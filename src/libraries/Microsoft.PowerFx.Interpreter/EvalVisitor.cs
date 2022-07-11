@@ -41,12 +41,12 @@ namespace Microsoft.PowerFx
         }
 
         // Helper to eval an arg that might be a lambda.
-        internal async ValueTask<DValue<T>> EvalArgAsync<T>(FormulaValue arg, SymbolContext context, IRContext irContext, StackMarker stackMarker)
+        internal async ValueTask<DValue<T>> EvalArgAsync<T>(FormulaValue arg, (SymbolContext, StackMarker) context, IRContext irContext)
             where T : ValidFormulaValue
         {
             if (arg is LambdaFormulaValue lambda)
             {
-                arg = await lambda.EvalAsync(this, context, stackMarker);
+                arg = await lambda.EvalAsync(this, context);
             }
 
             return arg switch
@@ -58,22 +58,22 @@ namespace Microsoft.PowerFx
             };
         }
 
-        public override async ValueTask<FormulaValue> Visit(TextLiteralNode node, (SymbolContext, StackMarker) fullContext)
+        public override async ValueTask<FormulaValue> Visit(TextLiteralNode node, (SymbolContext, StackMarker) context)
         {
             return new StringValue(node.IRContext, node.LiteralValue);
         }
 
-        public override async ValueTask<FormulaValue> Visit(NumberLiteralNode node, (SymbolContext, StackMarker) fullContext)
+        public override async ValueTask<FormulaValue> Visit(NumberLiteralNode node, (SymbolContext, StackMarker) context)
         {
             return new NumberValue(node.IRContext, node.LiteralValue);
         }
 
-        public override async ValueTask<FormulaValue> Visit(BooleanLiteralNode node, (SymbolContext, StackMarker) fullContext)
+        public override async ValueTask<FormulaValue> Visit(BooleanLiteralNode node, (SymbolContext, StackMarker) context)
         {
             return new BooleanValue(node.IRContext, node.LiteralValue);
         }
 
-        public override async ValueTask<FormulaValue> Visit(RecordNode node, (SymbolContext, StackMarker) fullContext)
+        public override async ValueTask<FormulaValue> Visit(RecordNode node, (SymbolContext, StackMarker) context)
         {
             var fields = new List<NamedValue>();
 
@@ -84,16 +84,16 @@ namespace Microsoft.PowerFx
                 var name = field.Key;
                 var value = field.Value;
 
-                var rhsValue = await value.Accept(this, fullContext);
+                var rhsValue = await value.Accept(this, context);
                 fields.Add(new NamedValue(name.Value, rhsValue));
             }
 
             return new InMemoryRecordValue(node.IRContext, fields);
         }
 
-        public override async ValueTask<FormulaValue> Visit(LazyEvalNode node, (SymbolContext, StackMarker) fullContext)
+        public override async ValueTask<FormulaValue> Visit(LazyEvalNode node, (SymbolContext, StackMarker) context)
         {
-            var val = await node.Child.Accept(this, fullContext);
+            var val = await node.Child.Accept(this, context);
             return val;
         }
 
@@ -101,7 +101,7 @@ namespace Microsoft.PowerFx
         // Set is unique because it has an l-value for the first arg. 
         // Async params can't have out-params. 
         // Return null if not handled. Else non-null if handled.
-        private async Task<FormulaValue> TryHandleSet(CallNode node, (SymbolContext, StackMarker) fullContext)
+        private async Task<FormulaValue> TryHandleSet(CallNode node, (SymbolContext, StackMarker) context)
         {
             // Special case Set() calls because they take an LValue. 
             if (node.Function.GetType() != typeof(RecalcEngineSetFunction))
@@ -112,7 +112,7 @@ namespace Microsoft.PowerFx
             var arg0 = node.Args[0];
             var arg1 = node.Args[1];
 
-            var newValue = await arg1.Accept(this, fullContext);
+            var newValue = await arg1.Accept(this, context);
 
             // Binder has already ensured this is a first name node. 
             if (arg0 is ResolvedObjectNode obj)
@@ -130,13 +130,13 @@ namespace Microsoft.PowerFx
             return CommonErrors.UnreachableCodeError(node.IRContext);
         }
 
-        public override async ValueTask<FormulaValue> Visit(CallNode node, (SymbolContext, StackMarker) fullContext)
+        public override async ValueTask<FormulaValue> Visit(CallNode node, (SymbolContext, StackMarker) context)
         {
             CheckCancel();
 
-            fullContext.Item2 = fullContext.Item2.Inc();
+            context.Item2 = context.Item2.Inc();
 
-            var setResult = await TryHandleSet(node, fullContext);
+            var setResult = await TryHandleSet(node, context);
             if (setResult != null)
             {
                 return setResult;
@@ -157,7 +157,7 @@ namespace Microsoft.PowerFx
 
                 if (!isLambda)
                 {
-                    args[i] = await child.Accept(this, fullContext);
+                    args[i] = await child.Accept(this, context);
                 }
                 else
                 {
@@ -165,7 +165,7 @@ namespace Microsoft.PowerFx
                 }
             }
 
-            var childContext = fullContext.Item1.WithScope(node.Scope);
+            var childContext = context.Item1.WithScope(node.Scope);
 
             if (func is IAsyncTexlFunction asyncFunc)
             {
@@ -181,7 +181,7 @@ namespace Microsoft.PowerFx
             {
                 if (FuncsByName.TryGetValue(func, out var ptr))
                 {
-                    var result = await ptr(this, childContext, node.IRContext, args, fullContext.Item2);
+                    var result = await ptr(this, (childContext, context.Item2), node.IRContext, args);
 
                     Contract.Assert(result.IRContext.ResultType == node.IRContext.ResultType || result is ErrorValue || result.IRContext.ResultType is BlankType);
 
@@ -192,24 +192,24 @@ namespace Microsoft.PowerFx
             }
         }
 
-        public override async ValueTask<FormulaValue> Visit(BinaryOpNode node, (SymbolContext, StackMarker) fullContext)
+        public override async ValueTask<FormulaValue> Visit(BinaryOpNode node, (SymbolContext, StackMarker) context)
         {
-            var arg1 = await node.Left.Accept(this, fullContext);
-            var arg2 = await node.Right.Accept(this, fullContext);
+            var arg1 = await node.Left.Accept(this, context);
+            var arg2 = await node.Right.Accept(this, context);
             var args = new FormulaValue[] { arg1, arg2 };
-            return await VisitBinaryOpNode(node, fullContext.Item1, args, fullContext.Item2);
+            return await VisitBinaryOpNode(node, context, args);
         }
 
-        private ValueTask<FormulaValue> VisitBinaryOpNode(BinaryOpNode node, SymbolContext context, FormulaValue[] args, StackMarker stackMarker)
+        private ValueTask<FormulaValue> VisitBinaryOpNode(BinaryOpNode node, (SymbolContext, StackMarker) context, FormulaValue[] args)
         { 
             switch (node.Op)
             {
                 case BinaryOpKind.AddNumbers:
-                    return OperatorBinaryAdd(this, context, node.IRContext, args, stackMarker);
+                    return OperatorBinaryAdd(this, context, node.IRContext, args);
                 case BinaryOpKind.MulNumbers:
-                    return OperatorBinaryMul(this, context, node.IRContext, args, stackMarker);
+                    return OperatorBinaryMul(this, context, node.IRContext, args);
                 case BinaryOpKind.DivNumbers:
-                    return OperatorBinaryDiv(this, context, node.IRContext, args, stackMarker);
+                    return OperatorBinaryDiv(this, context, node.IRContext, args);
                 case BinaryOpKind.EqBlob:
 
                 case BinaryOpKind.EqBoolean:
@@ -225,7 +225,7 @@ namespace Microsoft.PowerFx
                 case BinaryOpKind.EqOptionSetValue:
                 case BinaryOpKind.EqText:
                 case BinaryOpKind.EqTime:
-                    return OperatorBinaryEq(this, context, node.IRContext, args, stackMarker);
+                    return OperatorBinaryEq(this, context, node.IRContext, args);
 
                 case BinaryOpKind.NeqBlob:
                 case BinaryOpKind.NeqBoolean:
@@ -241,62 +241,62 @@ namespace Microsoft.PowerFx
                 case BinaryOpKind.NeqOptionSetValue:
                 case BinaryOpKind.NeqText:
                 case BinaryOpKind.NeqTime:
-                    return OperatorBinaryNeq(this, context, node.IRContext, args, stackMarker);
+                    return OperatorBinaryNeq(this, context, node.IRContext, args);
 
                 case BinaryOpKind.GtNumbers:
-                    return OperatorBinaryGt(this, context, node.IRContext, args, stackMarker);
+                    return OperatorBinaryGt(this, context, node.IRContext, args);
                 case BinaryOpKind.GeqNumbers:
-                    return OperatorBinaryGeq(this, context, node.IRContext, args, stackMarker);
+                    return OperatorBinaryGeq(this, context, node.IRContext, args);
                 case BinaryOpKind.LtNumbers:
-                    return OperatorBinaryLt(this, context, node.IRContext, args, stackMarker);
+                    return OperatorBinaryLt(this, context, node.IRContext, args);
                 case BinaryOpKind.LeqNumbers:
-                    return OperatorBinaryLeq(this, context, node.IRContext, args, stackMarker);
+                    return OperatorBinaryLeq(this, context, node.IRContext, args);
 
                 case BinaryOpKind.InText:
-                    return OperatorTextIn(this, context, node.IRContext, args, stackMarker);
+                    return OperatorTextIn(this, context, node.IRContext, args);
                 case BinaryOpKind.ExactInText:
-                    return OperatorTextInExact(this, context, node.IRContext, args, stackMarker);
+                    return OperatorTextInExact(this, context, node.IRContext, args);
 
                 case BinaryOpKind.InScalarTable:
-                    return OperatorScalarTableIn(this, context, node.IRContext, args, stackMarker);
+                    return OperatorScalarTableIn(this, context, node.IRContext, args);
 
                 case BinaryOpKind.ExactInScalarTable:
-                    return OperatorScalarTableInExact(this, context, node.IRContext, args, stackMarker);
+                    return OperatorScalarTableInExact(this, context, node.IRContext, args);
 
                 case BinaryOpKind.AddDateAndTime:
-                    return OperatorAddDateAndTime(this, context, node.IRContext, args, stackMarker);
+                    return OperatorAddDateAndTime(this, context, node.IRContext, args);
                 case BinaryOpKind.AddDateAndDay:
-                    return OperatorAddDateAndDay(this, context, node.IRContext, args, stackMarker);
+                    return OperatorAddDateAndDay(this, context, node.IRContext, args);
                 case BinaryOpKind.AddDateTimeAndDay:
-                    return OperatorAddDateTimeAndDay(this, context, node.IRContext, args, stackMarker);
+                    return OperatorAddDateTimeAndDay(this, context, node.IRContext, args);
                 case BinaryOpKind.DateDifference:
-                    return OperatorDateDifference(this, context, node.IRContext, args, stackMarker);
+                    return OperatorDateDifference(this, context, node.IRContext, args);
                 case BinaryOpKind.TimeDifference:
-                    return OperatorTimeDifference(this, context, node.IRContext, args, stackMarker);
+                    return OperatorTimeDifference(this, context, node.IRContext, args);
                 case BinaryOpKind.LtDateTime:
-                    return OperatorLtDateTime(this, context, node.IRContext, args, stackMarker);
+                    return OperatorLtDateTime(this, context, node.IRContext, args);
                 case BinaryOpKind.LeqDateTime:
-                    return OperatorLeqDateTime(this, context, node.IRContext, args, stackMarker);
+                    return OperatorLeqDateTime(this, context, node.IRContext, args);
                 case BinaryOpKind.GtDateTime:
-                    return OperatorGtDateTime(this, context, node.IRContext, args, stackMarker);
+                    return OperatorGtDateTime(this, context, node.IRContext, args);
                 case BinaryOpKind.GeqDateTime:
-                    return OperatorGeqDateTime(this, context, node.IRContext, args, stackMarker);
+                    return OperatorGeqDateTime(this, context, node.IRContext, args);
                 case BinaryOpKind.LtDate:
-                    return OperatorLtDate(this, context, node.IRContext, args, stackMarker);
+                    return OperatorLtDate(this, context, node.IRContext, args);
                 case BinaryOpKind.LeqDate:
-                    return OperatorLeqDate(this, context, node.IRContext, args, stackMarker);
+                    return OperatorLeqDate(this, context, node.IRContext, args);
                 case BinaryOpKind.GtDate:
-                    return OperatorGtDate(this, context, node.IRContext, args, stackMarker);
+                    return OperatorGtDate(this, context, node.IRContext, args);
                 case BinaryOpKind.GeqDate:
-                    return OperatorGeqDate(this, context, node.IRContext, args, stackMarker);
+                    return OperatorGeqDate(this, context, node.IRContext, args);
                 case BinaryOpKind.LtTime:
-                    return OperatorLtTime(this, context, node.IRContext, args, stackMarker);
+                    return OperatorLtTime(this, context, node.IRContext, args);
                 case BinaryOpKind.LeqTime:
-                    return OperatorLeqTime(this, context, node.IRContext, args, stackMarker);
+                    return OperatorLeqTime(this, context, node.IRContext, args);
                 case BinaryOpKind.GtTime:
-                    return OperatorGtTime(this, context, node.IRContext, args, stackMarker);
+                    return OperatorGtTime(this, context, node.IRContext, args);
                 case BinaryOpKind.GeqTime:
-                    return OperatorGeqTime(this, context, node.IRContext, args, stackMarker);
+                    return OperatorGeqTime(this, context, node.IRContext, args);
                 case BinaryOpKind.DynamicGetField:
                     return new ValueTask<FormulaValue>(OperatorDynamicGetField(node, args));
 
@@ -356,22 +356,22 @@ namespace Microsoft.PowerFx
             }
         }
 
-        public override async ValueTask<FormulaValue> Visit(UnaryOpNode node, (SymbolContext, StackMarker) fullContext)
+        public override async ValueTask<FormulaValue> Visit(UnaryOpNode node, (SymbolContext, StackMarker) context)
         {
-            var arg1 = await node.Child.Accept(this, fullContext);
+            var arg1 = await node.Child.Accept(this, context);
             var args = new FormulaValue[] { arg1 };
 
             if (UnaryOps.TryGetValue(node.Op, out var unaryOp))
             {
-                return await unaryOp(this, fullContext.Item1, node.IRContext, args, fullContext.Item2);
+                return await unaryOp(this, context, node.IRContext, args);
             }
 
             return CommonErrors.NotYetImplementedError(node.IRContext, $"Unary op {node.Op}");
         }
 
-        public override async ValueTask<FormulaValue> Visit(AggregateCoercionNode node, (SymbolContext, StackMarker) fullContext)
+        public override async ValueTask<FormulaValue> Visit(AggregateCoercionNode node, (SymbolContext, StackMarker) context)
         {
-            var arg1 = await node.Child.Accept(this, fullContext);
+            var arg1 = await node.Child.Accept(this, context);
 
             if (node.Op == UnaryOpKind.TableToTable)
             {
@@ -385,7 +385,7 @@ namespace Microsoft.PowerFx
                     if (row.IsValue)
                     {
                         var fields = new List<NamedValue>();
-                        var scopeContext = fullContext.Item1.WithScope(node.Scope);
+                        var scopeContext = context.Item1.WithScope(node.Scope);
                         foreach (var coercion in node.FieldCoercions)
                         {
                             CheckCancel();
@@ -393,7 +393,7 @@ namespace Microsoft.PowerFx
                             var record = row.Value;
                             var newScope = scopeContext.WithScopeValues(record);
 
-                            var newValue = await coercion.Value.Accept(this, (newScope, fullContext.Item2));
+                            var newValue = await coercion.Value.Accept(this, (newScope, context.Item2));
                             var name = coercion.Key;
                             fields.Add(new NamedValue(name.Value, newValue));
                         }
@@ -416,20 +416,20 @@ namespace Microsoft.PowerFx
             return CommonErrors.UnreachableCodeError(node.IRContext);
         }
 
-        public override async ValueTask<FormulaValue> Visit(ScopeAccessNode node, (SymbolContext, StackMarker) fullContext)
+        public override async ValueTask<FormulaValue> Visit(ScopeAccessNode node, (SymbolContext, StackMarker) context)
         {
             if (node.Value is ScopeAccessSymbol s1)
             {
                 var scope = s1.Parent;
 
-                var val = fullContext.Item1.GetScopeVar(scope, s1.Name);
+                var val = context.Item1.GetScopeVar(scope, s1.Name);
                 return val;
             }
 
             // Binds to whole scope
             if (node.Value is ScopeSymbol s2)
             {
-                var r = fullContext.Item1.ScopeValues[s2.Id];
+                var r = context.Item1.ScopeValues[s2.Id];
                 var r2 = (RecordScope)r;
                 return r2._context;
             }
@@ -437,9 +437,9 @@ namespace Microsoft.PowerFx
             return CommonErrors.UnreachableCodeError(node.IRContext);
         }
 
-        public override async ValueTask<FormulaValue> Visit(RecordFieldAccessNode node, (SymbolContext, StackMarker) fullContext)
+        public override async ValueTask<FormulaValue> Visit(RecordFieldAccessNode node, (SymbolContext, StackMarker) context)
         {
-            var left = await node.From.Accept(this, fullContext);
+            var left = await node.From.Accept(this, context);
 
             if (left is BlankValue)
             {
@@ -457,12 +457,12 @@ namespace Microsoft.PowerFx
             return val;
         }
 
-        public override async ValueTask<FormulaValue> Visit(SingleColumnTableAccessNode node, (SymbolContext, StackMarker) fullContext)
+        public override async ValueTask<FormulaValue> Visit(SingleColumnTableAccessNode node, (SymbolContext, StackMarker) context)
         {
             return CommonErrors.NotYetImplementedError(node.IRContext, "Single column table access");
         }
 
-        public override async ValueTask<FormulaValue> Visit(ErrorNode node, (SymbolContext, StackMarker) fullContext)
+        public override async ValueTask<FormulaValue> Visit(ErrorNode node, (SymbolContext, StackMarker) context)
         {
             return new ErrorValue(node.IRContext, new ExpressionError()
             {
@@ -472,12 +472,12 @@ namespace Microsoft.PowerFx
             });
         }
 
-        public override async ValueTask<FormulaValue> Visit(ColorLiteralNode node, (SymbolContext, StackMarker) fullContext)
+        public override async ValueTask<FormulaValue> Visit(ColorLiteralNode node, (SymbolContext, StackMarker) context)
         {
             return CommonErrors.NotYetImplementedError(node.IRContext, "Color literal");
         }
 
-        public override async ValueTask<FormulaValue> Visit(ChainingNode node, (SymbolContext, StackMarker) fullContext)
+        public override async ValueTask<FormulaValue> Visit(ChainingNode node, (SymbolContext, StackMarker) context)
         {
             CheckCancel();
 
@@ -493,7 +493,7 @@ namespace Microsoft.PowerFx
             {
                 CheckCancel();
 
-                fv = await iNode.Accept(this, fullContext);
+                fv = await iNode.Accept(this, context);
 
                 if (fv is ErrorValue ev)
                 {
@@ -504,7 +504,7 @@ namespace Microsoft.PowerFx
             return errors.Any() ? new ErrorValue(node.IRContext, errors) : fv;
         }
 
-        public override async ValueTask<FormulaValue> Visit(ResolvedObjectNode node, (SymbolContext, StackMarker) fullContext)
+        public override async ValueTask<FormulaValue> Visit(ResolvedObjectNode node, (SymbolContext, StackMarker) context)
         {
             return node.Value switch
             {

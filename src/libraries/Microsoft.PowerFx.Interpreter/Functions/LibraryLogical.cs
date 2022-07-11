@@ -15,11 +15,11 @@ namespace Microsoft.PowerFx.Functions
         }
 
         // Lazy evaluation 
-        public static async ValueTask<FormulaValue> And(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args, StackMarker stackMarker)
+        public static async ValueTask<FormulaValue> And(EvalVisitor runner, (SymbolContext, StackMarker) context, IRContext irContext, FormulaValue[] args)
         {
             foreach (var arg in args)
             {
-                var res = await runner.EvalArgAsync<BooleanValue>(arg, symbolContext, arg.IRContext, stackMarker);
+                var res = await runner.EvalArgAsync<BooleanValue>(arg, context, arg.IRContext);
 
                 if (res.IsValue)
                 {
@@ -39,13 +39,13 @@ namespace Microsoft.PowerFx.Functions
         }
 
         // Lazy evaluation 
-        public static async ValueTask<FormulaValue> Or(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args, StackMarker stackMarker)
+        public static async ValueTask<FormulaValue> Or(EvalVisitor runner, (SymbolContext, StackMarker) context, IRContext irContext, FormulaValue[] args)
         {
             foreach (var arg in args)
             {
                 runner.CheckCancel();
 
-                var res = await runner.EvalArgAsync<BooleanValue>(arg, symbolContext, arg.IRContext, stackMarker);
+                var res = await runner.EvalArgAsync<BooleanValue>(arg, context, arg.IRContext);
 
                 if (res.IsValue)
                 {
