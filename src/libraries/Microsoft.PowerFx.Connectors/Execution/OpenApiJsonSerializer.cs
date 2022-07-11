@@ -9,11 +9,12 @@ using System.Text.Json;
 
 namespace Microsoft.PowerFx.Connectors.Execution
 {
-    internal class OpenApiJsonSerializer : FormulaValueSerializer
+    internal class OpenApiJsonSerializer : FormulaValueSerializer, IDisposable
     {
         private readonly MemoryStream _stream;
         private readonly Utf8JsonWriter _writer;
-        private bool _topPropertyWritten = false;       
+        private bool _topPropertyWritten = false;
+        private bool _wasDisposed;
 
         public OpenApiJsonSerializer(bool schemaLessBody)
             : base(schemaLessBody)
@@ -121,6 +122,26 @@ namespace Microsoft.PowerFx.Connectors.Execution
             {
                 EndObject();
             }
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_wasDisposed)
+            {
+                if (disposing)
+                {
+                    _stream?.Dispose();
+                    _writer?.Dispose();                    
+                }
+
+                _wasDisposed = true;
+            }
+        }
+       
+        public void Dispose()
+        {            
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
     }
 }

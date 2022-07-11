@@ -123,11 +123,6 @@ namespace Microsoft.PowerFx.Core.Binding
         public ErrorContainer ErrorContainer { get; } = new ErrorContainer();
 
         /// <summary>
-        /// The maximum number of selects in a table that will be included in data call.
-        /// </summary>
-        public const int MaxSelectsToInclude = 100;
-
-        /// <summary>
         /// Default name used to access a Lambda scope.
         /// </summary>
         internal DName ThisRecordDefaultName => new DName("ThisRecord");
@@ -379,7 +374,7 @@ namespace Microsoft.PowerFx.Core.Binding
             INameResolver resolver,
             BindingConfig bindingConfig,
             DType ruleScope,
-            Features features)
+            Features features = Features.None)
         {
             return Run(glue, null, new DataSourceToQueryOptionsMap(), node, resolver, bindingConfig, false, ruleScope, false, null, features);
         }
@@ -909,8 +904,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     {
                         if (expandQueryOptions.Value.ExpandInfo.Identity == expandEntityLogicalName)
                         {
-                            if (!expandQueryOptions.Value.SelectsEqualKeyColumns() &&
-                                expandQueryOptions.Value.Selects.Count() <= MaxSelectsToInclude)
+                            if (!expandQueryOptions.Value.SelectsEqualKeyColumns())
                             {
                                 return expandQueryOptions.Value.Selects;
                             }

@@ -123,24 +123,37 @@ namespace Microsoft.PowerFx.Connectors
             return request;
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2000:Dispose objects before losing scope", Justification = "False positive")]
         private HttpContent GetBody(string referenceId, bool schemaLessBody, Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)> map)
         {
-            FormulaValueSerializer serializer = _argMapper.ContentType.ToLowerInvariant() switch
-            {
-                OpenApiExtensions.ContentType_XWwwFormUrlEncoded => new OpenApiFormUrlEncoder(schemaLessBody),
-                OpenApiExtensions.ContentType_TextPlain => new OpenApiTextSerializer(schemaLessBody),
-                _ => new OpenApiJsonSerializer(schemaLessBody)
-            };
+            FormulaValueSerializer serializer = null;
 
-            serializer.StartSerialization(referenceId);
-            foreach (var kv in map)
+            try
             {
-                serializer.SerializeValue(kv.Key, kv.Value.Schema, kv.Value.Value);
+                serializer = _argMapper.ContentType.ToLowerInvariant() switch
+                {
+                    OpenApiExtensions.ContentType_XWwwFormUrlEncoded => new OpenApiFormUrlEncoder(schemaLessBody),
+                    OpenApiExtensions.ContentType_TextPlain => new OpenApiTextSerializer(schemaLessBody),
+                    _ => new OpenApiJsonSerializer(schemaLessBody)
+                };
+
+                serializer.StartSerialization(referenceId);
+                foreach (var kv in map)
+                {
+                    serializer.SerializeValue(kv.Key, kv.Value.Schema, kv.Value.Value);
+                }
+
+                serializer.EndSerialization();
+
+                return new StringContent(serializer.GetResult(), Encoding.Default, _argMapper.ContentType);
             }
-
-            serializer.EndSerialization();
-
-            return new StringContent(serializer.GetResult(), Encoding.Default, _argMapper.ContentType);
+            finally
+            {
+                if (serializer != null && serializer is IDisposable disp)
+                {
+                    disp.Dispose();
+                }
+            }
         }
 
         public async Task<FormulaValue> DecodeResponseAsync(HttpResponseMessage response)
@@ -179,7 +192,7 @@ namespace Microsoft.PowerFx.Connectors
         public async Task<FormulaValue> InvokeAsync(string cacheScope, CancellationToken cancel, FormulaValue[] args)
         {
             FormulaValue result;
-            var request = BuildRequest(args);
+            using var request = BuildRequest(args);
 
             var key = request.RequestUri.ToString();
 

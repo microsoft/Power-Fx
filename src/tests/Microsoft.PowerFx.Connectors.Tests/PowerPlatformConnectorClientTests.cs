@@ -18,9 +18,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         private const string TestConnectionId = "9f8196668cbd431990bcca95b3ec1e23";
         private const string TestAuthToken = "AuthToken1234";
 
-        private PowerPlatformConnectorClient Client => new (TestEndpoint, TestEnvironmentId, TestConnectionId, () => TestAuthToken, new HttpMessageInvoker(TestHandler));
-
         private TestHandler TestHandler => new ();
+
+        private HttpMessageInvoker HttpMessageInvoker => new (TestHandler);
+
+        private PowerPlatformConnectorClient Client => new (TestEndpoint, TestEnvironmentId, TestConnectionId, () => TestAuthToken, HttpMessageInvoker);        
 
         [Fact]
         public void PowerPlatformConnectorClient_Constructor()
@@ -51,7 +53,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         public void PowerPlatformConnectorClient_TransformRequest(string method, string extraHeaders = null, string content = null)
         {
             var client = Client;
-            var request = new HttpRequestMessage(new HttpMethod(method), "/{connectionId}/test/someUri");
+            using var request = new HttpRequestMessage(new HttpMethod(method), "/{connectionId}/test/someUri");
 
             if (!string.IsNullOrEmpty(extraHeaders))
             {

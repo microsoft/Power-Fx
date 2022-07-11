@@ -378,6 +378,10 @@ namespace Microsoft.PowerFx.Core.Tests
             {
                 sb.Append($"{opt.Type.OptionSetName}.{opt.Option}");
             }
+            else if (result is GuidValue gv)
+            {
+                sb.Append($"GUID(\"{gv.Value}\")");
+            }
             else if (result is ErrorValue)
             {
                 sb.Append(result);
