@@ -13,7 +13,7 @@ namespace Microsoft.PowerFx.Core.IR
 
         public abstract TResult Visit(BooleanLiteralNode node, TContext context);
 
-        public abstract TResult Visit(ColorLiteralNode node, TContext context);        
+        public abstract TResult Visit(ColorLiteralNode node, TContext context);
 
         public abstract TResult Visit(RecordNode node, TContext context);
 

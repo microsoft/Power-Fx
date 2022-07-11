@@ -1,9 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using Microsoft.PowerFx.Core.Utils;
-
-namespace Microsoft.PowerFx.Core.IR
+namespace Microsoft.PowerFx.Core.Utils
 {
     internal struct StackMarker
     {

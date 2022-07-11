@@ -5,9 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies;
 using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Functions
@@ -23,7 +21,7 @@ namespace Microsoft.PowerFx.Functions
         // Support for aggregators. Helpers to ensure that Scalar and Tabular behave the same.
         private interface IAggregator
         {
-            void Apply(FormulaValue value);            
+            void Apply(FormulaValue value);
 
             FormulaValue GetResult(IRContext irContext);
         }
@@ -134,14 +132,14 @@ namespace Microsoft.PowerFx.Functions
                 }
             }
         }
-            
+
         private class MinNumberAgg : IAggregator
-        {            
+        {
             protected double _minValue = double.MaxValue;
             protected int _count = 0;
 
             public void Apply(FormulaValue value)
-            {            
+            {
                 if (value is BlankValue)
                 {
                     return;
@@ -174,7 +172,7 @@ namespace Microsoft.PowerFx.Functions
             protected int _count = 0;
 
             public void Apply(FormulaValue value)
-            {           
+            {
                 if (value is BlankValue)
                 {
                     return;
@@ -189,7 +187,7 @@ namespace Microsoft.PowerFx.Functions
 
                 _count++;
             }
-        
+
             public FormulaValue GetResult(IRContext irContext)
             {
                 if (_count == 0)
@@ -207,9 +205,9 @@ namespace Microsoft.PowerFx.Functions
             protected int _count = 0;
 
             public void Apply(FormulaValue value)
-            {               
+            {
                 if (value is BlankValue)
-                { 
+                {
                     return;
                 }
 
@@ -221,7 +219,7 @@ namespace Microsoft.PowerFx.Functions
                 }
 
                 _count++;
-            }           
+            }
 
             public FormulaValue GetResult(IRContext irContext)
             {
@@ -235,7 +233,7 @@ namespace Microsoft.PowerFx.Functions
         }
 
         private class MinTimeAgg : IAggregator
-        {            
+        {
             protected TimeSpan _minValueT = TimeSpan.MaxValue;
             protected int _count = 0;
 
@@ -254,7 +252,7 @@ namespace Microsoft.PowerFx.Functions
                 }
 
                 _count++;
-            }           
+            }
 
             public FormulaValue GetResult(IRContext irContext)
             {
@@ -268,12 +266,12 @@ namespace Microsoft.PowerFx.Functions
         }
 
         private class MaxNumberAgg : IAggregator
-        {            
+        {
             protected double _maxValue = double.MinValue;
             protected int _count = 0;
 
             public void Apply(FormulaValue value)
-            {            
+            {
                 if (value is BlankValue)
                 {
                     return;
@@ -287,7 +285,7 @@ namespace Microsoft.PowerFx.Functions
                 }
 
                 _count++;
-            }      
+            }
 
             public FormulaValue GetResult(IRContext irContext)
             {
@@ -301,12 +299,12 @@ namespace Microsoft.PowerFx.Functions
         }
 
         private class MaxDateAgg : IAggregator
-        {            
+        {
             protected DateTime _maxValueDT = DateTime.MinValue;
             protected int _count = 0;
 
             public void Apply(FormulaValue value)
-            {   
+            {
                 if (value is BlankValue)
                 {
                     return;
@@ -320,7 +318,7 @@ namespace Microsoft.PowerFx.Functions
                 }
 
                 _count++;
-            }       
+            }
 
             public FormulaValue GetResult(IRContext irContext)
             {
@@ -334,7 +332,7 @@ namespace Microsoft.PowerFx.Functions
         }
 
         private class MaxDateTimeAgg : IAggregator
-        {            
+        {
             protected DateTime _maxValueDT = DateTime.MinValue;
             protected int _count = 0;
 
@@ -344,7 +342,7 @@ namespace Microsoft.PowerFx.Functions
                 {
                     return;
                 }
-            
+
                 var n1 = ((DateTimeValue)value).Value;
 
                 if (n1 > _maxValueDT)
@@ -353,7 +351,7 @@ namespace Microsoft.PowerFx.Functions
                 }
 
                 _count++;
-            }          
+            }
 
             public FormulaValue GetResult(IRContext irContext)
             {
@@ -367,7 +365,7 @@ namespace Microsoft.PowerFx.Functions
         }
 
         private class MaxTimeAgg : IAggregator
-        {            
+        {
             protected TimeSpan _maxValueT = TimeSpan.MinValue;
             protected int _count = 0;
 
@@ -379,14 +377,14 @@ namespace Microsoft.PowerFx.Functions
                 }
 
                 var n1 = ((TimeValue)value).Value;
-                
+
                 if (n1 > _maxValueT)
                 {
                     _maxValueT = n1;
                 }
 
                 _count++;
-            }           
+            }
 
             public FormulaValue GetResult(IRContext irContext)
             {
@@ -423,7 +421,7 @@ namespace Microsoft.PowerFx.Functions
         }
 
         private static FormulaValue RunAggregator(IAggregator agg, IRContext irContext, FormulaValue[] values)
-        {            
+        {
             foreach (var value in values.Where(v => v is not BlankValue))
             {
                 agg.Apply(value);
@@ -481,7 +479,7 @@ namespace Microsoft.PowerFx.Functions
         {
             return await RunAggregatorAsync(new SumAgg(), runner, context, irContext, args);
         }
-        
+
         // VarP(1,2,3)
         internal static FormulaValue Var(IRContext irContext, FormulaValue[] args)
         {
@@ -556,12 +554,12 @@ namespace Microsoft.PowerFx.Functions
 
             if (agg != null)
             {
-                return await RunAggregatorAsync(agg, runner, context, irContext, args);                
+                return await RunAggregatorAsync(agg, runner, context, irContext, args);
             }
-            else 
+            else
             {
                 return CommonErrors.UnreachableCodeError(irContext);
-            }            
+            }
         }
 
         private static IAggregator GetMinMaxAggType(IRContext irContext, bool isMin)
@@ -656,8 +654,8 @@ namespace Microsoft.PowerFx.Functions
         public static FormulaValue Abs(IRContext irContext, NumberValue[] args)
         {
             var arg0 = args[0];
-            
-            if (arg0 == null) 
+
+            if (arg0 == null)
             {
                 return new NumberValue(irContext, 0d);
             }
@@ -694,7 +692,7 @@ namespace Microsoft.PowerFx.Functions
 
             var m = Math.Pow(10d, -dg);
             var eps = m / 1e12d; // used to manage rounding of 1.4499999999999999999996
-          
+
             switch (rt)
             {
                 case RoundType.Default:
@@ -713,7 +711,7 @@ namespace Microsoft.PowerFx.Functions
             Default,
             Up,
             Down
-        }       
+        }
 
         // Char is used for PA string escaping 
         public static FormulaValue RoundUp(IRContext irContext, NumberValue[] args)
@@ -788,7 +786,7 @@ namespace Microsoft.PowerFx.Functions
         public static FormulaValue Power(IRContext irContext, NumberValue[] args)
         {
             var number = args[0].Value;
-            var exponent = args[1].Value;            
+            var exponent = args[1].Value;
 
             if (number == 0)
             {

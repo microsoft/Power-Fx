@@ -10,7 +10,6 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Functions
@@ -367,15 +366,15 @@ namespace Microsoft.PowerFx.Functions
                 return CommonErrors.GenericInvalidArgument(irContext);
             }
 
-            var source = (StringValue)args[0];            
+            var source = (StringValue)args[0];
 
             if (count.Value < 0)
             {
                 return CommonErrors.GenericInvalidArgument(irContext);
             }
 
-            return new StringValue(irContext, leftOrRight(source.Value, (int)count.Value));            
-        }       
+            return new StringValue(irContext, leftOrRight(source.Value, (int)count.Value));
+        }
 
         private static FormulaValue Find(IRContext irContext, FormulaValue[] args)
         {
