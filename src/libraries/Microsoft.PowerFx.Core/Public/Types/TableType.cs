@@ -38,7 +38,7 @@ namespace Microsoft.PowerFx.Types
 
         public RecordType ToRecord()
         {
-            return new KnownRecordType(Type.ToRecord());
+            return new KnownRecordType(DType.ToRecord());
         }
     }
 }

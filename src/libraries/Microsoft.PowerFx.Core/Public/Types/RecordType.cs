@@ -29,7 +29,7 @@ namespace Microsoft.PowerFx.Types
             : base(DType.ObjNull)
         {
             var lazyTypeProvider = new LazyTypeProvider(Identity, TryGetFieldType, FieldNames);
-            Type = new DType(lazyTypeProvider, isTable: false);
+            DType = new DType(lazyTypeProvider, isTable: false);
         }
 
         public override void Visit(ITypeVisitor vistor)
@@ -39,7 +39,7 @@ namespace Microsoft.PowerFx.Types
         
         public TableType ToTable()
         {
-            return new KnownTableType(Type.ToTable());
+            return new KnownTableType(DType.ToTable());
         }
     }
 }

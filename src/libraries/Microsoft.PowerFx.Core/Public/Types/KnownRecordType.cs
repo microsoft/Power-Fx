@@ -28,7 +28,7 @@ namespace Microsoft.PowerFx.Types
 
         public KnownRecordType Add(string logicalName, FormulaType type, string optionalDisplayName = null)
         {
-            return Add(new NamedFormulaType(new TypedName(type.Type, new DName(logicalName)), optionalDisplayName));
+            return Add(new NamedFormulaType(new TypedName(type.DType, new DName(logicalName)), optionalDisplayName));
         }
     }
 }

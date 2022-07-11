@@ -37,7 +37,7 @@ namespace Microsoft.PowerFx.Core.Types
             }
             else if (_fieldTypeGetter(name.Value, out var fieldType))
             {
-                type = fieldType.Type;
+                type = fieldType.DType;
                 return true;
             }
 

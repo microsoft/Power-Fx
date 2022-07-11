@@ -157,10 +157,15 @@ namespace Microsoft.PowerFx.Tests
             var result3 = engine.Eval("x.Next.Next.Data");
             Assert.Equal(30.0, ((NumberValue)result3).Value);
 
-            // Recursion not supported - gets truncated...
-            // https://github.com/microsoft/Power-Fx/issues/225
-            var result4 = engine.Check("x.Next.Next.Next.Next.Next.Next");
-            Assert.False(result4.IsSuccess);
+            // Arbitrary recursion supported!
+            // Practically capped here at 50 due to parser depth limit
+            var result4 = engine.Check(
+                "x.Next.Next.Next.Next.Next.Next.Next.Next.Next.Next" +
+                ".Next.Next.Next.Next.Next.Next.Next.Next.Next.Next" +
+                ".Next.Next.Next.Next.Next.Next.Next.Next.Next.Next" +
+                ".Next.Next.Next.Next.Next.Next.Next.Next.Next.Next" +
+                ".Next.Next.Next.Next.Next.Next.Next.Next.Next");
+            Assert.True(result4.IsSuccess);
         }
 
         // Basic marshaling hook. 

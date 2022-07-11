@@ -23,7 +23,7 @@ namespace Microsoft.PowerFx.Types
 
         internal static KnownTableType FromRecord(RecordType type)
         {
-            var tableType = type.Type.ToTable();
+            var tableType = type.DType.ToTable();
             return new KnownTableType(tableType);
         }
 
@@ -34,7 +34,7 @@ namespace Microsoft.PowerFx.Types
 
         public KnownTableType Add(string logicalName, FormulaType type, string optionalDisplayName = null)
         {
-            return Add(new NamedFormulaType(new TypedName(type.Type, new DName(logicalName)), optionalDisplayName));
+            return Add(new NamedFormulaType(new TypedName(type.DType, new DName(logicalName)), optionalDisplayName));
         }
     }
 }

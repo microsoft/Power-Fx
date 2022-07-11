@@ -27,7 +27,7 @@ namespace Microsoft.PowerFx
         public override bool SupportsParamCoercion => true;
 
         public CustomTexlFunction(string name, FormulaType returnType, params FormulaType[] paramTypes)
-            : this(name, returnType.Type, Array.ConvertAll(paramTypes, x => x.Type))
+            : this(name, returnType.DType, Array.ConvertAll(paramTypes, x => x.DType))
         {
         }
 

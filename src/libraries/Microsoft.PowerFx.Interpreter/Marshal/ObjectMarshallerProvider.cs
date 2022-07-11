@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx
@@ -39,43 +40,41 @@ namespace Microsoft.PowerFx
                 return false;
             }
 
-            var mapping = new Dictionary<string, Func<object, FormulaValue>>(StringComparer.OrdinalIgnoreCase);
-
-            var fxType = new KnownRecordType();
-
+            var fieldGetters = new Dictionary<string, ObjectMarshaller.FieldTypeAndValueMarshallerGetter>();
             foreach (var prop in type.GetProperties(BindingFlags.Public | BindingFlags.Instance))
             {
                 if (!prop.CanRead)
                 {
                     continue;
                 }
-
+                
                 var fxName = GetFxName(prop);
                 if (fxName == null)
                 {
                     continue;
                 }
 
-                var tm = cache.GetMarshaller(prop.PropertyType);
-                var fxFieldType = tm.Type;
-
-                // Basic .net property
-                if (mapping.ContainsKey(fxName))
+                if (fieldGetters.ContainsKey(fxName))
                 {
                     throw new NameCollisionException(fxName);
                 }
 
-                mapping[fxName] = (object objSource) =>
+                (FormulaType fieldType, ObjectMarshaller.FieldValueMarshaller fieldValueMarshaller) TypeAndMarshallerGetter()
                 {
-                    var propValue = prop.GetValue(objSource);
-                    return tm.Marshal(propValue);
-                };
+                    var tm = cache.GetMarshaller(prop.PropertyType);
+                    return (tm.Type,
+                            (object objSource) =>
+                            {
+                                var propValue = prop.GetValue(objSource);
+                                return tm.Marshal(propValue);
+                            });
+                }
 
-                fxType = fxType.Add(fxName, fxFieldType);
+                fieldGetters.Add(fxName, TypeAndMarshallerGetter);
             }
 
-            marshaler = new ObjectMarshaller(fxType, mapping);
+            marshaler = new ObjectMarshaller(fieldGetters, type);
             return true;
-        }      
+        }
     }
 }

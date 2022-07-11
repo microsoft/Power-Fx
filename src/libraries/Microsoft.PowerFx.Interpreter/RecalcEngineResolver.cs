@@ -35,7 +35,7 @@ namespace Microsoft.PowerFx
             if (_parent.Formulas.TryGetValue(str, out var fi))
             {
                 var data = fi;
-                var type = fi._type.Type;
+                var type = fi._type.DType;
 
                 nameInfo = new NameLookupInfo(
                     BindKind.PowerFxResolvedObject,

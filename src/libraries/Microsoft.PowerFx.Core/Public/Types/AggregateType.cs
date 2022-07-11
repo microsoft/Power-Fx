@@ -26,11 +26,11 @@ namespace Microsoft.PowerFx.Types
                 throw new InvalidOperationException($"No field {fieldName}");
         }
 
-        public virtual IEnumerable<string> FieldNames => Type.GetNames(DPath.Root).Select(typedName => typedName.Name.Value);
+        public virtual IEnumerable<string> FieldNames => DType.GetNames(DPath.Root).Select(typedName => typedName.Name.Value);
 
         public virtual bool TryGetFieldType(string name, out FormulaType type)
         {
-            if (!Type.TryGetType(new DName(name), out var dType))
+            if (!DType.TryGetType(new DName(name), out var dType))
             {
                 type = Blank;
                 return false;
@@ -47,7 +47,7 @@ namespace Microsoft.PowerFx.Types
 
         private protected DType AddFieldToType(NamedFormulaType field)
         {
-            var displayNameProvider = Type.DisplayNameProvider;
+            var displayNameProvider = DType.DisplayNameProvider;
             if (displayNameProvider == null)
             {
                 displayNameProvider = new SingleSourceDisplayNameProvider();
@@ -61,7 +61,7 @@ namespace Microsoft.PowerFx.Types
                 }
             }
 
-            var newType = Type.Add(field._typedName);
+            var newType = DType.Add(field._typedName);
 
             if (displayNameProvider != null)
             {

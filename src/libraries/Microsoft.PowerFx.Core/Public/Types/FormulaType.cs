@@ -19,7 +19,7 @@ namespace Microsoft.PowerFx.Types
     public abstract class FormulaType
     {
         // Uses init to allow setting from derived constructors. Otherwise, is immutable.
-        internal DType Type { get; private protected init; }
+        internal DType DType { get; private protected init; }
 
         public static FormulaType Blank { get; } = new BlankType();
 
@@ -59,7 +59,7 @@ namespace Microsoft.PowerFx.Types
         // chained by derived type 
         internal FormulaType(DType type)
         {
-            Type = type;
+            DType = type;
         }
 
         // Entites may be recursive and their Dytype is tagged with additional schema metadata. 
@@ -177,7 +177,7 @@ namespace Microsoft.PowerFx.Types
         {
             if (other is FormulaType t)
             {
-                return Type.Equals(t.Type);
+                return DType.Equals(t.DType);
             }
 
             return false;
@@ -185,7 +185,7 @@ namespace Microsoft.PowerFx.Types
 
         public override int GetHashCode()
         {
-            return Type.GetHashCode();
+            return DType.GetHashCode();
         }
 
         #endregion // Equality

@@ -44,7 +44,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var r2 = r1.Add(new NamedFormulaType("Logical", FormulaType.String, "Foo"));
             var r3 = r1.Add(new NamedFormulaType("Logical", FormulaType.String, "Bar"));
 
-            Assert.False(ReferenceEquals(r2.Type.DisplayNameProvider, r3.Type.DisplayNameProvider));
+            Assert.False(ReferenceEquals(r2.DType.DisplayNameProvider, r3.DType.DisplayNameProvider));
         }
 
         [Fact]
@@ -56,9 +56,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var r2 = new KnownRecordType()
                 .Add(new NamedFormulaType("Other", FormulaType.String, "Foo"));
 
-            Assert.IsType<SingleSourceDisplayNameProvider>(r1.Type.DisplayNameProvider);
+            Assert.IsType<SingleSourceDisplayNameProvider>(r1.DType.DisplayNameProvider);
 
-            var disabledType = DType.AttachOrDisableDisplayNameProvider(r1.Type, r2.Type.DisplayNameProvider);
+            var disabledType = DType.AttachOrDisableDisplayNameProvider(r1.DType, r2.DType.DisplayNameProvider);
 
             Assert.IsType<DisabledDisplayNameProvider>(disabledType.DisplayNameProvider);
         }
@@ -185,7 +185,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 formula.ParseTree,
                 new SimpleResolver(new PowerFxConfig(CultureInfo.InvariantCulture)),
                 BindingConfig.Default,
-                ruleScope: r1.Type,
+                ruleScope: r1.DType,
                 updateDisplayNames: true);
 
             Assert.Empty(binding.NodesToReplace);
