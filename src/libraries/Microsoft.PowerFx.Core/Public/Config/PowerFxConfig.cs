@@ -8,7 +8,6 @@ using System.Linq;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.IR.Symbols;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
@@ -21,8 +20,7 @@ namespace Microsoft.PowerFx
     public sealed class PowerFxConfig
     {
         private bool _isLocked;
-        private readonly HashSet<TexlFunction> _extraFunctions = new HashSet<TexlFunction>();
-        private readonly HashSet<IGlobalSymbol> _globalSymbols = new HashSet<IGlobalSymbol>();
+        private readonly HashSet<TexlFunction> _extraFunctions = new HashSet<TexlFunction>();        
         private readonly Dictionary<DName, IExternalEntity> _environmentSymbols;
         private DisplayNameProvider _environmentSymbolDisplayNameProvider;
 
@@ -31,8 +29,6 @@ namespace Microsoft.PowerFx
         private IEnumerable<TexlFunction> _coreFunctions = BuiltinFunctionsCore.BuiltinFunctionsLibrary;
 
         internal IEnumerable<TexlFunction> Functions => _coreFunctions.Concat(_extraFunctions);
-
-        internal IEnumerable<IGlobalSymbol> GlobalSymbols => _globalSymbols;
 
         internal EnumStoreBuilder EnumStoreBuilder { get; }
 
@@ -167,11 +163,6 @@ namespace Microsoft.PowerFx
 
             _extraFunctions.Add(function);
             EnumStoreBuilder.WithRequiredEnums(new List<TexlFunction>() { function });
-        }
-
-        internal void AddGlobalSymbol(IGlobalSymbol symbol)
-        {
-            _globalSymbols.Add(symbol);
         }
 
         public void AddOptionSet(OptionSet optionSet, DName optionalDisplayName = default)

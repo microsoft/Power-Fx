@@ -3,11 +3,13 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using Microsoft.PowerFx.Core.App;
 using Microsoft.PowerFx.Core.App.Controls;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.IR.Symbols;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 
@@ -35,6 +37,8 @@ namespace Microsoft.PowerFx.Core.Binding
         DPath CurrentEntityPath { get; }
 
         IEnumerable<TexlFunction> Functions { get; }
+
+        ImmutableDictionary<string, GlobalSymbol> GlobalSymbols { get; }
 
         // This advertises whether the INameResolver instance will suggest unqualified enums ("Hours")
         // or only qualified enums ("TimeUnit.Hours").

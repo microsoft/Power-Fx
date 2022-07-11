@@ -1,9 +1,12 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Collections.Immutable;
+using System.Linq;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Glue;
+using Microsoft.PowerFx.Core.IR.Symbols;
 using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx
@@ -47,6 +50,13 @@ namespace Microsoft.PowerFx
             }
 
             return base.Lookup(name, out nameInfo, preferences);
+        }
+
+        public override void SetGlobalSymbols(ImmutableDictionary<string, GlobalSymbol> globalSymbols = null)
+        {
+            base.SetGlobalSymbols(globalSymbols ?? _parent.Formulas
+                .Select(f => new GlobalSymbol(f.Key, $"{f.Key} variable", f.Value.Value.Type))
+                .ToImmutableDictionary(kvp => kvp.Name, kvp => kvp));
         }
 
         public class ParameterData

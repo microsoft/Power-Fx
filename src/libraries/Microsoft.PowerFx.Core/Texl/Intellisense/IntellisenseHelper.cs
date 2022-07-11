@@ -715,9 +715,12 @@ namespace Microsoft.PowerFx.Intellisense
                 AddSuggestion(intellisenseData, funcNamespace.Name, SuggestionKind.Global, SuggestionIconKind.Other, DType.Unknown, requiresSuggestionEscaping: true);
             }
 
-            foreach (var symbol in intellisenseData.GlobalSymbols.Where(symbol => IsMatch(symbol.Name, intellisenseData.MatchingStr)))
+            if (intellisenseData.Binding.NameResolver.GlobalSymbols != null)
             {
-                CheckAndAddSuggestion(new IntellisenseSuggestion(new UIString(symbol.Name), SuggestionKind.Global, SuggestionIconKind.Other, symbol.Type._type, -1, symbol.Description, null, null), intellisenseData.Suggestions);
+                foreach (var symbol in intellisenseData.Binding.NameResolver.GlobalSymbols.Where(symbol => IsMatch(symbol.Key, intellisenseData.MatchingStr)))
+                {
+                    CheckAndAddSuggestion(new IntellisenseSuggestion(new UIString(symbol.Key), SuggestionKind.Global, SuggestionIconKind.Other, symbol.Value.Type._type, -1, symbol.Value.Description, null, null), intellisenseData.Suggestions);
+                }
             }
         }
 

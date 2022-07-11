@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.IR.Symbols;
 using Microsoft.PowerFx.Core.Texl.Intellisense;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Types.Enums;
@@ -59,9 +58,7 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
 
         internal IntellisenseSuggestionList SubstringSuggestions { get; }
 
-        internal TexlBinding Binding { get; }
-
-        internal IEnumerable<IGlobalSymbol> GlobalSymbols => _powerFxConfig.GlobalSymbols;
+        internal TexlBinding Binding { get; }        
 
         internal List<CommentToken> Comments { get; }
 

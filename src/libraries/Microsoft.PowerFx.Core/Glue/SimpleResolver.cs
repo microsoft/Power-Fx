@@ -3,12 +3,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using Microsoft.PowerFx.Core.App;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.IR.Symbols;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
@@ -20,14 +22,15 @@ namespace Microsoft.PowerFx.Core.Glue
     /// This aides in binding and intellisense. 
     /// Host can override Lookup to provide additional symbols to the expression. 
     /// </summary>
-    internal class SimpleResolver : INameResolver
+    internal class SimpleResolver : INameResolver, ISetGlobalSymbols
     {
         private readonly PowerFxConfig _config;
 
         private readonly TexlFunction[] _library;
+        private ImmutableDictionary<string, GlobalSymbol> _globalSymbols;
         private readonly EnumSymbol[] _enums = new EnumSymbol[] { };
 
-        private readonly IExternalDocument _document;        
+        private readonly IExternalDocument _document;
 
         IExternalDocument INameResolver.Document => _document;
 
@@ -39,6 +42,8 @@ namespace Microsoft.PowerFx.Core.Glue
 
         // Expose the list to aide in intellisense suggestions. 
         public IEnumerable<TexlFunction> Functions => _library;
+
+        public ImmutableDictionary<string, GlobalSymbol> GlobalSymbols => _globalSymbols;
 
         IExternalEntity INameResolver.CurrentEntity => null;
 
@@ -52,6 +57,7 @@ namespace Microsoft.PowerFx.Core.Glue
         {
             _config = config ?? throw new ArgumentNullException(nameof(config));
             _library = config.Functions.ToArray();
+            _globalSymbols = null;
             _enums = config.EnumStoreBuilder.Build().EnumSymbols.ToArray();            
         }
 
@@ -193,6 +199,11 @@ namespace Microsoft.PowerFx.Core.Glue
         public bool TryLookupEnum(DName name, out NameLookupInfo lookupInfo)
         {
             throw new System.NotImplementedException();
+        }
+
+        public virtual void SetGlobalSymbols(ImmutableDictionary<string, GlobalSymbol> globalSymbols = null)
+        {
+            _globalSymbols = globalSymbols ?? throw new ArgumentNullException(nameof(globalSymbols));
         }
     }
 }

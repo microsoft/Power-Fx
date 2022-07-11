@@ -7,7 +7,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Core.IR.Symbols;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Types;
@@ -63,6 +62,12 @@ namespace Microsoft.PowerFx
         {
             // The RecalcEngineResolver allows access to the values from UpdateValue. 
             var resolver = new RecalcEngineResolver(this, alternateConfig ?? Config);
+
+            if (resolver is ISetGlobalSymbols setSymbols)
+            {
+                setSymbols.SetGlobalSymbols();
+            }
+
             return resolver;
         }
 
@@ -130,8 +135,7 @@ namespace Microsoft.PowerFx
             }
             else
             {
-                Formulas[name] = new RecalcFormulaInfo { Value = x, _type = x.IRContext.ResultType };
-                Config.AddGlobalSymbol(new GlobalSymbol(name, $"{name} variable", value.Type));
+                Formulas[name] = new RecalcFormulaInfo { Value = x, _type = x.IRContext.ResultType };                
             }
 
             // Could trigger recalcs?
