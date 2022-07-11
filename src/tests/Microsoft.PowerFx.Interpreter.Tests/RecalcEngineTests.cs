@@ -553,6 +553,7 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public async void MaxRecursionDepthTest()
         {
+            bool test;
             var config = new PowerFxConfig(null)
             {
                 MaxCallDepth = 5
@@ -561,12 +562,14 @@ namespace Microsoft.PowerFx.Tests
             try
             {
                 await recalcEngine.EvalAsync("Abs(Abs(Abs(Abs(Abs(Abs(1))))))", new System.Threading.CancellationToken());
-                Assert.True(false);
+                test = false;
             }
             catch (MaxCallDepthException)
-            { 
+            {
+                test = true;
             }
 
+            Assert.True(test);
             await recalcEngine.EvalAsync("Abs(Abs(Abs(Abs(Abs(1)))))", new System.Threading.CancellationToken());
         }
 
