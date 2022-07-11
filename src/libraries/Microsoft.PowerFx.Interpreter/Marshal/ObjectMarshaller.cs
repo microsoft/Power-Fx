@@ -89,6 +89,7 @@ namespace Microsoft.PowerFx
             if (_fieldGetters.TryGetValue(name, out var getter))
             {
                 (type, _) = getter();
+                return true;
             }
 
             return false;

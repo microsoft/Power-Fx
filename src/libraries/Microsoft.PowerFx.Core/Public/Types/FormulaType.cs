@@ -14,7 +14,7 @@ namespace Microsoft.PowerFx.Types
     /// Base class for type of a Formula. 
     /// Formula Types are a class hiearchy.
     /// </summary>
-    [DebuggerDisplay("{_type}")]
+    [DebuggerDisplay("{DType}")]
     [ThreadSafeImmutable]
     public abstract class FormulaType
     {

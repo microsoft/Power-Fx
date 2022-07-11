@@ -10,17 +10,12 @@ namespace Microsoft.PowerFx.Interpreter
 {
     internal class ObjectRecordType : RecordType
     {
-        public override IAggregateTypeIdentity Identity { get; }
-
-        public override IEnumerable<string> FieldNames => _marshaller.FieldNames;
-
         private readonly ObjectMarshaller _marshaller;
 
         public ObjectRecordType(Type fromType, ObjectMarshaller marshaller)
-            : base()
+            : base(new MarshalledObjectIdentity(fromType), marshaller.FieldNames)
         {
-            Identity = new MarshalledObjectIdentity(fromType);
-            _marshaller = marshaller;
+             _marshaller = marshaller;
         }
 
         public override bool TryGetFieldType(string name, out FormulaType type)

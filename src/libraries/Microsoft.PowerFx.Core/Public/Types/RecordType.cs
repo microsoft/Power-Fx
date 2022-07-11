@@ -25,11 +25,9 @@ namespace Microsoft.PowerFx.Types
             Contracts.Assert(type.IsRecord);
         }
 
-        public RecordType() 
-            : base(DType.ObjNull)
+        public RecordType(IAggregateTypeIdentity identity, IEnumerable<string> fieldNames) 
+            : base(identity, fieldNames, true)
         {
-            var lazyTypeProvider = new LazyTypeProvider(Identity, TryGetFieldType, FieldNames);
-            DType = new DType(lazyTypeProvider, isTable: false);
         }
 
         public override void Visit(ITypeVisitor vistor)

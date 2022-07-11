@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Tests;
+using Microsoft.PowerFx.Interpreter.Tests;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
@@ -709,7 +710,12 @@ namespace Microsoft.PowerFx.Tests
                     Data = "B"
                 }
             };
-            Assert.Throws<InvalidOperationException>(() => cache.Marshal(obj));
+            var x = cache.Marshal(obj);
+            var engine = new RecalcEngine();
+            engine.UpdateVariable("x", x);
+
+            // Marshaller fails when type checking
+            Assert.Throws<InvalidOperationException>(() => engine.Check("x.Widget1"));
         }
 
         // Test a custom marshaler. 
@@ -736,18 +742,28 @@ namespace Microsoft.PowerFx.Tests
             };
 
             var x = cache.Marshal(obj);
-            Assert.Equal(1, marshaler._counter);
 
-            // Verify TypeMarshaller comes from cache and we don't call TryGetMarshaller again. 
-            var w1 = cache.Marshal(obj.Widget1);
-            Assert.Equal(1, marshaler._counter);
+            // Marshalling the fields of the outer object is lazy, doesn't touch Widget until later
+            Assert.Equal(0, marshaler._counter);
 
             var engine = new RecalcEngine();
             engine.UpdateVariable("x", x);
 
-            // Properties are renamed. 
+            // Marshalling the fields of the outer object is lazy, setting the variable doesn't touch the widget marshaller
+            Assert.Equal(0, marshaler._counter);
+
+            // Properties are renamed and marshalled correctly
             var result1 = engine.Eval("x.Widget1 & x.Widget2");
+
+            // Verify we only retrieved the widget marshaller once, the other one was from cache
+            Assert.Equal(1, marshaler._counter);
             Assert.Equal("WAWB", ((StringValue)result1).Value);
+
+            var result2 = engine.Eval("StartsWith(x.Widget1, \"W\")");
+            Assert.True(((BooleanValue)result2).Value);
+
+            // Verify we didn't retrieve a separate marshaller for a different expression
+            Assert.Equal(1, marshaler._counter);
         }
         
         // Test something that can't be marshalled. 

@@ -5,6 +5,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
@@ -13,7 +14,7 @@ using Xunit;
 #pragma warning disable SA1300 // Element should begin with upper-case letter
 #pragma warning disable SA1307 // Accessible fields should begin with upper-case letter
 
-namespace Microsoft.PowerFx.Core.Tests
+namespace Microsoft.PowerFx.Interpreter.Tests
 {
     public class ValueTests
     {

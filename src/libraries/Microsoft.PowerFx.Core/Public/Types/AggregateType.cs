@@ -12,11 +12,25 @@ namespace Microsoft.PowerFx.Types
 {
     public abstract class AggregateType : FormulaType
     {
-        public virtual IAggregateTypeIdentity Identity { get; }
+        public IEnumerable<string> FieldNames { get; }
+
+        public IAggregateTypeIdentity Identity { get; }
 
         internal AggregateType(DType type)
             : base(type)
         {
+            Contracts.Assert(type.IsAggregate);
+            FieldNames = DType.GetNames(DPath.Root).Select(typedName => typedName.Name.Value);
+        }
+
+        public AggregateType(IAggregateTypeIdentity identity, IEnumerable<string> fieldNames, bool isTable)
+            : base(DType.ObjNull)
+        {
+            FieldNames = fieldNames;
+            Identity = identity;
+
+            var lazyTypeProvider = new LazyTypeProvider(Identity, FieldNames, TryGetFieldType);
+            DType = new DType(lazyTypeProvider, isTable: false);
         }
 
         public FormulaType GetFieldType(string fieldName)
@@ -25,8 +39,6 @@ namespace Microsoft.PowerFx.Types
                 type :
                 throw new InvalidOperationException($"No field {fieldName}");
         }
-
-        public virtual IEnumerable<string> FieldNames => DType.GetNames(DPath.Root).Select(typedName => typedName.Name.Value);
 
         public virtual bool TryGetFieldType(string name, out FormulaType type)
         {

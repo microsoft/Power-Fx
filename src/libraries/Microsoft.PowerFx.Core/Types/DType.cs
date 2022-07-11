@@ -1096,6 +1096,8 @@ namespace Microsoft.PowerFx.Core.Types
             {
                 case DKind.Table:
                     return this;
+                case DKind.LazyRecord:
+                    return new DType(LazyTypeProvider, isTable: true);
                 case DKind.Record:
                 case DKind.DataEntity:
                 case DKind.Control:
@@ -1659,7 +1661,10 @@ namespace Microsoft.PowerFx.Core.Types
             return fValid;
         }
 
-        private bool AcceptsLazyType(DType other)
+        /// <summary>
+        /// Covers Lazy.Accepts(other) scenarios.
+        /// </summary>
+        private bool LazyTypeAccepts(DType other)
         {
             Contracts.AssertValid(other);
             Contracts.Assert(IsLazyType);
@@ -1669,13 +1674,37 @@ namespace Microsoft.PowerFx.Core.Types
                 case DKind.LazyRecord:
                 case DKind.LazyTable:
                     Contracts.AssertValue(LazyTypeProvider);
-                    return other.LazyTypeProvider.LazyTypeMetadata.Equals(LazyTypeProvider.LazyTypeMetadata) && IsTable == other.IsTable;
+                    return other.LazyTypeProvider.Identity.Equals(LazyTypeProvider.Identity) && IsTable == other.IsTable;
                 case DKind.Record:
                 case DKind.Table:
                     return LazyTypeProvider.GetExpandedType(IsTable).Accepts(other, true);
                 default:
                     return other.Kind == DKind.Unknown;
             }
+        }
+
+        /// <summary>
+        /// Covers Known.Accepts(Lazy) scenarios.
+        /// </summary>
+        private bool AcceptsLazyType(DType lazy)
+        {
+            Contracts.Assert(IsAggregate);
+            Contracts.Assert(lazy.IsLazyType);
+
+            if (IsTable != lazy.IsTable)
+            {
+                return false;
+            }
+
+            foreach (var namedType in GetNames(DPath.Root))
+            {
+                if (!lazy.TryGetType(namedType.Name, out var otherField) || !namedType.Type.Accepts(otherField))
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         private bool AcceptsEntityType(DType type)
@@ -1810,7 +1839,12 @@ namespace Microsoft.PowerFx.Core.Types
                 case DKind.Record:
                 case DKind.File:
                 case DKind.LargeImage:
-                    if (Kind == type.Kind || type.IsLazyType)
+                    if (type.IsLazyType)
+                    {
+                        return AcceptsLazyType(type);
+                    }
+
+                    if (Kind == type.Kind)
                     {
                         return TreeAccepts(this, TypeTree, type.TypeTree, out schemaDifference, out schemaDifferenceType, exact, useLegacyDateTimeAccepts);
                     }
@@ -1818,9 +1852,13 @@ namespace Microsoft.PowerFx.Core.Types
                     accepts = type.Kind == DKind.Unknown;
                     break;
 
-                case DKind.Table:
+                case DKind.Table:                    
+                    if (type.IsLazyType)
+                    {
+                        return AcceptsLazyType(type);
+                    }
 
-                    if (Kind == type.Kind || type.IsLazyType)
+                    if (Kind == type.Kind)
                     {
                         return TreeAccepts(this, TypeTree, type.TypeTree, out schemaDifference, out schemaDifferenceType, exact, useLegacyDateTimeAccepts);
                     }
@@ -1943,7 +1981,7 @@ namespace Microsoft.PowerFx.Core.Types
 
                 case DKind.LazyTable:
                 case DKind.LazyRecord:
-                    accepts = AcceptsLazyType(type);
+                    accepts = LazyTypeAccepts(type);
                     break;
                 default:
                     Contracts.Assert(false);
@@ -2777,7 +2815,7 @@ namespace Microsoft.PowerFx.Core.Types
                ValueTree == other.ValueTree &&
                HasExpandInfo == other.HasExpandInfo &&
                NamedValueKind == other.NamedValueKind &&
-               (LazyTypeProvider?.LazyTypeMetadata.Equals(other.LazyTypeProvider?.LazyTypeMetadata) ?? other.LazyTypeProvider == null);
+               (LazyTypeProvider?.Identity.Equals(other.LazyTypeProvider?.Identity) ?? other.LazyTypeProvider == null);
         }
 
         // Viewing DType.Invalid in the debugger should be allowed

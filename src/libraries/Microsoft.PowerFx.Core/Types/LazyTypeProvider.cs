@@ -17,14 +17,14 @@ namespace Microsoft.PowerFx.Core.Types
         public delegate bool FieldTypeGetter(string fieldName, out FormulaType fieldType);
 
         private readonly FieldTypeGetter _fieldTypeGetter;
-        private readonly Dictionary<DName, DType> _expandedFields = new Dictionary<DName, DType>();        
+        private readonly Dictionary<DName, DType> _expandedFields = new ();        
         private readonly IEnumerable<string> _fields;
 
-        public readonly IAggregateTypeIdentity LazyTypeMetadata;
+        public IAggregateTypeIdentity Identity { get; }
 
-        public LazyTypeProvider(IAggregateTypeIdentity metadata, FieldTypeGetter fieldTypeGetter, IEnumerable<string> fields)
+        public LazyTypeProvider(IAggregateTypeIdentity identity, IEnumerable<string> fields, FieldTypeGetter fieldTypeGetter)
         {            
-            LazyTypeMetadata = metadata;
+            Identity = identity;
             _fieldTypeGetter = fieldTypeGetter;
             _fields = fields;
         }

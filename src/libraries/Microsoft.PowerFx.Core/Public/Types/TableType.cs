@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
@@ -15,8 +16,8 @@ namespace Microsoft.PowerFx.Types
             Contracts.Assert(type.IsTable);
         }
 
-        public TableType()
-            : base(DType.EmptyTable)
+        public TableType(IAggregateTypeIdentity identity, IEnumerable<string> fieldNames)
+            : base(identity, fieldNames, true)
         {
         }
 
