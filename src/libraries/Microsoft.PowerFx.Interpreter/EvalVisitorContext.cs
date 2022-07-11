@@ -6,12 +6,13 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.PowerFx.Core.IR;
 
-namespace Microsoft.PowerFx.Interpreter
+namespace Microsoft.PowerFx
 {
     internal struct EvalVisitorContext
     {
-        public SymbolContext SymbolContext;
-        public StackMarker StackMarker;
+        public SymbolContext SymbolContext { get; set; }
+
+        public StackMarker StackMarker { get; set; }
 
         public EvalVisitorContext(SymbolContext symbolContext, StackMarker stackMarker)
         {
