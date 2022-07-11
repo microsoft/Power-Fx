@@ -130,6 +130,7 @@ stages:
       condition: succeededOrFailed()
 
 - stage: API_Compatibility_Validation
+  condition: True
   # dependsOn: Build
   # condition: and(succeeded(), ne(variables['DisableApiCompatibityValidation'], 'true'))
   variables:
