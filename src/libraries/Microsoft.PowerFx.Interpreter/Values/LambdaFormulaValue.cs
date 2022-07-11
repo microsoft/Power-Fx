@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
+using Microsoft.PowerFx.Interpreter;
 
 namespace Microsoft.PowerFx.Types
 {
@@ -22,7 +23,7 @@ namespace Microsoft.PowerFx.Types
             _tree = node;
         }
 
-        public async ValueTask<FormulaValue> EvalAsync(EvalVisitor runner, (SymbolContext, StackMarker) context)
+        public async ValueTask<FormulaValue> EvalAsync(EvalVisitor runner, EvalVisitorContext context)
         {
             runner.CheckCancel();
             var result = await _tree.Accept(runner, context);

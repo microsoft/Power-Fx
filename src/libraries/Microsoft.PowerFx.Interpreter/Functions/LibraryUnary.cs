@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
+using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Functions
@@ -253,7 +254,7 @@ namespace Microsoft.PowerFx.Functions
             return new NumberValue(irContext, result);
         }
 
-        public static FormulaValue NumberToText(EvalVisitor runner, (SymbolContext, StackMarker) context, IRContext irContext, NumberValue[] args)
+        public static FormulaValue NumberToText(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, NumberValue[] args)
         {
             return Text(runner, context, irContext, args);
         }

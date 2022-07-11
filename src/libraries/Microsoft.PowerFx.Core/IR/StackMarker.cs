@@ -17,10 +17,10 @@ namespace Microsoft.PowerFx.Core.IR
                 throw new MaxCallDepthException();
             }
 
-            return new StackMarker(_depth + 1, _maxCallDepth);
+            return new StackMarker(_maxCallDepth, _depth + 1);
         }
 
-        public StackMarker(int depth, int maxCallDepth)
+        public StackMarker(int maxCallDepth, int depth = 0)
         {
             _depth = depth;
             _maxCallDepth = maxCallDepth;

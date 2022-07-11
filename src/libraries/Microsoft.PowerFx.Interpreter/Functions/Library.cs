@@ -10,6 +10,7 @@ using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Functions
@@ -20,7 +21,7 @@ namespace Microsoft.PowerFx.Functions
         public delegate FormulaValue FunctionPtr(SymbolContext symbolContext, IRContext irContext, FormulaValue[] args);
 
         // Async - can invoke lambads.
-        public delegate ValueTask<FormulaValue> AsyncFunctionPtr(EvalVisitor runner, (SymbolContext, StackMarker) context, IRContext irContext, FormulaValue[] args);
+        public delegate ValueTask<FormulaValue> AsyncFunctionPtr(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args);
 
         public static IEnumerable<TexlFunction> FunctionList => FuncsByName.Keys;
 
@@ -1361,7 +1362,7 @@ namespace Microsoft.PowerFx.Functions
             return new InMemoryTableValue(irContext, records);
         }
 
-        public static ValueTask<FormulaValue> Blank(EvalVisitor runner, (SymbolContext, StackMarker) context, IRContext irContext, FormulaValue[] args)
+        public static ValueTask<FormulaValue> Blank(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             var result = new BlankValue(irContext);
             return new ValueTask<FormulaValue>(result);
@@ -1395,14 +1396,14 @@ namespace Microsoft.PowerFx.Functions
             return new BooleanValue(irContext, arg0 is NumberValue);
         }
 
-        public static async ValueTask<FormulaValue> With(EvalVisitor runner, (SymbolContext, StackMarker) context, IRContext irContext, FormulaValue[] args)
+        public static async ValueTask<FormulaValue> With(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             var arg0 = (RecordValue)args[0];
             var arg1 = (LambdaFormulaValue)args[1];
 
-            var childContext = context.Item1.WithScopeValues(arg0);
+            var childContext = context.SymbolContext.WithScopeValues(arg0);
 
-            return await arg1.EvalAsync(runner, (childContext, context.Item2));
+            return await arg1.EvalAsync(runner, new EvalVisitorContext(childContext, context.StackMarker));
         }
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-if
@@ -1410,7 +1411,7 @@ namespace Microsoft.PowerFx.Functions
         // If(Condition, Then, Else)
         // If(Condition, Then, Condition2, Then2)
         // If(Condition, Then, Condition2, Then2, Default)
-        public static async ValueTask<FormulaValue> If(EvalVisitor runner, (SymbolContext, StackMarker) context, IRContext irContext, FormulaValue[] args)
+        public static async ValueTask<FormulaValue> If(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             for (var i = 0; i < args.Length - 1; i += 2)
             {
@@ -1452,7 +1453,7 @@ namespace Microsoft.PowerFx.Functions
             return new BlankValue(irContext);
         }
 
-        public static async ValueTask<FormulaValue> IfError(EvalVisitor runner, (SymbolContext, StackMarker) context, IRContext irContext, FormulaValue[] args)
+        public static async ValueTask<FormulaValue> IfError(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             for (var i = 0; i < args.Length - 1; i += 2)
             {
@@ -1492,11 +1493,11 @@ namespace Microsoft.PowerFx.Functions
                             new TypedName(ErrorType.ReifiedError(), new DName("FirstError")),
                             new TypedName(ErrorType.ReifiedErrorTable(), new DName("AllErrors")),
                         }));
-                    var childContext = context.Item1.WithScopeValues(
+                    var childContext = context.SymbolContext.WithScopeValues(
                         new InMemoryRecordValue(
                             IRContext.NotInSource(ifErrorScopeParamType),
                             scopeVariables));
-                    return (await runner.EvalArgAsync<ValidFormulaValue>(errorHandlingBranch, (childContext, context.Item2), errorHandlingBranch.IRContext)).ToFormulaValue();
+                    return (await runner.EvalArgAsync<ValidFormulaValue>(errorHandlingBranch, new EvalVisitorContext(childContext, context.StackMarker), errorHandlingBranch.IRContext)).ToFormulaValue();
                 }
 
                 if (i + 1 == args.Length - 1)
@@ -1559,7 +1560,7 @@ namespace Microsoft.PowerFx.Functions
         // Switch(Formula, Match1, Result1, Match2,Result2)
         // Switch(Formula, Match1, Result1, DefaultResult)
         // Switch(Formula, Match1, Result1)
-        public static async ValueTask<FormulaValue> Switch(EvalVisitor runner, (SymbolContext, StackMarker) context, IRContext irContext, FormulaValue[] args)
+        public static async ValueTask<FormulaValue> Switch(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             var test = args[0];
 
@@ -1628,7 +1629,7 @@ namespace Microsoft.PowerFx.Functions
         }
 
         // ForAll([1,2,3,4,5], Value * Value)
-        public static async ValueTask<FormulaValue> ForAll(EvalVisitor runner, (SymbolContext, StackMarker) context, IRContext irContext, FormulaValue[] args)
+        public static async ValueTask<FormulaValue> ForAll(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {// Streaming 
             var arg0 = (TableValue)args[0];
             var arg1 = (LambdaFormulaValue)args[1];
@@ -1643,7 +1644,7 @@ namespace Microsoft.PowerFx.Functions
 
         private static IEnumerable<Task<FormulaValue>> LazyForAll(
             EvalVisitor runner,
-            (SymbolContext, StackMarker) context,
+            EvalVisitorContext context,
             IEnumerable<DValue<RecordValue>> sources,
             LambdaFormulaValue filter)
         {
@@ -1652,15 +1653,15 @@ namespace Microsoft.PowerFx.Functions
                 SymbolContext childContext;
                 if (row.IsValue)
                 {
-                    childContext = context.Item1.WithScopeValues(row.Value);
+                    childContext = context.SymbolContext.WithScopeValues(row.Value);
                 }
                 else
                 {
-                    childContext = context.Item1.WithScopeValues(RecordValue.Empty());
+                    childContext = context.SymbolContext.WithScopeValues(RecordValue.Empty());
                 }
 
                 // Filter evals to a boolean 
-                var result = filter.EvalAsync(runner, (childContext, context.Item2)).AsTask();
+                var result = filter.EvalAsync(runner, new EvalVisitorContext(childContext, context.StackMarker)).AsTask();
 
                 yield return result;
             }

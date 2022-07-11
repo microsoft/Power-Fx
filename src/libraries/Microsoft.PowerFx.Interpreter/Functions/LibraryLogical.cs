@@ -3,6 +3,7 @@
 
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Functions
@@ -15,7 +16,7 @@ namespace Microsoft.PowerFx.Functions
         }
 
         // Lazy evaluation 
-        public static async ValueTask<FormulaValue> And(EvalVisitor runner, (SymbolContext, StackMarker) context, IRContext irContext, FormulaValue[] args)
+        public static async ValueTask<FormulaValue> And(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             foreach (var arg in args)
             {
@@ -39,7 +40,7 @@ namespace Microsoft.PowerFx.Functions
         }
 
         // Lazy evaluation 
-        public static async ValueTask<FormulaValue> Or(EvalVisitor runner, (SymbolContext, StackMarker) context, IRContext irContext, FormulaValue[] args)
+        public static async ValueTask<FormulaValue> Or(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             foreach (var arg in args)
             {

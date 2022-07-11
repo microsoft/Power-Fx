@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Functions
@@ -46,7 +47,7 @@ namespace Microsoft.PowerFx.Functions
                 Func<IRContext, int, FormulaValue, FormulaValue> checkRuntimeTypes,
                 Func<IRContext, int, FormulaValue, FormulaValue> checkRuntimeValues,
                 ReturnBehavior returnBehavior,
-                Func<EvalVisitor, (SymbolContext, StackMarker), IRContext, T[], ValueTask<FormulaValue>> targetFunction)
+                Func<EvalVisitor, EvalVisitorContext, IRContext, T[], ValueTask<FormulaValue>> targetFunction)
             where T : FormulaValue
         {
             return async (runner, context, irContext, args) =>
@@ -143,7 +144,7 @@ namespace Microsoft.PowerFx.Functions
             Func<IRContext, int, FormulaValue, FormulaValue> checkRuntimeTypes,
             Func<IRContext, int, FormulaValue, FormulaValue> checkRuntimeValues,
             ReturnBehavior returnBehavior,
-            Func<EvalVisitor, (SymbolContext, StackMarker), IRContext, T[], FormulaValue> targetFunction)
+            Func<EvalVisitor, EvalVisitorContext, IRContext, T[], FormulaValue> targetFunction)
             where T : FormulaValue
         {
             return StandardErrorHandlingAsync<T>(expandArguments, replaceBlankValues, checkRuntimeTypes, checkRuntimeValues, returnBehavior, (runner, context, irContext, args) =>
@@ -165,7 +166,7 @@ namespace Microsoft.PowerFx.Functions
         }
 
         #region Single Column Table Functions
-        public static Func<EvalVisitor, (SymbolContext, StackMarker), IRContext, TableValue[], ValueTask<FormulaValue>> StandardSingleColumnTable<T>(Func<EvalVisitor, (SymbolContext, StackMarker), IRContext, T[], FormulaValue> targetFunction) 
+        public static Func<EvalVisitor, EvalVisitorContext, IRContext, TableValue[], ValueTask<FormulaValue>> StandardSingleColumnTable<T>(Func<EvalVisitor, EvalVisitorContext, IRContext, T[], FormulaValue> targetFunction) 
             where T : FormulaValue
         {
             return (runner, context, irContext, args) =>
@@ -213,7 +214,7 @@ namespace Microsoft.PowerFx.Functions
             };
         }
 
-        public static Func<EvalVisitor, (SymbolContext, StackMarker), IRContext, TableValue[], ValueTask<FormulaValue>> StandardSingleColumnTable<T>(Func<IRContext, T[], FormulaValue> targetFunction)
+        public static Func<EvalVisitor, EvalVisitorContext, IRContext, TableValue[], ValueTask<FormulaValue>> StandardSingleColumnTable<T>(Func<IRContext, T[], FormulaValue> targetFunction)
             where T : FormulaValue
         {
             return StandardSingleColumnTable<T>((runner, context, irContext, args) => targetFunction(irContext, args));
@@ -309,7 +310,7 @@ namespace Microsoft.PowerFx.Functions
          * F([a, b], [c, d]) => [F'([a, c]), F'([b, d])]
          * As a concrete example, Concatenate(["a", "b"], ["1", "2"]) => ["a1", "b2"]
         */
-        public static Func<EvalVisitor, (SymbolContext, StackMarker), IRContext, FormulaValue[], ValueTask<FormulaValue>> MultiSingleColumnTable(
+        public static Func<EvalVisitor, EvalVisitorContext, IRContext, FormulaValue[], ValueTask<FormulaValue>> MultiSingleColumnTable(
             AsyncFunctionPtr targetFunction, 
             bool transposeEmptyTable)
         {

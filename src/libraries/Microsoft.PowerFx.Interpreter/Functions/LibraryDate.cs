@@ -5,6 +5,7 @@ using System;
 using System.Globalization;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Functions
@@ -388,7 +389,7 @@ namespace Microsoft.PowerFx.Functions
             return new DateTimeValue(irContext, DateTime.Now);
         }
 
-        private static FormulaValue DateParse(EvalVisitor runner, (SymbolContext, StackMarker) context, IRContext irContext, StringValue[] args)
+        private static FormulaValue DateParse(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, StringValue[] args)
         {
             var str = args[0].Value;
             if (DateTime.TryParse(str, runner.CultureInfo, DateTimeStyles.None, out var result))
@@ -401,7 +402,7 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
-        public static FormulaValue DateTimeParse(EvalVisitor runner, (SymbolContext, StackMarker) context, IRContext irContext, StringValue[] args)
+        public static FormulaValue DateTimeParse(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, StringValue[] args)
         {
             var str = args[0].Value;
             if (DateTime.TryParse(str, runner.CultureInfo, DateTimeStyles.None, out var result))
@@ -414,7 +415,7 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
-        public static FormulaValue TimeParse(EvalVisitor runner, (SymbolContext, StackMarker) context, IRContext irContext, StringValue[] args)
+        public static FormulaValue TimeParse(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, StringValue[] args)
         {
             var str = args[0].Value;
             if (TimeSpan.TryParse(str, runner.CultureInfo, out var result))

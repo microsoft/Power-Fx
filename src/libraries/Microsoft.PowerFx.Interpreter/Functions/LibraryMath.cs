@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Functions
@@ -431,7 +432,7 @@ namespace Microsoft.PowerFx.Functions
             return agg.GetResult(irContext);
         }
 
-        private static async Task<FormulaValue> RunAggregatorAsync(IAggregator agg, EvalVisitor runner, (SymbolContext, StackMarker) context, IRContext irContext, FormulaValue[] args)
+        private static async Task<FormulaValue> RunAggregatorAsync(IAggregator agg, EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             var arg0 = (TableValue)args.First();
             var arg1 = (LambdaFormulaValue)args.Skip(1).First();
@@ -440,8 +441,8 @@ namespace Microsoft.PowerFx.Functions
             {
                 if (row.IsValue)
                 {
-                    var childContext = context.Item1.WithScopeValues(row.Value);
-                    var value = await arg1.EvalAsync(runner, (childContext, context.Item2));
+                    var childContext = context.SymbolContext.WithScopeValues(row.Value);
+                    var value = await arg1.EvalAsync(runner, new EvalVisitorContext(childContext, context.StackMarker));
 
                     if (value is NumberValue number)
                     {
@@ -476,7 +477,7 @@ namespace Microsoft.PowerFx.Functions
         }
 
         // Sum([1,2,3], Value * Value)     
-        public static async ValueTask<FormulaValue> SumTable(EvalVisitor runner, (SymbolContext, StackMarker) context, IRContext irContext, FormulaValue[] args)
+        public static async ValueTask<FormulaValue> SumTable(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             return await RunAggregatorAsync(new SumAgg(), runner, context, irContext, args);
         }
@@ -488,7 +489,7 @@ namespace Microsoft.PowerFx.Functions
         }
 
         // VarP([1,2,3], Value * Value)
-        public static async ValueTask<FormulaValue> VarTable(EvalVisitor runner, (SymbolContext, StackMarker) context, IRContext irContext, FormulaValue[] args)
+        public static async ValueTask<FormulaValue> VarTable(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             return await RunAggregatorAsync(new VarianceAgg(), runner, context, irContext, args);
         }
@@ -498,7 +499,7 @@ namespace Microsoft.PowerFx.Functions
             return RunAggregator(new StdDeviationAgg(), irContext, args);
         }
 
-        public static async ValueTask<FormulaValue> StdevTable(EvalVisitor runner, (SymbolContext, StackMarker) context, IRContext irContext, FormulaValue[] args)
+        public static async ValueTask<FormulaValue> StdevTable(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             return await RunAggregatorAsync(new StdDeviationAgg(), runner, context, irContext, args);
         }
@@ -519,7 +520,7 @@ namespace Microsoft.PowerFx.Functions
         }
 
         // Max([1,2,3], Value * Value)     
-        public static async ValueTask<FormulaValue> MaxTable(EvalVisitor runner, (SymbolContext, StackMarker) context, IRContext irContext, FormulaValue[] args)
+        public static async ValueTask<FormulaValue> MaxTable(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             var agg = GetMinMaxAggType(irContext, false);
 
@@ -549,7 +550,7 @@ namespace Microsoft.PowerFx.Functions
         }
 
         // Min([1,2,3], Value * Value)     
-        public static async ValueTask<FormulaValue> MinTable(EvalVisitor runner, (SymbolContext, StackMarker) context, IRContext irContext, FormulaValue[] args)
+        public static async ValueTask<FormulaValue> MinTable(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             var agg = GetMinMaxAggType(irContext, true);
 
@@ -598,7 +599,7 @@ namespace Microsoft.PowerFx.Functions
         }
 
         // Average([1,2,3], Value * Value)     
-        public static async ValueTask<FormulaValue> AverageTable(EvalVisitor runner, (SymbolContext, StackMarker) context, IRContext irContext, FormulaValue[] args)
+        public static async ValueTask<FormulaValue> AverageTable(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             var arg0 = (TableValue)args[0];
 
