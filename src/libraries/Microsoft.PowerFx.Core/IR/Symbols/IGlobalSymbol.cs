@@ -1,4 +1,7 @@
-﻿using System;
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.PowerFx.Core.Types;
@@ -9,7 +12,9 @@ namespace Microsoft.PowerFx.Core.IR.Symbols
     internal interface IGlobalSymbol
     {
         public string Name { get; }
+        
         public string Description { get; }
+        
         public FormulaType Type { get; }
     }
 }
