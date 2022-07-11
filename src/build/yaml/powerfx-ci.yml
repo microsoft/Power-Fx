@@ -4,7 +4,7 @@
 
 parameters:
   - name: packageFeed
-    displayName: API compatibility contract feed
+    displayName: Feed for API compatibility contract
     type: string
     default: Azure
     values:
@@ -33,6 +33,7 @@ variables:
 
 stages:
 - stage: Build
+  condition: false
   jobs:
   - job: build_and_test
     steps:
@@ -129,8 +130,8 @@ stages:
       condition: succeededOrFailed()
 
 - stage: API_Compatibility_Validation
-  dependsOn: Build
-  condition: and(succeeded(), ne(variables['DisableApiCompatibityValidation'], 'true'))
+  # dependsOn: Build
+  # condition: and(succeeded(), ne(variables['DisableApiCompatibityValidation'], 'true'))
   variables:
     skipComponentGovernanceDetection: true # the task is already injected into the build job, so skip it here.
   jobs:
