@@ -143,6 +143,8 @@ stages:
     - template: powerfx-feed-setup-step.yml
 
     - template: get-contract-version-step.yml
+      # parameters: 
+      #   PackageFeed: ${{ parameters.packageFeed }}
 
     - task: tagBuildOrRelease@0
       displayName: Tag Build with API contract version
@@ -152,6 +154,10 @@ stages:
           From ${{ parameters.packageFeed }} feed 
 
     - powershell: |
+        Write-Host "parameters.packageFeed: ${{ parameters.packageFeed }}";
+        $Feed = "${{ parameters.packageFeed }}";
+        Write-Host "Feed: $Feed";
+
         $multiconfig = '{';
         $env:PackagesToValidate.Split(",") | ForEach {
           $library = $_.Trim()
