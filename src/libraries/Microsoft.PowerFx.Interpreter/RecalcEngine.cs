@@ -166,14 +166,7 @@ namespace Microsoft.PowerFx
 
             var check = Check(expressionText, (RecordType)parameters.IRContext.ResultType, options);
             check.ThrowOnErrors();
-            try
-            {
-                return await check.Expression.EvalAsync(parameters, cancel);
-            }
-            catch (MaxCallDepthException)
-            {
-                return CommonErrors.MaxCallDepth(new IRContext(new Syntax.Span(0, expressionText.Length - 1), FormulaType.BindingError));
-            }
+            return await check.Expression.EvalAsync(parameters, cancel);
         }
 
         // Invoke onUpdate() each time this formula is changed, passing in the new value. 

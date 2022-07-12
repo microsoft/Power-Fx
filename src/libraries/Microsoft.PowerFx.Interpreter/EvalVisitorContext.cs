@@ -24,5 +24,10 @@ namespace Microsoft.PowerFx
         {
             return new EvalVisitorContext(SymbolContext, StackDepthCounter.Increment());
         }
+        
+        public EvalVisitorContext IncrementStackDepthCounter(SymbolContext symbolContext)
+        {
+            return new EvalVisitorContext(symbolContext, StackDepthCounter.Increment());
+        }
     }
 }

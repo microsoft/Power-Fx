@@ -4,9 +4,15 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Functions;
+using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Interpreter
 {
+    /// <summary>
+    /// This is an interpreter internal excpetion and should be converted to a ErrorValue before returning to the host.
+    /// </summary>
     [Serializable]
     internal class MaxCallDepthException : Exception
     {
@@ -30,6 +36,11 @@ namespace Microsoft.PowerFx.Interpreter
             System.Runtime.Serialization.StreamingContext context)
             : base(info, context)
         {
+        }
+
+        public FormulaValue ToErrorValue(IRContext irContext)
+        {
+            return CommonErrors.MaxCallDepth(irContext);
         }
     }
 }

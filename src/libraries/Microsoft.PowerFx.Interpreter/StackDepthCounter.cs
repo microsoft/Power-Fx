@@ -8,21 +8,21 @@ namespace Microsoft.PowerFx.Interpreter
     /// </summary>
     internal struct StackDepthCounter
     {
-        private readonly int _depth;
+        private readonly int _remaining;
 
         internal StackDepthCounter Increment()
         {
-            if (_depth == 0)
+            if (_remaining == 0)
             {
                 throw new MaxCallDepthException();
             }
 
-            return new StackDepthCounter(_depth - 1);
+            return new StackDepthCounter(_remaining - 1);
         }
 
         public StackDepthCounter(int maxCallDepth)
         {
-            _depth = maxCallDepth;
+            _remaining = maxCallDepth;
         }
     }
 }

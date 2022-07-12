@@ -179,7 +179,7 @@ namespace Microsoft.PowerFx
             {
                 if (FuncsByName.TryGetValue(func, out var ptr))
                 {
-                    var result = await ptr(this, new EvalVisitorContext(childContext, context.StackDepthCounter).IncrementStackDepthCounter(), node.IRContext, args);
+                    var result = await ptr(this, context.IncrementStackDepthCounter(childContext), node.IRContext, args);
 
                     Contract.Assert(result.IRContext.ResultType == node.IRContext.ResultType || result is ErrorValue || result.IRContext.ResultType is BlankType);
 

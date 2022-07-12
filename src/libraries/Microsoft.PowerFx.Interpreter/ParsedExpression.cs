@@ -26,13 +26,18 @@ namespace Microsoft.PowerFx
             _cultureInfo = cultureInfo ?? CultureInfo.CurrentCulture;
         }
 
-        public Task<FormulaValue> EvalAsync(RecordValue parameters, CancellationToken cancel)
+        public async Task<FormulaValue> EvalAsync(RecordValue parameters, CancellationToken cancel)
         {
             var ev2 = new EvalVisitor(_cultureInfo, cancel);
-
-            var newValue = _irnode.Accept(ev2, new EvalVisitorContext(SymbolContext.NewTopScope(_topScopeSymbol, parameters), _stackMarker));
-
-            return newValue.AsTask();
+            try
+            { 
+                var newValue = await _irnode.Accept(ev2, new EvalVisitorContext(SymbolContext.NewTopScope(_topScopeSymbol, parameters), _stackMarker));
+                return newValue;
+            }
+            catch (MaxCallDepthException maxCallDepthException)
+            {
+                return maxCallDepthException.ToErrorValue(_irnode.IRContext);
+            }
         }
     }
 }
