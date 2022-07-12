@@ -26,7 +26,7 @@ steps:
     }
     else {
       Write-Host "Get $packageName version number from the ApiContractVersion variable: [${{ parameters.apiContractVersion }}]";
-      $contractVersion = ${{ parameters.apiContractVersion }}
+      $contractVersion = "${{ parameters.apiContractVersion }}";
     }
     " "
     "Contract version:";
