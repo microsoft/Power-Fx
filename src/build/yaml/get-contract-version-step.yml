@@ -22,12 +22,12 @@ steps:
       $contractVersion = ($PackageList | Select -First 1).Split(" ")[-1];
     }
     else {
-      Write-Host "Assign $packageName version number from the ApiContractVersion variable";
+      Write-Host "Get $packageName version number from the ApiContractVersion variable: [$ApiContractVersion]";
       $contractVersion = $ApiContractVersion
     }
     " "
     "Contract version:";
     $packageName;
     $contractVersion;
-    "##vso[task.setvariable variable=ContractVersion;]$contractVersion";
+    "##vso[task.setvariable variable=ContractVersion;isOutput=true]$contractVersion";
   displayName: 'Get contract package version number'
