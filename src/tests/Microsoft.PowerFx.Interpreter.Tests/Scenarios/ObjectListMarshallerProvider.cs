@@ -31,11 +31,11 @@ namespace Microsoft.PowerFx.Tests
         {
             public FormulaType Type => _type.ToTable();
 
-            private readonly RecordType _type;
+            private readonly BaseRecordType _type;
 
             public ObjectListMarshaller()
             {
-                _type = new KnownRecordType().Add(TableValue.ValueName, FormulaType.UntypedObject);
+                _type = new RecordType().Add(TableValue.ValueName, FormulaType.UntypedObject);
             }
 
             public FormulaValue Marshal(object value)

@@ -20,9 +20,9 @@ namespace Microsoft.PowerFx.Core.Types
         private readonly Dictionary<DName, DType> _expandedFields = new ();        
         private readonly IEnumerable<string> _fields;
 
-        public IAggregateTypeIdentity Identity { get; }
+        public ITypeIdentity Identity { get; }
 
-        public LazyTypeProvider(IAggregateTypeIdentity identity, IEnumerable<string> fields, FieldTypeGetter fieldTypeGetter)
+        public LazyTypeProvider(ITypeIdentity identity, IEnumerable<string> fields, FieldTypeGetter fieldTypeGetter)
         {            
             Identity = identity;
             _fieldTypeGetter = fieldTypeGetter;

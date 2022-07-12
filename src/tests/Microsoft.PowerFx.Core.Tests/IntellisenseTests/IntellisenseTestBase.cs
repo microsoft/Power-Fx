@@ -25,24 +25,24 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         /// <returns></returns>
         internal IIntellisenseResult Suggest(string expression, PowerFxConfig config, string contextTypeString = null)
         {
-            RecordType contextType;
+            BaseRecordType contextType;
             if (contextTypeString != null)
             {
                 DType.TryParse(contextTypeString, out var contextDType);
-                contextType = FormulaType.Build(contextDType) as RecordType;
+                contextType = FormulaType.Build(contextDType) as BaseRecordType;
 
                 Assert.True(contextType != null, "Context type must be a record type");
             }
             else
             {
                 // We leave the context type as an empty record when none is provided
-                contextType = new KnownRecordType();
+                contextType = new RecordType();
             }
 
             return Suggest(expression, config, contextType);
         }
 
-        internal IIntellisenseResult Suggest(string expression, PowerFxConfig config, RecordType parameterType)
+        internal IIntellisenseResult Suggest(string expression, PowerFxConfig config, BaseRecordType parameterType)
         {
             Assert.NotNull(expression);
 
@@ -55,7 +55,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             return Suggest(expression, parameterType, cursorPosition, config);
         }
 
-        internal IIntellisenseResult Suggest(string expression, RecordType parameterType, int cursorPosition, PowerFxConfig config)
+        internal IIntellisenseResult Suggest(string expression, BaseRecordType parameterType, int cursorPosition, PowerFxConfig config)
         {
             var engine = new Engine(config);
 

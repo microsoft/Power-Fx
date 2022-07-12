@@ -38,9 +38,9 @@ namespace Microsoft.PowerFx.Tests
         {
         }
 
-        public static RecordType ComputeType(DataTable dataTable)
+        public static BaseRecordType ComputeType(DataTable dataTable)
         {
-            var recordType = new KnownRecordType();
+            var recordType = new RecordType();
             foreach (DataColumn column in dataTable.Columns)
             {
                 if (!PrimitiveValueConversions.TryGetFormulaType(column.DataType, out var fxType))
@@ -68,7 +68,7 @@ namespace Microsoft.PowerFx.Tests
         {
             private readonly DataRow _row;
 
-            public DataRowRecordValue(RecordType type, DataRow row)
+            public DataRowRecordValue(BaseRecordType type, DataRow row)
                 : base(type)
             {
                 _row = row;

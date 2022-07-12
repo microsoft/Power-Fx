@@ -109,7 +109,7 @@ namespace Microsoft.PowerFx.Core.IR
                     // Let's add "Value:" here                    
                     children = children.Select(childNode =>
                         new RecordNode(
-                            new IRContext(childNode.IRContext.SourceContext, new KnownRecordType().Add(TableValue.ValueName, childNode.IRContext.ResultType)),
+                            new IRContext(childNode.IRContext.SourceContext, new RecordType().Add(TableValue.ValueName, childNode.IRContext.ResultType)),
                             new Dictionary<DName, IntermediateNode>
                             {
                                 { TableValue.ValueDName, childNode }

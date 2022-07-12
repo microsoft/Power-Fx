@@ -16,7 +16,7 @@ namespace Microsoft.PowerFx.Types
             Contracts.Assert(type.IsTable);
         }
 
-        public TableType(IAggregateTypeIdentity identity, IEnumerable<string> fieldNames)
+        public TableType(ITypeIdentity identity, IEnumerable<string> fieldNames)
             : base(identity, fieldNames, true)
         {
         }
@@ -37,9 +37,9 @@ namespace Microsoft.PowerFx.Types
 
         internal FormulaType SingleColumnFieldType => GetFieldType(SingleColumnFieldName);
 
-        public RecordType ToRecord()
+        public BaseRecordType ToRecord()
         {
-            return new KnownRecordType(DType.ToRecord());
+            return new RecordType(DType.ToRecord());
         }
     }
 }

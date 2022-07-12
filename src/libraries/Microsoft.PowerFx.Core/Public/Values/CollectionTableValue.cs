@@ -22,7 +22,7 @@ namespace Microsoft.PowerFx.Types
         private readonly IReadOnlyList<T> _sourceIndex; // maybe null. supports index. 
         private readonly IReadOnlyCollection<T> _sourceCount; // maybe null. supports count;
 
-        public CollectionTableValue(RecordType recordType, IEnumerable<T> source)
+        public CollectionTableValue(BaseRecordType recordType, IEnumerable<T> source)
           : this(IRContext.NotInSource(recordType.ToTable()), source)
         {
             RecordType = recordType;
@@ -37,7 +37,7 @@ namespace Microsoft.PowerFx.Types
             _sourceCount = source as IReadOnlyCollection<T>;
         }
 
-        public RecordType RecordType { get; }
+        public BaseRecordType RecordType { get; }
 
         protected abstract DValue<RecordValue> Marshal(T item);
 

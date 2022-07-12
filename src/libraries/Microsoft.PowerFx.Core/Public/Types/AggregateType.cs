@@ -14,7 +14,7 @@ namespace Microsoft.PowerFx.Types
     {
         public IEnumerable<string> FieldNames { get; }
 
-        public IAggregateTypeIdentity Identity { get; }
+        public ITypeIdentity Identity { get; }
 
         internal AggregateType(DType type)
             : base(type)
@@ -23,7 +23,7 @@ namespace Microsoft.PowerFx.Types
             FieldNames = DType.GetNames(DPath.Root).Select(typedName => typedName.Name.Value);
         }
 
-        public AggregateType(IAggregateTypeIdentity identity, IEnumerable<string> fieldNames, bool isTable)
+        public AggregateType(ITypeIdentity identity, IEnumerable<string> fieldNames, bool isTable)
             : base(DType.ObjNull)
         {
             FieldNames = fieldNames;

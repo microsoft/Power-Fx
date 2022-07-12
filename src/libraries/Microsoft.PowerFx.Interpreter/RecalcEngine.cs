@@ -75,7 +75,7 @@ namespace Microsoft.PowerFx
         /// <summary>
         /// Create an evaluator over the existing binding. 
         /// </summary>
-        /// <param name="result">A successful binding from a previous call to <see cref="Engine.Check(string, RecordType, ParserOptions)"/>. </param>
+        /// <param name="result">A successful binding from a previous call to <see cref="Engine.Check(string, BaseRecordType, ParserOptions)"/>. </param>
         /// <returns></returns>
         public static IExpression CreateEvaluatorDirect(CheckResult result)
         {
@@ -157,7 +157,7 @@ namespace Microsoft.PowerFx
                 parameters = RecordValue.Empty();
             }
 
-            var check = Check(expressionText, (RecordType)parameters.IRContext.ResultType, options);
+            var check = Check(expressionText, (BaseRecordType)parameters.IRContext.ResultType, options);
             check.ThrowOnErrors();
 
             var newValue = await check.Expression.EvalAsync(parameters, cancel);

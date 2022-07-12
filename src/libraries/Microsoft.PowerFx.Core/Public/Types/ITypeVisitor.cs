@@ -16,7 +16,7 @@ namespace Microsoft.PowerFx.Types
 
         void Visit(StringType type);
 
-        void Visit(RecordType type);
+        void Visit(BaseRecordType type);
 
         void Visit(TableType type);
 

@@ -107,7 +107,7 @@ namespace Microsoft.PowerFx.Types
 
                 case DKind.Record:
                 case DKind.LazyRecord:
-                    return new KnownRecordType(type);
+                    return new RecordType(type);
                 case DKind.Table:
                 case DKind.LazyTable:
                     return new KnownTableType(type);
@@ -140,7 +140,7 @@ namespace Microsoft.PowerFx.Types
 
                 // This isn't quite right, but once we're in the IR, an option set acts more like a record with optionsetvalue fields. 
                 case DKind.OptionSet:
-                    return new KnownRecordType(DType.CreateRecord(type.GetAllNames(DPath.Root)));
+                    return new RecordType(DType.CreateRecord(type.GetAllNames(DPath.Root)));
 
                 case DKind.UntypedObject:
                     return UntypedObject;

@@ -30,7 +30,7 @@ namespace Microsoft.PowerFx
         /// <summary>
         /// Strongly typed wrapper for Type. 
         /// </summary>
-        public RecordType Type { get; }
+        public BaseRecordType Type { get; }
 
         public IEnumerable<string> FieldNames => _fieldGetters.Select(kvp => kvp.Key);
 

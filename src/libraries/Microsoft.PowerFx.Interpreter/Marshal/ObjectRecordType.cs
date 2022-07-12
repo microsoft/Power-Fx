@@ -8,7 +8,7 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Interpreter
 {
-    internal class ObjectRecordType : RecordType
+    internal class ObjectRecordType : BaseRecordType
     {
         private readonly ObjectMarshaller _marshaller;
 

@@ -83,7 +83,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 new NamedValue("Num", FormulaValue.New(15)),
                 new NamedValue("Str", FormulaValue.New("hello")));
 
-            RecordType rt = (RecordType)r.Type;
+            BaseRecordType rt = (BaseRecordType)r.Type;
 
             // Access as a dynamic
             dynamic d = r.ToObject();

@@ -24,7 +24,7 @@ namespace Microsoft.PowerFx.Tests
 
             var result = engine.Check(
                 "3*2+x",
-                new KnownRecordType().Add(
+                new RecordType().Add(
                     new NamedFormulaType("x", FormulaType.Number)));
 
             Assert.True(result.IsSuccess);
@@ -49,7 +49,7 @@ namespace Microsoft.PowerFx.Tests
             var str = parse.Root.ToString();
             Assert.Equal("3 * x", str);
 
-            var r = new KnownRecordType().Add(
+            var r = new RecordType().Add(
                    new NamedFormulaType("x", FormulaType.Number));
                         
             var check = engine.Check(parse, r);

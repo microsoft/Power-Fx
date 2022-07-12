@@ -10,7 +10,7 @@ namespace Microsoft.PowerFx.Types
     {
         private readonly RecordValue _inner;
 
-        public static RecordValue AdjustType(RecordType expectedType, RecordValue inner)
+        public static RecordValue AdjustType(BaseRecordType expectedType, RecordValue inner)
         {
             if (expectedType.Equals(inner.Type))
             {
@@ -20,7 +20,7 @@ namespace Microsoft.PowerFx.Types
             return new CompileTimeTypeWrapperRecordValue(expectedType, inner);
         }
 
-        private CompileTimeTypeWrapperRecordValue(RecordType type, RecordValue inner)
+        private CompileTimeTypeWrapperRecordValue(BaseRecordType type, RecordValue inner)
             : base(type)
         {
             _inner = inner;

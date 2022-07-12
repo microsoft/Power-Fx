@@ -188,7 +188,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
         // Demonstrate how to lazily marshal a property bag to a strongly typed value if we're given the type
-        private static RecordValue Marshal(Dictionary<string, object> values, TypeMarshallerCache cache, RecordType type)
+        private static RecordValue Marshal(Dictionary<string, object> values, TypeMarshallerCache cache, BaseRecordType type)
         {
             var fieldGetters = new Dictionary<string, ObjectMarshaller.FieldTypeAndValueMarshallerGetter>();
             foreach (var kv in values)
@@ -234,11 +234,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 { "bool", true }
             };
 
-            var recordTypeTestObj = new KnownRecordType()
+            var recordTypeTestObj = new RecordType()
                 .Add("Field1", FormulaType.Number)
                 .Add("Field2", FormulaType.Number);
 
-            var recordType = new KnownRecordType()
+            var recordType = new RecordType()
                 .Add("int", FormulaType.Number)
                 .Add("str", FormulaType.String)
                 .Add("test", recordTypeTestObj)

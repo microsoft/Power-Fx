@@ -15,7 +15,7 @@ namespace Microsoft.PowerFx.Core
 {
     internal class ExpressionLocalizationHelper
     {
-        internal static string ConvertExpression(string expressionText, RecordType parameters, BindingConfig config, INameResolver resolver, IBinderGlue binderGlue, CultureInfo userCulture, bool toDisplay)
+        internal static string ConvertExpression(string expressionText, BaseRecordType parameters, BindingConfig config, INameResolver resolver, IBinderGlue binderGlue, CultureInfo userCulture, bool toDisplay)
         {
             var targetLexer = toDisplay ? TexlLexer.GetLocalizedInstance(userCulture) : TexlLexer.InvariantLexer;
             var sourceLexer = toDisplay ? TexlLexer.InvariantLexer : TexlLexer.GetLocalizedInstance(userCulture);

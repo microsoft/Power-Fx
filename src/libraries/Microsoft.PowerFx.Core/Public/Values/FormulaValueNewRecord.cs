@@ -29,7 +29,7 @@ namespace Microsoft.PowerFx.Types
 
         public static RecordValue NewRecordFromFields(IEnumerable<NamedValue> fields)
         {
-            var type = new KnownRecordType();
+            var type = new RecordType();
             foreach (var field in fields)
             {
                 type = type.Add(new NamedFormulaType(field.Name, field.Value.IRContext.ResultType));
@@ -38,12 +38,12 @@ namespace Microsoft.PowerFx.Types
             return NewRecordFromFields(type, fields);
         }
 
-        public static RecordValue NewRecordFromFields(RecordType recordType, params NamedValue[] fields)
+        public static RecordValue NewRecordFromFields(BaseRecordType recordType, params NamedValue[] fields)
         {
             return NewRecordFromFields(recordType, fields.AsEnumerable());
         }
 
-        public static RecordValue NewRecordFromFields(RecordType recordType, IEnumerable<NamedValue> fields)
+        public static RecordValue NewRecordFromFields(BaseRecordType recordType, IEnumerable<NamedValue> fields)
         {
             return new InMemoryRecordValue(IRContext.NotInSource(recordType), fields);
         }

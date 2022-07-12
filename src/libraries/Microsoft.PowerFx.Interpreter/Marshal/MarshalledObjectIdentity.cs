@@ -13,7 +13,7 @@ namespace Microsoft.PowerFx
     /// which in this case is just the Type.
     /// </summary>
     [ThreadSafeImmutable]
-    public class MarshalledObjectIdentity : IAggregateTypeIdentity
+    public class MarshalledObjectIdentity : ITypeIdentity
     {
         public Type FromType { get; }
 

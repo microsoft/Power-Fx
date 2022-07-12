@@ -145,7 +145,7 @@ namespace Microsoft.PowerFx.Tests
             var engine = new Engine(config);
 
             var expr = "MSNWeather.CurrentWeather(";
-            var result = engine.Suggest(expr, new KnownRecordType(), expr.Length);
+            var result = engine.Suggest(expr, new RecordType(), expr.Length);
 
             var overload = result.FunctionOverloads.Single();
             Assert.Equal(Intellisense.SuggestionKind.Function, overload.Kind);

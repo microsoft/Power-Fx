@@ -16,7 +16,7 @@ namespace Microsoft.PowerFx.Types
 
         private readonly ObjectMarshaller _marshaller;
 
-        internal ObjectRecordValue(RecordType type, object source, ObjectMarshaller marshaler) 
+        internal ObjectRecordValue(BaseRecordType type, object source, ObjectMarshaller marshaler) 
             : base(type)
         {
             Source = source;

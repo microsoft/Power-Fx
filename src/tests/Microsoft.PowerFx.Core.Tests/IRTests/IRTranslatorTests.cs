@@ -30,7 +30,7 @@ namespace Microsoft.PowerFx.Core.Tests
             var tableType = new KnownTableType()
                 .Add(new NamedFormulaType("val", FormulaType.Number));
 
-            var parameterType = new KnownRecordType()
+            var parameterType = new RecordType()
                 .Add(new NamedFormulaType("numtable", tableType));
 
             var engine = new Engine(new PowerFxConfig());
