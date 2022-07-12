@@ -16,32 +16,32 @@ steps:
     targetPath: '$(System.ArtifactsDirectory)/Artifacts'
 
 - task: NuGetCommand@2
-  displayName: 'NuGet install $(PackageName) v $(ContractVersion)'
+  displayName: 'NuGet install $(PackageName) v $(parameters.ContractVersion)'
   inputs:
     command: custom
-    arguments: 'install $(PackageName) -Version $(ContractVersion) -OutputDirectory $(System.DefaultWorkingDirectory)\DownloadedNuGet'
+    arguments: 'install $(PackageName) -Version $(parameters.ContractVersion) -OutputDirectory $(System.DefaultWorkingDirectory)\DownloadedNuGet'
 
 - task: SOUTHWORKS.binaries-comparer.custom-build-release-task.binaries-comparer@0
   displayName: 'Compare binaries'
   inputs:
-    contractsRootFolder: 'DownloadedNuGet\$(PackageName).$(ContractVersion)\lib\netstandard2.0'
+    contractsRootFolder: 'DownloadedNuGet\$(PackageName).$(parameters.ContractVersion)\lib\netstandard2.0'
     contractsFileName: '$(PackageName).dll'
     implFolder: '$(System.ArtifactsDirectory)/Artifacts'
     failOnIssue: false
     resolveFx: false
     generateLog: true
-    outputFilename: '$(PackageName).$(ContractVersion).CompatResults.txt'
+    outputFilename: '$(PackageName).$(parameters.ContractVersion).CompatResults.txt'
     outputFolder: '$(Build.ArtifactStagingDirectory)'
     useBaseline: false
 
 - powershell: |
-    $filePath = "$(Build.ArtifactStagingDirectory)\$(PackageName).$(ContractVersion).CompatResults.txt"
-    $nugetLink = "compared against [version $(ContractVersion)](https://www.nuget.org/packages/$(PackageName)/$(ContractVersion)).";
+    $filePath = "$(Build.ArtifactStagingDirectory)\$(PackageName).$(parameters.ContractVersion).CompatResults.txt"
+    $nugetLink = "compared against [version $(ContractVersion)](https://www.nuget.org/packages/$(PackageName)/$(parameters.ContractVersion)).";
     Write-Host "Compatibility Check:"; 
 
     if (-not (Test-Path $filePath)) {
       $content = "The binary compatibility report for library '$(PackageName)' wasn't generated. This may have happened because the NuGet library '$(PackageName)' for version '$(ContractVersion)' was unavailable or a connectivity issue."
-      New-Item -Path '$(Build.ArtifactStagingDirectory)' -Name '$(PackageName).$(ContractVersion).CompatResults.txt' -ItemType "file" -Value $content
+      New-Item -Path '$(Build.ArtifactStagingDirectory)' -Name '$(PackageName).$(parameters.ContractVersion).CompatResults.txt' -ItemType "file" -Value $content
       $content;
       return;
     }
