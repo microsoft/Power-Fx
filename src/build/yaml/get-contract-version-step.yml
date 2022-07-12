@@ -16,7 +16,7 @@ steps:
 
       Write-Host "Get latest $packageName version number from Azure feed";
 
-      $RegistryUrlSource = 'PowerFx-feed';
+      $RegistryUrlSource = 'PowerFx';
       $Packagelist = nuget list "$packageName" -Source "$RegistryUrlSource" -PreRelease -AllVersions;
       " "
       "Available versions:";

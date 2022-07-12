@@ -140,7 +140,7 @@ stages:
     steps:
     - checkout: none
 
-    - template: powerfx-feed-setup-step.yml
+    - template: feed-setup-step.yml
       parameters: 
         feedName: "${{ parameters.packageFeed }}"
 
@@ -185,7 +185,7 @@ stages:
     steps:
     - checkout: none
 
-    - template: powerfx-feed-setup-step.yml
+    - template: feed-setup-step.yml
       parameters: 
         feedName: "${{ parameters.packageFeed }}"
 

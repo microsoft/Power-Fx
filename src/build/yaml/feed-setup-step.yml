@@ -12,18 +12,21 @@ steps:
       $value = "https://api.nuget.org/v3/index.json";
       $key2 = "nuget.org2";
       $value2 = "https://api.nuget.org/v3/index.json";
-      Write-Host 'System.PullRequest.IsFork = True';
-    } else if ("${{ parameters.feedName }}" -eq 'NuGet') {
-      $key = "SDK_Dotnet_V4_org";
-      $value = "https://pkgs.dev.azure.com/FuseLabs/_packaging/SDK_Dotnet_V4_org/nuget/v3/index.json";
-      $key2 = "nuget.org";
-      $value2 = "https://api.nuget.org/v3/index.json";
-      Write-Host 'System.PullRequest.IsFork = True';
+      Write-Host 'NuGet feed: System.PullRequest.IsFork = True';
     } else {
-      $key = "PowerFx-feed";
-      $value = "$(PowerFx_daily_feed_Url)";
-      $key2 = "SDK_Dotnet_V4_org";
-      $value2 = "https://pkgs.dev.azure.com/FuseLabs/_packaging/SDK_Dotnet_V4_org/nuget/v3/index.json";
+      if ("${{ parameters.feedName }}" -eq 'NuGet') {
+        $key = "SDK_Dotnet_V4_org";
+        $value = "https://pkgs.dev.azure.com/FuseLabs/_packaging/SDK_Dotnet_V4_org/nuget/v3/index.json";
+        $key2 = "nuget.org";
+        $value2 = "https://api.nuget.org/v3/index.json";
+        Write-Host 'SDK_Dotnet_V4_org feed';
+      } else {
+        $key = "PowerFx";
+        $value = "$(PowerFx_daily_feed_Url)";
+        $key2 = "SDK_Dotnet_V4_org";
+        $value2 = "https://pkgs.dev.azure.com/FuseLabs/_packaging/SDK_Dotnet_V4_org/nuget/v3/index.json";
+        Write-Host 'PowerFx feed';
+      }
     }
 
     $file = "$(Build.SourcesDirectory)\nuget.config";
