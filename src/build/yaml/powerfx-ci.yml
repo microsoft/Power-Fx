@@ -150,7 +150,7 @@ stages:
       displayName: Tag Build with API contract version
       inputs:
         tags: |
-          Comparing API against v $(ApiContractVersion)
+          Comparing API against v $(ContractVersion)
           From ${{ parameters.packageFeed }} feed 
 
     - powershell: |

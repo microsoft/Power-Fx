@@ -6,8 +6,10 @@ parameters:
 steps:
 - powershell: |
     Write-Host "feedName: ${{ parameters.feedName }}";
-    # if ("${{ parameters.feedName }}" -eq 'Azure' -and "$(System.PullRequest.IsFork)" -ne 'True') {
-      $packageName = ($env:PackagesToValidate.Split(","))[0];
+    $packageName = ($env:PackagesToValidate.Split(","))[0];
+    [string]$contractVersion = "";
+
+    if ("${{ parameters.feedName }}" -eq 'Azure' -and "$(System.PullRequest.IsFork)" -ne 'True') {
 
       Write-Host "Get latest $packageName version number from Azure ConversationalAI SDK feed";
 
@@ -17,16 +19,15 @@ steps:
       "Available versions:";
       $PackageList | Select -First 5;
       
-      [string]$latestVersion = ($PackageList | Select -First 1).Split(" ")[-1];
-      " "
-      "Latest version:";
-      $packageName;
-      $latestVersion;
-      "##vso[task.setvariable variable=ApiContractVersion;]$latestVersion";
-    # }
-    # else {
-    #   Write-Host "Skipped"
-    # }
-  displayName: 'From Azure feed get latest package version number - '
-  # condition: ${{ eq(parameters.packageFeed, 'Azure') }}
-  # condition: and(succeeded(), eq('${{ parameters.feedName }}', 'Azure'), eq(variables['System.PullRequest.IsFork'], 'false'))
+      $contractVersion = ($PackageList | Select -First 1).Split(" ")[-1];
+    }
+    else {
+      Write-Host "Assign $packageName version number from the ApiContractVersion variable";
+      $contractVersion = $ApiContractVersion
+    }
+    " "
+    "Contract version:";
+    $packageName;
+    $contractVersion;
+    "##vso[task.setvariable variable=ContractVersion;]$contractVersion";
+  displayName: 'Get contract package version number'
