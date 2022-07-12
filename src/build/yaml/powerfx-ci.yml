@@ -28,6 +28,7 @@ variables:
   BuildPlatform: 'any cpu'
   BuildSolution: src/Microsoft.PowerFx.sln
   PowerFx_daily_feed_Url: 'https://pkgs.dev.azure.com/ConversationalAI/BotFramework/_packaging/SDK/nuget/v3/index.json'
+  skipComponentGovernanceDetection: true
 # BuildConfiguration: define this in Azure
 # DisableApiCompatibityValidation: define this in Azure, settable by user.
 # PowerFxCoverallsToken: define this in Azure
@@ -147,6 +148,7 @@ stages:
     - template: get-contract-version-step.yml
       parameters: 
         feedName: "${{ parameters.packageFeed }}"
+        apiContractVersion: "$(ApiContractVersion)"
 
     - task: tagBuildOrRelease@0
       displayName: Tag Build with API contract version

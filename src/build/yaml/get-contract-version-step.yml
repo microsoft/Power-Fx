@@ -2,6 +2,9 @@ parameters:
   - name: feedName
     displayName: Azure or NuGet
     type: string
+  - name: apiContractVersion
+    displayName: API contract package version
+    type: string
 
 steps:
 - powershell: |
@@ -22,8 +25,8 @@ steps:
       $contractVersion = ($PackageList | Select -First 1).Split(" ")[-1];
     }
     else {
-      Write-Host "Get $packageName version number from the ApiContractVersion variable: [$ApiContractVersion]";
-      $contractVersion = $ApiContractVersion
+      Write-Host "Get $packageName version number from the ApiContractVersion variable: [${{ parameters.apiContractVersion }}]";
+      $contractVersion = ${{ parameters.apiContractVersion }}
     }
     " "
     "Contract version:";
