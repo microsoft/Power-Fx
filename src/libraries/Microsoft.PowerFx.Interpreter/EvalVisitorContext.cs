@@ -10,9 +10,9 @@ namespace Microsoft.PowerFx
 {
     internal struct EvalVisitorContext
     {
-        public SymbolContext SymbolContext { get; set; }
+        public SymbolContext SymbolContext { get; }
 
-        public StackDepthCounter StackDepthCounter { get; set; }
+        public StackDepthCounter StackDepthCounter { get; }
 
         public EvalVisitorContext(SymbolContext symbolContext, StackDepthCounter stackMarker)
         {
