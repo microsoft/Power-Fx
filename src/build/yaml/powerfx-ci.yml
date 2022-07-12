@@ -175,7 +175,7 @@ stages:
     
         Write-Host "Get latest $packageName version number from Azure ConversationalAI SDK feed";
     
-        $RegistryUrlSource = 'Azure';
+        $RegistryUrlSource = 'PowerFx-feed';
         $Packagelist = nuget list "$packageName" -Source "$RegistryUrlSource" -PreRelease -AllVersions;
         " "
         "Available versions:";
@@ -198,4 +198,6 @@ stages:
     # variables:
     #   BuildConfiguration: $(BuildConfiguration)
     steps:
+    - checkout: none
+
     - template: ci-post-to-github-steps.yml
