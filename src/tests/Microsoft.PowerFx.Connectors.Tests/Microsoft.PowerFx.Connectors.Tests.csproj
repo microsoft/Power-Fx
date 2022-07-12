@@ -8,8 +8,7 @@
     <OutputType>Library</OutputType>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+  <PropertyGroup>    
     <LangVersion>9.0</LangVersion>
   </PropertyGroup>
 

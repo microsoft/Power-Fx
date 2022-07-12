@@ -25,6 +25,10 @@
     <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
   </PropertyGroup>
 
+  <PropertyGroup>    
+    <LangVersion>9.0</LangVersion>
+  </PropertyGroup>
+
   <!-- Nuget Properties -->
   <PropertyGroup>
     <PackageId>Microsoft.PowerFx.Core.Tests</PackageId>
