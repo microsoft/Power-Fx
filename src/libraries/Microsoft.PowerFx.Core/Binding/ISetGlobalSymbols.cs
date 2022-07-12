@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Collections.ObjectModel;
 using System.Text;
 using Microsoft.PowerFx.Core.IR.Symbols;
 
@@ -11,6 +12,6 @@ namespace Microsoft.PowerFx.Core.Binding
 {
     internal interface ISetGlobalSymbols
     {
-        internal void SetGlobalSymbols(ImmutableDictionary<string, GlobalSymbol> globalSymbols = null);
+        internal void SetGlobalSymbols(IReadOnlyDictionary<string, IGlobalSymbol> globalSymbols = null);
     }
 }

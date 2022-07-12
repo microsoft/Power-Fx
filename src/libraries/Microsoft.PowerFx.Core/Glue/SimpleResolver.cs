@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Collections.ObjectModel;
 using System.Linq;
 using Microsoft.PowerFx.Core.App;
 using Microsoft.PowerFx.Core.Binding;
@@ -27,7 +28,7 @@ namespace Microsoft.PowerFx.Core.Glue
         private readonly PowerFxConfig _config;
 
         private readonly TexlFunction[] _library;
-        private ImmutableDictionary<string, GlobalSymbol> _globalSymbols;
+        private IReadOnlyDictionary<string, IGlobalSymbol> _globalSymbols;
         private readonly EnumSymbol[] _enums = new EnumSymbol[] { };
 
         private readonly IExternalDocument _document;
@@ -43,7 +44,7 @@ namespace Microsoft.PowerFx.Core.Glue
         // Expose the list to aide in intellisense suggestions. 
         public IEnumerable<TexlFunction> Functions => _library;
 
-        public ImmutableDictionary<string, GlobalSymbol> GlobalSymbols => _globalSymbols;
+        public IReadOnlyDictionary<string, IGlobalSymbol> GlobalSymbols => _globalSymbols;
 
         IExternalEntity INameResolver.CurrentEntity => null;
 
@@ -201,7 +202,7 @@ namespace Microsoft.PowerFx.Core.Glue
             throw new System.NotImplementedException();
         }
 
-        public virtual void SetGlobalSymbols(ImmutableDictionary<string, GlobalSymbol> globalSymbols = null)
+        public virtual void SetGlobalSymbols(IReadOnlyDictionary<string, IGlobalSymbol> globalSymbols = null)
         {
             _globalSymbols = globalSymbols ?? throw new ArgumentNullException(nameof(globalSymbols));
         }
