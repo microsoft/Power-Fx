@@ -33,7 +33,7 @@ variables:
 
 stages:
 - stage: Build
-  condition: false
+  # condition: false
   jobs:
   - job: build_and_test
     steps:
@@ -130,9 +130,9 @@ stages:
       condition: succeededOrFailed()
 
 - stage: API_Compatibility_Validation
-  condition: True
-  # dependsOn: Build
-  # condition: and(succeeded(), ne(variables['DisableApiCompatibityValidation'], 'true'))
+  # condition: True
+  dependsOn: Build
+  condition: and(succeeded(), ne(variables['DisableApiCompatibityValidation'], 'true'))
   variables:
     skipComponentGovernanceDetection: true # the task is already injected into the build job, so skip it here.
   jobs:
@@ -179,7 +179,7 @@ stages:
         $Packagelist = nuget list "$packageName" -PreRelease -AllVersions;
         " "
         "Available versions:";
-        $PackageList | Select -First 20;
+        $PackageList | Select -First 10;
         
         [string]$latestVersion = ($PackageList | Select -First 1).Split(" ")[-1];
         " "
