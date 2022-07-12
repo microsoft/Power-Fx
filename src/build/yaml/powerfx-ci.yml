@@ -163,7 +163,7 @@ stages:
 
     steps:
     - checkout: none
-    
+
     - template: powerfx-feed-setup-steps.yml
 
     - powershell: |
@@ -173,7 +173,7 @@ stages:
     
         Write-Host "Get latest $packageName version number from Azure ConversationalAI SDK feed";
     
-        $RegistryUrlSource = ${{ parameters.packageFeed }} 
+        $RegistryUrlSource = "${{ parameters.packageFeed }}";
         $Packagelist = nuget list "$packageName" -Source "$RegistryUrlSource" -PreRelease -AllVersions;
         " "
         "Available versions:";
