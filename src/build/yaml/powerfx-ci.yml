@@ -47,6 +47,7 @@ stages:
     - powershell: |
         gci env:* | sort-object name | Format-Table -AutoSize -Wrap
       displayName: 'Display env vars'
+      condition: succeededOrFailed()
 
     - task: VSBuild@1
       inputs:
@@ -156,6 +157,7 @@ stages:
     - powershell: |
         gci env:* | sort-object name | Format-Table -AutoSize -Wrap
       displayName: 'Display env vars'
+      condition: succeededOrFailed()
 
     - powershell: |
         $multiconfig = '{';
@@ -190,6 +192,7 @@ stages:
     - powershell: |
         gci env:* | sort-object name | Format-Table -AutoSize -Wrap
       displayName: 'Display env vars'
+      condition: succeededOrFailed()
 
   - job: post_results_to_gitHub
     dependsOn: check_api_for

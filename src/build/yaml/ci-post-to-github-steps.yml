@@ -1,6 +1,7 @@
 steps:
 - powershell: 'gci env:* | sort-object name | Format-Table -AutoSize -Wrap'
   displayName: 'Display env vars'
+  condition: succeededOrFailed()
 
 - task: DownloadBuildArtifacts@0
   displayName: 'Download compat results artifact'
