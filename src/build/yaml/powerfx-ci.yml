@@ -138,6 +138,8 @@ stages:
   jobs:
   - job: generate_multiconfig_var
     steps:
+    - checkout: none
+
     - powershell: |
         $multiconfig = '{';
         $env:PackagesToValidate.Split(",") | ForEach {
@@ -173,7 +175,7 @@ stages:
     
         Write-Host "Get latest $packageName version number from Azure ConversationalAI SDK feed";
     
-        $RegistryUrlSource = "${{ parameters.packageFeed }}";
+        $RegistryUrlSource = 'Azure';
         $Packagelist = nuget list "$packageName" -Source "$RegistryUrlSource" -PreRelease -AllVersions;
         " "
         "Available versions:";
