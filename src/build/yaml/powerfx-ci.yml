@@ -64,25 +64,25 @@ stages:
         New-Item CodeCoverage -ItemType Directory -Force
       displayName: 'Create CodeCoverage directory'
 
-    - task: DotNetCoreCLI@2
-      inputs:
-        command: test
-        projects: 'src\tests\**\*.Tests.csproj'
-        arguments: '--configuration $(BuildConfiguration) --collect "Code Coverage"'
-      displayName: 'dotnet test'
-      enabled: false
+    # - task: DotNetCoreCLI@2
+    #   inputs:
+    #     command: test
+    #     projects: 'src\tests\**\*.Tests.csproj'
+    #     arguments: '--configuration $(BuildConfiguration) --collect "Code Coverage"'
+    #   displayName: 'dotnet test'
+    #   enabled: false
 
-    - task: VSTest@2
-      inputs:
-        testAssemblyVer2: |
-          src\tests\*\bin\**\*.Tests.dll
-          !**\*TestAdapter.dll
-          !**\obj\**
-        resultsFolder: '$(Build.ArtifactStagingDirectory)\TestResults'
-        runSettingsFile: 'src\CodeCoverage.runsettings'
-        codeCoverageEnabled: true
-        configuration: '$(BuildConfiguration)'
-      displayName: VsTest
+    # - task: VSTest@2
+    #   inputs:
+    #     testAssemblyVer2: |
+    #       src\tests\*\bin\**\*.Tests.dll
+    #       !**\*TestAdapter.dll
+    #       !**\obj\**
+    #     resultsFolder: '$(Build.ArtifactStagingDirectory)\TestResults'
+    #     runSettingsFile: 'src\CodeCoverage.runsettings'
+    #     codeCoverageEnabled: true
+    #     configuration: '$(BuildConfiguration)'
+    #   displayName: VsTest
 
     - powershell: |
         # This task copies the code coverage file created by dotnet test into a well known location. In all
@@ -144,6 +144,8 @@ stages:
     - checkout: none
 
     - template: powerfx-feed-setup-step.yml
+      parameters: 
+        feedName: "${{ parameters.packageFeed }}"
 
     - template: get-contract-version-step.yml
       parameters: 

@@ -1,15 +1,24 @@
 # Create nuget.config for resolving dependencies exclusively from SDK_Dotnet_V4_org feed.
 # Resolve from nuget.org when PR is from a fork, as forks do not have access to our private feed.
+parameters:
+  - name: feedName
+    displayName: Azure or NuGet
+    type: string
+
 steps:
 - powershell: |
-    if ("${{ parameters.packageFeed }}" -eq 'NuGet' -or "$(System.PullRequest.IsFork)" -eq 'True') {
-      $key = "nuget.org";
-      $value = "https://api.nuget.org/v3/index.json";
+    if ("${{ parameters.feedName }}" -eq 'NuGet' -or "$(System.PullRequest.IsFork)" -eq 'True') {
+      $key = "SDK_Dotnet_V4_org";
+      $value = "https://pkgs.dev.azure.com/FuseLabs/_packaging/SDK_Dotnet_V4_org/nuget/v3/index.json";
+      $key2 = "nuget.org";
+      $value2 = "https://api.nuget.org/v3/index.json";
       Write-Host 'System.PullRequest.IsFork = True';
     }
     else {
       $key = "PowerFx-feed";
       $value = "$(PowerFx_daily_feed_Url)";
+      $key2 = "SDK_Dotnet_V4_org";
+      $value2 = "https://pkgs.dev.azure.com/FuseLabs/_packaging/SDK_Dotnet_V4_org/nuget/v3/index.json";
     }
 
     $file = "$(Build.SourcesDirectory)\nuget.config";
@@ -20,6 +29,7 @@ steps:
       <packageSources>
         <clear />
         <add key="$key" value="$value" />
+        <add key="$key2" value="$value2" />
       </packageSources>
       <activePackageSource>
         <add key="All" value="(Aggregate source)" />
