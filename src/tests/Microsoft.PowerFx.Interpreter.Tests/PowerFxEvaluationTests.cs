@@ -115,7 +115,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     return new RunResult(check);
                 }
 
-                var newValue = await check.Expression.EvalAsync(parameters, CancellationToken.None);
+                var newValue = await check.Expression.EvalAsync(parameters, config.Features, CancellationToken.None);
 
                 return new RunResult(newValue);
             }          

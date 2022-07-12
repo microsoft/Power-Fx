@@ -120,7 +120,7 @@ namespace Microsoft.PowerFx
         /// <returns></returns>
         public CheckResult Check(ParseResult parse, RecordType parameterType = null, ParserOptions options = null)
         {
-            var bindingConfig = new BindingConfig(options?.AllowsSideEffects == true);
+            var bindingConfig = new BindingConfig(allowsSideEffects: options?.AllowsSideEffects == true);
             return CheckInternal(parse, parameterType, bindingConfig);
         }
 

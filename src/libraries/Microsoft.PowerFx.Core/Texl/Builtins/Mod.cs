@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
+using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
@@ -52,7 +53,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return GetUniqueTexlRuntimeName(suffix: "_T");
         }
 
-        public override bool CheckInvocation(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        //GetOneColumnTableResultName(binding.Features.HasFlag(Features.ConsistentOneColumnTableResult))));
+
+        public override bool CheckInvocation(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+
+//                           public override bool CheckInvocation(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
@@ -107,7 +112,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 errors.EnsureError(DocumentErrorSeverity.Severe, arg1, TexlStrings.ErrNumberExpected);
             }
 
-            returnType = DType.CreateTable(new TypedName(DType.Number, OneColumnTableResultName));
+            returnType = DType.CreateTable(new TypedName(DType.Number, GetOneColumnTableResultName(binding.Features.HasFlag(Features.ConsistentOneColumnTableResult))));
 
             // At least one arg has to be a table.
             if (!(type0.IsTable || type1.IsTable))

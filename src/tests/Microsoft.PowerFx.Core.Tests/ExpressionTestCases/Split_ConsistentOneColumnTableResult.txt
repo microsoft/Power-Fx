@@ -1,0 +1,4 @@
+﻿#SETUP: ConsistentOneColumnTableResult
+
+>> Split( "Hello, World", "," )
+["Hello"," World"]

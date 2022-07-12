@@ -496,11 +496,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             {
                 if (type0.Kind == DKind.DateTime)
                 {
-                    returnType = DType.CreateTable(new TypedName(DType.DateTime, OneColumnTableResultName));
+                    returnType = DType.CreateTable(new TypedName(DType.DateTime, GetOneColumnTableResultName(binding.Features.HasFlag(Features.ConsistentOneColumnTableResult))));
                 }
                 else if (type0.Kind == DKind.Date)
                 {
-                    returnType = DType.CreateTable(new TypedName(DType.Date, OneColumnTableResultName));
+                    returnType = DType.CreateTable(new TypedName(DType.Date, GetOneColumnTableResultName(binding.Features.HasFlag(Features.ConsistentOneColumnTableResult))));
                 }
                 else if (type0.CoercesTo(DType.DateTime))
                 {
@@ -627,7 +627,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var type0 = argTypes[0];
             var type1 = argTypes[1];
 
-            returnType = DType.CreateTable(new TypedName(DType.Number, OneColumnTableResultName));
+            returnType = DType.CreateTable(new TypedName(DType.Number, GetOneColumnTableResultName(binding.Features.HasFlag(Features.ConsistentOneColumnTableResult))));
 
             // Arg0 should be either a date or a column of dates.
             if (type0.IsTable)

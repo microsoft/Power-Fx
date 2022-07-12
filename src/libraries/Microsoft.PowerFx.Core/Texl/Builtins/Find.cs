@@ -110,7 +110,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
             }
 
-            returnType = DType.CreateTable(new TypedName(DType.Number, OneColumnTableResultName));
+            returnType = DType.CreateTable(new TypedName(DType.Number, GetOneColumnTableResultName(binding.Features.HasFlag(Features.ConsistentOneColumnTableResult))));
 
             var hasStartIndex = argTypes.Length == 3;
 

@@ -11,7 +11,7 @@ namespace Microsoft.PowerFx.Core.Functions
     // Abstract base class for all Texl builtin functions.
     internal abstract class BuiltinFunction : TexlFunction
     {
-        public const string OneColumnTableResultNameStr = "Result";
+        public const string OneColumnTableResultNameStrOld = "Result";        
         public const string ColumnName_NameStr = "Name";
         public const string ColumnName_AddressStr = "Address";
         public const string ColumnName_ValueStr = "Value";
@@ -19,7 +19,8 @@ namespace Microsoft.PowerFx.Core.Functions
         public const string ColumnName_SubMatchesStr = "SubMatches";
         public const string ColumnName_StartMatchStr = "StartMatch";
 
-        public static readonly DName OneColumnTableResultName = new DName(OneColumnTableResultNameStr);
+        public static DName GetOneColumnTableResultName(bool f) => f ? new DName(ColumnName_ValueStr) : new DName(OneColumnTableResultNameStrOld);
+
         public static readonly DName ColumnName_Name = new DName(ColumnName_NameStr);
         public static readonly DName ColumnName_Address = new DName(ColumnName_AddressStr);
         public static readonly DName ColumnName_Value = new DName(ColumnName_ValueStr);

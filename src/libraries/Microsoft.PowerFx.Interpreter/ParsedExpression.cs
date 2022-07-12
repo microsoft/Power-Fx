@@ -23,9 +23,9 @@ namespace Microsoft.PowerFx
             _cultureInfo = cultureInfo ?? CultureInfo.CurrentCulture;
         }
 
-        public Task<FormulaValue> EvalAsync(RecordValue parameters, CancellationToken cancel)
+        public Task<FormulaValue> EvalAsync(RecordValue parameters, Features features, CancellationToken cancel)
         {
-            var ev2 = new EvalVisitor(_cultureInfo, cancel);            
+            var ev2 = new EvalVisitor(_cultureInfo, features, cancel);            
 
             var newValue = _irnode.Accept(ev2, SymbolContext.NewTopScope(_topScopeSymbol, parameters));
 

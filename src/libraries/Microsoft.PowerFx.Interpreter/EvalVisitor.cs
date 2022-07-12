@@ -25,11 +25,14 @@ namespace Microsoft.PowerFx
     {
         public CultureInfo CultureInfo { get; }
 
+        public Features Features { get; }
+
         private readonly CancellationToken _cancel;
 
-        public EvalVisitor(CultureInfo cultureInfo, CancellationToken cancel)
+        public EvalVisitor(CultureInfo cultureInfo, Features features, CancellationToken cancel)
         {
             CultureInfo = cultureInfo;
+            Features = features;
             _cancel = cancel;
         }
                 

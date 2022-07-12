@@ -89,7 +89,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 fValid &= CheckNumericColumnType(type1, args[1], errors, ref nodeToCoercedTypeMap);
 
                 // Since the 1st arg is not a table, make a new table return type *[Result:n]
-                returnType = DType.CreateTable(new TypedName(DType.Number, OneColumnTableResultName));
+                returnType = DType.CreateTable(new TypedName(DType.Number, GetOneColumnTableResultName(binding.Features.HasFlag(Features.ConsistentOneColumnTableResult))));
 
                 // Check arg0 below.
                 otherArg = args[0];
