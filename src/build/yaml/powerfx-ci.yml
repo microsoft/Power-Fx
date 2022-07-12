@@ -145,10 +145,10 @@ stages:
     - template: get-contract-version-step.yml
 
     - task: tagBuildOrRelease@0
-      displayName: Tag Build with Bot.Builder version
+      displayName: Tag Build with API contract version
       inputs:
         tags: |
-          Comparing against v $(ApiContractVersion)
+          Comparing API against v $(ApiContractVersion)
           From ${{ parameters.packageFeed }} feed 
 
     - powershell: |

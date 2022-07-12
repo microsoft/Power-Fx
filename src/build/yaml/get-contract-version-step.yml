@@ -1,21 +1,26 @@
 steps:
 - powershell: |
-    $packageName = ($env:PackagesToValidate.Split(","))[0];
+    if ("${{ parameters.packageFeed }}" -eq 'Azure' -and "$(System.PullRequest.IsFork)" -ne 'True') {
+      $packageName = ($env:PackagesToValidate.Split(","))[0];
 
-    Write-Host "Get latest $packageName version number from Azure ConversationalAI SDK feed";
+      Write-Host "Get latest $packageName version number from Azure ConversationalAI SDK feed";
 
-    $RegistryUrlSource = 'PowerFx-feed';
-    $Packagelist = nuget list "$packageName" -PreRelease -AllVersions;
-    " "
-    "Available versions:";
-    $PackageList | Select -First 5;
-    
-    [string]$latestVersion = ($PackageList | Select -First 1).Split(" ")[-1];
-    " "
-    "Latest version:";
-    $packageName;
-    $latestVersion;
-    "##vso[task.setvariable variable=ApiContractVersion;]$latestVersion";
+      $RegistryUrlSource = 'PowerFx-feed';
+      $Packagelist = nuget list "$packageName" -PreRelease -AllVersions;
+      " "
+      "Available versions:";
+      $PackageList | Select -First 5;
+      
+      [string]$latestVersion = ($PackageList | Select -First 1).Split(" ")[-1];
+      " "
+      "Latest version:";
+      $packageName;
+      $latestVersion;
+      "##vso[task.setvariable variable=ApiContractVersion;]$latestVersion";
+    }
+    else {
+      Write-Host "Skipped"
+    }
   displayName: 'From Azure feed get latest package version number - '
-  condition: ${{ eq(parameters.packageFeed, 'Azure') }}
-
+  # condition: ${{ eq(parameters.packageFeed, 'Azure') }}
+  condition: and(succeeded(), ne(variables['parameters.packageFeed'], 'NuGet'), eq(variables['System.PullRequest.IsFork'], 'false'))
