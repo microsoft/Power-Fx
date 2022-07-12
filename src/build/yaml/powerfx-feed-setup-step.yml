@@ -2,10 +2,6 @@
 # Resolve from nuget.org when PR is from a fork, as forks do not have access to our private feed.
 steps:
 - powershell: |
-    Write-Host "parameters.packageFeed: ${{ parameters.packageFeed }}";
-    $Feed = "${{ parameters.packageFeed }}";
-    Write-Host "Feed: $Feed";
-    
     if ("${{ parameters.packageFeed }}" -eq 'NuGet' -or "$(System.PullRequest.IsFork)" -eq 'True') {
       $key = "nuget.org";
       $value = "https://api.nuget.org/v3/index.json";

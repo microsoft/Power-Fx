@@ -1,6 +1,11 @@
+parameters:
+  - name: feedName
+    displayName: 'Azure' or 'NuGet'
+    type: string
+
 steps:
 - powershell: |
-    if ("${{ parameters.packageFeed }}" -eq 'Azure' -and "$(System.PullRequest.IsFork)" -ne 'True') {
+    # if ("${{ parameters.feedName }}" -eq 'Azure' -and "$(System.PullRequest.IsFork)" -ne 'True') {
       $packageName = ($env:PackagesToValidate.Split(","))[0];
 
       Write-Host "Get latest $packageName version number from Azure ConversationalAI SDK feed";
@@ -17,10 +22,10 @@ steps:
       $packageName;
       $latestVersion;
       "##vso[task.setvariable variable=ApiContractVersion;]$latestVersion";
-    }
-    else {
-      Write-Host "Skipped"
-    }
+    # }
+    # else {
+    #   Write-Host "Skipped"
+    # }
   displayName: 'From Azure feed get latest package version number - '
   # condition: ${{ eq(parameters.packageFeed, 'Azure') }}
-  condition: and(succeeded(), ne(variables['parameters.packageFeed'], 'NuGet'), eq(variables['System.PullRequest.IsFork'], 'false'))
+  condition: and(succeeded(), eq(variables['parameters.feedName'], 'Azure'), eq(variables['System.PullRequest.IsFork'], 'false'))
