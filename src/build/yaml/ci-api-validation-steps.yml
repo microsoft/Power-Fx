@@ -4,10 +4,6 @@ parameters:
     type: string
 
 steps:
-- powershell: 'gci env:* | sort-object name | Format-Table -AutoSize -Wrap'
-  displayName: 'Display env vars'
-  condition: succeededOrFailed()
-
 - task: DownloadPipelineArtifact@2
   displayName: 'Download $(PackageName).dll from Artifacts'
   inputs:
@@ -121,11 +117,6 @@ steps:
   displayName: 'Publish CompatResults artifact'
   inputs:
     ArtifactName: '$(PackageName).$(ContractVersion).CompatResults'
-  condition: succeededOrFailed()
-
-- powershell: |
-    gci env:* | sort-object name | Format-Table -AutoSize -Wrap
-  displayName: 'Display env vars'
   condition: succeededOrFailed()
 
 - script: |

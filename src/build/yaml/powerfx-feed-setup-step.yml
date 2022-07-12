@@ -1,4 +1,4 @@
-# Create nuget.config for resolving dependencies exclusively from SDK_Dotnet_V4_org feed.
+# Create nuget.config for getting packages from PowerFx feed or SDK_Dotnet_V4_org feed or NuGet.org feed.
 # Resolve from nuget.org when PR is from a fork, as forks do not have access to our private feed.
 parameters:
   - name: feedName
@@ -7,14 +7,19 @@ parameters:
 
 steps:
 - powershell: |
-    if ("${{ parameters.feedName }}" -eq 'NuGet' -or "$(System.PullRequest.IsFork)" -eq 'True') {
+    if ("$(System.PullRequest.IsFork)" -eq 'True') {
+      $key = "nuget.org";
+      $value = "https://api.nuget.org/v3/index.json";
+      $key2 = "nuget.org2";
+      $value2 = "https://api.nuget.org/v3/index.json";
+      Write-Host 'System.PullRequest.IsFork = True';
+    } else if ("${{ parameters.feedName }}" -eq 'NuGet') {
       $key = "SDK_Dotnet_V4_org";
       $value = "https://pkgs.dev.azure.com/FuseLabs/_packaging/SDK_Dotnet_V4_org/nuget/v3/index.json";
       $key2 = "nuget.org";
       $value2 = "https://api.nuget.org/v3/index.json";
       Write-Host 'System.PullRequest.IsFork = True';
-    }
-    else {
+    } else {
       $key = "PowerFx-feed";
       $value = "$(PowerFx_daily_feed_Url)";
       $key2 = "SDK_Dotnet_V4_org";

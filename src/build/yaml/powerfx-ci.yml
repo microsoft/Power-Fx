@@ -22,20 +22,18 @@ pool:
   - vstest
 
 variables:
-  ApiContractVersion: 0.2.2-preview # The packages version against which the new package APIs are to be validated.
-  # ContractVersion: ''
+  ApiContractVersion: 0.2.2-preview # The packages version in the NuGet feed used for API validation.
   PackagesToValidate: Microsoft.PowerFx.Core,Microsoft.PowerFx.Interpreter,Microsoft.PowerFx.LanguageServerProtocol,Microsoft.PowerFx.Transport.Attributes
   BuildPlatform: 'any cpu'
   BuildSolution: src/Microsoft.PowerFx.sln
   PowerFx_daily_feed_Url: 'https://pkgs.dev.azure.com/ConversationalAI/BotFramework/_packaging/SDK/nuget/v3/index.json'
-  skipComponentGovernanceDetection: true
+  skipComponentGovernanceDetection: false
 # BuildConfiguration: define this in Azure
 # DisableApiCompatibityValidation: define this in Azure, settable by user.
 # PowerFxCoverallsToken: define this in Azure
 
 stages:
 - stage: Build
-  # condition: false
   jobs:
   - job: build_and_test
     steps:
@@ -45,11 +43,6 @@ stages:
         feedsToUse: config
         nugetConfigPath: .
       displayName: 'NuGet restore'
-
-    - powershell: |
-        gci env:* | sort-object name | Format-Table -AutoSize -Wrap
-      displayName: 'Display env vars'
-      condition: succeededOrFailed()
 
     - task: VSBuild@1
       inputs:
@@ -72,26 +65,26 @@ stages:
     #   displayName: 'dotnet test'
     #   enabled: false
 
-    # - task: VSTest@2
-    #   inputs:
-    #     testAssemblyVer2: |
-    #       src\tests\*\bin\**\*.Tests.dll
-    #       !**\*TestAdapter.dll
-    #       !**\obj\**
-    #     resultsFolder: '$(Build.ArtifactStagingDirectory)\TestResults'
-    #     runSettingsFile: 'src\CodeCoverage.runsettings'
-    #     codeCoverageEnabled: true
-    #     configuration: '$(BuildConfiguration)'
-    #   displayName: VsTest
+    - task: VSTest@2
+      inputs:
+        testAssemblyVer2: |
+          src\tests\*\bin\**\*.Tests.dll
+          !**\*TestAdapter.dll
+          !**\obj\**
+        resultsFolder: '$(Build.ArtifactStagingDirectory)\TestResults'
+        runSettingsFile: 'src\CodeCoverage.runsettings'
+        codeCoverageEnabled: true
+        configuration: '$(BuildConfiguration)'
+      displayName: VsTest
 
-    # - powershell: |
-    #     # This task copies the code coverage file created by dotnet test into a well known location. In all
-    #     # checks I've done, dotnet test ALWAYS outputs the coverage file to the temp directory. $(Agent.TempDirectory)
-    #     # My attempts to override this and have it go directly to the CodeCoverage directory have
-    #     # all failed, so I'm just doing the copy here.  (cmullins)
+    - powershell: |
+        # This task copies the code coverage file created by dotnet test into a well known location. In all
+        # checks I've done, dotnet test ALWAYS outputs the coverage file to the temp directory. $(Agent.TempDirectory)
+        # My attempts to override this and have it go directly to the CodeCoverage directory have
+        # all failed, so I'm just doing the copy here.  (cmullins)
         
-    #     Get-ChildItem -Path $(Build.ArtifactStagingDirectory)\TestResults -Include "*.coverage" -Recurse | Copy-Item -Destination CodeCoverage
-    #   displayName: 'Copy .coverage Files to CodeCoverage folder'
+        Get-ChildItem -Path $(Build.ArtifactStagingDirectory)\TestResults -Include "*.coverage" -Recurse | Copy-Item -Destination CodeCoverage
+      displayName: 'Copy .coverage Files to CodeCoverage folder'
 
     - powershell: 'echo "##vso[task.setvariable variable=CoverallsToken]$(PowerFxCoverallsToken)"'
       displayName: 'Set CoverallsToken for PublishToCoveralls.ps1'
@@ -125,6 +118,11 @@ stages:
       displayName: 'Push to OutputDlls-$(BuildConfiguration) in Artifacts'
       continueOnError: true
 
+    - powershell: |
+        gci env:* | sort-object name | Format-Table -AutoSize -Wrap
+      displayName: 'Display env vars'
+      condition: succeededOrFailed()
+
     - script: |
         cd ..
         dir *.* /s
@@ -133,7 +131,6 @@ stages:
       condition: succeededOrFailed()
 
 - stage: API_Compatibility_Validation
-  # condition: True
   dependsOn: Build
   condition: and(succeeded(), ne(variables['DisableApiCompatibityValidation'], 'true'))
   variables:
@@ -158,11 +155,6 @@ stages:
         tags: |
           Comparing API against v $(GetContract.ContractVersion)
           From ${{ parameters.packageFeed }} feed 
-
-    - powershell: |
-        gci env:* | sort-object name | Format-Table -AutoSize -Wrap
-      displayName: 'Display env vars'
-      condition: succeededOrFailed()
 
     - powershell: |
         $multiconfig = '{';
@@ -201,16 +193,10 @@ stages:
       parameters: 
         ContractVersion: "$(contractVersion)"
 
-    - powershell: |
-        gci env:* | sort-object name | Format-Table -AutoSize -Wrap
-      displayName: 'Display env vars'
-      condition: succeededOrFailed()
-
   - job: post_results_to_gitHub
     dependsOn: check_api_for
     condition: ne(dependencies.generate_multiconfig_var.outputs['generate_var.MULTICONFIG'], '{}')
-    # variables:
-    #   BuildConfiguration: $(BuildConfiguration)
+
     steps:
     - checkout: none
 
