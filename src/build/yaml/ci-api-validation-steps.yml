@@ -117,6 +117,10 @@ steps:
     ArtifactName: '$(PackageName).$(ContractVersion).CompatResults'
   condition: succeededOrFailed()
 
+- powershell: |
+    gci env:* | sort-object name | Format-Table -AutoSize -Wrap
+  displayName: 'Display env vars'
+
 - script: |
    dir .. /s
   displayName: 'Dir workspace'
