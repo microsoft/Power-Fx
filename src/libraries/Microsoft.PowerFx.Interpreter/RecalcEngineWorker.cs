@@ -6,8 +6,8 @@ using System.Globalization;
 using System.Linq;
 using System.Threading;
 using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Functions;
+using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx
@@ -70,7 +70,7 @@ namespace Microsoft.PowerFx
                 var scope = this;
                 var v = new EvalVisitor(_cultureInfo, CancellationToken.None);
 
-                var newValue = irnode.Accept(v, new EvalVisitorContext(SymbolContext.New(), new StackMarker(_parent.Config.MaxCallDepth))).Result;
+                var newValue = irnode.Accept(v, new EvalVisitorContext(SymbolContext.New(), new StackDepthCounter(_parent.Config.MaxCallDepth))).Result;
 
                 var equal = fi.Value != null && // null on initial run. 
                     RuntimeHelpers.AreEqual(newValue, fi.Value);

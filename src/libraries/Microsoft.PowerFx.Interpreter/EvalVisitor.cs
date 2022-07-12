@@ -134,9 +134,7 @@ namespace Microsoft.PowerFx
         {
             CheckCancel();
 
-            context.StackMarker = context.StackMarker.Inc();
-
-            var setResult = await TryHandleSet(node, context);
+            var setResult = await TryHandleSet(node, context.IncrementStackDepthCounter());
             if (setResult != null)
             {
                 return setResult;
@@ -157,7 +155,7 @@ namespace Microsoft.PowerFx
 
                 if (!isLambda)
                 {
-                    args[i] = await child.Accept(this, context);
+                    args[i] = await child.Accept(this, context.IncrementStackDepthCounter());
                 }
                 else
                 {
@@ -181,7 +179,7 @@ namespace Microsoft.PowerFx
             {
                 if (FuncsByName.TryGetValue(func, out var ptr))
                 {
-                    var result = await ptr(this, new EvalVisitorContext(childContext, context.StackMarker), node.IRContext, args);
+                    var result = await ptr(this, new EvalVisitorContext(childContext, context.StackDepthCounter).IncrementStackDepthCounter(), node.IRContext, args);
 
                     Contract.Assert(result.IRContext.ResultType == node.IRContext.ResultType || result is ErrorValue || result.IRContext.ResultType is BlankType);
 
@@ -393,7 +391,7 @@ namespace Microsoft.PowerFx
                             var record = row.Value;
                             var newScope = scopeContext.WithScopeValues(record);
 
-                            var newValue = await coercion.Value.Accept(this, new EvalVisitorContext(newScope, context.StackMarker));
+                            var newValue = await coercion.Value.Accept(this, new EvalVisitorContext(newScope, context.StackDepthCounter));
                             var name = coercion.Key;
                             fields.Add(new NamedValue(name.Value, newValue));
                         }

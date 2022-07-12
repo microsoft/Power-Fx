@@ -54,7 +54,7 @@ namespace Microsoft.PowerFx.Functions
 
                     var childContext = context.SymbolContext.WithScopeValues(row.Value);
 
-                    var result = await arg1.EvalAsync(runner, new EvalVisitorContext(childContext, context.StackMarker));
+                    var result = await arg1.EvalAsync(runner, new EvalVisitorContext(childContext, context.StackDepthCounter));
 
                     var str = (StringValue)result;
                     sb.Append(str.Value);

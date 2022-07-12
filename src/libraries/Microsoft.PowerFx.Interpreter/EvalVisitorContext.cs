@@ -4,7 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Interpreter;
 
 namespace Microsoft.PowerFx
 {
@@ -12,12 +12,17 @@ namespace Microsoft.PowerFx
     {
         public SymbolContext SymbolContext { get; set; }
 
-        public StackMarker StackMarker { get; set; }
+        public StackDepthCounter StackDepthCounter { get; set; }
 
-        public EvalVisitorContext(SymbolContext symbolContext, StackMarker stackMarker)
+        public EvalVisitorContext(SymbolContext symbolContext, StackDepthCounter stackMarker)
         {
             SymbolContext = symbolContext;
-            StackMarker = stackMarker;
+            StackDepthCounter = stackMarker;
+        }
+
+        public EvalVisitorContext IncrementStackDepthCounter()
+        {
+            return new EvalVisitorContext(SymbolContext, StackDepthCounter.Increment());
         }
     }
 }

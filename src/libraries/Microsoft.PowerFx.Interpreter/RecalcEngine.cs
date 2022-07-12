@@ -11,6 +11,7 @@ using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Functions;
+using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx
@@ -70,6 +71,11 @@ namespace Microsoft.PowerFx
         /// <inheritdoc/>
         protected override IExpression CreateEvaluator(CheckResult result)
         {
+            return CreateEvaluatorDirect(result, new StackDepthCounter(Config.MaxCallDepth));
+        }
+
+        internal static IExpression CreateEvaluatorDirect(CheckResult result, StackDepthCounter stackMarker)
+        {
             if (result._binding == null)
             {
                 throw new InvalidOperationException($"Requires successful binding");
@@ -78,7 +84,7 @@ namespace Microsoft.PowerFx
             result.ThrowOnErrors();
 
             (var irnode, var ruleScopeSymbol) = IRTranslator.Translate(result._binding);
-            return new ParsedExpression(irnode, ruleScopeSymbol, new StackMarker(Config.MaxCallDepth));
+            return new ParsedExpression(irnode, ruleScopeSymbol, stackMarker);
         }
 
         /// <summary>
@@ -88,15 +94,7 @@ namespace Microsoft.PowerFx
         /// <returns></returns>
         public static IExpression CreateEvaluatorDirect(CheckResult result)
         {
-            if (result._binding == null)
-            {
-                throw new InvalidOperationException($"Requires successful binding");
-            }
-
-            result.ThrowOnErrors();            
-
-            (var irnode, var ruleScopeSymbol) = IRTranslator.Translate(result._binding);
-            return new ParsedExpression(irnode, ruleScopeSymbol, new StackMarker(20));
+            return CreateEvaluatorDirect(result, new StackDepthCounter(PowerFxConfig.DefaultMaxCallDepth));
         }
 
         // This handles lookups in the global scope. 
@@ -168,9 +166,14 @@ namespace Microsoft.PowerFx
 
             var check = Check(expressionText, (RecordType)parameters.IRContext.ResultType, options);
             check.ThrowOnErrors();
-
-            var newValue = await check.Expression.EvalAsync(parameters, cancel);
-            return newValue;
+            try
+            {
+                return await check.Expression.EvalAsync(parameters, cancel);
+            }
+            catch (MaxCallDepthException)
+            {
+                return CommonErrors.MaxCallDepth(new IRContext(new Syntax.Span(0, expressionText.Length - 1), FormulaType.BindingError));
+            }
         }
 
         // Invoke onUpdate() each time this formula is changed, passing in the new value. 

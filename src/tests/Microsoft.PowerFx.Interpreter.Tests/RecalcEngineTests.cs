@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Functions;
@@ -12,6 +13,7 @@ using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
 using Xunit;
 using Xunit.Sdk;
@@ -42,7 +44,7 @@ namespace Microsoft.PowerFx.Tests
                 $"{ns}.{nameof(PrimitiveTypeMarshaller)}",
                 $"{ns}.{nameof(TableMarshallerProvider)}",
                 $"{ns}.{nameof(TypeMarshallerCache)}",
-                $"{ns}.{nameof(TypeMarshallerCacheExtensions)}",                
+                $"{ns}.{nameof(TypeMarshallerCacheExtensions)}",
                 $"{nsType}.{nameof(ObjectRecordValue)}"
             };
 
@@ -74,7 +76,7 @@ namespace Microsoft.PowerFx.Tests
             var cache = new TypeMarshallerCache();
 
             var engine = new RecalcEngine();
-            
+
             var context = cache.NewRecord(new
             {
                 x = 15
@@ -141,7 +143,7 @@ namespace Microsoft.PowerFx.Tests
             // Batched up (we don't double fire)            
             AssertUpdate("B-->20;C-->25;D-->22;");
         }
-        
+
         [Fact]
         public void DeleteFormula()
         {
@@ -281,7 +283,7 @@ namespace Microsoft.PowerFx.Tests
             var engine = new RecalcEngine(config);
 
             Assert.DoesNotContain(nyiFunc, config.Functions);
-                
+
             var names = engine.GetAllFunctionNames().ToArray();
             Assert.True(names.Length > 100);
 
@@ -462,7 +464,7 @@ namespace Microsoft.PowerFx.Tests
             var config = new PowerFxConfig(null);
             config.SetCoreFunctions(new TexlFunction[0]); // clear builtins
             config.AddFunction(BuiltinFunctionsCore.Blank);
-            
+
             var recalcEngine = new Engine(config);
 
             var func = BuiltinFunctionsCore.AsType; // Function not already in engine
@@ -475,58 +477,58 @@ namespace Microsoft.PowerFx.Tests
             Assert.False(config.TryGetSymbol(new DName("foo"), out _, out _));
 
             Assert.DoesNotContain(BuiltinFunctionsCore.Abs, config.Functions);
-        }        
+        }
 
         [Fact]
         public void OptionSetChecks()
         {
             var config = new PowerFxConfig(null);
 
-            var optionSet = new OptionSet("OptionSet", DisplayNameUtility.MakeUnique(new Dictionary<string, string>() 
+            var optionSet = new OptionSet("OptionSet", DisplayNameUtility.MakeUnique(new Dictionary<string, string>()
             {
                     { "option_1", "Option1" },
                     { "option_2", "Option2" }
             }));
-            
-            config.AddOptionSet(optionSet);            
+
+            config.AddOptionSet(optionSet);
             var recalcEngine = new RecalcEngine(config);
 
             var checkResult = recalcEngine.Check("OptionSet.Option1 <> OptionSet.Option2");
             Assert.True(checkResult.IsSuccess);
         }
-        
+
         [Fact]
         public void OptionSetResultType()
         {
             var config = new PowerFxConfig(null);
 
-            var optionSet = new OptionSet("FooOs", DisplayNameUtility.MakeUnique(new Dictionary<string, string>() 
+            var optionSet = new OptionSet("FooOs", DisplayNameUtility.MakeUnique(new Dictionary<string, string>()
             {
                     { "option_1", "Option1" },
                     { "option_2", "Option2" }
             }));
-            
-            config.AddOptionSet(optionSet);            
+
+            config.AddOptionSet(optionSet);
             var recalcEngine = new RecalcEngine(config);
 
             var checkResult = recalcEngine.Check("FooOs.Option1");
             Assert.True(checkResult.IsSuccess);
             var osvaluetype = Assert.IsType<OptionSetValueType>(checkResult.ReturnType);
             Assert.Equal("FooOs", osvaluetype.OptionSetName);
-        }              
+        }
 
         [Fact]
         public void OptionSetChecksWithMakeUniqueCollision()
         {
             var config = new PowerFxConfig(null);
 
-            var optionSet = new OptionSet("OptionSet", DisplayNameUtility.MakeUnique(new Dictionary<string, string>() 
+            var optionSet = new OptionSet("OptionSet", DisplayNameUtility.MakeUnique(new Dictionary<string, string>()
             {
                     { "foo", "Option1" },
                     { "bar", "Option2" },
                     { "baz", "foo" }
             }));
-            
+
             config.AddEntity(optionSet, new DName("SomeDisplayName"));
             var recalcEngine = new RecalcEngine(config);
 
@@ -553,24 +555,19 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public async void MaxRecursionDepthTest()
         {
-            bool test;
             var config = new PowerFxConfig(null)
             {
                 MaxCallDepth = 5
             };
             var recalcEngine = new RecalcEngine(config);
-            try
-            {
-                await recalcEngine.EvalAsync("Abs(Abs(Abs(Abs(Abs(Abs(1))))))", new System.Threading.CancellationToken());
-                test = false;
-            }
-            catch (MaxCallDepthException)
-            {
-                test = true;
-            }
-
-            Assert.True(test);
-            await recalcEngine.EvalAsync("Abs(Abs(Abs(Abs(Abs(1)))))", new System.Threading.CancellationToken());
+            Assert.IsType<ErrorValue>(recalcEngine.Eval("Abs(Abs(Abs(Abs(Abs(Abs(1))))))"));
+            Assert.IsType<NumberValue>(recalcEngine.Eval("Abs(Abs(Abs(Abs(Abs(1)))))"));
+            Assert.IsType<NumberValue>(recalcEngine.Eval(
+                @"Sum(
+                Sum(Sum(1),1),
+                Sum(Sum(1),1),
+                Sum(Sum(1),1)
+                )"));
         }
 
         #region Test

@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Microsoft.PowerFx.Core.Utils
+namespace Microsoft.PowerFx.Interpreter
 {
     [Serializable]
     internal class MaxCallDepthException : Exception

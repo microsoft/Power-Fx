@@ -1402,7 +1402,7 @@ namespace Microsoft.PowerFx.Functions
 
             var childContext = context.SymbolContext.WithScopeValues(arg0);
 
-            return await arg1.EvalAsync(runner, new EvalVisitorContext(childContext, context.StackMarker));
+            return await arg1.EvalAsync(runner, new EvalVisitorContext(childContext, context.StackDepthCounter));
         }
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-if
@@ -1496,7 +1496,7 @@ namespace Microsoft.PowerFx.Functions
                         new InMemoryRecordValue(
                             IRContext.NotInSource(ifErrorScopeParamType),
                             scopeVariables));
-                    return (await runner.EvalArgAsync<ValidFormulaValue>(errorHandlingBranch, new EvalVisitorContext(childContext, context.StackMarker), errorHandlingBranch.IRContext)).ToFormulaValue();
+                    return (await runner.EvalArgAsync<ValidFormulaValue>(errorHandlingBranch, new EvalVisitorContext(childContext, context.StackDepthCounter), errorHandlingBranch.IRContext)).ToFormulaValue();
                 }
 
                 if (i + 1 == args.Length - 1)
@@ -1660,7 +1660,7 @@ namespace Microsoft.PowerFx.Functions
                 }
 
                 // Filter evals to a boolean 
-                var result = filter.EvalAsync(runner, new EvalVisitorContext(childContext, context.StackMarker)).AsTask();
+                var result = filter.EvalAsync(runner, new EvalVisitorContext(childContext, context.StackDepthCounter)).AsTask();
 
                 yield return result;
             }

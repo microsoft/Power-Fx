@@ -6,7 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.IR.Symbols;
-using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx
@@ -16,9 +16,9 @@ namespace Microsoft.PowerFx
         internal IntermediateNode _irnode;
         private readonly ScopeSymbol _topScopeSymbol;
         private readonly CultureInfo _cultureInfo;
-        private readonly StackMarker _stackMarker;
+        private readonly StackDepthCounter _stackMarker;
 
-        internal ParsedExpression(IntermediateNode irnode, ScopeSymbol topScope, StackMarker stackMarker, CultureInfo cultureInfo = null)
+        internal ParsedExpression(IntermediateNode irnode, ScopeSymbol topScope, StackDepthCounter stackMarker, CultureInfo cultureInfo = null)
         {
             _irnode = irnode;
             _topScopeSymbol = topScope;
