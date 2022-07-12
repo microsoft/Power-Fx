@@ -194,6 +194,8 @@ stages:
     - checkout: none
 
     - template: powerfx-feed-setup-step.yml
+      parameters: 
+        feedName: "${{ parameters.packageFeed }}"
 
     - template: ci-api-validation-steps.yml
       parameters: 
