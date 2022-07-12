@@ -3,9 +3,6 @@ parameters:
     displayName: Azure or NuGet
     type: string
 
-variables:
-  ContractVersion: ''
-
 steps:
 - powershell: |
     Write-Host "feedName: ${{ parameters.feedName }}";
@@ -14,7 +11,7 @@ steps:
 
     if ("${{ parameters.feedName }}" -eq 'Azure' -and "$(System.PullRequest.IsFork)" -ne 'True') {
 
-      Write-Host "Get latest $packageName version number from Azure ConversationalAI SDK feed";
+      Write-Host "Get latest $packageName version number from Azure feed";
 
       $RegistryUrlSource = 'PowerFx-feed';
       $Packagelist = nuget list "$packageName" -PreRelease -AllVersions;
