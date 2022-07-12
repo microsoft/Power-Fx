@@ -183,6 +183,9 @@ stages:
       maxParallel: 10
       matrix: $[ dependencies.generate_multiconfig_var.outputs['generate_var.MULTICONFIG'] ]
 
+    variables:
+      contractVersion: $[ dependencies.generate_multiconfig_var.outputs['GetContract.ContractVersion'] ]
+
     steps:
     - checkout: none
 
@@ -190,7 +193,7 @@ stages:
 
     - template: ci-api-validation-steps.yml
       parameters: 
-        ContractVersion: "$(GetContract.ContractVersion)"
+        ContractVersion: "$(contractVersion)"
 
     - powershell: |
         gci env:* | sort-object name | Format-Table -AutoSize -Wrap
