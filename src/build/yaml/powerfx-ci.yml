@@ -154,6 +154,10 @@ stages:
           From ${{ parameters.packageFeed }} feed 
 
     - powershell: |
+        gci env:* | sort-object name | Format-Table -AutoSize -Wrap
+      displayName: 'Display env vars'
+
+    - powershell: |
         $multiconfig = '{';
         $env:PackagesToValidate.Split(",") | ForEach {
           $library = $_.Trim()
@@ -182,6 +186,10 @@ stages:
     - template: powerfx-feed-setup-step.yml
 
     - template: ci-api-validation-steps.yml
+
+    - powershell: |
+        gci env:* | sort-object name | Format-Table -AutoSize -Wrap
+      displayName: 'Display env vars'
 
   - job: post_results_to_gitHub
     dependsOn: check_api_for
