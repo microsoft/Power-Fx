@@ -162,6 +162,8 @@ stages:
       matrix: $[ dependencies.generate_multiconfig_var.outputs['generate_var.MULTICONFIG'] ]
 
     steps:
+    - checkout: none
+    
     - template: powerfx-feed-setup-steps.yml
 
     - powershell: |
