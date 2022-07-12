@@ -5,6 +5,7 @@ parameters:
 
 steps:
 - powershell: |
+    Write-Host "feedName: ${{ parameters.feedName }}";
     # if ("${{ parameters.feedName }}" -eq 'Azure' -and "$(System.PullRequest.IsFork)" -ne 'True') {
       $packageName = ($env:PackagesToValidate.Split(","))[0];
 
@@ -28,4 +29,4 @@ steps:
     # }
   displayName: 'From Azure feed get latest package version number - '
   # condition: ${{ eq(parameters.packageFeed, 'Azure') }}
-  condition: and(succeeded(), eq(variables['parameters.feedName'], 'Azure'), eq(variables['System.PullRequest.IsFork'], 'false'))
+  condition: and(succeeded(), eq("${{ parameters.feedName }}"", 'Azure'), eq(variables['System.PullRequest.IsFork'], 'false'))
