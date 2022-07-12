@@ -35,9 +35,9 @@ namespace Microsoft.PowerFx.Types
             vistor.Visit(this);
         }
         
-        public TableType ToTable()
+        public BaseTableType ToTable()
         {
-            return new KnownTableType(DType.ToTable());
+            return new TableType(DType.ToTable());
         }
     }
 }

@@ -31,7 +31,7 @@ namespace Microsoft.PowerFx.Types
         internal TableValue(IRContext irContext)
             : base(irContext)
         {
-            Contract.Assert(IRContext.ResultType is TableType);
+            Contract.Assert(IRContext.ResultType is BaseTableType);
         }
 
         public virtual int Count()

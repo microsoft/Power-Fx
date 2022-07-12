@@ -110,7 +110,7 @@ namespace Microsoft.PowerFx.Types
                     return new RecordType(type);
                 case DKind.Table:
                 case DKind.LazyTable:
-                    return new KnownTableType(type);
+                    return new TableType(type);
 
                 case DKind.Number: return Number;
                 case DKind.String: return String;

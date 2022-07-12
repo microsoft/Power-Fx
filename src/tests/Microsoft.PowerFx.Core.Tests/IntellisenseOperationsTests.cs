@@ -87,7 +87,7 @@ namespace Microsoft.PowerFx.Core.Tests
             var engine = new Engine(config);
 
             var tableType =
-                new KnownTableType().Add(new NamedFormulaType("A", FormulaType.Number))
+                new TableType().Add(new NamedFormulaType("A", FormulaType.Number))
                                .Add(new NamedFormulaType("B", FormulaType.Number));
             var formulaParams =
                 new RecordType().Add("X", FormulaType.Number).Add("Y", FormulaType.Number).Add("Table", tableType);

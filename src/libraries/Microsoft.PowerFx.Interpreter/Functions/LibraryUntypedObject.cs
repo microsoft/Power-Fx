@@ -76,7 +76,7 @@ namespace Microsoft.PowerFx.Functions
 
         public static FormulaValue Table_UO(IRContext irContext, UntypedObjectValue[] args)
         {
-            var tableType = (TableType)irContext.ResultType;
+            var tableType = (BaseTableType)irContext.ResultType;
             var resultType = tableType.ToRecord();
             var itemType = resultType.GetFieldType(BuiltinFunction.ColumnName_ValueStr);
 

@@ -17,7 +17,7 @@ namespace Microsoft.PowerFx.Tests
 
             // FormulaType
             // Is this a valid usage of the UnknownType?
-            var fType = new KnownTableType()
+            var fType = new TableType()
                 .Add(new NamedFormulaType("Column1", FormulaType.Unknown))
                 .Add(new NamedFormulaType("Column2", FormulaType.Unknown))
                 .Add(new NamedFormulaType("Column3", FormulaType.Unknown));
@@ -130,7 +130,7 @@ First(
 
             //FormulaType
             // Is this a valid representation of a List<object> type to a FormulaType?
-            var fType = new KnownTableType()
+            var fType = new TableType()
                 .Add(new NamedFormulaType("Value", FormulaType.Unknown));
 
             var executionScope = new RecordType()

@@ -18,8 +18,8 @@ namespace Microsoft.PowerFx.Types
         internal InMemoryTableValue(IRContext irContext, IEnumerable<DValue<RecordValue>> records)
             : base(irContext, records)
         {
-            Contract.Assert(IRContext.ResultType is TableType);
-            var tableType = (TableType)IRContext.ResultType;
+            Contract.Assert(IRContext.ResultType is BaseTableType);
+            var tableType = (BaseTableType)IRContext.ResultType;
             _recordType = tableType.ToRecord();            
         }
 
@@ -48,8 +48,8 @@ namespace Microsoft.PowerFx.Types
         internal RecordsOnlyTableValue(IRContext irContext, IEnumerable<RecordValue> records)
             : base(irContext, records)
         {
-            Contract.Assert(IRContext.ResultType is TableType);
-            var tableType = (TableType)IRContext.ResultType;
+            Contract.Assert(IRContext.ResultType is BaseTableType);
+            var tableType = (BaseTableType)IRContext.ResultType;
             _recordType = tableType.ToRecord();
         }
 

@@ -93,6 +93,8 @@ namespace Microsoft.PowerFx.Core.Tests
 
                 // Power Fx Type system and Values. 
                 "Microsoft.PowerFx.Types.AggregateType",
+                "Microsoft.PowerFx.Types.BaseRecordType",
+                "Microsoft.PowerFx.Types.BaseTableType",
                 "Microsoft.PowerFx.Types.BindingErrorType",
                 "Microsoft.PowerFx.Types.BlankType",
                 "Microsoft.PowerFx.Types.BlankValue",
@@ -115,12 +117,10 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Types.GuidType",
                 "Microsoft.PowerFx.Types.GuidValue",
                 "Microsoft.PowerFx.Types.HyperlinkType",
-                "Microsoft.PowerFx.Types.IAggregateTypeIdentity",
+                "Microsoft.PowerFx.Types.ITypeIdentity",
                 "Microsoft.PowerFx.Types.ITypeVisitor",
                 "Microsoft.PowerFx.Types.IUntypedObject",
                 "Microsoft.PowerFx.Types.IValueVisitor",
-                "Microsoft.PowerFx.Types.KnownRecordType",
-                "Microsoft.PowerFx.Types.KnownTableType",
                 "Microsoft.PowerFx.Types.NamedFormulaType",
                 "Microsoft.PowerFx.Types.NamedValue",
                 "Microsoft.PowerFx.Types.NumberType",

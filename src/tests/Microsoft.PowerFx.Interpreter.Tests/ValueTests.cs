@@ -271,9 +271,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         {
             TableValue value = (TableValue)FormulaValue.FromJson("[1,2,3]");
 
-            TableType type = (TableType)value.Type;
+            BaseTableType type = (BaseTableType)value.Type;
 
-            TableType typeExpected = new KnownTableType()
+            BaseTableType typeExpected = new TableType()
                 .Add(new NamedFormulaType("Value", FormulaType.Number));
             Assert.Equal(typeExpected, type);
 

@@ -114,7 +114,7 @@ namespace Microsoft.PowerFx.Core
                 };
             }
 
-            public void Visit(TableType type)
+            public void Visit(BaseTableType type)
             {                
                 Result = new FormulaTypeSchema()
                 {

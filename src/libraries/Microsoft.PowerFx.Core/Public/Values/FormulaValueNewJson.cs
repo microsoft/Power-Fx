@@ -111,10 +111,10 @@ namespace Microsoft.PowerFx.Types
             }
 
             // Constructor will handle both single-column table 
-            TableType type;
+            BaseTableType type;
             if (records.Count == 0)
             {
-                type = new KnownTableType();
+                type = new TableType();
             }
             else
             {

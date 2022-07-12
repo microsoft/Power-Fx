@@ -81,7 +81,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 .Add(new NamedFormulaType("B", FormulaType.Boolean, "DisplayB"))
                 .Add(new NamedFormulaType(
                     "Nested", 
-                    new KnownTableType().Add(new NamedFormulaType("Inner", FormulaType.Number, "InnerDisplay")), 
+                    new TableType().Add(new NamedFormulaType("Inner", FormulaType.Number, "InnerDisplay")), 
                     "NestedDisplay"));
 
             if (toDisplay)
@@ -148,7 +148,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 .Add(new NamedFormulaType("B", FormulaType.Boolean, "DisplayB"))
                 .Add(new NamedFormulaType(
                         "Nested",
-                        new KnownTableType().Add(new NamedFormulaType("Inner", FormulaType.Number, "InnerDisplay")),
+                        new TableType().Add(new NamedFormulaType("Inner", FormulaType.Number, "InnerDisplay")),
                         "NestedDisplay"))
                 .Add(new NamedFormulaType(
                         "RecordNest",
@@ -223,7 +223,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 .Add(new NamedFormulaType("B", FormulaType.Boolean, "DisplayB"))
                 .Add(new NamedFormulaType(
                     "Nested",
-                    new KnownTableType().Add(new NamedFormulaType("Inner", FormulaType.Number, "InnerDisplay")),
+                    new TableType().Add(new NamedFormulaType("Inner", FormulaType.Number, "InnerDisplay")),
                     "NestedDisplay"));
 
             if (toDisplay)

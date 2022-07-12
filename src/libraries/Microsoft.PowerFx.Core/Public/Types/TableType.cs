@@ -1,45 +1,40 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Text;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Types
 {
-    public abstract class TableType : AggregateType
+    public sealed class TableType : BaseTableType
     {
         internal TableType(DType type)
             : base(type)
         {
-            Contracts.Assert(type.IsTable);
         }
 
-        public TableType(ITypeIdentity identity, IEnumerable<string> fieldNames)
-            : base(identity, fieldNames, true)
+        public TableType()
+            : base(DType.EmptyTable)
         {
         }
 
-        public override void Visit(ITypeVisitor vistor)
+        internal static TableType FromRecord(BaseRecordType type)
         {
-            vistor.Visit(this);
+            var tableType = type.DType.ToTable();
+            return new TableType(tableType);
         }
 
-        internal string SingleColumnFieldName
+        public TableType Add(NamedFormulaType field)
         {
-            get
-            {
-                Contracts.Assert(FieldNames.Count() == 1);
-                return FieldNames.First();
-            }
+            return new TableType(AddFieldToType(field));
         }
 
-        internal FormulaType SingleColumnFieldType => GetFieldType(SingleColumnFieldName);
-
-        public BaseRecordType ToRecord()
+        public TableType Add(string logicalName, FormulaType type, string optionalDisplayName = null)
         {
-            return new RecordType(DType.ToRecord());
+            return Add(new NamedFormulaType(new TypedName(type.DType, new DName(logicalName)), optionalDisplayName));
         }
     }
 }

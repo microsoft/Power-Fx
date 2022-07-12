@@ -107,7 +107,7 @@ namespace Microsoft.PowerFx.Functions
 
             var newColumns = NamedLambda.Parse(args);
 
-            var tableType = (TableType)irContext.ResultType;
+            var tableType = (BaseTableType)irContext.ResultType;
             var recordIRContext = new IRContext(irContext.SourceContext, tableType.ToRecord());
             var rows = await LazyAddColumnsAsync(runner, symbolContext, sourceArg.Rows, recordIRContext, newColumns);
 
