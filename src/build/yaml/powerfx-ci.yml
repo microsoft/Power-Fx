@@ -22,7 +22,7 @@ pool:
   - vstest
 
 variables:
-  ApiContractVersion: 0.2.2-preview # The packages version in the NuGet feed used for API validation.
+  ApiContractVersion: 0.2.2-preview # The packages version for API validation in the NuGet feed option case.
   PackagesToValidate: Microsoft.PowerFx.Core,Microsoft.PowerFx.Interpreter,Microsoft.PowerFx.LanguageServerProtocol,Microsoft.PowerFx.Transport.Attributes
   BuildPlatform: 'any cpu'
   BuildSolution: src/Microsoft.PowerFx.sln
