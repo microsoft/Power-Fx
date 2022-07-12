@@ -1,0 +1,21 @@
+steps:
+- powershell: |
+    $packageName = ($env:PackagesToValidate.Split(","))[0];
+
+    Write-Host "Get latest $packageName version number from Azure ConversationalAI SDK feed";
+
+    $RegistryUrlSource = 'PowerFx-feed';
+    $Packagelist = nuget list "$packageName" -PreRelease -AllVersions;
+    " "
+    "Available versions:";
+    $PackageList | Select -First 5;
+    
+    [string]$latestVersion = ($PackageList | Select -First 1).Split(" ")[-1];
+    " "
+    "Latest version:";
+    $packageName;
+    $latestVersion;
+    "##vso[task.setvariable variable=ApiContractVersion;]$latestVersion";
+  displayName: 'From Azure feed get latest package version number - '
+  condition: ${{ eq(parameters.packageFeed, 'Azure') }}
+

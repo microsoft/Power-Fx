@@ -140,6 +140,17 @@ stages:
     steps:
     - checkout: none
 
+    - template: powerfx-feed-setup-step.yml
+
+    - template: get-contract-version-step.yml
+
+    - task: tagBuildOrRelease@0
+      displayName: Tag Build with Bot.Builder version
+      inputs:
+        tags: |
+          Comparing against v $(ApiContractVersion)
+          From ${{ parameters.packageFeed }} feed 
+
     - powershell: |
         $multiconfig = '{';
         $env:PackagesToValidate.Split(",") | ForEach {
@@ -166,29 +177,7 @@ stages:
     steps:
     - checkout: none
 
-    - template: powerfx-feed-setup-steps.yml
-
-    - powershell: |
-        $packageName = ($env:PackagesToValidate.Split(","))[0];
-    
-        #$url = "https://feeds.dev.azure.com/ConversationalAI/BotFramework/_apis/packaging/Feeds/SDK/Packages/26dde74d-6079-401c-a9e0-c6d839e02c18/versions?api-version=5.1-preview.1"
-    
-        Write-Host "Get latest $packageName version number from Azure ConversationalAI SDK feed";
-    
-        $RegistryUrlSource = 'PowerFx-feed';
-        $Packagelist = nuget list "$packageName" -PreRelease -AllVersions;
-        " "
-        "Available versions:";
-        $PackageList | Select -First 10;
-        
-        [string]$latestVersion = ($PackageList | Select -First 1).Split(" ")[-1];
-        " "
-        "Latest version:";
-        $packageName;
-        $latestVersion;
-        "##vso[task.setvariable variable=ApiContractVersion;]$latestVersion";
-      displayName: 'From Azure feed get latest package version number - https://dev.azure.com/ConversationalAI/BotFramework/_packaging?_a=feed&feed=SDK'
-      condition: ${{ eq(parameters.packageFeed, 'Azure') }}
+    - template: powerfx-feed-setup-step.yml
 
     - template: ci-api-validation-steps.yml
 
