@@ -25,7 +25,6 @@
     <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
   </PropertyGroup>
 
-
   <!-- Nuget Properties -->
   <PropertyGroup>
     <PackageId>Microsoft.PowerFx.Core.Tests</PackageId>

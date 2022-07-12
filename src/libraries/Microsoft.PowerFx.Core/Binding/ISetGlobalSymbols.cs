@@ -12,6 +12,6 @@ namespace Microsoft.PowerFx.Core.Binding
 {
     internal interface ISetGlobalSymbols
     {
-        internal abstract void SetGlobalSymbols(IReadOnlyDictionary<string, IGlobalSymbol> globalSymbols = null);
+        abstract void SetGlobalSymbols(IReadOnlyDictionary<string, IGlobalSymbol> globalSymbols = null);
     }
 }
