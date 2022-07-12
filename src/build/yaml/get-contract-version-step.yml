@@ -3,6 +3,9 @@ parameters:
     displayName: Azure or NuGet
     type: string
 
+variables:
+  ContractVersion: ''
+
 steps:
 - powershell: |
     Write-Host "feedName: ${{ parameters.feedName }}";
@@ -31,3 +34,4 @@ steps:
     $contractVersion;
     "##vso[task.setvariable variable=ContractVersion;isOutput=true]$contractVersion";
   displayName: 'Get contract package version number'
+  name: GetContract

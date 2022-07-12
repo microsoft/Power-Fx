@@ -1,3 +1,8 @@
+parameters:
+  - name: ContractVersion
+    displayName: API contract version
+    type: string
+
 steps:
 - powershell: 'gci env:* | sort-object name | Format-Table -AutoSize -Wrap'
   displayName: 'Display env vars'
@@ -11,7 +16,7 @@ steps:
     targetPath: '$(System.ArtifactsDirectory)/Artifacts'
 
 - task: NuGetCommand@2
-  displayName: 'NuGet install $(PackageName) $(ContractVersion)'
+  displayName: 'NuGet install $(PackageName) v $(ContractVersion)'
   inputs:
     command: custom
     arguments: 'install $(PackageName) -Version $(ContractVersion) -OutputDirectory $(System.DefaultWorkingDirectory)\DownloadedNuGet'
