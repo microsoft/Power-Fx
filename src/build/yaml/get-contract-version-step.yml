@@ -1,6 +1,6 @@
 parameters:
   - name: feedName
-    displayName: 'Azure' or 'NuGet'
+    displayName: Azure or NuGet
     type: string
 
 steps:
