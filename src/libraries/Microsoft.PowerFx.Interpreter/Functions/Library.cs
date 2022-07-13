@@ -1332,7 +1332,7 @@ namespace Microsoft.PowerFx.Functions
 
         private static IEnumerable<DValue<RecordValue>> StandardTableNodeRecordsCore(IRContext irContext, FormulaValue[] args, bool forceSingleColumn, string columnName = BuiltinFunction.ColumnName_ValueStr)
         {
-            var tableType = (BaseTableType)irContext.ResultType;
+            var tableType = (TableType)irContext.ResultType;
             var recordType = tableType.ToRecord();
             return args.Select(arg =>
             {
@@ -1482,7 +1482,7 @@ namespace Microsoft.PowerFx.Functions
                         new NamedValue(
                             "AllErrors",
                             new InMemoryTableValue(
-                                IRContext.NotInSource(new TableType(ErrorType.ReifiedErrorTable())),
+                                IRContext.NotInSource(new KnownTableType(ErrorType.ReifiedErrorTable())),
                                 allErrors.Select(e => DValue<RecordValue>.Of(e))))
                     };
 

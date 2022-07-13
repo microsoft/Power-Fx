@@ -43,7 +43,6 @@ namespace Microsoft.PowerFx.Tests
                 $"{ns}.{nameof(TableMarshallerProvider)}",
                 $"{ns}.{nameof(TypeMarshallerCache)}",
                 $"{ns}.{nameof(TypeMarshallerCacheExtensions)}",   
-                $"{ns}.{nameof(MarshalledObjectIdentity)}",
                 $"{nsType}.{nameof(ObjectRecordValue)}"
             };
 

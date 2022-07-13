@@ -288,7 +288,7 @@ namespace Microsoft.PowerFx.Core.Tests
             }
             else if (result is TableValue t)
             {
-                var tableType = (BaseTableType)t.Type;
+                var tableType = (TableType)t.Type;
                 var canUseSquareBracketSyntax = t.IsColumn && t.Rows.All(r => r.IsValue) && tableType.GetFieldTypes().First().Name == "Value";
                 if (canUseSquareBracketSyntax)
                 {

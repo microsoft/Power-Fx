@@ -327,11 +327,11 @@ namespace Microsoft.PowerFx.Core.Utils
             }
         }
 
-        public static void CheckAllNonEmpty(IList<string> args, string paramName)
+        public static void CheckAllNonEmpty(IEnumerable<string> args, string paramName)
         {
-            for (var i = 0; i < Size(args); i++)
+            foreach (var name in args)
             {
-                if (string.IsNullOrEmpty(args[i]))
+                if (string.IsNullOrEmpty(name))
                 {
                     throw ExceptEmpty(paramName);
                 }

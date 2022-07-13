@@ -228,21 +228,25 @@ namespace Microsoft.PowerFx.Tests
             var config = new PowerFxConfig();
             var engine = new Engine(config);
 
+            var lazyTypeInstance = new LazyRecursiveRecordType();
+
             var result = engine.Check(
                 "Loop.Loop.Loop.Loop.Loop.Loop.Loop.Loop.Loop" +
                 ".Loop.Loop.Loop.Loop.Loop.Loop.Loop.Loop.Loop" +
                 ".Loop.Loop.Loop.Loop.Loop.Loop.Loop.Loop.Loop" +
-                ".Loop.Loop.Loop.Loop.Loop.Loop.Loop.Loop.Loop", new LazyRecursiveRecordType());
+                ".Loop.Loop.Loop.Loop.Loop.Loop.Loop.Loop.Loop", lazyTypeInstance);
             
             Assert.True(result.IsSuccess);
-            var recordType = Assert.IsType<KnownRecordType>(result.ReturnType);
-            Assert.Equal("LazyIdentityTest", recordType.Identity.ToString());
+            Assert.IsType<LazyRecursiveRecordType>(result.ReturnType);
+            Assert.Equal(lazyTypeInstance, result.ReturnType);
         }
 
         private class LazyRecursiveRecordType : RecordType
         {
+            public override IEnumerable<string> FieldNames => new List<string>() { "Value", "Loop" };
+
             public LazyRecursiveRecordType()
-                : base(new AggregateTypeTests.TestIdentity("LazyIdentityTest"), new List<string> { "Value", "Loop" })
+                : base()
             {
             }
 
@@ -261,6 +265,22 @@ namespace Microsoft.PowerFx.Tests
                         return false;
                 }
             }
+        }
+
+        [Fact]
+        public void CheckTypeUnionLazy()
+        {
+            var config = new PowerFxConfig();
+            var engine = new Engine(config);
+
+            var lazyTypeInstance = new LazyRecursiveRecordType();
+
+            var result = engine.Check("First(Table(Loop, {A: Value}))", lazyTypeInstance);
+            
+            Assert.True(result.IsSuccess);
+            Assert.IsType<KnownRecordType>(result.ReturnType);
+
+            Assert.Equal("![A:s, Loop:r!, Value:s]", result.ReturnType.DType.ToString());
         }
 
         /// <summary>

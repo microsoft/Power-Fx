@@ -10,17 +10,17 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Types
 {
-    internal sealed class KnownRecordType : RecordType
+    internal sealed class KnownTableType : TableType
     {
         public override IEnumerable<string> FieldNames => DType.GetRootFieldNames().Select(name => name.Value);
 
-        internal KnownRecordType(DType type)
+        internal KnownTableType(DType type)
             : base(type)
         {
         }
 
-        internal KnownRecordType()
-            : base(DType.EmptyRecord)
+        internal KnownTableType()
+            : base(DType.EmptyTable)
         {
         }
     }

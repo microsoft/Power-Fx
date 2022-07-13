@@ -25,8 +25,8 @@ namespace Microsoft.PowerFx.Types
             Contracts.Assert(type.IsRecord);
         }
 
-        public RecordType(ITypeIdentity identity, IEnumerable<string> fieldNames) 
-            : base(identity, fieldNames, false)
+        public RecordType() 
+            : base(false)
         {
         }
 
@@ -35,9 +35,38 @@ namespace Microsoft.PowerFx.Types
             vistor.Visit(this);
         }
         
-        public BaseTableType ToTable()
+        public TableType ToTable()
         {
-            return new TableType(DType.ToTable());
+            // Unwrap lazy types
+            if (DType.IsLazyType && DType.LazyTypeProvider.BackingFormulaType is TableType table)
+            {
+                return table;
+            }
+            
+            return new KnownTableType(DType.ToTable());
+        }
+
+        /// <summary>
+        /// By default, adding a field to a TableType requires the type to be fully expanded
+        /// Override if your derived class can change that behavior.
+        /// </summary>
+        /// <param name="field">Field being added.</param>
+        public virtual RecordType Add(NamedFormulaType field)
+        {
+            return new KnownRecordType(AddFieldToType(field));
+        }
+
+        /// <summary>
+        /// Wrapper for <see cref="Add(NamedFormulaType)"/>.
+        /// </summary>
+        public RecordType Add(string logicalName, FormulaType type, string optionalDisplayName = null)
+        {
+            return Add(new NamedFormulaType(new TypedName(type.DType, new DName(logicalName)), optionalDisplayName));
+        }
+
+        public static RecordType Empty()
+        {
+            return new KnownRecordType();
         }
     }
 }

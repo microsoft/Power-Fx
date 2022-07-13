@@ -77,7 +77,7 @@ namespace Microsoft.PowerFx.Types
             Contract.Assert(element.ValueKind == JsonValueKind.Object);
 
             var fields = new List<NamedValue>();
-            var type = new KnownRecordType();
+            var type = RecordType.Empty();
 
             foreach (var pair in element.EnumerateObject())
             {
@@ -111,10 +111,10 @@ namespace Microsoft.PowerFx.Types
             }
 
             // Constructor will handle both single-column table 
-            BaseTableType type;
+            TableType type;
             if (records.Count == 0)
             {
-                type = new TableType();
+                type = new KnownTableType();
             }
             else
             {

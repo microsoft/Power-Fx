@@ -170,7 +170,7 @@ namespace Microsoft.PowerFx.Functions
         {
             return (runner, symbolContext, irContext, args) =>
             {
-                var tableType = (BaseTableType)irContext.ResultType;
+                var tableType = (TableType)irContext.ResultType;
                 var resultType = tableType.ToRecord();
                 var columnNameStr = BuiltinFunction.OneColumnTableResultNameStr;
                 if (!resultType.TryGetFieldType(columnNameStr, out var itemType))
@@ -252,7 +252,7 @@ namespace Microsoft.PowerFx.Functions
         {
             if (arg is TableValue tv)
             {
-                var tvType = (BaseTableType)tv.Type;
+                var tvType = (TableType)tv.Type;
                 var name = tvType.SingleColumnFieldName;
 
                 var count = tv.Rows.Count();
@@ -328,7 +328,7 @@ namespace Microsoft.PowerFx.Functions
 
                 var allResults = args.Select(arg => ExpandToSize(arg, maxSize));
 
-                var tableType = (BaseTableType)irContext.ResultType;
+                var tableType = (TableType)irContext.ResultType;
                 var resultType = tableType.ToRecord();
                 var itemType = resultType.GetFieldType(BuiltinFunction.OneColumnTableResultNameStr);
 

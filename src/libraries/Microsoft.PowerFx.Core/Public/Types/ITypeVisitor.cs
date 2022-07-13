@@ -18,7 +18,7 @@ namespace Microsoft.PowerFx.Types
 
         void Visit(RecordType type);
 
-        void Visit(BaseTableType type);
+        void Visit(TableType type);
 
         void Visit(DateType type);
 

@@ -1579,6 +1579,16 @@ namespace Microsoft.PowerFx.Core.Types
             return GetAllNames(path).Where(kvp => kvp.Name != MetaFieldName);
         }
 
+        public IEnumerable<DName> GetRootFieldNames()
+        {
+            if (IsLazyType)
+            {
+                return LazyTypeProvider.FieldNames;
+            }
+
+            return GetAllNames(DPath.Root).Where(kvp => kvp.Name != MetaFieldName).Select(kvp => kvp.Name);
+        }
+
         /// <summary>
         /// Returns true if type contains a entity type.
         /// </summary>
@@ -1707,7 +1717,7 @@ namespace Microsoft.PowerFx.Core.Types
                 case DKind.LazyRecord:
                 case DKind.LazyTable:
                     Contracts.AssertValue(LazyTypeProvider);
-                    return other.LazyTypeProvider.Identity.Equals(LazyTypeProvider.Identity) && IsTable == other.IsTable;
+                    return other.LazyTypeProvider.BackingFormulaType.Equals(LazyTypeProvider.BackingFormulaType) && IsTable == other.IsTable;
                 case DKind.Record:
                 case DKind.Table:
                     return LazyTypeProvider.GetExpandedType(IsTable).Accepts(other, true);
@@ -2559,6 +2569,17 @@ namespace Microsoft.PowerFx.Core.Types
         {
             type1.AssertValid();
             type2.AssertValid();
+            
+            // For Lazy Types, union operations must expand the current depth
+            if (type1.IsLazyType)
+            {
+                type1 = type1.LazyTypeProvider.GetExpandedType(type1.IsTable);
+            }
+
+            if (type2.IsLazyType)
+            {
+                type2 = type2.LazyTypeProvider.GetExpandedType(type2.IsTable);
+            }
 
             if (type1.IsAggregate && type2.IsAggregate)
             {
@@ -2848,7 +2869,7 @@ namespace Microsoft.PowerFx.Core.Types
                ValueTree == other.ValueTree &&
                HasExpandInfo == other.HasExpandInfo &&
                NamedValueKind == other.NamedValueKind &&
-               (LazyTypeProvider?.Identity.Equals(other.LazyTypeProvider?.Identity) ?? other.LazyTypeProvider == null);
+               ReferenceEquals(LazyTypeProvider?.BackingFormulaType, other.LazyTypeProvider?.BackingFormulaType);
         }
 
         // Viewing DType.Invalid in the debugger should be allowed

@@ -12,30 +12,18 @@ namespace Microsoft.PowerFx.Types
 {
     public abstract class AggregateType : FormulaType
     {
-        public IEnumerable<string> FieldNames { get; }
-
-        public ITypeIdentity Identity { get; }
+        public virtual IEnumerable<string> FieldNames { get; }
 
         internal AggregateType(DType type)
             : base(type)
         {
             Contracts.Assert(type.IsAggregate);
-            FieldNames = DType.GetNames(DPath.Root).Select(typedName => typedName.Name.Value);
-            
-            // Expose the identity if this is wrapping a lazy type
-            if (type.IsLazyType)
-            {
-                Identity = type.LazyTypeProvider.Identity;
-            }
         }
 
-        public AggregateType(ITypeIdentity identity, IEnumerable<string> fieldNames, bool isTable)
-            : base(DType.ObjNull)
+        public AggregateType(bool isTable)
+            : base()
         {
-            FieldNames = fieldNames;
-            Identity = identity;
-
-            var lazyTypeProvider = new LazyTypeProvider(Identity, FieldNames, TryGetFieldType);
+            var lazyTypeProvider = new LazyTypeProvider(this);
             DType = new DType(lazyTypeProvider, isTable: isTable);
         }
 

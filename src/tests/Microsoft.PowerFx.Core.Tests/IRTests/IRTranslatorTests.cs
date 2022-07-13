@@ -27,7 +27,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("Sum(numtable, Sum(val,0))", "Sum(val,0)", typeof(NumberType))]
         public void TestLazyEvalNode(string expression, string expectedFragment, Type type)
         {
-            var tableType = new TableType()
+            var tableType = new KnownTableType()
                 .Add(new NamedFormulaType("val", FormulaType.Number));
 
             var parameterType = new KnownRecordType()

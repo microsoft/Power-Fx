@@ -14,19 +14,14 @@ namespace Microsoft.PowerFx.Core.Types
 {
     internal sealed class LazyTypeProvider
     {
-        public delegate bool FieldTypeGetter(string fieldName, out FormulaType fieldType);
+        private readonly Dictionary<DName, DType> _expandedFields = new ();
+        public readonly AggregateType BackingFormulaType;
 
-        private readonly FieldTypeGetter _fieldTypeGetter;
-        private readonly Dictionary<DName, DType> _expandedFields = new ();        
-        private readonly IEnumerable<string> _fields;
+        internal IEnumerable<DName> FieldNames => BackingFormulaType.FieldNames.Select(field => new DName(field));
 
-        public ITypeIdentity Identity { get; }
-
-        public LazyTypeProvider(ITypeIdentity identity, IEnumerable<string> fields, FieldTypeGetter fieldTypeGetter)
+        public LazyTypeProvider(AggregateType type)
         {            
-            Identity = identity;
-            _fieldTypeGetter = fieldTypeGetter;
-            _fields = fields;
+            BackingFormulaType = type;
         }
 
         internal bool TryGetFieldType(DName name, out DType type)
@@ -35,7 +30,7 @@ namespace Microsoft.PowerFx.Core.Types
             {
                 return true;
             }
-            else if (_fieldTypeGetter(name.Value, out var fieldType))
+            else if (BackingFormulaType.TryGetFieldType(name.Value, out var fieldType))
             {
                 type = fieldType.DType;
                 _expandedFields.Add(name, type);
@@ -50,9 +45,9 @@ namespace Microsoft.PowerFx.Core.Types
         // Beyond that scenario, fully expanding a lazy type is inefficient and should be avoided
         internal DType GetExpandedType(bool isTable)
         {
-            var fields = _fields.Select(field => 
-                TryGetFieldType(new DName(field), out var type) ?
-                    new TypedName(type, new DName(field)) :
+            var fields = FieldNames.Select(field => 
+                TryGetFieldType(field, out var type) ?
+                    new TypedName(type, field) :
                     throw new InvalidOperationException($"Fx type of field {field} not found"));
 
             return isTable ? DType.CreateTable(fields) : DType.CreateRecord(fields);

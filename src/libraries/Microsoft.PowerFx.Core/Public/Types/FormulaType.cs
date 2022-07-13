@@ -62,6 +62,14 @@ namespace Microsoft.PowerFx.Types
             DType = type;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FormulaType"/> class.
+        /// Used for subclasses that must set DType themselves.
+        /// </summary>
+        private protected FormulaType()
+        {            
+        }
+
         // Entites may be recursive and their Dytype is tagged with additional schema metadata. 
         // Expand that metadata into a proper Dtype. 
         private static DType GetExpandedEntityType(DType expandEntityType, string relatedEntityPath)
@@ -104,14 +112,10 @@ namespace Microsoft.PowerFx.Types
             switch (type.Kind)
             {
                 case DKind.ObjNull: return Blank;
-
                 case DKind.Record:
-                case DKind.LazyRecord:
                     return new KnownRecordType(type);
                 case DKind.Table:
-                case DKind.LazyTable:
-                    return new TableType(type);
-
+                    return new KnownTableType(type);
                 case DKind.Number: return Number;
                 case DKind.String: return String;
                 case DKind.Boolean: return Boolean;
@@ -150,7 +154,22 @@ namespace Microsoft.PowerFx.Types
 
                 case DKind.Error:
                     return BindingError;
+                    
+                case DKind.LazyRecord:
+                    if (type.LazyTypeProvider.BackingFormulaType is RecordType record)
+                    {
+                        return record;
+                    }
 
+                    return new KnownRecordType(type);
+                    
+                case DKind.LazyTable:
+                    if (type.LazyTypeProvider.BackingFormulaType is TableType table)
+                    {
+                        return table;
+                    }
+
+                    return new KnownRecordType(type);
                 default:
                     return new UnsupportedType(type);
             }

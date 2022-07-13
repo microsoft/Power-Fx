@@ -374,7 +374,7 @@ namespace Microsoft.PowerFx
             if (node.Op == UnaryOpKind.TableToTable)
             {
                 var table = (TableValue)arg1;
-                var tableType = (BaseTableType)node.IRContext.ResultType;
+                var tableType = (TableType)node.IRContext.ResultType;
                 var resultRows = new List<DValue<RecordValue>>();
                 foreach (var row in table.Rows)
                 {

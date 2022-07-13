@@ -21,7 +21,7 @@ namespace Microsoft.PowerFx.Core.Tests
             var config = new PowerFxConfig();
             var engine = new Engine(config);
 
-            var formulaParams = new KnownRecordType();
+            var formulaParams = RecordType.Empty();
             formulaParams = formulaParams.Add("X", FormulaType.String);
 
             var parseResult = engine.Parse(formula);
@@ -87,7 +87,7 @@ namespace Microsoft.PowerFx.Core.Tests
             var engine = new Engine(config);
 
             var tableType =
-                new TableType().Add(new NamedFormulaType("A", FormulaType.Number))
+                new KnownTableType().Add(new NamedFormulaType("A", FormulaType.Number))
                                .Add(new NamedFormulaType("B", FormulaType.Number));
             var formulaParams =
                 new KnownRecordType().Add("X", FormulaType.Number).Add("Y", FormulaType.Number).Add("Table", tableType);

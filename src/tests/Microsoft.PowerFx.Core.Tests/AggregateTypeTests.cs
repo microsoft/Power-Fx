@@ -14,40 +14,18 @@ namespace Microsoft.PowerFx.Core.Tests
 {
     public class AggregateTypeTests
     {
-        public class TestIdentity : ITypeIdentity
-        {
-            public string Identity;
-
-            public TestIdentity(string identity)
-            {
-                Identity = identity;
-            }
-
-            public override bool Equals(object obj)
-            {
-                return obj is TestIdentity other && other.Identity == Identity;
-            }
-
-            public override int GetHashCode()
-            {
-                return Identity.GetHashCode();
-            }
-
-            public override string ToString()
-            {
-                return Identity;
-            }
-        }
-
         public class TestLazyRecordType : RecordType
         {
             public delegate bool TryGetFieldDelegate(string name, out FormulaType type);
 
             private readonly TryGetFieldDelegate _tryGetField;
 
-            public TestLazyRecordType(string identity, IEnumerable<string> fields, TryGetFieldDelegate getter)
-                : base(new TestIdentity(identity), fields)
+            public override IEnumerable<string> FieldNames { get; }
+
+            public TestLazyRecordType(IEnumerable<string> fields, TryGetFieldDelegate getter)
+                : base()
             {
+                FieldNames = fields; 
                 _tryGetField = getter;
             }
 
@@ -57,15 +35,18 @@ namespace Microsoft.PowerFx.Core.Tests
             }
         }
 
-        public class TestLazyTableType : BaseTableType
+        public class TestLazyTableType : TableType
         {
             public delegate bool TryGetFieldDelegate(string name, out FormulaType type);
 
             private readonly TryGetFieldDelegate _tryGetField;
 
-            public TestLazyTableType(string identity, IEnumerable<string> fields, TryGetFieldDelegate getter)
-                : base(new TestIdentity(identity), fields)
+            public override IEnumerable<string> FieldNames { get; }
+
+            public TestLazyTableType(IEnumerable<string> fields, TryGetFieldDelegate getter)
+                : base()
             {
+                FieldNames = fields; 
                 _tryGetField = getter;
             }
 
@@ -113,10 +94,10 @@ namespace Microsoft.PowerFx.Core.Tests
 
         public AggregateTypeTests()
         {
-            _lazyRecord1 = new TestLazyRecordType("Lazy1", new List<string>() { "Foo", "Bar", "Baz" }, LazyGetField1);
-            _lazyRecord2 = new TestLazyRecordType("Lazy2", new List<string>() { "Qux", "Nested" }, LazyGetField2);
-            _lazyTable1 = new TestLazyTableType("Lazy1", new List<string>() { "Foo", "Bar", "Baz" }, LazyGetField1);
-            _lazyTable2 = new TestLazyTableType("Lazy2", new List<string>() { "Qux", "Nested" }, LazyGetField2);
+            _lazyRecord1 = new TestLazyRecordType(new List<string>() { "Foo", "Bar", "Baz" }, LazyGetField1);
+            _lazyRecord2 = new TestLazyRecordType(new List<string>() { "Qux", "Nested" }, LazyGetField2);
+            _lazyTable1 = new TestLazyTableType(new List<string>() { "Foo", "Bar", "Baz" }, LazyGetField1);
+            _lazyTable2 = new TestLazyTableType(new List<string>() { "Qux", "Nested" }, LazyGetField2);
         }
 
         [Fact]
@@ -126,8 +107,8 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal(DKind.LazyTable, _lazyTable1.DType.Kind);
             Assert.Equal("r!", _lazyRecord1.DType.ToString());
             Assert.Equal("r*", _lazyTable1.DType.ToString());
-            Assert.Equal("Lazy2", _lazyRecord2.DType.LazyTypeProvider.Identity.ToString());
-            Assert.Equal("Lazy1", _lazyTable1.DType.LazyTypeProvider.Identity.ToString());
+            Assert.Equal(_lazyRecord2, _lazyRecord2.DType.LazyTypeProvider.BackingFormulaType);
+            Assert.Equal(_lazyTable1, _lazyTable1.DType.LazyTypeProvider.BackingFormulaType);
             
             Assert.Equal(0, _getter1CalledCount);
             Assert.Equal(0, _getter2CalledCount);

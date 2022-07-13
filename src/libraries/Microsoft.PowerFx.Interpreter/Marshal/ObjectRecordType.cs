@@ -10,10 +10,12 @@ namespace Microsoft.PowerFx.Interpreter
 {
     internal class ObjectRecordType : RecordType
     {
+        public override IEnumerable<string> FieldNames => _marshaller.FieldNames;
+
         private readonly ObjectMarshaller _marshaller;
 
         public ObjectRecordType(Type fromType, ObjectMarshaller marshaller)
-            : base(new MarshalledObjectIdentity(fromType), marshaller.FieldNames)
+            : base()
         {
              _marshaller = marshaller;
         }
