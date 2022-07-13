@@ -39,7 +39,7 @@ namespace Microsoft.PowerFx.Core.Tests
             }
         }
 
-        public class TestLazyRecordType : BaseRecordType
+        public class TestLazyRecordType : RecordType
         {
             public delegate bool TryGetFieldDelegate(string name, out FormulaType type);
 

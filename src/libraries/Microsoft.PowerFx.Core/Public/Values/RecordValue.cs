@@ -34,7 +34,7 @@ namespace Microsoft.PowerFx.Types
         /// Initializes a new instance of the <see cref="RecordValue"/> class.
         /// </summary>
         /// <param name="type"></param>
-        public RecordValue(BaseRecordType type) 
+        public RecordValue(RecordType type) 
             : base(IRContext.NotInSource(type))
         {
         }
@@ -42,17 +42,17 @@ namespace Microsoft.PowerFx.Types
         internal RecordValue(IRContext irContext)
             : base(irContext)
         {
-            Contract.Assert(IRContext.ResultType is BaseRecordType);
+            Contract.Assert(IRContext.ResultType is RecordType);
         }
 
         /// <summary>
         /// The RecordType of this value.
         /// </summary>
-        public new BaseRecordType Type => (BaseRecordType)base.Type;
+        public new RecordType Type => (RecordType)base.Type;
 
         public static RecordValue Empty()
         {
-            var type = new RecordType();
+            var type = new KnownRecordType();
             return new InMemoryRecordValue(IRContext.NotInSource(type), new Dictionary<string, FormulaValue>());
         }
 
@@ -95,7 +95,7 @@ namespace Microsoft.PowerFx.Types
                 // Ensure that type is properly projected. 
                 if (result is RecordValue recordValue)
                 {
-                    var compileTimeType = (BaseRecordType)fieldType;
+                    var compileTimeType = (RecordType)fieldType;
                     result = CompileTimeTypeWrapperRecordValue.AdjustType(compileTimeType, recordValue);
                 }
                 else if (result is TableValue tableValue)

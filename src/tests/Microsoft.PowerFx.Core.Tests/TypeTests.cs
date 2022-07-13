@@ -11,11 +11,11 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void RecordType()
         {
-            var r1 = new RecordType()
+            var r1 = new KnownRecordType()
                 .Add(new NamedFormulaType("Num", FormulaType.Number))
                 .Add(new NamedFormulaType("B", FormulaType.Boolean));
 
-            var r2 = new RecordType()
+            var r2 = new KnownRecordType()
                 .Add(new NamedFormulaType("B", FormulaType.Boolean))
                 .Add(new NamedFormulaType("Num", FormulaType.Number));
 

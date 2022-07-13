@@ -22,7 +22,7 @@ namespace Microsoft.PowerFx.Tests
                 .Add(new NamedFormulaType("Column2", FormulaType.Unknown))
                 .Add(new NamedFormulaType("Column3", FormulaType.Unknown));
 
-            var executionScope = new RecordType()
+            var executionScope = new KnownRecordType()
                 .Add("RobinTable", fType);
 
             var validationResult = engine.Check("Index(RobinTable, 1).Column1", executionScope);
@@ -133,7 +133,7 @@ First(
             var fType = new TableType()
                 .Add(new NamedFormulaType("Value", FormulaType.Unknown));
 
-            var executionScope = new RecordType()
+            var executionScope = new KnownRecordType()
                 .Add("RobinList", fType);
 
             var validationResult = engine.Check("Index(RobinList, 1).Value", executionScope);

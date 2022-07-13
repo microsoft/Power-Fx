@@ -21,7 +21,7 @@ namespace Microsoft.PowerFx.Types
         public InMemoryRecordValue(IRContext irContext, IReadOnlyDictionary<string, FormulaValue> fields)
             : base(irContext)
         {
-            Contract.Assert(IRContext.ResultType is BaseRecordType);
+            Contract.Assert(IRContext.ResultType is RecordType);
 
             _fields = fields;
         }

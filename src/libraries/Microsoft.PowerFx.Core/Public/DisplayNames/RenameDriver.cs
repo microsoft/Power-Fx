@@ -13,13 +13,13 @@ namespace Microsoft.PowerFx.Core
 {
     public sealed class RenameDriver
     {
-        private readonly BaseRecordType _baseParameters;
-        private readonly BaseRecordType _renameParameters;
+        private readonly RecordType _baseParameters;
+        private readonly RecordType _renameParameters;
         private readonly INameResolver _resolver;
         private readonly Engine _engine;
         private readonly IBinderGlue _binderGlue;
 
-        internal RenameDriver(BaseRecordType parameters, DPath pathToRename, DName updatedName, Engine engine, INameResolver resolver, IBinderGlue binderGlue)
+        internal RenameDriver(RecordType parameters, DPath pathToRename, DName updatedName, Engine engine, INameResolver resolver, IBinderGlue binderGlue)
         {
             var segments = new Queue<DName>(pathToRename.Segments());
             Contracts.CheckParam(segments.Count > 0, nameof(parameters));
@@ -27,7 +27,7 @@ namespace Microsoft.PowerFx.Core
             _baseParameters = parameters;
 
             // After this point, _renameParameters should have at most one logical->display pair that can change in this conversion
-            _renameParameters = RenameFormulaTypeHelper(parameters, segments, updatedName) as BaseRecordType;
+            _renameParameters = RenameFormulaTypeHelper(parameters, segments, updatedName) as RecordType;
             _resolver = resolver;
             _engine = engine;
             _binderGlue = binderGlue;

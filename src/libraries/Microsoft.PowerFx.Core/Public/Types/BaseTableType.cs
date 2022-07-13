@@ -37,9 +37,9 @@ namespace Microsoft.PowerFx.Types
 
         internal FormulaType SingleColumnFieldType => GetFieldType(SingleColumnFieldName);
 
-        public BaseRecordType ToRecord()
+        public RecordType ToRecord()
         {
-            return new RecordType(DType.ToRecord());
+            return new KnownRecordType(DType.ToRecord());
         }
     }
 }

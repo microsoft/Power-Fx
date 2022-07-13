@@ -774,7 +774,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         [InlineData("{\"A\": 1 }", "A+2", typeof(NumberType))]
         [InlineData("{}", "\"hi\"", typeof(StringType))]
         [InlineData("{}", "", typeof(BlankType))]
-        [InlineData("{}", "{ A: 1 }", typeof(RecordType))]
+        [InlineData("{}", "{ A: 1 }", typeof(KnownRecordType))]
         [InlineData("{}", "[1, 2, 3]", typeof(TableType))]
         [InlineData("{}", "true", typeof(BooleanType))]
         public void TestPublishExpressionType(string context, string expression, System.Type expectedType)

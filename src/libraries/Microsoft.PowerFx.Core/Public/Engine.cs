@@ -46,7 +46,7 @@ namespace Microsoft.PowerFx
         }
 
         /// <summary>
-        /// Create a resolver for use in binding. This is called from <see cref="Check(string, BaseRecordType, ParserOptions)"/>.
+        /// Create a resolver for use in binding. This is called from <see cref="Check(string, RecordType, ParserOptions)"/>.
         /// Base classes can override this is there are additional symbols not in the config.
         /// </summary>
         /// <param name="alternateConfig">An alternate config that can be provided. Should default to engine's config if null.</param>        
@@ -105,7 +105,7 @@ namespace Microsoft.PowerFx
         /// <param name="parameterType">types of additional args to pass.</param>
         /// <param name="options">parser options to use.</param>
         /// <returns></returns>
-        public CheckResult Check(string expressionText, BaseRecordType parameterType = null, ParserOptions options = null)
+        public CheckResult Check(string expressionText, RecordType parameterType = null, ParserOptions options = null)
         {
             var parse = Parse(expressionText, options);
             return Check(parse, parameterType, options);
@@ -118,15 +118,15 @@ namespace Microsoft.PowerFx
         /// <param name="parameterType">types of additional args to pass.</param>
         /// <param name="options">parser options to use.</param>
         /// <returns></returns>
-        public CheckResult Check(ParseResult parse, BaseRecordType parameterType = null, ParserOptions options = null)
+        public CheckResult Check(ParseResult parse, RecordType parameterType = null, ParserOptions options = null)
         {
             var bindingConfig = new BindingConfig(options?.AllowsSideEffects == true);
             return CheckInternal(parse, parameterType, bindingConfig);
         }
 
-        private CheckResult CheckInternal(ParseResult parse, BaseRecordType parameterType, BindingConfig bindingConfig)
+        private CheckResult CheckInternal(ParseResult parse, RecordType parameterType, BindingConfig bindingConfig)
         {
-            parameterType ??= new RecordType();
+            parameterType ??= new KnownRecordType();
                         
             // Ok to continue with binding even if there are parse errors. 
             // We can still use that for intellisense. 
@@ -183,7 +183,7 @@ namespace Microsoft.PowerFx
         /// <summary>
         /// Get intellisense from the formula.
         /// </summary>
-        public IIntellisenseResult Suggest(string expression, BaseRecordType parameterType, int cursorPosition)
+        public IIntellisenseResult Suggest(string expression, RecordType parameterType, int cursorPosition)
         {
             var result = Check(expression, parameterType);
             var binding = result._binding;
@@ -205,7 +205,7 @@ namespace Microsoft.PowerFx
         /// <param name="pathToRename">Path to the field to rename.</param>
         /// <param name="updatedName">New name. Replaces the last segment of <paramref name="pathToRename"/>.</param>
         /// <returns></returns>
-        public RenameDriver CreateFieldRenamer(BaseRecordType parameters, DPath pathToRename, DName updatedName)
+        public RenameDriver CreateFieldRenamer(RecordType parameters, DPath pathToRename, DName updatedName)
         {
             Contracts.CheckValue(parameters, nameof(parameters));
             Contracts.CheckValid(pathToRename, nameof(pathToRename));
@@ -231,7 +231,7 @@ namespace Microsoft.PowerFx
         /// be acecssed as top-level identifiers in the formula. If DisplayNames are used, make sure to have that mapping
         /// as part of the RecordType.</param>
         /// <returns>The formula, with all identifiers converted to invariant form.</returns>
-        public string GetInvariantExpression(string expressionText, BaseRecordType parameters)
+        public string GetInvariantExpression(string expressionText, RecordType parameters)
         {
             return ExpressionLocalizationHelper.ConvertExpression(expressionText, parameters, BindingConfig.Default, CreateResolver(), CreateBinderGlue(), Config.CultureInfo, toDisplay: false);
         }
@@ -244,7 +244,7 @@ namespace Microsoft.PowerFx
         /// be acecssed as top-level identifiers in the formula. If DisplayNames are used, make sure to have that mapping
         /// as part of the RecordType.</param>
         /// <returns>The formula, with all identifiers converted to display form.</returns>
-        public string GetDisplayExpression(string expressionText, BaseRecordType parameters)
+        public string GetDisplayExpression(string expressionText, RecordType parameters)
         {
             return ExpressionLocalizationHelper.ConvertExpression(expressionText, parameters, BindingConfig.Default, CreateResolver(), CreateBinderGlue(), Config.CultureInfo, toDisplay: true);
         }

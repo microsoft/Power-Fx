@@ -24,7 +24,7 @@ namespace Microsoft.PowerFx.Tests
 
             var result = engine.Check(
                 "3*2+x",
-                new RecordType().Add(
+                new KnownRecordType().Add(
                     new NamedFormulaType("x", FormulaType.Number)));
 
             Assert.True(result.IsSuccess);
@@ -49,7 +49,7 @@ namespace Microsoft.PowerFx.Tests
             var str = parse.Root.ToString();
             Assert.Equal("3 * x", str);
 
-            var r = new RecordType().Add(
+            var r = new KnownRecordType().Add(
                    new NamedFormulaType("x", FormulaType.Number));
                         
             var check = engine.Check(parse, r);
@@ -235,11 +235,11 @@ namespace Microsoft.PowerFx.Tests
                 ".Loop.Loop.Loop.Loop.Loop.Loop.Loop.Loop.Loop", new LazyRecursiveRecordType());
             
             Assert.True(result.IsSuccess);
-            var recordType = Assert.IsType<RecordType>(result.ReturnType);
+            var recordType = Assert.IsType<KnownRecordType>(result.ReturnType);
             Assert.Equal("LazyIdentityTest", recordType.Identity.ToString());
         }
 
-        private class LazyRecursiveRecordType : BaseRecordType
+        private class LazyRecursiveRecordType : RecordType
         {
             public LazyRecursiveRecordType()
                 : base(new AggregateTypeTests.TestIdentity("LazyIdentityTest"), new List<string> { "Value", "Loop" })

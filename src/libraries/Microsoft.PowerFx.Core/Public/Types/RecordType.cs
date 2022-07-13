@@ -3,32 +3,41 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Types
 {
-    public sealed class RecordType : BaseRecordType
+    /// <summary>
+    /// Represents a Record type within PowerFx. If this is subclassed, it's quite likely that 
+    /// <see cref="RecordValue"/> should be as well. 
+    /// If the type is known in advance and easy to construct, use <see cref="KnownRecordType"/> instead of
+    /// deriving from this. 
+    /// </summary>
+    public abstract class RecordType : AggregateType
     {
+        // The internal constructor allows us to wrap known DTypes, while the public constructor
+        // will create a DType that wraps derived TryGetField/Fields/Identity calls
         internal RecordType(DType type)
             : base(type)
         {
+            Contracts.Assert(type.IsRecord);
         }
 
-        public RecordType()
-            : base(DType.EmptyRecord)
+        public RecordType(ITypeIdentity identity, IEnumerable<string> fieldNames) 
+            : base(identity, fieldNames, false)
         {
         }
 
-        public RecordType Add(NamedFormulaType field)
+        public override void Visit(ITypeVisitor vistor)
         {
-            return new RecordType(AddFieldToType(field));
+            vistor.Visit(this);
         }
-
-        public RecordType Add(string logicalName, FormulaType type, string optionalDisplayName = null)
+        
+        public BaseTableType ToTable()
         {
-            return Add(new NamedFormulaType(new TypedName(type.DType, new DName(logicalName)), optionalDisplayName));
+            return new TableType(DType.ToTable());
         }
     }
 }

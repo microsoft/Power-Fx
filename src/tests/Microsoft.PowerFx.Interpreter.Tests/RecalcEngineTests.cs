@@ -299,7 +299,7 @@ namespace Microsoft.PowerFx.Tests
             var engine = new RecalcEngine();
             var result = engine.Check(
                 "3*2+x",
-                new RecordType().Add(
+                new KnownRecordType().Add(
                     new NamedFormulaType("x", FormulaType.Number)));
 
             Assert.True(result.IsSuccess);
@@ -314,8 +314,8 @@ namespace Microsoft.PowerFx.Tests
             var config = new PowerFxConfig();
             var engine = new RecalcEngine(config);
 
-            var result = engine.Check("T.Var = 23", new RecordType()
-                .Add(new NamedFormulaType("T", new RecordType().Add(new NamedFormulaType("Var", FormulaType.String)))));
+            var result = engine.Check("T.Var = 23", new KnownRecordType()
+                .Add(new NamedFormulaType("T", new KnownRecordType().Add(new NamedFormulaType("Var", FormulaType.String)))));
 
             Assert.True(result.IsSuccess);
             Assert.Equal(1, result.Errors.Count(x => x.IsWarning));
@@ -406,7 +406,7 @@ namespace Microsoft.PowerFx.Tests
         public void CheckBindErrorWithParseExpression()
         {
             var engine = new RecalcEngine();
-            var result = engine.Check("3+foo+2", new RecordType()); // foo is undefined 
+            var result = engine.Check("3+foo+2", new KnownRecordType()); // foo is undefined 
 
             Assert.False(result.IsSuccess);
             Assert.Null(result.Expression);
@@ -420,7 +420,7 @@ namespace Microsoft.PowerFx.Tests
             var engine = new RecalcEngine();
             var result = engine.Check(
                 "3*2+x",
-                new RecordType().Add(
+                new KnownRecordType().Add(
                     new NamedFormulaType("x", FormulaType.Number)));
 
             // Test that parsing worked
@@ -448,7 +448,7 @@ namespace Microsoft.PowerFx.Tests
         {
             var result = engine.Check(
                "3*2+x",
-               new RecordType().Add(
+               new KnownRecordType().Add(
                    new NamedFormulaType("x", FormulaType.Number)));
 
             Assert.True(result.IsSuccess);

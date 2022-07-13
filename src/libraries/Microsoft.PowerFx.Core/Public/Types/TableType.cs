@@ -21,7 +21,7 @@ namespace Microsoft.PowerFx.Types
         {
         }
 
-        internal static TableType FromRecord(BaseRecordType type)
+        internal static TableType FromRecord(RecordType type)
         {
             var tableType = type.DType.ToTable();
             return new TableType(tableType);

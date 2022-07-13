@@ -77,7 +77,7 @@ namespace Microsoft.PowerFx.Types
             Contract.Assert(element.ValueKind == JsonValueKind.Object);
 
             var fields = new List<NamedValue>();
-            var type = new RecordType();
+            var type = new KnownRecordType();
 
             foreach (var pair in element.EnumerateObject())
             {
@@ -118,7 +118,7 @@ namespace Microsoft.PowerFx.Types
             }
             else
             {
-                type = ((BaseRecordType)GuaranteeRecord(records[0]).IRContext.ResultType).ToTable();
+                type = ((RecordType)GuaranteeRecord(records[0]).IRContext.ResultType).ToTable();
             }
 
             return new InMemoryTableValue(IRContext.NotInSource(type), records.Select(r => DValue<RecordValue>.Of(r)));

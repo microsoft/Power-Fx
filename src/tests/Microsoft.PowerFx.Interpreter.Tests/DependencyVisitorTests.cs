@@ -25,7 +25,7 @@ namespace Microsoft.PowerFx.Tests
             var accountType = new TableType()
                 .Add(new NamedFormulaType("Age", FormulaType.Number));
 
-            var type = new RecordType()
+            var type = new KnownRecordType()
                 .Add(new NamedFormulaType("A", FormulaType.Number))
                 .Add(new NamedFormulaType("B", FormulaType.Number))
                 .Add(new NamedFormulaType("Accounts", accountType));

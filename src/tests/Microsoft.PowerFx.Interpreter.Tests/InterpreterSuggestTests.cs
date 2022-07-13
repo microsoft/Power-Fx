@@ -14,7 +14,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 {
     public class InterpreterSuggestTests : IntellisenseTestBase
     {
-        private string[] SuggestStrings(string expression, PowerFxConfig config, BaseRecordType parameterType)
+        private string[] SuggestStrings(string expression, PowerFxConfig config, RecordType parameterType)
         {
             Assert.NotNull(expression);
 
@@ -53,9 +53,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             config.AddEntity(optionSet);
             config.AddEntity(otherOptionSet);
 
-            var parameterType = new RecordType()
+            var parameterType = new KnownRecordType()
                 .Add(new NamedFormulaType("TopOptionSetField", optionSet.FormulaType))
-                .Add(new NamedFormulaType("Nested", new RecordType()
+                .Add(new NamedFormulaType("Nested", new KnownRecordType()
                     .Add(new NamedFormulaType("InnerOtherOptionSet", otherOptionSet.FormulaType))));
 
             var actualSuggestions = SuggestStrings(expression, config, parameterType);

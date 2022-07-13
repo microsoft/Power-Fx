@@ -105,7 +105,7 @@ namespace Microsoft.PowerFx.Core
                 };
             }
 
-            public void Visit(BaseRecordType type)
+            public void Visit(RecordType type)
             {
                 Result = new FormulaTypeSchema()
                 {

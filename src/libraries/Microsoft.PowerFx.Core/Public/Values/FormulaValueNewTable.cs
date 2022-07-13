@@ -27,12 +27,12 @@ namespace Microsoft.PowerFx.Types
         /// <param name="recordType"></param>
         /// <param name="values"></param>
         /// <returns></returns>
-        public static TableValue NewTable(BaseRecordType recordType, params RecordValue[] values)
+        public static TableValue NewTable(RecordType recordType, params RecordValue[] values)
         {
             return NewTable(recordType, (IEnumerable<RecordValue>)values);
         }
 
-        public static TableValue NewTable(BaseRecordType recordType, IEnumerable<RecordValue> records)
+        public static TableValue NewTable(RecordType recordType, IEnumerable<RecordValue> records)
         {
             var tableType = recordType.ToTable();
             return new RecordsOnlyTableValue(IRContext.NotInSource(tableType), records);
@@ -60,7 +60,7 @@ namespace Microsoft.PowerFx.Types
                 throw new InvalidOperationException($"Use NewTable() instead");
             }
 
-            var recordType = new RecordType().Add(TableValue.ValueName, fxType);
+            var recordType = new KnownRecordType().Add(TableValue.ValueName, fxType);
 
             var irContext = IRContext.NotInSource(recordType);
             var recordValues = values.Select(item => new InMemoryRecordValue(

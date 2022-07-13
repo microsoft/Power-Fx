@@ -33,8 +33,8 @@ namespace Microsoft.PowerFx
             {
                 var first = records.FirstOrDefault();
                 var recordType = (first == null) ?
-                    new RecordType() :
-                    ((BaseRecordType)first.Type);
+                    new KnownRecordType() :
+                    ((RecordType)first.Type);
                 return FormulaValue.NewTable(recordType, records);
             }
 

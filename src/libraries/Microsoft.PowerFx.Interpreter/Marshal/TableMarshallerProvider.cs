@@ -26,12 +26,12 @@ namespace Microsoft.PowerFx
 
             var rowMarshaller = cache.GetMarshaller(et);
              
-            if (rowMarshaller.Type is not BaseRecordType recordType)
+            if (rowMarshaller.Type is not RecordType recordType)
             {               
                 // Single Column table. Wrap in a record. 
                 // This is happens for scalars.
                 // But could also happen for a table of tables. 
-                recordType = new RecordType().Add(TableValue.ValueName, rowMarshaller.Type);
+                recordType = new KnownRecordType().Add(TableValue.ValueName, rowMarshaller.Type);
 
                 rowMarshaller = new SCTMarshaller(recordType, rowMarshaller);
             }
@@ -71,7 +71,7 @@ namespace Microsoft.PowerFx
 
             private readonly ITypeMarshaller _inner;
 
-            public SCTMarshaller(BaseRecordType type, ITypeMarshaller inner)
+            public SCTMarshaller(RecordType type, ITypeMarshaller inner)
             {
                 Type = type;
                 _inner = inner;
@@ -99,7 +99,7 @@ namespace Microsoft.PowerFx
                 var t2 = typeof(TableMarshaller<>).MakeGenericType(elementType);
                 var tableMarshaller = (TableMarshaller)Activator.CreateInstance(t2);
 
-                var tableType = ((BaseRecordType)rowMarshaller.Type).ToTable();
+                var tableType = ((RecordType)rowMarshaller.Type).ToTable();
 
                 tableMarshaller.Type = tableType;
                 tableMarshaller._rowMarshaller = rowMarshaller;
