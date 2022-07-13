@@ -89,7 +89,7 @@ namespace Microsoft.PowerFx
                 throw new InvalidOperationException($"Requires successful binding");
             }
 
-            result.ThrowOnErrors();            
+            result.ThrowOnErrors();
 
             (var irnode, var ruleScopeSymbol) = IRTranslator.Translate(result._binding);
             return new ParsedExpression(irnode, ruleScopeSymbol);
@@ -135,7 +135,7 @@ namespace Microsoft.PowerFx
             }
             else
             {
-                Formulas[name] = new RecalcFormulaInfo { Value = x, _type = x.IRContext.ResultType };                
+                Formulas[name] = new RecalcFormulaInfo { Value = x, _type = x.IRContext.ResultType };
             }
 
             // Could trigger recalcs?
@@ -152,7 +152,7 @@ namespace Microsoft.PowerFx
         /// <returns>The formula's result.</returns>
         public FormulaValue Eval(string expressionText, RecordValue parameters = null, ParserOptions options = null)
         {
-            return EvalAsync(expressionText, CancellationToken.None, parameters, options).Result;          
+            return EvalAsync(expressionText, CancellationToken.None, parameters, options).Result;
         }
 
         public async Task<FormulaValue> EvalAsync(string expressionText, CancellationToken cancel, RecordValue parameters = null, ParserOptions options = null)

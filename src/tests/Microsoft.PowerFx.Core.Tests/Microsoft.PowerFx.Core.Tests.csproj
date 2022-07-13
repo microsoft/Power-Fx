@@ -25,9 +25,6 @@
     <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
   </PropertyGroup>
 
-  <PropertyGroup>
-
-  </PropertyGroup>
 
   <!-- Nuget Properties -->
   <PropertyGroup>
