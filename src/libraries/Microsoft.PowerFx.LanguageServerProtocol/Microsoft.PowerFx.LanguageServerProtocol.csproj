@@ -9,8 +9,7 @@
 
   <!-- Nuget Properties -->
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <LangVersion>9.0</LangVersion>
+    <TargetFramework>netstandard2.0</TargetFramework>    
     <PackageId>Microsoft.PowerFx.LanguageServerProtocol</PackageId>
     <Title>Microsoft Power Fx LanguageServerProtocol</Title>
     <Description>The LanguageServerProtocol of the Power Fx compiler. See more from https://microsoft.github.io/language-server-protocol/ </Description>
