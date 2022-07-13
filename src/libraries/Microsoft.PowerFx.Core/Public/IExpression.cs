@@ -13,7 +13,7 @@ namespace Microsoft.PowerFx
     /// <returns></returns>
     public interface IExpression
     {
-        public Task<FormulaValue> EvalAsync(RecordValue parameters, Features features, CancellationToken cancel);
+        Task<FormulaValue> EvalAsync(RecordValue parameters, Features features, CancellationToken cancel);
     }
 
     /// <summary>

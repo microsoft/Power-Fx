@@ -11,7 +11,7 @@ namespace Microsoft.PowerFx.Core.Functions
     // Abstract base class for all Texl builtin functions.
     internal abstract class BuiltinFunction : TexlFunction
     {
-        public const string OneColumnTableResultNameStrOld = "Result";        
+        public const string OneColumnTableResultNameStrOld = "Result";
         public const string ColumnName_NameStr = "Name";
         public const string ColumnName_AddressStr = "Address";
         public const string ColumnName_ValueStr = "Value";
