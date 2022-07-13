@@ -177,12 +177,21 @@ namespace Microsoft.PowerFx.Functions
                 if (itemType == null)
                 {
                     columnNameStr = BuiltinFunction.ColumnName_Value;
-                    itemType = resultType.GetFieldType(columnNameStr);
-                }
+                    itemType = resultType.MaybeGetFieldType(columnNameStr);
 
-                var arg0 = args[0];
+                    if (itemType == null && args[0].Rows.Any())
+                    {
+                        return new ValueTask<FormulaValue>(ErrorValue.NewError(new ExpressionError()
+                        {
+                            Message = "Invalid Column Name",
+                            Span = irContext.SourceContext,
+                            Kind = ErrorKind.InvalidArgument
+                        }));
+                    }
+                }
+                
                 var resultRows = new List<DValue<RecordValue>>();
-                foreach (var row in arg0.Rows)
+                foreach (var row in args[0].Rows)
                 {
                     if (row.IsValue)
                     {

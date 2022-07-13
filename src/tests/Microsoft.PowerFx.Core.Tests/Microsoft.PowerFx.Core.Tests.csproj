@@ -63,6 +63,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="ExpressionTestCases\FindT_ConsistentOneColumnTableResult.txt" />
+    <None Remove="ExpressionTestCases\Sqrt_ConsistentOneColumnTableResult.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\libraries\Microsoft.PowerFx.Core\Microsoft.PowerFx.Core.csproj" />
   </ItemGroup>
   <ItemGroup>

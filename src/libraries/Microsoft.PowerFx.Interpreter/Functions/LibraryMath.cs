@@ -463,7 +463,6 @@ namespace Microsoft.PowerFx.Functions
         private static FormulaValue Sqrt(IRContext irContext, NumberValue[] args)
         {
             var n1 = args[0];
-
             var result = Math.Sqrt(n1.Value);
 
             return new NumberValue(irContext, result);
