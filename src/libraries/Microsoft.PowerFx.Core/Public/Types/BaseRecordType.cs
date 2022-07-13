@@ -26,7 +26,7 @@ namespace Microsoft.PowerFx.Types
         }
 
         public BaseRecordType(ITypeIdentity identity, IEnumerable<string> fieldNames) 
-            : base(identity, fieldNames, true)
+            : base(identity, fieldNames, false)
         {
         }
 

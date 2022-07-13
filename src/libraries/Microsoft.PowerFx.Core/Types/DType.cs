@@ -1275,9 +1275,15 @@ namespace Microsoft.PowerFx.Core.Types
             AssertValid();
             type.AssertValid();
 
+            var fullType = this;
+            if (IsLazyType)
+            {
+                fullType = LazyTypeProvider.GetExpandedType(IsTable);
+            }
+
             for (; path.Length > 0; path = path.Parent)
             {
-                fError |= !TryGetType(path.Parent, out var typeCur);
+                fError |= !fullType.TryGetType(path.Parent, out var typeCur);
                 if (!typeCur.IsAggregate)
                 {
                     fError = true;
@@ -1297,7 +1303,7 @@ namespace Microsoft.PowerFx.Core.Types
             // Don't lose the top level entity info either.
             if (HasExpandInfo)
             {
-                type = CopyExpandInfo(type, this);
+                type = CopyExpandInfo(type, fullType);
             }
 
             return type;
@@ -1310,7 +1316,13 @@ namespace Microsoft.PowerFx.Core.Types
             Contracts.Assert(name.IsValid);
             type.AssertValid();
 
-            fError |= !TryGetType(path, out var typeOuter);
+            var fullType = this;
+            if (IsLazyType)
+            {
+                fullType = LazyTypeProvider.GetExpandedType(IsTable);
+            }
+
+            fError |= !fullType.TryGetType(path, out var typeOuter);
             if (!typeOuter.IsAggregate)
             {
                 fError = true;
@@ -1332,7 +1344,7 @@ namespace Microsoft.PowerFx.Core.Types
                 updatedTypeOuter = CopyExpandInfo(updatedTypeOuter, typeOuter);
             }
 
-            return SetType(ref fError, path, updatedTypeOuter);
+            return fullType.SetType(ref fError, path, updatedTypeOuter);
         }
 
         // Return a new type based on this, with an additional named member field (name) of a specified type.
@@ -1371,15 +1383,6 @@ namespace Microsoft.PowerFx.Core.Types
         {
             AssertValid();
             Contracts.Assert(name.IsValid);
-
-            fError |= !TryGetType(path, out var typeOuter);
-            if (!typeOuter.IsAggregate)
-            {
-                fError = true;
-                return this;
-            }
-
-            Contracts.Assert(typeOuter.IsRecord || typeOuter.IsTable);
             
             var fullType = this;
             if (IsLazyType)
@@ -1387,13 +1390,22 @@ namespace Microsoft.PowerFx.Core.Types
                 fullType = LazyTypeProvider.GetExpandedType(IsTable);
             }
 
+            fError |= !fullType.TryGetType(path, out var typeOuter);
+            if (!typeOuter.IsAggregate)
+            {
+                fError = true;
+                return this;
+            }
+
+            Contracts.Assert(typeOuter.IsRecord || typeOuter.IsTable);
+
             var tree = typeOuter.TypeTree.RemoveItem(ref fError, name);
             if (fError)
             {
                 return this;
             }
 
-            return SetType(ref fError, path, new DType(typeOuter.Kind, tree, AssociatedDataSources, DisplayNameProvider));
+            return fullType.SetType(ref fError, path, new DType(typeOuter.Kind, tree, AssociatedDataSources, DisplayNameProvider));
         }
 
         // Drop fields of specified kind.
@@ -1402,7 +1414,13 @@ namespace Microsoft.PowerFx.Core.Types
             AssertValid();
             Contracts.Assert(kind >= DKind._Min && kind < DKind._Lim);
 
-            fError |= !TryGetType(path, out var typeOuter);
+            var fullType = this;
+            if (IsLazyType)
+            {
+                fullType = LazyTypeProvider.GetExpandedType(IsTable);
+            }
+
+            fError |= !fullType.TryGetType(path, out var typeOuter);
             if (!typeOuter.IsAggregate)
             {
                 fError = true;
@@ -1410,7 +1428,7 @@ namespace Microsoft.PowerFx.Core.Types
             }
 
             var tree = typeOuter.TypeTree;
-            foreach (var typedName in GetNames(path))
+            foreach (var typedName in fullType.GetNames(path))
             {
                 if (typedName.Type.Kind == kind)
                 {
@@ -1425,14 +1443,20 @@ namespace Microsoft.PowerFx.Core.Types
                 return this;
             }
 
-            return SetType(ref fError, path, new DType(typeOuter.Kind, tree, AssociatedDataSources, DisplayNameProvider));
+            return fullType.SetType(ref fError, path, new DType(typeOuter.Kind, tree, AssociatedDataSources, DisplayNameProvider));
         }
 
         public DType DropAllOfTableRelationships(ref bool fError, DPath path)
         {
             AssertValid();
 
-            fError |= !TryGetType(path, out var typeOuter);
+            var fullType = this;
+            if (IsLazyType)
+            {
+                fullType = LazyTypeProvider.GetExpandedType(IsTable);
+            }
+
+            fError |= !fullType.TryGetType(path, out var typeOuter);
             if (!typeOuter.IsAggregate)
             {
                 fError = true;
@@ -1440,7 +1464,7 @@ namespace Microsoft.PowerFx.Core.Types
             }
 
             var tree = typeOuter.TypeTree;
-            foreach (var typedName in GetNames(path))
+            foreach (var typedName in fullType.GetNames(path))
             {
                 if (typedName.Type.Kind == DKind.DataEntity && (typedName.Type.ExpandInfo?.IsTable ?? false))
                 {
@@ -1451,7 +1475,7 @@ namespace Microsoft.PowerFx.Core.Types
                     var typeInner = typedName.Type.DropAllOfTableRelationships(ref fError, DPath.Root);
                     if (fError)
                     {
-                        return this;
+                        return fullType;
                     }
 
                     if (typeInner.TypeTree != tree)
@@ -1461,7 +1485,7 @@ namespace Microsoft.PowerFx.Core.Types
                 }
             }
 
-            return SetType(ref fError, path, new DType(typeOuter.Kind, tree, AssociatedDataSources, DisplayNameProvider));
+            return fullType.SetType(ref fError, path, new DType(typeOuter.Kind, tree, AssociatedDataSources, DisplayNameProvider));
         }
 
         // Drop fields of specified kind from all nested types
@@ -1470,7 +1494,16 @@ namespace Microsoft.PowerFx.Core.Types
             AssertValid();
             Contracts.Assert(kind >= DKind._Min && kind < DKind._Lim);
 
-            fError |= !TryGetType(path, out var typeOuter);
+            var fullType = this;
+            if (IsLazyType)
+            {
+                // This probably should throw (or be eliminated)
+                // It's not safe to do an unbounded recursive operation
+                // on Lazy types that expands subtypes
+                return DropAllOfKind(ref fError, path, kind);
+            }
+
+            fError |= !fullType.TryGetType(path, out var typeOuter);
             if (!typeOuter.IsAggregate)
             {
                 fError = true;
@@ -1478,7 +1511,7 @@ namespace Microsoft.PowerFx.Core.Types
             }
 
             var tree = typeOuter.TypeTree;
-            foreach (var typedName in GetNames(path))
+            foreach (var typedName in fullType.GetNames(path))
             {
                 if (typedName.Type.Kind == kind)
                 {
@@ -1499,7 +1532,7 @@ namespace Microsoft.PowerFx.Core.Types
                 }
             }
 
-            return SetType(ref fError, path, new DType(typeOuter.Kind, tree, AssociatedDataSources, DisplayNameProvider));
+            return fullType.SetType(ref fError, path, new DType(typeOuter.Kind, tree, AssociatedDataSources, DisplayNameProvider));
         }
 
         // Drop the specified names/fields from path's type, and return the resulting type.

@@ -21,6 +21,12 @@ namespace Microsoft.PowerFx.Types
         {
             Contracts.Assert(type.IsAggregate);
             FieldNames = DType.GetNames(DPath.Root).Select(typedName => typedName.Name.Value);
+            
+            // Expose the identity if this is wrapping a lazy type
+            if (type.IsLazyType)
+            {
+                Identity = type.LazyTypeProvider.Identity;
+            }
         }
 
         public AggregateType(ITypeIdentity identity, IEnumerable<string> fieldNames, bool isTable)
@@ -30,7 +36,7 @@ namespace Microsoft.PowerFx.Types
             Identity = identity;
 
             var lazyTypeProvider = new LazyTypeProvider(Identity, FieldNames, TryGetFieldType);
-            DType = new DType(lazyTypeProvider, isTable: false);
+            DType = new DType(lazyTypeProvider, isTable: isTable);
         }
 
         public FormulaType GetFieldType(string fieldName)

@@ -38,6 +38,7 @@ namespace Microsoft.PowerFx.Core.Types
             else if (_fieldTypeGetter(name.Value, out var fieldType))
             {
                 type = fieldType.DType;
+                _expandedFields.Add(name, type);
                 return true;
             }
 
