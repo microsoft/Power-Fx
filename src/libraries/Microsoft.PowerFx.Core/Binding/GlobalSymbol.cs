@@ -7,7 +7,7 @@ using System.Text;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Types;
 
-namespace Microsoft.PowerFx.Core.IR.Symbols
+namespace Microsoft.PowerFx.Core.Binding
 {
     internal class GlobalSymbol : IGlobalSymbol
     {
