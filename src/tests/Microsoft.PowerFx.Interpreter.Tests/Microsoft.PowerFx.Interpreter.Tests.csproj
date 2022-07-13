@@ -6,6 +6,7 @@
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
     <Configurations>Debug;Release</Configurations>
     <OutputType>Library</OutputType>
+    <LangVersion>9.0</LangVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)'!='Debug' or '$(TURN_OFF_WARNING_AS_ERROR)'!='True' ">
@@ -14,7 +15,6 @@
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
     <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
   </PropertyGroup>
-
 
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="6.0.0">

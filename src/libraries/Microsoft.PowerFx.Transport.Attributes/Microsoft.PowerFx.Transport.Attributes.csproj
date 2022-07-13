@@ -34,6 +34,7 @@
   <PropertyGroup>
     <PackageId>Microsoft.PowerFx.Transport.Attributes</PackageId>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>9.0</LangVersion>
     <!-- When updating the version, add a note to the release notes below. -->
     <Title>Microsoft PowerFx Transport Attributes</Title>
     <Description>This provides attributes used by Microsoft.PowerFx.Core</Description>
