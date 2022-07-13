@@ -8,7 +8,9 @@ using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Texl;
+using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Functions;
+using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx
@@ -74,15 +76,10 @@ namespace Microsoft.PowerFx
         /// <inheritdoc/>
         protected override IExpression CreateEvaluator(CheckResult result)
         {
-            return CreateEvaluatorDirect(result);
+            return CreateEvaluatorDirect(result, new StackDepthCounter(Config.MaxCallDepth));
         }
 
-        /// <summary>
-        /// Create an evaluator over the existing binding. 
-        /// </summary>
-        /// <param name="result">A successful binding from a previous call to <see cref="Engine.Check(string, RecordType, ParserOptions)"/>. </param>
-        /// <returns></returns>
-        public static IExpression CreateEvaluatorDirect(CheckResult result)
+        internal static IExpression CreateEvaluatorDirect(CheckResult result, StackDepthCounter stackMarker)
         {
             if (result._binding == null)
             {
@@ -92,7 +89,17 @@ namespace Microsoft.PowerFx
             result.ThrowOnErrors();
 
             (var irnode, var ruleScopeSymbol) = IRTranslator.Translate(result._binding);
-            return new ParsedExpression(irnode, ruleScopeSymbol);
+            return new ParsedExpression(irnode, ruleScopeSymbol, stackMarker);
+        }
+
+        /// <summary>
+        /// Create an evaluator over the existing binding. 
+        /// </summary>
+        /// <param name="result">A successful binding from a previous call to <see cref="Engine.Check(string, RecordType, ParserOptions)"/>. </param>
+        /// <returns></returns>
+        public static IExpression CreateEvaluatorDirect(CheckResult result)
+        {
+            return CreateEvaluatorDirect(result, new StackDepthCounter(PowerFxConfig.DefaultMaxCallDepth));
         }
 
         // This handles lookups in the global scope. 
@@ -164,9 +171,7 @@ namespace Microsoft.PowerFx
 
             var check = Check(expressionText, (RecordType)parameters.IRContext.ResultType, options);
             check.ThrowOnErrors();
-
-            var newValue = await check.Expression.EvalAsync(parameters, cancel);
-            return newValue;
+            return await check.Expression.EvalAsync(parameters, cancel);
         }
 
         // Invoke onUpdate() each time this formula is changed, passing in the new value. 
