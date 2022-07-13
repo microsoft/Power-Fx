@@ -1,0 +1,38 @@
+steps:
+- task: DownloadBuildArtifacts@0
+  displayName: 'Download compat results artifact'
+  inputs:
+    downloadType: specific
+    itemPattern: '**\*.txt'
+    downloadPath: '$(System.ArtifactsDirectory)\ApiCompat'
+
+- task: CopyFiles@2
+  displayName: 'Copy results for publish to Artifacts'
+  inputs:
+    SourceFolder: '$(System.ArtifactsDirectory)\ApiCompat'
+    Contents: '**\*.txt'
+    TargetFolder: '$(System.ArtifactsDirectory)\ApiCompatibilityResults'
+    flattenFolders: true
+
+- task: PublishPipelineArtifact@1
+  inputs:
+    artifactName: 'ApiCompatibilityResults'
+    targetPath: '$(System.ArtifactsDirectory)\ApiCompatibilityResults'
+  displayName: 'Publish compat results to Artifacts'
+  continueOnError: true
+
+- task: SOUTHWORKS.github-pr-comment.custom-publish-comment-task.github-pr-comment@0
+  displayName: 'Publish compat results to Github'
+  inputs:
+    userToken: '$(GitHubCommentApiKey)'
+    bodyFilePath: '$(System.ArtifactsDirectory)\ApiCompat'
+    getSubFolders: true
+  # Skip forks, as secret tokens are not available to them.
+  condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'), ne(variables['System.PullRequest.IsFork'], 'True'))
+
+- script: |
+   cd ..
+   dir /s
+  displayName: 'Dir workspace'
+  continueOnError: true
+  condition: succeededOrFailed()
