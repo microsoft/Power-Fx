@@ -275,7 +275,7 @@ namespace Microsoft.PowerFx.Functions
             else
             {
                 var name = BuiltinFunction.ColumnName_ValueStr;
-                var inputRecordType = new KnownRecordType().Add(name, arg.Type);
+                var inputRecordType = RecordType.Empty().Add(name, arg.Type);
                 var inputRecordNamedValue = new NamedValue(name, arg);
                 var inputRecord = new InMemoryRecordValue(IRContext.NotInSource(inputRecordType), new List<NamedValue>() { inputRecordNamedValue });
                 var inputDValue = DValue<RecordValue>.Of(inputRecord);

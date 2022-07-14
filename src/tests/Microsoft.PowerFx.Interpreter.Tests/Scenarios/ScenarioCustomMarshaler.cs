@@ -234,11 +234,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 { "bool", true }
             };
 
-            var recordTypeTestObj = new KnownRecordType()
+            var recordTypeTestObj = RecordType.Empty()
                 .Add("Field1", FormulaType.Number)
                 .Add("Field2", FormulaType.Number);
 
-            var recordType = new KnownRecordType()
+            var recordType = RecordType.Empty()
                 .Add("int", FormulaType.Number)
                 .Add("str", FormulaType.String)
                 .Add("test", recordTypeTestObj)

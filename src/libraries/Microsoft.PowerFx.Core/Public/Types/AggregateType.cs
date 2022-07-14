@@ -76,5 +76,9 @@ namespace Microsoft.PowerFx.Types
 
             return newType;
         }
+
+        public abstract override bool Equals(object other);
+
+        public abstract override int GetHashCode();
     }
 }

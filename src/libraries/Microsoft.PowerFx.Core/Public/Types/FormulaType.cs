@@ -160,6 +160,7 @@ namespace Microsoft.PowerFx.Types
                 case DKind.LazyRecord:
                     if (type.LazyTypeProvider.BackingFormulaType is RecordType record)
                     {
+                        // For Build calls, if the type is actually defined by a derived FormulaType, we return the derived instance.
                         return record;
                     }
 
@@ -168,6 +169,7 @@ namespace Microsoft.PowerFx.Types
                 case DKind.LazyTable:
                     if (type.LazyTypeProvider.BackingFormulaType is TableType table)
                     {
+                        // For Build calls, if the type is actually defined by a derived FormulaType, we return the derived instance.
                         return table;
                     }
 

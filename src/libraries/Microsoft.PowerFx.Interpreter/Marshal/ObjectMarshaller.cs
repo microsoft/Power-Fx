@@ -18,8 +18,14 @@ namespace Microsoft.PowerFx
     [DebuggerDisplay("ObjMarshal({Type})")]
     public class ObjectMarshaller : ITypeMarshaller
     {
+        /// <summary>
+        /// Value Marshalling function for a field.
+        /// </summary>
         public delegate FormulaValue FieldValueMarshaller(object source);
 
+        /// <summary>
+        /// Method that should return the Type and Value Marshalling function for a field.
+        /// </summary>
         public delegate (FormulaType fieldType, FieldValueMarshaller fieldValueMarshaller) FieldTypeAndValueMarshallerGetter();
 
         private readonly Dictionary<string, FieldTypeAndValueMarshallerGetter> _fieldGetters; 
@@ -57,22 +63,14 @@ namespace Microsoft.PowerFx
             fieldValue = null;
             if (_fieldGetters.TryGetValue(name, out var getter))
             {
-                fieldValue = GetValue(source, name, getter);
+                fieldValue = GetMarshalledValue(source, name, getter);
                 return true;
             }
 
             return false;
         }
 
-        internal IEnumerable<NamedValue> GetFields(object source)
-        {
-            foreach (var kv in _fieldGetters)
-            {
-                yield return new NamedValue(kv.Key, GetValue(source, kv.Key, kv.Value));
-            }
-        }
-
-        private static FormulaValue GetValue(object source, string name, FieldTypeAndValueMarshallerGetter getter)
+        private static FormulaValue GetMarshalledValue(object source, string name, FieldTypeAndValueMarshallerGetter getter)
         {
             var (_, valueMarshaller) = getter();
             if (valueMarshaller == null) 

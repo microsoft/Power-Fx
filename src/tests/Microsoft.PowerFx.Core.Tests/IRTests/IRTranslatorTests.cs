@@ -27,10 +27,10 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("Sum(numtable, Sum(val,0))", "Sum(val,0)", typeof(NumberType))]
         public void TestLazyEvalNode(string expression, string expectedFragment, Type type)
         {
-            var tableType = new KnownTableType()
+            var tableType = TableType.Empty()
                 .Add(new NamedFormulaType("val", FormulaType.Number));
 
-            var parameterType = new KnownRecordType()
+            var parameterType = RecordType.Empty()
                 .Add(new NamedFormulaType("numtable", tableType));
 
             var engine = new Engine(new PowerFxConfig());

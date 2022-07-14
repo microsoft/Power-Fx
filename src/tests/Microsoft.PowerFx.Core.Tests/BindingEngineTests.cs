@@ -24,7 +24,7 @@ namespace Microsoft.PowerFx.Tests
 
             var result = engine.Check(
                 "3*2+x",
-                new KnownRecordType().Add(
+                RecordType.Empty().Add(
                     new NamedFormulaType("x", FormulaType.Number)));
 
             Assert.True(result.IsSuccess);
@@ -49,7 +49,7 @@ namespace Microsoft.PowerFx.Tests
             var str = parse.Root.ToString();
             Assert.Equal("3 * x", str);
 
-            var r = new KnownRecordType().Add(
+            var r = RecordType.Empty().Add(
                    new NamedFormulaType("x", FormulaType.Number));
                         
             var check = engine.Check(parse, r);
@@ -277,6 +277,16 @@ namespace Microsoft.PowerFx.Tests
 
                 yield return "SomeString";
                 yield return "Loop";
+            }
+
+            public override bool Equals(object other)
+            {
+                return other is LazyRecursiveRecordType; // All the same 
+            }
+
+            public override int GetHashCode()
+            {
+                return 1;
             }
         }
 

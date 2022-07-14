@@ -60,7 +60,7 @@ namespace Microsoft.PowerFx.Types
                 throw new InvalidOperationException($"Use NewTable() instead");
             }
 
-            var recordType = new KnownRecordType().Add(TableValue.ValueName, fxType);
+            var recordType = RecordType.Empty().Add(TableValue.ValueName, fxType);
 
             var irContext = IRContext.NotInSource(recordType);
             var recordValues = values.Select(item => new InMemoryRecordValue(

@@ -273,7 +273,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             TableType type = (TableType)value.Type;
 
-            TableType typeExpected = new KnownTableType()
+            TableType typeExpected = TableType.Empty()
                 .Add(new NamedFormulaType("Value", FormulaType.Number));
             Assert.Equal(typeExpected, type);
 

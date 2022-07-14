@@ -114,7 +114,7 @@ namespace Microsoft.PowerFx.Types
             TableType type;
             if (records.Count == 0)
             {
-                type = new KnownTableType();
+                type = TableType.Empty();
             }
             else
             {

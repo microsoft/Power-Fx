@@ -16,6 +16,11 @@ namespace Microsoft.PowerFx.Types
             Contracts.Assert(type.IsTable);
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TableType"/> class.
+        /// Derived classes calling this must override <see cref="AggregateType.FieldNames"/>
+        /// and <see cref="AggregateType.TryGetFieldType(string, out FormulaType)"/>.
+        /// </summary>
         public TableType()
             : base(true)
         {
@@ -36,7 +41,12 @@ namespace Microsoft.PowerFx.Types
         }
 
         internal FormulaType SingleColumnFieldType => GetFieldType(SingleColumnFieldName);
-
+        
+        /// <summary>
+        /// Converts this type to a table.
+        /// If this type was a Table of a derived RecordType,
+        /// returns the derived RecordType.
+        /// </summary>
         public RecordType ToRecord()
         {
             // Unwrap lazy types
@@ -66,6 +76,12 @@ namespace Microsoft.PowerFx.Types
             return Add(new NamedFormulaType(new TypedName(type._type, new DName(logicalName)), optionalDisplayName));
         }
 
+        /// <summary>
+        /// Static builder method for constructing a TableType. 
+        /// Use with <see cref="Add(NamedFormulaType)"/> to construct a
+        /// Table type.
+        /// </summary>
+        /// <returns>An empty TableType instance.</returns>
         public static TableType Empty()
         {
             return new KnownTableType();

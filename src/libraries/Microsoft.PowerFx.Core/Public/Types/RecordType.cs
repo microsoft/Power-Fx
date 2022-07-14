@@ -12,19 +12,24 @@ namespace Microsoft.PowerFx.Types
     /// <summary>
     /// Represents a Record type within PowerFx. If this is subclassed, it's quite likely that 
     /// <see cref="RecordValue"/> should be as well. 
-    /// If the type is known in advance and easy to construct, use <see cref="KnownRecordType"/> instead of
-    /// deriving from this. 
+    /// If the type is known in advance and easy to construct, use <see cref="Empty"/> and <see cref="Add(NamedFormulaType)"/>
+    /// instead of deriving from this.
     /// </summary>
     public abstract class RecordType : AggregateType
     {
         // The internal constructor allows us to wrap known DTypes, while the public constructor
-        // will create a DType that wraps derived TryGetField/Fields/Identity calls
+        // will create a DType that wraps derived TryGetField/Fields calls
         internal RecordType(DType type)
             : base(type)
         {
             Contracts.Assert(type.IsRecord);
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RecordType"/> class.
+        /// Derived classes calling this must override <see cref="AggregateType.FieldNames"/>
+        /// and <see cref="AggregateType.TryGetFieldType(string, out FormulaType)"/>.
+        /// </summary>
         public RecordType() 
             : base(false)
         {
@@ -35,6 +40,11 @@ namespace Microsoft.PowerFx.Types
             vistor.Visit(this);
         }
         
+        /// <summary>
+        /// Converts this type to a table.
+        /// If this type was a record of a derived TableType,
+        /// returns the derived TableType.
+        /// </summary>
         public TableType ToTable()
         {
             // Unwrap lazy types
@@ -64,6 +74,12 @@ namespace Microsoft.PowerFx.Types
             return Add(new NamedFormulaType(new TypedName(type._type, new DName(logicalName)), optionalDisplayName));
         }
 
+        /// <summary>
+        /// Static builder method for constructing a record type. 
+        /// Use with <see cref="Add(NamedFormulaType)"/> to construct a
+        /// record type.
+        /// </summary>
+        /// <returns>An empty RecordType instance.</returns>
         public static RecordType Empty()
         {
             return new KnownRecordType();

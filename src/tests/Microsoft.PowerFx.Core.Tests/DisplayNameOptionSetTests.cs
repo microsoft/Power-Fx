@@ -38,12 +38,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             if (toDisplay)
             {
-                var outDisplayExpression = engine.GetDisplayExpression(inputExpression, new KnownRecordType());
+                var outDisplayExpression = engine.GetDisplayExpression(inputExpression, RecordType.Empty());
                 Assert.Equal(outputExpression, outDisplayExpression);
             }
             else
             {
-                var outInvariantExpression = engine.GetInvariantExpression(inputExpression, new KnownRecordType());
+                var outInvariantExpression = engine.GetInvariantExpression(inputExpression, RecordType.Empty());
                 Assert.Equal(outputExpression, outInvariantExpression);
             }
         }

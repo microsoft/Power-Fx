@@ -87,10 +87,10 @@ namespace Microsoft.PowerFx.Core.Tests
             var engine = new Engine(config);
 
             var tableType =
-                new KnownTableType().Add(new NamedFormulaType("A", FormulaType.Number))
+                TableType.Empty().Add(new NamedFormulaType("A", FormulaType.Number))
                                .Add(new NamedFormulaType("B", FormulaType.Number));
             var formulaParams =
-                new KnownRecordType().Add("X", FormulaType.Number).Add("Y", FormulaType.Number).Add("Table", tableType);
+                RecordType.Empty().Add("X", FormulaType.Number).Add("Y", FormulaType.Number).Add("Table", tableType);
 
             var parseResult = engine.Parse(formula);
             var args = parseResult.Root.AsCall().Args.ChildNodes;

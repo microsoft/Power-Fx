@@ -22,10 +22,10 @@ namespace Microsoft.PowerFx.Tests
 
             var engine = new RecalcEngine();
 
-            var accountType = new KnownTableType()
+            var accountType = TableType.Empty()
                 .Add(new NamedFormulaType("Age", FormulaType.Number));
 
-            var type = new KnownRecordType()
+            var type = RecordType.Empty()
                 .Add(new NamedFormulaType("A", FormulaType.Number))
                 .Add(new NamedFormulaType("B", FormulaType.Number))
                 .Add(new NamedFormulaType("Accounts", accountType));

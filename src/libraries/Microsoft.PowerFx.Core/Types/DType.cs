@@ -2869,7 +2869,7 @@ namespace Microsoft.PowerFx.Core.Types
                ValueTree == other.ValueTree &&
                HasExpandInfo == other.HasExpandInfo &&
                NamedValueKind == other.NamedValueKind &&
-               ReferenceEquals(LazyTypeProvider?.BackingFormulaType, other.LazyTypeProvider?.BackingFormulaType);
+               (LazyTypeProvider?.BackingFormulaType.Equals(other.LazyTypeProvider?.BackingFormulaType) ?? other.LazyTypeProvider == null);
         }
 
         // Viewing DType.Invalid in the debugger should be allowed

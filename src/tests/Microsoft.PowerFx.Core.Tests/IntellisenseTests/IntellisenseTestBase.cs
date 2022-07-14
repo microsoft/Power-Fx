@@ -36,7 +36,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             else
             {
                 // We leave the context type as an empty record when none is provided
-                contextType = new KnownRecordType();
+                contextType = RecordType.Empty();
             }
 
             return Suggest(expression, config, contextType);

@@ -35,7 +35,7 @@ namespace Microsoft.PowerFx.Tests
 
             public ObjectListMarshaller()
             {
-                _type = new KnownRecordType().Add(TableValue.ValueName, FormulaType.UntypedObject);
+                _type = RecordType.Empty().Add(TableValue.ValueName, FormulaType.UntypedObject);
             }
 
             public FormulaValue Marshal(object value)

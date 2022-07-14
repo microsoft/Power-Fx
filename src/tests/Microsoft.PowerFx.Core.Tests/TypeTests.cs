@@ -9,13 +9,13 @@ namespace Microsoft.PowerFx.Tests
     public class TypeTests
     {
         [Fact]
-        public void RecordType()
+        public void RecordTypeTest()
         {
-            var r1 = new KnownRecordType()
+            var r1 = RecordType.Empty()
                 .Add(new NamedFormulaType("Num", FormulaType.Number))
                 .Add(new NamedFormulaType("B", FormulaType.Boolean));
 
-            var r2 = new KnownRecordType()
+            var r2 = RecordType.Empty()
                 .Add(new NamedFormulaType("B", FormulaType.Boolean))
                 .Add(new NamedFormulaType("Num", FormulaType.Number));
 

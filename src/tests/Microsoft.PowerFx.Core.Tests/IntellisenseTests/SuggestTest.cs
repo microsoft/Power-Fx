@@ -304,6 +304,16 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
                 yield return "Loop";
                 yield return "Record";
             }
+
+            public override bool Equals(object other)
+            {
+                return other is LazyRecursiveRecordType; // All the same 
+            }
+
+            public override int GetHashCode()
+            {
+                return 1;
+            }   
         }
     }
 }

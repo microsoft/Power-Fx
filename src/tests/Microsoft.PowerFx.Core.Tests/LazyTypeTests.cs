@@ -19,12 +19,15 @@ namespace Microsoft.PowerFx.Core.Tests
             public delegate bool TryGetFieldDelegate(string name, out FormulaType type);
 
             private readonly TryGetFieldDelegate _tryGetField;
+            
+            internal string Identity;
 
             public override IEnumerable<string> FieldNames { get; }
 
-            public TestLazyRecordType(IEnumerable<string> fields, TryGetFieldDelegate getter)
+            public TestLazyRecordType(string identity, IEnumerable<string> fields, TryGetFieldDelegate getter)
                 : base()
             {
+                Identity = identity;
                 FieldNames = fields; 
                 _tryGetField = getter;
             }
@@ -32,6 +35,17 @@ namespace Microsoft.PowerFx.Core.Tests
             public override bool TryGetFieldType(string name, out FormulaType type)
             {
                 return _tryGetField(name, out type);
+            }
+
+            public override bool Equals(object other)
+            {
+                return other is TestLazyRecordType otherTable &&
+                    Identity == otherTable.Identity;
+            }
+
+            public override int GetHashCode()
+            {
+                return Identity.GetHashCode();
             }
         }
 
@@ -40,12 +54,15 @@ namespace Microsoft.PowerFx.Core.Tests
             public delegate bool TryGetFieldDelegate(string name, out FormulaType type);
 
             private readonly TryGetFieldDelegate _tryGetField;
+            
+            internal string Identity;
 
             public override IEnumerable<string> FieldNames { get; }
 
-            public TestLazyTableType(IEnumerable<string> fields, TryGetFieldDelegate getter)
+            public TestLazyTableType(string identity, IEnumerable<string> fields, TryGetFieldDelegate getter)
                 : base()
             {
+                Identity = identity;
                 FieldNames = fields; 
                 _tryGetField = getter;
             }
@@ -53,6 +70,17 @@ namespace Microsoft.PowerFx.Core.Tests
             public override bool TryGetFieldType(string name, out FormulaType type)
             {
                 return _tryGetField(name, out type);
+            }
+
+            public override bool Equals(object other)
+            {
+                return other is TestLazyTableType otherTable &&
+                    Identity == otherTable.Identity;
+            }
+
+            public override int GetHashCode()
+            {
+                return Identity.GetHashCode();
             }
         }
 
@@ -94,10 +122,10 @@ namespace Microsoft.PowerFx.Core.Tests
 
         public LazyTypeTests()
         {
-            _lazyRecord1 = new TestLazyRecordType(new List<string>() { "Foo", "Bar", "Baz" }, LazyGetField1);
-            _lazyRecord2 = new TestLazyRecordType(new List<string>() { "Qux", "Nested" }, LazyGetField2);
-            _lazyTable1 = new TestLazyTableType(new List<string>() { "Foo", "Bar", "Baz" }, LazyGetField1);
-            _lazyTable2 = new TestLazyTableType(new List<string>() { "Qux", "Nested" }, LazyGetField2);
+            _lazyRecord1 = new TestLazyRecordType("Lazy1", new List<string>() { "Foo", "Bar", "Baz" }, LazyGetField1);
+            _lazyRecord2 = new TestLazyRecordType("Lazy2", new List<string>() { "Qux", "Nested" }, LazyGetField2);
+            _lazyTable1 = new TestLazyTableType("Lazy3", new List<string>() { "Foo", "Bar", "Baz" }, LazyGetField1);
+            _lazyTable2 = new TestLazyTableType("Lazy4", new List<string>() { "Qux", "Nested" }, LazyGetField2);
         }
 
         [Fact]

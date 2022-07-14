@@ -12,6 +12,10 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core.Types
 {
+    /// <summary>
+    /// Wrapper class, provides access to derived TryGetFieldType, as well as identity of lazy types via AggregateType.
+    /// Also provides faciility to fully expand a level of the type when needed by operations such as Union/AddColumns/...
+    /// </summary>
     internal sealed class LazyTypeProvider
     {
         private readonly Dictionary<DName, DType> _expandedFields = new ();
@@ -20,10 +24,15 @@ namespace Microsoft.PowerFx.Core.Types
         internal IEnumerable<DName> FieldNames => BackingFormulaType.FieldNames.Select(field => new DName(field));
 
         public LazyTypeProvider(AggregateType type)
-        {            
+        {
+            // Ensure we aren't trying to wrap a Known type as lazy. This would cause StackOverflows when calling Equals()
+            Contracts.Assert(type is not KnownTableType and not KnownRecordType);
+
             BackingFormulaType = type;
         }
 
+        // Wrapper function around AggregateType.TryGetFieldType, provides caching
+        // in case computing field types is non-trivial for derived AggregateTypes.
         internal bool TryGetFieldType(DName name, out DType type)
         {
             if (_expandedFields.TryGetValue(name, out type))
@@ -41,7 +50,7 @@ namespace Microsoft.PowerFx.Core.Types
         }
 
         // In general, this would only occur for imperative use cases like validating Patch/Collect/...
-        // or operations that modify the type like AddColumns/DropColumns/...
+        // or operations that modify the type like Table()/AddColumns/DropColumns/...
         // Beyond that scenario, fully expanding a lazy type is inefficient and should be avoided
         internal DType GetExpandedType(bool isTable)
         {
@@ -51,6 +60,16 @@ namespace Microsoft.PowerFx.Core.Types
                     throw new InvalidOperationException($"Fx type of field {field} not found"));
 
             return isTable ? DType.CreateTable(fields) : DType.CreateRecord(fields);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return BackingFormulaType.Equals(obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return BackingFormulaType.GetHashCode();
         }
     }
 }

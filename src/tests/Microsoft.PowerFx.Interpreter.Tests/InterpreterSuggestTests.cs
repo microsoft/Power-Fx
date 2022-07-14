@@ -53,9 +53,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             config.AddEntity(optionSet);
             config.AddEntity(otherOptionSet);
 
-            var parameterType = new KnownRecordType()
+            var parameterType = RecordType.Empty()
                 .Add(new NamedFormulaType("TopOptionSetField", optionSet.FormulaType))
-                .Add(new NamedFormulaType("Nested", new KnownRecordType()
+                .Add(new NamedFormulaType("Nested", RecordType.Empty()
                     .Add(new NamedFormulaType("InnerOtherOptionSet", otherOptionSet.FormulaType))));
 
             var actualSuggestions = SuggestStrings(expression, config, parameterType);
