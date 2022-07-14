@@ -12,7 +12,7 @@ using Xunit;
 
 namespace Microsoft.PowerFx.Core.Tests
 {
-    public class AggregateTypeTests
+    public class LazyTypeTests
     {
         public class TestLazyRecordType : RecordType
         {
@@ -92,7 +92,7 @@ namespace Microsoft.PowerFx.Core.Tests
         private readonly TestLazyTableType _lazyTable1;
         private readonly TestLazyTableType _lazyTable2;
 
-        public AggregateTypeTests()
+        public LazyTypeTests()
         {
             _lazyRecord1 = new TestLazyRecordType(new List<string>() { "Foo", "Bar", "Baz" }, LazyGetField1);
             _lazyRecord2 = new TestLazyRecordType(new List<string>() { "Qux", "Nested" }, LazyGetField2);

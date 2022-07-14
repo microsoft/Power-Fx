@@ -1,12 +1,14 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types.Enums;
+using Microsoft.PowerFx.Types;
 using Xunit;
 
 namespace Microsoft.PowerFx.Tests.IntellisenseTests
@@ -32,6 +34,14 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             Assert.NotNull(expression);
 
             var intellisense = Suggest(expression, config, contextTypeString);
+            return intellisense.Suggestions.Select(suggestion => suggestion.DisplayText.Text).ToArray();
+        }
+
+        private string[] SuggestStrings(string expression, PowerFxConfig config, RecordType context)
+        {
+            Assert.NotNull(expression);
+
+            var intellisense = Suggest(expression, config, context);
             return intellisense.Suggestions.Select(suggestion => suggestion.DisplayText.Text).ToArray();
         }
         
@@ -238,6 +248,62 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
 
             var actualSuggestions = SuggestStrings(expression, Default, context);
             Assert.Equal(expectedSuggestions, actualSuggestions);
+        }        
+        
+        [Theory]
+        [InlineData("So|", true, "SomeString")]
+        [InlineData("Loop.Loop.Loop.So|", true, "SomeString")]
+        [InlineData("Loop.|", true, "Loop", "Record", "SomeString")]
+        [InlineData("Record.|", false, "Foo")]
+        [InlineData("Loop.Loop.Record.|", false, "Foo")]
+        public void TestSuggestLazyTypes(string expression, bool requiresExpansion, params string[] expectedSuggestions)
+        {
+            var lazyInstance = new LazyRecursiveRecordType();
+            var actualSuggestions = SuggestStrings(expression, EmptyEverything, lazyInstance);
+            Assert.Equal(expectedSuggestions, actualSuggestions);
+            
+            // Intellisense requires iterating the field names for some operations
+            Assert.Equal(requiresExpansion, lazyInstance.EnumerableIterated);
+        }
+
+        private class LazyRecursiveRecordType : RecordType
+        {
+            public override IEnumerable<string> FieldNames => GetFieldNames();
+
+            public bool EnumerableIterated = false;
+
+            public LazyRecursiveRecordType()
+                : base()
+            {
+            }
+
+            public override bool TryGetFieldType(string name, out FormulaType type)
+            {
+                switch (name)
+                {
+                    case "SomeString":
+                        type = FormulaType.String;
+                        return true;
+                    case "Loop":
+                        type = this;
+                        return true;
+                    case "Record":
+                        type = RecordType.Empty().Add("Foo", FormulaType.Number);
+                        return true;
+                    default:
+                        type = FormulaType.Blank;
+                        return false;
+                }
+            }
+
+            private IEnumerable<string> GetFieldNames()
+            {
+                EnumerableIterated = true;
+
+                yield return "SomeString";
+                yield return "Loop";
+                yield return "Record";
+            }
         }
     }
 }

@@ -239,11 +239,16 @@ namespace Microsoft.PowerFx.Tests
             Assert.True(result.IsSuccess);
             Assert.IsType<LazyRecursiveRecordType>(result.ReturnType);
             Assert.Equal(lazyTypeInstance, result.ReturnType);
+
+            // We never needed to iterate the fields of the lazy type
+            Assert.False(lazyTypeInstance.EnumerableIterated);
         }
 
         private class LazyRecursiveRecordType : RecordType
         {
-            public override IEnumerable<string> FieldNames => new List<string>() { "Value", "Loop" };
+            public override IEnumerable<string> FieldNames => GetFieldNames();
+
+            public bool EnumerableIterated = false;
 
             public LazyRecursiveRecordType()
                 : base()
@@ -254,7 +259,7 @@ namespace Microsoft.PowerFx.Tests
             {
                 switch (name)
                 {
-                    case "Value":
+                    case "SomeString":
                         type = FormulaType.String;
                         return true;
                     case "Loop":
@@ -264,6 +269,14 @@ namespace Microsoft.PowerFx.Tests
                         type = FormulaType.Blank;
                         return false;
                 }
+            }
+
+            private IEnumerable<string> GetFieldNames()
+            {
+                EnumerableIterated = true;
+
+                yield return "SomeString";
+                yield return "Loop";
             }
         }
 
@@ -275,12 +288,15 @@ namespace Microsoft.PowerFx.Tests
 
             var lazyTypeInstance = new LazyRecursiveRecordType();
 
-            var result = engine.Check("First(Table(Loop, {A: Value}))", lazyTypeInstance);
+            var result = engine.Check("First(Table(Loop, {A: SomeString}))", lazyTypeInstance);
             
             Assert.True(result.IsSuccess);
             Assert.IsType<KnownRecordType>(result.ReturnType);
 
-            Assert.Equal("![A:s, Loop:r!, Value:s]", result.ReturnType.DType.ToString());
+            Assert.Equal("![A:s, Loop:r!, SomeString:s]", result.ReturnType.DType.ToString());
+
+            // Union operations require iterating fields
+            Assert.True(lazyTypeInstance.EnumerableIterated);
         }
 
         /// <summary>

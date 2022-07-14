@@ -303,7 +303,7 @@ namespace Microsoft.PowerFx.Intellisense
             Contracts.Assert(type.IsValid);
             Contracts.Assert(prefix.Length == 0 || (TexlLexer.PunctuatorBang + TexlLexer.PunctuatorDot).IndexOf(prefix[prefix.Length - 1]) >= 0);
 
-            foreach (var tName in type.GetAllNames(DPath.Root))
+            foreach (var tName in type.GetRootFieldNames().Select(name => (Type: type.GetType(name), Name: name)))
             {
                 if (!intellisenseData.TryAddCustomColumnTypeSuggestions(tName.Type))
                 {

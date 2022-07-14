@@ -169,7 +169,7 @@ namespace Microsoft.PowerFx.Types
                         return table;
                     }
 
-                    return new KnownRecordType(type);
+                    return new KnownTableType(type);
                 default:
                     return new UnsupportedType(type);
             }

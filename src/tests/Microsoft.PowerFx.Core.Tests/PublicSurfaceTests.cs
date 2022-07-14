@@ -93,8 +93,6 @@ namespace Microsoft.PowerFx.Core.Tests
 
                 // Power Fx Type system and Values. 
                 "Microsoft.PowerFx.Types.AggregateType",
-                "Microsoft.PowerFx.Types.BaseRecordType",
-                "Microsoft.PowerFx.Types.BaseTableType",
                 "Microsoft.PowerFx.Types.BindingErrorType",
                 "Microsoft.PowerFx.Types.BlankType",
                 "Microsoft.PowerFx.Types.BlankValue",
