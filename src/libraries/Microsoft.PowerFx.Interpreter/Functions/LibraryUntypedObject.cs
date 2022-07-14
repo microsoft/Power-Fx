@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Text.Json;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Types;
