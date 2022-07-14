@@ -24,7 +24,7 @@ namespace Microsoft.PowerFx.Types
             : base()
         {
             var lazyTypeProvider = new LazyTypeProvider(this);
-            DType = new DType(lazyTypeProvider, isTable: isTable);
+            _type = new DType(lazyTypeProvider, isTable: isTable);
         }
 
         public FormulaType GetFieldType(string fieldName)
@@ -36,7 +36,7 @@ namespace Microsoft.PowerFx.Types
 
         public virtual bool TryGetFieldType(string name, out FormulaType type)
         {
-            if (!DType.TryGetType(new DName(name), out var dType))
+            if (!_type.TryGetType(new DName(name), out var dType))
             {
                 type = Blank;
                 return false;
@@ -53,7 +53,7 @@ namespace Microsoft.PowerFx.Types
 
         private protected DType AddFieldToType(NamedFormulaType field)
         {
-            var displayNameProvider = DType.DisplayNameProvider;
+            var displayNameProvider = _type.DisplayNameProvider;
             if (displayNameProvider == null)
             {
                 displayNameProvider = new SingleSourceDisplayNameProvider();
@@ -67,7 +67,7 @@ namespace Microsoft.PowerFx.Types
                 }
             }
 
-            var newType = DType.Add(field._typedName);
+            var newType = _type.Add(field._typedName);
 
             if (displayNameProvider != null)
             {

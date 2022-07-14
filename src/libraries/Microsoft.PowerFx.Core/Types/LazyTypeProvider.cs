@@ -32,7 +32,7 @@ namespace Microsoft.PowerFx.Core.Types
             }
             else if (BackingFormulaType.TryGetFieldType(name.Value, out var fieldType))
             {
-                type = fieldType.DType;
+                type = fieldType._type;
                 _expandedFields.Add(name, type);
                 return true;
             }

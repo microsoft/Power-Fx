@@ -14,12 +14,14 @@ namespace Microsoft.PowerFx.Types
     /// Base class for type of a Formula. 
     /// Formula Types are a class hiearchy.
     /// </summary>
-    [DebuggerDisplay("{DType}")]
+    [DebuggerDisplay("{_type}")]
     [ThreadSafeImmutable]
     public abstract class FormulaType
     {
+#pragma warning disable SA1300 // Element should begin with upper-case letter
         // Uses init to allow setting from derived constructors. Otherwise, is immutable.
-        internal DType DType { get; private protected init; }
+        internal DType _type { get; private protected init; }
+#pragma warning restore SA1300 // Element should begin with upper-case letter
 
         public static FormulaType Blank { get; } = new BlankType();
 
@@ -59,7 +61,7 @@ namespace Microsoft.PowerFx.Types
         // chained by derived type 
         internal FormulaType(DType type)
         {
-            DType = type;
+            _type = type;
         }
 
         /// <summary>
@@ -196,7 +198,7 @@ namespace Microsoft.PowerFx.Types
         {
             if (other is FormulaType t)
             {
-                return DType.Equals(t.DType);
+                return _type.Equals(t._type);
             }
 
             return false;
@@ -204,7 +206,7 @@ namespace Microsoft.PowerFx.Types
 
         public override int GetHashCode()
         {
-            return DType.GetHashCode();
+            return _type.GetHashCode();
         }
 
         #endregion // Equality

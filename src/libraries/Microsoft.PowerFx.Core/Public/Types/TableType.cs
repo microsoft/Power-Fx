@@ -40,12 +40,12 @@ namespace Microsoft.PowerFx.Types
         public RecordType ToRecord()
         {
             // Unwrap lazy types
-            if (DType.IsLazyType && DType.LazyTypeProvider.BackingFormulaType is RecordType record)
+            if (_type.IsLazyType && _type.LazyTypeProvider.BackingFormulaType is RecordType record)
             {
                 return record;
             }
 
-            return new KnownRecordType(DType.ToRecord());
+            return new KnownRecordType(_type.ToRecord());
         }
         
         /// <summary>
@@ -63,7 +63,7 @@ namespace Microsoft.PowerFx.Types
         /// </summary>
         public TableType Add(string logicalName, FormulaType type, string optionalDisplayName = null)
         {
-            return Add(new NamedFormulaType(new TypedName(type.DType, new DName(logicalName)), optionalDisplayName));
+            return Add(new NamedFormulaType(new TypedName(type._type, new DName(logicalName)), optionalDisplayName));
         }
 
         public static TableType Empty()

@@ -293,7 +293,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.True(result.IsSuccess);
             Assert.IsType<KnownRecordType>(result.ReturnType);
 
-            Assert.Equal("![A:s, Loop:r!, SomeString:s]", result.ReturnType.DType.ToString());
+            Assert.Equal("![A:s, Loop:r!, SomeString:s]", result.ReturnType._type.ToString());
 
             // Union operations require iterating fields
             Assert.True(lazyTypeInstance.EnumerableIterated);

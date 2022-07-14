@@ -26,7 +26,7 @@ namespace Microsoft.PowerFx.Types
 
         public abstract IEnumerable<DValue<RecordValue>> Rows { get; }
 
-        public bool IsColumn => IRContext.ResultType.DType.IsColumn;
+        public bool IsColumn => IRContext.ResultType._type.IsColumn;
 
         internal TableValue(IRContext irContext)
             : base(irContext)

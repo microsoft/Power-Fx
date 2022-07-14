@@ -12,7 +12,7 @@ namespace Microsoft.PowerFx.Types
 {
     internal sealed class KnownRecordType : RecordType
     {
-        public override IEnumerable<string> FieldNames => DType.GetRootFieldNames().Select(name => name.Value);
+        public override IEnumerable<string> FieldNames => _type.GetRootFieldNames().Select(name => name.Value);
 
         internal KnownRecordType(DType type)
             : base(type)

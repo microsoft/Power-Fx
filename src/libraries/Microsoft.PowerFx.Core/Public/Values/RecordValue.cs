@@ -109,7 +109,7 @@ namespace Microsoft.PowerFx.Types
                     {
                         if (result is not ErrorValue && result.Type is not BlankType)
                         {
-                            throw HostException(fieldName, $"Wrong field type. Retuned {result.Type.DType}, expected {fieldType.DType}.");
+                            throw HostException(fieldName, $"Wrong field type. Retuned {result.Type._type}, expected {fieldType._type}.");
                         }
                     }
                 }

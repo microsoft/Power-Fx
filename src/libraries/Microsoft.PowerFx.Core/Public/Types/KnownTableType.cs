@@ -12,7 +12,7 @@ namespace Microsoft.PowerFx.Types
 {
     internal sealed class KnownTableType : TableType
     {
-        public override IEnumerable<string> FieldNames => DType.GetRootFieldNames().Select(name => name.Value);
+        public override IEnumerable<string> FieldNames => _type.GetRootFieldNames().Select(name => name.Value);
 
         internal KnownTableType(DType type)
             : base(type)

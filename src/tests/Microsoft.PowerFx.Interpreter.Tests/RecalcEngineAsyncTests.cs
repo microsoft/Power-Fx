@@ -267,7 +267,7 @@ namespace Microsoft.PowerFx.Tests
         public override bool SupportsParamCoercion => true;
 
         public CustomAsyncTexlFunction(string name, FormulaType returnType, params FormulaType[] paramTypes)
-            : this(name, returnType.DType, Array.ConvertAll(paramTypes, x => x.DType))
+            : this(name, returnType._type, Array.ConvertAll(paramTypes, x => x._type))
         {
         }
 
