@@ -74,21 +74,30 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.Equal(expectedSuggestions, actualSuggestions);
         }
 
-        [Fact]
-        public void TestSuggestVariableName()
+        [Theory]
+        [InlineData("Fi")]
+        [InlineData("fi")]
+        [InlineData("fileIndex")]
+        [InlineData("FILEINDEX")]
+        public void TestSuggestVariableName(string suggestion)
         {                      
             var engine = new RecalcEngine(new PowerFxConfig());
             engine.UpdateVariable("fileIndex", FormulaValue.New(12));
 
-            var suggestions = engine.Suggest("Fi", null, 2);
-            var s = suggestions.Suggestions.OfType<IntellisenseSuggestion>().FirstOrDefault(su => su.Text == "fileIndex");
+            var suggestions = engine.Suggest(suggestion, null, 2);
+            var s1 = suggestions.Suggestions.OfType<IntellisenseSuggestion>();
+
+            Assert.NotNull(s1);
+            Assert.Equal(8, s1.Count());
+
+            var s = s1.FirstOrDefault(su => su.Text == "fileIndex");
 
             Assert.NotNull(s);
             Assert.Equal("fileIndex", s.DisplayText.Text);
             Assert.Null(s.FunctionName);
-            Assert.Equal(SuggestionIconKind.Other /* Variable */, s.IconKind);
+            Assert.Equal(SuggestionIconKind.Other, s.IconKind);
             Assert.Equal(SuggestionKind.Global, s.Kind);            
             Assert.Equal(DType.Number, s.Type);
-        }
+        }        
     }
 }

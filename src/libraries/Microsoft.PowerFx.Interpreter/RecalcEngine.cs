@@ -63,14 +63,12 @@ namespace Microsoft.PowerFx
         private protected override INameResolver CreateResolver(PowerFxConfig alternateConfig = null)
         {
             // The RecalcEngineResolver allows access to the values from UpdateValue. 
-            var resolver = new RecalcEngineResolver(this, alternateConfig ?? Config);
+            return new RecalcEngineResolver(this, alternateConfig ?? Config);          
+        }
 
-            if (resolver is ISetGlobalSymbols setSymbols)
-            {
-                setSymbols.SetGlobalSymbols();
-            }
-
-            return resolver;
+        private protected override INameResolver2 CreateResolver(PowerFxConfig alternateConfig, IReadOnlyDictionary<string, IGlobalSymbol> globalSymbols)
+        {
+            return new RecalcEngineResolver(this, alternateConfig ?? Config, globalSymbols);
         }
 
         /// <inheritdoc/>

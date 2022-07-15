@@ -20,11 +20,17 @@ namespace Microsoft.PowerFx
         private readonly RecalcEngine _parent;
         private readonly PowerFxConfig _powerFxConfig;
 
-        public RecalcEngineResolver(RecalcEngine parent, PowerFxConfig powerFxConfig)
+        public RecalcEngineResolver(RecalcEngine parent, PowerFxConfig powerFxConfig, IReadOnlyDictionary<string, IGlobalSymbol> globalSymbols = null)
             : base(powerFxConfig)
         {
             _parent = parent;
             _powerFxConfig = powerFxConfig;
+
+            _globalSymbols = globalSymbols ?? new ReadOnlyDictionary<string, IGlobalSymbol>(_parent.Formulas.Select(f =>
+            {
+                var description = $"{f.Key} variable";
+                return new GlobalSymbol(f.Key, description, f.Value.Value.Type) as IGlobalSymbol;
+            }).ToDictionary(kvp => kvp.Name, kvp => kvp));
         }
 
         public override bool Lookup(DName name, out NameLookupInfo nameInfo, NameLookupPreferences preferences = NameLookupPreferences.None)
@@ -41,21 +47,11 @@ namespace Microsoft.PowerFx
                 var data = fi;
                 var type = fi._type._type;
 
-                nameInfo = new NameLookupInfo(
-                    BindKind.PowerFxResolvedObject,
-                    type,
-                    DPath.Root,
-                    0,
-                    data);
+                nameInfo = new NameLookupInfo(BindKind.PowerFxResolvedObject, type, DPath.Root, 0, data);
                 return true;
             }
 
             return base.Lookup(name, out nameInfo, preferences);
-        }
-
-        public override void SetGlobalSymbols(IReadOnlyDictionary<string, IGlobalSymbol> globalSymbols = null)
-        {
-            base.SetGlobalSymbols(globalSymbols ?? new ReadOnlyDictionary<string, IGlobalSymbol>(_parent.Formulas.Select(f => new GlobalSymbol(f.Key, $"{f.Key} variable", f.Value.Value.Type) as IGlobalSymbol).ToDictionary(kvp => kvp.Name, kvp => kvp)));
         }
 
         public class ParameterData

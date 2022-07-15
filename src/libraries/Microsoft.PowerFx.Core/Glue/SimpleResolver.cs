@@ -22,15 +22,14 @@ namespace Microsoft.PowerFx.Core.Glue
     /// This aides in binding and intellisense. 
     /// Host can override Lookup to provide additional symbols to the expression. 
     /// </summary>
-    internal class SimpleResolver : INameResolver, ISetGlobalSymbols
+    internal class SimpleResolver : INameResolver2
     {
         private readonly PowerFxConfig _config;
-
-        private readonly TexlFunction[] _library;
-        private IReadOnlyDictionary<string, IGlobalSymbol> _globalSymbols;
+        private readonly TexlFunction[] _library;        
         private readonly EnumSymbol[] _enums = new EnumSymbol[] { };
-
         private readonly IExternalDocument _document;
+
+        protected IReadOnlyDictionary<string, IGlobalSymbol> _globalSymbols;
 
         IExternalDocument INameResolver.Document => _document;
 
@@ -59,6 +58,14 @@ namespace Microsoft.PowerFx.Core.Glue
             _library = config.Functions.ToArray();
             _globalSymbols = null;
             _enums = config.EnumStoreBuilder.Build().EnumSymbols.ToArray();            
+        }
+
+        public SimpleResolver(PowerFxConfig config, IReadOnlyDictionary<string, IGlobalSymbol> globalSymbols)
+        {
+            _config = config ?? throw new ArgumentNullException(nameof(config));
+            _library = config.Functions.ToArray();
+            _globalSymbols = globalSymbols;
+            _enums = config.EnumStoreBuilder.Build().EnumSymbols.ToArray();
         }
 
         // for derived classes that need to set INameResolver.Document. 
@@ -199,11 +206,6 @@ namespace Microsoft.PowerFx.Core.Glue
         public bool TryLookupEnum(DName name, out NameLookupInfo lookupInfo)
         {
             throw new System.NotImplementedException();
-        }
-
-        public virtual void SetGlobalSymbols(IReadOnlyDictionary<string, IGlobalSymbol> globalSymbols = null)
-        {
-            _globalSymbols = globalSymbols ?? throw new ArgumentNullException(nameof(globalSymbols));
         }
     }
 }
