@@ -163,8 +163,8 @@ namespace Microsoft.PowerFx
         /// <summary>
         /// Derived class can override to provide evaluation ability. Called after binding to return an eval object. 
         /// </summary>
-        /// <param name="result">results of binding.</param>
-        /// <returns>An <see cref="IExpression"/> to apply to the result.</returns>
+        /// <param name="result">results of binding.</param>        
+        /// <returns>An <see cref="IExpression"/> to apply to the result.</returns>        
         protected virtual IExpression CreateEvaluator(CheckResult result)
         {
             // Nop. 

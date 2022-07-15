@@ -13,7 +13,7 @@ namespace Microsoft.PowerFx
     /// <returns></returns>
     public interface IExpression
     {
-        Task<FormulaValue> EvalAsync(RecordValue parameters, Features features, CancellationToken cancel);
+        Task<FormulaValue> EvalAsync(RecordValue parameters, CancellationToken cancel);
     }
 
     /// <summary>
@@ -24,14 +24,14 @@ namespace Microsoft.PowerFx
         /// <summary>
         /// Evaluate the expression with a given set of record values.
         /// </summary>
-        public static FormulaValue Eval(this IExpression expr, RecordValue parameters, Features features, CancellationToken cancel)
+        public static FormulaValue Eval(this IExpression expr, RecordValue parameters, CancellationToken cancel)
         {
-            return expr.EvalAsync(parameters, features, cancel).Result;
+            return expr.EvalAsync(parameters, cancel).Result;
         }
 
-        public static FormulaValue Eval(this IExpression expr, RecordValue parameters, Features features = Features.None)
+        public static FormulaValue Eval(this IExpression expr, RecordValue parameters)
         {
-            return expr.Eval(parameters, features, CancellationToken.None);
+            return expr.Eval(parameters, CancellationToken.None);
         }
     }
 }

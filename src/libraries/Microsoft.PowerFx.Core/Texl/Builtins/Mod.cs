@@ -108,7 +108,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 errors.EnsureError(DocumentErrorSeverity.Severe, arg1, TexlStrings.ErrNumberExpected);
             }
 
-            returnType = DType.CreateTable(new TypedName(DType.Number, GetOneColumnTableResultName(binding.Features.HasFlag(Features.ConsistentOneColumnTableResult))));
+            returnType = DType.CreateTable(new TypedName(DType.Number, GetOneColumnTableResultName(binding)));
 
             // At least one arg has to be a table.
             if (!(type0.IsTable || type1.IsTable))

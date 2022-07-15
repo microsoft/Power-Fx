@@ -72,7 +72,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             fValid &= CheckNumericColumnType(argTypes[0], args[0], errors, ref nodeToCoercedTypeMap);
 
             // Synthesize a new return type
-            returnType = DType.CreateTable(new TypedName(DType.String, GetOneColumnTableResultName(binding.Features.HasFlag(Features.ConsistentOneColumnTableResult))));
+            returnType = DType.CreateTable(new TypedName(DType.String, GetOneColumnTableResultName(binding)));
 
             return fValid;
         }

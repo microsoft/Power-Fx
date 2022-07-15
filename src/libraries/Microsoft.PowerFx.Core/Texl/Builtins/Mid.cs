@@ -81,7 +81,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
             else
             {
-                returnType = DType.CreateTable(new TypedName(DType.String, GetOneColumnTableResultName(binding.Features.HasFlag(Features.ConsistentOneColumnTableResult))));
+                returnType = DType.CreateTable(new TypedName(DType.String, GetOneColumnTableResultName(binding)));
                 if (!DType.String.Accepts(type0))
                 {
                     if (type0.CoercesTo(DType.String))

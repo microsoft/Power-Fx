@@ -172,7 +172,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 var tableType = (TableType)irContext.ResultType;
                 var resultType = tableType.ToRecord();
-                var columnNameStr = BuiltinFunction.GetOneColumnTableResultName(runner.Features.HasFlag(Features.ConsistentOneColumnTableResult));
+                var columnNameStr = BuiltinFunction.GetOneColumnTableResultName(runner.Features);
                 FormulaType itemType = resultType.MaybeGetFieldType(columnNameStr);
                 if (itemType == null)
                 {
@@ -340,7 +340,7 @@ namespace Microsoft.PowerFx.Functions
 
                 var tableType = (TableType)irContext.ResultType;
                 var resultType = tableType.ToRecord();
-                var itemType = resultType.GetFieldType(BuiltinFunction.GetOneColumnTableResultName(runner.Features.HasFlag(Features.ConsistentOneColumnTableResult)));
+                var itemType = resultType.GetFieldType(BuiltinFunction.GetOneColumnTableResultName(runner.Features));
 
                 var transposed = Transpose(allResults.Select(result => result.Rows.ToList()).ToList(), maxSize);
                 var names = allResults.Select(result => result.Name).ToList();
@@ -355,7 +355,7 @@ namespace Microsoft.PowerFx.Functions
 
                     var targetArgs = list.Select((dv, i) => dv.IsValue ? dv.Value.GetField(names[i]) : dv.ToFormulaValue()).ToArray();
 
-                    var namedValue = new NamedValue(BuiltinFunction.GetOneColumnTableResultName(runner.Features.HasFlag(Features.ConsistentOneColumnTableResult)), await targetFunction(runner, context, IRContext.NotInSource(itemType), targetArgs));
+                    var namedValue = new NamedValue(BuiltinFunction.GetOneColumnTableResultName(runner.Features), await targetFunction(runner, context, IRContext.NotInSource(itemType), targetArgs));
                     var record = new InMemoryRecordValue(IRContext.NotInSource(resultType), new List<NamedValue>() { namedValue });
                     resultRows.Add(DValue<RecordValue>.Of(record));
                 }

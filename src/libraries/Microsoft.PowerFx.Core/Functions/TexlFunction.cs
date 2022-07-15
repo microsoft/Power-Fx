@@ -958,12 +958,12 @@ namespace Microsoft.PowerFx.Core.Functions
             Contracts.AssertValue(errors);
 
             IEnumerable<TypedName> columns;
-            if (!type.IsTable || (columns = type.GetNames(DPath.Root)).Count() > 1)
+            if (!type.IsTable || (columns = type.GetNames(DPath.Root)).Count() != 1)
             {
                 errors.EnsureError(DocumentErrorSeverity.Severe, arg, TexlStrings.ErrInvalidSchemaNeedCol);
                 return false;
             }
-            else if (columns.Any())
+            else
             {
                 var column = columns.Single();
                 if (!expectedType.Accepts(column.Type))

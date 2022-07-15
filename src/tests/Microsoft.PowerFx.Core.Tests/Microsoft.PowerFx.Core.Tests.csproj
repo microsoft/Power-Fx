@@ -63,8 +63,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="ExpressionTestCases\FindT_ConsistentOneColumnTableResult.txt" />
-    <None Remove="ExpressionTestCases\Sqrt_ConsistentOneColumnTableResult.txt" />
+    <None Remove="ExpressionTestCases\ArgCoercion_ConsistentOneColumnTableResult.txt" />
+    <None Remove="ExpressionTestCases\Len_ConsistentOneColumnTableResult.txt" />
+    <None Remove="ExpressionTestCases\TableStringFuncs_ConsistentOneColumnTableResult.txt" />
   </ItemGroup>
 
   <ItemGroup>

@@ -424,7 +424,7 @@ namespace Microsoft.PowerFx.Functions
             var substrings = string.IsNullOrEmpty(separator) ? text.Select(c => new string(c, 1)) : text.Split(new string[] { separator }, StringSplitOptions.None);
             var rows = substrings.Select(s => new StringValue(IRContext.NotInSource(FormulaType.String), s));
 
-            return new InMemoryTableValue(irContext, StandardSingleColumnTableFromValues(irContext, rows.ToArray(), forceSingleColumn: true, columnName: ((TableType)irContext.ResultType).SingleColumnFieldName));
+            return new InMemoryTableValue(irContext, StandardTableNodeRecords(irContext, rows.ToArray(), forceSingleColumn: true));
         }
 
         private static FormulaValue Substitute(IRContext irContext, FormulaValue[] args)

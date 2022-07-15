@@ -4,7 +4,7 @@
 [1,23,12,18]
 
 >> Sqrt([])
-[]
+Errors: Error 0-8: The function 'Sqrt' has some invalid arguments.|Error 5-7: Invalid schema, expected a one-column table.
 
 >> Sqrt([9, -1])
 [3,NaN]

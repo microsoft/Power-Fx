@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Numerics;
+using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
@@ -19,7 +20,11 @@ namespace Microsoft.PowerFx.Core.Functions
         public const string ColumnName_SubMatchesStr = "SubMatches";
         public const string ColumnName_StartMatchStr = "StartMatch";
 
-        public static DName GetOneColumnTableResultName(bool f) => f ? new DName(ColumnName_ValueStr) : new DName(OneColumnTableResultNameStrOld);
+        public static DName GetOneColumnTableResultName(TexlBinding binding) => GetOneColumnTableResultName(binding.Features);
+
+        public static DName GetOneColumnTableResultName(Features f) => f.HasFlag(Features.ConsistentOneColumnTableResult) 
+            ? new DName(ColumnName_ValueStr) 
+            : new DName(OneColumnTableResultNameStrOld);
 
         public static readonly DName ColumnName_Name = new DName(ColumnName_NameStr);
         public static readonly DName ColumnName_Address = new DName(ColumnName_AddressStr);
