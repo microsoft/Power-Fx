@@ -9,8 +9,7 @@
 
   <!-- Nuget Properties -->
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <LangVersion>9.0</LangVersion>
+    <TargetFramework>netstandard2.0</TargetFramework>    
     <PackageId>Microsoft.PowerFx.Interpreter</PackageId>
     <Title>Microsoft Power Fx Compiler - Interpreter Target</Title>
     <Description>The Interpreter the Power Fx compiler</Description>

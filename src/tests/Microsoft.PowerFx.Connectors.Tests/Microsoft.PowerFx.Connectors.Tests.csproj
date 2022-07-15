@@ -5,8 +5,7 @@
     <IsPackable>false</IsPackable>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
     <Configurations>Debug;Release</Configurations>
-    <OutputType>Library</OutputType>
-    <LangVersion>9.0</LangVersion>
+    <OutputType>Library</OutputType>   
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)'!='Debug' or '$(TURN_OFF_WARNING_AS_ERROR)'!='True' ">

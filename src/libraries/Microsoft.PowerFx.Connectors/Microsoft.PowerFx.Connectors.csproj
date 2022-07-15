@@ -9,8 +9,7 @@
 
   <!-- Nuget Properties -->
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <LangVersion>9.0</LangVersion>
+    <TargetFramework>netstandard2.0</TargetFramework>    
     <PackageId>Microsoft.PowerFx.Connectors</PackageId>
     <Title>Microsoft Power Fx Connector Support</Title>
     <Description>Connectors</Description>

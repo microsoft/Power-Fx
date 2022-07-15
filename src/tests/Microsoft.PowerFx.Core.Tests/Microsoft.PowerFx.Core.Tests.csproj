@@ -15,8 +15,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <DebugType>Full</DebugType>
-    <DebugSymbols>true</DebugSymbols>
-    <LangVersion>9.0</LangVersion>
+    <DebugSymbols>true</DebugSymbols>    
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)'!='Debug' or '$(TURN_OFF_WARNING_AS_ERROR)'!='True' ">
