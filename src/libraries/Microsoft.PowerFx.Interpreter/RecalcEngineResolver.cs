@@ -2,7 +2,6 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Microsoft.PowerFx.Core.Binding;
@@ -20,17 +19,17 @@ namespace Microsoft.PowerFx
         private readonly RecalcEngine _parent;
         private readonly PowerFxConfig _powerFxConfig;
 
-        public RecalcEngineResolver(RecalcEngine parent, PowerFxConfig powerFxConfig, IReadOnlyDictionary<string, IGlobalSymbol> globalSymbols = null)
+        public RecalcEngineResolver(RecalcEngine parent, PowerFxConfig powerFxConfig, IReadOnlyDictionary<string, NameLookupInfo> globalSymbols = null)
             : base(powerFxConfig)
         {
             _parent = parent;
             _powerFxConfig = powerFxConfig;
 
-            _globalSymbols = globalSymbols ?? new ReadOnlyDictionary<string, IGlobalSymbol>(_parent.Formulas.Select(f =>
+            _globalSymbols = globalSymbols ?? new ReadOnlyDictionary<string, NameLookupInfo>(_parent.Formulas.Select(f =>
             {
                 var description = $"{f.Key} variable";
-                return new GlobalSymbol(f.Key, description, f.Value.Value.Type) as IGlobalSymbol;
-            }).ToDictionary(kvp => kvp.Name, kvp => kvp));
+                return (f.Key, Value: new NameLookupInfo(BindKind.ScopeVariable, f.Value.Value.Type._type, DPath.Root, 0, f.Value, displayName: new DName(description)));
+            }).ToDictionary(kvp => kvp.Key, kvp => kvp.Value));
         }
 
         public override bool Lookup(DName name, out NameLookupInfo nameInfo, NameLookupPreferences preferences = NameLookupPreferences.None)

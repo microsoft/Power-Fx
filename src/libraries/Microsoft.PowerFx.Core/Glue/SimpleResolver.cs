@@ -3,8 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Collections.ObjectModel;
 using System.Linq;
 using Microsoft.PowerFx.Core.App;
 using Microsoft.PowerFx.Core.Binding;
@@ -29,7 +27,7 @@ namespace Microsoft.PowerFx.Core.Glue
         private readonly EnumSymbol[] _enums = new EnumSymbol[] { };
         private readonly IExternalDocument _document;
 
-        protected IReadOnlyDictionary<string, IGlobalSymbol> _globalSymbols;
+        protected IReadOnlyDictionary<string, NameLookupInfo> _globalSymbols;
 
         IExternalDocument INameResolver.Document => _document;
 
@@ -42,7 +40,7 @@ namespace Microsoft.PowerFx.Core.Glue
         // Expose the list to aide in intellisense suggestions. 
         public IEnumerable<TexlFunction> Functions => _library;
 
-        public IReadOnlyDictionary<string, IGlobalSymbol> GlobalSymbols => _globalSymbols;
+        public IReadOnlyDictionary<string, NameLookupInfo> GlobalSymbols => _globalSymbols;
 
         IExternalEntity INameResolver.CurrentEntity => null;
 
@@ -60,7 +58,7 @@ namespace Microsoft.PowerFx.Core.Glue
             _enums = config.EnumStoreBuilder.Build().EnumSymbols.ToArray();            
         }
 
-        public SimpleResolver(PowerFxConfig config, IReadOnlyDictionary<string, IGlobalSymbol> globalSymbols)
+        public SimpleResolver(PowerFxConfig config, IReadOnlyDictionary<string, NameLookupInfo> globalSymbols)
         {
             _config = config ?? throw new ArgumentNullException(nameof(config));
             _library = config.Functions.ToArray();

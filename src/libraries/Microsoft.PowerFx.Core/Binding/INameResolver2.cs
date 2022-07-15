@@ -1,14 +1,13 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
 using System.Collections.Generic;
-using System.Text;
+using Microsoft.PowerFx.Core.Binding.BindInfo;
 
 namespace Microsoft.PowerFx.Core.Binding
 {
     internal interface INameResolver2 : INameResolver
     {
-        IReadOnlyDictionary<string, IGlobalSymbol> GlobalSymbols { get; }
+        IReadOnlyDictionary<string, NameLookupInfo> GlobalSymbols { get; }
     }
 }

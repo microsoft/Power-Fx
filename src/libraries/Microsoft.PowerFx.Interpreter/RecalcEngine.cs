@@ -6,9 +6,9 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Binding;
+using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Texl;
-using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
@@ -66,7 +66,7 @@ namespace Microsoft.PowerFx
             return new RecalcEngineResolver(this, alternateConfig ?? Config);          
         }
 
-        private protected override INameResolver2 CreateResolver(PowerFxConfig alternateConfig, IReadOnlyDictionary<string, IGlobalSymbol> globalSymbols)
+        private protected override INameResolver CreateResolver(PowerFxConfig alternateConfig, IReadOnlyDictionary<string, NameLookupInfo> globalSymbols)
         {
             return new RecalcEngineResolver(this, alternateConfig ?? Config, globalSymbols);
         }
