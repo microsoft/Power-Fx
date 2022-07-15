@@ -5,90 +5,59 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using Microsoft.PowerFx.Core.Utils;
 
-namespace Microsoft.PowerFx.Core.Logging
+namespace Microsoft.PowerFx.Logging
 {
-    /// <summary>
-    /// A logger which logs to the Debug window in debug mode.
-    /// </summary>
-    public class DebugLogger : IPowerFxLogger
+    public sealed partial class Log 
     {
-        public void Verbose(string message, [CallerMemberName] string methodName = "", [CallerLineNumber] int sourceLineNumber = 0, [CallerFilePath] string sourceFilePath = "")
+        // Logger that logs to the debug console
+        // Private inner class to ensure it's not used independent of the LoggingProvider
+        private class DebugLogger : IPowerFxLogger
         {
-            Log("Verbose", message);
-        }
+            public void Track(string message, string customDimensions)
+            {
+                Log("Info", message);
+            }
 
-        public void Information(string message, [CallerMemberName] string methodName = "", [CallerLineNumber] int sourceLineNumber = 0, [CallerFilePath] string sourceFilePath = "")
-        {
-            Log("Info", message);
-        }
+            public void Warning(string message)
+            {
+                Log("Warning", message);
+            }
+        
+            public void Error(string message)
+            {
+                Log("Error", message);
+            }
 
-        public void Warning(string message, [CallerMemberName] string methodName = "", [CallerLineNumber] int sourceLineNumber = 0, [CallerFilePath] string sourceFilePath = "")
-        {
-            Log("Warning", message);
-        }
+            public void Exception(Exception exception, string message)
+            {
+                Contracts.AssertValue(exception);
+                Log("Exception", $"{message}\n{exception}");
+            }
 
-        public void Warning(Exception exception, string methodName, int sourceLineNumber, string sourceFilePath)
-        {
-            Log("Warning", exception.ToString());
-        }
+            public void StartScenario(string scenarioName, Guid scenarioInstance, string customDimensions)
+            {
+                Log("StartScenario", $"{scenarioName}/{scenarioInstance}: {customDimensions}");
+            }
 
-        public void Start(string message, [CallerMemberName] string methodName = "", [CallerLineNumber] int sourceLineNumber = 0, [CallerFilePath] string sourceFilePath = "")
-        {
-            Log("Start", message);
-        }
+            public void EndScenario(string scenarioName, Guid scenarioInstance, string customDimensions)
+            {
+                Log("EndScenario", $"{scenarioName}/{scenarioInstance}: {customDimensions}");
+            }
 
-        public void Stop(string message, [CallerMemberName] string methodName = "", [CallerLineNumber] int sourceLineNumber = 0, [CallerFilePath] string sourceFilePath = "")
-        {
-            Log("Stop", message);
-        }
+            public void FailScenario(string scenarioName, Guid scenarioInstance, string customDimensions)
+            {
+                Log("FailScenario", $"{scenarioName}/{scenarioInstance}): {customDimensions}");
+            }
 
-        public void Exception(Exception exception, [CallerMemberName] string methodName = "", [CallerLineNumber] int sourceLineNumber = 0, [CallerFilePath] string sourceFilePath = "")
-        {
-            Contracts.AssertValue(exception);
-            Log("Exception", exception.ToString());
-        }
+            private void Log(string type, string message)
+            {
+                Contracts.AssertValue(type);
+                Contracts.AssertValue(message);
 
-        public void Exception(string message, Exception exception, [CallerMemberName] string methodName = "", [CallerLineNumber] int sourceLineNumber = 0, [CallerFilePath] string sourceFilePath = "")
-        {
-            Contracts.AssertValue(exception);
-            Contracts.AssertValue(message);
-            Log("Exception:" + message, exception.ToString());
-        }
-
-        public void Track(string name, string message, string methodName, int sourceLineNumber, string sourceFilePath)
-        {
-            Log("Track", $"{name}: {message}");
-        }
-
-        public void StartScenario(string name, string message, string methodName, int sourceLineNumber, string sourceFilePath)
-        {
-            Log("StartScenario", $"{name}: {message}");
-        }
-
-        public void EndScenario(string name, string guid, string message, string methodName, int sourceLineNumber, string sourceFilePath)
-        {
-            Log("EndScenario", $"{name}/{guid}: {message}");
-        }
-
-        public void FailScenario(string name, string guid, string message, string methodName, int sourceLineNumber, string sourceFilePath)
-        {
-            Log("FailScenario", $"{name}/{guid}): {message}");
-        }
-
-        public void LogMetric(string metricName, IDictionary<string, string> metricDimensions, long value)
-        {
-            Log($"LogMetric:{metricName}/{metricDimensions}", $"{value}");
-        }
-
-        private void Log(string type, string message)
-        {
-            Contracts.AssertValue(type);
-            Contracts.AssertValue(message);
-
-#if DEBUG
-            Debug.WriteLine("[{0}] {1}", type, message);
-#endif
+                Debug.WriteLine("[{0}] {1}", type, message);
+            }
         }
     }
 }

@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Globalization;
+using Microsoft.PowerFx.Core.Tests.Helpers;
 
 namespace Microsoft.PowerFx.Core.Tests
 {

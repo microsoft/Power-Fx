@@ -153,6 +153,9 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Intellisense.SuggestionKind",
                 "Microsoft.PowerFx.Intellisense.TokenResultType",
                 "Microsoft.PowerFx.Intellisense.UIString",
+                
+                "Microsoft.PowerFx.Logging.Log",
+                "Microsoft.PowerFx.Logging.IPowerFxLogger",
 
                 // TBD ...
                 "Microsoft.PowerFx.Core.App.DefaultEnabledFeatures",
