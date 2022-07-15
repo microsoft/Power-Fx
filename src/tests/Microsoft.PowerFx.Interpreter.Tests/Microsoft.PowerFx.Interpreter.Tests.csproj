@@ -4,7 +4,7 @@
     <TargetFrameworks Condition="'$(BuildTarget)' == ''">netcoreapp3.1</TargetFrameworks>
     <IsPackable>false</IsPackable>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
-    <Configurations>Debug;Release</Configurations>    
+    <Configurations>Debug;Release</Configurations>
     <LangVersion>9.0</LangVersion>
   </PropertyGroup>
 

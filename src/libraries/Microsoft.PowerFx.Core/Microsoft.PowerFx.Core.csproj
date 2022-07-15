@@ -14,7 +14,7 @@
 
   <!-- Nuget Properties -->
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>    
+    <TargetFramework>netstandard2.0</TargetFramework>
     <PackageId>Microsoft.PowerFx.Core</PackageId>
     <Title>Microsoft Power Fx Compiler</Title>
     <Description>The core library for all Microsoft Power Fx Compiler targets</Description>
