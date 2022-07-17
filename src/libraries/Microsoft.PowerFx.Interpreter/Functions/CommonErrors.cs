@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Types;
 
@@ -155,6 +156,16 @@ namespace Microsoft.PowerFx.Functions
                 Message = $"Invalid Chain: {message}",
                 Span = irContext.SourceContext,
                 Kind = ErrorKind.NotSupported
+            });
+        }
+
+        internal static FormulaValue MaxCallDepth(IRContext irContext)
+        {
+            return new ErrorValue(irContext, new ExpressionError()
+            {
+                Message = "Max call depth exceeded",
+                Span = irContext.SourceContext,
+                Kind = ErrorKind.Internal
             });
         }
     }

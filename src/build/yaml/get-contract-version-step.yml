@@ -1,0 +1,37 @@
+parameters:
+  - name: feedName
+    displayName: Azure or NuGet
+    type: string
+  - name: apiContractVersion
+    displayName: API contract package version
+    type: string
+
+steps:
+- powershell: |
+    Write-Host "feedName: ${{ parameters.feedName }}";
+    $packageName = ($env:PackagesToValidate.Split(","))[0];
+    [string]$contractVersion = "";
+
+    if ("${{ parameters.feedName }}" -eq 'Azure' -and "$(System.PullRequest.IsFork)" -ne 'True') {
+
+      Write-Host "Get latest $packageName version number from Azure feed";
+
+      $RegistryUrlSource = 'PowerFx';
+      $Packagelist = nuget list "$packageName" -Source "$RegistryUrlSource" -PreRelease -AllVersions;
+      " "
+      "Available versions:";
+      $PackageList | Select -First 5;
+      
+      $contractVersion = ($PackageList | Select -First 1).Split(" ")[-1];
+    }
+    else {
+      Write-Host "Get $packageName version number from the ApiContractVersion variable: [${{ parameters.apiContractVersion }}]";
+      $contractVersion = "${{ parameters.apiContractVersion }}";
+    }
+    " "
+    "Contract version:";
+    $packageName;
+    $contractVersion;
+    "##vso[task.setvariable variable=ContractVersion;isOutput=true]$contractVersion";
+  displayName: 'Get contract package version number'
+  name: GetContract
