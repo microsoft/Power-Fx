@@ -497,6 +497,39 @@
   <data name="AboutBoolean_text" xml:space="preserve">
     <value>Nilai teks untuk dikonversi ke nilai boolean.</value>
   </data>
+  <data name="AboutBooleanT" xml:space="preserve">
+    <value>Mengonversi kolom nilai teks ke kolom nilai boolean.</value>
+    
+  </data>
+  <data name="BooleanTArg1" xml:space="preserve">
+    <value>masukan</value>
+    
+  </data>
+  <data name="AboutBooleanT_input" xml:space="preserve">
+    <value>Kolom nilai teks untuk diproses.</value>
+  </data>
+  <data name="AboutBooleanN" xml:space="preserve">
+    <value>Mengonversi 'angka' ke nilai boolean.</value>
+    
+  </data>
+  <data name="BooleanNArg1" xml:space="preserve">
+    <value>angka</value>
+    
+  </data>
+  <data name="AboutBooleanN_number" xml:space="preserve">
+    <value>Nilai angka untuk dikonversi ke nilai boolean.</value>
+  </data>
+  <data name="AboutBooleanNT" xml:space="preserve">
+    <value>Mengonversi kolom nilai numerik ke kolom nilai boolean.</value>
+    
+  </data>
+  <data name="BooleanNTArg1" xml:space="preserve">
+    <value>masukan</value>
+    
+  </data>
+  <data name="AboutBooleanNT_input" xml:space="preserve">
+    <value>Kolom nilai angka untuk diproses.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Menampilkan argumen tidak kosong pertama</value>
     
@@ -956,10 +989,10 @@
     
   </data>
   <data name="AboutInt_number" xml:space="preserve">
-    <value>Nilai numerik yang akan diproses.</value>
+    <value>Nilai numerik untuk diproses.</value>
   </data>
   <data name="AboutInt_input" xml:space="preserve">
-    <value>Kolom nilai numerik yang akan diproses.</value>
+    <value>Kolom nilai numerik untuk diproses.</value>
   </data>
   <data name="AboutTrunc" xml:space="preserve">
     <value>Memotong 'angka' dengan membulatkan ke nol.</value>
@@ -4359,7 +4392,7 @@
     <value>Sumber data mungkin tidak dapat memproses rumus dan mungkin menghasilkan himpunan data yang tidak lengkap. Aplikasi Anda mungkin tidak memberikan hasil yang benar atau berperilaku dengan benar jika himpunan data tidak lengkap.</value>
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_1" xml:space="preserve">
-    <value>Jika himpunan data Anda melebihi batas catatan 500 tetapi berisi kurang dari 2.000 catatan, atur ulang batas.</value>
+    <value>Jika himpunan data Anda melebihi batas rekaman 500 tetapi berisi kurang dari 2.000 rekaman, coba atur ulang batas.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_2" xml:space="preserve">
@@ -4386,7 +4419,7 @@
     <value>Sumber data mungkin tidak dapat memproses rumus dan mungkin menghasilkan himpunan data yang tidak lengkap. Aplikasi Anda mungkin tidak memberikan hasil yang benar atau berperilaku dengan benar jika himpunan data tidak lengkap.</value>
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_1" xml:space="preserve">
-    <value>Jika himpunan data Anda melebihi batas catatan 500 tetapi berisi kurang dari 2.000 catatan, atur ulang batas.</value>
+    <value>Jika himpunan data Anda melebihi batas rekaman 500 tetapi berisi kurang dari 2.000 rekaman, coba atur ulang batas.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_2" xml:space="preserve">
@@ -4417,7 +4450,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_2" xml:space="preserve">
-    <value>Jika himpunan data Anda melebihi batas catatan 500 tetapi berisi kurang dari 2.000 catatan, atur ulang batas.</value>
+    <value>Jika himpunan data Anda melebihi batas rekaman 500 tetapi berisi kurang dari 2.000 rekaman, coba atur ulang batas.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_3" xml:space="preserve">
@@ -4478,7 +4511,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_1" xml:space="preserve">
-    <value>Jika himpunan data Anda melebihi batas catatan 500 tetapi berisi kurang dari 2.000 catatan, atur ulang batas.</value>
+    <value>Jika himpunan data Anda melebihi batas rekaman 500 tetapi berisi kurang dari 2.000 rekaman, coba atur ulang batas.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_2" xml:space="preserve">
@@ -4551,6 +4584,10 @@
   </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula '{0}' sudah ada.</value>
+  </data>
+  <data name="ErrorResource_NameConflict" xml:space="preserve">
+    <value>Tidak dapat membuat {0} dengan nama '{1}' karena nama tersebut sudah digunakan untuk {2}.</value>
+    
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
     <value>Argumen pertama dari '{0}' harus berisi nama variabel yang valid, dan tidak boleh bertentangan dengan kontrol, layar, koleksi, atau nama sumber data yang ada. Jenis '{1}' ditemukan</value>

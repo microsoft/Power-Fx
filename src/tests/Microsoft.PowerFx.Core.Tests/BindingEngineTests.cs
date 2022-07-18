@@ -1,9 +1,14 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Tests;
+using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
@@ -247,6 +252,51 @@ namespace Microsoft.PowerFx.Tests
 
             Assert.False(result.IsSuccess);
             AssertContainsError(result, "Error 0-7: Invalid argument type. Cannot use Table values in this context.");
+        }
+
+        [Fact]
+        public void CheckParseResultSideEffects()
+        {
+            var config = new PowerFxConfig();
+            config.AddFunction(new BehaviorFunction());
+
+            var engine = new Engine(config);
+            var formula = "Behavior(); Behavior()";
+            var options = new ParserOptions { AllowsSideEffects = true };
+
+            var result1 = engine.Check(formula, options: options);
+            Assert.True(result1.IsSuccess);
+
+            var parseResult2 = engine.Parse(formula, options);
+            var result2 = engine.Check(parseResult2, options: options);
+            Assert.True(result2.IsSuccess);
+        }
+
+        /// <summary>
+        /// A function with behavior/side-effects used in testing.
+        /// </summary>
+        private class BehaviorFunction : TexlFunction
+        {
+            public BehaviorFunction()
+                : base(
+                      DPath.Root,
+                      "Behavior",
+                      "Behavior",
+                      TexlStrings.AboutSet, // just to add something
+                      FunctionCategories.Behavior,
+                      DType.Boolean,
+                      0, // no lambdas
+                      0, // no args
+                      0)
+            {
+            }
+
+            public override bool IsSelfContained => false;
+
+            public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
+            {
+                yield break;
+            }
         }
 
         private void AssertContainsError(IOperationStatus result, string errorMessage)

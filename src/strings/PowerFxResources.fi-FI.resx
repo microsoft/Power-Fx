@@ -497,6 +497,39 @@
   <data name="AboutBoolean_text" xml:space="preserve">
     <value>Totuusarvoksi muunnettava tekstiarvo.</value>
   </data>
+  <data name="AboutBooleanT" xml:space="preserve">
+    <value>Muuntaa tekstiarvojen sarakkeen totuusarvojen sarakkeeksi.</value>
+    
+  </data>
+  <data name="BooleanTArg1" xml:space="preserve">
+    <value>syöte</value>
+    
+  </data>
+  <data name="AboutBooleanT_input" xml:space="preserve">
+    <value>Käsiteltävien tekstiarvojen sarake.</value>
+  </data>
+  <data name="AboutBooleanN" xml:space="preserve">
+    <value>Muuntaa numeron totuusarvoksi.</value>
+    
+  </data>
+  <data name="BooleanNArg1" xml:space="preserve">
+    <value>luku</value>
+    
+  </data>
+  <data name="AboutBooleanN_number" xml:space="preserve">
+    <value>Totuusarvoksi muunnettava numeroarvo.</value>
+  </data>
+  <data name="AboutBooleanNT" xml:space="preserve">
+    <value>Muuntaa numeeristen arvojen sarakkeen totuusarvojen sarakkeeksi.</value>
+    
+  </data>
+  <data name="BooleanNTArg1" xml:space="preserve">
+    <value>syöte</value>
+    
+  </data>
+  <data name="AboutBooleanNT_input" xml:space="preserve">
+    <value>Käsiteltävien numeroarvojen sarake.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Palauttaa ensimmäisen muun kuin tyhjän argumentin</value>
     
@@ -4551,6 +4584,10 @@
   </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula '{0}' on jo olemassa.</value>
+  </data>
+  <data name="ErrorResource_NameConflict" xml:space="preserve">
+    <value>Kohdetta {0}, jonka nimi on {1}, ei voi luoda, koska nimeä käytetään jo kohteelle {2}.</value>
+    
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
     <value>Kohteen {0} ensimmäisen argumentin on oltava kelvollinen muuttujan nimi, eikä se voi olla ristiriidassa minkään olemassa olevan ohjausobjektin, näytön, kokoelman tai tietolähteen nimen kanssa. Löytyi tyyppi {1}</value>

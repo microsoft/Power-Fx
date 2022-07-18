@@ -9,7 +9,9 @@ using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Texl;
+using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Functions;
+using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx
@@ -49,6 +51,9 @@ namespace Microsoft.PowerFx
             powerFxConfig.AddFunction(BuiltinFunctionsCore.Text_UO);
             powerFxConfig.AddFunction(BuiltinFunctionsCore.Value_UO);
             powerFxConfig.AddFunction(BuiltinFunctionsCore.Boolean);
+            powerFxConfig.AddFunction(BuiltinFunctionsCore.Boolean_T);
+            powerFxConfig.AddFunction(BuiltinFunctionsCore.BooleanN);
+            powerFxConfig.AddFunction(BuiltinFunctionsCore.BooleanN_T);
             powerFxConfig.AddFunction(BuiltinFunctionsCore.Boolean_UO);
             powerFxConfig.AddFunction(BuiltinFunctionsCore.CountRows_UO);
 
@@ -66,7 +71,20 @@ namespace Microsoft.PowerFx
         /// <inheritdoc/>
         protected override IExpression CreateEvaluator(CheckResult result)
         {
-            return CreateEvaluatorDirect(result);
+            return CreateEvaluatorDirect(result, new StackDepthCounter(Config.MaxCallDepth));
+        }
+
+        internal static IExpression CreateEvaluatorDirect(CheckResult result, StackDepthCounter stackMarker)
+        {
+            if (result._binding == null)
+            {
+                throw new InvalidOperationException($"Requires successful binding");
+            }
+
+            result.ThrowOnErrors();
+
+            (var irnode, var ruleScopeSymbol) = IRTranslator.Translate(result._binding);
+            return new ParsedExpression(irnode, ruleScopeSymbol, stackMarker);
         }
 
         /// <summary>
@@ -76,15 +94,7 @@ namespace Microsoft.PowerFx
         /// <returns></returns>
         public static IExpression CreateEvaluatorDirect(CheckResult result)
         {
-            if (result._binding == null)
-            {
-                throw new InvalidOperationException($"Requires successful binding");
-            }
-
-            result.ThrowOnErrors();            
-
-            (var irnode, var ruleScopeSymbol) = IRTranslator.Translate(result._binding);
-            return new ParsedExpression(irnode, ruleScopeSymbol);
+            return CreateEvaluatorDirect(result, new StackDepthCounter(PowerFxConfig.DefaultMaxCallDepth));
         }
 
         // This handles lookups in the global scope. 
@@ -156,9 +166,7 @@ namespace Microsoft.PowerFx
 
             var check = Check(expressionText, (RecordType)parameters.IRContext.ResultType, options);
             check.ThrowOnErrors();
-
-            var newValue = await check.Expression.EvalAsync(parameters, cancel);
-            return newValue;
+            return await check.Expression.EvalAsync(parameters, cancel);
         }
 
         // Invoke onUpdate() each time this formula is changed, passing in the new value. 

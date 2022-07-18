@@ -1,21 +1,30 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <RuleSet Name="Rules for StyleCop.Analyzers" Description="Source analysis rules treat as errors for BotBuilder-DotNet solution." ToolsVersion="16.0">
   <Rules AnalyzerId="Microsoft.CodeQuality.Analyzers" RuleNamespace="Microsoft.CodeQuality.Analyzers">
-    <Rule Id="CA1054" Action="None" /> <!-- UriParametersShouldNotBeStrings -->
-    <Rule Id="CA1062" Action="None" /> <!-- ValidateArgumentsOfPublicMethods -->
-    <Rule Id="CA1308" Action="None" /> <!-- Normalize strings to uppercase (most of our operations are normalized on lowercase -->
-    <Rule Id="CA1822" Action="None" /> <!-- Ignore Mark members as static -->
+    <Rule Id="CA1054" Action="None" />       <!-- UriParametersShouldNotBeStrings -->
+    <Rule Id="CA1062" Action="None" />       <!-- ValidateArgumentsOfPublicMethods -->
+    <Rule Id="CA1308" Action="None" />       <!-- Normalize strings to uppercase (most of our operations are normalized on lowercase -->
+    <Rule Id="CA1822" Action="None" />       <!-- REQUIRED * CA1822: Mark members as static -->
+    <Rule Id="IDE0004" Action="None" />      <!-- REQUIRED * IDE0004: Cast is redundant -->
+    <Rule Id="IDE0005" Action="None" />      <!-- REQUIRED * IDE0005: Remove unnecessary using directives -->
+    <Rule Id="IDE0052" Action="None" />      <!-- REQUIRED * IDE0052: Remove unread private member -->
+    <Rule Id="IDE0054" Action="None" />      <!-- REQUIRED * IDE0054: Use compound assignment -->
+    <Rule Id="IDE0059" Action="None" />      <!-- REQUIRED * IDE0059: Remove unnecessary value assignment -->
+    <Rule Id="IDE0060" Action="None" />      <!-- REQUIRED * IDE0060: Remove unused parameters -->
+    <Rule Id="IDE0066" Action="None" />      <!-- REQUIRED * IDE0066: Use 'switch' expression -->
+    <Rule Id="IDE0079" Action="None" />      <!-- REQUIRED * IDE0079: Remove unnecessary suppressions -->
+    <Rule Id="IDE0083" Action="None" />      <!-- REQUIRED * IDE0083: Use pattern matching -->
   </Rules>
   <Rules AnalyzerId="Microsoft.NetCore.Analyzers" RuleNamespace="Microsoft.NetCore.Analyzers">
-    <Rule Id="CA1303" Action="None" /> <!-- DoNotPassLiteralsAsLocalizedParameters -->
+    <Rule Id="CA1303" Action="Warning" />    <!-- DoNotPassLiteralsAsLocalizedParameters -->
   </Rules>
   <Rules AnalyzerId="Microsoft.NetCore.CSharp.Analyzers" RuleNamespace="Microsoft.NetCore.CSharp.Analyzers">
-    <Rule Id="CA1309" Action="Error" /> <!-- Use ordinal StringComparison -->
+    <Rule Id="CA1309" Action="None" />       <!-- REQUIRED * CA1309: Use ordinal StringComparison -->
   </Rules>
   <Rules AnalyzerId="Microsoft.VisualStudio.Threading.Analyzers.CSharp" RuleNamespace="Microsoft.VisualStudio.Threading.Analyzers.CSharp">
-    <Rule Id="VSTHRD002" Action="None" /> <!-- Avoid problematic synchronous waits -->
-    <Rule Id="VSTHRD003" Action="None" /> <!-- Avoid awaiting foreign Tasks -->
-    <Rule Id="VSTHRD011" Action="None" /> <!-- Use AsyncLazy<T> -->
+    <Rule Id="VSTHRD002" Action="None" />    <!-- Avoid problematic synchronous waits -->
+    <Rule Id="VSTHRD003" Action="None" />    <!-- Avoid awaiting foreign Tasks -->
+    <Rule Id="VSTHRD011" Action="None" />    <!-- Use AsyncLazy<T> -->
   </Rules>
   <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
     <Rule Id="SA0001" Action="None" />
@@ -25,7 +34,7 @@
     <Rule Id="SA1002" Action="Error" />
     <Rule Id="SA1003" Action="Error" />
     <Rule Id="SA1004" Action="Error" />
-    <Rule Id="SA1005" Action="None" /> <!-- SingleLineCommentsMustBeginWithSingleSpace -->
+    <Rule Id="SA1005" Action="None" />       <!-- SingleLineCommentsMustBeginWithSingleSpace -->
     <Rule Id="SA1006" Action="Error" />
     <Rule Id="SA1007" Action="Error" />
     <Rule Id="SA1008" Action="Error" />
@@ -48,7 +57,7 @@
     <Rule Id="SA1025" Action="Error" />
     <Rule Id="SA1026" Action="Error" />
     <Rule Id="SA1027" Action="Error" />
-    <Rule Id="SA1028" Action="None" /> <!-- Code should not contain trailing whitespace -->
+    <Rule Id="SA1028" Action="None" />       <!-- Code should not contain trailing whitespace -->
     <Rule Id="SA1100" Action="Error" />
     <Rule Id="SA1102" Action="Error" />
     <Rule Id="SA1103" Action="Error" />
@@ -71,7 +80,7 @@
     <Rule Id="SA1121" Action="Error" />
     <Rule Id="SA1122" Action="Error" />
     <Rule Id="SA1123" Action="Error" />
-    <Rule Id="SA1124" Action="None" /> <!-- DoNotUseRegions-->
+    <Rule Id="SA1124" Action="None" />       <!-- DoNotUseRegions-->
     <Rule Id="SA1125" Action="Error" />
     <Rule Id="SA1127" Action="Error" />
     <Rule Id="SA1128" Action="Error" />
@@ -85,10 +94,10 @@
     <Rule Id="SA1137" Action="Error" />
     <Rule Id="SA1139" Action="Error" />
     <Rule Id="SA1200" Action="None" />
-    <Rule Id="SA1201" Action="None" />  <!-- ElementsMustAppearInTheCorrectOrder (This is a good rule, but not followed in the code currently)-->
-    <Rule Id="SA1202" Action="None" />  <!-- Same -->
-    <Rule Id="SA1203" Action="None" />  <!-- Same -->
-    <Rule Id="SA1204" Action="None" /> <!-- Same -->
+    <Rule Id="SA1201" Action="None" />       <!-- ElementsMustAppearInTheCorrectOrder (This is a good rule, but not followed in the code currently)-->
+    <Rule Id="SA1202" Action="None" />       <!-- Same -->
+    <Rule Id="SA1203" Action="None" />       <!-- Same -->
+    <Rule Id="SA1204" Action="None" />       <!-- Same -->
     <Rule Id="SA1205" Action="Error" />
     <Rule Id="SA1206" Action="Error" />
     <Rule Id="SA1207" Action="Error" />
@@ -105,18 +114,18 @@
     <Rule Id="SA1302" Action="Error" />
     <Rule Id="SA1303" Action="Error" />
     <Rule Id="SA1304" Action="Error" />
-    <Rule Id="SA1305" Action="None" /> <!-- FieldNamesMustNotUseHungarianNotation -->
+    <Rule Id="SA1305" Action="None" />       <!-- FieldNamesMustNotUseHungarianNotation -->
     <Rule Id="SA1306" Action="Error" />
     <Rule Id="SA1307" Action="Error" />
     <Rule Id="SA1308" Action="Error" />
     <Rule Id="SA1309" Action="None" />
-    <Rule Id="SA1310" Action="None" /> <!-- FieldNamesMustNotContainUnderscore: We have existing code that breaks this -->
+    <Rule Id="SA1310" Action="None" />       <!-- FieldNamesMustNotContainUnderscore: We have existing code that breaks this -->
     <Rule Id="SA1311" Action="Error" />
     <Rule Id="SA1312" Action="Error" />
     <Rule Id="SA1313" Action="Error" />
     <Rule Id="SA1314" Action="Error" />
     <Rule Id="SA1400" Action="Error" />
-    <Rule Id="SA1401" Action="None" /> <!-- FieldsMustBePrivate: Disabled, no automated fix and breaks existing uses -->
+    <Rule Id="SA1401" Action="None" />       <!-- FieldsMustBePrivate: Disabled, no automated fix and breaks existing uses -->
     <Rule Id="SA1403" Action="Warning" />
     <Rule Id="SA1404" Action="Error" />
     <Rule Id="SA1405" Action="Error" />
@@ -126,9 +135,9 @@
     <Rule Id="SA1410" Action="Error" />
     <Rule Id="SA1411" Action="Error" />
     <Rule Id="SA1412" Action="Error" />
-    <Rule Id="SA1413" Action="None" /> <!-- UseTrailingCommasInMultiLineInitializers-->
-    <Rule Id="SA1101" Action="None" /> <!-- PrefixLocalCallsWithThis -->
-    <Rule Id="SA1129" Action="None" /> <!-- DoNotUseDefaultValueTypeConstructor-->
+    <Rule Id="SA1413" Action="None" />       <!-- UseTrailingCommasInMultiLineInitializers-->
+    <Rule Id="SA1101" Action="None" />       <!-- PrefixLocalCallsWithThis -->
+    <Rule Id="SA1129" Action="None" />       <!-- DoNotUseDefaultValueTypeConstructor-->
     <Rule Id="SA1500" Action="Error" />
     <Rule Id="SA1501" Action="Error" />
     <Rule Id="SA1502" Action="Error" />
@@ -141,7 +150,7 @@
     <Rule Id="SA1509" Action="Error" />
     <Rule Id="SA1510" Action="Error" />
     <Rule Id="SA1511" Action="Error" />
-    <Rule Id="SA1512" Action="None" /> <!-- SingleLineCommentsMustNotBeFollowedByBlankLine -->
+    <Rule Id="SA1512" Action="None" />       <!-- SingleLineCommentsMustNotBeFollowedByBlankLine -->
     <Rule Id="SA1513" Action="Error" />
     <Rule Id="SA1514" Action="Error" />
     <Rule Id="SA1515" Action="Error" />
@@ -174,8 +183,7 @@
     <Rule Id="SA1643" Action="Error" />
     <Rule Id="SA1648" Action="Error" />
     <Rule Id="SA1651" Action="Error" />
-    <Rule Id="SX1309" Action="Error" />
-    <!-- XML Documentation Warnings, disabled until we take a pass over docs -->
+    <Rule Id="SX1309" Action="Error" />      <!-- XML Documentation Warnings, disabled until we take a pass over docs -->
     <Rule Id="SA1574" Action="None" />
     <Rule Id="SA1600" Action="None" />
     <Rule Id="SA1601" Action="None" />
@@ -192,11 +200,296 @@
     <Rule Id="SA1618" Action="None" />
     <Rule Id="SA1622" Action="None" />
     <Rule Id="SA1623" Action="None" />
-    <Rule Id="SA1625" Action="None" />
-    <!-- End XM Documentation Warnings-->
-    <!-- File/Class Naming Guidelines: These conflict with our function files mostly -->
-    <Rule Id="SA1402" Action="None" />
-    <Rule Id="SA1649" Action="None" />
-    <!-- End File/Class Naming Guidelines-->
+    <Rule Id="SA1625" Action="None" />       <!-- End XM Documentation Warnings -->    
+    <Rule Id="SA1402" Action="None" />       <!-- File/Class Naming Guidelines: These conflict with our function files mostly -->
+    <Rule Id="SA1649" Action="None" />       <!-- End File/Class Naming Guidelines-->
+  </Rules>
+  <Rules AnalyzerId="Microsoft.CodeAnalysis.CSharp.NetAnalyzers" RuleNamespace="Microsoft.CodeAnalysis.CSharp.NetAnalyzers">
+    <Rule Id="CA1001" Action="Error" />      <!-- CA1001: Types that own disposable fields should be disposable -->
+    <Rule Id="CA1032" Action="None" />       <!-- REQUIRED * CA1032: Implement standard exception constructors -->
+    <Rule Id="CA1200" Action="Warning" />
+    <Rule Id="CA1309" Action="None" />       <!-- REQUIRED * CA1309: Use ordinal StringComparison -->
+    <Rule Id="CA1507" Action="None" />       <!-- REQUIRED * CA1507: Use nameof in place of string -->
+    <Rule Id="CA1802" Action="None" />       <!-- REQUIRED * CA1802: Use Literals Where Appropriate -->
+    <Rule Id="CA1805" Action="None" />       <!-- REQUIRED * CA1805: Member 'xxx' is explicitly initialized to its default value -->
+    <Rule Id="CA1812" Action="None" />       <!-- REQUIRED * CA1812: Avoid uninstantiated internal classes -->
+    <Rule Id="CA1824" Action="Warning" />
+    <Rule Id="CA1825" Action="None" />       <!-- REQUIRED * CA1825: Avoid zero-length array allocations -->
+    <Rule Id="CA1841" Action="Warning" />
+    <Rule Id="CA1845" Action="Warning" />
+    <Rule Id="CA2014" Action="Warning" />
+    <Rule Id="CA2016" Action="Warning" />
+    <Rule Id="CA2234" Action="Warning" />
+    <Rule Id="CA2252" Action="Warning" />
+    <Rule Id="CA2352" Action="Warning" />
+    <Rule Id="CA2353" Action="Warning" />
+    <Rule Id="CA2354" Action="Warning" />
+    <Rule Id="CA2355" Action="Warning" />
+    <Rule Id="CA2356" Action="Warning" />
+    <Rule Id="CA2362" Action="Warning" />
+    <Rule Id="CA1019" Action="None" />       <!--- REQUIRED * CA1019: Define accessors for attribute arguments -->
+    <Rule Id="CA1065" Action="Warning" />
+    <Rule Id="CA2200" Action="Warning" />
+    <Rule Id="CA3076" Action="Warning" />
+    <Rule Id="CA3077" Action="Warning" />
+  </Rules>
+  <Rules AnalyzerId="Microsoft.CodeAnalysis.NetAnalyzers" RuleNamespace="Microsoft.CodeAnalysis.NetAnalyzers">
+    <Rule Id="CA1000" Action="None" />
+    <Rule Id="CA1002" Action="Warning" />
+    <Rule Id="CA1003" Action="None" />       <!-- REQUIRED * CA1003: Use generic event handler instances -->
+    <Rule Id="CA1005" Action="Warning" />
+    <Rule Id="CA1008" Action="None" />
+    <Rule Id="CA1010" Action="Warning" />
+    <Rule Id="CA1012" Action="None" />       <!-- REQUIRED * CA1012: Abstract types should not have public constructors -->
+    <Rule Id="CA1014" Action="None" />       <!-- REQUIRED * CA1014: Mark assemblies with CLSCompliantAttribute -->
+    <Rule Id="CA1016" Action="Warning" />
+    <Rule Id="CA1017" Action="Warning" />
+    <Rule Id="CA1018" Action="Warning" />
+    <Rule Id="CA1021" Action="None" />
+    <Rule Id="CA1024" Action="Warning" />
+    <Rule Id="CA1027" Action="None" />
+    <Rule Id="CA1028" Action="Warning" />
+    <Rule Id="CA1030" Action="Warning" />
+    <Rule Id="CA1031" Action="None" />       <!-- REQUIRED * CA1031: Do not catch general exception types -->
+    <Rule Id="CA1033" Action="Warning" />
+    <Rule Id="CA1034" Action="Warning" />
+    <Rule Id="CA1036" Action="Warning" />
+    <Rule Id="CA1040" Action="Warning" />
+    <Rule Id="CA1041" Action="Warning" />
+    <Rule Id="CA1043" Action="Warning" />
+    <Rule Id="CA1044" Action="Warning" />
+    <Rule Id="CA1045" Action="Warning" />
+    <Rule Id="CA1046" Action="Warning" />
+    <Rule Id="CA1050" Action="Warning" />
+    <Rule Id="CA1051" Action="None" />       <!-- REQUIRED * CA1051: Do not declare visible instance fields -->
+    <Rule Id="CA1052" Action="None" />       <!-- REQUIRED * CA1052: Static holder types should be Static or NotInheritable -->
+    <Rule Id="CA1054" Action="None" />
+    <Rule Id="CA1055" Action="Warning" />
+    <Rule Id="CA1056" Action="None" />
+    <Rule Id="CA1058" Action="Warning" />
+    <Rule Id="CA1060" Action="Warning" />
+    <Rule Id="CA1061" Action="Warning" />
+    <Rule Id="CA1062" Action="None" />
+    <Rule Id="CA1063" Action="Warning" />
+    <Rule Id="CA1064" Action="None" />       <!-- REQUIRED * CA1064: Exceptions should be public -->
+    <Rule Id="CA1066" Action="None" />       <!-- REQUIRED * CA1066: Implement IEquatable when overriding Equals -->
+    <Rule Id="CA1067" Action="Warning" />
+    <Rule Id="CA1068" Action="None" />       <!-- REQUIRED * CA1068: CancellationToken parameters must come last -->
+    <Rule Id="CA1069" Action="None" />
+    <Rule Id="CA1070" Action="Warning" />
+    <Rule Id="CA1303" Action="Warning" />
+    <Rule Id="CA1304" Action="None" />       <!-- REQUIRED * CA1304: Specify CultureInfo -->
+    <Rule Id="CA1305" Action="None" />       <!-- REQUIRED * CA1305: Specify IFormatProvider -->
+    <Rule Id="CA1307" Action="None" />       <!-- REQUIRED * CA1307: Specify StringComparison for clarity -->
+    <Rule Id="CA1308" Action="None" />
+    <Rule Id="CA1310" Action="None" />       <!-- REQUIRED * CA1310: Specify StringComparison for correctness -->
+    <Rule Id="CA1401" Action="Warning" />
+    <Rule Id="CA1416" Action="Warning" />
+    <Rule Id="CA1417" Action="Warning" />
+    <Rule Id="CA1501" Action="None" />
+    <Rule Id="CA1502" Action="None" />
+    <Rule Id="CA1505" Action="None" />
+    <Rule Id="CA1506" Action="None" />
+    <Rule Id="CA1508" Action="None" />       <!-- REQUIRED * CA1508: Avoid dead conditional code -->
+    <Rule Id="CA1509" Action="Warning" />
+    <Rule Id="CA1700" Action="Warning" />
+    <Rule Id="CA1707" Action="None" />
+    <Rule Id="CA1708" Action="Warning" />
+    <Rule Id="CA1710" Action="Warning" />
+    <Rule Id="CA1711" Action="None" />       <!-- REQUIRED * CA1711: Identifiers should not have incorrect suffix -->
+    <Rule Id="CA1712" Action="Warning" />
+    <Rule Id="CA1713" Action="Warning" />
+    <Rule Id="CA1715" Action="Warning" />
+    <Rule Id="CA1716" Action="None" />       <!-- REQUIRED * CA1716: Identifiers should not match keywords -->
+    <Rule Id="CA1720" Action="None" />
+    <Rule Id="CA1721" Action="Warning" />
+    <Rule Id="CA1724" Action="None" />       <!-- REQUIRED * CA1724: Type names should not match namespaces -->
+    <Rule Id="CA1725" Action="None" />       <!-- REQUIRED * CA1725: Parameter names should match base declaration -->
+    <Rule Id="CA1801" Action="None" />       <!-- REQUIRED * CA1801: Review unused parameters -->
+    <Rule Id="CA1802" Action="None" />       <!-- REQUIRED * CA1802: Use Literals Where Appropriate -->
+    <Rule Id="CA1805" Action="None" />       <!-- REQUIRED * CA1805: Member 'xxx' is explicitly initialized to its default value -->
+    <Rule Id="CA1806" Action="None" />       <!-- REQUIRED * CA1806: Do not ignore method results -->
+    <Rule Id="CA1810" Action="None" />       <!-- REQUIRED * CA1810: Initialize reference type static fields inline -->
+    <Rule Id="CA1813" Action="None" />       <!-- REQUIRED * CA1813: Avoid unsealed attributes -->
+    <Rule Id="CA1814" Action="None" />       <!-- REQUIRED * CA1814: Prefer jagged arrays over multidimensional -->
+    <Rule Id="CA1815" Action="None" />       <!-- REQUIRED * CA1815: Override equals and operator equals on value types -->
+    <Rule Id="CA1816" Action="Warning" />
+    <Rule Id="CA1819" Action="None" />       <!-- REQUIRED * CA1819: Properties should not return arrays -->
+    <Rule Id="CA1820" Action="None" />       <!-- REQUIRED * CA1820: Test for empty strings using string length -->
+    <Rule Id="CA1821" Action="Warning" />
+    <Rule Id="CA1822" Action="None" />       <!-- REQUIRED * CA1822: Mark members as static -->
+    <Rule Id="CA1823" Action="None" />       <!-- REQUIRED * CA1823: Avoid unused private fields -->
+    <Rule Id="CA1826" Action="None" />       <!-- REQUIRED * CA1826: Use property instead of Linq Enumerable method -->
+    <Rule Id="CA1827" Action="None" />       <!-- REQUIRED * CA1827: Do not use Count/LongCount when Any can be used -->
+    <Rule Id="CA1828" Action="Warning" />
+    <Rule Id="CA1829" Action="None" />       <!-- REQUIRED * CA1829: Use Length/Count property instead of Enumerable.Count method -->
+    <Rule Id="CA1830" Action="None" />       <!-- REQUIRED * CA1830: Prefer strongly-typed Append and Insert method overloads on StringBuilder. -->
+    <Rule Id="CA1831" Action="Warning" />
+    <Rule Id="CA1832" Action="Warning" />
+    <Rule Id="CA1833" Action="Warning" />
+    <Rule Id="CA1834" Action="None" />       <!-- REQUIRED * CA1834: Use StringBuilder.Append(char) for single character strings -->
+    <Rule Id="CA1835" Action="Warning" />
+    <Rule Id="CA1836" Action="Warning" />
+    <Rule Id="CA1837" Action="Warning" />
+    <Rule Id="CA1838" Action="Warning" />
+    <Rule Id="CA2000" Action="Error" />      <!-- CA2000: Dispose objects before losing scope -->
+    <Rule Id="CA2002" Action="Warning" />
+    <Rule Id="CA2007" Action="None" />       <!-- REQUIRED * CA2007: Do not directly await a Task -->
+    <Rule Id="CA2008" Action="Warning" />
+    <Rule Id="CA2009" Action="Warning" />
+    <Rule Id="CA2011" Action="Warning" />
+    <Rule Id="CA2012" Action="None" />       <!-- REQUIRED * CA2012: Use ValueTasks correctly -->
+    <Rule Id="CA2013" Action="Warning" />
+    <Rule Id="CA2014" Action="Warning" />
+    <Rule Id="CA2015" Action="Warning" />
+    <Rule Id="CA2100" Action="Warning" />
+    <Rule Id="CA2101" Action="Warning" />
+    <Rule Id="CA2109" Action="Warning" />
+    <Rule Id="CA2119" Action="Warning" />
+    <Rule Id="CA2153" Action="Warning" />
+    <Rule Id="CA2201" Action="None" />       <!-- REQUIRED * CA2201: Do not raise reserved exception types -->
+    <Rule Id="CA2207" Action="Warning" />
+    <Rule Id="CA2208" Action="None" />       <!-- REQUIRED * CA2208: Instantiate argument exceptions correctly -->
+    <Rule Id="CA2211" Action="Warning" />
+    <Rule Id="CA2213" Action="Warning" />
+    <Rule Id="CA2214" Action="Warning" />
+    <Rule Id="CA2215" Action="Warning" />
+    <Rule Id="CA2216" Action="Warning" />
+    <Rule Id="CA2217" Action="Warning" />
+    <Rule Id="CA2219" Action="Warning" />
+    <Rule Id="CA2225" Action="Warning" />
+    <Rule Id="CA2226" Action="Warning" />
+    <Rule Id="CA2227" Action="None" />       <!-- REQUIRED * CA2227: Collection properties should be read only -->
+    <Rule Id="CA2229" Action="Warning" />
+    <Rule Id="CA2231" Action="Warning" />
+    <Rule Id="CA2235" Action="Warning" />
+    <Rule Id="CA2237" Action="Warning" />
+    <Rule Id="CA2241" Action="Warning" />
+    <Rule Id="CA2242" Action="None" />       <!-- REQUIRED * CA2242: Test for NaN correctly -->
+    <Rule Id="CA2243" Action="Warning" />
+    <Rule Id="CA2244" Action="Warning" />
+    <Rule Id="CA2245" Action="Warning" />
+    <Rule Id="CA2246" Action="Warning" />
+    <Rule Id="CA2247" Action="Warning" />
+    <Rule Id="CA2248" Action="None" />       <!-- REQUIRED * CA2248: Provide correct enum argument to Enum.HasFlag -->
+    <Rule Id="CA2249" Action="Warning" />
+    <Rule Id="CA2300" Action="Warning" />
+    <Rule Id="CA2301" Action="Warning" />
+    <Rule Id="CA2302" Action="Warning" />
+    <Rule Id="CA2305" Action="Warning" />
+    <Rule Id="CA2310" Action="Warning" />
+    <Rule Id="CA2311" Action="Warning" />
+    <Rule Id="CA2312" Action="Warning" />
+    <Rule Id="CA2315" Action="Warning" />
+    <Rule Id="CA2321" Action="Warning" />
+    <Rule Id="CA2322" Action="Warning" />
+    <Rule Id="CA2326" Action="Warning" />
+    <Rule Id="CA2327" Action="Warning" />
+    <Rule Id="CA2328" Action="Warning" />
+    <Rule Id="CA2329" Action="Warning" />
+    <Rule Id="CA2330" Action="Warning" />
+    <Rule Id="CA2350" Action="Warning" />
+    <Rule Id="CA2351" Action="Warning" />
+    <Rule Id="CA2352" Action="Warning" />
+    <Rule Id="CA2353" Action="Warning" />
+    <Rule Id="CA2354" Action="Warning" />
+    <Rule Id="CA2355" Action="Warning" />
+    <Rule Id="CA2356" Action="Warning" />
+    <Rule Id="CA2361" Action="Warning" />
+    <Rule Id="CA2362" Action="Warning" />
+    <Rule Id="CA3001" Action="Warning" />
+    <Rule Id="CA3002" Action="Warning" />
+    <Rule Id="CA3003" Action="Warning" />
+    <Rule Id="CA3004" Action="Warning" />
+    <Rule Id="CA3005" Action="Warning" />
+    <Rule Id="CA3006" Action="Warning" />
+    <Rule Id="CA3007" Action="Warning" />
+    <Rule Id="CA3008" Action="Warning" />
+    <Rule Id="CA3009" Action="Warning" />
+    <Rule Id="CA3010" Action="Warning" />
+    <Rule Id="CA3011" Action="Warning" />
+    <Rule Id="CA3012" Action="Warning" />
+    <Rule Id="CA3061" Action="Warning" />
+    <Rule Id="CA3075" Action="Warning" />
+    <Rule Id="CA3147" Action="Warning" />
+    <Rule Id="CA5350" Action="Warning" />
+    <Rule Id="CA5351" Action="Warning" />
+    <Rule Id="CA5358" Action="Warning" />
+    <Rule Id="CA5359" Action="Warning" />
+    <Rule Id="CA5360" Action="Warning" />
+    <Rule Id="CA5361" Action="Warning" />
+    <Rule Id="CA5362" Action="Warning" />
+    <Rule Id="CA5363" Action="Warning" />
+    <Rule Id="CA5364" Action="Warning" />
+    <Rule Id="CA5365" Action="Warning" />
+    <Rule Id="CA5366" Action="Warning" />
+    <Rule Id="CA5367" Action="Warning" />
+    <Rule Id="CA5368" Action="Warning" />
+    <Rule Id="CA5369" Action="Warning" />
+    <Rule Id="CA5370" Action="Warning" />
+    <Rule Id="CA5371" Action="Warning" />
+    <Rule Id="CA5372" Action="Warning" />
+    <Rule Id="CA5373" Action="Warning" />
+    <Rule Id="CA5374" Action="Warning" />
+    <Rule Id="CA5375" Action="Warning" />
+    <Rule Id="CA5376" Action="Warning" />
+    <Rule Id="CA5377" Action="Warning" />
+    <Rule Id="CA5378" Action="Warning" />
+    <Rule Id="CA5379" Action="Warning" />
+    <Rule Id="CA5380" Action="Warning" />
+    <Rule Id="CA5381" Action="Warning" />
+    <Rule Id="CA5382" Action="Warning" />
+    <Rule Id="CA5383" Action="Warning" />
+    <Rule Id="CA5384" Action="Warning" />
+    <Rule Id="CA5385" Action="Warning" />
+    <Rule Id="CA5386" Action="Warning" />
+    <Rule Id="CA5387" Action="Warning" />
+    <Rule Id="CA5388" Action="Warning" />
+    <Rule Id="CA5389" Action="Warning" />
+    <Rule Id="CA5390" Action="Warning" />
+    <Rule Id="CA5391" Action="Warning" />
+    <Rule Id="CA5392" Action="Warning" />
+    <Rule Id="CA5393" Action="Warning" />
+    <Rule Id="CA5394" Action="None" />       <!-- REQUIRED * CA5394: Do not use insecure randomness -->
+    <Rule Id="CA5395" Action="Warning" />
+    <Rule Id="CA5396" Action="Warning" />
+    <Rule Id="CA5397" Action="Warning" />
+    <Rule Id="CA5398" Action="Warning" />
+    <Rule Id="CA5399" Action="Warning" />
+    <Rule Id="CA5400" Action="Warning" />
+    <Rule Id="CA5401" Action="Warning" />
+    <Rule Id="CA5402" Action="Warning" />
+    <Rule Id="CA5403" Action="Warning" />
+    <Rule Id="IL3000" Action="Warning" />
+    <Rule Id="IL3001" Action="Warning" />
+    <Rule Id="CA1019" Action="None" />       <!--- REQUIRED * CA1019: Define accessors for attribute arguments -->
+    <Rule Id="CA1065" Action="Warning" />
+    <Rule Id="CA1418" Action="Warning" />
+    <Rule Id="CA1419" Action="Warning" />
+    <Rule Id="CA1727" Action="Warning" />
+    <Rule Id="CA1839" Action="Warning" />
+    <Rule Id="CA1840" Action="Warning" />
+    <Rule Id="CA1842" Action="Warning" />
+    <Rule Id="CA1843" Action="Warning" />
+    <Rule Id="CA1844" Action="Warning" />
+    <Rule Id="CA1846" Action="Warning" />
+    <Rule Id="CA1847" Action="Warning" />
+    <Rule Id="CA1848" Action="Warning" />
+    <Rule Id="CA1849" Action="Warning" />
+    <Rule Id="CA2017" Action="Warning" />
+    <Rule Id="CA2018" Action="Warning" />
+    <Rule Id="CA2200" Action="Warning" />
+    <Rule Id="CA2250" Action="Warning" />
+    <Rule Id="CA2251" Action="Warning" />
+    <Rule Id="CA2253" Action="Warning" />
+    <Rule Id="CA2254" Action="Warning" />
+    <Rule Id="CA2255" Action="Warning" />
+    <Rule Id="CA2256" Action="Warning" />
+    <Rule Id="CA2257" Action="Warning" />
+    <Rule Id="CA2258" Action="Warning" />
+    <Rule Id="CA3076" Action="Warning" />
+    <Rule Id="CA3077" Action="Warning" />
+    <Rule Id="CA5404" Action="Warning" />
+    <Rule Id="CA5405" Action="Warning" />
   </Rules>
 </RuleSet>

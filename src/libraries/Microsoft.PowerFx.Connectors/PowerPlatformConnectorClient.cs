@@ -2,9 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Collections.Generic;
 using System.Net.Http;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -56,6 +54,13 @@ namespace Microsoft.PowerFx.Connectors
                 
         public override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
+            using HttpRequestMessage req = Transform(request);
+
+            return await _client.SendAsync(req, cancellationToken);            
+        }
+
+        public HttpRequestMessage Transform(HttpRequestMessage request)
+        {
             var url = request.RequestUri.ToString();
             if (request.RequestUri.IsAbsoluteUri)
             {
@@ -66,7 +71,7 @@ namespace Microsoft.PowerFx.Connectors
 
             url = url.Replace("{connectionId}", ConnectionId);
 
-            var method = request.Method;            
+            var method = request.Method;
             var authToken = GetAuthToken();
 
             var req = new HttpRequestMessage(HttpMethod.Post, $"https://{Endpoint}/invoke");
@@ -79,10 +84,15 @@ namespace Microsoft.PowerFx.Connectors
             req.Headers.Add("x-ms-client-environment-id", "/providers/Microsoft.PowerApps/environments/" + EnvironmentId);
             req.Headers.Add("x-ms-user-agent", $"PowerFx/{Version}");
             req.Headers.Add("x-ms-request-url", url);
-            req.Content = request.Content;                
 
-            var response = await _client.SendAsync(req, cancellationToken);
-            return response;
+            foreach (var header in request.Headers)
+            {
+                req.Headers.Add(header.Key, header.Value);
+            }
+
+            req.Content = request.Content;
+
+            return req;
         }
     }
 }
