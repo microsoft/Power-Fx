@@ -58,7 +58,7 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
 
         internal IntellisenseSuggestionList SubstringSuggestions { get; }
 
-        internal TexlBinding Binding { get; }        
+        internal TexlBinding Binding { get; }
 
         internal List<CommentToken> Comments { get; }
 
@@ -276,7 +276,7 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
             Contracts.AssertValue(function);
             Contracts.AssertValue(scopeType);
 
-            return ArgumentSuggestions.GetArgumentSuggestions(TryGetEnumSymbol,  SuggestUnqualifiedEnums, function, scopeType, argumentIndex, out requiresSuggestionEscaping);
+            return ArgumentSuggestions.GetArgumentSuggestions(TryGetEnumSymbol, SuggestUnqualifiedEnums, function, scopeType, argumentIndex, out requiresSuggestionEscaping);
         }
 
         /// <summary>

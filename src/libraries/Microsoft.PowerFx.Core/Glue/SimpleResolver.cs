@@ -24,10 +24,10 @@ namespace Microsoft.PowerFx.Core.Glue
     {
         private readonly PowerFxConfig _config;
 
-        private readonly TexlFunction[] _library;        
+        private readonly TexlFunction[] _library;
         private readonly EnumSymbol[] _enums = new EnumSymbol[] { };
 
-        private readonly IExternalDocument _document;        
+        private readonly IExternalDocument _document;
 
         IExternalDocument INameResolver.Document => _document;
 
@@ -39,7 +39,7 @@ namespace Microsoft.PowerFx.Core.Glue
 
         // Expose the list to aide in intellisense suggestions. 
         public IEnumerable<TexlFunction> Functions => _library;
-        
+
         IExternalEntity INameResolver.CurrentEntity => null;
 
         public bool SuggestUnqualifiedEnums => false;
@@ -51,8 +51,8 @@ namespace Microsoft.PowerFx.Core.Glue
         public SimpleResolver(PowerFxConfig config)
         {
             _config = config ?? throw new ArgumentNullException(nameof(config));
-            _library = config.Functions.ToArray();            
-            _enums = config.EnumStoreBuilder.Build().EnumSymbols.ToArray();            
+            _library = config.Functions.ToArray();
+            _enums = config.EnumStoreBuilder.Build().EnumSymbols.ToArray();
         }
 
         // for derived classes that need to set INameResolver.Document. 
