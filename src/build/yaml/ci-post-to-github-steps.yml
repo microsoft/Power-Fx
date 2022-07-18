@@ -24,7 +24,7 @@ steps:
 - powershell: |
     $OWNER = 'microsoft';
     $REPO = 'Power-Fx';
-    $ISSUE_NUMBER = $(System.PullRequest.PullRequestNumber);
+    $ISSUE_NUMBER = "$(System.PullRequest.PullRequestNumber)";
     $stringToMatch = "*Binary Compatibility*";
 
     $listCommentsUri = "https://api.github.com/repos/$OWNER/$REPO/issues/$ISSUE_NUMBER/comments";
