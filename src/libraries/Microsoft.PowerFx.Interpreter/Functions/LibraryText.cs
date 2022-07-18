@@ -30,7 +30,7 @@ namespace Microsoft.PowerFx.Functions
             return new StringValue(irContext, str);
         }
 
-        public static async ValueTask<FormulaValue> Concat(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
+        public static async ValueTask<FormulaValue> Concat(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {// Streaming 
             var arg0 = (TableValue)args[0];
             var arg1 = (LambdaFormulaValue)args[1];
@@ -52,9 +52,9 @@ namespace Microsoft.PowerFx.Functions
                         sb.Append(separator);
                     }
 
-                    var childContext = symbolContext.WithScopeValues(row.Value);
+                    var childContext = context.SymbolContext.WithScopeValues(row.Value);
 
-                    var result = await arg1.EvalAsync(runner, childContext);
+                    var result = await arg1.EvalAsync(runner, new EvalVisitorContext(childContext, context.StackDepthCounter));
 
                     var str = (StringValue)result;
                     sb.Append(str.Value);
@@ -80,7 +80,7 @@ namespace Microsoft.PowerFx.Functions
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-value
         // Convert string to number
-        public static FormulaValue Value(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
+        public static FormulaValue Value(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             var arg0 = args[0];
 
@@ -122,7 +122,7 @@ namespace Microsoft.PowerFx.Functions
         }
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-text
-        public static FormulaValue Text(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
+        public static FormulaValue Text(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             // only DateValue and DateTimeValue are supported for now with custom format strings.
             if (args.Length > 1 && args[0] is StringValue)
@@ -227,7 +227,7 @@ namespace Microsoft.PowerFx.Functions
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-isblank-isempty
         // Take first non-blank value.
-        public static async ValueTask<FormulaValue> Coalesce(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
+        public static async ValueTask<FormulaValue> Coalesce(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             var errors = new List<ErrorValue>();
 
@@ -235,7 +235,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 runner.CheckCancel();
 
-                var res = await runner.EvalArgAsync<ValidFormulaValue>(arg, symbolContext, arg.IRContext);
+                var res = await runner.EvalArgAsync<ValidFormulaValue>(arg, context, arg.IRContext);
 
                 if (res.IsValue)
                 {
@@ -279,7 +279,7 @@ namespace Microsoft.PowerFx.Functions
             return new StringValue(irContext, args[0].Value.ToUpper());
         }
 
-        public static FormulaValue Proper(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, StringValue[] args)
+        public static FormulaValue Proper(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, StringValue[] args)
         {
             return new StringValue(irContext, runner.CultureInfo.TextInfo.ToTitleCase(args[0].Value.ToLower()));
         }
@@ -366,15 +366,15 @@ namespace Microsoft.PowerFx.Functions
                 return CommonErrors.GenericInvalidArgument(irContext);
             }
 
-            var source = (StringValue)args[0];            
+            var source = (StringValue)args[0];
 
             if (count.Value < 0)
             {
                 return CommonErrors.GenericInvalidArgument(irContext);
             }
 
-            return new StringValue(irContext, leftOrRight(source.Value, (int)count.Value));            
-        }       
+            return new StringValue(irContext, leftOrRight(source.Value, (int)count.Value));
+        }
 
         private static FormulaValue Find(IRContext irContext, FormulaValue[] args)
         {
@@ -531,6 +531,21 @@ namespace Microsoft.PowerFx.Functions
             var result = text.Value.Trim();
 
             return new StringValue(irContext, result);
+        }
+
+        public static FormulaValue Guid(IRContext irContext, StringValue[] args)
+        {
+            var text = args[0].Value;
+            try
+            {
+                var guid = new Guid(text);
+
+                return new GuidValue(irContext, guid);
+            }
+            catch
+            {
+                return CommonErrors.GenericInvalidArgument(irContext);
+            }
         }
     }
 }

@@ -497,6 +497,39 @@
   <data name="AboutBoolean_text" xml:space="preserve">
     <value>Nilai teks untuk ditukar kepada nilai boolean.</value>
   </data>
+  <data name="AboutBooleanT" xml:space="preserve">
+    <value>Menukar lajur nilai teks kepada lajur nilai Boolean.</value>
+    
+  </data>
+  <data name="BooleanTArg1" xml:space="preserve">
+    <value>input</value>
+    
+  </data>
+  <data name="AboutBooleanT_input" xml:space="preserve">
+    <value>Lajur nilai teks untuk diproses.</value>
+  </data>
+  <data name="AboutBooleanN" xml:space="preserve">
+    <value>Menukar 'nombor' kepada nilai Boolean.</value>
+    
+  </data>
+  <data name="BooleanNArg1" xml:space="preserve">
+    <value>nombor</value>
+    
+  </data>
+  <data name="AboutBooleanN_number" xml:space="preserve">
+    <value>Nilai nombor untuk ditukar kepada nilai Boolean.</value>
+  </data>
+  <data name="AboutBooleanNT" xml:space="preserve">
+    <value>Menukar lajur nilai angka kepada lajur nilai Boolean.</value>
+    
+  </data>
+  <data name="BooleanNTArg1" xml:space="preserve">
+    <value>input</value>
+    
+  </data>
+  <data name="AboutBooleanNT_input" xml:space="preserve">
+    <value>Lajur nilai nombor untuk diproses.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Mengembalikan argumen bukan kosong pertama</value>
     
@@ -926,7 +959,7 @@
     
   </data>
   <data name="WeekNumArg2" xml:space="preserve">
-    <value>permulaan_minggu</value>
+    <value>start_of_week</value>
     
   </data>
   <data name="AboutWeekNum_date" xml:space="preserve">
@@ -1439,7 +1472,7 @@
     
   </data>
   <data name="AboutIsBlankOrError_expression" xml:space="preserve">
-    <value>Ungkapan yang akan diuji.</value>
+    <value>Ungkapan untuk diuji.</value>
     
   </data>
   <data name="AboutIsEmpty" xml:space="preserve">
@@ -4018,7 +4051,7 @@
     <value>Ralat ini muncul paling biasa apabila formula merujuk pada sesuatu yang tidak lagi wujud (contohnya, kawalan yang telah dipadamkan).</value>
   </data>
   <data name="ErrorResource_ErrInvalidName_HowToFix_1" xml:space="preserve">
-    <value>Alih Keluar atau betulkan rujukan kepada nama yang tidak sah.</value>
+    <value>Alih keluar atau betulkan rujukan kepada nama yang tidak sah.</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidName_Link_1" xml:space="preserve">
@@ -4359,15 +4392,15 @@
     <value>Sumber data mungkin tidak dapat memproses formula dan mungkin mengembalikan set data yang tidak lengkap. Aplikasi anda mungkin tidak mengembalikan keputusan yang betul atau berkelakuan dengan betul jika set data tidak lengkap.</value>
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_1" xml:space="preserve">
-    <value>Jika anda set data melebihi had rekod 500 tetapi mengandungi kurang daripada 2,000 rekod, cuba set semula had.</value>
+    <value>Jika set data anda melebihi had rekod 500 tetapi mengandungi kurang daripada 2,000 rekod, cuba tetapkan semula had.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_2" xml:space="preserve">
-    <value>Cuba Permudahkan formula.</value>
+    <value>Cuba permudahkan formula.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_3" xml:space="preserve">
-    <value>Cuba beralih data anda kepada sumber data yang berbeza.</value>
+    <value>Cuba alihkan data anda kepada sumber data lain.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_Link_1" xml:space="preserve">
@@ -4386,15 +4419,15 @@
     <value>Sumber data mungkin tidak dapat memproses formula dan mungkin mengembalikan set data yang tidak lengkap. Aplikasi anda mungkin tidak mengembalikan keputusan yang betul atau berkelakuan dengan betul jika set data tidak lengkap.</value>
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_1" xml:space="preserve">
-    <value>Jika anda set data melebihi had rekod 500 tetapi mengandungi kurang daripada 2,000 rekod, cuba set semula had.</value>
+    <value>Jika set data anda melebihi had rekod 500 tetapi mengandungi kurang daripada 2,000 rekod, cuba tetapkan semula had.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_2" xml:space="preserve">
-    <value>Cuba Permudahkan formula.</value>
+    <value>Cuba permudahkan formula.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_3" xml:space="preserve">
-    <value>Cuba beralih data anda kepada sumber data yang berbeza.</value>
+    <value>Cuba alihkan data anda kepada sumber data lain.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_1" xml:space="preserve">
@@ -4417,15 +4450,15 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_2" xml:space="preserve">
-    <value>Jika anda set data melebihi had rekod 500 tetapi mengandungi kurang daripada 2,000 rekod, cuba set semula had.</value>
+    <value>Jika set data anda melebihi had rekod 500 tetapi mengandungi kurang daripada 2,000 rekod, cuba tetapkan semula had.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_3" xml:space="preserve">
-    <value>Cuba Permudahkan formula.</value>
+    <value>Cuba permudahkan formula.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_4" xml:space="preserve">
-    <value>Cuba beralih data anda kepada sumber data yang berbeza.</value>
+    <value>Cuba alihkan data anda kepada sumber data lain.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_1" xml:space="preserve">
@@ -4454,11 +4487,11 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_3" xml:space="preserve">
-    <value>Cuba Permudahkan formula.</value>
+    <value>Cuba permudahkan formula.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_4" xml:space="preserve">
-    <value>Cuba beralih data anda kepada sumber data yang berbeza.</value>
+    <value>Cuba alihkan data anda kepada sumber data lain.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_1" xml:space="preserve">
@@ -4478,15 +4511,15 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_1" xml:space="preserve">
-    <value>Jika anda set data melebihi had rekod 500 tetapi mengandungi kurang daripada 2,000 rekod, cuba set semula had.</value>
+    <value>Jika set data anda melebihi had rekod 500 tetapi mengandungi kurang daripada 2,000 rekod, cuba tetapkan semula had.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_2" xml:space="preserve">
-    <value>Cuba Permudahkan formula.</value>
+    <value>Cuba permudahkan formula.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_3" xml:space="preserve">
-    <value>Cuba beralih data anda kepada sumber data yang berbeza.</value>
+    <value>Cuba alihkan data anda kepada sumber data lain.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_1" xml:space="preserve">
@@ -4551,6 +4584,10 @@
   </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula '{0}' sudah wujud.</value>
+  </data>
+  <data name="ErrorResource_NameConflict" xml:space="preserve">
+    <value>Tidak dapat mencipta {0} bernama '{1}' kerana nama tersebut sudah digunakan untuk {2}.</value>
+    
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
     <value>Argumen pertama '{0}' mestilah nama pemboleh ubah yang sah dan tidak boleh berkonflik dengan sebarang nama kawalan, skrin, koleksi atau sumber data sedia ada. Jenis ditemui '{1}'</value>

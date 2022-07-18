@@ -419,7 +419,7 @@ namespace Microsoft.PowerFx.Functions
 
                         if (!exact && rhs is StringValue strRhs)
                         {
-                            right = strRhs.ToLower();
+                            rhs = strRhs.ToLower();
                         }
 
                         if (RuntimeHelpers.AreEqual(left, rhs))

@@ -497,6 +497,39 @@
   <data name="AboutBoolean_text" xml:space="preserve">
     <value>Valoarea textului de convertit la o valoare booleană.</value>
   </data>
+  <data name="AboutBooleanT" xml:space="preserve">
+    <value>Converts a column of text values to a column of boolean values.</value>
+    
+  </data>
+  <data name="BooleanTArg1" xml:space="preserve">
+    <value>intrare</value>
+    
+  </data>
+  <data name="AboutBooleanT_input" xml:space="preserve">
+    <value>A column of text values to process.</value>
+  </data>
+  <data name="AboutBooleanN" xml:space="preserve">
+    <value>Converts a 'number' to a boolean value.</value>
+    
+  </data>
+  <data name="BooleanNArg1" xml:space="preserve">
+    <value>number</value>
+    
+  </data>
+  <data name="AboutBooleanN_number" xml:space="preserve">
+    <value>The number value to convert to a boolean value.</value>
+  </data>
+  <data name="AboutBooleanNT" xml:space="preserve">
+    <value>Converts a column of numeric values to a column of boolean values.</value>
+    
+  </data>
+  <data name="BooleanNTArg1" xml:space="preserve">
+    <value>intrare</value>
+    
+  </data>
+  <data name="AboutBooleanNT_input" xml:space="preserve">
+    <value>A column of number values to process.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Returnează primul argument nevid</value>
     
@@ -2626,7 +2659,7 @@
     
   </data>
   <data name="AboutIsUTCToday_date" xml:space="preserve">
-    <value>Valoarea datei de testat.</value>
+    <value>Valoarea dată de testat.</value>
   </data>
   <data name="IsUTCTodayFuncArg1" xml:space="preserve">
     <value>dată</value>
@@ -3977,7 +4010,7 @@
     <value>Eliminați sau înlocuiți caracterul neașteptat.</value>
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_Link_1" xml:space="preserve">
-    <value>Articol: Referință de formule pentru Power Apps</value>
+    <value>Articol: referință privind formulele pentru Power Apps</value>
     
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_ShortMessage" xml:space="preserve">
@@ -4018,7 +4051,7 @@
     <value>Această eroare apare cel mai frecvent atunci când o formulă face referire la ceva care nu mai există (de exemplu, un control pe care l-ați șters).</value>
   </data>
   <data name="ErrorResource_ErrInvalidName_HowToFix_1" xml:space="preserve">
-    <value>Eliminați sau corectați referința la nume care nu este validă.</value>
+    <value>Eliminați sau corectați referința la numele care nu este valid.</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidName_Link_1" xml:space="preserve">
@@ -4030,14 +4063,14 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidIdentifier_LongMessage" xml:space="preserve">
-    <value>Această eroare apare cel mai frecvent atunci când o formulă face referire la ceva care nu mai există (de exemplu un control pe care l-ați șters).</value>
+    <value>Această eroare apare cel mai frecvent atunci când o formulă face referire la ceva care nu mai există (de exemplu, un control pe care l-ați șters).</value>
   </data>
   <data name="ErrorResource_ErrInvalidIdentifier_HowToFix_1" xml:space="preserve">
     <value>Eliminați sau corectați referința la numele care nu este valid.</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
-    <value>Articol: Referință la formule pentru Power Apps</value>
+    <value>Articol: referință privind formulele pentru Power Apps</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_ShortMessage" xml:space="preserve">
@@ -4551,6 +4584,10 @@
   </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula „{0}” există deja.</value>
+  </data>
+  <data name="ErrorResource_NameConflict" xml:space="preserve">
+    <value>Nu se poate crea o entitate {0} denumită „{1}”, deoarece acest nume este deja utilizat de {2}.</value>
+    
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
     <value>Primul argument pentru „{0}” trebuie să fie un nume valid de variabilă și nu poate intra în conflict cu nume existente de controale, ecrane, colecții sau surse de date. S-a găsit tipul „{1}”</value>

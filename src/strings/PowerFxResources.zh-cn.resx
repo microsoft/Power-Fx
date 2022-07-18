@@ -497,6 +497,39 @@
   <data name="AboutBoolean_text" xml:space="preserve">
     <value>要转换为布尔值的文本值。</value>
   </data>
+  <data name="AboutBooleanT" xml:space="preserve">
+    <value>将文本值列转换为布尔值列。</value>
+    
+  </data>
+  <data name="BooleanTArg1" xml:space="preserve">
+    <value>输入</value>
+    
+  </data>
+  <data name="AboutBooleanT_input" xml:space="preserve">
+    <value>要处理的文本值组成的列。</value>
+  </data>
+  <data name="AboutBooleanN" xml:space="preserve">
+    <value>将“数值”转换为布尔值。</value>
+    
+  </data>
+  <data name="BooleanNArg1" xml:space="preserve">
+    <value>数字</value>
+    
+  </data>
+  <data name="AboutBooleanN_number" xml:space="preserve">
+    <value>要转换为布尔值的数字值。</value>
+  </data>
+  <data name="AboutBooleanNT" xml:space="preserve">
+    <value>将数值列转换为布尔值列。</value>
+    
+  </data>
+  <data name="BooleanNTArg1" xml:space="preserve">
+    <value>输入</value>
+    
+  </data>
+  <data name="AboutBooleanNT_input" xml:space="preserve">
+    <value>要处理的数值组成的列。</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>返回第一个非空白参数</value>
     
@@ -4551,6 +4584,10 @@
   </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula '{0}' 已存在。</value>
+  </data>
+  <data name="ErrorResource_NameConflict" xml:space="preserve">
+    <value>无法创建名为 '{1}' 的 {0}，因为该名称已用于 {2}。</value>
+    
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
     <value>“{0}”的第一个参数应为有效的变量名，且不能与任何现有控件、屏幕、集合或数据源名称冲突。找到的类型为“{1}”</value>

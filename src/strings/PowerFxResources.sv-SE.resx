@@ -497,6 +497,39 @@
   <data name="AboutBoolean_text" xml:space="preserve">
     <value>Textvärdet som ska konverteras till ett booleskt värde.</value>
   </data>
+  <data name="AboutBooleanT" xml:space="preserve">
+    <value>Converts a column of text values to a column of boolean values.</value>
+    
+  </data>
+  <data name="BooleanTArg1" xml:space="preserve">
+    <value>indata</value>
+    
+  </data>
+  <data name="AboutBooleanT_input" xml:space="preserve">
+    <value>A column of text values to process.</value>
+  </data>
+  <data name="AboutBooleanN" xml:space="preserve">
+    <value>Converts a 'number' to a boolean value.</value>
+    
+  </data>
+  <data name="BooleanNArg1" xml:space="preserve">
+    <value>number</value>
+    
+  </data>
+  <data name="AboutBooleanN_number" xml:space="preserve">
+    <value>The number value to convert to a boolean value.</value>
+  </data>
+  <data name="AboutBooleanNT" xml:space="preserve">
+    <value>Converts a column of numeric values to a column of boolean values.</value>
+    
+  </data>
+  <data name="BooleanNTArg1" xml:space="preserve">
+    <value>indata</value>
+    
+  </data>
+  <data name="AboutBooleanNT_input" xml:space="preserve">
+    <value>A column of number values to process.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Returnerar det första icke-tomma argumentet</value>
     
@@ -3956,7 +3989,7 @@
     
   </data>
   <data name="ErrorResource_ErrBadToken_LongMessage" xml:space="preserve">
-    <value>Tecknet '\' förväntas t.ex. inte efter ett tal, som exempelvis i: 32\'. Ett blanksteg (32 ) borde förväntas, så att det bara är talet 32, eller ett annat tal (som i 323) som förväntas.</value>
+    <value>Tecknet "\" förväntas t.ex. inte efter ett tal, som exempelvis i: "32\". Ett blanksteg ("32") borde förväntas, så att det bara är talet 32, eller ett annat tal (som i "323") som förväntas.</value>
   </data>
   <data name="ErrorResource_ErrBadToken_HowToFix_1" xml:space="preserve">
     <value>Ta bort eller ersätt de oväntade tecknen.</value>
@@ -4363,11 +4396,11 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_2" xml:space="preserve">
-    <value>Försök att förenkla formeln.</value>
+    <value>Försök förenkla formeln.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_3" xml:space="preserve">
-    <value>Försök att flytta dina data till en annan datakälla.</value>
+    <value>Försök flytta dina data till en annan datakälla.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_Link_1" xml:space="preserve">
@@ -4390,11 +4423,11 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_2" xml:space="preserve">
-    <value>Försök att förenkla formeln.</value>
+    <value>Försök förenkla formeln.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_3" xml:space="preserve">
-    <value>Försök att flytta dina data till en annan datakälla.</value>
+    <value>Försök flytta dina data till en annan datakälla.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_1" xml:space="preserve">
@@ -4421,11 +4454,11 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_3" xml:space="preserve">
-    <value>Försök att förenkla formeln.</value>
+    <value>Försök förenkla formeln.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_4" xml:space="preserve">
-    <value>Försök att flytta dina data till en annan datakälla.</value>
+    <value>Försök flytta dina data till en annan datakälla.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_1" xml:space="preserve">
@@ -4454,11 +4487,11 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_3" xml:space="preserve">
-    <value>Försök att förenkla formeln.</value>
+    <value>Försök förenkla formeln.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_4" xml:space="preserve">
-    <value>Försök att flytta dina data till en annan datakälla.</value>
+    <value>Försök flytta dina data till en annan datakälla.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_1" xml:space="preserve">
@@ -4482,11 +4515,11 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_2" xml:space="preserve">
-    <value>Försök att förenkla formeln.</value>
+    <value>Försök förenkla formeln.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_3" xml:space="preserve">
-    <value>Försök att flytta dina data till en annan datakälla.</value>
+    <value>Försök flytta dina data till en annan datakälla.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_1" xml:space="preserve">
@@ -4551,6 +4584,10 @@
   </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula '{0}' finns redan.</value>
+  </data>
+  <data name="ErrorResource_NameConflict" xml:space="preserve">
+    <value>Det går inte att skapa en {0} med namnet '{1}' eftersom namnet redan används för en {2}.</value>
+    
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
     <value>Det första argumentet för {0} ska vara ett giltigt variabelnamn och kan inte vara i konflikt med något befintligt namn på en kontroll, skärm, samling eller datakälla. Hittade typen {1}</value>

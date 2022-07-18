@@ -134,13 +134,13 @@ namespace Microsoft.PowerFx.Core.Tests
             {
                 Assert.Equal(0, summary.Fail);
                 Assert.Equal(2, summary.Pass);
-            } 
+            }
             else
             {
                 Assert.Equal(2, summary.Fail);
                 Assert.Equal(0, summary.Pass);
             }
-        }      
+        }
 
         [Theory]
         [InlineData("Bad1.txt")]
@@ -152,7 +152,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             Assert.Throws<InvalidOperationException>(
                 () => AddFile(runner, file));
-        }        
+        }
 
         // #DISABLE directive to remove an entire file. 
         [Fact]
@@ -196,10 +196,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [Fact]
         public void TestRunnerSuccess()
         {
-            var runner = new MockRunner
-            {
-                _hook = (expr, setup) => FormulaValue.New(1)
-            };
+            var runner = new MockRunner { _hook = (expr, setup) => FormulaValue.New(1) };
 
             var test = new TestCase
             {
@@ -213,10 +210,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [Fact]
         public void TestRunnerFail()
         {
-            var runner = new MockRunner
-            {
-                _hook = (expr, setup) => FormulaValue.New(1)
-            };
+            var runner = new MockRunner { _hook = (expr, setup) => FormulaValue.New(1) };
 
             var test = new TestCase
             {
@@ -230,10 +224,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [Fact]
         public void TestRunnerNumericTolerance()
         {
-            var runner = new MockRunner
-            {
-                _hook = (expr, setup) => FormulaValue.New(1.23456789)
-            };
+            var runner = new MockRunner { _hook = (expr, setup) => FormulaValue.New(1.23456789) };
 
             var test = new TestCase
             {
@@ -272,10 +263,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [Fact]
         public void TestRunnerUnsupported()
         {
-            var runner = new MockRunner
-            {
-                _hook2 = (expr, setup) => new RunResult { UnsupportedReason = "unsupported" }
-            };
+            var runner = new MockRunner { _hook2 = (expr, setup) => new RunResult { UnsupportedReason = "unsupported" } };
             {
                 var test = new TestCase
                 {
@@ -314,10 +302,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [Fact]
         public void TestRunnerError()
         {
-            var runner = new MockRunner
-            {
-                _hook = (expr, setup) => _errorValue // error
-            };
+            var runner = new MockRunner { _hook = (expr, setup) => _errorValue /* error */ };
 
             var test = new TestCase
             {
@@ -337,9 +322,8 @@ namespace Microsoft.PowerFx.Core.Tests
         [Fact]
         public void TestRunnerErrorKindMatching()
         {
-            var errorValue = new ErrorValue(
-                IR.IRContext.NotInSource(FormulaType.Number),
-                new ExpressionError { Kind = ErrorKind.InvalidFunctionUsage });
+            var errorValue = new ErrorValue(IR.IRContext.NotInSource(FormulaType.Number), new ExpressionError { Kind = ErrorKind.InvalidFunctionUsage });
+
             var runner = new MockRunner
             {
                 _hook = (expr, setup) => errorValue // error
@@ -378,10 +362,7 @@ namespace Microsoft.PowerFx.Core.Tests
         public void TestRunnerCompilerError()
         {
             // Compiler error is a throw from Check()
-            var runner = new MockRunner
-            {
-                _hook2 = (expr, setup) => RunResult.FromError("X")
-            };
+            var runner = new MockRunner { _hook2 = (expr, setup) => RunResult.FromError("X") };
 
             var test = new TestCase
             {
@@ -421,9 +402,10 @@ namespace Microsoft.PowerFx.Core.Tests
 
             var test = new TestCase
             {
-                SetupHandlerName = handlerName
+                SetupHandlerName = handlerName,
+                Expected = "1"
             };
-            test.Expected = "1";
+
             var (result, message) = runner.RunTestCase(test);
 
             Assert.Equal(TestResult.Skip, result);
