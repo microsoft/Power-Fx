@@ -13,6 +13,8 @@ namespace Microsoft.PowerFx.Core.Tests
 
         internal TexlParser.Flags Flags { get; set; }
 
+        internal Features Features { get; set; }
+
         internal static InternalSetup Parse(string setupHandlerName)
         {
             var iSetup = new InternalSetup();
@@ -22,7 +24,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 return iSetup;
             }
             
-            var parts = setupHandlerName.Split(",").Select(x => x.Trim()).Where(x => !string.IsNullOrEmpty(x)).ToList();           
+            var parts = setupHandlerName.Split(",").Select(x => x.Trim()).Where(x => !string.IsNullOrEmpty(x)).ToList();
             
             foreach (var part in parts.ToArray())
             {
@@ -31,6 +33,11 @@ namespace Microsoft.PowerFx.Core.Tests
                     iSetup.Flags |= flag;
                     parts.Remove(part);
                 }
+                else if (Enum.TryParse<Features>(part, out var f))
+                {
+                    iSetup.Features |= f;
+                    parts.Remove(part); 
+                }                
             }
 
             if (parts.Count > 1)

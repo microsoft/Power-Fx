@@ -497,6 +497,39 @@
   <data name="AboutBoolean_text" xml:space="preserve">
     <value>Wartość tekstowa do przekonwertowania na wartość logiczną.</value>
   </data>
+  <data name="AboutBooleanT" xml:space="preserve">
+    <value>Konwertuje kolumnę wartości tekstowych na kolumnę wartości logicznych.</value>
+    
+  </data>
+  <data name="BooleanTArg1" xml:space="preserve">
+    <value>dane_wejściowe</value>
+    
+  </data>
+  <data name="AboutBooleanT_input" xml:space="preserve">
+    <value>Kolumna wartości tekstowych do przetworzenia.</value>
+  </data>
+  <data name="AboutBooleanN" xml:space="preserve">
+    <value>Konwertuje „liczbę” na wartość logiczną.</value>
+    
+  </data>
+  <data name="BooleanNArg1" xml:space="preserve">
+    <value>liczba</value>
+    
+  </data>
+  <data name="AboutBooleanN_number" xml:space="preserve">
+    <value>Wartość liczbowa do przekonwertowania na wartość logiczną.</value>
+  </data>
+  <data name="AboutBooleanNT" xml:space="preserve">
+    <value>Konwertuje kolumnę wartości liczbowych na kolumnę wartości logicznych.</value>
+    
+  </data>
+  <data name="BooleanNTArg1" xml:space="preserve">
+    <value>dane_wejściowe</value>
+    
+  </data>
+  <data name="AboutBooleanNT_input" xml:space="preserve">
+    <value>Kolumna wartości liczbowych do przetworzenia.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Zwraca pierwszy niepusty argument</value>
     
@@ -3963,7 +3996,7 @@
     
   </data>
   <data name="ErrorResource_ErrBadToken_Link_1" xml:space="preserve">
-    <value>Artykuł: Odwołanie do formuły dla usługi Power Apps</value>
+    <value>Artykuł: Informacje o formułach w usłudze Power Apps</value>
     
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_ShortMessage" xml:space="preserve">
@@ -3992,7 +4025,7 @@
     
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_Link_1" xml:space="preserve">
-    <value>Artykuł: Odwołanie do formuły dla usługi Power Apps</value>
+    <value>Artykuł: Informacje o formułach w usłudze Power Apps</value>
     
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_ShortMessage" xml:space="preserve">
@@ -4007,7 +4040,7 @@
     
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_Link_1" xml:space="preserve">
-    <value>Artykuł: Odwołanie do formuły dla usługi Power Apps</value>
+    <value>Artykuł: Informacje o formułach w usłudze Power Apps</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
@@ -4022,7 +4055,7 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidName_Link_1" xml:space="preserve">
-    <value>Artykuł: Odwołanie do formuły dla usługi Power Apps</value>
+    <value>Artykuł: Informacje o formułach w usłudze Power Apps</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
@@ -4119,7 +4152,7 @@
     
   </data>
   <data name="ErrorResource_ErrNumberExpected_Link_1" xml:space="preserve">
-    <value>Artykuł: Odwołanie do formuły dla usługi Power Apps</value>
+    <value>Artykuł: Informacje o formułach w usłudze Power Apps</value>
     
   </data>
   <data name="ErrorResource_ErrBooleanExpected_ShortMessage" xml:space="preserve">
@@ -4134,7 +4167,7 @@
     
   </data>
   <data name="ErrorResource_ErrBooleanExpected_Link_1" xml:space="preserve">
-    <value>Artykuł: Odwołanie do formuły dla usługi Power Apps</value>
+    <value>Artykuł: Informacje o formułach w usłudze Power Apps</value>
     
   </data>
   <data name="ErrorResource_ErrColonExpected_ShortMessage" xml:space="preserve">
@@ -4201,7 +4234,7 @@
     
   </data>
   <data name="ErrorResource_ErrStringExpected_Link_1" xml:space="preserve">
-    <value>Artykuł: Odwołanie do formuły dla usługi Power Apps</value>
+    <value>Artykuł: Informacje o formułach w usłudze Power Apps</value>
     
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_ShortMessage" xml:space="preserve">
@@ -4216,7 +4249,7 @@
     
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_Link_1" xml:space="preserve">
-    <value>Artykuł: Odwołanie do formuły dla usługi Power Apps</value>
+    <value>Artykuł: Informacje o formułach w usłudze Power Apps</value>
     
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_ShortMessage" xml:space="preserve">
@@ -4270,7 +4303,7 @@
     
   </data>
   <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_Link_1" xml:space="preserve">
-    <value>Artykuł: Odwołanie do formuły dla usługi Power Apps</value>
+    <value>Artykuł: Informacje o formułach w usłudze Power Apps</value>
     
   </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_ShortMessage" xml:space="preserve">
@@ -4298,7 +4331,7 @@
     
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_Link_1" xml:space="preserve">
-    <value>Artykuł: Odwołanie do formuły dla usługi Power Apps</value>
+    <value>Artykuł: Informacje o formułach w usłudze Power Apps</value>
     
   </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
@@ -4348,7 +4381,7 @@
     
   </data>
   <data name="ErrorResource_ErrDateExpected_Link_1" xml:space="preserve">
-    <value>Artykuł: Odwołanie do formuły dla usługi Power Apps</value>
+    <value>Artykuł: Informacje o formułach w usłudze Power Apps</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_ShortMessage" xml:space="preserve">
@@ -4359,7 +4392,7 @@
     <value>Źródło danych może nie być w stanie przetworzyć formuły i może zwrócić niekompletny zestaw danych. Twoja aplikacja może nie zwrócić prawidłowych wyników lub zachowywać się nieprawidłowo, jeśli zestaw danych będzie niekompletny.</value>
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_1" xml:space="preserve">
-    <value>Jeśli zestaw danych przekracza limit rekordów wynoszący 500, ale zawiera mniej niż 2000 rekordów, spróbuj zresetować limit.</value>
+    <value>Jeśli zestaw danych przekracza limit liczby rekordów wynoszący 500, ale zawiera mniej niż 2000 rekordów, spróbuj zresetować limit.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_2" xml:space="preserve">
@@ -4375,7 +4408,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_Link_2" xml:space="preserve">
-    <value>Blog: Limity wierszy danych w przypadku delegowania</value>
+    <value>Blog: Limity liczby wierszy danych w przypadku delegowania</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_ShortMessage" xml:space="preserve">
@@ -4386,7 +4419,7 @@
     <value>Źródło danych może nie być w stanie przetworzyć formuły i może zwrócić niekompletny zestaw danych. Twoja aplikacja może nie zwrócić prawidłowych wyników lub zachowywać się nieprawidłowo, jeśli zestaw danych będzie niekompletny.</value>
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_1" xml:space="preserve">
-    <value>Jeśli zestaw danych przekracza limit rekordów wynoszący 500, ale zawiera mniej niż 2000 rekordów, spróbuj zresetować limit.</value>
+    <value>Jeśli zestaw danych przekracza limit liczby rekordów wynoszący 500, ale zawiera mniej niż 2000 rekordów, spróbuj zresetować limit.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_2" xml:space="preserve">
@@ -4402,7 +4435,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_2" xml:space="preserve">
-    <value>Blog: Limity wierszy danych w przypadku delegowania</value>
+    <value>Blog: Limity liczby wierszy danych w przypadku delegowania</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_ShortMessage" xml:space="preserve">
@@ -4417,7 +4450,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_2" xml:space="preserve">
-    <value>Jeśli zestaw danych przekracza limit rekordów wynoszący 500, ale zawiera mniej niż 2000 rekordów, spróbuj zresetować limit.</value>
+    <value>Jeśli zestaw danych przekracza limit liczby rekordów wynoszący 500, ale zawiera mniej niż 2000 rekordów, spróbuj zresetować limit.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_3" xml:space="preserve">
@@ -4433,7 +4466,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_2" xml:space="preserve">
-    <value>Blog: Limity wierszy danych w przypadku delegowania</value>
+    <value>Blog: Limity liczby wierszy danych w przypadku delegowania</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_ShortMessage" xml:space="preserve">
@@ -4466,7 +4499,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_2" xml:space="preserve">
-    <value>Blog: Limity wierszy danych w przypadku delegowania</value>
+    <value>Blog: Limity liczby wierszy danych w przypadku delegowania</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_ShortMessage" xml:space="preserve">
@@ -4478,7 +4511,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_1" xml:space="preserve">
-    <value>Jeśli zestaw danych przekracza limit rekordów wynoszący 500, ale zawiera mniej niż 2000 rekordów, spróbuj zresetować limit.</value>
+    <value>Jeśli zestaw danych przekracza limit liczby rekordów wynoszący 500, ale zawiera mniej niż 2000 rekordów, spróbuj zresetować limit.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_2" xml:space="preserve">
@@ -4494,7 +4527,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_2" xml:space="preserve">
-    <value>Blog: Limity wierszy danych w przypadku delegowania</value>
+    <value>Blog: Limity liczby wierszy danych w przypadku delegowania</value>
     
   </data>
   <data name="ErrorResource_ErrOnlyOneViewExpected_ShortMessage" xml:space="preserve">
@@ -4551,6 +4584,10 @@
   </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>Nazwana formuła „{0}” już istnieje.</value>
+  </data>
+  <data name="ErrorResource_NameConflict" xml:space="preserve">
+    <value>Nie można utworzyć encji {0} o nazwie „{1}”, ponieważ ta nazwa jest używana dla typu encji {2}.</value>
+    
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
     <value>Pierwszy argument elementu „{0}” powinien być prawidłową nazwą zmiennej i nie może powodować konfliktu z żadnymi istniejącymi nazwami kontrolek, ekranów, kolekcji ani źródeł danych. Znaleziono typ „{1}”</value>

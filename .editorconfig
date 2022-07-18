@@ -86,6 +86,18 @@ dotnet_naming_rule.constant_fields_should_be_pascal_case.style = pascal_case_sty
 dotnet_naming_symbols.constant_fields.applicable_kinds = field
 dotnet_naming_symbols.constant_fields.applicable_accessibilities = *
 dotnet_naming_symbols.constant_fields.required_modifiers = const
+dotnet_style_prefer_simplified_boolean_expressions = true:suggestion
+dotnet_style_prefer_inferred_tuple_names = true:suggestion
+dotnet_style_prefer_inferred_anonymous_type_member_names = true:suggestion
+dotnet_style_prefer_compound_assignment = true:suggestion
+dotnet_style_prefer_simplified_interpolation = true:suggestion
+dotnet_style_namespace_match_folder = true:suggestion
+dotnet_style_operator_placement_when_wrapping = beginning_of_line
+tab_width = 4
+end_of_line = crlf
+dotnet_style_allow_multiple_blank_lines_experimental = true:silent
+dotnet_style_allow_statement_immediately_after_block_experimental = true:silent
+dotnet_code_quality_unused_parameters = all:suggestion
 
 ###############################
 # C# Code Style Rules         #
@@ -158,8 +170,65 @@ csharp_space_after_dot = false
 csharp_preserve_single_line_statements = true
 csharp_preserve_single_line_blocks = true
 
-# CS0618: Type or member is obsolete
-dotnet_diagnostic.CS0618.severity = none
+csharp_using_directive_placement = outside_namespace:suggestion
+csharp_prefer_simple_using_statement = false:suggestion
+csharp_style_namespace_declarations = block_scoped:silent
+csharp_style_prefer_method_group_conversion = true:silent
+csharp_style_expression_bodied_lambdas = true:suggestion
+csharp_style_expression_bodied_local_functions = false:silent
+csharp_style_prefer_null_check_over_type_check = true:suggestion
+csharp_style_prefer_local_over_anonymous_function = true:suggestion
+csharp_style_prefer_index_operator = false:suggestion
+csharp_style_prefer_range_operator = false:suggestion
+csharp_style_implicit_object_creation_when_type_is_apparent = true:suggestion
+csharp_style_prefer_tuple_swap = true:suggestion
+csharp_style_unused_value_assignment_preference = discard_variable:suggestion
+csharp_style_unused_value_expression_statement_preference = discard_variable:silent
+csharp_prefer_static_local_function = true:suggestion
+csharp_style_allow_embedded_statements_on_same_line_experimental = true:silent
+csharp_style_allow_blank_lines_between_consecutive_braces_experimental = true:silent
+csharp_style_allow_blank_line_after_colon_in_constructor_initializer_experimental = true:silent
+csharp_style_prefer_parameter_null_checking = true:suggestion
+csharp_style_prefer_pattern_matching = true:silent
+csharp_style_prefer_switch_expression = true:suggestion
+csharp_style_prefer_not_pattern = true:suggestion
+csharp_style_prefer_extended_property_pattern = true:suggestion
 
+# IDE0004: Cast is redundant
+dotnet_diagnostic.IDE0004.severity = warning
+# IDE0005: Using directive is unnecessary ## REQUIRED
+dotnet_diagnostic.IDE0005.severity = none
+# IDE0032: Use auto property
+dotnet_diagnostic.IDE0032.severity = none
+# IDE0052: Private member can be removed as the value assigned to it is never read
+dotnet_diagnostic.IDE0052.severity = warning
+# IDE0054: Use compound assignment
+dotnet_diagnostic.IDE0054.severity = warning
+# IDE0059: Unnecessary assignment of a value to 'xxx'
+dotnet_diagnostic.IDE0059.severity = warning
+# IDE0060: Remove unused parameter
+dotnet_diagnostic.IDE0060.severity = warning
+# IDE0066: Use 'switch' expression
+dotnet_diagnostic.IDE0066.severity = warning
+# IDE0079: Remove unnecessary suppression
+dotnet_diagnostic.IDE0079.severity = warning
+# IDE0083: Use pattern matching ## REQUIRED
+dotnet_diagnostic.IDE0083.severity = none
 # IDE1006: Naming Styles
-dotnet_diagnostic.IDE1006.severity = suggestion
+dotnet_diagnostic.IDE1006.severity = none
+
+# CA1000: Do not declare static members on generic types
+dotnet_diagnostic.CA1000.severity = none
+# CA1008: Enums should have zero value
+dotnet_diagnostic.CA1008.severity = none
+# CA1027: Mark enums with FlagsAttribute
+dotnet_diagnostic.CA1027.severity = none
+# CA1056: URI properties should not be strings
+dotnet_diagnostic.CA1056.severity = none
+# CA1069: The enum member 'xxx' has the same constant value 'yy' as member 'zzz'
+dotnet_diagnostic.CA1069.severity = none
+# CA1707: Remove the underscores from member name
+dotnet_diagnostic.CA1707.severity = none
+
+# CS0618: Type or member is obsolete
+dotnet_diagnostic.CS0618.severity = error

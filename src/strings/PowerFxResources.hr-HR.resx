@@ -497,6 +497,39 @@
   <data name="AboutBoolean_text" xml:space="preserve">
     <value>Tekstna vrijednost koju treba pretvoriti u booleovu vrijednost.</value>
   </data>
+  <data name="AboutBooleanT" xml:space="preserve">
+    <value>Pretvara stupac tekstnih vrijednosti u stupac booleovih vrijednosti.</value>
+    
+  </data>
+  <data name="BooleanTArg1" xml:space="preserve">
+    <value>unos</value>
+    
+  </data>
+  <data name="AboutBooleanT_input" xml:space="preserve">
+    <value>Stupac tekstnih vrijednosti koji treba obraditi.</value>
+  </data>
+  <data name="AboutBooleanN" xml:space="preserve">
+    <value>Pretvara „broj” u booleovu vrijednost.</value>
+    
+  </data>
+  <data name="BooleanNArg1" xml:space="preserve">
+    <value>broj</value>
+    
+  </data>
+  <data name="AboutBooleanN_number" xml:space="preserve">
+    <value>Tekstna vrijednost koju treba pretvoriti u booleovu vrijednost.</value>
+  </data>
+  <data name="AboutBooleanNT" xml:space="preserve">
+    <value>Pretvara stupac numeričkih vrijednosti u stupac booleovih vrijednosti.</value>
+    
+  </data>
+  <data name="BooleanNTArg1" xml:space="preserve">
+    <value>unos</value>
+    
+  </data>
+  <data name="AboutBooleanNT_input" xml:space="preserve">
+    <value>Stupac brojčanih vrijednosti koji treba obraditi.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Vraća prvi argument koji nije prazan</value>
     
@@ -1137,10 +1170,10 @@
     
   </data>
   <data name="AboutAbs_number" xml:space="preserve">
-    <value>Numerička vrijednost koja se obrađuje.</value>
+    <value>Brojčana vrijednost koju treba obraditi.</value>
   </data>
   <data name="AboutAbs_input" xml:space="preserve">
-    <value>Stupac numeričkih vrijednosti koji se obrađuje.</value>
+    <value>Stupac brojčanih vrijednosti koji treba obraditi.</value>
   </data>
   <data name="AboutSin_number" xml:space="preserve">
     <value>Brojčana vrijednost (u radijanima) koja će biti obrađena.</value>
@@ -1157,10 +1190,10 @@
     
   </data>
   <data name="AboutAsin_number" xml:space="preserve">
-    <value>Numerička vrijednost koja se obrađuje.</value>
+    <value>Brojčana vrijednost koju treba obraditi.</value>
   </data>
   <data name="AboutAsin_input" xml:space="preserve">
-    <value>Stupac numeričkih vrijednosti koji se obrađuje.</value>
+    <value>Stupac brojčanih vrijednosti koji treba obraditi.</value>
   </data>
   <data name="AboutAsin" xml:space="preserve">
     <value>Vraća vrijednost arkus sinusa (u radijanima) broja.</value>
@@ -1189,20 +1222,20 @@
     
   </data>
   <data name="AboutAcos_number" xml:space="preserve">
-    <value>Numerička vrijednost koja se obrađuje.</value>
+    <value>Brojčana vrijednost koju treba obraditi.</value>
   </data>
   <data name="AboutAcosT" xml:space="preserve">
     <value>Vraća vrijednosti arkus kosinusa (u radijanima) stupca brojeva.</value>
     
   </data>
   <data name="AboutAcos_input" xml:space="preserve">
-    <value>Stupac numeričkih vrijednosti koji se obrađuje.</value>
+    <value>Stupac brojčanih vrijednosti koji treba obraditi.</value>
   </data>
   <data name="AboutAcot_number" xml:space="preserve">
-    <value>Numerička vrijednost koja se obrađuje.</value>
+    <value>Brojčana vrijednost koju treba obraditi.</value>
   </data>
   <data name="AboutAcot_input" xml:space="preserve">
-    <value>Stupac numeričkih vrijednosti koji se obrađuje.</value>
+    <value>Stupac brojčanih vrijednosti koji treba obraditi.</value>
   </data>
   <data name="AboutAcot" xml:space="preserve">
     <value>Vraća vrijednost arkus kotangensa (u radijanima) broja.</value>
@@ -1235,10 +1268,10 @@
     
   </data>
   <data name="AboutAtan_number" xml:space="preserve">
-    <value>Numerička vrijednost koja se obrađuje.</value>
+    <value>Brojčana vrijednost koju treba obraditi.</value>
   </data>
   <data name="AboutAtan_input" xml:space="preserve">
-    <value>Stupac numeričkih vrijednosti koji se obrađuje.</value>
+    <value>Stupac brojčanih vrijednosti koji treba obraditi.</value>
   </data>
   <data name="AboutCot" xml:space="preserve">
     <value>Vraća vrijednost kotangensa broja.</value>
@@ -1263,10 +1296,10 @@
     
   </data>
   <data name="AboutLn_number" xml:space="preserve">
-    <value>Numerička vrijednost koja se obrađuje.</value>
+    <value>Brojčana vrijednost koju treba obraditi.</value>
   </data>
   <data name="AboutLn_input" xml:space="preserve">
-    <value>Stupac numeričkih vrijednosti koji se obrađuje.</value>
+    <value>Stupac brojčanih vrijednosti koji treba obraditi.</value>
   </data>
   <data name="AboutLog" xml:space="preserve">
     <value>Vraća logaritam broja za navedenu bazu. Zadana je baza 10.</value>
@@ -1277,10 +1310,10 @@
     
   </data>
   <data name="AboutLog_number" xml:space="preserve">
-    <value>Numerička vrijednost koja se obrađuje.</value>
+    <value>Brojčana vrijednost koju treba obraditi.</value>
   </data>
   <data name="AboutLog_input" xml:space="preserve">
-    <value>Stupac numeričkih vrijednosti koji se obrađuje.</value>
+    <value>Stupac brojčanih vrijednosti koji treba obraditi.</value>
   </data>
   <data name="LogBase" xml:space="preserve">
     <value>baza</value>
@@ -1298,10 +1331,10 @@
     
   </data>
   <data name="AboutExp_number" xml:space="preserve">
-    <value>Numerička vrijednost koja se obrađuje.</value>
+    <value>Brojčana vrijednost koju treba obraditi.</value>
   </data>
   <data name="AboutExp_input" xml:space="preserve">
-    <value>Stupac numeričkih vrijednosti koji se obrađuje.</value>
+    <value>Stupac brojčanih vrijednosti koji treba obraditi.</value>
   </data>
   <data name="AboutPi" xml:space="preserve">
     <value>Vraća vrijednost pi.</value>
@@ -1360,10 +1393,10 @@
     
   </data>
   <data name="AboutSqrt_number" xml:space="preserve">
-    <value>Numerička vrijednost koja se obrađuje.</value>
+    <value>Brojčana vrijednost koju treba obraditi.</value>
   </data>
   <data name="AboutSqrt_input" xml:space="preserve">
-    <value>Stupac numeričkih vrijednosti koji se obrađuje.</value>
+    <value>Stupac brojčanih vrijednosti koji treba obraditi.</value>
   </data>
   <data name="MathFuncArg1" xml:space="preserve">
     <value>broj</value>
@@ -1428,7 +1461,7 @@
     
   </data>
   <data name="AboutIsBlank_expression" xml:space="preserve">
-    <value>Izraz koji se testira.</value>
+    <value>Izraz koji treba testirati.</value>
   </data>
   <data name="AboutIsBlankOrError" xml:space="preserve">
     <value>Provjerava je li rezultat izraza prazan ili pogreška i vraća true ili false.</value>
@@ -2615,7 +2648,7 @@
     
   </data>
   <data name="AboutIsToday_date" xml:space="preserve">
-    <value>Vrijednost datuma koja se testira.</value>
+    <value>Vrijednost datuma za testiranje.</value>
   </data>
   <data name="IsTodayFuncArg1" xml:space="preserve">
     <value>datum</value>
@@ -3977,7 +4010,7 @@
     <value>Uklonite ili zamijenite neočekivani znak.</value>
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_Link_1" xml:space="preserve">
-    <value>Članak: Referenca formule za servis Power Apps</value>
+    <value>Članak: referenca formule za Power Apps</value>
     
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_ShortMessage" xml:space="preserve">
@@ -4030,14 +4063,14 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidIdentifier_LongMessage" xml:space="preserve">
-    <value>Ta se pogreška najčešće pojavljuje kada se formula odnosi se na nešto što više ne postoji (primjerice, na kontrolu koju ste izbrisali).</value>
+    <value>Ta se pogreška najčešće pojavljuje kada se formula odnosi se na nešto što više ne postoji (na primjer, na kontrolu koju ste izbrisali).</value>
   </data>
   <data name="ErrorResource_ErrInvalidIdentifier_HowToFix_1" xml:space="preserve">
     <value>Uklonite ili ispravite referencu na naziv koji nije valjan.</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
-    <value>Članak: referenca formule za servis Power Apps</value>
+    <value>Članak: referenca formule za Power Apps</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_ShortMessage" xml:space="preserve">
@@ -4551,6 +4584,10 @@
   </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula „{0}” već postoji.</value>
+  </data>
+  <data name="ErrorResource_NameConflict" xml:space="preserve">
+    <value>Nije moguće stvoriti {0} s nazivom „{1}” jer se taj naziv već koristi za {2}.</value>
+    
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
     <value>Prvi argument za "{0}" mora biti valjani naziv varijable i ne smije biti u sukobu s postojećim nazivima za kontrole, zaslone, zbirke ili izvore podataka. Pronađena je vrsta "{1}"</value>

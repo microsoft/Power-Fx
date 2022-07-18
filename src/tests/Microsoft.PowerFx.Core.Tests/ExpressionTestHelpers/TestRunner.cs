@@ -125,7 +125,7 @@ namespace Microsoft.PowerFx.Core.Tests
                         var countRemoved = Tests.RemoveAll(test => string.Equals(Path.GetFileName(test.SourceFile), fileDisable, StringComparison.OrdinalIgnoreCase));
                     }
                     else if (TryParseDirective(line, "#SETUP:", ref fileSetup) ||
-                      TryParseDirective(line, "#OVERRIDE:", ref fileOveride))
+                             TryParseDirective(line, "#OVERRIDE:", ref fileOveride))
                     {
                         // flag is set, no additional work needed.
                     }
@@ -377,6 +377,10 @@ namespace Microsoft.PowerFx.Core.Tests
             else if (result is OptionSetValue opt)
             {
                 sb.Append($"{opt.Type.OptionSetName}.{opt.Option}");
+            }
+            else if (result is GuidValue gv)
+            {
+                sb.Append($"GUID(\"{gv.Value}\")");
             }
             else if (result is ErrorValue)
             {

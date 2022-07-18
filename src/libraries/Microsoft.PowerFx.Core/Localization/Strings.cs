@@ -91,6 +91,13 @@ namespace Microsoft.PowerFx.Core.Localization
 
         public static StringGetter AboutBoolean = (b) => StringResources.Get("AboutBoolean", b);
         public static StringGetter BooleanArg1 = (b) => StringResources.Get("BooleanArg1", b);
+        public static StringGetter AboutBooleanT = (b) => StringResources.Get("AboutBooleanT", b);
+        public static StringGetter BooleanTArg1 = (b) => StringResources.Get("BooleanTArg1", b);
+
+        public static StringGetter AboutBooleanN = (b) => StringResources.Get("AboutBooleanN", b);
+        public static StringGetter BooleanNArg1 = (b) => StringResources.Get("BooleanNArg1", b);
+        public static StringGetter AboutBooleanNT = (b) => StringResources.Get("AboutBooleanNT", b);
+        public static StringGetter BooleanNTArg1 = (b) => StringResources.Get("BooleanNTArg1", b);
 
         public static StringGetter AboutConcatenate = (b) => StringResources.Get("AboutConcatenate", b);
         public static StringGetter ConcatenateArg1 = (b) => StringResources.Get("ConcatenateArg1", b);
@@ -566,7 +573,7 @@ namespace Microsoft.PowerFx.Core.Localization
 
         public static ErrorResourceKey ErrNamedFormula_MissingSemicolon = new ErrorResourceKey("ErrNamedFormula_MissingSemicolon");
         public static ErrorResourceKey ErrNamedFormula_AlreadyDefined = new ErrorResourceKey("ErrNamedFormula_AlreadyDefined");
-        public static ErrorResourceKey ErrNamedFormula_NameConflict = new ErrorResourceKey("ErrNamedFormula_NameConflict");
+        public static ErrorResourceKey ErrorResource_NameConflict = new ErrorResourceKey("ErrorResource_NameConflict");
 
         // ErrorResourceKey for creating an error from an arbitrary string message. The key resolves to "{0}", meaning
         // that a single string arg can be supplied representing the entire text of the error.
