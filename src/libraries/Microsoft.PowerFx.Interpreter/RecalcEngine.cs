@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Binding;
-using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Functions;
@@ -64,11 +63,6 @@ namespace Microsoft.PowerFx
         {
             // The RecalcEngineResolver allows access to the values from UpdateValue. 
             return new RecalcEngineResolver(this, alternateConfig ?? Config);          
-        }
-
-        private protected override INameResolver CreateResolver(PowerFxConfig alternateConfig, IReadOnlyDictionary<string, NameLookupInfo> globalSymbols)
-        {
-            return new RecalcEngineResolver(this, alternateConfig ?? Config, globalSymbols);
         }
 
         /// <inheritdoc/>

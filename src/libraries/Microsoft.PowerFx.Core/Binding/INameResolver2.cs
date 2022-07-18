@@ -6,6 +6,8 @@ using Microsoft.PowerFx.Core.Binding.BindInfo;
 
 namespace Microsoft.PowerFx.Core.Binding
 {
+    // Allows Name resolvers to support global symbols, used for identifying
+    // variables in intellisense
     internal interface INameResolver2 : INameResolver
     {
         IReadOnlyDictionary<string, NameLookupInfo> GlobalSymbols { get; }

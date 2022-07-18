@@ -20,14 +20,12 @@ namespace Microsoft.PowerFx.Core.Glue
     /// This aides in binding and intellisense. 
     /// Host can override Lookup to provide additional symbols to the expression. 
     /// </summary>
-    internal class SimpleResolver : INameResolver2
+    internal class SimpleResolver : INameResolver
     {
         private readonly PowerFxConfig _config;
         private readonly TexlFunction[] _library;        
         private readonly EnumSymbol[] _enums = new EnumSymbol[] { };
-        private readonly IExternalDocument _document;
-
-        protected IReadOnlyDictionary<string, NameLookupInfo> _globalSymbols;
+        private readonly IExternalDocument _document;        
 
         IExternalDocument INameResolver.Document => _document;
 
@@ -39,9 +37,7 @@ namespace Microsoft.PowerFx.Core.Glue
 
         // Expose the list to aide in intellisense suggestions. 
         public IEnumerable<TexlFunction> Functions => _library;
-
-        public IReadOnlyDictionary<string, NameLookupInfo> GlobalSymbols => _globalSymbols;
-
+        
         IExternalEntity INameResolver.CurrentEntity => null;
 
         public bool SuggestUnqualifiedEnums => false;
@@ -53,17 +49,8 @@ namespace Microsoft.PowerFx.Core.Glue
         public SimpleResolver(PowerFxConfig config)
         {
             _config = config ?? throw new ArgumentNullException(nameof(config));
-            _library = config.Functions.ToArray();
-            _globalSymbols = null;
+            _library = config.Functions.ToArray();            
             _enums = config.EnumStoreBuilder.Build().EnumSymbols.ToArray();            
-        }
-
-        public SimpleResolver(PowerFxConfig config, IReadOnlyDictionary<string, NameLookupInfo> globalSymbols)
-        {
-            _config = config ?? throw new ArgumentNullException(nameof(config));
-            _library = config.Functions.ToArray();
-            _globalSymbols = globalSymbols;
-            _enums = config.EnumStoreBuilder.Build().EnumSymbols.ToArray();
         }
 
         // for derived classes that need to set INameResolver.Document. 

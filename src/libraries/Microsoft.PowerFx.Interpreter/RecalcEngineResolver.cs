@@ -14,22 +14,22 @@ namespace Microsoft.PowerFx
     /// <summary>
     /// <see cref="INameResolver"/> implementation for <see cref="RecalcEngine"/>.
     /// </summary>
-    internal class RecalcEngineResolver : SimpleResolver
+    internal class RecalcEngineResolver : SimpleResolver, INameResolver2
     {
         private readonly RecalcEngine _parent;
         private readonly PowerFxConfig _powerFxConfig;
+
+        public IReadOnlyDictionary<string, NameLookupInfo> GlobalSymbols => new ReadOnlyDictionary<string, NameLookupInfo>(_parent.Formulas.Select(f =>
+        {
+            var description = $"{f.Key} variable";
+            return (f.Key, Value: new NameLookupInfo(BindKind.ScopeVariable, f.Value.Value.Type._type, DPath.Root, 0, f.Value, displayName: new DName(description)));
+        }).ToDictionary(kvp => kvp.Key, kvp => kvp.Value));
 
         public RecalcEngineResolver(RecalcEngine parent, PowerFxConfig powerFxConfig, IReadOnlyDictionary<string, NameLookupInfo> globalSymbols = null)
             : base(powerFxConfig)
         {
             _parent = parent;
             _powerFxConfig = powerFxConfig;
-
-            _globalSymbols = globalSymbols ?? new ReadOnlyDictionary<string, NameLookupInfo>(_parent.Formulas.Select(f =>
-            {
-                var description = $"{f.Key} variable";
-                return (f.Key, Value: new NameLookupInfo(BindKind.ScopeVariable, f.Value.Value.Type._type, DPath.Root, 0, f.Value, displayName: new DName(description)));
-            }).ToDictionary(kvp => kvp.Key, kvp => kvp.Value));
         }
 
         public override bool Lookup(DName name, out NameLookupInfo nameInfo, NameLookupPreferences preferences = NameLookupPreferences.None)

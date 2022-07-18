@@ -55,11 +55,6 @@ namespace Microsoft.PowerFx
             return new SimpleResolver(alternateConfig ?? Config);
         }
 
-        private protected virtual INameResolver CreateResolver(PowerFxConfig alternateConfig, IReadOnlyDictionary<string, NameLookupInfo> globalSymbols)
-        {
-            return new SimpleResolver(alternateConfig ?? Config, globalSymbols);
-        }
-
         private protected virtual IBinderGlue CreateBinderGlue()
         {
             return new Glue2DocumentBinderGlue();
