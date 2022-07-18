@@ -34,8 +34,6 @@ steps:
     $compatComments = ($listResult | Where-Object {$_.body -like $stringToMatch});
     $count = $compatComments.count
 
-    Write-Host "Matching comments: $count";
-
     if ($count -gt 0) {
         $oldestCompatComment = $compatComments[0];
         $COMMENT_ID = $oldestCompatComment.id;
@@ -51,8 +49,10 @@ steps:
         $deleteCommentUri = "https://api.github.com/repos/$OWNER/$REPO/issues/comments/$COMMENT_ID";
 
         Invoke-RestMethod -Method Delete -Uri $deleteCommentUri -Headers $header;
+    } else {
+        Write-Host "Nothing to delete.";
     }
-  displayName: 'Delete old compat results from GitHub'
+  displayName: 'Delete old compat results'
   condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'), ne(variables['System.PullRequest.IsFork'], 'True'))
 
 - task: SOUTHWORKS.github-pr-comment.custom-publish-comment-task.github-pr-comment@0
