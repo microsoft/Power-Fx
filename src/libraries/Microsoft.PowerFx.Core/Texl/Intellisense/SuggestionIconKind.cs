@@ -8,6 +8,6 @@ namespace Microsoft.PowerFx.Intellisense
         Other,
         Function,
         Control,
-        DataSource
+        DataSource,
     }
 }

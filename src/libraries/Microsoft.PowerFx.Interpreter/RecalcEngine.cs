@@ -6,8 +6,10 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Binding;
+using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Texl;
+using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
@@ -62,7 +64,8 @@ namespace Microsoft.PowerFx
         private protected override INameResolver CreateResolver(PowerFxConfig alternateConfig = null)
         {
             // The RecalcEngineResolver allows access to the values from UpdateValue. 
-            return new RecalcEngineResolver(this, alternateConfig ?? Config);          
+            var resolver = new RecalcEngineResolver(this, alternateConfig ?? Config);
+            return resolver;
         }
 
         /// <inheritdoc/>

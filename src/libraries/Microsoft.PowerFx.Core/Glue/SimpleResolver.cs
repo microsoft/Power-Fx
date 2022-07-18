@@ -23,8 +23,10 @@ namespace Microsoft.PowerFx.Core.Glue
     internal class SimpleResolver : INameResolver
     {
         private readonly PowerFxConfig _config;
+
         private readonly TexlFunction[] _library;        
         private readonly EnumSymbol[] _enums = new EnumSymbol[] { };
+
         private readonly IExternalDocument _document;        
 
         IExternalDocument INameResolver.Document => _document;
