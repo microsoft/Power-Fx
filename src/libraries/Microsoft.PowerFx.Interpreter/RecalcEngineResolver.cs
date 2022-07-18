@@ -22,7 +22,7 @@ namespace Microsoft.PowerFx
         public IReadOnlyDictionary<string, NameLookupInfo> GlobalSymbols => new ReadOnlyDictionary<string, NameLookupInfo>(_parent.Formulas.Select(f =>
         {
             var description = $"{f.Key} variable";
-            return (f.Key, Value: new NameLookupInfo(BindKind.ScopeVariable, f.Value.Value.Type._type, DPath.Root, 0, f.Value, displayName: new DName(description)));
+            return (f.Key, Value: new NameLookupInfo(BindKind.PowerFxResolvedObject, f.Value.Value.Type._type, DPath.Root, 0, f.Value, displayName: new DName(description)));
         }).ToDictionary(kvp => kvp.Key, kvp => kvp.Value));
 
         public RecalcEngineResolver(RecalcEngine parent, PowerFxConfig powerFxConfig, IReadOnlyDictionary<string, NameLookupInfo> globalSymbols = null)
@@ -45,8 +45,9 @@ namespace Microsoft.PowerFx
             {
                 var data = fi;
                 var type = fi._type._type;
+                var description = $"{str} variable";
 
-                nameInfo = new NameLookupInfo(BindKind.PowerFxResolvedObject, type, DPath.Root, 0, data);
+                nameInfo = new NameLookupInfo(BindKind.PowerFxResolvedObject, type, DPath.Root, 0, data, displayName: new DName(description));                
                 return true;
             }
 

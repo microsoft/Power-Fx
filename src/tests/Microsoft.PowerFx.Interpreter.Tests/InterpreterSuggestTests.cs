@@ -4,9 +4,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.PowerFx.Core;
+using Microsoft.PowerFx.Core.Binding;
+using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Types.Enums;
+using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Tests.IntellisenseTests;
 using Microsoft.PowerFx.Types;
@@ -80,17 +83,20 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("fileIndex")]
         [InlineData("FILEINDEX")]
         public void TestSuggestVariableName(string suggestion)
-        {                      
-            var engine = new RecalcEngine(new PowerFxConfig());
-            engine.UpdateVariable("fileIndex", FormulaValue.New(12));
+        {
+            const string varName = "fileIndex";
 
-            var suggestions = engine.Suggest(suggestion, null, 2);
+            var pfxConfig = new PowerFxConfig();
+            var recalcEngine = new RecalcEngine(pfxConfig);
+
+            recalcEngine.UpdateVariable(varName, FormulaValue.New(12));
+            var suggestions = recalcEngine.Suggest(suggestion, null, 2);
             var s1 = suggestions.Suggestions.OfType<IntellisenseSuggestion>();
 
             Assert.NotNull(s1);
             Assert.Equal(8, s1.Count());
 
-            var s = s1.FirstOrDefault(su => su.Text == "fileIndex");
+            var s = s1.FirstOrDefault(su => su.Text == varName);
 
             Assert.NotNull(s);
             Assert.Equal("fileIndex", s.DisplayText.Text);
@@ -98,6 +104,20 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.Equal(SuggestionIconKind.Other, s.IconKind);
             Assert.Equal(SuggestionKind.Global, s.Kind);            
             Assert.Equal(DType.Number, s.Type);
+
+            var resolver = new RecalcEngineResolver(recalcEngine, pfxConfig);
+
+            Assert.True(resolver.GlobalSymbols.ContainsKey(varName));
+            Assert.Equal(BindKind.PowerFxResolvedObject, resolver.GlobalSymbols[varName].Kind);
+            Assert.Equal($"{varName} variable", resolver.GlobalSymbols[varName].DisplayName);
+            Assert.IsType<RecalcFormulaInfo>(resolver.GlobalSymbols[varName].Data);
+
+            var b = resolver.Lookup(new DName(varName), out var nameInfo, NameLookupPreferences.GlobalsOnly);
+
+            Assert.True(b);            
+            Assert.Equal(BindKind.PowerFxResolvedObject, nameInfo.Kind);
+            Assert.Equal($"{varName} variable", nameInfo.DisplayName);
+            Assert.IsType<RecalcFormulaInfo>(nameInfo.Data);
         }        
     }
 }
