@@ -41,7 +41,7 @@ steps:
 
         Write-Host "Deleting comment $COMMENT_ID dated $date";
 
-        $githubPersonalAccessToken = $(GitHubCommentApiKey);
+        $githubPersonalAccessToken = "$(GitHubCommentApiKey)";
 
         $token = [System.Convert]::ToBase64String([System.Text.Encoding]::ASCII.GetBytes(":$githubPersonalAccessToken"));
         $header = @{authorization = "Basic $token"};
