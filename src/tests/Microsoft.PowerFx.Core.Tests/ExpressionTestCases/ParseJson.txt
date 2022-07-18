@@ -134,3 +134,44 @@ Errors: Error 0-14: Invalid argument type. Expecting one of the following: Numbe
 >> Value(Index(ParseJSON("{""a"": 5, ""b"": [{""c"": 19 }, {""c"": ""foo"" }] }").b, 1).c)
 19
 
+>> DateDiff(DateValue(ParseJSON("""2011-01-15""")), DateValue(ParseJSON("""2011-01-30""")))
+15
+
+>> DateValue(ParseJSON("""2011-1-15"""))
+#Error(Kind=InvalidArgument)
+
+>> DateValue(ParseJSON("null"))
+Blank()
+
+>> DateValue(ParseJSON("""abcdef"""))
+#Error(Kind=InvalidArgument)
+
+>> DateDiff(DateTimeValue(ParseJSON("""2011-01-15T08:00:00.000Z""")), DateTimeValue(ParseJSON("""2011-01-30T08:00:00.000Z""")))
+15
+
+>> DateTimeValue(ParseJSON("""2011-01-15T08:0:00.000Z"""))
+#Error(Kind=InvalidArgument)
+
+>> DateTimeValue(ParseJSON("null"))
+Blank()
+
+>> DateTimeValue(ParseJSON("""abcdef"""))
+#Error(Kind=InvalidArgument)
+
+>> Text(TimeValue(ParseJSON("""08:03:05.000""")))
+"8:03 AM"
+
+>> TimeValue(ParseJSON("""08:93:05.000"""))
+#Error(Kind=InvalidArgument)
+
+>> TimeValue(ParseJSON("null"))
+Blank()
+
+>> TimeValue(ParseJSON("""abcdef"""))
+#Error(Kind=InvalidArgument)
+
+>> GUID(ParseJSON("""5cc45615-f759-4a53-b225-d3a2497f60ad"""))
+GUID("5cc45615-f759-4a53-b225-d3a2497f60ad")
+
+>> GUID(ParseJSON("null"))
+Blank()

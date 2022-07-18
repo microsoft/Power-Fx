@@ -20,7 +20,7 @@ namespace Microsoft.PowerFx.Functions
         public delegate FormulaValue FunctionPtr(SymbolContext symbolContext, IRContext irContext, FormulaValue[] args);
 
         // Async - can invoke lambads.
-        public delegate ValueTask<FormulaValue> AsyncFunctionPtr(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args);
+        public delegate ValueTask<FormulaValue> AsyncFunctionPtr(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args);
 
         public static IEnumerable<TexlFunction> FunctionList => FuncsByName.Keys;
 
@@ -371,6 +371,16 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: DateParse)
             },
             {
+                BuiltinFunctionsCore.DateValue_UO,
+                StandardErrorHandling<UntypedObjectValue>(
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<UntypedObjectValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: DateValue_UO)
+            },
+            {
                 BuiltinFunctionsCore.DateTimeValue,
                 StandardErrorHandling<StringValue>(
                     expandArguments: NoArgExpansion,
@@ -379,6 +389,16 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: DateTimeParse)
+            },
+            {
+                BuiltinFunctionsCore.DateTimeValue_UO,
+                StandardErrorHandling<UntypedObjectValue>(
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<UntypedObjectValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: DateTimeValue_UO)
             },
             {
                 BuiltinFunctionsCore.Day,
@@ -524,6 +544,26 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: ForAll)
+            },
+            {
+                BuiltinFunctionsCore.GUIDPure,
+                StandardErrorHandling<StringValue>(
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<StringValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: Guid)
+            },
+            {
+                BuiltinFunctionsCore.GUID_UO,
+                StandardErrorHandling<UntypedObjectValue>(
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<UntypedObjectValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: Guid_UO)
             },
             {
                 BuiltinFunctionsCore.IsBlank,
@@ -1156,6 +1196,16 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: TimeParse)
             },
             {
+                BuiltinFunctionsCore.TimeValue_UO,
+                StandardErrorHandling<UntypedObjectValue>(
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<UntypedObjectValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: TimeValue_UO)
+            },
+            {
                 BuiltinFunctionsCore.TimeZoneOffset,
                 StandardErrorHandling<FormulaValue>(
                     expandArguments: NoArgExpansion,
@@ -1311,7 +1361,7 @@ namespace Microsoft.PowerFx.Functions
             return new InMemoryTableValue(irContext, records);
         }
 
-        public static ValueTask<FormulaValue> Blank(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
+        public static ValueTask<FormulaValue> Blank(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             var result = new BlankValue(irContext);
             return new ValueTask<FormulaValue>(result);
@@ -1345,14 +1395,14 @@ namespace Microsoft.PowerFx.Functions
             return new BooleanValue(irContext, arg0 is NumberValue);
         }
 
-        public static async ValueTask<FormulaValue> With(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
+        public static async ValueTask<FormulaValue> With(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             var arg0 = (RecordValue)args[0];
             var arg1 = (LambdaFormulaValue)args[1];
 
-            var childContext = symbolContext.WithScopeValues(arg0);
+            var childContext = context.SymbolContext.WithScopeValues(arg0);
 
-            return await arg1.EvalAsync(runner, childContext);
+            return await arg1.EvalAsync(runner, new EvalVisitorContext(childContext, context.StackDepthCounter));
         }
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-if
@@ -1360,13 +1410,13 @@ namespace Microsoft.PowerFx.Functions
         // If(Condition, Then, Else)
         // If(Condition, Then, Condition2, Then2)
         // If(Condition, Then, Condition2, Then2, Default)
-        public static async ValueTask<FormulaValue> If(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
+        public static async ValueTask<FormulaValue> If(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             for (var i = 0; i < args.Length - 1; i += 2)
             {
                 runner.CheckCancel();
 
-                var res = await runner.EvalArgAsync<BooleanValue>(args[i], symbolContext, args[i].IRContext);
+                var res = await runner.EvalArgAsync<BooleanValue>(args[i], context, args[i].IRContext);
 
                 if (res.IsValue)
                 {
@@ -1375,7 +1425,7 @@ namespace Microsoft.PowerFx.Functions
                     {
                         var trueBranch = args[i + 1];
 
-                        return (await runner.EvalArgAsync<ValidFormulaValue>(trueBranch, symbolContext, trueBranch.IRContext)).ToFormulaValue();
+                        return (await runner.EvalArgAsync<ValidFormulaValue>(trueBranch, context, trueBranch.IRContext)).ToFormulaValue();
                     }
                 }
 
@@ -1391,7 +1441,7 @@ namespace Microsoft.PowerFx.Functions
                 if (i + 2 == args.Length - 1)
                 {
                     var falseBranch = args[i + 2];
-                    return (await runner.EvalArgAsync<ValidFormulaValue>(falseBranch, symbolContext, falseBranch.IRContext)).ToFormulaValue();
+                    return (await runner.EvalArgAsync<ValidFormulaValue>(falseBranch, context, falseBranch.IRContext)).ToFormulaValue();
                 }
 
                 // Else, if there are more values, this is another conditional.
@@ -1402,13 +1452,13 @@ namespace Microsoft.PowerFx.Functions
             return new BlankValue(irContext);
         }
 
-        public static async ValueTask<FormulaValue> IfError(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
+        public static async ValueTask<FormulaValue> IfError(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             for (var i = 0; i < args.Length - 1; i += 2)
             {
                 runner.CheckCancel();
 
-                var res = await runner.EvalArgAsync<ValidFormulaValue>(args[i], symbolContext, args[i].IRContext);
+                var res = await runner.EvalArgAsync<ValidFormulaValue>(args[i], context, args[i].IRContext);
 
                 if (res.IsError)
                 {
@@ -1442,11 +1492,11 @@ namespace Microsoft.PowerFx.Functions
                             new TypedName(ErrorType.ReifiedError(), new DName("FirstError")),
                             new TypedName(ErrorType.ReifiedErrorTable(), new DName("AllErrors")),
                         }));
-                    var childContext = symbolContext.WithScopeValues(
+                    var childContext = context.SymbolContext.WithScopeValues(
                         new InMemoryRecordValue(
                             IRContext.NotInSource(ifErrorScopeParamType),
                             scopeVariables));
-                    return (await runner.EvalArgAsync<ValidFormulaValue>(errorHandlingBranch, childContext, errorHandlingBranch.IRContext)).ToFormulaValue();
+                    return (await runner.EvalArgAsync<ValidFormulaValue>(errorHandlingBranch, new EvalVisitorContext(childContext, context.StackDepthCounter), errorHandlingBranch.IRContext)).ToFormulaValue();
                 }
 
                 if (i + 1 == args.Length - 1)
@@ -1457,7 +1507,7 @@ namespace Microsoft.PowerFx.Functions
                 if (i + 2 == args.Length - 1)
                 {
                     var falseBranch = args[i + 2];
-                    return (await runner.EvalArgAsync<ValidFormulaValue>(falseBranch, symbolContext, falseBranch.IRContext)).ToFormulaValue();
+                    return (await runner.EvalArgAsync<ValidFormulaValue>(falseBranch, context, falseBranch.IRContext)).ToFormulaValue();
                 }
             }
 
@@ -1509,7 +1559,7 @@ namespace Microsoft.PowerFx.Functions
         // Switch(Formula, Match1, Result1, Match2,Result2)
         // Switch(Formula, Match1, Result1, DefaultResult)
         // Switch(Formula, Match1, Result1)
-        public static async ValueTask<FormulaValue> Switch(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
+        public static async ValueTask<FormulaValue> Switch(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             var test = args[0];
 
@@ -1523,7 +1573,7 @@ namespace Microsoft.PowerFx.Functions
             for (var i = 1; i < args.Length - 1; i += 2)
             {
                 var match = (LambdaFormulaValue)args[i];
-                var matchValue = await match.EvalAsync(runner, symbolContext);
+                var matchValue = await match.EvalAsync(runner, context);
 
                 if (matchValue is ErrorValue mve)
                 {
@@ -1537,7 +1587,7 @@ namespace Microsoft.PowerFx.Functions
                 if (equal)
                 {
                     var lambda = (LambdaFormulaValue)args[i + 1];
-                    var result = await lambda.EvalAsync(runner, symbolContext);
+                    var result = await lambda.EvalAsync(runner, context);
                     if (errors.Count != 0)
                     {
                         return ErrorValue.Combine(irContext, errors);
@@ -1555,7 +1605,7 @@ namespace Microsoft.PowerFx.Functions
             if ((args.Length - 4) % 2 == 0)
             {
                 var lambda = (LambdaFormulaValue)args[args.Length - 1];
-                var result = await lambda.EvalAsync(runner, symbolContext);
+                var result = await lambda.EvalAsync(runner, context);
                 if (errors.Count != 0)
                 {
                     return ErrorValue.Combine(irContext, errors);
@@ -1578,12 +1628,12 @@ namespace Microsoft.PowerFx.Functions
         }
 
         // ForAll([1,2,3,4,5], Value * Value)
-        public static async ValueTask<FormulaValue> ForAll(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
+        public static async ValueTask<FormulaValue> ForAll(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {// Streaming 
             var arg0 = (TableValue)args[0];
             var arg1 = (LambdaFormulaValue)args[1];
 
-            var rowsAsync = LazyForAll(runner, symbolContext, arg0.Rows, arg1);
+            var rowsAsync = LazyForAll(runner, context, arg0.Rows, arg1);
 
             // TODO: verify semantics in the case of heterogeneous record lists
             var rows = await Task.WhenAll(rowsAsync);
@@ -1593,7 +1643,7 @@ namespace Microsoft.PowerFx.Functions
 
         private static IEnumerable<Task<FormulaValue>> LazyForAll(
             EvalVisitor runner,
-            SymbolContext context,
+            EvalVisitorContext context,
             IEnumerable<DValue<RecordValue>> sources,
             LambdaFormulaValue filter)
         {
@@ -1602,15 +1652,15 @@ namespace Microsoft.PowerFx.Functions
                 SymbolContext childContext;
                 if (row.IsValue)
                 {
-                    childContext = context.WithScopeValues(row.Value);
+                    childContext = context.SymbolContext.WithScopeValues(row.Value);
                 }
                 else
                 {
-                    childContext = context.WithScopeValues(RecordValue.Empty());
+                    childContext = context.SymbolContext.WithScopeValues(RecordValue.Empty());
                 }
 
                 // Filter evals to a boolean 
-                var result = filter.EvalAsync(runner, childContext).AsTask();
+                var result = filter.EvalAsync(runner, new EvalVisitorContext(childContext, context.StackDepthCounter)).AsTask();
 
                 yield return result;
             }

@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.PowerFx.Core.Binding;
-using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.IR.Symbols;
@@ -18,7 +17,6 @@ using BinaryOpNode = Microsoft.PowerFx.Core.IR.Nodes.BinaryOpNode;
 using CallNode = Microsoft.PowerFx.Core.IR.Nodes.CallNode;
 using ErrorNode = Microsoft.PowerFx.Core.IR.Nodes.ErrorNode;
 using RecordNode = Microsoft.PowerFx.Core.IR.Nodes.RecordNode;
-using TableNode = Microsoft.PowerFx.Core.IR.Nodes.TableNode;
 using TexlBinaryOpNode = Microsoft.PowerFx.Syntax.BinaryOpNode;
 using TexlCallNode = Microsoft.PowerFx.Syntax.CallNode;
 using TexlErrorNode = Microsoft.PowerFx.Syntax.ErrorNode;
@@ -104,7 +102,24 @@ namespace Microsoft.PowerFx.Core.IR
                 Contracts.AssertValue(context);
 
                 var children = node.Children.Select(child => child.Accept(this, context)).ToArray();
-                return MaybeInjectCoercion(node, new TableNode(context.GetIRContext(node), children), context);
+                var irContext = context.GetIRContext(node);
+
+                if (!context.Binding.Features.HasTableSyntaxDoesntWrapRecords() || (children.Any() && children.First() is not RecordNode))
+                {
+                    // Let's add "Value:" here                    
+                    children = children.Select(childNode =>
+                        new RecordNode(
+                            new IRContext(childNode.IRContext.SourceContext, new RecordType().Add(TableValue.ValueName, childNode.IRContext.ResultType)),
+                            new Dictionary<DName, IntermediateNode>
+                            {
+                                { TableValue.ValueDName, childNode }
+                            }))
+                        .ToArray();
+
+                    irContext = new IRContext(node.GetCompleteSpan(), irContext.ResultType);
+                }
+
+                return MaybeInjectCoercion(node, new CallNode(irContext, BuiltinFunctionsCore.Table, children), context);
             }
 
             public override IntermediateNode Visit(TexlUnaryOpNode node, IRTranslatorContext context)

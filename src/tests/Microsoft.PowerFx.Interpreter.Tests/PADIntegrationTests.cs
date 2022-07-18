@@ -54,7 +54,7 @@ namespace Microsoft.PowerFx.Tests
         {
             var engine = new RecalcEngine();
 
-            var table = CreateObjectDataTable();
+            using var table = CreateObjectDataTable();
 
             var cache = new TypeMarshallerCache()
                 .WithDynamicMarshallers(new DataTableMarshallerProvider());
@@ -95,7 +95,7 @@ namespace Microsoft.PowerFx.Tests
         {
             var engine = new RecalcEngine();
 
-            var table = CreateDataTable();
+            using var table = CreateDataTable();
 
             var cache = new TypeMarshallerCache()
                 .WithDynamicMarshallers(new DataTableMarshallerProvider());

@@ -8,7 +8,6 @@ using System.Linq;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.Public;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
@@ -25,6 +24,8 @@ namespace Microsoft.PowerFx
         private readonly Dictionary<DName, IExternalEntity> _environmentSymbols;
         private DisplayNameProvider _environmentSymbolDisplayNameProvider;
 
+        internal static readonly int DefaultMaxCallDepth = 20;
+
         // By default, we pull the core functions. 
         // These can be overridden. 
         private IEnumerable<TexlFunction> _coreFunctions = BuiltinFunctionsCore.BuiltinFunctionsLibrary;
@@ -35,21 +36,46 @@ namespace Microsoft.PowerFx
 
         public CultureInfo CultureInfo { get; }
 
-        private PowerFxConfig(CultureInfo cultureInfo, EnumStoreBuilder enumStoreBuilder) 
+        public Features Features { get; }
+
+        public int MaxCallDepth { get; set; }
+
+        private PowerFxConfig(CultureInfo cultureInfo, EnumStoreBuilder enumStoreBuilder, Features features = Features.None) 
         {
             CultureInfo = cultureInfo ?? CultureInfo.CurrentCulture;
+            Features = features;
             _isLocked = false;
             _environmentSymbols = new Dictionary<DName, IExternalEntity>();
             _environmentSymbolDisplayNameProvider = new SingleSourceDisplayNameProvider();
             EnumStoreBuilder = enumStoreBuilder;
+            MaxCallDepth = DefaultMaxCallDepth;
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PowerFxConfig"/> class.        
         /// </summary>
-        /// <param name="cultureInfo">Culture to use.</param>        
+        /// <param name="cultureInfo">Culture to use.</param>      
         public PowerFxConfig(CultureInfo cultureInfo = null)
-            : this(cultureInfo, new EnumStoreBuilder().WithRequiredEnums(BuiltinFunctionsCore.BuiltinFunctionsLibrary)) 
+            : this(cultureInfo, Features.None)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PowerFxConfig"/> class.        
+        /// </summary>
+        /// <param name="cultureInfo">Culture to use.</param>      
+        /// <param name="features">Features to use.</param>
+        public PowerFxConfig(CultureInfo cultureInfo, Features features)
+            : this(cultureInfo, new EnumStoreBuilder().WithRequiredEnums(BuiltinFunctionsCore.BuiltinFunctionsLibrary), features)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PowerFxConfig"/> class.        
+        /// </summary>
+        /// <param name="features">Features to use.</param>
+        public PowerFxConfig(Features features)
+            : this(null, features)
         {
         }
 

@@ -497,6 +497,39 @@
   <data name="AboutBoolean_text" xml:space="preserve">
     <value>Текстове значення для перетворення на логічне значення.</value>
   </data>
+  <data name="AboutBooleanT" xml:space="preserve">
+    <value>Converts a column of text values to a column of boolean values.</value>
+    
+  </data>
+  <data name="BooleanTArg1" xml:space="preserve">
+    <value>input</value>
+    
+  </data>
+  <data name="AboutBooleanT_input" xml:space="preserve">
+    <value>A column of text values to process.</value>
+  </data>
+  <data name="AboutBooleanN" xml:space="preserve">
+    <value>Converts a 'number' to a boolean value.</value>
+    
+  </data>
+  <data name="BooleanNArg1" xml:space="preserve">
+    <value>number</value>
+    
+  </data>
+  <data name="AboutBooleanN_number" xml:space="preserve">
+    <value>The number value to convert to a boolean value.</value>
+  </data>
+  <data name="AboutBooleanNT" xml:space="preserve">
+    <value>Converts a column of numeric values to a column of boolean values.</value>
+    
+  </data>
+  <data name="BooleanNTArg1" xml:space="preserve">
+    <value>input</value>
+    
+  </data>
+  <data name="AboutBooleanNT_input" xml:space="preserve">
+    <value>A column of number values to process.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Повертає перший непустий аргумент.</value>
     
@@ -959,7 +992,7 @@
     <value>Числове значення, яке потрібно обробити.</value>
   </data>
   <data name="AboutInt_input" xml:space="preserve">
-    <value>Стовпець числових значень, який потрібно обробити.</value>
+    <value>Числовий стовпець, який потрібно обробити.</value>
   </data>
   <data name="AboutTrunc" xml:space="preserve">
     <value>Скорочує "число" за допомогою округлення до нуля.</value>
@@ -2615,7 +2648,7 @@
     
   </data>
   <data name="AboutIsToday_date" xml:space="preserve">
-    <value>Значення дати, яку потрібно перевірити.</value>
+    <value>Значення дати для перевірки.</value>
   </data>
   <data name="IsTodayFuncArg1" xml:space="preserve">
     <value>дата</value>
@@ -4015,7 +4048,7 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
-    <value>Така помилка зазвичай стається, коли формула посилається на елемент, якого вже не існує (наприклад, видалений елемент керування).</value>
+    <value>Ця помилка найчастіше з’являється, коли формула посилається на те, чого більше не існує (наприклад, елемент керування, який ви видалили).</value>
   </data>
   <data name="ErrorResource_ErrInvalidName_HowToFix_1" xml:space="preserve">
     <value>Вилучіть або виправте посилання на неприпустиме ім’я.</value>
@@ -4359,7 +4392,7 @@
     <value>Якщо формулу не вдасться обробити, джерело даних може повернути їх неповний набір, а тому програма не зможе повернути правильні результати або належно працювати.</value>
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_1" xml:space="preserve">
-    <value>Якщо для даних перевищується ліміт у 500 записів, але не досягнуто 2000 записів, спробуйте скинути ліміт.</value>
+    <value>Якщо для даних перевищено обмеження в 500 записів, але не досягнуто 2000 записів, спробуйте змінити обмеження.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_2" xml:space="preserve">
@@ -4386,7 +4419,7 @@
     <value>Якщо формулу не вдасться обробити, джерело даних може повернути їх неповний набір, а тому програма не зможе повернути правильні результати або належно працювати.</value>
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_1" xml:space="preserve">
-    <value>Якщо для даних перевищується ліміт у 500 записів, але не досягнуто 2000 записів, спробуйте скинути ліміт.</value>
+    <value>Якщо для даних перевищено обмеження в 500 записів, але не досягнуто 2000 записів, спробуйте змінити обмеження.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_2" xml:space="preserve">
@@ -4417,7 +4450,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_2" xml:space="preserve">
-    <value>Якщо для даних перевищується ліміт у 500 записів, але не досягнуто 2000 записів, спробуйте скинути ліміт.</value>
+    <value>Якщо для даних перевищено обмеження в 500 записів, але не досягнуто 2000 записів, спробуйте змінити обмеження.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_3" xml:space="preserve">
@@ -4450,7 +4483,7 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_2" xml:space="preserve">
     <value>Якщо для даних перевищено обмеження в 500 записів, але не досягнуто 2000 записів, спробуйте змінити обмеження.
-      </value>
+</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_3" xml:space="preserve">
@@ -4478,7 +4511,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_1" xml:space="preserve">
-    <value>Якщо для даних перевищується ліміт у 500 записів, але не досягнуто 2000 записів, спробуйте скинути ліміт.</value>
+    <value>Якщо для даних перевищено обмеження в 500 записів, але не досягнуто 2000 записів, спробуйте змінити обмеження.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_2" xml:space="preserve">
@@ -4551,6 +4584,10 @@
   </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula "{0}" вже існує.</value>
+  </data>
+  <data name="ErrorResource_NameConflict" xml:space="preserve">
+    <value>Не вдалося створити {0} з іменем "{1}", оскільки воно вже використовується для {2}.</value>
+    
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
     <value>Як перший аргумент функції "{0}" слід указати припустиме ім’я змінної, що не має конфліктувати з будь-якими іменами наявних елементів керування, екранів, колекцій або джерел даних. Знайдено тип "{1}".</value>

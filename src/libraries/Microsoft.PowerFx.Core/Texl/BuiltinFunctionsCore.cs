@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Utils;
@@ -15,8 +16,11 @@ namespace Microsoft.PowerFx.Core.Texl
     {
         public static IEnumerable<TexlFunction> BuiltinFunctionsLibrary => _library;
 
+        internal static IEnumerable<TexlFunction> TestOnly_AllBuiltinFunctions => _library.Concat(_featureGateFunctions);
+
         // Functions in this list are shared and may show up in other hosts by default.
         private static readonly List<TexlFunction> _library = new List<TexlFunction>(200);
+        private static readonly List<TexlFunction> _featureGateFunctions = new List<TexlFunction>();
         
         public static readonly TexlFunction AmPm = _library.Append(new AmPmFunction());
         public static readonly TexlFunction AmPmShort = _library.Append(new AmPmShortFunction());
@@ -75,6 +79,7 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction First = _library.Append(new FirstLastFunction(isFirst: true));
         public static readonly TexlFunction FirstN = _library.Append(new FirstLastNFunction(isFirst: true));
         public static readonly TexlFunction ForAll = _library.Append(new ForAllFunction());
+        public static readonly TexlFunction GUIDPure = _library.Append(new GUIDPureFunction());
         public static readonly TexlFunction Hour = _library.Append(new HourFunction());
         public static readonly TexlFunction If = _library.Append(new IfFunction());
         public static readonly TexlFunction IfError = _library.Append(new IfErrorFunction());
@@ -188,21 +193,26 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction Year = _library.Append(new YearFunction());
 
         // NOTE: These functions should not be part of the core library until they are implemented in all runtimes
-        public static readonly TexlFunction DateTime = new DateTimeFunction();
-        public static readonly TexlFunction Index_UO = new IndexFunction_UO();
-        public static readonly TexlFunction ParseJSON = new ParseJSONFunction();
-        public static readonly TexlFunction Table_UO = new TableFunction_UO();
-        public static readonly TexlFunction Text_UO = new TextFunction_UO();
-        public static readonly TexlFunction Value_UO = new ValueFunction_UO();
-        public static readonly TexlFunction Boolean = new BooleanFunction();
-        public static readonly TexlFunction Boolean_T = new BooleanFunction_T();
-        public static readonly TexlFunction BooleanN = new BooleanNFunction();
-        public static readonly TexlFunction BooleanN_T = new BooleanNFunction_T();
-        public static readonly TexlFunction Boolean_UO = new BooleanFunction_UO();
-        public static readonly TexlFunction CountRows_UO = new CountRowsFunction_UO();
+        public static readonly TexlFunction DateTime = _featureGateFunctions.Append(new DateTimeFunction());
+        public static readonly TexlFunction Index_UO = _featureGateFunctions.Append(new IndexFunction_UO());
+        public static readonly TexlFunction ParseJSON = _featureGateFunctions.Append(new ParseJSONFunction());
+        public static readonly TexlFunction Table_UO = _featureGateFunctions.Append(new TableFunction_UO());
+        public static readonly TexlFunction Text_UO = _featureGateFunctions.Append(new TextFunction_UO());
+        public static readonly TexlFunction Value_UO = _featureGateFunctions.Append(new ValueFunction_UO());
+        public static readonly TexlFunction Boolean = _featureGateFunctions.Append(new BooleanFunction());
+        public static readonly TexlFunction Boolean_T = _featureGateFunctions.Append(new BooleanFunction_T());
+        public static readonly TexlFunction BooleanN = _featureGateFunctions.Append(new BooleanNFunction());
+        public static readonly TexlFunction BooleanN_T = _featureGateFunctions.Append(new BooleanNFunction_T());
+        public static readonly TexlFunction Boolean_UO = _featureGateFunctions.Append(new BooleanFunction_UO());
+        public static readonly TexlFunction CountRows_UO = _featureGateFunctions.Append(new CountRowsFunction_UO());
+        public static readonly TexlFunction DateValue_UO = _featureGateFunctions.Append(new DateValueFunction_UO());
+        public static readonly TexlFunction TimeValue_UO = _featureGateFunctions.Append(new TimeValueFunction_UO());
+        public static readonly TexlFunction DateTimeValue_UO = _featureGateFunctions.Append(new DateTimeValueFunction_UO());
+        public static readonly TexlFunction GUID_UO = _featureGateFunctions.Append(new GUIDPureFunction_UO());
+        public static readonly TexlFunction ColorValue_UO = _featureGateFunctions.Append(new ColorValueFunction_UO());
 
-        public static readonly TexlFunction IsUTCToday = new IsUTCTodayFunction();
-        public static readonly TexlFunction UTCNow = new UTCNowFunction();
-        public static readonly TexlFunction UTCToday = new UTCTodayFunction();
+        public static readonly TexlFunction IsUTCToday = _featureGateFunctions.Append(new IsUTCTodayFunction());
+        public static readonly TexlFunction UTCNow = _featureGateFunctions.Append(new UTCNowFunction());
+        public static readonly TexlFunction UTCToday = _featureGateFunctions.Append(new UTCTodayFunction());
     }
 }

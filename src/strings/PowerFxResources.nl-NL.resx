@@ -497,6 +497,39 @@
   <data name="AboutBoolean_text" xml:space="preserve">
     <value>De tekstwaarde die moet worden geconverteerd naar een booleaanse waarde.</value>
   </data>
+  <data name="AboutBooleanT" xml:space="preserve">
+    <value>Hiermee wordt een kolom met tekstwaarden naar een kolom met booleaanse waarden geconverteerd.</value>
+    
+  </data>
+  <data name="BooleanTArg1" xml:space="preserve">
+    <value>invoer</value>
+    
+  </data>
+  <data name="AboutBooleanT_input" xml:space="preserve">
+    <value>Een kolom met tekstwaarden die moeten worden verwerkt.</value>
+  </data>
+  <data name="AboutBooleanN" xml:space="preserve">
+    <value>Hiermee wordt een 'getal' naar een booleaanse waarde geconverteerd.</value>
+    
+  </data>
+  <data name="BooleanNArg1" xml:space="preserve">
+    <value>getal</value>
+    
+  </data>
+  <data name="AboutBooleanN_number" xml:space="preserve">
+    <value>De getalwaarde die moet worden geconverteerd naar een booleaanse waarde.</value>
+  </data>
+  <data name="AboutBooleanNT" xml:space="preserve">
+    <value>Hiermee wordt een kolom met numerieke waarden naar een kolom met booleaanse waarden geconverteerd.</value>
+    
+  </data>
+  <data name="BooleanNTArg1" xml:space="preserve">
+    <value>invoer</value>
+    
+  </data>
+  <data name="AboutBooleanNT_input" xml:space="preserve">
+    <value>Een kolom met getalwaarden die moeten worden verwerkt.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Hiermee wordt het eerste niet-lege argument geretourneerd</value>
     
@@ -3956,7 +3989,7 @@
     
   </data>
   <data name="ErrorResource_ErrBadToken_LongMessage" xml:space="preserve">
-    <value>Het teken \ wordt bijvoorbeeld niet verwacht na een getal zoals bij 32\. Er wordt een spatie (32 ) verwacht als het alleen het getal 32 betreft, anders wordt er een ander getal (zoals 323) verwacht.</value>
+    <value>Het teken \ wordt bijvoorbeeld niet verwacht na een getal zoals bij 32\. Er wordt een spatie (32) verwacht als het alleen het getal 32 betreft, anders wordt er een ander getal (zoals 323) verwacht.</value>
   </data>
   <data name="ErrorResource_ErrBadToken_HowToFix_1" xml:space="preserve">
     <value>Verwijder de onverwachte tekens of vervang deze.</value>
@@ -4551,6 +4584,10 @@
   </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula {0} bestaat al.</value>
+  </data>
+  <data name="ErrorResource_NameConflict" xml:space="preserve">
+    <value>Kan geen {0} maken met de naam {1} omdat deze naam al wordt gebruikt voor een {2}.</value>
+    
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
     <value>Het eerste argument van {0} moet een geldige naam voor een variabele zijn en mag geen conflict hebben met een bestaande naam van een besturingselement, scherm, verzameling of gegevensbron. Type {1} gevonden</value>
