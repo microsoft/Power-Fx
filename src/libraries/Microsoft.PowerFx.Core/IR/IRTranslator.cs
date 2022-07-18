@@ -156,97 +156,73 @@ namespace Microsoft.PowerFx.Core.IR
                 var left = node.Left.Accept(this, context);
                 var right = node.Right.Accept(this, context);
 
-                var leftType = context.Binding.GetType(node.Left);
-                var rightType = context.Binding.GetType(node.Right);
+                var kind = BinaryOpMatrix.GetBinaryOpKind(node, context.Binding);
 
                 IntermediateNode binaryOpResult;
-
-                switch (node.Op)
+                
+                switch (kind)
                 {
-                    case BinaryOp.In:
-                    case BinaryOp.Exactin:
-                        if (!rightType.IsAggregate)
-                        {
-                            if ((DType.String.Accepts(rightType) && (DType.String.Accepts(leftType) || leftType.CoercesTo(DType.String))) ||
-                                (rightType.CoercesTo(DType.String) && DType.String.Accepts(leftType)))
-                            {
-                                binaryOpResult = new BinaryOpNode(context.GetIRContext(node), node.Op == BinaryOp.In ? BinaryOpKind.InText : BinaryOpKind.ExactInText, left, right);
-                                break;
-                            }
-
-                            // anything else in scalar: not supported.
-                            Contracts.Assert(context.Binding.ErrorContainer.HasErrors(node.Left) || context.Binding.ErrorContainer.HasErrors(node.Right));
-                            return new ErrorNode(context.GetIRContext(node), node.ToString());
-                        }
-
-                        if (!leftType.IsAggregate)
-                        {
-                            if (rightType.IsTable)
-                            {
-                                // scalar in table: in_ST(left, right)
-                                // scalar exactin table: exactin_ST(left, right)
-                                binaryOpResult = new BinaryOpNode(context.GetIRContext(node), node.Op == BinaryOp.In ? BinaryOpKind.InScalarTable : BinaryOpKind.ExactInScalarTable, left, right);
-                                break;
-                            }
-
-                            // scalar in record: not supported
-                            // scalar exactin record: not supported
-                            Contracts.Assert(context.Binding.ErrorContainer.HasErrors(node.Left) || context.Binding.ErrorContainer.HasErrors(node.Right));
-                            return new ErrorNode(context.GetIRContext(node), node.ToString());
-                        }
-
-                        if (leftType.IsRecord)
-                        {
-                            if (rightType.IsTable)
-                            {
-                                // record in table: in_RT(left, right)
-                                // record exactin table: in_RT(left, right)
-                                // This is done regardless of "exactness".
-                                binaryOpResult = new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.InRecordTable, left, right);
-                                break;
-                            }
-
-                            // record in record: not supported
-                            // record exactin record: not supported
-                            Contracts.Assert(context.Binding.ErrorContainer.HasErrors(node.Left) || context.Binding.ErrorContainer.HasErrors(node.Right));
-                            return new ErrorNode(context.GetIRContext(node), node.ToString());
-                        }
-
-                        // table in anything: not supported
-                        // table exactin anything: not supported
-                        Contracts.Assert(context.Binding.ErrorContainer.HasErrors(node.Left));
-                        return new ErrorNode(context.GetIRContext(node), node.ToString());
-                    case BinaryOp.Power:
+                    // Call Node Replacements:
+                    case BinaryOpKind.Power:
                         binaryOpResult = new CallNode(context.GetIRContext(node), BuiltinFunctionsCore.Power, left, right);
                         break;
-                    case BinaryOp.Concat:
+                    case BinaryOpKind.Concatenate:
                         binaryOpResult = new CallNode(context.GetIRContext(node), BuiltinFunctionsCore.Concatenate, left, right);
                         break;
-                    case BinaryOp.Or:
-                    case BinaryOp.And:
+                    case BinaryOpKind.Or:
+                    case BinaryOpKind.And:
                         binaryOpResult = new CallNode(context.GetIRContext(node), node.Op == BinaryOp.And ? BuiltinFunctionsCore.And : BuiltinFunctionsCore.Or, left, new LazyEvalNode(context.GetIRContext(node), right));
                         break;
-                    case BinaryOp.Add:
-                        binaryOpResult = GetAddBinaryOp(context, node, left, right, leftType, rightType);
+
+                    // Reversed Args:
+                    case BinaryOpKind.AddTimeAndDate:
+                        binaryOpResult = new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.AddDateAndTime, right, left);
                         break;
-                    case BinaryOp.Mul:
-                        binaryOpResult = new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.MulNumbers, left, right);
+                    case BinaryOpKind.AddDayAndDate:
+                        binaryOpResult = new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.AddDateAndDay, right, left);
                         break;
-                    case BinaryOp.Div:
-                        binaryOpResult = new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.DivNumbers, left, right);
+                    case BinaryOpKind.AddMillisecondsAndTime:
+                        binaryOpResult = new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.AddTimeAndMilliseconds, right, left);
                         break;
-                    case BinaryOp.Equal:
-                    case BinaryOp.NotEqual:
-                    case BinaryOp.Less:
-                    case BinaryOp.LessEqual:
-                    case BinaryOp.Greater:
-                    case BinaryOp.GreaterEqual:
-                        binaryOpResult = GetBooleanBinaryOp(context, node, left, right, leftType, rightType);
+                    case BinaryOpKind.AddDayAndDateTime:
+                        binaryOpResult = new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.AddDateTimeAndDay, right, left);
                         break;
-                    case BinaryOp.Error:
-                        return new ErrorNode(context.GetIRContext(node), node.ToString());
+
+                    case BinaryOpKind.Invalid:
+                        if (node.Op == BinaryOp.NotEqual) 
+                        {
+                            binaryOpResult = new BooleanLiteralNode(context.GetIRContext(node), true);
+                        }
+                        else if (node.Op == BinaryOp.Equal)
+                        {
+                            binaryOpResult = new BooleanLiteralNode(context.GetIRContext(node), false);
+                        }
+                        else if (node.Op == BinaryOp.Error || context.Binding.ErrorContainer.HasErrors(node.Left) || context.Binding.ErrorContainer.HasErrors(node.Right))
+                        {
+                            return new ErrorNode(context.GetIRContext(node), node.ToString());
+                        }
+                        else
+                        {
+                            throw new NotSupportedException();
+                        }
+
+                        break;
+
+                    // Date Diff pulls from nested unary op
+                    case BinaryOpKind.DateDifference:
+                        // Validated in Matrix + Binder
+                        if (right is not UnaryOpNode { Op: UnaryOpKind.Negate } unaryNegate)
+                        {
+                            throw new NotSupportedException();
+                        }
+
+                        binaryOpResult = new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.DateDifference, left, unaryNegate.Child);
+                        break;
+
+                    // All others used directly
                     default:
-                        throw new NotSupportedException();
+                        binaryOpResult = new BinaryOpNode(context.GetIRContext(node), kind, left, right);
+                        break;
                 }
 
                 return MaybeInjectCoercion(node, binaryOpResult, context);
@@ -753,319 +729,6 @@ namespace Microsoft.PowerFx.Core.IR
                 }
 
                 return new UnaryOpNode(IRContext.NotInSource(FormulaType.Build(toType)), unaryOpKind, child);
-            }
-
-            private static IntermediateNode GetAddBinaryOp(IRTranslatorContext context, TexlBinaryOpNode node, IntermediateNode left, IntermediateNode right, DType leftType, DType rightType)
-            {
-                Contracts.AssertValue(node);
-                Contracts.Assert(node.Op == BinaryOp.Add);
-
-                switch (leftType.Kind)
-                {
-                    case DKind.Date:
-                        if (rightType == DType.DateTime || rightType == DType.Date)
-                        {
-                            // Date + '-DateTime' => in days
-                            // Date + '-Date' => in days
-
-                            // Binding produces this as '-Date'. This should be cleaned up when we switch to a proper sub op. 
-                            if (right is not UnaryOpNode unaryNode || unaryNode.Op != UnaryOpKind.Negate)
-                            {
-                                throw new NotSupportedException();
-                            }
-
-                            // Use the child of the negate as the rhs for datediff
-                            return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.DateDifference, left, unaryNode.Child);
-                        }
-                        else if (rightType == DType.Time)
-                        {
-                            return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.AddDateAndTime, left, right);
-                        }
-                        else
-                        {
-                            return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.AddDateAndDay, left, right);
-                        }
-
-                    case DKind.Time:
-                        if (rightType == DType.Date)
-                        {
-                            // Time + Date => DateTime
-                            return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.AddDateAndTime, right, left);
-                        }
-                        else if (rightType == DType.Time)
-                        {
-                            // Time + '-Time' => in ms
-                            // Ensure that this is really '-Time' - Binding should always catch this, but let's make sure...
-                            Contracts.Assert(node.Right.AsUnaryOpLit().VerifyValue().Op == UnaryOp.Minus);
-                            return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.AddNumbers, left, right);
-                        }
-                        else
-                        {
-                            // Time + Number
-                            return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.AddTimeAndMilliseconds, left, right);
-                        }
-
-                    case DKind.DateTime:
-                        if (rightType == DType.DateTime || rightType == DType.Date)
-                        {
-                            // DateTime + '-DateTime' => in days
-                            // DateTime + '-Date' => in days
-
-                            // Ensure that this is really '-Date' - Binding should always catch this, but let's make sure...
-                            Contracts.Assert(node.Right.AsUnaryOpLit().VerifyValue().Op == UnaryOp.Minus);
-                            return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.DateDifference, left, right);
-                        }
-                        else
-                        {
-                            return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.AddDateTimeAndDay, left, right);
-                        }
-
-                    default:
-                        switch (rightType.Kind)
-                        {
-                            case DKind.Date:
-                                // Number + Date
-                                return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.AddDateAndDay, right, left);
-                            case DKind.Time:
-                                // Number + Date
-                                return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.AddTimeAndMilliseconds, right, left);
-                            case DKind.DateTime:
-                                return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.AddDateTimeAndDay, right, left);
-                            default:
-                                // Number + Number
-                                return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.AddNumbers, left, right);
-                        }
-                }
-            }
-
-            private static IntermediateNode GetBooleanBinaryOp(IRTranslatorContext context, TexlBinaryOpNode node, IntermediateNode left, IntermediateNode right, DType leftType, DType rightType)
-            {
-                var kindToUse = leftType.Accepts(rightType) ? leftType.Kind : rightType.Kind;
-
-                if (!leftType.Accepts(rightType) && !rightType.Accepts(leftType))
-                {
-                    // There is coercion involved, pick the coerced type.
-                    if (context.Binding.TryGetCoercedType(node.Left, out var leftCoerced))
-                    {
-                        kindToUse = leftCoerced.Kind;
-                    }
-                    else if (context.Binding.TryGetCoercedType(node.Right, out var rightCoerced))
-                    {
-                        kindToUse = rightCoerced.Kind;
-                    }
-                    else
-                    {
-                        // In this particular case, we issue a warning
-                        // We only manage = and <> cases here as other comparison operators are more complex to handle
-                        // See https://stackoverflow.com/questions/35050151/excel-if-statement-comparing-text-with-number
-                        return (node.Op == BinaryOp.NotEqual) ? new BooleanLiteralNode(context.GetIRContext(node), true)
-                             : (node.Op == BinaryOp.Equal) ? new BooleanLiteralNode(context.GetIRContext(node), false)
-                             : throw new NotSupportedException();
-                    }
-                }
-
-                switch (kindToUse)
-                {
-                    case DKind.Number:
-                        switch (node.Op)
-                        {
-                            case BinaryOp.NotEqual:
-                                return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.NeqNumbers, left, right);
-                            case BinaryOp.Equal:
-                                return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.EqNumbers, left, right);
-                            case BinaryOp.Less:
-                                return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.LtNumbers, left, right);
-                            case BinaryOp.LessEqual:
-                                return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.LeqNumbers, left, right);
-                            case BinaryOp.Greater:
-                                return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.GtNumbers, left, right);
-                            case BinaryOp.GreaterEqual:
-                                return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.GeqNumbers, left, right);
-                            default:
-                                throw new NotSupportedException();
-                        }
-
-                    case DKind.Date:
-                        switch (node.Op)
-                        {
-                            case BinaryOp.NotEqual:
-                                return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.NeqDate, left, right);
-                            case BinaryOp.Equal:
-                                return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.EqDate, left, right);
-                            case BinaryOp.Less:
-                                return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.LtDate, left, right);
-                            case BinaryOp.LessEqual:
-                                return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.LeqDate, left, right);
-                            case BinaryOp.Greater:
-                                return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.GtDate, left, right);
-                            case BinaryOp.GreaterEqual:
-                                return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.GeqDate, left, right);
-                            default:
-                                throw new NotSupportedException();
-                        }
-
-                    case DKind.DateTime:
-                        switch (node.Op)
-                        {
-                            case BinaryOp.NotEqual:
-                                return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.NeqDateTime, left, right);
-                            case BinaryOp.Equal:
-                                return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.EqDateTime, left, right);
-                            case BinaryOp.Less:
-                                return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.LtDateTime, left, right);
-                            case BinaryOp.LessEqual:
-                                return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.LeqDateTime, left, right);
-                            case BinaryOp.Greater:
-                                return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.GtDateTime, left, right);
-                            case BinaryOp.GreaterEqual:
-                                return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.GeqDateTime, left, right);
-                            default:
-                                throw new NotSupportedException();
-                        }
-
-                    case DKind.Time:
-                        switch (node.Op)
-                        {
-                            case BinaryOp.NotEqual:
-                                return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.NeqTime, left, right);
-                            case BinaryOp.Equal:
-                                return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.EqTime, left, right);
-                            case BinaryOp.Less:
-                                return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.LtTime, left, right);
-                            case BinaryOp.LessEqual:
-                                return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.LeqTime, left, right);
-                            case BinaryOp.Greater:
-                                return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.GtTime, left, right);
-                            case BinaryOp.GreaterEqual:
-                                return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.GeqTime, left, right);
-                            default:
-                                throw new NotSupportedException();
-                        }
-
-                    case DKind.Boolean:
-                        switch (node.Op)
-                        {
-                            case BinaryOp.NotEqual:
-                                return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.NeqBoolean, left, right);
-                            case BinaryOp.Equal:
-                                return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.EqBoolean, left, right);
-                            default:
-                                throw new NotSupportedException();
-                        }
-
-                    case DKind.String:
-                        switch (node.Op)
-                        {
-                            case BinaryOp.NotEqual:
-                                return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.NeqText, left, right);
-                            case BinaryOp.Equal:
-                                return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.EqText, left, right);
-                            default:
-                                throw new NotSupportedException();
-                        }
-
-                    case DKind.Hyperlink:
-                        switch (node.Op)
-                        {
-                            case BinaryOp.NotEqual:
-                                return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.NeqHyperlink, left, right);
-                            case BinaryOp.Equal:
-                                return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.EqHyperlink, left, right);
-                            default:
-                                throw new NotSupportedException();
-                        }
-
-                    case DKind.Currency:
-                        switch (node.Op)
-                        {
-                            case BinaryOp.NotEqual:
-                                return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.NeqCurrency, left, right);
-                            case BinaryOp.Equal:
-                                return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.EqCurrency, left, right);
-                            default:
-                                throw new NotSupportedException();
-                        }
-
-                    case DKind.Image:
-                        switch (node.Op)
-                        {
-                            case BinaryOp.NotEqual:
-                                return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.NeqImage, left, right);
-                            case BinaryOp.Equal:
-                                return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.EqImage, left, right);
-                            default:
-                                throw new NotSupportedException();
-                        }
-
-                    case DKind.Color:
-                        switch (node.Op)
-                        {
-                            case BinaryOp.NotEqual:
-                                return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.NeqColor, left, right);
-                            case BinaryOp.Equal:
-                                return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.EqColor, left, right);
-                            default:
-                                throw new NotSupportedException();
-                        }
-
-                    case DKind.Media:
-                        switch (node.Op)
-                        {
-                            case BinaryOp.NotEqual:
-                                return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.NeqMedia, left, right);
-                            case BinaryOp.Equal:
-                                return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.EqMedia, left, right);
-                            default:
-                                throw new NotSupportedException();
-                        }
-
-                    case DKind.Blob:
-                        switch (node.Op)
-                        {
-                            case BinaryOp.NotEqual:
-                                return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.NeqBlob, left, right);
-                            case BinaryOp.Equal:
-                                return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.EqBlob, left, right);
-                            default:
-                                throw new NotSupportedException();
-                        }
-
-                    case DKind.Guid:
-                        switch (node.Op)
-                        {
-                            case BinaryOp.NotEqual:
-                                return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.NeqGuid, left, right);
-                            case BinaryOp.Equal:
-                                return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.EqGuid, left, right);
-                            default:
-                                throw new NotSupportedException();
-                        }
-
-                    case DKind.ObjNull:
-                        switch (node.Op)
-                        {
-                            case BinaryOp.NotEqual:
-                                return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.NeqNull, left, right);
-                            case BinaryOp.Equal:
-                                return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.EqNull, left, right);
-                            default:
-                                throw new NotSupportedException();
-                        }
-
-                    case DKind.OptionSetValue:
-                        switch (node.Op)
-                        {
-                            case BinaryOp.NotEqual:
-                                return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.NeqOptionSetValue, left, right);
-                            case BinaryOp.Equal:
-                                return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.EqOptionSetValue, left, right);
-                            default:
-                                throw new NotSupportedException();
-                        }
-
-                    default:
-                        throw new NotSupportedException("Not supported comparison op on type " + kindToUse.ToString());
-                }
             }
         }
 
