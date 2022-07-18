@@ -44,18 +44,18 @@ namespace Microsoft.PowerFx
             powerFxConfig.SetCoreFunctions(Library.FunctionList);
 
             // Add custom. 
-            powerFxConfig.AddFunction(BuiltinFunctionsCore.DateTime);
-            powerFxConfig.AddFunction(BuiltinFunctionsCore.Index_UO);
-            powerFxConfig.AddFunction(BuiltinFunctionsCore.ParseJSON);
-            powerFxConfig.AddFunction(BuiltinFunctionsCore.Table_UO);
-            powerFxConfig.AddFunction(BuiltinFunctionsCore.Text_UO);
-            powerFxConfig.AddFunction(BuiltinFunctionsCore.Value_UO);
-            powerFxConfig.AddFunction(BuiltinFunctionsCore.Boolean);
-            powerFxConfig.AddFunction(BuiltinFunctionsCore.Boolean_T);
-            powerFxConfig.AddFunction(BuiltinFunctionsCore.BooleanN);
-            powerFxConfig.AddFunction(BuiltinFunctionsCore.BooleanN_T);
-            powerFxConfig.AddFunction(BuiltinFunctionsCore.Boolean_UO);
-            powerFxConfig.AddFunction(BuiltinFunctionsCore.CountRows_UO);
+            // powerFxConfig.AddFunction(BuiltinFunctionsCore.DateTime);
+            //powerFxConfig.AddFunction(BuiltinFunctionsCore.Index_UO);
+            //powerFxConfig.AddFunction(BuiltinFunctionsCore.ParseJSON);
+            //powerFxConfig.AddFunction(BuiltinFunctionsCore.Table_UO);
+            //powerFxConfig.AddFunction(BuiltinFunctionsCore.Text_UO);
+            //powerFxConfig.AddFunction(BuiltinFunctionsCore.Value_UO);
+            //powerFxConfig.AddFunction(BuiltinFunctionsCore.Boolean);
+            //powerFxConfig.AddFunction(BuiltinFunctionsCore.Boolean_T);
+            //powerFxConfig.AddFunction(BuiltinFunctionsCore.BooleanN);
+            //powerFxConfig.AddFunction(BuiltinFunctionsCore.BooleanN_T);
+            //powerFxConfig.AddFunction(BuiltinFunctionsCore.Boolean_UO);
+            //powerFxConfig.AddFunction(BuiltinFunctionsCore.CountRows_UO);
 
             return powerFxConfig;
         }

@@ -40,7 +40,7 @@ namespace Microsoft.PowerFx
 
         public int MaxCallDepth { get; set; }
 
-        private PowerFxConfig(CultureInfo cultureInfo, EnumStoreBuilder enumStoreBuilder, Features features = Features.None) 
+        private PowerFxConfig(CultureInfo cultureInfo, EnumStoreBuilder enumStoreBuilder, Features features = Features.None)
         {
             CultureInfo = cultureInfo ?? CultureInfo.CurrentCulture;
             Features = features;
@@ -61,9 +61,9 @@ namespace Microsoft.PowerFx
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PowerFxConfig"/> class.        
+        /// Initializes a new instance of the <see cref="PowerFxConfig"/> class.
         /// </summary>
-        /// <param name="cultureInfo">Culture to use.</param>      
+        /// <param name="cultureInfo">Culture to use.</param>
         /// <param name="features">Features to use.</param>
         public PowerFxConfig(CultureInfo cultureInfo, Features features)
             : this(cultureInfo, new EnumStoreBuilder().WithRequiredEnums(BuiltinFunctionsCore.BuiltinFunctionsLibrary), features)
@@ -71,7 +71,7 @@ namespace Microsoft.PowerFx
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PowerFxConfig"/> class.        
+        /// Initializes a new instance of the <see cref="PowerFxConfig"/> class.
         /// </summary>
         /// <param name="features">Features to use.</param>
         public PowerFxConfig(Features features)
@@ -166,7 +166,15 @@ namespace Microsoft.PowerFx
         {
             CheckUnlocked();
 
-            _extraFunctions.Add(function);
+            if (!_coreFunctions.Contains(function, new TexlFunctionComparer()))
+            {                
+                _extraFunctions.Add(function);
+            }
+            else
+            {
+                throw new ArgumentException($"Function {function.Name} is already part of core functions");
+            }
+
             EnumStoreBuilder.WithRequiredEnums(new List<TexlFunction>() { function });
         }
 
@@ -199,10 +207,10 @@ namespace Microsoft.PowerFx
         internal PowerFxConfig WithoutDisplayNames()
         {
             return new PowerFxConfig(this) { _environmentSymbolDisplayNameProvider = DisabledDisplayNameProvider.Instance };
-        } 
+        }
 
         internal void Lock()
-        { 
+        {
             CheckUnlocked();
 
             _isLocked = true;
