@@ -497,6 +497,39 @@
   <data name="AboutBoolean_text" xml:space="preserve">
     <value>Valor de texto que se vai converter nun valor booleano.</value>
   </data>
+  <data name="AboutBooleanT" xml:space="preserve">
+    <value>Converte unha columna de valores de texto nunha columna de valores booleanos.</value>
+    
+  </data>
+  <data name="BooleanTArg1" xml:space="preserve">
+    <value>entrada</value>
+    
+  </data>
+  <data name="AboutBooleanT_input" xml:space="preserve">
+    <value>Columna de valores de texto que se van procesar.</value>
+  </data>
+  <data name="AboutBooleanN" xml:space="preserve">
+    <value>Converte un "número" nun valor booleano.</value>
+    
+  </data>
+  <data name="BooleanNArg1" xml:space="preserve">
+    <value>número</value>
+    
+  </data>
+  <data name="AboutBooleanN_number" xml:space="preserve">
+    <value>Valor numérico que se vai converter nun valor booleano.</value>
+  </data>
+  <data name="AboutBooleanNT" xml:space="preserve">
+    <value>Converte unha columna de valores numéricos nunha columna de valores booleanos.</value>
+    
+  </data>
+  <data name="BooleanNTArg1" xml:space="preserve">
+    <value>entrada</value>
+    
+  </data>
+  <data name="AboutBooleanNT_input" xml:space="preserve">
+    <value>Columna de valores numéricos que se van procesar.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Devolve o primeiro argumento que non está en branco</value>
     
@@ -4359,7 +4392,7 @@
     <value>É posible que a orixe de datos non poida procesar a fórmula e que devolva un conxunto de datos incompleto. Pode que a aplicación non devolva resultados correctos ou que funcione de xeito incorrecto se o conxunto de datos está incompleto.</value>
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_1" xml:space="preserve">
-    <value>Se o conxunto de datos supera o límite de 500 rexistros, pero contén menos de 2000, tente restablecer o límite.</value>
+    <value>Se o conxunto de datos supera o límite de 500 rexistros, pero contén menos de 2000, tente restablecer o límite.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_2" xml:space="preserve">
@@ -4386,7 +4419,7 @@
     <value>É posible que a orixe de datos non poida procesar a fórmula e que devolva un conxunto de datos incompleto. Pode que a aplicación non devolva resultados correctos ou que funcione de xeito incorrecto se o conxunto de datos está incompleto.</value>
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_1" xml:space="preserve">
-    <value>Se o conxunto de datos supera o límite de 500 rexistros, pero contén menos de 2000, tente restablecer o límite.</value>
+    <value>Se o conxunto de datos supera o límite de 500 rexistros, pero contén menos de 2000, tente restablecer o límite.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_2" xml:space="preserve">
@@ -4417,7 +4450,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_2" xml:space="preserve">
-    <value>Se o conxunto de datos supera o límite de 500 rexistros, pero contén menos de 2000, tente restablecer o límite.</value>
+    <value>Se o conxunto de datos supera o límite de 500 rexistros, pero contén menos de 2000, tente restablecer o límite.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_3" xml:space="preserve">
@@ -4449,7 +4482,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_2" xml:space="preserve">
-    <value>Se o conxunto de datos supera o límite de 500 rexistros, pero contén menos de 2000. Tente restablecer o límite.
+    <value>Se o conxunto de datos supera o límite de 500 rexistros, pero contén menos de 2000, tente restablecer o límite.
       </value>
     
   </data>
@@ -4478,7 +4511,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_1" xml:space="preserve">
-    <value>Se o conxunto de datos supera o límite de 500 rexistros, pero contén menos de 2000, tente restablecer o límite.</value>
+    <value>Se o conxunto de datos supera o límite de 500 rexistros, pero contén menos de 2000, tente restablecer o límite.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_2" xml:space="preserve">
@@ -4551,6 +4584,10 @@
   </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>A fórmula denominada "{0}" xa existe.</value>
+  </data>
+  <data name="ErrorResource_NameConflict" xml:space="preserve">
+    <value>Non se pode crear unha entidade de tipo {0} denominada "{1}" porque ese nome xa se está a usar para unha entidade de tipo {2}.</value>
+    
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
     <value>O primeiro argumento de "{0}" debe ser un nome de variable válido e non pode entrar en conflito con ningún nome existente de control, pantalla, colección nin orixe de datos. Atopouse o tipo "{1}"</value>

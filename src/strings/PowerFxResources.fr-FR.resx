@@ -497,6 +497,39 @@
   <data name="AboutBoolean_text" xml:space="preserve">
     <value>Valeur de texte à convertir en valeur booléenne.</value>
   </data>
+  <data name="AboutBooleanT" xml:space="preserve">
+    <value>Convertit une colonne de valeurs de texte en une colonne de valeurs booléennes.</value>
+    
+  </data>
+  <data name="BooleanTArg1" xml:space="preserve">
+    <value>entrée</value>
+    
+  </data>
+  <data name="AboutBooleanT_input" xml:space="preserve">
+    <value>Colonne de valeurs de texte à traiter.</value>
+  </data>
+  <data name="AboutBooleanN" xml:space="preserve">
+    <value>Convertit un « texte » en une valeur booléenne.</value>
+    
+  </data>
+  <data name="BooleanNArg1" xml:space="preserve">
+    <value>nombre</value>
+    
+  </data>
+  <data name="AboutBooleanN_number" xml:space="preserve">
+    <value>Valeur de texte à convertir en valeur booléenne.</value>
+  </data>
+  <data name="AboutBooleanNT" xml:space="preserve">
+    <value>Convertit une colonne de valeurs numériques en une colonne de valeurs booléennes.</value>
+    
+  </data>
+  <data name="BooleanNTArg1" xml:space="preserve">
+    <value>entrée</value>
+    
+  </data>
+  <data name="AboutBooleanNT_input" xml:space="preserve">
+    <value>Colonne de valeurs numériques à traiter.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Retourne le premier argument non vide</value>
     
@@ -1439,7 +1472,7 @@
     
   </data>
   <data name="AboutIsBlankOrError_expression" xml:space="preserve">
-    <value>Une expression à tester.</value>
+    <value>Expression à tester.</value>
     
   </data>
   <data name="AboutIsEmpty" xml:space="preserve">
@@ -4356,10 +4389,10 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_LongMessage" xml:space="preserve">
-    <value>La source de données n'est peut-être pas en mesure de traiter la formule et peut retourner un jeu de données incomplet. Il se peut que votre application ne puisse pas retourner de résultats corrects ni fonctionner correctement si le jeu de données est incomplet.</value>
+    <value>La source de données n’est peut-être pas en mesure de traiter la formule et peut retourner un jeu de données incomplet. Il se peut que votre application ne puisse pas retourner de résultats corrects ni fonctionner correctement si le groupe de données est incomplet.</value>
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_1" xml:space="preserve">
-    <value>Si votre jeu de données dépasse la limite de 500 enregistrements mais contient moins de 2 000 enregistrements, essayez de réinitialiser la limite.</value>
+    <value>Si votre jeu de données dépasse la limite de 500 enregistrements mais contient moins de 2 000 enregistrements, essayez de réinitialiser la limite.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_2" xml:space="preserve">
@@ -4383,10 +4416,10 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_LongMessage" xml:space="preserve">
-    <value>La source de données n'est peut-être pas en mesure de traiter la formule et peut retourner un jeu de données incomplet. Il se peut que votre application ne puisse pas retourner de résultats corrects ni fonctionner correctement si le jeu de données est incomplet.</value>
+    <value>La source de données n’est peut-être pas en mesure de traiter la formule et peut retourner un jeu de données incomplet. Il se peut que votre application ne puisse pas retourner de résultats corrects ni fonctionner correctement si le groupe de données est incomplet.</value>
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_1" xml:space="preserve">
-    <value>Si votre jeu de données dépasse la limite de 500 enregistrements mais contient moins de 2 000 enregistrements, essayez de réinitialiser la limite.</value>
+    <value>Si votre jeu de données dépasse la limite de 500 enregistrements mais contient moins de 2 000 enregistrements, essayez de réinitialiser la limite.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_2" xml:space="preserve">
@@ -4417,7 +4450,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_2" xml:space="preserve">
-    <value>Si votre jeu de données dépasse la limite de 500 enregistrements mais contient moins de 2 000 enregistrements, essayez de réinitialiser la limite.</value>
+    <value>Si votre jeu de données dépasse la limite de 500 enregistrements mais contient moins de 2 000 enregistrements, essayez de réinitialiser la limite.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_3" xml:space="preserve">
@@ -4449,7 +4482,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_2" xml:space="preserve">
-    <value>Si votre jeu de données dépasse la limite de 500 enregistrements, mais contient moins de 2 000 enregistrements, essayez de réinitialiser la limite.
+    <value>Si votre jeu de données dépasse la limite de 500 enregistrements mais contient moins de 2 000 enregistrements, essayez de réinitialiser la limite.
       </value>
     
   </data>
@@ -4474,11 +4507,11 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_LongMessage" xml:space="preserve">
-    <value>La source de données n'est peut-être pas en mesure de traiter la formule et peut retourner un jeu de données incomplet. Il se peut que votre application ne puisse pas retourner de résultats corrects ni fonctionner correctement si le jeu de données est incomplet.</value>
+    <value>La source de données n’est peut-être pas en mesure de traiter la formule et peut retourner un jeu de données incomplet. Il se peut que votre application ne puisse pas retourner de résultats corrects ni fonctionner correctement si le groupe de données est incomplet.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_1" xml:space="preserve">
-    <value>Si votre jeu de données dépasse la limite de 500 enregistrements mais contient moins de 2 000 enregistrements, essayez de réinitialiser la limite.</value>
+    <value>Si votre jeu de données dépasse la limite de 500 enregistrements mais contient moins de 2 000 enregistrements, essayez de réinitialiser la limite.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_2" xml:space="preserve">
@@ -4551,6 +4584,10 @@
   </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula '{0}' existe déjà.</value>
+  </data>
+  <data name="ErrorResource_NameConflict" xml:space="preserve">
+    <value>Impossible de créer un {0} nommé « {1} », car ce nom est déjà utilisé pour une {2}.</value>
+    
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
     <value>Le premier argument de « {0} » doit être un nom de variable valide et ne peut pas entrer en conflit avec les noms existants de contrôle, écran, collection ou source de données. Type trouvé « {1} »</value>

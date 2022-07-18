@@ -497,6 +497,39 @@
   <data name="AboutBoolean_text" xml:space="preserve">
     <value>Balio boolear bihurtuko den testu-balioa.</value>
   </data>
+  <data name="AboutBooleanT" xml:space="preserve">
+    <value>Testu-balioak dituen zutabe bat bihurtzen du balio boolearrak dituen zutabe.</value>
+    
+  </data>
+  <data name="BooleanTArg1" xml:space="preserve">
+    <value>sarrera</value>
+    
+  </data>
+  <data name="AboutBooleanT_input" xml:space="preserve">
+    <value>Prozesatuko den testu-balioen zutabea.</value>
+  </data>
+  <data name="AboutBooleanN" xml:space="preserve">
+    <value>"Zenbaki" bat balio boolear bihurtzen du.</value>
+    
+  </data>
+  <data name="BooleanNArg1" xml:space="preserve">
+    <value>zenbakia</value>
+    
+  </data>
+  <data name="AboutBooleanN_number" xml:space="preserve">
+    <value>Balio boolear bihurtuko den zenbakizko balioa.</value>
+  </data>
+  <data name="AboutBooleanNT" xml:space="preserve">
+    <value>Zenbakizko balioak dituen zutabe bat bihurtzen du balio boolearrak dituen zutabe.</value>
+    
+  </data>
+  <data name="BooleanNTArg1" xml:space="preserve">
+    <value>sarrera</value>
+    
+  </data>
+  <data name="AboutBooleanNT_input" xml:space="preserve">
+    <value>Prozesatuko den zenbakizko balioen zutabea.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Hutsa ez den lehen argumentua itzultzen du</value>
     
@@ -4551,6 +4584,10 @@
   </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>Badago "{0}" deitzen den formula bat.</value>
+  </data>
+  <data name="ErrorResource_NameConflict" xml:space="preserve">
+    <value>Ezin da sortu "{1}" izeneko {0} entitatea {2} entitatea hura erabiltzen ari delako jada.</value>
+    
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
     <value>"{0}" elementuaren lehen argumentuak balio duen aldagai-izen bat izan behar du eta ezin da gatazkan egon lehendik dauden kontrolen, pantailen, bildumen edo datu-iturburuen izenekin. Hau da aurkitutako mota: "{1}".</value>

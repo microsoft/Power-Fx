@@ -497,6 +497,39 @@
   <data name="AboutBoolean_text" xml:space="preserve">
     <value>O valor do texto para converter em um valor booliano.</value>
   </data>
+  <data name="AboutBooleanT" xml:space="preserve">
+    <value>Converts a column of text values to a column of boolean values.</value>
+    
+  </data>
+  <data name="BooleanTArg1" xml:space="preserve">
+    <value>input</value>
+    
+  </data>
+  <data name="AboutBooleanT_input" xml:space="preserve">
+    <value>A column of text values to process.</value>
+  </data>
+  <data name="AboutBooleanN" xml:space="preserve">
+    <value>Converts a 'number' to a boolean value.</value>
+    
+  </data>
+  <data name="BooleanNArg1" xml:space="preserve">
+    <value>number</value>
+    
+  </data>
+  <data name="AboutBooleanN_number" xml:space="preserve">
+    <value>The number value to convert to a boolean value.</value>
+  </data>
+  <data name="AboutBooleanNT" xml:space="preserve">
+    <value>Converts a column of numeric values to a column of boolean values.</value>
+    
+  </data>
+  <data name="BooleanNTArg1" xml:space="preserve">
+    <value>input</value>
+    
+  </data>
+  <data name="AboutBooleanNT_input" xml:space="preserve">
+    <value>A column of number values to process.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Retorna o primeiro argumento que não está em branco</value>
     
@@ -1137,10 +1170,10 @@
     
   </data>
   <data name="AboutAbs_number" xml:space="preserve">
-    <value>Valor numérico a processar.</value>
+    <value>Um valor numérico para processar.</value>
   </data>
   <data name="AboutAbs_input" xml:space="preserve">
-    <value>Coluna de valores numéricos a processar.</value>
+    <value>Uma coluna de valores numéricos para processar.</value>
   </data>
   <data name="AboutSin_number" xml:space="preserve">
     <value>Um valor numérico (em radianos) para processar.</value>
@@ -1157,10 +1190,10 @@
     
   </data>
   <data name="AboutAsin_number" xml:space="preserve">
-    <value>Valor numérico a processar.</value>
+    <value>Um valor numérico para processar.</value>
   </data>
   <data name="AboutAsin_input" xml:space="preserve">
-    <value>Coluna de valores numéricos a processar.</value>
+    <value>Uma coluna de valores numéricos para processar.</value>
   </data>
   <data name="AboutAsin" xml:space="preserve">
     <value>Retorna o valor do arco seno (em radianos) de um número.</value>
@@ -1189,20 +1222,20 @@
     
   </data>
   <data name="AboutAcos_number" xml:space="preserve">
-    <value>Valor numérico a processar.</value>
+    <value>Um valor numérico para processar.</value>
   </data>
   <data name="AboutAcosT" xml:space="preserve">
     <value>Retorna o valor do arco cosseno (em radianos) de uma coluna de números.</value>
     
   </data>
   <data name="AboutAcos_input" xml:space="preserve">
-    <value>Coluna de valores numéricos a processar.</value>
+    <value>Uma coluna de valores numéricos para processar.</value>
   </data>
   <data name="AboutAcot_number" xml:space="preserve">
-    <value>Valor numérico a processar.</value>
+    <value>Um valor numérico para processar.</value>
   </data>
   <data name="AboutAcot_input" xml:space="preserve">
-    <value>Coluna de valores numéricos a processar.</value>
+    <value>Uma coluna de valores numéricos para processar.</value>
   </data>
   <data name="AboutAcot" xml:space="preserve">
     <value>Retorna o valor do arco cotangente (em radianos) de um número.</value>
@@ -1235,10 +1268,10 @@
     
   </data>
   <data name="AboutAtan_number" xml:space="preserve">
-    <value>Valor numérico a processar.</value>
+    <value>Um valor numérico para processar.</value>
   </data>
   <data name="AboutAtan_input" xml:space="preserve">
-    <value>Coluna de valores numéricos a processar.</value>
+    <value>Uma coluna de valores numéricos para processar.</value>
   </data>
   <data name="AboutCot" xml:space="preserve">
     <value>Retorna o valor cotangente de um número.</value>
@@ -1263,10 +1296,10 @@
     
   </data>
   <data name="AboutLn_number" xml:space="preserve">
-    <value>Valor numérico a processar.</value>
+    <value>Um valor numérico para processar.</value>
   </data>
   <data name="AboutLn_input" xml:space="preserve">
-    <value>Coluna de valores numéricos a processar.</value>
+    <value>Uma coluna de valores numéricos para processar.</value>
   </data>
   <data name="AboutLog" xml:space="preserve">
     <value>Retorna o logaritmo de um número para a base determinada. A base padrão é 10.</value>
@@ -1277,10 +1310,10 @@
     
   </data>
   <data name="AboutLog_number" xml:space="preserve">
-    <value>Valor numérico a processar.</value>
+    <value>Um valor numérico para processar.</value>
   </data>
   <data name="AboutLog_input" xml:space="preserve">
-    <value>Coluna de valores numéricos a processar.</value>
+    <value>Uma coluna de valores numéricos para processar.</value>
   </data>
   <data name="LogBase" xml:space="preserve">
     <value>base</value>
@@ -1298,10 +1331,10 @@
     
   </data>
   <data name="AboutExp_number" xml:space="preserve">
-    <value>Valor numérico a processar.</value>
+    <value>Um valor numérico para processar.</value>
   </data>
   <data name="AboutExp_input" xml:space="preserve">
-    <value>Coluna de valores numéricos a processar.</value>
+    <value>Uma coluna de valores numéricos para processar.</value>
   </data>
   <data name="AboutPi" xml:space="preserve">
     <value>Retorna o valor de pi.</value>
@@ -1360,10 +1393,10 @@
     
   </data>
   <data name="AboutSqrt_number" xml:space="preserve">
-    <value>Valor numérico a processar.</value>
+    <value>Um valor numérico para processar.</value>
   </data>
   <data name="AboutSqrt_input" xml:space="preserve">
-    <value>Coluna de valores numéricos a processar.</value>
+    <value>Uma coluna de valores numéricos para processar.</value>
   </data>
   <data name="MathFuncArg1" xml:space="preserve">
     <value>número</value>
@@ -4037,7 +4070,7 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
-    <value>Artigo: Referência de fórmulas para o Power Apps</value>
+    <value>Artigo: Referência de fórmula para o Power Apps</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_ShortMessage" xml:space="preserve">
@@ -4359,7 +4392,7 @@
     <value>A fonte de dados pode não ser capaz de processar a fórmula e pode retornar um conjunto de dados incompleto. Seu aplicativo poderá não retornar resultados corretos ou não se comportar corretamente se o conjunto de dados estiver incompleto.</value>
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_1" xml:space="preserve">
-    <value>Se seu conjunto de dados excede o limite de registro de 500, mas contém menos de 2.000 registros, tente redefinir o limite.</value>
+    <value>Se seu conjunto de dados excede o limite de 500 registros, mas contém menos de 2.000 registros, tente redefinir o limite.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_2" xml:space="preserve">
@@ -4367,7 +4400,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_3" xml:space="preserve">
-    <value>Tente mover seus dados para uma fonte de dados diferente.</value>
+    <value>Tente mover os dados para uma fonte de dados diferente.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_Link_1" xml:space="preserve">
@@ -4386,7 +4419,7 @@
     <value>A fonte de dados pode não ser capaz de processar a fórmula e pode retornar um conjunto de dados incompleto. Seu aplicativo poderá não retornar resultados corretos ou não se comportar corretamente se o conjunto de dados estiver incompleto.</value>
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_1" xml:space="preserve">
-    <value>Se seu conjunto de dados excede o limite de registro de 500, mas contém menos de 2.000 registros, tente redefinir o limite.</value>
+    <value>Se seu conjunto de dados excede o limite de 500 registros, mas contém menos de 2.000 registros, tente redefinir o limite.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_2" xml:space="preserve">
@@ -4394,7 +4427,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_3" xml:space="preserve">
-    <value>Tente mover seus dados para uma fonte de dados diferente.</value>
+    <value>Tente mover os dados para uma fonte de dados diferente.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_1" xml:space="preserve">
@@ -4417,7 +4450,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_2" xml:space="preserve">
-    <value>Se seu conjunto de dados excede o limite de registro de 500, mas contém menos de 2.000 registros, tente redefinir o limite.</value>
+    <value>Se seu conjunto de dados excede o limite de 500 registros, mas contém menos de 2.000 registros, tente redefinir o limite.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_3" xml:space="preserve">
@@ -4425,7 +4458,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_4" xml:space="preserve">
-    <value>Tente mover seus dados para uma fonte de dados diferente.</value>
+    <value>Tente mover os dados para uma fonte de dados diferente.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_1" xml:space="preserve">
@@ -4458,7 +4491,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_4" xml:space="preserve">
-    <value>Tente mover seus dados para uma fonte de dados diferente.</value>
+    <value>Tente mover os dados para uma fonte de dados diferente.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_1" xml:space="preserve">
@@ -4478,7 +4511,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_1" xml:space="preserve">
-    <value>Se seu conjunto de dados excede o limite de registro de 500, mas contém menos de 2.000 registros, tente redefinir o limite.</value>
+    <value>Se seu conjunto de dados excede o limite de 500 registros, mas contém menos de 2.000 registros, tente redefinir o limite.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_2" xml:space="preserve">
@@ -4486,7 +4519,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_3" xml:space="preserve">
-    <value>Tente mover seus dados para uma fonte de dados diferente.</value>
+    <value>Tente mover os dados para uma fonte de dados diferente.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_1" xml:space="preserve">
@@ -4551,6 +4584,10 @@
   </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>A NamedFormula '{0}' já existe.</value>
+  </data>
+  <data name="ErrorResource_NameConflict" xml:space="preserve">
+    <value>Não é possível criar um {0} chamado '{1}' porque esse nome já é usado para um {2}.</value>
+    
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
     <value>O primeiro argumento de '{0}' deve ser um nome de variável válido e não pode entrar em conflito com qualquer nome de controle, tela, coleção ou fonte de dados existente. Tipo encontrado '{1}'</value>

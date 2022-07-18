@@ -6,21 +6,20 @@ using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 
-#pragma warning disable SA1402 // File may only contain a single type
-#pragma warning disable SA1649 // File name should match first type name
-
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
     // ColorValue(colorstring:s)
     // Returns the color value for the given color string
     internal sealed class ColorValueFunction : BuiltinFunction
     {
+        public const string ColorValueFunctionInvariantName = "ColorValue";
+
         public override bool IsSelfContained => true;
 
         public override bool SupportsParamCoercion => false;
 
         public ColorValueFunction()
-            : base("ColorValue", TexlStrings.AboutColorValue, FunctionCategories.Color, DType.Color, 0, 1, 1, DType.String)
+            : base(ColorValueFunctionInvariantName, TexlStrings.AboutColorValue, FunctionCategories.Color, DType.Color, 0, 1, 1, DType.String)
         {
         }
 
@@ -29,7 +28,28 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             yield return new[] { TexlStrings.ColorValueArg1 };
         }
     }
-}
 
-#pragma warning restore SA1402 // File may only contain a single type
-#pragma warning restore SA1649 // File name should match first type name
+    // ColorValue(colorstring:uo)
+    // ColorValue UntypedObject override
+    internal sealed class ColorValueFunction_UO : BuiltinFunction
+    {
+        public override bool IsSelfContained => true;
+
+        public override bool SupportsParamCoercion => false;
+
+        public ColorValueFunction_UO()
+            : base(ColorValueFunction.ColorValueFunctionInvariantName, TexlStrings.AboutColorValue, FunctionCategories.Color, DType.Color, 0, 1, 1, DType.UntypedObject)
+        {
+        }
+
+        public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
+        {
+            yield return new[] { TexlStrings.ColorValueArg1 };
+        }
+
+        public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
+        {
+            return GetUniqueTexlRuntimeName(suffix: "_UO");
+        }
+    }
+}

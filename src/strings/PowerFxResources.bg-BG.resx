@@ -497,6 +497,39 @@
   <data name="AboutBoolean_text" xml:space="preserve">
     <value>Стойността на текста за преобразуване в булева стойност.</value>
   </data>
+  <data name="AboutBooleanT" xml:space="preserve">
+    <value>Converts a column of text values to a column of boolean values.</value>
+    
+  </data>
+  <data name="BooleanTArg1" xml:space="preserve">
+    <value>входни данни</value>
+    
+  </data>
+  <data name="AboutBooleanT_input" xml:space="preserve">
+    <value>A column of text values to process.</value>
+  </data>
+  <data name="AboutBooleanN" xml:space="preserve">
+    <value>Converts a 'number' to a boolean value.</value>
+    
+  </data>
+  <data name="BooleanNArg1" xml:space="preserve">
+    <value>number</value>
+    
+  </data>
+  <data name="AboutBooleanN_number" xml:space="preserve">
+    <value>The number value to convert to a boolean value.</value>
+  </data>
+  <data name="AboutBooleanNT" xml:space="preserve">
+    <value>Converts a column of numeric values to a column of boolean values.</value>
+    
+  </data>
+  <data name="BooleanNTArg1" xml:space="preserve">
+    <value>входни данни</value>
+    
+  </data>
+  <data name="AboutBooleanNT_input" xml:space="preserve">
+    <value>A column of number values to process.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Връща първия непразен аргумент</value>
     
@@ -4551,6 +4584,10 @@
   </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula „{0}“ вече съществува.</value>
+  </data>
+  <data name="ErrorResource_NameConflict" xml:space="preserve">
+    <value>Не може да се създаде {0} на име „{1}“, защото това име вече се използва за {2}.</value>
+    
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
     <value>Първият аргумент на „{0}“ трябва да е валидно име на променлива и не може да е в конфликт с име на съществуваща контрола, екран, колекция или източник на данни. Открит е тип „{1}“</value>

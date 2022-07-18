@@ -497,6 +497,39 @@
   <data name="AboutBoolean_text" xml:space="preserve">
     <value>The text value to convert to a boolean value.</value>
   </data>
+  <data name="AboutBooleanT" xml:space="preserve">
+    <value>Converts a column of text values to a column of boolean values.</value>
+    <comment>Description of 'Boolean' function.</comment>
+  </data>
+  <data name="BooleanTArg1" xml:space="preserve">
+    <value>input</value>
+    <comment>function_parameter - First argument to the Boolean function - a column of text values.</comment>
+  </data>
+  <data name="AboutBooleanT_input" xml:space="preserve">
+    <value>A column of text values to process.</value>
+  </data>
+  <data name="AboutBooleanN" xml:space="preserve">
+    <value>Converts a 'number' to a boolean value.</value>
+    <comment>Description of 'Boolean' function.</comment>
+  </data>
+  <data name="BooleanNArg1" xml:space="preserve">
+    <value>number</value>
+    <comment>function_parameter - First argument to the Boolean function - the number that will be converted to a boolean.</comment>
+  </data>
+  <data name="AboutBooleanN_number" xml:space="preserve">
+    <value>The number value to convert to a boolean value.</value>
+  </data>
+  <data name="AboutBooleanNT" xml:space="preserve">
+    <value>Converts a column of numeric values to a column of boolean values.</value>
+    <comment>Description of 'Boolean' function.</comment>
+  </data>
+  <data name="BooleanNTArg1" xml:space="preserve">
+    <value>input</value>
+    <comment>function_parameter - First argument to the Boolean function - a column of number values.</comment>
+  </data>
+  <data name="AboutBooleanNT_input" xml:space="preserve">
+    <value>A column of number values to process.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Returns the first non blank argument</value>
     <comment>Description of 'Coalesce' function.</comment>
