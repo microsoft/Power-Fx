@@ -6,8 +6,6 @@ using System.Globalization;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Glue;
-using Microsoft.PowerFx.Core.Parser;
-using Microsoft.PowerFx.Core.Texl.Intellisense;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Intellisense;
@@ -127,7 +125,7 @@ namespace Microsoft.PowerFx
         private CheckResult CheckInternal(ParseResult parse, RecordType parameterType, BindingConfig bindingConfig)
         {
             parameterType ??= new RecordType();
-                        
+
             // Ok to continue with binding even if there are parse errors. 
             // We can still use that for intellisense. 
 
