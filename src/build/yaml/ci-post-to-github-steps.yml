@@ -21,8 +21,42 @@ steps:
   displayName: 'Publish compat results to Artifacts'
   continueOnError: true
 
+- powershell: |
+    $OWNER = 'microsoft';
+    $REPO = 'Power-Fx';
+    $ISSUE_NUMBER = $(System.PullRequest.PullRequestNumber);
+    $stringToMatch = "*Binary Compatibility*";
+
+    $listCommentsUri = "https://api.github.com/repos/$OWNER/$REPO/issues/$ISSUE_NUMBER/comments";
+
+    $listResult = Invoke-RestMethod "$listCommentsUri";
+
+    $compatComments = ($listResult | Where-Object {$_.body -like $stringToMatch});
+    $count = $compatComments.count
+
+    Write-Host "Matching comments: $count";
+
+    if ($count -gt 0) {
+        $oldestCompatComment = $compatComments[0];
+        $COMMENT_ID = $oldestCompatComment.id;
+        $date = $oldestCompatComment.created_at;
+
+        Write-Host "Deleting comment $COMMENT_ID dated $date";
+
+        $githubPersonalAccessToken = $(GitHubCommentApiKey);
+
+        $token = [System.Convert]::ToBase64String([System.Text.Encoding]::ASCII.GetBytes(":$githubPersonalAccessToken"));
+        $header = @{authorization = "Basic $token"};
+
+        $deleteCommentUri = "https://api.github.com/repos/$OWNER/$REPO/issues/comments/$COMMENT_ID";
+
+        Invoke-RestMethod -Method Delete -Uri $deleteCommentUri -Headers $header;
+    }
+  displayName: 'Delete old compat results from GitHub'
+  condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'), ne(variables['System.PullRequest.IsFork'], 'True'))
+
 - task: SOUTHWORKS.github-pr-comment.custom-publish-comment-task.github-pr-comment@0
-  displayName: 'Publish compat results to Github'
+  displayName: 'Publish compat results to GitHub'
   inputs:
     userToken: '$(GitHubCommentApiKey)'
     bodyFilePath: '$(System.ArtifactsDirectory)\ApiCompat'
