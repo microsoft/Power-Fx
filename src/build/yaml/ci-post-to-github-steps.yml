@@ -1,6 +1,5 @@
 steps:
 - task: DownloadBuildArtifacts@0
-  condition: false
   displayName: 'Download compat results artifact'
   inputs:
     downloadType: specific
@@ -8,7 +7,6 @@ steps:
     downloadPath: '$(System.ArtifactsDirectory)\ApiCompat'
 
 - task: CopyFiles@2
-  condition: false
   displayName: 'Copy results for publish to Artifacts'
   inputs:
     SourceFolder: '$(System.ArtifactsDirectory)\ApiCompat'
@@ -17,7 +15,6 @@ steps:
     flattenFolders: true
 
 - task: PublishPipelineArtifact@1
-  condition: false
   inputs:
     artifactName: 'ApiCompatibilityResults'
     targetPath: '$(System.ArtifactsDirectory)\ApiCompatibilityResults'
@@ -38,11 +35,6 @@ steps:
     Write-Host "Comment Ids:" $listResult.id;
     Write-Host "Users:" $listResult.user.login;
 
-    $githubPersonalAccessToken = "$(GitHubCommentApiKey)";
-
-    $token = [System.Convert]::ToBase64String([System.Text.Encoding]::ASCII.GetBytes(":$githubPersonalAccessToken"));
-    $header = @{authorization = "Basic $token"};
-    $deleteCommentUri = "https://api.github.com/repos/$OWNER/$REPO/issues/comments/$COMMENT_ID";
     $commentsDeleted = 0;
 
     for ($i = 0; $i -lt $count; $i++) {
@@ -50,6 +42,12 @@ steps:
             $COMMENT_ID = $listResult[$i].id;
             $date = $listResult[$i].created_at;
             $user = $listResult[$i].user.login;
+
+            $githubPersonalAccessToken = "$(GitHubCommentApiKey)";
+            $token = [System.Convert]::ToBase64String([System.Text.Encoding]::ASCII.GetBytes(":$githubPersonalAccessToken"));
+            $header = @{authorization = "Basic $token"};
+            $deleteCommentUri = "https://api.github.com/repos/$OWNER/$REPO/issues/comments/$COMMENT_ID";
+
             Write-Host "Deleting comment $COMMENT_ID from $user dated $date";
 
             #Invoke-RestMethod -Method Delete -Uri $deleteCommentUri -Headers $header;
@@ -65,14 +63,13 @@ steps:
   condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'), ne(variables['System.PullRequest.IsFork'], 'True'))
 
 - task: SOUTHWORKS.github-pr-comment.custom-publish-comment-task.github-pr-comment@0
-  condition: false
   displayName: 'Publish compat results to GitHub'
   inputs:
     userToken: '$(GitHubCommentApiKey)'
     bodyFilePath: '$(System.ArtifactsDirectory)\ApiCompat'
     getSubFolders: true
   # Skip forks, as secret tokens are not available to them.
-  # condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'), ne(variables['System.PullRequest.IsFork'], 'True'))
+  condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'), ne(variables['System.PullRequest.IsFork'], 'True'))
 
 - script: |
    cd ..
