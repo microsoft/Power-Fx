@@ -29,12 +29,15 @@ steps:
     $userNameToMatch = "BruceHaley";
 
     $listCommentsUri = "https://api.github.com/repos/$OWNER/$REPO/issues/$ISSUE_NUMBER/comments";
+    $listCommentsUri;
 
     $listResult = Invoke-RestMethod "$listCommentsUri";
+    $listResult.count;
 
     $compatComments = ($listResult | Where-Object {$_.body -like $stringToMatch -and $_.user.login -like $userNameToMatch});
     $count = $compatComments.count
-
+    $count;
+    
     if ($count -gt 0) {
         $oldestCompatComment = $compatComments[0];
         $COMMENT_ID = $oldestCompatComment.id;
@@ -49,7 +52,7 @@ steps:
 
         $deleteCommentUri = "https://api.github.com/repos/$OWNER/$REPO/issues/comments/$COMMENT_ID";
 
-        #Invoke-RestMethod -Method Delete -Uri $deleteCommentUri -Headers $header;
+        Invoke-RestMethod -Method Delete -Uri $deleteCommentUri -Headers $header;
     } else {
         Write-Host "Nothing to delete.";
     }
