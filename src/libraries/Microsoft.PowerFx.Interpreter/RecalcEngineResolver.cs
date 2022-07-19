@@ -26,7 +26,7 @@ namespace Microsoft.PowerFx
             return new NameLookupInfo(BindKind.PowerFxResolvedObject, recalcFormulaInfo.Value.Type._type, DPath.Root, 0, recalcFormulaInfo, displayName: new DName($"{name} variable"));
         }
 
-        public RecalcEngineResolver(RecalcEngine parent, PowerFxConfig powerFxConfig, IReadOnlyDictionary<string, NameLookupInfo> globalSymbols = null)
+        public RecalcEngineResolver(RecalcEngine parent, PowerFxConfig powerFxConfig)
             : base(powerFxConfig)
         {
             _parent = parent;
