@@ -19,11 +19,12 @@ namespace Microsoft.PowerFx
         private readonly RecalcEngine _parent;
         private readonly PowerFxConfig _powerFxConfig;
 
-        public IReadOnlyDictionary<string, NameLookupInfo> GlobalSymbols => new ReadOnlyDictionary<string, NameLookupInfo>(_parent.Formulas.Select(f =>
+        public IReadOnlyDictionary<string, NameLookupInfo> GlobalSymbols => _parent.Formulas.ToDictionary(kvp => kvp.Key, kvp => Create(kvp.Key, kvp.Value));
+
+        private NameLookupInfo Create(string name, RecalcFormulaInfo recalcFormulaInfo)
         {
-            var description = $"{f.Key} variable";
-            return (f.Key, Value: new NameLookupInfo(BindKind.PowerFxResolvedObject, f.Value.Value.Type._type, DPath.Root, 0, f.Value, displayName: new DName(description)));
-        }).ToDictionary(kvp => kvp.Key, kvp => kvp.Value));
+            return new NameLookupInfo(BindKind.PowerFxResolvedObject, recalcFormulaInfo.Value.Type._type, DPath.Root, 0, recalcFormulaInfo, displayName: new DName($"{name} variable"));
+        }
 
         public RecalcEngineResolver(RecalcEngine parent, PowerFxConfig powerFxConfig, IReadOnlyDictionary<string, NameLookupInfo> globalSymbols = null)
             : base(powerFxConfig)
@@ -43,11 +44,7 @@ namespace Microsoft.PowerFx
 
             if (_parent.Formulas.TryGetValue(str, out var fi))
             {
-                var data = fi;
-                var type = fi._type._type;
-                var description = $"{str} variable";
-
-                nameInfo = new NameLookupInfo(BindKind.PowerFxResolvedObject, type, DPath.Root, 0, data, displayName: new DName(description));                
+                nameInfo = Create(str, fi);
                 return true;
             }
 
