@@ -90,10 +90,20 @@ namespace Microsoft.PowerFx
         /// <summary>
         /// Create an evaluator over the existing binding.
         /// </summary>
+        /// <param name = "result" >A successful binding from a previous call to.<see cref="Engine.Check(string, RecordType, ParserOptions)"/>. </param>        
+        /// <returns></returns>
+        public static IExpression CreateEvaluatorDirect(CheckResult result)
+        {
+            return CreateEvaluatorDirect(result, Features.None, new StackDepthCounter(PowerFxConfig.DefaultMaxCallDepth));
+        }
+
+        /// <summary>
+        /// Create an evaluator over the existing binding.
+        /// </summary>
         /// <param name = "result" >A successful binding from a previous call to.<see cref="Engine.Check(string, RecordType, ParserOptions)"/>. </param>
         /// <param name="features">Features to use.</param>
         /// <returns></returns>
-        public static IExpression CreateEvaluatorDirect(CheckResult result, Features features = Features.None)
+        public static IExpression CreateEvaluatorDirect(CheckResult result, Features features)
         {
             return CreateEvaluatorDirect(result, features, new StackDepthCounter(PowerFxConfig.DefaultMaxCallDepth));
         }
