@@ -73,6 +73,9 @@ namespace Microsoft.PowerFx.Core.Binding
         // Global namespace, only used with fully qualified values
         QualifiedValue,
 
+        // Identifier
+        Identifier,
+
         Lim
     }
 }

@@ -24,6 +24,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 FunctionCategories.MathAndStat,
                 DType.Number, // return type
                 0,            // no lambdas
+                0,            // no identifiers
                 2,            // min arity of 2
                 2,            // max arity of 2
                 DType.Number, // first param is numeric

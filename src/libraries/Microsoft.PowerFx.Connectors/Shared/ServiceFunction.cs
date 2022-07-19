@@ -60,14 +60,14 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
         public override bool IsSelfContained => !_isBehaviorOnly;
 
         public ServiceFunction(IService parentService, DPath theNamespace, string name, string localeSpecificName, string description,
-            DType returnType, BigInteger maskLambdas, int arityMin, int arityMax, bool isBehaviorOnly, bool isAutoRefreshable, bool isDynamic, bool isCacheEnabled, int cacheTimetoutMs, bool isHidden,
+            DType returnType, BigInteger maskLambdas, BigInteger maskIdentifiers, int arityMin, int arityMax,
+            bool isBehaviorOnly, bool isAutoRefreshable, bool isDynamic, bool isCacheEnabled, int cacheTimetoutMs, bool isHidden,
             Dictionary<TypedName, List<string>> parameterOptions,
             ServiceFunctionParameterTemplate[] optionalParamInfo, ServiceFunctionParameterTemplate[] requiredParamInfo,
             Dictionary<string, Tuple<string, DType>> parameterDefaultValues,
             string actionName = "",
             params DType[] paramTypes)
-            : base(theNamespace, name, localeSpecificName, (l) => description, FunctionCategories.REST, returnType, maskLambdas, arityMin, arityMax,
-            paramTypes)
+            : base(theNamespace, name, localeSpecificName, (l) => description, FunctionCategories.REST, returnType, maskLambdas, maskIdentifiers, arityMin, arityMax, paramTypes)
         {
             Contracts.AssertValueOrNull(parentService);
             Contracts.AssertValueOrNull(localeSpecificName);
@@ -393,8 +393,8 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
         }
 
         // Swap for IService, to cut dependency on TransportType.
-        public class IService 
-        { 
+        public class IService
+        {
         }
 #endif
 

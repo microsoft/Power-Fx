@@ -45,6 +45,9 @@ namespace Microsoft.PowerFx.Core.Functions
         // Overloads may choose to ignore this mask, and override the HasLambdas/IsLambdaParam APIs instead.
         protected readonly BigInteger _maskLambdas;
 
+        // Mask indicating which parameters are identifiers
+        protected readonly BigInteger _maskIdentifiers;
+
         // The parent namespace for this function. DPath.Root indicates the global namespace.
         public DPath Namespace { get; }
 
@@ -74,6 +77,9 @@ namespace Microsoft.PowerFx.Core.Functions
 
         // Return true if the function expects lambda arguments, false otherwise.
         public virtual bool HasLambdas => !_maskLambdas.IsZero;
+
+        // Returns true is the function expects identifiers
+        public virtual bool HasIdentifiers => !_maskIdentifiers.IsZero;
 
         // Return true if lambda args should affect ECS, false otherwise.
         public virtual bool HasEcsExcemptLambdas => false;
@@ -298,6 +304,7 @@ namespace Microsoft.PowerFx.Core.Functions
             FunctionCategories functionCategories,
             DType returnType,
             BigInteger maskLambdas,
+            BigInteger maskIdentifiers,
             int arityMin,
             int arityMax,
             params DType[] paramTypes)
@@ -319,6 +326,7 @@ namespace Microsoft.PowerFx.Core.Functions
             _description = description;
             ReturnType = returnType;
             _maskLambdas = maskLambdas;
+            _maskIdentifiers = maskIdentifiers;
             MinArity = arityMin;
             MaxArity = arityMax;
             ParamTypes = paramTypes;
@@ -484,6 +492,14 @@ namespace Microsoft.PowerFx.Core.Functions
             return _maskLambdas.TestBit(index);
         }
 
+        // Returns true if the parameter at the specified 0-based rank is an identifier, false otherwise.
+        public virtual bool IsIdentifier(int index)
+        {
+            Contracts.AssertIndexInclusive(index, MaxArity);
+
+            return _maskIdentifiers.TestBit(index);
+        }
+
         /// <summary>
         /// True if the evaluation of the param at the 0-based index is controlled by the function in question
         /// e.g. conditionally evaluated, repeatedly evaluated, etc.., false otherwise.
@@ -494,7 +510,7 @@ namespace Microsoft.PowerFx.Core.Functions
         {
             Contracts.AssertIndexInclusive(index, MaxArity);
 
-            return IsLambdaParam(index);
+            return IsLambdaParam(index) || IsIdentifier(index);
         }
 
         public virtual bool IsEcsExcemptedLambda(int index)

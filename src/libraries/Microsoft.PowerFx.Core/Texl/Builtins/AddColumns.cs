@@ -30,7 +30,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool SupportsParamCoercion => false;
 
         public AddColumnsFunction()
-            : base("AddColumns", TexlStrings.AboutAddColumns, FunctionCategories.Table, DType.EmptyTable, 0, 3, int.MaxValue, DType.EmptyTable)
+            : base("AddColumns", TexlStrings.AboutAddColumns, FunctionCategories.Table, DType.EmptyTable, 0, 0, 3, int.MaxValue, DType.EmptyTable)
         {
             // AddColumns(source, name, valueFunc, name, valueFunc, ..., name, valueFunc, ...)
             SignatureConstraint = new SignatureConstraint(omitStartIndex: 5, repeatSpan: 2, endNonRepeatCount: 0, repeatTopLength: 9);
@@ -78,6 +78,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 errors.EnsureError(DocumentErrorSeverity.Severe, args[0].Parent.CastList().Parent.CastCall(), TexlStrings.ErrBadArityOdd, count);
             }
 
+            var supportIdentifiers = binding.Features.HasFlag(Features.SupportIdentifiers);
+
             for (var i = 1; i < count; i += 2)
             {
                 var nameArg = args[i];
@@ -86,24 +88,32 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 // Verify we have a string literal for the column name. Accd to spec, we don't support
                 // arbitrary expressions that evaluate to string values, because these values contribute to
                 // type analysis, so they need to be known upfront (before AddColumns executes).
-                StrLitNode nameNode;
-                if (nameArgType.Kind != DKind.String ||
-                    (nameNode = nameArg.AsStrLit()) == null)
+                StrLitNode strLitNode = null;
+                FirstNameNode firstNameNode = null;
+
+                if ((!supportIdentifiers && (nameArgType.Kind != DKind.String || (strLitNode = nameArg.AsStrLit()) == null)) ||
+                     (supportIdentifiers && (nameArgType.Kind != DKind.Identifier || (firstNameNode = nameArg.AsFirstName()) == null)))
                 {
                     fArgsValid = false;
+
+                    // Argument '{0}' is invalid, expected a text literal.
                     errors.EnsureError(DocumentErrorSeverity.Severe, nameArg, TexlStrings.ErrExpectedStringLiteralArg_Name, nameArg.ToString());
                     continue;
                 }
 
+                var value = supportIdentifiers ? firstNameNode.Ident.Name : strLitNode.Value;
+
                 // Verify that the name is valid.
-                if (!DName.IsValidDName(nameNode.Value))
+                if (!DName.IsValidDName(value))
                 {
                     fArgsValid = false;
-                    errors.EnsureError(DocumentErrorSeverity.Severe, nameArg, TexlStrings.ErrArgNotAValidIdentifier_Name, nameNode.Value);
+
+                    // Argument '{0}' is not a valid identifier.
+                    errors.EnsureError(DocumentErrorSeverity.Severe, nameArg, TexlStrings.ErrArgNotAValidIdentifier_Name, value);
                     continue;
                 }
 
-                var columnName = new DName(nameNode.Value);
+                var columnName = new DName(value);
                 if (DType.TryGetDisplayNameForColumn(typeScope, columnName, out var colName))
                 {
                     columnName = new DName(colName);
@@ -113,6 +123,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 if (typeScope.TryGetType(columnName, out var columnType) || DType.TryGetLogicalNameForColumn(typeScope, columnName, out var unused))
                 {
                     fArgsValid = false;
+
+                    // A column named '{0}' already exists.
                     errors.EnsureError(DocumentErrorSeverity.Moderate, nameArg, TexlStrings.ErrColExists_Name, columnName);
                     continue;
                 }
@@ -177,11 +189,19 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return index >= 2 && ((index & 1) == 0);
         }
 
+        public override bool IsIdentifier(int index)
+        {
+            Contracts.Assert(index >= 0);
+
+            // Left to right mask (infinite): ...010101010 
+            return index >= 1 && ((index & 1) == 1);
+        }
+
         public override bool AllowsRowScopedParamDelegationExempted(int index)
         {
             Contracts.Assert(index >= 0);
 
-            return IsLambdaParam(index);
+            return IsLambdaParam(index) || IsIdentifier(index); ;
         }
     }
 }

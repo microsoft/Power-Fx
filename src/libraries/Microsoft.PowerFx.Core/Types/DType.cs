@@ -60,6 +60,7 @@ namespace Microsoft.PowerFx.Core.Types
         public static readonly DType NamedValue = new DType(DKind.NamedValue);
         public static readonly DType MinimalLargeImage = CreateMinimalLargeImageType();
         public static readonly DType UntypedObject = new DType(DKind.UntypedObject);
+        public static readonly DType Identifier = new DType(DKind.Identifier);
 
         public static readonly DType Invalid = new DType();
 
@@ -1008,7 +1009,7 @@ namespace Microsoft.PowerFx.Core.Types
             var fError = false;
             var type = ToRecord(ref fError);
 
-            if (fError) 
+            if (fError)
             {
                 Contracts.Assert(false, "Bad source kind for ToRecord");
             }
@@ -1049,7 +1050,7 @@ namespace Microsoft.PowerFx.Core.Types
             var fError = false;
             var type = ToTable(ref fError);
 
-            if (fError) 
+            if (fError)
             {
                 Contracts.Assert(false, "Bad source kind for ToTable");
             }
@@ -3162,6 +3163,8 @@ namespace Microsoft.PowerFx.Core.Types
                     return "V";
                 case DKind.UntypedObject:
                     return "O";
+                case DKind.Identifier:
+                    return "@";
             }
         }
 

@@ -25,7 +25,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool SupportsParamCoercion => true;
 
         public FindFunction()
-            : base("Find", TexlStrings.AboutFind, FunctionCategories.Text, DType.Number, 0, 2, 3, DType.String, DType.String, DType.Number)
+            : base("Find", TexlStrings.AboutFind, FunctionCategories.Text, DType.Number, 0, 0, 2, 3, DType.String, DType.String, DType.Number)
         {
         }
 
@@ -44,7 +44,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool SupportsParamCoercion => true;
 
         public FindTFunction()
-            : base("Find", TexlStrings.AboutFindT, FunctionCategories.Table, DType.EmptyTable, 0, 2, 3)
+            : base("Find", TexlStrings.AboutFindT, FunctionCategories.Table, DType.EmptyTable, 0, 0, 2, 3)
         {
         }
 

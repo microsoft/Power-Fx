@@ -22,6 +22,8 @@ namespace Microsoft.PowerFx.Syntax
 
         internal bool IsLhs => Parent != null && Parent.AsDottedName() != null;
 
+        internal bool IsIdentifier { get; private set; }
+
         internal FirstNameNode(ref int idNext, Token tok, SourceList sourceList, Identifier ident)
             : base(ref idNext, tok, sourceList)
         {
@@ -29,6 +31,11 @@ namespace Microsoft.PowerFx.Syntax
             Contracts.Assert(ident.Namespace.IsRoot);
 
             Ident = ident;
+        }
+
+        internal void SetIdentifier()
+        {
+            IsIdentifier = true;
         }
 
         internal FirstNameNode(ref int idNext, Token tok, Identifier ident)

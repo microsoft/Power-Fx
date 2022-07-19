@@ -37,7 +37,8 @@ namespace Microsoft.PowerFx
             // defined at the top level (NestDst==1)
             if ((info.NestDst == 1 && info.Kind == BindKind.LambdaField) ||
                 (info.Kind == BindKind.ScopeVariable) ||
-                (info.Kind == BindKind.PowerFxResolvedObject))
+                (info.Kind == BindKind.PowerFxResolvedObject) ||
+                (info.Kind == BindKind.Identifier))
             {
                 _vars.Add(name);
             }

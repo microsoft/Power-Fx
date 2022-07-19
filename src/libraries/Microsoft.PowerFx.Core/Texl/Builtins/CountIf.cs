@@ -30,7 +30,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override DelegationCapability FunctionDelegationCapability => DelegationCapability.Filter | DelegationCapability.Count;
 
         public CountIfFunction()
-            : base("CountIf", TexlStrings.AboutCountIf, FunctionCategories.Table | FunctionCategories.MathAndStat, DType.Number, -2, 2, int.MaxValue, DType.EmptyTable, DType.Boolean)
+            : base("CountIf", TexlStrings.AboutCountIf, FunctionCategories.Table | FunctionCategories.MathAndStat, DType.Number, -2, 0, 2, int.MaxValue, DType.EmptyTable, DType.Boolean)
         {
             ScopeInfo = new FunctionScopeInfo(this, usesAllFieldsInScope: false);
         }

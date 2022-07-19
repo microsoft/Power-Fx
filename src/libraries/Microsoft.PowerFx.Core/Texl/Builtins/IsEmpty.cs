@@ -19,7 +19,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool SupportsParamCoercion => false;
 
         public IsEmptyFunction()
-            : base("IsEmpty", TexlStrings.AboutIsEmpty, FunctionCategories.Table | FunctionCategories.Information, DType.Boolean, 0, 1, 1)
+            : base("IsEmpty", TexlStrings.AboutIsEmpty, FunctionCategories.Table | FunctionCategories.Information, DType.Boolean, 0, 0, 1, 1)
         {
         }
 

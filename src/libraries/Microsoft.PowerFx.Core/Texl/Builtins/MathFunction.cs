@@ -20,7 +20,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool IsSelfContained => true;
 
         public MathOneArgFunction(string name, TexlStrings.StringGetter description, FunctionCategories fc)
-            : base(name, description, fc, DType.Number, 0, 1, 1, DType.Number)
+            : base(name, description, fc, DType.Number, 0, 0, 1, 1, DType.Number)
         {
         }
 
@@ -37,7 +37,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool IsSelfContained => true;
 
         public MathOneArgTableFunction(string name, TexlStrings.StringGetter description, FunctionCategories fc)
-            : base(name, description, fc, DType.EmptyTable, 0, 1, 1, DType.EmptyTable)
+            : base(name, description, fc, DType.EmptyTable, 0, 0, 1, 1, DType.EmptyTable)
         {
         }
 

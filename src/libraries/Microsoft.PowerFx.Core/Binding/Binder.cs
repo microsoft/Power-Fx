@@ -3016,6 +3016,12 @@ namespace Microsoft.PowerFx.Core.Binding
                     return;
                 }
 
+                if (node.IsIdentifier)
+                {
+                    _txb.SetInfo(node, FirstNameInfo.Create(BindKind.Identifier, node, 0, 0));
+                    return;
+                }
+
                 if (!haveNameResolver || !_nameResolver.Lookup(node.Ident.Name, out lookupInfo, preferences: lookupPrefs))
                 {
                     _txb.ErrorContainer.Error(node, TexlStrings.ErrInvalidName, node.Ident.Name.Value);
@@ -4954,13 +4960,26 @@ namespace Microsoft.PowerFx.Core.Binding
                         _txb.AddVolatileVariables(args[i], volatileVariables);
                     }
 
+                    var isIdentifier = _features.HasFlag(Features.SupportIdentifiers) && maybeFunc.IsIdentifier(i);
+
                     // Use the new scope only for lambda args.
-                    _currentScope = (maybeFunc.IsLambdaParam(i) && scopeInfo.AppliesToArgument(i)) ? scopeNew : scopeNew.Parent;
-                    args[i].Accept(this);
+                    _currentScope = ((maybeFunc.IsLambdaParam(i) || isIdentifier) && scopeInfo.AppliesToArgument(i)) ? scopeNew : scopeNew.Parent;
 
-                    _txb.AddVolatileVariables(node, _txb.GetVolatileVariables(args[i]));
+                    if (!isIdentifier)
+                    {
+                        args[i].Accept(this);
+                        _txb.AddVolatileVariables(node, _txb.GetVolatileVariables(args[i]));
+                        argTypes[i] = _txb.GetType(args[i]);
+                    }
+                    else
+                    {
+                        FirstNameNode firstNameNode = args[i].AsFirstName();
+                        Contracts.Assert(firstNameNode != null);
+                        firstNameNode.SetIdentifier();
+                        args[i].Accept(this);
+                        argTypes[i] = DType.Identifier;
+                    }
 
-                    argTypes[i] = _txb.GetType(args[i]);
                     Contracts.Assert(argTypes[i].IsValid);
 
                     // Async lambdas are not (yet) supported for this function. Flag these with errors.
@@ -4971,7 +4990,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     }
 
                     // Accept should leave the scope as it found it.
-                    Contracts.Assert(_currentScope == ((maybeFunc.IsLambdaParam(i) && scopeInfo.AppliesToArgument(i)) ? scopeNew : scopeNew.Parent));
+                    Contracts.Assert(_currentScope == (((maybeFunc.IsLambdaParam(i) || isIdentifier) && scopeInfo.AppliesToArgument(i)) ? scopeNew : scopeNew.Parent));
                 }
 
                 // Now check and mark the path as async.

@@ -22,8 +22,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override DelegationCapability FunctionDelegationCapability => DelegationCapability.Null | DelegationCapability.Filter;
 
-        public IsBlankFunctionBase(string name, TexlStrings.StringGetter description, FunctionCategories functionCategories, DType returnType, BigInteger maskLambdas, int arityMin, int arityMax)
-            : base(name, description, functionCategories, returnType, maskLambdas, arityMin, arityMax)
+        public IsBlankFunctionBase(string name, TexlStrings.StringGetter description, FunctionCategories functionCategories, DType returnType, BigInteger maskLambdas, BigInteger maskIdentifiers, int arityMin, int arityMax)
+            : base(name, description, functionCategories, returnType, maskLambdas, maskIdentifiers, arityMin, arityMax)
         {
         }
 
@@ -75,7 +75,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public const string IsBlankInvariantFunctionName = "IsBlank";
 
         public IsBlankFunction()
-            : base(IsBlankInvariantFunctionName, TexlStrings.AboutIsBlank, FunctionCategories.Table | FunctionCategories.Information, DType.Boolean, 0, 1, 1)
+            : base(IsBlankInvariantFunctionName, TexlStrings.AboutIsBlank, FunctionCategories.Table | FunctionCategories.Information, DType.Boolean, 0, 0, 1, 1)
         {
         }
 
@@ -134,7 +134,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool IsSelfContained => true;
 
         public IsBlankOptionSetValueFunction()
-            : base(IsBlankFunction.IsBlankInvariantFunctionName, TexlStrings.AboutIsBlank, FunctionCategories.Table | FunctionCategories.Information, DType.Boolean, 0, 1, 1, DType.OptionSetValue)
+            : base(IsBlankFunction.IsBlankInvariantFunctionName, TexlStrings.AboutIsBlank, FunctionCategories.Table | FunctionCategories.Information, DType.Boolean, 0, 0, 1, 1, DType.OptionSetValue)
         {
         }
 

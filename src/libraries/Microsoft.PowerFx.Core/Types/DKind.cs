@@ -85,7 +85,8 @@ namespace Microsoft.PowerFx.Core.Types
         LargeImage = 34,
         UntypedObject = 35,
 
-        _Lim = 36,
+        Identifier = 36,
+        _Lim = 37,
 #pragma warning restore SA1300 // Element should begin with upper-case letter
     }
 }

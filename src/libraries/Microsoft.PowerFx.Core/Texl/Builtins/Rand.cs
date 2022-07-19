@@ -21,7 +21,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool SupportsParamCoercion => true;
 
         public RandFunction()
-            : base("Rand", TexlStrings.AboutRand, FunctionCategories.MathAndStat, DType.Number, 0, 0, 0)
+            : base("Rand", TexlStrings.AboutRand, FunctionCategories.MathAndStat, DType.Number, 0, 0, 0, 0)
         {
         }
 

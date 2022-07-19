@@ -346,7 +346,13 @@ namespace Microsoft.PowerFx.Core.IR
                             result = new ResolvedObjectNode(context.GetIRContext(node), info.Data);
                             break;
                         }
-
+                    case BindKind.Identifier:
+                        {
+                            // [lucgen] This will fail in GetIRContext -> Binding.GetType(...) -> Contracts.Assert(_typeMap[node.Id].IsValid);
+                            // _typeMap[node.Id] is {x} for now
+                            result = new ResolvedObjectNode(context.GetIRContext(node), info.Data);
+                            break;
+                        }
                     default:
                         Contracts.Assert(false, "Unsupported Bindkind");
                         throw new NotImplementedException();

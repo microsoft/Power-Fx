@@ -32,8 +32,8 @@ namespace Microsoft.PowerFx
         }
 
         public CustomTexlFunction(string name, DType returnType, params DType[] paramTypes)
-            : base(DPath.Root, name, name, SG("Custom func " + name), FunctionCategories.MathAndStat, returnType, 0, paramTypes.Length, paramTypes.Length, paramTypes)
-        {            
+            : base(DPath.Root, name, name, SG("Custom func " + name), FunctionCategories.MathAndStat, returnType, 0, 0, paramTypes.Length, paramTypes.Length, paramTypes)
+        {
         }
 
         public override bool IsSelfContained => true;

@@ -15,7 +15,7 @@ using Xunit;
 namespace Microsoft.PowerFx.Tests
 {
     public class BindingEngineTests : PowerFxTest
-    {       
+    {
         [Fact]
         public void CheckSuccess()
         {
@@ -51,7 +51,7 @@ namespace Microsoft.PowerFx.Tests
 
             var r = new RecordType().Add(
                    new NamedFormulaType("x", FormulaType.Number));
-                        
+
             var check = engine.Check(parse, r);
             Assert.True(check.IsSuccess);
 
@@ -65,7 +65,7 @@ namespace Microsoft.PowerFx.Tests
         public void CheckChainingParseSuccess()
         {
             var opts = new ParserOptions
-            {  
+            {
                 AllowsSideEffects = true
             };
 
@@ -91,7 +91,7 @@ namespace Microsoft.PowerFx.Tests
 
             Assert.True(result.HasError);
             Assert.Single(result.Errors);
-                        
+
             AssertContainsError(result, "Error 4-4: Expected an operand");
         }
 
@@ -105,7 +105,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.False(result.IsSuccess);
             Assert.True(result.Errors.Count() >= 1);
             AssertContainsError(result, "Error 4-4: Expected an operand");
-        }        
+        }
 
         [Fact]
         public void CheckParseErrorCommaSeparatedLocale()
@@ -236,6 +236,7 @@ namespace Microsoft.PowerFx.Tests
                       FunctionCategories.Behavior,
                       DType.Boolean,
                       0, // no lambdas
+                      0, // no identifiers
                       0, // no args
                       0)
             {

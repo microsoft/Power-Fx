@@ -21,7 +21,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool SupportsParamCoercion => true;
 
         public MidFunction()
-            : base("Mid", TexlStrings.AboutMid, FunctionCategories.Text, DType.String, 0, 2, 3, DType.String, DType.Number, DType.Number)
+            : base("Mid", TexlStrings.AboutMid, FunctionCategories.Text, DType.String, 0, 0, 2, 3, DType.String, DType.Number, DType.Number)
         {
         }
 
@@ -40,7 +40,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool SupportsParamCoercion => true;
 
         public MidTFunction()
-            : base("Mid", TexlStrings.AboutMidT, FunctionCategories.Table, DType.EmptyTable, 0, 2, 3)
+            : base("Mid", TexlStrings.AboutMidT, FunctionCategories.Table, DType.EmptyTable, 0, 0, 2, 3)
         {
         }
 

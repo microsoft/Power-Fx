@@ -26,6 +26,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 FunctionCategories.MathAndStat,
                 returnType: DType.Number,
                 maskLambdas: 0,
+                maskIdentifiers: 0,
                 arityMin: 2,
                 arityMax: 2,
                 DType.Number,

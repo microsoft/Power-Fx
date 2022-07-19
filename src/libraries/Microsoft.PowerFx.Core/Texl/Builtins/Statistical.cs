@@ -21,7 +21,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool IsSelfContained => true;
 
         public StatisticalFunction(string name, TexlStrings.StringGetter description, FunctionCategories fc)
-            : base(name, description, fc, DType.Number, 0, 1, int.MaxValue, DType.Number)
+            : base(name, description, fc, DType.Number, 0, 0, 1, int.MaxValue, DType.Number)
         {
         }
 

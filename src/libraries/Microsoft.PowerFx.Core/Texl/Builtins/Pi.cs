@@ -23,6 +23,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 FunctionCategories.MathAndStat,
                 DType.Number, // return type
                 0,            // no lambdas
+                0,            // no unknonw identifiers
                 0,            // min arity of 0
                 0) // max arity of 0
         {
