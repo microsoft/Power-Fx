@@ -9,7 +9,7 @@ namespace Microsoft.PowerFx.Tests
     public class TypeTests
     {
         [Fact]
-        public void RecordTypeTest()
+        public void RecordTypeValidation()
         {
             var r1 = RecordType.Empty()
                 .Add(new NamedFormulaType("Num", FormulaType.Number))
