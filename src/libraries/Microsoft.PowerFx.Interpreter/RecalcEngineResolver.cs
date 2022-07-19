@@ -14,7 +14,7 @@ namespace Microsoft.PowerFx
     /// <summary>
     /// <see cref="INameResolver"/> implementation for <see cref="RecalcEngine"/>.
     /// </summary>
-    internal class RecalcEngineResolver : SimpleResolver, INameResolver2
+    internal class RecalcEngineResolver : SimpleResolver, IGlobalSymbolNameResolver
     {
         private readonly RecalcEngine _parent;
         private readonly PowerFxConfig _powerFxConfig;
@@ -23,7 +23,7 @@ namespace Microsoft.PowerFx
 
         private NameLookupInfo Create(string name, RecalcFormulaInfo recalcFormulaInfo)
         {
-            return new NameLookupInfo(BindKind.PowerFxResolvedObject, recalcFormulaInfo.Value.Type._type, DPath.Root, 0, recalcFormulaInfo, displayName: new DName($"{name} variable"));
+            return new NameLookupInfo(BindKind.PowerFxResolvedObject, recalcFormulaInfo.Value.Type._type, DPath.Root, 0, recalcFormulaInfo);
         }
 
         public RecalcEngineResolver(RecalcEngine parent, PowerFxConfig powerFxConfig)

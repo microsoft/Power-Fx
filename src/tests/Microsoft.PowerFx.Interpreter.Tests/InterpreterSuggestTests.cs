@@ -102,22 +102,20 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.Equal("fileIndex", s.DisplayText.Text);
             Assert.Null(s.FunctionName);
             Assert.Equal(SuggestionIconKind.Other, s.IconKind);
-            Assert.Equal(SuggestionKind.Global, s.Kind);            
+            Assert.Equal(SuggestionKind.Global, s.Kind);
             Assert.Equal(DType.Number, s.Type);
 
             var resolver = new RecalcEngineResolver(recalcEngine, pfxConfig);
 
             Assert.True(resolver.GlobalSymbols.ContainsKey(varName));
             Assert.Equal(BindKind.PowerFxResolvedObject, resolver.GlobalSymbols[varName].Kind);
-            Assert.Equal($"{varName} variable", resolver.GlobalSymbols[varName].DisplayName);
             Assert.IsType<RecalcFormulaInfo>(resolver.GlobalSymbols[varName].Data);
 
             var b = resolver.Lookup(new DName(varName), out var nameInfo, NameLookupPreferences.GlobalsOnly);
 
-            Assert.True(b);            
+            Assert.True(b);
             Assert.Equal(BindKind.PowerFxResolvedObject, nameInfo.Kind);
-            Assert.Equal($"{varName} variable", nameInfo.DisplayName);
             Assert.IsType<RecalcFormulaInfo>(nameInfo.Data);
-        }        
+        }
     }
 }

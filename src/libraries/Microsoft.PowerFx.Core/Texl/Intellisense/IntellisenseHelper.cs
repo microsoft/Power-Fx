@@ -715,7 +715,7 @@ namespace Microsoft.PowerFx.Intellisense
                 AddSuggestion(intellisenseData, funcNamespace.Name, SuggestionKind.Global, SuggestionIconKind.Other, DType.Unknown, requiresSuggestionEscaping: true);
             }
 
-            if (intellisenseData.Binding.NameResolver is INameResolver2 nr2 && nr2.GlobalSymbols != null)
+            if (intellisenseData.Binding.NameResolver is IGlobalSymbolNameResolver nr2 && nr2.GlobalSymbols != null)
             {
                 foreach (var symbol in nr2.GlobalSymbols.Where(symbol => IsMatch(symbol.Key, intellisenseData.MatchingStr)))
                 {
