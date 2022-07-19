@@ -31,7 +31,7 @@ namespace Microsoft.PowerFx
                 // Single Column table. Wrap in a record. 
                 // This is happens for scalars.
                 // But could also happen for a table of tables. 
-                recordType = new RecordType().Add(TableValue.ValueName, rowMarshaller.Type);
+                recordType = RecordType.Empty().Add(TableValue.ValueName, rowMarshaller.Type);
 
                 rowMarshaller = new SCTMarshaller(recordType, rowMarshaller);
             }

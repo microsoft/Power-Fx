@@ -22,14 +22,14 @@ pool:
   - vstest
 
 variables:
-  ApiContractVersion: 0.2.2-preview # The packages version for API validation in the NuGet feed option case.
-  PackagesToValidate: Microsoft.PowerFx.Core,Microsoft.PowerFx.Interpreter,Microsoft.PowerFx.LanguageServerProtocol,Microsoft.PowerFx.Transport.Attributes
   BuildPlatform: 'any cpu'
   BuildSolution: src/Microsoft.PowerFx.sln
   PowerFx_daily_feed_Url: 'https://pkgs.dev.azure.com/ConversationalAI/BotFramework/_packaging/SDK/nuget/v3/index.json'
   skipComponentGovernanceDetection: false
+# ApiContractVersion: define this in Azure. E.g. 0.2.2-preview # The packages version for API validation in the NuGet feed option case.
 # BuildConfiguration: define this in Azure
 # DisableApiCompatibityValidation: define this in Azure, settable by user.
+# PackagesToValidate: define this in Azure. E.g. Microsoft.PowerFx.Connectors,Microsoft.PowerFx.Core,Microsoft.PowerFx.Interpreter,Microsoft.PowerFx.LanguageServerProtocol,Microsoft.PowerFx.Transport.Attributes
 # PowerFxCoverallsToken: define this in Azure
 
 stages:
