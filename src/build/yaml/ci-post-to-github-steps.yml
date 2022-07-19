@@ -32,31 +32,33 @@ steps:
     $userNameToMatch = "BruceHaley";
 
     $listCommentsUri = "https://api.github.com/repos/$OWNER/$REPO/issues/$ISSUE_NUMBER/comments";
-    $listCommentsUri;
 
     $listResult = Invoke-RestMethod "$listCommentsUri";
-    $listResult.count;
+    $count = $listResult.count;
+    Write-Host "Comment Ids:" $listResult.id;
+    Write-Host "Users:" $listResult.user.login;
 
-    $compatComments = ($listResult | Where-Object {$_.body -like "$stringToMatch" -and $_.user.login -eq "$userNameToMatch"});
-    $count = $compatComments.count
-    $count;
-    
-    if ($count -gt 0) {
-        $oldestCompatComment = $compatComments[0];
-        $COMMENT_ID = $oldestCompatComment.id;
-        $date = $oldestCompatComment.created_at;
+    $githubPersonalAccessToken = "$(GitHubCommentApiKey)";
 
-        Write-Host "Deleting comment $COMMENT_ID dated $date";
+    $token = [System.Convert]::ToBase64String([System.Text.Encoding]::ASCII.GetBytes(":$githubPersonalAccessToken"));
+    $header = @{authorization = "Basic $token"};
+    $deleteCommentUri = "https://api.github.com/repos/$OWNER/$REPO/issues/comments/$COMMENT_ID";
+    $commentsDeleted = 0;
 
-        $githubPersonalAccessToken = "$(GitHubCommentApiKey)";
+    for ($i = 0; $i -lt $count; $i++) {
+        if ($listResult[$i].body -like $stringToMatch -and $listResult[$i].user.login -eq $userNameToMatch) {
+            $COMMENT_ID = $listResult[$i].id;
+            $date = $listResult[$i].created_at;
+            $user = $listResult[$i].user.login;
+            Write-Host "Deleting comment $COMMENT_ID from $user dated $date";
 
-        $token = [System.Convert]::ToBase64String([System.Text.Encoding]::ASCII.GetBytes(":$githubPersonalAccessToken"));
-        $header = @{authorization = "Basic $token"};
+            #Invoke-RestMethod -Method Delete -Uri $deleteCommentUri -Headers $header;
+            $commentsDeleted++;
+            break;
+        }
+    }
 
-        $deleteCommentUri = "https://api.github.com/repos/$OWNER/$REPO/issues/comments/$COMMENT_ID";
-
-        #Invoke-RestMethod -Method Delete -Uri $deleteCommentUri -Headers $header;
-    } else {
+    if ($commentsDeleted -eq 0) {
         Write-Host "Nothing to delete.";
     }
   displayName: 'Delete old compat results'
