@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Binding;
-using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Utils;
@@ -65,6 +64,12 @@ namespace Microsoft.PowerFx
         {
             // The RecalcEngineResolver allows access to the values from UpdateValue. 
             var resolver = new RecalcEngineResolver(this, alternateConfig ?? Config);
+
+            if (resolver is ISetGlobalSymbols setSymbols)
+            {
+                setSymbols.SetGlobalSymbols();
+            }
+
             return resolver;
         }
 
