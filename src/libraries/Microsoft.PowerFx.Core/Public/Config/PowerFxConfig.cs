@@ -8,7 +8,6 @@ using System.Linq;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.IR.Symbols;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
@@ -22,9 +21,10 @@ namespace Microsoft.PowerFx
     {
         private bool _isLocked;
         private readonly HashSet<TexlFunction> _extraFunctions = new HashSet<TexlFunction>();
-        private readonly HashSet<IGlobalSymbol> _globalSymbols = new HashSet<IGlobalSymbol>();
         private readonly Dictionary<DName, IExternalEntity> _environmentSymbols;
         private DisplayNameProvider _environmentSymbolDisplayNameProvider;
+
+        internal static readonly int DefaultMaxCallDepth = 20;
 
         // By default, we pull the core functions. 
         // These can be overridden. 
@@ -32,13 +32,13 @@ namespace Microsoft.PowerFx
 
         internal IEnumerable<TexlFunction> Functions => _coreFunctions.Concat(_extraFunctions);
 
-        internal IEnumerable<IGlobalSymbol> GlobalSymbols => _globalSymbols;
-
         internal EnumStoreBuilder EnumStoreBuilder { get; }
 
         public CultureInfo CultureInfo { get; }
 
         public Features Features { get; }
+
+        public int MaxCallDepth { get; set; }
 
         private PowerFxConfig(CultureInfo cultureInfo, EnumStoreBuilder enumStoreBuilder, Features features = Features.None) 
         {
@@ -47,7 +47,8 @@ namespace Microsoft.PowerFx
             _isLocked = false;
             _environmentSymbols = new Dictionary<DName, IExternalEntity>();
             _environmentSymbolDisplayNameProvider = new SingleSourceDisplayNameProvider();
-            EnumStoreBuilder = enumStoreBuilder;            
+            EnumStoreBuilder = enumStoreBuilder;
+            MaxCallDepth = DefaultMaxCallDepth;
         }
 
         /// <summary>
@@ -167,11 +168,6 @@ namespace Microsoft.PowerFx
 
             _extraFunctions.Add(function);
             EnumStoreBuilder.WithRequiredEnums(new List<TexlFunction>() { function });
-        }
-
-        internal void AddGlobalSymbol(IGlobalSymbol symbol)
-        {
-            _globalSymbols.Add(symbol);
         }
 
         public void AddOptionSet(OptionSet optionSet, DName optionalDisplayName = default)
