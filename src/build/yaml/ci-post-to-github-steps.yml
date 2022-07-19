@@ -50,7 +50,7 @@ steps:
 
             Write-Host "Deleting comment $COMMENT_ID from $user dated $date";
 
-            #Invoke-RestMethod -Method Delete -Uri $deleteCommentUri -Headers $header;
+            Invoke-RestMethod -Method Delete -Uri $deleteCommentUri -Headers $header;
             $commentsDeleted++;
             break;
         }
