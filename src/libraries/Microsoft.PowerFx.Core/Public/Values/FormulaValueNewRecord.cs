@@ -29,7 +29,7 @@ namespace Microsoft.PowerFx.Types
 
         public static RecordValue NewRecordFromFields(IEnumerable<NamedValue> fields)
         {
-            var type = new RecordType();
+            var type = RecordType.Empty();
             foreach (var field in fields)
             {
                 type = type.Add(new NamedFormulaType(field.Name, field.Value.IRContext.ResultType));

@@ -41,7 +41,7 @@ namespace Microsoft.PowerFx
 
             var mapping = new Dictionary<string, Func<object, FormulaValue>>(StringComparer.OrdinalIgnoreCase);
 
-            var fxType = new RecordType();
+            var fxType = RecordType.Empty();
 
             foreach (var prop in type.GetProperties(BindingFlags.Public | BindingFlags.Instance))
             {

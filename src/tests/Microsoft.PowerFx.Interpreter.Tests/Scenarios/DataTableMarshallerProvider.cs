@@ -40,7 +40,7 @@ namespace Microsoft.PowerFx.Tests
 
         public static RecordType ComputeType(DataTable dataTable)
         {
-            var recordType = new RecordType();
+            var recordType = RecordType.Empty();
             foreach (DataColumn column in dataTable.Columns)
             {
                 if (!PrimitiveValueConversions.TryGetFormulaType(column.DataType, out var fxType))
