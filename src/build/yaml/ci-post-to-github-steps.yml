@@ -34,7 +34,7 @@ steps:
     $listResult = Invoke-RestMethod "$listCommentsUri";
     $listResult.count;
 
-    $compatComments = ($listResult | Where-Object {$_.body -like $stringToMatch -and $_.user.login -like $userNameToMatch});
+    $compatComments = ($listResult | Where-Object {$_.body -like "$stringToMatch" -and $_.user.login -like "$userNameToMatch"});
     $count = $compatComments.count
     $count;
     
@@ -56,7 +56,7 @@ steps:
     } else {
         Write-Host "Nothing to delete.";
     }
-  displayName: 'Delete old compat results'
+  displayName: 'Delete old compat results' 
   condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'), ne(variables['System.PullRequest.IsFork'], 'True'))
 
 - task: SOUTHWORKS.github-pr-comment.custom-publish-comment-task.github-pr-comment@0
