@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using Microsoft.PowerFx.Core.Types;
@@ -16,6 +17,7 @@ namespace Microsoft.PowerFx.Types
             Contract.Assert(type.IsTable);
         }
 
+        [Obsolete("UseTableType.Empty() instead")]
         public TableType()
             : base(DType.EmptyTable)
         {
@@ -31,6 +33,8 @@ namespace Microsoft.PowerFx.Types
         {
             vistor.Visit(this);
         }
+
+        public static TableType Empty() => new TableType(DType.EmptyTable);
 
         public TableType Add(NamedFormulaType field)
         {
