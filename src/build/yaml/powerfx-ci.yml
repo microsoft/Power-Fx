@@ -34,6 +34,7 @@ variables:
 
 stages:
 - stage: Build
+  condition: false
   jobs:
   - job: build_and_test
     steps:
@@ -131,12 +132,14 @@ stages:
       condition: succeededOrFailed()
 
 - stage: API_Compatibility_Validation
-  dependsOn: Build
-  condition: and(succeeded(), ne(variables['DisableApiCompatibityValidation'], 'true'))
+  condition: true
+  #dependsOn: Build
+  #condition: and(succeeded(), ne(variables['DisableApiCompatibityValidation'], 'true'))
   variables:
     skipComponentGovernanceDetection: true # the task is already injected into the build job, so skip it here.
   jobs:
   - job: generate_multiconfig_var
+    condition: false
     steps:
     - checkout: none
 
@@ -172,8 +175,9 @@ stages:
       displayName: show var MULTICONFIG
 
   - job: check_api_for
-    dependsOn: generate_multiconfig_var
-    condition: ne(dependencies.generate_multiconfig_var.outputs['generate_var.MULTICONFIG'], '{}')
+    condition: false
+    # dependsOn: generate_multiconfig_var
+    # condition: ne(dependencies.generate_multiconfig_var.outputs['generate_var.MULTICONFIG'], '{}')
     timeoutInMinutes: 10
     strategy:
       maxParallel: 10
@@ -194,8 +198,9 @@ stages:
         ContractVersion: "$(contractVersion)"
 
   - job: post_results_to_gitHub
-    dependsOn: check_api_for
-    condition: ne(dependencies.generate_multiconfig_var.outputs['generate_var.MULTICONFIG'], '{}')
+    condition: true
+    # dependsOn: check_api_for
+    # condition: ne(dependencies.generate_multiconfig_var.outputs['generate_var.MULTICONFIG'], '{}')
 
     steps:
     - checkout: none

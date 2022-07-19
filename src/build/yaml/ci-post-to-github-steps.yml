@@ -1,5 +1,6 @@
 steps:
 - task: DownloadBuildArtifacts@0
+  condition: false
   displayName: 'Download compat results artifact'
   inputs:
     downloadType: specific
@@ -7,6 +8,7 @@ steps:
     downloadPath: '$(System.ArtifactsDirectory)\ApiCompat'
 
 - task: CopyFiles@2
+  condition: false
   displayName: 'Copy results for publish to Artifacts'
   inputs:
     SourceFolder: '$(System.ArtifactsDirectory)\ApiCompat'
@@ -15,6 +17,7 @@ steps:
     flattenFolders: true
 
 - task: PublishPipelineArtifact@1
+  condition: false
   inputs:
     artifactName: 'ApiCompatibilityResults'
     targetPath: '$(System.ArtifactsDirectory)\ApiCompatibilityResults'
@@ -34,7 +37,7 @@ steps:
     $listResult = Invoke-RestMethod "$listCommentsUri";
     $listResult.count;
 
-    $compatComments = ($listResult | Where-Object {$_.body -like "$stringToMatch" -and $_.user.login -like "$userNameToMatch"});
+    $compatComments = ($listResult | Where-Object {$_.body -like "$stringToMatch" -and $_.user.login -eq "$userNameToMatch"});
     $count = $compatComments.count
     $count;
     
@@ -52,7 +55,7 @@ steps:
 
         $deleteCommentUri = "https://api.github.com/repos/$OWNER/$REPO/issues/comments/$COMMENT_ID";
 
-        Invoke-RestMethod -Method Delete -Uri $deleteCommentUri -Headers $header;
+        #Invoke-RestMethod -Method Delete -Uri $deleteCommentUri -Headers $header;
     } else {
         Write-Host "Nothing to delete.";
     }
@@ -60,6 +63,7 @@ steps:
   condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'), ne(variables['System.PullRequest.IsFork'], 'True'))
 
 - task: SOUTHWORKS.github-pr-comment.custom-publish-comment-task.github-pr-comment@0
+  condition: false
   displayName: 'Publish compat results to GitHub'
   inputs:
     userToken: '$(GitHubCommentApiKey)'
