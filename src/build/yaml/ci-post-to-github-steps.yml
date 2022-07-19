@@ -25,13 +25,14 @@ steps:
     $OWNER = 'microsoft';
     $REPO = 'Power-Fx';
     $ISSUE_NUMBER = "$(System.PullRequest.PullRequestNumber)";
-    $stringToMatch = "*Binary Compatibility*";
+    $stringToMatch = "*Binary Compatibility issues*";
+    $userNameToMatch = "BruceHaley";
 
     $listCommentsUri = "https://api.github.com/repos/$OWNER/$REPO/issues/$ISSUE_NUMBER/comments";
 
     $listResult = Invoke-RestMethod "$listCommentsUri";
 
-    $compatComments = ($listResult | Where-Object {$_.body -like $stringToMatch});
+    $compatComments = ($listResult | Where-Object {$_.body -like $stringToMatch -and $_.user.login -like $userNameToMatch});
     $count = $compatComments.count
 
     if ($count -gt 0) {
@@ -48,7 +49,7 @@ steps:
 
         $deleteCommentUri = "https://api.github.com/repos/$OWNER/$REPO/issues/comments/$COMMENT_ID";
 
-        Invoke-RestMethod -Method Delete -Uri $deleteCommentUri -Headers $header;
+        #Invoke-RestMethod -Method Delete -Uri $deleteCommentUri -Headers $header;
     } else {
         Write-Host "Nothing to delete.";
     }
