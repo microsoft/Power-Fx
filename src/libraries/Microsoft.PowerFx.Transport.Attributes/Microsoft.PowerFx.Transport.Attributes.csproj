@@ -6,7 +6,7 @@
     <PackageVersion Condition=" '$(ReleasePackageVersion)' != '' ">$(ReleasePackageVersion)</PackageVersion>
     <Configurations>Debug;Release</Configurations>
   </PropertyGroup>
-  
+
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DebugType>Full</DebugType>
     <DebugSymbols>true</DebugSymbols>
@@ -34,7 +34,6 @@
   <PropertyGroup>
     <PackageId>Microsoft.PowerFx.Transport.Attributes</PackageId>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <LangVersion>9.0</LangVersion>
     <!-- When updating the version, add a note to the release notes below. -->
     <Title>Microsoft PowerFx Transport Attributes</Title>
     <Description>This provides attributes used by Microsoft.PowerFx.Core</Description>
