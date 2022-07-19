@@ -6,11 +6,10 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Binding;
+using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Texl;
-using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Functions;
-using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx
@@ -64,32 +63,13 @@ namespace Microsoft.PowerFx
         {
             // The RecalcEngineResolver allows access to the values from UpdateValue. 
             var resolver = new RecalcEngineResolver(this, alternateConfig ?? Config);
-
-            if (resolver is ISetGlobalSymbols setSymbols)
-            {
-                setSymbols.SetGlobalSymbols();
-            }
-
             return resolver;
         }
 
         /// <inheritdoc/>
         protected override IExpression CreateEvaluator(CheckResult result)
         {
-            return CreateEvaluatorDirect(result, new StackDepthCounter(Config.MaxCallDepth));
-        }
-
-        internal static IExpression CreateEvaluatorDirect(CheckResult result, StackDepthCounter stackMarker)
-        {
-            if (result._binding == null)
-            {
-                throw new InvalidOperationException($"Requires successful binding");
-            }
-
-            result.ThrowOnErrors();
-
-            (var irnode, var ruleScopeSymbol) = IRTranslator.Translate(result._binding);
-            return new ParsedExpression(irnode, ruleScopeSymbol, stackMarker);
+            return CreateEvaluatorDirect(result);
         }
 
         /// <summary>
@@ -99,7 +79,15 @@ namespace Microsoft.PowerFx
         /// <returns></returns>
         public static IExpression CreateEvaluatorDirect(CheckResult result)
         {
-            return CreateEvaluatorDirect(result, new StackDepthCounter(PowerFxConfig.DefaultMaxCallDepth));
+            if (result._binding == null)
+            {
+                throw new InvalidOperationException($"Requires successful binding");
+            }
+
+            result.ThrowOnErrors();            
+
+            (var irnode, var ruleScopeSymbol) = IRTranslator.Translate(result._binding);
+            return new ParsedExpression(irnode, ruleScopeSymbol);
         }
 
         // This handles lookups in the global scope. 
@@ -159,7 +147,7 @@ namespace Microsoft.PowerFx
         /// <returns>The formula's result.</returns>
         public FormulaValue Eval(string expressionText, RecordValue parameters = null, ParserOptions options = null)
         {
-            return EvalAsync(expressionText, CancellationToken.None, parameters, options).Result;
+            return EvalAsync(expressionText, CancellationToken.None, parameters, options).Result;          
         }
 
         public async Task<FormulaValue> EvalAsync(string expressionText, CancellationToken cancel, RecordValue parameters = null, ParserOptions options = null)
@@ -171,7 +159,9 @@ namespace Microsoft.PowerFx
 
             var check = Check(expressionText, (RecordType)parameters.IRContext.ResultType, options);
             check.ThrowOnErrors();
-            return await check.Expression.EvalAsync(parameters, cancel);
+
+            var newValue = await check.Expression.EvalAsync(parameters, cancel);
+            return newValue;
         }
 
         // Invoke onUpdate() each time this formula is changed, passing in the new value. 
