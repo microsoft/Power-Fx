@@ -17,22 +17,20 @@ namespace Microsoft.PowerFx
         private readonly ScopeSymbol _topScopeSymbol;
         private readonly CultureInfo _cultureInfo;
         private readonly StackDepthCounter _stackMarker;
-        private readonly Features _features;
 
-        internal ParsedExpression(IntermediateNode irnode, ScopeSymbol topScope, StackDepthCounter stackMarker, Features features, CultureInfo cultureInfo = null)
+        internal ParsedExpression(IntermediateNode irnode, ScopeSymbol topScope, StackDepthCounter stackMarker, CultureInfo cultureInfo = null)
         {
             _irnode = irnode;
             _topScopeSymbol = topScope;
             _stackMarker = stackMarker;
-            _features = features;
             _cultureInfo = cultureInfo ?? CultureInfo.CurrentCulture;
         }
 
         public async Task<FormulaValue> EvalAsync(RecordValue parameters, CancellationToken cancel)
         {
-            var ev2 = new EvalVisitor(_cultureInfo, _features, cancel);
+            var ev2 = new EvalVisitor(_cultureInfo, cancel);
             try
-            { 
+            {
                 var newValue = await _irnode.Accept(ev2, new EvalVisitorContext(SymbolContext.NewTopScope(_topScopeSymbol, parameters), _stackMarker));
                 return newValue;
             }

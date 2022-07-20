@@ -63,6 +63,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="ExpressionTestCases\SqrtT.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\libraries\Microsoft.PowerFx.Core\Microsoft.PowerFx.Core.csproj" />
   </ItemGroup>
   <ItemGroup>

@@ -25,17 +25,14 @@ namespace Microsoft.PowerFx
     {
         public CultureInfo CultureInfo { get; }
 
-        public Features Features { get; }
-
         private readonly CancellationToken _cancel;
 
-        public EvalVisitor(CultureInfo cultureInfo, Features features, CancellationToken cancel)
+        public EvalVisitor(CultureInfo cultureInfo, CancellationToken cancel)
         {
             CultureInfo = cultureInfo;
-            Features = features;
             _cancel = cancel;
         }
-                
+
         // Check this cooperatively - especially in any loop. 
         public void CheckCancel()
         {
@@ -141,7 +138,7 @@ namespace Microsoft.PowerFx
             if (setResult != null)
             {
                 return setResult;
-            }            
+            }
 
             var func = node.Function;
 
@@ -202,7 +199,7 @@ namespace Microsoft.PowerFx
         }
 
         private ValueTask<FormulaValue> VisitBinaryOpNode(BinaryOpNode node, EvalVisitorContext context, FormulaValue[] args)
-        { 
+        {
             switch (node.Op)
             {
                 case BinaryOpKind.AddNumbers:

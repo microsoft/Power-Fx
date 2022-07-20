@@ -71,10 +71,10 @@ namespace Microsoft.PowerFx
         /// <inheritdoc/>
         protected override IExpression CreateEvaluator(CheckResult result)
         {
-            return CreateEvaluatorDirect(result, Config.Features, new StackDepthCounter(Config.MaxCallDepth));
+            return CreateEvaluatorDirect(result, new StackDepthCounter(Config.MaxCallDepth));
         }
 
-        internal static IExpression CreateEvaluatorDirect(CheckResult result, Features features, StackDepthCounter stackMarker)
+        internal static IExpression CreateEvaluatorDirect(CheckResult result, StackDepthCounter stackMarker)
         {
             if (result._binding == null)
             {
@@ -84,7 +84,7 @@ namespace Microsoft.PowerFx
             result.ThrowOnErrors();
 
             (var irnode, var ruleScopeSymbol) = IRTranslator.Translate(result._binding);
-            return new ParsedExpression(irnode, ruleScopeSymbol, stackMarker, features);
+            return new ParsedExpression(irnode, ruleScopeSymbol, stackMarker);
         }
 
         /// <summary>
@@ -94,18 +94,7 @@ namespace Microsoft.PowerFx
         /// <returns></returns>
         public static IExpression CreateEvaluatorDirect(CheckResult result)
         {
-            return CreateEvaluatorDirect(result, Features.None, new StackDepthCounter(PowerFxConfig.DefaultMaxCallDepth));
-        }
-
-        /// <summary>
-        /// Create an evaluator over the existing binding.
-        /// </summary>
-        /// <param name = "result" >A successful binding from a previous call to.<see cref="Engine.Check(string, RecordType, ParserOptions)"/>. </param>
-        /// <param name="features">Features to use.</param>
-        /// <returns></returns>
-        public static IExpression CreateEvaluatorDirect(CheckResult result, Features features)
-        {
-            return CreateEvaluatorDirect(result, features, new StackDepthCounter(PowerFxConfig.DefaultMaxCallDepth));
+            return CreateEvaluatorDirect(result, new StackDepthCounter(PowerFxConfig.DefaultMaxCallDepth));
         }
 
         // This handles lookups in the global scope. 
@@ -165,7 +154,7 @@ namespace Microsoft.PowerFx
         /// <returns>The formula's result.</returns>
         public FormulaValue Eval(string expressionText, RecordValue parameters = null, ParserOptions options = null)
         {
-            return EvalAsync(expressionText, CancellationToken.None, parameters, options).Result;          
+            return EvalAsync(expressionText, CancellationToken.None, parameters, options).Result;
         }
 
         public async Task<FormulaValue> EvalAsync(string expressionText, CancellationToken cancel, RecordValue parameters = null, ParserOptions options = null)
