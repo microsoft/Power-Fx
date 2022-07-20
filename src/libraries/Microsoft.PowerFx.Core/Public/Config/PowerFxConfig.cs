@@ -166,13 +166,14 @@ namespace Microsoft.PowerFx
         {
             CheckUnlocked();
 
-            if (!_coreFunctions.Contains(function, new TexlFunctionComparer()))
-            {                
+            var comparer = new TexlFunctionComparer();
+            if (!_coreFunctions.Contains(function, comparer) && !_extraFunctions.Contains(function, comparer))
+            {
                 _extraFunctions.Add(function);
             }
             else
             {
-                throw new ArgumentException($"Function {function.Name} is already part of core functions");
+                throw new ArgumentException($"Function {function.Name} is already part of core or extra functions");
             }
 
             EnumStoreBuilder.WithRequiredEnums(new List<TexlFunction>() { function });

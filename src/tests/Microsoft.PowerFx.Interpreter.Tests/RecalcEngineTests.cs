@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Tests;
@@ -477,6 +478,16 @@ namespace Microsoft.PowerFx.Tests
             Assert.False(config.TryGetSymbol(new DName("foo"), out _, out _));
 
             Assert.DoesNotContain(BuiltinFunctionsCore.Abs, config.Functions);
+        }
+
+        [Fact]
+        public void RecalcEngine_AddFunction_Twice()
+        {
+            var config = new PowerFxConfig(null);
+            config.SetCoreFunctions(new TexlFunction[0]);
+            config.AddFunction(BuiltinFunctionsCore.Blank);
+
+            Assert.Throws<ArgumentException>(() => config.AddFunction(BuiltinFunctionsCore.Blank));
         }
 
         [Fact]
