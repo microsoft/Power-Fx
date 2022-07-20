@@ -10,7 +10,6 @@ using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
-using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
 using Xunit;
 using static Microsoft.PowerFx.Core.Localization.TexlStrings;

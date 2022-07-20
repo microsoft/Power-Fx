@@ -8,6 +8,9 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Interpreter.UDF
 {
+     /// <summary>
+     /// CheckWrapper delays the evaluation of the body to the Get call while taking in all the parameters needed to make the Check call.
+     /// </summary>
     internal class CheckWrapper
     {
         private readonly string _expressionText;

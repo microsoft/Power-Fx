@@ -8,7 +8,7 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Interpreter
 {
-    internal class UDFHelper
+    internal static class UDFHelper
     {
         internal static IEnumerable<NamedValue> Zip(NamedFormulaType[] parameters, FormulaValue[] args)
         {
