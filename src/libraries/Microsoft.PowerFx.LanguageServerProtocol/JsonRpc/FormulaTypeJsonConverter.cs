@@ -68,7 +68,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             Contracts.AssertValue(fields);
             Contracts.AssertAllValues(fields);
 
-            var fieldsType = new RecordType();
+            var fieldsType = RecordType.Empty();
             foreach (var field in fields)
             {
                 if (fieldsType.MaybeGetFieldType(field.Key) != null)
