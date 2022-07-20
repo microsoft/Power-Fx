@@ -6,6 +6,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
+using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.Utils;
 
@@ -31,6 +32,19 @@ namespace Microsoft.PowerFx
         {
             _parent = parent;
             _powerFxConfig = powerFxConfig;
+        }
+
+        public override IEnumerable<TexlFunction> LookupFunctions(DPath theNamespace, string name, bool localeInvariant = false)
+        {
+            if (theNamespace.IsRoot)
+            {
+                if (_parent._customFuncs.TryGetValue(name, out var func))
+                {
+                    return new TexlFunction[] { func };
+                }
+            }
+
+            return base.LookupFunctions(theNamespace, name, localeInvariant);
         }
 
         public override bool Lookup(DName name, out NameLookupInfo nameInfo, NameLookupPreferences preferences = NameLookupPreferences.None)

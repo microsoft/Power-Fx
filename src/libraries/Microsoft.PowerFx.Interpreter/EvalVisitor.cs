@@ -170,9 +170,14 @@ namespace Microsoft.PowerFx
                 var result = await asyncFunc.InvokeAsync(args, _cancel);
                 return result;
             }
-            else if (func is CustomTexlFunction customFunc)
+            else if (func is UserDefinedTexlFunction udtf)
             {
-                var result = customFunc.Invoke(args);
+                var result = await udtf.InvokeAsync(args, _cancel, context.StackDepthCounter.Increment());
+                return result;
+            }
+            else if (func is CustomTexlFunction customTexlFunc)
+            {
+                var result = customTexlFunc.Invoke(args);
                 return result;
             }
             else
@@ -182,7 +187,6 @@ namespace Microsoft.PowerFx
                     var result = await ptr(this, context.IncrementStackDepthCounter(childContext), node.IRContext, args);
 
                     Contract.Assert(result.IRContext.ResultType == node.IRContext.ResultType || result is ErrorValue || result.IRContext.ResultType is BlankType);
-
                     return result;
                 }
 
