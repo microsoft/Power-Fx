@@ -21,6 +21,11 @@ Blank()
 >> AddColumns(Table({a: 1}, {a: 2}), b, a * a * a)
 Table({a:1,b:1},{a:2,b:8})
 
->> AddColumns(Table({a: 1}, {a: 2}), b, c)
-Errors: Error 39-40: Name isn't valid. 'c' isn't recognized.|Error 0-41: The function 'AddColumns' has some invalid arguments.
+>> AddColumns(Table({a: 1, b: {c: 3}}, {a: 2, b: {c: 4}}), b.d, a * a * a)
+Table({a:1,b:{c:3},b.d:1},{a:2,b:{c:4},b.d:8})
 
+>> AddColumns(Table({a: 1, b: {c: 3}}, {a: 2, b: {c: 4}}), 'b d', a * a * a)
+Table({a:1,b:{c:3},'b d':1},{a:2,b:{c:4},'b d':8})
+
+>> AddColumns(Table({a: 1}, {a: 2}), b, c)
+Errors: Error 37-38: Name isn't valid. 'c' isn't recognized.|Error 0-39: The function 'AddColumns' has some invalid arguments.

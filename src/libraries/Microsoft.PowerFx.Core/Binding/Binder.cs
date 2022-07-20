@@ -2977,6 +2977,11 @@ namespace Microsoft.PowerFx.Core.Binding
                     return;
                 }
 
+                if (node.IsIdentifier)
+                {
+                    return;
+                }
+
                 // Look up a global variable with this name.
                 NameLookupInfo lookupInfo = default;
                 if (_txb.AffectsScopeVariableName)
@@ -3016,11 +3021,6 @@ namespace Microsoft.PowerFx.Core.Binding
                     return;
                 }
 
-                if (node.IsIdentifier)
-                {
-                    _txb.SetInfo(node, FirstNameInfo.Create(BindKind.Identifier, node, 0, 0));
-                    return;
-                }
 
                 if (!haveNameResolver || !_nameResolver.Lookup(node.Ident.Name, out lookupInfo, preferences: lookupPrefs))
                 {
@@ -3466,6 +3466,12 @@ namespace Microsoft.PowerFx.Core.Binding
                 if (!leftType.IsControl && !leftType.IsAggregate && !leftType.IsEnum && !leftType.IsOptionSet && !leftType.IsView && !leftType.IsUntypedObject)
                 {
                     SetDottedNameError(node, TexlStrings.ErrInvalidDot);
+                    return;
+                }
+
+                if (node.IsIdentifier)
+                {
+                    // There isn't much we can do with identifiers
                     return;
                 }
 
@@ -4945,7 +4951,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 {
                     Contracts.Assert(_currentScope == scopeNew || _currentScope == scopeNew.Parent);
 
-                    if (maybeFunc.AllowsRowScopedParamDelegationExempted(i))
+                    if (maybeFunc.AllowsRowScopedParamDelegationExempted(i, _features))
                     {
                         _txb.SetSupportingRowScopedDelegationExemptionNode(args[i]);
                     }
@@ -4973,9 +4979,13 @@ namespace Microsoft.PowerFx.Core.Binding
                     }
                     else
                     {
-                        FirstNameNode firstNameNode = args[i].AsFirstName();
-                        Contracts.Assert(firstNameNode != null);
-                        firstNameNode.SetIdentifier();
+                        // Can either be a FirstNodeName or DottedNameNode
+                        var identifierNode = args[i] as IIdentifierNode;
+                        Contracts.Assert(identifierNode != null);
+
+                        //  Mask the node as an identifier
+                        identifierNode.SetIdentifier();
+
                         args[i].Accept(this);
                         argTypes[i] = DType.Identifier;
                     }

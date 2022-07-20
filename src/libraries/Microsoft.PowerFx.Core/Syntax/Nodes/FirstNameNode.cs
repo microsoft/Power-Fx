@@ -1,9 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Utils;
-using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Syntax.SourceInformation;
 
 namespace Microsoft.PowerFx.Syntax
@@ -13,7 +11,7 @@ namespace Microsoft.PowerFx.Syntax
     /// 
     /// <code>Ident</code>
     /// </summary>
-    public sealed class FirstNameNode : NameNode
+    public sealed class FirstNameNode : NameNode, IIdentifierNode
     {
         /// <summary>
         ///  The identifier of the first name node.
@@ -22,7 +20,9 @@ namespace Microsoft.PowerFx.Syntax
 
         internal bool IsLhs => Parent != null && Parent.AsDottedName() != null;
 
-        internal bool IsIdentifier { get; private set; }
+        private bool _isIdentifier;
+
+        public bool IsIdentifier => _isIdentifier;
 
         internal FirstNameNode(ref int idNext, Token tok, SourceList sourceList, Identifier ident)
             : base(ref idNext, tok, sourceList)
@@ -33,10 +33,14 @@ namespace Microsoft.PowerFx.Syntax
             Ident = ident;
         }
 
-        internal void SetIdentifier()
+        public void SetIdentifier()
         {
-            IsIdentifier = true;
+            _isIdentifier = true;
         }
+
+        public string GetName() => Ident?.Name;
+
+        public override IIdentifierNode AsIdentifierNode() => this;
 
         internal FirstNameNode(ref int idNext, Token tok, Identifier ident)
             : this(ref idNext, tok, new SourceList(tok), ident)

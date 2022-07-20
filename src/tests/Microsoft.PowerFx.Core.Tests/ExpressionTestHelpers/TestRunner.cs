@@ -60,7 +60,7 @@ namespace Microsoft.PowerFx.Core.Tests
         {
             foreach (var file in files)
             {
-                AddFile(file);                
+                AddFile(file);
             }
         }
 
@@ -244,7 +244,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
                     var (result, msg) = runner.RunTestCase(testCase);
 
-                    summary.AddResult(testCase, result, engineName, msg);                  
+                    summary.AddResult(testCase, result, engineName, msg);
                 }
             }
 
@@ -345,7 +345,18 @@ namespace Microsoft.PowerFx.Core.Tests
                 foreach (var field in fields)
                 {
                     sb.Append(dil);
-                    sb.Append(field.Name);
+
+                    if (field.Name.Contains(' '))
+                    {
+                        sb.Append('\'');
+                        sb.Append(field.Name);
+                        sb.Append('\'');
+                    }
+                    else
+                    {
+                        sb.Append(field.Name);
+                    }
+
                     sb.Append(':');
                     TestToString(field.Value, sb);
 

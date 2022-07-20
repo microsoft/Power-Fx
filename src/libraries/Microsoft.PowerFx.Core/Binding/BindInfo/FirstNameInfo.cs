@@ -116,7 +116,7 @@ namespace Microsoft.PowerFx.Core.Binding.BindInfo
         //      e.g. "T1" in Filter(T1, T1[@a] < 100)
         public static FirstNameInfo Create(BindKind kind, FirstNameNode node, int nestDst, int nestSrc, object data = null)
         {
-            Contracts.Assert(kind == BindKind.LambdaField || kind == BindKind.LambdaFullRecord || kind == BindKind.ComponentNameSpace || kind == BindKind.Identifier);
+            Contracts.Assert(kind == BindKind.LambdaField || kind == BindKind.LambdaFullRecord || kind == BindKind.ComponentNameSpace);
             Contracts.AssertValue(node);
             Contracts.Assert(nestDst > int.MinValue);
             Contracts.Assert(nestSrc >= 0);

@@ -78,7 +78,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 errors.EnsureError(DocumentErrorSeverity.Severe, args[0].Parent.CastList().Parent.CastCall(), TexlStrings.ErrBadArityOdd, count);
             }
 
-            var supportIdentifiers = binding.Features.HasFlag(Features.SupportIdentifiers);
+            var supportIndentifiers = binding.Features.HasFlag(Features.SupportIdentifiers);
 
             for (var i = 1; i < count; i += 2)
             {
@@ -89,10 +89,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 // arbitrary expressions that evaluate to string values, because these values contribute to
                 // type analysis, so they need to be known upfront (before AddColumns executes).
                 StrLitNode strLitNode = null;
-                FirstNameNode firstNameNode = null;
+                IIdentifierNode identifierNode = null;
 
-                if ((!supportIdentifiers && (nameArgType.Kind != DKind.String || (strLitNode = nameArg.AsStrLit()) == null)) ||
-                     (supportIdentifiers && (nameArgType.Kind != DKind.Identifier || (firstNameNode = nameArg.AsFirstName()) == null)))
+                if ((!supportIndentifiers && (nameArgType.Kind != DKind.String || (strLitNode = nameArg.AsStrLit()) == null)) ||
+                     (supportIndentifiers && (nameArgType.Kind != DKind.Identifier || (identifierNode = nameArg.AsIdentifierNode()) == null)))
                 {
                     fArgsValid = false;
 
@@ -101,7 +101,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     continue;
                 }
 
-                var value = supportIdentifiers ? firstNameNode.Ident.Name : strLitNode.Value;
+                var value = supportIndentifiers ? identifierNode.GetName() : strLitNode.Value;
 
                 // Verify that the name is valid.
                 if (!DName.IsValidDName(value))
@@ -197,11 +197,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return index >= 1 && ((index & 1) == 1);
         }
 
-        public override bool AllowsRowScopedParamDelegationExempted(int index)
+        public override bool AllowsRowScopedParamDelegationExempted(int index, Features features)
         {
             Contracts.Assert(index >= 0);
 
-            return IsLambdaParam(index) || IsIdentifier(index); ;
+            return IsLambdaParam(index) || (features.HasFlag(Features.SupportIdentifiers) && IsIdentifier(index));
         }
     }
 }

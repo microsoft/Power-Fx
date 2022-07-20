@@ -29,6 +29,11 @@ namespace Microsoft.PowerFx
 
         public override void Visit(FirstNameNode node)
         {
+            if (node.IsIdentifier)
+            {
+                return;
+            }
+
             var info = _binding.GetInfo(node);
 
             var name = node.Ident.Name.Value;
@@ -37,8 +42,7 @@ namespace Microsoft.PowerFx
             // defined at the top level (NestDst==1)
             if ((info.NestDst == 1 && info.Kind == BindKind.LambdaField) ||
                 (info.Kind == BindKind.ScopeVariable) ||
-                (info.Kind == BindKind.PowerFxResolvedObject) ||
-                (info.Kind == BindKind.Identifier))
+                (info.Kind == BindKind.PowerFxResolvedObject))
             {
                 _vars.Add(name);
             }

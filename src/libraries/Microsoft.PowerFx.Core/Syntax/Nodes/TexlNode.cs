@@ -2,7 +2,6 @@
 // Licensed under the MIT license.
 
 using System.Linq;
-using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax.SourceInformation;
 
@@ -134,6 +133,11 @@ namespace Microsoft.PowerFx.Syntax
         }
 
         internal virtual FirstNameNode AsFirstName()
+        {
+            return null;
+        }
+
+        public virtual IIdentifierNode AsIdentifierNode()
         {
             return null;
         }

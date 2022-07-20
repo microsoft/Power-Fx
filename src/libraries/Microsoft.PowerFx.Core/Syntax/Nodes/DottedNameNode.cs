@@ -3,9 +3,7 @@
 
 using System;
 using System.Collections.Generic;
-using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Utils;
-using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Syntax.SourceInformation;
 
 namespace Microsoft.PowerFx.Syntax
@@ -15,7 +13,7 @@ namespace Microsoft.PowerFx.Syntax
     /// 
     /// <code>Left.Right</code>
     /// </summary>
-    public sealed class DottedNameNode : NameNode
+    public sealed class DottedNameNode : NameNode, IIdentifierNode
     {
         /// <summary>
         /// The left node of the dotted name.
@@ -52,6 +50,14 @@ namespace Microsoft.PowerFx.Syntax
         /// </summary>
         internal bool UsesBracket => Token.Kind == TokKind.BracketOpen;
 
+        private bool _isIdentifier;
+
+        public bool IsIdentifier => _isIdentifier;
+
+        public string GetName() => ToDPath().ToDottedSyntax();
+
+        public override IIdentifierNode AsIdentifierNode() => this;
+
         internal DottedNameNode(ref int idNext, Token primaryToken, SourceList sourceList, TexlNode left, Identifier right, TexlNode rightNode)
             : base(ref idNext, primaryToken, sourceList)
         {
@@ -75,6 +81,11 @@ namespace Microsoft.PowerFx.Syntax
             _depth = left.Depth + 1;
 
             MinChildID = Math.Min(left.MinChildID, rightNode?.MinChildID ?? MinChildID);
+        }
+
+        public void SetIdentifier()
+        {
+            _isIdentifier = true;
         }
 
         internal bool Matches(DName leftIdentifier, DName rightIdentifier)
