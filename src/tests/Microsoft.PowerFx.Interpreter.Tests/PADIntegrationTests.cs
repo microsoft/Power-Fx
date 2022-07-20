@@ -17,12 +17,12 @@ namespace Microsoft.PowerFx.Tests
 
             // FormulaType
             // Is this a valid usage of the UnknownType?
-            var fType = new TableType()
+            var fType = TableType.Empty()
                 .Add(new NamedFormulaType("Column1", FormulaType.Unknown))
                 .Add(new NamedFormulaType("Column2", FormulaType.Unknown))
                 .Add(new NamedFormulaType("Column3", FormulaType.Unknown));
 
-            var executionScope = new RecordType()
+            var executionScope = RecordType.Empty()
                 .Add("RobinTable", fType);
 
             var validationResult = engine.Check("Index(RobinTable, 1).Column1", executionScope);
@@ -130,10 +130,10 @@ First(
 
             //FormulaType
             // Is this a valid representation of a List<object> type to a FormulaType?
-            var fType = new TableType()
+            var fType = TableType.Empty()
                 .Add(new NamedFormulaType("Value", FormulaType.Unknown));
 
-            var executionScope = new RecordType()
+            var executionScope = RecordType.Empty()
                 .Add("RobinList", fType);
 
             var validationResult = engine.Check("Index(RobinList, 1).Value", executionScope);

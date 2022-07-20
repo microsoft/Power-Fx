@@ -16,6 +16,7 @@ namespace Microsoft.PowerFx.Types
             Contract.Assert(type.IsRecord);
         }
 
+        [Obsolete("Use RecordType.Empty() instead")]
         public RecordType()
             : base(DType.EmptyRecord)
         {
@@ -25,6 +26,8 @@ namespace Microsoft.PowerFx.Types
         {
             vistor.Visit(this);
         }
+
+        public static RecordType Empty() => new RecordType(DType.EmptyRecord);
 
         public RecordType Add(NamedFormulaType field)
         {

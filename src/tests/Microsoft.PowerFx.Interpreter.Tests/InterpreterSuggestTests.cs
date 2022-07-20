@@ -4,8 +4,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.PowerFx.Core;
+using Microsoft.PowerFx.Core.Binding;
+using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Types.Enums;
+using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Tests.IntellisenseTests;
 using Microsoft.PowerFx.Types;
 using Xunit;
@@ -53,9 +58,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             config.AddEntity(optionSet);
             config.AddEntity(otherOptionSet);
 
-            var parameterType = new RecordType()
+            var parameterType = RecordType.Empty()
                 .Add(new NamedFormulaType("TopOptionSetField", optionSet.FormulaType))
-                .Add(new NamedFormulaType("Nested", new RecordType()
+                .Add(new NamedFormulaType("Nested", RecordType.Empty()
                     .Add(new NamedFormulaType("InnerOtherOptionSet", otherOptionSet.FormulaType))));
 
             var actualSuggestions = SuggestStrings(expression, config, parameterType);
@@ -70,6 +75,47 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var actualSuggestions = SuggestStrings(expression, config, null);
             Assert.Equal(expectedSuggestions, actualSuggestions);
+        }
+
+        [Theory]
+        [InlineData("Fi")]
+        [InlineData("fi")]
+        [InlineData("fileIndex")]
+        [InlineData("FILEINDEX")]
+        public void TestSuggestVariableName(string suggestion)
+        {
+            const string varName = "fileIndex";
+
+            var pfxConfig = new PowerFxConfig();
+            var recalcEngine = new RecalcEngine(pfxConfig);
+
+            recalcEngine.UpdateVariable(varName, FormulaValue.New(12));
+            var suggestions = recalcEngine.Suggest(suggestion, null, 2);
+            var s1 = suggestions.Suggestions.OfType<IntellisenseSuggestion>();
+
+            Assert.NotNull(s1);
+            Assert.Equal(8, s1.Count());
+
+            var s = s1.FirstOrDefault(su => su.Text == varName);
+
+            Assert.NotNull(s);
+            Assert.Equal("fileIndex", s.DisplayText.Text);
+            Assert.Null(s.FunctionName);
+            Assert.Equal(SuggestionIconKind.Other, s.IconKind);
+            Assert.Equal(SuggestionKind.Global, s.Kind);
+            Assert.Equal(DType.Number, s.Type);
+
+            var resolver = new RecalcEngineResolver(recalcEngine, pfxConfig);
+
+            Assert.True(resolver.GlobalSymbols.ContainsKey(varName));
+            Assert.Equal(BindKind.PowerFxResolvedObject, resolver.GlobalSymbols[varName].Kind);
+            Assert.IsType<RecalcFormulaInfo>(resolver.GlobalSymbols[varName].Data);
+
+            var b = resolver.Lookup(new DName(varName), out var nameInfo, NameLookupPreferences.GlobalsOnly);
+
+            Assert.True(b);
+            Assert.Equal(BindKind.PowerFxResolvedObject, nameInfo.Kind);
+            Assert.IsType<RecalcFormulaInfo>(nameInfo.Data);
         }
     }
 }
