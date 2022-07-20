@@ -3021,7 +3021,6 @@ namespace Microsoft.PowerFx.Core.Binding
                     return;
                 }
 
-
                 if (!haveNameResolver || !_nameResolver.Lookup(node.Ident.Name, out lookupInfo, preferences: lookupPrefs))
                 {
                     _txb.ErrorContainer.Error(node, TexlStrings.ErrInvalidName, node.Ident.Name.Value);
@@ -4983,7 +4982,7 @@ namespace Microsoft.PowerFx.Core.Binding
                         var identifierNode = args[i] as IIdentifierNode;
                         Contracts.Assert(identifierNode != null);
 
-                        //  Mask the node as an identifier
+                        //  Mark the node as an identifier
                         identifierNode.SetIdentifier();
 
                         args[i].Accept(this);
