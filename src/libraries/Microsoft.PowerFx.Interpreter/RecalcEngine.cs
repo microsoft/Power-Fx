@@ -194,7 +194,7 @@ namespace Microsoft.PowerFx
             var func = new UserDefinedTexlFunction(definition.Name, definition.ReturnType, definition.Parameters, check);
             if (_customFuncs.ContainsKey(definition.Name))
             {
-                throw new InvalidOperationException($"function {definition.Name} is already defined");
+                throw new InvalidOperationException($"Function {definition.Name} is already defined");
             }
 
             _customFuncs[definition.Name] = func;
