@@ -20,7 +20,7 @@ namespace Microsoft.PowerFx
         /// Enable functions to consistently return one dimension tables with a "Value" column rather than some other name like "Result"
         /// Added on 11th July 2022
         /// </summary>
-        ConsistentOneColumnTableResult = 0x2        
+        ConsistentOneColumnTableResult = 0x2,
 
         /// <summary>
         /// Enable Identifier support for describing column names
