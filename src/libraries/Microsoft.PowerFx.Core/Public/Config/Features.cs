@@ -17,6 +17,12 @@ namespace Microsoft.PowerFx
         TableSyntaxDoesntWrapRecords = 0x1,
 
         /// <summary>
+        /// Enable functions to consistently return one dimension tables with a "Value" column rather than some other name like "Result"
+        /// Added on 11th July 2022
+        /// </summary>
+        ConsistentOneColumnTableResult = 0x2        
+
+        /// <summary>
         /// Enable Identifier support for describing column names
         /// Added on 20ieth July 2022.
         /// </summary>

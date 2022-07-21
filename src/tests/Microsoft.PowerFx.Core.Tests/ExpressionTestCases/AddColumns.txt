@@ -34,3 +34,5 @@ Errors: Error 39-40: Name isn't valid. 'c' isn't recognized.|Error 0-41: The fun
 >> With( { b : 15 }, AddColumns([1,2], "b", Value * b))
 Table({Value:1,b:15},{Value:2,b:30})
 
+>> AddColumns([], "Value", 1)
+[]

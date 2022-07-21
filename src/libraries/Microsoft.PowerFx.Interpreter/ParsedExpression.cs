@@ -30,7 +30,7 @@ namespace Microsoft.PowerFx
         {
             var ev2 = new EvalVisitor(_cultureInfo, cancel);
             try
-            { 
+            {
                 var newValue = await _irnode.Accept(ev2, new EvalVisitorContext(SymbolContext.NewTopScope(_topScopeSymbol, parameters), _stackMarker));
                 return newValue;
             }

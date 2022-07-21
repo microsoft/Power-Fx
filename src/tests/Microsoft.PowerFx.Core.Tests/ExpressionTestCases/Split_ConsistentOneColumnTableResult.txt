@@ -1,0 +1,31 @@
+﻿#SETUP: ConsistentOneColumnTableResult
+
+>> Split( "Hello, World", "," )
+["Hello"," World"]
+
+>> Split("this is a test", " ")
+["this","is","a","test"]
+
+>> Split("test", "")
+["t","e","s","t"]
+
+>> Split("Hello world", If(1 < 0, ""))
+["H","e","l","l","o"," ","w","o","r","l","d"]
+
+>> Split( "Hello, World", "l" )
+["He","","o, Wor","d"]
+
+>> Split( "Hello, World", "ll" )
+["He","o, World"]
+
+>> Split( "Hello, World", "%" )
+["Hello, World"]
+
+>> Split("", "")
+[]
+
+>> Split(If(1 < 0, ""), "")
+[]
+
+>> Split(Text(1/0), "")
+#Error
