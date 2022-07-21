@@ -51,7 +51,7 @@ namespace Microsoft.PowerFx.Connectors
                         continue;
                     }
 
-                    var operationName = op.OperationId ?? path.Replace("/", string.Empty);
+                    var operationName = op.OperationId ?? path.Replace("/", string.Empty);                    
                     var returnType = op.GetReturnType();
 
                     if (basePath != null)
@@ -89,7 +89,7 @@ namespace Microsoft.PowerFx.Connectors
                         operationName,
                         description, // Template.GetFunctionDescription(funcTemplate.Name),
                         returnType._type,
-                        BigInteger.Zero,                        
+                        BigInteger.Zero,
                         argMapper.ArityMin,
                         argMapper.ArityMax,
                         isBehavior,

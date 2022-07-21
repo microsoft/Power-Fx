@@ -24,7 +24,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool IsSelfContained => true;
 
-        public FilterFunctionBase(string name, TexlStrings.StringGetter description, FunctionCategories fc, DType returnType, BigInteger maskLambdas,  int arityMin, int arityMax, params DType[] paramTypes)
+        public FilterFunctionBase(string name, TexlStrings.StringGetter description, FunctionCategories fc, DType returnType, BigInteger maskLambdas, int arityMin, int arityMax, params DType[] paramTypes)
             : base(name, description, fc, returnType, maskLambdas, arityMin, arityMax, paramTypes)
         {
         }

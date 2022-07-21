@@ -29,7 +29,7 @@ namespace Microsoft.PowerFx.Interpreter
     {
         // Set() is a behavior function. 
         public override bool IsSelfContained => false;
-
+                
         public override IEnumerable<StringGetter[]> GetSignatures()
         {
             yield return new[] { TexlStrings.SetArg1, TexlStrings.SetArg2 };
@@ -43,7 +43,7 @@ namespace Microsoft.PowerFx.Interpreter
               TexlStrings.AboutSet,
               FunctionCategories.Behavior,
               DType.Boolean,
-              0, // no lambdas              
+              0, // no lambdas
               2,
               2)
         {

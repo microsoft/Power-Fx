@@ -74,9 +74,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     }
                 }
             } // No coercion necessary
-            else
-            {
-                fArgsValid = true;
+            else 
+            { 
+                fArgsValid = true; 
             }
 
             if (!fArgsValid)

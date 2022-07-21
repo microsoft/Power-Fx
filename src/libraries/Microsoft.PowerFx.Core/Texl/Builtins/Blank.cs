@@ -24,8 +24,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             TexlStrings.AboutBlank,
             FunctionCategories.Text,
             DType.ObjNull, // return type
-            0, // no lambdas            
-            0, // min arity of 0
+            0,            // no lambdas
+            0,            // min arity of 0
             0) // max arity of 0
         {
         }
