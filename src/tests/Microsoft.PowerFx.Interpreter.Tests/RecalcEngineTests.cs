@@ -341,10 +341,9 @@ namespace Microsoft.PowerFx.Tests
         {
             var config = new PowerFxConfig(null);
             var recalcEngine = new RecalcEngine(config);
-            Assert.True(recalcEngine.DefineFunctions(
+            Assert.Throws<InvalidOperationException>(() => recalcEngine.DefineFunctions(
                 new UDFDefinition("foo", "foo()", FormulaType.Blank),
-                new UDFDefinition("foo", "x+1", FormulaType.Number)).Any());
-            await Assert.ThrowsAsync<InvalidOperationException>(() => recalcEngine.EvalAsync("foo()", CancellationToken.None));
+                new UDFDefinition("foo", "x+1", FormulaType.Number)));
         }
 
         [Fact]

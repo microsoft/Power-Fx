@@ -194,13 +194,7 @@ namespace Microsoft.PowerFx
             var func = new UserDefinedTexlFunction(definition.Name, definition.ReturnType, definition.Parameters, check);
             if (_customFuncs.ContainsKey(definition.Name))
             {
-                return new UDFLazyBinder(
-                    new ExpressionError()
-                {
-                    Message = "Function name already defined",
-                    Span = null,
-                    Kind = ErrorKind.Internal, //Todo: change this out for a new kind of ErrorKind error.
-                }, definition.Name);
+                throw new InvalidOperationException($"function {definition.Name} is already defined");
             }
 
             _customFuncs[definition.Name] = func;
