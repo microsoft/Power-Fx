@@ -12,7 +12,7 @@ namespace Microsoft.PowerFx.Core.Functions
     {
         public bool Equals(TexlFunction x, TexlFunction y)
         {
-            return x.QualifiedName == y.QualifiedName && x.ParamTypes.SequenceEqual(y.ParamTypes);
+            return object.Equals(x, y);
         }
 
         public int GetHashCode(TexlFunction obj)
