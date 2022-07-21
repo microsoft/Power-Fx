@@ -222,6 +222,93 @@ namespace Microsoft.PowerFx.Tests
             Assert.True(result2.IsSuccess);
         }
 
+        [Fact]
+        public void CheckRecursiveCustomType()
+        {
+            var config = new PowerFxConfig();
+            var engine = new Engine(config);
+
+            var lazyTypeInstance = new LazyRecursiveRecordType();
+
+            var result = engine.Check(
+                "Loop.Loop.Loop.Loop.Loop.Loop.Loop.Loop.Loop" +
+                ".Loop.Loop.Loop.Loop.Loop.Loop.Loop.Loop.Loop" +
+                ".Loop.Loop.Loop.Loop.Loop.Loop.Loop.Loop.Loop" +
+                ".Loop.Loop.Loop.Loop.Loop.Loop.Loop.Loop.Loop", lazyTypeInstance);
+            
+            Assert.True(result.IsSuccess);
+            Assert.IsType<LazyRecursiveRecordType>(result.ReturnType);
+            Assert.Equal(lazyTypeInstance, result.ReturnType);
+
+            // We never needed to iterate the fields of the lazy type
+            Assert.False(lazyTypeInstance.EnumerableIterated);
+        }
+
+        private class LazyRecursiveRecordType : RecordType
+        {
+            public override IEnumerable<string> FieldNames => GetFieldNames();
+
+            public bool EnumerableIterated = false;
+
+            public LazyRecursiveRecordType()
+                : base()
+            {
+            }
+
+            public override bool TryGetFieldType(string name, out FormulaType type)
+            {
+                switch (name)
+                {
+                    case "SomeString":
+                        type = FormulaType.String;
+                        return true;
+                    case "Loop":
+                        type = this;
+                        return true;
+                    default:
+                        type = FormulaType.Blank;
+                        return false;
+                }
+            }
+
+            private IEnumerable<string> GetFieldNames()
+            {
+                EnumerableIterated = true;
+
+                yield return "SomeString";
+                yield return "Loop";
+            }
+
+            public override bool Equals(object other)
+            {
+                return other is LazyRecursiveRecordType; // All the same 
+            }
+
+            public override int GetHashCode()
+            {
+                return 1;
+            }
+        }
+
+        [Fact]
+        public void CheckTypeUnionLazy()
+        {
+            var config = new PowerFxConfig();
+            var engine = new Engine(config);
+
+            var lazyTypeInstance = new LazyRecursiveRecordType();
+
+            var result = engine.Check("First(Table(Loop, {A: SomeString}))", lazyTypeInstance);
+            
+            Assert.True(result.IsSuccess);
+            Assert.IsType<KnownRecordType>(result.ReturnType);
+
+            Assert.Equal("![A:s, Loop:r!, SomeString:s]", result.ReturnType._type.ToString());
+
+            // Union operations require iterating fields
+            Assert.True(lazyTypeInstance.EnumerableIterated);
+        }
+
         /// <summary>
         /// A function with behavior/side-effects used in testing.
         /// </summary>

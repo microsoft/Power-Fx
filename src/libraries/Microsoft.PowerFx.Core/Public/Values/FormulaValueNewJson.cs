@@ -118,7 +118,7 @@ namespace Microsoft.PowerFx.Types
             }
             else
             {
-                type = TableType.FromRecord((RecordType)GuaranteeRecord(records[0]).IRContext.ResultType);
+                type = ((RecordType)GuaranteeRecord(records[0]).IRContext.ResultType).ToTable();
             }
 
             return new InMemoryTableValue(IRContext.NotInSource(type), records.Select(r => DValue<RecordValue>.Of(r)));

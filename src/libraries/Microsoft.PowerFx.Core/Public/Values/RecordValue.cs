@@ -22,14 +22,10 @@ namespace Microsoft.PowerFx.Types
         {
             get
             {
-                var fields = Type.GetNames();
-                foreach (var kv in fields)
+                var fields = Type.FieldNames;
+                foreach (var fieldName in fields)
                 {
-                    var fieldName = kv.Name;
-                    var fieldType = kv.Type;
-
-                    var value = GetField(fieldType, fieldName);
-                    yield return new NamedValue(fieldName, value);
+                    yield return new NamedValue(fieldName, GetField(fieldName));
                 }
             }
         }
@@ -72,7 +68,10 @@ namespace Microsoft.PowerFx.Types
                 throw new ArgumentNullException(nameof(fieldName));
             }
 
-            var fieldType = Type.MaybeGetFieldType(fieldName) ?? FormulaType.Blank;
+            if (!Type.TryGetFieldType(fieldName, out var fieldType))
+            {
+                fieldType = FormulaType.Blank;
+            }
 
             return GetField(fieldType, fieldName);
         }

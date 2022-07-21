@@ -85,8 +85,13 @@ namespace Microsoft.PowerFx.Core.Types
         LargeImage = 34,
         UntypedObject = 35,
 
-        Identifier = 36,
-        _Lim = 37,
+        // Lazy implementations of Record/Table, using LazyTypeProvider for field access indirection
+        LazyRecord = 36,
+        LazyTable = 37,
+
+        // Identifier type
+        Identifier = 38,
+        _Lim = 39                
 #pragma warning restore SA1300 // Element should begin with upper-case letter
     }
 }
