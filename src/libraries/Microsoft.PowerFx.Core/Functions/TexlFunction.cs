@@ -297,7 +297,7 @@ namespace Microsoft.PowerFx.Core.Functions
             TexlStrings.StringGetter description,
             FunctionCategories functionCategories,
             DType returnType,
-            BigInteger maskLambdas,            
+            BigInteger maskLambdas,
             int arityMin,
             int arityMax,
             params DType[] paramTypes)
@@ -318,7 +318,7 @@ namespace Microsoft.PowerFx.Core.Functions
             FunctionCategoriesMask = functionCategories;
             _description = description;
             ReturnType = returnType;
-            _maskLambdas = maskLambdas;            
+            _maskLambdas = maskLambdas;
             MinArity = arityMin;
             MaxArity = arityMax;
             ParamTypes = paramTypes;
