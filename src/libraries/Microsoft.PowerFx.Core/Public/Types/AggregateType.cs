@@ -12,36 +12,43 @@ namespace Microsoft.PowerFx.Types
 {
     public abstract class AggregateType : FormulaType
     {
+        public virtual IEnumerable<string> FieldNames { get; }
+
         internal AggregateType(DType type)
             : base(type)
         {
+            Contracts.Assert(type.IsAggregate);
         }
 
-        public FormulaType MaybeGetFieldType(string fieldName)
+        public AggregateType(bool isTable)
+            : base()
         {
-            // $$$ Better lookup
-            foreach (var field in GetNames())
-            {
-                if (field.Name == fieldName)
-                {
-                    return field.Type;
-                }
-            }
-
-            return null;
+            var lazyTypeProvider = new LazyTypeProvider(this);
+            _type = new DType(lazyTypeProvider, isTable: isTable);
         }
 
         public FormulaType GetFieldType(string fieldName)
         {
-            return MaybeGetFieldType(fieldName) ??
+            return TryGetFieldType(fieldName, out var type) ? 
+                type :
                 throw new InvalidOperationException($"No field {fieldName}");
         }
 
-        // Enumerate fields
-        public IEnumerable<NamedFormulaType> GetNames()
+        public virtual bool TryGetFieldType(string name, out FormulaType type)
         {
-            var names = _type.GetAllNames(DPath.Root);
-            return from name in names select new NamedFormulaType(name);
+            if (!_type.TryGetType(new DName(name), out var dType))
+            {
+                type = Blank;
+                return false;
+            }
+
+            type = Build(dType);
+            return true;
+        }
+
+        public IEnumerable<NamedFormulaType> GetFieldTypes()
+        {
+            return FieldNames.Select(field => new NamedFormulaType(field, GetFieldType(field)));
         }
 
         private protected DType AddFieldToType(NamedFormulaType field)
@@ -69,5 +76,9 @@ namespace Microsoft.PowerFx.Types
 
             return newType;
         }
+
+        public abstract override bool Equals(object other);
+
+        public abstract override int GetHashCode();
     }
 }
