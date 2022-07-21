@@ -44,7 +44,7 @@ namespace Microsoft.PowerFx.Tests
                 $"{ns}.{nameof(PrimitiveTypeMarshaller)}",
                 $"{ns}.{nameof(TableMarshallerProvider)}",
                 $"{ns}.{nameof(TypeMarshallerCache)}",
-                $"{ns}.{nameof(TypeMarshallerCacheExtensions)}",
+                $"{ns}.{nameof(TypeMarshallerCacheExtensions)}",   
                 $"{nsType}.{nameof(ObjectRecordValue)}"
             };
 

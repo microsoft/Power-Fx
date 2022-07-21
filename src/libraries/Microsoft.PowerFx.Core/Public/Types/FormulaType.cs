@@ -18,8 +18,10 @@ namespace Microsoft.PowerFx.Types
     [ThreadSafeImmutable]
     public abstract class FormulaType
     {
-        // protected isn't enough to let derived classes access this.
-        internal readonly DType _type;
+#pragma warning disable SA1300 // Element should begin with upper-case letter
+        // Uses init to allow setting from derived constructors. Otherwise, is immutable.
+        internal DType _type { get; private protected init; }
+#pragma warning restore SA1300 // Element should begin with upper-case letter
 
         public static FormulaType Blank { get; } = new BlankType();
 
@@ -60,6 +62,14 @@ namespace Microsoft.PowerFx.Types
         internal FormulaType(DType type)
         {
             _type = type;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FormulaType"/> class.
+        /// Used for subclasses that must set DType themselves.
+        /// </summary>
+        private protected FormulaType()
+        {            
         }
 
         // Entites may be recursive and their Dytype is tagged with additional schema metadata. 
@@ -104,10 +114,10 @@ namespace Microsoft.PowerFx.Types
             switch (type.Kind)
             {
                 case DKind.ObjNull: return Blank;
-
-                case DKind.Record: return new RecordType(type);
-                case DKind.Table: return new TableType(type);
-
+                case DKind.Record:
+                    return new KnownRecordType(type);
+                case DKind.Table:
+                    return new KnownTableType(type);
                 case DKind.Number: return Number;
                 case DKind.String: return String;
                 case DKind.Boolean: return Boolean;
@@ -136,7 +146,7 @@ namespace Microsoft.PowerFx.Types
 
                 // This isn't quite right, but once we're in the IR, an option set acts more like a record with optionsetvalue fields. 
                 case DKind.OptionSet:
-                    return new RecordType(DType.CreateRecord(type.GetAllNames(DPath.Root)));
+                    return new KnownRecordType(DType.CreateRecord(type.GetAllNames(DPath.Root)));
 
                 case DKind.UntypedObject:
                     return UntypedObject;
@@ -146,7 +156,24 @@ namespace Microsoft.PowerFx.Types
 
                 case DKind.Error:
                     return BindingError;
+                    
+                case DKind.LazyRecord:
+                    if (type.LazyTypeProvider.BackingFormulaType is RecordType record)
+                    {
+                        // For Build calls, if the type is actually defined by a derived FormulaType, we return the derived instance.
+                        return record;
+                    }
 
+                    return new KnownRecordType(type);
+                    
+                case DKind.LazyTable:
+                    if (type.LazyTypeProvider.BackingFormulaType is TableType table)
+                    {
+                        // For Build calls, if the type is actually defined by a derived FormulaType, we return the derived instance.
+                        return table;
+                    }
+
+                    return new KnownTableType(type);
                 default:
                     return new UnsupportedType(type);
             }
