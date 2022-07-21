@@ -88,9 +88,9 @@ namespace Microsoft.PowerFx
         }
 
         /// <summary>
-        /// Create an evaluator over the existing binding. 
+        /// Create an evaluator over the existing binding.
         /// </summary>
-        /// <param name="result">A successful binding from a previous call to <see cref="Engine.Check(string, RecordType, ParserOptions)"/>. </param>
+        /// <param name = "result" >A successful binding from a previous call to.<see cref="Engine.Check(string, RecordType, ParserOptions)"/>. </param>        
         /// <returns></returns>
         public static IExpression CreateEvaluatorDirect(CheckResult result)
         {
@@ -154,7 +154,7 @@ namespace Microsoft.PowerFx
         /// <returns>The formula's result.</returns>
         public FormulaValue Eval(string expressionText, RecordValue parameters = null, ParserOptions options = null)
         {
-            return EvalAsync(expressionText, CancellationToken.None, parameters, options).Result;          
+            return EvalAsync(expressionText, CancellationToken.None, parameters, options).Result;
         }
 
         public async Task<FormulaValue> EvalAsync(string expressionText, CancellationToken cancel, RecordValue parameters = null, ParserOptions options = null)

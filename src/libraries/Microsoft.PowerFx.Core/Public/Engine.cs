@@ -6,8 +6,6 @@ using System.Globalization;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Glue;
-using Microsoft.PowerFx.Core.Parser;
-using Microsoft.PowerFx.Core.Texl.Intellisense;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Intellisense;
@@ -120,7 +118,7 @@ namespace Microsoft.PowerFx
         /// <returns></returns>
         public CheckResult Check(ParseResult parse, RecordType parameterType = null, ParserOptions options = null)
         {
-            var bindingConfig = new BindingConfig(options?.AllowsSideEffects == true);
+            var bindingConfig = new BindingConfig(allowsSideEffects: options?.AllowsSideEffects == true);
             return CheckInternal(parse, parameterType, bindingConfig);
         }
 

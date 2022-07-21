@@ -32,7 +32,7 @@ namespace Microsoft.PowerFx
             CultureInfo = cultureInfo;
             _cancel = cancel;
         }
-                
+
         // Check this cooperatively - especially in any loop. 
         public void CheckCancel()
         {
@@ -138,7 +138,7 @@ namespace Microsoft.PowerFx
             if (setResult != null)
             {
                 return setResult;
-            }            
+            }
 
             var func = node.Function;
 
@@ -199,7 +199,7 @@ namespace Microsoft.PowerFx
         }
 
         private ValueTask<FormulaValue> VisitBinaryOpNode(BinaryOpNode node, EvalVisitorContext context, FormulaValue[] args)
-        { 
+        {
             switch (node.Op)
             {
                 case BinaryOpKind.AddNumbers:

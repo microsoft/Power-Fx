@@ -172,16 +172,10 @@ namespace Microsoft.PowerFx.Functions
             {
                 var tableType = (TableType)irContext.ResultType;
                 var resultType = tableType.ToRecord();
-                var columnNameStr = BuiltinFunction.OneColumnTableResultNameStr;
-                if (!resultType.TryGetFieldType(columnNameStr, out var itemType))
-                {
-                    columnNameStr = BuiltinFunction.ColumnName_ValueStr;
-                    itemType = resultType.GetFieldType(columnNameStr);
-                }
-
-                var arg0 = args[0];
+                var columnNameStr = tableType.SingleColumnFieldName;
+                var itemType = resultType.GetFieldType(columnNameStr);
                 var resultRows = new List<DValue<RecordValue>>();
-                foreach (var row in arg0.Rows)
+                foreach (var row in args[0].Rows)
                 {
                     if (row.IsValue)
                     {
@@ -330,7 +324,8 @@ namespace Microsoft.PowerFx.Functions
 
                 var tableType = (TableType)irContext.ResultType;
                 var resultType = tableType.ToRecord();
-                var itemType = resultType.GetFieldType(BuiltinFunction.OneColumnTableResultNameStr);
+                var columnNameStr = tableType.SingleColumnFieldName;
+                var itemType = resultType.GetFieldType(columnNameStr);
 
                 var transposed = Transpose(allResults.Select(result => result.Rows.ToList()).ToList(), maxSize);
                 var names = allResults.Select(result => result.Name).ToList();
@@ -344,8 +339,7 @@ namespace Microsoft.PowerFx.Functions
                     }
 
                     var targetArgs = list.Select((dv, i) => dv.IsValue ? dv.Value.GetField(names[i]) : dv.ToFormulaValue()).ToArray();
-
-                    var namedValue = new NamedValue(BuiltinFunction.OneColumnTableResultNameStr, await targetFunction(runner, context, IRContext.NotInSource(itemType), targetArgs));
+                    var namedValue = new NamedValue(tableType.SingleColumnFieldName, await targetFunction(runner, context, IRContext.NotInSource(itemType), targetArgs));
                     var record = new InMemoryRecordValue(IRContext.NotInSource(resultType), new List<NamedValue>() { namedValue });
                     resultRows.Add(DValue<RecordValue>.Of(record));
                 }

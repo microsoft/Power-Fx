@@ -1,0 +1,74 @@
+﻿#SETUP: ConsistentOneColumnTableResult
+
+>> Concatenate("a", Table({b:"1"},{b:"2"}))
+["a1","a2"]
+
+>> Concatenate("a", LastN(Table({b:"1"},{b:"2"}), 0))
+[]
+
+>> Concatenate("a", If(1<0, ["txt"]))
+[]
+
+>> Concatenate("a", ["hello", Mid("great", -1), "world"])
+["ahello",Microsoft.PowerFx.Types.ErrorValue,"aworld"]
+
+>> Concatenate("a", Table({a:"one"},If(1<0,{a:"two"}),{a:"three"}))
+["aone","a","athree"]
+
+>> Concatenate("a", Table({a:"one"},If(1/0<2,{a:"two"}),{a:"three"}))
+Table({Value:"aone"},Microsoft.PowerFx.Types.ErrorValue,{Value:"athree"})
+
+>> Concatenate(Blank(), ["hello", Mid("great", -1), "world"])
+["hello",Microsoft.PowerFx.Types.ErrorValue,"world"]
+
+>> Concatenate(Blank(), Table({a:"one"},If(1<0,{a:"two"}),{a:"three"}))
+["one","","three"]
+
+>> Concatenate(Blank(), Table({a:"one"},If(1/0<2,{a:"two"}),{a:"three"}))
+Table({Value:"one"},Microsoft.PowerFx.Types.ErrorValue,{Value:"three"})
+
+>> Concatenate(Table({b:"1"},{b:"2"}), "a")
+["1a","2a"]
+
+>> Concatenate(LastN(Table({b:"1"},{b:"2"}), 0), "a")
+[]
+
+>> Concatenate(["hello", Mid("great", -1), "world"], "a")
+["helloa",Microsoft.PowerFx.Types.ErrorValue,"worlda"]
+
+>> Concatenate(Table({a:"one"},If(1<0,{a:"two"}),{a:"three"}), "a")
+["onea","a","threea"]
+
+>> Concatenate(Table({a:"one"},If(1/0<2,{a:"two"}),{a:"three"}), "a")
+Table({Value:"onea"},Microsoft.PowerFx.Types.ErrorValue,{Value:"threea"})
+
+>> Concatenate(["hello", Mid("great", -1), "world"], Blank())
+["hello",Microsoft.PowerFx.Types.ErrorValue,"world"]
+
+>> Concatenate(Table({a:"one"},If(1<0,{a:"two"}),{a:"three"}), Blank())
+["one","","three"]
+
+>> Concatenate(Table({a:"one"},If(1/0<2,{a:"two"}),{a:"three"}), Blank())
+Table({Value:"one"},Microsoft.PowerFx.Types.ErrorValue,{Value:"three"})
+
+// Table + Table
+>> Concatenate(["one", "two"], [1, 2, 3, 4])
+["one1","two2","3","4"]
+
+>> Concatenate(["one", "two"], LastN(Table({b:"1"},{b:"2"}), 0))
+["one","two"]
+
+>> Concatenate(["one", "two"], If(1<0, ["txt"]))
+["one","two"]
+
+>> Concatenate(["one", "two"], If(1/0<2, ["txt"]))
+Microsoft.PowerFx.Types.ErrorValue
+
+>> Concatenate(["one", "two"], Table({a:"one"},If(1<0,{a:"two"}),{a:"three"}))
+["oneone","two","three"]
+
+>> Concatenate(["one", "two"], ["hello", Mid("great", -1), "world"])
+["onehello",Microsoft.PowerFx.Types.ErrorValue,"world"]
+
+>> Concatenate(["a","b","c","d"], "-", ["1", "2"], "-", ["x", "y", "z"], "!")
+["a-1-x!","b-2-y!","c--z!","d--!"]

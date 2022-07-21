@@ -40,7 +40,7 @@ namespace Microsoft.PowerFx
 
         public int MaxCallDepth { get; set; }
 
-        private PowerFxConfig(CultureInfo cultureInfo, EnumStoreBuilder enumStoreBuilder, Features features = Features.None) 
+        private PowerFxConfig(CultureInfo cultureInfo, EnumStoreBuilder enumStoreBuilder, Features features = Features.None)
         {
             CultureInfo = cultureInfo ?? CultureInfo.CurrentCulture;
             Features = features;
@@ -199,10 +199,10 @@ namespace Microsoft.PowerFx
         internal PowerFxConfig WithoutDisplayNames()
         {
             return new PowerFxConfig(this) { _environmentSymbolDisplayNameProvider = DisabledDisplayNameProvider.Instance };
-        } 
+        }
 
         internal void Lock()
-        { 
+        {
             CheckUnlocked();
 
             _isLocked = true;
