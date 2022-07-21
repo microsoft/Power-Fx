@@ -4,7 +4,7 @@
 Table({Double:2,Value:1},{Double:4,Value:2},{Double:6,Value:3},{Double:8,Value:4},{Double:10,Value:5})
 
 >> AddColumns([1,2,3,4,5], Value, Value * 2)
-2
+Errors: Warning 24-29: A column named 'Value' already exists.|Error 0-41: The function 'AddColumns' has some invalid arguments.
 
 >> AddColumns([1,2,3,4,5], Blanks, Blank())
 Table({Blanks:Blank(),Value:1},{Blanks:Blank(),Value:2},{Blanks:Blank(),Value:3},{Blanks:Blank(),Value:4},{Blanks:Blank(),Value:5})
@@ -25,7 +25,7 @@ Blank()
 Table({a:1,b:1},{a:2,b:8})
 
 >> AddColumns(Table({a: 1, b: {c: 3}}, {a: 2, b: {c: 4}}), b.d, a * a * a)
-1
+Errors: Error 56-57: Name isn't valid. 'b' isn't recognized.|Error 57-59: Invalid use of '.'|Error 0-71: The function 'AddColumns' has some invalid arguments.
 
 >> AddColumns(Table({a: 1, b: {c: 3}}, {a: 2, b: {c: 4}}), 'b.d', a * a * a)
 Table({a:1,b:{c:3},b.d:1},{a:2,b:{c:4},b.d:8})
@@ -38,4 +38,4 @@ Table({a:1,b:{c:3},'b d':1},{a:2,b:{c:4},'b d':8})
 Errors: Error 37-38: Name isn't valid. 'c' isn't recognized.|Error 0-39: The function 'AddColumns' has some invalid arguments.
 
 >> With( { b : 15 }, AddColumns([1,2], b, Value * b))
-[15, 30]
+Table({Value:1,b:15},{Value:2,b:30})

@@ -3468,7 +3468,6 @@ namespace Microsoft.PowerFx.Core.Binding
                     return;
                 }
 
-
                 object value = null;
                 var typeRhs = DType.Invalid;
                 var nameRhs = node.Right.Name;
@@ -4945,7 +4944,9 @@ namespace Microsoft.PowerFx.Core.Binding
                 {
                     Contracts.Assert(_currentScope == scopeNew || _currentScope == scopeNew.Parent);
 
-                    if (maybeFunc is IUsesFeatures usesFeatures ? usesFeatures.AllowsRowScopedParamDelegationExempted(i, _features) : maybeFunc.AllowsRowScopedParamDelegationExempted(i))
+                    if (maybeFunc is IUsesFeatures usesFeatures
+                        ? usesFeatures.AllowsRowScopedParamDelegationExempted(i, _features)
+                        : maybeFunc.AllowsRowScopedParamDelegationExempted(i))
                     {
                         _txb.SetSupportingRowScopedDelegationExemptionNode(args[i]);
                     }
