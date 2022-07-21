@@ -19,10 +19,9 @@ namespace Microsoft.PowerFx
         /// </summary>
         /// <param name="type"></param>
         /// <param name="cache"></param>
-        /// <param name="maxDepth"></param>
         /// <param name="marshaller"></param>
         /// <returns></returns>
-        public bool TryGetMarshaller(Type type, TypeMarshallerCache cache, int maxDepth, out ITypeMarshaller marshaller);
+        public bool TryGetMarshaller(Type type, TypeMarshallerCache cache, out ITypeMarshaller marshaller);
     }
 
     /// <summary>

@@ -126,7 +126,7 @@ namespace Microsoft.PowerFx.Core
             private Dictionary<string, FormulaTypeSchema> GetChildren(AggregateType type)
             {
                 var fields = new Dictionary<string, FormulaTypeSchema>(StringComparer.Ordinal);
-                foreach (var child in type.GetNames())
+                foreach (var child in type.GetFieldTypes())
                 {
                     child.Type.Visit(this);
                     fields.Add(child.Name, Result);

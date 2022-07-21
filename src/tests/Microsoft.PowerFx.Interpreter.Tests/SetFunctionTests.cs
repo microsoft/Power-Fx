@@ -77,7 +77,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             engine.UpdateVariable("obj", obj);
             
             // Can update record
-            var r1 = engine.Eval("Set(obj, { X : 11, Y:21}); obj.X", null, _opts);
+            var r1 = engine.Eval("Set(obj, {X: 11, Y: 21}); obj.X", null, _opts);
             Assert.Equal(11.0, r1.ToObject());
 
             // But SetField fails 

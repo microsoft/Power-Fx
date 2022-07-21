@@ -4,6 +4,10 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
+using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx
@@ -14,8 +18,17 @@ namespace Microsoft.PowerFx
     [DebuggerDisplay("ObjMarshal({Type})")]
     public class ObjectMarshaller : ITypeMarshaller
     {
-        // Map fx field name to a function produces the formula value given the dotnet object.
-        private readonly IReadOnlyDictionary<string, Func<object, FormulaValue>> _mapping;
+        /// <summary>
+        /// Value Marshalling function for a field.
+        /// </summary>
+        public delegate FormulaValue FieldValueMarshaller(object source);
+
+        /// <summary>
+        /// Method that should return the Type and Value Marshalling function for a field.
+        /// </summary>
+        public delegate (FormulaType fieldType, FieldValueMarshaller fieldValueMarshaller) FieldTypeAndValueMarshallerGetter();
+
+        private readonly Dictionary<string, FieldTypeAndValueMarshallerGetter> _fieldGetters; 
 
         /// <inheritdoc/>
         FormulaType ITypeMarshaller.Type => Type;
@@ -23,22 +36,17 @@ namespace Microsoft.PowerFx
         /// <summary>
         /// Strongly typed wrapper for Type. 
         /// </summary>
-        public RecordType Type { get; private set; }
+        public RecordType Type { get; }
+
+        public IEnumerable<string> FieldNames => _fieldGetters.Select(kvp => kvp.Key);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ObjectMarshaller"/> class.
         /// </summary>
-        /// <param name="type">The FormulaType that these objects product.</param>
-        /// <param name="fieldMap">A mapping of fx field names to functions that produce that field. </param>
-        public ObjectMarshaller(RecordType type, IReadOnlyDictionary<string, Func<object, FormulaValue>> fieldMap)
+        public ObjectMarshaller(Dictionary<string, FieldTypeAndValueMarshallerGetter> fieldGetters, Type fromType)
         {
-            if (!(type is RecordType))
-            {
-                throw new ArgumentException($"type must be a record, not ${type}");
-            }
-
-            Type = type;
-            _mapping = fieldMap;
+            _fieldGetters = fieldGetters;
+            Type = new ObjectRecordType(fromType, this);
         }
 
         /// <inheritdoc/>
@@ -51,27 +59,38 @@ namespace Microsoft.PowerFx
         // Get the value of the field. 
         // Return null on missing
         internal bool TryGetField(object source, string name, out FormulaValue fieldValue)
-        {
-            if (_mapping.TryGetValue(name, out var getter))
+        {            
+            fieldValue = null;
+            if (_fieldGetters.TryGetValue(name, out var getter))
             {
-                fieldValue = getter(source);
+                fieldValue = GetMarshalledValue(source, name, getter);
                 return true;
             }
 
-            fieldValue = null;
             return false;
         }
 
-        internal IEnumerable<NamedValue> GetFields(object source)
+        private static FormulaValue GetMarshalledValue(object source, string name, FieldTypeAndValueMarshallerGetter getter)
         {
-            foreach (var kv in _mapping)
+            var (_, valueMarshaller) = getter();
+            if (valueMarshaller == null) 
             {
-                var fieldName = kv.Key;
-                var getter = kv.Value;
-
-                var value = getter(source);
-                yield return new NamedValue(fieldName, value);
+                throw new InvalidOperationException($"Failed to retrieve value marshaller for registered field {name}");
             }
+
+            return valueMarshaller(source);
+        }
+
+        internal bool TryGetFieldType(string name, out FormulaType type)
+        {
+            type = FormulaType.Blank;
+            if (_fieldGetters.TryGetValue(name, out var getter))
+            {
+                (type, _) = getter();
+                return true;
+            }
+
+            return false;
         }
     }
 }

@@ -124,15 +124,9 @@ namespace Microsoft.PowerFx
         /// Returns a marshaller for the given type. 
         /// </summary>
         /// <param name="type">dot net type to marshal.</param>
-        /// <param name="maxDepth">maximum depth to marshal.</param>
         /// <returns>A marshaller instance that can marshal objects of the given type.</returns>
-        public ITypeMarshaller GetMarshaller(Type type, int maxDepth = DefaultDepth)
+        public ITypeMarshaller GetMarshaller(Type type)
         {
-            if (maxDepth < 0)
-            {
-                return new EmptyMarshaller();
-            }
-
             // The cache requires an exact type match and doesn't handle base types.
             ITypeMarshaller tm;
 
@@ -146,7 +140,7 @@ namespace Microsoft.PowerFx
 
             foreach (var marshaller in _marshallers)
             {
-                if (marshaller.TryGetMarshaller(type, this, maxDepth - 1, out tm))
+                if (marshaller.TryGetMarshaller(type, this, out tm))
                 {
                     tm = new NullCheckerMarshaller(tm);
                     lock (_cache)
