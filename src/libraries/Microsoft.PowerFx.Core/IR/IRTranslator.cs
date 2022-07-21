@@ -263,7 +263,7 @@ namespace Microsoft.PowerFx.Core.IR
                     var arg = node.Args.Children[i];
 
                     var supportIdentifiers = _features.HasFlag(Features.SupportIdentifiers);
-                    if (supportIdentifiers && func.IsIdentifier(i))
+                    if (supportIdentifiers && func is IHasIdentifiers hasIdentifiers && hasIdentifiers.IsIdentifierParam(i))
                     {
                         var identifierNode = arg.AsIdentifierNode();
                         Contracts.Assert(identifierNode != null);

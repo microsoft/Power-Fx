@@ -26,7 +26,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         }
 
         public StringTwoArgFunction(string name, TexlStrings.StringGetter description, DType returnType)
-            : base(name, description, FunctionCategories.Text, returnType, 0, 0, 2, 2, DType.String, DType.String)
+            : base(name, description, FunctionCategories.Text, returnType, 0, 2, 2, DType.String, DType.String)
         {
         }
 

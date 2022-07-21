@@ -21,7 +21,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool SupportsParamCoercion => true;
 
         public SubstituteFunction()
-            : base("Substitute", TexlStrings.AboutSubstitute, FunctionCategories.Text, DType.String, 0, 0, 3, 4, DType.String, DType.String, DType.String, DType.Number)
+            : base("Substitute", TexlStrings.AboutSubstitute, FunctionCategories.Text, DType.String, 0, 3, 4, DType.String, DType.String, DType.String, DType.Number)
         {
         }
 
@@ -40,7 +40,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool SupportsParamCoercion => true;
 
         public SubstituteTFunction()
-            : base("Substitute", TexlStrings.AboutSubstituteT, FunctionCategories.Table, DType.EmptyTable, 0, 0, 3, 4)
+            : base("Substitute", TexlStrings.AboutSubstituteT, FunctionCategories.Table, DType.EmptyTable, 0, 3, 4)
         {
         }
 

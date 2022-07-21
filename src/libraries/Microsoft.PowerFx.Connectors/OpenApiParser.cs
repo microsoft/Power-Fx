@@ -89,8 +89,7 @@ namespace Microsoft.PowerFx.Connectors
                         operationName,
                         description, // Template.GetFunctionDescription(funcTemplate.Name),
                         returnType._type,
-                        BigInteger.Zero,
-                        BigInteger.Zero, // Identifiers
+                        BigInteger.Zero,                        
                         argMapper.ArityMin,
                         argMapper.ArityMax,
                         isBehavior,

@@ -21,7 +21,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool IsSelfContained => true;
 
         public RGBAFunction()
-            : base("RGBA", TexlStrings.AboutRGBA, FunctionCategories.Color, DType.Color, 0, 0, 4, 4, DType.Number, DType.Number, DType.Number, DType.Number)
+            : base("RGBA", TexlStrings.AboutRGBA, FunctionCategories.Color, DType.Color, 0, 4, 4, DType.Number, DType.Number, DType.Number, DType.Number)
         {
         }
 

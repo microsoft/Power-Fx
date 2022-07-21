@@ -22,7 +22,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool SupportsParamCoercion => true;
 
         public LeftRightScalarFunction(bool isLeft)
-            : base(isLeft ? "Left" : "Right", isLeft ? TexlStrings.AboutLeft : TexlStrings.AboutRight, FunctionCategories.Text, DType.String, 0, 0, 2, 2, DType.String, DType.Number)
+            : base(isLeft ? "Left" : "Right", isLeft ? TexlStrings.AboutLeft : TexlStrings.AboutRight, FunctionCategories.Text, DType.String, 0, 2, 2, DType.String, DType.Number)
         {
         }
 
@@ -42,7 +42,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool SupportsParamCoercion => true;
 
         public LeftRightTableScalarFunction(bool isLeft)
-            : base(isLeft ? "Left" : "Right", isLeft ? TexlStrings.AboutLeftT : TexlStrings.AboutRightT, FunctionCategories.Table, DType.EmptyTable, 0, 0, 2, 2, DType.EmptyTable, DType.Number)
+            : base(isLeft ? "Left" : "Right", isLeft ? TexlStrings.AboutLeftT : TexlStrings.AboutRightT, FunctionCategories.Table, DType.EmptyTable, 0, 2, 2, DType.EmptyTable, DType.Number)
         {
         }
 
@@ -90,7 +90,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool SupportsParamCoercion => true;
 
         public LeftRightTableTableFunction(bool isLeft)
-            : base(isLeft ? "Left" : "Right", isLeft ? TexlStrings.AboutLeftT : TexlStrings.AboutRightT, FunctionCategories.Table, DType.EmptyTable, 0, 0, 2, 2, DType.EmptyTable, DType.EmptyTable)
+            : base(isLeft ? "Left" : "Right", isLeft ? TexlStrings.AboutLeftT : TexlStrings.AboutRightT, FunctionCategories.Table, DType.EmptyTable, 0, 2, 2, DType.EmptyTable, DType.EmptyTable)
         {
         }
 
@@ -141,7 +141,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool SupportsParamCoercion => true;
 
         public LeftRightScalarTableFunction(bool isLeft)
-            : base(isLeft ? "Left" : "Right", isLeft ? TexlStrings.AboutLeftT : TexlStrings.AboutRightT, FunctionCategories.Table, DType.EmptyTable, 0, 0, 2, 2, DType.String, DType.EmptyTable)
+            : base(isLeft ? "Left" : "Right", isLeft ? TexlStrings.AboutLeftT : TexlStrings.AboutRightT, FunctionCategories.Table, DType.EmptyTable, 0, 2, 2, DType.String, DType.EmptyTable)
         {
         }
 

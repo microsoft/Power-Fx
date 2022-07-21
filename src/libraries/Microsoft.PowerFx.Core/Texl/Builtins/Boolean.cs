@@ -25,7 +25,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool SupportsParamCoercion => false;
 
         public BooleanFunction()
-            : base(BooleanInvariantFunctionName, TexlStrings.AboutBoolean, FunctionCategories.Text, DType.Boolean, 0, 0, 1, 1, DType.String)
+            : base(BooleanInvariantFunctionName, TexlStrings.AboutBoolean, FunctionCategories.Text, DType.Boolean, 0, 1, 1, DType.String)
         {
         }
 
@@ -44,7 +44,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool SupportsParamCoercion => false;
 
         public BooleanFunction_T()
-            : base(BooleanFunction.BooleanInvariantFunctionName, TexlStrings.AboutBooleanT, FunctionCategories.Table, DType.EmptyTable, 0, 0, 1, 1, DType.EmptyTable)
+            : base(BooleanFunction.BooleanInvariantFunctionName, TexlStrings.AboutBooleanT, FunctionCategories.Table, DType.EmptyTable, 0, 1, 1, DType.EmptyTable)
         {
         }
 
@@ -90,7 +90,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool SupportsParamCoercion => false;
 
         public BooleanNFunction()
-            : base(BooleanFunction.BooleanInvariantFunctionName, TexlStrings.AboutBooleanN, FunctionCategories.Text, DType.Boolean, 0, 0, 1, 1, DType.Number)
+            : base(BooleanFunction.BooleanInvariantFunctionName, TexlStrings.AboutBooleanN, FunctionCategories.Text, DType.Boolean, 0, 1, 1, DType.Number)
         {
         }
 
@@ -121,7 +121,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool SupportsParamCoercion => false;
 
         public BooleanNFunction_T()
-            : base(BooleanFunction.BooleanInvariantFunctionName, TexlStrings.AboutBooleanNT, FunctionCategories.Table, DType.EmptyTable, 0, 0, 1, 1, DType.EmptyTable)
+            : base(BooleanFunction.BooleanInvariantFunctionName, TexlStrings.AboutBooleanNT, FunctionCategories.Table, DType.EmptyTable, 0, 1, 1, DType.EmptyTable)
         {
         }
 
@@ -166,7 +166,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool SupportsParamCoercion => false;
 
         public BooleanFunction_UO()
-            : base(BooleanFunction.BooleanInvariantFunctionName, TexlStrings.AboutBoolean, FunctionCategories.Text, DType.Boolean, 0, 0, 1, 1, DType.UntypedObject)
+            : base(BooleanFunction.BooleanInvariantFunctionName, TexlStrings.AboutBoolean, FunctionCategories.Text, DType.Boolean, 0, 1, 1, DType.UntypedObject)
         {
         }
 

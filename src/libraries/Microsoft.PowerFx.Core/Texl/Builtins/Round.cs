@@ -21,7 +21,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool SupportsParamCoercion => true;
 
         public ScalarRoundingFunction(string name, TexlStrings.StringGetter description)
-            : base(name, description, FunctionCategories.MathAndStat, DType.Number, 0, 0, 2, 2, DType.Number, DType.Number)
+            : base(name, description, FunctionCategories.MathAndStat, DType.Number, 0, 2, 2, DType.Number, DType.Number)
         {
         }
 
@@ -39,7 +39,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool SupportsParamCoercion => true;
 
         public TableRoundingFunction(string name, TexlStrings.StringGetter description)
-            : base(name, description, FunctionCategories.Table, DType.EmptyTable, 0, 0, 2, 2)
+            : base(name, description, FunctionCategories.Table, DType.EmptyTable, 0, 2, 2)
         {
         }
 

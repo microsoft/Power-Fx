@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
@@ -19,7 +20,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
     // AddColumns(source:*[...], name:s, valueFunc:func<_>, name:s, valueFunc:func<_>, ...)
     // Corresponding DAX function: AddColumns
-    internal sealed class AddColumnsFunction : FunctionWithTableInput
+    internal sealed class AddColumnsFunction : FunctionWithTableInput, IHasIdentifiers, IUsesFeatures
     {
         public override bool SkipScopeForInlineRecords => true;
 
@@ -30,7 +31,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool SupportsParamCoercion => false;
 
         public AddColumnsFunction()
-            : base("AddColumns", TexlStrings.AboutAddColumns, FunctionCategories.Table, DType.EmptyTable, 0, 0, 3, int.MaxValue, DType.EmptyTable)
+            : base("AddColumns", TexlStrings.AboutAddColumns, FunctionCategories.Table, DType.EmptyTable, 0, 3, int.MaxValue, DType.EmptyTable)
         {
             // AddColumns(source, name, valueFunc, name, valueFunc, ..., name, valueFunc, ...)
             SignatureConstraint = new SignatureConstraint(omitStartIndex: 5, repeatSpan: 2, endNonRepeatCount: 0, repeatTopLength: 9);
@@ -189,7 +190,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return index >= 2 && ((index & 1) == 0);
         }
 
-        public override bool IsIdentifier(int index)
+        public bool IsIdentifierParam(int index)
         {
             Contracts.Assert(index >= 0);
 
@@ -197,11 +198,16 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return index >= 1 && ((index & 1) == 1);
         }
 
-        public override bool AllowsRowScopedParamDelegationExempted(int index, Features features)
+        public override bool AllowsRowScopedParamDelegationExempted(int index)
+        {
+            throw new NotImplementedException("Do not call this method, test for IUsesFeatures interface and call AllowsRowScopedParamDelegationExempted(int index, Features features) instead");
+        }
+
+        public bool AllowsRowScopedParamDelegationExempted(int index, Features features)
         {
             Contracts.Assert(index >= 0);
 
-            return IsLambdaParam(index) || (features.HasFlag(Features.SupportIdentifiers) && IsIdentifier(index));
+            return IsLambdaParam(index) || (features.HasFlag(Features.SupportIdentifiers) && IsIdentifierParam(index));
         }
     }
 }

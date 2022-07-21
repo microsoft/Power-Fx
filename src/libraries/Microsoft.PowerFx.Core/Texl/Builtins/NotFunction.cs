@@ -23,7 +23,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool SupportsParamCoercion => true;
 
         public NotFunction()
-            : base("Not", TexlStrings.AboutNot, FunctionCategories.Logical, DType.Boolean, 0, 0, 1, 1, DType.Boolean)
+            : base("Not", TexlStrings.AboutNot, FunctionCategories.Logical, DType.Boolean, 0, 1, 1, DType.Boolean)
         {
         }
 

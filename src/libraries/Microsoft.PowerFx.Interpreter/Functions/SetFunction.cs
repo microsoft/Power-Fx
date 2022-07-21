@@ -43,8 +43,7 @@ namespace Microsoft.PowerFx.Interpreter
               TexlStrings.AboutSet,
               FunctionCategories.Behavior,
               DType.Boolean,
-              0, // no lambdas
-              0, // no identifiers
+              0, // no lambdas              
               2,
               2)
         {

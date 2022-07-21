@@ -22,7 +22,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool SupportsParamCoercion => false;
 
         public ShuffleFunction()
-            : base("Shuffle", TexlStrings.AboutShuffle, FunctionCategories.Table, DType.EmptyTable, 0, 0, 1, 1, DType.EmptyTable)
+            : base("Shuffle", TexlStrings.AboutShuffle, FunctionCategories.Table, DType.EmptyTable, 0, 1, 1, DType.EmptyTable)
         {
         }
 

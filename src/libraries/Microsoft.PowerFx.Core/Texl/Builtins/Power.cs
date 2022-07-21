@@ -20,7 +20,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool IsSelfContained => true;
 
         public PowerFunction()
-            : base("Power", TexlStrings.AboutPower, FunctionCategories.MathAndStat, DType.Number, 0, 0, 2, 2, DType.Number, DType.Number)
+            : base("Power", TexlStrings.AboutPower, FunctionCategories.MathAndStat, DType.Number, 0, 2, 2, DType.Number, DType.Number)
         {
         }
 
@@ -39,7 +39,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool IsSelfContained => true;
 
         public PowerTFunction()
-            : base("Power", TexlStrings.AboutPowerT, FunctionCategories.MathAndStat, DType.EmptyTable, 0, 0, 2, 2)
+            : base("Power", TexlStrings.AboutPowerT, FunctionCategories.MathAndStat, DType.EmptyTable, 0, 2, 2)
         {
         }
 

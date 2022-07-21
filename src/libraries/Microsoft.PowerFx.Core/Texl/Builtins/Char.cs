@@ -24,7 +24,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool SupportsParamCoercion => true;
 
         public CharFunction()
-            : base("Char", TexlStrings.AboutChar, FunctionCategories.Text, DType.String, 0, 0, 1, 1, DType.Number)
+            : base("Char", TexlStrings.AboutChar, FunctionCategories.Text, DType.String, 0, 1, 1, DType.Number)
         {
         }
 
@@ -42,7 +42,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool SupportsParamCoercion => true;
 
         public CharTFunction()
-            : base("Char", TexlStrings.AboutCharT, FunctionCategories.Table, DType.EmptyTable, 0, 0, 1, 1, DType.EmptyTable)
+            : base("Char", TexlStrings.AboutCharT, FunctionCategories.Table, DType.EmptyTable, 0, 1, 1, DType.EmptyTable)
         {
         }
 

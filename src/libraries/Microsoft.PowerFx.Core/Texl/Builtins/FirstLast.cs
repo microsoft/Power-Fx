@@ -28,7 +28,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         private readonly bool _isFirst;
 
         public FirstLastFunction(bool isFirst)
-            : base(isFirst ? "First" : "Last", isFirst ? TexlStrings.AboutFirst : TexlStrings.AboutLast, FunctionCategories.Table, DType.EmptyRecord, 0, 0, 1, 1, DType.EmptyTable)
+            : base(isFirst ? "First" : "Last", isFirst ? TexlStrings.AboutFirst : TexlStrings.AboutLast, FunctionCategories.Table, DType.EmptyRecord, 0, 1, 1, DType.EmptyTable)
         {
             _isFirst = isFirst;
         }

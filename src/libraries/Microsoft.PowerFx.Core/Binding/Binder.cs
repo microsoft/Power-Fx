@@ -3468,11 +3468,6 @@ namespace Microsoft.PowerFx.Core.Binding
                     return;
                 }
 
-                if (node.IsIdentifier)
-                {
-                    // There isn't much we can do with identifiers
-                    return;
-                }
 
                 object value = null;
                 var typeRhs = DType.Invalid;
@@ -4950,7 +4945,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 {
                     Contracts.Assert(_currentScope == scopeNew || _currentScope == scopeNew.Parent);
 
-                    if (maybeFunc.AllowsRowScopedParamDelegationExempted(i, _features))
+                    if (maybeFunc is IUsesFeatures usesFeatures ? usesFeatures.AllowsRowScopedParamDelegationExempted(i, _features) : maybeFunc.AllowsRowScopedParamDelegationExempted(i))
                     {
                         _txb.SetSupportingRowScopedDelegationExemptionNode(args[i]);
                     }
@@ -4965,7 +4960,11 @@ namespace Microsoft.PowerFx.Core.Binding
                         _txb.AddVolatileVariables(args[i], volatileVariables);
                     }
 
-                    var isIdentifier = _features.HasFlag(Features.SupportIdentifiers) && maybeFunc.IsIdentifier(i);
+                    var isIdentifier =
+                        args[i] is FirstNameNode &&
+                        _features.HasFlag(Features.SupportIdentifiers) &&
+                        maybeFunc is IHasIdentifiers hasIdentifiers &&
+                        hasIdentifiers.IsIdentifierParam(i);
 
                     // Use the new scope only for lambda args.
                     _currentScope = ((maybeFunc.IsLambdaParam(i) || isIdentifier) && scopeInfo.AppliesToArgument(i)) ? scopeNew : scopeNew.Parent;

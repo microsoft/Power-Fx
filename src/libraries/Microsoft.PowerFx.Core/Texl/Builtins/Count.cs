@@ -24,7 +24,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool SupportsParamCoercion => false;
 
         public CountFunction()
-            : base("Count", TexlStrings.AboutCount, FunctionCategories.Table | FunctionCategories.MathAndStat, DType.Number, 0, 0, 1, 1, DType.EmptyTable)
+            : base("Count", TexlStrings.AboutCount, FunctionCategories.Table | FunctionCategories.MathAndStat, DType.Number, 0, 1, 1, DType.EmptyTable)
         {
         }
 

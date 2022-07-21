@@ -22,7 +22,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool SupportsParamCoercion => true;
 
         public TruncFunction()
-            : base("Trunc", TexlStrings.AboutTrunc, FunctionCategories.MathAndStat, DType.Number, 0, 0, 1, 2, DType.Number, DType.Number)
+            : base("Trunc", TexlStrings.AboutTrunc, FunctionCategories.MathAndStat, DType.Number, 0, 1, 2, DType.Number, DType.Number)
         {
         }
 
@@ -40,7 +40,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool SupportsParamCoercion => true;
 
         public TruncTableFunction()
-            : base("Trunc", TexlStrings.AboutTruncT, FunctionCategories.Table, DType.EmptyTable, 0, 0, 1, 2)
+            : base("Trunc", TexlStrings.AboutTruncT, FunctionCategories.Table, DType.EmptyTable, 0, 1, 2)
         {
         }
 

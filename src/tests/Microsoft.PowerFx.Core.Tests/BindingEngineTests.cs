@@ -235,7 +235,7 @@ namespace Microsoft.PowerFx.Tests
                 ".Loop.Loop.Loop.Loop.Loop.Loop.Loop.Loop.Loop" +
                 ".Loop.Loop.Loop.Loop.Loop.Loop.Loop.Loop.Loop" +
                 ".Loop.Loop.Loop.Loop.Loop.Loop.Loop.Loop.Loop", lazyTypeInstance);
-            
+
             Assert.True(result.IsSuccess);
             Assert.IsType<LazyRecursiveRecordType>(result.ReturnType);
             Assert.Equal(lazyTypeInstance, result.ReturnType);
@@ -299,7 +299,7 @@ namespace Microsoft.PowerFx.Tests
             var lazyTypeInstance = new LazyRecursiveRecordType();
 
             var result = engine.Check("First(Table(Loop, {A: SomeString}))", lazyTypeInstance);
-            
+
             Assert.True(result.IsSuccess);
             Assert.IsType<KnownRecordType>(result.ReturnType);
 
@@ -322,8 +322,7 @@ namespace Microsoft.PowerFx.Tests
                       TexlStrings.AboutSet, // just to add something
                       FunctionCategories.Behavior,
                       DType.Boolean,
-                      0, // no lambdas
-                      0, // no identifiers
+                      0, // no lambdas                      
                       0, // no args
                       0)
             {

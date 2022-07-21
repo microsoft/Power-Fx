@@ -22,7 +22,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool SupportsParamCoercion => true;
 
         public GUIDNoArgFunction()
-            : base(GUIDFunctionInvariantName, TexlStrings.AboutGUID, FunctionCategories.Text, DType.Guid, 0, 0, 0, 0)
+            : base(GUIDFunctionInvariantName, TexlStrings.AboutGUID, FunctionCategories.Text, DType.Guid, 0, 0, 0)
         {
         }
 
@@ -40,7 +40,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool SupportsParamCoercion => false;
 
         public GUIDPureFunction()
-            : base(GUIDNoArgFunction.GUIDFunctionInvariantName, TexlStrings.AboutGUID, FunctionCategories.Text, DType.Guid, 0, 0, 1, 1, DType.String)
+            : base(GUIDNoArgFunction.GUIDFunctionInvariantName, TexlStrings.AboutGUID, FunctionCategories.Text, DType.Guid, 0, 1, 1, DType.String)
         {
         }
 
@@ -58,7 +58,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool SupportsParamCoercion => false;
 
         public GUIDPureFunction_UO()
-            : base(GUIDNoArgFunction.GUIDFunctionInvariantName, TexlStrings.AboutGUID, FunctionCategories.Text, DType.Guid, 0, 0, 1, 1, DType.UntypedObject)
+            : base(GUIDNoArgFunction.GUIDFunctionInvariantName, TexlStrings.AboutGUID, FunctionCategories.Text, DType.Guid, 0, 1, 1, DType.UntypedObject)
         {
         }
 

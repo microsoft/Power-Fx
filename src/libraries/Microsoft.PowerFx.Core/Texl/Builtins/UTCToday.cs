@@ -20,7 +20,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool IsSelfContained => true;
 
         public UTCTodayFunction()
-            : base("UTCToday", TexlStrings.AboutUTCToday, FunctionCategories.DateTime, DType.Date, 0, 0, 0, 0)
+            : base("UTCToday", TexlStrings.AboutUTCToday, FunctionCategories.DateTime, DType.Date, 0, 0, 0)
         {
         }
 

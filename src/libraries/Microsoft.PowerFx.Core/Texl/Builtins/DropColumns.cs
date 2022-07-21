@@ -23,7 +23,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool SupportsParamCoercion => false;
 
         public DropColumnsFunction()
-            : base("DropColumns", TexlStrings.AboutDropColumns, FunctionCategories.Table, DType.EmptyTable, 0, 0, 2, int.MaxValue, DType.EmptyTable)
+            : base("DropColumns", TexlStrings.AboutDropColumns, FunctionCategories.Table, DType.EmptyTable, 0, 2, int.MaxValue, DType.EmptyTable)
         {
         }
 

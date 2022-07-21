@@ -28,7 +28,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                   FunctionCategories.Table,
                   DType.EmptyTable,
                   0,
-                  0,
                   1,
                   2,
                   DType.EmptyTable,

@@ -23,7 +23,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool SupportsParamCoercion => true;
 
         public TodayFunction()
-            : base("Today", TexlStrings.AboutToday, FunctionCategories.DateTime, DType.Date, 0, 0, 0, 0)
+            : base("Today", TexlStrings.AboutToday, FunctionCategories.DateTime, DType.Date, 0, 0, 0)
         {
         }
 
