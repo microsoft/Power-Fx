@@ -147,12 +147,11 @@ namespace Microsoft.PowerFx
                 return null;
             }
 
-            var newValue2 = await arg1.Accept(this, context);
-
-            var argFrom = await r.From.Accept(this, context);
+            var source = await r.From.Accept(this, context);
             var fieldName = r.Field.Value;
+            var newValue = await arg1.Accept(this, context);
 
-            var args = new FormulaValue[] { argFrom, FormulaValue.New(fieldName), newValue2 };
+            var args = new FormulaValue[] { source, FormulaValue.New(fieldName), newValue };
             var result = await setPropFunc.InvokeAsync(args, _cancel);
 
             return result;

@@ -85,8 +85,6 @@ namespace Microsoft.PowerFx.Tests
             {
             }
 
-            // public Dictionary<string, FormulaValue> _props = new Dictionary<string, FormulaValue>();
-
             // Must have "Execute" method. 
             public static BooleanValue Execute(RecordValue source, StringValue propName, FormulaValue newValue)
             {
