@@ -42,3 +42,9 @@ Table({Value:1,b:15},{Value:2,b:30})
 
 >> With( { b : 15 }, AddColumns([1,2], e, Value * b))
 Table({Value:1,e:15},{Value:2,e:30})
+
+>> AddColumns([1,2,3], sq, Value * Value, cu, Value * Value * Value)
+Table({Value:1,cu:1,sq:1},{Value:2,cu:8,sq:4},{Value:3,cu:27,sq:9})
+
+>> AddColumns([1,2,3], sq, Value * Value, cu, sq * Value)
+Errors: Error 43-45: Name isn't valid. 'sq' isn't recognized.

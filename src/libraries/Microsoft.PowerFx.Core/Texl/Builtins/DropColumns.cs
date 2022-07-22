@@ -1,10 +1,12 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Errors;
+using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
@@ -16,15 +18,18 @@ using Microsoft.PowerFx.Syntax;
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
     // DropColumns(source:*[...], name:s, name:s, ...)
-    internal sealed class DropColumnsFunction : FunctionWithTableInput
+    internal sealed class DropColumnsFunction : FunctionWithTableInput, IUsesFeatures, IHasIdentifiers
     {
         public override bool IsSelfContained => true;
+
+        public override bool HasLambdas => true;
 
         public override bool SupportsParamCoercion => false;
 
         public DropColumnsFunction()
             : base("DropColumns", TexlStrings.AboutDropColumns, FunctionCategories.Table, DType.EmptyTable, 0, 2, int.MaxValue, DType.EmptyTable)
         {
+            ScopeInfo = new FunctionScopeInfo(this);
         }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
@@ -65,6 +70,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 returnType = argTypes[0];
             }
 
+            var supportIndentifiers = binding.Features.HasFlag(Features.SupportIdentifiers);
+
             // The result type has N fewer columns, as specified by (args[1],args[2],args[3],...)
             var count = args.Length;
             for (var i = 1; i < count; i++)
@@ -75,23 +82,29 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 // Verify we have a string literal for the column name. Accd to spec, we don't support
                 // arbitrary expressions that evaluate to string values, because these values contribute to
                 // type analysis, so they need to be known upfront (before DropColumns executes).
-                StrLitNode nameNode;
-                if (nameArgType.Kind != DKind.String || (nameNode = nameArg.AsStrLit()) == null)
+                StrLitNode strLitNode = null;
+                FirstNameNode identifierNode = null;
+
+                if ((!supportIndentifiers && (nameArgType.Kind != DKind.String || (strLitNode = nameArg.AsStrLit()) == null)) ||
+                     (supportIndentifiers && (identifierNode = nameArg.AsFirstName()) == null))
                 {
                     fArgsValid = false;
+
                     errors.EnsureError(DocumentErrorSeverity.Severe, nameArg, TexlStrings.ErrExpectedStringLiteralArg_Name, nameArg.ToString());
                     continue;
                 }
 
+                var value = supportIndentifiers ? identifierNode.Name : strLitNode.Value;
+
                 // Verify that the name is valid.
-                if (!DName.IsValidDName(nameNode.Value))
+                if (!DName.IsValidDName(value))
                 {
                     fArgsValid = false;
-                    errors.EnsureError(DocumentErrorSeverity.Severe, nameArg, TexlStrings.ErrArgNotAValidIdentifier_Name, nameNode.Value);
+                    errors.EnsureError(DocumentErrorSeverity.Severe, nameArg, TexlStrings.ErrArgNotAValidIdentifier_Name, value);
                     continue;
                 }
 
-                var columnName = new DName(nameNode.Value);
+                var columnName = new DName(value);
 
                 // Verify that the name exists.
                 if (!returnType.TryGetType(columnName, out var columnType))
@@ -116,6 +129,23 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.Assert(argumentIndex >= 0);
 
             return argumentIndex >= 0;
+        }
+
+        public bool IsIdentifierParam(int index)
+        {
+            return index > 0;
+        }
+
+        public override bool AllowsRowScopedParamDelegationExempted(int index)
+        {
+            throw new NotImplementedException("Do not call this method, test for IUsesFeatures interface and call AllowsRowScopedParamDelegationExempted(int index, Features features) instead");
+        }
+
+        public bool AllowsRowScopedParamDelegationExempted(int index, Features features)
+        {
+            Contracts.Assert(index >= 0);
+
+            return features.HasFlag(Features.SupportIdentifiers) && IsIdentifierParam(index);
         }
     }
 }

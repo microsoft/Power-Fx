@@ -68,8 +68,8 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: AddColumns)
             },
             {
-                BuiltinFunctionsCore.And, 
-                And 
+                BuiltinFunctionsCore.And,
+                And
             },
             {
                 BuiltinFunctionsCore.Asin,
@@ -123,9 +123,9 @@ namespace Microsoft.PowerFx.Functions
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: AverageTable)
             },
-            { 
-                BuiltinFunctionsCore.Blank, 
-                Blank 
+            {
+                BuiltinFunctionsCore.Blank,
+                Blank
             },
             {
                 BuiltinFunctionsCore.Boolean,
@@ -190,9 +190,9 @@ namespace Microsoft.PowerFx.Functions
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: Concat)
             },
-            { 
-                BuiltinFunctionsCore.Coalesce, 
-                Coalesce 
+            {
+                BuiltinFunctionsCore.Coalesce,
+                Coalesce
             },
             {
                 BuiltinFunctionsCore.Char,
@@ -430,6 +430,16 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: SingleArgTrig("Degrees", x => x * 180.0 / Math.PI))
             },
             {
+                BuiltinFunctionsCore.DropColumns,
+                StandardErrorHandlingAsync<FormulaValue>(
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: DropColumnsTypeChecker,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: DropColumns)
+            },
+            {
                 BuiltinFunctionsCore.EndsWith,
                 StandardErrorHandling<StringValue>(
                     expandArguments: NoArgExpansion,
@@ -627,13 +637,13 @@ namespace Microsoft.PowerFx.Functions
                     returnBehavior: ReturnBehavior.ReturnFalseIfAnyArgIsBlank,
                     targetFunction: IsToday)
             },
-            { 
-                BuiltinFunctionsCore.If, 
-                If 
+            {
+                BuiltinFunctionsCore.If,
+                If
             },
-            { 
-                BuiltinFunctionsCore.IfError, 
-                IfError 
+            {
+                BuiltinFunctionsCore.IfError,
+                IfError
             },
             {
                 BuiltinFunctionsCore.Int,
@@ -884,9 +894,9 @@ namespace Microsoft.PowerFx.Functions
                 BuiltinFunctionsCore.Now,
                 NoErrorHandling(Now)
             },
-            { 
-                BuiltinFunctionsCore.Or, 
-                Or 
+            {
+                BuiltinFunctionsCore.Or,
+                Or
             },
             {
                 BuiltinFunctionsCore.ParseJSON,
@@ -1161,13 +1171,13 @@ namespace Microsoft.PowerFx.Functions
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: Substitute)
             },
-            { 
-                BuiltinFunctionsCore.Switch, 
-                Switch 
+            {
+                BuiltinFunctionsCore.Switch,
+                Switch
             },
-            { 
-                BuiltinFunctionsCore.Table, 
-                NoErrorHandling(Table) 
+            {
+                BuiltinFunctionsCore.Table,
+                NoErrorHandling(Table)
             },
             {
                 BuiltinFunctionsCore.Table_UO,
@@ -1249,9 +1259,9 @@ namespace Microsoft.PowerFx.Functions
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: TimeZoneOffset)
             },
-            { 
-                BuiltinFunctionsCore.Today, 
-                NoErrorHandling(Today) 
+            {
+                BuiltinFunctionsCore.Today,
+                NoErrorHandling(Today)
             },
             {
                 BuiltinFunctionsCore.Trim,
@@ -1313,7 +1323,7 @@ namespace Microsoft.PowerFx.Functions
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: Value_UO)
             },
-            { 
+            {
                 BuiltinFunctionsCore.VarP,
                 StandardErrorHandling<FormulaValue>(
                     expandArguments: NoArgExpansion,
@@ -1358,7 +1368,7 @@ namespace Microsoft.PowerFx.Functions
         };
 
         public static IEnumerable<DValue<RecordValue>> StandardTableNodeRecords(IRContext irContext, FormulaValue[] args, bool forceSingleColumn)
-        {            
+        {
             var tableType = (TableType)irContext.ResultType;
             var columnName = tableType.SingleColumnFieldName;
             var recordType = tableType.ToRecord();

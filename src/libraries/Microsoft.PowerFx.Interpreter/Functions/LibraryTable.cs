@@ -113,6 +113,17 @@ namespace Microsoft.PowerFx.Functions
             return new InMemoryTableValue(irContext, rows);
         }
 
+        public static async ValueTask<FormulaValue> DropColumns(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        {
+            var sourceArg = (TableValue)args[0];
+
+            var tableType = (TableType)irContext.ResultType;
+            var recordIRContext = new IRContext(irContext.SourceContext, tableType.ToRecord());
+            var rows = await LazyDropColumnsAsync(runner, context, sourceArg.Rows, recordIRContext, args.Skip(1).ToArray());
+
+            return new InMemoryTableValue(irContext, rows);
+        }
+
         private static async Task<IEnumerable<DValue<RecordValue>>> LazyAddColumnsAsync(EvalVisitor runner, EvalVisitorContext context, IEnumerable<DValue<RecordValue>> sources, IRContext recordIRContext, NamedLambda[] newColumns)
         {
             var list = new List<DValue<RecordValue>>();
@@ -133,6 +144,26 @@ namespace Microsoft.PowerFx.Functions
                     }
 
                     list.Add(DValue<RecordValue>.Of(new InMemoryRecordValue(recordIRContext, fields.ToArray())));
+                }
+                else
+                {
+                    list.Add(row);
+                }
+            }
+
+            return list;
+        }
+
+        private static async Task<IEnumerable<DValue<RecordValue>>> LazyDropColumnsAsync(EvalVisitor runner, EvalVisitorContext context, IEnumerable<DValue<RecordValue>> sources, IRContext recordIRContext, FormulaValue[] columnsToRemove)
+        {
+            var list = new List<DValue<RecordValue>>();
+            var columnNames = new HashSet<string>(columnsToRemove.OfType<StringValue>().Select(sv => sv.Value));
+
+            foreach (var row in sources)
+            {
+                if (row.IsValue)
+                {
+                    list.Add(DValue<RecordValue>.Of(new InMemoryRecordValue(recordIRContext, row.Value.Fields.Where(f => !columnNames.Contains(f.Name)).ToArray())));
                 }
                 else
                 {
