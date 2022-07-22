@@ -7,7 +7,6 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
@@ -48,7 +47,7 @@ namespace Microsoft.PowerFx.Tests
                 $"{ns}.{nameof(PrimitiveTypeMarshaller)}",
                 $"{ns}.{nameof(TableMarshallerProvider)}",
                 $"{ns}.{nameof(TypeMarshallerCache)}",
-                $"{ns}.{nameof(TypeMarshallerCacheExtensions)}",   
+                $"{ns}.{nameof(TypeMarshallerCacheExtensions)}",
                 $"{nsType}.{nameof(ObjectRecordValue)}"
             };
 
@@ -252,8 +251,8 @@ namespace Microsoft.PowerFx.Tests
             IEnumerable<ExpressionError> enumerable = recalcEngine.DefineFunctions(
             new UDFDefinition(
                 "foo",
-                "x * y", 
-                FormulaType.Number, 
+                "x * y",
+                FormulaType.Number,
                 new NamedFormulaType("x", FormulaType.Number),
                 new NamedFormulaType("y", FormulaType.Number)));
             Assert.False(enumerable.Any());
