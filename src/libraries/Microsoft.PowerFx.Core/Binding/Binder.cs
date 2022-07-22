@@ -4978,11 +4978,11 @@ namespace Microsoft.PowerFx.Core.Binding
                     }
                     else
                     {
-                        // Can either be a FirstNodeName or DottedNameNode
+                        // FirstNodeName 
                         var identifierNode = args[i] as IIdentifierNode;
                         Contracts.Assert(identifierNode != null);
 
-                        //  Mark the node as an identifier
+                        // Mark the node as an identifier
                         identifierNode.SetIdentifier();
 
                         args[i].Accept(this);
