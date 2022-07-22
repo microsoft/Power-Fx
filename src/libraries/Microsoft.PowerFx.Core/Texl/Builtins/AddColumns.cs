@@ -20,7 +20,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
     // AddColumns(source:*[...], name:s, valueFunc:func<_>, name:s, valueFunc:func<_>, ...)
     // Corresponding DAX function: AddColumns
-    internal sealed class AddColumnsFunction : FunctionWithTableInput, IHasIdentifiers, IUsesFeatures
+    internal sealed class AddColumnsFunction : FunctionWithTableInput
     {
         public override bool SkipScopeForInlineRecords => true;
 
@@ -190,7 +190,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return index >= 2 && ((index & 1) == 0);
         }
 
-        public bool IsIdentifierParam(int index)
+        public override bool IsIdentifierParam(int index)
         {
             Contracts.Assert(index >= 0);
 
@@ -200,14 +200,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool AllowsRowScopedParamDelegationExempted(int index)
         {
-            throw new NotImplementedException("Do not call this method, test for IUsesFeatures interface and call AllowsRowScopedParamDelegationExempted(int index, Features features) instead");
-        }
-
-        public bool AllowsRowScopedParamDelegationExempted(int index, Features features)
-        {
             Contracts.Assert(index >= 0);
 
-            return IsLambdaParam(index) || (features.HasFlag(Features.SupportIdentifiers) && IsIdentifierParam(index));
+            return IsLambdaParam(index);
         }
     }
 }

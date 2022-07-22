@@ -1,7 +1,11 @@
-﻿using System;
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
@@ -14,36 +18,32 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Fact]
         public void IdentifierAndDisplayNameTest()
         {
-            // >> With( { b : 15 }, AddColumns([1,2], e, Value * b))
-            // Table({ Value: 1,e: 15},{ Value: 2,e: 30})
-
-            var pfxConfig = new PowerFxConfig(Features.None);
+            var pfxConfig = new PowerFxConfig(Features.SupportIdentifiers);
             var engine = new RecalcEngine(pfxConfig);
 
-            var fv = FormulaValue.New(15);
-            var nv = new NamedValue("b", fv);
-            var nvl = new List<NamedValue>() { nv };
-            //var rv = new InMemoryRecordValue(
-            //    IRContext.NotInSource(new KnownRecordType(DType.CreateRecord(new TypedName(DType.Number, new DName("b"))))),
-            //    nvl);            
-
             var rt = RecordType.Empty()
-                .Add(new NamedFormulaType("b", FormulaType.Number))
-                .Add(new NamedFormulaType("e", FormulaType.Number, new DName("f")));
+                .Add(new NamedFormulaType("logicalA", FormulaType.Number, displayName: "displayName"))
+                .Add(new NamedFormulaType("logicalB", FormulaType.Number));
 
-            var rv = new InMemoryRecordValue(
-                IRContext.NotInSource(FormulaType.Build(rt._type)),
-                nvl);
+            var rv1 = RecordValue.NewRecordFromFields(
+                new NamedValue("logicalA", FormulaValue.New(1)),
+                new NamedValue("logicalB", FormulaValue.New(4)));
+            var rv2 = RecordValue.NewRecordFromFields(
+                new NamedValue("logicalA", FormulaValue.New(2)),
+                new NamedValue("logicalB", FormulaValue.New(5)));
+            var rv3 = RecordValue.NewRecordFromFields(
+                new NamedValue("logicalA", FormulaValue.New(3)),
+                new NamedValue("logicalB", FormulaValue.New(6)));
 
-            //var rv = new InMemoryRecordValue(
-            //    IRContext.NotInSource(new KnownRecordType(DType.CreateRecord(new TypedName(DType.Number, new DName("b"))))),
-            //    nvl);
+            var tv = TableValue.NewTable(rt, rv1, rv2, rv3);
 
-            //var rt = RecordType.Empty().Add(new NamedFormulaType("e", FormulaType.Number, new DName("f")));
+            var parameters = RecordValue.NewRecordFromFields(
+                new NamedValue("myTable", tv));
 
+            var result = engine.Eval("DropColumns(myTable, displayName)", parameters);
+            var output = TestRunner.TestToString(result);
 
-            var result = engine.Eval("AddColumns([1, 2], \"e\", Value * b)", rv);
-            var obj = result.ToObject();
+            Assert.Equal("Table({logicalB:4},{logicalB:5},{logicalB:6})", output);
         }
     }
 }

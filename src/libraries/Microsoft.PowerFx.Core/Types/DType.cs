@@ -3339,8 +3339,6 @@ namespace Microsoft.PowerFx.Core.Types
                     return "V";
                 case DKind.UntypedObject:
                     return "O";
-                    //case DKind.Identifier:
-                    //    return "@";
             }
         }
 

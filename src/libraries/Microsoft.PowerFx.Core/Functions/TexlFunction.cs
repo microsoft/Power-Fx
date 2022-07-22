@@ -504,6 +504,13 @@ namespace Microsoft.PowerFx.Core.Functions
             return false;
         }
 
+        public virtual bool IsIdentifierParam(int index)
+        {
+            Contracts.Assert(index >= 0);
+
+            return false;
+        }
+
         public virtual bool AllowsRowScopedParamDelegationExempted(int index)
         {
             return false;

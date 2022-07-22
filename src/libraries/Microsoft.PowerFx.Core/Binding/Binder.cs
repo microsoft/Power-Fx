@@ -4944,9 +4944,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 {
                     Contracts.Assert(_currentScope == scopeNew || _currentScope == scopeNew.Parent);
 
-                    if (maybeFunc is IUsesFeatures usesFeatures
-                        ? usesFeatures.AllowsRowScopedParamDelegationExempted(i, _features)
-                        : maybeFunc.AllowsRowScopedParamDelegationExempted(i))
+                    if (maybeFunc.AllowsRowScopedParamDelegationExempted(i))
                     {
                         _txb.SetSupportingRowScopedDelegationExemptionNode(args[i]);
                     }
@@ -4964,8 +4962,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     var isIdentifier =
                         args[i] is FirstNameNode &&
                         _features.HasFlag(Features.SupportIdentifiers) &&
-                        maybeFunc is IHasIdentifiers hasIdentifiers &&
-                        hasIdentifiers.IsIdentifierParam(i);
+                        maybeFunc.IsIdentifierParam(i);
 
                     // Use the new scope only for lambda args.
                     _currentScope = ((maybeFunc.IsLambdaParam(i) || isIdentifier) && scopeInfo.AppliesToArgument(i)) ? scopeNew : scopeNew.Parent;

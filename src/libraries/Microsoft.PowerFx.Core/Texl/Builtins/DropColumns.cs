@@ -18,7 +18,7 @@ using Microsoft.PowerFx.Syntax;
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
     // DropColumns(source:*[...], name:s, name:s, ...)
-    internal sealed class DropColumnsFunction : FunctionWithTableInput, IUsesFeatures, IHasIdentifiers
+    internal sealed class DropColumnsFunction : FunctionWithTableInput
     {
         public override bool IsSelfContained => true;
 
@@ -105,13 +105,24 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
 
                 var columnName = new DName(value);
+                string logicalName = null;
 
                 // Verify that the name exists.
-                if (!returnType.TryGetType(columnName, out var columnType))
+                if (!returnType.TryGetType(columnName, out var columnType) && !DType.TryGetLogicalNameForColumn(returnType, value, out logicalName))
                 {
                     fArgsValid = false;
                     returnType.ReportNonExistingName(FieldNameKind.Logical, errors, columnName, nameArg);
                     continue;
+                }
+
+                if (!string.IsNullOrEmpty(logicalName))
+                {
+                    columnName = new DName(logicalName);
+
+                    if (identifierNode != null)
+                    {
+                        identifierNode.SetLogicalName(logicalName);
+                    }
                 }
 
                 // Drop the specified column from the result type.
@@ -131,21 +142,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return argumentIndex >= 0;
         }
 
-        public bool IsIdentifierParam(int index)
+        public override bool IsIdentifierParam(int index)
         {
             return index > 0;
-        }
-
-        public override bool AllowsRowScopedParamDelegationExempted(int index)
-        {
-            throw new NotImplementedException("Do not call this method, test for IUsesFeatures interface and call AllowsRowScopedParamDelegationExempted(int index, Features features) instead");
-        }
-
-        public bool AllowsRowScopedParamDelegationExempted(int index, Features features)
-        {
-            Contracts.Assert(index >= 0);
-
-            return features.HasFlag(Features.SupportIdentifiers) && IsIdentifierParam(index);
         }
     }
 }
