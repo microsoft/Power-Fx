@@ -102,7 +102,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     continue;
                 }
 
-                var value = supportIndentifiers ? identifierNode.Name : strLitNode.Value;
+                var value = supportIndentifiers ? identifierNode.Ident.Name : strLitNode.Value;
 
                 // Verify that the name is valid.
                 if (!DName.IsValidDName(value))

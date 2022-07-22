@@ -269,7 +269,7 @@ namespace Microsoft.PowerFx.Core.IR
                         Contracts.Assert(identifierNode != null);
 
                         // Transform the identifier node as a string literal
-                        args.Add(new TextLiteralNode(context.GetIRContext(arg, DType.String), identifierNode.Name));
+                        args.Add(new TextLiteralNode(context.GetIRContext(arg, DType.String), identifierNode.Ident.Name));
                     }
                     else if (func.IsLazyEvalParam(i))
                     {

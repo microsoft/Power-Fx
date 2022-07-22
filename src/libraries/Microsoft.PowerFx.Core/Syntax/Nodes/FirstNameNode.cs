@@ -20,13 +20,6 @@ namespace Microsoft.PowerFx.Syntax
 
         internal bool IsLhs => Parent != null && Parent.AsDottedName() != null;
 
-        private bool _isIdentifier;
-        private string _logicalName;
-
-        public bool IsIdentifier => _isIdentifier;
-
-        public string LogicalName => _logicalName;
-
         internal FirstNameNode(ref int idNext, Token tok, SourceList sourceList, Identifier ident)
             : base(ref idNext, tok, sourceList)
         {
@@ -35,18 +28,6 @@ namespace Microsoft.PowerFx.Syntax
 
             Ident = ident;
         }
-
-        public void SetIdentifier()
-        {
-            _isIdentifier = true;
-        }
-
-        public void SetLogicalName(string logicalName)
-        {
-            _logicalName = logicalName;
-        }
-
-        public string Name => _logicalName ?? Ident?.Name;
 
         internal FirstNameNode(ref int idNext, Token tok, Identifier ident)
             : this(ref idNext, tok, new SourceList(tok), ident)

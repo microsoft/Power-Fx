@@ -94,7 +94,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     continue;
                 }
 
-                var value = supportIndentifiers ? identifierNode.Name : strLitNode.Value;
+                var value = supportIndentifiers ? identifierNode.Ident.Name : strLitNode.Value;
 
                 // Verify that the name is valid.
                 if (!DName.IsValidDName(value))
@@ -118,11 +118,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 if (!string.IsNullOrEmpty(logicalName))
                 {
                     columnName = new DName(logicalName);
-
-                    if (identifierNode != null)
-                    {
-                        identifierNode.SetLogicalName(logicalName);
-                    }
                 }
 
                 // Drop the specified column from the result type.

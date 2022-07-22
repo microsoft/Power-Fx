@@ -2977,11 +2977,6 @@ namespace Microsoft.PowerFx.Core.Binding
                     return;
                 }
 
-                if (node.IsIdentifier)
-                {
-                    return;
-                }
-
                 // Look up a global variable with this name.
                 NameLookupInfo lookupInfo = default;
                 if (_txb.AffectsScopeVariableName)
@@ -4975,14 +4970,6 @@ namespace Microsoft.PowerFx.Core.Binding
                     }
                     else
                     {
-                        // FirstNodeName 
-                        var identifierNode = args[i].AsFirstName();
-                        Contracts.Assert(identifierNode != null);
-
-                        // Mark the node as an identifier
-                        identifierNode.SetIdentifier();
-
-                        args[i].Accept(this);
                         argTypes[i] = DType.String;
                     }
 

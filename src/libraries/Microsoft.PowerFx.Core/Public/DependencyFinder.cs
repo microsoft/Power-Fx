@@ -29,12 +29,12 @@ namespace Microsoft.PowerFx
 
         public override void Visit(FirstNameNode node)
         {
-            if (node.IsIdentifier)
+            var info = _binding.GetInfo(node);
+
+            if (info == null)
             {
                 return;
             }
-
-            var info = _binding.GetInfo(node);
 
             var name = node.Ident.Name.Value;
 
