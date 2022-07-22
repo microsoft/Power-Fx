@@ -47,7 +47,7 @@ namespace Microsoft.PowerFx.Tests
                 $"{ns}.{nameof(PrimitiveTypeMarshaller)}",
                 $"{ns}.{nameof(TableMarshallerProvider)}",
                 $"{ns}.{nameof(TypeMarshallerCache)}",
-                $"{ns}.{nameof(TypeMarshallerCacheExtensions)}",   
+                $"{ns}.{nameof(TypeMarshallerCacheExtensions)}",
                 $"{nsType}.{nameof(ObjectRecordValue)}"
             };
 
@@ -251,8 +251,8 @@ namespace Microsoft.PowerFx.Tests
             IEnumerable<ExpressionError> enumerable = recalcEngine.DefineFunctions(
             new UDFDefinition(
                 "foo",
-                "x * y", 
-                FormulaType.Number, 
+                "x * y",
+                FormulaType.Number,
                 new NamedFormulaType("x", FormulaType.Number),
                 new NamedFormulaType("y", FormulaType.Number)));
             Assert.False(enumerable.Any());
@@ -604,6 +604,16 @@ namespace Microsoft.PowerFx.Tests
             Assert.False(config.TryGetSymbol(new DName("foo"), out _, out _));
 
             Assert.DoesNotContain(BuiltinFunctionsCore.Abs, config.Functions);
+        }
+
+        [Fact]
+        public void RecalcEngine_AddFunction_Twice()
+        {
+            var config = new PowerFxConfig(null);
+            config.SetCoreFunctions(new TexlFunction[0]);
+            config.AddFunction(BuiltinFunctionsCore.Blank);
+
+            Assert.Throws<ArgumentException>(() => config.AddFunction(BuiltinFunctionsCore.Blank));
         }
 
         [Fact]
