@@ -137,11 +137,6 @@ namespace Microsoft.PowerFx.Syntax
             return null;
         }
 
-        public virtual IIdentifierNode AsIdentifierNode()
-        {
-            return null;
-        }
-
         internal virtual ParentNode AsParent()
         {
             return null;

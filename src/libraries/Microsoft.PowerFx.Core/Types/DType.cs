@@ -59,7 +59,6 @@ namespace Microsoft.PowerFx.Core.Types
         public static readonly DType NamedValue = new DType(DKind.NamedValue);
         public static readonly DType MinimalLargeImage = CreateMinimalLargeImageType();
         public static readonly DType UntypedObject = new DType(DKind.UntypedObject);
-        public static readonly DType Identifier = new DType(DKind.Identifier);
 
         public static readonly DType Invalid = new DType();
 
@@ -1384,7 +1383,7 @@ namespace Microsoft.PowerFx.Core.Types
         {
             AssertValid();
             Contracts.Assert(name.IsValid);
-            
+
             var fullType = this;
             if (IsLazyType)
             {
@@ -1550,7 +1549,7 @@ namespace Microsoft.PowerFx.Core.Types
             {
                 fError = true;
                 return this;
-            }            
+            }
 
             var fullType = this;
             if (IsLazyType)
@@ -1896,7 +1895,7 @@ namespace Microsoft.PowerFx.Core.Types
                     accepts = type.Kind == DKind.Unknown;
                     break;
 
-                case DKind.Table:                    
+                case DKind.Table:
                     if (type.IsLazyType)
                     {
                         return AcceptsLazyType(type);
@@ -2570,7 +2569,7 @@ namespace Microsoft.PowerFx.Core.Types
         {
             type1.AssertValid();
             type2.AssertValid();
-            
+
             // For Lazy Types, union operations must expand the current depth
             if (type1.IsLazyType)
             {
@@ -3340,8 +3339,8 @@ namespace Microsoft.PowerFx.Core.Types
                     return "V";
                 case DKind.UntypedObject:
                     return "O";
-                case DKind.Identifier:
-                    return "@";
+                    //case DKind.Identifier:
+                    //    return "@";
             }
         }
 

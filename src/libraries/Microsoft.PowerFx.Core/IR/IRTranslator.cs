@@ -265,11 +265,11 @@ namespace Microsoft.PowerFx.Core.IR
                     var supportIdentifiers = _features.HasFlag(Features.SupportIdentifiers);
                     if (supportIdentifiers && func is IHasIdentifiers hasIdentifiers && hasIdentifiers.IsIdentifierParam(i))
                     {
-                        var identifierNode = arg.AsIdentifierNode();
+                        var identifierNode = arg.AsFirstName();
                         Contracts.Assert(identifierNode != null);
 
                         // Transform the identifier node as a string literal
-                        args.Add(new TextLiteralNode(context.GetIRContext(arg, DType.String), identifierNode.GetName()));
+                        args.Add(new TextLiteralNode(context.GetIRContext(arg, DType.String), identifierNode.Name));
                     }
                     else if (func.IsLazyEvalParam(i))
                     {

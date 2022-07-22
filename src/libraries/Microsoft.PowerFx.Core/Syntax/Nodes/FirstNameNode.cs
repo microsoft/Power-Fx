@@ -11,7 +11,7 @@ namespace Microsoft.PowerFx.Syntax
     /// 
     /// <code>Ident</code>
     /// </summary>
-    public sealed class FirstNameNode : NameNode, IIdentifierNode
+    public sealed class FirstNameNode : NameNode
     {
         /// <summary>
         ///  The identifier of the first name node.
@@ -38,9 +38,7 @@ namespace Microsoft.PowerFx.Syntax
             _isIdentifier = true;
         }
 
-        public string GetName() => Ident?.Name;
-
-        public override IIdentifierNode AsIdentifierNode() => this;
+        public string Name => Ident?.Name;
 
         internal FirstNameNode(ref int idNext, Token tok, Identifier ident)
             : this(ref idNext, tok, new SourceList(tok), ident)

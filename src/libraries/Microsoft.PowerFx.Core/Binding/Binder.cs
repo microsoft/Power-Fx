@@ -4979,14 +4979,14 @@ namespace Microsoft.PowerFx.Core.Binding
                     else
                     {
                         // FirstNodeName 
-                        var identifierNode = args[i] as IIdentifierNode;
+                        var identifierNode = args[i].AsFirstName();
                         Contracts.Assert(identifierNode != null);
 
                         // Mark the node as an identifier
                         identifierNode.SetIdentifier();
 
                         args[i].Accept(this);
-                        argTypes[i] = DType.Identifier;
+                        argTypes[i] = DType.String;
                     }
 
                     Contracts.Assert(argTypes[i].IsValid);

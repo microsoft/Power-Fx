@@ -90,10 +90,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 // arbitrary expressions that evaluate to string values, because these values contribute to
                 // type analysis, so they need to be known upfront (before AddColumns executes).
                 StrLitNode strLitNode = null;
-                IIdentifierNode identifierNode = null;
+                FirstNameNode identifierNode = null;
 
                 if ((!supportIndentifiers && (nameArgType.Kind != DKind.String || (strLitNode = nameArg.AsStrLit()) == null)) ||
-                     (supportIndentifiers && (nameArgType.Kind != DKind.Identifier || (identifierNode = nameArg.AsIdentifierNode()) == null)))
+                     (supportIndentifiers && (identifierNode = nameArg.AsFirstName()) == null))
                 {
                     fArgsValid = false;
 
@@ -102,7 +102,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     continue;
                 }
 
-                var value = supportIndentifiers ? identifierNode.GetName() : strLitNode.Value;
+                var value = supportIndentifiers ? identifierNode.Name : strLitNode.Value;
 
                 // Verify that the name is valid.
                 if (!DName.IsValidDName(value))
