@@ -4,10 +4,8 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
@@ -33,7 +31,7 @@ namespace Microsoft.PowerFx
 
         public CustomTexlFunction(string name, DType returnType, params DType[] paramTypes)
             : base(DPath.Root, name, name, SG("Custom func " + name), FunctionCategories.MathAndStat, returnType, 0, paramTypes.Length, paramTypes.Length, paramTypes)
-        {            
+        {
         }
 
         public override bool IsSelfContained => true;
