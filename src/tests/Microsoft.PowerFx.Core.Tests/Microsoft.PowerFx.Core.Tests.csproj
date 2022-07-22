@@ -63,11 +63,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="ExpressionTestCases\DropColumns.txt" />
-    <None Remove="ExpressionTestCases\DropColumns_SupportIdentifiers.txt" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\libraries\Microsoft.PowerFx.Core\Microsoft.PowerFx.Core.csproj" />
   </ItemGroup>
   <ItemGroup>

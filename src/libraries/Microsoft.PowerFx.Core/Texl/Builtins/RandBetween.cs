@@ -25,7 +25,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 TexlStrings.AboutRandBetween,
                 FunctionCategories.MathAndStat,
                 returnType: DType.Number,
-                maskLambdas: 0,                
+                maskLambdas: 0,
                 arityMin: 2,
                 arityMax: 2,
                 DType.Number,

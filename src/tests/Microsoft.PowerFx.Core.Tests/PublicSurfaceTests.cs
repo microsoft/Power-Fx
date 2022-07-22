@@ -59,7 +59,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Syntax.Token",
                 "Microsoft.PowerFx.Syntax.TokKind",
                 "Microsoft.PowerFx.Syntax.UnaryOp",
-                "Microsoft.PowerFx.Syntax.VariadicOp",                
+                "Microsoft.PowerFx.Syntax.VariadicOp",
 
                 // Parse nodes
                 "Microsoft.PowerFx.Syntax.AsNode",
@@ -161,7 +161,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Core.DisplayNameUtility",
                 "Microsoft.PowerFx.Core.FormulaTypeSchema",
                 "Microsoft.PowerFx.Core.FormulaTypeToSchemaConverter",
-                "Microsoft.PowerFx.Core.Localization.ErrorResourceKey",
+                "Microsoft.PowerFx.Core.Localization.ErrorResourceKey",                
                 "Microsoft.PowerFx.Core.RenameDriver",
                 "Microsoft.PowerFx.Core.Utils.DName",
                 "Microsoft.PowerFx.Core.Utils.DPath",
@@ -223,7 +223,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             var len = values1.Length;
             Assert.Equal(len, values2.Length);
-
+            
             for (var i = 0; i < len; i++)
             {
                 var x = values1.GetValue(i);

@@ -1036,7 +1036,7 @@ namespace Microsoft.PowerFx.Core.Types
             var fError = false;
             var type = ToRecord(ref fError);
 
-            if (fError)
+            if (fError) 
             {
                 Contracts.Assert(false, "Bad source kind for ToRecord");
             }
@@ -1080,7 +1080,7 @@ namespace Microsoft.PowerFx.Core.Types
             var fError = false;
             var type = ToTable(ref fError);
 
-            if (fError)
+            if (fError) 
             {
                 Contracts.Assert(false, "Bad source kind for ToTable");
             }
@@ -1383,7 +1383,7 @@ namespace Microsoft.PowerFx.Core.Types
         {
             AssertValid();
             Contracts.Assert(name.IsValid);
-
+            
             var fullType = this;
             if (IsLazyType)
             {
@@ -1549,7 +1549,7 @@ namespace Microsoft.PowerFx.Core.Types
             {
                 fError = true;
                 return this;
-            }
+            }            
 
             var fullType = this;
             if (IsLazyType)
@@ -1895,7 +1895,7 @@ namespace Microsoft.PowerFx.Core.Types
                     accepts = type.Kind == DKind.Unknown;
                     break;
 
-                case DKind.Table:
+                case DKind.Table:                    
                     if (type.IsLazyType)
                     {
                         return AcceptsLazyType(type);
@@ -2569,7 +2569,7 @@ namespace Microsoft.PowerFx.Core.Types
         {
             type1.AssertValid();
             type2.AssertValid();
-
+            
             // For Lazy Types, union operations must expand the current depth
             if (type1.IsLazyType)
             {
