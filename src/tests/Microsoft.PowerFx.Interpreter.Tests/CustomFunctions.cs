@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Types;
@@ -34,6 +35,68 @@ namespace Microsoft.PowerFx.Tests
             {
                 var val = x.Value.ToString() + "," + b.Value.ToString();
                 return FormulaValue.New(val);
+            }
+        }
+
+        public class TestObj
+        {
+            public double NumProp { get; set; }
+
+            public bool BoolProp { get; set; }
+        }
+
+        private static readonly ParserOptions _opts = new ParserOptions { AllowsSideEffects = true };
+
+        [Fact]
+        public void CustomSetPropertyFunction()
+        {
+            var config = new PowerFxConfig(null);
+            config.AddFunction(new TestCustomSetPropFunction());
+            var engine = new RecalcEngine(config);
+
+            var obj = new TestObj();
+            var cache = new TypeMarshallerCache();
+            var x = cache.Marshal(obj);
+            engine.UpdateVariable("x", x);
+
+            // Test multiple overloads
+            engine.Eval("SetProperty(x.NumProp, 123)", options: _opts);
+            Assert.Equal(123.0, obj.NumProp);
+
+            engine.Eval("SetProperty(x.BoolProp, true)", options: _opts);
+            Assert.True(obj.BoolProp);
+
+            // Test failure cases
+            var check = engine.Check("SetProperty(x.BoolProp, true)"); // Binding Fail, behavior prop 
+            Assert.False(check.IsSuccess);
+
+            check = engine.Check("SetProperty(x.BoolProp, 123)"); // arg mismatch
+            Assert.False(check.IsSuccess);
+
+            check = engine.Check("SetProperty(x.numMissing, 123)", options: _opts); // Binding Fail
+            Assert.False(check.IsSuccess);
+        }
+
+        // Must have "Function" suffix. 
+        private class TestCustomSetPropFunction : ReflectionFunction
+        {
+            public TestCustomSetPropFunction()
+                : base(SetPropertyName, FormulaType.Boolean)
+            {
+            }
+
+            // public Dictionary<string, FormulaValue> _props = new Dictionary<string, FormulaValue>();
+
+            // Must have "Execute" method. 
+            public static BooleanValue Execute(RecordValue source, StringValue propName, FormulaValue newValue)
+            {
+                var obj = (TestObj)source.ToObject();
+
+                // Use reflection to set
+                var prop = obj.GetType().GetProperty(propName.Value);
+                prop.SetValue(obj, newValue.ToObject());
+
+                return FormulaValue.New(true);
             }
         }
 
