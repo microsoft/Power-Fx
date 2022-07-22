@@ -5737,7 +5737,7 @@
     <comment>Error Message. Used in formula columns for a formula that references a single-column table.</comment>
   </data>
   <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
-    <value>Can not reference virtual table {0} in formula columns</value>
+    <value>Can not reference virtual table {0} in formula columns.</value>
     <comment>Error Message. Used in formula columns for a formula that references a virtual table.</comment>
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
