@@ -130,6 +130,33 @@ namespace Microsoft.PowerFx
             return CommonErrors.UnreachableCodeError(node.IRContext);
         }
 
+        // Handle invoke SetProperty(source.Prop, newValue)
+        // Invoke as: SetProperty(source, "Prop", newValue)
+        private async Task<FormulaValue> TryHandleSetProperty(CallNode node, EvalVisitorContext context)
+        {
+            if (node.Function is not CustomSetPropertyFunction setPropFunc)
+            {
+                return null;
+            }
+
+            var arg0 = node.Args[0];
+            var arg1 = node.Args[1];
+
+            if (arg0 is not RecordFieldAccessNode r)
+            {
+                return null;
+            }
+
+            var source = await r.From.Accept(this, context);
+            var fieldName = r.Field.Value;
+            var newValue = await arg1.Accept(this, context);
+
+            var args = new FormulaValue[] { source, FormulaValue.New(fieldName), newValue };
+            var result = await setPropFunc.InvokeAsync(args, _cancel);
+
+            return result;
+        }
+
         public override async ValueTask<FormulaValue> Visit(CallNode node, EvalVisitorContext context)
         {
             CheckCancel();
@@ -138,6 +165,12 @@ namespace Microsoft.PowerFx
             if (setResult != null)
             {
                 return setResult;
+            }
+
+            var setPropResult = await TryHandleSetProperty(node, context.IncrementStackDepthCounter());
+            if (setPropResult != null)
+            {
+                return setPropResult;
             }
 
             var func = node.Function;
