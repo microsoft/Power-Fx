@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
 using System.Collections.Generic;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
@@ -12,9 +11,6 @@ using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 
-#pragma warning disable SA1402 // File may only contain a single type
-#pragma warning disable SA1649 // File name should match first type name
-
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
     // DropColumns(source:*[...], name:s, name:s, ...)
@@ -22,7 +18,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public override bool IsSelfContained => true;
 
-        public override bool HasLambdas => true;
+        public override bool HasIdentifiers => true;
 
         public override bool SupportsParamCoercion => false;
 
@@ -104,20 +100,18 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     continue;
                 }
 
-                var columnName = new DName(value);
-                string logicalName = null;
+                DName? displayName;
+
+                var columnName = nameArg is FirstNameNode firstNameNode && ((displayName = binding.GetDisplayName(firstNameNode)) != null)
+                    ? displayName.Value
+                    : new DName(value);
 
                 // Verify that the name exists.
-                if (!returnType.TryGetType(columnName, out var columnType) && !DType.TryGetLogicalNameForColumn(returnType, value, out logicalName))
+                if (!returnType.TryGetType(columnName, out var columnType))
                 {
                     fArgsValid = false;
                     returnType.ReportNonExistingName(FieldNameKind.Logical, errors, columnName, nameArg);
                     continue;
-                }
-
-                if (!string.IsNullOrEmpty(logicalName))
-                {
-                    columnName = new DName(logicalName);
                 }
 
                 // Drop the specified column from the result type.
@@ -143,6 +137,3 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         }
     }
 }
-
-#pragma warning restore SA1402 // File may only contain a single type
-#pragma warning restore SA1649 // File name should match first type name

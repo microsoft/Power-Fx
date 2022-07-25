@@ -18,6 +18,8 @@ namespace Microsoft.PowerFx.Core.Binding.BindInfo
     {
         public override DName Name => Node.AsFirstName().Ident.Name;
 
+        public DName DisplayName { get; private set; }
+
         // Nesting level of where this name is defined.
         // Negative values mean "up".
         // Positive values mean that the target is a parameter of a nested lambda.
@@ -72,7 +74,7 @@ namespace Microsoft.PowerFx.Core.Binding.BindInfo
             Contracts.Assert(lookupInfo.UpCount >= 0);
             Contracts.Assert(lookupInfo.Path.IsValid);
 
-            return new FirstNameInfo(lookupInfo.Kind, node, -lookupInfo.UpCount, 0, lookupInfo.Path, lookupInfo.Data, default, false);
+            return new FirstNameInfo(lookupInfo.Kind, node, -lookupInfo.UpCount, 0, lookupInfo.Path, lookupInfo.Data, default, false) { DisplayName = lookupInfo.DisplayName };
         }
 
         public static FirstNameInfo Create(FirstNameNode node, NameLookupInfo lookupInfo, IExpandInfo data)
@@ -82,7 +84,7 @@ namespace Microsoft.PowerFx.Core.Binding.BindInfo
             Contracts.Assert(lookupInfo.UpCount >= 0);
             Contracts.Assert(lookupInfo.Path.IsValid);
 
-            return new FirstNameInfo(lookupInfo.Kind, node, -lookupInfo.UpCount, 0, lookupInfo.Path, data, default, false);
+            return new FirstNameInfo(lookupInfo.Kind, node, -lookupInfo.UpCount, 0, lookupInfo.Path, data, default, false) { DisplayName = lookupInfo.DisplayName };
         }
 
         public static FirstNameInfo Create(FirstNameNode node, NameLookupInfo lookupInfo, DName dataControlName, bool isDataControlAccess)
@@ -92,7 +94,7 @@ namespace Microsoft.PowerFx.Core.Binding.BindInfo
             Contracts.Assert(lookupInfo.UpCount >= 0);
             Contracts.Assert(lookupInfo.Path.IsValid);
 
-            return new FirstNameInfo(lookupInfo.Kind, node, -lookupInfo.UpCount, 0, lookupInfo.Path, lookupInfo.Data, dataControlName, isDataControlAccess);
+            return new FirstNameInfo(lookupInfo.Kind, node, -lookupInfo.UpCount, 0, lookupInfo.Path, lookupInfo.Data, dataControlName, isDataControlAccess) { DisplayName = lookupInfo.DisplayName };
         }
 
         public static FirstNameInfo Create(FirstNameNode node, ScopedNameLookupInfo lookupInfo)

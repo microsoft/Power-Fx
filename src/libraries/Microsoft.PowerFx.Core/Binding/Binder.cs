@@ -1584,6 +1584,13 @@ namespace Microsoft.PowerFx.Core.Binding
             return _infoMap[node.Id] as FirstNameInfo;
         }
 
+        public DName? GetDisplayName(FirstNameNode node)
+        {
+            Contracts.AssertValue(node);
+
+            return GetInfo(node)?.DisplayName;
+        }
+
         private BinderNodesVisitor _lazyInitializedBinderNodesVisitor = null;
 
         private BinderNodesVisitor BinderNodesVisitor
@@ -4743,9 +4750,9 @@ namespace Microsoft.PowerFx.Core.Binding
                     return false;
                 }
 
-                // If there are no overloads with lambdas, we can continue the visitation and
+                // If there are no overloads with lambdas or identifiers, we can continue the visitation and
                 // yield to the normal overload resolution.
-                var overloadsWithLambdas = overloads.Where(func => func.HasLambdas);
+                var overloadsWithLambdas = overloads.Where(func => func.HasLambdas || func.HasIdentifiers);
                 if (!overloadsWithLambdas.Any())
                 {
                     // We may still need a scope to determine inline-record types
@@ -4787,7 +4794,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 // its lambda mask), which in turn requires binding the args (for their types).
                 Contracts.Assert(overloadsWithLambdas.Count() == 1, "Incorrect multiple overloads with lambdas.");
                 var maybeFunc = overloadsWithLambdas.Single();
-                Contracts.Assert(maybeFunc.HasLambdas);
+                Contracts.Assert(maybeFunc.HasLambdas || maybeFunc.HasIdentifiers);
 
                 var scopeInfo = maybeFunc.ScopeInfo;
                 IDelegationMetadata metadata = null;
@@ -4995,7 +5002,19 @@ namespace Microsoft.PowerFx.Core.Binding
                 _currentScope = scopeNew.Parent;
                 PostVisit(node.Args);
 
-                // Typecheck the invocation.
+                if (maybeFunc.HasIdentifiers && _features.HasFlag(Features.SupportIdentifiers))
+                {
+                    foreach (var arg in args.Select((a, i) => a is FirstNameNode firstNameNode && maybeFunc.IsIdentifierParam(i) ? (i, firstNameNode) : (-1, null)).Where(a => a.i != -1))
+                    {
+                        if (DType.TryGetLogicalNameForColumn(argTypes[0], arg.firstNameNode.Ident.Name, out var logicalName))
+                        {
+                            var typedName = argTypes[0].GetAllNames(DPath.Root).First(tn => tn.Name == logicalName);
+                            var fileNameInfo = FirstNameInfo.Create(arg.firstNameNode, new NameLookupInfo(BindKind.NamedValue, typedName.Type, DPath.Root, 0, displayName: new DName(logicalName)));
+
+                            _txb.SetInfo(arg.firstNameNode, fileNameInfo);
+                        }
+                    }
+                }
 
                 // Typecheck the invocation and infer the return type.
                 fArgsValid &= maybeFunc.CheckInvocation(_txb, args, argTypes, _txb.ErrorContainer, out var returnType, out var nodeToCoercedTypeMap);
@@ -5349,7 +5368,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 // already processed in PreVisit.
                 var funcNamespace = _txb.GetFunctionNamespace(node, this);
                 var overloads = LookupFunctions(funcNamespace, node.Head.Name.Value)
-                    .Where(fnc => !fnc.HasLambdas)
+                    .Where(fnc => !fnc.HasLambdas && !fnc.HasIdentifiers)
                     .ToArray();
 
                 TexlFunction funcWithScope = null;

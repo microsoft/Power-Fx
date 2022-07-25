@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
@@ -13,9 +12,6 @@ using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 
-#pragma warning disable SA1402 // File may only contain a single type
-#pragma warning disable SA1649 // File name should match first type name
-
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
     // AddColumns(source:*[...], name:s, valueFunc:func<_>, name:s, valueFunc:func<_>, ...)
@@ -25,6 +21,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool SkipScopeForInlineRecords => true;
 
         public override bool HasLambdas => true;
+
+        public override bool HasIdentifiers => true;
 
         public override bool IsSelfContained => true;
 
@@ -121,7 +119,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
 
                 // Verify that the name doesn't already exist as either a logical or display name
-                if (typeScope.TryGetType(columnName, out var columnType) || DType.TryGetLogicalNameForColumn(typeScope, columnName, out _))
+                if (typeScope.TryGetType(columnName, out var columnType))
                 {
                     fArgsValid = false;
 
@@ -206,6 +204,3 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         }
     }
 }
-
-#pragma warning restore SA1402 // File may only contain a single type
-#pragma warning restore SA1649 // File name should match first type name
