@@ -707,6 +707,45 @@ namespace Microsoft.PowerFx.Tests
                 )"));
         }
 
+        [Fact]
+        public void UDFRecursionLimitTest()
+        {
+            var recalcEngine = new RecalcEngine(new PowerFxConfig(null));
+            recalcEngine.ParseAndRegisterUserDefinedFunctions("Foo(x As Number) As Number = Foo(x);");
+            Assert.IsType<ErrorValue>(recalcEngine.Eval("Foo(1)"));
+        }
+
+        [Fact]
+        public void UDFRecursionWorkingTest()
+        {
+            var recalcEngine = new RecalcEngine(new PowerFxConfig(null));
+            recalcEngine.ParseAndRegisterUserDefinedFunctions("Foo(x As Number) As Number = If(x = 1, 1, If(Mod(x, 2) = 0, Foo(x/2), Foo(x*3 + 1)));");
+            Assert.Equal(1.0, recalcEngine.Eval("Foo(5)").ToObject());
+        }
+
+        [Fact]
+        public void IndirectRecursionTest()
+        {
+            var recalcEngine = new RecalcEngine(new PowerFxConfig(null)
+            {
+                MaxCallDepth = 80
+            });
+            recalcEngine.ParseAndRegisterUserDefinedFunctions(
+                "A(x As Number) As Number = If(Mod(x, 2) = 0, B(x/2), B(x));" +
+                "B(x As Number) As Number = If(Mod(x, 3) = 0, C(x/3), C(x));" +
+                "C(x As Number) As Number = If(Mod(x, 5) = 0, D(x/5), D(x));" +
+                "D(x As Number) As Number = If(Mod(x, 7) = 0, F(x/7), F(x));" +
+                "F(x As Number) As Number = If(x = 1, 1, A(x+1));");
+            Assert.Equal(1.0, recalcEngine.Eval("A(12654)").ToObject());
+        }
+
+        [Fact]
+        public void DoubleDefinitionTest()
+        {
+            var recalcEngine = new RecalcEngine(new PowerFxConfig(null));
+            Assert.Throws<InvalidOperationException>(() => recalcEngine.ParseAndRegisterUserDefinedFunctions("Foo() As Number = 10; Foo(x As Number) As String = \"hi\""));
+        }
+
         #region Test
 
         private readonly StringBuilder _updates = new StringBuilder();

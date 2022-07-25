@@ -162,6 +162,19 @@ namespace Microsoft.PowerFx
             return await check.Expression.EvalAsync(parameters, cancel);
         }
 
+        internal IEnumerable<ExpressionError> ParseAndRegisterUserDefinedFunctions(string script)
+        {
+            var parsedUDFS = new Core.Syntax.ParsedUDFs(script);
+            var result = parsedUDFS.GetParsed();
+
+            var udfDefinitions = result.UDFs.Select(udf => new UDFDefinition(
+                udf.Ident.ToString(), 
+                udf.Body.ToString(), 
+                FormulaType.GetFromStringOrNull(udf.ReturnType.ToString()),
+                udf.Args.Select(arg => new NamedFormulaType(arg._varIdent.ToString(), FormulaType.GetFromStringOrNull(arg._varType.ToString()))).ToArray())).ToArray();
+            return DefineFunctions(udfDefinitions);
+        }
+
         /// <summary>
         /// For private use because we don't want anyone defining a function without binding it.
         /// </summary>
