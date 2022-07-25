@@ -175,3 +175,15 @@ GUID("5cc45615-f759-4a53-b225-d3a2497f60ad")
 
 >> GUID(ParseJSON("null"))
 Blank()
+
+>> Value(Index(ParseJSON("[ { ""a"" : 10 }, { ""b"" : ""str"" } ]"),1).a)
+10
+
+>> Value(Index(ParseJSON("[ { ""a"" : 10 }, { ""b"" : ""str"" } ]"),1).b)
+Blank()
+
+>> Text(Index(ParseJSON("[ { ""a"" : 10 }, { ""b"" : ""str"" } ]"),2).b)
+"str"
+
+>> Text(Index(ParseJSON("[ { ""a"" : 10 }, { ""b"" : ""str"" } ]"),2).a)
+Blank()
