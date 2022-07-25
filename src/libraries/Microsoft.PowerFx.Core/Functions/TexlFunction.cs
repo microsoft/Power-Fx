@@ -507,6 +507,11 @@ namespace Microsoft.PowerFx.Core.Functions
             return false;
         }
 
+        /// <summary>
+        /// Returns true if the parameter is an identifier.
+        /// </summary>
+        /// <param name="index">Parameter's index.</param>
+        /// <returns>Boolean representing if the parameter is an identifier.</returns>
         public virtual bool IsIdentifierParam(int index)
         {
             Contracts.Assert(index >= 0);

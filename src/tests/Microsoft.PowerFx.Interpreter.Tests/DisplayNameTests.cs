@@ -16,7 +16,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
     public class DisplayNameTests
     {
         [Fact]
-        public void IdentifierAndDisplayNameTest()
+        public void DisplayNameTest1()
         {
             var pfxConfig = new PowerFxConfig(Features.SupportIdentifiers);
             var engine = new RecalcEngine(pfxConfig);

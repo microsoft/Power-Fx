@@ -4752,8 +4752,8 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 // If there are no overloads with lambdas or identifiers, we can continue the visitation and
                 // yield to the normal overload resolution.
-                var overloadsWithLambdas = overloads.Where(func => func.HasLambdas || func.HasIdentifiers);
-                if (!overloadsWithLambdas.Any())
+                var overloadsWithLambdasOrIdentifiers = overloads.Where(func => func.HasLambdas || func.HasIdentifiers);
+                if (!overloadsWithLambdasOrIdentifiers.Any())
                 {
                     // We may still need a scope to determine inline-record types
                     Scope maybeScope = null;
@@ -4792,8 +4792,8 @@ namespace Microsoft.PowerFx.Core.Binding
                 // We support a single overload with lambdas. Otherwise we have a conceptual chicken-and-egg
                 // problem, whereby in order to bind the lambda args we need the precise overload (for
                 // its lambda mask), which in turn requires binding the args (for their types).
-                Contracts.Assert(overloadsWithLambdas.Count() == 1, "Incorrect multiple overloads with lambdas.");
-                var maybeFunc = overloadsWithLambdas.Single();
+                Contracts.Assert(overloadsWithLambdasOrIdentifiers.Count() == 1, "Incorrect multiple overloads with lambdas.");
+                var maybeFunc = overloadsWithLambdasOrIdentifiers.Single();
                 Contracts.Assert(maybeFunc.HasLambdas || maybeFunc.HasIdentifiers);
 
                 var scopeInfo = maybeFunc.ScopeInfo;
@@ -4888,7 +4888,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 DName scopeIdent = default;
                 var identRequired = false;
                 var fArgsValid = true;
-                if (scopeInfo.ScopeType != null)
+                if (scopeInfo?.ScopeType != null)
                 {
                     typeScope = scopeInfo.ScopeType;
 
