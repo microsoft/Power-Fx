@@ -5669,6 +5669,10 @@
     <comment>Error Message. Used in formula columns for arguments that are not supported there.  The {0} will be the name of the argument that is not supported.  The {1} will be the name of the function.</comment>
   </data>
   <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
+    <value>This argument can not be passed as this type in formula columns.</value>
+    <comment>Error Message. Used in formula columns for an argument where the type is not supported. {0} is the attempted type the argument is being coerced to.</comment>
+  </data>
+  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
     <value>This argument can not be passed as type {0} in formula columns.</value>
     <comment>Error Message. Used in formula columns for an argument where the type is not supported. {0} is the attempted type the argument is being coerced to.</comment>
   </data>
