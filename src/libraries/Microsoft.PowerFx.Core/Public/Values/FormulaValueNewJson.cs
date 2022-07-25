@@ -77,7 +77,7 @@ namespace Microsoft.PowerFx.Types
             Contract.Assert(element.ValueKind == JsonValueKind.Object);
 
             var fields = new List<NamedValue>();
-            var type = new RecordType();
+            var type = RecordType.Empty();
 
             foreach (var pair in element.EnumerateObject())
             {
@@ -114,11 +114,11 @@ namespace Microsoft.PowerFx.Types
             TableType type;
             if (records.Count == 0)
             {
-                type = new TableType();
+                type = TableType.Empty();
             }
             else
             {
-                type = TableType.FromRecord((RecordType)GuaranteeRecord(records[0]).IRContext.ResultType);
+                type = ((RecordType)GuaranteeRecord(records[0]).IRContext.ResultType).ToTable();
             }
 
             return new InMemoryTableValue(IRContext.NotInSource(type), records.Select(r => DValue<RecordValue>.Of(r)));

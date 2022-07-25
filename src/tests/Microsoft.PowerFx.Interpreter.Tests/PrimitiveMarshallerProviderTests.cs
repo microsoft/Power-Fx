@@ -28,7 +28,7 @@ namespace Microsoft.PowerFx.Core.Tests
         public void TestAll(Type dotnetType, Type fxType)
         {            
             var provder = new PrimitiveMarshallerProvider();
-            var result = provder.TryGetMarshaller(dotnetType, _cache, 1, out var tm);
+            var result = provder.TryGetMarshaller(dotnetType, _cache, out var tm);
 
             if (fxType == null)
             {

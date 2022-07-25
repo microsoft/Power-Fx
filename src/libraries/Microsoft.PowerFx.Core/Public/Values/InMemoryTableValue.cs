@@ -55,8 +55,7 @@ namespace Microsoft.PowerFx.Types
 
         protected override DValue<RecordValue> Marshal(RecordValue record)
         {
-            return DValue<RecordValue>.Of(
-                 new InMemoryRecordValue(IRContext.NotInSource(_recordType), record.Fields));
+            return DValue<RecordValue>.Of(CompileTimeTypeWrapperRecordValue.AdjustType(_recordType, record));
         }
     }
 }

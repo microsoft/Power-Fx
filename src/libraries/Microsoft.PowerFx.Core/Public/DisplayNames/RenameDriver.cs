@@ -60,8 +60,7 @@ namespace Microsoft.PowerFx.Core
                 return FormulaType.Build(DType.ReplaceDisplayNameProvider(DType.DisableDisplayNameProviders(nestedType._type), newProvider));
             }
 
-            var fieldType = nestedType.MaybeGetFieldType(field);
-            if (fieldType is not AggregateType aggregateType)
+            if (!nestedType.TryGetFieldType(field, out var fieldType) || fieldType is not AggregateType aggregateType)
             {
                 // Path doesn't exist within parameters, return as is, stripping displaynameproviders
                 return FormulaType.Build(DType.DisableDisplayNameProviders(nestedType._type));
