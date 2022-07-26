@@ -80,5 +80,9 @@ namespace Microsoft.PowerFx.Types
         public abstract override bool Equals(object other);
 
         public abstract override int GetHashCode();
+
+        // Keeping around to resolve a diamond dependency issue, remove once FormulaRepair is updated
+        [Obsolete("This method was replaced with GetFieldTypes", true)]
+        public IEnumerable<NamedFormulaType> GetNames() => GetFieldTypes();
     }
 }
