@@ -259,6 +259,28 @@ namespace Microsoft.PowerFx.Core.IR
                             throw new NotSupportedException();
                     }
 
+                case DKind.ViewValue:
+                    switch (node.Op)
+                    {
+                        case BinaryOp.NotEqual:
+                            return BinaryOpKind.NeqViewValue;
+                        case BinaryOp.Equal:
+                            return BinaryOpKind.EqViewValue;
+                        default:
+                            throw new NotSupportedException();
+                    }
+
+                case DKind.NamedValue:
+                    switch (node.Op)
+                    {
+                        case BinaryOp.NotEqual:
+                            return BinaryOpKind.NeqNamedValue;
+                        case BinaryOp.Equal:
+                            return BinaryOpKind.EqNamedValue;
+                        default:
+                            throw new NotSupportedException();
+                    }
+
                 default:
                     throw new NotSupportedException("Not supported comparison op on type " + kindToUse.ToString());
             }
