@@ -114,6 +114,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 if (!DName.IsValidDName(value))
                 {
                     fArgsValid = false;
+
                     // Argument '{0}' is not a valid identifier.
                     errors.EnsureError(DocumentErrorSeverity.Severe, nameArg, TexlStrings.ErrArgNotAValidIdentifier_Name, value);
                     continue;
