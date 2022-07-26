@@ -6509,6 +6509,38 @@
     <value>The first argument of '{0}' should be a valid variable name, and cannot conflict with any existing control, screen, collection, or data source names. Found type '{1}'</value>
     <comment>Error Message</comment>
   </data>
+  <data name="ErrUDF_MissingIdentifier" xml:space="preserve">
+    <value>User Defined Function is missing a valid name</value>
+    <comment>Error Message</comment>
+  </data>
+  <data name="ErrUDF_MissingOpenParen" xml:space="preserve">
+    <value>User Defined Function is missing a '(' here</value>
+    <comment>Error Message</comment>
+  </data>
+  <data name="ErrUDF_MissingEqual" xml:space="preserve">
+    <value>User Defined Function is missing a '=' here</value>
+    <comment>Error Message</comment>
+  </data>
+  <data name="ErrUDF_MissingCloseParen" xml:space="preserve">
+    <value>User Defined Function is missing a ')' here</value>
+    <comment>Error Message</comment>
+  </data>
+  <data name="ErrUDF_MissingSemicolon" xml:space="preserve">
+    <value>User Defined Function is missing a ';' here</value>
+    <comment>Error Message</comment>
+  </data>
+  <data name="ErrUDF_MissingComma" xml:space="preserve">
+    <value>User Defined Function is missing a ',' here</value>
+    <comment>Error Message</comment>
+  </data>
+  <data name="ErrUDF_MissingAs" xml:space="preserve">
+    <value>User Defined Function is missing an 'As' here</value>
+    <comment>Error Message</comment>
+  </data>
+  <data name="ErrUDF_DuplicateArgName" xml:space="preserve">
+    <value>User Defined Function has a duplicate argument name</value>
+    <comment>Error Message</comment>
+  </data>
   <data name="AboutSet" xml:space="preserve">
     <value>Create and set a global variable.</value>
     <comment>Description of 'Set' function.</comment>

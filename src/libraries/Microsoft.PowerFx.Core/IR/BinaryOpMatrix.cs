@@ -12,7 +12,7 @@ namespace Microsoft.PowerFx.Core.IR
 {
     internal class BinaryOpMatrix
     {
-        public static BinaryOpKind GetBinaryOpKind(Syntax.BinaryOpNode node, TexlBinding binding)
+        public static BinaryOpKind GetBinaryOpKind(PowerFx.Syntax.BinaryOpNode node, TexlBinding binding)
         {
             var parsedBinaryOp = node.Op;
             var leftType = binding.GetType(node.Left);
@@ -39,7 +39,7 @@ namespace Microsoft.PowerFx.Core.IR
             };
         }
 
-        private static BinaryOpKind GetBooleanBinaryOp(Syntax.BinaryOpNode node, TexlBinding binding, DType leftType, DType rightType)
+        private static BinaryOpKind GetBooleanBinaryOp(PowerFx.Syntax.BinaryOpNode node, TexlBinding binding, DType leftType, DType rightType)
         {
             var kindToUse = leftType.Accepts(rightType) ? leftType.Kind : rightType.Kind;
 
@@ -264,7 +264,7 @@ namespace Microsoft.PowerFx.Core.IR
             }
         }
 
-        private static BinaryOpKind GetAddOp(Syntax.BinaryOpNode node, DType leftType, DType rightType)
+        private static BinaryOpKind GetAddOp(PowerFx.Syntax.BinaryOpNode node, DType leftType, DType rightType)
         {
             switch (leftType.Kind)
             {
@@ -275,7 +275,7 @@ namespace Microsoft.PowerFx.Core.IR
                         // Date + '-Date' => in days
 
                         // Binding produces this as '-Date'. This should be cleaned up when we switch to a proper sub op. 
-                        if (node.Right is not Syntax.UnaryOpNode { Op: UnaryOp.Minus })
+                        if (node.Right is not PowerFx.Syntax.UnaryOpNode { Op: UnaryOp.Minus })
                         {
                             throw new NotSupportedException();
                         }
