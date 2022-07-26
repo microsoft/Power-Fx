@@ -1,4 +1,3 @@
-﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -4600,5 +4599,8 @@
   <data name="SetArg2" xml:space="preserve">
     <value>値</value>
     
+  </data>
+  <data name="ErrExpectedIdentifierArg_Name" xmlns:space="preserve">
+    <value>引数 '{0}' が無効です。識別子が必要です。</value>
   </data>
 </root>

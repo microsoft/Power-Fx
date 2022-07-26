@@ -5004,14 +5004,21 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 if (maybeFunc.HasIdentifiers && _features.HasFlag(Features.SupportIdentifiers))
                 {
-                    foreach (var arg in args.Select((a, i) => a is FirstNameNode firstNameNode && maybeFunc.IsIdentifierParam(i) ? (i, firstNameNode) : (-1, null)).Where(a => a.i != -1))
-                    {
-                        if (DType.TryGetLogicalNameForColumn(argTypes[0], arg.firstNameNode.Ident.Name, out var logicalName))
-                        {
-                            var typedName = argTypes[0].GetAllNames(DPath.Root).First(tn => tn.Name == logicalName);
-                            var fileNameInfo = FirstNameInfo.Create(arg.firstNameNode, new NameLookupInfo(BindKind.NamedValue, typedName.Type, DPath.Root, 0, displayName: new DName(logicalName)));
+                    var i = 0;
 
-                            _txb.SetInfo(arg.firstNameNode, fileNameInfo);
+                    foreach (var arg in args)
+                    {
+                        i++;
+
+                        if (arg is FirstNameNode firstNameNode && maybeFunc.IsIdentifierParam(i))
+                        {
+                            if (DType.TryGetLogicalNameForColumn(argTypes[0], firstNameNode.Ident.Name, out var logicalName))
+                            {
+                                var typedName = argTypes[0].GetAllNames(DPath.Root).First(tn => tn.Name == logicalName);
+                                var fileNameInfo = FirstNameInfo.Create(firstNameNode, new NameLookupInfo(BindKind.NamedValue, typedName.Type, DPath.Root, 0, displayName: new DName(logicalName)));
+
+                                _txb.SetInfo(firstNameNode, fileNameInfo);
+                            }
                         }
                     }
                 }

@@ -78,6 +78,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             var supportIndentifiers = binding.Features.HasFlag(Features.SupportIdentifiers);
+            string value = null;
 
             for (var i = 1; i < count; i += 2)
             {
@@ -87,20 +88,36 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 // Verify we have a string literal for the column name. Accd to spec, we don't support
                 // arbitrary expressions that evaluate to string values, because these values contribute to
                 // type analysis, so they need to be known upfront (before AddColumns executes).
-                StrLitNode strLitNode = null;
-                FirstNameNode identifierNode = null;
-
-                if ((!supportIndentifiers && (nameArgType.Kind != DKind.String || (strLitNode = nameArg.AsStrLit()) == null)) ||
-                     (supportIndentifiers && (identifierNode = nameArg.AsFirstName()) == null))
+                if (supportIndentifiers)
                 {
-                    fArgsValid = false;
+                    FirstNameNode identifierNode = nameArg.AsFirstName();
 
-                    // Argument '{0}' is invalid, expected a text literal.
-                    errors.EnsureError(DocumentErrorSeverity.Severe, nameArg, TexlStrings.ErrExpectedStringLiteralArg_Name, nameArg.ToString());
-                    continue;
+                    if (identifierNode == null)
+                    {
+                        fArgsValid = false;
+
+                        // Argument '{0}' is invalid, expected a text literal.
+                        errors.EnsureError(DocumentErrorSeverity.Severe, nameArg, TexlStrings.ErrExpectedStringLiteralArg_Name, nameArg.ToString());
+                        continue;
+                    }
+
+                    value = identifierNode.Ident.Name;
                 }
+                else
+                {
+                    StrLitNode strLitNode = nameArg.AsStrLit();
 
-                var value = supportIndentifiers ? identifierNode.Ident.Name : strLitNode.Value;
+                    if (nameArgType.Kind != DKind.String && strLitNode == null)
+                    {
+                        fArgsValid = false;
+
+                        // Argument '{0}' is invalid, expected a text literal.
+                        errors.EnsureError(DocumentErrorSeverity.Severe, nameArg, TexlStrings.ErrExpectedStringLiteralArg_Name, nameArg.ToString());
+                        continue;
+                    }
+
+                    value = strLitNode.Value;
+                }
 
                 // Verify that the name is valid.
                 if (!DName.IsValidDName(value))

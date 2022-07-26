@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -6484,5 +6484,9 @@
   <data name="SetArg2" xml:space="preserve">
     <value>value</value>
     <comment>function_parameter - Second argument to the Set function - any Power Apps value.</comment>
+  </data>
+  <data name="ErrExpectedIdentifierArg_Name" xml:space="preserve">
+    <value>Argument '{0}' is invalid, expected an identifier.</value>
+    <comment>Error Message.</comment>
   </data>
 </root>
