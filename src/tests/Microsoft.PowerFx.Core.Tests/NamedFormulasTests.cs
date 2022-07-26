@@ -18,10 +18,22 @@ namespace Microsoft.PowerFx.Core.Tests
             var parsedUDFS = new ParsedUDFs(script);
             var result = parsedUDFS.GetParsed();
             Assert.False(result.HasError);
-            foreach (var x in result.UDFs)
-            {
-                Assert.True(x.ToString().Equals("ident: Foo, body: Abs(x), returnType: Number, args: [ident: x, type: Number,]"));
-            }
+            var udf = result.UDFs.First();
+            Assert.Equal("Foo", udf.Ident.ToString());
+            Assert.Equal("Abs(x)", udf.Body.ToString());
+            Assert.Equal("Number", udf.ReturnType.ToString());
+            var arg = udf.Args.First();
+            Assert.Equal("x", arg.VarIdent.ToString());
+            Assert.Equal("Number", arg.VarType.ToString());
+        }
+
+        [Theory]
+        [InlineData("Foo(x As Number, x As String) As Number = Abs(x);")]
+        public void DoubleArgDefTest(string script)
+        {
+            var parsedUDFS = new ParsedUDFs(script);
+            var result = parsedUDFS.GetParsed();
+            Assert.True(result.HasError);
         }
 
         [Theory]

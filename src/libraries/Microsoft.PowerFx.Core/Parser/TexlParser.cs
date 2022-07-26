@@ -70,11 +70,11 @@ namespace Microsoft.PowerFx.Core.Parser
         private ParseUDFsResult ParseUDFs(string script)
         {
             var udfs = new List<UDF>();
-            ParseTrivia();
 
             while (_curs.TokCur.Kind != TokKind.Eof)
             {
-                var args = new HashSet<Arg>();
+                //var args = new HashSet<UDFArg>();
+                var args = new Dictionary<string, UDFArg>();
                 ParseTrivia();
 
                 // Store the name of the UDF.
@@ -108,7 +108,13 @@ namespace Microsoft.PowerFx.Core.Parser
                     ParseTrivia();
                     var varType = TokEat(TokKind.Ident);
                     ParseTrivia();
-                    args.Add(new Arg(varIdent.As<IdentToken>(), varType.As<IdentToken>()));
+                    if (args.ContainsKey(varIdent.ToString()))
+                    {
+                        CreateError(_curs.TokCur, TexlStrings.ErrUDF_DuplicateArgName);
+                        return new ParseUDFsResult(udfs, _errors);
+                    }
+
+                    args.Add(varIdent.ToString(), new UDFArg(varIdent.As<IdentToken>(), varType.As<IdentToken>()));
                     if (_curs.TokCur.Kind != TokKind.ParenClose && _curs.TokCur.Kind != TokKind.Comma)
                     {
                         CreateError(_curs.TokCur, TexlStrings.ErrUDF_MissingComma);
@@ -161,7 +167,7 @@ namespace Microsoft.PowerFx.Core.Parser
 
                     // Parse expression
                     var result = ParseExpr(Precedence.None);
-                    udfs.Add(new UDF(ident.As<IdentToken>(), returnType.As<IdentToken>(), args, result));
+                    udfs.Add(new UDF(ident.As<IdentToken>(), returnType.As<IdentToken>(), new HashSet<UDFArg>(args.Values), result));
                 }
 
                 TokEat(TokKind.Semicolon);

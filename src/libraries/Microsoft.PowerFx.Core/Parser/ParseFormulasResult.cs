@@ -35,8 +35,6 @@ namespace Microsoft.PowerFx.Core.Parser
     {
         internal IEnumerable<UDF> UDFs { get; }
 
-        internal List<TexlError> Errors { get; }
-
         internal bool HasError { get; }
 
         public ParseUDFsResult(List<UDF> uDFs, List<TexlError> errors)
@@ -45,14 +43,14 @@ namespace Microsoft.PowerFx.Core.Parser
 
             if (errors?.Any() ?? false)
             {
-                Errors = errors;
+                ExpErrors = ExpressionError.New(errors);
                 HasError = true;
             }
 
             UDFs = uDFs;
         }
 
-        public IEnumerable<ExpressionError> ExpErrors => ExpressionError.New(Errors);
+        public IEnumerable<ExpressionError> ExpErrors;
     }
 
     internal class UDF
@@ -63,42 +61,26 @@ namespace Microsoft.PowerFx.Core.Parser
         
         internal TexlNode Body { get; }
 
-        internal ISet<Arg> Args { get; }
+        internal ISet<UDFArg> Args { get; }
 
-        public UDF(IdentToken ident, IdentToken returnType, HashSet<Arg> args, TexlNode body)
+        public UDF(IdentToken ident, IdentToken returnType, HashSet<UDFArg> args, TexlNode body)
         {
             Ident = ident;
             ReturnType = returnType;
             Args = args;
             Body = body;
         }
-
-        public override string ToString()
-        {
-            var str = $"ident: {Ident}, body: {Body}, returnType: {ReturnType}, args: [";
-            foreach (var arg in Args)
-            {
-                str += $"{arg},";
-            }
-
-            return str += "]";
-        }
     }
 
-    internal class Arg
+    internal class UDFArg
     {
-        internal IdentToken _varIdent;
-        internal IdentToken _varType;
+        internal IdentToken VarIdent;
+        internal IdentToken VarType;
 
-        public Arg(IdentToken varIdent, IdentToken varType)
+        public UDFArg(IdentToken varIdent, IdentToken varType)
         {
-            _varIdent = varIdent;
-            _varType = varType;
-        }
-
-        public override string ToString()
-        {
-            return $"ident: {_varIdent}, type: {_varType}";
-        }
+            VarIdent = varIdent;
+            VarType = varType;
+        } 
     }
 }

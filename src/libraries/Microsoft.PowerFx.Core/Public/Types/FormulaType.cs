@@ -102,7 +102,7 @@ namespace Microsoft.PowerFx.Types
             return type;
         }
 
-        internal static FormulaType[] GetValidTypes()
+        internal static FormulaType[] GetValidUDFPrimitiveTypes()
         {
             FormulaType[] validTypes = { Blank, Boolean, Number, String, Time, Date, DateTime, DateTimeNoTimeZone, Hyperlink, Color, Guid };
             return validTypes;
@@ -110,7 +110,7 @@ namespace Microsoft.PowerFx.Types
 
         internal static FormulaType GetFromStringOrNull(string formula)
         {
-            foreach (FormulaType formulaType in GetValidTypes())
+            foreach (FormulaType formulaType in GetValidUDFPrimitiveTypes())
             {
                 if (formulaType.ToString().Equals(formula))
                 {

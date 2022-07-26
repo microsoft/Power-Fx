@@ -6537,6 +6537,10 @@
     <value>User Defined Function is missing an 'As' here</value>
     <comment>Error Message</comment>
   </data>
+  <data name="ErrUDF_DuplicateArgName" xml:space="preserve">
+    <value>User Defined Function has a duplicate argument name</value>
+    <comment>Error Message</comment>
+  </data>
   <data name="AboutSet" xml:space="preserve">
     <value>Create and set a global variable.</value>
     <comment>Description of 'Set' function.</comment>
