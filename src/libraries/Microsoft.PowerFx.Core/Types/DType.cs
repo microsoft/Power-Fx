@@ -1901,7 +1901,7 @@ namespace Microsoft.PowerFx.Core.Types
                         return AcceptsLazyType(type);
                     }
 
-                    if (Kind == type.Kind)
+                    if (Kind == type.Kind || type.IsExpandEntity)
                     {
                         return TreeAccepts(this, TypeTree, type.TypeTree, out schemaDifference, out schemaDifferenceType, exact, useLegacyDateTimeAccepts);
                     }
