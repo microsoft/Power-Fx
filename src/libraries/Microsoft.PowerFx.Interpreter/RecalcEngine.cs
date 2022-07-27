@@ -171,7 +171,7 @@ namespace Microsoft.PowerFx
                 udf.Ident.ToString(), 
                 udf.Body.ToString(), 
                 FormulaType.GetFromStringOrNull(udf.ReturnType.ToString()),
-                udf.Args.Select(arg => new NamedFormulaType(arg._varIdent.ToString(), FormulaType.GetFromStringOrNull(arg._varType.ToString()))).ToArray())).ToArray();
+                udf.Args.Select(arg => new NamedFormulaType(arg.VarIdent.ToString(), FormulaType.GetFromStringOrNull(arg.VarType.ToString()))).ToArray())).ToArray();
             return DefineFunctions(udfDefinitions);
         }
 
