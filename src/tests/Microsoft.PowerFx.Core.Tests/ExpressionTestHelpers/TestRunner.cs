@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core.Tests
@@ -345,21 +346,9 @@ namespace Microsoft.PowerFx.Core.Tests
                 foreach (var field in fields)
                 {
                     sb.Append(dil);
-
-                    if (field.Name.Contains(' '))
-                    {
-                        sb.Append('\'');
-                        sb.Append(field.Name);
-                        sb.Append('\'');
-                    }
-                    else
-                    {
-                        sb.Append(field.Name);
-                    }
-
+                    sb.Append(TexlLexer.EscapeName(field.Name));
                     sb.Append(':');
                     TestToString(field.Value, sb);
-
                     dil = ",";
                 }
 

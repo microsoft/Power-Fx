@@ -75,7 +75,11 @@ namespace Microsoft.PowerFx.Core.Functions
         // Return true if the function expects lambda arguments, false otherwise.
         public virtual bool HasLambdas => !_maskLambdas.IsZero;
 
-        // Returns true if the function expect identifiers, false otherwise.
+        /// <summary>
+        /// Returns true if the function expect identifiers, false otherwise.
+        /// Needs to be overloaded for functions having identiifer parameters.
+        /// Also overload IsIdentifierParam method 
+        /// </summary>
         public virtual bool HasIdentifiers => false;
 
         // Return true if lambda args should affect ECS, false otherwise.

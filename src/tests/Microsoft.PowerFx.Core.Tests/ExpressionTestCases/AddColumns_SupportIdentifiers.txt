@@ -28,8 +28,7 @@ Table({a:1,b:1},{a:2,b:8})
 Errors: Error 56-57: Name isn't valid. 'b' isn't recognized.|Error 57-59: Invalid use of '.'|Error 0-71: The function 'AddColumns' has some invalid arguments.
 
 >> AddColumns(Table({a: 1, b: {c: 3}}, {a: 2, b: {c: 4}}), 'b.d', a * a * a)
-Table({a:1,b:{c:3},b.d:1},{a:2,b:{c:4},b.d:8})
-
+Table({a:1,b:{c:3},'b.d':1},{a:2,b:{c:4},'b.d':8})
 
 >> AddColumns(Table({a: 1, b: {c: 3}}, {a: 2, b: {c: 4}}), 'b d', a * a * a)
 Table({a:1,b:{c:3},'b d':1},{a:2,b:{c:4},'b d':8})
