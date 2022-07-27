@@ -254,7 +254,7 @@ namespace Microsoft.PowerFx.Tests
                 "x * y",
                 FormulaType.Number,
                 new NamedFormulaType("x", FormulaType.Number),
-                new NamedFormulaType("y", FormulaType.Number))).Item1;
+                new NamedFormulaType("y", FormulaType.Number))).ExpressionErrors;
             Assert.False(enumerable.Any());
             Assert.Equal(17.0, recalcEngine.Eval("foo(3,4) + 5").ToObject());
         }
@@ -270,7 +270,7 @@ namespace Microsoft.PowerFx.Tests
                     "foo",
                     body,
                     FormulaType.Number,
-                    new NamedFormulaType("x", FormulaType.Number))).Item1;
+                    new NamedFormulaType("x", FormulaType.Number))).ExpressionErrors;
             var result = recalcEngine.Eval("foo(0)");
             Assert.Equal(2.0, result.ToObject());
             Assert.False(enumerable.Any());
@@ -285,7 +285,7 @@ namespace Microsoft.PowerFx.Tests
                 new UDFDefinition(
                     "foo",
                     "foo()",
-                    FormulaType.Blank)).Item1.Any());
+                    FormulaType.Blank)).ExpressionErrors.Any());
             var result = recalcEngine.Eval("foo()");
             Assert.IsType<ErrorValue>(result);
         }
@@ -304,7 +304,7 @@ namespace Microsoft.PowerFx.Tests
             var variable = new NamedFormulaType("x", FormulaType.Number);
 
             Assert.False(recalcEngine.DefineFunctions(
-                new UDFDefinition(funcName, body, returnType, variable)).Item1.Any());
+                new UDFDefinition(funcName, body, returnType, variable)).ExpressionErrors.Any());
             Assert.Equal(1.0, recalcEngine.Eval("hailstone(192)").ToObject());
         }
 
@@ -330,7 +330,7 @@ namespace Microsoft.PowerFx.Tests
                 FormulaType.Boolean,
                 new NamedFormulaType("number", FormulaType.Number));
 
-            Assert.False(recalcEngine.DefineFunctions(udfOdd, udfEven).Item1.Any());
+            Assert.False(recalcEngine.DefineFunctions(udfOdd, udfEven).ExpressionErrors.Any());
 
             Assert.Equal(true, recalcEngine.Eval("odd(17)").ToObject());
             Assert.Equal(false, recalcEngine.Eval("even(17)").ToObject());
@@ -351,7 +351,7 @@ namespace Microsoft.PowerFx.Tests
         {
             var config = new PowerFxConfig(null);
             var recalcEngine = new RecalcEngine(config);
-            Assert.True(recalcEngine.DefineFunctions(new UDFDefinition("foo", "x[", FormulaType.Blank)).Item1.Any());
+            Assert.True(recalcEngine.DefineFunctions(new UDFDefinition("foo", "x[", FormulaType.Blank)).ExpressionErrors.Any());
         }
 
         [Fact]
@@ -359,7 +359,7 @@ namespace Microsoft.PowerFx.Tests
         {
             var config = new PowerFxConfig(null);
             var recalcEngine = new RecalcEngine(config);
-            Assert.False(recalcEngine.DefineFunctions(new UDFDefinition("foo", "x+1", FormulaType.Number, new NamedFormulaType("x", FormulaType.Number))).Item1.Any());
+            Assert.False(recalcEngine.DefineFunctions(new UDFDefinition("foo", "x+1", FormulaType.Number, new NamedFormulaType("x", FormulaType.Number))).ExpressionErrors.Any());
             Assert.False(recalcEngine.Check("foo(False)").IsSuccess);
             Assert.False(recalcEngine.Check("foo(Table( { Value: \"Strawberry\" }, { Value: \"Vanilla\" } ))").IsSuccess);
             Assert.True(recalcEngine.Check("foo(1)").IsSuccess);
@@ -744,6 +744,13 @@ namespace Microsoft.PowerFx.Tests
         {
             var recalcEngine = new RecalcEngine(new PowerFxConfig(null));
             Assert.Throws<InvalidOperationException>(() => recalcEngine.DefineFunctions("Foo() As Number = 10; Foo(x As Number) As String = \"hi\""));
+        }
+
+        [Fact]
+        public void TestNumberBinding()
+        {
+            var recalcEngine = new RecalcEngine(new PowerFxConfig(null));
+            Assert.True(recalcEngine.DefineFunctions("Foo() As String = 10;").ExpressionErrors.Any());
         }
 
         #region Test

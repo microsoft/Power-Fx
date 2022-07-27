@@ -57,6 +57,15 @@ namespace Microsoft.PowerFx.Interpreter
                 return errorList;
             }
 
+            if (!check.ReturnType._type.Kind.Equals(ReturnType.Kind))
+            {
+                var errorList = new List<ExpressionError>
+                {
+                    new ExpressionError()
+                };
+                return errorList;
+            }
+
             return new List<ExpressionError>();
         }
 

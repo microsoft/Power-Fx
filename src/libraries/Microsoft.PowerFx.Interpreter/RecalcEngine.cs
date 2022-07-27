@@ -162,7 +162,7 @@ namespace Microsoft.PowerFx
             return await check.Expression.EvalAsync(parameters, cancel);
         }
 
-        public (IEnumerable<ExpressionError>, IEnumerable<FunctionInfo>) DefineFunctions(string script)
+        public DefineFunctionsResult DefineFunctions(string script)
         {
             var parsedUDFS = new Core.Syntax.ParsedUDFs(script);
             var result = parsedUDFS.GetParsed();
@@ -211,7 +211,7 @@ namespace Microsoft.PowerFx
         /// </summary>
         /// <param name="udfDefinitions"></param>
         /// <returns></returns>
-        internal (IEnumerable<ExpressionError>, IEnumerable<FunctionInfo>) DefineFunctions(IEnumerable<UDFDefinition> udfDefinitions)
+        internal DefineFunctionsResult DefineFunctions(IEnumerable<UDFDefinition> udfDefinitions)
         {
             var expressionErrors = new List<ExpressionError>();
 
@@ -238,10 +238,10 @@ namespace Microsoft.PowerFx
                 }
             }
 
-            return (expressionErrors, binders.Select(binder => new FunctionInfo(binder._function)));
+            return new DefineFunctionsResult(expressionErrors, binders.Select(binder => new FunctionInfo(binder._function)));
         }
 
-        internal (IEnumerable<ExpressionError>, IEnumerable<FunctionInfo>) DefineFunctions(params UDFDefinition[] udfDefinitions)
+        internal DefineFunctionsResult DefineFunctions(params UDFDefinition[] udfDefinitions)
         {
             return DefineFunctions(udfDefinitions.AsEnumerable());
         }
