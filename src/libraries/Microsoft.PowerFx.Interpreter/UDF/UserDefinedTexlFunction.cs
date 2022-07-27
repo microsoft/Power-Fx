@@ -53,6 +53,9 @@ namespace Microsoft.PowerFx.Interpreter
                 var errorList = new List<ExpressionError>
                 {
                     new ExpressionError()
+                    {
+                        Message = "Expression is not a ParsedExpression"
+                    }
                 };
                 return errorList;
             }
@@ -62,6 +65,9 @@ namespace Microsoft.PowerFx.Interpreter
                 var errorList = new List<ExpressionError>
                 {
                     new ExpressionError()
+                    {
+                        Message = "Return type does not match body return type"
+                    }
                 };
                 return errorList;
             }
