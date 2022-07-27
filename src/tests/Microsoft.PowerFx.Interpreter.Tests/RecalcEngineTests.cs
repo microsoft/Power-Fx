@@ -35,10 +35,13 @@ namespace Microsoft.PowerFx.Tests
             var nsType = "Microsoft.PowerFx.Types";
             var allowed = new HashSet<string>()
             {
+                $"{ns}.{nameof(CheckResultExtensions)}",
+                $"{ns}.{nameof(ReadOnlySymbolValues)}",
                 $"{ns}.{nameof(RecalcEngine)}",
                 $"{ns}.{nameof(ReflectionFunction)}",
                 $"{ns}.{nameof(RecalcEngineScope)}",
                 $"{ns}.{nameof(PowerFxConfigExtensions)}",
+                $"{ns}.{nameof(IExpressionEvaluator)}",
                 $"{ns}.{nameof(ITypeMarshallerProvider)}",
                 $"{ns}.{nameof(ITypeMarshaller)}",
                 $"{ns}.{nameof(IDynamicTypeMarshaller)}",
@@ -46,6 +49,7 @@ namespace Microsoft.PowerFx.Tests
                 $"{ns}.{nameof(ObjectMarshaller)}",
                 $"{ns}.{nameof(PrimitiveMarshallerProvider)}",
                 $"{ns}.{nameof(PrimitiveTypeMarshaller)}",
+                $"{ns}.{nameof(SymbolValues)}",
                 $"{ns}.{nameof(TableMarshallerProvider)}",
                 $"{ns}.{nameof(TypeMarshallerCache)}",
                 $"{ns}.{nameof(TypeMarshallerCacheExtensions)}",
@@ -406,19 +410,19 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void CheckFunctionCounts()
         {
-            var config = new PowerFxConfig();
+            var engine1 = new Engine(new PowerFxConfig());
 
             // Pick a function in core but not implemented in interpreter.
             var nyiFunc = BuiltinFunctionsCore.ISOWeekNum;
 
-            Assert.Contains(nyiFunc, config.Functions);
+            Assert.Contains(nyiFunc, engine1.Functions);
 
             // RecalcEngine will add the interpreter's functions. 
-            var engine = new RecalcEngine(config);
+            var engine2 = new RecalcEngine();
 
-            Assert.DoesNotContain(nyiFunc, config.Functions);
+            Assert.DoesNotContain(nyiFunc, engine2.Functions);
 
-            var names = engine.GetAllFunctionNames().ToArray();
+            var names = engine2.GetAllFunctionNames().ToArray();
             Assert.True(names.Length > 100);
 
             // Spot check some known functions
@@ -568,7 +572,7 @@ namespace Microsoft.PowerFx.Tests
             // Test evaluation of parsed expression
             var recordValue = FormulaValue.NewRecordFromFields(
                 new NamedValue("x", FormulaValue.New(5)));
-            var formulaValue = result.Expression.Eval(recordValue);
+            var formulaValue = result.GetEvaluator().Eval(recordValue);
             Assert.Equal(11.0, (double)formulaValue.ToObject());
         }
 
@@ -593,31 +597,34 @@ namespace Microsoft.PowerFx.Tests
         }
 
         [Fact]
-        public void RecalcEngineLocksConfig()
+        public void RecalcEngineMutateConfig()
         {
             var config = new PowerFxConfig(null);
-            config.SetCoreFunctions(new TexlFunction[0]); // clear builtins
-            config.AddFunction(BuiltinFunctionsCore.Blank);
+            config.SymbolTable.AddFunction(BuiltinFunctionsCore.Blank);
 
-            var recalcEngine = new Engine(config);
+            var recalcEngine = new Engine(config)
+            {
+                SupportedFunctions = new SymbolTable() // clear builtins
+            };
 
             var func = BuiltinFunctionsCore.AsType; // Function not already in engine
-            Assert.DoesNotContain(func, config.Functions); // didn't get auto-added by engine.
+            Assert.DoesNotContain(func, recalcEngine.Functions); // didn't get auto-added by engine.
 
+            // We can mutate config after engine is created.
             var optionSet = new OptionSet("foo", DisplayNameUtility.MakeUnique(new Dictionary<string, string>() { { "one key", "one value" } }));
-            Assert.Throws<InvalidOperationException>(() => config.AddFunction(func));
-            Assert.Throws<InvalidOperationException>(() => config.AddOptionSet(optionSet));
+            config.SymbolTable.AddFunction(func);
+            config.SymbolTable.AddEntity(optionSet);
 
-            Assert.False(config.TryGetSymbol(new DName("foo"), out _, out _));
+            Assert.True(config.TryGetSymbol(new DName("foo"), out _, out _));
+            Assert.Contains(func, recalcEngine.Functions); // function was added to the config.
 
-            Assert.DoesNotContain(BuiltinFunctionsCore.Abs, config.Functions);
+            Assert.DoesNotContain(BuiltinFunctionsCore.Abs, recalcEngine.Functions);
         }
 
         [Fact]
         public void RecalcEngine_AddFunction_Twice()
         {
             var config = new PowerFxConfig(null);
-            config.SetCoreFunctions(new TexlFunction[0]);
             config.AddFunction(BuiltinFunctionsCore.Blank);
 
             Assert.Throws<ArgumentException>(() => config.AddFunction(BuiltinFunctionsCore.Blank));
@@ -689,11 +696,7 @@ namespace Microsoft.PowerFx.Tests
 
             var checkResult = recalcEngine.Check("SortOrder.Ascending");
             Assert.True(checkResult.IsSuccess);
-            Assert.IsType<StringType>(checkResult.ReturnType);
-
-            var enums = config.EnumStoreBuilder.Build().EnumSymbols;
-
-            Assert.True(enums.Count() > 0);
+            Assert.IsType<StringType>(checkResult.ReturnType);            
         }
 
         [Fact]

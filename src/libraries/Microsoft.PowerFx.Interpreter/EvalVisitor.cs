@@ -26,12 +26,15 @@ namespace Microsoft.PowerFx
     {
         public CultureInfo CultureInfo { get; }
 
+        private readonly ReadOnlySymbolValues _runtimeConfig;
+
         private readonly CancellationToken _cancel;
 
-        public EvalVisitor(CultureInfo cultureInfo, CancellationToken cancel)
+        public EvalVisitor(CultureInfo cultureInfo, CancellationToken cancel, ReadOnlySymbolValues runtimeConfig = null)
         {
             CultureInfo = cultureInfo;
             _cancel = cancel;
+            _runtimeConfig = runtimeConfig;
         }
 
         // Check this cooperatively - especially in any loop. 
@@ -211,7 +214,7 @@ namespace Microsoft.PowerFx
             }
             else if (func is CustomTexlFunction customTexlFunc)
             {
-                var result = customTexlFunc.Invoke(args);
+                var result = customTexlFunc.Invoke(_runtimeConfig, args);
                 return result;
             }
             else
@@ -548,10 +551,22 @@ namespace Microsoft.PowerFx
         {
             return node.Value switch
             {
+                NameSymbol name => GetVariableOrFail(node, name.Name),
                 ICanGetValue fi => fi.Value,
                 IExternalOptionSet optionSet => ResolvedObjectHelpers.OptionSet(optionSet, node.IRContext),
                 _ => ResolvedObjectHelpers.ResolvedObjectError(node),
             };
+        }
+
+        private FormulaValue GetVariableOrFail(ResolvedObjectNode node, string name)
+        {
+            if (_runtimeConfig != null &&
+                _runtimeConfig.TryGetValue(name, out var value))
+            {
+                return value;
+            }
+
+            return ResolvedObjectHelpers.ResolvedObjectError(node);
         }
     }
 }

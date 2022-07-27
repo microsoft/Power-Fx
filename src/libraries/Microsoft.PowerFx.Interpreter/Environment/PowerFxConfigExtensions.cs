@@ -17,6 +17,11 @@ namespace Microsoft.PowerFx
             powerFxConfig.AddFunction(function.GetTexlFunction());
         }
 
+        public static void AddFunction(this SymbolTable symbolTable, ReflectionFunction function)
+        {
+            symbolTable.AddFunction(function.GetTexlFunction());
+        }
+
         /// <summary>
         /// Enable a Set() function which allows scripts to do <see cref="RecalcEngine.UpdateVariable(string, Types.FormulaValue)"/>.
         /// </summary>
