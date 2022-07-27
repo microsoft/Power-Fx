@@ -8,8 +8,10 @@ namespace Microsoft.PowerFx.Interpreter
 {
     internal class UDFLazyBinder
     {
-        public readonly UserDefinedTexlFunction _function;
-        
+        private readonly UserDefinedTexlFunction _function;
+
+        public UserDefinedTexlFunction Function => _function;
+
         private readonly List<ExpressionError> _expressionError = new List<ExpressionError>();
 
         public readonly string Name;

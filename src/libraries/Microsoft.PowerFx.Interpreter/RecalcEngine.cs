@@ -238,7 +238,7 @@ namespace Microsoft.PowerFx
                 }
             }
 
-            return new DefineFunctionsResult(expressionErrors, binders.Select(binder => new FunctionInfo(binder._function)));
+            return new DefineFunctionsResult(expressionErrors, binders.Select(binder => new FunctionInfo(binder.Function)));
         }
 
         internal DefineFunctionsResult DefineFunctions(params UDFDefinition[] udfDefinitions)
