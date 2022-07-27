@@ -16,6 +16,7 @@ using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Interpreter;
+using Microsoft.PowerFx.Interpreter.UDF;
 using Microsoft.PowerFx.Types;
 using Xunit;
 using Xunit.Sdk;
@@ -48,7 +49,8 @@ namespace Microsoft.PowerFx.Tests
                 $"{ns}.{nameof(TableMarshallerProvider)}",
                 $"{ns}.{nameof(TypeMarshallerCache)}",
                 $"{ns}.{nameof(TypeMarshallerCacheExtensions)}",
-                $"{nsType}.{nameof(ObjectRecordValue)}"
+                $"{nsType}.{nameof(ObjectRecordValue)}",
+                $"{ns}.Interpreter.UDF.{nameof(DefineFunctionsResult)}"
             };
 
             var sb = new StringBuilder();
