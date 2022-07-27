@@ -1,7 +1,9 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Diagnostics;
 using System.Linq;
+using Microsoft.PowerFx.Core.Syntax;
 using Microsoft.PowerFx.Syntax;
 using Xunit;
 
@@ -9,6 +11,31 @@ namespace Microsoft.PowerFx.Core.Tests
 {
     public class NamedFormulasTests : PowerFxTest
     {
+        [Theory]
+        [InlineData("Foo(x As Number) As Number = Abs(x);")]
+        public void DefFuncTest(string script)
+        {
+            var parsedUDFS = new ParsedUDFs(script);
+            var result = parsedUDFS.GetParsed();
+            Assert.False(result.HasError);
+            var udf = result.UDFs.First();
+            Assert.Equal("Foo", udf.Ident.ToString());
+            Assert.Equal("Abs(x)", udf.Body.ToString());
+            Assert.Equal("Number", udf.ReturnType.ToString());
+            var arg = udf.Args.First();
+            Assert.Equal("x", arg.VarIdent.ToString());
+            Assert.Equal("Number", arg.VarType.ToString());
+        }
+
+        [Theory]
+        [InlineData("Foo(x As Number, x As String) As Number = Abs(x);")]
+        public void DoubleArgDefTest(string script)
+        {
+            var parsedUDFS = new ParsedUDFs(script);
+            var result = parsedUDFS.GetParsed();
+            Assert.True(result.HasError);
+        }
+
         [Theory]
         [InlineData("x=1;y=2;")]
         public void NamedFormulaTest(string script)

@@ -40,6 +40,8 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
         EqBlob,
         EqGuid,
         EqOptionSetValue,
+        EqViewValue,
+        EqNamedValue,
         EqNull,
 
         NeqNumbers,
@@ -56,6 +58,8 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
         NeqBlob,
         NeqGuid,
         NeqOptionSetValue,
+        NeqViewValue,
+        NeqNamedValue,
         NeqNull,
 
         LtNumbers,
