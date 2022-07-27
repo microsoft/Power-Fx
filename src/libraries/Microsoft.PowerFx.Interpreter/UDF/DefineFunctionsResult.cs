@@ -23,6 +23,6 @@ namespace Microsoft.PowerFx.Interpreter.UDF
 
         public IEnumerable<ExpressionError> Errors => _expressionErrors;
 
-        public bool IsSuccess => _expressionErrors.Any();
+        public bool IsSuccess => !_expressionErrors.Any();
     }
 }
