@@ -12,7 +12,7 @@ namespace Microsoft.PowerFx.Core.Tests
     public class NamedFormulasTests : PowerFxTest
     {
         [Theory]
-        [InlineData("Foo(x As Number) As Number = Abs(x);")]
+        [InlineData("Foo(x: Number): Number = Abs(x);")]
         public void DefFuncTest(string script)
         {
             var parsedUDFS = new ParsedUDFs(script);
