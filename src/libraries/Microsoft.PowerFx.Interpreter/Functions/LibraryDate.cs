@@ -405,7 +405,11 @@ namespace Microsoft.PowerFx.Functions
         public static FormulaValue DateTimeParse(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, StringValue[] args)
         {
             var str = args[0].Value;
-            if (DateTime.TryParse(str, runner.CultureInfo, DateTimeStyles.None, out var result))
+
+            // argCI will have Culrural info incase one was passed in argument else it will have the default one.
+            CultureInfo argCI = args.Length > 1 ? new CultureInfo(args[1].Value) : runner.CultureInfo;
+
+            if (DateTime.TryParse(str, argCI, DateTimeStyles.None, out var result))
             {
                 return new DateTimeValue(irContext, result);
             }
