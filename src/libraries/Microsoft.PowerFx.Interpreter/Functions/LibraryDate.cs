@@ -406,7 +406,7 @@ namespace Microsoft.PowerFx.Functions
         {
             var str = args[0].Value;
 
-            // argCI will have Culrural info incase one was passed in argument else it will have the default one.
+            // argCI will have Cultural info in-case one was passed in argument else it will have the default one.
             CultureInfo argCI = args.Length > 1 ? new CultureInfo(args[1].Value) : runner.CultureInfo;
 
             if (DateTime.TryParse(str, argCI, DateTimeStyles.None, out var result))
