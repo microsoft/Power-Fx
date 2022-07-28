@@ -1,13 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Tests;
-using Microsoft.PowerFx.Core.Types;
-using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
@@ -44,6 +38,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var output = TestRunner.TestToString(result);
 
             Assert.Equal("Table({logicalB:4},{logicalB:5},{logicalB:6})", output);
+
+            var displayExpression = engine.GetDisplayExpression("DropColumns(myTable, displayName)", parameters.Type);
+            var invariantExpression = engine.GetInvariantExpression("DropColumns(myTable, displayName)", parameters.Type);
+
+            Assert.Equal("DropColumns(myTable, displayName)", displayExpression);
+            Assert.Equal("DropColumns(myTable, logicalA)", invariantExpression);
         }
     }
 }

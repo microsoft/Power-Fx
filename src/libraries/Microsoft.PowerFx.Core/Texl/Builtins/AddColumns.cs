@@ -78,10 +78,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             var supportIndentifiers = binding.Features.HasFlag(Features.SupportIdentifiers);
-            string value = null;
 
             for (var i = 1; i < count; i += 2)
             {
+                string expectedColumnName = null;
                 var nameArg = args[i];
                 var nameArgType = argTypes[i];
 
@@ -90,18 +90,16 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 // type analysis, so they need to be known upfront (before AddColumns executes).
                 if (supportIndentifiers)
                 {
-                    FirstNameNode identifierNode = nameArg.AsFirstName();
-
-                    if (identifierNode == null)
+                    if (nameArg is not FirstNameNode identifierNode)
                     {
                         fArgsValid = false;
 
-                        // Argument '{0}' is invalid, expected a text literal.
-                        errors.EnsureError(DocumentErrorSeverity.Severe, nameArg, TexlStrings.ErrExpectedStringLiteralArg_Name, nameArg.ToString());
+                        // Argument '{0}' is invalid, expected an identifier.
+                        errors.EnsureError(DocumentErrorSeverity.Severe, nameArg, TexlStrings.ErrExpectedIdentifierArg_Name, nameArg.ToString());
                         continue;
                     }
 
-                    value = identifierNode.Ident.Name;
+                    expectedColumnName = identifierNode.Ident.Name;
                 }
                 else
                 {
@@ -116,27 +114,27 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         continue;
                     }
 
-                    value = strLitNode.Value;
+                    expectedColumnName = strLitNode.Value;
                 }
 
                 // Verify that the name is valid.
-                if (!DName.IsValidDName(value))
+                if (!DName.IsValidDName(expectedColumnName))
                 {
                     fArgsValid = false;
 
                     // Argument '{0}' is not a valid identifier.
-                    errors.EnsureError(DocumentErrorSeverity.Severe, nameArg, TexlStrings.ErrArgNotAValidIdentifier_Name, value);
+                    errors.EnsureError(DocumentErrorSeverity.Severe, nameArg, TexlStrings.ErrArgNotAValidIdentifier_Name, expectedColumnName);
                     continue;
                 }
 
-                var columnName = new DName(value);
+                var columnName = new DName(expectedColumnName);
                 if (DType.TryGetDisplayNameForColumn(typeScope, columnName, out var colName))
                 {
                     columnName = new DName(colName);
                 }
 
                 // Verify that the name doesn't already exist as either a logical or display name
-                if (typeScope.TryGetType(columnName, out var columnType))
+                if (typeScope.TryGetType(columnName, out var columnType) || DType.TryGetLogicalNameForColumn(typeScope, columnName, out _))
                 {
                     fArgsValid = false;
 

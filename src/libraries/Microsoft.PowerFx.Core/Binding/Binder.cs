@@ -4967,7 +4967,7 @@ namespace Microsoft.PowerFx.Core.Binding
                         maybeFunc.IsIdentifierParam(i);
 
                     // Use the new scope only for lambda args.
-                    _currentScope = ((maybeFunc.IsLambdaParam(i) || isIdentifier) && scopeInfo.AppliesToArgument(i)) ? scopeNew : scopeNew.Parent;
+                    _currentScope = (maybeFunc.IsLambdaParam(i) && scopeInfo.AppliesToArgument(i)) ? scopeNew : scopeNew.Parent;
 
                     if (!isIdentifier)
                     {
@@ -4977,7 +4977,8 @@ namespace Microsoft.PowerFx.Core.Binding
                     }
                     else
                     {
-                        argTypes[i] = DType.String;
+                        // This is an identifier, no associated type 
+                        argTypes[i] = DType.Unknown;
                     }
 
                     Contracts.Assert(argTypes[i].IsValid);
@@ -4990,7 +4991,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     }
 
                     // Accept should leave the scope as it found it.
-                    Contracts.Assert(_currentScope == (((maybeFunc.IsLambdaParam(i) || isIdentifier) && scopeInfo.AppliesToArgument(i)) ? scopeNew : scopeNew.Parent));
+                    Contracts.Assert(_currentScope == ((maybeFunc.IsLambdaParam(i) && scopeInfo.AppliesToArgument(i)) ? scopeNew : scopeNew.Parent));
                 }
 
                 // Now check and mark the path as async.
@@ -5012,11 +5013,11 @@ namespace Microsoft.PowerFx.Core.Binding
 
                         if (arg is FirstNameNode firstNameNode && maybeFunc.IsIdentifierParam(i))
                         {
-                            if (DType.TryGetLogicalNameForColumn(argTypes[0], firstNameNode.Ident.Name, out var logicalName))
-                            {
-                                var typedName = argTypes[0].GetAllNames(DPath.Root).First(tn => tn.Name == logicalName);
-                                var fileNameInfo = FirstNameInfo.Create(firstNameNode, new NameLookupInfo(BindKind.NamedValue, typedName.Type, DPath.Root, 0, displayName: new DName(logicalName)));
+                            var displayName = GetLogicalNodeNameAndUpdateDisplayNames(argTypes[0], firstNameNode.Ident, out _);
 
+                            if (argTypes[0].TryGetType(displayName, out var fieldType))
+                            {
+                                var fileNameInfo = FirstNameInfo.Create(firstNameNode, new NameLookupInfo(BindKind.NamedValue, fieldType, DPath.Root, 0, displayName: new DName(displayName)));
                                 _txb.SetInfo(firstNameNode, fileNameInfo);
                             }
                         }

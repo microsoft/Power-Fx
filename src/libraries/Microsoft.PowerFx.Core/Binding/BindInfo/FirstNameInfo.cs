@@ -18,7 +18,9 @@ namespace Microsoft.PowerFx.Core.Binding.BindInfo
     {
         public override DName Name => Node.AsFirstName().Ident.Name;
 
-        public DName DisplayName { get; private set; }
+        // DisplayName is set in Create methods
+        // Mostly used with identifiers in PreVisit(CallNode node)
+        public DName DisplayName { get; init; }
 
         // Nesting level of where this name is defined.
         // Negative values mean "up".

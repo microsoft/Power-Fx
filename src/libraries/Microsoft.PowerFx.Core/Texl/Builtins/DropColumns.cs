@@ -67,12 +67,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             var supportIndentifiers = binding.Features.HasFlag(Features.SupportIdentifiers);
-            string value = null;
 
             // The result type has N fewer columns, as specified by (args[1],args[2],args[3],...)
             var count = args.Length;
             for (var i = 1; i < count; i++)
             {
+                string expectedColumnName = null;
                 var nameArg = args[i];
                 var nameArgType = argTypes[i];
 
@@ -81,9 +81,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 // type analysis, so they need to be known upfront (before DropColumns executes).                            
                 if (supportIndentifiers)
                 {
-                    FirstNameNode identifierNode = nameArg.AsFirstName();
-
-                    if (identifierNode == null)
+                    if (nameArg is not FirstNameNode identifierNode)
                     {
                         fArgsValid = false;
 
@@ -92,7 +90,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         continue;
                     }
 
-                    value = identifierNode.Ident.Name;
+                    expectedColumnName = identifierNode.Ident.Name;
                 }
                 else
                 {
@@ -107,16 +105,16 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         continue;
                     }
 
-                    value = strLitNode.Value;
+                    expectedColumnName = strLitNode.Value;
                 }
 
                 // Verify that the name is valid.
-                if (!DName.IsValidDName(value))
+                if (!DName.IsValidDName(expectedColumnName))
                 {
                     fArgsValid = false;
 
                     // Argument '{0}' is not a valid identifier.
-                    errors.EnsureError(DocumentErrorSeverity.Severe, nameArg, TexlStrings.ErrArgNotAValidIdentifier_Name, value);
+                    errors.EnsureError(DocumentErrorSeverity.Severe, nameArg, TexlStrings.ErrArgNotAValidIdentifier_Name, expectedColumnName);
                     continue;
                 }
 
@@ -124,7 +122,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                 var columnName = nameArg is FirstNameNode firstNameNode && ((displayName = binding.GetDisplayName(firstNameNode)) != null)
                     ? displayName.Value
-                    : new DName(value);
+                    : new DName(expectedColumnName);
 
                 // Verify that the name exists.
                 if (!returnType.TryGetType(columnName, out var columnType))
