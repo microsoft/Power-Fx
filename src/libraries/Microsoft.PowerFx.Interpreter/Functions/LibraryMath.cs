@@ -690,17 +690,17 @@ namespace Microsoft.PowerFx.Functions
             }
 
             // Dividing by m, since multiplication was introducing floating point error
-            var m = Math.Pow(10d, -dg);
-            var eps = m / 1e12d; // used to manage rounding of 1.4499999999999999999996
+            var m = Math.Pow(10d, dg);
+            var eps = 1 / (m * 1e12d); // used to manage rounding of 1.4499999999999999999996
 
             switch (rt)
             {
                 case RoundType.Default:
-                    return s * Math.Floor((n + (m / 2) + eps) / m) * m;
+                    return s * Math.Floor((n + (1 / (2 * m)) + eps) * m) / m;
                 case RoundType.Down:
-                    return s * Math.Floor(n / m) * m;
+                    return s * Math.Floor(n * m) / m;
                 case RoundType.Up:
-                    return s * Math.Ceiling(n / m) * m;
+                    return s * Math.Ceiling(n * m) / m;
             }
 
             return 0;
