@@ -13,20 +13,20 @@ namespace PowerFXBenchmark.UntypedObjects
 {
     public class TestObjectUntypedObject : IUntypedObject
     {
-        public TestObject twin;
+        public TestObject testObj;
 
-        public TestObjectUntypedObject(TestObject twin)
+        public TestObjectUntypedObject(TestObject testObj)
         {
-            this.twin = twin;
+            this.testObj = testObj;
         }
 
         public IUntypedObject this[int index] => throw new NotImplementedException();
 
         public FormulaType Type => ExternalType.ObjectType;
 
-        public static UntypedObjectValue New(TestObject twin)
+        public static UntypedObjectValue New(TestObject testObj)
         {
-            var x = new TestObjectUntypedObject(twin);
+            var x = new TestObjectUntypedObject(testObj);
 
             return FormulaValue.New(x);
         }
@@ -57,16 +57,16 @@ namespace PowerFXBenchmark.UntypedObjects
             switch (value)
             {
                 case "$id":
-                    result = SimpleUntypedObject.New(twin.Id);
+                    result = SimpleUntypedObject.New(testObj.Id);
                     return true;
                 case "$testSessionId":
-                    result = SimpleUntypedObject.New(twin.TestSessionId);
+                    result = SimpleUntypedObject.New(testObj.TestSessionId);
                     return true;
                 case "$metadata":
-                    result = new MetadataUntypedObject(twin.RootMetadata);
+                    result = new MetadataUntypedObject(testObj.RootMetadata);
                     return true;
                 default:
-                    if (twin.TryGetProperty(value, out JToken prop))
+                    if (testObj.TryGetProperty(value, out JToken prop))
                     {
                         result = SimpleUntypedObject.New(prop);
                         return true;
