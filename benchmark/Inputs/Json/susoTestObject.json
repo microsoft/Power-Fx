@@ -1,0 +1,23 @@
+﻿{
+  "$id": "susoTestObject1",
+  "$testSessionId": "f30bf757-13ae-4d48-9d82-54e8c8b00472",
+  "Temperature": 1,
+  "DisplayName": "i am display name",
+  "Humidity": 123,
+  "$metadata": {
+    "type": "powerfx-test-1",
+    "time": "2022-05-07T00:54:23.6004870Z",
+    "Temperature": {
+      "type": "powerfx-test-1",
+      "time": "2022-05-07T00:54:23.6004870Z"
+    },
+    "DisplayName": {
+      "type": "powerfx-test-1",
+      "time": "2022-05-07T00:54:23.6004870Z"
+    },
+    "Humidity": {
+      "type": "powerfx-test-1",
+      "time": "2022-05-07T00:54:23.6004870Z"
+    }
+  }
+}
