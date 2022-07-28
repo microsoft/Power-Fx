@@ -50,9 +50,17 @@ namespace Microsoft.PowerFx.Interpreter
             } 
             else
             {
+                throw new System.Exception("Expression is not a ParsedExpression");
+            }
+
+            if (!check.ReturnType._type.Kind.Equals(ReturnType.Kind))
+            {
                 var errorList = new List<ExpressionError>
                 {
                     new ExpressionError()
+                    {
+                        Message = "The stated function return type does not match the return type of the function body"
+                    }
                 };
                 return errorList;
             }

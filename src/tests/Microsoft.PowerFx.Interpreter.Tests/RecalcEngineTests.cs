@@ -16,6 +16,7 @@ using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Interpreter;
+using Microsoft.PowerFx.Interpreter.UDF;
 using Microsoft.PowerFx.Types;
 using Xunit;
 using Xunit.Sdk;
@@ -48,7 +49,8 @@ namespace Microsoft.PowerFx.Tests
                 $"{ns}.{nameof(TableMarshallerProvider)}",
                 $"{ns}.{nameof(TypeMarshallerCache)}",
                 $"{ns}.{nameof(TypeMarshallerCacheExtensions)}",
-                $"{nsType}.{nameof(ObjectRecordValue)}"
+                $"{nsType}.{nameof(ObjectRecordValue)}",
+                $"{ns}.Interpreter.UDF.{nameof(DefineFunctionsResult)}"
             };
 
             var sb = new StringBuilder();
@@ -254,7 +256,7 @@ namespace Microsoft.PowerFx.Tests
                 "x * y",
                 FormulaType.Number,
                 new NamedFormulaType("x", FormulaType.Number),
-                new NamedFormulaType("y", FormulaType.Number)));
+                new NamedFormulaType("y", FormulaType.Number))).Errors;
             Assert.False(enumerable.Any());
             Assert.Equal(17.0, recalcEngine.Eval("foo(3,4) + 5").ToObject());
         }
@@ -270,7 +272,7 @@ namespace Microsoft.PowerFx.Tests
                     "foo",
                     body,
                     FormulaType.Number,
-                    new NamedFormulaType("x", FormulaType.Number)));
+                    new NamedFormulaType("x", FormulaType.Number))).Errors;
             var result = recalcEngine.Eval("foo(0)");
             Assert.Equal(2.0, result.ToObject());
             Assert.False(enumerable.Any());
@@ -285,7 +287,7 @@ namespace Microsoft.PowerFx.Tests
                 new UDFDefinition(
                     "foo",
                     "foo()",
-                    FormulaType.Blank)).Any());
+                    FormulaType.Blank)).Errors.Any());
             var result = recalcEngine.Eval("foo()");
             Assert.IsType<ErrorValue>(result);
         }
@@ -304,7 +306,7 @@ namespace Microsoft.PowerFx.Tests
             var variable = new NamedFormulaType("x", FormulaType.Number);
 
             Assert.False(recalcEngine.DefineFunctions(
-                new UDFDefinition(funcName, body, returnType, variable)).Any());
+                new UDFDefinition(funcName, body, returnType, variable)).Errors.Any());
             Assert.Equal(1.0, recalcEngine.Eval("hailstone(192)").ToObject());
         }
 
@@ -330,7 +332,7 @@ namespace Microsoft.PowerFx.Tests
                 FormulaType.Boolean,
                 new NamedFormulaType("number", FormulaType.Number));
 
-            Assert.False(recalcEngine.DefineFunctions(udfOdd, udfEven).Any());
+            Assert.False(recalcEngine.DefineFunctions(udfOdd, udfEven).Errors.Any());
 
             Assert.Equal(true, recalcEngine.Eval("odd(17)").ToObject());
             Assert.Equal(false, recalcEngine.Eval("even(17)").ToObject());
@@ -351,7 +353,7 @@ namespace Microsoft.PowerFx.Tests
         {
             var config = new PowerFxConfig(null);
             var recalcEngine = new RecalcEngine(config);
-            Assert.True(recalcEngine.DefineFunctions(new UDFDefinition("foo", "x[", FormulaType.Blank)).Any());
+            Assert.True(recalcEngine.DefineFunctions(new UDFDefinition("foo", "x[", FormulaType.Blank)).Errors.Any());
         }
 
         [Fact]
@@ -359,7 +361,7 @@ namespace Microsoft.PowerFx.Tests
         {
             var config = new PowerFxConfig(null);
             var recalcEngine = new RecalcEngine(config);
-            Assert.False(recalcEngine.DefineFunctions(new UDFDefinition("foo", "x+1", FormulaType.Number, new NamedFormulaType("x", FormulaType.Number))).Any());
+            Assert.False(recalcEngine.DefineFunctions(new UDFDefinition("foo", "x+1", FormulaType.Number, new NamedFormulaType("x", FormulaType.Number))).Errors.Any());
             Assert.False(recalcEngine.Check("foo(False)").IsSuccess);
             Assert.False(recalcEngine.Check("foo(Table( { Value: \"Strawberry\" }, { Value: \"Vanilla\" } ))").IsSuccess);
             Assert.True(recalcEngine.Check("foo(1)").IsSuccess);
@@ -705,6 +707,52 @@ namespace Microsoft.PowerFx.Tests
                 Sum(Sum(1),1),
                 Sum(Sum(1),1)
                 )"));
+        }
+
+        [Fact]
+        public void UDFRecursionLimitTest()
+        {
+            var recalcEngine = new RecalcEngine(new PowerFxConfig(null));
+            recalcEngine.DefineFunctions("Foo(x As Number) As Number = Foo(x);");
+            Assert.IsType<ErrorValue>(recalcEngine.Eval("Foo(1)"));
+        }
+
+        [Fact]
+        public void UDFRecursionWorkingTest()
+        {
+            var recalcEngine = new RecalcEngine(new PowerFxConfig(null));
+            recalcEngine.DefineFunctions("Foo(x As Number) As Number = If(x = 1, 1, If(Mod(x, 2) = 0, Foo(x/2), Foo(x*3 + 1)));");
+            Assert.Equal(1.0, recalcEngine.Eval("Foo(5)").ToObject());
+        }
+
+        [Fact]
+        public void IndirectRecursionTest()
+        {
+            var recalcEngine = new RecalcEngine(new PowerFxConfig(null)
+            {
+                MaxCallDepth = 80
+            });
+            recalcEngine.DefineFunctions(
+                "A(x As Number) As Number = If(Mod(x, 2) = 0, B(x/2), B(x));" +
+                "B(x As Number) As Number = If(Mod(x, 3) = 0, C(x/3), C(x));" +
+                "C(x As Number) As Number = If(Mod(x, 5) = 0, D(x/5), D(x));" +
+                "D(x As Number) As Number = If(Mod(x, 7) = 0, F(x/7), F(x));" +
+                "F(x As Number) As Number = If(x = 1, 1, A(x+1));");
+            Assert.Equal(1.0, recalcEngine.Eval("A(12654)").ToObject());
+        }
+
+        [Fact]
+        public void DoubleDefinitionTest()
+        {
+            var recalcEngine = new RecalcEngine(new PowerFxConfig(null));
+            Assert.Throws<InvalidOperationException>(() => recalcEngine.DefineFunctions("Foo() As Number = 10; Foo(x As Number) As String = \"hi\""));
+        }
+
+        [Fact]
+        public void TestNumberBinding()
+        {
+            var recalcEngine = new RecalcEngine(new PowerFxConfig(null));
+            Assert.True(recalcEngine.DefineFunctions("Foo() As String = 10;").Errors.Any());
         }
 
         #region Test
