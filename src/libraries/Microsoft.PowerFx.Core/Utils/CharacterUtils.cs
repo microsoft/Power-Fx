@@ -158,7 +158,7 @@ namespace Microsoft.PowerFx.Core.Utils
             return InternalEscapeString(value, length, lengthForBuilder, ref sb, finalizeBuilder: true);
         }
 
-        public static string ExcelEscapeString(string value, bool isInterpolatedString = false)
+        public static string ExcelEscapeString(string value, bool isValueAnInterpolatedString = false)
         {
             Contracts.AssertValue(value);
 
@@ -176,7 +176,11 @@ namespace Microsoft.PowerFx.Core.Utils
                         break;
                     case '{':
                     case '}':
-                        HandleEscapedCurlyBraces(value[i], value, isInterpolatedString, lengthForBuilder, i, ref charsToAdd, ref sb);
+                        if (isValueAnInterpolatedString)
+                        {
+                            UpdateEscapeInternals($"{value[i]}{value[i]}", value, lengthForBuilder, i, ref charsToAdd, ref sb);
+                        }
+
                         break;
                     default:
                         charsToAdd++;
@@ -382,18 +386,6 @@ namespace Microsoft.PowerFx.Core.Utils
             }
 
             sb.Append(escapedValue);
-        }
-
-        private static void HandleEscapedCurlyBraces(char curlyBrace, string input, bool isInterpolatedInput, int estimatedLength, int currentPosition, ref int charsToAdd, ref StringBuilder sb)
-        {
-            Contracts.AssertOneOfValueType(curlyBrace, '{', '}');
-
-            if (!isInterpolatedInput)
-            {
-                return;
-            }
-
-            UpdateEscapeInternals($"{curlyBrace}{curlyBrace}", input, estimatedLength, currentPosition, ref charsToAdd, ref sb);
         }
 
         // If a string is going to be inserted into a string which is then used as a format string, it needs to be escaped first
