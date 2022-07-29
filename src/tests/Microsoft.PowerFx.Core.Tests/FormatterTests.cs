@@ -149,6 +149,12 @@ namespace Microsoft.PowerFx.Tests
         [InlineData("/*a*/$\"Hello {\"World\"}\"", "/*a*/$\"Hello {\"World\"}\"")]
         [InlineData("$\"Hello {\"World\"/*b*/}\"", "$\"Hello {\"World\"/*b*/}\"")]
         [InlineData("$\"Hello {\"World\"}\"/*b*/", "$\"Hello {\"World\"}\"/*b*/")]
+        [InlineData("$\"{{}}\"", "$\"{{}}\"")]
+        [InlineData("This is not an interpolated {} {{{}}} string", "This is not an interpolated {} {{{}}} string")]
+        [InlineData("$\"{{{{1+1}}}}\"", "$\"{{{{1+1}}}}\"")]
+        [InlineData("Set(str, $\"{{}}\")", "Set(\n    str,\n    $\"{{}}\"\n)")]
+        [InlineData("Set(additionText, $\"The sum of 1 and 3 is {{{1 + 3}}})\")", "Set(\n    additionText,\n    $\"The sum of 1 and 3 is {{{1 + 3}}})\"\n)")]
+        [InlineData("$\"This is {{\"Another\"}} interpolated {{string}}\"", "$\"This is {{\"Another\"}} interpolated {{string}}\"")]
         public void TestPrettyPrint(string script, string expected)
         {
             Preview.FeatureFlags.StringInterpolation = true;
