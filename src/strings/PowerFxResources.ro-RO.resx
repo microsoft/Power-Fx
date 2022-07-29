@@ -498,7 +498,7 @@
     <value>Valoarea textului de convertit la o valoare booleană.</value>
   </data>
   <data name="AboutBooleanT" xml:space="preserve">
-    <value>Converts a column of text values to a column of boolean values.</value>
+    <value>Convertește o coloană de valori text într-o coloană de valori booleene.</value>
     
   </data>
   <data name="BooleanTArg1" xml:space="preserve">
@@ -506,21 +506,21 @@
     
   </data>
   <data name="AboutBooleanT_input" xml:space="preserve">
-    <value>A column of text values to process.</value>
+    <value>O coloană de valori text de procesat.</value>
   </data>
   <data name="AboutBooleanN" xml:space="preserve">
-    <value>Converts a 'number' to a boolean value.</value>
+    <value>Convertește un număr la o valoare booleană.</value>
     
   </data>
   <data name="BooleanNArg1" xml:space="preserve">
-    <value>number</value>
+    <value>număr</value>
     
   </data>
   <data name="AboutBooleanN_number" xml:space="preserve">
-    <value>The number value to convert to a boolean value.</value>
+    <value>Valoarea numărului de convertit la o valoare booleană.</value>
   </data>
   <data name="AboutBooleanNT" xml:space="preserve">
-    <value>Converts a column of numeric values to a column of boolean values.</value>
+    <value>Convertește o coloană de valori numerice într-o coloană de valori booleene.</value>
     
   </data>
   <data name="BooleanNTArg1" xml:space="preserve">
@@ -528,7 +528,7 @@
     
   </data>
   <data name="AboutBooleanNT_input" xml:space="preserve">
-    <value>A column of number values to process.</value>
+    <value>O coloană de valori numerice de procesat.</value>
   </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Returnează primul argument nevid</value>
@@ -3924,12 +3924,20 @@
     <value>Nu este acceptat în coloanele de formule.</value>
     
   </data>
+  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
+    <value>Invalid number of arguments for {0} function: received {1}, expected {2}</value>
+    
+  </data>
   <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
     <value>Argumentul {0} nu este acceptat pentru funcția {1} din coloanele de formule.</value>
     
   </data>
   <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
     <value>Acest argument nu poate fi transmis ca fiind de acest tip în coloanele de formule.</value>
+    
+  </data>
+  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
+    <value>This argument can not be passed as type {0} in formula columns.</value>
     
   </data>
   <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
@@ -3948,6 +3956,10 @@
     <value>Numai șirurile scurte de format dată și oră sunt acceptate în coloanele de formule.</value>
     
   </data>
+  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
+    <value>The {0} argument is an invalid/unsupported unit of time for the {1} date arithmetic function.</value>
+    
+  </data>
   <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
     <value>Tokenurile de formatare specifice setărilor regionale, cum ar fi „.” și „,” nu sunt acceptate în coloanele de formule.</value>
     
@@ -3956,8 +3968,16 @@
     <value>{0} nu este acceptată în coloanele de formule, utilizați în schimb {1}.</value>
     
   </data>
+  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
+    <value>This operation can not be performed on type {0} in formula columns.</value>
+    
+  </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
     <value>Tipul de rezultat {0} nu este acceptat în coloanele de formule.</value>
+    
+  </data>
+  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
+    <value>Directly referencing an entire record is not supported in formula columns. Please reference a valid field in the record.</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
@@ -3972,8 +3992,20 @@
     <value>Coloanele de tip {0} având formatul {1} nu sunt acceptate în coloanele de formule.</value>
     
   </data>
+  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
+    <value>Coercing records or tables is not supported in formula columns.</value>
+    
+  </data>
   <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
     <value>Formulele nu pot avea mai mult de 1000 de caractere.</value>
+    
+  </data>
+  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
+    <value>Single-column tables are not supported in formula columns.</value>
+    
+  </data>
+  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
+    <value>Can not reference virtual table {0} in formula columns.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
@@ -4591,6 +4623,38 @@
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
     <value>Primul argument pentru „{0}” trebuie să fie un nume valid de variabilă și nu poate intra în conflict cu nume existente de controale, ecrane, colecții sau surse de date. S-a găsit tipul „{1}”</value>
+    
+  </data>
+  <data name="ErrUDF_MissingIdentifier" xml:space="preserve">
+    <value>User Defined Function is missing a valid name</value>
+    
+  </data>
+  <data name="ErrUDF_MissingOpenParen" xml:space="preserve">
+    <value>User Defined Function is missing a '(' here</value>
+    
+  </data>
+  <data name="ErrUDF_MissingEqual" xml:space="preserve">
+    <value>User Defined Function is missing a '=' here</value>
+    
+  </data>
+  <data name="ErrUDF_MissingCloseParen" xml:space="preserve">
+    <value>User Defined Function is missing a ')' here</value>
+    
+  </data>
+  <data name="ErrUDF_MissingSemicolon" xml:space="preserve">
+    <value>User Defined Function is missing a ';' here</value>
+    
+  </data>
+  <data name="ErrUDF_MissingComma" xml:space="preserve">
+    <value>User Defined Function is missing a ',' here</value>
+    
+  </data>
+  <data name="ErrUDF_MissingColon" xml:space="preserve">
+    <value>User Defined Function is missing an ':' here</value>
+    
+  </data>
+  <data name="ErrUDF_DuplicateArgName" xml:space="preserve">
+    <value>User Defined Function has a duplicate argument name</value>
     
   </data>
   <data name="AboutSet" xml:space="preserve">

@@ -3924,12 +3924,20 @@
     <value>Kaavasarakkeet eivät tue tätä.</value>
     
   </data>
+  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
+    <value>Virheellinen argumenttien määrä funktiolle {0}: vastaanotettu {1}, odotettu {2}</value>
+    
+  </data>
   <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
     <value>Argumenttia {0} ei tueta kaavasarakkeiden funktiolle {1}.</value>
     
   </data>
   <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
     <value>Tätä argumenttia ei voi siirtää annettuna tyyppinä kaavasarakkeissa.</value>
+    
+  </data>
+  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
+    <value>Tätä argumenttia ei voi välittää tyyppinä {0} kaavasarakkeissa.</value>
     
   </data>
   <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
@@ -3948,6 +3956,10 @@
     <value>Kaavasarakkeet tukevat vain lyhyitä päivämäärä- ja aikamuotoisia merkkijonoja.</value>
     
   </data>
+  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
+    <value>Argumentti {0} on virheellinen ajan yksikkö tai sitä ei tueta {1} päivämäärän aritmetiikkafunktiolle.</value>
+    
+  </data>
   <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
     <value>Kielikohtaiset muotoilutunnukset, kuten "." ja ",", eivät ole tuettuja kaavasarakkeissa.</value>
     
@@ -3956,8 +3968,16 @@
     <value>{0} ei tueta kaavasarakkeissa. Käytä sen sijaan {1}.</value>
     
   </data>
+  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
+    <value>Tätä toimintoa ei voi suorittaa tyypille {0} kaavasarakkeissa.</value>
+    
+  </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
     <value>Tulostyyppiä {0} ei tueta kaavasarakkeissa.</value>
+    
+  </data>
+  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
+    <value>Kaavasarakkeet eivät tue koko tietueeseen viittaamista suoraan. Viittaa kelvolliseen tietueen kenttään.</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
@@ -3972,8 +3992,20 @@
     <value>Tyypin {0} sarakkeet, joiden muoto on {1}, ei tueta kaavasarakkeissa.</value>
     
   </data>
+  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
+    <value>Kaavasarakkeet eivät tue tietueiden tai taulukoiden coercing-tietueita.</value>
+    
+  </data>
   <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
     <value>Kaavat voivat olla enintään 1 000 merkkiä pitkiä.</value>
+    
+  </data>
+  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
+    <value>Yksisarakkeista taulukoita ei tueta kaavasarakkeissa.</value>
+    
+  </data>
+  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
+    <value>Virtuaalitaulukkoon {0} ei voi viitata kaavasarakkeissa.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
@@ -4591,6 +4623,38 @@
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
     <value>Kohteen {0} ensimmäisen argumentin on oltava kelvollinen muuttujan nimi, eikä se voi olla ristiriidassa minkään olemassa olevan ohjausobjektin, näytön, kokoelman tai tietolähteen nimen kanssa. Löytyi tyyppi {1}</value>
+    
+  </data>
+  <data name="ErrUDF_MissingIdentifier" xml:space="preserve">
+    <value>Käyttäjän määrittämästä funktiosta puuttuu kelvollinen nimi</value>
+    
+  </data>
+  <data name="ErrUDF_MissingOpenParen" xml:space="preserve">
+    <value>Käyttäjän määrittämästä funktiosta puuttuu tässä '('</value>
+    
+  </data>
+  <data name="ErrUDF_MissingEqual" xml:space="preserve">
+    <value>Käyttäjän määrittämästä funktiosta puuttuu tässä '='</value>
+    
+  </data>
+  <data name="ErrUDF_MissingCloseParen" xml:space="preserve">
+    <value>Käyttäjän määrittämästä funktiosta puuttuu tässä ')'</value>
+    
+  </data>
+  <data name="ErrUDF_MissingSemicolon" xml:space="preserve">
+    <value>Käyttäjän määrittämästä funktiosta puuttuu tässä ';'</value>
+    
+  </data>
+  <data name="ErrUDF_MissingComma" xml:space="preserve">
+    <value>Käyttäjän määrittämästä funktiosta puuttuu tässä ','</value>
+    
+  </data>
+  <data name="ErrUDF_MissingColon" xml:space="preserve">
+    <value>Käyttäjän määrittämästä funktiosta puuttuu tässä ':'</value>
+    
+  </data>
+  <data name="ErrUDF_DuplicateArgName" xml:space="preserve">
+    <value>Käyttäjän määrittämällä funktiolla on argumentin nimen kaksoiskappale</value>
     
   </data>
   <data name="AboutSet" xml:space="preserve">
