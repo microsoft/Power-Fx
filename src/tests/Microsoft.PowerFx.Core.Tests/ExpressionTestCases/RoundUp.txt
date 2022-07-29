@@ -103,6 +103,9 @@
 >> RoundUp(1500.34,-3)
 2000
 
+>> RoundUp(0.3,1)
+0.3
+
 // Negative Decimal NUMBER parameter
 
 >> RoundUp(-14.123456,0)
