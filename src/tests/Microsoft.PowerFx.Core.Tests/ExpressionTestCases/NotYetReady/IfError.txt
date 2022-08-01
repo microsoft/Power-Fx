@@ -1,0 +1,163 @@
+
+// ********** NON-ERROR PARAMETERS **********
+
+>> IfError(1, 2)
+1
+
+>> IfError(1, 2, 3)
+3
+
+>> IfError(1, 2, 3, 4)
+3
+
+>> IfError( 10, 11, 20, 21, 300 )
+300
+
+>> IfError(1, "error 1", 2, "error 2", "no error")
+"no error"
+
+>> IfError({a:1, b:"hello"}, {a:2, b:"good morning"}).b
+"hello"
+
+>> IfError(1, {a:1}, 2, {a:2}, {a:3}).a
+3
+
+>> IfError({a:{a1:true},b:"hello"}, {a:1,b:"error 1"}, {a:{a1:{a2:3}},b:"world"}, {a:2,b:"error 2"}, {a:3,b:"valid"}, {a:4,b:"error 3"}).a
+3
+
+
+// ********** ERROR PARAMETERS *************
+
+>> IfError(1/0, 3)
+3
+
+>> IfError(1/0, -1)
+-1
+
+>> IfError(1/0, FirstError.Kind)
+13
+
+>> IfError(1/0, Error({Kind:FirstError.Kind}))
+#Error(Kind=Div0)
+
+>> IfError(1/0, Error(FirstError))
+#Error(Kind=Div0)
+
+>> IfError(Error({Kind:12}), FirstError.Kind)
+12
+
+>> IfError( 1/0, Sqrt(4))
+2
+
+>> IfError(0, 1, Sqrt(-2), 2)
+2
+
+>> IfError(0, 1, Error({Kind: ErrorKind.Unknown}), 2)
+2
+
+>> IfError(1/0, "error 1", 2, "error 2", "no error")
+"error 1"
+
+>> IfError({a:1, b:"hello"}, {a:2, b:"good morning"}, {a:1/0, b:"Error"}).b
+"Error"
+
+>> IfError({a:1, b:"hello"}, {a:2, b:"good morning"}, {a:1/0, b:"Error"}).a
+#Error(Kind=Div0)
+
+>> IfError(Error({Kind: ErrorKind.Validation}),"Error")
+"Error"
+
+>> IfError(Error({Kind: 11}),"Error")
+"Error"
+
+>> IfError(Error({Kind:ErrorKind.InvalidArgument}),"Error")
+"Error"
+
+
+// ********** COERCION CASE BETWEEN TEST VALUE AND REPLACEMENT VALUE *************
+
+// ********** TEST VALUE - NUMBER, REPLACEMENT VALUE - OTHER DATATYPES *************
+
+// Number-Number
+>> IfError(1/0, 1)
+1
+
+// Number-String
+>> IfError(1/0, "Division by zero error")
+#Error(Kind=InvalidArgument)
+
+//Test number parameter converted to text
+>> IfError(Text(1/0), "Division by zero error")
+"Division by zero error"
+
+>> IfError(1/0, "Division by zero error",1, "Valid value")
+"Division by zero error"
+
+>> IfError(1, "Valid value")
+1
+
+// Number-Boolean
+>> IfError(1/0, true)
+1
+
+>> IfError(1/0, false)
+0
+
+// Number-Date
+>> IfError(1/0, Date(2000,12,11))
+976521600000
+
+// Number-Time
+>> IfError(1/0, Time(11,30,59))
+70259000
+
+// Number-DateTime
+>> IfError(1/0, DateTime(2022,8,1,9,5,0))
+1659369900000
+
+
+// ********** TEST VALUE - ERROR TYPE, REPLACEMENT VALUE - OTHER DATATYPES *************
+
+// Error-Number
+>> IfError(Error({Kind: ErrorKind.Validation}), 1)
+1
+
+>> IfError(Error({Kind: 13}), 1/0)
+#Error(Kind=Div0)
+
+
+// Error-String
+>> IfError(Error({Kind: ErrorKind.Validation}), "Validation error")
+"Validation error"
+
+>> IfError(Error({Kind: 13}), "Division by zero error")
+"Division by zero error"
+
+
+// Error-Boolean
+>> IfError(Error({Kind: ErrorKind.Validation}), true)
+true
+
+>> IfError(Error({Kind: 11}), false)
+false
+
+
+// Error-Date
+>> IfError(Error({Kind: ErrorKind.Validation}), Date(2000,12,11))
+Date(2000,12,11)
+
+>> IfError(Error({Kind: 11}), DateValue("12 June, 2022"))
+Date(2022,6,12)
+
+
+// Error-Time
+>> IfError(Error({Kind: ErrorKind.Validation}), Time(11,30,59))
+12:00 AM
+
+>> IfError(Error({Kind: 11}), TimeValue("3:30 PM"))
+3:30 PM
+
+
+// Error-DateTime
+>> IfError(Error({Kind: ErrorKind.Validation}), DateTime(2021, 12, 12, 17, 30, 0))
+12/12/2021 5:30 PM
