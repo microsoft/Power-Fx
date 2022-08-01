@@ -16,7 +16,7 @@ namespace Microsoft.PowerFx
     public class TableMarshallerProvider : ITypeMarshallerProvider
     {
         /// <inheritdoc/>
-        public bool TryGetMarshaller(Type type, TypeMarshallerCache cache, int maxDepth, out ITypeMarshaller marshaler)
+        public bool TryGetMarshaller(Type type, TypeMarshallerCache cache, out ITypeMarshaller marshaler)
         {
             if (!IsIEnumerableT(type, out var et))
             {
@@ -24,14 +24,14 @@ namespace Microsoft.PowerFx
                 return false;
             }
 
-            var rowMarshaller = cache.GetMarshaller(et, maxDepth);
+            var rowMarshaller = cache.GetMarshaller(et);
              
             if (rowMarshaller.Type is not RecordType recordType)
             {               
                 // Single Column table. Wrap in a record. 
                 // This is happens for scalars.
                 // But could also happen for a table of tables. 
-                recordType = new RecordType().Add(TableValue.ValueName, rowMarshaller.Type);
+                recordType = RecordType.Empty().Add(TableValue.ValueName, rowMarshaller.Type);
 
                 rowMarshaller = new SCTMarshaller(recordType, rowMarshaller);
             }

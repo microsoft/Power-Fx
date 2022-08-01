@@ -32,7 +32,7 @@ namespace Microsoft.PowerFx
             CultureInfo = cultureInfo;
             _cancel = cancel;
         }
-                
+
         // Check this cooperatively - especially in any loop. 
         public void CheckCancel()
         {
@@ -130,6 +130,33 @@ namespace Microsoft.PowerFx
             return CommonErrors.UnreachableCodeError(node.IRContext);
         }
 
+        // Handle invoke SetProperty(source.Prop, newValue)
+        // Invoke as: SetProperty(source, "Prop", newValue)
+        private async Task<FormulaValue> TryHandleSetProperty(CallNode node, EvalVisitorContext context)
+        {
+            if (node.Function is not CustomSetPropertyFunction setPropFunc)
+            {
+                return null;
+            }
+
+            var arg0 = node.Args[0];
+            var arg1 = node.Args[1];
+
+            if (arg0 is not RecordFieldAccessNode r)
+            {
+                return null;
+            }
+
+            var source = await r.From.Accept(this, context);
+            var fieldName = r.Field.Value;
+            var newValue = await arg1.Accept(this, context);
+
+            var args = new FormulaValue[] { source, FormulaValue.New(fieldName), newValue };
+            var result = await setPropFunc.InvokeAsync(args, _cancel);
+
+            return result;
+        }
+
         public override async ValueTask<FormulaValue> Visit(CallNode node, EvalVisitorContext context)
         {
             CheckCancel();
@@ -138,7 +165,13 @@ namespace Microsoft.PowerFx
             if (setResult != null)
             {
                 return setResult;
-            }            
+            }
+
+            var setPropResult = await TryHandleSetProperty(node, context.IncrementStackDepthCounter());
+            if (setPropResult != null)
+            {
+                return setPropResult;
+            }
 
             var func = node.Function;
 
@@ -170,9 +203,14 @@ namespace Microsoft.PowerFx
                 var result = await asyncFunc.InvokeAsync(args, _cancel);
                 return result;
             }
-            else if (func is CustomTexlFunction customFunc)
+            else if (func is UserDefinedTexlFunction udtf)
             {
-                var result = customFunc.Invoke(args);
+                var result = await udtf.InvokeAsync(args, _cancel, context.StackDepthCounter.Increment());
+                return result;
+            }
+            else if (func is CustomTexlFunction customTexlFunc)
+            {
+                var result = customTexlFunc.Invoke(args);
                 return result;
             }
             else
@@ -182,7 +220,6 @@ namespace Microsoft.PowerFx
                     var result = await ptr(this, context.IncrementStackDepthCounter(childContext), node.IRContext, args);
 
                     Contract.Assert(result.IRContext.ResultType == node.IRContext.ResultType || result is ErrorValue || result.IRContext.ResultType is BlankType);
-
                     return result;
                 }
 
@@ -199,7 +236,7 @@ namespace Microsoft.PowerFx
         }
 
         private ValueTask<FormulaValue> VisitBinaryOpNode(BinaryOpNode node, EvalVisitorContext context, FormulaValue[] args)
-        { 
+        {
             switch (node.Op)
             {
                 case BinaryOpKind.AddNumbers:

@@ -158,7 +158,7 @@ namespace Microsoft.PowerFx.Core.Utils
             return InternalEscapeString(value, length, lengthForBuilder, ref sb, finalizeBuilder: true);
         }
 
-        public static string ExcelEscapeString(string value)
+        public static string ExcelEscapeString(string value, bool isValueAnInterpolatedString = false)
         {
             Contracts.AssertValue(value);
 
@@ -173,6 +173,14 @@ namespace Microsoft.PowerFx.Core.Utils
                 {
                     case '\"':
                         UpdateEscapeInternals("\"\"", value, lengthForBuilder, i, ref charsToAdd, ref sb);
+                        break;
+                    case '{':
+                    case '}':
+                        if (isValueAnInterpolatedString)
+                        {
+                            UpdateEscapeInternals($"{value[i]}{value[i]}", value, lengthForBuilder, i, ref charsToAdd, ref sb);
+                        }
+
                         break;
                     default:
                         charsToAdd++;

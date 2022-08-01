@@ -15,3 +15,6 @@ Table()
 
 >> AddColumns(If(1<0, [1, 2, 3]), "Double", Value * 2)
 Blank()
+
+>> AddColumns([], "Value", 1)
+[]

@@ -105,6 +105,12 @@
 >> Round(1500.34,-3)
 2000
 
+>> Round(12.1,1)
+12.1
+
+>> Round(0.3,1)
+0.3
+
 // Negative Decimal NUMBER parameter
 
 >> Round(-14.123456,0)

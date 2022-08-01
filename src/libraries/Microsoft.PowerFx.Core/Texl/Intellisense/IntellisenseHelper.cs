@@ -303,7 +303,7 @@ namespace Microsoft.PowerFx.Intellisense
             Contracts.Assert(type.IsValid);
             Contracts.Assert(prefix.Length == 0 || (TexlLexer.PunctuatorBang + TexlLexer.PunctuatorDot).IndexOf(prefix[prefix.Length - 1]) >= 0);
 
-            foreach (var tName in type.GetAllNames(DPath.Root))
+            foreach (var tName in type.GetRootFieldNames().Select(name => (Type: type.GetType(name), Name: name)))
             {
                 if (!intellisenseData.TryAddCustomColumnTypeSuggestions(tName.Type))
                 {
@@ -713,6 +713,14 @@ namespace Microsoft.PowerFx.Intellisense
                 }
 
                 AddSuggestion(intellisenseData, funcNamespace.Name, SuggestionKind.Global, SuggestionIconKind.Other, DType.Unknown, requiresSuggestionEscaping: true);
+            }
+
+            if (intellisenseData.Binding.NameResolver is IGlobalSymbolNameResolver nr2 && nr2.GlobalSymbols != null)
+            {
+                foreach (var symbol in nr2.GlobalSymbols.Where(symbol => IsMatch(symbol.Key, intellisenseData.MatchingStr)))
+                {
+                    CheckAndAddSuggestion(new IntellisenseSuggestion(new UIString(symbol.Key), SuggestionKind.Global, SuggestionIconKind.Other, symbol.Value.Type, -1, symbol.Value.DisplayName, null, null), intellisenseData.Suggestions);
+                }
             }
         }
 
