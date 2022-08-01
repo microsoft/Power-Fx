@@ -18,7 +18,7 @@ false
 
 // STRING RECORDS
 
->> IsEmpty("")
+>> IsEmpty([""])
 false
 
 >> IsEmpty(Table({a:"1"},{a:"two"},{a:"three"},{a:"four"},{a:"five"}))
@@ -48,7 +48,7 @@ false
 >> IsEmpty([Blank()])
 false
 
-﻿>> IsEmpty([Blank(),Blank(),Blank(),Blank(),Blank()])
+>> IsEmpty([Blank(),Blank(),Blank(),Blank(),Blank()])
 false
 
 >> IsEmpty(Table(Blank()))
@@ -88,15 +88,15 @@ true
 true
 
 // Date Properties
->> IsEmpty(Filter([Date(2022,12,1), DateValue("12/2/2022")], Value > Date(2022,12,4)))
+>> IsEmpty(Filter([Date(2022,12,1), Date(2022,2,2)], Value > Date(2022,12,4)))
 true
 
 // Time Properties
->> IsEmpty(Filter([Time(4,0,0), TimeValue("4:30 AM")], Value > TimeValue("5:00 AM")))
+>> IsEmpty(Filter([Time(4,0,0), Time(4,30,0)], Value > Time(5,0,0)))
 true
 
 // DateTime Properties
->> IsEmpty(Filter([DateTimeValue("June 19, 2022 4:00 PM"), DateTimeValue("6/18/2022 4:30 AM")], Value > DateTimeValue("Jun 19 2022 4:00 PM")))
+>> IsEmpty(Filter([DateTime(2022,6,19,16,0,0), DateTime(2022,6,18,4,30,0)], Value > DateTime(2022,6,19,16,0,0)))
 true
 
 // Multiple Datatype Properties

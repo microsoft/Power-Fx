@@ -40,6 +40,9 @@
 >> IfError(1/0, Error({Kind:FirstError.Kind}))
 #Error(Kind=Div0)
 
+>> IfError(1/0, Error(FirstError))
+#Error(Kind=Div0)
+
 >> IfError(Error({Kind:12}), FirstError.Kind)
 12
 
@@ -79,7 +82,6 @@
 >> IfError(1/0, 1)
 1
 
-
 // Number-String
 >> IfError(1/0, "Division by zero error")
 #Error(Kind=InvalidArgument)
@@ -92,8 +94,7 @@
 "Division by zero error"
 
 >> IfError(1, "Valid value")
-"Valid value"
-
+1
 
 // Number-Boolean
 >> IfError(1/0, true)
@@ -102,29 +103,17 @@
 >> IfError(1/0, false)
 0
 
-
 // Number-Date
 >> IfError(1/0, Date(2000,12,11))
 976521600000
-
->> IfError(1/0, DateValue("12 June, 2022"))
-1655017200000
-
 
 // Number-Time
 >> IfError(1/0, Time(11,30,59))
 70259000
 
->> IfError(1/0, TimeValue("3:30 PM"))
-28800000
-
-
 // Number-DateTime
->> IfError(1/0, DateTimeValue("12/12/2021 5:30 PM"))
-84600000
-
->> IfError(1/0, DateTimeValue("11/11/2011 20:30"))
-1321072200000
+>> IfError(1/0, DateTime(2022,8,1,9,5,0))
+1659369900000
 
 
 // ********** TEST VALUE - ERROR TYPE, REPLACEMENT VALUE - OTHER DATATYPES *************
@@ -170,8 +159,5 @@ Date(2022,6,12)
 
 
 // Error-DateTime
->> IfError(Error({Kind: ErrorKind.Validation}), DateTimeValue("12/12/2021 5:30 PM"))
+>> IfError(Error({Kind: ErrorKind.Validation}), DateTime(2021, 12, 12, 17, 30, 0))
 12/12/2021 5:30 PM
-
->> IfError(Error({Kind: 11}), DateTimeValue("11/11/2011 20:30"))
-11/11/2011 8:30 PM
