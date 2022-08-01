@@ -6,11 +6,18 @@ Blank()
 
 // ********************** ERROR PASSED AS TABLE RECORD **********************
 
->> Search(Table({Name:"ABC"}, {Name:"DEF"}, {Name:Error({Kind: 11})}),"ABC", "Name")
-Table({Name:"ABC"})
+>> Search(If(1/0<2,["ABC", "DEF", "GHI"]), "ABC", "Value")
+#Error(Kind=Div0)
 
->> Search(Table({Name:Error({Kind: 13})},{Name:"ABC"}, {Name:"DEF"}),"ABC", "Name")
-Table({Name:"ABC"})
+// Errors in table
+>> Search(Table({Name:"ABC"}, {Name:"DEF"}, {Name:Error({Kind: 11})}),"ABC", "Name")
+#Error(Kind=11)
+
+>> Search(Table({a:"one",b:"ten"},{a:"two",b:"twenty"},{a:Left("three",-1),b:"thirty"}), "t", "a")
+#Error(Kind=InvalidArgument)
+
+>> Search(Table({a:"one",b:"ten"},{a:"two",b:"twenty"},{a:Left("three",-1),b:"thirty"}), "t", "b")
+Table({a:"one",b:"ten"},{a:"two",b:"twenty"},{a:#Error(Kind=InvalidArgument),b:"thirty"})
 
 // ********************** SEARCH NULL TEXT - NO NULL VALUE IN SEARCH COLUMN **********************
 
@@ -22,7 +29,7 @@ Table({Name:"ABC"})
   { Name: "James Adams", Age: 30, Vaccinated: true, HasDog: true, Employer: "Facebook" },
   { Name: "Samuel Adams", Age: 39, Vaccinated: true, HasDog: true },
   { Employer: "Microsoft" }),If(1<0, "result is blank"),"Name")
-Blank()
+Table({Age:2,Employer:"NA",HasDog:true,Name:"",Vaccinated:true},Blank(),{Age:27,Employer:"Microsoft",HasDog:true,Name:"Christina Miller",Vaccinated:true},{Age:21,Employer:Blank(),HasDog:true,Name:"Andrew Miller",Vaccinated:true},{Age:30,Employer:"Facebook",HasDog:true,Name:"James Adams",Vaccinated:true},{Age:39,HasDog:true,Name:"Samuel Adams",Vaccinated:true},{Employer:"Microsoft"})
 
 
 // ********************** SEARCH NULL TEXT - NULL VALUE IN SEARCH COLUMN **********************
@@ -35,7 +42,7 @@ Blank()
   { Name: "James Adams", Age: 30, Vaccinated: true, HasDog: true, Employer: "Facebook" },
   { Name: "Samuel Adams", Age: 39, Vaccinated: true, HasDog: true },
   { Name: Blank(), Employer: "Microsoft" }),If(1<0, "result is blank"),"Name")
-Blank()
+Table({Age:2,Employer:"NA",HasDog:true,Name:Blank(),Vaccinated:true},Blank(),{Age:27,Employer:"Microsoft",HasDog:true,Name:"Christina Miller",Vaccinated:true},{Age:21,Employer:Blank(),HasDog:true,Name:"Andrew Miller",Vaccinated:true},{Age:30,Employer:"Facebook",HasDog:true,Name:"James Adams",Vaccinated:true},{Age:39,HasDog:true,Name:"Samuel Adams",Vaccinated:true},{Employer:"Microsoft"})
   
 // ********************** SEARCH EMPTY TEXT - TEST 1 **********************
 
@@ -123,7 +130,7 @@ Table({Age:27,Employer:"Microsoft",HasDog:true,Name:"Christina Miller",Vaccinate
 Table({'F\Name':"Adams"})
 
   
-// ********************** SEARCH NAME "mi" ACROSS ALL COLUMNS **********************
+// ********************** SEARCH EMPLOYER "mi" **********************
 
 >> Search(Table(
   { Name: "", Age: 2, Vaccinated: true, HasDog: true, Employer: "NA" },
