@@ -50,17 +50,17 @@ true
 >> Coalesce(1/0, 10, Blank())
 #Error(Kind=Div0)
 
->> Coalesce(Blank(), 1, ErrorKind.BadLanguageCode)
+>> Coalesce(Blank(), 1, Left("Hello", -1))
 1
 
->> Coalesce("", 1, ErrorKind.BadLanguageCode)
+>> Coalesce("", 1, Left("Hello", -1))
 "1"
 
->> Coalesce(ErrorKind.BadLanguageCode,"",1)
-14
+>> Coalesce(Left("Hello", -1),"",1)
+#Error(Kind=Numeric)
 
->> Coalesce(ErrorKind.BadRegex,Blank(),1)
-15
+>> Coalesce(Left("Hello", -1),Blank(),1)
+#Error(Kind=Numeric)
 
 // ****************************** DATATYPE CONVERSION CASES ******************************
 
