@@ -275,7 +275,7 @@ namespace Microsoft.PowerFx.Syntax
                     Contracts.Assert(node.Children[i] is StrLitNode);
 
                     var strLit = node.Children[i] as StrLitNode;
-                    result = result.With(CharacterUtils.ExcelEscapeString(strLit.Value));
+                    result = result.With(CharacterUtils.ExcelEscapeString(strLit.Value, true));
                 }
                 else
                 {
@@ -695,7 +695,7 @@ namespace Microsoft.PowerFx.Syntax
 
                         var strLitNode = nodeSource.Node as StrLitNode;
                         result = result
-                            .With(CharacterUtils.ExcelEscapeString(strLitNode.Value));
+                            .With(CharacterUtils.ExcelEscapeString(strLitNode.Value, true));
                     }
                 }
                 else if (source is TokenSource tokenSource)
@@ -706,7 +706,7 @@ namespace Microsoft.PowerFx.Syntax
 
                         var strLitToken = tokenSource.Token as StrLitToken;
                         result = result
-                            .With(CharacterUtils.ExcelEscapeString(strLitToken.Value));
+                            .With(CharacterUtils.ExcelEscapeString(strLitToken.Value, true));
                     }
                     else if (tokenSource.Token.Kind == TokKind.IslandStart)
                     {

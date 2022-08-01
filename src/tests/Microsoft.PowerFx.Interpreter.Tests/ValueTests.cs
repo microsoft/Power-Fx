@@ -5,6 +5,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
@@ -13,7 +14,7 @@ using Xunit;
 #pragma warning disable SA1300 // Element should begin with upper-case letter
 #pragma warning disable SA1307 // Accessible fields should begin with upper-case letter
 
-namespace Microsoft.PowerFx.Core.Tests
+namespace Microsoft.PowerFx.Interpreter.Tests
 {
     public class ValueTests
     {
@@ -272,12 +273,12 @@ namespace Microsoft.PowerFx.Core.Tests
 
             TableType type = (TableType)value.Type;
 
-            TableType typeExpected = new TableType()
+            TableType typeExpected = TableType.Empty()
                 .Add(new NamedFormulaType("Value", FormulaType.Number));
             Assert.Equal(typeExpected, type);
 
             // Another way to compare
-            var field1 = type.GetNames().First();
+            var field1 = type.GetFieldTypes().First();
             Assert.Equal("Value", field1.Name);
             Assert.Equal(FormulaType.Number, field1.Type);
 

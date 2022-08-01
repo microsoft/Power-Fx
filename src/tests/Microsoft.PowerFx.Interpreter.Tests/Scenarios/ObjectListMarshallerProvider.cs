@@ -15,7 +15,7 @@ namespace Microsoft.PowerFx.Tests
     /// </summary>
     internal class ObjectListMarshallerProvider : ITypeMarshallerProvider
     {
-        public bool TryGetMarshaller(Type type, TypeMarshallerCache cache, int maxDepth, out ITypeMarshaller marshaller)
+        public bool TryGetMarshaller(Type type, TypeMarshallerCache cache, out ITypeMarshaller marshaller)
         {
             if (type == typeof(List<object>))
             {
@@ -35,7 +35,7 @@ namespace Microsoft.PowerFx.Tests
 
             public ObjectListMarshaller()
             {
-                _type = new RecordType().Add(TableValue.ValueName, FormulaType.UntypedObject);
+                _type = RecordType.Empty().Add(TableValue.ValueName, FormulaType.UntypedObject);
             }
 
             public FormulaValue Marshal(object value)

@@ -5660,13 +5660,21 @@
     <value>Not supported in formula columns.</value>
     <comment>Error Message. Used in formula columns for scenarios where there the full PowerApps support is not available.</comment>
   </data>
+  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
+    <value>Invalid number of arguments for {0} function: received {1}, expected {2}</value>
+    <comment>Error Message. Used in formula columns for scenarios where an invalid number of arguments is supplied to a math function. The {0} will be the name of the function. The {1} will be the incorrect number of arguments received. The {2} will be the correct number of args expected. </comment>
+  </data>
   <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
     <value>The {0} argument is not supported for the {1} function in formula columns.</value>
     <comment>Error Message. Used in formula columns for arguments that are not supported there.  The {0} will be the name of the argument that is not supported.  The {1} will be the name of the function.</comment>
   </data>
   <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
     <value>This argument can not be passed as this type in formula columns.</value>
-    <comment>Error Message. Used in formula columns for an argument where the type is not supported.</comment>
+    <comment>Error Message. Used in formula columns for an argument where the type is not supported. {0} is the attempted type the argument is being coerced to.</comment>
+  </data>
+  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
+    <value>This argument can not be passed as type {0} in formula columns.</value>
+    <comment>Error Message. Used in formula columns for an argument where the type is not supported. {0} is the attempted type the argument is being coerced to.</comment>
   </data>
   <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
     <value>Only a literal value is supported for this argument.</value>
@@ -5684,6 +5692,10 @@
     <value>Only the short date and time format strings are supported in formula columns.</value>
     <comment>Error Message. Used in formula columns for scenarios where the maker supplies an invalid format string</comment>
   </data>
+  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
+    <value>The {0} argument is an invalid/unsupported unit of time for the {1} date arithmetic function.</value>
+    <comment>Error Message. Used in formula columns for scenarios where the maker supplies an unsupported unit of time to the DateAdd or DateDiff function. The {0} will be the name of the argument. The {1} will be the name of the function.</comment>
+  </data>
   <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
     <value>Locale-specific formatting tokens such as "." and "," are not supported in formula columns.</value>
     <comment>Error Message. Used in formula columns for scenarios where the maker supplies an invalid format string</comment>
@@ -5692,9 +5704,17 @@
     <value>{0} is not supported in formula columns, use {1} instead.</value>
     <comment>Error Message. Used in formula columns for scenarios where the maker attempts to use a function that is not supported, providing an alternate function name.  The {0} will be the name of the function that is not supported, and {1} is the name of the suggested alternate.</comment>
   </data>
+  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
+    <value>This operation can not be performed on type {0} in formula columns.</value>
+    <comment>Error Message. Used in formula columns for scenarios where the maker attempts to perform an unsupported operatiom. The {0} will be the type the operation is not supported for.</comment>
+  </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
     <value>The result type {0} is not supported in formula columns.</value>
     <comment>Error Message. Used in formula columns for a formula that returns a type which is not supported.</comment>
+  </data>
+  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
+    <value>Directly referencing an entire record is not supported in formula columns. Please reference a valid field in the record.</value>
+    <comment>Error Message. Used in formula columns for scenarios where the maker attempts to reference an entire record instead of a specific field.</comment>
   </data>
   <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
     <value>The result type for this formula is expected to be {0}, but the actual result type is {1}. The result type of a formula column cannot be changed.</value>
@@ -5708,9 +5728,21 @@
     <value>Columns of type {0} with format {1} are not supported in formula columns.</value>
     <comment>Error Message. Used in formula columns for a formula where the maker attempts to use a column from Dataverse that is of a format that not supported, such as whole number formatted as language.</comment>
   </data>
+  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
+    <value>Coercing records or tables is not supported in formula columns.</value>
+    <comment>Error Message. Used in formula columns for a formula where the maker attempts record-record or table-table coercion.</comment>
+  </data>
   <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
     <value>Formulas can't be longer than 1000 characters.</value>
     <comment>Error Message. Used in formula columns for a formula where the text is too long.</comment>
+  </data>
+  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
+    <value>Single-column tables are not supported in formula columns.</value>
+    <comment>Error Message. Used in formula columns for a formula that references a single-column table.</comment>
+  </data>
+  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
+    <value>Can not reference virtual table {0} in formula columns.</value>
+    <comment>Error Message. Used in formula columns for a formula that references a virtual table.</comment>
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>Expected an operand. The formula or expression expects a valid operand. For example, you can add the operand '2' to the expression ' 1 +_' so that the result is '3'. Or, you can add the operand "there" to the expression '"Hi "&amp; _ ' so that the result is 'Hi there'.</value>
@@ -6475,6 +6507,38 @@
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
     <value>The first argument of '{0}' should be a valid variable name, and cannot conflict with any existing control, screen, collection, or data source names. Found type '{1}'</value>
+    <comment>Error Message</comment>
+  </data>
+  <data name="ErrUDF_MissingIdentifier" xml:space="preserve">
+    <value>User Defined Function is missing a valid name</value>
+    <comment>Error Message</comment>
+  </data>
+  <data name="ErrUDF_MissingOpenParen" xml:space="preserve">
+    <value>User Defined Function is missing a '(' here</value>
+    <comment>Error Message</comment>
+  </data>
+  <data name="ErrUDF_MissingEqual" xml:space="preserve">
+    <value>User Defined Function is missing a '=' here</value>
+    <comment>Error Message</comment>
+  </data>
+  <data name="ErrUDF_MissingCloseParen" xml:space="preserve">
+    <value>User Defined Function is missing a ')' here</value>
+    <comment>Error Message</comment>
+  </data>
+  <data name="ErrUDF_MissingSemicolon" xml:space="preserve">
+    <value>User Defined Function is missing a ';' here</value>
+    <comment>Error Message</comment>
+  </data>
+  <data name="ErrUDF_MissingComma" xml:space="preserve">
+    <value>User Defined Function is missing a ',' here</value>
+    <comment>Error Message</comment>
+  </data>
+  <data name="ErrUDF_MissingColon" xml:space="preserve">
+    <value>User Defined Function is missing an ':' here</value>
+    <comment>Error Message</comment>
+  </data>
+  <data name="ErrUDF_DuplicateArgName" xml:space="preserve">
+    <value>User Defined Function has a duplicate argument name</value>
     <comment>Error Message</comment>
   </data>
   <data name="AboutSet" xml:space="preserve">

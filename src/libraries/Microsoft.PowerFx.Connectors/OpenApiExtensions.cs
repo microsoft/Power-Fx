@@ -156,7 +156,7 @@ namespace Microsoft.PowerFx.Connectors
                     {
                         // Primitives get marshalled as a SingleColumn table.
                         // Make sure this is consistent with invoker. 
-                        var r2 = new RecordType().Add(TableValue.ValueName, elementType);
+                        var r2 = RecordType.Empty().Add(TableValue.ValueName, elementType);
                         return r2.ToTable();
                     }
                     else
@@ -166,7 +166,7 @@ namespace Microsoft.PowerFx.Connectors
 
                 case "object":
                 case null: // xml
-                    var obj = new RecordType();
+                    var obj = RecordType.Empty();
                     foreach (var kv in schema.Properties)
                     {
                         var propName = kv.Key;

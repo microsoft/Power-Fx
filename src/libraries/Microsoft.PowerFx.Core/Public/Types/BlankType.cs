@@ -19,5 +19,10 @@ namespace Microsoft.PowerFx.Types
         {
             vistor.Visit(this);
         }
+
+        public override string ToString()
+        {
+            return "Blank";
+        }
     }
 }
