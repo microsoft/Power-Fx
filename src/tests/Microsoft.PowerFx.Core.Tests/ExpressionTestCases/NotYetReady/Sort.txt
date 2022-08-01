@@ -60,13 +60,13 @@
 >> Sort([Date(2020, 01, 05), Date(2020, 01, 01), Date(1995, 01, 01)], Value)
 [Date(1995,1,1),Date(2020,1,1),Date(2020,1,5)]
 
->> Sort([Date(2020, 01, 05), DateValue("12/14/2012"), DateValue("01 Jan 2022")], Value)
+>> Sort([Date(2020, 01, 05), Date(2012,12,14), Date(2022,1,1)], Value)
 [Date(2012,12,14),Date(2020,1,5),Date(2022,1,1)]
 
 >> Sort([Date(2020, 01, 05), Date(2020, 01, 01), Date(1995, 01, 01)], Value, SortOrder.Descending)
 [Date(2020,1,5),Date(2020,1,1),Date(1995,1,1)]
 
->> Sort([Date(2020, 01, 05), DateValue("12/14/2012"), Blank(), DateValue("01 Jan 2022")], Value, SortOrder.Descending)
+>> Sort([Date(2020, 01, 05), Date(2012,12,14), Blank(), Date(2022,1,1)], Value, SortOrder.Descending)
 [Date(2022,1,1),Date(2020,1,5),Date(2012,12,14),Blank()]
 
 // ******** TIME PARAMETERS ********
@@ -77,15 +77,15 @@
 >> Sort([Time(12,35,55), Time(23, 01, 01), Time(5,30,50)], Value, SortOrder.Descending)
 ["23:01:01.000","12:35:55.000","05:30:50.000"]
 
->> Sort([TimeValue("5:29 PM"), Blank(), Time(5,30,50)], Value)
+>> Sort([Time(17,29,0), Blank(), Time(5,30,50)], Value)
 ["05:30:50.000","17:29:00.000",Blank()]
 
 // ******** DATETIME PARAMETERS ********
 
->> Sort([DateTimeValue("May 16, 2019 8:00:00 AM"), DateTimeValue("May 16, 2019 8:00:00 PM"), DateTimeValue("May 16, 2019 8:00:01 PM")], Value)
+>> Sort([DateTime(2019,5,16,8,0,0), DateTime(2019,5,16,20,0,0), DateTime(2019,5,16,20,0,1)], Value)
 [DateTime(2019,5,16,8,0,0,0),DateTime(2019,5,16,20,0,0,0),DateTime(2019,5,16,20,0,1,0)]
 
->> Sort([DateTimeValue("May 16, 2019 8:00:00 AM"), DateTimeValue("May 16, 2019 8:00:00 PM"), DateTimeValue("May 16, 2019 8:00:01 PM")], Value, SortOrder.Descending)
+>> Sort([DateTime(2019,5,16,8,0,0), DateTime(2019,5,16,20,0,0), DateTime(2019,5,16,20,0,1)], Value, SortOrder.Descending)
 [DateTime(2019,5,16,20,0,1,0),DateTime(2019,5,16,20,0,0,0),DateTime(2019,5,16,8,0,0,0)]
 
 
@@ -374,7 +374,7 @@ Table({Age:792,First:"Titan",Gender:"Unknown",HasDog:Blank(),Last:Blank(),Vaccin
 Table({Age:2,First:"Bob",Gender:"Male",HasDog:true,Last:Blank(),Vaccinated:true},{Age:5,First:"Alice",Gender:"Female",HasDog:true,Last:"Smith",Vaccinated:true},{Age:Blank(),First:"Liam",Gender:"Male",HasDog:Blank(),Last:"Clark",Vaccinated:Blank()},{Age:Blank(),First:Blank(),Gender:"Male",HasDog:Blank(),Last:"Allen",Vaccinated:Blank()},{Age:Blank(),First:"Fiona",Gender:"Female",HasDog:Blank(),Last:"Brown",Vaccinated:Blank()},{Age:17,First:"John",Gender:"Male",HasDog:false,Last:"Batali",Vaccinated:false},{Age:29,First:"Emily",Gender:"Female",HasDog:Blank(),Last:"Jones",Vaccinated:true},{Age:63,First:"Helio",Gender:"Unknown",HasDog:Blank(),Last:Blank(),Vaccinated:Blank()},{Age:48,First:"Mary",Gender:"Female",HasDog:false,Last:"Harris",Vaccinated:false},{Age:79,First:"Titan",Gender:"Unknown",HasDog:Blank(),Last:Blank(),Vaccinated:Blank()},{Age:Blank(),First:Blank(),Gender:"Male",HasDog:Blank(),Last:"Walker",Vaccinated:Blank()},{Age:27,First:"Andrew",Gender:"Male",HasDog:false,Last:"Lee",Vaccinated:true},{Age:32,First:"Nizam",Gender:"Male",HasDog:false,Last:"Lewis",Vaccinated:true},{Age:40,First:"Amelia",Gender:"Female",HasDog:Blank(),Last:"Bedelia",Vaccinated:Blank()},{Age:4,First:"Dora",Gender:"Female",HasDog:true,Last:"TheExplorer",Vaccinated:Blank()},{Age:20,First:"Maria",Gender:"Female",HasDog:false,Last:"Martinez",Vaccinated:true},{Age:Blank(),First:"Ivor",Gender:"Female",HasDog:Blank(),Last:Blank(),Vaccinated:Blank()},{Age:29,First:"Jaideep",Gender:"Male",HasDog:false,Last:"Lopez",Vaccinated:true})
 
   
-// Blank() PASSED AS SORT FORMULA - DESCENCDING ORDER
+// Blank() PASSED AS SORT FORMULA - DESCENDING ORDER
 
 >> Sort(Table(
   { First: "Bob", Last: Blank(), Age: 2, Gender: "Male", Vaccinated: true, HasDog: true },

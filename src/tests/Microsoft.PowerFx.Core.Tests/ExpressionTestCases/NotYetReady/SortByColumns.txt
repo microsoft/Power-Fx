@@ -1,11 +1,11 @@
 >> SortByColumns([1],"Value")
-Table({Value:1})
+[1]
 
 >> SortByColumns([-2, -1, 0, 1, 2], "Value")
-Table({Value:-2},{Value:-1},{Value:0},{Value:1},{Value:2})
+[-2, -1, 0, 1, 2]
 
 >> SortByColumns(Table({Value:-2},{Value:-1},{Value:1},{Value:2},{Value:5}),"Value")
-[-2,-2,1,2,5]
+[-2,-1,1,2,5]
 
 
 // ******** NUMBER PARAMETERS ********
@@ -70,13 +70,13 @@ Table({Value:-2},{Value:-1},{Value:0},{Value:1},{Value:2})
 >> SortByColumns([Date(2020, 01, 05), Date(2020, 01, 01), Date(1995, 01, 01)], "Value")
 [Date(1995,1,1),Date(2020,1,1),Date(2020,1,5)]
 
->> SortByColumns([Date(2020, 01, 05), DateValue("12/14/2012"), DateValue("01 Jan 2022")], "Value")
+>> SortByColumns([Date(2020, 01, 05), Date(2012,12,14), Date(2022,1,1)], "Value")
 [Date(2012,12,14),Date(2020,1,5),Date(2022,1,1)]
 
 >> SortByColumns([Date(2020, 01, 05), Date(2020, 01, 01), Date(1995, 01, 01)], "Value", SortOrder.Descending)
 [Date(2020,1,5),Date(2020,1,1),Date(1995,1,1)]
 
->> SortByColumns([Date(2020, 01, 05), DateValue("12/14/2012"), Blank(), DateValue("01 Jan 2022")], "Value", SortOrder.Descending)
+>> SortByColumns([Date(2020, 01, 05), Date(2012,12,14), Blank(), Date(2022,1,1)], "Value", SortOrder.Descending)
 [Date(2022,1,1),Date(2020,1,5),Date(2012,12,14),Blank()]
 
 // ******** TIME PARAMETERS ********
@@ -87,25 +87,25 @@ Table({Value:-2},{Value:-1},{Value:0},{Value:1},{Value:2})
 >> SortByColumns([Time(12,35,55), Time(23, 01, 01), Time(5,30,50)], "Value", SortOrder.Descending)
 ["23:01:01.000","12:35:55.000","05:30:50.000"]
 
->> SortByColumns([TimeValue("5:29 PM"), Blank(), Time(5,30,50)], "Value")
+>> SortByColumns([Time(17,29,0), Blank(), Time(5,30,50)], "Value")
 ["05:30:50.000","17:29:00.000",Blank()]
 
 // ******** DATETIME PARAMETERS ********
 
->> SortByColumns([DateTimeValue("May 16, 2019 8:00:00 AM"), DateTimeValue("May 16, 2019 8:00:00 PM"), DateTimeValue("May 16, 2019 8:00:01 PM")], "Value")
+>> SortByColumns([DateTime(2019,5,16,8,0,0), DateTime(2019,5,16,20,0,0), DateTime(2019,5,16,20,0,1)], "Value")
 [DateTime(2019,5,16,8,0,0,0),DateTime(2019,5,16,20,0,0,0),DateTime(2019,5,16,20,0,1,0)]
 
->> SortByColumns([DateTimeValue("May 16, 2019 8:00:00 AM"), DateTimeValue("May 16, 2019 8:00:00 PM"), DateTimeValue("May 16, 2019 8:00:01 PM")], "Value", SortOrder.Descending)
+>> SortByColumns([DateTime(2019,5,16,8,0,0), DateTime(2019,5,16,20,0,0), DateTime(2019,5,16,20,0,1)], "Value", SortOrder.Descending)
 [DateTime(2019,5,16,20,0,1,0),DateTime(2019,5,16,20,0,0,0),DateTime(2019,5,16,8,0,0,0)]
 
 
 // ******** NULL and ERROR PARAMETERS ********
 
->> SortByColumns([-2, -1, 5, 1, 2], SortOrder.Descending)
-#Error(Kind=InvalidFunctionUsage)
+>> SortByColumns([-2, -1, 5, 1, 2], "Value", If(1/0<2,SortOrder.Ascending,SortOrder.Descending))
+#Error(Kind=Div0)
 
 //Error passed as one of the table records
->> SortByColumns([-2, -1, 5, 1/0, 2], Value)
+>> SortByColumns([-2, -1, 5, 1/0, 2], "Value")
 #Error(Kind=Div0)
 
 >> SortByColumns(["a", "b", "D", "x", "J", Error({Kind: 11})], "Value")
