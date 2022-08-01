@@ -103,6 +103,9 @@
 >> RoundDown(1600.34,-3)
 1000
 
+>> RoundDown(0.31,1)
+0.3
+
 // Negative Decimal NUMBER parameter
 
 >> RoundDown(-14.123456,0)

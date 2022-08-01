@@ -1,6 +1,9 @@
 ﻿>> Sin(Table({a:0},{a:Pi()/6},{a:Pi()/2}))
 Table({a:0},{a:0.5},{a:1})
 
+>> Sin([0, Pi()/6, Pi()/2)])
+[0,0.5,1]
+
 >> Sin(Table({a:0},{a:1/0},{a:Pi()/2}))
 Table({a:0},{a:Microsoft.PowerFx.Types.ErrorValue},{a:1})
 

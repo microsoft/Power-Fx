@@ -30,7 +30,7 @@ namespace Microsoft.PowerFx
         {
             var ev2 = new EvalVisitor(_cultureInfo, cancel);
             try
-            { 
+            {
                 var newValue = await _irnode.Accept(ev2, new EvalVisitorContext(SymbolContext.NewTopScope(_topScopeSymbol, parameters), _stackMarker));
                 return newValue;
             }
@@ -38,6 +38,15 @@ namespace Microsoft.PowerFx
             {
                 return maxCallDepthException.ToErrorValue(_irnode.IRContext);
             }
+        }
+
+        internal async Task<FormulaValue> EvalAsyncInternal(RecordValue parameters, CancellationToken cancel, StackDepthCounter stackMarker)
+        {
+            // We don't catch the max call depth exception here becuase someone could swallow the error with an "IfError" check.
+            // Instead we only catch at the top of parsed expression, which is the above function.
+            var ev2 = new EvalVisitor(_cultureInfo, cancel);
+            var newValue = await _irnode.Accept(ev2, new EvalVisitorContext(SymbolContext.NewTopScope(_topScopeSymbol, parameters), stackMarker));
+            return newValue;
         }
     }
 }

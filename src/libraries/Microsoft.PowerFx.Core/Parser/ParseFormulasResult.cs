@@ -30,4 +30,57 @@ namespace Microsoft.PowerFx.Core.Parser
             NamedFormulas = namedFormulas;
         }
     }
+
+    internal class ParseUDFsResult
+    {
+        internal IEnumerable<UDF> UDFs { get; }
+
+        internal bool HasError { get; }
+
+        public ParseUDFsResult(List<UDF> uDFs, List<TexlError> errors)
+        {
+            Contracts.AssertValue(uDFs);
+
+            if (errors?.Any() ?? false)
+            {
+                ExpErrors = ExpressionError.New(errors);
+                HasError = true;
+            }
+
+            UDFs = uDFs;
+        }
+
+        public IEnumerable<ExpressionError> ExpErrors;
+    }
+
+    internal class UDF
+    {
+        internal IdentToken Ident { get; }
+
+        internal IdentToken ReturnType { get; }
+        
+        internal TexlNode Body { get; }
+
+        internal ISet<UDFArg> Args { get; }
+
+        public UDF(IdentToken ident, IdentToken returnType, HashSet<UDFArg> args, TexlNode body)
+        {
+            Ident = ident;
+            ReturnType = returnType;
+            Args = args;
+            Body = body;
+        }
+    }
+
+    internal class UDFArg
+    {
+        internal IdentToken VarIdent;
+        internal IdentToken VarType;
+
+        public UDFArg(IdentToken varIdent, IdentToken varType)
+        {
+            VarIdent = varIdent;
+            VarType = varType;
+        } 
+    }
 }

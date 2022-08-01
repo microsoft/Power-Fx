@@ -5,6 +5,8 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
 {
     internal enum BinaryOpKind
     {
+        Invalid,
+
         InText,
         ExactInText,
         InScalarTable,
@@ -38,6 +40,8 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
         EqBlob,
         EqGuid,
         EqOptionSetValue,
+        EqViewValue,
+        EqNamedValue,
         EqNull,
 
         NeqNumbers,
@@ -54,6 +58,8 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
         NeqBlob,
         NeqGuid,
         NeqOptionSetValue,
+        NeqViewValue,
+        NeqNamedValue,
         NeqNull,
 
         LtNumbers,
@@ -78,5 +84,16 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
         DynamicGetField,
 
         // And, Or, Pow, Concatenate get represented as FunctionNodes with lambdas to handle short-circuiting
+        // Included here to make the matrix cleaner, should not be generated in IR.
+        Power,
+        Concatenate,
+        And,
+        Or,
+
+        // These are reversed versions of earlier ops, added to make the matrix cleaner
+        AddTimeAndDate,
+        AddDayAndDate,
+        AddMillisecondsAndTime,
+        AddDayAndDateTime,
     }
 }

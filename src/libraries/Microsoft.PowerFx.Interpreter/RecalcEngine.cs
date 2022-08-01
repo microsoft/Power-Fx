@@ -3,16 +3,21 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Binding;
+using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Texl;
+using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter;
+using Microsoft.PowerFx.Interpreter.UDF;
 using Microsoft.PowerFx.Types;
+using static Microsoft.PowerFx.Interpreter.UDFHelper;
 
 namespace Microsoft.PowerFx
 {
@@ -22,6 +27,8 @@ namespace Microsoft.PowerFx
     public sealed class RecalcEngine : Engine, IScope, IPowerFxEngine
     {
         internal Dictionary<string, RecalcFormulaInfo> Formulas { get; } = new Dictionary<string, RecalcFormulaInfo>();
+
+        internal Dictionary<string, TexlFunction> _customFuncs = new Dictionary<string, TexlFunction>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RecalcEngine"/> class.
@@ -42,20 +49,6 @@ namespace Microsoft.PowerFx
         {
             // Set to Interpreter's implemented list (not necessarily same as defaults)
             powerFxConfig.SetCoreFunctions(Library.FunctionList);
-
-            // Add custom. 
-            powerFxConfig.AddFunction(BuiltinFunctionsCore.DateTime);
-            powerFxConfig.AddFunction(BuiltinFunctionsCore.Index_UO);
-            powerFxConfig.AddFunction(BuiltinFunctionsCore.ParseJSON);
-            powerFxConfig.AddFunction(BuiltinFunctionsCore.Table_UO);
-            powerFxConfig.AddFunction(BuiltinFunctionsCore.Text_UO);
-            powerFxConfig.AddFunction(BuiltinFunctionsCore.Value_UO);
-            powerFxConfig.AddFunction(BuiltinFunctionsCore.Boolean);
-            powerFxConfig.AddFunction(BuiltinFunctionsCore.Boolean_T);
-            powerFxConfig.AddFunction(BuiltinFunctionsCore.BooleanN);
-            powerFxConfig.AddFunction(BuiltinFunctionsCore.BooleanN_T);
-            powerFxConfig.AddFunction(BuiltinFunctionsCore.Boolean_UO);
-            powerFxConfig.AddFunction(BuiltinFunctionsCore.CountRows_UO);
 
             return powerFxConfig;
         }
@@ -88,9 +81,9 @@ namespace Microsoft.PowerFx
         }
 
         /// <summary>
-        /// Create an evaluator over the existing binding. 
+        /// Create an evaluator over the existing binding.
         /// </summary>
-        /// <param name="result">A successful binding from a previous call to <see cref="Engine.Check(string, RecordType, ParserOptions)"/>. </param>
+        /// <param name = "result" >A successful binding from a previous call to.<see cref="Engine.Check(string, RecordType, ParserOptions)"/>. </param>        
         /// <returns></returns>
         public static IExpression CreateEvaluatorDirect(CheckResult result)
         {
@@ -154,7 +147,7 @@ namespace Microsoft.PowerFx
         /// <returns>The formula's result.</returns>
         public FormulaValue Eval(string expressionText, RecordValue parameters = null, ParserOptions options = null)
         {
-            return EvalAsync(expressionText, CancellationToken.None, parameters, options).Result;          
+            return EvalAsync(expressionText, CancellationToken.None, parameters, options).Result;
         }
 
         public async Task<FormulaValue> EvalAsync(string expressionText, CancellationToken cancel, RecordValue parameters = null, ParserOptions options = null)
@@ -167,6 +160,90 @@ namespace Microsoft.PowerFx
             var check = Check(expressionText, (RecordType)parameters.IRContext.ResultType, options);
             check.ThrowOnErrors();
             return await check.Expression.EvalAsync(parameters, cancel);
+        }
+
+        public DefineFunctionsResult DefineFunctions(string script)
+        {
+            var parsedUDFS = new Core.Syntax.ParsedUDFs(script);
+            var result = parsedUDFS.GetParsed();
+
+            var udfDefinitions = result.UDFs.Select(udf => new UDFDefinition(
+                udf.Ident.ToString(), 
+                udf.Body.ToString(), 
+                FormulaType.GetFromStringOrNull(udf.ReturnType.ToString()),
+                udf.Args.Select(arg => new NamedFormulaType(arg.VarIdent.ToString(), FormulaType.GetFromStringOrNull(arg.VarType.ToString()))).ToArray())).ToArray();
+            return DefineFunctions(udfDefinitions);
+        }
+
+        /// <summary>
+        /// For private use because we don't want anyone defining a function without binding it.
+        /// </summary>
+        /// <returns></returns>
+        private UDFLazyBinder DefineFunction(UDFDefinition definition)
+        {
+            // $$$ Would be a good helper function 
+            var record = RecordType.Empty();
+            foreach (var p in definition.Parameters)
+            {
+                record = record.Add(p);
+            }
+
+            var check = new CheckWrapper(this, definition.Body, record);
+
+            var func = new UserDefinedTexlFunction(definition.Name, definition.ReturnType, definition.Parameters, check);
+            if (_customFuncs.ContainsKey(definition.Name))
+            {
+                throw new InvalidOperationException($"Function {definition.Name} is already defined");
+            }
+
+            _customFuncs[definition.Name] = func;
+            return new UDFLazyBinder(func, definition.Name);
+        }
+
+        private void RemoveFunction(string name)
+        {
+            _customFuncs.Remove(name);
+        }
+
+        /// <summary>
+        /// Tries to define and bind all the functions here. If any function names conflict returns an expression error. 
+        /// Also returns any errors from binding failing. All functions defined here are removed if any of them contain errors.
+        /// </summary>
+        /// <param name="udfDefinitions"></param>
+        /// <returns></returns>
+        internal DefineFunctionsResult DefineFunctions(IEnumerable<UDFDefinition> udfDefinitions)
+        {
+            var expressionErrors = new List<ExpressionError>();
+
+            var binders = new List<UDFLazyBinder>();
+            foreach (UDFDefinition definition in udfDefinitions)
+            {
+                binders.Add(DefineFunction(definition));
+            }
+            
+            foreach (UDFLazyBinder lazyBinder in binders)
+            {
+                var possibleErrors = lazyBinder.Bind();
+                if (possibleErrors.Any())
+                {
+                    expressionErrors.AddRange(possibleErrors);
+                }
+            }
+
+            if (expressionErrors.Any())
+            {
+                foreach (UDFLazyBinder lazyBinder in binders)
+                {
+                    RemoveFunction(lazyBinder.Name);
+                }
+            }
+
+            return new DefineFunctionsResult(expressionErrors, binders.Select(binder => new FunctionInfo(binder.Function)));
+        }
+
+        internal DefineFunctionsResult DefineFunctions(params UDFDefinition[] udfDefinitions)
+        {
+            return DefineFunctions(udfDefinitions.AsEnumerable());
         }
 
         // Invoke onUpdate() each time this formula is changed, passing in the new value. 

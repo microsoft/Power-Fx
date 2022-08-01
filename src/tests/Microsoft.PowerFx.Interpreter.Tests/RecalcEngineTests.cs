@@ -9,14 +9,18 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.Localization;
+using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Interpreter;
+using Microsoft.PowerFx.Interpreter.UDF;
 using Microsoft.PowerFx.Types;
 using Xunit;
 using Xunit.Sdk;
+using static Microsoft.PowerFx.Interpreter.UDFHelper;
 
 namespace Microsoft.PowerFx.Tests
 {
@@ -45,7 +49,8 @@ namespace Microsoft.PowerFx.Tests
                 $"{ns}.{nameof(TableMarshallerProvider)}",
                 $"{ns}.{nameof(TypeMarshallerCache)}",
                 $"{ns}.{nameof(TypeMarshallerCacheExtensions)}",
-                $"{nsType}.{nameof(ObjectRecordValue)}"
+                $"{nsType}.{nameof(ObjectRecordValue)}",
+                $"{ns}.Interpreter.UDF.{nameof(DefineFunctionsResult)}"
             };
 
             var sb = new StringBuilder();
@@ -240,6 +245,130 @@ namespace Microsoft.PowerFx.Tests
         }
 
         [Fact]
+        public void DefFunc()
+        {
+            var config = new PowerFxConfig(null);
+            var recalcEngine = new RecalcEngine(config);
+
+            IEnumerable<ExpressionError> enumerable = recalcEngine.DefineFunctions(
+            new UDFDefinition(
+                "foo",
+                "x * y",
+                FormulaType.Number,
+                new NamedFormulaType("x", FormulaType.Number),
+                new NamedFormulaType("y", FormulaType.Number))).Errors;
+            Assert.False(enumerable.Any());
+            Assert.Equal(17.0, recalcEngine.Eval("foo(3,4) + 5").ToObject());
+        }
+
+        [Fact]
+        public void DefRecursiveFunc()
+        {
+            var config = new PowerFxConfig(null);
+            var recalcEngine = new RecalcEngine(config);
+            var body = @"If(x=0,foo(1),If(x=1,foo(2),If(x=2,2)))";
+            IEnumerable<ExpressionError> enumerable = recalcEngine.DefineFunctions(
+                new UDFDefinition(
+                    "foo",
+                    body,
+                    FormulaType.Number,
+                    new NamedFormulaType("x", FormulaType.Number))).Errors;
+            var result = recalcEngine.Eval("foo(0)");
+            Assert.Equal(2.0, result.ToObject());
+            Assert.False(enumerable.Any());
+        }
+
+        [Fact]
+        public void DefSimpleRecursiveFunc()
+        {
+            var config = new PowerFxConfig(null);
+            var recalcEngine = new RecalcEngine(config);
+            Assert.False(recalcEngine.DefineFunctions(
+                new UDFDefinition(
+                    "foo",
+                    "foo()",
+                    FormulaType.Blank)).Errors.Any());
+            var result = recalcEngine.Eval("foo()");
+            Assert.IsType<ErrorValue>(result);
+        }
+
+        [Fact]
+        public void DefHailstoneSequence()
+        {
+            var config = new PowerFxConfig(null)
+            {
+                MaxCallDepth = 100
+            };
+            var recalcEngine = new RecalcEngine(config);
+            var body = @"If(Not(x = 1), If(Mod(x, 2)=0, hailstone(x/2), hailstone(3*x+1)), x)";
+            var funcName = "hailstone";
+            var returnType = FormulaType.Number;
+            var variable = new NamedFormulaType("x", FormulaType.Number);
+
+            Assert.False(recalcEngine.DefineFunctions(
+                new UDFDefinition(funcName, body, returnType, variable)).Errors.Any());
+            Assert.Equal(1.0, recalcEngine.Eval("hailstone(192)").ToObject());
+        }
+
+        [Fact]
+        public void DefMutualRecursionFunc()
+        {
+            var config = new PowerFxConfig(null)
+            {
+                MaxCallDepth = 100
+            };
+            var recalcEngine = new RecalcEngine(config);
+            var bodyEven = @"If(number = 0, true, odd(Abs(number)-1))";
+            var bodyOdd = @"If(number = 0, false, even(Abs(number)-1))";
+
+            var udfOdd = new UDFDefinition(
+                "odd",
+                bodyOdd,
+                FormulaType.Boolean,
+                new NamedFormulaType("number", FormulaType.Number));
+            var udfEven = new UDFDefinition(
+                "even",
+                bodyEven,
+                FormulaType.Boolean,
+                new NamedFormulaType("number", FormulaType.Number));
+
+            Assert.False(recalcEngine.DefineFunctions(udfOdd, udfEven).Errors.Any());
+
+            Assert.Equal(true, recalcEngine.Eval("odd(17)").ToObject());
+            Assert.Equal(false, recalcEngine.Eval("even(17)").ToObject());
+        }
+
+        [Fact]
+        public async void RedefinitionError()
+        {
+            var config = new PowerFxConfig(null);
+            var recalcEngine = new RecalcEngine(config);
+            Assert.Throws<InvalidOperationException>(() => recalcEngine.DefineFunctions(
+                new UDFDefinition("foo", "foo()", FormulaType.Blank),
+                new UDFDefinition("foo", "x+1", FormulaType.Number)));
+        }
+
+        [Fact]
+        public void UDFBodySyntaxErrorTest()
+        {
+            var config = new PowerFxConfig(null);
+            var recalcEngine = new RecalcEngine(config);
+            Assert.True(recalcEngine.DefineFunctions(new UDFDefinition("foo", "x[", FormulaType.Blank)).Errors.Any());
+        }
+
+        [Fact]
+        public async void UDFIncorrectParametersTest()
+        {
+            var config = new PowerFxConfig(null);
+            var recalcEngine = new RecalcEngine(config);
+            Assert.False(recalcEngine.DefineFunctions(new UDFDefinition("foo", "x+1", FormulaType.Number, new NamedFormulaType("x", FormulaType.Number))).Errors.Any());
+            Assert.False(recalcEngine.Check("foo(False)").IsSuccess);
+            Assert.False(recalcEngine.Check("foo(Table( { Value: \"Strawberry\" }, { Value: \"Vanilla\" } ))").IsSuccess);
+            Assert.True(recalcEngine.Check("foo(1)").IsSuccess);
+            await Assert.ThrowsAsync<InvalidOperationException>(async () => await recalcEngine.EvalAsync("foo(False)", CancellationToken.None));
+        }
+
+        [Fact]
         public void PropagateNull()
         {
             var engine = new RecalcEngine();
@@ -300,7 +429,7 @@ namespace Microsoft.PowerFx.Tests
             var engine = new RecalcEngine();
             var result = engine.Check(
                 "3*2+x",
-                new RecordType().Add(
+                RecordType.Empty().Add(
                     new NamedFormulaType("x", FormulaType.Number)));
 
             Assert.True(result.IsSuccess);
@@ -315,8 +444,8 @@ namespace Microsoft.PowerFx.Tests
             var config = new PowerFxConfig();
             var engine = new RecalcEngine(config);
 
-            var result = engine.Check("T.Var = 23", new RecordType()
-                .Add(new NamedFormulaType("T", new RecordType().Add(new NamedFormulaType("Var", FormulaType.String)))));
+            var result = engine.Check("T.Var = 23", RecordType.Empty()
+                .Add(new NamedFormulaType("T", RecordType.Empty().Add(new NamedFormulaType("Var", FormulaType.String)))));
 
             Assert.True(result.IsSuccess);
             Assert.Equal(1, result.Errors.Count(x => x.IsWarning));
@@ -407,7 +536,7 @@ namespace Microsoft.PowerFx.Tests
         public void CheckBindErrorWithParseExpression()
         {
             var engine = new RecalcEngine();
-            var result = engine.Check("3+foo+2", new RecordType()); // foo is undefined 
+            var result = engine.Check("3+foo+2", RecordType.Empty()); // foo is undefined 
 
             Assert.False(result.IsSuccess);
             Assert.Null(result.Expression);
@@ -421,7 +550,7 @@ namespace Microsoft.PowerFx.Tests
             var engine = new RecalcEngine();
             var result = engine.Check(
                 "3*2+x",
-                new RecordType().Add(
+                RecordType.Empty().Add(
                     new NamedFormulaType("x", FormulaType.Number)));
 
             // Test that parsing worked
@@ -449,7 +578,7 @@ namespace Microsoft.PowerFx.Tests
         {
             var result = engine.Check(
                "3*2+x",
-               new RecordType().Add(
+               RecordType.Empty().Add(
                    new NamedFormulaType("x", FormulaType.Number)));
 
             Assert.True(result.IsSuccess);
@@ -477,6 +606,16 @@ namespace Microsoft.PowerFx.Tests
             Assert.False(config.TryGetSymbol(new DName("foo"), out _, out _));
 
             Assert.DoesNotContain(BuiltinFunctionsCore.Abs, config.Functions);
+        }
+
+        [Fact]
+        public void RecalcEngine_AddFunction_Twice()
+        {
+            var config = new PowerFxConfig(null);
+            config.SetCoreFunctions(new TexlFunction[0]);
+            config.AddFunction(BuiltinFunctionsCore.Blank);
+
+            Assert.Throws<ArgumentException>(() => config.AddFunction(BuiltinFunctionsCore.Blank));
         }
 
         [Fact]
@@ -568,6 +707,52 @@ namespace Microsoft.PowerFx.Tests
                 Sum(Sum(1),1),
                 Sum(Sum(1),1)
                 )"));
+        }
+
+        [Fact]
+        public void UDFRecursionLimitTest()
+        {
+            var recalcEngine = new RecalcEngine(new PowerFxConfig(null));
+            recalcEngine.DefineFunctions("Foo(x: Number): Number = Foo(x);");
+            Assert.IsType<ErrorValue>(recalcEngine.Eval("Foo(1)"));
+        }
+
+        [Fact]
+        public void UDFRecursionWorkingTest()
+        {
+            var recalcEngine = new RecalcEngine(new PowerFxConfig(null));
+            recalcEngine.DefineFunctions("Foo(x: Number): Number = If(x = 1, 1, If(Mod(x, 2) = 0, Foo(x/2), Foo(x*3 + 1)));");
+            Assert.Equal(1.0, recalcEngine.Eval("Foo(5)").ToObject());
+        }
+
+        [Fact]
+        public void IndirectRecursionTest()
+        {
+            var recalcEngine = new RecalcEngine(new PowerFxConfig(null)
+            {
+                MaxCallDepth = 80
+            });
+            recalcEngine.DefineFunctions(
+                "A(x: Number): Number = If(Mod(x, 2) = 0, B(x/2), B(x));" +
+                "B(x: Number): Number = If(Mod(x, 3) = 0, C(x/3), C(x));" +
+                "C(x: Number): Number = If(Mod(x, 5) = 0, D(x/5), D(x));" +
+                "D(x: Number): Number = If(Mod(x, 7) = 0, F(x/7), F(x));" +
+                "F(x: Number): Number = If(x = 1, 1, A(x+1));");
+            Assert.Equal(1.0, recalcEngine.Eval("A(12654)").ToObject());
+        }
+
+        [Fact]
+        public void DoubleDefinitionTest()
+        {
+            var recalcEngine = new RecalcEngine(new PowerFxConfig(null));
+            Assert.Throws<InvalidOperationException>(() => recalcEngine.DefineFunctions("Foo(): Number = 10; Foo(x: Number): String = \"hi\""));
+        }
+
+        [Fact]
+        public void TestNumberBinding()
+        {
+            var recalcEngine = new RecalcEngine(new PowerFxConfig(null));
+            Assert.True(recalcEngine.DefineFunctions("Foo(): String = 10;").Errors.Any());
         }
 
         #region Test
