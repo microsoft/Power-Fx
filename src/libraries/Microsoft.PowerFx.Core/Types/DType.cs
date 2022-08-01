@@ -1564,63 +1564,25 @@ namespace Microsoft.PowerFx.Core.Types
             return SetType(ref fError, path, new DType(typeOuter.Kind, tree, AssociatedDataSources, DisplayNameProvider));
         }
 
-        public bool ContainsKindExpanded(DPath path, DKind kind)
-        {
-            AssertValid();
-            Contracts.Assert(kind >= DKind._Min && kind < DKind._Lim);
-
-            var fullType = this;
-            if (IsLazyType)
-            {
-                fullType = LazyTypeProvider.GetExpandedType(IsTable);
-            }
-
-            fullType.TryGetType(path, out var typeOuter);
-            if (!typeOuter.IsAggregate)
-            {
-                return typeOuter.Kind == kind;
-            }
-
-            var tree = typeOuter.TypeTree;
-            foreach (var typedName in fullType.GetNames(path))
-            {
-                if (typedName.Type.Kind == kind)
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
         public bool ContainsKindNested(DPath path, DKind kind)
         {
             AssertValid();
             Contracts.Assert(kind >= DKind._Min && kind < DKind._Lim);
 
-            var fullType = this;
-            if (IsLazyType)
-            {
-                // This probably should throw (or be eliminated)
-                // It's not safe to do an unbounded recursive operation
-                // on Lazy types that expands subtypes
-                return ContainsKindExpanded(path, kind);
-            }
-
-            fullType.TryGetType(path, out var typeOuter);
+            TryGetType(path, out var typeOuter);
             if (!typeOuter.IsAggregate)
             {
                 return typeOuter.Kind == kind;
             }
 
             var tree = typeOuter.TypeTree;
-            foreach (var typedName in fullType.GetNames(path))
+            foreach (var typedName in GetNames(path))
             {
                 if (typedName.Type.Kind == kind)
                 {
                     return true;
                 }
-                else if (typedName.Type.IsAggregate)
+                else if (typedName.Type.IsAggregate && !IsLazyType)
                 {
                     var containsInner = typedName.Type.ContainsKindNested(DPath.Root, kind);
                     if (containsInner)
