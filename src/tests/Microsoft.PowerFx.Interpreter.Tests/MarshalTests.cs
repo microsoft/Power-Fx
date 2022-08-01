@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Tests;
+using Microsoft.PowerFx.Interpreter.Tests;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
@@ -157,10 +158,15 @@ namespace Microsoft.PowerFx.Tests
             var result3 = engine.Eval("x.Next.Next.Data");
             Assert.Equal(30.0, ((NumberValue)result3).Value);
 
-            // Recursion not supported - gets truncated...
-            // https://github.com/microsoft/Power-Fx/issues/225
-            var result4 = engine.Check("x.Next.Next.Next.Next.Next.Next");
-            Assert.False(result4.IsSuccess);
+            // Arbitrary recursion supported!
+            // Practically capped here at 50 due to parser depth limit
+            var result4 = engine.Check(
+                "x.Next.Next.Next.Next.Next.Next.Next.Next.Next.Next" +
+                ".Next.Next.Next.Next.Next.Next.Next.Next.Next.Next" +
+                ".Next.Next.Next.Next.Next.Next.Next.Next.Next.Next" +
+                ".Next.Next.Next.Next.Next.Next.Next.Next.Next.Next" +
+                ".Next.Next.Next.Next.Next.Next.Next.Next.Next");
+            Assert.True(result4.IsSuccess);
         }
 
         // Basic marshaling hook. 
@@ -391,7 +397,7 @@ namespace Microsoft.PowerFx.Tests
         // Example of a host-derived object. 
         private class MyRecordValue : RecordValue
         {
-            private static readonly RecordType _type = new RecordType().Add("field1", FormulaType.Number);
+            private static readonly RecordType _type = RecordType.Empty().Add("field1", FormulaType.Number);
 
             // Ctor to let tests override and provide wrong types.
             public MyRecordValue(RecordType type)
@@ -641,7 +647,7 @@ namespace Microsoft.PowerFx.Tests
             var tm = cache.GetMarshaller(typeof(PocoNotMarshalled));
             var fxType = (RecordType)tm.Type;
 
-            Assert.Empty(fxType.GetNames());
+            Assert.Empty(fxType.GetFieldTypes());
         }
 
         private interface IWidget
@@ -659,7 +665,7 @@ namespace Microsoft.PowerFx.Tests
         {
             public int _counter = 0;
 
-            public bool TryGetMarshaller(Type type, TypeMarshallerCache cache, int maxDepth, out ITypeMarshaller marshaler)
+            public bool TryGetMarshaller(Type type, TypeMarshallerCache cache, out ITypeMarshaller marshaler)
             {
                 if (type != typeof(IWidget))
                 {
@@ -704,7 +710,12 @@ namespace Microsoft.PowerFx.Tests
                     Data = "B"
                 }
             };
-            Assert.Throws<InvalidOperationException>(() => cache.Marshal(obj));
+            var x = cache.Marshal(obj);
+            var engine = new RecalcEngine();
+            engine.UpdateVariable("x", x);
+
+            // Marshaller fails when type checking
+            Assert.Throws<InvalidOperationException>(() => engine.Check("x.Widget1"));
         }
 
         // Test a custom marshaler. 
@@ -731,18 +742,28 @@ namespace Microsoft.PowerFx.Tests
             };
 
             var x = cache.Marshal(obj);
-            Assert.Equal(1, marshaler._counter);
 
-            // Verify TypeMarshaller comes from cache and we don't call TryGetMarshaller again. 
-            var w1 = cache.Marshal(obj.Widget1);
-            Assert.Equal(1, marshaler._counter);
+            // Marshalling the fields of the outer object is lazy, doesn't touch Widget until later
+            Assert.Equal(0, marshaler._counter);
 
             var engine = new RecalcEngine();
             engine.UpdateVariable("x", x);
 
-            // Properties are renamed. 
+            // Marshalling the fields of the outer object is lazy, setting the variable doesn't touch the widget marshaller
+            Assert.Equal(0, marshaler._counter);
+
+            // Properties are renamed and marshalled correctly
             var result1 = engine.Eval("x.Widget1 & x.Widget2");
+
+            // Verify we only retrieved the widget marshaller once, the other one was from cache
+            Assert.Equal(1, marshaler._counter);
             Assert.Equal("WAWB", ((StringValue)result1).Value);
+
+            var result2 = engine.Eval("StartsWith(x.Widget1, \"W\")");
+            Assert.True(((BooleanValue)result2).Value);
+
+            // Verify we didn't retrieve a separate marshaller for a different expression
+            Assert.Equal(1, marshaler._counter);
         }
         
         // Test something that can't be marshalled. 

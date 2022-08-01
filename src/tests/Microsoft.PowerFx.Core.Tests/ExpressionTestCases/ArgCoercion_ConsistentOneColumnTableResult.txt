@@ -1,0 +1,19 @@
+﻿#SETUP: ConsistentOneColumnTableResult
+
+>> Char("55")
+"7"
+
+>> Char("Should be Error")
+#Error
+
+>> Char(["55", "56", "57"])
+["7","8","9"]
+
+>> Char(["55", "Error Coercion", "57"])
+["7",Microsoft.PowerFx.Types.ErrorValue,"9"]
+
+>> Concatenate(-1, ["456", "abc"] )
+["-1456","-1abc"]
+
+>> Concatenate([-1, 123], ["456", "abc"] )
+["-1456","123abc"]

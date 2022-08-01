@@ -14,19 +14,19 @@ namespace Microsoft.PowerFx.Types
         /// </summary>
         public object Source { get; private set; }
 
-        private readonly ObjectMarshaller _mapping;
+        private readonly ObjectMarshaller _marshaller;
 
         internal ObjectRecordValue(RecordType type, object source, ObjectMarshaller marshaler) 
             : base(type)
         {
             Source = source;
-            _mapping = marshaler;
+            _marshaller = marshaler;
         }
                 
         /// <inheritdoc/>
         protected override bool TryGetField(FormulaType fieldType, string fieldName, out FormulaValue result)
         {
-            return _mapping.TryGetField(Source, fieldName, out result);            
+            return _marshaller.TryGetField(Source, fieldName, out result);            
         }
 
         public override object ToObject()
