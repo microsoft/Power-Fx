@@ -339,6 +339,11 @@ namespace Microsoft.PowerFx.Functions
                 });
             }
 
+            if (arg0 is QueryableTableValue tableQueryable)
+            {
+                return tableQueryable.Filter(arg1);
+            }
+
             var rows = await LazyFilterAsync(runner, context, arg0.Rows, arg1);
 
             return new InMemoryTableValue(irContext, rows);
