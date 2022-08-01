@@ -240,25 +240,25 @@ Blank()
 // ======================== SCENARIO 1 ========================
 // findText: null, withinText: null, startIndex: [{ start: 1 }]
 
->> Find(If(1<0,[1,2,3]),If(1<0,[1,2,3]),[1])
+>> Find(If(1<0,["string"]),If(1<0,["string"]),Table({start:1}))
 Table({Result:1})
 
 // ======================== SCENARIO 2 ========================
 // findText: null, withinText: null, startIndex: [{ start: 2 }] 
 
->> Find(If(1<0,[1,2,3]),If(1<0,[1,2,3]),[2])
+>> Find(If(1<0,["string"]),If(1<0,["string"]),Table({start:2}))
 Table({Result:#Error(Kind="InvalidArgument")})
 
 // ======================== SCENARIO 3 ========================
 // findText: null, withinText: "textToBeSearchedIn", startIndex: [{ start: 5 }]
 
->> Find(If(1<0,[1,2,3]),"textToBeSearchedIn",[5])
+>> Find(If(1<0,["string"]),"textToBeSearchedIn",Table({start:5}))
 Table({Result:5})
 
 // ======================== SCENARIO 4 ========================
-// findText: "textToSearch", qithinText: null, startIndex: [{ start: 1 }] 
+// findText: "textToSearch", withinText: null, startIndex: [{ start: 1 }] 
 
->> Find("textToSearch",If(1<0,[1,2,3]),[1])
+>> Find("textToSearch",If(1<0,["string"]),[1])
 Table({Result:Blank()})
 
 // ======================== SCENARIO 5 ========================
@@ -268,7 +268,7 @@ Table({Result:Blank()})
     {find: Blank()},
     {find: ""},
     {find: ","}),
-    If(1<0,[1,2,3]),1)
+    If(1<0,["string"]),1)
 Table({Result:1},{Result:1},{Result:Blank()})
 
 
@@ -279,14 +279,14 @@ Table({Result:1},{Result:1},{Result:Blank()})
    {find: Blank()},
    {find: ""},
    {find: ","}),
-   If(1<0,[1,2,3]),[1,2,3])
+   If(1<0,["string"]),[1,2,3])
 Table({Result:1},{Result:#Error(Kind=InvalidArgument)},{Result:#Error(Kind=InvalidArgument)})
 
 
 // ======================== SCENARIO 7 ========================
 // findText: null, withinText: [{ within: null }, { within: '' }, { within: 'textToBeSearchedIn' }], startIndex: 1
 
->> Find(If(1<0,[1,2,3]),
+>> Find(If(1<0,["string"]),
    Table(
    {within: Blank()},
    {within: ""},
@@ -298,7 +298,7 @@ Table({Result:1},{Result:1},{Result:1})
 // ======================== SCENARIO 8 ========================
 // findText: null, withinText: [{ within: null }, { within: '' }, { within: 'textToBeSearchedIn' }], startIndex: [{ start: 1 }, { start: 2 }, { start: 3 }]
 
->> Find(If(1<0,[1,2,3]),
+>> Find(If(1<0,["string"]),
    Table(
    {within: Blank()},
    {within: ""},
@@ -325,14 +325,14 @@ Table({Result:1},{Result:1},{Result:19})
    Table(
    {find: Blank()},{find: ""},{find: ","},{find: ","}),
    "textToBeSearchedIn,textToBeSearchedIn",
-   [1,2,3,20])
+   Table({start:1},{start:2},{start:3},{start:20}))
 Table({Result:1},{Result:2},{Result:19},{Result:Blank()})
 
 
 // ======================== SCENARIO 11 ========================   
 // findText: ',', withinText: [{ within: 'textToBeSearchedIn,textToBeSearchedIn' }], startIndex: 1
 
->> Find(",", Table({within: "textToBeSearchedIn,textToBeSearchedIn"}),[1])
+>> Find(",", Table({within: "textToBeSearchedIn,textToBeSearchedIn"}),1)
 Table({Result:19})
 
 //  ======================== SCENARIO 12 ========================
@@ -373,7 +373,7 @@ Table({Result:19},{Result:19},{Result:19},{Result:Blank()})
 
 >> Find(
    Table({find: Blank()},{find: ""},{find: ","}), 
-   If(1<0,[1,2,3]))
+   If(1<0,["string"]))
 Table({Result:1},{Result:1},{Result:Blank()})
 
 
@@ -381,7 +381,7 @@ Table({Result:1},{Result:1},{Result:Blank()})
 //  findText: null, withinText: [{ within: null }, { within: '' }, { within: 'textToBeSearchedIn' }]
 
 >> Find(
-   If(1<0,[1,2,3]),
+   If(1<0,["string"]),
    Table({within: Blank()},{within: ""},{within: "textToBeSearchedIn"})) 
 Table({Result:1},{Result:1},{Result:1})
 
@@ -486,35 +486,35 @@ Table({Result:Blank()},{Result:9},{Result:Blank()})
 //  ======================== SCENARIO 26 ========================
 //  findText: [], withinText: '', startIndex: 1,
 
->> Find(Filter([1, 2, 3], Value > 100),"",1)
+>> Find(Filter(["string"], Len(Value) > 10),"",1)
 Table()
 
 
 //  ======================== SCENARIO 27 ========================
 // findText: '', withinText: [], startIndex: 1,
 
->> Find("", Filter([1, 2, 3], Value > 100),1)
+>> Find("", Filter(["string"], Len(Value) > 10),1)
 Table()
 
 
 //  ======================== SCENARIO 28 ========================
 //  findText: 'textToFind', withinText: [], startIndex: 2
 
->> Find("textToFind", Filter([1, 2, 3], Value > 100),2)
+>> Find("textToFind", Filter(["string"], Len(Value) > 10),2)
 Table()
 
 
 //  ======================== SCENARIO 29 ========================
 //  findText: [],withinText: []
 
->> Find(Filter([1, 2, 3], Value > 100), Filter([1, 2, 3], Value > 100))
+>> Find(Filter(["string"], Len(Value) > 10), Filter(["string"], Len(Value) > 10))
 Table()
 
 
 //  ======================== SCENARIO 30 ========================
 //  findText: [],withinText: [], startIndex: []
 
->> Find(Filter([1, 2, 3], Value > 100), Filter([1, 2, 3], Value > 100), Filter([1, 2, 3], Value > 100))
+>> Find(Filter(["string"], Len(Value) > 10), Filter(["string"], Len(Value) > 10), Filter([1, 2, 3], Value > 100))
 Table()
 
 
@@ -522,7 +522,7 @@ Table()
 //  findText: [],withinText: [{ within: null }, { within: 'lastName,firstName' }, { within: 'lastName,firstName' }], startIndex: 2
 
 >> Find(
-   Filter([1, 2, 3], Value > 100),
+   Filter(["string"], Len(Value) > 10),
    Table({within:Blank()},{within:"lastName,firstName"},{within:"lastName,firstName"}),
    2)
 Table()
@@ -531,7 +531,7 @@ Table()
 //  findText: [], withinText: 'textToSearch', startIndex: [{ start: 1 }, { start: 2 }],
 
 >> Find(
-   Filter([1, 2, 3], Value > 100),
+   Filter(["string"], Len(Value) > 10),
    "textToSearch",
    [1,2])
 Table()
@@ -542,7 +542,7 @@ Table()
 
 >> Find(
    Table({find:","},{find:Blank()},{find:""}),
-   Filter([1, 2, 3], Value > 100),
+   Filter(["string"], Len(Value) > 10),
    2)
 Table()
 
@@ -552,7 +552,7 @@ Table()
 
 >> Find(
    ",",
-   Filter([1, 2, 3], Value > 100),
+   Filter(["string"], Len(Value) > 10),
    [1,1])
 Table()
 
@@ -637,7 +637,7 @@ Table({Result:#Error(Kind=Div0)},{Result:#Error(Kind=Div0)},{Result:#Error(Kind=
 //  findText: anError, withinText: [{ within: 'First' }, { within: 'Second' }]
 	
 >> Find(
-   1/0,
+   Text(1/0),
    Table({within:"First"},{within:"Second"}),
    )
 Table({Result:#Error(Kind=13)},{Result:#Error(Kind=13)})
