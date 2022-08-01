@@ -2269,5 +2269,26 @@ namespace Microsoft.PowerFx.Tests
             type.TryGetSimilarName(new DName(testName), FieldNameKind.Display, out var similar);
             Assert.Equal(expected, similar);
         }
+
+        [Theory]
+        [InlineData("n", false)]
+        [InlineData("*[]", false)]
+        [InlineData("![]", false)]
+        [InlineData("*[A:n, B:s]", false)]
+        [InlineData("![A:n, B:s]", false)]
+        [InlineData("*[X:O]", true)]
+        [InlineData("![X:O]", true)]
+        [InlineData("*[X:n, Y:O]", true)]
+        [InlineData("*[X:n, Y:![Z:O]]", true)]
+        [InlineData("*[X:n, Y:![Z:b, W:c]]", false)]
+        [InlineData("*[X:n, Y:![Z:b, W:O]]", true)]
+        [InlineData("*[X:n, Y:![Z:b, W:*[A:*[B:![C:*[D:![E:n, F:s, G:b]]]]]]]", false)]
+        [InlineData("*[X:n, Y:![Z:b, W:*[A:*[B:![C:*[D:![E:n, F:O, G:b]]]]]]]", true)]
+        [InlineData("*[X:*[A:*[], B:![X:n, Y:b], C:*[D:![E:O], E:*[F:n]]], Y:![Z:b, W:*[A:*[B:![C:*[D:![E:n, F:O, G:b]]]]]]]", true)]
+        [InlineData("*[X:*[A:*[], B:![X:n, Y:b], C:*[D:![E:$], E:*[F:n]]], Y:![Z:b, W:*[A:*[B:![C:*[D:![E:n, F:$, G:b]]]]]]]", false)]
+        public void TestDTypeContainsUO(string typeAsString, bool containsUO)
+        {
+            Assert.Equal(containsUO, TestUtils.DT(typeAsString).ContainsKindNested(DPath.Root, DKind.UntypedObject));
+        }
     }
 }
