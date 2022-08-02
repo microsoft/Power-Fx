@@ -2717,13 +2717,16 @@ namespace Microsoft.PowerFx.Core.Binding
                         }
 
                         var typedName = names.Single();
+
+                        // Ensure we error when RHS node of table type cannot be coerced to a multiselectOptionset table node.  
                         if (!typeRight.CoercesTo(typeLeft))
                         {
                             _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, right, TexlStrings.ErrCannotCoerce_SourceType_TargetType, typeLeft.GetKindString(), typedName.Type.GetKindString());
                             return false;
                         }
 
-                        if (typeRight.Accepts(typeLeft))
+                        // Check if multiselectoptionset column type accepts RHS node of type table. 
+                        if (typeLeft.Accepts(typedName.Type))
                         {
                             return true;
                         }
