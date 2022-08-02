@@ -2640,7 +2640,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     }
 
                     // scalar in table: RHS must be a one column table. We'll allow coercion.
-                    if (typeRight.IsTable)
+                    if (typeRight.IsTable && !typeRight.IsMultiSelectOptionSet())
                     {
                         var names = typeRight.GetNames(DPath.Root);
                         if (names.Count() != 1)
@@ -2666,8 +2666,8 @@ namespace Microsoft.PowerFx.Core.Binding
                         return true;
                     }
 
-                    // scalar in record: not supported. Flag an error on the RHS.
-                    Contracts.Assert(typeRight.IsRecord);
+                    // scalar in record or multiSelectOptionSet table: not supported. Flag an error on the RHS.
+                    Contracts.Assert(typeRight.IsRecord || typeRight.IsMultiSelectOptionSet());
                     _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, right, TexlStrings.ErrBadType_Type, typeRight.GetKindString());
                     return false;
                 }
@@ -2717,13 +2717,13 @@ namespace Microsoft.PowerFx.Core.Binding
                         }
 
                         var typedName = names.Single();
-                        if (!typeLeft.CoercesTo(typedName.Type))
+                        if (!typeRight.CoercesTo(typeLeft))
                         {
                             _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, right, TexlStrings.ErrCannotCoerce_SourceType_TargetType, typeLeft.GetKindString(), typedName.Type.GetKindString());
                             return false;
                         }
 
-                        if (typeLeft.Accepts(typedName.Type))
+                        if (typeRight.Accepts(typeLeft))
                         {
                             return true;
                         }
