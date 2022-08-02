@@ -137,6 +137,7 @@ stages:
     skipComponentGovernanceDetection: true # the task is already injected into the build job, so skip it here.
   jobs:
   - job: generate_multiconfig_var
+    condition: and(succeeded(), ne(variables['System.PullRequest.IsFork'], 'True'))
     steps:
     - checkout: none
 
