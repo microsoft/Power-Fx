@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Functions
@@ -69,6 +70,17 @@ namespace Microsoft.PowerFx.Functions
 
             var arg0 = (TableValue)args[0];
             var arg1 = (NumberValue)args[1];
+
+            if (arg0 is QueryableTableValue queryableTable)
+            {
+                try
+                {
+                    return queryableTable.FirstN((int)arg1.Value);
+                }
+                catch (NotDelegableException)
+                {
+                }
+            }
 
             var rows = arg0.Rows.Take((int)arg1.Value);
             return new InMemoryTableValue(irContext, rows);
@@ -341,7 +353,13 @@ namespace Microsoft.PowerFx.Functions
 
             if (arg0 is QueryableTableValue tableQueryable)
             {
-                return tableQueryable.Filter(arg1);
+                try
+                {
+                    return tableQueryable.Filter(arg1, runner, context);
+                }
+                catch (NotDelegableException)
+                {
+                }
             }
 
             var rows = await LazyFilterAsync(runner, context, arg0.Rows, arg1);
@@ -391,6 +409,19 @@ namespace Microsoft.PowerFx.Functions
             var arg1 = (LambdaFormulaValue)args[1];
             var arg2 = (StringValue)args[2];
 
+            var isDescending = arg2.Value.ToLower() == "descending";
+
+            if (arg0 is QueryableTableValue queryableTable)
+            {
+                try
+                {
+                    return queryableTable.Sort(arg1, isDescending, runner, context);
+                }
+                catch (NotDelegableException)
+                {
+                }
+            }
+
             var pairs = (await Task.WhenAll(arg0.Rows.Select(row => ApplySortLambda(runner, context, row, arg1)))).ToList();
 
             var errors = new List<ErrorValue>();
@@ -422,7 +453,7 @@ namespace Microsoft.PowerFx.Functions
             }
 
             var compareToResultModifier = 1;
-            if (arg2.Value.ToLower() == "descending")
+            if (isDescending)
             {
                 compareToResultModifier = -1;
             }

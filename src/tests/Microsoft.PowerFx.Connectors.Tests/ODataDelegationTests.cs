@@ -15,36 +15,51 @@ namespace Microsoft.PowerFx.Connectors.Tests
 {
     public class ODataDelegationTests : PowerFxTest
     {
-        [Fact]
-        public void Foo()
+        [Theory]
+        [InlineData("Filter(Table, x > 10)", "https://contoso.com/api/list?$filter=x+gt+10")]
+        [InlineData("Filter(Filter(Table, x > 10), x < 5)", "https://contoso.com/api/list?$filter=x+gt+10+and+x+lt+5")]
+        [InlineData("Filter(Table, date > Date(2010, 02, 05))", "https://contoso.com/api/list?$filter=date+gt+2010-02-05")]
+        [InlineData("Filter(Table, name = \"Foo\")", "https://contoso.com/api/list?$filter=name+eq+%27Foo%27")]
+        [InlineData("Filter(Table, !(name = \"Foo\"))", "https://contoso.com/api/list?$filter=NOT(name+eq+%27Foo%27)")]
+        [InlineData("Filter(Table, StartsWith(name, \"Prefix\"))", "https://contoso.com/api/list?$filter=startsWith(name%2c+%27Prefix%27)")]
+        [InlineData("Filter(Table, EndsWith(name, \"suffix\"))", "https://contoso.com/api/list?$filter=endsWith(name%2c+%27suffix%27)")]
+        [InlineData("Sort(Table, date)", "https://contoso.com/api/list?$orderby=date")]
+        [InlineData("Sort(Table, date, SortOrder.Descending)", "https://contoso.com/api/list?$orderby=date+desc")]
+        [InlineData("FirstN(Table, 10)", "https://contoso.com/api/list?$top=10")]
+        [InlineData("FirstN(Sort(Filter(Table, x > 10), date), 10)", "https://contoso.com/api/list?$filter=x+gt+10&$orderby=date&$top=10")]
+        public void TestDelegation(string expression, string uriExpected)
         {
             var config = new PowerFxConfig();
             var engine = new RecalcEngine(config);
 
-            TableValue table = new TestODataTableValue();
+            TableType tableType = TableType.Empty()
+                .Add("x", FormulaType.Number)
+                .Add("date", FormulaType.DateTime)
+                .Add("name", FormulaType.String);
+            TableValue table = new TestODataTableValue(tableType);
             engine.UpdateVariable("Table", table);
 
-            var odataTable = engine.Eval("Filter(Table, x > 10)") as ODataQueryableTableValue;
+            var odataTable = engine.Eval(expression) as ODataQueryableTableValue;
             Assert.NotNull(odataTable);
-            Assert.Equal(new Uri("https://contoso.com/api/list?$filter=x+gt+10"), odataTable.GetUri());
+            Assert.Equal(new Uri(uriExpected), odataTable.GetUri());
         }
     }
 
     public sealed class TestODataTableValue : ODataQueryableTableValue
     {
-        public TestODataTableValue()
-            : base(TableType.Empty().Add("x", FormulaType.Number), new Uri("https://contoso.com/api/list"))
+        public TestODataTableValue(TableType tableType)
+            : base(tableType, new Uri("https://contoso.com/api/list"))
         {
         }
 
-        private TestODataTableValue(NameValueCollection odataParams)
-            : base(TableType.Empty().Add("x", FormulaType.Number), new Uri("https://contoso.com/api/list"), odataParams)
+        private TestODataTableValue(TableType tableType, ODataParams odataParams)
+            : base(tableType, new Uri("https://contoso.com/api/list"), odataParams)
         {
         }
 
-        protected override ODataQueryableTableValue WithQuery(NameValueCollection odataParamsNew)
+        protected override ODataQueryableTableValue WithParameters(ODataParams odataParamsNew)
         {
-            return new TestODataTableValue(odataParamsNew);
+            return new TestODataTableValue((TableType)Type, odataParamsNew);
         }
 
         protected override Task<List<DValue<RecordValue>>> GetRowsAsync()

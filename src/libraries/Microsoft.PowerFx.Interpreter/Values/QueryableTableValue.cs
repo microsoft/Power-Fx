@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.IR.Nodes;
 
 namespace Microsoft.PowerFx.Types
 {
@@ -18,7 +19,13 @@ namespace Microsoft.PowerFx.Types
         {
         }
 
-        internal abstract TableValue Filter(LambdaFormulaValue lambda);
+        internal abstract TableValue Filter(LambdaFormulaValue lambda, EvalVisitor runner, EvalVisitorContext context);
+
+        internal abstract TableValue Sort(LambdaFormulaValue lambda, bool isDescending, EvalVisitor runner, EvalVisitorContext context);
+
+        internal abstract TableValue FirstN(int n);
+
+        // internal abstract TableValue SortByColumns(FormulaValue[]);
 
         public bool HasCachedRows
         {
@@ -49,5 +56,19 @@ namespace Microsoft.PowerFx.Types
                 return _taskRows.GetAwaiter().GetResult();
             }
         }
+    }
+
+    public readonly struct DelegationRunContext
+    {
+        internal readonly EvalVisitor Runner;
+        internal readonly EvalVisitorContext Context;
+
+        internal DelegationRunContext(EvalVisitor runner, EvalVisitorContext context)
+        {
+            Runner = runner;
+            Context = context;
+        }
+
+        internal ValueTask<FormulaValue> EvalAsync(IntermediateNode node) => node.Accept(Runner, Context);
     }
 }

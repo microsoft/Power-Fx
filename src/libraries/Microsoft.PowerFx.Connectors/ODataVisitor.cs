@@ -2,69 +2,99 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Globalization;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.IR.Symbols;
+using Microsoft.PowerFx.Core.Texl.Builtins;
+using Microsoft.PowerFx.Interpreter;
+using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors
 {
-    internal class ODataVisitor : IRNodeVisitor<string, object>
+    internal class ODataVisitor : IRNodeVisitor<string, DelegationRunContext>
     {
         internal static readonly ODataVisitor I = new ODataVisitor();
 
-        public override string Visit(TextLiteralNode node, object context)
+        public override string Visit(TextLiteralNode node, DelegationRunContext runContext)
         {
             return $"'{node.LiteralValue}'";
         }
 
-        public override string Visit(NumberLiteralNode node, object context)
+        public override string Visit(NumberLiteralNode node, DelegationRunContext runContext)
         {
             return node.LiteralValue.ToString(CultureInfo.InvariantCulture);
         }
 
-        public override string Visit(BooleanLiteralNode node, object context)
+        public override string Visit(BooleanLiteralNode node, DelegationRunContext runContext)
         {
             return node.LiteralValue.ToString(CultureInfo.InvariantCulture);
         }
 
-        public override string Visit(ColorLiteralNode node, object context)
+        public override string Visit(ColorLiteralNode node, DelegationRunContext runContext)
         {
-            throw new System.NotImplementedException();
+            throw new NotDelegableException();
         }
 
-        public override string Visit(RecordNode node, object context)
+        public override string Visit(RecordNode node, DelegationRunContext runContext)
         {
-            throw new System.NotImplementedException();
+            throw new NotDelegableException();
         }
 
-        public override string Visit(ErrorNode node, object context)
+        public override string Visit(ErrorNode node, DelegationRunContext runContext)
         {
-            throw new System.NotImplementedException();
+            throw new NotDelegableException();
         }
 
-        public override string Visit(LazyEvalNode node, object context)
+        public override string Visit(LazyEvalNode node, DelegationRunContext runContext)
         {
-            return node.Child.Accept(this, context);
+            return node.Child.Accept(this, runContext);
         }
 
-        public override string Visit(CallNode node, object context)
+        public override string Visit(CallNode node, DelegationRunContext runContext)
         {
-            throw new System.NotImplementedException();
+            // Special cases for functions supported by OData
+            if (node.Function is NotFunction)
+            {
+                return $"NOT({node.Args[0].Accept(this, runContext)})";
+            }
+
+            if (node.Function is StartsWithFunction)
+            {
+                return $"startsWith({node.Args[0].Accept(this, runContext)}, {node.Args[1].Accept(this, runContext)})";
+            }
+
+            if (node.Function is EndsWithFunction)
+            {
+                return $"endsWith({node.Args[0].Accept(this, runContext)}, {node.Args[1].Accept(this, runContext)})";
+            }
+
+            // Fallback: try to evaluate call node, fail if it tries to access a delegated scope
+            try
+            {
+                FormulaValue result = runContext.EvalAsync(node).Result;
+                return SerializeLiteralValue(result);
+            }
+            catch (KeyNotFoundException)
+            {
+                // scope access to table value
+                throw new NotDelegableException();
+            }
         }
 
-        public override string Visit(BinaryOpNode node, object context)
+        public override string Visit(BinaryOpNode node, DelegationRunContext runContext)
         {
-            return $"{node.Left.Accept(this, context)} {ODataOpFromBinaryOp(node.Op)} {node.Right.Accept(this, context)}";
+            return $"{node.Left.Accept(this, runContext)} {ODataOpFromBinaryOp(node.Op)} {node.Right.Accept(this, runContext)}";
         }
 
-        public override string Visit(UnaryOpNode node, object context)
+        public override string Visit(UnaryOpNode node, DelegationRunContext runContext)
         {
-            throw new System.NotImplementedException();
+            return $"{ODataOpFromUnaryOp(node.Op)}({node.Child.Accept(this, runContext)})";
         }
 
-        public override string Visit(ScopeAccessNode node, object context)
+        public override string Visit(ScopeAccessNode node, DelegationRunContext runContext)
         {
             if (node.Value is ScopeAccessSymbol symbol)
             {
@@ -74,40 +104,57 @@ namespace Microsoft.PowerFx.Connectors
             return string.Empty;
         }
 
-        public override string Visit(RecordFieldAccessNode node, object context)
+        public override string Visit(RecordFieldAccessNode node, DelegationRunContext runContext)
         {
-            throw new System.NotImplementedException();
+            throw new NotDelegableException();
         }
 
-        public override string Visit(ResolvedObjectNode node, object context)
+        public override string Visit(ResolvedObjectNode node, DelegationRunContext runContext)
         {
-            throw new System.NotImplementedException();
+            throw new NotDelegableException();
         }
 
-        public override string Visit(SingleColumnTableAccessNode node, object context)
+        public override string Visit(SingleColumnTableAccessNode node, DelegationRunContext runContext)
         {
-            throw new System.NotImplementedException();
+            throw new NotDelegableException();
         }
 
-        public override string Visit(ChainingNode node, object context)
+        public override string Visit(ChainingNode node, DelegationRunContext runContext)
         {
-            throw new System.NotImplementedException();
+            throw new NotDelegableException();
         }
 
-        public override string Visit(AggregateCoercionNode node, object context)
+        public override string Visit(AggregateCoercionNode node, DelegationRunContext runContext)
         {
-            throw new System.NotImplementedException();
+            throw new NotDelegableException();
         }
+
+        private static string SerializeLiteralValue(FormulaValue value)
+        {
+            return value switch
+            {
+                BooleanValue booleanValue => booleanValue.Value ? "true" : "false",
+                ColorValue colorValue => throw new NotDelegableException(),
+                DateTimeValue dateTimeValue => dateTimeValue.Value.ToString("yyyy-MM-ddTHH:mm:ssZ"),
+                DateValue dateValue => dateValue.Value.ToString("yyyy-MM-dd"),
+                GuidValue guidValue => guidValue.Value.ToString(),
+                NumberValue numberValue => numberValue.Value.ToString(CultureInfo.InvariantCulture),
+                StringValue stringValue => $"'{stringValue.Value}'",
+                TimeValue timeValue => throw new NotDelegableException(),
+                _ => throw new NotDelegableException(),
+            };
+        }
+
+        private static string ODataOpFromUnaryOp(UnaryOpKind op) =>
+            op switch
+            {
+                UnaryOpKind.Negate => "NOT",
+                _ => throw new NotDelegableException()
+            };
 
         private static string ODataOpFromBinaryOp(BinaryOpKind op) =>
             op switch
             {
-                // BinaryOpKind.Invalid => expr,
-                // BinaryOpKind.InText => expr,
-                // BinaryOpKind.ExactInText => expr,
-                // BinaryOpKind.InScalarTable => expr,
-                // BinaryOpKind.ExactInScalarTable => expr,
-                // BinaryOpKind.InRecordTable => expr,
                 BinaryOpKind.AddNumbers => "+",
                 BinaryOpKind.AddDateAndTime => "+",
                 BinaryOpKind.AddDateAndDay => "+",
@@ -115,9 +162,8 @@ namespace Microsoft.PowerFx.Connectors
                 BinaryOpKind.AddTimeAndMilliseconds => "+",
                 BinaryOpKind.DateDifference => "-",
                 BinaryOpKind.TimeDifference => "-",
-                
-                // BinaryOpKind.MulNumbers => expr,
                 BinaryOpKind.DivNumbers => "/",
+
                 BinaryOpKind.EqNumbers => "eq",
                 BinaryOpKind.EqBoolean => "eq",
                 BinaryOpKind.EqText => "eq",
@@ -168,18 +214,24 @@ namespace Microsoft.PowerFx.Connectors
                 BinaryOpKind.LeqTime => "le",
                 BinaryOpKind.GtTime => "gt",
                 BinaryOpKind.GeqTime => "ge",
-                
+
+                BinaryOpKind.And => "and",
+                BinaryOpKind.Or => "or",
+
                 // BinaryOpKind.DynamicGetField => expr,
                 // BinaryOpKind.Power => expr,
                 // BinaryOpKind.Concatenate => expr,
-                BinaryOpKind.And => "and",
-                BinaryOpKind.Or => "or",
-                
                 // BinaryOpKind.AddTimeAndDate => expr,
                 // BinaryOpKind.AddDayAndDate => expr,
                 // BinaryOpKind.AddMillisecondsAndTime => expr,
                 // BinaryOpKind.AddDayAndDateTime => expr,
-                _ => throw new ArgumentOutOfRangeException(nameof(op), op, null)
+                // BinaryOpKind.InText => expr,
+                // BinaryOpKind.ExactInText => expr,
+                // BinaryOpKind.InScalarTable => expr,
+                // BinaryOpKind.ExactInScalarTable => expr,
+                // BinaryOpKind.InRecordTable => expr,
+                // BinaryOpKind.MulNumbers => expr,
+                _ => throw new NotDelegableException(),
             };
     }
 }
