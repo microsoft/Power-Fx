@@ -132,7 +132,6 @@ stages:
 
 - stage: API_Compatibility_Validation
   dependsOn: Build
-  # condition: and(succeeded(), or(ne(variables['System.PullRequest.IsFork'], 'True'), eq('${{ parameters.packageFeed }}', 'NuGet')))
   variables:
     skipComponentGovernanceDetection: true # the task is already injected into the build job, so skip it here.
   jobs:
