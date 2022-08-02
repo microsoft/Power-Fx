@@ -12,7 +12,7 @@ steps:
     $packageName = ($env:PackagesToValidate.Split(","))[0];
     [string]$contractVersion = "";
 
-    if ("${{ parameters.feedName }}" -eq 'Azure' -and "$(System.PullRequest.IsFork)" -ne 'True') {
+    if ("${{ parameters.feedName }}" -eq 'Azure') { #-and "$(System.PullRequest.IsFork)" -ne 'True') {
 
       Write-Host "Get latest $packageName version number from Azure feed";
 
