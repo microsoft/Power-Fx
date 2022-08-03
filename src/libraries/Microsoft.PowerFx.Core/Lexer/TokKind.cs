@@ -291,6 +291,12 @@ namespace Microsoft.PowerFx.Syntax
         /// End of the string interpolation part (island).
         /// <code>}</code>
         /// </summary>
-        IslandEnd
+        IslandEnd,
+        
+        /// <summary>
+        /// Start of body for user defined functions.
+        /// <code>=></code>
+        /// </summary>
+        DoubleBarrelArrow,
     }
 }

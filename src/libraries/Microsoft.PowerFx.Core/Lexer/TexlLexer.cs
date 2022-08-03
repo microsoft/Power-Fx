@@ -67,6 +67,7 @@ namespace Microsoft.PowerFx.Syntax
         public const string PunctuatorColon = ":";
         public const string PunctuatorAt = "@";
         public const char IdentifierDelimiter = '\'';
+        public const string PunctuatorDoubleBarrelArrow = "=>";
 
         // These puntuators are related to commenting in the formula bar
         public const string PunctuatorBlockComment = "/*";
@@ -255,6 +256,7 @@ namespace Microsoft.PowerFx.Syntax
             AddPunctuator(punctuators, PunctuatorAmpersand, TokKind.Ampersand);
             AddPunctuator(punctuators, PunctuatorPercent, TokKind.PercentSign);
             AddPunctuator(punctuators, PunctuatorAt, TokKind.At);
+            AddPunctuator(punctuators, PunctuatorDoubleBarrelArrow, TokKind.DoubleBarrelArrow);
 
             // Commenting punctuators
             AddPunctuator(punctuators, PunctuatorBlockComment, TokKind.Comment);

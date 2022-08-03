@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -713,7 +714,7 @@ namespace Microsoft.PowerFx.Tests
         public void UDFRecursionLimitTest()
         {
             var recalcEngine = new RecalcEngine(new PowerFxConfig(null));
-            recalcEngine.DefineFunctions("Foo(x: Number): Number = Foo(x);");
+            recalcEngine.DefineFunctions("Foo(x: Number): Number => Foo(x);");
             Assert.IsType<ErrorValue>(recalcEngine.Eval("Foo(1)"));
         }
 
@@ -721,7 +722,7 @@ namespace Microsoft.PowerFx.Tests
         public void UDFRecursionWorkingTest()
         {
             var recalcEngine = new RecalcEngine(new PowerFxConfig(null));
-            recalcEngine.DefineFunctions("Foo(x: Number): Number = If(x = 1, 1, If(Mod(x, 2) = 0, Foo(x/2), Foo(x*3 + 1)));");
+            recalcEngine.DefineFunctions("Foo(x: Number): Number => If(x = 1, 1, If(Mod(x, 2) = 0, Foo(x/2), Foo(x*3 + 1)));");
             Assert.Equal(1.0, recalcEngine.Eval("Foo(5)").ToObject());
         }
 
@@ -733,11 +734,11 @@ namespace Microsoft.PowerFx.Tests
                 MaxCallDepth = 80
             });
             recalcEngine.DefineFunctions(
-                "A(x: Number): Number = If(Mod(x, 2) = 0, B(x/2), B(x));" +
-                "B(x: Number): Number = If(Mod(x, 3) = 0, C(x/3), C(x));" +
-                "C(x: Number): Number = If(Mod(x, 5) = 0, D(x/5), D(x));" +
-                "D(x: Number): Number = If(Mod(x, 7) = 0, F(x/7), F(x));" +
-                "F(x: Number): Number = If(x = 1, 1, A(x+1));");
+                "A(x: Number): Number => If(Mod(x, 2) = 0, B(x/2), B(x));" +
+                "B(x: Number): Number => If(Mod(x, 3) = 0, C(x/3), C(x));" +
+                "C(x: Number): Number => If(Mod(x, 5) = 0, D(x/5), D(x));" +
+                "D(x: Number): Number => { If(Mod(x, 7) = 0, F(x/7), F(x)) };" +
+                "F(x: Number): Number => { If(x = 1, 1, A(x+1)) };");
             Assert.Equal(1.0, recalcEngine.Eval("A(12654)").ToObject());
         }
 
@@ -745,14 +746,27 @@ namespace Microsoft.PowerFx.Tests
         public void DoubleDefinitionTest()
         {
             var recalcEngine = new RecalcEngine(new PowerFxConfig(null));
-            Assert.Throws<InvalidOperationException>(() => recalcEngine.DefineFunctions("Foo(): Number = 10; Foo(x: Number): String = \"hi\""));
+            Assert.Throws<InvalidOperationException>(() => recalcEngine.DefineFunctions("Foo(): Number => 10; Foo(x: Number): String => \"hi\";"));
         }
 
         [Fact]
         public void TestNumberBinding()
         {
             var recalcEngine = new RecalcEngine(new PowerFxConfig(null));
-            Assert.True(recalcEngine.DefineFunctions("Foo(): String = 10;").Errors.Any());
+            Assert.True(recalcEngine.DefineFunctions("Foo(): String => 10;").Errors.Any());
+        }
+
+        [Fact]
+        public void TestMultiReturn()
+        {
+            var recalcEngine = new RecalcEngine(new PowerFxConfig(null));
+            var str = "Foo(): Number => { 1+1; 2+2; };";
+            foreach (var error in recalcEngine.DefineFunctions(str).Errors)
+            {
+                Debug.WriteLine($"{error} frag: {error.Span.GetFragment(str)}");
+            }
+
+            Assert.Equal(4.0, recalcEngine.Eval("Foo()").ToObject());
         }
 
         #region Test

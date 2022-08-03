@@ -6534,11 +6534,15 @@
     <comment>Error Message</comment>
   </data>
   <data name="ErrUDF_MissingColon" xml:space="preserve">
-    <value>User Defined Function is missing an ':' here</value>
+    <value>User Defined Function is missing a ':' here</value>
     <comment>Error Message</comment>
   </data>
   <data name="ErrUDF_DuplicateArgName" xml:space="preserve">
     <value>User Defined Function has a duplicate argument name</value>
+    <comment>Error Message</comment>
+  </data>
+  <data name="ErrUDF_MissingDoubleBarrelArrow" xml:space="preserve">
+    <value>User Defined Function is missing a '=>' here</value>
     <comment>Error Message</comment>
   </data>
   <data name="AboutSet" xml:space="preserve">

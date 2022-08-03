@@ -12,7 +12,7 @@ namespace Microsoft.PowerFx.Core.Tests
     public class NamedFormulasTests : PowerFxTest
     {
         [Theory]
-        [InlineData("Foo(x: Number): Number = Abs(x);")]
+        [InlineData("Foo(x: Number): Number => Abs(x);")]
         public void DefFuncTest(string script)
         {
             var parsedUDFS = new ParsedUDFs(script);
@@ -28,12 +28,41 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("Foo(x As Number, x As String) As Number = Abs(x);")]
-        public void DoubleArgDefTest(string script)
+        [InlineData("Rec4(x: Number): Number => { { force: 1, goo: x } };" +
+                    "Rec5(x: Number): Number => { \"asfd\"; { force: 1, goo: x } };" +
+                    "Rec6(x: Number): Number => x + 1;" +
+                    "Rec7(x: Number): Number => { x + 1 };")]
+        public void DefFunctionFromDiscussion(string script)
         {
-            var parsedUDFS = new ParsedUDFs(script);
-            var result = parsedUDFS.GetParsed();
-            Assert.True(result.HasError);
+            var parsedUDFs = new ParsedUDFs(script);
+            var result = parsedUDFs.GetParsed();
+            Assert.False(result.HasError);
+        }
+
+        [Theory]
+        [InlineData("Foo(): Number => { 1+1; 2+2 };")]
+        public void TestChaining(string script)
+        {
+            var parsedUDFs = new ParsedUDFs(script);
+            var result = parsedUDFs.GetParsed();
+
+            Assert.False(result.HasError);
+            var udf = result.UDFs.First();
+            Assert.Equal("Foo", udf.Ident.ToString());
+            Assert.Equal("1 + 1 ; 2 + 2", udf.Body.ToString());
+        } 
+
+        [Theory]
+        [InlineData("Foo(): Number => { Sum(1, 1); Sum(2, 2); };")]
+        public void TestChaining2(string script)
+        {
+            var parsedUDFs = new ParsedUDFs(script);
+            var result = parsedUDFs.GetParsed();
+
+            Assert.False(result.HasError);
+            var udf = result.UDFs.First();
+            Assert.Equal("Foo", udf.Ident.ToString());
+            Assert.Equal("Sum(1, 1) ; Sum(2, 2)", udf.Body.ToString());
         }
 
         [Theory]

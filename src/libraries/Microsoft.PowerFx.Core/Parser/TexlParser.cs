@@ -28,7 +28,7 @@ namespace Microsoft.PowerFx.Core.Parser
         }
 
         private readonly TokenCursor _curs;
-        private readonly Flags _flags;
+        private Flags _flags;
         private List<TexlError> _errors;
 
         // Nodes are assigned an integer id that is used to index into arrays later.
@@ -67,7 +67,145 @@ namespace Microsoft.PowerFx.Core.Parser
             return parser.ParseUDFs(script);
         }
 
+        /// <summary>
+        /// If the token is of the right type, it returns it and moves forward.
+        /// This does not post an error if the tok is of the wrong type.
+        /// </summary>
+        /// <param name="tid"></param>
+        /// <returns></returns>
+        private Token TokPlainEat(TokKind tid)
+        {
+            if (_curs.TidCur == tid)
+            {
+                return _curs.TokMove();
+            }
+
+            return null;
+        }
+
         private ParseUDFsResult ParseUDFs(string script)
+        {
+            var udfs = new List<UDF>();
+
+            // <root> ::= (<udf> ';')*
+            while (_curs.TokCur.Kind != TokKind.Eof)
+            {
+                ParseTrivia();
+                if (!ParseUDF(udfs))
+                {
+                    return new ParseUDFsResult(udfs, _errors);
+                }
+
+                ParseTrivia();
+                
+                if (TokEat(TokKind.Semicolon) == null)
+                {
+                    break;
+                }
+            }
+
+            return new ParseUDFsResult(udfs, _errors);
+        }
+
+        private bool ParseUDF(List<UDF> udfs)
+        {
+            // <udf> ::= IDENT '(' <args> ')' ':' IDENT '=>' <function-body>
+            ParseTrivia();
+            var ident = TokEat(TokKind.Ident);
+            if (ident == null)
+            {
+                return false;
+            }
+
+            var args = new Dictionary<string, UDFArg>();
+            if (TokEat(TokKind.ParenOpen) == null)
+            {
+                return false;
+            }
+
+            while (_curs.TokCur.Kind != TokKind.ParenClose)
+            {
+                ParseTrivia();
+                var varIdent = TokEat(TokKind.Ident);
+                ParseTrivia();
+                if (TokEat(TokKind.Colon) == null)
+                {
+                    break;
+                }
+
+                ParseTrivia();
+                var varType = TokEat(TokKind.Ident);
+                ParseTrivia();
+                if (args.ContainsKey(varIdent.ToString()))
+                {
+                    return false;
+                }
+
+                args.Add(varIdent.ToString(), new UDFArg(varIdent.As<IdentToken>(), varType.As<IdentToken>()));
+                if (_curs.TokCur.Kind != TokKind.ParenClose && _curs.TokCur.Kind != TokKind.Comma)
+                {
+                    CreateError(_curs.TokCur, TexlStrings.ErrUDF_MissingComma);
+                    return false;
+                }
+                else if (_curs.TokCur.Kind == TokKind.Comma)
+                {
+                    TokEat(TokKind.Comma);
+                }
+            }
+
+            TokEat(TokKind.ParenClose);
+
+            ParseTrivia();
+
+            if (TokEat(TokKind.Colon) == null)
+            {
+                return false;
+            }
+
+            ParseTrivia();
+
+            var returnType = TokEat(TokKind.Ident);
+            if (returnType == null)
+            {
+                return false;
+            }
+
+            ParseTrivia();
+
+            if (TokEat(TokKind.DoubleBarrelArrow) == null)
+            {
+                return false;
+            }
+
+            // <function-body> ::= (EXP | <bracs-exp>)
+            // <bracs-exp> ::= '{' (((<EXP> ';')+ <EXP>) | <EXP>) (';')? '}'
+
+            ParseTrivia();
+
+            if (TokPlainEat(TokKind.CurlyOpen) != null)
+            {
+                ParseTrivia();
+                _flags = Flags.EnableExpressionChaining;
+                var result1 = ParseExpr(Precedence.None);
+                ParseTrivia();
+                if (TokEat(TokKind.CurlyClose) == null)
+                {
+                    return false;
+                }
+
+                udfs.Add(new UDF(ident.As<IdentToken>(), returnType.As<IdentToken>(), new HashSet<UDFArg>(args.Values), result1));
+                return true;
+            }
+
+            _flags = Flags.NamedFormulas;
+
+            var result = ParseExpr(Precedence.None);
+            ParseTrivia();
+            udfs.Add(new UDF(ident.As<IdentToken>(), returnType.As<IdentToken>(), new HashSet<UDFArg>(args.Values), result));
+            return true;
+        }
+
+        /*private ParseUDFsResult ParseUDFs(string script)
         {
             var udfs = new List<UDF>();
 
@@ -174,7 +312,7 @@ namespace Microsoft.PowerFx.Core.Parser
             }
 
             return new ParseUDFsResult(udfs, _errors);
-        }
+        }*/
 
         // Parse the script
         // Parsing strips out parens used to establish precedence, but these may be helpful to the
@@ -837,6 +975,9 @@ namespace Microsoft.PowerFx.Core.Parser
                     _curs.TokMove();
                     return ParseOperand();
 
+                /*case TokKind.CurlyClose:
+                    return ParseOperand();*/
+
                 // Any other input should cause parsing errors.
                 default:
                     return CreateError(_curs.TokMove(), TexlStrings.ErrBadToken);
@@ -1184,7 +1325,7 @@ namespace Microsoft.PowerFx.Core.Parser
                 sourceList.Add(new TokenSource(delimiter));
                 sourceList.Add(ParseTrivia());
 
-                if (_curs.TidCur == TokKind.Eof || _curs.TidCur == TokKind.Comma || _curs.TidCur == TokKind.ParenClose)
+                if (_curs.TidCur == TokKind.Eof || _curs.TidCur == TokKind.Comma || _curs.TidCur == TokKind.ParenClose || _curs.TidCur == TokKind.CurlyClose)
                 {
                     break;
                 }
