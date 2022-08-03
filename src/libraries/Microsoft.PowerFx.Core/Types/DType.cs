@@ -2036,7 +2036,7 @@ namespace Microsoft.PowerFx.Core.Types
                 case DKind.OptionSetValue:
                     accepts = (type.Kind == Kind &&
                                 (OptionSetInfo == null || type.OptionSetInfo == null || type.OptionSetInfo == OptionSetInfo)) ||
-                               type.Kind == DKind.Unknown || (type.IsMultiSelectOptionSet() && (OptionSetInfo != null && type.TypeTree.GetPairs().First().Value.OptionSetInfo == OptionSetInfo));
+                               type.Kind == DKind.Unknown;
                     break;
                 case DKind.View:
                 case DKind.ViewValue:
