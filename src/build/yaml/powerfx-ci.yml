@@ -132,11 +132,13 @@ stages:
 
 - stage: API_Compatibility_Validation
   dependsOn: Build
-  condition: and(succeeded(), ne(variables['DisableApiCompatibityValidation'], 'true'))
+  # Skip API validation against Azure for a fork, as forks do not have access to our private feed.
+  condition: and(succeeded(), or(ne(variables['System.PullRequest.IsFork'], 'True'), eq('${{ parameters.packageFeed }}', 'NuGet')))
   variables:
     skipComponentGovernanceDetection: true # the task is already injected into the build job, so skip it here.
   jobs:
   - job: generate_multiconfig_var
+    condition: and(succeeded(), ne(variables['System.PullRequest.IsFork'], 'True'))
     steps:
     - checkout: none
 
@@ -155,6 +157,7 @@ stages:
         tags: |
           Comparing API against v $(GetContract.ContractVersion)
           From ${{ parameters.packageFeed }} feed 
+      continueOnError: true
 
     - powershell: |
         $multiconfig = '{';
