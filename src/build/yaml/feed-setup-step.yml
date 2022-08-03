@@ -7,17 +7,30 @@ parameters:
 steps:
 - powershell: |
     if ("${{ parameters.feedName }}" -eq 'NuGet') {
-      $key = "SDK_Dotnet_V4_org";
-      $value = "https://pkgs.dev.azure.com/FuseLabs/_packaging/SDK_Dotnet_V4_org/nuget/v3/index.json";
+      if ("$(System.PullRequest.IsFork)" -eq 'True') {
+        $key = "nuget.org";
+        $value = "https://api.nuget.org/v3/index.json";
+        Write-Host 'nuget.org feed: System.PullRequest.IsFork = True';
+      } else {
+        # This private feed cannot be accessed by a fork.
+        $key = "SDK_Dotnet_V4_org";
+        $value = "https://pkgs.dev.azure.com/FuseLabs/_packaging/SDK_Dotnet_V4_org/nuget/v3/index.json";
+        Write-Host 'SDK_Dotnet_V4_org feed';
+      }
       $key2 = "nuget.org";
       $value2 = "https://api.nuget.org/v3/index.json";
-      Write-Host 'SDK_Dotnet_V4_org feed';
     } else {
       $key = "PowerFx";
       $value = "$(PowerFx_daily_feed_Url)";
-      $key2 = "SDK_Dotnet_V4_org";
-      $value2 = "https://pkgs.dev.azure.com/FuseLabs/_packaging/SDK_Dotnet_V4_org/nuget/v3/index.json";
-      Write-Host 'PowerFx feed';
+      Write-Host 'PowerFx daily feed';
+
+      if ("$(System.PullRequest.IsFork)" -eq 'True') {
+        $key2 = "nuget.org";
+        $value2 = "https://api.nuget.org/v3/index.json";
+      } else {
+        $key2 = "SDK_Dotnet_V4_org";
+        $value2 = "https://pkgs.dev.azure.com/FuseLabs/_packaging/SDK_Dotnet_V4_org/nuget/v3/index.json";
+      }
     }
 
     $file = "$(Build.SourcesDirectory)\nuget.config";
