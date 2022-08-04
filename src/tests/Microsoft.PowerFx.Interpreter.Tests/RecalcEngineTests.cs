@@ -50,7 +50,10 @@ namespace Microsoft.PowerFx.Tests
                 $"{ns}.{nameof(TypeMarshallerCache)}",
                 $"{ns}.{nameof(TypeMarshallerCacheExtensions)}",
                 $"{nsType}.{nameof(ObjectRecordValue)}",
-                $"{ns}.Interpreter.UDF.{nameof(DefineFunctionsResult)}"
+                $"{ns}.Interpreter.UDF.{nameof(DefineFunctionsResult)}",
+                $"{nsType}.{nameof(QueryableTableValue)}",
+                $"{nsType}.{nameof(DelegationRunContext)}",
+                $"{ns}.Interpreter.{nameof(NotDelegableException)}"
             };
 
             var sb = new StringBuilder();

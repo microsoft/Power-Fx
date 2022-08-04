@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,12 +12,12 @@ namespace Microsoft.PowerFx.Types
 {
     public abstract class QueryableTableValue : TableValue
     {
-        private Task<List<DValue<RecordValue>>> _taskRows;
-        private readonly object _lock = new object();
+        private readonly Lazy<Task<List<DValue<RecordValue>>>> _lazyTaskRows;
 
         internal QueryableTableValue(IRContext irContext)
             : base(irContext)
         {
+            _lazyTaskRows = new Lazy<Task<List<DValue<RecordValue>>>>(() => GetRowsAsync());
         }
 
         internal abstract TableValue Filter(LambdaFormulaValue lambda, EvalVisitor runner, EvalVisitorContext context);
@@ -27,35 +28,13 @@ namespace Microsoft.PowerFx.Types
 
         // internal abstract TableValue SortByColumns(FormulaValue[]);
 
-        public bool HasCachedRows
-        {
-            get
-            {
-                lock (_lock)
-                {
-                    return _taskRows != null;
-                }
-            }
-        }
+        public bool HasCachedRows => _lazyTaskRows.IsValueCreated;
 
         protected abstract Task<List<DValue<RecordValue>>> GetRowsAsync();
 
-        public sealed override IEnumerable<DValue<RecordValue>> Rows
-        {
-            get
-            {
-                // Not the best, but doesn't require major breaking changes to TableValue
-                lock (_lock)
-                {
-                    if (_taskRows == null)
-                    {
-                        _taskRows = GetRowsAsync();
-                    }
-                }
-
-                return _taskRows.GetAwaiter().GetResult();
-            }
-        }
+        // Not the best, but doesn't require major breaking changes to TableValue
+        public sealed override IEnumerable<DValue<RecordValue>> Rows =>
+            _lazyTaskRows.Value.GetAwaiter().GetResult();
     }
 
     public readonly struct DelegationRunContext
