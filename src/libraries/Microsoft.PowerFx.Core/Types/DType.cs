@@ -102,7 +102,6 @@ namespace Microsoft.PowerFx.Core.Types
                 { DKind.Control, DKind.Error },
                 { DKind.DataEntity, DKind.Error },
                 { DKind.Metadata, DKind.Error },
-                { DKind.Attachment, DKind.Error },
                 { DKind.File, DKind.Error },
                 { DKind.LargeImage, DKind.Error },
                 { DKind.OptionSet, DKind.Error },
@@ -126,10 +125,7 @@ namespace Microsoft.PowerFx.Core.Types
 
         public ValueTree ValueTree { get; }
 
-        // This is only used by attachment type.
-        protected readonly DType _attachmentType;
-
-        // Intended future home of all lazy type expansion (Control, Attachment, Relationship, Other)
+        // Intended future home of all lazy type expansion (Control, Relationship, Other)
         internal readonly LazyTypeProvider LazyTypeProvider;
 
         internal HashSet<IExternalTabularDataSource> AssociatedDataSources { get; }
@@ -172,7 +168,6 @@ namespace Microsoft.PowerFx.Core.Types
             ExpandInfo = null;
             PolymorphicInfo = null;
             Metadata = null;
-            _attachmentType = null;
             AssociatedDataSources = new HashSet<IExternalTabularDataSource>();
             OptionSetInfo = null;
             ViewInfo = null;
@@ -206,7 +201,6 @@ namespace Microsoft.PowerFx.Core.Types
                 ExpandInfo,
                 PolymorphicInfo,
                 Metadata,
-                _attachmentType,
                 IsFile,
                 IsLargeImage,
                 new HashSet<IExternalTabularDataSource>(AssociatedDataSources),
@@ -230,7 +224,6 @@ namespace Microsoft.PowerFx.Core.Types
             ExpandInfo = null;
             PolymorphicInfo = null;
             Metadata = null;
-            _attachmentType = null;
             AssociatedDataSources = new HashSet<IExternalTabularDataSource>();
             OptionSetInfo = null;
             ViewInfo = null;
@@ -252,7 +245,6 @@ namespace Microsoft.PowerFx.Core.Types
             ExpandInfo = null;
             PolymorphicInfo = null;
             Metadata = null;
-            _attachmentType = null;
             AssociatedDataSources = new HashSet<IExternalTabularDataSource>();
             OptionSetInfo = null;
             ViewInfo = null;
@@ -272,7 +264,6 @@ namespace Microsoft.PowerFx.Core.Types
             ExpandInfo = null;
             PolymorphicInfo = null;
             Metadata = null;
-            _attachmentType = null;
             AssociatedDataSources = new HashSet<IExternalTabularDataSource>();
             OptionSetInfo = null;
             ViewInfo = null;
@@ -293,7 +284,6 @@ namespace Microsoft.PowerFx.Core.Types
             ExpandInfo = info;
             PolymorphicInfo = null;
             Metadata = null;
-            _attachmentType = null;
             AssociatedDataSources = associatedDataSources ?? new HashSet<IExternalTabularDataSource>();
             OptionSetInfo = null;
             ViewInfo = null;
@@ -313,7 +303,6 @@ namespace Microsoft.PowerFx.Core.Types
             ExpandInfo = null;
             PolymorphicInfo = info;
             Metadata = null;
-            _attachmentType = null;
             AssociatedDataSources = associatedDataSources ?? new HashSet<IExternalTabularDataSource>();
             OptionSetInfo = null;
             ViewInfo = null;
@@ -335,7 +324,6 @@ namespace Microsoft.PowerFx.Core.Types
             ExpandInfo = metadata.IsExpandEntity ? metadata.Type.ExpandInfo : null;
             PolymorphicInfo = null;
             Metadata = metadata;
-            _attachmentType = null;
             AssociatedDataSources = new HashSet<IExternalTabularDataSource>();
             OptionSetInfo = null;
             ViewInfo = null;
@@ -343,11 +331,11 @@ namespace Microsoft.PowerFx.Core.Types
             AssertValid();
         }
 
-        // Constructor for Attachment or File or large image type
+        // Constructor for File or large image type
         private DType(DKind kind, DType complexType)
         {
             Contracts.AssertValid(complexType);
-            Contracts.Assert(kind == DKind.Attachment || kind == DKind.File || kind == DKind.LargeImage);
+            Contracts.Assert(kind == DKind.File || kind == DKind.LargeImage);
 
             Kind = kind;
             TypeTree = complexType.TypeTree;
@@ -356,7 +344,6 @@ namespace Microsoft.PowerFx.Core.Types
             ExpandInfo = null;
             PolymorphicInfo = null;
             Metadata = null;
-            _attachmentType = kind == DKind.Attachment ? complexType : null;
             _isFile = kind == DKind.File;
             _isLargeImage = kind == DKind.LargeImage;
             AssociatedDataSources = new HashSet<IExternalTabularDataSource>();
@@ -380,7 +367,6 @@ namespace Microsoft.PowerFx.Core.Types
             ExpandInfo = null;
             PolymorphicInfo = null;
             Metadata = null;
-            _attachmentType = null;
             AssociatedDataSources = new HashSet<IExternalTabularDataSource>();
             OptionSetInfo = info;
             ViewInfo = null;
@@ -402,7 +388,6 @@ namespace Microsoft.PowerFx.Core.Types
             ExpandInfo = null;
             PolymorphicInfo = null;
             Metadata = null;
-            _attachmentType = null;
             AssociatedDataSources = new HashSet<IExternalTabularDataSource>();
             OptionSetInfo = info;
             ViewInfo = null;
@@ -425,7 +410,6 @@ namespace Microsoft.PowerFx.Core.Types
             ExpandInfo = null;
             PolymorphicInfo = null;
             Metadata = null;
-            _attachmentType = null;
             AssociatedDataSources = new HashSet<IExternalTabularDataSource>();
             OptionSetInfo = null;
             ViewInfo = info;
@@ -447,7 +431,6 @@ namespace Microsoft.PowerFx.Core.Types
             ExpandInfo = null;
             PolymorphicInfo = null;
             Metadata = null;
-            _attachmentType = null;
             AssociatedDataSources = new HashSet<IExternalTabularDataSource>();
             OptionSetInfo = null;
             ViewInfo = info;
@@ -468,7 +451,6 @@ namespace Microsoft.PowerFx.Core.Types
             ValueTree = default;
             ExpandInfo = null;
             Metadata = null;
-            _attachmentType = null;
             AssociatedDataSources = new HashSet<IExternalTabularDataSource>();
             OptionSetInfo = null;
             ViewInfo = null;
@@ -489,7 +471,6 @@ namespace Microsoft.PowerFx.Core.Types
             ExpandInfo = null;
             PolymorphicInfo = null;
             Metadata = null;
-            _attachmentType = null;
             AssociatedDataSources = new HashSet<IExternalTabularDataSource>();
             OptionSetInfo = null;
             ViewInfo = null;
@@ -505,11 +486,10 @@ namespace Microsoft.PowerFx.Core.Types
 #if DEBUG
             TypeTree.AssertValid();
 #endif
-            Contracts.Assert(TypeTree.IsEmpty || Kind == DKind.Table || Kind == DKind.Record || Kind == DKind.Control || Kind == DKind.DataEntity || Kind == DKind.Attachment || Kind == DKind.File || Kind == DKind.LargeImage || Kind == DKind.OptionSet || Kind == DKind.OptionSetValue || Kind == DKind.View || Kind == DKind.ViewValue);
+            Contracts.Assert(TypeTree.IsEmpty || Kind == DKind.Table || Kind == DKind.Record || Kind == DKind.Control || Kind == DKind.DataEntity || Kind == DKind.File || Kind == DKind.LargeImage || Kind == DKind.OptionSet || Kind == DKind.OptionSetValue || Kind == DKind.View || Kind == DKind.ViewValue);
             Contracts.Assert(ValueTree.IsEmpty || Kind == DKind.Enum);
             Contracts.Assert(Kind != DKind.Enum || (EnumSuperkind >= DKind._Min && EnumSuperkind < DKind._Lim && EnumSuperkind != DKind.Enum));
             Contracts.Assert((Metadata != null) == (Kind == DKind.Metadata));
-            Contracts.Assert((_attachmentType != null) == (Kind == DKind.Attachment));
             Contracts.Assert((LazyTypeProvider != null) == (Kind == DKind.LazyRecord || Kind == DKind.LazyTable));
 
 #if DEBUG
@@ -549,7 +529,7 @@ namespace Microsoft.PowerFx.Core.Types
 
         public bool IsMetadata => Kind == DKind.Metadata;
 
-        public bool IsAttachment => Kind == DKind.Attachment;
+        public bool IsAttachment => IsLazyType && LazyTypeProvider.BackingFormulaType is BuiltInLazyTypes.AttachmentType;
 
         public bool IsPolymorphic => Kind == DKind.Polymorphic;
 
@@ -594,7 +574,7 @@ namespace Microsoft.PowerFx.Core.Types
 
         public IDataColumnMetadata Metadata { get; }
 
-        public DType AttachmentType => _attachmentType;
+        public DType AttachmentType => IsAttachment ? LazyTypeProvider.GetExpandedType(IsTable) : DType.Invalid;
 
         public bool HasExpandInfo => ExpandInfo != null;
 
@@ -830,8 +810,9 @@ namespace Microsoft.PowerFx.Core.Types
         public static DType CreateAttachmentType(DType attachmentType)
         {
             Contracts.AssertValid(attachmentType);
-
-            return new DType(DKind.Attachment, attachmentType);
+            var attachmentRecord = new BuiltInLazyTypes.AttachmentType(attachmentType);
+            
+            return attachmentType.IsTable ? attachmentRecord.ToTable()._type : attachmentRecord._type;
         }
 
         public static DType CreateFileType(DType fileType)
@@ -1411,8 +1392,13 @@ namespace Microsoft.PowerFx.Core.Types
         // Drop fields of specified kind.
         public DType DropAllOfKind(ref bool fError, DPath path, DKind kind)
         {
+            return DropAllMatching(ref fError, path, type => type.Kind == kind);
+        }
+
+        public DType DropAllMatching(ref bool fError, DPath path, Func<DType, bool> matchFunc)
+        {
             AssertValid();
-            Contracts.Assert(kind >= DKind._Min && kind < DKind._Lim);
+            Contracts.AssertValue(matchFunc);
 
             var fullType = this;
             if (IsLazyType)
@@ -1430,7 +1416,7 @@ namespace Microsoft.PowerFx.Core.Types
             var tree = typeOuter.TypeTree;
             foreach (var typedName in fullType.GetNames(path))
             {
-                if (typedName.Type.Kind == kind)
+                if (matchFunc(typedName.Type))
                 {
                     tree = tree.RemoveItem(ref fError, typedName.Name);
                 }
@@ -1488,11 +1474,16 @@ namespace Microsoft.PowerFx.Core.Types
             return fullType.SetType(ref fError, path, new DType(typeOuter.Kind, tree, AssociatedDataSources, DisplayNameProvider));
         }
 
-        // Drop fields of specified kind from all nested types
         public DType DropAllOfKindNested(ref bool fError, DPath path, DKind kind)
         {
+            return DropAllMatchingNested(ref fError, path, type => type.Kind == kind);
+        }
+
+        // Drop fields of specified kind from all nested types
+        public DType DropAllMatchingNested(ref bool fError, DPath path, Func<DType, bool> matchFunc)
+        {
             AssertValid();
-            Contracts.Assert(kind >= DKind._Min && kind < DKind._Lim);
+            Contracts.AssertValue(matchFunc);
 
             var fullType = this;
             if (IsLazyType)
@@ -1500,7 +1491,7 @@ namespace Microsoft.PowerFx.Core.Types
                 // This probably should throw (or be eliminated)
                 // It's not safe to do an unbounded recursive operation
                 // on Lazy types that expands subtypes
-                return DropAllOfKind(ref fError, path, kind);
+                return DropAllMatching(ref fError, path, matchFunc);
             }
 
             fError |= !fullType.TryGetType(path, out var typeOuter);
@@ -1513,13 +1504,13 @@ namespace Microsoft.PowerFx.Core.Types
             var tree = typeOuter.TypeTree;
             foreach (var typedName in fullType.GetNames(path))
             {
-                if (typedName.Type.Kind == kind)
+                if (matchFunc(typedName.Type))
                 {
                     tree = tree.RemoveItem(ref fError, typedName.Name);
                 }
                 else if (typedName.Type.IsAggregate)
                 {
-                    var typeInner = typedName.Type.DropAllOfKindNested(ref fError, DPath.Root, kind);
+                    var typeInner = typedName.Type.DropAllMatchingNested(ref fError, DPath.Root, matchFunc);
                     if (fError)
                     {
                         return this;
@@ -1723,7 +1714,7 @@ namespace Microsoft.PowerFx.Core.Types
             if (type.ContainsAttachmentType(DPath.Root))
             {
                 var fError = false;
-                type = type.DropAllOfKindNested(ref fError, DPath.Root, DKind.Attachment);
+                type = type.DropAllMatching(ref fError, DPath.Root, type => type.IsAttachment);
                 fValid &= !fError;
             }
 
@@ -1805,24 +1796,6 @@ namespace Microsoft.PowerFx.Core.Types
                     }
 
                     return expandedEntityType.Accepts(type, true);
-                default:
-                    return type.Kind == DKind.Unknown;
-            }
-        }
-
-        private bool AcceptsAttachmentType(DType type)
-        {
-            Contracts.AssertValid(type);
-            Contracts.Assert(Kind == DKind.Attachment);
-            Contracts.AssertValue(_attachmentType);
-
-            switch (type.Kind)
-            {
-                case DKind.Attachment:
-                    return _attachmentType.Accepts(type.AttachmentType, exact: true);
-                case DKind.Table:
-                case DKind.Record:
-                    return _attachmentType.Accepts(type, exact: true);
                 default:
                     return type.Kind == DKind.Unknown;
             }
@@ -2022,9 +1995,6 @@ namespace Microsoft.PowerFx.Core.Types
                     throw new NotImplementedException("This should be overriden");
                 case DKind.DataEntity:
                     accepts = AcceptsEntityType(type);
-                    break;
-                case DKind.Attachment:
-                    accepts = AcceptsAttachmentType(type);
                     break;
                 case DKind.Metadata:
                     accepts = (type.Kind == Kind &&
@@ -2920,7 +2890,6 @@ namespace Microsoft.PowerFx.Core.Types
             IExpandInfo expandInfo,
             IPolymorphicInfo polymorphicInfo,
             IDataColumnMetadata metadata,
-            DType attachmentType,
             bool isFile,
             bool isLargeImage,
             HashSet<IExternalTabularDataSource> associatedDataSources,
@@ -2936,7 +2905,6 @@ namespace Microsoft.PowerFx.Core.Types
             ExpandInfo = expandInfo;
             PolymorphicInfo = polymorphicInfo;
             Metadata = metadata;
-            _attachmentType = attachmentType;
             _isFile = isFile;
             _isLargeImage = isLargeImage;
             AssociatedDataSources = associatedDataSources;
@@ -3350,8 +3318,6 @@ namespace Microsoft.PowerFx.Core.Types
                     return "M";
                 case DKind.ObjNull:
                     return "N";
-                case DKind.Attachment:
-                    return "A";
                 case DKind.OptionSet:
                     return "L";
                 case DKind.OptionSetValue:

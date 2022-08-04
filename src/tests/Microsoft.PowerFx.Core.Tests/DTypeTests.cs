@@ -136,7 +136,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal(DKind.Record, DType.EmptyRecord.Kind);
             Assert.Equal(DKind.Table, DType.EmptyTable.Kind);
             Assert.Equal(DKind.Enum, DType.EmptyEnum.Kind);
-            Assert.Equal(DKind.Attachment, AttachmentType.Kind);
+            Assert.Equal(DKind.LazyTable, AttachmentType.Kind);
             Assert.Equal(DKind.OptionSet, OptionSetType.Kind);
             Assert.Equal(DKind.Table, MultiSelectOptionSetType.Kind);
             Assert.Equal(DKind.Date, DType.Date.Kind);
@@ -296,7 +296,7 @@ namespace Microsoft.PowerFx.Tests
 
             DType type5 = type1.Add(new DName("Attachments"), AttachmentType);
             fError = false;
-            newType = type1.DropAllOfKind(ref fError, DPath.Root, DKind.Attachment);
+            newType = type1.DropAllMatching(ref fError, DPath.Root, type => type.IsAttachment);
             Assert.Equal(TestUtils.DT("*[A:n, B:n, C:s]"), newType);
 
             DType type6 = type1.Add(new DName("Polymorphic"), DType.Polymorphic);

@@ -21,13 +21,17 @@ namespace Microsoft.PowerFx.Core.Entities
             { DKind.String, new[] { DataFormat.AllowedValues, DataFormat.Email, DataFormat.Multiline, DataFormat.Phone } },
             { DKind.Record, new[] { DataFormat.Lookup } },
             { DKind.Table, new[] { DataFormat.Lookup } },
-            { DKind.Attachment, new[] { DataFormat.Attachment } },
             { DKind.OptionSetValue, new[] { DataFormat.Lookup } }
         };
 
-        public static DataFormat[] GetValidDataFormats(DKind dkind)
+        public static DataFormat[] GetValidDataFormats(DType dtype)
         {
-            return _validDataFormatsPerDKind.TryGetValue(dkind, out var validFormats) ? validFormats : NoValidFormat;
+            if (dtype.IsAttachment)
+            {
+                return new[] { DataFormat.Attachment };
+            }
+
+            return _validDataFormatsPerDKind.TryGetValue(dtype.Kind, out var validFormats) ? validFormats : NoValidFormat;
         }
     }
 }
