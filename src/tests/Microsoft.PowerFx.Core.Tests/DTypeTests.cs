@@ -108,7 +108,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal("m", DType.Media.ToString());
             Assert.Equal("g", DType.Guid.ToString());
             Assert.Equal("o", DType.Blob.ToString());
-            Assert.Equal("A", AttachmentType.ToString());
+            Assert.Equal("r*", AttachmentType.ToString());
             Assert.Equal("T", DType.Time.ToString());
             Assert.Equal("D", DType.Date.ToString());
             Assert.Equal("N", DType.ObjNull.ToString());
@@ -487,8 +487,10 @@ namespace Microsoft.PowerFx.Tests
             Assert.False(DType.EmptyRecord.Accepts(AttachmentType));
             Assert.False(AttachmentType.Accepts(DType.EmptyRecord));
 
-            Assert.False(DType.EmptyTable.Accepts(AttachmentType));
+            Assert.True(DType.EmptyTable.Accepts(AttachmentType));
             Assert.False(AttachmentType.Accepts(DType.EmptyTable));
+            
+            Assert.True(DType.EmptyRecord.Accepts(AttachmentType.ToRecord()));
         }
         
         [Fact]
@@ -542,7 +544,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.False(DType.Color.IsAggregate);
             Assert.False(DType.Guid.IsAggregate);
             Assert.False(DType.Polymorphic.IsAggregate);
-            Assert.False(AttachmentType.IsAggregate);
+            Assert.True(AttachmentType.IsAggregate);
 
             Assert.True(DType.TryParse("%n[A:1,B:2]", out DType type));
             Assert.False(type.IsAggregate);
@@ -595,9 +597,9 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void AttachmentdataDTypes()
         {
-            // Attachment types are neither aggregate nor primitive
+            // Attachment types are aggregate (implemented as lazy types)
             Assert.False(AttachmentType.IsPrimitive);
-            Assert.False(AttachmentType.IsAggregate);
+            Assert.True(AttachmentType.IsAggregate);
 
             Assert.True(AttachmentType.IsAttachment);
             Assert.NotNull(AttachmentType.AttachmentType);
@@ -2098,11 +2100,11 @@ namespace Microsoft.PowerFx.Tests
             //Attachment
             var type1 = DType.CreateAttachmentType(DType.CreateAttachmentType(DType.CreateTable(new TypedName(DType.String, new DName("DisplayName")))));
             var type2 = DType.CreateAttachmentType(DType.CreateAttachmentType(DType.CreateTable(new TypedName(DType.String, new DName("Name")))));
-            TestUnion(type1, type1, type1);
-            TestUnion(type1, type2, DType.Error);
-            TestUnion(type2, type2, type2);
-            TestUnion(DType.Unknown, type1, type1);
-            TestUnion(DType.ObjNull, type1, type1);
+            TestUnion(type1, type1, type1.LazyTypeProvider.GetExpandedType(type1.IsTable));
+            TestUnion(type1, type2, TestUtils.DT("*[DisplayName:s, Name:s]"));
+            TestUnion(type2, type2, type2.LazyTypeProvider.GetExpandedType(type2.IsTable));
+            TestUnion(DType.Unknown, type1, type1.LazyTypeProvider.GetExpandedType(type1.IsTable));
+            TestUnion(DType.ObjNull, type1, type1.LazyTypeProvider.GetExpandedType(type1.IsTable));
         }
         
         [Fact]
