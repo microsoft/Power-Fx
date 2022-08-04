@@ -40,7 +40,7 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("Foo(): Number => { 1+1; 2+2 };")]
+        [InlineData("Foo(): Number => { 1+1; 2+2; };")]
         public void TestChaining(string script)
         {
             var parsedUDFs = new ParsedUDFs(script);

@@ -256,6 +256,7 @@ namespace Microsoft.PowerFx.Tests
                 "foo",
                 "x * y",
                 FormulaType.Number,
+                false,
                 new NamedFormulaType("x", FormulaType.Number),
                 new NamedFormulaType("y", FormulaType.Number))).Errors;
             Assert.False(enumerable.Any());
@@ -273,6 +274,7 @@ namespace Microsoft.PowerFx.Tests
                     "foo",
                     body,
                     FormulaType.Number,
+                    false,
                     new NamedFormulaType("x", FormulaType.Number))).Errors;
             var result = recalcEngine.Eval("foo(0)");
             Assert.Equal(2.0, result.ToObject());
@@ -288,7 +290,8 @@ namespace Microsoft.PowerFx.Tests
                 new UDFDefinition(
                     "foo",
                     "foo()",
-                    FormulaType.Blank)).Errors.Any());
+                    FormulaType.Blank,
+                    false)).Errors.Any());
             var result = recalcEngine.Eval("foo()");
             Assert.IsType<ErrorValue>(result);
         }
@@ -307,7 +310,7 @@ namespace Microsoft.PowerFx.Tests
             var variable = new NamedFormulaType("x", FormulaType.Number);
 
             Assert.False(recalcEngine.DefineFunctions(
-                new UDFDefinition(funcName, body, returnType, variable)).Errors.Any());
+                new UDFDefinition(funcName, body, returnType, false, variable)).Errors.Any());
             Assert.Equal(1.0, recalcEngine.Eval("hailstone(192)").ToObject());
         }
 
@@ -326,11 +329,13 @@ namespace Microsoft.PowerFx.Tests
                 "odd",
                 bodyOdd,
                 FormulaType.Boolean,
+                false,
                 new NamedFormulaType("number", FormulaType.Number));
             var udfEven = new UDFDefinition(
                 "even",
                 bodyEven,
                 FormulaType.Boolean,
+                false,
                 new NamedFormulaType("number", FormulaType.Number));
 
             Assert.False(recalcEngine.DefineFunctions(udfOdd, udfEven).Errors.Any());
@@ -345,8 +350,8 @@ namespace Microsoft.PowerFx.Tests
             var config = new PowerFxConfig(null);
             var recalcEngine = new RecalcEngine(config);
             Assert.Throws<InvalidOperationException>(() => recalcEngine.DefineFunctions(
-                new UDFDefinition("foo", "foo()", FormulaType.Blank),
-                new UDFDefinition("foo", "x+1", FormulaType.Number)));
+                new UDFDefinition("foo", "foo()", FormulaType.Blank, false),
+                new UDFDefinition("foo", "x+1", FormulaType.Number, false)));
         }
 
         [Fact]
@@ -354,7 +359,7 @@ namespace Microsoft.PowerFx.Tests
         {
             var config = new PowerFxConfig(null);
             var recalcEngine = new RecalcEngine(config);
-            Assert.True(recalcEngine.DefineFunctions(new UDFDefinition("foo", "x[", FormulaType.Blank)).Errors.Any());
+            Assert.True(recalcEngine.DefineFunctions(new UDFDefinition("foo", "x[", FormulaType.Blank, false)).Errors.Any());
         }
 
         [Fact]
@@ -362,7 +367,7 @@ namespace Microsoft.PowerFx.Tests
         {
             var config = new PowerFxConfig(null);
             var recalcEngine = new RecalcEngine(config);
-            Assert.False(recalcEngine.DefineFunctions(new UDFDefinition("foo", "x+1", FormulaType.Number, new NamedFormulaType("x", FormulaType.Number))).Errors.Any());
+            Assert.False(recalcEngine.DefineFunctions(new UDFDefinition("foo", "x+1", FormulaType.Number, false, new NamedFormulaType("x", FormulaType.Number))).Errors.Any());
             Assert.False(recalcEngine.Check("foo(False)").IsSuccess);
             Assert.False(recalcEngine.Check("foo(Table( { Value: \"Strawberry\" }, { Value: \"Vanilla\" } ))").IsSuccess);
             Assert.True(recalcEngine.Check("foo(1)").IsSuccess);
@@ -760,13 +765,13 @@ namespace Microsoft.PowerFx.Tests
         public void TestMultiReturn()
         {
             var recalcEngine = new RecalcEngine(new PowerFxConfig(null));
-            var str = "Foo(): Number => { 1+1; 2+2; };";
+            var str = "Foo(x: Number): Number => { 1+1; 2+2; };";
             foreach (var error in recalcEngine.DefineFunctions(str).Errors)
             {
                 Debug.WriteLine($"{error} frag: {error.Span.GetFragment(str)}");
             }
 
-            Assert.Equal(4.0, recalcEngine.Eval("Foo()").ToObject());
+            Assert.Equal(4.0, recalcEngine.Eval("Foo(1)", null, new ParserOptions { AllowsSideEffects = true }).ToObject());
         }
 
         #region Test
