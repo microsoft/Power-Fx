@@ -109,17 +109,8 @@ namespace Microsoft.PowerFx.Core.Parser
             return new ParseUDFsResult(udfs, _errors);
         }
 
-        private bool ParseUDF(List<UDF> udfs)
+        private bool ParseUDFArgs(HashSet<UDFArg> args)
         {
-            // <udf> ::= IDENT '(' <args> ')' ':' IDENT '=>' <function-body>
-            ParseTrivia();
-            var ident = TokEat(TokKind.Ident);
-            if (ident == null)
-            {
-                return false;
-            }
-
-            var args = new Dictionary<string, UDFArg>();
             if (TokEat(TokKind.ParenOpen) == null)
             {
                 return false;
@@ -138,12 +129,8 @@ namespace Microsoft.PowerFx.Core.Parser
                 ParseTrivia();
                 var varType = TokEat(TokKind.Ident);
                 ParseTrivia();
-                if (args.ContainsKey(varIdent.ToString()))
-                {
-                    return false;
-                }
 
-                args.Add(varIdent.ToString(), new UDFArg(varIdent.As<IdentToken>(), varType.As<IdentToken>()));
+                args.Add(new UDFArg(varIdent.As<IdentToken>(), varType.As<IdentToken>()));
                 if (_curs.TokCur.Kind != TokKind.ParenClose && _curs.TokCur.Kind != TokKind.Comma)
                 {
                     ErrorTid(_curs.TokCur, TokKind.Comma);
@@ -156,6 +143,25 @@ namespace Microsoft.PowerFx.Core.Parser
             }
 
             TokEat(TokKind.ParenClose);
+            return true;
+        }
+
+        private bool ParseUDF(List<UDF> udfs)
+        {
+            // <udf> ::= IDENT '(' <args> ')' ':' IDENT '=>' <function-body>
+            ParseTrivia();
+            var ident = TokEat(TokKind.Ident);
+            if (ident == null)
+            {
+                return false;
+            }
+
+            var args = new HashSet<UDFArg>();
+
+            if (!ParseUDFArgs(args))
+            {
+                return false;
+            }
 
             ParseTrivia();
 
@@ -196,7 +202,7 @@ namespace Microsoft.PowerFx.Core.Parser
                     return false;
                 }
 
-                udfs.Add(new UDF(ident.As<IdentToken>(), returnType.As<IdentToken>(), new HashSet<UDFArg>(args.Values), result1, _hasSemicolon));
+                udfs.Add(new UDF(ident.As<IdentToken>(), returnType.As<IdentToken>(), new HashSet<UDFArg>(args), result1, _hasSemicolon));
                 return true;
             }
 
@@ -204,7 +210,7 @@ namespace Microsoft.PowerFx.Core.Parser
 
             var result = ParseExpr(Precedence.None);
             ParseTrivia();
-            udfs.Add(new UDF(ident.As<IdentToken>(), returnType.As<IdentToken>(), new HashSet<UDFArg>(args.Values), result, false));
+            udfs.Add(new UDF(ident.As<IdentToken>(), returnType.As<IdentToken>(), new HashSet<UDFArg>(args), result, false));
             return true;
         }
 
