@@ -2640,12 +2640,19 @@ namespace Microsoft.PowerFx.Core.Binding
                     }
 
                     // scalar in table: RHS must be a one column table. We'll allow coercion.
-                    if (typeRight.IsTable && !typeRight.IsMultiSelectOptionSet())
+                    if (typeRight.IsTable)
                     {
                         var names = typeRight.GetNames(DPath.Root);
                         if (names.Count() != 1)
                         {
                             _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, right, TexlStrings.ErrInvalidSchemaNeedCol);
+                            return false;
+                        }
+
+                        // restrict scalar in multiselect optionset table. (Not TableA.OptionsetColumn)
+                        if (typeRight.IsMultiSelectOptionSet() && typeLeft.AssociatedDataSources?.Count == 0)
+                        {
+                            _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, left, TexlStrings.ErrBadType_Type, typeLeft.GetKindString());
                             return false;
                         }
 
