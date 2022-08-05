@@ -766,11 +766,7 @@ namespace Microsoft.PowerFx.Tests
         {
             var recalcEngine = new RecalcEngine(new PowerFxConfig(null));
             var str = "Foo(x: Number): Number => { 1+1; 2+2; };";
-            foreach (var error in recalcEngine.DefineFunctions(str).Errors)
-            {
-                Debug.WriteLine($"{error} frag: {error.Span.GetFragment(str)}");
-            }
-
+            recalcEngine.DefineFunctions(str);
             Assert.Equal(4.0, recalcEngine.Eval("Foo(1)", null, new ParserOptions { AllowsSideEffects = true }).ToObject());
         }
 

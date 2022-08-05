@@ -23,11 +23,11 @@ namespace Microsoft.PowerFx.Interpreter.UDF
             _engine = engine;
             _expressionText = expressionText;
             _parameterType = parameterType;
-            ParserOptions = new ParserOptions();
-
-            // If culture isn't explicitly set, use the one from PowerFx Config
-            ParserOptions.Culture ??= _engine.Config.CultureInfo;
-            ParserOptions.AllowsSideEffects = isImperative;
+            ParserOptions = new ParserOptions()
+            {
+                Culture = _engine.Config.CultureInfo,
+                AllowsSideEffects = isImperative,
+            };
         }
 
         public CheckResult Get() => _engine.Check(_expressionText, _parameterType, ParserOptions);

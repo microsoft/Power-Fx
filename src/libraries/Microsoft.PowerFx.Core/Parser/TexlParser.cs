@@ -870,9 +870,6 @@ namespace Microsoft.PowerFx.Core.Parser
                     _curs.TokMove();
                     return ParseOperand();
 
-                /*case TokKind.CurlyClose:
-                    return ParseOperand();*/
-
                 // Any other input should cause parsing errors.
                 default:
                     return CreateError(_curs.TokMove(), TexlStrings.ErrBadToken);
