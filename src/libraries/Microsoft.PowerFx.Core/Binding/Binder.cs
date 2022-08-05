@@ -2649,13 +2649,6 @@ namespace Microsoft.PowerFx.Core.Binding
                             return false;
                         }
 
-                        // restrict scalar in multiselect optionset table. (Not TableA.OptionsetColumn)
-                        if (typeRight.IsMultiSelectOptionSet() && typeLeft.AssociatedDataSources?.Count == 0)
-                        {
-                            _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, left, TexlStrings.ErrBadType_Type, typeLeft.GetKindString());
-                            return false;
-                        }
-
                         var typedName = names.Single();
                         if (typedName.Type.Accepts(typeLeft) || typeLeft.Accepts(typedName.Type))
                         {
@@ -2674,7 +2667,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     }
 
                     // scalar in record or multiSelectOptionSet table: not supported. Flag an error on the RHS.
-                    Contracts.Assert(typeRight.IsRecord || typeRight.IsMultiSelectOptionSet());
+                    Contracts.Assert(typeRight.IsRecord);
                     _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, right, TexlStrings.ErrBadType_Type, typeRight.GetKindString());
                     return false;
                 }

@@ -299,6 +299,12 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
                 return true;
             }
 
+            if ((leftType.IsMultiSelectOptionSet() && !rightType.IsAggregate) || (rightType.IsMultiSelectOptionSet() && !leftType.IsAggregate))
+            {
+                SuggestDelegationHint(node, binding);
+                return false;
+            }
+
             if (!DoCoercionCheck(binaryOpNode, metadata, binding))
             {
                 SuggestDelegationHint(node, binding);
