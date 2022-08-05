@@ -146,7 +146,7 @@ namespace Microsoft.PowerFx.Core.Parser
                 args.Add(varIdent.ToString(), new UDFArg(varIdent.As<IdentToken>(), varType.As<IdentToken>()));
                 if (_curs.TokCur.Kind != TokKind.ParenClose && _curs.TokCur.Kind != TokKind.Comma)
                 {
-                    CreateError(_curs.TokCur, TexlStrings.ErrUDF_MissingComma);
+                    ErrorTid(_curs.TokCur, TokKind.Comma);
                     return false;
                 }
                 else if (_curs.TokCur.Kind == TokKind.Comma)
