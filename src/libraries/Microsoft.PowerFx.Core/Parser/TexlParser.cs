@@ -191,6 +191,7 @@ namespace Microsoft.PowerFx.Core.Parser
                 ParseTrivia();
                 if (TokEat(TokKind.CurlyClose) == null)
                 {
+                    _flagsMode.Pop();
                     return false;
                 }
 
@@ -199,12 +200,9 @@ namespace Microsoft.PowerFx.Core.Parser
                 return true;
             }
 
-            _flagsMode.Push(Flags.NamedFormulas);
-
             var result = ParseExpr(Precedence.None);
             ParseTrivia();
             udfs.Add(new UDF(ident.As<IdentToken>(), returnType.As<IdentToken>(), new HashSet<UDFArg>(args), result, false));
-            _flagsMode.Pop();
             return true;
         }
 
