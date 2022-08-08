@@ -22,7 +22,7 @@ namespace Microsoft.PowerFx.Connectors
 
         private static string GetUriElement(this OpenApiDocument openApiDocument, Func<Uri, string> getElement)
         {
-            if (openApiDocument.Servers == null)
+            if (openApiDocument?.Servers == null)
             {
                 return null;
             }
