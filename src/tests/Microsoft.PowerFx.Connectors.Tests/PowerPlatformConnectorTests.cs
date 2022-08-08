@@ -25,10 +25,10 @@ namespace Microsoft.PowerFx.Tests
 
             using var httpClient = new HttpClient(testConnector);
             using var client = new PowerPlatformConnectorClient(
-                "firstrelease-001.azure-apim.net", // endpoint
-                "839eace6-59ab-4243-97ec-a5b8fcc104e4", // environment
+                "firstrelease-001.azure-apim.net",                         // endpoint
+                "839eace6-59ab-4243-97ec-a5b8fcc104e4",                    // environment
                 "shared-msnweather-8d08e763-937a-45bf-a2ea-c5ed-ecc70ca4", // connectionId
-                () => "AuthToken1",
+                async () => "AuthToken1",                                  // async
                 httpClient)
             {
                 SessionId = "MySessionId"
@@ -75,7 +75,7 @@ namespace Microsoft.PowerFx.Tests
         public async Task AzureBlobConnector_UploadFile()
         {
             using var testConnector = new LoggingTestServer(@"Swagger\AzureBlobStorage.json");
-            var apiDoc = testConnector._apiDocument;                       
+            var apiDoc = testConnector._apiDocument;
             var config = new PowerFxConfig();
             var token = @"AuthToken2";
 
@@ -84,7 +84,7 @@ namespace Microsoft.PowerFx.Tests
                 "firstrelease-001.azure-apim.net",      // endpoint
                 "839eace6-59ab-4243-97ec-a5b8fcc104e4", // environment
                 "453f61fa88434d42addb987063b1d7d2",     // connectionId
-                () => $"{token}",
+                () => $"{token}",                       // synchronous
                 httpClient)
             {
                 SessionId = "ccccbff3-9d2c-44b2-bee6-cf24aab10b7e"
@@ -97,15 +97,15 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal(funcNames, new string[] { "AppendFile", "CopyFile", "CopyFile_Old", "CreateFile", "CreateFile_Old", "DeleteFile", "DeleteFile_Old", "ExtractFolder_Old", "ExtractFolderV2", "GetDataSetsMetadata", "GetFileContent", "GetFileContent_Old", "GetFileContentByPath", "GetFileContentByPath_Old", "GetFileMetadata", "GetFileMetadata_Old", "GetFileMetadataByPath", "GetFileMetadataByPath_Old", "ListAllRootFolders", "ListAllRootFoldersV2", "ListFolder", "ListFolder_Old", "ListFolderV2", "ListRootFolder", "ListRootFolder_Old", "ListRootFolderV2", "TestConnection", "UpdateFile", "UpdateFile_Old" });
 
             // Now execute it...
-            var engine = new RecalcEngine(config);            
+            var engine = new RecalcEngine(config);
             testConnector.SetResponseFromFile(@"Responses\AzureBlobStorage_Response.json");
 
             var result = await engine.EvalAsync(
                 @"AzureBlobStorage.CreateFile(""container"", ""bora1.txt"", ""abc"").Size",
-                CancellationToken.None, 
+                CancellationToken.None,
                 options: new ParserOptions() { AllowsSideEffects = true });
 
-            dynamic res = result.ToObject();                       
+            dynamic res = result.ToObject();
             var size = (double)res;
 
             Assert.Equal(3.0, size);
@@ -130,7 +130,7 @@ namespace Microsoft.PowerFx.Tests
  [content-header] Content-Type: text/plain; charset=utf-8
  [body] abc
 ";
-            
+
             Assert.Equal(expected, actual);
         }
 
