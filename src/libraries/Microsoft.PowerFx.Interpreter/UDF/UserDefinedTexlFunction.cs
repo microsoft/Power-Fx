@@ -18,6 +18,8 @@ namespace Microsoft.PowerFx.Interpreter
 
         public override bool SupportsParamCoercion => false;
 
+        public override bool IsSelfContained => !_check.ParserOptions.AllowsSideEffects;
+
         public UserDefinedTexlFunction(string name, FormulaType returnType, IEnumerable<NamedFormulaType> parameterNames, CheckWrapper lazyCheck)
             : base(name, returnType, parameterNames.Select(x => x.Type).ToArray())
         {
