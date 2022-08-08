@@ -26,7 +26,7 @@ namespace Microsoft.PowerFx.Core.Types
         public LazyTypeProvider(AggregateType type)
         {
             // Ensure we aren't trying to wrap a Known type as lazy. This would cause StackOverflows when calling Equals()
-            Contracts.Assert(type is not KnownTableType and not KnownRecordType);
+            Contracts.Assert(type is not KnownRecordType and not TableType);
 
             BackingFormulaType = type;
         }
