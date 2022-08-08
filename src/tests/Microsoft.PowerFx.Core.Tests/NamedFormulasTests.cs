@@ -40,6 +40,18 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
+        [InlineData("Rec4\n(x\n: \nNumber\n)\n: \nNumber \n=>\n \n{\n \n{ force: 1, goo: x }\n \n}\n;\n" +
+                    "Rec5      (     x     :      Number    )    :    Number   =>    {     \"asfd\";     { force: 1, goo: x }     }     ;    " +
+                    "Rec6/*comment*/(/*comment*/x/*comment*/:/*comment*/ Number/*comment*/)/*comment*/:/*comment*/ Number/*comment*/ =>/*comment*/ x/*comment*/ + 1/*comment*/;/*comment*/" +
+                    "Rec7//comment\n(//comment\nx//comment\n://comment\n Number//comment\n)://comment\n Number//comment\n =>//comment\n { x + 1 }//comment\n;")]
+        public void DefFunctionWeirdFormatting(string script)
+        {
+            var parsedUDFs = new ParsedUDFs(script);
+            var result = parsedUDFs.GetParsed();
+            Assert.False(result.HasError);
+        }
+
+        [Theory]
         [InlineData("Foo(): Number => { 1+1; 2+2; };")]
         public void TestChaining(string script)
         {

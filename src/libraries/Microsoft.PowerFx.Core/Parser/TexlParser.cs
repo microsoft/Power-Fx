@@ -116,6 +116,7 @@ namespace Microsoft.PowerFx.Core.Parser
                 return false;
             }
 
+            ParseTrivia();
             while (_curs.TokCur.Kind != TokKind.ParenClose)
             {
                 ParseTrivia();
@@ -142,6 +143,8 @@ namespace Microsoft.PowerFx.Core.Parser
                 }
             }
 
+            ParseTrivia();
+
             TokEat(TokKind.ParenClose);
             return true;
         }
@@ -156,6 +159,7 @@ namespace Microsoft.PowerFx.Core.Parser
                 return false;
             }
 
+            ParseTrivia();
             var args = new HashSet<UDFArg>();
 
             if (!ParseUDFArgs(args))
@@ -195,14 +199,14 @@ namespace Microsoft.PowerFx.Core.Parser
                 _hasSemicolon = false;
                 ParseTrivia();
                 _flags = Flags.EnableExpressionChaining;
-                var result1 = ParseExpr(Precedence.None);
+                var exp_result = ParseExpr(Precedence.None);
                 ParseTrivia();
                 if (TokEat(TokKind.CurlyClose) == null)
                 {
                     return false;
                 }
 
-                udfs.Add(new UDF(ident.As<IdentToken>(), returnType.As<IdentToken>(), new HashSet<UDFArg>(args), result1, _hasSemicolon));
+                udfs.Add(new UDF(ident.As<IdentToken>(), returnType.As<IdentToken>(), new HashSet<UDFArg>(args), exp_result, _hasSemicolon));
                 return true;
             }
 
