@@ -188,15 +188,15 @@ namespace Microsoft.PowerFx.Core.Parser
                 ParseTrivia();
                 _flagsMode.Push(Flags.EnableExpressionChaining);
                 var exp_result = ParseExpr(Precedence.None);
+                _flagsMode.Pop();
                 ParseTrivia();
                 if (TokEat(TokKind.CurlyClose) == null)
                 {
-                    _flagsMode.Pop();
                     return false;
                 }
 
                 udfs.Add(new UDF(ident.As<IdentToken>(), returnType.As<IdentToken>(), new HashSet<UDFArg>(args), exp_result, _hasSemicolon));
-                _flagsMode.Pop();
+                
                 return true;
             }
 
