@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Linq;
 using System.Net.Http;
 using System.Threading;
@@ -16,23 +17,36 @@ namespace Microsoft.PowerFx.Tests
     public class PowerPlatformConnectorTests : PowerFxTest
     {
         // Exercise calling the MSNWeather connector against mocked Swagger and Response.json. 
-        [Fact]
-        public async Task MSNWeatherConnector_CurrentWeather()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task MSNWeatherConnector_CurrentWeather(bool useSwaggerParameter)
         {
             using var testConnector = new LoggingTestServer(@"Swagger\MSNWeather.json");
             var apiDoc = testConnector._apiDocument;
             var config = new PowerFxConfig();
 
             using var httpClient = new HttpClient(testConnector);
-            using var client = new PowerPlatformConnectorClient(
-                "firstrelease-001.azure-apim.net", // endpoint
-                "839eace6-59ab-4243-97ec-a5b8fcc104e4", // environment
-                "shared-msnweather-8d08e763-937a-45bf-a2ea-c5ed-ecc70ca4", // connectionId
-                () => "AuthToken1",
-                httpClient)
-            {
-                SessionId = "MySessionId"
-            };
+
+            using var client = useSwaggerParameter ?
+                new PowerPlatformConnectorClient(
+                    apiDoc,                                                     // Swagger file
+                    "839eace6-59ab-4243-97ec-a5b8fcc104e4",                     // environment
+                    "shared-msnweather-8d08e763-937a-45bf-a2ea-c5ed-ecc70ca4",  // connectionId
+                    () => "AuthToken1",
+                    httpClient)
+                {
+                    SessionId = "MySessionId"
+                }
+                : new PowerPlatformConnectorClient(
+                    "firstrelease-001.azure-apim.net",                          // endpoint
+                    "839eace6-59ab-4243-97ec-a5b8fcc104e4",                     // environment
+                    "shared-msnweather-8d08e763-937a-45bf-a2ea-c5ed-ecc70ca4",  // connectionId
+                    () => "AuthToken1",
+                    httpClient)
+                {
+                    SessionId = "MySessionId"
+                };
 
             var funcs = config.AddService("MSNWeather", apiDoc, client);
 
@@ -71,24 +85,36 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal(expected, actual);
         }
 
-        [Fact]
-        public async Task AzureBlobConnector_UploadFile()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task AzureBlobConnector_UploadFile(bool useSwaggerParameter)
         {
             using var testConnector = new LoggingTestServer(@"Swagger\AzureBlobStorage.json");
-            var apiDoc = testConnector._apiDocument;                       
+            var apiDoc = testConnector._apiDocument;
             var config = new PowerFxConfig();
             var token = @"AuthToken2";
 
             using var httpClient = new HttpClient(testConnector);
-            using var client = new PowerPlatformConnectorClient(
-                "firstrelease-001.azure-apim.net",      // endpoint
-                "839eace6-59ab-4243-97ec-a5b8fcc104e4", // environment
-                "453f61fa88434d42addb987063b1d7d2",     // connectionId
-                () => $"{token}",
-                httpClient)
-            {
-                SessionId = "ccccbff3-9d2c-44b2-bee6-cf24aab10b7e"
-            };
+            using var client = useSwaggerParameter ?
+                new PowerPlatformConnectorClient(
+                    apiDoc,                                 // Swagger file
+                    "839eace6-59ab-4243-97ec-a5b8fcc104e4", // environment
+                    "453f61fa88434d42addb987063b1d7d2",     // connectionId
+                    () => $"{token}",
+                    httpClient)
+                {
+                    SessionId = "ccccbff3-9d2c-44b2-bee6-cf24aab10b7e"
+                }
+                : new PowerPlatformConnectorClient(
+                    "firstrelease-001.azure-apim.net",      // endpoint
+                    "839eace6-59ab-4243-97ec-a5b8fcc104e4", // environment
+                    "453f61fa88434d42addb987063b1d7d2",     // connectionId
+                    () => $"{token}",
+                    httpClient)
+                {
+                    SessionId = "ccccbff3-9d2c-44b2-bee6-cf24aab10b7e"
+                };
 
             var funcs = config.AddService("AzureBlobStorage", apiDoc, client);
 
@@ -97,15 +123,15 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal(funcNames, new string[] { "AppendFile", "CopyFile", "CopyFile_Old", "CreateFile", "CreateFile_Old", "DeleteFile", "DeleteFile_Old", "ExtractFolder_Old", "ExtractFolderV2", "GetDataSetsMetadata", "GetFileContent", "GetFileContent_Old", "GetFileContentByPath", "GetFileContentByPath_Old", "GetFileMetadata", "GetFileMetadata_Old", "GetFileMetadataByPath", "GetFileMetadataByPath_Old", "ListAllRootFolders", "ListAllRootFoldersV2", "ListFolder", "ListFolder_Old", "ListFolderV2", "ListRootFolder", "ListRootFolder_Old", "ListRootFolderV2", "TestConnection", "UpdateFile", "UpdateFile_Old" });
 
             // Now execute it...
-            var engine = new RecalcEngine(config);            
+            var engine = new RecalcEngine(config);
             testConnector.SetResponseFromFile(@"Responses\AzureBlobStorage_Response.json");
 
             var result = await engine.EvalAsync(
                 @"AzureBlobStorage.CreateFile(""container"", ""bora1.txt"", ""abc"").Size",
-                CancellationToken.None, 
+                CancellationToken.None,
                 options: new ParserOptions() { AllowsSideEffects = true });
 
-            dynamic res = result.ToObject();                       
+            dynamic res = result.ToObject();
             var size = (double)res;
 
             Assert.Equal(3.0, size);
@@ -116,9 +142,10 @@ namespace Microsoft.PowerFx.Tests
             var actual = testConnector._log.ToString();
 
             var version = PowerPlatformConnectorClient.Version;
+            var host = useSwaggerParameter ? "tip1-shared.azure-apim.net" : "firstrelease-001.azure-apim.net";
             var expected =
-@$"POST https://firstrelease-001.azure-apim.net/invoke
- authority: firstrelease-001.azure-apim.net
+@$"POST https://{host}/invoke
+ authority: {host}
  Authorization: Bearer {token}
  path: /invoke
  scheme: https
@@ -130,7 +157,7 @@ namespace Microsoft.PowerFx.Tests
  [content-header] Content-Type: text/plain; charset=utf-8
  [body] abc
 ";
-            
+
             Assert.Equal(expected, actual);
         }
 
@@ -166,6 +193,66 @@ namespace Microsoft.PowerFx.Tests
 
             Assert.Equal("units", p1.Label);
             Assert.Equal("The measurement system used for all the meausre values in the request and response. Valid options are 'Imperial' and 'Metric'.", p1.Documentation);
+        }
+
+        [Fact]
+        public void PowerPlatformConnectorClientCtor()
+        {
+            using var httpClient = new HttpClient();
+
+            var ex = Assert.Throws<ArgumentException>(() => new PowerPlatformConnectorClient(
+                "http://firstrelease-001.azure-apim.net:117",  // endpoint not allowed with http scheme
+                "839eace6-59ab-4243-97ec-a5b8fcc104e4",
+                "453f61fa88434d42addb987063b1d7d2",
+                () => "AuthToken",
+                httpClient));
+
+            Assert.Equal("Cannot accept unsecure endpoint", ex.Message);
+
+            using var ppcl1 = new PowerPlatformConnectorClient(
+                "https://firstrelease-001.azure-apim.net:117", // endpoint is valid with https scheme
+                "839eace6-59ab-4243-97ec-a5b8fcc104e4",
+                "453f61fa88434d42addb987063b1d7d2",
+                () => "AuthToken",
+                httpClient);
+
+            Assert.NotNull(ppcl1);
+            Assert.Equal("firstrelease-001.azure-apim.net:117", ppcl1.Endpoint);
+
+            using var ppcl2 = new PowerPlatformConnectorClient(
+                "firstrelease-001.azure-apim.net:117",         // endpoint is valid with no scheme (https assumed)
+                "839eace6-59ab-4243-97ec-a5b8fcc104e4",
+                "453f61fa88434d42addb987063b1d7d2",
+                () => "AuthToken",
+                httpClient);
+
+            Assert.NotNull(ppcl2);
+            Assert.Equal("firstrelease-001.azure-apim.net:117", ppcl2.Endpoint);
+
+            using var testConnector = new LoggingTestServer(@"Swagger\AzureBlobStorage.json");
+            var apiDoc = testConnector._apiDocument;
+
+            using var ppcl3 = new PowerPlatformConnectorClient(
+                apiDoc,                                        // Swagger file with "host" param
+                "839eace6-59ab-4243-97ec-a5b8fcc104e4",
+                "453f61fa88434d42addb987063b1d7d2",
+                () => "AuthToken",
+                httpClient);
+
+            Assert.NotNull(ppcl3);
+            Assert.Equal("tip1-shared.azure-apim.net", ppcl3.Endpoint);
+
+            using var testConnector2 = new LoggingTestServer(@"Swagger\TestOpenAPI.json");
+            var apiDoc2 = testConnector2._apiDocument;
+
+            var ex2 = Assert.Throws<ArgumentException>(() => new PowerPlatformConnectorClient(
+                apiDoc2,                                        // Swagger file without "host" param
+                "839eace6-59ab-4243-97ec-a5b8fcc104e4",
+                "453f61fa88434d42addb987063b1d7d2",
+                () => "AuthToken",
+                httpClient));
+
+            Assert.Equal("Swagger document doesn't contain an endpoint", ex2.Message);
         }
     }
 }
