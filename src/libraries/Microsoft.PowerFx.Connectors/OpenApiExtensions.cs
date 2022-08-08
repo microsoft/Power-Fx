@@ -16,9 +16,13 @@ namespace Microsoft.PowerFx.Connectors
     // https://docs.microsoft.com/en-us/connectors/custom-connectors/openapi-extensions#x-ms-visibility
     public static class OpenApiExtensions
     {
-        public static string GetBasePath(this OpenApiDocument openApiDocument)
-        {            
-            if (openApiDocument.Servers == null)
+        public static string GetBasePath(this OpenApiDocument openApiDocument) => GetUriElement(openApiDocument, (uri) => uri.PathAndQuery);        
+
+        public static string GetAuthority(this OpenApiDocument openApiDocument) => GetUriElement(openApiDocument, (uri) => uri.Authority);        
+
+        private static string GetUriElement(this OpenApiDocument openApiDocument, Func<Uri, string> getElement)
+        {
+            if (openApiDocument?.Servers == null)
             {
                 return null;
             }
@@ -33,8 +37,7 @@ namespace Microsoft.PowerFx.Connectors
                     // Extract BasePath back out from this. 
                     var fullPath = openApiDocument.Servers[0].Url;
                     var uri = new Uri(fullPath);
-                    var basePath = uri.PathAndQuery;
-                    return basePath;
+                    return getElement(uri);
                 default:
                     throw new NotImplementedException($"Multiple servers not supported");
             }
@@ -46,7 +49,7 @@ namespace Microsoft.PowerFx.Connectors
             {
                 return oas.Value;
             }
-           
+
             return null;
         }
 
@@ -55,7 +58,7 @@ namespace Microsoft.PowerFx.Connectors
         {
             // x-ms-enum-values is: array of { value :string, displayName:string}.
             if (param.Extensions.TryGetValue("x-ms-enum-values", out var value))
-            { 
+            {
                 if (value is OpenApiArray array)
                 {
                     var list = new List<string>(array.Capacity);
@@ -175,7 +178,7 @@ namespace Microsoft.PowerFx.Connectors
                         obj = obj.Add(propName, propType);
                     }
 
-                    return obj;                
+                    return obj;
 
                 default:
 
@@ -193,10 +196,10 @@ namespace Microsoft.PowerFx.Connectors
                 OperationType.Delete => HttpMethod.Delete,
                 OperationType.Options => HttpMethod.Options,
                 OperationType.Head => HttpMethod.Head,
-                OperationType.Trace => HttpMethod.Trace,                
+                OperationType.Trace => HttpMethod.Trace,
                 _ => new HttpMethod(key.ToString())
             };
-        }        
+        }
 
         public static FormulaType GetReturnType(this OpenApiOperation op)
         {
@@ -232,7 +235,7 @@ namespace Microsoft.PowerFx.Connectors
                     }
 
                     var responseType = response.Schema.ToFormulaType();
-                    return responseType;                    
+                    return responseType;
                 }
             }
 
@@ -241,7 +244,7 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         // Keep these constants all lower case
-        public const string ContentType_TextJson = "text/json";        
+        public const string ContentType_TextJson = "text/json";
         public const string ContentType_XWwwFormUrlEncoded = "application/x-www-form-urlencoded";
         public const string ContentType_ApplicationJson = "application/json";
         public const string ContentType_TextPlain = "text/plain";
@@ -250,8 +253,8 @@ namespace Microsoft.PowerFx.Connectors
         {
             ContentType_ApplicationJson,
             ContentType_XWwwFormUrlEncoded,
-            ContentType_TextJson            
-        };        
+            ContentType_TextJson
+        };
 
         /// <summary>
         /// Identifies which ContentType and Schema to use.
@@ -264,7 +267,7 @@ namespace Microsoft.PowerFx.Connectors
             Dictionary<string, OpenApiMediaType> list = new ();
 
             foreach (var ct in _knownContentTypes)
-            {                
+            {
                 if (content.TryGetValue(ct, out var mediaType))
                 {
                     if ((ct == ContentType_ApplicationJson && !mediaType.Schema.Properties.Any()) ||
