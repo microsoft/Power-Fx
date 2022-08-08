@@ -163,7 +163,7 @@ namespace Microsoft.PowerFx.Connectors
 
             if (!response.IsSuccessStatusCode)
             {
-                var msg = $"Connector call failed {response.StatusCode}): " + json;
+                var msg = $"Connector call failed ({response.StatusCode}): " + json;
 
                 // $$$ Do any connectors have 40x behavior here in their response code?
                 // or 201 long-ops behavior?
