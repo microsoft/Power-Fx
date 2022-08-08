@@ -57,8 +57,6 @@ namespace Microsoft.PowerFx.Core.Parser
             _curs = new TokenCursor(tokens);
             _flagsMode = new Stack<Flags>();
             _flagsMode.Push(flags);
-
-            //_flags = flags;
         }
 
         public static ParseUDFsResult ParseUDFsScript(string script, CultureInfo loc = null)
