@@ -402,14 +402,41 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
+        private static bool CultureExists(string name)
+        {
+            CultureInfo[] availableCultures =
+                CultureInfo.GetCultures(CultureTypes.AllCultures);
+
+            foreach (CultureInfo culture in availableCultures)
+            {
+                if (string.Equals(culture.Name, name, StringComparison.OrdinalIgnoreCase))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         public static FormulaValue DateTimeParse(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, StringValue[] args)
         {
             var str = args[0].Value;
 
             // argCI will have Cultural info in-case one was passed in argument else it will have the default one.
-            CultureInfo argCI = args.Length > 1 ? new CultureInfo(args[1].Value) : runner.CultureInfo;
+            CultureInfo culture = runner.CultureInfo;
+            if (args.Length > 1)
+            {
+                if (CultureExists(args[1].Value))
+                {
+                    culture = new CultureInfo(args[1].Value);
+                }
+                else
+                {
+                    return CommonErrors.InvalidDateTimeError(irContext);
+                }
+            }
 
-            if (DateTime.TryParse(str, argCI, DateTimeStyles.None, out var result))
+            if (DateTime.TryParse(str, culture, DateTimeStyles.None, out var result))
             {
                 return new DateTimeValue(irContext, result);
             }
@@ -422,6 +449,21 @@ namespace Microsoft.PowerFx.Functions
         public static FormulaValue TimeParse(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, StringValue[] args)
         {
             var str = args[0].Value;
+
+            // argCI will have Cultural info in-case one was passed in argument else it will have the default one.
+            CultureInfo argCI = runner.CultureInfo;
+            if (args.Length > 1)
+            {
+                if (CultureExists(args[1].Value))
+                {
+                    argCI = new CultureInfo(args[1].Value);
+                }
+                else
+                {
+                    return CommonErrors.InvalidDateTimeError(irContext);
+                }
+            }
+
             if (TimeSpan.TryParse(str, runner.CultureInfo, out var result))
             {
                 return new TimeValue(irContext, result);

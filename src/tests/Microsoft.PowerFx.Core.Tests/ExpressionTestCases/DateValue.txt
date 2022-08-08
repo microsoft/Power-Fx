@@ -1,4 +1,4 @@
-
+﻿
 // Use of DateValue, DateTimeValue
 
 >> Text(DateTimeValue("01-01-2001 1:10:20"))
@@ -47,3 +47,18 @@ true
 
 >> Text(DateTimeValue("21-Dec-2016 02:55:00", "EN-US"))
 "12/21/2016 2:55 AM"
+
+>> Text(DateTimeValue("21-Dec-2016 02:55:00", "en-us"))
+"12/21/2016 2:55 AM"
+
+>> Text(DateTimeValue("Thursday 28 July 2022 7:34:03 PM", "EN"))
+"7/28/2022 7:34 PM"
+
+>> Text(DateTimeValue("21.7.2022. 19:34:03", "sr-cyrl-RS"))
+"7/21/2022 7:34 PM"
+
+>> Text(DateTimeValue("2022年07月28日 19:34:03", "ja-JP"))
+"7/28/2022 7:34 PM"
+
+>> Text(DateTimeValue("четвртак 21 јул 2022 19:34:03", "sr-cyrl-RS"))
+"7/21/2022 7:34 PM"
