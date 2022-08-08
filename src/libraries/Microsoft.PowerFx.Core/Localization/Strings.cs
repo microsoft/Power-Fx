@@ -582,7 +582,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrUDF_MissingCloseParen = new ErrorResourceKey("ErrUDF_MissingCloseParen");
         public static ErrorResourceKey ErrUDF_MissingSemicolon = new ErrorResourceKey("ErrUDF_MissingSemicolon");
         public static ErrorResourceKey ErrUDF_MissingComma = new ErrorResourceKey("ErrUDF_MissingComma");
-        public static ErrorResourceKey ErrUDF_MissingAs = new ErrorResourceKey("ErrUDF_MissingAs");
+        public static ErrorResourceKey ErrUDF_MissingColon = new ErrorResourceKey("ErrUDF_MissingColon");
         public static ErrorResourceKey ErrUDF_DuplicateArgName = new ErrorResourceKey("ErrUDF_DuplicateArgName");
 
         // ErrorResourceKey for creating an error from an arbitrary string message. The key resolves to "{0}", meaning

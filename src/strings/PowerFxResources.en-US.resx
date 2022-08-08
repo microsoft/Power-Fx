@@ -6533,8 +6533,8 @@
     <value>User Defined Function is missing a ',' here</value>
     <comment>Error Message</comment>
   </data>
-  <data name="ErrUDF_MissingAs" xml:space="preserve">
-    <value>User Defined Function is missing an 'As' here</value>
+  <data name="ErrUDF_MissingColon" xml:space="preserve">
+    <value>User Defined Function is missing an ':' here</value>
     <comment>Error Message</comment>
   </data>
   <data name="ErrUDF_DuplicateArgName" xml:space="preserve">

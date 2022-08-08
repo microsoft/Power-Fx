@@ -132,7 +132,6 @@ stages:
 
 - stage: API_Compatibility_Validation
   dependsOn: Build
-  condition: and(succeeded(), ne(variables['DisableApiCompatibityValidation'], 'true'))
   variables:
     skipComponentGovernanceDetection: true # the task is already injected into the build job, so skip it here.
   jobs:
@@ -155,6 +154,8 @@ stages:
         tags: |
           Comparing API against v $(GetContract.ContractVersion)
           From ${{ parameters.packageFeed }} feed 
+      condition: and(succeeded(), ne(variables['System.PullRequest.IsFork'], 'True'))
+      continueOnError: true
 
     - powershell: |
         $multiconfig = '{';
@@ -195,7 +196,7 @@ stages:
 
   - job: post_results_to_gitHub
     dependsOn: check_api_for
-    condition: ne(dependencies.generate_multiconfig_var.outputs['generate_var.MULTICONFIG'], '{}')
+    condition: and(succeeded(), ne(dependencies.generate_multiconfig_var.outputs['generate_var.MULTICONFIG'], '{}'), ne(variables['System.PullRequest.IsFork'], 'True'))
 
     steps:
     - checkout: none

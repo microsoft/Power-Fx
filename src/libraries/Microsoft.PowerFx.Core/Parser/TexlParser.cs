@@ -99,9 +99,9 @@ namespace Microsoft.PowerFx.Core.Parser
                     ParseTrivia();
                     var varIdent = TokEat(TokKind.Ident);
                     ParseTrivia();
-                    if (TokEat(TokKind.As) == null)
+                    if (TokEat(TokKind.Colon) == null)
                     {
-                        CreateError(_curs.TokCur, TexlStrings.ErrUDF_MissingAs);
+                        CreateError(_curs.TokCur, TexlStrings.ErrUDF_MissingColon);
                         break;
                     }
 
@@ -130,9 +130,9 @@ namespace Microsoft.PowerFx.Core.Parser
 
                 ParseTrivia();
 
-                if (TokEat(TokKind.As) == null)
+                if (TokEat(TokKind.Colon) == null)
                 {
-                    CreateError(_curs.TokCur, TexlStrings.ErrUDF_MissingAs);
+                    CreateError(_curs.TokCur, TexlStrings.ErrUDF_MissingColon);
                     break;
                 }
 
