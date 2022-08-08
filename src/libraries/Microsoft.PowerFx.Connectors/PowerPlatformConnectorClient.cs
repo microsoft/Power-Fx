@@ -18,7 +18,7 @@ namespace Microsoft.PowerFx.Connectors
         /// For telemetry - assembly version stamp. 
         /// </summary>
         public static string Version { get; } = typeof(PowerPlatformConnectorClient).Assembly.GetName().Version.ToString();
-        
+
         /// <summary>
         /// Session Id for telemetry.
         /// </summary>
@@ -26,7 +26,7 @@ namespace Microsoft.PowerFx.Connectors
 
         private readonly HttpMessageInvoker _client;
 
-        public string ConnectionId { get; } 
+        public string ConnectionId { get; }
 
         // For example, "firstrelease-001.azure-apim.net" 
         public string Endpoint { get; }
@@ -35,11 +35,16 @@ namespace Microsoft.PowerFx.Connectors
         /// Callback to get the auth token. 
         /// Invoke as a callback since token may need to be refreshed. 
         /// </summary>
-        public Func<string> GetAuthToken { get; }
+        public Func<Task<string>> GetAuthToken { get; }
 
         public string EnvironmentId { get; set; }
 
         public PowerPlatformConnectorClient(string endpoint, string environmentId, string connectionId, Func<string> getAuthToken, HttpMessageInvoker httpInvoker = null)
+            : this(endpoint, environmentId, connectionId, async () => getAuthToken(), httpInvoker)
+        {
+        }
+
+        public PowerPlatformConnectorClient(string endpoint, string environmentId, string connectionId, Func<Task<string>> getAuthToken, HttpMessageInvoker httpInvoker = null)
         {
             _client = httpInvoker ?? new HttpClient();
 
@@ -51,15 +56,14 @@ namespace Microsoft.PowerFx.Connectors
             // Must set to allow callers to invoke SendAsync() via other helper methods.
             BaseAddress = new Uri("https://" + endpoint); // Uri.Parse will validate endpoint syntax. 
         }
-                
+
         public override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            using HttpRequestMessage req = Transform(request);
-
-            return await _client.SendAsync(req, cancellationToken);            
+            using HttpRequestMessage req = await Transform(request).ConfigureAwait(false);
+            return await _client.SendAsync(req, cancellationToken).ConfigureAwait(false);
         }
 
-        public HttpRequestMessage Transform(HttpRequestMessage request)
+        public async Task<HttpRequestMessage> Transform(HttpRequestMessage request)
         {
             var url = request.RequestUri.ToString();
             if (request.RequestUri.IsAbsoluteUri)
@@ -72,7 +76,7 @@ namespace Microsoft.PowerFx.Connectors
             url = url.Replace("{connectionId}", ConnectionId);
 
             var method = request.Method;
-            var authToken = GetAuthToken();
+            var authToken = await GetAuthToken().ConfigureAwait(false);
 
             var req = new HttpRequestMessage(HttpMethod.Post, $"https://{Endpoint}/invoke");
             req.Headers.Add("authority", Endpoint);
