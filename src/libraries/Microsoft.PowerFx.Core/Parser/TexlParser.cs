@@ -30,7 +30,7 @@ namespace Microsoft.PowerFx.Core.Parser
         private bool _hasSemicolon = false;
 
         private readonly TokenCursor _curs;
-        private Flags _flags;
+        private readonly Stack<Flags> _flagsMode;
         private List<TexlError> _errors;
 
         // Nodes are assigned an integer id that is used to index into arrays later.
@@ -55,7 +55,10 @@ namespace Microsoft.PowerFx.Core.Parser
 
             _depth = 0;
             _curs = new TokenCursor(tokens);
-            _flags = flags;
+            _flagsMode = new Stack<Flags>();
+            _flagsMode.Push(flags);
+
+            //_flags = flags;
         }
 
         public static ParseUDFsResult ParseUDFsScript(string script, CultureInfo loc = null)
@@ -67,22 +70,6 @@ namespace Microsoft.PowerFx.Core.Parser
             var parser = new TexlParser(formulaTokens, Flags.NamedFormulas);
 
             return parser.ParseUDFs(script);
-        }
-
-        /// <summary>
-        /// If the token is of the right type, it returns it and moves forward.
-        /// This does not post an error if the tok is of the wrong type.
-        /// </summary>
-        /// <param name="tid"></param>
-        /// <returns></returns>
-        private Token TokPlainEat(TokKind tid)
-        {
-            if (_curs.TidCur == tid)
-            {
-                return _curs.TokMove();
-            }
-
-            return null;
         }
 
         private ParseUDFsResult ParseUDFs(string script)
@@ -109,8 +96,9 @@ namespace Microsoft.PowerFx.Core.Parser
             return new ParseUDFsResult(udfs, _errors);
         }
 
-        private bool ParseUDFArgs(HashSet<UDFArg> args)
+        private bool ParseUDFArgs(out HashSet<UDFArg> args)
         {
+            args = new HashSet<UDFArg>();
             if (TokEat(TokKind.ParenOpen) == null)
             {
                 return false;
@@ -160,9 +148,8 @@ namespace Microsoft.PowerFx.Core.Parser
             }
 
             ParseTrivia();
-            var args = new HashSet<UDFArg>();
 
-            if (!ParseUDFArgs(args))
+            if (!ParseUDFArgs(out HashSet<UDFArg> args))
             {
                 return false;
             }
@@ -194,11 +181,12 @@ namespace Microsoft.PowerFx.Core.Parser
 
             ParseTrivia();
 
-            if (TokPlainEat(TokKind.CurlyOpen) != null)
+            if (_curs.TidCur == TokKind.CurlyOpen)
             {
+                _curs.TokMove();
                 _hasSemicolon = false;
                 ParseTrivia();
-                _flags = Flags.EnableExpressionChaining;
+                _flagsMode.Push(Flags.EnableExpressionChaining);
                 var exp_result = ParseExpr(Precedence.None);
                 ParseTrivia();
                 if (TokEat(TokKind.CurlyClose) == null)
@@ -207,14 +195,16 @@ namespace Microsoft.PowerFx.Core.Parser
                 }
 
                 udfs.Add(new UDF(ident.As<IdentToken>(), returnType.As<IdentToken>(), new HashSet<UDFArg>(args), exp_result, _hasSemicolon));
+                _flagsMode.Pop();
                 return true;
             }
 
-            _flags = Flags.NamedFormulas;
+            _flagsMode.Push(Flags.NamedFormulas);
 
             var result = ParseExpr(Precedence.None);
             ParseTrivia();
             udfs.Add(new UDF(ident.As<IdentToken>(), returnType.As<IdentToken>(), new HashSet<UDFArg>(args), result, false));
+            _flagsMode.Pop();
             return true;
         }
 
@@ -685,13 +675,13 @@ namespace Microsoft.PowerFx.Core.Parser
 
                         case TokKind.Semicolon:
                             _hasSemicolon = true;
-                            if (_flags.HasFlag(Flags.NamedFormulas))
+                            if (_flagsMode.Peek().HasFlag(Flags.NamedFormulas))
                             {
                                 goto default;
                             }
 
                             // Only allow this when expression chaining is enabled (e.g. in behavior rules).
-                            if ((_flags & Flags.EnableExpressionChaining) == 0)
+                            if ((_flagsMode.Peek() & Flags.EnableExpressionChaining) == 0)
                             {
                                 goto case TokKind.False;
                             }
