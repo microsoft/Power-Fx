@@ -36,7 +36,7 @@ namespace Microsoft.PowerFx.Connectors
         /// Callback to get the auth token.
         /// Invoke as a callback since token may need to be refreshed. 
         /// </summary>
-        public Func<string> GetAuthToken { get; }
+        public Func<Task<string>> GetAuthToken { get; }
 
         public string EnvironmentId { get; set; }
 
@@ -46,6 +46,11 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         public PowerPlatformConnectorClient(string endpoint, string environmentId, string connectionId, Func<string> getAuthToken, HttpMessageInvoker httpInvoker = null)
+            : this(endpoint, environmentId, connectionId, async () => getAuthToken(), httpInvoker)
+        {
+        }
+
+        public PowerPlatformConnectorClient(string endpoint, string environmentId, string connectionId, Func<Task<string>> getAuthToken, HttpMessageInvoker httpInvoker = null)
         {
             _client = httpInvoker ?? new HttpClient();
 
@@ -72,12 +77,11 @@ namespace Microsoft.PowerFx.Connectors
 
         public override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            using HttpRequestMessage req = Transform(request);
-
-            return await _client.SendAsync(req, cancellationToken);
+            using HttpRequestMessage req = await Transform(request).ConfigureAwait(false);
+            return await _client.SendAsync(req, cancellationToken).ConfigureAwait(false);
         }
 
-        public HttpRequestMessage Transform(HttpRequestMessage request)
+        public async Task<HttpRequestMessage> Transform(HttpRequestMessage request)
         {
             var url = request.RequestUri.ToString();
             if (request.RequestUri.IsAbsoluteUri)
@@ -90,7 +94,7 @@ namespace Microsoft.PowerFx.Connectors
             url = url.Replace("{connectionId}", ConnectionId);
 
             var method = request.Method;
-            var authToken = GetAuthToken();
+            var authToken = await GetAuthToken().ConfigureAwait(false);
 
             var req = new HttpRequestMessage(HttpMethod.Post, $"https://{Endpoint}/invoke");
             req.Headers.Add("authority", Endpoint);

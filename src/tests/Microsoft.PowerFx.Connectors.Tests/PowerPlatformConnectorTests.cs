@@ -108,7 +108,7 @@ namespace Microsoft.PowerFx.Tests
                     SessionId = "ccccbff3-9d2c-44b2-bee6-cf24aab10b7e"
                 }
                 : new PowerPlatformConnectorClient(
-                    (useHttpsPrefix ? "https://" : "") + 
+                    (useHttpsPrefix ? "https://" : string.Empty) + 
                         "firstrelease-001.azure-apim.net",  // endpoint
                     "839eace6-59ab-4243-97ec-a5b8fcc104e4", // environment
                     "453f61fa88434d42addb987063b1d7d2",     // connectionId
