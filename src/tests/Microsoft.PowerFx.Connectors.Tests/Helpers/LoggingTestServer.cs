@@ -31,19 +31,19 @@ namespace Microsoft.PowerFx.Tests
         // Set the response, returned by SendAsync
         public HttpResponseMessage _nextResponse;
 
-        public void SetResponseFromFile(string filename)
+        public void SetResponseFromFile(string filename, HttpStatusCode status = HttpStatusCode.OK)
         {
-            var json = Helpers.ReadAllText(filename);
-            SetResponse(json);
+            var text = Helpers.ReadAllText(filename);
+            SetResponse(text, status);
         }
 
-        public void SetResponse(string json)
+        public void SetResponse(string text, HttpStatusCode status = HttpStatusCode.OK)
         {
             Assert.Null(_nextResponse);
 
-            var response = new HttpResponseMessage(HttpStatusCode.OK)
+            var response = new HttpResponseMessage(status)
             {
-                Content = new StringContent(json, Encoding.UTF8, OpenApiExtensions.ContentType_ApplicationJson)
+                Content = new StringContent(text, Encoding.UTF8, OpenApiExtensions.ContentType_ApplicationJson)
             };
             _nextResponse = response;
         }
@@ -69,18 +69,19 @@ namespace Microsoft.PowerFx.Tests
                 {
                     foreach (var h in httpContent.Headers)
                     {
-                        _log.AppendLine($" [content-header] {h.Key}: {string.Join(", ", h.Value)}");                            
+                        _log.AppendLine($" [content-header] {h.Key}: {string.Join(", ", h.Value)}");
                     }
                 }
 
                 var content = await httpContent.ReadAsStringAsync();
                 if (!string.IsNullOrEmpty(content))
-                {                    
+                {
                     _log.AppendLine($" [body] {content}");
                 }
             }
 
             var response = _nextResponse;
+            response.RequestMessage = request;
             _nextResponse = null;
             return response;
         }

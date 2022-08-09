@@ -5,12 +5,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Connectors.Execution;
+using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors
@@ -160,33 +163,56 @@ namespace Microsoft.PowerFx.Connectors
         {
             // $$$ Do we need to check response media type to confirm that the content is indeed json?
             var json = await response.Content.ReadAsStringAsync();
+            var statusCode = (int)response.StatusCode;
+            var message = statusCode == 200 ? string.Empty : $"Connector call failed ({response.StatusCode}), request {response.RequestMessage.RequestUri}, request headers {FormatHeaders(response.RequestMessage.Headers)}";
 
-            if (!response.IsSuccessStatusCode)
+            return statusCode switch
             {
-                var msg = $"Connector call failed ({response.StatusCode}): " + json;
+                int i when i >= 300 && i < 400 => FormulaValue.NewError(new ExpressionError() { Kind = ErrorKind.ConnectorWarning, Severity = ErrorSeverity.Warning, Message = message }),
+                int i when i >= 400 => FormulaValue.NewError(new ExpressionError() { Kind = ErrorKind.ConnectorError, Severity = ErrorSeverity.Critical, Message = message }),
+                
+                // 1xx, 2xx
+                _ => string.IsNullOrWhiteSpace(json) ? FormulaValue.NewBlank(_returnType) : FormulaValue.FromJson(json)
+            };
+        }
 
-                // $$$ Do any connectors have 40x behavior here in their response code?
-                // or 201 long-ops behavior?
+        private static string FormatHeaders(HttpRequestHeaders headers)
+        {
+            var sb = new StringBuilder(1024);
+            var b = false;
 
-                // $$$ Still type this. 
-                return FormulaValue.NewError(new ExpressionError
+            foreach (var header in headers)
+            {
+                // We don't want to log authentication tokens
+                if (header.Key == "Authorization")
                 {
-                    Kind = ErrorKind.Unknown,
-                    Message = msg
-                });
+                    continue;
+                }
+
+                if (b)
+                {
+                    sb.Append(", ");
+                }
+
+                sb.Append(header.Key);
+                sb.Append('=');
+
+                var c = false;
+                foreach (var val in header.Value)
+                {
+                    if (c)
+                    {
+                        sb.Append(',');
+                    }
+
+                    sb.Append(val);
+                    c = true;
+                }
+
+                b = true;
             }
 
-            if (string.IsNullOrWhiteSpace(json))
-            {
-                return FormulaValue.NewBlank(_returnType);
-            }
-
-            // $$$ Proper marshalling?,  use _returnType;
-            // If schema was an array, we returned a Single Column Table type for it. 
-            // Need to ensure we marshal it consistency here. 
-            var result = FormulaValue.FromJson(json);
-
-            return result;
+            return sb.ToString();
         }
 
         public async Task<FormulaValue> InvokeAsync(string cacheScope, CancellationToken cancel, FormulaValue[] args)
@@ -219,11 +245,21 @@ namespace Microsoft.PowerFx.Connectors
         private readonly string _cacheScope;
         private readonly HttpFunctionInvoker _invoker;
 
-        public ScopedHttpFunctionInvoker(string cacheScope, HttpFunctionInvoker invoker)
+        public ScopedHttpFunctionInvoker(DPath ns, string name, FormulaType returnType, string cacheScope, HttpFunctionInvoker invoker)
         {
+            Namespace = ns;
+            Name = name;
+            ReturnType = returnType._type;
+
             _cacheScope = cacheScope;
             _invoker = invoker ?? throw new ArgumentNullException(nameof(invoker));
         }
+
+        public DPath Namespace { get; }
+
+        public string Name { get; }
+
+        public DType ReturnType { get; }
 
         public Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancel)
         {

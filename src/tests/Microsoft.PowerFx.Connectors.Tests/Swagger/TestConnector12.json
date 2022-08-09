@@ -1,0 +1,413 @@
+﻿{
+  "swagger": "2.0",
+  "info": {
+    "title": "Weather Forecast Sample Site",
+    "description": "Weather Forecast Sample Site",
+    "version": "v1"
+  },
+  "host": "firstrelease-001.azure-apim.net",
+  "basePath": "/apim/testconnector12-5f4c1e90cbd0f5e3a0-5facff89f04372a1f1",
+  "schemes": [
+    "https"
+  ],
+  "paths": {
+    "/weather": {
+      "get": {
+        "tags": [
+          "WeatherForecast"
+        ],
+        "summary": "Get Weather Forecast",
+        "operationId": "GetWeather",
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "i",
+            "description": "",
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/WeatherForecast"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/{connectionId}/error": {
+      "get": {
+        "tags": [
+          "WeatherForecast"
+        ],
+        "summary": "Generates an HTTP error on demand",
+        "operationId": "GenerateError",
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "error",
+            "description": "HTTP Error",
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "100": {
+            "description": "Information"
+          },
+          "101": {
+            "description": "Information"
+          },
+          "102": {
+            "description": "Information"
+          },
+          "200": {
+            "description": "Success",
+            "schema": {
+              "format": "int32",
+              "type": "integer"
+            }
+          },
+          "201": {
+            "description": "Success",
+            "schema": {
+              "format": "int32",
+              "type": "integer"
+            }
+          },
+          "202": {
+            "description": "Success"
+          },
+          "203": {
+            "description": "Success"
+          },
+          "204": {
+            "description": "Success"
+          },
+          "205": {
+            "description": "Success"
+          },
+          "206": {
+            "description": "Success"
+          },
+          "207": {
+            "description": "Success"
+          },
+          "208": {
+            "description": "Success"
+          },
+          "226": {
+            "description": "Success"
+          },
+          "300": {
+            "description": "Redirect"
+          },
+          "301": {
+            "description": "Redirect"
+          },
+          "302": {
+            "description": "Redirect"
+          },
+          "303": {
+            "description": "Redirect"
+          },
+          "304": {
+            "description": "Not Modified"
+          },
+          "305": {
+            "description": "Redirect"
+          },
+          "306": {
+            "description": "Redirect"
+          },
+          "307": {
+            "description": "Redirect"
+          },
+          "308": {
+            "description": "Redirect"
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          },
+          "402": {
+            "description": "Client Error",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          },
+          "405": {
+            "description": "Method Not Allowed",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          },
+          "406": {
+            "description": "Not Acceptable",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          },
+          "407": {
+            "description": "Client Error",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          },
+          "408": {
+            "description": "Request Timeout",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          },
+          "410": {
+            "description": "Client Error",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          },
+          "411": {
+            "description": "Client Error",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          },
+          "412": {
+            "description": "Client Error",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          },
+          "413": {
+            "description": "Client Error",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          },
+          "414": {
+            "description": "Client Error",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          },
+          "415": {
+            "description": "Client Error",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          },
+          "416": {
+            "description": "Client Error",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          },
+          "417": {
+            "description": "Client Error",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          },
+          "418": {
+            "description": "Client Error",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          },
+          "419": {
+            "description": "Client Error",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          },
+          "421": {
+            "description": "Client Error",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          },
+          "422": {
+            "description": "Client Error",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          },
+          "423": {
+            "description": "Client Error",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          },
+          "424": {
+            "description": "Client Error",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          },
+          "426": {
+            "description": "Client Error",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          },
+          "428": {
+            "description": "Client Error",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          },
+          "429": {
+            "description": "Client Error",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          },
+          "431": {
+            "description": "Client Error",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          },
+          "451": {
+            "description": "Client Error",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          },
+          "500": {
+            "description": "Server Error"
+          },
+          "501": {
+            "description": "Server Error"
+          },
+          "502": {
+            "description": "Server Error"
+          },
+          "503": {
+            "description": "Server Error"
+          },
+          "504": {
+            "description": "Server Error"
+          },
+          "505": {
+            "description": "Server Error"
+          },
+          "506": {
+            "description": "Server Error"
+          },
+          "507": {
+            "description": "Server Error"
+          },
+          "508": {
+            "description": "Server Error"
+          },
+          "510": {
+            "description": "Server Error"
+          },
+          "511": {
+            "description": "Server Error"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "ProblemDetails": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "status": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "detail": {
+          "type": "string"
+        },
+        "instance": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "WeatherForecast": {
+      "required": [
+        "date",
+        "temperatureC"
+      ],
+      "type": "object",
+      "properties": {
+        "date": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "temperatureC": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "temperatureF": {
+          "format": "int32",
+          "type": "integer",
+          "readOnly": true
+        },
+        "summary": {
+          "default": "No Summary",
+          "type": "string"
+        },
+        "index": {
+          "format": "int32",
+          "type": "integer"
+        }
+      }
+    }
+  }
+}

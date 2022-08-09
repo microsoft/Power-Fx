@@ -77,7 +77,7 @@ namespace Microsoft.PowerFx
         }
 
         private static StringGetter SG(string text) => CustomTexlFunction.SG(text);
-        
+
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
             yield return new[] { SG("Arg 1"), SG("Arg 2") };
@@ -224,7 +224,7 @@ namespace Microsoft.PowerFx
         internal TexlFunction GetTexlFunction()
         {
             var info = Scan();
-            
+
             // Special case SetProperty. Use reference equality to opt into special casing.
             if (object.ReferenceEquals(info.Name, SetPropertyName))
             {
@@ -252,6 +252,12 @@ namespace Microsoft.PowerFx
     // A function capable of async invokes. 
     internal interface IAsyncTexlFunction
     {
+        DPath Namespace { get; }
+
+        string Name { get; }
+
+        DType ReturnType { get; }
+
         Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancel);
     }
 }

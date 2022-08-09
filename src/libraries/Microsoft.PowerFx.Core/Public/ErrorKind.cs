@@ -35,6 +35,8 @@ namespace Microsoft.PowerFx
         Network = 23,
         Numeric = 24,
         InvalidArgument = 25,
-        Internal = 26
+        Internal = 26,
+        ConnectorWarning = 27,
+        ConnectorError = 28
     }
 }

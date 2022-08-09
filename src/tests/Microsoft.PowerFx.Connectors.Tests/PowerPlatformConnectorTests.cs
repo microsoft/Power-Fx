@@ -3,6 +3,7 @@
 
 using System;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -85,44 +86,75 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal(expected, actual);
         }
 
-        [Fact]
-        public async Task MSNWeatherConnector_CurrentWeather_Error()
+        [Theory]
+        [InlineData(100)] // Continue
+        [InlineData(200)] // Ok
+        [InlineData(202)] // Accepted
+        [InlineData(305)] // Use Proxy
+        [InlineData(411)] // Length Required
+        [InlineData(500)] // Server Error
+        [InlineData(502)] // Bad Gateway
+        public async Task Connector_GenerateErrors(int statusCode)
         {
-            using var testConnector = new LoggingTestServer(@"Swagger\MSNWeather.json");
+            using var testConnector = new LoggingTestServer(@"Swagger\TestConnector12.json");
             var apiDoc = testConnector._apiDocument;
 
             var config = new PowerFxConfig();
 
-            using var httpClient = new HttpClient(); //testConnector);
+            using var httpClient = new HttpClient(testConnector);
             using var client = new PowerPlatformConnectorClient(
                 "firstrelease-001.azure-apim.net", // endpoint
                 "839eace6-59ab-4243-97ec-a5b8fcc104e4", // x-ms-client-environment-id
-                "66c93435ddba4e88b5271c190fa503dc", // connectionId
-                () => "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6IjJaUXBKM1VwYmpBWVhZR2FYRUpsOGxWMFRPSSIsImtpZCI6IjJaUXBKM1VwYmpBWVhZR2FYRUpsOGxWMFRPSSJ9.eyJhdWQiOiJodHRwczovL2FwaWh1Yi5henVyZS5jb20iLCJpc3MiOiJodHRwczovL3N0cy53aW5kb3dzLm5ldC83MmY5ODhiZi04NmYxLTQxYWYtOTFhYi0yZDdjZDAxMWRiNDcvIiwiaWF0IjoxNjU5OTY2NTU4LCJuYmYiOjE2NTk5NjY1NTgsImV4cCI6MTY1OTk3MTU4MywiYWNyIjoiMSIsImFpbyI6IkFWUUFxLzhUQUFBQXNsSDNjclV6WWpXRmZ2RmVPZ3dybERsNEVGWkNMTUgzL3ZkYnZ3OEhYdm9aODUvZEFQMnFDbXVBWVFWQVlIQVNHcUJqVnNaakZQbGpKR3ZGMDA4UUdsWFlEQ0Jlc2RNVGdQWU1lK3dSSjYwPSIsImFtciI6WyJwd2QiLCJyc2EiLCJtZmEiXSwiYXBwaWQiOiJhOGY3YTY1Yy1mNWJhLTQ4NTktYjJkNi1kZjc3MmMyNjRlOWQiLCJhcHBpZGFjciI6IjAiLCJkZXZpY2VpZCI6IjJhMDUwN2E4LTk2N2ItNGM1YS04MDc0LWI4OWM0NTNjYTI0MCIsImZhbWlseV9uYW1lIjoiR2VuZXRpZXIiLCJnaXZlbl9uYW1lIjoiTHVjIiwiaXBhZGRyIjoiOTAuMTA0LjQzLjgzIiwibmFtZSI6Ikx1YyBHZW5ldGllciIsIm9pZCI6IjE1MDg3MTNiLThmY2ItNDk1MS05YWRkLWUxMWJiYmQ2MDJjMyIsIm9ucHJlbV9zaWQiOiJTLTEtNS0yMS0xNzIxMjU0NzYzLTQ2MjY5NTgwNi0xNTM4ODgyMjgxLTM3MjQ5IiwicHVpZCI6IjEwMDMzRkZGODAxQkRGQjgiLCJyaCI6IjAuQVJvQXY0ajVjdkdHcjBHUnF5MTgwQkhiUjE4OEJmNlNOaFJQcnZMdU5Qd0lISzRhQUw0LiIsInNjcCI6IlJ1bnRpbWUuQWxsIiwic3ViIjoidTJUaGU3NFRvU1JCLUZhT25ubDRoeWRTTTFobXVadW1Va2tLVnNfcTJZMCIsInRpZCI6IjcyZjk4OGJmLTg2ZjEtNDFhZi05MWFiLTJkN2NkMDExZGI0NyIsInVuaXF1ZV9uYW1lIjoibHVjZ2VuQG1pY3Jvc29mdC5jb20iLCJ1cG4iOiJsdWNnZW5AbWljcm9zb2Z0LmNvbSIsInV0aSI6ImllNVZWWm5lUEVTX2EtNUZEb0dWQUEiLCJ2ZXIiOiIxLjAifQ.br4MPsHhE3NW6yaedwv2sZb-6wLpbUsVgsAzdLfHRUretTEEDTkiydj4267qUopL5901ZjHufz6qaIy_tyjtazY2q-0mQ40E_tvUYE5e8z70yAS2sPVCT50P9wPw7PzC-XkU3alBanl8dZQqFFoSC6QctmXJygIi6Fpeqfkuuxf08m2v0R3ke7YKDcx5v71rG-QeCcaTM8LXfi_THyUZVFUous_3qRtiavJBwzmqdx2DcLd-00uT9IBmf8uxS9MTqAK6-g5miovouUFA2xtoOdLalVbVh-sUDyKZlHxReCCjObGNSj2rKXj0kO5b1qxeQkQjVu42ZRdgtrzh4PjIuA",
+                "8329fe1b70d8494e940a9d3f683e1845", // connectionId
+                () => "AuthToken",
                 httpClient)
             {
-                SessionId = "MySessionId"
+                SessionId = "4851caf7-23ec-43fc-9a56-e1628655a6bd" // from x-ms-request-url
             };
 
-            var funcs = config.AddService("MSNWeather", apiDoc, client);
-
-            // Function we added where specified in MSNWeather.json
-            var funcNames = funcs.Select(func => func.Name).OrderBy(x => x).ToArray();
-            Assert.Equal(funcNames, new string[] { "CurrentWeather", "GetMeasureUnits", "TodaysForecast", "TomorrowsForecast" });
+            var funcs = config.AddService("TestConnector12", apiDoc, client);
 
             // Now execute it...
             var engine = new RecalcEngine(config);
-            //testConnector.SetResponseFromFile(@"Responses\MSNWeather_Response.json");
+            testConnector.SetResponse($"{statusCode}", (HttpStatusCode)statusCode);
 
-            var result = await engine.EvalAsync(
-                "MSNWeather.CurrentWeather(\"Redmond\", \"Imperial\").responses.weather.current.temp",
-                CancellationToken.None);
+            var result = await engine.EvalAsync($"TestConnector12.GenerateError({{error: {statusCode}}})", CancellationToken.None);
 
             Assert.NotNull(result);
+
+            if (statusCode < 300)
+            {
+                Assert.IsType<NumberValue>(result);
+
+                var nv = (NumberValue)result;
+
+                Assert.Equal(statusCode, nv.Value);
+            }
+            else
+            {
+                Assert.IsType<ErrorValue>(result);
+
+                var ev = (ErrorValue)result;
+
+                Assert.Equal(2, ev.Errors.Count);
+
+                var err1 = ev.Errors[0];
+                var err2 = ev.Errors[1];
+
+                Assert.Equal(statusCode < 400 ? ErrorKind.ConnectorWarning : ErrorKind.ConnectorError, err1.Kind);
+                Assert.Equal(statusCode < 400 ? ErrorSeverity.Warning : ErrorSeverity.Critical, err1.Severity);
+                Assert.Equal(
+                   $"Connector call failed ({(HttpStatusCode)statusCode}), request https://firstrelease-001.azure-apim.net/invoke, request headers authority=firstrelease-001.azure-apim.net, " +
+                    "scheme=https, path=/invoke, x-ms-client-session-id=4851caf7-23ec-43fc-9a56-e1628655a6bd, x-ms-request-method=GET, " +
+                    "x-ms-client-environment-id=/providers/Microsoft.PowerApps/environments/839eace6-59ab-4243-97ec-a5b8fcc104e4, x-ms-user-agent=PowerFx/0.3.0.0, " +
+                   $"x-ms-request-url=/apim/testconnector12-5f4c1e90cbd0f5e3a0-5facff89f04372a1f1/8329fe1b70d8494e940a9d3f683e1845/error?error={statusCode}", err1.Message);
+
+                Assert.Equal(statusCode < 400 ? ErrorKind.ConnectorWarning : ErrorKind.ConnectorError, err2.Kind);
+                Assert.Equal(statusCode < 400 ? ErrorSeverity.Warning : ErrorSeverity.Critical, err2.Severity);
+                Assert.Equal("Connector call failed on TestConnector12.GenerateError function call, return type n", err2.Message);
+            }
         }
 
-        [Fact]
-        public async Task AzureBlobConnector_UploadFile()
         [Theory]
         [InlineData(true, false)]
         [InlineData(false, false)]
@@ -146,7 +178,7 @@ namespace Microsoft.PowerFx.Tests
                     SessionId = "ccccbff3-9d2c-44b2-bee6-cf24aab10b7e"
                 }
                 : new PowerPlatformConnectorClient(
-                    (useHttpsPrefix ? "https://" : string.Empty) + 
+                    (useHttpsPrefix ? "https://" : string.Empty) +
                         "firstrelease-001.azure-apim.net",  // endpoint
                     "839eace6-59ab-4243-97ec-a5b8fcc104e4", // environment
                     "453f61fa88434d42addb987063b1d7d2",     // connectionId

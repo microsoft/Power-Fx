@@ -11,7 +11,6 @@ using Microsoft.AppMagic.DocumentServer.Common;
 #endif
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
-using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Functions.Publish;
 using Microsoft.PowerFx.Core.Localization;
@@ -389,12 +388,20 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
             {
                 throw new InvalidOperationException($"Function {Name} can't be invoked.");
             }
-            return await _invoker.InvokeAsync(args, cancel);
+            var result = await _invoker.InvokeAsync(args, cancel);
+
+            if (result is ErrorValue ev && ev.Errors.FirstOrDefault(e => e.Kind == ErrorKind.ConnectorError || e.Kind == ErrorKind.ConnectorWarning) != null)
+            {
+                var err = ev.Errors.First();
+                ev.Add(new ExpressionError() { Kind = err.Kind, Severity = err.Severity, Message = $"Connector call failed on {_invoker.Namespace.ToDottedSyntax()}.{_invoker.Name} function call, return type {_invoker.ReturnType}" });
+            }
+
+            return result;
         }
 
         // Swap for IService, to cut dependency on TransportType.
-        public class IService 
-        { 
+        public class IService
+        {
         }
 #endif
 
