@@ -390,10 +390,10 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
             }
             var result = await _invoker.InvokeAsync(args, cancel);
 
-            if (result is ErrorValue ev && ev.Errors.FirstOrDefault(e => e.Kind == ErrorKind.ConnectorError || e.Kind == ErrorKind.ConnectorWarning) != null)
+            if (result is ErrorValue ev && ev.Errors.FirstOrDefault(e => e.Kind == ErrorKind.Network) != null)
             {
                 var err = ev.Errors.First();
-                ev.Add(new ExpressionError() { Kind = err.Kind, Severity = err.Severity, Message = $"Connector call failed on {_invoker.Namespace.ToDottedSyntax()}.{_invoker.Name} function call, return type {_invoker.ReturnType}" });
+                ev.Add(new ExpressionError() { Kind = err.Kind, Severity = err.Severity, Message = $"Connector call failed on {_invoker.Namespace.ToDottedSyntax()}.{_invoker.Name} function call" });          
             }
 
             return result;

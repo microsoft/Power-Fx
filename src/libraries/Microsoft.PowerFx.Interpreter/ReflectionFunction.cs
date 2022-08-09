@@ -255,9 +255,7 @@ namespace Microsoft.PowerFx
         DPath Namespace { get; }
 
         string Name { get; }
-
-        DType ReturnType { get; }
-
+      
         Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancel);
     }
 }

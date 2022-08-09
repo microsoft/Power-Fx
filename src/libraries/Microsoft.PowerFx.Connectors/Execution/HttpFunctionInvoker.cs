@@ -24,7 +24,7 @@ namespace Microsoft.PowerFx.Connectors
         private readonly HttpMessageInvoker _httpClient;
         private readonly HttpMethod _method;
         private readonly string _path;
-        private readonly FormulaType _returnType;
+        internal readonly FormulaType _returnType;
         private readonly ArgumentMapper _argMapper;
         private readonly ICachingHttpClient _cache;
 
@@ -159,17 +159,24 @@ namespace Microsoft.PowerFx.Connectors
             }
         }
 
-        public async Task<FormulaValue> DecodeResponseAsync(HttpResponseMessage response)
+        public async Task<FormulaValue> DecodeResponseAsync(HttpResponseMessage response, FormulaType returnType)
         {
             // $$$ Do we need to check response media type to confirm that the content is indeed json?
             var json = await response.Content.ReadAsStringAsync();
             var statusCode = (int)response.StatusCode;
-            var message = statusCode == 200 ? string.Empty : $"Connector call failed ({response.StatusCode}), request {response.RequestMessage.RequestUri}, request headers {FormatHeaders(response.RequestMessage.Headers)}";
+            var message = statusCode < 300 ? string.Empty : $"Connector call failed ({response.StatusCode}), request {response.RequestMessage.RequestUri}, request headers {FormatHeaders(response.RequestMessage.Headers)}";
 
             return statusCode switch
-            {
-                int i when i >= 300 && i < 400 => FormulaValue.NewError(new ExpressionError() { Kind = ErrorKind.ConnectorWarning, Severity = ErrorSeverity.Warning, Message = message }),
-                int i when i >= 400 => FormulaValue.NewError(new ExpressionError() { Kind = ErrorKind.ConnectorError, Severity = ErrorSeverity.Critical, Message = message }),
+            {                
+                // 3xx, 4xx, 4xx
+                int i when i >= 300 => FormulaValue.NewError(
+                    new ExpressionError() 
+                    { 
+                        Kind = ErrorKind.Network, 
+                        Severity = ErrorSeverity.Critical, 
+                        Message = message 
+                    },
+                    returnType),
                 
                 // 1xx, 2xx
                 _ => string.IsNullOrWhiteSpace(json) ? FormulaValue.NewBlank(_returnType) : FormulaValue.FromJson(json)
@@ -181,7 +188,7 @@ namespace Microsoft.PowerFx.Connectors
             var sb = new StringBuilder(1024);
             var b = false;
 
-            foreach (var header in headers)
+            foreach (var header in headers.OrderBy(h => h.Key))
             {
                 // We don't want to log authentication tokens
                 if (header.Key == "Authorization")
@@ -231,7 +238,7 @@ namespace Microsoft.PowerFx.Connectors
             var result2 = await _cache.TryGetAsync(cacheScope, key, async () =>
             {
                 var response = await _httpClient.SendAsync(request, cancel);
-                result = await DecodeResponseAsync(response);
+                result = await DecodeResponseAsync(response, _returnType);
                 return result;
             });
 
@@ -245,11 +252,10 @@ namespace Microsoft.PowerFx.Connectors
         private readonly string _cacheScope;
         private readonly HttpFunctionInvoker _invoker;
 
-        public ScopedHttpFunctionInvoker(DPath ns, string name, FormulaType returnType, string cacheScope, HttpFunctionInvoker invoker)
+        public ScopedHttpFunctionInvoker(DPath ns, string name, string cacheScope, HttpFunctionInvoker invoker)
         {
             Namespace = ns;
-            Name = name;
-            ReturnType = returnType._type;
+            Name = name;  
 
             _cacheScope = cacheScope;
             _invoker = invoker ?? throw new ArgumentNullException(nameof(invoker));
@@ -258,8 +264,6 @@ namespace Microsoft.PowerFx.Connectors
         public DPath Namespace { get; }
 
         public string Name { get; }
-
-        public DType ReturnType { get; }
 
         public Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancel)
         {

@@ -136,22 +136,24 @@ namespace Microsoft.PowerFx.Tests
 
                 var ev = (ErrorValue)result;
 
+                Assert.Equal(FormulaType.Number, ev.Type);
                 Assert.Equal(2, ev.Errors.Count);
 
                 var err1 = ev.Errors[0];
                 var err2 = ev.Errors[1];
 
-                Assert.Equal(statusCode < 400 ? ErrorKind.ConnectorWarning : ErrorKind.ConnectorError, err1.Kind);
-                Assert.Equal(statusCode < 400 ? ErrorSeverity.Warning : ErrorSeverity.Critical, err1.Severity);
+                Assert.Equal(ErrorKind.Network, err1.Kind);
+                Assert.Equal(ErrorSeverity.Critical, err1.Severity);
                 Assert.Equal(
                    $"Connector call failed ({(HttpStatusCode)statusCode}), request https://firstrelease-001.azure-apim.net/invoke, request headers authority=firstrelease-001.azure-apim.net, " +
-                    "scheme=https, path=/invoke, x-ms-client-session-id=4851caf7-23ec-43fc-9a56-e1628655a6bd, x-ms-request-method=GET, " +
-                    "x-ms-client-environment-id=/providers/Microsoft.PowerApps/environments/839eace6-59ab-4243-97ec-a5b8fcc104e4, x-ms-user-agent=PowerFx/0.3.0.0, " +
-                   $"x-ms-request-url=/apim/testconnector12-5f4c1e90cbd0f5e3a0-5facff89f04372a1f1/8329fe1b70d8494e940a9d3f683e1845/error?error={statusCode}", err1.Message);
+                    "path=/invoke, scheme=https, x-ms-client-environment-id=/providers/Microsoft.PowerApps/environments/839eace6-59ab-4243-97ec-a5b8fcc104e4, " +
+                    "x-ms-client-session-id=4851caf7-23ec-43fc-9a56-e1628655a6bd, x-ms-request-method=GET, " +
+                   $"x-ms-request-url=/apim/testconnector12-5f4c1e90cbd0f5e3a0-5facff89f04372a1f1/8329fe1b70d8494e940a9d3f683e1845/error?error={statusCode}, " +
+                    "x-ms-user-agent=PowerFx/0.3.0.0", err1.Message);
 
-                Assert.Equal(statusCode < 400 ? ErrorKind.ConnectorWarning : ErrorKind.ConnectorError, err2.Kind);
-                Assert.Equal(statusCode < 400 ? ErrorSeverity.Warning : ErrorSeverity.Critical, err2.Severity);
-                Assert.Equal("Connector call failed on TestConnector12.GenerateError function call, return type n", err2.Message);
+                Assert.Equal(ErrorKind.Network, err2.Kind);
+                Assert.Equal(ErrorSeverity.Critical, err2.Severity);
+                Assert.Equal("Connector call failed on TestConnector12.GenerateError function call", err2.Message);
             }
         }
 
