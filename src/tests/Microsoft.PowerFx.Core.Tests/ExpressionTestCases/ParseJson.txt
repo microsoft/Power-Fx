@@ -161,6 +161,9 @@ Blank()
 >> Text(DateTimeValue(ParseJSON("""2022-05-05""")))
 "5/5/2022 12:00 AM"
 
+>> DateDiff(DateValue(ParseJSON("""2011-01-15T08:00:00.000Z""")), DateValue(ParseJSON("""2011-01-30T08:00:00.000Z""")))
+15
+
 >> Text(TimeValue(ParseJSON("""08:03:05.000""")))
 "8:03 AM"
 

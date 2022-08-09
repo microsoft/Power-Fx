@@ -152,12 +152,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 var s = impl.GetString();
 
-                if (!IsValidDateTimeUO(s))
-                {
-                    return CommonErrors.InvalidDateTimeError(irContext);
-                }
-
-                if (DateTime.TryParse(s, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime res))
+                if (IsValidDateTimeUO(s) && DateTime.TryParse(s, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime res))
                 {
                     return new DateValue(irContext, res.Date);
                 }
@@ -194,12 +189,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 var s = impl.GetString();
 
-                if (!IsValidDateTimeUO(s))
-                {
-                    return CommonErrors.InvalidDateTimeError(irContext);
-                }
-
-                if (DateTime.TryParse(s, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime res))
+                if (IsValidDateTimeUO(s) && DateTime.TryParse(s, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime res))
                 {
                     return new DateTimeValue(irContext, res);
                 }
