@@ -113,7 +113,7 @@ namespace Microsoft.PowerFx.Types
 
         public static ErrorValue NewError(ExpressionError error)
         {
-            return new ErrorValue(IRContext.NotInSource(FormulaType.Blank), error);
+            return NewError(error, FormulaType.Blank);
         }
 
         public static ErrorValue NewError(ExpressionError error, FormulaType type)
