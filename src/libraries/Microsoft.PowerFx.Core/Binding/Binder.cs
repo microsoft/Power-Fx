@@ -2640,7 +2640,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     }
 
                     // scalar in table: RHS must be a one column table. We'll allow coercion.
-                    if (typeRight.IsTable && !typeRight.IsMultiSelectOptionSet())
+                    if (typeRight.IsTable)
                     {
                         var names = typeRight.GetNames(DPath.Root);
                         if (names.Count() != 1)
@@ -2667,7 +2667,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     }
 
                     // scalar in record or multiSelectOptionSet table: not supported. Flag an error on the RHS.
-                    Contracts.Assert(typeRight.IsRecord || typeRight.IsMultiSelectOptionSet());
+                    Contracts.Assert(typeRight.IsRecord);
                     _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, right, TexlStrings.ErrBadType_Type, typeRight.GetKindString());
                     return false;
                 }
