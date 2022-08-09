@@ -15,7 +15,7 @@ namespace Microsoft.PowerFx.Functions
     {
         private static bool IsValidDateTimeUO(string s)
         {
-            return Regex.IsMatch(s, @"^[0-9]{4,4}(-[0-1][0-9](-[0-3][0-9](T[0-9]{2,2}(:[0-9]{2,2}(:[0-9]{2,2}(\.[0-9]{3,3}Z)?)?)?)?)?)?$");
+            return Regex.IsMatch(s, @"^[0-9]{4,4}-[0-1][0-9]-[0-3][0-9](T[0-2][0-9]:[0-5][0-9]:[0-5][0-9](\.[0-9]{3,3})?Z?)?$");
         }
 
         public static FormulaValue Index_UO(IRContext irContext, FormulaValue[] args)
