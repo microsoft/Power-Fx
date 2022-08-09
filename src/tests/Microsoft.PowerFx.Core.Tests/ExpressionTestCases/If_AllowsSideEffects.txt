@@ -1,0 +1,13 @@
+﻿#SETUP: EnableExpressionChaining
+
+>> If(false, "abc1", {x:3})
+{x:3}
+
+>> If(false, "abc2", {x:3}; {x:2}); Value(100)
+100
+
+>> If(false, "abc3", {x:3}; If(true, Value(10); {x:3})); Value(101)
+101
+
+>> Value(If(false, "abc4", {x:3}; If(true, Value(10); {x:3})); Value(102))
+102
