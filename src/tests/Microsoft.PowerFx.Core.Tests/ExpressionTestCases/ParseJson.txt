@@ -158,6 +158,9 @@ Blank()
 >> DateTimeValue(ParseJSON("""abcdef"""))
 #Error(Kind=InvalidArgument)
 
+>> Text(DateTimeValue(ParseJSON("""2022-05-05""")))
+"5/5/2022 12:00 AM"
+
 >> Text(TimeValue(ParseJSON("""08:03:05.000""")))
 "8:03 AM"
 
