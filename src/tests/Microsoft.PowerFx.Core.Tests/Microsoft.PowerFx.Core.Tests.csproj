@@ -63,7 +63,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="ExpressionTestCases\If_AllowsSideEffects.txt" />
     <None Remove="ExpressionTestCases\SqrtT.txt" />
   </ItemGroup>
 

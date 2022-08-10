@@ -1,5 +1,12 @@
 ﻿#SETUP: EnableExpressionChaining
 
+
+// These test cases are part of the code coverage and are meant to reach IfFunction.IsArgTypeInconsequential
+
+// This If() expression is allowed to have mismatching types between arg1 and arg2 because
+// a) it's behavior,
+// b) it's verified nobody is actually using the return value.
+
 >> If(false, "abc1", {x:3})
 {x:3}
 
