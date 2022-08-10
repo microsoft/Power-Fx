@@ -43,6 +43,15 @@ namespace Microsoft.PowerFx.Tests
             public double NumProp { get; set; }
 
             public bool BoolProp { get; set; }
+
+            public RecordObj RecordProp { get; set; }
+
+            public RecordObj[] TableProp { get; set; }
+        }
+
+        public class RecordObj
+        {
+            public string Value { get; set; }
         }
 
         private static readonly ParserOptions _opts = new ParserOptions { AllowsSideEffects = true };
@@ -71,6 +80,12 @@ namespace Microsoft.PowerFx.Tests
             Assert.False(check.IsSuccess);
 
             check = engine.Check("SetProperty(x.BoolProp, 123)"); // arg mismatch
+            Assert.False(check.IsSuccess);
+
+            check = engine.Check("SetProperty(x.RecordProp, {Value : \"2\"})");  // behavior function in a non behavior property error
+            Assert.False(check.IsSuccess);
+
+            check = engine.Check("SetProperty(x.TableProp, Table({Value:\"1\"},{Value:\"2\"}))"); // behavior function in a non behavior property error
             Assert.False(check.IsSuccess);
 
             check = engine.Check("SetProperty(x.numMissing, 123)", options: _opts); // Binding Fail
