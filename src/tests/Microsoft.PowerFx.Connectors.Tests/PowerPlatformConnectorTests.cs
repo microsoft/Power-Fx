@@ -261,6 +261,39 @@ namespace Microsoft.PowerFx.Tests
                 httpClient));
 
             Assert.Equal("Swagger document doesn't contain an endpoint", ex2.Message);
+
+        }
+
+        [Fact]
+        public async Task Office365Users_MyProfile()
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\Office365Users.json");
+            var apiDoc = testConnector._apiDocument;
+            var config = new PowerFxConfig();
+
+            using var httpClient = new HttpClient(); // testConnector);
+
+            using var client = new PowerPlatformConnectorClient(
+                    "firstrelease-001.azure-apim.net",               // endpoint
+                    "839eace6-59ab-4243-97ec-a5b8fcc104e4",          // environment
+                    "72c42ee1b3c7403c8e73aa9c02a7fbcc",              // connectionId
+                    () => "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6IjJaUXBKM1VwYmpBWVhZR2FYRUpsOGxWMFRPSSIsImtpZCI6IjJaUXBKM1VwYmpBWVhZR2FYRUpsOGxWMFRPSSJ9.eyJhdWQiOiJodHRwczovL2FwaWh1Yi5henVyZS5jb20iLCJpc3MiOiJodHRwczovL3N0cy53aW5kb3dzLm5ldC83MmY5ODhiZi04NmYxLTQxYWYtOTFhYi0yZDdjZDAxMWRiNDcvIiwiaWF0IjoxNjYwMTQ3NTUzLCJuYmYiOjE2NjAxNDc1NTMsImV4cCI6MTY2MDE1MjUzNCwiYWNyIjoiMSIsImFpbyI6IkFWUUFxLzhUQUFBQTVHUHZtY05nNzMrZlJSbTE1cUMyRDJTcGEwZURteXpzeFRWQUw2YUlRR28xZC9CcU5RNHdUVHVWeENMOVljR3dQSmxTSVFDZTh5UVNOYk11YVRIbk50QkFHVS80TmRldlh5RHdIeG4xSDFzPSIsImFtciI6WyJwd2QiLCJyc2EiLCJtZmEiXSwiYXBwaWQiOiJhOGY3YTY1Yy1mNWJhLTQ4NTktYjJkNi1kZjc3MmMyNjRlOWQiLCJhcHBpZGFjciI6IjAiLCJkZXZpY2VpZCI6IjJhMDUwN2E4LTk2N2ItNGM1YS04MDc0LWI4OWM0NTNjYTI0MCIsImZhbWlseV9uYW1lIjoiR2VuZXRpZXIiLCJnaXZlbl9uYW1lIjoiTHVjIiwiaXBhZGRyIjoiOTAuMTA0LjQzLjgzIiwibmFtZSI6Ikx1YyBHZW5ldGllciIsIm9pZCI6IjE1MDg3MTNiLThmY2ItNDk1MS05YWRkLWUxMWJiYmQ2MDJjMyIsIm9ucHJlbV9zaWQiOiJTLTEtNS0yMS0xNzIxMjU0NzYzLTQ2MjY5NTgwNi0xNTM4ODgyMjgxLTM3MjQ5IiwicHVpZCI6IjEwMDMzRkZGODAxQkRGQjgiLCJyaCI6IjAuQVJvQXY0ajVjdkdHcjBHUnF5MTgwQkhiUjE4OEJmNlNOaFJQcnZMdU5Qd0lISzRhQUw0LiIsInNjcCI6IlJ1bnRpbWUuQWxsIiwic3ViIjoidTJUaGU3NFRvU1JCLUZhT25ubDRoeWRTTTFobXVadW1Va2tLVnNfcTJZMCIsInRpZCI6IjcyZjk4OGJmLTg2ZjEtNDFhZi05MWFiLTJkN2NkMDExZGI0NyIsInVuaXF1ZV9uYW1lIjoibHVjZ2VuQG1pY3Jvc29mdC5jb20iLCJ1cG4iOiJsdWNnZW5AbWljcm9zb2Z0LmNvbSIsInV0aSI6ImtER2dFX0ZNaUVhbXY2ancwTTFaQUEiLCJ2ZXIiOiIxLjAifQ.pl9OkA23UeXUnsmMmQNU2rtNsToUwrPVLyG77jqR01Y5N2Q5ZJ8qypmWamOKpvM2uAIT74ItqRbLn1ENn4Wf1WZtMf0Kr_az95TQ6H4IjdzOHQgm2vYjuKxjZJnkSxWifZUmpALhANg0McsSUnnZp6aNd9X03rIEJPUTR2cJyibKYNYRhnXkcFtPddAaHBvoLQUwtAh7wg-QgPyEszTZ1fFsDWwlsJrh7nfL2Jrgl5cDlLD2C6IhDH3Pi2APGPTZfaFZLGf6RbkygLBpelfX11B-Vwxyz9KFpFqBISsi3QcYgH9wktO5phUfAntqXcMBk5NzseIZzbBWRbZn-MkLHQ",
+                    httpClient)
+            {
+                SessionId = "02199f4f-8306-4996-b1c3-1b6094c2b7f8"
+            };
+
+            var funcs = config.AddService("Office365Users", apiDoc, client);
+
+            // Function we added where specified in MSNWeather.json
+            //var funcNames = funcs.Select(func => func.Name).OrderBy(x => x).ToArray();
+            //Assert.Equal(funcNames, new string[] { "CurrentWeather", "GetMeasureUnits", "TodaysForecast", "TomorrowsForecast" });
+
+            // Now execute it...
+            var engine = new RecalcEngine(config);
+            //testConnector.SetResponseFromFile(@"Responses\MSNWeather_Response.json");
+
+            var result = await engine.EvalAsync("Office365Users.MyProfile().Country", CancellationToken.None);
         }
     }
 }
