@@ -219,7 +219,8 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             }
 
             var cursorPosition = GetPosition(expression, completionParams.Position.Line, completionParams.Position.Character);
-            var result = scope.Suggest(expression, cursorPosition, options);
+            var checkResult = scope.Check(expression, options);
+            var result = scope.Suggest(expression, checkResult, cursorPosition);
 
             var items = new List<CompletionItem>();
 
@@ -270,7 +271,8 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             }
 
             var cursorPosition = GetPosition(expression, signatureHelpParams.Position.Line, signatureHelpParams.Position.Character);
-            var result = scope.Suggest(expression, cursorPosition, options);
+            var checkResult = scope.Check(expression, options);
+            var result = scope.Suggest(expression, checkResult, cursorPosition);
 
             _sendToClient(JsonRpcHelper.CreateSuccessResult(id, result.SignatureHelp));
         }

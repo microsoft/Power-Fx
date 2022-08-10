@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Connectors;
+using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Types;
 using Xunit;
@@ -166,12 +167,10 @@ namespace Microsoft.PowerFx.Tests
 
         // Very documentation strings from the Swagger show up in the intellisense.
         [Theory]
-        [InlineData("MSNWeather.CurrentWeather(", false)]
-        [InlineData("Behavior(); MSNWeather.CurrentWeather(", true)]
-
-        // $$$ This test generates an internal error as we use an behavior function but we have no way to check its presence
-        [InlineData("Behavior(); MSNWeather.CurrentWeather(", false)]
-        public void IntellisenseHelpStrings(string expr, bool withAllowSideEffects)
+        [InlineData("MSNWeather.CurrentWeather(", false, false)]
+        [InlineData("Behavior(); MSNWeather.CurrentWeather(", true, false)]
+        [InlineData("Behavior(); MSNWeather.CurrentWeather(", false, true)]
+        public void IntellisenseHelpStrings(string expr, bool withAllowSideEffects, bool expectedBehaviorError)
         {
             var apiDoc = Helpers.ReadSwagger(@"Swagger\MSNWeather.json");
 
@@ -180,7 +179,18 @@ namespace Microsoft.PowerFx.Tests
             config.AddFunction(new BehaviorFunction());
 
             var engine = new Engine(config);
-            var result = engine.Suggest(expr, RecordType.Empty(), expr.Length, withAllowSideEffects ? new ParserOptions() { AllowsSideEffects = true } : null);
+            var check = engine.Check(expr, RecordType.Empty(), withAllowSideEffects ? new ParserOptions() { AllowsSideEffects = true } : null);
+
+            if (expectedBehaviorError)
+            {
+                Assert.Contains(check.Errors, d => d.Message == StringResources.GetErrorResource(TexlStrings.ErrBehaviorPropertyExpected).GetSingleValue(ErrorResource.ShortMessageTag));
+            }
+            else
+            {
+                Assert.DoesNotContain(check.Errors, d => d.Message == StringResources.GetErrorResource(TexlStrings.ErrBehaviorPropertyExpected).GetSingleValue(ErrorResource.ShortMessageTag));
+            }
+
+            var result = engine.Suggest(expr, check, expr.Length);
 
             var overload = result.FunctionOverloads.Single();
             Assert.Equal(Intellisense.SuggestionKind.Function, overload.Kind);

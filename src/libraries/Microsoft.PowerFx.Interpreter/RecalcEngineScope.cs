@@ -57,13 +57,13 @@ namespace Microsoft.PowerFx
         }
 
         public IIntellisenseResult Suggest(string expression, int cursorPosition)
-        {
-            return Suggest(expression, cursorPosition, null);
+        {            
+            return Suggest(expression, Check(expression), cursorPosition);
         }
 
-        public IIntellisenseResult Suggest(string expression, int cursorPosition, ParserOptions options)
+        public IIntellisenseResult Suggest(string expression, CheckResult checkResult, int cursorPosition)            
         {
-            return _engine.Suggest(expression, _contextType, cursorPosition, options);
+            return _engine.Suggest(expression, checkResult, cursorPosition);
         }
 
         public string ConvertToDisplay(string expression)

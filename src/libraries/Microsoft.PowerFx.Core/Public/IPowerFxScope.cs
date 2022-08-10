@@ -31,7 +31,7 @@ namespace Microsoft.PowerFx.Intellisense
         /// <summary>
         /// Provide intellisense for expression, with parser options.
         /// </summary>
-        IIntellisenseResult Suggest(string expression, int cursorPosition, ParserOptions options);
+        IIntellisenseResult Suggest(string expression, CheckResult checkResult, int cursorPosition);
 
         /// <summary>
         /// Converts punctuators and identifiers in an expression to the appropriate display format.
