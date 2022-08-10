@@ -66,6 +66,14 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
         /// </summary>
         public void OnDataReceived(string jsonRpcPayload)
         {
+            OnDataReceived(jsonRpcPayload, null);
+        }
+
+        /// <summary>
+        /// Received request/notification payload from client.
+        /// </summary>
+        public void OnDataReceived(string jsonRpcPayload, ParserOptions options)
+        {
             Contracts.AssertValue(jsonRpcPayload);
 
             string id = null;
@@ -96,16 +104,16 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                     switch (method)
                     {
                         case TextDocumentNames.DidOpen:
-                            HandleDidOpenNotification(paramsJson);
+                            HandleDidOpenNotification(paramsJson, options);
                             break;
                         case TextDocumentNames.DidChange:
-                            HandleDidChangeNotification(paramsJson);
+                            HandleDidChangeNotification(paramsJson, options);
                             break;
                         case TextDocumentNames.Completion:
-                            HandleCompletionRequest(id, paramsJson);
+                            HandleCompletionRequest(id, paramsJson, options);
                             break;
                         case TextDocumentNames.SignatureHelp:
-                            HandleSignatureHelpRequest(id, paramsJson);
+                            HandleSignatureHelpRequest(id, paramsJson, options);
                             break;
                         case CustomProtocolNames.InitialFixup:
                             HandleInitialFixupRequest(id, paramsJson);
@@ -128,7 +136,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             }
         }
 
-        private void HandleDidOpenNotification(string paramsJson)
+        private void HandleDidOpenNotification(string paramsJson, ParserOptions options)
         {
             Contracts.AssertValue(paramsJson);
 
@@ -142,7 +150,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             var scope = _scopeFactory.GetOrCreateInstance(documentUri);
 
             var expression = didOpenParams.TextDocument.Text;
-            var result = scope.Check(expression);
+            var result = scope.Check(expression, options);
 
             PublishDiagnosticsNotification(documentUri, expression, result.Errors.ToArray());
 
@@ -151,7 +159,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             PublishExpressionType(documentUri, result);
         }
 
-        private void HandleDidChangeNotification(string paramsJson)
+        private void HandleDidChangeNotification(string paramsJson, ParserOptions options)
         {
             Contracts.AssertValue(paramsJson);
 
@@ -173,7 +181,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             var scope = _scopeFactory.GetOrCreateInstance(documentUri);
 
             var expression = didChangeParams.ContentChanges[0].Text;
-            var result = scope.Check(expression);
+            var result = scope.Check(expression, options);
 
             PublishDiagnosticsNotification(documentUri, expression, result.Errors.ToArray());
 
@@ -182,7 +190,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             PublishExpressionType(documentUri, result);
         }
 
-        private void HandleCompletionRequest(string id, string paramsJson)
+        private void HandleCompletionRequest(string id, string paramsJson, ParserOptions options)
         {
             if (id == null)
             {
@@ -211,7 +219,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             }
 
             var cursorPosition = GetPosition(expression, completionParams.Position.Line, completionParams.Position.Character);
-            var result = scope.Suggest(expression, cursorPosition);
+            var result = scope.Suggest(expression, cursorPosition, options);
 
             var items = new List<CompletionItem>();
 
@@ -233,7 +241,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             }));
         }
 
-        private void HandleSignatureHelpRequest(string id, string paramsJson)
+        private void HandleSignatureHelpRequest(string id, string paramsJson, ParserOptions options)
         {
             if (id == null)
             {
@@ -262,7 +270,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             }
 
             var cursorPosition = GetPosition(expression, signatureHelpParams.Position.Line, signatureHelpParams.Position.Character);
-            var result = scope.Suggest(expression, cursorPosition);
+            var result = scope.Suggest(expression, cursorPosition, options);
 
             _sendToClient(JsonRpcHelper.CreateSuccessResult(id, result.SignatureHelp));
         }
@@ -426,7 +434,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             if (errors != null)
             {
                 foreach (var item in errors)
-                {                    
+                {
                     diagnostics.Add(new Diagnostic()
                     {
                         Range = GetRange(expression, item.Span),
@@ -453,7 +461,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
         /// <param name="span">The Span.</param>
         /// <returns>Generated Range.</returns>
         public static Range GetRange(string expression, Span span)
-        {                       
+        {
             var startChar = GetCharPosition(expression, span.Min) - 1;
             var endChar = GetCharPosition(expression, span.Lim) - 1;
 

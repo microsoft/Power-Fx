@@ -125,7 +125,7 @@ namespace Microsoft.PowerFx
         private CheckResult CheckInternal(ParseResult parse, RecordType parameterType, BindingConfig bindingConfig)
         {
             parameterType ??= RecordType.Empty();
-                        
+
             // Ok to continue with binding even if there are parse errors. 
             // We can still use that for intellisense. 
 
@@ -178,12 +178,17 @@ namespace Microsoft.PowerFx
             return IntellisenseProvider.GetIntellisense(Config);
         }
 
+        public IIntellisenseResult Suggest(string expression, RecordType parameterType, int cursorPosition)
+        {
+            return Suggest(expression, parameterType, cursorPosition, null);
+        }
+
         /// <summary>
         /// Get intellisense from the formula.
         /// </summary>
-        public IIntellisenseResult Suggest(string expression, RecordType parameterType, int cursorPosition)
+        public IIntellisenseResult Suggest(string expression, RecordType parameterType, int cursorPosition, ParserOptions options)
         {
-            var result = Check(expression, parameterType);
+            var result = Check(expression, parameterType, options);
             var binding = result._binding;
             var formula = new Formula(expression, Config.CultureInfo);
             formula.ApplyParse(result.Parse);

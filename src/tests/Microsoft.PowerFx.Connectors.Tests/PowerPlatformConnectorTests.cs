@@ -10,6 +10,7 @@ using Microsoft.PowerFx.Connectors;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Types;
 using Xunit;
+using static Microsoft.PowerFx.Tests.BindingEngineTests;
 
 namespace Microsoft.PowerFx.Tests
 {
@@ -108,7 +109,7 @@ namespace Microsoft.PowerFx.Tests
                     SessionId = "ccccbff3-9d2c-44b2-bee6-cf24aab10b7e"
                 }
                 : new PowerPlatformConnectorClient(
-                    (useHttpsPrefix ? "https://" : string.Empty) + 
+                    (useHttpsPrefix ? "https://" : string.Empty) +
                         "firstrelease-001.azure-apim.net",  // endpoint
                     "839eace6-59ab-4243-97ec-a5b8fcc104e4", // environment
                     "453f61fa88434d42addb987063b1d7d2",     // connectionId
@@ -164,17 +165,22 @@ namespace Microsoft.PowerFx.Tests
         }
 
         // Very documentation strings from the Swagger show up in the intellisense.
-        [Fact]
-        public void IntellisenseHelpStrings()
+        [Theory]
+        [InlineData("MSNWeather.CurrentWeather(", false)]
+        [InlineData("Behavior(); MSNWeather.CurrentWeather(", true)]
+
+        // $$$ This test generates an internal error as we use an behavior function but we have no way to check its presence
+        [InlineData("Behavior(); MSNWeather.CurrentWeather(", false)]
+        public void IntellisenseHelpStrings(string expr, bool withAllowSideEffects)
         {
             var apiDoc = Helpers.ReadSwagger(@"Swagger\MSNWeather.json");
 
             var config = new PowerFxConfig();
             config.AddService("MSNWeather", apiDoc, null);
-            var engine = new Engine(config);
+            config.AddFunction(new BehaviorFunction());
 
-            var expr = "MSNWeather.CurrentWeather(";
-            var result = engine.Suggest(expr, RecordType.Empty(), expr.Length);
+            var engine = new Engine(config);
+            var result = engine.Suggest(expr, RecordType.Empty(), expr.Length, withAllowSideEffects ? new ParserOptions() { AllowsSideEffects = true } : null);
 
             var overload = result.FunctionOverloads.Single();
             Assert.Equal(Intellisense.SuggestionKind.Function, overload.Kind);
