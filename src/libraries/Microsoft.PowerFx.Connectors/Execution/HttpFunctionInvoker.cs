@@ -161,65 +161,24 @@ namespace Microsoft.PowerFx.Connectors
 
         public async Task<FormulaValue> DecodeResponseAsync(HttpResponseMessage response, FormulaType returnType)
         {
-            // $$$ Do we need to check response media type to confirm that the content is indeed json?
-            var json = await response.Content.ReadAsStringAsync();
+            var text = await response.Content.ReadAsStringAsync();
             var statusCode = (int)response.StatusCode;
-            var message = statusCode < 300 ? string.Empty : $"Connector call failed ({response.StatusCode}), request {response.RequestMessage.RequestUri}, request headers {FormatHeaders(response.RequestMessage.Headers)}";
 
-            return statusCode switch
+            if (statusCode < 300)
             {                
-                // 3xx, 4xx, 4xx
-                int i when i >= 300 => FormulaValue.NewError(
-                    new ExpressionError() 
-                    { 
-                        Kind = ErrorKind.Network, 
-                        Severity = ErrorSeverity.Critical, 
-                        Message = message 
-                    },
-                    returnType),
-                
-                // 1xx, 2xx
-                _ => string.IsNullOrWhiteSpace(json) ? FormulaValue.NewBlank(_returnType) : FormulaValue.FromJson(json)
-            };
-        }
-
-        private static string FormatHeaders(HttpRequestHeaders headers)
-        {
-            var sb = new StringBuilder(1024);
-            var b = false;
-
-            foreach (var header in headers.OrderBy(h => h.Key))
-            {
-                // We don't want to log authentication tokens
-                if (header.Key == "Authorization")
-                {
-                    continue;
-                }
-
-                if (b)
-                {
-                    sb.Append(", ");
-                }
-
-                sb.Append(header.Key);
-                sb.Append('=');
-
-                var c = false;
-                foreach (var val in header.Value)
-                {
-                    if (c)
-                    {
-                        sb.Append(',');
-                    }
-
-                    sb.Append(val);
-                    c = true;
-                }
-
-                b = true;
+                return string.IsNullOrWhiteSpace(text) 
+                    ? FormulaValue.NewBlank(_returnType) 
+                    : FormulaValue.FromJson(text); // $$$ Do we need to check response media type to confirm that the content is indeed json?
             }
 
-            return sb.ToString();
+            return FormulaValue.NewError(
+                    new ExpressionError()
+                    {
+                        Kind = ErrorKind.Network,
+                        Severity = ErrorSeverity.Critical,
+                        Message = $"The server returned an HTTP error with code {statusCode}."
+                    },
+                    returnType);
         }
 
         public async Task<FormulaValue> InvokeAsync(string cacheScope, CancellationToken cancel, FormulaValue[] args)
@@ -255,7 +214,7 @@ namespace Microsoft.PowerFx.Connectors
         public ScopedHttpFunctionInvoker(DPath ns, string name, string cacheScope, HttpFunctionInvoker invoker)
         {
             Namespace = ns;
-            Name = name;  
+            Name = name;
 
             _cacheScope = cacheScope;
             _invoker = invoker ?? throw new ArgumentNullException(nameof(invoker));
