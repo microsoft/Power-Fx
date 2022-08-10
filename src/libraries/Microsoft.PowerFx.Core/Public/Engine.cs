@@ -184,7 +184,7 @@ namespace Microsoft.PowerFx
         }
 
         /// <summary>
-        /// Get intellisense from the formula.
+        /// Get intellisense from the formula, with parser options.
         /// </summary>
         public IIntellisenseResult Suggest(string expression, RecordType parameterType, int cursorPosition, ParserOptions options)
         {
