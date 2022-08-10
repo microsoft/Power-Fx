@@ -134,8 +134,8 @@ Errors: Error 0-14: Invalid argument type. Expecting one of the following: Numbe
 >> Value(Index(ParseJSON("{""a"": 5, ""b"": [{""c"": 19 }, {""c"": ""foo"" }] }").b, 1).c)
 19
 
->> Text(DateValue(ParseJSON("""2011-01-30""")), "yyyy-MM-dd")
-"2011-01-30"
+>> DateDiff(DateValue(ParseJSON("""2011-01-15""")), DateValue(ParseJSON("""2011-01-30""")))
+15
 
 >> DateValue(ParseJSON("""2011-1-15"""))
 #Error(Kind=InvalidArgument)
@@ -152,14 +152,14 @@ Blank()
 >> DateValue(ParseJSON("""abcdef"""))
 #Error(Kind=InvalidArgument)
 
->> Text(DateTimeValue(ParseJSON("""2011-01-15T08:00:00.000""")), "yyyy-MM-dd HH:mm:ss")
-"2011-01-15 08:00:00"
+>> DateDiff(DateTimeValue(ParseJSON("""2011-01-15T08:00:00.000Z""")), DateTimeValue(ParseJSON("""2011-01-30T08:00:00.000Z""")))
+15
 
->> Text(DateTimeValue(ParseJSON("""2011-01-15T08:00:00""")), "yyyy-MM-dd HH:mm:ss")
-"2011-01-15 08:00:00"
+>> DateDiff(DateTimeValue(ParseJSON("""2011-01-15T08:00:00Z""")), DateTimeValue(ParseJSON("""2011-01-30T08:00:00.000""")))
+15
 
->> Text(DateTimeValue(ParseJSON("""2011-01-15""")), "yyyy-MM-dd HH:mm:ss")
-"2011-01-15 00:00:00"
+>> DateDiff(DateTimeValue(ParseJSON("""2011-01-15T00:00:00""")), DateTimeValue(ParseJSON("""2011-01-30""")))
+15
 
 >> DateTimeValue(ParseJSON("""2011-01-15T08:0:00.000Z"""))
 #Error(Kind=InvalidArgument)
@@ -176,17 +176,17 @@ Blank()
 >> DateTimeValue(ParseJSON("""abcdef"""))
 #Error(Kind=InvalidArgument)
 
->> Text(DateValue(ParseJSON("""2022-05-05""")), "yyyy-MM-dd")
-"2022-05-05"
+>> Text(DateTimeValue(ParseJSON("""2022-05-05""")), "yyyy-MM-dd HH:mm:ss")
+"2022-05-05 00:00:00"
 
->> Text(DateValue(ParseJSON("""2011-01-15T08:00:00.000""")), "yyyy-MM-dd")
-"2011-01-15"
+>> DateDiff(DateValue(ParseJSON("""2011-01-15T08:00:00.000Z""")), DateValue(ParseJSON("""2011-01-30T08:00:00.000Z""")))
+15
 
->> Text(DateValue(ParseJSON("""2011-01-15T08:00:00""")), "yyyy-MM-dd")
-"2011-01-15"
+>> DateDiff(DateValue(ParseJSON("""2011-01-15T08:00:00Z""")), DateValue(ParseJSON("""2011-01-30T08:00:00.000""")))
+15
 
->> Text(DateValue(ParseJSON("""2011-01-15""")), "yyyy-MM-dd")
-"2011-01-15"
+>> DateDiff(DateValue(ParseJSON("""2011-01-15T00:00:00""")), DateValue(ParseJSON("""2011-01-30""")))
+15
 
 >> Text(TimeValue(ParseJSON("""08:03:05.000""")), "HH:mm:ss")
 "08:03:05"
