@@ -155,7 +155,10 @@ Blank()
 >> DateDiff(DateTimeValue(ParseJSON("""2011-01-15T08:00:00.000Z""")), DateTimeValue(ParseJSON("""2011-01-30T08:00:00.000Z""")))
 15
 
->> DateDiff(DateTimeValue(ParseJSON("""2011-01-15T08:00:00Z""")), DateTimeValue(ParseJSON("""2011-01-30T08:00:00.000""")))
+>> DateDiff(DateTimeValue(ParseJSON("""2011-01-15T08:00:00Z""")), DateTimeValue(ParseJSON("""2011-01-30T08:00:00Z""")))
+15
+
+>> DateDiff(DateTimeValue(ParseJSON("""2011-01-15T08:00:00.000""")), DateTimeValue(ParseJSON("""2011-01-30T08:00:00.000""")))
 15
 
 >> DateDiff(DateTimeValue(ParseJSON("""2011-01-15T00:00:00""")), DateTimeValue(ParseJSON("""2011-01-30""")))
@@ -182,10 +185,13 @@ Blank()
 >> DateDiff(DateValue(ParseJSON("""2011-01-15T08:00:00.000Z""")), DateValue(ParseJSON("""2011-01-30T08:00:00.000Z""")))
 15
 
->> DateDiff(DateValue(ParseJSON("""2011-01-15T08:00:00Z""")), DateValue(ParseJSON("""2011-01-30T08:00:00.000""")))
+>> DateDiff(DateValue(ParseJSON("""2011-01-15T08:00:00Z""")), DateValue(ParseJSON("""2011-01-30T08:00:00Z""")))
 15
 
 >> DateDiff(DateValue(ParseJSON("""2011-01-15T00:00:00""")), DateValue(ParseJSON("""2011-01-30""")))
+15
+
+>> DateDiff(DateValue(ParseJSON("""2011-01-15T08:00:00.000""")), DateValue(ParseJSON("""2011-01-30T08:00:00.000""")))
 15
 
 >> Text(TimeValue(ParseJSON("""08:03:05.000""")), "HH:mm:ss")
