@@ -1,9 +1,13 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
+using System.Reflection;
 using Microsoft.PowerFx.Core.Tests;
+using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
@@ -75,6 +79,13 @@ namespace Microsoft.PowerFx.Tests
             engine.Eval("SetProperty(x.BoolProp, true)", options: _opts);
             Assert.True(obj.BoolProp);
 
+            engine.Eval("SetProperty(x.RecordProp, {Value : \"2\"})", options: _opts);
+            Assert.True(obj.RecordProp.Value.Equals("2"));
+
+            engine.Eval("SetProperty(x.TableProp, Table({Value:\"1\"},{Value:\"2\"}))", options: _opts);
+            Assert.True(obj.TableProp.First().Value.Equals("1"));
+            Assert.True(obj.TableProp.Last().Value.Equals("2"));
+
             // Test failure cases
             var check = engine.Check("SetProperty(x.BoolProp, true)"); // Binding Fail, behavior prop 
             Assert.False(check.IsSuccess);
@@ -107,10 +118,58 @@ namespace Microsoft.PowerFx.Tests
 
                 // Use reflection to set
                 var prop = obj.GetType().GetProperty(propName.Value);
-                prop.SetValue(obj, newValue.ToObject());
+                var valueType = newValue.GetType();
+
+                if (valueType.Name.Equals(nameof(InMemoryRecordValue)))
+                {
+                    prop.SetValue(obj, RecordTableValueHelper(newValue));
+                } 
+                else if (valueType.Name.Equals(nameof(InMemoryTableValue)))
+                {
+                    prop.SetValue(obj, RecordTableValueHelper(newValue));
+                }
+                else
+                {                   
+                    prop.SetValue(obj, newValue.ToObject());
+                }                
 
                 return FormulaValue.New(true);
             }
+        }
+
+        // Helper for Record and Table Values
+        public static object RecordTableValueHelper(FormulaValue newValue)
+        {
+            var val = newValue.ToObject();
+            var recordObj = new RecordObj();
+
+            // Grabbing the values from table rows and storing in the table obj
+            if (val is IEnumerable<object> tableRow)
+            {
+                var tableObj = new RecordObj[tableRow.Count()];
+                var idx = 0;
+                foreach (var item in tableRow)
+                {
+                    recordObj = new RecordObj
+                    {
+                        Value = item.ToString()
+                    };
+                    tableObj[idx++] = recordObj;
+                }
+
+                return tableObj;
+            }
+
+            // Grabbing the values from record and storing in the table obj
+            if (val is IEnumerable<KeyValuePair<string, object>> resultList)
+            {
+                foreach (KeyValuePair<string, object> item in resultList)
+                {
+                    recordObj.Value = item.Value.ToString();
+                }               
+            }
+
+            return recordObj;
         }
 
         // Verify we can add overloads of a custom function. 
