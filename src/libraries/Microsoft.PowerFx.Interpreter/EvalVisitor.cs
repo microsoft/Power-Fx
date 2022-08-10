@@ -220,7 +220,7 @@ namespace Microsoft.PowerFx
                 {
                     var result = await ptr(this, context.IncrementStackDepthCounter(childContext), node.IRContext, args);
 
-                    if (IfFunction.CanCheckIfReturn(func))
+                    if (!func.ReturnType.IsUnknown)
                     {
                         Contract.Assert(result.IRContext.ResultType == node.IRContext.ResultType || result is ErrorValue || result.IRContext.ResultType is BlankType);
                     }

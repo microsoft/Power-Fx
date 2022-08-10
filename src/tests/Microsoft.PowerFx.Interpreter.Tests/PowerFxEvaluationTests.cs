@@ -91,7 +91,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
                 if (iSetup.HandlerName != null)
                 {
-                    if (!SetupHandlers.TryGetValue(iSetup.HandlerName, out var handler))
+                    if (!SetupHandlers.TryGetValue(setupHandlerName, out var handler))
                     {
                         throw new SetupHandlerNotFoundException();
                     }
