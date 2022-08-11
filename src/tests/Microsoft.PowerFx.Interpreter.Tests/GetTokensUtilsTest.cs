@@ -18,12 +18,15 @@ namespace Microsoft.PowerFx.Tests
         [InlineData("A+CountRows(B)", false, 3)]
         [InlineData("Behavior(); A+CountRows(B)", true, 4)]
         public void GetTokensTest(string expr, bool withAllowSideEffects, int expectedCount)
-        {
+        {            
             var config = new PowerFxConfig();
             config.AddFunction(new BehaviorFunction());
 
-            var scope = RecalcEngineScope.FromJson(new RecalcEngine(config), "{\"A\":1,\"B\":[1,2,3]}");
-            var checkResult = scope.Check(expr, withAllowSideEffects ? new ParserOptions() { AllowsSideEffects = true } : null);
+            var scope = RecalcEngineScope.FromJson(
+                new RecalcEngine(config), 
+                "{\"A\":1,\"B\":[1,2,3]}",
+                withAllowSideEffects ? new ParserOptions() { AllowsSideEffects = true } : null);
+            var checkResult = scope.Check(expr);
 
             var result = GetTokensUtils.GetTokens(checkResult._binding, GetTokensFlags.None);
             Assert.Equal(0, result.Count);

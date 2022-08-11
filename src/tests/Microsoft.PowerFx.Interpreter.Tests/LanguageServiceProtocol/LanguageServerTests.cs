@@ -37,7 +37,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Init();
         }
 
-        private void Init(Features features = Features.None)
+        private void Init(Features features = Features.None, ParserOptions options = null)
         {
             var config = new PowerFxConfig(features: features);
             config.AddFunction(new BehaviorFunction());
@@ -45,7 +45,9 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             var engine = new Engine(config);
 
             _sendToClientData = new List<string>();
-            _scopeFactory = new TestPowerFxScopeFactory((string documentUri) => RecalcEngineScope.FromUri(engine, documentUri));
+            _scopeFactory = new TestPowerFxScopeFactory(
+                (string documentUri) => RecalcEngineScope.FromUri(engine, documentUri, options),
+                options);
             _testServer = new TestLanguageServer(_sendToClientData.Add, _scopeFactory);
         }
 
@@ -187,6 +189,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         [InlineData("Behavior(); A+CountRows(B)", true)]
         public void TestDidChange(string text, bool withAllowSideEffects)
         {
+            Init(options: GetParserOptions(withAllowSideEffects));
+
             // test good formula
             _sendToClientData.Clear();
 
@@ -207,7 +211,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
                         new TextDocumentContentChangeEvent() { Text = text }
                     }
                     }
-                }), GetParserOptions(withAllowSideEffects));
+                }));
 
             Assert.Single(_sendToClientData);
             var notification = JsonSerializer.Deserialize<JsonRpcPublishDiagnosticsNotification>(_sendToClientData[0], _jsonSerializerOptions);
@@ -367,6 +371,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         [InlineData("Behavior(); Concatenate(", 24, false, true)]
         public void TestDidOpenWithErrors(string text, int offset, bool withAllowSideEffects, bool expectBehaviorError)
         {
+            Init(options: GetParserOptions(withAllowSideEffects));
+
             _testServer.OnDataReceived(
                 JsonSerializer.Serialize(new
                 {
@@ -382,7 +388,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
                             Text = text
                         }
                     }
-                }), GetParserOptions(withAllowSideEffects));
+                }));
 
             CheckBehaviorError(_sendToClientData[0], expectBehaviorError, out var diags);
 
@@ -412,8 +418,10 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 
         // $$$ This test generates an internal error as we use an behavior function but we have no way to check its presence
         [InlineData("Behavior(); Color.AliceBl", 25, false)]
-        public void TestCompletion(string text, int offset, bool withAllowStideEffects)
+        public void TestCompletion(string text, int offset, bool withAllowSideEffects)
         {
+            Init(options: GetParserOptions(withAllowSideEffects));
+
             // test good formula
             _testServer.OnDataReceived(
                 JsonSerializer.Serialize(new
@@ -434,7 +442,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
                         },
                         Context = new CompletionContext()
                     }
-                }), withAllowStideEffects ? new ParserOptions() { AllowsSideEffects = true } : null);
+                }));
             Assert.Single(_sendToClientData);
             var response = JsonSerializer.Deserialize<JsonRpcCompletionResponse>(_sendToClientData[0], _jsonSerializerOptions);
             Assert.Equal("2.0", response.Jsonrpc);
@@ -622,6 +630,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         [InlineData("Behavior(); Power(", 18, "Behavior(); Power(2,", 20, false)]
         public void TestSignatureHelp(string text, int offset, string text2, int offset2, bool withAllowSideEffects)
         {
+            Init(options: GetParserOptions(withAllowSideEffects));
+
             // test good formula
             _testServer.OnDataReceived(
                 JsonSerializer.Serialize(new
@@ -646,7 +656,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
                             TriggerCharacter = "("
                         }
                     }
-                }), GetParserOptions(withAllowSideEffects));
+                }));
             Assert.Single(_sendToClientData);
             var response = JsonSerializer.Deserialize<JsonRpcSignatureHelpResponse>(_sendToClientData[0], _jsonSerializerOptions);
             Assert.Equal("2.0", response.Jsonrpc);
@@ -684,7 +694,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
                             TriggerCharacter = ","
                         }
                     }
-                }), GetParserOptions(withAllowSideEffects));
+                }));
 
             Assert.Single(_sendToClientData);
             response = JsonSerializer.Deserialize<JsonRpcSignatureHelpResponse>(_sendToClientData[0], _jsonSerializerOptions);
@@ -720,7 +730,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
                         },
                         Context = new CompletionContext()
                     }
-                }), GetParserOptions(withAllowSideEffects));
+                }));
 
             Assert.Single(_sendToClientData);
             var errorResponse = JsonSerializer.Deserialize<JsonRpcErrorResponse>(_sendToClientData[0], _jsonSerializerOptions);
@@ -735,6 +745,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         [InlineData("Behavior(); A+CountRows(B)", 4, false, true)]
         public void TestPublishTokens(string text, int count, bool withAllowSideEffects, bool expectBehaviorError)
         {
+            Init(options: GetParserOptions(withAllowSideEffects));
+
             // getTokensFlags = 0x0 (none), 0x1 (tokens inside expression), 0x2 (all functions)
             var documentUri = "powerfx://app?context={\"A\":1,\"B\":[1,2,3]}&getTokensFlags=1";
 
@@ -753,7 +765,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
                             Text = text
                         }
                     }
-                }), GetParserOptions(withAllowSideEffects));
+                }));
 
             Assert.Equal(2, _sendToClientData.Count);
             var response = JsonSerializer.Deserialize<JsonRpcPublishTokensNotification>(_sendToClientData[1], _jsonSerializerOptions);
@@ -792,7 +804,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
                         new TextDocumentContentChangeEvent() { Text = text }
                     }
                     }
-                }), GetParserOptions(withAllowSideEffects));
+                }));
 
             Assert.Equal(2, _sendToClientData.Count);
             response = JsonSerializer.Deserialize<JsonRpcPublishTokensNotification>(_sendToClientData[1], _jsonSerializerOptions);
@@ -828,7 +840,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
                         new TextDocumentContentChangeEvent() { Text = text }
                     }
                     }
-                }), GetParserOptions(withAllowSideEffects));
+                }));
 
             Assert.Equal(2, _sendToClientData.Count);
             response = JsonSerializer.Deserialize<JsonRpcPublishTokensNotification>(_sendToClientData[1], _jsonSerializerOptions);

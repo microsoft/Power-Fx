@@ -11,24 +11,25 @@ namespace Microsoft.PowerFx
     /// <summary>
     /// Implement a <see cref="IPowerFxScope"/> for intellisense on top of an <see cref="Engine"/> instance.
     /// </summary>
-    public class RecalcEngineScope : IPowerFxScopeExtended
+    public class RecalcEngineScope : IPowerFxScope
     {
         private readonly Engine _engine;
-
         private readonly RecordType _contextType;
-
-        private RecalcEngineScope(Engine engine, RecordType contextType)
+        private readonly ParserOptions _parserOptions;
+        
+        private RecalcEngineScope(Engine engine, RecordType contextType, ParserOptions options)
         {
             _engine = engine;
             _contextType = contextType;
+            _parserOptions = options;
         }
 
-        public static RecalcEngineScope FromRecord(Engine engine, RecordType type)
+        public static RecalcEngineScope FromRecord(Engine engine, RecordType type, ParserOptions options = null)
         {
-            return new RecalcEngineScope(engine, type);
+            return new RecalcEngineScope(engine, type, options);
         }
 
-        public static RecalcEngineScope FromUri(Engine engine, string uri)
+        public static RecalcEngineScope FromUri(Engine engine, string uri, ParserOptions options = null)
         {
             var uriObj = new Uri(uri);
             var contextJson = HttpUtility.ParseQueryString(uriObj.Query).Get("context");
@@ -37,33 +38,23 @@ namespace Microsoft.PowerFx
                 contextJson = "{}";
             }
 
-            return FromJson(engine, contextJson);
+            return FromJson(engine, contextJson, options);
         }
 
-        public static RecalcEngineScope FromJson(Engine engine, string json)
+        public static RecalcEngineScope FromJson(Engine engine, string json, ParserOptions options = null)
         {
             var context = FormulaValue.FromJson(json);
-            return FromRecord(engine, (RecordType)context.Type);
+            return FromRecord(engine, (RecordType)context.Type, options);
         }
 
         public CheckResult Check(string expression)
         {
-            return Check(expression, null);
-        }
-
-        public CheckResult Check(string expression, ParserOptions options)
-        {
-            return _engine.Check(expression, _contextType, options);
+            return _engine.Check(expression, _contextType, _parserOptions);
         }
 
         public IIntellisenseResult Suggest(string expression, int cursorPosition)
         {            
-            return Suggest(expression, Check(expression), cursorPosition);
-        }
-
-        public IIntellisenseResult Suggest(string expression, CheckResult checkResult, int cursorPosition)            
-        {
-            return _engine.Suggest(expression, checkResult, cursorPosition);
+            return _engine.Suggest(expression, Check(expression), cursorPosition);
         }
 
         public string ConvertToDisplay(string expression)
