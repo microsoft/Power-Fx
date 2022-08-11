@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using Microsoft.PowerFx.Core;
+using Microsoft.PowerFx.Core.Public;
 using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.LanguageServerProtocol.Protocol;
 
@@ -14,17 +15,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             throw new System.NotImplementedException();
         }
 
-        public CheckResult Check(string expression, ParserOptions options)
-        {
-            throw new System.NotImplementedException();
-        }
-
         public IIntellisenseResult Suggest(string expression, int cursorPosition)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public IIntellisenseResult Suggest(string expression, int cursorPosition, ParserOptions options)
         {
             throw new System.NotImplementedException();
         }

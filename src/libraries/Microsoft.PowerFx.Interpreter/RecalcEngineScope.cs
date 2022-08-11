@@ -48,22 +48,12 @@ namespace Microsoft.PowerFx
 
         public CheckResult Check(string expression)
         {
-            return Check(expression, null);
-        }
-
-        public CheckResult Check(string expression, ParserOptions options)
-        {
-            return _engine.Check(expression, _contextType, options);
+            return _engine.Check(expression, _contextType);
         }
 
         public IIntellisenseResult Suggest(string expression, int cursorPosition)
         {
-            return Suggest(expression, cursorPosition, null);
-        }
-
-        public IIntellisenseResult Suggest(string expression, int cursorPosition, ParserOptions options)
-        {
-            return _engine.Suggest(expression, _contextType, cursorPosition, options);
+            return _engine.Suggest(expression, _contextType, cursorPosition);
         }
 
         public string ConvertToDisplay(string expression)

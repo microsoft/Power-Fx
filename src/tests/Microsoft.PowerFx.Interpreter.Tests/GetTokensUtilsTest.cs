@@ -8,36 +8,25 @@ using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Intellisense;
 using Xunit;
-using static Microsoft.PowerFx.Tests.BindingEngineTests;
 
 namespace Microsoft.PowerFx.Tests
 {
     public class GetTokensUtilsTest : PowerFxTest
     {
-        [Theory]
-        [InlineData("A+CountRows(B)", false, 3)]
-        [InlineData("Behavior(); A+CountRows(B)", true, 4)]
-        public void GetTokensTest(string expr, bool withAllowSideEffects, int expectedCount)
+        [Fact]
+        public void GetTokensTest()
         {
-            var config = new PowerFxConfig();
-            config.AddFunction(new BehaviorFunction());
-
-            var scope = RecalcEngineScope.FromJson(new RecalcEngine(config), "{\"A\":1,\"B\":[1,2,3]}");
-            var checkResult = scope.Check(expr, withAllowSideEffects ? new ParserOptions() { AllowsSideEffects = true } : null);
+            var scope = RecalcEngineScope.FromJson(new RecalcEngine(), "{\"A\":1,\"B\":[1,2,3]}");
+            var checkResult = scope.Check("A+CountRows(B)");
 
             var result = GetTokensUtils.GetTokens(checkResult._binding, GetTokensFlags.None);
             Assert.Equal(0, result.Count);
 
             result = GetTokensUtils.GetTokens(checkResult._binding, GetTokensFlags.UsedInExpression);
-            Assert.Equal(expectedCount, result.Count);
+            Assert.Equal(3, result.Count);
             Assert.Equal(TokenResultType.Variable, result["A"]);
             Assert.Equal(TokenResultType.Variable, result["B"]);
             Assert.Equal(TokenResultType.Function, result["CountRows"]);
-
-            if (expectedCount == 4)
-            {
-                Assert.Equal(TokenResultType.Function, result["Behavior"]);
-            }
 
             result = GetTokensUtils.GetTokens(checkResult._binding, GetTokensFlags.AllFunctions);
             Assert.False(result.ContainsKey("A"));

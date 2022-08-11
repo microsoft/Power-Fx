@@ -178,17 +178,12 @@ namespace Microsoft.PowerFx
             return IntellisenseProvider.GetIntellisense(Config);
         }
 
+        /// <summary>
+        /// Get intellisense from the formula.
+        /// </summary>
         public IIntellisenseResult Suggest(string expression, RecordType parameterType, int cursorPosition)
         {
-            return Suggest(expression, parameterType, cursorPosition, null);
-        }
-
-        /// <summary>
-        /// Get intellisense from the formula, with parser options.
-        /// </summary>
-        public IIntellisenseResult Suggest(string expression, RecordType parameterType, int cursorPosition, ParserOptions options)
-        {
-            var result = Check(expression, parameterType, options);
+            var result = Check(expression, parameterType);
             var binding = result._binding;
             var formula = new Formula(expression, Config.CultureInfo);
             formula.ApplyParse(result.Parse);

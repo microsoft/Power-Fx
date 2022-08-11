@@ -260,22 +260,17 @@ namespace Microsoft.PowerFx.Tests
         }
 
         // Very documentation strings from the Swagger show up in the intellisense.
-        [Theory]
-        [InlineData("MSNWeather.CurrentWeather(", false)]
-        [InlineData("Behavior(); MSNWeather.CurrentWeather(", true)]
-
-        // $$$ This test generates an internal error as we use an behavior function but we have no way to check its presence
-        [InlineData("Behavior(); MSNWeather.CurrentWeather(", false)]
-        public void IntellisenseHelpStrings(string expr, bool withAllowSideEffects)
+        [Fact]
+        public void IntellisenseHelpStrings()
         {
             var apiDoc = Helpers.ReadSwagger(@"Swagger\MSNWeather.json");
 
             var config = new PowerFxConfig();
             config.AddService("MSNWeather", apiDoc, null);
-            config.AddFunction(new BehaviorFunction());
-
             var engine = new Engine(config);
-            var result = engine.Suggest(expr, RecordType.Empty(), expr.Length, withAllowSideEffects ? new ParserOptions() { AllowsSideEffects = true } : null);
+
+            var expr = "MSNWeather.CurrentWeather(";
+            var result = engine.Suggest(expr, RecordType.Empty(), expr.Length);
 
             var overload = result.FunctionOverloads.Single();
             Assert.Equal(Intellisense.SuggestionKind.Function, overload.Kind);
