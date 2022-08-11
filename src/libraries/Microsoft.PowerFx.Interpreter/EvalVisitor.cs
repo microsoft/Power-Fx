@@ -11,6 +11,7 @@ using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.IR.Symbols;
+using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
@@ -219,7 +220,11 @@ namespace Microsoft.PowerFx
                 {
                     var result = await ptr(this, context.IncrementStackDepthCounter(childContext), node.IRContext, args);
 
-                    Contract.Assert(result.IRContext.ResultType == node.IRContext.ResultType || result is ErrorValue || result.IRContext.ResultType is BlankType);
+                    if (IfFunction.CanCheckIfReturn(func))
+                    {
+                        Contract.Assert(result.IRContext.ResultType == node.IRContext.ResultType || result is ErrorValue || result.IRContext.ResultType is BlankType);
+                    }
+
                     return result;
                 }
 
