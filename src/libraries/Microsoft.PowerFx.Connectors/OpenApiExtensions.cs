@@ -138,7 +138,7 @@ namespace Microsoft.PowerFx.Connectors
 
         // Internal parameters are not showen to the user. 
         // They can have a default value or be special cased by the infrastructure (like "connectionId").
-        public static bool IsInternal(this OpenApiParameter param) => param.Extensions.TryGetValue("x-ms-visibility", out _);
+        public static bool IsInternal(this OpenApiParameter param) => param.Extensions.TryGetValue("x-ms-visibility", out var openApiExt) && openApiExt is OpenApiString openApiStr && openApiStr.Value == "internal";                    
 
         // See https://swagger.io/docs/specification/data-models/data-types/
         public static FormulaType ToFormulaType(this OpenApiSchema schema)

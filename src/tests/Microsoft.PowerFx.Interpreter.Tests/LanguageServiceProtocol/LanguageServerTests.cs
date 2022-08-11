@@ -38,10 +38,10 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         private void Init(Features features = Features.None)
         {
             var engine = new Engine(new PowerFxConfig(features: features));
-            
+
             _sendToClientData = new List<string>();
             _scopeFactory = new TestPowerFxScopeFactory((string documentUri) => RecalcEngineScope.FromUri(engine, documentUri));
-            _testServer = new TestLanguageServer(_sendToClientData.Add, _scopeFactory);           
+            _testServer = new TestLanguageServer(_sendToClientData.Add, _scopeFactory);
         }
 
         // From JPC spec: https://microsoft.github.io/language-server-protocol/specifications/specification-3-14/
@@ -127,7 +127,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 
         [Fact]
         public void TestLanguageServerCommunication()
-        {            
+        {
             // bad payload
             _testServer.OnDataReceived(JsonSerializer.Serialize(new { }));
 
@@ -179,7 +179,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 
         [Fact]
         public void TestDidChange()
-        {            
+        {
             // test good formula
             _sendToClientData.Clear();
             _testServer.OnDataReceived(JsonSerializer.Serialize(new
@@ -372,7 +372,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 
         [Fact]
         public void TestCompletion()
-        {            
+        {
             // test good formula
             _testServer.OnDataReceived(JsonSerializer.Serialize(new
             {
@@ -574,7 +574,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 
         [Fact]
         public void TestSignatureHelp()
-        {            
+        {
             // test good formula
             _testServer.OnDataReceived(JsonSerializer.Serialize(new
             {
@@ -679,7 +679,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 
         [Fact]
         public void TestPublishTokens()
-        {            
+        {
             // getTokensFlags = 0x0 (none), 0x1 (tokens inside expression), 0x2 (all functions)
             var documentUri = "powerfx://app?context={\"A\":1,\"B\":[1,2,3]}&getTokensFlags=1";
             _testServer.OnDataReceived(JsonSerializer.Serialize(new
