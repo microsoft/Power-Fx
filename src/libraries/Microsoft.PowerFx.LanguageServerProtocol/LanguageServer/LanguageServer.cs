@@ -150,7 +150,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             var scope = _scopeFactory.GetOrCreateInstance(documentUri);
 
             var expression = didOpenParams.TextDocument.Text;
-            var result = scope.Check(expression, options);
+            var result = scope is IPowerFxScopeExtended scopeExtended ? scopeExtended.Check(expression, options) : scope.Check(expression);
 
             PublishDiagnosticsNotification(documentUri, expression, result.Errors.ToArray());
 
@@ -181,7 +181,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             var scope = _scopeFactory.GetOrCreateInstance(documentUri);
 
             var expression = didChangeParams.ContentChanges[0].Text;
-            var result = scope.Check(expression, options);
+            var result = scope is IPowerFxScopeExtended scopeExtended ? scopeExtended.Check(expression, options) : scope.Check(expression);
 
             PublishDiagnosticsNotification(documentUri, expression, result.Errors.ToArray());
 
@@ -219,9 +219,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             }
 
             var cursorPosition = GetPosition(expression, completionParams.Position.Line, completionParams.Position.Character);
-            var checkResult = scope.Check(expression, options);
-            var result = scope.Suggest(expression, checkResult, cursorPosition);
-
+            var result = Suggest(options, scope, expression, cursorPosition);
             var items = new List<CompletionItem>();
 
             foreach (var item in result.Suggestions)
@@ -240,6 +238,23 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                 items,
                 isIncomplete = false
             }));
+        }
+
+        private static IIntellisenseResult Suggest(ParserOptions options, IPowerFxScope scope, string expression, int cursorPosition)
+        {
+            IIntellisenseResult result;
+
+            if (scope is IPowerFxScopeExtended extendedScope)
+            {
+                var checkResult = extendedScope.Check(expression, options);
+                result = extendedScope.Suggest(expression, checkResult, cursorPosition);
+            }
+            else
+            {
+                result = scope.Suggest(expression, cursorPosition);
+            }
+
+            return result;
         }
 
         private void HandleSignatureHelpRequest(string id, string paramsJson, ParserOptions options)
@@ -271,8 +286,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             }
 
             var cursorPosition = GetPosition(expression, signatureHelpParams.Position.Line, signatureHelpParams.Position.Character);
-            var checkResult = scope.Check(expression, options);
-            var result = scope.Suggest(expression, checkResult, cursorPosition);
+            var result = Suggest(options, scope, expression, cursorPosition);
 
             _sendToClient(JsonRpcHelper.CreateSuccessResult(id, result.SignatureHelp));
         }

@@ -7,11 +7,9 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Connectors;
-using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Types;
 using Xunit;
-using static Microsoft.PowerFx.Tests.BindingEngineTests;
 
 namespace Microsoft.PowerFx.Tests
 {
@@ -176,18 +174,18 @@ namespace Microsoft.PowerFx.Tests
 
             var config = new PowerFxConfig();
             config.AddService("MSNWeather", apiDoc, null);
-            config.AddFunction(new BehaviorFunction());
+            config.AddBehaviorFunction();
 
             var engine = new Engine(config);
             var check = engine.Check(expr, RecordType.Empty(), withAllowSideEffects ? new ParserOptions() { AllowsSideEffects = true } : null);
 
             if (expectedBehaviorError)
             {
-                Assert.Contains(check.Errors, d => d.Message == StringResources.GetErrorResource(TexlStrings.ErrBehaviorPropertyExpected).GetSingleValue(ErrorResource.ShortMessageTag));
+                Assert.Contains(check.Errors, d => d.Message == Extensions.GetErrBehaviorPropertyExpectedMessage());
             }
             else
             {
-                Assert.DoesNotContain(check.Errors, d => d.Message == StringResources.GetErrorResource(TexlStrings.ErrBehaviorPropertyExpected).GetSingleValue(ErrorResource.ShortMessageTag));
+                Assert.DoesNotContain(check.Errors, d => d.Message == Extensions.GetErrBehaviorPropertyExpectedMessage());
             }
 
             var result = engine.Suggest(expr, check, expr.Length);

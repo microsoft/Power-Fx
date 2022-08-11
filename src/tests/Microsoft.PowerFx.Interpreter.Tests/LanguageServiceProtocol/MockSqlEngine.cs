@@ -14,17 +14,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             throw new System.NotImplementedException();
         }
 
-        public CheckResult Check(string expression, ParserOptions options)
-        {
-            throw new System.NotImplementedException();
-        }
-
         public IIntellisenseResult Suggest(string expression, int cursorPosition)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public IIntellisenseResult Suggest(string expression, CheckResult checkResult, int cursorPosition)
         {
             throw new System.NotImplementedException();
         }
