@@ -62,7 +62,7 @@ namespace Microsoft.PowerFx.Types
             {
                 throw new ArgumentNullException(nameof(value));
             }
-            
+
             return new StringValue(ir, value);
         }
 
@@ -113,7 +113,12 @@ namespace Microsoft.PowerFx.Types
 
         public static ErrorValue NewError(ExpressionError error)
         {
-            return new ErrorValue(IRContext.NotInSource(FormulaType.Blank), error);
+            return NewError(error, FormulaType.Blank);
+        }
+
+        public static ErrorValue NewError(ExpressionError error, FormulaType type)
+        {
+            return new ErrorValue(IRContext.NotInSource(type), error);
         }
 
         public static UntypedObjectValue New(IUntypedObject untypedObject)
