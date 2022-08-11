@@ -11,7 +11,7 @@ namespace Microsoft.PowerFx
     /// <summary>
     /// Implement a <see cref="IPowerFxScope"/> for intellisense on top of an <see cref="Engine"/> instance.
     /// </summary>
-    public class RecalcEngineScope : IPowerFxScopeExtended
+    public class RecalcEngineScope : IPowerFxScope
     {
         private readonly Engine _engine;
 
