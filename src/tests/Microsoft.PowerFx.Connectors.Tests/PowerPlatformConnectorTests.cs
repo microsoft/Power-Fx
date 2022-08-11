@@ -260,17 +260,31 @@ namespace Microsoft.PowerFx.Tests
         }
 
         // Very documentation strings from the Swagger show up in the intellisense.
-        [Fact]
-        public void IntellisenseHelpStrings()
+        [Theory]
+        [InlineData("MSNWeather.CurrentWeather(", false, false)]
+        [InlineData("Behavior(); MSNWeather.CurrentWeather(", true, false)]
+        [InlineData("Behavior(); MSNWeather.CurrentWeather(", false, true)]
+        public void IntellisenseHelpStrings(string expr, bool withAllowSideEffects, bool expectedBehaviorError)
         {
             var apiDoc = Helpers.ReadSwagger(@"Swagger\MSNWeather.json");
 
             var config = new PowerFxConfig();
             config.AddService("MSNWeather", apiDoc, null);
-            var engine = new Engine(config);
+            config.AddBehaviorFunction();
 
-            var expr = "MSNWeather.CurrentWeather(";
-            var result = engine.Suggest(expr, RecordType.Empty(), expr.Length);
+            var engine = new Engine(config);
+            var check = engine.Check(expr, RecordType.Empty(), withAllowSideEffects ? new ParserOptions() { AllowsSideEffects = true } : null);
+
+            if (expectedBehaviorError)
+            {
+                Assert.Contains(check.Errors, d => d.Message == Extensions.GetErrBehaviorPropertyExpectedMessage());
+            }
+            else
+            {
+                Assert.DoesNotContain(check.Errors, d => d.Message == Extensions.GetErrBehaviorPropertyExpectedMessage());
+            }
+
+            var result = engine.Suggest(expr, check, expr.Length);
 
             var overload = result.FunctionOverloads.Single();
             Assert.Equal(Intellisense.SuggestionKind.Function, overload.Kind);

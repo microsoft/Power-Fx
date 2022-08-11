@@ -312,7 +312,7 @@ namespace Microsoft.PowerFx.Tests
         /// <summary>
         /// A function with behavior/side-effects used in testing.
         /// </summary>
-        private class BehaviorFunction : TexlFunction
+        internal class BehaviorFunction : TexlFunction
         {
             public BehaviorFunction()
                 : base(
