@@ -498,37 +498,37 @@
     <value>Текстуална вредност коју треба конвертовати у Булову вредност.</value>
   </data>
   <data name="AboutBooleanT" xml:space="preserve">
-    <value>Converts a column of text values to a column of boolean values.</value>
+    <value>Конвертује колону текстуалних вредности у колону Булових вредности.</value>
     
   </data>
   <data name="BooleanTArg1" xml:space="preserve">
-    <value>input</value>
+    <value>унос</value>
     
   </data>
   <data name="AboutBooleanT_input" xml:space="preserve">
-    <value>A column of text values to process.</value>
+    <value>Колона вредности текста за обраду.</value>
   </data>
   <data name="AboutBooleanN" xml:space="preserve">
-    <value>Converts a 'number' to a boolean value.</value>
+    <value>Конвертује „број“ у Булову вредност.</value>
     
   </data>
   <data name="BooleanNArg1" xml:space="preserve">
-    <value>number</value>
+    <value>број</value>
     
   </data>
   <data name="AboutBooleanN_number" xml:space="preserve">
-    <value>The number value to convert to a boolean value.</value>
+    <value>Бројчана вредност коју треба конвертовати у Булову вредност.</value>
   </data>
   <data name="AboutBooleanNT" xml:space="preserve">
-    <value>Converts a column of numeric values to a column of boolean values.</value>
+    <value>Конвертује колону нумеричких вредности у колону Булових вредности.</value>
     
   </data>
   <data name="BooleanNTArg1" xml:space="preserve">
-    <value>input</value>
+    <value>унос</value>
     
   </data>
   <data name="AboutBooleanNT_input" xml:space="preserve">
-    <value>A column of number values to process.</value>
+    <value>Колона вредности бројева за обраду.</value>
   </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Враћа први аргумент који није празан</value>
@@ -3924,12 +3924,20 @@
     <value>Није подржано у колонама формула.</value>
     
   </data>
+  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
+    <value>Неважећи број аргумената за функцију {0}: примљено {1}, очекивано {2}</value>
+    
+  </data>
   <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
     <value>Аргумент {0} није подржан за функцију {1} у колонама формула.</value>
     
   </data>
   <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
     <value>Није могуће проследити овај аргумент као овај тип у колонама формула.</value>
+    
+  </data>
+  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
+    <value>Није могуће проследити овај аргумент као тип {0} у колонама формула.</value>
     
   </data>
   <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
@@ -3948,6 +3956,10 @@
     <value>У колонама формула подржане су само ниске кратког формата датума и времена.</value>
     
   </data>
+  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
+    <value>Аргумент {0} је неважећа/неподржана јединица времена за функцију аритметичког датума {1}.</value>
+    
+  </data>
   <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
     <value>Токени обликовања специфични за локални стандард, као што су „.“ и „,“ нису подржани у колонама формула.</value>
     
@@ -3956,8 +3968,16 @@
     <value>Функција {0} није подржана у колонама формула, користите {1} уместо ње.</value>
     
   </data>
+  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
+    <value>Није могуће извршити ову операцију на типу {0} у колонама формуле.</value>
+    
+  </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
     <value>Тип резултата {0} није подржан у колонама са формулама.</value>
+    
+  </data>
+  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
+    <value>Директно упућивање на цео запис није подржано у колонама формула. Поставите важеће поље у запису као референцу.</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
@@ -3972,8 +3992,20 @@
     <value>Колоне типа {0} са форматом {1} нису подржане у колонама са формулама.</value>
     
   </data>
+  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
+    <value>Принуда записа или табела није подржана у колонама формула.</value>
+    
+  </data>
   <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
     <value>Формуле не могу бити дуже од 1000 знакова.</value>
+    
+  </data>
+  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
+    <value>Табеле са једном колоном нису подржане у колонама са формулама.</value>
+    
+  </data>
+  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
+    <value>Није могуће поставити виртуелну табелу {0} као референцу у колонама формула.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
@@ -4591,6 +4623,38 @@
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
     <value>Први аргумент за „{0}“ треба да буде важеће име променљиве и не може да буде неусаглашено ни са једним именом постојеће контроле, екрана, колекције или извора података. Пронађен је тип „{1}“</value>
+    
+  </data>
+  <data name="ErrUDF_MissingIdentifier" xml:space="preserve">
+    <value>Кориснички дефинисаној функцији недостаје важећи назив</value>
+    
+  </data>
+  <data name="ErrUDF_MissingOpenParen" xml:space="preserve">
+    <value>Кориснички дефинисаној функцији овде недостаје „(“</value>
+    
+  </data>
+  <data name="ErrUDF_MissingEqual" xml:space="preserve">
+    <value>Кориснички дефинисаној функцији овде недостаје „=“</value>
+    
+  </data>
+  <data name="ErrUDF_MissingCloseParen" xml:space="preserve">
+    <value>Кориснички дефинисаној функцији овде недостаје „)“</value>
+    
+  </data>
+  <data name="ErrUDF_MissingSemicolon" xml:space="preserve">
+    <value>Кориснички дефинисаној функцији овде недостаје „;“</value>
+    
+  </data>
+  <data name="ErrUDF_MissingComma" xml:space="preserve">
+    <value>Кориснички дефинисаној функцији овде недостаје „,“</value>
+    
+  </data>
+  <data name="ErrUDF_MissingColon" xml:space="preserve">
+    <value>Кориснички дефинисаној функцији овде недостаје „:“</value>
+    
+  </data>
+  <data name="ErrUDF_DuplicateArgName" xml:space="preserve">
+    <value>Кориснички дефинисана функција има дупликат назива аргумента</value>
     
   </data>
   <data name="AboutSet" xml:space="preserve">

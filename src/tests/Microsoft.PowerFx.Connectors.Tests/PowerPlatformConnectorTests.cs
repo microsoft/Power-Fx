@@ -11,6 +11,7 @@ using Microsoft.PowerFx.Connectors;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Types;
 using Xunit;
+using static Microsoft.PowerFx.Tests.BindingEngineTests;
 
 namespace Microsoft.PowerFx.Tests
 {
@@ -259,17 +260,31 @@ namespace Microsoft.PowerFx.Tests
         }
 
         // Very documentation strings from the Swagger show up in the intellisense.
-        [Fact]
-        public void IntellisenseHelpStrings()
+        [Theory]
+        [InlineData("MSNWeather.CurrentWeather(", false, false)]
+        [InlineData("Behavior(); MSNWeather.CurrentWeather(", true, false)]
+        [InlineData("Behavior(); MSNWeather.CurrentWeather(", false, true)]
+        public void IntellisenseHelpStrings(string expr, bool withAllowSideEffects, bool expectedBehaviorError)
         {
             var apiDoc = Helpers.ReadSwagger(@"Swagger\MSNWeather.json");
 
             var config = new PowerFxConfig();
             config.AddService("MSNWeather", apiDoc, null);
-            var engine = new Engine(config);
+            config.AddBehaviorFunction();
 
-            var expr = "MSNWeather.CurrentWeather(";
-            var result = engine.Suggest(expr, RecordType.Empty(), expr.Length);
+            var engine = new Engine(config);
+            var check = engine.Check(expr, RecordType.Empty(), withAllowSideEffects ? new ParserOptions() { AllowsSideEffects = true } : null);
+
+            if (expectedBehaviorError)
+            {
+                Assert.Contains(check.Errors, d => d.Message == Extensions.GetErrBehaviorPropertyExpectedMessage());
+            }
+            else
+            {
+                Assert.DoesNotContain(check.Errors, d => d.Message == Extensions.GetErrBehaviorPropertyExpectedMessage());
+            }
+
+            var result = engine.Suggest(expr, check, expr.Length);
 
             var overload = result.FunctionOverloads.Single();
             Assert.Equal(Intellisense.SuggestionKind.Function, overload.Kind);
@@ -350,6 +365,118 @@ namespace Microsoft.PowerFx.Tests
                 httpClient));
 
             Assert.Equal("Swagger document doesn't contain an endpoint", ex2.Message);
+        }
+
+        [Fact]
+        public async Task Office365Users_UserProfile_V2()
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\Office_365_Swagger.json");
+            var apiDoc = testConnector._apiDocument;
+            var config = new PowerFxConfig();
+
+            using var httpClient = new HttpClient(testConnector);
+
+            using var client = new PowerPlatformConnectorClient(
+                    "firstrelease-001.azure-apim.net",               // endpoint
+                    "839eace6-59ab-4243-97ec-a5b8fcc104e4",          // environment
+                    "72c42ee1b3c7403c8e73aa9c02a7fbcc",              // connectionId
+                    () => "Some JWT token",
+                    httpClient)
+            {
+                SessionId = "02199f4f-8306-4996-b1c3-1b6094c2b7f8"
+            };
+
+            config.AddService("Office365Users", apiDoc, client);           
+            var engine = new RecalcEngine(config);            
+            testConnector.SetResponseFromFile(@"Responses\Office365_UserProfileV2.json");            
+            var result = await engine.EvalAsync(@"Office365Users.UserProfile_V2(""johndoe@microsoft.com"").mobilePhone", CancellationToken.None);
+
+            Assert.IsType<StringValue>(result);
+            Assert.Equal("+33 799 999 999", (result as StringValue).Value);
+        }
+
+        [Fact]
+        public async Task Office365Users_MyProfile_V2()
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\Office_365_Swagger.json");
+            var apiDoc = testConnector._apiDocument;
+            var config = new PowerFxConfig();
+
+            using var httpClient = new HttpClient(testConnector);
+
+            using var client = new PowerPlatformConnectorClient(
+                    "firstrelease-001.azure-apim.net",               // endpoint
+                    "839eace6-59ab-4243-97ec-a5b8fcc104e4",          // environment
+                    "72c42ee1b3c7403c8e73aa9c02a7fbcc",              // connectionId
+                    () => "Some JWT token",
+                    httpClient)
+            {
+                SessionId = "ce55fe97-6e74-4f56-b8cf-529e275b253f"
+            };
+
+            config.AddService("Office365Users", apiDoc, client);
+            var engine = new RecalcEngine(config);
+            testConnector.SetResponseFromFile(@"Responses\Office365_UserProfileV2.json");
+            var result = await engine.EvalAsync(@"Office365Users.MyProfile_V2().mobilePhone", CancellationToken.None);
+
+            Assert.IsType<StringValue>(result);
+            Assert.Equal("+33 799 999 999", (result as StringValue).Value);
+        }
+
+        [Fact]
+        public async Task Office365Users_DirectReports_V2()
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\Office_365_Swagger.json");
+            var apiDoc = testConnector._apiDocument;
+            var config = new PowerFxConfig();
+
+            using var httpClient = new HttpClient(testConnector);
+
+            using var client = new PowerPlatformConnectorClient(
+                    "firstrelease-001.azure-apim.net",               // endpoint
+                    "839eace6-59ab-4243-97ec-a5b8fcc104e4",          // environment
+                    "72c42ee1b3c7403c8e73aa9c02a7fbcc",              // connectionId
+                    () => "Some JWT token",
+                    httpClient)
+            {
+                SessionId = "ce55fe97-6e74-4f56-b8cf-529e275b253f"
+            };
+
+            config.AddService("Office365Users", apiDoc, client);
+            var engine = new RecalcEngine(config);
+            testConnector.SetResponseFromFile(@"Responses\Office365_DirectsV2.json");
+            var result = await engine.EvalAsync(@"First(Office365Users.DirectReports_V2(""jmstall@microsoft.com"", {'$top': 4 }).value).city", CancellationToken.None);
+
+            Assert.IsType<StringValue>(result);
+            Assert.Equal("Paris", (result as StringValue).Value);
+        }
+
+        [Fact]
+        public async Task Office365Users_SearchUsers_V2()
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\Office_365_Swagger.json");
+            var apiDoc = testConnector._apiDocument;
+            var config = new PowerFxConfig();
+
+            using var httpClient = new HttpClient(testConnector);
+
+            using var client = new PowerPlatformConnectorClient(
+                    "firstrelease-001.azure-apim.net",               // endpoint
+                    "839eace6-59ab-4243-97ec-a5b8fcc104e4",          // environment
+                    "72c42ee1b3c7403c8e73aa9c02a7fbcc",              // connectionId
+                    () => "Some JWT token",
+                    httpClient)
+            {
+                SessionId = "ce55fe97-6e74-4f56-b8cf-529e275b253f"
+            };
+
+            config.AddService("Office365Users", apiDoc, client);
+            var engine = new RecalcEngine(config);
+            testConnector.SetResponseFromFile(@"Responses\Office365_SearchV2.json");
+            var result = await engine.EvalAsync(@"First(Office365Users.SearchUserV2({searchTerm:""Doe"", top: 3}).value).DisplayName", CancellationToken.None);
+
+            Assert.IsType<StringValue>(result);
+            Assert.Equal("John Doe", (result as StringValue).Value);
         }
     }
 }

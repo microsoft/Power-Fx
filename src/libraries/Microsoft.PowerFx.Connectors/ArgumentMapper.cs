@@ -83,11 +83,7 @@ namespace Microsoft.PowerFx.Connectors
                     if (name == ConnectionIdParamName || param.HasDefaultValue())
                     {
                         continue;
-                    }
-                    else
-                    {
-                        throw new NotImplementedException($"Unexpected internal param {name}");
-                    }
+                    }                    
                 }
 
                 if (param.Required)
@@ -216,7 +212,7 @@ namespace Microsoft.PowerFx.Connectors
             }
 
             // Optional parameters are next and stored in a Record
-            if (OptionalParamInfo.Length > 0 && args.Length > 0)
+            if (OptionalParamInfo.Length > 0 && args.Length > RequiredParamInfo.Length)
             {
                 var optionalArg = args[args.Length - 1];
 

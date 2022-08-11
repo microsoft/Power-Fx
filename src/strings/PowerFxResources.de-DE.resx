@@ -498,37 +498,37 @@
     <value>Der Textwert, der in einen booleschen Wert umgewandelt werden soll.</value>
   </data>
   <data name="AboutBooleanT" xml:space="preserve">
-    <value>Converts a column of text values to a column of boolean values.</value>
+    <value>Konvertiert eine Spalte mit Textwerten in eine Spalte mit booleschen Werten.</value>
     
   </data>
   <data name="BooleanTArg1" xml:space="preserve">
-    <value>input</value>
+    <value>Eingabe</value>
     
   </data>
   <data name="AboutBooleanT_input" xml:space="preserve">
-    <value>A column of text values to process.</value>
+    <value>Eine Spalte mit zu verarbeitenden Textwerten.</value>
   </data>
   <data name="AboutBooleanN" xml:space="preserve">
-    <value>Converts a 'number' to a boolean value.</value>
+    <value>Konvertiert eine „Nummer“ in einen booleschen Wert.</value>
     
   </data>
   <data name="BooleanNArg1" xml:space="preserve">
-    <value>number</value>
+    <value>Zahl</value>
     
   </data>
   <data name="AboutBooleanN_number" xml:space="preserve">
-    <value>The number value to convert to a boolean value.</value>
+    <value>Der Nummernwert, der in einen booleschen Wert umgewandelt werden soll.</value>
   </data>
   <data name="AboutBooleanNT" xml:space="preserve">
-    <value>Converts a column of numeric values to a column of boolean values.</value>
+    <value>Konvertiert eine Spalte mit numerischen Werten in eine Spalte mit booleschen Werten.</value>
     
   </data>
   <data name="BooleanNTArg1" xml:space="preserve">
-    <value>input</value>
+    <value>Eingabe</value>
     
   </data>
   <data name="AboutBooleanNT_input" xml:space="preserve">
-    <value>A column of number values to process.</value>
+    <value>Eine Spalte mit zu verarbeitenden Nummernwerten.</value>
   </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Hiermit wird das erste nicht leere Argument zurückgegeben.</value>
@@ -3924,12 +3924,20 @@
     <value>Wird in Formelspalten nicht unterstützt.</value>
     
   </data>
+  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
+    <value>Ungültige Anzahl von Argumenten für die Funktion {0}: empfangen {1}, erwartet {2}</value>
+    
+  </data>
   <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
     <value>Das {0}-Argument wird für die {1}-Funktion in Formelspalten nicht unterstützt.</value>
     
   </data>
   <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
     <value>Dieses Argument kann nicht als dieser Typ in Formelspalten übergeben werden.</value>
+    
+  </data>
+  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
+    <value>Dieses Argument kann nicht als Typ {0} in Formelspalten übergeben werden.</value>
     
   </data>
   <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
@@ -3948,6 +3956,10 @@
     <value>Nur die Zeichenfolgen für das kurze Datums- und Zeitformat werden in den Formelspalten unterstützt.</value>
     
   </data>
+  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
+    <value>Das {0}-Argument ist eine ungültige/nicht unterstützte Zeiteinheit für {1} datumsarithmetische Funktion.</value>
+    
+  </data>
   <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
     <value>Ortsspezifische Formatierungstoken wie „.“ und „,“ werden in Formelspalten nicht unterstützt.</value>
     
@@ -3956,8 +3968,16 @@
     <value>{0} wird in Formelspalten nicht unterstützt. Verwenden Sie stattdessen {1}.</value>
     
   </data>
+  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
+    <value>Dieser Vorgang kann nicht für Typ {0} in Formelspalten ausgeführt werden.</value>
+    
+  </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
     <value>Der Ergebnistyp {0} wird in Formelspalten nicht unterstützt.</value>
+    
+  </data>
+  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
+    <value>Das direkte Verweisen auf einen gesamten Datensatz wird in Formelspalten nicht unterstützt. Verweisen Sie auf ein gültiges Feld im Datensatz.</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
@@ -3972,8 +3992,20 @@
     <value>Spalten vom Typ {0} mit Format {1} werden in Formelspalten nicht unterstützt.</value>
     
   </data>
+  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
+    <value>Das Erstellen von Datensätzen oder Tabellen wird in Formelspalten nicht unterstützt.</value>
+    
+  </data>
   <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
     <value>Formeln dürfen nicht länger als 1000 Zeichen sein.</value>
+    
+  </data>
+  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
+    <value>Tabellen mit einer einzelnen Spalte werden in Formelspalten nicht unterstützt.</value>
+    
+  </data>
+  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
+    <value>Es kann nicht auf die virtuelle Tabelle {0} in Formelspalten verwiesen werden.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
@@ -4591,6 +4623,38 @@
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
     <value>Das erste Argument von "{0}" muss ein gültiger Variablenname sein, der nicht in Konflikt mit vorhandenen Steuerelement-, Bildschirm-, Sammlungs- oder Datenquellennamen stehen darf. Gefundener Typ: "{1}"</value>
+    
+  </data>
+  <data name="ErrUDF_MissingIdentifier" xml:space="preserve">
+    <value>Für die benutzerdefinierte Funktion fehlt ein gültiger Name</value>
+    
+  </data>
+  <data name="ErrUDF_MissingOpenParen" xml:space="preserve">
+    <value>In der benutzerdefinierten Funktion fehlt hier ein „(“</value>
+    
+  </data>
+  <data name="ErrUDF_MissingEqual" xml:space="preserve">
+    <value>In der benutzerdefinierten Funktion fehlt hier ein „=“</value>
+    
+  </data>
+  <data name="ErrUDF_MissingCloseParen" xml:space="preserve">
+    <value>In der benutzerdefinierten Funktion fehlt hier ein „)“</value>
+    
+  </data>
+  <data name="ErrUDF_MissingSemicolon" xml:space="preserve">
+    <value>In der benutzerdefinierten Funktion fehlt hier ein „;“</value>
+    
+  </data>
+  <data name="ErrUDF_MissingComma" xml:space="preserve">
+    <value>In der benutzerdefinierten Funktion fehlt hier ein „,“</value>
+    
+  </data>
+  <data name="ErrUDF_MissingColon" xml:space="preserve">
+    <value>User Defined Function is missing an ':' here</value>
+    
+  </data>
+  <data name="ErrUDF_DuplicateArgName" xml:space="preserve">
+    <value>Benutzerdefinierte Funktion hat einen doppelten Argumentnamen</value>
     
   </data>
   <data name="AboutSet" xml:space="preserve">
