@@ -3,6 +3,7 @@
 
 using System;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -86,6 +87,100 @@ namespace Microsoft.PowerFx.Tests
         }
 
         [Theory]
+        [InlineData(100)] // Continue
+        [InlineData(200)] // Ok
+        [InlineData(202)] // Accepted
+        [InlineData(305)] // Use Proxy
+        [InlineData(411)] // Length Required
+        [InlineData(500)] // Server Error
+        [InlineData(502)] // Bad Gateway
+        public async Task Connector_GenerateErrors(int statusCode)
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\TestConnector12.json");
+            var apiDoc = testConnector._apiDocument;
+
+            var config = new PowerFxConfig();
+
+            using var httpClient = new HttpClient(testConnector);
+            using var client = new PowerPlatformConnectorClient(
+                "firstrelease-001.azure-apim.net", // endpoint
+                "839eace6-59ab-4243-97ec-a5b8fcc104e4", // x-ms-client-environment-id
+                "8329fe1b70d8494e940a9d3f683e1845", // connectionId
+                () => "AuthToken",
+                httpClient)
+            {
+                SessionId = "4851caf7-23ec-43fc-9a56-e1628655a6bd" // from x-ms-request-url
+            };
+
+            var funcs = config.AddService("TestConnector12", apiDoc, client);
+
+            // Now execute it...
+            var engine = new RecalcEngine(config);
+            testConnector.SetResponse($"{statusCode}", (HttpStatusCode)statusCode);
+            var result = await engine.EvalAsync($"TestConnector12.GenerateError({{error: {statusCode}}})", CancellationToken.None);
+
+            Assert.NotNull(result);
+
+            if (statusCode < 300)
+            {
+                Assert.IsType<NumberValue>(result);
+
+                var nv = (NumberValue)result;
+
+                Assert.Equal(statusCode, nv.Value);
+            }
+            else
+            {
+                Assert.IsType<ErrorValue>(result);
+
+                var ev = (ErrorValue)result;
+
+                Assert.Equal(FormulaType.Number, ev.Type);
+                Assert.Equal(1, ev.Errors.Count);
+
+                var err = ev.Errors[0];
+
+                Assert.Equal(ErrorKind.Network, err.Kind);
+                Assert.Equal(ErrorSeverity.Critical, err.Severity);
+                Assert.Equal($"TestConnector12.GenerateError failed: The server returned an HTTP error with code {statusCode}.", err.Message);
+            }
+
+            testConnector.SetResponse($"{statusCode}", (HttpStatusCode)statusCode);
+            var result2 = await engine.EvalAsync($"IfError(Text(TestConnector12.GenerateError({{error: {statusCode}}})),FirstError.Message)", CancellationToken.None);
+
+            Assert.NotNull(result2);
+            Assert.IsType<StringValue>(result2);
+
+            var sv2 = (StringValue)result2;
+
+            if (statusCode < 300)
+            {
+                Assert.Equal(statusCode.ToString(), sv2.Value);
+            }
+            else
+            {
+                Assert.Equal($"TestConnector12.GenerateError failed: The server returned an HTTP error with code {statusCode}.", sv2.Value);
+            }
+
+            testConnector.SetResponse($"{statusCode}", (HttpStatusCode)statusCode);
+            var result3 = await engine.EvalAsync($"IfError(Text(TestConnector12.GenerateError({{error: {statusCode}}})),CountRows(AllErrors))", CancellationToken.None);
+
+            Assert.NotNull(result3);
+            Assert.IsType<StringValue>(result3);
+
+            var sv3 = (StringValue)result3;
+
+            if (statusCode < 300)
+            {
+                Assert.Equal(statusCode.ToString(), sv3.Value);
+            }
+            else
+            {
+                Assert.Equal("1", sv3.Value);
+            }
+        }
+
+        [Theory]
         [InlineData(true, false)]
         [InlineData(false, false)]
         [InlineData(false, true)]
@@ -108,7 +203,7 @@ namespace Microsoft.PowerFx.Tests
                     SessionId = "ccccbff3-9d2c-44b2-bee6-cf24aab10b7e"
                 }
                 : new PowerPlatformConnectorClient(
-                    (useHttpsPrefix ? "https://" : string.Empty) + 
+                    (useHttpsPrefix ? "https://" : string.Empty) +
                         "firstrelease-001.azure-apim.net",  // endpoint
                     "839eace6-59ab-4243-97ec-a5b8fcc104e4", // environment
                     "453f61fa88434d42addb987063b1d7d2",     // connectionId

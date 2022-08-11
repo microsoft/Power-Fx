@@ -51,7 +51,7 @@ namespace Microsoft.PowerFx.Connectors
                         continue;
                     }
 
-                    var operationName = op.OperationId ?? path.Replace("/", string.Empty);                    
+                    var operationName = op.OperationId ?? path.Replace("/", string.Empty);
                     var returnType = op.GetReturnType();
 
                     if (basePath != null)
@@ -65,7 +65,7 @@ namespace Microsoft.PowerFx.Connectors
                     if (httpClient != null)
                     {
                         var httpInvoker = new HttpFunctionInvoker(httpClient, verb, path, returnType, argMapper, cache);
-                        invoker = new ScopedHttpFunctionInvoker(functionNamespace, httpInvoker);
+                        invoker = new ScopedHttpFunctionInvoker(DPath.Root.Append(DName.MakeValid(functionNamespace, out _)), operationName, functionNamespace, httpInvoker);
                     }
 
                     // Parameter (name,type) --> list of options. 
