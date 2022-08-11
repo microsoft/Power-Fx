@@ -399,7 +399,7 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
                     {
                         Kind = er.Kind,
                         Severity = er.Severity,
-                        Message = $"{_invoker.Namespace.ToDottedSyntax()}.{_invoker.Name} failed: {er.Message}"
+                        Message = $"{Namespace.ToDottedSyntax()}.{Name} failed: {er.Message}"
                     },
                     ev.Type);
             }

@@ -117,7 +117,6 @@ namespace Microsoft.PowerFx.Tests
             // Now execute it...
             var engine = new RecalcEngine(config);
             testConnector.SetResponse($"{statusCode}", (HttpStatusCode)statusCode);
-
             var result = await engine.EvalAsync($"TestConnector12.GenerateError({{error: {statusCode}}})", CancellationToken.None);
 
             Assert.NotNull(result);
@@ -139,11 +138,45 @@ namespace Microsoft.PowerFx.Tests
                 Assert.Equal(FormulaType.Number, ev.Type);
                 Assert.Equal(1, ev.Errors.Count);
 
-                var err = ev.Errors[0];               
+                var err = ev.Errors[0];
 
                 Assert.Equal(ErrorKind.Network, err.Kind);
                 Assert.Equal(ErrorSeverity.Critical, err.Severity);
-                Assert.Equal($"TestConnector12.GenerateError failed: The server returned an HTTP error with code {statusCode}.", err.Message);               
+                Assert.Equal($"TestConnector12.GenerateError failed: The server returned an HTTP error with code {statusCode}.", err.Message);
+            }
+
+            testConnector.SetResponse($"{statusCode}", (HttpStatusCode)statusCode);
+            var result2 = await engine.EvalAsync($"IfError(Text(TestConnector12.GenerateError({{error: {statusCode}}})),FirstError.Message)", CancellationToken.None);
+
+            Assert.NotNull(result2);
+            Assert.IsType<StringValue>(result2);
+
+            var sv2 = (StringValue)result2;
+
+            if (statusCode < 300)
+            {
+                Assert.Equal(statusCode.ToString(), sv2.Value);
+            }
+            else
+            {
+                Assert.Equal($"TestConnector12.GenerateError failed: The server returned an HTTP error with code {statusCode}.", sv2.Value);
+            }
+
+            testConnector.SetResponse($"{statusCode}", (HttpStatusCode)statusCode);
+            var result3 = await engine.EvalAsync($"IfError(Text(TestConnector12.GenerateError({{error: {statusCode}}})),CountRows(AllErrors))", CancellationToken.None);
+
+            Assert.NotNull(result3);
+            Assert.IsType<StringValue>(result3);
+
+            var sv3 = (StringValue)result3;
+
+            if (statusCode < 300)
+            {
+                Assert.Equal(statusCode.ToString(), sv3.Value);
+            }
+            else
+            {
+                Assert.Equal("1", sv3.Value);
             }
         }
 
