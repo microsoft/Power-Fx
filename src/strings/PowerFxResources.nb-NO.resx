@@ -3924,12 +3924,20 @@
     <value>Støttes ikke i formelkolonner.</value>
     
   </data>
+  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
+    <value>Ugyldig antall argumenter for {0}-funksjon: mottatt {1}, forventet {2}</value>
+    
+  </data>
   <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
     <value>Argumentet {0} støttes ikke for funksjonen {1} i formelkolonner.</value>
     
   </data>
   <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
     <value>Dette argumentet kan ikke sendes som denne typen i formelkolonner.</value>
+    
+  </data>
+  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
+    <value>Dette argumentet kan ikke sendes som typen {0} i formelkolonner.</value>
     
   </data>
   <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
@@ -3948,6 +3956,10 @@
     <value>Bare strengene for kort dato og klokkeslett-format støttes i formelkolonner.</value>
     
   </data>
+  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
+    <value>Argumentet {0} er en ugyldig/ustøttet tidsenhet for den aritmetiske datofunksjonen {1}.</value>
+    
+  </data>
   <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
     <value>Spesifikke formateringstokener for nasjonal innstilling som «.» og «,» støttes ikke i formelkolonner.</value>
     
@@ -3956,8 +3968,16 @@
     <value>{0} støttes ikke i formelkolonner. Bruk {1} i stedet.</value>
     
   </data>
+  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
+    <value>Denne operasjonen kan ikke utføres på typen {0} i formelkolonner.</value>
+    
+  </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
     <value>Resultattypen {0} støttes ikke i formelkolonner.</value>
+    
+  </data>
+  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
+    <value>Direkte henvisning til en hel oppføring støttes ikke i formelkolonner. Henvis til et gyldig felt i oppføringen.</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
@@ -3972,8 +3992,20 @@
     <value>Kolonner av typen {0} med formatet {1} støttes ikke i formelkolonner.</value>
     
   </data>
+  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
+    <value>Tvungne oppføringer eller tabeller støttes ikke i formelkolonner.</value>
+    
+  </data>
   <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
     <value>Formler kan ikke være lengre enn 1000 tegn.</value>
+    
+  </data>
+  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
+    <value>Tabeller med én kolonne støttes ikke i formelkolonner.</value>
+    
+  </data>
+  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
+    <value>Kan ikke henvise til virtuell tabell {0} i formelkolonner.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
@@ -4591,6 +4623,38 @@
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
     <value>Det første argumentet {0} skal være et gyldig variabelnavn og kan ikke komme i konflikt med noen eksisterende kontroll-, skjerm-, samling- eller datakildenavn. Fant typen {1}</value>
+    
+  </data>
+  <data name="ErrUDF_MissingIdentifier" xml:space="preserve">
+    <value>Brukerdefinert funksjon mangler et gyldig navn</value>
+    
+  </data>
+  <data name="ErrUDF_MissingOpenParen" xml:space="preserve">
+    <value>Brukerdefinert funksjon mangler ( her</value>
+    
+  </data>
+  <data name="ErrUDF_MissingEqual" xml:space="preserve">
+    <value>Brukerdefinert funksjon mangler = her</value>
+    
+  </data>
+  <data name="ErrUDF_MissingCloseParen" xml:space="preserve">
+    <value>Brukerdefinert funksjon mangler ) her</value>
+    
+  </data>
+  <data name="ErrUDF_MissingSemicolon" xml:space="preserve">
+    <value>Brukerdefinert funksjon mangler ; her</value>
+    
+  </data>
+  <data name="ErrUDF_MissingComma" xml:space="preserve">
+    <value>Brukerdefinert funksjon mangler , her</value>
+    
+  </data>
+  <data name="ErrUDF_MissingColon" xml:space="preserve">
+    <value>User Defined Function is missing an ':' here</value>
+    
+  </data>
+  <data name="ErrUDF_DuplicateArgName" xml:space="preserve">
+    <value>Brukerdefinert funksjon har et duplisert argumentnavn</value>
     
   </data>
   <data name="AboutSet" xml:space="preserve">
