@@ -53,18 +53,14 @@ namespace Microsoft.PowerFx.Connectors
 
                     var operationName = op.OperationId ?? path.Replace("/", string.Empty);                    
                     var returnType = op.GetReturnType();
-
-                    if (basePath != null)
-                    {
-                        path = basePath + path;
-                    }
+                    var opPath = basePath != null ? basePath + path : path;                    
 
                     var argMapper = new ArgumentMapper(op.Parameters, op);
 
                     IAsyncTexlFunction invoker = null;
                     if (httpClient != null)
                     {
-                        var httpInvoker = new HttpFunctionInvoker(httpClient, verb, path, returnType, argMapper, cache);
+                        var httpInvoker = new HttpFunctionInvoker(httpClient, verb, opPath, returnType, argMapper, cache);
                         invoker = new ScopedHttpFunctionInvoker(functionNamespace, httpInvoker);
                     }
 
