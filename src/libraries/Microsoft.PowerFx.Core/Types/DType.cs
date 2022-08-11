@@ -1564,6 +1564,37 @@ namespace Microsoft.PowerFx.Core.Types
             return SetType(ref fError, path, new DType(typeOuter.Kind, tree, AssociatedDataSources, DisplayNameProvider));
         }
 
+        public bool ContainsKindNested(DPath path, DKind kind)
+        {
+            AssertValid();
+            Contracts.Assert(kind >= DKind._Min && kind < DKind._Lim);
+
+            TryGetType(path, out var typeOuter);
+            if (!typeOuter.IsAggregate)
+            {
+                return typeOuter.Kind == kind;
+            }
+
+            var tree = typeOuter.TypeTree;
+            foreach (var typedName in GetNames(path))
+            {
+                if (typedName.Type.Kind == kind)
+                {
+                    return true;
+                }
+                else if (typedName.Type.IsAggregate && !IsLazyType)
+                {
+                    var containsInner = typedName.Type.ContainsKindNested(DPath.Root, kind);
+                    if (containsInner)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
         // Get ALL the fields/names at the specified path, including hidden meta fields
         // and other special fields.
         public IEnumerable<TypedName> GetAllNames(DPath path)
@@ -2005,7 +2036,7 @@ namespace Microsoft.PowerFx.Core.Types
                 case DKind.OptionSetValue:
                     accepts = (type.Kind == Kind &&
                                 (OptionSetInfo == null || type.OptionSetInfo == null || type.OptionSetInfo == OptionSetInfo)) ||
-                               type.Kind == DKind.Unknown || (type.IsMultiSelectOptionSet() && (OptionSetInfo != null && type.TypeTree.GetPairs().First().Value.OptionSetInfo == OptionSetInfo));
+                               type.Kind == DKind.Unknown;
                     break;
                 case DKind.View:
                 case DKind.ViewValue:

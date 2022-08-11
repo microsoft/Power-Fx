@@ -17,16 +17,19 @@ namespace Microsoft.PowerFx.Interpreter
 
         internal readonly IEnumerable<NamedFormulaType> Parameters;
 
-        public UDFDefinition(string name, string body, FormulaType returnType, IEnumerable<NamedFormulaType> parameters)
+        internal readonly bool IsImperative;
+
+        public UDFDefinition(string name, string body, FormulaType returnType, bool isImperative, IEnumerable<NamedFormulaType> parameters)
         {
             Name = name;
             Body = body;
             ReturnType = returnType;
+            IsImperative = isImperative;
             Parameters = parameters;
         }
 
-        public UDFDefinition(string name, string body, FormulaType returnType, params NamedFormulaType[] parameters)
-            : this(name, body, returnType, parameters.AsEnumerable())
+        public UDFDefinition(string name, string body, FormulaType returnType, bool isImperative, params NamedFormulaType[] parameters)
+            : this(name, body, returnType, isImperative, parameters.AsEnumerable())
         {
         }
     }

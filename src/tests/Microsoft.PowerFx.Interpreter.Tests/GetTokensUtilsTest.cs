@@ -46,7 +46,7 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void GetTokensHostSymbolTest()
         {
-            var optionSet = new OptionSet("OptionSet", DisplayNameUtility.MakeUnique(new Dictionary<string, string>() 
+            var optionSet = new OptionSet("OptionSet", DisplayNameUtility.MakeUnique(new Dictionary<string, string>()
             {
                     { "option_1", "Option1" },
                     { "option_2", "Option2" }
@@ -56,7 +56,7 @@ namespace Microsoft.PowerFx.Tests
 
             var scope = RecalcEngineScope.FromJson(new RecalcEngine(config), "{\"A\":1,\"B\":[1,2,3]}");
             var checkResult = scope.Check("If(OptionSet.Option2 = OptionSet.Option1, A, First(B)");
-            
+
             var result = GetTokensUtils.GetTokens(checkResult._binding, GetTokensFlags.UsedInExpression);
             Assert.Equal(5, result.Count);
             Assert.Equal(TokenResultType.Function, result["If"]);
