@@ -13,7 +13,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         [Theory]
         [InlineData("https://www.foo.bar", "www.foo.bar", "/")]
         [InlineData("https://www.FOO.bar", "www.foo.bar", "/")]
-        [InlineData("http://www.foo.bar", "www.foo.bar", "/")]
+        [InlineData("http://www.foo.bar", null, null)]
         [InlineData("https://www.foo.bar:117", "www.foo.bar:117", "/")]
         [InlineData("https://www.foo.bar/xyz", "www.foo.bar", "/xyz")]
         [InlineData("https://www.FOO.BAR:2883/xyz/ABC", "www.foo.bar:2883", "/xyz/ABC")]
