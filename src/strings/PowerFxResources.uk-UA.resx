@@ -498,37 +498,37 @@
     <value>Текстове значення для перетворення на логічне значення.</value>
   </data>
   <data name="AboutBooleanT" xml:space="preserve">
-    <value>Converts a column of text values to a column of boolean values.</value>
+    <value>Перетворює стовпець текстових значень на стовпець логічних значень.</value>
     
   </data>
   <data name="BooleanTArg1" xml:space="preserve">
-    <value>input</value>
+    <value>вхідні дані</value>
     
   </data>
   <data name="AboutBooleanT_input" xml:space="preserve">
-    <value>A column of text values to process.</value>
+    <value>Стовпець текстових значень, які потрібно обробити.</value>
   </data>
   <data name="AboutBooleanN" xml:space="preserve">
-    <value>Converts a 'number' to a boolean value.</value>
+    <value>Перетворює "число" на логічне значення.</value>
     
   </data>
   <data name="BooleanNArg1" xml:space="preserve">
-    <value>number</value>
+    <value>число</value>
     
   </data>
   <data name="AboutBooleanN_number" xml:space="preserve">
-    <value>The number value to convert to a boolean value.</value>
+    <value>Числове значення, яке потрібно перетворити на логічне значення.</value>
   </data>
   <data name="AboutBooleanNT" xml:space="preserve">
-    <value>Converts a column of numeric values to a column of boolean values.</value>
+    <value>Перетворює стовпець числових значень на стовпець логічних значень.</value>
     
   </data>
   <data name="BooleanNTArg1" xml:space="preserve">
-    <value>input</value>
+    <value>вхідні дані</value>
     
   </data>
   <data name="AboutBooleanNT_input" xml:space="preserve">
-    <value>A column of number values to process.</value>
+    <value>Стовпець числових значень, який потрібно обробити.</value>
   </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Повертає перший непустий аргумент.</value>
@@ -3924,12 +3924,20 @@
     <value>Не підтримується в стовпцях формул.</value>
     
   </data>
+  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
+    <value>Неприпустима кількість аргументів для функції {0}: отримано {1}, очікувалось {2}</value>
+    
+  </data>
   <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
     <value>Аргумент {0} не підтримується для функції {1} у стовпцях формул.</value>
     
   </data>
   <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
     <value>Цей аргумент не можна передати як цей тип у стовпцях формул.</value>
+    
+  </data>
+  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
+    <value>Цей аргумент не можна передати як тип {0} у стовпцях формул.</value>
     
   </data>
   <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
@@ -3948,6 +3956,10 @@
     <value>У стовпцях формул підтримуються лише рядки короткого формату дати й часу.</value>
     
   </data>
+  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
+    <value>Аргумент {0} є неприпустимою або непідтримуваною одиницею часу для функції арифметичної дати {1}.</value>
+    
+  </data>
   <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
     <value>Спеціальні маркери форматування для певної локалізації, наприклад "." та "," не підтримуються у стовпцях формул.</value>
     
@@ -3956,8 +3968,16 @@
     <value>{0} не підтримується у стовпцях формул. Натомість використовуйте {1}.</value>
     
   </data>
+  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
+    <value>Цю операцію не можна виконати як тип {0} у стовпцях формул.</value>
+    
+  </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
     <value>Тип результату {0} не підтримується у стовпцях формул.</value>
+    
+  </data>
+  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
+    <value>Пряме посилання на весь запис не підтримується в стовпцях формул. Створіть посилання на припустиме поле в записі.</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
@@ -3972,8 +3992,20 @@
     <value>Стовпці типу {0} з форматом {1} не підтримуються у стовпцях формул.</value>
     
   </data>
+  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
+    <value>Утримання записів або таблиць не підтримується у стовпцях формул.</value>
+    
+  </data>
   <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
     <value>Довжина формули не може перевищувати 1000 символів.</value>
+    
+  </data>
+  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
+    <value>Таблиці з одним стовпцем не підтримуються в стовпцях формул.</value>
+    
+  </data>
+  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
+    <value>Не можна посилатися на віртуальну таблицю {0} в стовпцях формул.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
@@ -4591,6 +4623,38 @@
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
     <value>Як перший аргумент функції "{0}" слід указати припустиме ім’я змінної, що не має конфліктувати з будь-якими іменами наявних елементів керування, екранів, колекцій або джерел даних. Знайдено тип "{1}".</value>
+    
+  </data>
+  <data name="ErrUDF_MissingIdentifier" xml:space="preserve">
+    <value>У визначеній користувачем функції відсутнє припустиме ім’я</value>
+    
+  </data>
+  <data name="ErrUDF_MissingOpenParen" xml:space="preserve">
+    <value>У визначеній користувачем функції відсутній елемент "(" тут</value>
+    
+  </data>
+  <data name="ErrUDF_MissingEqual" xml:space="preserve">
+    <value>У визначеній користувачем функції відсутній елемент "="</value>
+    
+  </data>
+  <data name="ErrUDF_MissingCloseParen" xml:space="preserve">
+    <value>У визначеній користувачем функції відсутній елемент ")" тут</value>
+    
+  </data>
+  <data name="ErrUDF_MissingSemicolon" xml:space="preserve">
+    <value>У визначеній користувачем функції відсутній елемент ";" тут</value>
+    
+  </data>
+  <data name="ErrUDF_MissingComma" xml:space="preserve">
+    <value>У визначеній користувачем функції відсутній елемент "," тут</value>
+    
+  </data>
+  <data name="ErrUDF_MissingColon" xml:space="preserve">
+    <value>User Defined Function is missing an ':' here</value>
+    
+  </data>
+  <data name="ErrUDF_DuplicateArgName" xml:space="preserve">
+    <value>Визначена користувачем функція має повторюване ім’я аргументу</value>
     
   </data>
   <data name="AboutSet" xml:space="preserve">

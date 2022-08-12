@@ -16,14 +16,20 @@ namespace Microsoft.PowerFx.Interpreter.UDF
         private readonly string _expressionText;
         private readonly RecordType _parameterType;
         private readonly RecalcEngine _engine;
+        public readonly ParserOptions ParserOptions;
 
-        public CheckWrapper(RecalcEngine engine, string expressionText, RecordType parameterType = null)
+        public CheckWrapper(RecalcEngine engine, string expressionText, RecordType parameterType = null, bool isImperative = false)
         {
             _engine = engine;
             _expressionText = expressionText;
             _parameterType = parameterType;
+            ParserOptions = new ParserOptions()
+            {
+                Culture = _engine.Config.CultureInfo,
+                AllowsSideEffects = isImperative,
+            };
         }
 
-        public CheckResult Get() => _engine.Check(_expressionText, _parameterType);
+        public CheckResult Get() => _engine.Check(_expressionText, _parameterType, ParserOptions);
     }
 }

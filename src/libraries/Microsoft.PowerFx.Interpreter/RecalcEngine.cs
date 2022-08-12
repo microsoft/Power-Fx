@@ -162,6 +162,20 @@ namespace Microsoft.PowerFx
             return await check.Expression.EvalAsync(parameters, cancel);
         }
 
+        public DefineFunctionsResult DefineFunctions(string script)
+        {
+            var parsedUDFS = new Core.Syntax.ParsedUDFs(script);
+            var result = parsedUDFS.GetParsed();
+
+            var udfDefinitions = result.UDFs.Select(udf => new UDFDefinition(
+                udf.Ident.ToString(), 
+                udf.Body.ToString(), 
+                FormulaType.GetFromStringOrNull(udf.ReturnType.ToString()),
+                udf.IsImperative,
+                udf.Args.Select(arg => new NamedFormulaType(arg.VarIdent.ToString(), FormulaType.GetFromStringOrNull(arg.VarType.ToString()))).ToArray())).ToArray();
+            return DefineFunctions(udfDefinitions);
+        }
+
         /// <summary>
         /// For private use because we don't want anyone defining a function without binding it.
         /// </summary>
@@ -175,7 +189,7 @@ namespace Microsoft.PowerFx
                 record = record.Add(p);
             }
 
-            var check = new CheckWrapper(this, definition.Body, record);
+            var check = new CheckWrapper(this, definition.Body, record, definition.IsImperative);
 
             var func = new UserDefinedTexlFunction(definition.Name, definition.ReturnType, definition.Parameters, check);
             if (_customFuncs.ContainsKey(definition.Name))
@@ -198,7 +212,7 @@ namespace Microsoft.PowerFx
         /// </summary>
         /// <param name="udfDefinitions"></param>
         /// <returns></returns>
-        internal IEnumerable<ExpressionError> DefineFunctions(IEnumerable<UDFDefinition> udfDefinitions)
+        internal DefineFunctionsResult DefineFunctions(IEnumerable<UDFDefinition> udfDefinitions)
         {
             var expressionErrors = new List<ExpressionError>();
 
@@ -225,10 +239,10 @@ namespace Microsoft.PowerFx
                 }
             }
 
-            return expressionErrors;
+            return new DefineFunctionsResult(expressionErrors, binders.Select(binder => new FunctionInfo(binder.Function)));
         }
 
-        internal IEnumerable<ExpressionError> DefineFunctions(params UDFDefinition[] udfDefinitions)
+        internal DefineFunctionsResult DefineFunctions(params UDFDefinition[] udfDefinitions)
         {
             return DefineFunctions(udfDefinitions.AsEnumerable());
         }

@@ -18,6 +18,8 @@ namespace Microsoft.PowerFx.Interpreter
 
         public override bool SupportsParamCoercion => false;
 
+        public override bool IsSelfContained => !_check.ParserOptions.AllowsSideEffects;
+
         public UserDefinedTexlFunction(string name, FormulaType returnType, IEnumerable<NamedFormulaType> parameterNames, CheckWrapper lazyCheck)
             : base(name, returnType, parameterNames.Select(x => x.Type).ToArray())
         {
@@ -50,9 +52,17 @@ namespace Microsoft.PowerFx.Interpreter
             } 
             else
             {
+                throw new System.Exception("Expression is not a ParsedExpression");
+            }
+
+            if (!check.ReturnType._type.Kind.Equals(ReturnType.Kind))
+            {
                 var errorList = new List<ExpressionError>
                 {
                     new ExpressionError()
+                    {
+                        Message = "The stated function return type does not match the return type of the function body"
+                    }
                 };
                 return errorList;
             }

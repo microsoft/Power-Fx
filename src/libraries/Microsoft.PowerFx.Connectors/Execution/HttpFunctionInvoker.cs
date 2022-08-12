@@ -5,12 +5,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Connectors.Execution;
+using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors
@@ -21,7 +24,7 @@ namespace Microsoft.PowerFx.Connectors
         private readonly HttpMessageInvoker _httpClient;
         private readonly HttpMethod _method;
         private readonly string _path;
-        private readonly FormulaType _returnType;
+        internal readonly FormulaType _returnType;
         private readonly ArgumentMapper _argMapper;
         private readonly ICachingHttpClient _cache;
 
@@ -156,37 +159,26 @@ namespace Microsoft.PowerFx.Connectors
             }
         }
 
-        public async Task<FormulaValue> DecodeResponseAsync(HttpResponseMessage response)
+        public async Task<FormulaValue> DecodeResponseAsync(HttpResponseMessage response, FormulaType returnType)
         {
-            // $$$ Do we need to check response media type to confirm that the content is indeed json?
-            var json = await response.Content.ReadAsStringAsync();
+            var text = await response.Content.ReadAsStringAsync();
+            var statusCode = (int)response.StatusCode;
 
-            if (!response.IsSuccessStatusCode)
-            {
-                var msg = $"Connector call failed {response.StatusCode}): " + json;
-
-                // $$$ Do any connectors have 40x behavior here in their response code?
-                // or 201 long-ops behavior?
-
-                // $$$ Still type this. 
-                return FormulaValue.NewError(new ExpressionError
-                {
-                    Kind = ErrorKind.Unknown,
-                    Message = msg
-                });
+            if (statusCode < 300)
+            {                
+                return string.IsNullOrWhiteSpace(text) 
+                    ? FormulaValue.NewBlank(_returnType) 
+                    : FormulaValue.FromJson(text); // $$$ Do we need to check response media type to confirm that the content is indeed json?
             }
 
-            if (string.IsNullOrWhiteSpace(json))
-            {
-                return FormulaValue.NewBlank(_returnType);
-            }
-
-            // $$$ Proper marshalling?,  use _returnType;
-            // If schema was an array, we returned a Single Column Table type for it. 
-            // Need to ensure we marshal it consistency here. 
-            var result = FormulaValue.FromJson(json);
-
-            return result;
+            return FormulaValue.NewError(
+                    new ExpressionError()
+                    {
+                        Kind = ErrorKind.Network,
+                        Severity = ErrorSeverity.Critical,
+                        Message = $"The server returned an HTTP error with code {statusCode}."
+                    },
+                    returnType);
         }
 
         public async Task<FormulaValue> InvokeAsync(string cacheScope, CancellationToken cancel, FormulaValue[] args)
@@ -205,7 +197,7 @@ namespace Microsoft.PowerFx.Connectors
             var result2 = await _cache.TryGetAsync(cacheScope, key, async () =>
             {
                 var response = await _httpClient.SendAsync(request, cancel);
-                result = await DecodeResponseAsync(response);
+                result = await DecodeResponseAsync(response, _returnType);
                 return result;
             });
 
@@ -219,11 +211,18 @@ namespace Microsoft.PowerFx.Connectors
         private readonly string _cacheScope;
         private readonly HttpFunctionInvoker _invoker;
 
-        public ScopedHttpFunctionInvoker(string cacheScope, HttpFunctionInvoker invoker)
+        public ScopedHttpFunctionInvoker(DPath ns, string name, string cacheScope, HttpFunctionInvoker invoker)
         {
+            Namespace = ns;
+            Name = name;
+
             _cacheScope = cacheScope;
             _invoker = invoker ?? throw new ArgumentNullException(nameof(invoker));
         }
+
+        public DPath Namespace { get; }
+
+        public string Name { get; }
 
         public Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancel)
         {

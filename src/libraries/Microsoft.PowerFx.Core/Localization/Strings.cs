@@ -575,15 +575,6 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrNamedFormula_AlreadyDefined = new ErrorResourceKey("ErrNamedFormula_AlreadyDefined");
         public static ErrorResourceKey ErrorResource_NameConflict = new ErrorResourceKey("ErrorResource_NameConflict");
 
-        public static ErrorResourceKey ErrUDF_MissingIdentifier = new ErrorResourceKey("ErrUDF_MissingIdentifier");
-        public static ErrorResourceKey ErrUDF_MissingOpenParen = new ErrorResourceKey("ErrUDF_MissingOpenParen");
-        public static ErrorResourceKey ErrUDF_MissingEqual = new ErrorResourceKey("ErrUDF_MissingEqual");
-        public static ErrorResourceKey ErrUDF_MissingCloseParen = new ErrorResourceKey("ErrUDF_MissingCloseParen");
-        public static ErrorResourceKey ErrUDF_MissingSemicolon = new ErrorResourceKey("ErrUDF_MissingSemicolon");
-        public static ErrorResourceKey ErrUDF_MissingComma = new ErrorResourceKey("ErrUDF_MissingComma");
-        public static ErrorResourceKey ErrUDF_MissingAs = new ErrorResourceKey("ErrUDF_MissingAs");
-        public static ErrorResourceKey ErrUDF_DuplicateArgName = new ErrorResourceKey("ErrUDF_DuplicateArgName");
-
         // ErrorResourceKey for creating an error from an arbitrary string message. The key resolves to "{0}", meaning
         // that a single string arg can be supplied representing the entire text of the error.
         public static ErrorResourceKey ErrGeneralError = new ErrorResourceKey("ErrGeneralError");

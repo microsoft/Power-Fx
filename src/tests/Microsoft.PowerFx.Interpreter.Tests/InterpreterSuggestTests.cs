@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Binding;
-using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Types.Enums;
@@ -111,7 +110,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var recalcEngine = new RecalcEngine(pfxConfig);
 
             recalcEngine.UpdateVariable(varName, FormulaValue.New(12));
-            var suggestions = recalcEngine.Suggest(suggestion, null, 2);
+            var checkResult = recalcEngine.Check(suggestion);
+            var suggestions = recalcEngine.Suggest(suggestion, checkResult, 2);
             var s1 = suggestions.Suggestions.OfType<IntellisenseSuggestion>();
 
             Assert.NotNull(s1);
