@@ -10,13 +10,14 @@ Param(
 
 Write-Host Install tools
 $basePath = (get-item $pathToCoverageFiles ).parent.FullName
-$coverageAnalyzer = "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Team Tools\Dynamic Code Coverage Tools\CodeCoverage.exe"
+
+$coverageAnalyzer = "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Team Tools\Dynamic Code Coverage Tools\CodeCoverage.exe"
+if (-not (Test-Path $coverageAnalyzer)) {
+  $coverageAnalyzer = "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Team Tools\Dynamic Code Coverage Tools\CodeCoverage.exe"
+}
+
 dotnet tool install coveralls.net --version 3.0.0 --tool-path tools --add-source https://api.nuget.org/v3/index.json
 $coverageUploader = ".\tools\csmacnz.Coveralls.exe"
-
-# Download temporary version of Archive module that fixes issue on macOS/Linux with path separator
-Invoke-WebRequest -Uri "https://raw.githubusercontent.com/PowerShell/Microsoft.PowerShell.Archive/master/Microsoft.PowerShell.Archive/Microsoft.PowerShell.Archive.psm1" -OutFile .\archive.psm1
-Import-Module .\archive.psm1
 
 Write-Host "Analyze coverage [$coverageAnalyzer] with args:"
 $coverageFiles = Get-ChildItem -Path "$pathToCoverageFiles" -Include "*.coverage" -Recurse | Select -Exp FullName
