@@ -27,8 +27,11 @@ namespace Microsoft.PowerFx.Connectors
                 return null;
             }
 
+            // Exclude unsecure servers
+            var servers = openApiDocument.Servers.Where(srv => srv.Url.StartsWith("https://", StringComparison.OrdinalIgnoreCase)).ToArray();
+
             // See https://spec.openapis.org/oas/v3.1.0#server-object
-            var count = openApiDocument.Servers.Count;
+            var count = servers.Length;
             switch (count)
             {
                 case 0: return null; // None
@@ -204,16 +207,17 @@ namespace Microsoft.PowerFx.Connectors
         public static FormulaType GetReturnType(this OpenApiOperation op)
         {
             var responses = op.Responses;
-            if (!responses.TryGetValue("200", out OpenApiResponse response200))
+            if (!responses.TryGetValue("200", out OpenApiResponse response))
             {
                 // If no 200, but "default", use that. 
-                if (!responses.TryGetValue("default", out response200))
+                if (!responses.TryGetValue("default", out response))
                 {
-                    throw new NotImplementedException($"Operation must have 200 response ({op.OperationId}).");
+                    // If no default, use the first one we find
+                    response = responses.FirstOrDefault().Value;
                 }
             }
 
-            if (response200.Content.Count == 0)
+            if (response == null || response.Content.Count == 0)
             {
                 // No return type. Void() method. 
                 return FormulaType.Blank;
@@ -221,20 +225,20 @@ namespace Microsoft.PowerFx.Connectors
 
             // Responses is a list by content-type. Find "application/json"
             // Headers are case insensitive.
-            foreach (var kv3 in response200.Content)
+            foreach (var kv3 in response.Content)
             {
                 var mediaType = kv3.Key;
-                var response = kv3.Value;
+                var openApiMediaType = kv3.Value;
 
                 if (string.Equals(mediaType, ContentType_ApplicationJson, StringComparison.OrdinalIgnoreCase))
                 {
-                    if (response.Schema == null)
+                    if (openApiMediaType.Schema == null)
                     {
                         // Treat as void. 
                         return FormulaType.Blank;
                     }
 
-                    var responseType = response.Schema.ToFormulaType();
+                    var responseType = openApiMediaType.Schema.ToFormulaType();
                     return responseType;
                 }
             }
