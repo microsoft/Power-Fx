@@ -100,15 +100,7 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
             }
 
             foreach (var requiredParam in requiredParamInfo)
-                if (_parameterDescriptionMap.ContainsKey(requiredParam.TypedName.Name.Value))
-                {
-                    // Can happen when a parameters is in Boby and Query at the same time
-                    _parameterDescriptionMap[requiredParam.TypedName.Name.Value] += $";{requiredParam.Description}";
-                }
-                else
-                {
-                    _parameterDescriptionMap.Add(requiredParam.TypedName.Name.Value, requiredParam.Description);
-                }
+                _parameterDescriptionMap.Add(requiredParam.TypedName.Name.Value, requiredParam.Description);
 
             _signatures = new List<string[]>();
             _parameterOptions = parameterOptions;
