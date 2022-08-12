@@ -478,16 +478,5 @@ namespace Microsoft.PowerFx.Tests
             Assert.IsType<StringValue>(result);
             Assert.Equal("John Doe", (result as StringValue).Value);
         }
-
-        [Fact]
-        public async Task PetStore_MultiServer()
-        {
-            using var testConnector = new LoggingTestServer(@"Swagger\PetStore.json");
-            var apiDoc = testConnector._apiDocument;
-            var config = new PowerFxConfig();
-
-            // Verify we can load the service
-            config.AddService("PetStore", apiDoc);           
-        }
     }
 }
