@@ -177,6 +177,9 @@ namespace Microsoft.PowerFx.Tests
 
             // Verify we can load the service
             config.AddService("PetStore", apiDoc);
+
+            // Ensure we use HTTPS protocol
+            Assert.Equal("https", apiDoc.GetScheme().Substring(0, 5));
         }
     }
 }
