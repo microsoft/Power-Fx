@@ -679,6 +679,9 @@ namespace Microsoft.PowerFx.Core.Parser
                             // Only allow this when expression chaining is enabled (e.g. in behavior rules).
                             if ((_flagsMode.Peek() & Flags.EnableExpressionChaining) == 0)
                             {
+                                _errors ??= new List<TexlError>();
+                                _errors.Add(new TexlError(_curs.TokCur, DocumentErrorSeverity.Critical, TexlStrings.ErrErrorChainingOperatorNotAllowed));
+
                                 goto case TokKind.False;
                             }
 

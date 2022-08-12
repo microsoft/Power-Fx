@@ -5944,6 +5944,10 @@
     <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
     <comment>{Locked}</comment>
   </data>
+  <data name="ErrorResource_ErrErrorChainingOperatorNotAllowed_ShortMessage" xml:space="preserve">
+    <value>The chaining operator is only allowed in a behavior property. Make sure that EnableExpressionChaining flag is properly set and passed as argument.</value>
+    <comment>Error Message.</comment>
+  </data>
   <data name="ErrorResource_ErrNumberExpected_ShortMessage" xml:space="preserve">
     <value>Expected number. We expect a number at this point in the formula.</value>
     <comment>Error Message.</comment>
