@@ -3924,12 +3924,20 @@
     <value>Δεν υποστηρίζεται στις στήλες τύπου.</value>
     
   </data>
+  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
+    <value>Μη έγκυρος αριθμός ορισμάτων για {0} τη συνάρτηση: ελήφθη {1}, αναμένεται {2}</value>
+    
+  </data>
   <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
     <value>Το όρισμα {0} δεν υποστηρίζεται για τη συνάρτηση {1} στις στήλες τύπου.</value>
     
   </data>
   <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
     <value>Αυτό το όρισμα δεν μπορεί να διαβιβαστεί ως αυτός ο τύπος στις στήλες τύπου.</value>
+    
+  </data>
+  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
+    <value>Αυτό το όρισμα δεν μπορεί να μεταβιβαστεί ως κείμενο {0} σε στήλες τύπων.</value>
     
   </data>
   <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
@@ -3948,6 +3956,10 @@
     <value>Μόνο οι συμβολοσειρές μορφής σύντομης ημερομηνίας και ώρας υποστηρίζονται σε στήλες τύπου.</value>
     
   </data>
+  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
+    <value>Το {0} όρισμα είναι μια μη έγκυρη/μη υποστηριζόμενη μονάδα χρόνου για την {1} αριθμητική συνάρτηση date.</value>
+    
+  </data>
   <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
     <value>Τα διακριτικά μορφοποίησης ειδικά για τοπικές ρυθμίσεις, όπως "." και "," δεν υποστηρίζονται σε στήλες τύπου.</value>
     
@@ -3956,8 +3968,16 @@
     <value>{0} δεν υποστηρίζεται σε στήλες τύπου, χρησιμοποιήστε {1} αντ' αυτού.</value>
     
   </data>
+  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
+    <value>Αυτή η λειτουργία δεν μπορεί να εκτελεστεί σε στήλες τύπων {0}.</value>
+    
+  </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
     <value>Ο τύπος αποτελέσματος {0} δεν υποστηρίζεται σε στήλες τύπου.</value>
+    
+  </data>
+  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
+    <value>Η απευθείας αναφορά σε μια ολόκληρη εγγραφή δεν υποστηρίζεται στις στήλες τύπων. Παρακαλείσθε να αναφέρετε ένα έγκυρο πεδίο στην εγγραφή.</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
@@ -3972,8 +3992,20 @@
     <value>Οι στήλες τύπου {0} με μορφή {1} δεν υποστηρίζονται σε στήλες τύπου.</value>
     
   </data>
+  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
+    <value>Ο εξαναγκασμός εγγραφών ή πινάκων δεν υποστηρίζεται σε στήλες τύπων.</value>
+    
+  </data>
   <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
     <value>Οι τύποι δεν μπορούν να είναι μεγαλύτεροι από 1000 χαρακτήρες.</value>
+    
+  </data>
+  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
+    <value>Οι πίνακες μίας στήλης δεν υποστηρίζονται σε στήλες τύπων.</value>
+    
+  </data>
+  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
+    <value>Δεν είναι δυνατή η αναφορά σε εικονικό πίνακα {0} σε στήλες τύπων.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
@@ -4591,6 +4623,38 @@
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
     <value>Το πρώτο όρισμα του "{0}" πρέπει να είναι ένα έγκυρο όνομα μεταβλητής και δεν πρέπει να έρχεται σε διένεξη με τυχόν υπάρχοντα ονόματα στοιχείου ελέγχου, οθόνης, συλλογής ή προέλευσης δεδομένων. Εντοπίστηκε τύπος "{1}"</value>
+    
+  </data>
+  <data name="ErrUDF_MissingIdentifier" xml:space="preserve">
+    <value>Από τη συνάρτηση ορισμού χρήστη λείπει ένα έγκυρο όνομα</value>
+    
+  </data>
+  <data name="ErrUDF_MissingOpenParen" xml:space="preserve">
+    <value>Από τη συνάρτηση που καθορίζεται από το χρήστη λείπει ένα '(' εδώ</value>
+    
+  </data>
+  <data name="ErrUDF_MissingEqual" xml:space="preserve">
+    <value>Από τη συνάρτηση που ορίζεται από το χρήστη λείπει ένα '=' εδώ</value>
+    
+  </data>
+  <data name="ErrUDF_MissingCloseParen" xml:space="preserve">
+    <value>Από τη συνάρτηση που καθορίζεται από το χρήστη λείπει ένα ')' εδώ</value>
+    
+  </data>
+  <data name="ErrUDF_MissingSemicolon" xml:space="preserve">
+    <value>Από τη λειτουργία που ορίζεται από το χρήστη λείπει ένα ';' εδώ</value>
+    
+  </data>
+  <data name="ErrUDF_MissingComma" xml:space="preserve">
+    <value>Από τη συνάρτηση που καθορίζεται από το χρήστη λείπει ένα '(' εδώ</value>
+    
+  </data>
+  <data name="ErrUDF_MissingColon" xml:space="preserve">
+    <value>User Defined Function is missing an ':' here</value>
+    
+  </data>
+  <data name="ErrUDF_DuplicateArgName" xml:space="preserve">
+    <value>Η συνάρτηση ορισμού χρήστη έχει διπλότυπο όνομα ορίσματος</value>
     
   </data>
   <data name="AboutSet" xml:space="preserve">

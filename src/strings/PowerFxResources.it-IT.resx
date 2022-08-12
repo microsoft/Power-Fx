@@ -3924,12 +3924,20 @@
     <value>Non supportato nelle colonne della formula.</value>
     
   </data>
+  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
+    <value>Numero di argomenti non valido per la funzione {0}: {1} ricevuti, {2} previsti</value>
+    
+  </data>
   <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
     <value>L'argomento {0} non è supportato per la funzione {1} nelle colonne della formula.</value>
     
   </data>
   <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
     <value>Impossibile trasmettere questo argomento come questo tipo nelle colonne della formula.</value>
+    
+  </data>
+  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
+    <value>Impossibile trasmettere questo argomento come tipo {0} nelle colonne della formula.</value>
     
   </data>
   <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
@@ -3948,6 +3956,10 @@
     <value>Solo le stringhe di formato di data e ora breve sono supportate nelle colonne della formula.</value>
     
   </data>
+  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
+    <value>L'argomento {0} è un'unità di tempo non valida o non supportata per la funzione aritmetica della data {1}.</value>
+    
+  </data>
   <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
     <value>I token di formattazione specifici delle impostazioni locali, ad esempio "." e "," non sono supportati nelle colonne della formula.</value>
     
@@ -3956,8 +3968,16 @@
     <value>{0} non è supportata nelle colonne della formula, utilizza invece {1}.</value>
     
   </data>
+  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
+    <value>Impossibile eseguire questa operazione sul tipo {0} nelle colonne della formula.</value>
+    
+  </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
     <value>Il tipo di risultato {0} non è supportato nelle colonne della formula.</value>
+    
+  </data>
+  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
+    <value>Il riferimento diretto a un intero record non è supportato nelle colonne della formula. Fare riferimento a un campo valido nel record.</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
@@ -3972,8 +3992,20 @@
     <value>Le colonne di tipo {0} con formato {1} non sono supportate nelle colonne della formula.</value>
     
   </data>
+  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
+    <value>La forzatura di record o tabelle non è supportata nelle colonne della formula.</value>
+    
+  </data>
   <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
     <value>Le formule non possono essere più lunghe di 1000 caratteri.</value>
+    
+  </data>
+  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
+    <value>Le tabelle a colonna singola non sono supportate nelle colonne della formula.</value>
+    
+  </data>
+  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
+    <value>Impossibile fare riferimento alla tabella virtuale {0} nelle colonne della formula.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
@@ -4591,6 +4623,38 @@
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
     <value>Il primo argomento di '{0}' deve essere un nome di variabile valido non in conflitto con i nomi di controlli, schermate, raccolte o origini dati esistenti. Tipo trovato: '{1}'</value>
+    
+  </data>
+  <data name="ErrUDF_MissingIdentifier" xml:space="preserve">
+    <value>Alla funzione definita dall'utente manca un nome valido</value>
+    
+  </data>
+  <data name="ErrUDF_MissingOpenParen" xml:space="preserve">
+    <value>Alla funzione definita dall'utente manca un elemento "(" qui</value>
+    
+  </data>
+  <data name="ErrUDF_MissingEqual" xml:space="preserve">
+    <value>Alla funzione definita dall'utente manca un elemento "=" qui</value>
+    
+  </data>
+  <data name="ErrUDF_MissingCloseParen" xml:space="preserve">
+    <value>Alla funzione definita dall'utente manca un elemento ")" qui</value>
+    
+  </data>
+  <data name="ErrUDF_MissingSemicolon" xml:space="preserve">
+    <value>Alla funzione definita dall'utente manca un elemento ";" qui</value>
+    
+  </data>
+  <data name="ErrUDF_MissingComma" xml:space="preserve">
+    <value>Alla funzione definita dall'utente manca un elemento "," qui</value>
+    
+  </data>
+  <data name="ErrUDF_MissingColon" xml:space="preserve">
+    <value>User Defined Function is missing an ':' here</value>
+    
+  </data>
+  <data name="ErrUDF_DuplicateArgName" xml:space="preserve">
+    <value>La funzione definita dall'utente ha un nome di argomento duplicato</value>
     
   </data>
   <data name="AboutSet" xml:space="preserve">

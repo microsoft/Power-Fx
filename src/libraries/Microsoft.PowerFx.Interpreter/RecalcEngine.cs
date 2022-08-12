@@ -171,6 +171,7 @@ namespace Microsoft.PowerFx
                 udf.Ident.ToString(), 
                 udf.Body.ToString(), 
                 FormulaType.GetFromStringOrNull(udf.ReturnType.ToString()),
+                udf.IsImperative,
                 udf.Args.Select(arg => new NamedFormulaType(arg.VarIdent.ToString(), FormulaType.GetFromStringOrNull(arg.VarType.ToString()))).ToArray())).ToArray();
             return DefineFunctions(udfDefinitions);
         }
@@ -188,7 +189,7 @@ namespace Microsoft.PowerFx
                 record = record.Add(p);
             }
 
-            var check = new CheckWrapper(this, definition.Body, record);
+            var check = new CheckWrapper(this, definition.Body, record, definition.IsImperative);
 
             var func = new UserDefinedTexlFunction(definition.Name, definition.ReturnType, definition.Parameters, check);
             if (_customFuncs.ContainsKey(definition.Name))

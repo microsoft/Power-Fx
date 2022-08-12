@@ -498,37 +498,37 @@
     <value>Tekstiväärtus loogiliseks väärtuseks teisendamise jaoks.</value>
   </data>
   <data name="AboutBooleanT" xml:space="preserve">
-    <value>Converts a column of text values to a column of boolean values.</value>
+    <value>Teisendab tekstväärtuste veeru loogiliste väärtuste veeruks.</value>
     
   </data>
   <data name="BooleanTArg1" xml:space="preserve">
-    <value>input</value>
+    <value>sisend</value>
     
   </data>
   <data name="AboutBooleanT_input" xml:space="preserve">
-    <value>A column of text values to process.</value>
+    <value>Töödeldav tekstväärtuste veerg.</value>
   </data>
   <data name="AboutBooleanN" xml:space="preserve">
-    <value>Converts a 'number' to a boolean value.</value>
+    <value>Teisendab „arvu“ loogiliseks väärtuseks.</value>
     
   </data>
   <data name="BooleanNArg1" xml:space="preserve">
-    <value>number</value>
+    <value>arv</value>
     
   </data>
   <data name="AboutBooleanN_number" xml:space="preserve">
-    <value>The number value to convert to a boolean value.</value>
+    <value>Arvväärtus loogiliseks väärtuseks teisendamise jaoks.</value>
   </data>
   <data name="AboutBooleanNT" xml:space="preserve">
-    <value>Converts a column of numeric values to a column of boolean values.</value>
+    <value>Teisendab arvväärtuste veeru loogiliste väärtuste veeruks.</value>
     
   </data>
   <data name="BooleanNTArg1" xml:space="preserve">
-    <value>input</value>
+    <value>sisend</value>
     
   </data>
   <data name="AboutBooleanNT_input" xml:space="preserve">
-    <value>A column of number values to process.</value>
+    <value>Töödeldav arvväärtuste veerg.</value>
   </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Tagastab esimese mittetühja argumendi</value>
@@ -3924,12 +3924,20 @@
     <value>Ei toetata valemiveergudes.</value>
     
   </data>
+  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
+    <value>Invalid number of arguments for {0} function: received {1}, expected {2}</value>
+    
+  </data>
   <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
     <value>Argumenti {0} ei toetata valemiveergude funktsioonis {1}.</value>
     
   </data>
   <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
     <value>Seda argumenti ei saa valemiveergudes selle tüübina edastada.</value>
+    
+  </data>
+  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
+    <value>This argument can not be passed as type {0} in formula columns.</value>
     
   </data>
   <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
@@ -3948,6 +3956,10 @@
     <value>Valemiveergudes toetatakse ainult lühikese vorminguga kuupäeva- ja kellaaja stringe.</value>
     
   </data>
+  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
+    <value>The {0} argument is an invalid/unsupported unit of time for the {1} date arithmetic function.</value>
+    
+  </data>
   <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
     <value>Lokaadipõhiseid vormingutõendeid (nt "." ja ",") valemiveergudes ei toetata.</value>
     
@@ -3956,8 +3968,16 @@
     <value>Üksust {0} ei toetata valemiveergudes, kasutage selle asemel üksust {1}.</value>
     
   </data>
+  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
+    <value>This operation can not be performed on type {0} in formula columns.</value>
+    
+  </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
     <value>Tulemitüüp {0} pole valemiveergudes toetatud.</value>
+    
+  </data>
+  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
+    <value>Directly referencing an entire record is not supported in formula columns. Please reference a valid field in the record.</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
@@ -3972,8 +3992,20 @@
     <value>Veerud, mille tüüp on {0} ja vorming {1}, pole valemiveergudes toetatud.</value>
     
   </data>
+  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
+    <value>Coercing records or tables is not supported in formula columns.</value>
+    
+  </data>
   <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
     <value>Valemid ei tohi olla pikemad kui 1000 märki.</value>
+    
+  </data>
+  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
+    <value>Single-column tables are not supported in formula columns.</value>
+    
+  </data>
+  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
+    <value>Can not reference virtual table {0} in formula columns.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
@@ -4591,6 +4623,38 @@
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
     <value>Üksuse '{0}' esimene argument peab olema kehtiv muutuja nimi ja see ei tohi olla vastuolus ühegi olemasoleva juhtelemendi, ekraani, kogumi või andmeallika nimega. Leitud tüüp '{1}'</value>
+    
+  </data>
+  <data name="ErrUDF_MissingIdentifier" xml:space="preserve">
+    <value>User Defined Function is missing a valid name</value>
+    
+  </data>
+  <data name="ErrUDF_MissingOpenParen" xml:space="preserve">
+    <value>User Defined Function is missing a '(' here</value>
+    
+  </data>
+  <data name="ErrUDF_MissingEqual" xml:space="preserve">
+    <value>User Defined Function is missing a '=' here</value>
+    
+  </data>
+  <data name="ErrUDF_MissingCloseParen" xml:space="preserve">
+    <value>User Defined Function is missing a ')' here</value>
+    
+  </data>
+  <data name="ErrUDF_MissingSemicolon" xml:space="preserve">
+    <value>User Defined Function is missing a ';' here</value>
+    
+  </data>
+  <data name="ErrUDF_MissingComma" xml:space="preserve">
+    <value>User Defined Function is missing a ',' here</value>
+    
+  </data>
+  <data name="ErrUDF_MissingColon" xml:space="preserve">
+    <value>User Defined Function is missing an ':' here</value>
+    
+  </data>
+  <data name="ErrUDF_DuplicateArgName" xml:space="preserve">
+    <value>User Defined Function has a duplicate argument name</value>
     
   </data>
   <data name="AboutSet" xml:space="preserve">
