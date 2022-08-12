@@ -10,7 +10,12 @@ Param(
 
 Write-Host Install tools
 $basePath = (get-item $pathToCoverageFiles ).parent.FullName
-$coverageAnalyzer = "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Team Tools\Dynamic Code Coverage Tools\CodeCoverage.exe"
+
+$coverageAnalyzer = "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Team Tools\Dynamic Code Coverage Tools\CodeCoverage.exe"
+if (-not (Test-Path $coverageAnalyzer)) {
+  $coverageAnalyzer = "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Team Tools\Dynamic Code Coverage Tools\CodeCoverage.exe"
+}
+
 dotnet tool install coveralls.net --version 3.0.0 --tool-path tools --add-source https://api.nuget.org/v3/index.json
 $coverageUploader = ".\tools\csmacnz.Coveralls.exe"
 
