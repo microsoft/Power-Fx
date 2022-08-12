@@ -16,7 +16,7 @@ if (-not (Test-Path $coverageAnalyzer)) {
   $coverageAnalyzer = "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Team Tools\Dynamic Code Coverage Tools\CodeCoverage.exe"
 }
 
-dotnet tool install coveralls.net --version 3.0.0 --tool-path tools --add-source https://api.nuget.org/v3/index.json
+dotnet tool install coveralls.net --version 4.0.1 --tool-path tools --add-source https://api.nuget.org/v3/index.json
 $coverageUploader = ".\tools\csmacnz.Coveralls.exe"
 
 Write-Host "Analyze coverage [$coverageAnalyzer] with args:"
