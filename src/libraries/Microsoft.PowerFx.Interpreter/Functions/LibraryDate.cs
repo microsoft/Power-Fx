@@ -3,6 +3,7 @@
 
 using System;
 using System.Globalization;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Interpreter;
@@ -402,7 +403,7 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
-        private static bool CultureExists(string name)
+        private static bool TryGetCulture(string name, out CultureInfo value)
         {
             CultureInfo[] availableCultures =
                 CultureInfo.GetCultures(CultureTypes.AllCultures);
@@ -411,10 +412,12 @@ namespace Microsoft.PowerFx.Functions
             {
                 if (string.Equals(culture.Name, name, StringComparison.OrdinalIgnoreCase))
                 {
+                    value = new CultureInfo(name);
                     return true;
                 }
             }
 
+            value = null;
             return false;
         }
 
@@ -422,15 +425,11 @@ namespace Microsoft.PowerFx.Functions
         {
             var str = args[0].Value;
 
-            // argCI will have Cultural info in-case one was passed in argument else it will have the default one.
+            // culture will have Cultural info in-case one was passed in argument else it will have the default one.
             CultureInfo culture = runner.CultureInfo;
             if (args.Length > 1)
             {
-                if (CultureExists(args[1].Value))
-                {
-                    culture = new CultureInfo(args[1].Value);
-                }
-                else
+                if (!TryGetCulture(args[1].Value, out culture))
                 {
                     return CommonErrors.InvalidDateTimeError(irContext);
                 }
@@ -450,15 +449,11 @@ namespace Microsoft.PowerFx.Functions
         {
             var str = args[0].Value;
 
-            // argCI will have Cultural info in-case one was passed in argument else it will have the default one.
-            CultureInfo argCI = runner.CultureInfo;
+            // culture will have Cultural info in-case one was passed in argument else it will have the default one.
+            CultureInfo culture = runner.CultureInfo;
             if (args.Length > 1)
             {
-                if (CultureExists(args[1].Value))
-                {
-                    argCI = new CultureInfo(args[1].Value);
-                }
-                else
+                if (!TryGetCulture(args[1].Value, out culture))
                 {
                     return CommonErrors.InvalidDateTimeError(irContext);
                 }
