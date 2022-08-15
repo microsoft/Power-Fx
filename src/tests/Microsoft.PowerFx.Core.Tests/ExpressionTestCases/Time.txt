@@ -67,6 +67,9 @@ false
 >> Time(1/0, 2, 3) < Time(8,1,30)
 #Error
 
+// Date <-> Time comparison is supported for back compat reasons
+// It's handled by promoting Times to DateTimes on the day of the epoch, and comparing using that.
+
 >> Date( 2019, 5, 16 ) > Time( 11, 23, 45 )
 true
 
