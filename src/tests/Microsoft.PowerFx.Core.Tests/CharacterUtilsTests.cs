@@ -58,10 +58,13 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal(expected, actual);
         }
 
-        [Fact]
-        public void HasSpacesTest()
+        [Theory]
+        [InlineData(" ")]
+        [InlineData("\t")]
+        [InlineData("\r \u00A0")]
+        public void HasSpacesTest(string input)
         {
-            var actual = CharacterUtils.HasSpaces(" ");
+            var actual = CharacterUtils.HasSpaces(input);
             Assert.True(actual);
         }
     }
