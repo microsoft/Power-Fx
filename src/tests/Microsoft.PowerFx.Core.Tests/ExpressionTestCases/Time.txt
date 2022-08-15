@@ -67,6 +67,12 @@ false
 >> Time(1/0, 2, 3) < Time(8,1,30)
 #Error
 
+>> Date( 2019, 5, 16 ) > Time( 11, 23, 45 )
+true
+
+>> Time( 11, 23, 45 ) > Date( 2019, 5, 16 )
+false
+
 >> Time(1/0, 2, 3) <= Time(8,1,30)
 #Error
 

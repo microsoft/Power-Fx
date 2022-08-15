@@ -4305,6 +4305,14 @@ namespace Microsoft.PowerFx.Core.Binding
                         _txb.SetCoercedType(left, DType.Number);
                         return;
                     }
+
+                    // Handle Date <=> Time comparison by coercing both to DateTime
+                    if (DType.DateTime.Accepts(typeLeft) && DType.DateTime.Accepts(typeRight))
+                    {
+                        _txb.SetCoercedType(left, DType.DateTime);
+                        _txb.SetCoercedType(right, DType.DateTime);
+                        return;
+                    }
                 }
             }
 
