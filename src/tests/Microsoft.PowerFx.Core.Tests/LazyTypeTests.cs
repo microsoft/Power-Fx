@@ -49,6 +49,58 @@ namespace Microsoft.PowerFx.Core.Tests
             }
         }
 
+        public class PadTableType : TableType
+        {
+            private RecordType _underlyingType;
+
+            public override IEnumerable<string> FieldNames => _underlyingType.FieldNames;
+
+            public PadTableType(RecordType underlyingType)
+            {
+                _underlyingType = underlyingType;
+            }
+
+            public PadTableType()
+            {
+                _underlyingType = RecordType.Empty();
+            }
+
+            public override TableType Add(NamedFormulaType field)
+            {
+                _underlyingType = _underlyingType.Add(field);
+                return this;
+            }
+
+            public override bool TryGetFieldType(string name, out FormulaType type)
+            {
+                return _underlyingType.TryGetFieldType(name, out type);
+            }
+
+            public override bool Equals(object other)
+            {
+                return false;
+            }
+
+            public override int GetHashCode()
+            {
+                return 0;
+            }
+        }
+
+        [Fact]
+        public void PadTableWithUnderlyingRecordType()
+        {
+            var context = RecordType.Empty();
+            context = context.Add("tableVar", new PadTableType(new TestLazyRecordType("Lazy1", new List<string>() { "Foo", "Bar", "Baz" }, LazyGetField1)));
+            var config = new PowerFxConfig();
+            var engine = new Engine(config);
+            var result = engine.Check("Index(tableVar, 1)", context);
+            Assert.IsType<KnownRecordType>(result.ReturnType);
+            
+            // Expected result
+            Assert.IsType<TestLazyRecordType>(result.ReturnType);
+        }
+
         public class TestLazyTableType : TableType
         {
             public delegate bool TryGetFieldDelegate(string name, out FormulaType type);
