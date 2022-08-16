@@ -1,0 +1,81 @@
+﻿{
+  "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#directoryObjects(aboutMe,accountEnabled,birthday,businessPhones,city,companyName,country,department,displayName,givenName,hireDate,id,interests,jobTitle,mail,mailNickname,mobilePhone,mySite,officeLocation,pastProjects,postalCode,preferredLanguage,preferredName,responsibilities,schools,skills,state,streetAddress,surname,userPrincipalName,userType)",
+  "value": [
+    {
+      "@odata.type": "#microsoft.graph.user",
+      "accountEnabled": true,
+      "businessPhones": [
+        "+33 (1) 1234567"
+      ],
+      "city": "Paris",
+      "companyName": "Paris",
+      "country": "France",
+      "department": "Power Fx",
+      "displayName": "John Doe",
+      "givenName": "John",
+      "id": "1507713b-8fcb-49b1-9add-e11bb44602c3",
+      "jobTitle": "SOFTWARE GURU",
+      "mail": "John.Doe@microsoft.com",
+      "mailNickname": "jhndoe",
+      "mobilePhone": "+33 999 999 999",
+      "officeLocation": "Home Office",
+      "postalCode": "75000",
+      "preferredLanguage": null,
+      "state": null,
+      "streetAddress": "17, Rue des Lilas",
+      "surname": "Doe",
+      "userPrincipalName": "jhndoe@microsoft.com",
+      "userType": "Member"
+    },
+    {
+      "@odata.type": "#microsoft.graph.user",
+      "accountEnabled": true,
+      "businessPhones": [
+        "+1 (555) 123467"
+      ],
+      "city": "Atlanta",
+      "companyName": "Microsoft",
+      "country": null,
+      "department": "Power Fx",
+      "displayName": "Bob Sponge",
+      "givenName": "Bob",
+      "id": "4290b11b-e6e6-7e7b-b119-b4e91470e8aa",
+      "jobTitle": "SOFTWARE CLEANER",
+      "mail": "bobsponge@microsoft.com",
+      "mailNickname": "bobsponge",
+      "mobilePhone": null,
+      "officeLocation": "ATLANTA-LAKE/117",
+      "postalCode": null,
+      "preferredLanguage": null,
+      "state": null,
+      "streetAddress": null,
+      "surname": "Sponge",
+      "userPrincipalName": "bobsponge@microsoft.com",
+      "userType": "Member"
+    },
+    {
+      "@odata.type": "#microsoft.graph.user",
+      "accountEnabled": true,
+      "businessPhones": [],
+      "city": "Dallas",
+      "companyName": "Microsoft",
+      "country": null,
+      "department": "Power Fx",
+      "displayName": "Billy the Kid",
+      "givenName": "Billy",
+      "id": "feec333d-3601-4be4-b01d-5688c0dac671",
+      "jobTitle": "SOFTWARE KILLER",
+      "mail": "billythekid@microsoft.com",
+      "mailNickname": "billythekid",
+      "mobilePhone": null,
+      "officeLocation": "DALLAS FW",
+      "postalCode": null,
+      "preferredLanguage": null,
+      "state": null,
+      "streetAddress": null,
+      "surname": "The Kid",
+      "userPrincipalName": "billythekid@microsoft.com",
+      "userType": "Member"
+    }
+  ]
+}

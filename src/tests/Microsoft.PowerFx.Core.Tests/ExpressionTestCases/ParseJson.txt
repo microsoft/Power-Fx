@@ -140,6 +140,12 @@ Errors: Error 0-14: Invalid argument type. Expecting one of the following: Numbe
 >> DateValue(ParseJSON("""2011-1-15"""))
 #Error(Kind=InvalidArgument)
 
+>> DateValue(ParseJSON("""2011-01"""))
+#Error(Kind=InvalidArgument)
+
+>> DateValue(ParseJSON("""2011"""))
+#Error(Kind=InvalidArgument)
+
 >> DateValue(ParseJSON("null"))
 Blank()
 
@@ -149,7 +155,22 @@ Blank()
 >> DateDiff(DateTimeValue(ParseJSON("""2011-01-15T08:00:00.000Z""")), DateTimeValue(ParseJSON("""2011-01-30T08:00:00.000Z""")))
 15
 
+>> DateDiff(DateTimeValue(ParseJSON("""2011-01-15T08:00:00Z""")), DateTimeValue(ParseJSON("""2011-01-30T08:00:00Z""")))
+15
+
+>> DateDiff(DateTimeValue(ParseJSON("""2011-01-15T08:00:00.000""")), DateTimeValue(ParseJSON("""2011-01-30T08:00:00.000""")))
+15
+
+>> DateDiff(DateTimeValue(ParseJSON("""2011-01-15T00:00:00""")), DateTimeValue(ParseJSON("""2011-01-30""")))
+15
+
 >> DateTimeValue(ParseJSON("""2011-01-15T08:0:00.000Z"""))
+#Error(Kind=InvalidArgument)
+
+>> DateTimeValue(ParseJSON("""2011-01-15T08"""))
+#Error(Kind=InvalidArgument)
+
+>> DateTimeValue(ParseJSON("""2011T08:00:00.000Z"""))
 #Error(Kind=InvalidArgument)
 
 >> DateTimeValue(ParseJSON("null"))
@@ -158,8 +179,23 @@ Blank()
 >> DateTimeValue(ParseJSON("""abcdef"""))
 #Error(Kind=InvalidArgument)
 
->> Text(TimeValue(ParseJSON("""08:03:05.000""")))
-"8:03 AM"
+>> Text(DateTimeValue(ParseJSON("""2022-05-05""")), "yyyy-MM-dd HH:mm:ss")
+"2022-05-05 00:00:00"
+
+>> DateDiff(DateValue(ParseJSON("""2011-01-15T08:00:00.000Z""")), DateValue(ParseJSON("""2011-01-30T08:00:00.000Z""")))
+15
+
+>> DateDiff(DateValue(ParseJSON("""2011-01-15T08:00:00Z""")), DateValue(ParseJSON("""2011-01-30T08:00:00Z""")))
+15
+
+>> DateDiff(DateValue(ParseJSON("""2011-01-15T00:00:00""")), DateValue(ParseJSON("""2011-01-30""")))
+15
+
+>> DateDiff(DateValue(ParseJSON("""2011-01-15T08:00:00.000""")), DateValue(ParseJSON("""2011-01-30T08:00:00.000""")))
+15
+
+>> Text(TimeValue(ParseJSON("""08:03:05.000""")), "HH:mm:ss")
+"08:03:05"
 
 >> TimeValue(ParseJSON("""08:93:05.000"""))
 #Error(Kind=InvalidArgument)

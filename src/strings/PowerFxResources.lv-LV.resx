@@ -498,37 +498,37 @@
     <value>Teksts, kas jāpārvērš par Būla vērtību.</value>
   </data>
   <data name="AboutBooleanT" xml:space="preserve">
-    <value>Converts a column of text values to a column of boolean values.</value>
+    <value>Pārvērš teksta vērtību kolonnu par Būla vērtību kolonnu.</value>
     
   </data>
   <data name="BooleanTArg1" xml:space="preserve">
-    <value>input</value>
+    <value>ievade</value>
     
   </data>
   <data name="AboutBooleanT_input" xml:space="preserve">
-    <value>A column of text values to process.</value>
+    <value>Apstrādājamā teksta vērtību kolonna.</value>
   </data>
   <data name="AboutBooleanN" xml:space="preserve">
-    <value>Converts a 'number' to a boolean value.</value>
+    <value>Pārvērš “skaitli” par Būla vērtību.</value>
     
   </data>
   <data name="BooleanNArg1" xml:space="preserve">
-    <value>number</value>
+    <value>skaitlis</value>
     
   </data>
   <data name="AboutBooleanN_number" xml:space="preserve">
-    <value>The number value to convert to a boolean value.</value>
+    <value>Teksts, kas jāpārvērš par Būla vērtību.</value>
   </data>
   <data name="AboutBooleanNT" xml:space="preserve">
-    <value>Converts a column of numeric values to a column of boolean values.</value>
+    <value>Pārvērš skaitlisku vērtību kolonnu par Būla vērtību kolonnu.</value>
     
   </data>
   <data name="BooleanNTArg1" xml:space="preserve">
-    <value>input</value>
+    <value>ievade</value>
     
   </data>
   <data name="AboutBooleanNT_input" xml:space="preserve">
-    <value>A column of number values to process.</value>
+    <value>Apstrādājamā skaitlisko vērtību kolonna.</value>
   </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Atgriež pirmo argumentu, kurš nav tukšs.</value>
@@ -3924,12 +3924,20 @@
     <value>Netiek atbalstīts formulu kolonnās.</value>
     
   </data>
+  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
+    <value>Nederīgs argumentu skaits funkcijai {0}: saņemtais {1}, paredzētais {2}</value>
+    
+  </data>
   <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
     <value>Formulu kolonnās arguments {0} funkcijai {1} netiek atbalstīts.</value>
     
   </data>
   <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
     <value>Šo argumentu formulu kolonnās nevar nodot kā šāda tipa argumentu.</value>
+    
+  </data>
+  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
+    <value>Šo argumentu formulas kolonnās nevar nodot kā šāda tipa ({0}) argumentu.</value>
     
   </data>
   <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
@@ -3948,6 +3956,10 @@
     <value>Formulu kolonnās tiek atbalstītas tikai īsās datuma un laika formāta virknes.</value>
     
   </data>
+  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
+    <value>Arguments {0} ir nederīga/neatbalstīta laika vienība datuma aritmētiskajai funkcijai {1}.</value>
+    
+  </data>
   <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
     <value>Lokalizācijas formatējuma marķieri, piemēram, "." un "," netiek atbalstīti formulas kolonnās.</value>
     
@@ -3956,8 +3968,16 @@
     <value>{0} netiek atbalstīts formulas kolonnās, tā vietā izmantojiet {1}.</value>
     
   </data>
+  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
+    <value>Formulas kolonnās šo darbību nevar veikt tipam {0}.</value>
+    
+  </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
     <value>Rezultātu tips {0} netiek atbalstīts formulu kolonnās.</value>
+    
+  </data>
+  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
+    <value>Formulas kolonnās netiek atbalstīta tieša atsauce uz visu ierakstu. Lūdzu, norādiet atsauci uz derīgu lauku ierakstā.</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
@@ -3972,8 +3992,20 @@
     <value>Formulu kolonnās netiek atbalstītas kolonnas, kuru tips ir {0}, formāts {1}.</value>
     
   </data>
+  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
+    <value>Formulas kolonnās netiek atbalstīti piespiedu ieraksti vai tabulas.</value>
+    
+  </data>
   <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
     <value>Formulas nevar būt garākas par 1000 rakstzīmēm.</value>
+    
+  </data>
+  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
+    <value>Formulas kolonnās netiek atbalstītas vienas kolonnas tabulas.</value>
+    
+  </data>
+  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
+    <value>Formulas kolonnās nevar atsaukties uz virtuālo tabulu {0}.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
@@ -4591,6 +4623,38 @@
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
     <value>Funkcijas {0} pirmajam argumentam jābūt derīgam mainīgā nosaukumam, kas nedrīkst konfliktēt ne ar vienu esošu vadīklas, ekrāna, kolekcijas vai datu avota nosaukumu. Atrastais tips: {1}.</value>
+    
+  </data>
+  <data name="ErrUDF_MissingIdentifier" xml:space="preserve">
+    <value>Lietotāja definētajai funkcijai trūkst derīga nosaukuma</value>
+    
+  </data>
+  <data name="ErrUDF_MissingOpenParen" xml:space="preserve">
+    <value>Lietotāja definētajai funkcijai šeit trūkst “(”</value>
+    
+  </data>
+  <data name="ErrUDF_MissingEqual" xml:space="preserve">
+    <value>Lietotāja definētajai funkcijai šeit trūkst “=”</value>
+    
+  </data>
+  <data name="ErrUDF_MissingCloseParen" xml:space="preserve">
+    <value>Lietotāja definētajai funkcijai šeit trūkst “)”</value>
+    
+  </data>
+  <data name="ErrUDF_MissingSemicolon" xml:space="preserve">
+    <value>Lietotāja definētajai funkcijai šeit trūkst “;”</value>
+    
+  </data>
+  <data name="ErrUDF_MissingComma" xml:space="preserve">
+    <value>Lietotāja definētajai funkcijai šeit trūkst “,”</value>
+    
+  </data>
+  <data name="ErrUDF_MissingColon" xml:space="preserve">
+    <value>User Defined Function is missing an ':' here</value>
+    
+  </data>
+  <data name="ErrUDF_DuplicateArgName" xml:space="preserve">
+    <value>Lietotāja definētajai funkcijai ir argumenta nosaukuma dublikāts</value>
     
   </data>
   <data name="AboutSet" xml:space="preserve">

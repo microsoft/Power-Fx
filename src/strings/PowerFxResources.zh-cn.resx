@@ -3924,12 +3924,20 @@
     <value>在公式列中不受支持。</value>
     
   </data>
+  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
+    <value>{0} 函数的参数数目无效: 收到 {1} 个，应为 {2} 个</value>
+    
+  </data>
   <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
     <value>公式列中的 {1} 函数不支持 {0} 参数。</value>
     
   </data>
   <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
     <value>此参数不能作为公式列中的此类型进行传递。</value>
+    
+  </data>
+  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
+    <value>此参数不能作为公式列中的类型 {0} 进行传递。</value>
     
   </data>
   <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
@@ -3948,6 +3956,10 @@
     <value>公式列仅支持短日期和时间格式字符串。</value>
     
   </data>
+  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
+    <value>{0} 参数是 {1} 日期算术函数的无效/不受支持的时间单位。</value>
+    
+  </data>
   <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
     <value>公式列中不支持特定于区域设置的格式标记，例如 "." 和 ","。</value>
     
@@ -3956,8 +3968,16 @@
     <value>公式列中不支持 {0}，请改用 {1}。</value>
     
   </data>
+  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
+    <value>无法对公式列中的类型 {0} 执行此操作。</value>
+    
+  </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
     <value>公式列中不支持结果类型 {0}。</value>
+    
+  </data>
+  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
+    <value>公式列中不支持直接引用整个记录。请引用记录中的有效字段。</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
@@ -3972,8 +3992,20 @@
     <value>公式列不支持类型为 {0} 且格式为 {1} 的列。</value>
     
   </data>
+  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
+    <value>公式列中不支持强制记录或表格。</value>
+    
+  </data>
   <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
     <value>公式长度不能超过 1000 个字符。</value>
+    
+  </data>
+  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
+    <value>公式列中不支持单列表。</value>
+    
+  </data>
+  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
+    <value>公式列中无法引用虚拟表 {0}。</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
@@ -4591,6 +4623,38 @@
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
     <value>“{0}”的第一个参数应为有效的变量名，且不能与任何现有控件、屏幕、集合或数据源名称冲突。找到的类型为“{1}”</value>
+    
+  </data>
+  <data name="ErrUDF_MissingIdentifier" xml:space="preserve">
+    <value>用户定义的函数缺少有效名称</value>
+    
+  </data>
+  <data name="ErrUDF_MissingOpenParen" xml:space="preserve">
+    <value>用户定义的函数在此处缺少 "("</value>
+    
+  </data>
+  <data name="ErrUDF_MissingEqual" xml:space="preserve">
+    <value>用户定义的函数在此处缺少 "="</value>
+    
+  </data>
+  <data name="ErrUDF_MissingCloseParen" xml:space="preserve">
+    <value>用户定义的函数在此处缺少 ")"</value>
+    
+  </data>
+  <data name="ErrUDF_MissingSemicolon" xml:space="preserve">
+    <value>用户定义的函数在此处缺少 ";"</value>
+    
+  </data>
+  <data name="ErrUDF_MissingComma" xml:space="preserve">
+    <value>用户定义的函数在此处缺少 ","</value>
+    
+  </data>
+  <data name="ErrUDF_MissingColon" xml:space="preserve">
+    <value>User Defined Function is missing an ':' here</value>
+    
+  </data>
+  <data name="ErrUDF_DuplicateArgName" xml:space="preserve">
+    <value>用户定义的函数具有重复的参数名称</value>
     
   </data>
   <data name="AboutSet" xml:space="preserve">

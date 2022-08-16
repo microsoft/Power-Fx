@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Binding;
-using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Types.Enums;
@@ -27,6 +26,15 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             return intellisense.Suggestions.Select(suggestion => suggestion.DisplayText.Text).ToArray();
         }
 
+        private string[] SuggestStrings(string expression, Engine engine, RecordType parameterType)
+        {
+            (var expression2, var cursorPosition) = Decode(expression);
+
+            var intellisense = engine.Suggest(expression, parameterType, cursorPosition);
+
+            return intellisense.Suggestions.Select(suggestion => suggestion.DisplayText.Text).ToArray();
+        }
+
         // Intellisense isn't actually all that great when it comes to context-sensitive suggestions
         // Without a refactor, this is the best it can currently do. 
         // Ideally, for BinaryOp nodes we only suggest things with relevant types,
@@ -37,11 +45,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("Opt|", "OptionSet", "OtherOptionSet", "TopOptionSetField")]
         [InlineData("Opti|on", "OptionSet", "OtherOptionSet", "TopOptionSetField")]
         [InlineData("TopOptionSetField <> |", "OptionSet", "OtherOptionSet")]
-        [InlineData("TopOptionSetField <> Op|", "OptionSet", "TopOptionSetField", "OtherOptionSet")]
+        [InlineData("TopOptionSetField <> Opt|", "OptionSet", "TopOptionSetField", "OtherOptionSet")]
         public void TestSuggestOptionSets(string expression, params string[] expectedSuggestions)
         {
             var config = PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder(), new TexlFunction[0]);
-
+            
             var optionSet = new OptionSet("OptionSet", DisplayNameUtility.MakeUnique(new Dictionary<string, string>()
             {
                     { "option_1", "Option1" },
@@ -59,12 +67,24 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             config.AddEntity(otherOptionSet);
 
             var parameterType = RecordType.Empty()
+                .Add(new NamedFormulaType("XXX", optionSet.FormulaType)) // Test filtering, shouldn't show up.
                 .Add(new NamedFormulaType("TopOptionSetField", optionSet.FormulaType))
                 .Add(new NamedFormulaType("Nested", RecordType.Empty()
                     .Add(new NamedFormulaType("InnerOtherOptionSet", otherOptionSet.FormulaType))));
 
-            var actualSuggestions = SuggestStrings(expression, config, parameterType);
+            var engine = new RecalcEngine(config);
+
+            var actualSuggestions = SuggestStrings(expression, engine, parameterType);
             Assert.Equal(expectedSuggestions, actualSuggestions);
+
+            // Now try with Globals instead of RowScope
+            foreach (var field in parameterType.GetFieldTypes())
+            {
+                engine.UpdateVariable(field.Name, FormulaValue.NewBlank(field.Type));
+            }
+
+            var actualSuggestions2 = SuggestStrings(expression, engine, RecordType.Empty());
+            Assert.Equal(expectedSuggestions, actualSuggestions2);
         }
 
         [Theory]
@@ -90,7 +110,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var recalcEngine = new RecalcEngine(pfxConfig);
 
             recalcEngine.UpdateVariable(varName, FormulaValue.New(12));
-            var suggestions = recalcEngine.Suggest(suggestion, null, 2);
+            var checkResult = recalcEngine.Check(suggestion);
+            var suggestions = recalcEngine.Suggest(suggestion, checkResult, 2);
             var s1 = suggestions.Suggestions.OfType<IntellisenseSuggestion>();
 
             Assert.NotNull(s1);

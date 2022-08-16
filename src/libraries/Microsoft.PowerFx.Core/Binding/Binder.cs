@@ -2640,7 +2640,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     }
 
                     // scalar in table: RHS must be a one column table. We'll allow coercion.
-                    if (typeRight.IsTable && !typeRight.IsMultiSelectOptionSet())
+                    if (typeRight.IsTable)
                     {
                         var names = typeRight.GetNames(DPath.Root);
                         if (names.Count() != 1)
@@ -2667,7 +2667,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     }
 
                     // scalar in record or multiSelectOptionSet table: not supported. Flag an error on the RHS.
-                    Contracts.Assert(typeRight.IsRecord || typeRight.IsMultiSelectOptionSet());
+                    Contracts.Assert(typeRight.IsRecord);
                     _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, right, TexlStrings.ErrBadType_Type, typeRight.GetKindString());
                     return false;
                 }
@@ -4303,6 +4303,14 @@ namespace Microsoft.PowerFx.Core.Binding
                     else if (DType.Number.Accepts(typeRight) && DType.DateTime.Accepts(typeLeft))
                     {
                         _txb.SetCoercedType(left, DType.Number);
+                        return;
+                    }
+
+                    // Handle Date <=> Time comparison by coercing both to DateTime
+                    if (DType.DateTime.Accepts(typeLeft) && DType.DateTime.Accepts(typeRight))
+                    {
+                        _txb.SetCoercedType(left, DType.DateTime);
+                        _txb.SetCoercedType(right, DType.DateTime);
                         return;
                     }
                 }

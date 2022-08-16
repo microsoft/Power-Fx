@@ -1,0 +1,27 @@
+﻿{
+  "value": [
+    {
+      "Id": "1508713b-8fcb-4951-9add-e11bbbd602c3",
+      "AccountEnabled": true,
+      "BusinessPhones": [
+        "+33 (1) 1234567"
+      ],
+      "City": "Bordeaux",
+      "CompanyName": "Microsoft Bordeaux",
+      "Country": "France",
+      "Department": "Power Fx",
+      "DisplayName": "John Doe",
+      "GivenName": "John",
+      "JobTitle": "SOFTWARE DRINKER",
+      "Mail": "John.Doe@microsoft.com",
+      "MailNickname": "jhndoe",
+      "mobilePhone": "+33 999 888 777",
+      "OfficeLocation": "Home Office",
+      "PostalCode": "33000",
+      "Surname": "Doe",
+      "TelephoneNumber": "+33 123 456 789",
+      "UserPrincipalName": "jhndoe@microsoft.com"
+    }
+  ],
+  "@odata.nextLink": null
+}

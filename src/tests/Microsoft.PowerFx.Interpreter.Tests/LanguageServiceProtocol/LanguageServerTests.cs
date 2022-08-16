@@ -7,12 +7,14 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using Microsoft.PowerFx.Core;
+using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.LanguageServerProtocol;
 using Microsoft.PowerFx.LanguageServerProtocol.Protocol;
 using Microsoft.PowerFx.Types;
 using Xunit;
+using static Microsoft.PowerFx.Tests.BindingEngineTests;
 
 namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 {
@@ -35,13 +37,18 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Init();
         }
 
-        private void Init(Features features = Features.None)
+        private void Init(Features features = Features.None, ParserOptions options = null)
         {
-            var engine = new Engine(new PowerFxConfig(features: features));
-            
+            var config = new PowerFxConfig(features: features);
+            config.AddFunction(new BehaviorFunction());
+
+            var engine = new Engine(config);
+
             _sendToClientData = new List<string>();
-            _scopeFactory = new TestPowerFxScopeFactory((string documentUri) => RecalcEngineScope.FromUri(engine, documentUri));
-            _testServer = new TestLanguageServer(_sendToClientData.Add, _scopeFactory);           
+            _scopeFactory = new TestPowerFxScopeFactory(
+                (string documentUri) => RecalcEngineScope.FromUri(engine, documentUri, options),
+                options);
+            _testServer = new TestLanguageServer(_sendToClientData.Add, _scopeFactory);
         }
 
         // From JPC spec: https://microsoft.github.io/language-server-protocol/specifications/specification-3-14/
@@ -85,8 +92,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             }
         }
 
-        // Exceptions can be thrown oob, test we can register a hook and receive. 
-        // Check for exceptions if the scope object we call back to throws 
+        // Exceptions can be thrown oob, test we can register a hook and receive.
+        // Check for exceptions if the scope object we call back to throws
         [Fact]
         public void TestLogCallbackExceptions()
         {
@@ -127,7 +134,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 
         [Fact]
         public void TestLanguageServerCommunication()
-        {            
+        {
             // bad payload
             _testServer.OnDataReceived(JsonSerializer.Serialize(new { }));
 
@@ -177,28 +184,35 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Equal(MethodNotFound, errorResponse.Error.Code);
         }
 
-        [Fact]
-        public void TestDidChange()
-        {            
+        [Theory]
+        [InlineData("A+CountRows(B)", false)]
+        [InlineData("Behavior(); A+CountRows(B)", true)]
+        public void TestDidChange(string text, bool withAllowSideEffects)
+        {
+            Init(options: GetParserOptions(withAllowSideEffects));
+
             // test good formula
             _sendToClientData.Clear();
-            _testServer.OnDataReceived(JsonSerializer.Serialize(new
-            {
-                jsonrpc = "2.0",
-                method = "textDocument/didChange",
-                @params = new DidChangeTextDocumentParams()
+
+            _testServer.OnDataReceived(
+                JsonSerializer.Serialize(new
                 {
-                    TextDocument = new VersionedTextDocumentIdentifier()
+                    jsonrpc = "2.0",
+                    method = "textDocument/didChange",
+                    @params = new DidChangeTextDocumentParams()
                     {
-                        Uri = "powerfx://app?context={\"A\":1,\"B\":[1,2,3]}",
-                        Version = 1,
-                    },
-                    ContentChanges = new TextDocumentContentChangeEvent[]
+                        TextDocument = new VersionedTextDocumentIdentifier()
+                        {
+                            Uri = "powerfx://app?context={\"A\":1,\"B\":[1,2,3]}",
+                            Version = 1,
+                        },
+                        ContentChanges = new TextDocumentContentChangeEvent[]
                     {
-                        new TextDocumentContentChangeEvent() { Text = "A+CountRows(B)" }
+                        new TextDocumentContentChangeEvent() { Text = text }
                     }
-                }
-            }));
+                    }
+                }));
+
             Assert.Single(_sendToClientData);
             var notification = JsonSerializer.Deserialize<JsonRpcPublishDiagnosticsNotification>(_sendToClientData[0], _jsonSerializerOptions);
             Assert.Equal("2.0", notification.Jsonrpc);
@@ -266,6 +280,11 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Equal("2.0", errorResponse.Jsonrpc);
             Assert.Null(errorResponse.Id);
             Assert.Equal(ParseError, errorResponse.Error.Code);
+        }
+
+        private static ParserOptions GetParserOptions(bool withAllowSideEffects)
+        {
+            return withAllowSideEffects ? new ParserOptions() { AllowsSideEffects = true } : null;
         }
 
         private void TestPublishDiagnostics(string uri, string method, string formula, Diagnostic[] expectedDiagnostics)
@@ -346,53 +365,84 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             TestPublishDiagnostics("powerfx://app", "textDocument/didOpen", formula, expectedDiagnostics);
         }
 
-        [Fact]
-        public void TestDidOpenWithErrors()
+        [Theory]
+        [InlineData("Concatenate(", 12, false, false)]
+        [InlineData("Behavior(); Concatenate(", 24, true, false)]
+        [InlineData("Behavior(); Concatenate(", 24, false, true)]
+        public void TestDidOpenWithErrors(string text, int offset, bool withAllowSideEffects, bool expectBehaviorError)
         {
-            _testServer.OnDataReceived(JsonSerializer.Serialize(new
-            {
-                jsonrpc = "2.0",
-                method = "textDocument/didOpen",
-                @params = new DidOpenTextDocumentParams()
-                {
-                    TextDocument = new TextDocumentItem()
-                    {
-                        Uri = "powerfx://app",
-                        LanguageId = "powerfx",
-                        Version = 1,
-                        Text = "Concatenate("
-                    }
-                }
-            }));
-            var diag = JsonSerializer.Deserialize<JsonRpcPublishDiagnosticsNotification>(_sendToClientData[0], _jsonSerializerOptions).Params.Diagnostics.First(d => d.Message == "Unexpected characters. The formula contains 'ParenClose' where 'Eof' is expected.");
+            Init(options: GetParserOptions(withAllowSideEffects));
 
-            Assert.Equal(12, diag.Range.Start.Character);
-            Assert.Equal(12, diag.Range.End.Character);
+            _testServer.OnDataReceived(
+                JsonSerializer.Serialize(new
+                {
+                    jsonrpc = "2.0",
+                    method = "textDocument/didOpen",
+                    @params = new DidOpenTextDocumentParams()
+                    {
+                        TextDocument = new TextDocumentItem()
+                        {
+                            Uri = "powerfx://app",
+                            LanguageId = "powerfx",
+                            Version = 1,
+                            Text = text
+                        }
+                    }
+                }));
+
+            CheckBehaviorError(_sendToClientData[0], expectBehaviorError, out var diags);
+
+            var diag = diags.First(d => d.Message == "Unexpected characters. The formula contains 'ParenClose' where 'Eof' is expected.");
+
+            Assert.Equal(offset, diag.Range.Start.Character);
+            Assert.Equal(offset, diag.Range.End.Character);
         }
 
-        [Fact]
-        public void TestCompletion()
-        {            
-            // test good formula
-            _testServer.OnDataReceived(JsonSerializer.Serialize(new
+        private void CheckBehaviorError(string sentToClientData, bool expectBehaviorError, out Diagnostic[] diags)
+        {
+            diags = JsonSerializer.Deserialize<JsonRpcPublishDiagnosticsNotification>(sentToClientData, _jsonSerializerOptions).Params.Diagnostics;
+
+            if (expectBehaviorError)
             {
-                jsonrpc = "2.0",
-                id = "123",
-                method = "textDocument/completion",
-                @params = new CompletionParams()
+                Assert.Contains(diags, d => d.Message == StringResources.GetErrorResource(TexlStrings.ErrBehaviorPropertyExpected).GetSingleValue(ErrorResource.ShortMessageTag));
+            }
+            else
+            {
+                Assert.DoesNotContain(diags, d => d.Message == StringResources.GetErrorResource(TexlStrings.ErrBehaviorPropertyExpected).GetSingleValue(ErrorResource.ShortMessageTag));
+            }
+        }
+
+        [Theory]
+        [InlineData("Color.AliceBl", 13, false)]
+        [InlineData("Behavior(); Color.AliceBl", 25, true)]
+
+        // $$$ This test generates an internal error as we use an behavior function but we have no way to check its presence
+        [InlineData("Behavior(); Color.AliceBl", 25, false)]
+        public void TestCompletion(string text, int offset, bool withAllowSideEffects)
+        {
+            Init(options: GetParserOptions(withAllowSideEffects));
+
+            // test good formula
+            _testServer.OnDataReceived(
+                JsonSerializer.Serialize(new
                 {
-                    TextDocument = new TextDocumentIdentifier()
+                    jsonrpc = "2.0",
+                    id = "123",
+                    method = "textDocument/completion",
+                    @params = new CompletionParams()
                     {
-                        Uri = "powerfx://test?expression=Color.AliceBl&context={}"
-                    },
-                    Position = new Position()
-                    {
-                        Line = 0,
-                        Character = 13
-                    },
-                    Context = new CompletionContext()
-                }
-            }));
+                        TextDocument = new TextDocumentIdentifier()
+                        {
+                            Uri = $"powerfx://test?expression={text}&context={{}}"
+                        },
+                        Position = new Position()
+                        {
+                            Line = 0,
+                            Character = offset
+                        },
+                        Context = new CompletionContext()
+                    }
+                }));
             Assert.Single(_sendToClientData);
             var response = JsonSerializer.Deserialize<JsonRpcCompletionResponse>(_sendToClientData[0], _jsonSerializerOptions);
             Assert.Equal("2.0", response.Jsonrpc);
@@ -572,33 +622,41 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Equal(3, _testServer.TestGetPosition("123", 0, 999));
         }
 
-        [Fact]
-        public void TestSignatureHelp()
-        {            
+        [Theory]
+        [InlineData("Power(", 6, "Power(2,", 8, false)]
+        [InlineData("Behavior(); Power(", 18, "Behavior(); Power(2,", 20, true)]
+
+        // This tests generates an internal error as we use an behavior function but we have no way to check its presence
+        [InlineData("Behavior(); Power(", 18, "Behavior(); Power(2,", 20, false)]
+        public void TestSignatureHelp(string text, int offset, string text2, int offset2, bool withAllowSideEffects)
+        {
+            Init(options: GetParserOptions(withAllowSideEffects));
+
             // test good formula
-            _testServer.OnDataReceived(JsonSerializer.Serialize(new
-            {
-                jsonrpc = "2.0",
-                id = "123",
-                method = "textDocument/signatureHelp",
-                @params = new SignatureHelpParams()
+            _testServer.OnDataReceived(
+                JsonSerializer.Serialize(new
                 {
-                    TextDocument = new TextDocumentIdentifier()
+                    jsonrpc = "2.0",
+                    id = "123",
+                    method = "textDocument/signatureHelp",
+                    @params = new SignatureHelpParams()
                     {
-                        Uri = "powerfx://test?expression=Power(&context={}"
-                    },
-                    Position = new Position()
-                    {
-                        Line = 0,
-                        Character = 6
-                    },
-                    Context = new SignatureHelpContext()
-                    {
-                        TriggerKind = SignatureHelpTriggerKind.TriggerCharacter,
-                        TriggerCharacter = "("
+                        TextDocument = new TextDocumentIdentifier()
+                        {
+                            Uri = $"powerfx://test?expression={text}&context={{}}"
+                        },
+                        Position = new Position()
+                        {
+                            Line = 0,
+                            Character = offset
+                        },
+                        Context = new SignatureHelpContext()
+                        {
+                            TriggerKind = SignatureHelpTriggerKind.TriggerCharacter,
+                            TriggerCharacter = "("
+                        }
                     }
-                }
-            }));
+                }));
             Assert.Single(_sendToClientData);
             var response = JsonSerializer.Deserialize<JsonRpcSignatureHelpResponse>(_sendToClientData[0], _jsonSerializerOptions);
             Assert.Equal("2.0", response.Jsonrpc);
@@ -613,29 +671,31 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Equal("exponent", foundItems.First().Parameters[1].Label);
 
             _sendToClientData.Clear();
-            _testServer.OnDataReceived(JsonSerializer.Serialize(new
-            {
-                jsonrpc = "2.0",
-                id = "123",
-                method = "textDocument/signatureHelp",
-                @params = new SignatureHelpParams()
+            _testServer.OnDataReceived(
+                JsonSerializer.Serialize(new
                 {
-                    TextDocument = new TextDocumentIdentifier()
+                    jsonrpc = "2.0",
+                    id = "123",
+                    method = "textDocument/signatureHelp",
+                    @params = new SignatureHelpParams()
                     {
-                        Uri = "powerfx://test?expression=Power(2,&context={}"
-                    },
-                    Position = new Position()
-                    {
-                        Line = 0,
-                        Character = 8
-                    },
-                    Context = new SignatureHelpContext()
-                    {
-                        TriggerKind = SignatureHelpTriggerKind.TriggerCharacter,
-                        TriggerCharacter = ","
+                        TextDocument = new TextDocumentIdentifier()
+                        {
+                            Uri = $"powerfx://test?expression={text2}&context={{}}"
+                        },
+                        Position = new Position()
+                        {
+                            Line = 0,
+                            Character = offset2
+                        },
+                        Context = new SignatureHelpContext()
+                        {
+                            TriggerKind = SignatureHelpTriggerKind.TriggerCharacter,
+                            TriggerCharacter = ","
+                        }
                     }
-                }
-            }));
+                }));
+
             Assert.Single(_sendToClientData);
             response = JsonSerializer.Deserialize<JsonRpcSignatureHelpResponse>(_sendToClientData[0], _jsonSerializerOptions);
             Assert.Equal("2.0", response.Jsonrpc);
@@ -651,25 +711,27 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 
             // missing 'expression' in documentUri
             _sendToClientData.Clear();
-            _testServer.OnDataReceived(JsonSerializer.Serialize(new
-            {
-                jsonrpc = "2.0",
-                id = "123",
-                method = "textDocument/signatureHelp",
-                @params = new CompletionParams()
+            _testServer.OnDataReceived(
+                JsonSerializer.Serialize(new
                 {
-                    TextDocument = new TextDocumentIdentifier()
+                    jsonrpc = "2.0",
+                    id = "123",
+                    method = "textDocument/signatureHelp",
+                    @params = new CompletionParams()
                     {
-                        Uri = "powerfx://test"
-                    },
-                    Position = new Position()
-                    {
-                        Line = 0,
-                        Character = 1
-                    },
-                    Context = new CompletionContext()
-                }
-            }));
+                        TextDocument = new TextDocumentIdentifier()
+                        {
+                            Uri = "powerfx://test"
+                        },
+                        Position = new Position()
+                        {
+                            Line = 0,
+                            Character = 1
+                        },
+                        Context = new CompletionContext()
+                    }
+                }));
+
             Assert.Single(_sendToClientData);
             var errorResponse = JsonSerializer.Deserialize<JsonRpcErrorResponse>(_sendToClientData[0], _jsonSerializerOptions);
             Assert.Equal("2.0", errorResponse.Jsonrpc);
@@ -677,55 +739,73 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Equal(InvalidParams, errorResponse.Error.Code);
         }
 
-        [Fact]
-        public void TestPublishTokens()
-        {            
+        [Theory]
+        [InlineData("A+CountRows(B)", 3, false, false)]
+        [InlineData("Behavior(); A+CountRows(B)", 4, true, false)]
+        [InlineData("Behavior(); A+CountRows(B)", 4, false, true)]
+        public void TestPublishTokens(string text, int count, bool withAllowSideEffects, bool expectBehaviorError)
+        {
+            Init(options: GetParserOptions(withAllowSideEffects));
+
             // getTokensFlags = 0x0 (none), 0x1 (tokens inside expression), 0x2 (all functions)
             var documentUri = "powerfx://app?context={\"A\":1,\"B\":[1,2,3]}&getTokensFlags=1";
-            _testServer.OnDataReceived(JsonSerializer.Serialize(new
-            {
-                jsonrpc = "2.0",
-                method = "textDocument/didOpen",
-                @params = new DidOpenTextDocumentParams()
+
+            _testServer.OnDataReceived(
+                JsonSerializer.Serialize(new
                 {
-                    TextDocument = new TextDocumentItem()
+                    jsonrpc = "2.0",
+                    method = "textDocument/didOpen",
+                    @params = new DidOpenTextDocumentParams()
                     {
-                        Uri = documentUri,
-                        LanguageId = "powerfx",
-                        Version = 1,
-                        Text = "A+CountRows(B)"
+                        TextDocument = new TextDocumentItem()
+                        {
+                            Uri = documentUri,
+                            LanguageId = "powerfx",
+                            Version = 1,
+                            Text = text
+                        }
                     }
-                }
-            }));
+                }));
+
             Assert.Equal(2, _sendToClientData.Count);
             var response = JsonSerializer.Deserialize<JsonRpcPublishTokensNotification>(_sendToClientData[1], _jsonSerializerOptions);
             Assert.Equal("$/publishTokens", response.Method);
             Assert.Equal(documentUri, response.Params.Uri);
-            Assert.Equal(3, response.Params.Tokens.Count);
+            Assert.Equal(count, response.Params.Tokens.Count);
             Assert.Equal(TokenResultType.Variable, response.Params.Tokens["A"]);
             Assert.Equal(TokenResultType.Variable, response.Params.Tokens["B"]);
             Assert.Equal(TokenResultType.Function, response.Params.Tokens["CountRows"]);
 
+            CheckBehaviorError(_sendToClientData[0], expectBehaviorError, out _);
+
+            if (count == 4)
+            {
+                Assert.Equal(TokenResultType.Function, response.Params.Tokens["Behavior"]);
+            }
+
             // getTokensFlags = 0x0 (none), 0x1 (tokens inside expression), 0x2 (all functions)
             _sendToClientData.Clear();
             documentUri = "powerfx://app?context={\"A\":1,\"B\":[1,2,3]}&getTokensFlags=2";
-            _testServer.OnDataReceived(JsonSerializer.Serialize(new
-            {
-                jsonrpc = "2.0",
-                method = "textDocument/didChange",
-                @params = new DidChangeTextDocumentParams()
+
+            _testServer.OnDataReceived(
+                JsonSerializer.Serialize(new
                 {
-                    TextDocument = new VersionedTextDocumentIdentifier()
+                    jsonrpc = "2.0",
+                    method = "textDocument/didChange",
+                    @params = new DidChangeTextDocumentParams()
                     {
-                        Uri = documentUri,
-                        Version = 1,
-                    },
-                    ContentChanges = new TextDocumentContentChangeEvent[]
+                        TextDocument = new VersionedTextDocumentIdentifier()
+                        {
+                            Uri = documentUri,
+                            Version = 1,
+                        },
+                        ContentChanges = new TextDocumentContentChangeEvent[]
                     {
-                        new TextDocumentContentChangeEvent() { Text = "A+CountRows(B)" }
+                        new TextDocumentContentChangeEvent() { Text = text }
                     }
-                }
-            }));
+                    }
+                }));
+
             Assert.Equal(2, _sendToClientData.Count);
             response = JsonSerializer.Deserialize<JsonRpcPublishTokensNotification>(_sendToClientData[1], _jsonSerializerOptions);
             Assert.Equal("$/publishTokens", response.Method);
@@ -737,26 +817,31 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Equal(TokenResultType.Function, response.Params.Tokens["VarP"]);
             Assert.Equal(TokenResultType.Function, response.Params.Tokens["Year"]);
 
+            CheckBehaviorError(_sendToClientData[0], expectBehaviorError, out _);
+
             // getTokensFlags = 0x0 (none), 0x1 (tokens inside expression), 0x2 (all functions)
             _sendToClientData.Clear();
             documentUri = "powerfx://app?context={\"A\":1,\"B\":[1,2,3]}&getTokensFlags=3";
-            _testServer.OnDataReceived(JsonSerializer.Serialize(new
-            {
-                jsonrpc = "2.0",
-                method = "textDocument/didChange",
-                @params = new DidChangeTextDocumentParams()
+
+            _testServer.OnDataReceived(
+                JsonSerializer.Serialize(new
                 {
-                    TextDocument = new VersionedTextDocumentIdentifier()
+                    jsonrpc = "2.0",
+                    method = "textDocument/didChange",
+                    @params = new DidChangeTextDocumentParams()
                     {
-                        Uri = documentUri,
-                        Version = 1,
-                    },
-                    ContentChanges = new TextDocumentContentChangeEvent[]
+                        TextDocument = new VersionedTextDocumentIdentifier()
+                        {
+                            Uri = documentUri,
+                            Version = 1,
+                        },
+                        ContentChanges = new TextDocumentContentChangeEvent[]
                     {
-                        new TextDocumentContentChangeEvent() { Text = "A+CountRows(B)" }
+                        new TextDocumentContentChangeEvent() { Text = text }
                     }
-                }
-            }));
+                    }
+                }));
+
             Assert.Equal(2, _sendToClientData.Count);
             response = JsonSerializer.Deserialize<JsonRpcPublishTokensNotification>(_sendToClientData[1], _jsonSerializerOptions);
             Assert.Equal("$/publishTokens", response.Method);
@@ -768,6 +853,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Equal(TokenResultType.Function, response.Params.Tokens["CountRows"]);
             Assert.Equal(TokenResultType.Function, response.Params.Tokens["VarP"]);
             Assert.Equal(TokenResultType.Function, response.Params.Tokens["Year"]);
+
+            CheckBehaviorError(_sendToClientData[0], expectBehaviorError, out _);
         }
 
         [Theory]
@@ -775,7 +862,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         [InlineData("{}", "\"hi\"", typeof(StringType))]
         [InlineData("{}", "", typeof(BlankType))]
         [InlineData("{}", "{ A: 1 }", typeof(KnownRecordType))]
-        [InlineData("{}", "[1, 2, 3]", typeof(KnownTableType))]
+        [InlineData("{}", "[1, 2, 3]", typeof(TableType))]
         [InlineData("{}", "true", typeof(BooleanType))]
         public void TestPublishExpressionType(string context, string expression, System.Type expectedType)
         {
