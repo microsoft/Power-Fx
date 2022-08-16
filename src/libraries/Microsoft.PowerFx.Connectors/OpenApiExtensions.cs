@@ -16,15 +16,24 @@ namespace Microsoft.PowerFx.Connectors
     // https://docs.microsoft.com/en-us/connectors/custom-connectors/openapi-extensions#x-ms-visibility
     public static class OpenApiExtensions
     {
-        public static string GetBasePath(this OpenApiDocument openApiDocument)
-        {            
-            if (openApiDocument.Servers == null)
+        public static string GetBasePath(this OpenApiDocument openApiDocument) => GetUriElement(openApiDocument, (uri) => uri.PathAndQuery);
+
+        public static string GetScheme(this OpenApiDocument openApiDocument) => GetUriElement(openApiDocument, (uri) => uri.Scheme);
+
+        public static string GetAuthority(this OpenApiDocument openApiDocument) => GetUriElement(openApiDocument, (uri) => uri.Authority);        
+
+        private static string GetUriElement(this OpenApiDocument openApiDocument, Func<Uri, string> getElement)
+        {
+            if (openApiDocument?.Servers == null)
             {
                 return null;
             }
 
+            // Exclude unsecure servers
+            var servers = openApiDocument.Servers.Where(srv => srv.Url.StartsWith("https://", StringComparison.OrdinalIgnoreCase)).ToArray();
+
             // See https://spec.openapis.org/oas/v3.1.0#server-object
-            var count = openApiDocument.Servers.Count;
+            var count = servers.Length;
             switch (count)
             {
                 case 0: return null; // None
@@ -33,8 +42,7 @@ namespace Microsoft.PowerFx.Connectors
                     // Extract BasePath back out from this. 
                     var fullPath = openApiDocument.Servers[0].Url;
                     var uri = new Uri(fullPath);
-                    var basePath = uri.PathAndQuery;
-                    return basePath;
+                    return getElement(uri);
                 default:
                     throw new NotImplementedException($"Multiple servers not supported");
             }
@@ -46,7 +54,7 @@ namespace Microsoft.PowerFx.Connectors
             {
                 return oas.Value;
             }
-           
+
             return null;
         }
 
@@ -55,7 +63,7 @@ namespace Microsoft.PowerFx.Connectors
         {
             // x-ms-enum-values is: array of { value :string, displayName:string}.
             if (param.Extensions.TryGetValue("x-ms-enum-values", out var value))
-            { 
+            {
                 if (value is OpenApiArray array)
                 {
                     var list = new List<string>(array.Capacity);
@@ -135,7 +143,7 @@ namespace Microsoft.PowerFx.Connectors
 
         // Internal parameters are not showen to the user. 
         // They can have a default value or be special cased by the infrastructure (like "connectionId").
-        public static bool IsInternal(this OpenApiParameter param) => param.Extensions.TryGetValue("x-ms-visibility", out _);
+        public static bool IsInternal(this OpenApiParameter param) => param.Extensions.TryGetValue("x-ms-visibility", out var openApiExt) && openApiExt is OpenApiString openApiStr && openApiStr.Value == "internal";                    
 
         // See https://swagger.io/docs/specification/data-models/data-types/
         public static FormulaType ToFormulaType(this OpenApiSchema schema)
@@ -175,7 +183,7 @@ namespace Microsoft.PowerFx.Connectors
                         obj = obj.Add(propName, propType);
                     }
 
-                    return obj;                
+                    return obj;
 
                 default:
 
@@ -193,24 +201,25 @@ namespace Microsoft.PowerFx.Connectors
                 OperationType.Delete => HttpMethod.Delete,
                 OperationType.Options => HttpMethod.Options,
                 OperationType.Head => HttpMethod.Head,
-                OperationType.Trace => HttpMethod.Trace,                
+                OperationType.Trace => HttpMethod.Trace,
                 _ => new HttpMethod(key.ToString())
             };
-        }        
+        }
 
         public static FormulaType GetReturnType(this OpenApiOperation op)
         {
             var responses = op.Responses;
-            if (!responses.TryGetValue("200", out OpenApiResponse response200))
+            if (!responses.TryGetValue("200", out OpenApiResponse response))
             {
                 // If no 200, but "default", use that. 
-                if (!responses.TryGetValue("default", out response200))
+                if (!responses.TryGetValue("default", out response))
                 {
-                    throw new NotImplementedException($"Operation must have 200 response ({op.OperationId}).");
+                    // If no default, use the first one we find
+                    response = responses.FirstOrDefault().Value;
                 }
             }
 
-            if (response200.Content.Count == 0)
+            if (response == null || response.Content.Count == 0)
             {
                 // No return type. Void() method. 
                 return FormulaType.Blank;
@@ -218,21 +227,21 @@ namespace Microsoft.PowerFx.Connectors
 
             // Responses is a list by content-type. Find "application/json"
             // Headers are case insensitive.
-            foreach (var kv3 in response200.Content)
+            foreach (var kv3 in response.Content)
             {
                 var mediaType = kv3.Key;
-                var response = kv3.Value;
+                var openApiMediaType = kv3.Value;
 
                 if (string.Equals(mediaType, ContentType_ApplicationJson, StringComparison.OrdinalIgnoreCase))
                 {
-                    if (response.Schema == null)
+                    if (openApiMediaType.Schema == null)
                     {
                         // Treat as void. 
                         return FormulaType.Blank;
                     }
 
-                    var responseType = response.Schema.ToFormulaType();
-                    return responseType;                    
+                    var responseType = openApiMediaType.Schema.ToFormulaType();
+                    return responseType;
                 }
             }
 
@@ -241,7 +250,7 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         // Keep these constants all lower case
-        public const string ContentType_TextJson = "text/json";        
+        public const string ContentType_TextJson = "text/json";
         public const string ContentType_XWwwFormUrlEncoded = "application/x-www-form-urlencoded";
         public const string ContentType_ApplicationJson = "application/json";
         public const string ContentType_TextPlain = "text/plain";
@@ -250,8 +259,8 @@ namespace Microsoft.PowerFx.Connectors
         {
             ContentType_ApplicationJson,
             ContentType_XWwwFormUrlEncoded,
-            ContentType_TextJson            
-        };        
+            ContentType_TextJson
+        };
 
         /// <summary>
         /// Identifies which ContentType and Schema to use.
@@ -264,7 +273,7 @@ namespace Microsoft.PowerFx.Connectors
             Dictionary<string, OpenApiMediaType> list = new ();
 
             foreach (var ct in _knownContentTypes)
-            {                
+            {
                 if (content.TryGetValue(ct, out var mediaType))
                 {
                     if ((ct == ContentType_ApplicationJson && !mediaType.Schema.Properties.Any()) ||

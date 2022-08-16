@@ -3924,12 +3924,20 @@
     <value>Не поддерживается в столбцах формул.</value>
     
   </data>
+  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
+    <value>Недопустимое число аргументов для функции {0}: получено {1}, ожидалось {2}</value>
+    
+  </data>
   <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
     <value>Аргумент {0} не поддерживается для функции {1} в столбцах формул.</value>
     
   </data>
   <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
     <value>Этот аргумент нельзя передавать в качестве этого типа в столбцах формул.</value>
+    
+  </data>
+  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
+    <value>Этот аргумент нельзя передавать в качестве типа {0} в столбцах формул.</value>
     
   </data>
   <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
@@ -3948,6 +3956,10 @@
     <value>В столбцах формул поддерживаются только строки в коротком формате даты и времени.</value>
     
   </data>
+  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
+    <value>Аргумент {0} представляет собой недопустимую/неподдерживаемую единицу времени для функции операций с датами {1}.</value>
+    
+  </data>
   <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
     <value>Зависящие от локали лексемы форматирования, такие как "." и "," не поддерживаются в столбцах формул.</value>
     
@@ -3956,8 +3968,16 @@
     <value>{0} не поддерживается в столбцах формул. Используйте {1}.</value>
     
   </data>
+  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
+    <value>Эту операцию нельзя выполнять над типом {0} в столбцах формул.</value>
+    
+  </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
     <value>Тип результата {0} не поддерживается в столбцах формул.</value>
+    
+  </data>
+  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
+    <value>Непосредственные ссылки на всю запись не поддерживаются в столбцах формул. Ссылка должна указывать на допустимое поле в записи.</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
@@ -3972,8 +3992,20 @@
     <value>Столбцы типа "{0}" с форматом {1} не поддерживаются в столбцах формул.</value>
     
   </data>
+  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
+    <value>Приведение типов записей или таблиц не поддерживается в столбцах формул.</value>
+    
+  </data>
   <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
     <value>Длина формулы не может превышать 1000 символов.</value>
+    
+  </data>
+  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
+    <value>Таблицы из одного столбца не поддерживаются в столбцах формул.</value>
+    
+  </data>
+  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
+    <value>В столбцах формул нельзя ссылаться на виртуальную таблицу {0}.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
@@ -4591,6 +4623,38 @@
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
     <value>Первый аргумент "{0}" должен быть допустимым именем переменной и не может конфликтовать с существующими именами элементов управления, экрана, коллекции или источника данных. Найден тип "{1}"</value>
+    
+  </data>
+  <data name="ErrUDF_MissingIdentifier" xml:space="preserve">
+    <value>User Defined Function is missing a valid name</value>
+    
+  </data>
+  <data name="ErrUDF_MissingOpenParen" xml:space="preserve">
+    <value>User Defined Function is missing a '(' here</value>
+    
+  </data>
+  <data name="ErrUDF_MissingEqual" xml:space="preserve">
+    <value>User Defined Function is missing a '=' here</value>
+    
+  </data>
+  <data name="ErrUDF_MissingCloseParen" xml:space="preserve">
+    <value>User Defined Function is missing a ')' here</value>
+    
+  </data>
+  <data name="ErrUDF_MissingSemicolon" xml:space="preserve">
+    <value>User Defined Function is missing a ';' here</value>
+    
+  </data>
+  <data name="ErrUDF_MissingComma" xml:space="preserve">
+    <value>User Defined Function is missing a ',' here</value>
+    
+  </data>
+  <data name="ErrUDF_MissingColon" xml:space="preserve">
+    <value>User Defined Function is missing an ':' here</value>
+    
+  </data>
+  <data name="ErrUDF_DuplicateArgName" xml:space="preserve">
+    <value>User Defined Function has a duplicate argument name</value>
     
   </data>
   <data name="AboutSet" xml:space="preserve">

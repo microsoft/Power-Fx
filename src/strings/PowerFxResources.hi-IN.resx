@@ -3924,12 +3924,20 @@
     <value>फॉर्मूला कॉलम में समर्थित नहीं है.</value>
     
   </data>
+  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
+    <value>Invalid number of arguments for {0} function: received {1}, expected {2}</value>
+    
+  </data>
   <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
     <value>फॉर्मूला कॉलम में {1} फ़ंक्शन के लिए {0} तर्क समर्थित नहीं है.</value>
     
   </data>
   <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
     <value>इस तर्क को फॉर्मूला कॉलम में इस प्रकार के रूप में पास नहीं किया जा सकता है.</value>
+    
+  </data>
+  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
+    <value>This argument can not be passed as type {0} in formula columns.</value>
     
   </data>
   <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
@@ -3948,6 +3956,10 @@
     <value>फॉर्मूला कॉलम में केवल छोटी दिनांक और समय प्रारूप स्ट्रिंग समर्थित हैं.</value>
     
   </data>
+  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
+    <value>The {0} argument is an invalid/unsupported unit of time for the {1} date arithmetic function.</value>
+    
+  </data>
   <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
     <value>फॉर्मूला कॉलमों में स्थानीय-विशिष्ट फॉर्मेटिंग टोकन जैसे "." और "," समर्थित नहीं हैं.</value>
     
@@ -3956,8 +3968,16 @@
     <value>फॉर्मूला कॉलमों में {0} समर्थित नहीं है, इसकी जगह {1} उपयोग करें.</value>
     
   </data>
+  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
+    <value>This operation can not be performed on type {0} in formula columns.</value>
+    
+  </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
     <value>परिणाम प्रकार {0} फॉर्मूला स्तंभों में समर्थित नहीं है.</value>
+    
+  </data>
+  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
+    <value>Directly referencing an entire record is not supported in formula columns. Please reference a valid field in the record.</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
@@ -3972,8 +3992,20 @@
     <value>{1} प्रारूप वाले {0} प्रकार के स्तंभ फॉर्मूला स्तंभों में समर्थित नहीं हैं.</value>
     
   </data>
+  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
+    <value>Coercing records or tables is not supported in formula columns.</value>
+    
+  </data>
   <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
     <value>फॉर्मूला 1000 अक्षरों से ज्यादा लंबे नहीं हो सकते.</value>
+    
+  </data>
+  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
+    <value>Single-column tables are not supported in formula columns.</value>
+    
+  </data>
+  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
+    <value>Can not reference virtual table {0} in formula columns.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
@@ -4591,6 +4623,38 @@
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
     <value>'{0}' का पहला तर्क कोई मान्य चर नाम होना चाहिए और इसका किसी मौजूदा नियंत्रण, स्क्रीन, संग्रहण या डेटा स्रोत नामों से विरोध नहीं हो सकता. प्रकार '{1}' ढ़ूंढ़ा गया</value>
+    
+  </data>
+  <data name="ErrUDF_MissingIdentifier" xml:space="preserve">
+    <value>User Defined Function is missing a valid name</value>
+    
+  </data>
+  <data name="ErrUDF_MissingOpenParen" xml:space="preserve">
+    <value>User Defined Function is missing a '(' here</value>
+    
+  </data>
+  <data name="ErrUDF_MissingEqual" xml:space="preserve">
+    <value>User Defined Function is missing a '=' here</value>
+    
+  </data>
+  <data name="ErrUDF_MissingCloseParen" xml:space="preserve">
+    <value>User Defined Function is missing a ')' here</value>
+    
+  </data>
+  <data name="ErrUDF_MissingSemicolon" xml:space="preserve">
+    <value>User Defined Function is missing a ';' here</value>
+    
+  </data>
+  <data name="ErrUDF_MissingComma" xml:space="preserve">
+    <value>User Defined Function is missing a ',' here</value>
+    
+  </data>
+  <data name="ErrUDF_MissingColon" xml:space="preserve">
+    <value>User Defined Function is missing an ':' here</value>
+    
+  </data>
+  <data name="ErrUDF_DuplicateArgName" xml:space="preserve">
+    <value>User Defined Function has a duplicate argument name</value>
     
   </data>
   <data name="AboutSet" xml:space="preserve">

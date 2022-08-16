@@ -15,7 +15,7 @@ using Xunit;
 namespace Microsoft.PowerFx.Tests
 {
     public class BindingEngineTests : PowerFxTest
-    {       
+    {
         [Fact]
         public void CheckSuccess()
         {
@@ -51,7 +51,7 @@ namespace Microsoft.PowerFx.Tests
 
             var r = RecordType.Empty().Add(
                    new NamedFormulaType("x", FormulaType.Number));
-                        
+
             var check = engine.Check(parse, r);
             Assert.True(check.IsSuccess);
 
@@ -65,7 +65,7 @@ namespace Microsoft.PowerFx.Tests
         public void CheckChainingParseSuccess()
         {
             var opts = new ParserOptions
-            {  
+            {
                 AllowsSideEffects = true
             };
 
@@ -91,7 +91,7 @@ namespace Microsoft.PowerFx.Tests
 
             Assert.True(result.HasError);
             Assert.Single(result.Errors);
-                        
+
             AssertContainsError(result, "Error 4-4: Expected an operand");
         }
 
@@ -105,7 +105,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.False(result.IsSuccess);
             Assert.True(result.Errors.Count() >= 1);
             AssertContainsError(result, "Error 4-4: Expected an operand");
-        }        
+        }
 
         [Fact]
         public void CheckParseErrorCommaSeparatedLocale()
@@ -235,7 +235,7 @@ namespace Microsoft.PowerFx.Tests
                 ".Loop.Loop.Loop.Loop.Loop.Loop.Loop.Loop.Loop" +
                 ".Loop.Loop.Loop.Loop.Loop.Loop.Loop.Loop.Loop" +
                 ".Loop.Loop.Loop.Loop.Loop.Loop.Loop.Loop.Loop", lazyTypeInstance);
-            
+
             Assert.True(result.IsSuccess);
             Assert.IsType<LazyRecursiveRecordType>(result.ReturnType);
             Assert.Equal(lazyTypeInstance, result.ReturnType);
@@ -299,7 +299,7 @@ namespace Microsoft.PowerFx.Tests
             var lazyTypeInstance = new LazyRecursiveRecordType();
 
             var result = engine.Check("First(Table(Loop, {A: SomeString}))", lazyTypeInstance);
-            
+
             Assert.True(result.IsSuccess);
             Assert.IsType<KnownRecordType>(result.ReturnType);
 
@@ -312,7 +312,7 @@ namespace Microsoft.PowerFx.Tests
         /// <summary>
         /// A function with behavior/side-effects used in testing.
         /// </summary>
-        private class BehaviorFunction : TexlFunction
+        internal class BehaviorFunction : TexlFunction
         {
             public BehaviorFunction()
                 : base(

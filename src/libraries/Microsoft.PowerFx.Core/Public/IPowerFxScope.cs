@@ -11,8 +11,8 @@ namespace Microsoft.PowerFx.Intellisense
         /// <summary>
         /// Check for errors in the given expression. 
         /// </summary>
-        /// <param name="expression"></param>
-        /// <returns></returns>
+        /// <param name="expression">The expression to validate.</param>
+        /// <returns>Validation result.</returns>
         CheckResult Check(string expression);
 
         /// <summary>

@@ -5669,11 +5669,11 @@
     <comment>Error Message. Used in formula columns for arguments that are not supported there.  The {0} will be the name of the argument that is not supported.  The {1} will be the name of the function.</comment>
   </data>
   <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>This argument can not be passed as this type in formula columns.</value>
+    <value>This argument cannot be passed as this type in formula columns.</value>
     <comment>Error Message. Used in formula columns for an argument where the type is not supported. {0} is the attempted type the argument is being coerced to.</comment>
   </data>
   <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
-    <value>This argument can not be passed as type {0} in formula columns.</value>
+    <value>This argument cannot be passed as type {0} in formula columns.</value>
     <comment>Error Message. Used in formula columns for an argument where the type is not supported. {0} is the attempted type the argument is being coerced to.</comment>
   </data>
   <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
@@ -5705,7 +5705,7 @@
     <comment>Error Message. Used in formula columns for scenarios where the maker attempts to use a function that is not supported, providing an alternate function name.  The {0} will be the name of the function that is not supported, and {1} is the name of the suggested alternate.</comment>
   </data>
   <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
-    <value>This operation can not be performed on type {0} in formula columns.</value>
+    <value>This operation cannot be performed on type {0} in formula columns.</value>
     <comment>Error Message. Used in formula columns for scenarios where the maker attempts to perform an unsupported operatiom. The {0} will be the type the operation is not supported for.</comment>
   </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
@@ -5741,7 +5741,7 @@
     <comment>Error Message. Used in formula columns for a formula that references a single-column table.</comment>
   </data>
   <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
-    <value>Can not reference virtual table {0} in formula columns.</value>
+    <value>Cannot reference virtual table {0} in formula columns.</value>
     <comment>Error Message. Used in formula columns for a formula that references a virtual table.</comment>
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
@@ -6507,38 +6507,6 @@
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
     <value>The first argument of '{0}' should be a valid variable name, and cannot conflict with any existing control, screen, collection, or data source names. Found type '{1}'</value>
-    <comment>Error Message</comment>
-  </data>
-  <data name="ErrUDF_MissingIdentifier" xml:space="preserve">
-    <value>User Defined Function is missing a valid name</value>
-    <comment>Error Message</comment>
-  </data>
-  <data name="ErrUDF_MissingOpenParen" xml:space="preserve">
-    <value>User Defined Function is missing a '(' here</value>
-    <comment>Error Message</comment>
-  </data>
-  <data name="ErrUDF_MissingEqual" xml:space="preserve">
-    <value>User Defined Function is missing a '=' here</value>
-    <comment>Error Message</comment>
-  </data>
-  <data name="ErrUDF_MissingCloseParen" xml:space="preserve">
-    <value>User Defined Function is missing a ')' here</value>
-    <comment>Error Message</comment>
-  </data>
-  <data name="ErrUDF_MissingSemicolon" xml:space="preserve">
-    <value>User Defined Function is missing a ';' here</value>
-    <comment>Error Message</comment>
-  </data>
-  <data name="ErrUDF_MissingComma" xml:space="preserve">
-    <value>User Defined Function is missing a ',' here</value>
-    <comment>Error Message</comment>
-  </data>
-  <data name="ErrUDF_MissingColon" xml:space="preserve">
-    <value>User Defined Function is missing an ':' here</value>
-    <comment>Error Message</comment>
-  </data>
-  <data name="ErrUDF_DuplicateArgName" xml:space="preserve">
-    <value>User Defined Function has a duplicate argument name</value>
     <comment>Error Message</comment>
   </data>
   <data name="AboutSet" xml:space="preserve">

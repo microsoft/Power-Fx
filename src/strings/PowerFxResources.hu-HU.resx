@@ -3924,12 +3924,20 @@
     <value>Nem támogatott a képletoszlopokban.</value>
     
   </data>
+  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
+    <value>Invalid number of arguments for {0} function: received {1}, expected {2}</value>
+    
+  </data>
   <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
     <value>A(z) {0} argumentum nem támogatott a(z) {1} képlet esetén a képletoszlopokban.</value>
     
   </data>
   <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
     <value>Ez az argumentum nem adható át ilyen típusúként a képletoszlopokban.</value>
+    
+  </data>
+  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
+    <value>This argument can not be passed as type {0} in formula columns.</value>
     
   </data>
   <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
@@ -3948,6 +3956,10 @@
     <value>Csak a rövid dátum- és időformátumú sztringek támogatottak a képletoszlopokban.</value>
     
   </data>
+  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
+    <value>The {0} argument is an invalid/unsupported unit of time for the {1} date arithmetic function.</value>
+    
+  </data>
   <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
     <value>A területibeállítás-specifikus formázási tokenek, mint például a "." és a ",", nem támogatottak a képletoszlopokban.</value>
     
@@ -3956,8 +3968,16 @@
     <value>A(z) {0} nem támogatott a képletoszlopokban. Használja inkább a következőt: {1}.</value>
     
   </data>
+  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
+    <value>This operation can not be performed on type {0} in formula columns.</value>
+    
+  </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
     <value>Az eredménytípus ("{0}") nem támogatott a képletoszlopokban.</value>
+    
+  </data>
+  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
+    <value>A képletoszlopok nem támogatják a teljes rekordra való közvetlen hivatkozást. Hivatkozzon egy érvényes mezőre a rekordban.</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
@@ -3972,8 +3992,20 @@
     <value>A(z) {0} típusú, {1} formátumú oszlopok nem használhatók képletoszlopokban.</value>
     
   </data>
+  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
+    <value>A rekordok vagy táblák kényszerítése nem támogatott a képletoszlopokban.</value>
+    
+  </data>
   <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
     <value>A képletek nem lehetnek hosszabbak 1000 karakternél.</value>
+    
+  </data>
+  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
+    <value>Single-column tables are not supported in formula columns.</value>
+    
+  </data>
+  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
+    <value>Nem hivatkozhat virtuális táblára {0} képletoszlopokban.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
@@ -4591,6 +4623,38 @@
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
     <value>A(z) {0} első argumentumának egy érvényes változónévnek kell lennie, amely semmilyen meglévő vezérlő, képernyő, gyűjtemény vagy adatforrás nevével nem ütközhet. A talált típus: {1}</value>
+    
+  </data>
+  <data name="ErrUDF_MissingIdentifier" xml:space="preserve">
+    <value>User Defined Function is missing a valid name</value>
+    
+  </data>
+  <data name="ErrUDF_MissingOpenParen" xml:space="preserve">
+    <value>User Defined Function is missing a '(' here</value>
+    
+  </data>
+  <data name="ErrUDF_MissingEqual" xml:space="preserve">
+    <value>User Defined Function is missing a '=' here</value>
+    
+  </data>
+  <data name="ErrUDF_MissingCloseParen" xml:space="preserve">
+    <value>User Defined Function is missing a ')' here</value>
+    
+  </data>
+  <data name="ErrUDF_MissingSemicolon" xml:space="preserve">
+    <value>User Defined Function is missing a ';' here</value>
+    
+  </data>
+  <data name="ErrUDF_MissingComma" xml:space="preserve">
+    <value>User Defined Function is missing a ',' here</value>
+    
+  </data>
+  <data name="ErrUDF_MissingColon" xml:space="preserve">
+    <value>User Defined Function is missing an ':' here</value>
+    
+  </data>
+  <data name="ErrUDF_DuplicateArgName" xml:space="preserve">
+    <value>User Defined Function has a duplicate argument name</value>
     
   </data>
   <data name="AboutSet" xml:space="preserve">

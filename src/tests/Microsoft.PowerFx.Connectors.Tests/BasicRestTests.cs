@@ -167,5 +167,19 @@ namespace Microsoft.PowerFx.Tests
             var r1 = engine.Check("Test.GetKey(\"Key1\")");
             Assert.True(r1.IsSuccess);
         }
+
+        [Fact]
+        public async Task PetStore_MultiServer()
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\PetStore.json");
+            var apiDoc = testConnector._apiDocument;
+            var config = new PowerFxConfig();
+
+            // Verify we can load the service
+            config.AddService("PetStore", apiDoc);
+
+            // Ensure we use HTTPS protocol
+            Assert.Equal("https", apiDoc.GetScheme().Substring(0, 5));
+        }
     }
 }
