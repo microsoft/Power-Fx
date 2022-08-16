@@ -3933,11 +3933,11 @@
     
   </data>
   <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>Αυτό το όρισμα δεν μπορεί να διαβιβαστεί ως αυτός ο τύπος στις στήλες τύπου.</value>
+    <value>Αυτό το όρισμα δεν μπορεί να διαβιβαστεί καθώς αυτός ο τύπος στις στήλες τύπου.</value>
     
   </data>
   <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
-    <value>Αυτό το όρισμα δεν μπορεί να μεταβιβαστεί ως κείμενο {0} σε στήλες τύπων.</value>
+    <value>Αυτό το όρισμα δεν μπορεί να μεταβιβαστεί ως τύπος {0} σε στήλες τύπων.</value>
     
   </data>
   <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
@@ -3969,7 +3969,7 @@
     
   </data>
   <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
-    <value>Αυτή η λειτουργία δεν μπορεί να εκτελεστεί σε στήλες τύπων {0}.</value>
+    <value>Αυτή η λειτουργία δεν μπορεί να εκτελεστεί σε τύπο {0} σε στήλες τύπου.</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
@@ -4005,7 +4005,7 @@
     
   </data>
   <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
-    <value>Δεν είναι δυνατή η αναφορά σε εικονικό πίνακα {0} σε στήλες τύπων.</value>
+    <value>Δεν είναι δυνατή η αναφορά εικονικού πίνακα {0} σε στήλες τύπων.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
@@ -4623,38 +4623,6 @@
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
     <value>Το πρώτο όρισμα του "{0}" πρέπει να είναι ένα έγκυρο όνομα μεταβλητής και δεν πρέπει να έρχεται σε διένεξη με τυχόν υπάρχοντα ονόματα στοιχείου ελέγχου, οθόνης, συλλογής ή προέλευσης δεδομένων. Εντοπίστηκε τύπος "{1}"</value>
-    
-  </data>
-  <data name="ErrUDF_MissingIdentifier" xml:space="preserve">
-    <value>Από τη συνάρτηση ορισμού χρήστη λείπει ένα έγκυρο όνομα</value>
-    
-  </data>
-  <data name="ErrUDF_MissingOpenParen" xml:space="preserve">
-    <value>Από τη συνάρτηση που καθορίζεται από το χρήστη λείπει ένα '(' εδώ</value>
-    
-  </data>
-  <data name="ErrUDF_MissingEqual" xml:space="preserve">
-    <value>Από τη συνάρτηση που ορίζεται από το χρήστη λείπει ένα '=' εδώ</value>
-    
-  </data>
-  <data name="ErrUDF_MissingCloseParen" xml:space="preserve">
-    <value>Από τη συνάρτηση που καθορίζεται από το χρήστη λείπει ένα ')' εδώ</value>
-    
-  </data>
-  <data name="ErrUDF_MissingSemicolon" xml:space="preserve">
-    <value>Από τη λειτουργία που ορίζεται από το χρήστη λείπει ένα ';' εδώ</value>
-    
-  </data>
-  <data name="ErrUDF_MissingComma" xml:space="preserve">
-    <value>Από τη συνάρτηση που καθορίζεται από το χρήστη λείπει ένα '(' εδώ</value>
-    
-  </data>
-  <data name="ErrUDF_MissingColon" xml:space="preserve">
-    <value>User Defined Function is missing an ':' here</value>
-    
-  </data>
-  <data name="ErrUDF_DuplicateArgName" xml:space="preserve">
-    <value>Η συνάρτηση ορισμού χρήστη έχει διπλότυπο όνομα ορίσματος</value>
     
   </data>
   <data name="AboutSet" xml:space="preserve">

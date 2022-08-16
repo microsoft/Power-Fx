@@ -4625,38 +4625,6 @@
     <value>“{0}”的第一个参数应为有效的变量名，且不能与任何现有控件、屏幕、集合或数据源名称冲突。找到的类型为“{1}”</value>
     
   </data>
-  <data name="ErrUDF_MissingIdentifier" xml:space="preserve">
-    <value>用户定义的函数缺少有效名称</value>
-    
-  </data>
-  <data name="ErrUDF_MissingOpenParen" xml:space="preserve">
-    <value>用户定义的函数在此处缺少 "("</value>
-    
-  </data>
-  <data name="ErrUDF_MissingEqual" xml:space="preserve">
-    <value>用户定义的函数在此处缺少 "="</value>
-    
-  </data>
-  <data name="ErrUDF_MissingCloseParen" xml:space="preserve">
-    <value>用户定义的函数在此处缺少 ")"</value>
-    
-  </data>
-  <data name="ErrUDF_MissingSemicolon" xml:space="preserve">
-    <value>用户定义的函数在此处缺少 ";"</value>
-    
-  </data>
-  <data name="ErrUDF_MissingComma" xml:space="preserve">
-    <value>用户定义的函数在此处缺少 ","</value>
-    
-  </data>
-  <data name="ErrUDF_MissingColon" xml:space="preserve">
-    <value>User Defined Function is missing an ':' here</value>
-    
-  </data>
-  <data name="ErrUDF_DuplicateArgName" xml:space="preserve">
-    <value>用户定义的函数具有重复的参数名称</value>
-    
-  </data>
   <data name="AboutSet" xml:space="preserve">
     <value>创建和设置全局变量。</value>
     

@@ -4625,38 +4625,6 @@
     <value>Як перший аргумент функції "{0}" слід указати припустиме ім’я змінної, що не має конфліктувати з будь-якими іменами наявних елементів керування, екранів, колекцій або джерел даних. Знайдено тип "{1}".</value>
     
   </data>
-  <data name="ErrUDF_MissingIdentifier" xml:space="preserve">
-    <value>У визначеній користувачем функції відсутнє припустиме ім’я</value>
-    
-  </data>
-  <data name="ErrUDF_MissingOpenParen" xml:space="preserve">
-    <value>У визначеній користувачем функції відсутній елемент "(" тут</value>
-    
-  </data>
-  <data name="ErrUDF_MissingEqual" xml:space="preserve">
-    <value>У визначеній користувачем функції відсутній елемент "="</value>
-    
-  </data>
-  <data name="ErrUDF_MissingCloseParen" xml:space="preserve">
-    <value>У визначеній користувачем функції відсутній елемент ")" тут</value>
-    
-  </data>
-  <data name="ErrUDF_MissingSemicolon" xml:space="preserve">
-    <value>У визначеній користувачем функції відсутній елемент ";" тут</value>
-    
-  </data>
-  <data name="ErrUDF_MissingComma" xml:space="preserve">
-    <value>У визначеній користувачем функції відсутній елемент "," тут</value>
-    
-  </data>
-  <data name="ErrUDF_MissingColon" xml:space="preserve">
-    <value>User Defined Function is missing an ':' here</value>
-    
-  </data>
-  <data name="ErrUDF_DuplicateArgName" xml:space="preserve">
-    <value>Визначена користувачем функція має повторюване ім’я аргументу</value>
-    
-  </data>
   <data name="AboutSet" xml:space="preserve">
     <value>Створення та налаштування глобальної змінної.</value>
     

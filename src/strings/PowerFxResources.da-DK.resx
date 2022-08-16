@@ -3937,7 +3937,7 @@
     
   </data>
   <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
-    <value>This argument can not be passed as type {0} in formula columns.</value>
+    <value>This argument cannot be passed as type {0} in formula columns.</value>
     
   </data>
   <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
@@ -3969,7 +3969,7 @@
     
   </data>
   <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
-    <value>This operation can not be performed on type {0} in formula columns.</value>
+    <value>This operation cannot be performed on type {0} in formula columns.</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
@@ -4005,7 +4005,7 @@
     
   </data>
   <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
-    <value>Can not reference virtual table {0} in formula columns.</value>
+    <value>Cannot reference virtual table {0} in formula columns.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
@@ -4623,38 +4623,6 @@
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
     <value>Det første argument for "{0}" skal være et gyldigt variabelnavn, og navnet må ikke være i konflikt med navne på eksisterende kontrolelementer, skærme, samlinger eller datakilder. Funden type: "{1}"</value>
-    
-  </data>
-  <data name="ErrUDF_MissingIdentifier" xml:space="preserve">
-    <value>User Defined Function is missing a valid name</value>
-    
-  </data>
-  <data name="ErrUDF_MissingOpenParen" xml:space="preserve">
-    <value>User Defined Function is missing a '(' here</value>
-    
-  </data>
-  <data name="ErrUDF_MissingEqual" xml:space="preserve">
-    <value>User Defined Function is missing a '=' here</value>
-    
-  </data>
-  <data name="ErrUDF_MissingCloseParen" xml:space="preserve">
-    <value>User Defined Function is missing a ')' here</value>
-    
-  </data>
-  <data name="ErrUDF_MissingSemicolon" xml:space="preserve">
-    <value>User Defined Function is missing a ';' here</value>
-    
-  </data>
-  <data name="ErrUDF_MissingComma" xml:space="preserve">
-    <value>User Defined Function is missing a ',' here</value>
-    
-  </data>
-  <data name="ErrUDF_MissingColon" xml:space="preserve">
-    <value>User Defined Function is missing an ':' here</value>
-    
-  </data>
-  <data name="ErrUDF_DuplicateArgName" xml:space="preserve">
-    <value>User Defined Function has a duplicate argument name</value>
     
   </data>
   <data name="AboutSet" xml:space="preserve">

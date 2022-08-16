@@ -3925,7 +3925,7 @@
     
   </data>
   <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
-    <value>Invalid number of arguments for {0} function: received {1}, expected {2}</value>
+    <value>Érvénytelen számú argumentum a(z) {0} függvényhez: fogadott {1}, várt {2}</value>
     
   </data>
   <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
@@ -3937,7 +3937,7 @@
     
   </data>
   <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
-    <value>This argument can not be passed as type {0} in formula columns.</value>
+    <value>Ez az argumentum nem adható át {0} típusúként a képletoszlopokban.</value>
     
   </data>
   <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
@@ -3957,7 +3957,7 @@
     
   </data>
   <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
-    <value>The {0} argument is an invalid/unsupported unit of time for the {1} date arithmetic function.</value>
+    <value>Az {0} argumentum a dátum aritmetikai {1} függvény érvénytelen/nem támogatott időegysége.</value>
     
   </data>
   <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
@@ -3969,7 +3969,7 @@
     
   </data>
   <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
-    <value>This operation can not be performed on type {0} in formula columns.</value>
+    <value>Ez a művelet nem hajtható végre {0} típusú képletoszlopokban.</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
@@ -4001,7 +4001,7 @@
     
   </data>
   <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
-    <value>Single-column tables are not supported in formula columns.</value>
+    <value>Az egyoszlopos táblák nem támogatottak a képletoszlopokban.</value>
     
   </data>
   <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
@@ -4623,38 +4623,6 @@
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
     <value>A(z) {0} első argumentumának egy érvényes változónévnek kell lennie, amely semmilyen meglévő vezérlő, képernyő, gyűjtemény vagy adatforrás nevével nem ütközhet. A talált típus: {1}</value>
-    
-  </data>
-  <data name="ErrUDF_MissingIdentifier" xml:space="preserve">
-    <value>User Defined Function is missing a valid name</value>
-    
-  </data>
-  <data name="ErrUDF_MissingOpenParen" xml:space="preserve">
-    <value>User Defined Function is missing a '(' here</value>
-    
-  </data>
-  <data name="ErrUDF_MissingEqual" xml:space="preserve">
-    <value>User Defined Function is missing a '=' here</value>
-    
-  </data>
-  <data name="ErrUDF_MissingCloseParen" xml:space="preserve">
-    <value>User Defined Function is missing a ')' here</value>
-    
-  </data>
-  <data name="ErrUDF_MissingSemicolon" xml:space="preserve">
-    <value>User Defined Function is missing a ';' here</value>
-    
-  </data>
-  <data name="ErrUDF_MissingComma" xml:space="preserve">
-    <value>User Defined Function is missing a ',' here</value>
-    
-  </data>
-  <data name="ErrUDF_MissingColon" xml:space="preserve">
-    <value>User Defined Function is missing an ':' here</value>
-    
-  </data>
-  <data name="ErrUDF_DuplicateArgName" xml:space="preserve">
-    <value>User Defined Function has a duplicate argument name</value>
     
   </data>
   <data name="AboutSet" xml:space="preserve">

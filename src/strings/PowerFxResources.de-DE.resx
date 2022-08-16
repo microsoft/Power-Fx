@@ -4625,38 +4625,6 @@
     <value>Das erste Argument von "{0}" muss ein gültiger Variablenname sein, der nicht in Konflikt mit vorhandenen Steuerelement-, Bildschirm-, Sammlungs- oder Datenquellennamen stehen darf. Gefundener Typ: "{1}"</value>
     
   </data>
-  <data name="ErrUDF_MissingIdentifier" xml:space="preserve">
-    <value>Für die benutzerdefinierte Funktion fehlt ein gültiger Name</value>
-    
-  </data>
-  <data name="ErrUDF_MissingOpenParen" xml:space="preserve">
-    <value>In der benutzerdefinierten Funktion fehlt hier ein „(“</value>
-    
-  </data>
-  <data name="ErrUDF_MissingEqual" xml:space="preserve">
-    <value>In der benutzerdefinierten Funktion fehlt hier ein „=“</value>
-    
-  </data>
-  <data name="ErrUDF_MissingCloseParen" xml:space="preserve">
-    <value>In der benutzerdefinierten Funktion fehlt hier ein „)“</value>
-    
-  </data>
-  <data name="ErrUDF_MissingSemicolon" xml:space="preserve">
-    <value>In der benutzerdefinierten Funktion fehlt hier ein „;“</value>
-    
-  </data>
-  <data name="ErrUDF_MissingComma" xml:space="preserve">
-    <value>In der benutzerdefinierten Funktion fehlt hier ein „,“</value>
-    
-  </data>
-  <data name="ErrUDF_MissingColon" xml:space="preserve">
-    <value>User Defined Function is missing an ':' here</value>
-    
-  </data>
-  <data name="ErrUDF_DuplicateArgName" xml:space="preserve">
-    <value>Benutzerdefinierte Funktion hat einen doppelten Argumentnamen</value>
-    
-  </data>
   <data name="AboutSet" xml:space="preserve">
     <value>Hiermit wird eine globale Variable erstellt und festgelegt.</value>
     

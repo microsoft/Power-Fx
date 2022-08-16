@@ -3937,7 +3937,7 @@
     
   </data>
   <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
-    <value>数式列では、この引数をタイプ {0} として渡せません。</value>
+    <value>数式列では、この引数を {0} 型として渡せません。</value>
     
   </data>
   <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
@@ -3969,7 +3969,7 @@
     
   </data>
   <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
-    <value>数式列では、この操作をタイプ {0} で実行できません。</value>
+    <value>数式列では、この操作を {0} 型で実行できません。</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
@@ -4623,38 +4623,6 @@
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
     <value>最初の引数 '{0}' は有効な変数名である必要があります。これは、既存のコントロール、画面、コレクション、またはデータ ソースの名前と競合することができません。見つかった型 '{1}'</value>
-    
-  </data>
-  <data name="ErrUDF_MissingIdentifier" xml:space="preserve">
-    <value>ユーザー定義関数に有効な名前がありません</value>
-    
-  </data>
-  <data name="ErrUDF_MissingOpenParen" xml:space="preserve">
-    <value>ユーザー定義関数の '(' が欠けています</value>
-    
-  </data>
-  <data name="ErrUDF_MissingEqual" xml:space="preserve">
-    <value>ユーザー定義関数の '=' が欠けています</value>
-    
-  </data>
-  <data name="ErrUDF_MissingCloseParen" xml:space="preserve">
-    <value>ユーザー定義関数の ')' が欠けています</value>
-    
-  </data>
-  <data name="ErrUDF_MissingSemicolon" xml:space="preserve">
-    <value>ユーザー定義関数の ';' が欠けています</value>
-    
-  </data>
-  <data name="ErrUDF_MissingComma" xml:space="preserve">
-    <value>ユーザー定義関数の ',' が欠けています</value>
-    
-  </data>
-  <data name="ErrUDF_MissingColon" xml:space="preserve">
-    <value>ユーザー定義関数の ':' が欠けています</value>
-    
-  </data>
-  <data name="ErrUDF_DuplicateArgName" xml:space="preserve">
-    <value>ユーザー定義関数の引数の名前が重複しています</value>
     
   </data>
   <data name="AboutSet" xml:space="preserve">
