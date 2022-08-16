@@ -207,7 +207,8 @@ namespace Microsoft.PowerFx.Core.Types
                 OptionSetInfo,
                 ViewInfo,
                 NamedValueKind,
-                DisplayNameProvider);
+                DisplayNameProvider,
+                LazyTypeProvider);
         }
 
         // Constructor for aggregate types (record, table)
@@ -2901,7 +2902,8 @@ namespace Microsoft.PowerFx.Core.Types
             IExternalOptionSet optionSetInfo,
             IExternalViewInfo viewInfo,
             string namedValueKind,
-            DisplayNameProvider displayNameProvider)
+            DisplayNameProvider displayNameProvider,
+            LazyTypeProvider lazyTypeProvider)
         {
             Kind = kind;
             TypeTree = typeTree;
@@ -2917,6 +2919,7 @@ namespace Microsoft.PowerFx.Core.Types
             ViewInfo = viewInfo;
             NamedValueKind = namedValueKind;
             DisplayNameProvider = displayNameProvider;
+            LazyTypeProvider = lazyTypeProvider;
         }
 
         public void AppendTo(StringBuilder sb)
