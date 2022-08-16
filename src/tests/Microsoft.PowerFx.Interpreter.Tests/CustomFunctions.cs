@@ -1,15 +1,10 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
-using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Tests;
-using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Types;
-using Newtonsoft.Json.Linq;
 using Xunit;
 
 namespace Microsoft.PowerFx.Tests
@@ -110,7 +105,6 @@ namespace Microsoft.PowerFx.Tests
         [InlineData("SetField(\"abc\")", "SetFieldStrFunction,abc")]
         [InlineData("SetField(true)", "SetFieldNumberFunction,1")] // true coerces to number 1
         [InlineData("SetField(Date(2040, 01, 01))", "SetFieldDateFunction,1/1/2040")]
-        [InlineData("SetField(Date(2040, 01, 01))", "SetFieldDateTimeFunction,1/1/2040 12:00:00 AM")]
         public void Overloads(string expr, string expected)
         {
             var config = new PowerFxConfig();
@@ -161,18 +155,18 @@ namespace Microsoft.PowerFx.Tests
             }
         }
 
-        private class SetFieldDateTimeFunction : SetFieldBaseFunction
-        {
-            public SetFieldDateTimeFunction()
-                : base(FormulaType.DateTime)
-            {
-            }
-        }
-
         private class SetFieldDateFunction : SetFieldBaseFunction
         {
             public SetFieldDateFunction()
                 : base(FormulaType.Date)
+            {
+            }
+        }
+
+        private class SetFieldDateTimeFunction : SetFieldBaseFunction
+        {
+            public SetFieldDateTimeFunction()
+                : base(FormulaType.DateTime)
             {
             }
         }
