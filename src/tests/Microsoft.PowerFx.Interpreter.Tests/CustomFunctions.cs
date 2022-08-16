@@ -1,10 +1,15 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
+using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Tests;
+using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Types;
+using Newtonsoft.Json.Linq;
 using Xunit;
 
 namespace Microsoft.PowerFx.Tests
@@ -104,11 +109,15 @@ namespace Microsoft.PowerFx.Tests
         [InlineData("SetField(\"-123\")", "SetFieldStrFunction,-123")]
         [InlineData("SetField(\"abc\")", "SetFieldStrFunction,abc")]
         [InlineData("SetField(true)", "SetFieldNumberFunction,1")] // true coerces to number 1
+        [InlineData("SetField(Date(2040, 01, 01))", "SetFieldDateFunction,1/1/2040")]
+        [InlineData("SetField(Date(2040, 01, 01))", "SetFieldDateTimeFunction,1/1/2040 12:00:00 AM")]
         public void Overloads(string expr, string expected)
         {
             var config = new PowerFxConfig();
             config.AddFunction(new SetFieldNumberFunction());
             config.AddFunction(new SetFieldStrFunction());
+            config.AddFunction(new SetFieldDateFunction());
+            config.AddFunction(new SetFieldDateTimeFunction());
             var engine = new RecalcEngine(config);
 
             var count = engine.GetAllFunctionNames().Count(name => name == "SetField");
@@ -123,9 +132,9 @@ namespace Microsoft.PowerFx.Tests
 
         private abstract class SetFieldBaseFunction : ReflectionFunction
         {
-            public SetFieldBaseFunction(FormulaType fieldType) 
+            public SetFieldBaseFunction(FormulaType fieldType)
                 : base("SetField", FormulaType.String, fieldType)
-            {                
+            {
             }
 
             public StringValue Execute(FormulaValue newValue)
@@ -148,6 +157,22 @@ namespace Microsoft.PowerFx.Tests
         {
             public SetFieldStrFunction()
                 : base(FormulaType.String)
+            {
+            }
+        }
+
+        private class SetFieldDateTimeFunction : SetFieldBaseFunction
+        {
+            public SetFieldDateTimeFunction()
+                : base(FormulaType.DateTime)
+            {
+            }
+        }
+
+        private class SetFieldDateFunction : SetFieldBaseFunction
+        {
+            public SetFieldDateFunction()
+                : base(FormulaType.Date)
             {
             }
         }
