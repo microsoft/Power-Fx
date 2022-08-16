@@ -4625,38 +4625,6 @@
     <value>Argumen pertama '{0}' mestilah nama pemboleh ubah yang sah dan tidak boleh berkonflik dengan sebarang nama kawalan, skrin, koleksi atau sumber data sedia ada. Jenis ditemui '{1}'</value>
     
   </data>
-  <data name="ErrUDF_MissingIdentifier" xml:space="preserve">
-    <value>Fungsi Ditakrifkan Pengguna tiada nama yang sah</value>
-    
-  </data>
-  <data name="ErrUDF_MissingOpenParen" xml:space="preserve">
-    <value>Fungsi Ditakrifkan Pengguna tiada '(' di sini</value>
-    
-  </data>
-  <data name="ErrUDF_MissingEqual" xml:space="preserve">
-    <value>Fungsi Ditakrifkan Pengguna tiada '=' di sini</value>
-    
-  </data>
-  <data name="ErrUDF_MissingCloseParen" xml:space="preserve">
-    <value>Fungsi Ditakrifkan Pengguna tiada ')' di sini</value>
-    
-  </data>
-  <data name="ErrUDF_MissingSemicolon" xml:space="preserve">
-    <value>Fungsi Ditakrifkan Pengguna tiada ';' di sini</value>
-    
-  </data>
-  <data name="ErrUDF_MissingComma" xml:space="preserve">
-    <value>Fungsi Ditakrifkan Pengguna tiada ',' di sini</value>
-    
-  </data>
-  <data name="ErrUDF_MissingColon" xml:space="preserve">
-    <value>Fungsi Ditakrifkan Pengguna tidak ditemukan ':' di sini</value>
-    
-  </data>
-  <data name="ErrUDF_DuplicateArgName" xml:space="preserve">
-    <value>Fungsi Ditakrifkan Pengguna mempunyai nama argumen duplikasi</value>
-    
-  </data>
   <data name="AboutSet" xml:space="preserve">
     <value>Cipta dan tetapkan pemboleh ubah global.</value>
     
