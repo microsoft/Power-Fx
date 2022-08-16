@@ -132,9 +132,9 @@ namespace Microsoft.PowerFx.Tests
 
         private abstract class SetFieldBaseFunction : ReflectionFunction
         {
-            public SetFieldBaseFunction(FormulaType fieldType)
+            public SetFieldBaseFunction(FormulaType fieldType) 
                 : base("SetField", FormulaType.String, fieldType)
-            {
+            {           
             }
 
             public StringValue Execute(FormulaValue newValue)
