@@ -134,7 +134,7 @@ namespace Microsoft.PowerFx.Tests
         {
             public SetFieldBaseFunction(FormulaType fieldType) 
                 : base("SetField", FormulaType.String, fieldType)
-            {           
+            {               
             }
 
             public StringValue Execute(FormulaValue newValue)
