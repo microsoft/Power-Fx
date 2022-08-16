@@ -4625,38 +4625,6 @@
     <value>Први аргумент за „{0}“ треба да буде важеће име променљиве и не може да буде неусаглашено ни са једним именом постојеће контроле, екрана, колекције или извора података. Пронађен је тип „{1}“</value>
     
   </data>
-  <data name="ErrUDF_MissingIdentifier" xml:space="preserve">
-    <value>Кориснички дефинисаној функцији недостаје важећи назив</value>
-    
-  </data>
-  <data name="ErrUDF_MissingOpenParen" xml:space="preserve">
-    <value>Кориснички дефинисаној функцији овде недостаје „(“</value>
-    
-  </data>
-  <data name="ErrUDF_MissingEqual" xml:space="preserve">
-    <value>Кориснички дефинисаној функцији овде недостаје „=“</value>
-    
-  </data>
-  <data name="ErrUDF_MissingCloseParen" xml:space="preserve">
-    <value>Кориснички дефинисаној функцији овде недостаје „)“</value>
-    
-  </data>
-  <data name="ErrUDF_MissingSemicolon" xml:space="preserve">
-    <value>Кориснички дефинисаној функцији овде недостаје „;“</value>
-    
-  </data>
-  <data name="ErrUDF_MissingComma" xml:space="preserve">
-    <value>Кориснички дефинисаној функцији овде недостаје „,“</value>
-    
-  </data>
-  <data name="ErrUDF_MissingColon" xml:space="preserve">
-    <value>Кориснички дефинисаној функцији овде недостаје „:“</value>
-    
-  </data>
-  <data name="ErrUDF_DuplicateArgName" xml:space="preserve">
-    <value>Кориснички дефинисана функција има дупликат назива аргумента</value>
-    
-  </data>
   <data name="AboutSet" xml:space="preserve">
     <value>Направите и подесите глобалну променљиву.</value>
     

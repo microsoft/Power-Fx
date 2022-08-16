@@ -53,7 +53,7 @@ namespace Microsoft.PowerFx.Functions
         {
             return new ErrorValue(irContext, new ExpressionError()
             {
-                Message = "Divide by zero",
+                Message = "Invalid operation: division by zero.",
                 Span = irContext.SourceContext,
                 Kind = ErrorKind.Div0
             });
