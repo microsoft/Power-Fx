@@ -807,10 +807,15 @@ namespace Microsoft.PowerFx.Core.Types
             return new DType(DKind.Metadata, metadata, Unknown.TypeTree);
         }
 
+        /// <summary>
+        /// Attachment types can be either tables or records, and are represented using a LazyTable/Record type.
+        /// </summary>
         public static DType CreateAttachmentType(DType attachmentType)
         {
             Contracts.AssertValid(attachmentType);
-            var attachmentRecord = new BuiltInLazyTypes.AttachmentType(attachmentType);
+            Contracts.Assert(attachmentType.IsAggregate);
+            
+            var attachmentRecord = new BuiltInLazyTypes.AttachmentType(attachmentType.ToRecord());
             
             return attachmentType.IsTable ? attachmentRecord.ToTable()._type : attachmentRecord._type;
         }

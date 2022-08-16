@@ -18,6 +18,8 @@ namespace Microsoft.PowerFx.Core.Types.BuiltInLazyTypes
         public AttachmentType(DType attachmentType) 
             : base()
         {
+            Contracts.Assert(attachmentType.IsRecord);
+
             Attachment = attachmentType;
         }
 
