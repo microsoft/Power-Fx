@@ -4625,38 +4625,6 @@
     <value>Первый аргумент "{0}" должен быть допустимым именем переменной и не может конфликтовать с существующими именами элементов управления, экрана, коллекции или источника данных. Найден тип "{1}"</value>
     
   </data>
-  <data name="ErrUDF_MissingIdentifier" xml:space="preserve">
-    <value>User Defined Function is missing a valid name</value>
-    
-  </data>
-  <data name="ErrUDF_MissingOpenParen" xml:space="preserve">
-    <value>User Defined Function is missing a '(' here</value>
-    
-  </data>
-  <data name="ErrUDF_MissingEqual" xml:space="preserve">
-    <value>User Defined Function is missing a '=' here</value>
-    
-  </data>
-  <data name="ErrUDF_MissingCloseParen" xml:space="preserve">
-    <value>User Defined Function is missing a ')' here</value>
-    
-  </data>
-  <data name="ErrUDF_MissingSemicolon" xml:space="preserve">
-    <value>User Defined Function is missing a ';' here</value>
-    
-  </data>
-  <data name="ErrUDF_MissingComma" xml:space="preserve">
-    <value>User Defined Function is missing a ',' here</value>
-    
-  </data>
-  <data name="ErrUDF_MissingColon" xml:space="preserve">
-    <value>User Defined Function is missing an ':' here</value>
-    
-  </data>
-  <data name="ErrUDF_DuplicateArgName" xml:space="preserve">
-    <value>User Defined Function has a duplicate argument name</value>
-    
-  </data>
   <data name="AboutSet" xml:space="preserve">
     <value>Создание и задание глобальной переменной.</value>
     

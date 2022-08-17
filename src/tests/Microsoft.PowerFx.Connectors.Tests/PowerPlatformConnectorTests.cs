@@ -218,7 +218,7 @@ namespace Microsoft.PowerFx.Tests
 
             // Function we added where specified in MSNWeather.json
             var funcNames = funcs.Select(func => func.Name).OrderBy(x => x).ToArray();
-            Assert.Equal(funcNames, new string[] { "AppendFile", "CopyFile", "CopyFile_Old", "CreateFile", "CreateFile_Old", "DeleteFile", "DeleteFile_Old", "ExtractFolder_Old", "ExtractFolderV2", "GetDataSetsMetadata", "GetFileContent", "GetFileContent_Old", "GetFileContentByPath", "GetFileContentByPath_Old", "GetFileMetadata", "GetFileMetadata_Old", "GetFileMetadataByPath", "GetFileMetadataByPath_Old", "ListAllRootFolders", "ListAllRootFoldersV2", "ListFolder", "ListFolder_Old", "ListFolderV2", "ListRootFolder", "ListRootFolder_Old", "ListRootFolderV2", "TestConnection", "UpdateFile", "UpdateFile_Old" });
+            Assert.Equal(funcNames, new string[] { "AppendFile", "CopyFile", "CopyFileOld", "CreateFile", "CreateFileOld", "DeleteFile", "DeleteFileOld", "ExtractFolderOld", "ExtractFolderV2", "GetDataSetsMetadata", "GetFileContent", "GetFileContentByPath", "GetFileContentByPathOld", "GetFileContentOld", "GetFileMetadata", "GetFileMetadataByPath", "GetFileMetadataByPathOld", "GetFileMetadataOld", "ListAllRootFolders", "ListAllRootFoldersV2", "ListFolder", "ListFolderOld", "ListFolderV2", "ListRootFolder", "ListRootFolderOld", "ListRootFolderV2", "TestConnection", "UpdateFile", "UpdateFileOld" });
 
             // Now execute it...
             var engine = new RecalcEngine(config);
@@ -389,7 +389,7 @@ namespace Microsoft.PowerFx.Tests
             config.AddService("Office365Users", apiDoc, client);           
             var engine = new RecalcEngine(config);            
             testConnector.SetResponseFromFile(@"Responses\Office365_UserProfileV2.json");            
-            var result = await engine.EvalAsync(@"Office365Users.UserProfile_V2(""johndoe@microsoft.com"").mobilePhone", CancellationToken.None);
+            var result = await engine.EvalAsync(@"Office365Users.UserProfileV2(""johndoe@microsoft.com"").mobilePhone", CancellationToken.None);
 
             Assert.IsType<StringValue>(result);
             Assert.Equal("+33 799 999 999", (result as StringValue).Value);
@@ -417,7 +417,7 @@ namespace Microsoft.PowerFx.Tests
             config.AddService("Office365Users", apiDoc, client);
             var engine = new RecalcEngine(config);
             testConnector.SetResponseFromFile(@"Responses\Office365_UserProfileV2.json");
-            var result = await engine.EvalAsync(@"Office365Users.MyProfile_V2().mobilePhone", CancellationToken.None);
+            var result = await engine.EvalAsync(@"Office365Users.MyProfileV2().mobilePhone", CancellationToken.None);
 
             Assert.IsType<StringValue>(result);
             Assert.Equal("+33 799 999 999", (result as StringValue).Value);
@@ -445,7 +445,7 @@ namespace Microsoft.PowerFx.Tests
             config.AddService("Office365Users", apiDoc, client);
             var engine = new RecalcEngine(config);
             testConnector.SetResponseFromFile(@"Responses\Office365_DirectsV2.json");
-            var result = await engine.EvalAsync(@"First(Office365Users.DirectReports_V2(""jmstall@microsoft.com"", {'$top': 4 }).value).city", CancellationToken.None);
+            var result = await engine.EvalAsync(@"First(Office365Users.DirectReportsV2(""jmstall@microsoft.com"", {'$top': 4 }).value).city", CancellationToken.None);
 
             Assert.IsType<StringValue>(result);
             Assert.Equal("Paris", (result as StringValue).Value);

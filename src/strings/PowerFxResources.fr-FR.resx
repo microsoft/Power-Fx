@@ -3933,11 +3933,11 @@
     
   </data>
   <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>Cet argument ne peut pas être passé en tant que ce type dans les colonnes de formule.</value>
+    <value>This argument cannot be passed as this type in formula columns.</value>
     
   </data>
   <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
-    <value>Cet argument ne peut pas être transmis en tant que type {0} dans les colonnes de formules.</value>
+    <value>This argument cannot be passed as type {0} in formula columns.</value>
     
   </data>
   <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
@@ -3969,7 +3969,7 @@
     
   </data>
   <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
-    <value>Cette opération ne peut pas être effectuée sur le type {0} dans les colonnes de formules.</value>
+    <value>This operation cannot be performed on type {0} in formula columns.</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
@@ -4005,7 +4005,7 @@
     
   </data>
   <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
-    <value>Impossible de référencer la table virtuelle {0} dans les colonnes de formules.</value>
+    <value>Cannot reference virtual table {0} in formula columns.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
@@ -4623,38 +4623,6 @@
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
     <value>Le premier argument de « {0} » doit être un nom de variable valide et ne peut pas entrer en conflit avec les noms existants de contrôle, écran, collection ou source de données. Type trouvé « {1} »</value>
-    
-  </data>
-  <data name="ErrUDF_MissingIdentifier" xml:space="preserve">
-    <value>Il manque un nom valide dans la fonction définie par l’utilisateur</value>
-    
-  </data>
-  <data name="ErrUDF_MissingOpenParen" xml:space="preserve">
-    <value>Il manque « ( » ici dans la fonction définie par l’utilisateur</value>
-    
-  </data>
-  <data name="ErrUDF_MissingEqual" xml:space="preserve">
-    <value>Il manque « = » ici dans la fonction définie par l’utilisateur</value>
-    
-  </data>
-  <data name="ErrUDF_MissingCloseParen" xml:space="preserve">
-    <value>Il manque « ) » ici dans la fonction définie par l’utilisateur</value>
-    
-  </data>
-  <data name="ErrUDF_MissingSemicolon" xml:space="preserve">
-    <value>Il manque « ; » ici dans la fonction définie par l’utilisateur</value>
-    
-  </data>
-  <data name="ErrUDF_MissingComma" xml:space="preserve">
-    <value>Il manque « , » ici dans la fonction définie par l’utilisateur</value>
-    
-  </data>
-  <data name="ErrUDF_MissingColon" xml:space="preserve">
-    <value>User Defined Function is missing an ':' here</value>
-    
-  </data>
-  <data name="ErrUDF_DuplicateArgName" xml:space="preserve">
-    <value>La fonction définie par l’utilisateur a un nom d’argument en double</value>
     
   </data>
   <data name="AboutSet" xml:space="preserve">

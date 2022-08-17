@@ -4625,38 +4625,6 @@
     <value>Il primo argomento di '{0}' deve essere un nome di variabile valido non in conflitto con i nomi di controlli, schermate, raccolte o origini dati esistenti. Tipo trovato: '{1}'</value>
     
   </data>
-  <data name="ErrUDF_MissingIdentifier" xml:space="preserve">
-    <value>Alla funzione definita dall'utente manca un nome valido</value>
-    
-  </data>
-  <data name="ErrUDF_MissingOpenParen" xml:space="preserve">
-    <value>Alla funzione definita dall'utente manca un elemento "(" qui</value>
-    
-  </data>
-  <data name="ErrUDF_MissingEqual" xml:space="preserve">
-    <value>Alla funzione definita dall'utente manca un elemento "=" qui</value>
-    
-  </data>
-  <data name="ErrUDF_MissingCloseParen" xml:space="preserve">
-    <value>Alla funzione definita dall'utente manca un elemento ")" qui</value>
-    
-  </data>
-  <data name="ErrUDF_MissingSemicolon" xml:space="preserve">
-    <value>Alla funzione definita dall'utente manca un elemento ";" qui</value>
-    
-  </data>
-  <data name="ErrUDF_MissingComma" xml:space="preserve">
-    <value>Alla funzione definita dall'utente manca un elemento "," qui</value>
-    
-  </data>
-  <data name="ErrUDF_MissingColon" xml:space="preserve">
-    <value>User Defined Function is missing an ':' here</value>
-    
-  </data>
-  <data name="ErrUDF_DuplicateArgName" xml:space="preserve">
-    <value>La funzione definita dall'utente ha un nome di argomento duplicato</value>
-    
-  </data>
   <data name="AboutSet" xml:space="preserve">
     <value>Crea e imposta una variabile globale.</value>
     

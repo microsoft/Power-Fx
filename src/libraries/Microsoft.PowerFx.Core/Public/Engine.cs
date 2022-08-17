@@ -47,11 +47,10 @@ namespace Microsoft.PowerFx
         /// Create a resolver for use in binding. This is called from <see cref="Check(string, RecordType, ParserOptions)"/>.
         /// Base classes can override this is there are additional symbols not in the config.
         /// </summary>
-        /// <param name="alternateConfig">An alternate config that can be provided. Should default to engine's config if null.</param>        
         /// <returns></returns>
-        private protected virtual INameResolver CreateResolver(PowerFxConfig alternateConfig = null)
+        private protected virtual INameResolver CreateResolver()
         {
-            return new SimpleResolver(alternateConfig ?? Config);
+            return new SimpleResolver(Config);
         }
 
         private protected virtual IBinderGlue CreateBinderGlue()
@@ -223,7 +222,7 @@ namespace Microsoft.PowerFx
             ** but that we don't return any display names for them. Thus, we clone a PowerFxConfig but without 
             ** display name support and construct a resolver from that instead, which we use for the rewrite binding.
             */
-            return new RenameDriver(parameters, pathToRename, updatedName, this, CreateResolver(Config.WithoutDisplayNames()), CreateBinderGlue());
+            return new RenameDriver(parameters, pathToRename, updatedName, this, CreateResolver(), CreateBinderGlue());
         }
 
         /// <summary>
