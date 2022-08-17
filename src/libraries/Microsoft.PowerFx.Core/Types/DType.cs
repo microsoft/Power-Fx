@@ -3220,6 +3220,26 @@ namespace Microsoft.PowerFx.Core.Types
                 return CoercesTo(expectedType, out var coercionIsSafe, aggregateCoercion) && (!safeCoercionRequired || coercionIsSafe);
             }
 
+            // LazyTable/Record case
+            if (expectedType.IsLazyType)
+            {
+                coercionType = expectedType;
+                coercionNeeded = !expectedType.Accepts(this);
+                if (!coercionNeeded)
+                {
+                    return true;
+                }
+                
+                if (expectedType.LazyTypeProvider.GetExpandedType(expectedType.IsTable).Accepts(this))
+                {
+                    coercionNeeded = false;
+                    return true;
+                }
+
+                // Lazy type coercion not supported
+                return false;
+            }
+
             coercionType = IsRecord ? EmptyRecord : EmptyTable;
             coercionNeeded = false;
 
