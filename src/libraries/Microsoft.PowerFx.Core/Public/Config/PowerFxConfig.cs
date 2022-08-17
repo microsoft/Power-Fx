@@ -200,16 +200,6 @@ namespace Microsoft.PowerFx
             return _environmentSymbols.TryGetValue(lookupName, out symbol);
         }
 
-        /// <summary>
-        /// Some scenarios require that lookups be done with logical names only.
-        /// This returns the same PowerFxConfig with the display name provider disabled.
-        /// </summary>
-        /// <returns></returns>
-        internal PowerFxConfig WithoutDisplayNames()
-        {
-            return new PowerFxConfig(this) { _environmentSymbolDisplayNameProvider = DisabledDisplayNameProvider.Instance };
-        }
-
         internal void Lock()
         {
             CheckUnlocked();
