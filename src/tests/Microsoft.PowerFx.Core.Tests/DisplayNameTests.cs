@@ -85,6 +85,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     TableType.Empty().Add(new NamedFormulaType("Inner", FormulaType.Number, "InnerDisplay")), 
                     "NestedDisplay"));
 
+            var result = _engine.Check(inputExpression, r1);
+            Assert.True(result.IsSuccess);
+
             if (toDisplay)
             {
                 var outDisplayExpression = _engine.GetDisplayExpression(inputExpression, r1);
