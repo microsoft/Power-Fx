@@ -2345,7 +2345,12 @@ namespace Microsoft.PowerFx.Core.Types
             }
 
             Contracts.Assert(!fError);
-            return new DType(type1.Kind, treeRes, UnionDataSourceInfoMetadata(type1, type2));
+            var returnType = new DType(type1.Kind, treeRes, UnionDataSourceInfoMetadata(type1, type2), type1.DisplayNameProvider);
+
+            returnType = type2.DisplayNameProvider == null ? 
+                returnType :
+                AttachOrDisableDisplayNameProvider(returnType, type2.DisplayNameProvider);
+            return returnType;
         }
 
         // Produces the union of the two given types.
