@@ -3933,7 +3933,7 @@
     
   </data>
   <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>Nie można przekazać tego argumentu jako tego typu w kolumnach formuły.</value>
+    <value>Tego argumentu nie można przekazywać jako tego typu w kolumnach formuł.</value>
     
   </data>
   <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
@@ -4623,38 +4623,6 @@
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
     <value>Pierwszy argument elementu „{0}” powinien być prawidłową nazwą zmiennej i nie może powodować konfliktu z żadnymi istniejącymi nazwami kontrolek, ekranów, kolekcji ani źródeł danych. Znaleziono typ „{1}”</value>
-    
-  </data>
-  <data name="ErrUDF_MissingIdentifier" xml:space="preserve">
-    <value>Funkcja zdefiniowana przez użytkownika nie ma prawidłowej nazwy</value>
-    
-  </data>
-  <data name="ErrUDF_MissingOpenParen" xml:space="preserve">
-    <value>W tym miejscu funkcji zdefiniowanej przez użytkownika brakuje symbolu „(”</value>
-    
-  </data>
-  <data name="ErrUDF_MissingEqual" xml:space="preserve">
-    <value>W tym miejscu funkcji zdefiniowanej przez użytkownika brakuje symbolu „=”</value>
-    
-  </data>
-  <data name="ErrUDF_MissingCloseParen" xml:space="preserve">
-    <value>W tym miejscu funkcji zdefiniowanej przez użytkownika brakuje symbolu „)”</value>
-    
-  </data>
-  <data name="ErrUDF_MissingSemicolon" xml:space="preserve">
-    <value>W tym miejscu funkcji zdefiniowanej przez użytkownika brakuje symbolu „;”</value>
-    
-  </data>
-  <data name="ErrUDF_MissingComma" xml:space="preserve">
-    <value>W tym miejscu funkcji zdefiniowanej przez użytkownika brakuje symbolu „,”</value>
-    
-  </data>
-  <data name="ErrUDF_MissingColon" xml:space="preserve">
-    <value>User Defined Function is missing an ':' here</value>
-    
-  </data>
-  <data name="ErrUDF_DuplicateArgName" xml:space="preserve">
-    <value>Funkcja zdefiniowana przez użytkownika zawiera zduplikowaną nazwę argumentu</value>
     
   </data>
   <data name="AboutSet" xml:space="preserve">

@@ -9,6 +9,7 @@ using Microsoft.AppMagic.Authoring.Texl.Builtins;
 using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
+using static Microsoft.PowerFx.Connectors.OpenApiHelperFunctions;
 
 namespace Microsoft.PowerFx.Connectors
 {
@@ -51,7 +52,8 @@ namespace Microsoft.PowerFx.Connectors
                         continue;
                     }
 
-                    var operationName = op.OperationId ?? path.Replace("/", string.Empty);
+                    // We need to remove invalid chars to be consistent with Power Apps
+                    var operationName = NormalizeOperationId(op.OperationId) ?? path.Replace("/", string.Empty);
                     var returnType = op.GetReturnType();
                     var opPath = basePath != null ? basePath + path : path;                    
 
@@ -110,7 +112,7 @@ namespace Microsoft.PowerFx.Connectors
 
             return newFunctions;
         }
-
+       
         private static bool IsSafeHttpMethod(HttpMethod httpMethod)
         {
             // HTTP/1.1 spec states that only GET and HEAD requests are 'safe' by default.
