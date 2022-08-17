@@ -54,10 +54,10 @@ namespace Microsoft.PowerFx
         }
 
         /// <inheritdoc/>
-        private protected override INameResolver CreateResolver(PowerFxConfig alternateConfig = null)
+        private protected override INameResolver CreateResolver()
         {
             // The RecalcEngineResolver allows access to the values from UpdateValue. 
-            var resolver = new RecalcEngineResolver(this, alternateConfig ?? Config);
+            var resolver = new RecalcEngineResolver(this, Config);
             return resolver;
         }
 
