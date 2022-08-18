@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Utils;
 
@@ -82,7 +83,7 @@ namespace Microsoft.PowerFx.Types
         // - Error, 
         // - with updated values
         // Async because derived classes may back this with a network call. 
-        public virtual async Task<DValue<RecordValue>> Append(RecordValue record)
+        public virtual async Task<DValue<RecordValue>> AppendAsync(RecordValue record)
         {
             // fails by default
             throw new System.NotImplementedException();

@@ -27,7 +27,7 @@ namespace Microsoft.PowerFx.Tests
     public class RecalcEngineTests : PowerFxTest
     {
         [Fact]
-        public void T1()
+        public async Task T1()
         {
             var r1 = FormulaValue.NewRecordFromFields(
                 new NamedValue("f1", FormulaValue.New(1)));
@@ -38,13 +38,13 @@ namespace Microsoft.PowerFx.Tests
             var t = FormulaValue.NewTable(r1.Type, r1); // Mutable 
                         
             Assert.Equal(1, t.Count()); 
-            t.Append(r2); // succeeds
+            await t.AppendAsync(r2); // succeeds
 
             Assert.Equal(2, t.Count());
 
             IEnumerable<RecordValue> source = new RecordValue[] { r1 };
             var t2 = FormulaValue.NewTable(r1.Type, source); // Immutabe
-            t2.Append(r2); // Fails 
+            await t2.AppendAsync(r2); // Fails 
         }
 
         [Fact]

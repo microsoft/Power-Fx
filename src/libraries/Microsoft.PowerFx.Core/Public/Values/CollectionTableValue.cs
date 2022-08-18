@@ -74,11 +74,11 @@ namespace Microsoft.PowerFx.Types
 
         private readonly List<T> _sourceList;
 
-        public override async Task<DValue<RecordValue>> Append(RecordValue record)
+        public override async Task<DValue<RecordValue>> AppendAsync(RecordValue record)
         {
             if (_sourceList == null)
             {
-                return await base.Append(record);
+                return await base.AppendAsync(record);
             }
 
             var item = MarshalInverse(record);
