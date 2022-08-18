@@ -78,6 +78,12 @@ namespace Microsoft.PowerFx.Types
             });
         }
 
+        public virtual void Append(RecordValue record)
+        {
+            // fails by default
+            throw new System.NotImplementedException();
+        }
+
         public override object ToObject()
         {
             if (IsColumn)

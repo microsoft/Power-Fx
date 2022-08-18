@@ -35,11 +35,17 @@ namespace Microsoft.PowerFx.Types
 
             _sourceIndex = source as IReadOnlyList<T>;
             _sourceCount = source as IReadOnlyCollection<T>;
+            _sourceList = source as List<T>;
         }
 
         public RecordType RecordType { get; }
 
         protected abstract DValue<RecordValue> Marshal(T item);
+
+        protected virtual T MarshalInverse(RecordValue row)
+        {
+            throw new NotImplementedException();
+        }
 
         public override IEnumerable<DValue<RecordValue>> Rows
         {
@@ -63,6 +69,20 @@ namespace Microsoft.PowerFx.Types
             {
                 return base.Count();
             }
+        }
+
+        private readonly List<T> _sourceList;
+
+        public override void Append(RecordValue record)
+        {
+            if (_sourceList == null)
+            {
+                base.Append(record);
+            }
+
+            var item = MarshalInverse(record);
+
+            _sourceList.Add(item);
         }
 
         protected override bool TryGetIndex(int index1, out DValue<RecordValue> record)

@@ -1378,14 +1378,14 @@ namespace Microsoft.PowerFx.Functions
         public static FormulaValue Table(IRContext irContext, FormulaValue[] args)
         {
             // Table literal
-            var records = Array.ConvertAll(
-                args,
-                arg => arg switch
+            var records = new List<DValue<RecordValue>>(
+                args.Select(arg => arg switch
                 {
                     RecordValue r => DValue<RecordValue>.Of(r),
                     BlankValue b => DValue<RecordValue>.Of(b),
                     _ => DValue<RecordValue>.Of((ErrorValue)arg),
-                });
+                }));
+
             return new InMemoryTableValue(irContext, records);
         }
 

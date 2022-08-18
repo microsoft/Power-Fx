@@ -36,6 +36,11 @@ namespace Microsoft.PowerFx.Types
                 return record;
             }
         }
+
+        protected override DValue<RecordValue> MarshalInverse(RecordValue row)
+        {
+            return DValue<RecordValue>.Of(row);
+        }
     }
 
     // More constrained table when we know that all values are indeed Records, not error/blank. 
@@ -56,6 +61,11 @@ namespace Microsoft.PowerFx.Types
         protected override DValue<RecordValue> Marshal(RecordValue record)
         {
             return DValue<RecordValue>.Of(CompileTimeTypeWrapperRecordValue.AdjustType(_recordType, record));
+        }
+
+        protected override RecordValue MarshalInverse(RecordValue row)
+        {
+            return row;
         }
     }
 }
