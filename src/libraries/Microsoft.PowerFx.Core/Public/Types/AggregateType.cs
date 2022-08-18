@@ -46,6 +46,39 @@ namespace Microsoft.PowerFx.Types
             return true;
         }
 
+        /// <summary>
+        /// Takes display or logical name as input and returns field and logical name if exists.
+        /// </summary>
+        /// <param name="displayOrLogicalName">Display or Logical name.</param>
+        /// <param name="logical">Logical name for the input.</param>
+        /// <param name="type">Type for the input Display or Logical name.</param>
+        /// <returns>true or false.</returns>
+        /// <exception cref="ArgumentNullException">Throws, if input displayOrLogicalName is empty.</exception>
+        public virtual bool TryGetFieldType(string displayOrLogicalName, out string logical, out FormulaType type)
+        {
+            if (string.IsNullOrEmpty(displayOrLogicalName))
+            {
+                throw new ArgumentNullException("Input parameter \"displayOrLogicalName\" cannot be empty or null");
+            }
+
+            if (_type.DisplayNameProvider.TryGetLogicalName(new DName(displayOrLogicalName), out var maybeLogical))
+            {
+                logical = maybeLogical;
+            }
+            else
+            {
+                logical = displayOrLogicalName;
+            }
+
+            if (!TryGetFieldType(logical, out type))
+            {
+                logical = null;
+                return false;
+            }
+
+            return true;
+        }
+
         public IEnumerable<NamedFormulaType> GetFieldTypes()
         {
             return FieldNames.Select(field => new NamedFormulaType(field, GetFieldType(field)));
