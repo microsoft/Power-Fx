@@ -78,7 +78,10 @@ namespace Microsoft.PowerFx.Types
             });
         }
 
-        public virtual void Append(RecordValue record)
+        // Return appended value 
+        // - Error, 
+        // - with updated values
+        public virtual DValue<RecordValue> Append(RecordValue record)
         {
             // fails by default
             throw new System.NotImplementedException();

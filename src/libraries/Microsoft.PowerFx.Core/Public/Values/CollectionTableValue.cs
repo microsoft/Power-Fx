@@ -73,16 +73,18 @@ namespace Microsoft.PowerFx.Types
 
         private readonly List<T> _sourceList;
 
-        public override void Append(RecordValue record)
+        public override DValue<RecordValue> Append(RecordValue record)
         {
             if (_sourceList == null)
             {
-                base.Append(record);
+                return base.Append(record);
             }
 
             var item = MarshalInverse(record);
 
             _sourceList.Add(item);
+
+            return DValue<RecordValue>.Of(record);
         }
 
         protected override bool TryGetIndex(int index1, out DValue<RecordValue> record)
