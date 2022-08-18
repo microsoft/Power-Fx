@@ -3933,11 +3933,11 @@
     
   </data>
   <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>Đối số này không thể được chuyển dưới dạng loại này trong cột công thức.</value>
+    <value>Không chuyển được đối số này dưới dạng loại này trong cột công thức.</value>
     
   </data>
   <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
-    <value>Đối số này không thể được chuyển dưới dạng loại {0} trong cột công thức.</value>
+    <value>Không chuyển được đối số này dưới dạng loại {0} trong cột công thức.</value>
     
   </data>
   <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
@@ -3969,7 +3969,7 @@
     
   </data>
   <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
-    <value>Thao tác này không thể được thực hiện trên loại {0} trong các cột công thức.</value>
+    <value>Không thực hiện được thao tác này đối với loại {0} trong cột công thức.</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
@@ -4623,38 +4623,6 @@
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
     <value>Đối số đầu tiên của '{0}' phải là một tên biến hợp lệ và không được xung đột với bất kỳ điều khiển, màn hình, tuyển tập hoặc tên nguồn dữ liệu nào. Loại tìm được '{1}'</value>
-    
-  </data>
-  <data name="ErrUDF_MissingIdentifier" xml:space="preserve">
-    <value>Hàm do người dùng xác định thiếu một tên hợp lệ</value>
-    
-  </data>
-  <data name="ErrUDF_MissingOpenParen" xml:space="preserve">
-    <value>Hàm do người dùng xác định thiếu "(" ở đây</value>
-    
-  </data>
-  <data name="ErrUDF_MissingEqual" xml:space="preserve">
-    <value>Hàm do người dùng xác định thiếu "=" ở đây</value>
-    
-  </data>
-  <data name="ErrUDF_MissingCloseParen" xml:space="preserve">
-    <value>Hàm do người dùng xác định thiếu ")" ở đây</value>
-    
-  </data>
-  <data name="ErrUDF_MissingSemicolon" xml:space="preserve">
-    <value>Hàm do người dùng xác định thiếu ";" ở đây</value>
-    
-  </data>
-  <data name="ErrUDF_MissingComma" xml:space="preserve">
-    <value>Hàm do người dùng xác định thiếu "," ở đây</value>
-    
-  </data>
-  <data name="ErrUDF_MissingColon" xml:space="preserve">
-    <value>User Defined Function is missing an ':' here</value>
-    
-  </data>
-  <data name="ErrUDF_DuplicateArgName" xml:space="preserve">
-    <value>Hàm do người dùng xác định có tên đối số trùng lặp</value>
     
   </data>
   <data name="AboutSet" xml:space="preserve">

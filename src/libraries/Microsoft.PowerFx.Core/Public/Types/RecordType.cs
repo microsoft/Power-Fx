@@ -53,7 +53,7 @@ namespace Microsoft.PowerFx.Types
                 return table;
             }
             
-            return new KnownTableType(_type.ToTable());
+            return new TableType(_type.ToTable());
         }
 
         /// <summary>
