@@ -13,8 +13,9 @@ namespace Microsoft.PowerFx.Core.Types.Enums
     /// <summary>
     /// Static class used to store built in Power Fx enums.
     /// </summary>
-    internal sealed class EnumStoreBuilder
+    internal sealed class EnumStoreBuilder : IEnumStore
     {
+        // These are used by Power Apps 
         #region Default Enums
         internal static IReadOnlyDictionary<string, string> DefaultEnums { get; } =
             new Dictionary<string, string>()
@@ -284,15 +285,23 @@ namespace Microsoft.PowerFx.Core.Types.Enums
             };
         #endregion
 
+        // Map from enum name to its type spec. 
         private readonly Dictionary<string, string> _workingEnums = new Dictionary<string, string>();
 
-        private ImmutableList<EnumSymbol> _enumSymbols;
-
-        private Dictionary<string, DType> _enumTypes;
-
+        // Cache results for IEnumStore.
+        // This cache has a 600% perf increase in tests, due to parsing type specs.
+        private List<EnumSymbol> _enumSymbolCache;
+                
         #region Internal methods
+
+        /// <summary>
+        /// Add any enums required by the functions. 
+        /// </summary>
+        /// <param name="functions"></param>
         internal EnumStoreBuilder WithRequiredEnums(IEnumerable<TexlFunction> functions)
         {
+            _enumSymbolCache = null;
+
             var missingEnums = new Dictionary<string, string>();
             foreach (var function in functions)
             {
@@ -314,8 +323,13 @@ namespace Microsoft.PowerFx.Core.Types.Enums
             return this;
         }
 
+        /// <summary>
+        /// Add the "default" enums specified by <see cref="EnumStoreBuilder.DefaultEnums"/>.
+        /// </summary>
         internal EnumStoreBuilder WithDefaultEnums()
         {
+            _enumSymbolCache = null;
+
             foreach (var defaultEnum in DefaultEnums)
             {
                 if (!_workingEnums.ContainsKey(defaultEnum.Key))
@@ -327,56 +341,47 @@ namespace Microsoft.PowerFx.Core.Types.Enums
             return this;
         }
 
-        internal EnumStore Build()
+        internal IEnumStore Build()
         {
-            return EnumStore.Build(new List<EnumSymbol>(EnumSymbols));
+            return this;
         }
         #endregion
 
-        private Dictionary<string, DType> RegenerateEnumTypes()
+        public IEnumerable<EnumSymbol> EnumSymbols
         {
-            var enumTypes = _workingEnums.ToDictionary(enumSpec => enumSpec.Key, enumSpec =>
+            get
             {
-                DType.TryParse(enumSpec.Value, out var type).Verify();
-                return type;
-            });
+                lock (_workingEnums)
+                {
+                    if (_enumSymbolCache != null)
+                    {
+                        return _enumSymbolCache;
+                    }
+                }
 
-            return enumTypes;
-        }
+                var list = new List<EnumSymbol>();
 
-        private IEnumerable<Tuple<DName, DName, DType>> EnumTuples()
-        {
-            CollectionUtils.EnsureInstanceCreated(ref _enumTypes, () =>
-            {
-                return RegenerateEnumTypes();
-            });
+                var customEnumLocDict = ImmutableDictionary<string, Dictionary<string, string>>.Empty;
 
-            var list = ImmutableList.CreateBuilder<Tuple<DName, DName, DType>>();
-            foreach (var enumSpec in _workingEnums)
-            {
-                Contracts.Assert(DName.IsValidDName(enumSpec.Key));
+                foreach (var enumSpec in _workingEnums)
+                {
+                    DType.TryParse(enumSpec.Value, out var type).Verify();
 
-                var name = new DName(enumSpec.Key);
-                list.Add(new Tuple<DName, DName, DType>(name, name, _enumTypes[enumSpec.Key]));
+                    Contracts.Assert(DName.IsValidDName(enumSpec.Key));
+
+                    var name = new DName(enumSpec.Key);
+                    var symbol = new EnumSymbol(customEnumLocDict, name, name, type);
+
+                    list.Add(symbol);
+                }
+
+                lock (_workingEnums)
+                {
+                    _enumSymbolCache = list;
+                }
+
+                return list;
             }
-
-            return list.ToImmutable();
-        }
-
-        private IEnumerable<EnumSymbol> EnumSymbols =>
-            CollectionUtils.EnsureInstanceCreated(
-                    ref _enumSymbols, () => RegenerateEnumSymbols());
-
-        private ImmutableList<EnumSymbol> RegenerateEnumSymbols()
-        {
-            var list = ImmutableList.CreateBuilder<EnumSymbol>();
-            var customEnumLocDict = ImmutableDictionary<string, Dictionary<string, string>>.Empty;
-            foreach (var enumValue in EnumTuples())
-            {
-                list.Add(new EnumSymbol(customEnumLocDict, enumValue.Item1, enumValue.Item2, enumValue.Item3));
-            }
-
-            return list.ToImmutable();
-        }
+        }     
     }
 }

@@ -20,7 +20,7 @@ namespace Microsoft.PowerFx.Core.Tests
             _enumStore = new EnumStoreBuilder().WithDefaultEnums().Build();
         }
 
-        private readonly EnumStore _enumStore;
+        private readonly IEnumStore _enumStore;
 
         [Theory]
         [InlineData("CountIf(numtable, val > 0)", ">", typeof(BooleanType))]

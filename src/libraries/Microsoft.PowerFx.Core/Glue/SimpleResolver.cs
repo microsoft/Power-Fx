@@ -25,7 +25,7 @@ namespace Microsoft.PowerFx.Core.Glue
         private readonly PowerFxConfig _config;
 
         private readonly TexlFunction[] _library;
-        private readonly EnumSymbol[] _enums = new EnumSymbol[] { };
+        private readonly IEnumerable<EnumSymbol> _enums;
 
         private readonly IExternalDocument _document;        
 
@@ -52,7 +52,7 @@ namespace Microsoft.PowerFx.Core.Glue
         {
             _config = config ?? throw new ArgumentNullException(nameof(config));
             _library = config.Functions.ToArray();
-            _enums = config.EnumStoreBuilder.Build().EnumSymbols.ToArray();            
+            _enums = config.EnumStoreBuilder.EnumSymbols;
         }
 
         // for derived classes that need to set INameResolver.Document. 
