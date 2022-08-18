@@ -46,6 +46,48 @@ namespace Microsoft.PowerFx.Types
             return true;
         }
 
+        /// <summary>
+        /// Lookup for logical name and field for input display or logical name.
+        /// If there is a conflict, it prioritizes logical name.
+        /// i.e. field1->Logical=F1 , Display=Display1; field2-> Logical=Display1, Display=Display2
+        /// would return field2 with logical name Display1.
+        /// </summary>
+        /// <param name="displayOrLogicalName">Display or Logical name.</param>
+        /// <param name="logical">Logical name for the input.</param>
+        /// <param name="type">Type for the input Display or Logical name.</param>
+        /// <returns>true or false.</returns>
+        /// <exception cref="ArgumentNullException">Throws, if input displayOrLogicalName is empty.</exception>
+        public bool TryGetFieldType(string displayOrLogicalName, out string logical, out FormulaType type)
+        {
+            if (string.IsNullOrEmpty(displayOrLogicalName))
+            {
+                throw new ArgumentNullException("Input parameter \"displayOrLogicalName\" cannot be empty or null");
+            }
+
+            if (_type.DisplayNameProvider.TryGetDisplayName(new DName(displayOrLogicalName), out _))
+            {
+                logical = displayOrLogicalName;
+            }
+            else if (_type.DisplayNameProvider.TryGetLogicalName(new DName(displayOrLogicalName), out var maybeLogical))
+            {
+                logical = maybeLogical;
+            }
+            else
+            {
+                logical = null;
+                type = Blank;
+                return false;
+            }
+
+            if (!TryGetFieldType(logical, out type))
+            {
+                logical = null;
+                return false;
+            }
+
+            return true;
+        }
+
         public IEnumerable<NamedFormulaType> GetFieldTypes()
         {
             return FieldNames.Select(field => new NamedFormulaType(field, GetFieldType(field)));
