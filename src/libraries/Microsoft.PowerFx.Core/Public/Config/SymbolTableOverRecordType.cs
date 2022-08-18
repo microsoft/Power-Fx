@@ -22,11 +22,12 @@ namespace Microsoft.PowerFx
             _debugName = "per-eval";
         }
 
+        // Key is the logical name. 
+        // Display names are in the NameLookupInfo.DisplayName field.
         IReadOnlyDictionary<string, NameLookupInfo> IGlobalSymbolNameResolver.GlobalSymbols
         {
             get
             {
-                // $$$ Enumeration is for intellisense, should return in DisplayNames?
                 var map = new Dictionary<string, NameLookupInfo>();
                 foreach (var kv in _type.GetFieldTypes())
                 {
@@ -58,12 +59,15 @@ namespace Microsoft.PowerFx
 
         private NameLookupInfo Create(string name, FormulaType type)
         {
+            var hasDisplayName = DType.TryGetDisplayNameForColumn(_type._type, name, out var displayName);
+
             return new NameLookupInfo(
                    BindKind.PowerFxResolvedObject,
                    type._type,
                    DPath.Root,
                    0,
-                   data: new NameSymbol(name));
+                   data: new NameSymbol(name),
+                   displayName: hasDisplayName ? new DName(displayName) : default);
         }
     }
 }

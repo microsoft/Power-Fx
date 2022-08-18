@@ -399,7 +399,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Fact]
         public async Task ParametersBindOnly()
         {
-            // $$$ add w/ Display names?
             var s1 = new SymbolTable();
             s1.AddConstant("p1", FormulaValue.New(3));
 
@@ -407,6 +406,20 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var check = engine.Check("p1", symbolTable: s1);
             Assert.True(check.IsSuccess);
             Assert.Equal(FormulaType.Number, check.ReturnType);
+        }
+
+        // Bind global parameters and ensure lookup works by display name 
+        [Fact]
+        public async Task ParametersDisplayNameBindOnly()
+        {
+            var optionSet = new OptionSet("foo", DisplayNameUtility.MakeUnique(new Dictionary<string, string>() { { "key1", "value1" } }));
+
+            var s1 = new SymbolTable();
+            s1.AddEntity(optionSet, displayName: new DName("DisplayFoo"));
+            
+            var engine = new Engine(new PowerFxConfig());
+            var check = engine.Check("DisplayFoo.key1", symbolTable: s1);
+            Assert.True(check.IsSuccess);            
         }
 
         // Can change default builtin functions.
