@@ -81,7 +81,8 @@ namespace Microsoft.PowerFx.Types
         // Return appended value 
         // - Error, 
         // - with updated values
-        public virtual DValue<RecordValue> Append(RecordValue record)
+        // Async because derived classes may back this with a network call. 
+        public virtual async Task<DValue<RecordValue>> Append(RecordValue record)
         {
             // fails by default
             throw new System.NotImplementedException();

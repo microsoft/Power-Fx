@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
 
 namespace Microsoft.PowerFx.Types
@@ -73,11 +74,11 @@ namespace Microsoft.PowerFx.Types
 
         private readonly List<T> _sourceList;
 
-        public override DValue<RecordValue> Append(RecordValue record)
+        public override async Task<DValue<RecordValue>> Append(RecordValue record)
         {
             if (_sourceList == null)
             {
-                return base.Append(record);
+                return await base.Append(record);
             }
 
             var item = MarshalInverse(record);
