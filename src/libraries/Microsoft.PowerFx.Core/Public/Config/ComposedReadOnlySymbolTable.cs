@@ -44,14 +44,6 @@ namespace Microsoft.PowerFx
             }            
         }
                 
-        IExternalDocument INameResolver.Document => default;
-
-        IExternalEntityScope INameResolver.EntityScope => throw new NotImplementedException();
-
-        DName INameResolver.CurrentProperty => default;
-
-        DPath INameResolver.CurrentEntityPath => default;
-
         // Expose the list to aide in intellisense suggestions. 
         IEnumerable<TexlFunction> INameResolver.Functions
         {
@@ -66,10 +58,6 @@ namespace Microsoft.PowerFx
                 }
             }
         }
-
-        IExternalEntity INameResolver.CurrentEntity => null;
-
-        public bool SuggestUnqualifiedEnums => false;
 
         public IReadOnlyDictionary<string, NameLookupInfo> GlobalSymbols
         {
@@ -127,13 +115,6 @@ namespace Microsoft.PowerFx
             return Functions.Where(function => function.Namespace.Equals(nameSpace));
         }
 
-        public bool LookupDataControl(DName name, out NameLookupInfo lookupInfo, out DName dataControlName)
-        {
-            dataControlName = default;
-            lookupInfo = default;
-            return false;
-        }
-
         public virtual bool LookupEnumValueByInfoAndLocName(object enumInfo, DName locName, out object value)
         {
             value = null;
@@ -168,29 +149,6 @@ namespace Microsoft.PowerFx
 
             lookupInfo = default;
             return false;
-        }
-
-        public bool LookupParent(out NameLookupInfo lookupInfo)
-        {
-            lookupInfo = default;
-            return false;
-        }
-
-        public bool LookupSelf(out NameLookupInfo lookupInfo)
-        {
-            lookupInfo = default;
-            return false;
-        }
-
-        public bool TryGetInnermostThisItemScope(out NameLookupInfo nameInfo)
-        {
-            nameInfo = default;
-            return false;
-        }
-
-        public bool TryLookupEnum(DName name, out NameLookupInfo lookupInfo)
-        {
-            throw new System.NotImplementedException();
         }
     }
 }

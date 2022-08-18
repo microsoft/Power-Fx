@@ -44,6 +44,10 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.True(v1a.Equals(v1b));
 
             Assert.NotEqual(v1a.GetHashCode(), v2.GetHashCode());
+
+            // Compare to non VersionHash
+            Assert.False(v2.Equals(3));
+            Assert.False(v2.Equals(null));
         }
 
         [Fact]

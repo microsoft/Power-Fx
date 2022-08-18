@@ -47,6 +47,10 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.True(ret);
             Assert.Equal(2.0, v1.ToObject());
 
+            ret = locals.TryGetValue("missing", out v1);
+            Assert.False(ret);
+            Assert.Null(v1);
+
             var symbols = locals.GetSymbolTableSnapshot();
             Assert.Null(symbols.Parent);
 

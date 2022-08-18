@@ -23,13 +23,35 @@ namespace Microsoft.PowerFx.Core.Tests
             AssertUnique(set, symbolTable.VersionHash);
         }
 
+        [Fact]
+        public void Parent()
+        {
+            var s0 = new SymbolTable();
+            var s1 = new SymbolTable
+            {
+                Parent = s0
+            };
+            
+            ReadOnlySymbolTable r0 = s0;
+            ReadOnlySymbolTable r1 = s1;
+
+            Assert.Same(s1.Parent, s0);
+            Assert.Same(r1.Parent, s0);
+        }
+
         // Changing the config changes its hash
         [Fact]
         public void ConfigHash()
         {
             var set = new HashSet<VersionHash>();
 
-            var s1 = new SymbolTable();
+            var s0 = new SymbolTable();
+            AssertUnique(set, s0);
+
+            var s1 = new SymbolTable
+            {
+                Parent = s0
+            };
             AssertUnique(set, s1);
 
             s1.AddVariable("x", FormulaType.Number);
@@ -42,7 +64,29 @@ namespace Microsoft.PowerFx.Core.Tests
             s1.AddVariable("x", FormulaType.Number);
             AssertUnique(set, s1);
 
-            // $$$ Test Parent, other mutations. 
+            // Try other mutations
+            s1.AddConstant("c", FormulaValue.New(1));
+            AssertUnique(set, s1);
+
+            // New function 
+            var func = new PowerFx.Tests.BindingEngineTests.BehaviorFunction();
+            var funcName = func.Name;
+            s1.AddFunction(func);
+            AssertUnique(set, s1);
+
+            s1.RemoveFunction(funcName);
+            AssertUnique(set, s1);
+
+            s1.RemoveFunction(func);
+            AssertUnique(set, s1);
+
+            var optionSet = new OptionSet("foo", DisplayNameUtility.MakeUnique(new Dictionary<string, string>() { { "one key", "one value" } }));
+            s1.AddEntity(optionSet);
+            AssertUnique(set, s1);
+
+            // Adding to parent still changes our checksum (even if shadowed)
+            s0.AddVariable("x", FormulaType.Number);
+            AssertUnique(set, s1);
         }
 
         [Fact]
