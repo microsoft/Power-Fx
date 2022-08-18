@@ -13,10 +13,7 @@ namespace Microsoft.PowerFx.Functions
     // Direct ports from JScript. 
     internal static partial class Library
     {
-        private static readonly object _randomizerLock = new object();
-
-        [ThreadSafeProtectedByLock(nameof(_randomizerLock))]
-        private static Random _random;
+        private static readonly IRandomService _defaultRandService = new DefaultRandomService();
 
         // Support for aggregators. Helpers to ensure that Scalar and Tabular behave the same.
         private interface IAggregator
@@ -811,17 +808,16 @@ namespace Microsoft.PowerFx.Functions
             return FiniteChecker(irContext, 1, result);
         }
 
-        private static FormulaValue Rand(IRContext irContext, FormulaValue[] args)
+        private static async ValueTask<FormulaValue> Rand(
+            EvalVisitor runner, 
+            EvalVisitorContext context, 
+            IRContext irContext, 
+            FormulaValue[] args)
         {
-            lock (_randomizerLock)
-            {
-                if (_random == null)
-                {
-                    _random = new Random();
-                }
+            var random = runner.GetService<IRandomService>() ?? _defaultRandService;
 
-                return new NumberValue(irContext, _random.NextDouble());
-            }
+            var value = random.NextDouble();
+            return new NumberValue(irContext, value);            
         }
 
         public static FormulaValue RandBetween(IRContext irContext, NumberValue[] args)
@@ -842,15 +838,9 @@ namespace Microsoft.PowerFx.Functions
             lower = Math.Ceiling(lower);
             upper = Math.Floor(upper);
 
-            lock (_randomizerLock)
-            {
-                if (_random == null)
-                {
-                    _random = new Random();
-                }
+            var random = _defaultRandService;
 
-                return new NumberValue(irContext, Math.Floor((_random.NextDouble() * (upper - lower + 1)) + lower));
-            }
+            return new NumberValue(irContext, Math.Floor((random.NextDouble() * (upper - lower + 1)) + lower));            
         }
 
         private static FormulaValue Pi(IRContext irContext, FormulaValue[] args)

@@ -15,6 +15,7 @@ using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Interpreter.UDF;
 using Microsoft.PowerFx.Types;
@@ -770,6 +771,25 @@ namespace Microsoft.PowerFx.Tests
             var str = "Foo(x: Number): Number => { 1+1; 2+2; };";
             recalcEngine.DefineFunctions(str);
             Assert.Equal(4.0, recalcEngine.Eval("Foo(1)", null, new ParserOptions { AllowsSideEffects = true }).ToObject());
+        }
+
+        [Fact]
+        public void FunctionServices()
+        {
+            var engine = new RecalcEngine();
+            var values = new SymbolValues();
+            values.AddService<IRandomService>(new TestRandService());
+
+            var result = engine.EvalAsync("Rand()", CancellationToken.None, runtimeConfig: values).Result;
+            Assert.Equal(555.0, result.ToObject());
+        }
+
+        private class TestRandService : IRandomService
+        {
+            public double NextDouble()
+            {
+                return 555;
+            }
         }
 
         #region Test

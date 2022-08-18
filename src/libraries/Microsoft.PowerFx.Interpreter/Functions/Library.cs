@@ -934,7 +934,7 @@ namespace Microsoft.PowerFx.Functions
             },
             {
                 BuiltinFunctionsCore.Rand,
-                NoErrorHandling(Rand)
+                Rand
             },
             {
                 BuiltinFunctionsCore.RandBetween,

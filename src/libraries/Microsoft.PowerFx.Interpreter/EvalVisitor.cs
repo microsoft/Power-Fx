@@ -37,6 +37,16 @@ namespace Microsoft.PowerFx
             _runtimeConfig = runtimeConfig;
         }
 
+        public T GetService<T>()
+        {
+            if (_runtimeConfig != null)
+            {
+                return (T)_runtimeConfig.GetService(typeof(T));
+            }
+
+            return default;
+        }
+
         // Check this cooperatively - especially in any loop. 
         public void CheckCancel()
         {
