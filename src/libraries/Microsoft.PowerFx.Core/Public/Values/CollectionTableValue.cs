@@ -21,6 +21,7 @@ namespace Microsoft.PowerFx.Types
         // Additional capabilities. 
         private readonly IReadOnlyList<T> _sourceIndex; // maybe null. supports index. 
         private readonly IReadOnlyCollection<T> _sourceCount; // maybe null. supports count;
+        private readonly List<T> _sourceList;
 
         public CollectionTableValue(RecordType recordType, IEnumerable<T> source)
           : this(IRContext.NotInSource(recordType.ToTable()), source)
@@ -35,6 +36,7 @@ namespace Microsoft.PowerFx.Types
 
             _sourceIndex = source as IReadOnlyList<T>;
             _sourceCount = source as IReadOnlyCollection<T>;
+            _sourceList = source as List<T>;
         }
 
         public RecordType RecordType { get; }
@@ -84,6 +86,18 @@ namespace Microsoft.PowerFx.Types
             {
                 return base.TryGetIndex(index1, out record);
             }
+        }
+
+        public bool Append(T record)
+        {
+            if (_sourceList == null)
+            {
+                throw new NotImplementedException();
+            }
+
+            _sourceList.Add(record);
+
+            return true;
         }
     }
 }
