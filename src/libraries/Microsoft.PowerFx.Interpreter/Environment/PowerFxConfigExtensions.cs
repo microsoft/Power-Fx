@@ -30,5 +30,14 @@ namespace Microsoft.PowerFx
         {
             powerFxConfig.AddFunction(new RecalcEngineSetFunction());
         }
+
+        /// <summary>
+        /// Enable a Collect() function which allows scripts to append table records.
+        /// </summary>
+        /// <param name="powerFxConfig"></param>
+        public static void EnableCollectFunction(this PowerFxConfig powerFxConfig)
+        {
+            powerFxConfig.AddFunction(new CollectFunction());
+        }
     }
 }

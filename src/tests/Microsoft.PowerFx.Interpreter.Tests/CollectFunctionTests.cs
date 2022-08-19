@@ -34,7 +34,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         {
             var config = new PowerFxConfig();
 
-            config.AddFunction(new CollectFunction());
+            config.EnableCollectFunction();
             config.EnableSetFunction();
 
             var engine = new RecalcEngine(config);
@@ -43,7 +43,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 new NamedValue("MyField1", FormulaValue.New(1)),
                 new NamedValue("MyField2", FormulaValue.New("Hello World!!!")));
 
-            var t = (RecordsOnlyTableValue)FormulaValue.NewTable(r1.Type, new List<RecordValue>());
+            var t = FormulaValue.NewTable(r1.Type, new List<RecordValue>());
 
             engine.UpdateVariable("t", t);
             engine.UpdateVariable("r1", r1);

@@ -200,49 +200,6 @@ namespace Microsoft.PowerFx.Interpreter
             return argumentIndex == 0;
         }
 
-        public override bool TryGetDataSourceNodes(CallNode callNode, TexlBinding binding, out IList<FirstNameNode> dsNodes)
-        {
-            Contracts.AssertValue(callNode);
-            Contracts.AssertValue(binding);
-
-            dsNodes = new List<FirstNameNode>();
-            if (callNode.Args.Count != 2)
-            {
-                return false;
-            }
-
-            var args = Contracts.VerifyValue(callNode.Args.Children);
-            var arg1 = Contracts.VerifyValue(args[1]);
-
-            // Only the second arg can contribute to the output for the purpose of delegation
-            return ArgValidators.DataSourceArgNodeValidator.TryGetValidValue(arg1, binding, out dsNodes);
-        }
-
-        public override IEnumerable<Identifier> GetIdentifierOfModifiedValue(TexlNode[] args, out TexlNode identifierNode)
-        {
-            Contracts.AssertValue(args);
-
-            identifierNode = null;
-            if (args.Length == 0)
-            {
-                return null;
-            }
-
-            var firstNameNode = args[0]?.AsFirstName();
-            identifierNode = firstNameNode;
-
-            if (firstNameNode == null)
-            {
-                return null;
-            }
-
-            var identifiers = new List<Identifier>
-            {
-                firstNameNode.Ident
-            };
-            return identifiers;
-        }
-
         public override bool IsAsyncInvocation(CallNode callNode, TexlBinding binding)
         {
             Contracts.AssertValue(callNode);
@@ -251,9 +208,9 @@ namespace Microsoft.PowerFx.Interpreter
             return Arg0RequiresAsync(callNode, binding);
         }
 
-        public Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancel)
+        public async Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancel)
         {
-            var arg0 = (RecordsOnlyTableValue)args[0];
+            var arg0 = (TableValue)args[0];
             var arg1 = (RecordValue)args[1];
 
             var mytype0 = arg0.GetType();
@@ -261,7 +218,7 @@ namespace Microsoft.PowerFx.Interpreter
 
             var result = arg0.AppendAsync(arg1);
 
-            return Task.FromResult<FormulaValue>(FormulaValue.New(true));
+            return await Task.FromResult<FormulaValue>(FormulaValue.New(true));
         }
     }
 }
