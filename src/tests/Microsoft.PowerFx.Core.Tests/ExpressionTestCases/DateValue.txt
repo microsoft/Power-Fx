@@ -62,3 +62,6 @@ true
 
 >> Text(DateTimeValue("четвртак 21 јул 2022 19:34:03", "sr-cyrl-RS"))
 "7/21/2022 7:34 PM"
+
+>> Text(DateTimeValue("четвртак 21 јул 2022 19:34:03", "invalid"))
+#Error(Kind=InvalidArgument)
