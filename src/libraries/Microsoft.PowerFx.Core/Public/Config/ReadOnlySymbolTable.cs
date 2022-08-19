@@ -94,6 +94,10 @@ namespace Microsoft.PowerFx
 
         private protected readonly Dictionary<string, NameLookupInfo> _variables = new Dictionary<string, NameLookupInfo>();
 
+        internal readonly Dictionary<DName, IExternalEntity> _environmentSymbols = new Dictionary<DName, IExternalEntity>();
+
+        internal DisplayNameProvider _environmentSymbolDisplayNameProvider = new SingleSourceDisplayNameProvider();
+
         private protected readonly List<TexlFunction> _functions = new List<TexlFunction>();
 
         // Which enums are available. 
@@ -125,22 +129,6 @@ namespace Microsoft.PowerFx
 
         IEnumerable<TexlFunction> INameResolver.Functions => _functions;
 
-        IExternalDocument INameResolver.Document => default;
-
-        IExternalEntityScope INameResolver.EntityScope => throw new NotImplementedException();
-
-        IExternalEntity INameResolver.CurrentEntity => default;
-
-        DName INameResolver.CurrentProperty => default;
-
-        DPath INameResolver.CurrentEntityPath => default;
-
-        bool INameResolver.SuggestUnqualifiedEnums => false;
-
-        internal readonly Dictionary<DName, IExternalEntity> _environmentSymbols = new Dictionary<DName, IExternalEntity>();
-
-        internal DisplayNameProvider _environmentSymbolDisplayNameProvider = new SingleSourceDisplayNameProvider();
-
         IReadOnlyDictionary<string, NameLookupInfo> IGlobalSymbolNameResolver.GlobalSymbols => _variables;
 
         internal string GetSuggestableSymbolName(IExternalEntity entity)
@@ -171,6 +159,7 @@ namespace Microsoft.PowerFx
         }
 
         // Derived symbol tables can hook. 
+        // NameLookupPreferences is just for legacy lookup behavior, so we don't need to pass it to this hook
         internal virtual bool TryLookup(DName name, out NameLookupInfo nameInfo)
         {
             nameInfo = default;
@@ -221,19 +210,6 @@ namespace Microsoft.PowerFx
             return false;
         }
 
-        bool INameResolver.TryGetInnermostThisItemScope(out NameLookupInfo nameInfo)
-        {
-            nameInfo = default;
-            return false;
-        }
-
-        bool INameResolver.LookupDataControl(DName name, out NameLookupInfo lookupInfo, out DName dataControlName)
-        {
-            dataControlName = default;
-            lookupInfo = default;
-            return false;
-        }
-
         IEnumerable<TexlFunction> INameResolver.LookupFunctions(DPath theNamespace, string name, bool localeInvariant)
         {
             Contracts.Check(theNamespace.IsValid, "The namespace is invalid.");
@@ -274,6 +250,21 @@ namespace Microsoft.PowerFx
             return false;
         }
 
+        #region INameResolver - not implemented
+
+        // Methods from INameResolver that we default / don't implement
+        IExternalDocument INameResolver.Document => default;
+
+        IExternalEntityScope INameResolver.EntityScope => throw new NotImplementedException();
+
+        IExternalEntity INameResolver.CurrentEntity => default;
+
+        DName INameResolver.CurrentProperty => default;
+
+        DPath INameResolver.CurrentEntityPath => default;
+
+        bool INameResolver.SuggestUnqualifiedEnums => false;
+
         bool INameResolver.LookupParent(out NameLookupInfo lookupInfo)
         {
             lookupInfo = default;
@@ -296,5 +287,19 @@ namespace Microsoft.PowerFx
         {
             throw new NotImplementedException();
         }
+
+        bool INameResolver.TryGetInnermostThisItemScope(out NameLookupInfo nameInfo)
+        {
+            nameInfo = default;
+            return false;
+        }
+
+        bool INameResolver.LookupDataControl(DName name, out NameLookupInfo lookupInfo, out DName dataControlName)
+        {
+            dataControlName = default;
+            lookupInfo = default;
+            return false;
+        }
+        #endregion
     }
 }

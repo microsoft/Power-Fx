@@ -102,7 +102,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     { "option_1", "Option1" },
                     { "option_2", "Option2" }
             }));
+<<<<<<< HEAD
                         
+=======
+
+>>>>>>> PR feedback
             config.AddEntity(optionSet, new DName("DisplayOpt"));
 
             var parameterType = RecordType.Empty()
@@ -111,7 +115,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var engine = new Engine(config);
 
             var actualSuggestions = SuggestStrings(expression, engine, parameterType);
+<<<<<<< HEAD
             Assert.Equal(expectedSuggestions, actualSuggestions);     
+=======
+            Assert.Equal(expectedSuggestions, actualSuggestions);
+>>>>>>> PR feedback
         }
 
         [Theory]

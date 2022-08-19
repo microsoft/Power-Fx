@@ -19,15 +19,17 @@ namespace Microsoft.PowerFx
     {
         internal VersionHash _version = VersionHash.New();
 
+        private ReadOnlySymbolTable _symbolTableSnapshot; 
+
         // Helper in debugging. Useful when we have multiple symbol tables chained. 
         public string DebugName { get; init; } = "(RuntimeValues)";
 
         // This will also mark dirty any symbol table that we handed out. 
         public void Inc()
         {
-            if (_lastSnapshot != null)
+            if (_symbolTableSnapshot != null)
             {
-                _lastSnapshot.Inc();
+                _symbolTableSnapshot.Inc();
             }
 
             _version.Inc();
@@ -44,22 +46,27 @@ namespace Microsoft.PowerFx
             return null;
         }
 
+        public T GetService<T>() 
+            where T : class
+        {
+            return (T)GetService(typeof(T));
+        }
+
         /// <summary>
         /// Get a snapshot of the current set of symbols. 
         /// </summary>
         /// <returns></returns>
         public ReadOnlySymbolTable GetSymbolTableSnapshot()
         {
-            if (_lastSnapshot != null)
+            if (_symbolTableSnapshot != null)
             {
-                _lastSnapshot.Inc();
+                // Invalidate the previous one
+                _symbolTableSnapshot.Inc();
             }
 
-            _lastSnapshot = GetSymbolTableSnapshotWorker();
-            return _lastSnapshot;
+            _symbolTableSnapshot = GetSymbolTableSnapshotWorker();
+            return _symbolTableSnapshot;
         }
-
-        private ReadOnlySymbolTable _lastSnapshot;
 
         protected abstract ReadOnlySymbolTable GetSymbolTableSnapshotWorker();
 
@@ -69,6 +76,11 @@ namespace Microsoft.PowerFx
             return false;
         }
 
+        /// <summary>
+        /// Get symbol values where each symbol is a field of the record. 
+        /// </summary>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
         public static ReadOnlySymbolValues NewFromRecord(RecordValue parameters)
         {
             var runtimeConfig = new SymbolValues();
