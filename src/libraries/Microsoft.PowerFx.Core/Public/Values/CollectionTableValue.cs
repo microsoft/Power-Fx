@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
 
 namespace Microsoft.PowerFx.Types
@@ -21,7 +22,7 @@ namespace Microsoft.PowerFx.Types
         // Additional capabilities. 
         private readonly IReadOnlyList<T> _sourceIndex; // maybe null. supports index. 
         private readonly IReadOnlyCollection<T> _sourceCount; // maybe null. supports count;
-        private readonly List<T> _sourceList;
+        private readonly ICollection<T> _sourceList;
 
         public CollectionTableValue(RecordType recordType, IEnumerable<T> source)
           : this(IRContext.NotInSource(recordType.ToTable()), source)
@@ -42,6 +43,11 @@ namespace Microsoft.PowerFx.Types
         public RecordType RecordType { get; }
 
         protected abstract DValue<RecordValue> Marshal(T item);
+
+        protected virtual T MarshalInverse(RecordValue row)
+        {
+            throw new NotImplementedException();
+        }
 
         public override IEnumerable<DValue<RecordValue>> Rows
         {
@@ -67,6 +73,20 @@ namespace Microsoft.PowerFx.Types
             }
         }
 
+        public override async Task<DValue<RecordValue>> AppendAsync(RecordValue record)
+        {
+            if (_sourceList == null)
+            {
+                return await base.AppendAsync(record);
+            }
+
+            var item = MarshalInverse(record);
+
+            _sourceList.Add(item);
+
+            return DValue<RecordValue>.Of(record);
+        }
+
         protected override bool TryGetIndex(int index1, out DValue<RecordValue> record)
         {
             var index0 = index1 - 1;
@@ -86,18 +106,6 @@ namespace Microsoft.PowerFx.Types
             {
                 return base.TryGetIndex(index1, out record);
             }
-        }
-
-        public bool Append(T record)
-        {
-            if (_sourceList == null)
-            {
-                throw new NotImplementedException();
-            }
-
-            _sourceList.Add(record);
-
-            return true;
         }
     }
 }

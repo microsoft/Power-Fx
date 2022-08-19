@@ -25,47 +25,34 @@ namespace Microsoft.PowerFx.Interpreter.Tests
     public class CollectFunctionTests : PowerFxTest
     {
         private readonly ParserOptions _opts = new ParserOptions { AllowsSideEffects = true };
-        private static readonly TypeMarshallerCache _cache = new TypeMarshallerCache();
 
-        [Fact]
-        public void AppendRecord()
+        [Theory]
+        [InlineData("Collect(t, {MyField1:2, MyField2:\"hello1\"});CountRows(t)", 1)]
+        [InlineData("Collect(t, r1);Collect(t, r1);Collect(t, r1);CountRows(t)", 3)]
+        [InlineData("Collect(t, r1);Collect(t, If(1>0, r1,Blank()));CountRows(t)", 2)]
+        public void AppendCountTest(string script, int expected)
         {
             var config = new PowerFxConfig();
 
             config.AddFunction(new CollectFunction());
+            config.EnableSetFunction();
 
             var engine = new RecalcEngine(config);
 
             RecordValue r1 = FormulaValue.NewRecordFromFields(
                 new NamedValue("MyField1", FormulaValue.New(1)),
-                new NamedValue("MyField2", FormulaValue.New("Hello Earth!!!")));
+                new NamedValue("MyField2", FormulaValue.New("Hello World!!!")));
 
-            RecordValue r2 = FormulaValue.NewRecordFromFields(
-                new NamedValue("MyField1", FormulaValue.New(2)),
-                new NamedValue("MyField2", FormulaValue.New("Hello Mars!!!")));
+            var t = (RecordsOnlyTableValue)FormulaValue.NewTable(r1.Type, new List<RecordValue>());
 
-            var list = new List<RecordValue>();
-
-            var t = (RecordsOnlyTableValue)FormulaValue.NewTable(r1.Type, list);
-
-            engine.UpdateVariable("list", t);
+            engine.UpdateVariable("t", t);
             engine.UpdateVariable("r1", r1);
 
-            engine.Eval("Collect(list, r1)"); // [1]
+            engine.Check(script, options: _opts);
 
-            t.Append(r2); // [2]
-
-            Assert.Equal(2, list.Count);
-
-            var resultCount = (NumberValue)engine.Eval("CountRows(list)");
-            Assert.Equal(2, resultCount.Value);
+            var resultCount = (NumberValue)engine.Eval(script, options: _opts);
+            
+            Assert.Equal(expected, resultCount.Value);
         }
-    }
-
-    internal class TestRow
-    {
-        public double MyField1 { get; set; }
-
-        public string MyField2 { get; set; }
     }
 }

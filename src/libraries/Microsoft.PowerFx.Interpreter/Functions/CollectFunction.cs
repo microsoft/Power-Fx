@@ -20,7 +20,7 @@ using static Microsoft.PowerFx.Core.Localization.TexlStrings;
 
 namespace Microsoft.PowerFx.Interpreter
 {
-    // The CollectFunction class was inspired (copied) by Set function.
+    // The CollectFunction class was copied from PowerApss.
     // Implementation of a Set function which just chains to 
     // RecalcEngine.UpdateVariable().
     // Set has no return value. 
@@ -31,25 +31,17 @@ namespace Microsoft.PowerFx.Interpreter
     //   Set(var,newValue)
     internal class CollectFunction : BuiltinFunction, IAsyncTexlFunction
     {
-        public override bool SuppressIntellisenseForComponent => true;
-
         public override bool ManipulatesCollections => true;
 
         public override bool ModifiesValues => true;
 
-        public override bool AffectsCollectionSchemas => true;
-
         public override bool IsSelfContained => true;
-
-        public override bool CanSuggestThisItem => true;
 
         public override bool RequiresDataSourceScope => true;
 
         protected virtual bool IsScalar => false;
 
         public override bool SupportsParamCoercion => false;
-
-        public override bool DisableForCommanding => true;
 
         public override bool ArgMatchesDatasourceType(int argNum)
         {
@@ -172,29 +164,6 @@ namespace Microsoft.PowerFx.Interpreter
 
             DType dataSourceType = argTypes[0];
 
-            // Not connected for now
-            //bool isConnected = binding.EntityScope != null &&
-            //    FunctionUtils.TryGetDataSource((EntityScope)binding.EntityScope, args[0], out DataSourceInfo dataSourceInfo) &&
-            //    (dataSourceInfo.Kind == DataSourceKind.Connected || dataSourceInfo.Kind == DataSourceKind.CdsNative);
-
-            //if (isConnected)
-            //{
-            //    for (int i = 1; i < args.Length; i++)
-            //    {
-            //        DType curType = argTypes[i];
-            //        foreach (var typedName in curType.GetNames(DPath.Root))
-            //        {
-            //            DName name = typedName.Name;
-            //            if (!dataSourceType.TryGetType(name, out DType dsNameType))
-            //                dataSourceType.ReportNonExistingName(FieldNameKind.Display, errors, name, args[i], DocumentErrorSeverity.Warning);
-            //        }
-            //    }
-            //}
-
-            // TASK: 75145: SPEC: what if the types align for arg0, but arg0 is not a name node? For example:
-            //      Collect( Filter(T,A<2), {A:10} )
-            // The current behavior is that Collect has no side effects for transient tables/collections.
-
             // Need a collection for the 1st arg
             DType collectionType = argTypes[0];
             if (!collectionType.IsTable)
@@ -219,13 +188,6 @@ namespace Microsoft.PowerFx.Interpreter
                     errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrNeedValidVariableName_Arg);
                 }
             }
-
-            //if ((binding.NameResolver?.CurrentEntity as ControlInfo)?.Template.IsDataComponent == true && !isConnected)
-            //{
-            //    // Stateful actions including using in-memory data sources are not allowed within data components.
-            //    fValid = false;
-            //    errors.EnsureError(DocumentErrorSeverity.Severe, args[0], CanvasStringResources.DataComponent_ErrCollectionInDataComponent);
-            //}
 
             return fValid;
         }
@@ -289,63 +251,6 @@ namespace Microsoft.PowerFx.Interpreter
             return Arg0RequiresAsync(callNode, binding);
         }
 
-        public static DType GetCollectedTypeForGivenArgType(DType argType)
-        {
-            Contracts.Assert(argType.IsValid);
-
-            if (!argType.IsPrimitive)
-            {
-                return argType;
-            }
-
-            // Passed a scalar; make a record out of it, using a name that depends on the type.
-            var fieldName = Contracts.VerifyValue(CreateInvariantFieldName(argType.Kind));
-            return DType.CreateRecord(new TypedName[] { new TypedName(argType, new DName(fieldName)) });
-        }
-
-        //        public static void PushCustomJsArgs(TexlFunction func, JsTranslator translator, TexlBinding binding, CallNode node, List<Fragment> argFragments)
-        //        {
-        //            var collectFunc = (CollectFunction)func;
-
-        //            // Only scalar collection functions require the scalar field name.
-        //            if (!collectFunc.IsScalar)
-        //            {
-        //                return;
-        //            }
-
-        //            // CollectS needs to also inject the field name for these scalars; e.g. Collect(x,"a","b") -> Collect(x,"a","b","Value").
-        //            // Note that a single name is sufficient. Since the scalars being pushed are of the same type, they will be collected
-        //            // into the exact same column, whose name is needed (and will be pushed) here.
-        //            TexlNode[] args = node.Args.Children;
-        //            string fieldName = Contracts.VerifyValue(CollectScalarFunction.GetInvariantNameForRecord(binding.GetType(args[1]).Kind));
-        //#if DEBUG
-        //            for (int i = 1; i < argFragments.Count; i++)
-        //                Contracts.Assert(fieldName == Contracts.VerifyValue(CollectScalarFunction.GetInvariantNameForRecord(binding.GetType(args[i]).Kind)));
-        //#endif
-
-        //            var builder = new PAStringBuilder(fieldName.Length + 2);
-        //            builder.AppendAsPlainText(fieldName);
-
-        //            argFragments.Add(translator.CreateFragment(builder));
-        //        }
-
-        protected static string CreateInvariantFieldName(DKind dKind)
-        {
-            Contracts.Assert(dKind >= DKind._Min && dKind < DKind._Lim);
-
-            switch (dKind)
-            {
-                case DKind.Image:
-                case DKind.Hyperlink:
-                case DKind.Media:
-                case DKind.Blob:
-                case DKind.PenImage:
-                    return "Url";
-                default:
-                    return "Value";
-            }
-        }
-
         public Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancel)
         {
             var arg0 = (RecordsOnlyTableValue)args[0];
@@ -354,7 +259,7 @@ namespace Microsoft.PowerFx.Interpreter
             var mytype0 = arg0.GetType();
             var mytype1 = arg1.GetType();
 
-            arg0.Append(arg1);
+            var result = arg0.AppendAsync(arg1);
 
             return Task.FromResult<FormulaValue>(FormulaValue.New(true));
         }
