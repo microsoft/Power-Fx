@@ -10,7 +10,7 @@ namespace Microsoft.PowerFx.Types
     /// Represent a value in the formula expression. 
     /// </summary>
     [DebuggerDisplay("{ToObject().ToString()} ({Type})")]
-    public abstract partial class FormulaValue
+    public abstract partial class FormulaValue : ICanGetValue
     {
         // We place the .New*() methods on FormulaValue for discoverability. 
         // If we're "marshalling" a T, we need a TypeMarshallerCache
@@ -23,6 +23,10 @@ namespace Microsoft.PowerFx.Types
         internal IRContext IRContext { get; }
 
         public FormulaType Type => IRContext.ResultType;
+
+#pragma warning disable CA1033 // Interface methods should be callable by child types
+        FormulaValue ICanGetValue.Value => this;
+#pragma warning restore CA1033 
 
         internal FormulaValue(IRContext irContext)
         {
