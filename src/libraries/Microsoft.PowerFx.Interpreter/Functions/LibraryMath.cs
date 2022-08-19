@@ -15,12 +15,6 @@ namespace Microsoft.PowerFx.Functions
     {
         private static readonly IRandomService _defaultRandService = new DefaultRandomService();
 
-        private static T GetService<T>(this IServiceProvider services, T defaultService)
-        {
-            var service = (T)services.GetService(typeof(T));
-            return service ?? defaultService;
-        }
-
         // Support for aggregators. Helpers to ensure that Scalar and Tabular behave the same.
         private interface IAggregator
         {
@@ -823,7 +817,7 @@ namespace Microsoft.PowerFx.Functions
 
             if (value < 0 || value > 1)
             {
-                // this a bug in the host's IRandomService
+                // This is a bug in the host's IRandomService.
                 throw new InvalidOperationException($"IRandomService ({random.GetType().FullName}) returned an illegal value {value}. Must be between 0 and 1");
             }
 
