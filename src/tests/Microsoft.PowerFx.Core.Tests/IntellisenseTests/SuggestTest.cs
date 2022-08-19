@@ -152,6 +152,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("ForAll([0],`|", "ThisRecord", "Value")]
         [InlineData("ForAll(-],|", "ThisRecord")]
         [InlineData("ForAll()~|")]
+        [InlineData("With( {Apples:3}, $\"We {Apples} apples|")]
 
         // BlankNodeSuggestionHandler
         [InlineData("|")]

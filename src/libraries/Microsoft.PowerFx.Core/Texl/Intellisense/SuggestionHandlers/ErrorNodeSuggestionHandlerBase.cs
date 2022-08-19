@@ -23,7 +23,7 @@ namespace Microsoft.PowerFx.Intellisense
                 // ThisItemProperties only in the context of thisItem.
                 var curNode = intellisenseData.CurNode;
 
-                if (curNode.Parent.Kind == NodeKind.StrInterp)
+                if (curNode.Parent != null && curNode.Parent.Kind == NodeKind.StrInterp)
                 {
                     return true;
                 }
