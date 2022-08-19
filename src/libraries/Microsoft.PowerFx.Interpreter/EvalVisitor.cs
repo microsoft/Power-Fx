@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Globalization;
@@ -37,15 +38,22 @@ namespace Microsoft.PowerFx
             _runtimeConfig = runtimeConfig;
         }
 
-        public T GetService<T>()
+        /// <summary>
+        /// Get a service from the <see cref="ReadOnlySymbolValues"/>. Returns null if not present.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public T GetService<T>() 
         {
             if (_runtimeConfig != null)
             {
-                return (T)_runtimeConfig.GetService(typeof(T));
+                return _runtimeConfig.GetService<T>();
             }
 
             return default;
         }
+
+        public IServiceProvider FunctionServices => _runtimeConfig;
 
         // Check this cooperatively - especially in any loop. 
         public void CheckCancel()

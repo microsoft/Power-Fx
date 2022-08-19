@@ -55,7 +55,10 @@ namespace Microsoft.PowerFx.Tests
                 $"{ns}.{nameof(TypeMarshallerCache)}",
                 $"{ns}.{nameof(TypeMarshallerCacheExtensions)}",
                 $"{nsType}.{nameof(ObjectRecordValue)}",
-                $"{ns}.Interpreter.UDF.{nameof(DefineFunctionsResult)}"
+                $"{ns}.Interpreter.UDF.{nameof(DefineFunctionsResult)}",
+
+                // Services for functions. 
+                $"{ns}.Functions.IRandomService"
             };
 
             var sb = new StringBuilder();
@@ -780,15 +783,50 @@ namespace Microsoft.PowerFx.Tests
             var values = new SymbolValues();
             values.AddService<IRandomService>(new TestRandService());
 
+            // Rand 
             var result = engine.EvalAsync("Rand()", CancellationToken.None, runtimeConfig: values).Result;
-            Assert.Equal(555.0, result.ToObject());
+            Assert.Equal(0.5, result.ToObject());
+
+            // 1 service can impact multiple functions. 
+            // It also doesn't replace the function, so existing function logic (errors, range checks, etc) still is used. 
+            // RandBetween maps 0.5 to 6. 
+            result = engine.EvalAsync("RandBetween(1,10)", CancellationToken.None, runtimeConfig: values).Result;
+            Assert.Equal(6.0, result.ToObject());
+        }
+
+        [Fact]
+        public async Task FunctionServicesHostBug()
+        {
+            // Need to protect against bogus values from a poorly implemented service.
+            // These are exceptions, not ErrorValues, since it's a host bug. 
+            var engine = new RecalcEngine();
+            var values = new SymbolValues();
+
+            // Host bug, service should be 0...1, this is out of range. 
+            var buggyService = new TestRandService { _value = 9999 };
+
+            values.AddService<IRandomService>(buggyService);
+
+            try
+            {
+                await engine.EvalAsync("Rand()", CancellationToken.None, runtimeConfig: values);
+                Assert.False(true); // should have thrown on illegal IRandomService service.
+            }
+            catch (InvalidOperationException e)
+            {
+                var name = typeof(TestRandService).FullName;
+                Assert.Equal($"IRandomService ({name}) returned an illegal value 9999. Must be between 0 and 1", e.Message);
+            }            
         }
 
         private class TestRandService : IRandomService
         {
+            public double _value = 0.5;
+
+            // Returns between 0 and 1. 
             public double NextDouble()
             {
-                return 555;
+                return _value;
             }
         }
 

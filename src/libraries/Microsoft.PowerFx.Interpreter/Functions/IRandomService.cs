@@ -11,10 +11,13 @@ namespace Microsoft.PowerFx.Functions
     /// Service for any functions needing Random behavior, 
     /// such as Rand(), RandBetween(), or Shuffle().
     /// </summary>
+    [ThreadSafeImmutable]
     public interface IRandomService
     {
         /// <summary>
-        /// Get the next random number. 
+        /// Returns a random floating-point number that is greater than or equal to 0.0, and less than 1.0.
+        /// Should be from a linear distribution. 
+        /// Expected this call is thread-safe and may be called concurrently from multiple threads.
         /// </summary>
         /// <returns></returns>
         double NextDouble();

@@ -15,6 +15,12 @@ namespace Microsoft.PowerFx.Functions
     {
         private static readonly IRandomService _defaultRandService = new DefaultRandomService();
 
+        private static T GetService<T>(this IServiceProvider services, T defaultService)
+        {
+            var service = (T)services.GetService(typeof(T));
+            return service ?? defaultService;
+        }
+
         // Support for aggregators. Helpers to ensure that Scalar and Tabular behave the same.
         private interface IAggregator
         {
@@ -808,19 +814,41 @@ namespace Microsoft.PowerFx.Functions
             return FiniteChecker(irContext, 1, result);
         }
 
+        // Since IRandomService is a pluggable service,
+        // validate that the implementation is within spec.
+        // This catches potential host bugs. 
+        private static double SafeNextDouble(this IRandomService random)
+        {
+            var value = random.NextDouble(); 
+
+            if (value < 0 || value > 1)
+            {
+                // this a bug in the host's IRandomService
+                throw new InvalidOperationException($"IRandomService ({random.GetType().FullName}) returned an illegal value {value}. Must be between 0 and 1");
+            }
+
+            return value;
+        }
+
+        private static double SafeNextDouble(this IServiceProvider services)
+        {
+            var random = services.GetService<IRandomService>(_defaultRandService);
+            return random.SafeNextDouble();
+        }
+
         private static async ValueTask<FormulaValue> Rand(
-            EvalVisitor runner, 
-            EvalVisitorContext context, 
-            IRContext irContext, 
+            EvalVisitor runner,
+            EvalVisitorContext context,
+            IRContext irContext,
             FormulaValue[] args)
         {
-            var random = runner.GetService<IRandomService>() ?? _defaultRandService;
+            var services = runner.FunctionServices;
 
-            var value = random.NextDouble();
+            var value = services.SafeNextDouble();
             return new NumberValue(irContext, value);            
         }
 
-        public static FormulaValue RandBetween(IRContext irContext, NumberValue[] args)
+        public static FormulaValue RandBetween(IServiceProvider services, IRContext irContext, NumberValue[] args)
         {
             var lower = args[0].Value;
             var upper = args[1].Value;
@@ -838,9 +866,8 @@ namespace Microsoft.PowerFx.Functions
             lower = Math.Ceiling(lower);
             upper = Math.Floor(upper);
 
-            var random = _defaultRandService;
-
-            return new NumberValue(irContext, Math.Floor((random.NextDouble() * (upper - lower + 1)) + lower));            
+            var value = services.SafeNextDouble();
+            return new NumberValue(irContext, Math.Floor((value * (upper - lower + 1)) + lower));            
         }
 
         private static FormulaValue Pi(IRContext irContext, FormulaValue[] args)
