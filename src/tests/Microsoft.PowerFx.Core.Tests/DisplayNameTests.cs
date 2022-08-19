@@ -209,7 +209,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 null,
                 new Core.Entities.QueryOptions.DataSourceToQueryOptionsMap(),
                 formula.ParseTree,
-                new SimpleResolver(new PowerFxConfig(CultureInfo.InvariantCulture)),
+                new SymbolTable(),
                 BindingConfig.Default,
                 ruleScope: r1._type,
                 updateDisplayNames: true);
