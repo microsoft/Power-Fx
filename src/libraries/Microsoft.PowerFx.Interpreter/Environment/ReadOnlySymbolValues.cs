@@ -47,7 +47,6 @@ namespace Microsoft.PowerFx
         }
 
         public T GetService<T>() 
-            where T : class
         {
             return (T)GetService(typeof(T));
         }
