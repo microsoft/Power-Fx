@@ -3,9 +3,7 @@
 
 using System;
 using System.Globalization;
-using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Functions
@@ -43,8 +41,10 @@ namespace Microsoft.PowerFx.Functions
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/show-text-dates-times
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-dateadd-datediff
-        public static FormulaValue DateAdd(IRContext irContext, FormulaValue[] args)
+        public static FormulaValue DateAdd(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
+            var timeZoneInfo = runner.GetService<TimeZoneInfo>();
+
             DateTime datetime;
             switch (args[0])
             {
@@ -60,6 +60,11 @@ namespace Microsoft.PowerFx.Functions
 
             var delta = (NumberValue)args[1];
             var units = (StringValue)args[2];
+
+            if (timeZoneInfo != null)
+            {
+                datetime = TimeZoneInfo.ConvertTimeToUtc(datetime, timeZoneInfo);
+            }
 
             try
             {
@@ -93,6 +98,11 @@ namespace Microsoft.PowerFx.Functions
                     default:
                         // TODO: Task 10723372: Implement Unit Functionality in DateAdd, DateDiff Functions
                         return CommonErrors.NotYetImplementedError(irContext, "DateAdd Only supports Days for the unit field");
+                }
+
+                if (timeZoneInfo != null)
+                {
+                    newDate = TimeZoneInfo.ConvertTimeFromUtc(newDate, timeZoneInfo);
                 }
 
                 if (args[0] is DateTimeValue)
@@ -405,7 +415,21 @@ namespace Microsoft.PowerFx.Functions
         public static FormulaValue DateTimeParse(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, StringValue[] args)
         {
             var str = args[0].Value;
-            if (DateTime.TryParse(str, runner.CultureInfo, DateTimeStyles.None, out var result))
+            var culture = runner.CultureInfo;
+
+            if (args.Length > 1)
+            {
+                try
+                {
+                    culture = new CultureInfo(args[1].Value);
+                }
+                catch (CultureNotFoundException cnfe)
+                {
+                    return CommonErrors.InvalidDateTimeError(irContext, cnfe.Message);
+                }
+            }
+
+            if (DateTime.TryParse(str, culture, DateTimeStyles.None, out var result))
             {
                 return new DateTimeValue(irContext, result);
             }

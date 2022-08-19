@@ -45,6 +45,12 @@ namespace Microsoft.PowerFx
             return await expr.EvalAsync(cancel, runtimeConfig);
         }
 
+        //public static async Task<FormulaValue> EvalAsync(this IExpressionEvaluator expr, CancellationToken cancel, RecordValue parameters, ReadOnlySymbolValues symbols)
+        //{
+        //    var runtimeConfig = SymbolValues.NewFromRecord(parameters, symbols);
+        //    return await expr.EvalAsync(cancel, runtimeConfig);
+        //}
+
         /// <summary>
         /// Get an evaluator for this expression which can be executed many times. 
         /// </summary>
@@ -110,9 +116,7 @@ namespace Microsoft.PowerFx
             }
         }
 
-        public async Task<FormulaValue> EvalAsync(
-            CancellationToken cancel,
-            ReadOnlySymbolValues runtimeConfig = null)
+        public async Task<FormulaValue> EvalAsync(CancellationToken cancel, ReadOnlySymbolValues runtimeConfig = null)
         {
             var ev2 = new EvalVisitor(_cultureInfo, cancel, runtimeConfig);
 

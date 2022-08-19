@@ -3,13 +3,10 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
-using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx
-{   
+{
     /// <summary>
     /// Mutable collection for runtime Values for a <see cref="SymbolTable"/>.
     /// </summary>
@@ -20,7 +17,7 @@ namespace Microsoft.PowerFx
 
         // Services for runtime functions. Lazy created.
         private Dictionary<Type, object> _services;
-        
+
         /// <summary>
         /// Enable chaining of lookups. Chaining is handled by calling the base methods. 
         /// </summary>
@@ -49,11 +46,18 @@ namespace Microsoft.PowerFx
                     table.AddVariable(kv.Key, kv.Value.Type);
                 }
             }
-                    
+
             return table;
         }
 
         public SymbolValues AddService<T>(T data)
+        {
+            AddService(typeof(T), data);
+
+            return this;
+        }
+
+        public SymbolValues AddService(Type t, object data)
         {
             // this changes the symbols.
             Inc();
@@ -64,7 +68,7 @@ namespace Microsoft.PowerFx
             }
 
             // Can't already exist. 
-            _services.Add(typeof(T), data);
+            _services.Add(t, data);
             return this;
         }
 
@@ -81,6 +85,11 @@ namespace Microsoft.PowerFx
             // Can't already exist. 
             _symbolValues.Add(name, value);
             return this;
+        }
+
+        public override IDictionary<Type, object> GetServices()
+        {
+            return _services;
         }
 
         public override object GetService(Type serviceType)

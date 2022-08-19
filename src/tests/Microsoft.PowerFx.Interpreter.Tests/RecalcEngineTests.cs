@@ -3,14 +3,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
-using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.Localization;
-using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types.Enums;
@@ -20,7 +18,6 @@ using Microsoft.PowerFx.Interpreter.UDF;
 using Microsoft.PowerFx.Types;
 using Xunit;
 using Xunit.Sdk;
-using static Microsoft.PowerFx.Interpreter.UDFHelper;
 
 namespace Microsoft.PowerFx.Tests
 {
@@ -696,7 +693,7 @@ namespace Microsoft.PowerFx.Tests
 
             var checkResult = recalcEngine.Check("SortOrder.Ascending");
             Assert.True(checkResult.IsSuccess);
-            Assert.IsType<StringType>(checkResult.ReturnType);            
+            Assert.IsType<StringType>(checkResult.ReturnType);
         }
 
         [Fact]
@@ -761,6 +758,21 @@ namespace Microsoft.PowerFx.Tests
         {
             var recalcEngine = new RecalcEngine(new PowerFxConfig(null));
             Assert.True(recalcEngine.DefineFunctions("Foo(): String => 10;").Errors.Any());
+        }
+
+        [Fact]
+        public void TestWithTimeZoneInfo()
+        {
+            var pfxConfig = new PowerFxConfig(new CultureInfo("ja-JP"));
+            var recalcEngine = new RecalcEngine(pfxConfig);
+            var symbols = new SymbolValues();
+
+            symbols.AddService(TimeZoneInfo.FindSystemTimeZoneById("Romance Standard Time")); // (UTC+01:00) Brussels, Copenhagen, Madrid, Paris            
+            var fv = recalcEngine.Eval(@"DateTimeValue(""jeudi 21 juillet 2022 19:34:03"", ""fr-FR"")", symbols: symbols);
+
+            Assert.NotNull(fv);
+            Assert.IsType<DateTimeValue>(fv);
+            Assert.Equal(new DateTime(2022, 7, 21, 19, 34, 3), (fv as DateTimeValue)?.Value);
         }
 
         [Fact]

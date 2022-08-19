@@ -440,7 +440,7 @@ namespace Microsoft.PowerFx.Functions
                 if (row.IsValue)
                 {
                     var childContext = context.SymbolContext.WithScopeValues(row.Value);
-                    var value = await arg1.EvalAsync(runner, new EvalVisitorContext(childContext, context.StackDepthCounter));
+                    var value = await arg1.EvalAsync(runner, new EvalVisitorContext(childContext, context));
 
                     if (value is NumberValue number)
                     {

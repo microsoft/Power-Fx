@@ -60,7 +60,7 @@ namespace Microsoft.PowerFx.Core.Tests
         {
             foreach (var file in files)
             {
-                AddFile(file);                
+                AddFile(file);
             }
         }
 
@@ -196,7 +196,7 @@ namespace Microsoft.PowerFx.Core.Tests
                     if (_keyToTests.TryGetValue(key, out var existingTest))
                     {
                         // Must be in different sources
-                        if (existingTest.SourceFile == test.SourceFile)
+                        if (existingTest.SourceFile == test.SourceFile && existingTest.SetupHandlerName == test.SetupHandlerName)
                         {
                             throw ParseError(i, $"Duplicate test cases in {Path.GetFileName(test.SourceFile)} on line {test.SourceLine} and {existingTest.SourceLine}");
                         }
@@ -244,7 +244,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
                     var (result, msg) = runner.RunTestCase(testCase);
 
-                    summary.AddResult(testCase, result, engineName, msg);                  
+                    summary.AddResult(testCase, result, engineName, msg);
                 }
             }
 

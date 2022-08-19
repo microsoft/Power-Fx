@@ -4,8 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Globalization;
-using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx
@@ -19,7 +17,7 @@ namespace Microsoft.PowerFx
     {
         internal VersionHash _version = VersionHash.New();
 
-        private ReadOnlySymbolTable _symbolTableSnapshot; 
+        private ReadOnlySymbolTable _symbolTableSnapshot;
 
         // Helper in debugging. Useful when we have multiple symbol tables chained. 
         public string DebugName { get; init; } = "(RuntimeValues)";
@@ -46,7 +44,16 @@ namespace Microsoft.PowerFx
             return null;
         }
 
-        public T GetService<T>() 
+        /// <summary>
+        /// Get all Services.
+        /// </summary>
+        /// <returns>List of services.</returns>
+        public virtual IDictionary<Type, object> GetServices()
+        {
+            return null;
+        }
+
+        public T GetService<T>()
             where T : class
         {
             return (T)GetService(typeof(T));
@@ -87,7 +94,7 @@ namespace Microsoft.PowerFx
             foreach (var kv in parameters.Fields)
             {
                 runtimeConfig.Add(kv.Name, kv.Value);
-            }
+            }          
 
             return runtimeConfig;
         }

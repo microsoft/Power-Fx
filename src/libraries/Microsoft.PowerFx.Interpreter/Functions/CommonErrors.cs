@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Types;
 
@@ -69,11 +68,11 @@ namespace Microsoft.PowerFx.Functions
             });
         }
 
-        public static ErrorValue InvalidDateTimeError(IRContext irContext)
+        public static ErrorValue InvalidDateTimeError(IRContext irContext, string extraMessage = null)
         {
             return new ErrorValue(irContext, new ExpressionError()
             {
-                Message = "The Date/Time could not be parsed",
+                Message = "The Date/Time could not be parsed." + extraMessage ?? string.Empty,
                 Span = irContext.SourceContext,
                 Kind = ErrorKind.InvalidArgument
             });

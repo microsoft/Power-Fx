@@ -1,0 +1,8 @@
+﻿// (UTC-08:00) Pacific Time (US & Canada)
+#SETUP: TimeZoneInfo(Pacific Standard Time)
+
+>> Text(DateAdd(DateTime(2022,3,13,1,0,0), 2, "hours"))
+"3/13/2022 4:00 AM"
+
+>> DateAdd((Date(2022, 3, 13) + Time(1,0,0)),90, "Minutes") 
+DateTime(2022,3,13,3,30,0,0)
