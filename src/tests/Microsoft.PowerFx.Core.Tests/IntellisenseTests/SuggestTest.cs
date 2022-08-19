@@ -135,6 +135,11 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("| Not false")]
         [InlineData("Not |")]
 
+        // StrInterpSuggestionHandler
+        [InlineData("With( {Apples:3}, $\"We have {appl|", "Apples")]
+        [InlineData("With( {Apples:3}, $\"We have {appl|} apples.", "Apples")]
+        [InlineData("$\"This is a randomly generated number: {rand|", "Rand", "RandBetween")]
+
         // StrNumLitNodeSuggestionHandler
         [InlineData("1 |", "-", "&", "&&", "*", "/", "^", "||", "+", "<", "<=", "<>", "=", ">", ">=", "And", "As", "exactin", "in", "Or")]
         [InlineData("1|0")]
@@ -152,7 +157,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("ForAll([0],`|", "ThisRecord", "Value")]
         [InlineData("ForAll(-],|", "ThisRecord")]
         [InlineData("ForAll()~|")]
-        [InlineData("With( {Apples:3}, $\"We {Apples} apples|")]
+        [InlineData("With( {Apples:3}, $\"We have {Apples} apples|")]
 
         // BlankNodeSuggestionHandler
         [InlineData("|")]

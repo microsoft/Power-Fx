@@ -23,7 +23,8 @@ namespace Microsoft.PowerFx.Intellisense
                 // ThisItemProperties only in the context of thisItem.
                 var curNode = intellisenseData.CurNode;
 
-                // Do not provide error suggestions in string interpolation scenario
+                // If the parent is a StrInterp node and current node is an error node (not an island)
+                // this node will always be a partial string literal and we should not provide suggestions
                 if (curNode.Parent != null && curNode.Parent.Kind == NodeKind.StrInterp)
                 {
                     return true;
