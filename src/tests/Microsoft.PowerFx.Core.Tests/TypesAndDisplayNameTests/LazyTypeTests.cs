@@ -39,8 +39,8 @@ namespace Microsoft.PowerFx.Core.Tests
 
             public override bool Equals(object other)
             {
-                return other is TestLazyRecordType otherTable &&
-                    Identity == otherTable.Identity;
+                return other is TestLazyRecordType otherRecord &&
+                    Identity == otherRecord.Identity;
             }
 
             public override int GetHashCode()

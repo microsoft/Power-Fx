@@ -476,11 +476,13 @@ namespace Microsoft.PowerFx.Core.Types
             AssertValid();
         }
 
-        internal DType(LazyTypeProvider provider, bool isTable)
+        internal DType(LazyTypeProvider typeProvider, DisplayNameProvider displayNameProvider, bool isTable)
         {
-            Contracts.AssertValue(provider);
+            Contracts.AssertValue(typeProvider);
 
-            LazyTypeProvider = provider;
+            LazyTypeProvider = typeProvider;
+            DisplayNameProvider = displayNameProvider;
+
             Kind = isTable ? DKind.LazyTable : DKind.LazyRecord;
 
             TypeTree = default;
@@ -1054,7 +1056,7 @@ namespace Microsoft.PowerFx.Core.Types
                 case DKind.Record:
                     return this;
                 case DKind.LazyTable:
-                    return new DType(LazyTypeProvider, isTable: false);
+                    return new DType(LazyTypeProvider, DisplayNameProvider, isTable: false);
                 case DKind.Table:
                 case DKind.DataEntity:
                 case DKind.Control:
@@ -1097,7 +1099,7 @@ namespace Microsoft.PowerFx.Core.Types
                 case DKind.Table:
                     return this;
                 case DKind.LazyRecord:
-                    return new DType(LazyTypeProvider, isTable: true);
+                    return new DType(LazyTypeProvider, DisplayNameProvider, isTable: true);
                 case DKind.Record:
                 case DKind.DataEntity:
                 case DKind.Control:
