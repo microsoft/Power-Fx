@@ -44,17 +44,7 @@ namespace Microsoft.PowerFx
             return null;
         }
 
-        /// <summary>
-        /// Get all Services.
-        /// </summary>
-        /// <returns>List of services.</returns>
-        public virtual IDictionary<Type, object> GetServices()
-        {
-            return null;
-        }
-
-        public T GetService<T>()
-            where T : class
+        public T GetService<T>() 
         {
             return (T)GetService(typeof(T));
         }

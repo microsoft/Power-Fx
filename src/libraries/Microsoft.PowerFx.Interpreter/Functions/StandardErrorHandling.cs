@@ -155,6 +155,25 @@ namespace Microsoft.PowerFx.Functions
         }
 
         // A wrapper that allows standard error handling to apply to
+        // sync functions which accept the simpler parameter list of
+        // an array of arguments, ignoring context, runner etc.
+        private static AsyncFunctionPtr StandardErrorHandling<T>(
+            Func<IRContext, IEnumerable<FormulaValue>, IEnumerable<FormulaValue>> expandArguments,
+            Func<IRContext, int, FormulaValue> replaceBlankValues,
+            Func<IRContext, int, FormulaValue, FormulaValue> checkRuntimeTypes,
+            Func<IRContext, int, FormulaValue, FormulaValue> checkRuntimeValues,
+            ReturnBehavior returnBehavior,
+            Func<IServiceProvider, IRContext, T[], FormulaValue> targetFunction)
+            where T : FormulaValue
+        {
+            return StandardErrorHandlingAsync<T>(expandArguments, replaceBlankValues, checkRuntimeTypes, checkRuntimeValues, returnBehavior, (runner, context, irContext, args) =>
+            {
+                var result = targetFunction(runner.FunctionServices, irContext, args);
+                return new ValueTask<FormulaValue>(result);
+            });
+        }
+
+        // A wrapper that allows standard error handling to apply to
         // sync functions with the full parameter list
         private static AsyncFunctionPtr StandardErrorHandling<T>(
             Func<IRContext, IEnumerable<FormulaValue>, IEnumerable<FormulaValue>> expandArguments,

@@ -353,17 +353,14 @@ namespace Microsoft.PowerFx.Functions
             return arg0.Index(rowIndex).ToFormulaValue();
         }
 
-        public static FormulaValue Shuffle(IRContext irContext, FormulaValue[] args)
+        public static FormulaValue Shuffle(IServiceProvider services, IRContext irContext, FormulaValue[] args)
         {
             var table = (TableValue)args[0];
             var records = table.Rows;
 
-            lock (_randomizerLock)
-            {
-                _random ??= new Random();
-            }
+            var random = services.GetService<IRandomService>(_defaultRandService);
 
-            var shuffledRecords = records.OrderBy(a => _random.Next()).ToList();
+            var shuffledRecords = records.OrderBy(a => random.SafeNextDouble()).ToList();
             return new InMemoryTableValue(irContext, shuffledRecords);
         }
 
