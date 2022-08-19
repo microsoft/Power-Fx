@@ -115,14 +115,14 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     return new RunResult(check);
                 }
 
-                var rtConfig = new SymbolValues();
+                var rtConfig = SymbolValues.NewFromRecord(parameters) as SymbolValues;
 
                 if (iSetup.TimeZoneInfo != null)
                 {
                     rtConfig.AddService(iSetup.TimeZoneInfo);
                 }
 
-                var newValue = await check.GetEvaluator().EvalAsync(CancellationToken.None, parameters, rtConfig);
+                var newValue = await check.GetEvaluator().EvalAsync(CancellationToken.None, rtConfig);
 
                 return new RunResult(newValue);
             }

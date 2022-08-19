@@ -70,7 +70,7 @@ namespace Microsoft.PowerFx
                 var scope = this;
                 var v = new EvalVisitor(_cultureInfo, CancellationToken.None);
 
-                var newValue = irnode.Accept(v, new EvalVisitorContext(SymbolContext.New(), new StackDepthCounter(_parent.Config.MaxCallDepth), new SymbolValues())).Result;
+                var newValue = irnode.Accept(v, new EvalVisitorContext(SymbolContext.New(), new StackDepthCounter(_parent.Config.MaxCallDepth))).Result;
 
                 var equal = fi.Value != null && // null on initial run. 
                     RuntimeHelpers.AreEqual(newValue, fi.Value);

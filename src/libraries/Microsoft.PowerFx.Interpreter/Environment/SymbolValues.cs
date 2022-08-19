@@ -87,11 +87,6 @@ namespace Microsoft.PowerFx
             return this;
         }
 
-        public override IDictionary<Type, object> GetServices()
-        {
-            return _services;
-        }
-
         public override object GetService(Type serviceType)
         {
             if (_services != null && _services.TryGetValue(serviceType, out var data))

@@ -11,20 +11,16 @@ namespace Microsoft.PowerFx
 
         public StackDepthCounter StackDepthCounter { get; }
 
-        //public ReadOnlySymbolValues Symbols { get; }
-
-        public EvalVisitorContext(SymbolContext symbolContext, StackDepthCounter stackMarker)//, ReadOnlySymbolValues symbols)
+        public EvalVisitorContext(SymbolContext symbolContext, StackDepthCounter stackMarker)
         {
             SymbolContext = symbolContext;
-            StackDepthCounter = stackMarker;
-            //Symbols = symbols;
+            StackDepthCounter = stackMarker;            
         }
 
         public EvalVisitorContext(SymbolContext symbolContext, EvalVisitorContext context)
         {
             SymbolContext = symbolContext;
-            StackDepthCounter = context.StackDepthCounter;
-            //Symbols = context.Symbols;
+            StackDepthCounter = context.StackDepthCounter;          
         }
 
         public EvalVisitorContext IncrementStackDepthCounter()
