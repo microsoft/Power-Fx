@@ -463,6 +463,9 @@ true
 >> Value("1.2e-3")
 0.0012
 
+>> Value("123,456", "es-ES" )
+123.456
+
 // ******** BOOLEAN PARAMETERS ********
 
 >> Value("true")
