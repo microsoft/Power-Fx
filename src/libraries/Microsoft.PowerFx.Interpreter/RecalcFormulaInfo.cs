@@ -41,9 +41,4 @@ namespace Microsoft.PowerFx
     {
         void SetValue(FormulaValue newValue);
     }
-
-    internal interface ICanGetValue
-    {
-        FormulaValue Value { get; }
-    }
 }

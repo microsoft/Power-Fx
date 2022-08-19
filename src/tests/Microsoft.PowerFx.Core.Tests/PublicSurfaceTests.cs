@@ -43,7 +43,11 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.OptionSet",
                 "Microsoft.PowerFx.ParseResult",
                 "Microsoft.PowerFx.ParserOptions",
+
+                // Config & Symbols
                 "Microsoft.PowerFx.PowerFxConfig",
+                "Microsoft.PowerFx.ReadOnlySymbolTable",
+                "Microsoft.PowerFx.SymbolTable",
 
                 // Feature flags are experimental - hosts shouldn't use it. 
                 "Microsoft.PowerFx.Preview.FeatureFlags",

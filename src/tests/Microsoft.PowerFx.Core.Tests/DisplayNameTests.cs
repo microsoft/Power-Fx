@@ -209,7 +209,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 null,
                 new Core.Entities.QueryOptions.DataSourceToQueryOptionsMap(),
                 formula.ParseTree,
-                new SimpleResolver(new PowerFxConfig(CultureInfo.InvariantCulture)),
+                new SymbolTable(),
                 BindingConfig.Default,
                 ruleScope: r1._type,
                 updateDisplayNames: true);
@@ -262,6 +262,41 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 var outInvariantExpression = _engine.GetInvariantExpression(inputExpression, r1);
                 Assert.Equal(outputExpression, outInvariantExpression);
             }
+        }
+
+        [Theory]
+        [InlineData("r1.Display1", true)]
+        [InlineData("If(true, r1).Display1", true)]
+        [InlineData("If(true, r1, r1).Display1", true)]
+        [InlineData("If(true, Blank(), r1).Display1", true)]
+
+        // If types are different, you have no access to Display name.
+        [InlineData("If(true, r1, r2).Display1", false)]
+        [InlineData("If(true, r1, r2).Display0", false)]
+        [InlineData("If(true, r1, {Display1 : 123}).Display1", false)]
+
+        // If types are different, you have access to logical name, only if the name and type are same!
+        [InlineData("If(true, r1, r2).F1", true)]
+        [InlineData("If(false, r1, r2).F1", true)]
+        [InlineData("If(true, r1, r2).F0", false)]
+        public void DisplayNameTest(string input, bool succeeds)
+        {
+            var r1 = RecordType.Empty()
+                        .Add(new NamedFormulaType("F1", FormulaType.Number, "Display1"))    
+                        .Add(new NamedFormulaType("F0", FormulaType.String, "Display0")); // F0 is Not a Common type
+
+            var r2 = RecordType.Empty()
+                        .Add(new NamedFormulaType("F1", FormulaType.Number, "Display1"))
+                        .Add(new NamedFormulaType("F0", FormulaType.Number, "Display0"));
+            var parameters = RecordType.Empty()
+                .Add("r1", r1)
+                .Add("r2", r2);
+
+            var engine = new Engine(new PowerFxConfig());
+
+            var result = engine.Check(input, parameters);
+            var actual = result.IsSuccess;
+            Assert.Equal(succeeds, actual);
         }
     }
 }
