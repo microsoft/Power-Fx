@@ -1,9 +1,8 @@
 ﻿
 // Use of DateValue, DateTimeValue
 
->> Text(DateTimeValue("01-01-2001 1:10:20"))
-"1/1/2001 1:10 AM"
-
+>> DateTimeValue("01-01-2001 1:10:20")
+DateTime(2001,1,1,1,10,20,0)
 
 >> Date(2001, 2, 14) = DateValue("2001-02-14")
 true
@@ -27,41 +26,41 @@ true
 >> Minute(DateAdd(DateTimeValue("01-01-2001 1:10:20"), 1, TimeUnit.Minutes))
 11
 
->> Text(DateTimeValue("02/14/2001 6:00 AM") - 0.5)
-"2/13/2001 6:00 PM"
+>> DateTimeValue("02/14/2001 6:00 AM") - 0.5
+DateTime(2001,2,13,18,0,0,0)
 
->> Text(DateTimeValue("02/14/2001 6:00 AM") + 0.0417)
-"2/14/2001 7:00 AM"
+>> DateTimeValue("02/14/2001 6:00 AM") + 0.0417
+DateTime(2001,2,14,7,0,2,880)
 
->> Text(DateTimeValue("02/14/2001 6:00 AM") + 7e-4)
-"2/14/2001 6:01 AM"
+>> DateTimeValue("02/14/2001 6:00 AM") + 7e-4
+DateTime(2001,2,14,6,1,0,480)
 
 >> Second(DateTimeValue("02/14/2001 6:00 AM") - 1.1574e-5)
 59
 
->> Text(DateTimeValue("jeudi 21 juillet 2022 19:34:03", "fr-FR"))
-"7/21/2022 7:34 PM"
+>> DateTimeValue("jeudi 21 juillet 2022 19:34:03", "fr-FR")
+DateTime(2022,7,21,19,34,3,0)
 
->> Text(DateTimeValue("Thursday 28 July 2022 19:34:03", "EN-US"))
-"7/28/2022 7:34 PM"
+>> DateTimeValue("Thursday 28 July 2022 19:34:03", "EN-US")
+DateTime(2022,7,28,19,34,3,0)
 
->> Text(DateTimeValue("21-Dec-2016 02:55:00", "EN-US"))
-"12/21/2016 2:55 AM"
+>> DateTimeValue("21-Dec-2016 02:55:00", "EN-US")
+DateTime(2016,12,21,2,55,0,0)
 
->> Text(DateTimeValue("21-Dec-2016 02:55:00", "en-us"))
-"12/21/2016 2:55 AM"
+>> DateTimeValue("21-Dec-2016 02:55:00", "en-us")
+DateTime(2016,12,21,2,55,0,0)
 
->> Text(DateTimeValue("Thursday 28 July 2022 7:34:03 PM", "EN"))
-"7/28/2022 7:34 PM"
+>> DateTimeValue("Thursday 28 July 2022 7:34:03 PM", "EN")
+DateTime(2022,7,28,19,34,3,0)
 
->> Text(DateTimeValue("21.7.2022. 19:34:03", "sr-cyrl-RS"))
-"7/21/2022 7:34 PM"
+>> DateTimeValue("21.7.2022. 19:34:03", "sr-cyrl-RS")
+DateTime(2022,7,21,19,34,3,0)
 
->> Text(DateTimeValue("2022年07月28日 19:34:03", "ja-JP"))
-"7/28/2022 7:34 PM"
+>> DateTimeValue("2022年07月28日 19:34:03", "ja-JP")
+DateTime(2022,7,28,19,34,3,0)
 
->> Text(DateTimeValue("четвртак 21 јул 2022 19:34:03", "sr-cyrl-RS"))
-"7/21/2022 7:34 PM"
+>> DateTimeValue("четвртак 21 јул 2022 19:34:03", "sr-cyrl-RS")
+DateTime(2022,7,21,19,34,3,0)
 
 >> Text(DateTimeValue("четвртак 21 јул 2022 19:34:03", "invalid"))
-#Error(Kind=InvalidArgument)
+#Error(Kind=BadLanguageCode)
