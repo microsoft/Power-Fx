@@ -59,6 +59,7 @@ DateTime(2022,7,21,19,34,3,0)
 >> DateTimeValue("2022年07月28日 19:34:03", "ja-JP")
 DateTime(2022,7,28,19,34,3,0)
 
+// This locale isn't supported in PowerApps.  
 >> DateTimeValue("четвртак 21 јул 2022 19:34:03", "sr-cyrl-RS")
 DateTime(2022,7,21,19,34,3,0)
 

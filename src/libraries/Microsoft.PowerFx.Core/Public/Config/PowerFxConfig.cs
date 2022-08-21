@@ -55,6 +55,15 @@ namespace Microsoft.PowerFx
         }
 
         /// <summary>
+        /// Information about available functions.
+        /// </summary>
+        [Obsolete("Migrate to SymbolTables")]
+        public IEnumerable<FunctionInfo> FunctionInfos => 
+            new Engine(this).SupportedFunctions.Functions
+            .Concat(SymbolTable.Functions)
+            .Select(f => new FunctionInfo(f));
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="PowerFxConfig"/> class.
         /// </summary>
         /// <param name="cultureInfo">Culture to use.</param>
