@@ -69,6 +69,16 @@ namespace Microsoft.PowerFx.Functions
             });
         }
 
+        public static ErrorValue BadLanguageCode(IRContext irContext, string languageCode)
+        {
+            return new ErrorValue(irContext, new ExpressionError()
+            {
+                Message = $"Language code {languageCode} not supported",
+                Span = irContext.SourceContext,
+                Kind = ErrorKind.BadLanguageCode
+            });
+        }
+
         public static ErrorValue InvalidDateTimeError(IRContext irContext)
         {
             return new ErrorValue(irContext, new ExpressionError()
