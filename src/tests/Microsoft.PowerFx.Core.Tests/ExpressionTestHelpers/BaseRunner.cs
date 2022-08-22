@@ -208,6 +208,26 @@ namespace Microsoft.PowerFx.Core.Tests
                         }
                     }
                 }
+
+                if (result is ErrorValue errV && errV.Errors.Any())
+                {
+                    var expectedCompilerError = expected.StartsWith("Errors: "); // $$$ Match error message. 
+                    if (expectedCompilerError)
+                    {
+                        var msg = $"Errors: " + string.Join("\r\n", errV.Errors.Select(err => err.ToString()).ToArray());
+                        var actualStr = msg.Replace("\r\n", "|").Replace("\n", "|");
+
+                        if (actualStr.Contains(expected))
+                        {
+                            // Compiler errors result in exceptions
+                            return (TestResult.Pass, null);
+                        }
+                        else
+                        {
+                            return (TestResult.Fail, $"Failed, but wrong error message: {msg}");
+                        }
+                    }
+                }
             }
             catch (SetupHandlerNotFoundException)
             {
