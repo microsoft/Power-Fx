@@ -239,6 +239,31 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.Equal(2.0, (engine.EvalAsync("2,0", CancellationToken.None, options: fr_ParserOptions, runtimeConfig: fr_Symbols).Result as NumberValue).Value);
         }
 
+        [Fact]
+        public void RecalcEngine_Symbol_CultureInfo2()
+        {
+            var us_Symbols = new SymbolValues();
+            var us_Culture = new CultureInfo("en-US");
+            us_Symbols.AddService(us_Culture);
+            var us_ParserOptions = new ParserOptions() { Culture = us_Culture };
+
+            var fr_Symbols = new SymbolValues();
+            var fr_Culture = new CultureInfo("fr-FR");
+            fr_Symbols.AddService(fr_Culture);
+            var fr_ParserOptions = new ParserOptions() { Culture = fr_Culture };
+
+            var engine = new RecalcEngine();
+
+            var expr1 = engine.Check("Text(1.01)", options: us_ParserOptions).GetEvaluator();
+            var expr2 = engine.Check("Text(2,01)", options: fr_ParserOptions).GetEvaluator();
+
+            Assert.Equal("1.01", (expr1.Eval(us_Symbols) as StringValue).Value);
+            Assert.Equal("1,01", (expr1.Eval(fr_Symbols) as StringValue).Value);
+
+            Assert.Equal("2.01", (expr2.Eval(us_Symbols) as StringValue).Value);
+            Assert.Equal("2,01", (expr2.Eval(fr_Symbols) as StringValue).Value);
+        }
+
         private static void AssertUnique(HashSet<VersionHash> set, VersionHash hash)
         {
             Assert.True(set.Add(hash), "Hash value should be unique");
