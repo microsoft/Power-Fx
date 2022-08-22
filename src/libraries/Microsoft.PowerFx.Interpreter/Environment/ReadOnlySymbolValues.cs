@@ -44,7 +44,7 @@ namespace Microsoft.PowerFx
             return null;
         }
 
-        public T GetService<T>() 
+        public T GetService<T>()
         {
             return (T)GetService(typeof(T));
         }
@@ -84,7 +84,7 @@ namespace Microsoft.PowerFx
             foreach (var kv in parameters.Fields)
             {
                 runtimeConfig.Add(kv.Name, kv.Value);
-            }          
+            }
 
             return runtimeConfig;
         }

@@ -52,7 +52,7 @@ namespace Microsoft.PowerFx
 
         public SymbolValues AddService<T>(T data)
         {
-            //this changes the symbols.
+            // this changes the symbols.
             Inc();
 
             if (_services == null)

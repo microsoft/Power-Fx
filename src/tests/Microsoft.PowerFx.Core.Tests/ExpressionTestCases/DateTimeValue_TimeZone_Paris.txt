@@ -17,3 +17,9 @@ DateTime(2022,7,21,19,34,3,0)
 
 >> DateAdd((Date(2022, 3, 13) + Time(1,0,0)), 90, "Minutes") 
 DateTime(2022,3,13,2,30,0,0)
+
+>> DateDiff(DateTime(2022,3,27,1,0,0), DateTime(2022,3,27,4,0,0), "hours")
+2
+
+>> DateDiff(DateTime(2022,3,13,1,0,0), DateTime(2022,3,13,4,0,0), "hours")
+3

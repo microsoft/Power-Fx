@@ -120,8 +120,10 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
-        public static FormulaValue DateDiff(IRContext irContext, FormulaValue[] args)
+        public static FormulaValue DateDiff(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
+            var timeZoneInfo = runner.GetService<TimeZoneInfo>();
+
             DateTime start;
             switch (args[0])
             {
@@ -135,6 +137,11 @@ namespace Microsoft.PowerFx.Functions
                     return CommonErrors.RuntimeTypeMismatch(irContext);
             }
 
+            if (timeZoneInfo != null)
+            {
+                start = TimeZoneInfo.ConvertTimeToUtc(start, timeZoneInfo);
+            }
+
             DateTime end;
             switch (args[1])
             {
@@ -146,6 +153,11 @@ namespace Microsoft.PowerFx.Functions
                     break;
                 default:
                     return CommonErrors.RuntimeTypeMismatch(irContext);
+            }
+
+            if (timeZoneInfo != null)
+            {
+                end = TimeZoneInfo.ConvertTimeToUtc(end, timeZoneInfo);
             }
 
             var units = (StringValue)args[2];

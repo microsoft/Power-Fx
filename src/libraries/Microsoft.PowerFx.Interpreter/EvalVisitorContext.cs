@@ -14,13 +14,13 @@ namespace Microsoft.PowerFx
         public EvalVisitorContext(SymbolContext symbolContext, StackDepthCounter stackMarker)
         {
             SymbolContext = symbolContext;
-            StackDepthCounter = stackMarker;            
+            StackDepthCounter = stackMarker;
         }
 
         public EvalVisitorContext(SymbolContext symbolContext, EvalVisitorContext previousContext)
         {
             SymbolContext = symbolContext;
-            StackDepthCounter = previousContext.StackDepthCounter;          
+            StackDepthCounter = previousContext.StackDepthCounter;
         }
 
         public EvalVisitorContext IncrementStackDepthCounter()
