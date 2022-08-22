@@ -218,7 +218,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.Equal("28", result4.ToObject());
         }
 
-        // Verify that a single IR tree can be re-executed across multiple cultures.
         [Fact]
         public void RecalcEngine_Symbol_CultureInfo()
         {
@@ -240,6 +239,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.Equal(2.0, (engine.EvalAsync("2,0", CancellationToken.None, options: fr_ParserOptions, runtimeConfig: fr_Symbols).Result as NumberValue).Value);
         }
 
+        // Verify that a single IR tree can be re-executed across multiple cultures.
         [Fact]
         public void RecalcEngine_Symbol_CultureInfo2()
         {
