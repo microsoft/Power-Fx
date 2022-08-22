@@ -157,6 +157,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return argumentIndex > 1;
         }
 
+        // When IsArgTypeInconsequential returns true, the runtime result of If may not match the binder's expectation.
+        // So use this helper to skip asserts comparing runtime and bind time types.
+        internal static bool CanCheckIfReturn(TexlFunction func)
+        {
+            return func is not IfFunction;
+        }
+
         private bool IsArgTypeInconsequential(TexlNode arg)
         {
             Contracts.AssertValue(arg);

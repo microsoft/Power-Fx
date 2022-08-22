@@ -498,7 +498,7 @@
     <value>Textvärdet som ska konverteras till ett booleskt värde.</value>
   </data>
   <data name="AboutBooleanT" xml:space="preserve">
-    <value>Converts a column of text values to a column of boolean values.</value>
+    <value>Konverterar en kolumn med textvärden till en kolumn med booleska värden.</value>
     
   </data>
   <data name="BooleanTArg1" xml:space="preserve">
@@ -506,21 +506,21 @@
     
   </data>
   <data name="AboutBooleanT_input" xml:space="preserve">
-    <value>A column of text values to process.</value>
+    <value>En kolumn med textvärden att bearbeta.</value>
   </data>
   <data name="AboutBooleanN" xml:space="preserve">
-    <value>Converts a 'number' to a boolean value.</value>
+    <value>Konverterar ett "tal" till ett booleskt värde.</value>
     
   </data>
   <data name="BooleanNArg1" xml:space="preserve">
-    <value>number</value>
+    <value>tal</value>
     
   </data>
   <data name="AboutBooleanN_number" xml:space="preserve">
-    <value>The number value to convert to a boolean value.</value>
+    <value>Det numeriska värdet som ska konverteras till ett booleskt värde.</value>
   </data>
   <data name="AboutBooleanNT" xml:space="preserve">
-    <value>Converts a column of numeric values to a column of boolean values.</value>
+    <value>Konverterar en kolumn med numeriska värden till en kolumn med booleska värden.</value>
     
   </data>
   <data name="BooleanNTArg1" xml:space="preserve">
@@ -528,7 +528,7 @@
     
   </data>
   <data name="AboutBooleanNT_input" xml:space="preserve">
-    <value>A column of number values to process.</value>
+    <value>En kolumn med numeriska värden att bearbeta.</value>
   </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Returnerar det första icke-tomma argumentet</value>
@@ -3924,12 +3924,20 @@
     <value>Stöds inte i formelkolumner.</value>
     
   </data>
+  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
+    <value>Ogiltigt antal argument för funktionen {0}: mottaget {1}, förväntat {2}</value>
+    
+  </data>
   <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
     <value>Argumentet {0} stöds inte för funktionen {1} i formelkolumner.</value>
     
   </data>
   <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
     <value>Det här argumentet kan inte skickas som den här typen i formelkolumner.</value>
+    
+  </data>
+  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
+    <value>Det här argumentet kan inte skickas som typen {0} i formelkolumner.</value>
     
   </data>
   <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
@@ -3948,6 +3956,10 @@
     <value>Endast de korta strängarna för datum- och tidsformat stöds i formelkolumner.</value>
     
   </data>
+  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
+    <value>Argumentet {0} är en ogiltig tidsenhet eller tidsenhet som inte stöds för den aritmetiska funktionen {1}.</value>
+    
+  </data>
   <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
     <value>Språkspecifika formateringstoken som "." och "," stöds inte i formelkolumner.</value>
     
@@ -3956,8 +3968,16 @@
     <value>{0} stöds inte i formelkolumner. Använd {1} i stället.</value>
     
   </data>
+  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
+    <value>Den här åtgärden kan inte utföras på typen {0} i formelkolumner.</value>
+    
+  </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
     <value>Resultattypen {0} stöds inte i formelkolumner.</value>
+    
+  </data>
+  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
+    <value>Direkt refererande av en hel post stöds inte i formelkolumner. Referera till ett giltigt fält i posten.</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
@@ -3972,8 +3992,20 @@
     <value>Kolumner av typen {0} med formatet {1} stöds inte i formelkolumner.</value>
     
   </data>
+  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
+    <value>Det går inte att använda flera samtidiga poster eller tabeller i formelkolumner.</value>
+    
+  </data>
   <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
     <value>Formler får inte vara längre än 1 000 tecken.</value>
+    
+  </data>
+  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
+    <value>Tabeller med en kolumn stöds inte i formelkolumner.</value>
+    
+  </data>
+  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
+    <value>Det går inte att referera till den virtuella tabellen {0} i formelkolumner.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">

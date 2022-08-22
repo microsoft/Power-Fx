@@ -3924,12 +3924,20 @@
     <value>計算式列では使用できません。</value>
     
   </data>
+  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
+    <value>{0} 関数の引数の数が無効です: 受取済み {1}、必要 {2}</value>
+    
+  </data>
   <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
     <value>計算式列に含まれる関数 {1} で引数 {0} を使用することはできません。</value>
     
   </data>
   <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
     <value>計算式列で、この引数をこの型で渡すことはできません。</value>
+    
+  </data>
+  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
+    <value>数式列では、この引数を {0} 型として渡せません。</value>
     
   </data>
   <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
@@ -3948,6 +3956,10 @@
     <value>計算式列では、短い文字列形式の日時のみを使用できます。</value>
     
   </data>
+  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
+    <value>{0} 引数の時間の単位は、{1} 日付計算関数で無効またはサポートされていません。</value>
+    
+  </data>
   <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
     <value>計算式列はロケール固有の書式トークン ("." や "," など) をサポートしていません。</value>
     
@@ -3956,8 +3968,16 @@
     <value>計算式列は {0} をサポートしていません。代わりに {1} を使用します。</value>
     
   </data>
+  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
+    <value>数式列では、この操作を {0} 型で実行できません。</value>
+    
+  </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
     <value>結果の種類 {0} は、計算式列に対応していません。</value>
+    
+  </data>
+  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
+    <value>数式列はレコード全体の直接参照に対応していません。レコードが含む有効なフィールドを参照してください。</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
@@ -3972,8 +3992,20 @@
     <value>型が {0}、形式が {1} である列は、計算式列に対応していません。</value>
     
   </data>
+  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
+    <value>数式列はレコードやテーブルの強制変換に対応していません。</value>
+    
+  </data>
   <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
     <value>計算式を 1,000 文字より長くすることはできません。</value>
+    
+  </data>
+  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
+    <value>数式列は単一列テーブルに対応していません。</value>
+    
+  </data>
+  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
+    <value>数式列で仮想テーブル {0} を参照できません。</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">

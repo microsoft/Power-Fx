@@ -3924,12 +3924,20 @@
     <value>Nem támogatott a képletoszlopokban.</value>
     
   </data>
+  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
+    <value>Érvénytelen számú argumentum a(z) {0} függvényhez: fogadott {1}, várt {2}</value>
+    
+  </data>
   <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
     <value>A(z) {0} argumentum nem támogatott a(z) {1} képlet esetén a képletoszlopokban.</value>
     
   </data>
   <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
     <value>Ez az argumentum nem adható át ilyen típusúként a képletoszlopokban.</value>
+    
+  </data>
+  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
+    <value>Ez az argumentum nem adható át {0} típusúként a képletoszlopokban.</value>
     
   </data>
   <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
@@ -3948,6 +3956,10 @@
     <value>Csak a rövid dátum- és időformátumú sztringek támogatottak a képletoszlopokban.</value>
     
   </data>
+  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
+    <value>Az {0} argumentum a dátum aritmetikai {1} függvény érvénytelen/nem támogatott időegysége.</value>
+    
+  </data>
   <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
     <value>A területibeállítás-specifikus formázási tokenek, mint például a "." és a ",", nem támogatottak a képletoszlopokban.</value>
     
@@ -3956,8 +3968,16 @@
     <value>A(z) {0} nem támogatott a képletoszlopokban. Használja inkább a következőt: {1}.</value>
     
   </data>
+  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
+    <value>Ez a művelet nem hajtható végre {0} típusú képletoszlopokban.</value>
+    
+  </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
     <value>Az eredménytípus ("{0}") nem támogatott a képletoszlopokban.</value>
+    
+  </data>
+  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
+    <value>A képletoszlopok nem támogatják a teljes rekordra való közvetlen hivatkozást. Hivatkozzon egy érvényes mezőre a rekordban.</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
@@ -3972,8 +3992,20 @@
     <value>A(z) {0} típusú, {1} formátumú oszlopok nem használhatók képletoszlopokban.</value>
     
   </data>
+  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
+    <value>A rekordok vagy táblák kényszerítése nem támogatott a képletoszlopokban.</value>
+    
+  </data>
   <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
     <value>A képletek nem lehetnek hosszabbak 1000 karakternél.</value>
+    
+  </data>
+  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
+    <value>Az egyoszlopos táblák nem támogatottak a képletoszlopokban.</value>
+    
+  </data>
+  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
+    <value>Nem hivatkozhat virtuális táblára {0} képletoszlopokban.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">

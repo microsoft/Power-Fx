@@ -3924,12 +3924,20 @@
     <value>Formül sütunlarında desteklenmez.</value>
     
   </data>
+  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
+    <value>{0} işleviyle ilgili geçersiz bağımsız değişken sayısı: {1} alındı, {2} bekleniyordu</value>
+    
+  </data>
   <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
     <value>{0} bağımsız değişkeni, formül sütunlarında {1} işlevi için desteklenmiyor.</value>
     
   </data>
   <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
     <value>Bu bağımsız değişken, formül sütunlarında bu tür olarak geçirilemez.</value>
+    
+  </data>
+  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
+    <value>Bu bağımsız değişken, formül sütunlarında tür {0} olarak geçirilemez.</value>
     
   </data>
   <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
@@ -3948,6 +3956,10 @@
     <value>Formül sütunlarında yalnızca kısa tarih ve saat biçimi dizeleri desteklenmektedir.</value>
     
   </data>
+  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
+    <value>{1} tarih aritmetik işlevi için {0} bağımsız değişkeni geçersiz/desteklenmeyen bir zaman birimidir.</value>
+    
+  </data>
   <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
     <value>Formül sütunlarında "." ve "," gibi yerel ayara özel biçimlendirme belirteçleri desteklenmiyor.</value>
     
@@ -3956,8 +3968,16 @@
     <value>{0}, formül sütunlarında desteklenmiyor, bunun yerine {1} kullanın.</value>
     
   </data>
+  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
+    <value>Bu işlem, formül sütunlarında {0} türü üzerinde gerçekleştirilemez.</value>
+    
+  </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
     <value>Sonuç türü {0}, formül sütunlarında desteklenmiyor.</value>
+    
+  </data>
+  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
+    <value>Formül sütunlarında tüm bir kayda referansta bulunma desteklenmez. Lütfen kayıtta geçerli bir alana referansta bulunun.</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
@@ -3972,8 +3992,20 @@
     <value>{1} biçimindeki {0} türündeki sütunlar, formül sütunlarında desteklenmiyor.</value>
     
   </data>
+  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
+    <value>Formül sütunlarında kayıt veya tabloların zorlanması desteklenmez.</value>
+    
+  </data>
   <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
     <value>Formüller 1000 karakterden uzun olamaz.</value>
+    
+  </data>
+  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
+    <value>Formül sütunlarında tek sütunlu tablolar desteklenmez.</value>
+    
+  </data>
+  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
+    <value>Formül sütunlarında {0} sanal tablosuna referansta bulunamazsınız.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">

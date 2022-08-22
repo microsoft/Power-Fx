@@ -3,6 +3,7 @@
 
 using System;
 using System.Globalization;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Interpreter;
@@ -402,10 +403,40 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
+        private static bool TryGetCulture(string name, out CultureInfo value)
+        {
+            CultureInfo[] availableCultures =
+                CultureInfo.GetCultures(CultureTypes.AllCultures);
+
+            foreach (CultureInfo culture in availableCultures)
+            {
+                if (string.Equals(culture.Name, name, StringComparison.OrdinalIgnoreCase))
+                {
+                    value = new CultureInfo(name);
+                    return true;
+                }
+            }
+
+            value = null;
+            return false;
+        }
+
         public static FormulaValue DateTimeParse(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, StringValue[] args)
         {
             var str = args[0].Value;
-            if (DateTime.TryParse(str, runner.CultureInfo, DateTimeStyles.None, out var result))
+
+            // culture will have Cultural info in-case one was passed in argument else it will have the default one.
+            CultureInfo culture = runner.CultureInfo;
+            if (args.Length > 1)
+            {
+                var languageCode = args[1].Value;
+                if (!TryGetCulture(languageCode, out culture))
+                {
+                    return CommonErrors.BadLanguageCode(irContext, languageCode);
+                }
+            }
+
+            if (DateTime.TryParse(str, culture, DateTimeStyles.None, out var result))
             {
                 return new DateTimeValue(irContext, result);
             }
@@ -418,6 +449,18 @@ namespace Microsoft.PowerFx.Functions
         public static FormulaValue TimeParse(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, StringValue[] args)
         {
             var str = args[0].Value;
+
+            // culture will have Cultural info in-case one was passed in argument else it will have the default one.
+            CultureInfo culture = runner.CultureInfo;
+            if (args.Length > 1)
+            {
+                var languageCode = args[1].Value;
+                if (!TryGetCulture(languageCode, out culture))
+                {
+                    return CommonErrors.BadLanguageCode(irContext, languageCode);
+                }
+            }
+
             if (TimeSpan.TryParse(str, runner.CultureInfo, out var result))
             {
                 return new TimeValue(irContext, result);

@@ -498,7 +498,7 @@
     <value>Valoarea textului de convertit la o valoare booleană.</value>
   </data>
   <data name="AboutBooleanT" xml:space="preserve">
-    <value>Converts a column of text values to a column of boolean values.</value>
+    <value>Convertește o coloană de valori text într-o coloană de valori booleene.</value>
     
   </data>
   <data name="BooleanTArg1" xml:space="preserve">
@@ -506,21 +506,21 @@
     
   </data>
   <data name="AboutBooleanT_input" xml:space="preserve">
-    <value>A column of text values to process.</value>
+    <value>O coloană de valori text de procesat.</value>
   </data>
   <data name="AboutBooleanN" xml:space="preserve">
-    <value>Converts a 'number' to a boolean value.</value>
+    <value>Convertește un număr la o valoare booleană.</value>
     
   </data>
   <data name="BooleanNArg1" xml:space="preserve">
-    <value>number</value>
+    <value>număr</value>
     
   </data>
   <data name="AboutBooleanN_number" xml:space="preserve">
-    <value>The number value to convert to a boolean value.</value>
+    <value>Valoarea numărului de convertit la o valoare booleană.</value>
   </data>
   <data name="AboutBooleanNT" xml:space="preserve">
-    <value>Converts a column of numeric values to a column of boolean values.</value>
+    <value>Convertește o coloană de valori numerice într-o coloană de valori booleene.</value>
     
   </data>
   <data name="BooleanNTArg1" xml:space="preserve">
@@ -528,7 +528,7 @@
     
   </data>
   <data name="AboutBooleanNT_input" xml:space="preserve">
-    <value>A column of number values to process.</value>
+    <value>O coloană de valori numerice de procesat.</value>
   </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Returnează primul argument nevid</value>
@@ -3924,12 +3924,20 @@
     <value>Nu este acceptat în coloanele de formule.</value>
     
   </data>
+  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
+    <value>Număr nevalid de argumente pentru funcția {0}: {1} primit, așteptat {2}</value>
+    
+  </data>
   <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
     <value>Argumentul {0} nu este acceptat pentru funcția {1} din coloanele de formule.</value>
     
   </data>
   <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>Acest argument nu poate fi transmis ca fiind de acest tip în coloanele de formule.</value>
+    <value>Acest argument nu poate fi transmis cu acest tip în coloanele de formule.</value>
+    
+  </data>
+  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
+    <value>Acest argument nu poate fi transmis cu tipul „{0}” în coloanele de formule.</value>
     
   </data>
   <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
@@ -3948,6 +3956,10 @@
     <value>Numai șirurile scurte de format dată și oră sunt acceptate în coloanele de formule.</value>
     
   </data>
+  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
+    <value>Argumentul {0} este o unitate de timp nevalidă/neacceptată pentru funcția aritmetică de dată {1}.</value>
+    
+  </data>
   <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
     <value>Tokenurile de formatare specifice setărilor regionale, cum ar fi „.” și „,” nu sunt acceptate în coloanele de formule.</value>
     
@@ -3956,8 +3968,16 @@
     <value>{0} nu este acceptată în coloanele de formule, utilizați în schimb {1}.</value>
     
   </data>
+  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
+    <value>Această operațiune nu poate fi efectuată pe tipul {0} în coloanele de formule.</value>
+    
+  </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
     <value>Tipul de rezultat {0} nu este acceptat în coloanele de formule.</value>
+    
+  </data>
+  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
+    <value>Referirea directă a unei întregi înregistrări nu este acceptată în coloanele de formule. Faceți referire la un câmp valid din înregistrare.</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
@@ -3972,8 +3992,20 @@
     <value>Coloanele de tip {0} având formatul {1} nu sunt acceptate în coloanele de formule.</value>
     
   </data>
+  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
+    <value>Constrângerea înregistrărilor sau a tabelelor nu este acceptată în coloanele de formule.</value>
+    
+  </data>
   <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
     <value>Formulele nu pot avea mai mult de 1000 de caractere.</value>
+    
+  </data>
+  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
+    <value>Tabelele cu o singură coloană nu sunt acceptate în coloanele de formule.</value>
+    
+  </data>
+  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
+    <value>Nu se poate face referire la tabelul virtual {0} în coloanele de formule.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">

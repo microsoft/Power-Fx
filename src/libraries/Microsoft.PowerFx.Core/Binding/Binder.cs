@@ -2666,7 +2666,7 @@ namespace Microsoft.PowerFx.Core.Binding
                         return true;
                     }
 
-                    // scalar in record: not supported. Flag an error on the RHS.
+                    // scalar in record or multiSelectOptionSet table: not supported. Flag an error on the RHS.
                     Contracts.Assert(typeRight.IsRecord);
                     _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, right, TexlStrings.ErrBadType_Type, typeRight.GetKindString());
                     return false;
@@ -2717,12 +2717,15 @@ namespace Microsoft.PowerFx.Core.Binding
                         }
 
                         var typedName = names.Single();
-                        if (!typeLeft.CoercesTo(typedName.Type))
+
+                        // Ensure we error when RHS node of table type cannot be coerced to a multiselectOptionset table node.  
+                        if (!typeRight.CoercesTo(typeLeft))
                         {
                             _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, right, TexlStrings.ErrCannotCoerce_SourceType_TargetType, typeLeft.GetKindString(), typedName.Type.GetKindString());
                             return false;
                         }
 
+                        // Check if multiselectoptionset column type accepts RHS node of type table. 
                         if (typeLeft.Accepts(typedName.Type))
                         {
                             return true;
@@ -4300,6 +4303,14 @@ namespace Microsoft.PowerFx.Core.Binding
                     else if (DType.Number.Accepts(typeRight) && DType.DateTime.Accepts(typeLeft))
                     {
                         _txb.SetCoercedType(left, DType.Number);
+                        return;
+                    }
+
+                    // Handle Date <=> Time comparison by coercing both to DateTime
+                    if (DType.DateTime.Accepts(typeLeft) && DType.DateTime.Accepts(typeRight))
+                    {
+                        _txb.SetCoercedType(left, DType.DateTime);
+                        _txb.SetCoercedType(right, DType.DateTime);
                         return;
                     }
                 }

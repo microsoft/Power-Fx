@@ -16,6 +16,13 @@ namespace Microsoft.PowerFx.Functions
 {
     internal static partial class Library
     {
+        // Helper to get a service or fallback to a default if the service is missing.
+        private static T GetService<T>(this IServiceProvider services, T defaultService)
+        {
+            var service = (T)services.GetService(typeof(T));
+            return service ?? defaultService;
+        }
+
         // Sync FunctionPtr - all args are evaluated before invoking this function.  
         public delegate FormulaValue FunctionPtr(SymbolContext symbolContext, IRContext irContext, FormulaValue[] args);
 
@@ -934,7 +941,7 @@ namespace Microsoft.PowerFx.Functions
             },
             {
                 BuiltinFunctionsCore.Rand,
-                NoErrorHandling(Rand)
+                Rand
             },
             {
                 BuiltinFunctionsCore.RandBetween,
@@ -1510,7 +1517,7 @@ namespace Microsoft.PowerFx.Functions
                         new NamedValue(
                             "AllErrors",
                             new InMemoryTableValue(
-                                IRContext.NotInSource(new KnownTableType(ErrorType.ReifiedErrorTable())),
+                                IRContext.NotInSource(new TableType(ErrorType.ReifiedErrorTable())),
                                 allErrors.Select(e => DValue<RecordValue>.Of(e))))
                     };
 

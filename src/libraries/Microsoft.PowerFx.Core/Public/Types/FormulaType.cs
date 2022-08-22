@@ -136,7 +136,7 @@ namespace Microsoft.PowerFx.Types
                 case DKind.Record:
                     return new KnownRecordType(type);
                 case DKind.Table:
-                    return new KnownTableType(type);
+                    return new TableType(type);
                 case DKind.Number: return Number;
                 case DKind.String: return String;
                 case DKind.Boolean: return Boolean;
@@ -192,7 +192,7 @@ namespace Microsoft.PowerFx.Types
                         return table;
                     }
 
-                    return new KnownTableType(type);
+                    return new TableType(type);
                 default:
                     return new UnsupportedType(type);
             }

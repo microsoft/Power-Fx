@@ -498,7 +498,7 @@
     <value>O valor de texto a converter num valor booleano.</value>
   </data>
   <data name="AboutBooleanT" xml:space="preserve">
-    <value>Converts a column of text values to a column of boolean values.</value>
+    <value>Converte uma coluna de valores de texto numa coluna de valores booleanos.</value>
     
   </data>
   <data name="BooleanTArg1" xml:space="preserve">
@@ -520,7 +520,7 @@
     <value>O valor numérico a converter num valor booleano.</value>
   </data>
   <data name="AboutBooleanNT" xml:space="preserve">
-    <value>Converts a column of numeric values to a column of boolean values.</value>
+    <value>Converte uma coluna de valores numéricos numa coluna de valores booleanos.</value>
     
   </data>
   <data name="BooleanNTArg1" xml:space="preserve">
@@ -3924,12 +3924,20 @@
     <value>Não suportado em colunas de fórmula.</value>
     
   </data>
+  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
+    <value>Número inválido de argumentos para a função {0}: recebido {1}, esperado {2}</value>
+    
+  </data>
   <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
     <value>O argumento {0} não é suportado para a função {1} em colunas de fórmula.</value>
     
   </data>
   <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
     <value>Não é possível transmitir este argumento como este tipo em colunas de fórmula.</value>
+    
+  </data>
+  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
+    <value>Não é possível transmitir este argumento com o tipo {0} em colunas de fórmula.</value>
     
   </data>
   <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
@@ -3948,6 +3956,10 @@
     <value>As colunas de fórmula só suportam cadeias no formato data e hora abreviada.</value>
     
   </data>
+  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
+    <value>O argumento {0} é uma unidade de tempo inválida/não suportada para a função aritmética de data {1}.</value>
+    
+  </data>
   <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
     <value>Tokens de formatação específicos da região, como "." e ",", não são suportados em colunas de fórmula.</value>
     
@@ -3956,8 +3968,16 @@
     <value>{0} não é suportado em colunas de fórmula. Utilize {1} em vez disso.</value>
     
   </data>
+  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
+    <value>Não é possível efetuar esta operação no tipo {0} em colunas de fórmula.</value>
+    
+  </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
     <value>O tipo de resultado {0} não é suportado em colunas de fórmula.</value>
+    
+  </data>
+  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
+    <value>A referenciação direta de um registo inteiro não é suportada em colunas de fórmula. Referencie um campo de valor no registo.</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
@@ -3972,8 +3992,20 @@
     <value>As colunas do tipo {0} com o formato {1} não são suportadas em colunas de fórmula.</value>
     
   </data>
+  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
+    <value>Forçar registos ou tabelas não é suportado em colunas de fórmula.</value>
+    
+  </data>
   <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
     <value>As fórmulas não podem ter mais de 1.000 caracteres.</value>
+    
+  </data>
+  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
+    <value>As tabelas de coluna única não são suportadas em colunas de fórmula.</value>
+    
+  </data>
+  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
+    <value>Não é possível referenciar a tabela virtual {0} em colunas de fórmula.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">

@@ -426,7 +426,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             if (errors != null)
             {
                 foreach (var item in errors)
-                {                    
+                {
                     diagnostics.Add(new Diagnostic()
                     {
                         Range = GetRange(expression, item.Span),
@@ -453,7 +453,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
         /// <param name="span">The Span.</param>
         /// <returns>Generated Range.</returns>
         public static Range GetRange(string expression, Span span)
-        {                       
+        {
             var startChar = GetCharPosition(expression, span.Min) - 1;
             var endChar = GetCharPosition(expression, span.Lim) - 1;
 

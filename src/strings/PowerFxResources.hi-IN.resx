@@ -3924,12 +3924,20 @@
     <value>फॉर्मूला कॉलम में समर्थित नहीं है.</value>
     
   </data>
+  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
+    <value>{0} फ़ंक्शन के लिए तर्कों की अमान्य संख्या: {1} प्राप्त हुआ, अपेक्षित {2}</value>
+    
+  </data>
   <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
     <value>फॉर्मूला कॉलम में {1} फ़ंक्शन के लिए {0} तर्क समर्थित नहीं है.</value>
     
   </data>
   <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>इस तर्क को फॉर्मूला कॉलम में इस प्रकार के रूप में पास नहीं किया जा सकता है.</value>
+    <value>इस तर्क को सूत्र स्तंभों में इस प्रकार के रूप में पारित नहीं किया जा सकता है.</value>
+    
+  </data>
+  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
+    <value>इस तर्क को सूत्र स्तंभों में {0} प्रकार के रूप में पारित नहीं किया जा सकता.</value>
     
   </data>
   <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
@@ -3948,6 +3956,10 @@
     <value>फॉर्मूला कॉलम में केवल छोटी दिनांक और समय प्रारूप स्ट्रिंग समर्थित हैं.</value>
     
   </data>
+  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
+    <value>{0} तर्क {1} दिनांक अंकगणितीय फ़ंक्शन के लिए समय की अमान्य/असमर्थित इकाई है.</value>
+    
+  </data>
   <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
     <value>फॉर्मूला कॉलमों में स्थानीय-विशिष्ट फॉर्मेटिंग टोकन जैसे "." और "," समर्थित नहीं हैं.</value>
     
@@ -3956,8 +3968,16 @@
     <value>फॉर्मूला कॉलमों में {0} समर्थित नहीं है, इसकी जगह {1} उपयोग करें.</value>
     
   </data>
+  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
+    <value>यह संचालन सूत्र स्तंभों में प्रकार {0} पर नहीं किया जा सकता है.</value>
+    
+  </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
     <value>परिणाम प्रकार {0} फॉर्मूला स्तंभों में समर्थित नहीं है.</value>
+    
+  </data>
+  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
+    <value>सूत्र स्तंभों में सीधे किसी संपूर्ण रिकॉर्ड को संदर्भित करना समर्थित नहीं है. कृपया रिकॉर्ड में किसी मान्य फ़ील्ड का संदर्भ दें.</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
@@ -3972,8 +3992,20 @@
     <value>{1} प्रारूप वाले {0} प्रकार के स्तंभ फॉर्मूला स्तंभों में समर्थित नहीं हैं.</value>
     
   </data>
+  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
+    <value>सूत्र स्तंभों में बलपूर्वक रिकॉर्ड या तालिकाएं समर्थित नहीं हैं.</value>
+    
+  </data>
   <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
     <value>फॉर्मूला 1000 अक्षरों से ज्यादा लंबे नहीं हो सकते.</value>
+    
+  </data>
+  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
+    <value>सूत्र स्तंभों में एकल-स्तंभ तालिकाएँ समर्थित नहीं हैं.</value>
+    
+  </data>
+  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
+    <value>सूत्र स्तंभों में वर्चुअल तालिका {0} संदर्भित नहीं कर सकता.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
