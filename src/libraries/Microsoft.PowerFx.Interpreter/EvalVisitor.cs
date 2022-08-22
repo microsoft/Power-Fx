@@ -27,7 +27,7 @@ namespace Microsoft.PowerFx
     {
         private CultureInfo _defaultCultureInfo { get; }
 
-        public CultureInfo CultureInfo => _runtimeConfig?.GetService<CultureInfo>() ?? _defaultCultureInfo;
+        public CultureInfo CultureInfo => GetService<CultureInfo>() ?? _defaultCultureInfo;
 
         private readonly ReadOnlySymbolValues _runtimeConfig;
 
