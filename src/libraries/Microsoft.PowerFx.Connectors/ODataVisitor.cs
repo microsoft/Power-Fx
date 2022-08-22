@@ -20,17 +20,17 @@ namespace Microsoft.PowerFx.Connectors
 
         public override string Visit(TextLiteralNode node, DelegationRunContext runContext)
         {
-            return $"'{node.LiteralValue}'";
+            return SerializeStringValue(node.LiteralValue);
         }
 
         public override string Visit(NumberLiteralNode node, DelegationRunContext runContext)
         {
-            return node.LiteralValue.ToString(CultureInfo.InvariantCulture);
+            return SerializeNumberValue(node.LiteralValue);
         }
 
         public override string Visit(BooleanLiteralNode node, DelegationRunContext runContext)
         {
-            return node.LiteralValue.ToString(CultureInfo.InvariantCulture);
+            return SerializeBooleanValue(node.LiteralValue);
         }
 
         public override string Visit(ColorLiteralNode node, DelegationRunContext runContext)
@@ -56,19 +56,14 @@ namespace Microsoft.PowerFx.Connectors
         public override string Visit(CallNode node, DelegationRunContext runContext)
         {
             // Special cases for functions supported by OData
-            if (node.Function is NotFunction)
+            switch (node.Function)
             {
-                return $"NOT({node.Args[0].Accept(this, runContext)})";
-            }
-
-            if (node.Function is StartsWithFunction)
-            {
-                return $"startsWith({node.Args[0].Accept(this, runContext)}, {node.Args[1].Accept(this, runContext)})";
-            }
-
-            if (node.Function is EndsWithFunction)
-            {
-                return $"endsWith({node.Args[0].Accept(this, runContext)}, {node.Args[1].Accept(this, runContext)})";
+                case NotFunction:
+                    return NotOp(node.Args[0], runContext);
+                case StartsWithFunction:
+                    return StartsWithOp(node.Args[0], node.Args[1], runContext);
+                case EndsWithFunction:
+                    return EndsWithOp(node.Args[0], node.Args[1], runContext);
             }
 
             // Fallback: try to evaluate call node, fail if it tries to access a delegated scope
@@ -86,12 +81,24 @@ namespace Microsoft.PowerFx.Connectors
 
         public override string Visit(BinaryOpNode node, DelegationRunContext runContext)
         {
-            return $"{node.Left.Accept(this, runContext)} {ODataOpFromBinaryOp(node.Op)} {node.Right.Accept(this, runContext)}";
+            try
+            {
+                FormulaValue result = runContext.EvalAsync(node).Result;
+                return SerializeLiteralValue(result);
+            }
+            catch (KeyNotFoundException)
+            {
+                return $"{node.Left.Accept(this, runContext)} {ODataOpFromBinaryOp(node.Op)} {node.Right.Accept(this, runContext)}";
+            }
         }
 
         public override string Visit(UnaryOpNode node, DelegationRunContext runContext)
         {
-            return $"{ODataOpFromUnaryOp(node.Op)}({node.Child.Accept(this, runContext)})";
+            return node.Op switch
+            {
+                UnaryOpKind.Negate => NotOp(node.Child, runContext),
+                _ => throw new NotDelegableException(),
+            };
         }
 
         public override string Visit(ScopeAccessNode node, DelegationRunContext runContext)
@@ -129,28 +136,42 @@ namespace Microsoft.PowerFx.Connectors
             throw new NotDelegableException();
         }
 
+        private string NotOp(IntermediateNode node, DelegationRunContext runContext)
+        {
+            return $"not({node.Accept(this, runContext)})";
+        }
+
+        private string StartsWithOp(IntermediateNode nodeA, IntermediateNode nodeB, DelegationRunContext runContext)
+        {
+            return $"startswith({nodeA.Accept(this, runContext)}, {nodeB.Accept(this, runContext)})";
+        }
+
+        private string EndsWithOp(IntermediateNode nodeA, IntermediateNode nodeB, DelegationRunContext runContext)
+        {
+            return $"endswith({nodeA.Accept(this, runContext)}, {nodeB.Accept(this, runContext)})";
+        }
+
         private static string SerializeLiteralValue(FormulaValue value)
         {
             return value switch
             {
-                BooleanValue booleanValue => booleanValue.Value ? "true" : "false",
+                BooleanValue booleanValue => SerializeBooleanValue(booleanValue.Value),
                 ColorValue colorValue => throw new NotDelegableException(),
                 DateTimeValue dateTimeValue => dateTimeValue.Value.ToString("yyyy-MM-ddTHH:mm:ssZ"),
                 DateValue dateValue => dateValue.Value.ToString("yyyy-MM-dd"),
                 GuidValue guidValue => guidValue.Value.ToString(),
-                NumberValue numberValue => numberValue.Value.ToString(CultureInfo.InvariantCulture),
-                StringValue stringValue => $"'{stringValue.Value}'",
+                NumberValue numberValue => SerializeNumberValue(numberValue.Value),
+                StringValue stringValue => SerializeStringValue(stringValue.Value),
                 TimeValue timeValue => throw new NotDelegableException(),
                 _ => throw new NotDelegableException(),
             };
         }
 
-        private static string ODataOpFromUnaryOp(UnaryOpKind op) =>
-            op switch
-            {
-                UnaryOpKind.Negate => "NOT",
-                _ => throw new NotDelegableException()
-            };
+        private static string SerializeNumberValue(double value) => value.ToString(CultureInfo.InvariantCulture);
+
+        private static string SerializeStringValue(string value) => '\'' + value.Replace("'", "''") + '\'';
+
+        private static string SerializeBooleanValue(bool value) => value ? "true" : "false";
 
         private static string ODataOpFromBinaryOp(BinaryOpKind op) =>
             op switch

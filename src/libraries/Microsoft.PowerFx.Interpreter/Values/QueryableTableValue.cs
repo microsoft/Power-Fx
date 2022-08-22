@@ -3,10 +3,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Core.IR.Nodes;
 
 namespace Microsoft.PowerFx.Types
 {
@@ -35,19 +33,5 @@ namespace Microsoft.PowerFx.Types
         // Not the best, but doesn't require major breaking changes to TableValue
         public sealed override IEnumerable<DValue<RecordValue>> Rows =>
             _lazyTaskRows.Value.GetAwaiter().GetResult();
-    }
-
-    public readonly struct DelegationRunContext
-    {
-        internal readonly EvalVisitor Runner;
-        internal readonly EvalVisitorContext Context;
-
-        internal DelegationRunContext(EvalVisitor runner, EvalVisitorContext context)
-        {
-            Runner = runner;
-            Context = context;
-        }
-
-        internal ValueTask<FormulaValue> EvalAsync(IntermediateNode node) => node.Accept(Runner, Context);
     }
 }

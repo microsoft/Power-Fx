@@ -5,19 +5,21 @@ using System;
 
 namespace Microsoft.PowerFx.Interpreter
 {
-    public sealed class NotDelegableException : Exception
+    // Used to fail attempted delegation and fall back to in memory evaluation
+    // Should always be caught by PowerFx code
+    internal sealed class NotDelegableException : Exception
     {
-        public NotDelegableException()
+        internal NotDelegableException()
             : base()
         {
         }
 
-        public NotDelegableException(string message)
+        internal NotDelegableException(string message)
             : base(message)
         {
         }
 
-        public NotDelegableException(string message, Exception inner)
+        internal NotDelegableException(string message, Exception inner)
             : base(message, inner)
         {
         }

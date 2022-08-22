@@ -15,14 +15,7 @@ namespace Microsoft.PowerFx.Connectors
     public abstract class ODataQueryableTableValue : QueryableTableValue
     {
         private readonly Uri _uriBase;
-
         private readonly ODataParams _odataParams;
-
-        // internal ODataQueryableTableValue(IRContext irContext, NameValueCollection odataParams)
-        //     : base(irContext)
-        // {
-        //     ODataParams = odataParams;
-        // }
 
         protected ODataQueryableTableValue(TableType tableType, Uri uriBase, ODataParams odataParams = default)
             : base(IRContext.NotInSource(tableType))
@@ -112,7 +105,7 @@ namespace Microsoft.PowerFx.Connectors
         {
             if (_filter != null)
             {
-                return new ODataParams(_count, $"{_filter} and {filterNew}", _orderby, _top);
+                return new ODataParams(_count, $"({_filter}) and ({filterNew})", _orderby, _top);
             }
 
             return new ODataParams(_count, filterNew, _orderby, _top);
