@@ -168,12 +168,7 @@ namespace Microsoft.PowerFx
             // - Some Symbols are metadata-only (like option sets, UDFs, constants, etc)
             // and hence don't require a corresponnding runtime Symbol Value. 
             var symbolsAll = ReadOnlySymbolTable.Compose(runtimeConfig?.GetSymbolTableSnapshot(), symbolTable);
-            var culture = runtimeConfig?.GetService<CultureInfo>();
-
-            if (options == null && culture != null)
-            {
-                options = new ParserOptions() { Culture = culture };
-            }
+            var culture = runtimeConfig?.GetService<CultureInfo>();            
 
             var check = Check(expressionText, options, symbolsAll);
             check.ThrowOnErrors();
