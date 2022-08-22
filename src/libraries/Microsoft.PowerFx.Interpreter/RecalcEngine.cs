@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -58,10 +59,10 @@ namespace Microsoft.PowerFx
         /// <inheritdoc/>
         protected override IExpression CreateEvaluator(CheckResult result)
         {
-            return CreateEvaluatorDirect(result, new StackDepthCounter(Config.MaxCallDepth));
+            return CreateEvaluatorDirect(result, new StackDepthCounter(Config.MaxCallDepth), Config.CultureInfo);
         }
 
-        internal static IExpression CreateEvaluatorDirect(CheckResult result, StackDepthCounter stackMarker)
+        internal static IExpression CreateEvaluatorDirect(CheckResult result, StackDepthCounter stackMarker, CultureInfo culture)
         {
             if (result._binding == null)
             {
@@ -71,7 +72,7 @@ namespace Microsoft.PowerFx
             result.ThrowOnErrors();
 
             (var irnode, var ruleScopeSymbol) = IRTranslator.Translate(result._binding);
-            return new ParsedExpression(irnode, ruleScopeSymbol, stackMarker);
+            return new ParsedExpression(irnode, ruleScopeSymbol, stackMarker, culture);
         }
 
         /// <summary>
@@ -81,7 +82,18 @@ namespace Microsoft.PowerFx
         /// <returns></returns>
         public static IExpression CreateEvaluatorDirect(CheckResult result)
         {
-            return CreateEvaluatorDirect(result, new StackDepthCounter(PowerFxConfig.DefaultMaxCallDepth));
+            return CreateEvaluatorDirect(result, new StackDepthCounter(PowerFxConfig.DefaultMaxCallDepth), null);
+        }
+
+        /// <summary>
+        /// Create an evaluator over the existing binding.
+        /// </summary>
+        /// <param name = "result" >A successful binding from a previous call to.<see cref="Engine.Check(string, RecordType, ParserOptions)"/>. </param>   
+        /// <param name="culture">Culture information.</param>
+        /// <returns></returns>
+        public static IExpression CreateEvaluatorDirect(CheckResult result, CultureInfo culture)
+        {
+            return CreateEvaluatorDirect(result, new StackDepthCounter(PowerFxConfig.DefaultMaxCallDepth), culture);
         }
 
         public void UpdateVariable(string name, double value)
@@ -125,15 +137,26 @@ namespace Microsoft.PowerFx
         /// <param name="expressionText">textual representation of the formula.</param>
         /// <param name="parameters">parameters for formula. The fields in the parameter record can 
         /// be acecssed as top-level identifiers in the formula.</param>
-        /// <param name="options"></param>
-        /// <param name="symbols"></param>
+        /// <param name="options"></param>        
         /// <returns>The formula's result.</returns>
-        public FormulaValue Eval(string expressionText, RecordValue parameters = null, ParserOptions options = null, ReadOnlySymbolValues symbols = null)
+        public FormulaValue Eval(string expressionText, RecordValue parameters = null, ParserOptions options = null)
         {
-            return EvalAsync(expressionText, CancellationToken.None, parameters, options, symbols).Result;
+            return EvalAsync(expressionText, CancellationToken.None, parameters, options).Result;
         }
 
-        public async Task<FormulaValue> EvalAsync(string expressionText, CancellationToken cancel, RecordValue parameters, ParserOptions options = null, ReadOnlySymbolValues symbols = null)
+        /// <summary>
+        /// Evaluate an expression as text and return the result.
+        /// </summary>
+        /// <param name="expressionText">textual representation of the formula.</param>
+        /// <param name="symbols">symbols for formula.</param>
+        /// <param name="options"></param>        
+        /// <returns>The formula's result.</returns>
+        public FormulaValue Eval(string expressionText, ReadOnlySymbolValues symbols, ParserOptions options = null)
+        {
+            return EvalAsync(expressionText, CancellationToken.None, options, runtimeConfig: symbols).Result;
+        }
+
+        public async Task<FormulaValue> EvalAsync(string expressionText, CancellationToken cancel, RecordValue parameters, ParserOptions options = null)
         {
             if (parameters == null)
             {
@@ -150,12 +173,7 @@ namespace Microsoft.PowerFx
             return result;
         }
 
-        public async Task<FormulaValue> EvalAsync(
-            string expressionText,
-            CancellationToken cancel,
-            ParserOptions options = null,
-            ReadOnlySymbolTable symbolTable = null,
-            ReadOnlySymbolValues runtimeConfig = null)
+        public async Task<FormulaValue> EvalAsync(string expressionText, CancellationToken cancel, ParserOptions options = null, ReadOnlySymbolTable symbolTable = null, ReadOnlySymbolValues runtimeConfig = null)
         {
             // We could have any combination of symbols and runtime values. 
             // - RuntimeConfig may be null if we don't need it. 

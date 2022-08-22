@@ -52,14 +52,7 @@ namespace Microsoft.PowerFx
 
         public SymbolValues AddService<T>(T data)
         {
-            AddService(typeof(T), data);
-
-            return this;
-        }
-
-        public SymbolValues AddService(Type t, object data)
-        {
-            // this changes the symbols.
+            //this changes the symbols.
             Inc();
 
             if (_services == null)
@@ -68,7 +61,7 @@ namespace Microsoft.PowerFx
             }
 
             // Can't already exist. 
-            _services.Add(t, data);
+            _services.Add(typeof(T), data);
             return this;
         }
 

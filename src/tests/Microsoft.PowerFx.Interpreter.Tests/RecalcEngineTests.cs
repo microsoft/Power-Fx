@@ -51,6 +51,7 @@ namespace Microsoft.PowerFx.Tests
                 $"{ns}.{nameof(TableMarshallerProvider)}",
                 $"{ns}.{nameof(TypeMarshallerCache)}",
                 $"{ns}.{nameof(TypeMarshallerCacheExtensions)}",
+                $"{ns}.{nameof(SymbolExtensions)}",
                 $"{nsType}.{nameof(ObjectRecordValue)}",
                 $"{ns}.Interpreter.UDF.{nameof(DefineFunctionsResult)}",
 
@@ -771,12 +772,21 @@ namespace Microsoft.PowerFx.Tests
             var recalcEngine = new RecalcEngine(pfxConfig);
             var symbols = new SymbolValues();
 
-            symbols.AddService(TimeZoneInfo.FindSystemTimeZoneById("Romance Standard Time")); // (UTC+01:00) Brussels, Copenhagen, Madrid, Paris            
-            var fv = recalcEngine.Eval(@"DateTimeValue(""jeudi 21 juillet 2022 19:34:03"", ""fr-FR"")", symbols: symbols);
+            // 10/30/22 is the date where DST applies in France (https://www.timeanddate.com/time/change/france/paris)
+            // So adding 2 hours to 1:34am will result in 2:34am
+            symbols.SetTimeZoneByDisplayName("(UTC+01:00) Brussels, Copenhagen, Madrid, Paris");
+            
+            // Alternative ways to set the TimeZoneInfo
+            // symbols.SetTimeZoneById("Romance Standard Time");
+            // symbols.AddService(TimeZoneInfo.FindSystemTimeZoneById("Romance Standard Time"));
+
+            var fv = recalcEngine.Eval(@"Text(DateAdd(DateTimeValue(""dimanche 30 octobre 2022 01:34:03"", ""fr-FR""), ""2"", ""hours""), ""dddd, MMMM dd, yyyy hh:mm:ss"")", symbols: symbols);
 
             Assert.NotNull(fv);
-            Assert.IsType<DateTimeValue>(fv);
-            Assert.Equal(new DateTime(2022, 7, 21, 19, 34, 3), (fv as DateTimeValue)?.Value);
+            Assert.IsType<StringValue>(fv);
+
+            // Then we convert the result to Japanese date/time format
+            Assert.Equal("日曜日, 10月 30, 2022 02:34:03", (fv as StringValue)?.Value);
         }
 
         [Fact]
@@ -785,7 +795,7 @@ namespace Microsoft.PowerFx.Tests
             var recalcEngine = new RecalcEngine(new PowerFxConfig(null));
             var str = "Foo(x: Number): Number => { 1+1; 2+2; };";
             recalcEngine.DefineFunctions(str);
-            Assert.Equal(4.0, recalcEngine.Eval("Foo(1)", null, new ParserOptions { AllowsSideEffects = true }).ToObject());
+            Assert.Equal(4.0, recalcEngine.Eval("Foo(1)", parameters: null, new ParserOptions { AllowsSideEffects = true }).ToObject());
         }
 
         [Fact]

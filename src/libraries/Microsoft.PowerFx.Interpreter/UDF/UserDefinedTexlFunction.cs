@@ -38,17 +38,6 @@ namespace Microsoft.PowerFx.Interpreter
             return result;
         }
 
-        public async Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancel, StackDepthCounter stackMarker, ReadOnlySymbolValues symbols)
-        {
-            // $$$ There's a lot of unnecessary string packing overhead here 
-            // because Eval wants a Record rather than a resolved arg array.                 
-            var parameters = FormulaValue.NewRecordFromFields(UDFHelper.Zip(_parameterNames.ToArray(), args));
-
-            var result = await GetExpression().EvalAsyncInternal(parameters, cancel, stackMarker);
-
-            return result;
-        }
-
         public IEnumerable<ExpressionError> Bind()
         {
             var check = _check.Get();
@@ -60,7 +49,7 @@ namespace Microsoft.PowerFx.Interpreter
             if (check.Expression is ParsedExpression parsed)
             {
                 _expr = parsed;
-            } 
+            }
             else
             {
                 throw new System.Exception("Expression is not a ParsedExpression");

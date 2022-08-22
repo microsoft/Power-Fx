@@ -227,7 +227,8 @@ namespace Microsoft.PowerFx
             }
             else if (func is UserDefinedTexlFunction udtf)
             {
-                var result = await udtf.InvokeAsync(args, _cancel, context.StackDepthCounter.Increment(), _runtimeConfig);
+                // $$$ Should add _runtimeConfig
+                var result = await udtf.InvokeAsync(args, _cancel, context.StackDepthCounter.Increment());
                 return result;
             }
             else if (func is CustomTexlFunction customTexlFunc)
@@ -454,7 +455,7 @@ namespace Microsoft.PowerFx
                             var record = row.Value;
                             var newScope = scopeContext.WithScopeValues(record);
 
-                            var newValue = await coercion.Value.Accept(this, new EvalVisitorContext(newScope, context));
+                            var newValue = await coercion.Value.Accept(this, context.NewScope(newScope));
                             var name = coercion.Key;
                             fields.Add(new NamedValue(name.Value, newValue));
                         }
