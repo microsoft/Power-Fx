@@ -25,7 +25,9 @@ namespace Microsoft.PowerFx
     // Use Task for public methods, but ValueTask for internal methods that we expect to be mostly sync. 
     internal class EvalVisitor : IRNodeVisitor<ValueTask<FormulaValue>, EvalVisitorContext>
     {
-        public CultureInfo CultureInfo { get; }
+        private CultureInfo _defaultCultureInfo { get; }
+
+        public CultureInfo CultureInfo => _runtimeConfig?.GetService<CultureInfo>() ?? _defaultCultureInfo;
 
         private readonly ReadOnlySymbolValues _runtimeConfig;
 
@@ -33,7 +35,7 @@ namespace Microsoft.PowerFx
 
         public EvalVisitor(CultureInfo cultureInfo, CancellationToken cancel, ReadOnlySymbolValues runtimeConfig = null)
         {
-            CultureInfo = cultureInfo;
+            _defaultCultureInfo = cultureInfo;
             _cancel = cancel;
             _runtimeConfig = runtimeConfig;
         }

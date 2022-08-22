@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -215,6 +216,23 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 CancellationToken.None,
                 symbolTable: s4); // 1*2 & 2*4  = "28"            
             Assert.Equal("28", result4.ToObject());
+        }
+
+        [Fact]
+        public void RecalcEngine_Symbol_CultureInfo()
+        {
+            var us_Symbols = new SymbolValues();
+            us_Symbols.AddService(new CultureInfo("en-US"));
+
+            var fr_Symbols = new SymbolValues();
+            fr_Symbols.AddService(new CultureInfo("fr-FR"));
+
+            var engine = new RecalcEngine();
+
+            Assert.Equal(1.0, (engine.EvalAsync("1.0", CancellationToken.None, runtimeConfig: us_Symbols).Result as NumberValue).Value);
+            Assert.ThrowsAsync<InvalidOperationException>(() => engine.EvalAsync("1.0", CancellationToken.None, runtimeConfig: fr_Symbols));
+            Assert.ThrowsAsync<InvalidOperationException>(() => engine.EvalAsync("2,0", CancellationToken.None, runtimeConfig: us_Symbols));
+            Assert.Equal(2.0, (engine.EvalAsync("2,0", CancellationToken.None, runtimeConfig: fr_Symbols).Result as NumberValue).Value);
         }
 
         private static void AssertUnique(HashSet<VersionHash> set, VersionHash hash)
