@@ -70,13 +70,6 @@ namespace Microsoft.PowerFx
         // These symbols then feed into the resolver
         protected SymbolTable EngineSymbols { get; set; }
 
-        // Move away
-        
-        private protected virtual INameResolver CreateResolver(PowerFxConfig alternateConfig = null)
-        {
-            return null;
-        }
-
         /// <summary>
         /// Create a resolver for use in binding. This is called from <see cref="Check(string, RecordType, ParserOptions)"/>.
         /// Base classes can override this is there are additional symbols not in the config.
@@ -84,7 +77,7 @@ namespace Microsoft.PowerFx
         [Obsolete("Use EngineSymbols instead.")]
         private protected virtual INameResolver CreateResolver()
         {
-            return new SimpleResolver(Config);
+            return null;
         }
 
         /// <param name="localSymbols">An alternate config that can be provided. Should default to engine's config if null.</param>        
@@ -94,7 +87,7 @@ namespace Microsoft.PowerFx
             // For backwards compat with Prose.
 #pragma warning disable CS0612 // Type or member is obsolete
 #pragma warning disable CS0618 // Type or member is obsolete
-            var existing = CreateResolver(null);
+            var existing = CreateResolver();
 #pragma warning restore CS0618 // Type or member is obsolete
 #pragma warning restore CS0612 // Type or member is obsolete
             if (existing != null)

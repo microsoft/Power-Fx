@@ -5,7 +5,7 @@
 DateTime(2022,7,21,19,34,3,0)
 
 >> DateTimeValue("jeudi 21 juillet 2022 19:34:03", "unknown")
-Errors: Error 0-58: The Date/Time could not be parsed.Culture is not supported. (Parameter 'name')|unknown is an invalid culture identifier.
+Errors: Error 0-58: Language code unknown not supported
 
 // The result of this expression depends on current TimeZoneInfo. 
 // In Seattle TimeZoneInfo, this would trip over daylight savings and be 4:00am. 

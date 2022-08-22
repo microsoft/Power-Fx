@@ -111,7 +111,17 @@ namespace Microsoft.PowerFx.Functions
                 return new BlankValue(irContext);
             }
 
-            var (val, err) = ConvertToNumber(str, runner.CultureInfo);
+            // culture will have Cultural info in-case one was passed in argument else it will have the default one.
+            var culture = runner.CultureInfo;
+            if (args.Length > 1)
+            {
+                if (args[1] is StringValue cultureArg && !TryGetCulture(cultureArg.Value, out culture))
+                {
+                    return CommonErrors.InvalidDateTimeError(irContext);
+                }
+            }
+
+            var (val, err) = ConvertToNumber(str, culture);
 
             if (err == ConvertionStatus.Ok)
             {
