@@ -429,9 +429,10 @@ namespace Microsoft.PowerFx.Functions
             CultureInfo culture = runner.CultureInfo;
             if (args.Length > 1)
             {
-                if (!TryGetCulture(args[1].Value, out culture))
+                var languageCode = args[1].Value;
+                if (!TryGetCulture(languageCode, out culture))
                 {
-                    return CommonErrors.InvalidDateTimeError(irContext);
+                    return CommonErrors.BadLanguageCode(irContext, languageCode);
                 }
             }
 
@@ -453,9 +454,10 @@ namespace Microsoft.PowerFx.Functions
             CultureInfo culture = runner.CultureInfo;
             if (args.Length > 1)
             {
-                if (!TryGetCulture(args[1].Value, out culture))
+                var languageCode = args[1].Value;
+                if (!TryGetCulture(languageCode, out culture))
                 {
-                    return CommonErrors.InvalidDateTimeError(irContext);
+                    return CommonErrors.BadLanguageCode(irContext, languageCode);
                 }
             }
 
