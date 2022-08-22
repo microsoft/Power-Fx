@@ -3,10 +3,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Threading.Tasks;
-using System.Web;
-using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Types;
 using Xunit;
@@ -15,6 +12,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
 {
     public class ODataDelegationTests : PowerFxTest
     {
+        private static readonly Uri _uriBase = new Uri("https://contoso.com/api/list");
+
         [Theory]
         [InlineData("Filter(Table, x > 10)", "https://contoso.com/api/list?$filter=x+gt+10")]
         [InlineData("Filter(Table, x > 10 + 5)", "https://contoso.com/api/list?$filter=x+gt+15")]
@@ -45,19 +44,19 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             var odataTable = engine.Eval(expression) as ODataQueryableTableValue;
             Assert.NotNull(odataTable);
-            Assert.Equal(new Uri(uriExpected), odataTable.GetUri());
+            Assert.Equal(new Uri(uriExpected), odataTable.ODataParams.GetUri(_uriBase));
         }
     }
 
     public sealed class TestODataTableValue : ODataQueryableTableValue
     {
         public TestODataTableValue(TableType tableType)
-            : base(tableType, new Uri("https://contoso.com/api/list"))
+            : base(tableType)
         {
         }
 
         private TestODataTableValue(TableType tableType, ODataParams odataParams)
-            : base(tableType, new Uri("https://contoso.com/api/list"), odataParams)
+            : base(tableType, odataParams)
         {
         }
 

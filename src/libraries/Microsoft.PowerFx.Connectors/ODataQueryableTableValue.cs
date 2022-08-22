@@ -6,57 +6,44 @@ using System.Collections.Specialized;
 using System.Globalization;
 using System.Web;
 using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Core.IR.Nodes;
-using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors
 {
     public abstract class ODataQueryableTableValue : QueryableTableValue
     {
-        private readonly Uri _uriBase;
-        private readonly ODataParams _odataParams;
+        public readonly ODataParams ODataParams;
 
-        protected ODataQueryableTableValue(TableType tableType, Uri uriBase, ODataParams odataParams = default)
+        protected ODataQueryableTableValue(TableType tableType, ODataParams odataParams = default)
             : base(IRContext.NotInSource(tableType))
         {
-            _uriBase = uriBase;
-            _odataParams = odataParams;
+            ODataParams = odataParams;
         }
 
         protected abstract ODataQueryableTableValue WithParameters(ODataParams odataParamsNew);
 
-        public Uri GetUri()
-        {
-            UriBuilder uriBuilder = new UriBuilder(_uriBase);
-            var query = HttpUtility.ParseQueryString(uriBuilder.Query);
-            _odataParams.AddTo(query);
-            uriBuilder.Query = query.ToString();
-            return uriBuilder.Uri;
-        }
-
         internal sealed override TableValue Filter(LambdaFormulaValue lambda, EvalVisitor runner, EvalVisitorContext context)
         {
-            DelegationRunContext runContext = new DelegationRunContext(runner, context);
+            ODataVisitorContext runContext = new ODataVisitorContext(runner, context);
             var filterClause = lambda.Visit(ODataVisitor.I, runContext);
-            return WithParameters(_odataParams.WithFilter(filterClause));
+            return WithParameters(ODataParams.WithFilter(filterClause));
         }
 
         internal sealed override TableValue Sort(LambdaFormulaValue lambda, bool isDescending, EvalVisitor runner, EvalVisitorContext context)
         {
-            DelegationRunContext runContext = new DelegationRunContext(runner, context);
+            ODataVisitorContext runContext = new ODataVisitorContext(runner, context);
             var orderby = lambda.Visit(ODataVisitor.I, runContext);
             if (isDescending)
             {
                 orderby += " desc";
             }
 
-            return WithParameters(_odataParams.WithOrderby(orderby));
+            return WithParameters(ODataParams.WithOrderby(orderby));
         }
 
         internal override TableValue FirstN(int n)
         {
-            return WithParameters(_odataParams.WithTop(n));
+            return WithParameters(ODataParams.WithTop(n));
         }
     }
 
@@ -76,7 +63,7 @@ namespace Microsoft.PowerFx.Connectors
             _top = top;
         }
 
-        internal void AddTo(NameValueCollection query)
+        public void AddTo(NameValueCollection query)
         {
             if (_count)
             {
@@ -99,9 +86,18 @@ namespace Microsoft.PowerFx.Connectors
             }
         }
 
-        internal ODataParams WithCount() => new ODataParams(true, _filter, _orderby, _top);
+        public Uri GetUri(Uri uriBase)
+        {
+            UriBuilder uriBuilder = new UriBuilder(uriBase);
+            var query = HttpUtility.ParseQueryString(uriBuilder.Query);
+            AddTo(query);
+            uriBuilder.Query = query.ToString();
+            return uriBuilder.Uri;
+        }
 
-        internal ODataParams WithFilter(string filterNew)
+        public ODataParams WithCount() => new ODataParams(true, _filter, _orderby, _top);
+
+        public ODataParams WithFilter(string filterNew)
         {
             if (_filter != null)
             {
@@ -111,8 +107,8 @@ namespace Microsoft.PowerFx.Connectors
             return new ODataParams(_count, filterNew, _orderby, _top);
         }
 
-        internal ODataParams WithOrderby(string orderbyNew) => new ODataParams(_count, _filter, orderbyNew, _top);
+        public ODataParams WithOrderby(string orderbyNew) => new ODataParams(_count, _filter, orderbyNew, _top);
 
-        internal ODataParams WithTop(int topNew) => new ODataParams(_count, _filter, _orderby, topNew);
+        public ODataParams WithTop(int topNew) => new ODataParams(_count, _filter, _orderby, topNew);
     }
 }

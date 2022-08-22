@@ -1,9 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Globalization;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
@@ -14,46 +12,46 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors
 {
-    internal class ODataVisitor : IRNodeVisitor<string, DelegationRunContext>
+    internal class ODataVisitor : IRNodeVisitor<string, ODataVisitorContext>
     {
         internal static readonly ODataVisitor I = new ODataVisitor();
 
-        public override string Visit(TextLiteralNode node, DelegationRunContext runContext)
+        public override string Visit(TextLiteralNode node, ODataVisitorContext runContext)
         {
             return SerializeStringValue(node.LiteralValue);
         }
 
-        public override string Visit(NumberLiteralNode node, DelegationRunContext runContext)
+        public override string Visit(NumberLiteralNode node, ODataVisitorContext runContext)
         {
             return SerializeNumberValue(node.LiteralValue);
         }
 
-        public override string Visit(BooleanLiteralNode node, DelegationRunContext runContext)
+        public override string Visit(BooleanLiteralNode node, ODataVisitorContext runContext)
         {
             return SerializeBooleanValue(node.LiteralValue);
         }
 
-        public override string Visit(ColorLiteralNode node, DelegationRunContext runContext)
+        public override string Visit(ColorLiteralNode node, ODataVisitorContext runContext)
         {
             throw new NotDelegableException();
         }
 
-        public override string Visit(RecordNode node, DelegationRunContext runContext)
+        public override string Visit(RecordNode node, ODataVisitorContext runContext)
         {
             throw new NotDelegableException();
         }
 
-        public override string Visit(ErrorNode node, DelegationRunContext runContext)
+        public override string Visit(ErrorNode node, ODataVisitorContext runContext)
         {
             throw new NotDelegableException();
         }
 
-        public override string Visit(LazyEvalNode node, DelegationRunContext runContext)
+        public override string Visit(LazyEvalNode node, ODataVisitorContext runContext)
         {
             return node.Child.Accept(this, runContext);
         }
 
-        public override string Visit(CallNode node, DelegationRunContext runContext)
+        public override string Visit(CallNode node, ODataVisitorContext runContext)
         {
             // Special cases for functions supported by OData
             switch (node.Function)
@@ -79,7 +77,7 @@ namespace Microsoft.PowerFx.Connectors
             }
         }
 
-        public override string Visit(BinaryOpNode node, DelegationRunContext runContext)
+        public override string Visit(BinaryOpNode node, ODataVisitorContext runContext)
         {
             try
             {
@@ -92,7 +90,7 @@ namespace Microsoft.PowerFx.Connectors
             }
         }
 
-        public override string Visit(UnaryOpNode node, DelegationRunContext runContext)
+        public override string Visit(UnaryOpNode node, ODataVisitorContext runContext)
         {
             return node.Op switch
             {
@@ -101,7 +99,7 @@ namespace Microsoft.PowerFx.Connectors
             };
         }
 
-        public override string Visit(ScopeAccessNode node, DelegationRunContext runContext)
+        public override string Visit(ScopeAccessNode node, ODataVisitorContext runContext)
         {
             if (node.Value is ScopeAccessSymbol symbol)
             {
@@ -111,42 +109,42 @@ namespace Microsoft.PowerFx.Connectors
             return string.Empty;
         }
 
-        public override string Visit(RecordFieldAccessNode node, DelegationRunContext runContext)
+        public override string Visit(RecordFieldAccessNode node, ODataVisitorContext runContext)
         {
             throw new NotDelegableException();
         }
 
-        public override string Visit(ResolvedObjectNode node, DelegationRunContext runContext)
+        public override string Visit(ResolvedObjectNode node, ODataVisitorContext runContext)
         {
             throw new NotDelegableException();
         }
 
-        public override string Visit(SingleColumnTableAccessNode node, DelegationRunContext runContext)
+        public override string Visit(SingleColumnTableAccessNode node, ODataVisitorContext runContext)
         {
             throw new NotDelegableException();
         }
 
-        public override string Visit(ChainingNode node, DelegationRunContext runContext)
+        public override string Visit(ChainingNode node, ODataVisitorContext runContext)
         {
             throw new NotDelegableException();
         }
 
-        public override string Visit(AggregateCoercionNode node, DelegationRunContext runContext)
+        public override string Visit(AggregateCoercionNode node, ODataVisitorContext runContext)
         {
             throw new NotDelegableException();
         }
 
-        private string NotOp(IntermediateNode node, DelegationRunContext runContext)
+        private string NotOp(IntermediateNode node, ODataVisitorContext runContext)
         {
             return $"not({node.Accept(this, runContext)})";
         }
 
-        private string StartsWithOp(IntermediateNode nodeA, IntermediateNode nodeB, DelegationRunContext runContext)
+        private string StartsWithOp(IntermediateNode nodeA, IntermediateNode nodeB, ODataVisitorContext runContext)
         {
             return $"startswith({nodeA.Accept(this, runContext)}, {nodeB.Accept(this, runContext)})";
         }
 
-        private string EndsWithOp(IntermediateNode nodeA, IntermediateNode nodeB, DelegationRunContext runContext)
+        private string EndsWithOp(IntermediateNode nodeA, IntermediateNode nodeB, ODataVisitorContext runContext)
         {
             return $"endswith({nodeA.Accept(this, runContext)}, {nodeB.Accept(this, runContext)})";
         }

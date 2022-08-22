@@ -3,15 +3,17 @@
 
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR.Nodes;
+using Microsoft.PowerFx.Types;
 
-namespace Microsoft.PowerFx.Types
+namespace Microsoft.PowerFx.Connectors
 {
-    internal readonly struct DelegationRunContext
+    /// Context for the <see cref="ODataVisitor" />
+    internal readonly struct ODataVisitorContext
     {
         internal readonly EvalVisitor Runner;
         internal readonly EvalVisitorContext Context;
 
-        internal DelegationRunContext(EvalVisitor runner, EvalVisitorContext context)
+        internal ODataVisitorContext(EvalVisitor runner, EvalVisitorContext context)
         {
             Runner = runner;
             Context = context;
