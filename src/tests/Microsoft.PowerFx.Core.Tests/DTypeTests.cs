@@ -15,7 +15,9 @@ namespace Microsoft.PowerFx.Tests
 {
     public class DTypeTests
     {
-        private DType AttachmentType => DType.CreateAttachmentType(DType.CreateTable(new TypedName(DType.String, new DName("DisplayName"))));
+        private DType AttachmentTableType => DType.CreateAttachmentType(DType.CreateTable(new TypedName(DType.String, new DName("DisplayName"))));
+
+        private DType AttachmentRecordType => DType.CreateAttachmentType(DType.CreateRecord(new TypedName(DType.Number, new DName("Wrapped"))));
 
         private IExternalEntity _optionSet;
 
@@ -108,7 +110,8 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal("m", DType.Media.ToString());
             Assert.Equal("g", DType.Guid.ToString());
             Assert.Equal("o", DType.Blob.ToString());
-            Assert.Equal("A", AttachmentType.ToString());
+            Assert.Equal("r*", AttachmentTableType.ToString());
+            Assert.Equal("r!", AttachmentRecordType.ToString());
             Assert.Equal("T", DType.Time.ToString());
             Assert.Equal("D", DType.Date.ToString());
             Assert.Equal("N", DType.ObjNull.ToString());
@@ -136,7 +139,8 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal(DKind.Record, DType.EmptyRecord.Kind);
             Assert.Equal(DKind.Table, DType.EmptyTable.Kind);
             Assert.Equal(DKind.Enum, DType.EmptyEnum.Kind);
-            Assert.Equal(DKind.Attachment, AttachmentType.Kind);
+            Assert.Equal(DKind.LazyTable, AttachmentTableType.Kind);
+            Assert.Equal(DKind.LazyRecord, AttachmentRecordType.Kind);
             Assert.Equal(DKind.OptionSet, OptionSetType.Kind);
             Assert.Equal(DKind.Table, MultiSelectOptionSetType.Kind);
             Assert.Equal(DKind.Date, DType.Date.Kind);
@@ -167,7 +171,8 @@ namespace Microsoft.PowerFx.Tests
             Assert.True(DType.Error.Accepts(DType.Date));
             Assert.True(DType.Error.Accepts(DType.Time));
             Assert.True(DType.Error.Accepts(DType.Guid));
-            Assert.True(DType.Error.Accepts(AttachmentType));
+            Assert.True(DType.Error.Accepts(AttachmentTableType));
+            Assert.True(DType.Error.Accepts(AttachmentRecordType));
             Assert.True(DType.Error.Accepts(OptionSetType));
             Assert.True(DType.Error.Accepts(MultiSelectOptionSetType));
             Assert.True(DType.Error.Accepts(DType.Polymorphic));
@@ -194,7 +199,8 @@ namespace Microsoft.PowerFx.Tests
             Assert.True(DType.Date.Accepts(DType.Unknown));
             Assert.True(DType.Time.Accepts(DType.Unknown));
             Assert.True(DType.Guid.Accepts(DType.Unknown));
-            Assert.True(AttachmentType.Accepts(DType.Unknown));
+            Assert.True(AttachmentTableType.Accepts(DType.Unknown));
+            Assert.True(AttachmentRecordType.Accepts(DType.Unknown));
             Assert.True(OptionSetType.Accepts(DType.Unknown));
             Assert.True(MultiSelectOptionSetType.Accepts(DType.Unknown));
             Assert.True(DType.Polymorphic.Accepts(DType.Unknown));
@@ -294,14 +300,19 @@ namespace Microsoft.PowerFx.Tests
             Assert.True(fError);
             Assert.Equal(TestUtils.DT("n"), newType);
 
-            DType type5 = type1.Add(new DName("Attachments"), AttachmentType);
+            DType type5 = type1.Add(new DName("Attachments"), AttachmentTableType);
             fError = false;
-            newType = type1.DropAllOfKind(ref fError, DPath.Root, DKind.Attachment);
+            newType = type5.DropAllMatching(ref fError, DPath.Root, type => type.IsAttachment);
             Assert.Equal(TestUtils.DT("*[A:n, B:n, C:s]"), newType);
 
             DType type6 = type1.Add(new DName("Polymorphic"), DType.Polymorphic);
             fError = false;
-            newType = type1.DropAllOfKind(ref fError, DPath.Root, DKind.Polymorphic);
+            newType = type6.DropAllOfKind(ref fError, DPath.Root, DKind.Polymorphic);
+            Assert.Equal(TestUtils.DT("*[A:n, B:n, C:s]"), newType);
+
+            DType type7 = type1.Add(new DName("Attachments"), AttachmentRecordType);
+            fError = false;
+            newType = type7.DropAllMatching(ref fError, DPath.Root, type => type.IsAttachment);
             Assert.Equal(TestUtils.DT("*[A:n, B:n, C:s]"), newType);
         }
 
@@ -484,11 +495,21 @@ namespace Microsoft.PowerFx.Tests
             Assert.False(DType.Color.Accepts(DType.EmptyTable));
             Assert.False(DType.Color.Accepts(DType.Guid));
 
-            Assert.False(DType.EmptyRecord.Accepts(AttachmentType));
-            Assert.False(AttachmentType.Accepts(DType.EmptyRecord));
+            Assert.False(DType.EmptyRecord.Accepts(AttachmentTableType));
+            Assert.False(AttachmentTableType.Accepts(DType.EmptyRecord));
 
-            Assert.False(DType.EmptyTable.Accepts(AttachmentType));
-            Assert.False(AttachmentType.Accepts(DType.EmptyTable));
+            Assert.True(DType.EmptyTable.Accepts(AttachmentTableType));
+            Assert.False(AttachmentTableType.Accepts(DType.EmptyTable));
+            
+            Assert.True(DType.EmptyRecord.Accepts(AttachmentTableType.ToRecord()));
+
+            Assert.True(DType.EmptyRecord.Accepts(AttachmentRecordType));
+            Assert.False(AttachmentRecordType.Accepts(DType.EmptyRecord));
+
+            Assert.False(DType.EmptyTable.Accepts(AttachmentRecordType));
+            Assert.False(AttachmentRecordType.Accepts(DType.EmptyTable));
+
+            Assert.True(DType.EmptyTable.Accepts(AttachmentRecordType.ToTable()));
         }
         
         [Fact]
@@ -542,7 +563,8 @@ namespace Microsoft.PowerFx.Tests
             Assert.False(DType.Color.IsAggregate);
             Assert.False(DType.Guid.IsAggregate);
             Assert.False(DType.Polymorphic.IsAggregate);
-            Assert.False(AttachmentType.IsAggregate);
+            Assert.True(AttachmentTableType.IsAggregate);
+            Assert.True(AttachmentRecordType.IsAggregate);
 
             Assert.True(DType.TryParse("%n[A:1,B:2]", out DType type));
             Assert.False(type.IsAggregate);
@@ -586,7 +608,8 @@ namespace Microsoft.PowerFx.Tests
             Assert.True(DType.TryParse("%n[A:1,B:2]", out DType type) && type.IsPrimitive);
 
             Assert.False(DType.Polymorphic.IsPrimitive);
-            Assert.False(AttachmentType.IsPrimitive);
+            Assert.False(AttachmentTableType.IsPrimitive);
+            Assert.False(AttachmentRecordType.IsPrimitive);
 
             Assert.False(DType.EmptyRecord.IsPrimitive);
             Assert.False(DType.EmptyTable.IsPrimitive);
@@ -595,12 +618,18 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void AttachmentdataDTypes()
         {
-            // Attachment types are neither aggregate nor primitive
-            Assert.False(AttachmentType.IsPrimitive);
-            Assert.False(AttachmentType.IsAggregate);
+            // Attachment types are aggregate (implemented as lazy types)
+            Assert.False(AttachmentTableType.IsPrimitive);
+            Assert.True(AttachmentTableType.IsAggregate);
 
-            Assert.True(AttachmentType.IsAttachment);
-            Assert.NotNull(AttachmentType.AttachmentType);
+            Assert.True(AttachmentTableType.IsAttachment);
+            Assert.NotNull(AttachmentTableType.AttachmentType);
+
+            Assert.False(AttachmentRecordType.IsPrimitive);
+            Assert.True(AttachmentRecordType.IsAggregate);
+
+            Assert.True(AttachmentRecordType.IsAttachment);
+            Assert.NotNull(AttachmentRecordType.AttachmentType);
         }
                 
         [Fact]
@@ -1918,28 +1947,51 @@ namespace Microsoft.PowerFx.Tests
             Assert.True(DType.ObjNull.CoercesTo(DType.Time));
             Assert.False(DType.Error.CoercesTo(DType.Time));
 
-            // Coercion to Attachment type
-            Assert.False(DType.Boolean.CoercesTo(AttachmentType));
-            Assert.False(DType.Number.CoercesTo(AttachmentType));
-            Assert.False(DType.Currency.CoercesTo(AttachmentType));
-            Assert.False(DType.Color.CoercesTo(AttachmentType));
-            Assert.False(DType.Guid.CoercesTo(AttachmentType));
-            Assert.False(DType.DateTime.CoercesTo(AttachmentType));
-            Assert.False(DType.Date.CoercesTo(AttachmentType));
-            Assert.False(DType.Time.CoercesTo(AttachmentType));
-            Assert.False(DType.String.CoercesTo(AttachmentType));
-            Assert.False(DType.Hyperlink.CoercesTo(AttachmentType));
-            Assert.False(DType.Image.CoercesTo(AttachmentType));
-            Assert.False(DType.PenImage.CoercesTo(AttachmentType));
-            Assert.False(DType.Media.CoercesTo(AttachmentType));
-            Assert.False(DType.Blob.CoercesTo(AttachmentType));
-            Assert.False(DType.EmptyTable.CoercesTo(AttachmentType));
-            Assert.False(DType.EmptyRecord.CoercesTo(AttachmentType));
-            Assert.True(AttachmentType.CoercesTo(AttachmentType));
-            Assert.False(DType.EmptyEnum.CoercesTo(AttachmentType));
-            Assert.False(DType.TryParse("%s[A:\"hello\"]", out type) && type.CoercesTo(AttachmentType));
-            Assert.True(DType.ObjNull.CoercesTo(AttachmentType));
-            Assert.False(DType.Error.CoercesTo(AttachmentType));
+            // Coercion to Attachment Table type
+            Assert.False(DType.Boolean.CoercesTo(AttachmentTableType));
+            Assert.False(DType.Number.CoercesTo(AttachmentTableType));
+            Assert.False(DType.Currency.CoercesTo(AttachmentTableType));
+            Assert.False(DType.Color.CoercesTo(AttachmentTableType));
+            Assert.False(DType.Guid.CoercesTo(AttachmentTableType));
+            Assert.False(DType.DateTime.CoercesTo(AttachmentTableType));
+            Assert.False(DType.Date.CoercesTo(AttachmentTableType));
+            Assert.False(DType.Time.CoercesTo(AttachmentTableType));
+            Assert.False(DType.String.CoercesTo(AttachmentTableType));
+            Assert.False(DType.Hyperlink.CoercesTo(AttachmentTableType));
+            Assert.False(DType.Image.CoercesTo(AttachmentTableType));
+            Assert.False(DType.PenImage.CoercesTo(AttachmentTableType));
+            Assert.False(DType.Media.CoercesTo(AttachmentTableType));
+            Assert.False(DType.Blob.CoercesTo(AttachmentTableType));
+            Assert.False(DType.EmptyTable.CoercesTo(AttachmentTableType));
+            Assert.False(DType.EmptyRecord.CoercesTo(AttachmentTableType));
+            Assert.True(AttachmentTableType.CoercesTo(AttachmentTableType));
+            Assert.False(DType.EmptyEnum.CoercesTo(AttachmentTableType));
+            Assert.False(DType.TryParse("%s[A:\"hello\"]", out type) && type.CoercesTo(AttachmentTableType));
+            Assert.True(DType.ObjNull.CoercesTo(AttachmentTableType));
+            Assert.False(DType.Error.CoercesTo(AttachmentTableType));
+
+            // Coercion to Attachment Record type
+            Assert.False(DType.Boolean.CoercesTo(AttachmentRecordType));
+            Assert.False(DType.Number.CoercesTo(AttachmentRecordType));
+            Assert.False(DType.Currency.CoercesTo(AttachmentRecordType));
+            Assert.False(DType.Color.CoercesTo(AttachmentRecordType));
+            Assert.False(DType.Guid.CoercesTo(AttachmentRecordType));
+            Assert.False(DType.DateTime.CoercesTo(AttachmentRecordType));
+            Assert.False(DType.Date.CoercesTo(AttachmentRecordType));
+            Assert.False(DType.Time.CoercesTo(AttachmentRecordType));
+            Assert.False(DType.String.CoercesTo(AttachmentRecordType));
+            Assert.False(DType.Hyperlink.CoercesTo(AttachmentRecordType));
+            Assert.False(DType.Image.CoercesTo(AttachmentRecordType));
+            Assert.False(DType.PenImage.CoercesTo(AttachmentRecordType));
+            Assert.False(DType.Media.CoercesTo(AttachmentRecordType));
+            Assert.False(DType.Blob.CoercesTo(AttachmentRecordType));
+            Assert.False(DType.EmptyTable.CoercesTo(AttachmentRecordType));
+            Assert.False(DType.EmptyRecord.CoercesTo(AttachmentRecordType));
+            Assert.True(AttachmentRecordType.CoercesTo(AttachmentRecordType));
+            Assert.False(DType.EmptyEnum.CoercesTo(AttachmentRecordType));
+            Assert.False(DType.TryParse("%s[A:\"hello\"]", out type) && type.CoercesTo(AttachmentRecordType));
+            Assert.True(DType.ObjNull.CoercesTo(AttachmentRecordType));
+            Assert.False(DType.Error.CoercesTo(AttachmentRecordType));
 
             // Coercion to Error type
             Assert.True(DType.Error.CoercesTo(DType.Error));
@@ -2098,11 +2150,11 @@ namespace Microsoft.PowerFx.Tests
             //Attachment
             var type1 = DType.CreateAttachmentType(DType.CreateAttachmentType(DType.CreateTable(new TypedName(DType.String, new DName("DisplayName")))));
             var type2 = DType.CreateAttachmentType(DType.CreateAttachmentType(DType.CreateTable(new TypedName(DType.String, new DName("Name")))));
-            TestUnion(type1, type1, type1);
-            TestUnion(type1, type2, DType.Error);
-            TestUnion(type2, type2, type2);
-            TestUnion(DType.Unknown, type1, type1);
-            TestUnion(DType.ObjNull, type1, type1);
+            TestUnion(type1, type1, type1.LazyTypeProvider.GetExpandedType(type1.IsTable));
+            TestUnion(type1, type2, TestUtils.DT("*[DisplayName:s, Name:s]"));
+            TestUnion(type2, type2, type2.LazyTypeProvider.GetExpandedType(type2.IsTable));
+            TestUnion(DType.Unknown, type1, type1.LazyTypeProvider.GetExpandedType(type1.IsTable));
+            TestUnion(DType.ObjNull, type1, type1.LazyTypeProvider.GetExpandedType(type1.IsTable));
         }
         
         [Fact]
