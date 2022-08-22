@@ -23,6 +23,13 @@ namespace Microsoft.PowerFx.Intellisense
                 // ThisItemProperties only in the context of thisItem.
                 var curNode = intellisenseData.CurNode;
 
+                // If the parent is a StrInterp node and current node is an error node (not an island)
+                // this node will always be a partial string literal and we should not provide suggestions
+                if (curNode.Parent != null && curNode.Parent.Kind == NodeKind.StrInterp)
+                {
+                    return true;
+                }
+
                 // Three methods that implement custom behavior here, one that adds suggestions before
                 // top level suggestions are added, one after, and one to handle the case where there aren't
                 // any top level suggestions to add.

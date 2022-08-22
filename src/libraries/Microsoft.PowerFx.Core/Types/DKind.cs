@@ -68,9 +68,6 @@ namespace Microsoft.PowerFx.Core.Types
         // Metadata type,
         Metadata = 28, // Type represents column metadata.
 
-        // Attachment type,
-        Attachment = 29, // Type represents attachment type which are delay loaded fields at runtime.
-
         // OptionSet type,
         OptionSet = 30,
 

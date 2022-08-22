@@ -1147,7 +1147,7 @@ namespace Microsoft.PowerFx.Core.Functions
 
             if (itemType.ContainsAttachmentType(DPath.Root))
             {
-                return DropAllOfKindNested(ref itemType, errors, node, DKind.Attachment);
+                return DropAllMatchingNested(ref itemType, errors, node, type => type.IsAttachment);
             }
 
             return true;
@@ -1156,12 +1156,17 @@ namespace Microsoft.PowerFx.Core.Functions
         // Helper to drop all of a single types from a result type
         protected bool DropAllOfKindNested(ref DType itemType, IErrorContainer errors, TexlNode node, DKind kind)
         {
+            return DropAllMatchingNested(ref itemType, errors, node, type => type.Kind == kind);
+        }
+
+        protected bool DropAllMatchingNested(ref DType itemType, IErrorContainer errors, TexlNode node, Func<DType, bool> matchFunc)
+        {
             Contracts.AssertValid(itemType);
             Contracts.AssertValue(errors);
             Contracts.AssertValue(node);
 
             var fError = false;
-            itemType = itemType.DropAllOfKindNested(ref fError, DPath.Root, kind);
+            itemType = itemType.DropAllMatchingNested(ref fError, DPath.Root, matchFunc);
             if (fError)
             {
                 errors.EnsureError(DocumentErrorSeverity.Severe, node, TexlStrings.ErrIncompatibleTypes);
