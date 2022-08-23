@@ -3526,6 +3526,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 {
                     // Error: Attachment Type should never be the left hand side of dotted name node
                     SetDottedNameError(node, TexlStrings.ErrInvalidIdentifier);
+                    return;
                 }
                 else if (leftType is IExternalControlType leftControl)
                 {
