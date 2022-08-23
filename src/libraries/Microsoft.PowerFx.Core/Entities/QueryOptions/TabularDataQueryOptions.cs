@@ -96,6 +96,12 @@ namespace Microsoft.PowerFx.Core.Entities.QueryOptions
                     // Add the Annotated value in case a navigation field is referred in selects. (ex: if the Datasource is Accounts and primarycontactid is in selects also append _primarycontactid_value)
                     _selects.Add(additionalColumnName);
                 }
+
+                if (cdsDataSourceInfo.CanRemoveNavigationColumn(select))
+                {
+                    // Remove Navigation columns from the selects since we don't use them in runtime.
+                    _selects.Remove(select);
+                }
             }
         }
 

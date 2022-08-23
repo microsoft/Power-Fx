@@ -15,5 +15,7 @@ namespace Microsoft.PowerFx.Core.Entities
         IExternalTableDefinition TableDefinition { get; }
 
         bool TryGetRelatedColumn(string selectColumnName, out string additionalColumnName, IExternalTableDefinition expandsTableDefinition = null);
+
+        bool CanRemoveNavigationColumn(string selectColumnName);
     }
 }
