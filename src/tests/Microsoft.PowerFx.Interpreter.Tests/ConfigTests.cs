@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -34,8 +35,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 .Add("local", FormulaValue.New(3));
 
             var result = await engine.EvalAsync(
-                "local+global", 
-                CancellationToken.None, 
+                "local+global",
+                CancellationToken.None,
                 runtimeConfig: locals);
 
             Assert.Equal(5.0, result.ToObject());
@@ -50,12 +51,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             // Share a config
             var s1 = new SymbolTable();
             s1.AddFunction(new Func1Function());
-                        
+
             // Per expression.
             var engine = new RecalcEngine();
             var result = await engine.EvalAsync(
-                "Func1(3)", 
-                CancellationToken.None, 
+                "Func1(3)",
+                CancellationToken.None,
                 symbolTable: s1);
             Assert.Equal(6.0, result.ToObject());
         }
@@ -76,13 +77,13 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             // Run separately 
             var run = check.GetEvaluator();
-            
+
             // Functions are already captured from the symbols 
             // don't need to be re-added.
             var result = await run.EvalAsync(CancellationToken.None);
             Assert.Equal(6.0, result.ToObject());
         }
-              
+
         // Trivial test function, just multiples by 2. 
         private class Func1Function : ReflectionFunction
         {
@@ -104,9 +105,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 _factor = factor;
             }
 
-            public MultiplyFunction() 
-                : this(2) 
-            { 
+            public MultiplyFunction()
+                : this(2)
+            {
             }
 
             // Must have "Execute" method. 
@@ -116,7 +117,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 return FormulaValue.New(val * _factor);
             }
         }
-        
+
         // Mutate the config after binding to show that execution doesn't rely on it. 
         [Fact]
         public async Task ExecutionDoesntUseConfig()
@@ -133,7 +134,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             // Even removing it and mofiying the config afterwards doesn't matter
             // since execution doesn't use config. 
             s1.RemoveFunction("Multiply");
-            var expr = check.GetEvaluator(); 
+            var expr = check.GetEvaluator();
 
             var result = await expr.EvalAsync(CancellationToken.None);
             Assert.Equal(6.0, result.ToObject());
@@ -153,7 +154,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             result = await engine.EvalAsync("Multiply(2)", CancellationToken.None, symbolTable: s1);
             Assert.Equal(8.0, result.ToObject());
         }
-                
+
         [Fact]
         public async Task Shadow()
         {
@@ -163,12 +164,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var s2 = new SymbolTable
             {
-                Parent = s1 
+                Parent = s1
             };
             s2.AddFunction(new MultiplyFunction(4)); // Shadows s1
 
             var engine = new RecalcEngine();
-            
+
             // Multiply was shadowed
             var result = await engine.EvalAsync("Multiply(2)", CancellationToken.None, symbolTable: s2);
             Assert.Equal(2 * 4.0, result.ToObject());
@@ -206,7 +207,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var result3 = await engine.EvalAsync(
                 expr,
-                CancellationToken.None, 
+                CancellationToken.None,
                 symbolTable: s3); // 1*2 & 2*3  = "26"
             Assert.Equal("26", result3.ToObject());
 
@@ -215,6 +216,59 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 CancellationToken.None,
                 symbolTable: s4); // 1*2 & 2*4  = "28"            
             Assert.Equal("28", result4.ToObject());
+        }
+
+        [Fact]
+        public void RecalcEngine_Symbol_CultureInfo()
+        {
+            var us_Symbols = new SymbolValues();
+            var us_Culture = new CultureInfo("en-US");
+            us_Symbols.AddService(us_Culture);
+            var us_ParserOptions = new ParserOptions() { Culture = us_Culture };
+
+            var fr_Symbols = new SymbolValues();
+            var fr_Culture = new CultureInfo("fr-FR");
+            fr_Symbols.AddService(fr_Culture);
+            var fr_ParserOptions = new ParserOptions() { Culture = fr_Culture };
+
+            var fa_Symbols = new SymbolValues();
+            var fa_Culture = new CultureInfo("fa-IR");
+            fa_Symbols.AddService(fa_Culture);
+
+            var engine = new RecalcEngine();
+
+            Assert.Equal(1.0, engine.EvalAsync("1.0", CancellationToken.None, options: us_ParserOptions, runtimeConfig: us_Symbols).Result.ToObject());
+            Assert.ThrowsAsync<InvalidOperationException>(() => engine.EvalAsync("1.0", CancellationToken.None, options: fr_ParserOptions, runtimeConfig: fr_Symbols));
+            Assert.ThrowsAsync<InvalidOperationException>(() => engine.EvalAsync("2,0", CancellationToken.None, options: us_ParserOptions, runtimeConfig: us_Symbols));
+            Assert.Equal(2.0, engine.EvalAsync("2,0", CancellationToken.None, options: fr_ParserOptions, runtimeConfig: fr_Symbols).Result.ToObject());
+
+            Assert.Equal("2/01", engine.EvalAsync("Text(2,01)", CancellationToken.None, options: fr_ParserOptions, runtimeConfig: fa_Symbols).Result.ToObject());
+        }
+
+        // Verify that a single IR tree can be re-executed across multiple cultures.
+        [Fact]
+        public void RecalcEngine_Symbol_CultureInfo2()
+        {
+            var us_Symbols = new SymbolValues();
+            var us_Culture = new CultureInfo("en-US");
+            us_Symbols.AddService(us_Culture);
+            var us_ParserOptions = new ParserOptions() { Culture = us_Culture };
+
+            var fr_Symbols = new SymbolValues();
+            var fr_Culture = new CultureInfo("fr-FR");
+            fr_Symbols.AddService(fr_Culture);
+            var fr_ParserOptions = new ParserOptions() { Culture = fr_Culture };
+
+            var engine = new RecalcEngine();
+
+            var expr1 = engine.Check("Text(1.01)", options: us_ParserOptions).GetEvaluator();
+            var expr2 = engine.Check("Text(2,01)", options: fr_ParserOptions).GetEvaluator();
+
+            Assert.Equal("1.01", (expr1.Eval(us_Symbols) as StringValue).Value);
+            Assert.Equal("1,01", (expr1.Eval(fr_Symbols) as StringValue).Value);
+
+            Assert.Equal("2.01", (expr2.Eval(us_Symbols) as StringValue).Value);
+            Assert.Equal("2,01", (expr2.Eval(fr_Symbols) as StringValue).Value);
         }
 
         private static void AssertUnique(HashSet<VersionHash> set, VersionHash hash)
@@ -248,7 +302,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             s1.AddFunction(func);
             AssertUnique(set, s1);
         }
-                
+
         // bump version number in a virtual callback that's called during binding. 
         // This lets us deterministically simulate a "mutation" in the middle of binding. 
         private class HookTable : SymbolTable
@@ -290,7 +344,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 symbolTable: s1);
 
             // Bind expression once, and then can pass in per-eval state. 
-            var expr = check.GetEvaluator(); 
+            var expr = check.GetEvaluator();
 
             foreach (var name in new string[] { "Bill", "Steve", "Satya" })
             {
@@ -306,7 +360,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
         // A test function that has per-eval state (rather than global)
         private class UserFunction : ReflectionFunction
-        {            
+        {
             public UserFunction()
             {
                 // Specify the type used for config. 
@@ -416,10 +470,10 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var s1 = new SymbolTable();
             s1.AddEntity(optionSet, displayName: new DName("DisplayFoo"));
-            
+
             var engine = new Engine(new PowerFxConfig());
             var check = engine.Check("DisplayFoo.key1", symbolTable: s1);
-            Assert.True(check.IsSuccess);            
+            Assert.True(check.IsSuccess);
         }
 
         // Can change default builtin functions.
@@ -454,7 +508,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         // Helper to set Engine.SupportedFunctions.
         private class Engine2 : Engine
         {
-            public Engine2() 
+            public Engine2()
                 : base(new PowerFxConfig())
             {
             }
@@ -472,7 +526,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var c1 = new PowerFxConfig();
 
             // these will injecting a resolver
-            c1.AddDataverse("Value1", FormulaValue.New(11)); 
+            c1.AddDataverse("Value1", FormulaValue.New(11));
             c1.AddDataverse("Value2", FormulaValue.New(22));
 
             var engine = new RecalcEngine(c1);
@@ -497,7 +551,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
         public static void AddDataverse(this PowerFxConfig config, string valueName, FormulaValue value)
         {
-            var symbolTable = new DataverseSymbolTable 
+            var symbolTable = new DataverseSymbolTable
             {
                 _valueName = valueName,
                 _value = new DataverseSymbolTable.Wrapper { Value = value },
@@ -528,10 +582,10 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 ICanGetValue irValue = _value;
 
                 nameInfo = new NameLookupInfo(
-                    BindKind.PowerFxResolvedObject, 
+                    BindKind.PowerFxResolvedObject,
                     _value.Value.Type._type,
-                    DPath.Root, 
-                    0, 
+                    DPath.Root,
+                    0,
                     data: irValue);
                 return true;
             }
