@@ -2213,7 +2213,7 @@ namespace Microsoft.PowerFx.Core.Types
             type1.AssertValid();
             type2.AssertValid();
 
-            if (type1.IsAggregate && type2.IsAggregate)
+            if (type1.IsAggregate && type2.IsAggregate && !(type1.IsLazyType || type2.IsLazyType))
             {
                 if (type1.Kind != type2.Kind)
                 {

@@ -291,10 +291,6 @@ namespace Microsoft.PowerFx.Tests
             Assert.False(fError);
             Assert.Equal(TestUtils.DT("*[C:s]"), newType);
 
-            newType = type1.DropAllOfKind(ref fError, DPath.Root, DKind.Control);
-            Assert.True(fError);
-            Assert.Equal(TestUtils.DT("*[A:n, B:n, C:s]"), newType);
-
             fError = false;
             newType = DType.Number.DropAllOfKind(ref fError, DPath.Root, DKind.Number);
             Assert.True(fError);
