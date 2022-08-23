@@ -957,6 +957,12 @@ namespace Microsoft.PowerFx.Core.Types
                 return "Control";
             }
 
+            if (IsLazyType)
+            {
+                var typeSuffix = string.IsNullOrEmpty(LazyTypeProvider.UserVisibleTypeName) ? string.Empty : $" ({LazyTypeProvider.UserVisibleTypeName})";
+                return (IsTable ? DKind.Table : DKind.Record) + typeSuffix;
+            }
+
             return Kind.ToString();
         }
 

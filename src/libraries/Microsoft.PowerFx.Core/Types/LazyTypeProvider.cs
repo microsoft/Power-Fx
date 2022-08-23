@@ -23,6 +23,8 @@ namespace Microsoft.PowerFx.Core.Types
 
         internal IEnumerable<DName> FieldNames => BackingFormulaType.FieldNames.Select(field => new DName(field));
 
+        internal string UserVisibleTypeName => BackingFormulaType.UserVisibleTypeName;
+
         public LazyTypeProvider(AggregateType type)
         {
             // Ensure we aren't trying to wrap a Known type as lazy. This would cause StackOverflows when calling Equals()
