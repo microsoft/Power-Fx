@@ -211,14 +211,22 @@ namespace Microsoft.PowerFx.Interpreter
         public async Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancel)
         {
             var arg0 = (TableValue)args[0];
-            var arg1 = (RecordValue)args[1];
+            var arg1 = args[1];
 
-            var mytype0 = arg0.GetType();
-            var mytype1 = arg1.GetType();
+            if (arg1 is BlankValue)
+            {
+                return FormulaValue.NewBlank();
+            }
+            else if (arg1 is ErrorValue)
+            {
+                return arg1;
+            }
 
-            var result = arg0.AppendAsync(arg1);
+            var record = (RecordValue)arg1;
 
-            return await Task.FromResult<FormulaValue>(FormulaValue.New(true));
+            var result = await arg0.AppendAsync(record);
+
+            return result.ToFormulaValue();
         }
     }
 }

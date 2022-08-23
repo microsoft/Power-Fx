@@ -34,10 +34,10 @@ namespace Microsoft.PowerFx
         /// <summary>
         /// Enable a Collect() function which allows scripts to append table records.
         /// </summary>
-        /// <param name="powerFxConfig"></param>
-        public static void EnableCollectFunction(this PowerFxConfig powerFxConfig)
+        /// <param name="symbolTable"></param>
+        public static void EnableCollectFunction(this SymbolTable symbolTable)
         {
-            powerFxConfig.AddFunction(new CollectFunction());
+            symbolTable.AddFunction(new CollectFunction());
         }
     }
 }

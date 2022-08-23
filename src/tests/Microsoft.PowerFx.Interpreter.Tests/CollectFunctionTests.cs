@@ -30,29 +30,51 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("Collect(t, {MyField1:2, MyField2:\"hello1\"});CountRows(t)", 1)]
         [InlineData("Collect(t, r1);Collect(t, r1);Collect(t, r1);CountRows(t)", 3)]
         [InlineData("Collect(t, r1);Collect(t, If(1>0, r1,Blank()));CountRows(t)", 2)]
-        public void AppendCountTest(string script, int expected)
+        public async Task AppendCountTest(string script, int expected)
         {
-            var config = new PowerFxConfig();
+            var symbol = new SymbolTable();
+            var listT = new List<RecordValue>();
 
-            config.EnableCollectFunction();
-            config.EnableSetFunction();
-
-            var engine = new RecalcEngine(config);
+            symbol.EnableCollectFunction();
 
             RecordValue r1 = FormulaValue.NewRecordFromFields(
                 new NamedValue("MyField1", FormulaValue.New(1)),
                 new NamedValue("MyField2", FormulaValue.New("Hello World!!!")));
 
-            var t = FormulaValue.NewTable(r1.Type, new List<RecordValue>());
+            var t = FormulaValue.NewTable(r1.Type, listT);
 
-            engine.UpdateVariable("t", t);
-            engine.UpdateVariable("r1", r1);
+            symbol.AddConstant("t", t);
+            symbol.AddConstant("r1", r1);
 
-            engine.Check(script, options: _opts);
-
-            var resultCount = (NumberValue)engine.Eval(script, options: _opts);
+            var engine = new RecalcEngine();
+            var resultCount = await engine.EvalAsync(script, CancellationToken.None, options: _opts, symbolTable: symbol);
             
-            Assert.Equal(expected, resultCount.Value);
+            Assert.Equal(expected, ((NumberValue)resultCount).Value);
+            Assert.Equal(expected, listT.Count);
+        }
+
+        [Theory]
+        [InlineData("IsBlank(Collect(t, Blank()))", true)]
+        [InlineData("IsError(Collect(t, If(1/0, r1)))", true)]
+        public async Task ReturnTest(string script, bool expected)
+        {
+            var symbol = new SymbolTable();
+
+            symbol.EnableCollectFunction();
+
+            RecordValue r1 = FormulaValue.NewRecordFromFields(
+                new NamedValue("MyField1", FormulaValue.New(1)),
+                new NamedValue("MyField2", FormulaValue.New("Hello World!!!")));
+
+            var t = FormulaValue.NewTable(RecordValue.Empty().Type, new List<RecordValue>());
+
+            symbol.AddConstant("t", t);
+            symbol.AddConstant("r1", r1);
+
+            var engine = new RecalcEngine();
+            var resultCount = await engine.EvalAsync(script, CancellationToken.None, options: _opts, symbolTable: symbol);
+
+            Assert.Equal(expected, ((BooleanValue)resultCount).Value);
         }
     }
 }
