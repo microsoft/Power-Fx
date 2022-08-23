@@ -56,6 +56,7 @@ namespace Microsoft.PowerFx.Tests
                 $"{ns}.{nameof(TypeMarshallerCacheExtensions)}",
                 $"{nsType}.{nameof(ObjectRecordValue)}",
                 $"{ns}.Interpreter.UDF.{nameof(DefineFunctionsResult)}",
+                $"{nsType}.{nameof(QueryableTableValue)}",
 
                 // Services for functions. 
                 $"{ns}.Functions.IRandomService"
