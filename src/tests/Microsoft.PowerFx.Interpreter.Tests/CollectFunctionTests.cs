@@ -81,7 +81,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("Collect(t)")]
         [InlineData("Collect(t, r1, r1)")]
         [InlineData("Collect(t, r1, 1; 2; r1)")]
-        public async Task AppendMultipleTest(string script)
+        public void AppendMultipleTest(string script)
         {
             var symbol = new SymbolTable();
             var listT = new List<RecordValue>();
@@ -98,12 +98,15 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             symbol.AddConstant("r1", r1);
 
             var engine = new RecalcEngine();
-            await Assert.ThrowsAsync<InvalidOperationException>(async () => await engine.EvalAsync(script, CancellationToken.None, options: _opts, symbolTable: symbol)); // Fails 
+            var result = engine.Check(script, options: _opts, symbolTable: symbol);
+
+            // Currently the Collect function does not handle multiple records
+            Assert.False(result.IsSuccess);
         }
 
         [Theory]
         [InlineData("Collect(t, \"x\")")]
-        public async Task AppendTypeCheckingTest(string script)
+        public void AppendTypeCheckingTest(string script)
         {
             var symbol = new SymbolTable();
             var listT = new List<RecordValue>();
@@ -120,11 +123,13 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             symbol.AddConstant("r1", r1);
 
             var engine = new RecalcEngine();
-            await Assert.ThrowsAsync<InvalidOperationException>(async () => await engine.EvalAsync(script, CancellationToken.None, options: _opts, symbolTable: symbol)); // Fails 
+            var result = engine.Check(script, options: _opts, symbolTable: symbol);
+
+            Assert.False(result.IsSuccess); 
         }
 
         [Fact]
-        public async Task CollectNonBehaviorTest()
+        public void CollectNonBehaviorTest()
         {
             var symbol = new SymbolTable();
             var listT = new List<RecordValue>();
@@ -140,10 +145,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             symbol.AddConstant("t", t);
             symbol.AddConstant("r1", r1);
 
+            // Calling the engine with out the AllowSideEffect flag
             var engine = new RecalcEngine();
+            var result = engine.Check("Collect(t, r1)", symbolTable: symbol);
 
-            // options: _opts has been removed
-            await Assert.ThrowsAsync<InvalidOperationException>(async () => await engine.EvalAsync("Collect(t, r1)", CancellationToken.None, symbolTable: symbol)); // Fails 
+            Assert.False(result.IsSuccess);
         }
     }
 }
