@@ -3,7 +3,6 @@
 
 using System;
 using System.Globalization;
-using System.Net.NetworkInformation;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Types;
 
