@@ -132,19 +132,7 @@ namespace Microsoft.PowerFx
         {
             return EvalAsync(expressionText, CancellationToken.None, parameters, options).Result;
         }
-
-        /// <summary>
-        /// Evaluate an expression as text and return the result.
-        /// </summary>
-        /// <param name="expressionText">textual representation of the formula.</param>
-        /// <param name="symbols">symbols for formula.</param>
-        /// <param name="options"></param>        
-        /// <returns>The formula's result.</returns>
-        public FormulaValue Eval2(string expressionText, ReadOnlySymbolValues symbols, ParserOptions options = null)
-        {
-            return EvalAsync(expressionText, CancellationToken.None, options, runtimeConfig: symbols).Result;
-        }
-
+      
         public async Task<FormulaValue> EvalAsync(string expressionText, CancellationToken cancel, RecordValue parameters, ParserOptions options = null)
         {
             if (parameters == null)

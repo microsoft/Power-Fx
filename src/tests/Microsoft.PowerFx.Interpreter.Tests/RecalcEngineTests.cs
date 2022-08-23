@@ -784,7 +784,10 @@ namespace Microsoft.PowerFx.Tests
             Assert.Same(frTimeZone, symbols.GetService<TimeZoneInfo>());
             Assert.Same(jaCulture, symbols.GetService<CultureInfo>());
 
-            var fv = recalcEngine.Eval2(@"Text(DateAdd(DateTimeValue(""dimanche 30 octobre 2022 01:34:03"", ""fr-FR""), ""2"", ""hours""), ""dddd, MMMM dd, yyyy hh:mm:ss"")", symbols: symbols);
+            var fv = recalcEngine.EvalAsync(
+                @"Text(DateAdd(DateTimeValue(""dimanche 30 octobre 2022 01:34:03"", ""fr-FR""), ""2"", ""hours""), ""dddd, MMMM dd, yyyy hh:mm:ss"")", 
+                CancellationToken.None,
+                runtimeConfig: symbols).Result;
 
             Assert.NotNull(fv);
             Assert.IsType<StringValue>(fv);
