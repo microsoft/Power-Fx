@@ -43,7 +43,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 }
                 else if (part.StartsWith("TimeZoneInfo", StringComparison.OrdinalIgnoreCase))
                 {
-                    var m = new Regex(@"TimeZoneInfo\((?<tz>[^)]+)\)", RegexOptions.IgnoreCase).Match(part);
+                    var m = new Regex(@"TimeZoneInfo\(""(?<tz>[^)]+)""\)", RegexOptions.IgnoreCase).Match(part);
 
                     if (m.Success)
                     {

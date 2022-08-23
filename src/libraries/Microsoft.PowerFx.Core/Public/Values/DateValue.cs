@@ -17,7 +17,8 @@ namespace Microsoft.PowerFx.Types
         {
             Contract.Assert(IRContext.ResultType == FormulaType.Date);
             Contract.Assert(value.TimeOfDay == TimeSpan.Zero);
-            Contract.Assert(value.Kind != DateTimeKind.Utc);
+
+            // value.Kind can be DateTimeKind.Utc when TimeZoneInfo isn't specified (or specified as UTC)
         }
 
         public override void Visit(IValueVisitor visitor)

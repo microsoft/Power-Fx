@@ -17,10 +17,9 @@ namespace Microsoft.PowerFx
             StackDepthCounter = stackMarker;
         }
 
-        public EvalVisitorContext(SymbolContext symbolContext, EvalVisitorContext previousContext)
+        public EvalVisitorContext NewScope(SymbolContext symbolContext)
         {
-            SymbolContext = symbolContext;
-            StackDepthCounter = previousContext.StackDepthCounter;
+            return new EvalVisitorContext(symbolContext, StackDepthCounter);
         }
 
         public EvalVisitorContext IncrementStackDepthCounter()

@@ -768,24 +768,29 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void TestWithTimeZoneInfo()
         {
-            var pfxConfig = new PowerFxConfig(new CultureInfo("ja-JP"));
+            var pfxConfig = new PowerFxConfig();
             var recalcEngine = new RecalcEngine(pfxConfig);
             var symbols = new SymbolValues();
 
             // 10/30/22 is the date where DST applies in France (https://www.timeanddate.com/time/change/france/paris)
             // So adding 2 hours to 1:34am will result in 2:34am
             symbols.SetTimeZoneByDisplayName("(UTC+01:00) Brussels, Copenhagen, Madrid, Paris");
-            
+
             // Alternative ways to set the TimeZoneInfo
             // symbols.SetTimeZoneById("Romance Standard Time");
             // symbols.AddService(TimeZoneInfo.FindSystemTimeZoneById("Romance Standard Time"));
+
+            symbols.SetCulture(new CultureInfo("ja-JP"));
+
+            // Alternative way to set the CultureInfo
+            // symbols.AddService(new CultureInfo("ja-JP"));
 
             var fv = recalcEngine.Eval(@"Text(DateAdd(DateTimeValue(""dimanche 30 octobre 2022 01:34:03"", ""fr-FR""), ""2"", ""hours""), ""dddd, MMMM dd, yyyy hh:mm:ss"")", symbols: symbols);
 
             Assert.NotNull(fv);
             Assert.IsType<StringValue>(fv);
 
-            // Then we convert the result to Japanese date/time format
+            // Then we convert the result to Japanese date/time format (English equivalent: "Sunday, October 30, 2022 02:34:03")
             Assert.Equal("日曜日, 10月 30, 2022 02:34:03", (fv as StringValue)?.Value);
         }
 

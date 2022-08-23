@@ -1,5 +1,5 @@
 ﻿// (UTC-08:00) Pacific Time (US & Canada)
-#SETUP: TimeZoneInfo(Pacific Standard Time)
+#SETUP: TimeZoneInfo("Pacific Standard Time")
 
 // The result of this expression depends on current TimeZoneInfo. 
 // In Seattle TimeZoneInfo, this will trip over daylight savings and be 4:00am. 

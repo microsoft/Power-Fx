@@ -59,10 +59,10 @@ namespace Microsoft.PowerFx
         /// <inheritdoc/>
         protected override IExpression CreateEvaluator(CheckResult result)
         {
-            return CreateEvaluatorDirect(result, new StackDepthCounter(Config.MaxCallDepth), Config.CultureInfo);
+            return CreateEvaluatorDirect(result, new StackDepthCounter(Config.MaxCallDepth), _symbolValues);
         }
 
-        internal static IExpression CreateEvaluatorDirect(CheckResult result, StackDepthCounter stackMarker, CultureInfo culture)
+        internal static IExpression CreateEvaluatorDirect(CheckResult result, StackDepthCounter stackMarker)
         {
             if (result._binding == null)
             {
@@ -72,7 +72,20 @@ namespace Microsoft.PowerFx
             result.ThrowOnErrors();
 
             (var irnode, var ruleScopeSymbol) = IRTranslator.Translate(result._binding);
-            return new ParsedExpression(irnode, ruleScopeSymbol, stackMarker, culture);
+            return new ParsedExpression(irnode, ruleScopeSymbol, stackMarker);
+        }
+
+        internal static IExpression CreateEvaluatorDirect(CheckResult result, StackDepthCounter stackMarker, ReadOnlySymbolValues symbols)
+        {
+            if (result._binding == null)
+            {
+                throw new InvalidOperationException($"Requires successful binding");
+            }
+
+            result.ThrowOnErrors();
+
+            (var irnode, var ruleScopeSymbol) = IRTranslator.Translate(result._binding);
+            return new ParsedExpression(irnode, ruleScopeSymbol, stackMarker, symbols);
         }
 
         /// <summary>
@@ -82,18 +95,7 @@ namespace Microsoft.PowerFx
         /// <returns></returns>
         public static IExpression CreateEvaluatorDirect(CheckResult result)
         {
-            return CreateEvaluatorDirect(result, new StackDepthCounter(PowerFxConfig.DefaultMaxCallDepth), null);
-        }
-
-        /// <summary>
-        /// Create an evaluator over the existing binding.
-        /// </summary>
-        /// <param name = "result" >A successful binding from a previous call to.<see cref="Engine.Check(string, RecordType, ParserOptions)"/>. </param>   
-        /// <param name="culture">Culture information.</param>
-        /// <returns></returns>
-        public static IExpression CreateEvaluatorDirect(CheckResult result, CultureInfo culture)
-        {
-            return CreateEvaluatorDirect(result, new StackDepthCounter(PowerFxConfig.DefaultMaxCallDepth), culture);
+            return CreateEvaluatorDirect(result, new StackDepthCounter(PowerFxConfig.DefaultMaxCallDepth));
         }
 
         public void UpdateVariable(string name, double value)

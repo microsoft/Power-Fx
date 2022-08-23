@@ -85,6 +85,14 @@ namespace Microsoft.PowerFx
             _cultureInfo = cultureInfo ?? CultureInfo.CurrentCulture;
         }
 
+        internal ParsedExpression(IntermediateNode irnode, ScopeSymbol topScope, StackDepthCounter stackMarker, ReadOnlySymbolValues symbols)
+        {
+            _irnode = irnode;
+            _topScopeSymbol = topScope;
+            _stackMarker = stackMarker;
+            _cultureInfo = symbols.GetService<CultureInfo>() ?? CultureInfo.CurrentCulture;
+        }
+
         public async Task<FormulaValue> EvalAsync(RecordValue parameters, CancellationToken cancel)
         {
             var useRowScope = _topScopeSymbol.AccessedFields.Count > 0;
