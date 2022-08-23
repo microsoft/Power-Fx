@@ -3933,14 +3933,15 @@ namespace Microsoft.PowerFx.Core.Binding
                 AssertValid();
                 Contracts.AssertValue(node);
 
+                var childType = _txb.GetType(node.Child);
+
                 switch (node.Op)
                 {
                     case UnaryOp.Not:
-                        CheckType(node.Child, DType.Boolean, /* coerced: */ DType.Number, DType.String, DType.OptionSetValue);
+                        CheckType(node.Child, childType, DType.Boolean, /* coerced: */ DType.Number, DType.String, DType.OptionSetValue);
                         _txb.SetType(node, DType.Boolean);
                         break;
                     case UnaryOp.Minus:
-                        var childType = _txb.GetType(node.Child);
                         switch (childType.Kind)
                         {
                             case DKind.Date:
@@ -3956,14 +3957,14 @@ namespace Microsoft.PowerFx.Core.Binding
                                 _txb.SetType(node, DType.DateTime);
                                 break;
                             default:
-                                CheckType(node.Child, DType.Number, /* coerced: */ DType.String, DType.Boolean);
+                                CheckType(node.Child, childType, DType.Number, /* coerced: */ DType.String, DType.Boolean);
                                 _txb.SetType(node, DType.Number);
                                 break;
                         }
 
                         break;
                     case UnaryOp.Percent:
-                        CheckType(node.Child, DType.Number, /* coerced: */ DType.String, DType.Boolean, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime);
+                        CheckType(node.Child, childType, DType.Number, /* coerced: */ DType.String, DType.Boolean, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime);
                         _txb.SetType(node, DType.Number);
                         break;
                     default:
@@ -4072,10 +4073,10 @@ namespace Microsoft.PowerFx.Core.Binding
                 Contracts.AssertValue(node);
                 Contracts.Assert(node.Op == BinaryOp.Add);
 
-                var left = _txb.GetType(node.Left);
-                var right = _txb.GetType(node.Right);
-                var leftKind = left.Kind;
-                var rightKind = right.Kind;
+                var leftType = _txb.GetType(node.Left);
+                var rightType = _txb.GetType(node.Right);
+                var leftKind = leftType.Kind;
+                var rightKind = rightType.Kind;
 
                 void ReportInvalidOperation()
                 {
@@ -4084,8 +4085,8 @@ namespace Microsoft.PowerFx.Core.Binding
                         DocumentErrorSeverity.Severe,
                         node,
                         TexlStrings.ErrBadOperatorTypes,
-                        left.GetKindString(),
-                        right.GetKindString());
+                        leftType.GetKindString(),
+                        rightType.GetKindString());
                 }
 
                 UnaryOpNode unary;
@@ -4118,7 +4119,7 @@ namespace Microsoft.PowerFx.Core.Binding
                                 break;
                             default:
                                 // DateTime + number = DateTime
-                                CheckType(node.Right, DType.Number, /* coerced: */ DType.String, DType.Boolean);
+                                CheckType(node.Right, rightType, DType.Number, /* coerced: */ DType.String, DType.Boolean);
                                 _txb.SetType(node, DType.DateTime);
                                 break;
                         }
@@ -4173,7 +4174,7 @@ namespace Microsoft.PowerFx.Core.Binding
                                 break;
                             default:
                                 // Date + number = Date
-                                CheckType(node.Right, DType.Number, /* coerced: */ DType.String, DType.Boolean);
+                                CheckType(node.Right, rightType, DType.Number, /* coerced: */ DType.String, DType.Boolean);
                                 _txb.SetType(node, DType.Date);
                                 break;
                         }
@@ -4217,7 +4218,7 @@ namespace Microsoft.PowerFx.Core.Binding
                                 break;
                             default:
                                 // Time + number = Time
-                                CheckType(node.Right, DType.Number, /* coerced: */ DType.String, DType.Boolean);
+                                CheckType(node.Right, rightType, DType.Number, /* coerced: */ DType.String, DType.Boolean);
                                 _txb.SetType(node, DType.Time);
                                 break;
                         }
@@ -4228,23 +4229,23 @@ namespace Microsoft.PowerFx.Core.Binding
                         {
                             case DKind.DateTime:
                                 // number + DateTime = DateTime
-                                CheckType(node.Left, DType.Number, /* coerced: */ DType.String, DType.Boolean);
+                                CheckType(node.Left, leftType, DType.Number, /* coerced: */ DType.String, DType.Boolean);
                                 _txb.SetType(node, DType.DateTime);
                                 break;
                             case DKind.Date:
                                 // number + Date = Date
-                                CheckType(node.Left, DType.Number, /* coerced: */ DType.String, DType.Boolean);
+                                CheckType(node.Left, leftType, DType.Number, /* coerced: */ DType.String, DType.Boolean);
                                 _txb.SetType(node, DType.Date);
                                 break;
                             case DKind.Time:
                                 // number + Time = Time
-                                CheckType(node.Left, DType.Number, /* coerced: */ DType.String, DType.Boolean);
+                                CheckType(node.Left, leftType, DType.Number, /* coerced: */ DType.String, DType.Boolean);
                                 _txb.SetType(node, DType.Time);
                                 break;
                             default:
                                 // Regular Addition
-                                CheckType(node.Left, DType.Number, /* coerced: */ DType.String, DType.Boolean);
-                                CheckType(node.Right, DType.Number, /* coerced: */ DType.String, DType.Boolean);
+                                CheckType(node.Left, leftType, DType.Number, /* coerced: */ DType.String, DType.Boolean);
+                                CheckType(node.Right, rightType, DType.Number, /* coerced: */ DType.String, DType.Boolean);
                                 _txb.SetType(node, DType.Number);
                                 break;
                         }
