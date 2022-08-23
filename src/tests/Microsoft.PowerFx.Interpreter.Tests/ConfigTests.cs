@@ -245,6 +245,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.Equal("2/01", engine.EvalAsync("Text(2,01)", CancellationToken.None, options: fr_ParserOptions, runtimeConfig: fa_Symbols).Result.ToObject());
         }
 
+        // Verify that a single IR tree can be re-executed across multiple cultures.
         [Fact]
         public void RecalcEngine_Symbol_CultureInfo2()
         {
