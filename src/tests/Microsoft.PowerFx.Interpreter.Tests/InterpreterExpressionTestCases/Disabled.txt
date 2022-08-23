@@ -1,3 +1,7 @@
 ﻿// List files that aren't supported in interpreter.
 #disable: Weekday.txt
 #disable: TrigTableFunctions.txt
+#disable: Abs_ConsistentOneColumnTableResult.txt
+#disable: Exp_ConsistentOneColumnTableResult.txt
+#disable: Int_ConsistentOneColumnTableResult.txt
+#disable: Ln_ConsistentOneColumnTableResult.txt
