@@ -1,0 +1,7 @@
+﻿#SETUP: EnableExpressionChaining
+
+>> IfError(1, {x:3}) + 1; 3
+Errors: Error 11-16: Invalid argument type (Record). Expecting a Number value instead.|Error 0-17: The function 'IfError' has some invalid arguments.
+
+>> IfError(1/0, {x:5}); IfError(2, {x:5}) + 2
+Errors: Error 32-37: Invalid argument type (Record). Expecting a Number value instead.|Error 21-38: The function 'IfError' has some invalid arguments.
