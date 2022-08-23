@@ -59,7 +59,7 @@ namespace Microsoft.PowerFx
         /// <inheritdoc/>
         protected override IExpression CreateEvaluator(CheckResult result)
         {
-            return CreateEvaluatorDirect(result, new StackDepthCounter(Config.MaxCallDepth), _symbolValues);
+            return CreateEvaluatorDirect(result, new StackDepthCounter(Config.MaxCallDepth));
         }
 
         internal static IExpression CreateEvaluatorDirect(CheckResult result, StackDepthCounter stackMarker)
@@ -73,19 +73,6 @@ namespace Microsoft.PowerFx
 
             (var irnode, var ruleScopeSymbol) = IRTranslator.Translate(result._binding);
             return new ParsedExpression(irnode, ruleScopeSymbol, stackMarker);
-        }
-
-        internal static IExpression CreateEvaluatorDirect(CheckResult result, StackDepthCounter stackMarker, ReadOnlySymbolValues symbols)
-        {
-            if (result._binding == null)
-            {
-                throw new InvalidOperationException($"Requires successful binding");
-            }
-
-            result.ThrowOnErrors();
-
-            (var irnode, var ruleScopeSymbol) = IRTranslator.Translate(result._binding);
-            return new ParsedExpression(irnode, ruleScopeSymbol, stackMarker, symbols);
         }
 
         /// <summary>
@@ -153,7 +140,7 @@ namespace Microsoft.PowerFx
         /// <param name="symbols">symbols for formula.</param>
         /// <param name="options"></param>        
         /// <returns>The formula's result.</returns>
-        public FormulaValue Eval(string expressionText, ReadOnlySymbolValues symbols, ParserOptions options = null)
+        public FormulaValue Eval2(string expressionText, ReadOnlySymbolValues symbols, ParserOptions options = null)
         {
             return EvalAsync(expressionText, CancellationToken.None, options, runtimeConfig: symbols).Result;
         }

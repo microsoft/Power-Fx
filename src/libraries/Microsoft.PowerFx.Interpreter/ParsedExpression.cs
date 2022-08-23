@@ -85,14 +85,6 @@ namespace Microsoft.PowerFx
             _cultureInfo = cultureInfo ?? CultureInfo.CurrentCulture;
         }
 
-        internal ParsedExpression(IntermediateNode irnode, ScopeSymbol topScope, StackDepthCounter stackMarker, ReadOnlySymbolValues symbols)
-        {
-            _irnode = irnode;
-            _topScopeSymbol = topScope;
-            _stackMarker = stackMarker;
-            _cultureInfo = symbols.GetService<CultureInfo>() ?? CultureInfo.CurrentCulture;
-        }
-
         public async Task<FormulaValue> EvalAsync(RecordValue parameters, CancellationToken cancel)
         {
             var useRowScope = _topScopeSymbol.AccessedFields.Count > 0;
@@ -120,7 +112,8 @@ namespace Microsoft.PowerFx
 
         public async Task<FormulaValue> EvalAsync(CancellationToken cancel, ReadOnlySymbolValues runtimeConfig = null)
         {
-            var ev2 = new EvalVisitor(_cultureInfo, cancel, runtimeConfig);
+            var culture = runtimeConfig?.GetService<CultureInfo>() ?? _cultureInfo;
+            var ev2 = new EvalVisitor(culture, cancel, runtimeConfig);
 
             try
             {

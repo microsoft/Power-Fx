@@ -65,10 +65,7 @@ namespace Microsoft.PowerFx.Functions
             var delta = (NumberValue)args[1];
             var units = (StringValue)args[2];
 
-            if (timeZoneInfo.SupportsDaylightSavingTime)
-            {
-                datetime = TimeZoneInfo.ConvertTimeToUtc(datetime, timeZoneInfo);
-            }
+            datetime = TimeZoneInfo.ConvertTimeToUtc(datetime, timeZoneInfo);
 
             try
             {
@@ -104,10 +101,7 @@ namespace Microsoft.PowerFx.Functions
                         return CommonErrors.NotYetImplementedError(irContext, "DateAdd Only supports Days for the unit field");
                 }
 
-                if (timeZoneInfo.SupportsDaylightSavingTime)
-                {
-                    newDate = TimeZoneInfo.ConvertTimeFromUtc(newDate, timeZoneInfo);
-                }
+                newDate = TimeZoneInfo.ConvertTimeFromUtc(newDate, timeZoneInfo);
 
                 if (args[0] is DateTimeValue)
                 {
@@ -173,11 +167,8 @@ namespace Microsoft.PowerFx.Functions
             // Convert to UTC to be accurate (apply DST if needed)
             var timeZoneInfo = runner.GetService<TimeZoneInfo>() ?? LocalTimeZone;
 
-            if (timeZoneInfo.SupportsDaylightSavingTime)
-            {
-                start = TimeZoneInfo.ConvertTimeToUtc(start, timeZoneInfo);           
-                end = TimeZoneInfo.ConvertTimeToUtc(end, timeZoneInfo);
-            }
+            start = TimeZoneInfo.ConvertTimeToUtc(start, timeZoneInfo);
+            end = TimeZoneInfo.ConvertTimeToUtc(end, timeZoneInfo);
 
             var diff = end - start;
 

@@ -20,10 +20,10 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             engine.UpdateVariable("x", FormulaValue.New(12));
 
-            var r1 = engine.Eval("x", parameters: null, _opts); // 12
+            var r1 = engine.Eval("x", null, _opts); // 12
             Assert.Equal(12.0, r1.ToObject());
 
-            var r2 = engine.Eval("Set(x, 15)", parameters: null, _opts);
+            var r2 = engine.Eval("Set(x, 15)", null, _opts);
 
             // Set() returns constant 'true;
             Assert.Equal(true, r2.ToObject());
@@ -45,7 +45,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             engine.UpdateVariable("x", FormulaValue.NewBlank(FormulaType.Number));
 
             // Circular reference ok
-            var r3 = engine.Eval("Set(x, 1);Set(x,x+1);x", parameters: null, _opts);
+            var r3 = engine.Eval("Set(x, 1);Set(x,x+1);x", null, _opts);
             Assert.Equal(2.0, r3.ToObject());
         }
 
@@ -59,7 +59,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             engine.UpdateVariable("x", FormulaValue.New(5));
             engine.UpdateVariable("y", FormulaValue.New(7));
 
-            var r1 = engine.Eval("Set(y, x*2);y", parameters: null, _opts);
+            var r1 = engine.Eval("Set(y, x*2);y", null, _opts);
             Assert.Equal(10.0, r1.ToObject());
         }
 
@@ -77,7 +77,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             engine.UpdateVariable("obj", obj);
             
             // Can update record
-            var r1 = engine.Eval("Set(obj, {X: 11, Y: 21}); obj.X", parameters: null, _opts);
+            var r1 = engine.Eval("Set(obj, {X: 11, Y: 21}); obj.X", null, _opts);
             Assert.Equal(11.0, r1.ToObject());
 
             // But SetField fails 

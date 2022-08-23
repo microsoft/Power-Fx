@@ -768,30 +768,29 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void TestWithTimeZoneInfo()
         {
+            // CultureInfo not set in PowerFxConfig as we use Symbols
             var pfxConfig = new PowerFxConfig();
             var recalcEngine = new RecalcEngine(pfxConfig);
             var symbols = new SymbolValues();
 
             // 10/30/22 is the date where DST applies in France (https://www.timeanddate.com/time/change/france/paris)
             // So adding 2 hours to 1:34am will result in 2:34am
-            symbols.SetTimeZoneByDisplayName("(UTC+01:00) Brussels, Copenhagen, Madrid, Paris");
+            var frTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Romance Standard Time");
+            symbols.SetTimeZone(frTimeZone);
+            
+            var jaCulture = new CultureInfo("ja-JP");
+            symbols.SetCulture(jaCulture);
 
-            // Alternative ways to set the TimeZoneInfo
-            // symbols.SetTimeZoneById("Romance Standard Time");
-            // symbols.AddService(TimeZoneInfo.FindSystemTimeZoneById("Romance Standard Time"));
+            Assert.Same(frTimeZone, symbols.GetService<TimeZoneInfo>());
+            Assert.Same(jaCulture, symbols.GetService<CultureInfo>());
 
-            symbols.SetCulture(new CultureInfo("ja-JP"));
-
-            // Alternative way to set the CultureInfo
-            // symbols.AddService(new CultureInfo("ja-JP"));
-
-            var fv = recalcEngine.Eval(@"Text(DateAdd(DateTimeValue(""dimanche 30 octobre 2022 01:34:03"", ""fr-FR""), ""2"", ""hours""), ""dddd, MMMM dd, yyyy hh:mm:ss"")", symbols: symbols);
+            var fv = recalcEngine.Eval2(@"Text(DateAdd(DateTimeValue(""dimanche 30 octobre 2022 01:34:03"", ""fr-FR""), ""2"", ""hours""), ""dddd, MMMM dd, yyyy hh:mm:ss"")", symbols: symbols);
 
             Assert.NotNull(fv);
             Assert.IsType<StringValue>(fv);
 
             // Then we convert the result to Japanese date/time format (English equivalent: "Sunday, October 30, 2022 02:34:03")
-            Assert.Equal("日曜日, 10月 30, 2022 02:34:03", (fv as StringValue)?.Value);
+            Assert.Equal("日曜日, 10月 30, 2022 02:34:03", fv.ToObject());
         }
 
         [Fact]
@@ -800,7 +799,7 @@ namespace Microsoft.PowerFx.Tests
             var recalcEngine = new RecalcEngine(new PowerFxConfig(null));
             var str = "Foo(x: Number): Number => { 1+1; 2+2; };";
             recalcEngine.DefineFunctions(str);
-            Assert.Equal(4.0, recalcEngine.Eval("Foo(1)", parameters: null, new ParserOptions { AllowsSideEffects = true }).ToObject());
+            Assert.Equal(4.0, recalcEngine.Eval("Foo(1)", null, new ParserOptions { AllowsSideEffects = true }).ToObject());
         }
 
         [Fact]
