@@ -31,7 +31,7 @@ namespace Microsoft.PowerFx
         /// Create a new power fx engine. 
         /// </summary>
         public RecalcEngine()
-            : this(new PowerFxConfig(null))
+            : this(new PowerFxConfig())
         {
         }
 
@@ -182,6 +182,7 @@ namespace Microsoft.PowerFx
             // - Some Symbols are metadata-only (like option sets, UDFs, constants, etc)
             // and hence don't require a corresponnding runtime Symbol Value. 
             var symbolsAll = ReadOnlySymbolTable.Compose(runtimeConfig?.GetSymbolTableSnapshot(), symbolTable);
+            var culture = runtimeConfig?.GetService<CultureInfo>();            
 
             var check = Check(expressionText, options, symbolsAll);
             check.ThrowOnErrors();
