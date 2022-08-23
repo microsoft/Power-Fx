@@ -19,7 +19,9 @@ namespace Microsoft.PowerFx.Core.Tests
             public delegate bool TryGetFieldDelegate(string name, out FormulaType type);
 
             private readonly TryGetFieldDelegate _tryGetField;
-            
+
+            public override string UserVisibleTypeName => "TestType";
+
             internal string Identity;
 
             public override IEnumerable<string> FieldNames { get; }
@@ -106,7 +108,14 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal(0, _getter1CalledCount);
             Assert.Equal(0, _getter2CalledCount);
         }
-        
+
+        [Fact]
+        public void KindString()
+        {
+            Assert.Equal("Table (TestType)", _lazyTable1._type.GetKindString());
+            Assert.Equal("Record (TestType)", _lazyRecord1._type.GetKindString());
+        }
+
         [Fact]
         public void AcceptsSimple()
         {

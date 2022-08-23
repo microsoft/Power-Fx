@@ -38,5 +38,10 @@ namespace Microsoft.PowerFx.Types
         {
             throw new NotImplementedException();
         }
+
+        internal TResult Visit<TResult, TContext>(IRNodeVisitor<TResult, TContext> visitor, TContext context)
+        {
+            return _tree.Accept(visitor, context);
+        }
     }
 }
