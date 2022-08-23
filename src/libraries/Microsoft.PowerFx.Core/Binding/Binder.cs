@@ -23,6 +23,7 @@ using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
+using static Microsoft.PowerFx.Core.Binding.BinderUtils;
 using Conditional = System.Diagnostics.ConditionalAttribute;
 
 namespace Microsoft.PowerFx.Core.Binding
@@ -532,7 +533,7 @@ namespace Microsoft.PowerFx.Core.Binding
             }
 
             var isServerDelegatable = function.IsServerDelegatable(node, this);
-            BinderUtils.LogTelemetryForFunction(function, node, this, isServerDelegatable);
+            LogTelemetryForFunction(function, node, this, isServerDelegatable);
             return isServerDelegatable;
         }
 
@@ -5518,106 +5519,6 @@ namespace Microsoft.PowerFx.Core.Binding
                 {
                     return Enumerable.Empty<TexlFunction>();
                 }
-            }
-
-            /// <summary>
-            /// Tries to get the best suited overload for <paramref name="node"/> according to <paramref name="txb"/> and
-            /// returns true if it is found.
-            /// </summary>
-            /// <param name="txb">
-            /// Binding that will help select the best overload.
-            /// </param>
-            /// <param name="node">
-            /// CallNode for which the best overload will be determined.
-            /// </param>
-            /// <param name="argTypes">
-            /// List of argument types for <paramref name="node.Args"/>.
-            /// </param>
-            /// <param name="overloads">
-            /// All overloads for <paramref name="node"/>. An element of this list will be returned.
-            /// </param>
-            /// <param name="bestOverload">
-            /// Set to the best overload when this method completes.
-            /// </param>
-            /// <param name="nodeToCoercedTypeMap">
-            /// Set to the types to which <paramref name="node.Args"/> must be coerced in order for
-            /// <paramref name="bestOverload"/> to be valid.
-            /// </param>
-            /// <param name="returnType">
-            /// The return type for <paramref name="bestOverload"/>.
-            /// </param>
-            /// <returns>
-            /// True if a valid overload was found, false if not.
-            /// </returns>
-            private static bool TryGetBestOverload(TexlBinding txb, CallNode node, DType[] argTypes, TexlFunction[] overloads, out TexlFunction bestOverload, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap, out DType returnType)
-            {
-                Contracts.AssertValue(node, nameof(node));
-                Contracts.AssertValue(overloads, nameof(overloads));
-
-                var args = node.Args.Children;
-                var carg = args.Length;
-                returnType = DType.Unknown;
-
-                TexlFunction matchingFuncWithCoercion = null;
-                var matchingFuncWithCoercionReturnType = DType.Invalid;
-                nodeToCoercedTypeMap = null;
-                Dictionary<TexlNode, DType> matchingFuncWithCoercionNodeToCoercedTypeMap = null;
-
-                foreach (var maybeFunc in overloads)
-                {
-                    Contracts.Assert(!maybeFunc.HasLambdas);
-
-                    nodeToCoercedTypeMap = null;
-
-                    if (carg < maybeFunc.MinArity || carg > maybeFunc.MaxArity)
-                    {
-                        continue;
-                    }
-
-                    var typeCheckSucceeded = false;
-
-                    IErrorContainer warnings = new LimitedSeverityErrorContainer(txb.ErrorContainer, DocumentErrorSeverity.Warning);
-
-                    // Typecheck the invocation and infer the return type.
-                    typeCheckSucceeded = maybeFunc.CheckInvocation(txb, args, argTypes, warnings, out returnType, out nodeToCoercedTypeMap);
-
-                    if (typeCheckSucceeded)
-                    {
-                        if (nodeToCoercedTypeMap == null)
-                        {
-                            // We found an overload that matches without type coercion.  The correct return type
-                            // and, trivially, the nodeToCoercedTypeMap are properly set at this point.
-                            bestOverload = maybeFunc;
-                            return true;
-                        }
-
-                        // We found an overload that matches but with type coercion. Keep going
-                        // until we find another overload that matches without type coercion.
-                        // If we cannot find one, we will use this overload only if there is no other
-                        // overload that involves fewer coercions.
-                        if (matchingFuncWithCoercion == null || nodeToCoercedTypeMap.Count < matchingFuncWithCoercionNodeToCoercedTypeMap.VerifyValue().Count)
-                        {
-                            matchingFuncWithCoercionNodeToCoercedTypeMap = nodeToCoercedTypeMap;
-                            matchingFuncWithCoercion = maybeFunc;
-                            matchingFuncWithCoercionReturnType = returnType;
-                        }
-                    }
-                }
-
-                // We've matched, but with coercion required.
-                if (matchingFuncWithCoercionNodeToCoercedTypeMap != null)
-                {
-                    bestOverload = matchingFuncWithCoercion;
-                    nodeToCoercedTypeMap = matchingFuncWithCoercionNodeToCoercedTypeMap;
-                    returnType = matchingFuncWithCoercionReturnType;
-                    return true;
-                }
-
-                // There are no good overloads
-                bestOverload = null;
-                nodeToCoercedTypeMap = null;
-                returnType = null;
-                return false;
             }
 
             /// <summary>
