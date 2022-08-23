@@ -15,7 +15,7 @@ namespace Microsoft.PowerFx.Types
         internal DateTimeValue(IRContext irContext, DateTime value)
             : base(irContext, value)
         {
-            Contract.Assert(IRContext.ResultType == FormulaType.DateTime);                       
+            Contract.Assert(IRContext.ResultType == FormulaType.DateTime);
             Contract.Assert(value.Kind != DateTimeKind.Utc);
         }
 

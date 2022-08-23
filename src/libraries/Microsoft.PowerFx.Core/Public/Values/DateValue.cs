@@ -16,7 +16,7 @@ namespace Microsoft.PowerFx.Types
             : base(irContext, value)
         {
             Contract.Assert(IRContext.ResultType == FormulaType.Date);
-            Contract.Assert(value.TimeOfDay == TimeSpan.Zero);            
+            Contract.Assert(value.TimeOfDay == TimeSpan.Zero);
             Contract.Assert(value.Kind != DateTimeKind.Utc);
         }
 
