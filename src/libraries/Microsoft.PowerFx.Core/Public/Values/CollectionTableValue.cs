@@ -75,7 +75,7 @@ namespace Microsoft.PowerFx.Types
 
         public override async Task<DValue<RecordValue>> AppendAsync(RecordValue record)
         {
-            if (_sourceList == null)
+            if (_sourceList == null || _sourceList.IsReadOnly)
             {
                 return await base.AppendAsync(record);
             }

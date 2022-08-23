@@ -76,5 +76,74 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             Assert.Equal(expected, ((BooleanValue)resultCount).Value);
         }
+
+        [Theory]
+        [InlineData("Collect(t)")]
+        [InlineData("Collect(t, r1, r1)")]
+        [InlineData("Collect(t, r1, 1; 2; r1)")]
+        public async Task AppendMultipleTest(string script)
+        {
+            var symbol = new SymbolTable();
+            var listT = new List<RecordValue>();
+
+            symbol.EnableCollectFunction();
+
+            RecordValue r1 = FormulaValue.NewRecordFromFields(
+                new NamedValue("MyField1", FormulaValue.New(1)),
+                new NamedValue("MyField2", FormulaValue.New("Hello World!!!")));
+
+            var t = FormulaValue.NewTable(r1.Type, listT);
+
+            symbol.AddConstant("t", t);
+            symbol.AddConstant("r1", r1);
+
+            var engine = new RecalcEngine();
+            await Assert.ThrowsAsync<InvalidOperationException>(async () => await engine.EvalAsync(script, CancellationToken.None, options: _opts, symbolTable: symbol)); // Fails 
+        }
+
+        [Theory]
+        [InlineData("Collect(t, \"x\")")]
+        public async Task AppendTypeCheckingTest(string script)
+        {
+            var symbol = new SymbolTable();
+            var listT = new List<RecordValue>();
+
+            symbol.EnableCollectFunction();
+
+            RecordValue r1 = FormulaValue.NewRecordFromFields(
+                new NamedValue("MyField1", FormulaValue.New(1)),
+                new NamedValue("MyField2", FormulaValue.New("Hello World!!!")));
+
+            var t = FormulaValue.NewTable(r1.Type, listT);
+
+            symbol.AddConstant("t", t);
+            symbol.AddConstant("r1", r1);
+
+            var engine = new RecalcEngine();
+            await Assert.ThrowsAsync<InvalidOperationException>(async () => await engine.EvalAsync(script, CancellationToken.None, options: _opts, symbolTable: symbol)); // Fails 
+        }
+
+        [Fact]
+        public async Task CollectNonBehaviorTest()
+        {
+            var symbol = new SymbolTable();
+            var listT = new List<RecordValue>();
+
+            symbol.EnableCollectFunction();
+
+            RecordValue r1 = FormulaValue.NewRecordFromFields(
+                new NamedValue("MyField1", FormulaValue.New(1)),
+                new NamedValue("MyField2", FormulaValue.New("Hello World!!!")));
+
+            var t = FormulaValue.NewTable(r1.Type, listT);
+
+            symbol.AddConstant("t", t);
+            symbol.AddConstant("r1", r1);
+
+            var engine = new RecalcEngine();
+
+            // options: _opts has been removed
+            await Assert.ThrowsAsync<InvalidOperationException>(async () => await engine.EvalAsync("Collect(t, r1)", CancellationToken.None, symbolTable: symbol)); // Fails 
+        }
     }
 }

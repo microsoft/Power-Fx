@@ -30,7 +30,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             // Future test case
             IEnumerable<RecordValue> source = new RecordValue[] { r1 };
-            var t2 = FormulaValue.NewTable(r1.Type, source); // Immutabe
+            var t2 = FormulaValue.NewTable(r1.Type, source); // Immutable
             await Assert.ThrowsAsync<NotImplementedException>(async () => await t2.AppendAsync(r2)); // Fails 
         }
     }

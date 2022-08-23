@@ -35,7 +35,7 @@ namespace Microsoft.PowerFx.Interpreter
 
         public override bool ModifiesValues => true;
 
-        public override bool IsSelfContained => true;
+        public override bool IsSelfContained => false;
 
         public override bool RequiresDataSourceScope => true;
 
@@ -58,7 +58,7 @@ namespace Microsoft.PowerFx.Interpreter
               DType.EmptyTable,
               0, // no lambdas
               2,
-              int.MaxValue)
+              2) // Not handling multiple arguments for now
         {
         }
 
