@@ -29,9 +29,9 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal(2, t.Count());
 
             // Future test case
-            //IEnumerable<RecordValue> source = new RecordValue[] { r1 };
-            //var t2 = FormulaValue.NewTable(r1.Type, source); // Immutabe
-            //await t2.AppendAsync(r2); // Fails 
+            IEnumerable<RecordValue> source = new RecordValue[] { r1 };
+            var t2 = FormulaValue.NewTable(r1.Type, source); // Immutabe
+            await Assert.ThrowsAsync<NotImplementedException>(async () => await t2.AppendAsync(r2)); // Fails 
         }
     }
 }
