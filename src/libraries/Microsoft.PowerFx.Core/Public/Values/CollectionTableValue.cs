@@ -37,7 +37,7 @@ namespace Microsoft.PowerFx.Types
 
             _sourceIndex = source as IReadOnlyList<T>;
             _sourceCount = source as IReadOnlyCollection<T>;
-            _sourceList = source as List<T>;
+            _sourceList = source as ICollection<T>;
         }
 
         public RecordType RecordType { get; }
