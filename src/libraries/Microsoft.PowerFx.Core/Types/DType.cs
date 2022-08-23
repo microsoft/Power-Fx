@@ -1434,10 +1434,8 @@ namespace Microsoft.PowerFx.Core.Types
                 }
             }
 
-            // Set error if no type of given kind was found.
             if (tree == typeOuter.TypeTree)
             {
-                fError = true;
                 return this;
             }
 

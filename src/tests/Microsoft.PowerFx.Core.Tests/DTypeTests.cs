@@ -314,6 +314,12 @@ namespace Microsoft.PowerFx.Tests
             fError = false;
             newType = type7.DropAllMatching(ref fError, DPath.Root, type => type.IsAttachment);
             Assert.Equal(TestUtils.DT("*[A:n, B:n, C:s]"), newType);
+            
+            // Safe to call when type isn't present
+            fError = false;
+            newType = type1.DropAllMatching(ref fError, DPath.Root, type => type.IsAttachment);
+            Assert.False(fError);
+            Assert.Equal(TestUtils.DT("*[A:n, B:n, C:s]"), newType);
         }
 
         [Fact]
