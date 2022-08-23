@@ -15,9 +15,8 @@ namespace Microsoft.PowerFx.Types
         internal DateTimeValue(IRContext irContext, DateTime value)
             : base(irContext, value)
         {
-            Contract.Assert(IRContext.ResultType == FormulaType.DateTime);
-
-            // value.Kind can be DateTimeKind.Utc when TimeZoneInfo isn't specified (or specified as UTC)
+            Contract.Assert(IRContext.ResultType == FormulaType.DateTime);                       
+            Contract.Assert(value.Kind != DateTimeKind.Utc);
         }
 
         public override void Visit(IValueVisitor visitor)

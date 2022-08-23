@@ -41,7 +41,7 @@ namespace Microsoft.PowerFx.Functions
         }
 
         // When not specified, default time zone is the local one.
-        private static TimeZoneInfo LocalTimeZone => TimeZoneInfo.Utc;
+        private static TimeZoneInfo LocalTimeZone => TimeZoneInfo.Local;
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/show-text-dates-times
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-dateadd-datediff
