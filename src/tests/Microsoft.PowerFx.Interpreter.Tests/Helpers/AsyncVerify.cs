@@ -7,6 +7,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.PowerFx.Core.Parser;
+using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
@@ -71,9 +73,16 @@ namespace Microsoft.PowerFx.Tests
             tsc.SetResult(1); // signals eval to keep running.
         }
 
-        public async Task<FormulaValue> EvalAsync(RecalcEngine engine, string expr, ParserOptions options = null)
+        public async Task<FormulaValue> EvalAsync(RecalcEngine engine, string expr, InternalSetup setup)
         {
-            var task = engine.EvalAsync(expr, CancellationToken.None, options: options);
+            var rtConfig = new SymbolValues();
+
+            if (setup.TimeZoneInfo != null)
+            {
+                rtConfig.AddService(setup.TimeZoneInfo);
+            }
+
+            var task = engine.EvalAsync(expr, CancellationToken.None, options: setup.Flags.ToParserOptions(), runtimeConfig: rtConfig);
 
             var i = 0;
             while (HasOutanding)

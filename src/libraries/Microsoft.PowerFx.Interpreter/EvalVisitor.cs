@@ -55,6 +55,12 @@ namespace Microsoft.PowerFx
             return default;
         }
 
+        public bool TryGetService<T>(out T result)
+        {
+            result = GetService<T>();
+            return result != null;
+        }
+
         public IServiceProvider FunctionServices => _runtimeConfig;
 
         // Check this cooperatively - especially in any loop. 
@@ -229,6 +235,7 @@ namespace Microsoft.PowerFx
             }
             else if (func is UserDefinedTexlFunction udtf)
             {
+                // $$$ Should add _runtimeConfig
                 var result = await udtf.InvokeAsync(args, _cancel, context.StackDepthCounter.Increment());
                 return result;
             }
@@ -456,7 +463,7 @@ namespace Microsoft.PowerFx
                             var record = row.Value;
                             var newScope = scopeContext.WithScopeValues(record);
 
-                            var newValue = await coercion.Value.Accept(this, new EvalVisitorContext(newScope, context.StackDepthCounter));
+                            var newValue = await coercion.Value.Accept(this, context.NewScope(newScope));
                             var name = coercion.Key;
                             fields.Add(new NamedValue(name.Value, newValue));
                         }

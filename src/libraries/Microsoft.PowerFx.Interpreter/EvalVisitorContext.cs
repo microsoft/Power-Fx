@@ -1,9 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Microsoft.PowerFx.Interpreter;
 
 namespace Microsoft.PowerFx
@@ -20,11 +17,16 @@ namespace Microsoft.PowerFx
             StackDepthCounter = stackMarker;
         }
 
+        public EvalVisitorContext NewScope(SymbolContext symbolContext)
+        {
+            return new EvalVisitorContext(symbolContext, StackDepthCounter);
+        }
+
         public EvalVisitorContext IncrementStackDepthCounter()
         {
             return new EvalVisitorContext(SymbolContext, StackDepthCounter.Increment());
         }
-        
+
         public EvalVisitorContext IncrementStackDepthCounter(SymbolContext symbolContext)
         {
             return new EvalVisitorContext(symbolContext, StackDepthCounter.Increment());

@@ -8,8 +8,8 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Functions
@@ -54,7 +54,7 @@ namespace Microsoft.PowerFx.Functions
 
                     var childContext = context.SymbolContext.WithScopeValues(row.Value);
 
-                    var result = await arg1.EvalAsync(runner, new EvalVisitorContext(childContext, context.StackDepthCounter));
+                    var result = await arg1.EvalAsync(runner, context.NewScope(childContext));
 
                     var str = (StringValue)result;
                     sb.Append(str.Value);
