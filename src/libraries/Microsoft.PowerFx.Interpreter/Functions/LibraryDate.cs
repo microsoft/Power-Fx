@@ -492,21 +492,23 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
+        // Returns the number of minutes between UTC and either local or defined time zone
         public static FormulaValue TimeZoneOffset(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             var tzInfo = runner.GetService<TimeZoneInfo>() ?? TimeZoneInfo.Local;
+
             if (args.Length == 0)
             {
                 var tzOffsetDays = tzInfo.GetUtcOffset(DateTime.Now).TotalDays;
-                return new NumberValue(irContext, tzOffsetDays * -1);
+                return new NumberValue(irContext, tzOffsetDays * -1440);
             }
 
             switch (args[0])
             {
                 case DateTimeValue dtv:
-                    return new NumberValue(irContext, tzInfo.GetUtcOffset(dtv.Value).TotalDays * -1);
+                    return new NumberValue(irContext, tzInfo.GetUtcOffset(dtv.Value).TotalDays * -1440);
                 case DateValue dv:
-                    return new NumberValue(irContext, tzInfo.GetUtcOffset(dv.Value).TotalDays * -1);
+                    return new NumberValue(irContext, tzInfo.GetUtcOffset(dv.Value).TotalDays * -1440);
                 default:
                     return CommonErrors.InvalidDateTimeError(irContext);
             }

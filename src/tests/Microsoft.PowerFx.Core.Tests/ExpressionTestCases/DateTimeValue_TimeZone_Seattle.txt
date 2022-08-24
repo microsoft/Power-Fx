@@ -27,8 +27,8 @@ DateTime(2022,3,13,3,30,0,0)
 >> DateDiff(DateTime(2022,3,13,1,0,0), DateTime(2022,3,13,4,0,0), "hours")
 2
 
->> TimeZoneOffset(DateTime(2022,3,13,1,0,0))*24
+>> TimeZoneOffset(DateTime(2022,3,13,1,0,0))/60
 8
 
->> TimeZoneOffset(DateTime(2022,3,13,4,0,0))*24
+>> TimeZoneOffset(DateTime(2022,3,13,4,0,0))/60
 7

@@ -23,7 +23,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         {
             var tzInfo = TimeZoneInfo.Local;
             var testDate = new DateTime(2021, 6, 1);
-            var tzOffsetDays = tzInfo.GetUtcOffset(testDate).TotalDays * -1;
+            var tzOffsetDays = tzInfo.GetUtcOffset(testDate).TotalDays * -1440;
             var numberValue = _engine.Eval("TimeZoneOffset(Date(2021, 6, 1))") as NumberValue;
             Assert.NotNull(numberValue);
             Assert.Equal(numberValue.Value, tzOffsetDays);
@@ -34,7 +34,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         {
             var tzInfo = TimeZoneInfo.Local;
             var testDate = new DateTime(2021, 12, 1);
-            var tzOffsetDays = tzInfo.GetUtcOffset(testDate).TotalDays * -1;
+            var tzOffsetDays = tzInfo.GetUtcOffset(testDate).TotalDays * -1440;
             var numberValue = _engine.Eval("TimeZoneOffset(Date(2021, 12, 1))") as NumberValue;
             Assert.NotNull(numberValue);
             Assert.Equal(numberValue.Value, tzOffsetDays);
@@ -44,7 +44,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         public void TestCurrentTimeZoneOffset()
         {
             var tzInfo = TimeZoneInfo.Local;
-            var tzOffsetDays = tzInfo.GetUtcOffset(DateTime.Now).TotalDays * -1;
+            var tzOffsetDays = tzInfo.GetUtcOffset(DateTime.Now).TotalDays * -1440;
             var numberValue = _engine.Eval("TimeZoneOffset()") as NumberValue;
             Assert.NotNull(numberValue);
             Assert.Equal(numberValue.Value, tzOffsetDays);
@@ -54,7 +54,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         public void TestConvertToUTC()
         {
             var testTime = DateTime.Now;
-            var result = _engine.Eval($"DateTimeValue(\"{testTime.ToString()}\") + TimeZoneOffset()");
+            var result = _engine.Eval($"DateAdd(DateTimeValue(\"{testTime.ToString()}\"), TimeZoneOffset(), \"Minutes\")");
             Assert.NotNull(result);
             if (result is DateTimeValue dateResult)
             {
@@ -73,7 +73,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         public void TestConvertFromUTC()
         {
             var testTime = DateTime.UtcNow.AddHours(-1);
-            var result = _engine.Eval($"DateTimeValue(\"{testTime.ToString()}\") + -TimeZoneOffset()");
+            var result = _engine.Eval($"DateTimeValue(\"{testTime.ToString()}\") + -TimeZoneOffset()/60/24");
             Assert.NotNull(result);
             if (result is DateTimeValue dateResult)
             {
