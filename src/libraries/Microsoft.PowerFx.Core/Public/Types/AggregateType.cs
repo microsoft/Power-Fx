@@ -20,11 +20,11 @@ namespace Microsoft.PowerFx.Types
             Contracts.Assert(type.IsAggregate);
         }
 
-        public AggregateType(bool isTable)
+        public AggregateType(bool isTable, DisplayNameProvider displayNameProvider = null)
             : base()
         {
             var lazyTypeProvider = new LazyTypeProvider(this);
-            _type = new DType(lazyTypeProvider, isTable: isTable);
+            _type = new DType(lazyTypeProvider, isTable: isTable, displayNameProvider);
         }
 
         public FormulaType GetFieldType(string fieldName)

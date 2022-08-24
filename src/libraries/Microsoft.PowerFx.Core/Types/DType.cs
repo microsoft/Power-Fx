@@ -476,7 +476,7 @@ namespace Microsoft.PowerFx.Core.Types
             AssertValid();
         }
 
-        internal DType(LazyTypeProvider provider, bool isTable)
+        internal DType(LazyTypeProvider provider, bool isTable, DisplayNameProvider displayNameProvider = null)
         {
             Contracts.AssertValue(provider);
 
@@ -494,7 +494,7 @@ namespace Microsoft.PowerFx.Core.Types
             OptionSetInfo = null;
             ViewInfo = null;
             NamedValueKind = null;
-
+            DisplayNameProvider = displayNameProvider;
             AssertValid();
         }
 

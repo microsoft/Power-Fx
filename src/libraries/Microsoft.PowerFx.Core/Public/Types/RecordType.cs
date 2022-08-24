@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 
@@ -30,8 +31,8 @@ namespace Microsoft.PowerFx.Types
         /// Derived classes calling this must override <see cref="AggregateType.FieldNames"/>
         /// and <see cref="AggregateType.TryGetFieldType(string, out FormulaType)"/>.
         /// </summary>
-        public RecordType() 
-            : base(false)
+        public RecordType(DisplayNameProvider displayNameProvider = null) 
+            : base(false, displayNameProvider)
         {
         }
 
