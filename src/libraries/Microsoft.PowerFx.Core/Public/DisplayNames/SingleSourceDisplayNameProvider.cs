@@ -17,7 +17,7 @@ namespace Microsoft.PowerFx.Core
         private readonly ImmutableDictionary<DName, DName> _logicalToDisplay;
         private readonly ImmutableDictionary<DName, DName> _displayToLogical;
 
-        internal override ImmutableDictionary<DName, DName> LogicalToDisplayPairs => _logicalToDisplay;
+        public override ImmutableDictionary<DName, DName> LogicalToDisplayPairs => _logicalToDisplay;
 
         internal SingleSourceDisplayNameProvider()
         {
@@ -25,7 +25,7 @@ namespace Microsoft.PowerFx.Core
             _displayToLogical = ImmutableDictionary.Create<DName, DName>();
         }
 
-        internal SingleSourceDisplayNameProvider(IEnumerable<KeyValuePair<DName, DName>> logicalToDisplayPairs)
+        public SingleSourceDisplayNameProvider(IEnumerable<KeyValuePair<DName, DName>> logicalToDisplayPairs)
         {
             var lToDBuilder = ImmutableDictionary.CreateBuilder<DName, DName>();
             var dToLBuilder = ImmutableDictionary.CreateBuilder<DName, DName>();
@@ -68,17 +68,17 @@ namespace Microsoft.PowerFx.Core
             return new SingleSourceDisplayNameProvider(newLogicalToDisplay, newDisplayToLogical);
         }
 
-        internal override bool TryGetLogicalName(DName displayName, out DName logicalName)
+        public override bool TryGetLogicalName(DName displayName, out DName logicalName)
         {
             return _displayToLogical.TryGetValue(displayName, out logicalName);
         }
 
-        internal override bool TryGetDisplayName(DName logicalName, out DName displayName)
+        public override bool TryGetDisplayName(DName logicalName, out DName displayName)
         {
             return _logicalToDisplay.TryGetValue(logicalName, out displayName);
         }
 
-        internal override bool TryRemapLogicalAndDisplayNames(DName displayName, out DName logicalName, out DName newDisplayName)
+        public override bool TryRemapLogicalAndDisplayNames(DName displayName, out DName logicalName, out DName newDisplayName)
         {
             newDisplayName = displayName;
             return TryGetLogicalName(displayName, out logicalName);

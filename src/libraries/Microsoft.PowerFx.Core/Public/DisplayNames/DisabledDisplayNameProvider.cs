@@ -16,25 +16,25 @@ namespace Microsoft.PowerFx.Core
     {
         internal static DisabledDisplayNameProvider Instance { get; } = new DisabledDisplayNameProvider();
 
-        internal override ImmutableDictionary<DName, DName> LogicalToDisplayPairs => ImmutableDictionary<DName, DName>.Empty;
+        public override ImmutableDictionary<DName, DName> LogicalToDisplayPairs => ImmutableDictionary<DName, DName>.Empty;
 
         internal DisabledDisplayNameProvider()
         {
         }
 
-        internal override bool TryGetDisplayName(DName logicalName, out DName displayName)
+        public override bool TryGetDisplayName(DName logicalName, out DName displayName)
         {
             displayName = default;
             return false;
         }
 
-        internal override bool TryGetLogicalName(DName displayName, out DName logicalName)
+        public override bool TryGetLogicalName(DName displayName, out DName logicalName)
         {
             logicalName = default;
             return false;
         }
 
-        internal override bool TryRemapLogicalAndDisplayNames(DName displayName, out DName logicalName, out DName newDisplayName)
+        public override bool TryRemapLogicalAndDisplayNames(DName displayName, out DName logicalName, out DName newDisplayName)
         {
             logicalName = default;
             newDisplayName = default;
