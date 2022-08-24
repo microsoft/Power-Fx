@@ -54,7 +54,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         public void TestConvertToUTC()
         {
             var testTime = DateTime.Now;
-            var result = _engine.Eval($"DateAdd(DateTimeValue(\"{testTime.ToString()}\"), TimeZoneOffset(), \"Minutes\")");
+            var result = _engine.Eval($"DateAdd(DateTimeValue(\"{testTime.ToString()}\"), TimeZoneOffset(), TimeUnit.Minutes)");
             Assert.NotNull(result);
             if (result is DateTimeValue dateResult)
             {
