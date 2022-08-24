@@ -11,3 +11,6 @@ Errors: Error 0-8: The function 'Sqrt' has some invalid arguments.|Error 5-7: In
 
 >> Sqrt([Blank(), 1444])
 [Blank(),38]
+
+>> Sqrt(If(1<0,[1]))
+Blank()

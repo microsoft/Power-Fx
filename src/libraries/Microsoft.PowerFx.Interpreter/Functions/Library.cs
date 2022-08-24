@@ -1147,7 +1147,7 @@ namespace Microsoft.PowerFx.Functions
                 BuiltinFunctionsCore.SqrtT,
                 StandardErrorHandlingAsync<TableValue>(
                     expandArguments: NoArgExpansion,
-                    replaceBlankValues: ReplaceBlankWithZero,
+                    replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: ExactValueTypeOrBlank<TableValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,

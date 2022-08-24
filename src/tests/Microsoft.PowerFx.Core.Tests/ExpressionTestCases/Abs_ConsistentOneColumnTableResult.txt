@@ -8,3 +8,9 @@
 
 >> Abs(["10", "-10.123"])
 [10,10.123]
+
+>> Abs([])
+Errors: Error 0-7: The function 'Abs' has some invalid arguments.|Error 4-6: Invalid schema, expected a one-column table.
+
+>> Abs(If(1<0,[1]))
+Blank()
