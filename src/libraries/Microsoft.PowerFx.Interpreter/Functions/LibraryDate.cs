@@ -454,6 +454,11 @@ namespace Microsoft.PowerFx.Functions
 
             if (DateTime.TryParse(str, culture, DateTimeStyles.None, out var result))
             {
+                if (runner.TryGetService<TimeZoneInfo>(out var tzi) && result.Kind == DateTimeKind.Local)
+                {
+                    result = TimeZoneInfo.ConvertTime(result, TimeZoneInfo.Local, tzi);
+                }
+
                 return new DateTimeValue(irContext, result);
             }
             else
@@ -487,9 +492,9 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
-        public static FormulaValue TimeZoneOffset(IRContext irContext, FormulaValue[] args)
+        public static FormulaValue TimeZoneOffset(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            var tzInfo = TimeZoneInfo.Local;
+            var tzInfo = runner.GetService<TimeZoneInfo>() ?? TimeZoneInfo.Local;
             if (args.Length == 0)
             {
                 var tzOffsetDays = tzInfo.GetUtcOffset(DateTime.Now).TotalDays;
@@ -499,9 +504,9 @@ namespace Microsoft.PowerFx.Functions
             switch (args[0])
             {
                 case DateTimeValue dtv:
-                    return new NumberValue(irContext, tzInfo.GetUtcOffset(dtv.Value.ToUniversalTime()).TotalDays * -1);
+                    return new NumberValue(irContext, tzInfo.GetUtcOffset(dtv.Value).TotalDays * -1);
                 case DateValue dv:
-                    return new NumberValue(irContext, tzInfo.GetUtcOffset(dv.Value.ToUniversalTime()).TotalDays * -1);
+                    return new NumberValue(irContext, tzInfo.GetUtcOffset(dv.Value).TotalDays * -1);
                 default:
                     return CommonErrors.InvalidDateTimeError(irContext);
             }

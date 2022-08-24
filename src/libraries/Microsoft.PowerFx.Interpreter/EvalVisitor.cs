@@ -55,6 +55,12 @@ namespace Microsoft.PowerFx
             return default;
         }
 
+        public bool TryGetService<T>(out T result)
+        {
+            result = GetService<T>();
+            return result != null;
+        }
+
         public IServiceProvider FunctionServices => _runtimeConfig;
 
         // Check this cooperatively - especially in any loop. 
