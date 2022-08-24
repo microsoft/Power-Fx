@@ -262,5 +262,14 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.NotEqual(_lazyRecord1, _lazyRecord2.ToTable().ToRecord());
             Assert.NotEqual(_lazyTable2, _lazyTable1.ToRecord().ToTable());
         }
+
+        [Fact]
+        public void Supertype()
+        {
+            Assert.Equal(_lazyRecord1, FormulaType.Build(DType.Supertype(_lazyRecord1._type, _lazyRecord1._type)));
+            Assert.Equal(_lazyTable1, FormulaType.Build(DType.Supertype(_lazyTable1._type, _lazyTable1._type)));
+            Assert.Equal(FormulaType.BindingError, FormulaType.Build(DType.Supertype(_lazyTable1._type, _lazyRecord1._type)));
+            Assert.Equal(FormulaType.BindingError, FormulaType.Build(DType.Supertype(_lazyRecord2._type, _lazyRecord1._type)));
+        }
     }
 }
