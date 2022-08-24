@@ -38,6 +38,16 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: Abs)
             },
             {
+                BuiltinFunctionsCore.AbsT,
+                StandardErrorHandlingAsync<TableValue>(
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<TableValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: StandardSingleColumnTable<NumberValue>(Abs))
+            },
+            {
                 BuiltinFunctionsCore.Acos,
                 StandardErrorHandling<NumberValue>(
                     expandArguments: NoArgExpansion,
