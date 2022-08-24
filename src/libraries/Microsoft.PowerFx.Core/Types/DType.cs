@@ -188,7 +188,7 @@ namespace Microsoft.PowerFx.Core.Types
             DisplayNameProvider = displayNameProvider;
         }
 
-        public virtual DType Clone()
+        public DType Clone()
         {
             AssertValid();
 
@@ -1806,7 +1806,7 @@ namespace Microsoft.PowerFx.Core.Types
         /// <returns>
         /// True if <see cref="DType"/> accepts <paramref name="type"/>, false otherwise.
         /// </returns>
-        public virtual bool Accepts(DType type, out KeyValuePair<string, DType> schemaDifference, out DType schemaDifferenceType, bool exact = true, bool useLegacyDateTimeAccepts = false)
+        public bool Accepts(DType type, out KeyValuePair<string, DType> schemaDifference, out DType schemaDifferenceType, bool exact = true, bool useLegacyDateTimeAccepts = false)
         {
             AssertValid();
             type.AssertValid();
@@ -3002,7 +3002,7 @@ namespace Microsoft.PowerFx.Core.Types
         // Returns true if values of this type may be coerced to the specified type.
         // isSafe is marked false if the resultant coercion could have undesireable results
         // such as returning null or returning an unintuitive outcome.
-        public virtual bool CoercesTo(DType typeDest, out bool isSafe, out DType coercionType, out KeyValuePair<string, DType> schemaDifference, out DType schemaDifferenceType, bool aggregateCoercion = true, bool isTopLevelCoercion = false)
+        public bool CoercesTo(DType typeDest, out bool isSafe, out DType coercionType, out KeyValuePair<string, DType> schemaDifference, out DType schemaDifferenceType, bool aggregateCoercion = true, bool isTopLevelCoercion = false)
         {
             AssertValid();
             Contracts.Assert(typeDest.IsValid);
@@ -3136,10 +3136,33 @@ namespace Microsoft.PowerFx.Core.Types
             return doesCoerce;
         }
 
-        protected virtual bool? SubtypeCoercesTo(DType typeDest, ref bool isSafe, out DType coercionType, ref KeyValuePair<string, DType> schemaDifference, ref DType schemaDifferenceType)
+        // This is a specific function to support PrimaryOutput Properties on Control LazyRecord types
+        // If we ever support DefaultField output for Records more broadly, this would be where it's done.
+        private bool? SubtypeCoercesTo(DType typeDest, ref bool isSafe, out DType coercionType, ref KeyValuePair<string, DType> schemaDifference, ref DType schemaDifferenceType)
         {
-            coercionType = null;
-            return null;
+            if (!IsLazyType || LazyTypeProvider.BackingFormulaType is not IExternalControlType controlType)
+            {
+                coercionType = this;
+                return null;
+            }
+
+            var primaryOutProp = controlType.ControlTemplate.PrimaryOutputProperty;
+
+            // Some controls don't have a primary output prop
+            if (primaryOutProp == null)
+            {
+                coercionType = this;
+                return false;
+            }
+
+            var outType = primaryOutProp.GetOpaqueType();
+            if (typeDest.Accepts(outType))
+            {
+                coercionType = typeDest;
+                return true;
+            }
+
+            return outType.CoercesTo(typeDest, out _, out coercionType, out schemaDifference, out schemaDifferenceType);
         }
 
         // Gets the subtype of aggregate type expectedType that this type can coerce to.
