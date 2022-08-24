@@ -2502,7 +2502,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 // If the node is a control, we may be able to coerce its primary output property
                 // to the desired type, and in the process support simplified syntax such as: slider2 <= slider4
                 IExternalControlProperty primaryOutProp;
-                if (type is IExternalControlType controlType && node.AsFirstName() != null && (primaryOutProp = controlType.ControlTemplate.PrimaryOutputProperty) != null)
+                if (type.IsControl && type.LazyTypeProvider.BackingFormulaType is IExternalControlType controlType && node.AsFirstName() != null && (primaryOutProp = controlType.ControlTemplate.PrimaryOutputProperty) != null)
                 {
                     var outType = primaryOutProp.GetOpaqueType();
                     var acceptedType = alternateTypes.FirstOrDefault(alt => alt.Accepts(outType));
@@ -2560,7 +2560,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 // If the node is a control, we may be able to coerce its primary output property
                 // to the desired type, and in the process support simplified syntax such as: label1 + slider4
                 IExternalControlProperty primaryOutProp;
-                if (nodeType is IExternalControlType controlType && node.AsFirstName() != null && (primaryOutProp = controlType.ControlTemplate.PrimaryOutputProperty) != null)
+                if (nodeType.IsControl && nodeType.LazyTypeProvider.BackingFormulaType is IExternalControlType controlType && node.AsFirstName() != null && (primaryOutProp = controlType.ControlTemplate.PrimaryOutputProperty) != null)
                 {
                     var outType = primaryOutProp.GetOpaqueType();
                     if (typeWant.Accepts(outType) || alternateTypes.Any(alt => alt.Accepts(outType)))
@@ -3177,7 +3177,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     Contracts.Assert(dataControlLookupInfo.Type.IsControl);
 
                     // Check to see if the dotted name is accessing a property of the data control.
-                    if (((IExternalControlType)dataControlLookupInfo.Type).ControlTemplate.HasOutput(rightName))
+                    if ((dataControlLookupInfo.Data is IExternalControl dataControl) && dataControl.Template.HasOutput(rightName))
                     {
                         // Set the result type to the data control type.
                         nodeType = dataControlLookupInfo.Type;
@@ -3527,7 +3527,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     SetDottedNameError(node, TexlStrings.ErrInvalidIdentifier);
                     return;
                 }
-                else if (leftType is IExternalControlType leftControl)
+                else if (leftType.IsControl && leftType.LazyTypeProvider.BackingFormulaType is IExternalControlType leftControl)
                 {
                     var (controlInfo, isIndirectPropertyUsage) = GetLHSControlInfo(node);
 
@@ -3619,7 +3619,7 @@ namespace Microsoft.PowerFx.Core.Binding
                             // If visiting an expando type property of control type variable, we cannot calculate the type here because
                             // The LHS associated ControlInfo is App/Component.
                             // e.g. Set(controlVariable1, DropDown1), Label1.Text = controlVariable1.Selected.Value.
-                            leftType = (DType)controlInfo.GetControlDType(calculateAugmentedExpandoType: true, isDataLimited: false);
+                            leftType = controlInfo.GetControlDType(calculateAugmentedExpandoType: true, isDataLimited: false)._type;
                         }
 
                         if (!leftType.ToRecord().TryGetType(property.InvariantName, out typeRhs))
@@ -3683,7 +3683,7 @@ namespace Microsoft.PowerFx.Core.Binding
                         return;
                     }
                 }
-                else if (typeRhs is IExternalControlType controlType && controlType.IsMetaField)
+                else if (leftType.IsControl && leftType.LazyTypeProvider.BackingFormulaType is IExternalControlType controlType && controlType.IsMetaField)
                 {
                     // Meta fields are not directly accessible. E.g. dropdown!Selected!meta is an invalid access.
                     SetDottedNameError(node, TexlStrings.ErrInvalidName, node.Right.Name.Value);

@@ -3,6 +3,7 @@
 
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core.App.Controls
 {
@@ -26,7 +27,7 @@ namespace Microsoft.PowerFx.Core.App.Controls
 
         bool IsCommandComponentInstance { get; }
 
-        IExternalControlType GetControlDType(bool calculateAugmentedExpandoType, bool isDataLimited);
+        RecordType GetControlDType(bool calculateAugmentedExpandoType, bool isDataLimited);
 
         bool IsDescendentOf(IExternalControl controlInfo);
 

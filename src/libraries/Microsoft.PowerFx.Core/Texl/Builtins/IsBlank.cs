@@ -46,7 +46,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 return false;
             }
 
-            if (argTypes[0] is IExternalControlType controlType)
+            if (argTypes[0].IsControl && argTypes[0].LazyTypeProvider.BackingFormulaType is IExternalControlType controlType)
             {
                 // A control will never be null. It never worked as intended.
                 // We coerce the control to control.primaryOutProperty.
