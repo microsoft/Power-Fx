@@ -69,7 +69,6 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal(0, new DType(DKind.Hyperlink).MaxDepth);
             Assert.Equal(0, new DType(DKind.Color).MaxDepth);
             Assert.Equal(0, new DType(DKind.Guid).MaxDepth);
-            Assert.Equal(0, new DType(DKind.Control).MaxDepth);
             Assert.Equal(0, new DType(DKind.DataEntity).MaxDepth);
             Assert.Equal(0, new DType(DKind.Polymorphic).MaxDepth);
             Assert.Equal(1, new DType(DKind.Record).MaxDepth);

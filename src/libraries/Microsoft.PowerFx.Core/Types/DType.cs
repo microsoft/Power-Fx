@@ -99,7 +99,6 @@ namespace Microsoft.PowerFx.Core.Types
                 { DKind.Guid, DKind.Error },
                 { DKind.Currency, DKind.Number },
                 { DKind.Color, DKind.Error },
-                { DKind.Control, DKind.Error },
                 { DKind.DataEntity, DKind.Error },
                 { DKind.Metadata, DKind.Error },
                 { DKind.File, DKind.Error },
@@ -243,25 +242,6 @@ namespace Microsoft.PowerFx.Core.Types
             TypeTree = default;
             EnumSuperkind = superkind;
             ValueTree = enumTree;
-            ExpandInfo = null;
-            PolymorphicInfo = null;
-            Metadata = null;
-            AssociatedDataSources = new HashSet<IExternalTabularDataSource>();
-            OptionSetInfo = null;
-            ViewInfo = null;
-            NamedValueKind = null;
-            AssertValid();
-        }
-
-        // Constructor for control types
-        protected DType(TypeTree outputTypeTree)
-        {
-            outputTypeTree.AssertValid();
-
-            Kind = DKind.Control;
-            TypeTree = outputTypeTree;
-            EnumSuperkind = default;
-            ValueTree = default;
             ExpandInfo = null;
             PolymorphicInfo = null;
             Metadata = null;
@@ -487,7 +467,7 @@ namespace Microsoft.PowerFx.Core.Types
 #if DEBUG
             TypeTree.AssertValid();
 #endif
-            Contracts.Assert(TypeTree.IsEmpty || Kind == DKind.Table || Kind == DKind.Record || Kind == DKind.Control || Kind == DKind.DataEntity || Kind == DKind.File || Kind == DKind.LargeImage || Kind == DKind.OptionSet || Kind == DKind.OptionSetValue || Kind == DKind.View || Kind == DKind.ViewValue);
+            Contracts.Assert(TypeTree.IsEmpty || Kind == DKind.Table || Kind == DKind.Record || Kind == DKind.DataEntity || Kind == DKind.File || Kind == DKind.LargeImage || Kind == DKind.OptionSet || Kind == DKind.OptionSetValue || Kind == DKind.View || Kind == DKind.ViewValue);
             Contracts.Assert(ValueTree.IsEmpty || Kind == DKind.Enum);
             Contracts.Assert(Kind != DKind.Enum || (EnumSuperkind >= DKind._Min && EnumSuperkind < DKind._Lim && EnumSuperkind != DKind.Enum));
             Contracts.Assert((Metadata != null) == (Kind == DKind.Metadata));
@@ -524,7 +504,7 @@ namespace Microsoft.PowerFx.Core.Types
 
         public bool IsColumn => IsTable && ChildCount == 1;
 
-        public bool IsControl => Kind == DKind.Control;
+        public bool IsControl => Kind == DKind.LazyRecord && LazyTypeProvider.BackingFormulaType is IExternalControlType;
 
         public bool IsExpandEntity => Kind == DKind.DataEntity;
 
@@ -966,41 +946,6 @@ namespace Microsoft.PowerFx.Core.Types
             return Kind.ToString();
         }
 
-        // WARNING! This method is dangerous, for several reasons (below). Clients need to
-        // rethink their strategy, and consider using the proper DType representation with
-        // embedded "v" types instead, and dig into those types as needed for additional
-        // control-specific information, such as property names.
-        // Reasons this is bad:
-        //  1. It is recursive, and will go as deep into a DType as needed to convert all nested
-        //     controls to their corresponding record representations.
-        //  2. It converts "v" (control) types to records, by picking certain property names as
-        //     fields for those records. This operation is LOSSY. For example, only the locale-specific
-        //     names are captured, not the invariant names (or vice versa).
-        //  3. There is no way to recover the originating control or control template from the
-        //     resulting type.
-        public DType ControlsToRecordsRecursive()
-        {
-            AssertValid();
-
-            if (!IsAggregate && !IsControl)
-            {
-                return this;
-            }
-
-            var result = IsControl ? ToRecord() : this;
-
-            foreach (var typedName in result.GetNames(DPath.Root))
-            {
-                var fError = false;
-                if (typedName.Type.IsAggregate || typedName.Type.IsControl)
-                {
-                    result = result.SetType(ref fError, DPath.Root.Append(typedName.Name), typedName.Type.ControlsToRecordsRecursive());
-                }
-            }
-
-            return result;
-        }
-
         public IEnumerable<IExpandInfo> GetExpands()
         {
             AssertValid();
@@ -1050,7 +995,6 @@ namespace Microsoft.PowerFx.Core.Types
                     return new DType(LazyTypeProvider, isTable: false);
                 case DKind.Table:
                 case DKind.DataEntity:
-                case DKind.Control:
                     if (ExpandInfo != null)
                     {
                         return new DType(DKind.Record, ExpandInfo, TypeTree);
@@ -1093,7 +1037,6 @@ namespace Microsoft.PowerFx.Core.Types
                     return new DType(LazyTypeProvider, isTable: true);
                 case DKind.Record:
                 case DKind.DataEntity:
-                case DKind.Control:
                     if (ExpandInfo != null)
                     {
                         return new DType(DKind.Table, ExpandInfo, TypeTree);
@@ -2001,8 +1944,6 @@ namespace Microsoft.PowerFx.Core.Types
                     accepts = (!exact && (type.Kind == DKind.DateTime || type.Kind == DKind.DateTimeNoTimeZone || (useLegacyDateTimeAccepts && type.Kind == DKind.Number))) ||
                               DefaultReturnValue(type);
                     break;
-                case DKind.Control:
-                    throw new NotImplementedException("This should be overriden");
                 case DKind.DataEntity:
                     accepts = AcceptsEntityType(type);
                     break;
@@ -3104,9 +3045,7 @@ namespace Microsoft.PowerFx.Core.Types
 
             if (Kind == DKind.Enum)
             {
-                if (!typeDest.IsControl &&
-                    !typeDest.IsExpandEntity &&
-                    !typeDest.IsAttachment &&
+                if (!typeDest.IsExpandEntity &&
                     !typeDest.IsMetadata &&
                     !typeDest.IsAggregate &&
                     typeDest.Accepts(GetEnumSupertype()))
@@ -3164,7 +3103,7 @@ namespace Microsoft.PowerFx.Core.Types
                                  Boolean.Accepts(this);
                     break;
                 case DKind.String:
-                    doesCoerce = Kind != DKind.Color && Kind != DKind.Control && Kind != DKind.DataEntity && Kind != DKind.OptionSet && Kind != DKind.View && Kind != DKind.Polymorphic && Kind != DKind.File && Kind != DKind.LargeImage;
+                    doesCoerce = Kind != DKind.Color && Kind != DKind.DataEntity && Kind != DKind.OptionSet && Kind != DKind.View && Kind != DKind.Polymorphic && Kind != DKind.File && Kind != DKind.LargeImage;
                     break;
                 case DKind.Hyperlink:
                     doesCoerce = Kind != DKind.Guid && String.Accepts(this);
@@ -3347,8 +3286,6 @@ namespace Microsoft.PowerFx.Core.Types
                     return "a";
                 case DKind.Guid:
                     return "g";
-                case DKind.Control:
-                    return "v";
                 case DKind.DataEntity:
                     return "E";
                 case DKind.Metadata:
@@ -3451,7 +3388,8 @@ namespace Microsoft.PowerFx.Core.Types
         {
             if (!IsAggregate ||
                 !TryGetType(new DName(MetaFieldName), out var field) ||
-                !(field is IExternalControlType control) ||
+                !field.IsControl ||
+                field.LazyTypeProvider.BackingFormulaType is not IExternalControlType control ||
                 !control.ControlTemplate.IsMetaLoc)
             {
                 metaFieldType = null;

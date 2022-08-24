@@ -438,7 +438,7 @@ namespace Microsoft.PowerFx.Syntax
             }
 
             // TASK 97994: Investigate and Implement the functionality if lhs of  'in' operator is a control type.
-            if (type.IsAggregate || type.IsControl)
+            if (type.IsAggregate)
             {
                 return _operatorKeywordsAggregate;
             }

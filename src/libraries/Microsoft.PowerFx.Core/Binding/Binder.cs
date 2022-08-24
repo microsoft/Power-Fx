@@ -2034,8 +2034,7 @@ namespace Microsoft.PowerFx.Core.Binding
                         }
 
                         // Get the RHS property type reported by the scope
-                        var tempRhsType = lambdaParamType.IsControl ? lambdaParamType.ToRecord() : lambdaParamType;
-                        if (!tempRhsType.TryGetType(dotted.Right.Name, out var propertyType))
+                        if (!lambdaParamType.TryGetType(dotted.Right.Name, out var propertyType))
                         {
                             propertyType = DType.Unknown;
                         }
@@ -3460,7 +3459,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 var leftType = _txb.GetType(node.Left);
 
-                if (!leftType.IsControl && !leftType.IsAggregate && !leftType.IsEnum && !leftType.IsOptionSet && !leftType.IsView && !leftType.IsUntypedObject)
+                if (!leftType.IsAggregate && !leftType.IsEnum && !leftType.IsOptionSet && !leftType.IsView && !leftType.IsUntypedObject)
                 {
                     SetDottedNameError(node, TexlStrings.ErrInvalidDot);
                     return;
@@ -3779,7 +3778,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 else
                 {
                     // v[prop:type, ...] . prop --> type
-                    Contracts.Assert(leftType.IsControl || leftType.IsExpandEntity || leftType.IsAttachment);
+                    Contracts.Assert(leftType.IsExpandEntity);
                     _txb.SetType(node, typeRhs);
                 }
 

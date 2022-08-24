@@ -55,10 +55,7 @@ namespace Microsoft.PowerFx.Core.Types
         OptionSetValue = 22,
         ViewValue = 23,
         NamedValue = 24,
-        _LimPrimitive = Control,
-
-        // Control type.
-        Control = 25,
+        _LimPrimitive = 25,
 
         // Expand Entity type.
         DataEntity = 26,
