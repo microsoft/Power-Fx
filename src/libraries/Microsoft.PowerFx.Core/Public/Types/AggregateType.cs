@@ -61,7 +61,7 @@ namespace Microsoft.PowerFx.Types
         {
             if (string.IsNullOrEmpty(displayOrLogicalName))
             {
-                throw new ArgumentNullException("Input parameter \"displayOrLogicalName\" cannot be empty or null");
+                throw new ArgumentNullException(nameof(displayOrLogicalName));
             }
 
             if (_type.DisplayNameProvider.TryGetDisplayName(new DName(displayOrLogicalName), out _))
