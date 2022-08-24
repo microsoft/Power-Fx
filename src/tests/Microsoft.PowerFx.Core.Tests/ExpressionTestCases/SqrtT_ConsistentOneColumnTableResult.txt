@@ -11,3 +11,6 @@ Errors: Error 0-8: The function 'Sqrt' has some invalid arguments.|Error 5-7: In
 
 >> Sqrt([Blank(), 1444])
 [Blank(),38]
+
+>> Sqrt(Table({a:0}, {a:1}, {a:4}, {a:9}, {a:16}))
+[0,1,2,3,4]
