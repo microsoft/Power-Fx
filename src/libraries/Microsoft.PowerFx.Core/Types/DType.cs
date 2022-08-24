@@ -957,6 +957,12 @@ namespace Microsoft.PowerFx.Core.Types
                 return "Control";
             }
 
+            if (IsLazyType)
+            {
+                var typeSuffix = string.IsNullOrEmpty(LazyTypeProvider.UserVisibleTypeName) ? string.Empty : $" ({LazyTypeProvider.UserVisibleTypeName})";
+                return (IsTable ? DKind.Table : DKind.Record) + typeSuffix;
+            }
+
             return Kind.ToString();
         }
 
@@ -1428,10 +1434,8 @@ namespace Microsoft.PowerFx.Core.Types
                 }
             }
 
-            // Set error if no type of given kind was found.
             if (tree == typeOuter.TypeTree)
             {
-                fError = true;
                 return this;
             }
 
@@ -2209,7 +2213,7 @@ namespace Microsoft.PowerFx.Core.Types
             type1.AssertValid();
             type2.AssertValid();
 
-            if (type1.IsAggregate && type2.IsAggregate)
+            if (type1.IsAggregate && type2.IsAggregate && !(type1.IsLazyType || type2.IsLazyType))
             {
                 if (type1.Kind != type2.Kind)
                 {

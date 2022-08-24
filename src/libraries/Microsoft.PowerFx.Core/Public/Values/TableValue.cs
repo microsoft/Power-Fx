@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Utils;
 
@@ -18,7 +19,7 @@ namespace Microsoft.PowerFx.Types
         /// Often marshalling an array will create a Single Column Tables with a single "Value" column. 
         /// </summary>
         public const string ValueName = "Value";
-        
+
         /// <summary>
         /// DName for ValueName.
         /// </summary>
@@ -67,7 +68,7 @@ namespace Microsoft.PowerFx.Types
             record = Rows.ElementAtOrDefault(index0);
             return record != null;
         }
-                
+
         private static ErrorValue ArgumentOutOfRange(IRContext irContext)
         {
             return new ErrorValue(irContext, new ExpressionError()
@@ -76,6 +77,16 @@ namespace Microsoft.PowerFx.Types
                 Span = irContext.SourceContext,
                 Kind = ErrorKind.Numeric
             });
+        }
+
+        // Return appended value 
+        // - Error, 
+        // - with updated values
+        // Async because derived classes may back this with a network call. 
+        public virtual async Task<DValue<RecordValue>> AppendAsync(RecordValue record)
+        {
+            // fails by default
+            throw new System.NotImplementedException("It is not possible to append to a TableValue directly.");
         }
 
         public override object ToObject()
