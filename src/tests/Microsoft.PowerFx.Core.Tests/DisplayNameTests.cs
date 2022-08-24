@@ -98,6 +98,18 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 var outInvariantExpression = _engine.GetInvariantExpression(inputExpression, r1);
                 Assert.Equal(outputExpression, outInvariantExpression);
             }
+
+            r1 = new LazyRecordType();
+            if (toDisplay)
+            {
+                var outDisplayExpression = _engine.GetDisplayExpression(inputExpression, r1);
+                Assert.Equal(outputExpression, outDisplayExpression);
+            }
+            else
+            {
+                var outInvariantExpression = _engine.GetInvariantExpression(inputExpression, r1);
+                Assert.Equal(outputExpression, outInvariantExpression);
+            }
         }
 
         [Fact]

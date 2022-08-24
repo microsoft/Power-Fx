@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 
@@ -32,6 +33,17 @@ namespace Microsoft.PowerFx.Types
         /// </summary>
         public RecordType() 
             : base(false)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RecordType"/> class with <see cref="DisplayNameProvider"/>.
+        /// Derived classes calling this must override <see cref="AggregateType.FieldNames"/>
+        /// and <see cref="AggregateType.TryGetFieldType(string, out FormulaType)"/>.
+        /// </summary>
+        /// <param name="displayNameProvider">Provide DispayNamerovide to be used.</param>
+        public RecordType(DisplayNameProvider displayNameProvider)
+            : base(false, displayNameProvider)
         {
         }
 
