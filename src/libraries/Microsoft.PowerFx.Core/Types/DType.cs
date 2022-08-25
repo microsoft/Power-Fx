@@ -2522,9 +2522,13 @@ namespace Microsoft.PowerFx.Core.Types
             type1.AssertValid();
             type2.AssertValid();
             
-            // For Lazy Types, union operations must expand the current depth
+            // For Lazy Types, union operations must expand the current depth if they aren't identical
             if (type1.IsLazyType)
             {
+                // Skip union operation if the types are equal
+                if (type1 == type2)
+                    return type1;
+
                 type1 = type1.LazyTypeProvider.GetExpandedType(type1.IsTable);
             }
 
@@ -3020,15 +3024,21 @@ namespace Microsoft.PowerFx.Core.Types
                 return false;
             }
 
+            bool aggregateCoerces;
             if (IsAggregate)
             {
-                return AggregateCoercesTo(typeDest, out isSafe, out coercionType, out schemaDifference, out schemaDifferenceType, aggregateCoercion);
-            }
+                if (AggregateCoercesTo(typeDest, out isSafe, out coercionType, out schemaDifference, out schemaDifferenceType, aggregateCoercion))
+                {
+                    return true;
+                }
 
-            var subtypeCoerces = SubtypeCoercesTo(typeDest, ref isSafe, out coercionType, ref schemaDifference, ref schemaDifferenceType);
-            if (subtypeCoerces.HasValue)
-            {
-                return subtypeCoerces.Value;
+                var subtypeCoerces = SubtypeCoercesTo(typeDest, ref isSafe, out coercionType, ref schemaDifference, ref schemaDifferenceType);
+                if (subtypeCoerces.HasValue)
+                {
+                    return subtypeCoerces.Value;
+                }
+
+                return false;
             }
 
             // For now, named values are never valid as a coerce target or source
