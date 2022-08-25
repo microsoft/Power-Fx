@@ -24,8 +24,12 @@ namespace Microsoft.PowerFx.Core
         /// If this isn't supported by a given display name provider, this should return the same as 
         /// <see cref="TryGetLogicalName(DName, out DName)"/>, with the newDisplayName output populated by the first arg. 
         /// </summary>
-        public abstract bool TryRemapLogicalAndDisplayNames(DName displayName, out DName logicalName, out DName newDisplayName);
+        internal virtual bool TryRemapLogicalAndDisplayNames(DName displayName, out DName logicalName, out DName newDisplayName)
+        {
+            newDisplayName = displayName;
+            return TryGetLogicalName(displayName, out logicalName);
+        }
 
-        public abstract ImmutableDictionary<DName, DName> LogicalToDisplayPairs { get; }
+        public abstract IEnumerable<KeyValuePair<DName, DName>> LogicalToDisplayPairs { get; }
     }
 }

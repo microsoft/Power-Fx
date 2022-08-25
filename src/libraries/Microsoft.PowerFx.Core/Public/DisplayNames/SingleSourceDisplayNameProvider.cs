@@ -17,7 +17,7 @@ namespace Microsoft.PowerFx.Core
         private readonly ImmutableDictionary<DName, DName> _logicalToDisplay;
         private readonly ImmutableDictionary<DName, DName> _displayToLogical;
 
-        public override ImmutableDictionary<DName, DName> LogicalToDisplayPairs => _logicalToDisplay;
+        public override IEnumerable<KeyValuePair<DName, DName>> LogicalToDisplayPairs => _logicalToDisplay;
 
         internal SingleSourceDisplayNameProvider()
         {
@@ -76,12 +76,6 @@ namespace Microsoft.PowerFx.Core
         public override bool TryGetDisplayName(DName logicalName, out DName displayName)
         {
             return _logicalToDisplay.TryGetValue(logicalName, out displayName);
-        }
-
-        public override bool TryRemapLogicalAndDisplayNames(DName displayName, out DName logicalName, out DName newDisplayName)
-        {
-            newDisplayName = displayName;
-            return TryGetLogicalName(displayName, out logicalName);
         }
     }
 }

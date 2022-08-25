@@ -39,7 +39,7 @@ namespace Microsoft.PowerFx
         public OptionSet(string name, DisplayNameProvider displayNameProvider)
         {
             EntityName = new DName(name);
-            Options = displayNameProvider.LogicalToDisplayPairs;
+            Options = displayNameProvider.LogicalToDisplayPairs.ToImmutableDictionary();
 
             _displayNameProvider = displayNameProvider;
             FormulaType = new OptionSetValueType(this);
