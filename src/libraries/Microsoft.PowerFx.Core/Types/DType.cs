@@ -932,11 +932,6 @@ namespace Microsoft.PowerFx.Core.Types
                 return "Text";
             }
 
-            if (Kind == DKind._LimPrimitive)
-            {
-                return "Control";
-            }
-
             if (IsLazyType)
             {
                 var typeSuffix = string.IsNullOrEmpty(LazyTypeProvider.UserVisibleTypeName) ? string.Empty : $" ({LazyTypeProvider.UserVisibleTypeName})";
