@@ -196,6 +196,7 @@ namespace Microsoft.PowerFx.Functions
                 var outputTableType = (TableType)irContext.ResultType;
                 var resultType = outputTableType.ToRecord();
                 var outputColumnNameStr = outputTableType.SingleColumnFieldName;
+                var outputItemType = outputTableType.GetFieldType(outputColumnNameStr);
                 var resultRows = new List<DValue<RecordValue>>();
                 foreach (var row in args[0].Rows)
                 {
@@ -205,7 +206,7 @@ namespace Microsoft.PowerFx.Functions
                         NamedValue namedValue;
                         namedValue = value switch
                         {
-                            T t => new NamedValue(outputColumnNameStr, targetFunction(runner, context, IRContext.NotInSource(inputItemType), new T[] { t })),
+                            T t => new NamedValue(outputColumnNameStr, targetFunction(runner, context, IRContext.NotInSource(outputItemType), new T[] { t })),
                             BlankValue bv => new NamedValue(outputColumnNameStr, bv),
                             ErrorValue ev => new NamedValue(outputColumnNameStr, ev),
                             _ => new NamedValue(outputColumnNameStr, CommonErrors.RuntimeTypeMismatch(IRContext.NotInSource(inputItemType)))
