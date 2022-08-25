@@ -3937,7 +3937,7 @@
     
   </data>
   <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
-    <value>Šo argumentu formulas kolonnās nevar nodot kā šāda tipa ({0}) argumentu.</value>
+    <value>Šo argumentu formulu kolonnās nevar nodot argumentu, kura tips ir kā {0}.</value>
     
   </data>
   <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
@@ -3969,7 +3969,7 @@
     
   </data>
   <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
-    <value>Formulas kolonnās šo darbību nevar veikt tipam {0}.</value>
+    <value>Formulu kolonnās šo darbību nevar veikt tipam {0}.</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
@@ -4005,7 +4005,7 @@
     
   </data>
   <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
-    <value>Formulas kolonnās nevar atsaukties uz virtuālo tabulu {0}.</value>
+    <value>Formulu kolonnās nevar atsaukties uz virtuālo tabulu {0}.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
@@ -4623,38 +4623,6 @@
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
     <value>Funkcijas {0} pirmajam argumentam jābūt derīgam mainīgā nosaukumam, kas nedrīkst konfliktēt ne ar vienu esošu vadīklas, ekrāna, kolekcijas vai datu avota nosaukumu. Atrastais tips: {1}.</value>
-    
-  </data>
-  <data name="ErrUDF_MissingIdentifier" xml:space="preserve">
-    <value>Lietotāja definētajai funkcijai trūkst derīga nosaukuma</value>
-    
-  </data>
-  <data name="ErrUDF_MissingOpenParen" xml:space="preserve">
-    <value>Lietotāja definētajai funkcijai šeit trūkst “(”</value>
-    
-  </data>
-  <data name="ErrUDF_MissingEqual" xml:space="preserve">
-    <value>Lietotāja definētajai funkcijai šeit trūkst “=”</value>
-    
-  </data>
-  <data name="ErrUDF_MissingCloseParen" xml:space="preserve">
-    <value>Lietotāja definētajai funkcijai šeit trūkst “)”</value>
-    
-  </data>
-  <data name="ErrUDF_MissingSemicolon" xml:space="preserve">
-    <value>Lietotāja definētajai funkcijai šeit trūkst “;”</value>
-    
-  </data>
-  <data name="ErrUDF_MissingComma" xml:space="preserve">
-    <value>Lietotāja definētajai funkcijai šeit trūkst “,”</value>
-    
-  </data>
-  <data name="ErrUDF_MissingColon" xml:space="preserve">
-    <value>User Defined Function is missing an ':' here</value>
-    
-  </data>
-  <data name="ErrUDF_DuplicateArgName" xml:space="preserve">
-    <value>Lietotāja definētajai funkcijai ir argumenta nosaukuma dublikāts</value>
     
   </data>
   <data name="AboutSet" xml:space="preserve">

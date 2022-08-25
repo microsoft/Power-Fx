@@ -12,16 +12,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
     public class ThreadingTests
     {
         [Fact]
-        public void CheckIntepreter()
+        public void CheckInterpreter()
         {
             var asm = typeof(RecalcEngine).Assembly;
-            var bugsFieldType = new HashSet<Type>
-            {                
-            };
-
-            var bugNames = new HashSet<string>
-            {
-            };
+            var bugsFieldType = new HashSet<Type>();
+            var bugNames = new HashSet<string>();
 
             AnalyzeThreadSafety.CheckStatics(asm, bugsFieldType, bugNames);
         }

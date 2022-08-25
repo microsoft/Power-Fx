@@ -4625,38 +4625,6 @@
     <value>Det første argumentet {0} skal være et gyldig variabelnavn og kan ikke komme i konflikt med noen eksisterende kontroll-, skjerm-, samling- eller datakildenavn. Fant typen {1}</value>
     
   </data>
-  <data name="ErrUDF_MissingIdentifier" xml:space="preserve">
-    <value>Brukerdefinert funksjon mangler et gyldig navn</value>
-    
-  </data>
-  <data name="ErrUDF_MissingOpenParen" xml:space="preserve">
-    <value>Brukerdefinert funksjon mangler ( her</value>
-    
-  </data>
-  <data name="ErrUDF_MissingEqual" xml:space="preserve">
-    <value>Brukerdefinert funksjon mangler = her</value>
-    
-  </data>
-  <data name="ErrUDF_MissingCloseParen" xml:space="preserve">
-    <value>Brukerdefinert funksjon mangler ) her</value>
-    
-  </data>
-  <data name="ErrUDF_MissingSemicolon" xml:space="preserve">
-    <value>Brukerdefinert funksjon mangler ; her</value>
-    
-  </data>
-  <data name="ErrUDF_MissingComma" xml:space="preserve">
-    <value>Brukerdefinert funksjon mangler , her</value>
-    
-  </data>
-  <data name="ErrUDF_MissingColon" xml:space="preserve">
-    <value>User Defined Function is missing an ':' here</value>
-    
-  </data>
-  <data name="ErrUDF_DuplicateArgName" xml:space="preserve">
-    <value>Brukerdefinert funksjon har et duplisert argumentnavn</value>
-    
-  </data>
   <data name="AboutSet" xml:space="preserve">
     <value>Opprett og angi en global variabel.</value>
     

@@ -9,16 +9,47 @@ using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx
 {
+    // These are "satellite" classes for RecalcEngine.
+    // If these were interfaces, then RecalcEngine would just implement the interfaces.
+    // But they're classes, and C# doesn't allow multiple class inheritence, so 
+    // we create lightweight classes that just point back to the RecalcEngine for all work. 
+    internal class RecalcSymbolValues : ReadOnlySymbolValues
+    {
+        private readonly RecalcEngine _parent;
+
+        public RecalcSymbolValues(RecalcEngine parent)
+        {
+            _parent = parent;
+        }
+
+        protected override ReadOnlySymbolTable GetSymbolTableSnapshotWorker()
+        {
+            return _parent._symbolTable;
+        }
+
+        public override bool TryGetValue(string name, out FormulaValue value)
+        {
+            if (_parent.Formulas.TryGetValue(name, out var info))
+            {
+                value = info.Value;
+                return true;
+            }
+
+            value = null;
+            return false;
+        }
+    }
+
     /// <summary>
     /// <see cref="INameResolver"/> implementation for <see cref="RecalcEngine"/>.
     /// </summary>
-    internal class RecalcEngineResolver : SimpleResolver, IGlobalSymbolNameResolver
+    internal class RecalcEngineResolver : SymbolTable, IGlobalSymbolNameResolver
     {
-        private readonly RecalcEngine _parent;
-        private readonly PowerFxConfig _powerFxConfig;
+        private new readonly RecalcEngine _parent;
 
         public IReadOnlyDictionary<string, NameLookupInfo> GlobalSymbols => _parent.Formulas.ToDictionary(kvp => kvp.Key, kvp => Create(kvp.Key, kvp.Value));
 
@@ -27,33 +58,14 @@ namespace Microsoft.PowerFx
             return new NameLookupInfo(BindKind.PowerFxResolvedObject, recalcFormulaInfo.Value.Type._type, DPath.Root, 0, recalcFormulaInfo);
         }
 
-        public RecalcEngineResolver(RecalcEngine parent, PowerFxConfig powerFxConfig)
-            : base(powerFxConfig)
+        public RecalcEngineResolver(RecalcEngine parent)
         {
             _parent = parent;
-            _powerFxConfig = powerFxConfig;
+            DebugName = "RecalcEngineResolver";
         }
 
-        public override IEnumerable<TexlFunction> LookupFunctions(DPath theNamespace, string name, bool localeInvariant = false)
+        internal override bool TryLookup(DName name, out NameLookupInfo nameInfo)
         {
-            if (theNamespace.IsRoot)
-            {
-                if (_parent._customFuncs.TryGetValue(name, out var func))
-                {
-                    return new TexlFunction[] { func };
-                }
-            }
-
-            return base.LookupFunctions(theNamespace, name, localeInvariant);
-        }
-
-        public override bool Lookup(DName name, out NameLookupInfo nameInfo, NameLookupPreferences preferences = NameLookupPreferences.None)
-        {
-            // Kinds of globals:
-            // - global formula
-            // - parameters 
-            // - environment symbols
-
             var str = name.Value;
 
             if (_parent.Formulas.TryGetValue(str, out var fi))
@@ -62,12 +74,8 @@ namespace Microsoft.PowerFx
                 return true;
             }
 
-            return base.Lookup(name, out nameInfo, preferences);
-        }
-
-        public class ParameterData
-        {
-            public string ParameterName;
+            nameInfo = default;
+            return false;
         }
     }
 }

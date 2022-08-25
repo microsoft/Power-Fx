@@ -24,7 +24,7 @@ namespace Microsoft.PowerFx
     /// </summary>
     internal class CustomTexlFunction : TexlFunction
     {
-        public Func<FormulaValue[], FormulaValue> _impl;
+        public Func<IServiceProvider, FormulaValue[], FormulaValue> _impl;
 
         public override bool SupportsParamCoercion => true;
 
@@ -50,9 +50,9 @@ namespace Microsoft.PowerFx
             yield return new[] { SG("Arg 1") };
         }
 
-        public virtual FormulaValue Invoke(FormulaValue[] args)
+        public virtual FormulaValue Invoke(IServiceProvider serviceProvider, FormulaValue[] args)
         {
-            return _impl(args);
+            return _impl(serviceProvider, args);
         }
     }
 
@@ -141,6 +141,9 @@ namespace Microsoft.PowerFx
         // This also gives us a symbol to track if we remove the special casing. 
         public const string SetPropertyName = "SetProperty";
 
+        // If non-null, specify what type of runtime config this function can accept. 
+        protected Type ConfigType { get; init; }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ReflectionFunction"/> class.
         /// Assume by defaults. Will reflect to get primitive types.
@@ -173,8 +176,13 @@ namespace Microsoft.PowerFx
         private class FunctionDescr
         {
             public FormulaType RetType;
+
+            // User-facing parameter types. 
             public FormulaType[] ParamTypes;
             public string Name;
+
+            // If not null, then arg0 is from RuntimeConfig
+            public Type _configType;
 
             public MethodInfo _method;
         }
@@ -197,7 +205,27 @@ namespace Microsoft.PowerFx
                 }
 
                 info.RetType = GetType(m.ReturnType);
-                info.ParamTypes = Array.ConvertAll(m.GetParameters(), p => GetType(p.ParameterType));
+
+                var paramTypes = new List<FormulaType>();
+                foreach (var p in m.GetParameters())
+                {
+                    if (typeof(FormulaValue).IsAssignableFrom(p.ParameterType))
+                    {
+                        paramTypes.Add(GetType(p.ParameterType));
+                    } 
+                    else if (p.ParameterType == ConfigType)
+                    {
+                        // Not a Formulatype, pull from RuntimeConfig
+                        info._configType = p.ParameterType;
+                    } 
+                    else
+                    {
+                        // Unknonw parameter type
+                        throw new InvalidOperationException($"Unknown parameter type: {p.Name}, {p.ParameterType}");
+                    }
+                }
+
+                info.ParamTypes = paramTypes.ToArray();
                 info._method = m;
 
                 _info = info;
@@ -230,20 +258,40 @@ namespace Microsoft.PowerFx
             {
                 return new CustomSetPropertyFunction(info.Name)
                 {
-                    _impl = args => Invoke(args)
+                    _impl = args => Invoke(null, args)
                 };
             }
 
             return new CustomTexlFunction(info.Name, info.RetType, info.ParamTypes)
             {
-                _impl = (args) => Invoke(args)
+                _impl = (runtimeConfig, args) => Invoke(runtimeConfig, args)
             };
         }
 
-        public FormulaValue Invoke(FormulaValue[] args)
+        public FormulaValue Invoke(IServiceProvider serviceProvider, FormulaValue[] args)
         {
             Scan();
-            var result = _info._method.Invoke(this, args);
+
+            var args2 = new List<object>();
+            if (ConfigType != null)
+            {
+                var service = serviceProvider.GetService(ConfigType);
+                if (service != null)
+                {
+                    args2.Add(service);
+                }
+                else
+                {
+                    throw new InvalidOperationException($"Call to {_info.Name} is missing config type {_info._configType.FullName}");
+                }
+            }
+
+            foreach (var arg in args)
+            {
+                args2.Add(arg);
+            }
+
+            var result = _info._method.Invoke(this, args2.ToArray());
 
             return (FormulaValue)result;
         }

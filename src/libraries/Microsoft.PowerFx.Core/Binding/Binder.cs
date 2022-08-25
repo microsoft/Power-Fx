@@ -23,6 +23,7 @@ using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
+using static Microsoft.PowerFx.Core.Binding.BinderUtils;
 using Conditional = System.Diagnostics.ConditionalAttribute;
 
 namespace Microsoft.PowerFx.Core.Binding
@@ -532,7 +533,7 @@ namespace Microsoft.PowerFx.Core.Binding
             }
 
             var isServerDelegatable = function.IsServerDelegatable(node, this);
-            BinderUtils.LogTelemetryForFunction(function, node, this, isServerDelegatable);
+            LogTelemetryForFunction(function, node, this, isServerDelegatable);
             return isServerDelegatable;
         }
 
@@ -2521,17 +2522,16 @@ namespace Microsoft.PowerFx.Core.Binding
 
             // Returns whether the node was of the type wanted, and reports appropriate errors.
             // A list of allowed alternate types specifies what other types of values can be coerced to the wanted type.
-            private bool CheckType(TexlNode node, DType typeWant, params DType[] alternateTypes)
+            private bool CheckType(TexlNode node, DType nodeType, DType typeWant, params DType[] alternateTypes)
             {
                 Contracts.AssertValue(node);
                 Contracts.Assert(typeWant.IsValid);
                 Contracts.Assert(!typeWant.IsError);
                 Contracts.AssertValue(alternateTypes);
 
-                var type = _txb.GetType(node);
-                if (typeWant.Accepts(type))
+                if (typeWant.Accepts(nodeType))
                 {
-                    if (type.RequiresExplicitCast(typeWant))
+                    if (nodeType.RequiresExplicitCast(typeWant))
                     {
                         _txb.SetCoercedType(node, typeWant);
                     }
@@ -2542,13 +2542,13 @@ namespace Microsoft.PowerFx.Core.Binding
                 // Normal (non-control) coercion
                 foreach (var altType in alternateTypes)
                 {
-                    if (!altType.Accepts(type))
+                    if (!altType.Accepts(nodeType))
                     {
                         continue;
                     }
 
                     // Ensure that booleans only match bool valued option sets
-                    if (typeWant.Kind == DKind.Boolean && altType.Kind == DKind.OptionSetValue && !(type.OptionSetInfo?.IsBooleanValued ?? false))
+                    if (typeWant.Kind == DKind.Boolean && altType.Kind == DKind.OptionSetValue && !(nodeType.OptionSetInfo?.IsBooleanValued ?? false))
                     {
                         continue;
                     }
@@ -2561,7 +2561,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 // If the node is a control, we may be able to coerce its primary output property
                 // to the desired type, and in the process support simplified syntax such as: label1 + slider4
                 IExternalControlProperty primaryOutProp;
-                if (type is IExternalControlType controlType && node.AsFirstName() != null && (primaryOutProp = controlType.ControlTemplate.PrimaryOutputProperty) != null)
+                if (nodeType is IExternalControlType controlType && node.AsFirstName() != null && (primaryOutProp = controlType.ControlTemplate.PrimaryOutputProperty) != null)
                 {
                     var outType = primaryOutProp.GetOpaqueType();
                     if (typeWant.Accepts(outType) || alternateTypes.Any(alt => alt.Accepts(outType)))
@@ -3526,6 +3526,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 {
                     // Error: Attachment Type should never be the left hand side of dotted name node
                     SetDottedNameError(node, TexlStrings.ErrInvalidIdentifier);
+                    return;
                 }
                 else if (leftType is IExternalControlType leftControl)
                 {
@@ -3932,14 +3933,15 @@ namespace Microsoft.PowerFx.Core.Binding
                 AssertValid();
                 Contracts.AssertValue(node);
 
+                var childType = _txb.GetType(node.Child);
+
                 switch (node.Op)
                 {
                     case UnaryOp.Not:
-                        CheckType(node.Child, DType.Boolean, /* coerced: */ DType.Number, DType.String, DType.OptionSetValue);
+                        CheckType(node.Child, childType, DType.Boolean, /* coerced: */ DType.Number, DType.String, DType.OptionSetValue);
                         _txb.SetType(node, DType.Boolean);
                         break;
                     case UnaryOp.Minus:
-                        var childType = _txb.GetType(node.Child);
                         switch (childType.Kind)
                         {
                             case DKind.Date:
@@ -3955,14 +3957,14 @@ namespace Microsoft.PowerFx.Core.Binding
                                 _txb.SetType(node, DType.DateTime);
                                 break;
                             default:
-                                CheckType(node.Child, DType.Number, /* coerced: */ DType.String, DType.Boolean);
+                                CheckType(node.Child, childType, DType.Number, /* coerced: */ DType.String, DType.Boolean);
                                 _txb.SetType(node, DType.Number);
                                 break;
                         }
 
                         break;
                     case UnaryOp.Percent:
-                        CheckType(node.Child, DType.Number, /* coerced: */ DType.String, DType.Boolean, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime);
+                        CheckType(node.Child, childType, DType.Number, /* coerced: */ DType.String, DType.Boolean, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime);
                         _txb.SetType(node, DType.Number);
                         break;
                     default:
@@ -3989,6 +3991,11 @@ namespace Microsoft.PowerFx.Core.Binding
                 AssertValid();
                 Contracts.AssertValue(node);
 
+                var leftType = _txb.GetType(node.Left);
+                var rightType = _txb.GetType(node.Right);
+                var leftNode = node.Left;
+                var rightNode = node.Right;
+
                 switch (node.Op)
                 {
                     case BinaryOp.Add:
@@ -3997,21 +4004,21 @@ namespace Microsoft.PowerFx.Core.Binding
                     case BinaryOp.Power:
                     case BinaryOp.Mul:
                     case BinaryOp.Div:
-                        CheckType(node.Left, DType.Number, /* coerced: */ DType.String, DType.Boolean, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime);
-                        CheckType(node.Right, DType.Number, /* coerced: */ DType.String, DType.Boolean, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime);
+                        CheckType(leftNode, leftType, DType.Number, /* coerced: */ DType.String, DType.Boolean, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime);
+                        CheckType(rightNode, rightType, DType.Number, /* coerced: */ DType.String, DType.Boolean, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime);
                         _txb.SetType(node, DType.Number);
                         break;
 
                     case BinaryOp.Or:
                     case BinaryOp.And:
-                        CheckType(node.Left, DType.Boolean, /* coerced: */ DType.Number, DType.String, DType.OptionSetValue);
-                        CheckType(node.Right, DType.Boolean, /* coerced: */ DType.Number, DType.String, DType.OptionSetValue);
+                        CheckType(leftNode, leftType, DType.Boolean, /* coerced: */ DType.Number, DType.String, DType.OptionSetValue);
+                        CheckType(rightNode, rightType, DType.Boolean, /* coerced: */ DType.Number, DType.String, DType.OptionSetValue);
                         _txb.SetType(node, DType.Boolean);
                         break;
 
                     case BinaryOp.Concat:
-                        CheckType(node.Left, DType.String, /* coerced: */ DType.Number, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime, DType.Boolean, DType.OptionSetValue, DType.ViewValue);
-                        CheckType(node.Right, DType.String, /* coerced: */ DType.Number, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime, DType.Boolean, DType.OptionSetValue, DType.ViewValue);
+                        CheckType(leftNode, leftType, DType.String, /* coerced: */ DType.Number, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime, DType.Boolean, DType.OptionSetValue, DType.ViewValue);
+                        CheckType(rightNode, rightType, DType.String, /* coerced: */ DType.Number, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime, DType.Boolean, DType.OptionSetValue, DType.ViewValue);
                         _txb.SetType(node, DType.String);
                         break;
 
@@ -4022,7 +4029,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                     case BinaryOp.Equal:
                     case BinaryOp.NotEqual:
-                        CheckEqualArgTypes(node.Left, node.Right);
+                        CheckEqualArgTypes(leftNode, rightNode);
                         _txb.SetType(node, DType.Boolean);
                         break;
 
@@ -4033,13 +4040,13 @@ namespace Microsoft.PowerFx.Core.Binding
                         // Excel's type coercion for inequality operators is inconsistent / borderline wrong, so we can't
                         // use it as a reference. For example, in Excel '2 < TRUE' produces TRUE, but so does '2 < FALSE'.
                         // Sticking to a restricted set of numeric-like types for now until evidence arises to support the need for coercion.
-                        CheckComparisonArgTypes(node.Left, node.Right);
+                        CheckComparisonArgTypes(leftNode, rightNode);
                         _txb.SetType(node, DType.Boolean);
                         break;
 
                     case BinaryOp.In:
                     case BinaryOp.Exactin:
-                        CheckInArgTypes(node.Left, node.Right);
+                        CheckInArgTypes(leftNode, rightNode);
                         _txb.SetType(node, DType.Boolean);
                         break;
 
@@ -4066,10 +4073,10 @@ namespace Microsoft.PowerFx.Core.Binding
                 Contracts.AssertValue(node);
                 Contracts.Assert(node.Op == BinaryOp.Add);
 
-                var left = _txb.GetType(node.Left);
-                var right = _txb.GetType(node.Right);
-                var leftKind = left.Kind;
-                var rightKind = right.Kind;
+                var leftType = _txb.GetType(node.Left);
+                var rightType = _txb.GetType(node.Right);
+                var leftKind = leftType.Kind;
+                var rightKind = rightType.Kind;
 
                 void ReportInvalidOperation()
                 {
@@ -4078,8 +4085,8 @@ namespace Microsoft.PowerFx.Core.Binding
                         DocumentErrorSeverity.Severe,
                         node,
                         TexlStrings.ErrBadOperatorTypes,
-                        left.GetKindString(),
-                        right.GetKindString());
+                        leftType.GetKindString(),
+                        rightType.GetKindString());
                 }
 
                 UnaryOpNode unary;
@@ -4112,7 +4119,7 @@ namespace Microsoft.PowerFx.Core.Binding
                                 break;
                             default:
                                 // DateTime + number = DateTime
-                                CheckType(node.Right, DType.Number, /* coerced: */ DType.String, DType.Boolean);
+                                CheckType(node.Right, rightType, DType.Number, /* coerced: */ DType.String, DType.Boolean);
                                 _txb.SetType(node, DType.DateTime);
                                 break;
                         }
@@ -4167,7 +4174,7 @@ namespace Microsoft.PowerFx.Core.Binding
                                 break;
                             default:
                                 // Date + number = Date
-                                CheckType(node.Right, DType.Number, /* coerced: */ DType.String, DType.Boolean);
+                                CheckType(node.Right, rightType, DType.Number, /* coerced: */ DType.String, DType.Boolean);
                                 _txb.SetType(node, DType.Date);
                                 break;
                         }
@@ -4211,7 +4218,7 @@ namespace Microsoft.PowerFx.Core.Binding
                                 break;
                             default:
                                 // Time + number = Time
-                                CheckType(node.Right, DType.Number, /* coerced: */ DType.String, DType.Boolean);
+                                CheckType(node.Right, rightType, DType.Number, /* coerced: */ DType.String, DType.Boolean);
                                 _txb.SetType(node, DType.Time);
                                 break;
                         }
@@ -4222,23 +4229,23 @@ namespace Microsoft.PowerFx.Core.Binding
                         {
                             case DKind.DateTime:
                                 // number + DateTime = DateTime
-                                CheckType(node.Left, DType.Number, /* coerced: */ DType.String, DType.Boolean);
+                                CheckType(node.Left, leftType, DType.Number, /* coerced: */ DType.String, DType.Boolean);
                                 _txb.SetType(node, DType.DateTime);
                                 break;
                             case DKind.Date:
                                 // number + Date = Date
-                                CheckType(node.Left, DType.Number, /* coerced: */ DType.String, DType.Boolean);
+                                CheckType(node.Left, leftType, DType.Number, /* coerced: */ DType.String, DType.Boolean);
                                 _txb.SetType(node, DType.Date);
                                 break;
                             case DKind.Time:
                                 // number + Time = Time
-                                CheckType(node.Left, DType.Number, /* coerced: */ DType.String, DType.Boolean);
+                                CheckType(node.Left, leftType, DType.Number, /* coerced: */ DType.String, DType.Boolean);
                                 _txb.SetType(node, DType.Time);
                                 break;
                             default:
                                 // Regular Addition
-                                CheckType(node.Left, DType.Number, /* coerced: */ DType.String, DType.Boolean);
-                                CheckType(node.Right, DType.Number, /* coerced: */ DType.String, DType.Boolean);
+                                CheckType(node.Left, leftType, DType.Number, /* coerced: */ DType.String, DType.Boolean);
+                                CheckType(node.Right, rightType, DType.Number, /* coerced: */ DType.String, DType.Boolean);
                                 _txb.SetType(node, DType.Number);
                                 break;
                         }
@@ -4303,6 +4310,14 @@ namespace Microsoft.PowerFx.Core.Binding
                     else if (DType.Number.Accepts(typeRight) && DType.DateTime.Accepts(typeLeft))
                     {
                         _txb.SetCoercedType(left, DType.Number);
+                        return;
+                    }
+
+                    // Handle Date <=> Time comparison by coercing both to DateTime
+                    if (DType.DateTime.Accepts(typeLeft) && DType.DateTime.Accepts(typeRight))
+                    {
+                        _txb.SetCoercedType(left, DType.DateTime);
+                        _txb.SetCoercedType(right, DType.DateTime);
                         return;
                     }
                 }
@@ -5509,106 +5524,6 @@ namespace Microsoft.PowerFx.Core.Binding
                 {
                     return Enumerable.Empty<TexlFunction>();
                 }
-            }
-
-            /// <summary>
-            /// Tries to get the best suited overload for <paramref name="node"/> according to <paramref name="txb"/> and
-            /// returns true if it is found.
-            /// </summary>
-            /// <param name="txb">
-            /// Binding that will help select the best overload.
-            /// </param>
-            /// <param name="node">
-            /// CallNode for which the best overload will be determined.
-            /// </param>
-            /// <param name="argTypes">
-            /// List of argument types for <paramref name="node.Args"/>.
-            /// </param>
-            /// <param name="overloads">
-            /// All overloads for <paramref name="node"/>. An element of this list will be returned.
-            /// </param>
-            /// <param name="bestOverload">
-            /// Set to the best overload when this method completes.
-            /// </param>
-            /// <param name="nodeToCoercedTypeMap">
-            /// Set to the types to which <paramref name="node.Args"/> must be coerced in order for
-            /// <paramref name="bestOverload"/> to be valid.
-            /// </param>
-            /// <param name="returnType">
-            /// The return type for <paramref name="bestOverload"/>.
-            /// </param>
-            /// <returns>
-            /// True if a valid overload was found, false if not.
-            /// </returns>
-            private static bool TryGetBestOverload(TexlBinding txb, CallNode node, DType[] argTypes, TexlFunction[] overloads, out TexlFunction bestOverload, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap, out DType returnType)
-            {
-                Contracts.AssertValue(node, nameof(node));
-                Contracts.AssertValue(overloads, nameof(overloads));
-
-                var args = node.Args.Children;
-                var carg = args.Length;
-                returnType = DType.Unknown;
-
-                TexlFunction matchingFuncWithCoercion = null;
-                var matchingFuncWithCoercionReturnType = DType.Invalid;
-                nodeToCoercedTypeMap = null;
-                Dictionary<TexlNode, DType> matchingFuncWithCoercionNodeToCoercedTypeMap = null;
-
-                foreach (var maybeFunc in overloads)
-                {
-                    Contracts.Assert(!maybeFunc.HasLambdas);
-
-                    nodeToCoercedTypeMap = null;
-
-                    if (carg < maybeFunc.MinArity || carg > maybeFunc.MaxArity)
-                    {
-                        continue;
-                    }
-
-                    var typeCheckSucceeded = false;
-
-                    IErrorContainer warnings = new LimitedSeverityErrorContainer(txb.ErrorContainer, DocumentErrorSeverity.Warning);
-
-                    // Typecheck the invocation and infer the return type.
-                    typeCheckSucceeded = maybeFunc.CheckInvocation(txb, args, argTypes, warnings, out returnType, out nodeToCoercedTypeMap);
-
-                    if (typeCheckSucceeded)
-                    {
-                        if (nodeToCoercedTypeMap == null)
-                        {
-                            // We found an overload that matches without type coercion.  The correct return type
-                            // and, trivially, the nodeToCoercedTypeMap are properly set at this point.
-                            bestOverload = maybeFunc;
-                            return true;
-                        }
-
-                        // We found an overload that matches but with type coercion. Keep going
-                        // until we find another overload that matches without type coercion.
-                        // If we cannot find one, we will use this overload only if there is no other
-                        // overload that involves fewer coercions.
-                        if (matchingFuncWithCoercion == null || nodeToCoercedTypeMap.Count < matchingFuncWithCoercionNodeToCoercedTypeMap.VerifyValue().Count)
-                        {
-                            matchingFuncWithCoercionNodeToCoercedTypeMap = nodeToCoercedTypeMap;
-                            matchingFuncWithCoercion = maybeFunc;
-                            matchingFuncWithCoercionReturnType = returnType;
-                        }
-                    }
-                }
-
-                // We've matched, but with coercion required.
-                if (matchingFuncWithCoercionNodeToCoercedTypeMap != null)
-                {
-                    bestOverload = matchingFuncWithCoercion;
-                    nodeToCoercedTypeMap = matchingFuncWithCoercionNodeToCoercedTypeMap;
-                    returnType = matchingFuncWithCoercionReturnType;
-                    return true;
-                }
-
-                // There are no good overloads
-                bestOverload = null;
-                nodeToCoercedTypeMap = null;
-                returnType = null;
-                return false;
             }
 
             /// <summary>
