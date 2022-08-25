@@ -103,6 +103,21 @@
 >> Average("false","false")
 #Error(Kind=InvalidArgument, InvalidArgument)
 
+// ******** DATE PARAMETERS (interpreted as numbers) ********
+
+>> Average(Date(2022, 10, 1), Date(2022, 10, 3))
+44836
+
+>> Average(Date(2022, 10, 1), Date(2022, 10, 3), Date(2022, 10, 5))
+44837
+
+>> Average(DateTime(2022, 10, 1, 6, 0, 0), DateTime(2022, 10, 2, 18, 0, 0))
+44836
+
+>> Average(DateTime(2022, 10, 1, 6, 0, 0), DateTime(2022, 10, 1, 18, 0, 0))
+44835.5
+
+
 // ***********  TABLE *************
 
 >> Average([1,2,3], Value)
@@ -122,5 +137,3 @@ Blank()
 
 >> Average([1, 2, 1/0, 4, 5], Value)
 #Error
-
-
