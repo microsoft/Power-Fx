@@ -39,5 +39,23 @@ namespace Microsoft.PowerFx
         {
             symbolTable.AddFunction(new CollectFunction());
         }
+
+        /// <summary>
+        /// Enable a Patch() function which allows scripts to append table records.
+        /// </summary>
+        /// <param name="symbolTable"></param>
+        public static void EnablePatchRecordFunction(this SymbolTable symbolTable)
+        {
+            symbolTable.AddFunction(new PatchRecordFunction());
+        }
+
+        /// <summary>
+        /// Enable a Patch() function which allows scripts to append table records.
+        /// </summary>
+        /// <param name="symbolTable"></param>
+        public static void EnablePatchFunction(this SymbolTable symbolTable)
+        {
+            symbolTable.AddFunction(new PatchFunction());
+        }
     }
 }

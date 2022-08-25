@@ -89,6 +89,14 @@ namespace Microsoft.PowerFx.Types
             throw new System.NotImplementedException("It is not possible to append to a TableValue directly.");
         }
 
+        // Return boolean value
+        // Async because derived classes may back this with a network call. 
+        public virtual async Task<DValue<BooleanValue>> RemoveAsync(RecordValue record)
+        {
+            // fails by default
+            throw new System.NotImplementedException("It is not possible to append to a TableValue directly.");
+        }
+
         public override object ToObject()
         {
             if (IsColumn)

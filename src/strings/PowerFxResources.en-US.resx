@@ -5004,6 +5004,10 @@
     <value>Contrast theme</value>
     <comment>Display text representing the Contrast value of TeamsTheme enum (TeamsTheme_Contrast_Name). The possible values for this enumeration are: Default, Dark, Contrast.</comment>
   </data>
+  <data name="AboutPatch" xml:space="preserve">
+    <value>Applies the updates to the specified row and changes the row in the specified datasource. Returns the updated row.</value>
+    <comment>Description of 'Patch' function.</comment>
+  </data>
   <data name="PenMode_Draw_DisplayName" xml:space="preserve">
     <value>Draw</value>
     <comment>Display text representing the Draw value of PenMode enum (PenMode_Draw_Name). The possible values for this enumeration are: Draw, Erase.</comment>

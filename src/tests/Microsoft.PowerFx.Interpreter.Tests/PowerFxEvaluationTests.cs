@@ -18,7 +18,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
     {
         internal static Dictionary<string, Func<PowerFxConfig, (RecalcEngine engine, RecordValue parameters)>> SetupHandlers = new () 
         {
-            { "OptionSetTestSetup", OptionSetTestSetup }
+            { "OptionSetTestSetup", OptionSetTestSetup },
+            { "PatchTestSetup", PatchTestSetup }
         };
 
         private static (RecalcEngine engine, RecordValue parameters) OptionSetTestSetup(PowerFxConfig config)
@@ -49,7 +50,47 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                         new NamedValue("InnerOtherOptionSet", o2Val)))); 
 
             return (new RecalcEngine(config), parameters);
-        }        
+        }
+
+        private static (RecalcEngine engine, RecordValue parameters) PatchTestSetup(PowerFxConfig config)
+        {
+            var symbol = new SymbolTable();
+            var datasource = new List<RecordValue>();
+
+            RecordValue r1 = FormulaValue.NewRecordFromFields(
+                new NamedValue("Field1", FormulaValue.New(1)),
+                new NamedValue("Field2", FormulaValue.New(2)));
+
+            RecordValue r2 = FormulaValue.NewRecordFromFields(
+                new NamedValue("Field1", FormulaValue.New(11)),
+                new NamedValue("Field2", FormulaValue.New(22)));
+
+            RecordValue r3 = FormulaValue.NewRecordFromFields(
+                new NamedValue("Field1", FormulaValue.New(111)),
+                new NamedValue("Field2", FormulaValue.New(222)));
+
+            RecordValue r4 = FormulaValue.NewRecordFromFields(
+                new NamedValue("Field1", FormulaValue.New(1111)),
+                new NamedValue("Field2", FormulaValue.New(2222)));
+
+            datasource.Add(r1);
+
+            var t = FormulaValue.NewTable(r1.Type, datasource);
+
+            symbol.EnablePatchRecordFunction();
+            symbol.EnablePatchFunction();
+            symbol.EnableCollectFunction();
+
+            symbol.AddConstant("t", t);
+            symbol.AddConstant("r1", r1);
+            symbol.AddConstant("r2", r2);
+            symbol.AddConstant("r3", r3);
+            symbol.AddConstant("r4", r4);
+
+            config.SymbolTable = symbol;
+
+            return (new RecalcEngine(config), null);
+        }
 
         internal class InterpreterRunner : BaseRunner
         {            
@@ -91,7 +132,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
                 if (iSetup.HandlerName != null)
                 {
-                    if (!SetupHandlers.TryGetValue(setupHandlerName, out var handler))
+                    if (!SetupHandlers.TryGetValue(iSetup.HandlerName, out var handler))
                     {
                         throw new SetupHandlerNotFoundException();
                     }

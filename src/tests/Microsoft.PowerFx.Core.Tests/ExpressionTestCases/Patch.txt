@@ -1,0 +1,33 @@
+﻿#SETUP: EnableExpressionChaining,PatchTestSetup
+
+// PatchTestSetup handle does the following:
+// - Creates a record: r1 => {Field1:1,Field2:2}
+// - Creates a record: r2 => {Field1:11,Field2:22}
+// - Creates a record: r3 => {Field1:111,Field2:222}
+// - Creates a record: r4 => {Field1:1111,Field2:2222}
+// - Creates a table: t
+// - Adds record r1 to table t
+
+>> Patch(r1, {Field3:3})
+{Field1:1,Field2:2,Field3:3}
+
+>> Patch(r1, {Field2:22})
+{Field1:1,Field2:22}
+
+>> Patch(r1, {Field3:3}, {Field2:22})
+{Field1:1,Field2:22,Field3:3}
+
+>> Patch(t, r1, {Field3:3,Field4:4,Field2:32}, Blank(), {Field5:5,Field6:6,Field2:222}); t
+Table({Field1:1,Field2:222})
+
+>> Patch(t, Lookup(t, Flavor = "Chocolate" ), {Field3:3,Field4:4,Field2:32}, Blank(), {Field5:5,Field6:6,Field2:222}); t
+#Skip
+
+>> Patch(t, r1, {Field3:3,Field4:4,Field2:22}); t
+Table({Field1:1,Field2:22})
+
+>> Patch(t, r1, r2, r3, r4, {Field1:0,Field4:4,Field2:-1}); t
+Table({Field1:0,Field2:-1})
+
+>> Collect(t, r2);Collect(t, r3);Collect(t, r4);Patch(t, r1, r2, r3, r4, {Field1:0,Field4:4,Field9:-1}); t
+Table({Field1:11,Field2:22},{Field1:111,Field2:222},{Field1:1111,Field2:2222},{Field1:0,Field2:2222})
