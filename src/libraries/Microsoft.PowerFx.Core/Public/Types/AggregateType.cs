@@ -21,10 +21,8 @@ namespace Microsoft.PowerFx.Types
         }
 
         public AggregateType(bool isTable)
-            : base()
+            : this(isTable, null)
         {
-            var lazyTypeProvider = new LazyTypeProvider(this);
-            _type = new DType(lazyTypeProvider, isTable: isTable, null);
         }
 
         public AggregateType(bool isTable, DisplayNameProvider displayNameProvider)
