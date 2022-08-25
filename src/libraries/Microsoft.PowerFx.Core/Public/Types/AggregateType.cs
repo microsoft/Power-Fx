@@ -20,6 +20,9 @@ namespace Microsoft.PowerFx.Types
         /// </summary>
         public virtual string UserVisibleTypeName => null; 
 
+        // Internal property, allows Canvas to control whether a Union operation is permitted on a derived record type
+        internal virtual bool AllowsUnion => true;
+
         internal AggregateType(DType type)
             : base(type)
         {

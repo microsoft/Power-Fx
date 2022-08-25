@@ -2525,16 +2525,34 @@ namespace Microsoft.PowerFx.Core.Types
             // For Lazy Types, union operations must expand the current depth if they aren't identical
             if (type1.IsLazyType)
             {
-                // Skip union operation if the types are equal
-                if (type1 == type2)
-                    return type1;
+                // Skip union operation if the types are both lazy and don't support expansion for unions
+                if (type2.IsLazyType) 
+                {
+                    if (type1 == type2)
+                    {
+                        return type1;
+                    }
+                    else if (!(type1.LazyTypeProvider.AllowsUnion && type2.LazyTypeProvider.AllowsUnion))
+                    {
+                        fError = true;
+                        return Error;
+                    }
+                }
 
-                type1 = type1.LazyTypeProvider.GetExpandedType(type1.IsTable);
+                // Skip expansion if union not permitted by type
+                if (type1.LazyTypeProvider.AllowsUnion)
+                {
+                    type1 = type1.LazyTypeProvider.GetExpandedType(type1.IsTable);
+                }
             }
 
             if (type2.IsLazyType)
             {
-                type2 = type2.LazyTypeProvider.GetExpandedType(type2.IsTable);
+                // Skip expansion if union not permitted by type
+                if (type2.LazyTypeProvider.AllowsUnion)
+                {
+                    type2 = type2.LazyTypeProvider.GetExpandedType(type2.IsTable);
+                }
             }
 
             if (type1.IsAggregate && type2.IsAggregate)
@@ -2936,6 +2954,19 @@ namespace Microsoft.PowerFx.Core.Types
                 return false;
             }
 
+            if (typeDest.IsLazyType)
+            {
+                if (IsLazyType)
+                {
+                    // Coercion from lazy -> lazy is not supported
+                    isSafe = false;
+                    coercionType = this;
+                    return false;
+                }
+
+                typeDest = typeDest.LazyTypeProvider.GetExpandedType(typeDest.IsTable);
+            }
+
             if (Kind != typeDest.Kind && Kind == DKind.Record && aggregateCoercion)
             {
                 return ToTable().CoercesTo(typeDest, out isSafe, out coercionType, out schemaDifference, out schemaDifferenceType);
@@ -3024,7 +3055,6 @@ namespace Microsoft.PowerFx.Core.Types
                 return false;
             }
 
-            bool aggregateCoerces;
             if (IsAggregate)
             {
                 if (AggregateCoercesTo(typeDest, out isSafe, out coercionType, out schemaDifference, out schemaDifferenceType, aggregateCoercion))

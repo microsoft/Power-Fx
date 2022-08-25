@@ -25,6 +25,8 @@ namespace Microsoft.PowerFx.Core.Types
 
         internal string UserVisibleTypeName => BackingFormulaType.UserVisibleTypeName;
 
+        internal bool AllowsUnion => BackingFormulaType.AllowsUnion;
+
         public LazyTypeProvider(AggregateType type)
         {
             // Ensure we aren't trying to wrap a Known type as lazy. This would cause StackOverflows when calling Equals()
