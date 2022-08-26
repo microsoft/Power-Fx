@@ -32,7 +32,7 @@ namespace Microsoft.PowerFx.Functions
                 else
                 {
                     var childContext = context.SymbolContext.WithScopeValues(row.Value);
-                    var value = await arg2.EvalAsync(runner, new EvalVisitorContext(childContext, context.StackDepthCounter));
+                    var value = await arg2.EvalAsync(runner, context.NewScope(childContext));
 
                     if (value is NumberValue number)
                     {
@@ -140,7 +140,7 @@ namespace Microsoft.PowerFx.Functions
 
                     foreach (var column in newColumns)
                     {
-                        var value = await column.Lambda.EvalAsync(runner, new EvalVisitorContext(childContext, context.StackDepthCounter));
+                        var value = await column.Lambda.EvalAsync(runner, context.NewScope(childContext));
                         fields.Add(new NamedValue(column.Name, value));
                     }
 
@@ -304,7 +304,7 @@ namespace Microsoft.PowerFx.Functions
                 if (row.IsValue)
                 {
                     var childContext = context.SymbolContext.WithScopeValues(row.Value);
-                    var result = await filter.EvalAsync(runner, new EvalVisitorContext(childContext, context.StackDepthCounter));
+                    var result = await filter.EvalAsync(runner, context.NewScope(childContext));
 
                     if (result is ErrorValue error)
                     {
@@ -395,7 +395,7 @@ namespace Microsoft.PowerFx.Functions
             }
 
             var childContext = context.SymbolContext.WithScopeValues(row.Value);
-            var sortValue = await lambda.EvalAsync(runner, new EvalVisitorContext(childContext, context.StackDepthCounter));
+            var sortValue = await lambda.EvalAsync(runner, context.NewScope(childContext));
 
             return (row, sortValue);
         }
@@ -529,7 +529,7 @@ namespace Microsoft.PowerFx.Functions
             }
 
             // Filter evals to a boolean 
-            var result = await filter.EvalAsync(runner, new EvalVisitorContext(childContext, context.StackDepthCounter));
+            var result = await filter.EvalAsync(runner, context.NewScope(childContext));
             var include = false;
             if (result is BooleanValue booleanValue)
             {

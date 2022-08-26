@@ -16,38 +16,38 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 {
     public class ExpressionEvaluationTests : PowerFxTest
     {
-        internal static Dictionary<string, Func<PowerFxConfig, (RecalcEngine engine, RecordValue parameters)>> SetupHandlers = new () 
+        internal static Dictionary<string, Func<PowerFxConfig, (RecalcEngine engine, RecordValue parameters)>> SetupHandlers = new ()
         {
             { "OptionSetTestSetup", OptionSetTestSetup },
             { "PatchTestSetup", PatchTestSetup }
         };
 
         private static (RecalcEngine engine, RecordValue parameters) OptionSetTestSetup(PowerFxConfig config)
-        {            
-            var optionSet = new OptionSet("OptionSet", DisplayNameUtility.MakeUnique(new Dictionary<string, string>() 
+        {
+            var optionSet = new OptionSet("OptionSet", DisplayNameUtility.MakeUnique(new Dictionary<string, string>()
             {
                     { "option_1", "Option1" },
                     { "option_2", "Option2" }
             }));
-            
-            var otherOptionSet = new OptionSet("OtherOptionSet", DisplayNameUtility.MakeUnique(new Dictionary<string, string>() 
+
+            var otherOptionSet = new OptionSet("OtherOptionSet", DisplayNameUtility.MakeUnique(new Dictionary<string, string>()
             {
                     { "99", "OptionA" },
                     { "112", "OptionB" },
                     { "35694", "OptionC" },
                     { "123412983", "OptionD" },
             }));
-            
+
             config.AddOptionSet(optionSet);
             config.AddOptionSet(otherOptionSet);
 
-            optionSet.TryGetValue(new DName("option_1"), out var o1Val);            
+            optionSet.TryGetValue(new DName("option_1"), out var o1Val);
             otherOptionSet.TryGetValue(new DName("123412983"), out var o2Val);
 
             var parameters = FormulaValue.NewRecordFromFields(
                     new NamedValue("TopOptionSetField", o1Val),
                     new NamedValue("Nested", FormulaValue.NewRecordFromFields(
-                        new NamedValue("InnerOtherOptionSet", o2Val)))); 
+                        new NamedValue("InnerOtherOptionSet", o2Val))));
 
             return (new RecalcEngine(config), parameters);
         }
@@ -93,12 +93,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
         internal class InterpreterRunner : BaseRunner
-        {            
+        {
             // For async tests, run in special mode. 
             // This does _not_ change evaluation semantics, but does verify .Result isn't called by checking
             // task completion status.. 
-            private async Task<FormulaValue> RunVerifyAsync(string expr, PowerFxConfig config, ParserOptions options)
-            {                
+            private async Task<FormulaValue> RunVerifyAsync(string expr, PowerFxConfig config, InternalSetup setup)
+            {
                 var verify = new AsyncVerify();
 
                 // Add Async(),WaitFor() functions 
@@ -113,7 +113,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 engine.UpdateVariable("varNumber", 9999);
 
                 // Run in special mode that ensures we're not calling .Result
-                var result = await verify.EvalAsync(engine, expr, options);
+                var result = await verify.EvalAsync(engine, expr, setup);
                 return result;
             }
 
@@ -127,7 +127,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
                 if (string.Equals(iSetup.HandlerName, "AsyncTestSetup", StringComparison.OrdinalIgnoreCase))
                 {
-                    return new RunResult(await RunVerifyAsync(expr, config, iSetup.Flags.ToParserOptions()));
+                    return new RunResult(await RunVerifyAsync(expr, config, iSetup));
                 }
 
                 if (iSetup.HandlerName != null)
@@ -156,10 +156,17 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     return new RunResult(check);
                 }
 
-                var newValue = await check.GetEvaluator().EvalAsync(CancellationToken.None, parameters);
+                var rtConfig = SymbolValues.NewFromRecord(parameters) as SymbolValues;
+
+                if (iSetup.TimeZoneInfo != null)
+                {
+                    rtConfig.AddService(iSetup.TimeZoneInfo);
+                }
+
+                var newValue = await check.GetEvaluator().EvalAsync(CancellationToken.None, rtConfig);
 
                 return new RunResult(newValue);
-            }          
+            }
         }
     }
 }

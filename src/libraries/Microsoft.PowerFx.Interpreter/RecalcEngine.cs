@@ -8,17 +8,11 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Binding;
-using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Core.Texl;
-using Microsoft.PowerFx.Core.Types;
-using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Interpreter.UDF;
 using Microsoft.PowerFx.Types;
-using static Microsoft.PowerFx.Interpreter.UDFHelper;
 
 namespace Microsoft.PowerFx
 {
@@ -52,7 +46,7 @@ namespace Microsoft.PowerFx
             // Add Builtin functions that aren't yet in the shared library. 
             SupportedFunctions = _interpreterSupportedFunctions;
         }
-            
+
         // Set of default functions supported by the interpreter. 
         private static readonly ReadOnlySymbolTable _interpreterSupportedFunctions = ReadOnlySymbolTable.NewDefault(Library.FunctionList);
 
@@ -90,7 +84,7 @@ namespace Microsoft.PowerFx
         {
             return CreateEvaluatorDirect(result, new StackDepthCounter(PowerFxConfig.DefaultMaxCallDepth));
         }
-                
+
         public void UpdateVariable(string name, double value)
         {
             UpdateVariable(name, new NumberValue(IRContext.NotInSource(FormulaType.Number), value));
@@ -138,7 +132,7 @@ namespace Microsoft.PowerFx
         {
             return EvalAsync(expressionText, CancellationToken.None, parameters, options).Result;
         }
-
+      
         public async Task<FormulaValue> EvalAsync(string expressionText, CancellationToken cancel, RecordValue parameters, ParserOptions options = null)
         {
             if (parameters == null)
@@ -155,13 +149,8 @@ namespace Microsoft.PowerFx
             var result = await run.EvalAsync(cancel, parameters);
             return result;
         }
-                
-        public async Task<FormulaValue> EvalAsync(
-            string expressionText,
-            CancellationToken cancel,
-            ParserOptions options = null,
-            ReadOnlySymbolTable symbolTable = null,
-            ReadOnlySymbolValues runtimeConfig = null)
+
+        public async Task<FormulaValue> EvalAsync(string expressionText, CancellationToken cancel, ParserOptions options = null, ReadOnlySymbolTable symbolTable = null, ReadOnlySymbolValues runtimeConfig = null)
         {
             // We could have any combination of symbols and runtime values. 
             // - RuntimeConfig may be null if we don't need it. 
@@ -184,8 +173,8 @@ namespace Microsoft.PowerFx
             var result = parsedUDFS.GetParsed();
 
             var udfDefinitions = result.UDFs.Select(udf => new UDFDefinition(
-                udf.Ident.ToString(), 
-                udf.Body.ToString(), 
+                udf.Ident.ToString(),
+                udf.Body.ToString(),
                 FormulaType.GetFromStringOrNull(udf.ReturnType.ToString()),
                 udf.IsImperative,
                 udf.Args.Select(arg => new NamedFormulaType(arg.VarIdent.ToString(), FormulaType.GetFromStringOrNull(arg.VarType.ToString()))).ToArray())).ToArray();
@@ -208,7 +197,7 @@ namespace Microsoft.PowerFx
             var check = new CheckWrapper(this, definition.Body, record, definition.IsImperative);
 
             var func = new UserDefinedTexlFunction(definition.Name, definition.ReturnType, definition.Parameters, check);
-                        
+
             var exists = _symbolTable.Functions.Any(x => x.Name == definition.Name);
             if (exists)
             {
@@ -239,7 +228,7 @@ namespace Microsoft.PowerFx
             {
                 binders.Add(DefineFunction(definition));
             }
-            
+
             foreach (UDFLazyBinder lazyBinder in binders)
             {
                 var possibleErrors = lazyBinder.Bind();

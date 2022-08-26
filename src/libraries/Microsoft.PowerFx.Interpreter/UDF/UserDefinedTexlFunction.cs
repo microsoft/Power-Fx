@@ -49,7 +49,7 @@ namespace Microsoft.PowerFx.Interpreter
             if (check.Expression is ParsedExpression parsed)
             {
                 _expr = parsed;
-            } 
+            }
             else
             {
                 throw new System.Exception("Expression is not a ParsedExpression");

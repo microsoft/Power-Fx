@@ -110,11 +110,10 @@ namespace Microsoft.PowerFx
             }
         }
 
-        public async Task<FormulaValue> EvalAsync(
-            CancellationToken cancel,
-            ReadOnlySymbolValues runtimeConfig = null)
+        public async Task<FormulaValue> EvalAsync(CancellationToken cancel, ReadOnlySymbolValues runtimeConfig = null)
         {
-            var ev2 = new EvalVisitor(_cultureInfo, cancel, runtimeConfig);
+            var culture = runtimeConfig?.GetService<CultureInfo>() ?? _cultureInfo;
+            var ev2 = new EvalVisitor(culture, cancel, runtimeConfig);
 
             try
             {

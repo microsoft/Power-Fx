@@ -3,13 +3,10 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
-using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx
-{   
+{
     /// <summary>
     /// Mutable collection for runtime Values for a <see cref="SymbolTable"/>.
     /// </summary>
@@ -20,7 +17,7 @@ namespace Microsoft.PowerFx
 
         // Services for runtime functions. Lazy created.
         private Dictionary<Type, object> _services;
-        
+
         /// <summary>
         /// Enable chaining of lookups. Chaining is handled by calling the base methods. 
         /// </summary>
@@ -49,7 +46,7 @@ namespace Microsoft.PowerFx
                     table.AddVariable(kv.Key, kv.Value.Type);
                 }
             }
-                    
+
             return table;
         }
 
