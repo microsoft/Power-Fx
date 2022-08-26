@@ -263,7 +263,8 @@ namespace Microsoft.PowerFx.Intellisense
             Contracts.AssertValid(type);
             Contracts.AssertValue(data);
 
-            foreach (var field in type.GetNames(DPath.Root))
+            foreach (var field in type.GetRootFieldNames()
+                .Select(field => (Type: type.GetType(field), Name: field)))
             {
                 var usedName = field.Name;
                 if (DType.TryGetDisplayNameForColumn(type, usedName, out var maybeDisplayName))
@@ -417,7 +418,8 @@ namespace Microsoft.PowerFx.Intellisense
         {
             Contracts.AssertValid(scopeType);
 
-            foreach (var name in scopeType.GetNames(DPath.Root))
+            foreach (var name in scopeType.GetRootFieldNames()
+                .Select(field => (Type: scopeType.GetType(field), Name: field)))
             {
                 yield return new KeyValuePair<string, DType>("\"" + CharacterUtils.ExcelEscapeString(name.Name.Value) + "\"", name.Type);
             }
@@ -435,7 +437,8 @@ namespace Microsoft.PowerFx.Intellisense
             }
 
             var suggestions = new List<KeyValuePair<string, DType>>();
-            foreach (var tName in typeToSuggestFrom.GetNames(DPath.Root))
+            foreach (var tName in typeToSuggestFrom.GetRootFieldNames()
+                .Select(field => (Type: typeToSuggestFrom.GetType(field), Name: field)))
             {
                 if (suggestionType.Accepts(tName.Type))
                 {
@@ -483,12 +486,9 @@ namespace Microsoft.PowerFx.Intellisense
             Contracts.AssertValue(callNode);
             Contracts.Assert(argumentIndex >= 0);
 
-            var info = intellisenseData.Binding.GetInfo(callNode);
-            Contracts.AssertValue(info);
-
             if (callNode.Args.Count < 0 ||
-                info.Function == null ||
-                !info.Function.HasSuggestionsForParam(argumentIndex))
+                intellisenseData.CurFunc == null ||
+                !intellisenseData.CurFunc.HasSuggestionsForParam(argumentIndex))
             {
                 return false;
             }
@@ -500,7 +500,7 @@ namespace Microsoft.PowerFx.Intellisense
 
             // If the function has specific suggestions for the argument,
             // indicate it to the caller.
-            var function = info.Function;
+            var function = intellisenseData.CurFunc;
             var suggestionKind = intellisenseData.GetFunctionSuggestionKind(function, argumentIndex);
             ErrorNode err;
 
