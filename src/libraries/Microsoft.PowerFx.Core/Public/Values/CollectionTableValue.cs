@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
 
 namespace Microsoft.PowerFx.Types
@@ -21,6 +22,7 @@ namespace Microsoft.PowerFx.Types
         // Additional capabilities. 
         private readonly IReadOnlyList<T> _sourceIndex; // maybe null. supports index. 
         private readonly IReadOnlyCollection<T> _sourceCount; // maybe null. supports count;
+        private readonly ICollection<T> _sourceList;
 
         public CollectionTableValue(RecordType recordType, IEnumerable<T> source)
           : this(IRContext.NotInSource(recordType.ToTable()), source)
@@ -35,11 +37,17 @@ namespace Microsoft.PowerFx.Types
 
             _sourceIndex = source as IReadOnlyList<T>;
             _sourceCount = source as IReadOnlyCollection<T>;
+            _sourceList = source as ICollection<T>;
         }
 
         public RecordType RecordType { get; }
 
         protected abstract DValue<RecordValue> Marshal(T item);
+
+        protected virtual T MarshalInverse(RecordValue row)
+        {
+            throw new NotImplementedException();
+        }
 
         public override IEnumerable<DValue<RecordValue>> Rows
         {
@@ -63,6 +71,20 @@ namespace Microsoft.PowerFx.Types
             {
                 return base.Count();
             }
+        }
+
+        public override async Task<DValue<RecordValue>> AppendAsync(RecordValue record)
+        {
+            if (_sourceList == null || _sourceList.IsReadOnly)
+            {
+                return await base.AppendAsync(record);
+            }
+
+            var item = MarshalInverse(record);
+
+            _sourceList.Add(item);
+
+            return DValue<RecordValue>.Of(record);
         }
 
         protected override bool TryGetIndex(int index1, out DValue<RecordValue> record)

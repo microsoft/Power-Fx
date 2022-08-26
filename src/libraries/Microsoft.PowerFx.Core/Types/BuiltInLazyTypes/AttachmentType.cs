@@ -25,6 +25,8 @@ namespace Microsoft.PowerFx.Core.Types.BuiltInLazyTypes
 
         public override IEnumerable<string> FieldNames => Attachment.GetRootFieldNames().Select(name => name.Value);
 
+        public override string UserVisibleTypeName => "Attachment";
+
         public override bool TryGetFieldType(string name, out FormulaType type)
         {
             if (!Attachment.TryGetType(new DName(name), out var dType))

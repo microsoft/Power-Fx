@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Functions
@@ -31,7 +32,7 @@ namespace Microsoft.PowerFx.Functions
                 else
                 {
                     var childContext = context.SymbolContext.WithScopeValues(row.Value);
-                    var value = await arg2.EvalAsync(runner, new EvalVisitorContext(childContext, context.StackDepthCounter));
+                    var value = await arg2.EvalAsync(runner, context.NewScope(childContext));
 
                     if (value is NumberValue number)
                     {
@@ -69,6 +70,17 @@ namespace Microsoft.PowerFx.Functions
 
             var arg0 = (TableValue)args[0];
             var arg1 = (NumberValue)args[1];
+
+            if (arg0 is QueryableTableValue queryableTable)
+            {
+                try
+                {
+                    return queryableTable.FirstN((int)arg1.Value);
+                }
+                catch (NotDelegableException)
+                {
+                }
+            }
 
             var rows = arg0.Rows.Take((int)arg1.Value);
             return new InMemoryTableValue(irContext, rows);
@@ -128,7 +140,7 @@ namespace Microsoft.PowerFx.Functions
 
                     foreach (var column in newColumns)
                     {
-                        var value = await column.Lambda.EvalAsync(runner, new EvalVisitorContext(childContext, context.StackDepthCounter));
+                        var value = await column.Lambda.EvalAsync(runner, context.NewScope(childContext));
                         fields.Add(new NamedValue(column.Name, value));
                     }
 
@@ -292,7 +304,7 @@ namespace Microsoft.PowerFx.Functions
                 if (row.IsValue)
                 {
                     var childContext = context.SymbolContext.WithScopeValues(row.Value);
-                    var result = await filter.EvalAsync(runner, new EvalVisitorContext(childContext, context.StackDepthCounter));
+                    var result = await filter.EvalAsync(runner, context.NewScope(childContext));
 
                     if (result is ErrorValue error)
                     {
@@ -339,6 +351,17 @@ namespace Microsoft.PowerFx.Functions
                 });
             }
 
+            if (arg0 is QueryableTableValue tableQueryable)
+            {
+                try
+                {
+                    return tableQueryable.Filter(arg1, runner, context);
+                }
+                catch (NotDelegableException)
+                {
+                }
+            }
+
             var rows = await LazyFilterAsync(runner, context, arg0.Rows, arg1);
 
             return new InMemoryTableValue(irContext, rows);
@@ -372,7 +395,7 @@ namespace Microsoft.PowerFx.Functions
             }
 
             var childContext = context.SymbolContext.WithScopeValues(row.Value);
-            var sortValue = await lambda.EvalAsync(runner, new EvalVisitorContext(childContext, context.StackDepthCounter));
+            var sortValue = await lambda.EvalAsync(runner, context.NewScope(childContext));
 
             return (row, sortValue);
         }
@@ -382,6 +405,19 @@ namespace Microsoft.PowerFx.Functions
             var arg0 = (TableValue)args[0];
             var arg1 = (LambdaFormulaValue)args[1];
             var arg2 = (StringValue)args[2];
+
+            var isDescending = arg2.Value.ToLower() == "descending";
+
+            if (arg0 is QueryableTableValue queryableTable)
+            {
+                try
+                {
+                    return queryableTable.Sort(arg1, isDescending, runner, context);
+                }
+                catch (NotDelegableException)
+                {
+                }
+            }
 
             var pairs = (await Task.WhenAll(arg0.Rows.Select(row => ApplySortLambda(runner, context, row, arg1)))).ToList();
 
@@ -414,7 +450,7 @@ namespace Microsoft.PowerFx.Functions
             }
 
             var compareToResultModifier = 1;
-            if (arg2.Value.ToLower() == "descending")
+            if (isDescending)
             {
                 compareToResultModifier = -1;
             }
@@ -493,7 +529,7 @@ namespace Microsoft.PowerFx.Functions
             }
 
             // Filter evals to a boolean 
-            var result = await filter.EvalAsync(runner, new EvalVisitorContext(childContext, context.StackDepthCounter));
+            var result = await filter.EvalAsync(runner, context.NewScope(childContext));
             var include = false;
             if (result is BooleanValue booleanValue)
             {

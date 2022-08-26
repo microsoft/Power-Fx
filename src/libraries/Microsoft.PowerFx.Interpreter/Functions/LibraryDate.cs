@@ -3,10 +3,7 @@
 
 using System;
 using System.Globalization;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Functions
@@ -42,10 +39,15 @@ namespace Microsoft.PowerFx.Functions
             return new BooleanValue(irContext, same);
         }
 
+        // When not specified, default time zone is the local one.
+        private static TimeZoneInfo LocalTimeZone => TimeZoneInfo.Local;
+
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/show-text-dates-times
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-dateadd-datediff
-        public static FormulaValue DateAdd(IRContext irContext, FormulaValue[] args)
+        public static FormulaValue DateAdd(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
+            var timeZoneInfo = runner.GetService<TimeZoneInfo>() ?? LocalTimeZone;
+
             DateTime datetime;
             switch (args[0])
             {
@@ -61,6 +63,8 @@ namespace Microsoft.PowerFx.Functions
 
             var delta = (NumberValue)args[1];
             var units = (StringValue)args[2];
+
+            datetime = TimeZoneInfo.ConvertTimeToUtc(datetime, timeZoneInfo);
 
             try
             {
@@ -96,6 +100,8 @@ namespace Microsoft.PowerFx.Functions
                         return CommonErrors.NotYetImplementedError(irContext, "DateAdd Only supports Days for the unit field");
                 }
 
+                newDate = TimeZoneInfo.ConvertTimeFromUtc(newDate, timeZoneInfo);
+
                 if (args[0] is DateTimeValue)
                 {
                     return new DateTimeValue(irContext, newDate);
@@ -111,7 +117,7 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
-        public static FormulaValue DateDiff(IRContext irContext, FormulaValue[] args)
+        public static FormulaValue DateDiff(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             DateTime start;
             switch (args[0])
@@ -141,6 +147,28 @@ namespace Microsoft.PowerFx.Functions
 
             var units = (StringValue)args[2];
 
+            // When converting to months, quarters or years, we don't use the time difference
+            // and applying changes to map time to UTC could lead to weird results depending on the local time zone
+            // as we could even change of year if the date we have is 1st of Jan and we are in a UTC+N time zone (N positive)
+            switch (units.Value.ToLower())
+            {
+                case "months":
+                    double months = ((end.Year - start.Year) * 12) + end.Month - start.Month;
+                    return new NumberValue(irContext, months);
+                case "quarters":
+                    var quarters = ((end.Year - start.Year) * 4) + Math.Floor(end.Month / 3.0) - Math.Floor(start.Month / 3.0);
+                    return new NumberValue(irContext, quarters);
+                case "years":
+                    double years = end.Year - start.Year;
+                    return new NumberValue(irContext, years);
+            }
+
+            // Convert to UTC to be accurate (apply DST if needed)
+            var timeZoneInfo = runner.GetService<TimeZoneInfo>() ?? LocalTimeZone;
+
+            start = TimeZoneInfo.ConvertTimeToUtc(start, timeZoneInfo);
+            end = TimeZoneInfo.ConvertTimeToUtc(end, timeZoneInfo);
+
             var diff = end - start;
 
             // The function DateDiff only returns a whole number of the units being subtracted, and the precision is given in the unit specified.
@@ -161,15 +189,6 @@ namespace Microsoft.PowerFx.Functions
                 case "days":
                     var days = Math.Floor(diff.TotalDays);
                     return new NumberValue(irContext, days);
-                case "months":
-                    double months = ((end.Year - start.Year) * 12) + end.Month - start.Month;
-                    return new NumberValue(irContext, months);
-                case "quarters":
-                    var quarters = ((end.Year - start.Year) * 4) + Math.Floor(end.Month / 3.0) - Math.Floor(start.Month / 3.0);
-                    return new NumberValue(irContext, quarters);
-                case "years":
-                    double years = end.Year - start.Year;
-                    return new NumberValue(irContext, years);
                 default:
                     // TODO: Task 10723372: Implement Unit Functionality in DateAdd, DateDiff Functions
                     return CommonErrors.NotYetImplementedError(irContext, "DateDiff Only supports Days for the unit field");
@@ -405,20 +424,16 @@ namespace Microsoft.PowerFx.Functions
 
         private static bool TryGetCulture(string name, out CultureInfo value)
         {
-            CultureInfo[] availableCultures =
-                CultureInfo.GetCultures(CultureTypes.AllCultures);
-
-            foreach (CultureInfo culture in availableCultures)
+            try
             {
-                if (string.Equals(culture.Name, name, StringComparison.OrdinalIgnoreCase))
-                {
-                    value = new CultureInfo(name);
-                    return true;
-                }
+                value = new CultureInfo(name);
+                return true;
             }
-
-            value = null;
-            return false;
+            catch (CultureNotFoundException)
+            {
+                value = null;
+                return false;
+            }
         }
 
         public static FormulaValue DateTimeParse(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, StringValue[] args)
@@ -430,6 +445,7 @@ namespace Microsoft.PowerFx.Functions
             if (args.Length > 1)
             {
                 var languageCode = args[1].Value;
+
                 if (!TryGetCulture(languageCode, out culture))
                 {
                     return CommonErrors.BadLanguageCode(irContext, languageCode);
@@ -438,6 +454,11 @@ namespace Microsoft.PowerFx.Functions
 
             if (DateTime.TryParse(str, culture, DateTimeStyles.None, out var result))
             {
+                if (runner.TryGetService<TimeZoneInfo>(out var tzi) && result.Kind == DateTimeKind.Local)
+                {
+                    result = TimeZoneInfo.ConvertTime(result, TimeZoneInfo.Local, tzi);
+                }
+
                 return new DateTimeValue(irContext, result);
             }
             else
@@ -471,21 +492,23 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
-        public static FormulaValue TimeZoneOffset(IRContext irContext, FormulaValue[] args)
+        // Returns the number of minutes between UTC and either local or defined time zone
+        public static FormulaValue TimeZoneOffset(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            var tzInfo = TimeZoneInfo.Local;
+            var tzInfo = runner.GetService<TimeZoneInfo>() ?? TimeZoneInfo.Local;
+
             if (args.Length == 0)
             {
                 var tzOffsetDays = tzInfo.GetUtcOffset(DateTime.Now).TotalDays;
-                return new NumberValue(irContext, tzOffsetDays * -1);
+                return new NumberValue(irContext, tzOffsetDays * -1440);
             }
 
             switch (args[0])
             {
                 case DateTimeValue dtv:
-                    return new NumberValue(irContext, tzInfo.GetUtcOffset(dtv.Value.ToUniversalTime()).TotalDays * -1);
+                    return new NumberValue(irContext, tzInfo.GetUtcOffset(dtv.Value).TotalDays * -1440);
                 case DateValue dv:
-                    return new NumberValue(irContext, tzInfo.GetUtcOffset(dv.Value.ToUniversalTime()).TotalDays * -1);
+                    return new NumberValue(irContext, tzInfo.GetUtcOffset(dv.Value).TotalDays * -1440);
                 default:
                     return CommonErrors.InvalidDateTimeError(irContext);
             }

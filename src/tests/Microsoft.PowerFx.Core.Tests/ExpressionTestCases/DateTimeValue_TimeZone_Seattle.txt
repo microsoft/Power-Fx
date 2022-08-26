@@ -1,0 +1,34 @@
+﻿// (UTC-08:00) Pacific Time (US & Canada)
+#SETUP: TimeZoneInfo("Pacific Standard Time")
+
+>> DateTimeValue("2022-08-23T12:00:00Z") 
+DateTime(2022,8,23,5,0,0,0)
+
+>> DateTimeValue("2022-08-23T12:00:00") 
+DateTime(2022,8,23,12,0,0,0)
+
+// The result of this expression depends on current TimeZoneInfo. 
+// In Seattle TimeZoneInfo, this will trip over daylight savings and be 4:00am. 
+// In Paris timezoneinfo - which does not do daylight savings at the same date, we get 3:00am.
+// https://www.timeanddate.com/time/change/usa/seattle
+// https://www.timeanddate.com/time/change/france/paris
+>> Text(DateAdd(DateTime(2022,3,13,1,0,0), 2, "hours"))
+"3/13/2022 4:00 AM"
+
+>> Text(DateAdd(DateTime(2022,3,27,1,0,0), 2, "hours"))
+"3/27/2022 3:00 AM"
+
+>> DateAdd((Date(2022, 3, 13) + Time(1,0,0)), 90, "Minutes") 
+DateTime(2022,3,13,3,30,0,0)
+
+>> DateDiff(DateTime(2022,3,27,1,0,0), DateTime(2022,3,27,4,0,0), "hours")
+3
+
+>> DateDiff(DateTime(2022,3,13,1,0,0), DateTime(2022,3,13,4,0,0), "hours")
+2
+
+>> TimeZoneOffset(DateTime(2022,3,13,1,0,0))/60
+8
+
+>> TimeZoneOffset(DateTime(2022,3,13,4,0,0))/60
+7

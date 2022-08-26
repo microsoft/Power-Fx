@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Functions
@@ -437,7 +438,7 @@ namespace Microsoft.PowerFx.Functions
                 if (row.IsValue)
                 {
                     var childContext = context.SymbolContext.WithScopeValues(row.Value);
-                    var value = await arg1.EvalAsync(runner, new EvalVisitorContext(childContext, context.StackDepthCounter));
+                    var value = await arg1.EvalAsync(runner, context.NewScope(childContext));
 
                     if (value is NumberValue number)
                     {
@@ -813,7 +814,7 @@ namespace Microsoft.PowerFx.Functions
         // This catches potential host bugs. 
         private static double SafeNextDouble(this IRandomService random)
         {
-            var value = random.NextDouble(); 
+            var value = random.NextDouble();
 
             if (value < 0 || value > 1)
             {
@@ -839,7 +840,7 @@ namespace Microsoft.PowerFx.Functions
             var services = runner.FunctionServices;
 
             var value = services.SafeNextDouble();
-            return new NumberValue(irContext, value);            
+            return new NumberValue(irContext, value);
         }
 
         public static FormulaValue RandBetween(IServiceProvider services, IRContext irContext, NumberValue[] args)
@@ -861,7 +862,7 @@ namespace Microsoft.PowerFx.Functions
             upper = Math.Floor(upper);
 
             var value = services.SafeNextDouble();
-            return new NumberValue(irContext, Math.Floor((value * (upper - lower + 1)) + lower));            
+            return new NumberValue(irContext, Math.Floor((value * (upper - lower + 1)) + lower));
         }
 
         private static FormulaValue Pi(IRContext irContext, FormulaValue[] args)

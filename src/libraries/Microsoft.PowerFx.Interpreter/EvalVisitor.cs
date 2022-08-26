@@ -25,7 +25,9 @@ namespace Microsoft.PowerFx
     // Use Task for public methods, but ValueTask for internal methods that we expect to be mostly sync. 
     internal class EvalVisitor : IRNodeVisitor<ValueTask<FormulaValue>, EvalVisitorContext>
     {
-        public CultureInfo CultureInfo { get; }
+        private readonly CultureInfo _defaultCultureInfo;
+
+        public CultureInfo CultureInfo => GetService<CultureInfo>() ?? _defaultCultureInfo;
 
         private readonly ReadOnlySymbolValues _runtimeConfig;
 
@@ -33,7 +35,7 @@ namespace Microsoft.PowerFx
 
         public EvalVisitor(CultureInfo cultureInfo, CancellationToken cancel, ReadOnlySymbolValues runtimeConfig = null)
         {
-            CultureInfo = cultureInfo;
+            _defaultCultureInfo = cultureInfo;
             _cancel = cancel;
             _runtimeConfig = runtimeConfig;
         }
@@ -51,6 +53,12 @@ namespace Microsoft.PowerFx
             }
 
             return default;
+        }
+
+        public bool TryGetService<T>(out T result)
+        {
+            result = GetService<T>();
+            return result != null;
         }
 
         public IServiceProvider FunctionServices => _runtimeConfig;
@@ -227,6 +235,7 @@ namespace Microsoft.PowerFx
             }
             else if (func is UserDefinedTexlFunction udtf)
             {
+                // $$$ Should add _runtimeConfig
                 var result = await udtf.InvokeAsync(args, _cancel, context.StackDepthCounter.Increment());
                 return result;
             }
@@ -454,7 +463,7 @@ namespace Microsoft.PowerFx
                             var record = row.Value;
                             var newScope = scopeContext.WithScopeValues(record);
 
-                            var newValue = await coercion.Value.Accept(this, new EvalVisitorContext(newScope, context.StackDepthCounter));
+                            var newValue = await coercion.Value.Accept(this, context.NewScope(newScope));
                             var name = coercion.Key;
                             fields.Add(new NamedValue(name.Value, newValue));
                         }

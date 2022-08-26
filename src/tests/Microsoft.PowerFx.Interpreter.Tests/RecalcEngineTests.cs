@@ -3,14 +3,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
-using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.Localization;
-using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types.Enums;
@@ -21,7 +19,6 @@ using Microsoft.PowerFx.Interpreter.UDF;
 using Microsoft.PowerFx.Types;
 using Xunit;
 using Xunit.Sdk;
-using static Microsoft.PowerFx.Interpreter.UDFHelper;
 
 namespace Microsoft.PowerFx.Tests
 {
@@ -54,8 +51,10 @@ namespace Microsoft.PowerFx.Tests
                 $"{ns}.{nameof(TableMarshallerProvider)}",
                 $"{ns}.{nameof(TypeMarshallerCache)}",
                 $"{ns}.{nameof(TypeMarshallerCacheExtensions)}",
+                $"{ns}.{nameof(SymbolExtensions)}",
                 $"{nsType}.{nameof(ObjectRecordValue)}",
                 $"{ns}.Interpreter.UDF.{nameof(DefineFunctionsResult)}",
+                $"{nsType}.{nameof(QueryableTableValue)}",
 
                 // Services for functions. 
                 $"{ns}.Functions.IRandomService"
@@ -700,7 +699,7 @@ namespace Microsoft.PowerFx.Tests
 
             var checkResult = recalcEngine.Check("SortOrder.Ascending");
             Assert.True(checkResult.IsSuccess);
-            Assert.IsType<StringType>(checkResult.ReturnType);            
+            Assert.IsType<StringType>(checkResult.ReturnType);
         }
 
         [Fact]
@@ -765,6 +764,37 @@ namespace Microsoft.PowerFx.Tests
         {
             var recalcEngine = new RecalcEngine(new PowerFxConfig(null));
             Assert.True(recalcEngine.DefineFunctions("Foo(): String => 10;").Errors.Any());
+        }
+
+        [Fact]
+        public void TestWithTimeZoneInfo()
+        {
+            // CultureInfo not set in PowerFxConfig as we use Symbols
+            var pfxConfig = new PowerFxConfig();
+            var recalcEngine = new RecalcEngine(pfxConfig);
+            var symbols = new SymbolValues();
+
+            // 10/30/22 is the date where DST applies in France (https://www.timeanddate.com/time/change/france/paris)
+            // So adding 2 hours to 1:34am will result in 2:34am
+            var frTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Romance Standard Time");
+            symbols.SetTimeZone(frTimeZone);
+            
+            var jaCulture = new CultureInfo("ja-JP");
+            symbols.SetCulture(jaCulture);
+
+            Assert.Same(frTimeZone, symbols.GetService<TimeZoneInfo>());
+            Assert.Same(jaCulture, symbols.GetService<CultureInfo>());
+
+            var fv = recalcEngine.EvalAsync(
+                @"Text(DateAdd(DateTimeValue(""dimanche 30 octobre 2022 01:34:03"", ""fr-FR""), ""2"", ""hours""), ""dddd, MMMM dd, yyyy hh:mm:ss"")", 
+                CancellationToken.None,
+                runtimeConfig: symbols).Result;
+
+            Assert.NotNull(fv);
+            Assert.IsType<StringValue>(fv);
+
+            // Then we convert the result to Japanese date/time format (English equivalent: "Sunday, October 30, 2022 02:34:03")
+            Assert.Equal("日曜日, 10月 30, 2022 02:34:03", fv.ToObject());
         }
 
         [Fact]
