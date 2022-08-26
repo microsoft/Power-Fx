@@ -161,5 +161,10 @@ namespace Microsoft.PowerFx.Types
         {
             visitor.Visit(this);
         }
+
+        public virtual void UpdateField(NamedValue newNamedValue)
+        {
+            throw new NotImplementedException("It is not possible to update a NamedValue to a RecordValue directly.");
+        }
     }
 }

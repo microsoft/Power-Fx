@@ -73,15 +73,15 @@ namespace Microsoft.PowerFx.Interpreter
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new[] { TexlStrings.AboutPatch, TexlStrings.AboutPatch, TexlStrings.AboutPatch };
-            yield return new[] { TexlStrings.AboutPatch, TexlStrings.AboutPatch, TexlStrings.AboutPatch, TexlStrings.AboutPatch };
+            yield return new[] { TexlStrings.PatchBaseRecordArg, TexlStrings.PatchChangeRecordsArg };
+            yield return new[] { TexlStrings.PatchBaseRecordArg, TexlStrings.PatchChangeRecordsArg, TexlStrings.PatchChangeRecordsArg };
         }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures(int arity)
         {
-            if (arity > 3)
+            if (arity > 2)
             {
-                return GetGenericSignatures(arity, TexlStrings.AboutPatch, TexlStrings.AboutPatch, TexlStrings.AboutPatch);
+                return GetGenericSignatures(arity, TexlStrings.PatchBaseRecordArg, TexlStrings.PatchChangeRecordsArg);
             }
 
             return base.GetSignatures(arity);
@@ -127,15 +127,16 @@ namespace Microsoft.PowerFx.Interpreter
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new[] { TexlStrings.AboutPatch, TexlStrings.AboutPatch, TexlStrings.AboutPatch };
-            yield return new[] { TexlStrings.AboutPatch, TexlStrings.AboutPatch, TexlStrings.AboutPatch, TexlStrings.AboutPatch };
+            yield return new[] { TexlStrings.PatchDataSourceArg, TexlStrings.PatchBaseRecordArg };
+            yield return new[] { TexlStrings.PatchDataSourceArg, TexlStrings.PatchBaseRecordArg, TexlStrings.PatchChangeRecordsArg };
+            yield return new[] { TexlStrings.PatchDataSourceArg, TexlStrings.PatchBaseRecordArg, TexlStrings.PatchChangeRecordsArg, TexlStrings.PatchChangeRecordsArg };
         }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures(int arity)
         {
             if (arity > 3)
             {
-                return GetGenericSignatures(arity, TexlStrings.AboutPatch, TexlStrings.AboutPatch, TexlStrings.AboutPatch);
+                return GetGenericSignatures(arity, TexlStrings.PatchDataSourceArg, TexlStrings.PatchBaseRecordArg, TexlStrings.PatchChangeRecordsArg);
             }
 
             return base.GetSignatures(arity);
@@ -144,7 +145,6 @@ namespace Microsoft.PowerFx.Interpreter
         public async Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancel)
         {
             var argFields = new Dictionary<string, FormulaValue>();
-            var fieldsDict = new Dictionary<string, FormulaValue>();
 
             var arg0 = args[0] as TableValue;
             var arg1 = args[1] as RecordValue;
@@ -165,6 +165,7 @@ namespace Microsoft.PowerFx.Interpreter
                 }
                 else if (arg is RecordValue record)
                 {
+                    // @@@JYL What is a ellegant way to avoid the nested loop?
                     foreach (var field in record.Fields)
                     {
                         argFields[field.Name] = field.Value;
@@ -172,33 +173,15 @@ namespace Microsoft.PowerFx.Interpreter
                 }
             }
 
-            var fieldList = new List<NamedValue>();
-
-            // Creates final record 
-            foreach (var field in arg1.Fields)
+            foreach (KeyValuePair<string, FormulaValue> kvp in argFields)
             {
-                var namedValue = argFields.ContainsKey(field.Name) ? argFields[field.Name] : field.Value;
-
-                fieldList.Add(new NamedValue(field.Name, namedValue));
+                arg1.UpdateField(new NamedValue(kvp));
             }
 
-            var newRecord = FormulaValue.NewRecordFromFields(fieldList);
+            // @@@JYL Check if record exists. Append if it doesn't
+            // Code goes here.
 
-            // @@@JYL Whats a good way to replace the old record with the new one and "update" the TableValue object?
-
-            var deleted = await arg0.RemoveAsync(arg1);
-
-            if (deleted.Value.Value)
-            {
-                await arg0.AppendAsync(newRecord);
-            }
-            else
-            {
-                // @@@JYL Return ErrorValue or throw exception?
-                throw new Exception("The old record could not be deleted.");
-            }
-
-            return await Task.FromResult<FormulaValue>(newRecord);
+            return arg1;
         }
     }
 }

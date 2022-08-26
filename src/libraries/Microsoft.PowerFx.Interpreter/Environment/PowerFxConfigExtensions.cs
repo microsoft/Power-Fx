@@ -32,29 +32,14 @@ namespace Microsoft.PowerFx
         }
 
         /// <summary>
-        /// Enable a Collect() function which allows scripts to append table records.
+        /// Enable all multation function which allows scripts to execute side effect behavior.
         /// </summary>
         /// <param name="symbolTable"></param>
-        public static void EnableCollectFunction(this SymbolTable symbolTable)
+        public static void EnableMutationFunctions(this SymbolTable symbolTable)
         {
+            symbolTable.AddFunction(new RecalcEngineSetFunction());
             symbolTable.AddFunction(new CollectFunction());
-        }
-
-        /// <summary>
-        /// Enable a Patch() function which allows scripts to append table records.
-        /// </summary>
-        /// <param name="symbolTable"></param>
-        public static void EnablePatchRecordFunction(this SymbolTable symbolTable)
-        {
             symbolTable.AddFunction(new PatchRecordFunction());
-        }
-
-        /// <summary>
-        /// Enable a Patch() function which allows scripts to append table records.
-        /// </summary>
-        /// <param name="symbolTable"></param>
-        public static void EnablePatchFunction(this SymbolTable symbolTable)
-        {
             symbolTable.AddFunction(new PatchFunction());
         }
     }

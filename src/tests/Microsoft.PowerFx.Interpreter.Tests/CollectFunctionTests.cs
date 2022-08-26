@@ -35,7 +35,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var symbol = new SymbolTable();
             var listT = new List<RecordValue>();
 
-            symbol.EnableCollectFunction();
+            symbol.EnableMutationFunctions();
 
             RecordValue r1 = FormulaValue.NewRecordFromFields(
                 new NamedValue("MyField1", FormulaValue.New(1)),
@@ -60,7 +60,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         {
             var symbol = new SymbolTable();
 
-            symbol.EnableCollectFunction();
+            symbol.EnableMutationFunctions();
 
             RecordValue r1 = FormulaValue.NewRecordFromFields(
                 new NamedValue("MyField1", FormulaValue.New(1)),
@@ -86,7 +86,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var symbol = new SymbolTable();
             var listT = new List<RecordValue>();
 
-            symbol.EnableCollectFunction();
+            symbol.EnableMutationFunctions();
 
             RecordValue r1 = FormulaValue.NewRecordFromFields(
                 new NamedValue("MyField1", FormulaValue.New(1)),
@@ -111,7 +111,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var symbol = new SymbolTable();
             var listT = new List<RecordValue>();
 
-            symbol.EnableCollectFunction();
+            symbol.EnableMutationFunctions();
 
             RecordValue r1 = FormulaValue.NewRecordFromFields(
                 new NamedValue("MyField1", FormulaValue.New(1)),
@@ -134,7 +134,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var symbol = new SymbolTable();
             var listT = new List<RecordValue>();
 
-            symbol.EnableCollectFunction();
+            symbol.EnableMutationFunctions();
 
             RecordValue r1 = FormulaValue.NewRecordFromFields(
                 new NamedValue("MyField1", FormulaValue.New(1)),

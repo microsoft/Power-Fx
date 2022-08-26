@@ -94,7 +94,7 @@ namespace Microsoft.PowerFx.Types
         public virtual async Task<DValue<BooleanValue>> RemoveAsync(RecordValue record)
         {
             // fails by default
-            throw new System.NotImplementedException("It is not possible to append to a TableValue directly.");
+            throw new System.NotImplementedException("It is not possible to remove from a TableValue directly.");
         }
 
         public override object ToObject()

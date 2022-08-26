@@ -87,18 +87,6 @@ namespace Microsoft.PowerFx.Types
             return DValue<RecordValue>.Of(record);
         }
 
-        public override async Task<DValue<BooleanValue>> RemoveAsync(RecordValue record)
-        {
-            if (_sourceList == null || _sourceList.IsReadOnly)
-            {
-                return await base.RemoveAsync(record);
-            }
-
-            var item = MarshalInverse(record);
-
-            return DValue<BooleanValue>.Of(FormulaValue.New(_sourceList.Remove(item)));
-        }
-
         protected override bool TryGetIndex(int index1, out DValue<RecordValue> record)
         {
             var index0 = index1 - 1;

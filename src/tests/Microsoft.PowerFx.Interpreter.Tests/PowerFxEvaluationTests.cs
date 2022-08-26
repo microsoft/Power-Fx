@@ -77,9 +77,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var t = FormulaValue.NewTable(r1.Type, datasource);
 
-            symbol.EnablePatchRecordFunction();
-            symbol.EnablePatchFunction();
-            symbol.EnableCollectFunction();
+            symbol.EnableMutationFunctions();
 
             symbol.AddConstant("t", t);
             symbol.AddConstant("r1", r1);
