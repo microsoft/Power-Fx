@@ -1087,6 +1087,7 @@ namespace Microsoft.PowerFx.Core.Types
 
             switch (Kind)
             {
+                case DKind.LazyTable:
                 case DKind.Table:
                     return this;
                 case DKind.LazyRecord:
