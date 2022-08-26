@@ -18,8 +18,5 @@ Blank()
 >> Abs(Table({a:-1},{a:0},{a:123456.789},{a:-123456.789}))
 [1,0,123456.789,123456.789]
 
->> Abs(Table({a:Ln("10")},{a:1/0},{a:Power(-3456,-1)}))
-[2.302585092994046,Microsoft.PowerFx.Types.ErrorValue,0.00028935185185185184]
-
->> Abs(Table({a: Blank()}))
-[Blank()]
+>> Abs(Table({a: Blank()},{a:1/0},{a:Power(-3,2)}))
+[Blank(),Microsoft.PowerFx.Types.ErrorValue,9]

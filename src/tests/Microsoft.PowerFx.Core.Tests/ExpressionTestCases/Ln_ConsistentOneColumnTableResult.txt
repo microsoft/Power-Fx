@@ -1,11 +1,10 @@
 ﻿#SETUP: ConsistentOneColumnTableResult
 
->> Ln([5, 430])
-[1.60943791, 6.06378521]
+>> Ln([1, true])
+[0,0]
 
->> Ln([1E+308, Exp(2)])
-[709.19620864, 2]
+>> Ln(Table({a: Exp(22)}, {a: Exp(-33)}))
+[22,-33]
 
->> Ln([true, "10"])
-[0, 2.30258509]
-
+>> Ln(Table({a: Blank()}, {a: 1/0}))
+[Blank(),Microsoft.PowerFx.Types.ErrorValue]
