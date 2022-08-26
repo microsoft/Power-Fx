@@ -30,6 +30,10 @@ namespace Microsoft.PowerFx.Core
             return TryGetLogicalName(displayName, out logicalName);
         }
 
+        /// <summary>
+        /// In KeyValue Pair, First is Logical Name, Second is Display Name
+        /// KeyValuePair&lt;Dname, Dname&gt;&gt; represents  KeyValuePair&lt;LogicalName, DisplayName&gt;&gt;.
+        /// </summary>
         public abstract IEnumerable<KeyValuePair<DName, DName>> LogicalToDisplayPairs { get; }
     }
 }
