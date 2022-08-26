@@ -84,7 +84,7 @@ namespace Microsoft.PowerFx.Core.Entities
         {
             Contracts.AssertNonEmpty(name);
             Contracts.AssertValid(schema);
-            Contracts.AssertOneOfValueTypeOrNull(dataFormat, DataTypeInfo.GetValidDataFormats(schema.Kind));
+            Contracts.AssertOneOfValueTypeOrNull(dataFormat, DataTypeInfo.GetValidDataFormats(schema));
             Contracts.AssertNonEmpty(displayName);
             Contracts.AssertNonEmptyOrNull(titleColumnName);
             Contracts.AssertNonEmptyOrNull(subtitleColumnName);

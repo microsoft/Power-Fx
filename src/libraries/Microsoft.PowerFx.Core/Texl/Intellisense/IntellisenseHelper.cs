@@ -722,7 +722,13 @@ namespace Microsoft.PowerFx.Intellisense
                 {
                     foreach (var symbol in globalSymbols)
                     {
-                        AddSuggestion(intellisenseData, symbol.Key, SuggestionKind.Global, SuggestionIconKind.Other, symbol.Value.Type, true);
+                        var suggestableName = symbol.Key;
+                        if (symbol.Value.DisplayName.IsValid)
+                        {
+                            suggestableName = symbol.Value.DisplayName.Value;
+                        }
+
+                        AddSuggestion(intellisenseData, suggestableName, SuggestionKind.Global, SuggestionIconKind.Other, symbol.Value.Type, true);
                     }
                 }
             }

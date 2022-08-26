@@ -3925,7 +3925,7 @@
     
   </data>
   <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
-    <value>Invalid number of arguments for {0} function: received {1}, expected {2}</value>
+    <value>{0} 함수에 대한 잘못된 인수 수: {1} 수신, 예상 {2}</value>
     
   </data>
   <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
@@ -3937,7 +3937,7 @@
     
   </data>
   <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
-    <value>This argument can not be passed as type {0} in formula columns.</value>
+    <value>이 인수는 수식 열에서 {0} 형식으로 전달할 수 없습니다.</value>
     
   </data>
   <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
@@ -3957,7 +3957,7 @@
     
   </data>
   <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
-    <value>The {0} argument is an invalid/unsupported unit of time for the {1} date arithmetic function.</value>
+    <value>{0} 인수는 {1} 날짜 연산 함수에 대해 유효하지 않거나 지원되지 않는 시간 단위입니다.</value>
     
   </data>
   <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
@@ -3969,7 +3969,7 @@
     
   </data>
   <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
-    <value>This operation can not be performed on type {0} in formula columns.</value>
+    <value>이 작업은 수식 열의 {0} 유형에 대해 수행할 수 없습니다.</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
@@ -3977,7 +3977,7 @@
     
   </data>
   <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
-    <value>Directly referencing an entire record is not supported in formula columns. Please reference a valid field in the record.</value>
+    <value>전체 레코드를 직접 참조하는 것은 수식 열에서 지원되지 않습니다. 레코드에서 유효한 필드를 참조하세요.</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
@@ -3993,7 +3993,7 @@
     
   </data>
   <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
-    <value>Coercing records or tables is not supported in formula columns.</value>
+    <value>수식 열에서는 레코드 또는 테이블 강제 변환이 지원되지 않습니다.</value>
     
   </data>
   <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
@@ -4001,11 +4001,11 @@
     
   </data>
   <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
-    <value>Single-column tables are not supported in formula columns.</value>
+    <value>단일 열 테이블은 수식 열에서 지원되지 않습니다.</value>
     
   </data>
   <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
-    <value>Can not reference virtual table {0} in formula columns.</value>
+    <value>수식 열에서 가상 테이블 {0}을(를) 참조할 수 없습니다.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
@@ -4623,38 +4623,6 @@
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
     <value>'{0}'의 첫 번째 인수가 올바른 변수 이름이어야 하며, 기존 컨트롤, 화면, 컬렉션 또는 데이터 원본 이름과 충돌할 수 없습니다. 검색된 유형: '{1}'</value>
-    
-  </data>
-  <data name="ErrUDF_MissingIdentifier" xml:space="preserve">
-    <value>User Defined Function is missing a valid name</value>
-    
-  </data>
-  <data name="ErrUDF_MissingOpenParen" xml:space="preserve">
-    <value>User Defined Function is missing a '(' here</value>
-    
-  </data>
-  <data name="ErrUDF_MissingEqual" xml:space="preserve">
-    <value>User Defined Function is missing a '=' here</value>
-    
-  </data>
-  <data name="ErrUDF_MissingCloseParen" xml:space="preserve">
-    <value>User Defined Function is missing a ')' here</value>
-    
-  </data>
-  <data name="ErrUDF_MissingSemicolon" xml:space="preserve">
-    <value>User Defined Function is missing a ';' here</value>
-    
-  </data>
-  <data name="ErrUDF_MissingComma" xml:space="preserve">
-    <value>User Defined Function is missing a ',' here</value>
-    
-  </data>
-  <data name="ErrUDF_MissingColon" xml:space="preserve">
-    <value>User Defined Function is missing an ':' here</value>
-    
-  </data>
-  <data name="ErrUDF_DuplicateArgName" xml:space="preserve">
-    <value>User Defined Function has a duplicate argument name</value>
     
   </data>
   <data name="AboutSet" xml:space="preserve">

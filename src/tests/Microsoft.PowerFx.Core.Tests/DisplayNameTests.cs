@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Collections.Generic;
 using System.Globalization;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Binding;
@@ -84,6 +85,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     TableType.Empty().Add(new NamedFormulaType("Inner", FormulaType.Number, "InnerDisplay")), 
                     "NestedDisplay"));
 
+            var result = _engine.Check(inputExpression, r1);
+            Assert.True(result.IsSuccess);
+
             if (toDisplay)
             {
                 var outDisplayExpression = _engine.GetDisplayExpression(inputExpression, r1);
@@ -141,11 +145,31 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("B & Invalid()", "A & Invalid()", "B", "A")] // Rename with bind errors
         [InlineData("B + + + ", "A + + + ", "B", "A")] // Rename with parse errors
         [InlineData("With({x: RecordNest, y: RecordNest}, x.SomeString & y.SomeString)", "With({x: RecordNest, y: RecordNest}, x.S2 & y.S2)", "RecordNest.SomeString", "S2")]
+        [InlineData("firstos.option_1 <> Os1Value", "firstos.option_1 <> Os1ValueRenamed", "Os1Value", "Os1ValueRenamed")] // Globals
+        [InlineData("TestSecondOptionSet.Option3 = DisplayOS2Value", "secondos.option_3 = Os2ValueRenamed", "Os2Value", "Os2ValueRenamed")]
+        [InlineData("If(false, TestSecondOptionSet.Option4, Os2Value)", "If(false, secondos.option_4, Os2ValueRenamed)", "Os2Value", "Os2ValueRenamed")]
         public void RenameParameter(string expressionBase, string expectedExpression, string path, string newName)
         {
+            var config = new PowerFxConfig(CultureInfo.InvariantCulture);
+            var optionSet1 = new OptionSet("firstos", DisplayNameUtility.MakeUnique(new Dictionary<string, string>()
+            {
+                    { "option_1", "Option1" },
+                    { "option_2", "Option2" }
+            }));
+
+            config.AddOptionSet(optionSet1, new DName("TestFirstOptionSet"));
+            var optionSet2 = new OptionSet("secondos", DisplayNameUtility.MakeUnique(new Dictionary<string, string>()
+            {
+                    { "option_3", "Option3" },
+                    { "option_4", "Option4" }
+            }));
+            config.AddOptionSet(optionSet2, new DName("TestSecondOptionSet"));
+
             var r1 = RecordType.Empty()
                 .Add(new NamedFormulaType("Num", FormulaType.Number, "DisplayNum"))
                 .Add(new NamedFormulaType("B", FormulaType.Boolean, "DisplayB"))
+                .Add(new NamedFormulaType("Os1Value", optionSet1.FormulaType, "DisplayOS1Value"))
+                .Add(new NamedFormulaType("Os2Value", optionSet2.FormulaType, "DisplayOS2Value"))
                 .Add(new NamedFormulaType(
                         "Nested",
                         TableType.Empty().Add(new NamedFormulaType("Inner", FormulaType.Number, "InnerDisplay")),
@@ -163,7 +187,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 dpath = dpath.Append(new DName(segment));
             }
 
-            var renamer = _engine.CreateFieldRenamer(r1, dpath, new DName(newName));
+            var engine = new Engine(config);
+
+            var renamer = engine.CreateFieldRenamer(r1, dpath, new DName(newName));
 
             Assert.Equal(expectedExpression, renamer.ApplyRename(expressionBase));
         }
@@ -183,7 +209,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 null,
                 new Core.Entities.QueryOptions.DataSourceToQueryOptionsMap(),
                 formula.ParseTree,
-                new SimpleResolver(new PowerFxConfig(CultureInfo.InvariantCulture)),
+                new SymbolTable(),
                 BindingConfig.Default,
                 ruleScope: r1._type,
                 updateDisplayNames: true);
@@ -236,6 +262,41 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 var outInvariantExpression = _engine.GetInvariantExpression(inputExpression, r1);
                 Assert.Equal(outputExpression, outInvariantExpression);
             }
+        }
+
+        [Theory]
+        [InlineData("r1.Display1", true)]
+        [InlineData("If(true, r1).Display1", true)]
+        [InlineData("If(true, r1, r1).Display1", true)]
+        [InlineData("If(true, Blank(), r1).Display1", true)]
+
+        // If types are different, you have no access to Display name.
+        [InlineData("If(true, r1, r2).Display1", false)]
+        [InlineData("If(true, r1, r2).Display0", false)]
+        [InlineData("If(true, r1, {Display1 : 123}).Display1", false)]
+
+        // If types are different, you have access to logical name, only if the name and type are same!
+        [InlineData("If(true, r1, r2).F1", true)]
+        [InlineData("If(false, r1, r2).F1", true)]
+        [InlineData("If(true, r1, r2).F0", false)]
+        public void DisplayNameTest(string input, bool succeeds)
+        {
+            var r1 = RecordType.Empty()
+                        .Add(new NamedFormulaType("F1", FormulaType.Number, "Display1"))    
+                        .Add(new NamedFormulaType("F0", FormulaType.String, "Display0")); // F0 is Not a Common type
+
+            var r2 = RecordType.Empty()
+                        .Add(new NamedFormulaType("F1", FormulaType.Number, "Display1"))
+                        .Add(new NamedFormulaType("F0", FormulaType.Number, "Display0"));
+            var parameters = RecordType.Empty()
+                .Add("r1", r1)
+                .Add("r2", r2);
+
+            var engine = new Engine(new PowerFxConfig());
+
+            var result = engine.Check(input, parameters);
+            var actual = result.IsSuccess;
+            Assert.Equal(succeeds, actual);
         }
     }
 }

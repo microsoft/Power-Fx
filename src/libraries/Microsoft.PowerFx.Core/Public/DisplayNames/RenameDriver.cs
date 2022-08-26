@@ -42,7 +42,11 @@ namespace Microsoft.PowerFx.Core
         {
             // Ensure expression is converted to invariant before applying rename.
             var invariantExpression = _engine.GetInvariantExpression(expressionText, _baseParameters);
-            return ExpressionLocalizationHelper.ConvertExpression(invariantExpression, _renameParameters, BindingConfig.Default, _resolver, _binderGlue, CultureInfo.InvariantCulture, true);
+            var converted = ExpressionLocalizationHelper.ConvertExpression(invariantExpression, _renameParameters, BindingConfig.Default, _resolver, _binderGlue, CultureInfo.InvariantCulture, true);
+            
+            // Convert back to the invariant expression. All parameter values are already invariant at this point, so we pass _renameParameters, but stripped of it's DisplayNameProvider
+            var strippedRenameParameters = FormulaType.Build(DType.DisableDisplayNameProviders(_renameParameters._type)) as RecordType;
+            return ExpressionLocalizationHelper.ConvertExpression(converted, strippedRenameParameters, BindingConfig.Default, _resolver, _binderGlue, CultureInfo.InvariantCulture, false);
         }
 
         private static FormulaType RenameFormulaTypeHelper(AggregateType nestedType, Queue<DName> segments, DName updatedName)

@@ -14,6 +14,12 @@ namespace Microsoft.PowerFx.Types
     {
         public virtual IEnumerable<string> FieldNames { get; }
 
+        /// <summary>
+        /// Override to add a more specific user-visible type name when this type shows up
+        /// in error messages, suggestions, etc..
+        /// </summary>
+        public virtual string UserVisibleTypeName => null; 
+
         internal AggregateType(DType type)
             : base(type)
         {

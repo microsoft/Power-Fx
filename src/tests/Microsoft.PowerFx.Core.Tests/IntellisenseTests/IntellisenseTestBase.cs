@@ -65,7 +65,10 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
 
         internal IIntellisenseResult Suggest(string expression, RecordType parameterType, int cursorPosition, PowerFxConfig config)
         {
-            var engine = new Engine(config);
+            var engine = new Engine(config)
+            {
+                SupportedFunctions = new SymbolTable()
+            };
 
             var suggestions = engine.Suggest(expression, parameterType, cursorPosition);
 

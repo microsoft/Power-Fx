@@ -55,6 +55,9 @@ Errors: Error 6-25: Invalid argument type. Expecting a Record value, but of a di
 >> IfError(1, 2, 3, 4)
 3
 
+>> IfError(Text(1/0), FirstError.Message)
+"Invalid operation: division by zero."
+
 >> IsBlank(1/0)
 #Error(Kind=Div0)
 
