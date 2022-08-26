@@ -55,16 +55,17 @@ namespace Microsoft.PowerFx.Tests
             Assert.NotNull(formulaType);
         }
 
-        [Theory]
-        [InlineData("")]
-        [InlineData(null)]
-        public void TryGetFieldTypeLookupNullTest(string inputDisplayOrLogical)
+        [Fact]
+        public void TryGetFieldTypeLookupNullTest()
         {
             var r1 = RecordType.Empty()
                         .Add(new NamedFormulaType("F1", FormulaType.Number, "Display1"));
 
             Assert.Throws<ArgumentNullException>(
-                () => r1.TryGetFieldType(inputDisplayOrLogical, out var actualLogical, out var formulaType));
+                () => r1.TryGetFieldType(null, out var actualLogical, out var formulaType));
+
+            Assert.Throws<ArgumentException>(
+                () => r1.TryGetFieldType(string.Empty, out var actualLogical, out var formulaType));
         }
     }
 }

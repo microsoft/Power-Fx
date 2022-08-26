@@ -59,11 +59,7 @@ namespace Microsoft.PowerFx.Types
         /// <exception cref="ArgumentNullException">Throws, if input displayOrLogicalName is empty.</exception>
         public bool TryGetFieldType(string displayOrLogicalName, out string logical, out FormulaType type)
         {
-            if (string.IsNullOrEmpty(displayOrLogicalName))
-            {
-                throw new ArgumentNullException(nameof(displayOrLogicalName));
-            }
-
+            Contracts.CheckNonEmpty(displayOrLogicalName, nameof(displayOrLogicalName));
             if (_type.DisplayNameProvider.TryGetDisplayName(new DName(displayOrLogicalName), out _))
             {
                 logical = displayOrLogicalName;
@@ -74,18 +70,12 @@ namespace Microsoft.PowerFx.Types
             }
             else
             {
-                logical = null;
+                logical = default;
                 type = Blank;
                 return false;
             }
 
-            if (!TryGetFieldType(logical, out type))
-            {
-                logical = null;
-                return false;
-            }
-
-            return true;
+            return TryGetFieldType(logical, out type);
         }
 
         public IEnumerable<NamedFormulaType> GetFieldTypes()
