@@ -15,11 +15,11 @@ Errors: Error 0-8: The function 'Sqrt' has some invalid arguments.|Error 5-7: In
 >> Sqrt(If(1<0,[1]))
 Blank()
 
->> Sqrt(Table({a:5}, {a:2.34567}, {a:1/0}))
-[2.23606797749979,1.5315580302424066,Microsoft.PowerFx.Types.ErrorValue]
+>> Sqrt(Table({a:16}, {a:289}, {a:1/0}))
+[4,17,Microsoft.PowerFx.Types.ErrorValue]
 
->> Sqrt(Table({a:Ln(2)}, {a:Power(2,2)}, {a:-9}))
-[0.8325546111576977,2,NaN]
+>> Sqrt(Table({a:6.25}, {a:Power(2,2)}, {a:-9}))
+[2.5,2,NaN]
 
 >> Sqrt(Table({a:Blank()}))
 [Blank()]
