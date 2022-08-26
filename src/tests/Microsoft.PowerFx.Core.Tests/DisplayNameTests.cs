@@ -30,7 +30,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 {
                     "Num" => FormulaType.Number,
                     "B" => FormulaType.Boolean,
-                    "Nested" => FormulaType.Unknown,
+                    "Nested" => TableType.Empty(),
                     "Inner" => FormulaType.Number,
                     _ => FormulaType.Blank
                 };
@@ -161,24 +161,24 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     TableType.Empty().Add(new NamedFormulaType("Inner", FormulaType.Number, "InnerDisplay")), 
                     "NestedDisplay"));
 
-            var result = _engine.Check(inputExpression, r1);
-            Assert.True(result.IsSuccess);
-
             // Below Record r2 Tests the second method where we provide DisplayNameProvider via constructor to 
             // initialize the DisplayNameProvider for derived record types.
             var r2 = new LazyRecordType();
 
             var records = new RecordType[] { r1, r2 };
-            foreach (var r in records)
+            foreach (var record in records)
             {
+                var result = _engine.Check(inputExpression, record);
+                Assert.True(result.IsSuccess);
+
                 if (toDisplay)
                 {
-                    var outDisplayExpression = _engine.GetDisplayExpression(inputExpression, r1);
+                    var outDisplayExpression = _engine.GetDisplayExpression(inputExpression, record);
                     Assert.Equal(outputExpression, outDisplayExpression);
                 }
                 else
                 {
-                    var outInvariantExpression = _engine.GetInvariantExpression(inputExpression, r1);
+                    var outInvariantExpression = _engine.GetInvariantExpression(inputExpression, record);
                     Assert.Equal(outputExpression, outInvariantExpression);
                 }
             }
