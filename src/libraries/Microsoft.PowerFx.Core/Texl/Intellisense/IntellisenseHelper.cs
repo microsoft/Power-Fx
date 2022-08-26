@@ -124,7 +124,7 @@ namespace Microsoft.PowerFx.Intellisense
                 if ((!suggestionKindIsGlobalOrScope &&
                      s.Kind != SuggestionKind.Global &&
                      s.Kind != SuggestionKind.ScopeVariable) ||
-                    s.Type == type)
+                    (s.Type == type && !type.IsControl))
                 {
                     continue;
                 }

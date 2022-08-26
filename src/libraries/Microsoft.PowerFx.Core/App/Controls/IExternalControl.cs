@@ -27,7 +27,7 @@ namespace Microsoft.PowerFx.Core.App.Controls
 
         bool IsCommandComponentInstance { get; }
 
-        RecordType GetControlType(bool calculateAugmentedExpandoType, bool isDataLimited);
+        DType GetControlType(bool calculateAugmentedExpandoType, bool isDataLimited);
 
         bool IsDescendentOf(IExternalControl controlInfo);
 
