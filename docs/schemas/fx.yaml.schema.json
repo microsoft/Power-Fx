@@ -6,7 +6,7 @@
     "properties": {  
         "Types": { 
             "type": "object", 
-            "$ref": "https://github.com/microsoft/power-fx/docs/schemas/type.schema.json" 
+            "$ref": "https://github.com/microsoft/Power-Fx/blob/gregli/fx-schema/docs/schemas/type-definition.schemas.json" 
         },
         "Functions": { 
             "type": "object"
