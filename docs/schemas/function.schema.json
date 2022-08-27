@@ -5,10 +5,11 @@
     "type": "object",
     "required": [ "Body" ],
     "unevaluatedProperties": false,
+    "$defs": { "Type": { "OneOf": [ { "type": "string" }, { "$ref": "./type.schema.json" } ] } },
     "properties": {  
         "Description": { "type": "string", "description": "description of this function" },
         "Help":        { "type": "string", "description": "help link for this function" },
-        "Type":        { "type": "object", "$ref": "./type.schema.json" },
+        "Type":        { "$ref": "#/$defs/Type" },
         "Body":        { "type": "string", "pattern": "^\\s*=" },
         "Parameters": { 
             "type": "array",
@@ -19,7 +20,7 @@
                     "Name":        { "type": "string", "description": "name of this parameter" },
                     "Required":    { "type": "boolean", "description": "parameter required?", "default": false },
                     "Description": { "type": "string", "description": "description of this parameter" },
-                    "Type":        { "type": "object", "$ref": "./type.schema.json" }
+                    "Type":        { "$ref": "#/$defs/Type" }
                 }
             }
         }
