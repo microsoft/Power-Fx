@@ -1,6 +1,6 @@
 {
     "$schema": "https://json-schema.org/draft/2019-09/schema",
-    "$id": "https://github.com/microsoft/power-fx/docs/schemas/fx.schema.json",
+    "$id": "https://raw.githubusercontent.com/microsoft/Power-Fx/gregli/fx-schema/docs/schemas/fx.schema.json",
     "description": "Power Fx .fx file schema",
     "type": "object",
     "properties": {  
@@ -8,20 +8,14 @@
             "type": "object", 
             "additionalProperties": {
                 "type": "object",
-				"additionalProperties": {
-                   "type": "object",
-                   "$ref": "https://raw.githubusercontent.com/microsoft/Power-Fx/gregli/fx-schema/docs/schemas/type.schema.json" 
-                }                 
+				"additionalProperties": { "type": "object", "$ref": "./type.schema.json" }
             }
         },
         "Functions": { 
             "type": "object",
             "additionalProperties": {
                 "type": "object",
-				"additionalProperties": {
-                   "type": "object",
-                   "$ref": "https://raw.githubusercontent.com/microsoft/Power-Fx/gregli/fx-schema/docs/schemas/function.schema.json" 
-                }                 
+				"additionalProperties": { "type": "object", "$ref": "./function.schema.json" }                 
             }            
         },
         "Formulas": {
