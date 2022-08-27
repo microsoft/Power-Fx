@@ -3,33 +3,30 @@
     "$id": "https://raw.githubusercontent.com/microsoft/Power-Fx/gregli/fx-schema/docs/schemas/fx.schema.json",
     "description": "Power Fx .fx file schema",
     "type": "object",
-    "unevaluatedProperties": false,    
+    "unevaluatedProperties": false,   
+    "$defs": { "formula" : { "type": "string", "pattern": "^\\s*=" } },
     "properties": {  
         "Types": { 
             "type": "object", 
-            "additionalProperties": {
-				"$ref": "./type.schema.json"
-            }
+            "additionalProperties": { "$ref": "./type.schema.json" }
         },
         "Functions": { 
             "type": "object",
-            "additionalProperties": {
-				"$ref": "./function.schema.json"
-            }            
+            "additionalProperties": { "$ref": "./function.schema.json" }            
         },
         "Formulas": {
             "oneOf": [ 
-                { "type": "string", "pattern": "^\\s*=" },
-                { 
-                  "type": "array", 
-                  "items": { "type": "string", "pattern": "^\\s*=" } 
-                }
+                { "$ref": "#/$defs/formula" },
+                { "type": "array", "items": { "$ref": "#/$defs/formula" } }
             ]
         }
     },
     "patternProperties": {
         "\\sAs\\s": { 
-            "type": "object"
+            "type": "object",
+            "$anchor": "instance",
+            "patternProperties": { "\\sAs\\s": { "$ref": "#instance" } },
+            "additionalProperties": { "$ref": "#/$defs/formula" }
         }
     }
 }
