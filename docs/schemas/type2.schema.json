@@ -2,7 +2,7 @@
     "$schema": "https://json-schema.org/draft/2019-09/schema",
     "$id": "https://raw.githubusercontent.com/microsoft/Power-Fx/gregli/fx-schema/docs/schemas/type.schema.json",
     "description": "Power Fx type definition schema",
-    "$defs": { "typeOpen": { 
+    "definitions": { "typeOpen": { 
         "type": "object",
         "required": [ "Type" ],
         "properties": {  
