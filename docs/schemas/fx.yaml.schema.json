@@ -6,10 +6,23 @@
     "properties": {  
         "Types": { 
             "type": "object", 
-            "$ref": "https://raw.githubusercontent.com/microsoft/Power-Fx/gregli/fx-schema/docs/schemas/type-definition.schemas.json" 
+            "additionalProperties": {
+                "type": "object",
+				"additionalProperties": {
+                   "type": "object",
+                   "$ref": "https://raw.githubusercontent.com/microsoft/Power-Fx/gregli/fx-schema/docs/schemas/type.schema.json" 
+                }                 
+            }
         },
         "Functions": { 
-            "type": "object"
+            "type": "object",
+            "additionalProperties": {
+                "type": "object",
+				"additionalProperties": {
+                   "type": "object",
+                   "$ref": "https://raw.githubusercontent.com/microsoft/Power-Fx/gregli/fx-schema/docs/schemas/function.schema.json" 
+                }                 
+            }            
         },
         "Formulas": {
             "oneOf": [ 
