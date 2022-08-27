@@ -12,7 +12,7 @@
         },
         "Functions": { 
             "type": "object",
-            "additionalProperties": { "$ref": "./function.schema.json" }            
+            "additionalProperties": { "$ref": "./function.schema.json" }
         },
         "Formulas": {
             "oneOf": [ 
