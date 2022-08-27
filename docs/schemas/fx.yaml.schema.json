@@ -1,0 +1,29 @@
+{
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "$id": "https://github.com/microsoft/power-fx/docs/schemas/fx.schema.json",
+    "description": "Power Fx .fx file schema",
+    "type": "object",
+    "properties": {  
+        "Types": { 
+            "type": "object", 
+            "$ref": "https://github.com/microsoft/power-fx/docs/schemas/type.schema.json" 
+        },
+        "Functions": { 
+            "type": "object"
+        },
+        "Formulas": {
+            "oneOf": [ 
+                { "type": "string", "pattern": "^\\s*=" },
+                { 
+                  "type": "array", 
+                  "items": { "type": "string", "pattern": "^\\s*=" } 
+                }
+            ]
+        }
+    }
+    "patternProperties": {
+        "\sAs\s": { 
+            "type": "object"
+        }
+    }
+}
