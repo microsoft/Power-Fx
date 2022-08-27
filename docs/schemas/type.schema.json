@@ -16,7 +16,7 @@
         "properties": {
             "Fields": { 
                 "type": "object",
-  	            "additionalProperties": { "type": "object", "$ref": "#" }
+  	            "additionalProperties": { "$ref": "#" }
             }
         }
     }

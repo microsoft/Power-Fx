@@ -9,6 +9,7 @@
         "Description": { "type": "string", "description": "description of this function" },
         "Help":        { "type": "string", "description": "help link for this function" },
         "Type":        { "type": "object", "$ref": "./type.schema.json" },
+        "Body":        { "type": "string", "pattern": "^\\s*=" },
         "Parameters": { 
             "type": "array",
             "items": {
@@ -21,7 +22,6 @@
                     "Type":        { "type": "object", "$ref": "./type.schema.json" }
                 }
             }
-        },
-        "Body": { "type": "string", "pattern": "^\\s*=" }
+        }
     }
 }

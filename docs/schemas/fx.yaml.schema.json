@@ -3,19 +3,18 @@
     "$id": "https://raw.githubusercontent.com/microsoft/Power-Fx/gregli/fx-schema/docs/schemas/fx.schema.json",
     "description": "Power Fx .fx file schema",
     "type": "object",
+    "unevaluatedProperties": false,    
     "properties": {  
         "Types": { 
             "type": "object", 
             "additionalProperties": {
-                "type": "object",
-				"additionalProperties": { "type": "object", "$ref": "./type.schema.json" }
+				"$ref": "./type.schema.json"
             }
         },
         "Functions": { 
             "type": "object",
             "additionalProperties": {
-                "type": "object",
-				"additionalProperties": { "type": "object", "$ref": "./function.schema.json" }                 
+				"$ref": "./function.schema.json"
             }            
         },
         "Formulas": {
