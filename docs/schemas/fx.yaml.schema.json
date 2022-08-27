@@ -6,7 +6,7 @@
     "properties": {  
         "Types": { 
             "type": "object", 
-            "$ref": "https://github.com/microsoft/Power-Fx/blob/gregli/fx-schema/docs/schemas/type-definition.schemas.json" 
+            "$ref": "https://raw.githubusercontent.com/microsoft/Power-Fx/gregli/fx-schema/docs/schemas/type-definition.schemas.json" 
         },
         "Functions": { 
             "type": "object"
@@ -20,9 +20,9 @@
                 }
             ]
         }
-    }
+    },
     "patternProperties": {
-        "\sAs\s": { 
+        "\\sAs\\s": { 
             "type": "object"
         }
     }
