@@ -4,7 +4,6 @@
     "description": "Power Fx type definition schema",
     "type": "object",
     "required": [ "Type" ],
-    "unevaluatedProperties": false,
     "properties": {  
         "Type":        { "type": "string", "description": "base type" },
         "Table":       { "type": "boolean", "description": "table of Type", "default": false },
