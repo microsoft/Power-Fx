@@ -18,5 +18,6 @@
                 "additionalProperties": { "$ref": "#" }
             }
         }
-    }
+    },
+    "unevaluatedProperties": false
 }
