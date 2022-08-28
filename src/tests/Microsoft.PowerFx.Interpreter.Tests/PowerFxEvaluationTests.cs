@@ -19,7 +19,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         internal static Dictionary<string, Func<PowerFxConfig, (RecalcEngine engine, RecordValue parameters)>> SetupHandlers = new ()
         {
             { "OptionSetTestSetup", OptionSetTestSetup },
-            { "PatchTestSetup", PatchTestSetup }
+            { "MutationFunctionsTestSetup", MutationFunctionsTestSetup }
         };
 
         private static (RecalcEngine engine, RecordValue parameters) OptionSetTestSetup(PowerFxConfig config)
@@ -52,7 +52,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             return (new RecalcEngine(config), parameters);
         }
 
-        private static (RecalcEngine engine, RecordValue parameters) PatchTestSetup(PowerFxConfig config)
+        private static (RecalcEngine engine, RecordValue parameters) MutationFunctionsTestSetup(PowerFxConfig config)
         {
             var symbol = new SymbolTable();
             var datasource = new List<RecordValue>();

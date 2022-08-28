@@ -26,7 +26,7 @@ using static Microsoft.PowerFx.Core.Localization.TexlStrings;
 namespace Microsoft.PowerFx.Interpreter
 {
     /*
-         * @@@JYL@@@
+         * !JYL!
          * Verify before pushing it.
          * => verify that Patch() fails in a non-behavior context.
          * => Type checking - what if we pass the wrong type to patch (too few fields, too many fields, not a record, etc).
@@ -62,6 +62,7 @@ namespace Microsoft.PowerFx.Interpreter
         }
     }
 
+    // Patch( Record1, Record2 [, …] )
     internal class PatchRecordFunction : PatchAndValidateRecordFunctionBase, IAsyncTexlFunction
     {
         public override bool IsSelfContained => false;
@@ -116,6 +117,7 @@ namespace Microsoft.PowerFx.Interpreter
         public override RequiredDataSourcePermissions FunctionPermission => RequiredDataSourcePermissions.Create | RequiredDataSourcePermissions.Update;
     }
 
+    // Patch( DataSource, BaseRecord, ChangeRecord1 [, ChangeRecord2, … ])
     internal class PatchFunction : PatchAndValidateRecordFunctionBase, IAsyncTexlFunction
     {
         public override bool IsSelfContained => false;
@@ -160,12 +162,11 @@ namespace Microsoft.PowerFx.Interpreter
                 }
                 else if (arg is ErrorValue)
                 {
-                    // @@@JYL How to handle error value arguments?
+                    // !JYL! How to handle error value arguments?
                     return arg;
                 }
                 else if (arg is RecordValue record)
                 {
-                    // @@@JYL What is a ellegant way to avoid the nested loop?
                     foreach (var field in record.Fields)
                     {
                         argFields[field.Name] = field.Value;
@@ -173,13 +174,7 @@ namespace Microsoft.PowerFx.Interpreter
                 }
             }
 
-            foreach (KeyValuePair<string, FormulaValue> kvp in argFields)
-            {
-                arg1.UpdateField(new NamedValue(kvp));
-            }
-
-            // @@@JYL Check if record exists. Append if it doesn't
-            // Code goes here.
+            arg1.UpdateFields(argFields);
 
             return arg1;
         }

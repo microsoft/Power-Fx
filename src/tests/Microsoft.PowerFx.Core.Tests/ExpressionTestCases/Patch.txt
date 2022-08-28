@@ -1,4 +1,4 @@
-﻿#SETUP: EnableExpressionChaining,PatchTestSetup
+﻿#SETUP: EnableExpressionChaining,MutationFunctionsTestSetup
 
 // PatchTestSetup handle does the following:
 // - Creates a record: r1 => {Field1:1,Field2:2}

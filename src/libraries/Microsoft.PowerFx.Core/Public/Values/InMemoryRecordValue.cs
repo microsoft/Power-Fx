@@ -44,16 +44,19 @@ namespace Microsoft.PowerFx.Types
             return _fields.TryGetValue(fieldName, out result);
         }
 
-        public override void UpdateField(NamedValue newNamedValue)
+        public override void UpdateFields(IEnumerable<KeyValuePair<string, FormulaValue>> record)
         {
-            if (newNamedValue == null || _sourceDict.IsReadOnly)
+            if (_sourceDict.IsReadOnly)
             {
-                base.UpdateField(newNamedValue);
+                base.UpdateFields(record);
             }
 
-            if (_sourceDict.ContainsKey(newNamedValue.Name))
+            foreach (var field in record)
             {
-                _sourceDict[newNamedValue.Name] = newNamedValue.Value;
+                if (_sourceDict.ContainsKey(field.Key))
+                {
+                    _sourceDict[field.Key] = field.Value;
+                }
             }
         }
     }

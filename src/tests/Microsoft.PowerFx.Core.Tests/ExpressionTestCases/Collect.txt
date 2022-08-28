@@ -1,0 +1,36 @@
+﻿#SETUP: EnableExpressionChaining,MutationFunctionsTestSetup
+
+// PatchTestSetup handle does the following:
+// - Creates a record: r1 => {Field1:1,Field2:2}
+// - Creates a record: r2 => {Field1:11,Field2:22}
+// - Creates a record: r3 => {Field1:111,Field2:222}
+// - Creates a record: r4 => {Field1:1111,Field2:2222}
+// - Creates a table: t
+// - Adds record r1 to table t
+
+>> Collect(t, {MyField1:2, MyField2:"hello1"});CountRows(t)
+2
+
+>> Collect(t, r1);Collect(t, r1);Collect(t, r1);CountRows(t)
+4
+
+>> Collect(t, r1);Collect(t, If(1>0, r1,Blank()));CountRows(t)
+3
+
+>> IsBlank(Collect(t, Blank()))
+true
+    
+>> IsError(Collect(t, If(1/0, r1)))
+true
+
+>> Collect(t)
+Errors: Error 0-10: Invalid number of arguments: received 1, expected 2.
+
+>> Collect(t, r1, r1)
+Errors: Error 0-18: Invalid number of arguments: received 3, expected 2.
+
+>> Collect(t, r1, 1; 2; r1)
+Errors: Error 0-24: Invalid number of arguments: received 3, expected 2.
+
+>> Collect(t, "x")
+Errors: Error 11-14: The first argument of '{0}' should be a valid variable name, and cannot conflict with any existing control, screen, collection, or data source names. Found type '{1}'|Error 0-15: The function 'Collect' has some invalid arguments.
