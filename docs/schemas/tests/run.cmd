@@ -1,4 +1,5 @@
 @echo off
+setlocal
 
 rem install ajv with "npm install -g ajv-cli"
 rem source at https://github.com/ajv-validator/ajv-cli and https://github.com/ajv-validator/ajv
@@ -21,5 +22,3 @@ goto :EOF
 set type=%1
 set result=%2
 set test=%3
-
-
