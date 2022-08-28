@@ -2,9 +2,9 @@
     "$schema": "https://json-schema.org/draft/2019-09/schema",
     "$id": "https://raw.githubusercontent.com/microsoft/Power-Fx/gregli/fx-schema/docs/schemas/type3.schema.json",
     "description": "Power Fx type definition schema",
+    "$defs": { "typeOpen": {
     "type": "object",
     "required": [ "Type" ],
-    "unevaluatedProperties": false,
     "properties": {  
         "Type":        { "type": "string", "description": "base type" },
         "Table":       { "type": "boolean", "description": "table of Type", "default": false },
@@ -19,5 +19,6 @@
   	            "additionalProperties": { "$ref": "#" }
             }
         }
-    }
+    } } },
+    "$ref": "#/$defs/typeOpen"
 }
