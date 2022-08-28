@@ -1,0 +1,21 @@
+# no type at top level
+Description: a book
+Help: https://en.wikipedia.org/wiki/Book
+Fields:
+  title: 
+    Type: text
+    Description: Title of the book
+  author:
+    Type: text
+    Description: Author of the book
+  price:
+    Type: number
+    Description: Retail price of the book
+  price-history:
+    Type: Record
+    Table: true
+    Fields:
+      date:
+        Type: date
+      price:
+        Type: Number
