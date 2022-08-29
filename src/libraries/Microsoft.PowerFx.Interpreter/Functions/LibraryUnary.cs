@@ -109,6 +109,16 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: NumberToDate)
             },
             {
+                UnaryOpKind.DateTimeToNumber,
+                StandardErrorHandling<FormulaValue>(
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: DateOrDateTime,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: DateToNumber)
+            },
+            {
                 UnaryOpKind.NumberToDateTime,
                 StandardErrorHandling<NumberValue>(
                     expandArguments: NoArgExpansion,

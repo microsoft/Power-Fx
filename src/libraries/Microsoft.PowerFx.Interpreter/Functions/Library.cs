@@ -1035,6 +1035,24 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: Round)
             },
             {
+                BuiltinFunctionsCore.RoundT,
+                StandardErrorHandlingAsync(
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrTableOrBlank<NumberValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: MultiSingleColumnTable(
+                            StandardErrorHandling<NumberValue>(
+                                expandArguments: NoArgExpansion,
+                                replaceBlankValues: ReplaceBlankWithEmptyString,
+                                checkRuntimeTypes: ExactValueType<NumberValue>,
+                                checkRuntimeValues: DeferRuntimeValueChecking,
+                                returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                                targetFunction: Round),
+                            transposeEmptyTable: true))
+            },
+            {
                 BuiltinFunctionsCore.RoundUp,
                 StandardErrorHandling<NumberValue>(
                     expandArguments: NoArgExpansion,

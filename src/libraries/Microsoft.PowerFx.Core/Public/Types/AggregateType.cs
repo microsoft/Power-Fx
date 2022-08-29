@@ -27,10 +27,15 @@ namespace Microsoft.PowerFx.Types
         }
 
         public AggregateType(bool isTable)
+            : this(isTable, null)
+        {
+        }
+
+        public AggregateType(bool isTable, DisplayNameProvider displayNameProvider)
             : base()
         {
             var lazyTypeProvider = new LazyTypeProvider(this);
-            _type = new DType(lazyTypeProvider, isTable: isTable);
+            _type = new DType(lazyTypeProvider, isTable: isTable, displayNameProvider);
         }
 
         public FormulaType GetFieldType(string fieldName)
@@ -50,6 +55,38 @@ namespace Microsoft.PowerFx.Types
 
             type = Build(dType);
             return true;
+        }
+
+        /// <summary>
+        /// Lookup for logical name and field for input display or logical name.
+        /// If there is a conflict, it prioritizes logical name.
+        /// i.e. field1->Logical=F1 , Display=Display1; field2-> Logical=Display1, Display=Display2
+        /// would return field2 with logical name Display1.
+        /// </summary>
+        /// <param name="displayOrLogicalName">Display or Logical name.</param>
+        /// <param name="logical">Logical name for the input.</param>
+        /// <param name="type">Type for the input Display or Logical name.</param>
+        /// <returns>true or false.</returns>
+        /// <exception cref="ArgumentNullException">Throws, if input displayOrLogicalName is empty.</exception>
+        public bool TryGetFieldType(string displayOrLogicalName, out string logical, out FormulaType type)
+        {
+            Contracts.CheckNonEmpty(displayOrLogicalName, nameof(displayOrLogicalName));
+            if (_type.DisplayNameProvider.TryGetDisplayName(new DName(displayOrLogicalName), out _))
+            {
+                logical = displayOrLogicalName;
+            }
+            else if (_type.DisplayNameProvider.TryGetLogicalName(new DName(displayOrLogicalName), out var maybeLogical))
+            {
+                logical = maybeLogical;
+            }
+            else
+            {
+                logical = default;
+                type = Blank;
+                return false;
+            }
+
+            return TryGetFieldType(logical, out type);
         }
 
         public IEnumerable<NamedFormulaType> GetFieldTypes()
