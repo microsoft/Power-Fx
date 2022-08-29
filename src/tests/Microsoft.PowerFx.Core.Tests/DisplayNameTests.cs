@@ -30,7 +30,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     "Num" => FormulaType.Number,
                     "B" => FormulaType.Boolean,
                     "Nested" => TableType.Empty().Add(new NamedFormulaType("Inner", FormulaType.Number, "InnerDisplay")),
-                    "Inner" => FormulaType.Number,
                     _ => FormulaType.Blank
                 };
 
