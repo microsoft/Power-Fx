@@ -48,7 +48,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("TopOptionSetField <> Opt|", "OptionSet", "TopOptionSetField", "OtherOptionSet")]
         public void TestSuggestOptionSets(string expression, params string[] expectedSuggestions)
         {
-            var config = PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder(), new TexlFunction[0]);
+            var config = PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder());
             
             var optionSet = new OptionSet("OptionSet", DisplayNameUtility.MakeUnique(new Dictionary<string, string>()
             {
@@ -72,7 +72,10 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 .Add(new NamedFormulaType("Nested", RecordType.Empty()
                     .Add(new NamedFormulaType("InnerOtherOptionSet", otherOptionSet.FormulaType))));
 
-            var engine = new RecalcEngine(config);
+            var engine = new RecalcEngine(config)
+            {
+                SupportedFunctions = new SymbolTable() // Clear
+            };
 
             var actualSuggestions = SuggestStrings(expression, engine, parameterType);
             Assert.Equal(expectedSuggestions, actualSuggestions);
@@ -87,11 +90,37 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.Equal(expectedSuggestions, actualSuggestions2);
         }
 
+        // Test with display names. 
+        [Theory]
+        [InlineData("Dis|", "DisplayOpt", "DisplayRowScope")] // Match to row scope       
+        public void TestSuggestOptionSetsDisplayName(string expression, params string[] expectedSuggestions)
+        {
+            var config = PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder(), new TexlFunction[0]);
+
+            var optionSet = new OptionSet("OptionSet", DisplayNameUtility.MakeUnique(new Dictionary<string, string>()
+            {
+                    { "option_1", "Option1" },
+                    { "option_2", "Option2" }
+            }));
+
+            config.AddEntity(optionSet, new DName("DisplayOpt"));
+
+            var parameterType = RecordType.Empty()
+                .Add(new NamedFormulaType("XXX", optionSet.FormulaType, new DName("DisplayRowScope")));
+
+            var engine = new Engine(config);
+
+            var actualSuggestions = SuggestStrings(expression, engine, parameterType);
+            Assert.Equal(expectedSuggestions, actualSuggestions);
+        }
+
         [Theory]
         [InlineData("Hou|", "Hour", "TimeUnit.Hours")]
         public void TestSuggestHour(string expression, params string[] expectedSuggestions)
         {
-            var config = new PowerFxConfig();
+            // Hour is a function, so that is included with the default set. 
+            // We don't suggest "Hours" because that is an unqualified enum. Only suggest qualified enum, "TimeUnit.Hours"
+            var config = SuggestTests.Default;
 
             var actualSuggestions = SuggestStrings(expression, config, null);
             Assert.Equal(expectedSuggestions, actualSuggestions);
@@ -126,7 +155,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.Equal(SuggestionKind.Global, s.Kind);
             Assert.Equal(DType.Number, s.Type);
 
-            var resolver = new RecalcEngineResolver(recalcEngine, pfxConfig);
+            var resolver = (IGlobalSymbolNameResolver)recalcEngine.TestCreateResolver();
 
             Assert.True(resolver.GlobalSymbols.ContainsKey(varName));
             Assert.Equal(BindKind.PowerFxResolvedObject, resolver.GlobalSymbols[varName].Kind);

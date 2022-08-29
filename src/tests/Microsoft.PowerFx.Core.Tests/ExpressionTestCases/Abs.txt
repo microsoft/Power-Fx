@@ -76,4 +76,12 @@ false
 >> Abs("false")
 #Error(Kind=InvalidArgument)
 
+// ******** Date values and functions with dates ********
+>> Date(1976, 12,23) - Date(2000, 01, 01)
+-8409
 
+>> Abs(Date(1976, 12,23) - Date(2000, 01, 01))
+8409
+
+>> Abs(Date(2022, 10, 1))
+44835

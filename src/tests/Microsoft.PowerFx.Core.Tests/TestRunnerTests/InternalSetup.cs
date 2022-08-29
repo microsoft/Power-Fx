@@ -3,6 +3,7 @@
 
 using System;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Microsoft.PowerFx.Core.Parser;
 
 namespace Microsoft.PowerFx.Core.Tests
@@ -15,6 +16,8 @@ namespace Microsoft.PowerFx.Core.Tests
 
         internal Features Features { get; set; }
 
+        internal TimeZoneInfo TimeZoneInfo { get; set; }
+
         internal static InternalSetup Parse(string setupHandlerName)
         {
             var iSetup = new InternalSetup();
@@ -23,9 +26,9 @@ namespace Microsoft.PowerFx.Core.Tests
             {
                 return iSetup;
             }
-            
+
             var parts = setupHandlerName.Split(",").Select(x => x.Trim()).Where(x => !string.IsNullOrEmpty(x)).ToList();
-            
+
             foreach (var part in parts.ToArray())
             {
                 if (Enum.TryParse<TexlParser.Flags>(part, out var flag))
@@ -36,16 +39,33 @@ namespace Microsoft.PowerFx.Core.Tests
                 else if (Enum.TryParse<Features>(part, out var f))
                 {
                     iSetup.Features |= f;
-                    parts.Remove(part); 
-                }                
+                    parts.Remove(part);
+                }
+                else if (part.StartsWith("TimeZoneInfo", StringComparison.OrdinalIgnoreCase))
+                {
+                    var m = new Regex(@"TimeZoneInfo\(""(?<tz>[^)]+)""\)", RegexOptions.IgnoreCase).Match(part);
+
+                    if (m.Success)
+                    {
+                        var tz = m.Groups["tz"].Value;
+
+                        // This call will throw if the Id in invalid
+                        iSetup.TimeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(tz);
+                        parts.Remove(part);
+                    }
+                    else
+                    {
+                        throw new ArgumentException("Invalid TimeZoneInfo setup!");
+                    }
+                }
             }
 
             if (parts.Count > 1)
             {
                 throw new ArgumentException("Too many setup handler names!");
             }
-            
-            iSetup.HandlerName = parts.FirstOrDefault();            
+
+            iSetup.HandlerName = parts.FirstOrDefault();
             return iSetup;
         }
     }

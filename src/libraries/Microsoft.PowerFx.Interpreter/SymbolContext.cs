@@ -30,6 +30,8 @@ namespace Microsoft.PowerFx
             return new SymbolContext(null, new Dictionary<int, IScope>());
         }
 
+        // Creates a top scope that pairs the values from ruleScope with 
+        // the scope topScope. topScope was created by IR. 
         public static SymbolContext NewTopScope(ScopeSymbol topScope, RecordValue ruleScope)
         {
             return new SymbolContext(topScope, new Dictionary<int, IScope>() { { topScope.Id, new RecordScope(ruleScope) } });
@@ -54,6 +56,7 @@ namespace Microsoft.PowerFx
             return WithScopeValues(new RecordScope(scopeValues));
         }
 
+        // Called by evaluator to fetch a runtime value in the given scope. 
         public FormulaValue GetScopeVar(ScopeSymbol scope, string name)
         {
             var record = ScopeValues[scope.Id];

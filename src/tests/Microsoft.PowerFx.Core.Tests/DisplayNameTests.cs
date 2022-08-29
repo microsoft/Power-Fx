@@ -56,9 +56,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             private class CustomDisplayNameProvider : DisplayNameProvider
             {
-                internal override ImmutableDictionary<DName, DName> LogicalToDisplayPairs => throw new NotImplementedException();
+                public override IEnumerable<KeyValuePair<DName, DName>> LogicalToDisplayPairs => throw new NotImplementedException();
 
-                internal override bool TryGetDisplayName(DName logicalName, out DName displayDName)
+                public override bool TryGetDisplayName(DName logicalName, out DName displayDName)
                 {
                     var displayName = logicalName.Value switch
                     {
@@ -72,7 +72,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     return displayName != null;
                 }
 
-                internal override bool TryGetLogicalName(DName displayName, out DName logicalDName)
+                public override bool TryGetLogicalName(DName displayName, out DName logicalDName)
                 {
                     var logicalName = displayName.Value switch
                     {
@@ -289,6 +289,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var formula = new Formula("If(SomeDisplayB, SomeDisplayNum, 1234)", CultureInfo.InvariantCulture);
             formula.EnsureParsed(TexlParser.Flags.None);
 
+#pragma warning disable CS0618 // Type or member is obsolete
             var binding = TexlBinding.Run(
                 new Glue2DocumentBinderGlue(),
                 null,
@@ -298,6 +299,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 BindingConfig.Default,
                 ruleScope: r1._type,
                 updateDisplayNames: true);
+#pragma warning restore CS0618 // Type or member is obsolete
 
             Assert.Empty(binding.NodesToReplace);
         }

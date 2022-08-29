@@ -19,7 +19,9 @@ namespace Microsoft.PowerFx.Core.Tests
             public delegate bool TryGetFieldDelegate(string name, out FormulaType type);
 
             private readonly TryGetFieldDelegate _tryGetField;
-            
+
+            public override string UserVisibleTypeName => "TestType";
+
             internal string Identity;
 
             public override IEnumerable<string> FieldNames { get; }
@@ -106,7 +108,14 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal(0, _getter1CalledCount);
             Assert.Equal(0, _getter2CalledCount);
         }
-        
+
+        [Fact]
+        public void KindString()
+        {
+            Assert.Equal("Table (TestType)", _lazyTable1._type.GetKindString());
+            Assert.Equal("Record (TestType)", _lazyRecord1._type.GetKindString());
+        }
+
         [Fact]
         public void AcceptsSimple()
         {
@@ -252,6 +261,15 @@ namespace Microsoft.PowerFx.Core.Tests
 
             Assert.NotEqual(_lazyRecord1, _lazyRecord2.ToTable().ToRecord());
             Assert.NotEqual(_lazyTable2, _lazyTable1.ToRecord().ToTable());
+        }
+
+        [Fact]
+        public void Supertype()
+        {
+            Assert.Equal(_lazyRecord1, FormulaType.Build(DType.Supertype(_lazyRecord1._type, _lazyRecord1._type)));
+            Assert.Equal(_lazyTable1, FormulaType.Build(DType.Supertype(_lazyTable1._type, _lazyTable1._type)));
+            Assert.Equal(FormulaType.BindingError, FormulaType.Build(DType.Supertype(_lazyTable1._type, _lazyRecord1._type)));
+            Assert.Equal(FormulaType.BindingError, FormulaType.Build(DType.Supertype(_lazyRecord2._type, _lazyRecord1._type)));
         }
     }
 }
