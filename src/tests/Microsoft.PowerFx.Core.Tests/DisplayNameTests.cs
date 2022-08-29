@@ -30,7 +30,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     "Num" => FormulaType.Number,
                     "B" => FormulaType.Boolean,
                     "Nested" => TableType.Empty().Add(new NamedFormulaType("Inner", FormulaType.Number, "InnerDisplay")),
-                    "Inner" => FormulaType.Number,
                     _ => FormulaType.Blank
                 };
 
@@ -40,7 +39,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             public LazyRecordType()
                 : base(new CustomDisplayNameProvider())
             {
-                FieldNames = new List<string>() { "Num", "B", "Nested", "Inner" };
+                FieldNames = new List<string>() { "Num", "B", "Nested" };
             }
 
             public override bool Equals(object other)
