@@ -36,6 +36,7 @@ namespace Microsoft.PowerFx.Core.Binding.BindInfo
         // For FirstNames with BindKind.ThisItem, are we accessing a field of the control template instead of data?
         public readonly bool IsDataControlAccess;
         public readonly DName DataControlName;
+        public readonly bool IsPageable;
 
         private readonly Lazy<Dictionary<ExpandPath, ExpandQueryOptions>> _dataQueryOptions;
 
@@ -45,7 +46,7 @@ namespace Microsoft.PowerFx.Core.Binding.BindInfo
         // 0 refers to the current/innermost scope, a higher number refers to a parent/ancestor scope.
         public int UpCount => NestSrc - NestDst;
 
-        private FirstNameInfo(BindKind kind, FirstNameNode node, int nestDst, int nestCur, DPath path, object data, DName dataControlName, bool isDataControlAccess)
+        private FirstNameInfo(BindKind kind, FirstNameNode node, int nestDst, int nestCur, DPath path, object data, DName dataControlName, bool isDataControlAccess, bool isPageable = false)
             : base(kind, node)
         {
             Contracts.Assert(nestDst >= int.MinValue);
@@ -59,6 +60,7 @@ namespace Microsoft.PowerFx.Core.Binding.BindInfo
             Data = data;
             IsDataControlAccess = isDataControlAccess;
             DataControlName = dataControlName;
+            IsPageable = isPageable;
 
             _dataQueryOptions = new Lazy<Dictionary<ExpandPath, ExpandQueryOptions>>();
         }
@@ -72,7 +74,7 @@ namespace Microsoft.PowerFx.Core.Binding.BindInfo
             Contracts.Assert(lookupInfo.UpCount >= 0);
             Contracts.Assert(lookupInfo.Path.IsValid);
 
-            return new FirstNameInfo(lookupInfo.Kind, node, -lookupInfo.UpCount, 0, lookupInfo.Path, lookupInfo.Data, default, false);
+            return new FirstNameInfo(lookupInfo.Kind, node, -lookupInfo.UpCount, 0, lookupInfo.Path, lookupInfo.Data, default, false, lookupInfo.IsPageable);
         }
 
         public static FirstNameInfo Create(FirstNameNode node, NameLookupInfo lookupInfo, IExpandInfo data)

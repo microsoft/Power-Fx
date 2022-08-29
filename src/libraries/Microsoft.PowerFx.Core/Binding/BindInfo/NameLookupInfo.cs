@@ -23,11 +23,12 @@ namespace Microsoft.PowerFx.Core.Binding.BindInfo
         /// </summary>
         public readonly DName DisplayName;
         public readonly bool IsAsync;
+        public readonly bool IsPageable;
 
         // Optional data associated with a name. May be null.
         public readonly object Data;
 
-        public NameLookupInfo(BindKind kind, DType type, DPath path, int upCount, object data = null, DName displayName = default, bool isAsync = false)
+        public NameLookupInfo(BindKind kind, DType type, DPath path, int upCount, object data = null, DName displayName = default, bool isAsync = false, bool isPageable = false)
         {
             Contracts.Assert(kind >= BindKind.Min && kind < BindKind.Lim);
             Contracts.Assert(upCount >= 0);
@@ -39,6 +40,7 @@ namespace Microsoft.PowerFx.Core.Binding.BindInfo
             UpCount = upCount;
             Data = data;
             DisplayName = displayName;
+            IsPageable = isPageable;
 
             // Any connectedDataSourceInfo or option set or view needs to be accessed asynchronously to allow data to be loaded.
             IsAsync = Data is IExternalTabularDataSource || Kind == BindKind.OptionSet || Kind == BindKind.View || isAsync;
