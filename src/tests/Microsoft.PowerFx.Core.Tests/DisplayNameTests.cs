@@ -30,7 +30,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 {
                     "Num" => FormulaType.Number,
                     "B" => FormulaType.Boolean,
-                    "Nested" => TableType.Empty(),
+                    "Nested" => TableType.Empty().Add(new NamedFormulaType("Inner", FormulaType.Number, "InnerDisplay")),
                     "Inner" => FormulaType.Number,
                     _ => FormulaType.Blank
                 };
@@ -151,6 +151,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("If(DisplayB, Num, 1234)", "If(B, Num, 1234)", false)]
         [InlineData("Sum(NestedDisplay, InnerDisplay)", "Sum(Nested, Inner)", false)]
         [InlineData("Sum(NestedDisplay /* The source */ , InnerDisplay /* Sum over the InnerDisplay column */)", "Sum(Nested /* The source */ , Inner /* Sum over the InnerDisplay column */)", false)]
+        [InlineData("Sum(NestedDisplay, ThisRecord.InnerDisplay)", "Sum(Nested, ThisRecord.Inner)", false)]
         public void ValidateDisplayNames(string inputExpression, string outputExpression, bool toDisplay)
         {
             var r1 = RecordType.Empty()
