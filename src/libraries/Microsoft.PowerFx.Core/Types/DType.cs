@@ -459,7 +459,7 @@ namespace Microsoft.PowerFx.Core.Types
             AssertValid();
         }
 
-        internal DType(LazyTypeProvider provider, bool isTable, DisplayNameProvider displayNameProvider)
+        internal DType(LazyTypeProvider provider, bool isTable, DisplayNameProvider displayNameProvider = null)
         {
             Contracts.AssertValue(provider);
 
@@ -477,6 +477,7 @@ namespace Microsoft.PowerFx.Core.Types
             ViewInfo = null;
             NamedValueKind = null;
             DisplayNameProvider = displayNameProvider;
+
             AssertValid();
         }
 
@@ -647,27 +648,6 @@ namespace Microsoft.PowerFx.Core.Types
             foreach (var typedName in returnType.GetNames(DPath.Root))
             {
                 returnType = returnType.SetType(ref fError, DPath.Root.Append(typedName.Name), AttachDataSourceInfo(typedName.Type, dsInfo, false), skipCompare: true);
-            }
-
-            return returnType;
-        }
-
-        internal static DType DisableDisplayNameProviders(DType type)
-        {
-            type.AssertValid();
-            var returnType = type.Clone();
-            returnType.DisplayNameProvider = DisabledDisplayNameProvider.Instance;
-
-            if (!type.IsAggregate)
-            {
-                return returnType;
-            }
-
-            var fError = false;
-            foreach (var typedName in returnType.GetNames(DPath.Root))
-            {
-                returnType = returnType.SetType(ref fError, DPath.Root.Append(typedName.Name), DisableDisplayNameProviders(typedName.Type), skipCompare: true);
-                Contracts.Assert(!fError);
             }
 
             return returnType;
