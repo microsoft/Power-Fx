@@ -778,7 +778,7 @@ namespace Microsoft.PowerFx.Tests
             // So adding 2 hours to 1:34am will result in 2:34am
             var frTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Romance Standard Time");
             symbols.SetTimeZone(frTimeZone);
-            
+
             var jaCulture = new CultureInfo("ja-JP");
             symbols.SetCulture(jaCulture);
 
@@ -786,7 +786,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.Same(jaCulture, symbols.GetService<CultureInfo>());
 
             var fv = recalcEngine.EvalAsync(
-                @"Text(DateAdd(DateTimeValue(""dimanche 30 octobre 2022 01:34:03"", ""fr-FR""), ""2"", ""hours""), ""dddd, MMMM dd, yyyy hh:mm:ss"")", 
+                @"Text(DateAdd(DateTimeValue(""dimanche 30 octobre 2022 01:34:03"", ""fr-FR""), ""2"", ""hours""), ""dddd, MMMM dd, yyyy hh:mm:ss"")",
                 CancellationToken.None,
                 runtimeConfig: symbols).Result;
 
@@ -846,7 +846,7 @@ namespace Microsoft.PowerFx.Tests
             {
                 var name = typeof(TestRandService).FullName;
                 Assert.Equal($"IRandomService ({name}) returned an illegal value 9999. Must be between 0 and 1", e.Message);
-            }            
+            }
         }
 
         private class TestRandService : IRandomService
