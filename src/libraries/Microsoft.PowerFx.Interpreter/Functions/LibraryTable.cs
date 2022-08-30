@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
+using static Microsoft.PowerFx.Syntax.PrettyPrintVisitor;
 
 namespace Microsoft.PowerFx.Functions
 {
@@ -48,7 +49,20 @@ namespace Microsoft.PowerFx.Functions
 
         public static FormulaValue First(IRContext irContext, TableValue[] args)
         {
-            return args[0].Rows.FirstOrDefault()?.ToFormulaValue() ?? new BlankValue(irContext);
+            var arg0 = args[0];
+
+            if (arg0 is QueryableTableValue tableQueryable)
+            {
+                try
+                {
+                    return tableQueryable.FirstN(1).Rows.FirstOrDefault()?.ToFormulaValue() ?? new BlankValue(irContext);
+                }
+                catch (NotDelegableException)
+                {
+                }
+            }
+
+            return arg0.Rows.FirstOrDefault()?.ToFormulaValue() ?? new BlankValue(irContext);
         }
 
         public static FormulaValue Last(IRContext irContext, TableValue[] args)
