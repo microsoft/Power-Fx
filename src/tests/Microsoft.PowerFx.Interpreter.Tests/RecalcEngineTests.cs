@@ -55,6 +55,7 @@ namespace Microsoft.PowerFx.Tests
                 $"{nsType}.{nameof(ObjectRecordValue)}",
                 $"{ns}.Interpreter.UDF.{nameof(DefineFunctionsResult)}",
                 $"{nsType}.{nameof(QueryableTableValue)}",
+                $"{ns}.Interpreter.{nameof(PowerFxInterpreterException)}",
 
                 // Services for functions. 
                 $"{ns}.Functions.IRandomService"
