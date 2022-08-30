@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using Microsoft.PowerFx.Core;
@@ -11,6 +12,7 @@ using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
+using Microsoft.PowerFx.Tests;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
@@ -18,6 +20,79 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 {
     public class DisplayNameTests : PowerFxTest
     {
+        public class LazyRecordType : RecordType
+        {
+            public override IEnumerable<string> FieldNames { get; }
+
+            public override bool TryGetFieldType(string name, out FormulaType type)
+            {
+                type = name switch
+                {
+                    "Num" => FormulaType.Number,
+                    "B" => FormulaType.Boolean,
+                    "Nested" => TableType.Empty().Add(new NamedFormulaType("Inner", FormulaType.Number, "InnerDisplay")),
+                    _ => FormulaType.Blank
+                };
+
+                return type != FormulaType.Blank;
+            }
+
+            public LazyRecordType()
+                : base(new CustomDisplayNameProvider())
+            {
+                FieldNames = new List<string>() { "Num", "B", "Nested" };
+            }
+
+            public override bool Equals(object other)
+            {
+                return other is LazyRecordType;
+            }
+
+            public override int GetHashCode()
+            {
+                return 3;
+            }
+
+            private class CustomDisplayNameProvider : DisplayNameProvider
+            {
+                public override IEnumerable<KeyValuePair<DName, DName>> LogicalToDisplayPairs => throw new NotImplementedException();
+
+                public override bool TryGetDisplayName(DName logicalName, out DName displayDName)
+                {
+                    var displayName = logicalName.Value switch
+                    {
+                        "Num" => "DisplayNum",
+                        "B" => "DisplayB",
+                        "Inner" => "InnerDisplay",
+                        "Nested" => "NestedDisplay",
+                        _ => null
+                    };
+                    displayDName = displayName == null ? default : new DName(displayName);
+                    return displayName != null;
+                }
+
+                public override bool TryGetLogicalName(DName displayName, out DName logicalDName)
+                {
+                    var logicalName = displayName.Value switch
+                    {
+                        "DisplayNum" => "Num",
+                        "DisplayB" => "B",
+                        "InnerDisplay" => "Inner",
+                        "NestedDisplay" => "Nested",
+                        _ => null
+                    };
+                    logicalDName = logicalName == null ? default : new DName(logicalName);
+                    return logicalName != null;
+                }
+
+                internal override bool TryRemapLogicalAndDisplayNames(DName displayName, out DName logicalName, out DName newDisplayName)
+                {
+                    newDisplayName = displayName;
+                    return TryGetLogicalName(displayName, out logicalName);
+                }
+            }
+        }
+
         public DisplayNameTests()
             : base()
         {
@@ -75,6 +150,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("If(DisplayB, Num, 1234)", "If(B, Num, 1234)", false)]
         [InlineData("Sum(NestedDisplay, InnerDisplay)", "Sum(Nested, Inner)", false)]
         [InlineData("Sum(NestedDisplay /* The source */ , InnerDisplay /* Sum over the InnerDisplay column */)", "Sum(Nested /* The source */ , Inner /* Sum over the InnerDisplay column */)", false)]
+        [InlineData("Sum(NestedDisplay, ThisRecord.InnerDisplay)", "Sum(Nested, ThisRecord.Inner)", false)]
         public void ValidateDisplayNames(string inputExpression, string outputExpression, bool toDisplay)
         {
             var r1 = RecordType.Empty()
@@ -85,18 +161,27 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     TableType.Empty().Add(new NamedFormulaType("Inner", FormulaType.Number, "InnerDisplay")), 
                     "NestedDisplay"));
 
-            var result = _engine.Check(inputExpression, r1);
-            Assert.True(result.IsSuccess);
+            // Below Record r2 Tests the second method where we provide DisplayNameProvider via constructor to 
+            // initialize the DisplayNameProvider for derived record types.
+            var r2 = new LazyRecordType();
 
-            if (toDisplay)
+            var records = new RecordType[] { r1, r2 };
+
+            foreach (var record in records)
             {
-                var outDisplayExpression = _engine.GetDisplayExpression(inputExpression, r1);
-                Assert.Equal(outputExpression, outDisplayExpression);
-            }
-            else
-            {
-                var outInvariantExpression = _engine.GetInvariantExpression(inputExpression, r1);
-                Assert.Equal(outputExpression, outInvariantExpression);
+                var result = _engine.Check(inputExpression, record);
+                Assert.True(result.IsSuccess);
+
+                if (toDisplay)
+                {
+                    var outDisplayExpression = _engine.GetDisplayExpression(inputExpression, record);
+                    Assert.Equal(outputExpression, outDisplayExpression);
+                }
+                else
+                {
+                    var outInvariantExpression = _engine.GetInvariantExpression(inputExpression, record);
+                    Assert.Equal(outputExpression, outInvariantExpression);
+                }
             }
         }
 
@@ -192,6 +277,32 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var renamer = engine.CreateFieldRenamer(r1, dpath, new DName(newName));
 
             Assert.Equal(expectedExpression, renamer.ApplyRename(expressionBase));
+        }
+
+        [Fact]
+        public void RenameLazyRecord()
+        {
+            var engine = new Engine(new PowerFxConfig(CultureInfo.InvariantCulture));
+
+            var renamer = engine.CreateFieldRenamer(
+                new BindingEngineTests.LazyRecursiveRecordType(),
+                DPath.Root.Append(new DName("Loop")).Append(new DName("SomeString")),
+                new DName("Var"));
+
+            Assert.Equal("Loop.Var = \"1\"", renamer.ApplyRename("Loop.SomeString = \"1\""));
+        }
+
+        [Fact]
+        public void RenameLazyRecordReusedTypes()
+        {
+            var engine = new Engine(new PowerFxConfig(CultureInfo.InvariantCulture));
+
+            var renamer = engine.CreateFieldRenamer(
+                new BindingEngineTests.LazyRecursiveRecordType(),
+                DPath.Root.Append(new DName("Loop")).Append(new DName("Loop")).Append(new DName("Loop")).Append(new DName("Loop")).Append(new DName("Loop")),
+                new DName("Var"));
+
+            Assert.Equal("Var.Var.SomeString = \"1\"", renamer.ApplyRename("Loop.Loop.SomeString = \"1\""));
         }
 
         [Fact]

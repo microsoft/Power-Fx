@@ -1,0 +1,13 @@
+﻿#SETUP: ConsistentOneColumnTableResult
+
+>> Int([0, 230])
+[0,230]
+
+>> Int([14.123456, 45.7, 3*0.415])
+[14,45,1]
+
+>>Int(Table({a: -14.123456}, {a: -45.7}, {a: -3*0.415}))
+[-15,-46,-2]
+
+>>Int(Table({a: false}, {a: true}))
+[0,1]

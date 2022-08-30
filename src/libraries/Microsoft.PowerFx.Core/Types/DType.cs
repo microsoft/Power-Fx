@@ -459,7 +459,7 @@ namespace Microsoft.PowerFx.Core.Types
             AssertValid();
         }
 
-        internal DType(LazyTypeProvider provider, bool isTable)
+        internal DType(LazyTypeProvider provider, bool isTable, DisplayNameProvider displayNameProvider = null)
         {
             Contracts.AssertValue(provider);
 
@@ -476,6 +476,7 @@ namespace Microsoft.PowerFx.Core.Types
             OptionSetInfo = null;
             ViewInfo = null;
             NamedValueKind = null;
+            DisplayNameProvider = displayNameProvider;
 
             AssertValid();
         }
@@ -647,27 +648,6 @@ namespace Microsoft.PowerFx.Core.Types
             foreach (var typedName in returnType.GetNames(DPath.Root))
             {
                 returnType = returnType.SetType(ref fError, DPath.Root.Append(typedName.Name), AttachDataSourceInfo(typedName.Type, dsInfo, false), skipCompare: true);
-            }
-
-            return returnType;
-        }
-
-        internal static DType DisableDisplayNameProviders(DType type)
-        {
-            type.AssertValid();
-            var returnType = type.Clone();
-            returnType.DisplayNameProvider = DisabledDisplayNameProvider.Instance;
-
-            if (!type.IsAggregate)
-            {
-                return returnType;
-            }
-
-            var fError = false;
-            foreach (var typedName in returnType.GetNames(DPath.Root))
-            {
-                returnType = returnType.SetType(ref fError, DPath.Root.Append(typedName.Name), DisableDisplayNameProviders(typedName.Type), skipCompare: true);
-                Contracts.Assert(!fError);
             }
 
             return returnType;
@@ -1012,7 +992,7 @@ namespace Microsoft.PowerFx.Core.Types
                 case DKind.Record:
                     return this;
                 case DKind.LazyTable:
-                    return new DType(LazyTypeProvider, isTable: false);
+                    return new DType(LazyTypeProvider, isTable: false, DisplayNameProvider);
                 case DKind.Table:
                 case DKind.DataEntity:
                 case DKind.Control:
@@ -1052,10 +1032,11 @@ namespace Microsoft.PowerFx.Core.Types
 
             switch (Kind)
             {
+                case DKind.LazyTable:
                 case DKind.Table:
                     return this;
                 case DKind.LazyRecord:
-                    return new DType(LazyTypeProvider, isTable: true);
+                    return new DType(LazyTypeProvider, isTable: true, DisplayNameProvider);
                 case DKind.Record:
                 case DKind.DataEntity:
                 case DKind.Control:
@@ -1199,23 +1180,7 @@ namespace Microsoft.PowerFx.Core.Types
                 return true;
             }
 
-            if (!type.IsAggregate)
-            {
-                type = Invalid;
-                return false;
-            }
-
-            switch (type.Kind)
-            {
-                case DKind.Record:
-                case DKind.Table:
-                case DKind.OptionSet:
-                case DKind.View:
-                    return type.TypeTree.TryGetValue(path.Name, out type);
-                default:
-                    Contracts.Assert(false);
-                    return false;
-            }
+            return TryGetTypeCore(path.Name, out type);
         }
 
         // Get the type of a member field specified by path.
@@ -1649,6 +1614,9 @@ namespace Microsoft.PowerFx.Core.Types
                 case DKind.Enum:
                     var supertype = new DType(type.EnumSuperkind);
                     return type.ValueTree.GetPairs().Select(kvp => new TypedName(supertype, new DName(kvp.Key)));
+                case DKind.LazyRecord:
+                case DKind.LazyTable:
+                    return type.GetRootFieldNames().Select(name => new TypedName(type.GetType(name), name));
                 default:
                     return Enumerable.Empty<TypedName>();
             }
@@ -1757,6 +1725,8 @@ namespace Microsoft.PowerFx.Core.Types
                 case DKind.DataEntity:
                     Contracts.AssertValue(ExpandInfo);
                     return type.ExpandInfo.Identity == ExpandInfo.Identity;
+                case DKind.LazyRecord:
+                case DKind.LazyTable:
                 case DKind.Table:
                 case DKind.Record:
                     if (type.ExpandInfo != null && type.ExpandInfo.Identity != ExpandInfo.Identity)

@@ -6,8 +6,17 @@
 >> Sqrt([])
 Errors: Error 0-8: The function 'Sqrt' has some invalid arguments.|Error 5-7: Invalid schema, expected a one-column table.
 
->> Sqrt([9, -1])
-[3,NaN]
+>> Sqrt([9, 1444])
+[3,38]
 
->> Sqrt([Blank(), 1444])
-[Blank(),38]
+>> Sqrt(If(1<0,[1]))
+Blank()
+
+>> Sqrt(Table({a:16}, {a:289}, {a:1/0}))
+[4,17,Microsoft.PowerFx.Types.ErrorValue]
+
+>> Sqrt(Table({a:6.25}, {a:Power(2,2)}))
+[2.5,2]
+
+>> Round(Sqrt(Table({a: 5}, {a: 2.34567}, {a: Ln(2)})), 8)
+[2.23606798,1.53155803,0.83255461]
