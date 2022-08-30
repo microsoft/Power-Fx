@@ -8,3 +8,11 @@
 
 >> Ln(Table({a: Blank()}, {a: 1/0}))
 [Blank(),Microsoft.PowerFx.Types.ErrorValue]
+
+//Rounding values as the test runner returns a different precision for table inputs
+
+>> Round(Ln(Table({a: 5}, {a: 430}, {a: 2.34567})), 8)
+[1.60943791,6.06378521,0.85257108]
+
+>> Round(Ln(Table({a: "-10.123"}, {a: "10"})), 8)
+[Microsoft.PowerFx.Types.ErrorValue,2.30258509]

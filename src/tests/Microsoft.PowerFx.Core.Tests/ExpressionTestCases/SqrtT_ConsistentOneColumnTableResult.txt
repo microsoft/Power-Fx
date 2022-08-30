@@ -23,3 +23,6 @@ Blank()
 
 >> Sqrt(Table({a:Blank()}))
 [Blank()]
+
+>> Round(Sqrt(Table({a: 5}, {a: 2.34567}, {a: Ln(2)})), 8)
+[2.23606798,1.53155803,0.83255461]

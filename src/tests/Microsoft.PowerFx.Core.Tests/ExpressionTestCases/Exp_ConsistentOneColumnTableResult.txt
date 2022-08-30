@@ -6,6 +6,16 @@
 >> Exp(Table({a: Ln(3)}, {a: 0}))
 [3,1]
 
->> Exp(Table({a: Blank()}, {a: 1/0}))
-[Blank(),Microsoft.PowerFx.Types.ErrorValue]
+>> Exp(Table({a: Blank()}, {a: 1/0}, {a: -750}))
+[Blank(),Microsoft.PowerFx.Types.ErrorValue,0]
 
+//Rounding values as the test runner returns a different precision for table inputs
+
+>> Round(Exp(Table({a: -0}, {a: 5}, {a: 2.302585092994045})), 7)
+[1,148.4131591,10]
+
+>> Round(Exp(Table({a: -5}, {a: 2.34567}, {a: 1})), 8)
+[0.00673795,10.44026536,2.71828183]
+
+>> Round(Exp(Table({a: "10"}, {a: "-10.123"})), 8)
+[22026.46579481,4.015E-05]
