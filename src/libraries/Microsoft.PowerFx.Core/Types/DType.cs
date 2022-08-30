@@ -1067,6 +1067,7 @@ namespace Microsoft.PowerFx.Core.Types
 
             switch (Kind)
             {
+                case DKind.LazyTable:
                 case DKind.Table:
                     return this;
                 case DKind.LazyRecord:
@@ -1214,23 +1215,7 @@ namespace Microsoft.PowerFx.Core.Types
                 return true;
             }
 
-            if (!type.IsAggregate)
-            {
-                type = Invalid;
-                return false;
-            }
-
-            switch (type.Kind)
-            {
-                case DKind.Record:
-                case DKind.Table:
-                case DKind.OptionSet:
-                case DKind.View:
-                    return type.TypeTree.TryGetValue(path.Name, out type);
-                default:
-                    Contracts.Assert(false);
-                    return false;
-            }
+            return TryGetTypeCore(path.Name, out type);
         }
 
         // Get the type of a member field specified by path.
@@ -1664,6 +1649,9 @@ namespace Microsoft.PowerFx.Core.Types
                 case DKind.Enum:
                     var supertype = new DType(type.EnumSuperkind);
                     return type.ValueTree.GetPairs().Select(kvp => new TypedName(supertype, new DName(kvp.Key)));
+                case DKind.LazyRecord:
+                case DKind.LazyTable:
+                    return type.GetRootFieldNames().Select(name => new TypedName(type.GetType(name), name));
                 default:
                     return Enumerable.Empty<TypedName>();
             }
@@ -1772,6 +1760,8 @@ namespace Microsoft.PowerFx.Core.Types
                 case DKind.DataEntity:
                     Contracts.AssertValue(ExpandInfo);
                     return type.ExpandInfo.Identity == ExpandInfo.Identity;
+                case DKind.LazyRecord:
+                case DKind.LazyTable:
                 case DKind.Table:
                 case DKind.Record:
                     if (type.ExpandInfo != null && type.ExpandInfo.Identity != ExpandInfo.Identity)
