@@ -41,8 +41,6 @@ namespace Microsoft.PowerFx.Core.Binding
         // Name of entity where this formula was bound.
         public readonly DName EntityName;
 
-        public readonly DName CurrentPropertyName;
-
         // The name resolver associated with this binding.
         public readonly INameResolver NameResolver;
 
@@ -320,7 +318,6 @@ namespace Microsoft.PowerFx.Core.Binding
             {
                 EntityPath = resolver.CurrentEntityPath;
                 EntityName = resolver.CurrentEntity == null ? default : resolver.CurrentEntity.EntityName;
-                CurrentPropertyName = resolver.CurrentProperty;
             }
 
             resolver?.TryGetCurrentControlProperty(out _property);
@@ -545,9 +542,9 @@ namespace Microsoft.PowerFx.Core.Binding
             Contracts.AssertValue(node);
 
             var info = GetInfo(node).VerifyValue();
-            if (info.Kind == BindKind.Data &&
-                info.Data is IExternalDataSource dataSourceInfo
-                && dataSourceInfo.IsPageable)
+            if ((info.Kind == BindKind.Data || info.Kind == BindKind.PowerFxResolvedObject) 
+                && info.Data is IExternalPageableSymbol pageableSymbol
+                && pageableSymbol.IsPageable)
             {
                 return true;
             }
@@ -558,7 +555,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 return true;
             }
 
-            return info.IsPageable;
+            return false;
         }
 
         private bool SupportsPaging(TexlNode node)
