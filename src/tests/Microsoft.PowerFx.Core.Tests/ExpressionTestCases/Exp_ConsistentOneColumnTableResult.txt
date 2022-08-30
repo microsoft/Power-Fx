@@ -6,8 +6,8 @@
 >> Exp(Table({a: Ln(3)}, {a: 0}))
 [3,1]
 
->> Exp(Table({a: Blank()}, {a: 1/0}, {a: -750}))
-[Blank(),Microsoft.PowerFx.Types.ErrorValue,0]
+>> Exp(Table({a: 1/0}, {a: -750}))
+[Microsoft.PowerFx.Types.ErrorValue,0]
 
 //Rounding values as the test runner returns a different precision for table inputs
 
