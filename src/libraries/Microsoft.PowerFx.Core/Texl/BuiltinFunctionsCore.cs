@@ -78,6 +78,8 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction Day = _library.Append(new DayFunction());
         public static readonly TexlFunction Degrees = _library.Append(new DegreesFunction());
         public static readonly TexlFunction DegreesT = _library.Append(new DegreesTableFunction());
+        public static readonly TexlFunction DEC2HEX = _library.Append(new DEC2HEXFunction());
+        public static readonly TexlFunction DEC2HEXT = _library.Append(new DEC2HEXTFunction());
         public static readonly TexlFunction EndsWith = _library.Append(new EndsWithFunction());
         public static readonly TexlFunction Error = _library.Append(new ErrorFunction());
         public static readonly TexlFunction Exp = _library.Append(new ExpFunction());
@@ -91,6 +93,8 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction ForAll_UO = _library.Append(new ForAllFunction_UO());
         public static readonly TexlFunction GUIDPure = _library.Append(new GUIDPureFunction());
         public static readonly TexlFunction GUID_UO = _library.Append(new GUIDPureFunction_UO());
+        public static readonly TexlFunction HEX2DEC = _library.Append(new HEX2DECFunction());
+        public static readonly TexlFunction HEX2DECT = _library.Append(new HEX2DECTFunction());
         public static readonly TexlFunction Hour = _library.Append(new HourFunction());
         public static readonly TexlFunction If = _library.Append(new IfFunction());
         public static readonly TexlFunction IfError = _library.Append(new IfErrorFunction());

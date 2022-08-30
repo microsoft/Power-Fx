@@ -447,6 +447,26 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: SingleArgTrig(x => x * 180.0 / Math.PI))
             },
             {
+                BuiltinFunctionsCore.DEC2HEX,
+                StandardErrorHandling<NumberValue>(
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: ReplaceBlankWithZero,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
+                    checkRuntimeValues: FiniteChecker,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: Dec2Hex
+            },
+            {
+                BuiltinFunctionsCore.DEC2HEXT,
+                StandardErrorHandlingAsync<TableValue>(
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: ReplaceBlankWithZero,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<TableValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: StandardSingleColumnTable<NumberValue>(Dec2Hex))
+            },
+            {
                 BuiltinFunctionsCore.EndsWith,
                 StandardErrorHandling<StringValue>(
                     BuiltinFunctionsCore.EndsWith.Name,
@@ -585,6 +605,17 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: Guid_UO)
+            },
+            {
+                BuiltinFunctionsCore.Hex2Dec,
+                StandardErrorHandling<StringValue>(
+                    BuiltinFunctionsCore.Hex2Dec.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: ReplaceBlankWithZero,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<StringValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: Hex2Dec
             },
             {
                 BuiltinFunctionsCore.Hour,

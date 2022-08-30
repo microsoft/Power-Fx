@@ -890,5 +890,31 @@ namespace Microsoft.PowerFx.Functions
                 Message = "Division by zero"
             });
         }
+
+        private static FormulaValue Dec2Hex(IRContext irContext, NumberValue[] args)
+        {
+            var number = Math.Floor(args[0].Value);
+            var places = Math.Floor(args[1].Value);
+            if (double.IsInfinity(number) || double.IsInfinity(places))
+            {
+                return CommonErrors.OverflowError(irContext);
+            }
+
+            var result = Math.Floor(number).ToString("X").PadLeft((int)places, '0');
+        
+            return new StringValue(irContext, result);
+        }
+
+        private static FormulaValue Hex2Dec(IRContext irContext, StringValue[] args)
+        {
+            var number = args[0].Value;
+            var result = double.Parse(number, System.Globalization.NumberStyles.HexNumber);
+            if (double.IsInfinity(result))
+            {
+                return CommonErrors.OverflowError(irContext);
+            }
+
+            return new NumberValue(irContext, result);
+        }
     }
 }
