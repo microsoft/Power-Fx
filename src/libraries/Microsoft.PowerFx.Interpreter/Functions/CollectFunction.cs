@@ -224,15 +224,8 @@ namespace Microsoft.PowerFx.Interpreter
 
             var record = (RecordValue)arg1;
 
-            try
-            {
-                var result = await arg0.AppendAsync(record); 
-                return result.ToFormulaValue();
-            }
-            catch (PowerFxInterpreterException pfxce)
-            {
-                return ErrorValue.NewError(pfxce.ExpressionError);
-            }            
+            var result = await arg0.AppendAsync(record);
+            return result.ToFormulaValue();
         }
     }
 }
