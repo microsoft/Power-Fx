@@ -2753,7 +2753,6 @@ namespace Microsoft.PowerFx.Core.Binding
                 return res.Success;
             }
 
-            // Performs type checking for the arguments passed to the membership "in"/"exactin" operators.
             private bool CheckInArgTypes(TexlNode left, TexlNode right)
             {
                 var res = CheckInArgTypesCore(
