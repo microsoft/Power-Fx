@@ -1,36 +1,37 @@
 ﻿#SETUP: EnableExpressionChaining,MutationFunctionsTestSetup
 
-// PatchTestSetup handle does the following:
-// - Creates a record: r1 => {Field1:1,Field2:2}
-// - Creates a record: r2 => {Field1:11,Field2:22}
-// - Creates a record: r3 => {Field1:111,Field2:222}
-// - Creates a record: r4 => {Field1:1111,Field2:2222}
-// - Creates a table: t
-// - Adds record r1 to table t
+// MutationFunctionsTestSetup handle does the following:
+// - Creates a record: r1 => {Field1:1,Field2:"earth",Field3:1/1/2022,Field4:true}
+// - Creates a record: r2 => {Field1:2,Field2:"moon",Field3:2/1/2022,Field4:false} (for convenience)
+// - Creates a record: r_empty => {}
+// - Creates a table: t1(r1) => Type (Field1, Field2, Field3, Field4)
 
->> Collect(t, {MyField1:2, MyField2:"hello1"});CountRows(t)
+>> Collect(t1, r2);CountRows(t1)
 2
 
->> Collect(t, r1);Collect(t, r1);Collect(t, r1);CountRows(t)
-4
-
->> Collect(t, r1);Collect(t, If(1>0, r1,Blank()));CountRows(t)
+>> Collect(t1, r2);Collect(t1, {Field1:3,Field2:"mars",Field3:DateTime(2022,3,1,0,0,0,0),Field4:false});CountRows(t1)
 3
 
->> IsBlank(Collect(t, Blank()))
+>> Collect(t1, If(1>0, r2));CountRows(t1)
+2
+
+>> IsBlank(Collect(t1, Blank()))
 true
     
->> IsError(Collect(t, If(1/0, r1)))
+>> IsError(Collect(t1, If(1/0, r2)))
 true
 
->> Collect(t)
-Errors: Error 0-10: Invalid number of arguments: received 1, expected 2.
+>> Collect(t1)
+Errors: Error 0-11: Invalid number of arguments: received 1, expected 2.
 
->> Collect(t, r1, r1)
-Errors: Error 0-18: Invalid number of arguments: received 3, expected 2.
+>> Collect(t1, r2, r2)
+Errors: Error 0-19: Invalid number of arguments: received 3, expected 2.
 
->> Collect(t, r1, 1; 2; r1)
-Errors: Error 0-24: Invalid number of arguments: received 3, expected 2.
+>> Collect(t1, r2, 1; 2; r2)
+Errors: Error 0-25: Invalid number of arguments: received 3, expected 2.
 
->> Collect(t, "x")
-Errors: Error 11-14: The first argument of '{0}' should be a valid variable name, and cannot conflict with any existing control, screen, collection, or data source names. Found type '{1}'|Error 0-15: The function 'Collect' has some invalid arguments.
+>> Collect(t1, "x")
+Errors: Error 12-15: Invalid argument type. Cannot use Text values in this context.|Error 0-16: The function 'Collect' has some invalid arguments.
+
+>> Collect(t1, 1)
+Errors: Error 12-13: Invalid argument type. Cannot use Number values in this context.|Error 0-14: The function 'Collect' has some invalid arguments.

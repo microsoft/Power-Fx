@@ -55,35 +55,29 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         private static (RecalcEngine engine, RecordValue parameters) MutationFunctionsTestSetup(PowerFxConfig config)
         {
             var symbol = new SymbolTable();
-            var datasource = new List<RecordValue>();
 
             RecordValue r1 = FormulaValue.NewRecordFromFields(
                 new NamedValue("Field1", FormulaValue.New(1)),
-                new NamedValue("Field2", FormulaValue.New(2)));
+                new NamedValue("Field2", FormulaValue.New("earth")),
+                new NamedValue("Field3", FormulaValue.New(DateTime.Parse("1/1/2022").Date)),
+                new NamedValue("Field4", FormulaValue.New(true)));
 
             RecordValue r2 = FormulaValue.NewRecordFromFields(
-                new NamedValue("Field1", FormulaValue.New(11)),
-                new NamedValue("Field2", FormulaValue.New(22)));
+                new NamedValue("Field1", FormulaValue.New(2)),
+                new NamedValue("Field2", FormulaValue.New("moon")),
+                new NamedValue("Field3", FormulaValue.New(DateTime.Parse("2/1/2022").Date)),
+                new NamedValue("Field4", FormulaValue.New(false)));
 
-            RecordValue r3 = FormulaValue.NewRecordFromFields(
-                new NamedValue("Field1", FormulaValue.New(111)),
-                new NamedValue("Field2", FormulaValue.New(222)));
+            var r_empty = RecordValue.Empty();
 
-            RecordValue r4 = FormulaValue.NewRecordFromFields(
-                new NamedValue("Field1", FormulaValue.New(1111)),
-                new NamedValue("Field2", FormulaValue.New(2222)));
-
-            datasource.Add(r1);
-
-            var t = FormulaValue.NewTable(r1.Type, datasource);
+            var t1 = FormulaValue.NewTable(r1.Type, new List<RecordValue>() { r1 });
 
             symbol.EnableMutationFunctions();
 
-            symbol.AddConstant("t", t);
+            symbol.AddConstant("t1", t1);
             symbol.AddConstant("r1", r1);
             symbol.AddConstant("r2", r2);
-            symbol.AddConstant("r3", r3);
-            symbol.AddConstant("r4", r4);
+            symbol.AddConstant("r_empty", r_empty);
 
             config.SymbolTable = symbol;
 

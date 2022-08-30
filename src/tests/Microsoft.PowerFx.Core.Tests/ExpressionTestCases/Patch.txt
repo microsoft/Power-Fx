@@ -1,33 +1,51 @@
 ﻿#SETUP: EnableExpressionChaining,MutationFunctionsTestSetup
 
-// PatchTestSetup handle does the following:
-// - Creates a record: r1 => {Field1:1,Field2:2}
-// - Creates a record: r2 => {Field1:11,Field2:22}
-// - Creates a record: r3 => {Field1:111,Field2:222}
-// - Creates a record: r4 => {Field1:1111,Field2:2222}
-// - Creates a table: t
-// - Adds record r1 to table t
+// MutationFunctionsTestSetup handle does the following:
+// - Creates a record: r1 => {Field1:1,Field2:"earth",Field3:1/1/2022,Field4:true}
+// - Creates a record: r2 => {Field1:2,Field2:"moon",Field3:2/1/2022,Field4:false} (for convenience)
+// - Creates a record: r_empty => {}
+// - Creates a table: t1(r1) => Type (Field1, Field2, Field3, Field4)
 
->> Patch(r1, {Field3:3})
-{Field1:1,Field2:2,Field3:3}
+>> Patch(r1, {Field5:5})
+{Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true,Field5:5}
 
->> Patch(r1, {Field2:22})
-{Field1:1,Field2:22}
+>> Patch(r1, r_empty)
+{Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}
 
->> Patch(r1, {Field3:3}, {Field2:22})
-{Field1:1,Field2:22,Field3:3}
+>> Patch(r1, {Field2:"mars"})
+{Field1:1,Field2:"mars",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}
 
->> Patch(t, r1, {Field3:3,Field4:4,Field2:32}, Blank(), {Field5:5,Field6:6,Field2:222}); t
-Table({Field1:1,Field2:222})
+>> Patch(r1, {Field2:"mars"}, Blank())
+{Field1:1,Field2:"mars",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}
 
->> Patch(t, Lookup(t, Flavor = "Chocolate" ), {Field3:3,Field4:4,Field2:32}, Blank(), {Field5:5,Field6:6,Field2:222}); t
-#Skip
+>> Patch(r1, {Field3:DateTime(2022,12,12,0,0,0,0)}, {Field4:false})
+{Field1:1,Field2:"earth",Field3:DateTime(2022,12,12,0,0,0,0),Field4:false}
 
->> Patch(t, r1, {Field3:3,Field4:4,Field2:22}); t
-Table({Field1:1,Field2:22})
+>> Patch(r1, r2)
+{Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false}
 
->> Patch(t, r1, r2, r3, r4, {Field1:0,Field4:4,Field2:-1}); t
-Table({Field1:0,Field2:-1})
+>> Patch(t1, r1, r_empty);t1
+Table({Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})
 
->> Collect(t, r2);Collect(t, r3);Collect(t, r4);Patch(t, r1, r2, r3, r4, {Field1:0,Field4:4,Field9:-1}); t
-Table({Field1:0,Field2:2222},{Field1:11,Field2:22},{Field1:111,Field2:222},{Field1:1111,Field2:2222})
+>> Patch(t1, r1, {Field2:"mars"});t1
+Table({Field1:1,Field2:"mars",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})
+
+>> Patch(t1, r1, {Field2:"mars"}, Blank());t1
+Table({Field1:1,Field2:"mars",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})
+
+>> Patch(t1, r1, {Field3:DateTime(2022,12,12,0,0,0,0)}, {Field4:false});t1
+Table({Field1:1,Field2:"earth",Field3:DateTime(2022,12,12,0,0,0,0),Field4:false})
+
+>> Patch(t1, r1, r2);t1
+Table({Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false})
+
+>> Patch(t1, r1, {Field5:"Field5"}); t1
+Errors: Error 0-32: The function 'Patch' has some invalid arguments.|Error 14-31: The specified column 'Field5' does not exist. The column with the most similar name is 'Field1'.
+
+>> Patch(Table(r1, r2), r1, {Field2:"Venus"})
+{Field1:1,Field2:"Venus",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}
+
+// !JYL! Coercion is not working. Why?
+>> Patch(t1, r1, {Field1:"2"}, {Field2:1000001}, {Field3:"10/10/2022"}, {Field4:"false"})
+#skip
+//{Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:false}

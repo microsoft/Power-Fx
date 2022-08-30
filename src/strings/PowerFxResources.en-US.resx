@@ -5009,16 +5009,16 @@
     <comment>Description of 'Patch' function.</comment>
   </data>
   <data name="PatchDataSourceArg" xml:space="preserve">
-    <value>Data source</value>
-    <comment>Required. The data source that contains the records that you want to modify or will contain the records that you want to create.</comment>
+    <value>data_source</value>
+    <comment>function_parameter - First parameter for the Patch function. The data source that contains the records that you want to modify or will contain the records that you want to create.</comment>
   </data>
   <data name="PatchBaseRecordArg" xml:space="preserve">
-    <value>Base record</value>
-    <comment>Required. The record to modify or create. If the record came from a data source, the record is found and modified. If the result of Defaults is used, a record is created.</comment>
+    <value>base_record</value>
+    <comment>function_parameter - Second parameter for the Patch function. The record to modify or create. If the record came from a data source, the record is found and modified. If the result of Defaults is used, a record is created.</comment>
   </data>
   <data name="PatchChangeRecordsArg" xml:space="preserve">
-    <value>Change record(s)</value>
-    <comment>Required. One or more records that contain properties to modify in the BaseRecord. Change records are processed in order from the beginning of the argument list to the end, with later property values overriding earlier ones.</comment>
+    <value>change_record(s)</value>
+    <comment>function_parameter - Third parameter for the Patch function. One or more records that contain properties to modify in the BaseRecord. Change records are processed in order from the beginning of the argument list to the end, with later property values overriding earlier ones.</comment>
   </data>
   <data name="PenMode_Draw_DisplayName" xml:space="preserve">
     <value>Draw</value>

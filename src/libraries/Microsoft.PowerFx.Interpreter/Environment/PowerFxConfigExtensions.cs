@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter;
 
 namespace Microsoft.PowerFx
@@ -32,7 +33,7 @@ namespace Microsoft.PowerFx
         }
 
         /// <summary>
-        /// Enable all multation function which allows scripts to execute side effect behavior.
+        /// Enable all multation functions which allows scripts to execute side effect behavior.
         /// </summary>
         /// <param name="symbolTable"></param>
         public static void EnableMutationFunctions(this SymbolTable symbolTable)
