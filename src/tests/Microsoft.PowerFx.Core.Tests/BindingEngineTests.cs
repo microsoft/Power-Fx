@@ -244,7 +244,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.False(lazyTypeInstance.EnumerableIterated);
         }
 
-        private class LazyRecursiveRecordType : RecordType
+        internal class LazyRecursiveRecordType : RecordType
         {
             public override IEnumerable<string> FieldNames => GetFieldNames();
 

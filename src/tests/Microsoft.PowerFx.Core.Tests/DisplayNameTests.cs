@@ -12,6 +12,7 @@ using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
+using Microsoft.PowerFx.Tests;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
@@ -276,6 +277,32 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var renamer = engine.CreateFieldRenamer(r1, dpath, new DName(newName));
 
             Assert.Equal(expectedExpression, renamer.ApplyRename(expressionBase));
+        }
+
+        [Fact]
+        public void RenameLazyRecord()
+        {
+            var engine = new Engine(new PowerFxConfig(CultureInfo.InvariantCulture));
+
+            var renamer = engine.CreateFieldRenamer(
+                new BindingEngineTests.LazyRecursiveRecordType(),
+                DPath.Root.Append(new DName("Loop")).Append(new DName("SomeString")),
+                new DName("Var"));
+
+            Assert.Equal("Loop.Var = \"1\"", renamer.ApplyRename("Loop.SomeString = \"1\""));
+        }
+
+        [Fact]
+        public void RenameLazyRecordReusedTypes()
+        {
+            var engine = new Engine(new PowerFxConfig(CultureInfo.InvariantCulture));
+
+            var renamer = engine.CreateFieldRenamer(
+                new BindingEngineTests.LazyRecursiveRecordType(),
+                DPath.Root.Append(new DName("Loop")).Append(new DName("Loop")).Append(new DName("Loop")).Append(new DName("Loop")).Append(new DName("Loop")),
+                new DName("Var"));
+
+            Assert.Equal("Var.Var.SomeString = \"1\"", renamer.ApplyRename("Loop.Loop.SomeString = \"1\""));
         }
 
         [Fact]
