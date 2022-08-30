@@ -112,14 +112,13 @@ namespace Microsoft.PowerFx.Core
             private readonly string _replacedField;
             private readonly FormulaType _replacedFieldType;
 
-            public override IEnumerable<string> FieldNames => _from.FieldNames; 
+            public override IEnumerable<string> FieldNames => _from.FieldNames;
 
             public WrappedDerivedRecordType(AggregateType type, DisplayNameProvider provider, RenameDriver renamer, string replacedFieldName = null, FormulaType replacedFieldType = null)
-                : base()
+                : base(provider)
             {
                 _from = type;
                 _renameDriver = renamer;
-                _type = DType.ReplaceDisplayNameProvider(_type, provider);
                 _replacedField = replacedFieldName;
                 _replacedFieldType = replacedFieldType;
             }
