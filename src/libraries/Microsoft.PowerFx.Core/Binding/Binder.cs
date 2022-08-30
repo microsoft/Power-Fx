@@ -542,9 +542,7 @@ namespace Microsoft.PowerFx.Core.Binding
             Contracts.AssertValue(node);
 
             var info = GetInfo(node).VerifyValue();
-            if (info.Kind == BindKind.Data &&
-                info.Data is IExternalDataSource dataSourceInfo
-                && dataSourceInfo.IsPageable)
+            if (info.Data is IExternalPageableSymbol pageableSymbol && pageableSymbol.IsPageable)
             {
                 return true;
             }
