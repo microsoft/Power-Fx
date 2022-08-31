@@ -28,10 +28,13 @@ namespace Microsoft.PowerFx.Syntax
 
         internal int Depth => _depth;
 
-        internal TexlNode Parent
+        /// <summary>
+        /// Parent <see cref="TexlNode" /> in the AST structure (if any).
+        /// </summary>
+        public TexlNode Parent
         {
             get => _parent;
-            set
+            internal set
             {
                 Contracts.Assert(_parent == null);
                 _parent = value;
