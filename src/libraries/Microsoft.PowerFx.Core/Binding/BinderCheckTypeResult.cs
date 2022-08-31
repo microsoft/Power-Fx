@@ -15,6 +15,10 @@ namespace Microsoft.PowerFx.Core.Binding
         // which may be called multiple times in a given type checking function
         // This collection represents repeated calls to that function
         public IReadOnlyCollection<BinderCoercionResult> Coercions { get; init; }
+
+        public TexlNode Node { get; init; }
+
+        public DType NodeType { get; init; }
     }
 
     internal readonly struct BinderCoercionResult
