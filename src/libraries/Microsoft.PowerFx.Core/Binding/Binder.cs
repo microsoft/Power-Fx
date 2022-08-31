@@ -4019,52 +4019,43 @@ namespace Microsoft.PowerFx.Core.Binding
             // REVIEW ragru: Introduce a TexlOperator abstract base plus various subclasses
             // for handling operators and their overloads. That will offload the burden of dealing with
             // operator special cases to the various operator classes.
-            public override void PostVisit(BinaryOpNode node)
+            public static BinderCheckTypeResult PostVisitCore(ErrorContainer errorContainer, BinaryOpNode node, DType leftType, DType rightType, bool isEnhancedDelegationEnabled)
             {
-                AssertValid();
                 Contracts.AssertValue(node);
 
-                var leftType = _txb.GetType(node.Left);
-                var rightType = _txb.GetType(node.Right);
                 var leftNode = node.Left;
                 var rightNode = node.Right;
 
                 switch (node.Op)
                 {
                     case BinaryOp.Add:
-                        PostVisitBinaryOpNodeAddition(node);
-                        break;
+                        return PostVisitBinaryOpNodeAdditionCore(errorContainer, node, leftType, rightType);
                     case BinaryOp.Power:
                     case BinaryOp.Mul:
                     case BinaryOp.Div:
-                        CheckType(leftNode, leftType, DType.Number, /* coerced: */ DType.String, DType.Boolean, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime);
-                        CheckType(rightNode, rightType, DType.Number, /* coerced: */ DType.String, DType.Boolean, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime);
-                        _txb.SetType(node, DType.Number);
-                        break;
+                        var resLeftDiv = CheckTypeCore(errorContainer, leftNode, leftType, DType.Number, /* coerced: */ DType.String, DType.Boolean, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime);
+                        var resRightDiv = CheckTypeCore(errorContainer, rightNode, rightType, DType.Number, /* coerced: */ DType.String, DType.Boolean, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime);
+                        return new BinderCheckTypeResult() { Success = true, Node = node, NodeType = DType.Number, Coercions = resLeftDiv.Coercions.Concat(resRightDiv.Coercions).ToList() };
 
                     case BinaryOp.Or:
                     case BinaryOp.And:
-                        CheckType(leftNode, leftType, DType.Boolean, /* coerced: */ DType.Number, DType.String, DType.OptionSetValue);
-                        CheckType(rightNode, rightType, DType.Boolean, /* coerced: */ DType.Number, DType.String, DType.OptionSetValue);
-                        _txb.SetType(node, DType.Boolean);
-                        break;
+                        var resLeftAnd = CheckTypeCore(errorContainer, leftNode, leftType, DType.Boolean, /* coerced: */ DType.Number, DType.String, DType.OptionSetValue);
+                        var resRightAnd = CheckTypeCore(errorContainer, rightNode, rightType, DType.Boolean, /* coerced: */ DType.Number, DType.String, DType.OptionSetValue);
+                        return new BinderCheckTypeResult() { Success = true, Node = node, NodeType = DType.Boolean, Coercions = resLeftAnd.Coercions.Concat(resRightAnd.Coercions).ToList() };
 
                     case BinaryOp.Concat:
-                        CheckType(leftNode, leftType, DType.String, /* coerced: */ DType.Number, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime, DType.Boolean, DType.OptionSetValue, DType.ViewValue);
-                        CheckType(rightNode, rightType, DType.String, /* coerced: */ DType.Number, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime, DType.Boolean, DType.OptionSetValue, DType.ViewValue);
-                        _txb.SetType(node, DType.String);
-                        break;
+                        var resLeftConcat = CheckTypeCore(errorContainer, leftNode, leftType, DType.String, /* coerced: */ DType.Number, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime, DType.Boolean, DType.OptionSetValue, DType.ViewValue);
+                        var resRightConcat = CheckTypeCore(errorContainer, rightNode, rightType, DType.String, /* coerced: */ DType.Number, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime, DType.Boolean, DType.OptionSetValue, DType.ViewValue);
+                        return new BinderCheckTypeResult() { Success = true, Node = node, NodeType = DType.String, Coercions = resLeftConcat.Coercions.Concat(resRightConcat.Coercions).ToList() };
 
                     case BinaryOp.Error:
-                        _txb.SetType(node, DType.Error);
-                        _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, node, TexlStrings.ErrOperatorExpected);
-                        break;
+                        errorContainer.EnsureError(DocumentErrorSeverity.Severe, node, TexlStrings.ErrOperatorExpected);
+                        return new BinderCheckTypeResult() { Success = false, Node = node, NodeType = DType.Error };
 
                     case BinaryOp.Equal:
                     case BinaryOp.NotEqual:
-                        CheckEqualArgTypes(leftNode, rightNode);
-                        _txb.SetType(node, DType.Boolean);
-                        break;
+                        var resEq = CheckEqualArgTypes(errorContainer, leftNode, rightNode, leftType, rightType);
+                        return new BinderCheckTypeResult() { Success = true, Node = node, NodeType = DType.Boolean, Coercions = resEq.Coercions };
 
                     case BinaryOp.Less:
                     case BinaryOp.LessEqual:
@@ -4073,20 +4064,37 @@ namespace Microsoft.PowerFx.Core.Binding
                         // Excel's type coercion for inequality operators is inconsistent / borderline wrong, so we can't
                         // use it as a reference. For example, in Excel '2 < TRUE' produces TRUE, but so does '2 < FALSE'.
                         // Sticking to a restricted set of numeric-like types for now until evidence arises to support the need for coercion.
-                        CheckComparisonArgTypes(leftNode, rightNode);
-                        _txb.SetType(node, DType.Boolean);
-                        break;
+                        var resOrder = CheckComparisonArgTypes(errorContainer, leftNode, rightNode, leftType, rightType);
+                        return new BinderCheckTypeResult() { Success = true, Node = node, NodeType = DType.Boolean, Coercions = resOrder.Coercions };
 
                     case BinaryOp.In:
                     case BinaryOp.Exactin:
-                        CheckInArgTypes(leftNode, rightNode);
-                        _txb.SetType(node, DType.Boolean);
-                        break;
+                        var resIn = CheckInArgTypesCore(errorContainer, leftNode, rightNode, leftType, rightType, isEnhancedDelegationEnabled);
+                        return new BinderCheckTypeResult() { Success = true, Node = node, NodeType = DType.Boolean, Coercions = resIn.Coercions };
 
                     default:
                         Contracts.Assert(false);
-                        _txb.SetType(node, DType.Error);
-                        break;
+                        return new BinderCheckTypeResult() { Success = false, Node = node, NodeType = DType.Error };
+                }
+            }
+
+            public override void PostVisit(BinaryOpNode node)
+            {
+                AssertValid();
+
+                var leftType = _txb.GetType(node.Left);
+                var rightType = _txb.GetType(node.Right);
+
+                var res = PostVisitCore(_txb.ErrorContainer, node, leftType, rightType, _txb.Document != null && _txb.Document.Properties.EnabledFeatures.IsEnhancedDelegationEnabled);
+
+                if (res.Success)
+                {
+                    foreach (var coercion in res.Coercions)
+                    {
+                        _txb.SetCoercedType(coercion.Node, coercion.CoercedType);
+                    }
+
+                    _txb.SetType(res.Node, res.NodeType);
                 }
 
                 _txb.SetSideEffects(node, _txb.HasSideEffects(node.Left) || _txb.HasSideEffects(node.Right));
