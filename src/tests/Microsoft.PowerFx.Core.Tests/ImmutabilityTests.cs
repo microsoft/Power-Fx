@@ -31,7 +31,7 @@ namespace Microsoft.PowerFx.Core.Tests
                     var propName = $"{t.FullName}.{prop.Name}";
                     checkedCount++;
 
-                    if (prop.CanWrite)
+                    if (prop.SetMethod != null && prop.SetMethod.IsPublic)
                     {
                         // C# "Init" keyword is semantically immutable, but appears mutable to reflection at runtime.
                         // See https://alistairevans.co.uk/2020/11/01/detecting-init-only-properties-with-reflection-in-c-9/
