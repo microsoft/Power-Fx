@@ -455,7 +455,7 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-                    targetFunction: Dec2Hex
+                    targetFunction: Dec2Hex)
             },
             {
                 BuiltinFunctionsCore.EndsWith,
@@ -606,7 +606,7 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeTypes: ExactValueTypeOrBlank<StringValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-                    targetFunction: Hex2Dec
+                    targetFunction: Hex2Dec)
             },
             {
                 BuiltinFunctionsCore.Hour,
