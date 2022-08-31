@@ -4151,7 +4151,7 @@ namespace Microsoft.PowerFx.Core.Binding
                             default:
                                 // DateTime + number = DateTime
                                 var resRight = CheckTypeCore(errorContainer, node.Right, rightType, DType.Number, /* coerced: */ DType.String, DType.Boolean);
-                                return new BinderCheckTypeResult() { Success = resRight.Success, Node = node, NodeType = DType.DateTime, Coercions = resRight.Coercions };
+                                return new BinderCheckTypeResult() { Success = true, Node = node, NodeType = DType.DateTime, Coercions = resRight.Coercions };
                         }
 
                     case DKind.Date:
@@ -4201,7 +4201,7 @@ namespace Microsoft.PowerFx.Core.Binding
                             default:
                                 // Date + number = Date
                                 var resRight = CheckTypeCore(errorContainer, node.Right, rightType, DType.Number, /* coerced: */ DType.String, DType.Boolean);
-                                return new BinderCheckTypeResult() { Success = resRight.Success, Node = node, NodeType = DType.Date, Coercions = resRight.Coercions };
+                                return new BinderCheckTypeResult() { Success = true, Node = node, NodeType = DType.Date, Coercions = resRight.Coercions };
                         }
 
                     case DKind.Time:
@@ -4240,7 +4240,7 @@ namespace Microsoft.PowerFx.Core.Binding
                             default:
                                 // Time + number = Time
                                 var resRight = CheckTypeCore(errorContainer, node.Right, rightType, DType.Number, /* coerced: */ DType.String, DType.Boolean);
-                                return new BinderCheckTypeResult() { Success = resRight.Success, Node = node, NodeType = DType.Time, Coercions = resRight.Coercions };
+                                return new BinderCheckTypeResult() { Success = true, Node = node, NodeType = DType.Time, Coercions = resRight.Coercions };
                         }
 
                     default:
@@ -4249,20 +4249,20 @@ namespace Microsoft.PowerFx.Core.Binding
                             case DKind.DateTime:
                                 // number + DateTime = DateTime
                                 var leftResDateTime = CheckTypeCore(errorContainer, node.Left, leftType, DType.Number, /* coerced: */ DType.String, DType.Boolean);
-                                return new BinderCheckTypeResult() { Success = leftResDateTime.Success, Node = node, NodeType = DType.DateTime, Coercions = leftResDateTime.Coercions };
+                                return new BinderCheckTypeResult() { Success = true, Node = node, NodeType = DType.DateTime, Coercions = leftResDateTime.Coercions };
                             case DKind.Date:
                                 // number + Date = Date
                                 var leftResDate = CheckTypeCore(errorContainer, node.Left, leftType, DType.Number, /* coerced: */ DType.String, DType.Boolean);
-                                return new BinderCheckTypeResult() { Success = leftResDate.Success, Node = node, NodeType = DType.Date, Coercions = leftResDate.Coercions };
+                                return new BinderCheckTypeResult() { Success = true, Node = node, NodeType = DType.Date, Coercions = leftResDate.Coercions };
                             case DKind.Time:
                                 // number + Time = Time
                                 var leftResTime = CheckTypeCore(errorContainer, node.Left, leftType, DType.Number, /* coerced: */ DType.String, DType.Boolean);
-                                return new BinderCheckTypeResult() { Success = leftResTime.Success, Node = node, NodeType = DType.Time, Coercions = leftResTime.Coercions };
+                                return new BinderCheckTypeResult() { Success = true, Node = node, NodeType = DType.Time, Coercions = leftResTime.Coercions };
                             default:
                                 // Regular Addition
                                 var leftResAdd = CheckTypeCore(errorContainer, node.Left, leftType, DType.Number, /* coerced: */ DType.String, DType.Boolean);
                                 var rightResAdd = CheckTypeCore(errorContainer, node.Right, rightType, DType.Number, /* coerced: */ DType.String, DType.Boolean);
-                                return new BinderCheckTypeResult() { Success = leftResAdd.Success && rightResAdd.Success, Node = node, NodeType = DType.Number, Coercions = leftResAdd.Coercions.Concat(rightResAdd.Coercions).ToList() };
+                                return new BinderCheckTypeResult() { Success = true, Node = node, NodeType = DType.Number, Coercions = leftResAdd.Coercions.Concat(rightResAdd.Coercions).ToList() };
                         }
                 }
             }
@@ -4278,12 +4278,15 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 if (res.Success)
                 {
-                    foreach (var coercion in res.Coercions)
-                    {
-                        _txb.SetCoercedType(coercion.Node, coercion.CoercedType);
-                    }
-
                     _txb.SetType(res.Node, res.NodeType);
+
+                    if (res.Coercions != null)
+                    {
+                        foreach (var coercion in res.Coercions)
+                        {
+                            _txb.SetCoercedType(coercion.Node, coercion.CoercedType);
+                        }
+                    }
                 }
             }
 
