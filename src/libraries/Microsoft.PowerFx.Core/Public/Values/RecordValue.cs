@@ -164,7 +164,13 @@ namespace Microsoft.PowerFx.Types
 
         public virtual FormulaValue UpdateFields(IEnumerable<KeyValuePair<string, FormulaValue>> record)
         {
-            throw new NotImplementedException("It is not possible to update a NamedValue to a RecordValue directly.");
+            //throw new NotImplementedException("It is not possible to update a NamedValue to a RecordValue directly.");
+            return FormulaValue.NewError(new ExpressionError()
+            {
+                Kind = ErrorKind.ReadOnlyValue,
+                Severity = ErrorSeverity.Critical,
+                Message = "It is not possible to update a RecordValue directly."
+            });
         }
 
         public FormulaValue UpdateField(string name, FormulaValue value)

@@ -42,8 +42,18 @@ Table({Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false})
 >> Patch(t1, r1, {Field5:"Field5"}); t1
 Errors: Error 0-32: The function 'Patch' has some invalid arguments.|Error 14-31: The specified column 'Field5' does not exist. The column with the most similar name is 'Field1'.
 
+// This test would fail in PA.
 >> Patch(Table(r1, r2), r1, {Field2:"Venus"})
 {Field1:1,Field2:"Venus",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}
+
+>> Patch(t1, r1, {Field1:1/0});t1
+Table({Field1:Microsoft.PowerFx.Types.ErrorValue,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})
+
+>> Patch(t1, Blank(), {Field1:10})
+Blank()
+
+>> Patch(t1, r1, {Field1:1/0}, {Field1:10});t1
+Table({Field1:10,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})
 
 // !JYL! Coercion is not working. Why?
 >> Patch(t1, r1, {Field1:"2"}, {Field2:1000001}, {Field3:"10/10/2022"}, {Field4:"false"})

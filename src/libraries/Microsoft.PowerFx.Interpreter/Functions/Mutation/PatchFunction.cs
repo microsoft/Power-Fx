@@ -51,7 +51,7 @@ namespace Microsoft.PowerFx.Functions
             return isValid;
         }
 
-        protected Dictionary<string, FormulaValue> CreateRecordFromArgsDict(FormulaValue[] args, int startFrom, out ErrorValue errorValue)
+        protected static Dictionary<string, FormulaValue> CreateRecordFromArgsDict(FormulaValue[] args, int startFrom, out ErrorValue errorValue)
         {
             var retFields = new Dictionary<string, FormulaValue>(StringComparer.Ordinal);
 
@@ -74,6 +74,10 @@ namespace Microsoft.PowerFx.Functions
                     {
                         retFields[field.Name] = field.Value;
                     }
+                }
+                else
+                {
+                    throw new ArgumentException($"Cann't handler {arg.Type} argument type.");
                 }
             }
 
@@ -111,6 +115,14 @@ namespace Microsoft.PowerFx.Functions
 
         public async Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancel)
         {
+            foreach (var arg in args)
+            {
+                if (arg is ErrorValue)
+                {
+                    return arg;
+                }
+            }
+
             var fieldsDict = CreateRecordFromArgsDict(args, 0, out ErrorValue errorValue);
 
             if (errorValue != null)
@@ -226,14 +238,28 @@ namespace Microsoft.PowerFx.Functions
 
         public async Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancel)
         {
-            var argFields = CreateRecordFromArgsDict(args, 1, out ErrorValue errorValue);
+            // If any args are error, propagate up.
+            foreach (var arg in args)
+            {
+                if (arg is ErrorValue)
+                {
+                    return arg;
+                }
+            }
 
-            var arg1 = args[1] as RecordValue;
+            if (args[1] is BlankValue)
+            {
+                return args[1];
+            }
+
+            var argFields = CreateRecordFromArgsDict(args, 1, out ErrorValue errorValue);
 
             if (errorValue != null)
             {
                 return errorValue;
             }
+
+            var arg1 = args[1] as RecordValue;
 
             return arg1.UpdateFields(argFields);
         }

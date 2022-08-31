@@ -11,22 +11,24 @@ namespace Microsoft.PowerFx.Types
     // Represent record backed by known list of values. 
     internal class InMemoryRecordValue : RecordValue
     {
-        private readonly IDictionary<string, FormulaValue> _fields;
+        private readonly IReadOnlyDictionary<string, FormulaValue> _fields;
+        private readonly IDictionary<string, FormulaValue> _fieldsDict;
 
         public InMemoryRecordValue(IRContext irContext, IEnumerable<NamedValue> fields)
           : this(irContext, ToDict(fields))
         {
         }
 
-        public InMemoryRecordValue(IRContext irContext, IDictionary<string, FormulaValue> fields)
+        public InMemoryRecordValue(IRContext irContext, IReadOnlyDictionary<string, FormulaValue> fields)
             : base(irContext)
         {
             Contract.Assert(IRContext.ResultType is RecordType);
 
             _fields = fields;
+            _fieldsDict = fields as IDictionary<string, FormulaValue>;
         }
 
-        private static IDictionary<string, FormulaValue> ToDict(IEnumerable<NamedValue> fields)
+        private static IReadOnlyDictionary<string, FormulaValue> ToDict(IEnumerable<NamedValue> fields)
         {
             var dict = new Dictionary<string, FormulaValue>(StringComparer.Ordinal);
             foreach (var field in fields)
@@ -44,7 +46,7 @@ namespace Microsoft.PowerFx.Types
 
         public override FormulaValue UpdateFields(IEnumerable<KeyValuePair<string, FormulaValue>> record)
         {
-            if (_fields.IsReadOnly)
+            if (_fieldsDict == null || _fieldsDict.IsReadOnly)
             {
                 return base.UpdateFields(record);
             }
@@ -58,12 +60,7 @@ namespace Microsoft.PowerFx.Types
                 // Throws if field is missing
                 Type.GetFieldType(fieldName);
 
-                if (field.Value is ErrorValue errorValue)
-                {
-                    return errorValue;
-                }
-
-                _fields[fieldName] = field.Value;
+                _fieldsDict[fieldName] = field.Value;
 
                 fields.Add(new NamedValue(field.Key, field.Value));
             }
