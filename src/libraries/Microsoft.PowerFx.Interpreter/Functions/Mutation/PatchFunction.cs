@@ -51,6 +51,24 @@ namespace Microsoft.PowerFx.Functions
             return isValid;
         }
 
+        protected static bool CheckArgs(FormulaValue[] args, out FormulaValue faultyArg)
+        {
+            // If any args are error, propagate up.
+            foreach (var arg in args)
+            {
+                if (arg is ErrorValue)
+                {
+                    faultyArg = (FormulaValue)arg;
+
+                    return false;
+                }
+            }
+
+            faultyArg = null;
+
+            return true;
+        }
+
         protected static Dictionary<string, FormulaValue> CreateRecordFromArgsDict(FormulaValue[] args, int startFrom)
         {
             var retFields = new Dictionary<string, FormulaValue>(StringComparer.Ordinal);
@@ -108,12 +126,11 @@ namespace Microsoft.PowerFx.Functions
 
         public async Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancel)
         {
-            foreach (var arg in args)
+            var validArgs = CheckArgs(args, out FormulaValue faultyArg);
+
+            if (!validArgs)
             {
-                if (arg is ErrorValue)
-                {
-                    return arg;
-                }
+                return faultyArg;
             }
 
             var fieldsDict = CreateRecordFromArgsDict(args, 0);
@@ -225,13 +242,11 @@ namespace Microsoft.PowerFx.Functions
 
         public async Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancel)
         {
-            // If any args are error, propagate up.
-            foreach (var arg in args)
+            var validArgs = CheckArgs(args, out FormulaValue faultyArg);
+
+            if (!validArgs)
             {
-                if (arg is ErrorValue)
-                {
-                    return arg;
-                }
+                return faultyArg;
             }
 
             if (args[1] is BlankValue)

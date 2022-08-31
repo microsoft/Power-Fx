@@ -54,8 +54,3 @@ Blank()
 
 >> Patch(t1, r1, {Field1:1/0}, {Field1:10});t1
 Table({Field1:10,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})
-
-// !JYL! Coercion is not working. Why?
->> Patch(t1, r1, {Field1:"2"}, {Field2:1000001}, {Field3:"10/10/2022"}, {Field4:"false"})
-#skip
-//{Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:false}
