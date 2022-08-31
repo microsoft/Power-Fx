@@ -2478,16 +2478,19 @@ namespace Microsoft.PowerFx.Core.Binding
             /// <summary>
             /// Helper for Lt/leq/geq/gt type checking. Restricts type to be one of the provided set, without coercion (except for primary output props).
             /// </summary>
+            /// <param name="errorContainer">Errors will be reported here.</param>
             /// <param name="node">Node for which we are checking the type.</param>
+            /// <param name="type">The type for node.</param>
             /// <param name="alternateTypes">List of acceptable types for this operation, in order of suitability.</param>
             /// <returns></returns>
-            private bool CheckComparisonTypeOneOf(TexlNode node, params DType[] alternateTypes)
+            private static BinderCheckTypeResult CheckComparisonTypeOneOfCore(ErrorContainer errorContainer, TexlNode node, DType type, params DType[] alternateTypes)
             {
                 Contracts.AssertValue(node);
                 Contracts.AssertValue(alternateTypes);
                 Contracts.Assert(alternateTypes.Any());
 
-                var type = _txb.GetType(node);
+                var coercions = new List<BinderCoercionResult>();
+
                 foreach (var altType in alternateTypes)
                 {
                     if (!altType.Accepts(type))
@@ -2495,7 +2498,7 @@ namespace Microsoft.PowerFx.Core.Binding
                         continue;
                     }
 
-                    return true;
+                    return new BinderCheckTypeResult() { Success = true };
                 }
 
                 // If the node is a control, we may be able to coerce its primary output property
@@ -2509,13 +2512,26 @@ namespace Microsoft.PowerFx.Core.Binding
                     {
                         // We'll coerce the control to the desired type, by pulling from the control's
                         // primary output property. See codegen for details.
-                        _txb.SetCoercedType(node, acceptedType);
-                        return true;
+                        coercions.Add(new BinderCoercionResult() { Node = node, CoercedType = acceptedType });
+                        return new BinderCheckTypeResult() { Success = true, Coercions = coercions };
                     }
                 }
 
-                _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, node, TexlStrings.ErrBadType_ExpectedTypesCSV, string.Join(", ", alternateTypes.Select(t => t.GetKindString())));
-                return false;
+                errorContainer.EnsureError(DocumentErrorSeverity.Severe, node, TexlStrings.ErrBadType_ExpectedTypesCSV, string.Join(", ", alternateTypes.Select(t => t.GetKindString())));
+                return new BinderCheckTypeResult() { Success = false };
+            }
+
+            private void CheckComparisonTypeOneOf(TexlNode node, DType type, params DType[] alternateTypes)
+            {
+                var res = CheckComparisonTypeOneOfCore(_txb.ErrorContainer, node, type, alternateTypes);
+
+                if (res.Success)
+                {
+                    foreach (var coercion in res.Coercions)
+                    {
+                        _txb.SetCoercedType(coercion.Node, coercion.CoercedType);
+                    }
+                }
             }
 
             // Returns whether the node was of the type wanted, and reports appropriate errors.
@@ -2581,7 +2597,7 @@ namespace Microsoft.PowerFx.Core.Binding
             }
 
             // Performs type checking for the arguments passed to the membership "in"/"exactin" operators.
-            internal static BinderCheckTypeResult CheckInArgTypesCore(ErrorContainer errorContainer, TexlNode left, TexlNode right, DType typeLeft, DType typeRight, bool isEnhancedDelegationEnabled = false)
+            internal static BinderCheckTypeResult CheckInArgTypesCore(ErrorContainer errorContainer, TexlNode left, TexlNode right, DType typeLeft, DType typeRight, bool isEnhancedDelegationEnabled)
             {
                 Contracts.AssertValue(left);
                 Contracts.AssertValue(right);
@@ -4314,14 +4330,14 @@ namespace Microsoft.PowerFx.Core.Binding
 
             private void CheckComparisonArgTypes(TexlNode left, TexlNode right)
             {
+                var typeLeft = _txb.GetType(left);
+                var typeRight = _txb.GetType(right);
+
                 // Excel's type coercion for inequality operators is inconsistent / borderline wrong, so we can't
                 // use it as a reference. For example, in Excel '2 < TRUE' produces TRUE, but so does '2 < FALSE'.
                 // Sticking to a restricted set of numeric-like types for now until evidence arises to support the need for coercion.
-                CheckComparisonTypeOneOf(left, DType.Number, DType.Date, DType.Time, DType.DateTime);
-                CheckComparisonTypeOneOf(right, DType.Number, DType.Date, DType.Time, DType.DateTime);
-
-                var typeLeft = _txb.GetType(left);
-                var typeRight = _txb.GetType(right);
+                CheckComparisonTypeOneOf(left, typeLeft, DType.Number, DType.Date, DType.Time, DType.DateTime);
+                CheckComparisonTypeOneOf(right, typeRight, DType.Number, DType.Date, DType.Time, DType.DateTime);
 
                 if (!typeLeft.Accepts(typeRight) && !typeRight.Accepts(typeLeft))
                 {
