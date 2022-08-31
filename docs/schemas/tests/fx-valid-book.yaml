@@ -1,0 +1,28 @@
+Types: 
+
+  price-history:
+    Description: former date and price record
+    Type: Record
+    Fields:
+      date:
+        Type: date
+      price:
+        Type: Number
+
+  Book:
+    Type: Record
+    Description: a book
+    Help: https://en.wikipedia.org/wiki/Book
+    Fields:
+      title: 
+        Type: text
+        Description: Title of the book
+      author:
+        Type: text
+        Description: Author of the book
+      price:
+        Type: number
+        Description: Retail price of the book
+      price-history:
+        Type: price-history
+        Table: true

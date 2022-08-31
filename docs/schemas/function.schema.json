@@ -5,7 +5,7 @@
     "type": "object",
     "required": [ "Body" ],
     "unevaluatedProperties": false,
-    "$defs": { "Type": { "OneOf": [ { "type": "string" }, { "$ref": "./type.schema.json" } ] } },
+    "$defs": { "Type": { "oneOf": [ { "type": "string" }, { "$ref": "./type.schema.json" } ] } },
     "properties": {  
         "Description": { "type": "string", "description": "description of this function" },
         "Help":        { "type": "string", "description": "help link for this function" },

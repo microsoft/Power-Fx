@@ -13,7 +13,11 @@ goto :EOF
 
 :each
 for /f "tokens=1,2,* delims=-" %%a in ("%1") do call :parse %%a %%b %%c 
-cmd /c "ajv test -s ..\%type%.schema.json -d %1 --spec=draft2019 --%result% --errors=no"
+set rfunction=
+set rtype=
+if not "%type%"=="function" set rfunction=-r ..\function.schema.json
+if not "%type%"=="type" set rtype=-r ..\type.schema.json
+cmd /c "ajv test -s ..\%type%.schema.json -d %1 --spec=draft2019 --%result% --errors=no --strict=false %rtype% %rfunction%
 if errorlevel 1 set /a fail=fail+1
 set /a total=total+1
 goto :EOF
