@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Dynamic;
+using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
 
 namespace Microsoft.PowerFx.Types
@@ -162,18 +163,19 @@ namespace Microsoft.PowerFx.Types
             visitor.Visit(this);
         }
 
-        public virtual FormulaValue UpdateFields(IEnumerable<KeyValuePair<string, FormulaValue>> record)
+        public virtual async Task<DValue<RecordValue>> UpdateFields(IEnumerable<KeyValuePair<string, FormulaValue>> record)
         {
-            //throw new NotImplementedException("It is not possible to update a NamedValue to a RecordValue directly.");
-            return FormulaValue.NewError(new ExpressionError()
+            var errorValue = NewError(new ExpressionError()
             {
                 Kind = ErrorKind.ReadOnlyValue,
                 Severity = ErrorSeverity.Critical,
                 Message = "It is not possible to update a RecordValue directly."
             });
+
+            return DValue<RecordValue>.Of(errorValue);
         }
 
-        public FormulaValue UpdateField(string name, FormulaValue value)
+        public Task<DValue<RecordValue>> UpdateField(string name, FormulaValue value)
         {
             var list = new KeyValuePair<string, FormulaValue>[] { new KeyValuePair<string, FormulaValue>(name, value) };
 

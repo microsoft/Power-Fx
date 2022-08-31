@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
+using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
 
 namespace Microsoft.PowerFx.Types
@@ -12,7 +13,7 @@ namespace Microsoft.PowerFx.Types
     internal class InMemoryRecordValue : RecordValue
     {
         private readonly IReadOnlyDictionary<string, FormulaValue> _fields;
-        private readonly IDictionary<string, FormulaValue> _fieldsDict;
+        private readonly IDictionary<string, FormulaValue> _mutableFields;
 
         public InMemoryRecordValue(IRContext irContext, IEnumerable<NamedValue> fields)
           : this(irContext, ToDict(fields))
@@ -25,7 +26,12 @@ namespace Microsoft.PowerFx.Types
             Contract.Assert(IRContext.ResultType is RecordType);
 
             _fields = fields;
-            _fieldsDict = fields as IDictionary<string, FormulaValue>;
+            _mutableFields = fields as IDictionary<string, FormulaValue>;
+
+            if (_mutableFields.IsReadOnly)
+            {
+                _mutableFields = null;
+            }
         }
 
         private static IReadOnlyDictionary<string, FormulaValue> ToDict(IEnumerable<NamedValue> fields)
@@ -44,11 +50,11 @@ namespace Microsoft.PowerFx.Types
             return _fields.TryGetValue(fieldName, out result);
         }
 
-        public override FormulaValue UpdateFields(IEnumerable<KeyValuePair<string, FormulaValue>> record)
+        public override async Task<DValue<RecordValue>> UpdateFields(IEnumerable<KeyValuePair<string, FormulaValue>> record)
         {
-            if (_fieldsDict == null || _fieldsDict.IsReadOnly)
+            if (_mutableFields == null)
             {
-                return base.UpdateFields(record);
+                return await base.UpdateFields(record);
             }
 
             var fields = new List<NamedValue>();
@@ -60,12 +66,12 @@ namespace Microsoft.PowerFx.Types
                 // Throws if field is missing
                 Type.GetFieldType(fieldName);
 
-                _fieldsDict[fieldName] = field.Value;
+                _mutableFields[fieldName] = field.Value;
 
                 fields.Add(new NamedValue(field.Key, field.Value));
             }
 
-            return NewRecordFromFields(fields);
+            return DValue<RecordValue>.Of(NewRecordFromFields(fields));
         }
     }
 }

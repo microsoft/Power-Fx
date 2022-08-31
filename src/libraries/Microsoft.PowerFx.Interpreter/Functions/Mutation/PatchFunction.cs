@@ -51,7 +51,7 @@ namespace Microsoft.PowerFx.Functions
             return isValid;
         }
 
-        protected static Dictionary<string, FormulaValue> CreateRecordFromArgsDict(FormulaValue[] args, int startFrom, out ErrorValue errorValue)
+        protected static Dictionary<string, FormulaValue> CreateRecordFromArgsDict(FormulaValue[] args, int startFrom)
         {
             var retFields = new Dictionary<string, FormulaValue>(StringComparer.Ordinal);
 
@@ -63,11 +63,6 @@ namespace Microsoft.PowerFx.Functions
                 {
                     continue;
                 }
-                else if (arg is ErrorValue error)
-                {
-                    errorValue = error;
-                    return null;
-                }
                 else if (arg is RecordValue record)
                 {
                     foreach (var field in record.Fields)
@@ -77,11 +72,9 @@ namespace Microsoft.PowerFx.Functions
                 }
                 else
                 {
-                    throw new ArgumentException($"Cann't handler {arg.Type} argument type.");
+                    throw new ArgumentException($"Can't handle {arg.Type} argument type.");
                 }
             }
-
-            errorValue = null;
 
             return retFields;
         }
@@ -123,13 +116,7 @@ namespace Microsoft.PowerFx.Functions
                 }
             }
 
-            var fieldsDict = CreateRecordFromArgsDict(args, 0, out ErrorValue errorValue);
-
-            if (errorValue != null)
-            {
-                return errorValue;
-            }
-
+            var fieldsDict = CreateRecordFromArgsDict(args, 0);
             var fieldList = new List<NamedValue>();
 
             foreach (var field in fieldsDict)
@@ -252,16 +239,11 @@ namespace Microsoft.PowerFx.Functions
                 return args[1];
             }
 
-            var argFields = CreateRecordFromArgsDict(args, 1, out ErrorValue errorValue);
+            var argFields = CreateRecordFromArgsDict(args, 1);
 
-            if (errorValue != null)
-            {
-                return errorValue;
-            }
+            var arg1 = (RecordValue)args[1];
 
-            var arg1 = args[1] as RecordValue;
-
-            return arg1.UpdateFields(argFields);
+            return (await arg1.UpdateFields(argFields)).Value;
         }
     }
 }
