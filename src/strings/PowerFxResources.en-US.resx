@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -6554,20 +6554,19 @@
     <comment>function_parameter - Second argument to the Set function - any Power Apps value.</comment>
   </data>
   <data name="AboutDec2Hex" xml:space="preserve">
-    <value>Returns the hexadecimal of a number.</value>
+    <value>Converts a decimal number to hexadecimal</value>
     <comment>Description of 'Dec2Hex' function.</comment>
   </data>
   <data name="AboutDec2HexT" xml:space="preserve">
-    <value>Returns the hexadecimals of a column of numbers.</value>
+    <value>Converts a column of decimal numbers to hexadecimals</value>
     <comment>Description of 'Dec2HexT' function.</comment>
   </data>
   <data name="AboutHex2Dec" xml:space="preserve">
-    <value>Returns the decimal of a hexadecimal number.</value>
+    <value>Converts a hexadecimal number to decimal</value>
     <comment>Description of 'Hex2Dec' function.</comment>
   </data>
   <data name="AboutHex2DecT" xml:space="preserve">
-    <value>Returns the decimal numbers of a column of hexadecimal numbers.</value>
+    <value>Converts a column of hexadecimal numbers to decimals</value>
     <comment>Description of 'Hex2DecT' function.</comment>
   </data>
-
 </root>
