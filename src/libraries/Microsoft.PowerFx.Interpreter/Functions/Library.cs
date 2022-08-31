@@ -447,24 +447,15 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: SingleArgTrig(x => x * 180.0 / Math.PI))
             },
             {
-                BuiltinFunctionsCore.DEC2HEX,
+                BuiltinFunctionsCore.Dec2Hex,
                 StandardErrorHandling<NumberValue>(
-                    expandArguments: NoArgExpansion,
+                    BuiltinFunctionsCore.Dec2Hex.Name,
+                    expandArguments: InsertDefaultValues(outputArgsCount: 2, fillWith: new BlankValue(IRContext.NotInSource(FormulaType.Blank))),
                     replaceBlankValues: ReplaceBlankWithZero,
                     checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
-                    checkRuntimeValues: FiniteChecker,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: Dec2Hex
-            },
-            {
-                BuiltinFunctionsCore.DEC2HEXT,
-                StandardErrorHandlingAsync<TableValue>(
-                    expandArguments: NoArgExpansion,
-                    replaceBlankValues: ReplaceBlankWithZero,
-                    checkRuntimeTypes: ExactValueTypeOrBlank<TableValue>,
-                    checkRuntimeValues: DeferRuntimeValueChecking,
-                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
-                    targetFunction: StandardSingleColumnTable<NumberValue>(Dec2Hex))
             },
             {
                 BuiltinFunctionsCore.EndsWith,
@@ -611,7 +602,7 @@ namespace Microsoft.PowerFx.Functions
                 StandardErrorHandling<StringValue>(
                     BuiltinFunctionsCore.Hex2Dec.Name,
                     expandArguments: NoArgExpansion,
-                    replaceBlankValues: ReplaceBlankWithZero,
+                    replaceBlankValues: ReplaceBlankWithEmptyString,
                     checkRuntimeTypes: ExactValueTypeOrBlank<StringValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
