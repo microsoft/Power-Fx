@@ -9,8 +9,8 @@ using Microsoft.PowerFx.Core.Types;
 
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
-    // HEX2DEC(number:n, [places:n])
-    internal sealed class HEX2DECFunction : BuiltinFunction
+    // Hex2Dec(number:n, [places:n])
+    internal sealed class Hex2DecFunction : BuiltinFunction
     {
         public override bool IsSelfContained => true;
 
@@ -18,32 +18,32 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool HasPreciseErrors => true;
 
-        public HEX2DECFunction()
-            : base("HEX2DEC", TexlStrings.AboutHEX2DEC, FunctionCategories.MathAndStat, DType.Number, 0, 1, 1, DType.String)
+        public Hex2DecFunction()
+            : base("Hex2Dec", TexlStrings.AboutHex2Dec, FunctionCategories.MathAndStat, DType.Number, 0, 1, 1, DType.String)
         {
         }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new[] { TexlStrings.HEX2DECArg1 };
+            yield return new[] { TexlStrings.Hex2DecArg1 };
         }
     }
 
-    // HEX2DECT(number:[n], [places:n])
-    internal sealed class HEX2DECTFunction : BuiltinFunction
+    // Hex2DecT(number:[n], [places:n])
+    internal sealed class Hex2DecTFunction : BuiltinFunction
     {
         public override bool IsSelfContained => true;
 
         public override bool IsStateless => true;
 
-        public HEX2DECTFunction()
-            : base("HEX2DECT", TexlStrings.AboutHEX2DECT, FunctionCategories.Table, DType.EmptyTable, 0, 1, 1, DType.EmptyTable)
+        public Hex2DecTFunction()
+            : base("Hex2DecT", TexlStrings.AboutHex2DecT, FunctionCategories.Table, DType.EmptyTable, 0, 1, 1, DType.EmptyTable)
         {
         }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new[] { TexlStrings.HEX2DECTArg1 };
+            yield return new[] { TexlStrings.Hex2DecTArg1 };
         }
     }
 }

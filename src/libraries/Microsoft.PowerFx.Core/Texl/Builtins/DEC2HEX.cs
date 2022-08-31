@@ -13,8 +13,8 @@ using Microsoft.PowerFx.Syntax;
 
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
-    // DEC2HEX(number:n, [places:n])
-    internal sealed class DEC2HEXFunction : BuiltinFunction
+    // Dec2Hex(number:n, [places:n])
+    internal sealed class Dec2HexFunction : BuiltinFunction
     {
         public override bool IsSelfContained => true;
 
@@ -24,19 +24,19 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool HasPreciseErrors => true;
 
-        public DEC2HEXFunction()
-            : base("DEC2HEX", TexlStrings.AboutDEC2HEX, FunctionCategories.MathAndStat, DType.String, 0, 1, 2, DType.Number, DType.Number)
+        public Dec2HexFunction()
+            : base("Dec2Hex", TexlStrings.AboutDec2Hex, FunctionCategories.MathAndStat, DType.String, 0, 1, 2, DType.Number, DType.Number)
         {
         }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new[] { TexlStrings.DEC2HEXArg1, TexlStrings.DEC2HEXArg2 };
+            yield return new[] { TexlStrings.Dec2HexArg1, TexlStrings.Dec2HexArg2 };
         }
     }
 
-    // DEC2HEXT(number:[n], [places:n])
-    internal sealed class DEC2HEXTableFunction : BuiltinFunction
+    // Dec2HexT(number:[n], [places:n])
+    internal sealed class Dec2HexTableFunction : BuiltinFunction
     {
         public override bool IsSelfContained => true;
 
@@ -46,14 +46,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool HasPreciseErrors => true;
 
-        public DEC2HEXTableFunction()
-            : base("DEC2HEXT", TexlStrings.AboutDEC2HEXT, FunctionCategories.Table, DType.EmptyTable, 0, 1, 1, DType.EmptyTable)
+        public Dec2HexTableFunction()
+            : base("Dec2HexT", TexlStrings.AboutDec2HexT, FunctionCategories.Table, DType.EmptyTable, 0, 1, 1, DType.EmptyTable)
         {
         }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new[] { TexlStrings.DEC2HEXTArg1 };
+            yield return new[] { TexlStrings.Dec2HexTArg1 };
         }
 
     }
