@@ -4280,9 +4280,12 @@ namespace Microsoft.PowerFx.Core.Binding
                 {
                     _txb.SetType(res.Node, res.NodeType);
 
-                    foreach (var coercion in res.Coercions)
+                    if (res.Coercions != null)
                     {
-                        _txb.SetCoercedType(coercion.Node, coercion.CoercedType);
+                        foreach (var coercion in res.Coercions)
+                        {
+                            _txb.SetCoercedType(coercion.Node, coercion.CoercedType);
+                        }
                     }
                 }
             }
