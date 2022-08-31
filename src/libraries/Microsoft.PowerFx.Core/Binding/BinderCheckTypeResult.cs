@@ -18,20 +18,8 @@ namespace Microsoft.PowerFx.Core.Binding
         // This collection represents repeated calls to that function
         public IReadOnlyCollection<BinderCoercionResult> Coercions
         {
-            get
-            {
-                if (_coercions == null)
-                {
-                    return new List<BinderCoercionResult>();
-                }
-
-                return _coercions;
-            }
-
-            init
-            {
-                _coercions = value;
-            }
+            get => _coercions ?? new List<BinderCoercionResult>();
+            init => _coercions = value;
         }
 
         public TexlNode Node { get; init; }
