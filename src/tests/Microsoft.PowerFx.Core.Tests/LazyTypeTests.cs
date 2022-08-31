@@ -261,6 +261,12 @@ namespace Microsoft.PowerFx.Core.Tests
 
             Assert.NotEqual(_lazyRecord1, _lazyRecord2.ToTable().ToRecord());
             Assert.NotEqual(_lazyTable2, _lazyTable1.ToRecord().ToTable());
+
+            Assert.Equal(_lazyTable2._type, _lazyTable2._type.ToRecord().ToTable());
+            Assert.Equal(_lazyRecord1._type, _lazyRecord1._type.ToTable().ToRecord());
+
+            Assert.Equal(_lazyTable2._type, _lazyTable2._type.ToTable());
+            Assert.Equal(_lazyRecord1._type, _lazyRecord1._type.ToRecord());
         }
 
         [Fact]

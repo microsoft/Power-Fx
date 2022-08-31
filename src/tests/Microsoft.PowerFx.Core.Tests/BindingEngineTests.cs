@@ -309,6 +309,21 @@ namespace Microsoft.PowerFx.Tests
             Assert.True(lazyTypeInstance.EnumerableIterated);
         }
 
+        [Fact]
+        public void CheckShuffleLazyTable()
+        {
+            var config = new PowerFxConfig();
+            var engine = new Engine(config);
+
+            var lazyTypeInstance = new LazyRecursiveRecordType().ToTable();
+
+            var result = engine.Check("Shuffle(Table)", RecordType.Empty().Add("Table", lazyTypeInstance));
+            Assert.True(result.IsSuccess);
+
+            var tableType = Assert.IsType<TableType>(result.ReturnType);
+            Assert.IsType<LazyRecursiveRecordType>(tableType.ToRecord());
+        }
+
         /// <summary>
         /// A function with behavior/side-effects used in testing.
         /// </summary>

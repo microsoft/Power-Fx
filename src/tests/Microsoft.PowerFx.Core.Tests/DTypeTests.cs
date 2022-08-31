@@ -2152,9 +2152,9 @@ namespace Microsoft.PowerFx.Tests
             //Attachment
             var type1 = DType.CreateAttachmentType(DType.CreateAttachmentType(DType.CreateTable(new TypedName(DType.String, new DName("DisplayName")))));
             var type2 = DType.CreateAttachmentType(DType.CreateAttachmentType(DType.CreateTable(new TypedName(DType.String, new DName("Name")))));
-            TestUnion(type1, type1, type1.LazyTypeProvider.GetExpandedType(type1.IsTable));
+            TestUnion(type1, type1, type1);
             TestUnion(type1, type2, TestUtils.DT("*[DisplayName:s, Name:s]"));
-            TestUnion(type2, type2, type2.LazyTypeProvider.GetExpandedType(type2.IsTable));
+            TestUnion(type2, type2, type2);
             TestUnion(DType.Unknown, type1, type1.LazyTypeProvider.GetExpandedType(type1.IsTable));
             TestUnion(DType.ObjNull, type1, type1.LazyTypeProvider.GetExpandedType(type1.IsTable));
         }

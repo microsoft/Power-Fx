@@ -946,41 +946,6 @@ namespace Microsoft.PowerFx.Core.Types
             return Kind.ToString();
         }
 
-        // WARNING! This method is dangerous, for several reasons (below). Clients need to
-        // rethink their strategy, and consider using the proper DType representation with
-        // embedded "v" types instead, and dig into those types as needed for additional
-        // control-specific information, such as property names.
-        // Reasons this is bad:
-        //  1. It is recursive, and will go as deep into a DType as needed to convert all nested
-        //     controls to their corresponding record representations.
-        //  2. It converts "v" (control) types to records, by picking certain property names as
-        //     fields for those records. This operation is LOSSY. For example, only the locale-specific
-        //     names are captured, not the invariant names (or vice versa).
-        //  3. There is no way to recover the originating control or control template from the
-        //     resulting type.
-        public DType ControlsToRecordsRecursive()
-        {
-            AssertValid();
-
-            if (!IsAggregate && !IsControl)
-            {
-                return this;
-            }
-
-            var result = IsControl ? ToRecord() : this;
-
-            foreach (var typedName in result.GetNames(DPath.Root))
-            {
-                var fError = false;
-                if (typedName.Type.IsAggregate || typedName.Type.IsControl)
-                {
-                    result = result.SetType(ref fError, DPath.Root.Append(typedName.Name), typedName.Type.ControlsToRecordsRecursive());
-                }
-            }
-
-            return result;
-        }
-
         public IEnumerable<IExpandInfo> GetExpands()
         {
             AssertValid();
@@ -1067,6 +1032,7 @@ namespace Microsoft.PowerFx.Core.Types
 
             switch (Kind)
             {
+                case DKind.LazyTable:
                 case DKind.Table:
                     return this;
                 case DKind.LazyRecord:
@@ -1214,23 +1180,7 @@ namespace Microsoft.PowerFx.Core.Types
                 return true;
             }
 
-            if (!type.IsAggregate)
-            {
-                type = Invalid;
-                return false;
-            }
-
-            switch (type.Kind)
-            {
-                case DKind.Record:
-                case DKind.Table:
-                case DKind.OptionSet:
-                case DKind.View:
-                    return type.TypeTree.TryGetValue(path.Name, out type);
-                default:
-                    Contracts.Assert(false);
-                    return false;
-            }
+            return TryGetTypeCore(path.Name, out type);
         }
 
         // Get the type of a member field specified by path.
@@ -1664,6 +1614,9 @@ namespace Microsoft.PowerFx.Core.Types
                 case DKind.Enum:
                     var supertype = new DType(type.EnumSuperkind);
                     return type.ValueTree.GetPairs().Select(kvp => new TypedName(supertype, new DName(kvp.Key)));
+                case DKind.LazyRecord:
+                case DKind.LazyTable:
+                    return type.GetRootFieldNames().Select(name => new TypedName(type.GetType(name), name));
                 default:
                     return Enumerable.Empty<TypedName>();
             }
@@ -1772,6 +1725,8 @@ namespace Microsoft.PowerFx.Core.Types
                 case DKind.DataEntity:
                     Contracts.AssertValue(ExpandInfo);
                     return type.ExpandInfo.Identity == ExpandInfo.Identity;
+                case DKind.LazyRecord:
+                case DKind.LazyTable:
                 case DKind.Table:
                 case DKind.Record:
                     if (type.ExpandInfo != null && type.ExpandInfo.Identity != ExpandInfo.Identity)
@@ -2569,6 +2524,11 @@ namespace Microsoft.PowerFx.Core.Types
             // For Lazy Types, union operations must expand the current depth
             if (type1.IsLazyType)
             {
+                if (type1 == type2)
+                {
+                    return type1;
+                }
+
                 type1 = type1.LazyTypeProvider.GetExpandedType(type1.IsTable);
             }
 
@@ -2974,6 +2934,19 @@ namespace Microsoft.PowerFx.Core.Types
                 isSafe = false;
                 coercionType = this;
                 return false;
+            }
+
+            if (typeDest.IsLazyType)
+            {
+                if (IsLazyType)
+                {
+                    // Coercion from lazy -> lazy is not supported
+                    isSafe = false;
+                    coercionType = this;
+                    return false;
+                }
+
+                typeDest = typeDest.LazyTypeProvider.GetExpandedType(typeDest.IsTable);
             }
 
             if (Kind != typeDest.Kind && Kind == DKind.Record && aggregateCoercion)
