@@ -1,0 +1,124 @@
+﻿// ******** INTEGER PARAMETERS WITHOUT PLACES ********
+
+>> Dec2Hex(0)
+"0"
+
+// Positive Integer Parameters
+>> Dec2Hex(165)
+"A5"
+
+>> Dec2Hex(3213)
+"C8D"
+
+// Negative Integer Parameters
+>> Dec2Hex(-1)
+"FFFFFFFFFF"
+
+>> Dec2Hex(-165)
+"FFFFFFFF5B"
+
+>> Dec2Hex(-3213)
+"FFFFFFF373"
+
+// ******** DECIMAL PARAMETERS ********
+
+>> Dec2Hex(3.74)
+"3"
+
+>> Dec2Hex(-3.74)
+"FFFFFFFFFD"
+	
+
+// ******** INTEGER PARAMETERS WITH PLACES ********
+
+>> Dec2Hex(45780)
+"B2D4"
+
+>> Dec2Hex(45780, 4)
+"B2D4"
+
+>> Dec2Hex(45780, 5)
+"0B2D4"
+
+>> Dec2Hex(45780, 6)
+"00B2D4"
+
+>> Dec2Hex(45780, -6)
+#Error(Kind=InvalidArgument)
+
+>> Dec2Hex(45780, 11)
+#Error(Kind=InvalidArgument)
+
+// Places are ignored when number is negative
+>> Dec2Hex(-45780)
+"FFFFFF4D2C"
+
+>> Dec2Hex(-45780, 4)
+"FFFFFF4D2C"
+
+>> Dec2Hex(-45780, 5)
+"FFFFFF4D2C"
+
+>> Dec2Hex(-45780, 6)
+"FFFFFF4D2C"
+
+>> Dec2Hex(-45780, 11)
+#Error(Kind=InvalidArgument)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// ******** NULL and ERROR PARAMETERS ********
+>> Dex2Hex(1/0)
+#Error(Kind=Div0)
+
+>> Dex2Hex(-549755813889)
+#Error(Kind=Numeric)
+
+>> Dex2Hex(549755813888)
+#Error(Kind=Numeric)
+
+// ******** STRING PARAMETERS ********
+
+>> Dex2Hex("sampleText")
+#Error(Kind=InvalidArgument)
+
+>> Dex2Hex("4")
+#Error(Kind=InvalidArgument)
+
+>> Dex2Hex("-9")
+#Error(Kind=InvalidArgument)
+
+
+// ******** BOOLEAN PARAMETERS ********
+
+>> Dex2Hex(true)
+#Error(Kind=InvalidArgument)
+
+>> Dex2Hex(false)
+#Error(Kind=InvalidArgument)
+
+>> Dex2Hex("true")
+#Error(Kind=InvalidArgument)
+
+>> Dex2Hex("false")
+#Error(Kind=InvalidArgument)
+
+// ******** FUNCTION VALUE AS PARAMETERS ********
+
+>> Dex2Hex(Ln(2))
+"0"
+
+>> Dex2Hex(Power(2,2))
+"4"
+
