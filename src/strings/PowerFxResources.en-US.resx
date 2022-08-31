@@ -6553,4 +6553,21 @@
     <value>value</value>
     <comment>function_parameter - Second argument to the Set function - any Power Apps value.</comment>
   </data>
+  <data name="AboutDec2Hex" xml:space="preserve">
+    <value>Returns the hexadecimal of a number.</value>
+    <comment>Description of 'Dec2Hex' function.</comment>
+  </data>
+  <data name="AboutDec2HexT" xml:space="preserve">
+    <value>Returns the hexadecimals of a column of numbers.</value>
+    <comment>Description of 'Dec2HexT' function.</comment>
+  </data>
+  <data name="AboutHex2Dec" xml:space="preserve">
+    <value>Returns the decimal of a hexadecimal number.</value>
+    <comment>Description of 'Hex2Dec' function.</comment>
+  </data>
+  <data name="AboutHex2DecT" xml:space="preserve">
+    <value>Returns the decimal numbers of a column of hexadecimal numbers.</value>
+    <comment>Description of 'Hex2DecT' function.</comment>
+  </data>
+
 </root>
