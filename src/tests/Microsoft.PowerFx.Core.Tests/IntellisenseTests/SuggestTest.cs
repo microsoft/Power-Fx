@@ -254,18 +254,24 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
 
             var actualSuggestions = SuggestStrings(expression, Default, context);
             Assert.Equal(expectedSuggestions, actualSuggestions);
-        }        
+        }
         
         [Theory]
         [InlineData("So|", true, "SomeString")]
         [InlineData("Loop.Loop.Loop.So|", true, "SomeString")]
-        [InlineData("Loop.|", true, "Loop", "Record", "SomeString")]
+        [InlineData("Loop.|", true, "Loop", "Record", "SomeString", "TableLoop")]
         [InlineData("Record.|", false, "Foo")]
         [InlineData("Loop.Loop.Record.|", false, "Foo")]
+        [InlineData("Filter(TableLoop, EndsWith(|", true, "SomeString")]
+        [InlineData("Loop.L|o", true, "Loop", "TableLoop")]
         public void TestSuggestLazyTypes(string expression, bool requiresExpansion, params string[] expectedSuggestions)
         {
             var lazyInstance = new LazyRecursiveRecordType();
-            var actualSuggestions = SuggestStrings(expression, EmptyEverything, lazyInstance);
+            var config = PowerFxConfig.BuildWithEnumStore(
+                null,
+                new EnumStoreBuilder(),
+                new TexlFunction[] { BuiltinFunctionsCore.EndsWith, BuiltinFunctionsCore.Filter, BuiltinFunctionsCore.Table });
+            var actualSuggestions = SuggestStrings(expression, config, lazyInstance);
             Assert.Equal(expectedSuggestions, actualSuggestions);
             
             // Intellisense requires iterating the field names for some operations
@@ -290,6 +296,9 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
                     case "SomeString":
                         type = FormulaType.String;
                         return true;
+                    case "TableLoop":
+                        type = ToTable();
+                        return true;
                     case "Loop":
                         type = this;
                         return true;
@@ -309,6 +318,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
                 yield return "SomeString";
                 yield return "Loop";
                 yield return "Record";
+                yield return "TableLoop";
             }
 
             public override bool Equals(object other)

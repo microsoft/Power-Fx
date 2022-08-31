@@ -263,7 +263,8 @@ namespace Microsoft.PowerFx.Intellisense
             Contracts.AssertValid(type);
             Contracts.AssertValue(data);
 
-            foreach (var field in type.GetNames(DPath.Root))
+            foreach (var field in type.GetRootFieldNames()
+                .Select(field => (Type: type.GetType(field), Name: field)))
             {
                 var usedName = field.Name;
                 if (DType.TryGetDisplayNameForColumn(type, usedName, out var maybeDisplayName))
@@ -417,7 +418,8 @@ namespace Microsoft.PowerFx.Intellisense
         {
             Contracts.AssertValid(scopeType);
 
-            foreach (var name in scopeType.GetNames(DPath.Root))
+            foreach (var name in scopeType.GetRootFieldNames()
+                .Select(field => (Type: scopeType.GetType(field), Name: field)))
             {
                 yield return new KeyValuePair<string, DType>("\"" + CharacterUtils.ExcelEscapeString(name.Name.Value) + "\"", name.Type);
             }
@@ -435,7 +437,8 @@ namespace Microsoft.PowerFx.Intellisense
             }
 
             var suggestions = new List<KeyValuePair<string, DType>>();
-            foreach (var tName in typeToSuggestFrom.GetNames(DPath.Root))
+            foreach (var tName in typeToSuggestFrom.GetRootFieldNames()
+                .Select(field => (Type: typeToSuggestFrom.GetType(field), Name: field)))
             {
                 if (suggestionType.Accepts(tName.Type))
                 {
