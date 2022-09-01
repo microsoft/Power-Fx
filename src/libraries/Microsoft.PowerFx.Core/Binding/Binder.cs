@@ -4328,37 +4328,49 @@ namespace Microsoft.PowerFx.Core.Binding
                 _txb.SetIsUnliftable(node, _txb.IsUnliftable(node.Left));
             }
 
-            private void CheckComparisonArgTypes(TexlNode left, TexlNode right)
+            private static BinderCheckTypeResult CheckComparisonArgTypesCore(ErrorContainer errorContainer, TexlNode left, TexlNode right, DType typeLeft, DType typeRight)
             {
-                var typeLeft = _txb.GetType(left);
-                var typeRight = _txb.GetType(right);
-
                 // Excel's type coercion for inequality operators is inconsistent / borderline wrong, so we can't
                 // use it as a reference. For example, in Excel '2 < TRUE' produces TRUE, but so does '2 < FALSE'.
                 // Sticking to a restricted set of numeric-like types for now until evidence arises to support the need for coercion.
-                CheckComparisonTypeOneOf(left, typeLeft, DType.Number, DType.Date, DType.Time, DType.DateTime);
-                CheckComparisonTypeOneOf(right, typeRight, DType.Number, DType.Date, DType.Time, DType.DateTime);
+                var resLeft = CheckComparisonTypeOneOfCore(errorContainer, left, typeLeft, DType.Number, DType.Date, DType.Time, DType.DateTime);
+                var resRight = CheckComparisonTypeOneOfCore(errorContainer, right, typeRight, DType.Number, DType.Date, DType.Time, DType.DateTime);
+
+                var coercions = new List<BinderCoercionResult>();
+                coercions.AddRange(resLeft.Coercions);
+                coercions.AddRange(resRight.Coercions);
 
                 if (!typeLeft.Accepts(typeRight) && !typeRight.Accepts(typeLeft))
                 {
                     // Handle DateTime <=> Number comparison by coercing one side to Number
                     if (DType.Number.Accepts(typeLeft) && DType.DateTime.Accepts(typeRight))
                     {
-                        _txb.SetCoercedType(right, DType.Number);
-                        return;
+                        coercions.Add(new BinderCoercionResult() { Node = right, CoercedType = DType.Number });
                     }
                     else if (DType.Number.Accepts(typeRight) && DType.DateTime.Accepts(typeLeft))
                     {
-                        _txb.SetCoercedType(left, DType.Number);
-                        return;
+                        coercions.Add(new BinderCoercionResult() { Node = left, CoercedType = DType.Number });
                     }
-
-                    // Handle Date <=> Time comparison by coercing both to DateTime
-                    if (DType.DateTime.Accepts(typeLeft) && DType.DateTime.Accepts(typeRight))
+                    else if (DType.DateTime.Accepts(typeLeft) && DType.DateTime.Accepts(typeRight))
                     {
-                        _txb.SetCoercedType(left, DType.DateTime);
-                        _txb.SetCoercedType(right, DType.DateTime);
-                        return;
+                        // Handle Date <=> Time comparison by coercing both to DateTime
+                        coercions.Add(new BinderCoercionResult() { Node = left, CoercedType = DType.DateTime });
+                        coercions.Add(new BinderCoercionResult() { Node = right, CoercedType = DType.DateTime });
+                    }
+                }
+
+                return new BinderCheckTypeResult() { Success = true, Coercions = coercions };
+            }
+
+            private void CheckComparisonArgTypes(TexlNode left, TexlNode right)
+            {
+                var res = CheckComparisonArgTypesCore(_txb.ErrorContainer, left, right, _txb.GetType(left), _txb.GetType(right));
+
+                if (res.Success)
+                {
+                    foreach (var coercion in res.Coercions)
+                    {
+                        _txb.SetCoercedType(coercion.Node, coercion.CoercedType);
                     }
                 }
             }
