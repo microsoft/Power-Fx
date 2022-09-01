@@ -4054,7 +4054,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                     case BinaryOp.Equal:
                     case BinaryOp.NotEqual:
-                        var resEq = CheckEqualArgTypes(errorContainer, leftNode, rightNode, leftType, rightType);
+                        var resEq = CheckEqualArgTypesCore(errorContainer, leftNode, rightNode, leftType, rightType);
                         return new BinderCheckTypeResult() { Success = true, Node = node, NodeType = DType.Boolean, Coercions = resEq.Coercions };
 
                     case BinaryOp.Less:
@@ -4064,7 +4064,7 @@ namespace Microsoft.PowerFx.Core.Binding
                         // Excel's type coercion for inequality operators is inconsistent / borderline wrong, so we can't
                         // use it as a reference. For example, in Excel '2 < TRUE' produces TRUE, but so does '2 < FALSE'.
                         // Sticking to a restricted set of numeric-like types for now until evidence arises to support the need for coercion.
-                        var resOrder = CheckComparisonArgTypes(errorContainer, leftNode, rightNode, leftType, rightType);
+                        var resOrder = CheckComparisonArgTypesCore(errorContainer, leftNode, rightNode, leftType, rightType);
                         return new BinderCheckTypeResult() { Success = true, Node = node, NodeType = DType.Boolean, Coercions = resOrder.Coercions };
 
                     case BinaryOp.In:
@@ -4087,15 +4087,12 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 var res = PostVisitCore(_txb.ErrorContainer, node, leftType, rightType, _txb.Document != null && _txb.Document.Properties.EnabledFeatures.IsEnhancedDelegationEnabled);
 
-                if (res.Success)
+                foreach (var coercion in res.Coercions)
                 {
-                    foreach (var coercion in res.Coercions)
-                    {
-                        _txb.SetCoercedType(coercion.Node, coercion.CoercedType);
-                    }
-
-                    _txb.SetType(res.Node, res.NodeType);
+                    _txb.SetCoercedType(coercion.Node, coercion.CoercedType);
                 }
+
+                _txb.SetType(res.Node, res.NodeType);
 
                 _txb.SetSideEffects(node, _txb.HasSideEffects(node.Left) || _txb.HasSideEffects(node.Right));
                 _txb.SetStateful(node, _txb.IsStateful(node.Left) || _txb.IsStateful(node.Right));
