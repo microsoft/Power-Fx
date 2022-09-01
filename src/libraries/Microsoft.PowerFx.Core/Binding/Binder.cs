@@ -390,7 +390,6 @@ namespace Microsoft.PowerFx.Core.Binding
         {
             Contracts.AssertValue(node);
             Contracts.AssertIndex(node.Id, _typeMap.Length);
-            
             Contracts.Assert(_typeMap[node.Id].IsValid);
 
             return _typeMap[node.Id];
