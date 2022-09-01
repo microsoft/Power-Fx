@@ -633,6 +633,21 @@ namespace Microsoft.PowerFx.Tests
             Assert.True(AttachmentRecordType.IsAttachment);
             Assert.NotNull(AttachmentRecordType.AttachmentType);
         }
+
+        [Fact]
+        public void TryGetTypePathTest()
+        {
+            var type = TestUtils.DT("*[A:n, B:*[D:s, E:*[F:b]], C:n]");
+            Assert.True(
+                type.TryGetType(
+                    DPath.Root
+                        .Append(new DName("B"))
+                        .Append(new DName("E"))
+                        .Append(new DName("F")),
+                    out var result));
+
+            Assert.Equal(DType.Boolean, result);
+        }
                 
         [Fact]
         public void RecordAndTableDTypeTests()
