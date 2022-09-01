@@ -2744,12 +2744,9 @@ namespace Microsoft.PowerFx.Core.Binding
             {
                 var res = CheckTypeCore(_txb.ErrorContainer, node, nodeType, typeWant, alternateTypes);
 
-                if (res.Success)
+                foreach (var coercion in res.Coercions)
                 {
-                    foreach (var coercion in res.Coercions)
-                    {
-                        _txb.SetCoercedType(coercion.Node, coercion.CoercedType);
-                    }
+                    _txb.SetCoercedType(coercion.Node, coercion.CoercedType);
                 }
 
                 return res.Success;
@@ -2765,12 +2762,9 @@ namespace Microsoft.PowerFx.Core.Binding
                     _txb.GetType(right),
                     _txb.Document != null && _txb.Document.Properties.EnabledFeatures.IsEnhancedDelegationEnabled);
 
-                if (res.Success)
+                foreach (var coercion in res.Coercions)
                 {
-                    foreach (var coercion in res.Coercions)
-                    {
-                        _txb.SetCoercedType(coercion.Node, coercion.CoercedType);
-                    }
+                    _txb.SetCoercedType(coercion.Node, coercion.CoercedType);
                 }
 
                 return res.Success;
@@ -4278,14 +4272,11 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 var res = PostVisitBinaryOpNodeAdditionCore(_txb.ErrorContainer, node, leftType, rightType);
 
-                if (res.Success)
-                {
-                    _txb.SetType(res.Node, res.NodeType);
+                _txb.SetType(res.Node, res.NodeType);
 
-                    foreach (var coercion in res.Coercions)
-                    {
-                        _txb.SetCoercedType(coercion.Node, coercion.CoercedType);
-                    }
+                foreach (var coercion in res.Coercions)
+                {
+                    _txb.SetCoercedType(coercion.Node, coercion.CoercedType);
                 }
             }
 
