@@ -109,7 +109,7 @@ namespace Microsoft.PowerFx.Interpreter
                 // The subsequent args should all be aggregates.
                 if (!argType.IsAggregate)
                 {
-                    errors.EnsureError(args[i], TexlStrings.ErrNeedValidVariableName_Arg);
+                    errors.EnsureError(args[i], TexlStrings.ErrBadType_Type, argType.GetKindString());
                     fValid = false;
                     continue;
                 }

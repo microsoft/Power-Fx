@@ -18,7 +18,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
     {
         internal static Dictionary<string, Func<PowerFxConfig, (RecalcEngine engine, RecordValue parameters)>> SetupHandlers = new ()
         {
-            { "OptionSetTestSetup", OptionSetTestSetup }
+            { "OptionSetTestSetup", OptionSetTestSetup },
+            { "MutationFunctionsTestSetup", MutationFunctionsTestSetup }
         };
 
         private static (RecalcEngine engine, RecordValue parameters) OptionSetTestSetup(PowerFxConfig config)
@@ -49,6 +50,38 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                         new NamedValue("InnerOtherOptionSet", o2Val))));
 
             return (new RecalcEngine(config), parameters);
+        }
+
+        private static (RecalcEngine engine, RecordValue parameters) MutationFunctionsTestSetup(PowerFxConfig config)
+        {
+            var symbol = new SymbolTable();
+
+            RecordValue r1 = FormulaValue.NewRecordFromFields(
+                new NamedValue("Field1", FormulaValue.New(1)),
+                new NamedValue("Field2", FormulaValue.New("earth")),
+                new NamedValue("Field3", FormulaValue.New(DateTime.Parse("1/1/2022").Date)),
+                new NamedValue("Field4", FormulaValue.New(true)));
+
+            RecordValue r2 = FormulaValue.NewRecordFromFields(
+                new NamedValue("Field1", FormulaValue.New(2)),
+                new NamedValue("Field2", FormulaValue.New("moon")),
+                new NamedValue("Field3", FormulaValue.New(DateTime.Parse("2/1/2022").Date)),
+                new NamedValue("Field4", FormulaValue.New(false)));
+
+            var r_empty = RecordValue.Empty();
+
+            var t1 = FormulaValue.NewTable(r1.Type, new List<RecordValue>() { r1 });
+
+            symbol.EnableMutationFunctions();
+
+            symbol.AddConstant("t1", t1);
+            symbol.AddConstant("r1", r1);
+            symbol.AddConstant("r2", r2);
+            symbol.AddConstant("r_empty", r_empty);
+
+            config.SymbolTable = symbol;
+
+            return (new RecalcEngine(config), null);
         }
 
         internal class InterpreterRunner : BaseRunner
@@ -91,7 +124,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
                 if (iSetup.HandlerName != null)
                 {
-                    if (!SetupHandlers.TryGetValue(setupHandlerName, out var handler))
+                    if (!SetupHandlers.TryGetValue(iSetup.HandlerName, out var handler))
                     {
                         throw new SetupHandlerNotFoundException();
                     }

@@ -16,10 +16,11 @@ namespace Microsoft.PowerFx
     {
         private readonly RecordType _type;
 
-        public SymbolTableOverRecordType(RecordType type)
+        public SymbolTableOverRecordType(RecordType type, ReadOnlySymbolTable parent = null)
         {
             _type = type;
             _debugName = "per-eval";
+            _parent = parent;
         }
 
         // Key is the logical name. 

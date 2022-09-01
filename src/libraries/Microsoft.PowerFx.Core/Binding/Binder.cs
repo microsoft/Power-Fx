@@ -2742,12 +2742,9 @@ namespace Microsoft.PowerFx.Core.Binding
             {
                 var res = CheckTypeCore(_txb.ErrorContainer, node, nodeType, typeWant, alternateTypes);
 
-                if (res.Success)
+                foreach (var coercion in res.Coercions)
                 {
-                    foreach (var coercion in res.Coercions)
-                    {
-                        _txb.SetCoercedType(coercion.Node, coercion.CoercedType);
-                    }
+                    _txb.SetCoercedType(coercion.Node, coercion.CoercedType);
                 }
 
                 return res.Success;
@@ -2763,12 +2760,9 @@ namespace Microsoft.PowerFx.Core.Binding
                     _txb.GetType(right),
                     _txb.Document != null && _txb.Document.Properties.EnabledFeatures.IsEnhancedDelegationEnabled);
 
-                if (res.Success)
+                foreach (var coercion in res.Coercions)
                 {
-                    foreach (var coercion in res.Coercions)
-                    {
-                        _txb.SetCoercedType(coercion.Node, coercion.CoercedType);
-                    }
+                    _txb.SetCoercedType(coercion.Node, coercion.CoercedType);
                 }
 
                 return res.Success;
@@ -4103,26 +4097,23 @@ namespace Microsoft.PowerFx.Core.Binding
                 _txb.SetIsUnliftable(node, _txb.IsUnliftable(node.Left) || _txb.IsUnliftable(node.Right));
             }
 
-            private void PostVisitBinaryOpNodeAddition(BinaryOpNode node)
+            private static BinderCheckTypeResult PostVisitBinaryOpNodeAdditionCore(ErrorContainer errorContainer, BinaryOpNode node, DType leftType, DType rightType)
             {
-                AssertValid();
                 Contracts.AssertValue(node);
                 Contracts.Assert(node.Op == BinaryOp.Add);
 
-                var leftType = _txb.GetType(node.Left);
-                var rightType = _txb.GetType(node.Right);
                 var leftKind = leftType.Kind;
                 var rightKind = rightType.Kind;
 
-                void ReportInvalidOperation()
+                BinderCheckTypeResult ReportInvalidOperation()
                 {
-                    _txb.SetType(node, DType.Error);
-                    _txb.ErrorContainer.EnsureError(
+                    errorContainer.EnsureError(
                         DocumentErrorSeverity.Severe,
                         node,
                         TexlStrings.ErrBadOperatorTypes,
                         leftType.GetKindString(),
                         rightType.GetKindString());
+                    return new BinderCheckTypeResult() { Success = false, Node = node, NodeType = DType.Error };
                 }
 
                 UnaryOpNode unary;
@@ -4139,28 +4130,24 @@ namespace Microsoft.PowerFx.Core.Binding
                                 {
                                     // DateTime - DateTime = Number
                                     // DateTime - Date = Number
-                                    _txb.SetType(node, DType.Number);
+                                    return new BinderCheckTypeResult() { Success = true, Node = node, NodeType = DType.Number };
                                 }
                                 else
                                 {
                                     // DateTime + DateTime in any other arrangement is an error
                                     // DateTime + Date in any other arrangement is an error
-                                    ReportInvalidOperation();
+                                    return ReportInvalidOperation();
                                 }
 
-                                break;
                             case DKind.Time:
                                 // DateTime + Time in any other arrangement is an error
-                                ReportInvalidOperation();
-                                break;
+                                return ReportInvalidOperation();
                             default:
                                 // DateTime + number = DateTime
-                                CheckType(node.Right, rightType, DType.Number, /* coerced: */ DType.String, DType.Boolean);
-                                _txb.SetType(node, DType.DateTime);
-                                break;
+                                var resRight = CheckTypeCore(errorContainer, node.Right, rightType, DType.Number, /* coerced: */ DType.String, DType.Boolean);
+                                return new BinderCheckTypeResult() { Success = true, Node = node, NodeType = DType.DateTime, Coercions = resRight.Coercions };
                         }
 
-                        break;
                     case DKind.Date:
                         switch (rightKind)
                         {
@@ -4170,52 +4157,47 @@ namespace Microsoft.PowerFx.Core.Binding
                                 if (unary != null && unary.Op == UnaryOp.Minus)
                                 {
                                     // Date - Date = Number
-                                    _txb.SetType(node, DType.Number);
+                                    return new BinderCheckTypeResult() { Success = true, Node = node, NodeType = DType.Number };
                                 }
                                 else
                                 {
                                     // Date + Date in any other arrangement is an error
-                                    ReportInvalidOperation();
+                                    return ReportInvalidOperation();
                                 }
 
-                                break;
                             case DKind.Time:
                                 unary = node.Right.AsUnaryOpLit();
                                 if (unary != null && unary.Op == UnaryOp.Minus)
                                 {
                                     // Date - Time is an error
-                                    ReportInvalidOperation();
+                                    return ReportInvalidOperation();
                                 }
                                 else
                                 {
                                     // Date + Time = DateTime
-                                    _txb.SetType(node, DType.DateTime);
+                                    return new BinderCheckTypeResult() { Success = true, Node = node, NodeType = DType.DateTime };
                                 }
 
-                                break;
                             case DKind.DateTime:
                                 // Date + DateTime = number but ONLY if its really subtraction Date + '-DateTime'
                                 unary = node.Right.AsUnaryOpLit();
                                 if (unary != null && unary.Op == UnaryOp.Minus)
                                 {
                                     // Date - DateTime = Number
-                                    _txb.SetType(node, DType.Number);
+                                    return new BinderCheckTypeResult() { Success = true, Node = node, NodeType = DType.Number };
                                 }
                                 else
                                 {
                                     // Date + DateTime in any other arrangement is an error
-                                    ReportInvalidOperation();
+                                    return ReportInvalidOperation();
                                 }
 
-                                break;
                             default:
                                 // Date + number = Date
-                                CheckType(node.Right, rightType, DType.Number, /* coerced: */ DType.String, DType.Boolean);
-                                _txb.SetType(node, DType.Date);
-                                break;
+                                var resRight = CheckTypeCore(errorContainer, node.Right, rightType, DType.Number, /* coerced: */ DType.String, DType.Boolean);
+                                return new BinderCheckTypeResult() { Success = true, Node = node, NodeType = DType.Date, Coercions = resRight.Coercions };
                         }
 
-                        break;
                     case DKind.Time:
                         switch (rightKind)
                         {
@@ -4225,68 +4207,74 @@ namespace Microsoft.PowerFx.Core.Binding
                                 if (unary != null && unary.Op == UnaryOp.Minus)
                                 {
                                     // Time - Time = Number
-                                    _txb.SetType(node, DType.Number);
+                                    return new BinderCheckTypeResult() { Success = true, Node = node, NodeType = DType.Number };
                                 }
                                 else
                                 {
                                     // Time + Time in any other arrangement is an error
-                                    ReportInvalidOperation();
+                                    return ReportInvalidOperation();
                                 }
 
-                                break;
                             case DKind.Date:
                                 unary = node.Right.AsUnaryOpLit();
                                 if (unary != null && unary.Op == UnaryOp.Minus)
                                 {
                                     // Time - Date is an error
-                                    ReportInvalidOperation();
+                                    return ReportInvalidOperation();
                                 }
                                 else
                                 {
                                     // Time + Date = DateTime
-                                    _txb.SetType(node, DType.DateTime);
+                                    return new BinderCheckTypeResult() { Success = true, Node = node, NodeType = DType.DateTime };
                                 }
 
-                                break;
                             case DKind.DateTime:
                                 // Time + DateTime in any other arrangement is an error
-                                ReportInvalidOperation();
-                                break;
+                                return ReportInvalidOperation();
                             default:
                                 // Time + number = Time
-                                CheckType(node.Right, rightType, DType.Number, /* coerced: */ DType.String, DType.Boolean);
-                                _txb.SetType(node, DType.Time);
-                                break;
+                                var resRight = CheckTypeCore(errorContainer, node.Right, rightType, DType.Number, /* coerced: */ DType.String, DType.Boolean);
+                                return new BinderCheckTypeResult() { Success = true, Node = node, NodeType = DType.Time, Coercions = resRight.Coercions };
                         }
 
-                        break;
                     default:
                         switch (rightKind)
                         {
                             case DKind.DateTime:
                                 // number + DateTime = DateTime
-                                CheckType(node.Left, leftType, DType.Number, /* coerced: */ DType.String, DType.Boolean);
-                                _txb.SetType(node, DType.DateTime);
-                                break;
+                                var leftResDateTime = CheckTypeCore(errorContainer, node.Left, leftType, DType.Number, /* coerced: */ DType.String, DType.Boolean);
+                                return new BinderCheckTypeResult() { Success = true, Node = node, NodeType = DType.DateTime, Coercions = leftResDateTime.Coercions };
                             case DKind.Date:
                                 // number + Date = Date
-                                CheckType(node.Left, leftType, DType.Number, /* coerced: */ DType.String, DType.Boolean);
-                                _txb.SetType(node, DType.Date);
-                                break;
+                                var leftResDate = CheckTypeCore(errorContainer, node.Left, leftType, DType.Number, /* coerced: */ DType.String, DType.Boolean);
+                                return new BinderCheckTypeResult() { Success = true, Node = node, NodeType = DType.Date, Coercions = leftResDate.Coercions };
                             case DKind.Time:
                                 // number + Time = Time
-                                CheckType(node.Left, leftType, DType.Number, /* coerced: */ DType.String, DType.Boolean);
-                                _txb.SetType(node, DType.Time);
-                                break;
+                                var leftResTime = CheckTypeCore(errorContainer, node.Left, leftType, DType.Number, /* coerced: */ DType.String, DType.Boolean);
+                                return new BinderCheckTypeResult() { Success = true, Node = node, NodeType = DType.Time, Coercions = leftResTime.Coercions };
                             default:
                                 // Regular Addition
-                                CheckType(node.Left, leftType, DType.Number, /* coerced: */ DType.String, DType.Boolean);
-                                CheckType(node.Right, rightType, DType.Number, /* coerced: */ DType.String, DType.Boolean);
-                                _txb.SetType(node, DType.Number);
-                                break;
+                                var leftResAdd = CheckTypeCore(errorContainer, node.Left, leftType, DType.Number, /* coerced: */ DType.String, DType.Boolean);
+                                var rightResAdd = CheckTypeCore(errorContainer, node.Right, rightType, DType.Number, /* coerced: */ DType.String, DType.Boolean);
+                                return new BinderCheckTypeResult() { Success = true, Node = node, NodeType = DType.Number, Coercions = leftResAdd.Coercions.Concat(rightResAdd.Coercions).ToList() };
                         }
+                }
+            }
 
-                        break;
+            private void PostVisitBinaryOpNodeAddition(BinaryOpNode node)
+            {
+                AssertValid();
+
+                var leftType = _txb.GetType(node.Left);
+                var rightType = _txb.GetType(node.Right);
+
+                var res = PostVisitBinaryOpNodeAdditionCore(_txb.ErrorContainer, node, leftType, rightType);
+
+                _txb.SetType(res.Node, res.NodeType);
+
+                foreach (var coercion in res.Coercions)
+                {
+                    _txb.SetCoercedType(coercion.Node, coercion.CoercedType);
                 }
             }
 

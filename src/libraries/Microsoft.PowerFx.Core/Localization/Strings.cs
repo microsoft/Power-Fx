@@ -449,6 +449,11 @@ namespace Microsoft.PowerFx.Core.Localization
         public static StringGetter IndexArg1 = (b) => StringResources.Get("IndexArg1", b);
         public static StringGetter IndexArg2 = (b) => StringResources.Get("IndexArg2", b);
 
+        public static StringGetter AboutPatch = (b) => StringResources.Get("AboutPatch", b);
+        public static StringGetter PatchDataSourceArg = (b) => StringResources.Get("PatchDataSourceArg", b);
+        public static StringGetter PatchBaseRecordArg = (b) => StringResources.Get("PatchBaseRecordArg", b);
+        public static StringGetter PatchChangeRecordsArg = (b) => StringResources.Get("PatchChangeRecordsArg", b);
+
         // Previously, errors were listed here in the form of a StringGetter, which would be evaluated to fetch
         // an error message to pass to the BaseError class constructor. We are switching to passing the message key itself
         // to the BaseError class, and the BaseError itself is responsible for fetching the resource. (This allows the
