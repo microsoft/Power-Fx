@@ -2521,19 +2521,6 @@ namespace Microsoft.PowerFx.Core.Binding
                 return new BinderCheckTypeResult() { Success = false };
             }
 
-            private void CheckComparisonTypeOneOf(TexlNode node, DType type, params DType[] alternateTypes)
-            {
-                var res = CheckComparisonTypeOneOfCore(_txb.ErrorContainer, node, type, alternateTypes);
-
-                if (res.Success)
-                {
-                    foreach (var coercion in res.Coercions)
-                    {
-                        _txb.SetCoercedType(coercion.Node, coercion.CoercedType);
-                    }
-                }
-            }
-
             // Returns whether the node was of the type wanted, and reports appropriate errors.
             // A list of allowed alternate types specifies what other types of values can be coerced to the wanted type.
             internal static BinderCheckTypeResult CheckTypeCore(ErrorContainer errorContainer, TexlNode node, DType nodeType, DType typeWant, params DType[] alternateTypes)
