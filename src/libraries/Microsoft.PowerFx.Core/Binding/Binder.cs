@@ -4364,13 +4364,23 @@ namespace Microsoft.PowerFx.Core.Binding
 
             private void CheckEqualArgTypes(TexlNode left, TexlNode right)
             {
+                var res = CheckEqualArgTypesCore(_txb.ErrorContainer, left, right, _txb.GetType(left), _txb.GetType(right));
+
+                if (res.Success)
+                {
+                    foreach (var coercion in res.Coercions)
+                    {
+                        _txb.SetCoercedType(coercion.Node, coercion.CoercedType);
+                    }
+                }
+            }
+
+            private static BinderCheckTypeResult CheckEqualArgTypesCore(ErrorContainer errorContainer, TexlNode left, TexlNode right, DType typeLeft, DType typeRight)
+            {
                 Contracts.AssertValue(left);
                 Contracts.AssertValue(right);
                 Contracts.AssertValue(left.Parent);
                 Contracts.Assert(ReferenceEquals(left.Parent, right.Parent));
-
-                var typeLeft = _txb.GetType(left);
-                var typeRight = _txb.GetType(right);
 
                 // EqualOp is only allowed on primitive types, polymorphic lookups, and control types.
                 if (!(typeLeft.IsPrimitive && typeRight.IsPrimitive) && !(typeLeft.IsPolymorphic && typeRight.IsPolymorphic) && !(typeLeft.IsControl && typeRight.IsControl)
@@ -4379,24 +4389,24 @@ namespace Microsoft.PowerFx.Core.Binding
                     var leftTypeDisambiguation = typeLeft.IsOptionSet && typeLeft.OptionSetInfo != null ? $"({typeLeft.OptionSetInfo.EntityName})" : string.Empty;
                     var rightTypeDisambiguation = typeRight.IsOptionSet && typeRight.OptionSetInfo != null ? $"({typeRight.OptionSetInfo.EntityName})" : string.Empty;
 
-                    _txb.ErrorContainer.EnsureError(
+                    errorContainer.EnsureError(
                         DocumentErrorSeverity.Severe,
                         left.Parent,
                         TexlStrings.ErrIncompatibleTypesForEquality_Left_Right,
                         typeLeft.GetKindString() + leftTypeDisambiguation,
                         typeRight.GetKindString() + rightTypeDisambiguation);
-                    return;
+                    return new BinderCheckTypeResult() { Success = false };
                 }
 
                 // Special case for guid, it should produce an error on being compared to non-guid types
                 if ((typeLeft.Equals(DType.Guid) && !typeRight.Equals(DType.Guid)) ||
                     (typeRight.Equals(DType.Guid) && !typeLeft.Equals(DType.Guid)))
                 {
-                    _txb.ErrorContainer.EnsureError(
+                    errorContainer.EnsureError(
                         DocumentErrorSeverity.Severe,
                         left.Parent,
                         TexlStrings.ErrGuidStrictComparison);
-                    return;
+                    return new BinderCheckTypeResult() { Success = false };
                 }
 
                 // Special case for option set values, it should produce an error when the base option sets are different
@@ -4405,14 +4415,14 @@ namespace Microsoft.PowerFx.Core.Binding
                     var leftTypeDisambiguation = typeLeft.IsOptionSet && typeLeft.OptionSetInfo != null ? $"({typeLeft.OptionSetInfo.EntityName})" : string.Empty;
                     var rightTypeDisambiguation = typeRight.IsOptionSet && typeRight.OptionSetInfo != null ? $"({typeRight.OptionSetInfo.EntityName})" : string.Empty;
 
-                    _txb.ErrorContainer.EnsureError(
+                    errorContainer.EnsureError(
                         DocumentErrorSeverity.Severe,
                         left.Parent,
                         TexlStrings.ErrIncompatibleTypesForEquality_Left_Right,
                         typeLeft.GetKindString() + leftTypeDisambiguation,
                         typeRight.GetKindString() + rightTypeDisambiguation);
 
-                    return;
+                    return new BinderCheckTypeResult() { Success = false };
                 }
 
                 // Special case for view values, it should produce an error when the base views are different
@@ -4421,37 +4431,40 @@ namespace Microsoft.PowerFx.Core.Binding
                     var leftTypeDisambiguation = typeLeft.IsView && typeLeft.ViewInfo != null ? $"({typeLeft.ViewInfo.Name})" : string.Empty;
                     var rightTypeDisambiguation = typeRight.IsView && typeRight.ViewInfo != null ? $"({typeRight.ViewInfo.Name})" : string.Empty;
 
-                    _txb.ErrorContainer.EnsureError(
+                    errorContainer.EnsureError(
                         DocumentErrorSeverity.Severe,
                         left.Parent,
                         TexlStrings.ErrIncompatibleTypesForEquality_Left_Right,
                         typeLeft.GetKindString() + leftTypeDisambiguation,
                         typeRight.GetKindString() + rightTypeDisambiguation);
-
-                    return;
+                    return new BinderCheckTypeResult() { Success = false };
                 }
+
+                var coercions = new List<BinderCoercionResult>();
 
                 if (!typeLeft.Accepts(typeRight) && !typeRight.Accepts(typeLeft))
                 {
                     // Handle DateTime <=> Number comparison
                     if (DType.Number.Accepts(typeLeft) && DType.DateTime.Accepts(typeRight))
                     {
-                        _txb.SetCoercedType(right, DType.Number);
-                        return;
+                        coercions.Add(new BinderCoercionResult() { Node = right, CoercedType = DType.Number });
+                        return new BinderCheckTypeResult() { Success = true, Coercions = coercions };
                     }
                     else if (DType.Number.Accepts(typeRight) && DType.DateTime.Accepts(typeLeft))
                     {
-                        _txb.SetCoercedType(left, DType.Number);
-                        return;
+                        coercions.Add(new BinderCoercionResult() { Node = left, CoercedType = DType.Number });
+                        return new BinderCheckTypeResult() { Success = true, Coercions = coercions };
                     }
 
-                    _txb.ErrorContainer.EnsureError(
+                    errorContainer.EnsureError(
                         DocumentErrorSeverity.Warning,
                         left.Parent,
                         TexlStrings.ErrIncompatibleTypesForEquality_Left_Right,
                         typeLeft.GetKindString(),
                         typeRight.GetKindString());
                 }
+
+                return new BinderCheckTypeResult() { Success = true };
             }
 
             private void SetVariadicNodePurity(VariadicBase node)
