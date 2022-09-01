@@ -105,7 +105,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("[{test:\",test\"}].test.| ")]
 
         // We do, however, if the one column table is a literal.
-        [InlineData("[\"test\"].| ", "Value")]
+        [InlineData("[\"test\"].| ")]
         [InlineData("Calendar.|", "MonthsLong", "MonthsShort", "WeekdaysLong", "WeekdaysShort")]
         [InlineData("Calendar.Months|", "MonthsLong", "MonthsShort")]
         [InlineData("Color.AliceBl|", "AliceBlue")]
@@ -170,6 +170,11 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("DisplayMode.D|", "Disabled", "Edit")]
         [InlineData("DisplayMode|", "DisplayMode", "DisplayMode.Disabled", "DisplayMode.Edit", "DisplayMode.View")]
         [InlineData("$\"Hello {DisplayMode|} World!\"", "DisplayMode", "DisplayMode.Disabled", "DisplayMode.Edit", "DisplayMode.View")]
+
+        [InlineData("Table({F1:1}).|")]
+        [InlineData("Table({F1:1},{F1:2}).|")]
+        [InlineData("Table({F1:1, F2:2},{F2:1}).|")]
+        [InlineData("[1,2,3].|")]
         public void TestSuggest(string expression, params string[] expectedSuggestions)
         {
             // Note that the expression string needs to have balanced quotes or we hit a bug in NUnit running the tests:
