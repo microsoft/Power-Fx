@@ -9,12 +9,12 @@
 >> Count(Table({a:1},{a:2},{a:3}))
 3
 
-﻿>> Count([1, 2, 3, 4, 5])
+>> Count([1, 2, 3, 4, 5])
 5
 
 // ******** TABLE WITH BLANK RECORDS ********
 
-﻿>> Count([0,""])
+>> Count([0,""])
 1
 
 >> Count([1,2,3,4,Blank()])
@@ -36,7 +36,7 @@
 3
 
 >> Count(LastN([1,2,3,4], Blank()))
-Blank()
+0
 
 >> Count([1,"1","2",Blank()])
 3
@@ -46,7 +46,7 @@ Blank()
 0
 
 //All blank records
-﻿>> Count([Blank(),Blank(),Blank(),Blank(),Blank()])
+>> Count([Blank(),Blank(),Blank(),Blank(),Blank()])
 0
 
 >> Count(Table({a:Blank()},{a:Blank()},{a:Blank()}))
@@ -54,13 +54,13 @@ Blank()
 
 // ******** BLANK TABLE ********
 
-﻿>> Count(If(1<0,[1,2,3]))
+>> Count(If(1<0,[1,2,3]))
 0
 
 // ******** ERRORS ********
 
 // Error table
-﻿>> Count(Sort([-2, -1, 0, 1, 2], 1 / Value))
+>> Count(Sort([-2, -1, 0, 1, 2], 1 / Value))
 #Error(Kind=Div0)
 
 // Error record
@@ -71,6 +71,6 @@ Blank()
 >> Count([1, 2, 1/0, 4, 5])
 #Error(Kind=Div0)
 
-// Multiple errors - stops at first
+// Multiple errors
 >> Count(Table({a:1/0},{a:Sqrt(-1)}))
-#Error(Kind=Div0)
+#Error(Kind=Div0,Numeric)
