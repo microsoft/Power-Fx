@@ -12,26 +12,26 @@ namespace Microsoft.PowerFx.Connectors
 {
     public abstract class ODataQueryableTableValue : QueryableTableValue
     {
-        public readonly ODataParams ODataParams;
+        public readonly ODataParameters ODataParams;
 
-        protected ODataQueryableTableValue(TableType tableType, ODataParams odataParams = default)
+        protected ODataQueryableTableValue(TableType tableType, ODataParameters odataParams = default)
             : base(IRContext.NotInSource(tableType))
         {
             ODataParams = odataParams;
         }
 
-        protected abstract ODataQueryableTableValue WithParameters(ODataParams odataParamsNew);
+        protected abstract ODataQueryableTableValue WithParameters(ODataParameters odataParamsNew);
 
         internal sealed override TableValue Filter(LambdaFormulaValue lambda, EvalVisitor runner, EvalVisitorContext context)
         {
-            ODataVisitorContext runContext = new ODataVisitorContext(runner, context);
+            ODataVisitorContext runContext = new (runner, context);
             var filterClause = lambda.Visit(ODataVisitor.I, runContext);
             return WithParameters(ODataParams.WithFilter(filterClause));
         }
 
         internal sealed override TableValue Sort(LambdaFormulaValue lambda, bool isDescending, EvalVisitor runner, EvalVisitorContext context)
         {
-            ODataVisitorContext runContext = new ODataVisitorContext(runner, context);
+            ODataVisitorContext runContext = new (runner, context);
             var orderby = lambda.Visit(ODataVisitor.I, runContext);
             if (isDescending)
             {
@@ -47,68 +47,73 @@ namespace Microsoft.PowerFx.Connectors
         }
     }
 
-    public readonly struct ODataParams
+    public readonly struct ODataParameters
     {
         // Missing parameters: skip, skipToken, expand, search, select, apply
-        private readonly bool _count;
-        private readonly string _filter;
-        private readonly string _orderby;
-        private readonly int _top;
+        public bool Count { get; }
 
-        internal ODataParams(bool count, string filter, string orderby, int top)
+        public string Filter { get; }
+
+        public string OrderBy { get; }
+
+        public int Top { get; }
+
+        internal ODataParameters(bool count, string filter, string orderby, int top)
         {
-            _count = count;
-            _filter = filter;
-            _orderby = orderby;
-            _top = top;
+            Count = count;
+            Filter = filter;
+            OrderBy = orderby;
+            Top = top;
         }
 
         public void AddTo(NameValueCollection query)
         {
-            if (_count)
+            if (Count)
             {
                 query["$count"] = "true";
             }
 
-            if (_filter != null)
+            if (Filter != null)
             {
-                query["$filter"] = _filter;
+                query["$filter"] = Filter;
             }
 
-            if (_orderby != null)
+            if (OrderBy != null)
             {
-                query["$orderby"] = _orderby;
+                query["$orderby"] = OrderBy;
             }
 
-            if (_top != 0)
+            if (Top != 0)
             {
-                query["$top"] = _top.ToString(CultureInfo.InvariantCulture);
+                query["$top"] = Top.ToString(CultureInfo.InvariantCulture);
             }
         }
 
         public Uri GetUri(Uri uriBase)
         {
-            UriBuilder uriBuilder = new UriBuilder(uriBase);
+            UriBuilder uriBuilder = new (uriBase);
             var query = HttpUtility.ParseQueryString(uriBuilder.Query);
             AddTo(query);
             uriBuilder.Query = query.ToString();
             return uriBuilder.Uri;
         }
 
-        public ODataParams WithCount() => new ODataParams(true, _filter, _orderby, _top);
+        public ODataParameters WithCount() => new ODataParameters(true, Filter, OrderBy, Top);
 
-        public ODataParams WithFilter(string filterNew)
+        public ODataParameters WithFilter(string filterNew)
         {
-            if (_filter != null)
+            if (Filter != null)
             {
-                return new ODataParams(_count, $"({_filter}) and ({filterNew})", _orderby, _top);
+                return new ODataParameters(Count, $"({Filter}) and ({filterNew})", OrderBy, Top);
             }
 
-            return new ODataParams(_count, filterNew, _orderby, _top);
+            return new ODataParameters(Count, filterNew, OrderBy, Top);
         }
 
-        public ODataParams WithOrderby(string orderbyNew) => new ODataParams(_count, _filter, orderbyNew, _top);
+        public ODataParameters WithOrderby(string orderbyNew) => new ODataParameters(Count, Filter, orderbyNew, Top);
 
-        public ODataParams WithTop(int topNew) => new ODataParams(_count, _filter, _orderby, topNew);
+        public ODataParameters WithTop(int topNew) => new ODataParameters(Count, Filter, OrderBy, topNew);
+
+        public override string ToString() => $"Count={Count}, Filter={Filter ?? "null"} OrderBy={OrderBy ?? "null"} Top={Top}";
     }
 }
