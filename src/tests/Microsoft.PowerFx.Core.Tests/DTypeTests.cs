@@ -633,6 +633,21 @@ namespace Microsoft.PowerFx.Tests
             Assert.True(AttachmentRecordType.IsAttachment);
             Assert.NotNull(AttachmentRecordType.AttachmentType);
         }
+
+        [Fact]
+        public void TryGetTypePathTest()
+        {
+            var type = TestUtils.DT("*[A:n, B:*[D:s, E:*[F:b]], C:n]");
+            Assert.True(
+                type.TryGetType(
+                    DPath.Root
+                        .Append(new DName("B"))
+                        .Append(new DName("E"))
+                        .Append(new DName("F")),
+                    out var result));
+
+            Assert.Equal(DType.Boolean, result);
+        }
                 
         [Fact]
         public void RecordAndTableDTypeTests()
@@ -2152,9 +2167,9 @@ namespace Microsoft.PowerFx.Tests
             //Attachment
             var type1 = DType.CreateAttachmentType(DType.CreateAttachmentType(DType.CreateTable(new TypedName(DType.String, new DName("DisplayName")))));
             var type2 = DType.CreateAttachmentType(DType.CreateAttachmentType(DType.CreateTable(new TypedName(DType.String, new DName("Name")))));
-            TestUnion(type1, type1, type1.LazyTypeProvider.GetExpandedType(type1.IsTable));
+            TestUnion(type1, type1, type1);
             TestUnion(type1, type2, TestUtils.DT("*[DisplayName:s, Name:s]"));
-            TestUnion(type2, type2, type2.LazyTypeProvider.GetExpandedType(type2.IsTable));
+            TestUnion(type2, type2, type2);
             TestUnion(DType.Unknown, type1, type1.LazyTypeProvider.GetExpandedType(type1.IsTable));
             TestUnion(DType.ObjNull, type1, type1.LazyTypeProvider.GetExpandedType(type1.IsTable));
         }

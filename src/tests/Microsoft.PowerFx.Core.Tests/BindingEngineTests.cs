@@ -244,7 +244,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.False(lazyTypeInstance.EnumerableIterated);
         }
 
-        private class LazyRecursiveRecordType : RecordType
+        internal class LazyRecursiveRecordType : RecordType
         {
             public override IEnumerable<string> FieldNames => GetFieldNames();
 
@@ -307,6 +307,21 @@ namespace Microsoft.PowerFx.Tests
 
             // Union operations require iterating fields
             Assert.True(lazyTypeInstance.EnumerableIterated);
+        }
+
+        [Fact]
+        public void CheckShuffleLazyTable()
+        {
+            var config = new PowerFxConfig();
+            var engine = new Engine(config);
+
+            var lazyTypeInstance = new LazyRecursiveRecordType().ToTable();
+
+            var result = engine.Check("Shuffle(Table)", RecordType.Empty().Add("Table", lazyTypeInstance));
+            Assert.True(result.IsSuccess);
+
+            var tableType = Assert.IsType<TableType>(result.ReturnType);
+            Assert.IsType<LazyRecursiveRecordType>(tableType.ToRecord());
         }
 
         /// <summary>

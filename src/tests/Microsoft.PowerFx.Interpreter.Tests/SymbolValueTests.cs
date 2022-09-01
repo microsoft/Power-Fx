@@ -2,6 +2,8 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Tests;
@@ -130,7 +132,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
         private class MyService : BaseService
-        {   
+        {
         }
 
         [Fact]
@@ -138,7 +140,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         {
             var derivedService = new MyService();
             var r1 = new SymbolValues();
-            
+
             r1.AddService(derivedService);
 
             // Lookup must be exact type; doesn't lookup by base class.
@@ -148,12 +150,49 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             // Base and derived can coexist 
             BaseService baseService = new MyService();
             r1.AddService(baseService);
-            
+
             lookup = r1.GetService(typeof(BaseService));
             Assert.Same(baseService, lookup);
 
             lookup = r1.GetService(typeof(MyService));
             Assert.Same(derivedService, lookup);
+        }
+
+        [Fact]
+        public void TestRowScope()
+        {
+            var r1 = new SymbolValues();
+            r1.Add("b", FormulaValue.New(1));
+
+            var record = FormulaValue.NewRecordFromFields(
+                new NamedValue("a", FormulaValue.New(10)));
+
+            var r2 = ReadOnlySymbolValues.NewRowScope(record, r1);
+
+            var engine = new RecalcEngine();
+            var result = engine.EvalAsync("ThisRecord.a + a + b", CancellationToken.None, runtimeConfig: r2).Result;
+
+            Assert.Equal(21.0, result.ToObject());
+        }
+
+        [Fact]
+        public void TestNew()
+        {
+            var dict = new Dictionary<string, NumberValue>
+            {
+                { "a", FormulaValue.New(1) },
+                { "b", FormulaValue.New(10) }
+            };
+
+            var r1 = new SymbolValues();
+            r1.Add("global", FormulaValue.New(100));
+
+            var r2 = ReadOnlySymbolValues.New(dict, r1);
+
+            var engine = new RecalcEngine();
+            var result = engine.EvalAsync("a + b + global", CancellationToken.None, runtimeConfig: r2).Result;
+
+            Assert.Equal(111.0, result.ToObject());
         }
     }
 }
