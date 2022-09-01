@@ -74,3 +74,17 @@
 // Multiple errors
 >> Count(Table({a:1/0},{a:Sqrt(-1)}))
 #Error(Kind=Div0,Numeric)
+
+// ******** COMPILE ERRORS - NON-NUMERIC TABLES, NOT SINGLE-COLUMN ********
+
+>> Count([])
+Errors: Error 6-8: The first argument of 'Count' should be a one-column table.|Error 0-9: The function 'Count' has some invalid arguments.
+
+>> Count(Table({a:1,b:2},{a:3,b:4}))
+Errors: Error 6-32: The first argument of 'Count' should be a one-column table.|Error 0-33: The function 'Count' has some invalid arguments.
+
+>> Count(["1"])
+Errors: Warning 6-11: Invalid schema, expected a column of numeric values for 'Value'.|Error 0-12: The function 'Count' has some invalid arguments.
+
+>> Count(Table({a:Date(2022,12,12)}))
+Errors: Warning 6-33: Invalid schema, expected a column of numeric values for 'a'.|Error 0-34: The function 'Count' has some invalid arguments.

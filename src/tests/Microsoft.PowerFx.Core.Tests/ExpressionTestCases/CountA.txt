@@ -117,7 +117,6 @@
 >> CountA([])
 Errors: Error 7-9: The first argument of 'CountA' should be a one-column table.|Error 0-10: The function 'CountA' has some invalid arguments.
 
-
 >> CountA(Table({a:1,b:2},{a:3,b:4}))
 Errors: Error 7-33: The first argument of 'CountA' should be a one-column table.|Error 0-34: The function 'CountA' has some invalid arguments.
 
