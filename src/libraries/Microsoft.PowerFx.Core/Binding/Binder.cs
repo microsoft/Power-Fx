@@ -4353,12 +4353,9 @@ namespace Microsoft.PowerFx.Core.Binding
             {
                 var res = CheckComparisonArgTypesCore(_txb.ErrorContainer, left, right, _txb.GetType(left), _txb.GetType(right));
 
-                if (res.Success)
+                foreach (var coercion in res.Coercions)
                 {
-                    foreach (var coercion in res.Coercions)
-                    {
-                        _txb.SetCoercedType(coercion.Node, coercion.CoercedType);
-                    }
+                    _txb.SetCoercedType(coercion.Node, coercion.CoercedType);
                 }
             }
 
@@ -4366,12 +4363,9 @@ namespace Microsoft.PowerFx.Core.Binding
             {
                 var res = CheckEqualArgTypesCore(_txb.ErrorContainer, left, right, _txb.GetType(left), _txb.GetType(right));
 
-                if (res.Success)
+                foreach (var coercion in res.Coercions)
                 {
-                    foreach (var coercion in res.Coercions)
-                    {
-                        _txb.SetCoercedType(coercion.Node, coercion.CoercedType);
-                    }
+                    _txb.SetCoercedType(coercion.Node, coercion.CoercedType);
                 }
             }
 
