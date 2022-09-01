@@ -71,7 +71,13 @@ namespace Microsoft.PowerFx.Types
         public bool TryGetFieldType(string displayOrLogicalName, out string logical, out FormulaType type)
         {
             Contracts.CheckNonEmpty(displayOrLogicalName, nameof(displayOrLogicalName));
-            if (_type.DisplayNameProvider.TryGetDisplayName(new DName(displayOrLogicalName), out _))
+
+            // checking null and empty case in-case derived types did not provide DisplayNameProvider.
+            if (_type.DisplayNameProvider == null || _type.DisplayNameProvider.LogicalToDisplayPairs.Count() == 0)
+            {
+                logical = displayOrLogicalName;
+            }
+            else if (_type.DisplayNameProvider.TryGetDisplayName(new DName(displayOrLogicalName), out _))
             {
                 logical = displayOrLogicalName;
             }
@@ -86,7 +92,13 @@ namespace Microsoft.PowerFx.Types
                 return false;
             }
 
-            return TryGetFieldType(logical, out type);
+            if (!TryGetFieldType(logical, out type))
+            {
+                logical = null;
+                return false;
+            }
+
+            return true;
         }
 
         public IEnumerable<NamedFormulaType> GetFieldTypes()
