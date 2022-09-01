@@ -3943,50 +3943,54 @@ namespace Microsoft.PowerFx.Core.Binding
                         controlInfo.Template.NestedAwareTableOutputs.Contains(propertyName);
             }
 
-            public override void PostVisit(UnaryOpNode node)
+            public static BinderCheckTypeResult PostVisitCore(ErrorContainer errorContainer, UnaryOpNode node, DType childType)
             {
-                AssertValid();
                 Contracts.AssertValue(node);
-
-                var childType = _txb.GetType(node.Child);
 
                 switch (node.Op)
                 {
                     case UnaryOp.Not:
-                        CheckType(node.Child, childType, DType.Boolean, /* coerced: */ DType.Number, DType.String, DType.OptionSetValue);
-                        _txb.SetType(node, DType.Boolean);
-                        break;
+                        var resNot = CheckTypeCore(errorContainer, node.Child, childType, DType.Boolean, /* coerced: */ DType.Number, DType.String, DType.OptionSetValue);
+                        return new BinderCheckTypeResult() { Success = true, Node = node, NodeType = DType.Boolean, Coercions = resNot.Coercions };
                     case UnaryOp.Minus:
                         switch (childType.Kind)
                         {
                             case DKind.Date:
                                 // Important to keep the type of minus-date as date, to allow D-D/d-D to be detected
-                                _txb.SetType(node, DType.Date);
-                                break;
+                                return new BinderCheckTypeResult() { Success = true, Node = node, NodeType = DType.Date };
                             case DKind.Time:
-                                // Important to keep the type of minus-time as time, to allow T-T to be detected
-                                _txb.SetType(node, DType.Time);
-                                break;
+                                return new BinderCheckTypeResult() { Success = true, Node = node, NodeType = DType.Time };
                             case DKind.DateTime:
                                 // Important to keep the type of minus-datetime as datetime, to allow d-d/D-d to be detected
-                                _txb.SetType(node, DType.DateTime);
-                                break;
+                                return new BinderCheckTypeResult() { Success = true, Node = node, NodeType = DType.DateTime };
                             default:
-                                CheckType(node.Child, childType, DType.Number, /* coerced: */ DType.String, DType.Boolean);
-                                _txb.SetType(node, DType.Number);
-                                break;
+                                var resDefault = CheckTypeCore(errorContainer, node.Child, childType, DType.Number, /* coerced: */ DType.String, DType.Boolean);
+                                return new BinderCheckTypeResult() { Success = true, Node = node, NodeType = DType.Number, Coercions = resDefault.Coercions };
                         }
 
-                        break;
                     case UnaryOp.Percent:
-                        CheckType(node.Child, childType, DType.Number, /* coerced: */ DType.String, DType.Boolean, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime);
-                        _txb.SetType(node, DType.Number);
-                        break;
+                        var resPercent = CheckTypeCore(errorContainer, node.Child, childType, DType.Number, /* coerced: */ DType.String, DType.Boolean, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime);
+                        return new BinderCheckTypeResult() { Success = true, Node = node, NodeType = DType.Number, Coercions = resPercent.Coercions };
                     default:
                         Contracts.Assert(false);
-                        _txb.SetType(node, DType.Error);
-                        break;
+                        return new BinderCheckTypeResult() { Success = false, Node = node, NodeType = DType.Error };
                 }
+            }
+
+            public override void PostVisit(UnaryOpNode node)
+            {
+                AssertValid();
+
+                var childType = _txb.GetType(node.Child);
+
+                var res = PostVisitCore(_txb.ErrorContainer, node, childType);
+
+                foreach (var coercion in res.Coercions)
+                {
+                    _txb.SetCoercedType(coercion.Node, coercion.CoercedType);
+                }
+
+                _txb.SetType(res.Node, res.NodeType);
 
                 _txb.SetSideEffects(node, _txb.HasSideEffects(node.Child));
                 _txb.SetStateful(node, _txb.IsStateful(node.Child));
