@@ -50,10 +50,13 @@ namespace Microsoft.PowerFx.Connectors
     public readonly struct ODataParameters
     {
         // Missing parameters: skip, skipToken, expand, search, select, apply
-        public readonly bool Count;
-        public readonly string Filter;
-        public readonly string OrderBy;
-        public readonly int Top;
+        public bool Count { get; }
+
+        public string Filter { get; }
+
+        public string OrderBy { get; }
+
+        public int Top { get; }
 
         internal ODataParameters(bool count, string filter, string orderby, int top)
         {
