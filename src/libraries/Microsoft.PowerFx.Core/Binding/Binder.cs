@@ -3943,7 +3943,7 @@ namespace Microsoft.PowerFx.Core.Binding
                         controlInfo.Template.NestedAwareTableOutputs.Contains(propertyName);
             }
 
-            public static BinderCheckTypeResult PostVisitCore(ErrorContainer errorContainer, UnaryOpNode node, DType childType)
+            public static BinderCheckTypeResult CheckUnaryOpCore(ErrorContainer errorContainer, UnaryOpNode node, DType childType)
             {
                 Contracts.AssertValue(node);
 
@@ -3983,7 +3983,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 var childType = _txb.GetType(node.Child);
 
-                var res = PostVisitCore(_txb.ErrorContainer, node, childType);
+                var res = CheckUnaryOpCore(_txb.ErrorContainer, node, childType);
 
                 foreach (var coercion in res.Coercions)
                 {
@@ -4005,7 +4005,7 @@ namespace Microsoft.PowerFx.Core.Binding
             // REVIEW ragru: Introduce a TexlOperator abstract base plus various subclasses
             // for handling operators and their overloads. That will offload the burden of dealing with
             // operator special cases to the various operator classes.
-            public static BinderCheckTypeResult PostVisitCore(ErrorContainer errorContainer, BinaryOpNode node, DType leftType, DType rightType, bool isEnhancedDelegationEnabled)
+            public static BinderCheckTypeResult CheckBinaryOpCore(ErrorContainer errorContainer, BinaryOpNode node, DType leftType, DType rightType, bool isEnhancedDelegationEnabled)
             {
                 Contracts.AssertValue(node);
 
@@ -4071,7 +4071,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 var leftType = _txb.GetType(node.Left);
                 var rightType = _txb.GetType(node.Right);
 
-                var res = PostVisitCore(_txb.ErrorContainer, node, leftType, rightType, _txb.Document != null && _txb.Document.Properties.EnabledFeatures.IsEnhancedDelegationEnabled);
+                var res = CheckBinaryOpCore(_txb.ErrorContainer, node, leftType, rightType, _txb.Document != null && _txb.Document.Properties.EnabledFeatures.IsEnhancedDelegationEnabled);
 
                 foreach (var coercion in res.Coercions)
                 {
