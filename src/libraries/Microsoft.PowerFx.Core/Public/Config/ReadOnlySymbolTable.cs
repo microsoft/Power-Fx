@@ -62,10 +62,11 @@ namespace Microsoft.PowerFx
         /// Create a symbol table where symbols match the fields of the record.
         /// </summary>
         /// <param name="type"></param>
+        /// <param name="parent"></param>
         /// <returns></returns>
-        public static ReadOnlySymbolTable NewFromRecord(RecordType type)
+        public static ReadOnlySymbolTable NewFromRecord(RecordType type, ReadOnlySymbolTable parent = null)
         {
-            return new SymbolTableOverRecordType(type ?? RecordType.Empty());
+            return new SymbolTableOverRecordType(type ?? RecordType.Empty(), parent);            
         }
 
         public static ReadOnlySymbolTable Compose(params ReadOnlySymbolTable[] tables)
