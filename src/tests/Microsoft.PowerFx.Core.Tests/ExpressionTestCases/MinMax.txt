@@ -23,7 +23,7 @@ DateTime(2014,11,11,13,50,0,0)
 DateTime(2014,11,10,14,50,0,0)
 
 >> Max(Time(1,50,0),Time(2,0,0))
-02:00:00
+Time(2,0,0,0)
 
 >> Max(Date(2022,3,8),DateTimeValue("March 08, 2022 1:50 PM"))
 DateTime(2022,3,8,13,50,0,0)

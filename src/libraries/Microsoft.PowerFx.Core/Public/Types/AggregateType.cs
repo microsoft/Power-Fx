@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
@@ -71,22 +72,30 @@ namespace Microsoft.PowerFx.Types
         public bool TryGetFieldType(string displayOrLogicalName, out string logical, out FormulaType type)
         {
             Contracts.CheckNonEmpty(displayOrLogicalName, nameof(displayOrLogicalName));
-            if (_type.DisplayNameProvider.TryGetDisplayName(new DName(displayOrLogicalName), out _))
+
+            if (DType.TryGetDisplayNameForColumn(_type, displayOrLogicalName, out _))
             {
                 logical = displayOrLogicalName;
             }
-            else if (_type.DisplayNameProvider.TryGetLogicalName(new DName(displayOrLogicalName), out var maybeLogical))
+            else if (DType.TryGetLogicalNameForColumn(_type, displayOrLogicalName, out var maybeLogical))
             {
                 logical = maybeLogical;
             }
             else
             {
-                logical = default;
-                type = Blank;
+                // in-case derived types did not provide DisplayNameProvider then above two will be false
+                // but we want to assume that, provided displayOrLogicalName maybe logical name it self
+                // and let TryGetFieldType verify that.
+                logical = displayOrLogicalName;
+            }
+
+            if (!TryGetFieldType(logical, out type))
+            {
+                logical = null;
                 return false;
             }
 
-            return TryGetFieldType(logical, out type);
+            return true;
         }
 
         public IEnumerable<NamedFormulaType> GetFieldTypes()

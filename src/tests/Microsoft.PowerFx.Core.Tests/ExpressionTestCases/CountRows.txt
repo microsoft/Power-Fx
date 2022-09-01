@@ -1,5 +1,101 @@
-﻿>> CountRows([1, 2, 3, 4, 5])
+﻿// ******** TABLE WITH NO BLANK RECORDS ********
+
+>> CountRows([])
+0
+
+>> CountRows([0])
+1
+
+>> CountRows([1])
+1
+
+// NUMERIC RECORDS
+
+>> CountRows([1, 2, 3, 4, 5])
 5
+
+>> CountRows(Table({a:1},{a:2},{a:3}))
+3
+
+// STRING RECORDS
+
+>> CountRows(["1", "one", "two", "three", "four"])
+5
+
+>> CountRows(Table({a:"1"},{a:"two"},{a:"three"},{a:"four"},{a:"five"}))
+5
+
+// BOOLEAN RECORDS
+
+>> CountRows([true, false])
+2
+
+>> CountRows(Table({a:true},{a:false}))
+2
+
+// DATE/TIME/DATETIMEVALUE RECORDS
+
+>> CountRows([Date(2022,12,12), Date(2014,10,1)])
+2
+
+>> CountRows(Table({a:Date(2022,12,12)},{a:Date(2014,10,1)}))
+2
+
+>> CountRows([DateTime(2022,5,12,18,30,30), DateTime(2022,5,19,0,0,0)])
+2
+
+>> CountRows(Table({a:DateTime(2022,5,12,18,30,30)},{a:DateTime(2022,5,19,0,0,0)}))
+2
+
+//  ALL DATATYPE RECORDS 
+
+>> CountRows(Table({a:1, b:"two", c:true, d:Date(2022,12,12), e:Time(6,30,30), f:DateTime(2022,5,12,18,30,30)}))
+1
+
+// ******** TABLE WITH BLANK RECORDS ********
+
+>> CountRows([0,""])
+2
+
+>> CountRows([1,2,3,4,Blank()])
+5
+
+>> CountRows([1, "2", true, false, Blank(), "", " ", Date(2022,12,12),Time(6,30,30),DateTimeValue("5/12/2022 6:30:30 PM")])
+10
+
+>> CountRows([1,"2", true, Blank(),Blank(),Blank()])
+6
+
+>> CountRows([1,Date(2022,12,12),"3",If(1<0,4),Blank()])
+5
+
+>> CountRows(Table({a:false},Blank(),{a:true},Blank()))
+4
+
+>> CountRows(Table({a:"1"},{a:"2"},If(1<0,{a:"3"}),If(1>0,{a:"4"}),{a:"5"}))
+5
+
+>> CountRows(LastN([1,2,3,4], Blank()))
+0
+
+>> CountRows(Table({a:Blank()},Blank()))
+2
+
+//One blank record
+>> CountRows([Blank()])
+1
+
+//All blank records
+>> CountRows([Blank(),Blank(),Blank(),Blank(),Blank()])
+5
+
+>> CountRows(["",""," ",Blank(),Blank()])
+5
+
+>> CountRows(Table({a:""},{a:" "},{a:Blank()}))
+3
+
+// ******** NULL / ERROR TABLE ********
 
 >> CountRows(Blank())
 0
@@ -7,11 +103,25 @@
 >> CountRows(If(1<0,[1]))
 0
 
->> CountRows(Sort([-2, -1, 0, 1, 2], 1 / Value))
+>> CountRows(Sort(["-2","-1","0",1,2],1/Value))
 #Error(Kind=Div0)
+
+// ******** NULL and ERROR RECORDS ********
+
+// Few error values
+>> CountRows([1, "2", 1/0, true, false, Blank(), "", " ", Date(2022,12,12),Time(6,30,30),DateTimeValue("5/12/2022 6:30:30 PM")])
+11
+
+// Error records
+>> CountRows(Table({a:1},{a:2},If(Sqrt(-1)<1,{a:3}),{a:4}))
+#Error(Kind=Numeric)
 
 >> CountRows(Filter([-2, -1, 0, 1, 2], 1 / Value < 3))
 #Error(Kind=Div0)
 
->> CountRows([1, 2, 1/0, 4, 5])
-5
+// All error values
+>> CountRows([1/0])
+1
+
+>> CountRows(Table({a:1/0},{a:Sqrt(-1)}))
+2
