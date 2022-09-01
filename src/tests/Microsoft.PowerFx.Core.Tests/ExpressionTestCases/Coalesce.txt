@@ -20,10 +20,20 @@
 >> Coalesce(Blank(), "", Blank(), "", Blank(), " ", "3", "4")
 " "
 
+// Blank values
 >> Coalesce("")
 Blank()
 
 >> Coalesce("","")
+Blank()
+
+>> Coalesce("",Blank(),"")
+Blank()
+
+>> Coalesce("",Blank(),"",Blank())
+Blank()
+
+>> Coalesce("",Blank(),"",Blank(),"")
 Blank()
 
 // Lazy evaluation, doesn't eval all arguements. 
