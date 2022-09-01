@@ -391,8 +391,7 @@ namespace Microsoft.PowerFx.Core.Binding
             Contracts.AssertValue(node);
             Contracts.AssertIndex(node.Id, _typeMap.Length);
             
-            // $$$ This assert is failing, which blocks the ability to see the test's assert. 
-            // Contracts.Assert(_typeMap[node.Id].IsValid);
+            Contracts.Assert(_typeMap[node.Id].IsValid);
 
             return _typeMap[node.Id];
         }
