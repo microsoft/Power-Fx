@@ -356,7 +356,9 @@ namespace Microsoft.PowerFx.Core.Tests
             }
             else if (result is TimeValue tv)
             {
-                sb.Append(tv.Value.ToString());
+                // Time(HH,mm,ss,fff)
+                var timeSpan = tv.Value;
+                sb.Append($"Time({timeSpan.Hours},{timeSpan.Minutes},{timeSpan.Seconds},{timeSpan.Milliseconds})");
             }
             else if (result is BlankValue)
             {
