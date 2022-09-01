@@ -2753,24 +2753,6 @@ namespace Microsoft.PowerFx.Core.Binding
                 return res.Success;
             }
 
-            private bool CheckInArgTypes(TexlNode left, TexlNode right)
-            {
-                var res = CheckInArgTypesCore(
-                    _txb.ErrorContainer,
-                    left,
-                    right,
-                    _txb.GetType(left),
-                    _txb.GetType(right),
-                    _txb.Document != null && _txb.Document.Properties.EnabledFeatures.IsEnhancedDelegationEnabled);
-
-                foreach (var coercion in res.Coercions)
-                {
-                    _txb.SetCoercedType(coercion.Node, coercion.CoercedType);
-                }
-
-                return res.Success;
-            }
-
             private ScopeUseSet JoinScopeUseSets(params TexlNode[] nodes)
             {
                 Contracts.AssertValue(nodes);
@@ -4269,23 +4251,6 @@ namespace Microsoft.PowerFx.Core.Binding
                 }
             }
 
-            private void PostVisitBinaryOpNodeAddition(BinaryOpNode node)
-            {
-                AssertValid();
-
-                var leftType = _txb.GetType(node.Left);
-                var rightType = _txb.GetType(node.Right);
-
-                var res = PostVisitBinaryOpNodeAdditionCore(_txb.ErrorContainer, node, leftType, rightType);
-
-                _txb.SetType(res.Node, res.NodeType);
-
-                foreach (var coercion in res.Coercions)
-                {
-                    _txb.SetCoercedType(coercion.Node, coercion.CoercedType);
-                }
-            }
-
             public override void PostVisit(AsNode node)
             {
                 Contracts.AssertValue(node);
@@ -4352,26 +4317,6 @@ namespace Microsoft.PowerFx.Core.Binding
                 }
 
                 return new BinderCheckTypeResult() { Success = true, Coercions = coercions };
-            }
-
-            private void CheckComparisonArgTypes(TexlNode left, TexlNode right)
-            {
-                var res = CheckComparisonArgTypesCore(_txb.ErrorContainer, left, right, _txb.GetType(left), _txb.GetType(right));
-
-                foreach (var coercion in res.Coercions)
-                {
-                    _txb.SetCoercedType(coercion.Node, coercion.CoercedType);
-                }
-            }
-
-            private void CheckEqualArgTypes(TexlNode left, TexlNode right)
-            {
-                var res = CheckEqualArgTypesCore(_txb.ErrorContainer, left, right, _txb.GetType(left), _txb.GetType(right));
-
-                foreach (var coercion in res.Coercions)
-                {
-                    _txb.SetCoercedType(coercion.Node, coercion.CoercedType);
-                }
             }
 
             private static BinderCheckTypeResult CheckEqualArgTypesCore(ErrorContainer errorContainer, TexlNode left, TexlNode right, DType typeLeft, DType typeRight)
