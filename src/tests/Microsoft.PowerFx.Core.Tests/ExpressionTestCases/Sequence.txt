@@ -15,13 +15,13 @@
 []
 
 >> Sequence(Blank())
-Blank()
+[]
 
 >> Sequence(4,Blank())
-Blank()
+[0,1,2,3]
 
 >> Sequence(4,24,Blank())
-Blank()
+[24,24,24,24]
 
 >> Sequence(1/0)
 #Error
