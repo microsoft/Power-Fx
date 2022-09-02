@@ -108,7 +108,8 @@ namespace Microsoft.PowerFx.Core.Entities.QueryOptions
 
             Contracts.Assert(TabularDataSourceInfo.GetKeyColumns().All(x => _selects.Contains(x)));
 
-            return TabularDataSourceInfo.GetKeyColumns().Count() < _selects.Count;
+            return TabularDataSourceInfo.GetKeyColumns().Count() < _selects.Count
+                 && _selects.Count < TexlBinding.MaxSelectsToInclude;
         }
 
         internal bool ReplaceExpandsWithAnnotation(ExpandQueryOptions expand)
