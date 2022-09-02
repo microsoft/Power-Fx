@@ -184,10 +184,10 @@ namespace Microsoft.PowerFx.Functions
         }
 
         #region Single Column Table Functions
-        public static Func<EvalVisitor, EvalVisitorContext, IRContext, TableValue[], ValueTask<FormulaValue>> StandardSingleColumnTable<T>(Func<EvalVisitor, EvalVisitorContext, IRContext, T[], FormulaValue> targetFunction)
+        public static Func<EvalVisitor, EvalVisitorContext, IRContext, TableValue[], ValueTask<FormulaValue>> StandardSingleColumnTable<T>(AsyncFunctionPtr targetFunction)
             where T : FormulaValue
         {
-            return (runner, context, irContext, args) =>
+            return async (runner, context, irContext, args) =>
             {
                 var inputTableType = (TableType)args[0].Type;
                 var inputColumnNameStr = inputTableType.SingleColumnFieldName;
@@ -206,8 +206,8 @@ namespace Microsoft.PowerFx.Functions
                         NamedValue namedValue;
                         namedValue = value switch
                         {
-                            T t => new NamedValue(outputColumnNameStr, targetFunction(runner, context, IRContext.NotInSource(outputItemType), new T[] { t })),
-                            BlankValue bv => new NamedValue(outputColumnNameStr, bv),
+                            T t => new NamedValue(outputColumnNameStr, await targetFunction(runner, context, IRContext.NotInSource(outputItemType), new T[] { t })),
+                            BlankValue bv => new NamedValue(outputColumnNameStr, await targetFunction(runner, context, IRContext.NotInSource(outputItemType), new FormulaValue[] { bv })),
                             ErrorValue ev => new NamedValue(outputColumnNameStr, ev),
                             _ => new NamedValue(outputColumnNameStr, CommonErrors.RuntimeTypeMismatch(IRContext.NotInSource(inputItemType)))
                         };
@@ -225,14 +225,14 @@ namespace Microsoft.PowerFx.Functions
                 }
 
                 var result = new InMemoryTableValue(irContext, resultRows);
-                return new ValueTask<FormulaValue>(result);
+                return result;
             };
         }
 
         public static Func<EvalVisitor, EvalVisitorContext, IRContext, TableValue[], ValueTask<FormulaValue>> StandardSingleColumnTable<T>(Func<IRContext, T[], FormulaValue> targetFunction)
             where T : FormulaValue
         {
-            return StandardSingleColumnTable<T>((runner, context, irContext, args) => targetFunction(irContext, args));
+            return StandardSingleColumnTable<T>(async (runner, context, irContext, args) => targetFunction(irContext, args.OfType<T>().ToArray()));
         }
 
         private static (int maxTableSize, bool emptyTablePresent) AnalyzeTableArguments(FormulaValue[] args)
