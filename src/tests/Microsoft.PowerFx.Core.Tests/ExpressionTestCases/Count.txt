@@ -1,20 +1,90 @@
-﻿>> Count([0,""])
+﻿// ******** TABLE WITH NO BLANK RECORDS ********
+
+>> Count([0])
 1
 
->> Count([1, 2, 1/0, 4, 5])
-#Error(Kind=Div0)
+>> Count([1])
+1
 
->> Count(If(1<0,[1,2,3]))
-0
+>> Count(Table({a:1},{a:2},{a:3}))
+3
+
+>> Count([1, 2, 3, 4, 5])
+5
+
+// ******** TABLE WITH BLANK RECORDS ********
+
+>> Count([0,""])
+1
+
+>> Count([1,2,3,4,Blank()])
+4
 
 >> Count([1,"4", Blank()])
 2
 
+>> Count([1,2,Blank(),Blank(),Blank()])
+2
+
+>> Count([1,2,3,If(1<0,4),Blank()])
+3
+
+>> Count(Table({a:1},{a:Blank()},{a:2},{a:Blank()} ))
+2
+
+>> Count(Table({a:1},{a:2},If(1<0,{a:3}),If(1<0,{a:4}),{a:5}))
+3
+
+>> Count(LastN([1,2,3,4], Blank()))
+0
+
+>> Count([1,"1","2",Blank()])
+3
+
+//One blank record
+>> Count([Blank()])
+0
+
+//All blank records
+>> Count([Blank(),Blank(),Blank(),Blank(),Blank()])
+0
+
+>> Count(Table({a:Blank()},{a:Blank()},{a:Blank()}))
+0
+
+// ******** BLANK TABLE ********
+
+>> Count(If(1<0,[1,2,3]))
+0
+
+// ******** ERRORS ********
+
+// Error table
+>> Count(Sort([-2, -1, 0, 1, 2], 1 / Value))
+#Error(Kind=Div0)
+
+// Error record
 >> Count(Table({a:1},{a:2},If(Sqrt(-1)<1,{a:3}),{a:4}))
 #Error(Kind=Numeric)
 
->> Count(Table({a:1},{a:2},If(1<0,{a:3}),{a:4}))
-3
-
->> Count(Sort([-2,-1,0,1,2],1/Value))
+// Error value
+>> Count([1, 2, 1/0, 4, 5])
 #Error(Kind=Div0)
+
+// Multiple errors
+>> Count(Table({a:1/0},{a:Sqrt(-1)}))
+#Error(Kind=Div0,Numeric)
+
+// ******** COMPILE ERRORS - NON-NUMERIC TABLES, NOT SINGLE-COLUMN ********
+
+>> Count([])
+Errors: Error 6-8: The first argument of 'Count' should be a one-column table.|Error 0-9: The function 'Count' has some invalid arguments.
+
+>> Count(Table({a:1,b:2},{a:3,b:4}))
+Errors: Error 6-32: The first argument of 'Count' should be a one-column table.|Error 0-33: The function 'Count' has some invalid arguments.
+
+>> Count(["1"])
+Errors: Warning 6-11: Invalid schema, expected a column of numeric values for 'Value'.|Error 0-12: The function 'Count' has some invalid arguments.
+
+>> Count(Table({a:Date(2022,12,12)}))
+Errors: Warning 6-33: Invalid schema, expected a column of numeric values for 'a'.|Error 0-34: The function 'Count' has some invalid arguments.

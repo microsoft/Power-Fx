@@ -191,7 +191,7 @@ namespace Microsoft.PowerFx.Core.Tests
                     // Matching text to CheckResult.ThrowOnErrors()
                     // Expected will contain the full error message, like:
                     //    Errors: Error 15-16: Incompatible types for comparison. These types can't be compared: UntypedObject, UntypedObject.
-                    var expectedCompilerError = expected.StartsWith("Errors: Error"); // $$$ Match error message. 
+                    var expectedCompilerError = expected.StartsWith("Errors: Error") || expected.StartsWith("Errors: Warning"); // $$$ Match error message. 
                     if (expectedCompilerError)
                     {
                         var msg = $"Errors: " + string.Join("\r\n", runResult.Errors.Select(err => err.ToString()).ToArray());

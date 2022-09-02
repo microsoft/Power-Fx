@@ -55,12 +55,12 @@ namespace Microsoft.PowerFx.Connectors.Tests
         {
         }
 
-        private TestODataTableValue(TableType tableType, ODataParams odataParams)
+        private TestODataTableValue(TableType tableType, ODataParameters odataParams)
             : base(tableType, odataParams)
         {
         }
 
-        protected override ODataQueryableTableValue WithParameters(ODataParams odataParamsNew)
+        protected override ODataQueryableTableValue WithParameters(ODataParameters odataParamsNew)
         {
             return new TestODataTableValue((TableType)Type, odataParamsNew);
         }

@@ -88,5 +88,51 @@ namespace Microsoft.PowerFx
 
             return runtimeConfig;
         }
+
+        /// <summary>
+        /// Includes 'ThisRecord'.
+        /// </summary>
+        /// <param name="parameters"></param>
+        /// <param name="parent"></param>
+        /// <returns></returns>
+        public static ReadOnlySymbolValues NewRowScope(RecordValue parameters, ReadOnlySymbolValues parent = null)
+        {
+            var s = new SymbolValues
+            {
+                Parent = parent
+            };
+
+            foreach (var kv in parameters.Fields)
+            {
+                s.Add(kv.Name, kv.Value);
+            }
+
+            s.Add("ThisRecord", parameters);
+
+            return s;
+        }
+
+        /// <summary>
+        /// Create values over existing collection.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="values"></param>
+        /// <param name="parent"></param>
+        public static ReadOnlySymbolValues New<T>(IReadOnlyDictionary<string, T> values, ReadOnlySymbolValues parent = null)
+            where T : FormulaValue
+        {
+            // Accept T to allow derived FormulaValue collections. 
+            var s = new SymbolValues
+            {
+                Parent = parent
+            };
+            
+            foreach (var kv in values)
+            {
+                s.Add(kv.Key, kv.Value);
+            }
+
+            return s;
+        }
     }
 }

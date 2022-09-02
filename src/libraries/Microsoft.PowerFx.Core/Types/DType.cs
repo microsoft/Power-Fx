@@ -1180,7 +1180,7 @@ namespace Microsoft.PowerFx.Core.Types
                 return true;
             }
 
-            return TryGetTypeCore(path.Name, out type);
+            return type.TryGetTypeCore(path.Name, out type);
         }
 
         // Get the type of a member field specified by path.
