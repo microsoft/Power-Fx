@@ -1024,7 +1024,7 @@ namespace Microsoft.PowerFx.Functions
                 BuiltinFunctionsCore.Sequence,
                 StandardErrorHandling<NumberValue>(
                     expandArguments: InsertDefaultValues(outputArgsCount: 3, fillWith: new NumberValue(IRContext.NotInSource(FormulaType.Number), 1)),
-                    replaceBlankValues: DoNotReplaceBlank,
+                    replaceBlankValues: ReplaceBlankWithZero,
                     checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
                     checkRuntimeValues: FiniteChecker,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
