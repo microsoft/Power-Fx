@@ -1,9 +1,11 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Utils;
@@ -85,16 +87,40 @@ namespace Microsoft.PowerFx.Types
         // Async because derived classes may back this with a network call. 
         public virtual async Task<DValue<RecordValue>> AppendAsync(RecordValue record)
         {
-            // fails by default
-            throw new System.NotImplementedException("It is not possible to append to a TableValue directly.");
+            throw ThrowNotImplementedException(MethodBase.GetCurrentMethod().Name);
+        }
+
+        public virtual async Task<DValue<RecordValue>> PatchCoreAsync(RecordValue originalRecord, RecordValue newRecord)
+        {
+            throw ThrowNotImplementedException(MethodBase.GetCurrentMethod().Name);
+        }
+
+        public async Task<DValue<RecordValue>> PatchAsync(RecordValue originalRecord, RecordValue newRecord)
+        {
+            var recordType = ((TableType)IRContext.ResultType).ToRecord();
+
+            // Resolve from display names to logical names, if any.
+            var resolvedOriginalRecord = recordType.ResolveToLogicalNames(originalRecord);
+            var resolvedNewRecord = recordType.ResolveToLogicalNames(newRecord);
+
+            return await PatchCoreAsync(resolvedOriginalRecord, resolvedNewRecord);
         }
 
         // Return boolean value
         // Async because derived classes may back this with a network call. 
         public virtual async Task<DValue<BooleanValue>> RemoveAsync(RecordValue record)
         {
-            // fails by default
-            throw new System.NotImplementedException("It is not possible to remove from a TableValue directly.");
+            throw ThrowNotImplementedException(MethodBase.GetCurrentMethod().Name);
+        }
+
+        public virtual bool TryFindRecord(RecordValue originalRecord, out int index)
+        {
+            throw ThrowNotImplementedException(MethodBase.GetCurrentMethod().Name);
+        }
+
+        private Exception ThrowNotImplementedException(string methodName)
+        {
+            return new NotImplementedException($"It is not possible to append to call {methodName} method from TableValue directly.");
         }
 
         public override object ToObject()
