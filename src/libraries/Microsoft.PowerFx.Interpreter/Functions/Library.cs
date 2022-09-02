@@ -32,8 +32,6 @@ namespace Microsoft.PowerFx.Functions
 
         public static IEnumerable<TexlFunction> FunctionList => FuncsByName.Keys;
 
-        private static readonly object LockObject = new object();
-
         public static readonly IReadOnlyDictionary<TexlFunction, AsyncFunctionPtr> FuncsByName;
 
         static Library()
