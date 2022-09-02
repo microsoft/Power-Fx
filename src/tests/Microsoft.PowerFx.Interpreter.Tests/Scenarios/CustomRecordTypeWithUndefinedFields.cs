@@ -41,13 +41,13 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
         [Theory]
-        [InlineData("obj.prop1", 1.0)]
-        [InlineData("IsError(obj.prop2)", true)] // type mismatch should fail at runtime
-        [InlineData("IsBlank(obj.missing)", "#exception")] // type checking fails when referencing undefined type.
-        [InlineData("IsBlank(obj.missing.missing)", "#exception")]
-        [InlineData("IsBlank(obj.prop_not_defined_in_type)", "#exception")]
-        [InlineData("IsError(obj.missing + 1)", "#exception")]
-        public async Task TestOriginalRecordType(string expr, object expected)
+        [InlineData("obj.prop1", 1.0, false)]
+        [InlineData("IsError(obj.prop2)", true, false)] // type mismatch should fail at runtime
+        [InlineData("IsBlank(obj.missing)", null, true)] // type checking fails when referencing undefined type.
+        [InlineData("IsBlank(obj.missing.missing)", null, true)]
+        [InlineData("IsBlank(obj.prop_not_defined_in_type)", null, true)]
+        [InlineData("IsError(obj.missing + 1)", null, true)]
+        public async Task TestOriginalRecordType(string expr, object expected, bool hasException)
         {
             var engine = new RecalcEngine();
             var symbolTable = new SymbolTable();
@@ -59,24 +59,23 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             try
             {
                 var result = await engine.EvalAsync(expr, default, null, symbolTable, symbolValues).ConfigureAwait(false);
+                Assert.False(hasException);
                 Assert.Equal(expected, result.ToObject());
             }
-            catch (InvalidOperationException ex)
+            catch (InvalidOperationException)
             {
-                var str = Assert.IsType<string>(expected);
-                Assert.Equal("#exception", str);
-                Console.WriteLine(ex.Message);
+                Assert.True(hasException);
             }
         }
 
         [Theory]
-        [InlineData("obj.prop1", 1.0)]
-        [InlineData("IsError(obj.prop2)", true)] // type mismatch should fail at runtime.
-        [InlineData("IsBlank(obj.missing)", true)] // fields not defined in RecordType is treated as Blank.
-        [InlineData("IsBlank(obj.missing.missing)", true)]
-        [InlineData("IsBlank(obj.prop_not_defined_in_type)", true)] // fields not defined in RecordType is always Blank, regardless of whether it is defined in actual data.
-        [InlineData("IsError(obj.missing + 1)", "#exception")] // type checking fails when operating on undefined field.
-        public async Task TestCustomRecordType(string expr, object expected)
+        [InlineData("obj.prop1", 1.0, false)]
+        [InlineData("IsError(obj.prop2)", true, false)] // type mismatch should fail at runtime.
+        [InlineData("IsBlank(obj.missing)", true, false)] // fields not defined in RecordType is treated as Blank.
+        [InlineData("IsBlank(obj.missing.missing)", true, false)]
+        [InlineData("IsBlank(obj.prop_not_defined_in_type)", true, false)] // fields not defined in RecordType is always Blank, regardless of whether it is defined in actual data.
+        [InlineData("IsError(obj.missing + 1)", null, true)] // type checking fails when operating on undefined field.
+        public async Task TestCustomRecordType(string expr, object expected, bool hasException)
         {
             var engine = new RecalcEngine();
             var symbolTable = new SymbolTable();
@@ -88,12 +87,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             try
             {
                 var result = await engine.EvalAsync(expr, default, null, symbolTable, symbolValues).ConfigureAwait(false);
+                Assert.False(hasException);
                 Assert.Equal(expected, result.ToObject());
             }
             catch (InvalidOperationException)
             {
-                var str = Assert.IsType<string>(expected);
-                Assert.Equal("#exception", str);
+                Assert.True(hasException);
             }
         }
 
@@ -142,7 +141,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
         /// <summary>
-        /// A wrapper Record Type that force accesses to missing fields to return FormulaType.UntypedObject.
+        /// A wrapper Record Type that forces accesses to missing fields to return FormulaType.UntypedObject.
         /// </summary>
         private class TreatMissingFieldAsUntypedRecordType : RecordType
         {
