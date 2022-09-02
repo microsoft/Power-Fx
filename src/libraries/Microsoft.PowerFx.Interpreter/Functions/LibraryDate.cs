@@ -357,11 +357,18 @@ namespace Microsoft.PowerFx.Functions
         {
             // The final date is built up this way to allow for inputs which overflow,
             // such as: Date(2000, 25, 69) -> 3/10/2002
-            var result = new DateTime(year, 1, 1)
-                .AddMonths(month - 1)
-                .AddDays(day - 1);
+            try
+            {
+                var result = new DateTime(year, 1, 1)
+                    .AddMonths(month - 1)
+                    .AddDays(day - 1);
 
-            return new DateValue(irContext, result);
+                return new DateValue(irContext, result);
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                return CommonErrors.InvalidDateTimeError(irContext);
+            }
         }
 
         public static FormulaValue Time(IRContext irContext, NumberValue[] args)
@@ -418,7 +425,7 @@ namespace Microsoft.PowerFx.Functions
             }
             else
             {
-                return CommonErrors.InvalidDateTimeError(irContext);
+                return CommonErrors.InvalidDateTimeParsingError(irContext);
             }
         }
 
@@ -463,7 +470,7 @@ namespace Microsoft.PowerFx.Functions
             }
             else
             {
-                return CommonErrors.InvalidDateTimeError(irContext);
+                return CommonErrors.InvalidDateTimeParsingError(irContext);
             }
         }
 
@@ -488,7 +495,7 @@ namespace Microsoft.PowerFx.Functions
             }
             else
             {
-                return CommonErrors.InvalidDateTimeError(irContext);
+                return CommonErrors.InvalidDateTimeParsingError(irContext);
             }
         }
 

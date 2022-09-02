@@ -1,19 +1,35 @@
 ﻿>> Date(-1, 2, 3)
-#Error
+#Error(Kind=InvalidArgument)
 
+>> Date(-1,1,1)
+#Error(Kind=InvalidArgument)
 
 >> Date(Blank(), 2, 3)
-Blank()
+#Error(Kind=InvalidArgument)
+
+>> Date(10000,1,1)
+#Error(Kind=InvalidArgument)
+
+>> Date(0,0,0)
+#Error(Kind=InvalidArgument)
+
+>> Date(1960,7,31)
+Date(1960,7,31)
 
 // Previously: dates before 1900 get converted to post-1900
 // New behavior: don't convert. 
 >> Date(80, 1, 2)
 Date(80,1,2)
 
+>> Date(76,7,4)
+Date(76,7,4)
+
+>> Date(100,1,1)
+Date(100,1,1)
+
 // months and days overflow (but not for SQL)
 >> Date(2000, 25, 69)
 Date(2002,3,10)
-
 
 >> Date(2000, 2, -1)
 Date(2000,1,30)
@@ -23,6 +39,78 @@ Date(1999,10,1)
 
 >> Date(2000, -2, -1)
 Date(1999,9,29)
+
+>> Date(1933,0,25)
+Date(1932,12,25)
+
+>> Date(2012,13,14)
+Date(2013,1,14)
+
+>> Date(1933,-5,25)
+Date(1932,7,25)
+
+>> Date(1933,30,25)
+Date(1935,6,25)
+
+>> Date(2118,4,0)
+Date(2118,3,31)
+
+>> Date(2012,7,32)
+Date(2012,8,1)
+
+>> Date(2012,7,-20)
+Date(2012,6,10)
+
+>> Date(2012,7,100)
+Date(2012,10,8)
+
+>> Date(1900.67,2.7,12.2)
+Date(1900,2,12)
+
+>> Date(1975,Blank(),14)
+Date(1974,12,14)
+
+>> Date(1975,10,Blank())
+Date(1975,9,30)
+
+>> Date(1/0, 11, 29)
+#Error(Kind=Div0)
+
+>> Date(1975,1/0,14)
+#Error(Kind=Div0)
+
+>> Date(1975,10,1/0)
+#Error(Kind=Div0)
+
+>> Date(-1,1,1/0)
+#Error
+
+>> Date("a","b","c")
+#Error(Kind=InvalidArgument,InvalidArgument,InvalidArgument)
+
+>> Date("1900","5","14")
+Date(1900,5,14)
+
+>> Date("1900",true,true)
+Date(1900,1,1)
+
+>> Date("1975",true,false)
+Date(1974,12,31)
+
+>> Date("1975",false,false)
+Date(1974,11,30)
+
+>> Date(true,true,true)
+Date(1,1,1)
+
+>> Date(Year("2022-11-29"),10,18)
+Date(2022,10,18)
+
+>> Date(1960, Month("2022-11-29"),17)
+Date(1960,11,17)
+
+>> Date(1960,6,Day("2022-11-29"))
+Date(1960,6,29)
 
 >> Month(Date(2011,5,12))
 5
@@ -37,12 +125,12 @@ Date(1999,9,29)
 15
 
 >> DateDiff(Date(-1, 2, 3), Date(2011,1,30))
-#Error
+#Error(Kind=InvalidArgument)
 
->> DateDiff(Date(Blank(), 2, 3), Date(2011,1,30))
+>> DateDiff(If(1<0,Date(1,1,1)), Date(2011,1,30))
 Blank()
 
->> DateDiff(Date(2011,1,15), Date(Blank(), 2, 3))
+>> DateDiff(Date(2011,1,15), If(1<0,Date(1,1,1)))
 Blank()
 
 >> DateDiff(Date(2011,1,15) , Date(2011,1,30), Blank())
@@ -206,29 +294,29 @@ true
 
 // Blank Date comparisons
 // SQL Null comparisons are always false
->> Date(Blank(), 2, 3) < Date(2011,1,30)
+>> If(1<0,Date(1,1,1)) < Date(2011,1,30)
 true
 
->> Date(Blank(), 2, 3) <= Date(2011,1,30)
+>> If(1<0,Date(1,1,1)) <= Date(2011,1,30)
 true
 
->> Date(Blank(), 2, 3) > Date(2011,1,30)
+>> If(1<0,Date(1,1,1)) > Date(2011,1,30)
 false
 
->> Date(Blank(), 2, 3) >= Date(2011,1,30)
+>> If(1<0,Date(1,1,1)) >= Date(2011,1,30)
 false
 
 // Blank DateTime comparisons
->> DateAdd(Date(Blank(), 2, 3), 3) < DateAdd(Date(2011,1,30), 3)
+>> DateAdd(If(1<0,DateTime(1,1,1,1,1,1)), 3) < DateAdd(Date(2011,1,30), 3)
 true
 
->> DateAdd(Date(Blank(), 2, 3), 3) <= DateAdd(Date(2011,1,30), 3)
+>> DateAdd(If(1<0,DateTime(1,1,1,1,1,1)), 3) <= DateAdd(Date(2011,1,30), 3)
 true
 
->> DateAdd(Date(Blank(), 2, 3), 3) > DateAdd(Date(2011,1,30), 3)
+>> DateAdd(If(1<0,DateTime(1,1,1,1,1,1)), 3) > DateAdd(Date(2011,1,30), 3)
 false
 
->> DateAdd(Date(Blank(), 2, 3), 3) >= DateAdd(Date(2011,1,30), 3)
+>> DateAdd(If(1<0,DateTime(1,1,1,1,1,1)), 3) >= DateAdd(Date(2011,1,30), 3)
 false
 
 // Error Date comparisons
@@ -273,8 +361,8 @@ true
 >> DateAdd(Date(-1, 2, 3), 3)
 #Error
 
->> DateAdd(Date(Blank(), 2, 3), 3)
-Blank()
+>> DateAdd(Date(1, 2, 3), 3)
+Date(1,2,6)
 
 >> Day(DateAdd(Date(2001,1,1), 4, TimeUnit.Days))
 5

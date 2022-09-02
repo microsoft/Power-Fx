@@ -336,10 +336,10 @@ namespace Microsoft.PowerFx.Functions
                 BuiltinFunctionsCore.Date,
                 StandardErrorHandling<NumberValue>(
                     expandArguments: NoArgExpansion,
-                    replaceBlankValues: DoNotReplaceBlank,
+                    replaceBlankValues: ReplaceBlankWithZero,
                     checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
                     checkRuntimeValues: ExactSequence(
-                        PositiveNumericNumberChecker,
+                        FiniteChecker,
                         FiniteChecker,
                         FiniteChecker),
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
