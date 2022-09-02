@@ -35,7 +35,7 @@ namespace Microsoft.PowerFx.Types
         /// Initializes a new instance of the <see cref="RecordValue"/> class.
         /// </summary>
         /// <param name="type"></param>
-        public RecordValue(RecordType type) 
+        public RecordValue(RecordType type)
             : base(IRContext.NotInSource(type))
         {
         }
@@ -102,7 +102,7 @@ namespace Microsoft.PowerFx.Types
                 else if (result is TableValue tableValue)
                 {
                     result = new InMemoryTableValue(IRContext.NotInSource(fieldType), tableValue.Rows);
-                } 
+                }
                 else
                 {
                     // Ensure that the actual type matches the expected type.
@@ -118,7 +118,7 @@ namespace Microsoft.PowerFx.Types
                 Contract.Assert(result.Type.Equals(fieldType) || result is ErrorValue || result.Type is BlankType);
 
                 return result;
-            } 
+            }
             else if (result != null)
             {
                 throw HostException(fieldName, $"returned false with non-null result.");
@@ -163,7 +163,7 @@ namespace Microsoft.PowerFx.Types
             visitor.Visit(this);
         }
 
-        public virtual async Task<DValue<RecordValue>> UpdateFields(IEnumerable<KeyValuePair<string, FormulaValue>> record)
+        public virtual async Task<DValue<RecordValue>> UpdateFields(RecordValue record)
         {
             var errorValue = NewError(new ExpressionError()
             {
@@ -177,9 +177,9 @@ namespace Microsoft.PowerFx.Types
 
         public Task<DValue<RecordValue>> UpdateField(string name, FormulaValue value)
         {
-            var list = new KeyValuePair<string, FormulaValue>[] { new KeyValuePair<string, FormulaValue>(name, value) };
+            var list = new List<NamedValue>() { new NamedValue(name, value) };
 
-            return UpdateFields(list);
-    }
+            return UpdateFields(FormulaValue.NewRecordFromFields(list));
+        }
     }
 }

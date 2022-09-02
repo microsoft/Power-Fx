@@ -58,7 +58,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 if (arg is ErrorValue)
                 {
-                    faultyArg = (FormulaValue)arg;
+                    faultyArg = arg;
 
                     return false;
                 }
@@ -69,6 +69,7 @@ namespace Microsoft.PowerFx.Functions
             return true;
         }
 
+        // Patch(datasource, baserecord, arg2, ... argn)
         protected static Dictionary<string, FormulaValue> CreateRecordFromArgsDict(FormulaValue[] args, int startFrom)
         {
             var retFields = new Dictionary<string, FormulaValue>(StringComparer.Ordinal);
@@ -85,6 +86,7 @@ namespace Microsoft.PowerFx.Functions
                 {
                     foreach (var field in record.Fields)
                     {
+                        //Patch(datasouce, r1, {field:1}, {displayfield1:2})
                         retFields[field.Name] = field.Value;
                     }
                 }
@@ -95,6 +97,18 @@ namespace Microsoft.PowerFx.Functions
             }
 
             return retFields;
+        }
+
+        protected static IEnumerable<NamedValue> FieldDictToFieldEnumerable(IReadOnlyDictionary<string, FormulaValue> fieldsDict)
+        {
+            var ret = new List<NamedValue>();
+
+            foreach (var field in fieldsDict)
+            {
+                ret.Add(new NamedValue(field.Key, field.Value));
+            }
+
+            return ret;
         }
     }
 
@@ -133,17 +147,9 @@ namespace Microsoft.PowerFx.Functions
                 return faultyArg;
             }
 
-            var fieldsDict = CreateRecordFromArgsDict(args, 0);
-            var fieldList = new List<NamedValue>();
-
-            foreach (var field in fieldsDict)
-            {
-                fieldList.Add(new NamedValue(field.Key, field.Value));
-            }
-
-            var record = FormulaValue.NewRecordFromFields(fieldList);
-
-            return record;
+            return FormulaValue.NewRecordFromFields(
+                FieldDictToFieldEnumerable(
+                    CreateRecordFromArgsDict(args, 0)));
         }
 
         public override RequiredDataSourcePermissions FunctionPermission => RequiredDataSourcePermissions.Create | RequiredDataSourcePermissions.Update;
@@ -205,11 +211,11 @@ namespace Microsoft.PowerFx.Functions
 
                 foreach (var typedName in curType.GetNames(DPath.Root))
                 {
-                    DName name = typedName.Name;
-
-                    if (!dataSourceType.TryGetType(name, out DType dsNameType))
+                    if (!(dataSourceType.DisplayNameProvider != null && (dataSourceType.DisplayNameProvider.TryGetDisplayName(typedName.Name, out var displayName) ||
+                        dataSourceType.DisplayNameProvider.TryGetLogicalName(typedName.Name, out DName name))) &&
+                        !dataSourceType.TryGetType(typedName.Name, out DType dsNameType))
                     {
-                        dataSourceType.ReportNonExistingName(FieldNameKind.Display, errors, name, args[i]);
+                        dataSourceType.ReportNonExistingName(FieldNameKind.Display, errors, typedName.Name, args[i]);
                         isValid = isSafeToUnion = false;
                         continue;
                     }
@@ -254,11 +260,16 @@ namespace Microsoft.PowerFx.Functions
                 return args[1];
             }
 
-            var argFields = CreateRecordFromArgsDict(args, 1);
+            var newRecord = FormulaValue.NewRecordFromFields(
+                FieldDictToFieldEnumerable(
+                    CreateRecordFromArgsDict(args, 2)));
 
+            var arg0 = (TableValue)args[0];
             var arg1 = (RecordValue)args[1];
 
-            return (await arg1.UpdateFields(argFields)).Value;
+            var ret = await arg0.PatchAsync(arg1, newRecord);
+
+            return ret.ToFormulaValue();
         }
     }
 }

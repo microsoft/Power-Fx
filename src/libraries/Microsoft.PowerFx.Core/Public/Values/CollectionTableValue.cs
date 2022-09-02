@@ -107,5 +107,51 @@ namespace Microsoft.PowerFx.Types
                 return base.TryGetIndex(index1, out record);
             }
         }
+
+        public override async Task<DValue<RecordValue>> PatchCoreAsync(RecordValue baserecord, RecordValue newRecord)
+        {
+            var actual = Find(baserecord);
+
+            if (actual != null)
+            {
+                return await actual.UpdateFields(newRecord);
+            }
+            else
+            {
+                return DValue<RecordValue>.Of(FormulaValue.NewBlank(IRContext.ResultType));
+            }
+        }
+
+        // Linear scan
+        protected virtual RecordValue Find(RecordValue baserecord)
+        {
+            foreach (var current in Rows)
+            {
+                if (Matches(current.Value, baserecord))
+                {
+                    return current.Value;
+                }
+            }
+
+            return null;
+        }
+
+        protected static bool Matches(RecordValue currentRecord, RecordValue baseRecord)
+        {
+            foreach (var field in baseRecord.Fields)
+            {
+                var fieldValue = currentRecord.GetField(field.Value.Type, field.Name);
+
+                var compare1 = fieldValue.ToObject();
+                var compare2 = field.Value.ToObject();
+
+                if (compare1 != null && !compare1.Equals(compare2))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
     }
 }
