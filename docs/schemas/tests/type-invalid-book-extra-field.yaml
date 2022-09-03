@@ -14,8 +14,7 @@ Fields:
     Description: Retail price of the book
     Extra: field
   price-history:
-    Type: Record
-    Table: true
+    Type: [ Record ]
     Fields:
       date:
         Type: date

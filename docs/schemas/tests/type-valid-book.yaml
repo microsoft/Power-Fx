@@ -1,4 +1,5 @@
-# the type definition itself does not include a name, that comes from the context in which this definition appears
+# The type definition itself does not include a name.  The name comes from the context 
+# in which this definition appears, such as the Type section of a fx.yaml file
 Type: Record                                      # This is a record definition, Fields are expected
 Description: a book                               # metadata about the type for IntelliSense and help (optional)
 Help: https://en.wikipedia.org/wiki/Book          # help link for the type (optional)
@@ -13,8 +14,7 @@ Fields:                                           # Fields of this type
     Type: number
     Description: Retail price of the book
   price-history:                                  # price-history is a table of records
-    Type: Record                                  # first we start by defining the record
-    Table: true                                   # and we indicate that it is a table of these records
+    Type: [ Record ]                               
     Fields:                                 
       date:
         Type: date                                # as before, fields are typed, metdata is optional

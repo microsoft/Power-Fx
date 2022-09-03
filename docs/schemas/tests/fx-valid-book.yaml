@@ -25,4 +25,4 @@ Types:
         Description: Retail price of the book
       price-history:
         Type: price-history
-        Table: true
+

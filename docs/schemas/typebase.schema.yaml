@@ -1,0 +1,42 @@
+# Power Fx Type definition schema base - typebase.schema.yaml (JSON Schema in YAML format)
+
+# This schema is the extendable base for the type definition
+# It shouldn't be used directly, it should be extended (with $ref and additional properties) 
+# and sealed (with unevaluatedProperties=false) before being directly used
+
+$schema: https://json-schema.org/draft/2019-09/schema
+$id: https://raw.githubusercontent.com/microsoft/Power-Fx/gregli/fx-schema/docs/schemas/typebase.schema.yaml
+description: Power Fx type definition schema base - for extension only
+
+type: object
+required: 
+    - Type
+properties:
+    Type:  
+        oneOf:      
+        - type: string                               # single type name (for example, Number)
+        - type: array                                # array with a single type name (for example, [Number] )
+          items: 
+              type: string
+          minItems: 1
+          maxItems: 1
+        description: base type, single name or a name wrapped in [ ]
+    Description:
+        type: string
+        description: description of this type
+    Help:        
+        type: string
+        description: help link for this type
+if:                                                  # just for Record, Fields are also defined
+    properties: 
+        Type:
+            oneOf: 
+            - const: Record
+            - const: [ Record ]
+then:
+    properties:
+        Fields:
+            type: object
+            additionalProperties: 
+                $ref: "./type.schema.yaml"           # type definition is recursive, any type can be a field
+

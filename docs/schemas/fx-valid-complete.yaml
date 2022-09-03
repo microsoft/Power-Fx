@@ -1,0 +1,128 @@
+Types: 
+
+  price-history:
+    Description: former date and price record
+    Type: Record
+    Fields:
+      date:
+        Type: date
+      price:
+        Type: Number
+
+  Book:
+    Type: Record
+    Description: a book
+    Help: https://en.wikipedia.org/wiki/Book
+    Fields:
+      title: 
+        Type: text
+        Description: Title of the book
+      author:
+        Type: text
+        Description: Author of the book
+      price:
+        Type: number
+        Description: Retail price of the book
+      price-history:
+        Type: price-history
+        Table: true
+
+Functions:
+
+  Fib:
+    Type: Number
+    Parameters:
+      - Name: x
+        Type: Number
+    Body: =If( x < 2, x, Fib(x-2) + Fib(x-1) )
+
+Formulas: |-
+  =c = 2.99792458e8;
+  e = 2.71828;
+
+App As appinfo:
+    BackEnabled: =false
+    OnStart: |+
+        =Set( background, "Gray" )
+
+BoardScreen As screen:
+
+    Header As rectangle:
+        Fill: =RGBA(155, 172, 220, 1)
+        Height: =84
+        Width: =1366
+        ZIndex: =1
+
+    GalleryBoard As gallery.galleryVertical:
+        Height: =BoardSize*8
+        Items: =If( SelMenu.black = playerid, Sequence( 8 ), Sequence(8,8,-1)  ) As Row
+        Layout: =Layout.Vertical
+        TemplatePadding: =0
+        TemplateSize: =BoardSize
+        Width: =BoardSize*8
+        X: =113
+        Y: =114
+        ZIndex: =3
+
+        GalleryBoardColumns As gallery.galleryHorizontal:
+            Height: =BoardSize
+            Items: =If( SelMenu.black = playerid, Sequence(8,8,-1) , Sequence( 8 ) ) As Column
+            TemplatePadding: =0
+            TemplateSize: =BoardSize
+            Width: =BoardSize*8
+            ZIndex: =1
+
+            BoardSelection As image:
+                Fill: |
+                    =If( Mod( Row.Value + Column.Value, 2 ) = If( Mid( Board, BoardRotate, 1 ) <> "1" , 1, 0 ), BoardLight, BoardDark )
+                Height: =BoardSize
+                HoverFill: =ColorFade( Self.Fill, 20% )
+                Image: =If( sel.column = Column.Value And sel.row = Row.Value, flash, Blank() )
+                OnSelect: =Select(Parent)
+                Width: =BoardSize
+                ZIndex: =1
+
+            BoardCheck As image:
+                Height: =BoardSize
+                Image: |-
+                    =With( { piece: Mid( Board, Column.Value + (Row.Value-1)*10, 1 ) },
+                        If( (piece = "k" And
+                            IsMatch( Board, "(" & "[QR]-*k|k-*[QR]|[QR].{9}(-.{9})*k|k.{9}(-.{9})*[QR]|" & 
+                                                "[QB].{10}(-.{10})*k|k.{10}(-.{10})*[QB]|[QB].{8}(-.{8})*k|k.{8}(-.{8})*[QB]|" & 
+                                                "P.{10}k|P.{8}k|" & 
+                                                "N.{18}k|k.{18}N|N.{20}k|k.{20}N|N.{11}k|k.{11}N|N.{7}k|k.{7}N|" &
+                                                "Kk|kK|K.{8,10}k|k.{8,10}K" & ")", MatchOptions.Contains )) Or
+                            (piece = "K" And
+                            IsMatch( Board, "(" & "[qr]-*K|K-*[qr]|[qr].{9}(-.{9})*K|K.{9}(-.{9})*[qr]|" & 
+                                                "[qb].{10}(-.{10})*K|K.{10}(-.{10})*[qb]|[qb].{8}(-.{8})*K|K.{8}(-.{8})*[qb]|" & 
+                                                "K.{10}p|K.{8}p|" & 
+                                                "n.{18}K|K.{18}n|n.{20}K|K.{20}n|n.{11}K|K.{11}n|n.{7}K|K.{7}n|" &
+                                                "kK|Kk|k.{8,10}K|K.{8,10}k" & ")", MatchOptions.Contains )),
+                            check, Blank()
+                        )
+                    )
+                OnSelect: =Select(Parent)
+                Width: =BoardSize
+                ZIndex: =2
+
+    AlgabraicVerticalGallery As gallery.galleryVertical:
+        Height: =BoardSize*8
+        Items: =If( Not( SelMenu.black = playerid ), Sequence(8,8,-1) , Sequence( 8 ) ) As Row
+        Layout: =Layout.Vertical
+        TemplatePadding: =0
+        TemplateSize: =BoardSize
+        Visible: =SelMenu.black <> "setup"
+        Width: =44
+        X: =73
+        Y: =114
+        ZIndex: =4
+
+        Label6 As label:
+            Align: =Right
+            OnSelect: =Select(Parent)
+            Size: =18
+            Text: =Row.Value
+            Width: =30
+            Y: =15
+            ZIndex: =1
+

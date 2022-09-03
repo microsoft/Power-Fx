@@ -1,0 +1,8 @@
+Parameters:
+  SelectedAccount:      
+    Type: Accounts
+    Description: a single Accounts record
+  SelectedAccounts:     
+    Type: Accounts
+    Table: true
+    Description: a table of Accounts records, for batch operations

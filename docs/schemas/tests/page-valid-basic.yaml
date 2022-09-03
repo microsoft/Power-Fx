@@ -1,0 +1,9 @@
+Parameters:
+  MyBoolean:
+    Type: Boolean
+  MyGuid:
+    Type: GUID
+  MyNumber:
+    Type: Number
+  MyString:
+    Type: Text

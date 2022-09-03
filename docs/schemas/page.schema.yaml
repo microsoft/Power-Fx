@@ -1,0 +1,22 @@
+# Power Fx custom page schema (JSON Schema in YAML format)
+
+# Derived and extended from type.schema.yaml
+
+$schema: https://json-schema.org/draft/2019-09/schema
+$id: https://raw.githubusercontent.com/microsoft/Power-Fx/gregli/fx-schema/docs/schemas/page.schema.yaml
+description: Power Fx custom page schema
+type: object
+unevaluatedProperties: false                            # no expando of properties to this schema
+properties:
+    Parameters:
+        type: object
+        additionalProperties: 
+            type: object
+            $ref: "./typebase.schema.yaml"
+            properties:
+                Url:
+                    type: boolean
+                    description: should this parameter be passed on the URL for deep leaking?
+                Required:
+                    type: boolean
+                    description: is this a required parameter?

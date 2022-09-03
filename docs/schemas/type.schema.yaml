@@ -1,0 +1,11 @@
+# Power Fx Type definition schema - type.schema.yaml (JSON Schema in YAML format)
+
+# Note that this schema does not name the type, that happens in whatever context embeds this schema
+
+$schema: https://json-schema.org/draft/2019-09/schema
+$id: https://raw.githubusercontent.com/microsoft/Power-Fx/gregli/fx-schema/docs/schemas/type.schema.yaml
+description: Power Fx type definition schema
+type: object
+unevaluatedProperties: false                            # no expando of properties on top of typebase
+$ref: ./typebase.schema.yaml
+
