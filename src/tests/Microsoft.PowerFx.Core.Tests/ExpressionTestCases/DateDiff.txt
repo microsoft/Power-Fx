@@ -1,0 +1,84 @@
+﻿>> DateDiff(Date(2011,1,15) , Date(2011,1,30))
+15
+
+>> DateDiff(Date(-1, 2, 3), Date(2011,1,30))
+#Error(Kind=InvalidArgument)
+
+>> DateDiff(If(1<0,Date(1,1,1)), Date(2011,1,30))
+Blank()
+
+>> DateDiff(Date(2011,1,15), If(1<0,Date(1,1,1)))
+Blank()
+
+>> DateDiff(Date(2011,1,15) , Date(2011,1,30), Blank())
+15
+
+>> DateDiff(Date(2013,1,15) , Date(2012,1,30))
+-351
+
+>> DateDiff(Date(2011,1,15) , Date(2011,1,30), TimeUnit.Days)
+15
+
+>> DateDiff(Date(2011,1,15) , Date(2011,1,30), "Days")
+15
+
+>> DateDiff(Date(2011,1,15) , Date(2011,1,30), "days")
+15
+
+>> DateDiff(Date(2011,1,15) , Date(2011,1,30), "DaYs")
+15
+
+>> DateDiff(Date(2013,1,15) , Date(2012,1,30), TimeUnit.Days)
+-351
+
+>> DateDiff(Date(2011,1,15) , Date(2011,1,30), "milliseconds")
+1296000000
+
+>> DateDiff(Date(2011,1,15) , Date(2011,1,30), "seconds")
+1296000
+
+>> DateDiff(Date(2011,1,15) , Date(2011,1,30), "minutes")
+21600
+
+>> DateDiff(Date(2011,1,15) , Date(2011,1,30), "hours")
+360
+
+>> DateDiff(Date(2011,1,15) , Date(2011,1,30), "quarters")
+0
+
+>> DateDiff(Date(2011,1,15) , Date(2011,7,30), "quarters")
+2
+
+>> DateDiff(Date(2011,1,15) , Date(2011,1,30), TimeUnit.Milliseconds)
+1296000000
+
+>> DateDiff(Date(2011,1,15) , Date(2011,1,30), TimeUnit.Seconds)
+1296000
+
+>> DateDiff(Date(2011,1,15) , Date(2011,1,30), TimeUnit.Minutes)
+21600
+
+>> DateDiff(Date(2011,1,15) , Date(2011,1,30), TimeUnit.Hours)
+360
+
+>> DateDiff(Date(2011,1,15) , Date(2011,1,30), TimeUnit.Quarters)
+0
+
+>> DateDiff(Date(2011,1,15) , Date(2011,7,30), TimeUnit.Quarters)
+2
+
+>> DateDiff(Date(2021,1,1), Date(2000,1,1), TimeUnit.Years)
+-21
+
+>> DateDiff(Date(2021,1,1), Date(2000,1,1), "Years")
+-21
+
+>> DateDiff(Date(2021,1,1), Date(2021,2,1), TimeUnit.Months)
+1
+
+>> DateDiff(Date(2021,1,1), Date(2021,2,1), "Months")
+1
+
+>> DateDiff(Date(2021,1,1), Date(2021,1,20), TimeUnit.Months)
+0
+
