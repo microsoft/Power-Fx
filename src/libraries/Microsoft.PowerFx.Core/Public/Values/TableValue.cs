@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Utils;
@@ -87,12 +88,12 @@ namespace Microsoft.PowerFx.Types
         // Async because derived classes may back this with a network call. 
         public virtual async Task<DValue<RecordValue>> AppendAsync(RecordValue record)
         {
-            throw ThrowNotImplementedException(MethodBase.GetCurrentMethod().Name);
+            throw ThrowNotImplementedException();
         }
 
         public virtual async Task<DValue<RecordValue>> PatchCoreAsync(RecordValue originalRecord, RecordValue newRecord)
         {
-            throw ThrowNotImplementedException(MethodBase.GetCurrentMethod().Name);
+            throw ThrowNotImplementedException();
         }
 
         public async Task<DValue<RecordValue>> PatchAsync(RecordValue originalRecord, RecordValue newRecord)
@@ -110,15 +111,15 @@ namespace Microsoft.PowerFx.Types
         // Async because derived classes may back this with a network call. 
         public virtual async Task<DValue<BooleanValue>> RemoveAsync(RecordValue record)
         {
-            throw ThrowNotImplementedException(MethodBase.GetCurrentMethod().Name);
+            throw ThrowNotImplementedException();
         }
 
         public virtual bool TryFindRecord(RecordValue originalRecord, out int index)
         {
-            throw ThrowNotImplementedException(MethodBase.GetCurrentMethod().Name);
+            throw ThrowNotImplementedException();
         }
 
-        private Exception ThrowNotImplementedException(string methodName)
+        private Exception ThrowNotImplementedException([CallerMemberName] string methodName = null)
         {
             return new NotImplementedException($"It is not possible to append to call {methodName} method from TableValue directly.");
         }
