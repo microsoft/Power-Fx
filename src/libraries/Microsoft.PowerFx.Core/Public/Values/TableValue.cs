@@ -113,11 +113,6 @@ namespace Microsoft.PowerFx.Types
             throw ThrowNotImplementedException();
         }
 
-        public virtual bool TryFindRecord(RecordValue originalRecord, out int index)
-        {
-            throw ThrowNotImplementedException();
-        }
-
         private Exception ThrowNotImplementedException([CallerMemberName] string methodName = null)
         {
             return new NotImplementedException($"It is not possible to append to call {methodName} method from TableValue directly.");
