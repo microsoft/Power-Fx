@@ -101,9 +101,7 @@ Errors: Error 0-51: The function 'Patch' has some invalid arguments.|Error 21-50
 Blank()
 
 >> Patch(t1, {DisplayNameField1:55}, {DisplayNameField2:"mars"})
-Blank()
+{Field1:1,Field2:"mars",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}
 
 >> Patch(t1, {DisplayNameField1:1/0}, {DisplayNameField2:"mars"})
-Blank()
-
-
+{Field1:1,Field2:"mars",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}

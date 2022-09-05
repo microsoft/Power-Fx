@@ -50,11 +50,11 @@ namespace Microsoft.PowerFx.Types
             return _fields.TryGetValue(fieldName, out result);
         }
 
-        public override async Task<DValue<RecordValue>> UpdateFields(RecordValue record)
+        public override async Task<DValue<RecordValue>> UpdateFieldsAsync(RecordValue record)
         {
             if (_mutableFields == null)
             {
-                return await base.UpdateFields(record);
+                return await base.UpdateFieldsAsync(record);
             }
 
             var fields = new List<NamedValue>();

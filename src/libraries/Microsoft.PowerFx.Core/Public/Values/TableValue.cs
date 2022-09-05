@@ -100,11 +100,10 @@ namespace Microsoft.PowerFx.Types
         {
             var recordType = ((TableType)IRContext.ResultType).ToRecord();
 
-            // Resolve from display names to logical names, if any.
-            var resolvedOriginalRecord = recordType.ResolveToLogicalNames(originalRecord);
+            // Resolve from display names to logical names, if any.            
             var resolvedNewRecord = recordType.ResolveToLogicalNames(newRecord);
 
-            return await PatchCoreAsync(resolvedOriginalRecord, resolvedNewRecord);
+            return await PatchCoreAsync(originalRecord, resolvedNewRecord);
         }
 
         // Return boolean value

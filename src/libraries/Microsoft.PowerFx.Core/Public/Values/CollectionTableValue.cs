@@ -114,7 +114,7 @@ namespace Microsoft.PowerFx.Types
 
             if (actual != null)
             {
-                return await actual.UpdateFields(newRecord);
+                return await actual.UpdateFieldsAsync(newRecord);
             }
             else
             {

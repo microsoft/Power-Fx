@@ -163,7 +163,7 @@ namespace Microsoft.PowerFx.Types
             visitor.Visit(this);
         }
 
-        public virtual async Task<DValue<RecordValue>> UpdateFields(RecordValue record)
+        public virtual async Task<DValue<RecordValue>> UpdateFieldsAsync(RecordValue record)
         {
             var errorValue = NewError(new ExpressionError()
             {
@@ -179,7 +179,7 @@ namespace Microsoft.PowerFx.Types
         {
             var list = new List<NamedValue>() { new NamedValue(name, value) };
 
-            return UpdateFields(FormulaValue.NewRecordFromFields(list));
+            return UpdateFieldsAsync(FormulaValue.NewRecordFromFields(list));
         }
     }
 }
