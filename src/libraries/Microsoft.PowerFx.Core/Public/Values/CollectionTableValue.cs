@@ -108,9 +108,9 @@ namespace Microsoft.PowerFx.Types
             }
         }
 
-        public override async Task<DValue<RecordValue>> PatchCoreAsync(RecordValue baserecord, RecordValue newRecord)
+        protected override async Task<DValue<RecordValue>> PatchCoreAsync(RecordValue baseRecord, RecordValue newRecord)
         {
-            var actual = Find(baserecord);
+            var actual = Find(baseRecord);
 
             if (actual != null)
             {
@@ -122,12 +122,17 @@ namespace Microsoft.PowerFx.Types
             }
         }
 
-        // Linear scan
-        protected virtual RecordValue Find(RecordValue baserecord)
+        /// <summary>
+        /// Execute a linear search for the matching record.
+        /// </summary>
+        /// <param name="baseRecord">RecordValue argument.</param>
+        /// <returns>A record instance within the current table. This record can then be updated.</returns>
+        /// <remarks>A derived class may override if there's a more efficient way to find the match than by linear scan.</remarks>
+        protected virtual RecordValue Find(RecordValue baseRecord)
         {
             foreach (var current in Rows)
             {
-                if (Matches(current.Value, baserecord))
+                if (Matches(current.Value, baseRecord))
                 {
                     return current.Value;
                 }

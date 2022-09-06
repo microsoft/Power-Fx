@@ -32,6 +32,8 @@ namespace Microsoft.PowerFx.Types
 
         public bool IsColumn => IRContext.ResultType._type.IsColumn;
 
+        public new TableType Type => (TableType)base.Type;
+
         internal TableValue(IRContext irContext)
             : base(irContext)
         {
@@ -82,40 +84,38 @@ namespace Microsoft.PowerFx.Types
             });
         }
 
+        private static ErrorValue NotImplemented(IRContext irContext, [CallerMemberName] string methodName = null)
+        {
+            return new ErrorValue(irContext, new ExpressionError()
+            {
+                Message = $"It is not possible to call {methodName} method from TableValue directly.",
+                Span = irContext.SourceContext,
+                Kind = ErrorKind.Internal
+            });
+        }
+
         // Return appended value 
         // - Error, 
         // - with updated values
         // Async because derived classes may back this with a network call. 
         public virtual async Task<DValue<RecordValue>> AppendAsync(RecordValue record)
         {
-            throw ThrowNotImplementedException();
+            return DValue<RecordValue>.Of(NotImplemented(IRContext));
         }
 
-        public virtual async Task<DValue<RecordValue>> PatchCoreAsync(RecordValue originalRecord, RecordValue newRecord)
+        protected virtual async Task<DValue<RecordValue>> PatchCoreAsync(RecordValue originalRecord, RecordValue newRecord)
         {
-            throw ThrowNotImplementedException();
+            return DValue<RecordValue>.Of(NotImplemented(IRContext));
         }
 
         public async Task<DValue<RecordValue>> PatchAsync(RecordValue originalRecord, RecordValue newRecord)
         {
-            var recordType = ((TableType)IRContext.ResultType).ToRecord();
+            var recordType = Type.ToRecord();
 
             // Resolve from display names to logical names, if any.            
             var resolvedNewRecord = recordType.ResolveToLogicalNames(newRecord);
 
             return await PatchCoreAsync(originalRecord, resolvedNewRecord);
-        }
-
-        // Return boolean value
-        // Async because derived classes may back this with a network call. 
-        public virtual async Task<DValue<BooleanValue>> RemoveAsync(RecordValue record)
-        {
-            throw ThrowNotImplementedException();
-        }
-
-        private Exception ThrowNotImplementedException([CallerMemberName] string methodName = null)
-        {
-            return new NotImplementedException($"It is not possible to append to call {methodName} method from TableValue directly.");
         }
 
         public override object ToObject()

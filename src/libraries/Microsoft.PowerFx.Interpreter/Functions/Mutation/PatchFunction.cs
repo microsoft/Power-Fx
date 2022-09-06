@@ -99,16 +99,16 @@ namespace Microsoft.PowerFx.Functions
             return retFields;
         }
 
-        protected static IEnumerable<NamedValue> FieldDictToFieldEnumerable(IReadOnlyDictionary<string, FormulaValue> fieldsDict)
+        protected static RecordValue FieldDictToRecordValue(IReadOnlyDictionary<string, FormulaValue> fieldsDict)
         {
-            var ret = new List<NamedValue>();
+            var list = new List<NamedValue>();
 
             foreach (var field in fieldsDict)
             {
-                ret.Add(new NamedValue(field.Key, field.Value));
+                list.Add(new NamedValue(field.Key, field.Value));
             }
 
-            return ret;
+            return FormulaValue.NewRecordFromFields(list);
         }
     }
 
@@ -147,9 +147,7 @@ namespace Microsoft.PowerFx.Functions
                 return faultyArg;
             }
 
-            return FormulaValue.NewRecordFromFields(
-                FieldDictToFieldEnumerable(
-                    CreateRecordFromArgsDict(args, 0)));
+            return FieldDictToRecordValue(CreateRecordFromArgsDict(args, 0));
         }
 
         public override RequiredDataSourcePermissions FunctionPermission => RequiredDataSourcePermissions.Create | RequiredDataSourcePermissions.Update;
@@ -255,14 +253,17 @@ namespace Microsoft.PowerFx.Functions
                 return faultyArg;
             }
 
+            if (args[0] is BlankValue)
+            {
+                return args[0];
+            }
+
             if (args[1] is BlankValue)
             {
                 return args[1];
             }
 
-            var newRecord = FormulaValue.NewRecordFromFields(
-                FieldDictToFieldEnumerable(
-                    CreateRecordFromArgsDict(args, 2)));
+            var newRecord = FieldDictToRecordValue(CreateRecordFromArgsDict(args, 2));
 
             var arg0 = (TableValue)args[0];
             var arg1 = (RecordValue)args[1];
