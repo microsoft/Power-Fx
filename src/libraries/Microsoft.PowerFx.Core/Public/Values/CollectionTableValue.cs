@@ -147,6 +147,11 @@ namespace Microsoft.PowerFx.Types
             {
                 var fieldValue = currentRecord.GetField(field.Value.Type, field.Name);
 
+                if (fieldValue is BlankValue)
+                {
+                    return false;
+                }
+
                 var compare1 = fieldValue.ToObject();
                 var compare2 = field.Value.ToObject();
 

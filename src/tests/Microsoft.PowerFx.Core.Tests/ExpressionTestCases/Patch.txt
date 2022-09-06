@@ -95,7 +95,7 @@ Table({Field1:0,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})
 >> Patch(t1, First(t1), {DisplayNameField5:"Pandora"});First(t1)
 Errors: Error 0-51: The function 'Patch' has some invalid arguments.|Error 21-50: The specified column 'DisplayNameField5' does not exist. The column with the most similar name is 'DisplayNameField1'.
 
->> Patch(t1, {DisplayNameField1:1}, {DisplayNameField2:"mars"});First(t1).Field2
+>> Patch(t1, {Field1:1}, {DisplayNameField2:"mars"});First(t1).Field2
 "mars"
 
 
@@ -105,7 +105,7 @@ Errors: Error 0-51: The function 'Patch' has some invalid arguments.|Error 21-50
 Blank()
 
 >> Patch(t1, {DisplayNameField1:55}, {DisplayNameField2:"mars"})
-{Field1:1,Field2:"mars",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}
+Blank()
 
 >> Patch(t1, {DisplayNameField1:1/0}, {DisplayNameField2:"mars"})
-{Field1:1,Field2:"mars",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}
+Blank()
