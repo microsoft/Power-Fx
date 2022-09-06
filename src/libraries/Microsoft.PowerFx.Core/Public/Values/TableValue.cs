@@ -103,19 +103,25 @@ namespace Microsoft.PowerFx.Types
             return DValue<RecordValue>.Of(NotImplemented(IRContext));
         }
 
-        protected virtual async Task<DValue<RecordValue>> PatchCoreAsync(RecordValue originalRecord, RecordValue newRecord)
+        protected virtual async Task<DValue<RecordValue>> PatchCoreAsync(RecordValue baseRecord, RecordValue changeRecord)
         {
             return DValue<RecordValue>.Of(NotImplemented(IRContext));
         }
 
-        public async Task<DValue<RecordValue>> PatchAsync(RecordValue originalRecord, RecordValue newRecord)
+        /// <summary>
+        /// Modifies one record in a data source.
+        /// </summary>
+        /// <param name="baseRecord">A record to modify.</param>
+        /// <param name="changeRecord">A record that contains properties to modify the base record.</param>
+        /// <returns>The updated record.</returns>
+        public async Task<DValue<RecordValue>> PatchAsync(RecordValue baseRecord, RecordValue changeRecord)
         {
             var recordType = Type.ToRecord();
 
             // Resolve from display names to logical names, if any.            
-            var resolvedNewRecord = recordType.ResolveToLogicalNames(newRecord);
+            var resolvedChangeRecord = recordType.ResolveToLogicalNames(changeRecord);
 
-            return await PatchCoreAsync(originalRecord, resolvedNewRecord);
+            return await PatchCoreAsync(baseRecord, resolvedChangeRecord);
         }
 
         public override object ToObject()

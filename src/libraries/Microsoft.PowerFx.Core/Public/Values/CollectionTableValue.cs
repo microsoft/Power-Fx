@@ -108,13 +108,13 @@ namespace Microsoft.PowerFx.Types
             }
         }
 
-        protected override async Task<DValue<RecordValue>> PatchCoreAsync(RecordValue baseRecord, RecordValue newRecord)
+        protected override async Task<DValue<RecordValue>> PatchCoreAsync(RecordValue baseRecord, RecordValue changeRecord)
         {
             var actual = Find(baseRecord);
 
             if (actual != null)
             {
-                return await actual.UpdateFieldsAsync(newRecord);
+                return await actual.UpdateFieldsAsync(changeRecord);
             }
             else
             {

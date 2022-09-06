@@ -69,7 +69,8 @@ namespace Microsoft.PowerFx.Functions
             return true;
         }
 
-        // Patch(datasource, baserecord, arg2, ... argn)
+        // Change records are processed in order from the beginning of the argument list to the end,
+        // with later property values overriding earlier ones.
         protected static Dictionary<string, FormulaValue> CreateRecordFromArgsDict(FormulaValue[] args, int startFrom)
         {
             var retFields = new Dictionary<string, FormulaValue>(StringComparer.Ordinal);
@@ -86,7 +87,6 @@ namespace Microsoft.PowerFx.Functions
                 {
                     foreach (var field in record.Fields)
                     {
-                        //Patch(datasouce, r1, {field:1}, {displayfield1:2})
                         retFields[field.Name] = field.Value;
                     }
                 }
@@ -263,12 +263,12 @@ namespace Microsoft.PowerFx.Functions
                 return args[1];
             }
 
-            var newRecord = FieldDictToRecordValue(CreateRecordFromArgsDict(args, 2));
+            var changeRecord = FieldDictToRecordValue(CreateRecordFromArgsDict(args, 2));
 
-            var arg0 = (TableValue)args[0];
-            var arg1 = (RecordValue)args[1];
+            var datasource = (TableValue)args[0];
+            var baseRecord = (RecordValue)args[1];
 
-            var ret = await arg0.PatchAsync(arg1, newRecord);
+            var ret = await datasource.PatchAsync(baseRecord, changeRecord);
 
             return ret.ToFormulaValue();
         }

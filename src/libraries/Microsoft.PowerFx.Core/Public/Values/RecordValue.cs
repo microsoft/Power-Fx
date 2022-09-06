@@ -163,7 +163,7 @@ namespace Microsoft.PowerFx.Types
             visitor.Visit(this);
         }
 
-        public virtual async Task<DValue<RecordValue>> UpdateFieldsAsync(RecordValue record)
+        public virtual async Task<DValue<RecordValue>> UpdateFieldsAsync(RecordValue changeRecord)
         {
             var errorValue = NewError(new ExpressionError()
             {
