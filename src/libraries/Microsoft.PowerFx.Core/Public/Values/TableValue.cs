@@ -103,6 +103,12 @@ namespace Microsoft.PowerFx.Types
             return DValue<RecordValue>.Of(NotImplemented(IRContext));
         }
 
+        /// <summary>
+        /// Patch implementation for derived classes.
+        /// </summary>
+        /// <param name="baseRecord">A record to modify.</param>
+        /// <param name="changeRecord">A record that contains properties to modify the base record. All display names are resolved.</param>
+        /// <returns></returns>
         protected virtual async Task<DValue<RecordValue>> PatchCoreAsync(RecordValue baseRecord, RecordValue changeRecord)
         {
             return DValue<RecordValue>.Of(NotImplemented(IRContext));

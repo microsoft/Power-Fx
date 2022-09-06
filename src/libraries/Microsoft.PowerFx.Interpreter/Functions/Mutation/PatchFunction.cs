@@ -198,6 +198,8 @@ namespace Microsoft.PowerFx.Functions
             {
                 DType curType = argTypes[i];
 
+                var tableType = (TableType)FormulaType.Build(dataSourceType);
+
                 if (!curType.IsRecord)
                 {
                     errors.EnsureError(args[i], TexlStrings.ErrNeedRecord);
@@ -209,9 +211,7 @@ namespace Microsoft.PowerFx.Functions
 
                 foreach (var typedName in curType.GetNames(DPath.Root))
                 {
-                    if (!(dataSourceType.DisplayNameProvider != null && (dataSourceType.DisplayNameProvider.TryGetDisplayName(typedName.Name, out var displayName) ||
-                        dataSourceType.DisplayNameProvider.TryGetLogicalName(typedName.Name, out DName name))) &&
-                        !dataSourceType.TryGetType(typedName.Name, out DType dsNameType))
+                    if (!tableType.TryGetFieldType(typedName.Name, out var displayName, out _))
                     {
                         dataSourceType.ReportNonExistingName(FieldNameKind.Display, errors, typedName.Name, args[i]);
                         isValid = isSafeToUnion = false;
