@@ -54,30 +54,42 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
         private static (RecalcEngine engine, RecordValue parameters) MutationFunctionsTestSetup(PowerFxConfig config)
         {
-            var symbol = new SymbolTable();
+            var rType = RecordType.Empty()
+                .Add(new NamedFormulaType("Field1", FormulaType.Number, "DisplayNameField1"))
+                .Add(new NamedFormulaType("Field2", FormulaType.String, "DisplayNameField2"))
+                .Add(new NamedFormulaType("Field3", FormulaType.DateTime, "DisplayNameField3"))
+                .Add(new NamedFormulaType("Field4", FormulaType.Boolean, "DisplayNameField4"));
 
-            RecordValue r1 = FormulaValue.NewRecordFromFields(
+            var r1Fields = new List<NamedValue>()
+            {
                 new NamedValue("Field1", FormulaValue.New(1)),
                 new NamedValue("Field2", FormulaValue.New("earth")),
                 new NamedValue("Field3", FormulaValue.New(DateTime.Parse("1/1/2022").Date)),
-                new NamedValue("Field4", FormulaValue.New(true)));
+                new NamedValue("Field4", FormulaValue.New(true))
+            };
 
-            RecordValue r2 = FormulaValue.NewRecordFromFields(
+            var r2Fields = new List<NamedValue>()
+            {
                 new NamedValue("Field1", FormulaValue.New(2)),
                 new NamedValue("Field2", FormulaValue.New("moon")),
                 new NamedValue("Field3", FormulaValue.New(DateTime.Parse("2/1/2022").Date)),
-                new NamedValue("Field4", FormulaValue.New(false)));
+                new NamedValue("Field4", FormulaValue.New(false))
+            };
 
-            var r_empty = RecordValue.Empty();
+            var r1 = FormulaValue.NewRecordFromFields(rType, r1Fields);
+            var r2 = FormulaValue.NewRecordFromFields(rType, r2Fields);
+            var rEmpty = RecordValue.Empty();
 
-            var t1 = FormulaValue.NewTable(r1.Type, new List<RecordValue>() { r1 });
+            var t1 = FormulaValue.NewTable(rType, new List<RecordValue>() { r1 });
+
+            var symbol = new SymbolTable();
 
             symbol.EnableMutationFunctions();
 
             symbol.AddConstant("t1", t1);
             symbol.AddConstant("r1", r1);
             symbol.AddConstant("r2", r2);
-            symbol.AddConstant("r_empty", r_empty);
+            symbol.AddConstant("r_empty", rEmpty);
 
             config.SymbolTable = symbol;
 

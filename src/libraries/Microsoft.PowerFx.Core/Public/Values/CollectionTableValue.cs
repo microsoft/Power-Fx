@@ -107,5 +107,61 @@ namespace Microsoft.PowerFx.Types
                 return base.TryGetIndex(index1, out record);
             }
         }
+
+        protected override async Task<DValue<RecordValue>> PatchCoreAsync(RecordValue baseRecord, RecordValue changeRecord)
+        {
+            var actual = Find(baseRecord);
+
+            if (actual != null)
+            {
+                return await actual.UpdateFieldsAsync(changeRecord);
+            }
+            else
+            {
+                return DValue<RecordValue>.Of(FormulaValue.NewBlank(IRContext.ResultType));
+            }
+        }
+
+        /// <summary>
+        /// Execute a linear search for the matching record.
+        /// </summary>
+        /// <param name="baseRecord">RecordValue argument.</param>
+        /// <returns>A record instance within the current table. This record can then be updated.</returns>
+        /// <remarks>A derived class may override if there's a more efficient way to find the match than by linear scan.</remarks>
+        protected virtual RecordValue Find(RecordValue baseRecord)
+        {
+            foreach (var current in Rows)
+            {
+                if (Matches(current.Value, baseRecord))
+                {
+                    return current.Value;
+                }
+            }
+
+            return null;
+        }
+
+        protected static bool Matches(RecordValue currentRecord, RecordValue baseRecord)
+        {
+            foreach (var field in baseRecord.Fields)
+            {
+                var fieldValue = currentRecord.GetField(field.Value.Type, field.Name);
+
+                if (fieldValue is BlankValue)
+                {
+                    return false;
+                }
+
+                var compare1 = fieldValue.ToObject();
+                var compare2 = field.Value.ToObject();
+
+                if (compare1 != null && !compare1.Equals(compare2))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
     }
 }

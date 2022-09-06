@@ -21,17 +21,23 @@ namespace Microsoft.PowerFx.Core.Tests
             var r2 = FormulaValue.NewRecordFromFields(
                 new NamedValue("f1", FormulaValue.New(2)));
 
-            var t = FormulaValue.NewTable(r1.Type, r1); // Mutable 
+            // Mutable
+            var t = FormulaValue.NewTable(r1.Type, r1); 
 
             Assert.Equal(1, t.Count());
-            await t.AppendAsync(r2); // succeeds
+
+            // succeeds
+            await t.AppendAsync(r2);
 
             Assert.Equal(2, t.Count());
 
-            // Future test case
+            // Immutable
             IEnumerable<RecordValue> source = new RecordValue[] { r1 };
-            var t2 = FormulaValue.NewTable(r1.Type, source); // Immutable
-            await Assert.ThrowsAsync<NotImplementedException>(async () => await t2.AppendAsync(r2)); // Fails 
+            var t2 = FormulaValue.NewTable(r1.Type, source); 
+            var result = await t2.AppendAsync(r2);
+
+            Assert.True(result.IsError);
+            Assert.Equal("It is not possible to call AppendAsync method from TableValue directly.", result.Error.Errors[0].Message);
         }
     }
 }
