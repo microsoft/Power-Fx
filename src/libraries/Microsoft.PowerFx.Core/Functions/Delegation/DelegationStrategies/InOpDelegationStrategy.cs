@@ -38,6 +38,10 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             }
 
             var isRHSDelegableTable = IsRHSDelegableTable(binding, binaryOpNode, metadata);
+            if (isRHSDelegableTable && binaryOpNode.Left is DottedNameNode dottedField && binding.GetType(dottedField.Left).HasExpandInfo)
+            {
+                return base.IsSupportedOpNode(node, metadata, binding);
+            }
 
             DName columnName = default;
             FirstNameInfo info = null;
@@ -68,9 +72,9 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             var hasEnhancedDelegation = binding.Document.Properties.EnabledFeatures.IsEnhancedDelegationEnabled;
             var isColumn = rightNodeType?.IsColumn == true;
             var isDelegationSupportedByTable = metadata.IsDelegationSupportedByTable(DelegationCapability.CdsIn);
-            var hasLeftFirstNameNodeOrIsFullRecordRowScopeAccess = binaryOpNode.Left?.AsFirstName() != null || binding.IsFullRecordRowScopeAccess(binaryOpNode.Left);
+            var hasLeftFirstNameNodeOrIsFullRecordRowScopeAccessOrLookup = binaryOpNode.Left?.AsFirstName() != null || binding.IsFullRecordRowScopeAccess(binaryOpNode.Left) || (binaryOpNode.Left is DottedNameNode dottedField && binding.GetType(dottedField.Left).HasExpandInfo);
 
-            return hasEnhancedDelegation && isColumn && isDelegationSupportedByTable && hasLeftFirstNameNodeOrIsFullRecordRowScopeAccess;
+            return hasEnhancedDelegation && isColumn && isDelegationSupportedByTable && hasLeftFirstNameNodeOrIsFullRecordRowScopeAccessOrLookup;
         }
 
         public bool CheckForFullyQualifiedFieldAccess(bool isRHSDelegableTable, BinaryOpNode binaryOpNode, TexlBinding binding, TexlNode node, ref DName columnName, ref FirstNameInfo info)
@@ -182,7 +186,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             if (!(_binaryOpNode.Right.Kind == NodeKind.FirstName ||
                 binding.IsFullRecordRowScopeAccess(_binaryOpNode.Right) ||
                 (metadata.IsDelegationSupportedByTable(DelegationCapability.CdsIn) &&
-                (_binaryOpNode.Left.Kind == NodeKind.FirstName || binding.IsFullRecordRowScopeAccess(_binaryOpNode.Left)) &&
+                (_binaryOpNode.Left.Kind == NodeKind.FirstName || binding.IsFullRecordRowScopeAccess(_binaryOpNode.Left) || (_binaryOpNode.Left.Kind == NodeKind.DottedName && binding.GetType((_binaryOpNode.Left as DottedNameNode).Left).HasExpandInfo)) &&
                 (_binaryOpNode.Right.Kind == NodeKind.Table || binding.GetType(_binaryOpNode.Right)?.IsColumn == true))))
             {
                 return false;
