@@ -127,15 +127,15 @@ namespace Microsoft.PowerFx.Types
             {
                 var deleteList = new List<T>();
 
-                foreach (var current in _enumerator)
+                foreach (var item in _enumerator)
                 {
                     cancel.ThrowIfCancellationRequested();
 
-                    var currentRecord = current as RecordValue;
+                    var dRecord = Marshal(item);
 
-                    if (Matches(currentRecord, recordToRemove))
+                    if (Matches(dRecord.Value, recordToRemove))
                     {
-                        deleteList.Add(current);
+                        deleteList.Add(item);
 
                         if (!all)
                         {

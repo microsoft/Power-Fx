@@ -133,7 +133,7 @@ namespace Microsoft.PowerFx.Functions
                     {
                         var strNode = (StrLitNode)args[i];
 
-                        if (strNode.Value.ToUpper() != "ALL")
+                        if (strNode.Value.ToUpperInvariant() != "ALL")
                         {
                             fValid = false;
                             errors.EnsureError(args[i], ErrRemoveAllArg, args[i]);
