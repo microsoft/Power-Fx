@@ -1,171 +1,60 @@
-//DateDiff Zero(TimeUnit.Milliseconds)
->> DateDiff(DateTimeValue("12/31/2005 23:59:59:999"), DateTimeValue("12/31/2005 23:59:59:999"), TimeUnit.Milliseconds)
-0
-
->> IsBlank(DateDiff(DateTimeValue("12/31/2005 23:59:59:999"), DateTimeValue("12/31/2005 23:59:59:999"), TimeUnit.Milliseconds))
-false
-
->> IsError(DateDiff(DateTimeValue("12/31/2005 23:59:59:999"), DateTimeValue("12/31/2005 23:59:59:999"), TimeUnit.Milliseconds))
-false
-
-//DateDiff Zero(TimeUnit.Seconds)
->> DateDiff(DateTimeValue("12/31/2005 23:59:59:999"), DateTimeValue("12/31/2005 23:59:59:999"), TimeUnit.Seconds)
-0
-
-//DateDiff Zero(TimeUnit.Minutes)
->> DateDiff(DateTimeValue("12/31/2005 23:59:59:999"), DateTimeValue("12/31/2005 23:59:59:999"), TimeUnit.Minutes)
-0
-
-//DateDiff Zero(TimeUnit.Hours)
->> DateDiff(DateTimeValue("12/31/2005 23:59:59:999"), DateTimeValue("12/31/2005 23:59:59:999"), TimeUnit.Hours)
-0
-
-//DateDiff Zero(TimeUnit.Days)
->> DateDiff(DateTimeValue("12/31/2005 23:59:59:999"), DateTimeValue("12/31/2005 23:59:59:999"), TimeUnit.Days)
-0
-
-//DateDiff Zero(TimeUnit.Months)
->> DateDiff(DateTimeValue("12/31/2005 23:59:59:999"), DateTimeValue("12/31/2005 23:59:59:999"), TimeUnit.Months)
-0
-
-//DateDiff Zero(TimeUnit.Quarters)
->> DateDiff(DateTimeValue("12/31/2005 23:59:59:999"), DateTimeValue("12/31/2005 23:59:59:999"), TimeUnit.Quarters)
-0
-
-//DateDiff Zero(TimeUnit.Years)
->> DateDiff(DateTimeValue("12/31/2005 23:59:59:999"), DateTimeValue("12/31/2005 23:59:59:999"), TimeUnit.Years)
-0
-
-//DateDiff 1 year in TimeUnit.Milliseconds
->> DateDiff(DateTimeValue("1/1/2006 0:0:0:0"), DateTimeValue("1/1/2007 0:0:0:0"),TimeUnit.Milliseconds)
-31536000000
-
-//DateDiff 1 year in TimeUnit.Seconds
->> DateDiff(DateTimeValue("1/1/2006 0:0:0:0"), DateTimeValue("1/1/2007 0:0:0:0"),TimeUnit.Seconds)
-31536000
-
-//DateDiff 1 year in TimeUnit.Minutes
->> DateDiff(DateTimeValue("1/1/2006 0:0:0:0"), DateTimeValue("1/1/2007 0:0:0:0"),TimeUnit.Minutes)
-525600
-
-//DateDiff 1 year in TimeUnit.Hours
->> DateDiff(DateTimeValue("1/1/2006 0:0:0:0"), DateTimeValue("1/1/2007 0:0:0:0"),TimeUnit.Hours)
-8760
-
-//DateDiff 1 year in TimeUnit.Days
->> DateDiff(DateTimeValue("1/1/2006 0:0:0:0"), DateTimeValue("1/1/2007 0:0:0:0"),TimeUnit.Days)
-365
-
-//DateDiff 1 year in TimeUnit.Months
->> DateDiff(DateTimeValue("1/1/2006 0:0:0:0"), DateTimeValue("1/1/2007 0:0:0:0"),TimeUnit.Months)
-12
-
-//DateDiff 1 year in TimeUnit.Quarters
->> DateDiff(DateTimeValue("1/1/2006 0:0:0:0"), DateTimeValue("1/1/2007 0:0:0:0"),TimeUnit.Quarters)
-4
-
-//DateDiff 1 year in TimeUnit.Years
->> DateDiff(DateTimeValue("1/1/2006 0:0:0:0"), DateTimeValue("1/1/2007 0:0:0:0"),TimeUnit.Years)
-1
-
-//DateDiff 2 years in TimeUnit.Milliseconds
->> DateDiff(DateTimeValue("12/31/2005 23:59:59:999"), DateTimeValue("1/1/2007 0:0:0:0"), TimeUnit.Milliseconds)
-31536000001
-
-//DateDiff 2 years in TimeUnit.Seconds
->> DateDiff(DateTimeValue("12/31/2005 23:59:59:999"), DateTimeValue("1/1/2007 0:0:0:0"), TimeUnit.Seconds)
-31536001
-
-//DateDiff 2 years in TimeUnit.Minutes
->> DateDiff(DateTimeValue("12/31/2005 23:59:59:999"), DateTimeValue("1/1/2007 0:0:0:0"), TimeUnit.Minutes)
-525601
-
-//DateDiff 2 years in TimeUnit.Hours
->> DateDiff(DateTimeValue("12/31/2005 23:59:59:999"), DateTimeValue("1/1/2007 0:0:0:0"), TimeUnit.Hours)
-8761
-
-//DateDiff 2 years in TimeUnit.Days
->> DateDiff(DateTimeValue("12/31/2005 23:59:59:999"), DateTimeValue("1/1/2007 0:0:0:0"), TimeUnit.Days)
-366
-
-//Excel returns 12
-//DateDiff 2 years in TimeUnit.Months
->> DateDiff(DateTimeValue("12/31/2005 23:59:59:999"), DateTimeValue("1/1/2007 0:0:0:0"), TimeUnit.Months)
-13
-
-//DateDiff 2 years in TimeUnit.Quarters
->> DateDiff(DateTimeValue("12/31/2005 23:59:59:999"), DateTimeValue("1/1/2007 0:0:0:0"), TimeUnit.Quarters)
-5
-
-//DateDiff 2 years in TimeUnit.Years
->> DateDiff(DateTimeValue("12/31/2005 23:59:59:999"), DateTimeValue("1/1/2007 0:0:0:0"), TimeUnit.Years)
-2
-
-//DateDiff 2 years in Default unit (TimeUnit.Days)
->> DateDiff(DateTimeValue("12/31/2005 23:59:59:999"), DateTimeValue("1/1/2007 0:0:0:0"))
-366
-
-//DateDiff - Leap year in days
->> DateDiff(DateTimeValue("1/1/2004 0:0:0:0"), DateTimeValue("1/1/2005 0:0:0:0"))
-366
-
 // ******************************** NULL AND ERROR PARAMETERS ********************************
 
->> DateDiff(DateTimeValue(Blank()), DateTimeValue("1/1/2007 0:0:0:0"))
+>> DateDiff(DateTimeValue(Blank()), DateTime(2007,1,1,0,0,0))
 Blank()
 
->> IsBlank(DateDiff(DateTimeValue(Blank()), DateTimeValue("1/1/2007 0:0:0:0")))
+>> IsBlank(DateDiff(DateTimeValue(Blank()), DateTime(2007,1,1,0,0,0)))
 true
 
->> IsError(DateDiff(DateTimeValue(Blank()), DateTimeValue("1/1/2007 0:0:0:0")))
+>> IsError(DateDiff(DateTimeValue(Blank()), DateTime(2007,1,1,0,0,0)))
 false
 
->> DateDiff(DateTimeValue(""), DateTimeValue("1/1/2007 0:0:0:0"))
+>> DateDiff(DateTimeValue(""), DateTime(2007,1,1,0,0,0))
 Blank()
 
->> DateDiff(Date(Blank(),Blank(),Blank()), DateTimeValue("1/1/2007 0:0:0:0"))
+>> DateDiff(Date(Blank(),Blank(),Blank()), DateTime(2007,1,1,0,0,0))
 Blank()
 
->> DateDiff(Blank(), DateTimeValue("1/1/2005 0:0:0:0"),TimeUnit.Days)
+>> DateDiff(Blank(), DateTime(2005,1,1,0,0,0),TimeUnit.Days)
 Blank()
 
->> DateDiff("", DateTimeValue("1/1/2005 0:0:0:0"),TimeUnit.Days)
+>> DateDiff("", DateTime(2005,1,1,0,0,0),TimeUnit.Days)
 Blank()
 
->> DateDiff(DateTimeValue("1/1/2004 0:0:0:0"), Blank())
+>> DateDiff(DateTime(2004,1,1,0,0,0), Blank())
 Blank()
 
->> DateDiff(DateTimeValue("1/1/2004 0:0:0:0"), "")
+>> DateDiff(DateTime(2004,1,1,0,0,0), "")
 Blank()
 
->> DateDiff(DateTimeValue("12/31/2005 23:59:59:999"), Date(Blank(),Blank(),Blank()))
+>> DateDiff(DateTime(2005,12,31,23,59,59,999), Date(Blank(),Blank(),Blank()))
 Blank()
 
->> DateDiff(DateTimeValue("12/31/2005 23:59:59:999"), DateTimeValue("1/1/2007 0:0:0:0"), Blank())
+>> DateDiff(DateTime(2005,12,31,23,59,59,999), DateTime(2007,1,1,0,0,0), Blank())
 366
 
->> DateDiff(DateTimeValue("12/31/2005 23:59:59:999"), DateTimeValue("1/1/2007 0:0:0:0"), "")
+>> DateDiff(DateTime(2005,12,31,23,59,59,999), DateTime(2007,1,1,0,0,0), "")
 #Error(Kind=InvalidArgument)
 
->> IsBlank(DateDiff(DateTimeValue("12/31/2005 23:59:59:999"), DateTimeValue("1/1/2007 0:0:0:0"), ""))
+>> IsBlank(DateDiff(DateTime(2005,12,31,23,59,59,999), DateTime(2007,1,1,0,0,0), ""))
 #Error(Kind=InvalidArgument)
 
->> IsError(DateDiff(DateTimeValue("12/31/2005 23:59:59:999"), DateTimeValue("1/1/2007 0:0:0:0"), ""))
+>> IsError(DateDiff(DateTime(2005,12,31,23,59,59,999), DateTime(2007,1,1,0,0,0), ""))
 true
 
->> DateDiff(1/0, DateTimeValue("1/1/2005 0:0:0:0"),TimeUnit.Days)
+>> DateDiff(1/0, DateTime(2005,1,1,0,0,0),TimeUnit.Days)
 #Error(Kind=Div0)
 
->> DateDiff(DateTimeValue(1/0), DateTimeValue("1/1/2007 0:0:0:0"))
+>> DateDiff(DateTimeValue(1/0), DateTime(2007,1,1,0,0,0))
 #Error(Kind=Div0)
 
->> DateDiff(DateTimeValue("1/1/2004 0:0:0:0"), 1/0)
+>> DateDiff(DateTime(2004,1,1,0,0,0), 1/0)
 #Error(Kind=Div0)
 
->> DateDiff(DateTimeValue("12/31/2005 23:59:59:999"), DateTimeValue(1/0))
+>> DateDiff(DateTime(2005,12,31,23,59,59,999), DateTimeValue(1/0))
 #Error(Kind=Div0)
 
->> DateDiff(DateTimeValue("12/31/2005 23:59:59:999"), DateTimeValue("1/1/2007 0:0:0:0"), 1/0)
+>> DateDiff(DateTime(2005,12,31,23,59,59,999), DateTime(2007,1,1,0,0,0), 1/0)
 #Error(Kind=Div0)
 
 
@@ -196,35 +85,35 @@ true
 
 //Number passed in Time unit parameter
 
->> DateDiff(DateTimeValue("12/31/2005 23:59:59:999"), DateTimeValue("1/1/2007 0:0:0:0"), 1)
+>> DateDiff(DateTime(2005,12,31,23,59,59,999), DateTime(2007,1,1,0,0,0), 1)
 #Error(Kind=InvalidArgument)
 
 
 // ******************************** STRING PARAMETERS ********************************
 
->> DateDiff(DateTimeValue("ABC"), DateTimeValue("1/1/2007 0:0:0:0"))
+>> DateDiff(DateTimeValue("ABC"), DateTime(2007,1,1,0,0,0))
 #Error(Kind=InvalidArgument)
 
->> DateDiff(DateTimeValue("12/31/2005 23:59:59:999"), DateTimeValue("DEF"), TimeUnit.Months)
+>> DateDiff(DateTime(2005,12,31,23,59,59,999), DateTimeValue("DEF"), TimeUnit.Months)
 #Error(Kind=InvalidArgument)
 
->> DateDiff(DateTimeValue("12/31/2005 23:59:59:999"), DateTimeValue("1/1/2007 0:0:0:0"), "ABC")
+>> DateDiff(DateTime(2005,12,31,23,59,59,999), DateTime(2007,1,1,0,0,0), "ABC")
 #Error(Kind=InvalidArgument)
 
 //Number passed as string in Unit parameter
->> DateDiff(DateTimeValue("12/31/2005 23:59:59:999"), DateTimeValue("1/1/2007 0:0:0:0"), "1")
+>> DateDiff(DateTime(2005,12,31,23,59,59,999), DateTime(2007,1,1,0,0,0), "1")
 #Error(Kind=InvalidArgument)
 
->> DateDiff(DateTimeValue("12/31/2005 23:59:59:999"), DateTimeValue("1/1/2007 0:0:0:0"), "TimeUnit.seCOnds")
+>> DateDiff(DateTime(2005,12,31,23,59,59,999), DateTime(2007,1,1,0,0,0), "TimeUnit.seCOnds")
 #Error(Kind=InvalidArgument)
 
->> DateDiff(DateTimeValue("12/31/2005 23:59:59:999"), DateTimeValue("1/1/2007 0:0:0:0"), "TimeUnit.months")
+>> DateDiff(DateTime(2005,12,31,23,59,59,999), DateTime(2007,1,1,0,0,0), "TimeUnit.months")
 #Error(Kind=InvalidArgument)
 
->> DateDiff(DateTimeValue("12/31/2005 23:59:59:999"), DateTimeValue("1/1/2007 0:0:0:0"), "TimeUnit.quaRTers")
+>> DateDiff(DateTime(2005,12,31,23,59,59,999), DateTime(2007,1,1,0,0,0), "TimeUnit.quaRTers")
 #Error(Kind=InvalidArgument)
 
->> DateDiff(DateTimeValue("12/31/2005 23:59:59:999"), DateTimeValue("1/1/2007 0:0:0:0"), "TimeUnit.Years")
+>> DateDiff(DateTime(2005,12,31,23,59,59,999), DateTime(2007,1,1,0,0,0), "TimeUnit.Years")
 #Error(Kind=InvalidArgument)
 
 
@@ -236,10 +125,10 @@ true
 >> DateDiff(DateTimeValue(false), DateTimeValue(false), TimeUnit.Months)
 #Error(Kind=InvalidArgument)
 
->> DateDiff(DateTimeValue("12/31/2005 23:59:59:999"), DateTimeValue("1/1/2007 0:0:0:0"), true)
+>> DateDiff(DateTime(2005,12,31,23,59,59,999), DateTime(2007,1,1,0,0,0), true)
 #Error(Kind=InvalidArgument)
 
->> DateDiff(DateTimeValue("12/31/2005 23:59:59:999"), DateTimeValue("1/1/2007 0:0:0:0"), false)
+>> DateDiff(DateTime(2005,12,31,23,59,59,999), DateTime(2007,1,1,0,0,0), false)
 #Error(Kind=InvalidArgument)
 
 

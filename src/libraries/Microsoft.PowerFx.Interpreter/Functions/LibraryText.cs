@@ -117,7 +117,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 if (args[1] is StringValue cultureArg && !TryGetCulture(cultureArg.Value, out culture))
                 {
-                    return CommonErrors.BadLanguageCode(irContext);
+                    return CommonErrors.BadLanguageCode(irContext, cultureArg.Value);
                 }
             }
 

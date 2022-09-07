@@ -62,45 +62,53 @@ namespace Microsoft.PowerFx.Functions
             }
 
             var delta = (NumberValue)args[1];
-            var units = (StringValue)args[2];
+            var timeUnit = ((StringValue)args[2]).Value.ToLowerInvariant();
 
-            datetime = TimeZoneInfo.ConvertTimeToUtc(datetime, timeZoneInfo);
+            var isSubdayUnit = IsSubdayTimeUnit(timeUnit);
+            if (isSubdayUnit)
+            {
+                datetime = TimeZoneInfo.ConvertTimeToUtc(datetime, timeZoneInfo);
+            }
 
             try
             {
                 DateTime newDate;
-                switch (units.Value.ToLower())
+                var deltaValue = delta.Value;
+                switch (timeUnit)
                 {
                     case "milliseconds":
-                        newDate = datetime.AddMilliseconds(delta.Value);
+                        newDate = datetime.AddMilliseconds(deltaValue);
                         break;
                     case "seconds":
-                        newDate = datetime.AddSeconds(delta.Value);
+                        newDate = datetime.AddSeconds(deltaValue);
                         break;
                     case "minutes":
-                        newDate = datetime.AddMinutes(delta.Value);
+                        newDate = datetime.AddMinutes(deltaValue);
                         break;
                     case "hours":
-                        newDate = datetime.AddHours(delta.Value);
+                        newDate = datetime.AddHours(deltaValue);
                         break;
                     case "days":
-                        newDate = datetime.AddDays(delta.Value);
+                        newDate = datetime.AddDays(deltaValue);
                         break;
                     case "months":
-                        newDate = datetime.AddMonths((int)delta.Value);
+                        newDate = datetime.AddMonths((int)deltaValue);
                         break;
                     case "quarters":
-                        newDate = datetime.AddMonths((int)delta.Value * 3);
+                        newDate = datetime.AddMonths(((int)deltaValue) * 3);
                         break;
                     case "years":
-                        newDate = datetime.AddYears((int)delta.Value);
+                        newDate = datetime.AddYears((int)deltaValue);
                         break;
                     default:
                         // TODO: Task 10723372: Implement Unit Functionality in DateAdd, DateDiff Functions
                         return CommonErrors.NotYetImplementedError(irContext, "DateAdd Only supports Days for the unit field");
                 }
 
-                newDate = TimeZoneInfo.ConvertTimeFromUtc(newDate, timeZoneInfo);
+                if (isSubdayUnit)
+                {
+                    newDate = TimeZoneInfo.ConvertTimeFromUtc(newDate, timeZoneInfo);
+                }
 
                 if (args[0] is DateTimeValue)
                 {
@@ -115,6 +123,11 @@ namespace Microsoft.PowerFx.Functions
             {
                 return CommonErrors.ArgumentOutOfRange(irContext);
             }
+        }
+
+        private static bool IsSubdayTimeUnit(string unit)
+        {
+            return unit == "milliseconds" || unit == "seconds" || unit == "minutes" || unit == "hours";
         }
 
         public static FormulaValue DateDiff(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
@@ -145,49 +158,59 @@ namespace Microsoft.PowerFx.Functions
                     return CommonErrors.RuntimeTypeMismatch(irContext);
             }
 
-            var units = (StringValue)args[2];
+            var timeUnit = ((StringValue)args[2]).Value.ToLowerInvariant();
+            var isSubdayUnit = IsSubdayTimeUnit(timeUnit);
 
             // When converting to months, quarters or years, we don't use the time difference
             // and applying changes to map time to UTC could lead to weird results depending on the local time zone
             // as we could even change of year if the date we have is 1st of Jan and we are in a UTC+N time zone (N positive)
-            switch (units.Value.ToLower())
+            switch (timeUnit)
             {
                 case "months":
                     double months = ((end.Year - start.Year) * 12) + end.Month - start.Month;
                     return new NumberValue(irContext, months);
                 case "quarters":
-                    var quarters = ((end.Year - start.Year) * 4) + Math.Floor(end.Month / 3.0) - Math.Floor(start.Month / 3.0);
+                    var quarters = ((end.Year - start.Year) * 4) + Math.Floor((end.Month - 1) / 3.0) - Math.Floor((start.Month - 1) / 3.0);
                     return new NumberValue(irContext, quarters);
                 case "years":
                     double years = end.Year - start.Year;
                     return new NumberValue(irContext, years);
             }
 
-            // Convert to UTC to be accurate (apply DST if needed)
-            var timeZoneInfo = runner.GetService<TimeZoneInfo>() ?? LocalTimeZone;
+            if (isSubdayUnit)
+            {
+                // Convert to UTC to be accurate (apply DST if needed)
+                var timeZoneInfo = runner.GetService<TimeZoneInfo>() ?? LocalTimeZone;
 
-            start = TimeZoneInfo.ConvertTimeToUtc(start, timeZoneInfo);
-            end = TimeZoneInfo.ConvertTimeToUtc(end, timeZoneInfo);
-
-            var diff = end - start;
+                start = TimeZoneInfo.ConvertTimeToUtc(start, timeZoneInfo);
+                end = TimeZoneInfo.ConvertTimeToUtc(end, timeZoneInfo);
+            }
 
             // The function DateDiff only returns a whole number of the units being subtracted, and the precision is given in the unit specified.
-            switch (units.Value.ToLower())
+            switch (timeUnit)
             {
                 case "milliseconds":
-                    var milliseconds = Math.Floor(diff.TotalMilliseconds);
+                    var milliseconds = Math.Floor((end - start).TotalMilliseconds);
                     return new NumberValue(irContext, milliseconds);
                 case "seconds":
-                    var seconds = Math.Floor(diff.TotalSeconds);
+                    start = new DateTime(start.Year, start.Month, start.Day, start.Hour, start.Minute, start.Second);
+                    end = new DateTime(end.Year, end.Month, end.Day, end.Hour, end.Minute, end.Second);
+                    var seconds = Math.Floor((end - start).TotalSeconds);
                     return new NumberValue(irContext, seconds);
                 case "minutes":
-                    var minutes = Math.Floor(diff.TotalMinutes);
+                    start = new DateTime(start.Year, start.Month, start.Day, start.Hour, start.Minute, 0);
+                    end = new DateTime(end.Year, end.Month, end.Day, end.Hour, end.Minute, 0);
+                    var minutes = Math.Floor((end - start).TotalMinutes);
                     return new NumberValue(irContext, minutes);
                 case "hours":
-                    var hours = Math.Floor(diff.TotalHours);
+                    start = new DateTime(start.Year, start.Month, start.Day, start.Hour, 0, 0);
+                    end = new DateTime(end.Year, end.Month, end.Day, end.Hour, 0, 0);
+                    var hours = Math.Floor((end - start).TotalHours);
                     return new NumberValue(irContext, hours);
                 case "days":
-                    var days = Math.Floor(diff.TotalDays);
+                    start = new DateTime(start.Year, start.Month, start.Day, 0, 0, 0);
+                    end = new DateTime(end.Year, end.Month, end.Day, 0, 0, 0);
+                    var days = Math.Floor((end - start).TotalDays);
                     return new NumberValue(irContext, days);
                 default:
                     // TODO: Task 10723372: Implement Unit Functionality in DateAdd, DateDiff Functions
@@ -419,6 +442,11 @@ namespace Microsoft.PowerFx.Functions
         private static FormulaValue DateParse(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, StringValue[] args)
         {
             var str = args[0].Value;
+            if (str == string.Empty)
+            {
+                return new BlankValue(irContext);
+            }
+
             if (DateTime.TryParse(str, runner.CultureInfo, DateTimeStyles.None, out var result))
             {
                 return new DateValue(irContext, result.Date);
@@ -457,6 +485,11 @@ namespace Microsoft.PowerFx.Functions
                 {
                     return CommonErrors.BadLanguageCode(irContext, languageCode);
                 }
+            }
+
+            if (str == string.Empty)
+            {
+                return new BlankValue(irContext);
             }
 
             if (DateTime.TryParse(str, culture, DateTimeStyles.None, out var result))
