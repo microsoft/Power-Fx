@@ -211,20 +211,8 @@ true
 >> Day(Date(-1, 2, 3))
 #Error
 
->> Day(Blank())
-0
-
->> Month(Date(-1, 2, 3))
-#Error
-
->> Month(Blank())
-1
-
->> Year(Date(-1, 2, 3))
-#Error
-
->> Year(Blank())
-1900
+>> Day(Date(1976,1,4) + Time(12,30,15))
+4
 
 // Excel-style date math
 >> Date(2001, 2, 14) + 2
@@ -238,4 +226,86 @@ Date(2001,2,16)
 -15
 
 >> Date(2022, 1/0, 15) - Date(2022, 1, 30)
+#Error(Kind=Div0)
+
+// ************************* OVERFLOWS AND UNDERFLOWS ************************
+
+>> Date(2022,2,29)
+Date(2022,3,1)
+
+>> Date(2022,13,1)
+Date(2023,1,1)
+
+>> Date(2022,2,-1)
+Date(2022,1,30)
+
+>> Date(2022,2,0)
+Date(2022,1,31)
+
+>> Date(2022,-1,1)
+Date(2021,11,1)
+
+>> Date(2022,0,1)
+Date(2021,12,1)
+
+// ******************************** COERCIONS ********************************
+
+// String to number
+>> Date("2022","9","8")
+Date(2022,9,8)
+
+// Boolean to number
+>> Date(2022,true,true)
+Date(2022,1,1)
+
+// String to date
+>> Day("2022-09-08")
+8
+
+>> Month("2022-09-08")
+9
+
+>> Year("2022-09-08")
+2022
+
+// Number to date (44811 == 2022-09-07)
+>> Day(44811)
+7
+
+>> Month(44811)
+9
+
+>> Year(44811)
+2022
+
+// ***************************** BLANKS AND ERRORS *****************************
+
+>> Day(Blank())
+0
+
+>> Month(Blank())
+1
+
+>> Year(Blank())
+1900
+
+>> Day("")
+0
+
+>> Month("")
+1
+
+>> Year("")
+1900
+
+>> Date(Sqrt(-4), 2, 3)
+#Error(Kind=Numeric)
+
+>> Day(If(1/0<2,Date(2000,1,1)))
+#Error(Kind=Div0)
+
+>> Month(If(1/0<2,Date(2000,1,1)))
+#Error(Kind=Div0)
+
+>> Year(If(1/0<2,Date(2000,1,1)))
 #Error(Kind=Div0)
