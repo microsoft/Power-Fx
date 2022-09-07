@@ -198,7 +198,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 var lastArgValue = (string)lastArg.ToObject();
 
-                if (lastArgValue.ToUpper() == "ALL")
+                if (lastArgValue.ToUpperInvariant() == "ALL")
                 {
                     all = true;
                     toExclude = 2;
@@ -206,11 +206,9 @@ namespace Microsoft.PowerFx.Functions
             }
 
             var datasource = (TableValue)args[0];
-
-            // !JYL! Better approach?
             var recordsToRemove = args.Skip(1).Take(args.Length - toExclude);
 
-            var ret = await datasource.RemoveAsync(recordsToRemove, all);
+            var ret = await datasource.RemoveAsync(recordsToRemove, all, cancel);
 
             return ret.ToFormulaValue();
         }

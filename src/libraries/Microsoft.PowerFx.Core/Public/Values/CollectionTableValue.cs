@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
 
@@ -38,6 +39,11 @@ namespace Microsoft.PowerFx.Types
             _sourceIndex = source as IReadOnlyList<T>;
             _sourceCount = source as IReadOnlyCollection<T>;
             _sourceList = source as ICollection<T>;
+
+            if (_sourceList != null && _sourceList.IsReadOnly)
+            {
+                _sourceList = null;
+            }
         }
 
         public RecordType RecordType { get; }
@@ -75,7 +81,7 @@ namespace Microsoft.PowerFx.Types
 
         public override async Task<DValue<RecordValue>> AppendAsync(RecordValue record)
         {
-            if (_sourceList == null || _sourceList.IsReadOnly)
+            if (_sourceList == null)
             {
                 return await base.AppendAsync(record);
             }
@@ -108,35 +114,39 @@ namespace Microsoft.PowerFx.Types
             }
         }
 
-        public override async Task<DValue<BooleanValue>> RemoveAsync(IEnumerable<FormulaValue> recordsToRemove, bool all = false)
+        public override async Task<DValue<BooleanValue>> RemoveAsync(IEnumerable<FormulaValue> recordsToRemove, bool all, CancellationToken cancel)
         {
             var ret = false;
 
-            if (_sourceList == null || _sourceList.IsReadOnly)
+            if (_sourceList == null)
             {
-                return await base.RemoveAsync(recordsToRemove, all);
+                return await base.RemoveAsync(recordsToRemove, all, cancel);
             }
 
-            // !JYL! Needs improvement
-            foreach (RecordValue record in recordsToRemove)
+            foreach (RecordValue recordToRemove in recordsToRemove)
             {
-                while (true)
-                {
-                    var actual = Find(record);
+                var deleteList = new List<T>();
 
-                    if (actual != null)
+                foreach (var current in _enumerator)
+                {
+                    cancel.ThrowIfCancellationRequested();
+
+                    var currentRecord = current as RecordValue;
+
+                    if (Matches(currentRecord, recordToRemove))
                     {
-                        _sourceList.Remove(MarshalInverse(actual));
+                        deleteList.Add(current);
 
                         if (!all)
                         {
                             break;
                         }
                     }
-                    else
-                    {
-                        break;
-                    }                    
+                }
+
+                foreach (var delete in deleteList)
+                {
+                    _sourceList.Remove(delete);
                 }
             }
 

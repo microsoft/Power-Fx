@@ -51,24 +51,24 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             // Remode single
             var list = new List<RecordValue>() { rRemove };
 
-            await t1.RemoveAsync(list, false);
+            await t1.RemoveAsync(list, false, CancellationToken.None);
 
             Assert.Equal(2, t1.Count());
 
             var t2 = FormulaValue.NewTable(r1.Type, r1, r2, r3);
 
             // Remove all
-            await t2.RemoveAsync(list, true);
+            await t2.RemoveAsync(list, true, CancellationToken.None);
 
             Assert.Equal(1, t2.Count());
 
             // Immutable
             IEnumerable<RecordValue> source = new RecordValue[] { r1, r2, r3 };
             var t3 = FormulaValue.NewTable(r1.Type, source);
-            var result = await t3.RemoveAsync(list, false);
+            var result = await t3.RemoveAsync(list, false, CancellationToken.None);
 
             Assert.True(result.IsError);
-            Assert.Equal("It is not possible to call RemoveAsync method from TableValue directly.", result.Error.Errors[0].Message);
+            Assert.Equal("RemoveAsync is not supported on this table instance.", result.Error.Errors[0].Message);
         }
     }
 }

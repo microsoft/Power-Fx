@@ -7,6 +7,7 @@ using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Utils;
@@ -88,7 +89,7 @@ namespace Microsoft.PowerFx.Types
         {
             return new ErrorValue(irContext, new ExpressionError()
             {
-                Message = $"It is not possible to call {methodName} method from TableValue directly.",
+                Message = $"{methodName} is not supported on this table instance.",
                 Span = irContext.SourceContext,
                 Kind = ErrorKind.Internal
             });
@@ -103,7 +104,7 @@ namespace Microsoft.PowerFx.Types
             return DValue<RecordValue>.Of(NotImplemented(IRContext));
         }
 
-        public virtual async Task<DValue<BooleanValue>> RemoveAsync(IEnumerable<FormulaValue> recordsToRemove, bool all)
+        public virtual async Task<DValue<BooleanValue>> RemoveAsync(IEnumerable<FormulaValue> recordsToRemove, bool all, CancellationToken cancel)
         {
             return DValue<BooleanValue>.Of(NotImplemented(IRContext));
         }
