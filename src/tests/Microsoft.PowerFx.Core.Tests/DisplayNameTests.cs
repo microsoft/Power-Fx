@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Glue;
@@ -182,6 +183,103 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     var outInvariantExpression = _engine.GetInvariantExpression(inputExpression, record);
                     Assert.Equal(outputExpression, outInvariantExpression);
                 }
+            }
+        }
+
+        // Template used in ResolveToLogicalNames tests.
+        private static readonly RecordType _template = RecordType.Empty()
+            .Add(new NamedFormulaType("Num", FormulaType.Number, "DisplayNum"))
+            .Add(new NamedFormulaType("LogicalOnly", FormulaType.Number))
+            .Add(new NamedFormulaType("Unused", FormulaType.Number));
+
+        [Fact]
+        public void TestResolveToLogicalNames()
+        {
+            var r = RecordValue.NewRecordFromFields(
+                new NamedValue("DisplayNum", FormulaValue.New(123)),
+                new NamedValue("LogicalOnly", FormulaValue.New(456)));
+
+            var rLogical = _template.ResolveToLogicalNames(r);
+
+            var x = rLogical.GetField("Num");
+            Assert.Equal(123.0, x.ToObject());
+
+            var y = rLogical.GetField("LogicalOnly");
+            Assert.Equal(456.0, y.ToObject());
+
+            // Ensure Unused fields (not present in r) don't show up in the type.
+            var fields = rLogical.Type.FieldNames.OrderBy(x => x).ToArray();
+            var fieldList = string.Join(",", fields);
+            Assert.Equal("LogicalOnly,Num", fieldList);
+        }
+
+        [Fact]
+        public void TestResolveToLogicalNames2()
+        {
+            // even if the type has a display name, incoming record may still use logical names.
+            var r = RecordValue.NewRecordFromFields(
+                    new NamedValue("Num", FormulaValue.New(123)));
+
+            var rLogical = _template.ResolveToLogicalNames(r);
+            var x = rLogical.GetField("Num");
+            Assert.Equal(123.0, x.ToObject());
+
+            // Field types
+            var fields = rLogical.Type.FieldNames.OrderBy(x => x).ToArray();
+            var fieldList = string.Join(",", fields);
+            Assert.Equal("Num", fieldList);
+        }
+
+        [Fact]
+        public void TestResolveToLogicalNamesIsLazy()
+        {
+            // Ensure that we don't call .Fields on the type. 
+            var r = TestLargeRecordType.New(
+                    new NamedValue("DisplayNum", FormulaValue.New(123)));
+
+            // Can convert and do lookup without ever enumerating. 
+            var rLogical = _template.ResolveToLogicalNames(r);
+            var x = rLogical.GetField("Num");
+            Assert.Equal(123.0, x.ToObject());            
+        }
+
+        // Enumalate a large type, ensure we don't enumerate (call FieldNames) on it. 
+        private class TestLargeRecordType : RecordType
+        {
+            private readonly RecordType _inner;
+
+            public static RecordValue New(params NamedValue[] fields)
+            {
+                var r = RecordValue.NewRecordFromFields(fields);
+                var type = new TestLargeRecordType(r.Type);
+
+                var value = new InMemoryRecordValue(
+                    Core.IR.IRContext.NotInSource(type), fields);
+
+                return value;
+            }
+
+            public TestLargeRecordType(RecordType inner)
+            {
+                _inner = inner;
+            }
+
+            public override IEnumerable<string> FieldNames => 
+                throw new NotSupportedException($"Don't enumerate fields");
+
+            public override bool Equals(object other)
+            {
+                throw new NotImplementedException();
+            }
+
+            public override int GetHashCode()
+            {
+                throw new NotImplementedException();
+            }
+
+            public override bool TryGetFieldType(string name, out FormulaType type)
+            {
+                return _inner.TryGetFieldType(name, out type);
             }
         }
 

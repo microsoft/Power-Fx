@@ -141,6 +141,12 @@ namespace Microsoft.PowerFx.Types
         /// <returns>true if field is present, else false.</returns>
         protected abstract bool TryGetField(FormulaType fieldType, string fieldName, out FormulaValue result);
 
+        // Allow internals to access TryGetField.
+        internal bool TryGetFieldDirect(FormulaType fieldType, string fieldName, out FormulaValue result)
+        {
+            return TryGetField(fieldType, fieldName, out result);
+        }
+
         /// <summary>
         /// Return an object, which can be used as 'dynamic' to fetch fields. 
         /// If this RecordValue was created around a host object, the host can override and return the source object.
