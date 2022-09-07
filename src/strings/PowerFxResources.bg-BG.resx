@@ -498,7 +498,7 @@
     <value>Стойността на текста за преобразуване в булева стойност.</value>
   </data>
   <data name="AboutBooleanT" xml:space="preserve">
-    <value>Converts a column of text values to a column of boolean values.</value>
+    <value>Преобразува колона с текстови стойности в колона с булеви стойности.</value>
     
   </data>
   <data name="BooleanTArg1" xml:space="preserve">
@@ -506,21 +506,21 @@
     
   </data>
   <data name="AboutBooleanT_input" xml:space="preserve">
-    <value>A column of text values to process.</value>
+    <value>Колона с текстови стойности за обработване.</value>
   </data>
   <data name="AboutBooleanN" xml:space="preserve">
-    <value>Converts a 'number' to a boolean value.</value>
+    <value>Преобразува „число“ в булева стойност.</value>
     
   </data>
   <data name="BooleanNArg1" xml:space="preserve">
-    <value>number</value>
+    <value>число</value>
     
   </data>
   <data name="AboutBooleanN_number" xml:space="preserve">
-    <value>The number value to convert to a boolean value.</value>
+    <value>Стойността на числото за преобразуване в булева стойност.</value>
   </data>
   <data name="AboutBooleanNT" xml:space="preserve">
-    <value>Converts a column of numeric values to a column of boolean values.</value>
+    <value>Преобразува колона с числови стойности в колона с булеви стойности.</value>
     
   </data>
   <data name="BooleanNTArg1" xml:space="preserve">
@@ -528,7 +528,7 @@
     
   </data>
   <data name="AboutBooleanNT_input" xml:space="preserve">
-    <value>A column of number values to process.</value>
+    <value>Колона с числови стойности за обработване.</value>
   </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Връща първия непразен аргумент</value>
@@ -989,10 +989,10 @@
     
   </data>
   <data name="AboutInt_number" xml:space="preserve">
-    <value>Числена стойност за обработване.</value>
+    <value>Числова стойност за обработване.</value>
   </data>
   <data name="AboutInt_input" xml:space="preserve">
-    <value>Колона с числени стойности за обработване.</value>
+    <value>Колона с числови стойности за обработване.</value>
   </data>
   <data name="AboutTrunc" xml:space="preserve">
     <value>Съкращава „число“, като закръглява в посока нула.</value>
@@ -2648,7 +2648,7 @@
     
   </data>
   <data name="AboutIsToday_date" xml:space="preserve">
-    <value>Стойността на дата за тестване.</value>
+    <value>Датата, която да бъде проверена.</value>
   </data>
   <data name="IsTodayFuncArg1" xml:space="preserve">
     <value>дата</value>
@@ -3924,12 +3924,20 @@
     <value>Не се поддържа в колоните за формули.</value>
     
   </data>
+  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
+    <value>Невалиден брой аргументи за функцията „{0}“: получени {1}, очаквани {2}</value>
+    
+  </data>
   <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
     <value>Аргументът {0} не се поддържа за функцията {1} в колоните за формули.</value>
     
   </data>
   <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
     <value>Този аргумент не може да бъде предаден като този тип в колоните за формули.</value>
+    
+  </data>
+  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
+    <value>Този аргумент не може да бъде предаден като тип „{0}“ в колоните с формули.</value>
     
   </data>
   <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
@@ -3948,6 +3956,10 @@
     <value>Само низовете за кратки формати за дата и час се поддържат в колоните за формули.</value>
     
   </data>
+  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
+    <value>Аргументът „{0}“ е невалидна/неподдържана единица време за аритметичната функция за дата „{1}“.</value>
+    
+  </data>
   <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
     <value>Във формулите за колони не се поддържат маркери за форматиране, специфични за дадена езиково-географска променлива, като „.“ и „,“.</value>
     
@@ -3956,8 +3968,16 @@
     <value>{0} не се поддържа във формули за колони, вместо това използвайте {1}.</value>
     
   </data>
+  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
+    <value>Тази операция не може да се извърши на тип {0} в колони за формули.</value>
+    
+  </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
     <value>Типът резултат {0} не се поддържа за колони за формули.</value>
+    
+  </data>
+  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
+    <value>Директното препращане към цял запис не се поддържа в колони с формули. Моля, направете препратка към валидно поле в записа.</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
@@ -3972,8 +3992,20 @@
     <value>Колони от тип {0} с формат {1} не се поддържат за колони за формули.</value>
     
   </data>
+  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
+    <value>Налагането на записи или таблици не се поддържа в колони с формули.</value>
+    
+  </data>
   <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
     <value>Формулите не може да бъдат по-дълги от 1000 знака.</value>
+    
+  </data>
+  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
+    <value>Таблиците с една колона не се поддържат в колоните за формули.</value>
+    
+  </data>
+  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
+    <value>Не може да препраща виртуална таблица „{0}“ в колоните за формули.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
@@ -3996,7 +4028,7 @@
     
   </data>
   <data name="ErrorResource_ErrBadToken_Link_1" xml:space="preserve">
-    <value>Статия: Справка за формули за Power Apps</value>
+    <value>Статия: Справочна информация за формулите за Power Apps</value>
     
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_ShortMessage" xml:space="preserve">
@@ -4025,7 +4057,7 @@
     
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_Link_1" xml:space="preserve">
-    <value>Статия: Справка за формули за Power Apps</value>
+    <value>Статия: Справочна информация за формулите за Power Apps</value>
     
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_ShortMessage" xml:space="preserve">
@@ -4040,7 +4072,7 @@
     
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_Link_1" xml:space="preserve">
-    <value>Статия: Справка за формули за Power Apps</value>
+    <value>Статия: Справочна информация за формулите за Power Apps</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
@@ -4048,14 +4080,14 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
-    <value>Тази грешка се появява най-често, когато формулата препраща към нещо, което вече не съществува (например контрола, която сте изтрили).</value>
+    <value>Тази грешка се появява най-често, когато формула препраща към нещо, което вече не съществува (например контрола, която сте изтрили).</value>
   </data>
   <data name="ErrorResource_ErrInvalidName_HowToFix_1" xml:space="preserve">
-    <value>Премахнете или коригирайте препратката към името, което не е валидно.</value>
+    <value>Премахнете или коригирайте невалидната препратка към името.</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidName_Link_1" xml:space="preserve">
-    <value>Статия: Справка за формули за Power Apps</value>
+    <value>Статия: Справочна информация за формулите за Power Apps</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
@@ -4152,7 +4184,7 @@
     
   </data>
   <data name="ErrorResource_ErrNumberExpected_Link_1" xml:space="preserve">
-    <value>Статия: Справка за формули за Power Apps</value>
+    <value>Статия: Справочна информация за формулите за Power Apps</value>
     
   </data>
   <data name="ErrorResource_ErrBooleanExpected_ShortMessage" xml:space="preserve">
@@ -4167,7 +4199,7 @@
     
   </data>
   <data name="ErrorResource_ErrBooleanExpected_Link_1" xml:space="preserve">
-    <value>Статия: Справка за формули за Power Apps</value>
+    <value>Статия: Справочна информация за формулите за Power Apps</value>
     
   </data>
   <data name="ErrorResource_ErrColonExpected_ShortMessage" xml:space="preserve">
@@ -4234,7 +4266,7 @@
     
   </data>
   <data name="ErrorResource_ErrStringExpected_Link_1" xml:space="preserve">
-    <value>Статия: Справка за формули за Power Apps</value>
+    <value>Статия: Справочна информация за формулите за Power Apps</value>
     
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_ShortMessage" xml:space="preserve">
@@ -4249,7 +4281,7 @@
     
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_Link_1" xml:space="preserve">
-    <value>Статия: Справка за формули за Power Apps</value>
+    <value>Статия: Справочна информация за формулите за Power Apps</value>
     
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_ShortMessage" xml:space="preserve">
@@ -4303,7 +4335,7 @@
     
   </data>
   <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_Link_1" xml:space="preserve">
-    <value>Статия: Справка за формули за Power Apps</value>
+    <value>Статия: Справочна информация за формулите за Power Apps</value>
     
   </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_ShortMessage" xml:space="preserve">
@@ -4331,7 +4363,7 @@
     
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_Link_1" xml:space="preserve">
-    <value>Статия: Справка за формули за Power Apps</value>
+    <value>Статия: Справочна информация за формулите за Power Apps</value>
     
   </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
@@ -4381,7 +4413,7 @@
     
   </data>
   <data name="ErrorResource_ErrDateExpected_Link_1" xml:space="preserve">
-    <value>Статия: Справка за формули за Power Apps</value>
+    <value>Статия: Справочна информация за формулите за Power Apps</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_ShortMessage" xml:space="preserve">
@@ -4392,7 +4424,7 @@
     <value>Възможно е източникът на данни да не може да обработи формулата и може да върне непълен набор от данни. Вашето приложение може да не върне правилни резултати или поведението му може да е неправилно, ако наборът от данни е непълен.</value>
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_1" xml:space="preserve">
-    <value>Ако вашият набор от данни надвишава ограничението от 500 записа, но съдържа по-малко от 2000 записа, опитайте да нулирате лимита.</value>
+    <value>Ако наборът от данни надвишава ограничението от 500 записа, но съдържа по-малко от 2000 записа, опитайте да нулирате ограничението.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_2" xml:space="preserve">
@@ -4419,7 +4451,7 @@
     <value>Възможно е източникът на данни да не може да обработи формулата и може да върне непълен набор от данни. Вашето приложение може да не върне правилни резултати или поведението му може да е неправилно, ако наборът от данни е непълен.</value>
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_1" xml:space="preserve">
-    <value>Ако вашият набор от данни надвишава ограничението от 500 записа, но съдържа по-малко от 2000 записа, опитайте да нулирате лимита.</value>
+    <value>Ако наборът от данни надвишава ограничението от 500 записа, но съдържа по-малко от 2000 записа, опитайте да нулирате ограничението.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_2" xml:space="preserve">
@@ -4450,7 +4482,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_2" xml:space="preserve">
-    <value>Ако вашият набор от данни надвишава ограничението от 500 записа, но съдържа по-малко от 2000 записа, опитайте да нулирате лимита.</value>
+    <value>Ако наборът от данни надвишава ограничението от 500 записа, но съдържа по-малко от 2000 записа, опитайте да нулирате ограничението.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_3" xml:space="preserve">
@@ -4482,7 +4514,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_2" xml:space="preserve">
-    <value>Ако вашият набор от данни надвишава ограничението от 500 записа, но съдържа по-малко от 2000 записа, опитайте да нулирате ограничението.
+    <value>Ако наборът от данни надвишава ограничението от 500 записа, но съдържа по-малко от 2000 записа, опитайте да нулирате ограничението.
       </value>
     
   </data>
@@ -4511,7 +4543,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_1" xml:space="preserve">
-    <value>Ако вашият набор от данни надвишава ограничението от 500 записа, но съдържа по-малко от 2000 записа, опитайте да нулирате лимита.</value>
+    <value>Ако наборът от данни надвишава ограничението от 500 записа, но съдържа по-малко от 2000 записа, опитайте да нулирате ограничението.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_2" xml:space="preserve">

@@ -43,7 +43,11 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.OptionSet",
                 "Microsoft.PowerFx.ParseResult",
                 "Microsoft.PowerFx.ParserOptions",
+
+                // Config & Symbols
                 "Microsoft.PowerFx.PowerFxConfig",
+                "Microsoft.PowerFx.ReadOnlySymbolTable",
+                "Microsoft.PowerFx.SymbolTable",
 
                 // Feature flags are experimental - hosts shouldn't use it. 
                 "Microsoft.PowerFx.Preview.FeatureFlags",
@@ -155,8 +159,6 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Intellisense.UIString",
 
                 // TBD ...
-                "Microsoft.PowerFx.Core.App.DefaultEnabledFeatures",
-                "Microsoft.PowerFx.Core.App.IExternalEnabledFeatures",
                 "Microsoft.PowerFx.Core.DisplayNameProvider",
                 "Microsoft.PowerFx.Core.DisplayNameUtility",
                 "Microsoft.PowerFx.Core.FormulaTypeSchema",

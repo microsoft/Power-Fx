@@ -13,10 +13,6 @@
     <Configurations>Debug;Release</Configurations>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
   </PropertyGroup>
-  <PropertyGroup>
-    <DebugType>Full</DebugType>
-    <DebugSymbols>true</DebugSymbols>
-  </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)'!='Debug' or '$(TURN_OFF_WARNING_AS_ERROR)'!='True' ">
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
@@ -60,10 +56,6 @@
       <Link>IntellisenseTests\TestSignatures\%(FileName)%(Extension)</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Remove="ExpressionTestCases\SqrtT.txt" />
   </ItemGroup>
 
   <ItemGroup>

@@ -498,37 +498,37 @@
     <value>Tekstiväärtus loogiliseks väärtuseks teisendamise jaoks.</value>
   </data>
   <data name="AboutBooleanT" xml:space="preserve">
-    <value>Converts a column of text values to a column of boolean values.</value>
+    <value>Teisendab tekstväärtuste veeru loogiliste väärtuste veeruks.</value>
     
   </data>
   <data name="BooleanTArg1" xml:space="preserve">
-    <value>input</value>
+    <value>sisend</value>
     
   </data>
   <data name="AboutBooleanT_input" xml:space="preserve">
-    <value>A column of text values to process.</value>
+    <value>Töödeldav tekstväärtuste veerg.</value>
   </data>
   <data name="AboutBooleanN" xml:space="preserve">
-    <value>Converts a 'number' to a boolean value.</value>
+    <value>Teisendab „arvu“ loogiliseks väärtuseks.</value>
     
   </data>
   <data name="BooleanNArg1" xml:space="preserve">
-    <value>number</value>
+    <value>arv</value>
     
   </data>
   <data name="AboutBooleanN_number" xml:space="preserve">
-    <value>The number value to convert to a boolean value.</value>
+    <value>Arvväärtus loogiliseks väärtuseks teisendamise jaoks.</value>
   </data>
   <data name="AboutBooleanNT" xml:space="preserve">
-    <value>Converts a column of numeric values to a column of boolean values.</value>
+    <value>Teisendab arvväärtuste veeru loogiliste väärtuste veeruks.</value>
     
   </data>
   <data name="BooleanNTArg1" xml:space="preserve">
-    <value>input</value>
+    <value>sisend</value>
     
   </data>
   <data name="AboutBooleanNT_input" xml:space="preserve">
-    <value>A column of number values to process.</value>
+    <value>Töödeldav arvväärtuste veerg.</value>
   </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Tagastab esimese mittetühja argumendi</value>
@@ -3924,12 +3924,20 @@
     <value>Ei toetata valemiveergudes.</value>
     
   </data>
+  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
+    <value>Funktsioonil {0} on sobimatu arv argumente: saadi {1}, eeldati {2}</value>
+    
+  </data>
   <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
     <value>Argumenti {0} ei toetata valemiveergude funktsioonis {1}.</value>
     
   </data>
   <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
     <value>Seda argumenti ei saa valemiveergudes selle tüübina edastada.</value>
+    
+  </data>
+  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
+    <value>Seda argumenti ei saa valemiveergudesse edastada tüübina {0}.</value>
     
   </data>
   <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
@@ -3948,6 +3956,10 @@
     <value>Valemiveergudes toetatakse ainult lühikese vorminguga kuupäeva- ja kellaaja stringe.</value>
     
   </data>
+  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
+    <value>Argument {0} on kuupäeva aritmeetilise funktsiooni {1} sobimatu/toetuseta ajaühik.</value>
+    
+  </data>
   <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
     <value>Lokaadipõhiseid vormingutõendeid (nt "." ja ",") valemiveergudes ei toetata.</value>
     
@@ -3956,8 +3968,16 @@
     <value>Üksust {0} ei toetata valemiveergudes, kasutage selle asemel üksust {1}.</value>
     
   </data>
+  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
+    <value>Seda toimingut ei saa valemiveergudes teha tüübiga {0}.</value>
+    
+  </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
     <value>Tulemitüüp {0} pole valemiveergudes toetatud.</value>
+    
+  </data>
+  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
+    <value>Valemiveergudes ei toetata kogu kirje otsest viitamist. Viidake kirjes kehtivale väljale.</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
@@ -3972,8 +3992,20 @@
     <value>Veerud, mille tüüp on {0} ja vorming {1}, pole valemiveergudes toetatud.</value>
     
   </data>
+  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
+    <value>Kirjete või tabelite koondamist ei toetata valemiveergudes.</value>
+    
+  </data>
   <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
     <value>Valemid ei tohi olla pikemad kui 1000 märki.</value>
+    
+  </data>
+  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
+    <value>Üheveerulisi tabeleid ei toetata valemiveergudes.</value>
+    
+  </data>
+  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
+    <value>Valemiveergudes ei saa virtuaaltabelile {0} viidata.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">

@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Types;
 
@@ -53,7 +52,7 @@ namespace Microsoft.PowerFx.Functions
         {
             return new ErrorValue(irContext, new ExpressionError()
             {
-                Message = "Divide by zero",
+                Message = "Invalid operation: division by zero.",
                 Span = irContext.SourceContext,
                 Kind = ErrorKind.Div0
             });
@@ -66,6 +65,16 @@ namespace Microsoft.PowerFx.Functions
                 Message = "Overflow",
                 Span = irContext.SourceContext,
                 Kind = ErrorKind.Numeric
+            });
+        }
+
+        public static ErrorValue BadLanguageCode(IRContext irContext, string languageCode)
+        {
+            return new ErrorValue(irContext, new ExpressionError()
+            {
+                Message = $"Language code {languageCode} not supported",
+                Span = irContext.SourceContext,
+                Kind = ErrorKind.BadLanguageCode
             });
         }
 

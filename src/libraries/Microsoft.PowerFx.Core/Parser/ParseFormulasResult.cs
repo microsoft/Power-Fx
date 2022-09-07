@@ -63,12 +63,15 @@ namespace Microsoft.PowerFx.Core.Parser
 
         internal ISet<UDFArg> Args { get; }
 
-        public UDF(IdentToken ident, IdentToken returnType, HashSet<UDFArg> args, TexlNode body)
+        internal bool IsImperative { get; }
+
+        public UDF(IdentToken ident, IdentToken returnType, HashSet<UDFArg> args, TexlNode body, bool isImperative)
         {
             Ident = ident;
             ReturnType = returnType;
             Args = args;
             Body = body;
+            IsImperative = isImperative;
         }
     }
 

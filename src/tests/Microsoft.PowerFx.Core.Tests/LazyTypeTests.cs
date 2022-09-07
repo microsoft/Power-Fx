@@ -19,7 +19,9 @@ namespace Microsoft.PowerFx.Core.Tests
             public delegate bool TryGetFieldDelegate(string name, out FormulaType type);
 
             private readonly TryGetFieldDelegate _tryGetField;
-            
+
+            public override string UserVisibleTypeName => "TestType";
+
             internal string Identity;
 
             public override IEnumerable<string> FieldNames { get; }
@@ -40,41 +42,6 @@ namespace Microsoft.PowerFx.Core.Tests
             public override bool Equals(object other)
             {
                 return other is TestLazyRecordType otherTable &&
-                    Identity == otherTable.Identity;
-            }
-
-            public override int GetHashCode()
-            {
-                return Identity.GetHashCode();
-            }
-        }
-
-        public class TestLazyTableType : TableType
-        {
-            public delegate bool TryGetFieldDelegate(string name, out FormulaType type);
-
-            private readonly TryGetFieldDelegate _tryGetField;
-            
-            internal string Identity;
-
-            public override IEnumerable<string> FieldNames { get; }
-
-            public TestLazyTableType(string identity, IEnumerable<string> fields, TryGetFieldDelegate getter)
-                : base()
-            {
-                Identity = identity;
-                FieldNames = fields; 
-                _tryGetField = getter;
-            }
-
-            public override bool TryGetFieldType(string name, out FormulaType type)
-            {
-                return _tryGetField(name, out type);
-            }
-
-            public override bool Equals(object other)
-            {
-                return other is TestLazyTableType otherTable &&
                     Identity == otherTable.Identity;
             }
 
@@ -117,15 +84,15 @@ namespace Microsoft.PowerFx.Core.Tests
         
         private readonly TestLazyRecordType _lazyRecord1;
         private readonly TestLazyRecordType _lazyRecord2;
-        private readonly TestLazyTableType _lazyTable1;
-        private readonly TestLazyTableType _lazyTable2;
+        private readonly TableType _lazyTable1;
+        private readonly TableType _lazyTable2;
 
         public LazyTypeTests()
         {
             _lazyRecord1 = new TestLazyRecordType("Lazy1", new List<string>() { "Foo", "Bar", "Baz" }, LazyGetField1);
             _lazyRecord2 = new TestLazyRecordType("Lazy2", new List<string>() { "Qux", "Nested" }, LazyGetField2);
-            _lazyTable1 = new TestLazyTableType("Lazy3", new List<string>() { "Foo", "Bar", "Baz" }, LazyGetField1);
-            _lazyTable2 = new TestLazyTableType("Lazy4", new List<string>() { "Qux", "Nested" }, LazyGetField2);
+            _lazyTable1 = new TestLazyRecordType("Lazy3", new List<string>() { "Foo", "Bar", "Baz" }, LazyGetField1).ToTable();
+            _lazyTable2 = new TestLazyRecordType("Lazy4", new List<string>() { "Qux", "Nested" }, LazyGetField2).ToTable();
         }
 
         [Fact]
@@ -136,12 +103,19 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal("r!", _lazyRecord1._type.ToString());
             Assert.Equal("r*", _lazyTable1._type.ToString());
             Assert.Equal(_lazyRecord2, _lazyRecord2._type.LazyTypeProvider.BackingFormulaType);
-            Assert.Equal(_lazyTable1, _lazyTable1._type.LazyTypeProvider.BackingFormulaType);
+            Assert.Equal(_lazyTable1.ToRecord(), _lazyTable1._type.LazyTypeProvider.BackingFormulaType);
             
             Assert.Equal(0, _getter1CalledCount);
             Assert.Equal(0, _getter2CalledCount);
         }
-        
+
+        [Fact]
+        public void KindString()
+        {
+            Assert.Equal("Table (TestType)", _lazyTable1._type.GetKindString());
+            Assert.Equal("Record (TestType)", _lazyRecord1._type.GetKindString());
+        }
+
         [Fact]
         public void AcceptsSimple()
         {
@@ -261,7 +235,7 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal(2, _getter2CalledCount);
 
             Assert.Equal("*[Qux:n]", type1.ToString());
-        }        
+        }
 
         [Fact]
         public void AddField()
@@ -274,6 +248,34 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal(3, _getter1CalledCount);
 
             Assert.Equal("![Bar:s, Baz:b, Foo:n, Test:O]", type1.ToString());
+        }
+
+        [Fact]
+        public void RoundTrip()
+        {
+            Assert.IsType<TestLazyRecordType>(_lazyTable1.ToRecord());
+            Assert.IsType<TestLazyRecordType>(_lazyRecord2.ToTable().ToRecord());
+
+            Assert.Equal(_lazyTable2, _lazyTable2.ToRecord().ToTable());
+            Assert.Equal(_lazyRecord1, _lazyRecord1.ToTable().ToRecord());
+
+            Assert.NotEqual(_lazyRecord1, _lazyRecord2.ToTable().ToRecord());
+            Assert.NotEqual(_lazyTable2, _lazyTable1.ToRecord().ToTable());
+
+            Assert.Equal(_lazyTable2._type, _lazyTable2._type.ToRecord().ToTable());
+            Assert.Equal(_lazyRecord1._type, _lazyRecord1._type.ToTable().ToRecord());
+
+            Assert.Equal(_lazyTable2._type, _lazyTable2._type.ToTable());
+            Assert.Equal(_lazyRecord1._type, _lazyRecord1._type.ToRecord());
+        }
+
+        [Fact]
+        public void Supertype()
+        {
+            Assert.Equal(_lazyRecord1, FormulaType.Build(DType.Supertype(_lazyRecord1._type, _lazyRecord1._type)));
+            Assert.Equal(_lazyTable1, FormulaType.Build(DType.Supertype(_lazyTable1._type, _lazyTable1._type)));
+            Assert.Equal(FormulaType.BindingError, FormulaType.Build(DType.Supertype(_lazyTable1._type, _lazyRecord1._type)));
+            Assert.Equal(FormulaType.BindingError, FormulaType.Build(DType.Supertype(_lazyRecord2._type, _lazyRecord1._type)));
         }
     }
 }

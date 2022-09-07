@@ -3924,12 +3924,20 @@
     <value>Nieobsługiwane w kolumnach formuły.</value>
     
   </data>
+  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
+    <value>Nieprawidłowa liczba argumentów dla funkcji „{0}”: odebrano: {1}; oczekiwano: {2}.</value>
+    
+  </data>
   <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
     <value>Argument {0} nie jest obsługiwany w przypadku funkcji {1} w kolumnach formuły.</value>
     
   </data>
   <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>Nie można przekazać tego argumentu jako tego typu w kolumnach formuły.</value>
+    <value>Tego argumentu nie można przekazywać jako tego typu w kolumnach formuł.</value>
+    
+  </data>
+  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
+    <value>Tego argumentu nie można przekazywać jako typu {0} w kolumnach formuł.</value>
     
   </data>
   <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
@@ -3948,6 +3956,10 @@
     <value>W kolumnach formuły są obsługiwane tylko ciągi krótkiego formatu daty i czasu.</value>
     
   </data>
+  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
+    <value>Argument {0} to nieprawidłowa/nieobsługiwana jednostka czasu dla arytmetycznej funkcji daty {1}.</value>
+    
+  </data>
   <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
     <value>Specyficzne dla ustawień regionalnych tokeny formatowania, takie jak „.” i „,”, nie są obsługiwane w kolumnach formuł.</value>
     
@@ -3956,8 +3968,16 @@
     <value>Funkcja {0} nie jest obsługiwana w kolumnach formuł. Użyj zamiast niej funkcji {1}.</value>
     
   </data>
+  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
+    <value>Tej operacji nie można wykonywać na typie {0} w kolumnach formuł.</value>
+    
+  </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
     <value>Typ wyniku {0} nie jest obsługiwany w kolumnach formuł.</value>
+    
+  </data>
+  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
+    <value>Bezpośrednie odwoływanie się do całego rekordu nie jest obsługiwane w kolumnach formuł. Odwołaj się do prawidłowego pola w rekordzie.</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
@@ -3972,8 +3992,20 @@
     <value>Kolumny typu {0} mające format {1} nie są obsługiwane w kolumnach formuł.</value>
     
   </data>
+  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
+    <value>Wymuszanie rekordów lub tabel nie jest obsługiwane w kolumnach formuł.</value>
+    
+  </data>
   <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
     <value>Długość formuł nie może przekraczać 1000 znaków.</value>
+    
+  </data>
+  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
+    <value>Tabele jednokolumnowe nie są obsługiwane w kolumnach formuł.</value>
+    
+  </data>
+  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
+    <value>Nie można odwoływać się do tabeli wirtualnej {0} w kolumnach formuł.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">

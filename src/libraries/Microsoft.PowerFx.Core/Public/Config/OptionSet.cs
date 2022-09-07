@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Linq;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Types;
@@ -55,7 +56,7 @@ namespace Microsoft.PowerFx
         /// Contains the members of the option set.
         /// Key is logical/invariant name, value is display name.
         /// </summary>
-        public ImmutableDictionary<DName, DName> Options { get; }
+        public IEnumerable<KeyValuePair<DName, DName>> Options { get; }
 
         /// <summary>
         /// Formula Type corresponding to this option set.
@@ -65,7 +66,7 @@ namespace Microsoft.PowerFx
 
         public bool TryGetValue(DName fieldName, out OptionSetValue optionSetValue)
         {
-            if (!Options.ContainsKey(fieldName)) 
+            if (!Options.Any(option => option.Key == fieldName))
             {
                 optionSetValue = null;
                 return false;
@@ -75,7 +76,7 @@ namespace Microsoft.PowerFx
             return true;
         }
 
-        IEnumerable<DName> IExternalOptionSet.OptionNames => Options.Keys;
+        IEnumerable<DName> IExternalOptionSet.OptionNames => Options.Select(option => option.Key);
 
         DisplayNameProvider IExternalOptionSet.DisplayNameProvider => _displayNameProvider;
         

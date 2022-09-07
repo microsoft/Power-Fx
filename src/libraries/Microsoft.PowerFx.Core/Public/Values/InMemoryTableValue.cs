@@ -20,7 +20,7 @@ namespace Microsoft.PowerFx.Types
         {
             Contract.Assert(IRContext.ResultType is TableType);
             var tableType = (TableType)IRContext.ResultType;
-            _recordType = tableType.ToRecord();            
+            _recordType = tableType.ToRecord();
         }
 
         protected override DValue<RecordValue> Marshal(DValue<RecordValue> record)
@@ -31,10 +31,15 @@ namespace Microsoft.PowerFx.Types
                 var record2 = CompileTimeTypeWrapperRecordValue.AdjustType(compileTimeType, record.Value);
                 return DValue<RecordValue>.Of(record2);
             }
-            else 
+            else
             {
                 return record;
             }
+        }
+
+        protected override DValue<RecordValue> MarshalInverse(RecordValue row)
+        {
+            return DValue<RecordValue>.Of(row);
         }
     }
 
@@ -56,6 +61,11 @@ namespace Microsoft.PowerFx.Types
         protected override DValue<RecordValue> Marshal(RecordValue record)
         {
             return DValue<RecordValue>.Of(CompileTimeTypeWrapperRecordValue.AdjustType(_recordType, record));
+        }
+
+        protected override RecordValue MarshalInverse(RecordValue row)
+        {
+            return row;
         }
     }
 }

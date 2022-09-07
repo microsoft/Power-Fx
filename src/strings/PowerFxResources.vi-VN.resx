@@ -3924,12 +3924,20 @@
     <value>Không được hỗ trợ trong cột công thức.</value>
     
   </data>
+  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
+    <value>Số lượng đối số không hợp lệ cho hàm {0}: đã nhận {1}, dự kiện {2}</value>
+    
+  </data>
   <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
     <value>Đối số {0} không được hỗ trợ cho hàm {1} trong cột công thức.</value>
     
   </data>
   <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>Đối số này không thể được chuyển dưới dạng loại này trong cột công thức.</value>
+    <value>Không chuyển được đối số này dưới dạng loại này trong cột công thức.</value>
+    
+  </data>
+  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
+    <value>Không chuyển được đối số này dưới dạng loại {0} trong cột công thức.</value>
     
   </data>
   <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
@@ -3948,6 +3956,10 @@
     <value>Chỉ các chuỗi định dạng ngày và giờ ngắn mới được hỗ trợ trong cột công thức.</value>
     
   </data>
+  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
+    <value>Đối số {0} là một đơn vị thời gian không hợp lệ/không được hỗ trợ cho hàm số học ngày {1}.</value>
+    
+  </data>
   <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
     <value>Các mã thông báo định dạng dành riêng cho ngôn ngữ như "." và "," không được hỗ trợ trong các cột công thức.</value>
     
@@ -3956,8 +3968,16 @@
     <value>{0} không được hỗ trợ trong cột công thức, hãy sử dụng {1}.</value>
     
   </data>
+  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
+    <value>Không thực hiện được thao tác này đối với loại {0} trong cột công thức.</value>
+    
+  </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
     <value>Không hỗ trợ kiểu kết quả {0} trong cột công thức.</value>
+    
+  </data>
+  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
+    <value>Không hỗ trợ tham chiếu trực tiếp toàn bộ bản ghi trong các cột công thức. Vui lòng tham chiếu một trường hợp lệ trong bản ghi.</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
@@ -3972,8 +3992,20 @@
     <value>Không hỗ trợ cột kiểu {0} với định dạng {1} trong cột công thức.</value>
     
   </data>
+  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
+    <value>Không hỗ trợ ép buộc bản ghi hoặc bảng trong các cột công thức.</value>
+    
+  </data>
   <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
     <value>Công thức không được dài hơn 1.000 ký tự.</value>
+    
+  </data>
+  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
+    <value>Không hỗ trợ bảng một cột trong các cột công thức.</value>
+    
+  </data>
+  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
+    <value>Không thể tham chiếu bảng ảo {0} trong cột công thức.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">

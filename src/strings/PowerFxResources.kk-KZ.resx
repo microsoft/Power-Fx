@@ -498,37 +498,37 @@
     <value>Логикалық мәнге түрлендірілетін мәтін мәні.</value>
   </data>
   <data name="AboutBooleanT" xml:space="preserve">
-    <value>Converts a column of text values to a column of boolean values.</value>
+    <value>Мәтіндік мәндер бағанын логикалық мәндер бағанына түрлендіреді.</value>
     
   </data>
   <data name="BooleanTArg1" xml:space="preserve">
-    <value>input</value>
+    <value>кіріс</value>
     
   </data>
   <data name="AboutBooleanT_input" xml:space="preserve">
-    <value>A column of text values to process.</value>
+    <value>Өңделетін сандық мәндер бағаны.</value>
   </data>
   <data name="AboutBooleanN" xml:space="preserve">
-    <value>Converts a 'number' to a boolean value.</value>
+    <value>"Санды" логикалық мәнге түрлендіреді.</value>
     
   </data>
   <data name="BooleanNArg1" xml:space="preserve">
-    <value>number</value>
+    <value>сан</value>
     
   </data>
   <data name="AboutBooleanN_number" xml:space="preserve">
-    <value>The number value to convert to a boolean value.</value>
+    <value>Логикалық мәнге түрлендірілетін сандық мән.</value>
   </data>
   <data name="AboutBooleanNT" xml:space="preserve">
-    <value>Converts a column of numeric values to a column of boolean values.</value>
+    <value>Сандық мәндер бағанын логикалық мәндер бағанына түрлендіреді.</value>
     
   </data>
   <data name="BooleanNTArg1" xml:space="preserve">
-    <value>input</value>
+    <value>кіріс</value>
     
   </data>
   <data name="AboutBooleanNT_input" xml:space="preserve">
-    <value>A column of number values to process.</value>
+    <value>Өңделетін сандық мәндер бағаны.</value>
   </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Бірінші бос емес аргументті қайтарады</value>
@@ -3924,12 +3924,20 @@
     <value>Формула бағандарында қолдау көрсетілмейді.</value>
     
   </data>
+  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
+    <value>{0} функциясына арналған аргументтер саны жарамсыз: {1} алынды, {2} күтілді</value>
+    
+  </data>
   <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
     <value>Формула бағандарындағы {1} функциясы үшін {0} аргументіне қолдау көрсетілмейді.</value>
     
   </data>
   <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>Бұл аргумент формула бағандарында осы түр ретінде берілмеуі мүмкін.</value>
+    <value>This argument cannot be passed as this type in formula columns.</value>
+    
+  </data>
+  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
+    <value>This argument cannot be passed as type {0} in formula columns.</value>
     
   </data>
   <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
@@ -3948,6 +3956,10 @@
     <value>Формула бағандарында тек қысқа күн мен уақыт пішімі жолдарына қолдау көрсетіледі.</value>
     
   </data>
+  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
+    <value>{0} аргументі — {1} күн арифметикалық функциясы үшін жарамсыз/қолдау көрсетілмейтін уақыт бірлігі.</value>
+    
+  </data>
   <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
     <value>Формула бағандарында "." және "," сияқты жергілікті пішімдеу таңбалауыштары қолданылмайды.</value>
     
@@ -3956,8 +3968,16 @@
     <value>{0} формула бағандарында қолданылмайды, оның орнына {1} пайдаланыңыз.</value>
     
   </data>
+  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
+    <value>This operation cannot be performed on type {0} in formula columns.</value>
+    
+  </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
     <value>{0} нәтиже түріне формула бағандарында қолдау көрсетілмейді.</value>
+    
+  </data>
+  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
+    <value>Формула бағандарында бүкіл жазбаға тікелей сілтеме жасауға қолдау көрсетілмейді. Жазбадағы жарамды өріске сілтеме жасаңыз.</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
@@ -3972,8 +3992,20 @@
     <value>{1} пішімді {0} түріндегі бағандарға формула бағандарында қолдау көрсетілмейді.</value>
     
   </data>
+  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
+    <value>Мәжбүрлі жазбаларға немесе кестелерге формула бағандарында қолдау көрсетілмейді.</value>
+    
+  </data>
   <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
     <value>Формулалар 1000 таңбадан аспауы керек.</value>
+    
+  </data>
+  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
+    <value>Бір бағанды кестелерге формула бағандарында қолдау көрсетілмейді.</value>
+    
+  </data>
+  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
+    <value>Cannot reference virtual table {0} in formula columns.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">

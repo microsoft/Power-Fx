@@ -449,6 +449,15 @@ namespace Microsoft.PowerFx.Core.Localization
         public static StringGetter IndexArg1 = (b) => StringResources.Get("IndexArg1", b);
         public static StringGetter IndexArg2 = (b) => StringResources.Get("IndexArg2", b);
 
+        public static StringGetter AboutPatch = (b) => StringResources.Get("AboutPatch", b);
+        public static StringGetter PatchDataSourceArg = (b) => StringResources.Get("PatchDataSourceArg", b);
+        public static StringGetter PatchBaseRecordArg = (b) => StringResources.Get("PatchBaseRecordArg", b);
+        public static StringGetter PatchChangeRecordsArg = (b) => StringResources.Get("PatchChangeRecordsArg", b);
+
+        public static StringGetter AboutRemove = (b) => StringResources.Get("AboutRemove", b);
+        public static StringGetter RemoveDataSourceArg = (b) => StringResources.Get("RemoveDataSourceArg", b);
+        public static StringGetter RemoveRecordsArg = (b) => StringResources.Get("RemoveRecordsArg", b);
+
         // Previously, errors were listed here in the form of a StringGetter, which would be evaluated to fetch
         // an error message to pass to the BaseError class constructor. We are switching to passing the message key itself
         // to the BaseError class, and the BaseError itself is responsible for fetching the resource. (This allows the
@@ -575,17 +584,10 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrNamedFormula_AlreadyDefined = new ErrorResourceKey("ErrNamedFormula_AlreadyDefined");
         public static ErrorResourceKey ErrorResource_NameConflict = new ErrorResourceKey("ErrorResource_NameConflict");
 
-        public static ErrorResourceKey ErrUDF_MissingIdentifier = new ErrorResourceKey("ErrUDF_MissingIdentifier");
-        public static ErrorResourceKey ErrUDF_MissingOpenParen = new ErrorResourceKey("ErrUDF_MissingOpenParen");
-        public static ErrorResourceKey ErrUDF_MissingEqual = new ErrorResourceKey("ErrUDF_MissingEqual");
-        public static ErrorResourceKey ErrUDF_MissingCloseParen = new ErrorResourceKey("ErrUDF_MissingCloseParen");
-        public static ErrorResourceKey ErrUDF_MissingSemicolon = new ErrorResourceKey("ErrUDF_MissingSemicolon");
-        public static ErrorResourceKey ErrUDF_MissingComma = new ErrorResourceKey("ErrUDF_MissingComma");
-        public static ErrorResourceKey ErrUDF_MissingColon = new ErrorResourceKey("ErrUDF_MissingColon");
-        public static ErrorResourceKey ErrUDF_DuplicateArgName = new ErrorResourceKey("ErrUDF_DuplicateArgName");
-
         // ErrorResourceKey for creating an error from an arbitrary string message. The key resolves to "{0}", meaning
         // that a single string arg can be supplied representing the entire text of the error.
         public static ErrorResourceKey ErrGeneralError = new ErrorResourceKey("ErrGeneralError");
+
+        public static ErrorResourceKey ErrRemoveAllArg = new ErrorResourceKey("ErrRemoveAllArg");
     }
 }

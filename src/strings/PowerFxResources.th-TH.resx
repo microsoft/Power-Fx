@@ -3924,12 +3924,20 @@
     <value>ไม่ได้รับการสนับสนุนในคอลัมน์สูตร</value>
     
   </data>
+  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
+    <value>จำนวนอาร์กิวเมนต์ที่ไม่ถูกต้องสำหรับฟังก์ชัน {0}: ได้รับ {1}, ที่คาดไว้ {2}</value>
+    
+  </data>
   <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
     <value>อาร์กิวเมนต์ {0} ไม่ได้รับการสนับสนุนสำหรับฟังก์ชัน {1} ในคอลัมน์สูตร</value>
     
   </data>
   <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
     <value>ไม่สามารถส่งผ่านอาร์กิวเมนต์เป็นชนิดนี้ในคอลัมน์สูตรได้</value>
+    
+  </data>
+  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
+    <value>ไม่สามารถส่งผ่านอาร์กิวเมนต์เป็นชนิด {0} ในคอลัมน์สูตร</value>
     
   </data>
   <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
@@ -3948,6 +3956,10 @@
     <value>คอลัมน์สูตรสนับสนุนเฉพาะสตริงรูปแบบวันที่และเวลาแบบสั้นเท่านั้น</value>
     
   </data>
+  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
+    <value>อาร์กิวเมนต์ {0} เป็นหน่วยเวลาที่ไม่ถูกต้อง/ไม่ได้รับการสนับสนุนสำหรับฟังก์ชันเลขคณิตของวันที่ {1}</value>
+    
+  </data>
   <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
     <value>โทเค็นการจัดรูปแบบเฉพาะตำแหน่งที่ตั้ง เช่น "." และ "," ไม่ได้รับการสนับสนุนในคอลัมน์สูตร</value>
     
@@ -3956,8 +3968,16 @@
     <value>{0} ไม่ได้รับการสนับสนุนในคอลัมน์สูตร ให้ใช้ {1} แทน</value>
     
   </data>
+  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
+    <value>ไม่สามารถดำเนินการนี้กับชนิด {0} ในคอลัมน์สูตร</value>
+    
+  </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
     <value>ชนิดผลลัพธ์ {0} ไม่ได้รับการสนับสนุนในคอลัมน์สูตร</value>
+    
+  </data>
+  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
+    <value>การอ้างอิงโดยตรงทั้งเรกคอร์ดไม่ได้รับการสนับสนุนในคอลัมน์สูตร โปรดอ้างอิงฟิลด์ที่ถูกต้องในเรกคอร์ด</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
@@ -3972,8 +3992,20 @@
     <value>คอลัมน์ชนิด {0} ที่มีรูปแบบ {1} ไม่ได้รับการสนับสนุนในคอลัมน์สูตร</value>
     
   </data>
+  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
+    <value>การแปลงข้อมูลเรกคอร์ดหรือตารางไม่ได้รับการสนับสนุนในคอลัมน์สูตร</value>
+    
+  </data>
   <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
     <value>สูตรต้องมีความยาวไม่เกิน 1000 อักขระ</value>
+    
+  </data>
+  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
+    <value>ตารางคอลัมน์เดียวไม่ได้รับการสนับสนุนในคอลัมน์สูตร</value>
+    
+  </data>
+  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
+    <value>ไม่สามารถอ้างอิงตารางเสมือน {0} ในคอลัมน์สูตร</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">

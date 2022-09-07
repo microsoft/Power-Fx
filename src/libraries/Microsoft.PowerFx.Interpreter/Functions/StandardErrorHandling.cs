@@ -136,6 +136,25 @@ namespace Microsoft.PowerFx.Functions
         }
 
         // A wrapper that allows standard error handling to apply to
+        // sync functions which accept the simpler parameter list of
+        // an array of arguments, ignoring context, runner etc.
+        private static AsyncFunctionPtr StandardErrorHandling<T>(
+            Func<IRContext, IEnumerable<FormulaValue>, IEnumerable<FormulaValue>> expandArguments,
+            Func<IRContext, int, FormulaValue> replaceBlankValues,
+            Func<IRContext, int, FormulaValue, FormulaValue> checkRuntimeTypes,
+            Func<IRContext, int, FormulaValue, FormulaValue> checkRuntimeValues,
+            ReturnBehavior returnBehavior,
+            Func<IServiceProvider, IRContext, T[], FormulaValue> targetFunction)
+            where T : FormulaValue
+        {
+            return StandardErrorHandlingAsync<T>(expandArguments, replaceBlankValues, checkRuntimeTypes, checkRuntimeValues, returnBehavior, (runner, context, irContext, args) =>
+            {
+                var result = targetFunction(runner.FunctionServices, irContext, args);
+                return new ValueTask<FormulaValue>(result);
+            });
+        }
+
+        // A wrapper that allows standard error handling to apply to
         // sync functions with the full parameter list
         private static AsyncFunctionPtr StandardErrorHandling<T>(
             Func<IRContext, IEnumerable<FormulaValue>, IEnumerable<FormulaValue>> expandArguments,
@@ -170,23 +189,27 @@ namespace Microsoft.PowerFx.Functions
         {
             return (runner, context, irContext, args) =>
             {
-                var tableType = (TableType)irContext.ResultType;
-                var resultType = tableType.ToRecord();
-                var columnNameStr = tableType.SingleColumnFieldName;
-                var itemType = resultType.GetFieldType(columnNameStr);
+                var inputTableType = (TableType)args[0].Type;
+                var inputColumnNameStr = inputTableType.SingleColumnFieldName;
+                var inputItemType = inputTableType.GetFieldType(inputColumnNameStr);
+
+                var outputTableType = (TableType)irContext.ResultType;
+                var resultType = outputTableType.ToRecord();
+                var outputColumnNameStr = outputTableType.SingleColumnFieldName;
+                var outputItemType = outputTableType.GetFieldType(outputColumnNameStr);
                 var resultRows = new List<DValue<RecordValue>>();
                 foreach (var row in args[0].Rows)
                 {
                     if (row.IsValue)
                     {
-                        var value = row.Value.GetField(BuiltinFunction.ColumnName_ValueStr);
+                        var value = row.Value.GetField(inputColumnNameStr);
                         NamedValue namedValue;
                         namedValue = value switch
                         {
-                            T t => new NamedValue(columnNameStr, targetFunction(runner, context, IRContext.NotInSource(itemType), new T[] { t })),
-                            BlankValue bv => new NamedValue(columnNameStr, bv),
-                            ErrorValue ev => new NamedValue(columnNameStr, ev),
-                            _ => new NamedValue(columnNameStr, CommonErrors.RuntimeTypeMismatch(IRContext.NotInSource(itemType)))
+                            T t => new NamedValue(outputColumnNameStr, targetFunction(runner, context, IRContext.NotInSource(outputItemType), new T[] { t })),
+                            BlankValue bv => new NamedValue(outputColumnNameStr, bv),
+                            ErrorValue ev => new NamedValue(outputColumnNameStr, ev),
+                            _ => new NamedValue(outputColumnNameStr, CommonErrors.RuntimeTypeMismatch(IRContext.NotInSource(inputItemType)))
                         };
                         var record = new InMemoryRecordValue(IRContext.NotInSource(resultType), new List<NamedValue>() { namedValue });
                         resultRows.Add(DValue<RecordValue>.Of(record));

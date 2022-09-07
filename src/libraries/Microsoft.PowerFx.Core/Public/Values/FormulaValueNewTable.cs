@@ -29,7 +29,8 @@ namespace Microsoft.PowerFx.Types
         /// <returns></returns>
         public static TableValue NewTable(RecordType recordType, params RecordValue[] values)
         {
-            return NewTable(recordType, (IEnumerable<RecordValue>)values);
+            var list = new List<RecordValue>(values);
+            return NewTable(recordType, list);
         }
 
         public static TableValue NewTable(RecordType recordType, IEnumerable<RecordValue> records)

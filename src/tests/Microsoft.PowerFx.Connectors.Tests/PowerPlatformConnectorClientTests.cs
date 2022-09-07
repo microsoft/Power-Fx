@@ -22,10 +22,10 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
         private HttpMessageInvoker HttpMessageInvoker => new (TestHandler);
 
-        private PowerPlatformConnectorClient Client => new (TestEndpoint, TestEnvironmentId, TestConnectionId, () => TestAuthToken, HttpMessageInvoker);        
+        private PowerPlatformConnectorClient Client => new (TestEndpoint, TestEnvironmentId, TestConnectionId, async () => TestAuthToken, HttpMessageInvoker);
 
         [Fact]
-        public void PowerPlatformConnectorClient_Constructor()
+        public async Task PowerPlatformConnectorClient_Constructor()
         {
             var client = Client;
 
@@ -33,7 +33,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.Equal(TestEndpoint, client.Endpoint);
             Assert.Equal(TestEnvironmentId, client.EnvironmentId);
             Assert.Equal(TestConnectionId, client.ConnectionId);
-            Assert.Equal(TestAuthToken, client.GetAuthToken());
+            Assert.Equal(TestAuthToken, await client.GetAuthToken().ConfigureAwait(false));
         }
 
         [Theory]
@@ -50,7 +50,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("Get", "SomeHeader:SomeValue;SomeHeader2:SomeValue2:AnotherValue")]
         [InlineData("Post", null, "abc")]
         [InlineData("Post", "SomeHeader:SomeValue", "abc")]
-        public void PowerPlatformConnectorClient_TransformRequest(string method, string extraHeaders = null, string content = null)
+        public async Task PowerPlatformConnectorClient_TransformRequest(string method, string extraHeaders = null, string content = null)
         {
             var client = Client;
             using var request = new HttpRequestMessage(new HttpMethod(method), "/{connectionId}/test/someUri");
@@ -69,7 +69,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 request.Content = new StringContent(content);
             }
 
-            var transformedRequest = client.Transform(request);
+            var transformedRequest = await client.Transform(request).ConfigureAwait(false);
 
             Assert.NotNull(transformedRequest);
             Assert.Equal(new Uri("https://" + TestEndpoint + "/invoke"), transformedRequest.RequestUri);

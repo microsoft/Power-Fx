@@ -58,6 +58,14 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
                 return false;
             }
 
+            var leftType = binding.GetType(binaryOpNode.Left);
+            var rightType = binding.GetType(binaryOpNode.Right);
+            if ((leftType.IsMultiSelectOptionSet() && !rightType.IsAggregate) || (rightType.IsMultiSelectOptionSet() && !leftType.IsAggregate))
+            {
+                SuggestDelegationHint(node, binding);
+                return false;
+            }
+
             return base.IsSupportedOpNode(node, metadata, binding);
         }
 

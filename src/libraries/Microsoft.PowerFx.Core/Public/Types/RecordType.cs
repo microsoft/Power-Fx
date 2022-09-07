@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 
@@ -35,6 +36,17 @@ namespace Microsoft.PowerFx.Types
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RecordType"/> class with <see cref="DisplayNameProvider"/>.
+        /// Derived classes calling this must override <see cref="AggregateType.FieldNames"/>
+        /// and <see cref="AggregateType.TryGetFieldType(string, out FormulaType)"/>.
+        /// </summary>
+        /// <param name="displayNameProvider">Provide DispayNamerovide to be used.</param>
+        public RecordType(DisplayNameProvider displayNameProvider)
+            : base(false, displayNameProvider)
+        {
+        }
+
         public override void Visit(ITypeVisitor vistor)
         {
             vistor.Visit(this);
@@ -53,7 +65,7 @@ namespace Microsoft.PowerFx.Types
                 return table;
             }
             
-            return new KnownTableType(_type.ToTable());
+            return new TableType(_type.ToTable());
         }
 
         /// <summary>
@@ -83,6 +95,31 @@ namespace Microsoft.PowerFx.Types
         public static RecordType Empty()
         {
             return new KnownRecordType();
+        }
+
+        /// <summary>
+        /// Resolve logical names when display names are given.
+        /// </summary>
+        /// <param name="recordToResolve">RecordValue to resolve.</param>
+        /// <returns>RecordValue containing only logical field names.</returns>
+        internal RecordValue ResolveToLogicalNames(RecordValue recordToResolve)
+        {
+            var list = new List<NamedValue>();
+            var rType = recordToResolve.Type;
+
+            foreach (var field in recordToResolve.Fields)
+            {
+                var name = field.Name;
+
+                if (DType.TryGetLogicalNameForColumn(_type, field.Name, out var logicalName))
+                {
+                    name = logicalName;
+                }
+
+                list.Add(new NamedValue(name, field.Value));
+            }
+
+            return FormulaValue.NewRecordFromFields(list);
         }
     }
 }

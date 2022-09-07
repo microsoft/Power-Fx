@@ -3924,12 +3924,20 @@
     <value>Tidak didukung di kolom formula.</value>
     
   </data>
+  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
+    <value>Jumlah argumen tidak valid untuk fungsi {0}: diterima {1}, diharapkan {2}</value>
+    
+  </data>
   <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
     <value>Argumen {0} tidak didukung untuk fungsi {1} di kolom formula.</value>
     
   </data>
   <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>Argumen ini tidak dapat diteruskan sebagai jenis ini di kolom formula.</value>
+    <value>Argumen ini tidak dapat diteruskan sebagai tipe ini di kolom rumus.</value>
+    
+  </data>
+  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
+    <value>Argumen ini tidak dapat diteruskan sebagai tipe {0} di kolom rumus.</value>
     
   </data>
   <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
@@ -3948,6 +3956,10 @@
     <value>Hanya string format tanggal dan waktu pendek yang didukung di kolom formula.</value>
     
   </data>
+  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
+    <value>Argumen {0} adalah satuan waktu yang tidak valid/tidak didukung untuk fungsi aritmetika tanggal {1}.</value>
+    
+  </data>
   <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
     <value>Token pemformatan khusus lokal seperti "." dan "," tidak didukung di kolom rumus.</value>
     
@@ -3956,8 +3968,16 @@
     <value>{0} tidak didukung di kolom rumus, gunakan {1} sebagai gantinya.</value>
     
   </data>
+  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
+    <value>Operasi ini tidak dapat dilakukan pada tipe {0} di kolom rumus.</value>
+    
+  </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
     <value>Jenis hasil {0} tidak didukung di kolom rumus.</value>
+    
+  </data>
+  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
+    <value>Mereferensikan seluruh rekaman secara langsung tidak didukung di kolom rumus. Referensikan bidang yang valid di rekaman.</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
@@ -3972,8 +3992,20 @@
     <value>Kolom jenis {0} dengan format {1} tidak didukung di kolom rumus.</value>
     
   </data>
+  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
+    <value>Rekaman atau tabel yang memaksa tidak didukung di kolom rumus.</value>
+    
+  </data>
   <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
     <value>Rumus tidak boleh lebih dari 1.000 karakter.</value>
+    
+  </data>
+  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
+    <value>Tabel satu kolom tidak didukung di kolom rumus.</value>
+    
+  </data>
+  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
+    <value>Tidak dapat mereferensikan tabel virtual {0} di kolom rumus.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">

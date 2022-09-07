@@ -45,7 +45,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             return intellisense.Suggestions.Select(suggestion => suggestion.DisplayText.Text).ToArray();
         }
         
-        private PowerFxConfig Default => PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder().WithDefaultEnums());
+        internal static PowerFxConfig Default => PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder().WithDefaultEnums());
 
         // No enums, no functions. Adding functions will add back in associated enums, so to be truly empty, ensure no functions. 
         private PowerFxConfig EmptyEverything => PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder(), new TexlFunction[0]);
@@ -105,7 +105,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("[{test:\",test\"}].test.| ")]
 
         // We do, however, if the one column table is a literal.
-        [InlineData("[\"test\"].| ", "Value")]
+        [InlineData("[\"test\"].| ")]
         [InlineData("Calendar.|", "MonthsLong", "MonthsShort", "WeekdaysLong", "WeekdaysShort")]
         [InlineData("Calendar.Months|", "MonthsLong", "MonthsShort")]
         [InlineData("Color.AliceBl|", "AliceBlue")]
@@ -135,6 +135,11 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("| Not false")]
         [InlineData("Not |")]
 
+        // StrInterpSuggestionHandler
+        [InlineData("With( {Apples:3}, $\"We have {appl|", "Apples")]
+        [InlineData("With( {Apples:3}, $\"We have {appl|} apples.", "Apples")]
+        [InlineData("$\"This is a randomly generated number: {rand|", "Rand", "RandBetween")]
+
         // StrNumLitNodeSuggestionHandler
         [InlineData("1 |", "-", "&", "&&", "*", "/", "^", "||", "+", "<", "<=", "<>", "=", ">", ">=", "And", "As", "exactin", "in", "Or")]
         [InlineData("1|0")]
@@ -152,6 +157,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("ForAll([0],`|", "ThisRecord", "Value")]
         [InlineData("ForAll(-],|", "ThisRecord")]
         [InlineData("ForAll()~|")]
+        [InlineData("With( {Apples:3}, $\"We have {Apples} apples|")]
 
         // BlankNodeSuggestionHandler
         [InlineData("|")]
@@ -164,6 +170,11 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("DisplayMode.D|", "Disabled", "Edit")]
         [InlineData("DisplayMode|", "DisplayMode", "DisplayMode.Disabled", "DisplayMode.Edit", "DisplayMode.View")]
         [InlineData("$\"Hello {DisplayMode|} World!\"", "DisplayMode", "DisplayMode.Disabled", "DisplayMode.Edit", "DisplayMode.View")]
+
+        [InlineData("Table({F1:1}).|")]
+        [InlineData("Table({F1:1},{F1:2}).|")]
+        [InlineData("Table({F1:1, F2:2},{F2:1}).|")]
+        [InlineData("[1,2,3].|")]
         public void TestSuggest(string expression, params string[] expectedSuggestions)
         {
             // Note that the expression string needs to have balanced quotes or we hit a bug in NUnit running the tests:
@@ -248,18 +259,24 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
 
             var actualSuggestions = SuggestStrings(expression, Default, context);
             Assert.Equal(expectedSuggestions, actualSuggestions);
-        }        
+        }
         
         [Theory]
         [InlineData("So|", true, "SomeString")]
         [InlineData("Loop.Loop.Loop.So|", true, "SomeString")]
-        [InlineData("Loop.|", true, "Loop", "Record", "SomeString")]
+        [InlineData("Loop.|", true, "Loop", "Record", "SomeString", "TableLoop")]
         [InlineData("Record.|", false, "Foo")]
         [InlineData("Loop.Loop.Record.|", false, "Foo")]
+        [InlineData("Filter(TableLoop, EndsWith(|", true, "SomeString")]
+        [InlineData("Loop.L|o", true, "Loop", "TableLoop")]
         public void TestSuggestLazyTypes(string expression, bool requiresExpansion, params string[] expectedSuggestions)
         {
             var lazyInstance = new LazyRecursiveRecordType();
-            var actualSuggestions = SuggestStrings(expression, EmptyEverything, lazyInstance);
+            var config = PowerFxConfig.BuildWithEnumStore(
+                null,
+                new EnumStoreBuilder(),
+                new TexlFunction[] { BuiltinFunctionsCore.EndsWith, BuiltinFunctionsCore.Filter, BuiltinFunctionsCore.Table });
+            var actualSuggestions = SuggestStrings(expression, config, lazyInstance);
             Assert.Equal(expectedSuggestions, actualSuggestions);
             
             // Intellisense requires iterating the field names for some operations
@@ -284,6 +301,9 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
                     case "SomeString":
                         type = FormulaType.String;
                         return true;
+                    case "TableLoop":
+                        type = ToTable();
+                        return true;
                     case "Loop":
                         type = this;
                         return true;
@@ -303,6 +323,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
                 yield return "SomeString";
                 yield return "Loop";
                 yield return "Record";
+                yield return "TableLoop";
             }
 
             public override bool Equals(object other)

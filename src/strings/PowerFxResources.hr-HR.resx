@@ -3924,12 +3924,20 @@
     <value>Nije podržano u stupcima formule.</value>
     
   </data>
+  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
+    <value>Broj argumenata za funkciju {0} nije valjan: primljeno {1}, očekivano {2}</value>
+    
+  </data>
   <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
     <value>Argument {0} nije podržan za funkciju {1} u stupcima formule.</value>
     
   </data>
   <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>Taj argument nije moguće proslijediti kao tu vrstu u stupcima formule.</value>
+    <value>This argument cannot be passed as this type in formula columns.</value>
+    
+  </data>
+  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
+    <value>This argument cannot be passed as type {0} in formula columns.</value>
     
   </data>
   <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
@@ -3948,6 +3956,10 @@
     <value>U stupcima formule podržani su samo nizovi koji se odnose na kratki zapis formata datuma i vremena.</value>
     
   </data>
+  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
+    <value>Argument {0} je vremenska jedinica koja nije valjana / nije podržana za aritmetičku funkciju datuma {1}.</value>
+    
+  </data>
   <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
     <value>Tokeni oblikovanja specifični za regionalnu shemu, kao što su „.” i „,” nisu podržani u stupcima formule.</value>
     
@@ -3956,8 +3968,16 @@
     <value>Funkcija {0} nije podržana u stupcima formula, umjesto toga upotrijebite {1}.</value>
     
   </data>
+  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
+    <value>This operation cannot be performed on type {0} in formula columns.</value>
+    
+  </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
     <value>Vrsta rezultata {0} nije podržana u stupcima formula.</value>
+    
+  </data>
+  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
+    <value>Izravno upućivanje na cijeli zapis nije podržano u stupcima formule. Uputite na valjano polje u zapisu.</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
@@ -3972,8 +3992,20 @@
     <value>Stupci vrste {0} formata {1} nisu podržani u stupcima formule.</value>
     
   </data>
+  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
+    <value>Prisila zapisa ili tablica nije podržana u stupcima formule.</value>
+    
+  </data>
   <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
     <value>Formule ne smiju biti dulje od 1000 znakova.</value>
+    
+  </data>
+  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
+    <value>Tablice s jednim stupcem nisu podržane u stupcima formule.</value>
+    
+  </data>
+  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
+    <value>Cannot reference virtual table {0} in formula columns.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">

@@ -51,5 +51,53 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal(expectedPath, path.ToString());
             Assert.Equal(segments.ToList(), path.Segments().Select(segment => segment.Value).ToList());
         }
+
+        [Theory]
+        [InlineData("a", "a", "")]
+        [InlineData("a.b.c", "a.b", "c")]
+        [InlineData("a.b.c.d", "a.b", "c.d")]
+        [InlineData("a.b.c.d.e.f.g.h.i.j.k.l.m.n.o.p.q.r.s.t.u.v.w.x.y.z", "a", "b.c.d.e.f.g.h.i.j.k.l.m.n.o.p.q.r.s.t.u.v.w.x.y.z")]
+        [InlineData("'!@#$%^'.'&*()_'.'123'", "!@#$%^.&*()_", "123")]
+        public void DPathAppendTests(string expectedPath, string path1, string path2)
+        {
+            var dPath1 = CreateDPath(path1);
+            var dPath2 = CreateDPath(path2);
+            var path = dPath1.Append(dPath2);
+            Assert.Equal(expectedPath, path.ToString());
+        }
+
+        [Theory]
+        [InlineData("", "", true)]
+        [InlineData("a", "a", true)]
+        [InlineData("a.b.c", "a.b.c", true)]
+        [InlineData("a.b.c", "a.b.d", false)]
+        public void DPathEqualityTests(string path1, string path2, bool succeeds)
+        {
+            var dPath1 = CreateDPath(path1);
+            var dPath2 = CreateDPath(path2);
+            Assert.Equal(succeeds, dPath1.Equals(dPath2));
+            Assert.Equal(!succeeds, dPath1 != dPath2);
+        }
+
+        [Fact]
+        public void DPathObjectEqualsTests()
+        {
+            var dPath = DPath.Root;
+            dPath.Append(new DName("1"));
+            Assert.False(dPath.Equals(1));
+            Assert.True(dPath.Equals((object)dPath));
+        }
+
+        private DPath CreateDPath(string path)
+        {
+            var segments = path.Split(".", StringSplitOptions.RemoveEmptyEntries);
+            var dPath = DPath.Root;
+            foreach (var name in segments)
+            {
+                dPath = dPath.Append(new DName(name));
+            }
+
+            return dPath;
+        }
     }
 }

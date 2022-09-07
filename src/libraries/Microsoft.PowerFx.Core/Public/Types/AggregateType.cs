@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
@@ -14,6 +15,12 @@ namespace Microsoft.PowerFx.Types
     {
         public virtual IEnumerable<string> FieldNames { get; }
 
+        /// <summary>
+        /// Override to add a more specific user-visible type name when this type shows up
+        /// in error messages, suggestions, etc..
+        /// </summary>
+        public virtual string UserVisibleTypeName => null; 
+
         internal AggregateType(DType type)
             : base(type)
         {
@@ -21,10 +28,15 @@ namespace Microsoft.PowerFx.Types
         }
 
         public AggregateType(bool isTable)
+            : this(isTable, null)
+        {
+        }
+
+        public AggregateType(bool isTable, DisplayNameProvider displayNameProvider)
             : base()
         {
             var lazyTypeProvider = new LazyTypeProvider(this);
-            _type = new DType(lazyTypeProvider, isTable: isTable);
+            _type = new DType(lazyTypeProvider, isTable: isTable, displayNameProvider);
         }
 
         public FormulaType GetFieldType(string fieldName)
@@ -43,6 +55,46 @@ namespace Microsoft.PowerFx.Types
             }
 
             type = Build(dType);
+            return true;
+        }
+
+        /// <summary>
+        /// Lookup for logical name and field for input display or logical name.
+        /// If there is a conflict, it prioritizes logical name.
+        /// i.e. field1->Logical=F1 , Display=Display1; field2-> Logical=Display1, Display=Display2
+        /// would return field2 with logical name Display1.
+        /// </summary>
+        /// <param name="displayOrLogicalName">Display or Logical name.</param>
+        /// <param name="logical">Logical name for the input.</param>
+        /// <param name="type">Type for the input Display or Logical name.</param>
+        /// <returns>true or false.</returns>
+        /// <exception cref="ArgumentNullException">Throws, if input displayOrLogicalName is empty.</exception>
+        public bool TryGetFieldType(string displayOrLogicalName, out string logical, out FormulaType type)
+        {
+            Contracts.CheckNonEmpty(displayOrLogicalName, nameof(displayOrLogicalName));
+
+            if (DType.TryGetDisplayNameForColumn(_type, displayOrLogicalName, out _))
+            {
+                logical = displayOrLogicalName;
+            }
+            else if (DType.TryGetLogicalNameForColumn(_type, displayOrLogicalName, out var maybeLogical))
+            {
+                logical = maybeLogical;
+            }
+            else
+            {
+                // in-case derived types did not provide DisplayNameProvider then above two will be false
+                // but we want to assume that, provided displayOrLogicalName maybe logical name it self
+                // and let TryGetFieldType verify that.
+                logical = displayOrLogicalName;
+            }
+
+            if (!TryGetFieldType(logical, out type))
+            {
+                logical = null;
+                return false;
+            }
+
             return true;
         }
 

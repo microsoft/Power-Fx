@@ -3924,12 +3924,20 @@
     <value>Niet ondersteund in formulekolommen.</value>
     
   </data>
+  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
+    <value>Ongeldig aantal argumenten voor functie {0}: {1} ontvangen {2} verwacht</value>
+    
+  </data>
   <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
     <value>Het argument {0} wordt niet ondersteund voor de functie {1} in formulekolommen.</value>
     
   </data>
   <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
     <value>Dit argument kan niet worden doorgegeven als dit type in formulekolommen.</value>
+    
+  </data>
+  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
+    <value>Dit argument kan niet worden doorgegeven als type {0} in formulekolommen.</value>
     
   </data>
   <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
@@ -3948,6 +3956,10 @@
     <value>Alleen tekenreeksen voor de korte datum- en tijdnotatie worden ondersteund in formulekolommen.</value>
     
   </data>
+  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
+    <value>Het argument {0} is een ongeldige/niet-ondersteunde tijdseenheid voor de rekenkundige functie {1} van de datum.</value>
+    
+  </data>
   <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
     <value>Landspecifieke opmaaktokens, zoals '.' en ',', worden niet ondersteund in formulekolommen.</value>
     
@@ -3956,8 +3968,16 @@
     <value>{0} wordt niet ondersteund in formulekolommen. Gebruik {1}.</value>
     
   </data>
+  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
+    <value>Deze bewerking kan niet worden uitgevoerd op type {0} in formulekolommen.</value>
+    
+  </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
     <value>Het resultaattype {0} wordt niet ondersteund in formulekolommen.</value>
+    
+  </data>
+  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
+    <value>Rechtstreeks verwijzen naar een volledige record wordt niet ondersteund in formulekolommen. Verwijzing naar een geldig veld in de record.</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
@@ -3972,8 +3992,20 @@
     <value>Kolommen van het type {0} met {1} worden niet ondersteund in formulekolommen.</value>
     
   </data>
+  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
+    <value>Afwijken van records of tabellen wordt niet ondersteund in formulekolommen.</value>
+    
+  </data>
   <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
     <value>Formules kunnen niet langer zijn dan 1000 tekens.</value>
+    
+  </data>
+  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
+    <value>Tabellen met één kolom worden niet ondersteund in formulekolommen.</value>
+    
+  </data>
+  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
+    <value>Kan niet verwijzen naar virtuele tabel {0} in formulekolommen.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">

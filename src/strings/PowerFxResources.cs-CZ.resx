@@ -3924,12 +3924,20 @@
     <value>Není podporováno ve sloupcích vzorce.</value>
     
   </data>
+  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
+    <value>Neplatný počet argumentů pro funkci {0}: přijaté {1}, očekávané {2}</value>
+    
+  </data>
   <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
     <value>Argument {0} není podporován pro funkci {1} ve sloupcích vzorce.</value>
     
   </data>
   <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
     <value>Tento argument nelze předat jako tento typ ve sloupcích vzorce.</value>
+    
+  </data>
+  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
+    <value>Tento argument nelze předat jako typ {0} ve sloupcích vzorce.</value>
     
   </data>
   <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
@@ -3948,6 +3956,10 @@
     <value>Ve sloupcích vzorce jsou podporovány pouze řetězce krátkého formátu data a času.</value>
     
   </data>
+  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
+    <value>Argument {0} je neplatná/nepodporovaná jednotka času pro aritmetickou funkci data {1}</value>
+    
+  </data>
   <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
     <value>Tokeny formátování specifické pro národní prostředí, jako jsou "." a "," nejsou ve sloupcích vzorců podporovány.</value>
     
@@ -3956,8 +3968,16 @@
     <value>{0} není ve sloupcích vzorců podporován, použijte místo toho {1}.</value>
     
   </data>
+  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
+    <value>Tuto operaci nelze provést u typu {0} ve sloupcích vzorců.</value>
+    
+  </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
     <value>Typ výsledku {0} není ve sloupcích vzorců podporován.</value>
+    
+  </data>
+  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
+    <value>Přímý odkaz na celý záznam není ve sloupcích vzorců podporován. Uveďte platné pole v záznamu.</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
@@ -3972,8 +3992,20 @@
     <value>Sloupce typu {0} s formátem {1} nejsou ve sloupcích vzorců podporovány.</value>
     
   </data>
+  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
+    <value>Vynucení záznamů nebo tabulek není ve sloupcích vzorců podporováno.</value>
+    
+  </data>
   <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
     <value>Vzorce nesmí být delší než 1000 znaků.</value>
+    
+  </data>
+  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
+    <value>Tabulky s jedním sloupcem nejsou ve sloupcích vzorců podporovány.</value>
+    
+  </data>
+  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
+    <value>Nelze odkazovat na virtuální tabulku {0} ve sloupcích vzorců.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">

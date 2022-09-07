@@ -498,37 +498,37 @@
     <value>要轉換為布林值的文字值。</value>
   </data>
   <data name="AboutBooleanT" xml:space="preserve">
-    <value>Converts a column of text values to a column of boolean values.</value>
+    <value>將文字資料行轉換為布林值資料行。</value>
     
   </data>
   <data name="BooleanTArg1" xml:space="preserve">
-    <value>input</value>
+    <value>輸入</value>
     
   </data>
   <data name="AboutBooleanT_input" xml:space="preserve">
-    <value>A column of text values to process.</value>
+    <value>要處理的文字值資料行。</value>
   </data>
   <data name="AboutBooleanN" xml:space="preserve">
-    <value>Converts a 'number' to a boolean value.</value>
+    <value>將「數字」轉換為布林值。</value>
     
   </data>
   <data name="BooleanNArg1" xml:space="preserve">
-    <value>number</value>
+    <value>數字</value>
     
   </data>
   <data name="AboutBooleanN_number" xml:space="preserve">
-    <value>The number value to convert to a boolean value.</value>
+    <value>要轉換為布林值的數字值。</value>
   </data>
   <data name="AboutBooleanNT" xml:space="preserve">
-    <value>Converts a column of numeric values to a column of boolean values.</value>
+    <value>將數值資料行轉換為布林值資料行。</value>
     
   </data>
   <data name="BooleanNTArg1" xml:space="preserve">
-    <value>input</value>
+    <value>輸入</value>
     
   </data>
   <data name="AboutBooleanNT_input" xml:space="preserve">
-    <value>A column of number values to process.</value>
+    <value>要處理的數字值資料行。</value>
   </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>傳回第一個非空白的引數</value>
@@ -3924,12 +3924,20 @@
     <value>公式資料行不支援。</value>
     
   </data>
+  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
+    <value>{0} 函式的引數數量無效: 收到 {1} 個，預期為 {2} 個</value>
+    
+  </data>
   <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
     <value>公式資料行中的 {1} 函數不支援 {0} 引數。</value>
     
   </data>
   <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
     <value>此引數不能在公式資料行中以此類型傳遞。</value>
+    
+  </data>
+  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
+    <value>此引數不能在公式資料行中以類型 {0} 傳遞。</value>
     
   </data>
   <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
@@ -3948,6 +3956,10 @@
     <value>公式資料行只支援簡短日期和時間格式字串。</value>
     
   </data>
+  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
+    <value>{0} 引數對 {1} 日期算術函式而言是無效/不受支援的時間單位。</value>
+    
+  </data>
   <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
     <value>特定地區設定格式化權杖，例如公式欄中不支援「。」和「，」。</value>
     
@@ -3956,8 +3968,16 @@
     <value>公式欄不支援 {0}，請改用 {1}。</value>
     
   </data>
+  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
+    <value>無法對公式資料行中的類型 {0} 執行此作業。</value>
+    
+  </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
     <value>公式欄不支援結果類型 {0}。</value>
+    
+  </data>
+  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
+    <value>公式資料行不支援直接參考整份記錄。請參考記錄中的有效欄位。</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
@@ -3972,8 +3992,20 @@
     <value>公式欄不支援 {1} 格式的資料行 {0}。</value>
     
   </data>
+  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
+    <value>公式資料行中不支援強制記錄或資料表。</value>
+    
+  </data>
   <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
     <value>公式不能超過 1000 個字元。</value>
+    
+  </data>
+  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
+    <value>公式資料行不支援單欄資料表。</value>
+    
+  </data>
+  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
+    <value>無法在公式資料行中參考虛擬資料表 {0}。</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">

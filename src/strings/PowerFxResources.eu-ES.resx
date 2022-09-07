@@ -3924,12 +3924,20 @@
     <value>Ez da onartzen formula-zutabeetan.</value>
     
   </data>
+  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
+    <value>{0} funtzioaren argumentu kopuruak ez du balio: {1} jaso dira, baina {2} espero ziren</value>
+    
+  </data>
   <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
     <value>{0} argumentua ez da onartzen formula-zutabeetako {1} funtzioan.</value>
     
   </data>
   <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>Argumentua ezin da modu horretakoa izan formula-zutabeetan.</value>
+    <value>This argument cannot be passed as this type in formula columns.</value>
+    
+  </data>
+  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
+    <value>This argument cannot be passed as type {0} in formula columns.</value>
     
   </data>
   <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
@@ -3948,6 +3956,10 @@
     <value>Dataren eta orduaren formatu laburrak soilik onartzen dira formula-zutabeetan.</value>
     
   </data>
+  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
+    <value>{0} argumentuaren denbora-unitateak ez du balio edo ez da onartzen {1} dataren funtzio aritmetikoan.</value>
+    
+  </data>
   <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
     <value>Eskualdeko ezarpenen formatu-tokenak (adibidez "." eta ",") ez dira onartzen formula-zutabeetan.</value>
     
@@ -3956,8 +3968,16 @@
     <value>{0} ez da onartzen formula-zutabeetan; horren ordez, erabili {1}.</value>
     
   </data>
+  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
+    <value>This operation cannot be performed on type {0} in formula columns.</value>
+    
+  </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
     <value>{0} emaitza mota ez da onartzen formula-zutabeetan.</value>
+    
+  </data>
+  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
+    <value>Ezin da aipatu erregistro oso bat formula-zutabeetan. Aipatu erregistroko baliozko eremu bat.</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
@@ -3972,8 +3992,20 @@
     <value>{1} formatudun {0} motako zutabeak ez dira onartzen formula-zutabeetan.</value>
     
   </data>
+  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
+    <value>Ezin dira txertatu erregistroak edo taulak formula-zutabeetan.</value>
+    
+  </data>
   <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
     <value>Formulek ezin dituzte eduki 1.000 karaktere baino gehiago.</value>
+    
+  </data>
+  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
+    <value>Zutabe bakarreko taulak ez dira onartzen formula-zutabeetan.</value>
+    
+  </data>
+  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
+    <value>Cannot reference virtual table {0} in formula columns.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">

@@ -3924,12 +3924,20 @@
     <value>Non se admite nas columnas de fórmula.</value>
     
   </data>
+  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
+    <value>Número non válido de argumentos para a función {0}: recibíronse {1}, esperábanse {2}</value>
+    
+  </data>
   <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
     <value>O argumento {0} non é compatible coa función {1} nas columnas de fórmula.</value>
     
   </data>
   <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>Este argumento non se pode pasar como este tipo nas columnas de fórmula.</value>
+    <value>This argument cannot be passed as this type in formula columns.</value>
+    
+  </data>
+  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
+    <value>This argument cannot be passed as type {0} in formula columns.</value>
     
   </data>
   <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
@@ -3948,6 +3956,10 @@
     <value>Nas columnas de fórmula só se admiten cadeas de formato de data e hora curtas.</value>
     
   </data>
+  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
+    <value>O argumento {0} é unha unidade de tempo que non se admite ou non é válida para a función aritmética de data {1}.</value>
+    
+  </data>
   <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
     <value>Non se admiten tokens de formatación específicos da configuración rexional (como "." e ",") nas columnas de fórmula.</value>
     
@@ -3956,8 +3968,16 @@
     <value>Non se admite a función {0} nas columnas de fórmula, use {1} no seu lugar.</value>
     
   </data>
+  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
+    <value>This operation cannot be performed on type {0} in formula columns.</value>
+    
+  </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
     <value>Non se admite o tipo de resultado {0} nas columnas de fórmula.</value>
+    
+  </data>
+  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
+    <value>Facer referencia de forma directa a un rexistro completo non se admite nas columnas de fórmula. Faga referencia a un campo válido no rexistro.</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
@@ -3972,8 +3992,20 @@
     <value>Non se admiten as columnas de tipo {0} con formato {1} nas columnas de fórmula.</value>
     
   </data>
+  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
+    <value>A coerción de rexistros ou táboas non se admite nas columnas de fórmula.</value>
+    
+  </data>
   <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
     <value>As fórmulas non poden ter máis de 1000 caracteres.</value>
+    
+  </data>
+  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
+    <value>Non se admiten as táboas dunha única columna nas columnas de fórmula.</value>
+    
+  </data>
+  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
+    <value>Cannot reference virtual table {0} in formula columns.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">

@@ -3924,12 +3924,20 @@
     <value>Tidak disokong dalam lajur formula.</value>
     
   </data>
+  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
+    <value>Bilangan argumen untuk {0} fungsi tidak sah: {1} diterima, {2} dijangka</value>
+    
+  </data>
   <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
     <value>Argumen {0} tidak disokong untuk fungsi {1} dalam lajur formula.</value>
     
   </data>
   <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
     <value>Argumen ini tidak boleh dihantar sebagai jenis ini dalam lajur formula.</value>
+    
+  </data>
+  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
+    <value>Argumen ini tidak boleh dihantar sebagai jenis {0} dalam lajur formula.</value>
     
   </data>
   <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
@@ -3948,6 +3956,10 @@
     <value>Hanya rentetan format tarikh dan masa pendek disokong dalam lajur formula.</value>
     
   </data>
+  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
+    <value>Argumen {0} ialah unit masa yang tidak sah/tidak disokong untuk {1} fungsi aritmetik tarikh.</value>
+    
+  </data>
   <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
     <value>Token pemformatan khusus tempatan seperti "." dan "," tidak disokong dalam lajur formula.</value>
     
@@ -3956,8 +3968,16 @@
     <value>{0} tidak disokong dalam lajur formula, gunakan {1}.</value>
     
   </data>
+  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
+    <value>Operasi ini tidak boleh dilakukan pada jenis {0} dalam lajur formula.</value>
+    
+  </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
     <value>Jenis hasil {0} tidak disokong dalam lajur formula.</value>
+    
+  </data>
+  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
+    <value>Tindakan merujuk keseluruhan rekod secara langsung tidak disokong dalam lajur formula. Sila rujuk medan yang sah dalam rekod.</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
@@ -3972,8 +3992,20 @@
     <value>Lajur jenis {0} dengan format {1} tidak disokong dalam lajur formula.</value>
     
   </data>
+  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
+    <value>Rekod atau jadual paksaan tidak disokong dalam lajur formula.</value>
+    
+  </data>
   <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
     <value>Formula tidak boleh lebih panjang daripada 1000 aksara.</value>
+    
+  </data>
+  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
+    <value>Jadual lajur tunggal tidak disokong dalam lajur formula.</value>
+    
+  </data>
+  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
+    <value>Tidak boleh merujuk jadual maya {0} dalam lajur formula.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">

@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Globalization;
@@ -11,6 +12,7 @@ using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.IR.Symbols;
+using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
@@ -23,15 +25,43 @@ namespace Microsoft.PowerFx
     // Use Task for public methods, but ValueTask for internal methods that we expect to be mostly sync. 
     internal class EvalVisitor : IRNodeVisitor<ValueTask<FormulaValue>, EvalVisitorContext>
     {
-        public CultureInfo CultureInfo { get; }
+        private readonly CultureInfo _defaultCultureInfo;
+
+        public CultureInfo CultureInfo => GetService<CultureInfo>() ?? _defaultCultureInfo;
+
+        private readonly ReadOnlySymbolValues _runtimeConfig;
 
         private readonly CancellationToken _cancel;
 
-        public EvalVisitor(CultureInfo cultureInfo, CancellationToken cancel)
+        public EvalVisitor(CultureInfo cultureInfo, CancellationToken cancel, ReadOnlySymbolValues runtimeConfig = null)
         {
-            CultureInfo = cultureInfo;
+            _defaultCultureInfo = cultureInfo;
             _cancel = cancel;
+            _runtimeConfig = runtimeConfig;
         }
+
+        /// <summary>
+        /// Get a service from the <see cref="ReadOnlySymbolValues"/>. Returns null if not present.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public T GetService<T>() 
+        {
+            if (_runtimeConfig != null)
+            {
+                return _runtimeConfig.GetService<T>();
+            }
+
+            return default;
+        }
+
+        public bool TryGetService<T>(out T result)
+        {
+            result = GetService<T>();
+            return result != null;
+        }
+
+        public IServiceProvider FunctionServices => _runtimeConfig;
 
         // Check this cooperatively - especially in any loop. 
         public void CheckCancel()
@@ -205,12 +235,13 @@ namespace Microsoft.PowerFx
             }
             else if (func is UserDefinedTexlFunction udtf)
             {
+                // $$$ Should add _runtimeConfig
                 var result = await udtf.InvokeAsync(args, _cancel, context.StackDepthCounter.Increment());
                 return result;
             }
             else if (func is CustomTexlFunction customTexlFunc)
             {
-                var result = customTexlFunc.Invoke(args);
+                var result = customTexlFunc.Invoke(_runtimeConfig, args);
                 return result;
             }
             else
@@ -219,7 +250,11 @@ namespace Microsoft.PowerFx
                 {
                     var result = await ptr(this, context.IncrementStackDepthCounter(childContext), node.IRContext, args);
 
-                    Contract.Assert(result.IRContext.ResultType == node.IRContext.ResultType || result is ErrorValue || result.IRContext.ResultType is BlankType);
+                    if (IfFunction.CanCheckIfReturn(func))
+                    {
+                        Contract.Assert(result.IRContext.ResultType == node.IRContext.ResultType || result is ErrorValue || result.IRContext.ResultType is BlankType);
+                    }
+
                     return result;
                 }
 
@@ -428,7 +463,7 @@ namespace Microsoft.PowerFx
                             var record = row.Value;
                             var newScope = scopeContext.WithScopeValues(record);
 
-                            var newValue = await coercion.Value.Accept(this, new EvalVisitorContext(newScope, context.StackDepthCounter));
+                            var newValue = await coercion.Value.Accept(this, context.NewScope(newScope));
                             var name = coercion.Key;
                             fields.Add(new NamedValue(name.Value, newValue));
                         }
@@ -543,10 +578,22 @@ namespace Microsoft.PowerFx
         {
             return node.Value switch
             {
+                NameSymbol name => GetVariableOrFail(node, name.Name),
                 ICanGetValue fi => fi.Value,
                 IExternalOptionSet optionSet => ResolvedObjectHelpers.OptionSet(optionSet, node.IRContext),
                 _ => ResolvedObjectHelpers.ResolvedObjectError(node),
             };
+        }
+
+        private FormulaValue GetVariableOrFail(ResolvedObjectNode node, string name)
+        {
+            if (_runtimeConfig != null &&
+                _runtimeConfig.TryGetValue(name, out var value))
+            {
+                return value;
+            }
+
+            return ResolvedObjectHelpers.ResolvedObjectError(node);
         }
     }
 }

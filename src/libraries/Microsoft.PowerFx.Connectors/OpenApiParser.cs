@@ -9,6 +9,7 @@ using Microsoft.AppMagic.Authoring.Texl.Builtins;
 using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
+using static Microsoft.PowerFx.Connectors.OpenApiHelperFunctions;
 
 namespace Microsoft.PowerFx.Connectors
 {
@@ -51,21 +52,18 @@ namespace Microsoft.PowerFx.Connectors
                         continue;
                     }
 
-                    var operationName = op.OperationId ?? path.Replace("/", string.Empty);                    
+                    // We need to remove invalid chars to be consistent with Power Apps
+                    var operationName = NormalizeOperationId(op.OperationId) ?? path.Replace("/", string.Empty);
                     var returnType = op.GetReturnType();
-
-                    if (basePath != null)
-                    {
-                        path = basePath + path;
-                    }
+                    var opPath = basePath != null ? basePath + path : path;                    
 
                     var argMapper = new ArgumentMapper(op.Parameters, op);
 
                     IAsyncTexlFunction invoker = null;
                     if (httpClient != null)
                     {
-                        var httpInvoker = new HttpFunctionInvoker(httpClient, verb, path, returnType, argMapper, cache);
-                        invoker = new ScopedHttpFunctionInvoker(functionNamespace, httpInvoker);
+                        var httpInvoker = new HttpFunctionInvoker(httpClient, verb, opPath, returnType, argMapper, cache);
+                        invoker = new ScopedHttpFunctionInvoker(DPath.Root.Append(DName.MakeValid(functionNamespace, out _)), operationName, functionNamespace, httpInvoker);
                     }
 
                     // Parameter (name,type) --> list of options. 
@@ -114,7 +112,7 @@ namespace Microsoft.PowerFx.Connectors
 
             return newFunctions;
         }
-
+       
         private static bool IsSafeHttpMethod(HttpMethod httpMethod)
         {
             // HTTP/1.1 spec states that only GET and HEAD requests are 'safe' by default.
