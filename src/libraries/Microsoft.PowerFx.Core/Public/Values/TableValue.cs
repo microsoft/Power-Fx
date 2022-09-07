@@ -103,6 +103,11 @@ namespace Microsoft.PowerFx.Types
             return DValue<RecordValue>.Of(NotImplemented(IRContext));
         }
 
+        public virtual async Task<DValue<BooleanValue>> RemoveAsync(IEnumerable<FormulaValue> recordsToRemove, bool all)
+        {
+            return DValue<BooleanValue>.Of(NotImplemented(IRContext));
+        }
+
         /// <summary>
         /// Patch implementation for derived classes.
         /// </summary>

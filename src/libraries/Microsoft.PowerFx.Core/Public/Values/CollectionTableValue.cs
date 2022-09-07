@@ -108,6 +108,41 @@ namespace Microsoft.PowerFx.Types
             }
         }
 
+        public override async Task<DValue<BooleanValue>> RemoveAsync(IEnumerable<FormulaValue> recordsToRemove, bool all = false)
+        {
+            var ret = false;
+
+            if (_sourceList == null || _sourceList.IsReadOnly)
+            {
+                return await base.RemoveAsync(recordsToRemove, all);
+            }
+
+            // !JYL! Needs improvement
+            foreach (RecordValue record in recordsToRemove)
+            {
+                while (true)
+                {
+                    var actual = Find(record);
+
+                    if (actual != null)
+                    {
+                        _sourceList.Remove(MarshalInverse(actual));
+
+                        if (!all)
+                        {
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        break;
+                    }                    
+                }
+            }
+
+            return DValue<BooleanValue>.Of(New(ret));
+        }
+
         protected override async Task<DValue<RecordValue>> PatchCoreAsync(RecordValue baseRecord, RecordValue changeRecord)
         {
             var actual = Find(baseRecord);
