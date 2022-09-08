@@ -549,7 +549,7 @@ namespace Microsoft.PowerFx.Core.IR
                 }
             }
 
-            private AggregateCoercionNode GetAggregateCoercionNode(UnaryOpKind unaryOpKind, IntermediateNode child, IRTranslatorContext context, DType fromType, DType toType)
+            private IntermediateNode GetAggregateCoercionNode(UnaryOpKind unaryOpKind, IntermediateNode child, IRTranslatorContext context, DType fromType, DType toType)
             {
                 var fieldCoercions = new Dictionary<DName, IntermediateNode>();
                 var scope = GetNewScope();
@@ -567,18 +567,14 @@ namespace Microsoft.PowerFx.Core.IR
                             continue;
                         }
 
-                        var innerCoersion = InjectCoercion(new ScopeAccessNode(IRContext.NotInSource(FormulaType.Build(fromField.Type)), new ScopeAccessSymbol(scope, scope.AddOrGetIndexForField(fromField.Name))), context, fromField.Type, toFieldType);
-
-                        if (innerCoersion != null)
-                        {
-                            fieldCoercions.Add(fromField.Name, innerCoersion);
-                        }
+                        var innerCoersion = InjectCoercion(new ScopeAccessNode(IRContext.NotInSource(FormulaType.Build(fromField.Type)), new ScopeAccessSymbol(scope, scope.AddOrGetIndexForField(fromField.Name))), context, fromField.Type, toFieldType);                        
+                        fieldCoercions.Add(fromField.Name, innerCoersion);                        
                     }
                 }
 
                 if (!fieldCoercions.Any())
                 {
-                    return null;
+                    return child;
                 }
 
                 return new AggregateCoercionNode(IRContext.NotInSource(FormulaType.Build(toType)), unaryOpKind, scope, child, fieldCoercions);
@@ -596,7 +592,7 @@ namespace Microsoft.PowerFx.Core.IR
                 Contracts.Assert(!fromType.IsError);
                 Contracts.Assert(!toType.IsError);
 
-                return InjectCoercion(child, context, fromType, toType) ?? child;                
+                return InjectCoercion(child, context, fromType, toType);             
             }
 
             private IntermediateNode InjectCoercion(IntermediateNode child, IRTranslatorContext context, DType fromType, DType toType)
