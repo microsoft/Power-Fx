@@ -56,15 +56,14 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             symbolTable.AddVariable("obj", _originalRecordType);
             symbolValues.Add("obj", new TestCustomRecordValue(_testObj, _originalRecordType));
 
-            try
+            CheckResult check = engine.Check(expr, null, symbolTable);
+            Assert.Equal(check.IsSuccess, !hasException);
+
+            if (check.IsSuccess)
             {
-                var result = await engine.EvalAsync(expr, default, null, symbolTable, symbolValues).ConfigureAwait(false);
-                Assert.False(hasException);
+                var evaluator = check.GetEvaluator();
+                var result = evaluator.Eval(symbolValues);
                 Assert.Equal(expected, result.ToObject());
-            }
-            catch (InvalidOperationException)
-            {
-                Assert.True(hasException);
             }
         }
 
@@ -84,15 +83,14 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             symbolTable.AddVariable("obj", _customRecordType);
             symbolValues.Add("obj", new TestCustomRecordValue(_testObj, _customRecordType));
 
-            try
+            CheckResult check = engine.Check(expr, null, symbolTable);
+            Assert.Equal(check.IsSuccess, !hasException);
+
+            if (check.IsSuccess)
             {
-                var result = await engine.EvalAsync(expr, default, null, symbolTable, symbolValues).ConfigureAwait(false);
-                Assert.False(hasException);
+                var evaluator = check.GetEvaluator();
+                var result = evaluator.Eval(symbolValues);
                 Assert.Equal(expected, result.ToObject());
-            }
-            catch (InvalidOperationException)
-            {
-                Assert.True(hasException);
             }
         }
 
