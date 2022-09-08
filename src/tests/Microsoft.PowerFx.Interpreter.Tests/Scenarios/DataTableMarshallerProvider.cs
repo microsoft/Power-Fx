@@ -116,11 +116,13 @@ namespace Microsoft.PowerFx.Tests
 
     // This class shouldn't be necessary, but DataTable is legacy and doesn't implement generic interfaces. 
     // Wrap and expose the generic interfaces that it ought to be implementing. 
-    internal class DataTableWrapper : IReadOnlyList<DataRow>
+    internal class DataTableWrapper : IReadOnlyList<DataRow>, ICollection<DataRow>
     {
         private readonly DataTable _dataTable;
 
         public int Count => _dataTable.Rows.Count;
+
+        bool ICollection<DataRow>.IsReadOnly => false;
 
         public DataRow this[int index] => _dataTable.Rows[index];
 
@@ -142,5 +144,32 @@ namespace Microsoft.PowerFx.Tests
         {
             return _dataTable.Rows.GetEnumerator();
         }
-    }    
+
+        void ICollection<DataRow>.Add(DataRow item)
+        {
+            _dataTable.Rows.Add(item);
+        }
+
+        void ICollection<DataRow>.Clear()
+        {
+            _dataTable.Rows.Clear();
+        }
+
+        bool ICollection<DataRow>.Contains(DataRow item)
+        {
+            return _dataTable.Rows.Contains(item);
+        }
+
+        void ICollection<DataRow>.CopyTo(DataRow[] array, int arrayIndex)
+        {
+            _dataTable.Rows.CopyTo(array, arrayIndex);
+        }
+
+        bool ICollection<DataRow>.Remove(DataRow item)
+        {
+            _dataTable.Rows.Remove(item);
+
+            return true;
+        }
+    }
 }

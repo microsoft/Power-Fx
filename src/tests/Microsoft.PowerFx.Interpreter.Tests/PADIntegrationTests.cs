@@ -58,7 +58,7 @@ namespace Microsoft.PowerFx.Tests
 
             var cache = new TypeMarshallerCache()
                 .WithDynamicMarshallers(new DataTableMarshallerProvider());
-                        
+
             var robinTable = cache.Marshal(table);
 
             engine.UpdateVariable("robintable", robinTable);
@@ -121,6 +121,14 @@ First(
         { Other : 5}
      )).Other");
             Assert.IsType<BlankValue>(result4);
+
+            var symbol = new SymbolTable();
+            symbol.EnableMutationFunctions();
+
+            engine.Config.SymbolTable = symbol;
+
+            var result5 = engine.Eval("Remove(robintable, {Names:\"name2\"});CountRows(robintable)", options: new ParserOptions() { AllowsSideEffects = true });
+            Assert.Equal(2, ((NumberValue)result5).Value);
         }
 
         [Fact]
