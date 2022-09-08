@@ -27,6 +27,13 @@ namespace Microsoft.PowerFx.Functions
 {
     internal abstract class PatchAndValidateRecordFunctionBase : BuiltinFunction
     {
+        public override bool RequiresDataSourceScope => true;
+        
+        public override bool ArgMatchesDatasourceType(int argNum)
+        {
+            return argNum >= 1;
+        }
+
         public PatchAndValidateRecordFunctionBase(DPath theNamespace, string name, StringGetter description, FunctionCategories fc, DType returnType, BigInteger maskLambdas, int arityMin, int arityMax, params DType[] paramTypes)
            : base(theNamespace, name, /*localeSpecificName*/string.Empty, description, fc, returnType, maskLambdas, arityMin, arityMax, paramTypes)
         {

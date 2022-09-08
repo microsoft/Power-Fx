@@ -157,7 +157,7 @@ namespace Microsoft.PowerFx.Functions
                     return new DateValue(irContext, res.Date);
                 }
 
-                return CommonErrors.InvalidDateTimeError(irContext);
+                return CommonErrors.InvalidDateTimeParsingError(irContext);
             }
 
             return CommonErrors.RuntimeTypeMismatch(irContext);
@@ -175,7 +175,7 @@ namespace Microsoft.PowerFx.Functions
                     return new TimeValue(irContext, res);
                 }
 
-                return CommonErrors.InvalidDateTimeError(irContext);
+                return CommonErrors.InvalidDateTimeParsingError(irContext);
             }
 
             return CommonErrors.RuntimeTypeMismatch(irContext);
@@ -194,7 +194,7 @@ namespace Microsoft.PowerFx.Functions
                     return new DateTimeValue(irContext, res);
                 }
 
-                return CommonErrors.InvalidDateTimeError(irContext);
+                return CommonErrors.InvalidDateTimeParsingError(irContext);
             }
 
             return CommonErrors.RuntimeTypeMismatch(irContext);
