@@ -170,6 +170,7 @@ namespace Microsoft.PowerFx.Functions
                     double months = ((end.Year - start.Year) * 12) + end.Month - start.Month;
                     return new NumberValue(irContext, months);
                 case "quarters":
+                    // decrementing months by 1 so that we can have months 1-3 (Jan-Mar) on quarter 0, months 4-6 (Apr-Jun) on quarter 1, and so on
                     var quarters = ((end.Year - start.Year) * 4) + Math.Floor((end.Month - 1) / 3.0) - Math.Floor((start.Month - 1) / 3.0);
                     return new NumberValue(irContext, quarters);
                 case "years":
