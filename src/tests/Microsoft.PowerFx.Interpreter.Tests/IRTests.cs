@@ -1,8 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System.Linq;
 using System.Threading;
+using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
@@ -28,9 +28,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var runtimeConfig = new SymbolValues();
             runtimeConfig.Add("MyTable", TableValue.NewTable(tableType.ToRecord()));
-            
+
             var evalResult = checkResult.GetEvaluator().EvalAsync(CancellationToken.None, runtimeConfig).Result;
             Assert.IsNotType<ErrorValue>(evalResult);
+
+            var ir = IRTranslator.Translate(checkResult._binding).ToString();
+            Assert.DoesNotContain("AggregateCoercionNode", ir);
         }
     }
 }

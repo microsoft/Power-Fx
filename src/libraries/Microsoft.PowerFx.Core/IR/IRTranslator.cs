@@ -159,7 +159,7 @@ namespace Microsoft.PowerFx.Core.IR
                 var kind = BinaryOpMatrix.GetBinaryOpKind(node, context.Binding);
 
                 IntermediateNode binaryOpResult;
-                
+
                 switch (kind)
                 {
                     // Call Node Replacements:
@@ -189,7 +189,7 @@ namespace Microsoft.PowerFx.Core.IR
                         break;
 
                     case BinaryOpKind.Invalid:
-                        if (node.Op == BinaryOp.NotEqual) 
+                        if (node.Op == BinaryOp.NotEqual)
                         {
                             binaryOpResult = new BooleanLiteralNode(context.GetIRContext(node), true);
                         }
@@ -567,8 +567,8 @@ namespace Microsoft.PowerFx.Core.IR
                             continue;
                         }
 
-                        var innerCoersion = InjectCoercion(new ScopeAccessNode(IRContext.NotInSource(FormulaType.Build(fromField.Type)), new ScopeAccessSymbol(scope, scope.AddOrGetIndexForField(fromField.Name))), context, fromField.Type, toFieldType);                        
-                        fieldCoercions.Add(fromField.Name, innerCoersion);                        
+                        var innerCoersion = InjectCoercion(new ScopeAccessNode(IRContext.NotInSource(FormulaType.Build(fromField.Type)), new ScopeAccessSymbol(scope, scope.AddOrGetIndexForField(fromField.Name))), context, fromField.Type, toFieldType);
+                        fieldCoercions.Add(fromField.Name, innerCoersion);
                     }
                 }
 
@@ -592,7 +592,7 @@ namespace Microsoft.PowerFx.Core.IR
                 Contracts.Assert(!fromType.IsError);
                 Contracts.Assert(!toType.IsError);
 
-                return InjectCoercion(child, context, fromType, toType);             
+                return InjectCoercion(child, context, fromType, toType);
             }
 
             private IntermediateNode InjectCoercion(IntermediateNode child, IRTranslatorContext context, DType fromType, DType toType)
