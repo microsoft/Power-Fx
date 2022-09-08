@@ -1,9 +1,12 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.PowerFx.Interpreter.Tests;
 using Microsoft.PowerFx.Types;
 
@@ -33,9 +36,12 @@ namespace Microsoft.PowerFx.Tests
     // All marshalling is done lazily so we avoid copying the whole table.
     internal class DataTableValue : CollectionTableValue<DataRow>
     {
+        private readonly DataTable _table;
+
         public DataTableValue(DataTable dataTable)
             : base(ComputeType(dataTable), new DataTableWrapper(dataTable))
         {
+            _table = dataTable; 
         }
 
         public static RecordType ComputeType(DataTable dataTable)
@@ -61,6 +67,43 @@ namespace Microsoft.PowerFx.Tests
             // Return value
             var record = new DataRowRecordValue(RecordType, item);
             return DValue<RecordValue>.Of(record);
+        }
+
+        protected override DataRow MarshalInverse(RecordValue row)
+        {
+#pragma warning disable CA2000 // Dispose objects before losing scope
+            var dataTable = new DataTable();
+#pragma warning restore CA2000 // Dispose objects before losing scope
+            var recordValues = new object[_table.Columns.Count];
+
+            var dict = new Dictionary<string, FormulaValue>();
+
+            foreach (var field in row.Fields)
+            {
+                dict[field.Name] = field.Value;
+            }
+
+            var index = 0;
+
+            foreach (DataColumn column in _table.Columns)
+            {
+                dataTable.Columns.Add(column.ColumnName, column.DataType);
+
+                if (dict.TryGetValue(column.ColumnName, out FormulaValue formulaValue))
+                {
+                    recordValues[index] = formulaValue.ToObject();
+                }
+                else
+                {
+                    // Assign default values if column is missing?
+                }
+
+                index++;
+            }
+
+            dataTable.Rows.Add(recordValues);
+
+            return dataTable.Rows[0];
         }
 
         // Wrap an individual DataRow of the DataTable as a Power Fx RecordValue
@@ -110,7 +153,38 @@ namespace Microsoft.PowerFx.Tests
                 }
 
                 return true;
-            }  
+            }
+
+            public override async Task<DValue<RecordValue>> UpdateFieldsAsync(RecordValue changeRecord)
+            {
+                var dict = new Dictionary<string, FormulaValue>();
+                var itemArray = new object[_row.Table.Columns.Count];
+
+                foreach (var field in changeRecord.Fields)
+                {
+                    dict[field.Name] = field.Value;
+                }
+
+                var index = 0;
+
+                foreach (DataColumn column in _row.Table.Columns)
+                {
+                    if (dict.TryGetValue(column.ColumnName, out FormulaValue formulaValue))
+                    {
+                        itemArray[index] = formulaValue.ToObject();
+                    }
+                    else
+                    {
+                        itemArray[index] = _row.ItemArray[index];
+                    }
+
+                    index++;
+                }
+
+                _row.ItemArray = itemArray;
+
+                return DValue<RecordValue>.Of(changeRecord);
+            }
         }
     }
 
@@ -147,7 +221,7 @@ namespace Microsoft.PowerFx.Tests
 
         void ICollection<DataRow>.Add(DataRow item)
         {
-            _dataTable.Rows.Add(item);
+            _dataTable.Rows.Add(item.ItemArray);
         }
 
         void ICollection<DataRow>.Clear()

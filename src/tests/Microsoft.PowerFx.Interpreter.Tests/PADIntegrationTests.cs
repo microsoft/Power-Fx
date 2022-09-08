@@ -123,12 +123,25 @@ First(
             Assert.IsType<BlankValue>(result4);
 
             var symbol = new SymbolTable();
+            var opt = new ParserOptions() { AllowsSideEffects = true };
+
             symbol.EnableMutationFunctions();
 
             engine.Config.SymbolTable = symbol;
 
-            var result5 = engine.Eval("Remove(robintable, {Names:\"name2\"});CountRows(robintable)", options: new ParserOptions() { AllowsSideEffects = true });
+            Assert.Equal(3, table.Rows.Count);
+
+            var result5 = engine.Eval("Remove(robintable, {Names:\"name2\"});CountRows(robintable)", options: opt);
             Assert.Equal(2, ((NumberValue)result5).Value);
+
+            // Is table object affected?
+            Assert.Equal(2, table.Rows.Count);
+
+            var result6 = engine.Eval("Collect(robintable, {Scores:100,Names:\"name100\"});CountRows(robintable)", options: opt);
+            Assert.Equal(3, ((NumberValue)result6).Value);
+
+            var result7 = engine.Eval("Patch(robintable, First(robintable),{Names:\"new-name\"});First(robintable).Names", options: opt);
+            Assert.Equal("new-name", ((StringValue)result7).Value);
         }
 
         [Fact]
