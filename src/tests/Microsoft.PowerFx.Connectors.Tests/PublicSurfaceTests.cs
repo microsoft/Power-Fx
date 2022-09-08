@@ -1,13 +1,10 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using Microsoft.PowerFx.Connectors;
-using Microsoft.PowerFx.Syntax;
 using Xunit;
 
 namespace Microsoft.PowerFx.Connector.Tests
@@ -35,7 +32,7 @@ namespace Microsoft.PowerFx.Connector.Tests
               "Microsoft.PowerFx.Connectors.CachingHttpClient",
               "Microsoft.PowerFx.Connectors.OpenApiExtensions",
               "Microsoft.PowerFx.Connectors.ODataQueryableTableValue",
-              "Microsoft.PowerFx.Connectors.ODataParams"
+              "Microsoft.PowerFx.Connectors.ODataParameters"
             };
 
             var sb = new StringBuilder();

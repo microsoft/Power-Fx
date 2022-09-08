@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Dynamic;
+using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
 
 namespace Microsoft.PowerFx.Types
@@ -34,7 +35,7 @@ namespace Microsoft.PowerFx.Types
         /// Initializes a new instance of the <see cref="RecordValue"/> class.
         /// </summary>
         /// <param name="type"></param>
-        public RecordValue(RecordType type) 
+        public RecordValue(RecordType type)
             : base(IRContext.NotInSource(type))
         {
         }
@@ -101,7 +102,7 @@ namespace Microsoft.PowerFx.Types
                 else if (result is TableValue tableValue)
                 {
                     result = new InMemoryTableValue(IRContext.NotInSource(fieldType), tableValue.Rows);
-                } 
+                }
                 else
                 {
                     // Ensure that the actual type matches the expected type.
@@ -117,7 +118,7 @@ namespace Microsoft.PowerFx.Types
                 Contract.Assert(result.Type.Equals(fieldType) || result is ErrorValue || result.Type is BlankType);
 
                 return result;
-            } 
+            }
             else if (result != null)
             {
                 throw HostException(fieldName, $"returned false with non-null result.");
@@ -160,6 +161,25 @@ namespace Microsoft.PowerFx.Types
         public sealed override void Visit(IValueVisitor visitor)
         {
             visitor.Visit(this);
+        }
+
+        public virtual async Task<DValue<RecordValue>> UpdateFieldsAsync(RecordValue changeRecord)
+        {
+            var errorValue = NewError(new ExpressionError()
+            {
+                Kind = ErrorKind.ReadOnlyValue,
+                Severity = ErrorSeverity.Critical,
+                Message = "It is not possible to update a RecordValue directly."
+            });
+
+            return DValue<RecordValue>.Of(errorValue);
+        }
+
+        public Task<DValue<RecordValue>> UpdateField(string name, FormulaValue value)
+        {
+            var list = new List<NamedValue>() { new NamedValue(name, value) };
+
+            return UpdateFieldsAsync(FormulaValue.NewRecordFromFields(list));
         }
     }
 }

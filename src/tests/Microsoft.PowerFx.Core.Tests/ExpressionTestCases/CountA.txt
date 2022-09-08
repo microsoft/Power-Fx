@@ -1,32 +1,122 @@
-﻿>> CountA([1,2,3,4,Blank()])
-4
+﻿// ******** TABLE WITH NO BLANK RECORDS ********
 
->> CountA([1,2,Blank(),Blank(),Blank()])
-2
+>> CountA([0])
+1
 
->> CountA([1,2,3,If(1<0,4),Blank()])
+>> CountA([1])
+1
+
+// NUMERIC RECORDS
+
+>> CountA([1, 2, 3, 4, 5])
+5
+
+>> CountA(Table({a:1},{a:2},{a:3}))
 3
 
->> CountA(Sort([-2, -1, 0, 1, 2], 1 / Value))
-#Error(Kind=Div0)
+// STRING RECORDS
+
+>> CountA(["1", "one", "two", "three", "four"])
+5
+
+>> CountA(Table({a:"1"},{a:"two"},{a:"three"},{a:"four"},{a:"five"}))
+5
+
+// BOOLEAN RECORDS
+
+>> CountA([true, false])
+2
+
+>> CountA(Table({a:true},{a:false}))
+2
+
+// DATE/TIME/DATETIMEVALUE RECORDS
+
+>> CountA([Date(2022,12,12)])
+1
+
+>> CountA(Table({a:DateTime(2022,12,12,12,12,12)},{a:DateTime(2014,10,10,10,10,10)}))
+2
+
+>> CountA([Time(12,34,56), Time(1,2,3,4), Time(12,0,0)])
+3
+
+// ******** TABLE WITH BLANK RECORDS ********
+
+>> CountA([0,""])
+1
+
+// CountA does count empty strings, like Excel
+>> CountA(["",""," ",1])
+4
+
+>> CountA([1,2,3,4,Blank()])
+4
+
+>> CountA([1,"2", true, Blank(),Blank(),Blank()])
+3
+
+>> CountA([1,Date(2022,12,12),"3",If(1<0,4),Blank()])
+3
+
+>> CountA(Table({a:false},Blank(),{a:true},Blank()))
+2
+
+>> CountA(Table({a:false},Blank(),{a:true},Blank(),{a:Blank()}))
+2
+
+>> CountA(Table({a:"1"},{a:"2"},If(1<0,{a:"3"}),If(1>0,{a:"4"}),{a:"5"}))
+4
+
+//One blank record
+>> CountA([Blank()])
+0
+
+//All blank records
+>> CountA([Blank(),Blank(),Blank(),Blank(),Blank()])
+0
+
+>> CountA(Table({a:Blank()},{a:Blank()},{a:Blank()}))
+0
+
+>> CountA(["",""," ",Blank(),Blank()])
+3
+
+>> CountA(Table({a:""},{a:" "},{a:Blank()}))
+2
+
+// ******** BLANK TABLE ********
 
 >> CountA(If(1<0,[1,2,3]))
 0
 
->> CountA(LastN([1,2,3,4], Blank()))
-0
+// ******** ERROR RECORDS ********
 
->> CountA([1, 2, 1/0, 4, 5])
-#Error(Kind=Div0)
+//Few error values
+>> CountA([1, "2", 1/0, true, " "])
+#Error(Kind=Div0,InvalidArgument)
 
+// Error records
 >> CountA(Table({a:1},{a:2},If(Sqrt(-1)<1,{a:3}),{a:4}))
 #Error(Kind=Numeric)
 
->> CountA(Table({a:1},{a:2},If(1<0,{a:3}), If(1>0,{a:4}),{a:5}))
-4
+//All error values
+>> CountA([1/0, Sqrt(-1)])
+#Error(Kind=Div0,Numeric)
 
->> CountA(["","123","abc",Blank()])
-3
+// All error values
+>> CountA(Table({a:1/0},{a:Sqrt(-1)}))
+#Error(Kind=Div0,Numeric)
 
->> CountA([1,"1","2",Blank()])
-3
+// Error table
+>> CountA(Sort([-2,-1,0,1,2],1/Value))
+#Error(Kind=Div0)
+
+// ******** ERROR SCENARIOS ********
+
+>> CountA([])
+Errors: Error 7-9: The first argument of 'CountA' should be a one-column table.|Error 0-10: The function 'CountA' has some invalid arguments.
+
+>> CountA(Table({a:1,b:2},{a:3,b:4}))
+Errors: Error 7-33: The first argument of 'CountA' should be a one-column table.|Error 0-34: The function 'CountA' has some invalid arguments.
+

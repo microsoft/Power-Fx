@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
 
@@ -38,6 +39,11 @@ namespace Microsoft.PowerFx.Types
             _sourceIndex = source as IReadOnlyList<T>;
             _sourceCount = source as IReadOnlyCollection<T>;
             _sourceList = source as ICollection<T>;
+
+            if (_sourceList != null && _sourceList.IsReadOnly)
+            {
+                _sourceList = null;
+            }
         }
 
         public RecordType RecordType { get; }
@@ -75,7 +81,7 @@ namespace Microsoft.PowerFx.Types
 
         public override async Task<DValue<RecordValue>> AppendAsync(RecordValue record)
         {
-            if (_sourceList == null || _sourceList.IsReadOnly)
+            if (_sourceList == null)
             {
                 return await base.AppendAsync(record);
             }
@@ -106,6 +112,101 @@ namespace Microsoft.PowerFx.Types
             {
                 return base.TryGetIndex(index1, out record);
             }
+        }
+
+        public override async Task<DValue<BooleanValue>> RemoveAsync(IEnumerable<FormulaValue> recordsToRemove, bool all, CancellationToken cancel)
+        {
+            var ret = true;
+
+            if (_sourceList == null)
+            {
+                return await base.RemoveAsync(recordsToRemove, all, cancel);
+            }
+
+            foreach (RecordValue recordToRemove in recordsToRemove)
+            {
+                var deleteList = new List<T>();
+
+                foreach (var item in _enumerator)
+                {
+                    cancel.ThrowIfCancellationRequested();
+
+                    var dRecord = Marshal(item);
+
+                    if (Matches(dRecord.Value, recordToRemove))
+                    {
+                        deleteList.Add(item);
+
+                        if (!all)
+                        {
+                            break;
+                        }
+                    }
+                }
+
+                foreach (var delete in deleteList)
+                {
+                    ret = ret && _sourceList.Remove(delete);
+                }
+            }
+
+            return DValue<BooleanValue>.Of(New(ret));
+        }
+
+        protected override async Task<DValue<RecordValue>> PatchCoreAsync(RecordValue baseRecord, RecordValue changeRecord)
+        {
+            var actual = Find(baseRecord);
+
+            if (actual != null)
+            {
+                return await actual.UpdateFieldsAsync(changeRecord);
+            }
+            else
+            {
+                return DValue<RecordValue>.Of(FormulaValue.NewBlank(IRContext.ResultType));
+            }
+        }
+
+        /// <summary>
+        /// Execute a linear search for the matching record.
+        /// </summary>
+        /// <param name="baseRecord">RecordValue argument.</param>
+        /// <returns>A record instance within the current table. This record can then be updated.</returns>
+        /// <remarks>A derived class may override if there's a more efficient way to find the match than by linear scan.</remarks>
+        protected virtual RecordValue Find(RecordValue baseRecord)
+        {
+            foreach (var current in Rows)
+            {
+                if (Matches(current.Value, baseRecord))
+                {
+                    return current.Value;
+                }
+            }
+
+            return null;
+        }
+
+        protected static bool Matches(RecordValue currentRecord, RecordValue baseRecord)
+        {
+            foreach (var field in baseRecord.Fields)
+            {
+                var fieldValue = currentRecord.GetField(field.Value.Type, field.Name);
+
+                if (fieldValue is BlankValue)
+                {
+                    return false;
+                }
+
+                var compare1 = fieldValue.ToObject();
+                var compare2 = field.Value.ToObject();
+
+                if (compare1 != null && !compare1.Equals(compare2))
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
     }
 }

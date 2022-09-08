@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter;
 
 namespace Microsoft.PowerFx
@@ -32,12 +33,16 @@ namespace Microsoft.PowerFx
         }
 
         /// <summary>
-        /// Enable a Collect() function which allows scripts to append table records.
+        /// Enable all multation functions which allows scripts to execute side effect behavior.
         /// </summary>
         /// <param name="symbolTable"></param>
-        public static void EnableCollectFunction(this SymbolTable symbolTable)
+        public static void EnableMutationFunctions(this SymbolTable symbolTable)
         {
+            symbolTable.AddFunction(new RecalcEngineSetFunction());
             symbolTable.AddFunction(new CollectFunction());
+            symbolTable.AddFunction(new PatchRecordFunction());
+            symbolTable.AddFunction(new PatchFunction());
+            symbolTable.AddFunction(new RemoveFunction());
         }
     }
 }

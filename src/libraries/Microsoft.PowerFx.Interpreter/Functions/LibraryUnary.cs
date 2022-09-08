@@ -13,8 +13,6 @@ namespace Microsoft.PowerFx.Functions
 {
     internal partial class Library
     {
-        private static readonly DateTime _epoch = new DateTime(1899, 12, 30, 0, 0, 0, 0);
-
         #region Standard Error Handling Wrappers for Unary Operators
         public static IReadOnlyDictionary<UnaryOpKind, AsyncFunctionPtr> UnaryOps { get; } = new Dictionary<UnaryOpKind, AsyncFunctionPtr>()
         {

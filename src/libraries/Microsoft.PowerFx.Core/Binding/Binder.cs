@@ -124,6 +124,11 @@ namespace Microsoft.PowerFx.Core.Binding
         public ErrorContainer ErrorContainer { get; } = new ErrorContainer();
 
         /// <summary>
+        /// The maximum number of selects in a table that will be included in data call.
+        /// </summary>
+        public const int MaxSelectsToInclude = 100;
+
+        /// <summary>
         /// Default name used to access a Lambda scope.
         /// </summary>
         internal DName ThisRecordDefaultName => new DName("ThisRecord");
@@ -542,9 +547,7 @@ namespace Microsoft.PowerFx.Core.Binding
             Contracts.AssertValue(node);
 
             var info = GetInfo(node).VerifyValue();
-            if (info.Kind == BindKind.Data &&
-                info.Data is IExternalDataSource dataSourceInfo
-                && dataSourceInfo.IsPageable)
+            if (info.Data is IExternalPageableSymbol pageableSymbol && pageableSymbol.IsPageable)
             {
                 return true;
             }
@@ -874,14 +877,14 @@ namespace Microsoft.PowerFx.Core.Binding
 
                     ruleQueryOptions.AddRelatedColumns();
 
-                    if (ruleQueryOptions.HasNonKeySelects())
+                    if (ruleQueryOptions.HasNonKeySelects(Document?.Properties?.UserFlags?.EnforceSelectPropagationLimit ?? false))
                     {
                         return ruleQueryOptions.Selects;
                     }
                 }
                 else
                 {
-                    if (ds.QueryOptions.HasNonKeySelects())
+                    if (ds.QueryOptions.HasNonKeySelects(Document?.Properties?.UserFlags?.EnforceSelectPropagationLimit ?? false))
                     {
                         ds.QueryOptions.AddRelatedColumns();
                         return ds.QueryOptions.Selects;
@@ -905,7 +908,8 @@ namespace Microsoft.PowerFx.Core.Binding
                     {
                         if (expandQueryOptions.Value.ExpandInfo.Identity == expandEntityLogicalName)
                         {
-                            if (!expandQueryOptions.Value.SelectsEqualKeyColumns())
+                            if (!expandQueryOptions.Value.SelectsEqualKeyColumns() &&
+                                (!(Document?.Properties?.UserFlags?.EnforceSelectPropagationLimit ?? false) || expandQueryOptions.Value.Selects.Count() <= MaxSelectsToInclude))
                             {
                                 return expandQueryOptions.Value.Selects;
                             }
@@ -2477,267 +2481,6 @@ namespace Microsoft.PowerFx.Core.Binding
                 Contracts.Assert(_currentScope == _topScope);
             }
 
-            /// <summary>
-            /// Helper for Lt/leq/geq/gt type checking. Restricts type to be one of the provided set, without coercion (except for primary output props).
-            /// </summary>
-            /// <param name="node">Node for which we are checking the type.</param>
-            /// <param name="alternateTypes">List of acceptable types for this operation, in order of suitability.</param>
-            /// <returns></returns>
-            private bool CheckComparisonTypeOneOf(TexlNode node, params DType[] alternateTypes)
-            {
-                Contracts.AssertValue(node);
-                Contracts.AssertValue(alternateTypes);
-                Contracts.Assert(alternateTypes.Any());
-
-                var type = _txb.GetType(node);
-                foreach (var altType in alternateTypes)
-                {
-                    if (!altType.Accepts(type))
-                    {
-                        continue;
-                    }
-
-                    return true;
-                }
-
-                // If the node is a control, we may be able to coerce its primary output property
-                // to the desired type, and in the process support simplified syntax such as: slider2 <= slider4
-                IExternalControlProperty primaryOutProp;
-                if (type is IExternalControlType controlType && node.AsFirstName() != null && (primaryOutProp = controlType.ControlTemplate.PrimaryOutputProperty) != null)
-                {
-                    var outType = primaryOutProp.GetOpaqueType();
-                    var acceptedType = alternateTypes.FirstOrDefault(alt => alt.Accepts(outType));
-                    if (acceptedType != default)
-                    {
-                        // We'll coerce the control to the desired type, by pulling from the control's
-                        // primary output property. See codegen for details.
-                        _txb.SetCoercedType(node, acceptedType);
-                        return true;
-                    }
-                }
-
-                _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, node, TexlStrings.ErrBadType_ExpectedTypesCSV, string.Join(", ", alternateTypes.Select(t => t.GetKindString())));
-                return false;
-            }
-
-            // Returns whether the node was of the type wanted, and reports appropriate errors.
-            // A list of allowed alternate types specifies what other types of values can be coerced to the wanted type.
-            private bool CheckType(TexlNode node, DType nodeType, DType typeWant, params DType[] alternateTypes)
-            {
-                Contracts.AssertValue(node);
-                Contracts.Assert(typeWant.IsValid);
-                Contracts.Assert(!typeWant.IsError);
-                Contracts.AssertValue(alternateTypes);
-
-                if (typeWant.Accepts(nodeType))
-                {
-                    if (nodeType.RequiresExplicitCast(typeWant))
-                    {
-                        _txb.SetCoercedType(node, typeWant);
-                    }
-
-                    return true;
-                }
-
-                // Normal (non-control) coercion
-                foreach (var altType in alternateTypes)
-                {
-                    if (!altType.Accepts(nodeType))
-                    {
-                        continue;
-                    }
-
-                    // Ensure that booleans only match bool valued option sets
-                    if (typeWant.Kind == DKind.Boolean && altType.Kind == DKind.OptionSetValue && !(nodeType.OptionSetInfo?.IsBooleanValued ?? false))
-                    {
-                        continue;
-                    }
-
-                    // We found an alternate type that is accepted and will be coerced.
-                    _txb.SetCoercedType(node, typeWant);
-                    return true;
-                }
-
-                // If the node is a control, we may be able to coerce its primary output property
-                // to the desired type, and in the process support simplified syntax such as: label1 + slider4
-                IExternalControlProperty primaryOutProp;
-                if (nodeType is IExternalControlType controlType && node.AsFirstName() != null && (primaryOutProp = controlType.ControlTemplate.PrimaryOutputProperty) != null)
-                {
-                    var outType = primaryOutProp.GetOpaqueType();
-                    if (typeWant.Accepts(outType) || alternateTypes.Any(alt => alt.Accepts(outType)))
-                    {
-                        // We'll "coerce" the control to the desired type, by pulling from the control's
-                        // primary output property. See codegen for details.
-                        _txb.SetCoercedType(node, typeWant);
-                        return true;
-                    }
-                }
-
-                var messageKey = alternateTypes.Length == 0 ? TexlStrings.ErrBadType_ExpectedType : TexlStrings.ErrBadType_ExpectedTypesCSV;
-                var messageArg = alternateTypes.Length == 0 ? typeWant.GetKindString() : string.Join(", ", new[] { typeWant }.Concat(alternateTypes).Select(t => t.GetKindString()));
-
-                _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, node, messageKey, messageArg);
-                return false;
-            }
-
-            // Performs type checking for the arguments passed to the membership "in"/"exactin" operators.
-            private bool CheckInArgTypes(TexlNode left, TexlNode right)
-            {
-                Contracts.AssertValue(left);
-                Contracts.AssertValue(right);
-
-                var typeLeft = _txb.GetType(left);
-                if (!typeLeft.IsValid || typeLeft.IsUnknown || typeLeft.IsError)
-                {
-                    _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, left, TexlStrings.ErrTypeError);
-                    return false;
-                }
-
-                var typeRight = _txb.GetType(right);
-                if (!typeRight.IsValid || typeRight.IsUnknown || typeRight.IsError)
-                {
-                    _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, right, TexlStrings.ErrTypeError);
-                    return false;
-                }
-
-                Contracts.Assert(!typeLeft.IsAggregate || typeLeft.IsTable || typeLeft.IsRecord);
-                Contracts.Assert(!typeRight.IsAggregate || typeRight.IsTable || typeRight.IsRecord);
-
-                if (!typeLeft.IsAggregate)
-                {
-                    // scalar in scalar: RHS must be a string (or coercible to string when LHS type is string). We'll allow coercion of LHS.
-                    // This case deals with substring matches, e.g. 'FirstName in "Aldous Huxley"' or "123" in 123.
-                    if (!typeRight.IsAggregate)
-                    {
-                        if (!DType.String.Accepts(typeRight))
-                        {
-                            if (typeRight.CoercesTo(DType.String) && DType.String.Accepts(typeLeft))
-                            {
-                                // Coerce RHS to a string type.
-                                _txb.SetCoercedType(right, DType.String);
-                            }
-                            else
-                            {
-                                _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, right, TexlStrings.ErrStringExpected);
-                                return false;
-                            }
-                        }
-
-                        if (DType.String.Accepts(typeLeft))
-                        {
-                            return true;
-                        }
-
-                        if (!typeLeft.CoercesTo(DType.String))
-                        {
-                            _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, left, TexlStrings.ErrCannotCoerce_SourceType_TargetType, typeLeft.GetKindString(), DType.String.GetKindString());
-                            return false;
-                        }
-
-                        // Coerce LHS to a string type, to facilitate subsequent substring checks.
-                        _txb.SetCoercedType(left, DType.String);
-                        return true;
-                    }
-
-                    // scalar in table: RHS must be a one column table. We'll allow coercion.
-                    if (typeRight.IsTable)
-                    {
-                        var names = typeRight.GetNames(DPath.Root);
-                        if (names.Count() != 1)
-                        {
-                            _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, right, TexlStrings.ErrInvalidSchemaNeedCol);
-                            return false;
-                        }
-
-                        var typedName = names.Single();
-                        if (typedName.Type.Accepts(typeLeft) || typeLeft.Accepts(typedName.Type))
-                        {
-                            return true;
-                        }
-
-                        if (!typeLeft.CoercesTo(typedName.Type))
-                        {
-                            _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, left, TexlStrings.ErrCannotCoerce_SourceType_TargetType, typeLeft.GetKindString(), typedName.Type.GetKindString());
-                            return false;
-                        }
-
-                        // Coerce LHS to the table column type, to facilitate subsequent comparison.
-                        _txb.SetCoercedType(left, typedName.Type);
-                        return true;
-                    }
-
-                    // scalar in record or multiSelectOptionSet table: not supported. Flag an error on the RHS.
-                    Contracts.Assert(typeRight.IsRecord);
-                    _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, right, TexlStrings.ErrBadType_Type, typeRight.GetKindString());
-                    return false;
-                }
-
-                if (typeLeft.IsRecord)
-                {
-                    // record in scalar: not supported
-                    if (!typeRight.IsAggregate)
-                    {
-                        _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, right, TexlStrings.ErrBadType_Type, typeRight.GetKindString());
-                        return false;
-                    }
-
-                    // record in table: RHS must be a table with a compatible schema. No coercion is allowed.
-                    if (typeRight.IsTable)
-                    {
-                        var typeLeftAsTable = typeLeft.ToTable();
-
-                        if (typeLeftAsTable.Accepts(typeRight, out var typeRightDifferingSchema, out var typeRightDifferingSchemaType) ||
-                            typeRight.Accepts(typeLeftAsTable, out var typeLeftDifferingSchema, out var typeLeftDifferingSchemaType))
-                        {
-                            return true;
-                        }
-
-                        _txb.ErrorContainer.Errors(left, typeLeft, typeLeftDifferingSchema, typeLeftDifferingSchemaType);
-                        _txb.ErrorContainer.Errors(right, typeRight, typeRightDifferingSchema, typeRightDifferingSchemaType);
-
-                        return false;
-                    }
-
-                    // record in record: not supported. Flag an error on the RHS.
-                    Contracts.Assert(typeRight.IsRecord);
-                    _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, right, TexlStrings.ErrBadType_Type, typeRight.GetKindString());
-                    return false;
-                }
-
-                if (_txb.Document != null && _txb.Document.Properties.EnabledFeatures.IsEnhancedDelegationEnabled && typeLeft.IsTable)
-                {
-                    // Table in table: RHS must be a single column table with a compatible schema. No coercion is allowed.
-                    if (typeRight.IsTable)
-                    {
-                        var names = typeRight.GetNames(DPath.Root);
-                        if (names.Count() != 1)
-                        {
-                            _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, right, TexlStrings.ErrInvalidSchemaNeedCol);
-                            return false;
-                        }
-
-                        var typedName = names.Single();
-
-                        // Ensure we error when RHS node of table type cannot be coerced to a multiselectOptionset table node.  
-                        if (!typeRight.CoercesTo(typeLeft))
-                        {
-                            _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, right, TexlStrings.ErrCannotCoerce_SourceType_TargetType, typeLeft.GetKindString(), typedName.Type.GetKindString());
-                            return false;
-                        }
-
-                        // Check if multiselectoptionset column type accepts RHS node of type table. 
-                        if (typeLeft.Accepts(typedName.Type))
-                        {
-                            return true;
-                        }
-                    }
-                }
-
-                // Table in scalar or Table in Record or Table in unsupported table: not supported
-                _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, left, TexlStrings.ErrBadType_Type, typeLeft.GetKindString());
-                return false;
-            }
-
             private ScopeUseSet JoinScopeUseSets(params TexlNode[] nodes)
             {
                 Contracts.AssertValue(nodes);
@@ -3931,47 +3674,17 @@ namespace Microsoft.PowerFx.Core.Binding
             public override void PostVisit(UnaryOpNode node)
             {
                 AssertValid();
-                Contracts.AssertValue(node);
 
                 var childType = _txb.GetType(node.Child);
 
-                switch (node.Op)
-                {
-                    case UnaryOp.Not:
-                        CheckType(node.Child, childType, DType.Boolean, /* coerced: */ DType.Number, DType.String, DType.OptionSetValue);
-                        _txb.SetType(node, DType.Boolean);
-                        break;
-                    case UnaryOp.Minus:
-                        switch (childType.Kind)
-                        {
-                            case DKind.Date:
-                                // Important to keep the type of minus-date as date, to allow D-D/d-D to be detected
-                                _txb.SetType(node, DType.Date);
-                                break;
-                            case DKind.Time:
-                                // Important to keep the type of minus-time as time, to allow T-T to be detected
-                                _txb.SetType(node, DType.Time);
-                                break;
-                            case DKind.DateTime:
-                                // Important to keep the type of minus-datetime as datetime, to allow d-d/D-d to be detected
-                                _txb.SetType(node, DType.DateTime);
-                                break;
-                            default:
-                                CheckType(node.Child, childType, DType.Number, /* coerced: */ DType.String, DType.Boolean);
-                                _txb.SetType(node, DType.Number);
-                                break;
-                        }
+                var res = CheckUnaryOpCore(_txb.ErrorContainer, node, childType);
 
-                        break;
-                    case UnaryOp.Percent:
-                        CheckType(node.Child, childType, DType.Number, /* coerced: */ DType.String, DType.Boolean, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime);
-                        _txb.SetType(node, DType.Number);
-                        break;
-                    default:
-                        Contracts.Assert(false);
-                        _txb.SetType(node, DType.Error);
-                        break;
+                foreach (var coercion in res.Coercions)
+                {
+                    _txb.SetCoercedType(coercion.Node, coercion.CoercedType);
                 }
+
+                _txb.SetType(res.Node, res.NodeType);
 
                 _txb.SetSideEffects(node, _txb.HasSideEffects(node.Child));
                 _txb.SetStateful(node, _txb.IsStateful(node.Child));
@@ -3983,78 +3696,21 @@ namespace Microsoft.PowerFx.Core.Binding
                 _txb.SetIsUnliftable(node, _txb.IsUnliftable(node.Child));
             }
 
-            // REVIEW ragru: Introduce a TexlOperator abstract base plus various subclasses
-            // for handling operators and their overloads. That will offload the burden of dealing with
-            // operator special cases to the various operator classes.
             public override void PostVisit(BinaryOpNode node)
             {
                 AssertValid();
-                Contracts.AssertValue(node);
 
                 var leftType = _txb.GetType(node.Left);
                 var rightType = _txb.GetType(node.Right);
-                var leftNode = node.Left;
-                var rightNode = node.Right;
 
-                switch (node.Op)
+                var res = CheckBinaryOpCore(_txb.ErrorContainer, node, leftType, rightType, _txb.Document != null && _txb.Document.Properties.EnabledFeatures.IsEnhancedDelegationEnabled);
+
+                foreach (var coercion in res.Coercions)
                 {
-                    case BinaryOp.Add:
-                        PostVisitBinaryOpNodeAddition(node);
-                        break;
-                    case BinaryOp.Power:
-                    case BinaryOp.Mul:
-                    case BinaryOp.Div:
-                        CheckType(leftNode, leftType, DType.Number, /* coerced: */ DType.String, DType.Boolean, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime);
-                        CheckType(rightNode, rightType, DType.Number, /* coerced: */ DType.String, DType.Boolean, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime);
-                        _txb.SetType(node, DType.Number);
-                        break;
-
-                    case BinaryOp.Or:
-                    case BinaryOp.And:
-                        CheckType(leftNode, leftType, DType.Boolean, /* coerced: */ DType.Number, DType.String, DType.OptionSetValue);
-                        CheckType(rightNode, rightType, DType.Boolean, /* coerced: */ DType.Number, DType.String, DType.OptionSetValue);
-                        _txb.SetType(node, DType.Boolean);
-                        break;
-
-                    case BinaryOp.Concat:
-                        CheckType(leftNode, leftType, DType.String, /* coerced: */ DType.Number, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime, DType.Boolean, DType.OptionSetValue, DType.ViewValue);
-                        CheckType(rightNode, rightType, DType.String, /* coerced: */ DType.Number, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime, DType.Boolean, DType.OptionSetValue, DType.ViewValue);
-                        _txb.SetType(node, DType.String);
-                        break;
-
-                    case BinaryOp.Error:
-                        _txb.SetType(node, DType.Error);
-                        _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, node, TexlStrings.ErrOperatorExpected);
-                        break;
-
-                    case BinaryOp.Equal:
-                    case BinaryOp.NotEqual:
-                        CheckEqualArgTypes(leftNode, rightNode);
-                        _txb.SetType(node, DType.Boolean);
-                        break;
-
-                    case BinaryOp.Less:
-                    case BinaryOp.LessEqual:
-                    case BinaryOp.Greater:
-                    case BinaryOp.GreaterEqual:
-                        // Excel's type coercion for inequality operators is inconsistent / borderline wrong, so we can't
-                        // use it as a reference. For example, in Excel '2 < TRUE' produces TRUE, but so does '2 < FALSE'.
-                        // Sticking to a restricted set of numeric-like types for now until evidence arises to support the need for coercion.
-                        CheckComparisonArgTypes(leftNode, rightNode);
-                        _txb.SetType(node, DType.Boolean);
-                        break;
-
-                    case BinaryOp.In:
-                    case BinaryOp.Exactin:
-                        CheckInArgTypes(leftNode, rightNode);
-                        _txb.SetType(node, DType.Boolean);
-                        break;
-
-                    default:
-                        Contracts.Assert(false);
-                        _txb.SetType(node, DType.Error);
-                        break;
+                    _txb.SetCoercedType(coercion.Node, coercion.CoercedType);
                 }
+
+                _txb.SetType(res.Node, res.NodeType);
 
                 _txb.SetSideEffects(node, _txb.HasSideEffects(node.Left) || _txb.HasSideEffects(node.Right));
                 _txb.SetStateful(node, _txb.IsStateful(node.Left) || _txb.IsStateful(node.Right));
@@ -4065,193 +3721,6 @@ namespace Microsoft.PowerFx.Core.Binding
                 _txb.AddVolatileVariables(node, _txb.GetVolatileVariables(node.Left));
                 _txb.AddVolatileVariables(node, _txb.GetVolatileVariables(node.Right));
                 _txb.SetIsUnliftable(node, _txb.IsUnliftable(node.Left) || _txb.IsUnliftable(node.Right));
-            }
-
-            private void PostVisitBinaryOpNodeAddition(BinaryOpNode node)
-            {
-                AssertValid();
-                Contracts.AssertValue(node);
-                Contracts.Assert(node.Op == BinaryOp.Add);
-
-                var leftType = _txb.GetType(node.Left);
-                var rightType = _txb.GetType(node.Right);
-                var leftKind = leftType.Kind;
-                var rightKind = rightType.Kind;
-
-                void ReportInvalidOperation()
-                {
-                    _txb.SetType(node, DType.Error);
-                    _txb.ErrorContainer.EnsureError(
-                        DocumentErrorSeverity.Severe,
-                        node,
-                        TexlStrings.ErrBadOperatorTypes,
-                        leftType.GetKindString(),
-                        rightType.GetKindString());
-                }
-
-                UnaryOpNode unary;
-
-                switch (leftKind)
-                {
-                    case DKind.DateTime:
-                        switch (rightKind)
-                        {
-                            case DKind.DateTime:
-                            case DKind.Date:
-                                unary = node.Right.AsUnaryOpLit();
-                                if (unary != null && unary.Op == UnaryOp.Minus)
-                                {
-                                    // DateTime - DateTime = Number
-                                    // DateTime - Date = Number
-                                    _txb.SetType(node, DType.Number);
-                                }
-                                else
-                                {
-                                    // DateTime + DateTime in any other arrangement is an error
-                                    // DateTime + Date in any other arrangement is an error
-                                    ReportInvalidOperation();
-                                }
-
-                                break;
-                            case DKind.Time:
-                                // DateTime + Time in any other arrangement is an error
-                                ReportInvalidOperation();
-                                break;
-                            default:
-                                // DateTime + number = DateTime
-                                CheckType(node.Right, rightType, DType.Number, /* coerced: */ DType.String, DType.Boolean);
-                                _txb.SetType(node, DType.DateTime);
-                                break;
-                        }
-
-                        break;
-                    case DKind.Date:
-                        switch (rightKind)
-                        {
-                            case DKind.Date:
-                                // Date + Date = number but ONLY if its really subtraction Date + '-Date'
-                                unary = node.Right.AsUnaryOpLit();
-                                if (unary != null && unary.Op == UnaryOp.Minus)
-                                {
-                                    // Date - Date = Number
-                                    _txb.SetType(node, DType.Number);
-                                }
-                                else
-                                {
-                                    // Date + Date in any other arrangement is an error
-                                    ReportInvalidOperation();
-                                }
-
-                                break;
-                            case DKind.Time:
-                                unary = node.Right.AsUnaryOpLit();
-                                if (unary != null && unary.Op == UnaryOp.Minus)
-                                {
-                                    // Date - Time is an error
-                                    ReportInvalidOperation();
-                                }
-                                else
-                                {
-                                    // Date + Time = DateTime
-                                    _txb.SetType(node, DType.DateTime);
-                                }
-
-                                break;
-                            case DKind.DateTime:
-                                // Date + DateTime = number but ONLY if its really subtraction Date + '-DateTime'
-                                unary = node.Right.AsUnaryOpLit();
-                                if (unary != null && unary.Op == UnaryOp.Minus)
-                                {
-                                    // Date - DateTime = Number
-                                    _txb.SetType(node, DType.Number);
-                                }
-                                else
-                                {
-                                    // Date + DateTime in any other arrangement is an error
-                                    ReportInvalidOperation();
-                                }
-
-                                break;
-                            default:
-                                // Date + number = Date
-                                CheckType(node.Right, rightType, DType.Number, /* coerced: */ DType.String, DType.Boolean);
-                                _txb.SetType(node, DType.Date);
-                                break;
-                        }
-
-                        break;
-                    case DKind.Time:
-                        switch (rightKind)
-                        {
-                            case DKind.Time:
-                                // Time + Time = number but ONLY if its really subtraction Time + '-Time'
-                                unary = node.Right.AsUnaryOpLit();
-                                if (unary != null && unary.Op == UnaryOp.Minus)
-                                {
-                                    // Time - Time = Number
-                                    _txb.SetType(node, DType.Number);
-                                }
-                                else
-                                {
-                                    // Time + Time in any other arrangement is an error
-                                    ReportInvalidOperation();
-                                }
-
-                                break;
-                            case DKind.Date:
-                                unary = node.Right.AsUnaryOpLit();
-                                if (unary != null && unary.Op == UnaryOp.Minus)
-                                {
-                                    // Time - Date is an error
-                                    ReportInvalidOperation();
-                                }
-                                else
-                                {
-                                    // Time + Date = DateTime
-                                    _txb.SetType(node, DType.DateTime);
-                                }
-
-                                break;
-                            case DKind.DateTime:
-                                // Time + DateTime in any other arrangement is an error
-                                ReportInvalidOperation();
-                                break;
-                            default:
-                                // Time + number = Time
-                                CheckType(node.Right, rightType, DType.Number, /* coerced: */ DType.String, DType.Boolean);
-                                _txb.SetType(node, DType.Time);
-                                break;
-                        }
-
-                        break;
-                    default:
-                        switch (rightKind)
-                        {
-                            case DKind.DateTime:
-                                // number + DateTime = DateTime
-                                CheckType(node.Left, leftType, DType.Number, /* coerced: */ DType.String, DType.Boolean);
-                                _txb.SetType(node, DType.DateTime);
-                                break;
-                            case DKind.Date:
-                                // number + Date = Date
-                                CheckType(node.Left, leftType, DType.Number, /* coerced: */ DType.String, DType.Boolean);
-                                _txb.SetType(node, DType.Date);
-                                break;
-                            case DKind.Time:
-                                // number + Time = Time
-                                CheckType(node.Left, leftType, DType.Number, /* coerced: */ DType.String, DType.Boolean);
-                                _txb.SetType(node, DType.Time);
-                                break;
-                            default:
-                                // Regular Addition
-                                CheckType(node.Left, leftType, DType.Number, /* coerced: */ DType.String, DType.Boolean);
-                                CheckType(node.Right, rightType, DType.Number, /* coerced: */ DType.String, DType.Boolean);
-                                _txb.SetType(node, DType.Number);
-                                break;
-                        }
-
-                        break;
-                }
             }
 
             public override void PostVisit(AsNode node)
@@ -4286,133 +3755,6 @@ namespace Microsoft.PowerFx.Core.Binding
                 _txb.SetScopeUseSet(node, _txb.GetScopeUseSet(left));
                 _txb.AddVolatileVariables(node, _txb.GetVolatileVariables(left));
                 _txb.SetIsUnliftable(node, _txb.IsUnliftable(node.Left));
-            }
-
-            private void CheckComparisonArgTypes(TexlNode left, TexlNode right)
-            {
-                // Excel's type coercion for inequality operators is inconsistent / borderline wrong, so we can't
-                // use it as a reference. For example, in Excel '2 < TRUE' produces TRUE, but so does '2 < FALSE'.
-                // Sticking to a restricted set of numeric-like types for now until evidence arises to support the need for coercion.
-                CheckComparisonTypeOneOf(left, DType.Number, DType.Date, DType.Time, DType.DateTime);
-                CheckComparisonTypeOneOf(right, DType.Number, DType.Date, DType.Time, DType.DateTime);
-
-                var typeLeft = _txb.GetType(left);
-                var typeRight = _txb.GetType(right);
-
-                if (!typeLeft.Accepts(typeRight) && !typeRight.Accepts(typeLeft))
-                {
-                    // Handle DateTime <=> Number comparison by coercing one side to Number
-                    if (DType.Number.Accepts(typeLeft) && DType.DateTime.Accepts(typeRight))
-                    {
-                        _txb.SetCoercedType(right, DType.Number);
-                        return;
-                    }
-                    else if (DType.Number.Accepts(typeRight) && DType.DateTime.Accepts(typeLeft))
-                    {
-                        _txb.SetCoercedType(left, DType.Number);
-                        return;
-                    }
-
-                    // Handle Date <=> Time comparison by coercing both to DateTime
-                    if (DType.DateTime.Accepts(typeLeft) && DType.DateTime.Accepts(typeRight))
-                    {
-                        _txb.SetCoercedType(left, DType.DateTime);
-                        _txb.SetCoercedType(right, DType.DateTime);
-                        return;
-                    }
-                }
-            }
-
-            private void CheckEqualArgTypes(TexlNode left, TexlNode right)
-            {
-                Contracts.AssertValue(left);
-                Contracts.AssertValue(right);
-                Contracts.AssertValue(left.Parent);
-                Contracts.Assert(ReferenceEquals(left.Parent, right.Parent));
-
-                var typeLeft = _txb.GetType(left);
-                var typeRight = _txb.GetType(right);
-
-                // EqualOp is only allowed on primitive types, polymorphic lookups, and control types.
-                if (!(typeLeft.IsPrimitive && typeRight.IsPrimitive) && !(typeLeft.IsPolymorphic && typeRight.IsPolymorphic) && !(typeLeft.IsControl && typeRight.IsControl)
-                    && !(typeLeft.IsPolymorphic && typeRight.IsRecord) && !(typeLeft.IsRecord && typeRight.IsPolymorphic))
-                {
-                    var leftTypeDisambiguation = typeLeft.IsOptionSet && typeLeft.OptionSetInfo != null ? $"({typeLeft.OptionSetInfo.EntityName})" : string.Empty;
-                    var rightTypeDisambiguation = typeRight.IsOptionSet && typeRight.OptionSetInfo != null ? $"({typeRight.OptionSetInfo.EntityName})" : string.Empty;
-
-                    _txb.ErrorContainer.EnsureError(
-                        DocumentErrorSeverity.Severe,
-                        left.Parent,
-                        TexlStrings.ErrIncompatibleTypesForEquality_Left_Right,
-                        typeLeft.GetKindString() + leftTypeDisambiguation,
-                        typeRight.GetKindString() + rightTypeDisambiguation);
-                    return;
-                }
-
-                // Special case for guid, it should produce an error on being compared to non-guid types
-                if ((typeLeft.Equals(DType.Guid) && !typeRight.Equals(DType.Guid)) ||
-                    (typeRight.Equals(DType.Guid) && !typeLeft.Equals(DType.Guid)))
-                {
-                    _txb.ErrorContainer.EnsureError(
-                        DocumentErrorSeverity.Severe,
-                        left.Parent,
-                        TexlStrings.ErrGuidStrictComparison);
-                    return;
-                }
-
-                // Special case for option set values, it should produce an error when the base option sets are different
-                if (typeLeft.Kind == DKind.OptionSetValue && !typeLeft.Accepts(typeRight))
-                {
-                    var leftTypeDisambiguation = typeLeft.IsOptionSet && typeLeft.OptionSetInfo != null ? $"({typeLeft.OptionSetInfo.EntityName})" : string.Empty;
-                    var rightTypeDisambiguation = typeRight.IsOptionSet && typeRight.OptionSetInfo != null ? $"({typeRight.OptionSetInfo.EntityName})" : string.Empty;
-
-                    _txb.ErrorContainer.EnsureError(
-                        DocumentErrorSeverity.Severe,
-                        left.Parent,
-                        TexlStrings.ErrIncompatibleTypesForEquality_Left_Right,
-                        typeLeft.GetKindString() + leftTypeDisambiguation,
-                        typeRight.GetKindString() + rightTypeDisambiguation);
-
-                    return;
-                }
-
-                // Special case for view values, it should produce an error when the base views are different
-                if (typeLeft.Kind == DKind.ViewValue && !typeLeft.Accepts(typeRight))
-                {
-                    var leftTypeDisambiguation = typeLeft.IsView && typeLeft.ViewInfo != null ? $"({typeLeft.ViewInfo.Name})" : string.Empty;
-                    var rightTypeDisambiguation = typeRight.IsView && typeRight.ViewInfo != null ? $"({typeRight.ViewInfo.Name})" : string.Empty;
-
-                    _txb.ErrorContainer.EnsureError(
-                        DocumentErrorSeverity.Severe,
-                        left.Parent,
-                        TexlStrings.ErrIncompatibleTypesForEquality_Left_Right,
-                        typeLeft.GetKindString() + leftTypeDisambiguation,
-                        typeRight.GetKindString() + rightTypeDisambiguation);
-
-                    return;
-                }
-
-                if (!typeLeft.Accepts(typeRight) && !typeRight.Accepts(typeLeft))
-                {
-                    // Handle DateTime <=> Number comparison
-                    if (DType.Number.Accepts(typeLeft) && DType.DateTime.Accepts(typeRight))
-                    {
-                        _txb.SetCoercedType(right, DType.Number);
-                        return;
-                    }
-                    else if (DType.Number.Accepts(typeRight) && DType.DateTime.Accepts(typeLeft))
-                    {
-                        _txb.SetCoercedType(left, DType.Number);
-                        return;
-                    }
-
-                    _txb.ErrorContainer.EnsureError(
-                        DocumentErrorSeverity.Warning,
-                        left.Parent,
-                        TexlStrings.ErrIncompatibleTypesForEquality_Left_Right,
-                        typeLeft.GetKindString(),
-                        typeRight.GetKindString());
-                }
             }
 
             private void SetVariadicNodePurity(VariadicBase node)
@@ -4771,7 +4113,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     var startArg = 0;
 
                     // Construct a scope if display names are enabled and this function requires a data source scope for inline records
-                    if (_txb.Document != null && _txb.Document.Properties.EnabledFeatures.IsUseDisplayNameMetadataEnabled &&
+                    if ((_txb.Document?.Properties?.EnabledFeatures?.IsUseDisplayNameMetadataEnabled ?? true) &&
                         overloads.Where(func => func.RequiresDataSourceScope).Any() && node.Args.Count > 0)
                     {
                         // Visit the first arg if it exists. This will give us the scope type for any subsequent lambda/predicate args.
@@ -4786,7 +4128,7 @@ namespace Microsoft.PowerFx.Core.Binding
                         // Only if there is a projection map associated with this will we need to set a scope
                         var typescope = _txb.GetType(nodeInp);
 
-                        if (typescope.AssociatedDataSources.Any() && typescope.IsTable)
+                        if ((typescope.AssociatedDataSources.Any() || typescope.DisplayNameProvider != null) && typescope.IsTable)
                         {
                             maybeScope = new Scope(node, _currentScope, typescope.ToRecord(), createsRowScope: false);
                         }
@@ -5618,7 +4960,7 @@ namespace Microsoft.PowerFx.Core.Binding
             {
                 Contracts.AssertValid(name);
 
-                if (_txb.Document == null || !_txb.Document.Properties.EnabledFeatures.IsUseDisplayNameMetadataEnabled)
+                if (!(_txb.Document?.Properties?.EnabledFeatures?.IsUseDisplayNameMetadataEnabled ?? true))
                 {
                     scope = default;
                     return false;

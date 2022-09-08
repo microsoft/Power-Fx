@@ -78,11 +78,21 @@ namespace Microsoft.PowerFx.Functions
             });
         }
 
-        public static ErrorValue InvalidDateTimeError(IRContext irContext)
+        public static ErrorValue InvalidDateTimeParsingError(IRContext irContext)
         {
             return new ErrorValue(irContext, new ExpressionError()
             {
                 Message = "The Date/Time could not be parsed",
+                Span = irContext.SourceContext,
+                Kind = ErrorKind.InvalidArgument
+            });
+        }
+
+        public static ErrorValue InvalidDateTimeError(IRContext irContext)
+        {
+            return new ErrorValue(irContext, new ExpressionError()
+            {
+                Message = "Invalid date/time value",
                 Span = irContext.SourceContext,
                 Kind = ErrorKind.InvalidArgument
             });

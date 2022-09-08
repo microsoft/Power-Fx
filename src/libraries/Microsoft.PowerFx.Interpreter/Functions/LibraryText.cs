@@ -111,13 +111,13 @@ namespace Microsoft.PowerFx.Functions
                 return new BlankValue(irContext);
             }
 
-            // culture will have Cultural info in-case one was passed in argument else it will have the default one.
+            // culture will have Cultural info in case one was passed in argument else it will have the default one.
             var culture = runner.CultureInfo;
             if (args.Length > 1)
             {
                 if (args[1] is StringValue cultureArg && !TryGetCulture(cultureArg.Value, out culture))
                 {
-                    return CommonErrors.InvalidDateTimeError(irContext);
+                    return CommonErrors.BadLanguageCode(irContext, cultureArg.Value);
                 }
             }
 
