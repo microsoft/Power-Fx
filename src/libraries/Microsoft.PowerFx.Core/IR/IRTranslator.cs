@@ -567,14 +567,18 @@ namespace Microsoft.PowerFx.Core.IR
                             continue;
                         }
 
-                        fieldCoercions.Add(
-                            fromField.Name,
-                            InjectCoercion(
-                                new ScopeAccessNode(IRContext.NotInSource(FormulaType.Build(fromField.Type)), new ScopeAccessSymbol(scope, scope.AddOrGetIndexForField(fromField.Name))),
-                                context,
-                                fromField.Type,
-                                toFieldType));
+                        var innerCoersion = InjectCoercion(new ScopeAccessNode(IRContext.NotInSource(FormulaType.Build(fromField.Type)), new ScopeAccessSymbol(scope, scope.AddOrGetIndexForField(fromField.Name))), context, fromField.Type, toFieldType);
+
+                        if (innerCoersion != null)
+                        {
+                            fieldCoercions.Add(fromField.Name, innerCoersion);
+                        }
                     }
+                }
+
+                if (!fieldCoercions.Any())
+                {
+                    return null;
                 }
 
                 return new AggregateCoercionNode(IRContext.NotInSource(FormulaType.Build(toType)), unaryOpKind, scope, child, fieldCoercions);
@@ -592,7 +596,7 @@ namespace Microsoft.PowerFx.Core.IR
                 Contracts.Assert(!fromType.IsError);
                 Contracts.Assert(!toType.IsError);
 
-                return InjectCoercion(child, context, fromType, toType);
+                return InjectCoercion(child, context, fromType, toType) ?? child;                
             }
 
             private IntermediateNode InjectCoercion(IntermediateNode child, IRTranslatorContext context, DType fromType, DType toType)
