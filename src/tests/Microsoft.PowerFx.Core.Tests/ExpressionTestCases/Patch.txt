@@ -74,6 +74,9 @@ Errors: Error 0-15: The function 'Patch' has some invalid arguments.|Error 10-11
 
 
 // Display names
+>> Patch(t1, {DisplayNameField2:"earth"}, {Field2:"mars"});t1
+Table({Field1:1,Field2:"mars",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})
+
 >> Patch(t1, First(t1), {DisplayNameField2:"Saturn"});First(t1)
 {Field1:1,Field2:"Saturn",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}
 
