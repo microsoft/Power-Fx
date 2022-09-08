@@ -218,7 +218,9 @@ namespace Microsoft.PowerFx.Functions
 
                 foreach (var typedName in curType.GetNames(DPath.Root))
                 {
-                    if (!tableType.TryGetFieldType(typedName.Name, out var displayName, out _))
+                    var xx = tableType.TryGetFieldType(typedName.Name, out var displayName, out _);
+
+                    if (!tableType.HasField(typedName.Name))
                     {
                         dataSourceType.ReportNonExistingName(FieldNameKind.Display, errors, typedName.Name, args[i]);
                         isValid = isSafeToUnion = false;
