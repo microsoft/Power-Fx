@@ -69,16 +69,13 @@ namespace Microsoft.PowerFx.Tests
             return DValue<RecordValue>.Of(record);
         }
 
-        protected override DataRow MarshalInverse(RecordValue row)
+        public override async Task<DValue<RecordValue>> AppendAsync(RecordValue record)
         {
-#pragma warning disable CA2000 // Dispose objects before losing scope
-            var dataTable = new DataTable();
-#pragma warning restore CA2000 // Dispose objects before losing scope
             var recordValues = new object[_table.Columns.Count];
 
             var dict = new Dictionary<string, FormulaValue>();
 
-            foreach (var field in row.Fields)
+            foreach (var field in record.Fields)
             {
                 dict[field.Name] = field.Value;
             }
@@ -87,8 +84,6 @@ namespace Microsoft.PowerFx.Tests
 
             foreach (DataColumn column in _table.Columns)
             {
-                dataTable.Columns.Add(column.ColumnName, column.DataType);
-
                 if (dict.TryGetValue(column.ColumnName, out FormulaValue formulaValue))
                 {
                     recordValues[index] = formulaValue.ToObject();
@@ -101,9 +96,9 @@ namespace Microsoft.PowerFx.Tests
                 index++;
             }
 
-            dataTable.Rows.Add(recordValues);
+            var row = _table.Rows.Add(recordValues);
 
-            return dataTable.Rows[0];
+            return Marshal(row);
         }
 
         // Wrap an individual DataRow of the DataTable as a Power Fx RecordValue

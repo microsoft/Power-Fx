@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Data;
+using Microsoft.PowerFx.Interpreter.Tests;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
@@ -131,17 +132,22 @@ First(
 
             Assert.Equal(3, table.Rows.Count);
 
-            var result5 = engine.Eval("Remove(robintable, {Names:\"name2\"});CountRows(robintable)", options: opt);
-            Assert.Equal(2, ((NumberValue)result5).Value);
+            var result5 = engine.Eval("Remove(robintable, {Names:\"name2\"});robintable", options: opt);            
+            Assert.Equal("Table({Names:\"name1\",Scores:10},{Names:\"name3\",Scores:30})", ((DataTableValue)result5).Dump());
 
             // Is table object affected?
             Assert.Equal(2, table.Rows.Count);
 
-            var result6 = engine.Eval("Collect(robintable, {Scores:100,Names:\"name100\"});CountRows(robintable)", options: opt);
-            Assert.Equal(3, ((NumberValue)result6).Value);
+            var result6 = engine.Eval("Collect(robintable, {Scores:10,Names:\"name100\"});robintable", options: opt);
+            Assert.Equal("Table({Names:\"name1\",Scores:10},{Names:\"name3\",Scores:30},{Names:\"name100\",Scores:10})", ((DataTableValue)result6).Dump());
 
-            var result7 = engine.Eval("Patch(robintable, First(robintable),{Names:\"new-name\"});First(robintable).Names", options: opt);
-            Assert.Equal("new-name", ((StringValue)result7).Value);
+            var result7 = engine.Eval("Patch(robintable, First(robintable),{Names:\"new-name\"});robintable", options: opt);
+            Assert.Equal("Table({Names:\"new-name\",Scores:10},{Names:\"name3\",Scores:30},{Names:\"name100\",Scores:10})", ((DataTableValue)result7).Dump());
+
+            var result8 = engine.Eval("Remove(robintable, {Scores:10}, \"All\");robintable", options: opt);
+            Assert.Equal("Table({Names:\"name3\",Scores:30})", ((DataTableValue)result8).Dump());
+
+            Assert.Equal(1, table.Rows.Count);
         }
 
         [Fact]
