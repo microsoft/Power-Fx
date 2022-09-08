@@ -37,7 +37,7 @@ namespace Microsoft.PowerFx.Core.Tests
             var result = await t2.AppendAsync(r2);
 
             Assert.True(result.IsError);
-            Assert.Equal("It is not possible to call AppendAsync method from TableValue directly.", result.Error.Errors[0].Message);
+            Assert.Equal("AppendAsync is not supported on this table instance.", result.Error.Errors[0].Message);
         }
     }
 }
