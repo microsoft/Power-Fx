@@ -24,7 +24,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var engine = new RecalcEngine(new PowerFxConfig());
             var checkResult = engine.Check("Patch(MyTable, { Currency: 1.2 }, { Currency: 1.5 })", new ParserOptions() { AllowsSideEffects = true }, symbolTable: symbols);
 
-            Assert.True(checkResult.IsSuccess, string.Join("\r\n", checkResult.Errors.Select(err => $"{err.Message}")));
+            checkResult.ThrowOnErrors();
 
             var runtimeConfig = new SymbolValues();
             runtimeConfig.Add("MyTable", TableValue.NewTable(tableType.ToRecord()));
