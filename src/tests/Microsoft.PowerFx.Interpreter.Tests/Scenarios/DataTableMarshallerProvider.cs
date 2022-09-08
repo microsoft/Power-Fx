@@ -72,19 +72,13 @@ namespace Microsoft.PowerFx.Tests
         public override async Task<DValue<RecordValue>> AppendAsync(RecordValue record)
         {
             var recordValues = new object[_table.Columns.Count];
-
-            var dict = new Dictionary<string, FormulaValue>();
-
-            foreach (var field in record.Fields)
-            {
-                dict[field.Name] = field.Value;
-            }
-
             var index = 0;
 
             foreach (DataColumn column in _table.Columns)
             {
-                if (dict.TryGetValue(column.ColumnName, out FormulaValue formulaValue))
+                var formulaValue = record.GetField(column.ColumnName);
+
+                if (formulaValue is not BlankValue)
                 {
                     recordValues[index] = formulaValue.ToObject();
                 }
@@ -152,19 +146,14 @@ namespace Microsoft.PowerFx.Tests
 
             public override async Task<DValue<RecordValue>> UpdateFieldsAsync(RecordValue changeRecord)
             {
-                var dict = new Dictionary<string, FormulaValue>();
                 var itemArray = new object[_row.Table.Columns.Count];
-
-                foreach (var field in changeRecord.Fields)
-                {
-                    dict[field.Name] = field.Value;
-                }
-
                 var index = 0;
 
                 foreach (DataColumn column in _row.Table.Columns)
                 {
-                    if (dict.TryGetValue(column.ColumnName, out FormulaValue formulaValue))
+                    var formulaValue = changeRecord.GetField(column.ColumnName);
+
+                    if (formulaValue is not BlankValue)
                     {
                         itemArray[index] = formulaValue.ToObject();
                     }
