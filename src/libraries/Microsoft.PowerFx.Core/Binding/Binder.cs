@@ -4107,7 +4107,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     var startArg = 0;
 
                     // Construct a scope if display names are enabled and this function requires a data source scope for inline records
-                    if (_txb.Document != null && _txb.Document.Properties.EnabledFeatures.IsUseDisplayNameMetadataEnabled &&
+                    if ((_txb.Document?.Properties?.EnabledFeatures?.IsUseDisplayNameMetadataEnabled ?? true) &&
                         overloads.Where(func => func.RequiresDataSourceScope).Any() && node.Args.Count > 0)
                     {
                         // Visit the first arg if it exists. This will give us the scope type for any subsequent lambda/predicate args.
@@ -4954,7 +4954,7 @@ namespace Microsoft.PowerFx.Core.Binding
             {
                 Contracts.AssertValid(name);
 
-                if (_txb.Document == null || !_txb.Document.Properties.EnabledFeatures.IsUseDisplayNameMetadataEnabled)
+                if (!(_txb.Document?.Properties?.EnabledFeatures?.IsUseDisplayNameMetadataEnabled ?? true))
                 {
                     scope = default;
                     return false;
