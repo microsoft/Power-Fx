@@ -124,10 +124,9 @@ namespace Microsoft.PowerFx.Types
         {
             var recordType = Type.ToRecord();
 
-            // Resolve from display names to logical names, if any.            
-            var resolvedChangeRecord = recordType.ResolveToLogicalNames(changeRecord);
-
-            return await PatchCoreAsync(baseRecord, resolvedChangeRecord);
+            // IR has already resolved to logical names because of 
+            // RequiresDataSourceScope, ArgMatchesDatasourceType on function.
+            return await PatchCoreAsync(baseRecord, changeRecord);
         }
 
         public override object ToObject()

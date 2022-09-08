@@ -4122,7 +4122,7 @@ namespace Microsoft.PowerFx.Core.Binding
                         // Only if there is a projection map associated with this will we need to set a scope
                         var typescope = _txb.GetType(nodeInp);
 
-                        if (typescope.AssociatedDataSources.Any() && typescope.IsTable)
+                        if ((typescope.AssociatedDataSources.Any() || typescope.DisplayNameProvider != null) && typescope.IsTable)
                         {
                             maybeScope = new Scope(node, _currentScope, typescope.ToRecord(), createsRowScope: false);
                         }
