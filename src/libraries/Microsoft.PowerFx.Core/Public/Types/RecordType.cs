@@ -96,5 +96,30 @@ namespace Microsoft.PowerFx.Types
         {
             return new KnownRecordType();
         }
+
+        /// <summary>
+        /// Resolve logical names when display names are given.
+        /// </summary>
+        /// <param name="recordToResolve">RecordValue to resolve.</param>
+        /// <returns>RecordValue containing only logical field names.</returns>
+        internal RecordValue ResolveToLogicalNames(RecordValue recordToResolve)
+        {
+            var list = new List<NamedValue>();
+            var rType = recordToResolve.Type;
+
+            foreach (var field in recordToResolve.Fields)
+            {
+                var name = field.Name;
+
+                if (DType.TryGetLogicalNameForColumn(_type, field.Name, out var logicalName))
+                {
+                    name = logicalName;
+                }
+
+                list.Add(new NamedValue(name, field.Value));
+            }
+
+            return FormulaValue.NewRecordFromFields(list);
+        }
     }
 }
