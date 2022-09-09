@@ -9,7 +9,7 @@ true
 #Error
 
 >> IsToday(Date(Blank(), 2, 3))
-false
+#Error(Kind=InvalidArgument)
 
 >> IsToday(Date(2012,1,1))
 false

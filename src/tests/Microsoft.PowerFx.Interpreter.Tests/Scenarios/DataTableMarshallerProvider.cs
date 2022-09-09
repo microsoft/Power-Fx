@@ -1,9 +1,12 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.PowerFx.Interpreter.Tests;
 using Microsoft.PowerFx.Types;
 
@@ -33,9 +36,12 @@ namespace Microsoft.PowerFx.Tests
     // All marshalling is done lazily so we avoid copying the whole table.
     internal class DataTableValue : CollectionTableValue<DataRow>
     {
+        private readonly DataTable _table;
+
         public DataTableValue(DataTable dataTable)
             : base(ComputeType(dataTable), new DataTableWrapper(dataTable))
         {
+            _table = dataTable; 
         }
 
         public static RecordType ComputeType(DataTable dataTable)
@@ -61,6 +67,32 @@ namespace Microsoft.PowerFx.Tests
             // Return value
             var record = new DataRowRecordValue(RecordType, item);
             return DValue<RecordValue>.Of(record);
+        }
+
+        public override async Task<DValue<RecordValue>> AppendAsync(RecordValue record)
+        {
+            var recordValues = new object[_table.Columns.Count];
+            var index = 0;
+
+            foreach (DataColumn column in _table.Columns)
+            {
+                var formulaValue = record.GetField(column.ColumnName);
+
+                if (formulaValue is not BlankValue)
+                {
+                    recordValues[index] = formulaValue.ToObject();
+                }
+                else
+                {
+                    // Assign default values if column is missing?
+                }
+
+                index++;
+            }
+
+            var row = _table.Rows.Add(recordValues);
+
+            return Marshal(row);
         }
 
         // Wrap an individual DataRow of the DataTable as a Power Fx RecordValue
@@ -110,17 +142,45 @@ namespace Microsoft.PowerFx.Tests
                 }
 
                 return true;
-            }  
+            }
+
+            public override async Task<DValue<RecordValue>> UpdateFieldsAsync(RecordValue changeRecord)
+            {
+                var itemArray = new object[_row.Table.Columns.Count];
+                var index = 0;
+
+                foreach (DataColumn column in _row.Table.Columns)
+                {
+                    var formulaValue = changeRecord.GetField(column.ColumnName);
+
+                    if (formulaValue is not BlankValue)
+                    {
+                        itemArray[index] = formulaValue.ToObject();
+                    }
+                    else
+                    {
+                        itemArray[index] = _row.ItemArray[index];
+                    }
+
+                    index++;
+                }
+
+                _row.ItemArray = itemArray;
+
+                return DValue<RecordValue>.Of(changeRecord);
+            }
         }
     }
 
     // This class shouldn't be necessary, but DataTable is legacy and doesn't implement generic interfaces. 
     // Wrap and expose the generic interfaces that it ought to be implementing. 
-    internal class DataTableWrapper : IReadOnlyList<DataRow>
+    internal class DataTableWrapper : IReadOnlyList<DataRow>, ICollection<DataRow>
     {
         private readonly DataTable _dataTable;
 
         public int Count => _dataTable.Rows.Count;
+
+        bool ICollection<DataRow>.IsReadOnly => false;
 
         public DataRow this[int index] => _dataTable.Rows[index];
 
@@ -142,5 +202,32 @@ namespace Microsoft.PowerFx.Tests
         {
             return _dataTable.Rows.GetEnumerator();
         }
-    }    
+
+        void ICollection<DataRow>.Add(DataRow item)
+        {
+            _dataTable.Rows.Add(item.ItemArray);
+        }
+
+        void ICollection<DataRow>.Clear()
+        {
+            _dataTable.Rows.Clear();
+        }
+
+        bool ICollection<DataRow>.Contains(DataRow item)
+        {
+            return _dataTable.Rows.Contains(item);
+        }
+
+        void ICollection<DataRow>.CopyTo(DataRow[] array, int arrayIndex)
+        {
+            _dataTable.Rows.CopyTo(array, arrayIndex);
+        }
+
+        bool ICollection<DataRow>.Remove(DataRow item)
+        {
+            _dataTable.Rows.Remove(item);
+
+            return true;
+        }
+    }
 }

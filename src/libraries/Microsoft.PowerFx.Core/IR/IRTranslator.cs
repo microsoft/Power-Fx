@@ -159,7 +159,7 @@ namespace Microsoft.PowerFx.Core.IR
                 var kind = BinaryOpMatrix.GetBinaryOpKind(node, context.Binding);
 
                 IntermediateNode binaryOpResult;
-                
+
                 switch (kind)
                 {
                     // Call Node Replacements:
@@ -189,7 +189,7 @@ namespace Microsoft.PowerFx.Core.IR
                         break;
 
                     case BinaryOpKind.Invalid:
-                        if (node.Op == BinaryOp.NotEqual) 
+                        if (node.Op == BinaryOp.NotEqual)
                         {
                             binaryOpResult = new BooleanLiteralNode(context.GetIRContext(node), true);
                         }
@@ -549,7 +549,7 @@ namespace Microsoft.PowerFx.Core.IR
                 }
             }
 
-            private AggregateCoercionNode GetAggregateCoercionNode(UnaryOpKind unaryOpKind, IntermediateNode child, IRTranslatorContext context, DType fromType, DType toType)
+            private IntermediateNode GetAggregateCoercionNode(UnaryOpKind unaryOpKind, IntermediateNode child, IRTranslatorContext context, DType fromType, DType toType)
             {
                 var fieldCoercions = new Dictionary<DName, IntermediateNode>();
                 var scope = GetNewScope();
@@ -567,14 +567,14 @@ namespace Microsoft.PowerFx.Core.IR
                             continue;
                         }
 
-                        fieldCoercions.Add(
-                            fromField.Name,
-                            InjectCoercion(
-                                new ScopeAccessNode(IRContext.NotInSource(FormulaType.Build(fromField.Type)), new ScopeAccessSymbol(scope, scope.AddOrGetIndexForField(fromField.Name))),
-                                context,
-                                fromField.Type,
-                                toFieldType));
+                        var innerCoersion = InjectCoercion(new ScopeAccessNode(IRContext.NotInSource(FormulaType.Build(fromField.Type)), new ScopeAccessSymbol(scope, scope.AddOrGetIndexForField(fromField.Name))), context, fromField.Type, toFieldType);
+                        fieldCoercions.Add(fromField.Name, innerCoersion);
                     }
+                }
+
+                if (!fieldCoercions.Any())
+                {
+                    return child;
                 }
 
                 return new AggregateCoercionNode(IRContext.NotInSource(FormulaType.Build(toType)), unaryOpKind, scope, child, fieldCoercions);

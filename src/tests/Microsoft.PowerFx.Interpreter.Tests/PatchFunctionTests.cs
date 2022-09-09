@@ -25,6 +25,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 {
     public class PatchFunctionTests : PowerFxTest
     {
+        private readonly ParserOptions _opts = new ParserOptions { AllowsSideEffects = true };
+
         [Theory]
         [InlineData(typeof(PatchFunction))]
         [InlineData(typeof(PatchRecordFunction))]
@@ -46,6 +48,31 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var result = await function.InvokeAsync(args, CancellationToken.None);
 
             Assert.IsType<ErrorValue>(result);
+        }
+
+        [Fact]
+        public void UpdateVariableTest()
+        {
+            var config = new PowerFxConfig();
+            var symbol = new SymbolTable();
+
+            symbol.EnableMutationFunctions();
+            config.SymbolTable = symbol;
+
+            var engine = new RecalcEngine(config);
+
+            RecordValue r1 = FormulaValue.NewRecordFromFields(new NamedValue("property", FormulaValue.New("x")));
+            RecordValue r2 = FormulaValue.NewRecordFromFields(new NamedValue("property", FormulaValue.New("check")));
+
+            engine.UpdateVariable("TestVar", r1);
+            engine.UpdateVariable("r2", r2);
+
+            var checkResult = engine.Check("Patch(TestVar,r2)", options: _opts);
+            Assert.True(checkResult.IsSuccess);
+
+            var result = engine.Eval("Patch(TestVar,r2)", options: _opts);
+            engine.UpdateVariable("TestVar", result);
+            Assert.Equal(r2.Dump(), engine.GetValue("TestVar").Dump());
         }
     }
 }
