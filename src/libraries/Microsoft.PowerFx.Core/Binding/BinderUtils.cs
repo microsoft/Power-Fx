@@ -485,8 +485,18 @@ namespace Microsoft.PowerFx.Core.Binding
                             }
 
                         case DKind.Time:
-                            // DateTime + Time in any other arrangement is an error
-                            return ReportInvalidOperation();
+                            unary = node.Right.AsUnaryOpLit();
+                            if (unary != null && unary.Op == UnaryOp.Minus)
+                            {
+                                // DateTime - Time is an error
+                                return ReportInvalidOperation();
+                            }
+                            else
+                            {
+                                // DateTime + Time = DateTime
+                                return new BinderCheckTypeResult() { Node = node, NodeType = DType.DateTime };
+                            }
+
                         default:
                             // DateTime + number = DateTime
                             var resRight = CheckTypeCore(errorContainer, node.Right, rightType, DType.Number, /* coerced: */ DType.String, DType.Boolean);
@@ -540,7 +550,7 @@ namespace Microsoft.PowerFx.Core.Binding
                         default:
                             // Date + number = Date
                             var resRight = CheckTypeCore(errorContainer, node.Right, rightType, DType.Number, /* coerced: */ DType.String, DType.Boolean);
-                            return new BinderCheckTypeResult() { Node = node, NodeType = DType.Date, Coercions = resRight.Coercions };
+                            return new BinderCheckTypeResult() { Node = node, NodeType = DType.DateTime, Coercions = resRight.Coercions };
                     }
 
                 case DKind.Time:
@@ -561,10 +571,11 @@ namespace Microsoft.PowerFx.Core.Binding
                             }
 
                         case DKind.Date:
+                        case DKind.DateTime:
                             unary = node.Right.AsUnaryOpLit();
                             if (unary != null && unary.Op == UnaryOp.Minus)
                             {
-                                // Time - Date is an error
+                                // Time - Date[Time] is an error
                                 return ReportInvalidOperation();
                             }
                             else
@@ -573,9 +584,6 @@ namespace Microsoft.PowerFx.Core.Binding
                                 return new BinderCheckTypeResult() { Node = node, NodeType = DType.DateTime };
                             }
 
-                        case DKind.DateTime:
-                            // Time + DateTime in any other arrangement is an error
-                            return ReportInvalidOperation();
                         default:
                             // Time + number = Time
                             var resRight = CheckTypeCore(errorContainer, node.Right, rightType, DType.Number, /* coerced: */ DType.String, DType.Boolean);
@@ -592,7 +600,7 @@ namespace Microsoft.PowerFx.Core.Binding
                         case DKind.Date:
                             // number + Date = Date
                             var leftResDate = CheckTypeCore(errorContainer, node.Left, leftType, DType.Number, /* coerced: */ DType.String, DType.Boolean);
-                            return new BinderCheckTypeResult() { Node = node, NodeType = DType.Date, Coercions = leftResDate.Coercions };
+                            return new BinderCheckTypeResult() { Node = node, NodeType = DType.DateTime, Coercions = leftResDate.Coercions };
                         case DKind.Time:
                             // number + Time = Time
                             var leftResTime = CheckTypeCore(errorContainer, node.Left, leftType, DType.Number, /* coerced: */ DType.String, DType.Boolean);

@@ -571,14 +571,7 @@ namespace Microsoft.PowerFx.Functions
             try
             {
                 var result = arg0.AddDays(arg1.Value);
-                if (args[0] is DateTimeValue)
-                {
-                    return new DateTimeValue(irContext, result);
-                }
-                else
-                {
-                    return new DateValue(irContext, result.Date);
-                }
+                return new DateTimeValue(irContext, result);
             }
             catch
             {

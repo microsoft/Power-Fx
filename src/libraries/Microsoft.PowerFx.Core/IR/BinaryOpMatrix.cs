@@ -314,7 +314,7 @@ namespace Microsoft.PowerFx.Core.IR
                     }
 
                 case DKind.Time:
-                    if (rightType == DType.Date)
+                    if (rightType == DType.Date || rightType == DType.DateTime)
                     {
                         // Time + Date => DateTime
                         return BinaryOpKind.AddTimeAndDate;
@@ -347,6 +347,10 @@ namespace Microsoft.PowerFx.Core.IR
                         // Ensure that this is really '-Date' - Binding should always catch this, but let's make sure...
                         Contracts.Assert(node.Right.AsUnaryOpLit().VerifyValue().Op == UnaryOp.Minus);
                         return BinaryOpKind.DateDifference;
+                    }
+                    else if (rightType == DType.Time)
+                    {
+                        return BinaryOpKind.AddDateAndTime;
                     }
                     else
                     {
