@@ -116,7 +116,7 @@ namespace Microsoft.PowerFx.Types
 
         public override async Task<DValue<BooleanValue>> RemoveAsync(IEnumerable<FormulaValue> recordsToRemove, bool all, CancellationToken cancel)
         {
-            var ret = false;
+            var ret = true;
 
             if (_sourceList == null)
             {
@@ -146,7 +146,7 @@ namespace Microsoft.PowerFx.Types
 
                 foreach (var delete in deleteList)
                 {
-                    _sourceList.Remove(delete);
+                    ret = ret && _sourceList.Remove(delete);
                 }
             }
 

@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Data;
+using Microsoft.PowerFx.Interpreter.Tests;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
@@ -58,7 +59,7 @@ namespace Microsoft.PowerFx.Tests
 
             var cache = new TypeMarshallerCache()
                 .WithDynamicMarshallers(new DataTableMarshallerProvider());
-                        
+
             var robinTable = cache.Marshal(table);
 
             engine.UpdateVariable("robintable", robinTable);
@@ -121,6 +122,32 @@ First(
         { Other : 5}
      )).Other");
             Assert.IsType<BlankValue>(result4);
+
+            var symbol = new SymbolTable();
+            var opt = new ParserOptions() { AllowsSideEffects = true };
+
+            symbol.EnableMutationFunctions();
+
+            engine.Config.SymbolTable = symbol;
+
+            Assert.Equal(3, table.Rows.Count);
+
+            var result5 = engine.Eval("Remove(robintable, {Names:\"name2\"});robintable", options: opt);            
+            Assert.Equal("Table({Names:\"name1\",Scores:10},{Names:\"name3\",Scores:30})", ((DataTableValue)result5).Dump());
+
+            // Is table object affected?
+            Assert.Equal(2, table.Rows.Count);
+
+            var result6 = engine.Eval("Collect(robintable, {Scores:10,Names:\"name100\"});robintable", options: opt);
+            Assert.Equal("Table({Names:\"name1\",Scores:10},{Names:\"name3\",Scores:30},{Names:\"name100\",Scores:10})", ((DataTableValue)result6).Dump());
+
+            var result7 = engine.Eval("Patch(robintable, First(robintable),{Names:\"new-name\"});robintable", options: opt);
+            Assert.Equal("Table({Names:\"new-name\",Scores:10},{Names:\"name3\",Scores:30},{Names:\"name100\",Scores:10})", ((DataTableValue)result7).Dump());
+
+            var result8 = engine.Eval("Remove(robintable, {Scores:10}, \"All\");robintable", options: opt);
+            Assert.Equal("Table({Names:\"name3\",Scores:30})", ((DataTableValue)result8).Dump());
+
+            Assert.Equal(1, table.Rows.Count);
         }
 
         [Fact]
