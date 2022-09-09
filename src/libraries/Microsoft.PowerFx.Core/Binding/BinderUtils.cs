@@ -556,8 +556,8 @@ namespace Microsoft.PowerFx.Core.Binding
                             }
                             else
                             {
-                                // Time + Time in any other arrangement is an error
-                                return ReportInvalidOperation();
+                                // Time + Time = Time
+                                return new BinderCheckTypeResult() { Node = node, NodeType = DType.Time };
                             }
 
                         case DKind.Date:

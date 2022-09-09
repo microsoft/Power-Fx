@@ -181,8 +181,8 @@ namespace Microsoft.PowerFx.Core.IR
                     case BinaryOpKind.AddDayAndDate:
                         binaryOpResult = new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.AddDateAndDay, right, left);
                         break;
-                    case BinaryOpKind.AddMillisecondsAndTime:
-                        binaryOpResult = new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.AddTimeAndMilliseconds, right, left);
+                    case BinaryOpKind.AddNumberAndTime:
+                        binaryOpResult = new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.AddTimeAndNumber, right, left);
                         break;
                     case BinaryOpKind.AddDayAndDateTime:
                         binaryOpResult = new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.AddDateTimeAndDay, right, left);
@@ -217,6 +217,16 @@ namespace Microsoft.PowerFx.Core.IR
                         }
 
                         binaryOpResult = new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.DateDifference, left, unaryNegate.Child);
+                        break;
+
+                    case BinaryOpKind.TimeDifference:
+                        // Validated in Matrix + Binder
+                        if (right is not UnaryOpNode { Op: UnaryOpKind.Negate } unaryNegate2)
+                        {
+                            throw new NotSupportedException();
+                        }
+
+                        binaryOpResult = new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.TimeDifference, left, unaryNegate2.Child);
                         break;
 
                     // All others used directly

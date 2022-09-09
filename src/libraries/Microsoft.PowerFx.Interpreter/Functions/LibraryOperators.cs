@@ -125,6 +125,30 @@ namespace Microsoft.PowerFx.Functions
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
             targetFunction: AddDateAndTime);
 
+        public static readonly AsyncFunctionPtr OperatorAddTimeAndNumber = StandardErrorHandling<FormulaValue>(
+            expandArguments: NoArgExpansion,
+            replaceBlankValues: ReplaceBlankWith(
+                new TimeValue(IRContext.NotInSource(FormulaType.Time), TimeSpan.Zero),
+                new NumberValue(IRContext.NotInSource(FormulaType.Number), 0)),
+            checkRuntimeTypes: ExactSequence(
+                TimeOrDateTime,
+                ExactValueType<NumberValue>),
+            checkRuntimeValues: DeferRuntimeValueChecking,
+            returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+            targetFunction: AddTimeAndNumber);
+
+        public static readonly AsyncFunctionPtr OperatorAddTimeAndTime = StandardErrorHandling<FormulaValue>(
+            expandArguments: NoArgExpansion,
+            replaceBlankValues: ReplaceBlankWith(
+                new TimeValue(IRContext.NotInSource(FormulaType.Time), TimeSpan.Zero),
+                new TimeValue(IRContext.NotInSource(FormulaType.Time), TimeSpan.Zero)),
+            checkRuntimeTypes: ExactSequence(
+                TimeOrDateTime,
+                TimeOrDateTime),
+            checkRuntimeValues: DeferRuntimeValueChecking,
+            returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+            targetFunction: AddTimeAndTime);
+
         public static readonly AsyncFunctionPtr OperatorAddDateAndDay = StandardErrorHandling<FormulaValue>(
             expandArguments: NoArgExpansion,
             replaceBlankValues: DoNotReplaceBlank,
@@ -461,6 +485,72 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
+        private static FormulaValue AddTimeAndNumber(IRContext irContext, FormulaValue[] args)
+        {
+            TimeSpan arg0;
+            switch (args[0])
+            {
+                case DateTimeValue dtv:
+                    arg0 = new TimeSpan(0, dtv.Value.Hour, dtv.Value.Minute, dtv.Value.Second, dtv.Value.Millisecond);
+                    break;
+                case TimeValue tv:
+                    arg0 = tv.Value;
+                    break;
+                default:
+                    return CommonErrors.RuntimeTypeMismatch(irContext);
+            }
+
+            var arg1 = (NumberValue)args[1];
+
+            try
+            {
+                var result = arg0.Add(TimeSpan.FromDays(arg1.Value));
+                return new TimeValue(irContext, result);
+            }
+            catch
+            {
+                return CommonErrors.ArgumentOutOfRange(irContext);
+            }
+        }
+
+        private static FormulaValue AddTimeAndTime(IRContext irContext, FormulaValue[] args)
+        {
+            TimeSpan arg0, arg1;
+            switch (args[0])
+            {
+                case DateTimeValue dtv:
+                    arg0 = new TimeSpan(0, dtv.Value.Hour, dtv.Value.Minute, dtv.Value.Second, dtv.Value.Millisecond);
+                    break;
+                case TimeValue tv:
+                    arg0 = tv.Value;
+                    break;
+                default:
+                    return CommonErrors.RuntimeTypeMismatch(irContext);
+            }
+
+            switch (args[1])
+            {
+                case DateTimeValue dtv:
+                    arg1 = new TimeSpan(0, dtv.Value.Hour, dtv.Value.Minute, dtv.Value.Second, dtv.Value.Millisecond);
+                    break;
+                case TimeValue tv:
+                    arg1 = tv.Value;
+                    break;
+                default:
+                    return CommonErrors.RuntimeTypeMismatch(irContext);
+            }
+
+            try
+            {
+                var result = arg0.Add(arg1);
+                return new TimeValue(irContext, result);
+            }
+            catch
+            {
+                return CommonErrors.ArgumentOutOfRange(irContext);
+            }
+        }
+
         private static FormulaValue AddDateAndDay(IRContext irContext, FormulaValue[] args)
         {
             DateTime arg0;
@@ -562,7 +652,7 @@ namespace Microsoft.PowerFx.Functions
             var arg1 = (TimeValue)args[1];
 
             var result = arg0.Value.Subtract(arg1.Value);
-            return new TimeValue(irContext, result);
+            return new NumberValue(irContext, result.TotalDays);
         }
 
         private static FormulaValue LtDateTime(IRContext irContext, FormulaValue[] args)

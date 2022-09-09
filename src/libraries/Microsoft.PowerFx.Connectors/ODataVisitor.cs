@@ -178,7 +178,7 @@ namespace Microsoft.PowerFx.Connectors
                 BinaryOpKind.AddDateAndTime => "+",
                 BinaryOpKind.AddDateAndDay => "+",
                 BinaryOpKind.AddDateTimeAndDay => "+",
-                BinaryOpKind.AddTimeAndMilliseconds => "+",
+                BinaryOpKind.AddTimeAndNumber => "+",
                 BinaryOpKind.DateDifference => "-",
                 BinaryOpKind.TimeDifference => "-",
                 BinaryOpKind.DivNumbers => "/",

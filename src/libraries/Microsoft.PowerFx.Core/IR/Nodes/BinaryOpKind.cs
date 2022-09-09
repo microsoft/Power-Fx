@@ -17,7 +17,8 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
         AddDateAndTime, // Date + Time
         AddDateAndDay, // Date + Number (Days)
         AddDateTimeAndDay,
-        AddTimeAndMilliseconds, // Time + Number (Milliseconds)
+        AddTimeAndNumber, // Time + Number (typically fraction of a day)
+        AddTimeAndTime, // Time + Time ==> Time
 
         DateDifference,
         TimeDifference,
@@ -93,7 +94,7 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
         // These are reversed versions of earlier ops, added to make the matrix cleaner
         AddTimeAndDate,
         AddDayAndDate,
-        AddMillisecondsAndTime,
+        AddNumberAndTime,
         AddDayAndDateTime,
     }
 }

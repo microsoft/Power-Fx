@@ -321,15 +321,21 @@ namespace Microsoft.PowerFx.Core.IR
                     }
                     else if (rightType == DType.Time)
                     {
-                        // Time + '-Time' => in ms
-                        // Ensure that this is really '-Time' - Binding should always catch this, but let's make sure...
-                        Contracts.Assert(node.Right.AsUnaryOpLit().VerifyValue().Op == UnaryOp.Minus);
-                        return BinaryOpKind.AddNumbers;
+                        if (node.Right.AsUnaryOpLit()?.Op == UnaryOp.Minus)
+                        {
+                            // Time + '-Time' => in ms
+                            return BinaryOpKind.TimeDifference;
+                        }
+                        else
+                        {
+                            // Time + Time => Time
+                            return BinaryOpKind.AddTimeAndTime;
+                        }
                     }
                     else
                     {
                         // Time + Number
-                        return BinaryOpKind.AddTimeAndMilliseconds;
+                        return BinaryOpKind.AddTimeAndNumber;
                     }
 
                 case DKind.DateTime:
@@ -354,8 +360,8 @@ namespace Microsoft.PowerFx.Core.IR
                             // Number + Date
                             return BinaryOpKind.AddDayAndDate;
                         case DKind.Time:
-                            // Number + Date
-                            return BinaryOpKind.AddMillisecondsAndTime;
+                            // Number + Time
+                            return BinaryOpKind.AddNumberAndTime;
                         case DKind.DateTime:
                             return BinaryOpKind.AddDayAndDateTime;
                         default:
