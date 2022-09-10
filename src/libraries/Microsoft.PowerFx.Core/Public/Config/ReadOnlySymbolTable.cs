@@ -132,18 +132,21 @@ namespace Microsoft.PowerFx
 
         IReadOnlyDictionary<string, NameLookupInfo> IGlobalSymbolNameResolver.GlobalSymbols => _variables;
 
+        /// <summary>
+        /// Get symbol names in this current scope.
+        /// </summary>
         public IEnumerable<NamedFormulaType> SymbolNames
         {
             get 
             {
                 IGlobalSymbolNameResolver globals = this;
+                
+                // GlobalSymbols are virtual, so we get derived behavior via that.
                 foreach (var kv in globals.GlobalSymbols)
                 {
                     var type = FormulaType.Build(kv.Value.Type);
                     yield return new NamedFormulaType(kv.Key, type);
                 }
-
-                // $$$ Chain to parent?
             }
         }
 

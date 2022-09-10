@@ -54,7 +54,7 @@ namespace Microsoft.PowerFx
 
         public IIntellisenseResult Suggest(string expression, int cursorPosition)
         {            
-            return _engine.Suggest(expression, Check(expression), cursorPosition);
+            return _engine.Suggest(Check(expression), cursorPosition);
         }
 
         public string ConvertToDisplay(string expression)
