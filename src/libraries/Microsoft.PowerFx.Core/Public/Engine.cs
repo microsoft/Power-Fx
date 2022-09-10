@@ -348,12 +348,10 @@ namespace Microsoft.PowerFx
         /// <returns>The formula, with all identifiers converted to display form.</returns>
         public string GetDisplayExpression(string expressionText, RecordType parameters)
         {
-            //return ExpressionLocalizationHelper.ConvertExpression(expressionText, parameters, BindingConfig.Default, CreateResolverInternal(), CreateBinderGlue(), Config.CultureInfo, toDisplay: true);
             var symbols = SymbolTable.NewFromRecord(parameters);
             return GetDisplayExpression(expressionText, symbols);
         }
 
-        // $$$ Should just take CheckResult!
         public string GetDisplayExpression(string expressionText, ReadOnlySymbolTable symbolTable)
         {
             return ExpressionLocalizationHelper.ConvertExpression(expressionText, null, BindingConfig.Default, CreateResolverInternal(symbolTable), CreateBinderGlue(), Config.CultureInfo, toDisplay: true);

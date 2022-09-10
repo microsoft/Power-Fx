@@ -23,10 +23,11 @@ namespace Microsoft.PowerFx
     }
 
     /// <summary>
+    /// Implement a<see cref="IPowerFxScope"/> for intellisense on top of an<see cref="Engine"/> instance.
     ///  A scope is the context for a specific formula bar. 
     ///  This includes helpers to aide in customizing the editing experience. 
     /// </summary>
-    public class PowerFxEditorScope : IPowerFxScope, IPowerFxScopeQuickFix
+    public sealed class PowerFxEditorScope : IPowerFxScope, IPowerFxScopeQuickFix
     {
         internal readonly Engine _engine;
         internal readonly ParserOptions _parserOptions;
@@ -45,6 +46,8 @@ namespace Microsoft.PowerFx
             _symbols = symbols ?? new SymbolTable();
         }
 
+        #region IPowerFxScope
+
         // The editor scope has all other context needed to produce a CheckResult  from just the 
         // text in the editor. 
         public CheckResult Check(string expression)
@@ -52,13 +55,18 @@ namespace Microsoft.PowerFx
             return _engine.Check(expression, _parserOptions, _symbols);
         }
 
-        public string ConvertToDisplay(string expression)
+        string IPowerFxScope.ConvertToDisplay(string expression)
         {
-            // $$$ Missing overload that takes recordValue...
-            return expression;
-
-            // GetDisplayExpression
+            return _engine.GetDisplayExpression(expression, _symbols);
         }
+
+        IIntellisenseResult IPowerFxScope.Suggest(string expression, int cursorPosition)
+        {
+            var check = Check(expression);
+            return _engine.Suggest(check, cursorPosition);
+        }
+
+        #endregion
 
         public void AddQuickFixHandler(ICodeFixHandler codeFixHandler)
         {
@@ -82,12 +90,6 @@ namespace Microsoft.PowerFx
             }            
 
             return list.ToArray();
-        }
-
-        public IIntellisenseResult Suggest(string expression, int cursorPosition)
-        {
-            var check = Check(expression);
-            return _engine.Suggest(check, cursorPosition);
         }
     }
 }
