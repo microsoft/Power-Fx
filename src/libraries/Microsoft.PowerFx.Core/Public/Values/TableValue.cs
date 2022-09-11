@@ -99,7 +99,7 @@ namespace Microsoft.PowerFx.Types
         // - Error, 
         // - with updated values
         // Async because derived classes may back this with a network call. 
-        public virtual async Task<DValue<RecordValue>> AppendAsync(RecordValue record)
+        public virtual async Task<DValue<RecordValue>> AppendAsync(RecordValue record, CancellationToken cancel)
         {
             return DValue<RecordValue>.Of(NotImplemented(IRContext));
         }
@@ -125,10 +125,13 @@ namespace Microsoft.PowerFx.Types
         /// </summary>
         /// <param name="baseRecord">A record to modify.</param>
         /// <param name="changeRecord">A record that contains properties to modify the base record.</param>
+        /// <param name="cancel">Cancelation token.</param>
         /// <returns>The updated record.</returns>
-        public async Task<DValue<RecordValue>> PatchAsync(RecordValue baseRecord, RecordValue changeRecord)
+        public async Task<DValue<RecordValue>> PatchAsync(RecordValue baseRecord, RecordValue changeRecord, CancellationToken cancel)
         {
             var recordType = Type.ToRecord();
+
+            cancel.ThrowIfCancellationRequested();
 
             // IR has already resolved to logical names because of 
             // RequiresDataSourceScope, ArgMatchesDatasourceType on function.

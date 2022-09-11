@@ -1,10 +1,6 @@
 ﻿#SETUP: EnableExpressionChaining,MutationFunctionsTestSetup
 
-// MutationFunctionsTestSetup handle does the following:
-// - Creates a record: r1 => {Field1:1,Field2:"earth",Field3:1/1/2022,Field4:true}
-// - Creates a record: r2 => {Field1:2,Field2:"moon",Field3:2/1/2022,Field4:false} (for convenience)
-// - Creates a record: r_empty => {}
-// - Creates a table: t1(r1) => Type (Field1, Field2, Field3, Field4)
+// Check MutationFunctionsTestSetup handler (PowerFxEvaluationTests.cs) for documentation.
 
 >> Collect(t1, r2);CountRows(t1)
 2
@@ -20,6 +16,9 @@ true
     
 >> IsError(Collect(t1, If(1/0, r2)))
 true
+
+>> Collect(t1, {Field1:3,Field2:"mars",Field3:DateTime(2022,3,1,0,0,0,0),Field4:false})
+{Field1:3,Field2:"mars",Field3:DateTime(2022,3,1,0,0,0,0),Field4:false}
 
 >> Collect(t1)
 Errors: Error 0-11: Invalid number of arguments: received 1, expected 2.

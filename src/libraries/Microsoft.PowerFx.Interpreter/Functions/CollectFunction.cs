@@ -224,7 +224,7 @@ namespace Microsoft.PowerFx.Interpreter
 
             var record = (RecordValue)arg1;
 
-            var result = await arg0.AppendAsync(record);
+            var result = await arg0.AppendAsync(record, cancel);
 
             return result.ToFormulaValue();
         }

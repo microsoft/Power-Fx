@@ -28,7 +28,7 @@ namespace Microsoft.PowerFx.Functions
     internal abstract class PatchAndValidateRecordFunctionBase : BuiltinFunction
     {
         public override bool RequiresDataSourceScope => true;
-        
+
         public override bool ArgMatchesDatasourceType(int argNum)
         {
             return argNum >= 1;
@@ -218,7 +218,7 @@ namespace Microsoft.PowerFx.Functions
 
                 foreach (var typedName in curType.GetNames(DPath.Root))
                 {
-                    if (!tableType.HasField(typedName.Name))
+                    if (!tableType.TryGetFieldType(typedName.Name, out var displayName, out _))
                     {
                         dataSourceType.ReportNonExistingName(FieldNameKind.Display, errors, typedName.Name, args[i]);
                         isValid = isSafeToUnion = false;
@@ -275,7 +275,7 @@ namespace Microsoft.PowerFx.Functions
             var datasource = (TableValue)args[0];
             var baseRecord = (RecordValue)args[1];
 
-            var ret = await datasource.PatchAsync(baseRecord, changeRecord);
+            var ret = await datasource.PatchAsync(baseRecord, changeRecord, cancel);
 
             return ret.ToFormulaValue();
         }
