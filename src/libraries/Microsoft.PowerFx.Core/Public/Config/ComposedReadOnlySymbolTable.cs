@@ -18,7 +18,7 @@ namespace Microsoft.PowerFx
     /// <summary>
     /// Composition of multiple <see cref="ReadOnlySymbolTable"/> into a single table.
     /// </summary>
-    internal class ComposedReadOnlySymbolTable : ReadOnlySymbolTable, INameResolver, IGlobalSymbolNameResolver
+    internal class ComposedReadOnlySymbolTable : ReadOnlySymbolTable, INameResolver, IGlobalSymbolNameResolver, IEnumStore
     {
         private readonly IEnumerable<ReadOnlySymbolTable> _symbolTables;
 
@@ -41,9 +41,9 @@ namespace Microsoft.PowerFx
                 }
 
                 return hash;
-            }            
+            }
         }
-                
+
         // Expose the list to aide in intellisense suggestions. 
         IEnumerable<TexlFunction> INameResolver.Functions
         {
@@ -81,6 +81,23 @@ namespace Microsoft.PowerFx
                 }
 
                 return map;
+            }
+        }
+
+        IEnumerable<EnumSymbol> IEnumStore.EnumSymbols
+        {
+            get
+            {
+                foreach (var table in _symbolTables)
+                {
+                    if (table is IEnumStore store)
+                    {
+                        foreach (var item in store.EnumSymbols)
+                        {
+                            yield return item;
+                        }
+                    }
+                }
             }
         }
 
