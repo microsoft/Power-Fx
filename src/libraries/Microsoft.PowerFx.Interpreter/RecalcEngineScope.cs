@@ -11,8 +11,15 @@ namespace Microsoft.PowerFx
     /// <summary>
     /// Implement a <see cref="IPowerFxScope"/> for intellisense on top of an <see cref="Engine"/> instance.
     /// </summary>
+    [Obsolete("Use Engine.CreateEditorScope() instead.")]
     public class RecalcEngineScope : IPowerFxScope
     {
+        // Obsoleting this because:
+        // - it creates an unnecssary dependy on RecalcEngine, instead of just working with Engine class.
+        // - hence lives in interpreter, when it should be in LSP.
+        // - superseded by EditorContextScope, which has more editor customizations. 
+        // - encourages a strong coupling on FromJson; but context is not json. 
+
         private readonly Engine _engine;
         private readonly RecordType _contextType;
         private readonly ParserOptions _parserOptions;

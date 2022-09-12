@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using Microsoft.PowerFx.LanguageServerProtocol.Protocol;
 using Microsoft.PowerFx.Syntax;
 
@@ -15,7 +16,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
     {
         public const string Title = "Blank() --> IsBlank()";
 
-        public CodeActionResult[] SuggestFixes(Engine engine, CheckResult result)
+        public async Task<IEnumerable<CodeActionResult>> SuggestFixesAsync(Engine engine, CheckResult result)
         {
             var v = new CodeFixVisitor
             {
@@ -26,7 +27,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 
             result.Parse.Root.Accept(v);
 
-            return v._fixes.ToArray();
+            return v._fixes;
         }
 
         private class CodeFixVisitor : IdentityTexlVisitor

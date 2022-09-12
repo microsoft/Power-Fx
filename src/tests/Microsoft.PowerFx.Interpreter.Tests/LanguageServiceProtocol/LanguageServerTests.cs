@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.RegularExpressions;
+using System.Web;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Tests;
@@ -46,9 +47,23 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 
             _sendToClientData = new List<string>();
             _scopeFactory = new TestPowerFxScopeFactory(
-                (string documentUri) => RecalcEngineScope.FromUri(engine, documentUri, options),
+                (string documentUri) => engine.CreateEditorScope(options, GetFromUri(documentUri)),
                 options);
             _testServer = new TestLanguageServer(_sendToClientData.Add, _scopeFactory);
+        }
+
+        // The convention for getting the context from the documentUri is arbitrary and determined by the host. 
+        private static ReadOnlySymbolTable GetFromUri(string documentUri)
+        {
+            var uriObj = new Uri(documentUri);
+            var json = HttpUtility.ParseQueryString(uriObj.Query).Get("context");
+            if (json == null)
+            {
+                json = "{}";
+            }
+
+            var record = (RecordValue)FormulaValue.FromJson(json);
+            return ReadOnlySymbolTable.NewFromRecord(record.Type);
         }
 
         // From JPC spec: https://microsoft.github.io/language-server-protocol/specifications/specification-3-14/
@@ -595,7 +610,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 
             var scopeFactory = new TestPowerFxScopeFactory((string documentUri) =>
             {
-                var scope = engine.CreateScope();
+                var scope = engine.CreateEditorScope();
                 scope.AddQuickFixHandler(new BlankHandler());
                 return scope;
             });

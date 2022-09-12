@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.LanguageServerProtocol.Protocol;
@@ -15,7 +16,7 @@ namespace Microsoft.PowerFx
     /// </summary>
     public interface ICodeFixHandler
     {
-        CodeActionResult[] SuggestFixes(
+        Task<IEnumerable<CodeActionResult>> SuggestFixesAsync(
             Engine engine,
             CheckResult checkResult);
     }

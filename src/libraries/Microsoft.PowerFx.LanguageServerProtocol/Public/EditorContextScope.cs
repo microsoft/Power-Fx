@@ -10,15 +10,15 @@ using Microsoft.PowerFx.LanguageServerProtocol.Protocol;
 
 namespace Microsoft.PowerFx
 {
-    public static class LSPEngineExtensions
+    public static class EditorEngineExtensions
     {
         // A scope is the context for a specific formula bar. 
-        public static PowerFxEditorScope CreateScope(
+        public static EditorContextScope CreateEditorScope(
             this Engine engine,
             ParserOptions parserOptions = null,
             ReadOnlySymbolTable symbols = null)
         {
-            return new PowerFxEditorScope(engine, parserOptions, symbols);
+            return new EditorContextScope(engine, parserOptions, symbols);
         }
     }
 
@@ -27,7 +27,7 @@ namespace Microsoft.PowerFx
     ///  A scope is the context for a specific formula bar. 
     ///  This includes helpers to aide in customizing the editing experience. 
     /// </summary>
-    public sealed class PowerFxEditorScope : IPowerFxScope, IPowerFxScopeQuickFix
+    public sealed class EditorContextScope : IPowerFxScope, IPowerFxScopeQuickFix
     {
         internal readonly Engine _engine;
         internal readonly ParserOptions _parserOptions;
@@ -36,7 +36,7 @@ namespace Microsoft.PowerFx
         // List of handlers to get code-fix suggestions. 
         private readonly List<ICodeFixHandler> _handlers = new List<ICodeFixHandler>();
 
-        internal PowerFxEditorScope(
+        internal EditorContextScope(
             Engine engine,
             ParserOptions parserOptions,
             ReadOnlySymbolTable symbols)
@@ -70,7 +70,7 @@ namespace Microsoft.PowerFx
 
         public void AddQuickFixHandler(ICodeFixHandler codeFixHandler)
         {
-            _handlers.Add(codeFixHandler);
+            _handlers.Add(codeFixHandler ?? throw new ArgumentNullException(nameof(codeFixHandler)));
         }
 
         CodeActionResult[] IPowerFxScopeQuickFix.Suggest(string expression)
@@ -82,7 +82,7 @@ namespace Microsoft.PowerFx
             // Show fixes for both warnings and errors. 
             foreach (var handler in _handlers)
             {
-                var fixes = handler.SuggestFixes(_engine, check);
+                var fixes = handler.SuggestFixesAsync(_engine, check).Result;
                 if (fixes != null)
                 {
                     list.AddRange(fixes);
