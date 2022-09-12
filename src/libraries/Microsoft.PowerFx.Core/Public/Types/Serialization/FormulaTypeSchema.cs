@@ -4,57 +4,37 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.Json.Serialization;
 
 namespace Microsoft.PowerFx.Core
 {
-    public class FormulaTypeSchema
+    internal class FormulaTypeSchema
     {
-        public enum ParamType
-        {
-            Number,
-            String,
-            Boolean,
-            Date,
-            Time,
-            DateTime,
-            DateTimeNoTimeZone,
-            Color,
-            Guid,
-            Record,
-            Table,
-            Blank,
-            Hyperlink,
-            OptionSetValue,
-            UntypedObject,
-            EntityRecord,
-            EntityTable,
-            Unknown,
-            Error
-        }
-
         /// <summary>
-        /// Represents the type of this item. For some complex types, additional optional data is required.
+        /// Represents the type of this item.
         /// </summary>
-        public ParamType Type { get; set; }
+        public SchemaTypeName Type { get; set; }
+
+        // Optional, description for the type
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public string Description { get; set; }        
+
+        // Optional, help link for the type
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public string Help { get; set; }
 
         /// <summary>
         /// Optional. For Records and Tables, contains the list of fields.
         /// </summary>
-        public Dictionary<string, FormulaTypeSchema> Fields { get; set; }
-        
-        /// <summary>
-        /// Optional. Used for external schema definitions and input validation.
-        /// </summary>
-        public bool? Required { get; set; }
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public IReadOnlyDictionary<string, FormulaTypeSchema> Fields { get; set; }
+    }
+    
+    [JsonConverter(typeof(SchemaTypeNameConverter))]
+    public readonly struct SchemaTypeName
+    {
+        public string Type { get; init; }
 
-        /// <summary>
-        /// Optional. For entities, specifies the table logical name.
-        /// </summary>
-        public string TableLogicalName { get; set; }
-
-        /// <summary>
-        /// Optional. For Option Set Values, specifies the option set logical name.
-        /// </summary>
-        public string OptionSetName { get; set; }
+        public bool IsTable { get; init; }
     }
 }
