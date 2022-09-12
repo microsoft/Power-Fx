@@ -6,7 +6,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Interpreter.Tests;
@@ -71,15 +70,13 @@ namespace Microsoft.PowerFx.Tests
             return DValue<RecordValue>.Of(record);
         }
 
-        public override async Task<DValue<RecordValue>> AppendAsync(RecordValue record, CancellationToken cancel)
+        public override async Task<DValue<RecordValue>> AppendAsync(RecordValue record)
         {
             var recordValues = new object[_table.Columns.Count];
             var index = 0;
 
             foreach (DataColumn column in _table.Columns)
             {
-                cancel.ThrowIfCancellationRequested();
-
                 var formulaValue = record.GetField(column.ColumnName);
 
                 if (formulaValue is not BlankValue)

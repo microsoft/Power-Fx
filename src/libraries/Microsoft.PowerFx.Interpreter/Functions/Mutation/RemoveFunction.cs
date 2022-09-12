@@ -215,7 +215,7 @@ namespace Microsoft.PowerFx.Functions
             var datasource = (TableValue)args[0];
             var recordsToRemove = args.Skip(1).Take(args.Length - toExclude);
 
-            var ret = await datasource.RemoveAsync(recordsToRemove, all, cancel);
+            var ret = await datasource.RemoveAsync(recordsToRemove, all);
 
             return ret.ToFormulaValue();
         }

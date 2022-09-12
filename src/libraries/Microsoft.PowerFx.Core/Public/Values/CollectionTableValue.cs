@@ -80,14 +80,12 @@ namespace Microsoft.PowerFx.Types
             }
         }
 
-        public override async Task<DValue<RecordValue>> AppendAsync(RecordValue record, CancellationToken cancel)
+        public override async Task<DValue<RecordValue>> AppendAsync(RecordValue record)
         {
             if (_sourceList == null)
             {
-                return await base.AppendAsync(record, cancel);
+                return await base.AppendAsync(record);
             }
-
-            cancel.ThrowIfCancellationRequested();
 
             var item = MarshalInverse(record);
 
@@ -117,13 +115,13 @@ namespace Microsoft.PowerFx.Types
             }
         }
 
-        public override async Task<DValue<BooleanValue>> RemoveAsync(IEnumerable<FormulaValue> recordsToRemove, bool all, CancellationToken cancel)
+        public override async Task<DValue<BooleanValue>> RemoveAsync(IEnumerable<FormulaValue> recordsToRemove, bool all)
         {
             var ret = false;
 
             if (_sourceList == null)
             {
-                return await base.RemoveAsync(recordsToRemove, all, cancel);
+                return await base.RemoveAsync(recordsToRemove, all);
             }
 
             foreach (RecordValue recordToRemove in recordsToRemove)
@@ -132,8 +130,6 @@ namespace Microsoft.PowerFx.Types
 
                 foreach (var item in _enumerator)
                 {
-                    cancel.ThrowIfCancellationRequested();
-
                     var dRecord = Marshal(item);
 
                     if (Matches(dRecord.Value, recordToRemove))
