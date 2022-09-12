@@ -14,7 +14,7 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core.Public.Types
 {
-    internal sealed class BuiltinTypesSymbolTable : TypeSymbolTable, IGlobalSymbolNameResolver
+    internal sealed class PrimitiveTypesSymbolTable : TypeSymbolTable, IGlobalSymbolNameResolver
     {
         private static readonly BidirectionalDictionary<string, FormulaType> _knownTypes = new ()
         {
@@ -30,18 +30,17 @@ namespace Microsoft.PowerFx.Core.Public.Types
             { "Time", FormulaType.Time },
             { "None", FormulaType.Blank },
             { "UntypedObject", FormulaType.UntypedObject },
-            { "Record", FormulaType.Build(DType.EmptyRecord) },
         };
 
         IReadOnlyDictionary<string, NameLookupInfo> IGlobalSymbolNameResolver.GlobalSymbols => _knownTypes.ToDictionary(kvp => kvp.Key, kvp => ToLookupInfo(kvp.Value));
 
         internal override VersionHash VersionHash => base.VersionHash;
 
-        private BuiltinTypesSymbolTable()
+        private PrimitiveTypesSymbolTable()
         {
         }
 
-        public static BuiltinTypesSymbolTable Instance = new BuiltinTypesSymbolTable();
+        public static PrimitiveTypesSymbolTable Instance = new PrimitiveTypesSymbolTable();
 
         internal override bool TryLookup(DName name, out NameLookupInfo nameInfo)
         {

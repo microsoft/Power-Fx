@@ -3,12 +3,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
+using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core
 {
-    internal class FormulaTypeSchema
+    internal sealed class FormulaTypeSchema
     {
         /// <summary>
         /// Represents the type of this item.
@@ -27,7 +29,28 @@ namespace Microsoft.PowerFx.Core
         /// Optional. For Records and Tables, contains the list of fields.
         /// </summary>
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public IReadOnlyDictionary<string, FormulaTypeSchema> Fields { get; set; }
+        public Dictionary<string, FormulaTypeSchema> Fields { get; set; }
+
+        public override bool Equals(object o)
+        {
+            return o is FormulaTypeSchema other && 
+                Type.Equals(other.Type) &&
+                Description == other.Description &&
+                Help == other.Help && 
+                Fields?.Count() == other.Fields?.Count() &&
+                (Fields?.All(
+                     (thisKvp) => other.Fields.TryGetValue(thisKvp.Key, out var otherValue) &&
+                     (thisKvp.Value?.Equals(otherValue) ?? otherValue == null)) ?? true);
+        }
+
+        public override int GetHashCode()
+        {
+            return Hashing.CombineHash(
+                Type.GetHashCode(),
+                Description.GetHashCode(),
+                Help.GetHashCode(),
+                Fields.GetHashCode());
+        }
     }
     
     [JsonConverter(typeof(SchemaTypeNameConverter))]

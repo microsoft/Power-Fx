@@ -11,7 +11,7 @@ using Microsoft.PowerFx.Core.UtilityDataStructures;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
 
-namespace Microsoft.PowerFx.Core.Public.Types
+namespace Microsoft.PowerFx.Core
 {
     internal abstract class TypeSymbolTable : ReadOnlySymbolTable
     {
@@ -19,7 +19,7 @@ namespace Microsoft.PowerFx.Core.Public.Types
 
         protected NameLookupInfo ToLookupInfo(FormulaType type)
         {
-            return new NameLookupInfo(BindKind.TypeName, type._type, DPath.Root, 0);
+            return new NameLookupInfo(BindKind.TypeName, type._type, DPath.Root, 0, data: type);
         }
     }
 }
