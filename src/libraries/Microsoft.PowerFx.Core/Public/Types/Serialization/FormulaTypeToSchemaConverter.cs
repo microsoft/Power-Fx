@@ -3,138 +3,93 @@
 
 using System;
 using System.Collections.Generic;
+using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core
 {
-    public static class FormulaTypeToSchemaConverter
+    internal static class FormulaTypeToSchemaConverter
     {
-        public static FormulaTypeSchema Convert(FormulaType type)
+        public static FormulaTypeSchema ToSchema(this FormulaType type, DefinedTypeSymbolTable definedTypeSymbols)
         {
-            var visitor = new FormulaTypeToSchemaVisitor();
-            type.Visit(visitor);
-            return visitor.Result;
+            return ToSchema(type, definedTypeSymbols, maxDepth: 5);
         }
 
-        private class FormulaTypeToSchemaVisitor : ITypeVisitor
+        private static SchemaTypeName RecordTypeName => new () { Type = "Record", IsTable = false };
+
+        private static SchemaTypeName TableTypeName => new () { Type = "Record", IsTable = true };
+
+        private static FormulaTypeSchema ToSchema(FormulaType type, DefinedTypeSymbolTable definedTypeSymbols, int maxDepth)
         {
-            public FormulaTypeSchema Result;
-
-#region Primitive Types
-            public void Visit(BlankType type)
+            if (maxDepth < 0)
             {
-                Result = new FormulaTypeSchema() { Type = FormulaTypeSchema.ParamType.Blank };
+                throw new NotSupportedException("Max depth exceeded when converting type to schema definition");
             }
 
-            public void Visit(BooleanType type)
+            if (TryLookupTypeName(type, definedTypeSymbols, out var typeName))
             {
-                Result = new FormulaTypeSchema() { Type = FormulaTypeSchema.ParamType.Boolean };
-            }
-
-            public void Visit(NumberType type)
-            {
-                Result = new FormulaTypeSchema() { Type = FormulaTypeSchema.ParamType.Number };
-            }
-
-            public void Visit(StringType type)
-            {
-                Result = new FormulaTypeSchema() { Type = FormulaTypeSchema.ParamType.String };
-            }
-                        
-            public void Visit(HyperlinkType type)
-            {
-                Result = new FormulaTypeSchema() { Type = FormulaTypeSchema.ParamType.Hyperlink };
-            }
-
-            public void Visit(GuidType type)
-            {
-                Result = new FormulaTypeSchema() { Type = FormulaTypeSchema.ParamType.Guid };
-            }
-
-            public void Visit(ColorType type)
-            {
-                Result = new FormulaTypeSchema() { Type = FormulaTypeSchema.ParamType.Color };
-            }
-
-            public void Visit(DateType type)
-            {
-                Result = new FormulaTypeSchema() { Type = FormulaTypeSchema.ParamType.Date };
-            }
-
-            public void Visit(DateTimeType type)
-            {
-                Result = new FormulaTypeSchema() { Type = FormulaTypeSchema.ParamType.DateTime };
-            }
-
-            public void Visit(DateTimeNoTimeZoneType type)
-            {
-                Result = new FormulaTypeSchema() { Type = FormulaTypeSchema.ParamType.DateTimeNoTimeZone };
-            }
-
-            public void Visit(TimeType type)
-            {
-                Result = new FormulaTypeSchema() { Type = FormulaTypeSchema.ParamType.Time };
-            }
-
-            public void Visit(UntypedObjectType type)
-            {
-                Result = new FormulaTypeSchema() { Type = FormulaTypeSchema.ParamType.UntypedObject };
-            }
-
-            public void Visit(UnsupportedType type) => throw new NotImplementedException();
-
-            public void Visit(UnknownType type)
-            {
-                Result = new FormulaTypeSchema() { Type = FormulaTypeSchema.ParamType.Unknown };
-            }
-
-            public void Visit(BindingErrorType type)
-            {
-                Result = new FormulaTypeSchema() { Type = FormulaTypeSchema.ParamType.Error };
-            }
-
-            #endregion
-            #region Complex Types
-
-            public void Visit(OptionSetValueType type)
-            {
-                Result = new FormulaTypeSchema()
+                return new FormulaTypeSchema()
                 {
-                    Type = FormulaTypeSchema.ParamType.OptionSetValue,
-                    OptionSetName = type.OptionSetName
+                    Type = new SchemaTypeName() { Type = typeName }
                 };
             }
 
-            public void Visit(RecordType type)
-            {
-                Result = new FormulaTypeSchema()
-                {
-                    Type = FormulaTypeSchema.ParamType.Record,
-                    Fields = GetChildren(type)
-                };
-            }
-
-            public void Visit(TableType type)
+            // Possible that the record type is defined for a TableType variant
+            if (type is TableType tableType && TryLookupTypeName(tableType.ToRecord(), definedTypeSymbols, out typeName))
             {                
-                Result = new FormulaTypeSchema()
+                return new FormulaTypeSchema()
                 {
-                    Type = FormulaTypeSchema.ParamType.Table,
-                    Fields = GetChildren(type)
+                    Type = new SchemaTypeName() { Type = typeName, IsTable = true }
                 };
             }
 
-            private Dictionary<string, FormulaTypeSchema> GetChildren(AggregateType type)
+            if (type is not AggregateType aggregateType)
             {
-                var fields = new Dictionary<string, FormulaTypeSchema>(StringComparer.Ordinal);
-                foreach (var child in type.GetFieldTypes())
-                {
-                    child.Type.Visit(this);
-                    fields.Add(child.Name, Result);
-                }
-
-                return fields;
+                throw new NotImplementedException($"Conversion to schema definition not supported for type {type}");
             }
-#endregion
+
+            var children = GetChildren(aggregateType, definedTypeSymbols, maxDepth - 1);
+
+            if (aggregateType is RecordType)
+            {
+                return new FormulaTypeSchema()
+                {
+                    Type = RecordTypeName,
+                    Fields = children
+                };
+            }                
+                
+            return new FormulaTypeSchema()
+            {
+                Type = TableTypeName,
+                Fields = children
+            };
+        }
+
+        private static bool TryLookupTypeName(FormulaType type, DefinedTypeSymbolTable definedTypeSymbols, out string typeName)
+        {
+            var lookupOrder = new List<TypeSymbolTable>() { definedTypeSymbols, BuiltinTypesSymbolTable.Instance };
+            foreach (var table in lookupOrder)
+            {
+                if (table.TryGetTypeName(type, out typeName))
+                {
+                    return true;
+                }
+            }
+
+            typeName = null;
+            return false;
+        }
+
+        private static Dictionary<string, FormulaTypeSchema> GetChildren(AggregateType type, DefinedTypeSymbolTable definedTypeSymbols, int maxDepth)
+        {
+            var fields = new Dictionary<string, FormulaTypeSchema>(StringComparer.Ordinal);
+            foreach (var child in type.GetFieldTypes())
+            {
+                fields.Add(child.Name, ToSchema(child.Type, definedTypeSymbols, maxDepth));
+            }
+
+            return fields;
         }
     }
 }
