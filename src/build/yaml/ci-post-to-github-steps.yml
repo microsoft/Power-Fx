@@ -20,7 +20,7 @@ steps:
     targetPath: '$(System.ArtifactsDirectory)\ApiCompatibilityResults'
   displayName: 'Publish compat results to Artifacts'
   continueOnError: true
-# - dummy change 6
+# - dummy change 7
 # - powershell: |
 #     $OWNER = 'microsoft';
 #     $REPO = 'Power-Fx';
