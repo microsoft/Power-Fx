@@ -42,3 +42,12 @@
 
 >> First(First(LastN(ForAll(Table({Value:1}, {Value:0}, {Value:2}), Table({a: 1/ThisRecord.Value})), 2)).Value)
 {a:Microsoft.PowerFx.Types.ErrorValue}
+
+>> ForAll([1,2,3], {C:1})
+Table({C:1},{C:1},{C:1})
+
+>> ForAll([1,2,3], {V:Value})
+Table({V:1},{V:2},{V:3})
+
+>> ForAll([1,2,3], {V:Value, C:1})
+Table({C:1,V:1},{C:1,V:2},{C:1,V:3})

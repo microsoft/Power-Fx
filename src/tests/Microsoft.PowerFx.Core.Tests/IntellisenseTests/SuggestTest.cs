@@ -181,7 +181,13 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             //   https://github.com/nunit/nunit3-vs-adapter/issues/691
 
             Preview.FeatureFlags.StringInterpolation = true;
-            var actualSuggestions = SuggestStrings(expression, Default);
+            var config = Default;
+            var actualSuggestions = SuggestStrings(expression, config);
+            Assert.Equal(expectedSuggestions, actualSuggestions);
+
+            // With adjusted config 
+            AdjustConfig(config);
+            actualSuggestions = SuggestStrings(expression, config);
             Assert.Equal(expectedSuggestions, actualSuggestions);
         }
 
@@ -199,7 +205,13 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         public void TestSuggestEmptyEnumList(string expression, params string[] expectedSuggestions)
         {
             Preview.FeatureFlags.StringInterpolation = true;
-            var actualSuggestions = SuggestStrings(expression, EmptyEverything);
+            var config = EmptyEverything;
+            var actualSuggestions = SuggestStrings(expression, config);
+            Assert.Equal(expectedSuggestions, actualSuggestions);
+
+            // With adjusted config 
+            AdjustConfig(config);
+            actualSuggestions = SuggestStrings(expression, config);
             Assert.Equal(expectedSuggestions, actualSuggestions);
         }
 
@@ -212,8 +224,24 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         public void TestSuggestEmptyAll(string expression, params string[] expectedSuggestions)
         {
             Preview.FeatureFlags.StringInterpolation = true;
-            var actualSuggestions = SuggestStrings(expression, MinimalEnums);
+            var config = MinimalEnums;
+            var actualSuggestions = SuggestStrings(expression, config);
             Assert.Equal(expectedSuggestions, actualSuggestions);
+
+            // With adjusted config 
+            AdjustConfig(config);
+            actualSuggestions = SuggestStrings(expression, config);
+            Assert.Equal(expectedSuggestions, actualSuggestions);
+        }
+
+        // Add an extra (empy) symbol table into the config and ensure we get the same results. 
+        private void AdjustConfig(PowerFxConfig config)
+        {
+            config.SymbolTable = new SymbolTable 
+            {
+                Parent = config.SymbolTable,
+                DebugName = "Extra Table"
+            };
         }
 
         /// <summary>
@@ -239,7 +267,13 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("[@|")]
         public void TestNonEmptySuggest(string expression, string context = null)
         {
+            var config = Default;
             var actualSuggestions = SuggestStrings(expression, Default, context);
+            Assert.True(actualSuggestions.Length > 0);
+
+            // With adjusted config 
+            AdjustConfig(config);
+            actualSuggestions = SuggestStrings(expression, config);
             Assert.True(actualSuggestions.Length > 0);
         }
 
@@ -257,7 +291,13 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         {
             Assert.NotNull(context);
 
-            var actualSuggestions = SuggestStrings(expression, Default, context);
+            var config = Default;
+            var actualSuggestions = SuggestStrings(expression, config, context);
+            Assert.Equal(expectedSuggestions, actualSuggestions);
+
+            // With adjusted config 
+            AdjustConfig(config);
+            actualSuggestions = SuggestStrings(expression, config, context);
             Assert.Equal(expectedSuggestions, actualSuggestions);
         }
         
@@ -281,6 +321,11 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             
             // Intellisense requires iterating the field names for some operations
             Assert.Equal(requiresExpansion, lazyInstance.EnumerableIterated);
+
+            // With adjusted config 
+            AdjustConfig(config);
+            actualSuggestions = SuggestStrings(expression, config, lazyInstance);
+            Assert.Equal(expectedSuggestions, actualSuggestions);
         }
 
         private class LazyRecursiveRecordType : RecordType

@@ -21,6 +21,11 @@ namespace Microsoft.PowerFx.Functions
             {
                 var res = await runner.EvalArgAsync<BooleanValue>(arg, context, arg.IRContext);
 
+                if (res.IsBlank)
+                {
+                    return new BooleanValue(irContext, false);
+                }
+
                 if (res.IsValue)
                 {
                     var val = res.Value;
