@@ -141,6 +141,9 @@ namespace Microsoft.PowerFx.Functions
                 case DateValue dv:
                     start = dv.Value;
                     break;
+                case TimeValue tv:
+                    start = _epoch.Add(tv.Value);
+                    break;
                 default:
                     return CommonErrors.RuntimeTypeMismatch(irContext);
             }
@@ -153,6 +156,9 @@ namespace Microsoft.PowerFx.Functions
                     break;
                 case DateValue dv:
                     end = dv.Value;
+                    break;
+                case TimeValue tv:
+                    end = _epoch.Add(tv.Value);
                     break;
                 default:
                     return CommonErrors.RuntimeTypeMismatch(irContext);
