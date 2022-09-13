@@ -372,8 +372,8 @@ namespace Microsoft.PowerFx.Functions
                         new DateTimeValue(IRContext.NotInSource(FormulaType.DateTime), _epoch),
                         new StringValue(IRContext.NotInSource(FormulaType.String), "days")),
                     checkRuntimeTypes: ExactSequence(
-                        DateOrDateTime,
-                        DateOrDateTime,
+                        DateOrTimeOrDateTime,
+                        DateOrTimeOrDateTime,
                         ExactValueTypeOrBlank<StringValue>),
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
@@ -1197,7 +1197,7 @@ namespace Microsoft.PowerFx.Functions
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: ReplaceBlankWithZero,
                     checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
-                    checkRuntimeValues: PositiveNumericNumberChecker,
+                    checkRuntimeValues: DeferRuntimeTypeChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: Sqrt)
             },

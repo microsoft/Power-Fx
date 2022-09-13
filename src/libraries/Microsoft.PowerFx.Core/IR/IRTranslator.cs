@@ -229,6 +229,38 @@ namespace Microsoft.PowerFx.Core.IR
                         binaryOpResult = new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.TimeDifference, left, unaryNegate2.Child);
                         break;
 
+                    case BinaryOpKind.AddDateAndTime:
+                        if (right is not UnaryOpNode { Op: UnaryOpKind.Negate } unaryNegate3)
+                        {
+                            binaryOpResult = new BinaryOpNode(context.GetIRContext(node), kind, left, right);
+                        }
+                        else
+                        {
+                            binaryOpResult = new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.SubtractDateAndTime, left, unaryNegate3.Child);
+                        }
+
+                        break;
+
+                    case BinaryOpKind.SubtractNumberAndDate:
+                        // Validated in Matrix + Binder
+                        if (right is not UnaryOpNode { Op: UnaryOpKind.Negate } unaryNegate4)
+                        {
+                            throw new NotSupportedException();
+                        }
+
+                        binaryOpResult = new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.SubtractNumberAndDate, left, unaryNegate4.Child);
+                        break;
+
+                    case BinaryOpKind.SubtractNumberAndTime:
+                        // Validated in Matrix + Binder
+                        if (right is not UnaryOpNode { Op: UnaryOpKind.Negate } unaryNegate5)
+                        {
+                            throw new NotSupportedException();
+                        }
+
+                        binaryOpResult = new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.SubtractNumberAndTime, left, unaryNegate5.Child);
+                        break;
+
                     // All others used directly
                     default:
                         binaryOpResult = new BinaryOpNode(context.GetIRContext(node), kind, left, right);

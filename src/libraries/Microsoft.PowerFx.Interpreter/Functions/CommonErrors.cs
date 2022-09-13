@@ -14,7 +14,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 Message = "Runtime type mismatch",
                 Span = irContext.SourceContext,
-                Kind = ErrorKind.Validation
+                Kind = ErrorKind.InvalidArgument
             });
         }
 
@@ -163,6 +163,16 @@ namespace Microsoft.PowerFx.Functions
             return new ErrorValue(irContext, new ExpressionError()
             {
                 Message = $"Not implemented: {message}",
+                Span = irContext.SourceContext,
+                Kind = ErrorKind.NotSupported
+            });
+        }
+
+        public static ErrorValue NotSupportedError(IRContext irContext)
+        {
+            return new ErrorValue(irContext, new ExpressionError()
+            {
+                Message = $"Not supported",
                 Span = irContext.SourceContext,
                 Kind = ErrorKind.NotSupported
             });

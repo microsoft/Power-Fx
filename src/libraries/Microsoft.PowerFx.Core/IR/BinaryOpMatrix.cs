@@ -361,13 +361,41 @@ namespace Microsoft.PowerFx.Core.IR
                     switch (rightType.Kind)
                     {
                         case DKind.Date:
-                            // Number + Date
-                            return BinaryOpKind.AddDayAndDate;
+                            if (node.Right.AsUnaryOpLit()?.Op == UnaryOp.Minus)
+                            {
+                                // Number + '-Date'
+                                return BinaryOpKind.SubtractNumberAndDate;
+                            }
+                            else
+                            {
+                                // Number + Date
+                                return BinaryOpKind.AddDayAndDate;
+                            }
+
                         case DKind.Time:
-                            // Number + Time
-                            return BinaryOpKind.AddNumberAndTime;
+                            if (node.Right.AsUnaryOpLit()?.Op == UnaryOp.Minus)
+                            {
+                                // Number + '-DateTime'
+                                return BinaryOpKind.SubtractNumberAndTime;
+                            }
+                            else
+                            {
+                                // Number + Time
+                                return BinaryOpKind.AddNumberAndTime;
+                            }
+
                         case DKind.DateTime:
-                            return BinaryOpKind.AddDayAndDateTime;
+                            if (node.Right.AsUnaryOpLit()?.Op == UnaryOp.Minus)
+                            {
+                                // Number + '-DateTime'
+                                return BinaryOpKind.SubtractNumberAndDate;
+                            }
+                            else
+                            {
+                                // Number + Date
+                                return BinaryOpKind.AddDayAndDateTime;
+                            }
+
                         default:
                             // Number + Number
                             return BinaryOpKind.AddNumbers;

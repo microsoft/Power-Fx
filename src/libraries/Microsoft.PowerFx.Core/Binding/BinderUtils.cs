@@ -485,17 +485,7 @@ namespace Microsoft.PowerFx.Core.Binding
                             }
 
                         case DKind.Time:
-                            unary = node.Right.AsUnaryOpLit();
-                            if (unary != null && unary.Op == UnaryOp.Minus)
-                            {
-                                // DateTime - Time is an error
-                                return ReportInvalidOperation();
-                            }
-                            else
-                            {
-                                // DateTime + Time = DateTime
-                                return new BinderCheckTypeResult() { Node = node, NodeType = DType.DateTime };
-                            }
+                            return new BinderCheckTypeResult { Node = node, NodeType = DType.DateTime };
 
                         default:
                             // DateTime + number = DateTime
@@ -521,17 +511,7 @@ namespace Microsoft.PowerFx.Core.Binding
                             }
 
                         case DKind.Time:
-                            unary = node.Right.AsUnaryOpLit();
-                            if (unary != null && unary.Op == UnaryOp.Minus)
-                            {
-                                // Date - Time is an error
-                                return ReportInvalidOperation();
-                            }
-                            else
-                            {
-                                // Date + Time = DateTime
-                                return new BinderCheckTypeResult() { Node = node, NodeType = DType.DateTime };
-                            }
+                            return new BinderCheckTypeResult() { Node = node, NodeType = DType.DateTime };
 
                         case DKind.DateTime:
                             // Date + DateTime = number but ONLY if its really subtraction Date + '-DateTime'

@@ -23,6 +23,10 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
         DateDifference,
         TimeDifference,
 
+        SubtractDateAndTime,
+        SubtractNumberAndDate,
+        SubtractNumberAndTime,
+
         MulNumbers,
 
         DivNumbers,

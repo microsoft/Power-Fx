@@ -112,7 +112,8 @@ namespace Microsoft.PowerFx.Functions
                         break;
                 }
 
-                return await targetFunction(runner, context, irContext, runtimeValuesChecked.Select(arg => arg as T).ToArray());
+                var result = await targetFunction(runner, context, irContext, runtimeValuesChecked.Select(arg => arg as T).ToArray());
+                return FiniteChecker(irContext, 0, result);
             };
         }
 
@@ -525,9 +526,29 @@ namespace Microsoft.PowerFx.Functions
 
             return CommonErrors.RuntimeTypeMismatch(irContext);
         }
-        #endregion
 
-        #region Common Runtime Value Checking Pipeline Stages
+        private static FormulaValue DateOrTimeOrDateTime(IRContext irContext, int index, FormulaValue arg)
+        {
+            if (arg is DateValue || arg is TimeValue || arg is DateTimeValue || arg is BlankValue || arg is ErrorValue)
+            {
+                return arg;
+            }
+
+            return CommonErrors.RuntimeTypeMismatch(irContext);
+        }
+
+        private static FormulaValue DateNumberTimeOrDateTime(IRContext irContext, int index, FormulaValue arg)
+        {
+            if (arg is DateValue || arg is DateTimeValue || arg is TimeValue || arg is NumberValue || arg is BlankValue || arg is ErrorValue)
+            {
+                return arg;
+            }
+
+            return CommonErrors.RuntimeTypeMismatch(irContext);
+        }
+#endregion
+
+#region Common Runtime Value Checking Pipeline Stages
         private static FormulaValue FiniteChecker(IRContext irContext, int index, FormulaValue arg)
         {
             if (arg is NumberValue numberValue)

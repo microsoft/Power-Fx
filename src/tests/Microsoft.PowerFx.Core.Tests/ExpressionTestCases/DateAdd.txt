@@ -126,10 +126,8 @@ DateTime(2000,1,1,0,0,0,0)
 >> DateAdd(DateTime(2000,1,1,0,0,0),-1,TimeUnit.Milliseconds)
 DateTime(1999,12,31,23,59,59,999)
 
-// TO BE DETERMINED: Adding fractional values
-// Subtracting 1.9 ms truncated to 1ms
-// >> DateAdd(DateTime(2000,1,1,0,0,0),-1.9,TimeUnit.Milliseconds)
-// DateTime(1999,12,31,23,59,59,999)
+>> DateAdd(DateTime(2000,1,1,0,0,0),-1.9,TimeUnit.Milliseconds)
+DateTime(1999,12,31,23,59,59,998)
 
 >> DateAdd(DateTime(2000,1,1,0,0,0),0,TimeUnit.Milliseconds)
 DateTime(2000,1,1,0,0,0,0)
@@ -138,10 +136,8 @@ DateTime(2000,1,1,0,0,0,0)
 >> DateAdd(DateTime(2000,1,1,0,0,0),1234,TimeUnit.Milliseconds)
 DateTime(2000,1,1,0,0,1,234)
 
-// TO BE DETERMINED: Adding fractional values
-// Adding 1000.9 ms truncates to 1000ms
-// >> DateAdd(DateTime(2000,1,1,0,0,0),1000.9,TimeUnit.Milliseconds)
-// DateTime(2000,1,1,0,0,1,0)
+>> DateAdd(DateTime(2000,1,1,0,0,0),1000.9,TimeUnit.Milliseconds)
+DateTime(2000,1,1,0,0,1,1)
 
 
 // ******************************** SECONDS UNIT PARAMETER ********************************
@@ -153,10 +149,8 @@ DateTime(2000,1,1,0,0,0,0)
 >> DateAdd(DateTime(2000,1,1,0,0,0),-1,TimeUnit.Seconds)
 DateTime(1999,12,31,23,59,59,0)
 
-// TO BE DETERMINED: Adding fractional values
-// Subtracting 1.9s should subtract 1s
-// >> DateAdd(DateTime(2000,1,1,0,0,0),-1.9,TimeUnit.Seconds)
-// DateTime(1999,12,31,23,59,59,0)
+>> DateAdd(DateTime(2000,1,1,0,0,0),-1.9,TimeUnit.Seconds)
+DateTime(1999,12,31,23,59,58,100)
 
 >> DateAdd(DateTime(2000,1,1,0,0,0),0,TimeUnit.Seconds)
 DateTime(2000,1,1,0,0,0,0)
@@ -164,10 +158,8 @@ DateTime(2000,1,1,0,0,0,0)
 >> DateAdd(DateTime(2000,1,1,0,0,0),1,TimeUnit.Seconds)
 DateTime(2000,1,1,0,0,1,0)
 
-// TO BE DETERMINED: Adding fractional values
-// Fractional parameter is truncated
-// >> DateAdd(DateTime(2000,1,1,0,0,0),1.9,TimeUnit.Seconds)
-// DateTime(2000,1,1,0,0,1,0)
+>> DateAdd(DateTime(2000,1,1,0,0,0),1.9,TimeUnit.Seconds)
+DateTime(2000,1,1,0,0,1,900)
 
 // ******************************** MINUTES UNIT PARAMETER ********************************
 
@@ -177,10 +169,8 @@ DateTime(2000,1,1,0,0,0,0)
 >> DateAdd(DateTime(2000,1,1,0,0,0),-1,TimeUnit.Minutes)
 DateTime(1999,12,31,23,59,0,0)
 
-// TO BE DETERMINED: Adding fractional values
-// Fractional parameter is truncated
-// >> DateAdd(DateTime(2000,1,1,0,0,0),-1.9,TimeUnit.Minutes)
-// DateTime(1999,12,31,23,59,0,0)
+>> DateAdd(DateTime(2000,1,1,0,0,0),-1.9,TimeUnit.Minutes)
+DateTime(1999,12,31,23,58,6,0)
 
 >> DateAdd(DateTime(2000,1,1,0,0,0),0,TimeUnit.Minutes)
 DateTime(2000,1,1,0,0,0,0)
@@ -188,10 +178,8 @@ DateTime(2000,1,1,0,0,0,0)
 >> DateAdd(DateTime(2000,1,1,0,0,0),1,TimeUnit.Minutes)
 DateTime(2000,1,1,0,1,0,0)
 
-// TO BE DETERMINED: Adding fractional values
-// Fractional parameter is truncated
-// >> DateAdd(DateTime(2000,1,1,0,0,0),1.9,TimeUnit.Minutes)
-// DateTime(2000,1,1,0,1,0,0)
+>> DateAdd(DateTime(2000,1,1,0,0,0),1.9,TimeUnit.Minutes)
+DateTime(2000,1,1,0,1,54,0)
 
 
 // ******************************** HOURS UNIT PARAMETER ********************************
@@ -202,10 +190,8 @@ DateTime(2000,1,1,0,0,0,0)
 >> DateAdd(DateTime(2000,1,1,0,0,0),-1,TimeUnit.Hours)
 DateTime(1999,12,31,23,0,0,0)
 
-// TO BE DETERMINED: Adding fractional values
-// Fractional parameter is truncated
-// >> DateAdd(DateTime(2000,1,1,0,0,0),-1.9,TimeUnit.Hours)
-// DateTime(1999,12,31,23,0,0,0)
+>> DateAdd(DateTime(2000,1,1,0,0,0),-1.9,TimeUnit.Hours)
+DateTime(1999,12,31,22,6,0,0)
 
 >> DateAdd(DateTime(2000,1,1,0,0,0),0,TimeUnit.Hours)
 DateTime(2000,1,1,0,0,0,0)
@@ -213,10 +199,8 @@ DateTime(2000,1,1,0,0,0,0)
 >> DateAdd(DateTime(2000,1,1,0,0,0),1,TimeUnit.Hours)
 DateTime(2000,1,1,1,0,0,0)
 
-// TO BE DETERMINED: Adding fractional values
-// Fractional parameter is truncated
-// >> DateAdd(DateTime(2000,1,1,0,0,0),1.9,TimeUnit.Hours)
-// DateTime(2000,1,1,1,0,0,0)
+>> DateAdd(DateTime(2000,1,1,0,0,0),1.9,TimeUnit.Hours)
+DateTime(2000,1,1,1,54,0,0)
 
 
 // ******************************** DAYS UNIT PARAMETER ********************************
@@ -227,10 +211,8 @@ DateTime(2000,1,1,0,0,0,0)
 >> DateAdd(DateTime(2000,1,1,0,0,0),-1,TimeUnit.Days)
 DateTime(1999,12,31,0,0,0,0)
 
-// TO BE DETERMINED: Adding fractional values
-// Fractional parameter is truncated
-// >> DateAdd(DateTime(2000,1,1,0,0,0),-1.9,TimeUnit.Days)
-// DateTime(1999,12,31,0,0,0,0)
+>> DateAdd(DateTime(2000,1,1,0,0,0),-1.9,TimeUnit.Days)
+DateTime(1999,12,30,2,24,0,0)
 
 >> DateAdd(DateTime(2000,1,1,0,0,0),0,TimeUnit.Days)
 DateTime(2000,1,1,0,0,0,0)
@@ -238,10 +220,8 @@ DateTime(2000,1,1,0,0,0,0)
 >> DateAdd(DateTime(2000,1,1,0,0,0),1,TimeUnit.Days)
 DateTime(2000,1,2,0,0,0,0)
 
-// TO BE DETERMINED: Adding fractional values
-// Fractional parameter is truncated
-// >> DateAdd(DateTime(2000,1,1,0,0,0),1.9,TimeUnit.Days)
-// DateTime(2000,1,2,0,0,0,0)
+>> DateAdd(DateTime(2000,1,1,0,0,0),1.9,TimeUnit.Days)
+DateTime(2000,1,2,21,36,0,0)
 
 // ******************************** MONTHS UNIT PARAMETER ********************************
 
@@ -326,9 +306,7 @@ DateTime(1900,4,30,0,0,0,0)
 >> DateAdd(DateTime(1900,1,31,0,0,0),3,TimeUnit.Quarters)
 DateTime(1900,10,31,0,0,0,0)
 
-
 // ************** DEFAULT UNIT PARAMETER (Default Unit parameter is "TimeUnit.Days",when no Unit parameter is passed) **************
-
 
 >> DateAdd(DateTime(2000,1,1,0,0,0),-0)
 DateTime(2000,1,1,0,0,0,0)

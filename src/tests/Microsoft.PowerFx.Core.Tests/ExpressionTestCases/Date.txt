@@ -64,6 +64,7 @@ Date(2012,6,10)
 >> Date(2012,7,100)
 Date(2012,10,8)
 
+// Parameters are truncated
 >> Date(1900.67,2.7,12.2)
 Date(1900,2,12)
 
@@ -214,9 +215,32 @@ true
 >> Day(Date(1976,1,4) + Time(12,30,15))
 4
 
-// Excel-style date math
+// ************************* Excel-style date math ************************
+
 >> Date(2001, 2, 14) + 2
-Date(2001,2,16)
+DateTime(2001,2,16,0,0,0,0)
+
+>> Date(2001, 2, 14) - 10
+DateTime(2001,2,4,0,0,0,0)
+
+>> Date(2001, 2, 14) + 2.3
+DateTime(2001,2,16,7,12,0,0)
+
+>> Date(2001, 2, 14) - 2.3
+DateTime(2001,2,11,16,48,0,0)
+
+// Across DST
+>> Date(2022, 1, 1) + 180
+DateTime(2022,6,30,0,0,0,0)
+
+>> Date(2022, 7, 1) + 180
+DateTime(2022,12,28,0,0,0,0)
+
+>> Date(2022, 6, 30) - 180
+DateTime(2022,1,1,0,0,0,0)
+
+>> Date(2022, 12, 28) - 180
+DateTime(2022,7,1,0,0,0,0)
 
 // Date difference
 >> Date(2022, 1, 30) - Date(2022, 1, 15)
@@ -225,8 +249,35 @@ Date(2001,2,16)
 >> Date(2022, 1, 15) - Date(2022, 1, 30)
 -15
 
->> Date(2022, 1/0, 15) - Date(2022, 1, 30)
-#Error(Kind=Div0)
+>> Date(2022, 10, 1) + Time(12, 34, 56)
+DateTime(2022,10,1,12,34,56,0)
+
+>> Time(12, 34, 56) + Date(2022, 10, 1)
+DateTime(2022,10,1,12,34,56,0)
+
+>> Date(2022, 10, 10) - Time(12, 34, 56)
+DateTime(2022,10,9,11,25,4,0)
+
+>> DateTime(2022, 10, 10, 19, 0, 0) - Time(12, 34, 56)
+DateTime(2022,10,10,6,25,4,0)
+
+>> DateTime(2022, 1, 30, 0, 0, 0) + Date(2022, 1, 15)
+Errors: Error 31-32: This operation isn't valid on these types: DateTime, Date.
+
+>> Date(2022, 1, 30) + Date(2022, 1, 15)
+Errors: Error 18-19: This operation isn't valid on these types: Date, Date.
+
+>> Date(2022, 1, 1) + DateTime(2022, 1, 30, 0, 0, 0)
+Errors: Error 17-18: This operation isn't valid on these types: Date, DateTime.
+
+>> DateTime(2022, 1, 1, 12, 34, 56) + DateTime(2022, 1, 30, 0, 0, 0)
+Errors: Error 33-34: This operation isn't valid on these types: DateTime, DateTime.
+
+>> 70 - DateTime(1900, 1, 1, 0, 0, 0)
+#Error(Kind=NotSupported)
+
+>> 80 - Date(1900, 1, 1)
+#Error(Kind=NotSupported)
 
 // ************************* OVERFLOWS AND UNDERFLOWS ************************
 
@@ -277,6 +328,16 @@ Date(2022,1,1)
 
 >> Year(44811)
 2022
+
+// Boolean to date (should fail)
+>> Day(true)
+Errors: Error 4-8: Invalid argument type (Boolean). Expecting a DateTime value instead.
+
+>> Month(true)
+Errors: Error 6-10: Invalid argument type (Boolean). Expecting a DateTime value instead.
+
+>> Year(true)
+Errors: Error 5-9: Invalid argument type (Boolean). Expecting a DateTime value instead.
 
 // ***************************** BLANKS AND ERRORS *****************************
 

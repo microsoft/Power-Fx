@@ -349,6 +349,8 @@ namespace Microsoft.PowerFx
                     return OperatorDateDifference(this, context, node.IRContext, args);
                 case BinaryOpKind.TimeDifference:
                     return OperatorTimeDifference(this, context, node.IRContext, args);
+                case BinaryOpKind.SubtractDateAndTime:
+                    return OperatorSubtractDateAndTime(this, context, node.IRContext, args);
                 case BinaryOpKind.LtDateTime:
                     return OperatorLtDateTime(this, context, node.IRContext, args);
                 case BinaryOpKind.LeqDateTime:

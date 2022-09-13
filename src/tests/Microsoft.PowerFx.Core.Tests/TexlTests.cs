@@ -15,8 +15,6 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("DateTimeValue(\"1 Jan 2015\") + Date(2000,1,1)")]
         [InlineData("Date(2000,1,1) + Date(1999,1,1)")]
         [InlineData("Date(2000,1,1) + DateTimeValue(\"1 Jan 2015\")")]
-        [InlineData("DateTimeValue(\"1 Jan 2015\") - Time(20,1,1)")]
-        [InlineData("DateValue(\"1 Jan 2015\") - Time(20,1,1)")]
         [InlineData("Time(20,1,1) - DateTimeValue(\"1 Jan 2015\")")]
         [InlineData("Time(20,1,1) - Date(2000,1,1)")]
         public void TexlDateOverloads_Negative(string script)
@@ -53,6 +51,8 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("Time(20,1,1) + Time(19,1,1)", "T")]
         [InlineData("DateTimeValue(\"1 Jan 2015\") + Time(20,1,1)", "d")]
         [InlineData("Time(20,1,1) + DateTimeValue(\"1 Jan 2015\")", "d")]
+        [InlineData("DateTimeValue(\"1 Jan 2015\") - Time(20,1,1)", "d")]
+        [InlineData("DateValue(\"1 Jan 2015\") - Time(20,1,1)", "d")]
         public void TexlDateOverloads(string expression, string expectedType)
         {
             var engine = new Engine(new PowerFxConfig());

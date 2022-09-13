@@ -189,6 +189,36 @@ namespace Microsoft.PowerFx.Functions
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
             targetFunction: TimeDifference);
 
+        public static readonly AsyncFunctionPtr OperatorSubtractDateAndTime = StandardErrorHandling<FormulaValue>(
+            expandArguments: NoArgExpansion,
+            replaceBlankValues: DoNotReplaceBlank,
+            checkRuntimeTypes: ExactSequence(
+                DateOrDateTime,
+                ExactValueType<TimeValue>),
+            checkRuntimeValues: DeferRuntimeValueChecking,
+            returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+            targetFunction: SubtractDateAndTime);
+
+        public static readonly AsyncFunctionPtr OperatorSubtractNumberAndDate = StandardErrorHandling<FormulaValue>(
+            expandArguments: NoArgExpansion,
+            replaceBlankValues: DoNotReplaceBlank,
+            checkRuntimeTypes: ExactSequence(
+                ExactValueType<NumberValue>,
+                DateOrDateTime),
+            checkRuntimeValues: DeferRuntimeValueChecking,
+            returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+            targetFunction: SubtractNumberAndDate);
+
+        public static readonly AsyncFunctionPtr OperatorSubtractNumberAndTime = StandardErrorHandling<FormulaValue>(
+            expandArguments: NoArgExpansion,
+            replaceBlankValues: DoNotReplaceBlank,
+            checkRuntimeTypes: ExactSequence(
+                ExactValueType<NumberValue>,
+                ExactValueType<TimeValue>),
+            checkRuntimeValues: DeferRuntimeValueChecking,
+            returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+            targetFunction: SubtractNumberAndTime);
+
         public static readonly AsyncFunctionPtr OperatorLtDateTime = StandardErrorHandling<FormulaValue>(
             expandArguments: NoArgExpansion,
             replaceBlankValues: ReplaceBlankWith(
@@ -646,6 +676,37 @@ namespace Microsoft.PowerFx.Functions
 
             var result = arg0.Value.Subtract(arg1.Value);
             return new NumberValue(irContext, result.TotalDays);
+        }
+
+        private static FormulaValue SubtractDateAndTime(IRContext irContext, FormulaValue[] args)
+        {
+            DateTime arg0;
+            switch (args[0])
+            {
+                case DateTimeValue dtv:
+                    arg0 = dtv.Value;
+                    break;
+                case DateValue dv:
+                    arg0 = dv.Value;
+                    break;
+                default:
+                    return CommonErrors.RuntimeTypeMismatch(irContext);
+            }
+
+            var arg1 = (TimeValue)args[1];
+
+            var result = arg0.Subtract(arg1.Value);
+            return new DateTimeValue(irContext, result);
+        }
+
+        private static FormulaValue SubtractNumberAndDate(IRContext irContext, FormulaValue[] args)
+        {
+            return CommonErrors.NotSupportedError(irContext);
+        }
+
+        private static FormulaValue SubtractNumberAndTime(IRContext irContext, FormulaValue[] args)
+        {
+            return CommonErrors.NotSupportedError(irContext);
         }
 
         private static FormulaValue LtDateTime(IRContext irContext, FormulaValue[] args)
