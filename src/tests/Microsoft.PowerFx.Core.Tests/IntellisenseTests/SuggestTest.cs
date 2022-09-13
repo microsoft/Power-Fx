@@ -105,7 +105,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("[{test:\",test\"}].test.| ")]
 
         // We do, however, if the one column table is a literal.
-        [InlineData("[\"test\"].| ", "Value")]
+        [InlineData("[\"test\"].| ")]
         [InlineData("Calendar.|", "MonthsLong", "MonthsShort", "WeekdaysLong", "WeekdaysShort")]
         [InlineData("Calendar.Months|", "MonthsLong", "MonthsShort")]
         [InlineData("Color.AliceBl|", "AliceBlue")]
@@ -170,13 +170,24 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("DisplayMode.D|", "Disabled", "Edit")]
         [InlineData("DisplayMode|", "DisplayMode", "DisplayMode.Disabled", "DisplayMode.Edit", "DisplayMode.View")]
         [InlineData("$\"Hello {DisplayMode|} World!\"", "DisplayMode", "DisplayMode.Disabled", "DisplayMode.Edit", "DisplayMode.View")]
+
+        [InlineData("Table({F1:1}).|")]
+        [InlineData("Table({F1:1},{F1:2}).|")]
+        [InlineData("Table({F1:1, F2:2},{F2:1}).|")]
+        [InlineData("[1,2,3].|")]
         public void TestSuggest(string expression, params string[] expectedSuggestions)
         {
             // Note that the expression string needs to have balanced quotes or we hit a bug in NUnit running the tests:
             //   https://github.com/nunit/nunit3-vs-adapter/issues/691
 
             Preview.FeatureFlags.StringInterpolation = true;
-            var actualSuggestions = SuggestStrings(expression, Default);
+            var config = Default;
+            var actualSuggestions = SuggestStrings(expression, config);
+            Assert.Equal(expectedSuggestions, actualSuggestions);
+
+            // With adjusted config 
+            AdjustConfig(config);
+            actualSuggestions = SuggestStrings(expression, config);
             Assert.Equal(expectedSuggestions, actualSuggestions);
         }
 
@@ -194,7 +205,13 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         public void TestSuggestEmptyEnumList(string expression, params string[] expectedSuggestions)
         {
             Preview.FeatureFlags.StringInterpolation = true;
-            var actualSuggestions = SuggestStrings(expression, EmptyEverything);
+            var config = EmptyEverything;
+            var actualSuggestions = SuggestStrings(expression, config);
+            Assert.Equal(expectedSuggestions, actualSuggestions);
+
+            // With adjusted config 
+            AdjustConfig(config);
+            actualSuggestions = SuggestStrings(expression, config);
             Assert.Equal(expectedSuggestions, actualSuggestions);
         }
 
@@ -207,8 +224,24 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         public void TestSuggestEmptyAll(string expression, params string[] expectedSuggestions)
         {
             Preview.FeatureFlags.StringInterpolation = true;
-            var actualSuggestions = SuggestStrings(expression, MinimalEnums);
+            var config = MinimalEnums;
+            var actualSuggestions = SuggestStrings(expression, config);
             Assert.Equal(expectedSuggestions, actualSuggestions);
+
+            // With adjusted config 
+            AdjustConfig(config);
+            actualSuggestions = SuggestStrings(expression, config);
+            Assert.Equal(expectedSuggestions, actualSuggestions);
+        }
+
+        // Add an extra (empy) symbol table into the config and ensure we get the same results. 
+        private void AdjustConfig(PowerFxConfig config)
+        {
+            config.SymbolTable = new SymbolTable 
+            {
+                Parent = config.SymbolTable,
+                DebugName = "Extra Table"
+            };
         }
 
         /// <summary>
@@ -234,7 +267,13 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("[@|")]
         public void TestNonEmptySuggest(string expression, string context = null)
         {
+            var config = Default;
             var actualSuggestions = SuggestStrings(expression, Default, context);
+            Assert.True(actualSuggestions.Length > 0);
+
+            // With adjusted config 
+            AdjustConfig(config);
+            actualSuggestions = SuggestStrings(expression, config);
             Assert.True(actualSuggestions.Length > 0);
         }
 
@@ -252,7 +291,13 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         {
             Assert.NotNull(context);
 
-            var actualSuggestions = SuggestStrings(expression, Default, context);
+            var config = Default;
+            var actualSuggestions = SuggestStrings(expression, config, context);
+            Assert.Equal(expectedSuggestions, actualSuggestions);
+
+            // With adjusted config 
+            AdjustConfig(config);
+            actualSuggestions = SuggestStrings(expression, config, context);
             Assert.Equal(expectedSuggestions, actualSuggestions);
         }
         
@@ -276,6 +321,11 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             
             // Intellisense requires iterating the field names for some operations
             Assert.Equal(requiresExpansion, lazyInstance.EnumerableIterated);
+
+            // With adjusted config 
+            AdjustConfig(config);
+            actualSuggestions = SuggestStrings(expression, config, lazyInstance);
+            Assert.Equal(expectedSuggestions, actualSuggestions);
         }
 
         private class LazyRecursiveRecordType : RecordType

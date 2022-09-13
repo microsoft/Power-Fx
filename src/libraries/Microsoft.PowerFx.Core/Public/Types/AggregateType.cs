@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Xml.Linq;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
@@ -56,6 +57,15 @@ namespace Microsoft.PowerFx.Types
 
             type = Build(dType);
             return true;
+        }
+
+        internal bool HasField(string displayOrLogicalName)
+        {
+            Contracts.CheckNonEmpty(displayOrLogicalName, nameof(displayOrLogicalName));
+
+            return DType.TryGetDisplayNameForColumn(_type, displayOrLogicalName, out _) ||
+                   DType.TryGetLogicalNameForColumn(_type, displayOrLogicalName, out _) ||
+                   _type.TryGetType(new DName(displayOrLogicalName), out _);
         }
 
         /// <summary>

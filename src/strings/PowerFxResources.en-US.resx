@@ -5020,6 +5020,22 @@
     <value>change_record(s)</value>
     <comment>function_parameter - Third parameter for the Patch function. One or more records that contain properties to modify in the BaseRecord. Change records are processed in order from the beginning of the argument list to the end, with later property values overriding earlier ones.</comment>
   </data>
+  <data name="AboutRemove" xml:space="preserve">
+    <value>Removes a specific record or records from a data source</value>
+    <comment>Description of 'Remove' function.</comment>
+  </data>
+  <data name="RemoveDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    <comment>function_parameter - First parameter for the Remove function. The data source that contains the records that you want to remove from.</comment>
+  </data>
+  <data name="RemoveRecordsArg" xml:space="preserve">
+    <value>remove_record(s)</value>
+    <comment>function_parameter - One or more records to be removed.</comment>
+  </data>
+  <data name="ErrRemoveAllArg" xml:space="preserve">
+    <value>If provided, last argument must be 'All'. Is there a typo?</value>
+    <comment>Error Message.</comment>
+  </data>
   <data name="PenMode_Draw_DisplayName" xml:space="preserve">
     <value>Draw</value>
     <comment>Display text representing the Draw value of PenMode enum (PenMode_Draw_Name). The possible values for this enumeration are: Draw, Erase.</comment>

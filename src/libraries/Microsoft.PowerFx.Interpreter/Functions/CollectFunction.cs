@@ -100,6 +100,9 @@ namespace Microsoft.PowerFx.Interpreter
             var fValid = true;
             DType itemType = DType.Invalid;
 
+            DType dataSourceType = argTypes[0];
+            var tableType = (TableType)FormulaType.Build(dataSourceType);
+
             var argc = args.Length;
 
             for (var i = 1; i < argc; i++)
@@ -112,6 +115,16 @@ namespace Microsoft.PowerFx.Interpreter
                     errors.EnsureError(args[i], TexlStrings.ErrBadType_Type, argType.GetKindString());
                     fValid = false;
                     continue;
+                }
+
+                foreach (var typedName in argType.GetNames(DPath.Root))
+                {
+                    if (!tableType.HasField(typedName.Name))
+                    {
+                        dataSourceType.ReportNonExistingName(FieldNameKind.Display, errors, typedName.Name, args[i]);
+                        fValid = false;
+                        continue;
+                    }
                 }
 
                 // Promote the arg type to a table to facilitate unioning.

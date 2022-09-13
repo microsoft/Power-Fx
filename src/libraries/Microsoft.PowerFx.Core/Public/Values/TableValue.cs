@@ -1,9 +1,13 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Utils;
@@ -28,6 +32,8 @@ namespace Microsoft.PowerFx.Types
         public abstract IEnumerable<DValue<RecordValue>> Rows { get; }
 
         public bool IsColumn => IRContext.ResultType._type.IsColumn;
+
+        public new TableType Type => (TableType)base.Type;
 
         internal TableValue(IRContext irContext)
             : base(irContext)
@@ -79,22 +85,54 @@ namespace Microsoft.PowerFx.Types
             });
         }
 
+        private static ErrorValue NotImplemented(IRContext irContext, [CallerMemberName] string methodName = null)
+        {
+            return new ErrorValue(irContext, new ExpressionError()
+            {
+                Message = $"{methodName} is not supported on this table instance.",
+                Span = irContext.SourceContext,
+                Kind = ErrorKind.Internal
+            });
+        }
+
         // Return appended value 
         // - Error, 
         // - with updated values
         // Async because derived classes may back this with a network call. 
         public virtual async Task<DValue<RecordValue>> AppendAsync(RecordValue record)
         {
-            // fails by default
-            throw new System.NotImplementedException("It is not possible to append to a TableValue directly.");
+            return DValue<RecordValue>.Of(NotImplemented(IRContext));
         }
 
-        // Return boolean value
-        // Async because derived classes may back this with a network call. 
-        public virtual async Task<DValue<BooleanValue>> RemoveAsync(RecordValue record)
+        public virtual async Task<DValue<BooleanValue>> RemoveAsync(IEnumerable<FormulaValue> recordsToRemove, bool all, CancellationToken cancel)
         {
-            // fails by default
-            throw new System.NotImplementedException("It is not possible to remove from a TableValue directly.");
+            return DValue<BooleanValue>.Of(NotImplemented(IRContext));
+        }
+
+        /// <summary>
+        /// Patch implementation for derived classes.
+        /// </summary>
+        /// <param name="baseRecord">A record to modify.</param>
+        /// <param name="changeRecord">A record that contains properties to modify the base record. All display names are resolved.</param>
+        /// <returns></returns>
+        protected virtual async Task<DValue<RecordValue>> PatchCoreAsync(RecordValue baseRecord, RecordValue changeRecord)
+        {
+            return DValue<RecordValue>.Of(NotImplemented(IRContext));
+        }
+
+        /// <summary>
+        /// Modifies one record in a data source.
+        /// </summary>
+        /// <param name="baseRecord">A record to modify.</param>
+        /// <param name="changeRecord">A record that contains properties to modify the base record.</param>
+        /// <returns>The updated record.</returns>
+        public async Task<DValue<RecordValue>> PatchAsync(RecordValue baseRecord, RecordValue changeRecord)
+        {
+            var recordType = Type.ToRecord();
+
+            // IR has already resolved to logical names because of 
+            // RequiresDataSourceScope, ArgMatchesDatasourceType on function.
+            return await PatchCoreAsync(baseRecord, changeRecord);
         }
 
         public override object ToObject()

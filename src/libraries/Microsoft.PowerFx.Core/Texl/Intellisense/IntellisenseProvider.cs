@@ -27,7 +27,7 @@ namespace Microsoft.PowerFx.Intellisense
 
         internal static IIntellisense GetIntellisense(PowerFxConfig config)
         {
-            return new Intellisense(config, config.EnumStoreBuilder.Build(), SuggestionHandlers);
+            return new Intellisense(config, config.EnumStore, SuggestionHandlers);
         }
     }
 }

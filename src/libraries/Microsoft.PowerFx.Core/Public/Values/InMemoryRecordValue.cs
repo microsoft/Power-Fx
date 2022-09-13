@@ -50,25 +50,23 @@ namespace Microsoft.PowerFx.Types
             return _fields.TryGetValue(fieldName, out result);
         }
 
-        public override async Task<DValue<RecordValue>> UpdateFields(IEnumerable<KeyValuePair<string, FormulaValue>> record)
+        public override async Task<DValue<RecordValue>> UpdateFieldsAsync(RecordValue changeRecord)
         {
             if (_mutableFields == null)
             {
-                return await base.UpdateFields(record);
+                return await base.UpdateFieldsAsync(changeRecord);
             }
 
             var fields = new List<NamedValue>();
 
-            foreach (var field in record)
+            foreach (var field in changeRecord.Fields)
             {
-                var fieldName = field.Key;
+                _mutableFields[field.Name] = field.Value;
+            }
 
-                // Throws if field is missing
-                Type.GetFieldType(fieldName);
-
-                _mutableFields[fieldName] = field.Value;
-
-                fields.Add(new NamedValue(field.Key, field.Value));
+            foreach (var kvp in _fields)
+            {
+                fields.Add(new NamedValue(kvp.Key, kvp.Value));
             }
 
             return DValue<RecordValue>.Of(NewRecordFromFields(fields));

@@ -25,7 +25,7 @@ namespace Microsoft.PowerFx
     /// </summary>
     [DebuggerDisplay("{_debugName}")]
     [ThreadSafeImmutable]
-    public class ReadOnlySymbolTable : INameResolver, IGlobalSymbolNameResolver
+    public class ReadOnlySymbolTable : INameResolver, IGlobalSymbolNameResolver, IEnumStore
     {
         // Changed on each update. 
         // Host can use to ensure that a symbol table wasn't mutated on us.                 
@@ -103,6 +103,7 @@ namespace Microsoft.PowerFx
 
         // Which enums are available. 
         // These do not compose - only bottom one wins. 
+        // ComposedReadOnlySymbolTable will handle composition by looking up in each symbol table. 
         private protected EnumStoreBuilder _enumStoreBuilder;
         private EnumSymbol[] _enumSymbolCache;
 
@@ -125,6 +126,8 @@ namespace Microsoft.PowerFx
                 return _enumSymbolCache;
             }
         }
+
+        IEnumerable<EnumSymbol> IEnumStore.EnumSymbols => GetEnumSymbolSnapshot;
 
         internal IEnumerable<TexlFunction> Functions => ((INameResolver)this).Functions;
 

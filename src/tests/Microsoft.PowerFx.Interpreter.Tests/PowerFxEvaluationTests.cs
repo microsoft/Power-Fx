@@ -54,30 +54,130 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
         private static (RecalcEngine engine, RecordValue parameters) MutationFunctionsTestSetup(PowerFxConfig config)
         {
-            var symbol = new SymbolTable();
+            /*
+             * Record r1 => {![Field1:n, Field2:s, Field3:d, Field4:b]}
+             * Record r2 => {![Field1:n, Field2:s, Field3:d, Field4:b]}
+             * Record rwr1 => {![Field1:n, Field2:![Field2_1:n, Field2_2:s, Field2_3:![Field2_3_1:n, Field2_3_2:s]], Field3:b]}
+             * Record rwr2 => {![Field1:n, Field2:![Field2_1:n, Field2_2:s, Field2_3:![Field2_3_1:n, Field2_3_2:s]], Field3:b]}
+             * Record rwr3 => {![Field1:n, Field2:![Field2_1:n, Field2_2:s, Field2_3:![Field2_3_1:n, Field2_3_2:s]], Field3:b]}
+             * Record r_empty => {}
+             * Table t1(r1) => Type (Field1, Field2, Field3, Field4)
+             * Table t2(rwr1, rwr2, rwr3)
+             */
 
-            RecordValue r1 = FormulaValue.NewRecordFromFields(
+            var rType = RecordType.Empty()
+                .Add(new NamedFormulaType("Field1", FormulaType.Number, "DisplayNameField1"))
+                .Add(new NamedFormulaType("Field2", FormulaType.String, "DisplayNameField2"))
+                .Add(new NamedFormulaType("Field3", FormulaType.DateTime, "DisplayNameField3"))
+                .Add(new NamedFormulaType("Field4", FormulaType.Boolean, "DisplayNameField4"));
+
+            var r1Fields = new List<NamedValue>()
+            {
                 new NamedValue("Field1", FormulaValue.New(1)),
                 new NamedValue("Field2", FormulaValue.New("earth")),
                 new NamedValue("Field3", FormulaValue.New(DateTime.Parse("1/1/2022").Date)),
-                new NamedValue("Field4", FormulaValue.New(true)));
+                new NamedValue("Field4", FormulaValue.New(true))
+            };
 
-            RecordValue r2 = FormulaValue.NewRecordFromFields(
+            var r2Fields = new List<NamedValue>()
+            {
                 new NamedValue("Field1", FormulaValue.New(2)),
                 new NamedValue("Field2", FormulaValue.New("moon")),
                 new NamedValue("Field3", FormulaValue.New(DateTime.Parse("2/1/2022").Date)),
-                new NamedValue("Field4", FormulaValue.New(false)));
+                new NamedValue("Field4", FormulaValue.New(false))
+            };
 
-            var r_empty = RecordValue.Empty();
+            var r1 = FormulaValue.NewRecordFromFields(rType, r1Fields);
+            var r2 = FormulaValue.NewRecordFromFields(rType, r2Fields);
+            var rEmpty = RecordValue.Empty();
 
-            var t1 = FormulaValue.NewTable(r1.Type, new List<RecordValue>() { r1 });
+            var t1 = FormulaValue.NewTable(rType, new List<RecordValue>() { r1 });
+
+#pragma warning disable SA1117 // Parameters should be on same line or separate lines
+            var recordWithRecordType = RecordType.Empty()
+                .Add(new NamedFormulaType("Field1", FormulaType.Number, "DisplayNameField1"))
+                .Add(new NamedFormulaType("Field2", RecordType.Empty()
+                    .Add(new NamedFormulaType("Field2_1", FormulaType.Number, "DisplayNameField2_1"))
+                    .Add(new NamedFormulaType("Field2_2", FormulaType.String, "DisplayNameField2_2"))
+                    .Add(new NamedFormulaType("Field2_3", RecordType.Empty()
+                        .Add(new NamedFormulaType("Field2_3_1", FormulaType.Number, "DisplayNameField2_3_1"))
+                        .Add(new NamedFormulaType("Field2_3_2", FormulaType.String, "DisplayNameField2_3_2")),
+                    "DisplayNameField2_3")),
+                "DisplayNameField2"))
+                .Add(new NamedFormulaType("Field3", FormulaType.Boolean, "DisplayNameField3"));
+#pragma warning restore SA1117 // Parameters should be on same line or separate lines
+
+            var recordWithRecordFields1 = new List<NamedValue>()
+            {
+                new NamedValue("Field1", FormulaValue.New(1)),
+                new NamedValue("Field2", FormulaValue.NewRecordFromFields(new List<NamedValue>()
+                {
+                    new NamedValue("Field2_1", FormulaValue.New(121)),
+                    new NamedValue("Field2_2", FormulaValue.New("2_2")),
+                    new NamedValue("Field2_3", FormulaValue.NewRecordFromFields(new List<NamedValue>()
+                    {
+                        new NamedValue("Field2_3_1", FormulaValue.New(1231)),
+                        new NamedValue("Field2_3_2", FormulaValue.New("common")),
+                    }))
+                })),
+                new NamedValue("Field3", FormulaValue.New(false))
+            };
+
+            var recordWithRecordFields2 = new List<NamedValue>()
+            {
+                new NamedValue("Field1", FormulaValue.New(2)),
+                new NamedValue("Field2", FormulaValue.NewRecordFromFields(new List<NamedValue>()
+                {
+                    new NamedValue("Field2_1", FormulaValue.New(221)),
+                    new NamedValue("Field2_2", FormulaValue.New("2_2")),
+                    new NamedValue("Field2_3", FormulaValue.NewRecordFromFields(new List<NamedValue>()
+                    {
+                        new NamedValue("Field2_3_1", FormulaValue.New(2231)),
+                        new NamedValue("Field2_3_2", FormulaValue.New("common")),
+                    }))
+                })),
+                new NamedValue("Field3", FormulaValue.New(false))
+            };
+
+            var recordWithRecordFields3 = new List<NamedValue>()
+            {
+                new NamedValue("Field1", FormulaValue.New(3)),
+                new NamedValue("Field2", FormulaValue.NewRecordFromFields(new List<NamedValue>()
+                {
+                    new NamedValue("Field2_1", FormulaValue.New(321)),
+                    new NamedValue("Field2_2", FormulaValue.New("2_2")),
+                    new NamedValue("Field2_3", FormulaValue.NewRecordFromFields(new List<NamedValue>()
+                    {
+                        new NamedValue("Field2_3_1", FormulaValue.New(3231)),
+                        new NamedValue("Field2_3_2", FormulaValue.New("common")),
+                    }))
+                })),
+                new NamedValue("Field3", FormulaValue.New(true))
+            };
+
+            var recordWithRecord1 = FormulaValue.NewRecordFromFields(recordWithRecordType, recordWithRecordFields1);
+            var recordWithRecord2 = FormulaValue.NewRecordFromFields(recordWithRecordType, recordWithRecordFields2);
+            var recordWithRecord3 = FormulaValue.NewRecordFromFields(recordWithRecordType, recordWithRecordFields3);
+
+            var t2 = FormulaValue.NewTable(recordWithRecordType, new List<RecordValue>()
+            {
+                recordWithRecord1,
+                recordWithRecord2,
+                recordWithRecord3
+            });
+
+            var symbol = new SymbolTable();
 
             symbol.EnableMutationFunctions();
 
             symbol.AddConstant("t1", t1);
             symbol.AddConstant("r1", r1);
             symbol.AddConstant("r2", r2);
-            symbol.AddConstant("r_empty", r_empty);
+            symbol.AddConstant("t2", t2);
+            symbol.AddConstant("rwr1", recordWithRecord1);
+            symbol.AddConstant("rwr2", recordWithRecord2);
+            symbol.AddConstant("rwr3", recordWithRecord3);
+            symbol.AddConstant("r_empty", rEmpty);
 
             config.SymbolTable = symbol;
 
