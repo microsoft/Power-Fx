@@ -1454,6 +1454,8 @@ namespace Microsoft.PowerFx.Functions
                     BlankValue b => DValue<RecordValue>.Of(b),
                     _ => DValue<RecordValue>.Of((ErrorValue)arg),
                 });
+
+            // Returning List to ensure that the returned table is mutable
             return new InMemoryTableValue(irContext, records.ToList());
         }
 
