@@ -1456,7 +1456,7 @@ namespace Microsoft.PowerFx.Functions
                 });
 
             // Returning List to ensure that the returned table is mutable
-            return new InMemoryTableValue(irContext, records.ToList());
+            return new InMemoryTableValue(irContext, records);
         }
 
         public static ValueTask<FormulaValue> Blank(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)

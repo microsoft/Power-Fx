@@ -43,3 +43,6 @@ Errors: Error 12-13: Invalid argument type. Cannot use Number values in this con
 
 >> Collect(Table({name: "VC"}), {surname: "textInput1"})
 Errors: Error 29-52: The specified column 'surname' does not exist. The column with the most similar name is 'name'.|Error 0-53: The function 'Collect' has some invalid arguments.
+
+>> Collect(FirstN(Table({name: "hello"}), 0), {name: "textInput1"})
+{name:"textInput1"}
