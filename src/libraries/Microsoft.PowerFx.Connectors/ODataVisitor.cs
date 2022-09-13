@@ -183,6 +183,7 @@ namespace Microsoft.PowerFx.Connectors
                 BinaryOpKind.TimeDifference => "-",
                 BinaryOpKind.SubtractDateAndTime => "-",
                 BinaryOpKind.SubtractNumberAndDate => "-",
+                BinaryOpKind.SubtractNumberAndDateTime => "-",
                 BinaryOpKind.SubtractNumberAndTime => "-",
                 BinaryOpKind.DivNumbers => "/",
 

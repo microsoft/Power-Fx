@@ -388,7 +388,7 @@ namespace Microsoft.PowerFx.Core.IR
                             if (node.Right.AsUnaryOpLit()?.Op == UnaryOp.Minus)
                             {
                                 // Number + '-DateTime'
-                                return BinaryOpKind.SubtractNumberAndDate;
+                                return BinaryOpKind.SubtractNumberAndDateTime;
                             }
                             else
                             {

@@ -25,6 +25,7 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
 
         SubtractDateAndTime,
         SubtractNumberAndDate,
+        SubtractNumberAndDateTime,
         SubtractNumberAndTime,
 
         MulNumbers,

@@ -242,6 +242,7 @@ namespace Microsoft.PowerFx.Core.IR
                         break;
 
                     case BinaryOpKind.SubtractNumberAndDate:
+                    case BinaryOpKind.SubtractNumberAndDateTime:
                         // Validated in Matrix + Binder
                         if (right is not UnaryOpNode { Op: UnaryOpKind.Negate } unaryNegate4)
                         {

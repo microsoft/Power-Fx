@@ -62,5 +62,47 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal(expectedDType, result._binding.ResultType);
             Assert.True(result.IsSuccess);
         }
+
+        [Theory]
+        [InlineData("DateAdd([Date(2000,1,1)],1)", "*[Value:d]")]
+        [InlineData("DateAdd([Date(2000,1,1)],[3])", "*[Value:d]")]
+        [InlineData("DateAdd(Table({a:Date(2000,1,1)}),[3])", "*[a:d]")]
+        [InlineData("DateAdd(Date(2000,1,1),[1])", "*[Result:d]")]
+        [InlineData("DateAdd([DateTimeValue(\"1 Jan 2015\")],1)", "*[Value:d]")]
+        [InlineData("DateAdd([DateTimeValue(\"1 Jan 2015\")],[3])", "*[Value:d]")]
+        [InlineData("DateAdd(DateTimeValue(\"1 Jan 2015\"),[1])", "*[Result:d]")]
+        [InlineData("DateDiff([Date(2000,1,1)],[Date(2001,1,1)],\"years\")", "*[Result:n]")]
+        [InlineData("DateDiff(Date(2000,1,1),[Date(2001,1,1)],\"years\")", "*[Result:n]")]
+        [InlineData("DateDiff([Date(2000,1,1)],Date(2001,1,1),\"years\")", "*[Result:n]")]
+        public void TexlDateTableFunctions(string expression, string expectedType)
+        {
+            var engine = new Engine(new PowerFxConfig());
+            var result = engine.Check(expression);
+
+            Assert.True(DType.TryParse(expectedType, out var expectedDType));
+            Assert.Equal(expectedDType, result._binding.ResultType);
+            Assert.True(result.IsSuccess);
+        }
+
+        [Theory]
+        [InlineData("DateAdd([Date(2000,1,1)],1)", "*[Value:d]")]
+        [InlineData("DateAdd([Date(2000,1,1)],[3])", "*[Value:d]")]
+        [InlineData("DateAdd(Table({a:Date(2000,1,1)}),[3])", "*[Value:d]")]
+        [InlineData("DateAdd(Date(2000,1,1),[1])", "*[Value:d]")]
+        [InlineData("DateAdd([DateTimeValue(\"1 Jan 2015\")],1)", "*[Value:d]")]
+        [InlineData("DateAdd([DateTimeValue(\"1 Jan 2015\")],[3])", "*[Value:d]")]
+        [InlineData("DateAdd(DateTimeValue(\"1 Jan 2015\"),[1])", "*[Value:d]")]
+        [InlineData("DateDiff([Date(2000,1,1)],[Date(2001,1,1)],\"years\")", "*[Value:n]")]
+        [InlineData("DateDiff(Date(2000,1,1),[Date(2001,1,1)],\"years\")", "*[Value:n]")]
+        [InlineData("DateDiff([Date(2000,1,1)],Date(2001,1,1),\"years\")", "*[Value:n]")]
+        public void TexlDateTableFunctions_ConsistentOneColumnTableResult(string expression, string expectedType)
+        {
+            var engine = new Engine(new PowerFxConfig(Features.ConsistentOneColumnTableResult));
+            var result = engine.Check(expression);
+
+            Assert.True(DType.TryParse(expectedType, out var expectedDType));
+            Assert.Equal(expectedDType, result._binding.ResultType);
+            Assert.True(result.IsSuccess);
+        }
     }
 }

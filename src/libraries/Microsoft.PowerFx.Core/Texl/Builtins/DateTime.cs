@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
@@ -483,8 +484,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 // for DateTime alone is sufficient.
                 fValid &= CheckDateColumnType(type0, args[0], errors, ref nodeToCoercedTypeMap);
 
-                // Borrow the return type from the 1st arg
-                returnType = type0;
+                var resultColumnType = binding.Features.HasFlag(Features.ConsistentOneColumnTableResult)
+                    ? ColumnName_Value
+                    : type0.GetNames(DPath.Root).Single().Name;
+                returnType = DType.CreateTable(new TypedName(DType.DateTime, resultColumnType));
             }
             else
             {
