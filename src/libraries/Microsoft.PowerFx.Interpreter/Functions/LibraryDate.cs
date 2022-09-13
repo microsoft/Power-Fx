@@ -110,14 +110,7 @@ namespace Microsoft.PowerFx.Functions
                     newDate = TimeZoneInfo.ConvertTimeFromUtc(newDate, timeZoneInfo);
                 }
 
-                if (args[0] is DateTimeValue)
-                {
-                    return new DateTimeValue(irContext, newDate);
-                }
-                else
-                {
-                    return new DateValue(irContext, newDate.Date);
-                }
+                return new DateTimeValue(irContext, newDate);
             }
             catch
             {

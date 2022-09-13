@@ -417,13 +417,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             if (fValid)
             {
                 // Arg0 should be either a DateTime or Date.
-                if (type0.Kind == DKind.Date)
-                {
-                    // Max resolution we support right now is "Days". If we start supporting sub-day resolutions
-                    // then we need to revisit this and return DateTime in those cases.
-                    returnType = DType.Date;
-                }
-                else if (type0.Kind == DKind.DateTime)
+                if (type0.Kind == DKind.Date || type0.Kind == DKind.DateTime)
                 {
                     returnType = ReturnType;
                 }
@@ -494,13 +488,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
             else
             {
-                if (type0.Kind == DKind.DateTime)
+                if (type0.Kind == DKind.DateTime || type0.Kind == DKind.Date)
                 {
                     returnType = DType.CreateTable(new TypedName(DType.DateTime, GetOneColumnTableResultName(binding)));
-                }
-                else if (type0.Kind == DKind.Date)
-                {
-                    returnType = DType.CreateTable(new TypedName(DType.Date, GetOneColumnTableResultName(binding)));
                 }
                 else if (type0.CoercesTo(DType.DateTime))
                 {
