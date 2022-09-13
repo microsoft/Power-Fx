@@ -15,7 +15,8 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
             Converters =
             {
-                new FormulaTypeJsonConverter()
+                // Serialize types without accounting for any defined type names
+                new FormulaTypeJsonConverter(new Core.DefinedTypeSymbolTable())
             }
         };
 

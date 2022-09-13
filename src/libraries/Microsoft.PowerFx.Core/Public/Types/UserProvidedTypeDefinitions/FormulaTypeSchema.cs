@@ -47,16 +47,15 @@ namespace Microsoft.PowerFx.Core
         {
             return Hashing.CombineHash(
                 Type.GetHashCode(),
-                Description.GetHashCode(),
-                Help.GetHashCode(),
-                Fields.GetHashCode());
+                Description?.GetHashCode() ?? 1,
+                Help?.GetHashCode() ?? 1,
+                Fields?.GetHashCode() ?? 1);
         }
     }
-    
-    [JsonConverter(typeof(SchemaTypeNameConverter))]
-    public readonly struct SchemaTypeName
+
+    internal readonly struct SchemaTypeName
     {
-        public string Type { get; init; }
+        public string Name { get; init; }
 
         public bool IsTable { get; init; }
     }

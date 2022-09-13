@@ -163,8 +163,6 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Core.App.IExternalEnabledFeatures",
                 "Microsoft.PowerFx.Core.DisplayNameProvider",
                 "Microsoft.PowerFx.Core.DisplayNameUtility",
-                "Microsoft.PowerFx.Core.FormulaTypeSchema",
-                "Microsoft.PowerFx.Core.FormulaTypeToSchemaConverter",
                 "Microsoft.PowerFx.Core.Localization.ErrorResourceKey",                
                 "Microsoft.PowerFx.Core.RenameDriver",
                 "Microsoft.PowerFx.Core.Utils.DName",

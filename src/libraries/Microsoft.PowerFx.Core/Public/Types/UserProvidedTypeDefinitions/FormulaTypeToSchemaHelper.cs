@@ -20,7 +20,7 @@ namespace Microsoft.PowerFx.Core
                 
         public static FormulaType ToFormulaType(this FormulaTypeSchema schema, DefinedTypeSymbolTable definedTypeSymbols)
         {
-            var typeName = schema.Type.Type;
+            var typeName = schema.Type.Name;
 
             if (TryLookupType(typeName, definedTypeSymbols, out var actualType))
             {
@@ -39,7 +39,7 @@ namespace Microsoft.PowerFx.Core
                 return actualType;
             }
 
-            if (typeName != RecordTypeName.Type)
+            if (typeName != RecordTypeName.Name)
             {
                 throw new NotSupportedException($"Unable to resolve type {typeName}");
             }
@@ -53,9 +53,9 @@ namespace Microsoft.PowerFx.Core
             return schema.Type.IsTable ? result.ToTable() : result;
         }
 
-        private static SchemaTypeName RecordTypeName => new () { Type = "Record", IsTable = false };
+        private static SchemaTypeName RecordTypeName => new () { Name = "Record", IsTable = false };
 
-        private static SchemaTypeName TableTypeName => new () { Type = "Record", IsTable = true };
+        private static SchemaTypeName TableTypeName => new () { Name = "Record", IsTable = true };
 
         private static FormulaTypeSchema ToSchema(FormulaType type, DefinedTypeSymbolTable definedTypeSymbols, int maxDepth)
         {
@@ -68,7 +68,7 @@ namespace Microsoft.PowerFx.Core
             {
                 return new FormulaTypeSchema()
                 {
-                    Type = new SchemaTypeName() { Type = typeName }
+                    Type = new SchemaTypeName() { Name = typeName }
                 };
             }
 
@@ -77,7 +77,7 @@ namespace Microsoft.PowerFx.Core
             {                
                 return new FormulaTypeSchema()
                 {
-                    Type = new SchemaTypeName() { Type = typeName, IsTable = true }
+                    Type = new SchemaTypeName() { Name = typeName, IsTable = true }
                 };
             }
 

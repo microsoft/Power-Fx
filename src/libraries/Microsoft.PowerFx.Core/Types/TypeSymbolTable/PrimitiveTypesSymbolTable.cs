@@ -14,9 +14,10 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core.Public.Types
 {
+    [ThreadSafeImmutable]
     internal sealed class PrimitiveTypesSymbolTable : TypeSymbolTable, IGlobalSymbolNameResolver
     {
-        private static readonly BidirectionalDictionary<string, FormulaType> _knownTypes = new ()
+        private static readonly IReadOnlyDictionary<string, FormulaType> _knownTypes = new Dictionary<string, FormulaType>()
         {
             { "Boolean", FormulaType.Boolean },
             { "Color", FormulaType.Color },
@@ -40,11 +41,11 @@ namespace Microsoft.PowerFx.Core.Public.Types
         {
         }
 
-        public static PrimitiveTypesSymbolTable Instance = new PrimitiveTypesSymbolTable();
+        public static readonly PrimitiveTypesSymbolTable Instance = new PrimitiveTypesSymbolTable();
 
         internal override bool TryLookup(DName name, out NameLookupInfo nameInfo)
         {
-            if (!_knownTypes.TryGetFromFirst(name.Value, out var type))
+            if (!_knownTypes.TryGetValue(name.Value, out var type))
             {
                 nameInfo = default;
                 return false;
@@ -56,7 +57,9 @@ namespace Microsoft.PowerFx.Core.Public.Types
 
         internal override bool TryGetTypeName(FormulaType type, out string typeName)
         {
-            return _knownTypes.TryGetFromSecond(type, out typeName);
+            typeName = _knownTypes.Where(kvp => kvp.Value.Equals(type)).FirstOrDefault().Key;
+
+            return typeName != null;
         }
     }
 }

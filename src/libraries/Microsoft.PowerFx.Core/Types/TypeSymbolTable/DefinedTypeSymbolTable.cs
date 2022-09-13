@@ -16,7 +16,7 @@ namespace Microsoft.PowerFx.Core
 {
     internal class DefinedTypeSymbolTable : TypeSymbolTable, IGlobalSymbolNameResolver
     {
-        private static readonly BidirectionalDictionary<string, FormulaType> _definedTypes = new ();
+        private readonly BidirectionalDictionary<string, FormulaType> _definedTypes = new ();
 
         IReadOnlyDictionary<string, NameLookupInfo> IGlobalSymbolNameResolver.GlobalSymbols => _definedTypes.ToDictionary(kvp => kvp.Key, kvp => ToLookupInfo(kvp.Value));
 
