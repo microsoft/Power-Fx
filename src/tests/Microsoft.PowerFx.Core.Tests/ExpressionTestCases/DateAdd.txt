@@ -94,10 +94,10 @@ DateTime(1,2,6,0,0,0,0)
 5
 
 >> DateAdd(Date(2011,1,15), 100000000, "milliseconds")
-DateTime(2011,1,16,0,0,0,0)
+DateTime(2011,1,16,3,46,40,0)
 
 >> DateAdd(Date(2011,1,15), 100000000, TimeUnit.Milliseconds)
-DateTime(2011,1,16,0,0,0,0)
+DateTime(2011,1,16,3,46,40,0)
 
 >> Month(DateAdd(Date(2001,1,1), 12, TimeUnit.Months))
 1
