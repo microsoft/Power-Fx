@@ -184,7 +184,7 @@ namespace Microsoft.PowerFx.Core.Binding
         /// <param name="type">The type for node.</param>
         /// <param name="alternateTypes">List of acceptable types for this operation, in order of suitability.</param>
         /// <returns></returns>
-        internal static BinderCheckTypeResult CheckComparisonTypeOneOfCore(ErrorContainer errorContainer, TexlNode node, DType type, params DType[] alternateTypes)
+        internal static BinderCheckTypeResult CheckComparisonTypeOneOfCore(IErrorContainer errorContainer, TexlNode node, DType type, params DType[] alternateTypes)
         {
             Contracts.AssertValue(node);
             Contracts.AssertValue(alternateTypes);
@@ -224,7 +224,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
         // Returns whether the node was of the type wanted, and reports appropriate errors.
         // A list of allowed alternate types specifies what other types of values can be coerced to the wanted type.
-        private static BinderCheckTypeResult CheckTypeCore(ErrorContainer errorContainer, TexlNode node, DType nodeType, DType typeWant, params DType[] alternateTypes)
+        private static BinderCheckTypeResult CheckTypeCore(IErrorContainer errorContainer, TexlNode node, DType nodeType, DType typeWant, params DType[] alternateTypes)
         {
             Contracts.AssertValue(node);
             Contracts.Assert(typeWant.IsValid);
@@ -285,7 +285,7 @@ namespace Microsoft.PowerFx.Core.Binding
         }
 
         // Performs type checking for the arguments passed to the membership "in"/"exactin" operators.
-        private static BinderCheckTypeResult CheckInArgTypesCore(ErrorContainer errorContainer, TexlNode left, TexlNode right, DType typeLeft, DType typeRight, bool isEnhancedDelegationEnabled)
+        private static BinderCheckTypeResult CheckInArgTypesCore(IErrorContainer errorContainer, TexlNode left, TexlNode right, DType typeLeft, DType typeRight, bool isEnhancedDelegationEnabled)
         {
             Contracts.AssertValue(left);
             Contracts.AssertValue(right);
@@ -442,7 +442,7 @@ namespace Microsoft.PowerFx.Core.Binding
             return new BinderCheckTypeResult() { Coercions = coercions };
         }
 
-        private static BinderCheckTypeResult PostVisitBinaryOpNodeAdditionCore(ErrorContainer errorContainer, BinaryOpNode node, DType leftType, DType rightType)
+        private static BinderCheckTypeResult PostVisitBinaryOpNodeAdditionCore(IErrorContainer errorContainer, BinaryOpNode node, DType leftType, DType rightType)
         {
             Contracts.AssertValue(node);
             Contracts.Assert(node.Op == BinaryOp.Add);
@@ -594,7 +594,7 @@ namespace Microsoft.PowerFx.Core.Binding
             }
         }
 
-        private static BinderCheckTypeResult CheckComparisonArgTypesCore(ErrorContainer errorContainer, TexlNode left, TexlNode right, DType typeLeft, DType typeRight)
+        private static BinderCheckTypeResult CheckComparisonArgTypesCore(IErrorContainer errorContainer, TexlNode left, TexlNode right, DType typeLeft, DType typeRight)
         {
             // Excel's type coercion for inequality operators is inconsistent / borderline wrong, so we can't
             // use it as a reference. For example, in Excel '2 < TRUE' produces TRUE, but so does '2 < FALSE'.
@@ -628,7 +628,7 @@ namespace Microsoft.PowerFx.Core.Binding
             return new BinderCheckTypeResult() { Coercions = coercions };
         }
 
-        private static BinderCheckTypeResult CheckEqualArgTypesCore(ErrorContainer errorContainer, TexlNode left, TexlNode right, DType typeLeft, DType typeRight)
+        private static BinderCheckTypeResult CheckEqualArgTypesCore(IErrorContainer errorContainer, TexlNode left, TexlNode right, DType typeLeft, DType typeRight)
         {
             Contracts.AssertValue(left);
             Contracts.AssertValue(right);
@@ -720,7 +720,7 @@ namespace Microsoft.PowerFx.Core.Binding
             return new BinderCheckTypeResult();
         }
 
-        internal static BinderCheckTypeResult CheckUnaryOpCore(ErrorContainer errorContainer, UnaryOpNode node, DType childType)
+        internal static BinderCheckTypeResult CheckUnaryOpCore(IErrorContainer errorContainer, UnaryOpNode node, DType childType)
         {
             Contracts.AssertValue(node);
 
@@ -757,7 +757,7 @@ namespace Microsoft.PowerFx.Core.Binding
         // REVIEW ragru: Introduce a TexlOperator abstract base plus various subclasses
         // for handling operators and their overloads. That will offload the burden of dealing with
         // operator special cases to the various operator classes.
-        public static BinderCheckTypeResult CheckBinaryOpCore(ErrorContainer errorContainer, BinaryOpNode node, DType leftType, DType rightType, bool isEnhancedDelegationEnabled)
+        public static BinderCheckTypeResult CheckBinaryOpCore(IErrorContainer errorContainer, BinaryOpNode node, DType leftType, DType rightType, bool isEnhancedDelegationEnabled)
         {
             Contracts.AssertValue(node);
 

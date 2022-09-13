@@ -1428,7 +1428,6 @@ namespace Microsoft.PowerFx.Functions
         public static IEnumerable<DValue<RecordValue>> StandardTableNodeRecords(IRContext irContext, FormulaValue[] args, bool forceSingleColumn)
         {
             var tableType = (TableType)irContext.ResultType;
-            var columnName = tableType.SingleColumnFieldName;
             var recordType = tableType.ToRecord();
             return args.Select(arg =>
             {
@@ -1438,6 +1437,7 @@ namespace Microsoft.PowerFx.Functions
                 }
 
                 // Handle the single-column-table case. 
+                var columnName = tableType.SingleColumnFieldName;
                 var defaultField = new NamedValue(columnName, arg);
                 return DValue<RecordValue>.Of(new InMemoryRecordValue(IRContext.NotInSource(recordType), new List<NamedValue>() { defaultField }));
             });
