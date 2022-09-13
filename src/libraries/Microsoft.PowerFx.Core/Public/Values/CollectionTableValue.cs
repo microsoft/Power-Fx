@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
@@ -116,7 +117,7 @@ namespace Microsoft.PowerFx.Types
 
         public override async Task<DValue<BooleanValue>> RemoveAsync(IEnumerable<FormulaValue> recordsToRemove, bool all, CancellationToken cancel)
         {
-            var ret = true;
+            var ret = false;
 
             if (_sourceList == null)
             {
@@ -146,7 +147,8 @@ namespace Microsoft.PowerFx.Types
 
                 foreach (var delete in deleteList)
                 {
-                    ret = ret && _sourceList.Remove(delete);
+                    _sourceList.Remove(delete);
+                    ret = true;
                 }
             }
 
@@ -188,25 +190,43 @@ namespace Microsoft.PowerFx.Types
 
         protected static bool Matches(RecordValue currentRecord, RecordValue baseRecord)
         {
-            foreach (var field in baseRecord.Fields)
+            var ret = true;
+
+            foreach (var baseRecordField in baseRecord.Fields)
             {
-                var fieldValue = currentRecord.GetField(field.Value.Type, field.Name);
+                var currentFieldValue = currentRecord.GetField(baseRecordField.Value.Type, baseRecordField.Name);
 
-                if (fieldValue is BlankValue)
+                if (currentFieldValue is BlankValue && baseRecordField.Value is BlankValue)
                 {
-                    return false;
+                    continue;
                 }
-
-                var compare1 = fieldValue.ToObject();
-                var compare2 = field.Value.ToObject();
-
-                if (compare1 != null && !compare1.Equals(compare2))
+                else if (currentFieldValue is BlankValue)
                 {
-                    return false;
+                    ret = false;
+                    break;
+                }
+                else if (currentFieldValue.Type._type.IsPrimitive && baseRecordField.Value.Type._type.IsPrimitive)
+                {
+                    var compare1 = currentFieldValue.ToObject();
+                    var compare2 = baseRecordField.Value.ToObject();
+
+                    if (!compare1.Equals(compare2))
+                    {
+                        ret = false;
+                        break;
+                    }
+                }
+                else if (baseRecordField.Value is RecordValue baseRecordValue && currentFieldValue is RecordValue currentRecordValue)
+                {
+                    ret = Matches(currentRecordValue, baseRecordValue);
+                }
+                else
+                {
+                    throw new NotSupportedException("Field value not supported.");
                 }
             }
 
-            return true;
+            return ret;
         }
     }
 }

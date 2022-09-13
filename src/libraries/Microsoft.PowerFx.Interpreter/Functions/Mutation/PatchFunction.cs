@@ -28,7 +28,7 @@ namespace Microsoft.PowerFx.Functions
     internal abstract class PatchAndValidateRecordFunctionBase : BuiltinFunction
     {
         public override bool RequiresDataSourceScope => true;
-        
+
         public override bool ArgMatchesDatasourceType(int argNum)
         {
             return argNum >= 1;

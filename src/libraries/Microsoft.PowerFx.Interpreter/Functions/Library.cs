@@ -1454,7 +1454,9 @@ namespace Microsoft.PowerFx.Functions
                     BlankValue b => DValue<RecordValue>.Of(b),
                     _ => DValue<RecordValue>.Of((ErrorValue)arg),
                 });
-            return new InMemoryTableValue(irContext, records);
+
+            // Returning List to ensure that the returned table is mutable
+            return new InMemoryTableValue(irContext, records.ToList());
         }
 
         public static ValueTask<FormulaValue> Blank(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)

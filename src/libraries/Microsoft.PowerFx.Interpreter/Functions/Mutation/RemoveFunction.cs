@@ -29,6 +29,13 @@ namespace Microsoft.PowerFx.Functions
     {
         public override bool IsSelfContained => false;
 
+        public override bool RequiresDataSourceScope => true;
+
+        public override bool ArgMatchesDatasourceType(int argNum)
+        {
+            return argNum >= 1;
+        }
+
         public RemoveFunctionBase(DPath theNamespace, string name, StringGetter description, FunctionCategories fc, DType returnType, BigInteger maskLambdas, int arityMin, int arityMax, params DType[] paramTypes)
             : base(theNamespace, name, /*localeSpecificName*/string.Empty, description, fc, returnType, maskLambdas, arityMin, arityMax, paramTypes)
         {
