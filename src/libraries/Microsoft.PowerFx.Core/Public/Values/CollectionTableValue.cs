@@ -115,13 +115,13 @@ namespace Microsoft.PowerFx.Types
             }
         }
 
-        public override async Task<DValue<BooleanValue>> RemoveAsync(IEnumerable<FormulaValue> recordsToRemove, bool all)
+        public override async Task<DValue<BooleanValue>> RemoveAsync(IEnumerable<FormulaValue> recordsToRemove, bool all, CancellationToken cancel)
         {
             var ret = false;
 
             if (_sourceList == null)
             {
-                return await base.RemoveAsync(recordsToRemove, all);
+                return await base.RemoveAsync(recordsToRemove, all, cancel);
             }
 
             foreach (RecordValue recordToRemove in recordsToRemove)
@@ -130,6 +130,8 @@ namespace Microsoft.PowerFx.Types
 
                 foreach (var item in _enumerator)
                 {
+                    cancel.ThrowIfCancellationRequested();
+
                     var dRecord = Marshal(item);
 
                     if (Matches(dRecord.Value, recordToRemove))
@@ -186,18 +188,12 @@ namespace Microsoft.PowerFx.Types
             return null;
         }
 
-        protected static bool Matches(RecordValue currentRecord, RecordValue baseRecord, bool exactly = false)
+        protected static bool Matches(RecordValue currentRecord, RecordValue baseRecord)
         {
             var ret = true;
 
-            var currentRecordEnumerator = currentRecord.Fields.GetEnumerator();
-            var baseRecordEnumerator = baseRecord.Fields.GetEnumerator();
-
-            while (baseRecordEnumerator.MoveNext())
+            foreach (var baseRecordField in baseRecord.Fields)
             {
-                currentRecordEnumerator.MoveNext();
-
-                var baseRecordField = baseRecordEnumerator.Current;
                 var currentFieldValue = currentRecord.GetField(baseRecordField.Value.Type, baseRecordField.Name);
 
                 if (currentFieldValue is BlankValue && baseRecordField.Value is BlankValue)
@@ -222,17 +218,12 @@ namespace Microsoft.PowerFx.Types
                 }
                 else if (baseRecordField.Value is RecordValue baseRecordValue && currentFieldValue is RecordValue currentRecordValue)
                 {
-                    ret = Matches(currentRecordValue, baseRecordValue, exactly);
+                    ret = Matches(currentRecordValue, baseRecordValue);
                 }
                 else
                 {
                     throw new NotSupportedException("Field value not supported.");
                 }
-            }
-
-            if (ret && exactly && (currentRecordEnumerator.MoveNext() || baseRecordEnumerator.MoveNext()))
-            {
-                ret = false;
             }
 
             return ret;

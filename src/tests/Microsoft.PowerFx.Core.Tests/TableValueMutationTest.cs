@@ -45,14 +45,14 @@ namespace Microsoft.PowerFx.Core.Tests
 
             // succeeds
             await t1.AppendAsync(r2);
-            await t1.RemoveAsync(new RecordValue[] { r1 }, false);
+            await t1.RemoveAsync(new RecordValue[] { r1 }, false, CancellationToken.None);
 
             Assert.Equal(1, t1.Count());
 
             // Immutable
             IEnumerable<RecordValue> source = new RecordValue[] { r1 };
             var t2 = FormulaValue.NewTable(r1.Type, source);
-            var result = await t2.RemoveAsync(new RecordValue[] { r1 }, false);
+            var result = await t2.RemoveAsync(new RecordValue[] { r1 }, false, CancellationToken.None);
 
             Assert.True(result.IsError);
             Assert.Equal("RemoveAsync is not supported on this table instance.", result.Error.Errors[0].Message);
