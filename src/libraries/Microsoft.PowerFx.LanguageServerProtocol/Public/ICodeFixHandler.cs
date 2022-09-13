@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Intellisense;
@@ -18,6 +19,7 @@ namespace Microsoft.PowerFx
     {
         Task<IEnumerable<CodeActionResult>> SuggestFixesAsync(
             Engine engine,
-            CheckResult checkResult);
+            CheckResult checkResult,
+            CancellationToken cancel);
     }
 }

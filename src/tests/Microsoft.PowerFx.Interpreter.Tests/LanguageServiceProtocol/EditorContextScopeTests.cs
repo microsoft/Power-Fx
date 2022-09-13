@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.LanguageServerProtocol.Protocol;
@@ -51,7 +52,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
         {
             public async Task<IEnumerable<CodeActionResult>> SuggestFixesAsync(
                 Engine engine,
-                CheckResult checkResult)
+                CheckResult checkResult,
+                CancellationToken cancel)
             {
                 return null;
             }
@@ -61,7 +63,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
         {
             public async Task<IEnumerable<CodeActionResult>> SuggestFixesAsync(
                 Engine engine, 
-                CheckResult checkResult)
+                CheckResult checkResult,
+                CancellationToken cancel)
             {
                 return new CodeActionResult[]
                 {

@@ -14,7 +14,11 @@ namespace Microsoft.PowerFx.Syntax
     public sealed class Identifier
     {
         internal readonly Token AtToken; // The "@" token, if any. May be null.
-        public readonly IdentToken Token;
+        internal readonly IdentToken Token;
+
+        public Span Span => HasAtToken ? 
+            new Span(AtToken.Span.Min, Token.Span.Lim) : 
+            Token.Span;
 
         /// <summary>
         /// The simple name of the identifier.

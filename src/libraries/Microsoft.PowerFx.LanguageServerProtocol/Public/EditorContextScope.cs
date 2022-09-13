@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.LanguageServerProtocol.Protocol;
@@ -82,7 +83,7 @@ namespace Microsoft.PowerFx
             // Show fixes for both warnings and errors. 
             foreach (var handler in _handlers)
             {
-                var fixes = handler.SuggestFixesAsync(_engine, check).Result;
+                var fixes = handler.SuggestFixesAsync(_engine, check, CancellationToken.None).Result;
                 if (fixes != null)
                 {
                     list.AddRange(fixes);

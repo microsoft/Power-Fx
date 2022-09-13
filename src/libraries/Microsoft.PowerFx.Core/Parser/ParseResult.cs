@@ -46,7 +46,7 @@ namespace Microsoft.PowerFx
         
         // Original script. 
         // All the spans in the tokens are relative to this. 
-        public string Text { get; private set; }
+        public string Text { get; }
 
         internal ParseResult(TexlNode root, List<TexlError> errors, bool hasError, List<CommentToken> comments, SourceList before, SourceList after, string text)
         {
