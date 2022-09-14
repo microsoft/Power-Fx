@@ -8,7 +8,7 @@ using System.Text;
 namespace Microsoft.PowerFx.LanguageServerProtocol
 {
     [Obsolete("Kept around short term to sequence changes in the formula bar")]
-    public class FormulaTypeSchema
+    internal class FormulaTypeSchema
     {
         [Obsolete("Kept around short term to sequence changes in the formula bar")]
         public enum ParamType

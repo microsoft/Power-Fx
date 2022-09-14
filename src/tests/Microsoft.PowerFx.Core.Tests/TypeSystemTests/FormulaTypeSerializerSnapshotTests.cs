@@ -12,7 +12,7 @@ namespace Microsoft.PowerFx.Tests
 {
     public class FormulaTypeSerializerSnapshotTests
     {
-        private const bool RegenerateSnapshots = true;
+        private const bool RegenerateSnapshots = false;
 
         /// <summary>
         /// Resolves to the directory in the src folder that corresponds to the current directory, which may

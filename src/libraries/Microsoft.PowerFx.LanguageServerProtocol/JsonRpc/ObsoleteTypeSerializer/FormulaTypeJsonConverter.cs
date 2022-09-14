@@ -13,7 +13,7 @@ using Microsoft.PowerFx.Types;
 namespace Microsoft.PowerFx.LanguageServerProtocol
 {
     [Obsolete("Kept around short term to sequence changes in the formula bar")]
-    public class FormulaTypeJsonConverter : JsonConverter<FormulaType>
+    internal class FormulaTypeJsonConverter : JsonConverter<FormulaType>
     {
         private readonly JsonSerializerOptions _options;
 

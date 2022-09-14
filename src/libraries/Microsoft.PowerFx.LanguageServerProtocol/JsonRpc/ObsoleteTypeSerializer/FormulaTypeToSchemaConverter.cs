@@ -8,7 +8,7 @@ using Microsoft.PowerFx.Types;
 namespace Microsoft.PowerFx.LanguageServerProtocol
 {
     [Obsolete("Kept around short term to sequence changes in the formula bar")]
-    public static class FormulaTypeToSchemaConverter
+    internal static class FormulaTypeToSchemaConverter
     {
         public static FormulaTypeSchema Convert(FormulaType type)
         {
