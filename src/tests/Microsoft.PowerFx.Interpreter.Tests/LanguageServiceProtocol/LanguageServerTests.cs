@@ -24,7 +24,9 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         {
             PropertyNameCaseInsensitive = true,
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-            Converters = { new FormulaTypeJsonConverter() }
+#pragma warning disable CS0618 // Type or member is obsolete
+            Converters = { new LanguageServerProtocol.FormulaTypeJsonConverter() }
+#pragma warning restore CS0618
         };
 
         protected List<string> _sendToClientData;
