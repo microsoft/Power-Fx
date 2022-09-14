@@ -18,6 +18,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // ForAll(source:*, formula)
     internal sealed class ForAllFunction : FunctionWithTableInput
     {
+        public const string ForAllInvariantFunctionName = "ForAll";
+
         public override bool SkipScopeForInlineRecords => true;
 
         public override bool IsSelfContained => true;
@@ -25,7 +27,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool SupportsParamCoercion => false;
 
         public ForAllFunction()
-            : base("ForAll", TexlStrings.AboutForAll, FunctionCategories.Table, DType.Unknown, 0x2, 2, 2, DType.EmptyTable)
+            : base(ForAllInvariantFunctionName, TexlStrings.AboutForAll, FunctionCategories.Table, DType.Unknown, 0x2, 2, 2, DType.EmptyTable)
         {
             ScopeInfo = new FunctionScopeInfo(this);
         }
@@ -72,6 +74,65 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
         {
             return GetUniqueTexlRuntimeName(suffix: isPrefetching ? "_ParallelPrefetching" : string.Empty);
+        }
+    }
+
+    internal sealed class ForAllFunction_UO : BuiltinFunction
+    {
+        public override bool IsSelfContained => true;
+
+        public override bool SupportsParamCoercion => false;
+
+        public override bool HasUntypedObjectLambdas => true;
+
+        public ForAllFunction_UO()
+            : base(ForAllFunction.ForAllInvariantFunctionName, TexlStrings.AboutForAll, FunctionCategories.Table, DType.Unknown, 0x2, 2, 2, DType.UntypedObject)
+        {
+            ScopeInfo = new FunctionScopeInfo(this);
+        }
+
+        public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
+        {
+            yield return new[] { TexlStrings.ForAllArg1, TexlStrings.ForAllArg2 };
+        }
+
+        public override bool CheckInvocation(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        {
+            Contracts.AssertValue(args);
+            Contracts.AssertAllValues(args);
+            Contracts.AssertValue(argTypes);
+            Contracts.Assert(args.Length == argTypes.Length);
+            Contracts.AssertValue(errors);
+
+            var fArgsValid = base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+
+            if (argTypes[1].IsRecord)
+            {
+                returnType = argTypes[1].ToTable();
+            }
+            else if (argTypes[1].IsPrimitive || argTypes[1].IsTable)
+            {
+                returnType = DType.CreateTable(new TypedName(argTypes[1], ColumnName_Value));
+            }
+            else
+            {
+                returnType = DType.Error;
+                fArgsValid = false;
+            }
+
+            return fArgsValid;
+        }
+
+        public override bool HasSuggestionsForParam(int index)
+        {
+            Contracts.Assert(index >= 0);
+
+            return index == 0;
+        }
+
+        public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
+        {
+            return GetUniqueTexlRuntimeName(suffix: "_UO");
         }
     }
 }

@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Texl;
@@ -223,6 +224,35 @@ namespace Microsoft.PowerFx.Functions
                 Span = irContext.SourceContext,
                 Message = $"The untyped object argument to the '{functionName}' function has an incorrect type. Expected: {expectedType}, Actual: {actualValue.Type}."
             });
+        }
+
+        public static async ValueTask<FormulaValue> ForAll_UO(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        {
+            var arg0 = (UntypedObjectValue)args[0];
+            var arg1 = (LambdaFormulaValue)args[1];
+
+            var inputItemType = RecordType.Empty().Add(new NamedFormulaType(BuiltinFunction.ColumnName_ValueStr, FormulaType.UntypedObject));
+            var inputTableType = inputItemType.ToTable();
+
+            var resultRows = new List<DValue<RecordValue>>();
+
+            var len = arg0.Impl.GetArrayLength();
+
+            for (var i = 0; i < len; i++)
+            {
+                var element = arg0.Impl[i];
+
+                var namedValue = new NamedValue(BuiltinFunction.ColumnName_ValueStr, new UntypedObjectValue(IRContext.NotInSource(FormulaType.UntypedObject), element));
+                var record = new InMemoryRecordValue(IRContext.NotInSource(inputItemType), new List<NamedValue>() { namedValue });
+                resultRows.Add(DValue<RecordValue>.Of(record));
+            }
+
+            var input = new InMemoryTableValue(IRContext.NotInSource(inputTableType), resultRows);
+            var rowsAsync = LazyForAll(runner, context, resultRows, arg1);
+
+            var rows = await Task.WhenAll(rowsAsync);
+
+            return new InMemoryTableValue(irContext, StandardTableNodeRecords(irContext, rows, forceSingleColumn: false));
         }
     }
 }

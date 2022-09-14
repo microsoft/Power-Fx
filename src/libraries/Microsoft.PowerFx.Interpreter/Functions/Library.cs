@@ -595,6 +595,20 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: ForAll)
             },
             {
+                BuiltinFunctionsCore.ForAll_UO,
+                StandardErrorHandlingAsync<FormulaValue>(
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactSequence(
+                        ExactValueTypeOrBlank<UntypedObjectValue>,
+                        ExactValueTypeOrBlank<LambdaFormulaValue>),
+                    checkRuntimeValues: ExactSequence(
+                        UntypedObjectArrayChecker,
+                        DeferRuntimeValueChecking),
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: ForAll_UO)
+            },
+            {
                 BuiltinFunctionsCore.GUIDPure,
                 StandardErrorHandling<StringValue>(
                     BuiltinFunctionsCore.GUIDPure.Name,

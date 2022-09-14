@@ -4153,6 +4153,23 @@ namespace Microsoft.PowerFx.Core.Binding
                     return false;
                 }
 
+                var numOverloads = overloads.Count();
+
+                var overloadsWithUntypedObjectLambdas = overloadsWithLambdas.Where(func => func.HasUntypedObjectLambdas);
+                TexlFunction overloadWithUntypedObjectLambda = null;
+                if (overloadsWithUntypedObjectLambdas.Any())
+                {
+                    Contracts.Assert(overloadsWithUntypedObjectLambdas.Count() == 1, "Incorrect multiple overloads with UntypedObject lambdas.");
+                    overloadWithUntypedObjectLambda = overloadsWithUntypedObjectLambdas.Single();
+                    Contracts.Assert(overloadWithUntypedObjectLambda.HasLambdas);
+
+                    // As an extraordinarily spcial case, we ignore untype object lambdas for now, and type check as normal
+                    // using the function without untyped object params. This only works if both functions have exactly
+                    // the same arity (this is enforced below).
+                    overloadsWithLambdas = overloadsWithLambdas.Except(overloadsWithUntypedObjectLambdas);
+                    numOverloads -= 1;
+                }
+
                 // We support a single overload with lambdas. Otherwise we have a conceptual chicken-and-egg
                 // problem, whereby in order to bind the lambda args we need the precise overload (for
                 // its lambda mask), which in turn requires binding the args (for their types).
@@ -4160,9 +4177,15 @@ namespace Microsoft.PowerFx.Core.Binding
                 var maybeFunc = overloadsWithLambdas.Single();
                 Contracts.Assert(maybeFunc.HasLambdas);
 
+                if (overloadWithUntypedObjectLambda != null)
+                {
+                    // Both overrides must have exactly the same arity.
+                    Contracts.Assert(maybeFunc.MaxArity == overloadWithUntypedObjectLambda.MaxArity);
+                    Contracts.Assert(maybeFunc.MinArity == overloadWithUntypedObjectLambda.MinArity);
+                }
+
                 var scopeInfo = maybeFunc.ScopeInfo;
                 IDelegationMetadata metadata = null;
-                var numOverloads = overloads.Count();
 
                 Scope scopeNew = null;
                 IExpandInfo expandInfo;
@@ -4238,6 +4261,13 @@ namespace Microsoft.PowerFx.Core.Binding
                 var nodeInput = args[0];
                 _txb.AddVolatileVariables(nodeInput, volatileVariables);
                 nodeInput.Accept(this);
+
+                // At this point we know the type of the first argument, so we can check for untyped objects
+                if (overloadWithUntypedObjectLambda != null && _txb.GetType(nodeInput) == DType.UntypedObject)
+                {
+                    maybeFunc = overloadWithUntypedObjectLambda;
+                    scopeInfo = maybeFunc.ScopeInfo;
+                }
 
                 FirstNameNode dsNode;
                 if (maybeFunc.TryGetDataSourceNodes(node, _txb, out var dsNodes) && ((dsNode = dsNodes.FirstOrDefault()) != default(FirstNameNode)))

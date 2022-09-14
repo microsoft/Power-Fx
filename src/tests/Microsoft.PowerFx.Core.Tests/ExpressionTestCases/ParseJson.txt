@@ -227,3 +227,7 @@ Blank()
 
 >> Text(Index(ParseJSON("[ { ""a"" : 10 }, { ""b"" : ""str"" } ]"),2).a)
 Blank()
+
+// ForAll
+>> ForAll(ParseJSON("[5, 6, 7]"), Value(Value))
+[5, 6, 7]
