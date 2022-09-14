@@ -29,10 +29,9 @@ namespace Microsoft.PowerFx.Core
                     return actualType switch
                     {
                         RecordType recordType => recordType.ToTable(),
-                        TableType _ => throw new NotSupportedException("Not a valid type to convert to table."),
 
-                        // Table of primitives
-                        _ => TableType.Empty().Add(TableValue.ValueName, actualType)
+                        // Add support for table of primitives here in the future
+                        _ => throw new NotSupportedException("Not a valid type to convert to table."),
                     };
                 }
                 
