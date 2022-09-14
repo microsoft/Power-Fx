@@ -1,4 +1,0 @@
-﻿#OVERRIDE: Blank.txt
-
->> Blank() = Blank()
-#Skip
