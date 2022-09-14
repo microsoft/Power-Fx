@@ -1,0 +1,17 @@
+{
+  "Type": {
+    "Name": "Record"
+  },
+  "Fields": {
+    "Bar": {
+      "Type": {
+        "Name": "Text"
+      }
+    },
+    "Foo": {
+      "Type": {
+        "Name": "Number"
+      }
+    }
+  }
+}

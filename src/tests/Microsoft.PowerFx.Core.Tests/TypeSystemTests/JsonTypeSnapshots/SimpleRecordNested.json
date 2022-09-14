@@ -1,0 +1,31 @@
+{
+  "Type": {
+    "Name": "Record"
+  },
+  "Fields": {
+    "Bar": {
+      "Type": {
+        "Name": "Record"
+      },
+      "Fields": {
+        "Qux": {
+          "Type": {
+            "Name": "Record"
+          },
+          "Fields": {
+            "Baz": {
+              "Type": {
+                "Name": "Text"
+              }
+            }
+          }
+        }
+      }
+    },
+    "Foo": {
+      "Type": {
+        "Name": "Number"
+      }
+    }
+  }
+}

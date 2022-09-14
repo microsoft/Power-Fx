@@ -1,0 +1,13 @@
+{
+  "Type": {
+    "Name": "Record",
+    "IsTable": true
+  },
+  "Fields": {
+    "Value": {
+      "Type": {
+        "Name": "GUID"
+      }
+    }
+  }
+}

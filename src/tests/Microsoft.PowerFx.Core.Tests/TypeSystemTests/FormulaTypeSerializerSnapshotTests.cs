@@ -20,8 +20,8 @@ namespace Microsoft.PowerFx.Tests
         /// built in debug or release mode.
         /// </summary>
         private static readonly string _typeSnapshotDirectory = Path.Join(Directory.GetCurrentDirectory(), "TypeSystemTests", "JsonTypeSnapshots")
-            .Replace(Path.Join("bin", "Debug.AnyCPU"), "src")
-            .Replace(Path.Join("bin", "Release.AnyCPU"), "src");
+            .Replace(Path.Join("bin", "Debug", "netcoreapp3.1"), string.Empty)
+            .Replace(Path.Join("bin", "Release", "netcoreapp3.1"), string.Empty);
 
         private void CheckTypeSnapshot(FormulaType type, string testId, JsonSerializerOptions options)
         {
@@ -74,9 +74,9 @@ namespace Microsoft.PowerFx.Tests
         [InlineData("PrimitiveNumber", "n")]
         [InlineData("PrimitiveBoolean", "b")]
         [InlineData("PrimitiveString", "s")]
-        [InlineData("PrimitiveDate", "d")]
-        [InlineData("PrimitiveTime", "t")]
-        [InlineData("PrimitiveDateTime", "D")]
+        [InlineData("PrimitiveDate", "D")]
+        [InlineData("PrimitiveTime", "T")]
+        [InlineData("PrimitiveDateTime", "d")]
         [InlineData("PrimitiveHyperlink", "h")]
         [InlineData("PrimitiveDTNTZ", "Z")]
         [InlineData("PrimitiveGuid", "g")]
@@ -92,6 +92,7 @@ namespace Microsoft.PowerFx.Tests
         {
             CheckTypeSnapshot(FormulaType.Build(TestUtils.DT(type)), "Simple" + testId, new JsonSerializerOptions()
             {
+                WriteIndented = true,
                 Converters =
                 {
                     // Serialize types without accounting for any defined type names
