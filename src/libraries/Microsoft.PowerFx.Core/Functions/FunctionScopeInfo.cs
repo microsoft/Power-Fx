@@ -123,7 +123,7 @@ namespace Microsoft.PowerFx.Core.Functions
             else if (_function.ParamTypes[0].IsUntypedObject)
             {
                 var fError = false;
-                typeScope = DType.UntypedObject;
+                typeScope = DType.CreateRecord(new TypedName(DType.UntypedObject, BuiltinFunction.ColumnName_Value));
                 fArgsValid &= !fError;
             }
             else

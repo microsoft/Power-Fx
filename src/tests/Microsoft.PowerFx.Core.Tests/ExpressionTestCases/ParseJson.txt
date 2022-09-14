@@ -230,4 +230,4 @@ Blank()
 
 // ForAll
 >> ForAll(ParseJSON("[5, 6, 7]"), Value(Value))
-[5, 6, 7]
+[5,6,7]
