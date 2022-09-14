@@ -1,6 +1,18 @@
 ﻿
 // Use of DateValue, DateTimeValue
 
+>> DateValue("")
+Blank()
+
+>> DateTimeValue("")
+Blank()
+
+>> DateValue(If(1<0,"blank"))
+Blank()
+
+>> DateTimeValue(If(1<0,"blank"))
+Blank()
+
 >> DateTimeValue("01-01-2001 1:10:20")
 DateTime(2001,1,1,1,10,20,0)
 

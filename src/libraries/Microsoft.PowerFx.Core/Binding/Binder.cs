@@ -124,6 +124,11 @@ namespace Microsoft.PowerFx.Core.Binding
         public ErrorContainer ErrorContainer { get; } = new ErrorContainer();
 
         /// <summary>
+        /// The maximum number of selects in a table that will be included in data call.
+        /// </summary>
+        public const int MaxSelectsToInclude = 100;
+
+        /// <summary>
         /// Default name used to access a Lambda scope.
         /// </summary>
         internal DName ThisRecordDefaultName => new DName("ThisRecord");
@@ -872,14 +877,14 @@ namespace Microsoft.PowerFx.Core.Binding
 
                     ruleQueryOptions.AddRelatedColumns();
 
-                    if (ruleQueryOptions.HasNonKeySelects())
+                    if (ruleQueryOptions.HasNonKeySelects(Document?.Properties?.UserFlags?.EnforceSelectPropagationLimit ?? false))
                     {
                         return ruleQueryOptions.Selects;
                     }
                 }
                 else
                 {
-                    if (ds.QueryOptions.HasNonKeySelects())
+                    if (ds.QueryOptions.HasNonKeySelects(Document?.Properties?.UserFlags?.EnforceSelectPropagationLimit ?? false))
                     {
                         ds.QueryOptions.AddRelatedColumns();
                         return ds.QueryOptions.Selects;
@@ -903,7 +908,8 @@ namespace Microsoft.PowerFx.Core.Binding
                     {
                         if (expandQueryOptions.Value.ExpandInfo.Identity == expandEntityLogicalName)
                         {
-                            if (!expandQueryOptions.Value.SelectsEqualKeyColumns())
+                            if (!expandQueryOptions.Value.SelectsEqualKeyColumns() &&
+                                (!(Document?.Properties?.UserFlags?.EnforceSelectPropagationLimit ?? false) || expandQueryOptions.Value.Selects.Count() <= MaxSelectsToInclude))
                             {
                                 return expandQueryOptions.Value.Selects;
                             }
@@ -4107,7 +4113,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     var startArg = 0;
 
                     // Construct a scope if display names are enabled and this function requires a data source scope for inline records
-                    if (_txb.Document != null && _txb.Document.Properties.EnabledFeatures.IsUseDisplayNameMetadataEnabled &&
+                    if ((_txb.Document?.Properties?.EnabledFeatures?.IsUseDisplayNameMetadataEnabled ?? true) &&
                         overloads.Where(func => func.RequiresDataSourceScope).Any() && node.Args.Count > 0)
                     {
                         // Visit the first arg if it exists. This will give us the scope type for any subsequent lambda/predicate args.
@@ -4122,7 +4128,7 @@ namespace Microsoft.PowerFx.Core.Binding
                         // Only if there is a projection map associated with this will we need to set a scope
                         var typescope = _txb.GetType(nodeInp);
 
-                        if (typescope.AssociatedDataSources.Any() && typescope.IsTable)
+                        if ((typescope.AssociatedDataSources.Any() || typescope.DisplayNameProvider != null) && typescope.IsTable)
                         {
                             maybeScope = new Scope(node, _currentScope, typescope.ToRecord(), createsRowScope: false);
                         }
@@ -4954,7 +4960,7 @@ namespace Microsoft.PowerFx.Core.Binding
             {
                 Contracts.AssertValid(name);
 
-                if (_txb.Document == null || !_txb.Document.Properties.EnabledFeatures.IsUseDisplayNameMetadataEnabled)
+                if (!(_txb.Document?.Properties?.EnabledFeatures?.IsUseDisplayNameMetadataEnabled ?? true))
                 {
                     scope = default;
                     return false;

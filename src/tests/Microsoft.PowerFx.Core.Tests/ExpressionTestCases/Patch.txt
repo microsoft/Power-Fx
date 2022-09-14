@@ -1,10 +1,6 @@
 ﻿#SETUP: EnableExpressionChaining,MutationFunctionsTestSetup
 
-// MutationFunctionsTestSetup handle does the following:
-// - Creates a record: r1 => {Field1:1,Field2:"earth",Field3:1/1/2022,Field4:true}
-// - Creates a record: r2 => {Field1:2,Field2:"moon",Field3:2/1/2022,Field4:false} (for convenience)
-// - Creates a record: r_empty => {}
-// - Creates a table: t1(r1) => Type (Field1, Field2, Field3, Field4)
+// Check MutationFunctionsTestSetup handler (PowerFxEvaluationTests.cs) for documentation.
 
 >> Patch(r1, {Field5:5})
 {Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true,Field5:5}
@@ -30,17 +26,26 @@ Table({Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})
 >> Patch(t1, r1, {Field2:"mars"});t1
 Table({Field1:1,Field2:"mars",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})
 
+>> Patch(t1, r1, {Field2:"mars"})
+{Field1:1,Field2:"mars",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}
+
 >> Patch(t1, r1, {Field2:"mars"}, Blank());t1
 Table({Field1:1,Field2:"mars",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})
 
 >> Patch(t1, r1, {Field3:DateTime(2022,12,12,0,0,0,0)}, {Field4:false});t1
 Table({Field1:1,Field2:"earth",Field3:DateTime(2022,12,12,0,0,0,0),Field4:false})
 
+>> Patch(t1, r1, {Field3:DateTime(2022,12,12,0,0,0,0)}, {Field4:false})
+{Field1:1,Field2:"earth",Field3:DateTime(2022,12,12,0,0,0,0),Field4:false}
+
 >> Patch(t1, r1, r2);t1
 Table({Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false})
 
+>> Patch(t1, r1, r2)
+{Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false}
+
 >> Patch(t1, r1, {Field5:"Field5"}); t1
-Errors: Error 0-32: The function 'Patch' has some invalid arguments.|Error 14-31: The specified column 'Field5' does not exist. The column with the most similar name is 'Field1'.
+Errors: Error 0-32: The function 'Patch' has some invalid arguments.|Error 14-31: The specified column 'Field5' does not exist.
 
 // This test would fail in PA.
 >> Patch(Table(r1, r2), r1, {Field2:"Venus"})
@@ -54,3 +59,69 @@ Blank()
 
 >> Patch(t1, r1, {Field1:1/0}, {Field1:10});t1
 Table({Field1:10,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})
+
+>> Collect(t1,{Field1:3,Field2:"phobos",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false});
+  Collect(t1,{Field1:2,Field2:"deimos",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false});
+  Patch(t1,{Field2:"deimos"},{Field3:DateTime(2030,2,1,0,0,0,0)})
+{Field1:2,Field2:"deimos",Field3:DateTime(2030,2,1,0,0,0,0),Field4:false}
+
+>> Collect(t1,{Field1:3,Field2:"phobos",Field3:DateTime(2024,2,1,0,0,0,0),Field4:false});
+  Collect(t1,{Field1:2,Field2:"deimos",Field3:DateTime(2025,2,1,0,0,0,0),Field4:false});
+  Patch(t1,{Field3:DateTime(2025,2,1,0,0,0,0)},{Field2:"pandora", Field1:55})
+{Field1:55,Field2:"pandora",Field3:DateTime(2025,2,1,0,0,0,0),Field4:false}
+
+>> Collect(t1, r2);Patch(t1, {Field4:true}, {Field2:"phobos"});First(t1).DisplayNameField2
+"phobos"
+
+>> Patch(t1, 0, 0)
+Errors: Error 0-15: The function 'Patch' has some invalid arguments.|Error 10-11: Invalid argument type (Number). Expecting a Record value instead.|Error 13-14: Invalid argument type (Number). Expecting a Record value instead.|Error 10-11: Cannot use a non-record value in this context.|Error 13-14: Cannot use a non-record value in this context.
+
+>> Patch(Table({field1:2,field2:{field21:"earth",field22:"venus"}},{field1:3,field2:{field21:"moon",field22:"phobos"}}),{field2:{field21:"moon"}},{field1:7})
+{field1:7,field2:{field21:"moon",field22:"phobos"}}
+
+>> Patch(Table(
+  {Planet:"earth",Properties:{Color:"blue",Size:"small",Weight:1000,Moon:{Name:"Moon", Color:"Silver"}}},
+  {Planet:"Saturn",Properties:{Color:"red-brown",Size:"huge",Weight:99999,Moon:{Name:"Phobos", Color:"yellow"}}}),
+  {Properties:{Moon:{Name:"Phobos"}}},
+  {Planet:"Jupter"})
+{Planet:"Jupter",Properties:{Color:"red-brown",Moon:{Color:"yellow",Name:"Phobos"},Size:"huge",Weight:99999}}
+
+// Display names
+>> Patch(t1, {DisplayNameField2:"earth"}, {Field2:"mars"});t1
+Table({Field1:1,Field2:"mars",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})
+
+>> Patch(t1, First(t1), {DisplayNameField2:"Saturn"});First(t1)
+{Field1:1,Field2:"Saturn",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}
+
+>> Patch(t1, r1, {DisplayNameField1:123,DisplayNameField2:"sun",DisplayNameField3:DateTime(2022,12,12,0,0,0,0),DisplayNameField4:false});First(t1)
+{Field1:123,Field2:"sun",Field3:DateTime(2022,12,12,0,0,0,0),Field4:false}
+
+>> Patch(t1, First(t1), {DisplayNameField1:1/0});t1
+Table({Field1:Microsoft.PowerFx.Types.ErrorValue,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})
+
+>> Patch(t1, First(t1), {DisplayNameField1:1/0}, {DisplayNameField1:Blank()}, {DisplayNameField1:0});t1
+Table({Field1:0,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})
+
+>> Patch(t1, First(t1), {DisplayNameField2:"jupter"});First(t1).DisplayNameField2
+"jupter"
+
+>> Patch(t1, First(t1), {DisplayNameField2:"jupter"});First(t1).Field2
+"jupter"
+
+>> Patch(t1, First(t1), {DisplayNameField5:"Pandora"});First(t1)
+Errors: Error 0-51: The function 'Patch' has some invalid arguments.|Error 21-50: The specified column 'DisplayNameField5' does not exist. The column with the most similar name is 'DisplayNameField1'.
+
+>> Patch(t1, {Field1:1}, {DisplayNameField2:"mars"});First(t1).Field2
+"mars"
+
+
+
+// Base record not found
+>> Patch(t1, {Field1:55}, {DisplayNameField2:"mars"})
+Blank()
+
+>> Patch(t1, {DisplayNameField1:55}, {DisplayNameField2:"mars"})
+Blank()
+
+>> Patch(t1, {DisplayNameField1:1/0}, {DisplayNameField2:"mars"})
+Blank()

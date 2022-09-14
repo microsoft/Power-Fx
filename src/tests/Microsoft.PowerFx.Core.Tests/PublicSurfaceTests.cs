@@ -159,8 +159,6 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Intellisense.UIString",
 
                 // TBD ...
-                "Microsoft.PowerFx.Core.App.DefaultEnabledFeatures",
-                "Microsoft.PowerFx.Core.App.IExternalEnabledFeatures",
                 "Microsoft.PowerFx.Core.DisplayNameProvider",
                 "Microsoft.PowerFx.Core.DisplayNameUtility",
                 "Microsoft.PowerFx.Core.Localization.ErrorResourceKey",                

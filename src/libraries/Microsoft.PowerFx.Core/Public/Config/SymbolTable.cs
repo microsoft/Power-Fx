@@ -44,7 +44,7 @@ namespace Microsoft.PowerFx
 
     /// <summary>
     /// Provides symbols to the engine. This includes variables (locals, globals), enums, options sets, and functions.
-    /// SymbolTables are mutable to support sessionful scenarios and can abe chained together. 
+    /// SymbolTables are mutable to support sessionful scenarios and can be chained together. 
     /// This is a publicly facing class around a <see cref="INameResolver"/>.
     /// </summary>
     [DebuggerDisplay("{DebugName}")]
