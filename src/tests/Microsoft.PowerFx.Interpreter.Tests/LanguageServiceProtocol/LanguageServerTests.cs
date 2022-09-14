@@ -24,7 +24,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         {
             PropertyNameCaseInsensitive = true,
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-            Converters = { new FormulaTypeJsonConverter(new DefinedTypeSymbolTable()) }
+            Converters = { new FormulaTypeJsonConverter() }
         };
 
         protected List<string> _sendToClientData;
@@ -861,7 +861,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         [InlineData("{\"A\": 1 }", "A+2", typeof(NumberType))]
         [InlineData("{}", "\"hi\"", typeof(StringType))]
         [InlineData("{}", "", typeof(BlankType))]
-        [InlineData("{}", "{ A: 1 }", typeof(UserDefinedRecordType))]
+        [InlineData("{}", "{ A: 1 }", typeof(KnownRecordType))]
         [InlineData("{}", "[1, 2, 3]", typeof(TableType))]
         [InlineData("{}", "true", typeof(BooleanType))]
         public void TestPublishExpressionType(string context, string expression, System.Type expectedType)
@@ -921,12 +921,12 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         }
 
         [Theory]
-        [InlineData(false, "{}", "{ A: 1 }", "{\"type\":{\"name\":\"Record\",\"isTable\":false},\"fields\":{\"A\":{\"type\":{\"name\":\"Number\",\"isTable\":false}}}}")]
-        [InlineData(false, "{}", "[1, 2]", "{\"type\":{\"name\":\"Record\",\"isTable\":true},\"fields\":{\"Value\":{\"type\":{\"name\":\"Number\",\"isTable\":false}}}}")]
-        [InlineData(true, "{}", "[{ A: 1 }, { B: true }]", "{\"type\":{\"name\":\"Record\",\"isTable\":true},\"fields\":{\"A\":{\"type\":{\"name\":\"Number\",\"isTable\":false}},\"B\":{\"type\":{\"name\":\"Boolean\",\"isTable\":false}}}}")]
-        [InlineData(false, "{}", "[{ A: 1 }, { B: true }]", "{\"type\":{\"name\":\"Record\",\"isTable\":true},\"fields\":{\"Value\":{\"type\":{\"name\":\"Record\",\"isTable\":false},\"fields\":{\"A\":{\"type\":{\"name\":\"Number\",\"isTable\":false}},\"B\":{\"type\":{\"name\":\"Boolean\",\"isTable\":false}}}}}}")]
-        [InlineData(false, "{}", "{A: 1, B: { C: { D: \"Qwerty\" }, E: true } }", "{\"type\":{\"name\":\"Record\",\"isTable\":false},\"fields\":{\"A\":{\"type\":{\"name\":\"Number\",\"isTable\":false}},\"B\":{\"type\":{\"name\":\"Record\",\"isTable\":false},\"fields\":{\"C\":{\"type\":{\"name\":\"Record\",\"isTable\":false},\"fields\":{\"D\":{\"type\":{\"name\":\"Text\",\"isTable\":false}}}},\"E\":{\"type\":{\"name\":\"Boolean\",\"isTable\":false}}}}}}")]
-        [InlineData(false, "{}", "{ type: 123 }", "{\"type\":{\"name\":\"Record\",\"isTable\":false},\"fields\":{\"type\":{\"type\":{\"name\":\"Number\",\"isTable\":false}}}}")]
+        [InlineData(false, "{}", "{ A: 1 }", @"{""Type"":""Record"",""Fields"":{""A"":{""Type"":""Number""}}}")]
+        [InlineData(false, "{}", "[1, 2]", @"{""Type"":""Table"",""Fields"":{""Value"":{""Type"":""Number""}}}")]
+        [InlineData(true, "{}", "[{ A: 1 }, { B: true }]", @"{""Type"":""Table"",""Fields"":{""A"":{""Type"":""Number""},""B"":{""Type"":""Boolean""}}}")]
+        [InlineData(false, "{}", "[{ A: 1 }, { B: true }]", @"{""Type"":""Table"",""Fields"":{""Value"":{""Type"":""Record"",""Fields"":{""A"":{""Type"":""Number""},""B"":{""Type"":""Boolean""}}}}}")]
+        [InlineData(false, "{}", "{A: 1, B: { C: { D: \"Qwerty\" }, E: true } }", @"{""Type"":""Record"",""Fields"":{""A"":{""Type"":""Number""},""B"":{""Type"":""Record"",""Fields"":{""C"":{""Type"":""Record"",""Fields"":{""D"":{""Type"":""String""}}},""E"":{""Type"":""Boolean""}}}}}")]
+        [InlineData(false, "{}", "{ type: 123 }", @"{""Type"":""Record"",""Fields"":{""type"":{""Type"":""Number""}}}")]
         public void TestPublishExpressionType_AggregateShapes(bool tableSyntaxDoesntWrapRecords, string context, string expression, string expectedTypeJson)
         {
             Init(tableSyntaxDoesntWrapRecords ? Features.TableSyntaxDoesntWrapRecords : Features.None);
@@ -951,7 +951,6 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             var response = JsonSerializer.Deserialize<JsonRpcPublishExpressionTypeNotification>(_sendToClientData[1], _jsonSerializerOptions);
             Assert.Equal("$/publishExpressionType", response.Method);
             Assert.Equal(documentUri, response.Params.Uri);
-            var result = JsonSerializer.Serialize(response.Params.Type, _jsonSerializerOptions);
             Assert.Equal(expectedTypeJson, JsonSerializer.Serialize(response.Params.Type, _jsonSerializerOptions));
         }
 

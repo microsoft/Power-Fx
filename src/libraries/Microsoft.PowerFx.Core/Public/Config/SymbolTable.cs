@@ -61,7 +61,7 @@ namespace Microsoft.PowerFx
             }
         }
 
-        protected void ValidateName(string name)
+        private void ValidateName(string name)
         {
             if (!DName.IsValidDName(name))
             {

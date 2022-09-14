@@ -39,12 +39,13 @@ namespace Microsoft.PowerFx.Tests
 #pragma warning disable CS0162 // Unreachable code due to a local switch to regenerate baseline files
                     try
                     {
+                        Assert.True(false);
                         TestUtils.AssertJsonEqual(actual, expected);
                     }
                     catch (Xunit.Sdk.XunitException)
                     {
                         // Only rewrite if the JSON has meaningfully changed
-                        File.WriteAllText(typeSnapshot, actual);
+                        File.WriteAllText(typeSnapshot, actual + "\r\n");
                     }
                 }
                 else
@@ -62,7 +63,7 @@ namespace Microsoft.PowerFx.Tests
                     Directory.CreateDirectory(directory);
                 }
 
-                File.WriteAllText(typeSnapshot, actual);
+                File.WriteAllText(typeSnapshot, actual + "\r\n");
             }
         }
 
