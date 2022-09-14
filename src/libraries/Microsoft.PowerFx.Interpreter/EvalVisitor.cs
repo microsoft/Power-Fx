@@ -45,7 +45,7 @@ namespace Microsoft.PowerFx
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public T GetService<T>() 
+        public T GetService<T>()
         {
             if (_runtimeConfig != null)
             {
@@ -481,6 +481,35 @@ namespace Microsoft.PowerFx
                 }
 
                 return new InMemoryTableValue(node.IRContext, resultRows);
+            }
+
+            if (node.Op == UnaryOpKind.RecordToRecord)
+            {
+                if (arg1 is RecordValue record)
+                {
+                    var fields = new List<NamedValue>();
+                    var scopeContext = context.SymbolContext.WithScope(node.Scope);
+                    foreach (var coercion in node.FieldCoercions)
+                    {
+                        CheckCancel();
+                        var newScope = scopeContext.WithScopeValues(record);
+                        var newValue = await coercion.Value.Accept(this, context.NewScope(newScope));
+
+                        if (newValue is ErrorValue)
+                        {
+                            return newValue;
+                        }
+
+                        var name = coercion.Key;
+                        fields.Add(new NamedValue(name.Value, newValue));
+                    }
+
+                    return new InMemoryRecordValue(node.IRContext, fields);
+                }
+                else if (arg1 is BlankValue bv)
+                {
+                    return new InMemoryRecordValue(node.IRContext, Enumerable.Empty<NamedValue>());
+                }
             }
 
             return CommonErrors.UnreachableCodeError(node.IRContext);
