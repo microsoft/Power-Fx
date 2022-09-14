@@ -39,7 +39,6 @@ namespace Microsoft.PowerFx.Tests
 #pragma warning disable CS0162 // Unreachable code due to a local switch to regenerate baseline files
                     try
                     {
-                        Assert.True(false);
                         TestUtils.AssertJsonEqual(actual, expected);
                     }
                     catch (Xunit.Sdk.XunitException)

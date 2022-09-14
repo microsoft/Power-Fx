@@ -15,7 +15,7 @@ namespace Microsoft.PowerFx.Core
         private readonly FormulaTypeSchema _backingSchema;
         private readonly DefinedTypeSymbolTable _symbolTable;
 
-        public override IEnumerable<string> FieldNames => _backingSchema.Fields.Keys;
+        public override IEnumerable<string> FieldNames => _backingSchema.Fields?.Keys ?? Enumerable.Empty<string>();
 
         public UserDefinedRecordType(FormulaTypeSchema backingSchema, DefinedTypeSymbolTable definedTypes)
         {
