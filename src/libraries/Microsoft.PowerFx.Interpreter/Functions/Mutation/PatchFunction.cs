@@ -226,6 +226,8 @@ namespace Microsoft.PowerFx.Functions
                     }
                 }
 
+                var fError = false;
+
                 if (isValid && SupportsParamCoercion && !dataSourceType.Accepts(curType))
                 {
                     if (!curType.TryGetCoercionSubType(dataSourceType, out DType coercionType, out var coercionNeeded))
@@ -239,7 +241,22 @@ namespace Microsoft.PowerFx.Functions
                             CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i], coercionType);
                         }
 
-                        retType = DType.Union(retType, coercionType);
+                        // Promote the arg type to a table to facilitate unioning.
+                        if (!coercionType.IsTable)
+                        {
+                            coercionType = coercionType.ToTable();
+                        }
+
+                        retType = DType.Union(ref fError, dataSourceType, coercionType, useLegacyDateTimeAccepts: true);
+
+                        if (fError)
+                        {
+                            isValid = false;
+                            if (!SetErrorForMismatchedColumns(dataSourceType, coercionType, args[1], errors))
+                            {
+                                errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrNeedValidVariableName_Arg);
+                            }
+                        }
                     }
                 }
                 else if (isSafeToUnion)
@@ -247,6 +264,8 @@ namespace Microsoft.PowerFx.Functions
                     retType = DType.Union(retType, curType);
                 }
             }
+
+            returnType = retType;
 
             return isValid;
         }
