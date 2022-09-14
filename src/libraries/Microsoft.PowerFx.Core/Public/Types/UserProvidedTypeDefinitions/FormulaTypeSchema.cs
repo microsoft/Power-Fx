@@ -57,6 +57,7 @@ namespace Microsoft.PowerFx.Core
     {
         public string Name { get; init; }
 
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public bool IsTable { get; init; }
     }
 }

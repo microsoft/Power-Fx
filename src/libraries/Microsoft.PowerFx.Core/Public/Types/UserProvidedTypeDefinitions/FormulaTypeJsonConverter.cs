@@ -10,7 +10,7 @@ using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
 
-namespace Microsoft.PowerFx.LanguageServerProtocol
+namespace Microsoft.PowerFx.Core
 {
     internal class FormulaTypeJsonConverter : JsonConverter<FormulaType>
     {
