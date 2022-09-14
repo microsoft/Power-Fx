@@ -125,3 +125,7 @@ Blank()
 
 >> Patch(t1, {DisplayNameField1:1/0}, {DisplayNameField2:"mars"})
 Blank()
+
+// Record to Record coercion
+>> Patch(t1, First(Filter(t1, Field2="earth")), {Field3: "2022-11-14 7:22:06 pm"})
+{Field1:1,Field2:"earth",Field3:DateTime(2022,11,14,19,22,6,0),Field4:true}
