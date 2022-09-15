@@ -63,6 +63,11 @@ namespace Microsoft.PowerFx
         public ParseResult Parse { get; set; }
 
         /// <summary>
+        /// Symbols passed to this binding. May be null. 
+        /// </summary>
+        public ReadOnlySymbolTable Symbols { get; set; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="CheckResult"/> class.
         /// </summary>
         public CheckResult()
