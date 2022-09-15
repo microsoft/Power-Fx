@@ -228,16 +228,16 @@ namespace Microsoft.PowerFx.Functions
                         continue;
                     }
 
-                    if (!dsNameType.Accepts(type, out var schemaDifference, out var schemaDifferenceType) &&
+                    if (!type.Accepts(dsNameType, out var schemaDifference, out var schemaDifferenceType) &&
                         (!SupportsParamCoercion || !type.CoercesTo(dsNameType, out var coercionIsSafe, aggregateCoercion: false) || !coercionIsSafe))
                     {
-                        if (dsNameType.Kind != type.Kind)
-                        //{
-                        //    errors.Errors(args[i], type, schemaDifference, schemaDifferenceType);
-                        //}
-                        //else
+                        if (dsNameType.Kind == type.Kind)
                         {
-                            errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrTypeError_Arg_Expected_Found, name, dsNameType.GetKindString(), type.GetKindString());
+                            errors.Errors(args[i], type, schemaDifference, schemaDifferenceType);
+                        }
+                        else
+                        {
+                            errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrTypeError_Arg_Expected_Found, name, dsNameType.GetKindString(), type.GetKindString());                            
                         }
 
                         isValid = isSafeToUnion = false;

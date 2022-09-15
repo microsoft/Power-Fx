@@ -1,7 +1,9 @@
-﻿using System;
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Runtime.Serialization;
 using System.Threading;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Entities.Delegation;
@@ -19,12 +21,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 {
     public class DatabaseSimulationTests
     {
-        [Fact]
-        public void DatabaseSimulation_Test()
+        [Theory]
+        [InlineData("Patch(Table, First(Filter(Table, MyStr=\"Str3\")), {MyDate: \"2022-11-14 7:22:06 pm\"})", false)]
+        [InlineData("Patch(Table, First(Filter(Table, MyStr=\"Str3\")), {MyDate: DateTimeValue(\"2022-11-14 7:22:06 pm\") })", true)]
+        public void DatabaseSimulation_Test(string expr, bool checkSuccess)
         {
-            // var expr = "Patch(Table, First(Filter(Table, MyStr=\"Str3\")), {MyDate: \"2022-11-14 7:22:06 pm\"})";
-            var expr = "Patch(Table, First(Filter(Table, MyStr=\"Str3\")), {MyDate: DateTimeValue(\"2022-11-14 7:22:06 pm\") })";
-
             var databaseTable = DatabaseTable.CreateTestTable();
             var symbols = new SymbolTable();
 
@@ -35,10 +36,17 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var runtimeConfig = ReadOnlySymbolValues.New(new Dictionary<string, DatabaseTable>() { { "Table", databaseTable } });
 
             CheckResult check = engine.Check(expr, symbolTable: symbols, options: new ParserOptions() { AllowsSideEffects = true });
-            Assert.True(check.IsSuccess, string.Join("\r\n", check.Errors.Select(ee => ee.Message)));
+            Assert.Equal(checkSuccess, check.IsSuccess);
+
+            if (!check.IsSuccess)
+            {
+                return;
+            }
 
             IExpressionEvaluator run = check.GetEvaluator();
             FormulaValue result = run.EvalAsync(CancellationToken.None, runtimeConfig).Result;
+
+            Assert.IsType<BlankValue>(result);
         }
 
         internal class DatabaseTable : InMemoryTableValue
@@ -46,7 +54,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             internal static TableType TestTableType => DatabaseRecord.TestRecordType.ToTable();
 
             internal static DatabaseTable CreateTestTable() =>
-                new(
+                new (
                     IRContext.NotInSource(TestTableType),
                     new List<DValue<RecordValue>>()
                     {
@@ -69,12 +77,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             internal static RecordType TestRecordType => RecordType.Empty()
                 .Add("logicStr", FormulaType.String, "MyStr")
-                .Add("logicDate", FormulaType.Date, "MyDate")
+                .Add("logicDate", FormulaType.DateTime, "MyDate")
                 .Add("logicNum", FormulaType.Number, "MyNum")
                 .Add("logicEnt", TestEntityType, "MyEntity");
 
             internal static DatabaseRecord CreateTestRecord(string myStr, DateTime myDate, double myNum) =>
-                new(
+                new (
                     IRContext.NotInSource(TestRecordType),
                     new List<NamedValue>()
                     {
@@ -120,7 +128,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
         internal class TestEntityValue : ValidFormulaValue
         {
-            public TestEntityValue(IRContext irContext) 
+            public TestEntityValue(IRContext irContext)
                 : base(irContext)
             {
             }
@@ -140,7 +148,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         {
             public bool TryGetEntityMetadata(string expandInfoIdentity, out IDataEntityMetadata entityMetadata)
             {
-                throw new NotImplementedException();
+                // Getting Metadata isn't allowed for performance reasons only
+                throw new GettingMetadataNotAllowedException();
             }
         }
 
@@ -287,7 +296,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         {
             internal TestDataSource DataSource;
 
-            internal  TestExpandInfo()
+            internal TestExpandInfo()
             {
                 DataSource = new TestDataSource();
             }
@@ -315,6 +324,28 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             }
 
             public void UpdateEntityInfo(IExternalDataSource dataSource, string relatedEntityPath)
+            {
+            }
+        }
+        
+        internal class GettingMetadataNotAllowedException : Exception
+        {
+            public GettingMetadataNotAllowedException()
+            {
+            }
+
+            public GettingMetadataNotAllowedException(string message) 
+                : base(message)
+            {
+            }
+
+            public GettingMetadataNotAllowedException(string message, Exception innerException) 
+                : base(message, innerException)
+            {
+            }
+
+            protected GettingMetadataNotAllowedException(SerializationInfo info, StreamingContext context) 
+                : base(info, context)
             {
             }
         }
