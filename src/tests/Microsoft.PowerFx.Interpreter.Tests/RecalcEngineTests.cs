@@ -37,7 +37,9 @@ namespace Microsoft.PowerFx.Tests
                 $"{ns}.{nameof(ReadOnlySymbolValues)}",
                 $"{ns}.{nameof(RecalcEngine)}",
                 $"{ns}.{nameof(ReflectionFunction)}",
+#pragma warning disable CS0618 // Type or member is obsolete
                 $"{ns}.{nameof(RecalcEngineScope)}",
+#pragma warning restore CS0618 // Type or member is obsolete
                 $"{ns}.{nameof(PowerFxConfigExtensions)}",
                 $"{ns}.{nameof(IExpressionEvaluator)}",
                 $"{ns}.{nameof(ITypeMarshallerProvider)}",
