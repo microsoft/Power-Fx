@@ -191,11 +191,17 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             }
 
             // RHS always needs to be firstname node or dottedname lambda access to support delegation.
-            if (!(_binaryOpNode.Right.Kind == NodeKind.FirstName ||
-                binding.IsFullRecordRowScopeAccess(_binaryOpNode.Right) ||
-                (metadata.IsDelegationSupportedByTable(DelegationCapability.CdsIn) &&
+            var isRHSFirstName = _binaryOpNode.Right.Kind == NodeKind.FirstName;
+            var isRHSRecordScope = binding.IsFullRecordRowScopeAccess(_binaryOpNode.Right);
+            
+            // Check if this is a table delegation for CDS in operator
+            var isCdsInTableDelegation = metadata.IsDelegationSupportedByTable(DelegationCapability.CdsIn) &&
+                /* Left node can be first name, row scope lambda or a lookup column */
                 (_binaryOpNode.Left.Kind == NodeKind.FirstName || binding.IsFullRecordRowScopeAccess(_binaryOpNode.Left) || (_binaryOpNode.Left.Kind == NodeKind.DottedName && binding.GetType((_binaryOpNode.Left as DottedNameNode).Left).HasExpandInfo)) &&
-                (_binaryOpNode.Right.Kind == NodeKind.Table || binding.GetType(_binaryOpNode.Right)?.IsColumn == true))))
+                /* Right has to be a single column table */
+                (_binaryOpNode.Right.Kind == NodeKind.Table || binding.GetType(_binaryOpNode.Right)?.IsColumn == true);
+
+            if (!(isRHSFirstName || isRHSRecordScope || isCdsInTableDelegation))
             {
                 return false;
             }
