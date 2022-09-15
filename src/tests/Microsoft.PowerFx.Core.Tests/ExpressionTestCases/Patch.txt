@@ -76,8 +76,12 @@ Table({Field1:10,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})
 >> Patch(t1, 0, 0)
 Errors: Error 0-15: The function 'Patch' has some invalid arguments.|Error 10-11: Invalid argument type (Number). Expecting a Record value instead.|Error 13-14: Invalid argument type (Number). Expecting a Record value instead.|Error 10-11: Cannot use a non-record value in this context.|Error 13-14: Cannot use a non-record value in this context.
 
->> Patch(Table({field1:2,field2:{field21:"earth",field22:"venus"}},{field1:3,field2:{field21:"moon",field22:"phobos"}}),{field2:{field21:"moon"}},{field1:7})
-{field1:7,field2:{field21:"moon",field22:"phobos"}}
+// field22 is missing and this is Ok
+>> Patch(Table({field1:2, field2:{field21:"earth",field22:"venus"}},
+               {field1:3, field2:{field21:"moon",field22:"phobos"}}),
+   {field2:{field21:"moon"}},
+   {field1:7})
+{field1:7, field2:{field21:"moon",field22:"phobos"}}
 
 >> Patch(Table(
   {Planet:"earth",Properties:{Color:"blue",Size:"small",Weight:1000,Moon:{Name:"Moon", Color:"Silver"}}},
@@ -115,7 +119,6 @@ Errors: Error 0-51: The function 'Patch' has some invalid arguments.|Error 21-50
 "mars"
 
 
-
 // Base record not found
 >> Patch(t1, {Field1:55}, {DisplayNameField2:"mars"})
 Blank()
@@ -126,6 +129,7 @@ Blank()
 >> Patch(t1, {DisplayNameField1:1/0}, {DisplayNameField2:"mars"})
 Blank()
 
+
 // Record to Record coercion
 >> Patch(t1, First(Filter(t1, Field2="earth")), {Field3: "2022-11-14 7:22:06 pm"})
-{Field1:1,Field2:"earth",Field3:DateTime(2022,11,14,19,22,6,0),Field4:true}
+Errors: Error 0-79: The function 'Patch' has some invalid arguments.|Error 45-78: The type of this argument 'Field3' does not match the expected type 'DateTime'. Found type 'Text'.
