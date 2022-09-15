@@ -89,6 +89,8 @@ namespace Microsoft.PowerFx.Core.Parser
                 {
                     break;
                 }
+
+                ParseTrivia();
             }
 
             return new ParseUDFsResult(udfs, _errors);
