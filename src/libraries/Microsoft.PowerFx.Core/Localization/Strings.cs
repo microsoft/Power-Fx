@@ -346,6 +346,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static StringGetter AboutClock__AmPmShort = (b) => StringResources.Get("AboutClock__AmPmShort", b);
         public static StringGetter AboutClock__IsClock24 = (b) => StringResources.Get("AboutClock__IsClock24", b);
 
+        public static StringGetter AboutDateTime = (b) => StringResources.Get("AboutDateTime", b);
         public static StringGetter AboutDateValue = (b) => StringResources.Get("AboutDateValue", b);
         public static StringGetter DateValueArg1 = (b) => StringResources.Get("DateValueArg1", b);
         public static StringGetter DateValueArg2 = (b) => StringResources.Get("DateValueArg2", b);

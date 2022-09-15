@@ -25,7 +25,7 @@ namespace Microsoft.PowerFx
     /// </summary>
     [DebuggerDisplay("{_debugName}")]
     [ThreadSafeImmutable]
-    public class ReadOnlySymbolTable : INameResolver, IGlobalSymbolNameResolver
+    public class ReadOnlySymbolTable : INameResolver, IGlobalSymbolNameResolver, IEnumStore
     {
         // Changed on each update. 
         // Host can use to ensure that a symbol table wasn't mutated on us.                 
@@ -66,7 +66,7 @@ namespace Microsoft.PowerFx
         /// <returns></returns>
         public static ReadOnlySymbolTable NewFromRecord(RecordType type, ReadOnlySymbolTable parent = null)
         {
-            return new SymbolTableOverRecordType(type ?? RecordType.Empty(), parent);            
+            return new SymbolTableOverRecordType(type ?? RecordType.Empty(), parent);
         }
 
         public static ReadOnlySymbolTable Compose(params ReadOnlySymbolTable[] tables)
@@ -103,6 +103,7 @@ namespace Microsoft.PowerFx
 
         // Which enums are available. 
         // These do not compose - only bottom one wins. 
+        // ComposedReadOnlySymbolTable will handle composition by looking up in each symbol table. 
         private protected EnumStoreBuilder _enumStoreBuilder;
         private EnumSymbol[] _enumSymbolCache;
 
@@ -126,11 +127,31 @@ namespace Microsoft.PowerFx
             }
         }
 
+        IEnumerable<EnumSymbol> IEnumStore.EnumSymbols => GetEnumSymbolSnapshot;
+
         internal IEnumerable<TexlFunction> Functions => ((INameResolver)this).Functions;
 
         IEnumerable<TexlFunction> INameResolver.Functions => _functions;
 
         IReadOnlyDictionary<string, NameLookupInfo> IGlobalSymbolNameResolver.GlobalSymbols => _variables;
+
+        /// <summary>
+        /// Get symbol names in this current scope.
+        /// </summary>
+        public IEnumerable<NamedFormulaType> SymbolNames
+        {
+            get 
+            {
+                IGlobalSymbolNameResolver globals = this;
+                
+                // GlobalSymbols are virtual, so we get derived behavior via that.
+                foreach (var kv in globals.GlobalSymbols)
+                {
+                    var type = FormulaType.Build(kv.Value.Type);
+                    yield return new NamedFormulaType(kv.Key, type);
+                }
+            }
+        }
 
         internal string GetSuggestableSymbolName(IExternalEntity entity)
         {
