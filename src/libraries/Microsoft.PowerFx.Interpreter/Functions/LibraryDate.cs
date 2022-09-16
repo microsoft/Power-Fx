@@ -101,8 +101,7 @@ namespace Microsoft.PowerFx.Functions
                         newDate = datetime.AddYears((int)deltaValue);
                         break;
                     default:
-                        // TODO: Task 10723372: Implement Unit Functionality in DateAdd, DateDiff Functions
-                        return CommonErrors.NotYetImplementedError(irContext, "DateAdd Only supports Days for the unit field");
+                        return GetInvalidUnitError(irContext, "DateAdd");
                 }
 
                 if (isSubdayUnit)
@@ -214,9 +213,18 @@ namespace Microsoft.PowerFx.Functions
                     var days = Math.Floor((end - start).TotalDays);
                     return new NumberValue(irContext, days);
                 default:
-                    // TODO: Task 10723372: Implement Unit Functionality in DateAdd, DateDiff Functions
-                    return CommonErrors.NotYetImplementedError(irContext, "DateDiff Only supports Days for the unit field");
+                    return GetInvalidUnitError(irContext, "DateDiff");
             }
+        }
+
+        private static ErrorValue GetInvalidUnitError(IRContext irContext, string functionName)
+        {
+            return new ErrorValue(irContext, new ExpressionError()
+            {
+                Message = $"The third argument to the {functionName} function is invalid",
+                Span = irContext.SourceContext,
+                Kind = ErrorKind.InvalidArgument
+            });
         }
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-datetime-parts
@@ -423,12 +431,20 @@ namespace Microsoft.PowerFx.Functions
             var month = (int)args[1].Value;
             var day = (int)args[2].Value;
             var date = DateImpl(IRContext.NotInSource(FormulaType.Date), year, month, day);
+            if (date is ErrorValue)
+            {
+                return date;
+            }
 
             var hour = (int)args[3].Value;
             var minute = (int)args[4].Value;
             var second = (int)args[5].Value;
             var millisecond = (int)args[6].Value;
             var time = TimeImpl(IRContext.NotInSource(FormulaType.Time), hour, minute, second, millisecond);
+            if (time is ErrorValue)
+            {
+                return time;
+            }
 
             var result = AddDateAndTime(irContext, new[] { date, time });
 

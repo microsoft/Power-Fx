@@ -111,7 +111,7 @@ namespace Microsoft.PowerFx.Functions
                 }
                 else
                 {
-                    return FiniteChecker(irContext, 0, new NumberValue(irContext, _m2Acc / _count));
+                    return new NumberValue(irContext, _m2Acc / _count);
                 }
             }
         }
@@ -126,7 +126,7 @@ namespace Microsoft.PowerFx.Functions
                 }
                 else
                 {
-                    return FiniteChecker(irContext, 0, new NumberValue(irContext, Math.Sqrt(_m2Acc / _count)));
+                    return new NumberValue(irContext, Math.Sqrt(_m2Acc / _count));
                 }
             }
         }
@@ -428,7 +428,7 @@ namespace Microsoft.PowerFx.Functions
             return agg.GetResult(irContext);
         }
 
-        private static async Task<FormulaValue> RunAggregatorAsync(IAggregator agg, EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        private static async Task<FormulaValue> RunAggregatorAsync(string functionName, IAggregator agg, EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             var arg0 = (TableValue)args.First();
             var arg1 = (LambdaFormulaValue)args.Skip(1).First();
@@ -440,12 +440,8 @@ namespace Microsoft.PowerFx.Functions
                     var childContext = context.SymbolContext.WithScopeValues(row.Value);
                     var value = await arg1.EvalAsync(runner, context.NewScope(childContext));
 
-                    if (value is NumberValue number)
-                    {
-                        value = FiniteChecker(irContext, 0, number);
-                    }
-
-                    if (value is ErrorValue error)
+                    var error = FiniteResultCheck(functionName, irContext, value);
+                    if (error != null)
                     {
                         return error;
                     }
@@ -474,7 +470,7 @@ namespace Microsoft.PowerFx.Functions
         // Sum([1,2,3], Value * Value)     
         public static async ValueTask<FormulaValue> SumTable(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            return await RunAggregatorAsync(new SumAgg(), runner, context, irContext, args);
+            return await RunAggregatorAsync("Sum", new SumAgg(), runner, context, irContext, args);
         }
 
         // VarP(1,2,3)
@@ -486,7 +482,7 @@ namespace Microsoft.PowerFx.Functions
         // VarP([1,2,3], Value * Value)
         public static async ValueTask<FormulaValue> VarTable(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            return await RunAggregatorAsync(new VarianceAgg(), runner, context, irContext, args);
+            return await RunAggregatorAsync("VarP", new VarianceAgg(), runner, context, irContext, args);
         }
 
         internal static FormulaValue Stdev(IRContext irContext, FormulaValue[] args)
@@ -496,7 +492,7 @@ namespace Microsoft.PowerFx.Functions
 
         public static async ValueTask<FormulaValue> StdevTable(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            return await RunAggregatorAsync(new StdDeviationAgg(), runner, context, irContext, args);
+            return await RunAggregatorAsync("StdevP", new StdDeviationAgg(), runner, context, irContext, args);
         }
 
         // Max(1,2,3)     
@@ -521,7 +517,7 @@ namespace Microsoft.PowerFx.Functions
 
             if (agg != null)
             {
-                return await RunAggregatorAsync(agg, runner, context, irContext, args);
+                return await RunAggregatorAsync("Max", agg, runner, context, irContext, args);
             }
             else
             {
@@ -551,7 +547,7 @@ namespace Microsoft.PowerFx.Functions
 
             if (agg != null)
             {
-                return await RunAggregatorAsync(agg, runner, context, irContext, args);
+                return await RunAggregatorAsync("Min", agg, runner, context, irContext, args);
             }
             else
             {
@@ -603,7 +599,7 @@ namespace Microsoft.PowerFx.Functions
                 return CommonErrors.DivByZeroError(irContext);
             }
 
-            return await RunAggregatorAsync(new AverageAgg(), runner, context, irContext, args);
+            return await RunAggregatorAsync("Average", new AverageAgg(), runner, context, irContext, args);
         }
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-mod
@@ -611,6 +607,11 @@ namespace Microsoft.PowerFx.Functions
         {
             var arg0 = args[0].Value;
             var arg1 = args[1].Value;
+
+            if (arg1 == 0)
+            {
+                return CommonErrors.DivByZeroError(irContext);
+            }
 
             // r = a – N × floor(a/b)
             var q = (long)Math.Floor(arg0 / arg1);
@@ -668,11 +669,6 @@ namespace Microsoft.PowerFx.Functions
             var digitsArg = args[1].Value;
 
             var x = Round(numberArg, digitsArg);
-            if (x == double.NaN)
-            {
-                return CommonErrors.NumericOutOfRange(irContext);
-            }
-
             return new NumberValue(irContext, x);
         }
 
@@ -741,12 +737,6 @@ namespace Microsoft.PowerFx.Functions
         public static FormulaValue Ln(IRContext irContext, NumberValue[] args)
         {
             var number = args[0].Value;
-
-            if (number <= 0)
-            {
-                return CommonErrors.ArgumentOutOfRange(irContext);
-            }
-
             return new NumberValue(irContext, Math.Log(number));
         }
 
@@ -805,8 +795,7 @@ namespace Microsoft.PowerFx.Functions
                 return CommonErrors.OverflowError(irContext);
             }
 
-            var result = new NumberValue(irContext, d);
-            return FiniteChecker(irContext, 1, result);
+            return new NumberValue(irContext, d);
         }
 
         // Since IRandomService is a pluggable service,

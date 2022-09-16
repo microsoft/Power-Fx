@@ -1,0 +1,386 @@
+﻿>> Abs(1/0)
+#Error(Kind=Div0)
+
+>> Abs(If(1/0<2,[1]))
+#Error(Kind=Div0)
+
+>> ForAll(Abs([0, -1, 1/0, 1, If(Char(0) = "a",-1)]), IfError(Value, -FirstError.Kind))
+[0,1,-13,1,-25]
+
+>> Abs([1])
+#Error(Kind=Div0)
+
+>> Acos(2)
+#Error(Kind=Numeric)
+
+>> Acos(1/0)
+#Error(Kind=Div0)
+
+>> Acot(1/0)
+#Error(Kind=Div0)
+
+>> AddColumns(If(1/0<2,[1]),"Square",Value^2)
+#Error(Kind=Div0)
+
+>> And(true,1/0)
+#Error(Kind=Div0)
+
+>> Asin(-1.5)
+#Error(Kind=Numeric)
+
+>> Asin(1/0)
+#Error(Kind=Div0)
+
+>> Atan(1/0)
+#Error(Kind=Div0)
+
+>> Atan2(0,0)
+#Error(Kind=Div0)
+
+>> Atan2(Sqrt(-1),1)
+#Error(Kind=Numeric)
+
+>> Average(2, Sqrt(-1), 3, 1/0, 4)
+#Error(Kind=Numeric,Div0)
+
+// PPPPP only first error is returned
+>> Average([3, 2, 1, 0, -1, -2], Sqrt(1/Value))
+#Error(Kind=Div0)
+
+>> Boolean("not bool")
+#Error(Kind=InvalidArgument)
+
+>> true && "not bool"
+#Error(Kind=InvalidArgument)
+
+>> true && If(1/0<2,"false")
+#Error(Kind=Div0)
+
+>> Boolean(If(1/0<2,["false","true"]))
+#Error(Kind=Div0)
+
+>> ForAll(Boolean(["true", "not bool", "false"]), IfError(Text(Value), $"ErrorKind={FirstError.Kind}"))
+["true","ErrorKind=25","false"]
+
+>> Boolean(Sqrt(-1))
+#Error(Kind=Numeric)
+
+>> ForAll(Boolean([3, 1/0, 0, Sqrt(-1)]), IfError(Text(Value), $"ErrorKind={FirstError.Kind}"))
+["true","ErrorKind=13","false","ErrorKind=24"]
+
+>> Boolean(ParseJSON("1"))
+#Error(Kind=InvalidArgument)
+
+>> Boolean(ParseJSON("{""a"":""true""}").a)
+#Error(Kind=InvalidArgument)
+
+// PPPPPPPPPP Stops at first error
+>> Concat([3, 2, 1, 0, -1, -2], Text(Sqrt(1/Value)))
+#Error(Kind=Div0)
+
+>> Concat(If(Sqrt(-1)<0,[3, 2, 1, 0, -1, -2]), Text(Sqrt(1/Value)))
+#Error(Kind=Numeric)
+
+>> Coalesce("", Sqrt(-1), 1/0)
+#Error(Kind=Numeric)
+
+>> Char(1/0)
+#Error(Kind=Div0)
+
+>> Char(0)
+#Error(Kind=InvalidArgument)
+
+>> Char(256)
+#Error(Kind=InvalidArgument)
+
+// PPPPPPPP Needs consistent schema flag
+>> ForAll(Char([65, -1, 97, 1000]), IfError(Result, Text(FirstError.Kind)))
+["A","25","a","25"]
+
+>> Concatenate("Hello", If(1/0,"div0"), "world", If(Sqrt(-1)<0,"sqrt"))
+#Error(Kind=Div0,Numeric)
+
+// PPPPPPPPPP Define errors in tabular functions with multiple arguments
+// >> Concatenate(...)
+
+>> Cos(1/0)
+#Error(Kind=Div0)
+
+>> Cot(0)
+#Error(Kind=Div0)
+
+>> Cot(Sqrt(-1))
+#Error(Kind=Numeric)
+
+>> Count(If(1/0<2,[1,2,3]))
+#Error(Kind=Div0)
+
+>> Count([1,Sqrt(-1),3,1/0,5])
+#Error(Kind=Numeric,Div0)
+
+>> CountA(If(1/0<2,[1,2,3]))
+#Error(Kind=Div0)
+
+>> CountA([1,Sqrt(-1),3,1/0,5])
+#Error(Kind=Numeric,Div0)
+
+// PPPPPPPPPP Stops at first error in JS, all errors in C#
+>> CountIf([2,1,0,-1,-2], Sqrt(1/Value)<0)
+#Error(Kind=Div0,Numeric,Numeric)
+
+>> CountIf(If(1/0<2,[1,2,3]),Value>0)
+#Error(Kind=Div0)
+
+>> CountRows(If(1/0<2,[1,2,3]))
+#Error(Kind=Div0)
+
+>> CountRows(Table({a:1},If(Sqrt(-1)<0,{a:2}),{a:3},If(1/0<2,{a:4}),{a:5}))
+#Error(Kind=Numeric,Div0)
+
+>> CountRows(ParseJSON("1"))
+#Error(Kind=InvalidArgument)
+
+>> CountRows(If(1/0<2,ParseJSON("[1,2,3]")))
+#Error(Kind=Div0)
+
+// PPPPPPPPPPPP Numeric in C#, InvalidArgument in JS
+>> Date(-1, -1, -1)
+#Error(Kind=InvalidArgument)
+
+>> Date(2000, Sqrt(-1), 1/0)
+#Error(Kind=Numeric,Div0)
+
+>> DateAdd(Date(2000,1,1), 1, "invalidunit")
+#Error(Kind=InvalidArgument)
+
+>> DateAdd(If(1/0<2,Date(2000,1,1)), If(Sqrt(-1)<0,3))
+#Error(Kind=Div0,Numeric)
+
+>> DateDiff(Date(2000,1,1), Date(2022,1,1), "invalidunit")
+#Error(Kind=InvalidArgument)
+
+>> DateDiff(If(1/0<2,Date(2000,1,1)), If(Sqrt(-1)<0,Date(2022,1,1)))
+#Error(Kind=Div0,Numeric)
+
+// PPPPPPPPPPPP Exception in C#, InvalidArgument in JS
+>> DateTime(-1, -1, -1, -1, -1, -1, -1)
+#Error(Kind=InvalidArgument)
+
+>> DateValue("not a date")
+#Error(Kind=InvalidArgument)
+
+>> DateValue(If(1/0<2,"date"))
+#Error(Kind=Div0)
+
+>> DateValue(ParseJSON("1"))
+#Error(Kind=InvalidArgument)
+
+>> DateTimeValue("not a date")
+#Error(Kind=InvalidArgument)
+
+>> DateTimeValue(If(1/0<2,"date"))
+#Error(Kind=Div0)
+
+>> DateTimeValue(ParseJSON("1"))
+#Error(Kind=InvalidArgument)
+
+>> Day(If(1/0<2,Date(2022,1,1)))
+#Error(Kind=Div0)
+
+>> Degrees(If(1/0<2,Date(2022,1,1)))
+#Error(Kind=Div0)
+
+>> EndsWith(If(Sqrt(-1)<0,"one"), "two")
+#Error(Kind=Numeric)
+
+>> EndsWith("one", If(1/0<0,"two"))
+#Error(Kind=Div0)
+
+>> Error({Kind:ErrorKind.Validation})
+#Error(Kind=Validation)
+
+>> Error({Kind:23})
+#Error(Kind=Network)
+
+>> Error(Table({Kind:15},{Kind:14}))
+#Error(Kind=BadRegex,BadLanguageCode)
+
+>> Exp(1000000)
+#Error(Kind=Numeric)
+
+>> Exp(If(1/0<2,0))
+#Error(Kind=Div0)
+
+>> Exp(If(1/0<0,[1,2,3]))
+#Error(Kind=Div0)
+
+>> ForAll(Exp([0, 1000000000, 0, 1/0, 0, If(Char(0) = "a",-1)]), IfError(Value, -FirstError.Kind))
+[1,-24,1,-13,1,-25]
+
+>> Filter(If(1/0<2,[1,2,3]), Value = Value)
+#Error(Kind=Div0)
+
+>> Filter([2,-1,0,1,-2], Sqrt(Value) > 0)
+Table({Value:2},Microsoft.PowerFx.Types.ErrorValue,{Value:1},Microsoft.PowerFx.Types.ErrorValue)
+
+>> Find(If(1/0<2,"one"),"two")
+#Error(Kind=Div0)
+
+>> Find("one",If(Sqrt(-1)<2,"two"))
+#Error(Kind=Numeric)
+
+>> Find("one", "two", 0)
+#Error(Kind=InvalidArgument)
+
+>> Find("one", "two", 100)
+#Error(Kind=InvalidArgument)
+
+>> Find(If(1/0<2,["1","2"]),"two")
+#Error(Kind=Div0)
+
+// PPPPPP JS distributes error through table, C# returns error
+>> Find(["1","2"],If(1/0<2,"1234"))
+#Error(Kind=Div0)
+
+>> Find(["one","two","three","four","five"],"one two three four five",[1/0, 0, 3, 100, 10])
+Table({Result:Microsoft.PowerFx.Types.ErrorValue},{Result:Microsoft.PowerFx.Types.ErrorValue},{Result:9},{Result:Microsoft.PowerFx.Types.ErrorValue},{Result:20})
+
+>> First(If(1/0<2,[1]))
+#Error(Kind=Div0)
+
+>> FirstN(If(1/0<2,[1]),3)
+#Error(Kind=Div0)
+
+>> FirstN([1,2,3],Sqrt(-1))
+#Error(Kind=Numeric)
+
+>> ForAll(If(1/0<2,[1,2,3]),Value)
+#Error(Kind=Div0)
+
+>> ForAll(Table({a:1},If(1/0<2,{a:2}),{a:3},If(Sqrt(-1)<0,{a:4}),{a:5}),{b:IfError(a,-FirstError.Kind)})
+Table({b:1},{b:-13},{b:3},{b:-24},{b:5})
+
+>> ForAll([2,1,0,-1,-2], Sqrt(1/Value))
+#Error(Kind=Div0,Numeric,Numeric)
+
+>> GUID("not a guid")
+#Error(Kind=InvalidArgument)
+
+>> GUID(ParseJSON("""not a guid"""))
+#Error(Kind=InvalidArgument)
+
+>> GUID(ParseJSON("true"))
+#Error(Kind=InvalidArgument)
+
+>> Hour(If(1/0<2,Time(20,10,10)))
+#Error(Kind=Div0)
+
+>> IsBlank(1/0)
+#Error(Kind=Div0)
+
+>> IsError(1/0)
+true
+
+>> IsBlankOrError(Sqrt(-1))
+true
+
+>> IsNumeric(1/0)
+#Error(Kind=Div0)
+
+>> IsNumeric(If(Sqrt(-1)<2,"hello"))
+#Error(Kind=Numeric)
+
+>> IsToday(If(Sqrt(-1)<2,Date(2022,1,1))
+#Error(Kind=Numeric)
+
+>> If(1/0<2,true,false)
+#Error(Kind=Div0)
+
+>> If(true,Sqrt(-1),0)
+#Error(Kind=Numeric)
+
+>> If(false,Sqrt(-1),1)
+1
+
+>> IfError(1/0,1)
+1
+
+>> IfError(1/0,Sqrt(-1))
+#Error(Kind=Numeric)
+
+>> IfError(1,Sqrt(-1),1/0)
+#Error(Kind=Div0)
+
+>> Int(1/0)
+#Error(Kind=Div0)
+
+>> Int(If(1/0<2,[1.2,3.4,5.6]))
+#Error(Kind=Div0)
+
+>> ForAll(Int([0.3, -1.2, 1/0, 1.1, If(Char(0) = "a",-1)]), IfError(Value, -FirstError.Kind))
+[0,-1,-13,1,-25]
+
+>> Index(If(1/0<2,[1,2,3]),Sqrt(-1))
+#Error(Kind=Div0,Numeric)
+
+>> Index([1,2,3,4],0)
+#Error(Kind=InvalidArgument)
+
+>> Index([1,2,3,4],5)
+#Error(Kind=InvalidArgument)
+
+>> Index(If(1/0<2,ParseJSON("[1,2,3]")),Sqrt(-1))
+#Error(Kind=Div0,Numeric)
+
+>> Index(ParseJSON("[1,2,3]"),0)
+#Error(Kind=InvalidArgument)
+
+>> Index(ParseJSON("[1,2,3]"),4)
+#Error(Kind=InvalidArgument)
+
+>> Index(ParseJSON("123"),1)
+#Error(Kind=InvalidArgument)
+
+>> Last(If(1/0<2,[1]))
+#Error(Kind=Div0)
+
+>> LastN(If(1/0<2,[1]),3)
+#Error(Kind=Div0)
+
+>> LastN([1,2,3],Sqrt(-1))
+#Error(Kind=Numeric)
+
+>> Left(If(1/0<2,"Hello"),Sqrt(-1))
+#Error(Kind=Div0,Numeric)
+
+>> Left("Hello",-1)
+#Error(Kind=InvalidArgument)
+
+>> Len(If(1/0<2,"Hello"))
+#Error(Kind=Div0)
+
+// PPPPPPPP Needs consistent schema flag
+>> ForAll(Len(["abc", 1/0, Sqrt(-1)+"", "hello"]), IfError(Result, -FirstError.Kind))
+[3,-13,-24,5]
+
+>> Ln(0)
+#Error(Kind=Numeric)
+
+>> Ln(If(1/0<2,10))
+#Error(Kind=Div0)
+
+>> Ln(If(1/0<0,[1,2,3]))
+#Error(Kind=Div0)
+
+>> ForAll(Ln([1, -1, 1, 1/0, 1, If(Char(0) = "a",-1)]), IfError(Value, -FirstError.Kind))
+[0,-24,0,-13,0,-25]
+
+>> Log(0)
+#Error(Kind=Numeric)
+
+>> Log(If(1/0<2,10),If(Char(0)="a",1))
+#Error(Kind=Div0,InvalidArgument)
+
+>> Log(10,1)
+#Error(Kind=Div0)
+

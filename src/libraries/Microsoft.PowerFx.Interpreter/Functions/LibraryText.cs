@@ -56,8 +56,21 @@ namespace Microsoft.PowerFx.Functions
 
                     var result = await arg1.EvalAsync(runner, context.NewScope(childContext));
 
-                    var str = (StringValue)result;
-                    sb.Append(str.Value);
+                    string str;
+                    if (result is ErrorValue ev)
+                    {
+                        return ev;
+                    }
+                    else if (result is BlankValue)
+                    {
+                        str = string.Empty;
+                    }
+                    else
+                    {
+                        str = ((StringValue)result).Value;
+                    }
+
+                    sb.Append(str);
                 }
             }
 
@@ -239,8 +252,6 @@ namespace Microsoft.PowerFx.Functions
         // Take first non-blank value.
         public static async ValueTask<FormulaValue> Coalesce(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            var errors = new List<ErrorValue>();
-
             foreach (var arg in args)
             {
                 runner.CheckCancel();
@@ -252,31 +263,17 @@ namespace Microsoft.PowerFx.Functions
                     var val = res.Value;
                     if (!(val is StringValue str && str.Value == string.Empty))
                     {
-                        if (errors.Count == 0)
-                        {
-                            return res.ToFormulaValue();
-                        }
-                        else
-                        {
-                            return ErrorValue.Combine(irContext, errors);
-                        }
+                        return res.ToFormulaValue();
                     }
                 }
 
                 if (res.IsError)
                 {
-                    errors.Add(res.Error);
+                    return res.Error;
                 }
             }
 
-            if (errors.Count == 0)
-            {
-                return new BlankValue(irContext);
-            }
-            else
-            {
-                return ErrorValue.Combine(irContext, errors);
-            }
+            return new BlankValue(irContext);
         }
 
         public static FormulaValue Lower(IRContext irContext, StringValue[] args)

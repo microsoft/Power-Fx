@@ -378,7 +378,7 @@ Date(2000,1,2)
 
 //Empty string passed as Units parameter
 >> DateAdd(Date(2000,1,1),1, "")
-#Error(Kind=NotSupported)
+#Error(Kind=InvalidArgument)
 
 // Errors passed as parameters
 >> DateAdd(If(Sqrt(-1)<0,Date(2000,1,1)),1,TimeUnit.Days)

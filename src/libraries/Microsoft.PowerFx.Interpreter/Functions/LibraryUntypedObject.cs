@@ -63,7 +63,7 @@ namespace Microsoft.PowerFx.Functions
                 return new NumberValue(irContext, number);
             }
 
-            return CommonErrors.RuntimeTypeMismatch(irContext);
+            return GetTypeMismatchError(irContext, "Value", "Number", impl);
         }
 
         public static FormulaValue Text_UO(IRContext irContext, UntypedObjectValue[] args)
@@ -76,7 +76,7 @@ namespace Microsoft.PowerFx.Functions
                 return new StringValue(irContext, str);
             }
 
-            return CommonErrors.RuntimeTypeMismatch(irContext);
+            return GetTypeMismatchError(irContext, "Text", "String", impl);
         }
 
         public static FormulaValue Table_UO(IRContext irContext, UntypedObjectValue[] args)
@@ -111,7 +111,7 @@ namespace Microsoft.PowerFx.Functions
                     {
                         Message = "The UntypedObject does not represent an array",
                         Span = irContext.SourceContext,
-                        Kind = ErrorKind.InvalidFunctionUsage
+                        Kind = ErrorKind.InvalidArgument
                     });
                 }
             }
@@ -129,7 +129,7 @@ namespace Microsoft.PowerFx.Functions
                 return new BooleanValue(irContext, b);
             }
 
-            return CommonErrors.RuntimeTypeMismatch(irContext);
+            return GetTypeMismatchError(irContext, "CountRows", "Boolean", impl);
         }
 
         public static FormulaValue CountRows_UO(IRContext irContext, UntypedObjectValue[] args)
@@ -141,7 +141,7 @@ namespace Microsoft.PowerFx.Functions
                 return new NumberValue(irContext, impl.GetArrayLength());
             }
 
-            return CommonErrors.RuntimeTypeMismatch(irContext);
+            return GetTypeMismatchError(irContext, "CountRows", "Table", impl);
         }
 
         public static FormulaValue DateValue_UO(IRContext irContext, UntypedObjectValue[] args)
@@ -160,7 +160,7 @@ namespace Microsoft.PowerFx.Functions
                 return CommonErrors.InvalidDateTimeParsingError(irContext);
             }
 
-            return CommonErrors.RuntimeTypeMismatch(irContext);
+            return GetTypeMismatchError(irContext, "DateValue", "String", impl);
         }
 
         public static FormulaValue TimeValue_UO(IRContext irContext, UntypedObjectValue[] args)
@@ -178,7 +178,7 @@ namespace Microsoft.PowerFx.Functions
                 return CommonErrors.InvalidDateTimeParsingError(irContext);
             }
 
-            return CommonErrors.RuntimeTypeMismatch(irContext);
+            return GetTypeMismatchError(irContext, "TimeValue", "String", impl);
         }
 
         public static FormulaValue DateTimeValue_UO(IRContext irContext, UntypedObjectValue[] args)
@@ -197,7 +197,7 @@ namespace Microsoft.PowerFx.Functions
                 return CommonErrors.InvalidDateTimeParsingError(irContext);
             }
 
-            return CommonErrors.RuntimeTypeMismatch(irContext);
+            return GetTypeMismatchError(irContext, "DateTimeValue", "String", impl);
         }
 
         public static FormulaValue Guid_UO(IRContext irContext, UntypedObjectValue[] args)
@@ -210,7 +210,17 @@ namespace Microsoft.PowerFx.Functions
                 return Guid(irContext, new StringValue[] { str });
             }
 
-            return CommonErrors.RuntimeTypeMismatch(irContext);
+            return GetTypeMismatchError(irContext, "GUID", "String", impl);
+        }
+
+        private static ErrorValue GetTypeMismatchError(IRContext irContext, string functionName, string expectedType, IUntypedObject actualValue)
+        {
+            return new ErrorValue(irContext, new ExpressionError
+            {
+                Kind = ErrorKind.InvalidArgument,
+                Span = irContext.SourceContext,
+                Message = $"The untyped object argument to the '{functionName}' function has an incorrect type. Expected: {expectedType}, Actual: {actualValue.Type}."
+            });
         }
     }
 }

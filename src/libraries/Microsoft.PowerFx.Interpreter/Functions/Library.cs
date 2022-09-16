@@ -40,16 +40,18 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.Abs,
                 StandardErrorHandling<NumberValue>(
+                    "Abs",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: ReplaceBlankWithZero,
                     checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
-                    checkRuntimeValues: FiniteChecker,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: Abs)
             },
             {
                 BuiltinFunctionsCore.AbsT,
                 StandardErrorHandlingAsync<TableValue>(
+                    "Abs",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: ExactValueTypeOrBlank<TableValue>,
@@ -60,26 +62,29 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.Acos,
                 StandardErrorHandling<NumberValue>(
+                    "Acos",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: ReplaceBlankWithZero,
                     checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
-                    checkRuntimeValues: FiniteChecker,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: SingleArgTrig("Acos", Math.Acos))
             },
             {
                 BuiltinFunctionsCore.Acot,
                 StandardErrorHandling<NumberValue>(
+                    "Acot",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: ReplaceBlankWithZero,
                     checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
-                    checkRuntimeValues: FiniteChecker,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: Acot)
             },
             {
                 BuiltinFunctionsCore.AddColumns,
                 StandardErrorHandlingAsync<FormulaValue>(
+                    "AddColumns",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: AddColumnsTypeChecker,
@@ -94,46 +99,51 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.Asin,
                 StandardErrorHandling<NumberValue>(
+                    "Asin",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: ReplaceBlankWithZero,
                     checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
-                    checkRuntimeValues: FiniteChecker,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: SingleArgTrig("Asin", Math.Asin))
             },
             {
                 BuiltinFunctionsCore.Atan,
                 StandardErrorHandling<NumberValue>(
+                    "Atan",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: ReplaceBlankWithZero,
                     checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
-                    checkRuntimeValues: FiniteChecker,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: SingleArgTrig("Atan", Math.Atan))
             },
             {
                 BuiltinFunctionsCore.Atan2,
                 StandardErrorHandling<NumberValue>(
+                    "Atan2",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: ReplaceBlankWithZero,
                     checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
-                    checkRuntimeValues: FiniteChecker,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: Atan2)
             },
             {
                 BuiltinFunctionsCore.Average,
                 StandardErrorHandling<FormulaValue>(
+                    "Average",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
-                    checkRuntimeValues: FiniteChecker,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: Average)
             },
             {
                 BuiltinFunctionsCore.AverageT,
                 StandardErrorHandlingAsync<FormulaValue>(
+                    "Average",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: ExactSequence(
@@ -150,6 +160,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.Boolean,
                 StandardErrorHandling<StringValue>(
+                    "Boolean",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: ExactValueTypeOrBlank<StringValue>,
@@ -160,6 +171,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.Boolean_T,
                 StandardErrorHandlingAsync<TableValue>(
+                    "Boolean",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: ExactValueTypeOrBlank<TableValue>,
@@ -170,6 +182,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.BooleanN,
                 StandardErrorHandling<NumberValue>(
+                    "Boolean",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
@@ -180,6 +193,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.BooleanN_T,
                 StandardErrorHandlingAsync<TableValue>(
+                    "Boolean",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: ExactValueTypeOrBlank<TableValue>,
@@ -190,6 +204,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.Boolean_UO,
                 StandardErrorHandling<UntypedObjectValue>(
+                    "Boolean",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: ExactValueTypeOrBlank<UntypedObjectValue>,
@@ -200,6 +215,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.Concat,
                 StandardErrorHandlingAsync<FormulaValue>(
+                    "Concat",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: ExactSequence(
@@ -212,11 +228,12 @@ namespace Microsoft.PowerFx.Functions
             },
             {
                 BuiltinFunctionsCore.Coalesce,
-                Coalesce
+                NoErrorHandling(Coalesce)
             },
             {
                 BuiltinFunctionsCore.Char,
                 StandardErrorHandling<NumberValue>(
+                    "Char",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
@@ -227,6 +244,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.CharT,
                 StandardErrorHandlingAsync(
+                    "Char",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: ExactValueTypeOrBlank<TableValue>,
@@ -237,6 +255,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.Concatenate,
                 StandardErrorHandling<StringValue>(
+                    "Concatenate",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: ReplaceBlankWithEmptyString,
                     checkRuntimeTypes: ExactValueType<StringValue>,
@@ -247,6 +266,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.ConcatenateT,
                 StandardErrorHandlingAsync(
+                    "Concatenate",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: ExactValueTypeOrTableOrBlank<StringValue>,
@@ -254,6 +274,7 @@ namespace Microsoft.PowerFx.Functions
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: MultiSingleColumnTable(
                             StandardErrorHandling<StringValue>(
+                                "Concatenate",
                                 expandArguments: NoArgExpansion,
                                 replaceBlankValues: ReplaceBlankWithEmptyString,
                                 checkRuntimeTypes: ExactValueType<StringValue>,
@@ -265,26 +286,29 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.Cos,
                 StandardErrorHandling<NumberValue>(
+                    "Cos",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: ReplaceBlankWithZero,
                     checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
-                    checkRuntimeValues: FiniteChecker,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: SingleArgTrig("Cos", Math.Cos))
             },
             {
                 BuiltinFunctionsCore.Cot,
                 StandardErrorHandling<NumberValue>(
+                    "Cot",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: ReplaceBlankWithZero,
                     checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
-                    checkRuntimeValues: FiniteChecker,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: Cot)
             },
             {
                 BuiltinFunctionsCore.Count,
                 StandardErrorHandling<FormulaValue>(
+                    "Count",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: ExactValueTypeOrBlank<TableValue>,
@@ -295,6 +319,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.CountA,
                 StandardErrorHandling<FormulaValue>(
+                    "CountA",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: ExactValueTypeOrBlank<TableValue>,
@@ -305,6 +330,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.CountIf,
                 StandardErrorHandlingAsync<FormulaValue>(
+                    "CountIf",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: ExactSequence(
@@ -317,6 +343,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.CountRows,
                 StandardErrorHandling<FormulaValue>(
+                    "CountRows",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: ExactValueTypeOrBlank<TableValue>,
@@ -327,6 +354,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.CountRows_UO,
                 StandardErrorHandling<UntypedObjectValue>(
+                    "CountRows",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: ExactValueTypeOrBlank<UntypedObjectValue>,
@@ -337,19 +365,18 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.Date,
                 StandardErrorHandling<NumberValue>(
+                    "Date",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: ReplaceBlankWithZero,
                     checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
-                    checkRuntimeValues: ExactSequence(
-                        FiniteChecker,
-                        FiniteChecker,
-                        FiniteChecker),
+                    checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: Date)
             },
             {
                 BuiltinFunctionsCore.DateAdd,
                 StandardErrorHandling<FormulaValue>(
+                    "DateAdd",
                     expandArguments: InsertDefaultValues(outputArgsCount: 3, fillWith: new BlankValue(IRContext.NotInSource(FormulaType.Blank))),
                     replaceBlankValues: ReplaceBlankWith(
                         new DateTimeValue(IRContext.NotInSource(FormulaType.DateTime), _epoch),
@@ -359,13 +386,14 @@ namespace Microsoft.PowerFx.Functions
                         DateOrDateTime,
                         ExactValueTypeOrBlank<NumberValue>,
                         ExactValueTypeOrBlank<StringValue>),
-                    checkRuntimeValues: FiniteChecker,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: DateAdd)
             },
             {
                 BuiltinFunctionsCore.DateDiff,
                 StandardErrorHandling<FormulaValue>(
+                    "DateDiff",
                     expandArguments: InsertDefaultValues(outputArgsCount: 3, fillWith: new BlankValue(IRContext.NotInSource(FormulaType.Blank))),
                     replaceBlankValues: ReplaceBlankWith(
                         new DateTimeValue(IRContext.NotInSource(FormulaType.DateTime), _epoch),
@@ -382,16 +410,18 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.DateTime,
                 StandardErrorHandling<NumberValue>(
+                    "DateTime",
                     expandArguments: InsertDefaultValues(outputArgsCount: 7, fillWith: new NumberValue(IRContext.NotInSource(FormulaType.Number), 0)),
                     replaceBlankValues: ReplaceBlankWithZero,
                     checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
-                    checkRuntimeValues: FiniteChecker,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: DateTimeFunction)
             },
             {
                 BuiltinFunctionsCore.DateValue,
                 StandardErrorHandling<StringValue>(
+                    "DateValue",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: ExactValueTypeOrBlank<StringValue>,
@@ -402,6 +432,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.DateValue_UO,
                 StandardErrorHandling<UntypedObjectValue>(
+                    "DateValue",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: ExactValueTypeOrBlank<UntypedObjectValue>,
@@ -412,6 +443,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.DateTimeValue,
                 StandardErrorHandling<StringValue>(
+                    "DateTimeValue",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: ExactValueTypeOrBlank<StringValue>,
@@ -422,6 +454,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.DateTimeValue_UO,
                 StandardErrorHandling<UntypedObjectValue>(
+                    "DateTimeValue",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: ExactValueTypeOrBlank<UntypedObjectValue>,
@@ -432,6 +465,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.Day,
                 StandardErrorHandling<FormulaValue>(
+                    "Day",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: DateOrDateTime,
@@ -442,16 +476,18 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.Degrees,
                 StandardErrorHandling<NumberValue>(
+                    "Degrees",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: ReplaceBlankWithZero,
                     checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
-                    checkRuntimeValues: FiniteChecker,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: SingleArgTrig("Degrees", x => x * 180.0 / Math.PI))
             },
             {
                 BuiltinFunctionsCore.EndsWith,
                 StandardErrorHandling<StringValue>(
+                    "EndsWith",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: ExactValueTypeOrBlank<StringValue>,
@@ -462,6 +498,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.Error,
                 StandardErrorHandling<FormulaValue>(
+                    "Error",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: DeferRuntimeTypeChecking,
@@ -472,16 +509,18 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.Exp,
                 StandardErrorHandling<NumberValue>(
+                    "Exp",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: ReplaceBlankWithZero,
                     checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
-                    checkRuntimeValues: FiniteChecker,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: Exp)
             },
             {
                 BuiltinFunctionsCore.ExpT,
                 StandardErrorHandlingAsync<TableValue>(
+                    "Exp",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: ExactValueTypeOrBlank<TableValue>,
@@ -492,6 +531,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.Filter,
                 StandardErrorHandlingAsync<FormulaValue>(
+                    "Filter",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: ExactSequence(
@@ -504,6 +544,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.Find,
                 StandardErrorHandling<FormulaValue>(
+                    "Find",
                     expandArguments: InsertDefaultValues(outputArgsCount: 3, fillWith: new NumberValue(IRContext.NotInSource(FormulaType.Number), 1)),
                     replaceBlankValues: ReplaceBlankWith(
                         new StringValue(IRContext.NotInSource(FormulaType.String), string.Empty),
@@ -523,6 +564,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.FindT,
                 StandardErrorHandlingAsync<FormulaValue>(
+                    "Find",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: ExactSequence(
@@ -533,6 +575,7 @@ namespace Microsoft.PowerFx.Functions
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: MultiSingleColumnTable(
                             StandardErrorHandling<FormulaValue>(
+                                "Find",
                                 expandArguments: InsertDefaultValues(outputArgsCount: 3, fillWith: new NumberValue(IRContext.NotInSource(FormulaType.Number), 1)),
                                 replaceBlankValues: ReplaceBlankWith(
                                     new StringValue(IRContext.NotInSource(FormulaType.String), string.Empty),
@@ -553,6 +596,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.First,
                 StandardErrorHandling<TableValue>(
+                    "First",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: ExactValueTypeOrBlank<TableValue>,
@@ -563,6 +607,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.FirstN,
                 StandardErrorHandling<FormulaValue>(
+                    "FirstN",
                     expandArguments: InsertDefaultValues(outputArgsCount: 2, fillWith: new NumberValue(IRContext.NotInSource(FormulaType.Number), 1)),
                     replaceBlankValues: ReplaceBlankWithZeroForSpecificIndices(1),
                     checkRuntimeTypes: ExactSequence(
@@ -575,6 +620,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.ForAll,
                 StandardErrorHandlingAsync<FormulaValue>(
+                    "ForAll",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: ExactSequence(
@@ -587,6 +633,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.GUIDPure,
                 StandardErrorHandling<StringValue>(
+                    "GUID",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: ExactValueTypeOrBlank<StringValue>,
@@ -597,6 +644,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.GUID_UO,
                 StandardErrorHandling<UntypedObjectValue>(
+                    "GUID",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: ExactValueTypeOrBlank<UntypedObjectValue>,
@@ -605,8 +653,20 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: Guid_UO)
             },
             {
+                BuiltinFunctionsCore.Hour,
+                StandardErrorHandling<FormulaValue>(
+                    "Hour",
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: TimeOrDateTime,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: Hour)
+            },
+            {
                 BuiltinFunctionsCore.IsBlank,
                 StandardErrorHandling<FormulaValue>(
+                    "IsBlank",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: DeferRuntimeTypeChecking,
@@ -618,6 +678,7 @@ namespace Microsoft.PowerFx.Functions
                 // Implementation 100% shared with IsBlank() for the interpreter
                 BuiltinFunctionsCore.IsBlankOptionSetValue,
                 StandardErrorHandling<FormulaValue>(
+                    "IsBlank",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: DeferRuntimeTypeChecking,
@@ -640,6 +701,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.IsNumeric,
                 StandardErrorHandling<FormulaValue>(
+                    "IsNumeric",
                     expandArguments: InsertDefaultValues(outputArgsCount: 2, fillWith: new NumberValue(IRContext.NotInSource(FormulaType.Number), 1)),
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: DeferRuntimeTypeChecking,
@@ -650,6 +712,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.IsToday,
                 StandardErrorHandling<FormulaValue>(
+                    "IsToday",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: DateOrDateTime,
@@ -668,16 +731,18 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.Int,
                 StandardErrorHandling<NumberValue>(
+                    "Int",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: ReplaceBlankWithZero,
                     checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
-                    checkRuntimeValues: FiniteChecker,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: Int)
             },
             {
                 BuiltinFunctionsCore.IntT,
                 StandardErrorHandlingAsync<TableValue>(
+                    "Int",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: ExactValueTypeOrBlank<TableValue>,
@@ -686,18 +751,9 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: StandardSingleColumnTable<NumberValue>(Int))
             },
             {
-                BuiltinFunctionsCore.Hour,
-                StandardErrorHandling<FormulaValue>(
-                    expandArguments: NoArgExpansion,
-                    replaceBlankValues: DoNotReplaceBlank,
-                    checkRuntimeTypes: TimeOrDateTime,
-                    checkRuntimeValues: DeferRuntimeValueChecking,
-                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-                    targetFunction: Hour)
-            },
-            {
                 BuiltinFunctionsCore.Index,
                 StandardErrorHandling<FormulaValue>(
+                    "Index",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: ExactSequence(
@@ -712,6 +768,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.Index_UO,
                 StandardErrorHandling<FormulaValue>(
+                    "Index",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: ExactSequence(
@@ -726,6 +783,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.Last,
                 StandardErrorHandling<TableValue>(
+                    "Last",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: ExactValueTypeOrBlank<TableValue>,
@@ -736,6 +794,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.LastN,
                 StandardErrorHandling<FormulaValue>(
+                    "LastN",
                     expandArguments: InsertDefaultValues(outputArgsCount: 2, fillWith: new NumberValue(IRContext.NotInSource(FormulaType.Number), 1)),
                     replaceBlankValues: ReplaceBlankWithZeroForSpecificIndices(1),
                     checkRuntimeTypes: ExactSequence(
@@ -748,6 +807,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.Left,
                 StandardErrorHandling<FormulaValue>(
+                    "Left",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: ExactSequence(
@@ -760,6 +820,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.Len,
                 StandardErrorHandling<StringValue>(
+                    "Len",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: ReplaceBlankWithEmptyString,
                     checkRuntimeTypes: ExactValueType<StringValue>,
@@ -770,6 +831,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.LenT,
                 StandardErrorHandlingAsync(
+                    "Len",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: ExactValueTypeOrBlank<TableValue>,
@@ -780,16 +842,18 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.Ln,
                 StandardErrorHandling<NumberValue>(
+                    "Ln",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: ReplaceBlankWithZero,
                     checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
-                    checkRuntimeValues: StrictNumericPositiveNumberChecker,
+                    checkRuntimeValues: DeferRuntimeTypeChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: Ln)
             },
             {
                 BuiltinFunctionsCore.LnT,
                 StandardErrorHandlingAsync<TableValue>(
+                    "Ln",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: ExactValueTypeOrBlank<TableValue>,
@@ -800,6 +864,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.Log,
                 StandardErrorHandling<NumberValue>(
+                    "Log",
                     expandArguments: InsertDefaultValues(outputArgsCount: 2, fillWith: new NumberValue(IRContext.NotInSource(FormulaType.Number), 10)),
                     replaceBlankValues: ReplaceBlankWithZero,
                     checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
@@ -810,6 +875,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.LookUp,
                 StandardErrorHandlingAsync<FormulaValue>(
+                    "LookUp",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: ExactSequence(
@@ -823,6 +889,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.Lower,
                 StandardErrorHandling<StringValue>(
+                    "Lower",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: ReplaceBlankWithEmptyString,
                     checkRuntimeTypes: ExactValueType<StringValue>,
@@ -833,16 +900,18 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.Max,
                 StandardErrorHandling<FormulaValue>(
+                    "Max",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: DeferRuntimeTypeChecking,
-                    checkRuntimeValues: FiniteChecker,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: Max)
             },
             {
                 BuiltinFunctionsCore.MaxT,
                 StandardErrorHandlingAsync<FormulaValue>(
+                    "Max",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: ExactSequence(
@@ -855,6 +924,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.Mid,
                 StandardErrorHandling<FormulaValue>(
+                    "Mid",
                     expandArguments: MidFunctionExpandArgs,
                     replaceBlankValues: ReplaceBlankWith(
                         new StringValue(IRContext.NotInSource(FormulaType.String), string.Empty),
@@ -871,16 +941,18 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.Min,
                 StandardErrorHandling<FormulaValue>(
+                    "Min",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: DeferRuntimeTypeChecking,
-                    checkRuntimeValues: FiniteChecker,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: Min)
             },
             {
                 BuiltinFunctionsCore.MinT,
                 StandardErrorHandlingAsync<FormulaValue>(
+                    "Min",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: ExactSequence(
@@ -893,6 +965,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.Minute,
                 StandardErrorHandling<FormulaValue>(
+                    "Minute",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: TimeOrDateTime,
@@ -903,16 +976,18 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.Mod,
                 StandardErrorHandling<NumberValue>(
+                    "Mod",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: ReplaceBlankWithZero,
                     checkRuntimeTypes: ExactValueType<NumberValue>,
-                    checkRuntimeValues: DivideByZeroChecker,
+                    checkRuntimeValues: DeferRuntimeTypeChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: Mod)
             },
             {
                 BuiltinFunctionsCore.Month,
                 StandardErrorHandling<FormulaValue>(
+                    "Month",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: DateOrDateTime,
@@ -923,6 +998,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.Not,
                 StandardErrorHandling<BooleanValue>(
+                    "Not",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: ReplaceBlankWith(new BooleanValue(IRContext.NotInSource(FormulaType.Boolean), false)),
                     checkRuntimeTypes: ExactValueType<BooleanValue>,
@@ -941,6 +1017,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.ParseJSON,
                 StandardErrorHandling<StringValue>(
+                    "ParseJSON",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: ExactValueTypeOrBlank<StringValue>,
@@ -951,6 +1028,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.Proper,
                 StandardErrorHandling<StringValue>(
+                    "Proper",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: ReplaceBlankWithEmptyString,
                     checkRuntimeTypes: ExactValueType<StringValue>,
@@ -965,20 +1043,22 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.Power,
                 StandardErrorHandling<NumberValue>(
+                    "Power",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: ReplaceBlankWithZero,
                     checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
-                    checkRuntimeValues: FiniteChecker,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: Power)
             },
             {
                 BuiltinFunctionsCore.Radians,
                 StandardErrorHandling<NumberValue>(
+                    "Radians",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: ReplaceBlankWithZero,
                     checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
-                    checkRuntimeValues: FiniteChecker,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: SingleArgTrig("Radians", x => x * Math.PI / 180.0))
             },
@@ -989,16 +1069,18 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.RandBetween,
                 StandardErrorHandling<NumberValue>(
+                    "RandBwtween",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: ReplaceBlankWithZero,
                     checkRuntimeTypes: ExactValueType<NumberValue>,
-                    checkRuntimeValues: FiniteChecker,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: RandBetween)
             },
             {
                 BuiltinFunctionsCore.Replace,
                 StandardErrorHandling<FormulaValue>(
+                    "Replace",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: ReplaceBlankWith(
                         new StringValue(IRContext.NotInSource(FormulaType.String), string.Empty),
@@ -1017,6 +1099,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.Right,
                 StandardErrorHandling<FormulaValue>(
+                    "Right",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: ExactSequence(
@@ -1029,16 +1112,18 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.Round,
                 StandardErrorHandling<NumberValue>(
+                    "Round",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: ReplaceBlankWithZero,
                     checkRuntimeTypes: ExactValueType<NumberValue>,
-                    checkRuntimeValues: FiniteChecker,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: Round)
             },
             {
                 BuiltinFunctionsCore.RoundT,
                 StandardErrorHandlingAsync(
+                    "Round",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: ExactValueTypeOrTableOrBlank<NumberValue>,
@@ -1046,6 +1131,7 @@ namespace Microsoft.PowerFx.Functions
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: MultiSingleColumnTable(
                             StandardErrorHandling<NumberValue>(
+                                "Round",
                                 expandArguments: NoArgExpansion,
                                 replaceBlankValues: ReplaceBlankWithEmptyString,
                                 checkRuntimeTypes: ExactValueType<NumberValue>,
@@ -1057,26 +1143,29 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.RoundUp,
                 StandardErrorHandling<NumberValue>(
+                    "RoundUp",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: ReplaceBlankWithZero,
                     checkRuntimeTypes: ExactValueType<NumberValue>,
-                    checkRuntimeValues: FiniteChecker,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: RoundUp)
             },
             {
                 BuiltinFunctionsCore.RoundDown,
                 StandardErrorHandling<NumberValue>(
+                    "RoundDown",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: ReplaceBlankWithZero,
                     checkRuntimeTypes: ExactValueType<NumberValue>,
-                    checkRuntimeValues: FiniteChecker,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: RoundDown)
             },
             {
                 BuiltinFunctionsCore.Second,
                 StandardErrorHandling<FormulaValue>(
+                    "Second",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: TimeOrDateTime,
@@ -1087,16 +1176,18 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.Sequence,
                 StandardErrorHandling<NumberValue>(
+                    "Sequence",
                     expandArguments: InsertDefaultValues(outputArgsCount: 3, fillWith: new NumberValue(IRContext.NotInSource(FormulaType.Number), 1)),
                     replaceBlankValues: ReplaceBlankWithZero,
                     checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
-                    checkRuntimeValues: FiniteChecker,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: Sequence)
             },
             {
                 BuiltinFunctionsCore.Shuffle,
                 StandardErrorHandling<TableValue>(
+                    "Shuffle",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: ExactValueTypeOrBlank<TableValue>,
@@ -1107,16 +1198,18 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.Sin,
                 StandardErrorHandling<NumberValue>(
+                    "Sin",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: ReplaceBlankWithZero,
                     checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
-                    checkRuntimeValues: FiniteChecker,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: SingleArgTrig("Sin", Math.Sin))
             },
             {
                 BuiltinFunctionsCore.Sort,
                 StandardErrorHandlingAsync<FormulaValue>(
+                    "Sort",
                     expandArguments: InsertDefaultValues(outputArgsCount: 3, fillWith: new StringValue(IRContext.NotInSource(FormulaType.String), "Ascending")),
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: ExactSequence(
@@ -1128,8 +1221,42 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: SortTable)
             },
             {
+                BuiltinFunctionsCore.Split,
+                StandardErrorHandling<StringValue>(
+                    "Split",
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: ReplaceBlankWithEmptyString,
+                    checkRuntimeTypes: ExactValueType<StringValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    Split)
+            },
+            {
+                BuiltinFunctionsCore.Sqrt,
+                StandardErrorHandling<NumberValue>(
+                    "Sqrt",
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: ReplaceBlankWithZero,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
+                    checkRuntimeValues: PositiveNumericNumberChecker,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: Sqrt)
+            },
+            {
+                BuiltinFunctionsCore.SqrtT,
+                StandardErrorHandlingAsync<TableValue>(
+                    "Sqrt",
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<TableValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: StandardSingleColumnTable<NumberValue>(Sqrt))
+            },
+            {
                 BuiltinFunctionsCore.StartsWith,
                 StandardErrorHandling<StringValue>(
+                    "StartsWith",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: ExactValueTypeOrBlank<StringValue>,
@@ -1140,16 +1267,18 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.StdevP,
                 StandardErrorHandling<FormulaValue>(
+                    "StdevP",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
-                    checkRuntimeValues: FiniteChecker,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: Stdev)
             },
             {
                 BuiltinFunctionsCore.StdevPT,
                 StandardErrorHandlingAsync<FormulaValue>(
+                    "StdevP",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: ExactSequence(
@@ -1162,16 +1291,18 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.Sum,
                 StandardErrorHandling<FormulaValue>(
+                    "Sum",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
-                    checkRuntimeValues: FiniteChecker,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: Sum)
             },
             {
                 BuiltinFunctionsCore.SumT,
                 StandardErrorHandlingAsync<FormulaValue>(
+                    "Sum",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: ExactSequence(
@@ -1182,38 +1313,9 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: SumTable)
             },
             {
-                BuiltinFunctionsCore.Split,
-                StandardErrorHandling<StringValue>(
-                    expandArguments: NoArgExpansion,
-                    replaceBlankValues: ReplaceBlankWithEmptyString,
-                    checkRuntimeTypes: ExactValueType<StringValue>,
-                    checkRuntimeValues: DeferRuntimeValueChecking,
-                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-                    Split)
-            },
-            {
-                BuiltinFunctionsCore.Sqrt,
-                StandardErrorHandling<NumberValue>(
-                    expandArguments: NoArgExpansion,
-                    replaceBlankValues: ReplaceBlankWithZero,
-                    checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
-                    checkRuntimeValues: PositiveNumericNumberChecker,
-                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-                    targetFunction: Sqrt)
-            },
-            {
-                BuiltinFunctionsCore.SqrtT,
-                StandardErrorHandlingAsync<TableValue>(
-                    expandArguments: NoArgExpansion,
-                    replaceBlankValues: DoNotReplaceBlank,
-                    checkRuntimeTypes: ExactValueTypeOrBlank<TableValue>,
-                    checkRuntimeValues: DeferRuntimeValueChecking,
-                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
-                    targetFunction: StandardSingleColumnTable<NumberValue>(Sqrt))
-            },
-            {
                 BuiltinFunctionsCore.Substitute,
                 StandardErrorHandling<FormulaValue>(
+                    "Substitute",
                     expandArguments: InsertDefaultValues(outputArgsCount: 4, fillWith: new BlankValue(IRContext.NotInSource(FormulaType.Blank))),
                     replaceBlankValues: ReplaceBlankWith(
                         new StringValue(IRContext.NotInSource(FormulaType.String), string.Empty),
@@ -1240,6 +1342,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.Table_UO,
                 StandardErrorHandling<UntypedObjectValue>(
+                    "Table",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: ExactValueTypeOrBlank<UntypedObjectValue>,
@@ -1250,16 +1353,18 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.Tan,
                 StandardErrorHandling<NumberValue>(
+                    "Tan",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: ReplaceBlankWithZero,
                     checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
-                    checkRuntimeValues: FiniteChecker,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: SingleArgTrig("Tan", Math.Tan))
             },
             {
                 BuiltinFunctionsCore.Text,
                 StandardErrorHandling<FormulaValue>(
+                    "Text",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: DeferRuntimeTypeChecking,
@@ -1270,6 +1375,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.Text_UO,
                 StandardErrorHandling<UntypedObjectValue>(
+                    "Text",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: ExactValueTypeOrBlank<UntypedObjectValue>,
@@ -1280,16 +1386,18 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.Time,
                 StandardErrorHandling<NumberValue>(
+                    "Time",
                     expandArguments: InsertDefaultValues(outputArgsCount: 4, fillWith: new NumberValue(IRContext.NotInSource(FormulaType.Number), 0)),
                     replaceBlankValues: ReplaceBlankWithZero,
                     checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
-                    checkRuntimeValues: FiniteChecker,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: Time)
             },
             {
                 BuiltinFunctionsCore.TimeValue,
                 StandardErrorHandling<StringValue>(
+                    "TimeValue",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: ExactValueTypeOrBlank<StringValue>,
@@ -1300,6 +1408,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.TimeValue_UO,
                 StandardErrorHandling<UntypedObjectValue>(
+                    "TimeValue",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: ExactValueTypeOrBlank<UntypedObjectValue>,
@@ -1310,6 +1419,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.TimeZoneOffset,
                 StandardErrorHandling<FormulaValue>(
+                    "TimeZoneOffset",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: DateOrDateTime,
@@ -1324,6 +1434,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.Trim,
                 StandardErrorHandling<StringValue>(
+                    "Trim",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: ExactValueTypeOrBlank<StringValue>,
@@ -1334,6 +1445,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.TrimEnds,
                 StandardErrorHandling<StringValue>(
+                    "TrimEnds",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: ExactValueTypeOrBlank<StringValue>,
@@ -1344,16 +1456,18 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.Trunc,
                 StandardErrorHandling<NumberValue>(
+                    "Trunc",
                     expandArguments: InsertDefaultValues(outputArgsCount: 2, fillWith: new NumberValue(IRContext.NotInSource(FormulaType.Number), 0)),
                     replaceBlankValues: ReplaceBlankWithZero,
                     checkRuntimeTypes: ExactValueType<NumberValue>,
-                    checkRuntimeValues: FiniteChecker,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: RoundDown)
             },
             {
                 BuiltinFunctionsCore.Upper,
                 StandardErrorHandling<StringValue>(
+                    "Upper",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: ReplaceBlankWithEmptyString,
                     checkRuntimeTypes: ExactValueType<StringValue>,
@@ -1364,6 +1478,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.Value,
                 StandardErrorHandling<FormulaValue>(
+                    "Value",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: DeferRuntimeTypeChecking,
@@ -1374,6 +1489,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.Value_UO,
                 StandardErrorHandling<UntypedObjectValue>(
+                    "Value",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: ExactValueTypeOrBlank<UntypedObjectValue>,
@@ -1384,16 +1500,18 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.VarP,
                 StandardErrorHandling<FormulaValue>(
+                    "VarP",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
-                    checkRuntimeValues: FiniteChecker,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: Var)
             },
             {
                 BuiltinFunctionsCore.VarPT,
                 StandardErrorHandlingAsync<FormulaValue>(
+                    "VarP",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: ExactSequence(
@@ -1406,6 +1524,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.With,
                 StandardErrorHandlingAsync<FormulaValue>(
+                    "With",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: DeferRuntimeTypeChecking,
@@ -1416,6 +1535,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.Year,
                 StandardErrorHandling<FormulaValue>(
+                    "Year",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: DateOrDateTime,
