@@ -1874,6 +1874,17 @@ namespace Microsoft.PowerFx.Core.Binding
             }
         }
 
+        public IEnumerable<TableNode> GetTableNodes()
+        {
+            for (var id = 0; id < IdLim; id++)
+            {
+                if (_nodeMap[id] is TableNode tableNode)
+                {
+                    yield return tableNode;
+                }
+            }
+        }
+
         public bool TryGetCall(int nodeId, out CallInfo callInfo)
         {
             Contracts.AssertIndex(nodeId, IdLim);

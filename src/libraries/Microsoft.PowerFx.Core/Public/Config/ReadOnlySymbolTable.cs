@@ -66,7 +66,7 @@ namespace Microsoft.PowerFx
         /// <returns></returns>
         public static ReadOnlySymbolTable NewFromRecord(RecordType type, ReadOnlySymbolTable parent = null)
         {
-            return new SymbolTableOverRecordType(type ?? RecordType.Empty(), parent);            
+            return new SymbolTableOverRecordType(type ?? RecordType.Empty(), parent);
         }
 
         public static ReadOnlySymbolTable Compose(params ReadOnlySymbolTable[] tables)
@@ -134,6 +134,24 @@ namespace Microsoft.PowerFx
         IEnumerable<TexlFunction> INameResolver.Functions => _functions;
 
         IReadOnlyDictionary<string, NameLookupInfo> IGlobalSymbolNameResolver.GlobalSymbols => _variables;
+
+        /// <summary>
+        /// Get symbol names in this current scope.
+        /// </summary>
+        public IEnumerable<NamedFormulaType> SymbolNames
+        {
+            get 
+            {
+                IGlobalSymbolNameResolver globals = this;
+                
+                // GlobalSymbols are virtual, so we get derived behavior via that.
+                foreach (var kv in globals.GlobalSymbols)
+                {
+                    var type = FormulaType.Build(kv.Value.Type);
+                    yield return new NamedFormulaType(kv.Key, type);
+                }
+            }
+        }
 
         internal string GetSuggestableSymbolName(IExternalEntity entity)
         {
