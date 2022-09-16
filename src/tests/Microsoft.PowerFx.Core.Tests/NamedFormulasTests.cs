@@ -12,7 +12,7 @@ namespace Microsoft.PowerFx.Core.Tests
     public class NamedFormulasTests : PowerFxTest
     {
         [Theory]
-        [InlineData("Foo(x: Number): Number => Abs(x);")]
+        [InlineData("Foo(x: Number): Number = Abs(x);")]
         public void DefFuncTest(string script)
         {
             var parsedUDFS = new ParsedUDFs(script);
@@ -28,10 +28,10 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("Rec4(x: Number): Number => { { force: 1, goo: x } };" +
-                    "Rec5(x: Number): Number => { \"asfd\"; { force: 1, goo: x } };" +
-                    "Rec6(x: Number): Number => x + 1;" +
-                    "Rec7(x: Number): Number => { x + 1 };")]
+        [InlineData("Rec4(x: Number): Number { { force: 1, goo: x } };" +
+                    "Rec5(x: Number): Number { \"asfd\"; { force: 1, goo: x } };" +
+                    "Rec6(x: Number): Number = x + 1;" +
+                    "Rec7(x: Number): Number { x + 1 };")]
         public void DefFunctionFromDiscussion(string script)
         {
             var parsedUDFs = new ParsedUDFs(script);
@@ -40,10 +40,10 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("Rec4\n(x\n: \nNumber\n)\n: \nNumber \n=>\n \n{\n \n{ force: 1, goo: x }\n \n}\n;\n" +
-                    "Rec5      (     x     :      Number    )    :    Number   =>    {     \"asfd\";     { force: 1, goo: x }     }     ;    " +
-                    "Rec6/*comment*/(/*comment*/x/*comment*/:/*comment*/ Number/*comment*/)/*comment*/:/*comment*/ Number/*comment*/ =>/*comment*/ x/*comment*/ + 1/*comment*/;/*comment*/" +
-                    "Rec7//comment\n(//comment\nx//comment\n://comment\n Number//comment\n)://comment\n Number//comment\n =>//comment\n { x + 1 }//comment\n;")]
+        [InlineData("Rec4\n(x\n: \nNumber\n)\n: \nNumber \n \n \n{\n \n{ force: 1, goo: x }\n \n}\n;\n" +
+                    "Rec5      (     x     :      Number    )    :    Number       {     \"asfd\";     { force: 1, goo: x }     }     ;    " +
+                    "Rec6/*comment*/(/*comment*/x/*comment*/:/*comment*/ Number/*comment*/)/*comment*/:/*comment*/ Number/*comment*/ =/*comment*/ x/*comment*/ + 1/*comment*/;/*comment*/" +
+                    "Rec7//comment\n(//comment\nx//comment\n://comment\n Number//comment\n)://comment\n Number//comment\n //comment\n { x + 1 }//comment\n;")]
         public void DefFunctionWeirdFormatting(string script)
         {
             var parsedUDFs = new ParsedUDFs(script);
@@ -52,7 +52,7 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("Foo(): Number => { 1+1; 2+2; };")]
+        [InlineData("Foo(): Number { 1+1; 2+2; };")]
         public void TestChaining(string script)
         {
             var parsedUDFs = new ParsedUDFs(script);
@@ -65,7 +65,7 @@ namespace Microsoft.PowerFx.Core.Tests
         } 
 
         [Theory]
-        [InlineData("Foo(): Number => { Sum(1, 1); Sum(2, 2); };")]
+        [InlineData("Foo(): Number { Sum(1, 1); Sum(2, 2); };")]
         public void TestChaining2(string script)
         {
             var parsedUDFs = new ParsedUDFs(script);
