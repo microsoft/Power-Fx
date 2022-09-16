@@ -13,7 +13,7 @@ namespace Microsoft.PowerFx.Core
     internal class UserDefinedRecordType : RecordType
     {
         private readonly FormulaTypeSchema _backingSchema;
-        private readonly DefinedTypeSymbolTable _symbolTable;
+        private readonly DefinedTypeSymbolTable _symbolTable;        
 
         public override IEnumerable<string> FieldNames => _backingSchema.Fields?.Keys ?? Enumerable.Empty<string>();
 
