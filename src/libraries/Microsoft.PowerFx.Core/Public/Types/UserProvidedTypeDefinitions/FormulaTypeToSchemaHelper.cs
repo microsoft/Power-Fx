@@ -31,7 +31,7 @@ namespace Microsoft.PowerFx.Core
                         RecordType recordType => recordType.ToTable(),
 
                         // Add support for table of primitives here in the future
-                        _ => throw new NotSupportedException("Not a valid type to convert to table."),
+                        _ => throw new TypeDefinitionException("Not a valid type to convert to table."),
                     };
                 }
                 
@@ -40,12 +40,12 @@ namespace Microsoft.PowerFx.Core
 
             if (typeName != RecordTypeName.Name)
             {
-                throw new NotSupportedException($"Unable to resolve type {typeName}");
+                throw new TypeDefinitionException($"Unable to resolve type {typeName}");
             }
 
             if (schema.Fields == null || !schema.Fields.Any())
             {
-                throw new NotSupportedException($"Missing field specification for type {typeName}");
+                throw new TypeDefinitionException($"Missing field specification for type {typeName}");
             }
 
             var result = new UserDefinedRecordType(schema, definedTypeSymbols);
@@ -60,7 +60,7 @@ namespace Microsoft.PowerFx.Core
         {
             if (maxDepth < 0)
             {
-                throw new NotSupportedException("Max depth exceeded when converting type to schema definition");
+                throw new TypeDefinitionException("Max depth exceeded when converting type to schema definition");
             }
 
             if (TryLookupTypeName(type, definedTypeSymbols, out var typeName))
@@ -82,7 +82,7 @@ namespace Microsoft.PowerFx.Core
 
             if (type is not AggregateType aggregateType)
             {
-                throw new NotImplementedException($"Conversion to schema definition not supported for type {type}");
+                throw new TypeDefinitionException($"Conversion to schema definition not supported for type {type}");
             }
 
             var children = GetChildren(aggregateType, definedTypeSymbols, maxDepth - 1);
@@ -112,7 +112,7 @@ namespace Microsoft.PowerFx.Core
                 {
                     if (lookupInfo.Kind != BindKind.TypeName || lookupInfo.Data is not FormulaType castType)
                     {
-                        throw new InvalidOperationException("Resolved non-type name when constructing FormulaType definition");
+                        throw new TypeDefinitionException("Resolved non-type name when constructing FormulaType definition");
                     }
 
                     type = castType;
