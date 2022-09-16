@@ -80,9 +80,13 @@ namespace Microsoft.PowerFx
             return null;
         }
 
-        /// <param name="localSymbols">An alternate config that can be provided. Should default to engine's config if null.</param>        
-        /// <returns></returns>
+        // Returns the INameResolver  and the corresponding Symbol table.         
         private protected INameResolver CreateResolverInternal(ReadOnlySymbolTable localSymbols = null)
+        {
+            return CreateResolverInternal(out _, localSymbols);
+        }
+
+        private protected INameResolver CreateResolverInternal(out ReadOnlySymbolTable symbols, ReadOnlySymbolTable localSymbols = null)
         {
             // For backwards compat with Prose.
 #pragma warning disable CS0612 // Type or member is obsolete
@@ -92,11 +96,13 @@ namespace Microsoft.PowerFx
 #pragma warning restore CS0612 // Type or member is obsolete
             if (existing != null)
             {
+                symbols = null;
                 return existing;
             }
 
-            var symbols = new SymbolTableEnumerator(localSymbols, EngineSymbols, SupportedFunctions, Config.SymbolTable);
-            return new ComposedReadOnlySymbolTable(symbols);
+            var list = new SymbolTableEnumerator(localSymbols, EngineSymbols, SupportedFunctions, Config.SymbolTable);
+            symbols = new ComposedReadOnlySymbolTable(list);
+            return symbols;
         }
 
         private protected virtual IBinderGlue CreateBinderGlue()
@@ -196,8 +202,8 @@ namespace Microsoft.PowerFx
             var startHash = symbolTable?.VersionHash;
 
             // Ok to continue with binding even if there are parse errors. 
-            // We can still use that for intellisense. 
-            var resolver = CreateResolverInternal(symbolTable);
+            // We can still use that for intellisense.             
+            var resolver = CreateResolverInternal(out var combinedSymbols, symbolTable);
             
             var glue = CreateBinderGlue();
 
@@ -209,7 +215,10 @@ namespace Microsoft.PowerFx
                 ruleScope: null,
                 features: Config.Features);
 
-            var result = new CheckResult(parse, binding);
+            var result = new CheckResult(parse, binding)
+            {
+                Symbols = combinedSymbols
+            };
 
             if (result.IsSuccess)
             {
@@ -256,12 +265,25 @@ namespace Microsoft.PowerFx
         public IIntellisenseResult Suggest(string expression, RecordType parameterType, int cursorPosition)
         {
             var checkResult = Check(expression, parameterType);
-            return Suggest(expression, checkResult, cursorPosition);
+            return Suggest(checkResult, cursorPosition);
         }
 
         /// <summary>
         /// Get intellisense from the formula, with parser options.
         /// </summary>
+        public IIntellisenseResult Suggest(CheckResult checkResult, int cursorPosition)
+        {
+            var expression = checkResult.Parse.Text;
+
+#pragma warning disable CS0618 // Type or member is obsolete
+            return Suggest(expression, checkResult, cursorPosition);
+#pragma warning restore CS0618 // Type or member is obsolete
+        }
+
+        /// <summary>
+        /// Get intellisense from the formula, with parser options.
+        /// </summary>
+        [Obsolete("Use overload without expression")]
         public IIntellisenseResult Suggest(string expression, CheckResult checkResult, int cursorPosition)
         {            
             var binding = checkResult._binding;
@@ -326,7 +348,13 @@ namespace Microsoft.PowerFx
         /// <returns>The formula, with all identifiers converted to display form.</returns>
         public string GetDisplayExpression(string expressionText, RecordType parameters)
         {
-            return ExpressionLocalizationHelper.ConvertExpression(expressionText, parameters, BindingConfig.Default, CreateResolverInternal(), CreateBinderGlue(), Config.CultureInfo, toDisplay: true);
+            var symbols = SymbolTable.NewFromRecord(parameters);
+            return GetDisplayExpression(expressionText, symbols);
+        }
+
+        public string GetDisplayExpression(string expressionText, ReadOnlySymbolTable symbolTable)
+        {
+            return ExpressionLocalizationHelper.ConvertExpression(expressionText, null, BindingConfig.Default, CreateResolverInternal(symbolTable), CreateBinderGlue(), Config.CultureInfo, toDisplay: true);
         }
     }
 }

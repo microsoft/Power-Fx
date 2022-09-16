@@ -45,7 +45,7 @@ namespace Microsoft.PowerFx
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public T GetService<T>() 
+        public T GetService<T>()
         {
             if (_runtimeConfig != null)
             {
@@ -483,7 +483,7 @@ namespace Microsoft.PowerFx
                 }
 
                 return new InMemoryTableValue(node.IRContext, resultRows);
-            }
+            }            
 
             return CommonErrors.UnreachableCodeError(node.IRContext);
         }

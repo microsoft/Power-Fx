@@ -7,7 +7,8 @@ using Microsoft.PowerFx.Core.Utils;
 namespace Microsoft.PowerFx.Types
 {
     // Useful for representing fields in an aggregate.  
-    public class NamedFormulaType
+    [ThreadSafeImmutable]
+    public sealed class NamedFormulaType
     {
         internal readonly TypedName _typedName;
 
