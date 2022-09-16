@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.RegularExpressions;
+using System.Web;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Tests;
@@ -48,9 +49,23 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 
             _sendToClientData = new List<string>();
             _scopeFactory = new TestPowerFxScopeFactory(
-                (string documentUri) => RecalcEngineScope.FromUri(engine, documentUri, options),
+                (string documentUri) => engine.CreateEditorScope(options, GetFromUri(documentUri)),
                 options);
             _testServer = new TestLanguageServer(_sendToClientData.Add, _scopeFactory);
+        }
+
+        // The convention for getting the context from the documentUri is arbitrary and determined by the host. 
+        private static ReadOnlySymbolTable GetFromUri(string documentUri)
+        {
+            var uriObj = new Uri(documentUri);
+            var json = HttpUtility.ParseQueryString(uriObj.Query).Get("context");
+            if (json == null)
+            {
+                json = "{}";
+            }
+
+            var record = (RecordValue)FormulaValue.FromJson(json);
+            return ReadOnlySymbolTable.NewFromRecord(record.Type);
         }
 
         // From JPC spec: https://microsoft.github.io/language-server-protocol/specifications/specification-3-14/
@@ -587,6 +602,69 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.NotEmpty(response.Result[CodeActionKind.QuickFix][0].Edit.Changes);
             Assert.Contains(documentUri, response.Result[CodeActionKind.QuickFix][0].Edit.Changes.Keys);
             Assert.Equal("TestText1", response.Result[CodeActionKind.QuickFix][0].Edit.Changes[documentUri][0].NewText);
+        }
+
+        // Test a codefix using a customization, ICodeFixHandler
+        [Fact]
+        public void TestCodeActionWithHandler()
+        {
+            var engine = new RecalcEngine();
+
+            var scopeFactory = new TestPowerFxScopeFactory((string documentUri) =>
+            {
+                var scope = engine.CreateEditorScope();
+                scope.AddQuickFixHandler(new BlankHandler());
+                return scope;
+            });
+
+            var testServer = new TestLanguageServer(_sendToClientData.Add, scopeFactory);
+
+            // Blank(A) is error, should change to IsBlank(A)
+            var original = "Blank(A)";
+            var updated = "IsBlank(A)";
+
+            var documentUri = "powerfx://test?expression=" + original + "&context={\"A\":1,\"B\":[1,2,3]}";
+
+            testServer.OnDataReceived(JsonSerializer.Serialize(new
+            {
+                jsonrpc = "2.0",
+                id = "testDocument1",
+                method = "textDocument/codeAction",
+                @params = new CodeActionParams()
+                {
+                    TextDocument = new TextDocumentIdentifier()
+                    {
+                        Uri = documentUri
+                    },
+                    Range = new LanguageServerProtocol.Protocol.Range()
+                    {
+                        Start = new Position
+                        {
+                            Line = 0,
+                            Character = 0
+                        },
+                        End = new Position
+                        {
+                            Line = 0,
+                            Character = 10
+                        }
+                    },
+                    Context = new CodeActionContext() { Only = new[] { CodeActionKind.QuickFix } }
+                }
+            }));
+
+            Assert.Single(_sendToClientData);
+            var response = JsonSerializer.Deserialize<JsonRpcCodeActionResponse>(_sendToClientData[0], _jsonSerializerOptions);
+            Assert.Equal("2.0", response.Jsonrpc);
+            Assert.Equal("testDocument1", response.Id);
+            Assert.NotEmpty(response.Result);
+            Assert.Contains(CodeActionKind.QuickFix, response.Result.Keys);
+            Assert.True(response.Result[CodeActionKind.QuickFix].Length == 1, "Quick fix didn't return expected suggestion.");
+            Assert.Equal(BlankHandler.Title, response.Result[CodeActionKind.QuickFix][0].Title);
+            Assert.NotEmpty(response.Result[CodeActionKind.QuickFix][0].Edit.Changes);
+            Assert.Contains(documentUri, response.Result[CodeActionKind.QuickFix][0].Edit.Changes.Keys);
+
+            Assert.Equal(updated, response.Result[CodeActionKind.QuickFix][0].Edit.Changes[documentUri][0].NewText);
         }
 
         [Theory]

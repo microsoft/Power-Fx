@@ -284,7 +284,7 @@ namespace Microsoft.PowerFx.Tests
                 Assert.DoesNotContain(check.Errors, d => d.Message == Extensions.GetErrBehaviorPropertyExpectedMessage());
             }
 
-            var result = engine.Suggest(expr, check, expr.Length);
+            var result = engine.Suggest(check, expr.Length);
 
             var overload = result.FunctionOverloads.Single();
             Assert.Equal(Intellisense.SuggestionKind.Function, overload.Kind);

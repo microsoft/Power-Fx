@@ -56,7 +56,9 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
 
             var leftType = binding.GetType(binaryOpNode.Left);
             var rightType = binding.GetType(binaryOpNode.Right);
-            if ((leftType.IsMultiSelectOptionSet() && !rightType.IsAggregate) || (rightType.IsMultiSelectOptionSet() && !leftType.IsAggregate))
+            var isLeftNodeAsync = binding.IsAsync(binaryOpNode.Left);
+            var isRightNodeAsync = binding.IsAsync(binaryOpNode.Right);
+            if ((leftType.IsMultiSelectOptionSet() && isRightNodeAsync) || (rightType.IsMultiSelectOptionSet() && isLeftNodeAsync))
             {
                 SuggestDelegationHint(node, binding);
                 return false;
