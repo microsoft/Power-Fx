@@ -22,7 +22,7 @@ namespace Microsoft.PowerFx.Functions
                     "-",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: ReplaceBlankWithZero,
-                    checkRuntimeTypes: ExactValueType<NumberValue>,
+                    checkRuntimeTypes: DateNumberTimeOrDateTime,
                     checkRuntimeValues: DeferRuntimeTypeChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: NumericNegate)

@@ -1,11 +1,14 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Diagnostics;
+
 namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
 {
     /// <summary>
     /// Code action response (ex. Quick fix).
     /// </summary>
+    [DebuggerDisplay("{Title}: {Text}")]
     public class CodeActionResult
     {
         /// <summary>

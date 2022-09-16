@@ -1,0 +1,28 @@
+﻿// (UTC+01:00) Brussels, Copenhagen, Madrid, Paris
+#SETUP: TimeZoneInfo("Romance Standard Time")
+
+// ***************** Excel-style date math, crossing time-zone boundaries ***************
+
+>> Date(2022, 1, 1) + 180
+DateTime(2022,6,30,0,0,0,0)
+
+>> Date(2022, 7, 1) + 180
+DateTime(2022,12,28,0,0,0,0)
+
+>> Date(2022, 6, 30) - 180
+DateTime(2022,1,1,0,0,0,0)
+
+>> Date(2022, 12, 28) - 180
+DateTime(2022,7,1,0,0,0,0)
+
+>> DateTime(2022, 1, 1, 12, 34, 56) + 180
+DateTime(2022,6,30,12,34,56,0)
+
+>> DateTime(2022, 7, 1, 12, 34, 56) + 180
+DateTime(2022,12,28,12,34,56,0)
+
+>> DateTime(2022, 6, 30, 12, 34, 56) - 180
+DateTime(2022,1,1,12,34,56,0)
+
+>> DateTime(2022, 12, 28, 12, 34, 56) - 180
+DateTime(2022,7,1,12,34,56,0)

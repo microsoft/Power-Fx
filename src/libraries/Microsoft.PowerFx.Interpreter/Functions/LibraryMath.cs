@@ -164,7 +164,7 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
-        private class MinDateTimeAgg : IAggregator
+        private class MinDateAndDateTimeAgg : IAggregator
         {
             protected DateTime _minValueDT = DateTime.MaxValue;
             protected int _count = 0;
@@ -176,11 +176,20 @@ namespace Microsoft.PowerFx.Functions
                     return;
                 }
 
-                var n1 = ((DateValue)value).Value;
-
-                if (n1 < _minValueDT)
+                DateTime dt = DateTime.MaxValue;
+                switch (value)
                 {
-                    _minValueDT = n1;
+                    case DateTimeValue dtv:
+                        dt = dtv.Value;
+                        break;
+                    case DateValue dv:
+                        dt = dv.Value;
+                        break;
+                }
+
+                if (dt < _minValueDT)
+                {
+                    _minValueDT = dt;
                 }
 
                 _count++;
@@ -193,40 +202,14 @@ namespace Microsoft.PowerFx.Functions
                     return new BlankValue(irContext);
                 }
 
-                return new DateTimeValue(irContext, _minValueDT);
-            }
-        }
-
-        private class MinDateAgg : IAggregator
-        {
-            protected DateTime _minValueDT = DateTime.MaxValue;
-            protected int _count = 0;
-
-            public void Apply(FormulaValue value)
-            {
-                if (value is BlankValue)
+                if (irContext.ResultType == FormulaType.DateTime)
                 {
-                    return;
+                    return new DateTimeValue(irContext, _minValueDT);
                 }
-
-                var n1 = ((DateValue)value).Value;
-
-                if (n1 < _minValueDT)
+                else
                 {
-                    _minValueDT = n1;
+                    return new DateValue(irContext, _minValueDT);
                 }
-
-                _count++;
-            }
-
-            public FormulaValue GetResult(IRContext irContext)
-            {
-                if (_count == 0)
-                {
-                    return new BlankValue(irContext);
-                }
-
-                return new DateValue(irContext, _minValueDT);
             }
         }
 
@@ -296,7 +279,7 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
-        private class MaxDateAgg : IAggregator
+        private class MaxDateAndDateTimeAgg : IAggregator
         {
             protected DateTime _maxValueDT = DateTime.MinValue;
             protected int _count = 0;
@@ -308,11 +291,20 @@ namespace Microsoft.PowerFx.Functions
                     return;
                 }
 
-                var n1 = ((DateValue)value).Value;
-
-                if (n1 > _maxValueDT)
+                DateTime dt = DateTime.MinValue;
+                switch (value)
                 {
-                    _maxValueDT = n1;
+                    case DateTimeValue dtv:
+                        dt = dtv.Value;
+                        break;
+                    case DateValue dv:
+                        dt = dv.Value;
+                        break;
+                }
+
+                if (dt > _maxValueDT)
+                {
+                    _maxValueDT = dt;
                 }
 
                 _count++;
@@ -325,40 +317,14 @@ namespace Microsoft.PowerFx.Functions
                     return new BlankValue(irContext);
                 }
 
-                return new DateValue(irContext, _maxValueDT);
-            }
-        }
-
-        private class MaxDateTimeAgg : IAggregator
-        {
-            protected DateTime _maxValueDT = DateTime.MinValue;
-            protected int _count = 0;
-
-            public void Apply(FormulaValue value)
-            {
-                if (value is BlankValue)
+                if (irContext.ResultType == FormulaType.DateTime)
                 {
-                    return;
+                    return new DateTimeValue(irContext, _maxValueDT);
                 }
-
-                var n1 = ((DateTimeValue)value).Value;
-
-                if (n1 > _maxValueDT)
+                else
                 {
-                    _maxValueDT = n1;
+                    return new DateValue(irContext, _maxValueDT);
                 }
-
-                _count++;
-            }
-
-            public FormulaValue GetResult(IRContext irContext)
-            {
-                if (_count == 0)
-                {
-                    return new BlankValue(irContext);
-                }
-
-                return new DateTimeValue(irContext, _maxValueDT);
             }
         }
 
@@ -562,13 +528,9 @@ namespace Microsoft.PowerFx.Functions
             {
                 agg = isMin ? new MinNumberAgg() : new MaxNumberAgg();
             }
-            else if (irContext.ResultType == FormulaType.DateTime)
+            else if (irContext.ResultType == FormulaType.DateTime || irContext.ResultType == FormulaType.Date)
             {
-                agg = isMin ? new MinDateTimeAgg() : new MaxDateTimeAgg();
-            }
-            else if (irContext.ResultType == FormulaType.Date)
-            {
-                agg = isMin ? new MinDateAgg() : new MaxDateAgg();
+                agg = isMin ? new MinDateAndDateTimeAgg() : new MaxDateAndDateTimeAgg();
             }
             else if (irContext.ResultType == FormulaType.Time)
             {

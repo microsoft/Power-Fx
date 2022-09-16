@@ -15,6 +15,11 @@
 >> Char(255)
 "ÿ"
 
+>> Char(65)
+"A"
+
+>> Char(660/10)
+"B"
 
 // ******** OUT-OF-RANGE PARAMETERS: Parameters outside range of 1 - 255 ********
 
@@ -53,15 +58,14 @@
 
 // ******** NULL and ERROR PARAMETERS ********
 
-// Excel returns error, while PowerFx does not return any value or error
 >> Char(Blank())
-Blank()
+#Error(Kind=InvalidArgument)
 
 >> IsBlank(Char(Blank()))
-true
+#Error(Kind=InvalidArgument)
 
 >> IsError(Char(Blank()))
-false
+true
 
 //Invalid operation: Division by zero
 >> Char(1/0)
