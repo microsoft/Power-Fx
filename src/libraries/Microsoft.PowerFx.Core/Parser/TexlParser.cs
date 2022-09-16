@@ -217,7 +217,7 @@ namespace Microsoft.PowerFx.Core.Parser
             List<TexlError> errors = null;
             var parsetree = parser.Parse(ref errors);
 
-            return new ParseResult(parsetree, errors, errors?.Any() ?? false, parser._comments, parser._before, parser._after);
+            return new ParseResult(parsetree, errors, errors?.Any() ?? false, parser._comments, parser._before, parser._after, script);
         }
 
         public static ParseFormulasResult ParseFormulasScript(string script, CultureInfo loc = null)
