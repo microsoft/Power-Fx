@@ -45,7 +45,7 @@ namespace Microsoft.PowerFx
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public T GetService<T>() 
+        public T GetService<T>()
         {
             if (_runtimeConfig != null)
             {
@@ -295,6 +295,7 @@ namespace Microsoft.PowerFx
                 case BinaryOpKind.EqOptionSetValue:
                 case BinaryOpKind.EqText:
                 case BinaryOpKind.EqTime:
+                case BinaryOpKind.EqNull:
                     return OperatorBinaryEq(this, context, node.IRContext, args);
 
                 case BinaryOpKind.NeqBlob:
@@ -311,6 +312,7 @@ namespace Microsoft.PowerFx
                 case BinaryOpKind.NeqOptionSetValue:
                 case BinaryOpKind.NeqText:
                 case BinaryOpKind.NeqTime:
+                case BinaryOpKind.NeqNull:
                     return OperatorBinaryNeq(this, context, node.IRContext, args);
 
                 case BinaryOpKind.GtNumbers:
@@ -493,7 +495,7 @@ namespace Microsoft.PowerFx
                 }
 
                 return new InMemoryTableValue(node.IRContext, resultRows);
-            }
+            }            
 
             return CommonErrors.UnreachableCodeError(node.IRContext);
         }

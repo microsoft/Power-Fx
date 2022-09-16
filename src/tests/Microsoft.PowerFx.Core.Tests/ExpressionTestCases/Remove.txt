@@ -1,10 +1,6 @@
 ﻿#SETUP: EnableExpressionChaining,MutationFunctionsTestSetup
 
-// MutationFunctionsTestSetup handle does the following:
-// - Creates a record: r1 => {Field1:1,Field2:"earth",Field3:1/1/2022,Field4:true}
-// - Creates a record: r2 => {Field1:2,Field2:"moon",Field3:2/1/2022,Field4:false} (for convenience)
-// - Creates a record: r_empty => {}
-// - Creates a table: t1(r1) => Type (Field1, Field2, Field3, Field4)
+// Check MutationFunctionsTestSetup handler (PowerFxEvaluationTests.cs) for documentation.
 
 >> Collect(t1, r2);Remove(t1, r1);t1
 Table({Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false})
@@ -53,6 +49,74 @@ Table({Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})
   Remove(t1, {Field2:"earth"}, "All");
   t1
 Table({Field1:Microsoft.PowerFx.Types.ErrorValue,Field2:"moon",Field3:DateTime(2030,2,1,0,0,0,0),Field4:true})
+
+>> Collect(t1, r2);
+  Collect(t1, {Field1:3,Field2:"earth",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false});
+  Collect(t1, {Field1:4,Field2:"earth",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false});
+  Remove(t1, {DisplayNameField2:"earth"});
+  t1
+Table({Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false},{Field1:3,Field2:"earth",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false},{Field1:4,Field2:"earth",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false})
+
+>> Collect(t1, r2);
+  Collect(t1, {Field1:3,Field2:"earth",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false});
+  Collect(t1, {Field1:4,Field2:"earth",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false});
+  Remove(t1, {DisplayNameField2:"earth"}, "All");
+  t1
+Table({Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false})
+
+>> Remove(t2, {Field1:1})
+true
+
+>> Remove(t2, {Field2:{Field2_1:321}})
+true
+
+>> Remove(t2, {Field2:{Field2_3:{Field2_3_1:3231}}})
+true
+
+>> Remove(t2, {Field1:5})
+false
+
+>> Remove(t2, {Field2:{Field2_1:555}})
+false
+
+>> Remove(t2, {Field2:{Field2_3:{Field2_3_1:5555}}})
+false
+
+>> Remove(t2, {Field1:1}, "All")
+true
+
+>> Remove(t2, {Field2:{Field2_1:321}}, "All")
+true
+
+>> Remove(t2, {Field2:{Field2_3:{Field2_3_1:3231}}}, "All")
+true
+
+>> Remove(t2, {Field2:{Field2_3:{Field2_3_2:"common"}}}, "All")
+true
+
+>> Remove(t2, {Field1:5}, "All")
+false
+
+>> Remove(t2, {Field2:{Field2_1:555}}, "All")
+false
+
+>> Remove(t2, {Field2:{Field2_3:{Field2_3_1:5555}}}, "All")
+false
+
+>> Remove(t2, {Field2:{Field2_3:{Field2_3_2:"notexists"}}}, "All")
+false
+
+>> Remove(t2, {Field1:1});t2
+Table({Field1:2,Field2:{Field2_1:221,Field2_2:"2_2",Field2_3:{Field2_3_1:2231,Field2_3_2:"common"}},Field3:false},{Field1:3,Field2:{Field2_1:321,Field2_2:"2_2",Field2_3:{Field2_3_1:3231,Field2_3_2:"common"}},Field3:true})
+
+>> Remove(t2, {Field2:{Field2_1:321}});t2
+Table({Field1:1,Field2:{Field2_1:121,Field2_2:"2_2",Field2_3:{Field2_3_1:1231,Field2_3_2:"common"}},Field3:false},{Field1:2,Field2:{Field2_1:221,Field2_2:"2_2",Field2_3:{Field2_3_1:2231,Field2_3_2:"common"}},Field3:false})
+
+>> Remove(t2, {Field2:{Field2_3:{Field2_3_1:3231}}});t2
+Table({Field1:1,Field2:{Field2_1:121,Field2_2:"2_2",Field2_3:{Field2_3_1:1231,Field2_3_2:"common"}},Field3:false},{Field1:2,Field2:{Field2_1:221,Field2_2:"2_2",Field2_3:{Field2_3_1:2231,Field2_3_2:"common"}},Field3:false})
+
+>> Remove(t2, {Field2:{Field2_3:{Field2_3_2:"common"}}}, "All");t2
+Table()
 
 // Wrong arguments
 >> Remove(t1, r1,"Al");
