@@ -89,6 +89,8 @@ namespace Microsoft.PowerFx.Core.Parser
                 {
                     break;
                 }
+
+                ParseTrivia();
             }
 
             return new ParseUDFsResult(udfs, _errors);
@@ -137,7 +139,8 @@ namespace Microsoft.PowerFx.Core.Parser
 
         private bool ParseUDF(List<UDF> udfs)
         {
-            // <udf> ::= IDENT '(' <args> ')' ':' IDENT '=>' <function-body>
+            // <udf> ::= IDENT '(' <args> ')' ':' IDENT ('=' EXP | <bracs-exp>)
+
             ParseTrivia();
             var ident = TokEat(TokKind.Ident);
             if (ident == null)
@@ -169,12 +172,6 @@ namespace Microsoft.PowerFx.Core.Parser
 
             ParseTrivia();
 
-            if (TokEat(TokKind.DoubleBarrelArrow) == null)
-            {
-                return false;
-            }
-
-            // <function-body> ::= (EXP | <bracs-exp>)
             // <bracs-exp> ::= '{' (((<EXP> ';')+ <EXP>) | <EXP>) (';')? '}'
 
             ParseTrivia();
@@ -194,14 +191,22 @@ namespace Microsoft.PowerFx.Core.Parser
                 }
 
                 udfs.Add(new UDF(ident.As<IdentToken>(), returnType.As<IdentToken>(), new HashSet<UDFArg>(args), exp_result, _hasSemicolon));
-                
+
                 return true;
             }
-
-            var result = ParseExpr(Precedence.None);
-            ParseTrivia();
-            udfs.Add(new UDF(ident.As<IdentToken>(), returnType.As<IdentToken>(), new HashSet<UDFArg>(args), result, false));
-            return true;
+            else if (_curs.TidCur == TokKind.Equ)
+            {
+                _curs.TokMove();
+                ParseTrivia();
+                var result = ParseExpr(Precedence.None);
+                ParseTrivia();
+                udfs.Add(new UDF(ident.As<IdentToken>(), returnType.As<IdentToken>(), new HashSet<UDFArg>(args), result, false));
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         // Parse the script
