@@ -44,7 +44,7 @@ namespace Microsoft.PowerFx.Functions
                 allFunctions.Add(func.Key, func.Value);
             }
 
-            foreach (var func in TabularFunctionImplementations)
+            foreach (var func in SimpleFunctionTabularOverloadImplementations)
             {
                 allFunctions.Add(func.Key, func.Value);
             }
@@ -1353,7 +1353,7 @@ namespace Microsoft.PowerFx.Functions
             }
         };
 
-        private static IReadOnlyDictionary<TexlFunction, AsyncFunctionPtr> TabularFunctionImplementations { get; } = new Dictionary<TexlFunction, AsyncFunctionPtr>
+        private static IReadOnlyDictionary<TexlFunction, AsyncFunctionPtr> SimpleFunctionTabularOverloadImplementations { get; } = new Dictionary<TexlFunction, AsyncFunctionPtr>
         {
             {
                 BuiltinFunctionsCore.AbsT,
