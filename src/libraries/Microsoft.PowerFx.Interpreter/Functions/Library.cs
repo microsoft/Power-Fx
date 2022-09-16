@@ -46,6 +46,7 @@ namespace Microsoft.PowerFx.Functions
 
             foreach (var func in SimpleFunctionTabularOverloadImplementations)
             {
+                Contracts.Assert(allFunctions.Any(f => f.Key.Name == func.Key.Name), "It needs to be an overload");
                 allFunctions.Add(func.Key, func.Value);
             }
 
