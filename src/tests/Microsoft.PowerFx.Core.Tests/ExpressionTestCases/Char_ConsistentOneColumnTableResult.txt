@@ -1,117 +1,15 @@
 ﻿#SETUP: ConsistentOneColumnTableResult
 
-// ******** VALID PARAMETERS: Between 1 and 255 ********
+>> Char([36,37])
+["$","%"]
 
-// Commenting these expressions as it return non-printable characters
-// >> Char(1)
-// >> Char(2)
+>> Char(Table({a:72},{a:101},{a:108},{a:108},{a:111}))
+["H","e","l","l","o"]
 
->> Char(36)
-"$"
-
->> Char(174)
-"®"
-
->> Char(255)
-"ÿ"
-
+>> Char([87, 111, 114, 108, 100])
+["W","o","r","l","d"]
 
 // ******** OUT-OF-RANGE PARAMETERS: Parameters outside range of 1 - 255 ********
 
->> Char(0)
-#Error(Kind=InvalidArgument)
-
->> Char(256)
-#Error(Kind=InvalidArgument)
-
->> Char(1024)
-#Error(Kind=InvalidArgument)
-
->> Char(-1)
-#Error(Kind=InvalidArgument)
-
->> Char(-255)
-#Error(Kind=InvalidArgument)
-
-
-// ******** DECIMAL PARAMETERS ********
-
->> Char(33.0001)
-"!"
-
->> Char(255.4)
-"ÿ"
-
-//Error: The first argument to Char should be number between 1 and 255
->> Char(0.78)
-#Error(Kind=InvalidArgument)
-
-//Error: The first argument to Char should be number between 1 and 255
->> Char(-0.001)
-#Error(Kind=InvalidArgument)
-
-// ******** NULL and ERROR PARAMETERS ********
-
-// Excel returns error, while PowerFx does not return any value or error
->> Char(Blank())
-Blank()
-
->> IsBlank(Char(Blank()))
-true
-
->> IsError(Char(Blank()))
-false
-
-//Invalid operation: Division by zero
->> Char(1/0)
-#Error(Kind=Div0)
-
-// ******** STRING PARAMETERS ********
-
-//Error: Invalid arguments to the "Value" function
->> Char("abc")
-#Error(Kind=InvalidArgument)
-
->> Char("200")
-"È"
-
->> Char("200.5")
-"È"
-
-//Error: The first argument to Char should be number between 1 and 255
->> Char("0")
-#Error(Kind=InvalidArgument)
-
-//Error: The first argument to Char should be number between 1 and 255
->> Char("256")
-#Error(Kind=InvalidArgument)
-
-//Error: The first argument to Char should be number between 1 and 255
->> Char("-20")
-#Error(Kind=InvalidArgument)
-
-
-// ******** BOOLEAN AND STRING PARAMETERS ********
-
-// Commenting the expression as it returns non-printable character
-// >> Char(true)
-
-//Error: The first argument to Char should be number between 1 and 255
->> Char(false)
-#Error(Kind=InvalidArgument)
-
-//Invalid arguments to the function
->> Char("false")
-#Error(Kind=InvalidArgument)
-
->> IsBlank(Char("false"))
-#Error(Kind=InvalidArgument)
-
->> IsError(Char("false"))
-true
-
-// ******** FUNCTION VALUE AS PARAMETERS ********
-
->> Char(Len("ThisIsASampleStringWith35Characters"))
-"#"
-
+>> Char(Table({a:32},{a:257},{a:65},{a:Blank()},{a:97}))
+[" ",Microsoft.PowerFx.Types.ErrorValue,"A",Microsoft.PowerFx.Types.ErrorValue,"a"]
