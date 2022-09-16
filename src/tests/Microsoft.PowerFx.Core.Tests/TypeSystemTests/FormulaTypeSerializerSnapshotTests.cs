@@ -19,9 +19,13 @@ namespace Microsoft.PowerFx.Tests
         /// instead include the subpath bin/(Debug|Release).AnyCPU, depending on whether the assembly was
         /// built in debug or release mode.
         /// </summary>
-        private static readonly string _typeSnapshotDirectory = Path.Join(Directory.GetCurrentDirectory(), "TypeSystemTests", "JsonTypeSnapshots")
-            .Replace(Path.Join("bin", "Debug", "netcoreapp3.1"), string.Empty)
-            .Replace(Path.Join("bin", "Release", "netcoreapp3.1"), string.Empty);
+        private static readonly string _baseDirectory = Path.Join(Directory.GetCurrentDirectory(), "TypeSystemTests", "JsonTypeSnapshots");
+
+        private static readonly string _typeSnapshotDirectory = RegenerateSnapshots ?
+            _baseDirectory
+                .Replace(Path.Join("bin", "Debug", "netcoreapp3.1"), string.Empty)
+                .Replace(Path.Join("bin", "Release", "netcoreapp3.1"), string.Empty) :
+            _baseDirectory;
 
         private void CheckTypeSnapshot(FormulaType type, string testId, JsonSerializerOptions options)
         {

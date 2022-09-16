@@ -20,9 +20,13 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         /// instead include the subpath bin/(Debug|Release).AnyCPU, depending on whether the assembly was
         /// built in debug or release mode.
         /// </summary>
-        private static readonly string _signatureHelpDirectory = Path.Join(Directory.GetCurrentDirectory(), "IntellisenseTests", "TestSignatures")
-            .Replace(Path.Join("bin", "Debug", "netcoreapp3.1"), string.Empty)
-            .Replace(Path.Join("bin", "Release", "netcoreapp3.1"), string.Empty);
+        private static readonly string _baseDirectory = Path.Join(Directory.GetCurrentDirectory(), "IntellisenseTests", "TestSignatures");
+
+        private static readonly string _signatureHelpDirectory = RegenerateSignatureHelp ?
+            _baseDirectory
+                .Replace(Path.Join("bin", "Debug", "netcoreapp3.1"), string.Empty)
+                .Replace(Path.Join("bin", "Release", "netcoreapp3.1"), string.Empty) :
+            _baseDirectory;
 
         /// <summary>
         /// Reads the current signature help test, located in the TestSignatures directory, deserializes and
