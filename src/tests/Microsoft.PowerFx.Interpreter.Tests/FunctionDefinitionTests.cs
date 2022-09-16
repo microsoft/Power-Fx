@@ -2,9 +2,11 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Tests;
+using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Types;
 using Xunit;
 using static Microsoft.PowerFx.Functions.Library;
@@ -26,7 +28,20 @@ namespace Microsoft.PowerFx.Tests
 
             foreach (var tabularOverload in tabularOverloads.Keys)
             {
-                Assert.Contains(simpleFunctions, f => f.Key.Name == tabularOverload.Name);
+                var simpleFunction = simpleFunctions.First(f => f.Key.Name == tabularOverload.Name).Key;
+                Assert.NotNull(simpleFunction);
+
+                // Validate input / output types - simple function should take / return scalars
+                Assert.NotEqual(DKind.Table, simpleFunction.ReturnType.Kind);
+                Assert.DoesNotContain(simpleFunction.ParamTypes, t => t.Kind == DKind.Table); // No tabular inputs
+
+                // Validate input / output types - tabular function should take at least one table / return table
+                Assert.Equal(DKind.Table, tabularOverload.ReturnType.Kind); // Returns table
+                Assert.Contains(tabularOverload.ParamTypes, t => t.Kind == DKind.Table); // At least one table input
+
+                // Validate similar arity
+                Assert.Equal(tabularOverload.MinArity, simpleFunction.MinArity);
+                Assert.Equal(tabularOverload.MaxArity, simpleFunction.MaxArity);
             }
         }
     }
