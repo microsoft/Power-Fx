@@ -7,9 +7,6 @@
 >> ForAll(Abs([0, -1, 1/0, 1, If(Char(0) = "a",-1)]), IfError(Value, -FirstError.Kind))
 [0,1,-13,1,-25]
 
->> Abs([1])
-#Error(Kind=Div0)
-
 >> Acos(2)
 #Error(Kind=Numeric)
 
@@ -24,6 +21,10 @@
 
 >> And(true,1/0)
 #Error(Kind=Div0)
+
+// And is a short-circuiting operator - only first error is returned
+>> And(Sqrt(-1)<0, 1/0<2, Char(0)="a")
+#Error(Kind=Numeric)
 
 >> Asin(-1.5)
 #Error(Kind=Numeric)
@@ -124,7 +125,6 @@
 >> CountA([1,Sqrt(-1),3,1/0,5])
 #Error(Kind=Numeric,Div0)
 
-// PPPPPPPPPP Stops at first error in JS, all errors in C#
 >> CountIf([2,1,0,-1,-2], Sqrt(1/Value)<0)
 #Error(Kind=Div0,Numeric,Numeric)
 
@@ -290,7 +290,7 @@ true
 >> IsNumeric(If(Sqrt(-1)<2,"hello"))
 #Error(Kind=Numeric)
 
->> IsToday(If(Sqrt(-1)<2,Date(2022,1,1))
+>> IsToday(If(Sqrt(-1)<2,Date(2022,1,1)))
 #Error(Kind=Numeric)
 
 >> If(1/0<2,true,false)
@@ -318,7 +318,7 @@ true
 #Error(Kind=Div0)
 
 >> ForAll(Int([0.3, -1.2, 1/0, 1.1, If(Char(0) = "a",-1)]), IfError(Value, -FirstError.Kind))
-[0,-1,-13,1,-25]
+[0,-2,-13,1,-25]
 
 >> Index(If(1/0<2,[1,2,3]),Sqrt(-1))
 #Error(Kind=Div0,Numeric)
@@ -383,4 +383,97 @@ true
 
 >> Log(10,1)
 #Error(Kind=Div0)
+
+>> LookUp(If(1/0<2,[1,2,3]), Value > 0)
+#Error(Kind=Div0)
+
+>> LookUp([-1, 0, 1], Sqrt(Value) < 1)
+#Error(Kind=Numeric)
+
+>> LookUp([1, 1/0, -1], IsError(Value), IfError(Value, -FirstError.Kind))
+-13
+
+>> Lower(If(1/0<2,"lower"))
+#Error(Kind=Div0)
+
+>> Max(2, Sqrt(-1), 3, 1/0, 4)
+#Error(Kind=Numeric,Div0)
+
+// PPPPP only first error is returned
+>> Max([3, 2, 1, 0, -1, -2], Sqrt(1/Value))
+#Error(Kind=Div0)
+
+>> Mid(Char(0),1/0,Sqrt(-1))
+#Error(Kind=InvalidArgument,Div0,Numeric)
+
+>> Mid("Hello", 0)
+#Error(Kind=InvalidArgument)
+
+>> Mid("Hello", 2, -1)
+#Error(Kind=InvalidArgument)
+
+>> Min(2, Sqrt(-1), 3, 1/0, 4)
+#Error(Kind=Numeric,Div0)
+
+// PPPPP only first error is returned
+>> Min([3, 2, 1, 0, -1, -2], Sqrt(1/Value))
+#Error(Kind=Div0)
+
+>> Minute(If(1/0<2,Time(20,10,10)))
+#Error(Kind=Div0)
+
+>> Mod(2,0)
+#Error(Kind=Div0)
+
+>> Mod(10^200,-10^-200)
+#Error(Kind=Numeric)
+
+>> Mod(Sqrt(-1),If(Char(0)="a",1))
+#Error(Kind=Numeric,InvalidArgument)
+
+>> Not(If(1/0<2,true))
+#Error(Kind=Div0)
+
+// Or is a short-circuiting operator - only first error is returned
+>> Or(Sqrt(-1)<0, 1/0<2, Char(0)="a")
+#Error(Kind=Numeric)
+
+>> ParseJSON("not a JSON string")
+#Error(Kind=InvalidArgument)
+
+>> ParseJSON(If(1/0<2,"not a JSON string"))
+#Error(Kind=Div0)
+
+>> Proper(If(1/0<2,"proper"))
+#Error(Kind=Div0)
+
+>> Power(0, -1)
+#Error(Kind=Div0)
+
+>> Power(-2, 0.5)
+#Error(Kind=Numeric)
+
+>> Power(10, 10000)
+#Error(Kind=Numeric)
+
+>> Power(If(Char(0)="a",1,2), Sqrt(-2))
+#Error(Kind=InvalidArgument,Numeric)
+
+>> Radians(If(1/0<2,Date(2022,1,1)))
+#Error(Kind=Div0)
+
+>> RandBetween(5, 2)
+#Error(Kind=Numeric)
+
+>> RandBetween(If(Char(0)="a",1,2), Sqrt(-2))
+#Error(Kind=InvalidArgument,Numeric)
+
+>> Replace(Char(0),Sqrt(-1),1/0,Char(256))
+#Error(Kind=InvalidArgument,Numeric,Div0,InvalidArgument)
+
+>> Replace("Hello world",-1,5,"new")
+#Error(Kind=InvalidArgument)
+
+>> Replace("Hello world",1,-5,"new")
+#Error(Kind=InvalidArgument)
 

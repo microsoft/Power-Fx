@@ -576,14 +576,19 @@ namespace Microsoft.PowerFx.Functions
             }
 
             // r = a – N × floor(a/b)
-            var q = (long)Math.Floor(arg0 / arg1);
-            var result = arg0 - (arg1 * q);
+            var q = Math.Floor(arg0 / arg1);
+            if (IsInvalidDouble(q))
+            {
+                return CommonErrors.OverflowError(irContext);
+            }
+
+            var result = arg0 - (arg1 * ((long)q));
 
             // We validate the reminder is in a valid range.
             // This is mainly to support very large numbers (like 1E+308) where the calculation could be incorrect
             if (result < -Math.Abs(arg1) || result > Math.Abs(arg1))
             {
-                result = 0;
+                return CommonErrors.OverflowError(irContext);
             }
 
             return new NumberValue(irContext, result);
@@ -710,11 +715,6 @@ namespace Microsoft.PowerFx.Functions
             if (numberBase == 1)
             {
                 return GetDiv0Error(irContext);
-            }
-
-            if (number <= 0)
-            {
-                return CommonErrors.ArgumentOutOfRange(irContext);
             }
 
             return new NumberValue(irContext, Math.Log(number, numberBase));

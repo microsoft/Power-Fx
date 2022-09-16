@@ -643,26 +643,6 @@ namespace Microsoft.PowerFx.Functions
         #endregion
 
         #region Common Runtime Value Checking Pipeline Stages
-        private static FormulaValue FiniteChecker(IRContext irContext, int index, FormulaValue arg)
-        {
-            if (arg is NumberValue numberValue)
-            {
-                var number = numberValue.Value;
-
-                if (double.IsNaN(number))
-                {
-                    return CommonErrors.NumericOutOfRange(irContext);
-                }
-
-                if (double.IsInfinity(number))
-                {
-                    return CommonErrors.OverflowError(irContext);
-                }
-            }
-
-            return arg;
-        }
-
         private static FormulaValue PositiveNumericNumberChecker(IRContext irContext, int index, FormulaValue arg)
         {
             if (arg is NumberValue numberArg)
@@ -670,7 +650,7 @@ namespace Microsoft.PowerFx.Functions
                 var number = numberArg.Value;
                 if (number < 0)
                 {
-                    return CommonErrors.NumericOutOfRange(irContext);
+                    return CommonErrors.ArgumentOutOfRange(irContext);
                 }
             }
 
@@ -712,7 +692,7 @@ namespace Microsoft.PowerFx.Functions
                 var number = numberArg.Value;
                 if (number <= 0)
                 {
-                    return CommonErrors.NumericOutOfRange(irContext);
+                    return CommonErrors.ArgumentOutOfRange(irContext);
                 }
             }
 

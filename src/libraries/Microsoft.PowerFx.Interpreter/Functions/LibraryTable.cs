@@ -32,14 +32,7 @@ namespace Microsoft.PowerFx.Functions
                 else
                 {
                     var childContext = context.SymbolContext.WithScopeValues(row.Value);
-                    var value = await arg2.EvalAsync(runner, context.NewScope(childContext));
-
-                    if (value is NumberValue number)
-                    {
-                        value = FiniteChecker(irContext, 0, number);
-                    }
-
-                    return value;
+                    return await arg2.EvalAsync(runner, context.NewScope(childContext));
                 }
             }
 

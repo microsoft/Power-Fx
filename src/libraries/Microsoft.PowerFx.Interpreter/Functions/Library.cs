@@ -788,7 +788,7 @@ namespace Microsoft.PowerFx.Functions
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: ReplaceBlankWithZero,
                     checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
-                    checkRuntimeValues: DeferRuntimeTypeChecking,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: Ln)
             },
@@ -799,7 +799,7 @@ namespace Microsoft.PowerFx.Functions
                     expandArguments: InsertDefaultValues(outputArgsCount: 2, fillWith: new NumberValue(IRContext.NotInSource(FormulaType.Number), 10)),
                     replaceBlankValues: ReplaceBlankWithZero,
                     checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
-                    checkRuntimeValues: StrictNumericPositiveNumberChecker,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: Log)
             },
@@ -1169,7 +1169,7 @@ namespace Microsoft.PowerFx.Functions
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: ReplaceBlankWithZero,
                     checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
-                    checkRuntimeValues: PositiveNumericNumberChecker,
+                    checkRuntimeValues: DeferRuntimeTypeChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: Sqrt)
             },
@@ -1815,6 +1815,12 @@ namespace Microsoft.PowerFx.Functions
 
             // TODO: verify semantics in the case of heterogeneous record lists
             var rows = await Task.WhenAll(rowsAsync);
+
+            var errorRows = rows.OfType<ErrorValue>();
+            if (errorRows.Any())
+            {
+                return ErrorValue.Combine(irContext, errorRows);
+            }
 
             return new InMemoryTableValue(irContext, StandardTableNodeRecords(irContext, rows, forceSingleColumn: false));
         }
