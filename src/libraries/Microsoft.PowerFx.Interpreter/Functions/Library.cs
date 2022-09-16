@@ -32,28 +32,28 @@ namespace Microsoft.PowerFx.Functions
         // Async - can invoke lambads.
         public delegate ValueTask<FormulaValue> AsyncFunctionPtr(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args);
 
-        public static IEnumerable<TexlFunction> FunctionList => FuncsByName.Keys;
+        public static IEnumerable<TexlFunction> FunctionList => FunctionImplementations.Keys;
 
-        public static readonly IReadOnlyDictionary<TexlFunction, AsyncFunctionPtr> FuncsByName;
+        public static readonly IReadOnlyDictionary<TexlFunction, AsyncFunctionPtr> FunctionImplementations;
 
         static Library()
         {
-            var funcsByName = new Dictionary<TexlFunction, AsyncFunctionPtr>();
-            foreach (var func in SimpleFuncsByName)
+            var allFunctions = new Dictionary<TexlFunction, AsyncFunctionPtr>();
+            foreach (var func in SimpleFunctionImplementations)
             {
-                funcsByName.Add(func.Key, func.Value);
+                allFunctions.Add(func.Key, func.Value);
             }
 
-            foreach (var func in TabularFuncsByName)
+            foreach (var func in TabularFunctionImplementations)
             {
-                funcsByName.Add(func.Key, func.Value);
+                allFunctions.Add(func.Key, func.Value);
             }
 
-            FuncsByName = funcsByName;
+            FunctionImplementations = allFunctions;
         }
 
         // Some TexlFunctions are overloaded
-        private static IReadOnlyDictionary<TexlFunction, AsyncFunctionPtr> SimpleFuncsByName { get; } = new Dictionary<TexlFunction, AsyncFunctionPtr>
+        private static IReadOnlyDictionary<TexlFunction, AsyncFunctionPtr> SimpleFunctionImplementations { get; } = new Dictionary<TexlFunction, AsyncFunctionPtr>
         {
             {
                 BuiltinFunctionsCore.Abs,
@@ -1353,7 +1353,7 @@ namespace Microsoft.PowerFx.Functions
             }
         };
 
-        private static IReadOnlyDictionary<TexlFunction, AsyncFunctionPtr> TabularFuncsByName { get; } = new Dictionary<TexlFunction, AsyncFunctionPtr>
+        private static IReadOnlyDictionary<TexlFunction, AsyncFunctionPtr> TabularFunctionImplementations { get; } = new Dictionary<TexlFunction, AsyncFunctionPtr>
         {
             {
                 BuiltinFunctionsCore.AbsT,
@@ -1363,7 +1363,7 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeTypes: ExactValueTypeOrBlank<TableValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
-                    targetFunction: StandardSingleColumnTable<NumberValue>(SimpleFuncsByName[BuiltinFunctionsCore.Abs]))
+                    targetFunction: StandardSingleColumnTable<NumberValue>(SimpleFunctionImplementations[BuiltinFunctionsCore.Abs]))
             },
             {
                 BuiltinFunctionsCore.Boolean_T,
@@ -1373,7 +1373,7 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeTypes: ExactValueTypeOrBlank<TableValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
-                    targetFunction: StandardSingleColumnTable<StringValue>(SimpleFuncsByName[BuiltinFunctionsCore.Boolean]))
+                    targetFunction: StandardSingleColumnTable<StringValue>(SimpleFunctionImplementations[BuiltinFunctionsCore.Boolean]))
             },
             {
                 BuiltinFunctionsCore.BooleanN_T,
@@ -1383,7 +1383,7 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeTypes: ExactValueTypeOrBlank<TableValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
-                    targetFunction: StandardSingleColumnTable<NumberValue>(SimpleFuncsByName[BuiltinFunctionsCore.BooleanN]))
+                    targetFunction: StandardSingleColumnTable<NumberValue>(SimpleFunctionImplementations[BuiltinFunctionsCore.BooleanN]))
             },
             {
                 BuiltinFunctionsCore.CharT,
@@ -1393,7 +1393,7 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeTypes: ExactValueTypeOrBlank<TableValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
-                    targetFunction: StandardSingleColumnTable<NumberValue>(SimpleFuncsByName[BuiltinFunctionsCore.Char]))
+                    targetFunction: StandardSingleColumnTable<NumberValue>(SimpleFunctionImplementations[BuiltinFunctionsCore.Char]))
             },
             {
                 BuiltinFunctionsCore.ExpT,
@@ -1403,7 +1403,7 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeTypes: ExactValueTypeOrBlank<TableValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
-                    targetFunction: StandardSingleColumnTable<NumberValue>(SimpleFuncsByName[BuiltinFunctionsCore.Exp]))
+                    targetFunction: StandardSingleColumnTable<NumberValue>(SimpleFunctionImplementations[BuiltinFunctionsCore.Exp]))
             },
             {
                 BuiltinFunctionsCore.IntT,
@@ -1413,7 +1413,7 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeTypes: ExactValueTypeOrBlank<TableValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
-                    targetFunction: StandardSingleColumnTable<NumberValue>(SimpleFuncsByName[BuiltinFunctionsCore.Int]))
+                    targetFunction: StandardSingleColumnTable<NumberValue>(SimpleFunctionImplementations[BuiltinFunctionsCore.Int]))
             },
             {
                 BuiltinFunctionsCore.LenT,
@@ -1423,7 +1423,7 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeTypes: ExactValueTypeOrBlank<TableValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
-                    targetFunction: StandardSingleColumnTable<StringValue>(SimpleFuncsByName[BuiltinFunctionsCore.Len]))
+                    targetFunction: StandardSingleColumnTable<StringValue>(SimpleFunctionImplementations[BuiltinFunctionsCore.Len]))
             },
             {
                 BuiltinFunctionsCore.LnT,
@@ -1433,7 +1433,7 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeTypes: ExactValueTypeOrBlank<TableValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
-                    targetFunction: StandardSingleColumnTable<NumberValue>(SimpleFuncsByName[BuiltinFunctionsCore.Ln]))
+                    targetFunction: StandardSingleColumnTable<NumberValue>(SimpleFunctionImplementations[BuiltinFunctionsCore.Ln]))
             },
             {
                 BuiltinFunctionsCore.SqrtT,
@@ -1443,7 +1443,7 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeTypes: ExactValueTypeOrBlank<TableValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
-                    targetFunction: StandardSingleColumnTable<NumberValue>(SimpleFuncsByName[BuiltinFunctionsCore.Sqrt]))
+                    targetFunction: StandardSingleColumnTable<NumberValue>(SimpleFunctionImplementations[BuiltinFunctionsCore.Sqrt]))
             },
         };
 

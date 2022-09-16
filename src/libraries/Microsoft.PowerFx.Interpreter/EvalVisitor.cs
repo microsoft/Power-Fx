@@ -246,7 +246,7 @@ namespace Microsoft.PowerFx
             }
             else
             {
-                if (FuncsByName.TryGetValue(func, out var ptr))
+                if (FunctionImplementations.TryGetValue(func, out var ptr))
                 {
                     var result = await ptr(this, context.IncrementStackDepthCounter(childContext), node.IRContext, args);
 
