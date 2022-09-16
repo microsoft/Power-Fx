@@ -168,16 +168,6 @@ namespace Microsoft.PowerFx.Functions
             });
         }
 
-        public static ErrorValue NotSupportedError(IRContext irContext)
-        {
-            return new ErrorValue(irContext, new ExpressionError()
-            {
-                Message = $"Not supported",
-                Span = irContext.SourceContext,
-                Kind = ErrorKind.NotSupported
-            });
-        }
-
         public static ErrorValue InvalidChain(IRContext irContext, string message)
         {
             return new ErrorValue(irContext, new ExpressionError()

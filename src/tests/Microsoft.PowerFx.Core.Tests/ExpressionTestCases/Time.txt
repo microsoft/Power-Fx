@@ -4,6 +4,10 @@ Time(1,2,3,0)
 >> Time(12, 23, 34, 456)
 Time(12,23,34,456)
 
+// Result of Time function should be between 00:00:00.000 and 23:59:59.999
+>> Time(30, 0, 0)
+Time(6,0,0,0)
+
 >> Hour(Time(1, 2, 3))
 1
 
@@ -99,6 +103,9 @@ true
 
 >> Text(Time(10, -30, -360), "HH:mm:ss")
 "09:24:00"
+
+>> Text(Time(23, 59, 59, 999), "HH:mm:ss.fff")
+"23:59:59.999"
 
 >> Date(2011, 2, 3) + Time(1, 2, 3)
 DateTime(2011,2,3,1,2,3,0)
@@ -213,6 +220,15 @@ Errors: Error 13-14: This operation isn't valid on these types: Time, DateTime.
 
 >> Second(DateTime(2000,15,40,26,90,90,5500))
 35
+
+>> Hour(Time(12,50,45,950) + Time(6,15,35,750))
+19
+
+>> Minute(Time(12,50,45,950) + Time(6,15,35,750))
+6
+
+>> Second(Time(12,50,45,950) + Time(6,15,35,750))
+21
 
 // ********** COMPONENTS FROM UNDERFLOWS **********
 >> Hour(Time(4,-90,-90))

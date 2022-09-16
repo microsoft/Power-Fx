@@ -413,6 +413,11 @@ namespace Microsoft.PowerFx.Functions
                 .Add(new TimeSpan(0, 0, second))
                 .Add(TimeSpan.FromMilliseconds(millisecond));
 
+            if (result.TotalDays >= 1)
+            {
+                result = result.Subtract(TimeSpan.FromDays((int)result.TotalDays));
+            }
+
             return new TimeValue(irContext, result);
         }
 
@@ -423,15 +428,30 @@ namespace Microsoft.PowerFx.Functions
             var day = (int)args[2].Value;
             var date = DateImpl(IRContext.NotInSource(FormulaType.Date), year, month, day);
 
+            if (date is ErrorValue)
+            {
+                return date;
+            }
+
             var hour = (int)args[3].Value;
             var minute = (int)args[4].Value;
             var second = (int)args[5].Value;
             var millisecond = (int)args[6].Value;
-            var time = TimeImpl(IRContext.NotInSource(FormulaType.Time), hour, minute, second, millisecond);
 
-            var result = AddDateAndTime(irContext, new[] { date, time });
+            try
+            {
+                var dateTime = ((DateValue)date).Value
+                    .AddHours(hour)
+                    .AddMinutes(minute)
+                    .AddSeconds(second)
+                    .AddMilliseconds(millisecond);
 
-            return result;
+                return new DateTimeValue(irContext, dateTime);
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                return CommonErrors.InvalidDateTimeError(irContext);
+            }
         }
 
         private static FormulaValue Now(IRContext irContext, FormulaValue[] args)

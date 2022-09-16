@@ -255,6 +255,10 @@ DateTime(2022,10,1,12,34,56,0)
 >> Time(12, 34, 56) + Date(2022, 10, 1)
 DateTime(2022,10,1,12,34,56,0)
 
+// Time wraps 30h to 6h
+>> Date(2022, 10, 1) + Time(30, 0, 0)
+DateTime(2022,10,1,6,0,0,0)
+
 >> Date(2022, 10, 10) - Time(12, 34, 56)
 DateTime(2022,10,9,11,25,4,0)
 
@@ -333,8 +337,8 @@ Date(2022,1,1)
 >> Day(true)
 Errors: Error 4-8: Invalid argument type (Boolean). Expecting a DateTime value instead.
 
->> Month(true)
-Errors: Error 6-10: Invalid argument type (Boolean). Expecting a DateTime value instead.
+>> Month(false)
+Errors: Error 6-11: Invalid argument type (Boolean). Expecting a DateTime value instead.
 
 >> Year(true)
 Errors: Error 5-9: Invalid argument type (Boolean). Expecting a DateTime value instead.

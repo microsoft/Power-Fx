@@ -701,12 +701,22 @@ namespace Microsoft.PowerFx.Functions
 
         private static FormulaValue SubtractNumberAndDate(IRContext irContext, FormulaValue[] args)
         {
-            return CommonErrors.NotSupportedError(irContext);
+            return OperatorNotSupportedError(irContext);
         }
 
         private static FormulaValue SubtractNumberAndTime(IRContext irContext, FormulaValue[] args)
         {
-            return CommonErrors.NotSupportedError(irContext);
+            return OperatorNotSupportedError(irContext);
+        }
+
+        public static ErrorValue OperatorNotSupportedError(IRContext irContext)
+        {
+            return new ErrorValue(irContext, new ExpressionError()
+            {
+                Message = $"The operator is invalid for these types",
+                Span = irContext.SourceContext,
+                Kind = ErrorKind.NotSupported
+            });
         }
 
         private static FormulaValue LtDateTime(IRContext irContext, FormulaValue[] args)
