@@ -351,8 +351,8 @@ namespace Microsoft.PowerFx.Functions
                         new DateTimeValue(IRContext.NotInSource(FormulaType.DateTime), _epoch),
                         new StringValue(IRContext.NotInSource(FormulaType.String), "days")),
                     checkRuntimeTypes: ExactSequence(
-                        DateOrDateTime,
-                        DateOrDateTime,
+                        DateOrTimeOrDateTime,
+                        DateOrTimeOrDateTime,
                         ExactValueTypeOrBlank<StringValue>),
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
@@ -1354,97 +1354,44 @@ namespace Microsoft.PowerFx.Functions
             }
         };
 
+        // Tabular overloads for functions in SimpleFunctionImplementations
         private static IReadOnlyDictionary<TexlFunction, AsyncFunctionPtr> SimpleFunctionTabularOverloadImplementations { get; } = new Dictionary<TexlFunction, AsyncFunctionPtr>
         {
             {
                 BuiltinFunctionsCore.AbsT,
-                StandardErrorHandlingAsync<TableValue>(
-                    expandArguments: NoArgExpansion,
-                    replaceBlankValues: DoNotReplaceBlank,
-                    checkRuntimeTypes: ExactValueTypeOrBlank<TableValue>,
-                    checkRuntimeValues: DeferRuntimeValueChecking,
-                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
-                    targetFunction: StandardSingleColumnTable<NumberValue>(SimpleFunctionImplementations[BuiltinFunctionsCore.Abs]))
+                StandardErrorHandlingTabularOverload<NumberValue>(SimpleFunctionImplementations[BuiltinFunctionsCore.Abs])
             },
             {
                 BuiltinFunctionsCore.Boolean_T,
-                StandardErrorHandlingAsync<TableValue>(
-                    expandArguments: NoArgExpansion,
-                    replaceBlankValues: DoNotReplaceBlank,
-                    checkRuntimeTypes: ExactValueTypeOrBlank<TableValue>,
-                    checkRuntimeValues: DeferRuntimeValueChecking,
-                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
-                    targetFunction: StandardSingleColumnTable<StringValue>(SimpleFunctionImplementations[BuiltinFunctionsCore.Boolean]))
+                StandardErrorHandlingTabularOverload<StringValue>(SimpleFunctionImplementations[BuiltinFunctionsCore.Boolean])
             },
             {
                 BuiltinFunctionsCore.BooleanN_T,
-                StandardErrorHandlingAsync<TableValue>(
-                    expandArguments: NoArgExpansion,
-                    replaceBlankValues: DoNotReplaceBlank,
-                    checkRuntimeTypes: ExactValueTypeOrBlank<TableValue>,
-                    checkRuntimeValues: DeferRuntimeValueChecking,
-                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
-                    targetFunction: StandardSingleColumnTable<NumberValue>(SimpleFunctionImplementations[BuiltinFunctionsCore.BooleanN]))
+                StandardErrorHandlingTabularOverload<NumberValue>(SimpleFunctionImplementations[BuiltinFunctionsCore.BooleanN])
             },
             {
                 BuiltinFunctionsCore.CharT,
-                StandardErrorHandlingAsync(
-                    expandArguments: NoArgExpansion,
-                    replaceBlankValues: DoNotReplaceBlank,
-                    checkRuntimeTypes: ExactValueTypeOrBlank<TableValue>,
-                    checkRuntimeValues: DeferRuntimeValueChecking,
-                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
-                    targetFunction: StandardSingleColumnTable<NumberValue>(SimpleFunctionImplementations[BuiltinFunctionsCore.Char]))
+                StandardErrorHandlingTabularOverload<NumberValue>(SimpleFunctionImplementations[BuiltinFunctionsCore.Char])
             },
             {
                 BuiltinFunctionsCore.ExpT,
-                StandardErrorHandlingAsync<TableValue>(
-                    expandArguments: NoArgExpansion,
-                    replaceBlankValues: DoNotReplaceBlank,
-                    checkRuntimeTypes: ExactValueTypeOrBlank<TableValue>,
-                    checkRuntimeValues: DeferRuntimeValueChecking,
-                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
-                    targetFunction: StandardSingleColumnTable<NumberValue>(SimpleFunctionImplementations[BuiltinFunctionsCore.Exp]))
+                StandardErrorHandlingTabularOverload<NumberValue>(SimpleFunctionImplementations[BuiltinFunctionsCore.Exp])
             },
             {
                 BuiltinFunctionsCore.IntT,
-                StandardErrorHandlingAsync<TableValue>(
-                    expandArguments: NoArgExpansion,
-                    replaceBlankValues: DoNotReplaceBlank,
-                    checkRuntimeTypes: ExactValueTypeOrBlank<TableValue>,
-                    checkRuntimeValues: DeferRuntimeValueChecking,
-                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
-                    targetFunction: StandardSingleColumnTable<NumberValue>(SimpleFunctionImplementations[BuiltinFunctionsCore.Int]))
+                StandardErrorHandlingTabularOverload<NumberValue>(SimpleFunctionImplementations[BuiltinFunctionsCore.Int])
             },
             {
                 BuiltinFunctionsCore.LenT,
-                StandardErrorHandlingAsync(
-                    expandArguments: NoArgExpansion,
-                    replaceBlankValues: DoNotReplaceBlank,
-                    checkRuntimeTypes: ExactValueTypeOrBlank<TableValue>,
-                    checkRuntimeValues: DeferRuntimeValueChecking,
-                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
-                    targetFunction: StandardSingleColumnTable<StringValue>(SimpleFunctionImplementations[BuiltinFunctionsCore.Len]))
+                StandardErrorHandlingTabularOverload<StringValue>(SimpleFunctionImplementations[BuiltinFunctionsCore.Len])
             },
             {
                 BuiltinFunctionsCore.LnT,
-                StandardErrorHandlingAsync<TableValue>(
-                    expandArguments: NoArgExpansion,
-                    replaceBlankValues: DoNotReplaceBlank,
-                    checkRuntimeTypes: ExactValueTypeOrBlank<TableValue>,
-                    checkRuntimeValues: DeferRuntimeValueChecking,
-                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
-                    targetFunction: StandardSingleColumnTable<NumberValue>(SimpleFunctionImplementations[BuiltinFunctionsCore.Ln]))
+                StandardErrorHandlingTabularOverload<NumberValue>(SimpleFunctionImplementations[BuiltinFunctionsCore.Ln])
             },
             {
                 BuiltinFunctionsCore.SqrtT,
-                StandardErrorHandlingAsync<TableValue>(
-                    expandArguments: NoArgExpansion,
-                    replaceBlankValues: DoNotReplaceBlank,
-                    checkRuntimeTypes: ExactValueTypeOrBlank<TableValue>,
-                    checkRuntimeValues: DeferRuntimeValueChecking,
-                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
-                    targetFunction: StandardSingleColumnTable<NumberValue>(SimpleFunctionImplementations[BuiltinFunctionsCore.Sqrt]))
+                StandardErrorHandlingTabularOverload<NumberValue>(SimpleFunctionImplementations[BuiltinFunctionsCore.Sqrt])
             },
         };
 

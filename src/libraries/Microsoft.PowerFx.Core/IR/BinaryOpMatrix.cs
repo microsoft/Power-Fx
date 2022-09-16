@@ -314,22 +314,28 @@ namespace Microsoft.PowerFx.Core.IR
                     }
 
                 case DKind.Time:
-                    if (rightType == DType.Date)
+                    if (rightType == DType.Date || rightType == DType.DateTime)
                     {
                         // Time + Date => DateTime
                         return BinaryOpKind.AddTimeAndDate;
                     }
                     else if (rightType == DType.Time)
                     {
-                        // Time + '-Time' => in ms
-                        // Ensure that this is really '-Time' - Binding should always catch this, but let's make sure...
-                        Contracts.Assert(node.Right.AsUnaryOpLit().VerifyValue().Op == UnaryOp.Minus);
-                        return BinaryOpKind.AddNumbers;
+                        if (node.Right.AsUnaryOpLit()?.Op == UnaryOp.Minus)
+                        {
+                            // Time + '-Time' => in ms
+                            return BinaryOpKind.TimeDifference;
+                        }
+                        else
+                        {
+                            // Time + Time => Time
+                            return BinaryOpKind.AddTimeAndTime;
+                        }
                     }
                     else
                     {
                         // Time + Number
-                        return BinaryOpKind.AddTimeAndMilliseconds;
+                        return BinaryOpKind.AddTimeAndNumber;
                     }
 
                 case DKind.DateTime:
@@ -342,6 +348,10 @@ namespace Microsoft.PowerFx.Core.IR
                         Contracts.Assert(node.Right.AsUnaryOpLit().VerifyValue().Op == UnaryOp.Minus);
                         return BinaryOpKind.DateDifference;
                     }
+                    else if (rightType == DType.Time)
+                    {
+                        return BinaryOpKind.AddDateAndTime;
+                    }
                     else
                     {
                         return BinaryOpKind.AddDateTimeAndDay;
@@ -351,13 +361,41 @@ namespace Microsoft.PowerFx.Core.IR
                     switch (rightType.Kind)
                     {
                         case DKind.Date:
-                            // Number + Date
-                            return BinaryOpKind.AddDayAndDate;
+                            if (node.Right.AsUnaryOpLit()?.Op == UnaryOp.Minus)
+                            {
+                                // Number + '-Date'
+                                return BinaryOpKind.SubtractNumberAndDate;
+                            }
+                            else
+                            {
+                                // Number + Date
+                                return BinaryOpKind.AddDayAndDate;
+                            }
+
                         case DKind.Time:
-                            // Number + Date
-                            return BinaryOpKind.AddMillisecondsAndTime;
+                            if (node.Right.AsUnaryOpLit()?.Op == UnaryOp.Minus)
+                            {
+                                // Number + '-DateTime'
+                                return BinaryOpKind.SubtractNumberAndTime;
+                            }
+                            else
+                            {
+                                // Number + Time
+                                return BinaryOpKind.AddNumberAndTime;
+                            }
+
                         case DKind.DateTime:
-                            return BinaryOpKind.AddDayAndDateTime;
+                            if (node.Right.AsUnaryOpLit()?.Op == UnaryOp.Minus)
+                            {
+                                // Number + '-DateTime'
+                                return BinaryOpKind.SubtractNumberAndDateTime;
+                            }
+                            else
+                            {
+                                // Number + Date
+                                return BinaryOpKind.AddDayAndDateTime;
+                            }
+
                         default:
                             // Number + Number
                             return BinaryOpKind.AddNumbers;

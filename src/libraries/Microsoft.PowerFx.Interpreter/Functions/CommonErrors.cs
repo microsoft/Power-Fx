@@ -14,7 +14,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 Message = "Runtime type mismatch",
                 Span = irContext.SourceContext,
-                Kind = ErrorKind.Validation
+                Kind = ErrorKind.InvalidArgument
             });
         }
 

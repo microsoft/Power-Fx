@@ -112,7 +112,8 @@ namespace Microsoft.PowerFx.Functions
                         break;
                 }
 
-                return await targetFunction(runner, context, irContext, runtimeValuesChecked.Select(arg => arg as T).ToArray());
+                var result = await targetFunction(runner, context, irContext, runtimeValuesChecked.Select(arg => arg as T).ToArray());
+                return FiniteChecker(irContext, 0, result);
             };
         }
 
@@ -171,6 +172,16 @@ namespace Microsoft.PowerFx.Functions
                 return new ValueTask<FormulaValue>(result);
             });
         }
+
+        // Wraps a scalar function into its tabular overload
+        private static AsyncFunctionPtr StandardErrorHandlingTabularOverload<TScalar>(AsyncFunctionPtr targetFunction)
+            where TScalar : FormulaValue => StandardErrorHandlingAsync<TableValue>(
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<TableValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: StandardSingleColumnTable<TScalar>(targetFunction));
 
         // A wrapper for a function with no error handling behavior whatsoever.
         private static AsyncFunctionPtr NoErrorHandling(
@@ -525,9 +536,29 @@ namespace Microsoft.PowerFx.Functions
 
             return CommonErrors.RuntimeTypeMismatch(irContext);
         }
-        #endregion
 
-        #region Common Runtime Value Checking Pipeline Stages
+        private static FormulaValue DateOrTimeOrDateTime(IRContext irContext, int index, FormulaValue arg)
+        {
+            if (arg is DateValue || arg is TimeValue || arg is DateTimeValue || arg is BlankValue || arg is ErrorValue)
+            {
+                return arg;
+            }
+
+            return CommonErrors.RuntimeTypeMismatch(irContext);
+        }
+
+        private static FormulaValue DateNumberTimeOrDateTime(IRContext irContext, int index, FormulaValue arg)
+        {
+            if (arg is DateValue || arg is DateTimeValue || arg is TimeValue || arg is NumberValue || arg is BlankValue || arg is ErrorValue)
+            {
+                return arg;
+            }
+
+            return CommonErrors.RuntimeTypeMismatch(irContext);
+        }
+#endregion
+
+#region Common Runtime Value Checking Pipeline Stages
         private static FormulaValue FiniteChecker(IRContext irContext, int index, FormulaValue arg)
         {
             if (arg is NumberValue numberValue)

@@ -341,10 +341,22 @@ namespace Microsoft.PowerFx
                     return OperatorAddDateAndDay(this, context, node.IRContext, args);
                 case BinaryOpKind.AddDateTimeAndDay:
                     return OperatorAddDateTimeAndDay(this, context, node.IRContext, args);
+                case BinaryOpKind.AddTimeAndNumber:
+                    return OperatorAddTimeAndNumber(this, context, node.IRContext, args);
+                case BinaryOpKind.AddNumberAndTime:
+                    return OperatorAddTimeAndNumber(this, context, node.IRContext, new[] { args[1], args[0] });
+                case BinaryOpKind.AddTimeAndTime:
+                    return OperatorAddTimeAndTime(this, context, node.IRContext, args);
                 case BinaryOpKind.DateDifference:
                     return OperatorDateDifference(this, context, node.IRContext, args);
                 case BinaryOpKind.TimeDifference:
                     return OperatorTimeDifference(this, context, node.IRContext, args);
+                case BinaryOpKind.SubtractDateAndTime:
+                    return OperatorSubtractDateAndTime(this, context, node.IRContext, args);
+                case BinaryOpKind.SubtractNumberAndDate:
+                    return OperatorSubtractNumberAndDate(this, context, node.IRContext, args);
+                case BinaryOpKind.SubtractNumberAndTime:
+                    return OperatorSubtractNumberAndTime(this, context, node.IRContext, args);
                 case BinaryOpKind.LtDateTime:
                     return OperatorLtDateTime(this, context, node.IRContext, args);
                 case BinaryOpKind.LeqDateTime:
