@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
+using System.Linq;
 using Microsoft.PowerFx.Core.IR;
 
 namespace Microsoft.PowerFx.Types
@@ -16,7 +17,7 @@ namespace Microsoft.PowerFx.Types
         private readonly RecordType _recordType;
 
         internal InMemoryTableValue(IRContext irContext, IEnumerable<DValue<RecordValue>> records)
-            : base(irContext, records)
+            : base(irContext, records.ToList())
         {
             Contract.Assert(IRContext.ResultType is TableType);
             var tableType = (TableType)IRContext.ResultType;

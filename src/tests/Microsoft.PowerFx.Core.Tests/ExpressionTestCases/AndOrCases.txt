@@ -92,28 +92,28 @@ false
 #Error(Kind=Div0)
 
 >> And(Blank(), true)
-Blank()
+false
 
 >> And(Blank(), false)
-Blank()
+false
 
 >> And(Blank(), Blank())
-Blank()
+false
 
 >> And(true, true, true, true, Blank(), true)
-Blank()
+false
 
 >> And("", true)
-Blank()
+false
 
 >> And("", false)
-Blank()
+false
 
 >> And("", "")
-Blank()
+false
 
 >> And(true, true, true, true, "", true)
-Blank()
+false
 
 // ====================== AND boolean logic between different datatyps ===================
 

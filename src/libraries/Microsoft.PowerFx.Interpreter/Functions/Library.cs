@@ -17,6 +17,8 @@ namespace Microsoft.PowerFx.Functions
 {
     internal static partial class Library
     {
+        private static readonly DateTime _epoch = new DateTime(1899, 12, 30, 0, 0, 0, 0);
+
         // Helper to get a service or fallback to a default if the service is missing.
         private static T GetService<T>(this IServiceProvider services, T defaultService)
         {
@@ -314,10 +316,10 @@ namespace Microsoft.PowerFx.Functions
                 BuiltinFunctionsCore.Date,
                 StandardErrorHandling<NumberValue>(
                     expandArguments: NoArgExpansion,
-                    replaceBlankValues: DoNotReplaceBlank,
+                    replaceBlankValues: ReplaceBlankWithZero,
                     checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
                     checkRuntimeValues: ExactSequence(
-                        PositiveNumericNumberChecker,
+                        FiniteChecker,
                         FiniteChecker,
                         FiniteChecker),
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
@@ -328,7 +330,7 @@ namespace Microsoft.PowerFx.Functions
                 StandardErrorHandling<FormulaValue>(
                     expandArguments: InsertDefaultValues(outputArgsCount: 3, fillWith: new BlankValue(IRContext.NotInSource(FormulaType.Blank))),
                     replaceBlankValues: ReplaceBlankWith(
-                        new BlankValue(IRContext.NotInSource(FormulaType.Blank)),
+                        new DateTimeValue(IRContext.NotInSource(FormulaType.DateTime), _epoch),
                         new NumberValue(IRContext.NotInSource(FormulaType.Number), 0),
                         new StringValue(IRContext.NotInSource(FormulaType.String), "days")),
                     checkRuntimeTypes: ExactSequence(
@@ -344,8 +346,8 @@ namespace Microsoft.PowerFx.Functions
                 StandardErrorHandling<FormulaValue>(
                     expandArguments: InsertDefaultValues(outputArgsCount: 3, fillWith: new BlankValue(IRContext.NotInSource(FormulaType.Blank))),
                     replaceBlankValues: ReplaceBlankWith(
-                        new BlankValue(IRContext.NotInSource(FormulaType.Blank)),
-                        new BlankValue(IRContext.NotInSource(FormulaType.Blank)),
+                        new DateTimeValue(IRContext.NotInSource(FormulaType.DateTime), _epoch),
+                        new DateTimeValue(IRContext.NotInSource(FormulaType.DateTime), _epoch),
                         new StringValue(IRContext.NotInSource(FormulaType.String), "days")),
                     checkRuntimeTypes: ExactSequence(
                         DateOrDateTime,
@@ -1448,7 +1450,6 @@ namespace Microsoft.PowerFx.Functions
         public static IEnumerable<DValue<RecordValue>> StandardTableNodeRecords(IRContext irContext, FormulaValue[] args, bool forceSingleColumn)
         {
             var tableType = (TableType)irContext.ResultType;
-            var columnName = tableType.SingleColumnFieldName;
             var recordType = tableType.ToRecord();
             return args.Select(arg =>
             {
@@ -1458,6 +1459,7 @@ namespace Microsoft.PowerFx.Functions
                 }
 
                 // Handle the single-column-table case. 
+                var columnName = tableType.SingleColumnFieldName;
                 var defaultField = new NamedValue(columnName, arg);
                 return DValue<RecordValue>.Of(new InMemoryRecordValue(IRContext.NotInSource(recordType), new List<NamedValue>() { defaultField }));
             });
@@ -1474,6 +1476,8 @@ namespace Microsoft.PowerFx.Functions
                     BlankValue b => DValue<RecordValue>.Of(b),
                     _ => DValue<RecordValue>.Of((ErrorValue)arg),
                 });
+
+            // Returning List to ensure that the returned table is mutable
             return new InMemoryTableValue(irContext, records);
         }
 

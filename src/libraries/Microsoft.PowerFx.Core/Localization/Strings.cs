@@ -346,6 +346,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static StringGetter AboutClock__AmPmShort = (b) => StringResources.Get("AboutClock__AmPmShort", b);
         public static StringGetter AboutClock__IsClock24 = (b) => StringResources.Get("AboutClock__IsClock24", b);
 
+        public static StringGetter AboutDateTime = (b) => StringResources.Get("AboutDateTime", b);
         public static StringGetter AboutDateValue = (b) => StringResources.Get("AboutDateValue", b);
         public static StringGetter DateValueArg1 = (b) => StringResources.Get("DateValueArg1", b);
         public static StringGetter DateValueArg2 = (b) => StringResources.Get("DateValueArg2", b);
@@ -453,6 +454,10 @@ namespace Microsoft.PowerFx.Core.Localization
         public static StringGetter PatchDataSourceArg = (b) => StringResources.Get("PatchDataSourceArg", b);
         public static StringGetter PatchBaseRecordArg = (b) => StringResources.Get("PatchBaseRecordArg", b);
         public static StringGetter PatchChangeRecordsArg = (b) => StringResources.Get("PatchChangeRecordsArg", b);
+
+        public static StringGetter AboutRemove = (b) => StringResources.Get("AboutRemove", b);
+        public static StringGetter RemoveDataSourceArg = (b) => StringResources.Get("RemoveDataSourceArg", b);
+        public static StringGetter RemoveRecordsArg = (b) => StringResources.Get("RemoveRecordsArg", b);
 
         // Previously, errors were listed here in the form of a StringGetter, which would be evaluated to fetch
         // an error message to pass to the BaseError class constructor. We are switching to passing the message key itself
@@ -583,5 +588,7 @@ namespace Microsoft.PowerFx.Core.Localization
         // ErrorResourceKey for creating an error from an arbitrary string message. The key resolves to "{0}", meaning
         // that a single string arg can be supplied representing the entire text of the error.
         public static ErrorResourceKey ErrGeneralError = new ErrorResourceKey("ErrGeneralError");
+
+        public static ErrorResourceKey ErrRemoveAllArg = new ErrorResourceKey("ErrRemoveAllArg");
     }
 }

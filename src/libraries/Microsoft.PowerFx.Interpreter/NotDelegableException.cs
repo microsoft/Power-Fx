@@ -4,22 +4,24 @@
 using System;
 
 namespace Microsoft.PowerFx.Interpreter
-{
-    // Used to fail attempted delegation and fall back to in memory evaluation
-    // Should always be caught by PowerFx code
-    internal sealed class NotDelegableException : Exception
+{   
+    /// <summary>
+    /// Used to fail attempted delegation and fall back to in memory evaluation.
+    /// Should always be caught by PowerFx code.
+    /// </summary>
+    public sealed class NotDelegableException : Exception
     {
-        internal NotDelegableException()
+        public NotDelegableException()
             : base()
         {
         }
 
-        internal NotDelegableException(string message)
+        public NotDelegableException(string message)
             : base(message)
         {
         }
 
-        internal NotDelegableException(string message, Exception inner)
+        public NotDelegableException(string message, Exception inner)
             : base(message, inner)
         {
         }

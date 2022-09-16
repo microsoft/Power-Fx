@@ -28,8 +28,11 @@ namespace Microsoft.PowerFx
         {
             DebugName = "DefaultConfig"
         };
-                
+
+        [Obsolete("Use Config.EnumStore or symboltable directly")]
         internal EnumStoreBuilder EnumStoreBuilder => SymbolTable.EnumStoreBuilder;
+
+        internal IEnumStore EnumStore => ReadOnlySymbolTable.Compose(SymbolTable);
 
         public CultureInfo CultureInfo { get; }
 

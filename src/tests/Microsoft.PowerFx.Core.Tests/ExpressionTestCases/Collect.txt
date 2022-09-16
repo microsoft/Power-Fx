@@ -1,10 +1,6 @@
 ﻿#SETUP: EnableExpressionChaining,MutationFunctionsTestSetup
 
-// MutationFunctionsTestSetup handle does the following:
-// - Creates a record: r1 => {Field1:1,Field2:"earth",Field3:1/1/2022,Field4:true}
-// - Creates a record: r2 => {Field1:2,Field2:"moon",Field3:2/1/2022,Field4:false} (for convenience)
-// - Creates a record: r_empty => {}
-// - Creates a table: t1(r1) => Type (Field1, Field2, Field3, Field4)
+// Check MutationFunctionsTestSetup handler (PowerFxEvaluationTests.cs) for documentation.
 
 >> Collect(t1, r2);CountRows(t1)
 2
@@ -12,14 +8,23 @@
 >> Collect(t1, r2);Collect(t1, {Field1:3,Field2:"mars",Field3:DateTime(2022,3,1,0,0,0,0),Field4:false});CountRows(t1)
 3
 
+>> Collect(t1, {Field1:3});Last(t1).Field2
+Blank()
+
 >> Collect(t1, If(1>0, r2));CountRows(t1)
 2
+
+>> Collect(Table({name: "VC"}), {name: "textInput1"})
+{name:"textInput1"}
 
 >> IsBlank(Collect(t1, Blank()))
 true
     
 >> IsError(Collect(t1, If(1/0, r2)))
 true
+
+>> Collect(t1, {Field1:3,Field2:"mars",Field3:DateTime(2022,3,1,0,0,0,0),Field4:false})
+{Field1:3,Field2:"mars",Field3:DateTime(2022,3,1,0,0,0,0),Field4:false}
 
 >> Collect(t1)
 Errors: Error 0-11: Invalid number of arguments: received 1, expected 2.
@@ -35,3 +40,9 @@ Errors: Error 12-15: Invalid argument type. Cannot use Text values in this conte
 
 >> Collect(t1, 1)
 Errors: Error 12-13: Invalid argument type. Cannot use Number values in this context.|Error 0-14: The function 'Collect' has some invalid arguments.
+
+>> Collect(Table({name: "VC"}), {surname: "textInput1"})
+Errors: Error 29-52: The specified column 'surname' does not exist. The column with the most similar name is 'name'.|Error 0-53: The function 'Collect' has some invalid arguments.
+
+>> Collect(FirstN(Table({name: "hello"}), 0), {name: "textInput1"})
+{name:"textInput1"}

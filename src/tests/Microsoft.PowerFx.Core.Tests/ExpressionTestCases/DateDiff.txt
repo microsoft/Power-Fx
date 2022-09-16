@@ -1,0 +1,245 @@
+﻿>> DateDiff(Date(2011,1,15) , Date(2011,1,30))
+15
+
+>> DateDiff(Date(-1, 2, 3), Date(2011,1,30))
+#Error(Kind=InvalidArgument)
+
+>> DateDiff(If(1<0,Date(1,1,1)), Date(2011,1,30))
+40573
+
+>> DateDiff(Date(2011,1,15), If(1<0,Date(1,1,1)))
+-40558
+
+>> DateDiff(Date(2011,1,15) , Date(2011,1,30), Blank())
+15
+
+>> DateDiff(Date(2013,1,15) , Date(2012,1,30))
+-351
+
+>> DateDiff(Date(2011,1,15) , Date(2011,1,30), TimeUnit.Days)
+15
+
+>> DateDiff(Date(2011,1,15) , Date(2011,1,30), "Days")
+15
+
+>> DateDiff(Date(2011,1,15) , Date(2011,1,30), "days")
+15
+
+>> DateDiff(Date(2011,1,15) , Date(2011,1,30), "DaYs")
+15
+
+>> DateDiff(Date(2013,1,15) , Date(2012,1,30), TimeUnit.Days)
+-351
+
+>> DateDiff(Date(2011,1,15) , Date(2011,1,30), "milliseconds")
+1296000000
+
+>> DateDiff(Date(2011,1,15) , Date(2011,1,30), "seconds")
+1296000
+
+>> DateDiff(Date(2011,1,15) , Date(2011,1,30), "minutes")
+21600
+
+>> DateDiff(Date(2011,1,15) , Date(2011,1,30), "hours")
+360
+
+>> DateDiff(Date(2011,1,15) , Date(2011,1,30), "quarters")
+0
+
+>> DateDiff(Date(2011,1,15) , Date(2011,7,30), "quarters")
+2
+
+>> DateDiff(Date(2011,1,15) , Date(2011,1,30), TimeUnit.Milliseconds)
+1296000000
+
+>> DateDiff(Date(2011,1,15) , Date(2011,1,30), TimeUnit.Seconds)
+1296000
+
+>> DateDiff(Date(2011,1,15) , Date(2011,1,30), TimeUnit.Minutes)
+21600
+
+>> DateDiff(Date(2011,1,15) , Date(2011,1,30), TimeUnit.Hours)
+360
+
+>> DateDiff(Date(2011,1,15) , Date(2011,1,30), TimeUnit.Quarters)
+0
+
+>> DateDiff(Date(2011,1,15) , Date(2011,7,30), TimeUnit.Quarters)
+2
+
+>> DateDiff(Date(2021,1,1), Date(2000,1,1), TimeUnit.Years)
+-21
+
+>> DateDiff(Date(2021,1,1), Date(2000,1,1), "Years")
+-21
+
+>> DateDiff(Date(2021,1,1), Date(2021,2,1), TimeUnit.Months)
+1
+
+>> DateDiff(Date(2021,1,1), Date(2021,2,1), "Months")
+1
+
+>> DateDiff(Date(2021,1,1), Date(2021,1,20), TimeUnit.Months)
+0
+
+//DateDiff Zero(TimeUnit.Milliseconds)
+>> DateDiff(DateTime(2005,12,31,23,59,59,999), DateTime(2005,12,31,23,59,59,999), TimeUnit.Milliseconds)
+0
+
+//DateDiff Zero(TimeUnit.Seconds)
+>> DateDiff(DateTime(2005,12,31,23,59,59,999), DateTime(2005,12,31,23,59,59,999), TimeUnit.Seconds)
+0
+
+//DateDiff Zero(TimeUnit.Minutes)
+>> DateDiff(DateTime(2005,12,31,23,59,59,999), DateTime(2005,12,31,23,59,59,999), TimeUnit.Minutes)
+0
+
+//DateDiff Zero(TimeUnit.Hours)
+>> DateDiff(DateTime(2005,12,31,23,59,59,999), DateTime(2005,12,31,23,59,59,999), TimeUnit.Hours)
+0
+
+//DateDiff Zero(TimeUnit.Days)
+>> DateDiff(DateTime(2005,12,31,23,59,59,999), DateTime(2005,12,31,23,59,59,999), TimeUnit.Days)
+0
+
+//DateDiff Zero(TimeUnit.Months)
+>> DateDiff(DateTime(2005,12,31,23,59,59,999), DateTime(2005,12,31,23,59,59,999), TimeUnit.Months)
+0
+
+//DateDiff Zero(TimeUnit.Quarters)
+>> DateDiff(DateTime(2005,12,31,23,59,59,999), DateTime(2005,12,31,23,59,59,999), TimeUnit.Quarters)
+0
+
+//DateDiff Zero(TimeUnit.Years)
+>> DateDiff(DateTime(2005,12,31,23,59,59,999), DateTime(2005,12,31,23,59,59,999), TimeUnit.Years)
+0
+
+//DateDiff 1 year in TimeUnit.Milliseconds
+>> DateDiff(DateTime(2006,1,1,0,0,0), DateTime(2007,1,1,0,0,0),TimeUnit.Milliseconds)
+31536000000
+
+//DateDiff 1 year in TimeUnit.Seconds
+>> DateDiff(DateTime(2006,1,1,0,0,0), DateTime(2007,1,1,0,0,0),TimeUnit.Seconds)
+31536000
+
+//DateDiff 1 year in TimeUnit.Minutes
+>> DateDiff(DateTime(2006,1,1,0,0,0), DateTime(2007,1,1,0,0,0),TimeUnit.Minutes)
+525600
+
+//DateDiff 1 year in TimeUnit.Hours
+>> DateDiff(DateTime(2006,1,1,0,0,0), DateTime(2007,1,1,0,0,0),TimeUnit.Hours)
+8760
+
+//DateDiff 1 year in TimeUnit.Days
+>> DateDiff(DateTime(2006,1,1,0,0,0), DateTime(2007,1,1,0,0,0),TimeUnit.Days)
+365
+
+//DateDiff 1 year in TimeUnit.Months
+>> DateDiff(DateTime(2006,1,1,0,0,0), DateTime(2007,1,1,0,0,0),TimeUnit.Months)
+12
+
+//DateDiff 1 year in TimeUnit.Quarters
+>> DateDiff(DateTime(2006,1,1,0,0,0), DateTime(2007,1,1,0,0,0),TimeUnit.Quarters)
+4
+
+//DateDiff 1 year in TimeUnit.Years
+>> DateDiff(DateTime(2006,1,1,0,0,0), DateTime(2007,1,1,0,0,0),TimeUnit.Years)
+1
+
+//DateDiff from last millisecond of one year to 1y+1ms later in TimeUnit.Milliseconds
+>> DateDiff(DateTime(2005,12,31,23,59,59,999), DateTime(2007,1,1,0,0,0), TimeUnit.Milliseconds)
+31536000001
+
+//DateDiff from last millisecond of one year to 1y+1ms later in TimeUnit.Seconds
+>> DateDiff(DateTime(2005,12,31,23,59,59,999), DateTime(2007,1,1,0,0,0), TimeUnit.Seconds)
+31536001
+
+//DateDiff from last millisecond of one year to 1y+1ms later in TimeUnit.Minutes
+>> DateDiff(DateTime(2005,12,31,23,59,59,999), DateTime(2007,1,1,0,0,0), TimeUnit.Minutes)
+525601
+
+//DateDiff from last millisecond of one year to 1y+1ms later in TimeUnit.Hours
+>> DateDiff(DateTime(2005,12,31,23,59,59,999), DateTime(2007,1,1,0,0,0), TimeUnit.Hours)
+8761
+
+//DateDiff from last millisecond of one year to 1y+1ms later in TimeUnit.Days
+>> DateDiff(DateTime(2005,12,31,23,59,59,999), DateTime(2007,1,1,0,0,0), TimeUnit.Days)
+366
+
+//DateDiff from last millisecond of one year to 1y+1ms later in TimeUnit.Months
+>> DateDiff(DateTime(2005,12,31,23,59,59,999), DateTime(2007,1,1,0,0,0), TimeUnit.Months)
+13
+
+//DateDiff from last millisecond of one year to 1y+1ms later in TimeUnit.Quarters
+>> DateDiff(DateTime(2005,12,31,23,59,59,999), DateTime(2007,1,1,0,0,0), TimeUnit.Quarters)
+5
+
+//DateDiff from last millisecond of one year to 1y+1ms later in TimeUnit.Years
+>> DateDiff(DateTime(2005,12,31,23,59,59,999), DateTime(2007,1,1,0,0,0), TimeUnit.Years)
+2
+
+//DateDiff from last millisecond of one year to 1y+1ms later in Default unit (TimeUnit.Days)
+>> DateDiff(DateTime(2005,12,31,23,59,59,999), DateTime(2007,1,1,0,0,0))
+366
+
+//DateDiff - Leap year in days
+>> DateDiff(DateTime(2004,1,1,0,0,0), DateTime(2005,1,1,0,0,0))
+366
+
+// ******************************** NULL AND ERROR PARAMETERS ********************************
+
+>> DateDiff(DateTimeValue(Blank()), DateTime(2007,1,1,0,0,0))
+39083
+
+>> DateDiff(DateTimeValue(""), DateTime(2007,1,1,0,0,0))
+39083
+
+>> DateDiff(Blank(), DateTime(2005,1,1,0,0,0),TimeUnit.Days)
+38353
+
+>> DateDiff(DateTime(2004,1,1,0,0,0), Blank())
+-37987
+
+>> DateDiff(DateTime(2004,1,1,0,0,0), "")
+-37987
+
+>> DateDiff(1/0, DateTime(2005,1,1,0,0,0),TimeUnit.Days)
+#Error(Kind=Div0)
+
+>> DateDiff(DateTime(2004,1,1,0,0,0), 1/0)
+#Error(Kind=Div0)
+
+>> DateDiff(DateTime(2005,12,31,23,59,59,999), DateTime(2007,1,1,0,0,0), 1/0)
+#Error(Kind=Div0)
+
+// ******************************** COERCIONS ********************************
+
+// Number to date (1)
+>> DateDiff(39083, Date(2007,1,2))
+1
+
+// Number to date (2)
+>> DateDiff(Date(2007,1,2), 39083)
+-1
+
+// String to date (1)
+>> DateDiff("2007-01-01", Date(2007,1,2))
+1
+
+// Number to date (2)
+>> DateDiff(Date(2007,1,2), "2007-01-01")
+-1
+
+// ******************************** DATE DIFFERENCE WITH FRACTIONAL RESULTS ********************************
+
+// Bug 15470360
+// >> DateDiff(TimeValue("09:45:00"), TimeValue("10:15:36"), TimeUnit.Hours)
+// 1
+
+// Bug 15470360
+// >> DateDiff(TimeValue("09:45:00"), TimeValue("10:15:36"), TimeUnit.Minutes)/60
+// 0.5
+
+// Bug 15470360
+// >> DateDiff(TimeValue("09:45:00"), TimeValue("10:15:36"), TimeUnit.Seconds)/3600
+// 0.51
