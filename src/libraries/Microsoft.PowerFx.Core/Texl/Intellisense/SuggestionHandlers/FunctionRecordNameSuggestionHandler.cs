@@ -58,7 +58,7 @@ namespace Microsoft.PowerFx.Intellisense
                 if (func.CanSuggestInputColumns)
                 {
                     var aggregateType = GetAggregateType(func, callNode, intellisenseData);
-                    if (aggregateType.HasErrors || !aggregateType.IsAggregate)
+                    if (aggregateType.IsError || !aggregateType.IsAggregate)
                     {
                         return false;
                     }
@@ -73,7 +73,7 @@ namespace Microsoft.PowerFx.Intellisense
                         }
                     }
 
-                    foreach (var tName in aggregateType.GetNames(DPath.Root))
+                    foreach (var tName in aggregateType.GetNames(DPath.Root).Where(param => !param.Value._type.IsError))
                     {
                         var usedName = tName.Name;
                         if (DType.TryGetDisplayNameForColumn(aggregateType, usedName, out var maybeDisplayName))
