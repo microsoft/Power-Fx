@@ -484,10 +484,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 // for DateTime alone is sufficient.
                 fValid &= CheckDateColumnType(type0, args[0], errors, ref nodeToCoercedTypeMap);
 
-                var resultColumnType = binding.Features.HasFlag(Features.ConsistentOneColumnTableResult)
-                    ? ColumnName_Value
-                    : type0.GetNames(DPath.Root).Single().Name;
-                returnType = DType.CreateTable(new TypedName(DType.DateTime, resultColumnType));
+                if (fValid)
+                {
+                    var resultColumnType = binding.Features.HasFlag(Features.ConsistentOneColumnTableResult)
+                        ? ColumnName_Value
+                        : type0.GetNames(DPath.Root).Single().Name;
+                    returnType = DType.CreateTable(new TypedName(DType.DateTime, resultColumnType));
+                }
             }
             else
             {
