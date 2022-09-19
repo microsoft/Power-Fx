@@ -4215,7 +4215,7 @@ namespace Microsoft.PowerFx.Core.Binding
                             // Determine the Scope Identifier using the 1st arg
                             required = _txb.GetScopeIdent(nodeInp, _txb.GetType(nodeInp), out scopeIdentifier);
 
-                            if (scopeInfo.CheckInput(nodeInp, scopeInfo.ScopeType, out scope))
+                            if (scopeInfo.CheckInput(nodeInp, _txb.GetType(nodeInp), out scope))
                             {
                                 if (_txb.TryGetEntityInfo(nodeInp, out expandInfo))
                                 {
