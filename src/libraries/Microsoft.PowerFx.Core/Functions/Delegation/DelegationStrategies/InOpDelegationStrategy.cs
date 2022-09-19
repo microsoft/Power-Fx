@@ -197,11 +197,11 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             var isRHSRecordScope = binding.IsFullRecordRowScopeAccess(_binaryOpNode.Right);
             
             // Check if this is a table delegation for CDS in operator
-            var isCdsInTableDelegation = metadata.IsDelegationSupportedByTable(DelegationCapability.CdsIn) &&
+            var isCdsInTableDelegation = binding.Document.Properties.EnabledFeatures.IsEnhancedDelegationEnabled && metadata.IsDelegationSupportedByTable(DelegationCapability.CdsIn) &&
                 /* Left node can be first name, row scope lambda or a lookup column */
                 (_binaryOpNode.Left.Kind == NodeKind.FirstName || binding.IsFullRecordRowScopeAccess(_binaryOpNode.Left) || (_binaryOpNode.Left.Kind == NodeKind.DottedName && binding.GetType((_binaryOpNode.Left as DottedNameNode).Left).HasExpandInfo)) &&
                 /* Right has to be a single column table */
-                (_binaryOpNode.Right.Kind == NodeKind.Table || binding.GetType(_binaryOpNode.Right)?.IsColumn == true);
+                ((_binaryOpNode.Right.Kind == NodeKind.Table || binding.GetType(_binaryOpNode.Right)?.IsColumn == true) && !binding.IsAsync(_binaryOpNode.Right));
 
             if (!(isRHSFirstName || isRHSRecordScope || isCdsInTableDelegation))
             {
