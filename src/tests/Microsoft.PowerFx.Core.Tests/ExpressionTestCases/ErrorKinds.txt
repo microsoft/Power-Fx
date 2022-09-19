@@ -257,8 +257,9 @@ Table({Result:Microsoft.PowerFx.Types.ErrorValue},{Result:Microsoft.PowerFx.Type
 >> ForAll(If(1/0<2,[1,2,3]),Value)
 #Error(Kind=Div0)
 
->> ForAll(Table({a:1},If(1/0<2,{a:2}),{a:3},If(Sqrt(-1)<0,{a:4}),{a:5}),{b:IfError(a,-FirstError.Kind)})
-Table({b:1},{b:-13},{b:3},{b:-24},{b:5})
+// Bug 15575103 - ForAll doesn't handle error records correctly
+// >> ForAll(Table({a:1},If(1/0<2,{a:2}),{a:3},If(Sqrt(-1)<0,{a:4}),{a:5}),{b:IfError(a,-FirstError.Kind)})
+// Table({b:1},{b:-13},{b:3},{b:-24},{b:5})
 
 >> ForAll([2,1,0,-1,-2], Sqrt(1/Value))
 #Error(Kind=Div0,Numeric,Numeric)
@@ -431,6 +432,9 @@ true
 >> Mod(Sqrt(-1),If(Char(0)="a",1))
 #Error(Kind=Numeric,InvalidArgument)
 
+>> Month(If(1/0<2,Date(2022,1,1)))
+#Error(Kind=Div0)
+
 >> Not(If(1/0<2,true))
 #Error(Kind=Div0)
 
@@ -477,3 +481,193 @@ true
 >> Replace("Hello world",1,-5,"new")
 #Error(Kind=InvalidArgument)
 
+>> Right("Hello world", -1)
+#Error(Kind=InvalidArgument)
+
+>> Right(If(1/0,"Hello"), Sqrt(-1))
+#Error(Kind=Div0,Numeric)
+
+>> Round(Sqrt(-1), 1/0)
+#Error(Kind=Numeric,Div0)
+
+// PPPPPPPPPP Define errors in tabular functions with multiple arguments
+// >> Round(...)
+
+>> RoundDown(Sqrt(-1), 1/0)
+#Error(Kind=Numeric,Div0)
+
+>> RoundUp(Sqrt(-1), 1/0)
+#Error(Kind=Numeric,Div0)
+
+>> Second(If(1/0<2,Time(20,10,10)))
+#Error(Kind=Div0)
+
+>> Sequence(-1)
+#Error(Kind=InvalidArgument)
+
+>> Sequence(Sqrt(-1),1/0,If(Char(0)="a",1))
+#Error(Kind=Numeric,Div0,InvalidArgument)
+
+>> Shuffle(If(1/0<2,[1,2,3]))
+#Error(Kind=Div0)
+
+>> Sin(1/0)
+#Error(Kind=Div0)
+
+>> Sort(If(1/0<2,[1,2,3]), Value)
+#Error(Kind=Div0)
+
+>> Sort([5,4,3,2,1,0,-1,-2], Sqrt(1/Value))
+#Error(Kind=Div0,Numeric,Numeric)
+
+>> Split(Char(-4), If(1/0<2,"."))
+#Error(Kind=InvalidArgument,Div0)
+
+>> Sqrt(-1)
+#Error(Kind=Numeric)
+
+>> Sqrt(1/0)
+#Error(Kind=Div0)
+
+>> Sqrt(If(1/0<2,[1,2,3,4]))
+#Error(Kind=Div0)
+
+>> ForAll(Sqrt([1, -2, 4, 1/0, 9, If(Char(0) = "a",-1)]), IfError(Value, -FirstError.Kind))
+[1,-24,2,-13,3,-25]
+
+>> StartsWith(Char(-4), If(1/0<2,"."))
+#Error(Kind=InvalidArgument,Div0)
+
+>> StdevP(2, Sqrt(-1), 3, 1/0, 4)
+#Error(Kind=Numeric,Div0)
+
+// Overflow in calculation
+>> StdevP(1e200, 2e200, 3e200, 4e200)
+#Error(Kind=Numeric)
+
+// PPPPP only first error is returned
+>> StdevP([3, 2, 1, 0, -1, -2], Sqrt(1/Value))
+#Error(Kind=Div0)
+
+>> Substitute(Char(0),If(Sqrt(-1)<0,"d"),If(1/0<2,"e"),Sqrt(-1))
+#Error(Kind=InvalidArgument,Numeric,Div0,Numeric)
+
+>> Substitute("Hello world", "he", "HE", 0)
+#Error(Kind=InvalidArgument)
+
+>> Sum(2, Sqrt(-1), 3, 1/0, 4)
+#Error(Kind=Numeric,Div0)
+
+// Overflow in calculation
+>> Sum(1e308, 1e308, 1e308, 1e308, 1e308)
+#Error(Kind=Numeric)
+
+// PPPPP only first error is returned
+>> Sum([3, 2, 1, 0, -1, -2], Sqrt(1/Value))
+#Error(Kind=Div0)
+
+>> Switch(1/0, 1, 2, 3)
+#Error(Kind=Div0)
+
+>> Switch(2,1,"a",Sqrt(-1),"b","c")
+#Error(Kind=Numeric)
+
+// Errors not evaluated are not returned
+>> Switch(2,1,"a",2,"b",Sqrt(-1),"c","d")
+"b"
+
+// Errors can go in tables
+>> Table({a:1},If(1/0<2,{a:2}),{a:3})
+Table({a:1},Microsoft.PowerFx.Types.ErrorValue,{a:3})
+
+>> Table(ParseJSON("1"))
+#Error(Kind=InvalidArgument)
+
+>> Table(If(1/0<2,ParseJSON("[1,2,3]")))
+#Error(Kind=Div0)
+
+>> Tan(1/0)
+#Error(Kind=Div0)
+
+>> Text(123.456, "0.00", "invalid")
+#Error(Kind=BadLanguageCode)
+
+>> Text(Char(0), If(1/0<2,"format"), If(Sqrt(-1)<0,"language"))
+#Error(Kind=InvalidArgument,Div0,Numeric)
+
+>> Text(ParseJSON("1"))
+#Error(Kind=InvalidArgument)
+
+>> Text(If(1/0<2,ParseJSON("1")))
+#Error(Kind=Div0)
+
+>> Time(20, Sqrt(-1), 1/0)
+#Error(Kind=Numeric,Div0)
+
+>> TimeValue("not a time")
+#Error(Kind=InvalidArgument)
+
+>> TimeValue(If(1/0<2,"time"))
+#Error(Kind=Div0)
+
+>> TimeValue(ParseJSON("1"))
+#Error(Kind=InvalidArgument)
+
+>> TimeValue(If(1/0<2,ParseJSON("1")))
+#Error(Kind=Div0)
+
+>> TimeZoneOffset(If(1/0<2,Date(2022,1,1)))
+#Error(Kind=Div0)
+
+>> Trim(If(1/0<2,"proper"))
+#Error(Kind=Div0)
+
+>> TrimEnds(If(1/0<2,"proper"))
+#Error(Kind=Div0)
+
+>> Trunc(Sqrt(-1), 1/0)
+#Error(Kind=Numeric,Div0)
+
+>> Upper(If(1/0<2,"proper"))
+#Error(Kind=Div0)
+
+>> Value("not a number")
+#Error(Kind=InvalidArgument)
+
+>> Value(If(Sqrt(-1)<0,"123"))
+#Error(Kind=Numeric)
+
+>> Value("1234", "not a culture")
+#Error(Kind=BadLanguageCode)
+
+>> Value(ParseJSON("false"))
+#Error(Kind=InvalidArgument)
+
+>> Value(If(1/0<2,ParseJSON("1")))
+#Error(Kind=Div0)
+
+>> VarP(2, Sqrt(-1), 3, 1/0, 4)
+#Error(Kind=Numeric,Div0)
+
+// Overflow in calculation
+>> VarP(1e200, 2e200, 3e200, 4e200)
+#Error(Kind=Numeric)
+
+// PPPPP only first error is returned
+>> VarP([3, 2, 1, 0, -1, -2], Sqrt(1/Value))
+#Error(Kind=Div0)
+
+// Error record scope
+>> With(If(1/0<2,{a:1}),a)
+#Error(Kind=Div0)
+
+// Error from scope
+>> With({a:1/0},a)
+#Error(Kind=Div0)
+
+// Handling error
+>> With({a:1/0},IfError(a,-FirstError.Kind))
+-13
+
+>> Year(If(1/0<2,Date(2022,1,1)))
+#Error(Kind=Div0)

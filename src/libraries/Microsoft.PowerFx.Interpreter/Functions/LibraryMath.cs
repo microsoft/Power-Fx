@@ -601,6 +601,11 @@ namespace Microsoft.PowerFx.Functions
             var start = args[1].Value;
             var step = args[2].Value;
 
+            if (records < 0)
+            {
+                return CommonErrors.ArgumentOutOfRange(irContext);
+            }
+
             var rows = LazySequence(records, start, step).Select(n => new NumberValue(IRContext.NotInSource(FormulaType.Number), n));
 
             return new InMemoryTableValue(irContext, StandardTableNodeRecords(irContext, rows.ToArray(), forceSingleColumn: true));

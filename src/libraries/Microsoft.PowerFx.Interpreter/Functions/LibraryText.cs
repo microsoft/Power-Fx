@@ -148,9 +148,9 @@ namespace Microsoft.PowerFx.Functions
         public static FormulaValue Text(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             // only DateValue and DateTimeValue are supported for now with custom format strings.
-            if (args.Length > 1 && args[0] is StringValue)
+            if (args[0] is StringValue sv)
             {
-                return CommonErrors.NotYetImplementedError(irContext, "Text() doesn't support format args for type StringValue");
+                return new StringValue(irContext, sv.Value);
             }
 
             string resultString = null;
@@ -162,10 +162,12 @@ namespace Microsoft.PowerFx.Functions
             }
 
             var culture = runner.CultureInfo;
-            if (args.Length > 2 && args[2] is StringValue locale)
+            if (args.Length > 2 && args[2] is StringValue languageCode)
             {
-                // Supplied culture
-                culture = new CultureInfo(locale.Value);
+                if (!TryGetCulture(languageCode.Value, out culture))
+                {
+                    return CommonErrors.BadLanguageCode(irContext, languageCode.Value);
+                }
             }
 
             switch (args[0])
