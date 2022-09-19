@@ -83,8 +83,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => false;
 
-        public override bool HasUntypedObjectLambdas => true;
-
         public ForAllFunction_UO()
             : base(ForAllFunction.ForAllInvariantFunctionName, TexlStrings.AboutForAll, FunctionCategories.Table, DType.Unknown, 0x2, 2, 2, DType.UntypedObject)
         {

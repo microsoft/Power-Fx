@@ -75,8 +75,6 @@ namespace Microsoft.PowerFx.Core.Functions
         // Return true if the function expects lambda arguments, false otherwise.
         public virtual bool HasLambdas => !_maskLambdas.IsZero;
 
-        public virtual bool HasUntypedObjectLambdas => false;
-
         // Return true if lambda args should affect ECS, false otherwise.
         public virtual bool HasEcsExcemptLambdas => false;
 

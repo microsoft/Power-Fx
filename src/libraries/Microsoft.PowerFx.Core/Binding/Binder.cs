@@ -4157,18 +4157,19 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 var numOverloads = overloads.Count();
 
-                var overloadsWithUntypedObjectLambdas = overloadsWithLambdas.Where(func => func.HasUntypedObjectLambdas);
+                var overloadsWithUntypedObjectLambdas = overloadsWithLambdas.Where(func => func.ParamTypes[0] == DType.UntypedObject);
                 TexlFunction overloadWithUntypedObjectLambda = null;
                 if (overloadsWithUntypedObjectLambdas.Any())
                 {
-                    Contracts.Assert(overloadsWithUntypedObjectLambdas.Count() == 1, "Incorrect multiple overloads with UntypedObject lambdas.");
+                    Contracts.Assert(overloadsWithUntypedObjectLambdas.Count() == 1, "Incorrect multiple overloads with both UntypedObject and lambdas.");
                     overloadWithUntypedObjectLambda = overloadsWithUntypedObjectLambdas.Single();
                     Contracts.Assert(overloadWithUntypedObjectLambda.HasLambdas);
 
                     // As an extraordinarily special case, we ignore untype object lambdas for now, and type check as normal
                     // using the function without untyped object params. This only works if both functions have exactly
-                    // the same arity (this is enforced below).
-                    overloadsWithLambdas = overloadsWithLambdas.Except(overloadsWithUntypedObjectLambdas);
+                    // the same arity (this is enforced below). We can't simply check the type of the first argument
+                    // because the argument list might be empty. Arity checks below require that we already picked an override.
+                    overloadsWithLambdas = overloadsWithLambdas.Where(func => func.ParamTypes[0] != DType.UntypedObject);
                     numOverloads -= 1;
                 }
 
@@ -4184,6 +4185,9 @@ namespace Microsoft.PowerFx.Core.Binding
                     // Both overrides must have exactly the same arity.
                     Contracts.Assert(maybeFunc.MaxArity == overloadWithUntypedObjectLambda.MaxArity);
                     Contracts.Assert(maybeFunc.MinArity == overloadWithUntypedObjectLambda.MinArity);
+
+                    // There also cannot be optional parameters
+                    Contracts.Assert(maybeFunc.MinArity == maybeFunc.MaxArity);
                 }
 
                 var scopeInfo = maybeFunc.ScopeInfo;
