@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Texl;
@@ -1873,7 +1874,24 @@ namespace Microsoft.PowerFx.Functions
                     childContext = context.SymbolContext.WithScopeValues(RecordValue.Empty());
                 }
 
-                // Filter evals to a boolean 
+                // Filter evals to a boolean
+                var result = filter.EvalAsync(runner, context.NewScope(childContext)).AsTask();
+
+                yield return result;
+            }
+        }
+
+        private static IEnumerable<Task<FormulaValue>> LazyForAll(
+            EvalVisitor runner,
+            EvalVisitorContext context,
+            IEnumerable<DValue<UntypedObjectValue>> sources,
+            LambdaFormulaValue filter)
+        {
+            foreach (var row in sources)
+            {
+                SymbolContext childContext = context.SymbolContext.WithThisItem(row.ToFormulaValue());
+
+                // Filter evals to a boolean
                 var result = filter.EvalAsync(runner, context.NewScope(childContext)).AsTask();
 
                 yield return result;

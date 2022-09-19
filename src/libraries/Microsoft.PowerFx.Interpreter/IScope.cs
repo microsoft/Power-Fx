@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx
@@ -23,7 +24,7 @@ namespace Microsoft.PowerFx
 
         public virtual FormulaValue Resolve(string name)
         {
-            return _context.GetField(name);            
+            return _context.GetField(name);
         }
     }
 
@@ -38,7 +39,28 @@ namespace Microsoft.PowerFx
 
         public virtual FormulaValue Resolve(string name)
         {
+
             return _context;
+        }
+    }
+
+    internal class ThisItemScope : IScope
+    {
+        public readonly FormulaValue _thisItem;
+
+        public ThisItemScope(FormulaValue thisItem)
+        {
+            _thisItem = thisItem;
+        }
+
+        public virtual FormulaValue Resolve(string name)
+        {
+            if (name == TexlBinding.ThisItemDefaultName.Value)
+            {
+                return _thisItem;
+            }
+
+            return null;
         }
     }
 }

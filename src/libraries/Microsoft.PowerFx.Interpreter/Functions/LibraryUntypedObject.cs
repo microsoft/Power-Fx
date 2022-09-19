@@ -231,22 +231,19 @@ namespace Microsoft.PowerFx.Functions
             var arg0 = (UntypedObjectValue)args[0];
             var arg1 = (LambdaFormulaValue)args[1];
 
-            var itemType = RecordType.Empty().Add(new NamedFormulaType(BuiltinFunction.ColumnName_ValueStr, FormulaType.UntypedObject));
-
-            var resultRows = new List<DValue<RecordValue>>();
+            var items = new List<DValue<UntypedObjectValue>>();
 
             var len = arg0.Impl.GetArrayLength();
 
             for (var i = 0; i < len; i++)
             {
                 var element = arg0.Impl[i];
+                var item = new UntypedObjectValue(IRContext.NotInSource(FormulaType.UntypedObject), element);
 
-                var namedValue = new NamedValue(BuiltinFunction.ColumnName_ValueStr, new UntypedObjectValue(IRContext.NotInSource(FormulaType.UntypedObject), element));
-                var record = new InMemoryRecordValue(IRContext.NotInSource(itemType), new List<NamedValue>() { namedValue });
-                resultRows.Add(DValue<RecordValue>.Of(record));
+                items.Add(DValue<UntypedObjectValue>.Of(item));
             }
 
-            var rowsAsync = LazyForAll(runner, context, resultRows, arg1);
+            var rowsAsync = LazyForAll(runner, context, items, arg1);
 
             var rows = await Task.WhenAll(rowsAsync);
 

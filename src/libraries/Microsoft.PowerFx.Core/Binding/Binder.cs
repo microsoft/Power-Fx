@@ -131,7 +131,9 @@ namespace Microsoft.PowerFx.Core.Binding
         /// <summary>
         /// Default name used to access a Lambda scope.
         /// </summary>
-        internal DName ThisRecordDefaultName => new DName("ThisRecord");
+        internal static DName ThisRecordDefaultName => new DName("ThisRecord");
+
+        internal static DName ThisItemDefaultName => new DName("ThisItem");
 
         public Features Features { get; }
 
@@ -1340,9 +1342,9 @@ namespace Microsoft.PowerFx.Core.Binding
         /// Otherwise returns false and sets scopeIdent to the default.
         /// </summary>
         /// <returns></returns>
-        private bool GetScopeIdent(TexlNode node, out DName scopeIdent)
+        private bool GetScopeIdent(TexlNode node, DType rowType, out DName scopeIdent)
         {
-            scopeIdent = ThisRecordDefaultName;
+            scopeIdent = rowType == DType.UntypedObject ? ThisItemDefaultName : ThisRecordDefaultName;
             if (node is AsNode asNode)
             {
                 scopeIdent = GetInfo(asNode).AsIdentifier;
@@ -2463,7 +2465,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 _nameResolver = resolver;
                 _features = features;
 
-                _topScope = new Scope(null, null, topScope ?? DType.Error, useThisRecordForRuleScope ? txb.ThisRecordDefaultName : default);
+                _topScope = new Scope(null, null, topScope ?? DType.Error, useThisRecordForRuleScope ? TexlBinding.ThisRecordDefaultName : default);
                 _currentScope = _topScope;
                 _currentScopeDsNodeId = -1;
             }
@@ -2700,7 +2702,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 // fieldName (unqualified)
                 else if (IsRowScopeField(node, out scope, out fError, out var isWholeScope))
                 {
-                    Contracts.Assert(scope.Type.IsRecord);
+                    Contracts.Assert(scope.Type.IsRecord || scope.Type.IsUntypedObject);
 
                     // Detected access to a pageable dataEntity in row scope, error was set
                     if (fError)
@@ -4163,7 +4165,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     overloadWithUntypedObjectLambda = overloadsWithUntypedObjectLambdas.Single();
                     Contracts.Assert(overloadWithUntypedObjectLambda.HasLambdas);
 
-                    // As an extraordinarily spcial case, we ignore untype object lambdas for now, and type check as normal
+                    // As an extraordinarily special case, we ignore untype object lambdas for now, and type check as normal
                     // using the function without untyped object params. This only works if both functions have exactly
                     // the same arity (this is enforced below).
                     overloadsWithLambdas = overloadsWithLambdas.Except(overloadsWithUntypedObjectLambdas);
@@ -4211,9 +4213,9 @@ namespace Microsoft.PowerFx.Core.Binding
                             nodeInp.Accept(this);
 
                             // Determine the Scope Identifier using the 1st arg
-                            required = _txb.GetScopeIdent(nodeInp, out scopeIdentifier);
+                            required = _txb.GetScopeIdent(nodeInp, _txb.GetType(nodeInp), out scopeIdentifier);
 
-                            if (scopeInfo.CheckInput(nodeInp, _txb.GetType(nodeInp), out scope))
+                            if (scopeInfo.CheckInput(nodeInp, scopeInfo.ScopeType, out scope))
                             {
                                 if (_txb.TryGetEntityInfo(nodeInp, out expandInfo))
                                 {
@@ -4293,7 +4295,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     fArgsValid = scopeInfo.CheckInput(nodeInput, typeInput, out typeScope);
 
                     // Determine the scope identifier using the first node for lambda params
-                    identRequired = _txb.GetScopeIdent(nodeInput, out scopeIdent);
+                    identRequired = _txb.GetScopeIdent(nodeInput, typeScope, out scopeIdent);
                 }
 
                 if (!fArgsValid)
