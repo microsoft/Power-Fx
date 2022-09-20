@@ -66,3 +66,7 @@ Table({b:1},{b:-13},{b:3},{b:-24},{b:5})
 
 >> ForAll([1, Error({Kind:ErrorKind.Validation}), 3, Error({Kind: 7}), 5],{b:IfError(Value,-FirstError.Kind)})
 Table({b:1},{b:-11},{b:3},{b:-7},{b:5})
+
+// Blank rows
+>> ForAll(Table({a:1},If(1<0,{a:2}),{a:3},If(1<0,{a:4}),{a:5}), {b:Coalesce(a, 100)})
+Table({b:1},{b:100},{b:3},{b:100},{b:5})

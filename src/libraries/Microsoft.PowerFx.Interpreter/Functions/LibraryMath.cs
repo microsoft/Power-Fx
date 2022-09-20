@@ -401,20 +401,28 @@ namespace Microsoft.PowerFx.Functions
 
             foreach (var row in arg0.Rows)
             {
-                if (row.IsValue || row.IsError)
+                SymbolContext childContext;
+                if (row.IsValue)
                 {
-                    var childContext = row.IsValue ?
-                        context.SymbolContext.WithScopeValues(row.Value) :
-                        context.SymbolContext.WithScopeValues(row.Error);
-                    var value = await arg1.EvalAsync(runner, context.NewScope(childContext));
-
-                    if (value is ErrorValue error)
-                    {
-                        return error;
-                    }
-
-                    agg.Apply(value);
+                    childContext = context.SymbolContext.WithScopeValues(row.Value);
                 }
+                else if (row.IsError)
+                {
+                    childContext = context.SymbolContext.WithScopeValues(row.Error);
+                }
+                else
+                {
+                    childContext = context.SymbolContext.WithScopeValues(RecordValue.Empty());
+                }
+
+                var value = await arg1.EvalAsync(runner, context.NewScope(childContext));
+
+                if (value is ErrorValue error)
+                {
+                    return error;
+                }
+
+                agg.Apply(value);
             }
 
             return agg.GetResult(irContext);
