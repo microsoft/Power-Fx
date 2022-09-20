@@ -122,9 +122,7 @@ namespace Microsoft.PowerFx.Core.Functions
             }
             else if (_function.ParamTypes[0].IsUntypedObject)
             {
-                var fError = false;
                 typeScope = DType.UntypedObject;
-                fArgsValid &= !fError;
             }
             else
             {

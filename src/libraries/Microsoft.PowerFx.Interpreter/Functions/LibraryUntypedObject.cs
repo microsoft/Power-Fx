@@ -237,6 +237,8 @@ namespace Microsoft.PowerFx.Functions
 
             for (var i = 0; i < len; i++)
             {
+                runner.CheckCancel();
+
                 var element = arg0.Impl[i];
                 var item = new UntypedObjectValue(IRContext.NotInSource(FormulaType.UntypedObject), element);
 
