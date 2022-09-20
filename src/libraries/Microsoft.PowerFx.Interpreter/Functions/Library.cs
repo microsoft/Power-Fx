@@ -1838,6 +1838,10 @@ namespace Microsoft.PowerFx.Functions
                 {
                     childContext = context.SymbolContext.WithScopeValues(row.Value);
                 }
+                else if (row.IsError)
+                {
+                    childContext = context.SymbolContext.WithScopeValues(row.Error);
+                }
                 else
                 {
                     childContext = context.SymbolContext.WithScopeValues(RecordValue.Empty());

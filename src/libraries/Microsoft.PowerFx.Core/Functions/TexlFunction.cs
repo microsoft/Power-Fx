@@ -916,7 +916,7 @@ namespace Microsoft.PowerFx.Core.Functions
                 return true;
             }
 
-            KeyValuePair<string, DType> coercionDifference;
+            KeyValuePair<string, DType> coercionDifference = default;
             DType coercionDifferenceType = null;
             if (coerceIfSupported && nodeType.CoercesTo(expectedType, out _, out coercionType, out coercionDifference, out coercionDifferenceType))
             {
