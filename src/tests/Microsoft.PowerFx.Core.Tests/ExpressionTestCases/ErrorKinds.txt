@@ -99,7 +99,7 @@
 >> Concatenate("Hello", If(1/0,"div0"), "world", If(Sqrt(-1)<0,"sqrt"))
 #Error(Kind=Div0,Numeric)
 
-// PPPPPPPPPP Define errors in tabular functions with multiple arguments
+// Need to define errors in tabular functions with multiple arguments
 // >> Concatenate(...)
 
 >> Cos(1/0)
@@ -234,8 +234,8 @@ Table({Value:2},Microsoft.PowerFx.Types.ErrorValue,{Value:1},Microsoft.PowerFx.T
 >> Find(If(1/0<2,["1","2"]),"two")
 #Error(Kind=Div0)
 
-// PPPPPPPPPP Define errors in tabular functions with multiple arguments
->> Find(["1","2"],If(1/0<2,"1234"))
+// Need to define errors in tabular functions with multiple arguments
+>> Find(If(1/0<2,["1","2"]),"1234")
 #Error(Kind=Div0)
 
 >> Find(["one","two","three","four","five"],"one two three four five",[1/0, 0, 3, 100, 10])
@@ -253,9 +253,8 @@ Table({Result:Microsoft.PowerFx.Types.ErrorValue},{Result:Microsoft.PowerFx.Type
 >> ForAll(If(1/0<2,[1,2,3]),Value)
 #Error(Kind=Div0)
 
-// Bug 15575103 - ForAll doesn't handle error records correctly
-// >> ForAll(Table({a:1},If(1/0<2,{a:2}),{a:3},If(Sqrt(-1)<0,{a:4}),{a:5}),{b:IfError(a,-FirstError.Kind)})
-// Table({b:1},{b:-13},{b:3},{b:-24},{b:5})
+>> ForAll(Table({a:1},If(Char(0)="a",{a:2}),{a:1/0},If(Sqrt(-1)<0,{a:4}),{a:5}),{b:IfError(a,-FirstError.Kind)})
+Table({b:1},{b:-25},{b:-13},{b:-24},{b:5})
 
 >> ForAll([2,1,0,-1,-2], Sqrt(1/Value))
 #Error(Kind=Div0,Numeric,Numeric)
@@ -484,7 +483,7 @@ true
 >> Round(Sqrt(-1), 1/0)
 #Error(Kind=Numeric,Div0)
 
-// PPPPPPPPPP Define errors in tabular functions with multiple arguments
+// Need to define errors in tabular functions with multiple arguments
 // >> Round(...)
 
 >> RoundDown(Sqrt(-1), 1/0)
