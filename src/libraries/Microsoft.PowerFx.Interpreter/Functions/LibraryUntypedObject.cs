@@ -108,6 +108,11 @@ namespace Microsoft.PowerFx.Functions
         {
             if (arg is UntypedObjectValue cov)
             {
+                if (cov.Impl.Type == FormulaType.Blank)
+                {
+                    return new BlankValue(irContext);
+                }
+
                 if (!(cov.Impl.Type is ExternalType et && et.Kind == ExternalTypeKind.Array))
                 {
                     return new ErrorValue(irContext, new ExpressionError()

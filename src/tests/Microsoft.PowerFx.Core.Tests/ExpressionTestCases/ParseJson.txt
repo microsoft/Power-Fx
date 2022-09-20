@@ -96,9 +96,26 @@ Blank()
 >> ForAll(ParseJSON("null"), Value(ThisItem))
 Blank()
 
-// We currently do not support null in any of the constructor functions, so this is an error
->> ForAll(ParseJSON("[null, null, null]"), Abs(Value(ThisItem)))
-[Microsoft.PowerFx.Types.ErrorValue,Microsoft.PowerFx.Types.ErrorValue,Microsoft.PowerFx.Types.ErrorValue]
+>> ForAll(ParseJSON("[null, null, null]"), Value(ThisItem))
+[Blank(),Blank(),Blank()]
+
+>> ForAll(ParseJSON("[5, null, 7]"), Value(ThisItem))
+[5,Blank(),7]
+
+>> ForAll(ParseJSON("[""hi"", null, ""hello""]"), Text(ThisItem))
+["hi",Blank(),"hello"]
+
+>> ForAll(ParseJSON("[true, null, false]"), Boolean(ThisItem))
+[true,Blank(),false]
+
+>> ForAll(ParseJSON("[""2011-01-15"", null]"), Text(DateValue(ThisItem), "yyyy-MM-dd"))
+["2011-01-15",""]
+
+>> ForAll(ParseJSON("[""08:03:05.000"", null]"), Text(TimeValue(ThisItem), "HH:mm:ss"))
+["08:03:05",""]
+
+>> ForAll(ParseJSON("[""5cc45615-f759-4a53-b225-d3a2497f60ad"", null]"), GUID(ThisItem))
+[GUID("5cc45615-f759-4a53-b225-d3a2497f60ad"),Blank()]
 
 >> ForAll(ParseJSON("[1]"), Value(ThisItem) / 0)
 [Microsoft.PowerFx.Types.ErrorValue]

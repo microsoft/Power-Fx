@@ -51,7 +51,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             {
                 returnType = argTypes[1].ToTable();
             }
-            else if (argTypes[1].IsPrimitive || argTypes[1].IsTable)
+            else if (argTypes[1].IsPrimitive || argTypes[1].IsTable || argTypes[1].IsUntypedObject)
             {
                 returnType = DType.CreateTable(new TypedName(argTypes[1], ColumnName_Value));
             }
