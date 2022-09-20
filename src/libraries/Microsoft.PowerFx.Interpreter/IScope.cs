@@ -25,20 +25,20 @@ namespace Microsoft.PowerFx
         {
             return _context.GetField(name);            
         }
+    }
 
-        internal class ErrorScope : IScope
+    internal class ErrorScope : IScope
+    {
+        public readonly ErrorValue _context;
+
+        public ErrorScope(ErrorValue context)
         {
-            public readonly ErrorValue _context;
+            _context = context;
+        }
 
-            public ErrorScope(ErrorValue context)
-            {
-                _context = context;
-            }
-
-            public virtual FormulaValue Resolve(string name)
-            {
-                return _context;
-            }
+        public virtual FormulaValue Resolve(string name)
+        {
+            return _context;
         }
     }
 }
