@@ -93,7 +93,7 @@ Blank()
 >> ForAll(ParseJSON("[5, 6, 7]"), Value(ThisItem))
 [5,6,7]
 
->> Sum(ForAll(ParseJSON("[5, 6, 7]"), Value(ThisItem)))
+>> Sum(ForAll(ParseJSON("[5, 6, 7]"), Value(ThisItem)), Value)
 18
 
 >> ParseJSON("5") + ParseJSON("5")

@@ -39,7 +39,6 @@ namespace Microsoft.PowerFx
 
         public virtual FormulaValue Resolve(string name)
         {
-
             return _context;
         }
     }

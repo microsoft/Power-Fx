@@ -4157,7 +4157,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 var numOverloads = overloads.Count();
 
-                var overloadsWithUntypedObjectLambdas = overloadsWithLambdas.Where(func => func.ParamTypes[0] == DType.UntypedObject);
+                var overloadsWithUntypedObjectLambdas = overloadsWithLambdas.Where(func => func.ParamTypes.Any() && func.ParamTypes[0] == DType.UntypedObject);
                 TexlFunction overloadWithUntypedObjectLambda = null;
                 if (overloadsWithUntypedObjectLambdas.Any())
                 {
@@ -4169,7 +4169,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     // using the function without untyped object params. This only works if both functions have exactly
                     // the same arity (this is enforced below). We can't simply check the type of the first argument
                     // because the argument list might be empty. Arity checks below require that we already picked an override.
-                    overloadsWithLambdas = overloadsWithLambdas.Where(func => func.ParamTypes[0] != DType.UntypedObject);
+                    overloadsWithLambdas = overloadsWithLambdas.Where(func => func.ParamTypes.Any() && func.ParamTypes[0] != DType.UntypedObject);
                     numOverloads -= 1;
                 }
 
