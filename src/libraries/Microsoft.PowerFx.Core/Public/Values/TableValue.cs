@@ -99,12 +99,12 @@ namespace Microsoft.PowerFx.Types
         // - Error, 
         // - with updated values
         // Async because derived classes may back this with a network call. 
-        public virtual async Task<DValue<RecordValue>> AppendAsync(RecordValue record)
-        {
+        public virtual async Task<DValue<RecordValue>> AppendAsync(RecordValue record, CancellationToken cancellationToken)
+        {            
             return DValue<RecordValue>.Of(NotImplemented(IRContext));
         }
 
-        public virtual async Task<DValue<BooleanValue>> RemoveAsync(IEnumerable<FormulaValue> recordsToRemove, bool all, CancellationToken cancel)
+        public virtual async Task<DValue<BooleanValue>> RemoveAsync(IEnumerable<FormulaValue> recordsToRemove, bool all, CancellationToken cancellationToken)
         {
             return DValue<BooleanValue>.Of(NotImplemented(IRContext));
         }
@@ -114,8 +114,9 @@ namespace Microsoft.PowerFx.Types
         /// </summary>
         /// <param name="baseRecord">A record to modify.</param>
         /// <param name="changeRecord">A record that contains properties to modify the base record. All display names are resolved.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
         /// <returns></returns>
-        protected virtual async Task<DValue<RecordValue>> PatchCoreAsync(RecordValue baseRecord, RecordValue changeRecord)
+        protected virtual async Task<DValue<RecordValue>> PatchCoreAsync(RecordValue baseRecord, RecordValue changeRecord, CancellationToken cancellationToken)
         {
             return DValue<RecordValue>.Of(NotImplemented(IRContext));
         }
@@ -125,14 +126,16 @@ namespace Microsoft.PowerFx.Types
         /// </summary>
         /// <param name="baseRecord">A record to modify.</param>
         /// <param name="changeRecord">A record that contains properties to modify the base record.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
         /// <returns>The updated record.</returns>
-        public async Task<DValue<RecordValue>> PatchAsync(RecordValue baseRecord, RecordValue changeRecord)
+        public async Task<DValue<RecordValue>> PatchAsync(RecordValue baseRecord, RecordValue changeRecord, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
             var recordType = Type.ToRecord();
 
             // IR has already resolved to logical names because of 
             // RequiresDataSourceScope, ArgMatchesDatasourceType on function.
-            return await PatchCoreAsync(baseRecord, changeRecord);
+            return await PatchCoreAsync(baseRecord, changeRecord, cancellationToken);
         }
 
         public override object ToObject()

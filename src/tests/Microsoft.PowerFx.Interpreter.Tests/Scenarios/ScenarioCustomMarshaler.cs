@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reflection;
+using System.Threading;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Types;
 using Xunit;
@@ -114,9 +115,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 public Adapter(ITypeMarshaller inner)
                 {
                     _inner = inner;
-                }                   
+                }
 
-                public FormulaType Type => _inner.Type;                
+                public FormulaType Type => _inner.Type;
 
                 public FormulaValue Marshal(object value)
                 {
@@ -147,7 +148,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     return _source;
                 }
 
-                protected override bool TryGetField(FormulaType fieldType, string fieldName, out FormulaValue result)
+                protected override bool TryGetField(FormulaType fieldType, string fieldName, CancellationToken cancellationToken, out FormulaValue result)
                 {
                     // Forward all field lookups
                     result = _inner.GetField(fieldName);
@@ -198,7 +199,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 (FormulaType fieldType, ObjectMarshaller.FieldValueMarshaller fieldValueMarshaller) TypeAndMarshallerGetter()
                 {
                     var marshaller = cache.GetMarshaller(kv.Value.GetType());
-                    var expectedType = type.GetFieldType(fieldName);                        
+                    var expectedType = type.GetFieldType(fieldName);
 
                     Assert.True(expectedType._type.Accepts(marshaller.Type._type, exact: true));
 
@@ -216,7 +217,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 fieldGetters.Add(fieldName, TypeAndMarshallerGetter);
             }
 
-            var om = new ObjectMarshaller(fieldGetters, typeof(Dictionary<string, object>));            
+            var om = new ObjectMarshaller(fieldGetters, typeof(Dictionary<string, object>));
             var value = (RecordValue)om.Marshal(values);
             return value;
         }

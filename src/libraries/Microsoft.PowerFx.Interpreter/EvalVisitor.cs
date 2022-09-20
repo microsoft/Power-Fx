@@ -495,7 +495,7 @@ namespace Microsoft.PowerFx
                 }
 
                 return new InMemoryTableValue(node.IRContext, resultRows);
-            }            
+            }
 
             return CommonErrors.UnreachableCodeError(node.IRContext);
         }
@@ -536,7 +536,7 @@ namespace Microsoft.PowerFx
             }
 
             var record = (RecordValue)left;
-            var val = record.GetField(node.IRContext.ResultType, node.Field.Value);
+            var val = record.GetField(node.IRContext.ResultType, node.Field.Value, CancellationToken.None);
 
             return val;
         }

@@ -237,7 +237,7 @@ namespace Microsoft.PowerFx.Functions
                         }
                         else
                         {
-                            errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrTypeError_Arg_Expected_Found, name, dsNameType.GetKindString(), type.GetKindString());                            
+                            errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrTypeError_Arg_Expected_Found, name, dsNameType.GetKindString(), type.GetKindString());
                         }
 
                         isValid = isSafeToUnion = false;
@@ -287,7 +287,7 @@ namespace Microsoft.PowerFx.Functions
             return isValid;
         }
 
-        public async Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancel)
+        public async Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancellationToken)
         {
             var validArgs = CheckArgs(args, out FormulaValue faultyArg);
 
@@ -311,7 +311,8 @@ namespace Microsoft.PowerFx.Functions
             var datasource = (TableValue)args[0];
             var baseRecord = (RecordValue)args[1];
 
-            var ret = await datasource.PatchAsync(baseRecord, changeRecord);
+            cancellationToken.ThrowIfCancellationRequested();
+            var ret = await datasource.PatchAsync(baseRecord, changeRecord, cancellationToken);
 
             return ret.ToFormulaValue();
         }

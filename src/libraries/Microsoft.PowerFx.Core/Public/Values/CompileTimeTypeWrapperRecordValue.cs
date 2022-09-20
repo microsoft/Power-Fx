@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Threading;
+
 namespace Microsoft.PowerFx.Types
 {
     // Project the correct compile-time type onto the runtime value. 
@@ -26,10 +28,10 @@ namespace Microsoft.PowerFx.Types
             _inner = inner;
         }
 
-        protected override bool TryGetField(FormulaType fieldType, string fieldName, out FormulaValue result)
+        protected override bool TryGetField(FormulaType fieldType, string fieldName, CancellationToken cancellationToken, out FormulaValue result)
         {
             // If the runtime value is missing a field of the given type, it will be Blank().
-            result = _inner.GetField(fieldType, fieldName);
+            result = _inner.GetField(fieldType, fieldName, cancellationToken);
             return true;
         }
 
