@@ -401,13 +401,14 @@ namespace Microsoft.PowerFx.Functions
 
             foreach (var row in arg0.Rows)
             {
-                if (row.IsValue)
+                if (row.IsValue || row.IsError)
                 {
-                    var childContext = context.SymbolContext.WithScopeValues(row.Value);
+                    var childContext = row.IsValue ?
+                        context.SymbolContext.WithScopeValues(row.Value) :
+                        context.SymbolContext.WithScopeValues(row.Error);
                     var value = await arg1.EvalAsync(runner, context.NewScope(childContext));
 
-                    var error = FiniteResultCheck(functionName, irContext, value);
-                    if (error != null)
+                    if (value is ErrorValue error)
                     {
                         return error;
                     }

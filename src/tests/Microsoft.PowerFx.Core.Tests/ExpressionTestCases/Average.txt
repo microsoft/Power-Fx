@@ -117,23 +117,53 @@
 >> Average(DateTime(2022, 10, 1, 6, 0, 0), DateTime(2022, 10, 1, 18, 0, 0))
 44835.5
 
-
 // ***********  TABLE *************
 
 >> Average([1,2,3], Value)
 2
 
->> Average(LastN([1, 2, 3, 4, 5], Blank()), Value)
+>> Average([1,2,3,4], 0)
+0
+
+>> Average([1,2,3,4], Value)
+2.5
+
+>> Average([1,2,3,4,5], Value^2)
+11
+
+>> Average([1,2,3,4,5], With({Square:Value^2},Square))
+11
+
+>> Average(AddColumns([1,2,3,4,5], "Square", Value^2), Square)
+11
+
+>> Average([1,2/0,3,Sqrt(-4),5], IfError(Value, 0))
+1.8
+
+>> Average([1,2/0,3,Sqrt(-4),5], IfError(Value, Blank()))
+3
+
+>> Average(Table({a:1},If(1/0<2,{a:2}),{a:3},If(Sqrt(-1)<0,{a:4}),{a:5}), IfError(a, 0))
+1.8
+
+>> Average(Table({a:1},If(1/0<2,{a:2}),{a:3},If(Sqrt(-1)<0,{a:4}),{a:5}), If(Not IsError(a), a))
+3
+
+>> Sum(If(1/0<2,[1,2,3,4]),Value)
+#Error(Kind=Div0)
+
+// Empty table
+>> Average(Filter([1, 2, 3, 4, 5], Value > 10), Value)
 #Error(Kind=Div0)
 
 >> Average(If(1<0,[1, 2, 3]), Value)
 Blank()
 
 >> Average(Sort([-2, -1, 0, 1, 2], 1 / Value), Value)
-#Error
+#Error(Kind=Div0)
 
 >> Average(1, 2, 3, Blank(), 2, 2)
 2
 
 >> Average([1, 2, 1/0, 4, 5], Value)
-#Error
+#Error(Kind=Div0)
