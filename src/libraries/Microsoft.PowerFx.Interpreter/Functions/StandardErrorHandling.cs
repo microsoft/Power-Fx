@@ -613,12 +613,7 @@ namespace Microsoft.PowerFx.Functions
                 }
             }
 
-            if (errors != null)
-            {
-                return ErrorValue.Combine(irContext, errors);
-            }
-
-            return null;
+            return errors != null ? ErrorValue.Combine(irContext, errors) : null;
         }
 
         private static ErrorValue FiniteResultCheck(string functionName, IRContext irContext, FormulaValue value)
