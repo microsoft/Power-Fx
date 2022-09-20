@@ -93,24 +93,26 @@ namespace Microsoft.PowerFx.Functions
                     return ErrorValue.Combine(irContext, errors);
                 }
 
+                var anyValueBlank = runtimeValuesChecked.Any(arg => arg is BlankValue || (arg is UntypedObjectValue uov && uov.Impl.Type == FormulaType.Blank));
+
                 switch (returnBehavior)
                 {
                     case ReturnBehavior.ReturnBlankIfAnyArgIsBlank:
-                        if (runtimeValuesChecked.Any(arg => arg is BlankValue || (arg is UntypedObjectValue uov && uov.Impl.Type == FormulaType.Blank)))
+                        if (anyValueBlank)
                         {
                             return new BlankValue(IRContext.NotInSource(FormulaType.Blank));
                         }
 
                         break;
                     case ReturnBehavior.ReturnEmptyStringIfAnyArgIsBlank:
-                        if (runtimeValuesChecked.Any(arg => arg is BlankValue || (arg is UntypedObjectValue uov && uov.Impl.Type == FormulaType.Blank)))
+                        if (anyValueBlank)
                         {
                             return new StringValue(IRContext.NotInSource(FormulaType.String), string.Empty);
                         }
 
                         break;
                     case ReturnBehavior.ReturnFalseIfAnyArgIsBlank:
-                        if (runtimeValuesChecked.Any(arg => arg is BlankValue || (arg is UntypedObjectValue uov && uov.Impl.Type == FormulaType.Blank)))
+                        if (anyValueBlank)
                         {
                             return new BooleanValue(IRContext.NotInSource(FormulaType.Boolean), false);
                         }
