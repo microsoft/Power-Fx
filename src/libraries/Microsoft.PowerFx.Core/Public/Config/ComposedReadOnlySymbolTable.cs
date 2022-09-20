@@ -58,29 +58,28 @@ namespace Microsoft.PowerFx
                 }
             }
         }
-
-        public IReadOnlyDictionary<string, NameLookupInfo> GlobalSymbols
+        
+        public IEnumerable<KeyValuePair<string, NameLookupInfo>> GlobalSymbols            
         {
             get
-            {
-                var map = new Dictionary<string, NameLookupInfo>();
+            {                              
+                var names = new HashSet<string>();
+                var map = new List<KeyValuePair<string, NameLookupInfo>>();
 
                 foreach (var table in _symbolTables)
                 {
-                    if (table is IGlobalSymbolNameResolver x)
+                    if (table is IGlobalSymbolNameResolver globalSymbolNameResolver)
                     {
-                        // Merge into a single dictionary. 
-                        foreach (var kv in x.GlobalSymbols)
+                        foreach (var symbol in globalSymbolNameResolver.GlobalSymbols)
                         {
-                            if (!map.ContainsKey(kv.Key))
+                            if (!names.Contains(symbol.Key))
                             {
-                                map[kv.Key] = kv.Value;
+                                names.Add(symbol.Key);
+                                yield return symbol;
                             }
                         }
                     }
-                }
-
-                return map;
+                }               
             }
         }
 

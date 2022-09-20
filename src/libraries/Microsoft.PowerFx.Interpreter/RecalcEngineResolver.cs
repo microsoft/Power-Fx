@@ -51,7 +51,7 @@ namespace Microsoft.PowerFx
     {
         private new readonly RecalcEngine _parent;
 
-        public IReadOnlyDictionary<string, NameLookupInfo> GlobalSymbols => _parent.Formulas.ToDictionary(kvp => kvp.Key, kvp => Create(kvp.Key, kvp.Value));
+        IEnumerable<KeyValuePair<string, NameLookupInfo>> IGlobalSymbolNameResolver.GlobalSymbols => _parent.Formulas.ToDictionary(kvp => kvp.Key, kvp => Create(kvp.Key, kvp.Value));
 
         private NameLookupInfo Create(string name, RecalcFormulaInfo recalcFormulaInfo)
         {

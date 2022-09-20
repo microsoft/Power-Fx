@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Types;
@@ -25,17 +26,14 @@ namespace Microsoft.PowerFx
 
         // Key is the logical name. 
         // Display names are in the NameLookupInfo.DisplayName field.
-        IReadOnlyDictionary<string, NameLookupInfo> IGlobalSymbolNameResolver.GlobalSymbols
+        IEnumerable<KeyValuePair<string, NameLookupInfo>> IGlobalSymbolNameResolver.GlobalSymbols            
         {
             get
-            {
-                var map = new Dictionary<string, NameLookupInfo>();
+            {                                
                 foreach (var kv in _type.GetFieldTypes())
                 {
-                    map[kv.Name] = Create(kv.Name, kv.Type);
-                }
-
-                return map;
+                    yield return new KeyValuePair<string, NameLookupInfo>(kv.Name, Create(kv.Name, kv.Type));
+                }                 
             }
         }
 
