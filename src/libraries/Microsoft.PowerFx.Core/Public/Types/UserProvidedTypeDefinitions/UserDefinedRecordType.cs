@@ -10,6 +10,12 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core
 {
+    /// <summary>
+    /// Aggregate Type Definition derived from a .fx.yaml file
+    /// This may recursively refer to itself or other types, and so we resolve
+    /// the field types lazily using the DefinedTypeSymbolTable 
+    /// passed to <see cref="FormulaTypeToSchemaHelper.ToFormulaType(FormulaTypeSchema, DefinedTypeSymbolTable)"/>.
+    /// </summary>
     internal class UserDefinedRecordType : RecordType
     {
         private readonly FormulaTypeSchema _backingSchema;
