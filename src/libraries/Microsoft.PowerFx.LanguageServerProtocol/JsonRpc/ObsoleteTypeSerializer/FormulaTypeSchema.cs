@@ -7,10 +7,10 @@ using System.Text;
 
 namespace Microsoft.PowerFx.LanguageServerProtocol
 {
-    [Obsolete("Kept around short term to sequence changes in the formula bar")]
+    [Obsolete("Use Microsoft.PowerFx.Core.FormulaTypeSchema instead. This JSON representation of types is not supported.")]
     internal class FormulaTypeSchema
     {
-        [Obsolete("Kept around short term to sequence changes in the formula bar")]
+        [Obsolete("Use Microsoft.PowerFx.Core.SchemaTypeName instead. This JSON representation of types is not supported.")]
         public enum ParamType
         {
             Number,

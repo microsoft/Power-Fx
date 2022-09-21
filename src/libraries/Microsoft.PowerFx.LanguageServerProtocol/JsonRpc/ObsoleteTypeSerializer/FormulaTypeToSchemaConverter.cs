@@ -7,7 +7,7 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.LanguageServerProtocol
 {
-    [Obsolete("Kept around short term to sequence changes in the formula bar")]
+    [Obsolete("Use methods from Microsoft.PowerFx.Core.FormulaTypeToSchemaHelper instead. This JSON representation of types is not supported.")]
     internal static class FormulaTypeToSchemaConverter
     {
         public static FormulaTypeSchema Convert(FormulaType type)
