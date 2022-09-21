@@ -12,7 +12,9 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.LanguageServerProtocol
 {
-    [Obsolete("Kept around short term to sequence changes in the formula bar")]
+    // Class kept around for sequencing with formula bar changes,
+    // remove after formula bar is supporting new json schema.
+    [Obsolete("Use Microsoft.PowerFx.Core.FormulaTypeJsonConverter instead. This JSON representation of types is not supported.")]
     internal class FormulaTypeJsonConverter : JsonConverter<FormulaType>
     {
         private readonly JsonSerializerOptions _options;

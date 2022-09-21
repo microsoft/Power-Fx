@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Linq;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Types;
@@ -73,7 +74,7 @@ namespace Microsoft.PowerFx.Intellisense
                         }
                     }
 
-                    foreach (var tName in aggregateType.GetNames(DPath.Root).Where(param => !param.Value._type.IsError))
+                    foreach (var tName in aggregateType.GetNames(DPath.Root).Where(param => !param.Type.IsError))
                     {
                         var usedName = tName.Name;
                         if (DType.TryGetDisplayNameForColumn(aggregateType, usedName, out var maybeDisplayName))
