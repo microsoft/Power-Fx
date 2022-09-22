@@ -113,3 +113,7 @@
 
 >> Sum(If(1/0<2,[1,2,3,4]),Value)
 #Error(Kind=Div0)
+
+// Blank rows
+>> Sum(Table({a:1},If(1<0,{a:2}),{a:3},If(1<0,{a:4}),{a:5}), Coalesce(a, 100))
+209

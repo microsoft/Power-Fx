@@ -12,8 +12,8 @@
 >> Mod(0,1)
 0
 
->> Mod(1E+308,7)
-0
+>> Mod(1E+300,1E-20)
+#Error(Kind=Numeric)
 
 // Invalid operation: Division by zero
 >> Mod(230,0)
