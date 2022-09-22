@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Microsoft.PowerFx.Types
 {
@@ -28,11 +29,18 @@ namespace Microsoft.PowerFx.Types
             _inner = inner;
         }
 
-        protected override bool TryGetField(FormulaType fieldType, string fieldName, CancellationToken cancellationToken, out FormulaValue result)
+        protected override bool TryGetField(FormulaType fieldType, string fieldName, out FormulaValue result)
+        {
+            (var res, result) = TryGetFieldAsync(fieldType, fieldName, CancellationToken.None).Result;
+
+            return res;
+        }
+
+        protected override async Task<(bool Result, FormulaValue Value)> TryGetFieldAsync(FormulaType fieldType, string fieldName, CancellationToken cancellationToken)
         {
             // If the runtime value is missing a field of the given type, it will be Blank().
-            result = _inner.GetField(fieldType, fieldName, cancellationToken);
-            return true;
+            var result = await _inner.GetFieldAsync(fieldType, fieldName, cancellationToken);
+            return (true, result);
         }
 
         public override object ToObject()
@@ -40,6 +48,6 @@ namespace Microsoft.PowerFx.Types
             // Unwrap as inner object. Especially important when host is passing
             // in a custom object that it needs to retrieve.
             return _inner.ToObject();
-        }
+        }        
     }
 }

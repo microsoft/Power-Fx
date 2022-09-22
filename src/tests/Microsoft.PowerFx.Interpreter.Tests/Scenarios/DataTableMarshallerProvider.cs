@@ -74,7 +74,7 @@ namespace Microsoft.PowerFx.Tests
 
             foreach (DataColumn column in _table.Columns)
             {
-                var formulaValue = record.GetField(column.ColumnName, cancellationToken);
+                var formulaValue = await record.GetFieldAsync(column.ColumnName, cancellationToken);
 
                 if (formulaValue is not BlankValue)
                 {
@@ -120,7 +120,7 @@ namespace Microsoft.PowerFx.Tests
                 }
             }
 
-            protected override bool TryGetField(FormulaType fieldType, string fieldName, CancellationToken cancellationToken, out FormulaValue result)
+            protected override bool TryGetField(FormulaType fieldType, string fieldName, out FormulaValue result)
             {
                 // DataRow doesn't have a way to check if 
                 if (!TryGetValue(_row, fieldName, out var value))
@@ -149,7 +149,7 @@ namespace Microsoft.PowerFx.Tests
 
                 foreach (DataColumn column in _row.Table.Columns)
                 {
-                    var formulaValue = changeRecord.GetField(column.ColumnName, cancellationToken);
+                    var formulaValue = await changeRecord.GetFieldAsync(column.ColumnName, cancellationToken);
 
                     if (formulaValue is not BlankValue)
                     {

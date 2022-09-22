@@ -142,11 +142,16 @@ namespace Microsoft.PowerFx.Types
         {
             if (IsColumn)
             {
-                var array = Rows.Select(val =>
+                var array = Rows.Select(async val =>
                 {
                     if (val.IsValue)
                     {
-                        return val.Value.Fields.First().Value.ToObject();
+                        await foreach (var field in val.Value.GetFieldsAsync(CancellationToken.None))
+                        {
+                            return field.Value.ToObject();
+                        }
+
+                        throw new NotImplementedException();
                     }
                     else if (val.IsBlank)
                     {
@@ -157,7 +162,8 @@ namespace Microsoft.PowerFx.Types
                         return val.Error.ToObject();
                     }
                 }).ToArray();
-                return array;
+                Task.WaitAll(array);
+                return array.Select(tsk => tsk.Result).ToArray();
             }
             else
             {

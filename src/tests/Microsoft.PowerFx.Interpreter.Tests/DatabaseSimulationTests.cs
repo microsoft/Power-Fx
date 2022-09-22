@@ -143,14 +143,14 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             {
             }
 
-            protected override bool TryGetField(FormulaType fieldType, string fieldName, CancellationToken cancellationToken, out FormulaValue result)
+            protected override Task<(bool Result, FormulaValue Value)> TryGetFieldAsync(FormulaType fieldType, string fieldName, CancellationToken cancellationToken)
             {
                 var st = Environment.StackTrace;
 
                 if (st.Contains("Microsoft.PowerFx.SymbolContext.GetScopeVar") ||
                     st.Contains("Microsoft.PowerFx.Types.CollectionTableValue`1.Matches"))
                 {
-                    return base.TryGetField(fieldType, fieldName, cancellationToken, out result);
+                    return base.TryGetFieldAsync(fieldType, fieldName, cancellationToken);
                 }
 
                 throw new NotImplementedException("Cannot call TryGetField");

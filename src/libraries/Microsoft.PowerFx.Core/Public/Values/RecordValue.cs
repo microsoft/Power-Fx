@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Dynamic;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
@@ -16,21 +17,29 @@ namespace Microsoft.PowerFx.Types
     /// </summary>
     public abstract class RecordValue : ValidFormulaValue
     {
-#pragma warning disable CA1721 // CA1721: Property names should not match get methods
         /// <summary>
         /// Fields and their values directly available on this record. 
         /// The field names should match the names on <see cref="Type"/>. 
         /// </summary>
-        public IEnumerable<NamedValue> Fields => GetFields(CancellationToken.None);
+        public IEnumerable<NamedValue> Fields => GetFields();
 
-        public IEnumerable<NamedValue> GetFields(CancellationToken cancellationToken)
-        {            
+        private IEnumerable<NamedValue> GetFields()
+        {
             foreach (var fieldName in Type.FieldNames)
             {
-                yield return new NamedValue(fieldName, GetField(fieldName, cancellationToken));
+                var formulaValue = GetField(fieldName);
+                yield return new NamedValue(fieldName, formulaValue);
             }
         }
-#pragma warning restore CA1721
+
+        public async IAsyncEnumerable<NamedValue> GetFieldsAsync([EnumeratorCancellation] CancellationToken cancellationToken)
+        {
+            foreach (var fieldName in Type.FieldNames)
+            {
+                var formulaValue = await GetFieldAsync(fieldName, cancellationToken);
+                yield return new NamedValue(fieldName, formulaValue);
+            }
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RecordValue"/> class.
@@ -58,13 +67,18 @@ namespace Microsoft.PowerFx.Types
             return new InMemoryRecordValue(IRContext.NotInSource(type), new Dictionary<string, FormulaValue>());
         }
 
+        public FormulaValue GetField(string fieldName)
+        {
+            return GetFieldAsync(fieldName, CancellationToken.None).Result;
+        }
+
         /// <summary>
         /// Get a field on this record.         
         /// </summary>
         /// <param name="fieldName">Name of field on this record.</param>
         /// <param name="cancellationToken">Cancellation token.</param>
         /// <returns>Field value or blank if missing. </returns>
-        public FormulaValue GetField(string fieldName, CancellationToken cancellationToken = default)
+        public async Task<FormulaValue> GetFieldAsync(string fieldName, CancellationToken cancellationToken)
         {
             if (fieldName == null)
             {
@@ -76,7 +90,7 @@ namespace Microsoft.PowerFx.Types
                 fieldType = FormulaType.Blank;
             }
 
-            return GetField(fieldType, fieldName, cancellationToken);
+            return await GetFieldAsync(fieldType, fieldName, cancellationToken);
         }
 
         // Create an exception object for when the host violates the TryGetField() contract. 
@@ -86,9 +100,15 @@ namespace Microsoft.PowerFx.Types
         }
 
         // Internal, for already verified values.
-        internal FormulaValue GetField(FormulaType fieldType, string fieldName, CancellationToken cancellationToken)
+        internal FormulaValue GetField(FormulaType fieldType, string fieldName)
         {
-            if (TryGetField(fieldType, fieldName, cancellationToken, out var result))
+            return GetFieldAsync(fieldType, fieldName, CancellationToken.None).Result;
+        }
+
+        internal async Task<FormulaValue> GetFieldAsync(FormulaType fieldType, string fieldName, CancellationToken cancellationToken)
+        {
+            var (res, result) = await TryGetFieldAsync(fieldType, fieldName, cancellationToken);
+            if (res)
             {
                 if (result == null)
                 {
@@ -138,11 +158,16 @@ namespace Microsoft.PowerFx.Types
         /// Derived classes must override to provide values for fields. 
         /// </summary>
         /// <param name="fieldType">Expected type of the field.</param>
-        /// <param name="fieldName">Name of the field.</param>
-        /// <param name="cancellationToken">Cancellation token.</param>
+        /// <param name="fieldName">Name of the field.</param>        
         /// <param name="result"></param>
         /// <returns>true if field is present, else false.</returns>
-        protected abstract bool TryGetField(FormulaType fieldType, string fieldName, CancellationToken cancellationToken, out FormulaValue result);
+        protected abstract bool TryGetField(FormulaType fieldType, string fieldName, out FormulaValue result);
+        
+        protected virtual Task<(bool Result, FormulaValue Value)> TryGetFieldAsync(FormulaType fieldType, string fieldName, CancellationToken cancellationToken)
+        {
+            var b = TryGetField(fieldType, fieldName, out FormulaValue result);
+            return Task.FromResult((b, result));
+        }
 
         /// <summary>
         /// Return an object, which can be used as 'dynamic' to fetch fields. 
@@ -176,14 +201,6 @@ namespace Microsoft.PowerFx.Types
             });
 
             return DValue<RecordValue>.Of(errorValue);
-        }
-
-        public Task<DValue<RecordValue>> UpdateField(string name, FormulaValue value, CancellationToken cancellationToken)
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            var list = new List<NamedValue>() { new NamedValue(name, value) };
-
-            return UpdateFieldsAsync(FormulaValue.NewRecordFromFields(list), cancellationToken);
-        }
+        }        
     }
 }

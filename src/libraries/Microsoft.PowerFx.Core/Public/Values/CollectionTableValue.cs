@@ -135,7 +135,7 @@ namespace Microsoft.PowerFx.Types
 
                     var dRecord = Marshal(item);
 
-                    if (Matches(dRecord.Value, recordToRemove, cancellationToken))
+                    if (await MatchesAsync(dRecord.Value, recordToRemove, cancellationToken))
                     {
                         deleteList.Add(item);
 
@@ -158,7 +158,7 @@ namespace Microsoft.PowerFx.Types
 
         protected override async Task<DValue<RecordValue>> PatchCoreAsync(RecordValue baseRecord, RecordValue changeRecord, CancellationToken cancellationToken)
         {
-            var actual = Find(baseRecord, cancellationToken);
+            var actual = await FindAsync(baseRecord, cancellationToken);
 
             if (actual != null)
             {
@@ -171,6 +171,11 @@ namespace Microsoft.PowerFx.Types
             }
         }
 
+        protected virtual RecordValue Find(RecordValue baseRecord)
+        {
+            return FindAsync(baseRecord, CancellationToken.None).Result;
+        }
+
         /// <summary>
         /// Execute a linear search for the matching record.
         /// </summary>
@@ -178,11 +183,11 @@ namespace Microsoft.PowerFx.Types
         /// <param name="cancellationToken">Cancellation token.</param>
         /// <returns>A record instance within the current table. This record can then be updated.</returns>
         /// <remarks>A derived class may override if there's a more efficient way to find the match than by linear scan.</remarks>
-        protected virtual RecordValue Find(RecordValue baseRecord, CancellationToken cancellationToken)
+        protected virtual async Task<RecordValue> FindAsync(RecordValue baseRecord, CancellationToken cancellationToken)
         {
             foreach (var current in Rows)
             {
-                if (Matches(current.Value, baseRecord, cancellationToken))
+                if (await MatchesAsync(current.Value, baseRecord, cancellationToken))
                 {
                     return current.Value;
                 }
@@ -191,13 +196,13 @@ namespace Microsoft.PowerFx.Types
             return null;
         }
 
-        protected static bool Matches(RecordValue currentRecord, RecordValue baseRecord, CancellationToken cancellationToken)
+        protected static async Task<bool> MatchesAsync(RecordValue currentRecord, RecordValue baseRecord, CancellationToken cancellationToken)
         {
             var ret = true;
 
-            foreach (var baseRecordField in baseRecord.GetFields(cancellationToken))
+            await foreach (var baseRecordField in baseRecord.GetFieldsAsync(cancellationToken))
             {
-                var currentFieldValue = currentRecord.GetField(baseRecordField.Value.Type, baseRecordField.Name, cancellationToken);
+                var currentFieldValue = await currentRecord.GetFieldAsync(baseRecordField.Value.Type, baseRecordField.Name, cancellationToken);
 
                 if (currentFieldValue is BlankValue && baseRecordField.Value is BlankValue)
                 {
@@ -221,7 +226,7 @@ namespace Microsoft.PowerFx.Types
                 }
                 else if (baseRecordField.Value is RecordValue baseRecordValue && currentFieldValue is RecordValue currentRecordValue)
                 {
-                    ret = Matches(currentRecordValue, baseRecordValue, cancellationToken);
+                    ret = await MatchesAsync(currentRecordValue, baseRecordValue, cancellationToken);
                 }
                 else
                 {

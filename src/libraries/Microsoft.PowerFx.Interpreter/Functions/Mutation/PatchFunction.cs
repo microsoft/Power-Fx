@@ -73,7 +73,7 @@ namespace Microsoft.PowerFx.Functions
 
         // Change records are processed in order from the beginning of the argument list to the end,
         // with later property values overriding earlier ones.
-        protected static Dictionary<string, FormulaValue> CreateRecordFromArgsDict(FormulaValue[] args, int startFrom)
+        protected static async Task<Dictionary<string, FormulaValue>> CreateRecordFromArgsDict(FormulaValue[] args, int startFrom, CancellationToken cancellationToken)
         {
             var retFields = new Dictionary<string, FormulaValue>(StringComparer.Ordinal);
 
@@ -87,7 +87,7 @@ namespace Microsoft.PowerFx.Functions
                 }
                 else if (arg is RecordValue record)
                 {
-                    foreach (var field in record.Fields)
+                    await foreach (var field in record.GetFieldsAsync(cancellationToken))
                     {
                         retFields[field.Name] = field.Value;
                     }
@@ -140,7 +140,7 @@ namespace Microsoft.PowerFx.Functions
             return base.GetSignatures(arity);
         }
 
-        public async Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancel)
+        public async Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancellationToken)
         {
             var validArgs = CheckArgs(args, out FormulaValue faultyArg);
 
@@ -149,7 +149,7 @@ namespace Microsoft.PowerFx.Functions
                 return faultyArg;
             }
 
-            return FieldDictToRecordValue(CreateRecordFromArgsDict(args, 0));
+            return FieldDictToRecordValue(await CreateRecordFromArgsDict(args, 0, cancellationToken));
         }
 
         public override RequiredDataSourcePermissions FunctionPermission => RequiredDataSourcePermissions.Create | RequiredDataSourcePermissions.Update;
@@ -306,7 +306,8 @@ namespace Microsoft.PowerFx.Functions
                 return args[1];
             }
 
-            var changeRecord = FieldDictToRecordValue(CreateRecordFromArgsDict(args, 2));
+            cancellationToken.ThrowIfCancellationRequested();
+            var changeRecord = FieldDictToRecordValue(await CreateRecordFromArgsDict(args, 2, cancellationToken));
 
             var datasource = (TableValue)args[0];
             var baseRecord = (RecordValue)args[1];

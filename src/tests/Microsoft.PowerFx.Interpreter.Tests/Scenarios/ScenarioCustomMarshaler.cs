@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reflection;
 using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Types;
 using Xunit;
@@ -148,12 +149,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     return _source;
                 }
 
-                protected override bool TryGetField(FormulaType fieldType, string fieldName, CancellationToken cancellationToken, out FormulaValue result)
+                protected override bool TryGetField(FormulaType fieldType, string fieldName, out FormulaValue result)
                 {
                     // Forward all field lookups
                     result = _inner.GetField(fieldName);
                     return true;
-                }
+                }               
             }
         }
 

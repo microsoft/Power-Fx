@@ -46,22 +46,23 @@ namespace Microsoft.PowerFx.Types
             return dict;
         }
 
-        protected override bool TryGetField(FormulaType fieldType, string fieldName, CancellationToken cancellationToken, out FormulaValue result)
+        protected override bool TryGetField(FormulaType fieldType, string fieldName, out FormulaValue result)
         {
             return _fields.TryGetValue(fieldName, out result);
         }
 
         public override async Task<DValue<RecordValue>> UpdateFieldsAsync(RecordValue changeRecord, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             if (_mutableFields == null)
-            {
-                cancellationToken.ThrowIfCancellationRequested();
+            {                
                 return await base.UpdateFieldsAsync(changeRecord, cancellationToken);
             }
 
             var fields = new List<NamedValue>();
 
-            foreach (var field in changeRecord.GetFields(cancellationToken))
+            await foreach (var field in changeRecord.GetFieldsAsync(cancellationToken))
             {
                 _mutableFields[field.Name] = field.Value;
             }
@@ -72,6 +73,6 @@ namespace Microsoft.PowerFx.Types
             }
 
             return DValue<RecordValue>.Of(NewRecordFromFields(fields));
-        }
+        }        
     }
 }

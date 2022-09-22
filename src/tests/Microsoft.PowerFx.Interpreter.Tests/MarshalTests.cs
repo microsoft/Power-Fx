@@ -410,7 +410,7 @@ namespace Microsoft.PowerFx.Tests
             {
             }
 
-            protected override bool TryGetField(FormulaType fieldType, string fieldName, CancellationToken cancellationToken, out FormulaValue result)
+            protected override bool TryGetField(FormulaType fieldType, string fieldName, out FormulaValue result)
             {
                 if (fieldName == "field1")
                 {
@@ -463,7 +463,7 @@ namespace Microsoft.PowerFx.Tests
 
         private class MyBadRecordValueMismatch : MyRecordValue
         {
-            protected override bool TryGetField(FormulaType fieldType, string fieldName, CancellationToken cancellationToken, out FormulaValue result)
+            protected override bool TryGetField(FormulaType fieldType, string fieldName, out FormulaValue result)
             {
                 // Error! we advertise field1 should be a number!
                 result = FormulaValue.New("a string");
@@ -473,7 +473,7 @@ namespace Microsoft.PowerFx.Tests
 
         private class MyBadRecordValue : MyRecordValue
         {
-            protected override bool TryGetField(FormulaType fieldType, string fieldName, CancellationToken cancellationToken, out FormulaValue result)
+            protected override bool TryGetField(FormulaType fieldType, string fieldName, out FormulaValue result)
             {
                 result = null;
                 return true; // Should be false
@@ -482,16 +482,16 @@ namespace Microsoft.PowerFx.Tests
 
         private class MyBadRecordValue2 : MyRecordValue
         {
-            protected override bool TryGetField(FormulaType fieldType, string fieldName, CancellationToken cancellationToken, out FormulaValue result)
+            protected override bool TryGetField(FormulaType fieldType, string fieldName, out FormulaValue result)
             {
-                base.TryGetField(fieldType, fieldName, cancellationToken, out result);
+                base.TryGetField(fieldType, fieldName, out result);
                 return false; // should be true. 
             }
         }
 
         private class MyBadRecordValueThrows : MyRecordValue
         {
-            protected override bool TryGetField(FormulaType fieldType, string fieldName, CancellationToken cancellationToken, out FormulaValue result)
+            protected override bool TryGetField(FormulaType fieldType, string fieldName, out FormulaValue result)
             {
                 // Exceptions here are implementation errors and should propagate. 
                 // A fx runtime error should be a ErrorValue instead.

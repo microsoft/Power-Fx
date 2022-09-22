@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Microsoft.PowerFx.Types
 {
@@ -26,7 +27,7 @@ namespace Microsoft.PowerFx.Types
         }
 
         /// <inheritdoc/>
-        protected override bool TryGetField(FormulaType fieldType, string fieldName, CancellationToken cancellation, out FormulaValue result)
+        protected override bool TryGetField(FormulaType fieldType, string fieldName, out FormulaValue result)
         {
             return _marshaller.TryGetField(Source, fieldName, out result);
         }
@@ -34,6 +35,6 @@ namespace Microsoft.PowerFx.Types
         public override object ToObject()
         {
             return Source;
-        }
+        }       
     }
 }
