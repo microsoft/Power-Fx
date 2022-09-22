@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Functions;
@@ -253,6 +254,12 @@ namespace Microsoft.PowerFx.Functions
             var rowsAsync = LazyForAll(runner, context, items, arg1);
 
             var rows = await Task.WhenAll(rowsAsync);
+
+            var errorRows = rows.OfType<ErrorValue>();
+            if (errorRows.Any())
+            {
+                return ErrorValue.Combine(irContext, errorRows);
+            }
 
             return new InMemoryTableValue(irContext, StandardTableNodeRecords(irContext, rows, forceSingleColumn: false));
         }

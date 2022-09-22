@@ -118,7 +118,7 @@ Blank()
 [GUID("5cc45615-f759-4a53-b225-d3a2497f60ad"),Blank()]
 
 >> ForAll(ParseJSON("[1]"), Value(ThisItem) / 0)
-[Microsoft.PowerFx.Types.ErrorValue]
+#Error
 
 >> CountRows(ForAll(ParseJSON("[1,2,3]"), Value(ThisItem)))
 3
@@ -133,7 +133,7 @@ Blank()
 ["1","false","hello"]
 
 >> ForAll(ParseJSON("[1,true,3,false]"), Value(ThisItem))
-[1,Microsoft.PowerFx.Types.ErrorValue,3,Microsoft.PowerFx.Types.ErrorValue]
+#Error
 
 >> ForAll(ParseJSON("[1,2,3]"), If(Value(ThisItem) < 2, Value(ThisItem), ThisItem))
 Errors: Error 70-78: Invalid argument type (UntypedObject). Expecting a Number value instead.|Error 29-79: The function 'If' has some invalid arguments.

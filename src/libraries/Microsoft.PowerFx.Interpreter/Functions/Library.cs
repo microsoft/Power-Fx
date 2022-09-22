@@ -598,6 +598,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.ForAll_UO,
                 StandardErrorHandlingAsync<FormulaValue>(
+                    BuiltinFunctionsCore.ForAll_UO.Name,
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: ExactSequence(
