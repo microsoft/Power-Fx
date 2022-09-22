@@ -1568,10 +1568,22 @@ namespace Microsoft.PowerFx.Functions
             return false;
         }
 
-        public static FormulaValue IsNumeric(IRContext irContext, FormulaValue[] args)
+        public static FormulaValue IsNumeric(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             var arg0 = args[0];
-            return new BooleanValue(irContext, arg0 is NumberValue);
+            switch (arg0)
+            {
+                case NumberValue _:
+                case DateValue _:
+                case DateTimeValue _:
+                case TimeValue _:
+                    return new BooleanValue(irContext, true);
+                case StringValue _:
+                    var nv = Value(runner, context, IRContext.NotInSource(FormulaType.Number), args);
+                    return new BooleanValue(irContext, nv is NumberValue);
+                default:
+                    return new BooleanValue(irContext, false);
+            }
         }
 
         public static async ValueTask<FormulaValue> With(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
