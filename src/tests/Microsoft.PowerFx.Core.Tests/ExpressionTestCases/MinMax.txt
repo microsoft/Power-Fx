@@ -1,107 +1,322 @@
-﻿>> Max(1)
+﻿// ****** Numeric arguments, scalar arguments ******
+
+>> Max(1)
 1
-
->> Max(Min(Date(2022,3,8)))
-Date(2022,3,8)
-
->> Max(1,2)
-2
-
->> Max("1","2")
-2
-
->> Max(Blank(), 100, -5, "2000", Value("2001"), Text(2002))
-2002
-
->> Max("200", "2000")
-2000
-
->> Max(DateTimeValue("November 10, 2014 1:50 PM"), DateTimeValue("November 11, 2014 1:50 PM"))
-DateTime(2014,11,11,13,50,0,0)
-
->> Max(DateTimeValue("November 10, 2014 1:50 PM"), DateTimeValue("November 10, 2014 2:50 PM"))
-DateTime(2014,11,10,14,50,0,0)
-
->> Max(Time(1,50,0),Time(2,0,0))
-Time(2,0,0,0)
-
->> Max(Date(2022,3,8),DateTime(2022,3,8,13,50,0))
-DateTime(2022,3,8,13,50,0,0)
-
->> Max(Time(3,4,5), Time(2,1/0,8))
-#Error(Kind=Div0)
-
->> Max(1, 2, {a:3})
-Errors: Error 10-15: Expected number. We expect a number at this point in the formula.
 
 >> Min(1)
 1
 
->> Min(Min(Date(2022,3,8)))
-Date(2022,3,8)
+>> Max(1,2)
+2
 
 >> Min(1,2)
 1
 
->> Min(Sequence(10000), Value)
+>> Max(0)
+0
+
+>> Min(0)
+0
+
+>> Max(0,0,0,0)
+0
+
+>> Min(0,0,0,0)
+0
+
+>> Max(1, 2, 3, 4, 5)
+5
+
+>> Min(1, 2, 3, 4, 5)
 1
 
->> Min(Date(1985,3,5),Date(1986,10,19))
-Date(1985,3,5)
+>> Max(-1, -2, -3, -4, -5)
+-1
+
+>> Min(-1, -2, -3, -4, -5)
+-5
+
+>> Max(2.34567)
+2.34567
+
+>> Min(2.34567)
+2.34567
+
+>> Max(-1.23, 23.4, -345.6, 4567.89, -5678.912)
+4567.89
+
+>> Min(-1.23, 23.4, -345.6, 4567.89, -5678.912)
+-5678.912
+
+>> Max(-123, 234, -3456, 4567, -5678)
+4567
+
+>> Min(-123, 234, -3456, 4567, -5678)
+-5678
+
+>> Max(-100, If(true, -1000, 200))
+-100
 
 >> Min(-100, If(true, -1000, 200))
 -1000
 
->> Min(1, 3, Sqrt(-1), -3)
-#Error(Kind=Numeric)
+>> Max(Blank())
+Blank()
 
->> Min({a:1}, {a:2}, {a:3})
-Errors: Error 4-9: Expected number. We expect a number at this point in the formula.|Error 11-16: Expected number. We expect a number at this point in the formula.|Error 18-23: Expected number. We expect a number at this point in the formula.
+>> Min(Blank())
+Blank()
 
->> Max([1, 2, 3, 4, 5], Value)
-5
+>> Max(Blank(), Blank(), Blank())
+Blank()
 
->> Max(Sequence(33333, 10),Value)
-33342
-
->> Max(1, 2, 3, Blank(), 2, 3)
-3
-
->> Max(Table({Name:"John Doe", DOB:Date(1985,3,5)},{Name:"Jane Roe", DOB:Date(1986,10,19)}),DOB)
-Date(1986,10,19)
-
->> Max(Table({Name:"John Doe", DOB:Date(1985,3,5), Thing: "1"},{Name:"Jane Roe", DOB:Date(1986,10,19), Thing: "2"}),Thing)
-2
-
->> Max([1, 2, 1/0, 4, 5], Value)
-#Error(Kind=Div0)
-
->> Min([1, 2, 3, 4, 5], Value)
-1
+>> Min(Blank(), Blank(), Blank())
+Blank()
 
 >> Min(1, 2, 3, Blank(), 2, 3)
 1
 
+>> Max(1, 2, 3, Blank(), 2, 3)
+3
+
+>> Min(-1, -2, -3, Blank(), -2, -3)
+-3
+
+>> Max(-1, -2, -3, Blank(), -2, -3)
+-1
+
+>> Max(1E+308, 1E+308)
+100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+
+>> Min(1E+308, 1E+308)
+100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+
+// ****** Date/time arguments, scalar arguments ******
+
+>> Max(Min(Date(2022,3,8)))
+Date(2022,3,8)
+
+>> Max(Date(1985,3,5),Date(1986,10,19))
+Date(1986,10,19)
+
+>> Min(Date(1985,3,5),Date(1986,10,19))
+Date(1985,3,5)
+
+>> Max(DateTime(2014,11,10,13,50,0), DateTime(2014,11,11,13,50,0))
+DateTime(2014,11,11,13,50,0,0)
+
+>> Min(DateTime(2014,11,10,13,50,0), DateTime(2014,11,11,13,50,0))
+DateTime(2014,11,10,13,50,0,0)
+
+>> Max(DateTime(2014,11,10,13,50,0), DateTime(2014,11,10,14,50,0))
+DateTime(2014,11,10,14,50,0,0)
+
+>> Min(DateTime(2014,11,10,13,50,0), DateTime(2014,11,10,14,50,0))
+DateTime(2014,11,10,13,50,0,0)
+
+>> Max(Time(1,50,0),Time(2,0,0))
+Time(2,0,0,0)
+
+>> Min(Time(1,50,0),Time(2,0,0))
+Time(1,50,0,0)
+
+>> Max(Date(2022,3,8),DateTime(2022,3,8,13,50,0))
+DateTime(2022,3,8,13,50,0,0)
+
+>> Min(Date(2022,3,8),DateTime(2022,3,8,13,50,0))
+DateTime(2022,3,8,0,0,0,0)
+
+// ****** Mix and numeric and date/time arguments, scalar arguments (result is numeric) ******
+
+// Date(2022, 9, 9) = 44813
+>> Max(Date(2022, 9, 9), 50000)
+50000
+
+>> Min(Date(2022, 9, 9), 50000)
+44813
+
+>> Max(Date(2022, 9, 9), 40000)
+44813
+
+>> Min(Date(2022, 9, 9), 40000)
+40000
+
+// ****** Coercions, scalar arguments ******
+
+>> Max("1","2")
+2
+
+>> Min("1","2")
+1
+
+>> Max(Blank(), 100, -5, "2000", Value("2001"), Text(2002))
+2002
+
+>> Min(Blank(), 100, -5, "2000", Value("2001"), Text(2002))
+-5
+
+>> Max("200", "2000")
+2000
+
+>> Min("200", "2000")
+200
+
+>> Max("sampleText")
+#Error(Kind=InvalidArgument)
+
+>> Min("sampleText")
+#Error(Kind=InvalidArgument)
+
+>> Max("10")
+10
+
+>> Min("10")
+10
+
+>> Max("-10.123", 1.234)
+1.234
+
+>> Min("-10.123", 1.234)
+-10.123
+
+>> Max("9", "10")
+10
+
+>> Min("9", "10")
+9
+
+>> Max("100", "AB")
+#Error(Kind=InvalidArgument)
+
+>> Min("100", "AB")
+#Error(Kind=InvalidArgument)
+
+>> Max(true,true)
+1
+
+>> Min(true,true)
+1
+
+>> Max(false,false)
+0
+
+>> Min(false,false)
+0
+
+>> Max(true,false)
+1
+
+>> Min(true,false)
+0
+
+>> Max("true","false")
+#Error(Kind=InvalidArgument, InvalidArgument)
+
+>> Min("true","false")
+#Error(Kind=InvalidArgument, InvalidArgument)
+
+// ****** Errors, scalar arguments ******
+
+>> Max(1/0)
+#Error(Kind=Div0)
+
+>> Min(1/0)
+#Error(Kind=Div0)
+
+>> Max(Time(3,4,5), Time(2,1/0,8))
+#Error(Kind=Div0)
+
+>> Min(Time(3,4,5), Time(2,1/0,8))
+#Error(Kind=Div0)
+
+>> Max(1, 3, Sqrt(-1), -3)
+#Error(Kind=Numeric)
+
+>> Min(1, 3, Sqrt(-1), -3)
+#Error(Kind=Numeric)
+
+// ****** Table + expression, numeric ******
+
+>> Max(Sequence(10000), Value)
+10000
+
+>> Min(Sequence(10000), Value)
+1
+
+>> Max([1, 2, 3, 4, 5], Value)
+5
+
+>> Min([1, 2, 3, 4, 5], Value)
+1
+
+>> Max(Sequence(33333, 10),Value)
+33342
+
+>> Min(Sequence(33333, 10),Value)
+10
+
+>> Max([1, 2, 3], 4)
+4
+
 >> Min([1, 2, 3], 4)
 4
+
+>> Max(Table({Name:"John Doe", DOB:Date(1985,3,5), Thing: "1"},{Name:"Jane Roe", DOB:Date(1986,10,19), Thing: "2"}),Thing)
+2
+
+>> Min(Table({Name:"John Doe", DOB:Date(1985,3,5), Thing: "1"},{Name:"Jane Roe", DOB:Date(1986,10,19), Thing: "2"}),Thing)
+1
+
+// ****** Table + expression, date/time ******
+
+>> Max(Table({Name:"John Doe", DOB:Date(1985,3,5)},{Name:"Jane Roe", DOB:Date(1986,10,19)}),DOB)
+Date(1986,10,19)
+
+>> Min(Table({Name:"John Doe", DOB:Date(1985,3,5)},{Name:"Jane Roe", DOB:Date(1986,10,19)}),DOB)
+Date(1985,3,5)
+
+>> Max(Sequence(10000), DateAdd(Date(2000,1,1), -Value, TimeUnit.Days))
+DateTime(1999,12,31,0,0,0,0)
 
 >> Min(Sequence(10000), DateAdd(Date(2000,1,1), -Value, TimeUnit.Days))
 DateTime(1972,8,15,0,0,0,0)
 
+>> Max(Sequence(10), Date(2000,1,10 + Value))
+Date(2000,1,20)
+
 >> Min(Sequence(10), Date(2000,1,10 + Value))
 Date(2000,1,11)
 
->> Min([-1, 0, 1], Date(2022, 9, If(10 / Value < 0, 1, 2)))
-#Error(Kind=Div0)
+// ****** Errors, table + expression ******
 
->> Max([-1, 0, 1], Date(2022, 9, If(10 / Value < 0, 1, 2)))
+>> Max([1, 2, 1/0, 4, 5], Value)
 #Error(Kind=Div0)
 
 >> Min([1, 2, 1/0, 4, 5], Value)
 #Error(Kind=Div0)
 
+>> Max(If(Sqrt(-1) < 1, [1,2,3]), Value)
+#Error(Kind=Numeric)
+
 >> Min(If(Sqrt(-1) < 1, [1,2,3]), Value)
 #Error(Kind=Numeric)
 
+// ****** Compiler errors ******
+
+>> Max(1, 2, {a:3})
+Errors: Error 10-15: Expected number. We expect a number at this point in the formula.
+
+>> Min(1, 2, {a:3})
+Errors: Error 10-15: Expected number. We expect a number at this point in the formula.
+
+>> Max({a:1}, {a:2}, {a:3})
+Errors: Error 4-9: Expected number. We expect a number at this point in the formula.|Error 11-16: Expected number. We expect a number at this point in the formula.|Error 18-23: Expected number. We expect a number at this point in the formula.
+
+>> Min({a:1}, {a:2}, {a:3})
+Errors: Error 4-9: Expected number. We expect a number at this point in the formula.|Error 11-16: Expected number. We expect a number at this point in the formula.|Error 18-23: Expected number. We expect a number at this point in the formula.
+
 >> Min([1,2,3], [1])
 Errors: Error 13-16: Expected number. We expect a number at this point in the formula.|Error 0-17: The function 'Min' has some invalid arguments.
+
+>> Max([1,2,3], [1])
+Errors: Error 13-16: Expected number. We expect a number at this point in the formula.|Error 0-17: The function 'Max' has some invalid arguments.
+
