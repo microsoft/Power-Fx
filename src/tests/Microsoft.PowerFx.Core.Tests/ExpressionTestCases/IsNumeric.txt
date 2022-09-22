@@ -1,6 +1,9 @@
 >>IsNumeric("A")
 false
 
+>>IsNumeric("123")
+true
+
 >>IsNumeric(123)
 true
 
@@ -17,7 +20,7 @@ true
 true
 
 >>IsNumeric(1/0)
-#Error
+#Error(Kind=Div0)
 
 >>IsNumeric(Blank())
 false
@@ -28,3 +31,17 @@ false
 >>IsNumeric([1,2,3,4])
 false
 
+>> IsNumeric(Date(2022,1,2))
+true
+
+>> IsNumeric(DateTime(2022,1,2,12,34,56))
+true
+
+>> IsNumeric(Time(2022,1,2))
+true
+
+>> IsNumeric(false)
+false
+
+>> IsNumeric(true)
+false
