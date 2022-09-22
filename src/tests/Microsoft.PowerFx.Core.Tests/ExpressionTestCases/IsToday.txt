@@ -6,7 +6,19 @@ true
 true
 
 >> IsToday(Date(-1, 2, 3))
-#Error
+false
+
+>> IsToday(DateDiff(Now(),Today()))
+false
+
+>> IsToday("30,12,4")
+false
+
+>> IsToday(Date(-1995,1,30))
+false
+
+>> IsToday(Blank())
+false
 
 >> IsToday(Date(Blank(), 2, 3))
 #Error(Kind=InvalidArgument)
@@ -15,6 +27,9 @@ true
 false
 
 >> IsToday(DateAdd(Today(),-1))
+false
+
+>> IsToday(DateDiff(Now(),1))
 false
 
 >> DateDiff(Now(), Today(), TimeUnit.Minutes) <> 0
