@@ -89,6 +89,10 @@
 >> Text("HELLO")
 "HELLO"
 
+// Calling Text on a string value returns that value
+>> Text("abc", "0.00")
+"abc"
+
 // ******** BOOLEAN PARAMETERS ********
 
 //Excel needs two parameters for Text function

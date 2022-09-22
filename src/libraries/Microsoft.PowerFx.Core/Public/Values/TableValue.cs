@@ -81,7 +81,7 @@ namespace Microsoft.PowerFx.Types
             {
                 Message = "Argument out of range",
                 Span = irContext.SourceContext,
-                Kind = ErrorKind.Numeric
+                Kind = ErrorKind.InvalidArgument
             });
         }
 
