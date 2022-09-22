@@ -112,7 +112,8 @@ namespace Microsoft.PowerFx.Functions
                         break;
                 }
 
-                return await targetFunction(runner, context, irContext, runtimeValuesChecked.Select(arg => arg as T).ToArray());
+                var result = await targetFunction(runner, context, irContext, runtimeValuesChecked.Select(arg => arg as T).ToArray());
+                return FiniteChecker(irContext, 0, result);
             };
         }
 
@@ -172,6 +173,16 @@ namespace Microsoft.PowerFx.Functions
             });
         }
 
+        // Wraps a scalar function into its tabular overload
+        private static AsyncFunctionPtr StandardErrorHandlingTabularOverload<TScalar>(AsyncFunctionPtr targetFunction)
+            where TScalar : FormulaValue => StandardErrorHandlingAsync<TableValue>(
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<TableValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: StandardSingleColumnTable<TScalar>(targetFunction));
+
         // A wrapper for a function with no error handling behavior whatsoever.
         private static AsyncFunctionPtr NoErrorHandling(
             Func<IRContext, FormulaValue[], FormulaValue> targetFunction)
@@ -184,10 +195,10 @@ namespace Microsoft.PowerFx.Functions
         }
 
         #region Single Column Table Functions
-        public static Func<EvalVisitor, EvalVisitorContext, IRContext, TableValue[], ValueTask<FormulaValue>> StandardSingleColumnTable<T>(Func<EvalVisitor, EvalVisitorContext, IRContext, T[], FormulaValue> targetFunction)
+        public static Func<EvalVisitor, EvalVisitorContext, IRContext, TableValue[], ValueTask<FormulaValue>> StandardSingleColumnTable<T>(AsyncFunctionPtr targetFunction)
             where T : FormulaValue
         {
-            return (runner, context, irContext, args) =>
+            return async (runner, context, irContext, args) =>
             {
                 var inputTableType = (TableType)args[0].Type;
                 var inputColumnNameStr = inputTableType.SingleColumnFieldName;
@@ -206,8 +217,8 @@ namespace Microsoft.PowerFx.Functions
                         NamedValue namedValue;
                         namedValue = value switch
                         {
-                            T t => new NamedValue(outputColumnNameStr, targetFunction(runner, context, IRContext.NotInSource(outputItemType), new T[] { t })),
-                            BlankValue bv => new NamedValue(outputColumnNameStr, bv),
+                            T t => new NamedValue(outputColumnNameStr, await targetFunction(runner, context, IRContext.NotInSource(outputItemType), new T[] { t })),
+                            BlankValue bv => new NamedValue(outputColumnNameStr, await targetFunction(runner, context, IRContext.NotInSource(outputItemType), new FormulaValue[] { bv })),
                             ErrorValue ev => new NamedValue(outputColumnNameStr, ev),
                             _ => new NamedValue(outputColumnNameStr, CommonErrors.RuntimeTypeMismatch(IRContext.NotInSource(inputItemType)))
                         };
@@ -225,14 +236,14 @@ namespace Microsoft.PowerFx.Functions
                 }
 
                 var result = new InMemoryTableValue(irContext, resultRows);
-                return new ValueTask<FormulaValue>(result);
+                return result;
             };
         }
 
         public static Func<EvalVisitor, EvalVisitorContext, IRContext, TableValue[], ValueTask<FormulaValue>> StandardSingleColumnTable<T>(Func<IRContext, T[], FormulaValue> targetFunction)
             where T : FormulaValue
         {
-            return StandardSingleColumnTable<T>((runner, context, irContext, args) => targetFunction(irContext, args));
+            return StandardSingleColumnTable<T>(async (runner, context, irContext, args) => targetFunction(irContext, args.OfType<T>().ToArray()));
         }
 
         private static (int maxTableSize, bool emptyTablePresent) AnalyzeTableArguments(FormulaValue[] args)
@@ -525,9 +536,29 @@ namespace Microsoft.PowerFx.Functions
 
             return CommonErrors.RuntimeTypeMismatch(irContext);
         }
-        #endregion
 
-        #region Common Runtime Value Checking Pipeline Stages
+        private static FormulaValue DateOrTimeOrDateTime(IRContext irContext, int index, FormulaValue arg)
+        {
+            if (arg is DateValue || arg is TimeValue || arg is DateTimeValue || arg is BlankValue || arg is ErrorValue)
+            {
+                return arg;
+            }
+
+            return CommonErrors.RuntimeTypeMismatch(irContext);
+        }
+
+        private static FormulaValue DateNumberTimeOrDateTime(IRContext irContext, int index, FormulaValue arg)
+        {
+            if (arg is DateValue || arg is DateTimeValue || arg is TimeValue || arg is NumberValue || arg is BlankValue || arg is ErrorValue)
+            {
+                return arg;
+            }
+
+            return CommonErrors.RuntimeTypeMismatch(irContext);
+        }
+#endregion
+
+#region Common Runtime Value Checking Pipeline Stages
         private static FormulaValue FiniteChecker(IRContext irContext, int index, FormulaValue arg)
         {
             if (arg is NumberValue numberValue)

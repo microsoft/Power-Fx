@@ -7,18 +7,6 @@
 >> Text(Blank(), "#.000")
 ""
 
->> Char(65)
-"A"
-
->> Char(Blank())
-Blank()
-
->> Char(660/10)
-"B"
-
->> Char(1/0)
-#Error
-
 // ******** NUMBER PARAMETERS ********
 
 //Excel needs two parameters for Text function

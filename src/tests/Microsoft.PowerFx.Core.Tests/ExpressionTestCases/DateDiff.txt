@@ -232,14 +232,59 @@
 
 // ******************************** DATE DIFFERENCE WITH FRACTIONAL RESULTS ********************************
 
-// Bug 15470360
-// >> DateDiff(TimeValue("09:45:00"), TimeValue("10:15:36"), TimeUnit.Hours)
-// 1
+>> DateDiff(TimeValue("09:45:00"), TimeValue("10:15:36"), TimeUnit.Hours)
+1
 
-// Bug 15470360
-// >> DateDiff(TimeValue("09:45:00"), TimeValue("10:15:36"), TimeUnit.Minutes)/60
-// 0.5
+>> DateDiff(TimeValue("09:45:00"), TimeValue("10:15:36"), TimeUnit.Minutes)/60
+0.5
 
-// Bug 15470360
-// >> DateDiff(TimeValue("09:45:00"), TimeValue("10:15:36"), TimeUnit.Seconds)/3600
-// 0.51
+>> DateDiff(TimeValue("09:45:00"), TimeValue("10:15:36"), TimeUnit.Seconds)/3600
+0.51
+
+>> DateDiff(DateTime(2011,12,31,23,59,59,999),Date(2012,1,1), TimeUnit.Milliseconds)
+1
+
+>> DateDiff(DateTime(2011,12,31,23,59,59,999),Date(2012,1,1), TimeUnit.Seconds)
+1
+
+>> DateDiff(DateTime(2011,12,31,23,59,59,999),Date(2012,1,1), TimeUnit.Minutes)
+1
+
+>> DateDiff(DateTime(2011,12,31,23,59,59,999),Date(2012,1,1), TimeUnit.Hours)
+1
+
+>> DateDiff(DateTime(2011,12,31,23,59,59,999),Date(2012,1,1), TimeUnit.Days)
+1
+
+>> DateDiff(DateTime(2011,12,31,23,59,59,999),Date(2012,1,1), TimeUnit.Months)
+1
+
+>> DateDiff(DateTime(2011,12,31,23,59,59,999),Date(2012,1,1), TimeUnit.Quarters)
+1
+
+>> DateDiff(DateTime(2011,12,31,23,59,59,999),Date(2012,1,1), TimeUnit.Years)
+1
+
+>> DateDiff(DateTime(2011,12,31,23,59,59,998),DateTime(2011,12,31,23,59,59,999), TimeUnit.Milliseconds)
+1
+
+>> DateDiff(DateTime(2011,12,31,23,59,59), DateTime(2011,12,31,23,59,59,999), TimeUnit.Seconds)
+0
+
+>> DateDiff(DateTime(2011,12,31,23,59,0), DateTime(2011,12,31,23,59,59,999), TimeUnit.Minutes)
+0
+
+>> DateDiff(DateTime(2011,12,31,23,0,0), DateTime(2011,12,31,23,59,59,999), TimeUnit.Hours)
+0
+
+>> DateDiff(DateTime(2011,12,31,0,0,0), DateTime(2011,12,31,23,59,59,999), TimeUnit.Days)
+0
+
+>> DateDiff(DateTime(2011,12,1,0,0,0), DateTime(2011,12,31,23,59,59,999), TimeUnit.Months)
+0
+
+>> DateDiff(DateTime(2011,10,1,0,0,0), DateTime(2011,12,31,23,59,59,999), TimeUnit.Quarters)
+0
+
+>> DateDiff(Date(2011,1,1), DateTime(2011,12,31,23,59,59,999), TimeUnit.Years)
+0

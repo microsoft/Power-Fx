@@ -1,4 +1,0 @@
-﻿#OVERRIDE: String.txt
-
->> StartsWith("FOO", "f")
-#Skip
