@@ -120,6 +120,9 @@ Blank()
 >> ForAll(ParseJSON("[1]"), Value(ThisItem) / 0)
 [Microsoft.PowerFx.Types.ErrorValue]
 
+>> CountRows(ForAll(ParseJSON("[1,2,3]"), Value(ThisItem)))
+3
+
 >> Sum(ForAll(ParseJSON("[5, 6, 7]"), Value(ThisItem)), Value)
 18
 
