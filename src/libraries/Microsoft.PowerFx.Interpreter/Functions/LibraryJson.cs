@@ -98,7 +98,7 @@ namespace Microsoft.PowerFx.Functions
                 {
                     Message = $"The Json could not be parsed: {ex.Message}",
                     Span = irContext.SourceContext,
-                    Kind = ErrorKind.InvalidFunctionUsage
+                    Kind = ErrorKind.InvalidArgument
                 });
             }
         }

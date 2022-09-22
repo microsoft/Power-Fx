@@ -2,10 +2,10 @@
 {Value:30}
 
 >> Index([1, 2, 3, 4, 5], 6)
-#Error(Kind=Numeric)
+#Error(Kind=InvalidArgument)
 
 >> Index([1, 2, 3, 4, 5], -1)
-#Error(Kind=Numeric)
+#Error(Kind=InvalidArgument)
 
 >> Index([1, 2, 3, 4, 5], Blank())
 Blank()
@@ -23,7 +23,7 @@ Blank()
 {a:"1",b:"101"}
 
 >> Index(Filter([1,2,3],Value=4),2)
-#Error(Kind=Numeric)
+#Error(Kind=InvalidArgument)
 
 >> Index(Table({a:{Value:2},b:1},{a:{Value:1},b:2}), 1).a
 {Value:2}

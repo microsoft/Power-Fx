@@ -144,3 +144,81 @@ Blank()
 
 >> Find("B", "LastNameisBlahFirstNameisblah", 12)
 Blank()
+
+>> Find("B", "LastNameisBiller")
+11
+
+>> Find("B", "LastNameisbiller")
+Blank()
+
+>> Find("b", "LastNameisbiller")
+11
+
+>> Find("b", "LastNameisBiller")
+Blank()
+
+>> Find("BB", "LastNameisBBiller")
+11
+
+>> Find("BB", "LastNameisBbiller")
+Blank()
+
+>> Find("bb", "LastNameisbbiller")
+11
+
+>> Find("bb", "LastNameisbBiller")
+Blank()
+
+>> Find("B", "LastNameisBillerFirstNameisBethy")
+11
+
+>> Find("B", "LastNameisBillerFirstNameisBethy", 2)
+11
+
+>> Find("B", "LastNameisBillerFirstNameisBethy", 11)
+11
+
+>> Find("B", "LastNameisBillerFirstNameisBethy", 12)
+28
+
+>> Find("B", "LastNameisBillerFirstNameisbethy", 12)
+Blank()
+
+>> Find("", "", -1)
+#Error(Kind=InvalidArgument)
+
+>> Find("", "", 0)
+#Error(Kind=InvalidArgument)
+
+>> Find("", "textToBeSearchedIn", -1)
+#Error(Kind=InvalidArgument)
+
+>> Find("", "textToBeSearchedIn", 0)
+#Error(Kind=InvalidArgument)
+
+>> Find("", "textToBeSearchedIn", 2)
+2
+
+>> Find("", "textToBeSearchedIn", 100)
+#Error(Kind=InvalidArgument)
+
+>> Find("textToFind", "",-1)
+#Error(Kind=InvalidArgument)
+
+>> Find("textToFind", "",0)
+#Error(Kind=InvalidArgument)
+
+>> Find("textToFind", "",1)
+Blank()
+
+>> Find("textToFind", "",2)
+#Error(Kind=InvalidArgument)
+
+>> Find(Blank(), Blank(), -1)
+#Error(Kind=InvalidArgument)
+
+>> Find(Blank(), Blank(), 0)
+#Error(Kind=InvalidArgument)
+
+>> Find(Blank(), Blank(), 1)
+1
