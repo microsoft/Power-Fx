@@ -151,7 +151,7 @@ namespace Microsoft.PowerFx.Types
                             return field.Value.ToObject();
                         }
 
-                        throw new NotImplementedException();
+                        return null;
                     }
                     else if (val.IsBlank)
                     {

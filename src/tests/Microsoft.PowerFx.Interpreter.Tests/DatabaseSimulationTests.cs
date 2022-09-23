@@ -24,10 +24,10 @@ namespace Microsoft.PowerFx.Interpreter.Tests
     {
         [Theory]
         [InlineData("Patch(Table, First(Filter(Table, MyStr = \"Str3\")), {MyDate: \"2022-11-14 7:22:06 pm\"})", false, 0)]
-        [InlineData("Patch(Table, First(Filter(Table, MyStr = \"Str3\")), {MyDate: DateTimeValue(\"2022-11-14 7:22:06 pm\") })", true, 0)]
+        [InlineData("Patch(Table, First(Filter(Table, MyStr = \"Str3\")), {MyDate: DateTime(2022,11,14,19,22,6) })", true, 0)]
         [InlineData("Patch(Table, First(Filter(Table, MyStr = \"Str3\")), {MyDate: \"2022-11-14 7:22:06 pm\"})", false, 2000)]
-        [InlineData("Patch(Table, First(Filter(Table, MyStr = \"Str3\")), {MyDate: DateTimeValue(\"2022-11-14 7:22:06 pm\") })", true, 2000, true)]
-        public void DatabaseSimulation_Test(string expr, bool checkSuccess, int patchDelay, bool expectTaskCancalledException = false)
+        [InlineData("Patch(Table, First(Filter(Table, MyStr = \"Str3\")), {MyDate: DateTime(2022,11,14,19,22,6) })", true, 2000, true)]
+        public void DatabaseSimulation_Test(string expr, bool checkSuccess, int patchDelay, bool expectTaskCancelledException = false)
         {
             var databaseTable = DatabaseTable.CreateTestTable(patchDelay);
             var symbols = new SymbolTable();
@@ -59,13 +59,13 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 }
                 catch (AggregateException agg)
                 {
-                    Assert.True(expectTaskCancalledException);
+                    Assert.True(expectTaskCancelledException);
                     Assert.IsType<TaskCanceledException>(agg.InnerException);
                     aggregateExceptionFired = true;
                 }
                 finally
                 {
-                    Assert.True(!expectTaskCancalledException ^ aggregateExceptionFired);
+                    Assert.True(expectTaskCancelledException == aggregateExceptionFired);
                 }
             }
         }

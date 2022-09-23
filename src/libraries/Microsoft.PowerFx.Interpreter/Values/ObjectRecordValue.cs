@@ -1,9 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System.Threading;
-using System.Threading.Tasks;
-
 namespace Microsoft.PowerFx.Types
 {
     /// <summary>
@@ -35,6 +32,6 @@ namespace Microsoft.PowerFx.Types
         public override object ToObject()
         {
             return Source;
-        }       
+        }
     }
 }

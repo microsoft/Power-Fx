@@ -5,8 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reflection;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Types;
 using Xunit;
@@ -154,7 +152,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     // Forward all field lookups
                     result = _inner.GetField(fieldName);
                     return true;
-                }               
+                }
             }
         }
 
@@ -212,7 +210,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
                                 var result = marshaller.Marshal(fieldValue);
                                 return result;
-                            });
+                            }
+                    );
                 }
 
                 fieldGetters.Add(fieldName, TypeAndMarshallerGetter);

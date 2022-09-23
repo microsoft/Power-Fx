@@ -191,6 +191,13 @@ namespace Microsoft.PowerFx.Types
             visitor.Visit(this);
         }
 
+        public DValue<RecordValue> UpdateField(string name, FormulaValue value)
+        {
+            var list = new List<NamedValue>() { new NamedValue(name, value) };
+
+            return UpdateFieldsAsync(FormulaValue.NewRecordFromFields(list), CancellationToken.None).ConfigureAwait(false).GetAwaiter().GetResult();
+        }
+
         public virtual async Task<DValue<RecordValue>> UpdateFieldsAsync(RecordValue changeRecord, CancellationToken cancellationToken)
         {
             var errorValue = NewError(new ExpressionError()

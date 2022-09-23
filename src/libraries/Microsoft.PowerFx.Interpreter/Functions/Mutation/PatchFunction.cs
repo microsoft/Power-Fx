@@ -73,7 +73,7 @@ namespace Microsoft.PowerFx.Functions
 
         // Change records are processed in order from the beginning of the argument list to the end,
         // with later property values overriding earlier ones.
-        protected static async Task<Dictionary<string, FormulaValue>> CreateRecordFromArgsDict(FormulaValue[] args, int startFrom, CancellationToken cancellationToken)
+        protected static async Task<Dictionary<string, FormulaValue>> CreateRecordFromArgsDictAsync(FormulaValue[] args, int startFrom, CancellationToken cancellationToken)
         {
             var retFields = new Dictionary<string, FormulaValue>(StringComparer.Ordinal);
 
@@ -149,7 +149,7 @@ namespace Microsoft.PowerFx.Functions
                 return faultyArg;
             }
 
-            return FieldDictToRecordValue(await CreateRecordFromArgsDict(args, 0, cancellationToken));
+            return FieldDictToRecordValue(await CreateRecordFromArgsDictAsync(args, 0, cancellationToken));
         }
 
         public override RequiredDataSourcePermissions FunctionPermission => RequiredDataSourcePermissions.Create | RequiredDataSourcePermissions.Update;
@@ -307,7 +307,7 @@ namespace Microsoft.PowerFx.Functions
             }
 
             cancellationToken.ThrowIfCancellationRequested();
-            var changeRecord = FieldDictToRecordValue(await CreateRecordFromArgsDict(args, 2, cancellationToken));
+            var changeRecord = FieldDictToRecordValue(await CreateRecordFromArgsDictAsync(args, 2, cancellationToken));
 
             var datasource = (TableValue)args[0];
             var baseRecord = (RecordValue)args[1];
