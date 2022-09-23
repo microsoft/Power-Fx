@@ -1,6 +1,9 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Threading;
+using System.Threading.Tasks;
+
 namespace Microsoft.PowerFx.Types
 {
     // Project the correct compile-time type onto the runtime value. 
@@ -28,9 +31,17 @@ namespace Microsoft.PowerFx.Types
 
         protected override bool TryGetField(FormulaType fieldType, string fieldName, out FormulaValue result)
         {
+            var (res, result2) = TryGetFieldAsync(fieldType, fieldName, CancellationToken.None).Result;
+
+            result = result2;
+            return res;
+        }
+
+        protected override async Task<(bool Result, FormulaValue Value)> TryGetFieldAsync(FormulaType fieldType, string fieldName, CancellationToken cancellationToken)
+        {
             // If the runtime value is missing a field of the given type, it will be Blank().
-            result = _inner.GetField(fieldType, fieldName);
-            return true;
+            var result = await _inner.GetFieldAsync(fieldType, fieldName, cancellationToken);
+            return (true, result);
         }
 
         public override object ToObject()

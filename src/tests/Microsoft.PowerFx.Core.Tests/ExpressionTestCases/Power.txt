@@ -20,6 +20,7 @@
 >> Power(230,10)
 414265112136490000000000
 
+// Overflow
 >> Power(230,230)
 #Error(Kind=Numeric)
 

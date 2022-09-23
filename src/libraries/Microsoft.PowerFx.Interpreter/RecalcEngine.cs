@@ -133,7 +133,7 @@ namespace Microsoft.PowerFx
             return EvalAsync(expressionText, CancellationToken.None, parameters, options).Result;
         }
       
-        public async Task<FormulaValue> EvalAsync(string expressionText, CancellationToken cancel, RecordValue parameters, ParserOptions options = null)
+        public async Task<FormulaValue> EvalAsync(string expressionText, CancellationToken cancellationToken, RecordValue parameters, ParserOptions options = null)
         {
             if (parameters == null)
             {
@@ -146,11 +146,11 @@ namespace Microsoft.PowerFx
             var stackMarker = new StackDepthCounter(Config.MaxCallDepth);
             var run = check.GetEvaluator(stackMarker);
 
-            var result = await run.EvalAsync(cancel, parameters);
+            var result = await run.EvalAsync(cancellationToken, parameters);
             return result;
         }
 
-        public async Task<FormulaValue> EvalAsync(string expressionText, CancellationToken cancel, ParserOptions options = null, ReadOnlySymbolTable symbolTable = null, ReadOnlySymbolValues runtimeConfig = null)
+        public async Task<FormulaValue> EvalAsync(string expressionText, CancellationToken cancellationToken, ParserOptions options = null, ReadOnlySymbolTable symbolTable = null, ReadOnlySymbolValues runtimeConfig = null)
         {
             // We could have any combination of symbols and runtime values. 
             // - RuntimeConfig may be null if we don't need it. 
@@ -164,7 +164,7 @@ namespace Microsoft.PowerFx
 
             var eval = (ParsedExpression)check.Expression;
 
-            return await eval.EvalAsync(cancel, runtimeConfig);
+            return await eval.EvalAsync(cancellationToken, runtimeConfig);
         }
 
         public DefineFunctionsResult DefineFunctions(string script)

@@ -88,4 +88,32 @@
 >> Sum("true","false")
 #Error(Kind=InvalidArgument, InvalidArgument)
 
+// ***********  TABLE + EXPRESSION *************
 
+>> Sum([1,2,3,4], 0)
+0
+
+>> Sum([1,2,3,4], Value)
+10
+
+>> Sum([1,2,3,4,5], Value^2)
+55
+
+>> Sum([1,2,3,4,5], With({Square:Value^2},Square))
+55
+
+>> Sum(AddColumns([1,2,3,4,5], "Square", Value^2), Square)
+55
+
+>> Sum([1,2/0,3,Sqrt(-4),5], IfError(Value, 0))
+9
+
+>> Sum(Table({a:1},If(1/0<2,{a:2}),{a:3},If(Sqrt(-1)<0,{a:4}),{a:5}), IfError(a, 0))
+9
+
+>> Sum(If(1/0<2,[1,2,3,4]),Value)
+#Error(Kind=Div0)
+
+// Blank rows
+>> Sum(Table({a:1},If(1<0,{a:2}),{a:3},If(1<0,{a:4}),{a:5}), Coalesce(a, 100))
+209

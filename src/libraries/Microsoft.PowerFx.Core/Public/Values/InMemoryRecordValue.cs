@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
 
@@ -50,16 +51,18 @@ namespace Microsoft.PowerFx.Types
             return _fields.TryGetValue(fieldName, out result);
         }
 
-        public override async Task<DValue<RecordValue>> UpdateFieldsAsync(RecordValue changeRecord)
+        public override async Task<DValue<RecordValue>> UpdateFieldsAsync(RecordValue changeRecord, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             if (_mutableFields == null)
             {
-                return await base.UpdateFieldsAsync(changeRecord);
+                return await base.UpdateFieldsAsync(changeRecord, cancellationToken);
             }
 
             var fields = new List<NamedValue>();
 
-            foreach (var field in changeRecord.Fields)
+            await foreach (var field in changeRecord.GetFieldsAsync(cancellationToken))
             {
                 _mutableFields[field.Name] = field.Value;
             }

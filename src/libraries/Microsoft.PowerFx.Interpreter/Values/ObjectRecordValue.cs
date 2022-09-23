@@ -2,7 +2,7 @@
 // Licensed under the MIT license.
 
 namespace Microsoft.PowerFx.Types
-{    
+{
     /// <summary>
     /// Represent a Record that's backed by a DotNet object. 
     /// Field access is lazy.
@@ -16,17 +16,17 @@ namespace Microsoft.PowerFx.Types
 
         private readonly ObjectMarshaller _marshaller;
 
-        internal ObjectRecordValue(RecordType type, object source, ObjectMarshaller marshaler) 
+        internal ObjectRecordValue(RecordType type, object source, ObjectMarshaller marshaler)
             : base(type)
         {
             Source = source;
             _marshaller = marshaler;
         }
-                
+
         /// <inheritdoc/>
         protected override bool TryGetField(FormulaType fieldType, string fieldName, out FormulaValue result)
         {
-            return _marshaller.TryGetField(Source, fieldName, out result);            
+            return _marshaller.TryGetField(Source, fieldName, out result);
         }
 
         public override object ToObject()

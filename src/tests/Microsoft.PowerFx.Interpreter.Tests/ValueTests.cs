@@ -291,7 +291,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             // Converts to single column 
             var obj = value.ToObject();
 
-            Assert.Equal((ICollection)obj, new[] { 1.0, 2.0, 3.0 });
+            Assert.Equal(new[] { 1.0, 2.0, 3.0 }, (ICollection)obj);
 
             var resultStr = value.Dump();
             Assert.Equal("[1,2,3]", resultStr);

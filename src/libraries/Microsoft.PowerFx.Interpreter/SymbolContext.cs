@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using Microsoft.PowerFx.Core.IR.Symbols;
 using Microsoft.PowerFx.Types;
+using static Microsoft.PowerFx.RecordScope;
 
 namespace Microsoft.PowerFx
 {
@@ -54,6 +55,11 @@ namespace Microsoft.PowerFx
         public SymbolContext WithScopeValues(RecordValue scopeValues)
         {
             return WithScopeValues(new RecordScope(scopeValues));
+        }
+
+        public SymbolContext WithScopeValues(ErrorValue scopeValues)
+        {
+            return WithScopeValues(new ErrorScope(scopeValues));
         }
 
         // Called by evaluator to fetch a runtime value in the given scope. 

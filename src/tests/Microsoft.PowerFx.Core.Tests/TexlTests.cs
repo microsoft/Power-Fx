@@ -104,5 +104,18 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal(expectedDType, result._binding.ResultType);
             Assert.True(result.IsSuccess);
         }
+
+        [Theory]
+        [InlineData("DateAdd(Table({v:Date(2022,1,1),s:9},{v:Date(2022,2,2),s:25}), 2, TimeUnit.Days)")]
+        [InlineData("DateAdd(DropColumns([Date(2022,1,1),Date(2022,2,2)],\"Value\"), 2, TimeUnit.Days)")]
+        [InlineData("DateDiff(Table({v:Date(2022,1,1),s:9},{v:Date(2022,2,2),s:25}), Date(2022,12,12), TimeUnit.Days)")]
+        [InlineData("DateDiff(DropColumns([Date(2022,1,1),Date(2022,2,2)],\"Value\"), Date(2022,2,2), TimeUnit.Days)")]
+        public void TexlDateTableFunctions_Negative(string expression)
+        {
+            var engine = new Engine(new PowerFxConfig());
+            var result = engine.Check(expression);
+
+            Assert.False(result.IsSuccess);
+        }
     }
 }

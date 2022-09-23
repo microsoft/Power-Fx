@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Entities.Delegation;
 using Microsoft.PowerFx.Core.Entities.QueryOptions;
@@ -22,11 +23,13 @@ namespace Microsoft.PowerFx.Interpreter.Tests
     public class DatabaseSimulationTests
     {
         [Theory]
-        [InlineData("Patch(Table, First(Filter(Table, MyStr=\"Str3\")), {MyDate: \"2022-11-14 7:22:06 pm\"})", false)]
-        [InlineData("Patch(Table, First(Filter(Table, MyStr=\"Str3\")), {MyDate: DateTimeValue(\"2022-11-14 7:22:06 pm\") })", true)]
-        public void DatabaseSimulation_Test(string expr, bool checkSuccess)
+        [InlineData("Patch(Table, First(Filter(Table, MyStr = \"Str3\")), {MyDate: \"2022-11-14 7:22:06 pm\"})", false, 0)]
+        [InlineData("Patch(Table, First(Filter(Table, MyStr = \"Str3\")), {MyDate: DateTime(2022,11,14,19,22,6) })", true, 0)]
+        [InlineData("Patch(Table, First(Filter(Table, MyStr = \"Str3\")), {MyDate: \"2022-11-14 7:22:06 pm\"})", false, 2000)]
+        [InlineData("Patch(Table, First(Filter(Table, MyStr = \"Str3\")), {MyDate: DateTime(2022,11,14,19,22,6) })", true, 2000, true)]
+        public void DatabaseSimulation_Test(string expr, bool checkSuccess, int patchDelay, bool expectTaskCancelledException = false)
         {
-            var databaseTable = DatabaseTable.CreateTestTable();
+            var databaseTable = DatabaseTable.CreateTestTable(patchDelay);
             var symbols = new SymbolTable();
 
             symbols.AddVariable("Table", DatabaseTable.TestTableType);
@@ -44,16 +47,36 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             }
 
             IExpressionEvaluator run = check.GetEvaluator();
-            FormulaValue result = run.EvalAsync(CancellationToken.None, runtimeConfig).Result;
 
-            Assert.IsType<BlankValue>(result);
+            using (var cts = new CancellationTokenSource(1500))
+            {
+                var aggregateExceptionFired = false;
+
+                try
+                {
+                    FormulaValue result = run.EvalAsync(cts.Token, runtimeConfig).Result;
+                    Assert.IsType<InMemoryRecordValue>(result);
+                }
+                catch (AggregateException agg)
+                {
+                    Assert.True(expectTaskCancelledException);
+                    Assert.IsType<TaskCanceledException>(agg.InnerException);
+                    aggregateExceptionFired = true;
+                }
+                finally
+                {
+                    Assert.True(expectTaskCancelledException == aggregateExceptionFired);
+                }
+            }
         }
 
         internal class DatabaseTable : InMemoryTableValue
         {
             internal static TableType TestTableType => DatabaseRecord.TestRecordType.ToTable();
 
-            internal static DatabaseTable CreateTestTable() =>
+            internal readonly int PatchDelay;
+
+            internal static DatabaseTable CreateTestTable(int patchDelay) =>
                 new (
                     IRContext.NotInSource(TestTableType),
                     new List<DValue<RecordValue>>()
@@ -63,11 +86,23 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                         DValue<RecordValue>.Of(DatabaseRecord.CreateTestRecord("Str3", new DateTime(2019, 6, 28, 0, 45, 15), 1.41421356237309)),
                         DValue<RecordValue>.Of(DatabaseRecord.CreateTestRecord("Str4", new DateTime(2010, 4, 24, 16, 15, 0), 1.61803398874989)),
                         DValue<RecordValue>.Of(DatabaseRecord.CreateTestRecord("Str5", new DateTime(1954, 12, 4, 21, 5, 10), 2.15443469003188))
-                    });
+                    },
+                    patchDelay);
 
-            internal DatabaseTable(IRContext irContext, IEnumerable<DValue<RecordValue>> records)
+            internal DatabaseTable(IRContext irContext, IEnumerable<DValue<RecordValue>> records, int patchDelay)
                 : base(irContext, records)
             {
+                PatchDelay = patchDelay;
+            }
+
+            protected override async Task<DValue<RecordValue>> PatchCoreAsync(RecordValue baseRecord, RecordValue changeRecord, CancellationToken cancellationToken)
+            {
+                if (PatchDelay > 0)
+                {
+                    await Task.Delay(PatchDelay, cancellationToken);
+                }
+
+                return await base.PatchCoreAsync(baseRecord, changeRecord, cancellationToken);
             }
         }
 
@@ -79,17 +114,23 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 .Add("logicStr", FormulaType.String, "MyStr")
                 .Add("logicDate", FormulaType.DateTime, "MyDate")
                 .Add("logicNum", FormulaType.Number, "MyNum")
-                .Add("logicEnt", TestEntityType, "MyEntity");
+                .Add("logicEntity", TestEntityType, "MyEntity");
 
             internal static DatabaseRecord CreateTestRecord(string myStr, DateTime myDate, double myNum) =>
                 new (
                     IRContext.NotInSource(TestRecordType),
                     new List<NamedValue>()
                     {
-                        new NamedValue("MyStr", New(myStr)),
-                        new NamedValue("MyDate", New(myDate)),
-                        new NamedValue("MyNum", New(myNum)),
-                        new NamedValue("MyEntity", new TestEntityValue(IRContext.NotInSource(TestEntityType)))
+                        new NamedValue("logicStr", New(myStr)),
+                        new NamedValue("logicDate", New(myDate)),
+                        new NamedValue("logicNum", New(myNum)),
+                        new NamedValue("logicEntity", new InMemoryRecordValue(
+                            IRContext.NotInSource(TestDelegationMetadata.EntityRecordType),
+                            new List<NamedValue>()
+                            {
+                                new NamedValue("logicStr2", New(myStr + "E")),
+                                new NamedValue("logicDate2", New(myDate.AddYears(1)))
+                            }))
                     });
 
             internal DatabaseRecord(IRContext irContext, IEnumerable<NamedValue> fields)
@@ -102,11 +143,14 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             {
             }
 
-            protected override bool TryGetField(FormulaType fieldType, string fieldName, out FormulaValue result)
+            protected override Task<(bool Result, FormulaValue Value)> TryGetFieldAsync(FormulaType fieldType, string fieldName, CancellationToken cancellationToken)
             {
-                if (Environment.StackTrace.Contains("Microsoft.PowerFx.SymbolContext.GetScopeVar"))
+                var st = Environment.StackTrace;
+
+                if (st.Contains("Microsoft.PowerFx.SymbolContext.GetScopeVar") ||
+                    st.Contains("Microsoft.PowerFx.Types.CollectionTableValue`1.Matches"))
                 {
-                    return base.TryGetField(fieldType, fieldName, out result);
+                    return base.TryGetFieldAsync(fieldType, fieldName, cancellationToken);
                 }
 
                 throw new NotImplementedException("Cannot call TryGetField");
@@ -135,7 +179,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             public override object ToObject()
             {
-                throw new NotImplementedException();
+                throw new NotImplementedException("TestEntityValue.ToObject() isn't implemented");
             }
 
             public override void Visit(IValueVisitor visitor)
@@ -148,6 +192,14 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         {
             public bool TryGetEntityMetadata(string expandInfoIdentity, out IDataEntityMetadata entityMetadata)
             {
+                var st = Environment.StackTrace;
+
+                if (st.Contains("Microsoft.PowerFx.Types.CollectionTableValue`1.Matches"))
+                {
+                    entityMetadata = new DataEntityMetadata();
+                    return true;
+                }
+
                 // Getting Metadata isn't allowed for performance reasons only
                 throw new GettingMetadataNotAllowedException();
             }
@@ -155,7 +207,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
         internal class TestDelegationMetadata : IDelegationMetadata
         {
-            public DType Schema => new TestEntityType()._type;
+            public static RecordType EntityRecordType => RecordType.Empty()
+                                                             .Add("logicStr2", FormulaType.String, "MyStr2")
+                                                             .Add("logicDate2", FormulaType.DateTime, "MyDate2");
+
+            public DType Schema => EntityRecordType._type;
 
             public DelegationCapability TableAttributes => throw new NotImplementedException();
 
@@ -327,24 +383,24 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             {
             }
         }
-        
+
         internal class GettingMetadataNotAllowedException : Exception
         {
             public GettingMetadataNotAllowedException()
             {
             }
 
-            public GettingMetadataNotAllowedException(string message) 
+            public GettingMetadataNotAllowedException(string message)
                 : base(message)
             {
             }
 
-            public GettingMetadataNotAllowedException(string message, Exception innerException) 
+            public GettingMetadataNotAllowedException(string message, Exception innerException)
                 : base(message, innerException)
             {
             }
 
-            protected GettingMetadataNotAllowedException(SerializationInfo info, StreamingContext context) 
+            protected GettingMetadataNotAllowedException(SerializationInfo info, StreamingContext context)
                 : base(info, context)
             {
             }

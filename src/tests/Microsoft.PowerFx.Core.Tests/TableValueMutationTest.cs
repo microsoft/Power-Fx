@@ -1,9 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Types;
@@ -23,14 +21,14 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal(1, t1.Count());
 
             // succeeds
-            await t1.AppendAsync(r2);
+            await t1.AppendAsync(r2, CancellationToken.None);
 
             Assert.Equal(2, t1.Count());
 
             // Immutable
             IEnumerable<RecordValue> source = new RecordValue[] { r1 };
             var t2 = FormulaValue.NewTable(r1.Type, source);
-            var result = await t2.AppendAsync(r2);
+            var result = await t2.AppendAsync(r2, CancellationToken.None);
 
             Assert.True(result.IsError);
             Assert.Equal("AppendAsync is not supported on this table instance.", result.Error.Errors[0].Message);
@@ -44,7 +42,7 @@ namespace Microsoft.PowerFx.Core.Tests
             var t1 = FormulaValue.NewTable(r1.Type, r1);
 
             // succeeds
-            await t1.AppendAsync(r2);
+            await t1.AppendAsync(r2, CancellationToken.None);
             await t1.RemoveAsync(new RecordValue[] { r1 }, false, CancellationToken.None);
 
             Assert.Equal(1, t1.Count());
@@ -67,7 +65,7 @@ namespace Microsoft.PowerFx.Core.Tests
             var t1 = FormulaValue.NewTable(r1.Type, r1);
 
             // succeeds
-            await t1.PatchAsync(r1, r2);
+            await t1.PatchAsync(r1, r2, CancellationToken.None);
 
             var firstRecord = t1.Index(1);
 
@@ -78,7 +76,7 @@ namespace Microsoft.PowerFx.Core.Tests
             // Immutable
             IEnumerable<RecordValue> source = new RecordValue[] { r1 };
             var t2 = FormulaValue.NewTable(r1.Type, source);
-            var result = await t2.PatchAsync(r1, r2);
+            var result = await t2.PatchAsync(r1, r2, CancellationToken.None);
 
             Assert.True(result.IsValue);
 
