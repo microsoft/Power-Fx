@@ -74,10 +74,10 @@ Blank()
 "1"
 
 >> Coalesce(Left("Hello", -1),"",1)
-#Error(Kind=Numeric)
+#Error(Kind=InvalidArgument)
 
 >> Coalesce(Left("Hello", -1),Blank(),1)
-#Error(Kind=Numeric)
+#Error(Kind=InvalidArgument)
 
 // ****************************** DATATYPE CONVERSION CASES ******************************
 

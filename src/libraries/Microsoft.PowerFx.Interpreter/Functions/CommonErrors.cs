@@ -28,16 +28,6 @@ namespace Microsoft.PowerFx.Functions
             });
         }
 
-        public static ErrorValue NumericOutOfRange(IRContext irContext)
-        {
-            return new ErrorValue(irContext, new ExpressionError()
-            {
-                Message = "Numeric out of range",
-                Span = irContext.SourceContext,
-                Kind = ErrorKind.Numeric
-            });
-        }
-
         public static ErrorValue InvalidCharValue(IRContext irContext)
         {
             return new ErrorValue(irContext, new ExpressionError()
