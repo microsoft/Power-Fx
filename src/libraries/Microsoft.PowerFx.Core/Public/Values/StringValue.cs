@@ -23,5 +23,10 @@ namespace Microsoft.PowerFx.Types
         {
             return new StringValue(IRContext.NotInSource(FormulaType.String), Value.ToLowerInvariant());
         }
+
+        public override string ToExpression()
+        {
+            return $"\"{Value}\"";
+        }
     }
 }

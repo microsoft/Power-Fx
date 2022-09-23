@@ -30,5 +30,10 @@ namespace Microsoft.PowerFx.Types
         {
             return _value;
         }
+
+        public override string ToExpression()
+        {
+            return Value.ToString();
+        }
     }
 }

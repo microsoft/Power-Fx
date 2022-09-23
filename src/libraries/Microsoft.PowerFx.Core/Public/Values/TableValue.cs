@@ -7,6 +7,8 @@ using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Runtime.Serialization;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
@@ -189,6 +191,29 @@ namespace Microsoft.PowerFx.Types
         public override void Visit(IValueVisitor visitor)
         {
             visitor.Visit(this);
+        }
+
+        public override string ToExpression()
+        {
+            if (Rows.Count() == 0)
+            {
+                throw new InvalidDataContractException("It's not possible to serialize an empty table.");
+            }
+
+            var sb = new StringBuilder();
+
+            sb.Append("Table(");
+
+            foreach (var row in Rows)
+            {
+                sb.Append(row.Value.ToExpression());
+                sb.Append(",");
+            }
+
+            sb.Remove(sb.Length - 1, 1);
+            sb.Append(")");
+
+            return sb.ToString();
         }
     }
 }

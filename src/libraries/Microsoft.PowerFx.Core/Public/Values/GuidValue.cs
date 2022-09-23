@@ -4,6 +4,7 @@
 using System;
 using System.Diagnostics.Contracts;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Types
 {
@@ -18,6 +19,11 @@ namespace Microsoft.PowerFx.Types
         public override void Visit(IValueVisitor visitor)
         {
             visitor.Visit(this);
+        }
+
+        public override string ToExpression()
+        {
+            return $"GUID({CharacterUtils.ToPlainText(Value.ToString("D"))})";
         }
     }
 }

@@ -6,9 +6,11 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Dynamic;
 using System.Runtime.CompilerServices;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Types
 {
@@ -213,6 +215,26 @@ namespace Microsoft.PowerFx.Types
             });
 
             return DValue<RecordValue>.Of(errorValue);
-        }        
+        }
+
+        public override string ToExpression()
+        {
+            var sb = new StringBuilder();
+
+            sb.Append("{");
+
+            foreach (var field in Fields)
+            {
+                sb.Append($"'{field.Name}'");
+                sb.Append(":");
+                sb.Append(field.Value.ToExpression());
+                sb.Append(",");
+            }
+
+            sb.Remove(sb.Length - 1, 1);
+            sb.Append("}");
+
+            return sb.ToString();
+        }
     }
 }

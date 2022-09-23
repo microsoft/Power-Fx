@@ -61,6 +61,12 @@ namespace Microsoft.PowerFx.Types
 
                 return logicalName;
             }
-        }        
+        }
+
+        public override string ToExpression()
+        {
+            // !JYL! Do we need to serialize this?
+            return Option;
+        }
     }
 }

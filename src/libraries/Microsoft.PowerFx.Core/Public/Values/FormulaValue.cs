@@ -43,5 +43,7 @@ namespace Microsoft.PowerFx.Types
         public abstract object ToObject();
 
         public abstract void Visit(IValueVisitor visitor);
+
+        public abstract string ToExpression();
     }
 }
