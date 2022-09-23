@@ -31,8 +31,9 @@ namespace Microsoft.PowerFx.Types
 
         protected override bool TryGetField(FormulaType fieldType, string fieldName, out FormulaValue result)
         {
-            (var res, result) = TryGetFieldAsync(fieldType, fieldName, CancellationToken.None).Result;
+            var (res, result2) = TryGetFieldAsync(fieldType, fieldName, CancellationToken.None).Result;
 
+            result = result2;
             return res;
         }
 
