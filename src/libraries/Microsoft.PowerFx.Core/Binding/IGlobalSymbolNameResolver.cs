@@ -9,7 +9,7 @@ namespace Microsoft.PowerFx.Core.Binding
     // Allows Name resolvers to support global symbols, used for identifying
     // variables in intellisense
     internal interface IGlobalSymbolNameResolver : INameResolver
-    {
-        IReadOnlyDictionary<string, NameLookupInfo> GlobalSymbols { get; }
+    {        
+        IEnumerable<KeyValuePair<string, NameLookupInfo>> GlobalSymbols { get; }
     }
 }
