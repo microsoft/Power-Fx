@@ -100,6 +100,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
             Contracts.AssertValue(argTypes);
+            Contracts.AssertAllValues(argTypes);
             Contracts.Assert(args.Length == argTypes.Length);
             Contracts.AssertValue(errors);
 
