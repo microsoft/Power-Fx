@@ -167,3 +167,7 @@ Blank()
 
 >> Average([1, 2, 1/0, 4, 5], Value)
 #Error(Kind=Div0)
+
+// Blank rows
+>> Average(Table({a:1},If(1<0,{a:2}),{a:3},If(1<0,{a:4}),{a:5}), Coalesce(a, 100))
+41.8

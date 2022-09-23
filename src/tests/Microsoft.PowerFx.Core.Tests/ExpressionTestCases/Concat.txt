@@ -97,3 +97,11 @@ Blank()
 
 >> Concat(["one", "two", "three"], Value, Len(Value)) // Separator cannot access record
 Errors: Error 43-48: Name isn't valid. 'Value' isn't recognized.
+
+// Blank results in the lambda
+>> Concat([2, 1, 0, -1, -2], If(Value <> 0, Text(1 / Value)), ",")
+"0.5,1,,-1,-0.5"
+
+// Errors in the lambda
+>> Concat([2, 1, 0, -1, -2], Text(1 / Value), ",")
+#Error(Kind=Div0)

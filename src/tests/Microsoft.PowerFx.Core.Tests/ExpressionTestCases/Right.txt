@@ -76,11 +76,11 @@ true
 ""
 
 >> Right(Blank(),-1)
-#Error(Kind=Numeric)
+#Error(Kind=InvalidArgument)
 
 //Error: The second argument to the Right function is invalid
 >> Right("HelloWorld", -1)
-#Error(Kind=Numeric)
+#Error(Kind=InvalidArgument)
 
 //Error: The second argument to the Right function is invalid
 >> Right("HelloWorld"," ")
