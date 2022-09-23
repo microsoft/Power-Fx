@@ -58,11 +58,11 @@ namespace Microsoft.PowerFx
                 }
             }
         }
-        
-        public IEnumerable<KeyValuePair<string, NameLookupInfo>> GlobalSymbols            
+
+        public IEnumerable<KeyValuePair<string, NameLookupInfo>> GlobalSymbols
         {
             get
-            {                              
+            {
                 var names = new HashSet<string>();
                 var map = new List<KeyValuePair<string, NameLookupInfo>>();
 
@@ -72,14 +72,13 @@ namespace Microsoft.PowerFx
                     {
                         foreach (var symbol in globalSymbolNameResolver.GlobalSymbols)
                         {
-                            if (!names.Contains(symbol.Key))
+                            if (names.Add(symbol.Key))
                             {
-                                names.Add(symbol.Key);
                                 yield return symbol;
                             }
                         }
                     }
-                }               
+                }
             }
         }
 
