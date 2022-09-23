@@ -29,16 +29,16 @@
 []
 
 >> ForAll(Sort([60, 61, 0, 63, 64], 1/Value), Char(Value))
-#Error
+#Error(Kind=Div0)
 
 >> ForAll(Table({Value:1,Zulu:1}, {Value:0,Zulu:0}, {Value:2,Zulu:2}), 1/ThisRecord.Value)
-[1,Microsoft.PowerFx.Types.ErrorValue,0.5]
+#Error(Kind=Div0)
 
 >> First(LastN(ForAll(Table({Value:1,Zulu:1}, {Value:0,Zulu:0}, {Value:2,Zulu:2}), 1/ThisRecord.Value), 2)).Value
-#Error
+#Error(Kind=Div0)
 
 >> Table({Value:1},First(LastN(ForAll(Table({Value:1,Zulu:1}, {Value:0,Zulu:0}, {Value:2,Zulu:2}), 1/ThisRecord.Value), 2)),{Value:2})
-[1,Microsoft.PowerFx.Types.ErrorValue,2]
+Table({Value:1},Microsoft.PowerFx.Types.ErrorValue,{Value:2})
 
 >> First(First(LastN(ForAll(Table({Value:1}, {Value:0}, {Value:2}), Table({a: 1/ThisRecord.Value})), 2)).Value)
 {a:Microsoft.PowerFx.Types.ErrorValue}
@@ -66,3 +66,7 @@ Table({b:1},{b:-13},{b:3},{b:-24},{b:5})
 
 >> ForAll([1, Error({Kind:ErrorKind.Validation}), 3, Error({Kind: 7}), 5],{b:IfError(Value,-FirstError.Kind)})
 Table({b:1},{b:-11},{b:3},{b:-7},{b:5})
+
+// Blank rows
+>> ForAll(Table({a:1},If(1<0,{a:2}),{a:3},If(1<0,{a:4}),{a:5}), {b:Coalesce(a, 100)})
+Table({b:1},{b:100},{b:3},{b:100},{b:5})
