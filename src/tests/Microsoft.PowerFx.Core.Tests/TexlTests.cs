@@ -95,7 +95,6 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        
         [InlineData("DateAdd([Date(2000,1,1)],1)", "*[Value:d]")]
         [InlineData("DateAdd([Date(2000,1,1)],[3])", "*[Value:d]")]
         [InlineData("DateAdd(Date(2000,1,1),[1])", "*[Result:d]")]
@@ -180,6 +179,14 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Fact]
+        public void TexlFunctionTypeSemanticsChar_ConsistentOneColumnTableResult()
+        {
+            var symbol = new SymbolTable();
+            symbol.AddVariable("T", new TableType(TestUtils.DT("*[Value:n]")));
+            TestSimpleBindingSuccess("Char(T)", TestUtils.DT("*[Value:s]"), symbol, Features.ConsistentOneColumnTableResult);
+        }
+
+        [Fact]
         public void TexlFunctionTypeSemanticsConcatenate()
         {
             var symbol = new SymbolTable();
@@ -206,6 +213,28 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Concatenate(Table!B, \" ending\", Table!D)",
                 TestUtils.DT("*[Result:s]"),
                 symbol);
+        }
+
+        [Fact]
+        public void TexlFunctionTypeSemanticsConcatenate_ConsistentOneColumnTableResult()
+        {
+            var symbol = new SymbolTable();
+            symbol.AddVariable("myString", FormulaType.String);
+
+            symbol.AddVariable("Table", new TableType(TestUtils.DT("*[A:n, B:s, C:b, D:*[X:n]]")));
+            TestSimpleBindingSuccess(
+                "Concatenate(Table!B, \" ending\")",
+                TestUtils.DT("*[Value:s]"),
+                symbol,
+                Features.ConsistentOneColumnTableResult);
+
+            symbol.RemoveVariable("Table");
+            symbol.AddVariable("Table", new TableType(TestUtils.DT("*[A:n, B:s, C:b, D:s]")));
+            TestSimpleBindingSuccess(
+                "Concatenate(Table!B, \" ending\", Table!D)",
+                TestUtils.DT("*[Value:s]"),
+                symbol,
+                Features.ConsistentOneColumnTableResult);
         }
 
         [Fact]
@@ -573,6 +602,18 @@ namespace Microsoft.PowerFx.Core.Tests
                 symbol);
         }
 
+        [Fact]
+        public void TexlFunctionTypeSemanticsLen_ConsistentOneColumnTableResult()
+        {
+            var symbol = new SymbolTable();
+            symbol.AddVariable("T", new TableType(TestUtils.DT("*[Name:s]")));
+            TestSimpleBindingSuccess(
+                "Len(T)",
+                TestUtils.DT("*[Value:n]"),
+                symbol,
+                Features.ConsistentOneColumnTableResult);
+        }
+
         [Theory]
         [InlineData("LookUp(T, A = 3, B)", "s", "*[A:n, B:s]")]
         [InlineData("LookUp(T, (A + 2) / C = 3, B & D)", "s", "*[A:n, B:s, C:n, D:s]")]
@@ -639,6 +680,20 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Mid(\"hello\", T2, T3)",
                 TestUtils.DT("*[Result:s]"),
                 symbol);
+        }
+
+        [Fact]
+        public void TexlFunctionTypeSemanticsMid_ConsistentOneColumnTableResult()
+        {
+            var symbol = new SymbolTable();
+            symbol.AddVariable("T2", new TableType(TestUtils.DT("*[Start:n]")));
+            symbol.AddVariable("T3", new TableType(TestUtils.DT("*[Count:n]")));
+
+            TestSimpleBindingSuccess(
+                "Mid(\"hello\", T2, T3)",
+                TestUtils.DT("*[Value:s]"),
+                symbol,
+                Features.ConsistentOneColumnTableResult);
         }
 
         [Theory]
@@ -766,6 +821,24 @@ namespace Microsoft.PowerFx.Core.Tests
                 symbol);
         }
 
+        [Theory]
+        [InlineData("Replace(T, 2, 3, \"X\")", "*[Name:s]")]
+        [InlineData("Replace(\"hello\", T2, T3, TX)", "*[Value:s]")]
+        public void TexlFunctionTypeSemanticsReplace_ConsistentOneColumnTableResult(string script, string expectedType)
+        {
+            var symbol = new SymbolTable();
+            symbol.AddVariable("T", new TableType(TestUtils.DT("*[Name:s]")));
+            symbol.AddVariable("T2", new TableType(TestUtils.DT("*[Start:n]")));
+            symbol.AddVariable("T3", new TableType(TestUtils.DT("*[Count:n]")));
+            symbol.AddVariable("TX", new TableType(TestUtils.DT("*[Replacement:s]")));
+
+            TestSimpleBindingSuccess(
+                script,
+                TestUtils.DT(expectedType),
+                symbol,
+                Features.ConsistentOneColumnTableResult);
+        }
+
         [Fact]
         public void TexlFunctionTypeSemanticsInt()
         {
@@ -823,6 +896,18 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Fact]
+        public void TexlFunctionTypeSemanticsTruncOneParam_ConsistentOneColumnTableResult()
+        {
+            var symbol = new SymbolTable();
+            symbol.AddVariable("T", new TableType(TestUtils.DT("*[A:n]")));
+            TestSimpleBindingSuccess(
+                "Trunc(T)",
+                TestUtils.DT("*[A:n]"),
+                symbol,
+                Features.ConsistentOneColumnTableResult);
+        }
+
+        [Fact]
         public void TexlFunctionTypeSemanticsTruncTwoParams()
         {
             var symbol = new SymbolTable();
@@ -874,6 +959,32 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Round(X, 4)",
                 TestUtils.DT("*[Nnnuuummm:n]"),
                 symbol);
+        }
+
+        [Theory]
+        [InlineData("Round(1234.567, T)", "*[Value:n]")]
+        [InlineData("Round(4, X)", "*[Value:n]")]
+        [InlineData("Round(X, 4)", "*[Nnnuuummm:n]")]
+        public void TexlFunctionTypeSemanticsRound_ConsistentOneColumnTableResult(string expression, string expectedType)
+        {
+            var symbol = new SymbolTable();
+            symbol.AddVariable("T", new TableType(TestUtils.DT("*[digits:n]")));
+            symbol.AddVariable("X", new TableType(TestUtils.DT("*[Nnnuuummm:n]")));
+
+            TestSimpleBindingSuccess(
+                expression,
+                TestUtils.DT(expectedType),
+                symbol,
+                Features.ConsistentOneColumnTableResult);
+
+            var config = new PowerFxConfig(Features.ConsistentOneColumnTableResult)
+            {
+                SymbolTable = symbol,
+            };
+            var engine = new Engine(config);
+            var result = engine.Check(expression);
+            Assert.Equal(TestUtils.DT(expectedType), result._binding.ResultType);
+            Assert.True(result.IsSuccess);
         }
 
         [Fact]
@@ -1474,6 +1585,31 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
+        [InlineData("Find(T, \"ll\")", "*[Value:n]")]
+        [InlineData("Find(T, \"ll\", 2)", "*[Value:n]")]
+        [InlineData("Find(T, \"ll\", T1)", "*[Value:n]")]
+        [InlineData("Find(T, T2)", "*[Value:n]")]
+        [InlineData("Find(T, T2, 2)", "*[Value:n]")]
+        [InlineData("Find(T, T2, T1)", "*[Value:n]")]
+        [InlineData("Find(\"ll\", T2)", "*[Value:n]")]
+        [InlineData("Find(\"ll\", T2, 2)", "*[Value:n]")]
+        [InlineData("Find(\"ll\", T2, T1)", "*[Value:n]")]
+        [InlineData("Find(\"ll\", \"ll\", T1)", "*[Value:n]")]
+        public void TexlFunctionTypeSemanticsFind_ConsistentOneColumnTableResult(string script, string expectedType)
+        {
+            var symbol = new SymbolTable();
+            symbol.AddVariable("T", new TableType(TestUtils.DT("*[FindText:s]")));
+            symbol.AddVariable("T1", new TableType(TestUtils.DT("*[StartIndex:n]")));
+            symbol.AddVariable("T2", new TableType(TestUtils.DT("*[WithinText:s]")));
+
+            TestSimpleBindingSuccess(
+                script,
+                TestUtils.DT(expectedType),
+                symbol,
+                Features.ConsistentOneColumnTableResult);
+        }
+
+        [Theory]
         [InlineData("a", "a")]
         [InlineData("'test'", "'''test'''")]
         [InlineData("te st", "'te st'")]
@@ -1596,6 +1732,24 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
+        [InlineData("Mod(-2, -2)", "n")]
+        [InlineData("Mod(T, 2)", "*[Value:n]")]
+        [InlineData("Mod(T, T2)", "*[Value:n]")]
+        [InlineData("Mod(3, T2)", "*[Value:n]")]
+        public void TexlFunctionTypeSemanticsModOverloads_ConsistentOneColumnTableResult(string script, string expectedType)
+        {
+            var symbol = new SymbolTable();
+            symbol.AddVariable("T", new TableType(TestUtils.DT("*[Number:n]")));
+            symbol.AddVariable("T2", new TableType(TestUtils.DT("*[Dividend:n]")));
+
+            TestSimpleBindingSuccess(
+                script,
+                TestUtils.DT(expectedType),
+                symbol,
+                Features.ConsistentOneColumnTableResult);
+        }
+
+        [Theory]
         [InlineData("Mod(\"3\", 2)", "n", null, null)]
         [InlineData("Mod(\"3\", true)", "n", null, null)]
         [InlineData("Mod(\"5\", T)", "*[Result:n]", "*[Booleans:b]", null)]
@@ -1624,6 +1778,36 @@ namespace Microsoft.PowerFx.Core.Tests
             else
             {
                 TestSimpleBindingSuccess(script, TestUtils.DT(expectedType));
+            }
+        }
+
+        [Theory]
+        [InlineData("Mod(\"5\", T)", "*[Value:n]", "*[Booleans:b]", null)]
+        [InlineData("Mod(T1, T2)", "*[Value:n]", "*[Booleans:b]", "*[Strings:s]")]
+        [InlineData("Mod(T, false)", "*[Value:n]", "*[Strings:s]", null)]
+        [InlineData("Mod([true, false, true], \"2\")", "*[Value:n]", null, null)]
+        [InlineData("Mod(12.5656242, [\"5\", \"6\"])", "*[Value:n]", null, null)]
+        public void TexlFunctionTypeSemanticsModOverloadsWithCoercion_ConsistentOneColumnTableResult(string script, string expectedType, string typedGlobal1, string typedGlobal2)
+        {
+            if (typedGlobal1 != null)
+            {
+                if (typedGlobal2 != null)
+                {
+                    var symbol = new SymbolTable();
+                    symbol.AddVariable("T1", new TableType(TestUtils.DT(typedGlobal1)));
+                    symbol.AddVariable("T2", new TableType(TestUtils.DT(typedGlobal2)));
+                    TestSimpleBindingSuccess(script, TestUtils.DT(expectedType), symbol, Features.ConsistentOneColumnTableResult);
+                }
+                else
+                {
+                    var symbol = new SymbolTable();
+                    symbol.AddVariable("T", new TableType(TestUtils.DT(typedGlobal1)));
+                    TestSimpleBindingSuccess(script, TestUtils.DT(expectedType), symbol, Features.ConsistentOneColumnTableResult);
+                }
+            }
+            else
+            {
+                TestSimpleBindingSuccess(script, TestUtils.DT(expectedType), features: Features.ConsistentOneColumnTableResult);
             }
         }
 
@@ -2158,9 +2342,9 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.False(result.IsSuccess);
         }
 
-        internal static void TestSimpleBindingSuccess(string script, DType expectedType, SymbolTable symbolTable = null)
+        private static void TestSimpleBindingSuccess(string script, DType expectedType, SymbolTable symbolTable = null, Features features = Features.None)
         {
-            var config = new PowerFxConfig
+            var config = new PowerFxConfig(features)
             {
                 SymbolTable = symbolTable
             };
