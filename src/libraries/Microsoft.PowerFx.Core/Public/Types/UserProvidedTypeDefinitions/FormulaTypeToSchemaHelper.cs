@@ -15,54 +15,14 @@ namespace Microsoft.PowerFx.Core
     {
         public static FormulaTypeSchema ToSchema(this FormulaType type, DefinedTypeSymbolTable definedTypeSymbols)
         {
+            // Converting a formulaType to a FormulaTypeSchema requires cutting off at a max depth
+            // FormulaType may contain recurisve definitions that are not supported by FormulaTypeSchema
+            // As such, capping the depth ensures that we don't stack overflow when converting those types. 
             return ToSchema(type, definedTypeSymbols, maxDepth: 5);
         }
-                
-        public static FormulaType ToFormulaType(this FormulaTypeSchema schema, DefinedTypeSymbolTable definedTypeSymbols)
-        {
-            var typeName = schema.Type.Name;
-
-            if (TryLookupType(typeName, definedTypeSymbols, out var actualType))
-            {
-                if (schema.Type.IsTable)
-                {
-                    return actualType switch
-                    {
-                        RecordType recordType => recordType.ToTable(),
-
-                        // Add support for table of primitives here in the future
-                        _ => FormulaType.BindingError,
-                    };
-                }
-                
-                return actualType;
-            }
-
-            if (typeName != RecordTypeName.Name)
-            {
-                return FormulaType.BindingError;
-            }
-
-            if (schema.Fields == null || !schema.Fields.Any())
-            {
-                return FormulaType.BindingError;
-            }
-
-            var result = new UserDefinedRecordType(schema, definedTypeSymbols);
-            return schema.Type.IsTable ? result.ToTable() : result;
-        }
-
-        private static SchemaTypeName RecordTypeName => new () { Name = "Record", IsTable = false };
-
-        private static SchemaTypeName TableTypeName => new () { Name = "Record", IsTable = true };
 
         private static FormulaTypeSchema ToSchema(FormulaType type, DefinedTypeSymbolTable definedTypeSymbols, int maxDepth)
         {
-            if (maxDepth < 0)
-            {
-                throw new InvalidOperationException("Max depth exceeded when converting type to schema definition");
-            }
-
             if (TryLookupTypeName(type, definedTypeSymbols, out var typeName))
             {
                 return new FormulaTypeSchema()
@@ -84,6 +44,15 @@ namespace Microsoft.PowerFx.Core
             {
                 throw new InvalidOperationException($"Conversion to schema definition not supported for type {type}");
             }
+            
+            if (maxDepth < 0)
+            {
+                // Capped depth, return None for aggregate types
+                return new FormulaTypeSchema()
+                {
+                    Type = new SchemaTypeName() { Name = "None" }
+                };
+            }
 
             var children = GetChildren(aggregateType, definedTypeSymbols, maxDepth - 1);
 
@@ -91,37 +60,16 @@ namespace Microsoft.PowerFx.Core
             {
                 return new FormulaTypeSchema()
                 {
-                    Type = RecordTypeName,
+                    Type = SchemaTypeName.RecordTypeName,
                     Fields = children
                 };
             }                
                 
             return new FormulaTypeSchema()
             {
-                Type = TableTypeName,
+                Type = SchemaTypeName.TableTypeName,
                 Fields = children
             };
-        }
-
-        private static bool TryLookupType(string typeName, DefinedTypeSymbolTable definedTypeSymbols, out FormulaType type)
-        {
-            var lookupOrder = new List<TypeSymbolTable>() { definedTypeSymbols, PrimitiveTypesSymbolTable.Instance };
-            foreach (var table in lookupOrder)
-            {
-                if (table.TryLookup(new DName(typeName), out var lookupInfo))
-                {
-                    if (lookupInfo.Kind != BindKind.TypeName || lookupInfo.Data is not FormulaType castType)
-                    {
-                        throw new InvalidOperationException("Resolved non-type name when constructing FormulaType definition");
-                    }
-
-                    type = castType;
-                    return true;
-                }
-            }
-
-            type = null;
-            return false;
         }
 
         private static bool TryLookupTypeName(FormulaType type, DefinedTypeSymbolTable definedTypeSymbols, out string typeName)

@@ -6,7 +6,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
+using Microsoft.PowerFx.Core.Binding;
+using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core
 {
@@ -30,6 +33,61 @@ namespace Microsoft.PowerFx.Core
         /// </summary>
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public Dictionary<string, FormulaTypeSchema> Fields { get; set; }
+
+        public FormulaType ToFormulaType(DefinedTypeSymbolTable definedTypeSymbols)
+        {
+            var typeName = Type.Name;
+
+            if (TryLookupType(typeName, definedTypeSymbols, out var actualType))
+            {
+                if (Type.IsTable)
+                {
+                    return actualType switch
+                    {
+                        RecordType recordType => recordType.ToTable(),
+
+                        // Add support for table of primitives here in the future
+                        _ => FormulaType.BindingError,
+                    };
+                }
+                
+                return actualType;
+            }
+
+            if (typeName != SchemaTypeName.RecordTypeName.Name)
+            {
+                return FormulaType.BindingError;
+            }
+
+            if (Fields == null || !Fields.Any())
+            {
+                return FormulaType.BindingError;
+            }
+
+            var result = new UserDefinedRecordType(this, definedTypeSymbols);
+            return Type.IsTable ? result.ToTable() : result;
+        }
+
+        private static bool TryLookupType(string typeName, DefinedTypeSymbolTable definedTypeSymbols, out FormulaType type)
+        {
+            var lookupOrder = new List<TypeSymbolTable>() { definedTypeSymbols, PrimitiveTypesSymbolTable.Instance };
+            foreach (var table in lookupOrder)
+            {
+                if (table.TryLookup(new DName(typeName), out var lookupInfo))
+                {
+                    if (lookupInfo.Kind != BindKind.TypeName || lookupInfo.Data is not FormulaType castType)
+                    {
+                        throw new InvalidOperationException("Resolved non-type name when constructing FormulaType definition");
+                    }
+
+                    type = castType;
+                    return true;
+                }
+            }
+
+            type = null;
+            return false;
+        }
 
         public override bool Equals(object o)
         {
@@ -59,5 +117,9 @@ namespace Microsoft.PowerFx.Core
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public bool IsTable { get; init; }
+
+        public static SchemaTypeName RecordTypeName => new () { Name = "Record", IsTable = false };
+
+        public static SchemaTypeName TableTypeName => new () { Name = "Record", IsTable = true };
     }
 }

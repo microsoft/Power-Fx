@@ -14,7 +14,7 @@ namespace Microsoft.PowerFx.Core
     /// Aggregate Type Definition derived from a .fx.yaml file
     /// This may recursively refer to itself or other types, and so we resolve
     /// the field types lazily using the DefinedTypeSymbolTable 
-    /// passed to <see cref="FormulaTypeToSchemaHelper.ToFormulaType(FormulaTypeSchema, DefinedTypeSymbolTable)"/>.
+    /// passed to <see cref="FormulaTypeSchema.ToFormulaType(DefinedTypeSymbolTable)"/>.
     /// </summary>
     internal class UserDefinedRecordType : RecordType
     {

@@ -106,6 +106,20 @@ namespace Microsoft.PowerFx.Tests
         }
 
         [Fact]
+        public void TypeSnapshotRecursive()
+        {
+            CheckTypeSnapshot(new BindingEngineTests.LazyRecursiveRecordType(), "Recursive", new JsonSerializerOptions()
+            {
+                WriteIndented = true,
+                Converters =
+                {
+                    // Serialize types without accounting for any defined type names
+                    new FormulaTypeJsonConverter(new DefinedTypeSymbolTable())
+                }
+            });
+        }
+
+        [Fact]
         public void TestRegenerateSignatureHelpIsOff() => Assert.False(RegenerateSnapshots);
     }
 }
