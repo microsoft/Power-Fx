@@ -195,7 +195,12 @@ namespace Microsoft.PowerFx.Types
         {
             var list = new List<NamedValue>() { new NamedValue(name, value) };
 
-            return UpdateFieldsAsync(FormulaValue.NewRecordFromFields(list), CancellationToken.None).ConfigureAwait(false).GetAwaiter().GetResult();
+            return UpdateFields(FormulaValue.NewRecordFromFields(list));
+        }
+
+        public DValue<RecordValue> UpdateFields(RecordValue changeRecord)
+        {
+            return UpdateFieldsAsync(changeRecord, CancellationToken.None).ConfigureAwait(false).GetAwaiter().GetResult();
         }
 
         public virtual async Task<DValue<RecordValue>> UpdateFieldsAsync(RecordValue changeRecord, CancellationToken cancellationToken)
