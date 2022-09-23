@@ -5,7 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Dynamic;
+using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Utils;
@@ -175,13 +177,6 @@ namespace Microsoft.PowerFx.Types
             });
 
             return DValue<RecordValue>.Of(errorValue);
-        }
-
-        public Task<DValue<RecordValue>> UpdateField(string name, FormulaValue value)
-        {
-            var list = new List<NamedValue>() { new NamedValue(name, value) };
-
-            return UpdateFieldsAsync(FormulaValue.NewRecordFromFields(list));
         }
 
         public override string ToExpression()
