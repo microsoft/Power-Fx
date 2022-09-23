@@ -19,9 +19,7 @@ namespace Microsoft.PowerFx
     /// </summary>
     public interface IExpressionEvaluator
     {
-        public Task<FormulaValue> EvalAsync(
-                    CancellationToken cancel,
-                    ReadOnlySymbolValues runtimeConfig = null);
+        public Task<FormulaValue> EvalAsync(CancellationToken cancellationToken, ReadOnlySymbolValues runtimeConfig = null);
     }
 
     // Extensions for adding evaluation methods. 
@@ -39,10 +37,10 @@ namespace Microsoft.PowerFx
             return expr.EvalAsync(CancellationToken.None, parameters).Result;
         }
 
-        public static async Task<FormulaValue> EvalAsync(this IExpressionEvaluator expr, CancellationToken cancel, RecordValue parameters)
+        public static async Task<FormulaValue> EvalAsync(this IExpressionEvaluator expr, CancellationToken cancellationToken, RecordValue parameters)
         {
             var runtimeConfig = SymbolValues.NewFromRecord(parameters);
-            return await expr.EvalAsync(cancel, runtimeConfig);
+            return await expr.EvalAsync(cancellationToken, runtimeConfig);
         }
 
         /// <summary>
@@ -85,7 +83,7 @@ namespace Microsoft.PowerFx
             _cultureInfo = cultureInfo ?? CultureInfo.CurrentCulture;
         }
 
-        public async Task<FormulaValue> EvalAsync(RecordValue parameters, CancellationToken cancel)
+        public async Task<FormulaValue> EvalAsync(RecordValue parameters, CancellationToken cancellationToken)
         {
             var useRowScope = _topScopeSymbol.AccessedFields.Count > 0;
             ReadOnlySymbolValues runtimeConfig = null;
@@ -98,10 +96,10 @@ namespace Microsoft.PowerFx
                 parameters = RecordValue.Empty();
             }
 
-            var ev2 = new EvalVisitor(_cultureInfo, cancel, runtimeConfig);
+            var evalVisitor = new EvalVisitor(_cultureInfo, cancellationToken, runtimeConfig);
             try
             {
-                var newValue = await _irnode.Accept(ev2, new EvalVisitorContext(SymbolContext.NewTopScope(_topScopeSymbol, parameters), _stackMarker));
+                var newValue = await _irnode.Accept(evalVisitor, new EvalVisitorContext(SymbolContext.NewTopScope(_topScopeSymbol, parameters), _stackMarker));
                 return newValue;
             }
             catch (MaxCallDepthException maxCallDepthException)
@@ -110,14 +108,14 @@ namespace Microsoft.PowerFx
             }
         }
 
-        public async Task<FormulaValue> EvalAsync(CancellationToken cancel, ReadOnlySymbolValues runtimeConfig = null)
+        public async Task<FormulaValue> EvalAsync(CancellationToken cancellationToken, ReadOnlySymbolValues runtimeConfig = null)
         {
             var culture = runtimeConfig?.GetService<CultureInfo>() ?? _cultureInfo;
-            var ev2 = new EvalVisitor(culture, cancel, runtimeConfig);
+            var evalVisitor = new EvalVisitor(culture, cancellationToken, runtimeConfig);
 
             try
             {
-                var newValue = await _irnode.Accept(ev2, new EvalVisitorContext(SymbolContext.New(), _stackMarker));
+                var newValue = await _irnode.Accept(evalVisitor, new EvalVisitorContext(SymbolContext.New(), _stackMarker));
                 return newValue;
             }
             catch (MaxCallDepthException maxCallDepthException)

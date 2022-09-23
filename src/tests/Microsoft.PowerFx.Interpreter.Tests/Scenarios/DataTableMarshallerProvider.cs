@@ -1,14 +1,11 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.PowerFx.Interpreter.Tests;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Tests
@@ -42,7 +39,7 @@ namespace Microsoft.PowerFx.Tests
         public DataTableValue(DataTable dataTable)
             : base(ComputeType(dataTable), new DataTableWrapper(dataTable))
         {
-            _table = dataTable; 
+            _table = dataTable;
         }
 
         public static RecordType ComputeType(DataTable dataTable)
@@ -64,20 +61,20 @@ namespace Microsoft.PowerFx.Tests
         protected override DValue<RecordValue> Marshal(DataRow item)
         {
             // We could check item.RowError and return an error for the whole row. 
-            
+
             // Return value
             var record = new DataRowRecordValue(RecordType, item);
             return DValue<RecordValue>.Of(record);
         }
 
-        public override async Task<DValue<RecordValue>> AppendAsync(RecordValue record)
+        public override async Task<DValue<RecordValue>> AppendAsync(RecordValue record, CancellationToken cancellationToken)
         {
             var recordValues = new object[_table.Columns.Count];
             var index = 0;
 
             foreach (DataColumn column in _table.Columns)
             {
-                var formulaValue = record.GetField(column.ColumnName);
+                var formulaValue = await record.GetFieldAsync(column.ColumnName, cancellationToken);
 
                 if (formulaValue is not BlankValue)
                 {
@@ -136,7 +133,7 @@ namespace Microsoft.PowerFx.Tests
                 if (fieldType == FormulaType.UntypedObject)
                 {
                     result = PrimitiveWrapperAsUnknownObject.New(value);
-                } 
+                }
                 else
                 {
                     result = PrimitiveValueConversions.Marshal(value, fieldType);
@@ -145,14 +142,14 @@ namespace Microsoft.PowerFx.Tests
                 return true;
             }
 
-            public override async Task<DValue<RecordValue>> UpdateFieldsAsync(RecordValue changeRecord)
+            public override async Task<DValue<RecordValue>> UpdateFieldsAsync(RecordValue changeRecord, CancellationToken cancellationToken)
             {
                 var itemArray = new object[_row.Table.Columns.Count];
                 var index = 0;
 
                 foreach (DataColumn column in _row.Table.Columns)
                 {
-                    var formulaValue = changeRecord.GetField(column.ColumnName);
+                    var formulaValue = await changeRecord.GetFieldAsync(column.ColumnName, cancellationToken);
 
                     if (formulaValue is not BlankValue)
                     {

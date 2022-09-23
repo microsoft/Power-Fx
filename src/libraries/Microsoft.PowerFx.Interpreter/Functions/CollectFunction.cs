@@ -1,22 +1,18 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.Functions.FunctionArgValidators;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
-using static Microsoft.PowerFx.Core.Localization.TexlStrings;
 
 namespace Microsoft.PowerFx.Interpreter
 {
@@ -221,7 +217,7 @@ namespace Microsoft.PowerFx.Interpreter
             return Arg0RequiresAsync(callNode, binding);
         }
 
-        public async Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancel)
+        public async Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancellationToken)
         {
             var arg0 = (TableValue)args[0];
             var arg1 = args[1];
@@ -237,7 +233,8 @@ namespace Microsoft.PowerFx.Interpreter
 
             var record = (RecordValue)arg1;
 
-            var result = await arg0.AppendAsync(record);
+            cancellationToken.ThrowIfCancellationRequested();
+            var result = await arg0.AppendAsync(record, cancellationToken);
 
             return result.ToFormulaValue();
         }

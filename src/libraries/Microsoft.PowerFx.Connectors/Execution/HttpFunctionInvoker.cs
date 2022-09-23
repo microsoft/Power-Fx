@@ -181,7 +181,7 @@ namespace Microsoft.PowerFx.Connectors
                     returnType);
         }
 
-        public async Task<FormulaValue> InvokeAsync(string cacheScope, CancellationToken cancel, FormulaValue[] args)
+        public async Task<FormulaValue> InvokeAsync(string cacheScope, FormulaValue[] args, CancellationToken cancellationToken)
         {
             FormulaValue result;
             using var request = BuildRequest(args);
@@ -196,7 +196,7 @@ namespace Microsoft.PowerFx.Connectors
 
             var result2 = await _cache.TryGetAsync(cacheScope, key, async () =>
             {
-                var response = await _httpClient.SendAsync(request, cancel);
+                var response = await _httpClient.SendAsync(request, cancellationToken);
                 result = await DecodeResponseAsync(response, _returnType);
                 return result;
             });
@@ -224,9 +224,9 @@ namespace Microsoft.PowerFx.Connectors
 
         public string Name { get; }
 
-        public Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancel)
+        public Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancellationToken)
         {
-            return _invoker.InvokeAsync(_cacheScope, cancel, args);
+            return _invoker.InvokeAsync(_cacheScope, args, cancellationToken);
         }
     }
 }
