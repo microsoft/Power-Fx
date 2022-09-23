@@ -1,13 +1,10 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Tests;
-using Microsoft.PowerFx.Tests;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
@@ -135,7 +132,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 }
 
                 return true;
-            }
+            }            
         }
 
         /// <summary>

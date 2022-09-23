@@ -114,9 +114,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 public Adapter(ITypeMarshaller inner)
                 {
                     _inner = inner;
-                }                   
+                }
 
-                public FormulaType Type => _inner.Type;                
+                public FormulaType Type => _inner.Type;
 
                 public FormulaValue Marshal(object value)
                 {
@@ -198,7 +198,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 (FormulaType fieldType, ObjectMarshaller.FieldValueMarshaller fieldValueMarshaller) TypeAndMarshallerGetter()
                 {
                     var marshaller = cache.GetMarshaller(kv.Value.GetType());
-                    var expectedType = type.GetFieldType(fieldName);                        
+                    var expectedType = type.GetFieldType(fieldName);
 
                     Assert.True(expectedType._type.Accepts(marshaller.Type._type, exact: true));
 
@@ -216,7 +216,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 fieldGetters.Add(fieldName, TypeAndMarshallerGetter);
             }
 
-            var om = new ObjectMarshaller(fieldGetters, typeof(Dictionary<string, object>));            
+            var om = new ObjectMarshaller(fieldGetters, typeof(Dictionary<string, object>));
             var value = (RecordValue)om.Marshal(values);
             return value;
         }
