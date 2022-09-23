@@ -4163,7 +4163,6 @@ namespace Microsoft.PowerFx.Core.Binding
                 {
                     Contracts.Assert(overloadsWithUntypedObjectLambdas.Count() == 1, "Incorrect multiple overloads with both UntypedObject and lambdas.");
                     overloadWithUntypedObjectLambda = overloadsWithUntypedObjectLambdas.Single();
-                    Contracts.Assert(overloadWithUntypedObjectLambda.HasLambdas);
 
                     // As an extraordinarily special case, we ignore untype object lambdas for now, and type check as normal
                     // using the function without untyped object params. This only works if both functions have exactly

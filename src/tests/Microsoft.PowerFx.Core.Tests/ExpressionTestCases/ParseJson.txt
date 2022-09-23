@@ -138,6 +138,9 @@ Blank()
 >> ForAll(ParseJSON("[1,2,3]"), If(Value(ThisItem) < 2, Value(ThisItem), ThisItem))
 Errors: Error 70-78: Invalid argument type (UntypedObject). Expecting a Number value instead.|Error 29-79: The function 'If' has some invalid arguments.
 
+>> ForAll(ParseJSON("[1,2,3]"), ThisRecord)
+Errors: Error 29-39: Name isn't valid. 'ThisRecord' isn't recognized.|Error 0-40: The function 'ForAll' has some invalid arguments.
+
 >> ParseJSON("5") + ParseJSON("5")
 Errors: Error 0-14: Invalid argument type. Expecting one of the following: Number, Text, Boolean.|Error 17-31: Invalid argument type. Expecting one of the following: Number, Text, Boolean.
 
