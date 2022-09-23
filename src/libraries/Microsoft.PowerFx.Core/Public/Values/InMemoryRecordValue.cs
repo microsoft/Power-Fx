@@ -56,7 +56,7 @@ namespace Microsoft.PowerFx.Types
             cancellationToken.ThrowIfCancellationRequested();
 
             if (_mutableFields == null)
-            {                
+            {
                 return await base.UpdateFieldsAsync(changeRecord, cancellationToken);
             }
 
@@ -73,6 +73,6 @@ namespace Microsoft.PowerFx.Types
             }
 
             return DValue<RecordValue>.Of(NewRecordFromFields(fields));
-        }        
+        }
     }
 }

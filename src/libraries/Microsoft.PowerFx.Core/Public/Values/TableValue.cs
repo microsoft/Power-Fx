@@ -100,7 +100,7 @@ namespace Microsoft.PowerFx.Types
         // - with updated values
         // Async because derived classes may back this with a network call. 
         public virtual async Task<DValue<RecordValue>> AppendAsync(RecordValue record, CancellationToken cancellationToken)
-        {            
+        {
             return DValue<RecordValue>.Of(NotImplemented(IRContext));
         }
 

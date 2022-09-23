@@ -48,6 +48,6 @@ namespace Microsoft.PowerFx.Types
             // Unwrap as inner object. Especially important when host is passing
             // in a custom object that it needs to retrieve.
             return _inner.ToObject();
-        }        
+        }
     }
 }
