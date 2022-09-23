@@ -43,5 +43,11 @@ namespace Microsoft.PowerFx.Types
         {
             return _tree.Accept(visitor, context);
         }
+
+        public override string ToExpression()
+        {
+            // !JYL! Do we need to serialize this?
+            throw new NotImplementedException("LambdaFormulaValue cannot be serialized.");
+        }
     }
 }

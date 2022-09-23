@@ -142,6 +142,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             {
                 throw new NotImplementedException("TestEntityValue.Visit");
             }
+
+            public override string ToExpression()
+            {
+                // !JYL! Do we need to serialize this?
+                throw new System.NotImplementedException("TestEntityValue cannot be serialized.");
+            }
         }
 
         internal class ExternalDataEntityMetadataProvider : IExternalDataEntityMetadataProvider

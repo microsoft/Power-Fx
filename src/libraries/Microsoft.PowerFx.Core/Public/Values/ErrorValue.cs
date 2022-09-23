@@ -68,5 +68,16 @@ namespace Microsoft.PowerFx.Types
                 }
             }
         }
+
+        public override string ToExpression()
+        {
+            // !JYL!
+            /* Few questions on this:
+             * Should this be serialized?
+             * If yes, what should be the serialized value?
+             * If not, is there a better exception option?
+             */
+            throw new System.NotImplementedException("ErrorValue cannot be serialized.");
+        }
     }
 }

@@ -18,5 +18,10 @@ namespace Microsoft.PowerFx.Types
         {
             visitor.Visit(this);
         }
+
+        public override string ToExpression()
+        {
+            return base.ToExpression().ToLowerInvariant();
+        }
     }
 }

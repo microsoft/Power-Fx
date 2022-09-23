@@ -5,8 +5,10 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Dynamic;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Types
 {
@@ -180,6 +182,26 @@ namespace Microsoft.PowerFx.Types
             var list = new List<NamedValue>() { new NamedValue(name, value) };
 
             return UpdateFieldsAsync(FormulaValue.NewRecordFromFields(list));
+        }
+
+        public override string ToExpression()
+        {
+            var sb = new StringBuilder();
+
+            sb.Append("{");
+
+            foreach (var field in Fields)
+            {
+                sb.Append($"'{field.Name}'");
+                sb.Append(":");
+                sb.Append(field.Value.ToExpression());
+                sb.Append(",");
+            }
+
+            sb.Remove(sb.Length - 1, 1);
+            sb.Append("}");
+
+            return sb.ToString();
         }
     }
 }

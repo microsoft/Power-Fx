@@ -24,5 +24,10 @@ namespace Microsoft.PowerFx.Types
         {
             visitor.Visit(this);
         }
+
+        public override string ToExpression()
+        {
+            return $"Date({Value.ToString("yyyy,M,d")})";
+        }
     }
 }

@@ -59,5 +59,11 @@ namespace Microsoft.PowerFx.Types
         {
             visitor.Visit(this);
         }
+
+        public override string ToExpression()
+        {
+            // !JYL! Do we need to serialize this?
+            throw new NotImplementedException("UntypedObjectValue cannot be serialized.");
+        }
     }
 }
