@@ -210,8 +210,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
                                 var result = marshaller.Marshal(fieldValue);
                                 return result;
-                            }
-                    );
+                            });
                 }
 
                 fieldGetters.Add(fieldName, TypeAndMarshallerGetter);
