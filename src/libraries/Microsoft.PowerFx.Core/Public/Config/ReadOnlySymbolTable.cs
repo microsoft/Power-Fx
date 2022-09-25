@@ -131,9 +131,9 @@ namespace Microsoft.PowerFx
 
         internal IEnumerable<TexlFunction> Functions => ((INameResolver)this).Functions;
 
-        IEnumerable<TexlFunction> INameResolver.Functions => _functions;
-
-        IReadOnlyDictionary<string, NameLookupInfo> IGlobalSymbolNameResolver.GlobalSymbols => _variables;
+        IEnumerable<TexlFunction> INameResolver.Functions => _functions; 
+        
+        IEnumerable<KeyValuePair<string, NameLookupInfo>> IGlobalSymbolNameResolver.GlobalSymbols => _variables;
 
         /// <summary>
         /// Get symbol names in this current scope.
