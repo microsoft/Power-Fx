@@ -14,7 +14,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 Message = "Runtime type mismatch",
                 Span = irContext.SourceContext,
-                Kind = ErrorKind.Validation
+                Kind = ErrorKind.InvalidArgument
             });
         }
 
@@ -25,16 +25,6 @@ namespace Microsoft.PowerFx.Functions
                 Message = "Argument out of range",
                 Span = irContext.SourceContext,
                 Kind = ErrorKind.InvalidArgument
-            });
-        }
-
-        public static ErrorValue NumericOutOfRange(IRContext irContext)
-        {
-            return new ErrorValue(irContext, new ExpressionError()
-            {
-                Message = "Numeric out of range",
-                Span = irContext.SourceContext,
-                Kind = ErrorKind.Numeric
             });
         }
 

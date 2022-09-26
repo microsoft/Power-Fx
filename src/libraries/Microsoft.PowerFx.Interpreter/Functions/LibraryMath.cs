@@ -111,7 +111,7 @@ namespace Microsoft.PowerFx.Functions
                 }
                 else
                 {
-                    return FiniteChecker(irContext, 0, new NumberValue(irContext, _m2Acc / _count));
+                    return new NumberValue(irContext, _m2Acc / _count);
                 }
             }
         }
@@ -126,7 +126,7 @@ namespace Microsoft.PowerFx.Functions
                 }
                 else
                 {
-                    return FiniteChecker(irContext, 0, new NumberValue(irContext, Math.Sqrt(_m2Acc / _count)));
+                    return new NumberValue(irContext, Math.Sqrt(_m2Acc / _count));
                 }
             }
         }
@@ -164,7 +164,7 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
-        private class MinDateTimeAgg : IAggregator
+        private class MinDateAndDateTimeAgg : IAggregator
         {
             protected DateTime _minValueDT = DateTime.MaxValue;
             protected int _count = 0;
@@ -176,11 +176,20 @@ namespace Microsoft.PowerFx.Functions
                     return;
                 }
 
-                var n1 = ((DateValue)value).Value;
-
-                if (n1 < _minValueDT)
+                DateTime dt = DateTime.MaxValue;
+                switch (value)
                 {
-                    _minValueDT = n1;
+                    case DateTimeValue dtv:
+                        dt = dtv.Value;
+                        break;
+                    case DateValue dv:
+                        dt = dv.Value;
+                        break;
+                }
+
+                if (dt < _minValueDT)
+                {
+                    _minValueDT = dt;
                 }
 
                 _count++;
@@ -193,40 +202,14 @@ namespace Microsoft.PowerFx.Functions
                     return new BlankValue(irContext);
                 }
 
-                return new DateTimeValue(irContext, _minValueDT);
-            }
-        }
-
-        private class MinDateAgg : IAggregator
-        {
-            protected DateTime _minValueDT = DateTime.MaxValue;
-            protected int _count = 0;
-
-            public void Apply(FormulaValue value)
-            {
-                if (value is BlankValue)
+                if (irContext.ResultType == FormulaType.DateTime)
                 {
-                    return;
+                    return new DateTimeValue(irContext, _minValueDT);
                 }
-
-                var n1 = ((DateValue)value).Value;
-
-                if (n1 < _minValueDT)
+                else
                 {
-                    _minValueDT = n1;
+                    return new DateValue(irContext, _minValueDT);
                 }
-
-                _count++;
-            }
-
-            public FormulaValue GetResult(IRContext irContext)
-            {
-                if (_count == 0)
-                {
-                    return new BlankValue(irContext);
-                }
-
-                return new DateValue(irContext, _minValueDT);
             }
         }
 
@@ -296,7 +279,7 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
-        private class MaxDateAgg : IAggregator
+        private class MaxDateAndDateTimeAgg : IAggregator
         {
             protected DateTime _maxValueDT = DateTime.MinValue;
             protected int _count = 0;
@@ -308,11 +291,20 @@ namespace Microsoft.PowerFx.Functions
                     return;
                 }
 
-                var n1 = ((DateValue)value).Value;
-
-                if (n1 > _maxValueDT)
+                DateTime dt = DateTime.MinValue;
+                switch (value)
                 {
-                    _maxValueDT = n1;
+                    case DateTimeValue dtv:
+                        dt = dtv.Value;
+                        break;
+                    case DateValue dv:
+                        dt = dv.Value;
+                        break;
+                }
+
+                if (dt > _maxValueDT)
+                {
+                    _maxValueDT = dt;
                 }
 
                 _count++;
@@ -325,40 +317,14 @@ namespace Microsoft.PowerFx.Functions
                     return new BlankValue(irContext);
                 }
 
-                return new DateValue(irContext, _maxValueDT);
-            }
-        }
-
-        private class MaxDateTimeAgg : IAggregator
-        {
-            protected DateTime _maxValueDT = DateTime.MinValue;
-            protected int _count = 0;
-
-            public void Apply(FormulaValue value)
-            {
-                if (value is BlankValue)
+                if (irContext.ResultType == FormulaType.DateTime)
                 {
-                    return;
+                    return new DateTimeValue(irContext, _maxValueDT);
                 }
-
-                var n1 = ((DateTimeValue)value).Value;
-
-                if (n1 > _maxValueDT)
+                else
                 {
-                    _maxValueDT = n1;
+                    return new DateValue(irContext, _maxValueDT);
                 }
-
-                _count++;
-            }
-
-            public FormulaValue GetResult(IRContext irContext)
-            {
-                if (_count == 0)
-                {
-                    return new BlankValue(irContext);
-                }
-
-                return new DateTimeValue(irContext, _maxValueDT);
             }
         }
 
@@ -428,30 +394,35 @@ namespace Microsoft.PowerFx.Functions
             return agg.GetResult(irContext);
         }
 
-        private static async Task<FormulaValue> RunAggregatorAsync(IAggregator agg, EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        private static async Task<FormulaValue> RunAggregatorAsync(string functionName, IAggregator agg, EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             var arg0 = (TableValue)args.First();
             var arg1 = (LambdaFormulaValue)args.Skip(1).First();
 
             foreach (var row in arg0.Rows)
             {
+                SymbolContext childContext;
                 if (row.IsValue)
                 {
-                    var childContext = context.SymbolContext.WithScopeValues(row.Value);
-                    var value = await arg1.EvalAsync(runner, context.NewScope(childContext));
-
-                    if (value is NumberValue number)
-                    {
-                        value = FiniteChecker(irContext, 0, number);
-                    }
-
-                    if (value is ErrorValue error)
-                    {
-                        return error;
-                    }
-
-                    agg.Apply(value);
+                    childContext = context.SymbolContext.WithScopeValues(row.Value);
                 }
+                else if (row.IsError)
+                {
+                    childContext = context.SymbolContext.WithScopeValues(row.Error);
+                }
+                else
+                {
+                    childContext = context.SymbolContext.WithScopeValues(RecordValue.Empty());
+                }
+
+                var value = await arg1.EvalAsync(runner, context.NewScope(childContext));
+
+                if (value is ErrorValue error)
+                {
+                    return error;
+                }
+
+                agg.Apply(value);
             }
 
             return agg.GetResult(irContext);
@@ -474,7 +445,7 @@ namespace Microsoft.PowerFx.Functions
         // Sum([1,2,3], Value * Value)     
         public static async ValueTask<FormulaValue> SumTable(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            return await RunAggregatorAsync(new SumAgg(), runner, context, irContext, args);
+            return await RunAggregatorAsync("Sum", new SumAgg(), runner, context, irContext, args);
         }
 
         // VarP(1,2,3)
@@ -486,7 +457,7 @@ namespace Microsoft.PowerFx.Functions
         // VarP([1,2,3], Value * Value)
         public static async ValueTask<FormulaValue> VarTable(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            return await RunAggregatorAsync(new VarianceAgg(), runner, context, irContext, args);
+            return await RunAggregatorAsync("VarP", new VarianceAgg(), runner, context, irContext, args);
         }
 
         internal static FormulaValue Stdev(IRContext irContext, FormulaValue[] args)
@@ -496,7 +467,7 @@ namespace Microsoft.PowerFx.Functions
 
         public static async ValueTask<FormulaValue> StdevTable(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            return await RunAggregatorAsync(new StdDeviationAgg(), runner, context, irContext, args);
+            return await RunAggregatorAsync("StdevP", new StdDeviationAgg(), runner, context, irContext, args);
         }
 
         // Max(1,2,3)     
@@ -521,7 +492,7 @@ namespace Microsoft.PowerFx.Functions
 
             if (agg != null)
             {
-                return await RunAggregatorAsync(agg, runner, context, irContext, args);
+                return await RunAggregatorAsync("Max", agg, runner, context, irContext, args);
             }
             else
             {
@@ -551,7 +522,7 @@ namespace Microsoft.PowerFx.Functions
 
             if (agg != null)
             {
-                return await RunAggregatorAsync(agg, runner, context, irContext, args);
+                return await RunAggregatorAsync("Min", agg, runner, context, irContext, args);
             }
             else
             {
@@ -566,13 +537,9 @@ namespace Microsoft.PowerFx.Functions
             {
                 agg = isMin ? new MinNumberAgg() : new MaxNumberAgg();
             }
-            else if (irContext.ResultType == FormulaType.DateTime)
+            else if (irContext.ResultType == FormulaType.DateTime || irContext.ResultType == FormulaType.Date)
             {
-                agg = isMin ? new MinDateTimeAgg() : new MaxDateTimeAgg();
-            }
-            else if (irContext.ResultType == FormulaType.Date)
-            {
-                agg = isMin ? new MinDateAgg() : new MaxDateAgg();
+                agg = isMin ? new MinDateAndDateTimeAgg() : new MaxDateAndDateTimeAgg();
             }
             else if (irContext.ResultType == FormulaType.Time)
             {
@@ -603,7 +570,7 @@ namespace Microsoft.PowerFx.Functions
                 return CommonErrors.DivByZeroError(irContext);
             }
 
-            return await RunAggregatorAsync(new AverageAgg(), runner, context, irContext, args);
+            return await RunAggregatorAsync("Average", new AverageAgg(), runner, context, irContext, args);
         }
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-mod
@@ -612,15 +579,25 @@ namespace Microsoft.PowerFx.Functions
             var arg0 = args[0].Value;
             var arg1 = args[1].Value;
 
+            if (arg1 == 0)
+            {
+                return CommonErrors.DivByZeroError(irContext);
+            }
+
             // r = a – N × floor(a/b)
-            var q = (long)Math.Floor(arg0 / arg1);
-            var result = arg0 - (arg1 * q);
+            var q = Math.Floor(arg0 / arg1);
+            if (IsInvalidDouble(q))
+            {
+                return CommonErrors.OverflowError(irContext);
+            }
+
+            var result = arg0 - (arg1 * ((long)q));
 
             // We validate the reminder is in a valid range.
             // This is mainly to support very large numbers (like 1E+308) where the calculation could be incorrect
             if (result < -Math.Abs(arg1) || result > Math.Abs(arg1))
             {
-                result = 0;
+                return CommonErrors.OverflowError(irContext);
             }
 
             return new NumberValue(irContext, result);
@@ -632,6 +609,11 @@ namespace Microsoft.PowerFx.Functions
             var records = args[0].Value;
             var start = args[1].Value;
             var step = args[2].Value;
+
+            if (records < 0)
+            {
+                return CommonErrors.ArgumentOutOfRange(irContext);
+            }
 
             var rows = LazySequence(records, start, step).Select(n => new NumberValue(IRContext.NotInSource(FormulaType.Number), n));
 
@@ -668,11 +650,6 @@ namespace Microsoft.PowerFx.Functions
             var digitsArg = args[1].Value;
 
             var x = Round(numberArg, digitsArg);
-            if (x == double.NaN)
-            {
-                return CommonErrors.NumericOutOfRange(irContext);
-            }
-
             return new NumberValue(irContext, x);
         }
 
@@ -741,12 +718,6 @@ namespace Microsoft.PowerFx.Functions
         public static FormulaValue Ln(IRContext irContext, NumberValue[] args)
         {
             var number = args[0].Value;
-
-            if (number <= 0)
-            {
-                return CommonErrors.ArgumentOutOfRange(irContext);
-            }
-
             return new NumberValue(irContext, Math.Log(number));
         }
 
@@ -758,11 +729,6 @@ namespace Microsoft.PowerFx.Functions
             if (numberBase == 1)
             {
                 return GetDiv0Error(irContext);
-            }
-
-            if (number <= 0)
-            {
-                return CommonErrors.ArgumentOutOfRange(irContext);
             }
 
             return new NumberValue(irContext, Math.Log(number, numberBase));
@@ -805,8 +771,7 @@ namespace Microsoft.PowerFx.Functions
                 return CommonErrors.OverflowError(irContext);
             }
 
-            var result = new NumberValue(irContext, d);
-            return FiniteChecker(irContext, 1, result);
+            return new NumberValue(irContext, d);
         }
 
         // Since IRandomService is a pluggable service,
@@ -907,22 +872,12 @@ namespace Microsoft.PowerFx.Functions
             return new NumberValue(irContext, Math.Atan2(y, x));
         }
 
-        public static Func<IRContext, NumberValue[], FormulaValue> SingleArgTrig(string functionName, Func<double, double> function)
+        public static Func<IRContext, NumberValue[], FormulaValue> SingleArgTrig(Func<double, double> function)
         {
             return (IRContext irContext, NumberValue[] args) =>
             {
                 var arg = args[0].Value;
                 var result = function(arg);
-                if (double.IsNaN(result) || double.IsInfinity(result))
-                {
-                    return new ErrorValue(irContext, new ExpressionError
-                    {
-                        Message = $"Invalid argument to the {functionName} function.",
-                        Span = irContext.SourceContext,
-                        Kind = ErrorKind.Numeric
-                    });
-                }
-
                 return new NumberValue(irContext, result);
             };
         }

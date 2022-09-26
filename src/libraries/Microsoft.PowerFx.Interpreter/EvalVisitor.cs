@@ -31,12 +31,12 @@ namespace Microsoft.PowerFx
 
         private readonly ReadOnlySymbolValues _runtimeConfig;
 
-        private readonly CancellationToken _cancel;
+        private readonly CancellationToken _cancellationToken;
 
-        public EvalVisitor(CultureInfo cultureInfo, CancellationToken cancel, ReadOnlySymbolValues runtimeConfig = null)
+        public EvalVisitor(CultureInfo cultureInfo, CancellationToken cancellationToken, ReadOnlySymbolValues runtimeConfig = null)
         {
             _defaultCultureInfo = cultureInfo;
-            _cancel = cancel;
+            _cancellationToken = cancellationToken;
             _runtimeConfig = runtimeConfig;
         }
 
@@ -45,7 +45,7 @@ namespace Microsoft.PowerFx
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public T GetService<T>() 
+        public T GetService<T>()
         {
             if (_runtimeConfig != null)
             {
@@ -67,7 +67,7 @@ namespace Microsoft.PowerFx
         public void CheckCancel()
         {
             // Throws OperationCanceledException exception
-            _cancel.ThrowIfCancellationRequested();
+            _cancellationToken.ThrowIfCancellationRequested();
         }
 
         // Helper to eval an arg that might be a lambda.
@@ -182,7 +182,7 @@ namespace Microsoft.PowerFx
             var newValue = await arg1.Accept(this, context);
 
             var args = new FormulaValue[] { source, FormulaValue.New(fieldName), newValue };
-            var result = await setPropFunc.InvokeAsync(args, _cancel);
+            var result = await setPropFunc.InvokeAsync(args, _cancellationToken);
 
             return result;
         }
@@ -230,13 +230,13 @@ namespace Microsoft.PowerFx
 
             if (func is IAsyncTexlFunction asyncFunc)
             {
-                var result = await asyncFunc.InvokeAsync(args, _cancel);
+                var result = await asyncFunc.InvokeAsync(args, _cancellationToken);
                 return result;
             }
             else if (func is UserDefinedTexlFunction udtf)
             {
                 // $$$ Should add _runtimeConfig
-                var result = await udtf.InvokeAsync(args, _cancel, context.StackDepthCounter.Increment());
+                var result = await udtf.InvokeAsync(args, _cancellationToken, context.StackDepthCounter.Increment());
                 return result;
             }
             else if (func is CustomTexlFunction customTexlFunc)
@@ -246,7 +246,7 @@ namespace Microsoft.PowerFx
             }
             else
             {
-                if (FuncsByName.TryGetValue(func, out var ptr))
+                if (FunctionImplementations.TryGetValue(func, out var ptr))
                 {
                     var result = await ptr(this, context.IncrementStackDepthCounter(childContext), node.IRContext, args);
 
@@ -295,6 +295,7 @@ namespace Microsoft.PowerFx
                 case BinaryOpKind.EqOptionSetValue:
                 case BinaryOpKind.EqText:
                 case BinaryOpKind.EqTime:
+                case BinaryOpKind.EqNull:
                     return OperatorBinaryEq(this, context, node.IRContext, args);
 
                 case BinaryOpKind.NeqBlob:
@@ -311,6 +312,7 @@ namespace Microsoft.PowerFx
                 case BinaryOpKind.NeqOptionSetValue:
                 case BinaryOpKind.NeqText:
                 case BinaryOpKind.NeqTime:
+                case BinaryOpKind.NeqNull:
                     return OperatorBinaryNeq(this, context, node.IRContext, args);
 
                 case BinaryOpKind.GtNumbers:
@@ -339,10 +341,22 @@ namespace Microsoft.PowerFx
                     return OperatorAddDateAndDay(this, context, node.IRContext, args);
                 case BinaryOpKind.AddDateTimeAndDay:
                     return OperatorAddDateTimeAndDay(this, context, node.IRContext, args);
+                case BinaryOpKind.AddTimeAndNumber:
+                    return OperatorAddTimeAndNumber(this, context, node.IRContext, args);
+                case BinaryOpKind.AddNumberAndTime:
+                    return OperatorAddTimeAndNumber(this, context, node.IRContext, new[] { args[1], args[0] });
+                case BinaryOpKind.AddTimeAndTime:
+                    return OperatorAddTimeAndTime(this, context, node.IRContext, args);
                 case BinaryOpKind.DateDifference:
                     return OperatorDateDifference(this, context, node.IRContext, args);
                 case BinaryOpKind.TimeDifference:
                     return OperatorTimeDifference(this, context, node.IRContext, args);
+                case BinaryOpKind.SubtractDateAndTime:
+                    return OperatorSubtractDateAndTime(this, context, node.IRContext, args);
+                case BinaryOpKind.SubtractNumberAndDate:
+                    return OperatorSubtractNumberAndDate(this, context, node.IRContext, args);
+                case BinaryOpKind.SubtractNumberAndTime:
+                    return OperatorSubtractNumberAndTime(this, context, node.IRContext, args);
                 case BinaryOpKind.LtDateTime:
                     return OperatorLtDateTime(this, context, node.IRContext, args);
                 case BinaryOpKind.LeqDateTime:
@@ -522,7 +536,7 @@ namespace Microsoft.PowerFx
             }
 
             var record = (RecordValue)left;
-            var val = record.GetField(node.IRContext.ResultType, node.Field.Value);
+            var val = await record.GetFieldAsync(node.IRContext.ResultType, node.Field.Value, _cancellationToken);
 
             return val;
         }

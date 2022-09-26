@@ -101,8 +101,7 @@ namespace Microsoft.PowerFx.Functions
                         newDate = datetime.AddYears((int)deltaValue);
                         break;
                     default:
-                        // TODO: Task 10723372: Implement Unit Functionality in DateAdd, DateDiff Functions
-                        return CommonErrors.NotYetImplementedError(irContext, "DateAdd Only supports Days for the unit field");
+                        return GetInvalidUnitError(irContext, "DateAdd");
                 }
 
                 if (isSubdayUnit)
@@ -110,14 +109,7 @@ namespace Microsoft.PowerFx.Functions
                     newDate = TimeZoneInfo.ConvertTimeFromUtc(newDate, timeZoneInfo);
                 }
 
-                if (args[0] is DateTimeValue)
-                {
-                    return new DateTimeValue(irContext, newDate);
-                }
-                else
-                {
-                    return new DateValue(irContext, newDate.Date);
-                }
+                return new DateTimeValue(irContext, newDate);
             }
             catch
             {
@@ -141,6 +133,9 @@ namespace Microsoft.PowerFx.Functions
                 case DateValue dv:
                     start = dv.Value;
                     break;
+                case TimeValue tv:
+                    start = _epoch.Add(tv.Value);
+                    break;
                 default:
                     return CommonErrors.RuntimeTypeMismatch(irContext);
             }
@@ -153,6 +148,9 @@ namespace Microsoft.PowerFx.Functions
                     break;
                 case DateValue dv:
                     end = dv.Value;
+                    break;
+                case TimeValue tv:
+                    end = _epoch.Add(tv.Value);
                     break;
                 default:
                     return CommonErrors.RuntimeTypeMismatch(irContext);
@@ -214,9 +212,18 @@ namespace Microsoft.PowerFx.Functions
                     var days = Math.Floor((end - start).TotalDays);
                     return new NumberValue(irContext, days);
                 default:
-                    // TODO: Task 10723372: Implement Unit Functionality in DateAdd, DateDiff Functions
-                    return CommonErrors.NotYetImplementedError(irContext, "DateDiff Only supports Days for the unit field");
+                    return GetInvalidUnitError(irContext, "DateDiff");
             }
+        }
+
+        private static ErrorValue GetInvalidUnitError(IRContext irContext, string functionName)
+        {
+            return new ErrorValue(irContext, new ExpressionError()
+            {
+                Message = $"The third argument to the {functionName} function is invalid",
+                Span = irContext.SourceContext,
+                Kind = ErrorKind.InvalidArgument
+            });
         }
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-datetime-parts
@@ -414,6 +421,11 @@ namespace Microsoft.PowerFx.Functions
                 .Add(new TimeSpan(0, 0, second))
                 .Add(TimeSpan.FromMilliseconds(millisecond));
 
+            if (result.TotalDays >= 1)
+            {
+                result = result.Subtract(TimeSpan.FromDays((int)result.TotalDays));
+            }
+
             return new TimeValue(irContext, result);
         }
 
@@ -423,16 +435,35 @@ namespace Microsoft.PowerFx.Functions
             var month = (int)args[1].Value;
             var day = (int)args[2].Value;
             var date = DateImpl(IRContext.NotInSource(FormulaType.Date), year, month, day);
+            if (date is ErrorValue)
+            {
+                return date;
+            }
+
+            if (date is ErrorValue)
+            {
+                return date;
+            }
 
             var hour = (int)args[3].Value;
             var minute = (int)args[4].Value;
             var second = (int)args[5].Value;
             var millisecond = (int)args[6].Value;
-            var time = TimeImpl(IRContext.NotInSource(FormulaType.Time), hour, minute, second, millisecond);
 
-            var result = AddDateAndTime(irContext, new[] { date, time });
+            try
+            {
+                var dateTime = ((DateValue)date).Value
+                    .AddHours(hour)
+                    .AddMinutes(minute)
+                    .AddSeconds(second)
+                    .AddMilliseconds(millisecond);
 
-            return result;
+                return new DateTimeValue(irContext, dateTime);
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                return CommonErrors.InvalidDateTimeError(irContext);
+            }
         }
 
         private static FormulaValue Now(IRContext irContext, FormulaValue[] args)

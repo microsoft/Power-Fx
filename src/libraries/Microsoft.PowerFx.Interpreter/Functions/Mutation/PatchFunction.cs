@@ -3,9 +3,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
@@ -13,10 +11,7 @@ using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Functions.DLP;
-using Microsoft.PowerFx.Core.Functions.FunctionArgValidators;
-using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Localization;
-using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
@@ -28,7 +23,7 @@ namespace Microsoft.PowerFx.Functions
     internal abstract class PatchAndValidateRecordFunctionBase : BuiltinFunction
     {
         public override bool RequiresDataSourceScope => true;
-        
+
         public override bool ArgMatchesDatasourceType(int argNum)
         {
             return argNum >= 1;
@@ -78,7 +73,7 @@ namespace Microsoft.PowerFx.Functions
 
         // Change records are processed in order from the beginning of the argument list to the end,
         // with later property values overriding earlier ones.
-        protected static Dictionary<string, FormulaValue> CreateRecordFromArgsDict(FormulaValue[] args, int startFrom)
+        protected static async Task<Dictionary<string, FormulaValue>> CreateRecordFromArgsDictAsync(FormulaValue[] args, int startFrom, CancellationToken cancellationToken)
         {
             var retFields = new Dictionary<string, FormulaValue>(StringComparer.Ordinal);
 
@@ -92,7 +87,7 @@ namespace Microsoft.PowerFx.Functions
                 }
                 else if (arg is RecordValue record)
                 {
-                    foreach (var field in record.Fields)
+                    await foreach (var field in record.GetFieldsAsync(cancellationToken))
                     {
                         retFields[field.Name] = field.Value;
                     }
@@ -145,7 +140,7 @@ namespace Microsoft.PowerFx.Functions
             return base.GetSignatures(arity);
         }
 
-        public async Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancel)
+        public async Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancellationToken)
         {
             var validArgs = CheckArgs(args, out FormulaValue faultyArg);
 
@@ -154,7 +149,7 @@ namespace Microsoft.PowerFx.Functions
                 return faultyArg;
             }
 
-            return FieldDictToRecordValue(CreateRecordFromArgsDict(args, 0));
+            return FieldDictToRecordValue(await CreateRecordFromArgsDictAsync(args, 0, cancellationToken));
         }
 
         public override RequiredDataSourcePermissions FunctionPermission => RequiredDataSourcePermissions.Create | RequiredDataSourcePermissions.Update;
@@ -201,6 +196,11 @@ namespace Microsoft.PowerFx.Functions
             DType dataSourceType = argTypes[0];
             DType retType = DType.EmptyRecord;
 
+            foreach (var assocDS in dataSourceType.AssociatedDataSources)
+            {
+                retType = DType.AttachDataSourceInfo(retType, assocDS);
+            }
+
             for (var i = 1; i < args.Length; i++)
             {
                 DType curType = argTypes[i];
@@ -218,13 +218,33 @@ namespace Microsoft.PowerFx.Functions
 
                 foreach (var typedName in curType.GetNames(DPath.Root))
                 {
-                    if (!tableType.HasField(typedName.Name))
+                    DName name = typedName.Name;
+                    DType type = typedName.Type;
+
+                    if (!dataSourceType.TryGetType(name, out DType dsNameType))
                     {
                         dataSourceType.ReportNonExistingName(FieldNameKind.Display, errors, typedName.Name, args[i]);
                         isValid = isSafeToUnion = false;
                         continue;
                     }
+
+                    if (!type.Accepts(dsNameType, out var schemaDifference, out var schemaDifferenceType) &&
+                        (!SupportsParamCoercion || !type.CoercesTo(dsNameType, out var coercionIsSafe, aggregateCoercion: false) || !coercionIsSafe))
+                    {
+                        if (dsNameType.Kind == type.Kind)
+                        {
+                            errors.Errors(args[i], type, schemaDifference, schemaDifferenceType);
+                        }
+                        else
+                        {
+                            errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrTypeError_Arg_Expected_Found, name, dsNameType.GetKindString(), type.GetKindString());
+                        }
+
+                        isValid = isSafeToUnion = false;
+                    }
                 }
+
+                var fError = false;
 
                 if (isValid && SupportsParamCoercion && !dataSourceType.Accepts(curType))
                 {
@@ -239,7 +259,22 @@ namespace Microsoft.PowerFx.Functions
                             CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i], coercionType);
                         }
 
-                        retType = DType.Union(retType, coercionType);
+                        // Promote the arg type to a table to facilitate unioning.
+                        if (!coercionType.IsTable)
+                        {
+                            coercionType = coercionType.ToTable();
+                        }
+
+                        retType = DType.Union(ref fError, dataSourceType, coercionType, useLegacyDateTimeAccepts: true);
+
+                        if (fError)
+                        {
+                            isValid = false;
+                            if (!SetErrorForMismatchedColumns(dataSourceType, coercionType, args[1], errors))
+                            {
+                                errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrNeedValidVariableName_Arg);
+                            }
+                        }
                     }
                 }
                 else if (isSafeToUnion)
@@ -248,10 +283,11 @@ namespace Microsoft.PowerFx.Functions
                 }
             }
 
+            returnType = retType;
             return isValid;
         }
 
-        public async Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancel)
+        public async Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancellationToken)
         {
             var validArgs = CheckArgs(args, out FormulaValue faultyArg);
 
@@ -270,12 +306,14 @@ namespace Microsoft.PowerFx.Functions
                 return args[1];
             }
 
-            var changeRecord = FieldDictToRecordValue(CreateRecordFromArgsDict(args, 2));
+            cancellationToken.ThrowIfCancellationRequested();
+            var changeRecord = FieldDictToRecordValue(await CreateRecordFromArgsDictAsync(args, 2, cancellationToken));
 
             var datasource = (TableValue)args[0];
             var baseRecord = (RecordValue)args[1];
 
-            var ret = await datasource.PatchAsync(baseRecord, changeRecord);
+            cancellationToken.ThrowIfCancellationRequested();
+            var ret = await datasource.PatchAsync(baseRecord, changeRecord, cancellationToken);
 
             return ret.ToFormulaValue();
         }

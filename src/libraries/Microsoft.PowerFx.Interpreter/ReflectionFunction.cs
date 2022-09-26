@@ -120,7 +120,7 @@ namespace Microsoft.PowerFx
             return true;
         }
 
-        public async Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancellation)
+        public async Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancellationToken)
         {
             var result = _impl(args);
             return result;
@@ -300,6 +300,6 @@ namespace Microsoft.PowerFx
     // A function capable of async invokes. 
     internal interface IAsyncTexlFunction
     {
-        Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancel);
+        Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancellationToken);
     }
 }

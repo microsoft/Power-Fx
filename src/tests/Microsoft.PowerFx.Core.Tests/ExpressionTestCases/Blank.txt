@@ -97,6 +97,23 @@ true
 >> Blank() = Blank()
 true
 
+>> Blank() <> Blank()
+false
+
+// Typed blank values
+>> If(1<0,1) = If(1<0,4)
+true
+
+>> If(1<0,false) = If(1<0,true)
+true
+
+>> If(1<0,Date(1999,12,31)) = If(1<0,Date(2022,1,1))
+true
+
+>> If(1<0,"str") = If(1<0,"str2")
+true
+
+// Blank and empty string
 >> Blank() = ""
 false
 

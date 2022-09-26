@@ -33,6 +33,7 @@ namespace Microsoft.PowerFx.Functions
         /// an ErrorValue instead of executing.
         /// </summary>
         /// <typeparam name="T">The specific FormulaValue type that the implementation of the builtin expects, for exmaple NumberValue for math functions.</typeparam>
+        /// <param name="functionName">The name of the Power Fx function, which is used in a possible error message.</param>
         /// <param name="expandArguments">This stage of the pipeline can be used to expand an argument list if some of the arguments are optional and missing.</param>
         /// <param name="replaceBlankValues">This stage can be used to transform Blank() into something else, for example the number 0.</param>
         /// <param name="checkRuntimeTypes">This stage can be used to check to that all the arguments have type T, or check that all arguments have type T | Blank(), etc.</param>
@@ -41,6 +42,7 @@ namespace Microsoft.PowerFx.Functions
         /// <param name="targetFunction">The implementation of the builtin function.</param>
         /// <returns></returns>
         private static AsyncFunctionPtr StandardErrorHandlingAsync<T>(
+                string functionName,
                 Func<IRContext, IEnumerable<FormulaValue>, IEnumerable<FormulaValue>> expandArguments,
                 Func<IRContext, int, FormulaValue> replaceBlankValues,
                 Func<IRContext, int, FormulaValue, FormulaValue> checkRuntimeTypes,
@@ -51,6 +53,12 @@ namespace Microsoft.PowerFx.Functions
         {
             return async (runner, context, irContext, args) =>
             {
+                var nonFiniteArgError = FiniteArgumentCheck(functionName, irContext, args);
+                if (nonFiniteArgError != null)
+                {
+                    return nonFiniteArgError;
+                }
+
                 var argumentsExpanded = expandArguments(irContext, args);
 
                 var blankValuesReplaced = argumentsExpanded.Select((arg, i) =>
@@ -112,7 +120,9 @@ namespace Microsoft.PowerFx.Functions
                         break;
                 }
 
-                return await targetFunction(runner, context, irContext, runtimeValuesChecked.Select(arg => arg as T).ToArray());
+                var result = await targetFunction(runner, context, irContext, runtimeValuesChecked.Select(arg => arg as T).ToArray());
+                var finiteError = FiniteResultCheck(functionName, irContext, result);
+                return finiteError ?? result;
             };
         }
 
@@ -120,6 +130,7 @@ namespace Microsoft.PowerFx.Functions
         // sync functions which accept the simpler parameter list of
         // an array of arguments, ignoring context, runner etc.
         private static AsyncFunctionPtr StandardErrorHandling<T>(
+            string functionName,
             Func<IRContext, IEnumerable<FormulaValue>, IEnumerable<FormulaValue>> expandArguments,
             Func<IRContext, int, FormulaValue> replaceBlankValues,
             Func<IRContext, int, FormulaValue, FormulaValue> checkRuntimeTypes,
@@ -128,7 +139,7 @@ namespace Microsoft.PowerFx.Functions
             Func<IRContext, T[], FormulaValue> targetFunction)
             where T : FormulaValue
         {
-            return StandardErrorHandlingAsync<T>(expandArguments, replaceBlankValues, checkRuntimeTypes, checkRuntimeValues, returnBehavior, (runner, context, irContext, args) =>
+            return StandardErrorHandlingAsync<T>(functionName, expandArguments, replaceBlankValues, checkRuntimeTypes, checkRuntimeValues, returnBehavior, (runner, context, irContext, args) =>
             {
                 var result = targetFunction(irContext, args);
                 return new ValueTask<FormulaValue>(result);
@@ -139,6 +150,7 @@ namespace Microsoft.PowerFx.Functions
         // sync functions which accept the simpler parameter list of
         // an array of arguments, ignoring context, runner etc.
         private static AsyncFunctionPtr StandardErrorHandling<T>(
+            string functionName,
             Func<IRContext, IEnumerable<FormulaValue>, IEnumerable<FormulaValue>> expandArguments,
             Func<IRContext, int, FormulaValue> replaceBlankValues,
             Func<IRContext, int, FormulaValue, FormulaValue> checkRuntimeTypes,
@@ -147,7 +159,7 @@ namespace Microsoft.PowerFx.Functions
             Func<IServiceProvider, IRContext, T[], FormulaValue> targetFunction)
             where T : FormulaValue
         {
-            return StandardErrorHandlingAsync<T>(expandArguments, replaceBlankValues, checkRuntimeTypes, checkRuntimeValues, returnBehavior, (runner, context, irContext, args) =>
+            return StandardErrorHandlingAsync<T>(functionName, expandArguments, replaceBlankValues, checkRuntimeTypes, checkRuntimeValues, returnBehavior, (runner, context, irContext, args) =>
             {
                 var result = targetFunction(runner.FunctionServices, irContext, args);
                 return new ValueTask<FormulaValue>(result);
@@ -157,6 +169,7 @@ namespace Microsoft.PowerFx.Functions
         // A wrapper that allows standard error handling to apply to
         // sync functions with the full parameter list
         private static AsyncFunctionPtr StandardErrorHandling<T>(
+            string functionName,
             Func<IRContext, IEnumerable<FormulaValue>, IEnumerable<FormulaValue>> expandArguments,
             Func<IRContext, int, FormulaValue> replaceBlankValues,
             Func<IRContext, int, FormulaValue, FormulaValue> checkRuntimeTypes,
@@ -165,12 +178,23 @@ namespace Microsoft.PowerFx.Functions
             Func<EvalVisitor, EvalVisitorContext, IRContext, T[], FormulaValue> targetFunction)
             where T : FormulaValue
         {
-            return StandardErrorHandlingAsync<T>(expandArguments, replaceBlankValues, checkRuntimeTypes, checkRuntimeValues, returnBehavior, (runner, context, irContext, args) =>
+            return StandardErrorHandlingAsync<T>(functionName, expandArguments, replaceBlankValues, checkRuntimeTypes, checkRuntimeValues, returnBehavior, (runner, context, irContext, args) =>
             {
                 var result = targetFunction(runner, context, irContext, args);
                 return new ValueTask<FormulaValue>(result);
             });
         }
+
+        // Wraps a scalar function into its tabular overload
+        private static AsyncFunctionPtr StandardErrorHandlingTabularOverload<TScalar>(string functionName, AsyncFunctionPtr targetFunction)
+            where TScalar : FormulaValue => StandardErrorHandlingAsync<TableValue>(
+                functionName: functionName,
+                expandArguments: NoArgExpansion,
+                replaceBlankValues: DoNotReplaceBlank,
+                checkRuntimeTypes: ExactValueTypeOrBlank<TableValue>,
+                checkRuntimeValues: DeferRuntimeValueChecking,
+                returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                targetFunction: StandardSingleColumnTable<TScalar>(targetFunction));
 
         // A wrapper for a function with no error handling behavior whatsoever.
         private static AsyncFunctionPtr NoErrorHandling(
@@ -183,11 +207,21 @@ namespace Microsoft.PowerFx.Functions
             };
         }
 
+        // A wrapper for a function with no error handling behavior whatsoever.
+        private static AsyncFunctionPtr NoErrorHandling(
+            Func<EvalVisitor, EvalVisitorContext, IRContext, FormulaValue[], ValueTask<FormulaValue>> targetFunction)
+        {
+            return (visitor, context, irContext, args) =>
+            {
+                return targetFunction(visitor, context, irContext, args);
+            };
+        }
+
         #region Single Column Table Functions
-        public static Func<EvalVisitor, EvalVisitorContext, IRContext, TableValue[], ValueTask<FormulaValue>> StandardSingleColumnTable<T>(Func<EvalVisitor, EvalVisitorContext, IRContext, T[], FormulaValue> targetFunction)
+        public static Func<EvalVisitor, EvalVisitorContext, IRContext, TableValue[], ValueTask<FormulaValue>> StandardSingleColumnTable<T>(AsyncFunctionPtr targetFunction)
             where T : FormulaValue
         {
-            return (runner, context, irContext, args) =>
+            return async (runner, context, irContext, args) =>
             {
                 var inputTableType = (TableType)args[0].Type;
                 var inputColumnNameStr = inputTableType.SingleColumnFieldName;
@@ -206,8 +240,8 @@ namespace Microsoft.PowerFx.Functions
                         NamedValue namedValue;
                         namedValue = value switch
                         {
-                            T t => new NamedValue(outputColumnNameStr, targetFunction(runner, context, IRContext.NotInSource(outputItemType), new T[] { t })),
-                            BlankValue bv => new NamedValue(outputColumnNameStr, bv),
+                            T t => new NamedValue(outputColumnNameStr, await targetFunction(runner, context, IRContext.NotInSource(outputItemType), new T[] { t })),
+                            BlankValue bv => new NamedValue(outputColumnNameStr, await targetFunction(runner, context, IRContext.NotInSource(outputItemType), new FormulaValue[] { bv })),
                             ErrorValue ev => new NamedValue(outputColumnNameStr, ev),
                             _ => new NamedValue(outputColumnNameStr, CommonErrors.RuntimeTypeMismatch(IRContext.NotInSource(inputItemType)))
                         };
@@ -225,14 +259,14 @@ namespace Microsoft.PowerFx.Functions
                 }
 
                 var result = new InMemoryTableValue(irContext, resultRows);
-                return new ValueTask<FormulaValue>(result);
+                return result;
             };
         }
 
         public static Func<EvalVisitor, EvalVisitorContext, IRContext, TableValue[], ValueTask<FormulaValue>> StandardSingleColumnTable<T>(Func<IRContext, T[], FormulaValue> targetFunction)
             where T : FormulaValue
         {
-            return StandardSingleColumnTable<T>((runner, context, irContext, args) => targetFunction(irContext, args));
+            return StandardSingleColumnTable<T>(async (runner, context, irContext, args) => targetFunction(irContext, args.OfType<T>().ToArray()));
         }
 
         private static (int maxTableSize, bool emptyTablePresent) AnalyzeTableArguments(FormulaValue[] args)
@@ -525,38 +559,93 @@ namespace Microsoft.PowerFx.Functions
 
             return CommonErrors.RuntimeTypeMismatch(irContext);
         }
+
+        private static FormulaValue DateOrTimeOrDateTime(IRContext irContext, int index, FormulaValue arg)
+        {
+            if (arg is DateValue || arg is TimeValue || arg is DateTimeValue || arg is BlankValue || arg is ErrorValue)
+            {
+                return arg;
+            }
+
+            return CommonErrors.RuntimeTypeMismatch(irContext);
+        }
+
+        private static FormulaValue DateNumberTimeOrDateTime(IRContext irContext, int index, FormulaValue arg)
+        {
+            if (arg is DateValue || arg is DateTimeValue || arg is TimeValue || arg is NumberValue || arg is BlankValue || arg is ErrorValue)
+            {
+                return arg;
+            }
+
+            return CommonErrors.RuntimeTypeMismatch(irContext);
+        }
         #endregion
 
         #region Common Runtime Value Checking Pipeline Stages
-        private static FormulaValue FiniteChecker(IRContext irContext, int index, FormulaValue arg)
+        private static ErrorValue FiniteArgumentCheck(string functionName, IRContext irContext, FormulaValue[] args)
         {
-            if (arg is NumberValue numberValue)
+            List<ErrorValue> errors = null;
+            foreach (var arg in args)
             {
-                var number = numberValue.Value;
-
-                if (double.IsNaN(number))
+                if (arg is ErrorValue ev)
                 {
-                    return CommonErrors.NumericOutOfRange(irContext);
+                    if (errors == null)
+                    {
+                        errors = new List<ErrorValue>();
+                    }
+
+                    errors.Add(ev);
                 }
 
-                if (double.IsInfinity(number))
+                if (arg is NumberValue nv && IsInvalidDouble(nv.Value))
                 {
-                    return CommonErrors.OverflowError(irContext);
+                    if (errors == null)
+                    {
+                        errors = new List<ErrorValue>();
+                    }
+
+                    errors.Add(new ErrorValue(irContext, new ExpressionError()
+                    {
+                        Message = $"Arguments to the {functionName} function must be finite.",
+                        Span = irContext.SourceContext,
+                        Kind = ErrorKind.Numeric
+                    }));
                 }
             }
 
-            return arg;
+            return errors != null ? ErrorValue.Combine(irContext, errors) : null;
         }
 
+        private static ErrorValue FiniteResultCheck(string functionName, IRContext irContext, FormulaValue value)
+        {
+            if (value is ErrorValue ev)
+            {
+                return ev;
+            }
+
+            if (value is NumberValue nv && IsInvalidDouble(nv.Value))
+            {
+                return new ErrorValue(irContext, new ExpressionError()
+                {
+                    Message = $"The function {functionName} returned a non-finite number.",
+                    Span = irContext.SourceContext,
+                    Kind = ErrorKind.Numeric
+                });
+            }
+
+            return null;
+        }
+        #endregion
+
+        #region Common Runtime Value Checking Pipeline Stages
         private static FormulaValue PositiveNumericNumberChecker(IRContext irContext, int index, FormulaValue arg)
         {
-            var finiteCheckResult = FiniteChecker(irContext, index, arg);
-            if (finiteCheckResult is NumberValue numberArg)
+            if (arg is NumberValue numberArg)
             {
                 var number = numberArg.Value;
                 if (number < 0)
                 {
-                    return CommonErrors.NumericOutOfRange(irContext);
+                    return CommonErrors.ArgumentOutOfRange(irContext);
                 }
             }
 
@@ -565,8 +654,7 @@ namespace Microsoft.PowerFx.Functions
 
         private static FormulaValue PositiveArgumentNumberChecker(IRContext irContext, int index, FormulaValue arg)
         {
-            var finiteCheckResult = FiniteChecker(irContext, index, arg);
-            if (finiteCheckResult is NumberValue numberArg)
+            if (arg is NumberValue numberArg)
             {
                 var number = numberArg.Value;
                 if (number < 0)
@@ -580,8 +668,7 @@ namespace Microsoft.PowerFx.Functions
 
         private static FormulaValue StrictArgumentPositiveNumberChecker(IRContext irContext, int index, FormulaValue arg)
         {
-            var finiteCheckResult = FiniteChecker(irContext, index, arg);
-            if (finiteCheckResult is NumberValue numberArg)
+            if (arg is NumberValue numberArg)
             {
                 var number = numberArg.Value;
                 if (number <= 0)
@@ -595,28 +682,12 @@ namespace Microsoft.PowerFx.Functions
 
         private static FormulaValue StrictNumericPositiveNumberChecker(IRContext irContext, int index, FormulaValue arg)
         {
-            var finiteCheckResult = FiniteChecker(irContext, index, arg);
-            if (finiteCheckResult is NumberValue numberArg)
+            if (arg is NumberValue numberArg)
             {
                 var number = numberArg.Value;
                 if (number <= 0)
                 {
-                    return CommonErrors.NumericOutOfRange(irContext);
-                }
-            }
-
-            return arg;
-        }
-
-        private static FormulaValue DivideByZeroChecker(IRContext irContext, int index, FormulaValue arg)
-        {
-            var finiteCheckResult = FiniteChecker(irContext, index, arg);
-            if (index == 1 && finiteCheckResult is NumberValue numberArg)
-            {
-                var number = numberArg.Value;
-                if (number == 0)
-                {
-                    return CommonErrors.DivByZeroError(irContext);
+                    return CommonErrors.ArgumentOutOfRange(irContext);
                 }
             }
 
