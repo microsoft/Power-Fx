@@ -2,8 +2,8 @@
 >> Value(Index(ParseJSON("[5]"), 1))
 5
 
->> IfError(Text(Index(ParseJSON("123"),1)),$"Kind={FirstError.Kind},Message={FirstError.Message}")
-"Kind=25,Message=The UntypedObject does not represent an array"
+>> IfError(Text(Index(ParseJSON("123"),1)),$"Kind={FirstError.Kind}")
+"Kind=25"
 
 >> Value(ParseJSON("5"))
 5
