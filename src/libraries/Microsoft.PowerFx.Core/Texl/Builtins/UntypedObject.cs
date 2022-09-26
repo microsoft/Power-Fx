@@ -42,6 +42,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         {
         }
 
+        public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
+        {
+            return GetUniqueTexlRuntimeName(suffix: "_UO");
+        }
+
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
             yield return new[] { TexlStrings.IndexArg1, TexlStrings.IndexArg2 };
