@@ -141,9 +141,9 @@
 -1
 
 // Month should be properly added, approaches but does not jump DST boundary
-// 10/5/2017 01:00:00.000 GMT-0700 + 1mo = 11/5/2017 01:00:00.000 GMT-0700
+// 11/5/2017 01:00:00.000 GMT-0700 doesn't exist
 >> DateDiff(DateTime(2017,10,5,1,0,0), DateTime(2017,11,5,1,0,0), TimeUnit.Months)
-1
+#Error(Kind=InvalidArgument)
 
 // Month should be properly added, jumping the DST boundary
 // 10/5/2017 03:00:00.000 GMT-0700 + 1mo = 11/5/2017 03:00:00.000 GMT-0800
@@ -156,9 +156,9 @@
 -1
 
 // Quarter should be properly added, approaches but does not jump DST boundary
-// 8/5/2017 01:00:00.000 GMT-0700 + 1q = 11/5/2017 01:00:00.000 GMT-0700
+// 11/5/2017 01:00:00.000 GMT-0700 doesn't exist
 >> DateDiff(DateTime(2017,8,5,1,0,0), DateTime(2017,11,5,1,0,0), TimeUnit.Quarters)
-1
+#Error(Kind=InvalidArgument)
 
 // Quarter should be properly added, jumping the DST boundary
 // 8/5/2017 03:00:00.000 GMT-0700 + 1q = 11/5/2017 03:00:00.000 GMT-0800
@@ -171,9 +171,9 @@
 -1
 
 // Year should be properly added, approaches but does not jump DST boundary
-// 11/5/2016 01:00:00.000 GMT-0700 + 1yr = 11/5/2017 01:00:00.000 GMT-0700
+// 11/5/2017 01:00:00.000 GMT-0700 doesn't exist
 >> DateDiff(DateTime(2016,11,5,1,0,0), DateTime(2017,11,5,1,0,0), TimeUnit.Years)
-1
+#Error(Kind=InvalidArgument)
 
 // Year should be properly added, jumping the DST boundary
 // 11/5/2016 03:00:00.000 GMT-0700 + 1yr = 11/5/2017 03:00:00.000 GMT-0800

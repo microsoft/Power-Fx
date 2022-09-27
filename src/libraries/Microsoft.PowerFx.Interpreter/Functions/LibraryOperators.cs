@@ -528,7 +528,7 @@ namespace Microsoft.PowerFx.Functions
             };
         }
 
-        private static FormulaValue AddDateAndTime(IRContext irContext, FormulaValue[] args)
+        private static FormulaValue AddDateAndTime(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             DateTime arg0;
             switch (args[0])
@@ -548,6 +548,12 @@ namespace Microsoft.PowerFx.Functions
             try
             {
                 var result = arg0.Add(arg1.Value);
+
+                if (!result.IsValid(runner))
+                {
+                    return CommonErrors.InvalidDateTimeError(irContext);
+                }
+
                 return new DateTimeValue(irContext, result);
             }
             catch
@@ -622,7 +628,7 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
-        private static FormulaValue AddDateAndDay(IRContext irContext, FormulaValue[] args)
+        private static FormulaValue AddDateAndDay(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             DateTime arg0;
             switch (args[0])
@@ -642,6 +648,12 @@ namespace Microsoft.PowerFx.Functions
             try
             {
                 var result = arg0.AddDays(arg1.Value);
+
+                if (!result.IsValid(runner))
+                {
+                    return CommonErrors.InvalidDateTimeError(irContext);
+                }
+
                 return new DateTimeValue(irContext, result);
             }
             catch
@@ -650,7 +662,7 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
-        private static FormulaValue AddDateTimeAndDay(IRContext irContext, FormulaValue[] args)
+        private static FormulaValue AddDateTimeAndDay(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             DateTime arg0;
             switch (args[0])
@@ -670,6 +682,12 @@ namespace Microsoft.PowerFx.Functions
             try
             {
                 var result = arg0.AddDays(arg1.Value);
+
+                if (!result.IsValid(runner))
+                {
+                    return CommonErrors.InvalidDateTimeError(irContext);
+                }
+
                 return new DateTimeValue(irContext, result);
             }
             catch
@@ -719,7 +737,7 @@ namespace Microsoft.PowerFx.Functions
             return new NumberValue(irContext, result.TotalDays);
         }
 
-        private static FormulaValue SubtractDateAndTime(IRContext irContext, FormulaValue[] args)
+        private static FormulaValue SubtractDateAndTime(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             DateTime arg0;
             switch (args[0])
@@ -735,8 +753,13 @@ namespace Microsoft.PowerFx.Functions
             }
 
             var arg1 = (TimeValue)args[1];
-
             var result = arg0.Subtract(arg1.Value);
+
+            if (!result.IsValid(runner))
+            {
+                return CommonErrors.InvalidDateTimeError(irContext);
+            }
+
             return new DateTimeValue(irContext, result);
         }
 

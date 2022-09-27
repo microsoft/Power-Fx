@@ -60,6 +60,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="ExpressionTestCases\DateAdd_TimeZone_Beirut.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\libraries\Microsoft.PowerFx.Core\Microsoft.PowerFx.Core.csproj" />
   </ItemGroup>
   <ItemGroup>

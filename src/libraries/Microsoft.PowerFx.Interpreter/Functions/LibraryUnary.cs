@@ -372,6 +372,10 @@ namespace Microsoft.PowerFx.Functions
         {
             var n = args[0].Value;
             var date = _epoch.AddDays(n);
+
+            // $$$
+            // Should we consider TimeZoneInfo and/or add validation/check ambiguity of the result?           
+
             return new DateTimeValue(irContext, date);
         }
 
@@ -445,6 +449,10 @@ namespace Microsoft.PowerFx.Functions
         {
             var t = args[0].Value;
             var date = _epoch.Add(t);
+
+            // $$$
+            // Should we consider TimeZoneInfo and/or add validation/check ambiguity of the result?   
+
             return new DateTimeValue(irContext, date);
         }
 
