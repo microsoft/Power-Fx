@@ -18,7 +18,7 @@ namespace Microsoft.PowerFx.Core
     {
         private readonly BidirectionalDictionary<string, FormulaType> _definedTypes = new ();
 
-        IReadOnlyDictionary<string, NameLookupInfo> IGlobalSymbolNameResolver.GlobalSymbols => _definedTypes.ToDictionary(kvp => kvp.Key, kvp => ToLookupInfo(kvp.Value));
+        IEnumerable<KeyValuePair<string, NameLookupInfo>> IGlobalSymbolNameResolver.GlobalSymbols => _definedTypes.ToDictionary(kvp => kvp.Key, kvp => ToLookupInfo(kvp.Value));
 
         internal void RegisterType(string typeName, AggregateType type)
         {

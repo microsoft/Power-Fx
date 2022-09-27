@@ -33,7 +33,7 @@ namespace Microsoft.PowerFx.Core.Public.Types
             { "UntypedObject", FormulaType.UntypedObject },
         };
 
-        IReadOnlyDictionary<string, NameLookupInfo> IGlobalSymbolNameResolver.GlobalSymbols => _knownTypes.ToDictionary(kvp => kvp.Key, kvp => ToLookupInfo(kvp.Value));
+        IEnumerable<KeyValuePair<string, NameLookupInfo>> IGlobalSymbolNameResolver.GlobalSymbols => _knownTypes.ToDictionary(kvp => kvp.Key, kvp => ToLookupInfo(kvp.Value));
 
         internal override VersionHash VersionHash => base.VersionHash;
 
