@@ -31,12 +31,12 @@ namespace Microsoft.PowerFx
 
         private readonly ReadOnlySymbolValues _runtimeConfig;
 
-        private readonly CancellationToken _cancel;
+        private readonly CancellationToken _cancellationToken;
 
-        public EvalVisitor(CultureInfo cultureInfo, CancellationToken cancel, ReadOnlySymbolValues runtimeConfig = null)
+        public EvalVisitor(CultureInfo cultureInfo, CancellationToken cancellationToken, ReadOnlySymbolValues runtimeConfig = null)
         {
             _defaultCultureInfo = cultureInfo;
-            _cancel = cancel;
+            _cancellationToken = cancellationToken;
             _runtimeConfig = runtimeConfig;
         }
 
@@ -67,7 +67,7 @@ namespace Microsoft.PowerFx
         public void CheckCancel()
         {
             // Throws OperationCanceledException exception
-            _cancel.ThrowIfCancellationRequested();
+            _cancellationToken.ThrowIfCancellationRequested();
         }
 
         // Helper to eval an arg that might be a lambda.
@@ -182,7 +182,7 @@ namespace Microsoft.PowerFx
             var newValue = await arg1.Accept(this, context);
 
             var args = new FormulaValue[] { source, FormulaValue.New(fieldName), newValue };
-            var result = await setPropFunc.InvokeAsync(args, _cancel);
+            var result = await setPropFunc.InvokeAsync(args, _cancellationToken);
 
             return result;
         }
@@ -230,13 +230,13 @@ namespace Microsoft.PowerFx
 
             if (func is IAsyncTexlFunction asyncFunc)
             {
-                var result = await asyncFunc.InvokeAsync(args, _cancel);
+                var result = await asyncFunc.InvokeAsync(args, _cancellationToken);
                 return result;
             }
             else if (func is UserDefinedTexlFunction udtf)
             {
                 // $$$ Should add _runtimeConfig
-                var result = await udtf.InvokeAsync(args, _cancel, context.StackDepthCounter.Increment());
+                var result = await udtf.InvokeAsync(args, _cancellationToken, context.StackDepthCounter.Increment());
                 return result;
             }
             else if (func is CustomTexlFunction customTexlFunc)
@@ -495,7 +495,7 @@ namespace Microsoft.PowerFx
                 }
 
                 return new InMemoryTableValue(node.IRContext, resultRows);
-            }            
+            }
 
             return CommonErrors.UnreachableCodeError(node.IRContext);
         }
@@ -536,7 +536,7 @@ namespace Microsoft.PowerFx
             }
 
             var record = (RecordValue)left;
-            var val = record.GetField(node.IRContext.ResultType, node.Field.Value);
+            var val = await record.GetFieldAsync(node.IRContext.ResultType, node.Field.Value, _cancellationToken);
 
             return val;
         }

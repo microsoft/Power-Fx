@@ -1,22 +1,15 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.Functions.DLP;
-using Microsoft.PowerFx.Core.Functions.FunctionArgValidators;
-using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Core.Localization;
-using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
@@ -182,7 +175,7 @@ namespace Microsoft.PowerFx.Functions
             return fValid;
         }
 
-        public async Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancel)
+        public async Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancellationToken)
         {
             var validArgs = CheckArgs(args, out FormulaValue faultyArg);
 
@@ -215,7 +208,8 @@ namespace Microsoft.PowerFx.Functions
             var datasource = (TableValue)args[0];
             var recordsToRemove = args.Skip(1).Take(args.Length - toExclude);
 
-            var ret = await datasource.RemoveAsync(recordsToRemove, all, cancel);
+            cancellationToken.ThrowIfCancellationRequested();
+            var ret = await datasource.RemoveAsync(recordsToRemove, all, cancellationToken);
 
             return ret.ToFormulaValue();
         }

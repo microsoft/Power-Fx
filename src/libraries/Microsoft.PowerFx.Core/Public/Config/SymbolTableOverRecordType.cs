@@ -25,17 +25,14 @@ namespace Microsoft.PowerFx
 
         // Key is the logical name. 
         // Display names are in the NameLookupInfo.DisplayName field.
-        IReadOnlyDictionary<string, NameLookupInfo> IGlobalSymbolNameResolver.GlobalSymbols
+        IEnumerable<KeyValuePair<string, NameLookupInfo>> IGlobalSymbolNameResolver.GlobalSymbols
         {
             get
             {
-                var map = new Dictionary<string, NameLookupInfo>();
                 foreach (var kv in _type.GetFieldTypes())
                 {
-                    map[kv.Name] = Create(kv.Name, kv.Type);
+                    yield return new KeyValuePair<string, NameLookupInfo>(kv.Name, Create(kv.Name, kv.Type));
                 }
-
-                return map;
             }
         }
 

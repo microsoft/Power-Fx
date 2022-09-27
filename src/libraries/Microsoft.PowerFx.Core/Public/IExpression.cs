@@ -15,7 +15,7 @@ namespace Microsoft.PowerFx
     public interface IExpression
     {
         [Obsolete("Use CheckResult.GetEvaluator() instead.")]
-        Task<FormulaValue> EvalAsync(RecordValue parameters, CancellationToken cancel);
+        Task<FormulaValue> EvalAsync(RecordValue parameters, CancellationToken cancellationToken);
     }
 
     /// <summary>
@@ -27,9 +27,9 @@ namespace Microsoft.PowerFx
         /// Evaluate the expression with a given set of record values.
         /// </summary>
         [Obsolete("Use CheckResult.GetEvaluator() instead.")]
-        public static FormulaValue Eval(this IExpression expr, RecordValue parameters, CancellationToken cancel)
+        public static FormulaValue Eval(this IExpression expr, RecordValue parameters, CancellationToken cancellationToken)
         {
-            return expr.EvalAsync(parameters, cancel).Result;
+            return expr.EvalAsync(parameters, cancellationToken).Result;
         }
 
         [Obsolete("Use CheckResult.GetEvaluator() instead.")]

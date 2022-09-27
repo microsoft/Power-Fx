@@ -13,11 +13,12 @@ using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Tests.IntellisenseTests;
 using Microsoft.PowerFx.Types;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Microsoft.PowerFx.Interpreter.Tests
 {
     public class InterpreterSuggestTests : IntellisenseTestBase
-    {
+    {        
         private string[] SuggestStrings(string expression, PowerFxConfig config, RecordType parameterType)
         {
             Assert.NotNull(expression);
@@ -47,9 +48,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("TopOptionSetField <> |", "OptionSet", "OtherOptionSet")]
         [InlineData("TopOptionSetField <> Opt|", "OptionSet", "TopOptionSetField", "OtherOptionSet")]
         public void TestSuggestOptionSets(string expression, params string[] expectedSuggestions)
-        {
+        {            
             var config = PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder());
-            
+
             var optionSet = new OptionSet("OptionSet", DisplayNameUtility.MakeUnique(new Dictionary<string, string>()
             {
                     { "option_1", "Option1" },
@@ -79,7 +80,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var actualSuggestions = SuggestStrings(expression, engine, parameterType);
             Assert.Equal(expectedSuggestions, actualSuggestions);
-
+            
             // Now try with Globals instead of RowScope
             foreach (var field in parameterType.GetFieldTypes())
             {
@@ -157,9 +158,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var resolver = (IGlobalSymbolNameResolver)recalcEngine.TestCreateResolver();
 
-            Assert.True(resolver.GlobalSymbols.ContainsKey(varName));
-            Assert.Equal(BindKind.PowerFxResolvedObject, resolver.GlobalSymbols[varName].Kind);
-            Assert.IsType<RecalcFormulaInfo>(resolver.GlobalSymbols[varName].Data);
+            var kvp = resolver.GlobalSymbols.FirstOrDefault(gs => gs.Key == varName);
+
+            Assert.True(kvp.Key == varName);
+            Assert.Equal(BindKind.PowerFxResolvedObject, kvp.Value.Kind);
+            Assert.IsType<RecalcFormulaInfo>(kvp.Value.Data);
 
             var b = resolver.Lookup(new DName(varName), out var nameInfo, NameLookupPreferences.GlobalsOnly);
 
