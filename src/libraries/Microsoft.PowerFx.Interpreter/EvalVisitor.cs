@@ -514,8 +514,14 @@ namespace Microsoft.PowerFx
             if (node.Value is ScopeSymbol s2)
             {
                 var r = context.SymbolContext.ScopeValues[s2.Id];
-                var r2 = (RecordScope)r;
-                return r2._context;
+                if (r is RecordScope r2)
+                {
+                    return r2._context;
+                }
+                else if (r is ThisItemScope r3)
+                {
+                    return r3._thisItem;
+                }
             }
 
             return CommonErrors.UnreachableCodeError(node.IRContext);
