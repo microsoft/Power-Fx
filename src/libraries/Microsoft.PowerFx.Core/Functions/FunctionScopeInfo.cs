@@ -120,6 +120,10 @@ namespace Microsoft.PowerFx.Core.Functions
                 typeScope = typeScope.ToRecord(ref fError);
                 fArgsValid &= !fError;
             }
+            else if (_function.ParamTypes[0].IsUntypedObject)
+            {
+                typeScope = DType.UntypedObject;
+            }
             else
             {
                 Contracts.Assert(_function.ParamTypes[0].IsRecord);
