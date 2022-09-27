@@ -4215,6 +4215,13 @@ namespace Microsoft.PowerFx.Core.Binding
                             var nodeInp = node.Args.Children[0];
                             nodeInp.Accept(this);
 
+                            // At this point we know the type of the first argument, so we can check for untyped objects
+                            if (overloadWithUntypedObjectLambda != null && _txb.GetType(nodeInp) == DType.UntypedObject)
+                            {
+                                maybeFunc = overloadWithUntypedObjectLambda;
+                                scopeInfo = maybeFunc.ScopeInfo;
+                            }
+
                             // Determine the Scope Identifier using the 1st arg
                             required = _txb.GetScopeIdent(nodeInp, _txb.GetType(nodeInp), out scopeIdentifier);
 
