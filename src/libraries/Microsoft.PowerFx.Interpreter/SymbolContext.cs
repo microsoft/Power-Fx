@@ -62,6 +62,11 @@ namespace Microsoft.PowerFx
             return WithScopeValues(new ErrorScope(scopeValues));
         }
 
+        public SymbolContext WithThisItem(FormulaValue value)
+        {
+            return WithScopeValues(new ThisItemScope(value));
+        }
+
         // Called by evaluator to fetch a runtime value in the given scope. 
         public FormulaValue GetScopeVar(ScopeSymbol scope, string name)
         {

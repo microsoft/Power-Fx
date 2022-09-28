@@ -130,3 +130,24 @@ Errors: Error 35-39: If provided, last argument must be 'All'. Is there a typo?|
 
 >> Remove(t1, "All");
 Errors: Error 11-16: Invalid argument type (Text). Expecting a Record value instead.|Error 11-16: Cannot use a non-record value in this context.|Error 0-17: The function 'Remove' has some invalid arguments.
+
+>> Collect(t1, r2);
+  Collect(t1, {Field1:3,Field2:"earth",Field3:DateTime(2030,2,1,0,0,0,0),Field4:true});
+  Collect(t1, {Field1:4,Field2:"earth",Field3:DateTime(2040,2,1,0,0,0,0),Field4:false});
+  Remove(t1,LookUp(t1,DisplayNameField2="earth"));
+  t1
+Table({Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false},{Field1:3,Field2:"earth",Field3:DateTime(2030,2,1,0,0,0,0),Field4:true},{Field1:4,Field2:"earth",Field3:DateTime(2040,2,1,0,0,0,0),Field4:false})
+
+>> Collect(t1, r2);
+  Collect(t1, {Field1:3,Field2:"earth",Field3:DateTime(2030,2,1,0,0,0,0),Field4:true});
+  Collect(t1, {Field1:4,Field2:"earth",Field3:DateTime(2040,2,1,0,0,0,0),Field4:false});
+  Remove(t1,Last(Filter(t1, DisplayNameField2 = "earth")));
+  t1
+Table({Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true},{Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false},{Field1:3,Field2:"earth",Field3:DateTime(2030,2,1,0,0,0,0),Field4:true})
+
+>> Collect(t1, r2);
+  Collect(t1, {Field1:3,Field2:"earth",Field3:DateTime(2030,2,1,0,0,0,0),Field4:true});
+  Collect(t1, {Field1:4,Field2:"earth",Field3:DateTime(2040,2,1,0,0,0,0),Field4:false});
+  Remove(t1,First(Filter(t1, DisplayNameField2 = "earth")));
+  t1
+Table({Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false},{Field1:3,Field2:"earth",Field3:DateTime(2030,2,1,0,0,0,0),Field4:true},{Field1:4,Field2:"earth",Field3:DateTime(2040,2,1,0,0,0,0),Field4:false})

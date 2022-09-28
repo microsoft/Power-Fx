@@ -131,7 +131,9 @@ namespace Microsoft.PowerFx.Core.Binding
         /// <summary>
         /// Default name used to access a Lambda scope.
         /// </summary>
-        internal DName ThisRecordDefaultName => new DName("ThisRecord");
+        internal static DName ThisRecordDefaultName => new DName("ThisRecord");
+
+        internal static DName ThisItemDefaultName => new DName("ThisItem");
 
         public Features Features { get; }
 
@@ -1340,9 +1342,9 @@ namespace Microsoft.PowerFx.Core.Binding
         /// Otherwise returns false and sets scopeIdent to the default.
         /// </summary>
         /// <returns></returns>
-        private bool GetScopeIdent(TexlNode node, out DName scopeIdent)
+        private bool GetScopeIdent(TexlNode node, DType rowType, out DName scopeIdent)
         {
-            scopeIdent = ThisRecordDefaultName;
+            scopeIdent = rowType == DType.UntypedObject ? ThisItemDefaultName : ThisRecordDefaultName;
             if (node is AsNode asNode)
             {
                 scopeIdent = GetInfo(asNode).AsIdentifier;
@@ -2463,7 +2465,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 _nameResolver = resolver;
                 _features = features;
 
-                _topScope = new Scope(null, null, topScope ?? DType.Error, useThisRecordForRuleScope ? txb.ThisRecordDefaultName : default);
+                _topScope = new Scope(null, null, topScope ?? DType.Error, useThisRecordForRuleScope ? TexlBinding.ThisRecordDefaultName : default);
                 _currentScope = _topScope;
                 _currentScopeDsNodeId = -1;
             }
@@ -2700,7 +2702,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 // fieldName (unqualified)
                 else if (IsRowScopeField(node, out scope, out fError, out var isWholeScope))
                 {
-                    Contracts.Assert(scope.Type.IsRecord);
+                    Contracts.Assert(scope.Type.IsRecord || scope.Type.IsUntypedObject);
 
                     // Detected access to a pageable dataEntity in row scope, error was set
                     if (fError)
@@ -4153,6 +4155,23 @@ namespace Microsoft.PowerFx.Core.Binding
                     return false;
                 }
 
+                var numOverloads = overloads.Count();
+
+                var overloadsWithUntypedObjectLambdas = overloadsWithLambdas.Where(func => func.ParamTypes.Any() && func.ParamTypes[0] == DType.UntypedObject);
+                TexlFunction overloadWithUntypedObjectLambda = null;
+                if (overloadsWithUntypedObjectLambdas.Any())
+                {
+                    Contracts.Assert(overloadsWithUntypedObjectLambdas.Count() == 1, "Incorrect multiple overloads with both UntypedObject and lambdas.");
+                    overloadWithUntypedObjectLambda = overloadsWithUntypedObjectLambdas.Single();
+
+                    // As an extraordinarily special case, we ignore untype object lambdas for now, and type check as normal
+                    // using the function without untyped object params. This only works if both functions have exactly
+                    // the same arity (this is enforced below). We can't simply check the type of the first argument
+                    // because the argument list might be empty. Arity checks below require that we already picked an override.
+                    overloadsWithLambdas = overloadsWithLambdas.Where(func => func.ParamTypes.Any() && func.ParamTypes[0] != DType.UntypedObject);
+                    numOverloads -= 1;
+                }
+
                 // We support a single overload with lambdas. Otherwise we have a conceptual chicken-and-egg
                 // problem, whereby in order to bind the lambda args we need the precise overload (for
                 // its lambda mask), which in turn requires binding the args (for their types).
@@ -4160,9 +4179,18 @@ namespace Microsoft.PowerFx.Core.Binding
                 var maybeFunc = overloadsWithLambdas.Single();
                 Contracts.Assert(maybeFunc.HasLambdas);
 
+                if (overloadWithUntypedObjectLambda != null)
+                {
+                    // Both overrides must have exactly the same arity.
+                    Contracts.Assert(maybeFunc.MaxArity == overloadWithUntypedObjectLambda.MaxArity);
+                    Contracts.Assert(maybeFunc.MinArity == overloadWithUntypedObjectLambda.MinArity);
+
+                    // There also cannot be optional parameters
+                    Contracts.Assert(maybeFunc.MinArity == maybeFunc.MaxArity);
+                }
+
                 var scopeInfo = maybeFunc.ScopeInfo;
                 IDelegationMetadata metadata = null;
-                var numOverloads = overloads.Count();
 
                 Scope scopeNew = null;
                 IExpandInfo expandInfo;
@@ -4187,8 +4215,15 @@ namespace Microsoft.PowerFx.Core.Binding
                             var nodeInp = node.Args.Children[0];
                             nodeInp.Accept(this);
 
+                            // At this point we know the type of the first argument, so we can check for untyped objects
+                            if (overloadWithUntypedObjectLambda != null && _txb.GetType(nodeInp) == DType.UntypedObject)
+                            {
+                                maybeFunc = overloadWithUntypedObjectLambda;
+                                scopeInfo = maybeFunc.ScopeInfo;
+                            }
+
                             // Determine the Scope Identifier using the 1st arg
-                            required = _txb.GetScopeIdent(nodeInp, out scopeIdentifier);
+                            required = _txb.GetScopeIdent(nodeInp, _txb.GetType(nodeInp), out scopeIdentifier);
 
                             if (scopeInfo.CheckInput(nodeInp, _txb.GetType(nodeInp), out scope))
                             {
@@ -4239,6 +4274,13 @@ namespace Microsoft.PowerFx.Core.Binding
                 _txb.AddVolatileVariables(nodeInput, volatileVariables);
                 nodeInput.Accept(this);
 
+                // At this point we know the type of the first argument, so we can check for untyped objects
+                if (overloadWithUntypedObjectLambda != null && _txb.GetType(nodeInput) == DType.UntypedObject)
+                {
+                    maybeFunc = overloadWithUntypedObjectLambda;
+                    scopeInfo = maybeFunc.ScopeInfo;
+                }
+
                 FirstNameNode dsNode;
                 if (maybeFunc.TryGetDataSourceNodes(node, _txb, out var dsNodes) && ((dsNode = dsNodes.FirstOrDefault()) != default(FirstNameNode)))
                 {
@@ -4263,7 +4305,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     fArgsValid = scopeInfo.CheckInput(nodeInput, typeInput, out typeScope);
 
                     // Determine the scope identifier using the first node for lambda params
-                    identRequired = _txb.GetScopeIdent(nodeInput, out scopeIdent);
+                    identRequired = _txb.GetScopeIdent(nodeInput, typeScope, out scopeIdent);
                 }
 
                 if (!fArgsValid)
