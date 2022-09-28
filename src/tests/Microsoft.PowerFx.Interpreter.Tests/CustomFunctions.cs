@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Threading.Channels;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Types;
@@ -63,7 +64,7 @@ namespace Microsoft.PowerFx.Tests
 
         // Verify a custom function can return a non-completed task. 
         [Fact]
-        public async Task VerifyCustomFunctionIsAsync()
+        public async void VerifyCustomFunctionIsAsync()
         {
             var func = new TestCustomWaitAsyncFunction();
             var config = new PowerFxConfig(null);
@@ -88,9 +89,62 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal(30.0, result.ToObject());
         }
 
+        [Fact]
+        public async void VerifyCancellationInAsync()
+        {
+            var func = new InfiniteAsyncFunction();
+            var config = new PowerFxConfig(null);
+            config.AddFunction(func);
+
+            var engine = new RecalcEngine(config);
+            using var cts = new CancellationTokenSource();
+
+            await Task.Yield();
+            var task = engine.EvalAsync("InfiniteAsync()", cts.Token);
+
+            // custom func is blocking on our Infinite loop.
+            await Task.Delay(TimeSpan.FromMilliseconds(5));
+            Assert.False(task.IsCompleted);
+
+            cts.Cancel();
+
+            await Assert.ThrowsAsync<TaskCanceledException>(async () => { await task; });
+        }
+
+        // Add a function that gets different runtime state per expression invoke
+        [Fact]
+        public async Task LocalAsyncFunction()
+        {
+            // Share a config
+            var s1 = new SymbolTable();
+            s1.AddFunction(new UserAsyncFunction());
+
+            var engine = new RecalcEngine();
+
+            var check = engine.Check(
+                "UserAsync(3)",
+                symbolTable: s1);
+
+            // Bind expression once, and then can pass in per-eval state. 
+            var expr = check.GetEvaluator();
+
+            foreach (var name in new string[] { "Bill", "Steve", "Satya" })
+            {
+                var runtime = new SymbolValues()
+                    .AddService(new UserAsyncFunction.Runtime { _name = name });
+                var result = await expr.EvalAsync(CancellationToken.None, runtime);
+
+                var expected = name + "3";
+                var actual = result.ToObject();
+                Assert.Equal(expected, actual);
+            }
+        }
+
         private class TestCustomAsyncFunction : ReflectionFunction
         {
-            public static async Task<StringValue> Execute(NumberValue x, BooleanValue b)
+            // Must have "Execute" method. 
+            // Cancellation Token must be the last argument for custom async function.
+            public static async Task<StringValue> Execute(NumberValue x, BooleanValue b, CancellationToken cancellationToken)
             {
                 var val = x.Value.ToString() + "," + b.Value.ToString();
                 return FormulaValue.New(val);
@@ -101,7 +155,9 @@ namespace Microsoft.PowerFx.Tests
         {
             private readonly TaskCompletionSource<FormulaValue> _waiter = new TaskCompletionSource<FormulaValue>();
 
-            public async Task<NumberValue> Execute()
+            // Must have "Execute" method. 
+            // Cancellation Token must be the last argument for custom async function.
+            public async Task<NumberValue> Execute(CancellationToken cancellationToken)
             {
                 await Task.Yield();
                 var result = await _waiter.Task;
@@ -115,6 +171,42 @@ namespace Microsoft.PowerFx.Tests
             public void SetResult(int value)
             {
                 _waiter.SetResult(FormulaValue.New(value));
+            }
+        }
+
+        private class UserAsyncFunction : ReflectionFunction
+        {
+            public UserAsyncFunction()
+            {
+                // Specify the type used for config. 
+                // At runtime, this is pulled from the RuntimeConfig config dictionary. 
+                ConfigType = typeof(Runtime);
+            }
+
+            public class Runtime
+            {
+                public string _name;
+            }
+
+            // Must have "Execute" method. 
+            // Arg0 is from RuntimeConfig state. 
+            // Arg1 is a regular parameter. 
+            // Cancellation Token must be the last argument for custom async function.
+            public async Task<StringValue> Execute(Runtime config, NumberValue x, CancellationToken cancellationToken)
+            {
+                var val = x.Value;
+                return FormulaValue.New(config._name + val);
+            }
+        }
+
+        private class InfiniteAsyncFunction : ReflectionFunction
+        {
+            // Must have "Execute" method. 
+            public async Task<StringValue> Execute(CancellationToken cancellationToken)
+            {
+                await Task.Delay(-1, cancellationToken); // throws TaskCanceledException
+
+                throw new InvalidOperationException($"Shouldn't get here");
             }
         }
 

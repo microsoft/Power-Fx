@@ -24,7 +24,7 @@ namespace Microsoft.PowerFx
     /// </summary>
     internal class CustomTexlFunction : TexlFunction
     {
-        public Func<IServiceProvider, FormulaValue[], FormulaValue> _impl;
+        public Func<IServiceProvider, FormulaValue[], CancellationToken, Task<FormulaValue>> _impl;
 
         public override bool SupportsParamCoercion => true;
 
@@ -50,9 +50,9 @@ namespace Microsoft.PowerFx
             yield return new[] { SG("Arg 1") };
         }
 
-        public virtual FormulaValue Invoke(IServiceProvider serviceProvider, FormulaValue[] args)
+        public virtual Task<FormulaValue> InvokeAsync(IServiceProvider serviceProvider, FormulaValue[] args, CancellationToken cancellationToken)
         {
-            return _impl(serviceProvider, args);
+            return _impl(serviceProvider, args, cancellationToken);
         }
     }
 
@@ -69,7 +69,7 @@ namespace Microsoft.PowerFx
 
         public override bool SupportsParamCoercion => false;
 
-        public Func<FormulaValue[], FormulaValue> _impl;
+        public Func<FormulaValue[], Task<FormulaValue>> _impl;
 
         public CustomSetPropertyFunction(string name)
             : base(DPath.Root, name, name, SG(name), FunctionCategories.Behavior, DType.Boolean, 0, 2, 2)
@@ -123,41 +123,7 @@ namespace Microsoft.PowerFx
         public async Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancellationToken)
         {
             var result = _impl(args);
-            return result;
-        }
-    }
-
-    internal class CustomAsyncTexlFunction : TexlFunction, IAsyncTexlFunction
-    {
-        public Func<FormulaValue[], CancellationToken, Task<FormulaValue>> _impl;
-
-        public override bool SupportsParamCoercion => true;
-
-        public CustomAsyncTexlFunction(string name, FormulaType returnType, params FormulaType[] paramTypes)
-            : this(name, returnType._type, Array.ConvertAll(paramTypes, x => x._type))
-        {
-        }
-
-        public CustomAsyncTexlFunction(string name, DType returnType, params DType[] paramTypes)
-            : base(DPath.Root, name, name, SG("Custom func " + name), FunctionCategories.MathAndStat, returnType, 0, paramTypes.Length, paramTypes.Length, paramTypes)
-        {
-        }
-
-        public override bool IsSelfContained => true;
-
-        public static StringGetter SG(string text)
-        {
-            return (string locale) => text;
-        }
-
-        public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
-        {
-            yield return new[] { SG("Arg 1") };
-        }
-
-        public virtual Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancel)
-        {
-            return _impl(args, cancel);
+            return await result;
         }
     }
 
@@ -243,27 +209,42 @@ namespace Microsoft.PowerFx
                 info.RetType = GetType(m.ReturnType);
 
                 var paramTypes = new List<FormulaType>();
-                foreach (var p in m.GetParameters())
+
+                info._isAsync = m.ReturnType.BaseType == typeof(Task);
+
+                var parmas = m.GetParameters();
+                for (var i = 0; i < parmas.Length; i++)
                 {
-                    if (typeof(FormulaValue).IsAssignableFrom(p.ParameterType))
+                    if (i == parmas.Length - 1 && info._isAsync)
                     {
-                        paramTypes.Add(GetType(p.ParameterType));
-                    } 
-                    else if (p.ParameterType == ConfigType)
+                        if (parmas[i].ParameterType != typeof(CancellationToken))
+                        {
+                            throw new InvalidOperationException($"Last argument must be a cancellation token.");
+                        }
+                    }
+                    else if (typeof(FormulaValue).IsAssignableFrom(parmas[i].ParameterType))
+                    {
+                        paramTypes.Add(GetType(parmas[i].ParameterType));
+                    }
+                    else if (parmas[i].ParameterType == ConfigType)
                     {
                         // Not a Formulatype, pull from RuntimeConfig
-                        info._configType = p.ParameterType;
-                    } 
-                    else
+                        info._configType = parmas[i].ParameterType;
+                    }
+                    else if (parmas[i].ParameterType == typeof(CancellationToken) && _info._isAsync)
                     {
-                        // Unknonw parameter type
-                        throw new InvalidOperationException($"Unknown parameter type: {p.Name}, {p.ParameterType}");
+                        throw new InvalidOperationException($"Cancellation token must be the last argument.");
+                    }
+                    else
+                    { 
+                        // Unknown parameter type
+                        throw new InvalidOperationException($"Unknown parameter type: {parmas[i].Name}, {parmas[i].ParameterType}");
                     }
                 }
 
                 info.ParamTypes = paramTypes.ToArray();
                 info._method = m;
-                info._isAsync = m.ReturnType.BaseType == typeof(Task);
+
                 _info = info;
             }
 
@@ -300,25 +281,17 @@ namespace Microsoft.PowerFx
             {
                 return new CustomSetPropertyFunction(info.Name)
                 {
-                    _impl = args => Invoke(null, args)
-                };
-            }
-
-            if (info._isAsync)
-            {
-                return new CustomAsyncTexlFunction(info.Name, info.RetType, info.ParamTypes)
-                {
-                    _impl = (args, cancellationToken) => InvokeAsync(args, cancellationToken)
+                    _impl = args => InvokeAsync(null, args, CancellationToken.None)
                 };
             }
 
             return new CustomTexlFunction(info.Name, info.RetType, info.ParamTypes)
             {
-                _impl = (runtimeConfig, args) => Invoke(runtimeConfig, args)
+                _impl = (runtimeConfig, args, cancellationToken) => InvokeAsync(runtimeConfig, args, cancellationToken)
             };
         }
 
-        public FormulaValue Invoke(IServiceProvider serviceProvider, FormulaValue[] args)
+        public async Task<FormulaValue> InvokeAsync(IServiceProvider serviceProvider, FormulaValue[] args, CancellationToken cancellationToken)
         {
             Scan();
 
@@ -341,28 +314,21 @@ namespace Microsoft.PowerFx
                 args2.Add(arg);
             }
 
-            var result = _info._method.Invoke(this, args2.ToArray());
-            
-            return (FormulaValue)result;
-        }
-
-        public async Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancellationToken)
-        {
-            Scan();
-
-            var args2 = new List<object>();
-
-            foreach (var arg in args)
+            if (_info._isAsync)
             {
-                args2.Add(arg);
+                args2.Add(cancellationToken);
             }
 
             var result = _info._method.Invoke(this, args2.ToArray());
 
-            var resultType = result.GetType().GenericTypeArguments[0];
-            var formulaValueResult = await Unwrap(result, resultType);
-            
-            return formulaValueResult;
+            if (_info._isAsync)
+            {
+                var resultType = result.GetType().GenericTypeArguments[0];
+                var formulaValueResult = await Unwrap(result, resultType);
+                return formulaValueResult;
+            }
+
+            return (FormulaValue)result;
         }
 
         private static async Task<FormulaValue> Unwrap(object obj, Type resultType)
