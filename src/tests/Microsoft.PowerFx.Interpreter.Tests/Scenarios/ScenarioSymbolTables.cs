@@ -55,16 +55,18 @@ namespace Microsoft.PowerFx.Interpreter.Tests.Scenarios
         [Theory]
         [InlineData("FindRecord(\"Customer\").CustomerId")]
         [InlineData("FindRecord(\"Vendor\").VendorId")]
+        [InlineData("FindRecord(\"Vendor\").VendorId; FindRecord(\"Customer\").CustomerId;", Skip = "Only first entry in symbol table is used")]
         public void DynamicRecordTypeDottedChecking(string expr)
         {
             var typeCache = new TypeMarshallerCache();
+            var parserOptions = new ParserOptions() { AllowsSideEffects = true };
 
             var config = new PowerFxConfig();
             config.AddFunction(new FindRecord(typeCache));
 
             var engine = new RecalcEngine(config);
 
-            var parseResult = engine.Parse(expr);
+            var parseResult = engine.Parse(expr, parserOptions);
             var findRecords = new FindRecordVisitor();
             parseResult.Root.Accept(findRecords);
 
@@ -77,7 +79,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests.Scenarios
                 symbolTable.AddFunction(new FindRecord(typeCache, recordValue.Type));
             }
 
-            var checkResult = engine.Check(parseResult, options: null, symbolTable);
+            var checkResult = engine.Check(parseResult, parserOptions, symbolTable);
 
             Assert.True(checkResult.IsSuccess);
         }
