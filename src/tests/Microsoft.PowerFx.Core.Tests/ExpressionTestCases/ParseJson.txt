@@ -93,6 +93,12 @@ Blank()
 >> ForAll(ParseJSON("[5, 6, 7]"), Value(ThisRecord))
 [5,6,7]
 
+>> ForAll(ParseJSON("5"), Value(ThisRecord))
+#Error(Kind=InvalidArgument)
+
+>> ForAll(ParseJSON("5"), IfError(Value(ThisRecord), -1))
+#Error(Kind=InvalidArgument)
+
 >> ForAll(ParseJSON("null"), Value(ThisRecord))
 Blank()
 
