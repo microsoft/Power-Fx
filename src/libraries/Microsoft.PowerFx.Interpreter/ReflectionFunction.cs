@@ -127,6 +127,40 @@ namespace Microsoft.PowerFx
         }
     }
 
+    internal class CustomAsyncTexlFunction : TexlFunction, IAsyncTexlFunction
+    {
+        public Func<FormulaValue[], CancellationToken, Task<FormulaValue>> _impl;
+
+        public override bool SupportsParamCoercion => true;
+
+        public CustomAsyncTexlFunction(string name, FormulaType returnType, params FormulaType[] paramTypes)
+            : this(name, returnType._type, Array.ConvertAll(paramTypes, x => x._type))
+        {
+        }
+
+        public CustomAsyncTexlFunction(string name, DType returnType, params DType[] paramTypes)
+            : base(DPath.Root, name, name, SG("Custom func " + name), FunctionCategories.MathAndStat, returnType, 0, paramTypes.Length, paramTypes.Length, paramTypes)
+        {
+        }
+
+        public override bool IsSelfContained => true;
+
+        public static StringGetter SG(string text)
+        {
+            return (string locale) => text;
+        }
+
+        public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
+        {
+            yield return new[] { SG("Arg 1") };
+        }
+
+        public virtual Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancel)
+        {
+            return _impl(args, cancel);
+        }
+    }
+
     /// <summary>
     /// Base class for importing a C# function into Power Fx. 
     /// Dervied class should follow this convention:
@@ -185,6 +219,8 @@ namespace Microsoft.PowerFx
             public Type _configType;
 
             public MethodInfo _method;
+
+            public bool _isAsync;
         }
 
         private FunctionDescr Scan()
@@ -227,7 +263,7 @@ namespace Microsoft.PowerFx
 
                 info.ParamTypes = paramTypes.ToArray();
                 info._method = m;
-
+                info._isAsync = m.ReturnType.BaseType == typeof(Task);
                 _info = info;
             }
 
@@ -238,6 +274,12 @@ namespace Microsoft.PowerFx
         {
             // Handle any FormulaType deriving from Primitive<T>
             var tBase = t.BaseType;
+
+            if (tBase == typeof(Task))
+            {
+                tBase = t.GenericTypeArguments[0].BaseType;
+            }
+
             if (Utility.TryGetElementType(tBase, typeof(PrimitiveValue<>), out var typeArg))
             {
                 if (PrimitiveValueConversions.TryGetFormulaType(typeArg, out var formulaType))
@@ -259,6 +301,14 @@ namespace Microsoft.PowerFx
                 return new CustomSetPropertyFunction(info.Name)
                 {
                     _impl = args => Invoke(null, args)
+                };
+            }
+
+            if (info._isAsync)
+            {
+                return new CustomAsyncTexlFunction(info.Name, info.RetType, info.ParamTypes)
+                {
+                    _impl = (args, cancellationToken) => InvokeAsync(args, cancellationToken)
                 };
             }
 
@@ -292,8 +342,56 @@ namespace Microsoft.PowerFx
             }
 
             var result = _info._method.Invoke(this, args2.ToArray());
-
+            
             return (FormulaValue)result;
+        }
+
+        public async Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancellationToken)
+        {
+            Scan();
+
+            var args2 = new List<object>();
+
+            foreach (var arg in args)
+            {
+                args2.Add(arg);
+            }
+
+            var result = _info._method.Invoke(this, args2.ToArray());
+
+            var resultType = result.GetType().GenericTypeArguments[0];
+            var formulaValueResult = await Unwrap(result, resultType);
+            
+            return formulaValueResult;
+        }
+
+        private static async Task<FormulaValue> Unwrap(object obj, Type resultType)
+        {
+            var t1 = typeof(Helper<>).MakeGenericType(resultType);
+            var helper = Activator.CreateInstance(t1);
+            var t2 = (Helper)helper;
+
+            FormulaValue result = await t2.Unwrap(obj);
+
+            return result;
+        }
+
+        private abstract class Helper
+        {
+            // where obj is Task<T>, T is FormulaValue 
+            public abstract Task<FormulaValue> Unwrap(object obj);
+        }
+
+        private class Helper<T> : Helper
+            where T : FormulaValue
+        {
+            // where obj is Task<T>, T is FormulaValue 
+            public override async Task<FormulaValue> Unwrap(object obj)
+            {
+                var t = (Task<T>)obj;
+                var result = await t;
+                return result;
+            }
         }
     }
 

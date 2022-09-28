@@ -1,11 +1,15 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Types;
 using Xunit;
+using Xunit.Sdk;
 
 namespace Microsoft.PowerFx.Tests
 {
@@ -35,6 +39,82 @@ namespace Microsoft.PowerFx.Tests
             {
                 var val = x.Value.ToString() + "," + b.Value.ToString();
                 return FormulaValue.New(val);
+            }
+        }
+
+        [Fact]
+        public async void SimpleCustomAsyncFuntion()
+        {
+            var config = new PowerFxConfig(null);
+
+            config.AddFunction(new TestCustomAsyncFunction());
+            var engine = new RecalcEngine(config);
+
+            // Shows up in enumeration
+            var func = engine.GetAllFunctionNames().First(name => name == "TestCustomAsync");
+            Assert.NotNull(func);
+
+            // Can be invoked. 
+            using var cts = new CancellationTokenSource();
+            var resultAsync = await engine.EvalAsync("TestCustomAsync(3, true)", cts.Token);
+
+            Assert.Equal("3,True", resultAsync.ToObject());
+        }
+
+        // Verify a custom function can return a non-completed task. 
+        [Fact]
+        public async Task VerifyCustomFunctionIsAsync()
+        {
+            var func = new TestCustomWaitAsyncFunction();
+            var config = new PowerFxConfig(null);
+            config.AddFunction(func);
+
+            var engine = new RecalcEngine(config);
+
+            // Can be invoked. 
+            using var cts = new CancellationTokenSource();
+
+            var task = engine.EvalAsync("TestCustomWaitAsync()", cts.Token);
+            await Task.Yield();
+
+            // custom func is blocking on our waiter
+            await Task.Delay(TimeSpan.FromMilliseconds(5));
+            Assert.False(task.IsCompleted);
+
+            func.SetResult(15);
+
+            var result = await task;
+
+            Assert.Equal(30.0, result.ToObject());
+        }
+
+        private class TestCustomAsyncFunction : ReflectionFunction
+        {
+            public static async Task<StringValue> Execute(NumberValue x, BooleanValue b)
+            {
+                var val = x.Value.ToString() + "," + b.Value.ToString();
+                return FormulaValue.New(val);
+            }
+        }
+
+        private class TestCustomWaitAsyncFunction : ReflectionFunction
+        {
+            private readonly TaskCompletionSource<FormulaValue> _waiter = new TaskCompletionSource<FormulaValue>();
+
+            public async Task<NumberValue> Execute()
+            {
+                await Task.Yield();
+                var result = await _waiter.Task;
+
+                var n = ((NumberValue)result).Value;
+                var x = FormulaValue.New(n * 2);
+
+                return x;
+            }
+
+            public void SetResult(int value)
+            {
+                _waiter.SetResult(FormulaValue.New(value));
             }
         }
 
