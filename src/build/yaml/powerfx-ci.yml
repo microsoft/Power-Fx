@@ -134,7 +134,7 @@ stages:
 
         foreach ($Name in $Names) {
             "---- $Name ------------------";
-            nuget install $Name -Version $ApiContractVersion -OutputDirectory $TempContractInstallDirectory;
+            nuget install $Name -Version $ApiContractVersion -OutputDirectory $TempContractInstallDirectory -NonInteractive;
 
             Copy-Item "$TempContractInstallDirectory\$Name.$ApiContractVersion\lib\netstandard2.0\$Name.dll" $OutputDirectory;
         }
