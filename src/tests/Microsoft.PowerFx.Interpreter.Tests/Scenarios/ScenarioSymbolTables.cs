@@ -171,7 +171,14 @@ namespace Microsoft.PowerFx.Interpreter.Tests.Scenarios
             {
                 if (node.Head.Name.Equals("FindRecord"))
                 {
-                    _recordTypes.Add((node.Args.ChildNodes.First() as StrLitNode).Value);
+                    if (node.Args.ChildNodes.First() is StrLitNode tableNameLiteral)
+                    {
+                        _recordTypes.Add(tableNameLiteral.Value);
+                    }
+                }
+                else
+                {
+                    throw new ArgumentException("String literal expected as first argument for 'FindRecord' function");
                 }
             }
 
