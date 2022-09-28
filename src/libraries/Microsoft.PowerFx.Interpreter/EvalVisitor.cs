@@ -241,7 +241,7 @@ namespace Microsoft.PowerFx
             }
             else if (func is CustomTexlFunction customTexlFunc)
             {
-                var result = await customTexlFunc.InvokeAsync(_runtimeConfig, args, _cancel);
+                var result = await customTexlFunc.InvokeAsync(_runtimeConfig, args, _cancellationToken);
                 return result;
             }
             else
