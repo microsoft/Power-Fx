@@ -43,20 +43,20 @@ namespace Microsoft.PowerFx
         }
     }
 
-    internal class ThisItemScope : IScope
+    internal class UntypedObjectThisRecordScope : IScope
     {
-        public readonly FormulaValue _thisItem;
+        public readonly FormulaValue _thisRecord;
 
-        public ThisItemScope(FormulaValue thisItem)
+        public UntypedObjectThisRecordScope(FormulaValue thisItem)
         {
-            _thisItem = thisItem;
+            _thisRecord = thisItem;
         }
 
         public virtual FormulaValue Resolve(string name)
         {
-            if (name == TexlBinding.ThisItemDefaultName.Value)
+            if (name == TexlBinding.ThisRecordDefaultName.Value)
             {
-                return _thisItem;
+                return _thisRecord;
             }
 
             return null;
