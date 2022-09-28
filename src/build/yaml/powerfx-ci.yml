@@ -119,6 +119,31 @@ stages:
       continueOnError: true
 
     - powershell: |
+        $PackageNames = $(PackagesToValidate);
+        $ApiContractVersion = $(ApiContractVersion);
+        $TempContractInstallDirectory = ".\TempContractInstallDir";
+        $OutputDirectory = ".\ContractDlls";
+
+        New-Item -ItemType directory -Path $OutputDirectory -Force
+
+        $Names = $PackageNames.Split(',');
+
+        foreach ($Name in $Names) {
+            "---- $Name ------------------";
+            nuget install $Name -Version $ApiContractVersion -OutputDirectory $TempContractInstallDirectory;
+
+            Copy-Item "$TempContractInstallDirectory\$Name.$ApiContractVersion\lib\netstandard2.0\$Name.dll" $OutputDirectory;
+        }
+      displayName: 'Download Contract DLLs to ContractDlls folder'
+
+    - task: PublishPipelineArtifact@0
+      inputs:
+        artifactName: 'ContractDlls'
+        targetPath: ContractDlls
+      displayName: 'Push to ContractDlls in Artifacts'
+      continueOnError: true
+
+    - powershell: |
         gci env:* | sort-object name | Format-Table -AutoSize -Wrap
       displayName: 'Display env vars'
       condition: succeededOrFailed()

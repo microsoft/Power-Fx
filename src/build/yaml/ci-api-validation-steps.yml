@@ -5,24 +5,23 @@ parameters:
 
 steps:
 - task: DownloadPipelineArtifact@2
-  displayName: 'Download $(PackageName).dll from Artifacts'
+  displayName: 'Download OutputDlls from Artifacts'
   inputs:
     artifactName: 'OutputDlls-$(BuildConfiguration)'
-    patterns: '$(PackageName).dll'
-    targetPath: '$(System.ArtifactsDirectory)/Artifacts'
+    targetPath: '$(System.ArtifactsDirectory)/OutputDlls'
 
-- task: NuGetCommand@2
-  displayName: 'NuGet install $(PackageName) v ${{ parameters.ContractVersion }}'
+- task: DownloadPipelineArtifact@2
+  displayName: 'Download ContractDlls from Artifacts'
   inputs:
-    command: custom
-    arguments: 'install $(PackageName) -Version ${{ parameters.ContractVersion }} -OutputDirectory $(System.DefaultWorkingDirectory)\DownloadedNuGet'
+    artifactName: 'ContractDlls'
+    targetPath: '$(System.ArtifactsDirectory)/ContractDlls'
 
 - task: SOUTHWORKS.binaries-comparer.custom-build-release-task.binaries-comparer@0
   displayName: 'Compare binaries'
   inputs:
-    contractsRootFolder: 'DownloadedNuGet\$(PackageName).${{ parameters.ContractVersion }}\lib\netstandard2.0'
+    contractsRootFolder: '$(System.ArtifactsDirectory)/ContractDlls'
     contractsFileName: '$(PackageName).dll'
-    implFolder: '$(System.ArtifactsDirectory)/Artifacts'
+    implFolder: '$(System.ArtifactsDirectory)/OutputDlls'
     failOnIssue: false
     resolveFx: false
     generateLog: true
