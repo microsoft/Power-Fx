@@ -118,6 +118,10 @@ stages:
       displayName: 'Push to OutputDlls-$(BuildConfiguration) in Artifacts'
       continueOnError: true
 
+    - template: feed-setup-step.yml
+      parameters: 
+        feedName: "${{ parameters.packageFeed }}"
+
     - powershell: |
         $PackageNames = "$(PackagesToValidate)";
         $ApiContractVersion = "$(ApiContractVersion)";
