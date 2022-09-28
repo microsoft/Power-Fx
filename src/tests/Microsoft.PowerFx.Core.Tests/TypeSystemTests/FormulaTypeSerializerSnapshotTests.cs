@@ -86,6 +86,7 @@ namespace Microsoft.PowerFx.Tests
         [InlineData("PrimitiveGuid", "g")]
         [InlineData("PrimitiveUntyped", "O")]
         [InlineData("PrimitiveBlank", "N")]
+        [InlineData("PrimitiveError", "e")]
         [InlineData("Record", "![Foo:n, Bar:s]")]
         [InlineData("RecordNested", "![Foo:n, Bar:![Qux:![Baz:s]]]")]
         [InlineData("RecordTableNested", "*[Foo:n, Bar:![Qux:*[Baz:s]]]")]

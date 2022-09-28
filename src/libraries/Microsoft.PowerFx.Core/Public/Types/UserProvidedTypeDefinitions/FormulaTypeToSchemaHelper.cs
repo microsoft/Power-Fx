@@ -42,7 +42,11 @@ namespace Microsoft.PowerFx.Core
 
             if (type is not AggregateType aggregateType)
             {
-                throw new InvalidOperationException($"Conversion to schema definition not supported for type {type}");
+                // Unsupported type, return None
+                return new FormulaTypeSchema()
+                {
+                    Type = new SchemaTypeName() { Name = "None" }
+                };
             }
             
             if (maxDepth < 0)
