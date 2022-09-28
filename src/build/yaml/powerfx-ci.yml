@@ -119,8 +119,8 @@ stages:
       continueOnError: true
 
     - powershell: |
-        $PackageNames = $(PackagesToValidate);
-        $ApiContractVersion = $(ApiContractVersion);
+        $PackageNames = "$(PackagesToValidate)";
+        $ApiContractVersion = "$(ApiContractVersion)";
         $TempContractInstallDirectory = ".\TempContractInstallDir";
         $OutputDirectory = ".\ContractDlls";
 
