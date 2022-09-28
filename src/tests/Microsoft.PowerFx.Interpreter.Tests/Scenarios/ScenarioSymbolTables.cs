@@ -43,10 +43,43 @@ namespace Microsoft.PowerFx.Interpreter.Tests.Scenarios
             }
 
             var checkResult = engine.Check(parseResult, options: null, symbolTable);
+
+            Assert.True(checkResult.IsSuccess);
+
             var resultValue = checkResult.GetEvaluator().Eval() as ObjectRecordValue;
 
             Assert.NotNull(resultValue);
             Assert.IsType(expectedType, resultValue.Source);
+        }
+
+        [Theory]
+        [InlineData("FindRecord(\"Customer\").CustomerId")]
+        [InlineData("FindRecord(\"Vendor\").VendorId")]
+        public void DynamicRecordTypeDottedChecking(string expr)
+        {
+            var typeCache = new TypeMarshallerCache();
+
+            var config = new PowerFxConfig();
+            config.AddFunction(new FindRecord(typeCache));
+
+            var engine = new RecalcEngine(config);
+
+            var parseResult = engine.Parse(expr);
+            var findRecords = new FindRecordVisitor();
+            parseResult.Root.Accept(findRecords);
+
+            var symbolTable = new SymbolTable();
+            foreach (var tableName in findRecords.RecordTypes)
+            {
+                var record = BaseRecord.CreateRecord(tableName);
+                var recordValue = typeCache.Marshal(record, record.GetType()) as RecordValue;
+
+                symbolTable.AddFunction(new FindRecord(typeCache, recordValue.Type));
+            }
+
+            var checkResult = engine.Check(parseResult, options: null, symbolTable);
+
+            Assert.True(checkResult.IsSuccess);
         }
 
         private class BaseRecord
