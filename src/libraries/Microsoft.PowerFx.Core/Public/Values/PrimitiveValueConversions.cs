@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Types
@@ -42,6 +43,7 @@ namespace Microsoft.PowerFx.Types
             { typeof(DateTime?), FormulaType.DateTime },
             { typeof(DateTimeOffset?), FormulaType.DateTime },
             { typeof(TimeSpan?), FormulaType.Time },
+            { typeof(Color), FormulaType.Color }
         };
 
         /// <summary>
@@ -166,6 +168,10 @@ namespace Microsoft.PowerFx.Types
             else if (type == FormulaType.Guid)
             {
                 result = FormulaValue.New((Guid)value);
+            }
+            else if (type == FormulaType.Color)
+            {
+                result = FormulaValue.New((Color)value);
             }
 
             return result != null;

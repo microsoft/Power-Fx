@@ -246,6 +246,48 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: Concatenate)
             },
             {
+                BuiltinFunctionsCore.ColorValue,
+                StandardErrorHandling<StringValue>(
+                    BuiltinFunctionsCore.ColorValue.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<StringValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: TextToColor)
+            },
+            {
+                BuiltinFunctionsCore.ColorValue_UO,
+                StandardErrorHandling<UntypedObjectValue>(
+                    BuiltinFunctionsCore.ColorValue.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<UntypedObjectValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: ColorValue_UO)
+            },
+            {
+                BuiltinFunctionsCore.ConcatenateT,
+                StandardErrorHandlingAsync(
+                    BuiltinFunctionsCore.ConcatenateT.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrTableOrBlank<StringValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: MultiSingleColumnTable(
+                            StandardErrorHandling<StringValue>(
+                                BuiltinFunctionsCore.Concatenate.Name,
+                                expandArguments: NoArgExpansion,
+                                replaceBlankValues: ReplaceBlankWithEmptyString,
+                                checkRuntimeTypes: ExactValueType<StringValue>,
+                                checkRuntimeValues: DeferRuntimeValueChecking,
+                                returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                                targetFunction: Concatenate),
+                            transposeEmptyTable: true))
+            },
+            {
                 BuiltinFunctionsCore.Cos,
                 StandardErrorHandling<NumberValue>(
                     BuiltinFunctionsCore.Cos.Name,
@@ -1020,6 +1062,17 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeValues: DeferRuntimeTypeChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: Replace)
+            },
+            {
+                BuiltinFunctionsCore.RGBA,
+                StandardErrorHandling<NumberValue>(
+                    BuiltinFunctionsCore.RGBA.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: ReplaceBlankWithZero,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: RGBA)
             },
             {
                 BuiltinFunctionsCore.Right,

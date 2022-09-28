@@ -302,5 +302,19 @@ namespace Microsoft.PowerFx.Functions
 
             return new InMemoryTableValue(irContext, StandardTableNodeRecords(irContext, rows, forceSingleColumn: false));
         }
+
+        public static FormulaValue ColorValue_UO(IRContext irContext, UntypedObjectValue[] args)
+        {
+            var impl = args[0].Impl;
+
+            if (impl.Type == FormulaType.String)
+            {
+                var str = impl.GetString();
+
+                return TextToColor(irContext, new StringValue[] { FormulaValue.New(str) });
+            }
+
+            return GetTypeMismatchError(irContext, BuiltinFunctionsCore.ColorValue_UO.Name, DType.String.GetKindString(), impl);
+        }
     }
 }

@@ -320,3 +320,9 @@ Blank()
 
 >> Text(Index(ParseJSON("[ { ""a"" : 10 }, { ""b"" : ""str"" } ]"),2).a)
 Blank()
+
+>> ColorValue(ParseJSON("""#01020304"""))
+Color [A=4, R=1, G=2, B=3]
+
+>> ColorValue(ParseJSON("null"))
+Blank()
