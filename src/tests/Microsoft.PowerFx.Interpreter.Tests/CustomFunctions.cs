@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Tests;
+using Microsoft.PowerFx.Core.Tests.Helpers;
 using Microsoft.PowerFx.Types;
 using Xunit;
 using Xunit.Sdk;
@@ -113,7 +114,7 @@ namespace Microsoft.PowerFx.Tests
 
         // Add a function that gets different runtime state per expression invoke
         [Fact]
-        public async Task LocalAsyncFunction()
+        public async void LocalAsyncFunction()
         {
             // Share a config
             var s1 = new SymbolTable();
@@ -137,6 +138,46 @@ namespace Microsoft.PowerFx.Tests
                 var expected = name + "3";
                 var actual = result.ToObject();
                 Assert.Equal(expected, actual);
+            }
+        }
+
+        [Fact]
+        public async void InvalidAsyncFunction()
+        {
+            var func = new TestCustomInvalidAsyncFunction();
+            var config = new PowerFxConfig(null);
+            Assert.Throws<InvalidOperationException>(() => config.AddFunction(func));
+        }
+
+        [Fact]
+        public async void InvalidAsync2Function()
+        {
+            var func = new TestCustomInvalid2AsyncFunction();
+            var config = new PowerFxConfig(null);
+            Assert.Throws<InvalidOperationException>(() => config.AddFunction(func));
+        }
+
+        private class TestCustomInvalidAsyncFunction : ReflectionFunction
+        {
+            // Must have "Execute" method. 
+            // Cancellation Token must be the last argument for custom async function, which is not
+            // hence the invalid
+            public static async Task<StringValue> Execute(NumberValue x, BooleanValue b)
+            {
+                var val = x.Value.ToString() + "," + b.Value.ToString();
+                return FormulaValue.New(val);
+            }
+        }
+
+        private class TestCustomInvalid2AsyncFunction : ReflectionFunction
+        {
+            // Must have "Execute" method. 
+            // Cancellation Token must be the last argument for custom async function, which is not
+            // hence the invalid
+            public static async Task<StringValue> Execute(NumberValue x, CancellationToken cancellationToken, BooleanValue b)
+            {
+                var val = x.Value.ToString() + "," + b.Value.ToString();
+                return FormulaValue.New(val);
             }
         }
 

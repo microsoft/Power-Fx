@@ -212,33 +212,33 @@ namespace Microsoft.PowerFx
 
                 info._isAsync = m.ReturnType.BaseType == typeof(Task);
 
-                var parmas = m.GetParameters();
-                for (var i = 0; i < parmas.Length; i++)
+                var parameters = m.GetParameters();
+                for (var i = 0; i < parameters.Length; i++)
                 {
-                    if (i == parmas.Length - 1 && info._isAsync)
+                    if (i == parameters.Length - 1 && info._isAsync)
                     {
-                        if (parmas[i].ParameterType != typeof(CancellationToken))
+                        if (parameters[i].ParameterType != typeof(CancellationToken))
                         {
                             throw new InvalidOperationException($"Last argument must be a cancellation token.");
                         }
                     }
-                    else if (typeof(FormulaValue).IsAssignableFrom(parmas[i].ParameterType))
+                    else if (typeof(FormulaValue).IsAssignableFrom(parameters[i].ParameterType))
                     {
-                        paramTypes.Add(GetType(parmas[i].ParameterType));
+                        paramTypes.Add(GetType(parameters[i].ParameterType));
                     }
-                    else if (parmas[i].ParameterType == ConfigType)
+                    else if (parameters[i].ParameterType == ConfigType)
                     {
                         // Not a Formulatype, pull from RuntimeConfig
-                        info._configType = parmas[i].ParameterType;
+                        info._configType = parameters[i].ParameterType;
                     }
-                    else if (parmas[i].ParameterType == typeof(CancellationToken) && _info._isAsync)
+                    else if (parameters[i].ParameterType == typeof(CancellationToken) && info._isAsync)
                     {
                         throw new InvalidOperationException($"Cancellation token must be the last argument.");
                     }
                     else
                     { 
                         // Unknown parameter type
-                        throw new InvalidOperationException($"Unknown parameter type: {parmas[i].Name}, {parmas[i].ParameterType}");
+                        throw new InvalidOperationException($"Unknown parameter type: {parameters[i].Name}, {parameters[i].ParameterType}");
                     }
                 }
 
@@ -289,6 +289,11 @@ namespace Microsoft.PowerFx
             {
                 _impl = (runtimeConfig, args, cancellationToken) => InvokeAsync(runtimeConfig, args, cancellationToken)
             };
+        }
+
+        public FormulaValue Invoke(IServiceProvider serviceProvider, FormulaValue[] args)
+        {
+            return InvokeAsync(serviceProvider, args, CancellationToken.None).Result;
         }
 
         public async Task<FormulaValue> InvokeAsync(IServiceProvider serviceProvider, FormulaValue[] args, CancellationToken cancellationToken)
