@@ -525,16 +525,13 @@ namespace Microsoft.PowerFx.Functions
             // such as: Date(2000, 25, 69) -> 3/10/2002
             try
             {
-                var result = new DateTime(year, 1, 1)
+                var datetime = new DateTime(year, 1, 1)
                     .AddMonths(month - 1)
                     .AddDays(day - 1);
 
-                if (!result.IsValid(runner))
-                {
-                    return CommonErrors.InvalidDateTimeError(irContext);
-                }
+                datetime = MakeValidDateTime(runner, datetime, runner.GetService<TimeZoneInfo>() ?? LocalTimeZone);
 
-                return new DateValue(irContext, result);
+                return datetime.Hour == 0 ? new DateValue(irContext, datetime) : new DateTimeValue(irContext, datetime);
             }
             catch (ArgumentOutOfRangeException)
             {
@@ -589,10 +586,7 @@ namespace Microsoft.PowerFx.Functions
                     .AddSeconds(second)
                     .AddMilliseconds(millisecond);
 
-                if (!dateTime.IsValid(runner))
-                {
-                    return CommonErrors.InvalidDateTimeError(irContext);
-                }
+                dateTime = MakeValidDateTime(runner, dateTime, runner.GetService<TimeZoneInfo>() ?? LocalTimeZone);
 
                 return new DateTimeValue(irContext, dateTime);
             }

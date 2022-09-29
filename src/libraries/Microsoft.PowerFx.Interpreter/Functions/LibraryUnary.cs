@@ -373,10 +373,7 @@ namespace Microsoft.PowerFx.Functions
             var n = args[0].Value;
             var date = _epoch.AddDays(n);
 
-            if (!date.IsValid(runner))
-            {
-                return CommonErrors.RuntimeTypeMismatch(irContext);
-            }
+            date = MakeValidDateTime(runner, date, runner.GetService<TimeZoneInfo>() ?? LocalTimeZone);            
 
             return new DateTimeValue(irContext, date);
         }
@@ -458,10 +455,7 @@ namespace Microsoft.PowerFx.Functions
             var t = args[0].Value;
             var date = _epoch.Add(t);
 
-            if (!date.IsValid(runner))
-            {
-                return CommonErrors.RuntimeTypeMismatch(irContext);
-            }
+            date = MakeValidDateTime(runner, date, runner.GetService<TimeZoneInfo>() ?? LocalTimeZone);
 
             return new DateTimeValue(irContext, date);
         }

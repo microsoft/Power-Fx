@@ -18,19 +18,19 @@ DateTime(2022,7,21,19,34,3,0)
 // In Paris timezoneinfo - which does not do daylight savings at the same date, we get 3:00am.
 // https://www.timeanddate.com/time/change/usa/seattle
 // https://www.timeanddate.com/time/change/france/paris
->> Text(DateAdd(DateTime(2022,3,13,1,0,0), 2, "hours"))
+>> Text(DateAdd(DateTime(2022,3,13,1,0,0), 2, TimeUnit.Hours))
 "3/13/2022 3:00 AM"
 
->> Text(DateAdd(DateTime(2022,3,27,1,0,0), 2, "hours"))
+>> Text(DateAdd(DateTime(2022,3,27,1,0,0), 2, TimeUnit.Hours))
 "3/27/2022 4:00 AM"
 
->> DateAdd((Date(2022, 3, 13) + Time(1,0,0)), 90, "Minutes") 
+>> DateAdd((Date(2022, 3, 13) + Time(1,0,0)), 90, TimeUnit.Minutes) 
 DateTime(2022,3,13,2,30,0,0)
 
->> DateDiff(DateTime(2022,3,27,1,0,0), DateTime(2022,3,27,4,0,0), "hours")
+>> DateDiff(DateTime(2022,3,27,1,0,0), DateTime(2022,3,27,4,0,0), TimeUnit.Hours)
 2
 
->> DateDiff(DateTime(2022,3,13,1,0,0), DateTime(2022,3,13,4,0,0), "hours")
+>> DateDiff(DateTime(2022,3,13,1,0,0), DateTime(2022,3,13,4,0,0), TimeUnit.Hours)
 3
 
 >> TimeZoneOffset(DateTime(2022,3,27,1,0,0))/60

@@ -3,19 +3,19 @@
 >> DateAdd(Date(2021, 3, 26), 2)
 DateTime(2021,3,28,0,0,0,0)
 
->> DateAdd(Date(2021, 3, 26), 2, "days")
+>> DateAdd(Date(2021, 3, 26), 2, TimeUnit.Days)
 DateTime(2021,3,28,0,0,0,0)
 
->> DateAdd(Date(2021, 3, 27), 2, "days")
+>> DateAdd(Date(2021, 3, 27), 2, TimeUnit.Days)
 DateTime(2021,3,29,0,0,0,0)
 
->> DateAdd(Date(2021, 3, 26), 48, "hours")
+>> DateAdd(Date(2021, 3, 26), 48, TimeUnit.Hours)
 DateTime(2021,3,28,0,0,0,0)
 
->> DateAdd(Date(2021, 3, 26), 49, "hours")
+>> DateAdd(Date(2021, 3, 26), 49, TimeUnit.Hours)
 DateTime(2021,3,28,1,0,0,0)
 
->> DateDiff(DateTime(2021,3,27,23,59,59,990), DateTime(2021,3,28,1,0,0,0), "milliseconds")
+>> DateDiff(DateTime(2021,3,27,23,59,59,990), DateTime(2021,3,28,1,0,0,0), TimeUnit.Milliseconds)
 3600010
 
 >> DateAdd(Date(2021,3,28), 0)

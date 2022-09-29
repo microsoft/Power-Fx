@@ -35,11 +35,11 @@ DateTime(2023,3,12,1,59,59,0)
 
 // Invalid time
 >> DateTime(2023, 3, 12, 2, 0, 0)
-#Error(Kind=InvalidArgument)
+DateTime(2023,3,12,3,0,0,0)
 
 // Invalid time
 >> DateTime(2023, 3, 12, 2, 30, 0)
-#Error(Kind=InvalidArgument)
+DateTime(2023,3,12,3,0,0,0)
 
 // Valid time
 >> DateTime(2023, 3, 12, 3, 0, 0)

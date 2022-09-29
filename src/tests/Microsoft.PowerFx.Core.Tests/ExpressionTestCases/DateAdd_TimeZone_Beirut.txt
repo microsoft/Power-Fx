@@ -6,32 +6,35 @@ DateTime(2021,3,28,1,0,0,0)
 
 // When adding 2 days to this date, we arrive to an invalid date/time
 // So we calculate the next valid date/time and that's why we see this extra 1h
->> DateAdd(Date(2021, 3, 26), 2, "days")
+>> DateAdd(Date(2021, 3, 26), 2, TimeUnit.Days)
 DateTime(2021,3,28,1,0,0,0)
 
 // This is not the case for next day as midnight for that day is valid
->> DateAdd(Date(2021, 3, 27), 2, "days")
+>> DateAdd(Date(2021, 3, 27), 2, TimeUnit.Days)
 DateTime(2021,3,29,0,0,0,0)
 
 // https://www.timeanddate.com/time/change/lebanon/beirut?year=2021
->> DateAdd(Date(2021, 3, 26), 48, "hours")
+>> DateAdd(Date(2021, 3, 26), 48, TimeUnit.Hours)
 DateTime(2021,3,28,1,0,0,0)
 
 // https://www.timeanddate.com/time/change/lebanon/beirut?year=2021
->> DateAdd(Date(2021, 3, 26), 49, "hours")
+>> DateAdd(Date(2021, 3, 26), 49, TimeUnit.Hours)
 DateTime(2021,3,28,2,0,0,0)
 
->> DateDiff(DateTime(2021,3,27,23,59,59,990), DateTime(2021,3,28,1,0,0,0), "milliseconds")
+>> DateDiff(DateTime(2021,3,27,23,59,59,990), DateTime(2021,3,28,1,0,0,0), TimeUnit.Milliseconds)
 10
 
 >> DateAdd(Date(2021,3,28), 0)
-#Error(Kind=InvalidArgument)
+DateTime(2021,3,28,1,0,0,0)
 
 >> Date(2021,3,28)
-#Error(Kind=InvalidArgument)
+DateTime(2021,3,28,1,0,0,0)
+
+>> Date(2021,3,29)
+Date(2021,3,29)
 
 >> DateTime(2021,3,28, 0, 0, 0)
-#Error(Kind=InvalidArgument)
+DateTime(2021,3,28,1,0,0,0)
 
 >> DateTime(2021,3,28, 1, 0, 0)
 DateTime(2021,3,28,1,0,0,0)
