@@ -531,7 +531,7 @@ namespace Microsoft.PowerFx.Functions
 
                 datetime = MakeValidDateTime(runner, datetime, runner.GetService<TimeZoneInfo>() ?? LocalTimeZone);
 
-                return datetime.Hour == 0 ? new DateValue(irContext, datetime) : new DateTimeValue(irContext, datetime);
+                return new DateValue(irContext, datetime);
             }
             catch (ArgumentOutOfRangeException)
             {
