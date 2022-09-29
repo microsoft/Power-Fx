@@ -181,9 +181,7 @@ stages:
           "---- $Name ------------------";
           nuget install $Name -Version $ApiContractVersion -OutputDirectory $TempContractInstallDirectory -DirectDownload -NonInteractive;
 
-          if ($LASTEXITCODE -eq 0) {
-            Copy-Item "$TempContractInstallDirectory\$Name.$ApiContractVersion\lib\netstandard2.0\$Name.dll" $OutputDirectory;
-          }
+          Copy-Item "$TempContractInstallDirectory\$Name.$ApiContractVersion\lib\netstandard2.0\$Name.dll" $OutputDirectory;
         }
       displayName: 'Download Contract DLLs to ContractDlls folder'
       continueOnError: true

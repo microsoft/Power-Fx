@@ -38,6 +38,7 @@ steps:
       $content = "The binary compatibility report for library '$(PackageName)' wasn't generated. This may have happened because the NuGet library '$(PackageName)' for version '$(ContractVersion)' was unavailable or a connectivity issue."
       New-Item -Path '$(Build.ArtifactStagingDirectory)' -Name '$(PackageName).${{ parameters.ContractVersion }}.CompatResults.txt' -ItemType "file" -Value $content
       $content;
+      Write-Host "##vso[task.complete result=Failed;]";
       return;
     }
 
