@@ -61,6 +61,8 @@
 
   <ItemGroup>
     <None Remove="ExpressionTestCases\DateAdd_TimeZone_Beirut.txt" />
+    <None Remove="ExpressionTestCases\DateAdd_TimeZone_UTC.txt" />
+    <None Remove="ExpressionTestCases\Date_TimeZone_UTC.txt" />
   </ItemGroup>
 
   <ItemGroup>

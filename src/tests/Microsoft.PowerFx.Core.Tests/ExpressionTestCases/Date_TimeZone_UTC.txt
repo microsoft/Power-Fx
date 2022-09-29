@@ -1,5 +1,4 @@
-﻿// (UTC-08:00) Pacific Time (US & Canada)
-#SETUP: TimeZoneInfo("Pacific Standard Time")
+﻿#SETUP: TimeZoneInfo("UTC")
 
 // ***************** Excel-style date math, crossing time-zone boundaries ***************
 
@@ -27,35 +26,31 @@ DateTime(2022,1,1,12,34,56,0)
 >> DateTime(2022, 12, 28, 12, 34, 56) - 180
 DateTime(2022,7,1,12,34,56,0)
 
-// --- US DST -- https://www.timeanddate.com/time/change/usa/seattle?year=2023
-
 // Valid time
 >> DateTime(2023, 3, 12, 1, 59, 59)
 DateTime(2023,3,12,1,59,59,0)
 
-// Invalid time
+// Valid time
 >> DateTime(2023, 3, 12, 2, 0, 0)
-#Error(Kind=InvalidArgument)
+DateTime(2023,3,12,2,0,0,0)
 
-// Invalid time
+// Valid time
 >> DateTime(2023, 3, 12, 2, 30, 0)
-#Error(Kind=InvalidArgument)
+DateTime(2023,3,12,2,30,0,0)
 
 // Valid time
 >> DateTime(2023, 3, 12, 3, 0, 0)
 DateTime(2023,3,12,3,0,0,0)
 
-// --- US DST -- https://www.timeanddate.com/time/change/usa/seattle?year=2023
-
 // Valid time
 >> DateTime(2023, 11, 5, 0, 59, 59)
 DateTime(2023,11,5,0,59,59,0)
 
-// Ambiguous time
+// Valid time
 >> DateTime(2023, 11, 5, 1, 0, 0)
 DateTime(2023,11,5,1,0,0,0)
 
-// Ambiguous time
+// Valid time
 >> DateTime(2023, 11, 5, 1, 0, 1)
 DateTime(2023,11,5,1,0,1,0)
 
