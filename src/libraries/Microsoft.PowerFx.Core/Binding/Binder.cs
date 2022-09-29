@@ -2745,7 +2745,7 @@ namespace Microsoft.PowerFx.Core.Binding
                         // App variable name cannot conflict with any existing global entity name, eg. control/data/table/enum.
                         if (scopedControl.IsAppInfoControl && _nameResolver.LookupGlobalEntity(node.Ident.Name, out lookupInfo))
                         {
-                            _txb.ErrorContainer.Error(node, TexlStrings.ErrExpectedFound_Ex_Fnd, TokKind.Ident, lookupInfo.Kind);
+                            _txb.ErrorContainer.Error(node, TexlStrings.ErrExpectedFound_Ex_Fnd, lookupInfo.Kind, TokKind.Ident);
                         }
 
                         _txb.SetAppScopedVariable(node, scopedControl.IsAppInfoControl);
