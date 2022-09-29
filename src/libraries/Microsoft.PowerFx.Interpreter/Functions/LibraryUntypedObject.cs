@@ -4,7 +4,9 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Texl;
@@ -107,6 +109,11 @@ namespace Microsoft.PowerFx.Functions
         {
             if (arg is UntypedObjectValue cov)
             {
+                if (cov.Impl.Type == FormulaType.Blank)
+                {
+                    return new BlankValue(irContext);
+                }
+
                 if (!(cov.Impl.Type is ExternalType et && et.Kind == ExternalTypeKind.Array))
                 {
                     return new ErrorValue(irContext, new ExpressionError()
@@ -228,6 +235,38 @@ namespace Microsoft.PowerFx.Functions
                 Span = irContext.SourceContext,
                 Message = $"The untyped object argument to the '{functionName}' function has an incorrect type. Expected: {expectedType}, Actual: {actualValue.Type}."
             });
+        }
+
+        public static async ValueTask<FormulaValue> ForAll_UO(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        {
+            var arg0 = (UntypedObjectValue)args[0];
+            var arg1 = (LambdaFormulaValue)args[1];
+
+            var items = new List<DValue<UntypedObjectValue>>();
+
+            var len = arg0.Impl.GetArrayLength();
+
+            for (var i = 0; i < len; i++)
+            {
+                runner.CheckCancel();
+
+                var element = arg0.Impl[i];
+                var item = new UntypedObjectValue(IRContext.NotInSource(FormulaType.UntypedObject), element);
+
+                items.Add(DValue<UntypedObjectValue>.Of(item));
+            }
+
+            var rowsAsync = LazyForAll(runner, context, items, arg1);
+
+            var rows = await Task.WhenAll(rowsAsync);
+
+            var errorRows = rows.OfType<ErrorValue>();
+            if (errorRows.Any())
+            {
+                return ErrorValue.Combine(irContext, errorRows);
+            }
+
+            return new InMemoryTableValue(irContext, StandardTableNodeRecords(irContext, rows, forceSingleColumn: false));
         }
     }
 }

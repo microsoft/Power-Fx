@@ -90,6 +90,63 @@ Blank()
 >> Sum(Table(ParseJSON("[1, 2, 3, 4, 5]")), Value(Value))
 15
 
+>> ForAll(ParseJSON("[5, 6, 7]"), Value(ThisRecord))
+[5,6,7]
+
+>> ForAll(ParseJSON("5"), Value(ThisRecord))
+#Error(Kind=InvalidArgument)
+
+>> ForAll(ParseJSON("5"), IfError(Value(ThisRecord), -1))
+#Error(Kind=InvalidArgument)
+
+>> ForAll(ParseJSON("null"), Value(ThisRecord))
+Blank()
+
+>> ForAll(ParseJSON("[null, null, null]"), Value(ThisRecord))
+[Blank(),Blank(),Blank()]
+
+>> ForAll(ParseJSON("[5, null, 7]"), Value(ThisRecord))
+[5,Blank(),7]
+
+>> ForAll(ParseJSON("[""hi"", null, ""hello""]"), Text(ThisRecord))
+["hi",Blank(),"hello"]
+
+>> ForAll(ParseJSON("[true, null, false]"), Boolean(ThisRecord))
+[true,Blank(),false]
+
+>> ForAll(ParseJSON("[""2011-01-15"", null]"), Text(DateValue(ThisRecord), "yyyy-MM-dd"))
+["2011-01-15",""]
+
+>> ForAll(ParseJSON("[""08:03:05.000"", null]"), Text(TimeValue(ThisRecord), "HH:mm:ss"))
+["08:03:05",""]
+
+>> ForAll(ParseJSON("[""5cc45615-f759-4a53-b225-d3a2497f60ad"", null]"), GUID(ThisRecord))
+[GUID("5cc45615-f759-4a53-b225-d3a2497f60ad"),Blank()]
+
+>> ForAll(ParseJSON("[1]"), Value(ThisRecord) / 0)
+#Error
+
+>> CountRows(ForAll(ParseJSON("[1,2,3]"), Value(ThisRecord)))
+3
+
+>> Sum(ForAll(ParseJSON("[5, 6, 7]"), Value(ThisRecord)), Value)
+18
+
+>> Sum(ForAll(ParseJSON("[5, 6, 7]"), ThisRecord), Value(Value))
+18
+
+>> ForAll(ParseJSON("[1,{""a"":false},""hello""]"), IfError(Text(ThisRecord), IfError(Text(Value(ThisRecord)), Text(Boolean(ThisRecord.a)))))
+["1","false","hello"]
+
+>> ForAll(ParseJSON("[1,true,3,false]"), Value(ThisRecord))
+#Error
+
+>> ForAll(ParseJSON("[1,2,3]"), If(Value(ThisRecord) < 2, Value(ThisRecord), ThisRecord))
+Errors: Error 74-84: Invalid argument type (UntypedObject). Expecting a Number value instead.|Error 29-85: The function 'If' has some invalid arguments.
+
+>> ForAll(ParseJSON("[1,2,3]"), ThisItem)
+Errors: Error 29-37: Name isn't valid. 'ThisItem' isn't recognized.|Error 0-38: The function 'ForAll' has some invalid arguments.
+
 >> ParseJSON("5") + ParseJSON("5")
 Errors: Error 0-14: Invalid argument type. Expecting one of the following: Number, Text, Boolean.|Error 17-31: Invalid argument type. Expecting one of the following: Number, Text, Boolean.
 

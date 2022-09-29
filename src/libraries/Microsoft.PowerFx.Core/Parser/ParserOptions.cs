@@ -20,7 +20,7 @@ namespace Microsoft.PowerFx
         /// </summary>
         public bool AllowsSideEffects { get; set; }
                 
-        internal CultureInfo Culture { get; set; }
+        public CultureInfo Culture { get; set; }
 
         internal ParseResult Parse(string script)
         {
