@@ -160,10 +160,10 @@ stages:
     - powershell: |
         # Set up tokens for private sources
         $file = "$(Build.SourcesDirectory)\nuget.config";
-        $ErrorActionPreference= 'SilentlyContinue';
+        $ErrorActionPreference = 'SilentlyContinue';
         nuget sources update -ConfigFile "$file" -Name "SDK_Dotnet_V4_org" -username "ContractDlls" -password "$(System.AccessToken)";
         nuget sources update -ConfigFile "$file" -Name "PowerFx" -username "ContractDlls" -password "$(System.AccessToken)";
-        $ErrorActionPreference= 'Continue';
+        $ErrorActionPreference = 'Continue';
         '-------------'; get-content "$file"; '===================';
 
         $PackageNames = "$(PackagesToValidate)";
@@ -181,7 +181,12 @@ stages:
           "---- $Name ------------------";
           nuget install $Name -Version $ApiContractVersion -OutputDirectory $TempContractInstallDirectory -DirectDownload -NonInteractive;
 
-          Copy-Item "$TempContractInstallDirectory\$Name.$ApiContractVersion\lib\netstandard2.0\$Name.dll" $OutputDirectory;
+          if ($LASTEXITCODE -eq 0) {
+            Copy-Item "$TempContractInstallDirectory\$Name.$ApiContractVersion\lib\netstandard2.0\$Name.dll" $OutputDirectory;
+          }
+          else {
+            Write-Host "##vso[task.complete result=Failed;]";
+          }
         }
       displayName: 'Download Contract DLLs to ContractDlls folder'
       continueOnError: true

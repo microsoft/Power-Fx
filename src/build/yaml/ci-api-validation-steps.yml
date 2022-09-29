@@ -28,6 +28,7 @@ steps:
     outputFilename: '$(PackageName).${{ parameters.ContractVersion }}.CompatResults.txt'
     outputFolder: '$(Build.ArtifactStagingDirectory)'
     useBaseline: false
+  continueOnError: true
 
 - powershell: |
     $filePath = "$(Build.ArtifactStagingDirectory)\$(PackageName).${{ parameters.ContractVersion }}.CompatResults.txt"
