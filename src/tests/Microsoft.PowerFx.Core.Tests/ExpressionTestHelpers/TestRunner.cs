@@ -387,7 +387,7 @@ namespace Microsoft.PowerFx.Core.Tests
             }
             else if (result is ColorValue cv)
             {   
-                sb.Append($"Color [A={cv.Value.A}, R={cv.Value.R}, G={cv.Value.G}, B={cv.Value.B}]");
+                sb.Append($"RGBA({cv.Value.R},{cv.Value.G},{cv.Value.B},{Math.Round(cv.Value.A / 255.0, 3)})");
             }
             else if (result is ErrorValue)
             {
