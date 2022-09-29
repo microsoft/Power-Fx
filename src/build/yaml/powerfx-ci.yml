@@ -118,43 +118,6 @@ stages:
       displayName: 'Push to OutputDlls-$(BuildConfiguration) in Artifacts'
       continueOnError: true
 
-    - template: feed-setup-step.yml
-      parameters: 
-        feedName: "${{ parameters.packageFeed }}"
-
-    - powershell: |
-        # Set up tokens for private sources
-        $file = "$(Build.SourcesDirectory)\nuget.config";
-        $ErrorActionPreference= 'SilentlyContinue';
-        nuget sources update -ConfigFile "$file" -Name "SDK_Dotnet_V4_org" -username "ContractDlls" -password "$(System.AccessToken)";
-        nuget sources update -ConfigFile "$file" -Name "PowerFx" -username "ContractDlls" -password "$(System.AccessToken)";
-        $ErrorActionPreference= 'Continue';
-        '-------------'; get-content "$file"; '===================';
-
-        $PackageNames = "$(PackagesToValidate)";
-        $ApiContractVersion = "$(ApiContractVersion)";
-        $TempContractInstallDirectory = ".\TempContractInstallDir";
-        $OutputDirectory = ".\ContractDlls";
-
-        New-Item -ItemType directory -Path $OutputDirectory -Force
-
-        $Names = $PackageNames.Split(',');
-
-        foreach ($Name in $Names) {
-            "---- $Name ------------------";
-            nuget install $Name -Version $ApiContractVersion -OutputDirectory $TempContractInstallDirectory -DirectDownload -NonInteractive;
-
-            Copy-Item "$TempContractInstallDirectory\$Name.$ApiContractVersion\lib\netstandard2.0\$Name.dll" $OutputDirectory;
-        }
-      displayName: 'Download Contract DLLs to ContractDlls folder'
-
-    - task: PublishPipelineArtifact@0
-      inputs:
-        artifactName: 'ContractDlls'
-        targetPath: ContractDlls
-      displayName: 'Push to ContractDlls in Artifacts'
-      continueOnError: true
-
     - powershell: |
         gci env:* | sort-object name | Format-Table -AutoSize -Wrap
       displayName: 'Display env vars'
@@ -192,6 +155,41 @@ stages:
           Comparing API against v $(GetContract.ContractVersion)
           From ${{ parameters.packageFeed }} feed 
       condition: and(succeeded(), ne(variables['System.PullRequest.IsFork'], 'True'))
+      continueOnError: true
+
+    - powershell: |
+        # Set up tokens for private sources
+        $file = "$(Build.SourcesDirectory)\nuget.config";
+        $ErrorActionPreference= 'SilentlyContinue';
+        nuget sources update -ConfigFile "$file" -Name "SDK_Dotnet_V4_org" -username "ContractDlls" -password "$(System.AccessToken)";
+        nuget sources update -ConfigFile "$file" -Name "PowerFx" -username "ContractDlls" -password "$(System.AccessToken)";
+        $ErrorActionPreference= 'Continue';
+        '-------------'; get-content "$file"; '===================';
+
+        $PackageNames = "$(PackagesToValidate)";
+        $ApiContractVersion = "$(GetContract.ContractVersion)";
+        $TempContractInstallDirectory = ".\TempContractInstallDir";
+        $OutputDirectory = ".\ContractDlls";
+
+        Write-Host "Downloading contract packages version $ApiContractVersion."
+
+        New-Item -ItemType directory -Path $OutputDirectory -Force
+
+        $Names = $PackageNames.Split(',');
+
+        foreach ($Name in $Names) {
+            "---- $Name ------------------";
+            nuget install $Name -Version $ApiContractVersion -OutputDirectory $TempContractInstallDirectory -DirectDownload -NonInteractive;
+
+            Copy-Item "$TempContractInstallDirectory\$Name.$ApiContractVersion\lib\netstandard2.0\$Name.dll" $OutputDirectory;
+        }
+      displayName: 'Download Contract DLLs to ContractDlls folder'
+
+    - task: PublishPipelineArtifact@0
+      inputs:
+        artifactName: 'ContractDlls'
+        targetPath: ContractDlls
+      displayName: 'Push to ContractDlls in Artifacts'
       continueOnError: true
 
     - powershell: |
