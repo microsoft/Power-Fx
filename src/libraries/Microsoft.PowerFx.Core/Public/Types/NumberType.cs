@@ -21,5 +21,10 @@ namespace Microsoft.PowerFx.Types
         {
             return "Number";
         }
+
+        internal override string DefaultExpressionValue()
+        {
+            return "0";
+        }
     }
 }

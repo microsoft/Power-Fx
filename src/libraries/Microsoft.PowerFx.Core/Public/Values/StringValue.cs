@@ -2,7 +2,9 @@
 // Licensed under the MIT license.
 
 using System.Diagnostics.Contracts;
+using System.Text;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Types
 {
@@ -26,7 +28,7 @@ namespace Microsoft.PowerFx.Types
 
         public override string ToExpression()
         {
-            return $"\"{Value}\"";
+            return $"\"{CharacterUtils.ExcelEscapeString(Value)}\"";
         }
     }
 }

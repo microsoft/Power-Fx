@@ -31,7 +31,14 @@ namespace Microsoft.PowerFx.Types
 
         public override string ToExpression()
         {
-            return ToString();
+            if (Type is BlankType)
+            {
+                return Type.DefaultExpressionValue();
+            }
+            else
+            {
+                return $"If(false,{Type.DefaultExpressionValue()})";
+            }
         }
     }
 }

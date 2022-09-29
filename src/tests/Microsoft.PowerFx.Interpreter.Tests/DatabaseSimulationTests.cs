@@ -189,7 +189,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             public override string ToExpression()
             {
-                // !JYL! Do we need to serialize this?
+                // Internal only.
                 throw new System.NotImplementedException("TestEntityValue cannot be serialized.");
             }
         }

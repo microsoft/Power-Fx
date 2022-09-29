@@ -46,7 +46,7 @@ namespace Microsoft.PowerFx.Types
 
         public override string ToExpression()
         {
-            // !JYL! Do we need to serialize this?
+            // Internal only.
             throw new NotImplementedException("LambdaFormulaValue cannot be serialized.");
         }
     }

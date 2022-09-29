@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Types
 {
@@ -20,6 +21,11 @@ namespace Microsoft.PowerFx.Types
         public override string ToString()
         {
             return "String";
+        }
+
+        internal override string DefaultExpressionValue()
+        {
+            return "\"\"";
         }
     }
 }

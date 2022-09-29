@@ -21,5 +21,10 @@ namespace Microsoft.PowerFx.Types
         {
             return "Boolean";
         }
+
+        internal override string DefaultExpressionValue()
+        {
+            return "false";
+        }
     }
 }

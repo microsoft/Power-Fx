@@ -21,7 +21,7 @@ namespace Microsoft.PowerFx.Types
 
         public override string ToExpression()
         {
-            return base.ToExpression().ToLowerInvariant();
+            return Value.ToString().ToLowerInvariant();
         }
     }
 }

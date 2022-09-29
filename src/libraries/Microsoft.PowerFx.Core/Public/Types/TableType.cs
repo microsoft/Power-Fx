@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.PowerFx.Core.Types;
@@ -101,6 +102,11 @@ namespace Microsoft.PowerFx.Types
         public override int GetHashCode()
         {
             return _type.GetHashCode();
-        }        
+        }
+
+        internal override string DefaultExpressionValue()
+        {
+            return $"Table({ToRecord().DefaultExpressionValue()})";
+        }
     }
 }

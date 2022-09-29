@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Dynamic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
@@ -220,18 +221,22 @@ namespace Microsoft.PowerFx.Types
         public override string ToExpression()
         {
             var sb = new StringBuilder();
+            var flag = true;
 
             sb.Append("{");
 
             foreach (var field in Fields)
             {
-                sb.Append($"'{field.Name}'");
-                sb.Append(":");
-                sb.Append(field.Value.ToExpression());
-                sb.Append(",");
+                if (!flag)
+                {
+                    sb.Append(",");
+                }
+
+                flag = false;
+
+                sb.Append($"'{field.Name}':{field.Value.ToExpression()}");
             }
 
-            sb.Remove(sb.Length - 1, 1);
             sb.Append("}");
 
             return sb.ToString();

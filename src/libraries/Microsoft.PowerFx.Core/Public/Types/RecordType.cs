@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
@@ -95,6 +96,31 @@ namespace Microsoft.PowerFx.Types
         public static RecordType Empty()
         {
             return new KnownRecordType();
+        }
+
+        internal override string DefaultExpressionValue()
+        {
+            var sb = new StringBuilder();
+            var flag = true;
+
+            sb.Append("{");
+
+            foreach (var field in GetFieldTypes())
+            {
+                if (!flag)
+                {
+                    sb.Append(",");
+                }
+
+                flag = false;
+                
+                // !JYL! Check how to escape field name
+                sb.Append($"'{field.Name}':{field.Type.DefaultExpressionValue()}");
+            }
+
+            sb.Append("}");
+
+            return sb.ToString();
         }
     }
 }

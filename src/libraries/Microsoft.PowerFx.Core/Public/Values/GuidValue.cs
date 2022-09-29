@@ -23,7 +23,7 @@ namespace Microsoft.PowerFx.Types
 
         public override string ToExpression()
         {
-            return $"GUID({CharacterUtils.ToPlainText(Value.ToString("D"))})";
+            return $"GUID({CharacterUtils.ToPlainText(Value.ToString("N"))})";
         }
     }
 }

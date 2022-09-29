@@ -12,6 +12,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Types
@@ -195,25 +196,33 @@ namespace Microsoft.PowerFx.Types
 
         public override string ToExpression()
         {
-            if (Rows.Count() == 0)
-            {
-                throw new InvalidDataContractException("It's not possible to serialize an empty table.");
+            if (!Rows.Any())
+            {                
+                return $"FirstN({Type.DefaultExpressionValue()},0)";
             }
-
-            var sb = new StringBuilder();
-
-            sb.Append("Table(");
-
-            foreach (var row in Rows)
+            else
             {
-                sb.Append(row.Value.ToExpression());
-                sb.Append(",");
+                var sb = new StringBuilder();
+                var flag = true;
+
+                sb.Append("Table(");
+
+                foreach (var row in Rows)
+                {
+                    if (!flag)
+                    {
+                        sb.Append(",");
+                    }
+
+                    flag = false;
+
+                    sb.Append(row.ToFormulaValue().ToExpression());
+                }
+
+                sb.Append(")");
+
+                return sb.ToString();
             }
-
-            sb.Remove(sb.Length - 1, 1);
-            sb.Append(")");
-
-            return sb.ToString();
         }
     }
 }

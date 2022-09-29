@@ -2,7 +2,11 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using System.Text;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Utils;
+using static Microsoft.PowerFx.Syntax.PrettyPrintVisitor;
 
 namespace Microsoft.PowerFx.Types
 {
@@ -70,14 +74,38 @@ namespace Microsoft.PowerFx.Types
         }
 
         public override string ToExpression()
-        {
-            // !JYL!
-            /* Few questions on this:
-             * Should this be serialized?
-             * If yes, what should be the serialized value?
-             * If not, is there a better exception option?
-             */
-            throw new System.NotImplementedException("ErrorValue cannot be serialized.");
+        {            
+            var concat = string.Empty;
+            var flag = true;
+
+            var sb = new StringBuilder();
+
+            sb.Append("Error(Table(");
+
+            foreach (var errorValue in _errors)
+            {
+                if (!flag)
+                {
+                    sb.Append(",");
+                }
+
+                flag = false;
+
+                sb.Append("{Kind:ErrorKind.");
+                sb.Append(errorValue.Kind.ToString());
+
+                if (errorValue.Message != null)
+                {
+                    sb.Append(", Message:");
+                    sb.Append(CharacterUtils.ToPlainText(errorValue.Message));
+                }
+
+                sb.Append("}");
+            }
+
+            sb.Append("))");
+
+            return sb.ToString();
         }
     }
 }

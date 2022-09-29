@@ -3,6 +3,7 @@
 
 using System;
 using System.Diagnostics.Contracts;
+using System.Globalization;
 using Microsoft.PowerFx.Core.IR;
 
 namespace Microsoft.PowerFx.Types
@@ -22,7 +23,7 @@ namespace Microsoft.PowerFx.Types
 
         public override string ToExpression()
         {
-            return $"Time({Value.Hours},{Value.Minutes},{Value.Seconds})";
+            return $"Time({Value.Hours},{Value.Minutes},{Value.Seconds},{Value.Milliseconds})";
         }
     }
 }

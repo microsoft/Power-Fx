@@ -4,6 +4,7 @@
 using System;
 using System.Diagnostics.Contracts;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Types
 {
@@ -26,7 +27,9 @@ namespace Microsoft.PowerFx.Types
 
         public override string ToExpression()
         {
-            return $"DateTime({Value.ToString("yyyy,M,d,H,m,s")})";
+            var ret = Value.Kind == DateTimeKind.Utc ? Value : Value.ToUniversalTime();
+
+            return $"DateTimeValue({CharacterUtils.ToPlainText(Value.ToString("o"))})";
         }
     }
 }

@@ -62,7 +62,7 @@ namespace Microsoft.PowerFx.Types
 
         public override string ToExpression()
         {
-            // !JYL! Do we need to serialize this?
+            // Not supported for the time being.
             throw new NotImplementedException("UntypedObjectValue cannot be serialized.");
         }
     }

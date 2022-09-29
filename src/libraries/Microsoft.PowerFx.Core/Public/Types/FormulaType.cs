@@ -233,5 +233,10 @@ namespace Microsoft.PowerFx.Types
         #endregion // Equality
 
         public abstract void Visit(ITypeVisitor vistor);
+
+        internal virtual string DefaultExpressionValue()
+        {
+            throw new NotSupportedException();
+        }
     }
 }

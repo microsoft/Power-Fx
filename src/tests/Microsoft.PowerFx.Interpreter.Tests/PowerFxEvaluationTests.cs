@@ -6,11 +6,15 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
+using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Tests;
+using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Tests;
 using Microsoft.PowerFx.Types;
+using static Microsoft.PowerFx.Core.Localization.TexlStrings;
 
 namespace Microsoft.PowerFx.Interpreter.Tests
 {
@@ -257,7 +261,16 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
                 var newValue = await check.GetEvaluator().EvalAsync(CancellationToken.None, rtConfig);
 
-                return new RunResult(newValue);
+                // UntypedObjectType type is currently not supported for serialization.
+                if (newValue.Type is UntypedObjectType)
+                {
+                    return new RunResult(newValue);
+                }
+
+                // Serialization test. Serialized expression must produce an identical result.
+                var deserialized = await engine.EvalAsync(newValue.ToExpression(), CancellationToken.None);
+
+                return new RunResult(deserialized);
             }
         }
     }

@@ -65,8 +65,7 @@ namespace Microsoft.PowerFx.Types
 
         public override string ToExpression()
         {
-            // !JYL! Do we need to serialize this?
-            return Option;
+            return $"{Type._type.OptionSetInfo.EntityName}.{Option}";
         }
     }
 }

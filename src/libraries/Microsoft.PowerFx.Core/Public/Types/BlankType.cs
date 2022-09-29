@@ -24,5 +24,10 @@ namespace Microsoft.PowerFx.Types
         {
             return "Blank";
         }
+
+        internal override string DefaultExpressionValue()
+        {
+            return "Blank()";
+        }
     }
 }

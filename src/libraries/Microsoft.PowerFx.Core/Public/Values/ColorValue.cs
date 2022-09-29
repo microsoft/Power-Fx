@@ -19,5 +19,10 @@ namespace Microsoft.PowerFx.Types
         {
             visitor.Visit(this);
         }
+
+        public override string ToExpression()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

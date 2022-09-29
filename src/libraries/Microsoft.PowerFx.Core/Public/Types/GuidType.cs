@@ -3,6 +3,7 @@
 
 using System;
 using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Types
 {
@@ -21,6 +22,11 @@ namespace Microsoft.PowerFx.Types
         public override string ToString()
         {
             return "Guid";
+        }
+
+        internal override string DefaultExpressionValue()
+        {
+            return $"GUID({CharacterUtils.ToPlainText(System.Guid.Empty.ToString("N"))})";
         }
     }
 }
