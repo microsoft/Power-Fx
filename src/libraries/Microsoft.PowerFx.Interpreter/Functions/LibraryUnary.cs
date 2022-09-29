@@ -368,13 +368,15 @@ namespace Microsoft.PowerFx.Functions
             return new DateValue(irContext, date);
         }
 
-        public static DateTimeValue NumberToDateTime(IRContext irContext, NumberValue[] args)
+        public static FormulaValue NumberToDateTime(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, NumberValue[] args)
         {
             var n = args[0].Value;
             var date = _epoch.AddDays(n);
 
-            // $$$
-            // Should we consider TimeZoneInfo and/or add validation/check ambiguity of the result?           
+            if (!date.IsValid(runner))
+            {
+                return CommonErrors.RuntimeTypeMismatch(irContext);
+            }
 
             return new DateTimeValue(irContext, date);
         }
@@ -438,20 +440,28 @@ namespace Microsoft.PowerFx.Functions
             return new TimeValue(irContext, time);
         }
 
-        public static DateValue TimeToDate(IRContext irContext, TimeValue[] args)
+        public static FormulaValue TimeToDate(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, TimeValue[] args)
         {
             var t = args[0].Value;
             var date = _epoch.Add(t);
+
+            if (!date.IsValid(runner))
+            {
+                return CommonErrors.RuntimeTypeMismatch(irContext);
+            }
+
             return new DateValue(irContext, date.Date);
         }
 
-        public static DateTimeValue TimeToDateTime(IRContext irContext, TimeValue[] args)
+        public static FormulaValue TimeToDateTime(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, TimeValue[] args)
         {
             var t = args[0].Value;
             var date = _epoch.Add(t);
 
-            // $$$
-            // Should we consider TimeZoneInfo and/or add validation/check ambiguity of the result?   
+            if (!date.IsValid(runner))
+            {
+                return CommonErrors.RuntimeTypeMismatch(irContext);
+            }
 
             return new DateTimeValue(irContext, date);
         }

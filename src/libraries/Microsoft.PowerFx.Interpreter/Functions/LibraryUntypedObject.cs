@@ -153,7 +153,7 @@ namespace Microsoft.PowerFx.Functions
             return GetTypeMismatchError(irContext, BuiltinFunctionsCore.CountRows_UO.Name, DType.EmptyTable.GetKindString(), impl);
         }
 
-        public static FormulaValue DateValue_UO(IRContext irContext, UntypedObjectValue[] args)
+        public static FormulaValue DateValue_UO(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, UntypedObjectValue[] args)
         {
             var impl = args[0].Impl;
 
@@ -163,6 +163,11 @@ namespace Microsoft.PowerFx.Functions
 
                 if (IsValidDateTimeUO(s) && DateTime.TryParse(s, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime res))
                 {
+                    if (!res.IsValid(runner))
+                    {
+                        return CommonErrors.InvalidDateTimeError(irContext);
+                    }
+
                     return new DateValue(irContext, res.Date);
                 }
 

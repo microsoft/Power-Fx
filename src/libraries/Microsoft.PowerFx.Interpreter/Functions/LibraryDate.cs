@@ -64,8 +64,24 @@ namespace Microsoft.PowerFx.Functions
                     return CommonErrors.RuntimeTypeMismatch(irContext);
             }
 
-            var delta = (NumberValue)args[1];
-            var timeUnit = ((StringValue)args[2]).Value.ToLowerInvariant();
+            NumberValue delta;
+            string timeUnit;
+
+            if (args[1] is NumberValue number)
+            {
+                delta = number;
+                timeUnit = ((StringValue)args[2]).Value.ToLowerInvariant();
+            }
+            else if (args[1] is TimeValue time)
+            {
+                delta = NumberValue.New(time.Value.TotalMilliseconds);
+                timeUnit = "milliseconds";
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
+
             var useUtcConversion = NeedToConvertToUtc(runner, datetime, timeUnit);
 
             if (useUtcConversion)
@@ -129,6 +145,7 @@ namespace Microsoft.PowerFx.Functions
                 return datetime;
             }
 
+            // If the date is invalid, we want to return the next valid date/time
             return GetNextValidDate(datetime, timeZoneInfo);
         }
 

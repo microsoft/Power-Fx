@@ -25,7 +25,7 @@ namespace Microsoft.PowerFx.Functions
                 return false;
             }
 
-            // 5 Nov 2023 01:10:00 is ambiguous and considered valid
+            // ambiguous times (like 5 Nov 2023 01:10:00 is ambiguous in PST timezone) will be considered valid
             return true;
         }
     }
