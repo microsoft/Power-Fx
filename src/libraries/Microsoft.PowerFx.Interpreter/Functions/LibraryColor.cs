@@ -28,7 +28,7 @@ namespace Microsoft.PowerFx.Functions
             Match match;
             if (ColorTable.InvariantNameToHexMap.ContainsKey(val))
             {
-                var hexStringColor = string.Format("#{0:X6}", ColorTable.InvariantNameToHexMap[val]);
+                var hexStringColor = string.Format("#{0:X8}", ColorTable.InvariantNameToHexMap[val]);
 
                 // ColorTable is ARGB
                 var regex = new Regex(@"^#(?<a>[0-9a-fA-F]{2})(?<r>[0-9a-fA-F]{2})(?<g>[0-9a-fA-F]{2})(?<b>[0-9a-fA-F]{2})?$");
