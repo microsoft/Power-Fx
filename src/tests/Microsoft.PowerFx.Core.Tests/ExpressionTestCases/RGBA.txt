@@ -1,17 +1,17 @@
-﻿>> RGBA(1, 2, 3, 0.015)
-Color [A=4, R=1, G=2, B=3]
+﻿>> RGBA(1, 2, 3, 0.4)
+RGBA(1,2,3,0.4)
 
 >> RGBA(0, 0, 0, 0)
-Color [A=0, R=0, G=0, B=0]
+RGBA(0,0,0,0)
 
 >> RGBA(255, 255, 255, 1.0)
-Color [A=255, R=255, G=255, B=255]
+RGBA(255,255,255,1)
 
 >> RGBA(-1, 255, 255, 1.0)
 #Error(Kind=InvalidArgument)
 
 >> RGBA(1.5, 255, 255, 1.0)
-#Error(Kind=InvalidArgument)
+RGBA(1,255,255,1)
 
 >> RGBA(256, 255, 255, 1.0)
 #Error(Kind=InvalidArgument)
@@ -20,7 +20,7 @@ Color [A=255, R=255, G=255, B=255]
 #Error(Kind=InvalidArgument)
 
 >> RGBA(255, 1.5, 255, 1.0)
-#Error(Kind=InvalidArgument)
+RGBA(255,1,255,1)
 
 >> RGBA(255, 256, 255, 1.0)
 #Error(Kind=InvalidArgument)
@@ -29,7 +29,7 @@ Color [A=255, R=255, G=255, B=255]
 #Error(Kind=InvalidArgument)
 
 >> RGBA(255, 255, 1.5, 1.0)
-#Error(Kind=InvalidArgument)
+RGBA(255,255,1,1)
 
 >> RGBA(255, 255, 256, 1.0)
 #Error(Kind=InvalidArgument)
@@ -39,3 +39,9 @@ Color [A=255, R=255, G=255, B=255]
 
 >> RGBA(255, 255, 255, 1.01)
 #Error(Kind=InvalidArgument)
+
+>> RGBA(Blank(),Blank(),Blank(),1)
+RGBA(0,0,0,1)
+
+>> RGBA(255,255,255,Blank())
+RGBA(255,255,255,0)

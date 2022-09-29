@@ -322,7 +322,19 @@ Blank()
 Blank()
 
 >> ColorValue(ParseJSON("""#01020304"""))
-Color [A=4, R=1, G=2, B=3]
+RGBA(1,2,3,0.016)
+
+>> ColorValue(ParseJSON("""#010203"""))
+RGBA(1,2,3,1)
+
+>> ColorValue(ParseJSON("""Red"""))
+#Error(Kind=InvalidArgument)
+
+>> ColorValue(ParseJSON("""#RRGGBBAA"""))
+#Error(Kind=InvalidArgument)
+
+>> ColorValue(ParseJSON("""#000000ZZ"""))
+#Error(Kind=InvalidArgument)
 
 >> ColorValue(ParseJSON("null"))
 Blank()

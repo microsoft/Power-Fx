@@ -1,32 +1,35 @@
 ﻿>> ColorValue("#01020304")
-Color [A=4, R=1, G=2, B=3]
+RGBA(1,2,3,0.016)
 
 >> ColorValue("#010203")
-Color [A=255, R=1, G=2, B=3]
+RGBA(1,2,3,1)
 
 >> ColorValue("#aabbccdd")
-Color [A=221, R=170, G=187, B=204]
+RGBA(170,187,204,0.867)
 
 >> ColorValue("#aabbcc")
-Color [A=255, R=170, G=187, B=204]
+RGBA(170,187,204,1)
 
 >> ColorValue("#AABBCCDD")
-Color [A=221, R=170, G=187, B=204]
+RGBA(170,187,204,0.867)
 
 >> ColorValue("#AABBCC")
-Color [A=255, R=170, G=187, B=204]
+RGBA(170,187,204,1)
 
 >> ColorValue("#ffffffff")
-Color [A=255, R=255, G=255, B=255]
+RGBA(255,255,255,1)
 
 >> ColorValue("#FFFFFFFF")
-Color [A=255, R=255, G=255, B=255]
+RGBA(255,255,255,1)
 
 >> ColorValue("#00000000")
-Color [A=0, R=0, G=0, B=0]
+RGBA(0,0,0,0)
 
 >> ColorValue("#000000")
-Color [A=255, R=0, G=0, B=0]
+RGBA(0,0,0,1)
+
+>> ColorValue("Red")
+RGBA(255,0,0,1)
 
 >> ColorValue("#0g020304")
 #Error(Kind=InvalidArgument)
@@ -47,4 +50,7 @@ Color [A=255, R=0, G=0, B=0]
 #Error(Kind=InvalidArgument)
 
 >> ColorValue(Blank())
+Blank()
+
+>> ColorValue("")
 Blank()
