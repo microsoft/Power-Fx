@@ -508,15 +508,10 @@ namespace Microsoft.PowerFx.Functions
                 return CommonErrors.ArgumentOutOfRange(irContext);
             }
 
-            var r = System.Convert.ToByte(args[0].Value);
-            var g = System.Convert.ToByte(args[1].Value);
-            var b = System.Convert.ToByte(args[2].Value);
-
-            // Ensure bytes are whole numbers and weren't rounded
-            if (r != args[0].Value || g != args[1].Value || b != args[2].Value)
-            {
-                return CommonErrors.InvalidNumberFormatError(irContext);
-            }
+            // Truncate (strip decimals)
+            var r = (int)args[0].Value;
+            var g = (int)args[1].Value;
+            var b = (int)args[2].Value;
 
             // Ensure alpha is between 0 and 1
             if (args[3].Value < 0.0d || args[3].Value > 1.0d)
