@@ -123,6 +123,14 @@ stages:
         feedName: "${{ parameters.packageFeed }}"
 
     - powershell: |
+        # Set up tokens for private sources
+        $file = "$(Build.SourcesDirectory)\nuget.config";
+        $ErrorActionPreference= 'SilentlyContinue';
+        nuget sources update -ConfigFile "$file" -Name "SDK_Dotnet_V4_org" -username "ContractDlls" -password "$(System.AccessToken)";
+        nuget sources update -ConfigFile "$file" -Name "PowerFx" -username "ContractDlls" -password "$(System.AccessToken)";
+        $ErrorActionPreference= 'Continue';
+        '-------------'; get-content "$file"; '===================';
+
         $PackageNames = "$(PackagesToValidate)";
         $ApiContractVersion = "$(ApiContractVersion)";
         $TempContractInstallDirectory = ".\TempContractInstallDir";
@@ -134,7 +142,7 @@ stages:
 
         foreach ($Name in $Names) {
             "---- $Name ------------------";
-            nuget install $Name -Version $ApiContractVersion -OutputDirectory $TempContractInstallDirectory -NonInteractive;
+            nuget install $Name -Version $ApiContractVersion -OutputDirectory $TempContractInstallDirectory -DirectDownload -NonInteractive;
 
             Copy-Item "$TempContractInstallDirectory\$Name.$ApiContractVersion\lib\netstandard2.0\$Name.dll" $OutputDirectory;
         }
