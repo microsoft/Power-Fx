@@ -155,3 +155,23 @@ Blank()
 // Record to Record coercion not allowed
 >> Patch(t1, First(Filter(t1, Field2="earth")), {Field3: "2022-11-14 7:22:06 pm"})
 Errors: Error 0-79: The function 'Patch' has some invalid arguments.|Error 45-78: The type of this argument 'Field3' does not match the expected type 'DateTime'. Found type 'Text'.
+
+>> Patch(t1,LookUp(t1,DisplayNameField2="earth"),{Field1:100,Field4:false});t1
+Table({Field1:100,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:false})
+
+>> Collect(t1, r2);
+  Collect(t1, {Field1:3,Field2:"venus",Field3:DateTime(2030,1,1,0,0,0,0),Field4:true});
+  Collect(t1, {Field1:4,Field2:"mars",Field3:DateTime(2031,1,1,0,0,0,0),Field4:false});
+  Collect(t1, {Field1:5,Field2:"jupter",Field3:DateTime(2032,1,1,0,0,0,0),Field4:true});
+  Collect(t1, {Field1:6,Field2:"saturn",Field3:DateTime(2033,1,1,0,0,0,0),Field4:false});
+  Patch(t1, First(Filter(t1, Field1 > 4)), {Field2: "phobos"});
+{Field1:5,Field2:"phobos",Field3:DateTime(2032,1,1,0,0,0,0),Field4:true}
+
+>> Collect(t1, r2);
+  Collect(t1, {DisplayNameField1:3,Field2:"venus",Field3:DateTime(2030,1,1,0,0,0,0),DisplayNameField4:true});
+  Collect(t1, {DisplayNameField1:4,Field2:"mars",Field3:DateTime(2031,1,1,0,0,0,0),DisplayNameField4:false});
+  Collect(t1, {DisplayNameField1:5,Field2:"jupter",Field3:DateTime(2032,1,1,0,0,0,0),DisplayNameField4:true});
+  Collect(t1, {DisplayNameField1:6,Field2:"saturn",Field3:DateTime(2033,1,1,0,0,0,0),DisplayNameField4:false});
+  Patch(t1, Last(Filter(t1, Field4 = false)), {DisplayNameField2: "phobos"});
+{Field1:6,Field2:"phobos",Field3:DateTime(2033,1,1,0,0,0,0),Field4:false}
+  

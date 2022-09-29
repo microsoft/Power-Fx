@@ -23,13 +23,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
     public class DatabaseSimulationTests
     {
         [Theory]
-        [InlineData("Patch(Table, First(Filter(Table, MyStr = \"Str3\")), {MyDate: \"2022-11-14 7:22:06 pm\"})", false, 0)]
-        [InlineData("Patch(Table, First(Filter(Table, MyStr = \"Str3\")), {MyDate: DateTime(2022,11,14,19,22,6) })", true, 0)]
-        [InlineData("Patch(Table, First(Filter(Table, MyStr = \"Str3\")), {MyDate: \"2022-11-14 7:22:06 pm\"})", false, 2000)]
-        [InlineData("Patch(Table, First(Filter(Table, MyStr = \"Str3\")), {MyDate: DateTime(2022,11,14,19,22,6) })", true, 2000, true)]
-        public void DatabaseSimulation_Test(string expr, bool checkSuccess, int patchDelay, bool expectTaskCancelledException = false)
+        [InlineData("Patch(Table, First(Filter(Table, MyStr = \"Str3\")), {MyDate: \"2022-11-14 7:22:06 pm\"})", false)]
+        [InlineData("Patch(Table, First(Filter(Table, MyStr = \"Str3\")), {MyDate: DateTime(2022,11,14,19,22,6) })", true)]
+        public async Task DatabaseSimulation_Test(string expr, bool checkSuccess)
         {
-            var databaseTable = DatabaseTable.CreateTestTable(patchDelay);
+            var databaseTable = DatabaseTable.CreateTestTable(0);
             var symbols = new SymbolTable();
 
             symbols.AddVariable("Table", DatabaseTable.TestTableType);
@@ -48,25 +46,35 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             IExpressionEvaluator run = check.GetEvaluator();
 
-            using (var cts = new CancellationTokenSource(1500))
-            {
-                var aggregateExceptionFired = false;
+            FormulaValue result = await run.EvalAsync(CancellationToken.None, runtimeConfig);
+            Assert.IsType<InMemoryRecordValue>(result);
+        }
 
-                try
-                {
-                    FormulaValue result = run.EvalAsync(cts.Token, runtimeConfig).Result;
-                    Assert.IsType<InMemoryRecordValue>(result);
-                }
-                catch (AggregateException agg)
-                {
-                    Assert.True(expectTaskCancelledException);
-                    Assert.IsType<TaskCanceledException>(agg.InnerException);
-                    aggregateExceptionFired = true;
-                }
-                finally
-                {
-                    Assert.True(expectTaskCancelledException == aggregateExceptionFired);
-                }
+        // Verify that we catch timeouts. 
+        [Theory]
+        [InlineData("Patch(Table, First(Filter(Table, MyStr = \"Str3\")), {MyDate: DateTime(2022,11,14,19,22,6) })")]
+        public async Task DatabaseSimulation_TestTimeout(string expr)
+        {
+            // Set PatchDelay to "infinite" (20 seconds). We'll timeout after 500ms. 
+            // This should abort from the middle of the Patch. 
+            var databaseTable = DatabaseTable.CreateTestTable(patchDelay: 20000);
+            var symbols = new SymbolTable();
+
+            symbols.AddVariable("Table", DatabaseTable.TestTableType);
+            symbols.EnableMutationFunctions();
+
+            var engine = new RecalcEngine();
+            var runtimeConfig = ReadOnlySymbolValues.New(new Dictionary<string, DatabaseTable>() { { "Table", databaseTable } });
+
+            CheckResult check = engine.Check(expr, symbolTable: symbols, options: new ParserOptions() { AllowsSideEffects = true });
+            Assert.True(check.IsSuccess);
+
+            IExpressionEvaluator run = check.GetEvaluator();
+                        
+            using (var cts = new CancellationTokenSource(500))
+            {
+                // Won't complete - should throw cancellation task 
+                await Assert.ThrowsAsync<TaskCanceledException>(async () => await run.EvalAsync(cts.Token, runtimeConfig));
             }
         }
 

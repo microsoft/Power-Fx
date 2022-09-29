@@ -73,6 +73,11 @@ namespace Microsoft.PowerFx.Core.Binding
         // Global namespace, only used with fully qualified values
         QualifiedValue,
 
+        /// <summary>
+        /// This BindKind applies to resolved Type Names, and is not used for any data.
+        /// </summary>
+        TypeName,
+
         Lim
     }
 }
