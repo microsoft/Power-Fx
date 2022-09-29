@@ -171,9 +171,9 @@ stages:
         $TempContractInstallDirectory = ".\TempContractInstallDir";
         $OutputDirectory = ".\ContractDlls";
 
-        Write-Host "\nDownloading packages version $ApiContractVersion."
+        Write-Host "\nDownloading packages version $ApiContractVersion.";
 
-        New-Item -ItemType directory -Path $OutputDirectory -Force
+        New-Item -ItemType directory -Path $OutputDirectory -Force | Out-Null;
 
         $Names = $PackageNames.Split(',');
 
