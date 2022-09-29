@@ -33,7 +33,7 @@
 
 // single expressions are not supported as chains
 >> (1;(2;7));3;4
-Errors: Error 2-3: Unexpected characters. The formula contains 'ParenClose' where 'Semicolon' is expected.|Error 5-6: Unexpected characters. The formula contains 'Semicolon' where 'ParenClose' is expected.|Error 7-8: Unexpected characters. Characters are used in the formula in an unexpected way.
+Errors: Error 2-3: Unexpected characters. The formula contains 'Semicolon' where 'ParenClose' is expected.|Error 5-6: Unexpected characters. The formula contains 'Semicolon' where 'ParenClose' is expected.|Error 7-8: Unexpected characters. Characters are used in the formula in an unexpected way.
 
 
 >> If(true, 1;2 , 4)
