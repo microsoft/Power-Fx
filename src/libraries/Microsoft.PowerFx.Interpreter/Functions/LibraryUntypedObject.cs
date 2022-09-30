@@ -153,7 +153,7 @@ namespace Microsoft.PowerFx.Functions
             return GetTypeMismatchError(irContext, BuiltinFunctionsCore.CountRows_UO.Name, DType.EmptyTable.GetKindString(), impl);
         }
 
-        public static FormulaValue DateValue_UO(IRContext irContext, UntypedObjectValue[] args)
+        public static FormulaValue DateValue_UO(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, UntypedObjectValue[] args)
         {
             var impl = args[0].Impl;
 
@@ -161,9 +161,11 @@ namespace Microsoft.PowerFx.Functions
             {
                 var s = impl.GetString();
 
-                if (IsValidDateTimeUO(s) && DateTime.TryParse(s, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime res))
+                if (IsValidDateTimeUO(s) && DateTime.TryParse(s, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime datetime))
                 {
-                    return new DateValue(irContext, res.Date);
+                    datetime = MakeValidDateTime(runner, datetime, runner.GetService<TimeZoneInfo>() ?? TimeZoneInfo.Local);
+
+                    return new DateValue(irContext, datetime);
                 }
 
                 return CommonErrors.InvalidDateTimeParsingError(irContext);
@@ -190,7 +192,7 @@ namespace Microsoft.PowerFx.Functions
             return GetTypeMismatchError(irContext, BuiltinFunctionsCore.TimeValue_UO.Name, DType.String.GetKindString(), impl);
         }
 
-        public static FormulaValue DateTimeValue_UO(IRContext irContext, UntypedObjectValue[] args)
+        public static FormulaValue DateTimeValue_UO(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, UntypedObjectValue[] args)
         {
             var impl = args[0].Impl;
 
@@ -198,9 +200,11 @@ namespace Microsoft.PowerFx.Functions
             {
                 var s = impl.GetString();
 
-                if (IsValidDateTimeUO(s) && DateTime.TryParse(s, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime res))
+                if (IsValidDateTimeUO(s) && DateTime.TryParse(s, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime datetime))
                 {
-                    return new DateTimeValue(irContext, res);
+                    datetime = MakeValidDateTime(runner, datetime, runner.GetService<TimeZoneInfo>() ?? TimeZoneInfo.Local);
+
+                    return new DateTimeValue(irContext, datetime);
                 }
 
                 return CommonErrors.InvalidDateTimeParsingError(irContext);
