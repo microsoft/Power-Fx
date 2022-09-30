@@ -409,7 +409,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 
             CheckBehaviorError(_sendToClientData[0], expectBehaviorError, out var diags);
 
-            var diag = diags.First(d => d.Message == "Unexpected characters. The formula contains 'ParenClose' where 'Eof' is expected.");
+            var diag = diags.First(d => d.Message == "Unexpected characters. The formula contains 'Eof' where 'ParenClose' is expected.");
 
             Assert.Equal(offset, diag.Range.Start.Character);
             Assert.Equal(offset, diag.Range.End.Character);
