@@ -16,7 +16,6 @@ namespace Microsoft.PowerFx.Types
             : base(irContext, value)
         {
             Contract.Assert(IRContext.ResultType == FormulaType.DateTime);
-            Contract.Assert(value.Kind != DateTimeKind.Utc);
         }
 
         public override void Visit(IValueVisitor visitor)

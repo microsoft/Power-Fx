@@ -3,8 +3,11 @@
 
 using System;
 using System.Globalization;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Types;
+using static System.TimeZoneInfo;
 
 namespace Microsoft.PowerFx.Functions
 {
@@ -61,11 +64,27 @@ namespace Microsoft.PowerFx.Functions
                     return CommonErrors.RuntimeTypeMismatch(irContext);
             }
 
-            var delta = (NumberValue)args[1];
-            var timeUnit = ((StringValue)args[2]).Value.ToLowerInvariant();
+            NumberValue delta;
+            string timeUnit;
 
-            var isSubdayUnit = IsSubdayTimeUnit(timeUnit);
-            if (isSubdayUnit)
+            if (args[1] is NumberValue number)
+            {
+                delta = number;
+                timeUnit = ((StringValue)args[2]).Value.ToLowerInvariant();
+            }
+            else if (args[1] is TimeValue time)
+            {
+                delta = NumberValue.New(time.Value.TotalMilliseconds);
+                timeUnit = "milliseconds";
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
+
+            var useUtcConversion = NeedToConvertToUtc(runner, datetime, timeUnit);
+
+            if (useUtcConversion)
             {
                 datetime = TimeZoneInfo.ConvertTimeToUtc(datetime, timeZoneInfo);
             }
@@ -104,10 +123,12 @@ namespace Microsoft.PowerFx.Functions
                         return GetInvalidUnitError(irContext, "DateAdd");
                 }
 
-                if (isSubdayUnit)
+                if (useUtcConversion)
                 {
                     newDate = TimeZoneInfo.ConvertTimeFromUtc(newDate, timeZoneInfo);
                 }
+
+                newDate = MakeValidDateTime(runner, newDate, timeZoneInfo);
 
                 return new DateTimeValue(irContext, newDate);
             }
@@ -117,9 +138,107 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
-        private static bool IsSubdayTimeUnit(string unit)
+        private static DateTime MakeValidDateTime(EvalVisitor runner, DateTime datetime, TimeZoneInfo timeZoneInfo)
         {
-            return unit == "milliseconds" || unit == "seconds" || unit == "minutes" || unit == "hours";
+            if (datetime.IsValid(runner))
+            {
+                return datetime;
+            }
+
+            // If the date is invalid, we want to return the next valid date/time
+            return GetNextValidDate(datetime, timeZoneInfo);
+        }
+
+        private static DateTime GetNextValidDate(DateTime invalidDate, TimeZoneInfo timeZoneInfo)
+        {
+            // Determine which adjustment rule applies to the current date
+            var adjr = timeZoneInfo.GetAdjustmentRules().FirstOrDefault(ar => ar.DateStart <= invalidDate && invalidDate < ar.DateEnd);
+
+            if (adjr == null)
+            {
+                // We cannot correct the invalid date, let's default to what we have
+                return invalidDate;
+            }
+
+            // As the datetime is invalid, we are necessarily in the invalid range of the DST
+            // We will take the beginning of the range and apply the necessary DST offset to get the new time
+            var validDate = AdjustMilliseconds(TransitionTimeToDateTime(invalidDate.Year, adjr.DaylightTransitionStart) + adjr.DaylightDelta);
+
+            return validDate;
+        }
+
+        private static DateTime AdjustMilliseconds(DateTime datetime)
+        {
+            // Adjustment rules are usually 1ms off and we need to readjust the date/time to a whole second
+            // otherwise we'd show 2:59:59 or 11:59:59 times when displaying the result (could potentially be on the wrong date)
+            if (datetime.Millisecond > 995)
+            {
+                return datetime.AddMilliseconds(1000 - datetime.Millisecond);
+            }
+
+            return datetime;
+        }
+
+        // From https://referencesource.microsoft.com/#mscorlib/system/timezoneinfo.cs        
+        // TransitionTimeToDateTime        
+        // Helper function that converts a year and TransitionTime into a DateTime        
+        private static DateTime TransitionTimeToDateTime(int year, TransitionTime transitionTime)
+        {
+            DateTime value;
+            DateTime timeOfDay = transitionTime.TimeOfDay;
+
+            if (transitionTime.IsFixedDateRule)
+            {
+                // create a DateTime from the passed in year and the properties on the transitionTime
+
+                // if the day is out of range for the month then use the last day of the month
+                var day = DateTime.DaysInMonth(year, transitionTime.Month);
+
+                value = new DateTime(year, transitionTime.Month, (day < transitionTime.Day) ? day : transitionTime.Day, timeOfDay.Hour, timeOfDay.Minute, timeOfDay.Second, timeOfDay.Millisecond);
+            }
+            else
+            {
+                if (transitionTime.Week <= 4)
+                {
+                    // Get the (transitionTime.Week)th Sunday.                 
+                    value = new DateTime(year, transitionTime.Month, 1, timeOfDay.Hour, timeOfDay.Minute, timeOfDay.Second, timeOfDay.Millisecond);
+
+                    var dayOfWeek = (int)value.DayOfWeek;
+                    var delta = (int)transitionTime.DayOfWeek - dayOfWeek;
+                    if (delta < 0)
+                    {
+                        delta += 7;
+                    }
+
+                    delta += 7 * (transitionTime.Week - 1);
+
+                    if (delta > 0)
+                    {
+                        value = value.AddDays(delta);
+                    }
+                }
+                else
+                {
+                    // If TransitionWeek is greater than 4, we will get the last week.                    
+                    var daysInMonth = DateTime.DaysInMonth(year, transitionTime.Month);
+                    value = new DateTime(year, transitionTime.Month, daysInMonth, timeOfDay.Hour, timeOfDay.Minute, timeOfDay.Second, timeOfDay.Millisecond);
+
+                    // This is the day of week for the last day of the month.
+                    var dayOfWeek = (int)value.DayOfWeek;
+                    var delta = dayOfWeek - (int)transitionTime.DayOfWeek;
+                    if (delta < 0)
+                    {
+                        delta += 7;
+                    }
+
+                    if (delta > 0)
+                    {
+                        value = value.AddDays(-delta);
+                    }
+                }
+            }
+
+            return value;
         }
 
         public static FormulaValue DateDiff(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
@@ -157,7 +276,6 @@ namespace Microsoft.PowerFx.Functions
             }
 
             var timeUnit = ((StringValue)args[2]).Value.ToLowerInvariant();
-            var isSubdayUnit = IsSubdayTimeUnit(timeUnit);
 
             // When converting to months, quarters or years, we don't use the time difference
             // and applying changes to map time to UTC could lead to weird results depending on the local time zone
@@ -176,12 +294,16 @@ namespace Microsoft.PowerFx.Functions
                     return new NumberValue(irContext, years);
             }
 
-            if (isSubdayUnit)
-            {
-                // Convert to UTC to be accurate (apply DST if needed)
-                var timeZoneInfo = runner.GetService<TimeZoneInfo>() ?? LocalTimeZone;
+            // Convert to UTC to be accurate (apply DST if needed)
+            var timeZoneInfo = runner.GetService<TimeZoneInfo>() ?? LocalTimeZone;
 
+            if (NeedToConvertToUtc(runner, start, timeUnit))
+            {
                 start = TimeZoneInfo.ConvertTimeToUtc(start, timeZoneInfo);
+            }
+
+            if (NeedToConvertToUtc(runner, end, timeUnit))
+            {
                 end = TimeZoneInfo.ConvertTimeToUtc(end, timeZoneInfo);
             }
 
@@ -214,6 +336,19 @@ namespace Microsoft.PowerFx.Functions
                 default:
                     return GetInvalidUnitError(irContext, "DateDiff");
             }
+        }
+
+        internal static bool NeedToConvertToUtc(EvalVisitor runner, DateTime datetime, string unit)
+        {
+            // If datetime is already UTC, no need to apply any conversion
+            // For DateAdd in Days or bigger units, we want to preserve the time
+            return datetime.Kind != DateTimeKind.Utc &&
+                   IsSubdayTimeUnit(unit);
+        }
+
+        private static bool IsSubdayTimeUnit(string unit)
+        {
+            return unit is "milliseconds" or "seconds" or "minutes" or "hours";
         }
 
         private static ErrorValue GetInvalidUnitError(IRContext irContext, string functionName)
@@ -374,27 +509,29 @@ namespace Microsoft.PowerFx.Functions
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-date-time
         // Date(Year,Month,Day)
-        public static FormulaValue Date(IRContext irContext, NumberValue[] args)
+        public static FormulaValue Date(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, NumberValue[] args)
         {
             // $$$ fix impl
             var year = (int)args[0].Value;
             var month = (int)args[1].Value;
             var day = (int)args[2].Value;
 
-            return DateImpl(irContext, year, month, day);
+            return DateImpl(runner, context, irContext, year, month, day);
         }
 
-        private static FormulaValue DateImpl(IRContext irContext, int year, int month, int day)
+        private static FormulaValue DateImpl(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, int year, int month, int day)
         {
             // The final date is built up this way to allow for inputs which overflow,
             // such as: Date(2000, 25, 69) -> 3/10/2002
             try
             {
-                var result = new DateTime(year, 1, 1)
+                var datetime = new DateTime(year, 1, 1)
                     .AddMonths(month - 1)
                     .AddDays(day - 1);
 
-                return new DateValue(irContext, result);
+                datetime = MakeValidDateTime(runner, datetime, runner.GetService<TimeZoneInfo>() ?? LocalTimeZone);
+
+                return new DateValue(irContext, datetime);
             }
             catch (ArgumentOutOfRangeException)
             {
@@ -429,22 +566,11 @@ namespace Microsoft.PowerFx.Functions
             return new TimeValue(irContext, result);
         }
 
-        public static FormulaValue DateTimeFunction(IRContext irContext, NumberValue[] args)
+        public static FormulaValue DateTimeFunction(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, NumberValue[] args)
         {
             var year = (int)args[0].Value;
             var month = (int)args[1].Value;
             var day = (int)args[2].Value;
-            var date = DateImpl(IRContext.NotInSource(FormulaType.Date), year, month, day);
-            if (date is ErrorValue)
-            {
-                return date;
-            }
-
-            if (date is ErrorValue)
-            {
-                return date;
-            }
-
             var hour = (int)args[3].Value;
             var minute = (int)args[4].Value;
             var second = (int)args[5].Value;
@@ -452,11 +578,15 @@ namespace Microsoft.PowerFx.Functions
 
             try
             {
-                var dateTime = ((DateValue)date).Value
+                var dateTime = new DateTime(year, 1, 1)
+                    .AddMonths(month - 1)
+                    .AddDays(day - 1)
                     .AddHours(hour)
                     .AddMinutes(minute)
                     .AddSeconds(second)
                     .AddMilliseconds(millisecond);
+
+                dateTime = MakeValidDateTime(runner, dateTime, runner.GetService<TimeZoneInfo>() ?? LocalTimeZone);
 
                 return new DateTimeValue(irContext, dateTime);
             }
@@ -466,9 +596,12 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
-        private static FormulaValue Now(IRContext irContext, FormulaValue[] args)
+        private static async ValueTask<FormulaValue> Now(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            return new DateTimeValue(irContext, DateTime.Now);
+            var tzInfo = runner.GetService<TimeZoneInfo>() ?? TimeZoneInfo.Local;
+
+            var datetime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, tzInfo);
+            return new DateTimeValue(irContext, datetime);
         }
 
         private static FormulaValue DateParse(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, StringValue[] args)
@@ -481,6 +614,13 @@ namespace Microsoft.PowerFx.Functions
 
             if (DateTime.TryParse(str, runner.CultureInfo, DateTimeStyles.None, out var result))
             {
+                var tzi = runner.GetService<TimeZoneInfo>() ?? TimeZoneInfo.Local;
+
+                if (result.Kind == DateTimeKind.Local)
+                {
+                    result = TimeZoneInfo.ConvertTime(result, TimeZoneInfo.Local, tzi);
+                }
+
                 return new DateValue(irContext, result.Date);
             }
             else
@@ -526,7 +666,9 @@ namespace Microsoft.PowerFx.Functions
 
             if (DateTime.TryParse(str, culture, DateTimeStyles.None, out var result))
             {
-                if (runner.TryGetService<TimeZoneInfo>(out var tzi) && result.Kind == DateTimeKind.Local)
+                var tzi = runner.GetService<TimeZoneInfo>() ?? TimeZoneInfo.Local;
+
+                if (result.Kind == DateTimeKind.Local)
                 {
                     result = TimeZoneInfo.ConvertTime(result, TimeZoneInfo.Local, tzi);
                 }
