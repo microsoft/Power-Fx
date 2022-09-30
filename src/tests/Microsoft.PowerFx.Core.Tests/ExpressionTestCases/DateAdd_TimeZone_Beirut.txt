@@ -71,5 +71,8 @@ DateTime(2021,3,28,1,0,0,0)
 >> DateTime(2021,3,29,0,0,0,0) - 2
 DateTime(2021,3,27,0,0,0,0)
 
+// While Date(2021,3,28) returns Date(2021,3,28) [ie a Date], internally, we store DateTime(2021,3,28,1,0,0,0) which is 
+// the next valid time, knowing DateTime(2021,3,28,0,0,0,0) isn't valid for that TimeZone. As a result, when adding a day, 
+// we get DateTime(2021,3,29,1,0,0,0) and finally when substracting 30 minutes, we end up with DateTime(2021,3,28,0,30,0,0) 
 >> Date(2021,3,28) + 1 - Time(0, 30, 0)
 DateTime(2021,3,29,0,30,0,0)

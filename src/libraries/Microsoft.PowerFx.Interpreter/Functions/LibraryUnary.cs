@@ -368,7 +368,7 @@ namespace Microsoft.PowerFx.Functions
             return new DateValue(irContext, date);
         }
 
-        public static FormulaValue NumberToDateTime(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, NumberValue[] args)
+        public static DateTimeValue NumberToDateTime(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, NumberValue[] args)
         {
             var n = args[0].Value;
             var date = _epoch.AddDays(n);
