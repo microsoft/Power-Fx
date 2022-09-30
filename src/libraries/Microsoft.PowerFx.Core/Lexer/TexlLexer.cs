@@ -843,11 +843,18 @@ namespace Microsoft.PowerFx.Syntax
                 StringInterpolation
             }
 
+            public enum EscapeMode
+            {
+                Normal,
+                SpecialEscape
+            }
+
             private readonly TexlLexer _lex;
             private readonly string _text;
             private readonly int _charCount;
             private readonly StringBuilder _sb; // Used while building a token.
             private readonly Stack<LexerMode> _modeStack;
+            private readonly Stack<EscapeMode> _escapeModeStack;
 
             private int _currentTokenPos; // The start of the current token.
 
@@ -864,10 +871,15 @@ namespace Microsoft.PowerFx.Syntax
 
                 _modeStack = new Stack<LexerMode>();
                 _modeStack.Push(LexerMode.Normal);
+
+                _escapeModeStack = new Stack<EscapeMode>();
+                _escapeModeStack.Push(EscapeMode.Normal);
             }
 
             // If the mode stack is empty, this is already an parse, use NormalMode as a default
             private LexerMode CurrentMode => _modeStack.Count != 0 ? _modeStack.Peek() : LexerMode.Normal;
+
+            private EscapeMode CurrentEscapeMode => _escapeModeStack.Count != 0 ? _escapeModeStack.Peek() : EscapeMode.Normal;
 
             private void EnterMode(LexerMode newMode)
             {
@@ -879,6 +891,19 @@ namespace Microsoft.PowerFx.Syntax
                 if (_modeStack.Count != 0)
                 {
                     _modeStack.Pop();
+                }
+            }
+
+            private void EnterEscapeMode(EscapeMode newMode)
+            {
+                _escapeModeStack.Push(newMode);
+            }
+
+            private void ExitEscapeMode()
+            {
+                if (_escapeModeStack.Count != 0)
+                {
+                    _escapeModeStack.Pop();
                 }
             }
 
@@ -1380,65 +1405,131 @@ namespace Microsoft.PowerFx.Syntax
                 {
                     var ch = CurrentChar;
 
-                    if (IsStringDelimiter(ch))
+                    if (CurrentEscapeMode == EscapeMode.SpecialEscape)
                     {
-                        char nextCh;
-                        if (Eof || CharacterUtils.IsLineTerm(nextCh = PeekChar(1)) || !IsStringDelimiter(nextCh))
+                        // check for eof
+                        if (IsStringDelimiter(ch))
                         {
-                            // Interpolated string end, do not call NextChar()
-                            if (Eof)
+                            char nextCh;
+                            if (Eof || CharacterUtils.IsLineTerm(nextCh = PeekChar(1)) || !IsStringDelimiter(nextCh))
                             {
-                                return new ErrorToken(GetTextSpan());
+                                // Interpolated string end, do not call NextChar()
+                                if (Eof)
+                                {
+                                    return new ErrorToken(GetTextSpan());
+                                }
+
+                                return new StrLitToken(_sb.ToString(), GetTextSpan());
                             }
 
-                            return new StrLitToken(_sb.ToString(), GetTextSpan());
-                        }
-
-                        // If we are here, we are seeing a double quote followed immediately by another
-                        // double quote. That is an escape sequence for double quote characters.
-                        _sb.Append(ch);
-                        NextChar();
-                    }
-                    else if (IsCurlyOpen(ch))
-                    {
-                        char nextCh;
-                        if (Eof || CharacterUtils.IsLineTerm(nextCh = PeekChar(1)) || !IsCurlyOpen(nextCh))
-                        {
-                            // Island start, do not call NextChar()
-                            if (Eof)
-                            {
-                                return new ErrorToken(GetTextSpan());
-                            }
-
-                            return new StrLitToken(_sb.ToString(), GetTextSpan());
-                        }
-
-                        // If we are here, we are seeing a open curly followed immediately by another
-                        // open curly. That is an escape sequence for open curly characters.
-                        _sb.Append(ch);
-                        NextChar();
-                    }
-                    else if (IsCurlyClose(ch))
-                    {
-                        char nextCh;
-                        if (Eof || CharacterUtils.IsLineTerm(nextCh = PeekChar(1)) || !IsCurlyClose(nextCh))
-                        {
-                            var res = new ErrorToken(GetTextSpan());
+                            // If we are here, we are seeing a double quote followed immediately by another
+                            // double quote. That is an escape sequence for double quote characters.
+                            _sb.Append(ch);
                             NextChar();
-                            return res;
+                        }
+                        else if (IsCurlyOpen(ch))
+                        {
+                            char nextCh;
+                            if (Eof || CharacterUtils.IsLineTerm(nextCh = PeekChar(1)) || !IsCurlyOpen(nextCh))
+                            {
+                                // Island start, do not call NextChar()
+                                if (Eof)
+                                {
+                                    return new ErrorToken(GetTextSpan());
+                                }
+
+                                return new StrLitToken(_sb.ToString(), GetTextSpan());
+                            }
+
+                            // If we are here, we are seeing a open curly followed immediately by another
+                            // open curly. That is an escape sequence for open curly characters.
+                            _sb.Append(ch);
+                            NextChar();
+                        }
+                        else if (IsCurlyClose(ch))
+                        {
+                            char nextCh;
+                            if (Eof || CharacterUtils.IsLineTerm(nextCh = PeekChar(1)) || !IsCurlyClose(nextCh))
+                            {
+                                var res = new ErrorToken(GetTextSpan());
+                                NextChar();
+                                return res;
+                            }
+
+                            // If we are here, we are seeing a close curly followed immediately by another
+                            // close curly. That is an escape sequence for close curly characters.
+                            _sb.Append(ch);
+                            NextChar();
+                        }
+                        else if (!CharacterUtils.IsFormatCh(ch))
+                        {
+                            _sb.Append(ch);
                         }
 
-                        // If we are here, we are seeing a close curly followed immediately by another
-                        // close curly. That is an escape sequence for close curly characters.
-                        _sb.Append(ch);
                         NextChar();
                     }
-                    else if (!CharacterUtils.IsFormatCh(ch))
+                    else
                     {
-                        _sb.Append(ch);
-                    }
+                        if (IsStringDelimiter(ch))
+                        {
+                            char nextCh;
+                            if (Eof || CharacterUtils.IsLineTerm(nextCh = PeekChar(1)) || !IsStringDelimiter(nextCh))
+                            {
+                                // Interpolated string end, do not call NextChar()
+                                if (Eof)
+                                {
+                                    return new ErrorToken(GetTextSpan());
+                                }
 
-                    NextChar();
+                                return new StrLitToken(_sb.ToString(), GetTextSpan());
+                            }
+
+                            // If we are here, we are seeing a double quote followed immediately by another
+                            // double quote. That is an escape sequence for double quote characters.
+                            _sb.Append(ch);
+                            NextChar();
+                        }
+                        else if (IsCurlyOpen(ch))
+                        {
+                            char nextCh;
+                            if (Eof || CharacterUtils.IsLineTerm(nextCh = PeekChar(1)) || !IsCurlyOpen(nextCh))
+                            {
+                                // Island start, do not call NextChar()
+                                if (Eof)
+                                {
+                                    return new ErrorToken(GetTextSpan());
+                                }
+
+                                return new StrLitToken(_sb.ToString(), GetTextSpan());
+                            }
+
+                            // If we are here, we are seeing a open curly followed immediately by another
+                            // open curly. That is an escape sequence for open curly characters.
+                            _sb.Append(ch);
+                            NextChar();
+                        }
+                        else if (IsCurlyClose(ch))
+                        {
+                            char nextCh;
+                            if (Eof || CharacterUtils.IsLineTerm(nextCh = PeekChar(1)) || !IsCurlyClose(nextCh))
+                            {
+                                var res = new ErrorToken(GetTextSpan());
+                                NextChar();
+                                return res;
+                            }
+
+                            // If we are here, we are seeing a close curly followed immediately by another
+                            // close curly. That is an escape sequence for close curly characters.
+                            _sb.Append(ch);
+                            NextChar();
+                        }
+                        else if (!CharacterUtils.IsFormatCh(ch))
+                        {
+                            _sb.Append(ch);
+                        }
+
+                        NextChar();
+                    }
                 }
                 while (!Eof);
 
