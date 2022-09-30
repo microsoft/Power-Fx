@@ -1,0 +1,92 @@
+﻿// *********** Single-argument functions ***********
+
+>> Abs(If(1/0<2,[1]))
+#Error(Kind=Div0)
+
+>> Abs(If(1<0,[1]))
+Blank()
+
+>> Abs(Filter([1,2,3], Value > 10))
+[]
+
+>> Boolean(If(1/0<2,["true"]))
+#Error(Kind=Div0)
+
+>> Boolean(If(1<0,["true"]))
+Blank()
+
+>> Boolean(Filter(["true","false"], Len(Value) > 10))
+[]
+
+>> Boolean(If(1/0<2,[1]))
+#Error(Kind=Div0)
+
+>> Boolean(If(1<0,[1]))
+Blank()
+
+>> Boolean(Filter([1,2,3], Value > 10))
+[]
+
+>> Char(If(1/0<2,[61]))
+#Error(Kind=Div0)
+
+>> Char(If(1<0,[61]))
+Blank()
+
+// Needs updating for consistent schema flag
+>> Char(Filter([61,62,63], Value > 100))
+Table()
+
+>> Exp(If(1/0<2,[1]))
+#Error(Kind=Div0)
+
+>> Exp(If(1<0,[1]))
+Blank()
+
+>> Exp(Filter([1,2,3], Value > 10))
+[]
+
+>> Int(If(1/0<2,[1]))
+#Error(Kind=Div0)
+
+>> Int(If(1<0,[1]))
+Blank()
+
+>> Int(Filter([1,2,3], Value > 10))
+[]
+
+>> Len(If(1/0<2,["true"]))
+#Error(Kind=Div0)
+
+>> Len(If(1<0,["true"]))
+Blank()
+
+>> Len(Filter(["true","false"], Len(Value) > 10))
+[]
+
+>> Ln(If(1/0<2,[1]))
+#Error(Kind=Div0)
+
+>> Ln(If(1<0,[1]))
+Blank()
+
+>> Ln(Filter([1,2,3], Value > 10))
+[]
+
+>> Sqrt(If(1/0<2,[1]))
+#Error(Kind=Div0)
+
+>> Sqrt(If(1<0,[1]))
+Blank()
+
+>> Sqrt(Filter([1,2,3], Value > 10))
+[]
+
+// *********** 2+-argument functions ***********
+
+>> Concatenate(If(1/0<2,["hello", "hi"]), " world")
+#Error(Kind=Div0)
+
+>> Concatenate(["hello", "hi"], If(1/0<2," world"))
+#Error(Kind=Div0)
+
