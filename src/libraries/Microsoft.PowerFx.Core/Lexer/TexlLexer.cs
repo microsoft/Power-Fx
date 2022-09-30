@@ -350,6 +350,38 @@ namespace Microsoft.PowerFx.Syntax
             return tokens;
         }
 
+        public List<Token> GetTokensSpecial(string text)
+        {
+            Contracts.AssertValue(text);
+
+            Token tok;
+
+            // Default escape mode is set to be different
+            var impl = new LexerImpl(this, text, new StringBuilder(), Flags.None, LexerImpl.EscapeMode.SpecialEscape);
+
+            var tokens = new List<Token>
+            {
+                // Figure out what to do with the span that won't break intellisense/syntax coloring
+                // The parser will need this dummy StrInterpStart, and will need an End token as well
+                new StrInterpStartToken(new Span(0, 0))
+            };
+
+            // Magic happens here, Push LexerMode.StringInterpolation, jump straight into LexInterpolatedStringBody
+            tok = impl.GetNextTokenSpecial();
+
+            tokens.Add(tok);
+
+            while ((tok = impl.GetNextToken()) != null)
+            {
+                tokens.Add(tok);
+            }
+
+            // Dummy end token
+            tokens.Add(new StrInterpEndToken(new Span(0, 0)));
+
+            return tokens;
+        }
+
         public static bool RequiresWhiteSpace(Token tk)
         {
             bool result;
@@ -858,7 +890,7 @@ namespace Microsoft.PowerFx.Syntax
 
             private int _currentTokenPos; // The start of the current token.
 
-            public LexerImpl(TexlLexer lex, string text, StringBuilder sb, Flags flags)
+            public LexerImpl(TexlLexer lex, string text, StringBuilder sb, Flags flags, EscapeMode initialEscapeMode = EscapeMode.Normal)
             {
                 Contracts.AssertValue(lex);
                 Contracts.AssertValue(text);
@@ -873,7 +905,7 @@ namespace Microsoft.PowerFx.Syntax
                 _modeStack.Push(LexerMode.Normal);
 
                 _escapeModeStack = new Stack<EscapeMode>();
-                _escapeModeStack.Push(EscapeMode.Normal);
+                _escapeModeStack.Push(initialEscapeMode);
             }
 
             // If the mode stack is empty, this is already an parse, use NormalMode as a default
@@ -989,6 +1021,36 @@ namespace Microsoft.PowerFx.Syntax
                     }
 
                     var tok = Dispatch(true, true);
+                    if (tok != null)
+                    {
+                        return tok;
+                    }
+                }
+            }
+
+            public Token GetNextTokenSpecial()
+            {
+                for (var i = 0; ; i++)
+                {
+                    if (Eof)
+                    {
+                        ExitMode();
+                        return null;
+                    }
+
+                    Token tok;
+
+                    if (i == 0)
+                    {
+                        // Magic
+                        EnterMode(LexerMode.StringInterpolation);
+                        tok = LexInterpolatedStringBody();
+                    }
+                    else
+                    {
+                        tok = Dispatch(true, true);
+                    }
+                    
                     if (tok != null)
                     {
                         return tok;
