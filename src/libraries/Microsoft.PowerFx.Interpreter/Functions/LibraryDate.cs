@@ -614,6 +614,13 @@ namespace Microsoft.PowerFx.Functions
 
             if (DateTime.TryParse(str, runner.CultureInfo, DateTimeStyles.None, out var result))
             {
+                var tzi = runner.GetService<TimeZoneInfo>() ?? TimeZoneInfo.Local;
+
+                if (result.Kind == DateTimeKind.Local)
+                {
+                    result = TimeZoneInfo.ConvertTime(result, TimeZoneInfo.Local, tzi);
+                }
+
                 return new DateValue(irContext, result.Date);
             }
             else
