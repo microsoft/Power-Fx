@@ -14,6 +14,7 @@ using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Tests.Helpers;
 using Microsoft.PowerFx.Core.Texl;
+using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
@@ -83,7 +84,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("DateAdd(Table({a:Date(2000,1,1)}),[3])", "*[a:d]")]
         [InlineData("DateAdd(Date(2000,1,1),[1])", "*[Result:d]")]
         [InlineData("DateAdd(DateTimeValue(\"1 Jan 2015\"), 2)", "d")]
-        [InlineData("DateAdd(DateTimeValue(\"1 Jan 2015\"), 2, TimeUnit!Years)", "d")]
+        [InlineData("DateAdd(DateTimeValue(\"1 Jan 2015\"), 2, TimeUnit.Years)", "d")]
         [InlineData("DateAdd(DateTimeValue(\"1 Jan 2015\"), \"hello\")", "d")]
         [InlineData("DateAdd(DateTimeValue(\"1 Jan 2015\"), \"hello\", 3)", "d")]
         public void TexlDateAdd(string script, string expectedType)
@@ -198,7 +199,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             symbol.AddVariable("Table", new TableType(TestUtils.DT("*[A:n, B:s, C:b, D:*[X:n]]")));
             TestSimpleBindingSuccess(
-                "Concatenate(Table!B, \" ending\")",
+                "Concatenate(ShowColumns(Table,\"B\"), \" ending\")",
                 TestUtils.DT("*[Result:s]"),
                 symbol);
 
@@ -223,7 +224,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             symbol.AddVariable("Table", new TableType(TestUtils.DT("*[A:n, B:s, C:b, D:*[X:n]]")));
             TestSimpleBindingSuccess(
-                "Concatenate(Table!B, \" ending\")",
+                "Concatenate(ShowColumns(Table,\"B\"), \" ending\")",
                 TestUtils.DT("*[Value:s]"),
                 symbol,
                 Features.ConsistentOneColumnTableResult);
@@ -231,7 +232,7 @@ namespace Microsoft.PowerFx.Core.Tests
             symbol.RemoveVariable("Table");
             symbol.AddVariable("Table", new TableType(TestUtils.DT("*[A:n, B:s, C:b, D:s]")));
             TestSimpleBindingSuccess(
-                "Concatenate(Table!B, \" ending\", Table!D)",
+                "Concatenate(ShowColumns(Table,\"B\"), \" ending\", ShowColumns(Table,\"D\"))",
                 TestUtils.DT("*[Value:s]"),
                 symbol,
                 Features.ConsistentOneColumnTableResult);
@@ -248,7 +249,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 symbol);
 
             TestSimpleBindingSuccess(
-                "Count(Table!A)",
+                "Count(ShowColumns(Table,\"A\"))",
                 DType.Number,
                 symbol);
         }
@@ -271,7 +272,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             symbol.AddVariable("Table3", new TableType(TestUtils.DT("*[A:s, B:n, C:b]")));
             TestSimpleBindingSuccess(
-                "CountA(Table3!C)",
+                "CountA(ShowColumns(Table3,\"C\"))",
                 DType.Number,
                 symbol);
         }
@@ -311,7 +312,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 symbol);
 
             TestSimpleBindingSuccess(
-                "CountRows(First(Table2)!D)",
+                "CountRows(First(Table2).D)",
                 DType.Number,
                 symbol);
         }
@@ -334,13 +335,13 @@ namespace Microsoft.PowerFx.Core.Tests
 
             symbol.AddVariable("Table3", new TableType(TestUtils.DT("*[A:n, B:s, C:b, D:![X:n]]")));
             TestSimpleBindingSuccess(
-                "Filter(Table3, D!X < 10, B = \"foo\", C = true)",
+                "Filter(Table3, D.X < 10, B = \"foo\", C = true)",
                 TestUtils.DT("*[A:n, B:s, C:b, D:![X:n]]"),
                 symbol);
 
             symbol.AddVariable("Table4", new TableType(TestUtils.DT("*[A:n, B:s, C:b, D:*[X:n]]")));
             TestSimpleBindingSuccess(
-                "Filter(Table4, CountRows(D!X) < 10, B = \"foo\", C = true)",
+                "Filter(Table4, CountRows(ShowColumns(D,\"X\")) < 10, B = \"foo\", C = true)",
                 TestUtils.DT("*[A:n, B:s, C:b, D:*[X:n]]"),
                 symbol);
 
@@ -896,18 +897,6 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Fact]
-        public void TexlFunctionTypeSemanticsTruncOneParam_ConsistentOneColumnTableResult()
-        {
-            var symbol = new SymbolTable();
-            symbol.AddVariable("T", new TableType(TestUtils.DT("*[A:n]")));
-            TestSimpleBindingSuccess(
-                "Trunc(T)",
-                TestUtils.DT("*[A:n]"),
-                symbol,
-                Features.ConsistentOneColumnTableResult);
-        }
-
-        [Fact]
         public void TexlFunctionTypeSemanticsTruncTwoParams()
         {
             var symbol = new SymbolTable();
@@ -964,7 +953,6 @@ namespace Microsoft.PowerFx.Core.Tests
         [Theory]
         [InlineData("Round(1234.567, T)", "*[Value:n]")]
         [InlineData("Round(4, X)", "*[Value:n]")]
-        [InlineData("Round(X, 4)", "*[Nnnuuummm:n]")]
         public void TexlFunctionTypeSemanticsRound_ConsistentOneColumnTableResult(string expression, string expectedType)
         {
             var symbol = new SymbolTable();
@@ -1047,11 +1035,10 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("Sort(Table, A, \"Descending\")", "*[A:n, B:s, C:b, D:*[X:n]]")]
         [InlineData("Sort(Table, B)", "*[A:n, B:s, C:b, D:*[X:n]]")]
         [InlineData("Sort(Table, C)", "*[A:n, B:s, C:b, D:*[X:n]]")]
-        [InlineData("Sort(Table!A, A)", "*[A:n]")]
+        [InlineData("Sort(ShowColumns(Table,\"A\"), A)", "*[A:n]")]
         [InlineData("Sort(Table, B & \"hello\")", "*[A:n, B:s, C:b, D:*[X:n]]")]
-        [InlineData("Sort(Table!B, Left(B, 2))", "*[B:s]")]
-        [InlineData("Sort(Table2, D!X & \"hello\")", "*[A:n, B:s, C:b, D:![X:n]]")]
-        [InlineData("Sort(Table2, D!X + 2)", "*[A:n, B:s, C:b, D:![X:n]]")]
+        [InlineData("Sort(Table2, D.X & \"hello\")", "*[A:n, B:s, C:b, D:![X:n]]")]
+        [InlineData("Sort(Table2, D.X + 2)", "*[A:n, B:s, C:b, D:![X:n]]")]
         public void TexlFunctionTypeSemanticsSort(string script, string expectedType)
         {
             var symbol = new SymbolTable();
@@ -1068,7 +1055,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [Theory]
         [InlineData("Sqrt(1234.567)", "n")]
         [InlineData("Sqrt(T)", "*[A:n]")]
-        [InlineData("Sqrt(T2!Value)", "*[Value:n]")]
+        [InlineData("Sqrt(ShowColumns(T2,\"Value\"))", "*[Value:n]")]
         public void TexlFunctionTypeSemanticsSqrt(string script, string expectedType)
         {
             var symbol = new SymbolTable();
@@ -1110,8 +1097,8 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("Sum(1, 2, 3, 4)")]
         [InlineData("Sum(1, A, 2, A)")]
         [InlineData("Sum(Table, A)")]
-        [InlineData("Sum(Table2, D!X)")]
-        [InlineData("Sum(Table, A + CountA(D!X))")]
+        [InlineData("Sum(Table2, D.X)")]
+        [InlineData("Sum(Table, A + CountA(D.X))")]
         public void TexlFunctionTypeSemanticsSum(string script)
         {
             var symbol = new SymbolTable();
@@ -1153,8 +1140,8 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("StdevP(1, 2, 3, 4)")]
         [InlineData("StdevP(1, A, 2, A)")]
         [InlineData("StdevP(Table, A)")]
-        [InlineData("StdevP(Table2, D!X)")]
-        [InlineData("StdevP(Table, A + CountA(D!X))")]
+        [InlineData("StdevP(Table2, D.X)")]
+        [InlineData("StdevP(Table, A + CountA(ShowColumns(D,\"X\")))")]
         public void TexlFunctionTypeSemanticsStdevP(string script)
         {
             var symbol = new SymbolTable();
@@ -1196,8 +1183,8 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("VarP(1, 2, 3, 4)")]
         [InlineData("VarP(1, A, 2, A)")]
         [InlineData("VarP(Table, A)")]
-        [InlineData("VarP(Table2, D!X)")]
-        [InlineData("VarP(Table, A + CountA(D!X))")]
+        [InlineData("VarP(Table2, D.X)")]
+        [InlineData("VarP(Table, A + CountA(ShowColumns(D,\"X\")))")]
         public void TexlFunctionTypeSemanticsVarP(string script)
         {
             var symbol = new SymbolTable();
@@ -1378,7 +1365,6 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("a;b;c;d;e;")]
         [InlineData("a;a;a;a;")]
         [InlineData("If(A;B;,C;D;/*asdf*/,F;)")]
-        [InlineData("ClearCollect(A,B);If(A, Set(A, B) /*asdf*/;);Set(A, !B);")]
         public void TexlTestParsingChainRuleEndingSemicolon(string inputText)
         {
             var result = TexlParser.ParseScript(inputText, flags: TexlParser.Flags.EnableExpressionChaining);
@@ -2348,6 +2334,12 @@ namespace Microsoft.PowerFx.Core.Tests
             {
                 SymbolTable = symbolTable
             };
+
+            if (symbolTable != null)
+            {
+                config.AddFunction(new ShowColumnsFunction());
+            }
+
             var engine = new Engine(config);
             var result = engine.Check(script);
             Assert.Equal(expectedType, result._binding.ResultType);
