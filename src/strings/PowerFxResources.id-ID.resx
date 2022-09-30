@@ -3268,6 +3268,38 @@
     <value>Tema kontras</value>
     
   </data>
+  <data name="AboutPatch" xml:space="preserve">
+    <value>Menerapkan pembaruan ke baris yang ditentukan dan mengubah baris di sumber data tertentu. Mengembalikan baris yang diperbarui.</value>
+    
+  </data>
+  <data name="PatchDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="PatchBaseRecordArg" xml:space="preserve">
+    <value>base_record</value>
+    
+  </data>
+  <data name="PatchChangeRecordsArg" xml:space="preserve">
+    <value>change_record(s)</value>
+    
+  </data>
+  <data name="AboutRemove" xml:space="preserve">
+    <value>Menghapus satu atau beberapa rekaman tertentu dari sumber data</value>
+    
+  </data>
+  <data name="RemoveDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="RemoveRecordsArg" xml:space="preserve">
+    <value>remove_record(s)</value>
+    
+  </data>
+  <data name="ErrRemoveAllArg" xml:space="preserve">
+    <value>Jika diberikan, argumen terakhir harus 'Semua'. Apakah ada kesalahan ketik?</value>
+    
+  </data>
   <data name="PenMode_Draw_DisplayName" xml:space="preserve">
     <value>Gambar</value>
     

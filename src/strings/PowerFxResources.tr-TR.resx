@@ -3268,6 +3268,38 @@
     <value>Karşıtlık teması</value>
     
   </data>
+  <data name="AboutPatch" xml:space="preserve">
+    <value>Güncelleştirmeleri belirtilen satırlara uygular ve belirtilen veri kaynağındaki satırı değiştirir. Güncelleştirilen satırı döndürür.</value>
+    
+  </data>
+  <data name="PatchDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="PatchBaseRecordArg" xml:space="preserve">
+    <value>base_record</value>
+    
+  </data>
+  <data name="PatchChangeRecordsArg" xml:space="preserve">
+    <value>change_record(s)</value>
+    
+  </data>
+  <data name="AboutRemove" xml:space="preserve">
+    <value>Belirli bir kaydı veya kayıtları veri kaynağından kaldırır</value>
+    
+  </data>
+  <data name="RemoveDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="RemoveRecordsArg" xml:space="preserve">
+    <value>remove_record(s)</value>
+    
+  </data>
+  <data name="ErrRemoveAllArg" xml:space="preserve">
+    <value>Sağlandığı durumda son bağımsız değişken 'All' olmalıdır. Bir yazım hatası var mı?</value>
+    
+  </data>
   <data name="PenMode_Draw_DisplayName" xml:space="preserve">
     <value>Çiz</value>
     
