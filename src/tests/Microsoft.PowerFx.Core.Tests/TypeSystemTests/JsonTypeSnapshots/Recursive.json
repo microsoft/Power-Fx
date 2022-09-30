@@ -1,0 +1,77 @@
+{
+  "Type": {
+    "Name": "Record"
+  },
+  "Fields": {
+    "SomeString": {
+      "Type": {
+        "Name": "Text"
+      }
+    },
+    "Loop": {
+      "Type": {
+        "Name": "Record"
+      },
+      "Fields": {
+        "SomeString": {
+          "Type": {
+            "Name": "Text"
+          }
+        },
+        "Loop": {
+          "Type": {
+            "Name": "Record"
+          },
+          "Fields": {
+            "SomeString": {
+              "Type": {
+                "Name": "Text"
+              }
+            },
+            "Loop": {
+              "Type": {
+                "Name": "Record"
+              },
+              "Fields": {
+                "SomeString": {
+                  "Type": {
+                    "Name": "Text"
+                  }
+                },
+                "Loop": {
+                  "Type": {
+                    "Name": "Record"
+                  },
+                  "Fields": {
+                    "SomeString": {
+                      "Type": {
+                        "Name": "Text"
+                      }
+                    },
+                    "Loop": {
+                      "Type": {
+                        "Name": "Record"
+                      },
+                      "Fields": {
+                        "SomeString": {
+                          "Type": {
+                            "Name": "Text"
+                          }
+                        },
+                        "Loop": {
+                          "Type": {
+                            "Name": "None"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

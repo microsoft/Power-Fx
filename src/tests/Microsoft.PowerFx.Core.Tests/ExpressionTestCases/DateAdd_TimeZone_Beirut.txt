@@ -1,0 +1,78 @@
+﻿// (UTC+02:00) Beirut
+#SETUP: TimeZoneInfo("Middle East Standard Time")
+
+>> DateAdd(Date(2021, 3, 26), 2)
+DateTime(2021,3,28,1,0,0,0)
+
+// When adding 2 days to this date, we arrive to an invalid date/time
+// So we calculate the next valid date/time and that's why we see this extra 1h
+>> DateAdd(Date(2021, 3, 26), 2, TimeUnit.Days)
+DateTime(2021,3,28,1,0,0,0)
+
+// This is not the case for next day as midnight for that day is valid
+>> DateAdd(Date(2021, 3, 27), 2, TimeUnit.Days)
+DateTime(2021,3,29,0,0,0,0)
+
+// https://www.timeanddate.com/time/change/lebanon/beirut?year=2021
+>> DateAdd(Date(2021, 3, 26), 48, TimeUnit.Hours)
+DateTime(2021,3,28,1,0,0,0)
+
+// https://www.timeanddate.com/time/change/lebanon/beirut?year=2021
+>> DateAdd(Date(2021, 3, 26), 49, TimeUnit.Hours)
+DateTime(2021,3,28,2,0,0,0)
+
+>> DateDiff(DateTime(2021,3,27,23,59,59,990), DateTime(2021,3,28,1,0,0,0), TimeUnit.Milliseconds)
+10
+
+>> DateAdd(Date(2021,3,28), 0)
+DateTime(2021,3,28,1,0,0,0)
+
+>> Date(2021,3,28)
+Date(2021,3,28)
+
+>> Date(2021,3,29)
+Date(2021,3,29)
+
+>> DateTime(2021,3,28, 0, 0, 0)
+DateTime(2021,3,28,1,0,0,0)
+
+>> DateTime(2021,3,28, 1, 0, 0)
+DateTime(2021,3,28,1,0,0,0)
+
+>> Date(2021, 3, 27) + Time(12, 0, 0) + Time(12, 0, 0)
+DateTime(2021,3,28,1,0,0,0)
+
+// Time(24,0,0) is zero
+>> Date(2021, 3, 27) + Time(24, 0, 0)
+DateTime(2021,3,27,0,0,0,0)
+
+>> Date(2021, 3, 27) + 1
+DateTime(2021,3,28,1,0,0,0)
+
+>> DateTime(2021,3,27,0,0,0,0) + 1
+DateTime(2021,3,28,1,0,0,0)
+
+>> Date(2021,3,29) - Time(12, 0, 0) - Time(12, 0, 0)
+DateTime(2021,3,27,23,0,0,0)
+
+// Time(24,0,0) is zero
+>> Date(2021,3,29) - Time(24, 0, 0)
+DateTime(2021,3,29,0,0,0,0)
+
+>> Date(2021,3,29) - 1
+DateTime(2021,3,28,1,0,0,0)
+
+>> Date(2021,3,29) - 2
+DateTime(2021,3,27,0,0,0,0)
+
+>> DateTime(2021,3,29,0,0,0,0) - 1
+DateTime(2021,3,28,1,0,0,0)
+
+>> DateTime(2021,3,29,0,0,0,0) - 2
+DateTime(2021,3,27,0,0,0,0)
+
+// While Date(2021,3,28) returns Date(2021,3,28) [ie a Date], internally, we store DateTime(2021,3,28,1,0,0,0) which is 
+// the next valid time, knowing DateTime(2021,3,28,0,0,0,0) isn't valid for that TimeZone. As a result, when adding a day, 
+// we get DateTime(2021,3,29,1,0,0,0) and finally when substracting 30 minutes, we end up with DateTime(2021,3,28,0,30,0,0) 
+>> Date(2021,3,28) + 1 - Time(0, 30, 0)
+DateTime(2021,3,29,0,30,0,0)

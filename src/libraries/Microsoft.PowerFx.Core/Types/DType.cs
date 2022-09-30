@@ -1672,7 +1672,7 @@ namespace Microsoft.PowerFx.Core.Types
         /// <summary>
         /// Covers Lazy.Accepts(other) scenarios.
         /// </summary>
-        private bool LazyTypeAccepts(DType other)
+        private bool LazyTypeAccepts(DType other, bool exact)
         {
             Contracts.AssertValid(other);
             Contracts.Assert(IsLazyType);
@@ -1685,7 +1685,7 @@ namespace Microsoft.PowerFx.Core.Types
                     return other.LazyTypeProvider.BackingFormulaType.Equals(LazyTypeProvider.BackingFormulaType) && IsTable == other.IsTable;
                 case DKind.Record:
                 case DKind.Table:
-                    return LazyTypeProvider.GetExpandedType(IsTable).Accepts(other, true);
+                    return LazyTypeProvider.GetExpandedType(IsTable).Accepts(other, exact);
                 default:
                     return other.Kind == DKind.Unknown;
             }
@@ -1694,7 +1694,7 @@ namespace Microsoft.PowerFx.Core.Types
         /// <summary>
         /// Covers Known.Accepts(Lazy) scenarios.
         /// </summary>
-        private bool AcceptsLazyType(DType lazy)
+        private bool AcceptsLazyType(DType lazy, bool exact)
         {
             Contracts.Assert(IsAggregate);
             Contracts.Assert(lazy.IsLazyType);
@@ -1706,7 +1706,7 @@ namespace Microsoft.PowerFx.Core.Types
 
             foreach (var namedType in GetNames(DPath.Root))
             {
-                if (!lazy.TryGetType(namedType.Name, out var otherField) || !namedType.Type.Accepts(otherField))
+                if (!lazy.TryGetType(namedType.Name, out var otherField) || !namedType.Type.Accepts(otherField, exact))
                 {
                     return false;
                 }
@@ -1833,7 +1833,7 @@ namespace Microsoft.PowerFx.Core.Types
                 case DKind.LargeImage:
                     if (type.IsLazyType)
                     {
-                        return AcceptsLazyType(type);
+                        return AcceptsLazyType(type, exact);
                     }
 
                     if (Kind == type.Kind)
@@ -1847,7 +1847,7 @@ namespace Microsoft.PowerFx.Core.Types
                 case DKind.Table:                    
                     if (type.IsLazyType)
                     {
-                        return AcceptsLazyType(type);
+                        return AcceptsLazyType(type, exact);
                     }
 
                     if (Kind == type.Kind || type.IsExpandEntity)
@@ -1970,7 +1970,7 @@ namespace Microsoft.PowerFx.Core.Types
 
                 case DKind.LazyTable:
                 case DKind.LazyRecord:
-                    accepts = LazyTypeAccepts(type);
+                    accepts = LazyTypeAccepts(type, exact);
                     break;
                 default:
                     Contracts.Assert(false);
