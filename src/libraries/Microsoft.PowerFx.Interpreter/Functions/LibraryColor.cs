@@ -16,7 +16,7 @@ namespace Microsoft.PowerFx.Functions
 {
     internal partial class Library
     {
-        public static FormulaValue TextToColor(IRContext irContext, StringValue[] args)
+        public static FormulaValue ColorValue(IRContext irContext, StringValue[] args)
         {
             var val = args[0].Value;
 

@@ -313,7 +313,7 @@ namespace Microsoft.PowerFx.Functions
 
                 if (Regex.IsMatch(str, @"^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$"))
                 {
-                    return TextToColor(irContext, new StringValue[] { FormulaValue.New(str) });
+                    return ColorValue(irContext, new StringValue[] { FormulaValue.New(str) });
                 }
                 else
                 {
