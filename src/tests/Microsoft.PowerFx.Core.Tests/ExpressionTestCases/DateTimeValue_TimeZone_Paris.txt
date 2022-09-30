@@ -38,3 +38,12 @@ DateTime(2022,3,13,2,30,0,0)
 
 >> TimeZoneOffset(DateTime(2022,3,27,4,0,0))/60
 -2
+
+>> DateTimeValue("2022-09-29T20:00:00")
+DateTime(2022,9,29,20,0,0,0)
+
+>> DateTimeValue("2022-09-29T20:00:00Z")
+DateTime(2022,9,29,22,0,0,0)
+
+>> DateTimeValue("2022-09-29T20:00:00-08:00")
+DateTime(2022,9,30,6,0,0,0)

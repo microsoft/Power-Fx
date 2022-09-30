@@ -450,7 +450,7 @@ namespace Microsoft.PowerFx.Functions
             return new DateValue(irContext, date.Date);
         }
 
-        public static FormulaValue TimeToDateTime(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, TimeValue[] args)
+        public static DateTimeValue TimeToDateTime(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, TimeValue[] args)
         {
             var t = args[0].Value;
             var date = _epoch.Add(t);

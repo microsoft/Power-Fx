@@ -348,7 +348,7 @@ namespace Microsoft.PowerFx.Functions
 
         private static bool IsSubdayTimeUnit(string unit)
         {
-            return unit is null or "milliseconds" or "seconds" or "minutes" or "hours";
+            return unit is "milliseconds" or "seconds" or "minutes" or "hours";
         }
 
         private static ErrorValue GetInvalidUnitError(IRContext irContext, string functionName)
