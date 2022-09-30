@@ -61,6 +61,26 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.Equal(6.0, result.ToObject());
         }
 
+        [Fact]
+        public void DisplayNameBinding()
+        {
+            var r1 = RecordType.Empty()
+             .Add(new NamedFormulaType("Num", FormulaType.Number, "DisplayNum"));
+
+            var s = ReadOnlySymbolTable.NewFromRecord(r1);
+            var s2 = new SymbolTable() { Parent = s };
+
+            var config = new PowerFxConfig
+            {
+                SymbolTable = s2
+            };
+
+            var engine = new RecalcEngine(config);
+            var check = engine.Check("DisplayNum + 2");
+
+            Assert.True(check.IsSuccess);
+        }
+
         // Bind a function, eval it separately.
         // But still share symbol values.
         [Fact]

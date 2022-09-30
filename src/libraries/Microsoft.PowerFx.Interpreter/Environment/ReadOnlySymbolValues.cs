@@ -94,12 +94,14 @@ namespace Microsoft.PowerFx
         /// </summary>
         /// <param name="parameters"></param>
         /// <param name="parent"></param>
+        /// <param name="debugName"></param>
         /// <returns></returns>
-        public static ReadOnlySymbolValues NewRowScope(RecordValue parameters, ReadOnlySymbolValues parent = null)
+        public static ReadOnlySymbolValues NewRowScope(RecordValue parameters, ReadOnlySymbolValues parent = null, string debugName = null)
         {
             var s = new SymbolValues
             {
-                Parent = parent
+                Parent = parent,
+                DebugName = debugName ?? "(rowScope)"                
             };
 
             foreach (var kv in parameters.Fields)
