@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Diagnostics;
+using System.Text;
 using Microsoft.PowerFx.Core.IR;
 
 namespace Microsoft.PowerFx.Types
@@ -44,6 +45,15 @@ namespace Microsoft.PowerFx.Types
 
         public abstract void Visit(IValueVisitor visitor);
 
-        public abstract string ToExpression();
+        public abstract void ToExpression(StringBuilder sb);
+
+        public string ToExpression()
+        {
+            var sb = new StringBuilder();
+
+            ToExpression(sb);
+
+            return sb.ToString();
+        }
     }
 }

@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Text;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 
@@ -24,9 +25,9 @@ namespace Microsoft.PowerFx.Types
             return "Guid";
         }
 
-        internal override string DefaultExpressionValue()
+        internal override void DefaultExpressionValue(StringBuilder sb)
         {
-            return $"GUID({CharacterUtils.ToPlainText(System.Guid.Empty.ToString("N"))})";
+            sb.Append($"GUID({CharacterUtils.ToPlainText(System.Guid.Empty.ToString("N"))})");
         }
     }
 }

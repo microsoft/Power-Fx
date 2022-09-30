@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Diagnostics;
+using System.Text;
 using Microsoft.PowerFx.Core.IR;
 
 namespace Microsoft.PowerFx.Types
@@ -29,15 +30,17 @@ namespace Microsoft.PowerFx.Types
             visitor.Visit(this);
         }
 
-        public override string ToExpression()
+        public override void ToExpression(StringBuilder sb)
         {
             if (Type is BlankType)
             {
-                return Type.DefaultExpressionValue();
+                Type.DefaultExpressionValue(sb);
             }
             else
             {
-                return $"If(false,{Type.DefaultExpressionValue()})";
+                sb.Append($"If(false,");
+                Type.DefaultExpressionValue(sb);
+                sb.Append(")");
             }
         }
     }

@@ -3,6 +3,7 @@
 
 using System;
 using System.Diagnostics.Contracts;
+using System.Text;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Utils;
 
@@ -25,11 +26,9 @@ namespace Microsoft.PowerFx.Types
             visitor.Visit(this);
         }
 
-        public override string ToExpression()
+        public override void ToExpression(StringBuilder sb)
         {
-            var ret = Value.Kind == DateTimeKind.Utc ? Value : Value.ToUniversalTime();
-
-            return $"DateTimeValue({CharacterUtils.ToPlainText(Value.ToString("o"))})";
+            sb.Append($"DateTimeValue({CharacterUtils.ToPlainText(Value.ToString("o"))})");
         }
     }
 }

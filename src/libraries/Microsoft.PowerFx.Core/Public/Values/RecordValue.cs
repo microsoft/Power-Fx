@@ -218,9 +218,8 @@ namespace Microsoft.PowerFx.Types
             return DValue<RecordValue>.Of(errorValue);
         }
 
-        public override string ToExpression()
+        public override void ToExpression(StringBuilder sb)
         {
-            var sb = new StringBuilder();
             var flag = true;
 
             sb.Append("{");
@@ -234,12 +233,12 @@ namespace Microsoft.PowerFx.Types
 
                 flag = false;
 
-                sb.Append($"'{field.Name}':{field.Value.ToExpression()}");
+                sb.Append($"'{CharacterUtils.Escape(field.Name)}':");
+
+                field.Value.ToExpression(sb);
             }
 
             sb.Append("}");
-
-            return sb.ToString();
         }
     }
 }

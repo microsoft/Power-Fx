@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Text;
 using Microsoft.PowerFx.Core.Types;
 
 namespace Microsoft.PowerFx.Types
@@ -22,9 +23,9 @@ namespace Microsoft.PowerFx.Types
             return "Number";
         }
 
-        internal override string DefaultExpressionValue()
+        internal override void DefaultExpressionValue(StringBuilder sb)
         {
-            return "0";
+            sb.Append("0");
         }
     }
 }

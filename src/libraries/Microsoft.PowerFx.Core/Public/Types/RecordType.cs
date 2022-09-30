@@ -98,9 +98,8 @@ namespace Microsoft.PowerFx.Types
             return new KnownRecordType();
         }
 
-        internal override string DefaultExpressionValue()
+        internal override void DefaultExpressionValue(StringBuilder sb)
         {
-            var sb = new StringBuilder();
             var flag = true;
 
             sb.Append("{");
@@ -115,12 +114,12 @@ namespace Microsoft.PowerFx.Types
                 flag = false;
                 
                 // !JYL! Check how to escape field name
-                sb.Append($"'{field.Name}':{field.Type.DefaultExpressionValue()}");
+                sb.Append($"'{field.Name}':");
+
+                field.Type.DefaultExpressionValue(sb);
             }
 
             sb.Append("}");
-
-            return sb.ToString();
         }
     }
 }

@@ -194,15 +194,17 @@ namespace Microsoft.PowerFx.Types
             visitor.Visit(this);
         }
 
-        public override string ToExpression()
+        public override void ToExpression(StringBuilder sb)
         {
+            // Table() is not legal, so we need an alternate expression to capture the table's type.
             if (!Rows.Any())
-            {                
-                return $"FirstN({Type.DefaultExpressionValue()},0)";
+            {
+                sb.Append("FirstN(");
+                Type.DefaultExpressionValue(sb);
+                sb.Append(",0)");
             }
             else
             {
-                var sb = new StringBuilder();
                 var flag = true;
 
                 sb.Append("Table(");
@@ -216,12 +218,10 @@ namespace Microsoft.PowerFx.Types
 
                     flag = false;
 
-                    sb.Append(row.ToFormulaValue().ToExpression());
+                    row.ToFormulaValue().ToExpression(sb);
                 }
 
                 sb.Append(")");
-
-                return sb.ToString();
             }
         }
     }

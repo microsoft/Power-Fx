@@ -4,12 +4,15 @@
 using System;
 using System.Diagnostics.Contracts;
 using System.Globalization;
+using System.Text;
 using Microsoft.PowerFx.Core.IR;
 
 namespace Microsoft.PowerFx.Types
 {
     public class TimeValue : PrimitiveValue<TimeSpan>
     {
+        private const string ExpressionFormat = "Time({0},{1},{2},{3})";
+
         internal TimeValue(IRContext irContext, TimeSpan ts)
             : base(irContext, ts)
         {
@@ -21,9 +24,9 @@ namespace Microsoft.PowerFx.Types
             visitor.Visit(this);
         }
 
-        public override string ToExpression()
+        public override void ToExpression(StringBuilder sb)
         {
-            return $"Time({Value.Hours},{Value.Minutes},{Value.Seconds},{Value.Milliseconds})";
+            sb.Append(string.Format(ExpressionFormat, Value.Hours, Value.Minutes, Value.Seconds, Value.Milliseconds));
         }
     }
 }

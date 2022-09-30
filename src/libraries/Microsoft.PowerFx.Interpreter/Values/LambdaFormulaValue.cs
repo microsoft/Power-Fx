@@ -3,6 +3,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
@@ -44,7 +45,7 @@ namespace Microsoft.PowerFx.Types
             return _tree.Accept(visitor, context);
         }
 
-        public override string ToExpression()
+        public override void ToExpression(StringBuilder sb)
         {
             // Internal only.
             throw new NotImplementedException("LambdaFormulaValue cannot be serialized.");

@@ -60,7 +60,7 @@ namespace Microsoft.PowerFx.Types
             visitor.Visit(this);
         }
 
-        public override string ToExpression()
+        public override void ToExpression(StringBuilder sb)
         {
             // Not supported for the time being.
             throw new NotImplementedException("UntypedObjectValue cannot be serialized.");

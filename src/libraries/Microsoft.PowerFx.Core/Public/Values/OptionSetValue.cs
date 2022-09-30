@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Diagnostics;
+using System.Text;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Utils;
 
@@ -63,9 +64,9 @@ namespace Microsoft.PowerFx.Types
             }
         }
 
-        public override string ToExpression()
+        public override void ToExpression(StringBuilder sb)
         {
-            return $"{Type._type.OptionSetInfo.EntityName}.{Option}";
+            sb.Append($"{Type._type.OptionSetInfo.EntityName}.{Option}");
         }
     }
 }

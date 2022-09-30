@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Text;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 
@@ -23,11 +24,11 @@ namespace Microsoft.PowerFx.Types
             return "Date";
         }
 
-        internal override string DefaultExpressionValue()
+        internal override void DefaultExpressionValue(StringBuilder sb)
         {
             var dateTimeMin = System.DateTime.MinValue.ToUniversalTime();
 
-            return $"DateValue({CharacterUtils.ToPlainText(dateTimeMin.Date.ToString("o"))})";
+            sb.Append($"DateValue({CharacterUtils.ToPlainText(dateTimeMin.Date.ToString("o"))})");
         }
     }
 }

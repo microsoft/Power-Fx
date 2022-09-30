@@ -26,9 +26,9 @@ namespace Microsoft.PowerFx.Types
             return new StringValue(IRContext.NotInSource(FormulaType.String), Value.ToLowerInvariant());
         }
 
-        public override string ToExpression()
+        public override void ToExpression(StringBuilder sb)
         {
-            return $"\"{CharacterUtils.ExcelEscapeString(Value)}\"";
+            sb.Append($"\"{CharacterUtils.ExcelEscapeString(Value)}\"");
         }
     }
 }

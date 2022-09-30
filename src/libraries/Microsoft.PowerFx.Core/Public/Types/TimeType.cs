@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Text;
 using Microsoft.PowerFx.Core.Types;
 
 namespace Microsoft.PowerFx.Types
@@ -23,11 +24,11 @@ namespace Microsoft.PowerFx.Types
             return "Time";
         }
 
-        internal override string DefaultExpressionValue()
+        internal override void DefaultExpressionValue(StringBuilder sb)
         {
             var timeSpanMin = TimeSpan.MinValue;
 
-            return $"Time({timeSpanMin.Hours},{timeSpanMin.Minutes},{timeSpanMin.Seconds},{timeSpanMin.Milliseconds})";
+            sb.Append($"Time({timeSpanMin.Hours},{timeSpanMin.Minutes},{timeSpanMin.Seconds},{timeSpanMin.Milliseconds})");
         }
     }
 }

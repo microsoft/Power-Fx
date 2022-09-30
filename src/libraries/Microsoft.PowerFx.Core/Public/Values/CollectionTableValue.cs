@@ -24,7 +24,7 @@ namespace Microsoft.PowerFx.Types
         // Additional capabilities. 
         private readonly IReadOnlyList<T> _sourceIndex; // maybe null. supports index. 
         private readonly IReadOnlyCollection<T> _sourceCount; // maybe null. supports count;
-        private readonly ICollection<T> _sourceList; // maybe null. supports multation;
+        private readonly ICollection<T> _sourceList; // maybe null. supports mutation;
 
         public CollectionTableValue(RecordType recordType, IEnumerable<T> source)
           : this(IRContext.NotInSource(recordType.ToTable()), source)

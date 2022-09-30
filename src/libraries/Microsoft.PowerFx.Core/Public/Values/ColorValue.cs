@@ -3,6 +3,7 @@
 
 using System.Diagnostics.Contracts;
 using System.Drawing;
+using System.Text;
 using Microsoft.PowerFx.Core.IR;
 
 namespace Microsoft.PowerFx.Types
@@ -20,7 +21,7 @@ namespace Microsoft.PowerFx.Types
             visitor.Visit(this);
         }
 
-        public override string ToExpression()
+        public override void ToExpression(StringBuilder sb)
         {
             throw new System.NotImplementedException();
         }

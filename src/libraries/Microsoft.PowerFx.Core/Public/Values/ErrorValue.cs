@@ -73,12 +73,10 @@ namespace Microsoft.PowerFx.Types
             }
         }
 
-        public override string ToExpression()
+        public override void ToExpression(StringBuilder sb)
         {            
             var concat = string.Empty;
             var flag = true;
-
-            var sb = new StringBuilder();
 
             sb.Append("Error(Table(");
 
@@ -104,8 +102,6 @@ namespace Microsoft.PowerFx.Types
             }
 
             sb.Append("))");
-
-            return sb.ToString();
         }
     }
 }

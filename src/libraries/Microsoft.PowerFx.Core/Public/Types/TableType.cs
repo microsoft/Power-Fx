@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 
@@ -104,9 +105,13 @@ namespace Microsoft.PowerFx.Types
             return _type.GetHashCode();
         }
 
-        internal override string DefaultExpressionValue()
+        internal override void DefaultExpressionValue(StringBuilder sb)
         {
-            return $"Table({ToRecord().DefaultExpressionValue()})";
+            sb.Append("Table(");
+
+            ToRecord().DefaultExpressionValue(sb);
+
+            sb.Append(")");
         }
     }
 }

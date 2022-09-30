@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Text;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
@@ -234,9 +235,18 @@ namespace Microsoft.PowerFx.Types
 
         public abstract void Visit(ITypeVisitor vistor);
 
-        internal virtual string DefaultExpressionValue()
+        internal virtual void DefaultExpressionValue(StringBuilder sb)
         {
             throw new NotSupportedException();
+        }
+
+        internal string DefaultExpressionValue()
+        {
+            var sb = new StringBuilder();
+
+            DefaultExpressionValue(sb);
+
+            return sb.ToString();
         }
     }
 }

@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Diagnostics.Contracts;
+using System.Text;
 using Microsoft.PowerFx.Core.IR;
 
 namespace Microsoft.PowerFx.Types
@@ -19,9 +20,9 @@ namespace Microsoft.PowerFx.Types
             visitor.Visit(this);
         }
 
-        public override string ToExpression()
+        public override void ToExpression(StringBuilder sb)
         {
-            return Value.ToString().ToLowerInvariant();
+            sb.Append(Value.ToString().ToLowerInvariant());
         }
     }
 }

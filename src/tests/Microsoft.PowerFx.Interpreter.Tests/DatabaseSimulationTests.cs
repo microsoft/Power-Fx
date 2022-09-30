@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Entities;
@@ -195,7 +196,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 throw new NotImplementedException("TestEntityValue.Visit");
             }
 
-            public override string ToExpression()
+            public override void ToExpression(StringBuilder sb)
             {
                 // Internal only.
                 throw new System.NotImplementedException("TestEntityValue cannot be serialized.");
