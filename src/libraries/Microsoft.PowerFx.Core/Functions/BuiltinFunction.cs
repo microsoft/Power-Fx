@@ -15,7 +15,6 @@ namespace Microsoft.PowerFx.Core.Functions
         public const string OneColumnTableResultNameStrOld = "Result";
         public const string ColumnName_NameStr = "Name";
         public const string ColumnName_AddressStr = "Address";
-        public const string ColumnName_ValueStr = "Value";
         public const string ColumnName_FullMatchStr = "FullMatch";
         public const string ColumnName_SubMatchesStr = "SubMatches";
         public const string ColumnName_StartMatchStr = "StartMatch";
