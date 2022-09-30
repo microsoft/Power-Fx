@@ -271,6 +271,26 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.Equal("2,01", (expr2.Eval(fr_Symbols) as StringValue).Value);
         }
 
+        // Verify that an egine with a specific culture can evaluate an invariant formula
+        [Fact]
+        public void RecalcEngine_CultureInfo()
+        {
+            var fr_culture = new CultureInfo("fr-FR");
+            var invariant_culture = CultureInfo.InvariantCulture;
+
+            var engine = new RecalcEngine(new PowerFxConfig(fr_culture));
+
+            var fr_formula = "Concatenate(\"My \";\"french \";\"formula\")";
+            var invariant_formula = engine.GetInvariantExpression(fr_formula, RecordType.Empty());
+
+            var fr_ParserOptions = new ParserOptions() { Culture = fr_culture };
+            var invariant_ParserOptions = new ParserOptions() { Culture = invariant_culture };
+
+            Assert.Throws<AggregateException>(() => engine.Eval(invariant_formula, options: fr_ParserOptions));
+            Assert.Equal("My french formula", engine.Eval(fr_formula, options: fr_ParserOptions).ToObject());
+            Assert.Equal("My french formula", engine.Eval(invariant_formula, options: invariant_ParserOptions).ToObject());
+        }
+
         private static void AssertUnique(HashSet<VersionHash> set, VersionHash hash)
         {
             Assert.True(set.Add(hash), "Hash value should be unique");

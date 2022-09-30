@@ -241,7 +241,7 @@ namespace Microsoft.PowerFx
             }
             else if (func is CustomTexlFunction customTexlFunc)
             {
-                var result = customTexlFunc.Invoke(_runtimeConfig, args);
+                var result = await customTexlFunc.InvokeAsync(_runtimeConfig, args, _cancellationToken);
                 return result;
             }
             else
@@ -518,9 +518,9 @@ namespace Microsoft.PowerFx
                 {
                     return r2._context;
                 }
-                else if (r is ThisItemScope r3)
+                else if (r is UntypedObjectThisRecordScope r3)
                 {
-                    return r3._thisItem;
+                    return r3._thisRecord;
                 }
             }
 

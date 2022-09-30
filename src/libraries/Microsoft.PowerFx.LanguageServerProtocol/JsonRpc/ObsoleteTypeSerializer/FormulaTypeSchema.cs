@@ -5,10 +5,12 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Microsoft.PowerFx.Core
+namespace Microsoft.PowerFx.LanguageServerProtocol
 {
-    public class FormulaTypeSchema
+    [Obsolete("Use Microsoft.PowerFx.Core.FormulaTypeSchema instead. This JSON representation of types is not supported.")]
+    internal class FormulaTypeSchema
     {
+        [Obsolete("Use Microsoft.PowerFx.Core.SchemaTypeName instead. This JSON representation of types is not supported.")]
         public enum ParamType
         {
             Number,
@@ -41,7 +43,7 @@ namespace Microsoft.PowerFx.Core
         /// Optional. For Records and Tables, contains the list of fields.
         /// </summary>
         public Dictionary<string, FormulaTypeSchema> Fields { get; set; }
-        
+
         /// <summary>
         /// Optional. Used for external schema definitions and input validation.
         /// </summary>

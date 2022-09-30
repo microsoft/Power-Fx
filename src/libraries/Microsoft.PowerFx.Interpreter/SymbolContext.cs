@@ -64,7 +64,7 @@ namespace Microsoft.PowerFx
 
         public SymbolContext WithThisItem(FormulaValue value)
         {
-            return WithScopeValues(new ThisItemScope(value));
+            return WithScopeValues(new UntypedObjectThisRecordScope(value));
         }
 
         // Called by evaluator to fetch a runtime value in the given scope. 

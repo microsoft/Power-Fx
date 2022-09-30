@@ -133,8 +133,6 @@ namespace Microsoft.PowerFx.Core.Binding
         /// </summary>
         internal static DName ThisRecordDefaultName => new DName("ThisRecord");
 
-        internal static DName ThisItemDefaultName => new DName("ThisItem");
-
         public Features Features { get; }
 
         // Property to which current rule is being bound to. It could be null in the absence of NameResolver.
@@ -1344,7 +1342,7 @@ namespace Microsoft.PowerFx.Core.Binding
         /// <returns></returns>
         private bool GetScopeIdent(TexlNode node, DType rowType, out DName scopeIdent)
         {
-            scopeIdent = rowType == DType.UntypedObject ? ThisItemDefaultName : ThisRecordDefaultName;
+            scopeIdent = ThisRecordDefaultName;
             if (node is AsNode asNode)
             {
                 scopeIdent = GetInfo(asNode).AsIdentifier;
