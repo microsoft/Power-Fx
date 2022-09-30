@@ -165,7 +165,7 @@ namespace Microsoft.PowerFx.Functions
                 {
                     datetime = MakeValidDateTime(runner, datetime, runner.GetService<TimeZoneInfo>() ?? TimeZoneInfo.Local);
 
-                    return new DateValue(irContext, datetime.Date);
+                    return new DateValue(irContext, datetime);
                 }
 
                 return CommonErrors.InvalidDateTimeParsingError(irContext);
@@ -200,14 +200,11 @@ namespace Microsoft.PowerFx.Functions
             {
                 var s = impl.GetString();
 
-                if (IsValidDateTimeUO(s) && DateTime.TryParse(s, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime res))
+                if (IsValidDateTimeUO(s) && DateTime.TryParse(s, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime datetime))
                 {
-                    if (!res.IsValid(runner))
-                    {
-                        return CommonErrors.InvalidDateTimeError(irContext);
-                    }
+                    datetime = MakeValidDateTime(runner, datetime, runner.GetService<TimeZoneInfo>() ?? TimeZoneInfo.Local);
 
-                    return new DateTimeValue(irContext, res);
+                    return new DateTimeValue(irContext, datetime);
                 }
 
                 return CommonErrors.InvalidDateTimeParsingError(irContext);
