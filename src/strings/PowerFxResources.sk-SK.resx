@@ -3268,6 +3268,38 @@
     <value>Kontrastný motív</value>
     
   </data>
+  <data name="AboutPatch" xml:space="preserve">
+    <value>Použije aktualizácie na zadaný riadok a zmení riadok v zadanom zdroji údajov. Vráti aktualizovaný riadok.</value>
+    
+  </data>
+  <data name="PatchDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="PatchBaseRecordArg" xml:space="preserve">
+    <value>base_record</value>
+    
+  </data>
+  <data name="PatchChangeRecordsArg" xml:space="preserve">
+    <value>change_record(s)</value>
+    
+  </data>
+  <data name="AboutRemove" xml:space="preserve">
+    <value>Odstráni konkrétny záznam alebo záznamy zo zdroja údajov</value>
+    
+  </data>
+  <data name="RemoveDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="RemoveRecordsArg" xml:space="preserve">
+    <value>remove_record(s)</value>
+    
+  </data>
+  <data name="ErrRemoveAllArg" xml:space="preserve">
+    <value>Ak je zadaný, posledný argument musí byť Všetko. Je tam preklep?</value>
+    
+  </data>
   <data name="PenMode_Draw_DisplayName" xml:space="preserve">
     <value>Kresliť</value>
     
@@ -3933,11 +3965,11 @@
     
   </data>
   <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>This argument cannot be passed as this type in formula columns.</value>
+    <value>Tento typ argumentu nie je možné odovzdať do stĺpcov vzorcov.</value>
     
   </data>
   <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
-    <value>This argument cannot be passed as type {0} in formula columns.</value>
+    <value>Typ {0} argumentu nie je možné odovzdať do stĺpcov vzorcov.</value>
     
   </data>
   <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
@@ -3969,7 +4001,7 @@
     
   </data>
   <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
-    <value>This operation cannot be performed on type {0} in formula columns.</value>
+    <value>Túto operáciu nie je možné vykonať na type {0} v stĺpcoch vzorcov.</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
@@ -4005,7 +4037,7 @@
     
   </data>
   <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
-    <value>Cannot reference virtual table {0} in formula columns.</value>
+    <value>V stĺpcoch vzorcov nemožno odkazovať na virtuálnu tabuľku {0}.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
