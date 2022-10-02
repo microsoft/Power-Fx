@@ -2765,10 +2765,48 @@ namespace Microsoft.PowerFx.Core.Tests
         {
             var symbol = new SymbolTable();
             symbol.AddVariable("Table", new TableType(TestUtils.DT("*[input:n]")));
-
+            
             TestSimpleBindingSuccess(
                 script,
                 TestUtils.DT("*[Value:n]"),
+                symbol,
+                Features.ConsistentOneColumnTableResult);
+        }
+
+        [Theory]
+        [InlineData("Right(\"foo\", 3)", "s")]
+        [InlineData("Right(T, 3)", "*[Name:s]")]
+        [InlineData("Right(T, T2)", "*[Name:s]")]
+        [InlineData("Right(\"foo\", T2)", "*[Result:s]")]
+        public void TexlFunctionTypeSemanticsRight(string script, string expectedType)
+        {
+            var symbol = new SymbolTable();
+            symbol.AddVariable("T", new TableType(TestUtils.DT("*[Name:s]")));
+            symbol.AddVariable("T2", new TableType(TestUtils.DT("*[Count:n]")));
+
+            TestSimpleBindingSuccess(
+                script,
+                TestUtils.DT(expectedType),
+                symbol);
+        }
+
+        [Theory]
+        [InlineData("Right(T, 3)")]
+        [InlineData("Right(\"foo\", T2)")]
+        [InlineData("Right(T, T2)")]
+        public void TexlFunctionTypeSemanticsRight_ConsistentOneColumnTableResult(string script)
+        {
+            TestSimpleBindingSuccess(
+                "Right(\"foo\", 3)",
+                DType.String);
+
+            var symbol = new SymbolTable();
+            symbol.AddVariable("T", new TableType(TestUtils.DT("*[Name:s]")));
+            symbol.AddVariable("T2", new TableType(TestUtils.DT("*[Count:n]")));
+
+            TestSimpleBindingSuccess(
+                script,
+                TestUtils.DT("*[Value:s]"),
                 symbol,
                 Features.ConsistentOneColumnTableResult);
         }
