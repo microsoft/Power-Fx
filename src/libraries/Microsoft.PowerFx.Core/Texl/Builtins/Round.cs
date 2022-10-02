@@ -77,7 +77,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 fValid &= CheckNumericColumnType(type0, args[0], errors, ref nodeToCoercedTypeMap);
 
                 returnType = binding.Features.HasFlag(Features.ConsistentOneColumnTableResult)
-                    ? DType.CreateTable(new TypedName(DType.String, new DName(ColumnName_ValueStr)))
+                    ? DType.CreateTable(new TypedName(DType.Number, new DName(ColumnName_ValueStr)))
                     : type0;
 
                 // Check arg1 below.

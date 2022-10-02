@@ -1012,6 +1012,8 @@ namespace Microsoft.PowerFx.Core.Tests
         [Theory]
         [InlineData("Round(1234.567, T)", "*[Value:n]")]
         [InlineData("Round(4, X)", "*[Value:n]")]
+        [InlineData("Round(X, 4)", "*[Value:n]")]
+        [InlineData("Round(X, T)", "*[Value:n]")]
         public void TexlFunctionTypeSemanticsRound_ConsistentOneColumnTableResult(string expression, string expectedType)
         {
             var symbol = new SymbolTable();
