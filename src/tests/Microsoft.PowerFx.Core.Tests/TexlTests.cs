@@ -2994,6 +2994,27 @@ namespace Microsoft.PowerFx.Core.Tests
                 symbol);
         }
 
+        [Theory]
+        [InlineData("Substitute(T, T2, T3, TN)")]
+        [InlineData("Substitute(T,\"S1\", \"S2\", 1)")]
+        [InlineData("Substitute(\"S1\",T, \"S2\", 1)")]
+        [InlineData("Substitute(\"S1\",\"S2\", T, 1)")]
+        [InlineData("Substitute(\"S1\",\"S2\", \"S3\", TN)")]
+        public void TexlFunctionTypeSemanticsSubstitute_ConsistentOneColumnTableResult(string script)
+        {
+            var symbol = new SymbolTable();
+            symbol.AddVariable("T", new TableType(TestUtils.DT("*[Name:s]")));
+            symbol.AddVariable("T2", new TableType(TestUtils.DT("*[Name2:s]")));
+            symbol.AddVariable("T3", new TableType(TestUtils.DT("*[Name3:s]")));
+            symbol.AddVariable("TN", new TableType(TestUtils.DT("*[Number:n]")));
+
+            TestSimpleBindingSuccess(
+                script,
+                TestUtils.DT("*[Value: s]"),
+                symbol,
+                Features.ConsistentOneColumnTableResult);
+        }
+
         private void TestBindingPurity(string script, bool isPure, SymbolTable symbolTable = null)
         {
             var config = new PowerFxConfig
