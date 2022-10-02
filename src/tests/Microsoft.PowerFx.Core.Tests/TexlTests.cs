@@ -956,6 +956,18 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Fact]
+        public void TexlFunctionTypeSemanticsTruncOneParam_ConsistentOneColumnTableResult()
+        {
+            var symbol = new SymbolTable();
+            symbol.AddVariable("T", new TableType(TestUtils.DT("*[A:n]")));
+            TestSimpleBindingSuccess(
+                "Trunc(T)",
+                TestUtils.DT("*[Value:n]"),
+                symbol,
+                Features.ConsistentOneColumnTableResult);
+        }
+
+        [Fact]
         public void TexlFunctionTypeSemanticsTruncTwoParams()
         {
             var symbol = new SymbolTable();
@@ -1063,6 +1075,23 @@ namespace Microsoft.PowerFx.Core.Tests
                 symbol);
         }
 
+        [Theory]
+        [InlineData("RoundUp(1234.567, T)")]
+        [InlineData("RoundUp(X, 4)")]
+        [InlineData("RoundUp(X, T)")]
+        public void TexlFunctionTypeSemanticsRoundUp_ConsistentOneColumnTableResult(string script)
+        {
+            var symbol = new SymbolTable();
+            symbol.AddVariable("T", new TableType(TestUtils.DT("*[digits:n]")));
+            symbol.AddVariable("X", new TableType(TestUtils.DT("*[Nnnuuummm:n]")));
+
+            TestSimpleBindingSuccess(
+                script,
+                TestUtils.DT("*[Value:n]"),
+                symbol,
+                Features.ConsistentOneColumnTableResult);
+        }
+
         [Fact]
         public void TexlFunctionTypeSemanticsRoundDown()
         {
@@ -1088,6 +1117,23 @@ namespace Microsoft.PowerFx.Core.Tests
                 "RoundDown(X, 4)",
                 TestUtils.DT("*[Nnnuuummm:n]"),
                 symbol);
+        }
+
+        [Theory]
+        [InlineData("RoundDown(1234.567, T)")]
+        [InlineData("RoundDown(X, T)")]
+        [InlineData("RoundDown(X, 4)")]
+        public void TexlFunctionTypeSemanticsRoundDown_ConsistentOneColumnTableResult(string script)
+        {
+            var symbol = new SymbolTable();
+            symbol.AddVariable("T", new TableType(TestUtils.DT("*[digits:n]")));
+            symbol.AddVariable("X", new TableType(TestUtils.DT("*[Nnnuuummm:n]")));
+
+            TestSimpleBindingSuccess(
+                script,
+                TestUtils.DT("*[Value:n]"),
+                symbol,
+                Features.ConsistentOneColumnTableResult);
         }
 
         [Theory]
@@ -1152,6 +1198,22 @@ namespace Microsoft.PowerFx.Core.Tests
             {
                 TestSimpleBindingSuccess(script, TestUtils.DT(expectedType));
             }
+        }
+
+        [Theory]
+        [InlineData("Sqrt(T)", "*[Booleans:b]")]
+        [InlineData("Sqrt(T)", "*[Number:n]")]
+        [InlineData("Sqrt(T)", "*[Strings:s]")]
+        public void TexlFunctionTypeSemanticsSqrtWithCoercion_ConsistentOneColumnTableResult(string script, string typedGlobal)
+        {
+            var symbol = new SymbolTable();
+            symbol.AddVariable("T", new TableType(TestUtils.DT(typedGlobal)));
+
+            TestSimpleBindingSuccess(
+                script,
+                TestUtils.DT("*[Value: n]"),
+                symbol,
+                Features.ConsistentOneColumnTableResult);
         }
 
         [Theory]
@@ -1378,6 +1440,19 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Fact]
+        public void TexlFunctionTypeSemanticsTrim_ConsistentOneColumnTableResult()
+        {
+            var symbol = new SymbolTable();
+            symbol.AddVariable("T", new TableType(TestUtils.DT("*[Name:s]")));
+
+            TestSimpleBindingSuccess(
+                "Trim(T)",
+                TestUtils.DT("*[Value:s]"),
+                symbol,
+                Features.ConsistentOneColumnTableResult);
+        }
+
+        [Fact]
         public void TexlFunctionTypeSemanticsTrimEnds()
         {
             var symbol = new SymbolTable();
@@ -1394,6 +1469,19 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Fact]
+        public void TexlFunctionTypeSemanticsTrimEnds_ConsistentOneColumnTableResult()
+        {
+            var symbol = new SymbolTable();
+            symbol.AddVariable("T", new TableType(TestUtils.DT("*[Name:s]")));
+
+            TestSimpleBindingSuccess(
+                "TrimEnds(T)",
+                TestUtils.DT("*[Value:s]"),
+                symbol,
+                Features.ConsistentOneColumnTableResult);
+        }
+
+        [Fact]
         public void TexlFunctionTypeSemanticsUpper()
         {
             var symbol = new SymbolTable();
@@ -1407,6 +1495,19 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Upper(T)",
                 TestUtils.DT("*[Name:s]"),
                 symbol);
+        }
+
+        [Fact]
+        public void TexlFunctionTypeSemanticsUpper_ConsistentOneColumnTableResult()
+        {
+            var symbol = new SymbolTable();
+            symbol.AddVariable("T", new TableType(TestUtils.DT("*[Name:s]")));
+
+            TestSimpleBindingSuccess(
+                "Upper(T)",
+                TestUtils.DT("*[Value:s]"),
+                symbol,
+                Features.ConsistentOneColumnTableResult);
         }
 
         [Fact]
@@ -2560,65 +2661,65 @@ namespace Microsoft.PowerFx.Core.Tests
                 Features.ConsistentOneColumnTableResult);
         }
 
-        //[Theory]
-        //[InlineData("cos(1)", "n")]
-        //[InlineData("cos(A)", "n")]
-        //[InlineData("cos(Table)", "*[input:n]")]
-        //public void TexlFunctionTypeSemanticsCos(string script, string expectedType)
-        //{
-        //    var symbol = new SymbolTable();
-        //    symbol.AddVariable("Table", new TableType(TestUtils.DT("*[input:n]")));
-        //    symbol.AddVariable("A", FormulaType.Number);
+        [Theory]
+        [InlineData("Cos(1)", "n")]
+        [InlineData("Cos(A)", "n")]
+        [InlineData("Cos(Table)", "*[input:n]")]
+        public void TexlFunctionTypeSemanticsCos(string script, string expectedType)
+        {
+            var symbol = new SymbolTable();
+            symbol.AddVariable("Table", new TableType(TestUtils.DT("*[input:n]")));
+            symbol.AddVariable("A", FormulaType.Number);
 
-        //    TestSimpleBindingSuccess(
-        //        script,
-        //        TestUtils.DT(expectedType),
-        //        symbol);
-        //}
+            TestSimpleBindingSuccess(
+                script,
+                TestUtils.DT(expectedType),
+                symbol);
+        }
 
-        //[Theory]
-        //[InlineData("cos(Table)")]
-        //public void TexlFunctionTypeSemanticsCos_ConsistentOneColumnTableResult(string script)
-        //{
-        //    var symbol = new SymbolTable();
-        //    symbol.AddVariable("Table", new TableType(TestUtils.DT("*[input:n]")));
+        [Theory]
+        [InlineData("Cos(Table)")]
+        public void TexlFunctionTypeSemanticsCos_ConsistentOneColumnTableResult(string script)
+        {
+            var symbol = new SymbolTable();
+            symbol.AddVariable("Table", new TableType(TestUtils.DT("*[input:n]")));
 
-        //    TestSimpleBindingSuccess(
-        //        script,
-        //        TestUtils.DT("*[Value:n]"),
-        //        symbol,
-        //        Features.ConsistentOneColumnTableResult);
-        //}
+            TestSimpleBindingSuccess(
+                script,
+                TestUtils.DT("*[Value:n]"),
+                symbol,
+                Features.ConsistentOneColumnTableResult);
+        }
 
-        //[Theory]
-        //[InlineData("cot(1)", "n")]
-        //[InlineData("cot(A)", "n")]
-        //[InlineData("cot(Table)", "*[input:n]")]
-        //public void TexlFunctionTypeSemanticsCot(string script, string expectedType)
-        //{
-        //    var symbol = new SymbolTable();
-        //    symbol.AddVariable("Table", new TableType(TestUtils.DT("*[input:n]")));
-        //    symbol.AddVariable("A", FormulaType.Number);
+        [Theory]
+        [InlineData("Cot(1)", "n")]
+        [InlineData("Cot(A)", "n")]
+        [InlineData("Cot(Table)", "*[input:n]")]
+        public void TexlFunctionTypeSemanticsCot(string script, string expectedType)
+        {
+            var symbol = new SymbolTable();
+            symbol.AddVariable("Table", new TableType(TestUtils.DT("*[input:n]")));
+            symbol.AddVariable("A", FormulaType.Number);
 
-        //    TestSimpleBindingSuccess(
-        //        script,
-        //        TestUtils.DT(expectedType),
-        //        symbol);
-        //}
+            TestSimpleBindingSuccess(
+                script,
+                TestUtils.DT(expectedType),
+                symbol);
+        }
 
-        //[Theory]
-        //[InlineData("cot(Table)")]
-        //public void TexlFunctionTypeSemanticsCot_ConsistentOneColumnTableResult(string script)
-        //{
-        //    var symbol = new SymbolTable();
-        //    symbol.AddVariable("Table", new TableType(TestUtils.DT("*[input:n]")));
+        [Theory]
+        [InlineData("Cot(Table)")]
+        public void TexlFunctionTypeSemanticsCot_ConsistentOneColumnTableResult(string script)
+        {
+            var symbol = new SymbolTable();
+            symbol.AddVariable("Table", new TableType(TestUtils.DT("*[input:n]")));
 
-        //    TestSimpleBindingSuccess(
-        //        script,
-        //        TestUtils.DT("*[Value:n]"),
-        //        symbol,
-        //        Features.ConsistentOneColumnTableResult);
-        //}
+            TestSimpleBindingSuccess(
+                script,
+                TestUtils.DT("*[Value:n]"),
+                symbol,
+                Features.ConsistentOneColumnTableResult);
+        }
 
         [Theory]
         [InlineData("Degrees(1)", "n")]
@@ -2811,6 +2912,86 @@ namespace Microsoft.PowerFx.Core.Tests
                 TestUtils.DT("*[Value:s]"),
                 symbol,
                 Features.ConsistentOneColumnTableResult);
+        }
+
+        [Theory]
+        [InlineData("Sin(1)", "n")]
+        [InlineData("Sin(A)", "n")]
+        [InlineData("Sin(Table)", "*[input:n]")]
+        public void TexlFunctionTypeSemanticsSin(string script, string expectedType)
+        {
+            var symbol = new SymbolTable();
+            symbol.AddVariable("Table", new TableType(TestUtils.DT("*[input:n]")));
+            symbol.AddVariable("A", FormulaType.Number);
+
+            TestSimpleBindingSuccess(
+                script,
+                TestUtils.DT(expectedType),
+                symbol);
+        }
+
+        [Theory]
+        [InlineData("Sin(Table)")]
+        public void TexlFunctionTypeSemanticsSin_ConsistentOneColumnTableResult(string script)
+        {
+            var symbol = new SymbolTable();
+            symbol.AddVariable("Table", new TableType(TestUtils.DT("*[input:n]")));
+
+            TestSimpleBindingSuccess(
+                script,
+                TestUtils.DT("*[Value:n]"),
+                symbol,
+                Features.ConsistentOneColumnTableResult);
+        }
+
+        [Theory]
+        [InlineData("Tan(1)", "n")]
+        [InlineData("Tan(A)", "n")]
+        [InlineData("Tan(Table)", "*[input:n]")]
+        public void TexlFunctionTypeSemanticsTan(string script, string expectedType)
+        {
+            var symbol = new SymbolTable();
+            symbol.AddVariable("Table", new TableType(TestUtils.DT("*[input:n]")));
+            symbol.AddVariable("A", FormulaType.Number);
+
+            TestSimpleBindingSuccess(
+                script,
+                TestUtils.DT(expectedType),
+                symbol);
+        }
+
+        [Theory]
+        [InlineData("Tan(Table)")]
+        public void TexlFunctionTypeSemanticsTan_ConsistentOneColumnTableResult(string script)
+        {
+            var symbol = new SymbolTable();
+            symbol.AddVariable("Table", new TableType(TestUtils.DT("*[input:n]")));
+
+            TestSimpleBindingSuccess(
+                script,
+                TestUtils.DT("*[Value:n]"),
+                symbol,
+                Features.ConsistentOneColumnTableResult);
+        }
+
+        [Theory]
+        [InlineData("Substitute(T, T2, T3, TN)", "*[Name:s]")]
+        [InlineData("Substitute(T,\"S1\", \"S2\", 1)", "*[Name:s]")]
+        [InlineData("Substitute(\"S1\",T, \"S2\", 1)", "*[Result:s]")]
+        [InlineData("Substitute(\"S1\",\"S2\", T, 1)", "*[Result:s]")]
+        [InlineData("Substitute(\"S1\",\"S2\", \"S3\", TN)", "*[Result:s]")]
+        public void TexlFunctionTypeSemanticsSubstitute(string script, string expectedType)
+        {
+            var symbol = new SymbolTable();
+            symbol.AddVariable("T", new TableType(TestUtils.DT("*[Name:s]")));
+            symbol.AddVariable("T2", new TableType(TestUtils.DT("*[Name2:s]")));
+            symbol.AddVariable("T3", new TableType(TestUtils.DT("*[Name3:s]")));
+            symbol.AddVariable("TN", new TableType(TestUtils.DT("*[Number:n]")));
+
+            TestSimpleBindingSuccess(
+                script,
+                TestUtils.DT(expectedType),
+                symbol);
         }
 
         private void TestBindingPurity(string script, bool isPure, SymbolTable symbolTable = null)
