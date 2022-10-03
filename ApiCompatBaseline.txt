@@ -1,0 +1,1 @@
+CannotChangeAttribute : Attribute 'Microsoft.AppMagic.Transport.TransportTypeAttribute' on 'Microsoft.PowerFx.Syntax.Span' changed from '[TransportTypeAttribute(0, true, null, null, false)]' in the contract to '[TransportTypeAttribute(TransportKind.ByValue, true, null, null, false)]' in the implementation.

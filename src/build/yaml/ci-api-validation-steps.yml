@@ -27,7 +27,8 @@ steps:
     generateLog: true
     outputFilename: '$(PackageName).${{ parameters.ContractVersion }}.CompatResults.txt'
     outputFolder: '$(Build.ArtifactStagingDirectory)'
-    useBaseline: false
+    useBaseline: true
+    baselineFile: ApiCompatBaseline.txt
   continueOnError: true
 
 - task: SOUTHWORKS.binaries-comparer.custom-build-release-task.binaries-comparer@0
@@ -41,7 +42,8 @@ steps:
     generateLog: true
     outputFilename: '$(PackageName).${{ parameters.ContractVersion }}.CompatResults2.txt'
     outputFolder: '$(Build.ArtifactStagingDirectory)'
-    useBaseline: false
+    useBaseline: true
+    baselineFile: ApiCompatBaseline.txt
   continueOnError: true
 
 - task: SOUTHWORKS.binaries-comparer.custom-build-release-task.binaries-comparer@0
@@ -55,7 +57,8 @@ steps:
     generateLog: true
     outputFilename: '$(PackageName).${{ parameters.ContractVersion }}.CompatResults3.txt'
     outputFolder: '$(Build.ArtifactStagingDirectory)'
-    useBaseline: false
+    useBaseline: true
+    baselineFile: ApiCompatBaseline.txt
   continueOnError: true
 
 - task: SOUTHWORKS.binaries-comparer.custom-build-release-task.binaries-comparer@0
@@ -69,7 +72,8 @@ steps:
     generateLog: true
     outputFilename: '$(PackageName).${{ parameters.ContractVersion }}.CompatResults4.txt'
     outputFolder: '$(Build.ArtifactStagingDirectory)'
-    useBaseline: false
+    useBaseline: true
+    baselineFile: ApiCompatBaseline.txt
   continueOnError: true
 
 - powershell: |
