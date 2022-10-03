@@ -862,13 +862,13 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("Replace(T, 2, 3, \"X\")", "*[Value:s]")]
-        [InlineData("Replace(T, T2, 3, \"X\")", "*[Value:s]")]
-        [InlineData("Replace(T, 2, T3, \"X\")", "*[Value:s]")]
-        [InlineData("Replace(T, T2, T3, \"X\")", "*[Value:s]")]
-        [InlineData("Replace(T, T2, T3, TX)", "*[Value:s]")]
-        [InlineData("Replace(\"hello\", T2, T3, TX)", "*[Value:s]")]
-        public void TexlFunctionTypeSemanticsReplace_ConsistentOneColumnTableResult(string script, string expectedType)
+        [InlineData("Replace(T, 2, 3, \"X\")")]
+        [InlineData("Replace(T, T2, 3, \"X\")")]
+        [InlineData("Replace(T, 2, T3, \"X\")")]
+        [InlineData("Replace(T, T2, T3, \"X\")")]
+        [InlineData("Replace(T, T2, T3, TX)")]
+        [InlineData("Replace(\"hello\", T2, T3, TX)")]
+        public void TexlFunctionTypeSemanticsReplace_ConsistentOneColumnTableResult(string script)
         {
             var symbol = new SymbolTable();
             symbol.AddVariable("T", new TableType(TestUtils.DT("*[Name:s]")));
@@ -878,7 +878,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             TestSimpleBindingSuccess(
                 script,
-                TestUtils.DT(expectedType),
+                TestUtils.DT("*[Value:s]"),
                 symbol,
                 Features.ConsistentOneColumnTableResult);
         }
@@ -1022,11 +1022,11 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("Round(1234.567, T)", "*[Value:n]")]
-        [InlineData("Round(4, X)", "*[Value:n]")]
-        [InlineData("Round(X, 4)", "*[Value:n]")]
-        [InlineData("Round(X, T)", "*[Value:n]")]
-        public void TexlFunctionTypeSemanticsRound_ConsistentOneColumnTableResult(string expression, string expectedType)
+        [InlineData("Round(1234.567, T)")]
+        [InlineData("Round(4, X)")]
+        [InlineData("Round(X, 4)")]
+        [InlineData("Round(X, T)")]
+        public void TexlFunctionTypeSemanticsRound_ConsistentOneColumnTableResult(string expression)
         {
             var symbol = new SymbolTable();
             symbol.AddVariable("T", new TableType(TestUtils.DT("*[digits:n]")));
@@ -1034,18 +1034,9 @@ namespace Microsoft.PowerFx.Core.Tests
 
             TestSimpleBindingSuccess(
                 expression,
-                TestUtils.DT(expectedType),
+                TestUtils.DT("*[Value:n]"),
                 symbol,
                 Features.ConsistentOneColumnTableResult);
-
-            var config = new PowerFxConfig(Features.ConsistentOneColumnTableResult)
-            {
-                SymbolTable = symbol,
-            };
-            var engine = new Engine(config);
-            var result = engine.Check(expression);
-            Assert.Equal(TestUtils.DT(expectedType), result._binding.ResultType);
-            Assert.True(result.IsSuccess);
         }
 
         [Fact]
