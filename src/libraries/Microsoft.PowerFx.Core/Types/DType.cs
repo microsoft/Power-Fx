@@ -2434,6 +2434,7 @@ namespace Microsoft.PowerFx.Core.Types
         }
 
         /// <summary>
+        /// This API is very specific for Canvas. Don't call it unless you know exactly what you're doing. 
         /// Returns true iff <paramref name="displayName"/> was found within <paramref name="type"/>'s old display
         /// name mapping and sets <paramref name="logicalName"/> and <paramref name="newDisplayName"/>
         /// according to the new mapping.

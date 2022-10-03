@@ -3268,6 +3268,38 @@
     <value>Kontrasta dizains</value>
     
   </data>
+  <data name="AboutPatch" xml:space="preserve">
+    <value>Lieto atjauninājumus norādītajā rindā un maina rindu norādītajā datu avotā. Atgriež atjaunināto rindu.</value>
+    
+  </data>
+  <data name="PatchDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="PatchBaseRecordArg" xml:space="preserve">
+    <value>base_record</value>
+    
+  </data>
+  <data name="PatchChangeRecordsArg" xml:space="preserve">
+    <value>change_record(s)</value>
+    
+  </data>
+  <data name="AboutRemove" xml:space="preserve">
+    <value>Noņem noteiktu ierakstu vai ierakstus no datu avota</value>
+    
+  </data>
+  <data name="RemoveDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="RemoveRecordsArg" xml:space="preserve">
+    <value>noņemt_ierakstu(s)</value>
+    
+  </data>
+  <data name="ErrRemoveAllArg" xml:space="preserve">
+    <value>Ja tiek sniegts, pēdējam argumentam ir jābūt "Visi". Vai šeit ir pareizrakstības kļūda?</value>
+    
+  </data>
   <data name="PenMode_Draw_DisplayName" xml:space="preserve">
     <value>Zīmēt</value>
     

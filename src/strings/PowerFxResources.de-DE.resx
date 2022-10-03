@@ -3268,6 +3268,38 @@
     <value>Design „Kontrast“</value>
     
   </data>
+  <data name="AboutPatch" xml:space="preserve">
+    <value>Wendet die Updates auf die angegebene Zeile an und ändert die Zeile in der angegebenen Datenquelle. Gibt die aktualisierte Zeile zurück.</value>
+    
+  </data>
+  <data name="PatchDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="PatchBaseRecordArg" xml:space="preserve">
+    <value>base_record</value>
+    
+  </data>
+  <data name="PatchChangeRecordsArg" xml:space="preserve">
+    <value>change_record(s)</value>
+    
+  </data>
+  <data name="AboutRemove" xml:space="preserve">
+    <value>Entfernt einen oder mehrere bestimmte Datensätze aus einer Datenquelle</value>
+    
+  </data>
+  <data name="RemoveDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="RemoveRecordsArg" xml:space="preserve">
+    <value>remove_record(s)</value>
+    
+  </data>
+  <data name="ErrRemoveAllArg" xml:space="preserve">
+    <value>Falls angegeben, muss das letzte Argument „Alle sein. Gibt es einen Tippfehler?</value>
+    
+  </data>
   <data name="PenMode_Draw_DisplayName" xml:space="preserve">
     <value>Zeichnen</value>
     

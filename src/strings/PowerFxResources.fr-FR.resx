@@ -371,7 +371,7 @@
     
   </data>
   <data name="AboutDropColumns_source" xml:space="preserve">
-    <value>Valeur de table dont supprimer des colonnes.</value>
+    <value>Valeur de table pour laquelle supprimer des colonnes.</value>
   </data>
   <data name="AboutDropColumns_column_name" xml:space="preserve">
     <value>Nom d’une colonne à supprimer.</value>
@@ -3268,6 +3268,38 @@
     <value>Thème contrasté</value>
     
   </data>
+  <data name="AboutPatch" xml:space="preserve">
+    <value>Applique les mises à jour à la ligne spécifiée, et modifie celle-ci dans la source de données spécifiée. Retourne la ligne mise à jour.</value>
+    
+  </data>
+  <data name="PatchDataSourceArg" xml:space="preserve">
+    <value>source_données</value>
+    
+  </data>
+  <data name="PatchBaseRecordArg" xml:space="preserve">
+    <value>enregistrement_base</value>
+    
+  </data>
+  <data name="PatchChangeRecordsArg" xml:space="preserve">
+    <value>modifier_enregistrement(s)</value>
+    
+  </data>
+  <data name="AboutRemove" xml:space="preserve">
+    <value>Supprime un enregistrement ou des enregistrements spécifiques d’une source de données</value>
+    
+  </data>
+  <data name="RemoveDataSourceArg" xml:space="preserve">
+    <value>source_données</value>
+    
+  </data>
+  <data name="RemoveRecordsArg" xml:space="preserve">
+    <value>supprimer_enregistrement(s)</value>
+    
+  </data>
+  <data name="ErrRemoveAllArg" xml:space="preserve">
+    <value>Si fourni, le dernier argument doit être « Tous ». Y a-t-il une erreur de saisie ?</value>
+    
+  </data>
   <data name="PenMode_Draw_DisplayName" xml:space="preserve">
     <value>Dessiner</value>
     
@@ -3933,11 +3965,11 @@
     
   </data>
   <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>This argument cannot be passed as this type in formula columns.</value>
+    <value>Cet argument ne peut pas être transmis en tant que ce type dans les colonnes de formule.</value>
     
   </data>
   <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
-    <value>This argument cannot be passed as type {0} in formula columns.</value>
+    <value>Impossible de transmettre cet argument en tant que type {0} dans les colonnes de formules.</value>
     
   </data>
   <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
@@ -3969,7 +4001,7 @@
     
   </data>
   <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
-    <value>This operation cannot be performed on type {0} in formula columns.</value>
+    <value>Impossible d’effectuer cette opération sur le type {0} dans les colonnes de formules.</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
@@ -4005,7 +4037,7 @@
     
   </data>
   <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
-    <value>Cannot reference virtual table {0} in formula columns.</value>
+    <value>Impossible de référencer la table virtuelle {0} dans les colonnes de formules.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">

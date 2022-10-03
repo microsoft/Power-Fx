@@ -3268,6 +3268,38 @@
     <value>Motyw kontrastowy</value>
     
   </data>
+  <data name="AboutPatch" xml:space="preserve">
+    <value>Stosuje aktualizacje do określonego wiersza i zmienia wiersz w określonym źródle danych. Zwraca zaktualizowany wiersz.</value>
+    
+  </data>
+  <data name="PatchDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="PatchBaseRecordArg" xml:space="preserve">
+    <value>base_record</value>
+    
+  </data>
+  <data name="PatchChangeRecordsArg" xml:space="preserve">
+    <value>change_record(s)</value>
+    
+  </data>
+  <data name="AboutRemove" xml:space="preserve">
+    <value>Usuwa określony rekord lub rekordy ze źródła danych</value>
+    
+  </data>
+  <data name="RemoveDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="RemoveRecordsArg" xml:space="preserve">
+    <value>remove_record(s)</value>
+    
+  </data>
+  <data name="ErrRemoveAllArg" xml:space="preserve">
+    <value>Jeśli zostanie podany ten argument, ostatni argument musi mieć wartość „Wszystkie”. Czy podane dane zawierają błąd pisowni?</value>
+    
+  </data>
   <data name="PenMode_Draw_DisplayName" xml:space="preserve">
     <value>Rysuj</value>
     
