@@ -3268,6 +3268,38 @@
     <value>對比佈景主題</value>
     
   </data>
+  <data name="AboutPatch" xml:space="preserve">
+    <value>將更新套用至指定的資料列，並變更指定資料來源中的資料列。傳回更新後的資料列。</value>
+    
+  </data>
+  <data name="PatchDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="PatchBaseRecordArg" xml:space="preserve">
+    <value>base_record</value>
+    
+  </data>
+  <data name="PatchChangeRecordsArg" xml:space="preserve">
+    <value>change_record(s)</value>
+    
+  </data>
+  <data name="AboutRemove" xml:space="preserve">
+    <value>從資料來源移除特定記錄</value>
+    
+  </data>
+  <data name="RemoveDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="RemoveRecordsArg" xml:space="preserve">
+    <value>remove_record(s)</value>
+    
+  </data>
+  <data name="ErrRemoveAllArg" xml:space="preserve">
+    <value>如果提供，最後一個引數必須是「全部」。是否有錯別字?</value>
+    
+  </data>
   <data name="PenMode_Draw_DisplayName" xml:space="preserve">
     <value>繪圖</value>
     
@@ -4005,7 +4037,7 @@
     
   </data>
   <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
-    <value>無法在公式資料行中參考虛擬資料表 {0}。</value>
+    <value>無法在公式資料行中參考虛擬表格 {0}。</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">

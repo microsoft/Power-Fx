@@ -498,7 +498,7 @@
     <value>बूलियन मान में बदला जाने वाला टेक्स्ट मान.</value>
   </data>
   <data name="AboutBooleanT" xml:space="preserve">
-    <value>पाठ मानों के कॉलम को बूलियन मानों के कॉलम में परिवर्तित करता है.</value>
+    <value>पाठ मानों के कॉलम को बूलियन मानों के कॉलम में रूपांतरित करता है.</value>
     
   </data>
   <data name="BooleanTArg1" xml:space="preserve">
@@ -509,7 +509,7 @@
     <value>संसाधित किए जाने वाले पाठ मानों का स्तंभ.</value>
   </data>
   <data name="AboutBooleanN" xml:space="preserve">
-    <value>एक 'संख्या' को एक बूलियन मान में परिवर्तित करता है.</value>
+    <value>एक 'संख्या' को एक बूलियन मान में रूपांतरित करता है.</value>
     
   </data>
   <data name="BooleanNArg1" xml:space="preserve">
@@ -520,7 +520,7 @@
     <value>बूलियन मान में कनवर्ट करने के लिए संख्या मान.</value>
   </data>
   <data name="AboutBooleanNT" xml:space="preserve">
-    <value>संख्यात्मक मानों के कॉलम को बूलियन मानों के कॉलम में परिवर्तित करता है.</value>
+    <value>संख्यात्मक मानों के कॉलम को बूलियन मानों के कॉलम में रूपांतरित करता है.</value>
     
   </data>
   <data name="BooleanNTArg1" xml:space="preserve">
@@ -3266,6 +3266,38 @@
   </data>
   <data name="TeamsTheme_Contrast_DisplayName" xml:space="preserve">
     <value>कॉन्ट्रास्ट विषयवस्तु</value>
+    
+  </data>
+  <data name="AboutPatch" xml:space="preserve">
+    <value>अद्यतनों को निर्दिष्ट पंक्ति पर लागू करता है और निर्दिष्ट डेटास्रोत की पंक्ति को बदलता है. अद्यतित पंक्ति लौटाता है.</value>
+    
+  </data>
+  <data name="PatchDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="PatchBaseRecordArg" xml:space="preserve">
+    <value>base_record</value>
+    
+  </data>
+  <data name="PatchChangeRecordsArg" xml:space="preserve">
+    <value>change_record(s)</value>
+    
+  </data>
+  <data name="AboutRemove" xml:space="preserve">
+    <value>डेटा स्रोत से कोई विशेष रिकॉर्ड या रिकॉर्ड्स हटाता है</value>
+    
+  </data>
+  <data name="RemoveDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="RemoveRecordsArg" xml:space="preserve">
+    <value>remove_record(s)</value>
+    
+  </data>
+  <data name="ErrRemoveAllArg" xml:space="preserve">
+    <value>यदि प्रदान किया गया है, तो अंतिम तर्क 'सभी' होना चाहिए. क्या कोई टाइपो है?</value>
     
   </data>
   <data name="PenMode_Draw_DisplayName" xml:space="preserve">

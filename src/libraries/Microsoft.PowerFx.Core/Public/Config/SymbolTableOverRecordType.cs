@@ -40,14 +40,9 @@ namespace Microsoft.PowerFx
         {
             // Lookup must handle display names
             // This is consistent with RowScope. 
-            if (!DType.TryGetConvertedDisplayNameAndLogicalNameForColumn(_type._type, name, out var logicalName, out _))
+            if (_type.TryGetFieldType(name.Value, out var logicalName, out var type))
             {
-                logicalName = name.Value;
-            }
-
-            if (_type.TryGetFieldType(logicalName, out var type))
-            {
-                nameInfo = Create(name.Value, type);
+                nameInfo = Create(logicalName, type);
                 return true;
             }
 
@@ -55,16 +50,16 @@ namespace Microsoft.PowerFx
             return false;
         }
 
-        private NameLookupInfo Create(string name, FormulaType type)
+        private NameLookupInfo Create(string logicalName, FormulaType type)
         {
-            var hasDisplayName = DType.TryGetDisplayNameForColumn(_type._type, name, out var displayName);
+            var hasDisplayName = DType.TryGetDisplayNameForColumn(_type._type, logicalName, out var displayName);
 
             return new NameLookupInfo(
                    BindKind.PowerFxResolvedObject,
                    type._type,
                    DPath.Root,
                    0,
-                   data: new NameSymbol(name),
+                   data: new NameSymbol(logicalName),
                    displayName: hasDisplayName ? new DName(displayName) : default);
         }
     }

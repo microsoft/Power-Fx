@@ -3268,6 +3268,38 @@
     <value>대비 테마</value>
     
   </data>
+  <data name="AboutPatch" xml:space="preserve">
+    <value>지정된 행에 업데이트를 적용하고 지정된 데이터 원본의 행을 변경합니다. 업데이트된 행을 반환합니다.</value>
+    
+  </data>
+  <data name="PatchDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="PatchBaseRecordArg" xml:space="preserve">
+    <value>base_record</value>
+    
+  </data>
+  <data name="PatchChangeRecordsArg" xml:space="preserve">
+    <value>change_record(s)</value>
+    
+  </data>
+  <data name="AboutRemove" xml:space="preserve">
+    <value>데이터 원본에서 특정 레코드 또는 레코드 제거</value>
+    
+  </data>
+  <data name="RemoveDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="RemoveRecordsArg" xml:space="preserve">
+    <value>remove_record(s)</value>
+    
+  </data>
+  <data name="ErrRemoveAllArg" xml:space="preserve">
+    <value>제공된 경우 마지막 인수는 'All'이어야 합니다. 오타가 있습니까?</value>
+    
+  </data>
   <data name="PenMode_Draw_DisplayName" xml:space="preserve">
     <value>그리기</value>
     

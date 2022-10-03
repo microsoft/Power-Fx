@@ -3268,6 +3268,38 @@
     <value>Temaet Kontrast</value>
     
   </data>
+  <data name="AboutPatch" xml:space="preserve">
+    <value>Anvender opdateringerne til den angivne række og ændrer rækken i den angivne datakilde. Returnerer den opdaterede række.</value>
+    
+  </data>
+  <data name="PatchDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="PatchBaseRecordArg" xml:space="preserve">
+    <value>base_record</value>
+    
+  </data>
+  <data name="PatchChangeRecordsArg" xml:space="preserve">
+    <value>change_record(s)</value>
+    
+  </data>
+  <data name="AboutRemove" xml:space="preserve">
+    <value>Fjerner en bestemt post eller bestemte poster fra en datakilde</value>
+    
+  </data>
+  <data name="RemoveDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="RemoveRecordsArg" xml:space="preserve">
+    <value>remove_record(s)</value>
+    
+  </data>
+  <data name="ErrRemoveAllArg" xml:space="preserve">
+    <value>Hvis det er angivet, skal det sidste argument være "Alle". Er der en slåfejl?</value>
+    
+  </data>
   <data name="PenMode_Draw_DisplayName" xml:space="preserve">
     <value>Tegn</value>
     
@@ -3925,7 +3957,7 @@
     
   </data>
   <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
-    <value>Invalid number of arguments for {0} function: received {1}, expected {2}</value>
+    <value>Ugyldigt antal argumenter for {0} funktion: modtaget {1}, forventet {2}</value>
     
   </data>
   <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
@@ -3937,7 +3969,7 @@
     
   </data>
   <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
-    <value>This argument cannot be passed as type {0} in formula columns.</value>
+    <value>Dette argument kan ikke overføres som type {0} i formelkolonner.</value>
     
   </data>
   <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
@@ -3957,7 +3989,7 @@
     
   </data>
   <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
-    <value>The {0} argument is an invalid/unsupported unit of time for the {1} date arithmetic function.</value>
+    <value>{0}-argumentet er en ugyldig/ikke understøttet tidsenhed for {1}-dataaritmetisk funktion.</value>
     
   </data>
   <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
@@ -3969,7 +4001,7 @@
     
   </data>
   <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
-    <value>This operation cannot be performed on type {0} in formula columns.</value>
+    <value>Denne handling kan ikke udføres på type {0} i formelkolonnerne.</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
@@ -3977,7 +4009,7 @@
     
   </data>
   <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
-    <value>Directly referencing an entire record is not supported in formula columns. Please reference a valid field in the record.</value>
+    <value>Direkte henvisning til en hel post er ikke understøttet i formelkolonner. Henvis venligst til et gyldigt felt i posten.</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
@@ -3993,7 +4025,7 @@
     
   </data>
   <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
-    <value>Coercing records or tables is not supported in formula columns.</value>
+    <value>Det er ikke understøttet at tvinge poster eller tabeller i formelkolonner.</value>
     
   </data>
   <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
@@ -4001,11 +4033,11 @@
     
   </data>
   <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
-    <value>Single-column tables are not supported in formula columns.</value>
+    <value>Tabeller med en enkelt kolonne understøttes ikke i formelkolonner.</value>
     
   </data>
   <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
-    <value>Cannot reference virtual table {0} in formula columns.</value>
+    <value>Der kan ikke refereres til virtuel tabel {0} i formelkolonner.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">

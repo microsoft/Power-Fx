@@ -3268,6 +3268,38 @@
     <value>Tema de contraste</value>
     
   </data>
+  <data name="AboutPatch" xml:space="preserve">
+    <value>Aplica las actualizaciones a la fila especificada y cambia la fila en el origen de datos especificado. Devuelve la fila actualizada.</value>
+    
+  </data>
+  <data name="PatchDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="PatchBaseRecordArg" xml:space="preserve">
+    <value>base_record</value>
+    
+  </data>
+  <data name="PatchChangeRecordsArg" xml:space="preserve">
+    <value>change_record(s)</value>
+    
+  </data>
+  <data name="AboutRemove" xml:space="preserve">
+    <value>Quita registros específicos de un origen de datos</value>
+    
+  </data>
+  <data name="RemoveDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="RemoveRecordsArg" xml:space="preserve">
+    <value>remove_record(s)</value>
+    
+  </data>
+  <data name="ErrRemoveAllArg" xml:space="preserve">
+    <value>Si se proporciona, el último argumento debe ser "Todo". ¿Hay un error ortográfico?</value>
+    
+  </data>
   <data name="PenMode_Draw_DisplayName" xml:space="preserve">
     <value>Dibujar</value>
     

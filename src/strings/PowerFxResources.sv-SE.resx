@@ -3268,6 +3268,38 @@
     <value>Kontrasttema</value>
     
   </data>
+  <data name="AboutPatch" xml:space="preserve">
+    <value>Tillämpar uppdateringarna på den angivna raden och ändrar raden i den angivna datakällan. Returnerar den uppdaterade raden.</value>
+    
+  </data>
+  <data name="PatchDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="PatchBaseRecordArg" xml:space="preserve">
+    <value>base_record</value>
+    
+  </data>
+  <data name="PatchChangeRecordsArg" xml:space="preserve">
+    <value>change_record(s)</value>
+    
+  </data>
+  <data name="AboutRemove" xml:space="preserve">
+    <value>Tar bort en viss post eller poster från en datakälla</value>
+    
+  </data>
+  <data name="RemoveDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="RemoveRecordsArg" xml:space="preserve">
+    <value>remove_record(s)</value>
+    
+  </data>
+  <data name="ErrRemoveAllArg" xml:space="preserve">
+    <value>Om detta anges måste det sista argumentet vara "Alla". Finns det något stavfel?</value>
+    
+  </data>
   <data name="PenMode_Draw_DisplayName" xml:space="preserve">
     <value>Rita</value>
     
