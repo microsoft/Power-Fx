@@ -225,7 +225,8 @@ stages:
       contractVersion: $[ dependencies.generate_multiconfig_var.outputs['GetContract.ContractVersion'] ]
 
     steps:
-    - checkout: none
+    - checkout: self
+      fetchDepth: 1
 
     - template: feed-setup-step.yml
       parameters: 
