@@ -113,8 +113,7 @@ namespace Microsoft.PowerFx.Types
 
                 flag = false;
                 
-                // !JYL! Check how to escape field name
-                sb.Append($"'{field.Name}':");
+                sb.Append($"'{CharacterUtils.Escape(field.Name)}':");
 
                 field.Type.DefaultExpressionValue(sb);
             }

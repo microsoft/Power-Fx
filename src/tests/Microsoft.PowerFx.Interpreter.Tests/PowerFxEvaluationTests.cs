@@ -267,10 +267,19 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     return new RunResult(newValue);
                 }
 
-                // Serialization test. Serialized expression must produce an identical result.
-                var deserialized = await engine.EvalAsync(newValue.ToExpression(), CancellationToken.None);
+                // Get serialized expression. DateTimeValue needs timezone information.
+                var serializedExpression = newValue is DateTimeValue dtv ? dtv.ToExpression(iSetup.TimeZoneInfo) : newValue.ToExpression();
 
-                return new RunResult(deserialized);
+                // Serialization test. Serialized expression must produce an identical result.
+                var checkSerialized = engine.Check(serializedExpression, parameters.Type, options: iSetup.Flags.ToParserOptions());
+                if (!check.IsSuccess)
+                {
+                    return new RunResult(checkSerialized);
+                }
+
+                var newValueDeserialized = await checkSerialized.GetEvaluator().EvalAsync(CancellationToken.None, rtConfig);
+
+                return new RunResult(newValueDeserialized);
             }
         }
     }

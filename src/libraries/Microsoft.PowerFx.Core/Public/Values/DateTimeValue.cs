@@ -29,5 +29,17 @@ namespace Microsoft.PowerFx.Types
         {
             sb.Append($"DateTimeValue({CharacterUtils.ToPlainText(Value.ToString("o"))})");
         }
+
+        public string ToExpression(TimeZoneInfo timezoneInfo)
+        {
+            var value = Value;
+
+            if (timezoneInfo != null)
+            {
+                value = TimeZoneInfo.ConvertTimeToUtc(Value, timezoneInfo);
+            }
+
+            return $"DateTimeValue({CharacterUtils.ToPlainText(value.ToString("o"))})";
+        }
     }
 }

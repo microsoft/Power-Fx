@@ -237,7 +237,7 @@ namespace Microsoft.PowerFx.Types
 
         internal virtual void DefaultExpressionValue(StringBuilder sb)
         {
-            throw new NotSupportedException();
+            throw new NotSupportedException($"{GetType().FullName} doesn't implement DefaultExpressionValue.");
         }
 
         internal string DefaultExpressionValue()

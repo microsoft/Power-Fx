@@ -47,6 +47,12 @@ namespace Microsoft.PowerFx.Types
 
         public abstract void ToExpression(StringBuilder sb);
 
+        /// <summary>
+        /// Provides serialization. Return an expression that, when evaluated in the
+        /// invariant locale, recreates an equivalent formula value, including its type. 
+        /// This may not be the same as the expression used to originally create this type.
+        /// </summary>
+        /// <returns>Serialized expression.</returns>
         public string ToExpression()
         {
             var sb = new StringBuilder();

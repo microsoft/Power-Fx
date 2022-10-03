@@ -75,7 +75,6 @@ namespace Microsoft.PowerFx.Types
 
         public override void ToExpression(StringBuilder sb)
         {            
-            var concat = string.Empty;
             var flag = true;
 
             sb.Append("Error(Table(");
