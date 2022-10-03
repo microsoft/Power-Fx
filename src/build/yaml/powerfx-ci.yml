@@ -226,7 +226,6 @@ stages:
 
     steps:
     - checkout: self
-      fetchDepth: 1
 
     - template: feed-setup-step.yml
       parameters: 

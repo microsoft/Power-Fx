@@ -31,51 +31,6 @@ steps:
     baselineFile: ApiCompatBaseline.txt
   continueOnError: true
 
-- task: SOUTHWORKS.binaries-comparer.custom-build-release-task.binaries-comparer@0
-  displayName: 'Compare binaries 2'
-  inputs:
-    contractsRootFolder: '$(System.ArtifactsDirectory)/OutputDlls'
-    contractsFileName: '$(PackageName).dll'
-    implFolder: '$(System.ArtifactsDirectory)/ContractDlls'
-    failOnIssue: false
-    resolveFx: false
-    generateLog: true
-    outputFilename: '$(PackageName).${{ parameters.ContractVersion }}.CompatResults2.txt'
-    outputFolder: '$(Build.ArtifactStagingDirectory)'
-    useBaseline: true
-    baselineFile: ApiCompatBaseline.txt
-  continueOnError: true
-
-- task: SOUTHWORKS.binaries-comparer.custom-build-release-task.binaries-comparer@0
-  displayName: 'Compare binaries 3'
-  inputs:
-    contractsRootFolder: '$(System.ArtifactsDirectory)/OutputDlls'
-    contractsFileName: '$(PackageName).dll'
-    implFolder: '$(System.ArtifactsDirectory)/OutputDlls'
-    failOnIssue: false
-    resolveFx: false
-    generateLog: true
-    outputFilename: '$(PackageName).${{ parameters.ContractVersion }}.CompatResults3.txt'
-    outputFolder: '$(Build.ArtifactStagingDirectory)'
-    useBaseline: true
-    baselineFile: ApiCompatBaseline.txt
-  continueOnError: true
-
-- task: SOUTHWORKS.binaries-comparer.custom-build-release-task.binaries-comparer@0
-  displayName: 'Compare binaries 4'
-  inputs:
-    contractsRootFolder: '$(System.ArtifactsDirectory)/ContractDlls'
-    contractsFileName: '$(PackageName).dll'
-    implFolder: '$(System.ArtifactsDirectory)/ContractDlls'
-    failOnIssue: false
-    resolveFx: false
-    generateLog: true
-    outputFilename: '$(PackageName).${{ parameters.ContractVersion }}.CompatResults4.txt'
-    outputFolder: '$(Build.ArtifactStagingDirectory)'
-    useBaseline: true
-    baselineFile: ApiCompatBaseline.txt
-  continueOnError: true
-
 - powershell: |
     $filePath = "$(Build.ArtifactStagingDirectory)\$(PackageName).${{ parameters.ContractVersion }}.CompatResults.txt"
     $nugetLink = "compared against [version $(ContractVersion)](https://www.nuget.org/packages/$(PackageName)/${{ parameters.ContractVersion }}).";
