@@ -48,6 +48,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.PowerFxConfig",
                 "Microsoft.PowerFx.ReadOnlySymbolTable",
                 "Microsoft.PowerFx.SymbolTable",
+                "Microsoft.PowerFx.FormulaValueSerializerSettings",
 
                 // Feature flags are experimental - hosts shouldn't use it. 
                 "Microsoft.PowerFx.Preview.FeatureFlags",

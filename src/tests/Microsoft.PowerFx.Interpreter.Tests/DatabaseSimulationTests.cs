@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Entities;
@@ -193,6 +194,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             public override void Visit(IValueVisitor visitor)
             {
                 throw new NotImplementedException("TestEntityValue.Visit");
+            }
+
+            public override void ToExpression(StringBuilder sb, FormulaValueSerializerSettings settings)
+            {
+                // Internal only.
+                throw new System.NotImplementedException("TestEntityValue cannot be serialized.");
             }
         }
 

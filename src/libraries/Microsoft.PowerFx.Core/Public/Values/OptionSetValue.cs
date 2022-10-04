@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Diagnostics;
+using System.Text;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Utils;
 
@@ -61,6 +62,11 @@ namespace Microsoft.PowerFx.Types
 
                 return logicalName;
             }
-        }        
+        }
+
+        public override void ToExpression(StringBuilder sb, FormulaValueSerializerSettings settings)
+        {
+            sb.Append($"{Type._type.OptionSetInfo.EntityName}.{Option}");
+        }
     }
 }
