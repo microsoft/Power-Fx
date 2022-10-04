@@ -17,12 +17,23 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         public void DateTimeSerializationTests()
         {
             var engine = new RecalcEngine(new PowerFxConfig());
+
+            // Local datetime
             var now = DateTime.Now;
+            var dateTimeNowValue = FormulaValue.New(now);
+            var dateTimeNowValueDeserialized = (DateTimeValue)engine.Eval(dateTimeNowValue.ToExpression());
 
-            var dateTimeValue = FormulaValue.New(now);
-            var dateTimeValueDeserialized = (DateTimeValue)engine.Eval(dateTimeValue.ToExpression());
+            Assert.Equal(dateTimeNowValue.Value, dateTimeNowValueDeserialized.Value);
 
-            Assert.Equal(dateTimeValue.Value, dateTimeValueDeserialized.Value);
+            // Unspecified
+            var unspecified = DateTime.Parse("10/10/2022");
+            var dateTimeUnspecifiedValue = FormulaValue.New(unspecified);
+            var dateTimeUnspecifiedValueDeserialized = (DateTimeValue)engine.Eval(dateTimeUnspecifiedValue.ToExpression());
+
+            Assert.Equal(dateTimeUnspecifiedValue.Value, dateTimeUnspecifiedValueDeserialized.Value);
+
+            // UTC is not allowed
+            Assert.Throws<ArgumentException>(() => FormulaValue.New(DateTime.UtcNow));
         }            
     }
 }
