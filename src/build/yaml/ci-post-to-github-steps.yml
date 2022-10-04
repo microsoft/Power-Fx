@@ -21,54 +21,14 @@ steps:
   displayName: 'Publish compat results to Artifacts'
   continueOnError: true
 
-- powershell: |
-    $OWNER = 'microsoft';
-    $REPO = 'Power-Fx';
-    $ISSUE_NUMBER = "$(System.PullRequest.PullRequestNumber)";
-    $stringToMatch = "*Binary Compatibility issues*";
-    $userNameToMatch = "BruceHaley";
-
-    $listCommentsUri = "https://api.github.com/repos/$OWNER/$REPO/issues/$ISSUE_NUMBER/comments";
-
-    $listResult = Invoke-RestMethod "$listCommentsUri";
-    $count = $listResult.count;
-    Write-Host "Comment Ids:" $listResult.id;
-    Write-Host "Users:" $listResult.user.login;
-
-    $commentsDeleted = 0;
-
-    for ($i = 0; $i -lt $count; $i++) {
-        if ($listResult[$i].body -like $stringToMatch -and $listResult[$i].user.login -eq $userNameToMatch) {
-            $COMMENT_ID = $listResult[$i].id;
-            $date = $listResult[$i].created_at;
-            $user = $listResult[$i].user.login;
-
-            $githubPersonalAccessToken = "$(GitHubCommentApiKey)";
-            $token = [System.Convert]::ToBase64String([System.Text.Encoding]::ASCII.GetBytes(":$githubPersonalAccessToken"));
-            $header = @{authorization = "Basic $token"};
-            $deleteCommentUri = "https://api.github.com/repos/$OWNER/$REPO/issues/comments/$COMMENT_ID";
-
-            Write-Host "Deleting comment $COMMENT_ID from $user dated $date";
-
-            Invoke-RestMethod -Method Delete -Uri $deleteCommentUri -Headers $header;
-            $commentsDeleted++;
-            break;
-        }
-    }
-
-    if ($commentsDeleted -eq 0) {
-        Write-Host "Nothing to delete.";
-    }
-  displayName: 'Delete old compat results'
-  condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'), ne(variables['System.PullRequest.IsFork'], 'True'))
-
 - task: SOUTHWORKS.github-pr-comment.custom-publish-comment-task.github-pr-comment@0
   displayName: 'Publish compat results to GitHub'
   inputs:
     userToken: '$(GitHubCommentApiKey)'
     bodyFilePath: '$(System.ArtifactsDirectory)\ApiCompat'
     getSubFolders: true
-  # Skip forks, as secret tokens are not available to them.
+    keepCommentHistory: false
+  # Skip for forks, as secret tokens are not available to them.
   condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'), ne(variables['System.PullRequest.IsFork'], 'True'))
 
 - script: |
