@@ -18,22 +18,21 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         {
             var engine = new RecalcEngine(new PowerFxConfig());
 
-            // Local datetime
-            var now = DateTime.Now;
-            var dateTimeNowValue = FormulaValue.New(now);
-            var dateTimeNowValueDeserialized = (DateTimeValue)engine.Eval(dateTimeNowValue.ToExpression());
+            foreach (var dt in new[] { DateTime.Now, DateTime.UtcNow, DateTime.Parse("10/10/2022") })
+            {
+                if (dt.Kind == DateTimeKind.Utc)
+                {
+                    // UTC is not allowed
+                    Assert.Throws<ArgumentException>(() => FormulaValue.New(DateTime.UtcNow));
+                }
+                else
+                {
+                    var dateTimeValue = FormulaValue.New(dt);
+                    var dateTimeValueDeserialized = (DateTimeValue)engine.Eval(dateTimeValue.ToExpression());
 
-            Assert.Equal(dateTimeNowValue.Value, dateTimeNowValueDeserialized.Value);
-
-            // Unspecified
-            var unspecified = DateTime.Parse("10/10/2022");
-            var dateTimeUnspecifiedValue = FormulaValue.New(unspecified);
-            var dateTimeUnspecifiedValueDeserialized = (DateTimeValue)engine.Eval(dateTimeUnspecifiedValue.ToExpression());
-
-            Assert.Equal(dateTimeUnspecifiedValue.Value, dateTimeUnspecifiedValueDeserialized.Value);
-
-            // UTC is not allowed
-            Assert.Throws<ArgumentException>(() => FormulaValue.New(DateTime.UtcNow));
+                    Assert.Equal(dateTimeValue.Value, dateTimeValueDeserialized.Value);
+                }
+            }            
         }            
     }
 }
