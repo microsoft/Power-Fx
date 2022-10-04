@@ -2,7 +2,9 @@
 // Licensed under the MIT license.
 
 using System.Diagnostics.Contracts;
+using System.Text;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Types
 {
@@ -22,6 +24,11 @@ namespace Microsoft.PowerFx.Types
         internal StringValue ToLower()
         {
             return new StringValue(IRContext.NotInSource(FormulaType.String), Value.ToLowerInvariant());
+        }
+
+        public override void ToExpression(StringBuilder sb, FormulaValueSerializerSettings settings)
+        {
+            sb.Append($"\"{CharacterUtils.ExcelEscapeString(Value)}\"");
         }
     }
 }

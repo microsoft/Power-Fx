@@ -5,10 +5,13 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Dynamic;
+using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Types
 {
@@ -213,6 +216,29 @@ namespace Microsoft.PowerFx.Types
             });
 
             return DValue<RecordValue>.Of(errorValue);
-        }        
+        }
+
+        public override void ToExpression(StringBuilder sb, FormulaValueSerializerSettings settings)
+        {
+            var flag = true;
+
+            sb.Append("{");
+
+            foreach (var field in Fields)
+            {
+                if (!flag)
+                {
+                    sb.Append(",");
+                }
+
+                flag = false;
+
+                sb.Append($"'{CharacterUtils.Escape(field.Name)}':");
+
+                field.Value.ToExpression(sb, settings);
+            }
+
+            sb.Append("}");
+        }
     }
 }

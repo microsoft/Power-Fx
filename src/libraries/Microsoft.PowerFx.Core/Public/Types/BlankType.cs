@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Text;
 using Microsoft.PowerFx.Core.Types;
 
 namespace Microsoft.PowerFx.Types
@@ -23,6 +24,11 @@ namespace Microsoft.PowerFx.Types
         public override string ToString()
         {
             return "Blank";
+        }
+
+        internal override void DefaultExpressionValue(StringBuilder sb)
+        {
+            sb.Append("Blank()");
         }
     }
 }

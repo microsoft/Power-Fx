@@ -2,7 +2,11 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using System.Text;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Utils;
+using static Microsoft.PowerFx.Syntax.PrettyPrintVisitor;
 
 namespace Microsoft.PowerFx.Types
 {
@@ -67,6 +71,36 @@ namespace Microsoft.PowerFx.Types
                     yield return error;
                 }
             }
+        }
+
+        public override void ToExpression(StringBuilder sb, FormulaValueSerializerSettings settings)
+        {            
+            var flag = true;
+
+            sb.Append("Error(Table(");
+
+            foreach (var errorValue in _errors)
+            {
+                if (!flag)
+                {
+                    sb.Append(",");
+                }
+
+                flag = false;
+
+                sb.Append("{Kind:ErrorKind.");
+                sb.Append(errorValue.Kind.ToString());
+
+                if (errorValue.Message != null)
+                {
+                    sb.Append(", Message:");
+                    sb.Append(CharacterUtils.ToPlainText(errorValue.Message));
+                }
+
+                sb.Append("}");
+            }
+
+            sb.Append("))");
         }
     }
 }

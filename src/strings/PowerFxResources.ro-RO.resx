@@ -3268,6 +3268,38 @@
     <value>Tema Contrast</value>
     
   </data>
+  <data name="AboutPatch" xml:space="preserve">
+    <value>Aplică actualizările la rândul specificat și modifică rândul în sursa de date specificată. Returnează rândul actualizat.</value>
+    
+  </data>
+  <data name="PatchDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="PatchBaseRecordArg" xml:space="preserve">
+    <value>base_record</value>
+    
+  </data>
+  <data name="PatchChangeRecordsArg" xml:space="preserve">
+    <value>change_record(s)</value>
+    
+  </data>
+  <data name="AboutRemove" xml:space="preserve">
+    <value>Elimină una sau mai multe înregistrări dintr-o sursă de date</value>
+    
+  </data>
+  <data name="RemoveDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="RemoveRecordsArg" xml:space="preserve">
+    <value>remove_record (remove_record)</value>
+    
+  </data>
+  <data name="ErrRemoveAllArg" xml:space="preserve">
+    <value>Dacă este furnizat, ultimul argument trebuie să fie „Toate”. Există o eroare de scriere?</value>
+    
+  </data>
   <data name="PenMode_Draw_DisplayName" xml:space="preserve">
     <value>Desenare</value>
     

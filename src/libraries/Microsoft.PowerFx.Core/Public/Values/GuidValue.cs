@@ -3,7 +3,9 @@
 
 using System;
 using System.Diagnostics.Contracts;
+using System.Text;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Types
 {
@@ -18,6 +20,11 @@ namespace Microsoft.PowerFx.Types
         public override void Visit(IValueVisitor visitor)
         {
             visitor.Visit(this);
+        }
+
+        public override void ToExpression(StringBuilder sb, FormulaValueSerializerSettings settings)
+        {
+            sb.Append($"GUID({CharacterUtils.ToPlainText(Value.ToString("N"))})");
         }
     }
 }

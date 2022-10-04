@@ -3,7 +3,9 @@
 
 using System;
 using System.Diagnostics.Contracts;
+using System.Text;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Types
 {
@@ -16,13 +18,16 @@ namespace Microsoft.PowerFx.Types
             : base(irContext, value)
         {
             Contract.Assert(IRContext.ResultType == FormulaType.Date);
-            Contract.Assert(value.TimeOfDay == TimeSpan.Zero);
-            Contract.Assert(value.Kind != DateTimeKind.Utc);
         }
 
         public override void Visit(IValueVisitor visitor)
         {
             visitor.Visit(this);
+        }
+
+        public override void ToExpression(StringBuilder sb, FormulaValueSerializerSettings settings)
+        {
+            sb.Append($"DateValue({CharacterUtils.ToPlainText(Value.ToString("o"))})");
         }
     }
 }
