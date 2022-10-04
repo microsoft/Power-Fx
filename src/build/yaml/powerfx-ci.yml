@@ -196,7 +196,7 @@ stages:
 
   - job: post_results_to_gitHub
     dependsOn: check_api_for
-    condition: and(succeeded(), ne(dependencies.generate_multiconfig_var.outputs['generate_var.MULTICONFIG'], '{}'), ne(variables['System.PullRequest.IsFork'], 'True'))
+    condition: ne(dependencies.generate_multiconfig_var.outputs['generate_var.MULTICONFIG'], '{}')
 
     steps:
     - checkout: none
