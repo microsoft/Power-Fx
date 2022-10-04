@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Functions
@@ -271,10 +272,11 @@ namespace Microsoft.PowerFx.Functions
             return StandardSingleColumnTable<T>(async (runner, context, irContext, args) => targetFunction(irContext, args.OfType<T>().ToArray()));
         }
 
-        private static (int maxTableSize, bool emptyTablePresent) AnalyzeTableArguments(FormulaValue[] args)
+        private static (int maxTableSize, int minTableSize, bool emptyTablePresent) AnalyzeTableArguments(FormulaValue[] args)
         {
             var maxTableSize = 0;
             var emptyTablePresent = false;
+            var minTableSize = int.MaxValue;
 
             foreach (var arg in args)
             {
@@ -282,11 +284,15 @@ namespace Microsoft.PowerFx.Functions
                 {
                     var tableSize = tv.Rows.Count();
                     maxTableSize = Math.Max(maxTableSize, tableSize);
+
+                    // Empty tables are not considered for count.
+                    minTableSize = tableSize != 0 ? Math.Min(minTableSize, tableSize) : minTableSize;
+
                     emptyTablePresent |= tableSize == 0;
                 }
             }
 
-            return (maxTableSize, emptyTablePresent);
+            return (maxTableSize, minTableSize, emptyTablePresent);
         }
 
         private class ExpandToSizeResult
@@ -310,6 +316,46 @@ namespace Microsoft.PowerFx.Functions
 
                 var count = tv.Rows.Count();
                 if (count < size)
+                {
+                    var inputRecordType = tvType.ToRecord();
+                    var inputRecordNamedValue = new NamedValue(name, new BlankValue(IRContext.NotInSource(FormulaType.Blank)));
+                    var inputRecord = new InMemoryRecordValue(IRContext.NotInSource(inputRecordType), new List<NamedValue>() { inputRecordNamedValue });
+                    var inputDValue = DValue<RecordValue>.Of(inputRecord);
+
+                    var repeated = Enumerable.Repeat(inputDValue, size - count);
+                    var rows = tv.Rows.Concat(repeated);
+                    return new ExpandToSizeResult(name, rows);
+                }
+                else
+                {
+                    return new ExpandToSizeResult(name, tv.Rows);
+                }
+            }
+            else
+            {
+                var name = BuiltinFunction.ColumnName_ValueStr;
+                var inputRecordType = RecordType.Empty().Add(name, arg.Type);
+                var inputRecordNamedValue = new NamedValue(name, arg);
+                var inputRecord = new InMemoryRecordValue(IRContext.NotInSource(inputRecordType), new List<NamedValue>() { inputRecordNamedValue });
+                var inputDValue = DValue<RecordValue>.Of(inputRecord);
+                var rows = Enumerable.Repeat(inputDValue, size);
+                return new ExpandToSizeResult(name, rows);
+            }
+        }
+
+        private static ExpandToSizeResult ShrinkToSize(FormulaValue arg, int size)
+        {
+            if (arg is TableValue tv)
+            {
+                var tvType = (TableType)tv.Type;
+                var name = tvType.SingleColumnFieldName;
+
+                var count = tv.Rows.Count();
+                if (count > size)
+                {
+                    return new ExpandToSizeResult(name, tv.Rows.Take(size));
+                }
+                else if (count == 0)
                 {
                     var inputRecordType = tvType.ToRecord();
                     var inputRecordNamedValue = new NamedValue(name, new BlankValue(IRContext.NotInSource(FormulaType.Blank)));
@@ -369,7 +415,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 var resultRows = new List<DValue<RecordValue>>();
 
-                (var maxSize, var emptyTablePresent) = AnalyzeTableArguments(args);
+                (var maxSize, var minSize, var emptyTablePresent) = AnalyzeTableArguments(args);
                 if (maxSize == 0 || (emptyTablePresent && !transposeEmptyTable))
                 {
                     // maxSize == 0 means there are no tables with rows. This can happen when we expect a Table at compile time but we recieve Blank() at runtime,
@@ -379,14 +425,14 @@ namespace Microsoft.PowerFx.Functions
                     return new InMemoryTableValue(irContext, resultRows);
                 }
 
-                var allResults = args.Select(arg => ExpandToSize(arg, maxSize));
+                var allResults = args.Select(arg => ShrinkToSize(arg, minSize));
 
                 var tableType = (TableType)irContext.ResultType;
                 var resultType = tableType.ToRecord();
                 var columnNameStr = tableType.SingleColumnFieldName;
                 var itemType = resultType.GetFieldType(columnNameStr);
 
-                var transposed = Transpose(allResults.Select(result => result.Rows.ToList()).ToList(), maxSize);
+                var transposed = Transpose(allResults.Select(result => result.Rows.ToList()).ToList(), minSize);
                 var names = allResults.Select(result => result.Name).ToList();
                 foreach (var list in transposed)
                 {
@@ -401,6 +447,16 @@ namespace Microsoft.PowerFx.Functions
                     var namedValue = new NamedValue(tableType.SingleColumnFieldName, await targetFunction(runner, context, IRContext.NotInSource(itemType), targetArgs));
                     var record = new InMemoryRecordValue(IRContext.NotInSource(resultType), new List<NamedValue>() { namedValue });
                     resultRows.Add(DValue<RecordValue>.Of(record));
+                }
+
+                for (var i = 0; i < maxSize - minSize; i++)
+                {
+                    resultRows.Add(DValue<RecordValue>.Of(FormulaValue.NewError(new ExpressionError()
+                    {
+                        Kind = ErrorKind.MissingRequired,
+                        Severity = ErrorSeverity.Critical,
+                        Message = "Value not available"
+                    })));
                 }
 
                 return new InMemoryTableValue(irContext, resultRows);

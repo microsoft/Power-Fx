@@ -240,26 +240,6 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: Concatenate)
             },
             {
-                BuiltinFunctionsCore.ConcatenateT,
-                StandardErrorHandlingAsync(
-                    BuiltinFunctionsCore.ConcatenateT.Name,
-                    expandArguments: NoArgExpansion,
-                    replaceBlankValues: DoNotReplaceBlank,
-                    checkRuntimeTypes: ExactValueTypeOrTableOrBlank<StringValue>,
-                    checkRuntimeValues: DeferRuntimeValueChecking,
-                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-                    targetFunction: MultiSingleColumnTable(
-                            StandardErrorHandling<StringValue>(
-                                BuiltinFunctionsCore.Concatenate.Name,
-                                expandArguments: NoArgExpansion,
-                                replaceBlankValues: ReplaceBlankWithEmptyString,
-                                checkRuntimeTypes: ExactValueType<StringValue>,
-                                checkRuntimeValues: DeferRuntimeValueChecking,
-                                returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-                                targetFunction: Concatenate),
-                            transposeEmptyTable: true))
-            },
-            {
                 BuiltinFunctionsCore.Cos,
                 StandardErrorHandling<NumberValue>(
                     BuiltinFunctionsCore.Cos.Name,
@@ -525,38 +505,6 @@ namespace Microsoft.PowerFx.Functions
                         StrictArgumentPositiveNumberChecker),
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: Find)
-            },
-            {
-                BuiltinFunctionsCore.FindT,
-                StandardErrorHandlingAsync<FormulaValue>(
-                    BuiltinFunctionsCore.FindT.Name,
-                    expandArguments: NoArgExpansion,
-                    replaceBlankValues: DoNotReplaceBlank,
-                    checkRuntimeTypes: ExactSequence(
-                        ExactValueTypeOrTableOrBlank<StringValue>,
-                        ExactValueTypeOrTableOrBlank<StringValue>,
-                        ExactValueTypeOrTableOrBlank<NumberValue>),
-                    checkRuntimeValues: DeferRuntimeValueChecking,
-                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-                    targetFunction: MultiSingleColumnTable(
-                            StandardErrorHandling<FormulaValue>(
-                                BuiltinFunctionsCore.Find.Name,
-                                expandArguments: InsertDefaultValues(outputArgsCount: 3, fillWith: new NumberValue(IRContext.NotInSource(FormulaType.Number), 1)),
-                                replaceBlankValues: ReplaceBlankWith(
-                                    new StringValue(IRContext.NotInSource(FormulaType.String), string.Empty),
-                                    new StringValue(IRContext.NotInSource(FormulaType.String), string.Empty),
-                                    new BlankValue(IRContext.NotInSource(FormulaType.Blank))),
-                                checkRuntimeTypes: ExactSequence(
-                                    ExactValueType<StringValue>,
-                                    ExactValueType<StringValue>,
-                                    ExactValueTypeOrBlank<NumberValue>),
-                                checkRuntimeValues: ExactSequence(
-                                    DeferRuntimeValueChecking,
-                                    DeferRuntimeValueChecking,
-                                    StrictArgumentPositiveNumberChecker),
-                                returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
-                                targetFunction: Find),
-                            transposeEmptyTable: false))
             },
             {
                 BuiltinFunctionsCore.First,
@@ -1072,26 +1020,6 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: Round)
             },
             {
-                BuiltinFunctionsCore.RoundT,
-                StandardErrorHandlingAsync(
-                    BuiltinFunctionsCore.RoundT.Name,
-                    expandArguments: NoArgExpansion,
-                    replaceBlankValues: DoNotReplaceBlank,
-                    checkRuntimeTypes: ExactValueTypeOrTableOrBlank<NumberValue>,
-                    checkRuntimeValues: DeferRuntimeValueChecking,
-                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-                    targetFunction: MultiSingleColumnTable(
-                            StandardErrorHandling<NumberValue>(
-                                BuiltinFunctionsCore.Round.Name,
-                                expandArguments: NoArgExpansion,
-                                replaceBlankValues: ReplaceBlankWithEmptyString,
-                                checkRuntimeTypes: ExactValueType<NumberValue>,
-                                checkRuntimeValues: DeferRuntimeValueChecking,
-                                returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-                                targetFunction: Round),
-                            transposeEmptyTable: true))
-            },
-            {
                 BuiltinFunctionsCore.RoundUp,
                 StandardErrorHandling<NumberValue>(
                     BuiltinFunctionsCore.RoundUp.Name,
@@ -1523,6 +1451,48 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.SqrtT,
                 StandardErrorHandlingTabularOverload<NumberValue>(BuiltinFunctionsCore.SqrtT.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.Sqrt])
+            },
+            {
+                BuiltinFunctionsCore.ConcatenateT,
+                StandardErrorHandlingAsync(
+                    BuiltinFunctionsCore.ConcatenateT.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrTableOrBlank<StringValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: MultiSingleColumnTable(
+                            SimpleFunctionImplementations[BuiltinFunctionsCore.Concatenate],
+                            transposeEmptyTable: true))
+            },
+            {
+                BuiltinFunctionsCore.FindT,
+                StandardErrorHandlingAsync<FormulaValue>(
+                    BuiltinFunctionsCore.FindT.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactSequence(
+                        ExactValueTypeOrTableOrBlank<StringValue>,
+                        ExactValueTypeOrTableOrBlank<StringValue>,
+                        ExactValueTypeOrTableOrBlank<NumberValue>),
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: MultiSingleColumnTable(
+                            SimpleFunctionImplementations[BuiltinFunctionsCore.Find],
+                            transposeEmptyTable: false))
+            },
+            {
+                BuiltinFunctionsCore.RoundT,
+                StandardErrorHandlingAsync(
+                    BuiltinFunctionsCore.RoundT.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrTableOrBlank<NumberValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: MultiSingleColumnTable(
+                            SimpleFunctionImplementations[BuiltinFunctionsCore.Round],
+                            transposeEmptyTable: true))
             },
         };
 
