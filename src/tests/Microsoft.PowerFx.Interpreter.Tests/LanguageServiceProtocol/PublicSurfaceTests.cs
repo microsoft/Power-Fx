@@ -37,7 +37,6 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
                 "Microsoft.PowerFx.LanguageServerProtocol.LanguageServer",
 
                 // Internal
-                "Microsoft.PowerFx.LanguageServerProtocol.FormulaTypeJsonConverter",
                 "Microsoft.PowerFx.LanguageServerProtocol.JsonRpcHelper",
                 "Microsoft.PowerFx.LanguageServerProtocol.CodeActionKind",
 

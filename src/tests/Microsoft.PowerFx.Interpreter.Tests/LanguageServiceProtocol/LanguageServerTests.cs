@@ -25,7 +25,9 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         {
             PropertyNameCaseInsensitive = true,
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-            Converters = { new FormulaTypeJsonConverter() }
+#pragma warning disable CS0618 // Type or member is obsolete
+            Converters = { new LanguageServerProtocol.FormulaTypeJsonConverter() }
+#pragma warning restore CS0618
         };
 
         protected List<string> _sendToClientData;
@@ -407,7 +409,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 
             CheckBehaviorError(_sendToClientData[0], expectBehaviorError, out var diags);
 
-            var diag = diags.First(d => d.Message == "Unexpected characters. The formula contains 'ParenClose' where 'Eof' is expected.");
+            var diag = diags.First(d => d.Message == "Unexpected characters. The formula contains 'Eof' where 'ParenClose' is expected.");
 
             Assert.Equal(offset, diag.Range.Start.Character);
             Assert.Equal(offset, diag.Range.End.Character);

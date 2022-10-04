@@ -3268,6 +3268,38 @@
     <value>Kontrasttema</value>
     
   </data>
+  <data name="AboutPatch" xml:space="preserve">
+    <value>Bruker oppdateringene i den angitte raden, og endrer raden i den angitte datakilden. Returnerer den oppdaterte raden.</value>
+    
+  </data>
+  <data name="PatchDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="PatchBaseRecordArg" xml:space="preserve">
+    <value>base_record</value>
+    
+  </data>
+  <data name="PatchChangeRecordsArg" xml:space="preserve">
+    <value>change_record(s)</value>
+    
+  </data>
+  <data name="AboutRemove" xml:space="preserve">
+    <value>Fjerner en bestemt oppføring eller oppføringer fra en datakilde</value>
+    
+  </data>
+  <data name="RemoveDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="RemoveRecordsArg" xml:space="preserve">
+    <value>remove_record(s)</value>
+    
+  </data>
+  <data name="ErrRemoveAllArg" xml:space="preserve">
+    <value>Hvis angitt, må det siste argumentet være All. Er det en skrivefeil?</value>
+    
+  </data>
   <data name="PenMode_Draw_DisplayName" xml:space="preserve">
     <value>Tegn</value>
     

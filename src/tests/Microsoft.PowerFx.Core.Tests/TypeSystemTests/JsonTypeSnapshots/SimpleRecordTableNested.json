@@ -1,0 +1,33 @@
+{
+  "Type": {
+    "Name": "Record",
+    "IsTable": true
+  },
+  "Fields": {
+    "Bar": {
+      "Type": {
+        "Name": "Record"
+      },
+      "Fields": {
+        "Qux": {
+          "Type": {
+            "Name": "Record",
+            "IsTable": true
+          },
+          "Fields": {
+            "Baz": {
+              "Type": {
+                "Name": "Text"
+              }
+            }
+          }
+        }
+      }
+    },
+    "Foo": {
+      "Type": {
+        "Name": "Number"
+      }
+    }
+  }
+}

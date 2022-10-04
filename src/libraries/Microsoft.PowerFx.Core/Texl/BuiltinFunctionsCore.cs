@@ -88,6 +88,7 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction First = _library.Append(new FirstLastFunction(isFirst: true));
         public static readonly TexlFunction FirstN = _library.Append(new FirstLastNFunction(isFirst: true));
         public static readonly TexlFunction ForAll = _library.Append(new ForAllFunction());
+        public static readonly TexlFunction ForAll_UO = _library.Append(new ForAllFunction_UO());
         public static readonly TexlFunction GUIDPure = _library.Append(new GUIDPureFunction());
         public static readonly TexlFunction GUID_UO = _library.Append(new GUIDPureFunction_UO());
         public static readonly TexlFunction Hour = _library.Append(new HourFunction());

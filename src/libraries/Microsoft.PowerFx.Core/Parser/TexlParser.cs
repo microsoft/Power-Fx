@@ -1518,7 +1518,7 @@ namespace Microsoft.PowerFx.Core.Parser
         {
             Contracts.Assert(tidWanted != tok.Kind);
 
-            PostError(tok, TexlStrings.ErrExpectedFound_Ex_Fnd, tidWanted, tok);
+            PostError(tok, TexlStrings.ErrExpectedFound_Ex_Fnd, tok, tidWanted);
         }
 
         // Gets the string corresponding to token kinds used in binary or unary nodes.
