@@ -45,7 +45,7 @@ namespace Microsoft.PowerFx.Types
             return _tree.Accept(visitor, context);
         }
 
-        public override void ToExpression(StringBuilder sb)
+        public override void ToExpression(StringBuilder sb, FormulaValueSerializerSettings settings)
         {
             // Internal only.
             throw new NotImplementedException("LambdaFormulaValue cannot be serialized.");

@@ -24,7 +24,7 @@ namespace Microsoft.PowerFx.Types
             visitor.Visit(this);
         }
 
-        public override void ToExpression(StringBuilder sb)
+        public override void ToExpression(StringBuilder sb, FormulaValueSerializerSettings settings)
         {
             sb.Append(string.Format(ExpressionFormat, Value.Hours, Value.Minutes, Value.Seconds, Value.Milliseconds));
         }

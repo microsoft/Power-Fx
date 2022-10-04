@@ -218,7 +218,7 @@ namespace Microsoft.PowerFx.Types
             return DValue<RecordValue>.Of(errorValue);
         }
 
-        public override void ToExpression(StringBuilder sb)
+        public override void ToExpression(StringBuilder sb, FormulaValueSerializerSettings settings)
         {
             var flag = true;
 
@@ -235,7 +235,7 @@ namespace Microsoft.PowerFx.Types
 
                 sb.Append($"'{CharacterUtils.Escape(field.Name)}':");
 
-                field.Value.ToExpression(sb);
+                field.Value.ToExpression(sb, settings);
             }
 
             sb.Append("}");

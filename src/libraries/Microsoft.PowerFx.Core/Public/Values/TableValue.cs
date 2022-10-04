@@ -194,7 +194,7 @@ namespace Microsoft.PowerFx.Types
             visitor.Visit(this);
         }
 
-        public override void ToExpression(StringBuilder sb)
+        public override void ToExpression(StringBuilder sb, FormulaValueSerializerSettings settings)
         {
             // Table() is not legal, so we need an alternate expression to capture the table's type.
             if (!Rows.Any())
@@ -218,7 +218,7 @@ namespace Microsoft.PowerFx.Types
 
                     flag = false;
 
-                    row.ToFormulaValue().ToExpression(sb);
+                    row.ToFormulaValue().ToExpression(sb, settings);
                 }
 
                 sb.Append(")");

@@ -196,7 +196,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 throw new NotImplementedException("TestEntityValue.Visit");
             }
 
-            public override void ToExpression(StringBuilder sb)
+            public override void ToExpression(StringBuilder sb, FormulaValueSerializerSettings settings)
             {
                 // Internal only.
                 throw new System.NotImplementedException("TestEntityValue cannot be serialized.");

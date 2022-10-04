@@ -64,7 +64,7 @@ namespace Microsoft.PowerFx.Types
             }
         }
 
-        public override void ToExpression(StringBuilder sb)
+        public override void ToExpression(StringBuilder sb, FormulaValueSerializerSettings settings)
         {
             sb.Append($"{Type._type.OptionSetInfo.EntityName}.{Option}");
         }

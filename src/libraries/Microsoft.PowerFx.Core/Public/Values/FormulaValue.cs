@@ -45,7 +45,7 @@ namespace Microsoft.PowerFx.Types
 
         public abstract void Visit(IValueVisitor visitor);
 
-        public abstract void ToExpression(StringBuilder sb);
+        public abstract void ToExpression(StringBuilder sb, FormulaValueSerializerSettings settings);
 
         /// <summary>
         /// Provides serialization. Return an expression that, when evaluated in the
@@ -55,9 +55,10 @@ namespace Microsoft.PowerFx.Types
         /// <returns>Serialized expression.</returns>
         public string ToExpression()
         {
+            var settings = new FormulaValueSerializerSettings();
             var sb = new StringBuilder();
 
-            ToExpression(sb);
+            ToExpression(sb, settings);
 
             return sb.ToString();
         }

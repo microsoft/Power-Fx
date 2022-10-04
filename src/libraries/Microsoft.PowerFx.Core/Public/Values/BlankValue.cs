@@ -30,7 +30,7 @@ namespace Microsoft.PowerFx.Types
             visitor.Visit(this);
         }
 
-        public override void ToExpression(StringBuilder sb)
+        public override void ToExpression(StringBuilder sb, FormulaValueSerializerSettings settings)
         {
             if (Type is BlankType)
             {

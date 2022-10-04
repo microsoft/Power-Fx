@@ -3,6 +3,7 @@
 
 using System;
 using System.Diagnostics.Contracts;
+using System.Globalization;
 using System.Text;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Utils;
@@ -25,21 +26,9 @@ namespace Microsoft.PowerFx.Types
             visitor.Visit(this);
         }
 
-        public override void ToExpression(StringBuilder sb)
+        public override void ToExpression(StringBuilder sb, FormulaValueSerializerSettings settings)
         {
-            sb.Append($"DateTimeValue({CharacterUtils.ToPlainText(Value.ToString("o"))})");
-        }
-
-        public string ToExpression(TimeZoneInfo timezoneInfo)
-        {
-            var value = Value;
-
-            if (timezoneInfo != null)
-            {
-                value = TimeZoneInfo.ConvertTimeToUtc(Value, timezoneInfo);
-            }
-
-            return $"DateTimeValue({CharacterUtils.ToPlainText(value.ToString("o"))})";
+            sb.Append($"DateTimeValue({CharacterUtils.ToPlainText(Value.ToString("o", CultureInfo.InvariantCulture))})");
         }
     }
 }
