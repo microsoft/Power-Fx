@@ -113,6 +113,9 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                         case TextDocumentNames.CodeAction:
                             HandleCodeActionRequest(id, paramsJson);
                             break;
+                        case TextDocumentNames.CommandExecuted:
+                            HandleCommandExecutedRequest(id, paramsJson);
+                            break;
                         default:
                             _sendToClient(JsonRpcHelper.CreateErrorResult(id, JsonRpcHelper.ErrorCode.MethodNotFound));
                             break;
@@ -126,6 +129,11 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                 _sendToClient(JsonRpcHelper.CreateErrorResult(id, JsonRpcHelper.ErrorCode.InternalError, ex.Message));
                 return;
             }
+        }
+
+        private void HandleCommandExecutedRequest(string id, string paramsJson)
+        {
+            // TODO: Handle command executed event;
         }
 
         private void HandleDidOpenNotification(string paramsJson)
@@ -348,7 +356,8 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                                     Edit = new WorkspaceEdit
                                     {
                                         Changes = new Dictionary<string, TextEdit[]> { { documentUri, new[] { new TextEdit { Range = range, NewText = item.Text } } } }
-                                    }
+                                    },
+                                    ActionResultContext = item.ActionResultContext
                                 });
                             }
 

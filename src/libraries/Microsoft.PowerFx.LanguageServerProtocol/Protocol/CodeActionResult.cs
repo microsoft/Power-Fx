@@ -25,5 +25,10 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
         /// Gets or sets code fix range.
         /// </summary>
         public Range Range { get; set; }
+
+        /// <summary>
+        /// Gets or sets code action context.
+        /// </summary>
+        public CodeActionResultContext ActionResultContext { get; set; }
     }
 }
