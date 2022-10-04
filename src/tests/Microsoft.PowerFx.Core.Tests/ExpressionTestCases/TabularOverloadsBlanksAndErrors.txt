@@ -212,3 +212,28 @@ Blank()
 // Needs updating for consistent schema flag
 >> Round(If(1<0,2), [1, 2, 3])
 Table({Result:0},{Result:0},{Result:0})
+
+// *********** 2+-argument functions, empty tables ***********
+
+// Needs updating for consistent schema flag
+>> Concatenate(Filter(["hello", "hi"], Len(Value)>10), " world")
+Table()
+
+// Needs updating for consistent schema flag
+>> Concatenate("hello ", Filter(["world", "day"],Len(Value)>10))
+Table()
+
+// Needs updating for consistent schema flag
+>> Find(Filter(["hello", "hi"], Len(Value)>10), " world")
+Table()
+
+// Needs updating for consistent schema flag
+>> Find("a", Filter(["world", "day"],Len(Value)>10))
+Table()
+
+>> Round(Filter([12.34, 56.78], Value > 100), 1)
+[]
+
+// Needs updating for consistent schema flag
+>> Round(1234.5678, Filter([1, 2, 3], Value > 10))
+Table()
