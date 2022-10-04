@@ -16,6 +16,12 @@ steps:
     artifactName: 'ContractDlls'
     targetPath: '$(System.ArtifactsDirectory)/ContractDlls'
 
+- powershell: |
+    Write-Host "The following API compatibility issues are suppressed:";
+    Get-Content "ApiCompatBaseline.txt";
+  displayName: 'Show API compat issue suppression list in ApiCompatBaseline.txt'
+  continueOnError: true
+
 - task: SOUTHWORKS.binaries-comparer.custom-build-release-task.binaries-comparer@0
   displayName: 'Compare binaries'
   inputs:
