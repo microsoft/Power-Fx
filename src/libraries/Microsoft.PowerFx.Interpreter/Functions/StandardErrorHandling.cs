@@ -61,7 +61,8 @@ namespace Microsoft.PowerFx.Functions
                 {
                     (var maxSize, var minsSize, var emptyTablePresent) = AnalyzeTableArguments(args);
 
-                    // In case Tabular overload has one scalar error arg and another Table arg.
+                    // In case Tabular overload has one scalar error arg and another Table arg we want to
+                    // return table of error.
                     if (isMultiArgTabularOverload && maxSize > 0)
                     {
                         var tableType = (TableType)irContext.ResultType;
@@ -470,6 +471,8 @@ namespace Microsoft.PowerFx.Functions
                     resultRows.Add(DValue<RecordValue>.Of(record));
                 }
 
+                // Add error nodes for different table length
+                // e.g. Concatenate(["a"],["1","2"] => ["a1", <error>]
                 var namedErrorValue = new NamedValue(tableType.SingleColumnFieldName, FormulaValue.NewError(new ExpressionError()
                 {
                     Kind = ErrorKind.NotSupported,
