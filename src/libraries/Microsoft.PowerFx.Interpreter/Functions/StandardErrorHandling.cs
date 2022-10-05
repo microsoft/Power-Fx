@@ -41,6 +41,7 @@ namespace Microsoft.PowerFx.Functions
         /// <param name="checkRuntimeValues">This stage can be used to generate errors if specific values occur in the arguments, for example infinity, NaN, etc.</param>
         /// <param name="returnBehavior">A flag that can be used to activate pre-defined early return behavior, such as returning Blank() if any argument is Blank().</param>
         /// <param name="targetFunction">The implementation of the builtin function.</param>
+        /// <param name="isMultiArgTabularOverload">If True returns error table in case of error args.</param>
         /// <returns></returns>
         private static AsyncFunctionPtr StandardErrorHandlingAsync<T>(
                 string functionName,
@@ -49,7 +50,8 @@ namespace Microsoft.PowerFx.Functions
                 Func<IRContext, int, FormulaValue, FormulaValue> checkRuntimeTypes,
                 Func<IRContext, int, FormulaValue, FormulaValue> checkRuntimeValues,
                 ReturnBehavior returnBehavior,
-                Func<EvalVisitor, EvalVisitorContext, IRContext, T[], ValueTask<FormulaValue>> targetFunction)
+                Func<EvalVisitor, EvalVisitorContext, IRContext, T[], ValueTask<FormulaValue>> targetFunction,
+                bool isMultiArgTabularOverload = false)
             where T : FormulaValue
         {
             return async (runner, context, irContext, args) =>
@@ -57,6 +59,20 @@ namespace Microsoft.PowerFx.Functions
                 var nonFiniteArgError = FiniteArgumentCheck(functionName, irContext, args);
                 if (nonFiniteArgError != null)
                 {
+                    (var maxSize, var minsSize, var emptyTablePresent) = AnalyzeTableArguments(args);
+
+                    // In case Tabular overload has one scalar error arg and another Table arg.
+                    if (isMultiArgTabularOverload && maxSize > 0)
+                    {
+                        var tableType = (TableType)irContext.ResultType;
+                        var resultType = tableType.ToRecord();
+                        var namedValue = new NamedValue(tableType.SingleColumnFieldName, nonFiniteArgError);
+                        var record = DValue<RecordValue>.Of(new InMemoryRecordValue(IRContext.NotInSource(resultType), new List<NamedValue>() { namedValue }));
+                        var resultRows = Enumerable.Repeat(record, maxSize).ToList();
+
+                        return new InMemoryTableValue(irContext, resultRows);
+                    }
+
                     return nonFiniteArgError;
                 }
 
@@ -422,6 +438,11 @@ namespace Microsoft.PowerFx.Functions
                     // or all tables in args are empty. Additionally, among non-empty tables (in which case maxSize > 0) there may be an empty table,
                     // which also means empty result if transposeEmptyTable == false.
                     // Return an empty table (with the correct type).
+                    if (!emptyTablePresent)
+                    {
+                        return FormulaValue.NewBlank();
+                    }
+
                     return new InMemoryTableValue(irContext, resultRows);
                 }
 
@@ -449,16 +470,15 @@ namespace Microsoft.PowerFx.Functions
                     resultRows.Add(DValue<RecordValue>.Of(record));
                 }
 
-                for (var i = 0; i < maxSize - minSize; i++)
+                var namedErrorValue = new NamedValue(tableType.SingleColumnFieldName, FormulaValue.NewError(new ExpressionError()
                 {
-                    resultRows.Add(DValue<RecordValue>.Of(FormulaValue.NewError(new ExpressionError()
-                    {
-                        Kind = ErrorKind.MissingRequired,
-                        Severity = ErrorSeverity.Critical,
-                        Message = "Value not available"
-                    })));
-                }
-
+                    Kind = ErrorKind.NotSupported,
+                    Severity = ErrorSeverity.Critical,
+                    Message = "Value not available"
+                }));
+                var errorRecord = new InMemoryRecordValue(IRContext.NotInSource(resultType), new List<NamedValue>() { namedErrorValue });
+                var errorRowCount = maxSize - minSize;
+                resultRows.AddRange(Enumerable.Repeat(DValue<RecordValue>.Of(errorRecord), errorRowCount));
                 return new InMemoryTableValue(irContext, resultRows);
             };
         }

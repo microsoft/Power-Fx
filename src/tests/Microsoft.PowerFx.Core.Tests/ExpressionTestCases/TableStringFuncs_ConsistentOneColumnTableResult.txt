@@ -7,7 +7,7 @@
 []
 
 >> Concatenate("a", If(1<0, ["txt"]))
-[]
+Blank()
 
 >> Concatenate("a", ["hello", Mid("great", -1), "world"])
 ["ahello",Microsoft.PowerFx.Types.ErrorValue,"aworld"]
@@ -53,7 +53,7 @@ Table({Value:"one"},Microsoft.PowerFx.Types.ErrorValue,{Value:"three"})
 
 // Table + Table
 >> Concatenate(["one", "two"], [1, 2, 3, 4])
-["one1","two2","3","4"]
+["one1","two2",Microsoft.PowerFx.Types.ErrorValue,Microsoft.PowerFx.Types.ErrorValue]
 
 >> Concatenate(["one", "two"], LastN(Table({b:"1"},{b:"2"}), 0))
 ["one","two"]
@@ -62,13 +62,13 @@ Table({Value:"one"},Microsoft.PowerFx.Types.ErrorValue,{Value:"three"})
 ["one","two"]
 
 >> Concatenate(["one", "two"], If(1/0<2, ["txt"]))
-Microsoft.PowerFx.Types.ErrorValue
+[Microsoft.PowerFx.Types.ErrorValue,Microsoft.PowerFx.Types.ErrorValue]
 
 >> Concatenate(["one", "two"], Table({a:"one"},If(1<0,{a:"two"}),{a:"three"}))
-["oneone","two","three"]
+["oneone","two",Microsoft.PowerFx.Types.ErrorValue]
 
 >> Concatenate(["one", "two"], ["hello", Mid("great", -1), "world"])
-["onehello",Microsoft.PowerFx.Types.ErrorValue,"world"]
+["onehello",Microsoft.PowerFx.Types.ErrorValue,Microsoft.PowerFx.Types.ErrorValue]
 
 >> Concatenate(["a","b","c","d"], "-", ["1", "2"], "-", ["x", "y", "z"], "!")
-["a-1-x!","b-2-y!","c--z!","d--!"]
+["a-1-x!","b-2-y!",Microsoft.PowerFx.Types.ErrorValue,Microsoft.PowerFx.Types.ErrorValue]

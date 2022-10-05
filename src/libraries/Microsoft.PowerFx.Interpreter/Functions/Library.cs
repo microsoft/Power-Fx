@@ -51,6 +51,12 @@ namespace Microsoft.PowerFx.Functions
                 allFunctions.Add(func.Key, func.Value);
             }
 
+            foreach (var func in SimpleFunctionMultiArgsTabularOverloadImplementations)
+            {
+                Contracts.Assert(allFunctions.Any(f => f.Key.Name == func.Key.Name), "It needs to be an overload");
+                allFunctions.Add(func.Key, func.Value);
+            }
+
             FunctionImplementations = allFunctions;
         }
 
@@ -1452,19 +1458,10 @@ namespace Microsoft.PowerFx.Functions
                 BuiltinFunctionsCore.SqrtT,
                 StandardErrorHandlingTabularOverload<NumberValue>(BuiltinFunctionsCore.SqrtT.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.Sqrt])
             },
-            {
-                BuiltinFunctionsCore.ConcatenateT,
-                StandardErrorHandlingAsync(
-                    BuiltinFunctionsCore.ConcatenateT.Name,
-                    expandArguments: NoArgExpansion,
-                    replaceBlankValues: DoNotReplaceBlank,
-                    checkRuntimeTypes: ExactValueTypeOrTableOrBlank<StringValue>,
-                    checkRuntimeValues: DeferRuntimeValueChecking,
-                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-                    targetFunction: MultiSingleColumnTable(
-                            SimpleFunctionImplementations[BuiltinFunctionsCore.Concatenate],
-                            transposeEmptyTable: true))
-            },
+        };
+
+        private static IReadOnlyDictionary<TexlFunction, AsyncFunctionPtr> SimpleFunctionMultiArgsTabularOverloadImplementations { get; } = new Dictionary<TexlFunction, AsyncFunctionPtr>
+        {
             {
                 BuiltinFunctionsCore.FindT,
                 StandardErrorHandlingAsync<FormulaValue>(
@@ -1479,7 +1476,22 @@ namespace Microsoft.PowerFx.Functions
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: MultiSingleColumnTable(
                             SimpleFunctionImplementations[BuiltinFunctionsCore.Find],
-                            transposeEmptyTable: false))
+                            transposeEmptyTable: false),
+                    isMultiArgTabularOverload: true)
+            },
+            {
+                BuiltinFunctionsCore.ConcatenateT,
+                StandardErrorHandlingAsync(
+                    BuiltinFunctionsCore.ConcatenateT.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrTableOrBlank<StringValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: MultiSingleColumnTable(
+                            SimpleFunctionImplementations[BuiltinFunctionsCore.Concatenate],
+                            transposeEmptyTable: true),
+                    isMultiArgTabularOverload: true)
             },
             {
                 BuiltinFunctionsCore.RoundT,
@@ -1492,7 +1504,8 @@ namespace Microsoft.PowerFx.Functions
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: MultiSingleColumnTable(
                             SimpleFunctionImplementations[BuiltinFunctionsCore.Round],
-                            transposeEmptyTable: true))
+                            transposeEmptyTable: true),
+                    isMultiArgTabularOverload: true)
             },
         };
 

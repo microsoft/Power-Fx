@@ -20,10 +20,10 @@ Table({Result:Blank()})
 Table({Result:1},{Result:1},{Result:Blank()})
 
 >> Find(["b"], ["abc", "cde"])
-Table({Result:2},{Result:1})
+Table({Result:2},{Result:Microsoft.PowerFx.Types.ErrorValue})
 
 >> Find(["b"], ["abc", "cde"], If(false, [0], Blank()))
-Table({Result:Blank()},{Result:Blank()})
+Table({Result:Blank()},{Result:Microsoft.PowerFx.Types.ErrorValue})
 
 >> Find(["b"], ["abc", "cde"], Filter([0], Value <> Value))
 Table()
@@ -71,10 +71,10 @@ Table({Result:19})
 Table({Result:1},{Result:1},{Result:19})
 
 >> Find([Blank(), ","], ["lastName,firstName", "lastName,firstName,", "lastName,firstName", Blank()])
-Table({Result:1},{Result:9},{Result:1},{Result:1})
+Table({Result:1},{Result:9},{Result:Microsoft.PowerFx.Types.ErrorValue},{Result:Microsoft.PowerFx.Types.ErrorValue})
 
 >> Find([Blank(), ",", "", "findMe"], [Blank(), "lastName,firstName"])
-Table({Result:1},{Result:9},{Result:1},{Result:Blank()})
+Table({Result:1},{Result:9},{Result:Microsoft.PowerFx.Types.ErrorValue},{Result:Microsoft.PowerFx.Types.ErrorValue})
 
 >> Find([Blank(), ","], ["lastName,firstName",], [9, 2, 3])
 Table({Result:9},{Result:Microsoft.PowerFx.Types.ErrorValue},{Result:Microsoft.PowerFx.Types.ErrorValue})
@@ -83,10 +83,10 @@ Table({Result:9},{Result:Microsoft.PowerFx.Types.ErrorValue},{Result:Microsoft.P
 Table({Result:Microsoft.PowerFx.Types.ErrorValue},{Result:Blank()},{Result:Microsoft.PowerFx.Types.ErrorValue},{Result:Microsoft.PowerFx.Types.ErrorValue})
 
 >> Find([",", Blank()], "lastName,firstName", [1, 2, 3])
-Table({Result:9},{Result:2},{Result:3})
+Table({Result:9},{Result:2},{Result:Microsoft.PowerFx.Types.ErrorValue})
 
 >> Find(",", [Blank(), "lastName,firstName", "lastName,firstName"], [1, 2])
-Table({Result:Blank()},{Result:9},{Result:Blank()})
+Table({Result:Blank()},{Result:9},{Result:Microsoft.PowerFx.Types.ErrorValue})
 
 >> Find(Filter(["empty table"], Value <> Value), "", 1)
 Table()
@@ -138,7 +138,7 @@ Table({Result:1},Microsoft.PowerFx.Types.ErrorValue,{Result:Microsoft.PowerFx.Ty
 //actual: Microsoft.PowerFx.Types.ErrorValue
 
 >> Find(Table({ find: "a" }, { find: "b" }, { find: "c" }), If(1/0>2,"abcdef"))
-#Error(Kind=Div0)
+Table({Result:Microsoft.PowerFx.Types.ErrorValue},{Result:Microsoft.PowerFx.Types.ErrorValue},{Result:Microsoft.PowerFx.Types.ErrorValue})
 
 >> Find(If(Sqrt(-1)<0,"First second third"), Table({ within: "First" }, { within: "Second" }))
-#Error(Kind=Numeric)
+Table({Result:Microsoft.PowerFx.Types.ErrorValue},{Result:Microsoft.PowerFx.Types.ErrorValue})
