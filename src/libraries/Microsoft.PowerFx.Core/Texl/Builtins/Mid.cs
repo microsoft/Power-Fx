@@ -77,7 +77,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 fValid &= CheckStringColumnType(type0, args[0], errors, ref nodeToCoercedTypeMap);
 
                 // Borrow the return type from the 1st arg
-                returnType = type0;
+                returnType = binding.Features.HasFlag(Features.ConsistentOneColumnTableResult)
+                    ? DType.CreateTable(new TypedName(DType.String, new DName(ColumnName_ValueStr)))
+                    : type0;
             }
             else
             {
