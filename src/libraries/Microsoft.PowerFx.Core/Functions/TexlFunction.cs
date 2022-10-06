@@ -402,7 +402,7 @@ namespace Microsoft.PowerFx.Core.Functions
         }
 
         // Called after type checking, and independent of type checking. This method is responsible for producing
-        //  non-type related errors. This function has access to the binding, which means that it has a great deal of
+        // non-type related errors. This function has access to the binding, which means that it has a great deal of
         // power and insight into context information that is not available to regular type checking.
         public virtual void CheckSemantics(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors)
         {
