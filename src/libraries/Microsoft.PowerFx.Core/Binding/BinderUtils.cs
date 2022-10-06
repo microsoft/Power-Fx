@@ -134,8 +134,11 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 IErrorContainer warnings = new LimitedSeverityErrorContainer(txb.ErrorContainer, DocumentErrorSeverity.Warning);
 
-                // Typecheck the invocation and infer the return type.
-                typeCheckSucceeded = maybeFunc.CheckInvocation(txb, args, argTypes, warnings, out returnType, out nodeToCoercedTypeMap);
+                // Type check the invocation and infer the return type.
+                typeCheckSucceeded = maybeFunc.CheckTypes(args, argTypes, warnings, out returnType, out nodeToCoercedTypeMap);
+
+                // Semantic analysis
+                typeCheckSucceeded &= maybeFunc.CheckSemantics(txb, args, argTypes, warnings);
 
                 if (typeCheckSucceeded)
                 {

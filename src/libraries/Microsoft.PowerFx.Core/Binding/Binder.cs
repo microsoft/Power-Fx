@@ -4394,10 +4394,11 @@ namespace Microsoft.PowerFx.Core.Binding
                 _currentScope = scopeNew.Parent;
                 PostVisit(node.Args);
 
-                // Typecheck the invocation.
+                // Type check the invocation and infer the return type.
+                fArgsValid &= maybeFunc.CheckTypes(args, argTypes, _txb.ErrorContainer, out var returnType, out var nodeToCoercedTypeMap);
 
-                // Typecheck the invocation and infer the return type.
-                fArgsValid &= maybeFunc.CheckInvocation(_txb, args, argTypes, _txb.ErrorContainer, out var returnType, out var nodeToCoercedTypeMap);
+                // Check any post-type checking semantics
+                fArgsValid &= maybeFunc.CheckSemantics(_txb, args, argTypes, _txb.ErrorContainer);
 
                 // This is done because later on, if a CallNode has a return type of Error, you can assert HasErrors on it.
                 // This was not done for UnaryOpNodes, BinaryOpNodes, CompareNodes.
@@ -4600,8 +4601,9 @@ namespace Microsoft.PowerFx.Core.Binding
                     isUnliftable |= _txb.IsUnliftable(child);
                 }
 
-                // Typecheck the node's children against the built-in Concatenate function
-                var fArgsValid = BuiltinFunctionsCore.Concatenate.CheckInvocation(_txb, args, argTypes, _txb.ErrorContainer, out var returnType, out var nodeToCoercedTypeMap);
+                // Type check the node's children against the built-in Concatenate function
+                // Note: Concatenate does not have custom semantic analysis
+                var fArgsValid = BuiltinFunctionsCore.Concatenate.CheckTypes(args, argTypes, _txb.ErrorContainer, out var returnType, out var nodeToCoercedTypeMap);
 
                 if (!fArgsValid)
                 {
@@ -4719,8 +4721,12 @@ namespace Microsoft.PowerFx.Core.Binding
                 var argTypes = args.Select(_txb.GetType).ToArray();
                 bool fArgsValid;
 
-                // Typecheck the invocation and infer the return type.
-                fArgsValid = func.CheckInvocation(_txb, args, argTypes, _txb.ErrorContainer, out returnType, out _);
+                // Type check the invocation and infer the return type.
+                fArgsValid = func.CheckTypes(args, argTypes, _txb.ErrorContainer, out returnType, out _);
+
+                // Semantic analysis
+                fArgsValid &= func.CheckSemantics(_txb, args, argTypes, _txb.ErrorContainer);
+
                 if (!fArgsValid)
                 {
                     _txb.ErrorContainer.Error(DocumentErrorSeverity.Severe, node, TexlStrings.ErrInvalidArgs_Func, func.Name);
@@ -4881,12 +4887,14 @@ namespace Microsoft.PowerFx.Core.Binding
                     _txb.AddVolatileVariables(node, modifiedIdentifiers.Select(identifier => identifier.Name.ToString()).ToImmutableHashSet());
                 }
 
-                // Typecheck the invocation and infer the return type.
                 var argTypes = args.Select(_txb.GetType).ToArray();
                 bool fArgsValid;
 
-                // Typecheck the invocation and infer the return type.
-                fArgsValid = func.CheckInvocation(_txb, args, argTypes, _txb.ErrorContainer, out returnType, out var nodeToCoercedTypeMap);
+                // Type check the invocation and infer the return type.
+                fArgsValid = func.CheckTypes(args, argTypes, _txb.ErrorContainer, out returnType, out var nodeToCoercedTypeMap);
+
+                // Semantic analysis
+                fArgsValid &= func.CheckSemantics(_txb, args, argTypes, _txb.ErrorContainer);
 
                 if (!fArgsValid && !func.HasPreciseErrors)
                 {
@@ -4968,8 +4976,11 @@ namespace Microsoft.PowerFx.Core.Binding
                     _txb.ErrorContainer.Error(node, TexlStrings.ErrInvalidArgs_Func, someFunc.Name);
                 }
 
-                // The final CheckInvocation call will post all the necessary document errors.
-                someFunc.CheckInvocation(_txb, args, argTypes, _txb.ErrorContainer, out returnType, out _);
+                // Perform type checking
+                someFunc.CheckTypes(args, argTypes, _txb.ErrorContainer, out returnType, out _);
+
+                // The final CheckSemantics call will post all the necessary document errors.
+                someFunc.CheckSemantics(_txb, args, argTypes, _txb.ErrorContainer);
 
                 _txb.SetInfo(node, new CallInfo(someFunc, node));
                 _txb.SetType(node, returnType);

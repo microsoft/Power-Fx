@@ -385,18 +385,23 @@ namespace Microsoft.PowerFx.Core.Functions
             return char.ToLowerInvariant(name[0]).ToString() + name.Substring(1) + suffix + (IsAsync && !suppressAsync ? "Async" : string.Empty);
         }
 
-        public virtual bool CheckInvocation(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public virtual bool CheckSemantics(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors)
         {
-            return CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            return true;
         }
 
         // Type check an invocation of the function with the specified args (and their corresponding types).
         // Return true if everything aligns even with coercion, false otherwise.
         // By default, the out returnType will be the one advertised via the constructor. If this.ReturnType
         // is either Unknown or an aggregate type, this method needs to be specialized.
-        public virtual bool CheckInvocation(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public virtual bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
-            return CheckInvocationCore(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            return CheckTypesCore(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+        }
+
+        public virtual bool CheckTypes(BindingConfig config, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        {
+            return CheckTypesCore(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
         }
 
         public virtual bool CheckForDynamicReturnType(TexlBinding binding, TexlNode[] args)
@@ -421,7 +426,7 @@ namespace Microsoft.PowerFx.Core.Functions
             return SupportsParamCoercion && (argIndex <= MinArity || argIndex <= MaxArity);
         }
 
-        private bool CheckInvocationCore(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        private bool CheckTypesCore(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
@@ -1254,7 +1259,7 @@ namespace Microsoft.PowerFx.Core.Functions
             return false;
         }
 
-        protected bool CheckAllParamsAreTypeOrSingleColumnTable(TexlBinding binding, DType desiredType, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        protected bool CheckAllParamsAreTypeOrSingleColumnTable(Features features, DType desiredType, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
@@ -1277,7 +1282,7 @@ namespace Microsoft.PowerFx.Core.Functions
                 {
                     if (fValid && nodeToCoercedTypeMap.Any())
                     {
-                        var resultColumnName = binding.Features.HasFlag(Features.ConsistentOneColumnTableResult)
+                        var resultColumnName = features.HasFlag(Features.ConsistentOneColumnTableResult)
                             ? new DName(ColumnName_ValueStr)
                             : argTypes[i].GetNames(DPath.Root).Single().Name;
 
@@ -1285,7 +1290,7 @@ namespace Microsoft.PowerFx.Core.Functions
                     }
                     else
                     {
-                        returnType = binding.Features.HasFlag(Features.ConsistentOneColumnTableResult)
+                        returnType = features.HasFlag(Features.ConsistentOneColumnTableResult)
                             ? DType.CreateTable(new TypedName(desiredType, new DName(ColumnName_ValueStr)))
                             : argTypes[i];
                     }

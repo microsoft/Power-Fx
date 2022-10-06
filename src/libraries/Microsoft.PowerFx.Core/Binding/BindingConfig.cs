@@ -13,16 +13,26 @@ namespace Microsoft.PowerFx.Core.Binding
     [ThreadSafeImmutable]
     internal class BindingConfig
     {
-        public static readonly BindingConfig Default = new BindingConfig();
+        public static readonly BindingConfig Default = new BindingConfig(Features.None);
 
         public bool AllowsSideEffects { get; }
 
         public bool UseThisRecordForRuleScope { get; }
 
-        public BindingConfig(bool allowsSideEffects = false, bool useThisRecordForRuleScope = false)
+        public bool IsEnhancedDelegationEnabled { get; }
+
+        public Features Features { get; }
+
+        public BindingConfig(
+            Features features,
+            bool allowsSideEffects = false,
+            bool useThisRecordForRuleScope = false,
+            bool isEnhancedDelegationEnabled = false)
         {
+            Features = features;
             AllowsSideEffects = allowsSideEffects;
             UseThisRecordForRuleScope = useThisRecordForRuleScope;
+            IsEnhancedDelegationEnabled = isEnhancedDelegationEnabled;
         }
     }
 }
