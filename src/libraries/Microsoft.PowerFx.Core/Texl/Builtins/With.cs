@@ -36,8 +36,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return GetUniqueTexlRuntimeName(suffix: "_R");
         }
 
-        public override bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public override bool CheckTypes(BindingConfig config, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
+            Contracts.AssertValue(config);
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
             Contracts.AssertValue(argTypes);
@@ -45,7 +46,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
 
             // Base call yields unknown return type, so we set it accordingly below
-            var fArgsValid = base.CheckTypes(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fArgsValid = CheckTypes(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
 
             // Return type determined by second argument (function)
             // Since CheckInvocation is called on partial functions, return type should be error when a second argument is undefined

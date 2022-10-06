@@ -385,9 +385,9 @@ namespace Microsoft.PowerFx.Core.Functions
             return char.ToLowerInvariant(name[0]).ToString() + name.Substring(1) + suffix + (IsAsync && !suppressAsync ? "Async" : string.Empty);
         }
 
-        public virtual bool CheckSemantics(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors)
+        public virtual bool CheckTypes(BindingConfig config, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
-            return true;
+            return CheckTypes(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
         }
 
         // Type check an invocation of the function with the specified args (and their corresponding types).
@@ -399,9 +399,8 @@ namespace Microsoft.PowerFx.Core.Functions
             return CheckTypesCore(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
         }
 
-        public virtual bool CheckTypes(BindingConfig config, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public virtual void CheckSemantics(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors)
         {
-            return CheckTypesCore(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
         }
 
         public virtual bool CheckForDynamicReturnType(TexlBinding binding, TexlNode[] args)

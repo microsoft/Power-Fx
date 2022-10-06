@@ -52,7 +52,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.Assert(argTypes.Length == 2);
             Contracts.AssertValue(errors);
 
-            if (!CheckTypes(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap))
+            if (!base.CheckTypes(config, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap))
             {
                 return false;
             }
@@ -80,15 +80,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return true;
         }
 
-        public override bool CheckSemantics(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors)
+        public override void CheckSemantics(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors)
         {
-            Contracts.AssertValue(args);
-            Contracts.AssertAllValues(args);
-            Contracts.AssertValue(argTypes);
-            Contracts.Assert(args.Length == 2);
-            Contracts.Assert(argTypes.Length == 2);
-            Contracts.AssertValue(errors);
-
             // Check if table arg referrs to a connected data source.
             var tableArg = args[1];
             if (!binding.TryGetFirstNameInfo(tableArg.Id, out var tableInfo) ||
@@ -96,10 +89,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 !(tableDsInfo is IExternalTabularDataSource))
             {
                 errors.EnsureError(tableArg, TexlStrings.ErrAsTypeAndIsTypeExpectConnectedDataSource);
-                return false;
             }
-
-            return true;
         }
 
         public override bool IsRowScopedServerDelegatable(CallNode callNode, TexlBinding binding, OperationCapabilityMetadata metadata)

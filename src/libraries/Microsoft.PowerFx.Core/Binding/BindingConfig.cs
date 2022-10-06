@@ -15,19 +15,15 @@ namespace Microsoft.PowerFx.Core.Binding
     {
         public static readonly BindingConfig Default = new BindingConfig(Features.None);
 
+        public Features Features { get; }
+
         public bool AllowsSideEffects { get; }
 
         public bool UseThisRecordForRuleScope { get; }
 
         public bool IsEnhancedDelegationEnabled { get; }
 
-        public Features Features { get; }
-
-        public BindingConfig(
-            Features features,
-            bool allowsSideEffects = false,
-            bool useThisRecordForRuleScope = false,
-            bool isEnhancedDelegationEnabled = false)
+        public BindingConfig(Features features, bool allowsSideEffects = false, bool useThisRecordForRuleScope = false, bool isEnhancedDelegationEnabled = false)
         {
             Features = features;
             AllowsSideEffects = allowsSideEffects;

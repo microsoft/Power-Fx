@@ -62,6 +62,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool CheckTypes(BindingConfig config, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
+            Contracts.AssertValue(config);
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
             Contracts.AssertValue(argTypes);

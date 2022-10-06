@@ -49,7 +49,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return base.GetSignatures(arity);
         }
 
-        public override bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public override bool CheckTypes(BindingConfig config, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertValue(argTypes);
@@ -57,7 +57,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
             nodeToCoercedTypeMap = null;
 
-            var fArgsValid = base.CheckTypes(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fArgsValid = CheckTypes(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
 
             // The first Texl function arg determines the cursor type, the scope type for the lambda params, and the return type.
             fArgsValid &= ScopeInfo.CheckInput(args[0], argTypes[0], errors, out var typeScope);
@@ -68,12 +68,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return fArgsValid;
         }
 
-        public override bool CheckSemantics(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors)
+        public override void CheckSemantics(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors)
         {
             var viewCount = 0;
-            var dataSourceVisitor = new ViewFilterDataSourceVisitor(binding);
 
-            var fArgsValid = base.CheckSemantics(binding, args, argTypes, errors);
+            var dataSourceVisitor = new ViewFilterDataSourceVisitor(binding);
 
             // Ensure that all the args starting at index 1 are booleans or view
             for (var i = 1; i < args.Length; i++)
@@ -84,7 +83,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     {
                         // Only one view expected
                         errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrOnlyOneViewExpected);
-                        fArgsValid = false;
                         continue;
                     }
 
@@ -96,7 +94,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     {
                         // Only one view expected
                         errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrOnlyOneViewExpected);
-                        fArgsValid = false;
                         continue;
                     }
 
@@ -107,13 +104,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         if (viewInfo.RelatedEntityName != dataSourceInfo.Name)
                         {
                             errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrViewFromCurrentTableExpected, dataSourceInfo.Name);
-                            fArgsValid = false;
                         }
                     }
                     else
                     {
                         errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrBooleanExpected);
-                        fArgsValid = false;
                     }
 
                     continue;
@@ -125,12 +120,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 else if (!argTypes[i].CoercesTo(DType.Boolean))
                 {
                     errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrBooleanExpected);
-                    fArgsValid = false;
                     continue;
                 }
             }
-
-            return fArgsValid;
         }
 
         // Verifies if given callnode can be server delegatable or not.

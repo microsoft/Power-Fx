@@ -82,12 +82,11 @@ namespace Microsoft.PowerFx.Intellisense
                         out var retDType,
                         out _);
 
-                result &=
-                    fnc.CheckSemantics(
-                        _checkResult._binding,
-                        args.ToArray(),
-                        types,
-                        _checkResult._binding.ErrorContainer);
+                fnc.CheckSemantics(
+                    _checkResult._binding,
+                    args.ToArray(),
+                    types,
+                    _checkResult._binding.ErrorContainer);
 
                 if (result)
                 {

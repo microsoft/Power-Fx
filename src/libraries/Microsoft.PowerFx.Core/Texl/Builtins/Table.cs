@@ -43,7 +43,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         }
 
         // Typecheck an invocation of Table.
-        public override bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public override bool CheckTypes(BindingConfig config, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
@@ -52,7 +52,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            var isValid = base.CheckTypes(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var isValid = CheckTypes(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
             Contracts.Assert(returnType.IsTable);
 
             // Ensure that all args (if any) are records with compatible schemas.
@@ -103,9 +103,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         }
 
         // Typecheck an invocation of Table.
-        public override bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public override bool CheckTypes(BindingConfig config, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
-            var isValid = base.CheckTypes(args, argTypes, errors, out _, out nodeToCoercedTypeMap);
+            var isValid = CheckTypes(args, argTypes, errors, out _, out nodeToCoercedTypeMap);
 
             var rowType = DType.EmptyRecord.Add(new TypedName(DType.UntypedObject, ColumnName_Value));
             returnType = rowType.ToTable();
