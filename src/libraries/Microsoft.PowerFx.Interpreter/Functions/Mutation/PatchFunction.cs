@@ -48,7 +48,7 @@ namespace Microsoft.PowerFx.Functions
             Contracts.Assert(args.Length == argTypes.Length);
             Contracts.AssertValue(errors);
 
-            var isValid = CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var isValid = CheckTypes(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
 
             return isValid;
         }
@@ -191,7 +191,7 @@ namespace Microsoft.PowerFx.Functions
             Contracts.Assert(args.Length == argTypes.Length);
             Contracts.AssertValue(errors);
 
-            var isValid = CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var isValid = CheckTypes(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
 
             DType dataSourceType = argTypes[0];
             DType retType = DType.EmptyRecord;

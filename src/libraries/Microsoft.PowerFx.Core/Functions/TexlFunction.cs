@@ -387,16 +387,16 @@ namespace Microsoft.PowerFx.Core.Functions
 
         public virtual bool CheckInvocation(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
-            return CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            return CheckTypes(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
         }
 
         // Type check an invocation of the function with the specified args (and their corresponding types).
         // Return true if everything aligns even with coercion, false otherwise.
         // By default, the out returnType will be the one advertised via the constructor. If this.ReturnType
         // is either Unknown or an aggregate type, this method needs to be specialized.
-        public virtual bool CheckInvocation(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public virtual bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
-            return CheckInvocationCore(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            return CheckTypesCore(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
         }
 
         public virtual bool CheckForDynamicReturnType(TexlBinding binding, TexlNode[] args)
@@ -421,7 +421,7 @@ namespace Microsoft.PowerFx.Core.Functions
             return SupportsParamCoercion && (argIndex <= MinArity || argIndex <= MaxArity);
         }
 
-        private bool CheckInvocationCore(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        private bool CheckTypesCore(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
