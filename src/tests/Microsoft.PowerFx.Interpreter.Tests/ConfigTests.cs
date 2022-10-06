@@ -321,7 +321,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Fact]
         public void RecalcEngine_Symbol_CultureInfo4()
         {
-            EqualException equalException = null;
+            Exception exception = null;
 
             var t = new Thread(() =>
             {
@@ -352,18 +352,18 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     result = engine.Eval(datetimeExpression);
                     Assert.Equal("01/20/2014 13:50", (result as StringValue).Value);
                 }
-                catch (EqualException ex)
+                catch (Exception ex)
                 {
-                    equalException = ex;
+                    exception = ex;
                 }                
             });
 
             t.Start();
             t.Join();
 
-            if (equalException != null)
+            if (exception != null)
             {
-                throw new EqualException(equalException.Expected, equalException.Actual);
+                throw exception;
             }
         }
 
