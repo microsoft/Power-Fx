@@ -394,11 +394,16 @@ namespace Microsoft.PowerFx.Core.Functions
         // Return true if everything aligns even with coercion, false otherwise.
         // By default, the out returnType will be the one advertised via the constructor. If this.ReturnType
         // is either Unknown or an aggregate type, this method needs to be specialized.
+        // Note: this function MUST be capable of producing a type and checking the arg types without access
+        // to an instance of TexlBinding
         public virtual bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             return CheckTypesCore(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
         }
 
+        // Called after type checking, and independent of type checking. This method is responsible for producing
+        //  non-type related errors. This function has access to the binding, which means that it has a great deal of
+        // power and insight into context information that is not available to regular type checking.
         public virtual void CheckSemantics(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors)
         {
         }
