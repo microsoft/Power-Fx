@@ -60,7 +60,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return index >= 1;
         }
 
-        public override bool CheckInvocation(BindingConfig config, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public override bool CheckTypes(BindingConfig config, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(config);
             Contracts.AssertValue(args);

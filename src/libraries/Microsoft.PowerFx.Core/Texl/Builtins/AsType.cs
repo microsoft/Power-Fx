@@ -43,7 +43,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             yield return new[] { TexlStrings.AsTypeArg1, TexlStrings.AsTypeArg2 };
         }
 
-        public override bool CheckInvocation(BindingConfig config, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public override bool CheckTypes(BindingConfig config, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
@@ -52,7 +52,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.Assert(argTypes.Length == 2);
             Contracts.AssertValue(errors);
 
-            if (!base.CheckInvocation(config, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap))
+            if (!base.CheckTypes(config, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap))
             {
                 return false;
             }

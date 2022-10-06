@@ -229,7 +229,7 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
         }
 #endif
 
-        public override bool CheckInvocation(BindingConfig config, TexlNode[] args, DType[] argTypes,
+        public override bool CheckTypes(BindingConfig config, TexlNode[] args, DType[] argTypes,
             IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
