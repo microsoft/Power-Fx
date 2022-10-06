@@ -52,7 +52,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            var isValidInvocation = CheckTypes(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var isValidInvocation = base.CheckTypes(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
             Contracts.Assert(returnType.IsTable);
 
             if (!argTypes[0].IsTable)
