@@ -64,7 +64,7 @@ namespace Microsoft.PowerFx
             result.ThrowOnErrors();
 
             (var irnode, var ruleScopeSymbol) = IRTranslator.Translate(result._binding);
-            return new ParsedExpression(irnode, ruleScopeSymbol, stackMarker);
+            return new ParsedExpression(irnode, ruleScopeSymbol, stackMarker, result.CultureInfo);
         }
     }
 
@@ -80,7 +80,7 @@ namespace Microsoft.PowerFx
             _irnode = irnode;
             _topScopeSymbol = topScope;
             _stackMarker = stackMarker;
-            _cultureInfo = cultureInfo ?? CultureInfo.CurrentCulture;
+            _cultureInfo = cultureInfo ?? throw new NullReferenceException("Culture info can't be null.");
         }
 
         public async Task<FormulaValue> EvalAsync(RecordValue parameters, CancellationToken cancellationToken)
