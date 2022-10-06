@@ -304,7 +304,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             tr_symbols.AddService(new CultureInfo("tr-TR"));
 
             var textExpression = "Upper(\"indigo\")";
-            var datetimeExpression = "Text(DateTimeValue(\"20/1/2014 1:50:24.765 PM\", \"tr-TR\"))";
+            var datetimeExpression = "Text(DateTimeValue(\"Perşembe 6 Ekim 2022 14:19:06\", \"tr-TR\"))";
 
             var check = engine.Check(textExpression).GetEvaluator();
 
@@ -313,13 +313,38 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             check = engine.Check(datetimeExpression).GetEvaluator();
 
-            Assert.Equal("01/20/2014 13:50", (check.Eval() as StringValue).Value);
-            Assert.Equal("20.01.2014 13:50", (check.Eval(runtimeConfig: tr_symbols) as StringValue).Value);
+            Assert.Equal("10/06/2022 14:19", (check.Eval() as StringValue).Value);
+            Assert.Equal("6.10.2022 14:19", (check.Eval(runtimeConfig: tr_symbols) as StringValue).Value);
+        }
+
+        // Verify if text is transformed using the correct culture info (PowerFxConfig and Symbols)
+        [Fact]
+        public void RecalcEngine_Symbol_CultureInfo4()
+        {
+            var config = new PowerFxConfig(CultureInfo.InvariantCulture);
+            var engine = new RecalcEngine(config);
+
+            var us_symbols = new SymbolValues();
+
+            us_symbols.AddService(new CultureInfo("en-US"));
+
+            var textExpression = "Upper(\"indigo\")";
+            var datetimeExpression = "Text(DateTimeValue(\"Perşembe 06 Ekim 2022 14:19:06\", \"tr-TR\"))";
+
+            var check = engine.Check(textExpression).GetEvaluator();
+
+            Assert.Equal("INDIGO", (check.Eval() as StringValue).Value);
+            Assert.Equal("INDIGO", (check.Eval(runtimeConfig: us_symbols) as StringValue).Value);
+
+            check = engine.Check(datetimeExpression).GetEvaluator();
+
+            Assert.Equal("10/06/2022 14:19", (check.Eval() as StringValue).Value);
+            Assert.Equal("10/6/2022 2:19 PM", (check.Eval(runtimeConfig: us_symbols) as StringValue).Value);
         }
 
         // Verify if text is transformed using the correct culture info (PowerFxConfig and global settings)
         [Fact]
-        public void RecalcEngine_Symbol_CultureInfo4()
+        public void RecalcEngine_Symbol_CultureInfo5()
         {
             Exception exception = null;
 
@@ -336,7 +361,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 var lowerExpression = "Lower(\"inDigo\")";
                 var properExpression = "Proper(\"inDigo\")";
 
-                var datetimeExpression = "Text(DateTimeValue(\"20/1/2014 1:50:24.765 PM\", \"tr-TR\"))";
+                var datetimeExpression = "Text(DateTimeValue(\"Perşembe 06 Ekim 2022 14:19:06\", \"tr-TR\"))";
 
                 try
                 {
@@ -350,7 +375,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     Assert.Equal("Indigo", (result as StringValue).Value);
 
                     result = engine.Eval(datetimeExpression);
-                    Assert.Equal("01/20/2014 13:50", (result as StringValue).Value);
+                    Assert.Equal("10/06/2022 14:19", (result as StringValue).Value);
                 }
                 catch (Exception ex)
                 {
