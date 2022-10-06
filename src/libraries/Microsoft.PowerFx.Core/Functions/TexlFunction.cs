@@ -31,6 +31,9 @@ namespace Microsoft.PowerFx.Core.Functions
     [ThreadSafeImmutable]
     internal abstract class TexlFunction : IFunction
     {
+        // Column name when Features.ConsistentOneColumnTableResult is enabled.
+        public const string ColumnName_ValueStr = "Value";
+
         // A default "no-op" error container that does not post document errors.
         public static IErrorContainer DefaultErrorContainer => new DefaultNoOpErrorContainer();
 
@@ -1282,7 +1285,7 @@ namespace Microsoft.PowerFx.Core.Functions
             return false;
         }
 
-        protected bool CheckAllParamsAreTypeOrSingleColumnTable(DType desiredType, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        protected bool CheckAllParamsAreTypeOrSingleColumnTable(TexlBinding binding, DType desiredType, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
@@ -1305,11 +1308,17 @@ namespace Microsoft.PowerFx.Core.Functions
                 {
                     if (fValid && nodeToCoercedTypeMap.Any())
                     {
-                        returnType = DType.CreateTable(new TypedName(desiredType, argTypes[i].GetNames(DPath.Root).Single().Name));
+                        var resultColumnName = binding.Features.HasFlag(Features.ConsistentOneColumnTableResult)
+                            ? new DName(ColumnName_ValueStr)
+                            : argTypes[i].GetNames(DPath.Root).Single().Name;
+
+                        returnType = DType.CreateTable(new TypedName(desiredType, resultColumnName));
                     }
                     else
                     {
-                        returnType = argTypes[i];
+                        returnType = binding.Features.HasFlag(Features.ConsistentOneColumnTableResult)
+                            ? DType.CreateTable(new TypedName(desiredType, new DName(ColumnName_ValueStr)))
+                            : argTypes[i];
                     }
                 }
             }
