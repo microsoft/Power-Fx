@@ -81,6 +81,12 @@ namespace Microsoft.PowerFx.Intellisense
                         out var retDType,
                         out _);
 
+                fnc.CheckSemantics(
+                    _checkResult._binding,
+                    args.ToArray(),
+                    types,
+                    _checkResult._binding.ErrorContainer);
+
                 if (result)
                 {
                     retType = FormulaType.Build(retDType);

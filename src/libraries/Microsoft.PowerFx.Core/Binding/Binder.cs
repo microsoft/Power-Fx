@@ -4398,6 +4398,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 // Typecheck the invocation and infer the return type.
                 fArgsValid &= maybeFunc.CheckTypes(_txb.BindingConfig, args, argTypes, _txb.ErrorContainer, out var returnType, out var nodeToCoercedTypeMap);
+                maybeFunc.CheckSemantics(_txb, args, argTypes, _txb.ErrorContainer);
 
                 // This is done because later on, if a CallNode has a return type of Error, you can assert HasErrors on it.
                 // This was not done for UnaryOpNodes, BinaryOpNodes, CompareNodes.
@@ -4721,6 +4722,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 // Typecheck the invocation and infer the return type.
                 fArgsValid = func.CheckTypes(_txb.BindingConfig, args, argTypes, _txb.ErrorContainer, out returnType, out _);
+                func.CheckSemantics(_txb, args, argTypes, _txb.ErrorContainer);
                 if (!fArgsValid)
                 {
                     _txb.ErrorContainer.Error(DocumentErrorSeverity.Severe, node, TexlStrings.ErrInvalidArgs_Func, func.Name);
@@ -4887,6 +4889,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 // Typecheck the invocation and infer the return type.
                 fArgsValid = func.CheckTypes(_txb.BindingConfig, args, argTypes, _txb.ErrorContainer, out returnType, out var nodeToCoercedTypeMap);
+                func.CheckSemantics(_txb, args, argTypes, _txb.ErrorContainer);
 
                 if (!fArgsValid && !func.HasPreciseErrors)
                 {
@@ -4994,6 +4997,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 // The final CheckInvocation call will post all the necessary document errors.
                 someFunc.CheckTypes(_txb.BindingConfig, args, argTypes, _txb.ErrorContainer, out returnType, out _);
+                someFunc.CheckSemantics(_txb, args, argTypes, _txb.ErrorContainer);
 
                 _txb.SetInfo(node, new CallInfo(someFunc, node));
                 _txb.SetType(node, returnType);

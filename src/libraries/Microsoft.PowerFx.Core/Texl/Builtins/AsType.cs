@@ -64,18 +64,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 return false;
             }
 
-            /*
-            // Check if table arg referrs to a connected data source.
-            var tableArg = args[1];
-            if (!binding.TryGetFirstNameInfo(tableArg.Id, out var tableInfo) ||
-                tableInfo.Data is not IExternalDataSource tableDsInfo ||
-                !(tableDsInfo is IExternalTabularDataSource))
-            {
-                errors.EnsureError(tableArg, TexlStrings.ErrAsTypeAndIsTypeExpectConnectedDataSource);
-                return false;
-            }
-            */
-
             var tableDsInfo = argTypes[0].AssociatedDataSources.Single();
 
             if (config.IsEnhancedDelegationEnabled && (tableDsInfo is IExternalCdsDataSource) && argTypes[0].HasPolymorphicInfo)
@@ -90,6 +78,18 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             returnType = argTypes[1].ToRecord();
             return true;
+        }
+
+        public override void CheckSemantics(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors)
+        {
+            // Check if table arg referrs to a connected data source.
+            var tableArg = args[1];
+            if (!binding.TryGetFirstNameInfo(tableArg.Id, out var tableInfo) ||
+                tableInfo.Data is not IExternalDataSource tableDsInfo ||
+                !(tableDsInfo is IExternalTabularDataSource))
+            {
+                errors.EnsureError(tableArg, TexlStrings.ErrAsTypeAndIsTypeExpectConnectedDataSource);
+            }
         }
 
         public override bool IsRowScopedServerDelegatable(CallNode callNode, TexlBinding binding, OperationCapabilityMetadata metadata)

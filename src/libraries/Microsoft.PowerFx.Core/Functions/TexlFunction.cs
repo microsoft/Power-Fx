@@ -399,6 +399,10 @@ namespace Microsoft.PowerFx.Core.Functions
             return CheckTypesCore(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
         }
 
+        public virtual void CheckSemantics(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors)
+        {
+        }
+
         public virtual bool CheckForDynamicReturnType(TexlBinding binding, TexlNode[] args)
         {
             return false;
