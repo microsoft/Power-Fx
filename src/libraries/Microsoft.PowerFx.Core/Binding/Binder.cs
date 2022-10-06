@@ -4395,7 +4395,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 PostVisit(node.Args);
 
                 // Type check the invocation and infer the return type.
-                fArgsValid &= maybeFunc.CheckTypes(args, argTypes, _txb.ErrorContainer, out var returnType, out var nodeToCoercedTypeMap);
+                fArgsValid &= maybeFunc.CheckTypes(_txb.BindingConfig, args, argTypes, _txb.ErrorContainer, out var returnType, out var nodeToCoercedTypeMap);
 
                 // Check any post-type checking semantics
                 fArgsValid &= maybeFunc.CheckSemantics(_txb, args, argTypes, _txb.ErrorContainer);
@@ -4603,7 +4603,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 // Type check the node's children against the built-in Concatenate function
                 // Note: Concatenate does not have custom semantic analysis
-                var fArgsValid = BuiltinFunctionsCore.Concatenate.CheckTypes(args, argTypes, _txb.ErrorContainer, out var returnType, out var nodeToCoercedTypeMap);
+                var fArgsValid = BuiltinFunctionsCore.Concatenate.CheckTypes(_txb.BindingConfig, args, argTypes, _txb.ErrorContainer, out var returnType, out var nodeToCoercedTypeMap);
 
                 if (!fArgsValid)
                 {
@@ -4722,7 +4722,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 bool fArgsValid;
 
                 // Type check the invocation and infer the return type.
-                fArgsValid = func.CheckTypes(args, argTypes, _txb.ErrorContainer, out returnType, out _);
+                fArgsValid = func.CheckTypes(_txb.BindingConfig, args, argTypes, _txb.ErrorContainer, out returnType, out _);
 
                 // Semantic analysis
                 fArgsValid &= func.CheckSemantics(_txb, args, argTypes, _txb.ErrorContainer);
@@ -4891,7 +4891,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 bool fArgsValid;
 
                 // Type check the invocation and infer the return type.
-                fArgsValid = func.CheckTypes(args, argTypes, _txb.ErrorContainer, out returnType, out var nodeToCoercedTypeMap);
+                fArgsValid = func.CheckTypes(_txb.BindingConfig, args, argTypes, _txb.ErrorContainer, out returnType, out var nodeToCoercedTypeMap);
 
                 // Semantic analysis
                 fArgsValid &= func.CheckSemantics(_txb, args, argTypes, _txb.ErrorContainer);
@@ -4977,7 +4977,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 }
 
                 // Perform type checking
-                someFunc.CheckTypes(args, argTypes, _txb.ErrorContainer, out returnType, out _);
+                someFunc.CheckTypes(_txb.BindingConfig, args, argTypes, _txb.ErrorContainer, out returnType, out _);
 
                 // The final CheckSemantics call will post all the necessary document errors.
                 someFunc.CheckSemantics(_txb, args, argTypes, _txb.ErrorContainer);
