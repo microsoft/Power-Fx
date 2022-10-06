@@ -71,7 +71,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 // Ensure we have a one-column table of colors.
                 fValid &= CheckColorColumnType(type0, args[0], errors, ref nodeToCoercedTypeMap);
 
-                returnType = binding.Features.HasFlag(Features.ConsistentOneColumnTableResult)
+                returnType = config.Features.HasFlag(Features.ConsistentOneColumnTableResult)
                     ? DType.CreateTable(new TypedName(DType.Color, new DName(ColumnName_ValueStr)))
                     : type0;
 
