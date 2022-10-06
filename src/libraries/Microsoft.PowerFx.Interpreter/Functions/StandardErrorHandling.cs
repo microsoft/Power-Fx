@@ -324,42 +324,6 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
-        private static ExpandToSizeResult ExpandToSize(FormulaValue arg, int size)
-        {
-            if (arg is TableValue tv)
-            {
-                var tvType = (TableType)tv.Type;
-                var name = tvType.SingleColumnFieldName;
-
-                var count = tv.Rows.Count();
-                if (count < size)
-                {
-                    var inputRecordType = tvType.ToRecord();
-                    var inputRecordNamedValue = new NamedValue(name, new BlankValue(IRContext.NotInSource(FormulaType.Blank)));
-                    var inputRecord = new InMemoryRecordValue(IRContext.NotInSource(inputRecordType), new List<NamedValue>() { inputRecordNamedValue });
-                    var inputDValue = DValue<RecordValue>.Of(inputRecord);
-
-                    var repeated = Enumerable.Repeat(inputDValue, size - count);
-                    var rows = tv.Rows.Concat(repeated);
-                    return new ExpandToSizeResult(name, rows);
-                }
-                else
-                {
-                    return new ExpandToSizeResult(name, tv.Rows);
-                }
-            }
-            else
-            {
-                var name = BuiltinFunction.ColumnName_ValueStr;
-                var inputRecordType = RecordType.Empty().Add(name, arg.Type);
-                var inputRecordNamedValue = new NamedValue(name, arg);
-                var inputRecord = new InMemoryRecordValue(IRContext.NotInSource(inputRecordType), new List<NamedValue>() { inputRecordNamedValue });
-                var inputDValue = DValue<RecordValue>.Of(inputRecord);
-                var rows = Enumerable.Repeat(inputDValue, size);
-                return new ExpandToSizeResult(name, rows);
-            }
-        }
-
         private static ExpandToSizeResult ShrinkToSize(FormulaValue arg, int size)
         {
             if (arg is TableValue tv)
@@ -473,7 +437,7 @@ namespace Microsoft.PowerFx.Functions
 
                 // Add error nodes for different table length
                 // e.g. Concatenate(["a"],["1","2"] => ["a1", <error>]
-                var namedErrorValue = new NamedValue(tableType.SingleColumnFieldName, FormulaValue.NewError(new ExpressionError()
+                var namedErrorValue = new NamedValue(columnNameStr, FormulaValue.NewError(new ExpressionError()
                 {
                     Kind = ErrorKind.NotSupported,
                     Severity = ErrorSeverity.Critical,
