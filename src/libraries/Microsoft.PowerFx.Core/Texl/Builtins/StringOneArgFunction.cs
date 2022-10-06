@@ -106,7 +106,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return GetUniqueTexlRuntimeName(suffix: "_T");
         }
 
-        public override bool CheckInvocation(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public override bool CheckInvocation(BindingConfig config, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
@@ -128,7 +128,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
             else
             {
-                returnType = binding.Features.HasFlag(Features.ConsistentOneColumnTableResult)
+                returnType = config.Features.HasFlag(Features.ConsistentOneColumnTableResult)
                 ? DType.CreateTable(new TypedName(DType.String, new DName(ColumnName_ValueStr)))
                 : argTypes[0];
             }

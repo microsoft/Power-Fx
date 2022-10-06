@@ -83,9 +83,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         // Type check an invocation of the function with the specified args (and their corresponding types).
         // Return true if everything aligns, false otherwise.
         // This override does not post any document errors (i.e. it performs the typechecks quietly).
-        public override bool CheckInvocation(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public override bool CheckInvocation(BindingConfig config, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
-            Contracts.AssertValue(binding);
+            Contracts.AssertValue(config);
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
             Contracts.AssertValue(argTypes);
@@ -117,7 +117,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             nodeToCoercedTypeMap = null;
 
             // Are we on a behavior property?
-            var isBehavior = binding.BindingConfig.AllowsSideEffects;
+            var isBehavior = config.AllowsSideEffects;
 
             // Compute the result type by joining the types of all non-predicate args.
             Contracts.Assert(type == DType.Unknown);

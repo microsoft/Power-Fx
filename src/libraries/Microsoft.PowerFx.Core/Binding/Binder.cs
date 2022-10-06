@@ -4397,7 +4397,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 // Typecheck the invocation.
 
                 // Typecheck the invocation and infer the return type.
-                fArgsValid &= maybeFunc.CheckInvocation(_txb, args, argTypes, _txb.ErrorContainer, out var returnType, out var nodeToCoercedTypeMap);
+                fArgsValid &= maybeFunc.CheckInvocation(_txb.BindingConfig, args, argTypes, _txb.ErrorContainer, out var returnType, out var nodeToCoercedTypeMap);
 
                 // This is done because later on, if a CallNode has a return type of Error, you can assert HasErrors on it.
                 // This was not done for UnaryOpNodes, BinaryOpNodes, CompareNodes.
@@ -4601,7 +4601,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 }
 
                 // Typecheck the node's children against the built-in Concatenate function
-                var fArgsValid = BuiltinFunctionsCore.Concatenate.CheckInvocation(_txb, args, argTypes, _txb.ErrorContainer, out var returnType, out var nodeToCoercedTypeMap);
+                var fArgsValid = BuiltinFunctionsCore.Concatenate.CheckInvocation(_txb.BindingConfig, args, argTypes, _txb.ErrorContainer, out var returnType, out var nodeToCoercedTypeMap);
 
                 if (!fArgsValid)
                 {
@@ -4720,7 +4720,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 bool fArgsValid;
 
                 // Typecheck the invocation and infer the return type.
-                fArgsValid = func.CheckInvocation(_txb, args, argTypes, _txb.ErrorContainer, out returnType, out _);
+                fArgsValid = func.CheckInvocation(_txb.BindingConfig, args, argTypes, _txb.ErrorContainer, out returnType, out _);
                 if (!fArgsValid)
                 {
                     _txb.ErrorContainer.Error(DocumentErrorSeverity.Severe, node, TexlStrings.ErrInvalidArgs_Func, func.Name);
@@ -4886,7 +4886,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 bool fArgsValid;
 
                 // Typecheck the invocation and infer the return type.
-                fArgsValid = func.CheckInvocation(_txb, args, argTypes, _txb.ErrorContainer, out returnType, out var nodeToCoercedTypeMap);
+                fArgsValid = func.CheckInvocation(_txb.BindingConfig, args, argTypes, _txb.ErrorContainer, out returnType, out var nodeToCoercedTypeMap);
 
                 if (!fArgsValid && !func.HasPreciseErrors)
                 {
@@ -4993,7 +4993,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 }
 
                 // The final CheckInvocation call will post all the necessary document errors.
-                someFunc.CheckInvocation(_txb, args, argTypes, _txb.ErrorContainer, out returnType, out _);
+                someFunc.CheckInvocation(_txb.BindingConfig, args, argTypes, _txb.ErrorContainer, out returnType, out _);
 
                 _txb.SetInfo(node, new CallInfo(someFunc, node));
                 _txb.SetType(node, returnType);

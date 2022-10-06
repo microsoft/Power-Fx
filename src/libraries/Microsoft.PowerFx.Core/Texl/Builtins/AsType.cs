@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
@@ -42,7 +43,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             yield return new[] { TexlStrings.AsTypeArg1, TexlStrings.AsTypeArg2 };
         }
 
-        public override bool CheckInvocation(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public override bool CheckInvocation(BindingConfig config, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
@@ -51,7 +52,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.Assert(argTypes.Length == 2);
             Contracts.AssertValue(errors);
 
-            if (!base.CheckInvocation(binding, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap))
+            if (!base.CheckInvocation(config, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap))
             {
                 return false;
             }
@@ -63,6 +64,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 return false;
             }
 
+            /*
             // Check if table arg referrs to a connected data source.
             var tableArg = args[1];
             if (!binding.TryGetFirstNameInfo(tableArg.Id, out var tableInfo) ||
@@ -72,8 +74,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 errors.EnsureError(tableArg, TexlStrings.ErrAsTypeAndIsTypeExpectConnectedDataSource);
                 return false;
             }
+            */
 
-            if (binding.Document.Properties.EnabledFeatures.IsEnhancedDelegationEnabled && (tableDsInfo is IExternalCdsDataSource) && argTypes[0].HasPolymorphicInfo)
+            var tableDsInfo = argTypes[0].AssociatedDataSources.Single();
+
+            if (config.IsEnhancedDelegationEnabled && (tableDsInfo is IExternalCdsDataSource) && argTypes[0].HasPolymorphicInfo)
             {
                 var expandInfo = argTypes[0].PolymorphicInfo.TryGetExpandInfo(tableDsInfo.TableMetadata.Name);
                 if (expandInfo != null)

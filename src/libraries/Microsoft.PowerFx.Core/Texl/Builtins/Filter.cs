@@ -49,17 +49,19 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return base.GetSignatures(arity);
         }
 
-        public override bool CheckInvocation(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public override bool CheckInvocation(BindingConfig config, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertValue(argTypes);
             Contracts.Assert(args.Length == argTypes.Length);
             Contracts.AssertValue(errors);
             nodeToCoercedTypeMap = null;
-            var viewCount = 0;
+
+            // var viewCount = 0;
 
             var fArgsValid = CheckTypes(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
 
+            /*
             var dataSourceVisitor = new ViewFilterDataSourceVisitor(binding);
 
             // Ensure that all the args starting at index 1 are booleans or view
@@ -116,6 +118,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     continue;
                 }
             }
+            */
 
             // The first Texl function arg determines the cursor type, the scope type for the lambda params, and the return type.
             fArgsValid &= ScopeInfo.CheckInput(args[0], argTypes[0], errors, out var typeScope);

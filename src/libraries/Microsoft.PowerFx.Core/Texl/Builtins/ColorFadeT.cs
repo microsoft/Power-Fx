@@ -48,7 +48,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return GetUniqueTexlRuntimeName(suffix: "_T");
         }
 
-        public override bool CheckInvocation(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public override bool CheckInvocation(BindingConfig config, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
@@ -71,7 +71,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 // Ensure we have a one-column table of colors.
                 fValid &= CheckColorColumnType(type0, args[0], errors, ref nodeToCoercedTypeMap);
 
-                returnType = binding.Features.HasFlag(Features.ConsistentOneColumnTableResult)
+                returnType = config.Features.HasFlag(Features.ConsistentOneColumnTableResult)
                     ? DType.CreateTable(new TypedName(DType.Color, new DName(ColumnName_ValueStr)))
                     : type0;
 
@@ -90,7 +90,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 fValid &= CheckNumericColumnType(type1, args[1], errors, ref nodeToCoercedTypeMap);
 
                 // Since the 1st arg is not a table, make a new table return type *[Result:c]
-                returnType = DType.CreateTable(new TypedName(DType.Color, GetOneColumnTableResultName(binding)));
+                returnType = DType.CreateTable(new TypedName(DType.Color, GetOneColumnTableResultName(config.Features)));
 
                 // Check arg0 below.
                 otherArg = args[0];

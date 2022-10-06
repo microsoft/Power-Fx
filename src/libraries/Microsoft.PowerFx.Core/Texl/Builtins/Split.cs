@@ -24,7 +24,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             yield return new[] { TexlStrings.SplitArg1, TexlStrings.SplitArg2 };
         }
 
-        public override bool CheckInvocation(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public override bool CheckInvocation(BindingConfig config, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
@@ -36,7 +36,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var fValid = CheckTypes(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
             Contracts.Assert(returnType.IsTable);
 
-            returnType = DType.CreateTable(new TypedName(DType.String, GetOneColumnTableResultName(binding)));
+            returnType = DType.CreateTable(new TypedName(DType.String, GetOneColumnTableResultName(config.Features)));
             return fValid;
         }
     }

@@ -74,7 +74,7 @@ namespace Microsoft.PowerFx.Intellisense
             {
                 var result =
                     fnc.CheckInvocation(
-                        _checkResult._binding,
+                        _checkResult._binding.BindingConfig,
                         args.ToArray(),
                         types,
                         _checkResult._binding.ErrorContainer,
