@@ -1,0 +1,59 @@
+>> Distinct(Blank(), true)
+Blank()
+
+>> Distinct([], true)
+Table()
+
+>> Distinct([{A: 1}, {A: 2}, {A: 3}, {A: 4}], true)
+Table({Result:true})
+
+>> Distinct([{A: 1}, {A: 2}, {A: 3}, {A: 4}], false)
+Table({Result:false})
+
+>> Distinct([{A: 1}, {A: 2}, {A: 3}, {A: 4}], Value.A)
+Table({Result:1},{Result:2},{Result:3},{Result:4})
+
+>> Distinct([{A: 1}, {A: 2}, {A: 3}, {A: 4}], Value.A * 2)
+Table({Result:2},{Result:4},{Result:6},{Result:8})
+
+>> Distinct([{A: 1}, {A: 2}, {A: 3}, {A: 4}], Int(Value.A / 2))
+Table({Result:0},{Result:1},{Result:2})
+
+>> Sort(Distinct([{FirstName: "Harry"}, {FirstName: "Sally"}, {FirstName: "Harry"}, {FirstName: "Alice"}, {FirstName: "Sally"}], Value.FirstName), Result)
+Table({Result:"Alice"},{Result:"Harry"},{Result:"Sally"})
+
+>> Sort(Distinct([{FirstName: "Harry"}, {FirstName: Blank()}, {FirstName: "Sally"}, {FirstName: "Harry"}, {FirstName: Blank()}, {FirstName: "Alice"}, {FirstName: "Sally"}], Value.FirstName), Result)
+Table({Result:"Alice"},{Result:"Harry"},{Result:"Sally"},{Result:Blank()})
+
+>> Sort(Distinct([{Reminder: Date(2020, 01, 05)}, {Reminder: Date(2020, 01, 01)}, {Reminder: Date(2020, 01, 05)}, {Reminder: Date(1995, 01, 01)}, {Reminder: Date(1995, 01, 01)}], Value.Reminder), Result)
+Table({Result:Date(1995,1,1)},{Result:Date(2020,1,1)},{Result:Date(2020,1,5)})
+
+>> Sort(Distinct([{Reminder: Date(2020, 01, 05)}, {Reminder: Blank()}, {Reminder: Date(2020, 01, 01)}, {Reminder: Blank()}, {Reminder: Date(2020, 01, 05)}, {Reminder: Date(1995, 01, 01)}, {Reminder: Date(1995, 01, 01)}], Value.Reminder), Result)
+Table({Result:Date(1995,1,1)},{Result:Date(2020,1,1)},{Result:Date(2020,1,5)},{Result:Blank()})
+
+>> Sort(Distinct([{Reminder: DateTimeValue("May 16, 2019 8:00:00 AM")}, {Reminder: DateTimeValue("May 16, 2019 8:00:00 PM")}, {Reminder: DateTimeValue("May 16, 2019 8:00:00 AM")}, {Reminder: DateTimeValue("May 16, 2019 8:00:01 PM")}], Value.Reminder), Result)
+Table({Result:DateTime(2019,5,16,8,0,0,0)},{Result:DateTime(2019,5,16,20,0,0,0)},{Result:DateTime(2019,5,16,20,0,1,0)})
+
+>> Sort(Distinct([{Truth: true}, {Truth: false}, {Truth: true}, {Truth: true}, {Truth: false}], Value.Truth), Result)
+Table({Result:false},{Result:true})
+
+>> Sort(Distinct([{Truth: true}, {Truth: false}, {Truth: Blank()}, {Truth: true}, {Truth: false}, {Truth: Blank()}], Value.Truth), Result)
+Table({Result:false},{Result:true},{Result:Blank()})
+
+>> Distinct(Error("error"), true)
+Microsoft.PowerFx.Types.ErrorValue
+
+>> Distinct([{A: 1}, {A: 2}, {A: 3}, Error("error")], Value.A)
+Microsoft.PowerFx.Types.ErrorValue
+
+>> Distinct([{A: 1}, {A: 2}, {A: 3}, {A: Error("error")}], Value.A)
+Microsoft.PowerFx.Types.ErrorValue
+
+>> Distinct([{A: 1, B: 1}, {A: 2, B: 2}, {A: 3, B: 3}, {A: Error("error"), B: 4}], Value.B)
+Table({Result:1},{Result:2},{Result:3},{Result:4})
+
+>> Distinct([{A: 1}, {A: 2}, {A: 3}, Error("error")], IfError(Value.A, 4))
+Table({Result:1},{Result:2},{Result:3},{Result:4})
+
+>> Distinct([{A: 1}, {A: 2}, {A: 3}, {A: 4}], If(Value.A = 4, Error("error"), Value.A))
+Microsoft.PowerFx.Types.ErrorValue

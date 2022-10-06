@@ -408,6 +408,76 @@ namespace Microsoft.PowerFx.Functions
             return (row, sortValue);
         }
 
+        private static async Task<(DValue<RecordValue> row, FormulaValue sortValue)> ApplyDistinctLambda(EvalVisitor runner, EvalVisitorContext context, DValue<RecordValue> row, LambdaFormulaValue lambda)
+        {
+            if (!row.IsValue)
+            {
+                return (row, row.ToFormulaValue());
+            }
+
+            var childContext = context.SymbolContext.WithScopeValues(row.Value);
+            var distinctValue = await lambda.EvalInRowScopeAsync(context.NewScope(childContext));
+
+            return (row, distinctValue);
+        }
+
+        public static async ValueTask<FormulaValue> DistinctTable(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        {
+            var arg0 = (TableValue)args[0];
+            var arg1 = (LambdaFormulaValue)args[1];
+
+            var pairs = (await Task.WhenAll(arg0.Rows.Select(row => ApplyDistinctLambda(runner, context, row, arg1)))).ToList();
+
+            var errors = new List<ErrorValue>();
+            bool allNumbers = true, allStrings = true, allBooleans = true, allDatetimes = true, allDates = true;
+
+            foreach (var (row, sortValue) in pairs)
+            {
+                allNumbers &= IsValueTypeErrorOrBlank<NumberValue>(sortValue);
+                allStrings &= IsValueTypeErrorOrBlank<StringValue>(sortValue);
+                allBooleans &= IsValueTypeErrorOrBlank<BooleanValue>(sortValue);
+                allDatetimes &= IsValueTypeErrorOrBlank<DateTimeValue>(sortValue);
+                allDates &= IsValueTypeErrorOrBlank<DateValue>(sortValue);
+
+                if (sortValue is ErrorValue errorValue)
+                {
+                    errors.Add(errorValue);
+                }
+            }
+
+            if (!(allNumbers || allStrings || allBooleans || allDatetimes || allDates))
+            {
+                errors.Add(CommonErrors.RuntimeTypeMismatch(irContext));
+                return ErrorValue.Combine(irContext, errors);
+            }
+
+            if (errors.Count != 0)
+            {
+                return ErrorValue.Combine(irContext, errors);
+            }
+
+            if (allNumbers)
+            {
+                return DistinctValueType<NumberValue, double>(pairs, irContext);
+            }
+            else if (allStrings)
+            {
+                return DistinctValueType<StringValue, string>(pairs, irContext);
+            }
+            else if (allBooleans)
+            {
+                return DistinctValueType<BooleanValue, bool>(pairs, irContext);
+            }
+            else if (allDatetimes)
+            {
+                return DistinctValueType<DateTimeValue, DateTime>(pairs, irContext);
+            }
+            else
+            {
+                return DistinctValueType<DateValue, DateTime>(pairs, irContext);
+            }
+        }
+
         public static async ValueTask<FormulaValue> SortTable(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             var arg0 = (TableValue)args[0];
@@ -491,6 +561,44 @@ namespace Microsoft.PowerFx.Functions
             where T : FormulaValue
         {
             return val is T || val is BlankValue || val is ErrorValue;
+        }
+
+        private static FormulaValue DistinctValueType<TPFxPrimitive, TDotNetPrimitive>(List<(DValue<RecordValue> row, FormulaValue sortValue)> pairs, IRContext irContext)
+            where TPFxPrimitive : PrimitiveValue<TDotNetPrimitive>
+            where TDotNetPrimitive : IComparable<TDotNetPrimitive>
+        {
+            var values = new Dictionary<TDotNetPrimitive, DValue<RecordValue>>();
+            var name = ((TableType)irContext.ResultType).SingleColumnFieldName;
+            var type = ((TableType)irContext.ResultType).SingleColumnFieldType;
+
+            // Have to handle null
+            var addBlankValue = false;
+
+            foreach (var (row, sortValue) in pairs)
+            {
+                if (sortValue?.ToObject() == null)
+                {
+                    addBlankValue = true;
+                    continue;
+                }
+
+                var key = (TDotNetPrimitive)sortValue?.ToObject();
+  
+                if (!values.ContainsKey(key))
+                {
+                    var insert = FormulaValue.NewRecordFromFields(new NamedValue(name, sortValue));
+                    values.Add(key, DValue<RecordValue>.Of(insert));
+                }
+            }
+
+            var append = Enumerable.Empty<DValue<RecordValue>>();
+            if (addBlankValue)
+            {
+                var emptyRecord = DValue<RecordValue>.Of(FormulaValue.NewRecordFromFields(new NamedValue(name, FormulaValue.NewBlank(type))));
+                append = new List<DValue<RecordValue>> { emptyRecord };
+            }
+
+            return new InMemoryTableValue(irContext, values.Values.Concat(append));
         }
 
         private static FormulaValue SortValueType<TPFxPrimitive, TDotNetPrimitive>(List<(DValue<RecordValue> row, FormulaValue sortValue)> pairs, IRContext irContext, int compareToResultModifier)

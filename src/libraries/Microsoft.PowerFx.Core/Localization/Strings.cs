@@ -165,6 +165,10 @@ namespace Microsoft.PowerFx.Core.Localization
         public static StringGetter SortArg2 = (b) => StringResources.Get("SortArg2", b);
         public static StringGetter SortArg3 = (b) => StringResources.Get("SortArg3", b);
 
+        public static StringGetter AboutDistinct = (b) => StringResources.Get("AboutDistinct", b);
+        public static StringGetter DistinctArg1 = (b) => StringResources.Get("DistinctArg1", b);
+        public static StringGetter DistinctArg2 = (b) => StringResources.Get("DistinctArg2", b);
+
         public static StringGetter AboutSortByColumns = (b) => StringResources.Get("AboutSortByColumns", b);
         public static StringGetter SortByColumnsArg1 = (b) => StringResources.Get("SortByColumnsArg1", b);
         public static StringGetter SortByColumnsArg2 = (b) => StringResources.Get("SortByColumnsArg2", b);

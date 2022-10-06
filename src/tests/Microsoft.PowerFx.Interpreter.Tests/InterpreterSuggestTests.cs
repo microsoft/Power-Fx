@@ -93,7 +93,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
         // Test with display names. 
         [Theory]
-        [InlineData("Dis|", "DisplayOpt", "DisplayRowScope")] // Match to row scope       
+        [InlineData("Dis|", "DisplayOpt", "DisplayRowScope", "Distinct")] // Match to row scope       
         public void TestSuggestOptionSetsDisplayName(string expression, params string[] expectedSuggestions)
         {
             var config = PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder(), new TexlFunction[0]);

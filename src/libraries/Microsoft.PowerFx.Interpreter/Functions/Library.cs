@@ -508,6 +508,19 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: Dec2Hex)
             },
             {
+                 BuiltinFunctionsCore.Distinct,
+                StandardErrorHandlingAsync<FormulaValue>(
+                    BuiltinFunctionsCore.Distinct.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactSequence(
+                        ExactValueTypeOrBlank<TableValue>,
+                        ExactValueTypeOrBlank<LambdaFormulaValue>),
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: DistinctTable)
+            },
+            {
                 BuiltinFunctionsCore.DropColumns,
                 StandardErrorHandlingAsync<FormulaValue>(
                     BuiltinFunctionsCore.DropColumns.Name,
