@@ -73,7 +73,11 @@
 
 // Multiple errors
 >> Count(Table({a:1/0},{a:Sqrt(-1)}))
-#Error(Kind=Div0,Numeric)
+#Error(Kind=Div0)
+
+// Multiple errors
+>> Count(Table({a:Sqrt(-1)},{a:1/0}))
+#Error(Kind=Numeric)
 
 // ******** COMPILE ERRORS - NON-NUMERIC TABLES, NOT SINGLE-COLUMN ********
 

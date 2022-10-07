@@ -79,6 +79,12 @@
 >> Concat(ForAll(FirstN([60, 61, 62, 63, 64], Blank()), Char(Value)), Value)
 ""
 
+>> Concat(Filter([1,2,3], Value > 10), Text(Value))
+""
+
+>> Concat(Filter([1,2,3], Value > 10), Text(Value), ",")
+""
+
 // Concat with blank table
 >> Concat(ForAll(If(1<0,[60, 61, 62]), Char(Value)), Value)
 Blank()
