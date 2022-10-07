@@ -16,7 +16,7 @@
 "Error(Kind=25), Error(Kind=25), Error(Kind=25)"
 
 >> Concat(Concatenate(["hello", "hi"], " ", ["John", "Jane", "Jim", "Joan"]), IfError(Value, $"Error(Kind={FirstError.Kind})"), ", ")
-"hello John, hi Jane, Error(Kind=20), Error(Kind=20)"
+"hello John, hi Jane, Error(Kind=27), Error(Kind=27)"
 
 >> Find(["a", "b"], If(1/0<2,"abcdefg"))
 [Microsoft.PowerFx.Types.ErrorValue,Microsoft.PowerFx.Types.ErrorValue]
@@ -34,7 +34,7 @@
 "Error(Kind=25), Error(Kind=25), Error(Kind=25)"
 
 >> Concat(Find(["a", "b", "c"], "The quick brown fox jumped over the lazy dog", [1, 2, 3, 4, 5]), IfError(Text(Value), $"Error(Kind={FirstError.Kind})"), ", ")
-"38, 11, 8, Error(Kind=20), Error(Kind=20)"
+"38, 11, 8, Error(Kind=27), Error(Kind=27)"
 
 >> Round(Sqrt(-1), [1, 2, 3])
 [Microsoft.PowerFx.Types.ErrorValue,Microsoft.PowerFx.Types.ErrorValue,Microsoft.PowerFx.Types.ErrorValue]
@@ -71,3 +71,15 @@
 
 >> Round(1234.5678, Filter([1, 2, 3], Value > 10))
 []
+
+>> Concatenate(Filter([1], Value > 10), "test")
+[]
+
+>> Concatenate(Blank(), Filter([1], Value > 10))
+Blank()
+
+>> Concatenate(Blank(), "test")
+"test"
+
+>> Concatenate(Blank(), ["test"], Filter([1], Value > 10))
+Blank()

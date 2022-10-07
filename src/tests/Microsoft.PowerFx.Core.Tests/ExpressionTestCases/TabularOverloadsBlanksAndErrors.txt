@@ -105,7 +105,7 @@ Table({Result:"hello John"},{Result:"hi Jane"},{Result:Microsoft.PowerFx.Types.E
 "Error(Kind=25), Error(Kind=25), Error(Kind=25)"
 
 >> Concat(Concatenate(["hello", "hi"], " ", ["John", "Jane", "Jim", "Joan"]), IfError(Result, $"Error(Kind={FirstError.Kind})"), ", ")
-"hello John, hi Jane, Error(Kind=20), Error(Kind=20)"
+"hello John, hi Jane, Error(Kind=27), Error(Kind=27)"
 
 >> Find(If(1/0<2,["hello", "hi"]), " world")
 #Error(Kind=Div0)
@@ -129,7 +129,7 @@ Table({Result:38},{Result:11},{Result:8},{Result:Microsoft.PowerFx.Types.ErrorVa
 "Error(Kind=25), Error(Kind=25), Error(Kind=25)"
 
 >> Concat(Find(["a", "b", "c"], "The quick brown fox jumped over the lazy dog", [1, 2, 3, 4, 5]), IfError(Text(Result), $"Error(Kind={FirstError.Kind})"), ", ")
-"38, 11, 8, Error(Kind=20), Error(Kind=20)"
+"38, 11, 8, Error(Kind=27), Error(Kind=27)"
 
 >> Round(If(1/0<2,[12.34, 56.78]), 1)
 #Error(Kind=Div0)
@@ -153,7 +153,7 @@ Table({Result:Microsoft.PowerFx.Types.ErrorValue},{Result:Microsoft.PowerFx.Type
 "Error(Kind=24), Error(Kind=24), Error(Kind=24)"
 
 >> Concat(Round([123.456, 234.567], [1, 2, 3]), IfError(Text(Value), $"Error(Kind={FirstError.Kind})"), ", ")
-"123.5, 234.57, Error(Kind=20)"
+"123.5, 234.57, Error(Kind=27)"
 
 // *********** 2+-argument functions, blanks ***********
 
@@ -212,3 +212,9 @@ Table()
 
 >> Round(1234.5678, Filter([1, 2, 3], Value > 10))
 Table()
+
+>> Concatenate(Filter(["a","b"], Len(Value)>10), If(1<0,["abcdef", "ghijkl"]))
+Blank()
+
+>> Find(If(1<0,["a","b"]), Filter(["abcdef", "ghijkl"], Len(Value)>10))
+Blank()

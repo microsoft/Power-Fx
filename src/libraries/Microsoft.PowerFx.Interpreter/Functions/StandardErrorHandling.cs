@@ -59,7 +59,7 @@ namespace Microsoft.PowerFx.Functions
                 var nonFiniteArgError = FiniteArgumentCheck(functionName, irContext, args);
                 if (nonFiniteArgError != null)
                 {
-                    (var maxSize, var minsSize, var emptyTablePresent) = AnalyzeTableArguments(args);
+                    (var maxSize, var minsSize, var emptyTablePresent, _) = AnalyzeTableArguments(args);
 
                     // In case Tabular overload has one scalar error arg and another Table arg we want to
                     // return table of error.
@@ -289,11 +289,12 @@ namespace Microsoft.PowerFx.Functions
             return StandardSingleColumnTable<T>(async (runner, context, irContext, args) => targetFunction(irContext, args.OfType<T>().ToArray()));
         }
 
-        private static (int maxTableSize, int minTableSize, bool emptyTablePresent) AnalyzeTableArguments(FormulaValue[] args)
+        private static (int maxTableSize, int minTableSize, bool emptyTablePresent, bool blankTablePresent) AnalyzeTableArguments(FormulaValue[] args)
         {
             var maxTableSize = 0;
             var emptyTablePresent = false;
             var minTableSize = int.MaxValue;
+            var blankTablePresent = false;
 
             foreach (var arg in args)
             {
@@ -307,9 +308,14 @@ namespace Microsoft.PowerFx.Functions
 
                     emptyTablePresent |= tableSize == 0;
                 }
+
+                if (arg is BlankValue bv)
+                {
+                    blankTablePresent = true;
+                }
             }
 
-            return (maxTableSize, minTableSize, emptyTablePresent);
+            return (maxTableSize, minTableSize, emptyTablePresent, blankTablePresent);
         }
 
         private class ExpandToSizeResult
@@ -396,18 +402,22 @@ namespace Microsoft.PowerFx.Functions
             {
                 var resultRows = new List<DValue<RecordValue>>();
 
-                (var maxSize, var minSize, var emptyTablePresent) = AnalyzeTableArguments(args);
+                (var maxSize, var minSize, var emptyTablePresent, var blankTablePresent) = AnalyzeTableArguments(args);
+
+                // If one arg is blank and among all other args one is empty Table or all other args are scaler or blank.
+                // e.g. Concatenate(Blank(), []), Concatenate(Blank(), "test"), Concatenate(Blank(), ["test"], []) => Blank()
+                if (blankTablePresent && (emptyTablePresent || maxSize == 0))
+                {
+                    return FormulaValue.NewBlank();
+                }
+
                 if (maxSize == 0 || (emptyTablePresent && !transposeEmptyTable))
                 {
                     // maxSize == 0 means there are no tables with rows. This can happen when we expect a Table at compile time but we recieve Blank() at runtime,
                     // or all tables in args are empty. Additionally, among non-empty tables (in which case maxSize > 0) there may be an empty table,
                     // which also means empty result if transposeEmptyTable == false.
                     // Return an empty table (with the correct type).
-                    if (!emptyTablePresent)
-                    {
-                        return FormulaValue.NewBlank();
-                    }
-
+                    // e.g. Concatenate([], "test") => []
                     return new InMemoryTableValue(irContext, resultRows);
                 }
 
@@ -439,9 +449,9 @@ namespace Microsoft.PowerFx.Functions
                 // e.g. Concatenate(["a"],["1","2"] => ["a1", <error>]
                 var namedErrorValue = new NamedValue(columnNameStr, FormulaValue.NewError(new ExpressionError()
                 {
-                    Kind = ErrorKind.NotSupported,
+                    Kind = ErrorKind.NotApplicable,
                     Severity = ErrorSeverity.Critical,
-                    Message = "Value not available"
+                    Message = "Not Applicable"
                 }));
                 var errorRecord = new InMemoryRecordValue(IRContext.NotInSource(resultType), new List<NamedValue>() { namedErrorValue });
                 var errorRowCount = maxSize - minSize;
