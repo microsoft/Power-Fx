@@ -51,7 +51,12 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
                     _fixes.Add(new CodeActionResult
                     {
                         Text = newExpr,
-                        Title = Title
+                        Title = Title,
+                        ActionResultContext = new CodeActionResultContext
+                        {
+                            ProviderName = nameof(BlankHandler),
+                            ActionIdentifier = "Suggestion"
+                        }
                     });
                 }
             }

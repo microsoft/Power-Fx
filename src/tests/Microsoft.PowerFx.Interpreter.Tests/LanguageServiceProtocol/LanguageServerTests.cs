@@ -667,6 +667,76 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Equal(updated, response.Result[CodeActionKind.QuickFix][0].Edit.Changes[documentUri][0].NewText);
         }
 
+        [Fact]
+        public void TestCodeActionCommandExecuted()
+        {
+            var engine = new RecalcEngine();
+
+            var scopeFactory = new TestPowerFxScopeFactory((string documentUri) =>
+            {
+                var scope = engine.CreateEditorScope();
+                scope.AddQuickFixHandler(new BlankHandler());
+                return scope;
+            });
+
+            var testServer = new TestLanguageServer(_sendToClientData.Add, scopeFactory);
+            var documentUri = "powerfx://test?expression=Blank(A)&context={\"A\":1,\"B\":[1,2,3]}";
+
+            testServer.OnDataReceived(JsonSerializer.Serialize(new
+            {
+                jsonrpc = "2.0",
+                id = "testDocument1",
+                method = "textDocument/codeAction",
+                @params = new CodeActionParams()
+                {
+                    TextDocument = new TextDocumentIdentifier()
+                    {
+                        Uri = documentUri
+                    },
+                    Range = new LanguageServerProtocol.Protocol.Range()
+                    {
+                        Start = new Position
+                        {
+                            Line = 0,
+                            Character = 0
+                        },
+                        End = new Position
+                        {
+                            Line = 0,
+                            Character = 10
+                        }
+                    },
+                    Context = new CodeActionContext() { Only = new[] { CodeActionKind.QuickFix } }
+                }
+            }));
+
+            Assert.Single(_sendToClientData);
+            var response = JsonSerializer.Deserialize<JsonRpcCodeActionResponse>(_sendToClientData[0], _jsonSerializerOptions);
+            Assert.Equal("2.0", response.Jsonrpc);
+            Assert.Equal("testDocument1", response.Id);
+            Assert.NotEmpty(response.Result);
+
+            var codeActionResult = response.Result[CodeActionKind.QuickFix][0];
+
+            _sendToClientData.Clear();
+
+            var testServer1 = new TestLanguageServer(_sendToClientData.Add, scopeFactory);
+
+            testServer1.OnDataReceived(JsonSerializer.Serialize(new
+            {
+                jsonrpc = "2.0",
+                id = "testDocument1",
+                method = "textDocument/commandExecuted",
+                @params = new CommandExecutedParams()
+                {
+                    Command = CommandName.CodeActionApplied,
+                    Argument = JsonSerializer.Serialize(codeActionResult)
+                }
+            }));
+
+            Assert.Empty(_sendToClientData);
+        }
+
         [Theory]
         [InlineData("{1}", 1)]
         [InlineData("12{3}45", 3)]

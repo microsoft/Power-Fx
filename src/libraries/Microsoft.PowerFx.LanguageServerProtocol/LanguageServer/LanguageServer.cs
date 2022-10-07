@@ -133,7 +133,40 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
 
         private void HandleCommandExecutedRequest(string id, string paramsJson)
         {
-            // TODO: Handle command executed event;
+            if (id == null)
+            {
+                _sendToClient(JsonRpcHelper.CreateErrorResult(id, JsonRpcHelper.ErrorCode.InvalidRequest));
+                return;
+            }
+
+            Contracts.AssertValue(id);
+            Contracts.AssertValue(paramsJson);
+
+            if (!TryParseParams(paramsJson, out CommandExecutedParams commandExecutedParams))
+            {
+                _sendToClient(JsonRpcHelper.CreateErrorResult(id, JsonRpcHelper.ErrorCode.ParseError));
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(commandExecutedParams.Argument))
+            {
+                //TODO: Log argument is null.
+
+                return;
+            }
+
+            switch (commandExecutedParams.Command)
+            {
+                case CommandName.CodeActionApplied:
+                    var codeActionResult = JsonSerializer.Deserialize<CodeActionResult>(commandExecutedParams.Argument);
+                    Contracts.AssertValue(codeActionResult?.ActionResultContext);
+
+                    // TODO: add code extension.
+                    break;
+                default:
+                    // TODO: Handle fallback cases.
+                    break;
+            }
         }
 
         private void HandleDidOpenNotification(string paramsJson)
