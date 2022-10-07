@@ -39,6 +39,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
                 // Internal
                 "Microsoft.PowerFx.LanguageServerProtocol.JsonRpcHelper",
                 "Microsoft.PowerFx.LanguageServerProtocol.CodeActionKind",
+                "Microsoft.PowerFx.LanguageServerProtocol.CommandName",
 
                 // Protocol classes.
                 "Microsoft.PowerFx.LanguageServerProtocol.Protocol.CodeAction",
@@ -46,6 +47,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
                 "Microsoft.PowerFx.LanguageServerProtocol.Protocol.CodeActionContext",
                 "Microsoft.PowerFx.LanguageServerProtocol.Protocol.CodeActionParams",
                 "Microsoft.PowerFx.LanguageServerProtocol.Protocol.CodeActionResult",
+                "Microsoft.PowerFx.LanguageServerProtocol.Protocol.CodeActionResultContext",
+                "Microsoft.PowerFx.LanguageServerProtocol.Protocol.CommandExecutedParams",
                 "Microsoft.PowerFx.LanguageServerProtocol.Protocol.CompletionContext",
                 "Microsoft.PowerFx.LanguageServerProtocol.Protocol.CompletionItem",
                 "Microsoft.PowerFx.LanguageServerProtocol.Protocol.CompletionItemKind",
