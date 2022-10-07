@@ -217,7 +217,8 @@ namespace Microsoft.PowerFx
 
             var result = new CheckResult(parse, binding)
             {
-                Symbols = combinedSymbols
+                Symbols = combinedSymbols,
+                CultureInfo = Config.CultureInfo
             };
 
             if (result.IsSuccess)

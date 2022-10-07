@@ -64,7 +64,7 @@ namespace Microsoft.PowerFx
             result.ThrowOnErrors();
 
             (var irnode, var ruleScopeSymbol) = IRTranslator.Translate(result._binding);
-            return new ParsedExpression(irnode, ruleScopeSymbol, stackMarker);
+            return new ParsedExpression(irnode, ruleScopeSymbol, stackMarker, result.CultureInfo);
         }
     }
 
@@ -75,12 +75,12 @@ namespace Microsoft.PowerFx
         private readonly CultureInfo _cultureInfo;
         private readonly StackDepthCounter _stackMarker;
 
-        internal ParsedExpression(IntermediateNode irnode, ScopeSymbol topScope, StackDepthCounter stackMarker, CultureInfo cultureInfo = null)
+        internal ParsedExpression(IntermediateNode irnode, ScopeSymbol topScope, StackDepthCounter stackMarker, CultureInfo cultureInfo)
         {
             _irnode = irnode;
             _topScopeSymbol = topScope;
             _stackMarker = stackMarker;
-            _cultureInfo = cultureInfo ?? CultureInfo.CurrentCulture;
+            _cultureInfo = cultureInfo ?? throw new ArgumentNullException(nameof(cultureInfo));
         }
 
         public async Task<FormulaValue> EvalAsync(RecordValue parameters, CancellationToken cancellationToken)

@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Errors;
@@ -66,6 +67,11 @@ namespace Microsoft.PowerFx
         /// Symbols passed to this binding. May be null. 
         /// </summary>
         public ReadOnlySymbolTable Symbols { get; set; }
+
+        /// <summary>
+        /// Culture info passed to this binding. May be null. 
+        /// </summary>
+        internal CultureInfo CultureInfo { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CheckResult"/> class.
