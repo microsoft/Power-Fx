@@ -111,12 +111,17 @@ namespace Microsoft.PowerFx.Core.Errors
 
         private static readonly string HowToFixSuffix = "_HowToFix";
 
-        internal BaseError(IDocumentError innerError, Exception internalException, DocumentErrorKind kind, DocumentErrorSeverity severity, ErrorResourceKey errKey, params object[] args)
-            : this(innerError, internalException, kind, severity, errKey, textSpan: null, sinkTypeErrors: null, args: args)
+        internal BaseError(IDocumentError innerError, Exception internalException, DocumentErrorKind kind, DocumentErrorSeverity severity, ErrorResourceKey errKey, CultureInfo locale, params object[] args)
+            : this(innerError, internalException, kind, severity, errKey, textSpan: null, sinkTypeErrors: null, locale, args: args)
         {
         }
 
-        internal BaseError(IDocumentError innerError, Exception internalException, DocumentErrorKind kind, DocumentErrorSeverity severity, ErrorResourceKey errKey, Span textSpan, IEnumerable<string> sinkTypeErrors, params object[] args)
+        internal BaseError(IDocumentError innerError, Exception internalException, DocumentErrorKind kind, DocumentErrorSeverity severity, ErrorResourceKey errKey, params object[] args)
+            : this(innerError, internalException, kind, severity, errKey, textSpan: null, sinkTypeErrors: null, CultureInfo.CurrentCulture, args: args)
+        {
+        }
+
+        internal BaseError(IDocumentError innerError, Exception internalException, DocumentErrorKind kind, DocumentErrorSeverity severity, ErrorResourceKey errKey, Span textSpan, IEnumerable<string> sinkTypeErrors, CultureInfo locale, params object[] args)
         {
             Contracts.AssertValueOrNull(innerError);
             Contracts.AssertValueOrNull(args);
@@ -141,7 +146,7 @@ namespace Microsoft.PowerFx.Core.Errors
             // that haven't yet been converted to an ErrorResource in the Resources.pares file.
             string shortMessage;
             string longMessage;
-            if (!StringResources.TryGetErrorResource(errKey, out var errorResource))
+            if (!StringResources.TryGetErrorResource(errKey, out var errorResource, locale.Name))
             {
                 errorResource = null;
                 shortMessage = StringResources.Get(errKey.Key);
@@ -154,14 +159,14 @@ namespace Microsoft.PowerFx.Core.Errors
                 longMessage = errorResource.GetSingleValue(ErrorResource.LongMessageTag);
             }
 
-            ShortMessage = FormatMessage(shortMessage, args);
-            LongMessage = FormatMessage(longMessage, args);
+            ShortMessage = FormatMessage(shortMessage, locale, args);
+            LongMessage = FormatMessage(longMessage, locale, args);
             HowToFixMessages = errorResource?.GetValues(ErrorResource.HowToFixTag) ?? GetHowToFix(errKey.Key);
             WhyToFixMessage = errorResource?.GetSingleValue(ErrorResource.WhyToFixTag) ?? string.Empty;
             Links = errorResource?.HelpLinks;
         }
 
-        private string FormatMessage(string message, params object[] args)
+        private string FormatMessage(string message, CultureInfo locale, params object[] args)
         {
             if (message == null)
             {
@@ -173,7 +178,7 @@ namespace Microsoft.PowerFx.Core.Errors
             {
                 try
                 {
-                    sb.AppendFormat(CultureInfo.CurrentCulture, message, args);
+                    sb.AppendFormat(locale, message, args);
                 }
                 catch (FormatException)
                 {

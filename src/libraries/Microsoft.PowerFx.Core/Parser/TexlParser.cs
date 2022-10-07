@@ -43,6 +43,7 @@ namespace Microsoft.PowerFx.Core.Parser
         private readonly List<CommentToken> _comments = new List<CommentToken>();
         private SourceList _before;
         private SourceList _after;
+        private CultureInfo _locale;
 
         // Represents temporary extra trivia, for when a parsing method
         // had to parse tailing trivia to do 1-lookahead. Will be
@@ -57,7 +58,14 @@ namespace Microsoft.PowerFx.Core.Parser
             _curs = new TokenCursor(tokens);
             _flagsMode = new Stack<Flags>();
             _flagsMode.Push(flags);
+            _locale = CultureInfo.CurrentCulture;
         }
+
+        private TexlParser(IReadOnlyList<Token> tokens, Flags flags, CultureInfo locale)
+            : this(tokens, flags)
+        {
+            _locale = locale ?? CultureInfo.CurrentCulture;
+        }        
 
         public static ParseUDFsResult ParseUDFsScript(string script, CultureInfo loc = null)
         {
@@ -218,7 +226,7 @@ namespace Microsoft.PowerFx.Core.Parser
             Contracts.AssertValueOrNull(loc);
 
             var tokens = TokenizeScript(script, loc, flags);
-            var parser = new TexlParser(tokens, flags);
+            var parser = new TexlParser(tokens, flags, loc);
             List<TexlError> errors = null;
             var parsetree = parser.Parse(ref errors);
 
@@ -1470,7 +1478,7 @@ namespace Microsoft.PowerFx.Core.Parser
             Contracts.AssertValue(tok);
             Contracts.AssertValue(errKey.Key);
 
-            var err = new TexlError(tok, DocumentErrorSeverity.Critical, errKey);
+            var err = new TexlError(tok, DocumentErrorSeverity.Critical, errKey, _locale);
             CollectionUtils.Add(ref _errors, err);
             return err;
         }
@@ -1481,7 +1489,7 @@ namespace Microsoft.PowerFx.Core.Parser
             Contracts.AssertValue(errKey.Key);
             Contracts.AssertValueOrNull(args);
 
-            var err = new TexlError(tok, DocumentErrorSeverity.Critical, errKey, args);
+            var err = new TexlError(tok, DocumentErrorSeverity.Critical, errKey, _locale, args);
             CollectionUtils.Add(ref _errors, err);
 
             return err;

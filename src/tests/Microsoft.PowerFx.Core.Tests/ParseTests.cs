@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Globalization;
 using System.Linq;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Parser;
@@ -59,6 +60,13 @@ namespace Microsoft.PowerFx.Core.Tests
         public void TexlParseNumericLiterals_Negative(string script)
         {
             TestParseErrors(script, 1, StringResources.Get(TexlStrings.ErrOperatorExpected));
+
+            // Testing different locales
+            var locale = new CultureInfo("pt-BR");
+            TestParseErrors(script, 1, StringResources.Get(TexlStrings.ErrOperatorExpected, locale: locale.Name), locale: locale);
+
+            locale = new CultureInfo("fr-FR");
+            TestParseErrors(script, 1, StringResources.Get(TexlStrings.ErrOperatorExpected, locale: locale.Name), locale: locale);
         }
 
         [Theory]
@@ -69,6 +77,13 @@ namespace Microsoft.PowerFx.Core.Tests
         public void TexlParseLargeNumerics_Negative(string script)
         {
             TestParseErrors(script, 1, StringResources.Get(TexlStrings.ErrNumberTooLarge));
+
+            // Testing different locales
+            var locale = new CultureInfo("pt-BR");
+            TestParseErrors(script, 1, StringResources.Get(TexlStrings.ErrNumberTooLarge, locale: locale.Name), locale: locale);
+
+            locale = new CultureInfo("fr-FR");
+            TestParseErrors(script, 1, StringResources.Get(TexlStrings.ErrNumberTooLarge, locale: locale.Name), locale: locale);
         }
 
         [Theory]
@@ -720,9 +735,11 @@ namespace Microsoft.PowerFx.Core.Tests
             customTest?.Invoke(node);
         }
 
-        internal void TestParseErrors(string script, int count = 1, string errorMessage = null)
+        internal void TestParseErrors(string script, int count = 1, string errorMessage = null, CultureInfo locale = null)
         {
-            var result = TexlParser.ParseScript(script);
+            locale ??= CultureInfo.CurrentCulture;
+
+            var result = TexlParser.ParseScript(script, loc: locale);
             Assert.NotNull(result.Root);
             Assert.True(result.HasError);
             Assert.True(result._errors.Count >= count);
