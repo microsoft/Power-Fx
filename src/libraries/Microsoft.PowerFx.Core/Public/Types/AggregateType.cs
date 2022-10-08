@@ -146,5 +146,25 @@ namespace Microsoft.PowerFx.Types
         // Keeping around to resolve a diamond dependency issue, remove once FormulaRepair is updated
         [Obsolete("This method was replaced with GetFieldTypes", true)]
         public IEnumerable<NamedFormulaType> GetNames() => GetFieldTypes();
+
+        /// <summary>
+        /// Get a symbol name - which is the name this was added with in the symbol table. 
+        /// This may be null. 
+        /// This may often be a Display Name or whatever the host assigned, like "Accounts_2".
+        /// </summary>
+        public virtual string TableSymbolName
+        {
+            get
+            {
+                var ds = _type.AssociatedDataSources.FirstOrDefault();
+
+                if (ds != null)
+                { 
+                    return ds.EntityName.Value;
+                }
+
+                return null;
+            }
+        }
     }
 }
