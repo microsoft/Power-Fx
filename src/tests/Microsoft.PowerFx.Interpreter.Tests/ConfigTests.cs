@@ -18,6 +18,7 @@ using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Tests.IntellisenseTests;
 using Microsoft.PowerFx.Types;
 using Xunit;
+using Xunit.Sdk;
 
 namespace Microsoft.PowerFx.Interpreter.Tests
 {
@@ -291,7 +292,107 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.Equal("2,01", (expr2.Eval(fr_Symbols) as StringValue).Value);
         }
 
-        // Verify that an egine with a specific culture can evaluate an invariant formula
+        // Verify if text is transformed using the correct culture info (PowerFxConfig and Symbols)
+        [Fact]
+        public void RecalcEngine_Symbol_CultureInfo3()
+        {
+            var config = new PowerFxConfig(CultureInfo.InvariantCulture);
+            var engine = new RecalcEngine(config);
+
+            var tr_symbols = new SymbolValues();
+
+            tr_symbols.AddService(new CultureInfo("tr-TR"));
+
+            var textExpression = "Upper(\"indigo\")";
+            var datetimeExpression = "Text(DateTimeValue(\"Perşembe 6 Ekim 2022 14:19:06\", \"tr-TR\"))";
+
+            var check = engine.Check(textExpression).GetEvaluator();
+
+            Assert.Equal("INDIGO", (check.Eval() as StringValue).Value);
+            Assert.Equal("İNDİGO", (check.Eval(runtimeConfig: tr_symbols) as StringValue).Value);
+
+            check = engine.Check(datetimeExpression).GetEvaluator();
+
+            Assert.Equal("10/06/2022 14:19", (check.Eval() as StringValue).Value);
+            Assert.Equal("6.10.2022 14:19", (check.Eval(runtimeConfig: tr_symbols) as StringValue).Value);
+        }
+
+        // Verify if text is transformed using the correct culture info (PowerFxConfig and Symbols)
+        [Fact]
+        public void RecalcEngine_Symbol_CultureInfo4()
+        {
+            var config = new PowerFxConfig(CultureInfo.InvariantCulture);
+            var engine = new RecalcEngine(config);
+
+            var us_symbols = new SymbolValues();
+
+            us_symbols.AddService(new CultureInfo("en-US"));
+
+            var textExpression = "Upper(\"indigo\")";
+            var datetimeExpression = "Text(DateTimeValue(\"Perşembe 06 Ekim 2022 14:19:06\", \"tr-TR\"))";
+
+            var check = engine.Check(textExpression).GetEvaluator();
+
+            Assert.Equal("INDIGO", (check.Eval() as StringValue).Value);
+            Assert.Equal("INDIGO", (check.Eval(runtimeConfig: us_symbols) as StringValue).Value);
+
+            check = engine.Check(datetimeExpression).GetEvaluator();
+
+            Assert.Equal("10/06/2022 14:19", (check.Eval() as StringValue).Value);
+            Assert.Equal("10/6/2022 2:19 PM", (check.Eval(runtimeConfig: us_symbols) as StringValue).Value);
+        }
+
+        // Verify if text is transformed using the correct culture info (PowerFxConfig and global settings)
+        [Fact]
+        public void RecalcEngine_Symbol_CultureInfo5()
+        {
+            Exception exception = null;
+
+            var t = new Thread(() =>
+            {
+                Thread.CurrentThread.CurrentCulture = new CultureInfo("tr-TR");
+
+                var config = new PowerFxConfig(CultureInfo.InvariantCulture);
+                var engine = new RecalcEngine(config);
+
+                var symbols = new SymbolValues();
+
+                var upperExpression = "Upper(\"inDigo\")";
+                var lowerExpression = "Lower(\"inDigo\")";
+                var properExpression = "Proper(\"inDigo\")";
+
+                var datetimeExpression = "Text(DateTimeValue(\"Perşembe 06 Ekim 2022 14:19:06\", \"tr-TR\"))";
+
+                try
+                {
+                    var result = engine.Eval(upperExpression);
+                    Assert.Equal("INDIGO", (result as StringValue).Value);
+
+                    result = engine.Eval(lowerExpression);
+                    Assert.Equal("indigo", (result as StringValue).Value);
+
+                    result = engine.Eval(properExpression);
+                    Assert.Equal("Indigo", (result as StringValue).Value);
+
+                    result = engine.Eval(datetimeExpression);
+                    Assert.Equal("10/06/2022 14:19", (result as StringValue).Value);
+                }
+                catch (Exception ex)
+                {
+                    exception = ex;
+                }                
+            });
+
+            t.Start();
+            t.Join();
+
+            if (exception != null)
+            {
+                throw exception;
+            }
+        }
+
+        // Verify that an engine with a specific culture can evaluate an invariant formula
         [Fact]
         public void RecalcEngine_CultureInfo()
         {

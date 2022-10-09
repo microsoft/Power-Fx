@@ -64,7 +64,7 @@ namespace Microsoft.PowerFx
             result.ThrowOnErrors();
 
             (var irnode, var ruleScopeSymbol) = IRTranslator.Translate(result._binding);
-            return new ParsedExpression(irnode, ruleScopeSymbol, stackMarker);
+            return new ParsedExpression(irnode, ruleScopeSymbol, stackMarker, result.CultureInfo);
         }
     }
 

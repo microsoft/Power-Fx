@@ -4919,30 +4919,6 @@ namespace Microsoft.PowerFx.Core.Binding
                 }
             }
 
-            /// <summary>
-            /// Returns best overload in case there are no matches based on first argument and order.
-            /// </summary>
-            private TexlFunction FindBestErrorOverload(TexlFunction[] overloads, DType[] argTypes, int cArg)
-            {
-                var candidates = overloads.Where(overload => overload.MinArity <= cArg && cArg <= overload.MaxArity);
-                if (cArg == 0)
-                {
-                    return candidates.FirstOrDefault();
-                }
-
-                // Consider overloads that have DType.Error parameter the last
-                candidates = candidates.OrderBy(candidate => candidate.ParamTypes.Length > 0 && candidate.ParamTypes[0] == DType.Error).ToArray();
-                foreach (var candidate in candidates)
-                {
-                    if (candidate.ParamTypes.Length > 0 && candidate.ParamTypes[0].Accepts(argTypes[0]))
-                    {
-                        return candidate;
-                    }
-                }
-
-                return candidates.FirstOrDefault();
-            }
-
             private void PreVisitWithOverloadResolution(CallNode node, TexlFunction[] overloads)
             {
                 Contracts.AssertValue(node);

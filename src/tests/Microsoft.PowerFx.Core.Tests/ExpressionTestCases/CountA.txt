@@ -94,7 +94,11 @@
 
 //Few error values
 >> CountA([1, "2", 1/0, true, " "])
-#Error(Kind=Div0,InvalidArgument)
+#Error(Kind=Div0)
+
+//Few error values
+>> CountA([1, " ", "2", 1/0, true])
+#Error(Kind=InvalidArgument)
 
 // Error records
 >> CountA(Table({a:1},{a:2},If(Sqrt(-1)<1,{a:3}),{a:4}))
@@ -102,11 +106,19 @@
 
 //All error values
 >> CountA([1/0, Sqrt(-1)])
-#Error(Kind=Div0,Numeric)
+#Error(Kind=Div0)
+
+//All error values
+>> CountA([Sqrt(-1),1/0])
+#Error(Kind=Numeric)
 
 // All error values
 >> CountA(Table({a:1/0},{a:Sqrt(-1)}))
-#Error(Kind=Div0,Numeric)
+#Error(Kind=Div0)
+
+// All error values
+>> CountA(Table({a:Sqrt(-1)},{a:1/0}))
+#Error(Kind=Numeric)
 
 // Error table
 >> CountA(Sort([-2,-1,0,1,2],1/Value))

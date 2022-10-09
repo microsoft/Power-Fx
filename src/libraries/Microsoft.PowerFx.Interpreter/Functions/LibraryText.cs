@@ -278,14 +278,14 @@ namespace Microsoft.PowerFx.Functions
             return new BlankValue(irContext);
         }
 
-        public static FormulaValue Lower(IRContext irContext, StringValue[] args)
+        public static FormulaValue Lower(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, StringValue[] args)
         {
-            return new StringValue(irContext, args[0].Value.ToLower());
+            return new StringValue(irContext, runner.CultureInfo.TextInfo.ToLower(args[0].Value));
         }
 
-        public static FormulaValue Upper(IRContext irContext, StringValue[] args)
+        public static FormulaValue Upper(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, StringValue[] args)
         {
-            return new StringValue(irContext, args[0].Value.ToUpper());
+            return new StringValue(irContext, runner.CultureInfo.TextInfo.ToUpper(args[0].Value));
         }
 
         public static FormulaValue Proper(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, StringValue[] args)
