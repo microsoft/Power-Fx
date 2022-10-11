@@ -1,17 +1,27 @@
-# Microsoft Power Fx
+# <img src="https://user-images.githubusercontent.com/70824102/194465962-481fa7ec-0d42-4037-bdd2-f84710272329.png" width="25"> Microsoft Power Fx
 
-![simple formula using Notify to produce a "Hello, World!" message](docs/media/root/hello-world.png)
+<img alt="PowerFX usage example, displaying a simple slider" src="https://learn.microsoft.com/pt-br/power-platform/power-fx/media/overview/always-live.gif" width="750">
 
-Microsoft Power Fx is a low-code general purpose programming language based on spreadsheet-like formulas.  It is a strongly typed, declarative, and functional language, with imperative logic and state management available as needed.  
+> Microsoft Power Fx is a low-code general purpose programming language based on spreadsheet-like formulas.  It is a strongly typed, declarative, and functional language, with imperative logic and state management available as needed.  
 
-Power Fx started with Power Apps canvas apps and that is where [you can experience it now](https://powerapps.microsoft.com/en-us/).  We are in the process of extracting the language from that product so that we can use it in more Microsoft Power Platform products and make it available here for you to use.  That's going to take some time and we will report on our progress here and on the [Power Apps blog](https://powerapps.microsoft.com/en-us/blog/).  
+> Power Fx started with Power Apps canvas apps and that is where [you can experience it now](https://powerapps.microsoft.com/en-us/).  We are in the process of extracting the language from that product so that we can use it in more Microsoft Power Platform products and make it available here for you to use.  That's going to take some time and we will report on our progress here and on the [Power Apps blog](https://powerapps.microsoft.com/en-us/blog/).  
 
-A start on the language documentation is [available in the docs folder](docs/overview.md).  As with the implementation, it is being extracted from the Power Apps documentation and generalized and that too is going to take some time.
+> A start on the language documentation is [available in the docs folder](docs/overview.md).  As with the implementation, it is being extracted from the Power Apps documentation and generalized and that too is going to take some time.
+
+## Summary
+
+- [Overview](#overview)
+- [Build Status](#build-status)
+- [Packages](#packages)
+- [Daily Builds](#daily-builds)
+- [Samples](#samples)
+- [Contributing](#contributing)
+- [Trademarks](#trademarks)
 
 ## Overview
-For those new to Power-Fx, this video should answer many of your questions:
 
-[![Power-Fx — The low code programming language for everyone](https://img.youtube.com/vi/ik6k89WNjuk/0.jpg)](https://www.youtube-nocookie.com/embed/ik6k89WNjuk)
+| [<img width="350" alt="PowerFX overview video thumbnail" src="https://user-images.githubusercontent.com/70824102/194465349-0e78a62c-cebd-4d57-9f3b-df6a371127ee.png">](https://www.youtube-nocookie.com/embed/ik6k89WNjuk) | For those new to Power-Fx, this video should answer many of your questions: <br> [Power Fx: the Programming Language for Low Code and what it means for Developers](https://www.youtube-nocookie.com/embed/ik6k89WNjuk) |
+| ---- | ---- |
 
 ## Build Status
 
@@ -31,7 +41,9 @@ For those new to Power-Fx, this video should answer many of your questions:
 ## Daily Builds
 Daily builds of the Power Fx packages are published to Azure Artifacts. 
 - The [Azure Artifacts daily feed](https://dev.azure.com/ConversationalAI/BotFramework/_packaging?_a=feed&feed=SDK) carries the most recent packages. To consume them, specify this package source: 
-`https://pkgs.dev.azure.com/ConversationalAI/BotFramework/_packaging/SDK/nuget/v3/index.json`
+```
+https://pkgs.dev.azure.com/ConversationalAI/BotFramework/_packaging/SDK/nuget/v3/index.json
+```
 
 - For detailed instructions [visit this page](dailyBuilds.md).
 

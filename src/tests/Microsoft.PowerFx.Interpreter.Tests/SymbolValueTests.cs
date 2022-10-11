@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Binding;
@@ -163,16 +164,152 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         {
             var r1 = new SymbolValues();
             r1.Add("b", FormulaValue.New(1));
+            Assert.Equal("(RuntimeValues)", r1.DebugName);
 
             var record = FormulaValue.NewRecordFromFields(
                 new NamedValue("a", FormulaValue.New(10)));
 
             var r2 = ReadOnlySymbolValues.NewRowScope(record, r1);
+            Assert.Equal("(rowScope),(RuntimeValues)", r2.DebugName);
 
             var engine = new RecalcEngine();
+
             var result = engine.EvalAsync("ThisRecord.a + a + b", CancellationToken.None, runtimeConfig: r2).Result;
 
             Assert.Equal(21.0, result.ToObject());
+        }
+
+        [Fact]
+        public void TestRowScopeNoParent()
+        {
+            var record = FormulaValue.NewRecordFromFields(
+                new NamedValue("a", FormulaValue.New(10)));
+
+            var r2 = ReadOnlySymbolValues.NewRowScope(record);
+            Assert.Equal("(rowScope)", r2.DebugName);
+
+            var engine = new RecalcEngine();
+
+            var result = engine.EvalAsync("ThisRecord.a + a", CancellationToken.None, runtimeConfig: r2).Result;
+
+            Assert.Equal(20.0, result.ToObject());
+        }
+
+        // Ensure the RowScope is lazy and doesn't call fields. 
+        [Fact]
+        public void TestRowScopeLazy()
+        {
+            var r1 = new SymbolValues();
+            r1.Add("b", FormulaValue.New(1));
+
+            var record = FormulaValue.NewRecordFromFields(
+                new NamedValue("a", FormulaValue.New(10)));
+
+            record = LazyType.Wrap(record); // Ensure we don't call RecordType.Fields
+
+            var r2 = ReadOnlySymbolValues.NewRowScope(record, r1);
+
+            var table = r2.GetSymbolTableSnapshot();
+            
+            var engine = new RecalcEngine();
+
+            var result = engine.EvalAsync("ThisRecord.a + a + b", CancellationToken.None, runtimeConfig: r2).Result;
+
+            Assert.Equal(21.0, result.ToObject());
+        }
+
+        // Type to ensure we don't call Fields. 
+        private class LazyType : RecordType
+        {
+            private readonly RecordType _inner;
+
+            public LazyType(RecordType inner)
+            {
+                _inner = inner;
+            }
+
+            // Wrap the existing record, but ensure we don't call FieldNames on it. 
+            // This ensures operations stay lazy. 
+            public static RecordValue Wrap(RecordValue record)
+            {
+                return FormulaValue.NewRecordFromFields(new LazyType(record.Type), record.Fields);
+            }
+
+            public override bool TryGetFieldType(string name, out FormulaType type)
+            {
+                return _inner.TryGetFieldType(name, out type);
+            }
+
+            // Explicit don't enumerate fields
+            public override IEnumerable<string> FieldNames => throw new NotImplementedException();
+
+            public override bool Equals(object other) => throw new NotImplementedException();
+            
+            public override int GetHashCode() => throw new NotImplementedException();
+        }
+
+        // Test Composing symbol tables. 
+        [Fact]
+        public void Compose()
+        {
+            var culture1 = new CultureInfo("en-us");
+
+            var r1 = new SymbolValues();
+            r1.Add("x", FormulaValue.New("x1"));
+            r1.AddService(culture1);
+
+            var r2 = new SymbolValues();
+            r2.Add("y", FormulaValue.New("y2"));
+            r2.Add("x", FormulaValue.New("x2"));
+
+            // Compose 
+            var r3 = ReadOnlySymbolValues.Compose(r1, r2);
+
+            var found = r3.TryGetValue("x", out var result);
+            Assert.True(found);
+            Assert.Equal("x1", result.ToObject());
+
+            found = r3.TryGetValue("y", out result);
+            Assert.True(found);
+            Assert.Equal("y2", result.ToObject());
+
+            found = r3.TryGetValue("missing", out result);
+            Assert.False(found);
+            Assert.Null(result);
+
+            var culture2 = r3.GetService<CultureInfo>();
+            Assert.Same(culture1, culture2);
+
+            // Flipping the order changes precedence
+            r3 = ReadOnlySymbolValues.Compose(r2, r1);
+            found = r3.TryGetValue("x", out result);
+            Assert.True(found);
+            Assert.Equal("x2", result.ToObject());
+
+            culture2 = r3.GetService<CultureInfo>();
+            Assert.Same(culture1, culture2);           
+        }
+
+        [Fact]
+        public void ComposeNest()
+        {
+            var r1 = new SymbolValues();
+            r1.Add("x", FormulaValue.New("x1"));
+
+            var r2 = new SymbolValues();
+            r2.Add("y", FormulaValue.New("y2"));
+
+            var r3 = new SymbolValues();
+            r3.Add("z", FormulaValue.New("z3"));
+
+            // Compose can nest
+            var r2_3 = ReadOnlySymbolValues.Compose(r2, r3);
+
+            var rAll = ReadOnlySymbolValues.Compose(r1, r3);
+
+            var found = rAll.TryGetValue("z", out var result);
+            Assert.True(found);
+            Assert.Equal("z3", result.ToObject());
         }
 
         [Fact]

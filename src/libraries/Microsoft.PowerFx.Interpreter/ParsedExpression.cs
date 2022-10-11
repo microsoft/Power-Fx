@@ -75,12 +75,12 @@ namespace Microsoft.PowerFx
         private readonly CultureInfo _cultureInfo;
         private readonly StackDepthCounter _stackMarker;
 
-        internal ParsedExpression(IntermediateNode irnode, ScopeSymbol topScope, StackDepthCounter stackMarker, CultureInfo cultureInfo)
+        internal ParsedExpression(IntermediateNode irnode, ScopeSymbol topScope, StackDepthCounter stackMarker, CultureInfo cultureInfo = null)
         {
             _irnode = irnode;
             _topScopeSymbol = topScope;
             _stackMarker = stackMarker;
-            _cultureInfo = cultureInfo ?? throw new ArgumentNullException(nameof(cultureInfo));
+            _cultureInfo = cultureInfo ?? CultureInfo.CurrentCulture;
         }
 
         public async Task<FormulaValue> EvalAsync(RecordValue parameters, CancellationToken cancellationToken)
