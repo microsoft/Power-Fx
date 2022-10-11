@@ -115,16 +115,16 @@
 #Error(Kind=Div0)
 
 >> Count([1,Sqrt(-1),3,1/0,5])
-#Error(Kind=Numeric,Div0)
+#Error(Kind=Numeric)
 
 >> CountA(If(1/0<2,[1,2,3]))
 #Error(Kind=Div0)
 
 >> CountA([1,Sqrt(-1),3,1/0,5])
-#Error(Kind=Numeric,Div0)
+#Error(Kind=Numeric)
 
 >> CountIf([2,1,0,-1,-2], Sqrt(1/Value)<0)
-#Error(Kind=Div0,Numeric,Numeric)
+#Error(Kind=Div0)
 
 >> CountIf(If(1/0<2,[1,2,3]),Value>0)
 #Error(Kind=Div0)
@@ -133,7 +133,7 @@
 #Error(Kind=Div0)
 
 >> CountRows(Table({a:1},If(Sqrt(-1)<0,{a:2}),{a:3},If(1/0<2,{a:4}),{a:5}))
-#Error(Kind=Numeric,Div0)
+#Error(Kind=Numeric)
 
 >> CountRows(ParseJSON("1"))
 #Error(Kind=InvalidArgument)
@@ -511,7 +511,10 @@ true
 #Error(Kind=Div0)
 
 >> Sort([5,4,3,2,1,0,-1,-2], Sqrt(1/Value))
-#Error(Kind=Div0,Numeric,Numeric)
+#Error(Kind=Div0)
+
+>> Sort([-2,-1,0,1,2,3,4,5], Sqrt(1/Value))
+#Error(Kind=Numeric)
 
 >> Split(Char(-4), If(1/0<2,"."))
 #Error(Kind=InvalidArgument,Div0)

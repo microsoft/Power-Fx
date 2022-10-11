@@ -28,7 +28,6 @@ namespace Microsoft.PowerFx.Functions
         {
             protected int _count;
             protected double _accumulator;
-            protected static readonly double _defaultN = 0d;
 
             public void Apply(FormulaValue value)
             {
@@ -50,7 +49,7 @@ namespace Microsoft.PowerFx.Functions
 
             public FormulaValue GetDefault(IRContext context)
             {
-                return new NumberValue(context, _defaultN);
+                return new BlankValue(context);
             }
 
             public virtual FormulaValue GetResult(IRContext irContext)
