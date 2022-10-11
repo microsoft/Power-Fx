@@ -163,9 +163,8 @@ namespace Microsoft.PowerFx.Tests
         [InlineData("$\"This is {{\"Another\"}} interpolated {{string}}\"", "$\"This is {{\"Another\"}} interpolated {{string}}\"")]
         public void TestPrettyPrint(string script, string expected)
         {
-            var defaultLocale = new CultureInfo("en-US");
-
             Preview.FeatureFlags.StringInterpolation = true;
+
             var result = Format(script, _defaultLocale);
             Assert.NotNull(result);
             Assert.Equal(expected, result);

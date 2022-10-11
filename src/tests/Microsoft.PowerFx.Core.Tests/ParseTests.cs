@@ -13,7 +13,7 @@ namespace Microsoft.PowerFx.Core.Tests
 {
     public class ParseTests : PowerFxTest
     {
-        private readonly CultureInfo _locale = new ("pt-BR");
+        private readonly CultureInfo _otherLocale = new ("pt-BR");
         private readonly CultureInfo _defaultLocale = new ("en-US");
 
         [Theory]
@@ -63,7 +63,7 @@ namespace Microsoft.PowerFx.Core.Tests
         public void TexlParseNumericLiterals_Negative(string script)
         {
             TestParseErrors(script, 1, StringResources.Get(TexlStrings.ErrOperatorExpected));
-            TestParseErrorsLocale(script, _locale, StringResources.Get(TexlStrings.ErrOperatorExpected, _locale.Name));
+            TestParseErrorsLocale(script, _otherLocale, StringResources.Get(TexlStrings.ErrOperatorExpected, _otherLocale.Name));
         }
 
         [Theory]
@@ -74,7 +74,7 @@ namespace Microsoft.PowerFx.Core.Tests
         public void TexlParseLargeNumerics_Negative(string script)
         {
             TestParseErrors(script, 1, StringResources.Get(TexlStrings.ErrNumberTooLarge));
-            TestParseErrorsLocale(script, _locale, StringResources.Get(TexlStrings.ErrNumberTooLarge, _locale.Name));
+            TestParseErrorsLocale(script, _otherLocale, StringResources.Get(TexlStrings.ErrNumberTooLarge, _otherLocale.Name));
         }
 
         [Theory]
@@ -520,7 +520,7 @@ namespace Microsoft.PowerFx.Core.Tests
         public void TexlExcessivelyDeepRules(string script)
         {
             TestParseErrors(script, count: 1, errorMessage: StringResources.Get(TexlStrings.ErrRuleNestedTooDeeply));
-            TestParseErrorsLocale(script, _locale, StringResources.Get(TexlStrings.ErrRuleNestedTooDeeply, _locale.Name));
+            TestParseErrorsLocale(script, _otherLocale, StringResources.Get(TexlStrings.ErrRuleNestedTooDeeply, _otherLocale.Name));
         }
 
         [Theory]
