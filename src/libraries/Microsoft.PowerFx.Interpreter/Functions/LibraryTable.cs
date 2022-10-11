@@ -173,10 +173,10 @@ namespace Microsoft.PowerFx.Functions
 
             if (arg0 is TableValue table)
             {
-                var errors = table.Rows.Where(r => r.IsError).Select(r => r.Error);
-                if (errors.Any())
+                var error = table.Rows.Where(r => r.IsError).Select(r => r.Error).FirstOrDefault();
+                if (error != null)
                 {
-                    return ErrorValue.Combine(irContext, errors);
+                    return error;
                 }
 
                 var count = table.Count();
@@ -199,8 +199,6 @@ namespace Microsoft.PowerFx.Functions
 
             if (arg0 is TableValue table)
             {
-                var errors = new List<ErrorValue>();
-
                 foreach (var row in table.Rows)
                 {
                     if (row.IsBlank)
@@ -209,27 +207,20 @@ namespace Microsoft.PowerFx.Functions
                     }
                     else if (row.IsError)
                     {
-                        errors.Add(row.Error);
-                        continue;
+                        return row.Error;
                     }
 
                     var field = row.Value.Fields.First().Value;
 
                     if (field is ErrorValue error)
                     {
-                        errors.Add(error);
-                        continue;
+                        return error;
                     }
 
                     if (field is NumberValue)
                     {
                         count++;
                     }
-                }
-
-                if (errors.Count != 0)
-                {
-                    return ErrorValue.Combine(irContext, errors);
                 }
 
                 return new NumberValue(irContext, count);
@@ -251,8 +242,6 @@ namespace Microsoft.PowerFx.Functions
             {
                 var count = 0;
 
-                var errors = new List<ErrorValue>();
-
                 foreach (var row in table.Rows)
                 {
                     if (row.IsBlank)
@@ -261,27 +250,20 @@ namespace Microsoft.PowerFx.Functions
                     }
                     else if (row.IsError)
                     {
-                        errors.Add(row.Error);
-                        continue;
+                        return row.Error;
                     }
 
                     var field = row.Value.Fields.First().Value;
 
                     if (field is ErrorValue error)
                     {
-                        errors.Add(error);
-                        continue;
+                        return error;
                     }
 
                     if (field is not BlankValue)
                     {
                         count++;
                     }
-                }
-
-                if (errors.Count != 0)
-                {
-                    return ErrorValue.Combine(irContext, errors);
                 }
 
                 return new NumberValue(irContext, count);
@@ -303,19 +285,18 @@ namespace Microsoft.PowerFx.Functions
 
             var count = 0;
 
-            var errors = new List<ErrorValue>();
-
             foreach (var row in sources.Rows)
             {
-                if (row.IsValue)
+                if (row.IsValue || row.IsError)
                 {
-                    var childContext = context.SymbolContext.WithScopeValues(row.Value);
+                    var childContext = row.IsValue ?
+                        context.SymbolContext.WithScopeValues(row.Value) :
+                        context.SymbolContext.WithScopeValues(row.Error);
                     var result = await filter.EvalAsync(runner, context.NewScope(childContext));
 
                     if (result is ErrorValue error)
                     {
-                        errors.Add(error);
-                        continue;
+                        return error;
                     }
 
                     var include = ((BooleanValue)result).Value;
@@ -325,16 +306,6 @@ namespace Microsoft.PowerFx.Functions
                         count++;
                     }
                 }
-
-                if (row.IsError)
-                {
-                    errors.Add(row.Error);
-                }
-            }
-
-            if (errors.Count != 0)
-            {
-                return ErrorValue.Combine(irContext, errors);
             }
 
             return new NumberValue(irContext, count);
@@ -427,7 +398,6 @@ namespace Microsoft.PowerFx.Functions
 
             var pairs = (await Task.WhenAll(arg0.Rows.Select(row => ApplySortLambda(runner, context, row, arg1)))).ToList();
 
-            var errors = new List<ErrorValue>();
             bool allNumbers = true, allStrings = true, allBooleans = true, allDatetimes = true, allDates = true;
 
             foreach (var (row, sortValue) in pairs)
@@ -440,19 +410,13 @@ namespace Microsoft.PowerFx.Functions
 
                 if (sortValue is ErrorValue errorValue)
                 {
-                    errors.Add(errorValue);
+                    return errorValue;
                 }
             }
 
             if (!(allNumbers || allStrings || allBooleans || allDatetimes || allDates))
             {
-                errors.Add(CommonErrors.RuntimeTypeMismatch(irContext));
-                return ErrorValue.Combine(irContext, errors);
-            }
-
-            if (errors.Count != 0)
-            {
-                return ErrorValue.Combine(irContext, errors);
+                return CommonErrors.RuntimeTypeMismatch(irContext);
             }
 
             var compareToResultModifier = 1;

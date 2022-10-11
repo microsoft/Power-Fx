@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx
@@ -80,13 +81,7 @@ namespace Microsoft.PowerFx
         /// <returns></returns>
         public static ReadOnlySymbolValues NewFromRecord(RecordValue parameters)
         {
-            var runtimeConfig = new SymbolValues();
-            foreach (var kv in parameters.Fields)
-            {
-                runtimeConfig.Add(kv.Name, kv.Value);
-            }
-
-            return runtimeConfig;
+            return new RowScopeSymbolValues(parameters, false);
         }
 
         /// <summary>
@@ -98,18 +93,15 @@ namespace Microsoft.PowerFx
         /// <returns></returns>
         public static ReadOnlySymbolValues NewRowScope(RecordValue parameters, ReadOnlySymbolValues parent = null, string debugName = null)
         {
-            var s = new SymbolValues
+            ReadOnlySymbolValues s = new RowScopeSymbolValues(parameters, true)
             {
-                Parent = parent,
-                DebugName = debugName ?? "(rowScope)"                
+                DebugName = debugName ?? "(rowScope)"
             };
 
-            foreach (var kv in parameters.Fields)
+            if (parent != null)
             {
-                s.Add(kv.Name, kv.Value);
+                s = Compose(s, parent);
             }
-
-            s.Add("ThisRecord", parameters);
 
             return s;
         }
@@ -135,6 +127,16 @@ namespace Microsoft.PowerFx
             }
 
             return s;
+        }
+
+        /// <summary>
+        /// Compose multiple symbol values into a single one. 
+        /// </summary>
+        /// <param name="tables">Ordered list of symbol tables.</param>
+        /// <returns></returns>
+        public static ReadOnlySymbolValues Compose(params ReadOnlySymbolValues[] tables)
+        {
+            return new ComposedReadOnlySymbolTableValues(tables);
         }
     }
 }

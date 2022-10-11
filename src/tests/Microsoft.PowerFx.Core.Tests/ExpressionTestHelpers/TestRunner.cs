@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core.Tests
@@ -345,7 +346,8 @@ namespace Microsoft.PowerFx.Core.Tests
                 foreach (var field in fields)
                 {
                     sb.Append(dil);
-                    sb.Append(field.Name);
+                    var escapedName = IdentToken.MakeValidIdentifier(field.Name);
+                    sb.Append(escapedName);
                     sb.Append(':');
                     TestToString(field.Value, sb);
 
