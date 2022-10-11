@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Parser;
@@ -159,7 +160,7 @@ namespace Microsoft.PowerFx.Intellisense
         internal static bool TryParseFunctionNameWithNamespace(string functionName, out Identifier ident)
         {
             ident = null;
-            var parseResult = TexlParser.ParseScript($"{functionName}()");
+            var parseResult = TexlParser.ParseScript($"{functionName}()", CultureInfo.CurrentUICulture);
             if (!parseResult.IsSuccess)
             {
                 return false;

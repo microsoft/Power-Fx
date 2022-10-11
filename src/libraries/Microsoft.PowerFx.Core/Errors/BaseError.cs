@@ -111,12 +111,12 @@ namespace Microsoft.PowerFx.Core.Errors
 
         private static readonly string HowToFixSuffix = "_HowToFix";
 
-        internal BaseError(IDocumentError innerError, Exception internalException, DocumentErrorKind kind, DocumentErrorSeverity severity, ErrorResourceKey errKey, params object[] args)
-            : this(innerError, internalException, kind, severity, errKey, textSpan: null, sinkTypeErrors: null, args: args)
+        internal BaseError(IDocumentError innerError, Exception internalException, DocumentErrorKind kind, DocumentErrorSeverity severity, ErrorResourceKey errKey, CultureInfo locale, params object[] args)
+            : this(innerError, internalException, kind, severity, errKey, textSpan: null, sinkTypeErrors: null, locale, args: args)
         {
         }
 
-        internal BaseError(IDocumentError innerError, Exception internalException, DocumentErrorKind kind, DocumentErrorSeverity severity, ErrorResourceKey errKey, Span textSpan, IEnumerable<string> sinkTypeErrors, params object[] args)
+        internal BaseError(IDocumentError innerError, Exception internalException, DocumentErrorKind kind, DocumentErrorSeverity severity, ErrorResourceKey errKey, Span textSpan, IEnumerable<string> sinkTypeErrors, CultureInfo locale, params object[] args)
         {
             Contracts.AssertValueOrNull(innerError);
             Contracts.AssertValueOrNull(args);
@@ -141,10 +141,11 @@ namespace Microsoft.PowerFx.Core.Errors
             // that haven't yet been converted to an ErrorResource in the Resources.pares file.
             string shortMessage;
             string longMessage;
-            if (!StringResources.TryGetErrorResource(errKey, out var errorResource))
+
+            if (!StringResources.TryGetErrorResource(errKey, out var errorResource, locale?.Name))
             {
                 errorResource = null;
-                shortMessage = StringResources.Get(errKey.Key);
+                shortMessage = StringResources.Get(errKey.Key, locale?.Name);
                 longMessage = null;
             }
             else
