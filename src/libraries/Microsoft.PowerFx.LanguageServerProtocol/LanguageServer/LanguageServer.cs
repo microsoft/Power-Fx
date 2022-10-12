@@ -113,7 +113,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                         case TextDocumentNames.CodeAction:
                             HandleCodeActionRequest(id, paramsJson);
                             break;
-                        case TextDocumentNames.CommandExecuted:
+                        case CustomProtocolNames.CommandExecuted:
                             HandleCommandExecutedRequest(id, paramsJson);
                             break;
                         default:

@@ -568,7 +568,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             {
                 jsonrpc = "2.0",
                 id = "testDocument1",
-                method = "textDocument/codeAction",
+                method = TextDocumentNames.CodeAction,
                 @params = new CodeActionParams()
                 {
                     TextDocument = new TextDocumentIdentifier()
@@ -629,7 +629,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             {
                 jsonrpc = "2.0",
                 id = "testDocument1",
-                method = "textDocument/codeAction",
+                method = TextDocumentNames.CodeAction,
                 @params = new CodeActionParams()
                 {
                     TextDocument = new TextDocumentIdentifier()
@@ -686,7 +686,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             {
                 jsonrpc = "2.0",
                 id = "testDocument1",
-                method = "textDocument/codeAction",
+                method = TextDocumentNames.CodeAction,
                 @params = new CodeActionParams()
                 {
                     TextDocument = new TextDocumentIdentifier()
@@ -731,7 +731,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             {
                 jsonrpc = "2.0",
                 id = "testDocument1",
-                method = "textDocument/commandExecuted",
+                method = CustomProtocolNames.CommandExecuted,
                 @params = new CommandExecutedParams()
                 {
                     TextDocument = new TextDocumentIdentifier()
