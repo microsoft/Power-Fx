@@ -62,7 +62,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             returnType = argTypes[0];
 
             var exprType = argTypes[1];
-            if (!exprType.IsPrimitive || exprType.IsOptionSet)
+            if (!exprType.IsPrimitive)
             {
                 fValid = false;
                 errors.EnsureError(args[1], TexlStrings.ErrSortWrongType);
@@ -210,6 +210,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             switch (type.Kind)
             {
+                case DKind.OptionSet:
+                case DKind.OptionSetValue:
+                    return "3";
                 case DKind.Boolean:
                     return "0";
                 case DKind.Number:
@@ -243,7 +246,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             foreach (var column in allColumns)
             {
-                if (column.Type.IsPrimitive && !column.Type.IsOptionSet)
+                if (column.Type.IsPrimitive)
                 {
                     primitiveColumnsAndComparatorIds.AppendFormat(
                         "{0}\"{1}\":{2}",
