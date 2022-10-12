@@ -104,7 +104,7 @@ namespace Microsoft.PowerFx
             if (!string.IsNullOrEmpty(codeActionResult.ActionResultContext?.HandlerName) &&
                 _handlers.TryGetValue(codeActionResult.ActionResultContext.HandlerName, out ICodeFixHandler handler))
             {
-                handler.OnCommandExecuted(codeActionResult);
+                handler.OnCodeActionApplied(codeActionResult);
             }
         }
     }

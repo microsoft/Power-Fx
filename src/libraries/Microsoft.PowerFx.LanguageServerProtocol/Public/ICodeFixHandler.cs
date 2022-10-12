@@ -22,6 +22,6 @@ namespace Microsoft.PowerFx
             CheckResult checkResult,
             CancellationToken cancel);
 
-        void OnCommandExecuted(CodeActionResult codeActionResult);
+        void OnCodeActionApplied(CodeActionResult codeActionResult);
     }
 }

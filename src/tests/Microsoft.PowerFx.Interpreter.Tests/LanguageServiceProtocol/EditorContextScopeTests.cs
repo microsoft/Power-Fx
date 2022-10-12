@@ -50,7 +50,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
 
         private class MyEmptyHandler : ICodeFixHandler
         {
-            public void OnCommandExecuted(CodeActionResult codeActionResult)
+            public void OnCodeActionApplied(CodeActionResult codeActionResult)
             {
                 // Empty implementaion.
             }
@@ -66,7 +66,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
 
         private class MyHandler : ICodeFixHandler
         {
-            public void OnCommandExecuted(CodeActionResult codeActionResult)
+            public void OnCodeActionApplied(CodeActionResult codeActionResult)
             {
                 // Empty implementaion.
             }
