@@ -24,12 +24,8 @@ namespace PowerFXBenchmark.Inputs.Models
 #pragma warning restore CS8601 // Possible null reference assignment.
     }
 
-    public class RootMetadata
+    public class RootMetadata : PropertyMetadata
     {
-        public string Type { get; set; }
-
-        public string Time { get; set; }
-
         public IDictionary<string, PropertyMetadata> PropertyMetadata { get; set; } = new Dictionary<string, PropertyMetadata>();
     }
 

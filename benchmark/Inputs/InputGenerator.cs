@@ -1,11 +1,5 @@
 ﻿using PowerFXBenchmark.Builders;
 using PowerFXBenchmark.Inputs.Models;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PowerFXBenchmark.Inputs
 {
@@ -13,7 +7,7 @@ namespace PowerFXBenchmark.Inputs
     {
         public static string GenerateJson(string? fileName = null)
         {
-            fileName ??= "telemetry_6KB";
+            fileName ??= "json_small";
             return File.ReadAllText($"Inputs\\Json\\{fileName}.json");
         }
 
@@ -23,9 +17,19 @@ namespace PowerFXBenchmark.Inputs
             return builder
                 .WithId("powerfx-test-1")
                 .WithType("powerfx-test-1")
-                .WithRootProperty("Temperature", 1)
-                .WithRootProperty("Humidity", 123)
+                .WithRootProperty("Temperature", 112)
+                .WithRootProperty("Humidity", 123.5)
                 .WithRootProperty("DisplayName", "i am display name")
+                .Build();
+        }
+        public static TestObjectSchema GenerateTestObjectSchema()
+        {
+            var builder = new TestObjectSchemaBuilder();
+            return builder
+                .AddNestedPrimitiveSchema("Temperature", TestObjDataKind.Integer)
+                .AddNestedPrimitiveSchema("ComfortIndex", TestObjDataKind.Integer)
+                .AddNestedPrimitiveSchema("Humidity", TestObjDataKind.Double)
+                .AddNestedPrimitiveSchema("DisplayName", TestObjDataKind.String)
                 .Build();
         }
     }

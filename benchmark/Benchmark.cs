@@ -11,169 +11,108 @@ using System.Threading.Tasks;
 using System.Linq.Expressions;
 using PowerFXBenchmark.Builders;
 using PowerFXBenchmark.Inputs.Models;
-using PowerFXBenchmark.UntypedObjects;
+using PowerFXBenchmark.TypedObjects;
 using PowerFXBenchmark.Inputs;
+using System.Text.Json.Nodes;
 
 namespace PowerFXBenchmark
 {
     public class Benchmark
     {
-        private readonly EngineWrapper engine;
+        public readonly RecalcEngine engine;
 
-        private readonly RecordType untypedRecordtype;
-        private readonly RecordType stronglyTypedRecordtype;
-        private readonly IExpression Expression_Untyped;
-        private readonly IExpression Expression_StronglyTyped;
-        private readonly IExpression parseJsonExpression;
+        public readonly TestObject testObj;
+        public readonly TestObjectSchema testObjSchema;
 
-        private readonly IExpression Expression_Complexity1;
-        private readonly IExpression Expression_Complexity2;
+        private readonly string jsonString;
+        private readonly JsonElement jsonElement;
 
-        private readonly RecordValue stronglyTypedInput;
-        private readonly TestObject testObj;
-        private readonly string testObjJson;
-        private readonly string telemetryJson;
-        private readonly JsonElement telemetryJsonElement;
+        public readonly RecordType testObjRecordType;
+        public readonly RecordType jsonRecordType;
+        public readonly RecordValue testObjRecordValue;
+        public readonly RecordValue jsonRecordValue;
 
+        public readonly ParseResult parseResult;
+        public readonly IExpressionEvaluator expressionEvaluator;
+
+        private readonly string expression = "testObj.Temperature < 10 && testObj.DisplayName = \"blah\" && (testObj.ComfortIndex * 3.14 > 140) && json.data.properties.MyTemperature < 10 && json.data.properties.MyName = \"blah\" && (json.data.comfortIndex * 3.14 > 140)";
 
         public Benchmark()
         {
-            engine = new EngineWrapper();
+            engine = new RecalcEngine();
 
-            // Input
+            // Raw Inputs
             testObj = InputGenerator.GenerateTestObject();
-            testObjJson = InputGenerator.GenerateJson("susoTestObject");
-            telemetryJson = InputGenerator.GenerateJson("telemetry_6KB");
-            telemetryJsonElement = JsonDocument.Parse(telemetryJson).RootElement;
+            testObjSchema = InputGenerator.GenerateTestObjectSchema();
+            jsonString = InputGenerator.GenerateJson("json_small");
 
-            stronglyTypedInput = RecordValue.NewRecordFromFields(
-                new NamedValue("testObj", RecordValue.FromJson(testObjJson)),
-                new NamedValue("event", RecordValue.FromJson(telemetryJson)));
+            // Intermediate Inputs
+            jsonElement = JsonDocument.Parse(jsonString).RootElement;
 
-            // Input schema
-            untypedRecordtype = new RecordType()
-                .Add(new NamedFormulaType("testObj", FormulaType.UntypedObject))
-                .Add(new NamedFormulaType("event", FormulaType.UntypedObject));
-            stronglyTypedRecordtype = stronglyTypedInput.Type;
+            // Power FX formats
+            testObjRecordType = Convert_TestObjSchema_To_PowerFX_RecordType();
+            testObjRecordValue = Convert_TestObj_To_PowerFX_RecordValue();
+            jsonRecordValue = (RecordValue)Convert_JsonElement_To_PowerFX_RecordValue();
+            jsonRecordType = jsonRecordValue.Type;
 
-            // Compiled expressions
-            parseJsonExpression = engine.CompiledSingleExpression(
-                "ParseJSON(x)",
-                new RecordType().Add(new NamedFormulaType("x", FormulaType.String)));
-
-            Expression_Untyped = ParseNCheckExpression_UntypedInput();
-            Expression_StronglyTyped = ParseNCheckExpression_StronglyTypedInput();
-            Expression_Complexity1 = engine.CompiledSingleExpression(
-                "(Value(event.data.temperature) - 32) * 5 / 9 > 10",
-                untypedRecordtype);
-            Expression_Complexity2 = engine.CompiledSingleExpression(
-                "(Value(event.data.temperature) - 32) * 5 / 9 > 10 && Text(testObj.'$metadata'.type) = \"powerfx-test-1\"",
-                untypedRecordtype);
+            parseResult = Parse();
+            expressionEvaluator = TypeCheck();
         }
 
         [Benchmark]
-        public IExpression ParseNCheckExpression_StronglyTypedInput()
+        public RecordType Convert_TestObjSchema_To_PowerFX_RecordType()
         {
-            return engine.CompiledSingleExpression(
-                "(testObj.Temperature - 32) * 5 / 9 > 10 && !event.data.isActive && event.data.testId <> \"mytest\"",
-                //"(Value(testObj.Temperature) - 32) * 5 / 9 > 10  && !event.data.isActive && Text(event.data.testId) <> \"mytest\"",
-                stronglyTypedRecordtype);
+            return testObjSchema.ToRecordType();
         }
 
         [Benchmark]
-        public IExpression ParseNCheckExpression_UntypedInput()
+        public FormulaValue Convert_JsonElement_To_PowerFX_RecordValue()
         {
-            return engine.CompiledSingleExpression(
-                "(Value(testObj.Temperature) - 32) * 5 / 9 > 10  && !Boolean(event.data.isActive) && Text(event.data.testId) <> \"mytest\"",
-                untypedRecordtype);
-        }
-
-        /// <summary>
-        /// Evaluate "pre-compiled" expression, including parsing JSON string to untyped object and explicit conversion within the expression
-        /// </summary>
-        [Benchmark]
-        public async Task<object> Evaluation_UntypedInput_ParseJSON()
-        {
-            var t1 = parseJsonExpression.EvalAsync(RecordValue.NewRecordFromFields(
-                new NamedValue("x", FormulaValue.New(testObjJson))), default);
-            var t2 = parseJsonExpression.EvalAsync(RecordValue.NewRecordFromFields(
-                new NamedValue("x", FormulaValue.New(telemetryJson))), default);
-
-            await Task.WhenAll(t1, t2);
-            var parameters = RecordValue.NewRecordFromFields(
-                new NamedValue("testObj", t1.Result),
-                new NamedValue("event", t2.Result));
-
-            var result = await Expression_Untyped
-                .EvalAsync(parameters, default)
-                .ConfigureAwait(false);
-
-            return result.ToObject();
-        }
-
-        /// <summary>
-        /// Evaluate "pre-compiled" expression, with C# TestObject and json string as input.
-        /// </summary>
-        [Benchmark]
-        public async Task<object> Evaluation_UntypedInput_CustomUntypedObject()
-        {
-            var builder = new RecordValueBuilder();
-            var parameters = builder
-                .WithTestObject(testObj)
-                .WithEventJson(telemetryJson)
-                .Build();
-            var result = await Expression_Untyped
-                .EvalAsync(parameters, default)
-                .ConfigureAwait(false);
-
-            return result.ToObject();
-        }
-
-        /// <summary>
-        /// Evaluate "pre-compiled" expression, including parsing JSON string into strongly typed record.
-        /// </summary>
-        [Benchmark]
-        public async Task<object> Evaluation_StronglyTypedInput()
-        {
-            var parameters = RecordValue
-                .NewRecordFromFields(
-                    new NamedValue("testObj", RecordValue.FromJson(testObjJson)),
-                    new NamedValue("event", RecordValue.FromJson(telemetryJsonElement)));
-            var result = await Expression_StronglyTyped
-                .EvalAsync(parameters, default)
-                .ConfigureAwait(false);
-
-            return result.ToObject();
+            return FormulaValue.FromJson(jsonElement);
         }
 
         [Benchmark]
-        public async Task<object> Evaluation_Expression_Complexity1()
+        public RecordValue Convert_TestObj_To_PowerFX_RecordValue()
         {
-            var builder = new RecordValueBuilder();
-            var parameters = builder
-                .WithTestObject(testObj)
-                .WithEventJson(telemetryJson)
-                .Build();
-            var result = await Expression_Complexity1
-                .EvalAsync(parameters, default)
-                .ConfigureAwait(false);
-
-            return result.ToObject();
+            return new TestObjectRecordValue(testObj, testObjSchema, testObjRecordType);
         }
 
         [Benchmark]
-        public async Task<object> Evaluation_Expression_Complexity2()
+        public ParseResult Parse()
         {
-            var builder = new RecordValueBuilder();
-            var parameters = builder
-                .WithTestObject(testObj)
-                .WithEventJson(telemetryJson)
-                .Build();
-            var result = await Expression_Complexity2
-                .EvalAsync(parameters, default)
-                .ConfigureAwait(false);
+            var parse = engine.Parse(expression);
+            if (!parse.IsSuccess)
+            {
+                throw new Exception("Parse error");
+            }
 
-            return result.ToObject();
+            return parse;
+        }
+
+        [Benchmark]
+        public IExpressionEvaluator TypeCheck()
+        {
+            var symbolTable = new SymbolTable();
+            symbolTable.AddVariable("testObj", testObjRecordType);
+            symbolTable.AddVariable("json", jsonRecordType);
+
+            var checkResult = engine.Check(parseResult, null, symbolTable);
+            if (!checkResult.IsSuccess)
+            {
+                throw new Exception("Check error");
+            }
+
+            return checkResult.GetEvaluator();
+        }
+
+        [Benchmark]
+        public async Task<object> EvaluateAsync()
+        {
+            var symbolValues = new SymbolValues()
+                .Add("testObj", testObjRecordValue)
+                .Add("json", jsonRecordValue);
+
+            return (await expressionEvaluator.EvalAsync(default, symbolValues).ConfigureAwait(false)).ToObject();
         }
     }
 }

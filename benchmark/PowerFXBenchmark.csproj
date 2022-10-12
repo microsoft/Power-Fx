@@ -9,19 +9,16 @@
 
 	<ItemGroup>
 		<PackageReference Include="BenchmarkDotNet" Version="0.13.1" />
-		<PackageReference Include="Microsoft.PowerFx.Core" Version="0.2.2-preview" />
-		<PackageReference Include="Microsoft.PowerFx.Interpreter" Version="0.2.2-preview" />
+		<PackageReference Include="Microsoft.PowerFx.Core" Version="0.2.2-preview.20220818-317600" />
+		<PackageReference Include="Microsoft.PowerFx.Interpreter" Version="0.2.2-preview.20220818-317600" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <None Update="Inputs\Json\susoTestObject.json">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </None>
-	  <None Update="Inputs\Json\telemetry_6KB.json">
+	  <None Update="Inputs\Json\json_6KB.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
-	  <None Update="Inputs\Json\telemetry_small.json">
+	  <None Update="Inputs\Json\json_small.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
 	</ItemGroup>
