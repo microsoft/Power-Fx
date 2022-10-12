@@ -718,6 +718,11 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 
             var codeActionResult = response.Result[CodeActionKind.QuickFix][0];
 
+            Assert.NotNull(codeActionResult);
+            Assert.NotNull(codeActionResult.ActionResultContext);
+            Assert.Equal(nameof(BlankHandler), codeActionResult.ActionResultContext.HandlerName);
+            Assert.Equal("Suggestion", codeActionResult.ActionResultContext.ActionIdentifier);
+
             _sendToClientData.Clear();
 
             var testServer1 = new TestLanguageServer(_sendToClientData.Add, scopeFactory);
@@ -729,6 +734,10 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
                 method = "textDocument/commandExecuted",
                 @params = new CommandExecutedParams()
                 {
+                    TextDocument = new TextDocumentIdentifier()
+                    {
+                        Uri = documentUri
+                    },
                     Command = CommandName.CodeActionApplied,
                     Argument = JsonSerializer.Serialize(codeActionResult)
                 }

@@ -159,12 +159,20 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             {
                 case CommandName.CodeActionApplied:
                     var codeActionResult = JsonSerializer.Deserialize<CodeActionResult>(commandExecutedParams.Argument);
-                    Contracts.AssertValue(codeActionResult?.ActionResultContext);
+                    if (codeActionResult.ActionResultContext == null)
+                    {
+                        return;
+                    }
 
-                    // TODO: add code extension.
+                    var scope = _scopeFactory.GetOrCreateInstance(commandExecutedParams.TextDocument.Uri);
+                    if (scope is IPowerFxScopeQuickFix scopeQuickFix)
+                    {
+                        scopeQuickFix.OnCommandExecuted(codeActionResult);
+                    }
+
                     break;
                 default:
-                    // TODO: Handle fallback cases.
+                    // TODO: Handle fallback cases (unsupported command).
                     break;
             }
         }

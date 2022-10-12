@@ -21,5 +21,7 @@ namespace Microsoft.PowerFx
             Engine engine,
             CheckResult checkResult,
             CancellationToken cancel);
+
+        void OnCommandExecuted(CodeActionResult codeActionResult);
     }
 }

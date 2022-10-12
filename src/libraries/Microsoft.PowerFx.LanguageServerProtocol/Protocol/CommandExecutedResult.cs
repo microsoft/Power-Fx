@@ -10,6 +10,8 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
     /// </summary>
     public class CommandExecutedParams
     {
+        public TextDocumentIdentifier TextDocument { get; set; }
+
         /// <summary>
         /// Gets or sets the command name.
         /// </summary>

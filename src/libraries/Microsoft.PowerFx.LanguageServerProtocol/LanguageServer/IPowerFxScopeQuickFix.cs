@@ -16,5 +16,11 @@ namespace Microsoft.PowerFx.Core
         /// <param name="expression">The formula expression.</param>
         /// <returns>Collection of quick fixes.</returns>
         CodeActionResult[] Suggest(string expression);
+
+        /// <summary>
+        /// Callback action on command executed.
+        /// </summary>
+        /// <param name="codeActionResult">CodeActionResult instance.</param>
+        void OnCommandExecuted(CodeActionResult codeActionResult);
     }
 }

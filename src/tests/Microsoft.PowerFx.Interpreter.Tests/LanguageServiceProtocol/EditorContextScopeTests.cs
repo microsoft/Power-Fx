@@ -50,6 +50,11 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
 
         private class MyEmptyHandler : ICodeFixHandler
         {
+            public void OnCommandExecuted(CodeActionResult codeActionResult)
+            {
+                // Empty implementaion.
+            }
+
             public async Task<IEnumerable<CodeActionResult>> SuggestFixesAsync(
                 Engine engine,
                 CheckResult checkResult,
@@ -61,6 +66,11 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
 
         private class MyHandler : ICodeFixHandler
         {
+            public void OnCommandExecuted(CodeActionResult codeActionResult)
+            {
+                // Empty implementaion.
+            }
+
             public async Task<IEnumerable<CodeActionResult>> SuggestFixesAsync(
                 Engine engine, 
                 CheckResult checkResult,

@@ -8,7 +8,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
     /// </summary>
     public class CodeActionResultContext
     {
-        public string ProviderName { get; set; }
+        public string HandlerName { get; set; }
 
         public string ActionIdentifier { get; set; }
     }

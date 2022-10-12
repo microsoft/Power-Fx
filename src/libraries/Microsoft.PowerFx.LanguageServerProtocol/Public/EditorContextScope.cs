@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using Microsoft.PowerFx.Core;
@@ -35,7 +36,7 @@ namespace Microsoft.PowerFx
         internal readonly ReadOnlySymbolTable _symbols;
 
         // List of handlers to get code-fix suggestions. 
-        private readonly List<ICodeFixHandler> _handlers = new List<ICodeFixHandler>();
+        private readonly Dictionary<string, ICodeFixHandler> _handlers = new Dictionary<string, ICodeFixHandler>();
 
         internal EditorContextScope(
             Engine engine,
@@ -71,7 +72,12 @@ namespace Microsoft.PowerFx
 
         public void AddQuickFixHandler(ICodeFixHandler codeFixHandler)
         {
-            _handlers.Add(codeFixHandler ?? throw new ArgumentNullException(nameof(codeFixHandler)));
+            if (codeFixHandler == null)
+            {
+                throw new ArgumentNullException(nameof(codeFixHandler));
+            }
+
+            _handlers.Add(codeFixHandler.GetType().Name, codeFixHandler);
         }
 
         CodeActionResult[] IPowerFxScopeQuickFix.Suggest(string expression)
@@ -79,18 +85,27 @@ namespace Microsoft.PowerFx
             var check = Check(expression);
 
             var list = new List<CodeActionResult>();
-            
+
             // Show fixes for both warnings and errors. 
             foreach (var handler in _handlers)
             {
-                var fixes = handler.SuggestFixesAsync(_engine, check, CancellationToken.None).Result;
+                var fixes = handler.Value.SuggestFixesAsync(_engine, check, CancellationToken.None).Result;
                 if (fixes != null)
                 {
                     list.AddRange(fixes);
                 }
-            }            
+            }
 
             return list.ToArray();
+        }
+
+        void IPowerFxScopeQuickFix.OnCommandExecuted(CodeActionResult codeActionResult)
+        {
+            if (!string.IsNullOrEmpty(codeActionResult.ActionResultContext?.HandlerName) &&
+                _handlers.TryGetValue(codeActionResult.ActionResultContext.HandlerName, out ICodeFixHandler handler))
+            {
+                handler.OnCommandExecuted(codeActionResult);
+            }
         }
     }
 }

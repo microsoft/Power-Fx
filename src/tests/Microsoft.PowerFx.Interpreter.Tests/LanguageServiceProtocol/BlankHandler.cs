@@ -54,7 +54,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
                         Title = Title,
                         ActionResultContext = new CodeActionResultContext
                         {
-                            ProviderName = nameof(BlankHandler),
+                            HandlerName = nameof(BlankHandler),
                             ActionIdentifier = "Suggestion"
                         }
                     });
@@ -69,6 +69,11 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             var x = left + newText + right;
 
             return x;
+        }
+
+        public void OnCommandExecuted(CodeActionResult codeActionResult)
+        {
+            // Empty implementaion.
         }
     }
 }
