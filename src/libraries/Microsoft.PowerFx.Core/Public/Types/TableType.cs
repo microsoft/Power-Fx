@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Syntax;
 
 namespace Microsoft.PowerFx.Types
 {       
@@ -107,6 +108,14 @@ namespace Microsoft.PowerFx.Types
 
         internal override void DefaultExpressionValue(StringBuilder sb)
         {
+            var symbolName = TableSymbolName;
+            if (symbolName != null)
+            {
+                // If this is coming from a symbol, we need to reference that. 
+                sb.Append(IdentToken.MakeValidIdentifier(symbolName));
+                return;
+            }
+
             sb.Append("Table(");
 
             ToRecord().DefaultExpressionValue(sb);

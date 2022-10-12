@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Globalization;
 using System.Linq;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Parser;
@@ -11,7 +12,10 @@ using Xunit;
 namespace Microsoft.PowerFx.Core.Tests
 {
     public class ParseTests : PowerFxTest
-    {      
+    {
+        private readonly CultureInfo _otherLocale = new ("pt-BR");
+        private readonly CultureInfo _defaultLocale = new ("en-US");
+
         [Theory]
         [InlineData("0")]
         [InlineData("-0")]
@@ -59,6 +63,7 @@ namespace Microsoft.PowerFx.Core.Tests
         public void TexlParseNumericLiterals_Negative(string script)
         {
             TestParseErrors(script, 1, StringResources.Get(TexlStrings.ErrOperatorExpected));
+            TestParseErrorsLocale(script, _otherLocale, StringResources.Get(TexlStrings.ErrOperatorExpected, _otherLocale.Name));
         }
 
         [Theory]
@@ -69,6 +74,7 @@ namespace Microsoft.PowerFx.Core.Tests
         public void TexlParseLargeNumerics_Negative(string script)
         {
             TestParseErrors(script, 1, StringResources.Get(TexlStrings.ErrNumberTooLarge));
+            TestParseErrorsLocale(script, _otherLocale, StringResources.Get(TexlStrings.ErrNumberTooLarge, _otherLocale.Name));
         }
 
         [Theory]
@@ -514,6 +520,7 @@ namespace Microsoft.PowerFx.Core.Tests
         public void TexlExcessivelyDeepRules(string script)
         {
             TestParseErrors(script, count: 1, errorMessage: StringResources.Get(TexlStrings.ErrRuleNestedTooDeeply));
+            TestParseErrorsLocale(script, _otherLocale, StringResources.Get(TexlStrings.ErrRuleNestedTooDeeply, _otherLocale.Name));
         }
 
         [Theory]
@@ -523,7 +530,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("/* Block Comment Closed */")]
         public void TestBlankNodesAndCommentNodeOnlys(string script)
         {
-            var result = TexlParser.ParseScript(script);
+            var result = TexlParser.ParseScript(script, _defaultLocale);
             var node = result.Root;
 
             Assert.NotNull(node);
@@ -557,7 +564,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("a.b.c.d.e.f.g.h.i.j.k.l.m.n.o.p.q.r.s.t.w.x.y.z", "a.b.c.d.e.f.g.h.i.j.k.l.m.n.o.p.q.r.s.t.w.x.y.z")]
         public void TestNodeToDPath(string script, string dpath)
         {
-            var result = TexlParser.ParseScript(script);
+            var result = TexlParser.ParseScript(script, _defaultLocale);
             var node = result.Root;
 
             Assert.NotNull(node);
@@ -693,7 +700,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
         internal void TestRoundtrip(string script, string expected = null, NodeKind expectedNodeKind = NodeKind.Error, Action<TexlNode> customTest = null, TexlParser.Flags flags = TexlParser.Flags.None)
         {
-            var result = TexlParser.ParseScript(script, flags: flags);
+            var result = TexlParser.ParseScript(script, _defaultLocale, flags: flags);
             var node = result.Root;            
                         
             Assert.NotNull(node);
@@ -722,7 +729,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
         internal void TestParseErrors(string script, int count = 1, string errorMessage = null)
         {
-            var result = TexlParser.ParseScript(script);
+            var result = TexlParser.ParseScript(script, _defaultLocale);
             Assert.NotNull(result.Root);
             Assert.True(result.HasError);
             Assert.True(result._errors.Count >= count);
@@ -731,16 +738,25 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.True(errorMessage == null || result._errors.Any(err => err.ShortMessage == errorMessage));
         }
 
+        internal void TestParseErrorsLocale(string script, CultureInfo locale, string errorMessage)
+        {
+            var result = TexlParser.ParseScript(script, locale);
+
+            Assert.NotNull(result.Root);
+            Assert.True(result.HasError);
+            Assert.True(errorMessage == null || result._errors.Any(err => err.ShortMessage == errorMessage));
+        }
+
         internal void TestFormulasParseRoundtrip(string script)
         {
-            var result = TexlParser.ParseFormulasScript(script);
+            var result = TexlParser.ParseFormulasScript(script, new CultureInfo("en-US"));
 
             Assert.False(result.HasError);
         }
 
         internal void TestFormulasParseError(string script)
         {
-            var result = TexlParser.ParseFormulasScript(script);
+            var result = TexlParser.ParseFormulasScript(script, new CultureInfo("en-US"));
 
             Assert.True(result.HasError);
         }
