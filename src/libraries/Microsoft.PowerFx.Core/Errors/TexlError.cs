@@ -26,8 +26,8 @@ namespace Microsoft.PowerFx.Core.Errors
 
         public override IEnumerable<string> SinkTypeErrors => _nameMapIDs;
 
-        public TexlError(Token tok, DocumentErrorSeverity severity, ErrorResourceKey errKey, params object[] args)
-            : base(null, null, DocumentErrorKind.AXL, severity, errKey, args)
+        public TexlError(Token tok, DocumentErrorSeverity severity, ErrorResourceKey errKey, CultureInfo locale, params object[] args)
+            : base(null, null, DocumentErrorKind.AXL, severity, errKey, locale, args)
         {
             Contracts.AssertValue(tok);
 
@@ -37,8 +37,8 @@ namespace Microsoft.PowerFx.Core.Errors
             _nameMapIDs = new List<string>();
         }
 
-        public TexlError(TexlNode node, DocumentErrorSeverity severity, ErrorResourceKey errKey, params object[] args)
-            : base(null, null, DocumentErrorKind.AXL, severity, errKey, args)
+        public TexlError(TexlNode node, DocumentErrorSeverity severity, ErrorResourceKey errKey, CultureInfo locale, params object[] args)
+            : base(null, null, DocumentErrorKind.AXL, severity, errKey, locale, args)
         {
             Contracts.AssertValue(node);
             Contracts.AssertValue(node.Token);

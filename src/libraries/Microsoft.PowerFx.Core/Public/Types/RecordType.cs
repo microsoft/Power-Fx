@@ -8,6 +8,7 @@ using System.Text;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Syntax;
 
 namespace Microsoft.PowerFx.Types
 {
@@ -100,6 +101,17 @@ namespace Microsoft.PowerFx.Types
 
         internal override void DefaultExpressionValue(StringBuilder sb)
         {
+            var symbolName = TableSymbolName;
+            if (symbolName != null)
+            {
+                // If this is coming from a symbol, we need to reference that. 
+                // Get a blank record of the given Symbol type. 
+                sb.Append("First(FirstN(");
+                sb.Append(IdentToken.MakeValidIdentifier(symbolName));
+                sb.Append(",0))");
+                return;
+            }
+
             var flag = true;
 
             sb.Append("{");
@@ -113,7 +125,7 @@ namespace Microsoft.PowerFx.Types
 
                 flag = false;
                 
-                sb.Append($"'{CharacterUtils.Escape(field.Name)}':");
+                sb.Append($"{IdentToken.MakeValidIdentifier(field.Name)}:");
 
                 field.Type.DefaultExpressionValue(sb);
             }
