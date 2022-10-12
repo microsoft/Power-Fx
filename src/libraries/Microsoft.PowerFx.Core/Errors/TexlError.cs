@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
@@ -26,6 +27,18 @@ namespace Microsoft.PowerFx.Core.Errors
 
         public override IEnumerable<string> SinkTypeErrors => _nameMapIDs;
 
+        [Obsolete("Use overload with explicit Culture")]
+        public TexlError(Token tok, DocumentErrorSeverity severity, ErrorResourceKey errKey, params object[] args)
+            : this(tok, severity, errKey, null, args)
+        {
+        }
+
+        [Obsolete("Use overload with explicit Culture")]
+        public TexlError(TexlNode node, DocumentErrorSeverity severity, ErrorResourceKey errKey, params object[] args)
+            : this(node, severity, errKey, null, args)
+        {
+        }
+
         public TexlError(Token tok, DocumentErrorSeverity severity, ErrorResourceKey errKey, CultureInfo locale, params object[] args)
             : base(null, null, DocumentErrorKind.AXL, severity, errKey, locale, args)
         {
@@ -35,7 +48,7 @@ namespace Microsoft.PowerFx.Core.Errors
             TextSpan = new Span(tok.VerifyValue().Span.Min, tok.VerifyValue().Span.Lim);
 
             _nameMapIDs = new List<string>();
-        }
+        }        
 
         public TexlError(TexlNode node, DocumentErrorSeverity severity, ErrorResourceKey errKey, CultureInfo locale, params object[] args)
             : base(null, null, DocumentErrorKind.AXL, severity, errKey, locale, args)

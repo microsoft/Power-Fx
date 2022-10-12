@@ -111,8 +111,14 @@ namespace Microsoft.PowerFx.Core.Errors
 
         private static readonly string HowToFixSuffix = "_HowToFix";
 
+        [Obsolete("Use overload with explicit Culture")]
+        internal BaseError(IDocumentError innerError, Exception internalException, DocumentErrorKind kind, DocumentErrorSeverity severity, ErrorResourceKey errKey, params object[] args)
+            : this(innerError, internalException, kind, severity, errKey, textSpan: null, sinkTypeErrors: null, locale: null, args: args)
+        {
+        }
+
         internal BaseError(IDocumentError innerError, Exception internalException, DocumentErrorKind kind, DocumentErrorSeverity severity, ErrorResourceKey errKey, CultureInfo locale, params object[] args)
-            : this(innerError, internalException, kind, severity, errKey, textSpan: null, sinkTypeErrors: null, locale, args: args)
+            : this(innerError, internalException, kind, severity, errKey, textSpan: null, sinkTypeErrors: null, locale: locale, args: args)
         {
         }
 
