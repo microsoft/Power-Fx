@@ -114,7 +114,7 @@ namespace Microsoft.PowerFx.Tests
             var result = engine.Parse("3.145");
 
             Assert.False(result.IsSuccess);
-            Assert.StartsWith("Error 2-5: Unexpected character", result.Errors.First().ToString());
+            Assert.StartsWith("Error 2-5: Caratteri non previsti", result.Errors.First().ToString());
         }
 
         [Fact]
