@@ -1654,13 +1654,6 @@ namespace Microsoft.PowerFx.Core.Types
                 fValid &= !fError;
             }
 
-            if (type.ContainsAttachmentType(DPath.Root))
-            {
-                var fError = false;
-                type = type.DropAllMatching(ref fError, DPath.Root, type => type.IsAttachment);
-                fValid &= !fError;
-            }
-
             if (!fValid)
             {
                 type = Unknown;
