@@ -149,8 +149,6 @@ namespace Microsoft.PowerFx.Interpreter
                 {
                     fValid &= DropAllOfKindNested(ref itemType, errors, args[i], DKind.DataEntity);
                 }
-
-                fValid &= DropAttachmentsIfExists(ref itemType, errors, args[i]);
             }
 
             Contracts.Assert(!itemType.IsValid || itemType.IsTable);
