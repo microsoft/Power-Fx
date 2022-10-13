@@ -119,6 +119,7 @@ namespace Microsoft.PowerFx.Core.Errors
 
         [Obsolete("Use overload with explicit Culture")]
         internal BaseError(IDocumentError innerError, Exception internalException, DocumentErrorKind kind, DocumentErrorSeverity severity, ErrorResourceKey errKey, Span textSpan, IEnumerable<string> sinkTypeErrors, params object[] args)
+            : this(innerError, internalException, kind, severity, null, errKey, textSpan, sinkTypeErrors, args)
         {
         }
 
