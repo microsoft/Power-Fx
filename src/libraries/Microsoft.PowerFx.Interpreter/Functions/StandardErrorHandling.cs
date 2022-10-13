@@ -309,7 +309,7 @@ namespace Microsoft.PowerFx.Functions
                     emptyTablePresent |= tableSize == 0;
                 }
 
-                if (arg is BlankValue bv)
+                if (arg is BlankValue bv && bv.IRContext.ResultType._type.IsTable)
                 {
                     blankTablePresent = true;
                 }
@@ -404,9 +404,9 @@ namespace Microsoft.PowerFx.Functions
 
                 (var maxSize, var minSize, var emptyTablePresent, var blankTablePresent) = AnalyzeTableArguments(args);
 
-                // If one arg is blank and among all other args one is empty Table or all other args are scaler or blank.
+                // If one arg is blank table and among all other args, return blank.
                 // e.g. Concatenate(Blank(), []), Concatenate(Blank(), "test"), Concatenate(Blank(), ["test"], []) => Blank()
-                if (blankTablePresent && (emptyTablePresent || maxSize == 0))
+                if (blankTablePresent)
                 {
                     return FormulaValue.NewBlank();
                 }

@@ -218,3 +218,18 @@ Blank()
 
 >> Find(If(1<0,["a","b"]), Filter(["abcdef", "ghijkl"], Len(Value)>10))
 Blank()
+
+>> Concatenate(["a","b"], If(1/0<2,["abcdef", "ghijkl"]))
+Table({Result:Microsoft.PowerFx.Types.ErrorValue},{Result:Microsoft.PowerFx.Types.ErrorValue})
+
+>> Find(If(1/0<2,["a","b"]), ["abcdef", "ghijkl"])
+Table({Result:Microsoft.PowerFx.Types.ErrorValue},{Result:Microsoft.PowerFx.Types.ErrorValue})
+
+>> Concatenate(["a","b"], If(1<0,["abcdef", "ghijkl"]))
+Blank()
+
+>> Find(If(1<0,["a","b"]), ["abcdef", "ghijkl"])
+Blank()
+
+>> Concatenate(If(1<0,["a","b"]), If(1/0<2,["abcdef", "ghijkl"]))
+#Error(Kind=Div0)

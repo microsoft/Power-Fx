@@ -5,37 +5,37 @@ Errors: Error 0-24: The function 'Find' has some invalid arguments.|Error 14-18:
 Errors: Error 0-25: The function 'Find' has some invalid arguments.|Error 5-9: Invalid argument type (Table). Expecting a Text value instead.|Error 11-15: Invalid argument type (Table). Expecting a Text value instead.
 
 >> Find(If(false, ["blank table"], Blank()), If(false, ["blank table"], Blank()), [1])
-Table({Result:1})
+Blank()
 
 >> Find(If(false, ["blank table"], Blank()), If(false, ["blank table"], Blank()), [2])
-Table({Result:Microsoft.PowerFx.Types.ErrorValue})
+Blank()
 
 >> Find(If(false, ["blank table"], Blank()), "textToBeSearchedIn", [5])
-Table({Result:5})
+Blank()
 
 >> Find("textToSearch", If(false, ["blank table"], Blank()), [1])
-Table({Result:Blank()})
+Blank()
 
 >> Find([Blank(), "", ","], If(false, ["blank table"], Blank()), 1)
-Table({Result:1},{Result:1},{Result:Blank()})
+Blank()
 
 >> Find(["b"], ["abc", "cde"])
 Table({Result:2},{Result:Microsoft.PowerFx.Types.ErrorValue})
 
 >> Find(["b"], ["abc", "cde"], If(false, [0], Blank()))
-Table({Result:Blank()},{Result:Microsoft.PowerFx.Types.ErrorValue})
+Blank()
 
 >> Find(["b"], ["abc", "cde"], Filter([0], Value <> Value))
 Table()
 
 >> Find([Blank(), "", ","], If(false, ["blank table"], Blank()), [1, 2, 3])
-Table({Result:1},{Result:Microsoft.PowerFx.Types.ErrorValue},{Result:Microsoft.PowerFx.Types.ErrorValue})
+Blank()
 
 >> Find(If(false, ["blank table"], Blank()), [Blank(), "", "textToBeSearchedIn"], 1)
-Table({Result:1},{Result:1},{Result:1})
+Blank()
 
 >> Find(If(false, ["blank table"], Blank()), [Blank(), "", "textToBeSearchedIn"], [1, 2, 3])
-Table({Result:1},{Result:Microsoft.PowerFx.Types.ErrorValue},{Result:3})
+Blank()
 
 >> Find([Blank(), "", ","], "textToBeSearchedIn,textToBeSearchedIn", 1)
 Table({Result:1},{Result:1},{Result:19})
@@ -56,10 +56,10 @@ Table({Result:1},{Result:10},{Result:19})
 Table({Result:19},{Result:19},{Result:19},{Result:Blank()})
 
 >> Find([Blank(), "", ","], If(false, ["blank table"], Blank()))
-Table({Result:1},{Result:1},{Result:Blank()})
+Blank()
 
 >> Find(If(false, ["blank table"], Blank()), [Blank(), "", "textToBeSearchedIn"])
-Table({Result:1},{Result:1},{Result:1})
+Blank()
 
 >> Find([Blank(), "", ","], "textToBeSearchedIn,textToBeSearchedIn")
 Table({Result:1},{Result:1},{Result:19})
