@@ -129,7 +129,7 @@ namespace Microsoft.PowerFx.Core.Types
         #region New Generic versions of legacy features. 
 
         /// <summary>
-        /// Intended future home of all lazy type expansion (Control, Relationship, Other)
+        /// Intended future home of all lazy type expansion (Control, Relationship, Other).
         /// </summary>
         internal readonly LazyTypeProvider LazyTypeProvider;
 
