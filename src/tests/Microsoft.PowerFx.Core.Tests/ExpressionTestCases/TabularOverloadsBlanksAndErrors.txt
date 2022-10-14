@@ -233,3 +233,12 @@ Blank()
 
 >> Concatenate(If(1<0,["a","b"]), If(1/0<2,["abcdef", "ghijkl"]))
 #Error(Kind=Div0)
+
+>> Concatenate( If(Sqrt(-1)<0,["Hi", "hello"]), If(1/0<2, " world") )
+#Error(Kind=Numeric)
+
+>> Concatenate( If(Sqrt(-1)<0,"Hello"), If(1/0<2, [" world", "people"]) )
+#Error(Kind=Div0)
+
+>> Concatenate( If(Sqrt(-1)<0,["Hi", "hello"]), If(1/0<2, [" world", "people"]) )
+#Error(Kind=Numeric, Div0)
