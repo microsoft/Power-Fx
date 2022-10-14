@@ -93,6 +93,20 @@ namespace Microsoft.PowerFx
             return s;
         }
 
+        // Helper to create a ReadOnly symbol table around a set of core functions.
+        // Important that this is mutable so that it can be changed across engines. 
+        public SymbolTable GetMutableCopy()
+        {
+            var s = new SymbolTable();
+
+            foreach (var func in _functions)
+            {
+                s.AddFunction(func); 
+            }
+
+            return s;
+        }
+
         private protected readonly Dictionary<string, NameLookupInfo> _variables = new Dictionary<string, NameLookupInfo>();
 
         internal readonly Dictionary<DName, IExternalEntity> _environmentSymbols = new Dictionary<DName, IExternalEntity>();

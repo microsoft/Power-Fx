@@ -680,6 +680,49 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             Assert.Equal(33.0, result.ToObject());
         }
+
+        [Theory]
+        [InlineData("Abs", "Abs(-1)")]
+        [InlineData("Abs", "If(true,Abs(-1))")]
+        [InlineData("Abs", "If(false,Abs(-1))")]
+        public void MutableSupportedFunctionsTest(string functionName, string expression)
+        {
+            var engine = new Engine(new PowerFxConfig());
+            var symbolTable = engine.SupportedFunctions.GetMutableCopy();
+
+            symbolTable.RemoveFunction(functionName);
+
+            var engine2 = new Engine2();
+            engine2.UpdateSupportedFunctions(symbolTable);
+
+            var checkFalse = engine2.Check(expression);
+            var checkTrue = engine2.Check("Value(\"1\")");
+
+            Assert.True(checkTrue.IsSuccess);
+            Assert.False(checkFalse.IsSuccess);
+            Assert.Contains(checkFalse.Errors, e => e.MessageKey == "ErrUnknownFunction" && e.Message.Contains($"'{functionName}' is an unknown or unsupported function."));
+        }
+
+        // Helper to set Engine with mutable support functions.
+        private class Engine3 : Engine
+        {
+            public Engine3()
+                : this(new PowerFxConfig())
+            {
+            }
+
+            public Engine3(ReadOnlySymbolTable supportedFunctions)
+                : base(new PowerFxConfig())
+            {
+                SupportedFunctions = supportedFunctions;
+            }
+
+            public Engine3(PowerFxConfig powerFxConfig)
+                : base(powerFxConfig)
+            {
+                SupportedFunctions = null;
+            }
+        }
     } // end test class
 
     // Extension methods, need to be in a top-level class. 
