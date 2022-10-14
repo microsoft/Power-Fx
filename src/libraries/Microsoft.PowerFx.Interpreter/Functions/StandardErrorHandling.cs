@@ -59,11 +59,11 @@ namespace Microsoft.PowerFx.Functions
                 var nonFiniteArgError = FiniteArgumentCheck(functionName, irContext, args);
                 if (nonFiniteArgError != null)
                 {
-                    (var maxSize, var minsSize, var emptyTablePresent, _) = AnalyzeTableArguments(args);
+                    (var maxSize, var minsSize, var emptyTablePresent, _, var errorTablePresent) = AnalyzeTableArguments(args);
 
                     // In case Tabular overload has one scalar error arg and another Table arg we want to
-                    // return table of error.
-                    if (isMultiArgTabularOverload && maxSize > 0)
+                    // return table of error. If error arg is table then return error arg.
+                    if (isMultiArgTabularOverload && maxSize > 0 && !errorTablePresent)
                     {
                         var tableType = (TableType)irContext.ResultType;
                         var resultType = tableType.ToRecord();
@@ -289,12 +289,13 @@ namespace Microsoft.PowerFx.Functions
             return StandardSingleColumnTable<T>(async (runner, context, irContext, args) => targetFunction(irContext, args.OfType<T>().ToArray()));
         }
 
-        private static (int maxTableSize, int minTableSize, bool emptyTablePresent, bool blankTablePresent) AnalyzeTableArguments(FormulaValue[] args)
+        private static (int maxTableSize, int minTableSize, bool emptyTablePresent, bool blankTablePresent, bool errorTablePresent) AnalyzeTableArguments(FormulaValue[] args)
         {
             var maxTableSize = 0;
             var emptyTablePresent = false;
             var minTableSize = int.MaxValue;
             var blankTablePresent = false;
+            var errorTablePresent = false;
 
             foreach (var arg in args)
             {
@@ -308,14 +309,17 @@ namespace Microsoft.PowerFx.Functions
 
                     emptyTablePresent |= tableSize == 0;
                 }
-
-                if (arg is BlankValue bv && bv.IRContext.ResultType._type.IsTable)
+                else if (arg is BlankValue bv && bv.IRContext.ResultType._type.IsTable)
                 {
                     blankTablePresent = true;
                 }
+                else if (arg is ErrorValue ev && ev.IRContext.ResultType._type.IsTable)
+                {
+                    errorTablePresent = true;
+                }
             }
 
-            return (maxTableSize, minTableSize, emptyTablePresent, blankTablePresent);
+            return (maxTableSize, minTableSize, emptyTablePresent, blankTablePresent, errorTablePresent);
         }
 
         private class ExpandToSizeResult
@@ -402,7 +406,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 var resultRows = new List<DValue<RecordValue>>();
 
-                (var maxSize, var minSize, var emptyTablePresent, var blankTablePresent) = AnalyzeTableArguments(args);
+                (var maxSize, var minSize, var emptyTablePresent, var blankTablePresent, _) = AnalyzeTableArguments(args);
 
                 // If one arg is blank table and among all other args, return blank.
                 // e.g. Concatenate(Blank(), []), Concatenate(Blank(), "test"), Concatenate(Blank(), ["test"], []) => Blank()

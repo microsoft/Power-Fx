@@ -220,10 +220,10 @@ Blank()
 Blank()
 
 >> Concatenate(["a","b"], If(1/0<2,["abcdef", "ghijkl"]))
-Table({Result:Microsoft.PowerFx.Types.ErrorValue},{Result:Microsoft.PowerFx.Types.ErrorValue})
+#Error(Kind=Div0)
 
 >> Find(If(1/0<2,["a","b"]), ["abcdef", "ghijkl"])
-Table({Result:Microsoft.PowerFx.Types.ErrorValue},{Result:Microsoft.PowerFx.Types.ErrorValue})
+#Error(Kind=Div0)
 
 >> Concatenate(["a","b"], If(1<0,["abcdef", "ghijkl"]))
 Blank()

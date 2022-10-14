@@ -71,7 +71,7 @@ Table({Result:"one"},{Result:"two"})
 Blank()
 
 >> Concatenate(["one", "two"], If(1/0<2, ["txt"]))
-Table({Result:Microsoft.PowerFx.Types.ErrorValue},{Result:Microsoft.PowerFx.Types.ErrorValue})
+#Error(Kind=Div0)
 
 >> Concatenate(["one", "two"], Table({a:"one"},If(1<0,{a:"two"}),{a:"three"}))
 Table({Result:"oneone"},{Result:"two"},{Result:Microsoft.PowerFx.Types.ErrorValue})
