@@ -136,7 +136,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 // Typecheck the invocation and infer the return type.
                 typeCheckSucceeded = maybeFunc.CheckTypes(txb.BindingConfig, args, argTypes, warnings, out returnType, out nodeToCoercedTypeMap);
-                maybeFunc.CheckSemantics(txb, args, argTypes, warnings);
+                maybeFunc.CheckSemantics(txb, args, argTypes, warnings, ref nodeToCoercedTypeMap);
 
                 if (typeCheckSucceeded)
                 {

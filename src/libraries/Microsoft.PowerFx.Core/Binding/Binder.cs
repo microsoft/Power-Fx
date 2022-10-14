@@ -4398,7 +4398,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 // Typecheck the invocation and infer the return type.
                 fArgsValid &= maybeFunc.CheckTypes(_txb.BindingConfig, args, argTypes, _txb.ErrorContainer, out var returnType, out var nodeToCoercedTypeMap);
-                maybeFunc.CheckSemantics(_txb, args, argTypes, _txb.ErrorContainer);
+                maybeFunc.CheckSemantics(_txb, args, argTypes, _txb.ErrorContainer, ref nodeToCoercedTypeMap);
 
                 // This is done because later on, if a CallNode has a return type of Error, you can assert HasErrors on it.
                 // This was not done for UnaryOpNodes, BinaryOpNodes, CompareNodes.
@@ -4889,7 +4889,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 // Typecheck the invocation and infer the return type.
                 fArgsValid = func.CheckTypes(_txb.BindingConfig, args, argTypes, _txb.ErrorContainer, out returnType, out var nodeToCoercedTypeMap);
-                func.CheckSemantics(_txb, args, argTypes, _txb.ErrorContainer);
+                func.CheckSemantics(_txb, args, argTypes, _txb.ErrorContainer, ref nodeToCoercedTypeMap);
 
                 if (!fArgsValid && !func.HasPreciseErrors)
                 {
