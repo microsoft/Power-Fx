@@ -56,7 +56,7 @@ Blank()
 ["one1","two2",Microsoft.PowerFx.Types.ErrorValue,Microsoft.PowerFx.Types.ErrorValue]
 
 >> Concatenate(["one", "two"], LastN(Table({b:"1"},{b:"2"}), 0))
-["one","two"]
+[Microsoft.PowerFx.Types.ErrorValue,Microsoft.PowerFx.Types.ErrorValue]
 
 >> Concatenate(["one", "two"], If(1<0, ["txt"]))
 Blank()

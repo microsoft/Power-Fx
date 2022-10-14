@@ -1475,8 +1475,7 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: MultiSingleColumnTable(
-                            SimpleFunctionImplementations[BuiltinFunctionsCore.Find],
-                            transposeEmptyTable: false),
+                            SimpleFunctionImplementations[BuiltinFunctionsCore.Find]),
                     isMultiArgTabularOverload: true)
             },
             {
@@ -1489,8 +1488,7 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: MultiSingleColumnTable(
-                            SimpleFunctionImplementations[BuiltinFunctionsCore.Concatenate],
-                            transposeEmptyTable: true),
+                            SimpleFunctionImplementations[BuiltinFunctionsCore.Concatenate]),
                     isMultiArgTabularOverload: true)
             },
             {
@@ -1503,8 +1501,7 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: MultiSingleColumnTable(
-                            SimpleFunctionImplementations[BuiltinFunctionsCore.Round],
-                            transposeEmptyTable: true),
+                            SimpleFunctionImplementations[BuiltinFunctionsCore.Round]),
                     isMultiArgTabularOverload: true)
             },
         };

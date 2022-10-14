@@ -4,4 +4,4 @@
 ["777abc1",Microsoft.PowerFx.Types.ErrorValue]
 
 >> Concatenate("777", Filter(["empty table"], Value <> Value), ["1", "2"])
-["7771","7772"]
+[Microsoft.PowerFx.Types.ErrorValue,Microsoft.PowerFx.Types.ErrorValue]

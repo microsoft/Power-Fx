@@ -309,9 +309,7 @@ namespace Microsoft.PowerFx.Functions
                 {
                     var tableSize = tv.Rows.Count();
                     maxTableSize = Math.Max(maxTableSize, tableSize);
-
-                    // Empty tables are not considered for count.
-                    minTableSize = tableSize != 0 ? Math.Min(minTableSize, tableSize) : minTableSize;
+                    minTableSize = Math.Min(minTableSize, tableSize);
 
                     emptyTablePresent |= tableSize == 0;
                 }
@@ -411,8 +409,7 @@ namespace Microsoft.PowerFx.Functions
          * As a concrete example, Concatenate(["a", "b"], ["1", "2"]) => ["a1", "b2"]
         */
         public static Func<EvalVisitor, EvalVisitorContext, IRContext, FormulaValue[], ValueTask<FormulaValue>> MultiSingleColumnTable(
-            AsyncFunctionPtr targetFunction,
-            bool transposeEmptyTable)
+            AsyncFunctionPtr targetFunction)
         {
             return async (runner, context, irContext, args) =>
             {
@@ -427,11 +424,10 @@ namespace Microsoft.PowerFx.Functions
                     return FormulaValue.NewBlank();
                 }
 
-                if (maxSize == 0 || (emptyTablePresent && !transposeEmptyTable))
+                if (maxSize == 0)
                 {
                     // maxSize == 0 means there are no tables with rows. This can happen when we expect a Table at compile time but we recieve Blank() at runtime,
-                    // or all tables in args are empty. Additionally, among non-empty tables (in which case maxSize > 0) there may be an empty table,
-                    // which also means empty result if transposeEmptyTable == false.
+                    // or all tables in args are empty. Additionally, 
                     // Return an empty table (with the correct type).
                     // e.g. Concatenate([], "test") => []
                     return new InMemoryTableValue(irContext, resultRows);
