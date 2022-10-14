@@ -98,7 +98,7 @@ namespace Microsoft.PowerFx
         /// Important that this is mutable so that it can be changed across engines. 
         /// </summary>
         /// <returns>SymbolTable with supported functions.</returns>
-        public SymbolTable GetMutableSupportedFunctionsCopy()
+        public SymbolTable GetMutableCopyOfFunctions()
         {
             var s = new SymbolTable()
             {

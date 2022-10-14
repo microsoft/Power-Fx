@@ -688,7 +688,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         public void MutableSupportedFunctionsTest(string functionName, string expression)
         {
             var engine = new Engine(new PowerFxConfig());
-            var symbolTable = engine.SupportedFunctions.GetMutableSupportedFunctionsCopy();
+            var symbolTable = engine.SupportedFunctions.GetMutableCopyOfFunctions();
 
             symbolTable.RemoveFunction(functionName);
 

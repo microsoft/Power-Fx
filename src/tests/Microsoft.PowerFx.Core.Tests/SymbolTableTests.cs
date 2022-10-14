@@ -137,8 +137,8 @@ namespace Microsoft.PowerFx.Core.Tests
         public void MutableSupportedFunctionsTest()
         {
             var symbolTableOriginal = new Engine(new PowerFxConfig()).SupportedFunctions;
-            var symbolTableCopy1 = symbolTableOriginal.GetMutableSupportedFunctionsCopy();
-            var symbolTableCopy2 = symbolTableOriginal.GetMutableSupportedFunctionsCopy();
+            var symbolTableCopy1 = symbolTableOriginal.GetMutableCopyOfFunctions();
+            var symbolTableCopy2 = symbolTableOriginal.GetMutableCopyOfFunctions();
 
             var originalCount = symbolTableOriginal.Functions.Count();
             var copyCount1 = symbolTableCopy1.Functions.Count();
@@ -151,6 +151,8 @@ namespace Microsoft.PowerFx.Core.Tests
             symbolTableCopy2.RemoveFunction("Day");
 
             Assert.Equal(originalCount, symbolTableOriginal.Functions.Count());
+            Assert.Equal(copyCount1 - 2, symbolTableCopy1.Functions.Count());
+            Assert.Equal(copyCount2 - 1, symbolTableCopy2.Functions.Count());
 
             Assert.NotEqual(copyCount1, symbolTableCopy1.Functions.Count());
             Assert.NotEqual(copyCount2, symbolTableCopy2.Functions.Count());
