@@ -688,7 +688,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         public void MutableSupportedFunctionsTest(string functionName, string expression)
         {
             var engine = new Engine(new PowerFxConfig());
-            var symbolTable = engine.SupportedFunctions.GetMutableCopy();
+            var symbolTable = engine.SupportedFunctions.GetMutableSupportedFunctionsCopy();
 
             symbolTable.RemoveFunction(functionName);
 
@@ -701,27 +701,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.True(checkTrue.IsSuccess);
             Assert.False(checkFalse.IsSuccess);
             Assert.Contains(checkFalse.Errors, e => e.MessageKey == "ErrUnknownFunction" && e.Message.Contains($"'{functionName}' is an unknown or unsupported function."));
-        }
-
-        // Helper to set Engine with mutable support functions.
-        private class Engine3 : Engine
-        {
-            public Engine3()
-                : this(new PowerFxConfig())
-            {
-            }
-
-            public Engine3(ReadOnlySymbolTable supportedFunctions)
-                : base(new PowerFxConfig())
-            {
-                SupportedFunctions = supportedFunctions;
-            }
-
-            public Engine3(PowerFxConfig powerFxConfig)
-                : base(powerFxConfig)
-            {
-                SupportedFunctions = null;
-            }
         }
     } // end test class
 
