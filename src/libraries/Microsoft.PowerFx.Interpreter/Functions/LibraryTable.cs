@@ -446,9 +446,13 @@ namespace Microsoft.PowerFx.Functions
             {
                 return SortValueType<DateValue, DateTime>(pairs, irContext, compareToResultModifier);
             }
+            else if (allOptionSets)
+            {
+                return SortOptionSet(pairs, irContext, compareToResultModifier);
+            }
             else
             {
-                return SortOtionSet(pairs, irContext, compareToResultModifier);
+                return CommonErrors.RuntimeTypeMismatch(irContext);
             }
         }
 
@@ -481,7 +485,7 @@ namespace Microsoft.PowerFx.Functions
             return new InMemoryTableValue(irContext, pairs.Select(pair => pair.row));
         }
 
-        private static FormulaValue SortOtionSet(List<(DValue<RecordValue> row, FormulaValue sortValue)> pairs, IRContext irContext, int compareToResultModifier)
+        private static FormulaValue SortOptionSet(List<(DValue<RecordValue> row, FormulaValue sortValue)> pairs, IRContext irContext, int compareToResultModifier)
         {
             pairs.Sort((a, b) =>
             {

@@ -1,10 +1,22 @@
 ﻿#SETUP: OptionSetSortTestSetup
 
 >> Sort(t1, OptionSetField1, SortOrder.Ascending)
-Table({OptionSetField1:OptionSet.option_1},{OptionSetField1:OptionSet.option_2})
+Table({OptionSetField1:OptionSet.option_1,StrField1:"test1"},{OptionSetField1:OptionSet.option_2,StrField1:"test2"})
 
 >> Sort(t1, OptionSetField1, SortOrder.Descending)
-Table({OptionSetField1:OptionSet.option_2},{OptionSetField1:OptionSet.option_1})
+Table({OptionSetField1:OptionSet.option_2,StrField1:"test2"},{OptionSetField1:OptionSet.option_1,StrField1:"test1"})
+
+>> Sort(t2, OptionSetField1, SortOrder.Ascending)
+Table({OptionSetField1:OptionSet.option_1,StrField1:"test1"},{OptionSetField1:OptionSet.option_1,StrField1:"test3"},{OptionSetField1:OptionSet.option_2,StrField1:"test2"},{OptionSetField1:OptionSet.option_2,StrField1:"test4"})
+
+>> Sort(t2, OptionSetField1, SortOrder.Descending)
+Table({OptionSetField1:OptionSet.option_2,StrField1:"test2"},{OptionSetField1:OptionSet.option_2,StrField1:"test4"},{OptionSetField1:OptionSet.option_1,StrField1:"test1"},{OptionSetField1:OptionSet.option_1,StrField1:"test3"})
+
+>> Sort(t3, OptionSetField1, SortOrder.Ascending)
+#Error
+
+>> Sort(t3, OptionSetField1, SortOrder.Descending)
+#Error
 
 >> Sort([-2, -1, 5, 1, 2], Value)
 [-2,-1,1,2,5]
