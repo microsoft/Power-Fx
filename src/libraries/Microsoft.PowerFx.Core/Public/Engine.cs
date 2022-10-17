@@ -169,7 +169,7 @@ namespace Microsoft.PowerFx
         /// <returns></returns>
         public CheckResult Check(ParseResult parse, RecordType parameterType, ParserOptions options = null)
         {
-            var bindingConfig = new BindingConfig(allowsSideEffects: options?.AllowsSideEffects == true);
+            var bindingConfig = new BindingConfig(Config.Features, allowsSideEffects: options?.AllowsSideEffects == true);
             var symbols = SymbolTable.NewFromRecord(parameterType);
 
             return CheckInternal(parse, bindingConfig, symbols);
@@ -189,7 +189,7 @@ namespace Microsoft.PowerFx
             ParserOptions options = null,
             ReadOnlySymbolTable symbolTable = null)
         {
-            var bindingConfig = new BindingConfig(allowsSideEffects: options?.AllowsSideEffects == true);
+            var bindingConfig = new BindingConfig(Config.Features, allowsSideEffects: options?.AllowsSideEffects == true);
 
             return CheckInternal(parse, bindingConfig, symbolTable);
         }
