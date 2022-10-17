@@ -23,7 +23,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         internal static Dictionary<string, Func<PowerFxConfig, (RecalcEngine engine, RecordValue parameters)>> SetupHandlers = new ()
         {
             { "OptionSetTestSetup", OptionSetTestSetup },
-            { "MutationFunctionsTestSetup", MutationFunctionsTestSetup }
+            { "MutationFunctionsTestSetup", MutationFunctionsTestSetup },
+            { "OptionSetSortTestSetup", OptionSetSortTestSetup },
         };
 
         private static (RecalcEngine engine, RecordValue parameters) OptionSetTestSetup(PowerFxConfig config)
@@ -54,6 +55,36 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                         new NamedValue("InnerOtherOptionSet", o2Val))));
 
             return (new RecalcEngine(config), parameters);
+        }
+
+        private static (RecalcEngine engine, RecordValue parameters) OptionSetSortTestSetup(PowerFxConfig config)
+        {
+            var optionSet = new OptionSet("OptionSet", DisplayNameUtility.MakeUnique(new Dictionary<string, string>()
+            {
+                    { "option_1", "Option1" },
+                    { "option_2", "Option2" }
+            }));
+
+            config.AddOptionSet(optionSet);
+
+            optionSet.TryGetValue(new DName("option_1"), out var o1Val);
+            optionSet.TryGetValue(new DName("option_2"), out var o2Val);
+
+            var r1 = FormulaValue.NewRecordFromFields(new NamedValue("OptionSetField1", o1Val));
+            var r2 = FormulaValue.NewRecordFromFields(new NamedValue("OptionSetField1", o2Val));
+
+            var rType = RecordType.Empty()
+                .Add(new NamedFormulaType("OptionSetField1", FormulaType.OptionSetValue, "DisplayNameField1"));
+
+            var t1 = new RecordsOnlyTableValue(Core.IR.IRContext.NotInSource(rType.ToTable()), new List<RecordValue>() { r1, r2 });
+
+            var symbol = new SymbolTable() { Parent = config.SymbolTable };
+
+            symbol.AddConstant("t1", t1);
+
+            config.SymbolTable = symbol;
+
+            return (new RecalcEngine(config), null);
         }
 
         private static (RecalcEngine engine, RecordValue parameters) MutationFunctionsTestSetup(PowerFxConfig config)

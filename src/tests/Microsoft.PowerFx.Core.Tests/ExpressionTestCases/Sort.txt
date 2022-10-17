@@ -1,4 +1,12 @@
-﻿>> Sort([-2, -1, 5, 1, 2], Value)
+﻿#SETUP: OptionSetSortTestSetup
+
+>> Sort(t1, OptionSetField1, SortOrder.Ascending)
+Table({OptionSetField1:OptionSet.option_1},{OptionSetField1:OptionSet.option_2})
+
+>> Sort(t1, OptionSetField1, SortOrder.Descending)
+Table({OptionSetField1:OptionSet.option_2},{OptionSetField1:OptionSet.option_1})
+
+>> Sort([-2, -1, 5, 1, 2], Value)
 [-2,-1,1,2,5]
 
 >> Sort([-2, -1, 5, 1, 2], Value, SortOrder.Descending)
