@@ -171,15 +171,12 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.DoesNotContain(symbolTableCopy1.Functions, f => f.Name == "Abs");
             Assert.DoesNotContain(symbolTableCopy2.Functions, f => f.Name == "Day");
 
-            if (symbolTableOriginal.Parent != null)
-            {
-                Assert.True(symbolTableCopy1.Parent == null && symbolTableCopy2.Parent == null);
-            }
+            Assert.Same(symbolTableCopy1.Parent, symbolTableOriginal.Parent);
+            Assert.Same(symbolTableCopy2.Parent, symbolTableOriginal.Parent);
 
-            if (symbolTableOriginal.SymbolNames.Count() != 0)
-            {
-                Assert.True(symbolTableCopy1.SymbolNames.Count() == 0 && symbolTableCopy2.SymbolNames.Count() == 0);
-            }
+            // Check if nothing else has been copied
+            Assert.Empty(symbolTableCopy1.SymbolNames);
+            Assert.Empty(symbolTableCopy2.SymbolNames);
         }
     }
 }
