@@ -151,7 +151,7 @@
 
 //Error message: The second argument to the "Value" function should be greater than or equal to 1
 >> Replace("abcabcabc", -1, -2, "mm")
-#Error(Kind=InvalidArgument, InvalidArgument)
+#Error(Kind=InvalidArgument)
 
 //Error message: The second argument to the "Value" function should be greater than or equal to 1
 >> Replace("", 0, 0, "")

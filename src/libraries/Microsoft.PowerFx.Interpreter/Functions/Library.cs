@@ -465,10 +465,10 @@ namespace Microsoft.PowerFx.Functions
                 StandardErrorHandling<StringValue>(
                     BuiltinFunctionsCore.EndsWith.Name,
                     expandArguments: NoArgExpansion,
-                    replaceBlankValues: DoNotReplaceBlank,
+                    replaceBlankValues: ReplaceBlankWithEmptyString,
                     checkRuntimeTypes: ExactValueTypeOrBlank<StringValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
-                    returnBehavior: ReturnBehavior.ReturnFalseIfAnyArgIsBlank,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: EndsWith)
             },
             {
@@ -514,16 +514,16 @@ namespace Microsoft.PowerFx.Functions
                     replaceBlankValues: ReplaceBlankWith(
                         new StringValue(IRContext.NotInSource(FormulaType.String), string.Empty),
                         new StringValue(IRContext.NotInSource(FormulaType.String), string.Empty),
-                        new BlankValue(IRContext.NotInSource(FormulaType.Blank))),
+                        new NumberValue(IRContext.NotInSource(FormulaType.Number), 0)),
                     checkRuntimeTypes: ExactSequence(
                         ExactValueType<StringValue>,
                         ExactValueType<StringValue>,
-                        ExactValueTypeOrBlank<NumberValue>),
+                        ExactValueType<NumberValue>),
                     checkRuntimeValues: ExactSequence(
                         DeferRuntimeValueChecking,
                         DeferRuntimeValueChecking,
                         StrictArgumentPositiveNumberChecker),
-                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: Find)
             },
             {
@@ -1031,15 +1031,15 @@ namespace Microsoft.PowerFx.Functions
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: ReplaceBlankWith(
                         new StringValue(IRContext.NotInSource(FormulaType.String), string.Empty),
-                        new BlankValue(IRContext.NotInSource(FormulaType.Blank)),
+                        new NumberValue(IRContext.NotInSource(FormulaType.Number), 0),
                         new NumberValue(IRContext.NotInSource(FormulaType.Number), 0),
                         new StringValue(IRContext.NotInSource(FormulaType.String), string.Empty)),
                     checkRuntimeTypes: ExactSequence(
                         ExactValueType<StringValue>,
-                        ExactValueTypeOrBlank<NumberValue>,
+                        ExactValueType<NumberValue>,
                         ExactValueType<NumberValue>,
                         ExactValueType<StringValue>),
-                    checkRuntimeValues: ReplaceChecker,
+                    checkRuntimeValues: DeferRuntimeTypeChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: Replace)
             },
@@ -1194,10 +1194,10 @@ namespace Microsoft.PowerFx.Functions
                 StandardErrorHandling<StringValue>(
                     BuiltinFunctionsCore.StartsWith.Name,
                     expandArguments: NoArgExpansion,
-                    replaceBlankValues: DoNotReplaceBlank,
+                    replaceBlankValues: ReplaceBlankWithEmptyString,
                     checkRuntimeTypes: ExactValueTypeOrBlank<StringValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
-                    returnBehavior: ReturnBehavior.ReturnFalseIfAnyArgIsBlank,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: StartsWith)
             },
             {
@@ -1228,17 +1228,17 @@ namespace Microsoft.PowerFx.Functions
                 BuiltinFunctionsCore.Substitute,
                 StandardErrorHandling<FormulaValue>(
                     BuiltinFunctionsCore.Substitute.Name,
-                    expandArguments: InsertDefaultValues(outputArgsCount: 4, fillWith: new BlankValue(IRContext.NotInSource(FormulaType.Blank))),
+                    expandArguments: NoArgExpansion,
                     replaceBlankValues: ReplaceBlankWith(
                         new StringValue(IRContext.NotInSource(FormulaType.String), string.Empty),
-                        new BlankValue(IRContext.NotInSource(FormulaType.Blank)),
                         new StringValue(IRContext.NotInSource(FormulaType.String), string.Empty),
-                        new BlankValue(IRContext.NotInSource(FormulaType.Blank))),
+                        new StringValue(IRContext.NotInSource(FormulaType.String), string.Empty),
+                        new NumberValue(IRContext.NotInSource(FormulaType.Number), 0)),
                     checkRuntimeTypes: ExactSequence(
                         ExactValueType<StringValue>,
-                        ExactValueTypeOrBlank<StringValue>,
                         ExactValueType<StringValue>,
-                        ExactValueTypeOrBlank<NumberValue>),
+                        ExactValueType<StringValue>,
+                        ExactValueType<NumberValue>),
                     checkRuntimeValues: StrictArgumentPositiveNumberChecker,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: Substitute)

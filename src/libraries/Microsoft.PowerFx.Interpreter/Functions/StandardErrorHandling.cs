@@ -654,20 +654,6 @@ namespace Microsoft.PowerFx.Functions
             return arg;
         }
 
-        private static FormulaValue PositiveArgumentNumberChecker(IRContext irContext, int index, FormulaValue arg)
-        {
-            if (arg is NumberValue numberArg)
-            {
-                var number = numberArg.Value;
-                if (number < 0)
-                {
-                    return CommonErrors.ArgumentOutOfRange(irContext);
-                }
-            }
-
-            return arg;
-        }
-
         private static FormulaValue StrictArgumentPositiveNumberChecker(IRContext irContext, int index, FormulaValue arg)
         {
             if (arg is NumberValue numberArg)
@@ -691,31 +677,6 @@ namespace Microsoft.PowerFx.Functions
                 {
                     return CommonErrors.ArgumentOutOfRange(irContext);
                 }
-            }
-
-            return arg;
-        }
-
-        private static FormulaValue ReplaceChecker(IRContext irContext, int index, FormulaValue arg)
-        {
-            if (index == 1)
-            {
-                if (arg is BlankValue)
-                {
-                    return new ErrorValue(irContext, new ExpressionError()
-                    {
-                        Message = "The second parameter to the Replace function cannot be Blank()",
-                        Span = irContext.SourceContext,
-                        Kind = ErrorKind.InvalidFunctionUsage
-                    });
-                }
-
-                return StrictArgumentPositiveNumberChecker(irContext, index, arg);
-            }
-
-            if (index == 2)
-            {
-                return PositiveArgumentNumberChecker(irContext, index, arg);
             }
 
             return arg;

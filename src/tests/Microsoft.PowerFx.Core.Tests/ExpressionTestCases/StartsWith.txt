@@ -140,17 +140,17 @@ true
 >> StartsWith(1/0,"hello")
 #Error(Kind=Div0)
 
-// Null text case
+// Null text case - coerced to ""
 >> StartsWith(Blank(),"ok")
 false
 
-// Null end case
+// Null start case - coerced to ""
 >> StartsWith("Hello",Blank())
-false
+true
 
-// Null both case
+// Null both case - coerced to ""
 >> StartsWith(Blank(),Blank())
-false
+true
 
 
 // ******** BOOLEAN PARAMETERS ********
