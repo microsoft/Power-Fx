@@ -35,6 +35,7 @@ namespace Microsoft.PowerFx
         Network = 23,
         Numeric = 24,
         InvalidArgument = 25,
-        Internal = 26
+        Internal = 26,
+        Custom = 1000
     }
 }
