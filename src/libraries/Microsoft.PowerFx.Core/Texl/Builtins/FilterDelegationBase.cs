@@ -3,6 +3,7 @@
 
 using System.Numerics;
 using Microsoft.PowerFx.Core.Binding;
+using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Functions.Delegation;
 using Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata;
 using Microsoft.PowerFx.Core.Localization;
@@ -24,8 +25,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool IsSelfContained => true;
 
-        public FilterFunctionBase(string name, TexlStrings.StringGetter description, FunctionCategories fc, DType returnType, BigInteger maskLambdas, int arityMin, int arityMax, params DType[] paramTypes)
-            : base(name, description, fc, returnType, maskLambdas, arityMin, arityMax, paramTypes)
+        public FilterFunctionBase(TexlFunctionConfig instanceConfig, string name, TexlStrings.StringGetter description, FunctionCategories fc, DType returnType, BigInteger maskLambdas, int arityMin, int arityMax, params DType[] paramTypes)
+            : base(instanceConfig, name, description, fc, returnType, maskLambdas, arityMin, arityMax, paramTypes)
         {
         }
 

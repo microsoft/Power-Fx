@@ -18,8 +18,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => true;
 
-        public ClockFunction(string functionInvariantName, TexlStrings.StringGetter functionDescription)
-            : base(new DPath().Append(new DName(LanguageConstants.InvariantClockNamespace)), functionInvariantName, functionDescription, FunctionCategories.DateTime, DType.CreateTable(new TypedName(DType.String, new DName("Value"))), 0, 0, 0)
+        public ClockFunction(TexlFunctionConfig instanceConfig, string functionInvariantName, TexlStrings.StringGetter functionDescription)
+            : base(instanceConfig, new DPath().Append(new DName(LanguageConstants.InvariantClockNamespace)), functionInvariantName, functionDescription, FunctionCategories.DateTime, DType.CreateTable(new TypedName(DType.String, new DName("Value"))), 0, 0, 0)
         {
         }
 
@@ -32,8 +32,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Clock.AmPm()
     internal sealed class AmPmFunction : ClockFunction
     {
-        public AmPmFunction()
-            : base("AmPm", TexlStrings.AboutClock__AmPm)
+        public AmPmFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "AmPm", TexlStrings.AboutClock__AmPm)
         {
         }
     }
@@ -41,8 +41,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Clock.AmPmShort()
     internal sealed class AmPmShortFunction : ClockFunction
     {
-        public AmPmShortFunction()
-            : base("AmPmShort", TexlStrings.AboutClock__AmPmShort)
+        public AmPmShortFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "AmPmShort", TexlStrings.AboutClock__AmPmShort)
         {
         }
     }
@@ -54,8 +54,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => true;
 
-        public IsClock24Function()
-            : base(new DPath().Append(new DName(LanguageConstants.InvariantClockNamespace)), "IsClock24", TexlStrings.AboutClock__IsClock24, FunctionCategories.DateTime, DType.Boolean, 0, 0, 0)
+        public IsClock24Function(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, new DPath().Append(new DName(LanguageConstants.InvariantClockNamespace)), "IsClock24", TexlStrings.AboutClock__IsClock24, FunctionCategories.DateTime, DType.Boolean, 0, 0, 0)
         {
         }
 

@@ -24,8 +24,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => true;
 
-        public ConcatenateFunction()
-            : base("Concatenate", TexlStrings.AboutConcatenate, FunctionCategories.Text, DType.String, 0, 0, int.MaxValue)
+        public ConcatenateFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "Concatenate", TexlStrings.AboutConcatenate, FunctionCategories.Text, DType.String, 0, 0, int.MaxValue)
         {
         }
 
@@ -93,8 +93,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => true;
 
-        public ConcatenateTableFunction()
-            : base("Concatenate", TexlStrings.AboutConcatenateT, FunctionCategories.Table | FunctionCategories.Text, DType.EmptyTable, 0, 1, int.MaxValue)
+        public ConcatenateTableFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "Concatenate", TexlStrings.AboutConcatenateT, FunctionCategories.Table | FunctionCategories.Text, DType.EmptyTable, 0, 1, int.MaxValue)
         {
         }
 
@@ -148,7 +148,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 nodeToCoercedTypeMap = null;
             }
 
-            returnType = DType.CreateTable(new TypedName(DType.String, GetOneColumnTableResultName(config.Features)));
+            returnType = DType.CreateTable(new TypedName(DType.String, GetOneColumnTableResultName(InstanceConfig.Features)));
 
             return hasTableArg && fArgsValid;
         }

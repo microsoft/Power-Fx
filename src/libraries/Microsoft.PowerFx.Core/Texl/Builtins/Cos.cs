@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 
@@ -13,8 +14,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Equivalent Excel function: Cos
     internal sealed class CosFunction : MathOneArgFunction
     {
-        public CosFunction()
-            : base("Cos", TexlStrings.AboutCos, FunctionCategories.MathAndStat)
+        public CosFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "Cos", TexlStrings.AboutCos, FunctionCategories.MathAndStat)
         {
         }
     }
@@ -23,8 +24,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Table overload that computes the cosine of each item in the input table.
     internal sealed class CosTableFunction : MathOneArgTableFunction
     {
-        public CosTableFunction()
-            : base("Cos", TexlStrings.AboutCosT, FunctionCategories.Table)
+        public CosTableFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "Cos", TexlStrings.AboutCosT, FunctionCategories.Table)
         {
         }
     }

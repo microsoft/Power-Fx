@@ -20,13 +20,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => true;
 
-        public StringTwoArgFunction(string name, TexlStrings.StringGetter description)
-            : this(name, description, DType.Boolean)
+        public StringTwoArgFunction(TexlFunctionConfig instanceConfig, string name, TexlStrings.StringGetter description)
+            : this(instanceConfig, name, description, DType.Boolean)
         {
         }
 
-        public StringTwoArgFunction(string name, TexlStrings.StringGetter description, DType returnType)
-            : base(name, description, FunctionCategories.Text, returnType, 0, 2, 2, DType.String, DType.String)
+        public StringTwoArgFunction(TexlFunctionConfig instanceConfig, string name, TexlStrings.StringGetter description, DType returnType)
+            : base(instanceConfig, name, description, FunctionCategories.Text, returnType, 0, 2, 2, DType.String, DType.String)
         {
         }
 

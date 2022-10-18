@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 
@@ -13,8 +14,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Equivalent Excel function: Cot
     internal sealed class CotFunction : MathOneArgFunction
     {
-        public CotFunction()
-            : base("Cot", TexlStrings.AboutCot, FunctionCategories.MathAndStat)
+        public CotFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "Cot", TexlStrings.AboutCot, FunctionCategories.MathAndStat)
         {
         }
     }
@@ -23,8 +24,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Table overload that computes the cotangent of each item in the input table.
     internal sealed class CotTableFunction : MathOneArgTableFunction
     {
-        public CotTableFunction()
-            : base("Cot", TexlStrings.AboutCotT, FunctionCategories.Table)
+        public CotTableFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "Cot", TexlStrings.AboutCotT, FunctionCategories.Table)
         {
         }
     }

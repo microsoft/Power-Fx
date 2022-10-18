@@ -28,8 +28,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => true;
 
-        public ErrorFunction()
-            : base("Error", TexlStrings.AboutError, FunctionCategories.Logical, DType.ObjNull, 0, 1, 1)
+        public ErrorFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "Error", TexlStrings.AboutError, FunctionCategories.Logical, DType.ObjNull, 0, 1, 1)
         {
         }
 

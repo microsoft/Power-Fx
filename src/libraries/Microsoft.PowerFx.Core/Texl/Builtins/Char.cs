@@ -23,8 +23,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => true;
 
-        public CharFunction()
-            : base("Char", TexlStrings.AboutChar, FunctionCategories.Text, DType.String, 0, 1, 1, DType.Number)
+        public CharFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "Char", TexlStrings.AboutChar, FunctionCategories.Text, DType.String, 0, 1, 1, DType.Number)
         {
         }
 
@@ -41,8 +41,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => true;
 
-        public CharTFunction()
-            : base("Char", TexlStrings.AboutCharT, FunctionCategories.Table, DType.EmptyTable, 0, 1, 1, DType.EmptyTable)
+        public CharTFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "Char", TexlStrings.AboutCharT, FunctionCategories.Table, DType.EmptyTable, 0, 1, 1, DType.EmptyTable)
         {
         }
 
@@ -72,7 +72,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             fValid &= CheckNumericColumnType(argTypes[0], args[0], errors, ref nodeToCoercedTypeMap);
 
             // Synthesize a new return type
-            returnType = DType.CreateTable(new TypedName(DType.String, GetOneColumnTableResultName(config.Features)));
+            returnType = DType.CreateTable(new TypedName(DType.String, GetOneColumnTableResultName(InstanceConfig.Features)));
 
             return fValid;
         }

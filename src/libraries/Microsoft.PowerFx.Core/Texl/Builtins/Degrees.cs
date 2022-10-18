@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 
@@ -13,8 +14,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Equivalent Excel function: Degrees
     internal sealed class DegreesFunction : MathOneArgFunction
     {
-        public DegreesFunction()
-            : base("Degrees", TexlStrings.AboutDegrees, FunctionCategories.MathAndStat)
+        public DegreesFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "Degrees", TexlStrings.AboutDegrees, FunctionCategories.MathAndStat)
         {
         }
     }
@@ -23,8 +24,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Table overload that computes the degrees values of each item in the input table.
     internal sealed class DegreesTableFunction : MathOneArgTableFunction
     {
-        public DegreesTableFunction()
-            : base("Degrees", TexlStrings.AboutDegreesT, FunctionCategories.Table)
+        public DegreesTableFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "Degrees", TexlStrings.AboutDegreesT, FunctionCategories.Table)
         {
         }
     }

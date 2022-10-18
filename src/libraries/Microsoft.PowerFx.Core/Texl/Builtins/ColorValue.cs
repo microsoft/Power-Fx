@@ -18,8 +18,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => false;
 
-        public ColorValueFunction()
-            : base(ColorValueFunctionInvariantName, TexlStrings.AboutColorValue, FunctionCategories.Color, DType.Color, 0, 1, 1, DType.String)
+        public ColorValueFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, ColorValueFunctionInvariantName, TexlStrings.AboutColorValue, FunctionCategories.Color, DType.Color, 0, 1, 1, DType.String)
         {
         }
 
@@ -37,8 +37,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => false;
 
-        public ColorValueFunction_UO()
-            : base(ColorValueFunction.ColorValueFunctionInvariantName, TexlStrings.AboutColorValue, FunctionCategories.Color, DType.Color, 0, 1, 1, DType.UntypedObject)
+        public ColorValueFunction_UO(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, ColorValueFunction.ColorValueFunctionInvariantName, TexlStrings.AboutColorValue, FunctionCategories.Color, DType.Color, 0, 1, 1, DType.UntypedObject)
         {
         }
 

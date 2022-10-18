@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using Microsoft.PowerFx.Core.Binding;
+using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Functions.Delegation;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Utils;
@@ -19,8 +20,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public override DelegationCapability FunctionDelegationCapability => DelegationCapability.EndsWith;
 
-        public EndsWithFunction()
-            : base("EndsWith", TexlStrings.AboutEndsWith)
+        public EndsWithFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "EndsWith", TexlStrings.AboutEndsWith)
         {
         }
 

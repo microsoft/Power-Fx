@@ -27,8 +27,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => true;
 
-        public DateFunction()
-            : base("Date", TexlStrings.AboutDate, FunctionCategories.DateTime, DType.Date, 0, 3, 3, DType.Number, DType.Number, DType.Number)
+        public DateFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "Date", TexlStrings.AboutDate, FunctionCategories.DateTime, DType.Date, 0, 3, 3, DType.Number, DType.Number, DType.Number)
         {
         }
 
@@ -47,8 +47,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => true;
 
-        public ExtractDateTimeFunctionBase(string name, TexlStrings.StringGetter description, FunctionCategories fc, DType returnType, BigInteger maskLambdas, int arityMin, int arityMax, params DType[] paramTypes)
-            : base(name, description, fc, returnType, maskLambdas, arityMin, arityMax, paramTypes)
+        public ExtractDateTimeFunctionBase(TexlFunctionConfig instanceConfig, string name, TexlStrings.StringGetter description, FunctionCategories fc, DType returnType, BigInteger maskLambdas, int arityMin, int arityMax, params DType[] paramTypes)
+            : base(instanceConfig, name, description, fc, returnType, maskLambdas, arityMin, arityMax, paramTypes)
         {
             Contracts.Assert(arityMin == 1);
             Contracts.Assert(arityMax == 1);
@@ -75,8 +75,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => true;
 
-        public TimeFunction()
-            : base("Time", TexlStrings.AboutTime, FunctionCategories.DateTime, DType.Time, 0, 3, 4, DType.Number, DType.Number, DType.Number, DType.Number)
+        public TimeFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "Time", TexlStrings.AboutTime, FunctionCategories.DateTime, DType.Time, 0, 3, 4, DType.Number, DType.Number, DType.Number, DType.Number)
         {
         }
 
@@ -96,8 +96,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => true;
 
-        public DateTimeFunction()
-            : base("DateTime", TexlStrings.AboutDateTime, FunctionCategories.DateTime, DType.DateTime, 0, 6, 7, DType.Number, DType.Number, DType.Number, DType.Number, DType.Number, DType.Number, DType.Number)
+        public DateTimeFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "DateTime", TexlStrings.AboutDateTime, FunctionCategories.DateTime, DType.DateTime, 0, 6, 7, DType.Number, DType.Number, DType.Number, DType.Number, DType.Number, DType.Number, DType.Number)
         {
         }
 
@@ -112,8 +112,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Equivalent DAX/Excel function: Year
     internal sealed class YearFunction : ExtractDateTimeFunctionBase
     {
-        public YearFunction()
-            : base("Year", TexlStrings.AboutYear, FunctionCategories.DateTime, DType.Number, 0, 1, 1, DType.DateTime)
+        public YearFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "Year", TexlStrings.AboutYear, FunctionCategories.DateTime, DType.Number, 0, 1, 1, DType.DateTime)
         {
         }
 
@@ -129,8 +129,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Equivalent DAX/Excel function: Month
     internal sealed class MonthFunction : ExtractDateTimeFunctionBase
     {
-        public MonthFunction()
-            : base("Month", TexlStrings.AboutMonth, FunctionCategories.DateTime, DType.Number, 0, 1, 1, DType.DateTime)
+        public MonthFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "Month", TexlStrings.AboutMonth, FunctionCategories.DateTime, DType.Number, 0, 1, 1, DType.DateTime)
         {
         }
 
@@ -146,8 +146,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Equivalent DAX/Excel function: Day
     internal sealed class DayFunction : ExtractDateTimeFunctionBase
     {
-        public DayFunction()
-            : base("Day", TexlStrings.AboutDay, FunctionCategories.DateTime, DType.Number, 0, 1, 1, DType.DateTime)
+        public DayFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "Day", TexlStrings.AboutDay, FunctionCategories.DateTime, DType.Number, 0, 1, 1, DType.DateTime)
         {
         }
 
@@ -163,8 +163,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Equivalent DAX/Excel function: Hour
     internal sealed class HourFunction : ExtractDateTimeFunctionBase
     {
-        public HourFunction()
-            : base("Hour", TexlStrings.AboutHour, FunctionCategories.DateTime, DType.Number, 0, 1, 1, DType.DateTime)
+        public HourFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "Hour", TexlStrings.AboutHour, FunctionCategories.DateTime, DType.Number, 0, 1, 1, DType.DateTime)
         {
         }
 
@@ -180,8 +180,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Equivalent DAX/Excel function: Minute
     internal sealed class MinuteFunction : ExtractDateTimeFunctionBase
     {
-        public MinuteFunction()
-            : base("Minute", TexlStrings.AboutMinute, FunctionCategories.DateTime, DType.Number, 0, 1, 1, DType.DateTime)
+        public MinuteFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "Minute", TexlStrings.AboutMinute, FunctionCategories.DateTime, DType.Number, 0, 1, 1, DType.DateTime)
         {
         }
 
@@ -197,8 +197,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Equivalent DAX/Excel function: Second
     internal sealed class SecondFunction : ExtractDateTimeFunctionBase
     {
-        public SecondFunction()
-            : base("Second", TexlStrings.AboutSecond, FunctionCategories.DateTime, DType.Number, 0, 1, 1, DType.DateTime)
+        public SecondFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "Second", TexlStrings.AboutSecond, FunctionCategories.DateTime, DType.Number, 0, 1, 1, DType.DateTime)
         {
         }
 
@@ -220,8 +220,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => true;
 
-        public WeekdayFunction()
-            : base("Weekday", TexlStrings.AboutWeekday, FunctionCategories.DateTime, DType.Number, 0, 1, 2, DType.DateTime, DType.Number)
+        public WeekdayFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "Weekday", TexlStrings.AboutWeekday, FunctionCategories.DateTime, DType.Number, 0, 1, 2, DType.DateTime, DType.Number)
         {
         }
 
@@ -247,8 +247,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => true;
 
-        public WeekNumFunction()
-            : base("WeekNum", TexlStrings.AboutWeekNum, FunctionCategories.DateTime, DType.Number, 0, 1, 2, DType.DateTime, DType.Number)
+        public WeekNumFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "WeekNum", TexlStrings.AboutWeekNum, FunctionCategories.DateTime, DType.Number, 0, 1, 2, DType.DateTime, DType.Number)
         {
         }
 
@@ -272,8 +272,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => true;
 
-        public ISOWeekNumFunction()
-            : base("ISOWeekNum", TexlStrings.AboutISOWeekNum, FunctionCategories.DateTime, DType.Number, 0, 1, 1, DType.DateTime)
+        public ISOWeekNumFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "ISOWeekNum", TexlStrings.AboutISOWeekNum, FunctionCategories.DateTime, DType.Number, 0, 1, 1, DType.DateTime)
         {
         }
 
@@ -289,8 +289,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool HasPreciseErrors => true;
 
-        protected DateTimeGenericFunction(string name, TexlStrings.StringGetter description, DType returnType)
-            : base(name, description, FunctionCategories.DateTime, returnType, 0, 1, 2, DType.String, DType.String)
+        protected DateTimeGenericFunction(TexlFunctionConfig instanceConfig, string name, TexlStrings.StringGetter description, DType returnType)
+            : base(instanceConfig, name, description, FunctionCategories.DateTime, returnType, 0, 1, 2, DType.String, DType.String)
         {
         }
 
@@ -314,8 +314,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => true;
 
-        public DateValueFunction()
-            : base(DateValueInvariantFunctionName, TexlStrings.AboutDateValue, DType.Date)
+        public DateValueFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, DateValueInvariantFunctionName, TexlStrings.AboutDateValue, DType.Date)
         {
         }
 
@@ -335,8 +335,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => true;
 
-        public TimeValueFunction()
-            : base(TimeValueFunctionInvariantName, TexlStrings.AboutTimeValue, DType.Time)
+        public TimeValueFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, TimeValueFunctionInvariantName, TexlStrings.AboutTimeValue, DType.Time)
         {
         }
 
@@ -356,8 +356,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => true;
 
-        public DateTimeValueFunction()
-            : base(DateTimeValueInvariantFunctionName, TexlStrings.AboutDateTimeValue, DType.DateTime)
+        public DateTimeValueFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, DateTimeValueInvariantFunctionName, TexlStrings.AboutDateTimeValue, DType.DateTime)
         {
         }
 
@@ -377,8 +377,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         internal static readonly List<string> SubDayStringList = new List<string>() { "Hours", "Minutes", "Seconds", "Milliseconds" };
 
-        public DateAddFunction()
-            : base("DateAdd", TexlStrings.AboutDateAdd, FunctionCategories.DateTime, DType.DateTime, 0, 2, 3, DType.DateTime, DType.Number, DType.String)
+        public DateAddFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "DateAdd", TexlStrings.AboutDateAdd, FunctionCategories.DateTime, DType.DateTime, 0, 2, 3, DType.DateTime, DType.Number, DType.String)
         {
         }
 
@@ -441,8 +441,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => true;
 
-        public DateAddTFunction()
-            : base("DateAdd", TexlStrings.AboutDateAddT, FunctionCategories.Table, DType.EmptyTable, 0, 2, 3)
+        public DateAddTFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "DateAdd", TexlStrings.AboutDateAddT, FunctionCategories.Table, DType.EmptyTable, 0, 2, 3)
         {
         }
 
@@ -486,7 +486,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                 if (fValid)
                 {
-                    var resultColumnType = config.Features.HasFlag(Features.ConsistentOneColumnTableResult)
+                    var resultColumnType = InstanceConfig.Features.HasFlag(Features.ConsistentOneColumnTableResult)
                         ? ColumnName_Value
                         : type0.GetNames(DPath.Root).Single().Name;
                     returnType = DType.CreateTable(new TypedName(DType.DateTime, resultColumnType));
@@ -496,7 +496,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             {
                 if (type0.Kind == DKind.DateTime || type0.Kind == DKind.Date)
                 {
-                    returnType = DType.CreateTable(new TypedName(DType.DateTime, GetOneColumnTableResultName(config.Features)));
+                    returnType = DType.CreateTable(new TypedName(DType.DateTime, GetOneColumnTableResultName(InstanceConfig.Features)));
                 }
                 else if (type0.CoercesTo(DType.DateTime))
                 {
@@ -556,8 +556,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => true;
 
-        public DateDiffFunction()
-            : base("DateDiff", TexlStrings.AboutDateDiff, FunctionCategories.DateTime, DType.Number, 0, 2, 3, DType.DateTime, DType.DateTime, DType.String)
+        public DateDiffFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "DateDiff", TexlStrings.AboutDateDiff, FunctionCategories.DateTime, DType.Number, 0, 2, 3, DType.DateTime, DType.DateTime, DType.String)
         {
         }
 
@@ -588,8 +588,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => true;
 
-        public DateDiffTFunction()
-            : base("DateDiff", TexlStrings.AboutDateDiffT, FunctionCategories.Table, DType.EmptyTable, 0, 2, 3)
+        public DateDiffTFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "DateDiff", TexlStrings.AboutDateDiffT, FunctionCategories.Table, DType.EmptyTable, 0, 2, 3)
         {
         }
 
@@ -623,7 +623,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var type0 = argTypes[0];
             var type1 = argTypes[1];
 
-            returnType = DType.CreateTable(new TypedName(DType.Number, GetOneColumnTableResultName(config.Features)));
+            returnType = DType.CreateTable(new TypedName(DType.Number, GetOneColumnTableResultName(InstanceConfig.Features)));
 
             // Arg0 should be either a date or a column of dates.
             if (type0.IsTable)
@@ -692,8 +692,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool IsSelfContained => true;
 
-        public DateValueFunction_UO()
-            : base(DateValueFunction.DateValueInvariantFunctionName, TexlStrings.AboutDateValue, FunctionCategories.DateTime, DType.Date, 0, 1, 1, DType.UntypedObject)
+        public DateValueFunction_UO(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, DateValueFunction.DateValueInvariantFunctionName, TexlStrings.AboutDateValue, FunctionCategories.DateTime, DType.Date, 0, 1, 1, DType.UntypedObject)
         {
         }
 
@@ -717,8 +717,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool IsSelfContained => true;
 
-        public TimeValueFunction_UO()
-            : base(TimeValueFunction.TimeValueFunctionInvariantName, TexlStrings.AboutTimeValue, FunctionCategories.DateTime, DType.Time, 0, 1, 1, DType.UntypedObject)
+        public TimeValueFunction_UO(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, TimeValueFunction.TimeValueFunctionInvariantName, TexlStrings.AboutTimeValue, FunctionCategories.DateTime, DType.Time, 0, 1, 1, DType.UntypedObject)
         {
         }
 
@@ -742,8 +742,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool IsSelfContained => true;
 
-        public DateTimeValueFunction_UO()
-            : base(DateTimeValueFunction.DateTimeValueInvariantFunctionName, TexlStrings.AboutDateTimeValue, FunctionCategories.DateTime, DType.DateTime, 0, 1, 1, DType.UntypedObject)
+        public DateTimeValueFunction_UO(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, DateTimeValueFunction.DateTimeValueInvariantFunctionName, TexlStrings.AboutDateTimeValue, FunctionCategories.DateTime, DType.DateTime, 0, 1, 1, DType.UntypedObject)
         {
         }
 

@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 
@@ -15,8 +16,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public override bool HasPreciseErrors => true;
 
-        public ExpFunction()
-            : base("Exp", TexlStrings.AboutExp, FunctionCategories.MathAndStat)
+        public ExpFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "Exp", TexlStrings.AboutExp, FunctionCategories.MathAndStat)
         {
         }
     }
@@ -27,8 +28,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public override bool HasPreciseErrors => true;
 
-        public ExpTableFunction()
-            : base("Exp", TexlStrings.AboutExpT, FunctionCategories.Table)
+        public ExpTableFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "Exp", TexlStrings.AboutExpT, FunctionCategories.Table)
         {
         }
     }
