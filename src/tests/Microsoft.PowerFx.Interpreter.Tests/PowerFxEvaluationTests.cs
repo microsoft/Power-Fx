@@ -293,11 +293,13 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     return new RunResult(check);
                 }
 
-                var rtConfig = SymbolValues.NewFromRecord(parameters) as SymbolValues;
-
+                var rtConfig = SymbolValues.NewFromRecord(parameters);
+                                
                 if (iSetup.TimeZoneInfo != null)
                 {
-                    rtConfig.AddService(iSetup.TimeZoneInfo);
+                    var commonSymbols = new SymbolValues();
+                    commonSymbols.AddService(iSetup.TimeZoneInfo);
+                    rtConfig = ReadOnlySymbolValues.Compose(rtConfig, commonSymbols);
                 }
 
                 var newValue = await check.GetEvaluator().EvalAsync(CancellationToken.None, rtConfig);

@@ -30,7 +30,10 @@ namespace Microsoft.PowerFx.Syntax
         /// </summary>
         public DPath Namespace { get; }
 
-        internal bool HasAtToken => AtToken != null;
+        /// <summary>
+        /// Whether this identifier has <c>@</c> token, used to distinguish <c>X</c> from <c>[@X]</c>.
+        /// </summary>
+        public bool HasAtToken => AtToken != null;
 
         internal Identifier(DPath theNamespace, Token atToken, IdentToken tok)
         {
