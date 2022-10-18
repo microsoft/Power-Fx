@@ -1726,6 +1726,7 @@ namespace Microsoft.PowerFx.Functions
 
         // Error({Kind:<error kind>,Message:<error message>})
         // Error(Table({Kind:<error kind 1>,Message:<error message 1>}, {Kind:<error kind 2>,Message:<error message 2>}))
+        // Error(<error message>)
         public static FormulaValue Error(IRContext irContext, FormulaValue[] args)
         {
             var result = new ErrorValue(irContext);
@@ -1744,6 +1745,11 @@ namespace Microsoft.PowerFx.Functions
                         errorRecords.Add(errorRow.Value);
                     }
                 }
+            }
+            else if (args[0] is StringValue stringValue)
+            {
+                //Error("Custom error message").This is equivalent to Error({ Kind: ErrorKind.Custom, Message: "Custom error message"}).
+                return CommonErrors.CustomError(irContext, stringValue.Value);
             }
             else
             {
