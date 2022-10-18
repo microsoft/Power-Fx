@@ -426,6 +426,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             ok = sym.TryGetValue("displayNum", out x);
 
             // $$$ This is succeeding, but returning blank!
+            // - because HasField accepts displaynames, so we believe the field is present
+            // - but then fail the actual lookup and so return blank. 
             // Assert.False(ok);
             // Assert.Null(x);
 

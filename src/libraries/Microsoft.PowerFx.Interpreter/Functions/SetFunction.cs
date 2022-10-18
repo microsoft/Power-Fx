@@ -75,6 +75,10 @@ namespace Microsoft.PowerFx.Interpreter
                 return false;
             }
 
+            var info = binding.GetInfo(firstName);
+            
+            // $$$ Ensure this is mutable ...
+            
             var arg1 = argTypes[1];
 
             if (!arg0.Accepts(arg1))

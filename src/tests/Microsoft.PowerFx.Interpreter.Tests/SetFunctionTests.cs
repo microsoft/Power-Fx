@@ -180,6 +180,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.Equal("Set(num, 12); num", invariant);
         }
 
-        // $$$ What about type-not found? Or failure to update?        
+        // $$$ What about type-not found? Or failure to update
+        // $$$ Or Set(ThisRecord),  or setting other 'non-mutable' things?         
     }
 }
