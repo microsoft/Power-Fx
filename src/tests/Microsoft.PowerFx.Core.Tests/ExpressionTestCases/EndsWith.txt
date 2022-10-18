@@ -146,6 +146,10 @@ false
 >> EndsWith("Hello",Blank())
 true
 
+//Null end case - coerced to ""
+>> EndsWith("",Blank())
+true
+
 //Null both case - both coerced to ""
 >> EndsWith(Blank(),Blank())
 true

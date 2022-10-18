@@ -148,6 +148,10 @@ false
 >> StartsWith("Hello",Blank())
 true
 
+// Null start case - coerced to ""
+>> StartsWith("",Blank())
+true
+
 // Null both case - coerced to ""
 >> StartsWith(Blank(),Blank())
 true

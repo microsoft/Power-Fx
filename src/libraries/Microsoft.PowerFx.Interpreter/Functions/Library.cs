@@ -667,7 +667,7 @@ namespace Microsoft.PowerFx.Functions
                 StandardErrorHandling<FormulaValue>(
                     BuiltinFunctionsCore.Index.Name,
                     expandArguments: NoArgExpansion,
-                    replaceBlankValues: DoNotReplaceBlank,
+                    replaceBlankValues: ReplaceBlankWithZeroForSpecificIndices(1),
                     checkRuntimeTypes: ExactSequence(
                         ExactValueTypeOrBlank<TableValue>,
                         ExactValueTypeOrBlank<NumberValue>),
@@ -731,7 +731,7 @@ namespace Microsoft.PowerFx.Functions
                 BuiltinFunctionsCore.IsNumeric,
                 StandardErrorHandling<FormulaValue>(
                     BuiltinFunctionsCore.IsNumeric.Name,
-                    expandArguments: InsertDefaultValues(outputArgsCount: 2, fillWith: new NumberValue(IRContext.NotInSource(FormulaType.Number), 1)),
+                    expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: DeferRuntimeTypeChecking,
                     checkRuntimeValues: DeferRuntimeValueChecking,
@@ -778,10 +778,12 @@ namespace Microsoft.PowerFx.Functions
                 StandardErrorHandling<FormulaValue>(
                     BuiltinFunctionsCore.Left.Name,
                     expandArguments: NoArgExpansion,
-                    replaceBlankValues: DoNotReplaceBlank,
+                    replaceBlankValues: ReplaceBlankWith(
+                        new StringValue(IRContext.NotInSource(FormulaType.String), string.Empty),
+                        new NumberValue(IRContext.NotInSource(FormulaType.Number), 0)),
                     checkRuntimeTypes: ExactSequence(
-                        ExactValueTypeOrBlank<StringValue>,
-                        ExactValueTypeOrBlank<NumberValue>),
+                        ExactValueType<StringValue>,
+                        ExactValueType<NumberValue>),
                     checkRuntimeValues: PositiveNumericNumberChecker,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: Left)
@@ -1048,10 +1050,12 @@ namespace Microsoft.PowerFx.Functions
                 StandardErrorHandling<FormulaValue>(
                     BuiltinFunctionsCore.Right.Name,
                     expandArguments: NoArgExpansion,
-                    replaceBlankValues: DoNotReplaceBlank,
+                    replaceBlankValues: ReplaceBlankWith(
+                        new StringValue(IRContext.NotInSource(FormulaType.String), string.Empty),
+                        new NumberValue(IRContext.NotInSource(FormulaType.Number), 0)),
                     checkRuntimeTypes: ExactSequence(
-                        ExactValueTypeOrBlank<StringValue>,
-                        ExactValueTypeOrBlank<NumberValue>),
+                        ExactValueType<StringValue>,
+                        ExactValueType<NumberValue>),
                     checkRuntimeValues: PositiveNumericNumberChecker,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: Right)
@@ -1126,7 +1130,7 @@ namespace Microsoft.PowerFx.Functions
                     BuiltinFunctionsCore.Sequence.Name,
                     expandArguments: InsertDefaultValues(outputArgsCount: 3, fillWith: new NumberValue(IRContext.NotInSource(FormulaType.Number), 1)),
                     replaceBlankValues: ReplaceBlankWithZero,
-                    checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
+                    checkRuntimeTypes: ExactValueType<NumberValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: Sequence)
@@ -1148,7 +1152,7 @@ namespace Microsoft.PowerFx.Functions
                     BuiltinFunctionsCore.Sin.Name,
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: ReplaceBlankWithZero,
-                    checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
+                    checkRuntimeTypes: ExactValueType<NumberValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: SingleArgTrig(Math.Sin))
@@ -1184,7 +1188,7 @@ namespace Microsoft.PowerFx.Functions
                     BuiltinFunctionsCore.Sqrt.Name,
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: ReplaceBlankWithZero,
-                    checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
+                    checkRuntimeTypes: ExactValueType<NumberValue>,
                     checkRuntimeValues: DeferRuntimeTypeChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: Sqrt)
@@ -1195,7 +1199,7 @@ namespace Microsoft.PowerFx.Functions
                     BuiltinFunctionsCore.StartsWith.Name,
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: ReplaceBlankWithEmptyString,
-                    checkRuntimeTypes: ExactValueTypeOrBlank<StringValue>,
+                    checkRuntimeTypes: ExactValueType<StringValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: StartsWith)
@@ -1292,7 +1296,7 @@ namespace Microsoft.PowerFx.Functions
                     BuiltinFunctionsCore.Tan.Name,
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: ReplaceBlankWithZero,
-                    checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
+                    checkRuntimeTypes: ExactValueType<NumberValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: SingleArgTrig(Math.Tan))
@@ -1325,7 +1329,7 @@ namespace Microsoft.PowerFx.Functions
                     BuiltinFunctionsCore.Time.Name,
                     expandArguments: InsertDefaultValues(outputArgsCount: 4, fillWith: new NumberValue(IRContext.NotInSource(FormulaType.Number), 0)),
                     replaceBlankValues: ReplaceBlankWithZero,
-                    checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
+                    checkRuntimeTypes: ExactValueType<NumberValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: Time)
@@ -1372,10 +1376,10 @@ namespace Microsoft.PowerFx.Functions
                 StandardErrorHandling<StringValue>(
                     BuiltinFunctionsCore.Trim.Name,
                     expandArguments: NoArgExpansion,
-                    replaceBlankValues: DoNotReplaceBlank,
-                    checkRuntimeTypes: ExactValueTypeOrBlank<StringValue>,
+                    replaceBlankValues: ReplaceBlankWithEmptyString,
+                    checkRuntimeTypes: ExactValueType<StringValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
-                    returnBehavior: ReturnBehavior.ReturnEmptyStringIfAnyArgIsBlank,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: Trim)
             },
             {
@@ -1383,10 +1387,10 @@ namespace Microsoft.PowerFx.Functions
                 StandardErrorHandling<StringValue>(
                     BuiltinFunctionsCore.TrimEnds.Name,
                     expandArguments: NoArgExpansion,
-                    replaceBlankValues: DoNotReplaceBlank,
-                    checkRuntimeTypes: ExactValueTypeOrBlank<StringValue>,
+                    replaceBlankValues: ReplaceBlankWithEmptyString,
+                    checkRuntimeTypes: ExactValueType<StringValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
-                    returnBehavior: ReturnBehavior.ReturnEmptyStringIfAnyArgIsBlank,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: TrimEnds)
             },
             {
