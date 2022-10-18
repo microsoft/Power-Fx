@@ -23,7 +23,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         internal static Dictionary<string, Func<PowerFxConfig, (RecalcEngine engine, RecordValue parameters)>> SetupHandlers = new ()
         {
             { "OptionSetTestSetup", OptionSetTestSetup },
-            { "MutationFunctionsTestSetup", MutationFunctionsTestSetup }
+            { "MutationFunctionsTestSetup", MutationFunctionsTestSetup },
+            { "OptionSetSortTestSetup", OptionSetSortTestSetup },
         };
 
         private static (RecalcEngine engine, RecordValue parameters) OptionSetTestSetup(PowerFxConfig config)
@@ -54,6 +55,46 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                         new NamedValue("InnerOtherOptionSet", o2Val))));
 
             return (new RecalcEngine(config), parameters);
+        }
+
+        private static (RecalcEngine engine, RecordValue parameters) OptionSetSortTestSetup(PowerFxConfig config)
+        {
+            var optionSet = new OptionSet("OptionSet", DisplayNameUtility.MakeUnique(new Dictionary<string, string>()
+            {
+                    { "option_1", "Option1" },
+                    { "option_2", "Option2" }
+            }));
+
+            config.AddOptionSet(optionSet);
+
+            optionSet.TryGetValue(new DName("option_1"), out var o1Val);
+            optionSet.TryGetValue(new DName("option_2"), out var o2Val);
+
+            var r1 = FormulaValue.NewRecordFromFields(new NamedValue("OptionSetField1", o1Val), new NamedValue("StrField1", FormulaValue.New("test1")));
+            var r2 = FormulaValue.NewRecordFromFields(new NamedValue("OptionSetField1", o2Val), new NamedValue("StrField1", FormulaValue.New("test2")));
+            var r3 = FormulaValue.NewRecordFromFields(new NamedValue("OptionSetField1", o1Val), new NamedValue("StrField1", FormulaValue.New("test3")));
+            var r4 = FormulaValue.NewRecordFromFields(new NamedValue("OptionSetField1", o2Val), new NamedValue("StrField1", FormulaValue.New("test4")));
+            
+            // Testing with missing/blank option set field is throwing an exception. Once that is resolved uncomment and fix the test case in Sort.txt
+            var r5 = FormulaValue.NewRecordFromFields(new NamedValue("StrField1", FormulaValue.New("test5")));
+
+            var rType = RecordType.Empty()
+                .Add(new NamedFormulaType("OptionSetField1", FormulaType.OptionSetValue, "DisplayNameField1"))
+                .Add(new NamedFormulaType("StrField1", FormulaType.String, "DisplayNameField2"));
+
+            var t1 = FormulaValue.NewTable(rType, r1, r2);
+            var t2 = FormulaValue.NewTable(rType, r1, r2, r3, r4);
+            var t3 = FormulaValue.NewTable(rType, r1, r2, r3, r5, r4);
+
+            var symbol = new SymbolTable() { Parent = config.SymbolTable };
+
+            symbol.AddConstant("t1", t1);
+            symbol.AddConstant("t2", t2);
+            symbol.AddConstant("t3", t3);
+
+            config.SymbolTable = symbol;
+
+            return (new RecalcEngine(config), null);
         }
 
         private static (RecalcEngine engine, RecordValue parameters) MutationFunctionsTestSetup(PowerFxConfig config)

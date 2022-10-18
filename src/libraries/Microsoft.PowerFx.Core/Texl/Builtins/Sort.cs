@@ -62,7 +62,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             returnType = argTypes[0];
 
             var exprType = argTypes[1];
-            if (!exprType.IsPrimitive || exprType.IsOptionSet)
+            if (!exprType.IsPrimitive)
             {
                 fValid = false;
                 errors.EnsureError(args[1], TexlStrings.ErrSortWrongType);
@@ -202,61 +202,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             return true;
-        }
-
-        public static string GetSortComparatorIdForType(DType type)
-        {
-            Contracts.AssertValid(type);
-
-            switch (type.Kind)
-            {
-                case DKind.Boolean:
-                    return "0";
-                case DKind.Number:
-                case DKind.Color:
-                case DKind.Currency:
-                case DKind.Date:
-                case DKind.Time:
-                case DKind.DateTime:
-                    return "1";
-                case DKind.String:
-                case DKind.Image:
-                case DKind.PenImage:
-                case DKind.Hyperlink:
-                case DKind.Media:
-                case DKind.Blob:
-                default:
-                    Contracts.Assert(DType.String.Accepts(type, exact: false));
-                    return "2";
-            }
-        }
-
-        internal static string GenerateColumnNamesMappingForSortByColumns(DType sourceType)
-        {
-            Contracts.Assert(sourceType.IsTable);
-
-            var allColumns = sourceType.GetNames(DPath.Root);
-            var separator = string.Empty;
-
-            var primitiveColumnsAndComparatorIds = new StringBuilder();
-            primitiveColumnsAndComparatorIds.Append("{");
-
-            foreach (var column in allColumns)
-            {
-                if (column.Type.IsPrimitive && !column.Type.IsOptionSet)
-                {
-                    primitiveColumnsAndComparatorIds.AppendFormat(
-                        "{0}\"{1}\":{2}",
-                        separator,
-                        CharacterUtils.EscapeString(column.Name),
-                        GetSortComparatorIdForType(column.Type));
-                    separator = ",";
-                }
-            }
-
-            primitiveColumnsAndComparatorIds.Append("}");
-
-            return primitiveColumnsAndComparatorIds.ToString();
         }
 
         private bool IsSortOrderSuppportedByColumn(TexlNode node, TexlBinding binding, string order, SortOpMetadata metadata, DPath columnPath)
