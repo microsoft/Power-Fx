@@ -17,8 +17,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public override bool IsSelfContained => true;
 
-        public Atan2Function()
+        public Atan2Function(TexlFunctionConfig instanceConfig)
             : base(
+                instanceConfig,
                 "Atan2",
                 TexlStrings.AboutAtan2,
                 FunctionCategories.MathAndStat,

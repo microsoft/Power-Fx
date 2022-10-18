@@ -29,8 +29,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => false;
 
-        public AddColumnsFunction()
-            : base("AddColumns", TexlStrings.AboutAddColumns, FunctionCategories.Table, DType.EmptyTable, 0, 3, int.MaxValue, DType.EmptyTable)
+        public AddColumnsFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "AddColumns", TexlStrings.AboutAddColumns, FunctionCategories.Table, DType.EmptyTable, 0, 3, int.MaxValue, DType.EmptyTable)
         {
             // AddColumns(source, name, valueFunc, name, valueFunc, ..., name, valueFunc, ...)
             SignatureConstraint = new SignatureConstraint(omitStartIndex: 5, repeatSpan: 2, endNonRepeatCount: 0, repeatTopLength: 9);

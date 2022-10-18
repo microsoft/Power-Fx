@@ -18,8 +18,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => true;
 
-        public BlankFunction()
+        public BlankFunction(TexlFunctionConfig instanceConfig)
             : base(
+            instanceConfig,
             "Blank",
             TexlStrings.AboutBlank,
             FunctionCategories.Text,

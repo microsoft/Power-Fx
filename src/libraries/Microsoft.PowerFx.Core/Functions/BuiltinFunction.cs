@@ -30,23 +30,23 @@ namespace Microsoft.PowerFx.Core.Functions
         public static readonly DName ColumnName_SubMatches = new DName(ColumnName_SubMatchesStr);
         public static readonly DName ColumnName_StartMatch = new DName(ColumnName_StartMatchStr);
 
-        public BuiltinFunction(DPath theNamespace, string name, string localeSpecificName, TexlStrings.StringGetter description, FunctionCategories functionCategories, DType returnType, BigInteger maskLambdas, int arityMin, int arityMax, params DType[] paramTypes)
-            : base(theNamespace, name, localeSpecificName, description, functionCategories, returnType, maskLambdas, arityMin, arityMax, paramTypes)
+        public BuiltinFunction(TexlFunctionConfig instanceConfig, DPath theNamespace, string name, string localeSpecificName, TexlStrings.StringGetter description, FunctionCategories functionCategories, DType returnType, BigInteger maskLambdas, int arityMin, int arityMax, params DType[] paramTypes)
+            : base(instanceConfig, theNamespace, name, localeSpecificName, description, functionCategories, returnType, maskLambdas, arityMin, arityMax, paramTypes)
         {
         }
 
-        public BuiltinFunction(DPath theNamespace, string name, TexlStrings.StringGetter description, FunctionCategories functionCategories, DType returnType, BigInteger maskLambdas, int arityMin, int arityMax, params DType[] paramTypes)
-            : this(theNamespace, name, /*localeSpecificName*/string.Empty, description, functionCategories, returnType, maskLambdas, arityMin, arityMax, paramTypes)
+        public BuiltinFunction(TexlFunctionConfig instanceConfig, DPath theNamespace, string name, TexlStrings.StringGetter description, FunctionCategories functionCategories, DType returnType, BigInteger maskLambdas, int arityMin, int arityMax, params DType[] paramTypes)
+            : this(instanceConfig, theNamespace, name, /*localeSpecificName*/string.Empty, description, functionCategories, returnType, maskLambdas, arityMin, arityMax, paramTypes)
         {
         }
 
-        public BuiltinFunction(string name, TexlStrings.StringGetter description, FunctionCategories functionCategories, DType returnType, BigInteger maskLambdas, int arityMin, int arityMax, params DType[] paramTypes)
-            : this(DPath.Root, name, description, functionCategories, returnType, maskLambdas, arityMin, arityMax, paramTypes)
+        public BuiltinFunction(TexlFunctionConfig instanceConfig, string name, TexlStrings.StringGetter description, FunctionCategories functionCategories, DType returnType, BigInteger maskLambdas, int arityMin, int arityMax, params DType[] paramTypes)
+            : this(instanceConfig, DPath.Root, name, description, functionCategories, returnType, maskLambdas, arityMin, arityMax, paramTypes)
         {
         }
 
-        public BuiltinFunction(string name, string localeSpecificName, TexlStrings.StringGetter description, FunctionCategories functionCategories, DType returnType, BigInteger maskLambdas, int arityMin, int arityMax, params DType[] paramTypes)
-            : this(DPath.Root, name, localeSpecificName, description, functionCategories, returnType, maskLambdas, arityMin, arityMax, paramTypes)
+        public BuiltinFunction(TexlFunctionConfig instanceConfig, string name, string localeSpecificName, TexlStrings.StringGetter description, FunctionCategories functionCategories, DType returnType, BigInteger maskLambdas, int arityMin, int arityMax, params DType[] paramTypes)
+            : this(instanceConfig, DPath.Root, name, localeSpecificName, description, functionCategories, returnType, maskLambdas, arityMin, arityMax, paramTypes)
         {
         }
     }

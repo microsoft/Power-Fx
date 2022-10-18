@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 
@@ -10,8 +11,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Equivalent DAX function: Abs
     internal sealed class AbsFunction : MathOneArgFunction
     {
-        public AbsFunction()
-            : base("Abs", TexlStrings.AboutAbs, FunctionCategories.MathAndStat)
+        public AbsFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "Abs", TexlStrings.AboutAbs, FunctionCategories.MathAndStat)
         {
         }
     }
@@ -20,8 +21,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Table overload that computes the absolute values of each item in the input table.
     internal sealed class AbsTableFunction : MathOneArgTableFunction
     {
-        public AbsTableFunction()
-            : base("Abs", TexlStrings.AboutAbsT, FunctionCategories.Table)
+        public AbsTableFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "Abs", TexlStrings.AboutAbsT, FunctionCategories.Table)
         {
         }
     }

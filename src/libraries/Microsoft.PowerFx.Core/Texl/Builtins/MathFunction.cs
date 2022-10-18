@@ -20,8 +20,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool IsSelfContained => true;
 
-        public MathOneArgFunction(string name, TexlStrings.StringGetter description, FunctionCategories fc)
-            : base(name, description, fc, DType.Number, 0, 1, 1, DType.Number)
+        public MathOneArgFunction(TexlFunctionConfig instanceConfig, string name, TexlStrings.StringGetter description, FunctionCategories fc)
+            : base(instanceConfig, name, description, fc, DType.Number, 0, 1, 1, DType.Number)
         {
         }
 
@@ -37,8 +37,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool IsSelfContained => true;
 
-        public MathOneArgTableFunction(string name, TexlStrings.StringGetter description, FunctionCategories fc)
-            : base(name, description, fc, DType.EmptyTable, 0, 1, 1, DType.EmptyTable)
+        public MathOneArgTableFunction(TexlFunctionConfig instanceConfig, string name, TexlStrings.StringGetter description, FunctionCategories fc)
+            : base(instanceConfig, name, description, fc, DType.EmptyTable, 0, 1, 1, DType.EmptyTable)
         {
         }
 
@@ -78,7 +78,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 returnType = argType;
             }
 
-            returnType = config.Features.HasFlag(Features.ConsistentOneColumnTableResult) ? DType.CreateTable(new TypedName(DType.Number, GetOneColumnTableResultName(config.Features))) : returnType;
+            returnType = InstanceConfig.Features.HasFlag(Features.ConsistentOneColumnTableResult) ? DType.CreateTable(new TypedName(DType.Number, GetOneColumnTableResultName(InstanceConfig.Features))) : returnType;
 
             if (!fValid)
             {

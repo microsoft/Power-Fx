@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 
@@ -13,8 +14,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Equivalent Excel function: Acot
     internal sealed class AcotFunction : MathOneArgFunction
     {
-        public AcotFunction()
-            : base("Acot", TexlStrings.AboutAcot, FunctionCategories.MathAndStat)
+        public AcotFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "Acot", TexlStrings.AboutAcot, FunctionCategories.MathAndStat)
         {
         }
     }
@@ -23,8 +24,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Table overload that computes the arc cotangent of each item in the input table.
     internal sealed class AcotTableFunction : MathOneArgTableFunction
     {
-        public AcotTableFunction()
-            : base("Acot", TexlStrings.AboutAcotT, FunctionCategories.Table)
+        public AcotTableFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "Acot", TexlStrings.AboutAcotT, FunctionCategories.Table)
         {
         }
     }

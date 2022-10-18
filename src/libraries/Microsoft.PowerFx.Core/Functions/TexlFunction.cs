@@ -293,7 +293,10 @@ namespace Microsoft.PowerFx.Core.Functions
         // If the function is in the global namespace, this.QualifiedName is the same as this.Name.
         public string QualifiedName => Namespace.IsRoot ? Name : Namespace.ToDottedSyntax() + TexlLexer.PunctuatorDot + TexlLexer.EscapeName(Name);
 
+        public TexlFunctionConfig InstanceConfig { get; }
+
         public TexlFunction(
+            TexlFunctionConfig instanceConfig,
             DPath theNamespace,
             string name,
             string localeSpecificName,
@@ -305,6 +308,7 @@ namespace Microsoft.PowerFx.Core.Functions
             int arityMax,
             params DType[] paramTypes)
         {
+            Contracts.AssertValue(instanceConfig);
             Contracts.Assert(theNamespace.IsValid);
             Contracts.AssertNonEmpty(name);
             Contracts.AssertValue(localeSpecificName);
@@ -316,6 +320,7 @@ namespace Microsoft.PowerFx.Core.Functions
             Contracts.Assert(arityMax >= 0 && paramTypes.Length <= arityMax);
             Contracts.AssertIndexInclusive(arityMin, arityMax);
 
+            InstanceConfig = instanceConfig;
             Namespace = theNamespace;
             LocaleInvariantName = name;
             FunctionCategoriesMask = functionCategories;

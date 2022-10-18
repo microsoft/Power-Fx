@@ -20,8 +20,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool IsSelfContained => true;
 
-        public StatisticalFunction(string name, TexlStrings.StringGetter description, FunctionCategories fc)
-            : base(name, description, fc, DType.Number, 0, 1, int.MaxValue, DType.Number)
+        public StatisticalFunction(TexlFunctionConfig instanceConfig, string name, TexlStrings.StringGetter description, FunctionCategories fc)
+            : base(instanceConfig, name, description, fc, DType.Number, 0, 1, int.MaxValue, DType.Number)
         {
         }
 

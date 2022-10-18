@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Functions.Delegation;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
@@ -14,8 +15,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Corresponding Excel function: Average
     internal sealed class AverageFunction : StatisticalFunction
     {
-        public AverageFunction()
-            : base("Average", TexlStrings.AboutAverage, FunctionCategories.MathAndStat)
+        public AverageFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "Average", TexlStrings.AboutAverage, FunctionCategories.MathAndStat)
         {
         }
     }

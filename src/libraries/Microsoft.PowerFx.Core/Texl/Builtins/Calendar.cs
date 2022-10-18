@@ -18,8 +18,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => true;
 
-        public CalendarFunction(string functionInvariantName, TexlStrings.StringGetter functionDescription)
-            : base(new DPath().Append(new DName(LanguageConstants.InvariantCalendarNamespace)), functionInvariantName, functionDescription, FunctionCategories.DateTime, DType.CreateTable(new TypedName(DType.String, new DName("Value"))), 0, 0, 0)
+        public CalendarFunction(TexlFunctionConfig instanceConfig, string functionInvariantName, TexlStrings.StringGetter functionDescription)
+            : base(instanceConfig, new DPath().Append(new DName(LanguageConstants.InvariantCalendarNamespace)), functionInvariantName, functionDescription, FunctionCategories.DateTime, DType.CreateTable(new TypedName(DType.String, new DName("Value"))), 0, 0, 0)
         {
         }
 
@@ -32,8 +32,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Calendar.MonthsLong()
     internal sealed class MonthsLongFunction : CalendarFunction
     {
-        public MonthsLongFunction()
-            : base("MonthsLong", TexlStrings.AboutCalendar__MonthsLong)
+        public MonthsLongFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "MonthsLong", TexlStrings.AboutCalendar__MonthsLong)
         {
         }
     }
@@ -41,8 +41,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Calendar.MonthsShort()
     internal sealed class MonthsShortFunction : CalendarFunction
     {
-        public MonthsShortFunction()
-            : base("MonthsShort", TexlStrings.AboutCalendar__MonthsShort)
+        public MonthsShortFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "MonthsShort", TexlStrings.AboutCalendar__MonthsShort)
         {
         }
     }
@@ -50,8 +50,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Calendar.WeekdaysLong()
     internal sealed class WeekdaysLongFunction : CalendarFunction
     {
-        public WeekdaysLongFunction()
-            : base("WeekdaysLong", TexlStrings.AboutCalendar__WeekdaysLong)
+        public WeekdaysLongFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "WeekdaysLong", TexlStrings.AboutCalendar__WeekdaysLong)
         {
         }
     }
@@ -59,8 +59,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Calendar.WeekdaysShort()
     internal sealed class WeekdaysShortFunction : CalendarFunction
     {
-        public WeekdaysShortFunction()
-            : base("WeekdaysShort", TexlStrings.AboutCalendar__WeekdaysShort)
+        public WeekdaysShortFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "WeekdaysShort", TexlStrings.AboutCalendar__WeekdaysShort)
         {
         }
     }

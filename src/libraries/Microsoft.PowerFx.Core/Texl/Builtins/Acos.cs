@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 
@@ -13,8 +14,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Equivalent Excel function: acos
     internal sealed class AcosFunction : MathOneArgFunction
     {
-        public AcosFunction()
-            : base("Acos", TexlStrings.AboutAcos, FunctionCategories.MathAndStat)
+        public AcosFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "Acos", TexlStrings.AboutAcos, FunctionCategories.MathAndStat)
         {
         }
     }
@@ -23,8 +24,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Table overload that computes the arc cosine of each item in the input table.
     internal sealed class AcosTableFunction : MathOneArgTableFunction
     {
-        public AcosTableFunction()
-            : base("Acos", TexlStrings.AboutAcosT, FunctionCategories.Table)
+        public AcosTableFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "Acos", TexlStrings.AboutAcosT, FunctionCategories.Table)
         {
         }
     }

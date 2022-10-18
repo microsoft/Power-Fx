@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 
@@ -13,8 +14,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Equivalent Excel function: Atan
     internal sealed class AtanFunction : MathOneArgFunction
     {
-        public AtanFunction()
-            : base("Atan", TexlStrings.AboutAtan, FunctionCategories.MathAndStat)
+        public AtanFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "Atan", TexlStrings.AboutAtan, FunctionCategories.MathAndStat)
         {
         }
     }
@@ -23,8 +24,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Table overload that computes the arc tangent of each item in the input table.
     internal sealed class AtanTableFunction : MathOneArgTableFunction
     {
-        public AtanTableFunction()
-            : base("Atan", TexlStrings.AboutAtanT, FunctionCategories.Table)
+        public AtanTableFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "Atan", TexlStrings.AboutAtanT, FunctionCategories.Table)
         {
         }
     }
