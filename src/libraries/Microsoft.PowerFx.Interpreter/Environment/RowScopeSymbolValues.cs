@@ -24,7 +24,7 @@ namespace Microsoft.PowerFx
             _allowThisRecord = allowThisRecord;
         }
 
-        public override bool UpdateValue(string name, FormulaValue newValue)
+        public override bool TryUpdateValue(string name, FormulaValue newValue)
         {
             if (_parameter.Type.HasField(name))
             {

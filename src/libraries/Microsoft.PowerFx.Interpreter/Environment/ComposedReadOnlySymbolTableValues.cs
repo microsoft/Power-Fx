@@ -37,11 +37,11 @@ namespace Microsoft.PowerFx
             return null;
         }
 
-        public override bool UpdateValue(string name, FormulaValue newValue)
+        public override bool TryUpdateValue(string name, FormulaValue newValue)
         {
             foreach (var table in _tables)
             {
-                var updated = table.UpdateValue(name, newValue);
+                var updated = table.TryUpdateValue(name, newValue);
                 if (updated)
                 {
                     return true;

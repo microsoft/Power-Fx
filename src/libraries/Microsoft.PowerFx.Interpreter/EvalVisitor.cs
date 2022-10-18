@@ -150,7 +150,7 @@ namespace Microsoft.PowerFx
                 if (obj.Value is NameSymbol sym)
                 {
                     if (_runtimeConfig != null &&
-                        _runtimeConfig.UpdateValue(sym.Name, newValue))
+                        _runtimeConfig.TryUpdateValue(sym.Name, newValue))
                     {
                         return FormulaValue.New(true);
                     }

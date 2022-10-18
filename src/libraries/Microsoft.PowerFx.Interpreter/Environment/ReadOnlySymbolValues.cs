@@ -77,7 +77,7 @@ namespace Microsoft.PowerFx
         // Must be existing symbol
         // Must have same type as before. 
         // Return true on successful update, false if not.
-        public virtual bool UpdateValue(string name, FormulaValue newValue)
+        public virtual bool TryUpdateValue(string name, FormulaValue newValue)
         {
             // Default is to fail - should have been caught by binder?
             return false;

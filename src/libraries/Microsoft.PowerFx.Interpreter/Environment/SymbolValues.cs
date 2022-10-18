@@ -95,7 +95,7 @@ namespace Microsoft.PowerFx
             return null;
         }
 
-        public override bool UpdateValue(string name, FormulaValue newValue)
+        public override bool TryUpdateValue(string name, FormulaValue newValue)
         {
             if (_symbolValues != null)
             {
@@ -108,7 +108,7 @@ namespace Microsoft.PowerFx
 
             if (Parent != null)
             {
-                return Parent.UpdateValue(name, newValue);
+                return Parent.TryUpdateValue(name, newValue);
             }
 
             return false;

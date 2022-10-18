@@ -335,6 +335,15 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
         [Fact]
+        public void UpdateMiss()
+        {
+            ReadOnlySymbolValues sym1 = new SymbolValues();
+
+            var ok = sym1.TryUpdateValue("missing", FormulaValue.New(123));
+            Assert.False(ok);
+        }
+
+        [Fact]
         public void UpdateCompose()
         {
             var sym1 = new SymbolValues();
@@ -348,11 +357,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             Assert.Equal("v2=20;|v1=1;v2=<shadow>;|", Get(sym2));
 
-            sym2.UpdateValue("v2", FormulaValue.New(21));
+            var ok = sym2.TryUpdateValue("v2", FormulaValue.New(21));
+            Assert.True(ok);
             Assert.Equal("v2=21;|v1=1;v2=<shadow>;|", Get(sym2));
             Assert.Equal("v1=1;v2=2;|", Get(sym1)); // v2 in parent not updated 
 
-            sym2.UpdateValue("v1", FormulaValue.New(19)); // finds in Parent 
+            sym2.TryUpdateValue("v1", FormulaValue.New(19)); // finds in Parent 
             Assert.Equal("v2=21;|v1=19;v2=<shadow>;|", Get(sym2));
             Assert.Equal("v1=19;v2=2;|", Get(sym1)); // v2 in parent not updated 
 
@@ -364,12 +374,64 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var sym3 = ReadOnlySymbolValues.Compose(sym3a, sym3b, sym2);
 
-            sym3.UpdateValue("v1", FormulaValue.New(18));
+            sym3.TryUpdateValue("v1", FormulaValue.New(18));
             Assert.Equal("v1=18;v2=2;|", Get(sym1));
 
-            sym3.UpdateValue("v3a", FormulaValue.New(38));
-            sym3.UpdateValue("v3b", FormulaValue.New(39));
+            sym3.TryUpdateValue("v3a", FormulaValue.New(38));
+            sym3.TryUpdateValue("v3b", FormulaValue.New(39));
             Assert.Equal("v1=18;v2=21;v3a=38;v3b=39;|", Get(sym3));
+        }
+
+        [Fact]
+        public void UpdateCompose2()
+        {
+            // Nested composes
+            var sym1a = new SymbolValues();
+            var sym1b = new SymbolValues();
+
+            var sym1 = ReadOnlySymbolValues.Compose(sym1a, sym1b);
+
+            var sym2a = new SymbolValues();
+            sym2a.Add("v2a", FormulaValue.New(1));
+
+            var sym2 = ReadOnlySymbolValues.Compose(sym1, sym2a);
+
+            var ok = sym2.TryUpdateValue("v2a", FormulaValue.New(2));
+            Assert.True(ok);
+            Assert.Equal("v2a=2;|", Get(sym2));
+        }
+
+        [Fact]
+        public void RowScope()
+        {
+            var displayName = "displayNum";
+            var recordType = RecordType.Empty()
+                .Add(new NamedFormulaType("num", FormulaType.Number, displayName));
+
+            var record = FormulaValue.NewRecordFromFields(
+                recordType,
+                new NamedValue("num", FormulaValue.New(11)));
+
+            var sym = ReadOnlySymbolValues.NewFromRecord(record);
+
+            Assert.Equal("num=11;|", Get(sym));
+
+            // No 'ThisRecord'
+            var ok = sym.TryGetValue("ThisRecord", out var x);            
+            Assert.False(ok);
+            Assert.Null(x);
+
+            // Lookup doesn't get display name. 
+            // IR should translate Display names to logical names. 
+            ok = sym.TryGetValue("displayNum", out x);
+
+            // $$$ This is succeeding, but returning blank!
+            // Assert.False(ok);
+            // Assert.Null(x);
+
+            // Update
+            sym.TryUpdateValue("num", FormulaValue.New(12));
+            Assert.Equal("num=12;|", Get(sym));
         }
 
         // Get a convenient string representation of a SymbolValue
