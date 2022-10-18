@@ -177,5 +177,15 @@ namespace Microsoft.PowerFx.Functions
                 Kind = ErrorKind.Internal
             });
         }
+
+        internal static FormulaValue CustomError(IRContext irContext, string message)
+        {
+            return new ErrorValue(irContext, new ExpressionError()
+            {
+                Message = message,
+                Span = irContext.SourceContext,
+                Kind = ErrorKind.Custom
+            });
+        }
     }
 }
