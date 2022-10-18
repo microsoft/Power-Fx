@@ -31,6 +31,17 @@ namespace Microsoft.PowerFx
             return _parent._symbolTable;
         }
 
+        public override bool UpdateValue(string name, FormulaValue newValue)
+        {
+            if (_parent.Formulas.TryGetValue(name, out var info))
+            {
+                _parent.UpdateVariable(name, newValue);
+                return true;
+            }
+
+            return false;
+        }
+
         public override bool TryGetValue(string name, out FormulaValue value)
         {
             if (_parent.Formulas.TryGetValue(name, out var info))

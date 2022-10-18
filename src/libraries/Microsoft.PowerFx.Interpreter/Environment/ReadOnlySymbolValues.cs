@@ -74,6 +74,15 @@ namespace Microsoft.PowerFx
             return false;
         }
 
+        // Must be existing symbol
+        // Must have same type as before. 
+        // Return true on successful update, false if not.
+        public virtual bool UpdateValue(string name, FormulaValue newValue)
+        {
+            // Default is to fail - should have been caught by binder?
+            return false;
+        }
+
         /// <summary>
         /// Get symbol values where each symbol is a field of the record. 
         /// </summary>

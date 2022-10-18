@@ -4,6 +4,8 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Binding;
@@ -330,6 +332,83 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var result = engine.EvalAsync("a + b + global", CancellationToken.None, runtimeConfig: r2).Result;
 
             Assert.Equal(111.0, result.ToObject());
+        }
+
+        [Fact]
+        public void UpdateCompose()
+        {
+            var sym1 = new SymbolValues();
+            sym1.Add("v1", FormulaValue.New(1));
+            sym1.Add("v2", FormulaValue.New(2)); // shadowed 
+
+            Assert.Equal("v1=1;v2=2;|", Get(sym1));
+
+            var sym2 = new SymbolValues { Parent = sym1 };
+            sym2.Add("v2", FormulaValue.New(20));
+
+            Assert.Equal("v2=20;|v1=1;v2=<shadow>;|", Get(sym2));
+
+            sym2.UpdateValue("v2", FormulaValue.New(21));
+            Assert.Equal("v2=21;|v1=1;v2=<shadow>;|", Get(sym2));
+            Assert.Equal("v1=1;v2=2;|", Get(sym1)); // v2 in parent not updated 
+
+            sym2.UpdateValue("v1", FormulaValue.New(19)); // finds in Parent 
+            Assert.Equal("v2=21;|v1=19;v2=<shadow>;|", Get(sym2));
+            Assert.Equal("v1=19;v2=2;|", Get(sym1)); // v2 in parent not updated 
+
+            var sym3a = new SymbolValues();
+            sym3a.Add("v3a", FormulaValue.New(30));
+
+            var sym3b = new SymbolValues();
+            sym3b.Add("v3b", FormulaValue.New(31));
+
+            var sym3 = ReadOnlySymbolValues.Compose(sym3a, sym3b, sym2);
+
+            sym3.UpdateValue("v1", FormulaValue.New(18));
+            Assert.Equal("v1=18;v2=2;|", Get(sym1));
+
+            sym3.UpdateValue("v3a", FormulaValue.New(38));
+            sym3.UpdateValue("v3b", FormulaValue.New(39));
+            Assert.Equal("v1=18;v2=21;v3a=38;v3b=39;|", Get(sym3));
+        }
+
+        // Get a convenient string representation of a SymbolValue
+        private static string Get(ReadOnlySymbolValues values)
+        {
+            var sb = new StringBuilder();
+
+            var symbolTable = values.GetSymbolTableSnapshot();
+
+            var seen = new HashSet<string>();
+
+            while (symbolTable != null)
+            {
+                foreach (var sym in symbolTable.SymbolNames.OrderBy(x => x.Name.Value))
+                {
+                    sb.Append(sym.Name);
+                    sb.Append('=');
+
+                    if (seen.Add(sym.Name.Value))
+                    {
+                        values.TryGetValue(sym.Name, out var value);
+                        sb.Append(value?.ToObject()?.ToString());
+                    }
+                    else
+                    {
+                        // We have no way to query parent variables from the symbol Values. 
+                        // So we just call it shadowed. 
+                        sb.Append("<shadow>");
+                    }
+
+                    sb.Append(';');             
+                }
+
+                sb.Append('|'); // break between symbol tables.
+
+                symbolTable = symbolTable.Parent;
+            }
+
+            return sb.ToString();
         }
     }
 }

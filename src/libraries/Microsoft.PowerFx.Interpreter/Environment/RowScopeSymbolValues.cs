@@ -24,6 +24,19 @@ namespace Microsoft.PowerFx
             _allowThisRecord = allowThisRecord;
         }
 
+        public override bool UpdateValue(string name, FormulaValue newValue)
+        {
+            if (_parameter.Type.HasField(name))
+            {
+                // If it's not in this table. Be sure to not claim it so that 
+                // we can still check a parent scope. 
+                _parameter.UpdateField(name, newValue);
+                return true;
+            }
+
+            return false;
+        }
+
         public override bool TryGetValue(string name, out FormulaValue value)
         {
             if (_allowThisRecord && name == "ThisRecord")

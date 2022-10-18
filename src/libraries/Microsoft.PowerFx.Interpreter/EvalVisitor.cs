@@ -147,6 +147,16 @@ namespace Microsoft.PowerFx
             // Binder has already ensured this is a first name node. 
             if (arg0 is ResolvedObjectNode obj)
             {
+                if (obj.Value is NameSymbol sym)
+                {
+                    if (_runtimeConfig != null &&
+                        _runtimeConfig.UpdateValue(sym.Name, newValue))
+                    {
+                        return FormulaValue.New(true);
+                    }
+                }
+                
+                // $$$ Ever hit this?
                 if (obj.Value is ICanSetValue fi)
                 {
                     fi.SetValue(newValue);

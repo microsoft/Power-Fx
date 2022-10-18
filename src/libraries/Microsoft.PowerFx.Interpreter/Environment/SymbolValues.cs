@@ -95,6 +95,25 @@ namespace Microsoft.PowerFx
             return null;
         }
 
+        public override bool UpdateValue(string name, FormulaValue newValue)
+        {
+            if (_symbolValues != null)
+            {
+                if (_symbolValues.TryGetValue(name, out var value))
+                {
+                    _symbolValues[name] = newValue;
+                    return true;
+                }
+            }
+
+            if (Parent != null)
+            {
+                return Parent.UpdateValue(name, newValue);
+            }
+
+            return false;
+        }
+
         public override bool TryGetValue(string name, out FormulaValue value)
         {
             if (_symbolValues != null && _symbolValues.TryGetValue(name, out value))

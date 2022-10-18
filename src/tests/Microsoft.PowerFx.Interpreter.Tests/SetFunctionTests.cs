@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Threading;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Types;
 using Xunit;
@@ -124,5 +125,61 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var result = engine.Check("Set(x, 15)", null, _opts);
             Assert.False(result.IsSuccess);
         }
+
+        [Fact]
+        public void UpdateSimple()
+        {
+            var sym = new SymbolValues();
+            sym.Add("x", FormulaValue.New(12));
+
+            var config = new PowerFxConfig();
+            config.EnableSetFunction();
+            var engine = new RecalcEngine(config);
+
+            var expr = "Set(x, x+1);x";
+            
+            var result = engine.EvalAsync(expr, CancellationToken.None, options: _opts, runtimeConfig: sym).Result;
+
+            Assert.Equal(13.0, result.ToObject());
+
+            var found = sym.TryGetValue("x", out var result2);
+            Assert.True(found);
+            Assert.Equal(13.0, result2.ToObject());
+        }
+
+        [Fact]
+        public void UpdateRowScope()
+        {
+            var recordType = RecordType.Empty()
+                .Add(new NamedFormulaType("num", FormulaType.Number, "displayNum"))
+                .Add(new NamedFormulaType("str", FormulaType.String, "displayStr"));
+
+            var record = FormulaValue.NewRecordFromFields(
+                recordType,
+                new NamedValue("num", FormulaValue.New(11)),
+                new NamedValue("str", FormulaValue.New("abc")));
+
+            var expr = "Set(displayNum, 12); displayNum";
+
+            var sym = ReadOnlySymbolValues.NewFromRecord(record);
+            
+            var config = new PowerFxConfig();
+            config.EnableSetFunction();
+            var engine = new RecalcEngine(config);
+
+            var result = engine.EvalAsync(expr, CancellationToken.None, options: _opts, runtimeConfig: sym).Result;
+
+            Assert.Equal(12.0, result.ToObject());
+
+            var found = sym.TryGetValue("num", out var result2);
+            Assert.True(found);
+            Assert.Equal(12.0, result2.ToObject());
+
+            // Can get invariant form.
+            var invariant = engine.GetInvariantExpression(expr, recordType);
+            Assert.Equal("Set(num, 12); num", invariant);
+        }
+
+        // $$$ What about type-not found? Or failure to update?        
     }
 }
