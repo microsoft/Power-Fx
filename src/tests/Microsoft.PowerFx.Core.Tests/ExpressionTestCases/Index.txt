@@ -7,8 +7,11 @@
 >> Index([1, 2, 3, 4, 5], -1)
 #Error(Kind=InvalidArgument)
 
+>> Index([1, 2, 3, 4, 5], 0)
+#Error(Kind=InvalidArgument)
+
 >> Index([1, 2, 3, 4, 5], Blank())
-Blank()
+#Error(Kind=InvalidArgument)
 
 >> Index(Blank(), 2)
 Blank()

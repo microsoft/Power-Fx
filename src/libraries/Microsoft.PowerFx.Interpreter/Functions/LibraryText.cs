@@ -408,6 +408,11 @@ namespace Microsoft.PowerFx.Functions
             var count = ((NumberValue)args[2]).Value;
             var replacement = ((StringValue)args[3]).Value;
 
+            if (start <= 0 || count < 0)
+            {
+                return CommonErrors.ArgumentOutOfRange(irContext);
+            }
+
             if (start >= int.MaxValue)
             {
                 start = source.Length + 1;
@@ -439,19 +444,19 @@ namespace Microsoft.PowerFx.Functions
         private static FormulaValue Substitute(IRContext irContext, FormulaValue[] args)
         {
             var source = (StringValue)args[0];
+            var match = (StringValue)args[1];
+            var replacement = (StringValue)args[2];
 
-            if (args[1] is BlankValue || (args[1] is StringValue sv && string.IsNullOrEmpty(sv.Value)))
+            if (string.IsNullOrEmpty(match.Value))
             {
                 return source;
             }
 
-            var match = (StringValue)args[1];
-            var replacement = (StringValue)args[2];
-
             var instanceNum = -1;
-            if (args[3] is NumberValue nv)
+            if (args.Length > 3)
             {
-                if (nv.Value >= int.MaxValue)
+                var nv = (NumberValue)args[3];
+                if (nv.Value > source.Value.Length)
                 {
                     return source;
                 }
