@@ -119,9 +119,9 @@
 >> Substitute("HelloHelloHello", Blank(), "Je", 2)
 "HelloHelloHello"
 
-//Excel doesn't support Blank() in the forth argument and throws error
+// Blank() is coerced to 0, which is invalid
 >> Substitute("HelloHelloHello", "He", "Je", Blank())
-"JelloJelloJello"
+#Error(Kind=InvalidArgument)
 
 >> Substitute("HelloHelloHello", "He", "")
 "llollollo"

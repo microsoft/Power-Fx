@@ -24,6 +24,11 @@ namespace Microsoft.PowerFx.Types
             { typeof(decimal), FormulaType.Number },
             { typeof(long), FormulaType.Number },
             { typeof(float), FormulaType.Number },
+            { typeof(double?), FormulaType.Number },
+            { typeof(int?), FormulaType.Number },
+            { typeof(decimal?), FormulaType.Number },
+            { typeof(long?), FormulaType.Number },
+            { typeof(float?), FormulaType.Number },
                         
             // Non-numeric types:
             { typeof(Guid), FormulaType.Guid },
@@ -31,7 +36,12 @@ namespace Microsoft.PowerFx.Types
             { typeof(DateTime), FormulaType.DateTime },
             { typeof(DateTimeOffset), FormulaType.DateTime },
             { typeof(TimeSpan), FormulaType.Time },
-            { typeof(string), FormulaType.String }
+            { typeof(string), FormulaType.String },
+            { typeof(Guid?), FormulaType.Guid },
+            { typeof(bool?), FormulaType.Boolean },
+            { typeof(DateTime?), FormulaType.DateTime },
+            { typeof(DateTimeOffset?), FormulaType.DateTime },
+            { typeof(TimeSpan?), FormulaType.Time },
         };
 
         /// <summary>
