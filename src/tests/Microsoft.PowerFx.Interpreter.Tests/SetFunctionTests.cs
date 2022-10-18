@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Threading;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Types;
 using Xunit;
@@ -10,7 +11,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
     public class SetFunctionTests : PowerFxTest
     {
         private readonly ParserOptions _opts = new ParserOptions { AllowsSideEffects = true };
-                
+
         [Fact]
         public void SetVar()
         {
@@ -123,6 +124,263 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var result = engine.Check("Set(x, 15)", null, _opts);
             Assert.False(result.IsSuccess);
+        }
+
+        [Fact]
+        public void UpdateSimple()
+        {
+            var symTable = new SymbolTable();
+            var slotX = symTable.AddVariable("x", FormulaType.Number, mutable: true);
+
+            var sym = symTable.CreateValues();            
+            sym.Set(slotX, FormulaValue.New(12));
+
+            var config = new PowerFxConfig();
+            config.EnableSetFunction();
+            var engine = new RecalcEngine(config);
+
+            var expr = "Set(x, x+1);x";
+            
+            var result = engine.EvalAsync(expr, CancellationToken.None, options: _opts, runtimeConfig: sym).Result;
+            Assert.Equal(13.0, result.ToObject());
+
+            result = sym.Get(slotX);
+            Assert.Equal(13.0, result.ToObject());
+
+            var found = sym.TryGetValue("x", out var result2);
+            Assert.True(found);
+            Assert.Equal(13.0, result2.ToObject());
+        }
+
+        [Fact]
+        public void MutableByDefault()
+        {            
+            var sym = new SymbolValues();
+            sym.Add("x", FormulaValue.New(12)); // mutable by default
+
+            var config = new PowerFxConfig();
+            config.EnableSetFunction();
+            var engine = new RecalcEngine(config);
+
+            // ok, mutable 
+            var expr = "Set(x,5)";
+
+            var result = engine.Check(expr, options: _opts, symbolTable: sym.SymbolTable);
+            Assert.True(result.IsSuccess);
+        }
+
+        // Attempting to Set() a readonly variable should be a binding error. 
+        [Fact]
+        public void UpdateFailsOnReadOnlyValue()
+        {
+            var symTable = new SymbolTable();
+            var slotX = symTable.AddVariable("x", FormulaType.Number, mutable: true);
+
+            var sym = symTable.CreateValues();
+            sym.Set(slotX, FormulaValue.New(12));
+
+            var config = new PowerFxConfig();
+            config.EnableSetFunction();
+            var engine = new RecalcEngine(config);
+
+            // fails on readonly failure. 
+            var expr = "With({y : x},Set(y,5))";
+            
+            var result = engine.Check(expr, options: _opts, symbolTable: symTable);
+            Assert.False(result.IsSuccess);
+
+            // but ok to set X since it's mutable. 
+            expr = "With({y : x},Set(x,y*2))";
+
+            //result = engine.Check(expr, symbolTable: sym.GetSymbolTableSnapshot());
+            result = engine.Check(expr, options: _opts, symbolTable: symTable);
+
+            Assert.True(result.IsSuccess);
+        }
+
+        [Fact]
+        public void UpdateFailsOnReadOnlyValue2()
+        {
+            var symTable = new SymbolTable();
+            var slotX = symTable.AddVariable("x", FormulaType.Number, mutable: false);
+
+            var sym = symTable.CreateValues();
+            sym.Set(slotX, FormulaValue.New(12)); // Ok 
+
+            var config = new PowerFxConfig();
+            config.EnableSetFunction();
+            var engine = new RecalcEngine(config);
+
+            // fails on readonly failure. 
+            var expr = "Set(x,5)";
+
+            var result = engine.Check(expr, options: _opts, symbolTable: symTable);
+            Assert.False(result.IsSuccess);
+        }
+
+        [Fact]
+        public void UpdateFailsOnReadOnlyValue3()
+        {
+            var symTable = new SymbolTable();
+            symTable.AddConstant("x", FormulaValue.New(12));
+
+            var found = symTable.TryLookupSlot("x", out var slot);
+            Assert.False(found); // no slots for constants. 
+            Assert.Null(slot);
+
+            var config = new PowerFxConfig();
+            config.EnableSetFunction();
+            var engine = new RecalcEngine(config);
+
+            // fails on readonly failure. 
+            var expr = "Set(x,5)";
+
+            var result = engine.Check(expr, options: _opts, symbolTable: symTable);
+            Assert.False(result.IsSuccess);
+        }
+
+        // Demonstrate we can have a single Check w/ SymbolTable used against multiple SymbolValues.
+        [Fact]
+        public void Update3()
+        {
+            var symTable = new SymbolTable();
+            var slot = symTable.AddVariable("num", FormulaType.Number, mutable: true);
+
+            var config = new PowerFxConfig();
+            config.EnableSetFunction();
+            var engine = new RecalcEngine(config);
+
+            // Create multiple values that share a symbol table.
+            var symValues1 = symTable.CreateValues();
+            symValues1.Set(slot, FormulaValue.New(10));
+
+            var symValues2 = symTable.CreateValues();
+            symValues2.Set(slot, FormulaValue.New(20));
+
+            var check = engine.Check("Set(num, num+5)", options: _opts, symbolTable: symTable);
+            check.ThrowOnErrors();
+            var eval = check.GetEvaluator();
+
+            foreach (var symValue in new[] { symValues1, symValues2 })
+            {
+                var result = eval.EvalAsync(CancellationToken.None, runtimeConfig: symValue);
+            }
+
+            AssertValue(symValues1, "num", 15.0);
+            AssertValue(symValues2, "num", 25.0);
+        }
+
+        [Fact]
+        public void UpdateRowScope()
+        {
+            var recordType = RecordType.Empty()
+                .Add(new NamedFormulaType("num", FormulaType.Number, "displayNum"))
+                .Add(new NamedFormulaType("str", FormulaType.String, "displayStr"));
+
+            var record = FormulaValue.NewRecordFromFields(
+                recordType,
+                new NamedValue("num", FormulaValue.New(11)),
+                new NamedValue("str", FormulaValue.New("abc")));
+
+            var expr = "Set(displayNum, 12); displayNum";
+                        
+            var sym = NewMutableFromRecord(record);
+            
+            var config = new PowerFxConfig();
+            config.EnableSetFunction();
+            var engine = new RecalcEngine(config);
+
+            var result = engine.EvalAsync(expr, CancellationToken.None, options: _opts, runtimeConfig: sym).Result;
+
+            Assert.Equal(12.0, result.ToObject());
+
+            AssertValue(sym, "num", 12.0);
+
+            // Can get invariant form.
+            var invariant = engine.GetInvariantExpression(expr, recordType);
+            Assert.Equal("Set(num, 12); num", invariant);
+        }
+
+        // Expression from 2 row scopes!
+        [Fact]
+        public void UpdateRowScope2()
+        {
+            var recordType1 = RecordType.Empty()
+                .Add(new NamedFormulaType("num", FormulaType.Number, "displayNum"))
+                .Add(new NamedFormulaType("str", FormulaType.String, "displayStr"));
+
+            var record1 = FormulaValue.NewRecordFromFields(
+                recordType1,
+                new NamedValue("num", FormulaValue.New(10)),
+                new NamedValue("str", FormulaValue.New("abc")));
+
+            var recordType2 = RecordType.Empty()
+                .Add(new NamedFormulaType("num2", FormulaType.Number, "displayNum2"));
+
+            var record2 = FormulaValue.NewRecordFromFields(
+                recordType2,
+                new NamedValue("num2", FormulaValue.New(20)));
+
+            var expr = "Set(displayNum, displayNum2+5); displayNum";
+                        
+            var sym1 = NewMutableFromRecord(record1);
+            var sym2 = NewMutableFromRecord(record2);
+
+            var sym = ReadOnlySymbolValues.Compose(sym1, sym2);
+
+            var config = new PowerFxConfig();
+            config.EnableSetFunction();
+            var engine = new RecalcEngine(config);
+
+            // Verify Check, creating symbol table several ways 
+            var check1 = engine.Check(expr, _opts, sym.SymbolTable);
+            Assert.True(check1.IsSuccess);
+
+            var symTable1 = NewMutableFromRecord(recordType1);
+            var symTable2 = NewMutableFromRecord(recordType2);
+            var symTable = ReadOnlySymbolTable.Compose(symTable1, symTable2);
+
+            var check2 = engine.Check(expr, _opts, symTable);
+            Assert.True(check1.IsSuccess);
+
+            // Verify evaluation. 
+            var result = engine.EvalAsync(expr, CancellationToken.None, options: _opts, runtimeConfig: sym).Result;
+
+            Assert.Equal(25.0, result.ToObject());
+
+            AssertValue(sym, "num", 25.0);
+
+            // Can get invariant form.
+            // Can't pass in symbol table here...
+            // https://github.com/microsoft/Power-Fx/issues/767
+            //var invariant = engine.GetInvariantExpression(expr, recordType);
+            //Assert.Equal("Set(num, 12); num", invariant);
+        }
+
+        private static void AssertMissing(ReadOnlySymbolValues symValues, string name)
+        {
+            var found = symValues.TryGetValue(name, out var result);
+            Assert.False(found);
+            Assert.Null(result);
+        }
+
+        private static void AssertValue(ReadOnlySymbolValues symValues, string name, object expected)
+        {
+            var found = symValues.TryGetValue(name, out var result);
+            Assert.True(found);
+            Assert.Equal(expected, result.ToObject());
+        }
+
+        public static ReadOnlySymbolValues NewMutableFromRecord(RecordValue parameters)
+        {
+            var symTable = NewMutableFromRecord(parameters.Type);
+            return ReadOnlySymbolValues.NewFromRecord(symTable, parameters);
+        }
+
+        public static ReadOnlySymbolTable NewMutableFromRecord(RecordType type)
+        {
+            var symTable = ReadOnlySymbolTable.NewFromRecord(type, allowMutable: true);
+            return symTable;
         }
     }
 }

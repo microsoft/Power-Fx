@@ -342,6 +342,37 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             Assert.Empty(binding.NodesToReplace);
         }
+
+        // Verify lookup methods against logical/display names. 
+        [Fact]
+        public void FieldLookup()
+        {
+            var r1 = RecordType.Empty()
+                .Add(new NamedFormulaType("Num", FormulaType.Number, "SomeDisplayNum"))
+                .Add(new NamedFormulaType("B", FormulaType.Boolean, "SomeDisplayB"));
+
+            FormulaType type;
+            
+            type = r1.GetFieldType("Num");
+            Assert.Equal(FormulaType.Number, type);
+
+            // Display name not found because we only lookup logical 
+            var found = r1.TryGetFieldType("SomeDisplayNum", out type);
+            Assert.False(found);
+            Assert.Equal(FormulaType.Blank, type);
+
+            // Lookup to get display name 
+            found = r1.TryGetFieldType("Num", out var logical, out type);
+            Assert.True(found);
+            Assert.Equal(FormulaType.Number, type);
+            Assert.Equal("Num", logical);
+
+            // This overload handles display name
+            found = r1.TryGetFieldType("SomeDisplayNum", out logical, out type);
+            Assert.True(found);
+            Assert.Equal(FormulaType.Number, type);
+            Assert.Equal("Num", logical);
+        }
     }
 
     public class CommaSeparatedDecimalLocaleConversionTests

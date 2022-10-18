@@ -16,33 +16,6 @@ using Microsoft.PowerFx.Types;
 namespace Microsoft.PowerFx
 {
     /// <summary>
-    /// Used between Symbol Table resolver and IR. Enables describing constants or 
-    /// globals that are the same across evals. 
-    /// Object provided by resolver data in <see cref="NameLookupInfo.Data"/>.
-    /// IR then recognizes this and will look these values and will retrieve the Value at runtime. 
-    /// </summary>
-    internal interface ICanGetValue
-    {
-        FormulaValue Value { get; }
-    }
-
-    /// <summary>
-    /// Used between Symbol Table resolver and IR.
-    /// NameInfo data to associate a symbol at bind time with a runtime config at runtime. 
-    /// Object provided by resolver data in <see cref="NameLookupInfo.Data"/>.
-    /// IR then recognizes this and will look these values up via ReadOnlySymbolValues.TryGetValue.
-    /// </summary>
-    internal class NameSymbol
-    {
-        public NameSymbol(string name)
-        {
-            Name = name;
-        }
-        
-        public string Name { get; private set; }
-    }
-
-    /// <summary>
     /// Provides symbols to the engine. This includes variables (locals, globals), enums, options sets, and functions.
     /// SymbolTables are mutable to support sessionful scenarios and can be chained together. 
     /// This is a publicly facing class around a <see cref="INameResolver"/>.
@@ -50,6 +23,8 @@ namespace Microsoft.PowerFx
     [DebuggerDisplay("{DebugName}")]
     public class SymbolTable : ReadOnlySymbolTable
     {
+        private readonly SlotMap<NameLookupInfo?> _slots = new SlotMap<NameLookupInfo?>();
+
         // Expose public setters
         public new ReadOnlySymbolTable Parent
         {
@@ -69,27 +44,90 @@ namespace Microsoft.PowerFx
             }
         }
 
+        public override FormulaType GetTypeFromSlot(ISymbolSlot slot)
+        {
+            if (_slots.TryGet(slot.SlotIndex, out var nameInfo))
+            {
+                return FormulaType.Build(nameInfo.Value.Type);
+            }
+
+            throw NewBadSlotException(slot); 
+        }
+
+        // Ensure that newType can be assigned to the given slot. 
+        internal void ValidateAccepts(ISymbolSlot slot, FormulaType newType)
+        {
+            if (_slots.TryGet(slot.SlotIndex, out var nameInfo))
+            {
+                var srcType = nameInfo.Value.Type;
+                
+                if (newType is RecordType)
+                {
+                    // Lazy RecordTypes don't validate. 
+                    // https://github.com/microsoft/Power-Fx/issues/833
+                    return;
+                }
+
+                var ok = srcType.Accepts(newType._type);
+
+                if (ok)
+                {
+                    return;
+                }
+
+                var name = (nameInfo.Value.Data as NameSymbol)?.Name;
+
+                throw new InvalidOperationException($"Can't change '{name}' from {srcType} to {newType._type}.");
+            }
+
+            throw NewBadSlotException(slot);
+        }
+
         /// <summary>
         /// Provide variable for binding only.
         /// Value must be provided at runtime.
         /// </summary>
         /// <param name="name"></param>
         /// <param name="type"></param>
-        public void AddVariable(string name, FormulaType type)
+        /// <param name="mutable"></param>
+        /// <param name="displayName"></param>
+        public ISymbolSlot AddVariable(string name, FormulaType type, bool mutable = false, string displayName = null)
         {
+            if (displayName != null)
+            {
+                // Include parameter so that it's not a breaking change when we enable.
+                // https://github.com/microsoft/Power-Fx/issues/779
+                throw new NotImplementedException("DisplayName support for variables not implemented yet");
+            }
+
             Inc();
             ValidateName(name);
 
+            if (_variables.ContainsKey(name))
+            {
+                throw new InvalidOperationException($"{name} is already defined");
+            }
+
+            var slotIndex = _slots.Add(null);
+            var data = new NameSymbol(name, mutable)
+            {
+                Owner = this,
+                SlotIndex = slotIndex
+            };
+            
             var info = new NameLookupInfo(
                 BindKind.PowerFxResolvedObject,
                 type._type,
                 DPath.Root,
                 0,
-                data: new NameSymbol(name));
+                data: data);
 
+            _slots.Set(slotIndex, info);
             _variables.Add(name, info); // can't exist
+
+            return data;
         }
-                
+
         /// <summary>
         /// Add a constant.  This is like a variable, but the value is known at bind time. 
         /// </summary>
@@ -119,6 +157,15 @@ namespace Microsoft.PowerFx
         public void RemoveVariable(string name)
         {
             Inc();
+
+            if (_variables.TryGetValue(name, out var info))
+            {
+                if (info.Data is NameSymbol info2)
+                {
+                    _slots.Remove(info2.SlotIndex);
+                    info2.DisposeSlot();
+                }
+            }
 
             // Ok to remove if missing. 
             _variables.Remove(name);

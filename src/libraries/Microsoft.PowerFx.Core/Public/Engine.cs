@@ -225,7 +225,9 @@ namespace Microsoft.PowerFx
 
             var result = new CheckResult(parse, Config.CultureInfo, binding)
             {
-                Symbols = combinedSymbols,
+                Source = this,
+                Symbols = combinedSymbols, // all symbols
+                Parameters = symbolTable // just the parameters (provided at runtime)
             };
 
             if (result.IsSuccess)

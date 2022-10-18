@@ -48,10 +48,10 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         {
             var engine = new RecalcEngine();
             var symbolTable = new SymbolTable();
-            var symbolValues = new SymbolValues();
+            var symbolValues = new SymbolValues(symbolTable);
 
-            symbolTable.AddVariable("obj", _originalRecordType);
-            symbolValues.Add("obj", new TestCustomRecordValue(_testObj, _originalRecordType));
+            var slot = symbolTable.AddVariable("obj", _originalRecordType);
+            symbolValues.Set(slot, new TestCustomRecordValue(_testObj, _originalRecordType));
 
             CheckResult check = engine.Check(expr, null, symbolTable);
             Assert.Equal(check.IsSuccess, !hasException);
@@ -75,10 +75,10 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         {
             var engine = new RecalcEngine();
             var symbolTable = new SymbolTable();
-            var symbolValues = new SymbolValues();
+            var symbolValues = new SymbolValues(symbolTable);
 
-            symbolTable.AddVariable("obj", _customRecordType);
-            symbolValues.Add("obj", new TestCustomRecordValue(_testObj, _customRecordType));
+            var slot = symbolTable.AddVariable("obj", _customRecordType);
+            symbolValues.Set(slot, new TestCustomRecordValue(_testObj, _customRecordType));
 
             CheckResult check = engine.Check(expr, null, symbolTable);
             Assert.Equal(check.IsSuccess, !hasException);

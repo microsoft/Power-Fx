@@ -144,16 +144,19 @@ namespace Microsoft.PowerFx
 
             var newValue = await arg1.Accept(this, context);
 
-            // Binder has already ensured this is a first name node. 
+            // Binder has already ensured this is a first name node as well as mutable symbol. 
             if (arg0 is ResolvedObjectNode obj)
             {
-                if (obj.Value is ICanSetValue fi)
+                if (obj.Value is ISymbolSlot sym)
                 {
-                    fi.SetValue(newValue);
+                    if (_runtimeConfig != null)
+                    {
+                        _runtimeConfig.Set(sym, newValue);
+                        return FormulaValue.New(true);
+                    }
 
-                    // Set() returns true. 
-                    return FormulaValue.New(true);
-                }
+                    // This may happen if the runtime symbols are missing a value and we failed to update. 
+                }    
             }
 
             // Fail?
@@ -598,19 +601,22 @@ namespace Microsoft.PowerFx
         {
             return node.Value switch
             {
-                NameSymbol name => GetVariableOrFail(node, name.Name),
-                ICanGetValue fi => fi.Value,
+                NameSymbol name => GetVariableOrFail(node, name),
+                FormulaValue fi => fi,
                 IExternalOptionSet optionSet => ResolvedObjectHelpers.OptionSet(optionSet, node.IRContext),
                 _ => ResolvedObjectHelpers.ResolvedObjectError(node),
             };
         }
 
-        private FormulaValue GetVariableOrFail(ResolvedObjectNode node, string name)
+        private FormulaValue GetVariableOrFail(ResolvedObjectNode node, ISymbolSlot slot)
         {
-            if (_runtimeConfig != null &&
-                _runtimeConfig.TryGetValue(name, out var value))
+            if (_runtimeConfig != null)                
             {
-                return value;
+                var value = _runtimeConfig.Get(slot);
+                if (value != null)
+                {
+                    return value;
+                }
             }
 
             return ResolvedObjectHelpers.ResolvedObjectError(node);
