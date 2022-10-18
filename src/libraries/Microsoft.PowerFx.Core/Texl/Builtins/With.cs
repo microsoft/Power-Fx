@@ -19,8 +19,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => false;
 
-        public WithFunction()
-            : base("With", TexlStrings.AboutWith, FunctionCategories.Table, DType.Unknown, 0x2, 2, 2, DType.EmptyRecord)
+        public WithFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "With", TexlStrings.AboutWith, FunctionCategories.Table, DType.Unknown, 0x2, 2, 2, DType.EmptyRecord)
         {
             ScopeInfo = new FunctionScopeInfo(this, iteratesOverScope: false);
         }

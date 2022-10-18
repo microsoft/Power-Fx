@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using Microsoft.PowerFx.Core.Binding;
+using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Functions.Delegation;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
@@ -13,8 +14,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Trim(arg:s)
     internal sealed class TrimFunction : StringOneArgFunction
     {
-        public TrimFunction()
-            : base("Trim", TexlStrings.AboutTrim, FunctionCategories.Text)
+        public TrimFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "Trim", TexlStrings.AboutTrim, FunctionCategories.Text)
         {
         }
     }
@@ -22,8 +23,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Trim(arg:*[s])
     internal sealed class TrimTFunction : StringOneArgTableFunction
     {
-        public TrimTFunction()
-            : base("Trim", TexlStrings.AboutTrim, FunctionCategories.Table)
+        public TrimTFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "Trim", TexlStrings.AboutTrim, FunctionCategories.Table)
         {
         }
     }
@@ -31,8 +32,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // TrimEnds(arg:s)
     internal sealed class TrimEndsFunction : StringOneArgFunction
     {
-        public TrimEndsFunction()
-            : base("TrimEnds", TexlStrings.AboutTrimEnds, FunctionCategories.Text)
+        public TrimEndsFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "TrimEnds", TexlStrings.AboutTrimEnds, FunctionCategories.Text)
         {
         }
 
@@ -51,8 +52,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Trim(arg:*[s])
     internal sealed class TrimEndsTFunction : StringOneArgTableFunction
     {
-        public TrimEndsTFunction()
-            : base("TrimEnds", TexlStrings.AboutTrimEnds, FunctionCategories.Table)
+        public TrimEndsTFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "TrimEnds", TexlStrings.AboutTrimEnds, FunctionCategories.Table)
         {
         }
     }

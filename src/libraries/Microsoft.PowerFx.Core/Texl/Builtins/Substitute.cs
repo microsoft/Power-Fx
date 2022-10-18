@@ -20,8 +20,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => true;
 
-        public SubstituteFunction()
-            : base("Substitute", TexlStrings.AboutSubstitute, FunctionCategories.Text, DType.String, 0, 3, 4, DType.String, DType.String, DType.String, DType.Number)
+        public SubstituteFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "Substitute", TexlStrings.AboutSubstitute, FunctionCategories.Text, DType.String, 0, 3, 4, DType.String, DType.String, DType.String, DType.Number)
         {
         }
 
@@ -39,8 +39,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => true;
 
-        public SubstituteTFunction()
-            : base("Substitute", TexlStrings.AboutSubstituteT, FunctionCategories.Table, DType.EmptyTable, 0, 3, 4)
+        public SubstituteTFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "Substitute", TexlStrings.AboutSubstituteT, FunctionCategories.Table, DType.EmptyTable, 0, 3, 4)
         {
         }
 
@@ -77,13 +77,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 // Ensure we have a one-column table of strings
                 fValid &= CheckStringColumnType(type0, args[0], errors, ref nodeToCoercedTypeMap);
 
-                returnType = config.Features.HasFlag(Features.ConsistentOneColumnTableResult)
+                returnType = InstanceConfig.Features.HasFlag(Features.ConsistentOneColumnTableResult)
                     ? DType.CreateTable(new TypedName(DType.String, new DName(ColumnName_ValueStr)))
                     : type0;
             }
             else
             {
-                returnType = DType.CreateTable(new TypedName(DType.String, GetOneColumnTableResultName(config.Features)));
+                returnType = DType.CreateTable(new TypedName(DType.String, GetOneColumnTableResultName(InstanceConfig.Features)));
                 if (!DType.String.Accepts(type0))
                 {
                     if (type0.CoercesTo(DType.String))

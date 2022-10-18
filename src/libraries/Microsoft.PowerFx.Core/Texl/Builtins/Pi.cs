@@ -16,8 +16,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => true;
 
-        public PiFunction()
+        public PiFunction(TexlFunctionConfig instanceConfig)
             : base(
+                instanceConfig, 
                 "Pi",
                 TexlStrings.AboutPi,
                 FunctionCategories.MathAndStat,

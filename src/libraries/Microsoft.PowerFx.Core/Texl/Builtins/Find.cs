@@ -24,8 +24,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => true;
 
-        public FindFunction()
-            : base("Find", TexlStrings.AboutFind, FunctionCategories.Text, DType.Number, 0, 2, 3, DType.String, DType.String, DType.Number)
+        public FindFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "Find", TexlStrings.AboutFind, FunctionCategories.Text, DType.Number, 0, 2, 3, DType.String, DType.String, DType.Number)
         {
         }
 
@@ -43,8 +43,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => true;
 
-        public FindTFunction()
-            : base("Find", TexlStrings.AboutFindT, FunctionCategories.Table, DType.EmptyTable, 0, 2, 3)
+        public FindTFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "Find", TexlStrings.AboutFindT, FunctionCategories.Table, DType.EmptyTable, 0, 2, 3)
         {
         }
 
@@ -110,7 +110,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
             }
 
-            returnType = DType.CreateTable(new TypedName(DType.Number, GetOneColumnTableResultName(config.Features)));
+            returnType = DType.CreateTable(new TypedName(DType.Number, GetOneColumnTableResultName(InstanceConfig.Features)));
 
             var hasStartIndex = argTypes.Length == 3;
 

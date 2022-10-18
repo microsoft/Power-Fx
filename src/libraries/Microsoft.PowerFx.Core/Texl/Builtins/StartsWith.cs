@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using Microsoft.PowerFx.Core.Binding;
+using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Functions.Delegation;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Utils;
@@ -16,8 +17,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public override DelegationCapability FunctionDelegationCapability => DelegationCapability.StartsWith;
 
-        public StartsWithFunction()
-            : base("StartsWith", TexlStrings.AboutStartsWith)
+        public StartsWithFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "StartsWith", TexlStrings.AboutStartsWith)
         {
         }
 

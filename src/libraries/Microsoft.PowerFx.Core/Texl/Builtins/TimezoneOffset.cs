@@ -15,8 +15,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => true;
 
-        public TimeZoneOffsetFunction()
-            : base("TimeZoneOffset", TexlStrings.AboutTimeZoneOffset, FunctionCategories.DateTime, DType.Number, 0, 0, 1, DType.DateTime)
+        public TimeZoneOffsetFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "TimeZoneOffset", TexlStrings.AboutTimeZoneOffset, FunctionCategories.DateTime, DType.Number, 0, 0, 1, DType.DateTime)
         {
         }
 

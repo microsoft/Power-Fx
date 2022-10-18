@@ -20,8 +20,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => true;
 
-        public ScalarRoundingFunction(string name, TexlStrings.StringGetter description)
-            : base(name, description, FunctionCategories.MathAndStat, DType.Number, 0, 2, 2, DType.Number, DType.Number)
+        public ScalarRoundingFunction(TexlFunctionConfig instanceConfig, string name, TexlStrings.StringGetter description)
+            : base(instanceConfig, name, description, FunctionCategories.MathAndStat, DType.Number, 0, 2, 2, DType.Number, DType.Number)
         {
         }
 
@@ -38,8 +38,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => true;
 
-        public TableRoundingFunction(string name, TexlStrings.StringGetter description)
-            : base(name, description, FunctionCategories.Table, DType.EmptyTable, 0, 2, 2)
+        public TableRoundingFunction(TexlFunctionConfig instanceConfig, string name, TexlStrings.StringGetter description)
+            : base(instanceConfig, name, description, FunctionCategories.Table, DType.EmptyTable, 0, 2, 2)
         {
         }
 
@@ -76,7 +76,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 // Ensure we have a one-column table of numerics
                 fValid &= CheckNumericColumnType(type0, args[0], errors, ref nodeToCoercedTypeMap);
 
-                returnType = config.Features.HasFlag(Features.ConsistentOneColumnTableResult)
+                returnType = InstanceConfig.Features.HasFlag(Features.ConsistentOneColumnTableResult)
                     ? DType.CreateTable(new TypedName(DType.Number, new DName(ColumnName_ValueStr)))
                     : type0;
 
@@ -91,7 +91,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                 // Since the 1st arg is not a table, make a new table return type *[Result:n] or
                 // *[Value:n] if the consistent return schema flag is enabled
-                returnType = DType.CreateTable(new TypedName(DType.Number, GetOneColumnTableResultName(config.Features)));
+                returnType = DType.CreateTable(new TypedName(DType.Number, GetOneColumnTableResultName(InstanceConfig.Features)));
 
                 // Check arg0 below.
                 otherArg = args[0];
@@ -137,8 +137,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Round(number:n, digits:n)
     internal sealed class RoundScalarFunction : ScalarRoundingFunction
     {
-        public RoundScalarFunction()
-            : base("Round", TexlStrings.AboutRound)
+        public RoundScalarFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "Round", TexlStrings.AboutRound)
         {
         }
     }
@@ -146,8 +146,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // RoundUp(number:n, digits:n)
     internal sealed class RoundUpScalarFunction : ScalarRoundingFunction
     {
-        public RoundUpScalarFunction()
-            : base("RoundUp", TexlStrings.AboutRoundUp)
+        public RoundUpScalarFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "RoundUp", TexlStrings.AboutRoundUp)
         {
         }
     }
@@ -155,8 +155,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // RoundDown(number:n, digits:n)
     internal sealed class RoundDownScalarFunction : ScalarRoundingFunction
     {
-        public RoundDownScalarFunction()
-            : base("RoundDown", TexlStrings.AboutRoundDown)
+        public RoundDownScalarFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "RoundDown", TexlStrings.AboutRoundDown)
         {
         }
     }
@@ -164,8 +164,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Round(number:n|*[n], digits:n|*[n])
     internal sealed class RoundTableFunction : TableRoundingFunction
     {
-        public RoundTableFunction()
-            : base("Round", TexlStrings.AboutRoundT)
+        public RoundTableFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "Round", TexlStrings.AboutRoundT)
         {
         }
     }
@@ -173,8 +173,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // RoundUp(number:n|*[n], digits:n|*[n])
     internal sealed class RoundUpTableFunction : TableRoundingFunction
     {
-        public RoundUpTableFunction()
-            : base("RoundUp", TexlStrings.AboutRoundUpT)
+        public RoundUpTableFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "RoundUp", TexlStrings.AboutRoundUpT)
         {
         }
     }
@@ -182,8 +182,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // RoundDown(number:n|*[n], digits:n|*[n])
     internal sealed class RoundDownTableFunction : TableRoundingFunction
     {
-        public RoundDownTableFunction()
-            : base("RoundDown", TexlStrings.AboutRoundDownT)
+        public RoundDownTableFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "RoundDown", TexlStrings.AboutRoundDownT)
         {
         }
     }

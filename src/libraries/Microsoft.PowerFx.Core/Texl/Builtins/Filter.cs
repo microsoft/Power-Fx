@@ -23,8 +23,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Corresponding DAX function: Filter
     internal sealed class FilterFunction : FilterFunctionBase
     {
-        public FilterFunction()
-            : base("Filter", TexlStrings.AboutFilter, FunctionCategories.Table, DType.EmptyTable, -2, 2, int.MaxValue, DType.EmptyTable)
+        public FilterFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "Filter", TexlStrings.AboutFilter, FunctionCategories.Table, DType.EmptyTable, -2, 2, int.MaxValue, DType.EmptyTable)
         {
             ScopeInfo = new FunctionScopeInfo(this, acceptsLiteralPredicates: false);
         }

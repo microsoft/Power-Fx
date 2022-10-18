@@ -19,8 +19,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool IsSelfContained => true;
 
-        public UTCNowFunction()
-            : base("UTCNow", TexlStrings.AboutUTCNow, FunctionCategories.DateTime, DType.DateTime, 0, 0, 0)
+        public UTCNowFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "UTCNow", TexlStrings.AboutUTCNow, FunctionCategories.DateTime, DType.DateTime, 0, 0, 0)
         {
         }
 

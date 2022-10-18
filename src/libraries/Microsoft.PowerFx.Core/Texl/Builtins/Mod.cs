@@ -20,8 +20,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool IsSelfContained => true;
 
-        public ModFunction()
-            : base("Mod", TexlStrings.AboutMod, FunctionCategories.MathAndStat, DType.Number, 0, 2, 2, DType.Number, DType.Number)
+        public ModFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "Mod", TexlStrings.AboutMod, FunctionCategories.MathAndStat, DType.Number, 0, 2, 2, DType.Number, DType.Number)
         {
         }
 
@@ -38,8 +38,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool IsSelfContained => true;
 
-        public ModTFunction()
-            : base("Mod", TexlStrings.AboutModT, FunctionCategories.Table, DType.EmptyTable, 0, 2, 2)
+        public ModTFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "Mod", TexlStrings.AboutModT, FunctionCategories.Table, DType.EmptyTable, 0, 2, 2)
         {
         }
 
@@ -108,7 +108,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 errors.EnsureError(DocumentErrorSeverity.Severe, arg1, TexlStrings.ErrNumberExpected);
             }
 
-            returnType = DType.CreateTable(new TypedName(DType.Number, GetOneColumnTableResultName(config.Features)));
+            returnType = DType.CreateTable(new TypedName(DType.Number, GetOneColumnTableResultName(InstanceConfig.Features)));
 
             // At least one arg has to be a table.
             if (!(type0.IsTable || type1.IsTable))

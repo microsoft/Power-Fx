@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 
@@ -10,8 +11,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Corresponding Excel function: STDEV.P
     internal sealed class StdevPFunction : StatisticalFunction
     {
-        public StdevPFunction()
-            : base("StdevP", TexlStrings.AboutStdevP, FunctionCategories.MathAndStat)
+        public StdevPFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "StdevP", TexlStrings.AboutStdevP, FunctionCategories.MathAndStat)
         {
         }
     }
@@ -20,8 +21,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Corresponding DAX function: STDEV.P
     internal sealed class StdevPTableFunction : StatisticalTableFunction
     {
-        public StdevPTableFunction()
-            : base("StdevP", TexlStrings.AboutStdevPT, FunctionCategories.Table)
+        public StdevPTableFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "StdevP", TexlStrings.AboutStdevPT, FunctionCategories.Table)
         {
         }
     }

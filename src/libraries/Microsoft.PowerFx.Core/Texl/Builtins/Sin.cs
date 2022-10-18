@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 
@@ -10,8 +11,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Equivalent Excel function: Sin
     internal sealed class SinFunction : MathOneArgFunction
     {
-        public SinFunction()
-            : base("Sin", TexlStrings.AboutSin, FunctionCategories.MathAndStat)
+        public SinFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "Sin", TexlStrings.AboutSin, FunctionCategories.MathAndStat)
         {
         }
     }
@@ -20,8 +21,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Table overload that computes the sine values of each item in the input table.
     internal sealed class SinTableFunction : MathOneArgTableFunction
     {
-        public SinTableFunction()
-            : base("Sin", TexlStrings.AboutSinT, FunctionCategories.Table)
+        public SinTableFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "Sin", TexlStrings.AboutSinT, FunctionCategories.Table)
         {
         }
     }

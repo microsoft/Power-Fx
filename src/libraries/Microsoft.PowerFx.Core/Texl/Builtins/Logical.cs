@@ -27,8 +27,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         internal readonly bool _isAnd;
 
-        public VariadicLogicalFunction(bool isAnd)
-            : base(isAnd ? "And" : "Or", isAnd ? TexlStrings.AboutAnd : TexlStrings.AboutOr, FunctionCategories.Logical, DType.Boolean, 0, 0, int.MaxValue, DType.Boolean)
+        public VariadicLogicalFunction(TexlFunctionConfig instanceConfig, bool isAnd)
+            : base(instanceConfig, isAnd ? "And" : "Or", isAnd ? TexlStrings.AboutAnd : TexlStrings.AboutOr, FunctionCategories.Logical, DType.Boolean, 0, 0, int.MaxValue, DType.Boolean)
         {
             _isAnd = isAnd;
         }

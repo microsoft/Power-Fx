@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
+using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
@@ -14,8 +15,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Split(text:s, separator:s)
     internal class SplitFunction : StringTwoArgFunction
     {
-        public SplitFunction()
-            : base("Split", TexlStrings.AboutSplit, DType.EmptyTable)
+        public SplitFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "Split", TexlStrings.AboutSplit, DType.EmptyTable)
         {
         }
 
@@ -36,7 +37,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var fValid = CheckTypes(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
             Contracts.Assert(returnType.IsTable);
 
-            returnType = DType.CreateTable(new TypedName(DType.String, GetOneColumnTableResultName(config.Features)));
+            returnType = DType.CreateTable(new TypedName(DType.String, GetOneColumnTableResultName(InstanceConfig.Features)));
             return fValid;
         }
     }

@@ -20,8 +20,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => false;
 
-        public TableFunction()
-            : base("Table", TexlStrings.AboutTable, FunctionCategories.Table, DType.EmptyTable, 0, 0, int.MaxValue)
+        public TableFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "Table", TexlStrings.AboutTable, FunctionCategories.Table, DType.EmptyTable, 0, 0, int.MaxValue)
         {
         }
 
@@ -92,8 +92,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => false;
 
-        public TableFunction_UO()
-            : base("Table", TexlStrings.AboutTable, FunctionCategories.Table, DType.EmptyTable, 0, 1, 1, DType.UntypedObject)
+        public TableFunction_UO(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "Table", TexlStrings.AboutTable, FunctionCategories.Table, DType.EmptyTable, 0, 1, 1, DType.UntypedObject)
         {
         }
 

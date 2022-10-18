@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 
@@ -10,8 +11,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Corresponding Excel function: VARP
     internal sealed class VarPFunction : StatisticalFunction
     {
-        public VarPFunction()
-            : base("VarP", TexlStrings.AboutVarP, FunctionCategories.MathAndStat)
+        public VarPFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "VarP", TexlStrings.AboutVarP, FunctionCategories.MathAndStat)
         {
         }
     }
@@ -20,8 +21,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Corresponding DAX function: VAR.P
     internal sealed class VarPTableFunction : StatisticalTableFunction
     {
-        public VarPTableFunction()
-            : base("VarP", TexlStrings.AboutVarPT, FunctionCategories.Table)
+        public VarPTableFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "VarP", TexlStrings.AboutVarPT, FunctionCategories.Table)
         {
         }
     }

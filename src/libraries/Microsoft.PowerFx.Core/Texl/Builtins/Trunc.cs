@@ -21,8 +21,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => true;
 
-        public TruncFunction()
-            : base("Trunc", TexlStrings.AboutTrunc, FunctionCategories.MathAndStat, DType.Number, 0, 1, 2, DType.Number, DType.Number)
+        public TruncFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "Trunc", TexlStrings.AboutTrunc, FunctionCategories.MathAndStat, DType.Number, 0, 1, 2, DType.Number, DType.Number)
         {
         }
 
@@ -39,8 +39,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => true;
 
-        public TruncTableFunction()
-            : base("Trunc", TexlStrings.AboutTruncT, FunctionCategories.Table, DType.EmptyTable, 0, 1, 2)
+        public TruncTableFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "Trunc", TexlStrings.AboutTruncT, FunctionCategories.Table, DType.EmptyTable, 0, 1, 2)
         {
         }
 
@@ -80,7 +80,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     // Ensure we have a one-column table of numerics
                     fValid &= CheckNumericColumnType(type0, args[0], errors, ref nodeToCoercedTypeMap);
 
-                    returnType = config.Features.HasFlag(Features.ConsistentOneColumnTableResult)
+                    returnType = InstanceConfig.Features.HasFlag(Features.ConsistentOneColumnTableResult)
                         ? DType.CreateTable(new TypedName(DType.Number, new DName(ColumnName_ValueStr)))
                         : type0;
 
@@ -94,7 +94,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     fValid &= CheckNumericColumnType(type1, args[1], errors, ref nodeToCoercedTypeMap);
 
                     // Since the 1st arg is not a table, make a new table return type *[Result:n]
-                    returnType = DType.CreateTable(new TypedName(DType.Number, GetOneColumnTableResultName(config.Features)));
+                    returnType = DType.CreateTable(new TypedName(DType.Number, GetOneColumnTableResultName(InstanceConfig.Features)));
 
                     // Check arg0 below.
                     otherArg = args[0];
@@ -142,7 +142,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     // Ensure we have a one-column table of numerics
                     fValid &= CheckNumericColumnType(type0, args[0], errors, ref nodeToCoercedTypeMap);
 
-                    returnType = config.Features.HasFlag(Features.ConsistentOneColumnTableResult)
+                    returnType = InstanceConfig.Features.HasFlag(Features.ConsistentOneColumnTableResult)
                         ? DType.CreateTable(new TypedName(DType.Number, new DName(ColumnName_ValueStr)))
                         : type0;
                 }

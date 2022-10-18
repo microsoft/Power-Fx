@@ -20,8 +20,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool IsSelfContained => true;
 
-        public PowerFunction()
-            : base("Power", TexlStrings.AboutPower, FunctionCategories.MathAndStat, DType.Number, 0, 2, 2, DType.Number, DType.Number)
+        public PowerFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "Power", TexlStrings.AboutPower, FunctionCategories.MathAndStat, DType.Number, 0, 2, 2, DType.Number, DType.Number)
         {
         }
 
@@ -39,8 +39,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool IsSelfContained => true;
 
-        public PowerTFunction()
-            : base("Power", TexlStrings.AboutPowerT, FunctionCategories.MathAndStat, DType.EmptyTable, 0, 2, 2)
+        public PowerTFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "Power", TexlStrings.AboutPowerT, FunctionCategories.MathAndStat, DType.EmptyTable, 0, 2, 2)
         {
         }
 
@@ -63,7 +63,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
 
             var fValid = CheckTypes(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
-            fValid &= CheckAllParamsAreTypeOrSingleColumnTable(config.Features, DType.Number, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            fValid &= CheckAllParamsAreTypeOrSingleColumnTable(InstanceConfig.Features, DType.Number, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
 
             return fValid;
         }

@@ -30,8 +30,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => true;
 
-        public IfFunction()
-            : base("If", TexlStrings.AboutIf, FunctionCategories.Logical, DType.Unknown, 0, 2, int.MaxValue)
+        public IfFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "If", TexlStrings.AboutIf, FunctionCategories.Logical, DType.Unknown, 0, 2, int.MaxValue)
         {
             // If(cond1, value1, cond2, value2, ..., condN, valueN, [valueFalse], ...)
             SignatureConstraint = new SignatureConstraint(omitStartIndex: 4, repeatSpan: 2, endNonRepeatCount: 0, repeatTopLength: 8);

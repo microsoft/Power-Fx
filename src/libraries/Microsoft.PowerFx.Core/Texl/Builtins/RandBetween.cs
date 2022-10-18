@@ -19,8 +19,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => true;
 
-        public RandBetweenFunction()
+        public RandBetweenFunction(TexlFunctionConfig instanceConfig)
             : base(
+                instanceConfig, 
                 "RandBetween",
                 TexlStrings.AboutRandBetween,
                 FunctionCategories.MathAndStat,

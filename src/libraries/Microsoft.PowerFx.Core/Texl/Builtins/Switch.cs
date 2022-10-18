@@ -31,8 +31,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         // We do not support coercion for the 1st param, or the match params, only the result params. 
         public override bool SupportsParamCoercion => true;
 
-        public SwitchFunction()
-            : base("Switch", TexlStrings.AboutSwitch, FunctionCategories.Logical, DType.Unknown, 0, 3, int.MaxValue)
+        public SwitchFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "Switch", TexlStrings.AboutSwitch, FunctionCategories.Logical, DType.Unknown, 0, 3, int.MaxValue)
         {
             // If(cond1, value1, cond2, value2, ..., condN, valueN, [valueFalse], ...)
             // Switch(switch_value, match_value1, match_result1, match_value2, match_result2, ..., match_valueN, match_resultN, [default_result], ...)

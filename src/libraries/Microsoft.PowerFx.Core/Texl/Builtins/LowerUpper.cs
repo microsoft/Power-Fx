@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using Microsoft.PowerFx.Core.Binding;
+using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Functions.Delegation;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
@@ -17,8 +18,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         private readonly bool _isLower;
 
-        public LowerUpperFunction(bool isLower)
-            : base(isLower ? "Lower" : "Upper", isLower ? TexlStrings.AboutLower : TexlStrings.AboutUpper, FunctionCategories.Text)
+        public LowerUpperFunction(TexlFunctionConfig instanceConfig, bool isLower)
+            : base(instanceConfig, isLower ? "Lower" : "Upper", isLower ? TexlStrings.AboutLower : TexlStrings.AboutUpper, FunctionCategories.Text)
         {
             _isLower = isLower;
         }
@@ -39,8 +40,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Upper(arg:*[s])
     internal sealed class LowerUpperTFunction : StringOneArgTableFunction
     {
-        public LowerUpperTFunction(bool isLower)
-            : base(isLower ? "Lower" : "Upper", isLower ? TexlStrings.AboutLowerT : TexlStrings.AboutUpperT, FunctionCategories.Table)
+        public LowerUpperTFunction(TexlFunctionConfig instanceConfig, bool isLower)
+            : base(instanceConfig, isLower ? "Lower" : "Upper", isLower ? TexlStrings.AboutLowerT : TexlStrings.AboutUpperT, FunctionCategories.Table)
         {
         }
     }

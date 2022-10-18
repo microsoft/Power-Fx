@@ -24,8 +24,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool IsSelfContained => true;
 
-        public MinMaxFunction(bool isMin)
-            : base(isMin ? "Min" : "Max", isMin ? TexlStrings.AboutMin : TexlStrings.AboutMax, FunctionCategories.MathAndStat, DType.Number, 0, 1, int.MaxValue, DType.Number)
+        public MinMaxFunction(TexlFunctionConfig instanceConfig, bool isMin)
+            : base(instanceConfig, isMin ? "Min" : "Max", isMin ? TexlStrings.AboutMin : TexlStrings.AboutMax, FunctionCategories.MathAndStat, DType.Number, 0, 1, int.MaxValue, DType.Number)
         {
         }
 

@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using Microsoft.PowerFx.Core.Binding;
+using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Functions.Delegation;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
@@ -14,8 +15,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public override bool HasPreciseErrors => true;
 
-        public ProperFunction()
-            : base("Proper", TexlStrings.AboutProper, FunctionCategories.Text)
+        public ProperFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "Proper", TexlStrings.AboutProper, FunctionCategories.Text)
         {
         }
 
@@ -30,8 +31,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public override bool HasPreciseErrors => true;
 
-        public ProperTFunction()
-            : base("Proper", TexlStrings.AboutProperT, FunctionCategories.Table)
+        public ProperTFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "Proper", TexlStrings.AboutProperT, FunctionCategories.Table)
         {
         }
     }

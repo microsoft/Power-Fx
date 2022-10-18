@@ -26,8 +26,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => false;
 
-        public ForAllFunction()
-            : base(ForAllInvariantFunctionName, TexlStrings.AboutForAll, FunctionCategories.Table, DType.Unknown, 0x2, 2, 2, DType.EmptyTable)
+        public ForAllFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, ForAllInvariantFunctionName, TexlStrings.AboutForAll, FunctionCategories.Table, DType.Unknown, 0x2, 2, 2, DType.EmptyTable)
         {
             ScopeInfo = new FunctionScopeInfo(this);
         }
@@ -84,8 +84,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => false;
 
-        public ForAllFunction_UO()
-            : base(ForAllFunction.ForAllInvariantFunctionName, TexlStrings.AboutForAll, FunctionCategories.Table, DType.Unknown, 0x2, 2, 2, DType.UntypedObject)
+        public ForAllFunction_UO(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, ForAllFunction.ForAllInvariantFunctionName, TexlStrings.AboutForAll, FunctionCategories.Table, DType.Unknown, 0x2, 2, 2, DType.UntypedObject)
         {
             ScopeInfo = new FunctionScopeInfo(this);
         }

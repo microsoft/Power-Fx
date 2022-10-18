@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 
@@ -10,8 +11,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Truncate by rounding toward negative infinity.
     internal sealed class IntFunction : MathOneArgFunction
     {
-        public IntFunction()
-            : base("Int", TexlStrings.AboutInt, FunctionCategories.MathAndStat)
+        public IntFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "Int", TexlStrings.AboutInt, FunctionCategories.MathAndStat)
         {
         }
     }
@@ -20,8 +21,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Table overload that applies Int to each item in the input table.
     internal sealed class IntTableFunction : MathOneArgTableFunction
     {
-        public IntTableFunction()
-            : base("Int", TexlStrings.AboutIntT, FunctionCategories.Table)
+        public IntTableFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "Int", TexlStrings.AboutIntT, FunctionCategories.Table)
         {
         }
     }

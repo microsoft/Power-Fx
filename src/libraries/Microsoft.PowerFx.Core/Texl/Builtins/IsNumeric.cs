@@ -15,8 +15,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => false;
 
-        public IsNumericFunction()
-            : base("IsNumeric", TexlStrings.AboutIsNumeric, FunctionCategories.Information, DType.Boolean, 0, 1, 1)
+        public IsNumericFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "IsNumeric", TexlStrings.AboutIsNumeric, FunctionCategories.Information, DType.Boolean, 0, 1, 1)
         {
         }
 

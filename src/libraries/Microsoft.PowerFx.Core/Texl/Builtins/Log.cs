@@ -22,8 +22,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool HasPreciseErrors => true;
 
-        public LogFunction()
-            : base("Log", TexlStrings.AboutLog, FunctionCategories.MathAndStat, DType.Number, 0, 1, 2, DType.Number, DType.Number)
+        public LogFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "Log", TexlStrings.AboutLog, FunctionCategories.MathAndStat, DType.Number, 0, 1, 2, DType.Number, DType.Number)
         {
         }
 
@@ -42,8 +42,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool IsSelfContained => true;
 
-        public LogTFunction()
-            : base("Log", TexlStrings.AboutLogT, FunctionCategories.MathAndStat, DType.EmptyTable, 0, 1, 2)
+        public LogTFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "Log", TexlStrings.AboutLogT, FunctionCategories.MathAndStat, DType.EmptyTable, 0, 1, 2)
         {
         }
 
@@ -66,7 +66,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
 
             var fValid = CheckTypes(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
-            fValid &= CheckAllParamsAreTypeOrSingleColumnTable(config.Features, DType.Number, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            fValid &= CheckAllParamsAreTypeOrSingleColumnTable(InstanceConfig.Features, DType.Number, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
 
             return fValid;
         }

@@ -21,8 +21,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => true;
 
-        public LeftRightScalarFunction(bool isLeft)
-            : base(isLeft ? "Left" : "Right", isLeft ? TexlStrings.AboutLeft : TexlStrings.AboutRight, FunctionCategories.Text, DType.String, 0, 2, 2, DType.String, DType.Number)
+        public LeftRightScalarFunction(TexlFunctionConfig instanceConfig, bool isLeft)
+            : base(instanceConfig, isLeft ? "Left" : "Right", isLeft ? TexlStrings.AboutLeft : TexlStrings.AboutRight, FunctionCategories.Text, DType.String, 0, 2, 2, DType.String, DType.Number)
         {
         }
 
@@ -41,8 +41,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => true;
 
-        public LeftRightTableScalarFunction(bool isLeft)
-            : base(isLeft ? "Left" : "Right", isLeft ? TexlStrings.AboutLeftT : TexlStrings.AboutRightT, FunctionCategories.Table, DType.EmptyTable, 0, 2, 2, DType.EmptyTable, DType.Number)
+        public LeftRightTableScalarFunction(TexlFunctionConfig instanceConfig, bool isLeft)
+            : base(instanceConfig, isLeft ? "Left" : "Right", isLeft ? TexlStrings.AboutLeftT : TexlStrings.AboutRightT, FunctionCategories.Table, DType.EmptyTable, 0, 2, 2, DType.EmptyTable, DType.Number)
         {
         }
 
@@ -74,7 +74,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             // Typecheck the input table
             fValid &= CheckStringColumnType(argTypes[0], args[0], errors, ref nodeToCoercedTypeMap);
 
-            returnType = config.Features.HasFlag(Features.ConsistentOneColumnTableResult)
+            returnType = InstanceConfig.Features.HasFlag(Features.ConsistentOneColumnTableResult)
                 ? DType.CreateTable(new TypedName(DType.String, new DName(ColumnName_ValueStr)))
                 : argTypes[0];
 
@@ -91,8 +91,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => true;
 
-        public LeftRightTableTableFunction(bool isLeft)
-            : base(isLeft ? "Left" : "Right", isLeft ? TexlStrings.AboutLeftT : TexlStrings.AboutRightT, FunctionCategories.Table, DType.EmptyTable, 0, 2, 2, DType.EmptyTable, DType.EmptyTable)
+        public LeftRightTableTableFunction(TexlFunctionConfig instanceConfig, bool isLeft)
+            : base(instanceConfig, isLeft ? "Left" : "Right", isLeft ? TexlStrings.AboutLeftT : TexlStrings.AboutRightT, FunctionCategories.Table, DType.EmptyTable, 0, 2, 2, DType.EmptyTable, DType.EmptyTable)
         {
         }
 
@@ -127,7 +127,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             // Typecheck the count table
             fValid &= CheckNumericColumnType(argTypes[1], args[1], errors, ref nodeToCoercedTypeMap);
 
-            returnType = config.Features.HasFlag(Features.ConsistentOneColumnTableResult)
+            returnType = InstanceConfig.Features.HasFlag(Features.ConsistentOneColumnTableResult)
                 ? DType.CreateTable(new TypedName(DType.String, new DName(ColumnName_ValueStr)))
                 : argTypes[0];
 
@@ -144,8 +144,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => true;
 
-        public LeftRightScalarTableFunction(bool isLeft)
-            : base(isLeft ? "Left" : "Right", isLeft ? TexlStrings.AboutLeftT : TexlStrings.AboutRightT, FunctionCategories.Table, DType.EmptyTable, 0, 2, 2, DType.String, DType.EmptyTable)
+        public LeftRightScalarTableFunction(TexlFunctionConfig instanceConfig, bool isLeft)
+            : base(instanceConfig, isLeft ? "Left" : "Right", isLeft ? TexlStrings.AboutLeftT : TexlStrings.AboutRightT, FunctionCategories.Table, DType.EmptyTable, 0, 2, 2, DType.String, DType.EmptyTable)
         {
         }
 
@@ -178,7 +178,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             fValid &= CheckNumericColumnType(argTypes[1], args[1], errors, ref nodeToCoercedTypeMap);
 
             // Synthesize a new return type
-            returnType = DType.CreateTable(new TypedName(DType.String, GetOneColumnTableResultName(config.Features)));
+            returnType = DType.CreateTable(new TypedName(DType.String, GetOneColumnTableResultName(InstanceConfig.Features)));
 
             return fValid;
         }

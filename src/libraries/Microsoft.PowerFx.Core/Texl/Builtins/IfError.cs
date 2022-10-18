@@ -26,8 +26,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => true;
 
-        public IfErrorFunction()
-            : base("IfError", TexlStrings.AboutIfError, FunctionCategories.Logical, DType.Unknown, 0, 2, int.MaxValue)
+        public IfErrorFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "IfError", TexlStrings.AboutIfError, FunctionCategories.Logical, DType.Unknown, 0, 2, int.MaxValue)
         {
             ScopeInfo = new FunctionScopeInfo(
                 this,

@@ -21,8 +21,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => true;
 
-        public LenFunction()
-            : base("Len", TexlStrings.AboutLen, FunctionCategories.Text, DType.Number)
+        public LenFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "Len", TexlStrings.AboutLen, FunctionCategories.Text, DType.Number)
         {
         }
 
@@ -46,8 +46,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => true;
 
-        public LenTFunction()
-            : base("Len", TexlStrings.AboutLenT, FunctionCategories.Table, DType.EmptyTable, 0, 1, 1, DType.EmptyTable)
+        public LenTFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "Len", TexlStrings.AboutLenT, FunctionCategories.Table, DType.EmptyTable, 0, 1, 1, DType.EmptyTable)
         {
         }
 
@@ -77,7 +77,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             fValid &= CheckStringColumnType(argTypes[0], args[0], errors, ref nodeToCoercedTypeMap);
 
             // Synthesize a new return type
-            returnType = DType.CreateTable(new TypedName(DType.Number, GetOneColumnTableResultName(config.Features)));
+            returnType = DType.CreateTable(new TypedName(DType.Number, GetOneColumnTableResultName(InstanceConfig.Features)));
 
             return fValid;
         }

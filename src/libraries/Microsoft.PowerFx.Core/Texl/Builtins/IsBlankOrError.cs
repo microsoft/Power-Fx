@@ -14,8 +14,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public const string IsBlankOrErrorInvariantFunctionName = "IsBlankOrError";
 
-        public IsBlankOrErrorFunction()
-            : base(IsBlankOrErrorInvariantFunctionName, TexlStrings.AboutIsBlankOrError, FunctionCategories.Table | FunctionCategories.Information, DType.Boolean, 0, 1, 1)
+        public IsBlankOrErrorFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, IsBlankOrErrorInvariantFunctionName, TexlStrings.AboutIsBlankOrError, FunctionCategories.Table | FunctionCategories.Information, DType.Boolean, 0, 1, 1)
         {
         }
 
@@ -33,8 +33,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool IsSelfContained => true;
 
-        public IsBlankOrErrorOptionSetValueFunction()
-            : base(IsBlankOrErrorFunction.IsBlankOrErrorInvariantFunctionName, TexlStrings.AboutIsBlankOrError, FunctionCategories.Table | FunctionCategories.Information, DType.Boolean, 0, 1, 1, DType.OptionSetValue)
+        public IsBlankOrErrorOptionSetValueFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, IsBlankOrErrorFunction.IsBlankOrErrorInvariantFunctionName, TexlStrings.AboutIsBlankOrError, FunctionCategories.Table | FunctionCategories.Information, DType.Boolean, 0, 1, 1, DType.OptionSetValue)
         {
         }
 

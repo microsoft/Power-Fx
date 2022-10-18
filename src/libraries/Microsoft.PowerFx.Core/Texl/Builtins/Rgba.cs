@@ -20,8 +20,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         // This is important to set so that calls to RGBA(consts,...) are also considered const
         public override bool IsSelfContained => true;
 
-        public RGBAFunction()
-            : base("RGBA", TexlStrings.AboutRGBA, FunctionCategories.Color, DType.Color, 0, 4, 4, DType.Number, DType.Number, DType.Number, DType.Number)
+        public RGBAFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "RGBA", TexlStrings.AboutRGBA, FunctionCategories.Color, DType.Color, 0, 4, 4, DType.Number, DType.Number, DType.Number, DType.Number)
         {
         }
 

@@ -16,8 +16,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => true;
 
-        public SequenceFunction()
-            : base("Sequence", TexlStrings.AboutSequence, FunctionCategories.MathAndStat, DType.CreateTable(new TypedName(DType.Number, new DName("Value"))), 0, 1, 3, DType.Number, DType.Number, DType.Number)
+        public SequenceFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "Sequence", TexlStrings.AboutSequence, FunctionCategories.MathAndStat, DType.CreateTable(new TypedName(DType.Number, new DName("Value"))), 0, 1, 3, DType.Number, DType.Number, DType.Number)
         {
         }
 

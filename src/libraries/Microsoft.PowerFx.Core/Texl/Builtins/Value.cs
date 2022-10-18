@@ -23,8 +23,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => true;
 
-        public ValueFunction()
-            : base(ValueInvariantFunctionName, TexlStrings.AboutValue, FunctionCategories.Text, DType.Number, 0, 1, 2, DType.String, DType.String)
+        public ValueFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, ValueInvariantFunctionName, TexlStrings.AboutValue, FunctionCategories.Text, DType.Number, 0, 1, 2, DType.String, DType.String)
         {
         }
 
@@ -88,8 +88,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => false;
 
-        public ValueFunction_UO()
-            : base(ValueFunction.ValueInvariantFunctionName, TexlStrings.AboutValue, FunctionCategories.Text, DType.Number, 0, 1, 1, DType.UntypedObject)
+        public ValueFunction_UO(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, ValueFunction.ValueInvariantFunctionName, TexlStrings.AboutValue, FunctionCategories.Text, DType.Number, 0, 1, 1, DType.UntypedObject)
         {
         }
 

@@ -29,8 +29,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => false;
 
-        public SortFunction()
-            : base("Sort", TexlStrings.AboutSort, FunctionCategories.Table, DType.EmptyTable, 0x02, 2, 3, DType.EmptyTable)
+        public SortFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "Sort", TexlStrings.AboutSort, FunctionCategories.Table, DType.EmptyTable, 0x02, 2, 3, DType.EmptyTable)
         {
             ScopeInfo = new FunctionScopeInfo(this);
             _sortOrderValidator = ArgValidators.SortOrderValidator;

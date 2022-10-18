@@ -23,8 +23,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool IsSelfContained => true;
 
-        public TextFunction()
-            : base("Text", TexlStrings.AboutText, FunctionCategories.Table | FunctionCategories.Text | FunctionCategories.DateTime, DType.String, 0, 1, 3, DType.Number, DType.String, DType.String)
+        public TextFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "Text", TexlStrings.AboutText, FunctionCategories.Table | FunctionCategories.Text | FunctionCategories.DateTime, DType.String, 0, 1, 3, DType.Number, DType.String, DType.String)
         {
         }
 
@@ -177,8 +177,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool IsSelfContained => true;
 
-        public TextFunction_UO()
-            : base("Text", TexlStrings.AboutText, FunctionCategories.Text, DType.String, 0, 1, 1, DType.UntypedObject)
+        public TextFunction_UO(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "Text", TexlStrings.AboutText, FunctionCategories.Text, DType.String, 0, 1, 1, DType.UntypedObject)
         {
         }
 

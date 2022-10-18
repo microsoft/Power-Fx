@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Errors;
+using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Functions.Delegation;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
@@ -21,8 +22,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override DelegationCapability FunctionDelegationCapability => _delegationCapability;
 
-        public MinMaxTableFunction(bool isMin)
-            : base(isMin ? "Min" : "Max", isMin ? TexlStrings.AboutMinT : TexlStrings.AboutMaxT, FunctionCategories.Table)
+        public MinMaxTableFunction(TexlFunctionConfig instanceConfig, bool isMin)
+            : base(instanceConfig, isMin ? "Min" : "Max", isMin ? TexlStrings.AboutMinT : TexlStrings.AboutMaxT, FunctionCategories.Table)
         {
             _delegationCapability = isMin ? DelegationCapability.Min : DelegationCapability.Max;
         }

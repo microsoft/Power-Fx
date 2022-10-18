@@ -6,6 +6,7 @@ using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Errors;
+using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Functions.Delegation;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
@@ -27,8 +28,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         private readonly bool _isFirst;
 
-        public FirstLastFunction(bool isFirst)
-            : base(isFirst ? "First" : "Last", isFirst ? TexlStrings.AboutFirst : TexlStrings.AboutLast, FunctionCategories.Table, DType.EmptyRecord, 0, 1, 1, DType.EmptyTable)
+        public FirstLastFunction(TexlFunctionConfig instanceConfig, bool isFirst)
+            : base(instanceConfig, isFirst ? "First" : "Last", isFirst ? TexlStrings.AboutFirst : TexlStrings.AboutLast, FunctionCategories.Table, DType.EmptyRecord, 0, 1, 1, DType.EmptyTable)
         {
             _isFirst = isFirst;
         }

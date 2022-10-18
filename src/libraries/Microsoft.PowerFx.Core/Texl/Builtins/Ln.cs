@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 
@@ -12,8 +13,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public override bool HasPreciseErrors => true;
 
-        public LnFunction()
-            : base("Ln", TexlStrings.AboutLn, FunctionCategories.MathAndStat)
+        public LnFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "Ln", TexlStrings.AboutLn, FunctionCategories.MathAndStat)
         {
         }
     }
@@ -24,8 +25,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public override bool HasPreciseErrors => true;
 
-        public LnTableFunction()
-            : base("Ln", TexlStrings.AboutLnT, FunctionCategories.Table)
+        public LnTableFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "Ln", TexlStrings.AboutLnT, FunctionCategories.Table)
         {
         }
     }

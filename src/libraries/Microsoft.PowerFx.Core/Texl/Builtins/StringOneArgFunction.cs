@@ -20,13 +20,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => true;
 
-        public StringOneArgFunction(string name, TexlStrings.StringGetter description, FunctionCategories functionCategories)
-            : base(name, description, functionCategories, DType.String, 0, 1, 1, DType.String)
+        public StringOneArgFunction(TexlFunctionConfig instanceConfig, string name, TexlStrings.StringGetter description, FunctionCategories functionCategories)
+            : base(instanceConfig, name, description, functionCategories, DType.String, 0, 1, 1, DType.String)
         {
         }
 
-        public StringOneArgFunction(string name, TexlStrings.StringGetter description, FunctionCategories functionCategories, DType returnType)
-            : base(name, description, functionCategories, returnType, 0, 1, 1, DType.String)
+        public StringOneArgFunction(TexlFunctionConfig instanceConfig, string name, TexlStrings.StringGetter description, FunctionCategories functionCategories, DType returnType)
+            : base(instanceConfig, name, description, functionCategories, returnType, 0, 1, 1, DType.String)
         {
         }
 
@@ -91,8 +91,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => true;
 
-        public StringOneArgTableFunction(string name, TexlStrings.StringGetter description, FunctionCategories functionCategories)
-            : base(name, description, functionCategories, DType.EmptyTable, 0, 1, 1, DType.EmptyTable)
+        public StringOneArgTableFunction(TexlFunctionConfig instanceConfig, string name, TexlStrings.StringGetter description, FunctionCategories functionCategories)
+            : base(instanceConfig, name, description, functionCategories, DType.EmptyTable, 0, 1, 1, DType.EmptyTable)
         {
         }
 
@@ -128,7 +128,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
             else
             {
-                returnType = config.Features.HasFlag(Features.ConsistentOneColumnTableResult)
+                returnType = InstanceConfig.Features.HasFlag(Features.ConsistentOneColumnTableResult)
                 ? DType.CreateTable(new TypedName(DType.String, new DName(ColumnName_ValueStr)))
                 : argTypes[0];
             }

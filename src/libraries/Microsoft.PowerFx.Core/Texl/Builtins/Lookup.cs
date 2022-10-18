@@ -23,8 +23,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool HasPreciseErrors => true;
 
-        public LookUpFunction()
-            : base("LookUp", TexlStrings.AboutLookUp, FunctionCategories.Table, DType.Unknown, 0x6, 2, 3, DType.EmptyTable, DType.Boolean)
+        public LookUpFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "LookUp", TexlStrings.AboutLookUp, FunctionCategories.Table, DType.Unknown, 0x6, 2, 3, DType.EmptyTable, DType.Boolean)
         {
             ScopeInfo = new FunctionScopeInfo(this);
         }

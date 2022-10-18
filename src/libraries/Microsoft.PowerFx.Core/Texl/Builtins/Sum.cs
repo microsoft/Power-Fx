@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Functions.Delegation;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
@@ -10,8 +11,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Sum(arg1:n, arg2:n, ..., argN:n)
     internal sealed class SumFunction : StatisticalFunction
     {
-        public SumFunction()
-            : base("Sum", TexlStrings.AboutSum, FunctionCategories.MathAndStat)
+        public SumFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "Sum", TexlStrings.AboutSum, FunctionCategories.MathAndStat)
         {
         }
     }
@@ -22,8 +23,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public override DelegationCapability FunctionDelegationCapability => DelegationCapability.Sum;
 
-        public SumTableFunction()
-            : base("Sum", TexlStrings.AboutSumT, FunctionCategories.Table)
+        public SumTableFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "Sum", TexlStrings.AboutSumT, FunctionCategories.Table)
         {
         }
     }
