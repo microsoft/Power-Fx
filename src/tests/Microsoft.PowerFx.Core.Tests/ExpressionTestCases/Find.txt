@@ -95,16 +95,16 @@ Blank()
 Blank()
 
 >> Find("textToFind", Blank(), 3)
-#Error
+#Error(Kind=InvalidArgument)
 
 >> Find(",", "LastName,FirstName", -1)
-#Error
+#Error(Kind=InvalidArgument)
 
 >> Find(",", "LastName,FirstName", 0)
-#Error
+#Error(Kind=InvalidArgument)
 
 >> Find(",", "LastName,FirstName", Blank())
-Blank()
+#Error(Kind=InvalidArgument)
 
 >> Find("B", "LastNameisBlah")
 11
