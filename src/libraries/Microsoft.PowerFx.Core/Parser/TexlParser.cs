@@ -43,13 +43,14 @@ namespace Microsoft.PowerFx.Core.Parser
         private readonly List<CommentToken> _comments = new List<CommentToken>();
         private SourceList _before;
         private SourceList _after;
+        private readonly CultureInfo _locale;
 
         // Represents temporary extra trivia, for when a parsing method
         // had to parse tailing trivia to do 1-lookahead. Will be
         // collected by the next call to ParseTrivia.
         private ITexlSource _extraTrivia;
 
-        private TexlParser(IReadOnlyList<Token> tokens, Flags flags)
+        private TexlParser(IReadOnlyList<Token> tokens, Flags flags, CultureInfo locale)
         {
             Contracts.AssertValue(tokens);
 
@@ -57,15 +58,16 @@ namespace Microsoft.PowerFx.Core.Parser
             _curs = new TokenCursor(tokens);
             _flagsMode = new Stack<Flags>();
             _flagsMode.Push(flags);
+            _locale = locale;
         }
 
-        public static ParseUDFsResult ParseUDFsScript(string script, CultureInfo loc = null)
+        public static ParseUDFsResult ParseUDFsScript(string script, CultureInfo loc)
         {
             Contracts.AssertValue(script);
             Contracts.AssertValueOrNull(loc);
 
             var formulaTokens = TokenizeScript(script, loc, Flags.NamedFormulas);
-            var parser = new TexlParser(formulaTokens, Flags.NamedFormulas);
+            var parser = new TexlParser(formulaTokens, Flags.NamedFormulas, loc);
 
             return parser.ParseUDFs(script);
         }
@@ -218,7 +220,7 @@ namespace Microsoft.PowerFx.Core.Parser
             Contracts.AssertValueOrNull(loc);
 
             var tokens = TokenizeScript(script, loc, flags);
-            var parser = new TexlParser(tokens, flags);
+            var parser = new TexlParser(tokens, flags, loc);
             List<TexlError> errors = null;
             var parsetree = parser.Parse(ref errors);
 
@@ -231,7 +233,7 @@ namespace Microsoft.PowerFx.Core.Parser
             Contracts.AssertValueOrNull(loc);
 
             var formulaTokens = TokenizeScript(script, loc, Flags.NamedFormulas);
-            var parser = new TexlParser(formulaTokens, Flags.NamedFormulas);
+            var parser = new TexlParser(formulaTokens, Flags.NamedFormulas, loc);
 
             return parser.ParseFormulas(script);
         }
@@ -1470,7 +1472,7 @@ namespace Microsoft.PowerFx.Core.Parser
             Contracts.AssertValue(tok);
             Contracts.AssertValue(errKey.Key);
 
-            var err = new TexlError(tok, DocumentErrorSeverity.Critical, errKey);
+            var err = new TexlError(tok, DocumentErrorSeverity.Critical, _locale, errKey);
             CollectionUtils.Add(ref _errors, err);
             return err;
         }
@@ -1481,7 +1483,7 @@ namespace Microsoft.PowerFx.Core.Parser
             Contracts.AssertValue(errKey.Key);
             Contracts.AssertValueOrNull(args);
 
-            var err = new TexlError(tok, DocumentErrorSeverity.Critical, errKey, args);
+            var err = new TexlError(tok, DocumentErrorSeverity.Critical, _locale, errKey, args);
             CollectionUtils.Add(ref _errors, err);
 
             return err;
@@ -1579,10 +1581,17 @@ namespace Microsoft.PowerFx.Core.Parser
             }
         }
 
+        [Obsolete("Use overload with explicit Culture")]
         public static string Format(string text)
+        {
+            return Format(text, null);
+        }
+
+        public static string Format(string text, CultureInfo locale)
         {
             var result = ParseScript(
                 text,
+                locale,
                 flags: Flags.EnableExpressionChaining);
 
             // Can't pretty print a script with errors.

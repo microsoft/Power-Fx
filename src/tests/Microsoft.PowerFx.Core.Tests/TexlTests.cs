@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection.Metadata;
 using Microsoft.PowerFx.Core.App.Controls;
@@ -25,6 +26,8 @@ namespace Microsoft.PowerFx.Core.Tests
 {    
     public class TexlTests : PowerFxTest
     {
+        private readonly CultureInfo _defaultLocale = new ("en-US");
+
         private const string ChurnDataFunctionName = "ChurnData";
 
         [Theory]
@@ -1520,7 +1523,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("If(A;B;,C;D;/*asdf*/,F;)")]
         public void TexlTestParsingChainRuleEndingSemicolon(string inputText)
         {
-            var result = TexlParser.ParseScript(inputText, flags: TexlParser.Flags.EnableExpressionChaining);
+            var result = TexlParser.ParseScript(inputText, _defaultLocale, flags: TexlParser.Flags.EnableExpressionChaining);
             Assert.Empty(result.Errors);
             Assert.NotNull(result.Root);
         }
@@ -1530,7 +1533,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("a;b;;")]
         public void TexlTestParsingChainRuleEndingSemicolon_negative(string inputText)
         {
-            var result = TexlParser.ParseScript(inputText, flags: TexlParser.Flags.EnableExpressionChaining);
+            var result = TexlParser.ParseScript(inputText, _defaultLocale, flags: TexlParser.Flags.EnableExpressionChaining);
             Assert.True(result.HasError);
             Assert.NotNull(result.Root);
         }
@@ -2024,7 +2027,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("[1 + 2, 3 + 4]", 3)]
         public void TexlTreeDepth(string script, int expectedDepth)
         {
-            var result = TexlParser.ParseScript(script, flags: TexlParser.Flags.EnableExpressionChaining);
+            var result = TexlParser.ParseScript(script, _defaultLocale, flags: TexlParser.Flags.EnableExpressionChaining);
             var node = result.Root;
             Assert.NotNull(node);
             Assert.Equal(expectedDepth, node.Depth);

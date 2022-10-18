@@ -12,6 +12,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Syntax;
 
 namespace Microsoft.PowerFx.Types
 {
@@ -233,7 +234,8 @@ namespace Microsoft.PowerFx.Types
 
                 flag = false;
 
-                sb.Append($"'{CharacterUtils.Escape(field.Name)}':");
+                sb.Append(IdentToken.MakeValidIdentifier(field.Name));
+                sb.Append(':');
 
                 field.Value.ToExpression(sb, settings);
             }

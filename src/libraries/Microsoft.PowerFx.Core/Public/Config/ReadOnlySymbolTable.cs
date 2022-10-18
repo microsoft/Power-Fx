@@ -93,6 +93,27 @@ namespace Microsoft.PowerFx
             return s;
         }
 
+        /// <summary>
+        /// Helper to create a symbol table around a set of core functions.
+        /// Important that this is mutable so that it can be changed across engines. 
+        /// </summary>
+        /// <returns>SymbolTable with supported functions.</returns>
+        public SymbolTable GetMutableCopyOfFunctions()
+        {
+            var s = new SymbolTable()
+            {
+                DebugName = DebugName + " (Functions only)",
+                Parent = Parent,
+            };
+
+            foreach (var func in _functions)
+            {
+                s.AddFunction(func); 
+            }
+
+            return s;
+        }
+
         private protected readonly Dictionary<string, NameLookupInfo> _variables = new Dictionary<string, NameLookupInfo>();
 
         internal readonly Dictionary<DName, IExternalEntity> _environmentSymbols = new Dictionary<DName, IExternalEntity>();

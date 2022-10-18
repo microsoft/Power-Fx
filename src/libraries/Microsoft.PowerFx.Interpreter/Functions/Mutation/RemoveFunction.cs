@@ -117,8 +117,6 @@ namespace Microsoft.PowerFx.Functions
                 errors.EnsureError(args[0], ErrNeedTable_Func, Name);
             }
 
-            fValid &= DropAttachmentsIfExists(ref collectionType, errors, args[0]);
-
             var argCount = argTypes.Length;
 
             for (var i = 1; i < argCount; i++)
@@ -146,8 +144,6 @@ namespace Microsoft.PowerFx.Functions
                     errors.EnsureError(args[i], ErrNeedRecord, args[i]);
                     continue;
                 }
-
-                fValid &= DropAttachmentsIfExists(ref argType, errors, args[i]);
 
                 var collectionAcceptsRecord = collectionType.Accepts(argType.ToTable());
                 var recordAcceptsCollection = argType.ToTable().Accepts(collectionType);
