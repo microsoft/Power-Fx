@@ -242,3 +242,6 @@ Blank()
 
 >> Concatenate( If(Sqrt(-1)<0,["Hi", "hello"]), If(1/0<2, [" world", "people"]) )
 #Error(Kind=Numeric, Div0)
+
+>> Concatenate(Filter([1,2], Value<>Value), If(1/0<0, "test"))
+Table()

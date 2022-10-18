@@ -48,7 +48,7 @@ namespace Microsoft.PowerFx.Tests
                 Assert.Equal(DKind.Table, tabularOverload.ReturnType.Kind); // Returns table
 
                 // Validate input types - Single arg Tabular function should take at lease one table
-                // Multi arg Tabular Function can have scaler/tabular as arg hence skip this test.
+                // Multi arg Tabular Function can have scalar/tabular as arg hence skip this test.
                 if (!isMultiArg)
                 {
                     Assert.Contains(tabularOverload.ParamTypes, t => t.Kind == DKind.Table); // At least one table input
