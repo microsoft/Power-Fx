@@ -27,6 +27,6 @@ namespace Microsoft.PowerFx
         /// instead of
         /// Filter(A, A[@Value] = 2)
         /// </summary>
-        DisableRowScopeDisambiguationSyntax
+        DisableRowScopeDisambiguationSyntax = 0x4,
     }
 }
