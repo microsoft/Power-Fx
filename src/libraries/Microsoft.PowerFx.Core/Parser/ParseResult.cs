@@ -75,7 +75,7 @@ namespace Microsoft.PowerFx
         }));
 
         /// <summary>
-        /// Converts the current formula into an anonymized format.
+        /// Converts the current formula into an anonymized format suitable for logging.
         /// </summary>
         public string GetAnonymizedFormula()
         {
