@@ -36,7 +36,7 @@ namespace Microsoft.PowerFx
         Numeric = 24,
         InvalidArgument = 25,
         Internal = 26,
-        Custom = 1000,
         NotApplicable = 27,
+        Custom = 1000,
     }
 }
