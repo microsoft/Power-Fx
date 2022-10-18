@@ -27,8 +27,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public override DelegationCapability FunctionDelegationCapability => DelegationCapability.Average;
 
-        public AverageTableFunction()
-            : base("Average", TexlStrings.AboutAverageT, FunctionCategories.Table)
+        public AverageTableFunction(TexlFunctionConfig instanceConfig)
+            : base(instanceConfig, "Average", TexlStrings.AboutAverageT, FunctionCategories.Table)
         {
         }
     }
