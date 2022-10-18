@@ -82,9 +82,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 .Add(new NamedFormulaType("OptionSetField1", FormulaType.OptionSetValue, "DisplayNameField1"))
                 .Add(new NamedFormulaType("StrField1", FormulaType.String, "DisplayNameField2"));
 
-            var t1 = new RecordsOnlyTableValue(Core.IR.IRContext.NotInSource(rType.ToTable()), new List<RecordValue>() { r1, r2 });
-            var t2 = new RecordsOnlyTableValue(Core.IR.IRContext.NotInSource(rType.ToTable()), new List<RecordValue>() { r1, r2, r3, r4 });
-            var t3 = new RecordsOnlyTableValue(Core.IR.IRContext.NotInSource(rType.ToTable()), new List<RecordValue>() { r1, r2, r3, r5, r4 });
+            var t1 = FormulaValue.NewTable(rType, r1, r2);
+            var t2 = FormulaValue.NewTable(rType, r1, r2, r3, r4);
+            var t3 = FormulaValue.NewTable(rType, r1, r2, r3, r5, r4);
 
             var symbol = new SymbolTable() { Parent = config.SymbolTable };
 
