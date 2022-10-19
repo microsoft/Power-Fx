@@ -76,6 +76,11 @@ namespace Microsoft.PowerFx.Interpreter
             }
 
             var info = binding.GetInfo(firstName);
+            if (info.Data is NameSymbol nameSymbol)
+            {
+                // Could check mutability here? 
+                // Could even have a backpointer to the symbol table?
+            }
             
             // $$$ Ensure this is mutable ...
             
