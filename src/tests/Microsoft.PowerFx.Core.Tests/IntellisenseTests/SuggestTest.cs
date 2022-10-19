@@ -131,13 +131,13 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("true &|", "&", "&&")]
 
         // UnaryOpNodeSuggestionHandler
-        [InlineData("Not| false", "Not", "NotificationType", "NotificationType.Error", "NotificationType.Information", "NotificationType.Success", "NotificationType.Warning", "ErrorKind.FileNotFound", "ErrorKind.NotFound", "ErrorKind.NotSupported", "Icon.Note", "Icon.Notebook")]
+        [InlineData("Not| false", "Not", "NotificationType", "NotificationType.Error", "NotificationType.Information", "NotificationType.Success", "NotificationType.Warning", "ErrorKind.FileNotFound", "ErrorKind.NotApplicable", "ErrorKind.NotFound", "ErrorKind.NotSupported", "Icon.Note", "Icon.Notebook")]
         [InlineData("| Not false")]
         [InlineData("Not |")]
 
         // StrInterpSuggestionHandler
-        [InlineData("With( {Apples:3}, $\"We have {appl|", "Apples")]
-        [InlineData("With( {Apples:3}, $\"We have {appl|} apples.", "Apples")]
+        [InlineData("With( {Apples:3}, $\"We have {appl|", "Apples", "ErrorKind.NotApplicable")]
+        [InlineData("With( {Apples:3}, $\"We have {appl|} apples.", "Apples", "ErrorKind.NotApplicable")]
         [InlineData("$\"This is a randomly generated number: {rand|", "Rand", "RandBetween")]
 
         // StrNumLitNodeSuggestionHandler

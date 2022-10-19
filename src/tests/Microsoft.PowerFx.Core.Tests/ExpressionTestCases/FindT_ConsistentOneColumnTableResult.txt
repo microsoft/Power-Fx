@@ -7,37 +7,37 @@ Errors: Error 0-24: The function 'Find' has some invalid arguments.|Error 14-18:
 Errors: Error 0-25: The function 'Find' has some invalid arguments.|Error 5-9: Invalid argument type (Table). Expecting a Text value instead.|Error 11-15: Invalid argument type (Table). Expecting a Text value instead.
 
 >> Find(If(false, ["blank table"], Blank()), If(false, ["blank table"], Blank()), [1])
-[1]
+Blank()
 
 >> Find(If(false, ["blank table"], Blank()), If(false, ["blank table"], Blank()), [2])
-[Microsoft.PowerFx.Types.ErrorValue]
+Blank()
 
 >> Find(If(false, ["blank table"], Blank()), "textToBeSearchedIn", [5])
-[5]
+Blank()
 
 >> Find("textToSearch", If(false, ["blank table"], Blank()), [1])
-[Blank()]
+Blank()
 
 >> Find([Blank(), "", ","], If(false, ["blank table"], Blank()), 1)
-[1,1,Blank()]
+Blank()
 
 >> Find(["b"], ["abc", "cde"])
-[2,1]
+[2,Microsoft.PowerFx.Types.ErrorValue]
 
 >> Find(["b"], ["abc", "cde"], If(false, [0], Blank()))
-[Blank(),Blank()]
+Blank()
 
 >> Find(["b"], ["abc", "cde"], Filter([0], Value <> Value))
-[]
+[Microsoft.PowerFx.Types.ErrorValue,Microsoft.PowerFx.Types.ErrorValue]
 
 >> Find([Blank(), "", ","], If(false, ["blank table"], Blank()), [1, 2, 3])
-[1,Microsoft.PowerFx.Types.ErrorValue,Microsoft.PowerFx.Types.ErrorValue]
+Blank()
 
 >> Find(If(false, ["blank table"], Blank()), [Blank(), "", "textToBeSearchedIn"], 1)
-[1,1,1]
+Blank()
 
 >> Find(If(false, ["blank table"], Blank()), [Blank(), "", "textToBeSearchedIn"], [1, 2, 3])
-[1,Microsoft.PowerFx.Types.ErrorValue,3]
+Blank()
 
 >> Find([Blank(), "", ","], "textToBeSearchedIn,textToBeSearchedIn", 1)
 [1,1,19]
@@ -58,10 +58,10 @@ Errors: Error 0-25: The function 'Find' has some invalid arguments.|Error 5-9: I
 [19,19,19,Blank()]
 
 >> Find([Blank(), "", ","], If(false, ["blank table"], Blank()))
-[1,1,Blank()]
+Blank()
 
 >> Find(If(false, ["blank table"], Blank()), [Blank(), "", "textToBeSearchedIn"])
-[1,1,1]
+Blank()
 
 >> Find([Blank(), "", ","], "textToBeSearchedIn,textToBeSearchedIn")
 [1,1,19]
@@ -73,10 +73,10 @@ Errors: Error 0-25: The function 'Find' has some invalid arguments.|Error 5-9: I
 [1,1,19]
 
 >> Find([Blank(), ","], ["lastName,firstName", "lastName,firstName,", "lastName,firstName", Blank()])
-[1,9,1,1]
+[1,9,Microsoft.PowerFx.Types.ErrorValue,Microsoft.PowerFx.Types.ErrorValue]
 
 >> Find([Blank(), ",", "", "findMe"], [Blank(), "lastName,firstName"])
-[1,9,1,Blank()]
+[1,9,Microsoft.PowerFx.Types.ErrorValue,Microsoft.PowerFx.Types.ErrorValue]
 
 >> Find([Blank(), ","], ["lastName,firstName",], [9, 2, 3])
 [9,Microsoft.PowerFx.Types.ErrorValue,Microsoft.PowerFx.Types.ErrorValue]
@@ -85,10 +85,10 @@ Errors: Error 0-25: The function 'Find' has some invalid arguments.|Error 5-9: I
 [Microsoft.PowerFx.Types.ErrorValue,Blank(),Microsoft.PowerFx.Types.ErrorValue,Microsoft.PowerFx.Types.ErrorValue]
 
 >> Find([",", Blank()], "lastName,firstName", [1, 2, 3])
-[9,2,3]
+[9,2,Microsoft.PowerFx.Types.ErrorValue]
 
 >> Find(",", [Blank(), "lastName,firstName", "lastName,firstName"], [1, 2])
-[Blank(),9,Blank()]
+[Blank(),9,Microsoft.PowerFx.Types.ErrorValue]
 
 >> Find(Filter(["empty table"], Value <> Value), "", 1)
 []
@@ -106,22 +106,22 @@ Errors: Error 0-25: The function 'Find' has some invalid arguments.|Error 5-9: I
 []
 
 >> Find(Filter(["empty table"], Value <> Value), [Blank(), "lastName,firstName", "lastName,firstName"], 2)
-[]
+[Microsoft.PowerFx.Types.ErrorValue,Microsoft.PowerFx.Types.ErrorValue,Microsoft.PowerFx.Types.ErrorValue]
 
 >> Find(Filter(["empty table"], Value <> Value), "textToSearch", [1, 2])
-[]
+[Microsoft.PowerFx.Types.ErrorValue,Microsoft.PowerFx.Types.ErrorValue]
 
 >> Find([",", Blank(), ""], Filter(["empty table"], Value <> Value), 2)
-[]
+[Microsoft.PowerFx.Types.ErrorValue,Microsoft.PowerFx.Types.ErrorValue,Microsoft.PowerFx.Types.ErrorValue]
 
 >> Find(",", Filter(["empty table"], Value <> Value), [1, 1])
-[]
+[Microsoft.PowerFx.Types.ErrorValue,Microsoft.PowerFx.Types.ErrorValue]
 
 >> Find([Blank(), ",", "", "findMe"], [Blank(), "lastName,firstName", "lastName,firstName"], Filter(["empty table"], Value <> Value))
-[]
+[Microsoft.PowerFx.Types.ErrorValue,Microsoft.PowerFx.Types.ErrorValue,Microsoft.PowerFx.Types.ErrorValue,Microsoft.PowerFx.Types.ErrorValue]
 
 >> Find(",", [Blank(), "lastName,firstName"], Filter(["empty table"], Value <> Value))
-[]
+[Microsoft.PowerFx.Types.ErrorValue,Microsoft.PowerFx.Types.ErrorValue]
 
 >> Find("c", Table({ within: "abc" }, { within: Error({Kind: ErrorKind.Validation}) }, { within: "cde" }))
 [3,Microsoft.PowerFx.Types.ErrorValue,1]
@@ -139,7 +139,7 @@ Errors: Error 0-25: The function 'Find' has some invalid arguments.|Error 5-9: I
 Table({Value:1},Microsoft.PowerFx.Types.ErrorValue,{Value:Microsoft.PowerFx.Types.ErrorValue},Microsoft.PowerFx.Types.ErrorValue,{Value:3})
 
 >> Find(Table({ find: "a" }, { find: "b" }, { find: "c" }), If(1/0>2,"abcdef"))
-#Error(Kind=Div0)
+[Microsoft.PowerFx.Types.ErrorValue,Microsoft.PowerFx.Types.ErrorValue,Microsoft.PowerFx.Types.ErrorValue]
 
 >> Find(If(Sqrt(-1)<0,"First second third"), Table({ within: "First" }, { within: "Second" }))
-#Error(Kind=Numeric)
+[Microsoft.PowerFx.Types.ErrorValue,Microsoft.PowerFx.Types.ErrorValue]

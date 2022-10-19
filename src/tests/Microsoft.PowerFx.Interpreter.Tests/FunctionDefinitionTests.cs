@@ -25,7 +25,16 @@ namespace Microsoft.PowerFx.Tests
             var tabularOverloads = type.GetProperty("SimpleFunctionTabularOverloadImplementations", BindingFlags.Static | BindingFlags.NonPublic).GetValue(null)
                 as IReadOnlyDictionary<TexlFunction, AsyncFunctionPtr>;
             Assert.NotNull(tabularOverloads);
+            var tabularMultiArgsOverloads = type.GetProperty("SimpleFunctionMultiArgsTabularOverloadImplementations", BindingFlags.Static | BindingFlags.NonPublic).GetValue(null)
+                as IReadOnlyDictionary<TexlFunction, AsyncFunctionPtr>;
+            Assert.NotNull(tabularMultiArgsOverloads);
 
+            ValidateOverloads(simpleFunctions, tabularOverloads, isMultiArg: false);
+            ValidateOverloads(simpleFunctions, tabularMultiArgsOverloads, isMultiArg: true);
+        }
+
+        private void ValidateOverloads(IReadOnlyDictionary<TexlFunction, AsyncFunctionPtr> simpleFunctions, IReadOnlyDictionary<TexlFunction, AsyncFunctionPtr> tabularOverloads, bool isMultiArg) 
+        {
             foreach (var tabularOverload in tabularOverloads.Keys)
             {
                 var simpleFunction = simpleFunctions.First(f => f.Key.Name == tabularOverload.Name).Key;
@@ -35,9 +44,15 @@ namespace Microsoft.PowerFx.Tests
                 Assert.NotEqual(DKind.Table, simpleFunction.ReturnType.Kind);
                 Assert.DoesNotContain(simpleFunction.ParamTypes, t => t.Kind == DKind.Table); // No tabular inputs
 
-                // Validate input / output types - tabular function should take at least one table / return table
+                // Validate tabular function should return table
                 Assert.Equal(DKind.Table, tabularOverload.ReturnType.Kind); // Returns table
-                Assert.Contains(tabularOverload.ParamTypes, t => t.Kind == DKind.Table); // At least one table input
+
+                // Validate input types - Single arg Tabular function should take at lease one table
+                // Multi arg Tabular Function can have scalar/tabular as arg hence skip this test.
+                if (!isMultiArg)
+                {
+                    Assert.Contains(tabularOverload.ParamTypes, t => t.Kind == DKind.Table); // At least one table input
+                }
 
                 // Validate similar arity
                 Assert.Equal(tabularOverload.MinArity, simpleFunction.MinArity);

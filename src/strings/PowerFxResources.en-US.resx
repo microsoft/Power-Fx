@@ -3452,6 +3452,10 @@
     <value>Internal</value>
     <comment>{Locked} Enum value</comment>
   </data>
+  <data name="ErrorKind_NotApplicable_Name" xml:space="preserve">
+    <value>NotApplicable</value>
+    <comment>{Locked} Enum value</comment>
+  </data>
   <data name="Post" xml:space="preserve">
     <value>Post</value>
     <comment>Button text to post comment</comment>
