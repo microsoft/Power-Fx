@@ -392,6 +392,42 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             }
         }
 
+        // Verify if text is transformed using the correct culture info (PowerFxConfig and global settings)
+        // Origin: https://github.com/microsoft/Power-Fx/issues/111
+        [Fact]
+        public void RecalcEngine_Symbol_CultureInfo6()
+        {
+            Exception exception = null;
+
+            var t = new Thread(() =>
+            {
+                Thread.CurrentThread.CurrentCulture = new CultureInfo("bg-BG");
+
+                try
+                {
+                    const string formula = "Concatenate(\"Hello\", \" World!\")";
+                    var defaultCulture = CultureInfo.CreateSpecificCulture("en");
+                    var engine = new RecalcEngine(new PowerFxConfig(defaultCulture));
+                    var result = engine.Eval(formula);
+
+                    var helloWorld = Assert.IsType<string>(result.ToObject());
+                    Assert.Equal("Hello World!", helloWorld);
+                }
+                catch (Exception ex)
+                {
+                    exception = ex;
+                }
+            });
+
+            t.Start();
+            t.Join();
+
+            if (exception != null)
+            {
+                throw exception;
+            }
+        }
+
         // Verify that an engine with a specific culture can evaluate an invariant formula
         [Fact]
         public void RecalcEngine_CultureInfo()
