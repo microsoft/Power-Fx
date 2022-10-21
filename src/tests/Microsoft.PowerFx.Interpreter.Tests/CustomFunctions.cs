@@ -73,22 +73,22 @@ namespace Microsoft.PowerFx.Tests
         public async void CustomFunctionAsync_CallBack()
         {
             var config = new PowerFxConfig(null);
-            config.AddFunction(new WaitAsyncFunction());
+            config.AddFunction(new WaitFunction());
             config.AddFunction(new HelperFunction(x => FormulaValue.New(x.Value + 1)));
             var engine = new RecalcEngine(config);
 
             // Shows up in enuemeration
-            var func = engine.GetAllFunctionNames().First(name => name == "WaitAsync");
+            var func = engine.GetAllFunctionNames().First(name => name == "Wait");
             Assert.NotNull(func);
 
             // Can be invoked. 
             using var cts = new CancellationTokenSource();
-            var result = engine.EvalAsync("WaitAsync(Helper() = 3)", cts.Token);
+            var result = engine.EvalAsync("Wait(Helper() = 3)", cts.Token);
             Assert.Equal(true, (await result).ToObject());
             Assert.True(result.IsCompletedSuccessfully);
         }
         
-        private class WaitAsyncFunction : ReflectionFunction
+        private class WaitFunction : ReflectionFunction
         {
             // Must have "Execute" method. 
             // Cancellation Token must be the last argument for custom async function.
@@ -97,6 +97,7 @@ namespace Microsoft.PowerFx.Tests
             {
                 while (!(await expression()).Value) 
                 {
+                    cancellationToken.ThrowIfCancellationRequested();
                 }
 
                 return FormulaValue.New(true);
@@ -125,10 +126,12 @@ namespace Microsoft.PowerFx.Tests
         public async void CustomFunctionAsync_CallBack_Invalid()
         {
             var config = new PowerFxConfig(null);
-            Assert.Throws<InvalidOperationException>(() => config.AddFunction(new InvalidTestCallbackAsyncFunction()));
+            Action act = () => config.AddFunction(new InvalidTestCallbackFunction());
+            Exception exception = Assert.Throws<InvalidOperationException>(act);
+            Assert.Equal("Unknown parameter type: expression, System.Func`1[System.Threading.Tasks.Task`1[Microsoft.PowerFx.Types.StringValue]]. Only System.Func`1[System.Threading.Tasks.Task`1[Microsoft.PowerFx.Types.BooleanValue]] is supported", exception.Message);
         }
 
-        private class InvalidTestCallbackAsyncFunction : ReflectionFunction
+        private class InvalidTestCallbackFunction : ReflectionFunction
         {
             // Must have "Execute" method. 
             // Cancellation Token must be the last argument for custom async function.
@@ -141,26 +144,26 @@ namespace Microsoft.PowerFx.Tests
         }
 
         [Fact]
-        public async void CustomMockAndFunctionAsync_CallBack()
+        public async void CustomMockAndFunction_CallBack()
         {
             var config = new PowerFxConfig(null);
-            config.AddFunction(new MockAnd2ArgAsyncFunction());
+            config.AddFunction(new MockAnd2ArgFunction());
             var engine = new RecalcEngine(config);
 
             // Shows up in enuemeration
-            var func = engine.GetAllFunctionNames().First(name => name == "MockAnd2ArgAsync");
+            var func = engine.GetAllFunctionNames().First(name => name == "MockAnd2Arg");
             Assert.NotNull(func);
 
             // Can be invoked. 
             using var cts = new CancellationTokenSource();
-            var result = engine.EvalAsync("MockAnd2ArgAsync(1=2, 1=1)", cts.Token);
+            var result = engine.EvalAsync("MockAnd2Arg(1=2, 1=1)", cts.Token);
             Assert.Equal(false, (await result).ToObject());
 
-            var result2 = engine.EvalAsync("MockAnd2ArgAsync(1=1, 1=1)", cts.Token);
+            var result2 = engine.EvalAsync("MockAnd2Arg(1=1, 1=1)", cts.Token);
             Assert.Equal(true, (await result2).ToObject());
         }
 
-        private class MockAnd2ArgAsyncFunction : ReflectionFunction
+        private class MockAnd2ArgFunction : ReflectionFunction
         {
             // Must have "Execute" method. 
             // Cancellation Token must be the last argument for custom async function.
