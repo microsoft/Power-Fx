@@ -414,7 +414,7 @@ namespace Microsoft.PowerFx.Functions
                     childContext = context.SymbolContext.WithScopeValues(RecordValue.Empty());
                 }
 
-                var value = await arg1.EvalAsync(runner, context.NewScope(childContext));
+                var value = await arg1.EvalInRowScopeAsync(context.NewScope(childContext));
 
                 if (value is ErrorValue error)
                 {

@@ -340,7 +340,7 @@ namespace Microsoft.PowerFx
             {
                 if (arg is LambdaFormulaValue lambda)
                 {
-                    Func<Task<BooleanValue>> argLambda = async () => (BooleanValue)await lambda.EvalAsync(lambda.Runner, lambda.Context);
+                    Func<Task<BooleanValue>> argLambda = async () => (BooleanValue)await lambda.EvalAsync();
                     args2.Add(argLambda);
                 }
                 else
