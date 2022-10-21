@@ -251,6 +251,11 @@ namespace Microsoft.PowerFx
                         info.LamdaParamMask = info.LamdaParamMask | BigInteger.One << i;
                         paramTypes.Add(FormulaType.Boolean);
                     }
+                    else if (parameters[i].ParameterType == typeof(Func<Task<FormulaValue>>))
+                    {
+                        // Currently only Func<Task<BooleanValue> is supported.
+                        throw new InvalidOperationException($"Unknown parameter type: {parameters[i].Name}, {parameters[i].ParameterType}. Only {nameof(Func<Task<BooleanValue>>)} is supported");
+                    }
                     else
                     { 
                         // Unknown parameter type

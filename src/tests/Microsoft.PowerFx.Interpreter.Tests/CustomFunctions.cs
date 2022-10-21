@@ -73,27 +73,70 @@ namespace Microsoft.PowerFx.Tests
         public async void CustomFunctionAsync_CallBack()
         {
             var config = new PowerFxConfig(null);
-            config.AddFunction(new TestCallbackAsyncFunction());
+            config.AddFunction(new WaitAsyncFunction());
+            config.AddFunction(new HelperFunction(x => FormulaValue.New(x.Value + 1)));
             var engine = new RecalcEngine(config);
 
             // Shows up in enuemeration
-            var func = engine.GetAllFunctionNames().First(name => name == "TestCallbackAsync");
+            var func = engine.GetAllFunctionNames().First(name => name == "WaitAsync");
             Assert.NotNull(func);
 
             // Can be invoked. 
             using var cts = new CancellationTokenSource();
-            var result = engine.EvalAsync("TestCallbackAsync(1=2)", cts.Token);
-            Assert.Equal(false, (await result).ToObject());
+            var result = engine.EvalAsync("WaitAsync(Helper() = 3)", cts.Token);
+            Assert.Equal(true, (await result).ToObject());
+            Assert.True(result.IsCompletedSuccessfully);
         }
         
-        private class TestCallbackAsyncFunction : ReflectionFunction
+        private class WaitAsyncFunction : ReflectionFunction
         {
             // Must have "Execute" method. 
             // Cancellation Token must be the last argument for custom async function.
             // Any arg can be a boolean callback function.
             public static async Task<BooleanValue> Execute(Func<Task<BooleanValue>> expression, CancellationToken cancellationToken)
             {
-                return await expression();
+                while (!(await expression()).Value) 
+                {
+                }
+
+                return FormulaValue.New(true);
+            }
+        }
+
+        private class HelperFunction : ReflectionFunction
+        {
+            private readonly Func<NumberValue, NumberValue> _func;
+            private NumberValue _counter;
+
+            public HelperFunction(Func<NumberValue, NumberValue> func)
+            {
+                _func = func;
+                _counter = FormulaValue.New(0);
+            }
+              
+            public NumberValue Execute()
+            {
+                _counter = _func(_counter);
+                return _counter;
+            }
+        }
+
+        [Fact]
+        public async void CustomFunctionAsync_CallBack_Invalid()
+        {
+            var config = new PowerFxConfig(null);
+            Assert.Throws<InvalidOperationException>(() => config.AddFunction(new InvalidTestCallbackAsyncFunction()));
+        }
+
+        private class InvalidTestCallbackAsyncFunction : ReflectionFunction
+        {
+            // Must have "Execute" method. 
+            // Cancellation Token must be the last argument for custom async function.
+            // Any arg can be a boolean callback function.
+            public static async Task<BooleanValue> Execute(Func<Task<StringValue>> expression, CancellationToken cancellationToken)
+            {
+                await expression();
+                return FormulaValue.New(false);
             }
         }
 
