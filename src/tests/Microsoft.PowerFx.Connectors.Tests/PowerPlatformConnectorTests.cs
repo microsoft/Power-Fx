@@ -18,6 +18,12 @@ namespace Microsoft.PowerFx.Tests
     // Simulate calling PowerPlatform connectors.
     public class PowerPlatformConnectorTests : PowerFxTest
     {
+        // Compare strings, ignoring \r differences that can happen across Operating systems. 
+        private static void AssertEqual(string expected, string actual)
+        {
+            Assert.Equal(expected.Replace("\r", string.Empty), actual.Replace("\r", string.Empty));
+        }
+
         // Exercise calling the MSNWeather connector against mocked Swagger and Response.json. 
         [Theory]
         [InlineData(true)]
@@ -84,7 +90,7 @@ namespace Microsoft.PowerFx.Tests
  x-ms-request-url: /apim/msnweather/shared-msnweather-8d08e763-937a-45bf-a2ea-c5ed-ecc70ca4/current/Redmond?units=Imperial
  x-ms-user-agent: PowerFx/{version}
 ";
-            Assert.Equal(expected, actual);
+            AssertEqual(expected, actual);
         }
 
         [Theory]
@@ -256,7 +262,7 @@ namespace Microsoft.PowerFx.Tests
  [body] abc
 ";
 
-            Assert.Equal(expected, actual);
+            AssertEqual(expected, actual);
         }
 
         // Very documentation strings from the Swagger show up in the intellisense.
