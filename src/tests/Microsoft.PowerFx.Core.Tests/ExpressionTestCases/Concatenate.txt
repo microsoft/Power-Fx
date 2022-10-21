@@ -1,8 +1,8 @@
 ﻿>> Concatenate("777", ["abc"], ["1", "2"])
-Table({Result:"777abc1"},{Result:"7772"})
+Table({Result:"777abc1"},{Result:Microsoft.PowerFx.Types.ErrorValue})
 
 >> Concatenate("777", Filter(["empty table"], Value <> Value), ["1", "2"])
-Table({Result:"7771"},{Result:"7772"})
+Table({Result:Microsoft.PowerFx.Types.ErrorValue},{Result:Microsoft.PowerFx.Types.ErrorValue})
 
 // ******** VALID STRING PARAMETERS ********
 

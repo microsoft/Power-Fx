@@ -1125,37 +1125,6 @@ namespace Microsoft.PowerFx.Core.Functions
                     dataSource.DelegationMetadata.VerifyValue().TableCapabilities.HasCapability(expectedCapability.Capabilities);
         }
 
-        /// <summary>
-        /// Removes the Attachments field from <paramref name="itemType"/> if it is defined and returns true if
-        /// successful and false if an error was present.  If the Attachments field is not defined, does nothing
-        /// and returns true.
-        /// </summary>
-        /// <remarks>
-        /// We ignore the Attachments field on all types in the invocation because it is a special column that
-        /// is delay loaded.  It is stripped from the type when used in functions like Set and is ignored in
-        /// Collect.CheckInvocation.
-        /// </remarks>
-        /// <param name="itemType">Type that may define Attachments.</param>
-        /// <param name="errors">Errors.</param>
-        /// <param name="node">Node to which <paramref name="itemType"/> is associated.</param>
-        /// <returns>
-        /// True if operation succeeded, if no Attachments field is defined or the Attachments field
-        /// has been successfully removed from <paramref name="itemType"/>, false otherwise.
-        /// </returns>
-        protected bool DropAttachmentsIfExists(ref DType itemType, IErrorContainer errors, TexlNode node)
-        {
-            Contracts.AssertValid(itemType);
-            Contracts.AssertValue(errors);
-            Contracts.AssertValue(node);
-
-            if (itemType.ContainsAttachmentType(DPath.Root))
-            {
-                return DropAllMatchingNested(ref itemType, errors, node, type => type.IsAttachment);
-            }
-
-            return true;
-        }
-
         // Helper to drop all of a single types from a result type
         protected bool DropAllOfKindNested(ref DType itemType, IErrorContainer errors, TexlNode node, DKind kind)
         {

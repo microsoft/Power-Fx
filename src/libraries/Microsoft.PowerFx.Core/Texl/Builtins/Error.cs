@@ -64,10 +64,16 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var argument = args[0];
             var argumentType = argTypes[0];
 
-            if (argumentType.Kind != DKind.Record && argumentType.Kind != DKind.Table)
+            if (argumentType.Kind != DKind.Record && argumentType.Kind != DKind.Table && argumentType.Kind != DKind.String)
             {
                 errors.EnsureError(argument, TexlStrings.ErrBadType);
                 return false;
+            }
+
+            // Custom error message
+            if (argumentType.Kind == DKind.String)
+            {
+                return true;
             }
 
             // We cache the whole name list regardless of path.

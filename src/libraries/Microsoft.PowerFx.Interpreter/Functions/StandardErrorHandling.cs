@@ -7,7 +7,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Types;
+using static Microsoft.PowerFx.Syntax.PrettyPrintVisitor;
 
 namespace Microsoft.PowerFx.Functions
 {
@@ -40,6 +42,7 @@ namespace Microsoft.PowerFx.Functions
         /// <param name="checkRuntimeValues">This stage can be used to generate errors if specific values occur in the arguments, for example infinity, NaN, etc.</param>
         /// <param name="returnBehavior">A flag that can be used to activate pre-defined early return behavior, such as returning Blank() if any argument is Blank().</param>
         /// <param name="targetFunction">The implementation of the builtin function.</param>
+        /// <param name="isMultiArgTabularOverload">If True returns error table in case of error args.</param>
         /// <returns></returns>
         private static AsyncFunctionPtr StandardErrorHandlingAsync<T>(
                 string functionName,
@@ -48,7 +51,8 @@ namespace Microsoft.PowerFx.Functions
                 Func<IRContext, int, FormulaValue, FormulaValue> checkRuntimeTypes,
                 Func<IRContext, int, FormulaValue, FormulaValue> checkRuntimeValues,
                 ReturnBehavior returnBehavior,
-                Func<EvalVisitor, EvalVisitorContext, IRContext, T[], ValueTask<FormulaValue>> targetFunction)
+                Func<EvalVisitor, EvalVisitorContext, IRContext, T[], ValueTask<FormulaValue>> targetFunction,
+                bool isMultiArgTabularOverload = false)
             where T : FormulaValue
         {
             return async (runner, context, irContext, args) =>
@@ -56,6 +60,33 @@ namespace Microsoft.PowerFx.Functions
                 var nonFiniteArgError = FiniteArgumentCheck(functionName, irContext, args);
                 if (nonFiniteArgError != null)
                 {
+                    (var maxSize, var minsSize, _, var errorTable) = AnalyzeTableArguments(args, irContext);
+
+                    // In case Tabular overload has one scalar error arg and another Table arg we want to
+                    // return table of error. else If error arg is table then return table error args.
+                    if (isMultiArgTabularOverload && maxSize > 0 && errorTable == null)
+                    {
+                        var tableType = (TableType)irContext.ResultType;
+                        var resultType = tableType.ToRecord();
+                        var namedValue = new NamedValue(tableType.SingleColumnFieldName, nonFiniteArgError);
+                        var record = DValue<RecordValue>.Of(new InMemoryRecordValue(IRContext.NotInSource(resultType), new List<NamedValue>() { namedValue }));
+                        var resultRows = Enumerable.Repeat(record, maxSize).ToList();
+
+                        return new InMemoryTableValue(irContext, resultRows);
+                    }
+                    else if (isMultiArgTabularOverload && errorTable != null)
+                    {
+                        return errorTable;
+                    }
+                    else if (isMultiArgTabularOverload)
+                    {
+                        // nonFiniteArgError!=null && maxSize == 0 && errorTable == null would means there are
+                        // no Table with rows and there is scaler error but no error table
+                        // in that case we return empty table
+                        // e.g. Concatenate(Filter([1,2], Value<>Value), If(1/0<0, "test"))
+                        return new InMemoryTableValue(irContext, new List<DValue<RecordValue>>());
+                    }
+
                     return nonFiniteArgError;
                 }
 
@@ -271,10 +302,13 @@ namespace Microsoft.PowerFx.Functions
             return StandardSingleColumnTable<T>(async (runner, context, irContext, args) => targetFunction(irContext, args.OfType<T>().ToArray()));
         }
 
-        private static (int maxTableSize, bool emptyTablePresent) AnalyzeTableArguments(FormulaValue[] args)
+        private static (int maxTableSize, int minTableSize, bool blankTablePresent, ErrorValue errorTable) AnalyzeTableArguments(FormulaValue[] args, IRContext irContext)
         {
             var maxTableSize = 0;
-            var emptyTablePresent = false;
+            var minTableSize = int.MaxValue;
+            var blankTablePresent = false;
+
+            List<ErrorValue> errors = null;
 
             foreach (var arg in args)
             {
@@ -282,26 +316,40 @@ namespace Microsoft.PowerFx.Functions
                 {
                     var tableSize = tv.Rows.Count();
                     maxTableSize = Math.Max(maxTableSize, tableSize);
-                    emptyTablePresent |= tableSize == 0;
+                    minTableSize = Math.Min(minTableSize, tableSize);
+                }
+                else if (arg is BlankValue bv && bv.IRContext.ResultType._type.IsTable)
+                {
+                    blankTablePresent = true;
+                }
+                else if (arg is ErrorValue ev && ev.IRContext.ResultType._type.IsTable)
+                {
+                    if (errors == null)
+                    {
+                        errors = new List<ErrorValue>();
+                    }
+
+                    errors.Add(ev);
                 }
             }
 
-            return (maxTableSize, emptyTablePresent);
+            var errorTable = errors != null ? ErrorValue.Combine(irContext, errors) : null;
+            return (maxTableSize, minTableSize, blankTablePresent, errorTable);
         }
 
-        private class ExpandToSizeResult
+        private class ShrinkToSizeResult
         {
             public readonly string Name;
             public readonly IEnumerable<DValue<RecordValue>> Rows;
 
-            public ExpandToSizeResult(string name, IEnumerable<DValue<RecordValue>> rows)
+            public ShrinkToSizeResult(string name, IEnumerable<DValue<RecordValue>> rows)
             {
                 Name = name;
                 Rows = rows;
             }
         }
 
-        private static ExpandToSizeResult ExpandToSize(FormulaValue arg, int size)
+        private static ShrinkToSizeResult ShrinkToSize(FormulaValue arg, int size)
         {
             if (arg is TableValue tv)
             {
@@ -309,20 +357,13 @@ namespace Microsoft.PowerFx.Functions
                 var name = tvType.SingleColumnFieldName;
 
                 var count = tv.Rows.Count();
-                if (count < size)
+                if (count > size)
                 {
-                    var inputRecordType = tvType.ToRecord();
-                    var inputRecordNamedValue = new NamedValue(name, new BlankValue(IRContext.NotInSource(FormulaType.Blank)));
-                    var inputRecord = new InMemoryRecordValue(IRContext.NotInSource(inputRecordType), new List<NamedValue>() { inputRecordNamedValue });
-                    var inputDValue = DValue<RecordValue>.Of(inputRecord);
-
-                    var repeated = Enumerable.Repeat(inputDValue, size - count);
-                    var rows = tv.Rows.Concat(repeated);
-                    return new ExpandToSizeResult(name, rows);
+                    return new ShrinkToSizeResult(name, tv.Rows.Take(size));
                 }
                 else
                 {
-                    return new ExpandToSizeResult(name, tv.Rows);
+                    return new ShrinkToSizeResult(name, tv.Rows);
                 }
             }
             else
@@ -333,7 +374,7 @@ namespace Microsoft.PowerFx.Functions
                 var inputRecord = new InMemoryRecordValue(IRContext.NotInSource(inputRecordType), new List<NamedValue>() { inputRecordNamedValue });
                 var inputDValue = DValue<RecordValue>.Of(inputRecord);
                 var rows = Enumerable.Repeat(inputDValue, size);
-                return new ExpandToSizeResult(name, rows);
+                return new ShrinkToSizeResult(name, rows);
             }
         }
 
@@ -362,31 +403,38 @@ namespace Microsoft.PowerFx.Functions
          * As a concrete example, Concatenate(["a", "b"], ["1", "2"]) => ["a1", "b2"]
         */
         public static Func<EvalVisitor, EvalVisitorContext, IRContext, FormulaValue[], ValueTask<FormulaValue>> MultiSingleColumnTable(
-            AsyncFunctionPtr targetFunction,
-            bool transposeEmptyTable)
+            AsyncFunctionPtr targetFunction)
         {
             return async (runner, context, irContext, args) =>
             {
                 var resultRows = new List<DValue<RecordValue>>();
 
-                (var maxSize, var emptyTablePresent) = AnalyzeTableArguments(args);
-                if (maxSize == 0 || (emptyTablePresent && !transposeEmptyTable))
+                (var maxSize, var minSize, var blankTablePresent, _) = AnalyzeTableArguments(args, irContext);
+
+                // If one arg is blank table and among all other args, return blank.
+                // e.g. Concatenate(Blank(), []), Concatenate(Blank(), "test"), Concatenate(Blank(), ["test"], []) => Blank()
+                if (blankTablePresent)
                 {
-                    // maxSize == 0 means there are no tables with rows. This can happen when we expect a Table at compile time but we recieve Blank() at runtime,
-                    // or all tables in args are empty. Additionally, among non-empty tables (in which case maxSize > 0) there may be an empty table,
-                    // which also means empty result if transposeEmptyTable == false.
+                    return FormulaValue.NewBlank();
+                }
+
+                if (maxSize == 0)
+                {
+                    // maxSize == 0 means there are no tables with rows. This can happen if we receive a Filter expression where no rows were return,
+                    // or all tables in args are empty. 
                     // Return an empty table (with the correct type).
+                    // e.g. Concatenate(Filter([1,2], Value<>Value, "test") => []
                     return new InMemoryTableValue(irContext, resultRows);
                 }
 
-                var allResults = args.Select(arg => ExpandToSize(arg, maxSize));
+                var allResults = args.Select(arg => ShrinkToSize(arg, minSize));
 
                 var tableType = (TableType)irContext.ResultType;
                 var resultType = tableType.ToRecord();
                 var columnNameStr = tableType.SingleColumnFieldName;
                 var itemType = resultType.GetFieldType(columnNameStr);
 
-                var transposed = Transpose(allResults.Select(result => result.Rows.ToList()).ToList(), maxSize);
+                var transposed = Transpose(allResults.Select(result => result.Rows.ToList()).ToList(), minSize);
                 var names = allResults.Select(result => result.Name).ToList();
                 foreach (var list in transposed)
                 {
@@ -403,6 +451,17 @@ namespace Microsoft.PowerFx.Functions
                     resultRows.Add(DValue<RecordValue>.Of(record));
                 }
 
+                // Add error nodes for different table length
+                // e.g. Concatenate(["a"],["1","2"] => ["a1", <error>]
+                var namedErrorValue = new NamedValue(columnNameStr, FormulaValue.NewError(new ExpressionError()
+                {
+                    Kind = ErrorKind.NotApplicable,
+                    Severity = ErrorSeverity.Critical,
+                    Message = "Not Applicable"
+                }));
+                var errorRecord = new InMemoryRecordValue(IRContext.NotInSource(resultType), new List<NamedValue>() { namedErrorValue });
+                var errorRowCount = maxSize - minSize;
+                resultRows.AddRange(Enumerable.Repeat(DValue<RecordValue>.Of(errorRecord), errorRowCount));
                 return new InMemoryTableValue(irContext, resultRows);
             };
         }
@@ -654,20 +713,6 @@ namespace Microsoft.PowerFx.Functions
             return arg;
         }
 
-        private static FormulaValue PositiveArgumentNumberChecker(IRContext irContext, int index, FormulaValue arg)
-        {
-            if (arg is NumberValue numberArg)
-            {
-                var number = numberArg.Value;
-                if (number < 0)
-                {
-                    return CommonErrors.ArgumentOutOfRange(irContext);
-                }
-            }
-
-            return arg;
-        }
-
         private static FormulaValue StrictArgumentPositiveNumberChecker(IRContext irContext, int index, FormulaValue arg)
         {
             if (arg is NumberValue numberArg)
@@ -691,31 +736,6 @@ namespace Microsoft.PowerFx.Functions
                 {
                     return CommonErrors.ArgumentOutOfRange(irContext);
                 }
-            }
-
-            return arg;
-        }
-
-        private static FormulaValue ReplaceChecker(IRContext irContext, int index, FormulaValue arg)
-        {
-            if (index == 1)
-            {
-                if (arg is BlankValue)
-                {
-                    return new ErrorValue(irContext, new ExpressionError()
-                    {
-                        Message = "The second parameter to the Replace function cannot be Blank()",
-                        Span = irContext.SourceContext,
-                        Kind = ErrorKind.InvalidFunctionUsage
-                    });
-                }
-
-                return StrictArgumentPositiveNumberChecker(irContext, index, arg);
-            }
-
-            if (index == 2)
-            {
-                return PositiveArgumentNumberChecker(irContext, index, arg);
             }
 
             return arg;

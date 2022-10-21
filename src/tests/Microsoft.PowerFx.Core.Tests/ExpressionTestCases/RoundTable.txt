@@ -24,14 +24,14 @@ Table({Result:1200},{Result:1234.6},{Result:1235},{Result:1234.6},{Result:1234.5
 
 // Blank values
 >> Round( If(1<0,[1]), 1 )
-[]
+Blank()
 
 // Errors
 >> Round( If(1/0<2, [1]), 1 )
 #Error(Kind=Div0)
 
 >> Round( [1.2, 2.3, 3.4], 1/0 )
-#Error(Kind=Div0)
+[Microsoft.PowerFx.Types.ErrorValue,Microsoft.PowerFx.Types.ErrorValue,Microsoft.PowerFx.Types.ErrorValue]
 
 >> Round( [1.23, Sqrt(-1), 7.89], 1)
 [1.2,Microsoft.PowerFx.Types.ErrorValue,7.9]

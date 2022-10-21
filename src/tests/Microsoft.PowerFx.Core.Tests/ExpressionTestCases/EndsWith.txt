@@ -142,13 +142,17 @@ true
 >> EndsWith(Blank(),"ok")
 false
 
-//Null end case
+//Null end case - coerced to ""
 >> EndsWith("Hello",Blank())
-false
+true
 
-//Null both case
+//Null end case - coerced to ""
+>> EndsWith("",Blank())
+true
+
+//Null both case - both coerced to ""
 >> EndsWith(Blank(),Blank())
-false
+true
 
 
 // ******** BOOLEAN PARAMETERS ********

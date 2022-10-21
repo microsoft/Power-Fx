@@ -99,7 +99,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                             sourceType.ReportNonExistingName(FieldNameKind.Logical, errors, columnName, args[i]);
                             fValid = false;
                         }
-                        else if (!columnType.IsPrimitive || columnType.IsOptionSet)
+                        else if (!columnType.IsPrimitive)
                         {
                             fValid = false;
                             errors.EnsureError(colNameArg, TexlStrings.ErrSortWrongType);

@@ -371,7 +371,7 @@
     
   </data>
   <data name="AboutDropColumns_source" xml:space="preserve">
-    <value>Valeur de table pour laquelle supprimer des colonnes.</value>
+    <value>Table pour laquelle supprimer des colonnes.</value>
   </data>
   <data name="AboutDropColumns_column_name" xml:space="preserve">
     <value>Nom d’une colonne à supprimer.</value>
@@ -2638,7 +2638,7 @@
     
   </data>
   <data name="AboutShowColumns_source" xml:space="preserve">
-    <value>Valeur de table dont supprimer des colonnes.</value>
+    <value>Table pour laquelle supprimer des colonnes.</value>
   </data>
   <data name="AboutShowColumns_column_name" xml:space="preserve">
     <value>Nom d’une colonne à conserver.</value>

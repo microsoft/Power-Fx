@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.PowerFx.Core.Errors;
+using Microsoft.PowerFx.Core.Logging;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Syntax.SourceInformation;
@@ -72,5 +73,13 @@ namespace Microsoft.PowerFx
             err.FormatCore(sb);            
             return $"Err#{++i} {sb}";
         }));
+
+        /// <summary>
+        /// Converts the current formula into an anonymized format suitable for logging.
+        /// </summary>
+        public string GetAnonymizedFormula()
+        {
+            return StructuralPrint.Print(Root);
+        }
     }
 }
