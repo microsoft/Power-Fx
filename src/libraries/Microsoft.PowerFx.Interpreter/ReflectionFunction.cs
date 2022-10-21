@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Numerics;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -25,6 +26,8 @@ namespace Microsoft.PowerFx
     internal class CustomTexlFunction : TexlFunction
     {
         public Func<IServiceProvider, FormulaValue[], CancellationToken, Task<FormulaValue>> _impl;
+
+        internal BigInteger LamdaParamMask;
 
         public override bool SupportsParamCoercion => true;
 
@@ -53,6 +56,11 @@ namespace Microsoft.PowerFx
         public virtual Task<FormulaValue> InvokeAsync(IServiceProvider serviceProvider, FormulaValue[] args, CancellationToken cancellationToken)
         {
             return _impl(serviceProvider, args, cancellationToken);
+        }
+
+        public override bool IsLazyEvalParam(int index)
+        {
+            return LamdaParamMask.TestBit(index);
         }
     }
 
@@ -188,6 +196,8 @@ namespace Microsoft.PowerFx
             public MethodInfo _method;
 
             public bool _isAsync;
+
+            public BigInteger LamdaParamMask;
         }
 
         private FunctionDescr Scan()
@@ -235,6 +245,11 @@ namespace Microsoft.PowerFx
                     else if (parameters[i].ParameterType == typeof(CancellationToken) && info._isAsync)
                     {
                         throw new InvalidOperationException($"Cancellation token must be the last argument.");
+                    }
+                    else if (parameters[i].ParameterType == typeof(Func<Task<BooleanValue>>))
+                    {
+                        info.LamdaParamMask = info.LamdaParamMask | BigInteger.One << i;
+                        paramTypes.Add(FormulaType.Boolean);
                     }
                     else
                     { 
@@ -288,7 +303,8 @@ namespace Microsoft.PowerFx
 
             return new CustomTexlFunction(info.Name, info.RetType, info.ParamTypes)
             {
-                _impl = (runtimeConfig, args, cancellationToken) => InvokeAsync(runtimeConfig, args, cancellationToken)
+                _impl = (runtimeConfig, args, cancellationToken) => InvokeAsync(runtimeConfig, args, cancellationToken),
+                LamdaParamMask = info.LamdaParamMask,
             };
         }
 
@@ -317,7 +333,15 @@ namespace Microsoft.PowerFx
 
             foreach (var arg in args)
             {
-                args2.Add(arg);
+                if (arg is LambdaFormulaValue lambda)
+                {
+                    var argLambda = async () => (BooleanValue)(await lambda.EvalAsync(lambda.Runner, lambda.Context));
+                    args2.Add(argLambda);
+                }
+                else
+                {
+                    args2.Add(arg);
+                }
             }
 
             if (_info._isAsync)

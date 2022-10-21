@@ -15,12 +15,23 @@ namespace Microsoft.PowerFx.Types
     {
         private readonly IntermediateNode _tree;
 
+        internal EvalVisitor Runner { get; }
+
+        internal EvalVisitorContext Context { get; }
+
         // Lambdas don't get a special type. 
         // Type is the type the lambda evaluates too. 
         public LambdaFormulaValue(IRContext irContext, IntermediateNode node)
+            : this(irContext, node, null, null)
+        {
+        }
+
+        public LambdaFormulaValue(IRContext irContext, IntermediateNode node, EvalVisitor visitor, EvalVisitorContext? context)
             : base(irContext)
         {
             _tree = node;
+            Runner = visitor;
+            Context = context ?? default;
         }
 
         public async ValueTask<FormulaValue> EvalAsync(EvalVisitor runner, EvalVisitorContext context)

@@ -222,7 +222,7 @@ namespace Microsoft.PowerFx
                 }
                 else
                 {
-                    args[i] = new LambdaFormulaValue(node.IRContext, child);
+                    args[i] = new LambdaFormulaValue(node.IRContext, child, this, context);
                 }
             }
 
