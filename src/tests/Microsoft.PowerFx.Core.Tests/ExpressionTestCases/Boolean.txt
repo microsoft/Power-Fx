@@ -1,4 +1,4 @@
-﻿>> Boolean("true")
+>> Boolean("true")
 true
 
 >> Boolean("false")
@@ -35,7 +35,7 @@ Blank()
 #Error(Kind=InvalidArgument)
 
 >> Boolean(["true", "True", "TRUE", "false", "False", "FALSE"])
-[true,true,true,false,false,false]
+Table({Value:true},{Value:true},{Value:true},{Value:false},{Value:false},{Value:false})
 
 >> Boolean(0)
 false
@@ -47,7 +47,7 @@ true
 true
 
 >> Boolean([0, 1, 2])
-[false,true,true]
+Table({Value:false},{Value:true},{Value:true})
 
 >> Boolean([])
 Errors: Error 0-11: The function 'Boolean' has some invalid arguments.|Error 8-10: Invalid schema, expected a one-column table.

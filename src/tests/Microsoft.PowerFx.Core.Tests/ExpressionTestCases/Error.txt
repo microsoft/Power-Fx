@@ -1,4 +1,4 @@
-﻿>> 1/0
+>> 1/0
 #Error(Kind=Div0)
 
 >> Sqrt(-1)
@@ -89,4 +89,4 @@ Errors: Error 6-25: Invalid argument type. Expecting a Record value, but of a di
 #Error(Kind=Numeric,Custom)
 
 >> ForAll(Len(["abc", Error("lorem ipsum"), Sqrt(-1)+"", "hello"]), IfError(Result, -FirstError.Kind))
-[3,-1000,-24,5]
+Table({Value:3},{Value:-1000},{Value:-24},{Value:5})

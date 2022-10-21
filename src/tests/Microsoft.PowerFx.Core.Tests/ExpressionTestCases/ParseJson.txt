@@ -1,4 +1,4 @@
-﻿// Value tests
+// Value tests
 >> Value(Index(ParseJSON("[5]"), 1))
 5
 
@@ -91,7 +91,7 @@ Blank()
 15
 
 >> ForAll(ParseJSON("[5, 6, 7]"), Value(ThisRecord))
-[5,6,7]
+Table({Value:5},{Value:6},{Value:7})
 
 >> ForAll(ParseJSON("5"), Value(ThisRecord))
 #Error(Kind=InvalidArgument)
@@ -103,25 +103,25 @@ Blank()
 Blank()
 
 >> ForAll(ParseJSON("[null, null, null]"), Value(ThisRecord))
-[Blank(),Blank(),Blank()]
+Table({Value:Blank()},{Value:Blank()},{Value:Blank()})
 
 >> ForAll(ParseJSON("[5, null, 7]"), Value(ThisRecord))
-[5,Blank(),7]
+Table({Value:5},{Value:Blank()},{Value:7})
 
 >> ForAll(ParseJSON("[""hi"", null, ""hello""]"), Text(ThisRecord))
-["hi",Blank(),"hello"]
+Table({Value:"hi"},{Value:Blank()},{Value:"hello"})
 
 >> ForAll(ParseJSON("[true, null, false]"), Boolean(ThisRecord))
-[true,Blank(),false]
+Table({Value:true},{Value:Blank()},{Value:false})
 
 >> ForAll(ParseJSON("[""2011-01-15"", null]"), Text(DateValue(ThisRecord), "yyyy-MM-dd"))
-["2011-01-15",""]
+Table({Value:"2011-01-15"},{Value:""})
 
 >> ForAll(ParseJSON("[""08:03:05.000"", null]"), Text(TimeValue(ThisRecord), "HH:mm:ss"))
-["08:03:05",""]
+Table({Value:"08:03:05"},{Value:""})
 
 >> ForAll(ParseJSON("[""5cc45615-f759-4a53-b225-d3a2497f60ad"", null]"), GUID(ThisRecord))
-[GUID("5cc45615-f759-4a53-b225-d3a2497f60ad"),Blank()]
+Table({Value:GUID("5cc45615-f759-4a53-b225-d3a2497f60ad")},{Value:Blank()})
 
 >> ForAll(ParseJSON("[1]"), Value(ThisRecord) / 0)
 #Error
@@ -136,7 +136,7 @@ Blank()
 18
 
 >> ForAll(ParseJSON("[1,{""a"":false},""hello""]"), IfError(Text(ThisRecord), IfError(Text(Value(ThisRecord)), Text(Boolean(ThisRecord.a)))))
-["1","false","hello"]
+Table({Value:"1"},{Value:"false"},{Value:"hello"})
 
 >> ForAll(ParseJSON("[1,true,3,false]"), Value(ThisRecord))
 #Error

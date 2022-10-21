@@ -1,7 +1,7 @@
-﻿#SETUP: ConsistentOneColumnTableResult
+#SETUP: ConsistentOneColumnTableResult
 
 >> Concatenate("777", ["abc"], ["1", "2"])
-["777abc1",Microsoft.PowerFx.Types.ErrorValue]
+Table({Value:"777abc1"},{Value:Microsoft.PowerFx.Types.ErrorValue})
 
 >> Concatenate("777", Filter(["empty table"], Value <> Value), ["1", "2"])
-[Microsoft.PowerFx.Types.ErrorValue,Microsoft.PowerFx.Types.ErrorValue]
+Table({Value:Microsoft.PowerFx.Types.ErrorValue},{Value:Microsoft.PowerFx.Types.ErrorValue})

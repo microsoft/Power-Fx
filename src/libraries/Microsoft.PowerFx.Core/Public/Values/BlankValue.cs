@@ -32,6 +32,12 @@ namespace Microsoft.PowerFx.Types
 
         public override void ToExpression(StringBuilder sb, FormulaValueSerializerSettings settings)
         {
+            if (settings.Compact)
+            {
+                sb.Append(new BlankType().DefaultExpressionValue());
+                return;
+            }
+
             if (Type is BlankType)
             {
                 Type.DefaultExpressionValue(sb);

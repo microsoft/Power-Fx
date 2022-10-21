@@ -1,4 +1,4 @@
-﻿>> Last([1, 2, 3, 4, 5])
+>> Last([1, 2, 3, 4, 5])
 {Value:5}
 
 >> Last(Blank())
@@ -14,19 +14,19 @@ Blank()
 #Error
 
 >> LastN([1, 2, 3, 4, 5], 2)
-[4,5]
+Table({Value:4},{Value:5})
 
 >> LastN([1, 2, 3, 4, 5])
-[5]
+Table({Value:5})
 
 >> LastN([1, 2, 3, 4, 5], 6)
-[1,2,3,4,5]
+Table({Value:1},{Value:2},{Value:3},{Value:4},{Value:5})
 
 >> LastN([1, 2, 3, 4, 5], -1)
-[]
+Table()
 
 >> LastN([1, 2, 3, 4, 5], Blank())
-[]
+Table()
 
 >> LastN(Blank(), 2)
 Blank()
@@ -54,4 +54,4 @@ Table({Value:2,Zulu:2},{Value:3,Zulu:3})
 Blank()
 
 >> LastN(Filter([1,2,3],Value=4),2)
-[]
+Table()

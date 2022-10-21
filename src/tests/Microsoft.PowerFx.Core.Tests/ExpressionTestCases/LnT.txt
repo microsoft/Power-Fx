@@ -1,5 +1,5 @@
 >> Ln([1, true])
-[0,0]
+Table({Value:0},{Value:0})
 
 >> Ln(Table({a: Exp(22)}, {a: Exp(-33)}))
 Table({a:22},{a:-33})

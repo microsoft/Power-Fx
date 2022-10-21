@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Types;
@@ -76,6 +77,12 @@ namespace Microsoft.PowerFx.Types
         public override void ToExpression(StringBuilder sb, FormulaValueSerializerSettings settings)
         {            
             var flag = true;
+
+            if (settings.Compact && _errors.Count == 1)
+            {
+                sb.Append(this);
+                return;
+            }
 
             sb.Append("Error(Table(");
 

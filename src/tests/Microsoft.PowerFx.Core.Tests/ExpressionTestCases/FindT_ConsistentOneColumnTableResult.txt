@@ -1,4 +1,4 @@
-﻿#SETUP: ConsistentOneColumnTableResult
+#SETUP: ConsistentOneColumnTableResult
 
 >> Find(Blank(), [""], [1])
 Errors: Error 0-24: The function 'Find' has some invalid arguments.|Error 14-18: Invalid argument type (Table). Expecting a Text value instead.|Error 20-23: Invalid argument type (Table). Expecting a Number value instead.
@@ -22,13 +22,13 @@ Blank()
 Blank()
 
 >> Find(["b"], ["abc", "cde"])
-[2,Microsoft.PowerFx.Types.ErrorValue]
+Table({Value:2},{Value:Microsoft.PowerFx.Types.ErrorValue})
 
 >> Find(["b"], ["abc", "cde"], If(false, [0], Blank()))
 Blank()
 
 >> Find(["b"], ["abc", "cde"], Filter([0], Value <> Value))
-[Microsoft.PowerFx.Types.ErrorValue,Microsoft.PowerFx.Types.ErrorValue]
+Table({Value:Microsoft.PowerFx.Types.ErrorValue},{Value:Microsoft.PowerFx.Types.ErrorValue})
 
 >> Find([Blank(), "", ","], If(false, ["blank table"], Blank()), [1, 2, 3])
 Blank()
@@ -40,22 +40,22 @@ Blank()
 Blank()
 
 >> Find([Blank(), "", ","], "textToBeSearchedIn,textToBeSearchedIn", 1)
-[1,1,19]
+Table({Value:1},{Value:1},{Value:19})
 
 >> Find([Blank(), "", ",", ","], "textToBeSearchedIn,textToBeSearchedIn", [1, 2, 3, 20])
-[1,2,19,Blank()]
+Table({Value:1},{Value:2},{Value:19},{Value:Blank()})
 
 >> Find(",", ["textToBeSearchedIn,textToBeSearchedIn"], 1)
-[19]
+Table({Value:19})
 
 >> Find(",", ["textToBeSearchedIn,textToBeSearchedIn", "textToBeSearchedIn,textToBeSearchedIn,", "textToBeSearchedIn,textToBeSearchedIn"], [1, 20, 40])
-[19,38,Microsoft.PowerFx.Types.ErrorValue]
+Table({Value:19},{Value:38},{Value:Microsoft.PowerFx.Types.ErrorValue})
 
 >> Find([Blank(), "", ","], ["textToBeSearchedIn,textToBeSearchedIn", "textToBeSearchedIn,textToBeSearchedIn,", "textToBeSearchedIn,textToBeSearchedIn"], [1, 10, 9])
-[1,10,19]
+Table({Value:1},{Value:10},{Value:19})
 
 >> Find(",", "textToBeSearchedIn,textToBeSearchedIn", [1, 2, 19, 20])
-[19,19,19,Blank()]
+Table({Value:19},{Value:19},{Value:19},{Value:Blank()})
 
 >> Find([Blank(), "", ","], If(false, ["blank table"], Blank()))
 Blank()
@@ -64,82 +64,82 @@ Blank()
 Blank()
 
 >> Find([Blank(), "", ","], "textToBeSearchedIn,textToBeSearchedIn")
-[1,1,19]
+Table({Value:1},{Value:1},{Value:19})
 
 >> Find(",", ["textToBeSearchedIn,textToBeSearchedIn"])
-[19]
+Table({Value:19})
 
 >> Find([Blank(), "", ","], ["textToBeSearchedIn,textToBeSearchedIn", "textToBeSearchedIn,textToBeSearchedIn,", "textToBeSearchedIn,textToBeSearchedIn"])
-[1,1,19]
+Table({Value:1},{Value:1},{Value:19})
 
 >> Find([Blank(), ","], ["lastName,firstName", "lastName,firstName,", "lastName,firstName", Blank()])
-[1,9,Microsoft.PowerFx.Types.ErrorValue,Microsoft.PowerFx.Types.ErrorValue]
+Table({Value:1},{Value:9},{Value:Microsoft.PowerFx.Types.ErrorValue},{Value:Microsoft.PowerFx.Types.ErrorValue})
 
 >> Find([Blank(), ",", "", "findMe"], [Blank(), "lastName,firstName"])
-[1,9,Microsoft.PowerFx.Types.ErrorValue,Microsoft.PowerFx.Types.ErrorValue]
+Table({Value:1},{Value:9},{Value:Microsoft.PowerFx.Types.ErrorValue},{Value:Microsoft.PowerFx.Types.ErrorValue})
 
 >> Find([Blank(), ","], ["lastName,firstName",], [9, 2, 3])
-[9,Microsoft.PowerFx.Types.ErrorValue,Microsoft.PowerFx.Types.ErrorValue]
+Table({Value:9},{Value:Microsoft.PowerFx.Types.ErrorValue},{Value:Microsoft.PowerFx.Types.ErrorValue})
 
 >> Find([Blank(), ",", "", "findMe"], [Blank(), "lastName,firstName"], 10)
-[Microsoft.PowerFx.Types.ErrorValue,Blank(),Microsoft.PowerFx.Types.ErrorValue,Microsoft.PowerFx.Types.ErrorValue]
+Table({Value:Microsoft.PowerFx.Types.ErrorValue},{Value:Blank()},{Value:Microsoft.PowerFx.Types.ErrorValue},{Value:Microsoft.PowerFx.Types.ErrorValue})
 
 >> Find([",", Blank()], "lastName,firstName", [1, 2, 3])
-[9,2,Microsoft.PowerFx.Types.ErrorValue]
+Table({Value:9},{Value:2},{Value:Microsoft.PowerFx.Types.ErrorValue})
 
 >> Find(",", [Blank(), "lastName,firstName", "lastName,firstName"], [1, 2])
-[Blank(),9,Microsoft.PowerFx.Types.ErrorValue]
+Table({Value:Blank()},{Value:9},{Value:Microsoft.PowerFx.Types.ErrorValue})
 
 >> Find(Filter(["empty table"], Value <> Value), "", 1)
-[]
+Table()
 
 >> Find("", Filter(["empty table"], Value <> Value), 1)
-[]
+Table()
 
 >> Find("textToFind", Filter(["empty table"], Value <> Value), 2)
-[]
+Table()
 
 >> Find(Filter(["empty table"], Value <> Value), Filter(["empty table"], Value <> Value))
-[]
+Table()
 
 >> Find(Filter(["empty table"], Value <> Value), Filter(["empty table"], Value <> Value), Filter(["empty table"], Value <> Value))
-[]
+Table()
 
 >> Find(Filter(["empty table"], Value <> Value), [Blank(), "lastName,firstName", "lastName,firstName"], 2)
-[Microsoft.PowerFx.Types.ErrorValue,Microsoft.PowerFx.Types.ErrorValue,Microsoft.PowerFx.Types.ErrorValue]
+Table({Value:Microsoft.PowerFx.Types.ErrorValue},{Value:Microsoft.PowerFx.Types.ErrorValue},{Value:Microsoft.PowerFx.Types.ErrorValue})
 
 >> Find(Filter(["empty table"], Value <> Value), "textToSearch", [1, 2])
-[Microsoft.PowerFx.Types.ErrorValue,Microsoft.PowerFx.Types.ErrorValue]
+Table({Value:Microsoft.PowerFx.Types.ErrorValue},{Value:Microsoft.PowerFx.Types.ErrorValue})
 
 >> Find([",", Blank(), ""], Filter(["empty table"], Value <> Value), 2)
-[Microsoft.PowerFx.Types.ErrorValue,Microsoft.PowerFx.Types.ErrorValue,Microsoft.PowerFx.Types.ErrorValue]
+Table({Value:Microsoft.PowerFx.Types.ErrorValue},{Value:Microsoft.PowerFx.Types.ErrorValue},{Value:Microsoft.PowerFx.Types.ErrorValue})
 
 >> Find(",", Filter(["empty table"], Value <> Value), [1, 1])
-[Microsoft.PowerFx.Types.ErrorValue,Microsoft.PowerFx.Types.ErrorValue]
+Table({Value:Microsoft.PowerFx.Types.ErrorValue},{Value:Microsoft.PowerFx.Types.ErrorValue})
 
 >> Find([Blank(), ",", "", "findMe"], [Blank(), "lastName,firstName", "lastName,firstName"], Filter(["empty table"], Value <> Value))
-[Microsoft.PowerFx.Types.ErrorValue,Microsoft.PowerFx.Types.ErrorValue,Microsoft.PowerFx.Types.ErrorValue,Microsoft.PowerFx.Types.ErrorValue]
+Table({Value:Microsoft.PowerFx.Types.ErrorValue},{Value:Microsoft.PowerFx.Types.ErrorValue},{Value:Microsoft.PowerFx.Types.ErrorValue},{Value:Microsoft.PowerFx.Types.ErrorValue})
 
 >> Find(",", [Blank(), "lastName,firstName"], Filter(["empty table"], Value <> Value))
-[Microsoft.PowerFx.Types.ErrorValue,Microsoft.PowerFx.Types.ErrorValue]
+Table({Value:Microsoft.PowerFx.Types.ErrorValue},{Value:Microsoft.PowerFx.Types.ErrorValue})
 
 >> Find("c", Table({ within: "abc" }, { within: Error({Kind: ErrorKind.Validation}) }, { within: "cde" }))
-[3,Microsoft.PowerFx.Types.ErrorValue,1]
+Table({Value:3},{Value:Microsoft.PowerFx.Types.ErrorValue},{Value:1})
 
 >> Find("c", ["abc", Error({Kind: ErrorKind.Validation}), "cde"])
-[3,Microsoft.PowerFx.Types.ErrorValue,1]
+Table({Value:3},{Value:Microsoft.PowerFx.Types.ErrorValue},{Value:1})
 
 >> Find(Table({ find: "a" }, { find: Error({Kind: ErrorKind.Validation}) }, { find: "b" }), "abc")
-[1,Microsoft.PowerFx.Types.ErrorValue,2]
+Table({Value:1},{Value:Microsoft.PowerFx.Types.ErrorValue},{Value:2})
 
 >> Find(["a", Error({Kind: ErrorKind.Validation}), "b"], "abc")
-[1,Microsoft.PowerFx.Types.ErrorValue,2]
+Table({Value:1},{Value:Microsoft.PowerFx.Types.ErrorValue},{Value:2})
 
 >> Find(Table({ find: "a" }, { find: Mid("Hello", -1) }, { find: "b" }, If(1/0>2, { find: "e" }), { find: "c" }), Table({ within: "abc" }, If(Sqrt(-1)<0, { within: "err" }), { within: Left("err", -1) }, If(Right("err", -3) = "err", { within: "err" }), { within: "abc" }))
 Table({Value:1},Microsoft.PowerFx.Types.ErrorValue,{Value:Microsoft.PowerFx.Types.ErrorValue},Microsoft.PowerFx.Types.ErrorValue,{Value:3})
 
 >> Find(Table({ find: "a" }, { find: "b" }, { find: "c" }), If(1/0>2,"abcdef"))
-[Microsoft.PowerFx.Types.ErrorValue,Microsoft.PowerFx.Types.ErrorValue,Microsoft.PowerFx.Types.ErrorValue]
+Table({Value:Microsoft.PowerFx.Types.ErrorValue},{Value:Microsoft.PowerFx.Types.ErrorValue},{Value:Microsoft.PowerFx.Types.ErrorValue})
 
 >> Find(If(Sqrt(-1)<0,"First second third"), Table({ within: "First" }, { within: "Second" }))
-[Microsoft.PowerFx.Types.ErrorValue,Microsoft.PowerFx.Types.ErrorValue]
+Table({Value:Microsoft.PowerFx.Types.ErrorValue},{Value:Microsoft.PowerFx.Types.ErrorValue})

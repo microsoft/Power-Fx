@@ -1,4 +1,4 @@
-﻿>> First([1, 2, 3, 4, 5])
+>> First([1, 2, 3, 4, 5])
 {Value:1}
 
 >> First(Blank())
@@ -14,22 +14,22 @@ Blank()
 #Error
 
 >> FirstN([1, 2, 3, 4, 5], 2)
-[1,2]
+Table({Value:1},{Value:2})
 
 >> FirstN([1, 2, 3, 4, 5], 1)
-[1]
+Table({Value:1})
 
 >> FirstN([1, 2, 3, 4, 5])
-[1]
+Table({Value:1})
 
 >> FirstN([1, 2, 3, 4, 5], 6)
-[1,2,3,4,5]
+Table({Value:1},{Value:2},{Value:3},{Value:4},{Value:5})
 
 >> FirstN([1, 2, 3, 4, 5], -1)
-[]
+Table()
 
 >> FirstN([1, 2, 3, 4, 5], Blank())
-[]
+Table()
 
 >> FirstN(Blank(), 2)
 Blank()
@@ -68,4 +68,4 @@ Blank()
 Blank()
 
 >> FirstN(Filter([1,2,3],Value=4),2)
-[]
+Table()

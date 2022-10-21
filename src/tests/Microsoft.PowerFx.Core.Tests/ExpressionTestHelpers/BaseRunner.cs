@@ -4,6 +4,7 @@
 using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -303,7 +304,16 @@ namespace Microsoft.PowerFx.Core.Tests
             }
             else
             {
-                var actualStr = TestRunner.TestToString(result);
+                var sb = new StringBuilder();
+
+                var settings = new FormulaValueSerializerSettings()
+                {
+                    Compact = true,
+                };
+
+                result.ToExpression(sb, settings);
+
+                var actualStr = sb.ToString();
 
                 if (string.Equals(expected, actualStr, StringComparison.Ordinal))
                 {

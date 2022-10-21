@@ -1,11 +1,11 @@
-﻿>> Abs(1/0)
+>> Abs(1/0)
 #Error(Kind=Div0)
 
 >> Abs(If(1/0<2,[1]))
 #Error(Kind=Div0)
 
 >> ForAll(Abs([0, -1, 1/0, 1, If(Char(0) = "a",-1)]), IfError(Value, -FirstError.Kind))
-[0,1,-13,1,-25]
+Table({Value:0},{Value:1},{Value:-13},{Value:1},{Value:-25})
 
 >> Acos(2)
 #Error(Kind=Numeric)
@@ -60,13 +60,13 @@
 #Error(Kind=Div0)
 
 >> ForAll(Boolean(["true", "not bool", "false"]), IfError(Text(Value), $"ErrorKind={FirstError.Kind}"))
-["true","ErrorKind=25","false"]
+Table({Value:"true"},{Value:"ErrorKind=25"},{Value:"false"})
 
 >> Boolean(Sqrt(-1))
 #Error(Kind=Numeric)
 
 >> ForAll(Boolean([3, 1/0, 0, Sqrt(-1)]), IfError(Text(Value), $"ErrorKind={FirstError.Kind}"))
-["true","ErrorKind=13","false","ErrorKind=24"]
+Table({Value:"true"},{Value:"ErrorKind=13"},{Value:"false"},{Value:"ErrorKind=24"})
 
 >> Boolean(ParseJSON("1"))
 #Error(Kind=InvalidArgument)
@@ -94,7 +94,7 @@
 
 // Needs updating for consistent schema flag
 >> ForAll(Char([65, -1, 97, 1000]), IfError(Result, Text(FirstError.Kind)))
-["A","25","a","25"]
+Table({Value:"A"},{Value:"25"},{Value:"a"},{Value:"25"})
 
 >> Concatenate("Hello", If(1/0,"div0"), "world", If(Sqrt(-1)<0,"sqrt"))
 #Error(Kind=Div0,Numeric)
@@ -211,7 +211,7 @@
 #Error(Kind=Div0)
 
 >> ForAll(Exp([0, 1000000000, 0, 1/0, 0, If(Char(0) = "a",-1)]), IfError(Value, -FirstError.Kind))
-[1,-24,1,-13,1,-25]
+Table({Value:1},{Value:-24},{Value:1},{Value:-13},{Value:1},{Value:-25})
 
 >> Filter(If(1/0<2,[1,2,3]), Value = Value)
 #Error(Kind=Div0)
@@ -314,7 +314,7 @@ true
 #Error(Kind=Div0)
 
 >> ForAll(Int([0.3, -1.2, 1/0, 1.1, If(Char(0) = "a",-1)]), IfError(Value, -FirstError.Kind))
-[0,-2,-13,1,-25]
+Table({Value:0},{Value:-2},{Value:-13},{Value:1},{Value:-25})
 
 >> Index(If(1/0<2,[1,2,3]),Sqrt(-1))
 #Error(Kind=Div0,Numeric)
@@ -357,7 +357,7 @@ true
 
 // Needs updating for consistent schema flag
 >> ForAll(Len(["abc", 1/0, Sqrt(-1)+"", "hello"]), IfError(Result, -FirstError.Kind))
-[3,-13,-24,5]
+Table({Value:3},{Value:-13},{Value:-24},{Value:5})
 
 >> Ln(0)
 #Error(Kind=Numeric)
@@ -369,7 +369,7 @@ true
 #Error(Kind=Div0)
 
 >> ForAll(Ln([1, -1, 1, 1/0, 1, If(Char(0) = "a",-1)]), IfError(Value, -FirstError.Kind))
-[0,-24,0,-13,0,-25]
+Table({Value:0},{Value:-24},{Value:0},{Value:-13},{Value:0},{Value:-25})
 
 >> Log(0)
 #Error(Kind=Numeric)
@@ -529,7 +529,7 @@ true
 #Error(Kind=Div0)
 
 >> ForAll(Sqrt([1, -2, 4, 1/0, 9, If(Char(0) = "a",-1)]), IfError(Value, -FirstError.Kind))
-[1,-24,2,-13,3,-25]
+Table({Value:1},{Value:-24},{Value:2},{Value:-13},{Value:3},{Value:-25})
 
 >> StartsWith(Char(-4), If(1/0<2,"."))
 #Error(Kind=InvalidArgument,Div0)

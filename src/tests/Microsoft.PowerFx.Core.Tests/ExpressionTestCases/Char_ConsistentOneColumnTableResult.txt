@@ -1,15 +1,15 @@
-﻿#SETUP: ConsistentOneColumnTableResult
+#SETUP: ConsistentOneColumnTableResult
 
 >> Char([36,37])
-["$","%"]
+Table({Value:"$"},{Value:"%"})
 
 >> Char(Table({a:72},{a:101},{a:108},{a:108},{a:111}))
-["H","e","l","l","o"]
+Table({Value:"H"},{Value:"e"},{Value:"l"},{Value:"l"},{Value:"o"})
 
 >> Char([87, 111, 114, 108, 100])
-["W","o","r","l","d"]
+Table({Value:"W"},{Value:"o"},{Value:"r"},{Value:"l"},{Value:"d"})
 
 // ******** OUT-OF-RANGE PARAMETERS: Parameters outside range of 1 - 255 ********
 
 >> Char(Table({a:32},{a:257},{a:65},{a:Blank()},{a:97}))
-[" ",Microsoft.PowerFx.Types.ErrorValue,"A",Microsoft.PowerFx.Types.ErrorValue,"a"]
+Table({Value:" "},{Value:Microsoft.PowerFx.Types.ErrorValue},{Value:"A"},{Value:Microsoft.PowerFx.Types.ErrorValue},{Value:"a"})

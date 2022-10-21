@@ -1,4 +1,4 @@
-﻿>> AddColumns([1,2,3,4,5], "Double", Value * 2)
+>> AddColumns([1,2,3,4,5], "Double", Value * 2)
 Table({Double:2,Value:1},{Double:4,Value:2},{Double:6,Value:3},{Double:8,Value:4},{Double:10,Value:5})
 
 >> AddColumns([1,2,3,4,5], "Blanks", Blank())
@@ -17,4 +17,4 @@ Table()
 Blank()
 
 >> AddColumns([], "Value", 1)
-[]
+Table()

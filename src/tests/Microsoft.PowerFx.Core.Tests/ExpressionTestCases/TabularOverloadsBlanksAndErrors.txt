@@ -1,4 +1,4 @@
-﻿// *********** Single-argument functions ***********
+// *********** Single-argument functions ***********
 
 >> Abs(If(1/0<2,[1]))
 #Error(Kind=Div0)
@@ -7,7 +7,7 @@
 Blank()
 
 >> Abs(Filter([1,2,3], Value > 10))
-[]
+Table()
 
 >> Boolean(If(1/0<2,["true"]))
 #Error(Kind=Div0)
@@ -16,7 +16,7 @@ Blank()
 Blank()
 
 >> Boolean(Filter(["true","false"], Len(Value) > 10))
-[]
+Table()
 
 >> Boolean(If(1/0<2,[1]))
 #Error(Kind=Div0)
@@ -25,7 +25,7 @@ Blank()
 Blank()
 
 >> Boolean(Filter([1,2,3], Value > 10))
-[]
+Table()
 
 >> Char(If(1/0<2,[61]))
 #Error(Kind=Div0)
@@ -43,7 +43,7 @@ Table()
 Blank()
 
 >> Exp(Filter([1,2,3], Value > 10))
-[]
+Table()
 
 >> Int(If(1/0<2,[1]))
 #Error(Kind=Div0)
@@ -52,7 +52,7 @@ Blank()
 Blank()
 
 >> Int(Filter([1,2,3], Value > 10))
-[]
+Table()
 
 >> Len(If(1/0<2,["true"]))
 #Error(Kind=Div0)
@@ -70,7 +70,7 @@ Table()
 Blank()
 
 >> Ln(Filter([1,2,3], Value > 10))
-[]
+Table()
 
 >> Sqrt(If(1/0<2,[1]))
 #Error(Kind=Div0)
@@ -79,7 +79,7 @@ Blank()
 Blank()
 
 >> Sqrt(Filter([1,2,3], Value > 10))
-[]
+Table()
 
 // *********** 2+-argument functions, errors ***********
 
@@ -138,13 +138,13 @@ Table({Result:38},{Result:11},{Result:8},{Result:Microsoft.PowerFx.Types.ErrorVa
 #Error(Kind=Numeric)
 
 >> Round([12.34, 56.78], 1/0)
-[Microsoft.PowerFx.Types.ErrorValue,Microsoft.PowerFx.Types.ErrorValue]
+Table({Value:Microsoft.PowerFx.Types.ErrorValue},{Value:Microsoft.PowerFx.Types.ErrorValue})
 
 >> Round(Sqrt(-1), [1, 2, 3])
 Table({Result:Microsoft.PowerFx.Types.ErrorValue},{Result:Microsoft.PowerFx.Types.ErrorValue},{Result:Microsoft.PowerFx.Types.ErrorValue})
 
 >> Round([123.456, 234.567], [1, 2, 3])
-[123.5,234.57,Microsoft.PowerFx.Types.ErrorValue]
+Table({Value:123.5},{Value:234.57},{Value:Microsoft.PowerFx.Types.ErrorValue})
 
 >> Concat(Round([12.34, 56.78], 1/0), IfError(Text(Value), $"Error(Kind={FirstError.Kind})"), ", ")
 "Error(Kind=13), Error(Kind=13)"
@@ -188,7 +188,7 @@ Blank()
 Blank()
 
 >> Round([12.34, 56.78], If(1<0,1))
-[12,57]
+Table({Value:12},{Value:57})
 
 >> Round(If(1<0,2), [1, 2, 3])
 Table({Result:0},{Result:0},{Result:0})
@@ -208,7 +208,7 @@ Table()
 Table()
 
 >> Round(Filter([12.34, 56.78], Value > 100), 1)
-[]
+Table()
 
 >> Round(1234.5678, Filter([1, 2, 3], Value > 10))
 Table()

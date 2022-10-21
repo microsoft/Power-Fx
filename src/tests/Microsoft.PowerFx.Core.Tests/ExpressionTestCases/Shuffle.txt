@@ -2,16 +2,16 @@
 5
 
 >> Sort(Shuffle([-2, -1, 5, 1, 2]), Value)
-[-2,-1,1,2,5]
+Table({Value:-2},{Value:-1},{Value:1},{Value:2},{Value:5})
 
 >> CountRows(Shuffle([1, 1]))
 2
 
 >> Sort(Shuffle([1, 1]), Value)
-[1,1]
+Table({Value:1},{Value:1})
 
 >> Sort(Shuffle(["b", "a"]), Value)
-["a","b"]
+Table({Value:"a"},{Value:"b"})
 
 >> CountRows(Shuffle(["b", "a"]))
 2

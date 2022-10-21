@@ -1,5 +1,5 @@
 >> Exp([false, 0])
-[1,1]
+Table({Value:1},{Value:1})
 
 >> Exp(Table({a: Ln(3)}, {a: 0}))
 Table({a:3},{a:1})
@@ -11,4 +11,4 @@ Table({a:Microsoft.PowerFx.Types.ErrorValue},{a:0})
 Table({a:1},{a:2.71828},{a:7.38906})
 
 >> Round(Exp([10, 10000]), 5)
-[22026.46579,Microsoft.PowerFx.Types.ErrorValue]
+Table({Value:22026.46579},{Value:Microsoft.PowerFx.Types.ErrorValue})

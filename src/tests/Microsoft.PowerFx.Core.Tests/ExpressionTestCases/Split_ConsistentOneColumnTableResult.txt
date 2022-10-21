@@ -1,31 +1,31 @@
-﻿#SETUP: ConsistentOneColumnTableResult
+#SETUP: ConsistentOneColumnTableResult
 
 >> Split( "Hello, World", "," )
-["Hello"," World"]
+Table({Value:"Hello"},{Value:" World"})
 
 >> Split("this is a test", " ")
-["this","is","a","test"]
+Table({Value:"this"},{Value:"is"},{Value:"a"},{Value:"test"})
 
 >> Split("test", "")
-["t","e","s","t"]
+Table({Value:"t"},{Value:"e"},{Value:"s"},{Value:"t"})
 
 >> Split("Hello world", If(1 < 0, ""))
-["H","e","l","l","o"," ","w","o","r","l","d"]
+Table({Value:"H"},{Value:"e"},{Value:"l"},{Value:"l"},{Value:"o"},{Value:" "},{Value:"w"},{Value:"o"},{Value:"r"},{Value:"l"},{Value:"d"})
 
 >> Split( "Hello, World", "l" )
-["He","","o, Wor","d"]
+Table({Value:"He"},{Value:""},{Value:"o, Wor"},{Value:"d"})
 
 >> Split( "Hello, World", "ll" )
-["He","o, World"]
+Table({Value:"He"},{Value:"o, World"})
 
 >> Split( "Hello, World", "%" )
-["Hello, World"]
+Table({Value:"Hello, World"})
 
 >> Split("", "")
-[]
+Table()
 
 >> Split(If(1 < 0, ""), "")
-[]
+Table()
 
 >> Split(Text(1/0), "")
 #Error
