@@ -11,6 +11,7 @@ using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
@@ -336,17 +337,42 @@ namespace Microsoft.PowerFx
                 }
             }
 
-            foreach (var arg in args)
+            List<ErrorValue> errors = null;
+            for (var i = 0; i < args.Length; i++)
             {
-                if (arg is LambdaFormulaValue lambda)
+                if (args[i] is ErrorValue ev)
+                {
+                    if (errors == null)
+                    {
+                        errors = new List<ErrorValue>();
+                    }
+
+                    errors.Add(ev);
+                }
+                else if (args[i] is BlankValue && _info.ParamTypes[i] is NumberType)
+                {
+                    args[i] = FormulaValue.New(0);
+                    args2.Add(args[i]);
+                }
+                else if (args[i] is BlankValue && _info.ParamTypes[i] is StringType)
+                {
+                    args[i] = FormulaValue.New(string.Empty);
+                    args2.Add(args[i]);
+                }
+                else if (args[i] is LambdaFormulaValue lambda)
                 {
                     Func<Task<BooleanValue>> argLambda = async () => (BooleanValue)await lambda.EvalAsync();
                     args2.Add(argLambda);
                 }
                 else
                 {
-                    args2.Add(arg);
+                    args2.Add(args[i]);
                 }
+            }
+
+            if (errors != null)
+            {
+                return ErrorValue.Combine(IRContext.NotInSource(FormulaType.BindingError), errors);
             }
 
             if (_info._isAsync)
