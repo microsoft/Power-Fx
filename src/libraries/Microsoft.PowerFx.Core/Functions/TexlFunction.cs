@@ -1277,7 +1277,7 @@ namespace Microsoft.PowerFx.Core.Functions
                 {
                     if (fValid && nodeToCoercedTypeMap.Any())
                     {
-                        var resultColumnName = binding.Features.HasFlag(Features.ConsistentOneColumnTableResult)
+                        var resultColumnName = binding.CheckTypesContext.Features.HasFlag(Features.ConsistentOneColumnTableResult)
                             ? new DName(ColumnName_ValueStr)
                             : argTypes[i].GetNames(DPath.Root).Single().Name;
 
@@ -1285,7 +1285,7 @@ namespace Microsoft.PowerFx.Core.Functions
                     }
                     else
                     {
-                        returnType = binding.Features.HasFlag(Features.ConsistentOneColumnTableResult)
+                        returnType = binding.CheckTypesContext.Features.HasFlag(Features.ConsistentOneColumnTableResult)
                             ? DType.CreateTable(new TypedName(desiredType, new DName(ColumnName_ValueStr)))
                             : argTypes[i];
                     }

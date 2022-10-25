@@ -133,8 +133,6 @@ namespace Microsoft.PowerFx.Core.Binding
         /// </summary>
         internal static DName ThisRecordDefaultName => new DName("ThisRecord");
 
-        public Features Features { get; }
-
         // Property to which current rule is being bound to. It could be null in the absence of NameResolver.
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0025:Use expression body for properties", Justification = "n/a")]
         public IExternalControlProperty Property
@@ -204,6 +202,8 @@ namespace Microsoft.PowerFx.Core.Binding
 
         public BindingConfig BindingConfig { get; }
 
+        public CheckTypesContext CheckTypesContext { get; }
+
         public IExternalDocument Document => NameResolver?.Document;
 
         public bool AffectsAliases { get; private set; }
@@ -268,7 +268,6 @@ namespace Microsoft.PowerFx.Core.Binding
 
             BindingConfig = bindingConfig;
             QueryOptions = queryOptions;
-            Features = features;
             _glue = glue;
             Top = node;
             NameResolver = resolver;
@@ -327,6 +326,14 @@ namespace Microsoft.PowerFx.Core.Binding
 
             resolver?.TryGetCurrentControlProperty(out _property);
             _control = resolver?.CurrentEntity as IExternalControl;
+
+            CheckTypesContext = new CheckTypesContext(
+                features,
+                resolver,
+                entityName: EntityName,
+                propertyName: Property?.InvariantName ?? string.Empty,
+                isEnhancedDelegationEnabled: Document?.Properties?.EnabledFeatures?.IsEnhancedDelegationEnabled ?? false,
+                allowsSideEffects: bindingConfig.AllowsSideEffects);
         }
 
         // Binds a Texl parse tree.

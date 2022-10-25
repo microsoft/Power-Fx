@@ -19,7 +19,7 @@ namespace Microsoft.PowerFx.Core.Functions
         public const string ColumnName_SubMatchesStr = "SubMatches";
         public const string ColumnName_StartMatchStr = "StartMatch";
 
-        public static DName GetOneColumnTableResultName(TexlBinding binding) => GetOneColumnTableResultName(binding.Features);
+        public static DName GetOneColumnTableResultName(TexlBinding binding) => GetOneColumnTableResultName(binding.CheckTypesContext.Features);
 
         public static DName GetOneColumnTableResultName(Features f) => f.HasFlag(Features.ConsistentOneColumnTableResult) 
             ? new DName(ColumnName_ValueStr) 

@@ -486,7 +486,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                 if (fValid)
                 {
-                    var resultColumnType = binding.Features.HasFlag(Features.ConsistentOneColumnTableResult)
+                    var resultColumnType = binding.CheckTypesContext.Features.HasFlag(Features.ConsistentOneColumnTableResult)
                         ? ColumnName_Value
                         : type0.GetNames(DPath.Root).Single().Name;
                     returnType = DType.CreateTable(new TypedName(DType.DateTime, resultColumnType));

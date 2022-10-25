@@ -80,7 +80,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     // Ensure we have a one-column table of numerics
                     fValid &= CheckNumericColumnType(type0, args[0], errors, ref nodeToCoercedTypeMap);
 
-                    returnType = binding.Features.HasFlag(Features.ConsistentOneColumnTableResult)
+                    returnType = binding.CheckTypesContext.Features.HasFlag(Features.ConsistentOneColumnTableResult)
                         ? DType.CreateTable(new TypedName(DType.Number, new DName(ColumnName_ValueStr)))
                         : type0;
 
@@ -142,7 +142,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     // Ensure we have a one-column table of numerics
                     fValid &= CheckNumericColumnType(type0, args[0], errors, ref nodeToCoercedTypeMap);
 
-                    returnType = binding.Features.HasFlag(Features.ConsistentOneColumnTableResult)
+                    returnType = binding.CheckTypesContext.Features.HasFlag(Features.ConsistentOneColumnTableResult)
                         ? DType.CreateTable(new TypedName(DType.Number, new DName(ColumnName_ValueStr)))
                         : type0;
                 }

@@ -128,7 +128,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
             else
             {
-                returnType = binding.Features.HasFlag(Features.ConsistentOneColumnTableResult)
+                returnType = binding.CheckTypesContext.Features.HasFlag(Features.ConsistentOneColumnTableResult)
                 ? DType.CreateTable(new TypedName(DType.String, new DName(ColumnName_ValueStr)))
                 : argTypes[0];
             }
