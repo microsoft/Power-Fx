@@ -5,7 +5,7 @@ Table({Value:0},{Value:0})
 Table({a:22},{a:-33})
 
 >> Ln(Table({a: -57.88}, {a: 1/0}))
-Table({a:Microsoft.PowerFx.Types.ErrorValue},{a:Microsoft.PowerFx.Types.ErrorValue})
+Table({a:Error(Kind=Numeric)},{a:Error(Kind=Div0)})
 
 //Rounding values as the test runner returns a different precision for table inputs
 
@@ -13,4 +13,4 @@ Table({a:Microsoft.PowerFx.Types.ErrorValue},{a:Microsoft.PowerFx.Types.ErrorVal
 Table({a:1.60943791},{a:6.06378521},{a:0.85257108})
 
 >> Round(Ln(Table({a: "-10.123"}, {a: "10"})), 8)
-Table({a:Microsoft.PowerFx.Types.ErrorValue},{a:2.30258509})
+Table({a:Error(Kind=Numeric)},{a:2.30258509})

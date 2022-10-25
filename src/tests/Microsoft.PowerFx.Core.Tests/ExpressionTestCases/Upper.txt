@@ -63,7 +63,7 @@ true
 
 //Invalid operation: Division by zero
 >> Upper(1/0)
-#Error(Kind=Div0)
+Error(Kind=Div0)
 
 // ******** FUNCTION VALUE AS PARAMETERS ********
 

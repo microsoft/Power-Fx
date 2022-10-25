@@ -3,10 +3,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
+using Newtonsoft.Json.Linq;
 using Xunit;
 
 namespace Microsoft.PowerFx.Interpreter.Tests
@@ -30,26 +32,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     var dateTimeValue = FormulaValue.New(dt);
                     var dateTimeValueDeserialized = (DateTimeValue)engine.Eval(dateTimeValue.ToExpression());
 
-                    // !JYL! Comparing this way since PFx doesnt consider tick value
-                    var datetime1 = dateTimeValue.Value;
-                    var datetime2 = dateTimeValueDeserialized.Value;
-
-                    var timeSpan1 = datetime1.TimeOfDay;
-                    var timeSpan2 = datetime2.TimeOfDay;
-
-                    var equal = datetime1.Year == datetime2.Year && 
-                                datetime1.Month == datetime2.Month && 
-                                datetime1.Day == datetime2.Day;
-
-                    equal = equal && 
-                            timeSpan1.Hours == timeSpan2.Hours && 
-                            timeSpan1.Minutes == timeSpan2.Minutes && 
-                            timeSpan1.Seconds == timeSpan2.Seconds && 
-                            timeSpan1.Milliseconds == timeSpan2.Milliseconds;
-
-                    Assert.True(equal);
+                    Assert.Equal(dateTimeValue.Value, dateTimeValueDeserialized.Value);
                 }
-            }            
+            }
         }
     }
 }

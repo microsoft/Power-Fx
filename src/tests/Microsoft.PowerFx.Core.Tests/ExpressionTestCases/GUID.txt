@@ -11,23 +11,23 @@ GUID("c203b79b-b985-42f0-b523-c10eb64387c6")
 
 // Correct format, invalid chars
 >> GUID("5zz45615-f759-4a53-b225-d3a2497f60ad")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 // Dashes in wrong place
 >> GUID("5cc45615-f75-94a5-3b225d3a24-97f60ad")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 >> GUID(Text(1/0))
-#Error(Kind=Div0)
+Error(Kind=Div0)
 
 >> GUID(Blank())
 Blank()
 
 >> GUID("")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 >> GUID("shortstring")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 >> GUID("thisisastringthatismuchlongerthanaguidshouldbeitisquitealongstringandwillfinderrorswithlongstringsinthisfunction")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)

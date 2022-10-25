@@ -22,7 +22,7 @@ Blank()
 Blank()
 
 >> Find("#", "LastName,FirstName", 100)
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 >> Find(",", "LastName,First,Name")
 9
@@ -58,10 +58,10 @@ Blank()
 2
 
 >> Find(",", "LastName,FirstName", -1)
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 >> Find(",", "LastName,FirstName", 0)
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 >> Find("B", "LastNameisBiller")
 11
@@ -109,25 +109,25 @@ Blank()
 1
 
 >> Find("", "", -1)
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 >> Find("", "", 0)
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 >> Find("", "", 1)
 1
 
 >> Find("", "", 2)
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 >> Find("", "textToBeSearchedIn")
 1
 
 >> Find("", "textToBeSearchedIn", -1)
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 >> Find("", "textToBeSearchedIn", 0)
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 >> Find("", "textToBeSearchedIn", 1)
 1
@@ -136,37 +136,37 @@ Blank()
 4
 
 >> Find("", "textToBeSearchedIn", 100)
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 >> Find("textToFind", "")
 Blank()
 
 >> Find("textToFind", "",-1)
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 >> Find("textToFind", "",0)
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 >> Find("textToFind", "",1)
 Blank()
 
 >> Find("textToFind", "",2)
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 >> Find(Blank(), Blank())
 1
 
 >> Find(Blank(), Blank(), -1)
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 >> Find(Blank(), Blank(), 0)
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 >> Find(Blank(), Blank(), 1)
 1
 
 >> Find(Blank(), Blank(), 2)
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 >> Find(Blank(), "textToBeSearchedIn")
 1
@@ -178,7 +178,7 @@ Blank()
 Blank()
 
 >> Find("textToFind", Blank(), 3)
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 >> Find(Blank(), "")
 1
@@ -190,13 +190,13 @@ Blank()
 Blank()
 
 >> Find(1/0, "", 1)
-#Error(Kind=Div0)
+Error(Kind=Div0)
 
 >> Find(1, 1/0, 1)
-#Error(Kind=Div0)
+Error(Kind=Div0)
 
 >> Find(1, 1, 1/0)
-#Error(Kind=Div0)
+Error(Kind=Div0)
 
 >> Find(18, 18, ErrorKind.Sync)
 1
@@ -217,7 +217,7 @@ Blank()
 Blank()
 
 >> Find(1, ErrorKind.BadRegex, 4)
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 >> Find(ErrorKind.BadRegex, 156)
 1
@@ -232,7 +232,7 @@ Blank()
 Blank()
 
 >> Find(ErrorKind.BadRegex, 156, 5)
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 
 // ************************* TABLE PARAMETERS *************************
@@ -247,7 +247,7 @@ Table({Result:1})
 // findText: null, withinText: null, startIndex: [{ start: 2 }] 
 
 >> Find(If(1<0,["string"]),If(1<0,["string"]),Table({start:2}))
-Table({Result:#Error(Kind="InvalidArgument")})
+Table({Result:Error(Kind="InvalidArgument")})
 
 // ======================== SCENARIO 3 ========================
 // findText: null, withinText: "textToBeSearchedIn", startIndex: [{ start: 5 }]
@@ -280,7 +280,7 @@ Table({Result:1},{Result:1},{Result:Blank()})
    {find: ""},
    {find: ","}),
    If(1<0,["string"]),[1,2,3])
-Table({Result:1},{Result:#Error(Kind=InvalidArgument)},{Result:#Error(Kind=InvalidArgument)})
+Table({Result:1},{Result:Error(Kind=InvalidArgument)},{Result:Error(Kind=InvalidArgument)})
 
 
 // ======================== SCENARIO 7 ========================
@@ -304,7 +304,7 @@ Table({Result:1},{Result:1},{Result:1})
    {within: ""},
    {within: "textToBeSearchedIn"}),
    [1,2,3])
-Table({Result:1},{Result:#Error(Kind=InvalidArgument)},{Result:3})
+Table({Result:1},{Result:Error(Kind=InvalidArgument)},{Result:3})
 
 
 // ======================== SCENARIO 9 ========================
@@ -343,7 +343,7 @@ Table({Result:19})
 >> Find(",", 
    Table({within: "textToBeSearchedIn,textToBeSearchedIn"},{within: "textToBeSearchedIn,textToBeSearchedIn,"},{within: "textToBeSearchedIn,textToBeSearchedIn"}),
    [1,20,40])
-Table({Result:19},{Result:38},{Result:#Error(Kind=InvalidArgument)})
+Table({Result:19},{Result:38},{Result:Error(Kind=InvalidArgument)})
 
 
 //  ======================== SCENARIO 13 ========================
@@ -445,7 +445,7 @@ Table({Result:1},{Result:9},{Result:1},{Result:Blank()})
    Table({within: "lastName,firstName"}),
    [9,2,3]
    )
-Table({Result:9},{Result:#Error(Kind=InvalidArgument)},{Result:#Error(Kind=InvalidArgument)})
+Table({Result:9},{Result:Error(Kind=InvalidArgument)},{Result:Error(Kind=InvalidArgument)})
 
 
 //  ======================== SCENARIO 23 ========================
@@ -458,7 +458,7 @@ Table({Result:9},{Result:#Error(Kind=InvalidArgument)},{Result:#Error(Kind=Inval
    Table({within: Blank()},{within: "lastName,firstName"}),
    10
    )
-Table({Result:#Error(Kind=InvalidArgument)},{Result:Blank()},{Result:#Error(Kind=InvalidArgument)},{Result:#Error(Kind=InvalidArgument)})
+Table({Result:Error(Kind=InvalidArgument)},{Result:Blank()},{Result:Error(Kind=InvalidArgument)},{Result:Error(Kind=InvalidArgument)})
 
 
 //  ======================== SCENARIO 24 ========================
@@ -587,7 +587,7 @@ Table()
    "c",
    Table({within: "abc"},{within: Error({Kind: Validation})}, {within: "cde"})
    )
-Table({Result:3},{Result:#Error(Kind=Validation)},{Result:1})
+Table({Result:3},{Result:Error(Kind=Validation)},{Result:1})
 
 
 //  ======================== SCENARIO 38 ========================
@@ -598,7 +598,7 @@ Table({Result:3},{Result:#Error(Kind=Validation)},{Result:1})
    Table({within: "abc"},{within: Error({Kind: Validation})}, {within: "cde"}),
    [3,1/0,1]
    )
-Table({Result:3},{Result:#Error(Kind=Validation)},{Result:1})
+Table({Result:3},{Result:Error(Kind=Validation)},{Result:1})
 
 
 //  ======================== SCENARIO 39 ========================
@@ -609,7 +609,7 @@ Table({Result:3},{Result:#Error(Kind=Validation)},{Result:1})
    "abc",
    [1,1/0,2]
    )
-Table({Result:1},{Result:#Error(Kind=Validation)},{Result:2})
+Table({Result:1},{Result:Error(Kind=Validation)},{Result:2})
 
 
 //  ======================== SCENARIO 40 ========================
@@ -620,7 +620,7 @@ Table({Result:1},{Result:#Error(Kind=Validation)},{Result:2})
    Table({find:"a"},{find:Error({Kind: Validation})},{find:"b"},{find:Error({Kind: InvalidArgument})},{find:"c"}),
    Table({within:"abc"}, Error({Kind: InvalidArgument}), {within:Error({Kind: Validation})}, Error({Kind: Div0}), {within:"abc"})
    )
-Table({Result:1},#Error(Kind=InvalidArgument),{Result:#Error(Kind=Validation)},#Error(Kind=Div0),{Result:3})
+Table({Result:1},Error(Kind=InvalidArgument),{Result:Error(Kind=Validation)},Error(Kind=Div0),{Result:3})
 
 
 //  ======================== SCENARIO 41 ========================
@@ -630,7 +630,7 @@ Table({Result:1},#Error(Kind=InvalidArgument),{Result:#Error(Kind=Validation)},#
    Table({find:"a"},{find:"b"},{find:"c"}),
    1/0
    )
-Table({Result:#Error(Kind=Div0)},{Result:#Error(Kind=Div0)},{Result:#Error(Kind=Div0)})
+Table({Result:Error(Kind=Div0)},{Result:Error(Kind=Div0)},{Result:Error(Kind=Div0)})
 
 
 //  ======================== SCENARIO 42 ========================
@@ -640,4 +640,4 @@ Table({Result:#Error(Kind=Div0)},{Result:#Error(Kind=Div0)},{Result:#Error(Kind=
    Text(1/0),
    Table({within:"First"},{within:"Second"}),
    )
-Table({Result:#Error(Kind=13)},{Result:#Error(Kind=13)})
+Table({Result:Error(Kind=13)},{Result:Error(Kind=13)})

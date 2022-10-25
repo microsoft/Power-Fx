@@ -29,19 +29,19 @@ Table({Value:"@"},{Value:"?"},{Value:">"},{Value:"="},{Value:"<"})
 Table()
 
 >> ForAll(Sort([60, 61, 0, 63, 64], 1/Value), Char(Value))
-#Error(Kind=Div0)
+Error(Kind=Div0)
 
 >> ForAll(Table({Value:1,Zulu:1}, {Value:0,Zulu:0}, {Value:2,Zulu:2}), 1/ThisRecord.Value)
-#Error(Kind=Div0)
+Error(Kind=Div0)
 
 >> First(LastN(ForAll(Table({Value:1,Zulu:1}, {Value:0,Zulu:0}, {Value:2,Zulu:2}), 1/ThisRecord.Value), 2)).Value
-#Error(Kind=Div0)
+Error(Kind=Div0)
 
 >> Table({Value:1},First(LastN(ForAll(Table({Value:1,Zulu:1}, {Value:0,Zulu:0}, {Value:2,Zulu:2}), 1/ThisRecord.Value), 2)),{Value:2})
-Table({Value:1},Microsoft.PowerFx.Types.ErrorValue,{Value:2})
+Table({Value:1},Error(Kind=Div0),{Value:2})
 
 >> First(First(LastN(ForAll(Table({Value:1}, {Value:0}, {Value:2}), Table({a: 1/ThisRecord.Value})), 2)).Value)
-{a:Microsoft.PowerFx.Types.ErrorValue}
+{a:Error(Kind=Div0)}
 
 >> ForAll([1,2,3], {C:1})
 Table({C:1},{C:1},{C:1})

@@ -25,7 +25,7 @@
 5579910311786366000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 
 >> Exp(750)
-#Error(Kind=Numeric)
+Error(Kind=Numeric)
 
 // Negative Integer Parameters
 
@@ -59,7 +59,7 @@
 
 // ******** NULL and ERROR PARAMETERS ********
 >> Exp(1/0)
-#Error(Kind=Div0)
+Error(Kind=Div0)
 
 // Excel returns 1
 >> Exp(Blank())
@@ -68,7 +68,7 @@
 // ******** STRING PARAMETERS ********
 
 >> Exp("sampleText")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 >> Exp("10")
 22026.46579481
@@ -85,10 +85,10 @@
 1
 
 >> Exp("true")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 >> Exp("false")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 // ******** FUNCTION VALUE AS PARAMETERS ********
 

@@ -17,7 +17,7 @@ Table({Value:"a"},{Value:"b"})
 2
 
 >> Shuffle(Sort([0], 1 / Value))
-#Error
+Error(Kind=Div0)
 
 >> Shuffle(Blank())
 Blank()

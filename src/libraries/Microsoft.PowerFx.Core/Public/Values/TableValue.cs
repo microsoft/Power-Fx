@@ -199,9 +199,10 @@ namespace Microsoft.PowerFx.Types
             // Table() is not legal, so we need an alternate expression to capture the table's type.
             if (!Rows.Any())
             {
-                if (settings.Compact)
+                if (settings.UseCompactRepresentation)
                 {
                     sb.Append("Table()");
+
                     return;
                 }
 

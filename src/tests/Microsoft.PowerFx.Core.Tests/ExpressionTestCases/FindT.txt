@@ -20,13 +20,13 @@ Blank()
 Blank()
 
 >> Find(["b"], ["abc", "cde"])
-Table({Result:2},{Result:Microsoft.PowerFx.Types.ErrorValue})
+Table({Result:2},{Result:Error(Kind=NotApplicable)})
 
 >> Find(["b"], ["abc", "cde"], If(false, [0], Blank()))
 Blank()
 
 >> Find(["b"], ["abc", "cde"], Filter([0], Value <> Value))
-Table({Result:Microsoft.PowerFx.Types.ErrorValue},{Result:Microsoft.PowerFx.Types.ErrorValue})
+Table({Result:Error(Kind=NotApplicable)},{Result:Error(Kind=NotApplicable)})
 
 >> Find([Blank(), "", ","], If(false, ["blank table"], Blank()), [1, 2, 3])
 Blank()
@@ -47,7 +47,7 @@ Table({Result:1},{Result:2},{Result:19},{Result:Blank()})
 Table({Result:19})
 
 >> Find(",", ["textToBeSearchedIn,textToBeSearchedIn", "textToBeSearchedIn,textToBeSearchedIn,", "textToBeSearchedIn,textToBeSearchedIn"], [1, 20, 40])
-Table({Result:19},{Result:38},{Result:Microsoft.PowerFx.Types.ErrorValue})
+Table({Result:19},{Result:38},{Result:Error(Kind=InvalidArgument)})
 
 >> Find([Blank(), "", ","], ["textToBeSearchedIn,textToBeSearchedIn", "textToBeSearchedIn,textToBeSearchedIn,", "textToBeSearchedIn,textToBeSearchedIn"], [1, 10, 9])
 Table({Result:1},{Result:10},{Result:19})
@@ -71,22 +71,22 @@ Table({Result:19})
 Table({Result:1},{Result:1},{Result:19})
 
 >> Find([Blank(), ","], ["lastName,firstName", "lastName,firstName,", "lastName,firstName", Blank()])
-Table({Result:1},{Result:9},{Result:Microsoft.PowerFx.Types.ErrorValue},{Result:Microsoft.PowerFx.Types.ErrorValue})
+Table({Result:1},{Result:9},{Result:Error(Kind=NotApplicable)},{Result:Error(Kind=NotApplicable)})
 
 >> Find([Blank(), ",", "", "findMe"], [Blank(), "lastName,firstName"])
-Table({Result:1},{Result:9},{Result:Microsoft.PowerFx.Types.ErrorValue},{Result:Microsoft.PowerFx.Types.ErrorValue})
+Table({Result:1},{Result:9},{Result:Error(Kind=NotApplicable)},{Result:Error(Kind=NotApplicable)})
 
 >> Find([Blank(), ","], ["lastName,firstName",], [9, 2, 3])
-Table({Result:9},{Result:Microsoft.PowerFx.Types.ErrorValue},{Result:Microsoft.PowerFx.Types.ErrorValue})
+Table({Result:9},{Result:Error(Kind=NotApplicable)},{Result:Error(Kind=NotApplicable)})
 
 >> Find([Blank(), ",", "", "findMe"], [Blank(), "lastName,firstName"], 10)
-Table({Result:Microsoft.PowerFx.Types.ErrorValue},{Result:Blank()},{Result:Microsoft.PowerFx.Types.ErrorValue},{Result:Microsoft.PowerFx.Types.ErrorValue})
+Table({Result:Error(Kind=InvalidArgument)},{Result:Blank()},{Result:Error(Kind=NotApplicable)},{Result:Error(Kind=NotApplicable)})
 
 >> Find([",", Blank()], "lastName,firstName", [1, 2, 3])
-Table({Result:9},{Result:2},{Result:Microsoft.PowerFx.Types.ErrorValue})
+Table({Result:9},{Result:2},{Result:Error(Kind=NotApplicable)})
 
 >> Find(",", [Blank(), "lastName,firstName", "lastName,firstName"], [1, 2])
-Table({Result:Blank()},{Result:9},{Result:Microsoft.PowerFx.Types.ErrorValue})
+Table({Result:Blank()},{Result:9},{Result:Error(Kind=NotApplicable)})
 
 >> Find(Filter(["empty table"], Value <> Value), "", 1)
 Table()
@@ -104,41 +104,41 @@ Table()
 Table()
 
 >> Find(Filter(["empty table"], Value <> Value), [Blank(), "lastName,firstName", "lastName,firstName"], 2)
-Table({Result:Microsoft.PowerFx.Types.ErrorValue},{Result:Microsoft.PowerFx.Types.ErrorValue},{Result:Microsoft.PowerFx.Types.ErrorValue})
+Table({Result:Error(Kind=NotApplicable)},{Result:Error(Kind=NotApplicable)},{Result:Error(Kind=NotApplicable)})
 
 >> Find(Filter(["empty table"], Value <> Value), "textToSearch", [1, 2])
-Table({Result:Microsoft.PowerFx.Types.ErrorValue},{Result:Microsoft.PowerFx.Types.ErrorValue})
+Table({Result:Error(Kind=NotApplicable)},{Result:Error(Kind=NotApplicable)})
 
 >> Find([",", Blank(), ""], Filter(["empty table"], Value <> Value), 2)
-Table({Result:Microsoft.PowerFx.Types.ErrorValue},{Result:Microsoft.PowerFx.Types.ErrorValue},{Result:Microsoft.PowerFx.Types.ErrorValue})
+Table({Result:Error(Kind=NotApplicable)},{Result:Error(Kind=NotApplicable)},{Result:Error(Kind=NotApplicable)})
 
 >> Find(",", Filter(["empty table"], Value <> Value), [1, 1])
-Table({Result:Microsoft.PowerFx.Types.ErrorValue},{Result:Microsoft.PowerFx.Types.ErrorValue})
+Table({Result:Error(Kind=NotApplicable)},{Result:Error(Kind=NotApplicable)})
 
 >> Find([Blank(), ",", "", "findMe"], [Blank(), "lastName,firstName", "lastName,firstName"], Filter(["empty table"], Value <> Value))
-Table({Result:Microsoft.PowerFx.Types.ErrorValue},{Result:Microsoft.PowerFx.Types.ErrorValue},{Result:Microsoft.PowerFx.Types.ErrorValue},{Result:Microsoft.PowerFx.Types.ErrorValue})
+Table({Result:Error(Kind=NotApplicable)},{Result:Error(Kind=NotApplicable)},{Result:Error(Kind=NotApplicable)},{Result:Error(Kind=NotApplicable)})
 
 >> Find(",", [Blank(), "lastName,firstName"], Filter(["empty table"], Value <> Value))
-Table({Result:Microsoft.PowerFx.Types.ErrorValue},{Result:Microsoft.PowerFx.Types.ErrorValue})
+Table({Result:Error(Kind=NotApplicable)},{Result:Error(Kind=NotApplicable)})
 
 >> Find("c", Table({ within: "abc" }, { within: Error({Kind: ErrorKind.Validation}) }, { within: "cde" }))
-Table({Result:3},{Result:Microsoft.PowerFx.Types.ErrorValue},{Result:1})
+Table({Result:3},{Result:Error(Kind=Validation)},{Result:1})
 
 >> Find("c", ["abc", Error({Kind: ErrorKind.Validation}), "cde"])
-Table({Result:3},{Result:Microsoft.PowerFx.Types.ErrorValue},{Result:1})
+Table({Result:3},{Result:Error(Kind=Validation)},{Result:1})
 
 >> Find(Table({ find: "a" }, { find: Error({Kind: ErrorKind.Validation}) }, { find: "b" }), "abc")
-Table({Result:1},{Result:Microsoft.PowerFx.Types.ErrorValue},{Result:2})
+Table({Result:1},{Result:Error(Kind=Validation)},{Result:2})
 
 >> Find(["a", Error({Kind: ErrorKind.Validation}), "b"], "abc")
-Table({Result:1},{Result:Microsoft.PowerFx.Types.ErrorValue},{Result:2})
+Table({Result:1},{Result:Error(Kind=Validation)},{Result:2})
 
 >> Find(Table({ find: "a" }, { find: Mid("Hello", -1) }, { find: "b" }, If(1/0>2, { find: "e" }), { find: "c" }), Table({ within: "abc" }, If(Sqrt(-1)<0, { within: "err" }), { within: Left("err", -1) }, If(Right("err", -3) = "err", { within: "err" }), { within: "abc" }))
-Table({Result:1},Microsoft.PowerFx.Types.ErrorValue,{Result:Microsoft.PowerFx.Types.ErrorValue},Microsoft.PowerFx.Types.ErrorValue,{Result:3})
-//actual: Microsoft.PowerFx.Types.ErrorValue
+Table({Result:1},Error(Kind=Numeric),{Result:Error(Kind=InvalidArgument)},Error(Kind=Div0),{Result:3})
+//actual: Error(Kind=Div0)
 
 >> Find(Table({ find: "a" }, { find: "b" }, { find: "c" }), If(1/0>2,"abcdef"))
-Table({Result:Microsoft.PowerFx.Types.ErrorValue},{Result:Microsoft.PowerFx.Types.ErrorValue},{Result:Microsoft.PowerFx.Types.ErrorValue})
+Table({Result:Error(Kind=Div0)},{Result:Error(Kind=Div0)},{Result:Error(Kind=Div0)})
 
 >> Find(If(Sqrt(-1)<0,"First second third"), Table({ within: "First" }, { within: "Second" }))
-Table({Result:Microsoft.PowerFx.Types.ErrorValue},{Result:Microsoft.PowerFx.Types.ErrorValue})
+Table({Result:Error(Kind=Numeric)},{Result:Error(Kind=Numeric)})

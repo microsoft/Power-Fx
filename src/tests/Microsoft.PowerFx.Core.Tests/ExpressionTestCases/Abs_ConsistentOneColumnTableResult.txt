@@ -19,4 +19,4 @@ Blank()
 Table({Value:1},{Value:0},{Value:123456.789},{Value:123456.789})
 
 >> Abs(Table({a:1/0},{a:Power(-3,2)}))
-Table({Value:Microsoft.PowerFx.Types.ErrorValue},{Value:9})
+Table({Value:Error(Kind=Div0)},{Value:9})

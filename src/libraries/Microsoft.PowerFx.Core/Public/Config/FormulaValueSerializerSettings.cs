@@ -13,6 +13,6 @@ namespace Microsoft.PowerFx
     public class FormulaValueSerializerSettings
     {
         // Provides a simpler version for some types.
-        public bool Compact { get; set; }
+        public bool UseCompactRepresentation { get; set; }
     }
 }

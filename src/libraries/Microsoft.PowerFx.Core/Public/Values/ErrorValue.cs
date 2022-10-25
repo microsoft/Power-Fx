@@ -78,15 +78,15 @@ namespace Microsoft.PowerFx.Types
         {            
             var flag = true;
 
-            if (settings.Compact && _errors.Count == 1)
+            if (settings.UseCompactRepresentation)
             {
-                sb.Append(this);
+                AppendCompactRepresentation(sb);
                 return;
             }
 
             sb.Append("Error(Table(");
 
-            foreach (var errorValue in _errors)
+            foreach (var error in _errors)
             {
                 if (!flag)
                 {
@@ -96,18 +96,39 @@ namespace Microsoft.PowerFx.Types
                 flag = false;
 
                 sb.Append("{Kind:ErrorKind.");
-                sb.Append(errorValue.Kind.ToString());
+                sb.Append(error.Kind.ToString());
 
-                if (errorValue.Message != null)
+                if (error.Message != null)
                 {
                     sb.Append(", Message:");
-                    sb.Append(CharacterUtils.ToPlainText(errorValue.Message));
+                    sb.Append(CharacterUtils.ToPlainText(error.Message));
                 }
 
                 sb.Append("}");
             }
 
             sb.Append("))");
+        }
+
+        private void AppendCompactRepresentation(StringBuilder sb)
+        {
+            var flag = true;
+
+            sb.Append("Error(Kind=");
+
+            foreach (var error in _errors)
+            {
+                if (!flag)
+                {
+                    sb.Append(",");
+                }
+
+                sb.Append(error.Kind.ToString());
+
+                flag = false;
+            }
+
+            sb.Append(")");
         }
     }
 }

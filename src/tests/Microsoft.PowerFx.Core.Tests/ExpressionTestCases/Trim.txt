@@ -61,7 +61,7 @@
 
 //Invalid operation: Division by zero
 >> Trim(1/0)
-#Error(Kind=Div0)
+Error(Kind=Div0)
 
 >> Trim("  1/0   ")
 "1/0"

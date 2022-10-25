@@ -63,16 +63,16 @@ false
 
 // Error DateTime comparisons
 >> DateAdd(Date(1/0, 2, 3), 3) < DateAdd(Date(2011,1,30), 3)
-#Error
+Error(Kind=Div0)
 
 >> DateAdd(Date(1/0, 2, 3), 3) <= DateAdd(Date(2011,1,30), 3)
-#Error
+Error(Kind=Div0)
 
 >> DateAdd(Date(1/0, 2, 3), 3) > DateAdd(Date(2011,1,30), 3)
-#Error
+Error(Kind=Div0)
 
 >> DateAdd(Date(1/0, 2, 3), 3) >= DateAdd(Date(2011,1,30), 3)
-#Error
+Error(Kind=Div0)
 
 // date add and part
 >> Day(DateAdd(Date(2001,1,1), 3))
@@ -85,7 +85,7 @@ false
 1
 
 >> DateAdd(Date(-1, 2, 3), 3)
-#Error
+Error(Kind=InvalidArgument)
 
 >> DateAdd(Date(1, 2, 3), 3)
 DateTime(1,2,6,0,0,0,0)
@@ -352,17 +352,17 @@ DateTime(2000,1,2,0,0,0,0)
 
 //Empty string passed as Units parameter
 >> DateAdd(Date(2000,1,1),1, "")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 // Errors passed as parameters
 >> DateAdd(If(Sqrt(-1)<0,Date(2000,1,1)),1,TimeUnit.Days)
-#Error(Kind=Numeric)
+Error(Kind=Numeric)
 
 >> DateAdd(Date(2000,1,1),1/0,TimeUnit.Days)
-#Error(Kind=Div0)
+Error(Kind=Div0)
 
 >> DateAdd(Date(2000,1,1),1,Text(1/0))
-#Error(Kind=Div0)
+Error(Kind=Div0)
 
 // ******************************** COERCIONS ********************************
 

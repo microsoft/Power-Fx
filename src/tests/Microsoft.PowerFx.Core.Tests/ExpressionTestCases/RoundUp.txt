@@ -176,10 +176,10 @@
 
 // ******** NULL and ERROR PARAMETERS ********
 >> RoundUp(1/0,1)
-#Error(Kind=Div0)
+Error(Kind=Div0)
 
 >> RoundUp(1,1/0)
-#Error(Kind=Div0)
+Error(Kind=Div0)
 
 >> RoundUp(Blank(),1)
 0
@@ -199,10 +199,10 @@
 // ******** STRING PARAMETERS ********
 
 >> RoundUp("sampleText",1)
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 >> RoundUp("10.5678","ABC")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 >> RoundUp("-10.5678","2")
 -10.57
@@ -228,5 +228,5 @@
 0
 
 >> RoundUp("true","false")
-#Error(Kind=InvalidArgument, InvalidArgument)
+Error(Kind=InvalidArgument,InvalidArgument)
 

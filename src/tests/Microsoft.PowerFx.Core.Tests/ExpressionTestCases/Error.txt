@@ -1,8 +1,8 @@
 >> 1/0
-#Error(Kind=Div0)
+Error(Kind=Div0)
 
 >> Sqrt(-1)
-#Error(Kind=Numeric)
+Error(Kind=Numeric)
 
 >> IsError(1/0)
 true
@@ -17,10 +17,10 @@ true
 true
 
 >> Error({Kind:ErrorKind.InvalidArgument})
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 >> Error({Kind:ErrorKind.Validation})
-#Error(Kind=11)
+Error(Kind=Validation)
 
 >> Error({Kind:Validation}) // We need to use the fully-qualified enum value
 Errors: Error 12-22: Name isn't valid. 'Validation' isn't recognized.
@@ -29,7 +29,7 @@ Errors: Error 12-22: Name isn't valid. 'Validation' isn't recognized.
 Errors: Error 6-25: Invalid argument type. Expecting a Record value, but of a different schema.|Error 6-25: Invalid type for field 'Kind'. Expected field type of 'ErrorKind'.
 
 >> IfError(1/0, Error({Kind:FirstError.Kind}))
-#Error(Kind=Div0)
+Error(Kind=Div0)
 
 >> IfError(1/0, 3)
 3
@@ -59,10 +59,10 @@ Errors: Error 6-25: Invalid argument type. Expecting a Record value, but of a di
 "Invalid operation: division by zero."
 
 >> IsBlank(1/0)
-#Error(Kind=Div0)
+Error(Kind=Div0)
 
 >> Not(IsBlank(1/0))
-#Error(Kind=13)
+Error(Kind=Div0)
 
 >> "Result: " & IfError(1/0, -1)
 "Result: -1"
@@ -80,13 +80,13 @@ Errors: Error 6-25: Invalid argument type. Expecting a Record value, but of a di
 "Result: 1"
 
 >> Error("lorem ipsum")
-#Error(Kind=Custom)
+Error(Kind=Custom)
 
 >> IfError(Error("lorem ipsum"), FirstError.Message)
 "lorem ipsum"
 
 >> Date(2000, Sqrt(-1), Error("lorem ipsum"))
-#Error(Kind=Numeric,Custom)
+Error(Kind=Numeric,Custom)
 
 >> ForAll(Len(["abc", Error("lorem ipsum"), Sqrt(-1)+"", "hello"]), IfError(Result, -FirstError.Kind))
 Table({Value:3},{Value:-1000},{Value:-24},{Value:5})

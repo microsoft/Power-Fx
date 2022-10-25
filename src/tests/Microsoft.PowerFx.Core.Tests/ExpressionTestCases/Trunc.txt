@@ -196,13 +196,13 @@
 
 // ******** NULL and ERROR PARAMETERS ********
 >> Trunc(1/0,1)
-#Error(Kind=Div0)
+Error(Kind=Div0)
 
 >> Trunc(1,1/0)
-#Error(Kind=Div0)
+Error(Kind=Div0)
 
 >> Trunc(1/0)
-#Error(Kind=Div0)
+Error(Kind=Div0)
 
 >> Trunc(Blank())
 0
@@ -225,10 +225,10 @@
 // ******** STRING PARAMETERS ********
 
 >> Trunc("sampleText",1)
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 >> Trunc("10.5678","ABC")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 >> Trunc("-10.5678")
 -10
@@ -257,4 +257,4 @@
 0
 
 >> Trunc("true","false")
-#Error(Kind=InvalidArgument, InvalidArgument)
+Error(Kind=InvalidArgument,InvalidArgument)

@@ -42,19 +42,19 @@
 // ******** NULL and ERROR PARAMETERS ********
 
 >> Average(1/0)
-#Error(Kind=Div0)
+Error(Kind=Div0)
 
 >> Average(Blank())
-#Error(Kind=Div0)
+Error(Kind=Div0)
 
 >> Average("")
-#Error(Kind=Div0)
+Error(Kind=Div0)
 
 >> Average(Blank(),1,1,Blank())
 1
 
 >> Average(Blank(),Blank(),Blank(),Blank())
-#Error(Kind=Div0)
+Error(Kind=Div0)
 
 >> Average(1, Blank(), 2, Blank(), 3, Blank(), 4, Blank(), 5)
 3
@@ -64,12 +64,12 @@
 
 //Excel gives compile error and mention typo in the formula. Suggest to correct 1E+308 to E1+308
 >> Average(1E+308, 1E+308)
-#Error(Kind=Numeric)
+Error(Kind=Numeric)
 
 // ******** STRING PARAMETERS ********
 
 >> Average("sampleText")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 >> Average("10")
 10
@@ -81,7 +81,7 @@
 9.5
 
 >> Average("100", "AB")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 // ******** BOOLEAN PARAMETERS ********
 
@@ -95,13 +95,13 @@
 0.5
 
 >> Average("true", true)
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 >> Average("true","true")
-#Error(Kind=InvalidArgument, InvalidArgument)
+Error(Kind=InvalidArgument,InvalidArgument)
 
 >> Average("false","false")
-#Error(Kind=InvalidArgument, InvalidArgument)
+Error(Kind=InvalidArgument,InvalidArgument)
 
 // ******** DATE PARAMETERS (interpreted as numbers) ********
 
@@ -150,23 +150,23 @@
 3
 
 >> Sum(If(1/0<2,[1,2,3,4]),Value)
-#Error(Kind=Div0)
+Error(Kind=Div0)
 
 // Empty table
 >> Average(Filter([1, 2, 3, 4, 5], Value > 10), Value)
-#Error(Kind=Div0)
+Error(Kind=Div0)
 
 >> Average(If(1<0,[1, 2, 3]), Value)
 Blank()
 
 >> Average(Sort([-2, -1, 0, 1, 2], 1 / Value), Value)
-#Error(Kind=Div0)
+Error(Kind=Div0)
 
 >> Average(1, 2, 3, Blank(), 2, 2)
 2
 
 >> Average([1, 2, 1/0, 4, 5], Value)
-#Error(Kind=Div0)
+Error(Kind=Div0)
 
 // Blank rows
 >> Average(Table({a:1},If(1<0,{a:2}),{a:3},If(1<0,{a:4}),{a:5}), Coalesce(a, 100))

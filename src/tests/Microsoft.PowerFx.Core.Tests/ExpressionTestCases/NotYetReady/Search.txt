@@ -7,17 +7,17 @@ Blank()
 // ********************** ERROR PASSED AS TABLE RECORD **********************
 
 >> Search(If(1/0<2,["ABC", "DEF", "GHI"]), "ABC", "Value")
-#Error(Kind=Div0)
+Error(Kind=Div0)
 
 // Errors in table
 >> Search(Table({Name:"ABC"}, {Name:"DEF"}, {Name:Error({Kind: 11})}),"ABC", "Name")
-#Error(Kind=11)
+Error(Kind=11)
 
 >> Search(Table({a:"one",b:"ten"},{a:"two",b:"twenty"},{a:Left("three",-1),b:"thirty"}), "t", "a")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 >> Search(Table({a:"one",b:"ten"},{a:"two",b:"twenty"},{a:Left("three",-1),b:"thirty"}), "t", "b")
-Table({a:"one",b:"ten"},{a:"two",b:"twenty"},{a:#Error(Kind=InvalidArgument),b:"thirty"})
+Table({a:"one",b:"ten"},{a:"two",b:"twenty"},{a:Error(Kind=InvalidArgument),b:"thirty"})
 
 // ********************** SEARCH NULL TEXT - NO NULL VALUE IN SEARCH COLUMN **********************
 

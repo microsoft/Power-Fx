@@ -11,7 +11,7 @@
 123456.78
 
 >> Value("xxx")
-#Error
+Error(Kind=InvalidArgument)
 
 >> Value( "$ 12.34" )
 12.34
@@ -469,16 +469,16 @@ true
 // ******** BOOLEAN PARAMETERS ********
 
 >> Value("true")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 >> Value("false")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 // ******** INVALID, NULL and ERROR PARAMETERS ********
 
 //Alphabetical String passed as parameter
 >> Value("Hello")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 //Excel return error (Error message : A value used in the formula is of the wrong data type)
 >> Value("")
@@ -494,291 +494,291 @@ Blank()
 
 //Error message: Invalid operation - Division by zero
 >> Value(1/0)
-#Error(Kind=Div0)
+Error(Kind=Div0)
 
 //Error message: We cannot convert the value to a number
 >> Value("%")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 //Error message: Invalid arguments to the Value function
 >> Value("1%00")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 //Error message: Invalid arguments to the Value function [Currency symbol allowed as prefix and not in between the string]
 >> Value("12$34")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 //Error message: Invalid arguments to the Value function [Currency symbol allowed as prefix and not in between the string]
 >> Value("12$34.567")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 //Error message: Invalid arguments to the Value function [Currency symbol allowed as prefix and not in between the string]
 >> Value("-12$34")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 //Error message: Invalid arguments to the Value function [Currency symbol allowed as prefix and not in between the string]
 >> Value("-12$34.567")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 // +- together is not valid.
 >> Value("+-1")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
   
 // +- together is not valid.  
 >> Value("-+1")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
   
 // 'a' is not allowed.  
 >> Value("a")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 // 'a' is not allowed.
 >> Value("a12")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 // 'a' is not allowed.  
 >> Value("12a")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 // 'b' is not allowed.  
 >> Value("1b2")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 // 'c' is not allowed.
 >> Value("12.33c")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
   
 // 'A' is not allowed.  
 >> Value("12.33A")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 // ';' is not allowed as it's not a thousand separator.
 >> Value("123;456.789")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 // '#' is not allowed as it's not the default currency symbol for en-US.
 >> Value("#123,456.789")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 // '*' is not allowed as it's not the default decimal symbol.
 >> Value("123,456*789")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 // ; is not allowed.
 >> Value("123;")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 // ' is not allowed.
 >> Value("123'")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
  
 // " is not allowed. 
 // >> Value("\"123\"")
-// #Error
+// Error(Kind=Div0)
 
 // multiple decimal separators are not allowed.
 >> Value("2.3.5")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 // exponent form and decimal cannot be mixed.
 >> Value("2e3.5")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 // exponent form and decimal cannot be mixed.
 >> Value("2e-3.5")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 // currency symbol and % cannot be mixed.
 >> Value("$%1.3")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 // currency symbol and % cannot be mixed.
 >> Value("$%1")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 // multiple occurrences of %.
 >> Value("%1.3%")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 // multiple occurrences of %.
 >> Value("%%1.3")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 // multiple occurrences of %.
 >> Value("%1%.3")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 // invalid occurrence of %.
 >> Value("0.%3")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 // invalid occurrence of %.
 >> Value("1%.3")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 // invalid occurrence of %.
 >> Value("1%2.3")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 // multiple occurrences of %.
 >> Value("0.%%3")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 // multiple occurrences of %.
 >> Value("0.3%%")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
   
 // multiple occurrences of %.
 >> Value("0.%3%")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 // -+ cannot be mixed.
 >> Value("-%+1")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 // -+ cannot be mixed.
 >> Value("+%-1")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 // no +- after decimal symbol.
 >> Value("100.+3")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
  
 // no +- after decimal symbol.
 >> Value("100.-3")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
   
 // space anywhere other than beginning/end is not allowed.
 >> Value("1 .23")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 // just the decimal symbol is invalid.
 >> Value(".")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
   
 // invalid.
 >> Value("+.")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 // invalid.
 >> Value("-.")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 >> Value("e")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 >> Value("2e")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 >> Value("2e+")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 >> Value("2e-")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 >> Value("e3")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 >> Value("e+3")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 >> Value("e-3")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 >> Value(" e")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 >> Value("e ")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 >> Value("2e ")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 >> Value(" 2e")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 >> Value(" 2e+")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 >> Value("2e+ ")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 >> Value(" 2e-")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 >> Value("2e- ")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 >> Value(" e3")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 >> Value("e3 ")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 >> Value(" e+3")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 >> Value("e+3 ")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 >> Value(" e-3")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 >> Value("e-3 ")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 >> Value("$12.3%+")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 >> Value("   ")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 >> Value("1 23")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 >> Value("123 .45")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 >> Value("123. 45")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 >> Value("1 23.45")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 >> Value("1  23.45")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 >> Value("123 e45")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 >> Value("123 e 45")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 >> Value("123e+ 45")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 >> Value("123e +45")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 >> Value("123e- 45")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 >> Value("123e -45")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 // cannot have both () and -
 >> Value("%(-123)")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 // cannot have both () and +
 >> Value("%(+123)")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 // cannot have both () and -
 >> Value("(-123)")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 // cannot have both () and +
 >> Value("(+123)")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 

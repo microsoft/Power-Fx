@@ -11,10 +11,10 @@
 2.6666666666666665
 
 >> VarP(Blank())
-#Error
+Error(Kind=Div0)
 
 >> VarP(1, 2, 1/0)
-#Error
+Error(Kind=Div0)
 
 >> VarP(1, 1, 1)
 0
@@ -33,13 +33,13 @@
 
 //Infinity
 >> VarP("NaN")
-#Error
+Error(Kind=InvalidArgument)
 
 >> VarP(CountIf([1,2,3], true))
 0
 
 >> VarP(Sort([-2, -1, 0, 1, 2], 1 / Value), Value)
-#Error
+Error(Kind=Div0)
 
 >> VarP(["1", "2", "3"], Value)
 0.6666666666666666

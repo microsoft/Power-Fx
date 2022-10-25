@@ -2,7 +2,7 @@
 
 // Positive Integer Parameters
 >> Ln(0)
-#Error
+Error(Kind=Numeric)
 
 >> Ln(5)
 1.60943791
@@ -17,52 +17,52 @@
 // Negative Integer Parameters
 
 >> Ln(-0)
-#Error(Kind=Numeric)
+Error(Kind=Numeric)
 
 >> Ln(-5)
-#Error(Kind=Numeric)
+Error(Kind=Numeric)
 
 >> Ln(-430)
-#Error(Kind=Numeric)
+Error(Kind=Numeric)
 
 // Excel shows typo in the formula and suggest to change the formula to Ln(E1+308)
 >> Ln(-1E+308)
-#Error(Kind=Numeric)
+Error(Kind=Numeric)
 
 
 // ******** DECIMAL PARAMETERS ********
 
 >> Ln(0.00)
-#Error(Kind=Numeric)
+Error(Kind=Numeric)
 
 >> Ln(-0.00)
-#Error(Kind=Numeric)
+Error(Kind=Numeric)
 
 >> Ln(2.34567)
 0.85257108
 
 >> Ln(-345.6)
-#Error(Kind=Numeric)
+Error(Kind=Numeric)
 
 
 // ******** NULL and ERROR PARAMETERS ********
 >> Ln(1/0)
-#Error(Kind=Div0)
+Error(Kind=Div0)
 
-// Excel returns #Error
+// Excel returns Error(Kind=Div0)
 >> Ln(Blank())
-#Error(Kind=Numeric)
+Error(Kind=Numeric)
 
 // ******** STRING PARAMETERS ********
 
 >> Ln("sampleText")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 >> Ln("10")
 2.30258509
 
 >> Ln("-10.123")
-#Error(Kind=Numeric)
+Error(Kind=Numeric)
 
 // ******** BOOLEAN PARAMETERS ********
 
@@ -70,13 +70,13 @@
 0
 
 >> Ln(false)
-#Error(Kind=Numeric)
+Error(Kind=Numeric)
 
 >> Ln("true")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 >> Ln("false")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 // ******** FUNCTION VALUE AS PARAMETERS ********
 

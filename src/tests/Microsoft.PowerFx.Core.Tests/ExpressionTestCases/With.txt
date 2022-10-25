@@ -11,4 +11,4 @@ Blank()
 10
 
 >> With(First(First(LastN(ForAll(Table({Value:1}, {Value:0}, {Value:2}), Table({a: 1/ThisRecord.Value})), 2)).Value), a * a)
-#Error
+Error(Kind=Div0,Div0)

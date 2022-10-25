@@ -28,10 +28,13 @@ namespace Microsoft.PowerFx.Types
 
         public override void ToExpression(StringBuilder sb, FormulaValueSerializerSettings settings)
         {
-            var date = Value.Date;
-            var timeSpan = Value.TimeOfDay;
+            if (settings.UseCompactRepresentation)
+            {
+                sb.Append($"DateTime({Value.Date.Year},{Value.Date.Month},{Value.Date.Day},{Value.TimeOfDay.Hours},{Value.TimeOfDay.Minutes},{Value.TimeOfDay.Seconds},{Value.TimeOfDay.Milliseconds})");
+                return;
+            }
 
-            sb.Append($"DateTime({date.Year},{date.Month},{date.Day},{timeSpan.Hours},{timeSpan.Minutes},{timeSpan.Seconds},{timeSpan.Milliseconds})");
+            sb.Append($"DateTimeValue({CharacterUtils.ToPlainText(Value.ToString("o", CultureInfo.InvariantCulture))})");
         }
     }
 }

@@ -28,10 +28,10 @@ Blank()
 
 // Errors
 >> Round( If(1/0<2, [1]), 1 )
-#Error(Kind=Div0)
+Error(Kind=Div0)
 
 >> Round( [1.2, 2.3, 3.4], 1/0 )
-Table({Value:Microsoft.PowerFx.Types.ErrorValue},{Value:Microsoft.PowerFx.Types.ErrorValue},{Value:Microsoft.PowerFx.Types.ErrorValue})
+Table({Value:Error(Kind=Div0)},{Value:Error(Kind=Div0)},{Value:Error(Kind=Div0)})
 
 >> Round( [1.23, Sqrt(-1), 7.89], 1)
-Table({Value:1.2},{Value:Microsoft.PowerFx.Types.ErrorValue},{Value:7.9})
+Table({Value:1.2},{Value:Error(Kind=Numeric)},{Value:7.9})

@@ -74,10 +74,10 @@ Blank()
 {Value:1}
 
 >> LookUp([0,3,4], 1/ThisRecord.Value >= 0)
-#Error(Kind=Div0)
+Error(Kind=Div0)
 
 >> LookUp([0,3,4], ThisRecord.Value = 0, 1/ThisRecord.Value)
-#Error(Kind=Div0)
+Error(Kind=Div0)
 
 >> LookUp([1,2,3,4], Blank())
 Blank()
@@ -89,7 +89,7 @@ Blank()
 Blank()
 
 >> LookUp([100, 200, 300], Value > 250, Power(100, Value))
-#Error(Kind=Numeric)
+Error(Kind=Numeric)
 
 >> LookUp(Sequence(0), true)
 Blank()
@@ -98,13 +98,13 @@ Blank()
 "found error on the table"
 
 >> LookUp(["one", "two", "three"], Left(Value, -1) = "string")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 >> LookUp(["one", "two", "three"], true, Left(Value, -1))
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 >> LookUp(If(1/0<2,[1,2]), true)
-#Error(Kind=Div0)
+Error(Kind=Div0)
 
 >> LookUp(true, true)
 Errors: Error 7-11: Invalid argument type.

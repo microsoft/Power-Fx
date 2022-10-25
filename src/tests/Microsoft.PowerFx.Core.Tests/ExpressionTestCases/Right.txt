@@ -41,10 +41,10 @@
 ""
 
 >> Right("HelloWorld","true")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 >> Right("HelloWorld","false")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 // ******** EMPTY STRING, BLANK and ERROR PARAMETERS ********
 
@@ -76,23 +76,23 @@ true
 ""
 
 >> Right(Blank(),-1)
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 //Error: The second argument to the Right function is invalid
 >> Right("HelloWorld", -1)
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 //Error: The second argument to the Right function is invalid
 >> Right("HelloWorld"," ")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 //Invalid operation: Division by zero
 >> Right(1/0,1)
-#Error(Kind=Div0)
+Error(Kind=Div0)
 
 //Invalid operation: Division by zero
 >> Right("HelloWorld",1/0)
-#Error(Kind=Div0)
+Error(Kind=Div0)
 
 // ******** FUNCTION VALUE AS PARAMETERS ********
 

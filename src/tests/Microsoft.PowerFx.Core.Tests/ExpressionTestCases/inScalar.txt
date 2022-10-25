@@ -5,10 +5,10 @@
 
 
 >> ("a" & 1/0) in "abc"
-#Error 
+Error(Kind=Div0) 
 
 >> "a" in ("abc" & 1/0)
-#Error 
+Error(Kind=Div0) 
 
 // 
 // Scalar

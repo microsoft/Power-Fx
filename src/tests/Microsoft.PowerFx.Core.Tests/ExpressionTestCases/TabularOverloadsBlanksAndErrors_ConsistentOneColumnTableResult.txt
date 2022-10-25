@@ -1,13 +1,13 @@
 #SETUP: ConsistentOneColumnTableResult
 
 >> Concatenate(["hello", "hi"], If(1/0<2," world"))
-Table({Value:Microsoft.PowerFx.Types.ErrorValue},{Value:Microsoft.PowerFx.Types.ErrorValue})
+Table({Value:Error(Kind=Div0)},{Value:Error(Kind=Div0)})
 
 >> Concatenate(Char(0), ["hello", "great", "world"])
-Table({Value:Microsoft.PowerFx.Types.ErrorValue},{Value:Microsoft.PowerFx.Types.ErrorValue},{Value:Microsoft.PowerFx.Types.ErrorValue})
+Table({Value:Error(Kind=InvalidArgument)},{Value:Error(Kind=InvalidArgument)},{Value:Error(Kind=InvalidArgument)})
 
 >> Concatenate(["hello", "hi"], " ", ["John", "Jane", "Jim", "Joan"])
-Table({Value:"hello John"},{Value:"hi Jane"},{Value:Microsoft.PowerFx.Types.ErrorValue},{Value:Microsoft.PowerFx.Types.ErrorValue})
+Table({Value:"hello John"},{Value:"hi Jane"},{Value:Error(Kind=NotApplicable)},{Value:Error(Kind=NotApplicable)})
 
 >> Concat(Concatenate(["one", "two"], Text(1/0)), IfError(Value, $"Error(Kind={FirstError.Kind})"), ", ")
 "Error(Kind=13), Error(Kind=13)"
@@ -19,13 +19,13 @@ Table({Value:"hello John"},{Value:"hi Jane"},{Value:Microsoft.PowerFx.Types.Erro
 "hello John, hi Jane, Error(Kind=27), Error(Kind=27)"
 
 >> Find(["a", "b"], If(1/0<2,"abcdefg"))
-Table({Value:Microsoft.PowerFx.Types.ErrorValue},{Value:Microsoft.PowerFx.Types.ErrorValue})
+Table({Value:Error(Kind=Div0)},{Value:Error(Kind=Div0)})
 
 >> Find(Char(0), ["hello", "great", "world"])
-Table({Value:Microsoft.PowerFx.Types.ErrorValue},{Value:Microsoft.PowerFx.Types.ErrorValue},{Value:Microsoft.PowerFx.Types.ErrorValue})
+Table({Value:Error(Kind=InvalidArgument)},{Value:Error(Kind=InvalidArgument)},{Value:Error(Kind=InvalidArgument)})
 
 >> Find(["a", "b", "c"], "The quick brown fox jumped over the lazy dog", [1, 2, 3, 4, 5])
-Table({Value:38},{Value:11},{Value:8},{Value:Microsoft.PowerFx.Types.ErrorValue},{Value:Microsoft.PowerFx.Types.ErrorValue})
+Table({Value:38},{Value:11},{Value:8},{Value:Error(Kind=NotApplicable)},{Value:Error(Kind=NotApplicable)})
 
 >> Concat(Find(["a", "b"], If(1/0<2,"abcdefg")), IfError(Text(Value), $"Error(Kind={FirstError.Kind})"), ", ")
 "Error(Kind=13), Error(Kind=13)"
@@ -37,7 +37,7 @@ Table({Value:38},{Value:11},{Value:8},{Value:Microsoft.PowerFx.Types.ErrorValue}
 "38, 11, 8, Error(Kind=27), Error(Kind=27)"
 
 >> Round(Sqrt(-1), [1, 2, 3])
-Table({Value:Microsoft.PowerFx.Types.ErrorValue},{Value:Microsoft.PowerFx.Types.ErrorValue},{Value:Microsoft.PowerFx.Types.ErrorValue})
+Table({Value:Error(Kind=Numeric)},{Value:Error(Kind=Numeric)},{Value:Error(Kind=Numeric)})
 
 >> Concat(Round(Sqrt(-1), [1, 2, 3]), IfError(Text(Value), $"Error(Kind={FirstError.Kind})"), ", ")
 "Error(Kind=24), Error(Kind=24), Error(Kind=24)"

@@ -21,15 +21,15 @@
 
 //Error: Argument to SQRT function should be non-negative number
 >> Sqrt(-5)
-#Error(Kind=Numeric)
+Error(Kind=Numeric)
 
 //Error: Argument to SQRT function should be non-negative number
 >> Sqrt(-144)
-#Error(Kind=Numeric)
+Error(Kind=Numeric)
 
 //PowerFx shows error message "Argument to SQRT function should be non-negative number", while Excel shows typo in the formula and suggest to change the formula to Sqrt(-E1+308)
 >> Sqrt(-1E+308)
-#Error(Kind=Numeric)
+Error(Kind=Numeric)
 
 // ******** DECIMAL PARAMETERS ********
 
@@ -44,12 +44,12 @@
 
 //Error: Argument to SQRT function should be non-negative number
 >> Sqrt(-345.6)
-#Error(Kind=Numeric)
+Error(Kind=Numeric)
 	
 
 // ******** NULL and ERROR PARAMETERS ********
 >> Sqrt(1/0)
-#Error(Kind=Div0)
+Error(Kind=Div0)
 
 //Excel returns 0
 >> Sqrt(Blank())
@@ -58,14 +58,14 @@
 // ******** STRING PARAMETERS ********
 
 >> Sqrt("sampleText")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 >> Sqrt("4")
 2
 
 //Error: Argument to SQRT function should be non-negative number
 >> Sqrt("-9")
-#Error(Kind=Numeric)
+Error(Kind=Numeric)
 
 
 // ******** BOOLEAN PARAMETERS ********
@@ -77,10 +77,10 @@
 0
 
 >> Sqrt("true")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 >> Sqrt("false")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 // ******** FUNCTION VALUE AS PARAMETERS ********
 

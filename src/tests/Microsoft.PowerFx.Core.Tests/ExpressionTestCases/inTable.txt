@@ -7,7 +7,7 @@ true
 false
 
 >> 1/0 in [1,2,3]
-#Error
+Error(Kind=Div0)
 
 >> true in [false, true]
 true

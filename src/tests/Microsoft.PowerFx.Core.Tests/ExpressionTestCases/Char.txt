@@ -24,19 +24,19 @@
 // ******** OUT-OF-RANGE PARAMETERS: Parameters outside range of 1 - 255 ********
 
 >> Char(0)
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 >> Char(256)
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 >> Char(1024)
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 >> Char(-1)
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 >> Char(-255)
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 
 // ******** DECIMAL PARAMETERS ********
@@ -49,33 +49,33 @@
 
 //Error: The first argument to Char should be number between 1 and 255
 >> Char(0.78)
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 //Error: The first argument to Char should be number between 1 and 255
 >> Char(-0.001)
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 
 // ******** NULL and ERROR PARAMETERS ********
 
 >> Char(Blank())
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 >> IsBlank(Char(Blank()))
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 >> IsError(Char(Blank()))
 true
 
 //Invalid operation: Division by zero
 >> Char(1/0)
-#Error(Kind=Div0)
+Error(Kind=Div0)
 
 // ******** STRING PARAMETERS ********
 
 //Error: Invalid arguments to the "Value" function
 >> Char("abc")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 >> Char("200")
 "È"
@@ -85,15 +85,15 @@ true
 
 //Error: The first argument to Char should be number between 1 and 255
 >> Char("0")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 //Error: The first argument to Char should be number between 1 and 255
 >> Char("256")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 //Error: The first argument to Char should be number between 1 and 255
 >> Char("-20")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 
 // ******** BOOLEAN AND STRING PARAMETERS ********
@@ -103,14 +103,14 @@ true
 
 //Error: The first argument to Char should be number between 1 and 255
 >> Char(false)
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 //Invalid arguments to the function
 >> Char("false")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 >> IsBlank(Char("false"))
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 >> IsError(Char("false"))
 true

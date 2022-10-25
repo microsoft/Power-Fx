@@ -22,7 +22,7 @@
 
 // Overflow
 >> Power(230,230)
-#Error(Kind=Numeric)
+Error(Kind=Numeric)
 
 //Negative "BASE" Parameter
 
@@ -134,7 +134,7 @@
 //Decimal BASE and EXPONENT parameter
 
 >> Power(14.123456,1111111111)
-#Error(Kind=Numeric)
+Error(Kind=Numeric)
 
 >> Power(14.123456,0.123)
 1.38497757
@@ -146,19 +146,19 @@
 274.07844417
 
 >> Power(-14.123456,3.678)
-#Error(Kind=Numeric)
+Error(Kind=Numeric)
 
 >> Power(-1412.34567,4.78)
-#Error(Kind=Numeric)
+Error(Kind=Numeric)
 
 >> Power(1412.34,-1.2)
 0.00016599
 
 >> Power(-1412.34,-1.6)
-#Error(Kind=Numeric)
+Error(Kind=Numeric)
 
 >> Power(-1412.34,-2.9)
-#Error(Kind=Numeric)
+Error(Kind=Numeric)
 
 >> Power(1500.34,-3.5)
 0
@@ -170,18 +170,18 @@
 // ******** NULL and ERROR PARAMETERS ********
 // Division by zero error
 >> Power(1/0,1)
-#Error(Kind=Div0)
+Error(Kind=Div0)
 
 // Division by zero error
 >> Power(1,1/0)
-#Error(Kind=Div0)
+Error(Kind=Div0)
 
 >> Power(Blank(),1)
 0
 
 // Excel returns Divison by Zero error
 >> Power(Blank(), -1)
-#Error(Kind=Div0)
+Error(Kind=Div0)
 
 >> Power(56.78, Blank())
 1
@@ -197,10 +197,10 @@
 // ******** STRING PARAMETERS ********
 
 >> Power("sampleText",1)
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 >> Power("10.5678","ABC")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 >> Power("-10.5678","2")
 111.67839684
@@ -209,7 +209,7 @@
 0.00895428
 
 >> Power("-10.123", "1.234")
-#Error(Kind=Numeric)
+Error(Kind=Numeric)
 
 // ******** BOOLEAN PARAMETERS ********
 
@@ -222,12 +222,12 @@
 >> Power(false,true)
 0
 
-// Excel returns #Error
+// Excel returns Error(Kind=Div0)
 >> Power(false,false)
 1
 
 >> Power("true","false")
-#Error(Kind=InvalidArgument, InvalidArgument)
+Error(Kind=InvalidArgument,InvalidArgument)
 
 // ******** FUNCTION VALUE AS PARAMETERS ********
 

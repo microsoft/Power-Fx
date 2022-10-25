@@ -1252,7 +1252,7 @@
 
 // Invalid String passed as DateTimeValue
 >> ISOWeekNum("ABC")
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 // Valid date passed as string in DateTimeValue parameter
 >> ISOWeekNum("1/2/2022")
@@ -1266,19 +1266,19 @@
 
 // Boolean value true passed as DateTimeValue parameter
 >> ISOWeekNum(DateTimeValue(true))
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 // Boolean value true passed as DateTimeValue parameter
 >> ISOWeekNum(DateTimeValue("true"))
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 // Boolean value true passed as DateTimeValue parameter
 >> ISOWeekNum(DateTimeValue(false))
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 // Boolean value true passed as DateTimeValue parameter
 >> ISOWeekNum(DateTimeValue("false"))
-#Error(Kind=InvalidArgument)
+Error(Kind=InvalidArgument)
 
 // ******************************** NULL AND ERROR PARAMETERS ********************************
 
@@ -1292,8 +1292,8 @@ Blank()
 
 // 1/0 as DateTime value
 >> ISOWeekNum(1/0)
-#Error(Kind=Div0)
+Error(Kind=Div0)
 
 //Very large number as DateTimeValue
 >> ISOWeekNum(1E308)
-#Error
+Error(Kind=Div0)
