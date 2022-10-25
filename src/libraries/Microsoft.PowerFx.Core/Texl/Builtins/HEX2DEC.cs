@@ -37,7 +37,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool IsStateless => true;
 
         public Hex2DecTFunction()
-            : base("Hex2DecT", TexlStrings.AboutHex2DecT, FunctionCategories.Table, DType.EmptyTable, 0, 1, 1, DType.EmptyTable)
+            : base("Hex2Dec", TexlStrings.AboutHex2DecT, FunctionCategories.Table, DType.EmptyTable, 0, 1, 1, DType.EmptyTable)
         {
         }
 

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -6557,16 +6557,54 @@
     <value>Converts a decimal number to hexadecimal</value>
     <comment>Description of 'Dec2Hex' function.</comment>
   </data>
+  <data name="Dec2HexArg1" xml:space="preserve">
+    <value>number</value>
+  </data>
+  <data name="AboutDec2Hex_number" xml:space="preserve">
+    <value>A numeric decimal value to convert to hexadecimal string.</value>
+    <comment>Description of 'Dec2HexArg1' function parameter.</comment>
+  </data>
+  <data name="Dec2HexArg2" xml:space="preserve">
+    <value>places</value>
+  </data>
+  <data name="AboutDec2Hex_places" xml:space="preserve">
+    <value>A numeric value to add padding to hexadecimal string.</value>
+    <comment>Description of 'Dec2HexArg2' function parameter.</comment>
+  </data>
   <data name="AboutDec2HexT" xml:space="preserve">
     <value>Converts a column of decimal numbers to hexadecimals</value>
     <comment>Description of 'Dec2HexT' function.</comment>
+  </data>
+  <data name="Dec2HexTArg1" xml:space="preserve">
+    <value>table</value>
+  </data>
+  <data name="Dec2HexTArg2" xml:space="preserve">
+    <value>table</value>
+  </data>
+  <data name="AboutDec2Hex_table" xml:space="preserve">
+    <value>A column of numeric decimal values to convert to hexadecimals.</value>
+    <comment>Description of 'Dec2HexTArg1' function parameter.</comment>
   </data>
   <data name="AboutHex2Dec" xml:space="preserve">
     <value>Converts a hexadecimal number to decimal</value>
     <comment>Description of 'Hex2Dec' function.</comment>
   </data>
+  <data name="Hex2DecArg1" xml:space="preserve">
+    <value>number</value>
+  </data>
+  <data name="AboutHex2Dec_number" xml:space="preserve">
+    <value>A hexadecimal string convert to decimal.</value>
+    <comment>Description of 'Hex2DecArg1' function parameter.</comment>
+  </data>
   <data name="AboutHex2DecT" xml:space="preserve">
     <value>Converts a column of hexadecimal numbers to decimals</value>
     <comment>Description of 'Hex2DecT' function.</comment>
+  </data>
+  <data name="Hex2DecTArg1" xml:space="preserve">
+    <value>table</value>
+  </data>
+  <data name="AboutHex2Dec_table" xml:space="preserve">
+    <value>A column of hexadecimal strings to convert to decimals.</value>
+    <comment>Description of 'Hex2DecTArg1' function parameter.</comment>
   </data>
 </root>

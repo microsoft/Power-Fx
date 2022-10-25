@@ -1,5 +1,8 @@
-﻿>> Hex2Dec(""0"")
+﻿>> Hex2Dec("0")
 0
+
+>> Hex2Dec(Blank())
+#Error(Kind=InvalidArgument)
 
 // Positive Integer Parameters
 >> Hex2Dec("A5")
@@ -7,6 +10,12 @@
 
 >> Hex2Dec("C8D")
 3213
+
+>> Hex2Dec("B2D4")
+45780
+
+>> Hex2Dec("7FFFFFFFFF")
+549755813887
 
 // Negative Integer Parameters
 >> Hex2Dec("FFFFFFFFFF")
@@ -18,10 +27,21 @@
 >> Hex2Dec("FFFFFFF373")
 -3213
 
+>> Hex2Dec("8000000002")
+-549755813886
+
+>> Hex2Dec("8000000001")
+-549755813887
+
+>> Hex2Dec("FFFFFF4D2C")
+-45780
+
+
+
 // ******** NULL and ERROR PARAMETERS ********
 // More than 10 characters
 >> Hex2Dec("FFFFFFFFFFF")
-#Error(Kind=InvalidArgument)
+#Error(Kind=Numeric)
 
 // characters no in 0-9 and A-Z range
 >> Hex2Dec("ZZZZ")

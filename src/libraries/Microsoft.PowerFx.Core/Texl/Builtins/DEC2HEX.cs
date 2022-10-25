@@ -36,7 +36,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     }
 
     // Dec2HexT(number:[n], [places:n])
-    internal sealed class Dec2HexTableFunction : BuiltinFunction
+    internal sealed class Dec2HexTFunction : BuiltinFunction
     {
         public override bool IsSelfContained => true;
 
@@ -46,15 +46,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool HasPreciseErrors => true;
 
-        public Dec2HexTableFunction()
-            : base("Dec2HexT", TexlStrings.AboutDec2HexT, FunctionCategories.Table, DType.EmptyTable, 0, 1, 1, DType.EmptyTable)
+        public Dec2HexTFunction()
+            : base("Dec2Hex", TexlStrings.AboutDec2HexT, FunctionCategories.Table, DType.EmptyTable, 0, 1, 2, DType.EmptyTable, DType.EmptyTable)
         {
         }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new[] { TexlStrings.Dec2HexTArg1 };
+            yield return new[] { TexlStrings.Dec2HexTArg1, TexlStrings.Dec2HexTArg2 };
         }
-
     }
 }

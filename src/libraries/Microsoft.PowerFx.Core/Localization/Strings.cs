@@ -465,6 +465,7 @@ namespace Microsoft.PowerFx.Core.Localization
 
         public static StringGetter AboutDec2HexT = (b) => StringResources.Get("AboutDec2HexT", b);
         public static StringGetter Dec2HexTArg1 = (b) => StringResources.Get("Dec2HexTArg1", b);
+        public static StringGetter Dec2HexTArg2 = (b) => StringResources.Get("Dec2HexTArg2", b);
 
         public static StringGetter AboutHex2Dec = (b) => StringResources.Get("AboutHex2Dec", b);
         public static StringGetter Hex2DecArg1 = (b) => StringResources.Get("Hex2DecArg1", b);

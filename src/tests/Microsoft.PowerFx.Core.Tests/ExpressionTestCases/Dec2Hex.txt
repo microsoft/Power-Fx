@@ -1,6 +1,9 @@
-﻿// ******** INTEGER PARAMETERS WITHOUT PLACES ********
+﻿﻿// ******** INTEGER PARAMETERS WITHOUT PLACES ********
 
 >> Dec2Hex(0)
+"0"
+
+>> Dec2Hex(Blank())
 "0"
 
 // Positive Integer Parameters
@@ -9,6 +12,9 @@
 
 >> Dec2Hex(3213)
 "C8D"
+
+>> Dec2Hex(549755813887)
+"7FFFFFFFFF"
 
 // Negative Integer Parameters
 >> Dec2Hex(-1)
@@ -20,19 +26,25 @@
 >> Dec2Hex(-3213)
 "FFFFFFF373"
 
+>> Dec2Hex(-549755813888)
+"8000000000"
+
 // ******** DECIMAL PARAMETERS ********
 
 >> Dec2Hex(3.74)
 "3"
 
 >> Dec2Hex(-3.74)
-"FFFFFFFFFD"
-	
+"FFFFFFFFFC"
+
 
 // ******** INTEGER PARAMETERS WITH PLACES ********
 
 >> Dec2Hex(45780)
 "B2D4"
+
+>> Dec2Hex(45780, 3)
+#Error(Kind=InvalidArgument)
 
 >> Dec2Hex(45780, 4)
 "B2D4"
@@ -44,10 +56,10 @@
 "00B2D4"
 
 >> Dec2Hex(45780, -6)
-#Error(Kind=InvalidArgument)
+#Error(Kind=Numeric)
 
 >> Dec2Hex(45780, 11)
-#Error(Kind=InvalidArgument)
+#Error(Kind=Numeric)
 
 // Places are ignored when number is negative
 >> Dec2Hex(-45780)
@@ -63,62 +75,50 @@
 "FFFFFF4D2C"
 
 >> Dec2Hex(-45780, 11)
-#Error(Kind=InvalidArgument)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// ******** NULL and ERROR PARAMETERS ********
->> Dex2Hex(1/0)
-#Error(Kind=Div0)
-
->> Dex2Hex(-549755813889)
 #Error(Kind=Numeric)
 
->> Dex2Hex(549755813888)
+// ******** NULL and ERROR PARAMETERS ********
+>> Dec2Hex(1/0)
+#Error(Kind=Div0)
+
+>> Dec2Hex(-549755813889)
+#Error(Kind=Numeric)
+
+>> Dec2Hex(549755813888)
 #Error(Kind=Numeric)
 
 // ******** STRING PARAMETERS ********
 
->> Dex2Hex("sampleText")
+>> Dec2Hex("sampleText")
 #Error(Kind=InvalidArgument)
 
->> Dex2Hex("4")
-#Error(Kind=InvalidArgument)
+>> Dec2Hex("4")
+"4"
 
->> Dex2Hex("-9")
-#Error(Kind=InvalidArgument)
-
+>> Dec2Hex("-9")
+"FFFFFFFFF7"
 
 // ******** BOOLEAN PARAMETERS ********
 
->> Dex2Hex(true)
+>> Dec2Hex(true)
+"1"
+
+>> Dec2Hex(false)
+"0"
+
+>> Dec2Hex("true")
 #Error(Kind=InvalidArgument)
 
->> Dex2Hex(false)
-#Error(Kind=InvalidArgument)
-
->> Dex2Hex("true")
-#Error(Kind=InvalidArgument)
-
->> Dex2Hex("false")
+>> Dec2Hex("false")
 #Error(Kind=InvalidArgument)
 
 // ******** FUNCTION VALUE AS PARAMETERS ********
 
->> Dex2Hex(Ln(2))
+>> Dec2Hex(Ln(2))
 "0"
 
->> Dex2Hex(Power(2,2))
+>> Dec2Hex(Power(2,2))
 "4"
 
+>> Dec2Hex([ 10, 255, -16 ])
+[ "A", "FF", "FFFFFFFFF0" ]

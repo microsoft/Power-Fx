@@ -893,25 +893,76 @@ namespace Microsoft.PowerFx.Functions
 
         private static FormulaValue Dec2Hex(IRContext irContext, NumberValue[] args)
         {
+            var min_number = -Math.Pow(2, 39);
+            var max_number = Math.Pow(2, 39) - 1;
+
             var number = Math.Floor(args[0].Value);
             var places = Math.Floor(args[1].Value);
-            if (double.IsInfinity(number) || double.IsInfinity(places))
+
+            if (number < min_number || number > max_number)
             {
                 return CommonErrors.OverflowError(irContext);
             }
 
-            var result = Math.Floor(number).ToString("X").PadLeft((int)places, '0');
-        
+            var round_places = (int)Math.Floor(places);
+
+            // places need to be non-negative and 10 or less
+            if (round_places < 0 || round_places > 10)
+            {
+                return new ErrorValue(irContext, new ExpressionError()
+                {
+                    Message = $"Places should be between 0 and 10",
+                    Span = irContext.SourceContext,
+                    Kind = ErrorKind.Numeric
+                });
+            }
+
+            var round_number = (long)number;
+            string result;
+            /*
+             * a long negative will result in 16 characters so
+             * negative numbers need to be truncated down to 10 characters
+            */
+            if (number < 0)
+            {
+                result = round_number.ToString("X");
+                result = result.Substring(result.Length - 10, 10);
+            }
+            else
+            {
+                result = round_number.ToString("X" + round_places);
+            }
+
+            // places need to be greater or equal to length of hexadecimal when number is positive
+            if (round_places != 0 && result.Length > round_places && number > 0)
+            {
+                return CommonErrors.GenericInvalidArgument(irContext);
+            }
+
             return new StringValue(irContext, result);
         }
 
         private static FormulaValue Hex2Dec(IRContext irContext, StringValue[] args)
         {
             var number = args[0].Value;
-            var result = double.Parse(number, System.Globalization.NumberStyles.HexNumber);
-            if (double.IsInfinity(result))
+
+            if (number.Length > 10)
             {
                 return CommonErrors.OverflowError(irContext);
+            }
+
+            // negative numbers starts after 8000000000 so fill the string with F up to 16 characters
+            if (number.Length == 10 && number.CompareTo("8000000000") > 0)
+            {
+                var max_number = (long)Math.Pow(2, 40);
+                long.TryParse(number, System.Globalization.NumberStyles.HexNumber, null, out var negative_result);
+                negative_result -= max_number;
+                return new NumberValue(irContext, negative_result);
+            }
+
+            if (!long.TryParse(number, System.Globalization.NumberStyles.HexNumber, null, out var result))
+            {
+                return CommonErrors.GenericInvalidArgument(irContext);
             }
 
             return new NumberValue(irContext, result);
