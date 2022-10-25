@@ -3009,6 +3009,35 @@ namespace Microsoft.PowerFx.Core.Tests
                 Features.ConsistentOneColumnTableResult);
         }
 
+        [Theory]
+        [InlineData("First(First(DS).Attach).Name", "s")]
+        [InlineData("First(First(DS).Attach).Value", "o")]
+        [InlineData("If(false, First(DS).Attach, First(DS).Attach)", "*[Value:o, Name:s, Link:s]")]
+        [InlineData("First(If(false, DS, DS)).Attach", "*[Value:o, Name:s, Link:s]")]
+        [InlineData("First(First(If(false, DS, DS)).Attach).Link", "s")]
+        public void TestAttachmentDottedNameNodeBinding(string script, string expectedSchema)
+        {
+            var schema = DType.CreateTable(new TypedName(DType.CreateAttachmentType(TestUtils.DT("*[Value:o, Name:s, Link:s]")), new DName("Attach")), new TypedName(TestUtils.DT("b"), new DName("Value")));
+
+            var expectedType = TestUtils.DT(expectedSchema);
+
+            var symbol = new SymbolTable();
+            symbol.AddEntity(new TestDataSource("DS", schema));
+
+            TestSimpleBindingSuccess(script, expectedType, symbol);
+        }
+
+        [Fact]
+        public void TestAttachmentIf()
+        {
+            var schema = DType.CreateTable(new TypedName(DType.CreateAttachmentType(TestUtils.DT("*[Value:o, Name:s, Link:s]")), new DName("Attach")), new TypedName(TestUtils.DT("b"), new DName("Value")));
+
+            var symbol = new SymbolTable();
+            symbol.AddEntity(new TestDataSource("DS", schema));
+
+            TestSimpleBindingSuccess("If(true, DS, DS)", schema, symbol);
+        }
+
         private void TestBindingPurity(string script, bool isPure, SymbolTable symbolTable = null)
         {
             var config = new PowerFxConfig
