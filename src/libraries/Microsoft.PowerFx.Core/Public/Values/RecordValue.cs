@@ -225,7 +225,11 @@ namespace Microsoft.PowerFx.Types
 
             sb.Append("{");
 
-            foreach (var field in Fields)
+            // Deterministic. Printing fields in order.
+            var fields = Fields.ToArray();
+            Array.Sort(fields, (a, b) => string.CompareOrdinal(a.Name, b.Name));
+
+            foreach (var field in fields)
             {
                 if (!flag)
                 {
