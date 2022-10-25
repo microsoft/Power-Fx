@@ -9,6 +9,7 @@ using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Logging.Trackers;
+using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
@@ -77,11 +78,14 @@ namespace Microsoft.PowerFx.Core.Binding
         }
 
         /// <summary>
-        /// Tries to get the best suited overload for <paramref name="node"/> according to <paramref name="txb"/> and
+        /// Tries to get the best suited overload for <paramref name="node"/> according to <paramref name="context"/> and
         /// returns true if it is found.
         /// </summary>
-        /// <param name="txb">
-        /// Binding that will help select the best overload.
+        /// <param name="context">
+        /// Type checking context.
+        /// </param>
+        /// <param name="errorContainer">
+        /// Container for reporting errors.
         /// </param>
         /// <param name="node">
         /// CallNode for which the best overload will be determined.
@@ -105,7 +109,7 @@ namespace Microsoft.PowerFx.Core.Binding
         /// <returns>
         /// True if a valid overload was found, false if not.
         /// </returns>
-        internal static bool TryGetBestOverload(TexlBinding txb, CallNode node, DType[] argTypes, TexlFunction[] overloads, out TexlFunction bestOverload, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap, out DType returnType)
+        internal static bool TryGetBestOverload(CheckTypesContext context, IErrorContainer errorContainer, CallNode node, DType[] argTypes, TexlFunction[] overloads, out TexlFunction bestOverload, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap, out DType returnType)
         {
             Contracts.AssertValue(node, nameof(node));
             Contracts.AssertValue(overloads, nameof(overloads));
@@ -132,10 +136,10 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 var typeCheckSucceeded = false;
 
-                IErrorContainer warnings = new LimitedSeverityErrorContainer(txb.ErrorContainer, DocumentErrorSeverity.Warning);
+                IErrorContainer warnings = new LimitedSeverityErrorContainer(errorContainer, DocumentErrorSeverity.Warning);
 
                 // Typecheck the invocation and infer the return type.
-                typeCheckSucceeded = maybeFunc.CheckInvocation(txb, args, argTypes, warnings, out returnType, out nodeToCoercedTypeMap);
+                typeCheckSucceeded = maybeFunc.CheckTypes(context, args, argTypes, warnings, out returnType, out nodeToCoercedTypeMap);
 
                 if (typeCheckSucceeded)
                 {
@@ -838,6 +842,98 @@ namespace Microsoft.PowerFx.Core.Binding
                     Contracts.Assert(false);
                     return new BinderCheckTypeResult() { Node = node, NodeType = DType.Error };
             }
+        }
+
+        public static bool TryGetConstantValue(INameResolver nameResolver, TexlNode node, out string nodeValue)
+        {
+            Contracts.AssertValue(node);
+            nodeValue = null;
+            switch (node.Kind)
+            {
+                case NodeKind.StrLit:
+                    nodeValue = node.AsStrLit().Value;
+                    return true;
+                case NodeKind.BinaryOp:
+                    var binaryOpNode = node.AsBinaryOp();
+                    if (binaryOpNode.Op == BinaryOp.Concat)
+                    {
+                        if (TryGetConstantValue(nameResolver, binaryOpNode.Left, out var left) && TryGetConstantValue(nameResolver, binaryOpNode.Right, out var right))
+                        {
+                            nodeValue = string.Concat(left, right);
+                            return true;
+                        }
+                    }
+
+                    break;
+                case NodeKind.Call:
+                    var callNode = node.AsCall();
+                    if (callNode.Head.Name.Value == BuiltinFunctionsCore.Concatenate.Name)
+                    {
+                        var parameters = new List<string>();
+                        foreach (var argNode in callNode.Args.Children)
+                        {
+                            if (TryGetConstantValue(nameResolver, argNode, out var argValue))
+                            {
+                                parameters.Add(argValue);
+                            }
+                            else
+                            {
+                                break;
+                            }
+                        }
+
+                        if (parameters.Count == callNode.Args.Count)
+                        {
+                            nodeValue = string.Join(string.Empty, parameters);
+                            return true;
+                        }
+                    }
+
+                    break;
+                case NodeKind.FirstName:
+                    // Possibly a non-qualified enum value
+                    var firstNameNode = node.AsFirstName();
+
+                    if (nameResolver.Lookup(firstNameNode.Ident.Name, out var lookupInfo, preferences: NameLookupPreferences.None))
+                    {
+                        if (lookupInfo.Kind == BindKind.Enum)
+                        {
+                            if (lookupInfo.Data is string enumValue)
+                            {
+                                nodeValue = enumValue;
+                                return true;
+                            }
+                        }
+                    }
+
+                    break;
+                case NodeKind.DottedName:
+                    // Possibly an enumeration
+                    var dottedNameNode = node.AsDottedName();
+                    if (dottedNameNode.Left.Kind == NodeKind.FirstName)
+                    {
+                        if (nameResolver.TryLookupEnum(dottedNameNode.Left.AsFirstName().Ident.Name, out var nameLookupInfo))
+                        {
+                            if (nameLookupInfo.Kind == BindKind.Enum)
+                            {
+                                var enumType = nameLookupInfo.Type;
+
+                                if (enumType.TryGetEnumValue(dottedNameNode.Right.Name, out var enumValue))
+                                {
+                                    if (enumValue is string strValue)
+                                    {
+                                        nodeValue = strValue;
+                                        return true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    break;
+            }
+
+            return false;
         }
     }
 }

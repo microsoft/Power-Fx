@@ -77,13 +77,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 // Ensure we have a one-column table of strings
                 fValid &= CheckStringColumnType(type0, args[0], errors, ref nodeToCoercedTypeMap);
 
-                returnType = binding.Features.HasFlag(Features.ConsistentOneColumnTableResult)
+                returnType = context.Features.HasFlag(Features.ConsistentOneColumnTableResult)
                     ? DType.CreateTable(new TypedName(DType.String, new DName(ColumnName_ValueStr)))
                     : type0;
             }
             else
             {
-                returnType = DType.CreateTable(new TypedName(DType.String, GetOneColumnTableResultName(binding)));
+                returnType = DType.CreateTable(new TypedName(DType.String, GetOneColumnTableResultName(context.Features)));
                 if (!DType.String.Accepts(type0))
                 {
                     if (type0.CoercesTo(DType.String))

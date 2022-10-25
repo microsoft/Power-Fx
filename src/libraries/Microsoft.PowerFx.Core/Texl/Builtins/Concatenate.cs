@@ -148,7 +148,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 nodeToCoercedTypeMap = null;
             }
 
-            returnType = DType.CreateTable(new TypedName(DType.String, GetOneColumnTableResultName(binding)));
+            returnType = DType.CreateTable(new TypedName(DType.String, GetOneColumnTableResultName(context.Features)));
 
             return hasTableArg && fArgsValid;
         }

@@ -204,6 +204,8 @@ namespace Microsoft.PowerFx.Core.Binding
 
         public BindingConfig BindingConfig { get; }
 
+        public CheckTypesContext CheckTypesContext { get; }
+
         public IExternalDocument Document => NameResolver?.Document;
 
         public bool AffectsAliases { get; private set; }
@@ -327,6 +329,14 @@ namespace Microsoft.PowerFx.Core.Binding
 
             resolver?.TryGetCurrentControlProperty(out _property);
             _control = resolver?.CurrentEntity as IExternalControl;
+
+            CheckTypesContext = new CheckTypesContext(
+                features,
+                resolver,
+                entityName: EntityName,
+                propertyName: Property?.InvariantName ?? string.Empty,
+                isEnhancedDelegationEnabled: Document?.Properties?.EnabledFeatures?.IsEnhancedDelegationEnabled ?? false,
+                allowsSideEffects: bindingConfig.AllowsSideEffects);
         }
 
         // Binds a Texl parse tree.
@@ -4931,8 +4941,11 @@ namespace Microsoft.PowerFx.Core.Binding
                 var carg = args.Length;
                 var argTypes = args.Select(_txb.GetType).ToArray();
 
-                if (TryGetBestOverload(_txb, node, argTypes, overloads, out var function, out var nodeToCoercedTypeMap, out var returnType))
+                if (TryGetBestOverload(_txb.CheckTypesContext, _txb.ErrorContainer, node, argTypes, overloads, out var function, out var nodeToCoercedTypeMap, out var returnType))
                 {
+                    // TryGetBestOverload does not call CheckSemantics
+                    function.CheckSemantics(_txb, args, argTypes, _txb.ErrorContainer, ref nodeToCoercedTypeMap);
+
                     _txb.SetInfo(node, new CallInfo(function, node));
                     _txb.SetType(node, returnType);
 

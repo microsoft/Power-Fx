@@ -73,7 +73,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var fArgsValid = true;
             var type = ReturnType;
 
-            var isBehavior = binding.BindingConfig.AllowsSideEffects;
+            var isBehavior = context.AllowsSideEffects;
 
             Contracts.Assert(type == DType.Unknown);
             for (var i = 0; i < count;)

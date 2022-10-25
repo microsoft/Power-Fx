@@ -68,13 +68,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            var fValid = CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fValid = CheckTypes(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
             Contracts.Assert(returnType.IsTable);
 
             // Typecheck the input table
             fValid &= CheckStringColumnType(argTypes[0], args[0], errors, ref nodeToCoercedTypeMap);
 
-            returnType = binding.Features.HasFlag(Features.ConsistentOneColumnTableResult)
+            returnType = context.Features.HasFlag(Features.ConsistentOneColumnTableResult)
                 ? DType.CreateTable(new TypedName(DType.String, new DName(ColumnName_ValueStr)))
                 : argTypes[0];
 
@@ -127,7 +127,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             // Typecheck the count table
             fValid &= CheckNumericColumnType(argTypes[1], args[1], errors, ref nodeToCoercedTypeMap);
 
-            returnType = binding.Features.HasFlag(Features.ConsistentOneColumnTableResult)
+            returnType = context.Features.HasFlag(Features.ConsistentOneColumnTableResult)
                 ? DType.CreateTable(new TypedName(DType.String, new DName(ColumnName_ValueStr)))
                 : argTypes[0];
 
@@ -171,14 +171,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            var fValid = CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fValid = CheckTypes(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
             Contracts.Assert(returnType.IsTable);
 
             // Typecheck the count table
             fValid &= CheckNumericColumnType(argTypes[1], args[1], errors, ref nodeToCoercedTypeMap);
 
             // Synthesize a new return type
-            returnType = DType.CreateTable(new TypedName(DType.String, GetOneColumnTableResultName(binding)));
+            returnType = DType.CreateTable(new TypedName(DType.String, GetOneColumnTableResultName(context.Features)));
 
             return fValid;
         }
