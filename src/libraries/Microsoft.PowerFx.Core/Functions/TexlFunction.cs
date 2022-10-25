@@ -394,7 +394,7 @@ namespace Microsoft.PowerFx.Core.Functions
         // Return true if everything aligns even with coercion, false otherwise.
         // By default, the out returnType will be the one advertised via the constructor. If this.ReturnType
         // is either Unknown or an aggregate type, this method needs to be specialized.
-        public virtual bool CheckInvocation(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        protected virtual bool CheckInvocation(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             return CheckInvocationCore(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
         }
