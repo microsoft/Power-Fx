@@ -39,16 +39,16 @@ namespace Microsoft.PowerFx.Functions
         {
         }
 
-        public override bool CheckInvocation(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
-            Contracts.AssertValue(binding);
+            Contracts.AssertValue(context);
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
             Contracts.AssertValue(argTypes);
             Contracts.Assert(args.Length == argTypes.Length);
             Contracts.AssertValue(errors);
 
-            var isValid = CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var isValid = CheckTypes(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
 
             return isValid;
         }
@@ -97,7 +97,7 @@ namespace Microsoft.PowerFx.Functions
             return base.GetSignatures(arity);
         }
 
-        public override bool CheckInvocation(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public override bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
@@ -106,7 +106,7 @@ namespace Microsoft.PowerFx.Functions
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            var fValid = base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fValid = base.CheckTypes(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
 
             //Contracts.Assert(returnType.IsTable);
 

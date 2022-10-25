@@ -229,7 +229,7 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
         }
 #endif
 
-        public override bool CheckInvocation(TexlBinding binding, TexlNode[] args, DType[] argTypes,
+        public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes,
             IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
@@ -238,7 +238,7 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            bool fArgsValid = base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            bool fArgsValid = base.CheckTypes(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
 
 #if canvas
             // Check if we have a dynamic type for a dynamic schema

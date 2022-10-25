@@ -50,9 +50,9 @@ namespace Microsoft.PowerFx.Interpreter
         }
 
         // 2nd argument should be same type as 1st argument. 
-        public override bool CheckInvocation(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
-            Contracts.AssertValue(binding);
+            Contracts.AssertValue(context);
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
             Contracts.AssertValue(argTypes);

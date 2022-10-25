@@ -43,7 +43,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             yield return new[] { TexlStrings.AsTypeArg1, TexlStrings.AsTypeArg2 };
         }
 
-        public override bool CheckInvocation(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
@@ -52,7 +52,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.Assert(argTypes.Length == 2);
             Contracts.AssertValue(errors);
 
-            if (!base.CheckInvocation(binding, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap))
+            if (!base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap))
             {
                 return false;
             }
@@ -64,17 +64,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 return false;
             }
 
-            // Check if table arg referrs to a connected data source.
-            var tableArg = args[1];
-            if (!binding.TryGetFirstNameInfo(tableArg.Id, out var tableInfo) ||
-                tableInfo.Data is not IExternalDataSource tableDsInfo ||
-                !(tableDsInfo is IExternalTabularDataSource))
-            {
-                errors.EnsureError(tableArg, TexlStrings.ErrAsTypeAndIsTypeExpectConnectedDataSource);
-                return false;
-            }
+            var tableDsInfo = argTypes[1].AssociatedDataSources.Single();
 
-            if (binding.Document.Properties.EnabledFeatures.IsEnhancedDelegationEnabled && (tableDsInfo is IExternalCdsDataSource) && argTypes[0].HasPolymorphicInfo)
+            if (context.IsEnhancedDelegationEnabled && (tableDsInfo is IExternalCdsDataSource) && argTypes[0].HasPolymorphicInfo)
             {
                 var expandInfo = argTypes[0].PolymorphicInfo.TryGetExpandInfo(tableDsInfo.TableMetadata.Name);
                 if (expandInfo != null)
@@ -86,6 +78,18 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             returnType = argTypes[1].ToRecord();
             return true;
+        }
+
+        public override void CheckSemantics(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors)
+        {
+            // Check if table arg referrs to a connected data source.
+            var tableArg = args[1];
+            if (!binding.TryGetFirstNameInfo(tableArg.Id, out var tableInfo) ||
+                tableInfo.Data is not IExternalDataSource tableDsInfo ||
+                !(tableDsInfo is IExternalTabularDataSource))
+            {
+                errors.EnsureError(tableArg, TexlStrings.ErrAsTypeAndIsTypeExpectConnectedDataSource);
+            }
         }
 
         public override bool IsRowScopedServerDelegatable(CallNode callNode, TexlBinding binding, OperationCapabilityMetadata metadata)

@@ -57,14 +57,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return base.GetSignatures(arity);
         }
 
-        public override bool CheckInvocation(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertValue(argTypes);
             Contracts.Assert(args.Length == argTypes.Length);
             Contracts.AssertValue(errors);
 
-            var fValid = CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fValid = CheckTypes(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
             Contracts.Assert(returnType == DType.Number);
 
             // Ensure that all the args starting at index 1 are booleans or coerece to boolean if they are OptionSetValues.

@@ -385,18 +385,34 @@ namespace Microsoft.PowerFx.Core.Functions
             return char.ToLowerInvariant(name[0]).ToString() + name.Substring(1) + suffix + (IsAsync && !suppressAsync ? "Async" : string.Empty);
         }
 
-        public virtual bool CheckInvocation(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
-        {
-            return CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
-        }
-
         // Type check an invocation of the function with the specified args (and their corresponding types).
         // Return true if everything aligns even with coercion, false otherwise.
         // By default, the out returnType will be the one advertised via the constructor. If this.ReturnType
         // is either Unknown or an aggregate type, this method needs to be specialized.
-        public virtual bool CheckInvocation(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        // Note: this function MUST be capable of producing a type and checking the arg types without access
+        // to an instance of TexlBinding
+        public virtual bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
-            return CheckInvocationCore(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            return CheckTypesCore(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+        }
+
+        // CheckTypes override with access to config
+        public virtual bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        {
+            return CheckTypes(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+        }
+
+        // Called after type checking, and independent of type checking. This method is responsible for producing
+        // non-type related errors. This function has access to the binding, which means that it has a great deal of
+        // power and insight into context information that is not available to regular type checking.
+        public virtual void CheckSemantics(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors)
+        {
+        }
+
+        // CheckSemantics override with access to nodeToCoercedTypeMap
+        public virtual void CheckSemantics(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors, ref Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        {
+            CheckSemantics(binding, args, argTypes, errors);
         }
 
         public virtual bool CheckForDynamicReturnType(TexlBinding binding, TexlNode[] args)
@@ -421,7 +437,7 @@ namespace Microsoft.PowerFx.Core.Functions
             return SupportsParamCoercion && (argIndex <= MinArity || argIndex <= MaxArity);
         }
 
-        private bool CheckInvocationCore(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        private bool CheckTypesCore(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);

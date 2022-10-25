@@ -57,7 +57,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return GetUniqueTexlRuntimeName(suffix: "_T");
         }
 
-        public override bool CheckInvocation(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
@@ -65,8 +65,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.Assert(args.Length == argTypes.Length);
             Contracts.AssertValue(errors);
 
-            var fValid = CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
-            fValid &= CheckAllParamsAreTypeOrSingleColumnTable(binding, DType.Number, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fValid = CheckTypes(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            fValid &= CheckAllParamsAreTypeOrSingleColumnTable(context.Features, DType.Number, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
 
             return fValid;
         }

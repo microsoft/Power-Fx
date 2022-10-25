@@ -55,7 +55,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return base.GetSignatures(arity);
         }
 
-        public override bool CheckInvocation(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertValue(argTypes);
@@ -63,7 +63,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            var fArgsValid = CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fArgsValid = CheckTypes(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
 
             // The first arg determines the scope type for the lambda params, and the return type.
             fArgsValid &= ScopeInfo.CheckInput(args[0], argTypes[0], errors, out var typeScope);

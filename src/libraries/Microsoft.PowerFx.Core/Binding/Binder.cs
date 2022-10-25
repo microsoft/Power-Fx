@@ -269,6 +269,7 @@ namespace Microsoft.PowerFx.Core.Binding
             Contracts.AssertValueOrNull(scopeResolver);
 
             BindingConfig = bindingConfig;
+
             QueryOptions = queryOptions;
             Features = features;
             _glue = glue;
@@ -1193,90 +1194,6 @@ namespace Microsoft.PowerFx.Core.Binding
             Contracts.AssertIndex(node.Id, _isSelfContainedConstant.Length);
 
             return _isSelfContainedConstant.Get(node.Id);
-        }
-
-        public bool TryGetConstantValue(TexlNode node, out string nodeValue)
-        {
-            Contracts.AssertValue(node);
-            nodeValue = null;
-            switch (node.Kind)
-            {
-                case NodeKind.StrLit:
-                    nodeValue = node.AsStrLit().Value;
-                    return true;
-                case NodeKind.BinaryOp:
-                    var binaryOpNode = node.AsBinaryOp();
-                    if (binaryOpNode.Op == BinaryOp.Concat)
-                    {
-                        if (TryGetConstantValue(binaryOpNode.Left, out var left) && TryGetConstantValue(binaryOpNode.Right, out var right))
-                        {
-                            nodeValue = string.Concat(left, right);
-                            return true;
-                        }
-                    }
-
-                    break;
-                case NodeKind.Call:
-                    var callNode = node.AsCall();
-                    if (callNode.Head.Name.Value == BuiltinFunctionsCore.Concatenate.Name)
-                    {
-                        var parameters = new List<string>();
-                        foreach (var argNode in callNode.Args.Children)
-                        {
-                            if (TryGetConstantValue(argNode, out var argValue))
-                            {
-                                parameters.Add(argValue);
-                            }
-                            else
-                            {
-                                break;
-                            }
-                        }
-
-                        if (parameters.Count == callNode.Args.Count)
-                        {
-                            nodeValue = string.Join(string.Empty, parameters);
-                            return true;
-                        }
-                    }
-
-                    break;
-                case NodeKind.FirstName:
-                    // Possibly a non-qualified enum value
-                    var firstNameNode = node.AsFirstName();
-                    var firstNameInfo = GetInfo(firstNameNode);
-                    if (firstNameInfo.Kind == BindKind.Enum)
-                    {
-                        if (firstNameInfo.Data is string enumValue)
-                        {
-                            nodeValue = enumValue;
-                            return true;
-                        }
-                    }
-
-                    break;
-                case NodeKind.DottedName:
-                    // Possibly an enumeration
-                    var dottedNameNode = node.AsDottedName();
-                    if (dottedNameNode.Left.Kind == NodeKind.FirstName)
-                    {
-                        if (Document.GlobalScope.TryGetNamedEnum(dottedNameNode.Left.AsFirstName().Ident.Name, out var enumType))
-                        {
-                            if (enumType.TryGetEnumValue(dottedNameNode.Right.Name, out var enumValue))
-                            {
-                                if (enumValue is string strValue)
-                                {
-                                    nodeValue = strValue;
-                                    return true;
-                                }
-                            }
-                        }
-                    }
-
-                    break;
-            }
-
-            return false;
         }
 
         /// <summary>
@@ -4407,7 +4324,8 @@ namespace Microsoft.PowerFx.Core.Binding
                 // Typecheck the invocation.
 
                 // Typecheck the invocation and infer the return type.
-                fArgsValid &= maybeFunc.CheckInvocation(_txb, args, argTypes, _txb.ErrorContainer, out var returnType, out var nodeToCoercedTypeMap);
+                fArgsValid &= maybeFunc.CheckTypes(_txb.CheckTypesContext, args, argTypes, _txb.ErrorContainer, out var returnType, out var nodeToCoercedTypeMap);
+                maybeFunc.CheckSemantics(_txb, args, argTypes, _txb.ErrorContainer, ref nodeToCoercedTypeMap);
 
                 // This is done because later on, if a CallNode has a return type of Error, you can assert HasErrors on it.
                 // This was not done for UnaryOpNodes, BinaryOpNodes, CompareNodes.
@@ -4611,7 +4529,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 }
 
                 // Typecheck the node's children against the built-in Concatenate function
-                var fArgsValid = BuiltinFunctionsCore.Concatenate.CheckInvocation(_txb, args, argTypes, _txb.ErrorContainer, out var returnType, out var nodeToCoercedTypeMap);
+                var fArgsValid = BuiltinFunctionsCore.Concatenate.CheckTypes(_txb.CheckTypesContext, args, argTypes, _txb.ErrorContainer, out var returnType, out var nodeToCoercedTypeMap);
 
                 if (!fArgsValid)
                 {
@@ -4730,7 +4648,8 @@ namespace Microsoft.PowerFx.Core.Binding
                 bool fArgsValid;
 
                 // Typecheck the invocation and infer the return type.
-                fArgsValid = func.CheckInvocation(_txb, args, argTypes, _txb.ErrorContainer, out returnType, out _);
+                fArgsValid = func.CheckTypes(_txb.CheckTypesContext, args, argTypes, _txb.ErrorContainer, out returnType, out _);
+                func.CheckSemantics(_txb, args, argTypes, _txb.ErrorContainer);
                 if (!fArgsValid)
                 {
                     _txb.ErrorContainer.Error(DocumentErrorSeverity.Severe, node, TexlStrings.ErrInvalidArgs_Func, func.Name);
@@ -4896,7 +4815,8 @@ namespace Microsoft.PowerFx.Core.Binding
                 bool fArgsValid;
 
                 // Typecheck the invocation and infer the return type.
-                fArgsValid = func.CheckInvocation(_txb, args, argTypes, _txb.ErrorContainer, out returnType, out var nodeToCoercedTypeMap);
+                fArgsValid = func.CheckTypes(_txb.CheckTypesContext, args, argTypes, _txb.ErrorContainer, out returnType, out var nodeToCoercedTypeMap);
+                func.CheckSemantics(_txb, args, argTypes, _txb.ErrorContainer, ref nodeToCoercedTypeMap);
 
                 if (!fArgsValid && !func.HasPreciseErrors)
                 {
@@ -4982,7 +4902,8 @@ namespace Microsoft.PowerFx.Core.Binding
                 }
 
                 // The final CheckInvocation call will post all the necessary document errors.
-                someFunc.CheckInvocation(_txb, args, argTypes, _txb.ErrorContainer, out returnType, out _);
+                someFunc.CheckTypes(_txb.CheckTypesContext, args, argTypes, _txb.ErrorContainer, out returnType, out _);
+                someFunc.CheckSemantics(_txb, args, argTypes, _txb.ErrorContainer);
 
                 _txb.SetInfo(node, new CallInfo(someFunc, node));
                 _txb.SetType(node, returnType);
