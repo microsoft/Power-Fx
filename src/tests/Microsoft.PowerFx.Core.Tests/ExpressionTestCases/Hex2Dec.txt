@@ -46,3 +46,12 @@
 // characters no in 0-9 and A-Z range
 >> Hex2Dec("ZZZZ")
 #Error(Kind=InvalidArgument)
+
+>> Hex2Dec(["A","12","FFFF"])
+[10,18,65535]
+
+>> Hex2Dec("43j")
+#Error(Kind=InvalidArgument)
+
+>> Hex2Dec(["3","E","I","B"])
+[3,14,Microsoft.PowerFx.Types.ErrorValue,11]

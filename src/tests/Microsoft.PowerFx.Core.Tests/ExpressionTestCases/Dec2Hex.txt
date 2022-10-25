@@ -120,5 +120,11 @@
 >> Dec2Hex(Power(2,2))
 "4"
 
->> Dec2Hex([ 10, 255, -16 ])
-[ "A", "FF", "FFFFFFFFF0" ]
+>> Dec2Hex([10,255,-16])
+["A","FF","FFFFFFFFF0"]
+
+>> Dec2Hex([1,1e-45,1e45,2])
+["1","0",Microsoft.PowerFx.Types.ErrorValue,"2"]
+
+>> Dec2Hex([10,255,-16], 5)
+["A","FF","FFFFFFFFF0"]

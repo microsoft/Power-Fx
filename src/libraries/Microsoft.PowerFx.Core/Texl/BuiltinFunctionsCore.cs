@@ -220,6 +220,5 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction IsUTCToday = _featureGateFunctions.Append(new IsUTCTodayFunction());
         public static readonly TexlFunction UTCNow = _featureGateFunctions.Append(new UTCNowFunction());
         public static readonly TexlFunction UTCToday = _featureGateFunctions.Append(new UTCTodayFunction());
-
     }
 }

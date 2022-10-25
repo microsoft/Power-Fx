@@ -36,8 +36,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool IsStateless => true;
 
+        private static readonly DType TabularReturnType = DType.CreateTable(new TypedName(DType.Number, ColumnName_Value));
+
         public Hex2DecTFunction()
-            : base("Hex2Dec", TexlStrings.AboutHex2DecT, FunctionCategories.Table, DType.EmptyTable, 0, 1, 1, DType.EmptyTable)
+            : base("Hex2DecT", TexlStrings.AboutHex2DecT, FunctionCategories.Table, TabularReturnType, 0, 1, 1, DType.EmptyTable)
         {
         }
 

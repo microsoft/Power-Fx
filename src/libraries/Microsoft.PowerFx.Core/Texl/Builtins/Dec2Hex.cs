@@ -46,8 +46,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool HasPreciseErrors => true;
 
+        private static readonly DType TabularReturnType = DType.CreateTable(new TypedName(DType.String, ColumnName_Value));
+
         public Dec2HexTFunction()
-            : base("Dec2Hex", TexlStrings.AboutDec2HexT, FunctionCategories.Table, DType.EmptyTable, 0, 1, 2, DType.EmptyTable, DType.EmptyTable)
+            : base("Dec2HexT", TexlStrings.AboutDec2HexT, FunctionCategories.Table, TabularReturnType, 0, 1, 2, DType.EmptyTable, DType.EmptyTable)
         {
         }
 
