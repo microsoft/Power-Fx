@@ -212,6 +212,9 @@ namespace Microsoft.PowerFx.Core.Functions
         // Opt-in to using the new CheckTypes/CheckSemantics and then compare the results to legacy CheckInvocation
         public virtual bool CompareLegacyCheckInvocation => false;
 
+        // Opt-in to using the new CheckTypes/CheckSemantics methods without calling CheckInvocation
+        public virtual bool CheckTypesAndSemanticsOnly => false;
+
         /// <summary>
         /// Indicates whether the function sets a value.
         /// </summary>
@@ -388,7 +391,43 @@ namespace Microsoft.PowerFx.Core.Functions
             return char.ToLowerInvariant(name[0]).ToString() + name.Substring(1) + suffix + (IsAsync && !suppressAsync ? "Async" : string.Empty);
         }
 
-        public virtual bool CheckInvocation(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public bool HandleCheckInvocation(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        {
+            if (CheckTypesAndSemanticsOnly)
+            {
+                Contracts.Assert(!CompareLegacyCheckInvocation);
+
+                var result = CheckTypes(binding.CheckTypesContext, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+                CheckSemantics(binding, args, argTypes, errors, ref nodeToCoercedTypeMap);
+                return result;
+            }
+
+            if (CompareLegacyCheckInvocation)
+            {
+                Contracts.Assert(!CheckTypesAndSemanticsOnly);
+
+                var checkTypesErrors = new ErrorContainer();
+                var checkTypesResult = CheckTypes(binding.CheckTypesContext, args, argTypes, checkTypesErrors, out var checkTypesReturnType, out var checkTypesNodeMap);
+                CheckSemantics(binding, args, argTypes, checkTypesErrors, ref checkTypesNodeMap);
+
+                var legacyErrors = new ErrorContainer();
+                var legacyResult = CheckInvocation(binding, args, argTypes, legacyErrors, out var legacyReturnType, out var legacyNodeMap);
+
+                CompareResultToLegacyCheckInvocation(
+                    checkTypesResult,
+                    checkTypesErrors,
+                    checkTypesReturnType,
+                    checkTypesNodeMap,
+                    legacyResult,
+                    legacyErrors,
+                    legacyReturnType,
+                    legacyNodeMap);
+            }
+
+            return CheckInvocation(binding, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+        }
+
+        protected virtual bool CheckInvocation(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             return CheckInvocation(binding.CheckTypesContext, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
         }
@@ -409,7 +448,7 @@ namespace Microsoft.PowerFx.Core.Functions
 
         protected virtual bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
-            Contracts.Assert(CompareLegacyCheckInvocation);
+            Contracts.Assert(CheckTypesAndSemanticsOnly || CompareLegacyCheckInvocation);
 
             returnType = null;
             nodeToCoercedTypeMap = null;
@@ -418,18 +457,18 @@ namespace Microsoft.PowerFx.Core.Functions
 
         protected virtual void CheckSemantics(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors, ref Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
-            Contracts.Assert(CompareLegacyCheckInvocation);
+            Contracts.Assert(CheckTypesAndSemanticsOnly || CompareLegacyCheckInvocation);
         }
 
         protected virtual void CompareResultToLegacyCheckInvocation(
             bool result,
             IErrorContainer errors,
             DType returnType,
-            ref Dictionary<TexlNode, DType> nodeToCoercedTypeMap,
+            Dictionary<TexlNode, DType> nodeToCoercedTypeMap,
             bool legacyResult,
             IErrorContainer legacyErrors,
             DType legacyReturnType,
-            ref Dictionary<TexlNode, DType> legacyNodeToCoercedTypeMap)
+            Dictionary<TexlNode, DType> legacyNodeToCoercedTypeMap)
         {
             Contracts.Assert(CompareLegacyCheckInvocation);
         }
