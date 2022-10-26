@@ -209,12 +209,6 @@ namespace Microsoft.PowerFx.Core.Functions
         /// <summary>Indicates whether table and record param types require all columns to be specified in the input argument.</summary>
         public virtual bool RequireAllParamColumns => false;
 
-        // Opt-in to using the new CheckTypes/CheckSemantics and then compare the results to legacy CheckInvocation
-        public virtual bool CompareLegacyCheckInvocation => false;
-
-        // Opt-in to using the new CheckTypes/CheckSemantics methods without calling CheckInvocation
-        public virtual bool CheckTypesAndSemanticsOnly => false;
-
         /// <summary>
         /// Indicates whether the function sets a value.
         /// </summary>
@@ -391,6 +385,26 @@ namespace Microsoft.PowerFx.Core.Functions
             return char.ToLowerInvariant(name[0]).ToString() + name.Substring(1) + suffix + (IsAsync && !suppressAsync ? "Async" : string.Empty);
         }
 
+        protected virtual bool CheckInvocation(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        {
+            return CheckInvocation(binding.CheckTypesContext, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+        }
+
+        protected virtual bool CheckInvocation(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        {
+            return CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+        }
+
+        // Type check an invocation of the function with the specified args (and their corresponding types).
+        // Return true if everything aligns even with coercion, false otherwise.
+        // By default, the out returnType will be the one advertised via the constructor. If this.ReturnType
+        // is either Unknown or an aggregate type, this method needs to be specialized.
+        protected virtual bool CheckInvocation(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        {
+            return CheckInvocationCore(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+        }
+
+        #region CheckInvocation Replacement Project
         public bool HandleCheckInvocation(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             if (CheckTypesAndSemanticsOnly)
@@ -427,26 +441,21 @@ namespace Microsoft.PowerFx.Core.Functions
             return CheckInvocation(binding, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
         }
 
-        protected virtual bool CheckInvocation(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
-        {
-            return CheckInvocation(binding.CheckTypesContext, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
-        }
+        // Opt-in to using the new CheckTypes/CheckSemantics and then compare the results to legacy CheckInvocation
+        public virtual bool CompareLegacyCheckInvocation => false;
 
-        protected virtual bool CheckInvocation(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
-        {
-            return CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
-        }
+        // Opt-in to using the new CheckTypes/CheckSemantics methods without calling CheckInvocation
+        public virtual bool CheckTypesAndSemanticsOnly => false;
 
-        // Type check an invocation of the function with the specified args (and their corresponding types).
-        // Return true if everything aligns even with coercion, false otherwise.
-        // By default, the out returnType will be the one advertised via the constructor. If this.ReturnType
-        // is either Unknown or an aggregate type, this method needs to be specialized.
-        protected virtual bool CheckInvocation(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
-        {
-            return CheckInvocationCore(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
-        }
-
+        // Perform sub-expression type checking and produce a return type. This method will eventually replace CheckInvocation.
         protected virtual bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        {
+            Contracts.Assert(CheckTypesAndSemanticsOnly || CompareLegacyCheckInvocation);
+
+            return CheckTypes(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+        }
+
+        protected virtual bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.Assert(CheckTypesAndSemanticsOnly || CompareLegacyCheckInvocation);
 
@@ -455,11 +464,21 @@ namespace Microsoft.PowerFx.Core.Functions
             return false;
         }
 
+        // Perform expression-level semantics checks which require a binding. May produce coercions.
         protected virtual void CheckSemantics(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors, ref Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        {
+            Contracts.Assert(CheckTypesAndSemanticsOnly || CompareLegacyCheckInvocation);
+
+            CheckSemantics(binding, args, argTypes, errors);
+        }
+
+        protected virtual void CheckSemantics(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors)
         {
             Contracts.Assert(CheckTypesAndSemanticsOnly || CompareLegacyCheckInvocation);
         }
 
+        // This method can be overridden in a derived class and then a breakpoint can be used to inspect the
+        // output of both methods.
         protected virtual void CompareResultToLegacyCheckInvocation(
             bool result,
             IErrorContainer errors,
@@ -472,6 +491,7 @@ namespace Microsoft.PowerFx.Core.Functions
         {
             Contracts.Assert(CompareLegacyCheckInvocation);
         }
+        #endregion
 
         public virtual bool CheckForDynamicReturnType(TexlBinding binding, TexlNode[] args)
         {
