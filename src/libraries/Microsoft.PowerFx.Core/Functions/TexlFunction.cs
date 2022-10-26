@@ -401,7 +401,7 @@ namespace Microsoft.PowerFx.Core.Functions
         // is either Unknown or an aggregate type, this method needs to be specialized.
         protected virtual bool CheckInvocation(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
-            return CheckInvocationCore(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            return CheckTypesCore(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
         }
 
         #region CheckInvocation Replacement Project
@@ -459,9 +459,7 @@ namespace Microsoft.PowerFx.Core.Functions
         {
             Contracts.Assert(CheckTypesAndSemanticsOnly || CompareLegacyCheckInvocation);
 
-            returnType = null;
-            nodeToCoercedTypeMap = null;
-            return false;
+            return CheckTypesCore(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
         }
 
         // Perform expression-level semantics checks which require a binding. May produce coercions.
@@ -515,7 +513,7 @@ namespace Microsoft.PowerFx.Core.Functions
             return SupportsParamCoercion && (argIndex <= MinArity || argIndex <= MaxArity);
         }
 
-        private bool CheckInvocationCore(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        private bool CheckTypesCore(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);

@@ -375,6 +375,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => true;
 
+        public override bool CheckTypesAndSemanticsOnly => true;
+
         internal static readonly List<string> SubDayStringList = new List<string>() { "Hours", "Minutes", "Seconds", "Milliseconds" };
 
         public DateAddFunction()
@@ -401,7 +403,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return argumentIndex == 2;
         }
 
-        protected override bool CheckInvocation(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        protected override bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
@@ -410,7 +412,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            var fValid = base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fValid = base.CheckTypes(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
             Contracts.Assert(returnType == DType.DateTime);
 
             var type0 = argTypes[0];
