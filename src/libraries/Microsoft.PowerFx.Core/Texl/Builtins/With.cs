@@ -50,7 +50,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var fArgsValid = base.CheckTypes(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
 
             // Return type determined by second argument (function)
-            // Since CheckInvocation is called on partial functions, return type should be error when a second argument is undefined
+            // Since CheckTypes is called on partial functions, return type should be error when a second argument is undefined
             if (argTypes.Length >= 2)
             {
                 returnType = argTypes[1];
