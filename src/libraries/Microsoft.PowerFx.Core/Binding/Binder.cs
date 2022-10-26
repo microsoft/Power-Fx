@@ -133,6 +133,8 @@ namespace Microsoft.PowerFx.Core.Binding
         /// </summary>
         internal static DName ThisRecordDefaultName => new DName("ThisRecord");
 
+        public Features Features { get; }
+
         // Property to which current rule is being bound to. It could be null in the absence of NameResolver.
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0025:Use expression body for properties", Justification = "n/a")]
         public IExternalControlProperty Property
@@ -268,6 +270,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
             BindingConfig = bindingConfig;
             QueryOptions = queryOptions;
+            Features = features;
             _glue = glue;
             Top = node;
             NameResolver = resolver;
