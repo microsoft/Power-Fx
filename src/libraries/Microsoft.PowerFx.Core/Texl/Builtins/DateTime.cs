@@ -462,7 +462,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return GetUniqueTexlRuntimeName(suffix: "_T");
         }
 
-        public override bool CheckInvocation(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        protected override bool CheckInvocation(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
@@ -486,7 +486,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                 if (fValid)
                 {
-                    var resultColumnType = binding.CheckTypesContext.Features.HasFlag(Features.ConsistentOneColumnTableResult)
+                    var resultColumnType = context.Features.HasFlag(Features.ConsistentOneColumnTableResult)
                         ? ColumnName_Value
                         : type0.GetNames(DPath.Root).Single().Name;
                     returnType = DType.CreateTable(new TypedName(DType.DateTime, resultColumnType));
@@ -496,7 +496,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             {
                 if (type0.Kind == DKind.DateTime || type0.Kind == DKind.Date)
                 {
-                    returnType = DType.CreateTable(new TypedName(DType.DateTime, GetOneColumnTableResultName(binding)));
+                    returnType = DType.CreateTable(new TypedName(DType.DateTime, GetOneColumnTableResultName(context.Features)));
                 }
                 else if (type0.CoercesTo(DType.DateTime))
                 {
@@ -609,7 +609,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return GetUniqueTexlRuntimeName(suffix: "_T");
         }
 
-        public override bool CheckInvocation(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        protected override bool CheckInvocation(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
@@ -623,7 +623,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var type0 = argTypes[0];
             var type1 = argTypes[1];
 
-            returnType = DType.CreateTable(new TypedName(DType.Number, GetOneColumnTableResultName(binding)));
+            returnType = DType.CreateTable(new TypedName(DType.Number, GetOneColumnTableResultName(context.Features)));
 
             // Arg0 should be either a date or a column of dates.
             if (type0.IsTable)

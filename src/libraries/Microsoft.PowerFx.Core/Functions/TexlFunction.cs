@@ -387,6 +387,11 @@ namespace Microsoft.PowerFx.Core.Functions
 
         public virtual bool CheckInvocation(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
+            return CheckInvocation(binding.CheckTypesContext, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+        }
+
+        protected virtual bool CheckInvocation(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        {
             return CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
         }
 
