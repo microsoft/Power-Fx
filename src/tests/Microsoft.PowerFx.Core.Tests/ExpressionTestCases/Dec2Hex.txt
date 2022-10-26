@@ -113,10 +113,10 @@
 "0"
 
 >> Dec2Hex("true")
-Microsoft.PowerFx.Types.ErrorValue
+#Error(Kind=InvalidArgument)
 
 >> Dec2Hex("false")
-Microsoft.PowerFx.Types.ErrorValue
+#Error(Kind=InvalidArgument)
 
 // ******** FUNCTION VALUE AS PARAMETERS ********
 
@@ -139,4 +139,4 @@ Microsoft.PowerFx.Types.ErrorValue
 ["0000A","000FF","FFFFFFFFF0"]
 
 >> Dec2Hex(10, [2,5,10])
-Table({Result:"0A"},{Result:"0000A"},{Result:"000000000A"})
+["0A","0000A","000000000A"]
