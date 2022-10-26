@@ -387,6 +387,11 @@ namespace Microsoft.PowerFx.Core.Functions
 
         public virtual bool CheckInvocation(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
+            return CheckInvocation(binding.CheckTypesContext, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+        }
+
+        protected virtual bool CheckInvocation(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        {
             return CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
         }
 
@@ -394,7 +399,7 @@ namespace Microsoft.PowerFx.Core.Functions
         // Return true if everything aligns even with coercion, false otherwise.
         // By default, the out returnType will be the one advertised via the constructor. If this.ReturnType
         // is either Unknown or an aggregate type, this method needs to be specialized.
-        public virtual bool CheckInvocation(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        protected virtual bool CheckInvocation(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             return CheckInvocationCore(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
         }
@@ -1254,7 +1259,7 @@ namespace Microsoft.PowerFx.Core.Functions
             return false;
         }
 
-        protected bool CheckAllParamsAreTypeOrSingleColumnTable(TexlBinding binding, DType desiredType, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        protected bool CheckAllParamsAreTypeOrSingleColumnTable(CheckTypesContext context, DType desiredType, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
@@ -1277,7 +1282,7 @@ namespace Microsoft.PowerFx.Core.Functions
                 {
                     if (fValid && nodeToCoercedTypeMap.Any())
                     {
-                        var resultColumnName = binding.Features.HasFlag(Features.ConsistentOneColumnTableResult)
+                        var resultColumnName = context.Features.HasFlag(Features.ConsistentOneColumnTableResult)
                             ? new DName(ColumnName_ValueStr)
                             : argTypes[i].GetNames(DPath.Root).Single().Name;
 
@@ -1285,7 +1290,7 @@ namespace Microsoft.PowerFx.Core.Functions
                     }
                     else
                     {
-                        returnType = binding.Features.HasFlag(Features.ConsistentOneColumnTableResult)
+                        returnType = context.Features.HasFlag(Features.ConsistentOneColumnTableResult)
                             ? DType.CreateTable(new TypedName(desiredType, new DName(ColumnName_ValueStr)))
                             : argTypes[i];
                     }
