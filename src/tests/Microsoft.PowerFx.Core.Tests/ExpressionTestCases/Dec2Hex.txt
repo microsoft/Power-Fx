@@ -133,10 +133,10 @@ Microsoft.PowerFx.Types.ErrorValue
 ["1","0",Microsoft.PowerFx.Types.ErrorValue,"2"]
 
 >> Dec2Hex([10,11,"12"], [2,5,10])
-["0A","0000B","00000D"]
+["0A","0000B","000000000C"]
 
 >> Dec2Hex([10,255,-16], 5)
 ["0000A","000FF","FFFFFFFFF0"]
 
 >> Dec2Hex(10, [2,5,10])
-["0A","0000A","000000000A"]
+Table({Result:"0A"},{Result:"0000A"},{Result:"000000000A"})
