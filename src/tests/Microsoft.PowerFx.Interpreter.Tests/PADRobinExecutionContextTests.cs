@@ -21,8 +21,8 @@ namespace Microsoft.PowerFx.Tests
             using var table = CreateDataTable();
 
             var robinTable = new DataTableValue(table);
-            var c = new RobinExecutionContext(robinTable);
-            var result1 = engine.Eval("Index(robintable, 2).Scores", c); // 20
+            var robinScope = new RobinExecutionContext(robinTable);
+            var result1 = engine.Eval("Index(robintable, 2).Scores", robinScope); // 20
             Assert.Equal(20.0, result1.ToObject());
             Assert.Equal(1, robinTable.TryGetIndexNumberOfCalls);
             Assert.Equal(0, robinTable.MarshalNumberOfCalls);
