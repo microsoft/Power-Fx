@@ -441,13 +441,19 @@ namespace Microsoft.PowerFx.Core.Functions
             return CheckInvocation(binding, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
         }
 
-        // Opt-in to using the new CheckTypes/CheckSemantics and then compare the results to legacy CheckInvocation
+        /// <summary>
+        /// Opt-in to using the new CheckTypes/CheckSemantics and then compare the results to legacy CheckInvocation.
+        /// </summary>
         public virtual bool CompareLegacyCheckInvocation => false;
 
-        // Opt-in to using the new CheckTypes/CheckSemantics methods without calling CheckInvocation
+        /// <summary>
+        /// Opt-in to using the new CheckTypes/CheckSemantics methods without calling CheckInvocation.
+        /// </summary>
         public virtual bool CheckTypesAndSemanticsOnly => false;
 
-        // Perform sub-expression type checking and produce a return type. This method will eventually replace CheckInvocation.
+        /// <summary>
+        /// Perform sub-expression type checking and produce a return type. This method will eventually replace CheckInvocation.
+        /// </summary>
         protected virtual bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.Assert(CheckTypesAndSemanticsOnly || CompareLegacyCheckInvocation);
@@ -462,7 +468,9 @@ namespace Microsoft.PowerFx.Core.Functions
             return CheckTypesCore(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
         }
 
-        // Perform expression-level semantics checks which require a binding. May produce coercions.
+        /// <summary>
+        /// Perform expression-level semantics checks which require a binding. May produce coercions.
+        /// </summary>
         protected virtual void CheckSemantics(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors, ref Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.Assert(CheckTypesAndSemanticsOnly || CompareLegacyCheckInvocation);
