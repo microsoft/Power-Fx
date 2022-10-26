@@ -14,7 +14,7 @@ namespace Microsoft.PowerFx.Tests
     {
         // Eval against RobinExecutionContext
         [Fact]
-        public void DataTableEvalTest2()
+        public void EvalAgainstRobinExecutionContextTest()
         {
             var engine = new RecalcEngine();
 
@@ -30,7 +30,7 @@ namespace Microsoft.PowerFx.Tests
 
         // Eval against UpdateVariable
         [Fact]
-        public void DataTableEvalTest3()
+        public void EvalAgainstUpdateVariableTest()
         {
             var engine = new RecalcEngine();
 
