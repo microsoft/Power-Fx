@@ -55,7 +55,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return GetUniqueTexlRuntimeName(suffix: "_T");
         }
 
-        public override bool CheckInvocation(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        protected override bool CheckInvocation(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
@@ -77,13 +77,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 fValid &= CheckStringColumnType(type0, args[0], errors, ref nodeToCoercedTypeMap);
 
                 // Borrow the return type from the 1st arg
-                returnType = binding.CheckTypesContext.Features.HasFlag(Features.ConsistentOneColumnTableResult)
+                returnType = context.Features.HasFlag(Features.ConsistentOneColumnTableResult)
                     ? DType.CreateTable(new TypedName(DType.String, new DName(ColumnName_ValueStr)))
                     : type0;
             }
             else
             {
-                returnType = DType.CreateTable(new TypedName(DType.String, GetOneColumnTableResultName(binding)));
+                returnType = DType.CreateTable(new TypedName(DType.String, GetOneColumnTableResultName(context.Features)));
                 if (!DType.String.Accepts(type0))
                 {
                     if (type0.CoercesTo(DType.String))
