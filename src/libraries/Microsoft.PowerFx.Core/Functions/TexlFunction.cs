@@ -209,6 +209,9 @@ namespace Microsoft.PowerFx.Core.Functions
         /// <summary>Indicates whether table and record param types require all columns to be specified in the input argument.</summary>
         public virtual bool RequireAllParamColumns => false;
 
+        // Opt-in to using the new CheckTypes/CheckSemantics and then compare the results to legacy CheckInvocation
+        public virtual bool CompareLegacyCheckInvocation => false;
+
         /// <summary>
         /// Indicates whether the function sets a value.
         /// </summary>
@@ -402,6 +405,33 @@ namespace Microsoft.PowerFx.Core.Functions
         protected virtual bool CheckInvocation(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             return CheckInvocationCore(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+        }
+
+        protected virtual bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        {
+            Contracts.Assert(CompareLegacyCheckInvocation);
+
+            returnType = null;
+            nodeToCoercedTypeMap = null;
+            return false;
+        }
+
+        protected virtual void CheckSemantics(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors, ref Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        {
+            Contracts.Assert(CompareLegacyCheckInvocation);
+        }
+
+        protected virtual void CompareResultToLegacyCheckInvocation(
+            bool result,
+            IErrorContainer errors,
+            DType returnType,
+            ref Dictionary<TexlNode, DType> nodeToCoercedTypeMap,
+            bool legacyResult,
+            IErrorContainer legacyErrors,
+            DType legacyReturnType,
+            ref Dictionary<TexlNode, DType> legacyNodeToCoercedTypeMap)
+        {
+            Contracts.Assert(CompareLegacyCheckInvocation);
         }
 
         public virtual bool CheckForDynamicReturnType(TexlBinding binding, TexlNode[] args)
