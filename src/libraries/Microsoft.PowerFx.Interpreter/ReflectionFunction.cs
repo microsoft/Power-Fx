@@ -69,6 +69,8 @@ namespace Microsoft.PowerFx
 
         public override bool SupportsParamCoercion => false;
 
+        public override bool CheckTypesAndSemanticsOnly => true;
+
         public Func<FormulaValue[], Task<FormulaValue>> _impl;
 
         public CustomSetPropertyFunction(string name)

@@ -24,6 +24,8 @@ namespace Microsoft.PowerFx.Functions
     {
         public override bool RequiresDataSourceScope => true;
 
+        public override bool CheckTypesAndSemanticsOnly => true;
+
         public override bool ArgMatchesDatasourceType(int argNum)
         {
             return argNum >= 1;
@@ -158,6 +160,8 @@ namespace Microsoft.PowerFx.Functions
     internal class PatchFunction : PatchAndValidateRecordFunctionBase, IAsyncTexlFunction
     {
         public override bool IsSelfContained => false;
+
+        public override bool CheckTypesAndSemanticsOnly => true;
 
         public PatchFunction()
             : base("Patch", AboutPatch, FunctionCategories.Table | FunctionCategories.Behavior, DType.EmptyRecord, 0, 3, int.MaxValue, DType.EmptyTable, DType.EmptyRecord, DType.EmptyRecord)
