@@ -39,7 +39,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         private static readonly DType TabularReturnType = DType.CreateTable(new TypedName(DType.Number, ColumnName_Value));
 
         public Hex2DecTFunction()
-            : base("Hex2DecT", TexlStrings.AboutHex2DecT, FunctionCategories.Table, TabularReturnType, 0, 1, 1, DType.EmptyTable)
+            : base("Hex2Dec", TexlStrings.AboutHex2DecT, FunctionCategories.Table, TabularReturnType, 0, 1, 1, DType.EmptyTable)
         {
         }
 

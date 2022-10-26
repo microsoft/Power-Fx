@@ -107,10 +107,10 @@
 "0"
 
 >> Dec2Hex("true")
-#Error(Kind=InvalidArgument)
+"1"
 
 >> Dec2Hex("false")
-#Error(Kind=InvalidArgument)
+"0"
 
 // ******** FUNCTION VALUE AS PARAMETERS ********
 
@@ -127,4 +127,4 @@
 ["1","0",Microsoft.PowerFx.Types.ErrorValue,"2"]
 
 >> Dec2Hex([10,255,-16], 5)
-["A","FF","FFFFFFFFF0"]
+["0000A","000FF","FFFFFFFFF0"]
