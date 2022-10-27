@@ -25,77 +25,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool HasPreciseErrors => true;
 
         public Dec2HexFunction()
-            : base("Dec2Hex", TexlStrings.AboutDec2Hex, FunctionCategories.MathAndStat, DType.String, 0, 1, 2)
+            : base("Dec2Hex", TexlStrings.AboutDec2Hex, FunctionCategories.MathAndStat, DType.String, 0, 1, 2, DType.Number, DType.Number)
         {
         }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
             yield return new[] { TexlStrings.Dec2HexArg1, TexlStrings.Dec2HexArg2 };
-        }
-
-        protected override bool CheckInvocation(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
-        {
-            Contracts.AssertValue(args);
-            Contracts.AssertAllValues(args);
-            Contracts.AssertValue(argTypes);
-            Contracts.Assert(args.Length == argTypes.Length);
-            Contracts.AssertValue(errors);
-            Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
-
-            var fValid = CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
-            if (argTypes.Length == 1)
-            {
-                var type = argTypes[0];
-                var arg = args[0];
-                if (!DType.Number.Accepts(type))
-                {
-                    if (type.CoercesTo(DType.Number))
-                    {
-                        CollectionUtils.Add(ref nodeToCoercedTypeMap, arg, DType.Number);
-                    }
-                    else
-                    {
-                        fValid = false;
-                        errors.EnsureError(DocumentErrorSeverity.Severe, arg, TexlStrings.ErrTypeError);
-                    }
-                }
-            }
-            else if (argTypes.Length == 2)
-            {
-                var type0 = argTypes[0];
-                var type1 = argTypes[1];
-                var arg1 = args[0];
-                var arg2 = args[1];
-
-                if (!DType.Number.Accepts(type0))
-                {
-                    if (type0.CoercesTo(DType.Number))
-                    {
-                        CollectionUtils.Add(ref nodeToCoercedTypeMap, arg1, DType.Number);
-                    }
-                    else
-                    {
-                        fValid = false;
-                        errors.EnsureError(DocumentErrorSeverity.Severe, arg1, TexlStrings.ErrTypeError);
-                    }
-                }
-
-                if (!DType.Number.Accepts(type1))
-                {
-                    if (type1.CoercesTo(DType.Number))
-                    {
-                        CollectionUtils.Add(ref nodeToCoercedTypeMap, arg2, DType.Number);
-                    }
-                    else
-                    {
-                        fValid = false;
-                        errors.EnsureError(DocumentErrorSeverity.Severe, arg2, TexlStrings.ErrTypeError);
-                    }
-                }
-            }
-
-            return fValid;
         }
     }
 
@@ -159,12 +95,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 var otherType = DType.Invalid;
                 TexlNode otherArg = null;
 
+                returnType = DType.CreateTable(new TypedName(DType.String, new DName(ColumnName_ValueStr)));
                 if (type0.IsTable)
                 {
                     // Ensure we have a one-column table of numerics
                     fValid &= CheckNumericColumnType(type0, args[0], errors, ref nodeToCoercedTypeMap);
-
-                    returnType = DType.CreateTable(new TypedName(DType.String, new DName(ColumnName_ValueStr)));
 
                     // Check arg1 below.
                     otherArg = args[1];
@@ -174,10 +109,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 {
                     // Ensure we have a one-column table of numerics
                     fValid &= CheckNumericColumnType(type1, args[1], errors, ref nodeToCoercedTypeMap);
-
-                    // Since the 1st arg is not a table, make a new table return type
-                    // *[Value:n] if the consistent return schema flag is enabled
-                    returnType = DType.CreateTable(new TypedName(DType.String, new DName(ColumnName_ValueStr)));
 
                     // Check arg0 below.
                     otherArg = args[0];
