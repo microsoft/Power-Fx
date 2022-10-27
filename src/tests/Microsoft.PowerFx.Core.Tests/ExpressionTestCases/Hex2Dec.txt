@@ -1,9 +1,6 @@
 ﻿>> Hex2Dec("0")
 0
 
->> Hex2Dec(Blank())
-#Error(Kind=InvalidArgument)
-
 // Positive Integer Parameters
 >> Hex2Dec("A5")
 165
@@ -16,6 +13,9 @@
 
 >> Hex2Dec("7FFFFFFFFF")
 549755813887
+
+>> Hex2Dec("FfFf")
+65535
 
 // Negative Integer Parameters
 >> Hex2Dec("FFFFFFFFFF")
@@ -36,22 +36,48 @@
 >> Hex2Dec("FFFFFF4D2C")
 -45780
 
-
-
 // ******** NULL and ERROR PARAMETERS ********
+
+>> Hex2Dec(Blank())
+0
+
+>> Hex2Dec("")
+0
+
 // More than 10 characters
 >> Hex2Dec("FFFFFFFFFFF")
 #Error(Kind=Numeric)
 
 // characters no in 0-9 and A-Z range
 >> Hex2Dec("ZZZZ")
-#Error(Kind=InvalidArgument)
+#Error(Kind=Numeric)
+
+>> Hex2Dec(If(1/0<2,["true"]))
+#Error(Kind=Div0)
+
+>> Hex2Dec(If(1<0,["true"]))
+Blank()
+
+>> Hex2Dec(Filter(["true","false"], Len(Value) > 10))
+[]
+
+>> Hex2Dec(If(1/0<2,[1]))
+#Error(Kind=Div0)
+
+>> Hex2Dec(If(1<0,[1]))
+Blank()
+
+>> Hex2Dec(Filter([1,2,3], Value > 10))
+[]
+
+// ******** TABULAR VALUE AS PARAMETERS ********
 
 >> Hex2Dec(["A","12","FFFF"])
 [10,18,65535]
 
 >> Hex2Dec("43j")
-#Error(Kind=InvalidArgument)
+#Error(Kind=Numeric)
 
 >> Hex2Dec(["3","E","I","B"])
 [3,14,Microsoft.PowerFx.Types.ErrorValue,11]
+

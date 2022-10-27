@@ -43,6 +43,9 @@
 >> Dec2Hex(45780)
 "B2D4"
 
+>> Dec2Hex(45780, 0)
+"B2D4"
+
 >> Dec2Hex(45780, 3)
 #Error(Kind=InvalidArgument)
 
@@ -54,6 +57,9 @@
 
 >> Dec2Hex(45780, 6)
 "00B2D4"
+
+>> Dec2Hex(45780, 10)
+"000000B2D4"
 
 >> Dec2Hex(45780, -6)
 #Error(Kind=Numeric)
@@ -86,6 +92,40 @@
 
 >> Dec2Hex(549755813888)
 #Error(Kind=Numeric)
+
+>> Dec2Hex(If(1/0<2,["true"]))
+#Error(Kind=Div0)
+
+>> Dec2Hex(If(1<0,["true"]))
+Blank()
+
+>> Dec2Hex(Filter(["true","false"], Len(Value) > 10))
+[]
+
+>> Dec2Hex(If(1/0<2,[1]))
+#Error(Kind=Div0)
+
+>> Dec2Hex(If(1<0,[1]))
+Blank()
+
+>> Dec2Hex(Filter([1,2,3], Value > 10))
+[]
+
+>> Dec2Hex(If(1/0<2,[12, 56]), 1)
+#Error(Kind=Div0)
+
+>> Dec2Hex(1234, If(Sqrt(-1)<0,[1, 2, 3]))
+#Error(Kind=Numeric)
+
+>> Dec2Hex([12, 56], 1/0)
+[Microsoft.PowerFx.Types.ErrorValue,Microsoft.PowerFx.Types.ErrorValue]
+
+>> Dec2Hex(Sqrt(-1), [1, 2, 3])
+[Microsoft.PowerFx.Types.ErrorValue,Microsoft.PowerFx.Types.ErrorValue,Microsoft.PowerFx.Types.ErrorValue]
+
+>> Dec2Hex([123, 234], [3, 2, 3])
+["07B","EA",Microsoft.PowerFx.Types.ErrorValue]
+
 
 // ******** STRING PARAMETERS ********
 
@@ -125,6 +165,8 @@
 
 >> Dec2Hex(Power(2,2))
 "4"
+
+// ******** TABULAR VALUE AS PARAMETERS ********
 
 >> Dec2Hex([10,255,-16])
 ["A","FF","FFFFFFFFF0"]
