@@ -893,21 +893,21 @@ namespace Microsoft.PowerFx.Functions
 
         private static FormulaValue Dec2Hex(IRContext irContext, NumberValue[] args)
         {
-            var min_number = -Math.Pow(2, 39);
-            var max_number = Math.Pow(2, 39) - 1;
+            var minNumber = -(1L << 39);
+            var maxNumber = (1L << 39) - 1;
 
             var number = Math.Floor(args[0].Value);
             var places = Math.Floor(args[1].Value);
 
-            if (number < min_number || number > max_number)
+            if (number < minNumber || number > maxNumber)
             {
                 return CommonErrors.OverflowError(irContext);
             }
 
-            var round_places = (int)Math.Floor(places);
+            var roundPlaces = (int)Math.Floor(places);
 
             // places need to be non-negative and 10 or less
-            if (round_places < 0 || round_places > 10)
+            if (roundPlaces < 0 || roundPlaces > 10)
             {
                 return new ErrorValue(irContext, new ExpressionError()
                 {
@@ -917,7 +917,7 @@ namespace Microsoft.PowerFx.Functions
                 });
             }
 
-            var round_number = (long)number;
+            var roundNumber = (long)number;
             string result;
             /*
              * a long negative will result in 16 characters so
@@ -925,16 +925,16 @@ namespace Microsoft.PowerFx.Functions
             */
             if (number < 0)
             {
-                result = round_number.ToString("X");
+                result = roundNumber.ToString("X");
                 result = result.Substring(result.Length - 10, 10);
             }
             else
             {
-                result = round_number.ToString("X" + round_places);
+                result = roundNumber.ToString("X" + roundPlaces);
             }
 
             // places need to be greater or equal to length of hexadecimal when number is positive
-            if (round_places != 0 && result.Length > round_places && number > 0)
+            if (roundPlaces != 0 && result.Length > roundPlaces && number > 0)
             {
                 return CommonErrors.GenericInvalidArgument(irContext);
             }
@@ -946,23 +946,28 @@ namespace Microsoft.PowerFx.Functions
         {
             var number = args[0].Value;
 
+            if (string.IsNullOrEmpty(number))
+            {
+                return new NumberValue(irContext, 0);
+            }
+
             if (number.Length > 10)
             {
                 return CommonErrors.OverflowError(irContext);
             }
 
-            // negative numbers starts after 8000000000 so fill the string with F up to 16 characters
+            // negative numbers starts after 8000000000
             if (number.Length == 10 && number.CompareTo("8000000000") > 0)
             {
-                var max_number = (long)Math.Pow(2, 40);
+                var maxNumber = (long)(1L << 40);
                 long.TryParse(number, System.Globalization.NumberStyles.HexNumber, null, out var negative_result);
-                negative_result -= max_number;
+                negative_result -= maxNumber;
                 return new NumberValue(irContext, negative_result);
             }
 
             if (!long.TryParse(number, System.Globalization.NumberStyles.HexNumber, null, out var result))
             {
-                return CommonErrors.GenericInvalidArgument(irContext);
+                return CommonErrors.OverflowError(irContext);
             }
 
             return new NumberValue(irContext, result);

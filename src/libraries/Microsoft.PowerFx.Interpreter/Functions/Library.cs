@@ -450,7 +450,7 @@ namespace Microsoft.PowerFx.Functions
                 BuiltinFunctionsCore.Dec2Hex,
                 StandardErrorHandling<NumberValue>(
                     BuiltinFunctionsCore.Dec2Hex.Name,
-                    expandArguments: InsertDefaultValues(outputArgsCount: 2, fillWith: new BlankValue(IRContext.NotInSource(FormulaType.Blank))),
+                    expandArguments: InsertDefaultValues(outputArgsCount: 2, fillWith: new NumberValue(IRContext.NotInSource(FormulaType.Number), 0)),
                     replaceBlankValues: ReplaceBlankWithZero,
                     checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
