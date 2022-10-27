@@ -17,7 +17,7 @@ namespace Microsoft.PowerFx.Types
 
         private readonly EvalVisitor _runner;
 
-        private EvalVisitorContext Context { get; set; }
+        private readonly EvalVisitorContext _context;
 
         // Lambdas don't get a special type. 
         // Type is the type the lambda evaluates too. 
@@ -26,20 +26,19 @@ namespace Microsoft.PowerFx.Types
         {
             _tree = node;
             _runner = visitor;
-            Context = context;
+            _context = context;
         }
 
         public async ValueTask<FormulaValue> EvalAsync()
         {
-            _runner.CheckCancel();
-            var result = await _tree.Accept(_runner, Context);
-            return result;
+            return await EvalInRowScopeAsync(_context);
         }
 
         public async ValueTask<FormulaValue> EvalInRowScopeAsync(EvalVisitorContext context)
         {
-            Context = context;
-            return await EvalAsync();
+            _runner.CheckCancel();
+            var result = await _tree.Accept(_runner, context);
+            return result;
         }
 
         public override object ToObject()
