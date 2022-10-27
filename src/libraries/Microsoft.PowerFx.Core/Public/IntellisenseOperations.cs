@@ -74,7 +74,7 @@ namespace Microsoft.PowerFx.Intellisense
             foreach (var fnc in fncs)
             {
                 var result =
-                    fnc.CheckInvocation(
+                    fnc.HandleCheckInvocation(
                         _checkResult._binding,
                         args.ToArray(),
                         types,
