@@ -353,34 +353,46 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 Thread.CurrentThread.CurrentCulture = new CultureInfo("tr-TR");
 
                 var config = new PowerFxConfig(CultureInfo.InvariantCulture);
-                var engine = new RecalcEngine(config);
 
-                var symbols = new SymbolValues();
+                var upperExpression = "Upper(\"INDIGO inDigo\")";
+                var lowerExpression = "Lower(\"INDIGO inDigo\")";
+                var properExpression = "Proper(\"INDIGO inDigo\")";
 
-                var upperExpression = "Upper(\"inDigo\")";
-                var lowerExpression = "Lower(\"inDigo\")";
-                var properExpression = "Proper(\"inDigo\")";
-
-                var datetimeExpression = "Text(DateTimeValue(\"Perşembe 06 Ekim 2022 14:19:06\", \"tr-TR\"))";
+                var datetimeExpression = "Text(DateTimeValue(\"Perşembe 6 Ekim 2022 14:19:06\", \"tr-TR\"))";
 
                 try
                 {
+                    // Engine will use custom locale (invariant)
+                    var engine = new RecalcEngine(config);
+
                     var result = engine.Eval(upperExpression);
-                    Assert.Equal("INDIGO", (result as StringValue).Value);
+                    Assert.Equal("INDIGO INDIGO", (result as StringValue).Value);
 
                     result = engine.Eval(lowerExpression);
-                    Assert.Equal("indigo", (result as StringValue).Value);
+                    Assert.Equal("indigo indigo", (result as StringValue).Value);
 
                     result = engine.Eval(properExpression);
-                    Assert.Equal("Indigo", (result as StringValue).Value);
+                    Assert.Equal("Indigo Indigo", (result as StringValue).Value);
 
                     result = engine.Eval(datetimeExpression);
                     Assert.Equal("10/06/2022 14:19", (result as StringValue).Value);
+
+                    // Engine will use thread locale (tr-TR)
+                    var engine2 = new RecalcEngine(new PowerFxConfig());
+
+                    result = engine2.Eval(upperExpression);
+                    Assert.Equal("INDIGO İNDİGO", (result as StringValue).Value);
+
+                    result = engine2.Eval(lowerExpression);
+                    Assert.Equal("ındıgo indigo", (result as StringValue).Value);
+
+                    result = engine2.Eval(properExpression);
+                    Assert.Equal("Indıgo İndigo", (result as StringValue).Value);
                 }
                 catch (Exception ex)
                 {
                     exception = ex;
-                }                
+                }
             });
 
             t.Start();
