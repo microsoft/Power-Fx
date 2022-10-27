@@ -3297,7 +3297,7 @@
     
   </data>
   <data name="ErrRemoveAllArg" xml:space="preserve">
-    <value>Falls angegeben, muss das letzte Argument „Alle sein. Gibt es einen Tippfehler?</value>
+    <value>Falls angegeben, muss das letzte Argument „Alle“ sein. Gibt es einen Tippfehler?</value>
     
   </data>
   <data name="PenMode_Draw_DisplayName" xml:space="preserve">
