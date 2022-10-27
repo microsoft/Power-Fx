@@ -204,6 +204,8 @@ namespace Microsoft.PowerFx.Core.Binding
 
         public BindingConfig BindingConfig { get; }
 
+        public CheckTypesContext CheckTypesContext { get; }
+
         public IExternalDocument Document => NameResolver?.Document;
 
         public bool AffectsAliases { get; private set; }
@@ -327,6 +329,14 @@ namespace Microsoft.PowerFx.Core.Binding
 
             resolver?.TryGetCurrentControlProperty(out _property);
             _control = resolver?.CurrentEntity as IExternalControl;
+
+            CheckTypesContext = new CheckTypesContext(
+                features,
+                resolver,
+                entityName: EntityName,
+                propertyName: Property?.InvariantName ?? string.Empty,
+                isEnhancedDelegationEnabled: Document?.Properties?.EnabledFeatures?.IsEnhancedDelegationEnabled ?? false,
+                allowsSideEffects: bindingConfig.AllowsSideEffects);
         }
 
         // Binds a Texl parse tree.
@@ -4397,7 +4407,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 // Typecheck the invocation.
 
                 // Typecheck the invocation and infer the return type.
-                fArgsValid &= maybeFunc.CheckInvocation(_txb, args, argTypes, _txb.ErrorContainer, out var returnType, out var nodeToCoercedTypeMap);
+                fArgsValid &= maybeFunc.HandleCheckInvocation(_txb, args, argTypes, _txb.ErrorContainer, out var returnType, out var nodeToCoercedTypeMap);
 
                 // This is done because later on, if a CallNode has a return type of Error, you can assert HasErrors on it.
                 // This was not done for UnaryOpNodes, BinaryOpNodes, CompareNodes.
@@ -4601,7 +4611,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 }
 
                 // Typecheck the node's children against the built-in Concatenate function
-                var fArgsValid = BuiltinFunctionsCore.Concatenate.CheckInvocation(_txb, args, argTypes, _txb.ErrorContainer, out var returnType, out var nodeToCoercedTypeMap);
+                var fArgsValid = BuiltinFunctionsCore.Concatenate.HandleCheckInvocation(_txb, args, argTypes, _txb.ErrorContainer, out var returnType, out var nodeToCoercedTypeMap);
 
                 if (!fArgsValid)
                 {
@@ -4720,7 +4730,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 bool fArgsValid;
 
                 // Typecheck the invocation and infer the return type.
-                fArgsValid = func.CheckInvocation(_txb, args, argTypes, _txb.ErrorContainer, out returnType, out _);
+                fArgsValid = func.HandleCheckInvocation(_txb, args, argTypes, _txb.ErrorContainer, out returnType, out _);
                 if (!fArgsValid)
                 {
                     _txb.ErrorContainer.Error(DocumentErrorSeverity.Severe, node, TexlStrings.ErrInvalidArgs_Func, func.Name);
@@ -4886,7 +4896,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 bool fArgsValid;
 
                 // Typecheck the invocation and infer the return type.
-                fArgsValid = func.CheckInvocation(_txb, args, argTypes, _txb.ErrorContainer, out returnType, out var nodeToCoercedTypeMap);
+                fArgsValid = func.HandleCheckInvocation(_txb, args, argTypes, _txb.ErrorContainer, out returnType, out var nodeToCoercedTypeMap);
 
                 if (!fArgsValid && !func.HasPreciseErrors)
                 {
@@ -4969,7 +4979,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 }
 
                 // The final CheckInvocation call will post all the necessary document errors.
-                someFunc.CheckInvocation(_txb, args, argTypes, _txb.ErrorContainer, out returnType, out _);
+                someFunc.HandleCheckInvocation(_txb, args, argTypes, _txb.ErrorContainer, out returnType, out _);
 
                 _txb.SetInfo(node, new CallInfo(someFunc, node));
                 _txb.SetType(node, returnType);

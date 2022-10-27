@@ -43,6 +43,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => true;
 
+        public override bool CheckTypesAndSemanticsOnly => true;
+
         public FindTFunction()
             : base("Find", TexlStrings.AboutFindT, FunctionCategories.Table, DType.EmptyTable, 0, 2, 3)
         {
@@ -59,7 +61,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return GetUniqueTexlRuntimeName(suffix: "_T");
         }
 
-        public override bool CheckInvocation(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        protected override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
@@ -68,7 +70,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            var fValid = CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
 
             var type0 = argTypes[0];
             var type1 = argTypes[1];
@@ -110,7 +112,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
             }
 
-            returnType = DType.CreateTable(new TypedName(DType.Number, GetOneColumnTableResultName(binding)));
+            returnType = DType.CreateTable(new TypedName(DType.Number, GetOneColumnTableResultName(context.Features)));
 
             var hasStartIndex = argTypes.Length == 3;
 
