@@ -1593,7 +1593,7 @@ namespace Microsoft.PowerFx.Functions
 
             var childContext = context.SymbolContext.WithScopeValues(arg0);
 
-            return await arg1.EvalAsync(runner, context.NewScope(childContext));
+            return await arg1.EvalInRowScopeAsync(context.NewScope(childContext));
         }
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-if
@@ -1769,7 +1769,7 @@ namespace Microsoft.PowerFx.Functions
             for (var i = 1; i < args.Length - 1; i += 2)
             {
                 var match = (LambdaFormulaValue)args[i];
-                var matchValue = await match.EvalAsync(runner, context);
+                var matchValue = await match.EvalAsync();
 
                 if (matchValue is ErrorValue mve)
                 {
@@ -1783,7 +1783,7 @@ namespace Microsoft.PowerFx.Functions
                 if (equal)
                 {
                     var lambda = (LambdaFormulaValue)args[i + 1];
-                    var result = await lambda.EvalAsync(runner, context);
+                    var result = await lambda.EvalAsync();
                     if (errors.Count != 0)
                     {
                         return ErrorValue.Combine(irContext, errors);
@@ -1801,7 +1801,7 @@ namespace Microsoft.PowerFx.Functions
             if ((args.Length - 4) % 2 == 0)
             {
                 var lambda = (LambdaFormulaValue)args[args.Length - 1];
-                var result = await lambda.EvalAsync(runner, context);
+                var result = await lambda.EvalAsync();
                 if (errors.Count != 0)
                 {
                     return ErrorValue.Combine(irContext, errors);
@@ -1866,7 +1866,7 @@ namespace Microsoft.PowerFx.Functions
                 }
 
                 // Filter evals to a boolean
-                var result = filter.EvalAsync(runner, context.NewScope(childContext)).AsTask();
+                var result = filter.EvalInRowScopeAsync(context.NewScope(childContext)).AsTask();
 
                 yield return result;
             }
@@ -1883,7 +1883,7 @@ namespace Microsoft.PowerFx.Functions
                 SymbolContext childContext = context.SymbolContext.WithThisItem(row.ToFormulaValue());
 
                 // Filter evals to a boolean
-                var result = filter.EvalAsync(runner, context.NewScope(childContext)).AsTask();
+                var result = filter.EvalInRowScopeAsync(context.NewScope(childContext)).AsTask();
 
                 yield return result;
             }
