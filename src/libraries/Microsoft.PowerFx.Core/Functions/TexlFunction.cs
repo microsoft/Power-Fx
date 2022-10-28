@@ -385,11 +385,13 @@ namespace Microsoft.PowerFx.Core.Functions
             return char.ToLowerInvariant(name[0]).ToString() + name.Substring(1) + suffix + (IsAsync && !suppressAsync ? "Async" : string.Empty);
         }
 
+        [Obsolete("Override CheckTypes instead. If binder access is needed to generate errors, override CheckSemantics. Override the bool property CheckTypesAndSemanticsOnly and set it to true if you override either of these methods.", false)]
         protected virtual bool CheckInvocation(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             return CheckInvocation(binding.CheckTypesContext, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
         }
 
+        [Obsolete("Override CheckTypes instead. If binder access is needed to generate errors, override CheckSemantics. Override the bool property CheckTypesAndSemanticsOnly and set it to true if you override either of these methods.", false)]
         protected virtual bool CheckInvocation(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             return CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
@@ -425,7 +427,9 @@ namespace Microsoft.PowerFx.Core.Functions
                 CheckSemantics(binding, args, argTypes, checkTypesErrors, ref checkTypesNodeMap);
 
                 var legacyErrors = new ErrorContainer();
+#pragma warning disable CS0618 // Type or member is obsolete
                 var legacyResult = CheckInvocation(binding, args, argTypes, legacyErrors, out var legacyReturnType, out var legacyNodeMap);
+#pragma warning restore CS0618 // Type or member is obsolete
 
                 CompareResultToLegacyCheckInvocation(
                     checkTypesResult,
@@ -438,7 +442,9 @@ namespace Microsoft.PowerFx.Core.Functions
                     legacyNodeMap);
             }
 
+#pragma warning disable CS0618 // Type or member is obsolete
             return CheckInvocation(binding, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+#pragma warning restore CS0618 // Type or member is obsolete
         }
 
         /// <summary>
