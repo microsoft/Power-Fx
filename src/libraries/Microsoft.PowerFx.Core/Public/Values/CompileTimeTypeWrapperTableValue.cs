@@ -1,12 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System.Collections.Generic;
-using System.Diagnostics.Contracts;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.PowerFx.Core.IR;
-
 namespace Microsoft.PowerFx.Types
 {
     // Project the correct compile-time type onto the runtime value. 
@@ -14,8 +8,6 @@ namespace Microsoft.PowerFx.Types
     //    First(Table({a:1},{b:2})), result is a record with both fields a and b. 
     internal class CompileTimeTypeWrapperTableValue : CollectionTableValue<DValue<RecordValue>>
     {
-        private readonly TableValue _inner;
-
         public static TableValue AdjustType(TableType expectedType, TableValue inner)
         {
             if (expectedType.Equals(inner.Type))
@@ -29,7 +21,6 @@ namespace Microsoft.PowerFx.Types
         private CompileTimeTypeWrapperTableValue(TableType type, TableValue inner)
             : base(type.ToRecord(), inner.Rows)
         {
-            _inner = inner;
         }
 
         protected override DValue<RecordValue> Marshal(DValue<RecordValue> record)
