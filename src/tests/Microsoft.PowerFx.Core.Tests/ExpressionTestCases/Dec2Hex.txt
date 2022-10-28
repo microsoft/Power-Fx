@@ -182,3 +182,11 @@ Blank()
 
 >> Dec2Hex(10, [2,5,10])
 ["0A","0000A","000000000A"]
+
+// ******** DIFFERENT INPUT TYPES AS PARAMETERS ********
+
+>> Dec2Hex(Table({a:10},{a:255},{a:-16}))
+["A","FF","FFFFFFFFF0"]
+
+>> Dec2Hex(Table({a:10},{a:11},{a:12}), Table({b:2},{b:5},{b:10}))
+["0A","0000B","000000000C"]

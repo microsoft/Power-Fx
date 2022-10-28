@@ -6579,7 +6579,11 @@
     <value>table</value>
   </data>
   <data name="Dec2HexTArg2" xml:space="preserve">
-    <value>table</value>
+    <value>places</value>
+  </data>
+  <data name="AboutDec2HexT_places" xml:space="preserve">
+    <value>A numeric value or array of values to add padding to hexadecimal strings.</value>
+    <comment>Description of 'Dec2HexArgT2' function parameter.</comment>
   </data>
   <data name="AboutDec2Hex_table" xml:space="preserve">
     <value>A column of numeric decimal values to convert to hexadecimals.</value>

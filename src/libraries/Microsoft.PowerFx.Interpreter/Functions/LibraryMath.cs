@@ -897,17 +897,15 @@ namespace Microsoft.PowerFx.Functions
             var maxNumber = (1L << 39) - 1;
 
             var number = Math.Floor(args[0].Value);
-            var places = Math.Floor(args[1].Value);
+            var places = (int)Math.Floor(args[1].Value);
 
             if (number < minNumber || number > maxNumber)
             {
                 return CommonErrors.OverflowError(irContext);
             }
 
-            var roundPlaces = (int)Math.Floor(places);
-
             // places need to be non-negative and 10 or less
-            if (roundPlaces < 0 || roundPlaces > 10)
+            if (places < 0 || places > 10)
             {
                 return new ErrorValue(irContext, new ExpressionError()
                 {
@@ -930,11 +928,11 @@ namespace Microsoft.PowerFx.Functions
             }
             else
             {
-                result = roundNumber.ToString("X" + roundPlaces);
+                result = roundNumber.ToString("X" + places);
             }
 
             // places need to be greater or equal to length of hexadecimal when number is positive
-            if (roundPlaces != 0 && result.Length > roundPlaces && number > 0)
+            if (places != 0 && result.Length > places && number > 0)
             {
                 return CommonErrors.GenericInvalidArgument(irContext);
             }

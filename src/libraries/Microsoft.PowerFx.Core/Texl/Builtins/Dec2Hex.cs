@@ -70,6 +70,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
             var fValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            Contracts.Assert(returnType.IsTable);
+            Contracts.Assert(!fValid || returnType.IsColumn);
             if (argTypes.Length == 1)
             {
                 var type = argTypes[0];
@@ -97,7 +99,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 var otherType = DType.Invalid;
                 TexlNode otherArg = null;
 
-                returnType = DType.CreateTable(new TypedName(DType.String, new DName(ColumnName_ValueStr)));
                 if (type0.IsTable)
                 {
                     // Ensure we have a one-column table of numerics
@@ -119,8 +120,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                 Contracts.Assert(otherType.IsValid);
                 Contracts.AssertValue(otherArg);
-                Contracts.Assert(returnType.IsTable);
-                Contracts.Assert(!fValid || returnType.IsColumn);
 
                 if (otherType.IsTable)
                 {
