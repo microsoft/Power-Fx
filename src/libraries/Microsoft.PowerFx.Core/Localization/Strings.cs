@@ -459,6 +459,20 @@ namespace Microsoft.PowerFx.Core.Localization
         public static StringGetter RemoveDataSourceArg = (b) => StringResources.Get("RemoveDataSourceArg", b);
         public static StringGetter RemoveRecordsArg = (b) => StringResources.Get("RemoveRecordsArg", b);
 
+        public static StringGetter AboutDec2Hex = (b) => StringResources.Get("AboutDec2Hex", b);
+        public static StringGetter Dec2HexArg1 = (b) => StringResources.Get("Dec2HexArg1", b);
+        public static StringGetter Dec2HexArg2 = (b) => StringResources.Get("Dec2HexArg2", b);
+
+        public static StringGetter AboutDec2HexT = (b) => StringResources.Get("AboutDec2HexT", b);
+        public static StringGetter Dec2HexTArg1 = (b) => StringResources.Get("Dec2HexTArg1", b);
+        public static StringGetter Dec2HexTArg2 = (b) => StringResources.Get("Dec2HexTArg2", b);
+
+        public static StringGetter AboutHex2Dec = (b) => StringResources.Get("AboutHex2Dec", b);
+        public static StringGetter Hex2DecArg1 = (b) => StringResources.Get("Hex2DecArg1", b);
+
+        public static StringGetter AboutHex2DecT = (b) => StringResources.Get("AboutHex2DecT", b);
+        public static StringGetter Hex2DecTArg1 = (b) => StringResources.Get("Hex2DecTArg1", b);
+
         // Previously, errors were listed here in the form of a StringGetter, which would be evaluated to fetch
         // an error message to pass to the BaseError class constructor. We are switching to passing the message key itself
         // to the BaseError class, and the BaseError itself is responsible for fetching the resource. (This allows the

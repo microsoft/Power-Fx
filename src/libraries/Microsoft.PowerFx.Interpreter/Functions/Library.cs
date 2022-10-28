@@ -447,6 +447,17 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: SingleArgTrig(x => x * 180.0 / Math.PI))
             },
             {
+                BuiltinFunctionsCore.Dec2Hex,
+                StandardErrorHandling<NumberValue>(
+                    BuiltinFunctionsCore.Dec2Hex.Name,
+                    expandArguments: InsertDefaultValues(outputArgsCount: 2, fillWith: new NumberValue(IRContext.NotInSource(FormulaType.Number), 0)),
+                    replaceBlankValues: ReplaceBlankWithZero,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: Dec2Hex)
+            },
+            {
                 BuiltinFunctionsCore.EndsWith,
                 StandardErrorHandling<StringValue>(
                     BuiltinFunctionsCore.EndsWith.Name,
@@ -585,6 +596,17 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: Guid_UO)
+            },
+            {
+                BuiltinFunctionsCore.Hex2Dec,
+                StandardErrorHandling<StringValue>(
+                    BuiltinFunctionsCore.Hex2Dec.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: ReplaceBlankWithEmptyString,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<StringValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: Hex2Dec)
             },
             {
                 BuiltinFunctionsCore.Hour,
@@ -1443,6 +1465,10 @@ namespace Microsoft.PowerFx.Functions
                 StandardErrorHandlingTabularOverload<NumberValue>(BuiltinFunctionsCore.ExpT.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.Exp])
             },
             {
+                BuiltinFunctionsCore.Hex2DecT,
+                StandardErrorHandlingTabularOverload<StringValue>(BuiltinFunctionsCore.Hex2DecT.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.Hex2Dec])
+            },
+            {
                 BuiltinFunctionsCore.IntT,
                 StandardErrorHandlingTabularOverload<NumberValue>(BuiltinFunctionsCore.IntT.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.Int])
             },
@@ -1489,6 +1515,19 @@ namespace Microsoft.PowerFx.Functions
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: MultiSingleColumnTable(
                             SimpleFunctionImplementations[BuiltinFunctionsCore.Concatenate]),
+                    isMultiArgTabularOverload: true)
+            },
+            {
+                BuiltinFunctionsCore.Dec2HexT,
+                StandardErrorHandlingAsync(
+                    BuiltinFunctionsCore.Dec2HexT.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrTableOrBlank<NumberValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: MultiSingleColumnTable(
+                            SimpleFunctionImplementations[BuiltinFunctionsCore.Dec2Hex]),
                     isMultiArgTabularOverload: true)
             },
             {
@@ -1593,7 +1632,7 @@ namespace Microsoft.PowerFx.Functions
 
             var childContext = context.SymbolContext.WithScopeValues(arg0);
 
-            return await arg1.EvalAsync(runner, context.NewScope(childContext));
+            return await arg1.EvalInRowScopeAsync(context.NewScope(childContext));
         }
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-if
@@ -1769,7 +1808,7 @@ namespace Microsoft.PowerFx.Functions
             for (var i = 1; i < args.Length - 1; i += 2)
             {
                 var match = (LambdaFormulaValue)args[i];
-                var matchValue = await match.EvalAsync(runner, context);
+                var matchValue = await match.EvalAsync();
 
                 if (matchValue is ErrorValue mve)
                 {
@@ -1783,7 +1822,7 @@ namespace Microsoft.PowerFx.Functions
                 if (equal)
                 {
                     var lambda = (LambdaFormulaValue)args[i + 1];
-                    var result = await lambda.EvalAsync(runner, context);
+                    var result = await lambda.EvalAsync();
                     if (errors.Count != 0)
                     {
                         return ErrorValue.Combine(irContext, errors);
@@ -1801,7 +1840,7 @@ namespace Microsoft.PowerFx.Functions
             if ((args.Length - 4) % 2 == 0)
             {
                 var lambda = (LambdaFormulaValue)args[args.Length - 1];
-                var result = await lambda.EvalAsync(runner, context);
+                var result = await lambda.EvalAsync();
                 if (errors.Count != 0)
                 {
                     return ErrorValue.Combine(irContext, errors);
@@ -1866,7 +1905,7 @@ namespace Microsoft.PowerFx.Functions
                 }
 
                 // Filter evals to a boolean
-                var result = filter.EvalAsync(runner, context.NewScope(childContext)).AsTask();
+                var result = filter.EvalInRowScopeAsync(context.NewScope(childContext)).AsTask();
 
                 yield return result;
             }
@@ -1883,7 +1922,7 @@ namespace Microsoft.PowerFx.Functions
                 SymbolContext childContext = context.SymbolContext.WithThisItem(row.ToFormulaValue());
 
                 // Filter evals to a boolean
-                var result = filter.EvalAsync(runner, context.NewScope(childContext)).AsTask();
+                var result = filter.EvalInRowScopeAsync(context.NewScope(childContext)).AsTask();
 
                 yield return result;
             }

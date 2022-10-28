@@ -54,7 +54,7 @@ namespace Microsoft.PowerFx.Functions
 
                     var childContext = context.SymbolContext.WithScopeValues(row.Value);
 
-                    var result = await arg1.EvalAsync(runner, context.NewScope(childContext));
+                    var result = await arg1.EvalInRowScopeAsync(context.NewScope(childContext));
 
                     string str;
                     if (result is ErrorValue ev)

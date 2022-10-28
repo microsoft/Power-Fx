@@ -45,6 +45,140 @@ namespace Microsoft.PowerFx.Tests
         }
 
         [Fact]
+        public async void CustomFunction_CallBack()
+        {
+            var config = new PowerFxConfig(null);
+            config.AddFunction(new TestCallbackFunction());
+            var engine = new RecalcEngine(config);
+
+            // Shows up in enuemeration
+            var func = engine.GetAllFunctionNames().First(name => name == "TestCallback");
+            Assert.NotNull(func);
+
+            var result = engine.Eval("TestCallback(1=2)");
+            Assert.Equal(false, result.ToObject());
+        }
+
+        private class TestCallbackFunction : ReflectionFunction
+        {
+            // Must have "Execute" method. 
+            // Any arg can be a boolean callback function.
+            public static BooleanValue Execute(Func<Task<BooleanValue>> expression)
+            {
+                return expression().Result;
+            }
+        }
+
+        [Fact]
+        public async void CustomFunctionAsync_CallBack()
+        {
+            var config = new PowerFxConfig(null);
+            config.AddFunction(new WaitFunction());
+            config.AddFunction(new HelperFunction(x => FormulaValue.New(x.Value + 1)));
+            var engine = new RecalcEngine(config);
+
+            // Shows up in enuemeration
+            var func = engine.GetAllFunctionNames().First(name => name == "Wait");
+            Assert.NotNull(func);
+
+            // Can be invoked. 
+            using var cts = new CancellationTokenSource();
+            var result = await engine.EvalAsync("Wait(Helper() = 3)", cts.Token);
+            Assert.Equal(true, result.ToObject());
+        }
+        
+        private class WaitFunction : ReflectionFunction
+        {
+            // Must have "Execute" method. 
+            // Cancellation Token must be the last argument for custom async function.
+            // Any arg can be a boolean callback function.
+            public static async Task<BooleanValue> Execute(Func<Task<BooleanValue>> expression, CancellationToken cancellationToken)
+            {
+                while (!(await expression()).Value) 
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+                }
+
+                return FormulaValue.New(true);
+            }
+        }
+
+        private class HelperFunction : ReflectionFunction
+        {
+            private readonly Func<NumberValue, NumberValue> _func;
+            private NumberValue _counter;
+
+            public HelperFunction(Func<NumberValue, NumberValue> func)
+            {
+                _func = func;
+                _counter = FormulaValue.New(0);
+            }
+              
+            public NumberValue Execute()
+            {
+                _counter = _func(_counter);
+                return _counter;
+            }
+        }
+
+        [Fact]
+        public async void CustomFunctionAsync_CallBack_Invalid()
+        {
+            var config = new PowerFxConfig(null);
+            Action act = () => config.AddFunction(new InvalidTestCallbackFunction());
+            Exception exception = Assert.Throws<InvalidOperationException>(act);
+            Assert.Equal("Unknown parameter type: expression, System.Func`1[System.Threading.Tasks.Task`1[Microsoft.PowerFx.Types.StringValue]]. Only System.Func`1[System.Threading.Tasks.Task`1[Microsoft.PowerFx.Types.BooleanValue]] is supported", exception.Message);
+        }
+
+        private class InvalidTestCallbackFunction : ReflectionFunction
+        {
+            // Must have "Execute" method. 
+            // Cancellation Token must be the last argument for custom async function.
+            // Any arg can be a boolean callback function.
+            public static async Task<BooleanValue> Execute(Func<Task<StringValue>> expression, CancellationToken cancellationToken)
+            {
+                await expression();
+                return FormulaValue.New(false);
+            }
+        }
+
+        [Fact]
+        public async void CustomMockAndFunction_CallBack()
+        {
+            var config = new PowerFxConfig(null);
+            config.AddFunction(new MockAnd2ArgFunction());
+            var engine = new RecalcEngine(config);
+
+            // Shows up in enuemeration
+            var func = engine.GetAllFunctionNames().First(name => name == "MockAnd2Arg");
+            Assert.NotNull(func);
+
+            // Can be invoked. 
+            using var cts = new CancellationTokenSource();
+            var result = engine.EvalAsync("MockAnd2Arg(1=2, 1=1)", cts.Token);
+            Assert.Equal(false, (await result).ToObject());
+
+            var result2 = engine.EvalAsync("MockAnd2Arg(1=1, 1=1)", cts.Token);
+            Assert.Equal(true, (await result2).ToObject());
+        }
+
+        private class MockAnd2ArgFunction : ReflectionFunction
+        {
+            // Must have "Execute" method. 
+            // Cancellation Token must be the last argument for custom async function.
+            // Any arg can be a boolean callback function.
+            public static async Task<BooleanValue> Execute(Func<Task<BooleanValue>> expression1, Func<Task<BooleanValue>> expression2, CancellationToken cancellationToken)
+            {
+                if (!(await expression1()).Value)
+                {
+                    return FormulaValue.New(false);
+                }
+
+                return await expression2();
+            }
+        }
+
+        [Fact]
         public async void SimpleCustomAsyncFuntion()
         {
             var config = new PowerFxConfig(null);
