@@ -83,9 +83,8 @@ namespace Microsoft.PowerFx.Tests
 
             // Can be invoked. 
             using var cts = new CancellationTokenSource();
-            var result = engine.EvalAsync("Wait(Helper() = 3)", cts.Token);
-            Assert.Equal(true, (await result).ToObject());
-            Assert.True(result.IsCompletedSuccessfully);
+            var result = await engine.EvalAsync("Wait(Helper() = 3)", cts.Token);
+            Assert.Equal(true, result.ToObject());
         }
         
         private class WaitFunction : ReflectionFunction
