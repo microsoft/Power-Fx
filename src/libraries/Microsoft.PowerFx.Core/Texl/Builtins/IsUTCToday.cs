@@ -23,6 +23,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => true;
 
+        public override bool CheckTypesAndSemanticsOnly => true;
+
         public IsUTCTodayFunction()
             : base("IsUTCToday", TexlStrings.AboutIsUTCToday, FunctionCategories.Information, DType.Boolean, 0, 1, 1, DType.DateTime)
         {
@@ -33,7 +35,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return EnumerableUtils.Yield(new[] { TexlStrings.IsUTCTodayFuncArg1 });
         }
 
-        public override bool CheckInvocation(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        protected override bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
@@ -41,7 +43,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.Assert(args.Length == argTypes.Length);
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
-            var fValid = CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fValid = base.CheckTypes(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
             var type0 = argTypes[0];
 
             // Arg0 should not be a Time

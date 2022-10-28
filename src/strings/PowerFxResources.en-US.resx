@@ -5037,8 +5037,8 @@
     <comment>function_parameter - One or more records to be removed.</comment>
   </data>
   <data name="ErrRemoveAllArg" xml:space="preserve">
-    <value>If provided, last argument must be 'All'. Is there a typo?</value>
-    <comment>Error Message.</comment>
+    <value>If provided, last argument must be 'RemoveFlags.All'. Is there a typo?</value>
+    <comment>{Locked=RemoveFlags.All} Error Message, RemoveFlags.All is an enum value that does not get localized.</comment>
   </data>
   <data name="PenMode_Draw_DisplayName" xml:space="preserve">
     <value>Draw</value>

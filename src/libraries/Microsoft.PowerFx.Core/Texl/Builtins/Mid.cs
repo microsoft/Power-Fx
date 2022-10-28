@@ -39,6 +39,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => true;
 
+        public override bool CheckTypesAndSemanticsOnly => true;
+
         public MidTFunction()
             : base("Mid", TexlStrings.AboutMidT, FunctionCategories.Table, DType.EmptyTable, 0, 2, 3)
         {
@@ -55,7 +57,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return GetUniqueTexlRuntimeName(suffix: "_T");
         }
 
-        public override bool CheckInvocation(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        protected override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
@@ -64,7 +66,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            var fValid = CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
 
             var type0 = argTypes[0];
             var type1 = argTypes[1];
@@ -77,13 +79,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 fValid &= CheckStringColumnType(type0, args[0], errors, ref nodeToCoercedTypeMap);
 
                 // Borrow the return type from the 1st arg
-                returnType = binding.Features.HasFlag(Features.ConsistentOneColumnTableResult)
+                returnType = context.Features.HasFlag(Features.ConsistentOneColumnTableResult)
                     ? DType.CreateTable(new TypedName(DType.String, new DName(ColumnName_ValueStr)))
                     : type0;
             }
             else
             {
-                returnType = DType.CreateTable(new TypedName(DType.String, GetOneColumnTableResultName(binding)));
+                returnType = DType.CreateTable(new TypedName(DType.String, GetOneColumnTableResultName(context.Features)));
                 if (!DType.String.Accepts(type0))
                 {
                     if (type0.CoercesTo(DType.String))

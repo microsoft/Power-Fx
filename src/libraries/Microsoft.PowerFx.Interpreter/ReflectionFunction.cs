@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Numerics;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -25,6 +26,8 @@ namespace Microsoft.PowerFx
     internal class CustomTexlFunction : TexlFunction
     {
         public Func<IServiceProvider, FormulaValue[], CancellationToken, Task<FormulaValue>> _impl;
+
+        internal BigInteger LamdaParamMask;
 
         public override bool SupportsParamCoercion => true;
 
@@ -54,6 +57,11 @@ namespace Microsoft.PowerFx
         {
             return _impl(serviceProvider, args, cancellationToken);
         }
+
+        public override bool IsLazyEvalParam(int index)
+        {
+            return LamdaParamMask.TestBit(index);
+        }
     }
 
     // Helper for SetPropertyFunction 
@@ -68,6 +76,8 @@ namespace Microsoft.PowerFx
         public override bool IsSelfContained => false; // marks as behavior 
 
         public override bool SupportsParamCoercion => false;
+
+        public override bool CheckTypesAndSemanticsOnly => true;
 
         public Func<FormulaValue[], Task<FormulaValue>> _impl;
 
@@ -84,9 +94,8 @@ namespace Microsoft.PowerFx
         }
 
         // 2nd argument should be same type as 1st argument. 
-        public override bool CheckInvocation(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        protected override bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
-            Contracts.AssertValue(binding);
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
             Contracts.AssertValue(argTypes);
@@ -187,6 +196,8 @@ namespace Microsoft.PowerFx
             public MethodInfo _method;
 
             public bool _isAsync;
+
+            public BigInteger LamdaParamMask;
         }
 
         private FunctionDescr Scan()
@@ -234,6 +245,16 @@ namespace Microsoft.PowerFx
                     else if (parameters[i].ParameterType == typeof(CancellationToken) && info._isAsync)
                     {
                         throw new InvalidOperationException($"Cancellation token must be the last argument.");
+                    }
+                    else if (parameters[i].ParameterType == typeof(Func<Task<BooleanValue>>))
+                    {
+                        info.LamdaParamMask = info.LamdaParamMask | BigInteger.One << i;
+                        paramTypes.Add(FormulaType.Boolean);
+                    }
+                    else if (parameters[i].ParameterType.BaseType == typeof(MulticastDelegate))
+                    {
+                        // Currently only Func<Task<BooleanValue> is supported.
+                        throw new InvalidOperationException($"Unknown parameter type: {parameters[i].Name}, {parameters[i].ParameterType}. Only {typeof(Func<Task<BooleanValue>>)} is supported");
                     }
                     else
                     { 
@@ -287,7 +308,8 @@ namespace Microsoft.PowerFx
 
             return new CustomTexlFunction(info.Name, info.RetType, info.ParamTypes)
             {
-                _impl = (runtimeConfig, args, cancellationToken) => InvokeAsync(runtimeConfig, args, cancellationToken)
+                _impl = (runtimeConfig, args, cancellationToken) => InvokeAsync(runtimeConfig, args, cancellationToken),
+                LamdaParamMask = info.LamdaParamMask,
             };
         }
 
@@ -316,7 +338,15 @@ namespace Microsoft.PowerFx
 
             foreach (var arg in args)
             {
-                args2.Add(arg);
+                if (arg is LambdaFormulaValue lambda)
+                {
+                    Func<Task<BooleanValue>> argLambda = async () => (BooleanValue)await lambda.EvalAsync();
+                    args2.Add(argLambda);
+                }
+                else
+                {
+                    args2.Add(arg);
+                }
             }
 
             if (_info._isAsync)

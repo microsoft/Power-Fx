@@ -54,7 +54,7 @@ namespace Microsoft.PowerFx.Functions
 
                     var childContext = context.SymbolContext.WithScopeValues(row.Value);
 
-                    var result = await arg1.EvalAsync(runner, context.NewScope(childContext));
+                    var result = await arg1.EvalInRowScopeAsync(context.NewScope(childContext));
 
                     string str;
                     if (result is ErrorValue ev)
@@ -290,7 +290,7 @@ namespace Microsoft.PowerFx.Functions
 
         public static FormulaValue Proper(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, StringValue[] args)
         {
-            return new StringValue(irContext, runner.CultureInfo.TextInfo.ToTitleCase(args[0].Value.ToLower()));
+            return new StringValue(irContext, runner.CultureInfo.TextInfo.ToTitleCase(runner.CultureInfo.TextInfo.ToLower(args[0].Value)));
         }
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-len
