@@ -41,12 +41,6 @@ namespace Microsoft.PowerFx.Types
             return result;
         }
 
-        public async ValueTask<FormulaValue> EvalInRowScopeAsync(EvalVisitorContext context)
-        {
-            Context = context;
-            return await EvalAsync();
-        }
-
         public override object ToObject()
         {
             return "<Lambda>";
