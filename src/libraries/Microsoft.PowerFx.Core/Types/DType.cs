@@ -680,7 +680,7 @@ namespace Microsoft.PowerFx.Core.Types
             var returnType = type.Clone();
             returnType.AssociatedDataSources.Add(dsInfo);
 
-            if (!attachToNestedType)
+            if (!attachToNestedType || type.IsLazyType)
             {
                 return returnType;
             }

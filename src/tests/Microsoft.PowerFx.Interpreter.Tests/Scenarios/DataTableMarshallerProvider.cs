@@ -36,6 +36,10 @@ namespace Microsoft.PowerFx.Tests
     {
         private readonly DataTable _table;
 
+        public int TryGetIndexNumberOfCalls { get; set; } = 0;
+
+        public int MarshalNumberOfCalls { get; set; } = 0;
+
         public DataTableValue(DataTable dataTable)
             : base(ComputeType(dataTable), new DataTableWrapper(dataTable))
         {
@@ -58,9 +62,26 @@ namespace Microsoft.PowerFx.Tests
             return recordType;
         }
 
+        protected override bool TryGetIndex(int index1, out DValue<RecordValue> record)
+        {
+            TryGetIndexNumberOfCalls++;
+
+            var index0 = index1 - 1;
+            if (index0 < 0)
+            {
+                record = null;
+                return false;
+            }
+
+            record = DValue<RecordValue>.Of(new DataRowRecordValue(RecordType, _table.Rows[index0]));
+            return record != null;
+        }
+
         protected override DValue<RecordValue> Marshal(DataRow item)
         {
             // We could check item.RowError and return an error for the whole row. 
+
+            MarshalNumberOfCalls++;
 
             // Return value
             var record = new DataRowRecordValue(RecordType, item);

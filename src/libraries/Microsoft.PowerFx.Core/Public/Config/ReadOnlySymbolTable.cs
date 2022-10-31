@@ -236,6 +236,18 @@ namespace Microsoft.PowerFx
 
                     return true;
                 }
+                else if (symbol is IExternalDataSource)
+                {
+                    nameInfo = new NameLookupInfo(
+                        BindKind.Data,
+                        symbol.Type,
+                        DPath.Root,
+                        0,
+                        symbol,
+                        displayName);
+
+                    return true;
+                }
                 else
                 {
                     throw new NotImplementedException($"{symbol.GetType().Name} not supported.");
@@ -298,7 +310,7 @@ namespace Microsoft.PowerFx
         // Methods from INameResolver that we default / don't implement
         IExternalDocument INameResolver.Document => default;
 
-        IExternalEntityScope INameResolver.EntityScope => throw new NotImplementedException();
+        IExternalEntityScope INameResolver.EntityScope => default;
 
         IExternalEntity INameResolver.CurrentEntity => default;
 

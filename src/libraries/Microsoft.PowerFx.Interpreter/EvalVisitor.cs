@@ -76,7 +76,7 @@ namespace Microsoft.PowerFx
         {
             if (arg is LambdaFormulaValue lambda)
             {
-                arg = await lambda.EvalAsync(this, context);
+                arg = await lambda.EvalInRowScopeAsync(context);
             }
 
             return arg switch
@@ -222,7 +222,7 @@ namespace Microsoft.PowerFx
                 }
                 else
                 {
-                    args[i] = new LambdaFormulaValue(node.IRContext, child);
+                    args[i] = new LambdaFormulaValue(node.IRContext, child, this, context);
                 }
             }
 
