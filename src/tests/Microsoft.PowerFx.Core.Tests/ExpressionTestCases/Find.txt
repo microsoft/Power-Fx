@@ -5,7 +5,7 @@
 1
 
 >> Find("", "", 2)
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Find("", "textToBeSearchedIn")
 1
@@ -20,7 +20,7 @@ Error(Kind=InvalidArgument)
 Blank()
 
 >> Find("textToFind", "", 2)
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Find(",", "LastName,FirstName")
 9
@@ -44,7 +44,7 @@ Blank()
 Blank()
 
 >> Find("#", "LastName,FirstName", 100)
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Find(",", "LastName,First,Name")
 9
@@ -83,7 +83,7 @@ Blank()
 1
 
 >> Find(Blank(), Blank(), 2)
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Find(Blank(), "textToBeSearchedIn")
 1
@@ -95,16 +95,16 @@ Error(Kind=InvalidArgument)
 Blank()
 
 >> Find("textToFind", Blank(), 3)
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Find(",", "LastName,FirstName", -1)
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Find(",", "LastName,FirstName", 0)
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Find(",", "LastName,FirstName", Blank())
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Find("B", "LastNameisBlah")
 11
@@ -185,40 +185,40 @@ Blank()
 Blank()
 
 >> Find("", "", -1)
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Find("", "", 0)
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Find("", "textToBeSearchedIn", -1)
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Find("", "textToBeSearchedIn", 0)
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Find("", "textToBeSearchedIn", 2)
 2
 
 >> Find("", "textToBeSearchedIn", 100)
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Find("textToFind", "",-1)
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Find("textToFind", "",0)
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Find("textToFind", "",1)
 Blank()
 
 >> Find("textToFind", "",2)
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Find(Blank(), Blank(), -1)
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Find(Blank(), Blank(), 0)
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Find(Blank(), Blank(), 1)
 1

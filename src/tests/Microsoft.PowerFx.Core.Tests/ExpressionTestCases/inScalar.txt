@@ -5,10 +5,10 @@
 
 
 >> ("a" & 1/0) in "abc"
-Error(Kind=Div0) 
+Error({Kind:ErrorKind.Div0}) 
 
 >> "a" in ("abc" & 1/0)
-Error(Kind=Div0) 
+Error({Kind:ErrorKind.Div0}) 
 
 // 
 // Scalar

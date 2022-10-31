@@ -49,7 +49,7 @@
 
 //Invalid operation: Division by zero
 >>Len(1/0)
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 // ******** FUNCTION VALUE AS PARAMETERS ********
 

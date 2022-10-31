@@ -59,13 +59,13 @@ Blank()
 // ****************************** ERROR PARAMETER ******************************
 
 >> Coalesce(Blank(), 1/0, 10)
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Coalesce(1/0, Blank(), 10)
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Coalesce(1/0, 10, Blank())
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Coalesce(Blank(), 1, Left("Hello", -1))
 1
@@ -74,10 +74,10 @@ Error(Kind=Div0)
 "1"
 
 >> Coalesce(Left("Hello", -1),"",1)
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Coalesce(Left("Hello", -1),Blank(),1)
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 // ****************************** DATATYPE CONVERSION CASES ******************************
 

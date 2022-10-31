@@ -13,28 +13,28 @@
 2
 
 >> Log(0)
-Error(Kind=Numeric)
+Error({Kind:ErrorKind.Numeric})
 
 >> Log(-1)
-Error(Kind=Numeric)
+Error({Kind:ErrorKind.Numeric})
 
 >> Log(-8, -2)
-Error(Kind=Numeric)
+Error({Kind:ErrorKind.Numeric})
 
 >> Log(10, 1)
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Log(Blank())
-Error(Kind=Numeric)
+Error({Kind:ErrorKind.Numeric})
 
 >> Log(64, Blank())
-Error(Kind=Numeric)
+Error({Kind:ErrorKind.Numeric})
 
 >> Log(Blank(), 64)
-Error(Kind=Numeric)
+Error({Kind:ErrorKind.Numeric})
 
 >> Log(Blank(), Blank())
-Error(Kind=Numeric)
+Error({Kind:ErrorKind.Numeric})
 
 >> Log(1/0)
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})

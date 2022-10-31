@@ -8,10 +8,10 @@ Blank()
 {Value:1}
 
 >> First([1/0, 2, 3]).Value
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> First(Sort([-2, -1, 0, 1, 2], 1 / Value))
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> FirstN([1, 2, 3, 4, 5], 2)
 Table({Value:1},{Value:2})
@@ -38,10 +38,10 @@ Blank()
 Blank()
 
 >> FirstN(Sort([-2, -1, 0, 1, 2], 1 / Value), 2)
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> FirstN([1, 2, 3, 4, 5], 1/0)
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> First(Table({a:1,b:2},{c:3})).c
 Blank()

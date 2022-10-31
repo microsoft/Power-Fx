@@ -94,35 +94,35 @@
 
 //Few error values
 >> CountA([1, "2", 1/0, true, " "])
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 //Few error values
 >> CountA([1, " ", "2", 1/0, true])
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 // Error records
 >> CountA(Table({a:1},{a:2},If(Sqrt(-1)<1,{a:3}),{a:4}))
-Error(Kind=Numeric)
+Error({Kind:ErrorKind.Numeric})
 
 //All error values
 >> CountA([1/0, Sqrt(-1)])
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 //All error values
 >> CountA([Sqrt(-1),1/0])
-Error(Kind=Numeric)
+Error({Kind:ErrorKind.Numeric})
 
 // All error values
 >> CountA(Table({a:1/0},{a:Sqrt(-1)}))
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 // All error values
 >> CountA(Table({a:Sqrt(-1)},{a:1/0}))
-Error(Kind=Numeric)
+Error({Kind:ErrorKind.Numeric})
 
 // Error table
 >> CountA(Sort([-2,-1,0,1,2],1/Value))
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 // ******** ERROR SCENARIOS ********
 

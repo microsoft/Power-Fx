@@ -86,10 +86,10 @@ false
 false
 
 >> And(true, true, true, 1/0=1)
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> And(1/0 = 7, true)
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> And(Blank(), true)
 false
@@ -132,10 +132,10 @@ true
 false
 
 >> And(1,"1")
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> And(1,"ABC")
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> And(-24.5,"true")
 true
@@ -152,22 +152,22 @@ false
 // 2. First Argument - String and Second Argument - Other Datatypes
 
 >> And("1",0)
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> And("ABC",1)
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> And("ABC","ABC")
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> And("ABC","abc")
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> And("ABC",true)
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> And("ABC",false)
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> And("true",true)
 true
@@ -194,7 +194,7 @@ false
 false
 
 >> And(true, "1") 
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> And(true, "true")
 true
@@ -291,13 +291,13 @@ true
 true
 
 >> Or(1/0 = 7, true)
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Or(false, 1/0=1)
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Or(1/0=7, true)
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Or(Blank(), true)
 true
@@ -331,7 +331,7 @@ true
 true
 
 >> Or(0,"1")
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Or(1,"ABC")
 true
@@ -345,22 +345,22 @@ true
 // 2. First Argument - String Or Second Argument - Other Datatypes
 
 >> Or("1",1)
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Or("ABC",11)
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Or("ABC","ABC")
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Or("ABC","abc")
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Or("ABC",true)
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Or("ABC",false)
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 // 3. First Argument - Boolean Or Second Argument - Other Datatypes
 
@@ -396,10 +396,10 @@ false
 true
 
 >> Not("1")
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Not("0")
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Not("true")
 false
@@ -426,7 +426,7 @@ true
 // ============================Null, Empty String and Error cases ========================
 
 >> Not(1/0=1)
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Not(Blank())
 true

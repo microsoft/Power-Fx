@@ -176,10 +176,10 @@
 
 // ******** NULL and ERROR PARAMETERS ********
 >> RoundDown(1/0,1)
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> RoundDown(1,1/0)
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> RoundDown(Blank(),1)
 0
@@ -199,10 +199,10 @@ Error(Kind=Div0)
 // ******** STRING PARAMETERS ********
 
 >> RoundDown("sampleText",1)
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> RoundDown("10.5678","ABC")
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> RoundDown("-10.5678","2")
 -10.56
@@ -228,6 +228,6 @@ Error(Kind=InvalidArgument)
 0
 
 >> RoundDown("true","false")
-Error(Kind=InvalidArgument,InvalidArgument)
+Error(Table({Kind:ErrorKind.InvalidArgument},{Kind:ErrorKind.InvalidArgument}))
 
 

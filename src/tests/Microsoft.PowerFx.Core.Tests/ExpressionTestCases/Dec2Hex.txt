@@ -100,7 +100,7 @@
 Blank()
 
 >> Dec2Hex(Filter(["true","false"], Len(Value) > 10))
-[]
+Table()
 
 >> Dec2Hex(If(1/0<2,[1]))
 #Error(Kind=Div0)
@@ -109,7 +109,7 @@ Blank()
 Blank()
 
 >> Dec2Hex(Filter([1,2,3], Value > 10))
-[]
+Table()
 
 >> Dec2Hex(If(1/0<2,[12, 56]), 1)
 #Error(Kind=Div0)
@@ -118,13 +118,13 @@ Blank()
 #Error(Kind=Numeric)
 
 >> Dec2Hex([12, 56], 1/0)
-[Microsoft.PowerFx.Types.ErrorValue,Microsoft.PowerFx.Types.ErrorValue]
+Table({Value:Error({Kind:ErrorKind.Div0})},{Value:Error({Kind:ErrorKind.Div0})})
 
 >> Dec2Hex(Sqrt(-1), [1, 2, 3])
-[Microsoft.PowerFx.Types.ErrorValue,Microsoft.PowerFx.Types.ErrorValue,Microsoft.PowerFx.Types.ErrorValue]
+Table({Value:Error({Kind:ErrorKind.Numeric})},{Value:Error({Kind:ErrorKind.Numeric})},{Value:Error({Kind:ErrorKind.Numeric})})
 
 >> Dec2Hex([123, 234], [3, 2, 3])
-["07B","EA",Microsoft.PowerFx.Types.ErrorValue]
+Table({Value:"07B"},{Value:"EA"},{Value:Error({Kind:ErrorKind.NotApplicable})})
 
 
 // ******** STRING PARAMETERS ********
@@ -169,24 +169,24 @@ Blank()
 // ******** TABULAR VALUE AS PARAMETERS ********
 
 >> Dec2Hex([10,255,-16])
-["A","FF","FFFFFFFFF0"]
+Table({Value:"A"},{Value:"FF"},{Value:"FFFFFFFFF0"})
 
 >> Dec2Hex([1,1e-45,1e45,2])
-["1","0",Microsoft.PowerFx.Types.ErrorValue,"2"]
+Table({Value:"1"},{Value:"0"},{Value:Error({Kind:ErrorKind.Numeric})},{Value:"2"})
 
 >> Dec2Hex([10,11,"12"], [2,5,10])
-["0A","0000B","000000000C"]
+Table({Value:"0A"},{Value:"0000B"},{Value:"000000000C"})
 
 >> Dec2Hex([10,255,-16], 5)
-["0000A","000FF","FFFFFFFFF0"]
+Table({Value:"0000A"},{Value:"000FF"},{Value:"FFFFFFFFF0"})
 
 >> Dec2Hex(10, [2,5,10])
-["0A","0000A","000000000A"]
+Table({Value:"0A"},{Value:"0000A"},{Value:"000000000A"})
 
 // ******** DIFFERENT INPUT TYPES AS PARAMETERS ********
 
 >> Dec2Hex(Table({a:10},{a:255},{a:-16}))
-["A","FF","FFFFFFFFF0"]
+Table({Value:"A"},{Value:"FF"},{Value:"FFFFFFFFF0"})
 
 >> Dec2Hex(Table({a:10},{a:11},{a:12}), Table({b:2},{b:5},{b:10}))
-["0A","0000B","000000000C"]
+Table({Value:"0A"},{Value:"0000B"},{Value:"000000000C"})

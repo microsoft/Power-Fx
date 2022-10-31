@@ -76,17 +76,17 @@ DateTime(2022,7,28,19,34,3,0)
 DateTime(2022,7,21,19,34,3,0)
 
 >> Text(DateTimeValue("четвртак 21 јул 2022 19:34:03", "invalid"))
-Error(Kind=BadLanguageCode)
+Error({Kind:ErrorKind.BadLanguageCode})
 
 // Errors
 >> DateValue(If(1/0<2,"2022-01-01"))
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> DateValue(If(Sqrt(-1) < 0, "2022-01-01"))
-Error(Kind=Numeric)
+Error({Kind:ErrorKind.Numeric})
 
 >> DateTimeValue(If(1/0<2,"2022-01-01 12:34:56"))
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> DateTimeValue(If(Sqrt(-1) < 0, "2022-01-01 12:34:56"))
-Error(Kind=Numeric)
+Error({Kind:ErrorKind.Numeric})

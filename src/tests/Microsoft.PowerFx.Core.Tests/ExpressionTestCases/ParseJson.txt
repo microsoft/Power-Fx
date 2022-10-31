@@ -9,16 +9,16 @@
 5
 
 >> Value(ParseJSON("true"))
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Value(ParseJSON("false"))
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Value(ParseJSON("""5"""))
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Value(ParseJSON("""a"""))
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Value(ParseJSON("null"))
 Blank()
@@ -36,10 +36,10 @@ Blank()
 Blank()
 
 >> Value(ParseJSON("""s""").a)
-Error(Kind=BadLanguageCode)
+Error({Kind:ErrorKind.BadLanguageCode})
 
 >> Value(ParseJSON("This "" Is , "" Invalid ").a)
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 // Text tests
 >> Text(Index(ParseJSON("[""s""]"), 1))
@@ -52,13 +52,13 @@ Error(Kind=InvalidArgument)
 Blank()
 
 >> Text(ParseJSON("true"))
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Text(ParseJSON("false"))
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Text(ParseJSON("5"))
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Boolean(ParseJSON("true"))
 true
@@ -94,10 +94,10 @@ Blank()
 Table({Value:5},{Value:6},{Value:7})
 
 >> ForAll(ParseJSON("5"), Value(ThisRecord))
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> ForAll(ParseJSON("5"), IfError(Value(ThisRecord), -1))
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> ForAll(ParseJSON("null"), Value(ThisRecord))
 Blank()
@@ -124,7 +124,7 @@ Table({Value:"08:03:05"},{Value:""})
 Table({Value:GUID("5cc45615-f759-4a53-b225-d3a2497f60ad")},{Value:Blank()})
 
 >> ForAll(ParseJSON("[1]"), Value(ThisRecord) / 0)
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> CountRows(ForAll(ParseJSON("[1,2,3]"), Value(ThisRecord)))
 3
@@ -139,7 +139,7 @@ Error(Kind=Div0)
 Table({Value:"1"},{Value:"false"},{Value:"hello"})
 
 >> ForAll(ParseJSON("[1,true,3,false]"), Value(ThisRecord))
-Error(Kind=InvalidArgument,InvalidArgument)
+Error(Table({Kind:ErrorKind.InvalidArgument},{Kind:ErrorKind.InvalidArgument}))
 
 >> ForAll(ParseJSON("[1,2,3]"), If(Value(ThisRecord) < 2, Value(ThisRecord), ThisRecord))
 Errors: Error 74-84: Invalid argument type (UntypedObject). Expecting a Number value instead.|Error 29-85: The function 'If' has some invalid arguments.
@@ -184,7 +184,7 @@ Errors: Error 0-14: Invalid argument type. Expecting one of the following: Numbe
 0
 
 >> CountRows(ParseJSON("1"))
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 // --- Testing heterogeneous arrays --
 
@@ -198,19 +198,19 @@ Error(Kind=InvalidArgument)
 15
 
 >> DateValue(ParseJSON("""2011-1-15"""))
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> DateValue(ParseJSON("""2011-01"""))
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> DateValue(ParseJSON("""2011"""))
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> DateValue(ParseJSON("null"))
 Blank()
 
 >> DateValue(ParseJSON("""abcdef"""))
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> DateDiff(DateTimeValue(ParseJSON("""2011-01-15T08:00:00.000Z""")), DateTimeValue(ParseJSON("""2011-01-30T08:00:00.000Z""")))
 15
@@ -225,19 +225,19 @@ Error(Kind=InvalidArgument)
 15
 
 >> DateTimeValue(ParseJSON("""2011-01-15T08:0:00.000Z"""))
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> DateTimeValue(ParseJSON("""2011-01-15T08"""))
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> DateTimeValue(ParseJSON("""2011T08:00:00.000Z"""))
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> DateTimeValue(ParseJSON("null"))
 Blank()
 
 >> DateTimeValue(ParseJSON("""abcdef"""))
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Text(DateTimeValue(ParseJSON("""2022-05-05""")), "yyyy-MM-dd HH:mm:ss")
 "2022-05-05 00:00:00"
@@ -258,13 +258,13 @@ Error(Kind=InvalidArgument)
 "08:03:05"
 
 >> TimeValue(ParseJSON("""08:93:05.000"""))
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> TimeValue(ParseJSON("null"))
 Blank()
 
 >> TimeValue(ParseJSON("""abcdef"""))
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> GUID(ParseJSON("""5cc45615-f759-4a53-b225-d3a2497f60ad"""))
 GUID("5cc45615-f759-4a53-b225-d3a2497f60ad")

@@ -12,7 +12,9 @@ namespace Microsoft.PowerFx
     /// </summary>
     public class FormulaValueSerializerSettings
     {
-        // Provides a simpler version for some types.
+        /// <summary>
+        /// Provides a human-friendly representation of a FormulaValue value.
+        /// </summary>
         public bool UseCompactRepresentation { get; set; }
     }
 }

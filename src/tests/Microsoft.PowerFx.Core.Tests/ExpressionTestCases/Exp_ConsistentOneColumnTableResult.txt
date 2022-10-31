@@ -7,7 +7,7 @@ Table({Value:1},{Value:1})
 Table({Value:3},{Value:1})
 
 >> Exp(Table({a: 1/0}, {a: -750}))
-Table({Value:Error(Kind=Div0)},{Value:0})
+Table({Value:Error({Kind:ErrorKind.Div0})},{Value:0})
 
 //Rounding values as the test runner returns a different precision for table inputs
 

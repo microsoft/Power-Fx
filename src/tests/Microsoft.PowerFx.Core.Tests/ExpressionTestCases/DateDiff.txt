@@ -2,7 +2,7 @@
 15
 
 >> DateDiff(Date(-1, 2, 3), Date(2011,1,30))
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> DateDiff(If(1<0,Date(1,1,1)), Date(2011,1,30))
 40573
@@ -204,13 +204,13 @@ Error(Kind=InvalidArgument)
 -37987
 
 >> DateDiff(1/0, DateTime(2005,1,1,0,0,0),TimeUnit.Days)
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> DateDiff(DateTime(2004,1,1,0,0,0), 1/0)
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> DateDiff(DateTime(2005,12,31,23,59,59,999), DateTime(2007,1,1,0,0,0), 1/0)
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 // ******************************** COERCIONS ********************************
 

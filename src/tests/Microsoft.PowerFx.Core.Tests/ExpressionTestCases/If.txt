@@ -53,4 +53,4 @@ Blank()
 2
 
 >> If(1/0 = 7, 2, 3)
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})

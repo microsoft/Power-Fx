@@ -1,17 +1,17 @@
 ﻿>> Date(-1, 2, 3)
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Date(-1,1,1)
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Date(Blank(), 2, 3)
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Date(10000,1,1)
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Date(0,0,0)
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Date(1960,7,31)
 Date(1960,7,31)
@@ -75,19 +75,19 @@ Date(1974,12,14)
 Date(1975,9,30)
 
 >> Date(1/0, 11, 29)
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Date(1975,1/0,14)
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Date(1975,10,1/0)
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Date(-1,1,1/0)
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Date("a","b","c")
-Error(Kind=InvalidArgument,InvalidArgument,InvalidArgument)
+Error(Table({Kind:ErrorKind.InvalidArgument},{Kind:ErrorKind.InvalidArgument},{Kind:ErrorKind.InvalidArgument}))
 
 >> Date("1900","5","14")
 Date(1900,5,14)
@@ -175,16 +175,16 @@ false
 
 // Error Date comparisons
 >> Date(1/0, 2, 3) < Date(2011,1,30)
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Date(1/0, 2, 3) <= Date(2011,1,30)
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Date(1/0, 2, 3) > Date(2011,1,30)
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Date(1/0, 2, 3) >= Date(2011,1,30)
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Date(2001,2,14) = Date(2001,2,14)
 true
@@ -210,7 +210,7 @@ true
 13
 
 >> Day(Date(-1, 2, 3))
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Day(Date(1976,1,4) + Time(12,30,15))
 4
@@ -278,10 +278,10 @@ Errors: Error 17-18: This operation isn't valid on these types: Date, DateTime.
 Errors: Error 33-34: This operation isn't valid on these types: DateTime, DateTime.
 
 >> 70 - DateTime(1900, 1, 1, 0, 0, 0)
-Error(Kind=NotSupported)
+Error({Kind:ErrorKind.NotSupported})
 
 >> 80 - Date(1900, 1, 1)
-Error(Kind=NotSupported)
+Error({Kind:ErrorKind.NotSupported})
 
 // ************************* OVERFLOWS AND UNDERFLOWS ************************
 
@@ -364,13 +364,13 @@ Errors: Error 5-9: Invalid argument type (Boolean). Expecting a DateTime value i
 1900
 
 >> Date(Sqrt(-4), 2, 3)
-Error(Kind=Numeric)
+Error({Kind:ErrorKind.Numeric})
 
 >> Day(If(1/0<2,Date(2000,1,1)))
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Month(If(1/0<2,Date(2000,1,1)))
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Year(If(1/0<2,Date(2000,1,1)))
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})

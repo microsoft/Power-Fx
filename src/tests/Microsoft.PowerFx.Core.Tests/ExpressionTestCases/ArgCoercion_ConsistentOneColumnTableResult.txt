@@ -4,13 +4,13 @@
 "7"
 
 >> Char("Should be Error")
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Char(["55", "56", "57"])
 Table({Value:"7"},{Value:"8"},{Value:"9"})
 
 >> Char(["55", "Error Coercion", "57"])
-Table({Value:"7"},{Value:Error(Kind=InvalidArgument)},{Value:"9"})
+Table({Value:"7"},{Value:Error({Kind:ErrorKind.InvalidArgument})},{Value:"9"})
 
 >> Concatenate(-1, ["456", "abc"] )
 Table({Value:"-1456"},{Value:"-1abc"})

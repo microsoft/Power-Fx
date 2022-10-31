@@ -38,7 +38,7 @@
 
 // ******** NULL and ERROR PARAMETERS ********
 >> Abs(1/0)
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 //Excel returns 0
 >> Abs(Blank())
@@ -54,7 +54,7 @@ false
 // ******** STRING PARAMETERS ********
 
 >> Abs("sampleText")
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Abs("10")
 10
@@ -71,10 +71,10 @@ Error(Kind=InvalidArgument)
 0
 
 >> Abs("true")
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Abs("false")
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 // ******** Date values and functions with dates ********
 >> Date(1976, 12,23) - Date(2000, 01, 01)

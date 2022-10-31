@@ -143,59 +143,59 @@
 
 //Error message: The second argument to the "Value" function should be greater than or equal to 1
 >> Replace("abcabcabc", 0, 1, "mm")
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 //Error message: The third argument to the "Value" function should be greater than or equal to 0
 >> Replace("abcabcabc", 1, -2, "mm")
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 //Error message: The second argument to the "Value" function should be greater than or equal to 1
 >> Replace("abcabcabc", -1, -2, "mm")
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 //Error message: The second argument to the "Value" function should be greater than or equal to 1
 >> Replace("", 0, 0, "")
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 //Error message: The second argument to the "Value" function should be greater than or equal to 1
 >> Replace(Blank(), 0, 0, "")
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 //Error message: The second argument to the "Value" function should be greater than or equal to 1
 >> Replace("abcd", 0, 0, "")
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 //Error message: The second argument to the "Value" function should be greater than or equal to 1
 >>  Replace("abcd", 0, 1, "P")
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 //Error message: The second argument to the "Value" function should be greater than or equal to 1
 >>  Replace("abcd", -10, 2, "P")
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 //Error message: The third argument to the "Value" function should be greater than or equal to 0
 >>  Replace("abcd", 2, -2, "P")
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 //Error message: The second argument to the "Value" function should be greater than or equal to 1
 >> Replace("HelloWorld",false,true,"mm")
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 //Error message: Invalid arguments to the 'Value' function
 >> Replace("HelloWorld","true","false","mm")
-Error(Kind=InvalidArgument,InvalidArgument)
+Error(Table({Kind:ErrorKind.InvalidArgument},{Kind:ErrorKind.InvalidArgument}))
 
 //Invalid operation: Division by zero
 >> Replace("abcdef", 1/0, 1, "mm")
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 //Invalid operation: Division by zero
 >> Replace("abcdef", 1, 1/0, "mm")
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 //Invalid argument to the function
 >> Replace("abcd", "abc", "def", "mm")
-Error(Kind=InvalidArgument,InvalidArgument)
+Error(Table({Kind:ErrorKind.InvalidArgument},{Kind:ErrorKind.InvalidArgument}))
 
 // ******** FUNCTION VALUE AS PARAMETERS ********
 

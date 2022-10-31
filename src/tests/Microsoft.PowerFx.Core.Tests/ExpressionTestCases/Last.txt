@@ -8,10 +8,10 @@ Blank()
 {Value:3}
 
 >> Last([1, 2, 1/0]).Value
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Last(Sort([-2, -1, 0, 1, 2], 1 / Value))
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> LastN([1, 2, 3, 4, 5], 2)
 Table({Value:4},{Value:5})
@@ -35,10 +35,10 @@ Blank()
 Blank()
 
 >> LastN(Sort([-2, -1, 0, 1, 2], 1 / Value), 2)
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> LastN([1, 2, 3, 4, 5], 1/0)
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 // Last2 have all values in column 'b' Blank(), but is still part of the type.
 >> LastN(Table({a:1, b:101}, {a:2}, {a:3}), 2)

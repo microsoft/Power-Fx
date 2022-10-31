@@ -176,10 +176,10 @@
 
 // ******** NULL and ERROR PARAMETERS ********
 >> RoundUp(1/0,1)
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> RoundUp(1,1/0)
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> RoundUp(Blank(),1)
 0
@@ -199,10 +199,10 @@ Error(Kind=Div0)
 // ******** STRING PARAMETERS ********
 
 >> RoundUp("sampleText",1)
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> RoundUp("10.5678","ABC")
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> RoundUp("-10.5678","2")
 -10.57
@@ -228,5 +228,5 @@ Error(Kind=InvalidArgument)
 0
 
 >> RoundUp("true","false")
-Error(Kind=InvalidArgument,InvalidArgument)
+Error(Table({Kind:ErrorKind.InvalidArgument},{Kind:ErrorKind.InvalidArgument}))
 

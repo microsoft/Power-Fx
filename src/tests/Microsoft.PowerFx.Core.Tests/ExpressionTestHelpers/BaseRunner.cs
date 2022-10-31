@@ -206,7 +206,7 @@ namespace Microsoft.PowerFx.Core.Tests
                             return (TestResult.Fail, $"Failed, but wrong error message: {msg}");
                         }
                     }
-                }               
+                }
             }
             catch (SetupHandlerNotFoundException)
             {
@@ -215,6 +215,12 @@ namespace Microsoft.PowerFx.Core.Tests
             catch (Exception e)
             {
                 return (TestResult.Fail, $"Threw exception: {e.Message}, {e.StackTrace}");
+            }
+
+            if (IsError(result) && testCase.Input != null)
+            {
+                // If they override IsError, then do additional checks. 
+                return await RunErrorCaseAsync(testCase);
             }
 
             // If the actual result is not an error, we'll fail with a mismatch below

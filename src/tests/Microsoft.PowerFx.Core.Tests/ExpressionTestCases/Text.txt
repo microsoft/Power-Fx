@@ -160,7 +160,7 @@
 
 
 >> Text(1/0, "#.000")
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 // ******** DATE/TIME PARAMETERS ********
 

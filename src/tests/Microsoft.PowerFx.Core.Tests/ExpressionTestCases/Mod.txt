@@ -7,17 +7,17 @@
 
 // Invalid operation: Division by zero
 >> Mod(0,0)
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Mod(0,1)
 0
 
 >> Mod(1E+300,1E-20)
-Error(Kind=Numeric)
+Error({Kind:ErrorKind.Numeric})
 
 // Invalid operation: Division by zero
 >> Mod(230,0)
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Mod(230,1)
 0
@@ -35,7 +35,7 @@ Error(Kind=Div0)
 
 // Invalid operation: Division by zero
 >> Mod(-456,0)
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Mod(-456,1)
 0
@@ -70,7 +70,7 @@ Error(Kind=Div0)
 
 // Invalid operation: Division by zero
 >> Mod(14.123456,0)
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Mod(14.123456,1)
 0.123456
@@ -100,7 +100,7 @@ Error(Kind=Div0)
 
 // Invalid operation: Division by zero
 >> Mod(-14.123456,0)
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Mod(-14.123456,1)
 0.876544
@@ -165,10 +165,10 @@ Error(Kind=Div0)
 // ******** NULL and ERROR PARAMETERS ********
 // Invalid operation: Division by zero
 >> Mod(1/0,1)
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Mod(1,1/0)
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Mod(Blank(),1)
 0
@@ -178,23 +178,23 @@ Error(Kind=Div0)
 
 // Invalid operation: Division by zero
 >> Mod(56.78, Blank())
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 // Invalid operation: Division by zero
 >> Mod(-56.78, Blank())
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 // Invalid operation: Division by zero
 >> Mod(Blank(),Blank())
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 // ******** STRING PARAMETERS ********
 
 >> Mod("sampleText",1)
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Mod("10.5678","ABC")
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Mod("-10.5678","2")
 1.4322
@@ -212,17 +212,17 @@ Error(Kind=InvalidArgument)
 
 // Invalid operation: Division by zero
 >> Mod(true,false)
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Mod(false,true)
 0
 
 // Invalid operation: Division by zero
 >> Mod(false,false)
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Mod("false","true")
-Error(Kind=InvalidArgument,InvalidArgument)
+Error(Table({Kind:ErrorKind.InvalidArgument},{Kind:ErrorKind.InvalidArgument}))
 
 // ********* DATE PARAMETERS
 

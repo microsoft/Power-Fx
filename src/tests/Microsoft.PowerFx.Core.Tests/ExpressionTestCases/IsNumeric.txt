@@ -20,7 +20,7 @@ true
 true
 
 >>IsNumeric(1/0)
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >>IsNumeric(Blank())
 false

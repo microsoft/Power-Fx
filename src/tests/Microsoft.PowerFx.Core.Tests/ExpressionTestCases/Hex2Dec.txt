@@ -59,7 +59,7 @@
 Blank()
 
 >> Hex2Dec(Filter(["true","false"], Len(Value) > 10))
-[]
+Table()
 
 >> Hex2Dec(If(1/0<2,[1]))
 #Error(Kind=Div0)
@@ -68,16 +68,16 @@ Blank()
 Blank()
 
 >> Hex2Dec(Filter([1,2,3], Value > 10))
-[]
+Table()
 
 // ******** TABULAR VALUE AS PARAMETERS ********
 
 >> Hex2Dec(["A","12","FFFF"])
-[10,18,65535]
+Table({Value:10},{Value:18},{Value:65535})
 
 >> Hex2Dec("43j")
 #Error(Kind=Numeric)
 
 >> Hex2Dec(["3","E","I","B"])
-[3,14,Microsoft.PowerFx.Types.ErrorValue,11]
+Table({Value:3},{Value:14},{Value:Error({Kind:ErrorKind.Numeric})},{Value:11})
 

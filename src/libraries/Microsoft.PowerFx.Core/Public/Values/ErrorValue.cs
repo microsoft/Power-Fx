@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -78,13 +79,12 @@ namespace Microsoft.PowerFx.Types
         {            
             var flag = true;
 
-            if (settings.UseCompactRepresentation)
-            {
-                AppendCompactRepresentation(sb);
-                return;
-            }
+            sb.Append("Error(");
 
-            sb.Append("Error(Table(");
+            if (_errors.Count > 1)
+            {
+                sb.Append("Table(");
+            }          
 
             foreach (var error in _errors)
             {
@@ -98,7 +98,7 @@ namespace Microsoft.PowerFx.Types
                 sb.Append("{Kind:ErrorKind.");
                 sb.Append(error.Kind.ToString());
 
-                if (error.Message != null)
+                if (error.Message != null && !settings.UseCompactRepresentation)
                 {
                     sb.Append(", Message:");
                     sb.Append(CharacterUtils.ToPlainText(error.Message));
@@ -107,28 +107,12 @@ namespace Microsoft.PowerFx.Types
                 sb.Append("}");
             }
 
-            sb.Append("))");
-        }
-
-        private void AppendCompactRepresentation(StringBuilder sb)
-        {
-            var flag = true;
-
-            sb.Append("Error(Kind=");
-
-            foreach (var error in _errors)
-            {
-                if (!flag)
-                {
-                    sb.Append(",");
-                }
-
-                sb.Append(error.Kind.ToString());
-
-                flag = false;
-            }
-
             sb.Append(")");
+
+            if (_errors.Count > 1)
+            {
+                sb.Append(")");
+            }
         }
     }
 }

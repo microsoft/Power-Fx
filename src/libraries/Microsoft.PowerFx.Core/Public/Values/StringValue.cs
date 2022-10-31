@@ -28,12 +28,6 @@ namespace Microsoft.PowerFx.Types
 
         public override void ToExpression(StringBuilder sb, FormulaValueSerializerSettings settings)
         {
-            if (settings.UseCompactRepresentation)
-            {
-                sb.Append($"\"{Value}\"");
-                return;
-            }
-
             sb.Append($"\"{CharacterUtils.ExcelEscapeString(Value)}\"");
         }
     }

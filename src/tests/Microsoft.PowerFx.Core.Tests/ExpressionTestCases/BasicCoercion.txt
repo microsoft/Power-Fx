@@ -17,7 +17,7 @@
 
 // non-numeric Strings don't coorce
 >> ("x" * "3")
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 // bools coorce to number as 1 or 0
 >> true - false
@@ -35,10 +35,10 @@ true
 
 // can coorce text to bool via logical operators
 >> "true" && "anything"
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> "anything" || "true"
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 // blank coorces to false via logical operators
 >> true && !Blank()

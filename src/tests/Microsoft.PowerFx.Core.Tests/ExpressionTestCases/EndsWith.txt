@@ -132,11 +132,11 @@ true
 
 //Invalid operation: Division by zero
 >> EndsWith("hello",1/0)
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 //Invalid operation: Division by zero
 >> EndsWith(1/0,"hello")
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 //Null text case
 >> EndsWith(Blank(),"ok")

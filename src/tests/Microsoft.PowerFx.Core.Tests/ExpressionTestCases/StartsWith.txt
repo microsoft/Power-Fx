@@ -134,11 +134,11 @@ true
 
 // Invalid operation: Division by zero
 >> StartsWith("hello",1/0)
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 // Invalid operation: Division by zero
 >> StartsWith(1/0,"hello")
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 // Null text case - coerced to ""
 >> StartsWith(Blank(),"ok")

@@ -5,7 +5,7 @@
 0.81649658093
 
 >> StdevP(1, 2/0)
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> StdevP(-1)
 0
@@ -14,16 +14,16 @@ Error(Kind=Div0)
 0
 
 >> StdevP(Blank())
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> StdevP("NaN")
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> StdevP("NaN", Blank())
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> StdevP(Sort([-2, -1, 0, 1, 2], 1 / Value), Value)
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> StdevP(CountIf([1,2,3], true))
 0
@@ -33,10 +33,10 @@ Error(Kind=Div0)
 
 // Infinity
 >> StdevP(-1.7e308,1.7e308)
-Error(Kind=Numeric)
+Error({Kind:ErrorKind.Numeric})
 
 >> StdevP("100", "AB")
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> StdevP(false, false)
 0

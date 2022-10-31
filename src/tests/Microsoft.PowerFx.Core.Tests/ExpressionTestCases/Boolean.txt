@@ -5,13 +5,13 @@ true
 false
 
 >> Boolean("x")
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Boolean(" true")
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Boolean(" false")
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Boolean("True")
 true
@@ -29,10 +29,10 @@ false
 Blank()
 
 >> Boolean(Text(1/0))
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Boolean("0")
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Boolean(["true", "True", "TRUE", "false", "False", "FALSE"])
 Table({Value:true},{Value:true},{Value:true},{Value:false},{Value:false},{Value:false})

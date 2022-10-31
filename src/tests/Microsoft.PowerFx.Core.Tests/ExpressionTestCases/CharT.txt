@@ -10,7 +10,7 @@ Table({Result:"W"},{Result:"o"},{Result:"r"},{Result:"l"},{Result:"d"})
 // ******** OUT-OF-RANGE AND ERROR PARAMETERS: Parameters outside range of 1 - 255 ********
 
 >> Char(Table({a:32},{a:257},{a:65},{a:Blank()},{a:97}))
-Table({Result:" "},{Result:Error(Kind=InvalidArgument)},{Result:"A"},{Result:Error(Kind=InvalidArgument)},{Result:"a"})
+Table({Result:" "},{Result:Error({Kind:ErrorKind.InvalidArgument})},{Result:"A"},{Result:Error({Kind:ErrorKind.InvalidArgument})},{Result:"a"})
 
 >> Char(If(Sqrt(-1)<1,[33]))
-Error(Kind=Numeric)
+Error({Kind:ErrorKind.Numeric})

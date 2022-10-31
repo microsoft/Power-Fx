@@ -7,7 +7,7 @@ Table({Value:0},{Value:0})
 Table({Value:22},{Value:-33})
 
 >> Ln(Table({a: -57.88}, {a: 1/0}))
-Table({Value:Error(Kind=Numeric)},{Value:Error(Kind=Div0)})
+Table({Value:Error({Kind:ErrorKind.Numeric})},{Value:Error({Kind:ErrorKind.Div0})})
 
 //Rounding values as the test runner returns a different precision for table inputs
 
@@ -15,4 +15,4 @@ Table({Value:Error(Kind=Numeric)},{Value:Error(Kind=Div0)})
 Table({Value:1.60943791},{Value:6.06378521},{Value:0.85257108})
 
 >> Round(Ln(Table({a: "-10.123"}, {a: "10"})), 8)
-Table({Value:Error(Kind=Numeric)},{Value:2.30258509})
+Table({Value:Error({Kind:ErrorKind.Numeric})},{Value:2.30258509})

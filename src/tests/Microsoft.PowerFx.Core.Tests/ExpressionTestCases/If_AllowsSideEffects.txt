@@ -44,4 +44,4 @@ Blank()
 5
 
 >> If(Value("1")>Value("0"), Blank(); 1/0; Blank(), 3)
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})

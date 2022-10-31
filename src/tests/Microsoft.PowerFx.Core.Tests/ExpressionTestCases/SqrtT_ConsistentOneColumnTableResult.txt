@@ -13,7 +13,7 @@ Table({Value:3},{Value:38})
 Blank()
 
 >> Sqrt(Table({a:16}, {a:289}, {a:1/0}))
-Table({Value:4},{Value:17},{Value:Error(Kind=Div0)})
+Table({Value:4},{Value:17},{Value:Error({Kind:ErrorKind.Div0})})
 
 >> Sqrt(Table({a:6.25}, {a:Power(2,2)}))
 Table({Value:2.5},{Value:2})

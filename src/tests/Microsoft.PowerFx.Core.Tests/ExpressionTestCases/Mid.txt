@@ -146,35 +146,35 @@
 //Invalid operation: Division by zero
 //Excel doesnt allow two parameters, it needs 3 parameters
 >> Mid(Text(1/0, "#.000"), 1)
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 //Invalid operation: Division by zero
 >> Mid("abcdef", 1/0, 1)
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 //Invalid operation: Division by zero
 >> Mid("abcdef", 1, 1/0)
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 //PowerFx Error message: The second argument to the 'Mid' function should be greater than or equal to 1
 >> Mid("", 0, 0)
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 //PowerFx Error message: The second argument to the 'Mid' function should be greater than or equal to 1 
 >> Mid("abcd", 0, 1)
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 //PowerFx Error message: The second argument to the 'Mid' function should be greater than or equal to 1  
 >> Mid("abcd", -10, 2)
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 //PowerFx Error message: The third argument to the 'Mid' function should be greater than or equal to 0 
 >> Mid("abcd", 2, -2)
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 //Invalid argument to the function
 >> Mid("abcd", "abc","def")
-Error(Kind=InvalidArgument,InvalidArgument)
+Error(Table({Kind:ErrorKind.InvalidArgument},{Kind:ErrorKind.InvalidArgument}))
 
 // ******** FUNCTION VALUE AS PARAMETERS ********
 

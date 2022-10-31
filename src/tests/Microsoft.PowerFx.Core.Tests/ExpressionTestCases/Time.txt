@@ -18,7 +18,7 @@ Time(6,0,0,0)
 3
 
 >> Time(1/0, 2, 3)
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Time(8,1,15) < Time(8,1,30)
 true
@@ -69,7 +69,7 @@ false
 false
 
 >> Time(1/0, 2, 3) < Time(8,1,30)
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 // Date <-> Time comparison is supported for back compat reasons
 // It's handled by promoting Times to DateTimes on the day of the epoch, and comparing using that.
@@ -84,13 +84,13 @@ false
 true
 
 >> Time(1/0, 2, 3) <= Time(8,1,30)
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Time(1/0, 2, 3) > Time(8,1,30)
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Time(1/0, 2, 3) >= Time(8,1,30)
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Text(Time(10, 70, 360), "HH:mm:ss")
 "11:16:00"
@@ -200,7 +200,7 @@ Errors: Error 13-14: This operation isn't valid on these types: Time, Date.
 Errors: Error 13-14: This operation isn't valid on these types: Time, DateTime.
 
 >> 0 - Time(2,30,45)
-Error(Kind=NotSupported)
+Error({Kind:ErrorKind.NotSupported})
 
 // *********** COMPONENTS FROM OVERFLOWS **********
 >> Hour(Time(26,90,90))
@@ -281,37 +281,37 @@ Time(12,34,56,0)
 0
 
 >> Time(1/0, 34, 56)
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Time(12, Sqrt(-1), 56)
-Error(Kind=Numeric)
+Error({Kind:ErrorKind.Numeric})
 
 >> Time(12, 34, 2/0)
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Time(12, 34, 56, Sqrt(-1))
-Error(Kind=Numeric)
+Error({Kind:ErrorKind.Numeric})
 
 >> Time(Sqrt(-2), 34, 2/0)
-Error(Kind=Numeric,Div0)
+Error(Table({Kind:ErrorKind.Numeric},{Kind:ErrorKind.Div0}))
 
 >> Hour(If(1/0<2,Time(1,1,1)))
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Hour(If(Sqrt(-1)<0,DateTime(2000,1,1,1,1,1)))
-Error(Kind=Numeric)
+Error({Kind:ErrorKind.Numeric})
 
 >> Minute(If(Sqrt(-1)<0,Time(1,1,1)))
-Error(Kind=Numeric)
+Error({Kind:ErrorKind.Numeric})
 
 >> Minute(If(1/0>2,DateTime(2000,1,1,1,1,1)))
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Second(If(10/0>0,Time(1,1,1)))
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Second(If(Sqrt(-1)<0,DateTime(2000,1,1,1,1,1)))
-Error(Kind=Numeric)
+Error({Kind:ErrorKind.Numeric})
 
 // ********** COERCION CASES **************
 

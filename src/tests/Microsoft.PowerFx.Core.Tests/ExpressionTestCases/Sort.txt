@@ -31,7 +31,7 @@ Table({Value:-2},{Value:1},{Value:2},{Value:5},{Value:Blank()})
 Table({Value:5},{Value:2},{Value:1},{Value:-2},{Value:Blank()})
 
 >> Sort([-2, -1, 0, 1, 2], 1 / Value)
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Sort(["a", "b", "D", "x", "J", "C"], Value)
 Table({Value:"a"},{Value:"b"},{Value:"C"},{Value:"D"},{Value:"J"},{Value:"x"})
@@ -70,4 +70,4 @@ Table({Value:DateTime(2019,5,16,8,0,0,0)},{Value:DateTime(2019,5,16,20,0,0,0)},{
 Table({Value:DateTime(2019,5,16,20,0,1,0)},{Value:DateTime(2019,5,16,20,0,0,0)},{Value:DateTime(2019,5,16,8,0,0,0)})
 
 >> First(LastN(Sort([-2, -1, 0, 1, 2], 1 / Value), 3)).Value
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})

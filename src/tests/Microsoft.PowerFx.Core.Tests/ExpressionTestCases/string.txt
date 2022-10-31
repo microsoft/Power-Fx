@@ -17,10 +17,10 @@
 ""
 
 >> Left("foo", -1)
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Left("foo", 1/0)
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Left(Blank(), 1)
 ""
@@ -41,10 +41,10 @@ Error(Kind=Div0)
 ""
 
 >> Right("bar", -1)
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Right("foo", 1/0)
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Right(Blank(), 1)
 ""
@@ -69,22 +69,22 @@ Error(Kind=Div0)
 ""
 
 >> Mid("bar", -1)
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> IsError(Mid("bar", -1))
 true
 
 >> Mid("bar", 2, -1)
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> IsError(Mid("bar", 2, -1))
 true
 
 >> Mid("foo", 0)
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Mid(Text(1/0, "#.000"), 1)
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> IsError(Mid("foo", 0))
 true
@@ -108,7 +108,7 @@ false
 0
 
 >> Len(Text(1/0, "#.000"))
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> "f" in "foo"
 true
@@ -148,7 +148,7 @@ true
 true
 
 >> StartsWith("foobar", Text(1/0))
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> EndsWith("foobar", "bar")
 true
@@ -164,7 +164,7 @@ true
 true
 
 >> EndsWith("foobar", Text(1/0))
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> TrimEnds("   Hello     World   ")
 "Hello     World"
@@ -173,7 +173,7 @@ Error(Kind=Div0)
 ""
 
 >> TrimEnds(Text(1/0))
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Trim("   Hello     World   ")
 "Hello World"
@@ -182,7 +182,7 @@ Error(Kind=Div0)
 ""
 
 >> Trim(Text(1/0))
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Lower("E. E. Cummings")
 "e. e. cummings"
@@ -191,7 +191,7 @@ Error(Kind=Div0)
 ""
 
 >> Lower(Text(1/0, "000"))
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Upper("Important!")
 "IMPORTANT!"
@@ -200,7 +200,7 @@ Error(Kind=Div0)
 ""
 
 >> Upper(Text(1/0, "000"))
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Substitute("abcabcabc", "ab", "xx")
 "xxcxxcxxc"
@@ -218,13 +218,13 @@ Error(Kind=Div0)
 "abcabcabc"
 
 >> Substitute("abcabcabc", "ab", "xx", 1/0)
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Substitute("abcabcabc", "ab", "xx", 0)
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Substitute("abcabcabc", "ab", "xx", Blank())
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Substitute("abcabcabc", Blank(), "xx")
 "abcabcabc"
@@ -245,7 +245,7 @@ Error(Kind=InvalidArgument)
 true
 
 >> Substitute("abcabcabc", "ab", "xx", -2)
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> IsError(Substitute("abcabcabc", "ab", "xx", -2))
 true
@@ -263,19 +263,19 @@ true
 "abcxx"
 
 >> Replace("abcabcabc", 0, 0, "xx")
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> IsError(Replace("abcabcabc", 0, 0, "xx"))
 true
 
 >> Replace("abcabcabc", 1, -2, "xx")
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> IsError(Replace("abcabcabc", 1, -2, "xx"))
 true
 
 >> Replace("abcabcabc", -1, -2, "xx")
-Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> IsError(Replace("abcabcabc", -1, -2, "xx"))
 true
@@ -287,4 +287,4 @@ true
 "ab"
 
 >> Concatenate(Text(1/0, "000"), "b", Text(7))
-Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
