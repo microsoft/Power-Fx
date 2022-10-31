@@ -713,7 +713,7 @@ namespace Microsoft.PowerFx.Core.Parser
                             
                             if (_features.HasFlag(Features.DisableRowScopeDisambiguationSyntax))
                             {
-                                PostError(_curs.TokCur, errKey: TexlStrings.ErrBadToken);
+                                PostError(_curs.TokCur, errKey: TexlStrings.ErrDeprecated);
                             }
 
                             node = ParseScopeField(first);

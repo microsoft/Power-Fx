@@ -144,11 +144,6 @@ namespace Microsoft.PowerFx
         /// <summary>
         /// Parse the expression without doing any binding.
         /// </summary>
-        /// <param name="expressionText"></param>
-        /// <param name="features"></param>
-        /// <param name="options"></param>
-        /// <param name="cultureInfo"></param>
-        /// <returns></returns>
         public static ParseResult Parse(string expressionText, Features features, ParserOptions options = null, CultureInfo cultureInfo = null)
         {
             options ??= new ParserOptions();

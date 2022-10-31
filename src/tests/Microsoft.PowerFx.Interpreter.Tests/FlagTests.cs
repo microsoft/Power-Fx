@@ -3,7 +3,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Preview;
 using Microsoft.PowerFx.Types;
@@ -34,12 +36,13 @@ namespace Microsoft.PowerFx.Core.Tests
             TableValue val = FormulaValue.NewSingleColumnTable(r1, r2, r3);
 
             engine.UpdateVariable("A", val);
-            var resultWithFlag = engine.Check(expression);
+            var resultWithFlag = engine.Parse(expression);
 
             engineWithoutFlag.UpdateVariable("A", val);
-            var resultWithoutFlag = engineWithoutFlag.Check(expression);
+            var resultWithoutFlag = engineWithoutFlag.Parse(expression);
 
             Assert.False(resultWithFlag.IsSuccess);
+            Assert.NotNull(resultWithFlag.Errors.First(error => error.MessageKey.Equals(TexlStrings.ErrDeprecated.Key)));
 
             Assert.True(resultWithoutFlag.IsSuccess);
         }
