@@ -73,13 +73,22 @@ namespace Microsoft.PowerFx.Core.Functions.FunctionArgValidators
             }
 
             var firstNameInfo = binding.GetInfo(firstName);
-            if (firstNameInfo == null || firstNameInfo.Kind != BindKind.Data)
+            if (firstNameInfo == null)
             {
                 return false;
             }
 
-            return binding.EntityScope != null &&
-                binding.EntityScope.TryGetEntity(firstNameInfo.Name, out dsInfo);
+            if (firstNameInfo.Kind == BindKind.Data)
+            {
+                return binding.EntityScope != null &&
+                    binding.EntityScope.TryGetEntity(firstNameInfo.Name, out dsInfo);
+            }
+            else if (firstNameInfo.Kind == BindKind.PowerFxResolvedObject && firstNameInfo.Data is IExternalNamedFormula formula)
+            {
+                return formula.TryGetExternalDataSource(out dsInfo);
+            }
+
+            return false;
         }
 
         private bool TryGetDsInfo(DottedNameNode dottedNameNode, TexlBinding binding, out IExternalDataSource dsInfo)

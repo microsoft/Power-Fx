@@ -25,4 +25,9 @@ namespace Microsoft.PowerFx.Core.Entities
 
         IDelegationMetadata DelegationMetadata { get; }
     }
+
+    internal interface IExternalNamedFormula : IExternalPageableSymbol
+    {
+        bool TryGetExternalDataSource(out IExternalDataSource dataSource);
+    }
 }
