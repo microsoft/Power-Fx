@@ -573,6 +573,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrInvalidControlReference = new ErrorResourceKey("ErrInvalidControlReference");
         public static ErrorResourceKey ErrInvalidStringInterpolation = new ErrorResourceKey("ErrInvalidStringInterpolation");
         public static ErrorResourceKey ErrEmptyIsland = new ErrorResourceKey("ErrEmptyIsland");
+        public static ErrorResourceKey ErrDeprecated = new ErrorResourceKey("ErrDeprecated");
 
         public static ErrorResourceKey ErrErrorIrrelevantField = new ErrorResourceKey("ErrErrorIrrelevantField");
         public static ErrorResourceKey ErrAsNotInContext = new ErrorResourceKey("ErrAsNotInContext");

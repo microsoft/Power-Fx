@@ -19,6 +19,14 @@ namespace Microsoft.PowerFx
         /// <summary>
         /// Enable functions to consistently return one dimension tables with a "Value" column rather than some other name like "Result"
         /// </summary>
-        ConsistentOneColumnTableResult = 0x2
+        ConsistentOneColumnTableResult = 0x2,
+
+        /// <summary>
+        /// Disables support for row-scope disambiguation syntax.
+        /// Now,for example user would need to use Filter(A, ThisRecord.Value = 2) or Filter(A As Foo, Foo.Value = 2)
+        /// instead of
+        /// Filter(A, A[@Value] = 2)
+        /// </summary>
+        DisableRowScopeDisambiguationSyntax = 0x4,
     }
 }

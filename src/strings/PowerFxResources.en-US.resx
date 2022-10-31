@@ -6611,4 +6611,8 @@
     <value>A column of hexadecimal strings to convert to decimals.</value>
     <comment>Description of 'Hex2DecTArg1' function parameter.</comment>
   </data>
+  <data name="ErrDeprecated" xml:space="preserve">
+    <value>This feature is deprecated and is no longer supported.</value>
+    <comment>An error message for deprecated features.</comment>
+  </data>
 </root>
