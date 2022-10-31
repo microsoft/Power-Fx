@@ -3,12 +3,10 @@
 
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Text;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
-using Newtonsoft.Json.Linq;
 using Xunit;
 
 namespace Microsoft.PowerFx.Interpreter.Tests

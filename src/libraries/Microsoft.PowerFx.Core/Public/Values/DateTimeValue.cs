@@ -31,7 +31,7 @@ namespace Microsoft.PowerFx.Types
             if (settings.UseCompactRepresentation)
             {
                 // DateTime(2022,10,23,12,34,56,999)
-                sb.Append($"DateTime({Value.Date.Year},{Value.Date.Month},{Value.Date.Day},{Value.TimeOfDay.Hours},{Value.TimeOfDay.Minutes},{Value.TimeOfDay.Seconds},{Value.TimeOfDay.Milliseconds})");
+                sb.Append($"DateTime({Value.Year},{Value.Month},{Value.Day},{Value.Hour},{Value.Minute},{Value.Second},{Value.Millisecond})");
                 return;
             }
 
