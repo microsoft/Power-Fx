@@ -60,15 +60,19 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             var tableArgType = argTypes[1];
-            var tableDsInfo = tableArgType.AssociatedDataSources.Single();
 
-            if (context.IsEnhancedDelegationEnabled && (tableDsInfo is IExternalCdsDataSource) && argTypes[0].HasPolymorphicInfo)
+            if (tableArgType.AssociatedDataSources.Any())
             {
-                var expandInfo = argTypes[0].PolymorphicInfo.TryGetExpandInfo(tableDsInfo.TableMetadata.Name);
-                if (expandInfo != null)
+                var tableDsInfo = tableArgType.AssociatedDataSources.Single();
+
+                if (context.IsEnhancedDelegationEnabled && (tableDsInfo is IExternalCdsDataSource) && argTypes[0].HasPolymorphicInfo)
                 {
-                    returnType = argTypes[0].ExpandPolymorphic(argTypes[1], expandInfo);
-                    return true;
+                    var expandInfo = argTypes[0].PolymorphicInfo.TryGetExpandInfo(tableDsInfo.TableMetadata.Name);
+                    if (expandInfo != null)
+                    {
+                        returnType = argTypes[0].ExpandPolymorphic(argTypes[1], expandInfo);
+                        return true;
+                    }
                 }
             }
 

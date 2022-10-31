@@ -127,7 +127,7 @@ namespace Microsoft.PowerFx.Types
                 }
                 else if (result is TableValue tableValue)
                 {
-                    result = new InMemoryTableValue(IRContext.NotInSource(fieldType), tableValue.Rows);
+                    result = CompileTimeTypeWrapperTableValue.AdjustType((TableType)fieldType, tableValue);
                 }
                 else
                 {

@@ -32,7 +32,7 @@ namespace Microsoft.PowerFx.Functions
                 else
                 {
                     var childContext = context.SymbolContext.WithScopeValues(row.Value);
-                    return await arg2.EvalAsync(runner, context.NewScope(childContext));
+                    return await arg2.EvalInRowScopeAsync(context.NewScope(childContext));
                 }
             }
 
@@ -146,7 +146,7 @@ namespace Microsoft.PowerFx.Functions
 
                     foreach (var column in newColumns)
                     {
-                        var value = await column.Lambda.EvalAsync(runner, context.NewScope(childContext));
+                        var value = await column.Lambda.EvalInRowScopeAsync(context.NewScope(childContext));
                         fields.Add(new NamedValue(column.Name, value));
                     }
 
@@ -292,7 +292,7 @@ namespace Microsoft.PowerFx.Functions
                     var childContext = row.IsValue ?
                         context.SymbolContext.WithScopeValues(row.Value) :
                         context.SymbolContext.WithScopeValues(row.Error);
-                    var result = await filter.EvalAsync(runner, context.NewScope(childContext));
+                    var result = await filter.EvalInRowScopeAsync(context.NewScope(childContext));
 
                     if (result is ErrorValue error)
                     {
@@ -372,7 +372,7 @@ namespace Microsoft.PowerFx.Functions
             }
 
             var childContext = context.SymbolContext.WithScopeValues(row.Value);
-            var sortValue = await lambda.EvalAsync(runner, context.NewScope(childContext));
+            var sortValue = await lambda.EvalInRowScopeAsync(context.NewScope(childContext));
 
             return (row, sortValue);
         }
@@ -529,7 +529,7 @@ namespace Microsoft.PowerFx.Functions
             }
 
             // Filter evals to a boolean 
-            var result = await filter.EvalAsync(runner, context.NewScope(childContext));
+            var result = await filter.EvalInRowScopeAsync(context.NewScope(childContext));
             var include = false;
             if (result is BooleanValue booleanValue)
             {

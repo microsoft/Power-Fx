@@ -212,6 +212,11 @@ namespace Microsoft.PowerFx.Core.Texl
         // NOTE: These functions should not be part of the core library until they are implemented in all runtimes
         public static readonly TexlFunction DateTime = _featureGateFunctions.Append(new DateTimeFunction());
 
+        public static readonly TexlFunction Dec2Hex = _featureGateFunctions.Append(new Dec2HexFunction());
+        public static readonly TexlFunction Dec2HexT = _featureGateFunctions.Append(new Dec2HexTFunction());
+        public static readonly TexlFunction Hex2Dec = _featureGateFunctions.Append(new Hex2DecFunction());
+        public static readonly TexlFunction Hex2DecT = _featureGateFunctions.Append(new Hex2DecTFunction());
+
         public static readonly TexlFunction IsUTCToday = _featureGateFunctions.Append(new IsUTCTodayFunction());
         public static readonly TexlFunction UTCNow = _featureGateFunctions.Append(new UTCNowFunction());
         public static readonly TexlFunction UTCToday = _featureGateFunctions.Append(new UTCTodayFunction());

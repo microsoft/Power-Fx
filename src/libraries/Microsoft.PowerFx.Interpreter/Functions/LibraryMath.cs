@@ -414,7 +414,7 @@ namespace Microsoft.PowerFx.Functions
                     childContext = context.SymbolContext.WithScopeValues(RecordValue.Empty());
                 }
 
-                var value = await arg1.EvalAsync(runner, context.NewScope(childContext));
+                var value = await arg1.EvalInRowScopeAsync(context.NewScope(childContext));
 
                 if (value is ErrorValue error)
                 {
@@ -889,6 +889,86 @@ namespace Microsoft.PowerFx.Functions
                 Span = irContext.SourceContext,
                 Message = "Division by zero"
             });
+        }
+
+        private static FormulaValue Dec2Hex(IRContext irContext, NumberValue[] args)
+        {
+            var minNumber = -(1L << 39);
+            var maxNumber = (1L << 39) - 1;
+
+            var number = Math.Floor(args[0].Value);
+            var places = (int)Math.Floor(args[1].Value);
+
+            if (number < minNumber || number > maxNumber)
+            {
+                return CommonErrors.OverflowError(irContext);
+            }
+
+            // places need to be non-negative and 10 or less
+            if (places < 0 || places > 10)
+            {
+                return new ErrorValue(irContext, new ExpressionError()
+                {
+                    Message = $"Places should be between 0 and 10",
+                    Span = irContext.SourceContext,
+                    Kind = ErrorKind.Numeric
+                });
+            }
+
+            var roundNumber = (long)number;
+            string result;
+            /*
+             * a long negative will result in 16 characters so
+             * negative numbers need to be truncated down to 10 characters
+            */
+            if (number < 0)
+            {
+                result = roundNumber.ToString("X");
+                result = result.Substring(result.Length - 10, 10);
+            }
+            else
+            {
+                result = roundNumber.ToString("X" + places);
+            }
+
+            // places need to be greater or equal to length of hexadecimal when number is positive
+            if (places != 0 && result.Length > places && number > 0)
+            {
+                return CommonErrors.GenericInvalidArgument(irContext);
+            }
+
+            return new StringValue(irContext, result);
+        }
+
+        private static FormulaValue Hex2Dec(IRContext irContext, StringValue[] args)
+        {
+            var number = args[0].Value;
+
+            if (string.IsNullOrEmpty(number))
+            {
+                return new NumberValue(irContext, 0);
+            }
+
+            if (number.Length > 10)
+            {
+                return CommonErrors.OverflowError(irContext);
+            }
+
+            // negative numbers starts after 8000000000
+            if (number.Length == 10 && number.CompareTo("8000000000") > 0)
+            {
+                var maxNumber = (long)(1L << 40);
+                long.TryParse(number, System.Globalization.NumberStyles.HexNumber, null, out var negative_result);
+                negative_result -= maxNumber;
+                return new NumberValue(irContext, negative_result);
+            }
+
+            if (!long.TryParse(number, System.Globalization.NumberStyles.HexNumber, null, out var result))
+            {
+                return CommonErrors.OverflowError(irContext);
+            }
+
+            return new NumberValue(irContext, result);
         }
     }
 }
