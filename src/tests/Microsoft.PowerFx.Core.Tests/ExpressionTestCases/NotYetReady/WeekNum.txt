@@ -11624,26 +11624,26 @@
 
 // 0 not in list of supported StartofWeek Excel codes
 >> WeekNum(Date(2016, 1, 3),0)
-Error(Kind=InvalidFunctionUsage)
+Error({Kind:ErrorKind.InvalidFunctionUsage})
 
 //MondayZero StartOfWeek enumeration is not supported by WeekNum function
 >> WeekNum(Date(2020, 5, 3),StartOfWeek.MondayZero)
-Error(Kind=InvalidFunctionUsage)
+Error({Kind:ErrorKind.InvalidFunctionUsage})
 
 // 5 not in list of supported StartofWeek Excel codes
 >> WeekNum(Date(2016, 1, 3),5)
-Error(Kind=InvalidFunctionUsage)
+Error({Kind:ErrorKind.InvalidFunctionUsage})
 
 // Decimal number error code not supported
 >> WeekNum(Date(2016, 1, 3),12.5)
-Error(Kind=InvalidFunctionUsage)
+Error({Kind:ErrorKind.InvalidFunctionUsage})
 
 // Negative error code not supported
 >> WeekNum(Date(2016, 1, 3),-12)
-Error(Kind=InvalidFunctionUsage)
+Error({Kind:ErrorKind.InvalidFunctionUsage})
 
 >> WeekNum(DateValue("1/2/2022"),1E308)
-Error(Kind=InvalidFunctionUsage)
+Error({Kind:ErrorKind.InvalidFunctionUsage})
 
 
 // ******************************** NUMBER PARAMETERS ********************************
@@ -11702,7 +11702,7 @@ Error({Kind:ErrorKind.InvalidArgument})
 
 // Boolean value false coerced to Excel code 0, which is unsupported StartOfWeek code
 >> WeekNum(DateValue("1/2/2022"),false)
-Error(Kind=InvalidFunctionUsage)
+Error({Kind:ErrorKind.InvalidFunctionUsage})
 
 // Boolean value true passed as string is treated as invalid argument
 >> WeekNum(DateValue("1/2/2022"),"true")

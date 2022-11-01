@@ -27,16 +27,8 @@ namespace Microsoft.PowerFx.Types
         }
 
         public override void ToExpression(StringBuilder sb, FormulaValueSerializerSettings settings)
-        {            
-            if (settings.UseCompactRepresentation)
-            {
-                // DateTime(2022,10,23,12,34,56,999)
-                sb.Append($"DateTime({Value.Year},{Value.Month},{Value.Day},{Value.Hour},{Value.Minute},{Value.Second},{Value.Millisecond})");
-                return;
-            }
-
-            // DateTimeValue("2022-10-25T20:31:38.0594225Z")
-            sb.Append($"DateTimeValue({CharacterUtils.ToPlainText(Value.ToString("o", CultureInfo.InvariantCulture))})");
+        {
+            sb.Append($"DateTime({Value.Year},{Value.Month},{Value.Day},{Value.Hour},{Value.Minute},{Value.Second},{Value.Millisecond})");
         }
     }
 }

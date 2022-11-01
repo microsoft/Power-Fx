@@ -47,7 +47,7 @@
 "B2D4"
 
 >> Dec2Hex(45780, 3)
-#Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Dec2Hex(45780, 4)
 "B2D4"
@@ -62,10 +62,10 @@
 "000000B2D4"
 
 >> Dec2Hex(45780, -6)
-#Error(Kind=Numeric)
+Error({Kind:ErrorKind.Numeric})
 
 >> Dec2Hex(45780, 11)
-#Error(Kind=Numeric)
+Error({Kind:ErrorKind.Numeric})
 
 // Places are ignored when number is negative
 >> Dec2Hex(-45780)
@@ -81,20 +81,20 @@
 "FFFFFF4D2C"
 
 >> Dec2Hex(-45780, 11)
-#Error(Kind=Numeric)
+Error({Kind:ErrorKind.Numeric})
 
 // ******** NULL and ERROR PARAMETERS ********
 >> Dec2Hex(1/0)
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Dec2Hex(-549755813889)
-#Error(Kind=Numeric)
+Error({Kind:ErrorKind.Numeric})
 
 >> Dec2Hex(549755813888)
-#Error(Kind=Numeric)
+Error({Kind:ErrorKind.Numeric})
 
 >> Dec2Hex(If(1/0<2,["true"]))
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Dec2Hex(If(1<0,["true"]))
 Blank()
@@ -103,7 +103,7 @@ Blank()
 Table()
 
 >> Dec2Hex(If(1/0<2,[1]))
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Dec2Hex(If(1<0,[1]))
 Blank()
@@ -112,10 +112,10 @@ Blank()
 Table()
 
 >> Dec2Hex(If(1/0<2,[12, 56]), 1)
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Dec2Hex(1234, If(Sqrt(-1)<0,[1, 2, 3]))
-#Error(Kind=Numeric)
+Error({Kind:ErrorKind.Numeric})
 
 >> Dec2Hex([12, 56], 1/0)
 Table({Value:Error({Kind:ErrorKind.Div0})},{Value:Error({Kind:ErrorKind.Div0})})
@@ -130,7 +130,7 @@ Table({Value:"07B"},{Value:"EA"},{Value:Error({Kind:ErrorKind.NotApplicable})})
 // ******** STRING PARAMETERS ********
 
 >> Dec2Hex("sampleText")
-#Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Dec2Hex("4")
 "4"
@@ -153,10 +153,10 @@ Table({Value:"07B"},{Value:"EA"},{Value:Error({Kind:ErrorKind.NotApplicable})})
 "0"
 
 >> Dec2Hex("true")
-#Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Dec2Hex("false")
-#Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 // ******** FUNCTION VALUE AS PARAMETERS ********
 

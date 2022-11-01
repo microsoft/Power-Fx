@@ -111,9 +111,9 @@ Error({Kind:ErrorKind.InvalidArgument})
 //Excel allows only single parameter
 //PowerFx message: Language code "12" not supported
 >> Value("$1,234.56","12")
-Error({Kind:ErrorKind.InvalidArgument})
+Error({Kind:ErrorKind.BadLanguageCode})
 
 //Excel allows only single parameter
 //PowerFx Error message: Language code "Abc" not supported
 >> Value("$1,234.56","Abc")
-Error({Kind:ErrorKind.Div0})
+Error({Kind:ErrorKind.BadLanguageCode})

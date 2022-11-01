@@ -46,14 +46,14 @@
 
 // More than 10 characters
 >> Hex2Dec("FFFFFFFFFFF")
-#Error(Kind=Numeric)
+Error({Kind:ErrorKind.Numeric})
 
 // characters no in 0-9 and A-Z range
 >> Hex2Dec("ZZZZ")
-#Error(Kind=Numeric)
+Error({Kind:ErrorKind.Numeric})
 
 >> Hex2Dec(If(1/0<2,["true"]))
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Hex2Dec(If(1<0,["true"]))
 Blank()
@@ -62,7 +62,7 @@ Blank()
 Table()
 
 >> Hex2Dec(If(1/0<2,[1]))
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Hex2Dec(If(1<0,[1]))
 Blank()
@@ -76,7 +76,7 @@ Table()
 Table({Value:10},{Value:18},{Value:65535})
 
 >> Hex2Dec("43j")
-#Error(Kind=Numeric)
+Error({Kind:ErrorKind.Numeric})
 
 >> Hex2Dec(["3","E","I","B"])
 Table({Value:3},{Value:14},{Value:Error({Kind:ErrorKind.Numeric})},{Value:11})

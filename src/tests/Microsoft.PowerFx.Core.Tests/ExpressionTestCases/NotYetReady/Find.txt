@@ -247,7 +247,7 @@ Table({Result:1})
 // findText: null, withinText: null, startIndex: [{ start: 2 }] 
 
 >> Find(If(1<0,["string"]),If(1<0,["string"]),Table({start:2}))
-Table({Result:Error(Kind="InvalidArgument")})
+Table({Result:Error({Kind:ErrorKind.InvalidArgument})})
 
 // ======================== SCENARIO 3 ========================
 // findText: null, withinText: "textToBeSearchedIn", startIndex: [{ start: 5 }]
@@ -640,4 +640,4 @@ Table({Result:Error({Kind:ErrorKind.Div0})},{Result:Error({Kind:ErrorKind.Div0})
    Text(1/0),
    Table({within:"First"},{within:"Second"}),
    )
-Table({Result:Error(Kind=13)},{Result:Error(Kind=13)})
+Table({Result:Error({Kind:ErrorKind.Div0})},{Result:Error({Kind:ErrorKind.Div0})})

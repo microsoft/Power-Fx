@@ -534,7 +534,7 @@ Error({Kind:ErrorKind.InvalidArgument})
   { First: "Helio", Last: Left("Hello", -1), Age: 263, Gender: "Unknown", Vaccinated: Blank(), HasDog: Blank() },
   { First: "Mary", Last: "Harris", Age: 48, Gender: "Female", Vaccinated: false, HasDog: false },
   { First: "Titan", Last: Left("Hello", -1), Age: 792, Gender: "Unknown", Vaccinated: Blank(), HasDog: Blank() }),"First", SortOrder.Ascending,"Age", SortOrder.Descending)
-Table({First:"Alice",Last:"Smith",Age:5,Gender:"Female",Vaccinated:true,HasDog:true}, {First:"Bob",Last:"Smith",Age:2,Gender:"Male",Vaccinated:true,HasDog:true}, {First:"Helio",Last:Error(Kind=25),Age:263,Gender:"Unknown",Vaccinated:Blank(),HasDog:false}, {First:"Mary",Last:"Harris",Age:48,Gender:"Female",Vaccinated:false,HasDog:false}, {First:"Titan",Last:Error(Kind=25),Age:792,Gender:"Unknown",Vaccinated:Blank(),HasDog:false})
+Table({First:"Alice",Last:"Smith",Age:5,Gender:"Female",Vaccinated:true,HasDog:true}, {First:"Bob",Last:"Smith",Age:2,Gender:"Male",Vaccinated:true,HasDog:true}, {First:"Helio",Last:Error({Kind:ErrorKind.InvalidArgument}),Age:263,Gender:"Unknown",Vaccinated:Blank(),HasDog:false}, {First:"Mary",Last:"Harris",Age:48,Gender:"Female",Vaccinated:false,HasDog:false}, {First:"Titan",Last:Error({Kind:ErrorKind.InvalidArgument}),Age:792,Gender:"Unknown",Vaccinated:Blank(),HasDog:false})
 
 
 // SORT ON TABLE WITH ERROR PASSED AS SORT COLUMN NAME - ASCENDING ORDER
@@ -1058,7 +1058,7 @@ Error({Kind:ErrorKind.InvalidArgument})
   { name: Left("Hello", -1), Day: "Tuesday" },
   { name: "Team Meeting", Day: "Monday" },
   { name: "Scrum Meeting 2", Day: "Tuesday" }),"Day", ["Monday","Tuesday","Wednesday","Thursday","Friday"])
-Table({name:"Scrum Meeting 1",Day:Monday}, {name:"Project Meeting 1",Day:Monday}, {name:"Team Meeting",Day:Monday}, {name:Error(Kind=25),Day:Tuesday}, {name:"Scrum Meeting 2",Day:Tuesday}, {name:"Scrum Meeting 3",Day:Wednesday}, {name:"Project Meeting 2",Day:Wednesday}, {name:"Scrum Meeting 4",Day:Thursday}, {name:"Project Meeting 3",Day:Friday}, {name:"Scrum Meeting 5",Day:Friday})
+Table({name:"Scrum Meeting 1",Day:Monday}, {name:"Project Meeting 1",Day:Monday}, {name:"Team Meeting",Day:Monday}, {name:Error({Kind:ErrorKind.InvalidArgument}),Day:Tuesday}, {name:"Scrum Meeting 2",Day:Tuesday}, {name:"Scrum Meeting 3",Day:Wednesday}, {name:"Project Meeting 2",Day:Wednesday}, {name:"Scrum Meeting 4",Day:Thursday}, {name:"Project Meeting 3",Day:Friday}, {name:"Scrum Meeting 5",Day:Friday})
 
 
 // Sort on error values for some columns
@@ -1077,7 +1077,7 @@ Error({Kind:ErrorKind.InvalidArgument})
   { First: "Alice", Last: Left("Hello", -1) },
   { First: "John", Last: "Batali", Age: 17 },
   { First: "Emily", Last: Left("Hello", -1), Age: 29 }), "First", ["Alice","Emily","Bob","John"])
-Table({First:"Alice",Last:Error(Kind=25)}, {First:"Emily",Last:Error(Kind=25),Age:29}, {First:"Bob",Last:"Smith",Age:2}, {First:"John",Last:"Batali",Age:17})
+Table({First:"Alice",Last:Error({Kind:ErrorKind.InvalidArgument})}, {First:"Emily",Last:Error({Kind:ErrorKind.InvalidArgument}),Age:29}, {First:"Bob",Last:"Smith",Age:2}, {First:"John",Last:"Batali",Age:17})
 
 
 // All duplicate values in order table

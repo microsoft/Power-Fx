@@ -11,7 +11,7 @@ Error({Kind:ErrorKind.Div0})
 
 // Errors in table
 >> Search(Table({Name:"ABC"}, {Name:"DEF"}, {Name:Error({Kind: 11})}),"ABC", "Name")
-Error(Kind=11)
+Error({Kind:ErrorKind.Validation})
 
 >> Search(Table({a:"one",b:"ten"},{a:"two",b:"twenty"},{a:Left("three",-1),b:"thirty"}), "t", "a")
 Error({Kind:ErrorKind.InvalidArgument})
