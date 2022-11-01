@@ -576,7 +576,7 @@ namespace Microsoft.PowerFx.Core.Binding
             Contracts.AssertValue(node);
 
             var info = GetInfo(node).VerifyValue();
-            return info.Data is IExternalDelegable delegableSymbol && delegableSymbol.IsDelegable;
+            return info.Data is IExternalDelegatableSymbol delegableSymbol && delegableSymbol.IsDelegatable;
         }
 
         private bool SupportsPaging(TexlNode node)

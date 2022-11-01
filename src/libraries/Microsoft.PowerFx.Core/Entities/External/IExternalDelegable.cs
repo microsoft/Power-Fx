@@ -3,8 +3,8 @@
 
 namespace Microsoft.PowerFx.Core.Entities
 {
-    internal interface IExternalDelegable
+    internal interface IExternalDelegatableSymbol
     {
-        bool IsDelegable { get; }
+        bool IsDelegatable { get; }
     }
 }
