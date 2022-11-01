@@ -7,7 +7,7 @@ using Microsoft.PowerFx.Core.Types;
 
 namespace Microsoft.PowerFx.Core.Entities
 {
-    internal interface IExternalNamedFormula : IExternalPageableSymbol
+    internal interface IExternalNamedFormula : IExternalPageableSymbol, IExternalDelegable
     {
         bool TryGetExternalDataSource(out IExternalDataSource dataSource);
     }

@@ -571,6 +571,14 @@ namespace Microsoft.PowerFx.Core.Binding
             return false;
         }
 
+        private bool SupportsDelegation(FirstNameNode node)
+        {
+            Contracts.AssertValue(node);
+
+            var info = GetInfo(node).VerifyValue();
+            return info.Data is IExternalDelegable delegableSymbol && delegableSymbol.IsDelegable;
+        }
+
         private bool SupportsPaging(TexlNode node)
         {
             Contracts.AssertValue(node);
@@ -1135,8 +1143,7 @@ namespace Microsoft.PowerFx.Core.Binding
             Contracts.AssertValue(node);
             Contracts.AssertIndex(node.Id, _typeMap.Length);
 
-            var info = GetInfo(node).VerifyValue();
-            if (info.Kind == BindKind.PowerFxResolvedObject && SupportsPaging(node))
+            if (SupportsDelegation(node))
             {
                 _isDelegatable.Set(node.Id, true);
 
