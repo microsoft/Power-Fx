@@ -1130,6 +1130,24 @@ namespace Microsoft.PowerFx.Core.Binding
             }
         }
 
+        public void CheckAndMarkAsDelegatable(FirstNameNode node)
+        {
+            Contracts.AssertValue(node);
+            Contracts.AssertIndex(node.Id, _typeMap.Length);
+
+            var info = GetInfo(node).VerifyValue();
+            if (info.Kind == BindKind.PowerFxResolvedObject && SupportsPaging(node))
+            {
+                _isDelegatable.Set(node.Id, true);
+
+                // Mark this as async, as this may result in async invocation.
+                FlagPathAsAsync(node);
+
+                // Pageable nodes are also stateful as data is always pulled from outside.
+                SetStateful(node, isStateful: true);
+            }
+        }
+
         public void CheckAndMarkAsDelegatable(DottedNameNode node)
         {
             Contracts.AssertValue(node);
@@ -2900,6 +2918,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 }
 
                 _txb.CheckAndMarkAsPageable(node);
+                _txb.CheckAndMarkAsDelegatable(node);
 
                 if ((lookupInfo.Kind == BindKind.WebResource || lookupInfo.Kind == BindKind.QualifiedValue) && !(node.Parent is DottedNameNode))
                 {
