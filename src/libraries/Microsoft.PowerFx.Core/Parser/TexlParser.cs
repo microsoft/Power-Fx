@@ -44,13 +44,14 @@ namespace Microsoft.PowerFx.Core.Parser
         private SourceList _before;
         private SourceList _after;
         private readonly CultureInfo _locale;
+        private readonly Features _features;
 
         // Represents temporary extra trivia, for when a parsing method
         // had to parse tailing trivia to do 1-lookahead. Will be
         // collected by the next call to ParseTrivia.
         private ITexlSource _extraTrivia;
 
-        private TexlParser(IReadOnlyList<Token> tokens, Flags flags, CultureInfo locale)
+        private TexlParser(IReadOnlyList<Token> tokens, Flags flags, CultureInfo locale, Features features = Features.None)
         {
             Contracts.AssertValue(tokens);
 
@@ -59,6 +60,7 @@ namespace Microsoft.PowerFx.Core.Parser
             _flagsMode = new Stack<Flags>();
             _flagsMode.Push(flags);
             _locale = locale;
+            _features = features;
         }
 
         public static ParseUDFsResult ParseUDFsScript(string script, CultureInfo loc)
@@ -216,11 +218,16 @@ namespace Microsoft.PowerFx.Core.Parser
         // caller, so precedenceTokens provide a list of stripped tokens.
         internal static ParseResult ParseScript(string script, CultureInfo loc = null, Flags flags = Flags.None)
         {
+            return ParseScript(script, Features.None, loc, flags);
+        }
+
+        internal static ParseResult ParseScript(string script, Features features, CultureInfo loc = null, Flags flags = Flags.None)
+        {
             Contracts.AssertValue(script);
             Contracts.AssertValueOrNull(loc);
 
             var tokens = TokenizeScript(script, loc, flags);
-            var parser = new TexlParser(tokens, flags, loc);
+            var parser = new TexlParser(tokens, flags, loc, features);
             List<TexlError> errors = null;
             var parsetree = parser.Parse(ref errors);
 
@@ -702,6 +709,11 @@ namespace Microsoft.PowerFx.Core.Parser
                             if (node is not FirstNameNode first || first.Ident.AtToken != null || _curs.TidPeek() != TokKind.At)
                             {
                                 goto default;
+                            }
+                            
+                            if (_features.HasFlag(Features.DisableRowScopeDisambiguationSyntax))
+                            {
+                                PostError(_curs.TokCur, errKey: TexlStrings.ErrDeprecated);
                             }
 
                             node = ParseScopeField(first);
