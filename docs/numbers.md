@@ -6,8 +6,8 @@ Licensed under the MIT license.
 # Numbers
 
 Microsoft Power Fx supports two kinds of numbers:
-- **Decimal** is used for high precision and financial calculations.  It is the type of numeric literals and the Value function.
-- **Float** is used for high performance calculations.
+- **Decimal** is used for high precision and financial calculations.  It is the type of numeric literals and the **Value** function.
+- **Float** is used for high performance calculations and for very large and very small numbers.
 
 In most situations, you do need to know which one to use.  Values will freely coerce between these types as needed.  By having numeric literals and the Value function use **Decimal**, calculations will be done in a high precision manner that most people are accustomed to and is great for calculations involving money.  But the use of controls, objects, and database fields will automatically promotes to the higher performance **Float** when that is more appropriate. 
 
