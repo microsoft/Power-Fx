@@ -43,19 +43,19 @@ Let's look at some examples:
 
 | Formula | Type | Value | Description |
 |---------|-------|------|-------------|
-| 1       | Decimal | 1     | Common integers are easily represented by **Decimal**.
-| 0.1     | Decimal | 0.1   | Using base 10 math, this fraction is easily represented by **Decimal**.
-| 1e3     | Decimal | 1000  | Scientific notation is supported with **Decimal** numbers, up to the maximum range of a **Decimal**. |
-| 1e200   | Decimal | *error* | This large exponent is beyond the range of **Decimal**. |
-| Value( "1" ) | Decimal | 1  | Common integers are easily represented by **Decimal**.
-| Value( "0.1" ) | Decimal | 0.1 | Using base 10 math, this fraction is easily represented by **Decimal**.
-| Value( "1e3" ) | Decimal | 1000 | Scientific notation is supported with **Decimal** numbers, up to the maximum range of a **Decimal**. |
-| Value( "1e200" ) | Decimal | *error* | This large exponent is beyond the range of **Decimal**. |
-| Float( 1 ) | Float | 1 | Whole numbers are exactly representable with **Float** |
-| Float( 0.1 ) | Float | 0.10000000000000000555 | Because **Float** is not base 10 based, this number cannot be exactly represented.  This may seem like a small error, but if this number is used in repeated calculations, the small error could bill and become noticeable. |
-| Float( 1e3 ) | Float | 1000 | Again, to a point, whole number are exactly representable with **Float** |
-| Float( 1e200 )  | Float | *error* | This starts out as a **Decimal** number which is converted to a **Float**.  Because the **Decimal** is out of range, an error is returned. |
-| Float( "1e200" ) | Float | 9.999999999999999e199 | This large exponent is representable with a **Float**, but it is beyond the safe integer limits and so has been rounded. | Float |
+| `1`      | Decimal | `1`     | Common integers are easily represented by **Decimal**.
+| `0.1`     | Decimal | `0.1`   | Using base 10 math, this fraction is easily represented by **Decimal**.
+| `1e3`     | Decimal | `1000`  | Scientific notation is supported with **Decimal** numbers, up to the maximum range of a **Decimal**. |
+| `1e200`   | Decimal | *error (ErrorKind.Numeric)* | This large exponent is beyond the range of **Decimal**. |
+| `Value( "1" )` | Decimal | `1`  | Common integers are easily represented by **Decimal**.
+| `Value( "0.1" )` | Decimal | `0.1` | Using base 10 math, this fraction is easily represented by **Decimal**.
+| `Value( "1e3" )` | Decimal | `1000` | Scientific notation is supported with **Decimal** numbers, up to the maximum range of a **Decimal**. |
+| `Value( "1e200" )` | Decimal | *error (ErrorKind.Numeric)* | This large exponent is beyond the range of **Decimal**. |
+| `Float( 1 )` | Float | `1` | Whole numbers are exactly representable with **Float** |
+| `Float( 0.1 )` | Float | `0.10000000000000000555` | Because **Float** is not base 10 based, this number cannot be exactly represented.  This may seem like a small error, but if this number is used in repeated calculations, the small error could bill and become noticeable. |
+| `Float( 1e3 )` | Float | `1000` | Again, to a point, whole number are exactly representable with **Float** |
+| `Float( 1e200 )`  | Float | *error (ErrorKind.Numeric)*| This starts out as a **Decimal** number which is converted to a **Float**.  Because the **Decimal** is out of range, an error is returned. |
+| `Float( "1e200" )` | Float | `9.999999999999999e199` | This large exponent is representable with a **Float**, but it is beyond the safe integer limits and so has been rounded. | Float |
 
 ## Type precedence  
 
@@ -67,11 +67,11 @@ Let's look at some examples.  **Title1** refers to a control in Power Apps, with
 
 | Formula | Type | Value | Description |
 |---------|-------|------|-------------|
-| 1 + 1   | Decimal | 2  | Both of these numeric literals are **Decimal**, so the result is **Decimal**. |
-| 3 * 0.1 | Decimal | 0.3 | Both of these numeric literals are **Decimal**, so the result is **Decimal**.
-| Sum( 0.1, 0.1, 0.1 ) | Decimal | 0.3 | All of the arguments to **Sum** are **Decimal**, and it is one of the functions that can natively operate on **Decimall** values, so the result is also **Decimal**. |
-| Float( "1e200" ) * 2 | Float | 1.9999999999999998e199 | The **Float** function returns a floating point version of the string passed to it.  Since it has higher type precedence than the literal **2** which is of type **Decimal**, the **2** is promoted to floating point and used in the calculation.  The result is **Float**.
-| Title1.Y + Title1.Height + 4 | Float | 84 | Power Apps control properties are usually **Float**, because approximations are fine and it is higher performance.  The literal **4** is promoted to **Float** for the calculation.  Since all the quantities are whole numbers, and **Float** can represent common whole numbers exactly, there is no rounding errors. |
+| `1 + 1`   | Decimal | `2`  | Both of these numeric literals are **Decimal**, so the result is **Decimal**. |
+| `3 * 0.1` | Decimal | `0.3` | Both of these numeric literals are **Decimal**, so the result is **Decimal**.
+| `Sum( 0.1, 0.1, 0.1 )` | Decimal | `0.3` | All of the arguments to **Sum** are **Decimal**, and it is one of the functions that can natively operate on **Decimall** values, so the result is also **Decimal**. |
+| `Float( "1e200" ) * 2` | Float | `1.9999999999999998e199` | The **Float** function returns a floating point version of the string passed to it.  Since it has higher type precedence than the literal **2** which is of type **Decimal**, the **2** is promoted to floating point and used in the calculation.  The result is **Float**.
+| `Title1.Y + Title1.Height + 4` | Float | `84` | Power Apps control properties are usually **Float**, because approximations are fine and it is higher performance.  The literal **4** is promoted to **Float** for the calculation.  Since all the quantities are whole numbers, and **Float** can represent common whole numbers exactly, there is no rounding errors. |
 
 ## Object properties
 
@@ -104,15 +104,15 @@ In Power Apps Canvas, editing **Unit price** is done by feeding the current valu
 **Decimal** can automatically coerce to **Float** and vice versa, as needed.  They can also be explicitly coerced between each other with the **Value** and **Float** functions.
 
 Common functions and operators that could lead to a loss of precision natively support either type.  These include:
-- Arithmetic: +, -, *, /, Mod, %
-- Comparison: <, >, =, <>, >=, <=
-- Aggregates: Sum, Max, Min, Average, StdevP, VarP
-- Rounding: Round, RoundDown, RoundUp, Int, Trunc
-- Miscellaneous: Text, Abs, JSON, ParseJSON
+- Arithmetic: `+`, `-`, `*`, `/`, **Mod**, `%`
+- Comparison: `<`, `>`, `=`, `<>`, `>=`, `<=`
+- Aggregates: **Sum**, **Max**, **Min**, **Average**, **StdevP**, **VarP**
+- Rounding: **Round**, **RoundDown**, **RoundUp**, **Int**, **Trunc**
+- Miscellaneous: **Text**, **Abs**, **JSON**, **ParseJSON**
 
 All other functions will coerce **Decimal** to **Float** for their arguments.  If it is a mathematical function, such as Sqrt or Cos, the result will be **Float**, which is usually fine as these functions return approximations if the result is not a whole number, and whole numbers can be exactly represented by **Float**.  If it is a function that takes whole numbers as arguments, such as Mid or Char, there is no problem translating to **Float** before making the call.
 
-StdevP is a hybrid function.  It will perform internal calculations using **Decimal** but will do the final square root operation in **Float**, and so this function returns **Float**.
+**StdevP** is a hybrid function.  It will perform internal calculations using **Decimal** but will do the final square root operation in **Float**, and so this function returns **Float**.
 
 ## ParseJSON and JSON functions
 
