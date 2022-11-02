@@ -47,15 +47,15 @@ Let's look at some examples:
 | `0.1`     | Decimal | `0.1`   | Using base 10 math, this fraction is easily represented by **Decimal**.
 | `1e3`     | Decimal | `1000`  | Scientific notation is supported with **Decimal** numbers, up to the maximum range of a **Decimal**. |
 | `1e200`   | Decimal | *error (ErrorKind.Numeric)* | This large exponent is beyond the range of **Decimal**. |
-| `Value( "1" )` | Decimal | `1`  | Common integers are easily represented by **Decimal**.
-| `Value( "0.1" )` | Decimal | `0.1` | Using base 10 math, this fraction is easily represented by **Decimal**.
-| `Value( "1e3" )` | Decimal | `1000` | Scientific notation is supported with **Decimal** numbers, up to the maximum range of a **Decimal**. |
-| `Value( "1e200" )` | Decimal | *error (ErrorKind.Numeric)* | This large exponent is beyond the range of **Decimal**. |
-| `Float( 1 )` | Float | `1` | Whole numbers are exactly representable with **Float** |
-| `Float( 0.1 )` | Float | `0.10000000000000000555` | Because **Float** is not base 10 based, this number cannot be exactly represented.  This may seem like a small error, but if this number is used in repeated calculations, the small error could bill and become noticeable. |
-| `Float( 1e3 )` | Float | `1000` | Again, to a point, whole number are exactly representable with **Float** |
-| `Float( 1e200 )`  | Float | *error (ErrorKind.Numeric)*| This starts out as a **Decimal** number which is converted to a **Float**.  Because the **Decimal** is out of range, an error is returned. |
-| `Float( "1e200" )` | Float | `9.999999999999999e199` | This large exponent is representable with a **Float**, but it is beyond the safe integer limits and so has been rounded. | Float |
+| `Value(&nbsp;"1"&nbsp;)` | Decimal | `1`  | Common integers are easily represented by **Decimal**.
+| `Value(&nbsp;"0.1"&nbsp;)` | Decimal | `0.1` | Using base 10 math, this fraction is easily represented by **Decimal**.
+| `Value(&nbsp;"1e3"&nbsp;)` | Decimal | `1000` | Scientific notation is supported with **Decimal** numbers, up to the maximum range of a **Decimal**. |
+| `Value(&nbsp;"1e200"&nbsp;)` | Decimal | *error (ErrorKind.Numeric)* | This large exponent is beyond the range of **Decimal**. |
+| `Float(&nbsp;1&nbsp;)` | Float | `1` | Whole numbers are exactly representable with **Float** |
+| `Float(&nbsp;0.1&nbsp;)` | Float | `0.10000000000000000555` | Because **Float** is not base 10 based, this number cannot be exactly represented.  This may seem like a small error, but if this number is used in repeated calculations, the small error could bill and become noticeable. |
+| `Float(&nbsp;1e3&nbsp;)` | Float | `1000` | Again, to a point, whole number are exactly representable with **Float** |
+| `Float(&nbsp;1e200&nbsp;)`  | Float | *error (ErrorKind.Numeric)*| This starts out as a **Decimal** number which is converted to a **Float**.  Because the **Decimal** is out of range, an error is returned. |
+| `Float(&nbsp;"1e200"&nbsp;)` | Float | `9.999999999999999e199` | This large exponent is representable with a **Float**, but it is beyond the safe integer limits and so has been rounded. | Float |
 
 ## Type precedence  
 
