@@ -3056,7 +3056,9 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("Text(X)")]
         [InlineData("Value(X)")]
         [InlineData("Boolean(X)")]
-        [InlineData("Index([1,2,3], X)")]
+        [InlineData("Index([1,2,3].Value, X)")]
+
+        // Ensures expression binds without any errors - but issues a warning for the deferred(unknown) type.
         public void DeferredTypeTest(string script)
         {
             Preview.FeatureFlags.StringInterpolation = true;
@@ -3066,17 +3068,19 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("$\"Test {X} {XR}\"")]
-        [InlineData("Table(X, XN)")]
-        [InlineData("X.field + XN.field")]
+        [InlineData("$\"Test {X} {R}\"")]
+        [InlineData("Table(X, N)")]
+        [InlineData("X.field + N.field")]
         [InlineData("Index([1,2,3], X).missing")]
+
+        // Ensures expression issues an error if it exists, despite the deferred type.
         public void DeferredTypeTest_Negative(string script)
         {
             Preview.FeatureFlags.StringInterpolation = true;
             var symbolTable = new SymbolTable();
             symbolTable.AddVariable("X", FormulaType.Unknown);
-            symbolTable.AddVariable("XN", FormulaType.Number);
-            symbolTable.AddVariable("XR", RecordType.Empty());
+            symbolTable.AddVariable("N", FormulaType.Number);
+            symbolTable.AddVariable("R", RecordType.Empty());
             TestBindingError(script, symbolTable);
         }
 
@@ -3173,8 +3177,8 @@ namespace Microsoft.PowerFx.Core.Tests
             var result = engine.Check(script);
 
             Assert.True(result.IsSuccess);
-            Assert.True(result._binding.ErrorContainer.HasErrors());
-            Assert.True(result._binding.ErrorContainer.GetErrors().All(error => error.MessageKey.Equals(TexlStrings.WarnUnknownType.Key)));
+            Assert.True(result.Errors.Count() > 0);
+            Assert.True(result.Errors.All(error => error.MessageKey.Equals(TexlStrings.WarnUnknownType.Key)));
         }
 
         private void TestBindingError(string script, SymbolTable symbolTable = null)
