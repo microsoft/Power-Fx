@@ -3038,6 +3038,48 @@ namespace Microsoft.PowerFx.Core.Tests
             TestSimpleBindingSuccess("If(true, DS, DS)", schema, symbol);
         }
 
+        [Theory]
+        [InlineData("X")]
+        [InlineData("$\"Test {X}\"")]
+        [InlineData("!X")]
+        [InlineData("Table(X)")]
+        [InlineData("X.Field1")]
+        [InlineData("X + 1")]
+        [InlineData("X + Date(2022, 10, 27)")]
+        [InlineData("X * 1")]
+        [InlineData("X < 2")]
+        [InlineData("\"The\" in X")]
+        [InlineData("123 in X")]
+        [InlineData("123 in Table(X)")]
+        [InlineData("IsBlank(X)")]
+        [InlineData("IsError(X)")]
+        [InlineData("Text(X)")]
+        [InlineData("Value(X)")]
+        [InlineData("Boolean(X)")]
+        [InlineData("Index([1,2,3], X)")]
+        public void DeferredTypeTest(string script)
+        {
+            Preview.FeatureFlags.StringInterpolation = true;
+            var symbolTable = new SymbolTable();
+            symbolTable.AddVariable("X", FormulaType.Unknown);
+            TestDeferredTypeBindingWarning(script, symbolTable);
+        }
+
+        [Theory]
+        [InlineData("$\"Test {X} {XR}\"")]
+        [InlineData("Table(X, XN)")]
+        [InlineData("X.field + XN.field")]
+        [InlineData("Index([1,2,3], X).missing")]
+        public void DeferredTypeTest_Negative(string script)
+        {
+            Preview.FeatureFlags.StringInterpolation = true;
+            var symbolTable = new SymbolTable();
+            symbolTable.AddVariable("X", FormulaType.Unknown);
+            symbolTable.AddVariable("XN", FormulaType.Number);
+            symbolTable.AddVariable("XR", RecordType.Empty());
+            TestBindingError(script, symbolTable);
+        }
+
         private void TestBindingPurity(string script, bool isPure, SymbolTable symbolTable = null)
         {
             var config = new PowerFxConfig
@@ -3118,6 +3160,34 @@ namespace Microsoft.PowerFx.Core.Tests
             var result = engine.Check(script);
             Assert.Equal(expectedType, result._binding.ResultType);
             Assert.True(result.IsSuccess);
+        }
+
+        private void TestDeferredTypeBindingWarning(string script, SymbolTable symbolTable = null)
+        {
+            var config = new PowerFxConfig
+            {
+                SymbolTable = symbolTable
+            };
+
+            var engine = new Engine(config);
+            var result = engine.Check(script);
+
+            Assert.True(result.IsSuccess);
+            Assert.True(result._binding.ErrorContainer.HasErrors());
+            Assert.True(result._binding.ErrorContainer.GetErrors().All(error => error.MessageKey.Equals(TexlStrings.WarnUnknownType.Key)));
+        }
+
+        private void TestBindingError(string script, SymbolTable symbolTable = null)
+        {
+            var config = new PowerFxConfig
+            {
+                SymbolTable = symbolTable
+            };
+
+            var engine = new Engine(config);
+            var result = engine.Check(script);
+
+            Assert.False(result.IsSuccess);
         }
     }
 }

@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
@@ -19,6 +20,16 @@ namespace Microsoft.PowerFx.Core.App.ErrorContainers
         public bool HasErrors()
         {
             return CollectionUtils.Size(_errors) > 0;
+        }
+
+        public void ConcatErrors(IEnumerable<TexlError> errors)
+        {
+            if (_errors == null)
+            {
+                _errors = new List<TexlError>();
+            }
+
+            _errors.AddRange(errors);
         }
 
         public bool HasErrors(TexlNode node, DocumentErrorSeverity severity = DocumentErrorSeverity.Suggestion)

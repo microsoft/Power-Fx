@@ -2160,6 +2160,10 @@
     <value>Warning: Select "Capture Schema" at the bottom of the expanded formula bar to set and refresh this method's result schema. Otherwise this method will return no result.</value>
     <comment>Warning given when service function returns dynamic metadata.</comment>
   </data>
+  <data name="WarnUnknownType" xml:space="preserve">
+    <value>Warning: unknown type provided.</value>
+    <comment>Warning given when input has unknown Type.</comment>
+  </data>
   <data name="FindArg1" xml:space="preserve">
     <value>find_text</value>
     <comment>function_parameter - First argument of the Find function - the text to search for. Translate this string. Maintain as a single word (do not add spaces).</comment>

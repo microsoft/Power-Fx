@@ -2802,6 +2802,11 @@ namespace Microsoft.PowerFx.Core.Binding
                     }
                 }
 
+                if (lookupType.IsUnknown)
+                {
+                    _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Warning, node, TexlStrings.WarnUnknownType);
+                }
+
                 // Make a note of this global's type, as identifier by the resolver.
                 _txb.SetType(node, lookupType);
 
@@ -3166,7 +3171,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 var leftType = _txb.GetType(node.Left);
 
-                if (!leftType.IsControl && !leftType.IsAggregate && !leftType.IsEnum && !leftType.IsOptionSet && !leftType.IsView && !leftType.IsUntypedObject)
+                if (!leftType.IsControl && !leftType.IsAggregate && !leftType.IsEnum && !leftType.IsOptionSet && !leftType.IsView && !leftType.IsUntypedObject && !leftType.IsUnknown)
                 {
                     SetDottedNameError(node, TexlStrings.ErrInvalidDot);
                     return;
@@ -3367,7 +3372,7 @@ namespace Microsoft.PowerFx.Core.Binding
                         _txb.FlagPathAsAsync(node);
                     }
                 }
-                else if (!leftType.TryGetType(nameRhs, out typeRhs) && !leftType.IsUntypedObject)
+                else if (!leftType.TryGetType(nameRhs, out typeRhs) && !leftType.IsUntypedObject && !leftType.IsUnknown)
                 {
                     // We may be in the case of dropDown!Selected!RHS
                     // In this case, Selected embeds a meta field whose v-type encapsulates localization info
@@ -3456,6 +3461,10 @@ namespace Microsoft.PowerFx.Core.Binding
                 else if (leftType.IsUntypedObject)
                 {
                     _txb.SetType(node, DType.UntypedObject);
+                }
+                else if (leftType.IsUnknown)
+                {
+                    _txb.SetType(node, DType.Unknown);
                 }
                 else if (leftType.IsTable)
                 {
@@ -4837,9 +4846,36 @@ namespace Microsoft.PowerFx.Core.Binding
                 var argTypes = args.Select(_txb.GetType).ToArray();
                 bool fArgsValid;
 
-                // Typecheck the invocation and infer the return type.
-                fArgsValid = func.HandleCheckInvocation(_txb, args, argTypes, _txb.ErrorContainer, out returnType, out var nodeToCoercedTypeMap);
+                // This error container is used as temporary container so we can trap type mismatch kind of error for
+                // deferred (unknown) type args and validate all the errors were caused due to deferred(unknown) type.
+                var checkInvocationErrors = new ErrorContainer();
 
+                // Typecheck the invocation and infer the return type.
+                fArgsValid = func.HandleCheckInvocation(_txb, args, argTypes, checkInvocationErrors, out returnType, out var nodeToCoercedTypeMap);
+
+                // If type check failed and errors were due to Unknown type node we would like to consider the typeChecking passed.
+                if (!fArgsValid && checkInvocationErrors.HasErrors() && checkInvocationErrors.GetErrors().All(error => _txb.GetType(error.Node).IsUnknown))
+                {
+                    fArgsValid = true;
+
+                    // If one of the arg was unknown and that generated error (e.g. type mismatch)
+                    // and return type could not be calculated and was error we assign it as unknown.
+                    // and if return type was Table, we assign it to be table of unknown, so operation like In can work.
+                    switch (returnType.Kind)
+                    {
+                        case DKind.Error:
+                            returnType = DType.Unknown;
+                            break;
+                        case DKind.Table:
+                            returnType = DType.EmptyRecord.Add(new TypedName(DType.Unknown,  new DName(TexlFunction.ColumnName_ValueStr))).ToTable();
+                            break;
+                    }
+                }
+                else
+                {
+                    _txb.ErrorContainer.ConcatErrors(checkInvocationErrors.GetErrors());
+                }
+                
                 if (!fArgsValid && !func.HasPreciseErrors)
                 {
                     _txb.ErrorContainer.Error(DocumentErrorSeverity.Severe, node, TexlStrings.ErrInvalidArgs_Func, func.Name);

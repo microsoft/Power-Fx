@@ -228,7 +228,8 @@ namespace Microsoft.PowerFx
                 Symbols = combinedSymbols,
             };
 
-            if (result.IsSuccess)
+            // If the result is not sucess or has warning related to DeferredArgs we don't want to calculate return type or generate the IR Tree.
+            if (result.IsSuccess && !result.HasDeferredArgsWarning)
             {
                 result.TopLevelIdentifiers = DependencyFinder.FindDependencies(binding.Top, binding);
 

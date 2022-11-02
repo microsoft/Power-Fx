@@ -7,6 +7,7 @@ using System.Globalization;
 using System.Linq;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Errors;
+using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Public;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Intellisense;
@@ -55,6 +56,8 @@ namespace Microsoft.PowerFx
         /// True if no errors. 
         /// </summary>
         public bool IsSuccess => !Errors.Any(x => !x.IsWarning);
+
+        public bool HasDeferredArgsWarning => Errors.Any(x => x.IsWarning && x.MessageKey.Equals(TexlStrings.WarnUnknownType.Key));
 
         internal TexlBinding _binding;
 
