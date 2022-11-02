@@ -4846,32 +4846,10 @@ namespace Microsoft.PowerFx.Core.Binding
                 var argTypes = args.Select(_txb.GetType).ToArray();
                 bool fArgsValid;
 
-                // This error container is used as temporary container so we can trap type mismatch kind of error for
-                // deferred (unknown) type args and validate all the errors were caused due to deferred(unknown) type.
-                var checkInvocationErrors = new ErrorContainer();
-
                 // Typecheck the invocation and infer the return type.
-                fArgsValid = func.HandleCheckInvocation(_txb, args, argTypes, checkInvocationErrors, out returnType, out var nodeToCoercedTypeMap);
+                fArgsValid = HandleCheckInvocationWithUnknown(func, _txb, args, argTypes, out var checkInvocationErrors, out returnType, out var nodeToCoercedTypeMap);
 
-                // If type check failed and errors were due to Unknown type node we would like to consider the typeChecking passed.
-                if (!fArgsValid && checkInvocationErrors.HasErrors() && checkInvocationErrors.GetErrors().All(error => _txb.GetType(error.Node).IsUnknown))
-                {
-                    fArgsValid = true;
-
-                    // If one of the arg was unknown and that generated error (e.g. type mismatch)
-                    // and return type could not be calculated and was error we assign it as unknown.
-                    // and if return type was Table, we assign it to be table of unknown, so operation like In can work.
-                    switch (returnType.Kind)
-                    {
-                        case DKind.Error:
-                            returnType = DType.Unknown;
-                            break;
-                        case DKind.Table:
-                            returnType = DType.EmptyRecord.Add(new TypedName(DType.Unknown,  new DName(TexlFunction.ColumnName_ValueStr))).ToTable();
-                            break;
-                    }
-                }
-                else
+                if (!fArgsValid)
                 {
                     _txb.ErrorContainer.ConcatErrors(checkInvocationErrors.GetErrors());
                 }
