@@ -152,9 +152,6 @@ namespace Microsoft.PowerFx.Core.Binding
                     }
                 }
 
-                // If type check failed and errors were due to Unknown type node we would like to consider the typeChecking passed.
-                // typeCheckSucceeded = CheckUnknownType(txb, checkInvocationErrors, typeCheckSucceeded, returnType, out returnType);
-
                 if (typeCheckSucceeded)
                 {
                     if (nodeToCoercedTypeMap == null)
@@ -210,7 +207,7 @@ namespace Microsoft.PowerFx.Core.Binding
             var typeCheckSucceeded = maybeFunc.HandleCheckInvocation(txb, args, argTypes, checkInvocationErrors, out returnType, out nodeToCoercedTypeMap);
 
             // If type check failed and errors were due to Unknown type node we would like to consider the typeChecking passed.
-            if (!typeCheckSucceeded && checkInvocationErrors.HasErrors() && checkInvocationErrors.GetErrors().All(error => txb.GetType(error.Node).IsUnknown))
+            if (txb.Features.HasFlag(Features.EnableDeferredType) && !typeCheckSucceeded && checkInvocationErrors.HasErrors() && checkInvocationErrors.GetErrors().All(error => txb.GetType(error.Node).IsUnknown))
             {
                 // If one of the arg was unknown and that generated error (e.g. type mismatch)
                 // and return type could not be calculated and was error we assign it as unknown.
@@ -364,20 +361,20 @@ namespace Microsoft.PowerFx.Core.Binding
         }
 
         // Performs type checking for the arguments passed to the membership "in"/"exactin" operators.
-        private static BinderCheckTypeResult CheckInArgTypesCore(IErrorContainer errorContainer, TexlNode left, TexlNode right, DType typeLeft, DType typeRight, bool isEnhancedDelegationEnabled)
+        private static BinderCheckTypeResult CheckInArgTypesCore(IErrorContainer errorContainer, TexlNode left, TexlNode right, DType typeLeft, DType typeRight, bool isEnhancedDelegationEnabled, Features features)
         {
             Contracts.AssertValue(left);
             Contracts.AssertValue(right);
 
             var coercions = new List<BinderCoercionResult>();
 
-            if (!typeLeft.IsValid || typeLeft.IsError)
+            if (!typeLeft.IsValid || (typeLeft.IsUnknown && !features.HasFlag(Features.EnableDeferredType)) || typeLeft.IsError)
             {
                 errorContainer.EnsureError(DocumentErrorSeverity.Severe, left, TexlStrings.ErrTypeError);
                 return new BinderCheckTypeResult() { Coercions = coercions };
             }
 
-            if (!typeRight.IsValid || typeRight.IsError)
+            if (!typeRight.IsValid || (typeRight.IsUnknown && !features.HasFlag(Features.EnableDeferredType)) || typeRight.IsError)
             {
                 errorContainer.EnsureError(DocumentErrorSeverity.Severe, right, TexlStrings.ErrTypeError);
                 return new BinderCheckTypeResult() { Coercions = coercions };
@@ -707,7 +704,7 @@ namespace Microsoft.PowerFx.Core.Binding
             return new BinderCheckTypeResult() { Coercions = coercions };
         }
 
-        private static BinderCheckTypeResult CheckEqualArgTypesCore(IErrorContainer errorContainer, TexlNode left, TexlNode right, DType typeLeft, DType typeRight)
+        private static BinderCheckTypeResult CheckEqualArgTypesCore(IErrorContainer errorContainer, TexlNode left, TexlNode right, DType typeLeft, DType typeRight, Features features)
         {
             Contracts.AssertValue(left);
             Contracts.AssertValue(right);
@@ -716,7 +713,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
             // EqualOp is only allowed on primitive types, polymorphic lookups, and control types.
             if (!(typeLeft.IsPrimitive && typeRight.IsPrimitive) && !(typeLeft.IsPolymorphic && typeRight.IsPolymorphic) && !(typeLeft.IsControl && typeRight.IsControl)
-                && !(typeLeft.IsPolymorphic && typeRight.IsRecord) && !(typeLeft.IsRecord && typeRight.IsPolymorphic) && !(typeLeft.IsUnknown || typeRight.IsUnknown))
+                && !(typeLeft.IsPolymorphic && typeRight.IsRecord) && !(typeLeft.IsRecord && typeRight.IsPolymorphic) && !((typeLeft.IsUnknown || typeRight.IsUnknown) && features.HasFlag(Features.EnableDeferredType)))
             {
                 var leftTypeDisambiguation = typeLeft.IsOptionSet && typeLeft.OptionSetInfo != null ? $"({typeLeft.OptionSetInfo.EntityName})" : string.Empty;
                 var rightTypeDisambiguation = typeRight.IsOptionSet && typeRight.OptionSetInfo != null ? $"({typeRight.OptionSetInfo.EntityName})" : string.Empty;
@@ -836,7 +833,7 @@ namespace Microsoft.PowerFx.Core.Binding
         // REVIEW ragru: Introduce a TexlOperator abstract base plus various subclasses
         // for handling operators and their overloads. That will offload the burden of dealing with
         // operator special cases to the various operator classes.
-        public static BinderCheckTypeResult CheckBinaryOpCore(IErrorContainer errorContainer, BinaryOpNode node, DType leftType, DType rightType, bool isEnhancedDelegationEnabled)
+        public static BinderCheckTypeResult CheckBinaryOpCore(IErrorContainer errorContainer, BinaryOpNode node, DType leftType, DType rightType, bool isEnhancedDelegationEnabled, Features features)
         {
             Contracts.AssertValue(node);
 
@@ -871,7 +868,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 case BinaryOp.Equal:
                 case BinaryOp.NotEqual:
-                    var resEq = CheckEqualArgTypesCore(errorContainer, leftNode, rightNode, leftType, rightType);
+                    var resEq = CheckEqualArgTypesCore(errorContainer, leftNode, rightNode, leftType, rightType, features);
                     return new BinderCheckTypeResult() { Node = node, NodeType = DType.Boolean, Coercions = resEq.Coercions };
 
                 case BinaryOp.Less:
@@ -886,7 +883,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 case BinaryOp.In:
                 case BinaryOp.Exactin:
-                    var resIn = CheckInArgTypesCore(errorContainer, leftNode, rightNode, leftType, rightType, isEnhancedDelegationEnabled);
+                    var resIn = CheckInArgTypesCore(errorContainer, leftNode, rightNode, leftType, rightType, isEnhancedDelegationEnabled, features);
                     return new BinderCheckTypeResult() { Node = node, NodeType = DType.Boolean, Coercions = resIn.Coercions };
 
                 default:

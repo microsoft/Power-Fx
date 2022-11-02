@@ -2802,7 +2802,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     }
                 }
 
-                if (lookupType.IsUnknown)
+                if (_txb.Features.HasFlag(Features.EnableDeferredType) && lookupType.IsUnknown)
                 {
                     _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Warning, node, TexlStrings.WarnUnknownType);
                 }
@@ -3171,7 +3171,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 var leftType = _txb.GetType(node.Left);
 
-                if (!leftType.IsControl && !leftType.IsAggregate && !leftType.IsEnum && !leftType.IsOptionSet && !leftType.IsView && !leftType.IsUntypedObject && !leftType.IsUnknown)
+                if (!leftType.IsControl && !leftType.IsAggregate && !leftType.IsEnum && !leftType.IsOptionSet && !leftType.IsView && !leftType.IsUntypedObject && !(leftType.IsUnknown && _txb.Features.HasFlag(Features.EnableDeferredType)))
                 {
                     SetDottedNameError(node, TexlStrings.ErrInvalidDot);
                     return;
@@ -3372,7 +3372,7 @@ namespace Microsoft.PowerFx.Core.Binding
                         _txb.FlagPathAsAsync(node);
                     }
                 }
-                else if (!leftType.TryGetType(nameRhs, out typeRhs) && !leftType.IsUntypedObject && !leftType.IsUnknown)
+                else if (!leftType.TryGetType(nameRhs, out typeRhs) && !leftType.IsUntypedObject && !(leftType.IsUnknown && _txb.Features.HasFlag(Features.EnableDeferredType)))
                 {
                     // We may be in the case of dropDown!Selected!RHS
                     // In this case, Selected embeds a meta field whose v-type encapsulates localization info
@@ -3462,7 +3462,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 {
                     _txb.SetType(node, DType.UntypedObject);
                 }
-                else if (leftType.IsUnknown)
+                else if (_txb.Features.HasFlag(Features.EnableDeferredType) && leftType.IsUnknown)
                 {
                     _txb.SetType(node, DType.Unknown);
                 }
@@ -3675,7 +3675,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 var leftType = _txb.GetType(node.Left);
                 var rightType = _txb.GetType(node.Right);
 
-                var res = CheckBinaryOpCore(_txb.ErrorContainer, node, leftType, rightType, _txb.Document != null && _txb.Document.Properties.EnabledFeatures.IsEnhancedDelegationEnabled);
+                var res = CheckBinaryOpCore(_txb.ErrorContainer, node, leftType, rightType, _txb.Document != null && _txb.Document.Properties.EnabledFeatures.IsEnhancedDelegationEnabled, _txb.Features);
 
                 foreach (var coercion in res.Coercions)
                 {
