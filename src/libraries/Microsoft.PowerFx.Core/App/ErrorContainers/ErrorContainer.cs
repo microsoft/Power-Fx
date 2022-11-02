@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using System.Globalization;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
@@ -106,12 +107,27 @@ namespace Microsoft.PowerFx.Core.App.ErrorContainers
             return Error(DefaultSeverity, node, errKey, args);
         }
 
+        public TexlError Error(TexlNode node, ErrorResourceKey errKey, CultureInfo locale, params object[] args)
+        {
+            return Error(DefaultSeverity, node, errKey, locale: locale, args);
+        }
+
         public TexlError Error(DocumentErrorSeverity severity, TexlNode node, ErrorResourceKey errKey, params object[] args)
         {
             Contracts.AssertValue(node);
             Contracts.AssertValue(args);
 
             var err = new TexlError(node, severity, null, errKey, args);
+            CollectionUtils.Add(ref _errors, err);
+            return err;
+        }
+
+        public TexlError Error(DocumentErrorSeverity severity, TexlNode node, ErrorResourceKey errKey, CultureInfo locale, params object[] args)
+        {
+            Contracts.AssertValue(node);
+            Contracts.AssertValue(args);
+
+            var err = new TexlError(node, severity, locale: locale, errKey, args);
             CollectionUtils.Add(ref _errors, err);
             return err;
         }

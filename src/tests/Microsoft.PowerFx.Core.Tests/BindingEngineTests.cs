@@ -145,6 +145,19 @@ namespace Microsoft.PowerFx.Tests
             AssertContainsError(result, "Error 2-5: Name isn't valid. 'foo' isn't recognized");
         }
 
+        [Theory]
+        [InlineData("3+foo+2", "Error 2-5: Il nome non è valido. \"foo\" non riconosciuto.", "it-IT")]
+        [InlineData("Foo()", "Error 0-5: 'Foo' est une fonction inconnue ou non prise en charge.", "fr-FR")]
+        [InlineData("AAA", "Error 0-3: O nome não é válido. 'AAA' não é reconhecido.", "pt-BR")]
+        public void CheckBindError2(string expression, string expected, string locale)
+        {
+            var engine = new Engine(new PowerFxConfig(CultureInfo.GetCultureInfo(locale)));
+            var result = engine.Check(expression);
+
+            Assert.False(result.IsSuccess);
+            AssertContainsError(result, expected);
+        }
+
         [Fact]
         public void CheckBadFunctionError()
         {

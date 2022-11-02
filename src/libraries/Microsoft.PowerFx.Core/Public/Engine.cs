@@ -197,7 +197,7 @@ namespace Microsoft.PowerFx
             ParserOptions options = null,
             ReadOnlySymbolTable symbolTable = null)
         {
-            var bindingConfig = new BindingConfig(allowsSideEffects: options?.AllowsSideEffects == true);
+            var bindingConfig = new BindingConfig(allowsSideEffects: options?.AllowsSideEffects == true, locale: Config.CultureInfo);
 
             return CheckInternal(parse, bindingConfig, symbolTable);
         }
