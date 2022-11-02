@@ -3297,7 +3297,7 @@
     
   </data>
   <data name="ErrRemoveAllArg" xml:space="preserve">
-    <value>Če je navedeno, mora biti zadnji argument »Vse«. Ali ste našli tipkarsko napako?</value>
+    <value>Če je navedeno, mora biti zadnji argument »RemoveFlags.All«. Ali ste našli tipkarsko napako?</value>
     
   </data>
   <data name="PenMode_Draw_DisplayName" xml:space="preserve">
@@ -4663,6 +4663,68 @@
   </data>
   <data name="SetArg2" xml:space="preserve">
     <value>vrednost</value>
+    
+  </data>
+  <data name="AboutDec2Hex" xml:space="preserve">
+    <value>Converts a decimal number to hexadecimal</value>
+    
+  </data>
+  <data name="Dec2HexArg1" xml:space="preserve">
+    <value>number</value>
+  </data>
+  <data name="AboutDec2Hex_number" xml:space="preserve">
+    <value>A numeric decimal value to convert to hexadecimal string.</value>
+    
+  </data>
+  <data name="Dec2HexArg2" xml:space="preserve">
+    <value>places</value>
+  </data>
+  <data name="AboutDec2Hex_places" xml:space="preserve">
+    <value>A numeric value to add padding to hexadecimal string.</value>
+    
+  </data>
+  <data name="AboutDec2HexT" xml:space="preserve">
+    <value>Converts a column of decimal numbers to hexadecimals</value>
+    
+  </data>
+  <data name="Dec2HexTArg1" xml:space="preserve">
+    <value>table</value>
+  </data>
+  <data name="Dec2HexTArg2" xml:space="preserve">
+    <value>places</value>
+  </data>
+  <data name="AboutDec2HexT_places" xml:space="preserve">
+    <value>A numeric value or array of values to add padding to hexadecimal strings.</value>
+    
+  </data>
+  <data name="AboutDec2Hex_table" xml:space="preserve">
+    <value>A column of numeric decimal values to convert to hexadecimals.</value>
+    
+  </data>
+  <data name="AboutHex2Dec" xml:space="preserve">
+    <value>Converts a hexadecimal number to decimal</value>
+    
+  </data>
+  <data name="Hex2DecArg1" xml:space="preserve">
+    <value>number</value>
+  </data>
+  <data name="AboutHex2Dec_number" xml:space="preserve">
+    <value>A hexadecimal string convert to decimal.</value>
+    
+  </data>
+  <data name="AboutHex2DecT" xml:space="preserve">
+    <value>Converts a column of hexadecimal numbers to decimals</value>
+    
+  </data>
+  <data name="Hex2DecTArg1" xml:space="preserve">
+    <value>table</value>
+  </data>
+  <data name="AboutHex2Dec_table" xml:space="preserve">
+    <value>A column of hexadecimal strings to convert to decimals.</value>
+    
+  </data>
+  <data name="ErrDeprecated" xml:space="preserve">
+    <value>This feature is deprecated and is no longer supported.</value>
     
   </data>
 </root>

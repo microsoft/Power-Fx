@@ -3297,7 +3297,7 @@
     
   </data>
   <data name="ErrRemoveAllArg" xml:space="preserve">
-    <value>Si fourni, le dernier argument doit être « Tous ». Y a-t-il une erreur de saisie ?</value>
+    <value>Si fourni, le dernier argument doit être « RemoveFlags.All ». Y a-t-il une erreur de saisie ?</value>
     
   </data>
   <data name="PenMode_Draw_DisplayName" xml:space="preserve">
@@ -4663,6 +4663,68 @@
   </data>
   <data name="SetArg2" xml:space="preserve">
     <value>valeur</value>
+    
+  </data>
+  <data name="AboutDec2Hex" xml:space="preserve">
+    <value>Convertit un nombre décimal en nombre hexadécimal</value>
+    
+  </data>
+  <data name="Dec2HexArg1" xml:space="preserve">
+    <value>nombre</value>
+  </data>
+  <data name="AboutDec2Hex_number" xml:space="preserve">
+    <value>Valeur décimale numérique à convertir en chaîne hexadécimale.</value>
+    
+  </data>
+  <data name="Dec2HexArg2" xml:space="preserve">
+    <value>lieux</value>
+  </data>
+  <data name="AboutDec2Hex_places" xml:space="preserve">
+    <value>Valeur numérique pour ajouter un remplissage à la chaîne hexadécimale.</value>
+    
+  </data>
+  <data name="AboutDec2HexT" xml:space="preserve">
+    <value>Convertit une colonne de nombres décimaux en nombres hexadécimaux</value>
+    
+  </data>
+  <data name="Dec2HexTArg1" xml:space="preserve">
+    <value>table</value>
+  </data>
+  <data name="Dec2HexTArg2" xml:space="preserve">
+    <value>lieux</value>
+  </data>
+  <data name="AboutDec2HexT_places" xml:space="preserve">
+    <value>Valeur numérique ou tableau de valeurs pour ajouter un remplissage aux chaînes hexadécimales.</value>
+    
+  </data>
+  <data name="AboutDec2Hex_table" xml:space="preserve">
+    <value>Colonne de valeurs décimales numériques à convertir en valeurs hexadécimales.</value>
+    
+  </data>
+  <data name="AboutHex2Dec" xml:space="preserve">
+    <value>Convertit un nombre hexadécimal en nombre décimal</value>
+    
+  </data>
+  <data name="Hex2DecArg1" xml:space="preserve">
+    <value>nombre</value>
+  </data>
+  <data name="AboutHex2Dec_number" xml:space="preserve">
+    <value>Chaîne hexadécimale convertie en chaîne décimale.</value>
+    
+  </data>
+  <data name="AboutHex2DecT" xml:space="preserve">
+    <value>Convertit une colonne de nombres hexadécimaux en nombres décimaux</value>
+    
+  </data>
+  <data name="Hex2DecTArg1" xml:space="preserve">
+    <value>table</value>
+  </data>
+  <data name="AboutHex2Dec_table" xml:space="preserve">
+    <value>Colonne de chaînes hexadécimales à convertir en chaînes décimales.</value>
+    
+  </data>
+  <data name="ErrDeprecated" xml:space="preserve">
+    <value>Cette fonctionnalité est déconseillée et n’est plus prise en charge.</value>
     
   </data>
 </root>

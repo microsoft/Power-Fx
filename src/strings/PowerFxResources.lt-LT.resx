@@ -3297,7 +3297,7 @@
     
   </data>
   <data name="ErrRemoveAllArg" xml:space="preserve">
-    <value>Jei pateikta, paskutinis argumentas turi būti „Viskas“. Ar tai spaudos klaida?</value>
+    <value>Jei pateikta, paskutinis argumentas turi būti „RemoveFlags.All“. Ar tai spaudos klaida?</value>
     
   </data>
   <data name="PenMode_Draw_DisplayName" xml:space="preserve">
@@ -4663,6 +4663,68 @@
   </data>
   <data name="SetArg2" xml:space="preserve">
     <value>reikšmė</value>
+    
+  </data>
+  <data name="AboutDec2Hex" xml:space="preserve">
+    <value>Konvertuoja dešimtainį skaičių į šešioliktainį</value>
+    
+  </data>
+  <data name="Dec2HexArg1" xml:space="preserve">
+    <value>skaičius</value>
+  </data>
+  <data name="AboutDec2Hex_number" xml:space="preserve">
+    <value>Skaitinė dešimtainė reikšmė konvertavimui į šešioliktainio formato eilutę.</value>
+    
+  </data>
+  <data name="Dec2HexArg2" xml:space="preserve">
+    <value>vietos</value>
+  </data>
+  <data name="AboutDec2Hex_places" xml:space="preserve">
+    <value>Skaitinė reikšmė, norint pridėti užpildymą šešioliktainio formato eilutei.</value>
+    
+  </data>
+  <data name="AboutDec2HexT" xml:space="preserve">
+    <value>Konvertuoja dešimtainių skaičių stulpelį į šešioliktainius</value>
+    
+  </data>
+  <data name="Dec2HexTArg1" xml:space="preserve">
+    <value>lentelė</value>
+  </data>
+  <data name="Dec2HexTArg2" xml:space="preserve">
+    <value>vietos</value>
+  </data>
+  <data name="AboutDec2HexT_places" xml:space="preserve">
+    <value>Skaitinė reikšmė arba reikšmių masyvas, norint pridėti užpildymą šešioliktainio formato eilutėms.</value>
+    
+  </data>
+  <data name="AboutDec2Hex_table" xml:space="preserve">
+    <value>Skaitinių dešimtainių dalių reikšmių stulpelis konvertavimui į šešioliktainius.</value>
+    
+  </data>
+  <data name="AboutHex2Dec" xml:space="preserve">
+    <value>Konvertuoja šešioliktainį skaičių į dešimtainį</value>
+    
+  </data>
+  <data name="Hex2DecArg1" xml:space="preserve">
+    <value>skaičius</value>
+  </data>
+  <data name="AboutHex2Dec_number" xml:space="preserve">
+    <value>Šešioliktainio formato eilutės konvertavimas į dešimtainį skaičių.</value>
+    
+  </data>
+  <data name="AboutHex2DecT" xml:space="preserve">
+    <value>Konvertuoja šešioliktainių skaičių stulpelį į dešimtainius</value>
+    
+  </data>
+  <data name="Hex2DecTArg1" xml:space="preserve">
+    <value>lentelė</value>
+  </data>
+  <data name="AboutHex2Dec_table" xml:space="preserve">
+    <value>Šešioliktainio formato eilučių stulpelis konvertavimui į dešimtainius skaičius.</value>
+    
+  </data>
+  <data name="ErrDeprecated" xml:space="preserve">
+    <value>Ši funkcija nerekomenduojama ir nebepalaikoma.</value>
     
   </data>
 </root>
