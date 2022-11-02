@@ -119,9 +119,9 @@ All other functions will coerce **Decimal** to **Float** for their arguments.  I
 JavaScript and JSON has no decimal data type.  Many users of decimal in JSON will wrap the decimal number in a string to avoid floating point rounding of the number by JSON parsers.  
 
 When used with an untyped object, the **Value** function will accept a number in one of three formats:
-- As a JSON number literal: `{ "Value": 1.234 }`.  Despite using a floating point notation, the precision of the original number will be honored to the degree possible, meaning that `{ "Value": 1.2345678912345678901 }` will retail all decimal places, despite being beyond the precision of a standard JavaScript floating point number.
-- As a JSON string literal containing a number: `{ "Value": "1.234" }`
-- As a JSON BigInt literal: `{ "Value": 1234n }`
+- JSON number literal: `{ "Value": 1.234 }`.  Despite using a floating point notation, the precision of the original number will be honored to the degree possible, meaning that `{ "Value": 1.2345678912345678901 }` will retail all decimal places, despite being beyond the precision of a standard JavaScript floating point number.
+- JSON string literal containing a number: `{ "Value": "1.234" }`.  The number must use dot as the decimal separator have no other punctuation such as thousands separators.
+- JSON BigInt literal: `{ "Value": 1234n }`.
 
 The **Float** function will only accept a JSON number literal.
 
