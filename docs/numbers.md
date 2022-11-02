@@ -70,8 +70,8 @@ Let's look at some examples.  **Title1** refers to a control in Power Apps, with
 | `1+1`   | Decimal | `2`  | Both of these numeric literals are **Decimal**, so the result is **Decimal**. |
 | `3*0.1` | Decimal | `0.3` | Both of these numeric literals are **Decimal**, so the result is **Decimal**.
 | `Sum(0.1,0.1,0.1)` | Decimal | `0.3` | All of the arguments to **Sum** are **Decimal**, and it is one of the functions that can natively operate on **Decimall** values, so the result is also **Decimal**. |
-| `Float("1e200")*2` | Float | `1.9999999999999998e199` | The **Float** function returns a floating point version of the string passed to it.  Since it has higher type precedence than the literal **2** which is of type **Decimal**, the **2** is promoted to floating point and used in the calculation.  The result is **Float**.
-| `Title1.Y+Title1.Height+4` | Float | `84` | Power Apps control properties are usually **Float**, because approximations are fine and it is higher performance.  The literal **4** is promoted to **Float** for the calculation.  Since all the quantities are whole numbers, and **Float** can represent common whole numbers exactly, there is no rounding errors. |
+| `Float("1e200") * 2` | Float | `1.9999999999999998e199` | The **Float** function returns a floating point version of the string passed to it.  Since it has higher type precedence than the literal **2** which is of type **Decimal**, the **2** is promoted to floating point and used in the calculation.  The result is **Float**.
+| `Title1.Y + Title1.Height + 4` | Float | `84` | Power Apps control properties are usually **Float**, because approximations are fine and it is higher performance.  The literal **4** is promoted to **Float** for the calculation.  Since all the quantities are whole numbers, and **Float** can represent common whole numbers exactly, there is no rounding errors. |
 
 ## Object properties
 
