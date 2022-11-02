@@ -126,7 +126,7 @@ namespace Microsoft.PowerFx
         /// <returns></returns>
         public ParseResult Parse(string expressionText, ParserOptions options = null)
         {
-            return Parse(expressionText, options, Config.CultureInfo);
+            return Parse(expressionText, Config.Features, options, Config.CultureInfo);
         }
 
         /// <summary>
@@ -138,12 +138,20 @@ namespace Microsoft.PowerFx
         /// <returns></returns>
         public static ParseResult Parse(string expressionText, ParserOptions options = null, CultureInfo cultureInfo = null)
         {
+            return Parse(expressionText, Features.None, options, cultureInfo);
+        }
+
+        /// <summary>
+        /// Parse the expression without doing any binding.
+        /// </summary>
+        public static ParseResult Parse(string expressionText, Features features, ParserOptions options = null, CultureInfo cultureInfo = null)
+        {
             options ??= new ParserOptions();
 
             // If culture isn't explicitly set, use the one from PowerFx Config
             options.Culture ??= cultureInfo;
 
-            var result = options.Parse(expressionText);
+            var result = options.Parse(expressionText, features);
             return result;
         }
 

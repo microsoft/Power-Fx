@@ -571,6 +571,14 @@ namespace Microsoft.PowerFx.Core.Binding
             return false;
         }
 
+        private bool SupportsDelegation(FirstNameNode node)
+        {
+            Contracts.AssertValue(node);
+
+            var info = GetInfo(node).VerifyValue();
+            return info.Data is IExternalDelegatableSymbol delegableSymbol && delegableSymbol.IsDelegatable;
+        }
+
         private bool SupportsPaging(TexlNode node)
         {
             Contracts.AssertValue(node);
@@ -1121,6 +1129,23 @@ namespace Microsoft.PowerFx.Core.Binding
             if (SupportsPaging(node))
             {
                 _isPageable.Set(node.Id, true);
+
+                // Mark this as async, as this may result in async invocation.
+                FlagPathAsAsync(node);
+
+                // Pageable nodes are also stateful as data is always pulled from outside.
+                SetStateful(node, isStateful: true);
+            }
+        }
+
+        public void CheckAndMarkAsDelegatable(FirstNameNode node)
+        {
+            Contracts.AssertValue(node);
+            Contracts.AssertIndex(node.Id, _typeMap.Length);
+
+            if (SupportsDelegation(node))
+            {
+                _isDelegatable.Set(node.Id, true);
 
                 // Mark this as async, as this may result in async invocation.
                 FlagPathAsAsync(node);
@@ -2900,6 +2925,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 }
 
                 _txb.CheckAndMarkAsPageable(node);
+                _txb.CheckAndMarkAsDelegatable(node);
 
                 if ((lookupInfo.Kind == BindKind.WebResource || lookupInfo.Kind == BindKind.QualifiedValue) && !(node.Parent is DottedNameNode))
                 {
@@ -4941,8 +4967,14 @@ namespace Microsoft.PowerFx.Core.Binding
                 var carg = args.Length;
                 var argTypes = args.Select(_txb.GetType).ToArray();
 
-                if (TryGetBestOverload(_txb, node, argTypes, overloads, out var function, out var nodeToCoercedTypeMap, out var returnType))
+                if (TryGetBestOverload(_txb, node, argTypes, overloads, out var function, out var nodeToCoercedTypeMap, out var returnType, out var warnings))
                 {
+                    if (function.CheckTypesAndSemanticsOnly)
+                    {
+                        // CheckSemantics may produce errors that are being ignored.
+                        warnings.Undiscard();
+                    }
+
                     _txb.SetInfo(node, new CallInfo(function, node));
                     _txb.SetType(node, returnType);
 
