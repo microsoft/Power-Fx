@@ -42,7 +42,7 @@ namespace Microsoft.PowerFx.Tests
 
             // With error as arg.
             var result = engine.Eval("TestCustom(1/0,true)");
-            Assert.Equal(FormulaType.BindingError, result.Type);
+            Assert.Equal(FormulaType.String, result.Type);
             Assert.Equal(1, ((ErrorValue)result).Errors.Count);
             Assert.Equal("Invalid operation: division by zero.", ((ErrorValue)result).Errors[0].Message);
 

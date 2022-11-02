@@ -340,7 +340,11 @@ namespace Microsoft.PowerFx
             List<ErrorValue> errors = null;
             for (var i = 0; i < args.Length; i++)
             {
-                if (args[i] is ErrorValue ev)
+                object arg = args[i];
+
+                // In case, ReflectionFunction was created using the constructor which takes paramtypes as optional argument paramtypes could be null.
+                var expectedType = _info.ParamTypes.Length <= i ? default : _info.ParamTypes[i];
+                if (arg is ErrorValue ev)
                 {
                     if (errors == null)
                     {
@@ -349,25 +353,25 @@ namespace Microsoft.PowerFx
 
                     errors.Add(ev);
                 }
-                else if (args[i] is BlankValue && _info.ParamTypes[i] is NumberType)
+                else if (arg is BlankValue && expectedType is NumberType)
                 {
-                    args[i] = FormulaValue.New(0);
-                    args2.Add(args[i]);
+                    arg = FormulaValue.New(0);
                 }
-                else if (args[i] is BlankValue && _info.ParamTypes[i] is StringType)
+                else if (arg is BlankValue && expectedType is StringType)
                 {
-                    args[i] = FormulaValue.New(string.Empty);
-                    args2.Add(args[i]);
+                    arg = FormulaValue.New(string.Empty);
                 }
-                else if (args[i] is LambdaFormulaValue lambda)
+                else if (arg is LambdaFormulaValue lambda)
                 {
-                    Func<Task<BooleanValue>> argLambda = async () => (BooleanValue)await lambda.EvalAsync();
-                    args2.Add(argLambda);
+                    arg = async () => (BooleanValue)await lambda.EvalAsync();
                 }
-                else
-                {
-                    args2.Add(args[i]);
-                }
+
+                args2.Add(arg);
+            }
+
+            if (errors != null)
+            {
+                return ErrorValue.Combine(IRContext.NotInSource(_info.RetType), errors);
             }
 
             if (errors != null)
