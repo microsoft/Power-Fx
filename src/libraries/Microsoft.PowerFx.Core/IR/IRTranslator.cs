@@ -8,6 +8,7 @@ using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.IR.Symbols;
+using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
@@ -320,6 +321,13 @@ namespace Microsoft.PowerFx.Core.IR
             {
                 Contracts.AssertValue(node);
                 Contracts.AssertValue(context);
+
+                var nodeType = context.Binding.GetType(node);
+
+                if (nodeType.IsUnknown)
+                {
+                    throw new NotSupportedException("Deferred(Unknown) is not supported");
+                }
 
                 var info = context.Binding.GetInfo(node);
                 if (info == null)
