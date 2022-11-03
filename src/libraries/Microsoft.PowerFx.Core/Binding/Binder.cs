@@ -337,6 +337,8 @@ namespace Microsoft.PowerFx.Core.Binding
                 propertyName: Property?.InvariantName ?? string.Empty,
                 isEnhancedDelegationEnabled: Document?.Properties?.EnabledFeatures?.IsEnhancedDelegationEnabled ?? false,
                 allowsSideEffects: bindingConfig.AllowsSideEffects);
+
+            ErrorContainer.Locale = bindingConfig.Locale;
         }
 
         // Binds a Texl parse tree.
@@ -2780,7 +2782,7 @@ namespace Microsoft.PowerFx.Core.Binding
                         // App variable name cannot conflict with any existing global entity name, eg. control/data/table/enum.
                         if (scopedControl.IsAppInfoControl && _nameResolver.LookupGlobalEntity(node.Ident.Name, out lookupInfo))
                         {
-                            _txb.ErrorContainer.Error(node, TexlStrings.ErrExpectedFound_Ex_Fnd, _txb.BindingConfig.CultureInfo, lookupInfo.Kind, TokKind.Ident);
+                            _txb.ErrorContainer.Error(node, TexlStrings.ErrExpectedFound_Ex_Fnd, lookupInfo.Kind, TokKind.Ident);
                         }
 
                         _txb.SetAppScopedVariable(node, scopedControl.IsAppInfoControl);
@@ -2810,7 +2812,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 if (!haveNameResolver || !_nameResolver.Lookup(node.Ident.Name, out lookupInfo, preferences: lookupPrefs))
                 {
-                    _txb.ErrorContainer.Error(node, TexlStrings.ErrInvalidName, _txb.BindingConfig.CultureInfo, node.Ident.Name.Value);
+                    _txb.ErrorContainer.Error(node, TexlStrings.ErrInvalidName, node.Ident.Name.Value);
                     _txb.SetType(node, DType.Error);
                     _txb.SetInfo(node, FirstNameInfo.Create(node, default(NameLookupInfo)));
                     return;
@@ -2838,7 +2840,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 // Internal control references are not allowed in component input properties.
                 if (CheckComponentProperty(lookupInfo.Data as IExternalControl))
                 {
-                    _txb.ErrorContainer.Error(node, TexlStrings.ErrInternalControlInInputProperty, locale: _txb.BindingConfig.CultureInfo);
+                    _txb.ErrorContainer.Error(node, TexlStrings.ErrInternalControlInInputProperty);
                     _txb.SetType(node, DType.Error);
                     _txb.SetInfo(node, fnInfo ?? FirstNameInfo.Create(node, default(NameLookupInfo)));
                     return;
@@ -3048,7 +3050,7 @@ namespace Microsoft.PowerFx.Core.Binding
                                     }
                                     else
                                     {
-                                        _txb.ErrorContainer.Error(node, TexlStrings.ErrColumnNotAccessibleInCurrentContext, locale: _txb.BindingConfig.CultureInfo);
+                                        _txb.ErrorContainer.Error(node, TexlStrings.ErrColumnNotAccessibleInCurrentContext);
                                         _txb.SetType(node, DType.Error);
                                         fError = true;
                                         return true;
@@ -3125,14 +3127,14 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 if (_nameResolver == null || _nameResolver.CurrentEntity == null)
                 {
-                    _txb.ErrorContainer.Error(node, TexlStrings.ErrInvalidIdentifier, locale: _txb.BindingConfig.CultureInfo);
+                    _txb.ErrorContainer.Error(node, TexlStrings.ErrInvalidIdentifier);
                     _txb.SetType(node, DType.Error);
                     return;
                 }
 
                 if (!(_nameResolver.CurrentEntity is IExternalControl) || !_nameResolver.LookupParent(out var lookupInfo))
                 {
-                    _txb.ErrorContainer.Error(node, TexlStrings.ErrInvalidParentUse, locale: _txb.BindingConfig.CultureInfo);
+                    _txb.ErrorContainer.Error(node, TexlStrings.ErrInvalidParentUse);
                     _txb.SetType(node, DType.Error);
                     return;
                 }
@@ -3152,14 +3154,14 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 if (_nameResolver == null || _nameResolver.CurrentEntity == null)
                 {
-                    _txb.ErrorContainer.Error(node, TexlStrings.ErrInvalidIdentifier, locale: _txb.BindingConfig.CultureInfo);
+                    _txb.ErrorContainer.Error(node, TexlStrings.ErrInvalidIdentifier);
                     _txb.SetType(node, DType.Error);
                     return;
                 }
 
                 if (!_nameResolver.LookupSelf(out var lookupInfo))
                 {
-                    _txb.ErrorContainer.Error(node, TexlStrings.ErrInvalidIdentifier, locale: _txb.BindingConfig.CultureInfo);
+                    _txb.ErrorContainer.Error(node, TexlStrings.ErrInvalidIdentifier);
                     _txb.SetType(node, DType.Error);
                     return;
                 }
@@ -3695,7 +3697,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 Contracts.AssertValue(args);
 
                 _txb.SetInfo(node, new DottedNameInfo(node));
-                _txb.ErrorContainer.Error(node, errKey, locale: _txb.BindingConfig.CultureInfo, args);
+                _txb.ErrorContainer.Error(node, errKey, args);
                 _txb.SetType(node, DType.Error);
             }
 
@@ -4126,7 +4128,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     }
                     else
                     {
-                        _txb.ErrorContainer.Error(node, TexlStrings.ErrUnknownFunction, _txb.BindingConfig.CultureInfo, node.Head.Name.Value);
+                        _txb.ErrorContainer.Error(node, TexlStrings.ErrUnknownFunction, node.Head.Name.Value);
                     }
 
                     _txb.SetInfo(node, new CallInfo(node));
@@ -4349,7 +4351,7 @@ namespace Microsoft.PowerFx.Core.Binding
                         // If there is a single function with this name, and the first arg is not
                         // a good match, then we have an erroneous invocation.
                         _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, nodeInput, TexlStrings.ErrBadType);
-                        _txb.ErrorContainer.Error(node, TexlStrings.ErrInvalidArgs_Func, locale: _txb.BindingConfig.CultureInfo, maybeFunc.Name);
+                        _txb.ErrorContainer.Error(node, TexlStrings.ErrInvalidArgs_Func, maybeFunc.Name);
                         _txb.SetInfo(node, new CallInfo(maybeFunc, node, typeScope, scopeIdent, identRequired, _currentScope.Nest));
                         _txb.SetType(node, maybeFunc.ReturnType);
                     }
@@ -4414,7 +4416,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     if (_txb.IsAsync(args[i]) && !scopeInfo.SupportsAsyncLambdas)
                     {
                         fArgsValid = false;
-                        _txb.ErrorContainer.Error(DocumentErrorSeverity.Severe, node, TexlStrings.ErrAsyncLambda, locale: _txb.BindingConfig.CultureInfo);
+                        _txb.ErrorContainer.Error(DocumentErrorSeverity.Severe, node, TexlStrings.ErrAsyncLambda);
                     }
 
                     // Accept should leave the scope as it found it.
@@ -4441,7 +4443,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 // on their argument types.
                 if (!fArgsValid)
                 {
-                    _txb.ErrorContainer.Error(DocumentErrorSeverity.Severe, node, TexlStrings.ErrInvalidArgs_Func, locale: _txb.BindingConfig.CultureInfo, maybeFunc.Name);
+                    _txb.ErrorContainer.Error(DocumentErrorSeverity.Severe, node, TexlStrings.ErrInvalidArgs_Func, maybeFunc.Name);
                 }
 
                 // Set the inferred return type for the node.
@@ -4641,7 +4643,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 if (!fArgsValid)
                 {
-                    _txb.ErrorContainer.Error(DocumentErrorSeverity.Severe, node, TexlStrings.ErrInvalidStringInterpolation, locale: _txb.BindingConfig.CultureInfo);
+                    _txb.ErrorContainer.Error(DocumentErrorSeverity.Severe, node, TexlStrings.ErrInvalidStringInterpolation);
                 }
 
                 if (fArgsValid && nodeToCoercedTypeMap != null)
@@ -4759,7 +4761,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 fArgsValid = func.HandleCheckInvocation(_txb, args, argTypes, _txb.ErrorContainer, out returnType, out _);
                 if (!fArgsValid)
                 {
-                    _txb.ErrorContainer.Error(DocumentErrorSeverity.Severe, node, TexlStrings.ErrInvalidArgs_Func, locale: _txb.BindingConfig.CultureInfo, func.Name);
+                    _txb.ErrorContainer.Error(DocumentErrorSeverity.Severe, node, TexlStrings.ErrInvalidArgs_Func, func.Name);
                 }
 
                 _txb.SetType(node, returnType);
@@ -4890,7 +4892,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     }
                     else
                     {
-                        _txb.ErrorContainer.Error(node, TexlStrings.ErrInvalidName, locale: _txb.BindingConfig.CultureInfo, node.Head.Name.Value);
+                        _txb.ErrorContainer.Error(node, TexlStrings.ErrInvalidName, node.Head.Name.Value);
                         _txb.SetInfo(node, new CallInfo(node));
                         _txb.SetType(node, DType.Error);
                         return;
@@ -4926,7 +4928,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 if (!fArgsValid && !func.HasPreciseErrors)
                 {
-                    _txb.ErrorContainer.Error(DocumentErrorSeverity.Severe, node, TexlStrings.ErrInvalidArgs_Func, locale: _txb.BindingConfig.CultureInfo, func.Name);
+                    _txb.ErrorContainer.Error(DocumentErrorSeverity.Severe, node, TexlStrings.ErrInvalidArgs_Func, func.Name);
                 }
 
                 _txb.SetType(node, returnType);
@@ -5007,7 +5009,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 // We exhausted the overloads without finding an exact match, so post a document error.
                 if (!someFunc.HasPreciseErrors)
                 {
-                    _txb.ErrorContainer.Error(node, TexlStrings.ErrInvalidArgs_Func, locale: _txb.BindingConfig.CultureInfo, someFunc.Name);
+                    _txb.ErrorContainer.Error(node, TexlStrings.ErrInvalidArgs_Func, someFunc.Name);
                 }
 
                 // The final CheckInvocation call will post all the necessary document errors.

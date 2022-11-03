@@ -15,6 +15,8 @@ namespace Microsoft.PowerFx.Core.App.ErrorContainers
     {
         private List<TexlError> _errors;
 
+        public CultureInfo Locale { get; set; }
+
         public DocumentErrorSeverity DefaultSeverity => DocumentErrorSeverity.Critical;
 
         public bool HasErrors()
@@ -107,27 +109,12 @@ namespace Microsoft.PowerFx.Core.App.ErrorContainers
             return Error(DefaultSeverity, node, errKey, args);
         }
 
-        public TexlError Error(TexlNode node, ErrorResourceKey errKey, CultureInfo locale, params object[] args)
-        {
-            return Error(DefaultSeverity, node, errKey, locale: locale, args);
-        }
-
         public TexlError Error(DocumentErrorSeverity severity, TexlNode node, ErrorResourceKey errKey, params object[] args)
         {
             Contracts.AssertValue(node);
             Contracts.AssertValue(args);
 
-            var err = new TexlError(node, severity, null, errKey, args);
-            CollectionUtils.Add(ref _errors, err);
-            return err;
-        }
-
-        public TexlError Error(DocumentErrorSeverity severity, TexlNode node, ErrorResourceKey errKey, CultureInfo locale, params object[] args)
-        {
-            Contracts.AssertValue(node);
-            Contracts.AssertValue(args);
-
-            var err = new TexlError(node, severity, locale: locale, errKey, args);
+            var err = new TexlError(node, severity, Locale, errKey, args);
             CollectionUtils.Add(ref _errors, err);
             return err;
         }

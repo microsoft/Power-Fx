@@ -20,13 +20,20 @@ namespace Microsoft.PowerFx.Core.Binding
 
         public bool UseThisRecordForRuleScope { get; }
 
-        public CultureInfo CultureInfo { get; }
+        public CultureInfo Locale { get; }
 
-        public BindingConfig(bool allowsSideEffects = false, bool useThisRecordForRuleScope = false, CultureInfo locale = null)
+        public BindingConfig(bool allowsSideEffects = false, bool useThisRecordForRuleScope = false)
         {
             AllowsSideEffects = allowsSideEffects;
             UseThisRecordForRuleScope = useThisRecordForRuleScope;
-            CultureInfo = locale;
+            Locale = null;
+        }
+
+        public BindingConfig(CultureInfo locale, bool allowsSideEffects = false, bool useThisRecordForRuleScope = false)
+        {
+            AllowsSideEffects = allowsSideEffects;
+            UseThisRecordForRuleScope = useThisRecordForRuleScope;
+            Locale = locale;
         }
     }
 }
