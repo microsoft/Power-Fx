@@ -116,13 +116,8 @@ All other functions will coerce **Decimal** to **Float** for their arguments.  I
 
 ## ParseJSON and JSON functions
 
-JavaScript and JSON has no decimal data type.  Many users of decimal in JSON will wrap the decimal number in a string to avoid floating point rounding of the number by JSON parsers.  
+Both floating point and decimal numbers can be expressed in JSON as numbers.  It is up to the parser of the JSON to decide how to use it and which data type to use.
 
-When used with an untyped object, the **Value** function will accept a number in one of three formats:
-- JSON number literal: `{ "Value": 1.234 }`.  Despite using a floating point notation, the precision of the original number will be honored to the degree possible, meaning that `{ "Value": 1.2345678912345678901 }` will retail all decimal places, despite being beyond the precision of a standard JavaScript floating point number.
-- JSON string literal containing a number: `{ "Value": "1.234" }`.  The number must use dot as the decimal separator have no other punctuation such as thousands separators.
-- JSON BigInt literal: `{ "Value": 1234n }`.
+**ParseJSON** will return an untyped object.  Use the **Value** function if you would like the value to be placed in a **Decimal** and use the **Float** function if you would like the value to be placed in a **Float**.  When using the **JSON** function, both floating point and decimal values will be written out as numbers.
 
-The **Float** function will only accept a JSON number literal.
-
-When using the JSON function, **Decimal** values will be emitted as JSON string literals containing a number.  **JSONFormat.DecimalAsNumber** can be used to force JSON number literals to be used instead, and the full precision of the **Decimal** will be included in the JSON string and not rounded to floating point precision.
+Some systems will place decimal values within a string.  With **ParseJSON**, first pass the value through the **Text** function before calling **Value**.  If there is a chance the user of the app may be in a locale that uses a comma as the decimal separator, be sure to pass an appropriate second argument to **Value** so that the correct decimal separator will be used.  When using the **JSON** function to write out a **Decimal** as a string, you will need to first transform the value into a text field.
