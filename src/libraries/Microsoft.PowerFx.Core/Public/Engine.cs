@@ -223,10 +223,9 @@ namespace Microsoft.PowerFx
                 ruleScope: null,
                 features: Config.Features);
 
-            var result = new CheckResult(parse, binding)
+            var result = new CheckResult(parse, Config.CultureInfo, binding)
             {
                 Symbols = combinedSymbols,
-                CultureInfo = Config.CultureInfo
             };
 
             if (result.IsSuccess)

@@ -2,8 +2,10 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Microsoft.PowerFx.Core.Errors;
+using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 
@@ -64,6 +66,28 @@ namespace Microsoft.PowerFx
             };
         }
 
+        internal static ExpressionError New(IDocumentError error, CultureInfo locale)
+        {
+            var shortMessage = string.Empty;
+
+            if (StringResources.TryGetErrorResource(new ErrorResourceKey(error.MessageKey), out var errorResource, locale?.Name))
+            {
+                shortMessage = errorResource.GetSingleValue(ErrorResource.ShortMessageTag);
+            }
+            else
+            {
+                shortMessage = StringResources.Get(error.MessageKey, locale?.Name);
+            }            
+
+            return new ExpressionError
+            {
+                Message = ErrorUtils.FormatMessage(shortMessage, locale, error.MessageArgs),
+                Span = error.TextSpan,
+                Severity = (ErrorSeverity)error.Severity,
+                MessageKey = error.MessageKey
+            };
+        }
+
         internal static IEnumerable<ExpressionError> New(IEnumerable<IDocumentError> errors)
         {
             if (errors == null)
@@ -73,6 +97,18 @@ namespace Microsoft.PowerFx
             else
             {
                 return errors.Select(x => ExpressionError.New(x)).ToArray();
+            }
+        }
+
+        internal static IEnumerable<ExpressionError> New(IEnumerable<IDocumentError> errors, CultureInfo locale)
+        {
+            if (errors == null)
+            {
+                return new ExpressionError[0];
+            }
+            else
+            {
+                return errors.Select(x => ExpressionError.New(x, locale)).ToArray();
             }
         }
     }
