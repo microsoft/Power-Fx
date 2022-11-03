@@ -3297,7 +3297,7 @@
     
   </data>
   <data name="ErrRemoveAllArg" xml:space="preserve">
-    <value>Егер берілсе, соңғы аргумент "Барлығы" болуы керек. Жазылуында қате бар ма?</value>
+    <value>Егер берілсе, соңғы аргумент "RemoveFlags.All" болуы керек. Жазылу емлесінде қате бар ма?</value>
     
   </data>
   <data name="PenMode_Draw_DisplayName" xml:space="preserve">
@@ -4663,6 +4663,68 @@
   </data>
   <data name="SetArg2" xml:space="preserve">
     <value>мән</value>
+    
+  </data>
+  <data name="AboutDec2Hex" xml:space="preserve">
+    <value>Ондық бөлшекті он алтылық санға түрлендіреді</value>
+    
+  </data>
+  <data name="Dec2HexArg1" xml:space="preserve">
+    <value>сан</value>
+  </data>
+  <data name="AboutDec2Hex_number" xml:space="preserve">
+    <value>Он алтылық жолға түрлендірілетін сандық ондық мән.</value>
+    
+  </data>
+  <data name="Dec2HexArg2" xml:space="preserve">
+    <value>орындар</value>
+  </data>
+  <data name="AboutDec2Hex_places" xml:space="preserve">
+    <value>Он алтылық жолға қосылатын сандық мән.</value>
+    
+  </data>
+  <data name="AboutDec2HexT" xml:space="preserve">
+    <value>Ондық бөлшектер бағанын он алтылық сандарға түрлендіреді</value>
+    
+  </data>
+  <data name="Dec2HexTArg1" xml:space="preserve">
+    <value>кесте</value>
+  </data>
+  <data name="Dec2HexTArg2" xml:space="preserve">
+    <value>орындар</value>
+  </data>
+  <data name="AboutDec2HexT_places" xml:space="preserve">
+    <value>Он алтылық жолдарға қосылатын сандық мән немесе мәндер жиымы.</value>
+    
+  </data>
+  <data name="AboutDec2Hex_table" xml:space="preserve">
+    <value>Он алтылық мәндерге түрлендіру үшін сандық ондық мәндер бағаны.</value>
+    
+  </data>
+  <data name="AboutHex2Dec" xml:space="preserve">
+    <value>Он алтылық санды ондық бөлшекке түрлендіреді</value>
+    
+  </data>
+  <data name="Hex2DecArg1" xml:space="preserve">
+    <value>сан</value>
+  </data>
+  <data name="AboutHex2Dec_number" xml:space="preserve">
+    <value>Он алтылық жол ондық бөлшекке түрлендіріледі.</value>
+    
+  </data>
+  <data name="AboutHex2DecT" xml:space="preserve">
+    <value>Он алтылық сандар бағанын ондық бөлшектерге түрлендіреді</value>
+    
+  </data>
+  <data name="Hex2DecTArg1" xml:space="preserve">
+    <value>кесте</value>
+  </data>
+  <data name="AboutHex2Dec_table" xml:space="preserve">
+    <value>Ондық бөлшектерге түрлендірілетін он алтылық жолдар бағаны.</value>
+    
+  </data>
+  <data name="ErrDeprecated" xml:space="preserve">
+    <value>Бұл мүмкіндік ұсынылмайды және бұдан былай қолдау көрсетілмейді.</value>
     
   </data>
 </root>

@@ -3297,7 +3297,7 @@
     
   </data>
   <data name="ErrRemoveAllArg" xml:space="preserve">
-    <value>Jika diberikan, argumen terakhir harus 'Semua'. Apakah ada kesalahan ketik?</value>
+    <value>Jika diberikan, argumen terakhir harus 'RemoveFlags.All'. Apakah ada kesalahan ketik?</value>
     
   </data>
   <data name="PenMode_Draw_DisplayName" xml:space="preserve">
@@ -4663,6 +4663,68 @@
   </data>
   <data name="SetArg2" xml:space="preserve">
     <value>nilai</value>
+    
+  </data>
+  <data name="AboutDec2Hex" xml:space="preserve">
+    <value>Mengonversi angka desimal ke heksadesimal</value>
+    
+  </data>
+  <data name="Dec2HexArg1" xml:space="preserve">
+    <value>angka</value>
+  </data>
+  <data name="AboutDec2Hex_number" xml:space="preserve">
+    <value>Nilai desimal numerik untuk dikonversi ke string heksadesimal.</value>
+    
+  </data>
+  <data name="Dec2HexArg2" xml:space="preserve">
+    <value>tempat</value>
+  </data>
+  <data name="AboutDec2Hex_places" xml:space="preserve">
+    <value>Nilai numerik untuk menambahkan padding ke string heksadesimal.</value>
+    
+  </data>
+  <data name="AboutDec2HexT" xml:space="preserve">
+    <value>Mengonversi kolom angka desimal ke heksadesimal</value>
+    
+  </data>
+  <data name="Dec2HexTArg1" xml:space="preserve">
+    <value>tabel</value>
+  </data>
+  <data name="Dec2HexTArg2" xml:space="preserve">
+    <value>tempat</value>
+  </data>
+  <data name="AboutDec2HexT_places" xml:space="preserve">
+    <value>Nilai numerik atau larik nilai untuk menambahkan padding ke string heksadesimal.</value>
+    
+  </data>
+  <data name="AboutDec2Hex_table" xml:space="preserve">
+    <value>Kolom nilai desimal numerik untuk dikonversi ke heksadesimal.</value>
+    
+  </data>
+  <data name="AboutHex2Dec" xml:space="preserve">
+    <value>Mengonversi angka heksadesimal ke desimal</value>
+    
+  </data>
+  <data name="Hex2DecArg1" xml:space="preserve">
+    <value>angka</value>
+  </data>
+  <data name="AboutHex2Dec_number" xml:space="preserve">
+    <value>String heksadesimal dikonversi ke desimal.</value>
+    
+  </data>
+  <data name="AboutHex2DecT" xml:space="preserve">
+    <value>Mengonversi kolom angka heksadesimal ke desimal</value>
+    
+  </data>
+  <data name="Hex2DecTArg1" xml:space="preserve">
+    <value>tabel</value>
+  </data>
+  <data name="AboutHex2Dec_table" xml:space="preserve">
+    <value>Kolom string heksadesimal untuk dikonversi ke desimal.</value>
+    
+  </data>
+  <data name="ErrDeprecated" xml:space="preserve">
+    <value>Fitur ini tidak digunakan lagi dan sudah tidak didukung.</value>
     
   </data>
 </root>

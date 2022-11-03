@@ -3297,7 +3297,7 @@
     
   </data>
   <data name="ErrRemoveAllArg" xml:space="preserve">
-    <value>제공된 경우 마지막 인수는 'All'이어야 합니다. 오타가 있습니까?</value>
+    <value>제공된 경우 마지막 인수는 'RemoveFlags.All'이어야 합니다. 오타가 있습니까?</value>
     
   </data>
   <data name="PenMode_Draw_DisplayName" xml:space="preserve">
@@ -4663,6 +4663,68 @@
   </data>
   <data name="SetArg2" xml:space="preserve">
     <value>값</value>
+    
+  </data>
+  <data name="AboutDec2Hex" xml:space="preserve">
+    <value>16진수로 10진수 변환</value>
+    
+  </data>
+  <data name="Dec2HexArg1" xml:space="preserve">
+    <value>숫자</value>
+  </data>
+  <data name="AboutDec2Hex_number" xml:space="preserve">
+    <value>16진수 문자열로 변환할 숫자 10진수 값입니다.</value>
+    
+  </data>
+  <data name="Dec2HexArg2" xml:space="preserve">
+    <value>장소</value>
+  </data>
+  <data name="AboutDec2Hex_places" xml:space="preserve">
+    <value>16진수 문자열에 패딩을 추가할 숫자 값입니다.</value>
+    
+  </data>
+  <data name="AboutDec2HexT" xml:space="preserve">
+    <value>16진수로 10진수 열 변환</value>
+    
+  </data>
+  <data name="Dec2HexTArg1" xml:space="preserve">
+    <value>테이블</value>
+  </data>
+  <data name="Dec2HexTArg2" xml:space="preserve">
+    <value>장소</value>
+  </data>
+  <data name="AboutDec2HexT_places" xml:space="preserve">
+    <value>16진수 문자열에 패딩을 추가할 숫자 값 또는 값 배열입니다.</value>
+    
+  </data>
+  <data name="AboutDec2Hex_table" xml:space="preserve">
+    <value>16진수로 변환할 10진수 값의 열입니다.</value>
+    
+  </data>
+  <data name="AboutHex2Dec" xml:space="preserve">
+    <value>10진수로 16진수 변환</value>
+    
+  </data>
+  <data name="Hex2DecArg1" xml:space="preserve">
+    <value>숫자</value>
+  </data>
+  <data name="AboutHex2Dec_number" xml:space="preserve">
+    <value>16진수 문자열을 10진수로 변환합니다.</value>
+    
+  </data>
+  <data name="AboutHex2DecT" xml:space="preserve">
+    <value>10진수로 16진수 열 변환</value>
+    
+  </data>
+  <data name="Hex2DecTArg1" xml:space="preserve">
+    <value>테이블</value>
+  </data>
+  <data name="AboutHex2Dec_table" xml:space="preserve">
+    <value>10진수로 변환할 16진수 문자열의 열입니다.</value>
+    
+  </data>
+  <data name="ErrDeprecated" xml:space="preserve">
+    <value>이 기능은 사용되지 않으며 더 이상 지원되지 않습니다.</value>
     
   </data>
 </root>
