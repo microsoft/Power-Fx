@@ -3,10 +3,13 @@
 
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Glue;
+using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core
@@ -52,6 +55,18 @@ namespace Microsoft.PowerFx.Core
             _wrappedLazyRecordTypes = new Dictionary<AggregateType, WrappedDerivedRecordType>();
             var strippedRenameParameters = GetWrappedAggregateType(_renameParameters, DisabledDisplayNameProvider.Instance) as RecordType;
             return ExpressionLocalizationHelper.ConvertExpression(converted, strippedRenameParameters, BindingConfig.Default, _resolver, _binderGlue, CultureInfo.InvariantCulture, false);
+        }
+
+        /// <summary>
+        /// Tells if the expression contains will get changed.
+        /// </summary>
+        /// <param name="expressionText"></param>
+        /// <returns>True if the full path to change is contained in the expression.</returns>
+        public bool Find(string expressionText)
+        {
+            var invariantExpression = _engine.GetInvariantExpression(expressionText, _baseParameters);
+
+            return invariantExpression != ApplyRename(invariantExpression);
         }
 
         private FormulaType RenameFormulaTypeHelper(AggregateType nestedType, Queue<DName> segments, DName updatedName)
