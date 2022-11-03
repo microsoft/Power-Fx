@@ -15,6 +15,7 @@ using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 using static Microsoft.PowerFx.Core.Localization.TexlStrings;
@@ -361,6 +362,10 @@ namespace Microsoft.PowerFx
                 {
                     arg = FormulaValue.New(string.Empty);
                 }
+                else if (arg is BlankValue)
+                {
+                    errors.Add(CommonErrors.RuntimeTypeMismatch(IRContext.NotInSource(FormulaType.Blank)));
+                }
                 else if (arg is LambdaFormulaValue lambda)
                 {
                     arg = async () => (BooleanValue)await lambda.EvalAsync();
@@ -372,11 +377,6 @@ namespace Microsoft.PowerFx
             if (errors != null)
             {
                 return ErrorValue.Combine(IRContext.NotInSource(_info.RetType), errors);
-            }
-
-            if (errors != null)
-            {
-                return ErrorValue.Combine(IRContext.NotInSource(FormulaType.BindingError), errors);
             }
 
             if (_info._isAsync)
