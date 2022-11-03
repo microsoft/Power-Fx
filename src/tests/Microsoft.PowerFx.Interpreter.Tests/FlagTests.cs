@@ -77,20 +77,20 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("$\"Test {X} {R}\"")]
-        [InlineData("Table(X, N)")]
-        [InlineData("X.field + N.field")]
-        [InlineData("Index([1,2,3], X).missing")]
+        [InlineData("$\"Test {X} {R}\"", "Invalid argument type (Record). Expecting a Text value instead.")]
+        [InlineData("Table(X, N)", "Cannot use a non-record value in this context")]
+        [InlineData("X.field + N.field", "Invalid use of '.'")]
+        [InlineData("Index([1,2,3], X).missing", "Name isn't valid. 'missing' isn't recognized")]
 
         // Ensures expression issues an error if it exists, despite the deferred type.
-        public void DeferredTypeTest_EnableDeferredType_Negative(string script)
+        public void DeferredTypeTest_EnableDeferredType_Negative(string script, string errorMessage)
         {
             Preview.FeatureFlags.StringInterpolation = true;
             var symbolTable = new SymbolTable();
             symbolTable.AddVariable("X", FormulaType.Unknown);
             symbolTable.AddVariable("N", FormulaType.Number);
             symbolTable.AddVariable("R", RecordType.Empty());
-            TestBindingError(script, Features.EnableDeferredType, symbolTable);
+            TestBindingError(script, Features.EnableDeferredType, errorMessage, symbolTable);
         }
 
         private void TestDeferredTypeBindingWarning(string script, Features features, SymbolTable symbolTable = null, bool isEvalAllowed = true)
@@ -115,7 +115,7 @@ namespace Microsoft.PowerFx.Core.Tests
             }
         }
 
-        private void TestBindingError(string script, Features features, SymbolTable symbolTable = null)
+        private void TestBindingError(string script, Features features, string errorMessage, SymbolTable symbolTable = null)
         {
             var config = new PowerFxConfig(features)
             {
@@ -126,6 +126,8 @@ namespace Microsoft.PowerFx.Core.Tests
             var result = engine.Check(script);
 
             Assert.False(result.IsSuccess);
+
+            Assert.Contains(result.Errors, error => error.Message.Contains(errorMessage));
         }
     }
 }
