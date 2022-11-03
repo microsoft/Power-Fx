@@ -364,11 +364,17 @@ namespace Microsoft.PowerFx
                 }
                 else if (arg is BlankValue)
                 {
+                    if (errors == null)
+                    {
+                        errors = new List<ErrorValue>();
+                    }
+
                     errors.Add(CommonErrors.RuntimeTypeMismatch(IRContext.NotInSource(FormulaType.Blank)));
                 }
                 else if (arg is LambdaFormulaValue lambda)
                 {
-                    arg = async () => (BooleanValue)await lambda.EvalAsync();
+                    Func<Task<BooleanValue>> argLambda = async () => (BooleanValue)await lambda.EvalAsync();
+                    arg = argLambda;
                 }
 
                 args2.Add(arg);
