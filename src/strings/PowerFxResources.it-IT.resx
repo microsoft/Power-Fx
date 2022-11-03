@@ -3297,7 +3297,7 @@
     
   </data>
   <data name="ErrRemoveAllArg" xml:space="preserve">
-    <value>Se specificato, l'ultimo argomento deve essere "Tutto". È presente un errore di ortografia?</value>
+    <value>Se specificato, l'ultimo argomento deve essere "RemoveFlags.All". È presente un errore di ortografia?</value>
     
   </data>
   <data name="PenMode_Draw_DisplayName" xml:space="preserve">
@@ -4663,6 +4663,68 @@
   </data>
   <data name="SetArg2" xml:space="preserve">
     <value>valore</value>
+    
+  </data>
+  <data name="AboutDec2Hex" xml:space="preserve">
+    <value>Converte un numero decimale in esadecimale</value>
+    
+  </data>
+  <data name="Dec2HexArg1" xml:space="preserve">
+    <value>numero</value>
+  </data>
+  <data name="AboutDec2Hex_number" xml:space="preserve">
+    <value>Valore decimale numerico da convertire in stringa esadecimale.</value>
+    
+  </data>
+  <data name="Dec2HexArg2" xml:space="preserve">
+    <value>posizioni</value>
+  </data>
+  <data name="AboutDec2Hex_places" xml:space="preserve">
+    <value>Valore numerico per aggiungere spaziatura interna alla stringa esadecimale.</value>
+    
+  </data>
+  <data name="AboutDec2HexT" xml:space="preserve">
+    <value>Converte una colonna di numeri decimali in valori esadecimali</value>
+    
+  </data>
+  <data name="Dec2HexTArg1" xml:space="preserve">
+    <value>tabella</value>
+  </data>
+  <data name="Dec2HexTArg2" xml:space="preserve">
+    <value>posizioni</value>
+  </data>
+  <data name="AboutDec2HexT_places" xml:space="preserve">
+    <value>Valore numerico o matrice di valori per aggiungere spaziatura interna nelle stringhe esadecimali.</value>
+    
+  </data>
+  <data name="AboutDec2Hex_table" xml:space="preserve">
+    <value>Colonna di valori decimali numerici da convertire in valori esadecimali.</value>
+    
+  </data>
+  <data name="AboutHex2Dec" xml:space="preserve">
+    <value>Converte un numero esadecimale in decimale</value>
+    
+  </data>
+  <data name="Hex2DecArg1" xml:space="preserve">
+    <value>numero</value>
+  </data>
+  <data name="AboutHex2Dec_number" xml:space="preserve">
+    <value>Conversione della stringa esadecimale in decimale.</value>
+    
+  </data>
+  <data name="AboutHex2DecT" xml:space="preserve">
+    <value>Converte in decimali una colonna di numeri esadecimali</value>
+    
+  </data>
+  <data name="Hex2DecTArg1" xml:space="preserve">
+    <value>tabella</value>
+  </data>
+  <data name="AboutHex2Dec_table" xml:space="preserve">
+    <value>Colonna di stringhe esadecimali da convertire in decimali.</value>
+    
+  </data>
+  <data name="ErrDeprecated" xml:space="preserve">
+    <value>Questa funzionalità è deprecata e non è più supportata.</value>
     
   </data>
 </root>
