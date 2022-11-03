@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Text;
 
 namespace Microsoft.PowerFx.Core.Binding
@@ -20,20 +19,10 @@ namespace Microsoft.PowerFx.Core.Binding
 
         public bool UseThisRecordForRuleScope { get; }
 
-        public CultureInfo Locale { get; }
-
         public BindingConfig(bool allowsSideEffects = false, bool useThisRecordForRuleScope = false)
         {
             AllowsSideEffects = allowsSideEffects;
             UseThisRecordForRuleScope = useThisRecordForRuleScope;
-            Locale = null;
-        }
-
-        public BindingConfig(CultureInfo locale, bool allowsSideEffects = false, bool useThisRecordForRuleScope = false)
-        {
-            AllowsSideEffects = allowsSideEffects;
-            UseThisRecordForRuleScope = useThisRecordForRuleScope;
-            Locale = locale;
         }
     }
 }
