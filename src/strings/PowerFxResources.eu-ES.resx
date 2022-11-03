@@ -3297,7 +3297,7 @@
     
   </data>
   <data name="ErrRemoveAllArg" xml:space="preserve">
-    <value>Ematen bada, azken argumentuak "Guztiak" izan behar du. Idazketa-akatsik dago?</value>
+    <value>Ematen bada, "RemoveFlags.All" izan behar du azken argumentuak. Ortografia-erroreren bat al dago?</value>
     
   </data>
   <data name="PenMode_Draw_DisplayName" xml:space="preserve">
@@ -4663,6 +4663,68 @@
   </data>
   <data name="SetArg2" xml:space="preserve">
     <value>balioa</value>
+    
+  </data>
+  <data name="AboutDec2Hex" xml:space="preserve">
+    <value>Zenbaki hamartarra hamaseitar bihurtzen du</value>
+    
+  </data>
+  <data name="Dec2HexArg1" xml:space="preserve">
+    <value>zenbakia</value>
+  </data>
+  <data name="AboutDec2Hex_number" xml:space="preserve">
+    <value>Kate hamaseitar bihurtzeko erabiliko den zenbakizko balio hamartarra.</value>
+    
+  </data>
+  <data name="Dec2HexArg2" xml:space="preserve">
+    <value>lekuak</value>
+  </data>
+  <data name="AboutDec2Hex_places" xml:space="preserve">
+    <value>Betegarriak kate hamaseitarrean gehitzeko zenbakizko balioa.</value>
+    
+  </data>
+  <data name="AboutDec2HexT" xml:space="preserve">
+    <value>Zutabe bateko balio hamartarrak hamaseitar bihurtzen ditu</value>
+    
+  </data>
+  <data name="Dec2HexTArg1" xml:space="preserve">
+    <value>taula</value>
+  </data>
+  <data name="Dec2HexTArg2" xml:space="preserve">
+    <value>lekuak</value>
+  </data>
+  <data name="AboutDec2HexT_places" xml:space="preserve">
+    <value>Betegarria kate hamaseitarretan gehitzeko erabiliko diren balioen zenbakizko balio edo matrizea.</value>
+    
+  </data>
+  <data name="AboutDec2Hex_table" xml:space="preserve">
+    <value>Balio hamaseitar bihurtzeko erabiliko diren zenbakizko balio hamartarren zutabea.</value>
+    
+  </data>
+  <data name="AboutHex2Dec" xml:space="preserve">
+    <value>Zenbaki hamaseitarra hamartar bihurtzen du</value>
+    
+  </data>
+  <data name="Hex2DecArg1" xml:space="preserve">
+    <value>zenbakia</value>
+  </data>
+  <data name="AboutHex2Dec_number" xml:space="preserve">
+    <value>Balio hamartar bihurtzeko erabiliko den kate hamaseitarra.</value>
+    
+  </data>
+  <data name="AboutHex2DecT" xml:space="preserve">
+    <value>Zutabe bateko balio hamaseitarrak hamartar bihurtzen ditu</value>
+    
+  </data>
+  <data name="Hex2DecTArg1" xml:space="preserve">
+    <value>taula</value>
+  </data>
+  <data name="AboutHex2Dec_table" xml:space="preserve">
+    <value>Balio hamartar bihurtzeko erabiliko diren kate hamaseitarren zutabea.</value>
+    
+  </data>
+  <data name="ErrDeprecated" xml:space="preserve">
+    <value>Eginbidea zaharkituta dago eta ez da aurrerantzean onartuko.</value>
     
   </data>
 </root>

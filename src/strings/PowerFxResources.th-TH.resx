@@ -3297,7 +3297,7 @@
     
   </data>
   <data name="ErrRemoveAllArg" xml:space="preserve">
-    <value>หากระบุ อาร์กิวเมนต์สุดท้ายจะต้องเป็น 'ทั้งหมด' มีการพิมพ์ผิดหรือไม่</value>
+    <value>หากระบุ อาร์กิวเมนต์สุดท้ายต้องเป็น 'RemoveFlags.All' มีการพิมพ์ผิดหรือไม่</value>
     
   </data>
   <data name="PenMode_Draw_DisplayName" xml:space="preserve">
@@ -4663,6 +4663,68 @@
   </data>
   <data name="SetArg2" xml:space="preserve">
     <value>ค่า</value>
+    
+  </data>
+  <data name="AboutDec2Hex" xml:space="preserve">
+    <value>แปลงเลขฐานสิบเป็นเลขฐานสิบหก</value>
+    
+  </data>
+  <data name="Dec2HexArg1" xml:space="preserve">
+    <value>ตัวเลข</value>
+  </data>
+  <data name="AboutDec2Hex_number" xml:space="preserve">
+    <value>ค่าตัวเลขฐานสิบที่จะแปลงเป็นสตริงเลขฐานสิบหก</value>
+    
+  </data>
+  <data name="Dec2HexArg2" xml:space="preserve">
+    <value>สถานที่</value>
+  </data>
+  <data name="AboutDec2Hex_places" xml:space="preserve">
+    <value>ค่าตัวเลขเพื่อเพิ่มการเสริมเต็มให้กับสตริงเลขฐานสิบหก</value>
+    
+  </data>
+  <data name="AboutDec2HexT" xml:space="preserve">
+    <value>แปลงคอลัมน์ของเลขฐานสิบเป็นเลขฐานสิบหก</value>
+    
+  </data>
+  <data name="Dec2HexTArg1" xml:space="preserve">
+    <value>ตาราง</value>
+  </data>
+  <data name="Dec2HexTArg2" xml:space="preserve">
+    <value>สถานที่</value>
+  </data>
+  <data name="AboutDec2HexT_places" xml:space="preserve">
+    <value>ค่าตัวเลขหรืออาร์เรย์ของค่าเพื่อเพิ่มการเสริมเต็มให้กับสตริงเลขฐานสิบหก</value>
+    
+  </data>
+  <data name="AboutDec2Hex_table" xml:space="preserve">
+    <value>คอลัมน์ของค่าเลขฐานสิบที่จะแปลงเป็นเลขฐานสิบหก</value>
+    
+  </data>
+  <data name="AboutHex2Dec" xml:space="preserve">
+    <value>แปลงเลขฐานสิบหกเป็นเลขฐานสิบ</value>
+    
+  </data>
+  <data name="Hex2DecArg1" xml:space="preserve">
+    <value>ตัวเลข</value>
+  </data>
+  <data name="AboutHex2Dec_number" xml:space="preserve">
+    <value>สตริงเลขฐานสิบหกแปลงเป็นเลขฐานสิบ</value>
+    
+  </data>
+  <data name="AboutHex2DecT" xml:space="preserve">
+    <value>แปลงคอลัมน์ของเลขฐานสิบหกเป็นเลขฐานสิบ</value>
+    
+  </data>
+  <data name="Hex2DecTArg1" xml:space="preserve">
+    <value>ตาราง</value>
+  </data>
+  <data name="AboutHex2Dec_table" xml:space="preserve">
+    <value>คอลัมน์ของสตริงเลขฐานสิบหกที่จะแปลงเป็นเลขฐานสิบ</value>
+    
+  </data>
+  <data name="ErrDeprecated" xml:space="preserve">
+    <value>คุณลักษณะนี้ไม่สนับสนุนและไม่ได้รับการรองรับอีกต่อไป</value>
     
   </data>
 </root>

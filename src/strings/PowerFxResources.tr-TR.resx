@@ -3297,7 +3297,7 @@
     
   </data>
   <data name="ErrRemoveAllArg" xml:space="preserve">
-    <value>Sağlandığı durumda son bağımsız değişken 'All' olmalıdır. Bir yazım hatası var mı?</value>
+    <value>Sağlandığı durumda son bağımsız değişken "RemoveFlags.All" olmalıdır. Bir yazım hatası var mı?</value>
     
   </data>
   <data name="PenMode_Draw_DisplayName" xml:space="preserve">
@@ -4663,6 +4663,68 @@
   </data>
   <data name="SetArg2" xml:space="preserve">
     <value>değer</value>
+    
+  </data>
+  <data name="AboutDec2Hex" xml:space="preserve">
+    <value>Ondalık sayıyı onaltılık sayıya dönüştürür</value>
+    
+  </data>
+  <data name="Dec2HexArg1" xml:space="preserve">
+    <value>sayı</value>
+  </data>
+  <data name="AboutDec2Hex_number" xml:space="preserve">
+    <value>Onaltılık dizeye dönüştürülecek sayısal ondalık değer.</value>
+    
+  </data>
+  <data name="Dec2HexArg2" xml:space="preserve">
+    <value>yerler</value>
+  </data>
+  <data name="AboutDec2Hex_places" xml:space="preserve">
+    <value>Onaltılık dizeye doldurma eklemek için sayısal değer.</value>
+    
+  </data>
+  <data name="AboutDec2HexT" xml:space="preserve">
+    <value>Ondalık sayı sütunundaki değerleri onaltılık sayılara dönüştürür</value>
+    
+  </data>
+  <data name="Dec2HexTArg1" xml:space="preserve">
+    <value>tablo</value>
+  </data>
+  <data name="Dec2HexTArg2" xml:space="preserve">
+    <value>yerler</value>
+  </data>
+  <data name="AboutDec2HexT_places" xml:space="preserve">
+    <value>Onaltılık dizelere doldurma eklemek için sayısal değer veya değer dizisi.</value>
+    
+  </data>
+  <data name="AboutDec2Hex_table" xml:space="preserve">
+    <value>Onaltılık değerlere dönüştürülecek sayısal ondalık değer sütunu.</value>
+    
+  </data>
+  <data name="AboutHex2Dec" xml:space="preserve">
+    <value>Onaltılık sayıyı ondalık sayıya dönüştürür</value>
+    
+  </data>
+  <data name="Hex2DecArg1" xml:space="preserve">
+    <value>sayı</value>
+  </data>
+  <data name="AboutHex2Dec_number" xml:space="preserve">
+    <value>Onaltılık dizeyi ondalığa dönüştürülür.</value>
+    
+  </data>
+  <data name="AboutHex2DecT" xml:space="preserve">
+    <value>Onaltılık sayı sütunundaki değerleri ondalık sayılara dönüştürür</value>
+    
+  </data>
+  <data name="Hex2DecTArg1" xml:space="preserve">
+    <value>tablo</value>
+  </data>
+  <data name="AboutHex2Dec_table" xml:space="preserve">
+    <value>Ondalık dizelere dönüştürülecek onaltılık dizeler sütunu.</value>
+    
+  </data>
+  <data name="ErrDeprecated" xml:space="preserve">
+    <value>This feature is deprecated and is no longer supported.</value>
     
   </data>
 </root>

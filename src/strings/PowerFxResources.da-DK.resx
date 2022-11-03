@@ -3297,7 +3297,7 @@
     
   </data>
   <data name="ErrRemoveAllArg" xml:space="preserve">
-    <value>Hvis det er angivet, skal det sidste argument være "Alle". Er der en slåfejl?</value>
+    <value>Hvis det er angivet, skal det sidste argument være 'RemoveFlags.All'. Er der en tastefejl?</value>
     
   </data>
   <data name="PenMode_Draw_DisplayName" xml:space="preserve">
@@ -4663,6 +4663,68 @@
   </data>
   <data name="SetArg2" xml:space="preserve">
     <value>værdi</value>
+    
+  </data>
+  <data name="AboutDec2Hex" xml:space="preserve">
+    <value>Konverterer et decimaltal til hexadecimalt tal</value>
+    
+  </data>
+  <data name="Dec2HexArg1" xml:space="preserve">
+    <value>tal</value>
+  </data>
+  <data name="AboutDec2Hex_number" xml:space="preserve">
+    <value>En numerisk decimalværdi, der skal konverteres til hexadecimal streng.</value>
+    
+  </data>
+  <data name="Dec2HexArg2" xml:space="preserve">
+    <value>steder</value>
+  </data>
+  <data name="AboutDec2Hex_places" xml:space="preserve">
+    <value>En numerisk værdi, der føjer udfyldning til hexadecimal streng.</value>
+    
+  </data>
+  <data name="AboutDec2HexT" xml:space="preserve">
+    <value>Konverterer en kolonne med decimaltal til hexadecimale tal</value>
+    
+  </data>
+  <data name="Dec2HexTArg1" xml:space="preserve">
+    <value>tabel</value>
+  </data>
+  <data name="Dec2HexTArg2" xml:space="preserve">
+    <value>steder</value>
+  </data>
+  <data name="AboutDec2HexT_places" xml:space="preserve">
+    <value>En numerisk værdi eller matrix med værdier, der føjer udfyldning til hexadecimale strenge.</value>
+    
+  </data>
+  <data name="AboutDec2Hex_table" xml:space="preserve">
+    <value>En kolonne med numeriske decimalværdier, der skal konverteres til hexadecimale værdier.</value>
+    
+  </data>
+  <data name="AboutHex2Dec" xml:space="preserve">
+    <value>Konverterer et hexadecimalt tal til decimaltal</value>
+    
+  </data>
+  <data name="Hex2DecArg1" xml:space="preserve">
+    <value>tal</value>
+  </data>
+  <data name="AboutHex2Dec_number" xml:space="preserve">
+    <value>En hexadecimal streng konverteres til decimal streng.</value>
+    
+  </data>
+  <data name="AboutHex2DecT" xml:space="preserve">
+    <value>Konverterer en kolonne med hexadecimale tal til decimaltal</value>
+    
+  </data>
+  <data name="Hex2DecTArg1" xml:space="preserve">
+    <value>tabel</value>
+  </data>
+  <data name="AboutHex2Dec_table" xml:space="preserve">
+    <value>En kolonne med hexadecimale strenge, der skal konverteres til decimale strenge.</value>
+    
+  </data>
+  <data name="ErrDeprecated" xml:space="preserve">
+    <value>Denne funktion udfases og understøttes ikke længere.</value>
     
   </data>
 </root>
