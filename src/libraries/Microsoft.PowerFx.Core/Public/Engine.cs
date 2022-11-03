@@ -229,7 +229,7 @@ namespace Microsoft.PowerFx
             };
 
             // If the result is not sucess or has warning related to DeferredArgs we don't want to calculate return type or generate the IR Tree.
-            if (result.IsSuccess && !result.HasDeferredArgsWarning)
+            if (result.IsSuccess && !(binding.Features.HasFlag(Features.EnableDeferredType) && result.HasDeferredArgsWarning))
             {
                 result.TopLevelIdentifiers = DependencyFinder.FindDependencies(binding.Top, binding);
 
