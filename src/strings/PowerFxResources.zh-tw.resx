@@ -3297,7 +3297,7 @@
     
   </data>
   <data name="ErrRemoveAllArg" xml:space="preserve">
-    <value>如果提供，最後一個引數必須是「全部」。是否有錯別字?</value>
+    <value>如果提供，最後一個引數必須是「RemoveFlags.All」。是否有錯別字?</value>
     
   </data>
   <data name="PenMode_Draw_DisplayName" xml:space="preserve">
@@ -4663,6 +4663,68 @@
   </data>
   <data name="SetArg2" xml:space="preserve">
     <value>值</value>
+    
+  </data>
+  <data name="AboutDec2Hex" xml:space="preserve">
+    <value>將十進位數轉換為十六進位</value>
+    
+  </data>
+  <data name="Dec2HexArg1" xml:space="preserve">
+    <value>number</value>
+  </data>
+  <data name="AboutDec2Hex_number" xml:space="preserve">
+    <value>要轉換為十六進位字串的十進位數值。</value>
+    
+  </data>
+  <data name="Dec2HexArg2" xml:space="preserve">
+    <value>地點</value>
+  </data>
+  <data name="AboutDec2Hex_places" xml:space="preserve">
+    <value>用以新增邊框間距至十六進位字串的數值。</value>
+    
+  </data>
+  <data name="AboutDec2HexT" xml:space="preserve">
+    <value>將十進位數資料行轉換為十六進位</value>
+    
+  </data>
+  <data name="Dec2HexTArg1" xml:space="preserve">
+    <value>資料表</value>
+  </data>
+  <data name="Dec2HexTArg2" xml:space="preserve">
+    <value>地點</value>
+  </data>
+  <data name="AboutDec2HexT_places" xml:space="preserve">
+    <value>用以新增邊框間距至十六進位字串的數值或值陣列。</value>
+    
+  </data>
+  <data name="AboutDec2Hex_table" xml:space="preserve">
+    <value>要轉換為十六進位的十進位數值資料行。</value>
+    
+  </data>
+  <data name="AboutHex2Dec" xml:space="preserve">
+    <value>將十六進位數轉換為十進位</value>
+    
+  </data>
+  <data name="Hex2DecArg1" xml:space="preserve">
+    <value>number</value>
+  </data>
+  <data name="AboutHex2Dec_number" xml:space="preserve">
+    <value>十六進位字串會轉換為十進位。</value>
+    
+  </data>
+  <data name="AboutHex2DecT" xml:space="preserve">
+    <value>將十六進位數資料行轉換為十進位</value>
+    
+  </data>
+  <data name="Hex2DecTArg1" xml:space="preserve">
+    <value>資料表</value>
+  </data>
+  <data name="AboutHex2Dec_table" xml:space="preserve">
+    <value>要轉換為十進位的十六進位字串資料行。</value>
+    
+  </data>
+  <data name="ErrDeprecated" xml:space="preserve">
+    <value>此功能已淘汰，不再受支援。</value>
     
   </data>
 </root>

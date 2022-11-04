@@ -102,10 +102,13 @@ namespace Microsoft.PowerFx.Core.Binding
         /// <param name="returnType">
         /// The return type for <paramref name="bestOverload"/>.
         /// </param>
+        /// <param name="warnings">
+        /// Any recorded warnings that may have been produced by CheckTypes/CheckSemantics or CheckInvocation.
+        /// </param>
         /// <returns>
         /// True if a valid overload was found, false if not.
         /// </returns>
-        internal static bool TryGetBestOverload(TexlBinding txb, CallNode node, DType[] argTypes, TexlFunction[] overloads, out TexlFunction bestOverload, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap, out DType returnType)
+        internal static bool TryGetBestOverload(TexlBinding txb, CallNode node, DType[] argTypes, TexlFunction[] overloads, out TexlFunction bestOverload, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap, out DType returnType, out LimitedSeverityErrorContainer warnings)
         {
             Contracts.AssertValue(node, nameof(node));
             Contracts.AssertValue(overloads, nameof(overloads));
@@ -118,6 +121,7 @@ namespace Microsoft.PowerFx.Core.Binding
             var matchingFuncWithCoercionReturnType = DType.Invalid;
             nodeToCoercedTypeMap = null;
             Dictionary<TexlNode, DType> matchingFuncWithCoercionNodeToCoercedTypeMap = null;
+            LimitedSeverityErrorContainer matchingFuncWithCoercionWarnings = null;
 
             foreach (var maybeFunc in overloads)
             {
@@ -132,10 +136,10 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 var typeCheckSucceeded = false;
 
-                IErrorContainer warnings = new LimitedSeverityErrorContainer(txb.ErrorContainer, DocumentErrorSeverity.Warning);
+                var localWarnings = new LimitedSeverityErrorContainer(txb.ErrorContainer, DocumentErrorSeverity.Warning);
 
                 // Typecheck the invocation and infer the return type.
-                typeCheckSucceeded = maybeFunc.HandleCheckInvocation(txb, args, argTypes, warnings, out returnType, out nodeToCoercedTypeMap);
+                typeCheckSucceeded = maybeFunc.HandleCheckInvocation(txb, args, argTypes, localWarnings, out returnType, out nodeToCoercedTypeMap);
 
                 if (typeCheckSucceeded)
                 {
@@ -144,6 +148,7 @@ namespace Microsoft.PowerFx.Core.Binding
                         // We found an overload that matches without type coercion.  The correct return type
                         // and, trivially, the nodeToCoercedTypeMap are properly set at this point.
                         bestOverload = maybeFunc;
+                        warnings = localWarnings;
                         return true;
                     }
 
@@ -156,6 +161,7 @@ namespace Microsoft.PowerFx.Core.Binding
                         matchingFuncWithCoercionNodeToCoercedTypeMap = nodeToCoercedTypeMap;
                         matchingFuncWithCoercion = maybeFunc;
                         matchingFuncWithCoercionReturnType = returnType;
+                        matchingFuncWithCoercionWarnings = localWarnings;
                     }
                 }
             }
@@ -166,6 +172,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 bestOverload = matchingFuncWithCoercion;
                 nodeToCoercedTypeMap = matchingFuncWithCoercionNodeToCoercedTypeMap;
                 returnType = matchingFuncWithCoercionReturnType;
+                warnings = matchingFuncWithCoercionWarnings;
                 return true;
             }
 
@@ -173,8 +180,9 @@ namespace Microsoft.PowerFx.Core.Binding
             bestOverload = null;
             nodeToCoercedTypeMap = null;
             returnType = null;
+            warnings = null;
             return false;
-        }        
+        }
 
         /// <summary>
         /// Returns best overload in case there are no matches based on first argument and order.

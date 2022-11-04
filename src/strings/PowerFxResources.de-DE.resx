@@ -3297,7 +3297,7 @@
     
   </data>
   <data name="ErrRemoveAllArg" xml:space="preserve">
-    <value>Falls angegeben, muss das letzte Argument „Alle“ sein. Gibt es einen Tippfehler?</value>
+    <value>Falls angegeben, muss das letzte Argument „RemoveFlags.All“ sein. Gibt es einen Tippfehler?</value>
     
   </data>
   <data name="PenMode_Draw_DisplayName" xml:space="preserve">
@@ -4663,6 +4663,68 @@
   </data>
   <data name="SetArg2" xml:space="preserve">
     <value>Wert</value>
+    
+  </data>
+  <data name="AboutDec2Hex" xml:space="preserve">
+    <value>Konvertiert eine Dezimalzahl in Hexadezimal</value>
+    
+  </data>
+  <data name="Dec2HexArg1" xml:space="preserve">
+    <value>Zahl</value>
+  </data>
+  <data name="AboutDec2Hex_number" xml:space="preserve">
+    <value>Ein numerischer Dezimalwert, der in eine Hexadezimalzeichenfolge konvertiert werden soll.</value>
+    
+  </data>
+  <data name="Dec2HexArg2" xml:space="preserve">
+    <value>Orte</value>
+  </data>
+  <data name="AboutDec2Hex_places" xml:space="preserve">
+    <value>Ein numerischer Wert zum Hinzufügen eines Abstandes zur Hexadezimalzeichenfolge.</value>
+    
+  </data>
+  <data name="AboutDec2HexT" xml:space="preserve">
+    <value>Konvertiert eine Spalte mit Dezimalzahlen in Hexadezimale.</value>
+    
+  </data>
+  <data name="Dec2HexTArg1" xml:space="preserve">
+    <value>Tabelle</value>
+  </data>
+  <data name="Dec2HexTArg2" xml:space="preserve">
+    <value>Orte</value>
+  </data>
+  <data name="AboutDec2HexT_places" xml:space="preserve">
+    <value>Ein numerischer Wert oder ein Array von Werten zum Hinzufügen von Abstand zu Hexadezimalzeichenfolgen.</value>
+    
+  </data>
+  <data name="AboutDec2Hex_table" xml:space="preserve">
+    <value>Eine Spalte mit numerischen Dezimalwerten, die in Hexadezimale konvertiert werden.</value>
+    
+  </data>
+  <data name="AboutHex2Dec" xml:space="preserve">
+    <value>Konvertiert eine Hexadezimalzahl in Dezimalzahl</value>
+    
+  </data>
+  <data name="Hex2DecArg1" xml:space="preserve">
+    <value>Zahl</value>
+  </data>
+  <data name="AboutHex2Dec_number" xml:space="preserve">
+    <value>Eine in Dezimalzahl konvertierte Hexadezimalzeichenfolge.</value>
+    
+  </data>
+  <data name="AboutHex2DecT" xml:space="preserve">
+    <value>Konvertiert eine Spalte mit Hexadezimalzahlen in Dezimalzahlen</value>
+    
+  </data>
+  <data name="Hex2DecTArg1" xml:space="preserve">
+    <value>Tabelle</value>
+  </data>
+  <data name="AboutHex2Dec_table" xml:space="preserve">
+    <value>Eine Spalte mit Hexadezimalzeichenfolgen, die in Dezimalstellen konvertiert werden soll.</value>
+    
+  </data>
+  <data name="ErrDeprecated" xml:space="preserve">
+    <value>Diese Funktion ist veraltet und wird nicht mehr unterstützt.</value>
     
   </data>
 </root>

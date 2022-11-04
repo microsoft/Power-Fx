@@ -3297,7 +3297,7 @@
     
   </data>
   <data name="ErrRemoveAllArg" xml:space="preserve">
-    <value>Jos annettu, viimeisen argumentin on oltava Kaikki. Onko kyseessä kirjoitusvirhe?</value>
+    <value>Jos annettu, viimeisen argumentin on oltava RemoveFlags.All. Onko kyseessä kirjoitusvirhe?</value>
     
   </data>
   <data name="PenMode_Draw_DisplayName" xml:space="preserve">
@@ -4663,6 +4663,68 @@
   </data>
   <data name="SetArg2" xml:space="preserve">
     <value>arvo</value>
+    
+  </data>
+  <data name="AboutDec2Hex" xml:space="preserve">
+    <value>Muuntaa desimaaliluvun heksadesimaaliksi</value>
+    
+  </data>
+  <data name="Dec2HexArg1" xml:space="preserve">
+    <value>luku</value>
+  </data>
+  <data name="AboutDec2Hex_number" xml:space="preserve">
+    <value>Numeerinen desimaaliarvo, joka muunnetaan heksadesimaalimerkkijonoksi.</value>
+    
+  </data>
+  <data name="Dec2HexArg2" xml:space="preserve">
+    <value>paikat</value>
+  </data>
+  <data name="AboutDec2Hex_places" xml:space="preserve">
+    <value>Numeerinen arvo, joka lisätään täyttönä heksadesimaalimerkkijonoon.</value>
+    
+  </data>
+  <data name="AboutDec2HexT" xml:space="preserve">
+    <value>Muuntaa desimaalilukusarakkeen heksadesimaaliksi</value>
+    
+  </data>
+  <data name="Dec2HexTArg1" xml:space="preserve">
+    <value>taulukko</value>
+  </data>
+  <data name="Dec2HexTArg2" xml:space="preserve">
+    <value>paikat</value>
+  </data>
+  <data name="AboutDec2HexT_places" xml:space="preserve">
+    <value>Numeerinen arvo tai arvojen matriisi, joka lisätään heksadesimaalimerkkijonoihin.</value>
+    
+  </data>
+  <data name="AboutDec2Hex_table" xml:space="preserve">
+    <value>Numeeristen desimaaliarvojen sarake, joka muunnetaan heksadesimaaleiksi.</value>
+    
+  </data>
+  <data name="AboutHex2Dec" xml:space="preserve">
+    <value>Muuntaa heksadesimaaliluvun desimaaliluvuksi</value>
+    
+  </data>
+  <data name="Hex2DecArg1" xml:space="preserve">
+    <value>luku</value>
+  </data>
+  <data name="AboutHex2Dec_number" xml:space="preserve">
+    <value>Heksadesimaalimerkkijono, joka muunnetaan desimaaliluvuksi.</value>
+    
+  </data>
+  <data name="AboutHex2DecT" xml:space="preserve">
+    <value>Muuntaa heksadesimaalilukujen sarakkeen desimaaleiksi</value>
+    
+  </data>
+  <data name="Hex2DecTArg1" xml:space="preserve">
+    <value>taulukko</value>
+  </data>
+  <data name="AboutHex2Dec_table" xml:space="preserve">
+    <value>Heksadesimaalimerkkijonojen sarake, joka muunnetaan desimaaliluvuiksi.</value>
+    
+  </data>
+  <data name="ErrDeprecated" xml:space="preserve">
+    <value>Tämä ominaisuus on vanhentunut, eikä sitä enää tueta.</value>
     
   </data>
 </root>

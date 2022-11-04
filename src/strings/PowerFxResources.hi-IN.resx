@@ -3297,7 +3297,7 @@
     
   </data>
   <data name="ErrRemoveAllArg" xml:space="preserve">
-    <value>यदि प्रदान किया गया है, तो अंतिम तर्क 'सभी' होना चाहिए. क्या कोई टाइपो है?</value>
+    <value>यदि प्रदान किया गया है, तो अंतिम तर्क 'RemoveFlags.All' होना चाहिए. क्या कोई टाइपो है?</value>
     
   </data>
   <data name="PenMode_Draw_DisplayName" xml:space="preserve">
@@ -4663,6 +4663,68 @@
   </data>
   <data name="SetArg2" xml:space="preserve">
     <value>मान</value>
+    
+  </data>
+  <data name="AboutDec2Hex" xml:space="preserve">
+    <value>दशमलव संख्या को हेक्साडेसिमल में बदलें</value>
+    
+  </data>
+  <data name="Dec2HexArg1" xml:space="preserve">
+    <value>संख्या</value>
+  </data>
+  <data name="AboutDec2Hex_number" xml:space="preserve">
+    <value>हेक्साडेसिमल स्ट्रिंग में बदलने के लिए संख्यात्मक दशमलव मान.</value>
+    
+  </data>
+  <data name="Dec2HexArg2" xml:space="preserve">
+    <value>स्थान</value>
+  </data>
+  <data name="AboutDec2Hex_places" xml:space="preserve">
+    <value>हेक्साडेसिमल स्ट्रिंग में पैडिंग जोड़ने के लिए कोई संख्यात्मक मान.</value>
+    
+  </data>
+  <data name="AboutDec2HexT" xml:space="preserve">
+    <value>दशमलव संख्याओं के कॉलम को हेक्साडेसिमल में बदलें</value>
+    
+  </data>
+  <data name="Dec2HexTArg1" xml:space="preserve">
+    <value>तालिका</value>
+  </data>
+  <data name="Dec2HexTArg2" xml:space="preserve">
+    <value>स्थान</value>
+  </data>
+  <data name="AboutDec2HexT_places" xml:space="preserve">
+    <value>हेक्साडेसिमल स्ट्रिंग्स में पैडिंग जोड़ने के लिए संख्यात्मक मान या मानों को व्यवस्थित करें.</value>
+    
+  </data>
+  <data name="AboutDec2Hex_table" xml:space="preserve">
+    <value>संख्यात्मक दशमलव मान का कोई कॉलम जिसे हेक्साडेसिमल में बदलता है.</value>
+    
+  </data>
+  <data name="AboutHex2Dec" xml:space="preserve">
+    <value>हेक्साडेसिमल संख्या को दशमलव में बदलता है</value>
+    
+  </data>
+  <data name="Hex2DecArg1" xml:space="preserve">
+    <value>संख्या</value>
+  </data>
+  <data name="AboutHex2Dec_number" xml:space="preserve">
+    <value>एक हेक्साडेसिमल स्ट्रिंग दशमलव में बदलती है.</value>
+    
+  </data>
+  <data name="AboutHex2DecT" xml:space="preserve">
+    <value>हेक्साडेसिमल संख्याओं के कॉलम को दशमलव में बदलता है</value>
+    
+  </data>
+  <data name="Hex2DecTArg1" xml:space="preserve">
+    <value>तालिका</value>
+  </data>
+  <data name="AboutHex2Dec_table" xml:space="preserve">
+    <value>दशमलव में बदलने के लिए हेक्साडेसिमल स्ट्रिंग का एक कॉलम.</value>
+    
+  </data>
+  <data name="ErrDeprecated" xml:space="preserve">
+    <value>यह सुविधा अप्रचलित कर दी गई है और यह अब समर्थित नहीं है.</value>
     
   </data>
 </root>
