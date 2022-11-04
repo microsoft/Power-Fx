@@ -68,16 +68,7 @@ namespace Microsoft.PowerFx
 
         internal static ExpressionError New(IDocumentError error, CultureInfo locale)
         {
-            var shortMessage = string.Empty;
-
-            if (StringResources.TryGetErrorResource(new ErrorResourceKey(error.MessageKey), out var errorResource, locale?.Name))
-            {
-                shortMessage = errorResource.GetSingleValue(ErrorResource.ShortMessageTag);
-            }
-            else
-            {
-                shortMessage = StringResources.Get(error.MessageKey, locale?.Name);
-            }            
+            (var shortMessage, var _) = ErrorUtils.GetLocalizedErrorContent(new ErrorResourceKey(error.MessageKey), locale, out _);           
 
             return new ExpressionError
             {

@@ -148,24 +148,7 @@ namespace Microsoft.PowerFx.Core.Errors
             MessageKey = errKey.Key;
             MessageArgs = args;
 
-            // We expect errKey to be the key for an error resource object within string resources.
-            // We fall back to using a basic content string within string resources, for errors
-            // that haven't yet been converted to an ErrorResource in the Resources.pares file.
-            string shortMessage;
-            string longMessage;
-
-            if (!StringResources.TryGetErrorResource(errKey, out var errorResource, locale?.Name))
-            {
-                errorResource = null;
-                shortMessage = StringResources.Get(errKey.Key, locale?.Name);
-                longMessage = null;
-            }
-            else
-            {
-                shortMessage = errorResource.GetSingleValue(ErrorResource.ShortMessageTag);
-                Contracts.AssertValue(shortMessage);
-                longMessage = errorResource.GetSingleValue(ErrorResource.LongMessageTag);
-            }
+            (var shortMessage, var longMessage) = ErrorUtils.GetLocalizedErrorContent(errKey, locale, out var errorResource);
 
             ShortMessage = ErrorUtils.FormatMessage(shortMessage, locale, args);
             LongMessage = ErrorUtils.FormatMessage(longMessage, locale, args);
