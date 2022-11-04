@@ -38,7 +38,7 @@ namespace Microsoft.PowerFx
         /// </summary>
         public IEnumerable<ExpressionError> Errors { get; set; }
 
-        private IEnumerable<ExpressionError> BindingErrors => ExpressionError.New(_binding.ErrorContainer.GetErrors(), CultureInfo);
+        private IEnumerable<ExpressionError> BindingErrors => ExpressionError.New(_binding?.ErrorContainer.GetErrors(), CultureInfo);
 
         internal void SetErrors(IEnumerable<IDocumentError> errors)
         {
@@ -80,13 +80,9 @@ namespace Microsoft.PowerFx
         {
         }
 
-        internal CheckResult(ParseResult parse, TexlBinding binding = null)
+        internal CheckResult(ParseResult parse, TexlBinding binding = null) 
+            : this(parse, null, binding)
         {
-            Parse = parse ?? throw new ArgumentNullException(nameof(parse));
-
-            _binding = binding;
-
-            Errors = Parse.Errors.Concat(BindingErrors);
         }
 
         internal CheckResult(ParseResult parse, CultureInfo locale, TexlBinding binding = null)
