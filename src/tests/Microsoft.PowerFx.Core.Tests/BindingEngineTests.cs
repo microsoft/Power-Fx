@@ -145,6 +145,28 @@ namespace Microsoft.PowerFx.Tests
             AssertContainsError(result, "Error 2-5: Name isn't valid. 'foo' isn't recognized");
         }
 
+        [Theory]
+
+        // Runtime errors
+        [InlineData("3+foo+2", "Error 2-5: Il nome non è valido. \"foo\" non riconosciuto.", "it-IT")]
+        [InlineData("Foo()", "Error 0-5: 'Foo' est une fonction inconnue ou non prise en charge.", "fr-FR")]
+        [InlineData("AAA", "Error 0-3: O nome não é válido. 'AAA' não é reconhecido.", "pt-BR")]
+        [InlineData("Bar()", "Error 0-5: \"Bar\" — неизвестная или неподдерживаемая функция.", "ru-RU")]
+
+        // Parse errors
+        [InlineData("2e.5", "Error 1-2: È previsto un operatore. A questo punto della formula è previsto un operatore, ad esempio +, * o &.", "it-IT")]
+        [InlineData(".2.3", "Error 0-1: Caractères inattendus. Des caractères sont utilisés dans la formule de manière inattendue.", "fr-FR")]
+        [InlineData("2EEE5", "Error 1-5: Operador esperado. Esperamos um operador como +, * ou & neste ponto na fórmula.", "pt-BR")]
+        [InlineData("7E1111111", "Error 0-9: Numerická hodnota je príliš veľká.", "sk-SK")]
+        public void CheckBindError2(string expression, string expected, string locale)
+        {
+            var engine = new Engine(new PowerFxConfig(CultureInfo.GetCultureInfo(locale)));
+            var result = engine.Check(expression);
+
+            Assert.False(result.IsSuccess);
+            AssertContainsError(result, expected);
+        }
+
         [Fact]
         public void CheckBadFunctionError()
         {
