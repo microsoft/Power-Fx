@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -83,7 +84,7 @@ namespace Microsoft.PowerFx
         {
             if (errors == null)
             {
-                return new ExpressionError[0];
+                return Array.Empty<ExpressionError>();
             }
             else
             {
@@ -95,7 +96,7 @@ namespace Microsoft.PowerFx
         {
             if (errors == null)
             {
-                return new ExpressionError[0];
+                return Array.Empty<ExpressionError>();
             }
             else
             {

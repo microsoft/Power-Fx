@@ -27,20 +27,8 @@ namespace Microsoft.PowerFx.Core.Errors
 
         public override IEnumerable<string> SinkTypeErrors => _nameMapIDs;
 
-        [Obsolete("Use overload with explicit Culture")]
         public TexlError(Token tok, DocumentErrorSeverity severity, ErrorResourceKey errKey, params object[] args)
-            : this(tok, severity, null, errKey, args)
-        {
-        }
-
-        [Obsolete("Use overload with explicit Culture")]
-        public TexlError(TexlNode node, DocumentErrorSeverity severity, ErrorResourceKey errKey, params object[] args)
-            : this(node, severity, null, errKey, args)
-        {
-        }
-
-        public TexlError(Token tok, DocumentErrorSeverity severity, CultureInfo locale, ErrorResourceKey errKey, params object[] args)
-            : base(null, null, DocumentErrorKind.AXL, severity, locale, errKey, args)
+            : base(null, null, DocumentErrorKind.AXL, severity, errKey, args)
         {
             Contracts.AssertValue(tok);
 
@@ -48,10 +36,10 @@ namespace Microsoft.PowerFx.Core.Errors
             TextSpan = new Span(tok.VerifyValue().Span.Min, tok.VerifyValue().Span.Lim);
 
             _nameMapIDs = new List<string>();
-        }        
+        }
 
-        public TexlError(TexlNode node, DocumentErrorSeverity severity, CultureInfo locale, ErrorResourceKey errKey, params object[] args)
-            : base(null, null, DocumentErrorKind.AXL, severity, locale, errKey, args)
+        public TexlError(TexlNode node, DocumentErrorSeverity severity, ErrorResourceKey errKey, params object[] args)
+            : base(null, null, DocumentErrorKind.AXL, severity, errKey, args)
         {
             Contracts.AssertValue(node);
             Contracts.AssertValue(node.Token);

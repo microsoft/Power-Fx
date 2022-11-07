@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using Microsoft.PowerFx.Core.Errors;
@@ -27,7 +28,7 @@ namespace Microsoft.PowerFx
         /// <summary>
         /// List of errors or warnings. Check <see cref="ExpressionError.IsWarning"/>.
         /// </summary>
-        public IEnumerable<ExpressionError> Errors => ExpressionError.New(_errors);
+        public IEnumerable<ExpressionError> Errors => ExpressionError.New(_errors, Locale);
 
         /// <summary>
         /// True if there were parse errors. 
@@ -44,10 +45,18 @@ namespace Microsoft.PowerFx
         internal SourceList Before { get; }
 
         internal SourceList After { get; }
-        
+
+        internal CultureInfo Locale { get; }
+
         // Original script. 
         // All the spans in the tokens are relative to this. 
         public string Text { get; }
+
+        internal ParseResult(TexlNode root, List<TexlError> errors, bool hasError, List<CommentToken> comments, SourceList before, SourceList after, string text, CultureInfo locale)
+            : this(root, errors, hasError, comments, before, after, text)
+        {
+            Locale = locale;
+        }
 
         internal ParseResult(TexlNode root, List<TexlError> errors, bool hasError, List<CommentToken> comments, SourceList before, SourceList after, string text)
         {
