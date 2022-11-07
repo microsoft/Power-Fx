@@ -2,16 +2,12 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using System.Threading.Channels;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Tests;
-using Microsoft.PowerFx.Core.Tests.Helpers;
 using Microsoft.PowerFx.Types;
 using Xunit;
-using Xunit.Sdk;
 
 namespace Microsoft.PowerFx.Tests
 {
@@ -29,17 +25,53 @@ namespace Microsoft.PowerFx.Tests
             Assert.NotNull(func);
 
             // Can be invoked. 
-            var result = engine.Eval("TestCustom(3,true)");
-            Assert.Equal("3,True", result.ToObject());
+            var result = engine.Eval("TestCustom(3,true,\"a\")");
+            Assert.Equal("3,True,a", result.ToObject());
+        }
+
+        [Theory]
+        [InlineData("TestCustom(1/0,true,\"test\")", null, true, "Invalid operation: division by zero.")]
+
+        // With Blanks() as arg where expected arg is not a number or a string, Blank() will generate type mismatch error.
+        [InlineData("TestCustom(0, If(false,true), \"test\")", null, true, "Runtime type mismatch")]
+
+        // With Blanks() as arg where expected arg is number, Blank() will be coerced to 0.
+        [InlineData("TestCustom(If(false,12),true,\"test\")", "0,True,test", false, null)]
+
+        // With Blanks() as arg where expected arg is string, Blank() will be coerced to empty string.
+        [InlineData("TestCustom(0,true,If(false,\"test\"))", "0,True,", false, null)]
+        public void CustomFunctionErrorOrBlank(string script, string expectedResult, bool isErrorExpected, string errorMessage)
+        {
+            var config = new PowerFxConfig(null);
+            config.AddFunction(new TestCustomFunction());
+            var engine = new RecalcEngine(config);
+
+            // Shows up in enumeration
+            var func = engine.GetAllFunctionNames().First(name => name == "TestCustom");
+            Assert.NotNull(func);
+
+            // With error as arg.
+            var result = engine.Eval(script);
+
+            if (isErrorExpected)
+            {
+                Assert.IsType<ErrorValue>(result);
+                Assert.Equal(1, ((ErrorValue)result).Errors.Count);
+                Assert.Equal(errorMessage, ((ErrorValue)result).Errors[0].Message);
+            }
+            else
+            {
+                Assert.Equal(expectedResult, result.ToObject());
+            }
         }
 
         // Must have "Function" suffix. 
         private class TestCustomFunction : ReflectionFunction
         {
             // Must have "Execute" method. 
-            public static StringValue Execute(NumberValue x, BooleanValue b)
+            public static StringValue Execute(NumberValue x, BooleanValue b, StringValue s)
             {
-                var val = x.Value.ToString() + "," + b.Value.ToString();
+                var val = x.Value.ToString() + "," + b.Value.ToString() + "," + s.Value.ToString();
                 return FormulaValue.New(val);
             }
         }
