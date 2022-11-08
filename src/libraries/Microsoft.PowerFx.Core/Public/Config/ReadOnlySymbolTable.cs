@@ -320,8 +320,6 @@ namespace Microsoft.PowerFx
 
         bool INameResolver.SuggestUnqualifiedEnums => false;
 
-        bool INameResolver.IsNamedFormula => false;
-
         bool INameResolver.LookupParent(out NameLookupInfo lookupInfo)
         {
             lookupInfo = default;

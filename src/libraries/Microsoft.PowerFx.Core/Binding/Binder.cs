@@ -3132,7 +3132,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 if (!(_nameResolver.CurrentEntity is IExternalControl) || 
                     !_nameResolver.LookupParent(out var lookupInfo) ||
-                    _nameResolver.IsNamedFormula)
+                    (_txb.NameResolver.LookupGlobalEntity(_txb.NameResolver.CurrentProperty, out var info) && info.Kind == BindKind.PowerFxResolvedObject))
                 {
                     _txb.ErrorContainer.Error(node, TexlStrings.ErrInvalidParentUse);
                     _txb.SetType(node, DType.Error);
@@ -3166,7 +3166,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     return;
                 }
 
-                if (_nameResolver.IsNamedFormula)
+                if (_txb.NameResolver.LookupGlobalEntity(_txb.NameResolver.CurrentProperty, out var info) && info.Kind == BindKind.PowerFxResolvedObject)
                 {
                     _txb.ErrorContainer.Error(node, TexlStrings.ErrSelfNotSupportedInNameFormulas);
                     _txb.SetType(node, DType.Error);
