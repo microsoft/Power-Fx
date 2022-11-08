@@ -117,6 +117,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal("N", DType.ObjNull.ToString());
             Assert.Equal("P", DType.Polymorphic.ToString());
             Assert.Equal("V", DType.NamedValue.ToString());
+            Assert.Equal("X", DType.Deferred.ToString());
         }
         
         [Fact]
@@ -147,12 +148,14 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal(DKind.Time, DType.Time.Kind);
             Assert.Equal(DKind.Polymorphic, DType.Polymorphic.Kind);
             Assert.Equal(DKind.NamedValue, DType.NamedValue.Kind);
+            Assert.Equal(DKind.Deferred, DType.Deferred.Kind);
         }
 
         [Fact]
         public void ErrorIsSupertypeOfAll()
         {
             Assert.True(DType.Error.Accepts(DType.Unknown));
+            Assert.True(DType.Error.Accepts(DType.Deferred));
             Assert.True(DType.Error.Accepts(DType.Error));
             Assert.True(DType.Error.Accepts(DType.Boolean));
             Assert.True(DType.Error.Accepts(DType.DateTime));
@@ -205,7 +208,36 @@ namespace Microsoft.PowerFx.Tests
             Assert.True(MultiSelectOptionSetType.Accepts(DType.Unknown));
             Assert.True(DType.Polymorphic.Accepts(DType.Unknown));
         }
-        
+
+        [Fact]
+        public void DeferredIsSubtypeOfAll()
+        {
+            Assert.True(DType.Unknown.Accepts(DType.Deferred));
+            Assert.True(DType.Error.Accepts(DType.Deferred));
+            Assert.True(DType.Number.Accepts(DType.Deferred));
+            Assert.True(DType.Boolean.Accepts(DType.Deferred));
+            Assert.True(DType.String.Accepts(DType.Deferred));
+            Assert.True(DType.Hyperlink.Accepts(DType.Deferred));
+            Assert.True(DType.Image.Accepts(DType.Deferred));
+            Assert.True(DType.PenImage.Accepts(DType.Deferred));
+            Assert.True(DType.Media.Accepts(DType.Deferred));
+            Assert.True(DType.Blob.Accepts(DType.Deferred));
+            Assert.True(DType.Color.Accepts(DType.Deferred));
+            Assert.True(DType.Currency.Accepts(DType.Deferred));
+            Assert.True(DType.EmptyRecord.Accepts(DType.Deferred));
+            Assert.True(DType.EmptyTable.Accepts(DType.Deferred));
+            Assert.True(DType.EmptyEnum.Accepts(DType.Deferred));
+            Assert.True(DType.Date.Accepts(DType.Deferred));
+            Assert.True(DType.Time.Accepts(DType.Deferred));
+            Assert.True(DType.Guid.Accepts(DType.Deferred));
+            Assert.True(AttachmentTableType.Accepts(DType.Deferred));
+            Assert.True(AttachmentRecordType.Accepts(DType.Deferred));
+            Assert.True(OptionSetType.Accepts(DType.Deferred));
+            Assert.True(MultiSelectOptionSetType.Accepts(DType.Deferred));
+            Assert.True(DType.Polymorphic.Accepts(DType.Deferred));
+            Assert.True(DType.Deferred.Accepts(DType.Deferred));
+        }
+
         [Fact]
         public void AttachmentTypeAcceptanceTest()
         {
