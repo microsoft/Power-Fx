@@ -5886,6 +5886,10 @@
     <value>Name isn't valid. This identifier isn't recognized.</value>
     <comment>Error Message.</comment>
   </data>
+  <data name="ErrSelfNotSupportedInNameFormulas" xml:space="preserve">
+    <value>Self keyword is not supported in named formulas.</value>
+    <comment>Error Message.</comment>
+  </data>
   <data name="ErrorResource_ErrInvalidIdentifier_LongMessage" xml:space="preserve">
     <value>This error appears most commonly when a formula refers to something that no longer exists (for example, a control that you've deleted).</value>
   </data>

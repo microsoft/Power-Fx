@@ -30,6 +30,8 @@ namespace Microsoft.PowerFx.Core.Binding
 
         IExternalEntity CurrentEntity { get; }
 
+        bool IsNamedFormula { get; }
+
         DName CurrentProperty { get; }
 
         DPath CurrentEntityPath { get; }
