@@ -1902,7 +1902,7 @@ namespace Microsoft.PowerFx.Core.Types
                     break;
 
                 case DKind.Unknown:
-                    accepts = type.Kind == DKind.Unknown;
+                    accepts = type.Kind == DKind.Unknown || type.Kind == DKind.Deferred;
                     break;
                 case DKind.Deferred:
                     accepts = type.Kind == DKind.Deferred;
