@@ -86,7 +86,9 @@ namespace Microsoft.PowerFx.Core.Types
         LazyRecord = 36,
         LazyTable = 37,
 
-        _Lim = 38,
+        Deferred = 38,
+
+        _Lim = 39,
 #pragma warning restore SA1300 // Element should begin with upper-case letter
     }
 }

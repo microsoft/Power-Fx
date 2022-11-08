@@ -51,6 +51,7 @@ namespace Microsoft.PowerFx.Core.Types
         public static readonly DType NamedValue = new DType(DKind.NamedValue);
         public static readonly DType MinimalLargeImage = CreateMinimalLargeImageType();
         public static readonly DType UntypedObject = new DType(DKind.UntypedObject);
+        public static readonly DType Deferred = new DType(DKind.Deferred);
 
         public static readonly DType Invalid = new DType();
 
@@ -567,6 +568,8 @@ namespace Microsoft.PowerFx.Core.Types
         public bool IsValid => Kind >= DKind._Min && Kind < DKind._Lim;
 
         public bool IsUnknown => Kind == DKind.Unknown;
+
+        public bool IsDeferred => Kind == DKind.Deferred;
 
         public bool IsError => Kind == DKind.Error;
 
@@ -1721,7 +1724,7 @@ namespace Microsoft.PowerFx.Core.Types
                 case DKind.Table:
                     return LazyTypeProvider.GetExpandedType(IsTable).Accepts(other, exact);
                 default:
-                    return other.Kind == DKind.Unknown;
+                    return other.Kind == DKind.Unknown || other.Kind == DKind.Deferred;
             }
         }
 
@@ -1776,7 +1779,7 @@ namespace Microsoft.PowerFx.Core.Types
 
                     return expandedEntityType.Accepts(type, true);
                 default:
-                    return type.Kind == DKind.Unknown;
+                    return type.Kind == DKind.Unknown || type.Kind == DKind.Deferred;
             }
         }
 
@@ -1849,6 +1852,7 @@ namespace Microsoft.PowerFx.Core.Types
             bool DefaultReturnValue(DType targetType) =>
                     targetType.Kind == Kind ||
                     targetType.Kind == DKind.Unknown ||
+                    targetType.Kind == DKind.Deferred ||
                     (targetType.Kind == DKind.Enum && Accepts(targetType.GetEnumSupertype()));
 
             bool accepts;
@@ -1859,7 +1863,7 @@ namespace Microsoft.PowerFx.Core.Types
                     break;
 
                 case DKind.Polymorphic:
-                    accepts = type.Kind == DKind.Polymorphic || type.Kind == DKind.Record || type.Kind == DKind.Unknown;
+                    accepts = type.Kind == DKind.Polymorphic || type.Kind == DKind.Record || type.Kind == DKind.Unknown || type.Kind == DKind.Deferred;
                     break;
 
                 case DKind.Record:
@@ -1875,7 +1879,7 @@ namespace Microsoft.PowerFx.Core.Types
                         return TreeAccepts(this, TypeTree, type.TypeTree, out schemaDifference, out schemaDifferenceType, exact, useLegacyDateTimeAccepts);
                     }
 
-                    accepts = type.Kind == DKind.Unknown;
+                    accepts = type.Kind == DKind.Unknown || type.Kind == DKind.Deferred;
                     break;
 
                 case DKind.Table:                    
@@ -1889,18 +1893,20 @@ namespace Microsoft.PowerFx.Core.Types
                         return TreeAccepts(this, TypeTree, type.TypeTree, out schemaDifference, out schemaDifferenceType, exact, useLegacyDateTimeAccepts);
                     }
 
-                    accepts = (IsMultiSelectOptionSet() && TypeTree.GetPairs().First().Value.OptionSetInfo == type.OptionSetInfo) || type.Kind == DKind.Unknown;
+                    accepts = (IsMultiSelectOptionSet() && TypeTree.GetPairs().First().Value.OptionSetInfo == type.OptionSetInfo) || type.Kind == DKind.Unknown || type.Kind == DKind.Deferred;
                     break;
 
                 case DKind.Enum:
-                    accepts = (Kind != type.Kind && type.Kind == DKind.Unknown) ||
+                    accepts = (Kind != type.Kind && (type.Kind == DKind.Unknown || type.Kind == DKind.Deferred)) ||
                               (EnumSuperkind == type.EnumSuperkind && EnumTreeAccepts(ValueTree, type.ValueTree, exact));
                     break;
 
                 case DKind.Unknown:
                     accepts = type.Kind == DKind.Unknown;
                     break;
-
+                case DKind.Deferred:
+                    accepts = type.Kind == DKind.Deferred;
+                    break;
                 case DKind.String:
                     accepts =
                         type.Kind == Kind ||
@@ -1910,6 +1916,7 @@ namespace Microsoft.PowerFx.Core.Types
                         type.Kind == DKind.Media ||
                         type.Kind == DKind.Blob ||
                         type.Kind == DKind.Unknown ||
+                        type.Kind == DKind.Deferred ||
                         type.Kind == DKind.Guid ||
                         (type.Kind == DKind.Enum && Accepts(type.GetEnumSupertype()));
                     break;
@@ -1919,6 +1926,7 @@ namespace Microsoft.PowerFx.Core.Types
                         type.Kind == Kind ||
                         type.Kind == DKind.Currency ||
                         type.Kind == DKind.Unknown ||
+                        type.Kind == DKind.Deferred ||
                         (useLegacyDateTimeAccepts &&
                             (type.Kind == DKind.DateTime ||
                             type.Kind == DKind.Date ||
@@ -1979,27 +1987,27 @@ namespace Microsoft.PowerFx.Core.Types
                     accepts = (type.Kind == Kind &&
                                 type.Metadata.Name == Metadata.Name &&
                                 type.Metadata.Type == Metadata.Type &&
-                                type.Metadata.ParentTableMetadata.Name == Metadata.ParentTableMetadata.Name) || type.Kind == DKind.Unknown;
+                                type.Metadata.ParentTableMetadata.Name == Metadata.ParentTableMetadata.Name) || type.Kind == DKind.Unknown || type.Kind == DKind.Deferred;
                     break;
                 case DKind.OptionSet:
                 case DKind.OptionSetValue:
                     accepts = (type.Kind == Kind &&
                                 (OptionSetInfo == null || type.OptionSetInfo == null || type.OptionSetInfo == OptionSetInfo)) ||
-                               type.Kind == DKind.Unknown;
+                               type.Kind == DKind.Unknown || type.Kind == DKind.Deferred;
                     break;
                 case DKind.View:
                 case DKind.ViewValue:
                     accepts = (type.Kind == Kind &&
                                 (ViewInfo == null || type.ViewInfo == null || type.ViewInfo == ViewInfo)) ||
-                               type.Kind == DKind.Unknown;
+                               type.Kind == DKind.Unknown || type.Kind == DKind.Deferred;
                     break;
 
                 case DKind.NamedValue:
                     accepts = (type.Kind == Kind && NamedValueKind == type.NamedValueKind) ||
-                              type.Kind == DKind.Unknown;
+                              type.Kind == DKind.Unknown || type.Kind == DKind.Deferred;
                     break;
                 case DKind.UntypedObject:
-                    accepts = type.Kind == DKind.UntypedObject || type.Kind == DKind.Unknown;
+                    accepts = type.Kind == DKind.UntypedObject || type.Kind == DKind.Unknown || type.Kind == DKind.Deferred;
                     break;
 
                 case DKind.LazyTable:
@@ -3291,6 +3299,8 @@ namespace Microsoft.PowerFx.Core.Types
                     return "x";
                 case DKind.Unknown:
                     return "?";
+                case DKind.Deferred:
+                    return "X";
                 case DKind.Error:
                     return "e";
                 case DKind.Boolean:
