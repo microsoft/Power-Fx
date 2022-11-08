@@ -1220,7 +1220,7 @@ namespace Microsoft.PowerFx.Core.Binding
             return _isSelfContainedConstant.Get(node.Id);
         }
 
-        public bool TryGetConstantValue(TexlNode node, out string nodeValue)
+        public bool TryGetConstantValue(CheckTypesContext context, TexlNode node, out string nodeValue)
         {
             Contracts.AssertValue(node);
             nodeValue = null;
@@ -1233,7 +1233,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     var binaryOpNode = node.AsBinaryOp();
                     if (binaryOpNode.Op == BinaryOp.Concat)
                     {
-                        if (TryGetConstantValue(binaryOpNode.Left, out var left) && TryGetConstantValue(binaryOpNode.Right, out var right))
+                        if (TryGetConstantValue(context, binaryOpNode.Left, out var left) && TryGetConstantValue(context, binaryOpNode.Right, out var right))
                         {
                             nodeValue = string.Concat(left, right);
                             return true;
@@ -1248,7 +1248,7 @@ namespace Microsoft.PowerFx.Core.Binding
                         var parameters = new List<string>();
                         foreach (var argNode in callNode.Args.Children)
                         {
-                            if (TryGetConstantValue(argNode, out var argValue))
+                            if (TryGetConstantValue(context, argNode, out var argValue))
                             {
                                 parameters.Add(argValue);
                             }
@@ -1269,13 +1269,15 @@ namespace Microsoft.PowerFx.Core.Binding
                 case NodeKind.FirstName:
                     // Possibly a non-qualified enum value
                     var firstNameNode = node.AsFirstName();
-                    var firstNameInfo = GetInfo(firstNameNode);
-                    if (firstNameInfo.Kind == BindKind.Enum)
+                    if (context.NameResolver.Lookup(firstNameNode.Ident.Name, out var firstNameInfo, NameLookupPreferences.None))
                     {
-                        if (firstNameInfo.Data is string enumValue)
+                        if (firstNameInfo.Kind == BindKind.Enum)
                         {
-                            nodeValue = enumValue;
-                            return true;
+                            if (firstNameInfo.Data is string enumValue)
+                            {
+                                nodeValue = enumValue;
+                                return true;
+                            }
                         }
                     }
 
