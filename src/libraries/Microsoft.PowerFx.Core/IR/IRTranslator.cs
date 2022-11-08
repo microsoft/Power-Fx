@@ -321,6 +321,13 @@ namespace Microsoft.PowerFx.Core.IR
                 Contracts.AssertValue(node);
                 Contracts.AssertValue(context);
 
+                var nodeType = context.Binding.GetType(node);
+
+                if (nodeType.IsDeferred)
+                {
+                    throw new NotSupportedException("Deferred(Unknown) is not supported");
+                }
+
                 var info = context.Binding.GetInfo(node);
                 if (info == null)
                 {

@@ -581,6 +581,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey WarnColumnNameSpecifiedMultipleTimes_Name = new ErrorResourceKey("WarnColumnNameSpecifiedMultipleTimes_Name");
         public static ErrorResourceKey WarnLiteralPredicate = new ErrorResourceKey("WarnLiteralPredicate");
         public static ErrorResourceKey WarnDynamicMetadata = new ErrorResourceKey("WarnDynamicMetadata");
+        public static ErrorResourceKey WarnDeferredType = new ErrorResourceKey("WarnDeferredType");
 
         public static StringGetter InfoMessage = (b) => StringResources.Get("InfoMessage", b);
         public static StringGetter InfoNode_Node = (b) => StringResources.Get("InfoNode_Node", b);

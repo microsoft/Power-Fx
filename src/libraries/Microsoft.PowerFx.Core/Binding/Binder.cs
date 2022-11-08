@@ -2802,6 +2802,11 @@ namespace Microsoft.PowerFx.Core.Binding
                     }
                 }
 
+                if (lookupType.IsDeferred)
+                {
+                    _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Warning, node, TexlStrings.WarnDeferredType);
+                }
+
                 // Make a note of this global's type, as identifier by the resolver.
                 _txb.SetType(node, lookupType);
 
@@ -3166,7 +3171,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 var leftType = _txb.GetType(node.Left);
 
-                if (!leftType.IsControl && !leftType.IsAggregate && !leftType.IsEnum && !leftType.IsOptionSet && !leftType.IsView && !leftType.IsUntypedObject)
+                if (!leftType.IsControl && !leftType.IsAggregate && !leftType.IsEnum && !leftType.IsOptionSet && !leftType.IsView && !leftType.IsUntypedObject && !leftType.IsDeferred)
                 {
                     SetDottedNameError(node, TexlStrings.ErrInvalidDot);
                     return;
@@ -3367,7 +3372,7 @@ namespace Microsoft.PowerFx.Core.Binding
                         _txb.FlagPathAsAsync(node);
                     }
                 }
-                else if (!leftType.TryGetType(nameRhs, out typeRhs) && !leftType.IsUntypedObject)
+                else if (!leftType.TryGetType(nameRhs, out typeRhs) && !leftType.IsUntypedObject && !leftType.IsDeferred)
                 {
                     // We may be in the case of dropDown!Selected!RHS
                     // In this case, Selected embeds a meta field whose v-type encapsulates localization info
@@ -3456,6 +3461,10 @@ namespace Microsoft.PowerFx.Core.Binding
                 else if (leftType.IsUntypedObject)
                 {
                     _txb.SetType(node, DType.UntypedObject);
+                }
+                else if (leftType.IsDeferred)
+                {
+                    _txb.SetType(node, DType.Deferred);
                 }
                 else if (leftType.IsTable)
                 {
@@ -4838,7 +4847,14 @@ namespace Microsoft.PowerFx.Core.Binding
                 bool fArgsValid;
 
                 // Typecheck the invocation and infer the return type.
-                fArgsValid = func.HandleCheckInvocation(_txb, args, argTypes, _txb.ErrorContainer, out returnType, out var nodeToCoercedTypeMap);
+                // fArgsValid = func.HandleCheckInvocation(_txb, args, argTypes, _txb.ErrorContainer, out returnType, out var nodeToCoercedTypeMap);
+
+                fArgsValid = HandleCheckInvocationWithUnknown(func, _txb, args, argTypes, out var checkInvocationErrors, out returnType, out var nodeToCoercedTypeMap);
+
+                if (!fArgsValid)
+                {
+                    _txb.ErrorContainer.ConcatErrors(checkInvocationErrors.GetErrors());
+                }
 
                 if (!fArgsValid && !func.HasPreciseErrors)
                 {
