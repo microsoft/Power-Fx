@@ -770,8 +770,8 @@ namespace Microsoft.PowerFx.Tests
                 MaxCallDepth = 5
             };
             var recalcEngine = new RecalcEngine(config);
-            Assert.IsType<ErrorValue>(recalcEngine.Eval("Abs(Abs(Abs(Abs(Abs(Abs(1))))))"));
-            Assert.IsType<NumberValue>(recalcEngine.Eval("Abs(Abs(Abs(Abs(Abs(1)))))"));
+            Assert.IsType<ErrorValue>(recalcEngine.Eval("Trunc(Trunc(Trunc(Trunc(Trunc(Trunc(1))))))"));
+            Assert.IsType<NumberValue>(recalcEngine.Eval("Trunc(Trunc(Trunc(Trunc(Trunc(1)))))"));
             Assert.IsType<NumberValue>(recalcEngine.Eval(
                 @"Sum(
                 Sum(Sum(1),1),
