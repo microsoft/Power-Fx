@@ -18,14 +18,22 @@ using Microsoft.PowerFx.Core.Functions.DLP;
 using Microsoft.PowerFx.Core.Functions.FunctionArgValidators;
 using Microsoft.PowerFx.Core.Functions.Publish;
 using Microsoft.PowerFx.Core.Functions.TransportSchemas;
+using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Logging.Trackers;
+using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
+using Microsoft.PowerFx.Types;
+using BinaryOpNode = Microsoft.PowerFx.Syntax.BinaryOpNode;
+using CallNode = Microsoft.PowerFx.Syntax.CallNode;
+using IRCallNode = Microsoft.PowerFx.Core.IR.Nodes.CallNode;
 
 namespace Microsoft.PowerFx.Core.Functions
 {
+    using static Microsoft.PowerFx.Core.IR.IRTranslator;
     using FunctionInfo = Microsoft.PowerFx.Core.Functions.TransportSchemas.FunctionInfo;
 
     [ThreadSafeImmutable]
@@ -1358,6 +1366,32 @@ namespace Microsoft.PowerFx.Core.Functions
                     }).ToArray()
                 }).ToArray()
             };
+        }
+
+        internal virtual IRCallNode CreateIRCallNode(IRTranslatorContext context, CallNode node, List<IntermediateNode> args, IR.Symbols.ScopeSymbol scope)
+        {
+            if (scope != null)
+            {
+                return new IRCallNode(context.GetIRContext(node), this, scope, args);
+            }
+
+            return new IRCallNode(context.GetIRContext(node), this, args);
+        }
+
+        internal IRCallNode BlankToZeroIRCallNode(IntermediateNode arg, IRContext context)
+        {
+            var zeroNumLitNode = new NumberLiteralNode(IRContext.NotInSource(FormulaType.Number), 0);
+            var isBlankCallNode = new IRCallNode(IRContext.NotInSource(FormulaType.Boolean), BuiltinFunctionsCore.IsBlank, arg);
+
+            return new IRCallNode(context, BuiltinFunctionsCore.If, isBlankCallNode, zeroNumLitNode, arg);
+        }
+
+        internal IRCallNode BlankToEmptyStringIRCallNode(IntermediateNode arg, IRContext context)
+        {
+            var emptyTextLitNode = new TextLiteralNode(IRContext.NotInSource(FormulaType.String), string.Empty);
+            var isBlankCallNode = new IRCallNode(IRContext.NotInSource(FormulaType.Boolean), BuiltinFunctionsCore.IsBlank, arg);
+
+            return new IRCallNode(context, BuiltinFunctionsCore.If, isBlankCallNode, emptyTextLitNode, arg);
         }
     }
 }

@@ -5,6 +5,9 @@ using System.Collections.Generic;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.IR.Nodes;
+using Microsoft.PowerFx.Core.IR.Symbols;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
@@ -79,6 +82,16 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             returnType = ReturnType;
 
             return fArgsValid;
+        }
+
+        internal override IR.Nodes.CallNode CreateIRCallNode(IRTranslator.IRTranslatorContext context, PowerFx.Syntax.CallNode node, List<IntermediateNode> args, ScopeSymbol scope)
+        {
+            for (var i = 0; i < args.Count; i++)
+            {
+                args[i] = BlankToEmptyStringIRCallNode(args[i], context.GetIRContext(node.Args.Children[i]));
+            }
+
+            return base.CreateIRCallNode(context, node, args, scope);
         }
     }
 

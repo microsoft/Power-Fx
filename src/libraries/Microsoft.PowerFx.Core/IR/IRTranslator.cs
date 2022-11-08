@@ -308,12 +308,7 @@ namespace Microsoft.PowerFx.Core.IR
                     }
                 }
 
-                if (scope != null)
-                {
-                    return MaybeInjectCoercion(node, new CallNode(context.GetIRContext(node), func, scope, args), context);
-                }
-
-                return MaybeInjectCoercion(node, new CallNode(context.GetIRContext(node), func, args), context);
+                return MaybeInjectCoercion(node, func.CreateIRCallNode(context, node, args, scope), context);
             }
 
             public override IntermediateNode Visit(FirstNameNode node, IRTranslatorContext context)

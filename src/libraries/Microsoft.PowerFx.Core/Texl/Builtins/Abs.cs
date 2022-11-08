@@ -1,6 +1,10 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Collections.Generic;
+using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.IR.Nodes;
+using Microsoft.PowerFx.Core.IR.Symbols;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 
@@ -13,6 +17,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public AbsFunction()
             : base("Abs", TexlStrings.AboutAbs, FunctionCategories.MathAndStat)
         {
+        }
+
+        internal override IR.Nodes.CallNode CreateIRCallNode(IRTranslator.IRTranslatorContext context, PowerFx.Syntax.CallNode node, List<IntermediateNode> args, ScopeSymbol scope)
+        {
+            args[0] = BlankToZeroIRCallNode(args[0], context.GetIRContext(node.Args.Children[0]));
+            return base.CreateIRCallNode(context, node, args, scope);
         }
     }
 

@@ -5,10 +5,14 @@ using System.Collections.Generic;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
+using static Microsoft.PowerFx.Core.IR.IRTranslator;
+using CallNode = Microsoft.PowerFx.Syntax.CallNode;
+using IRCallNode = Microsoft.PowerFx.Core.IR.Nodes.CallNode;
 
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
@@ -29,6 +33,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
             yield return new[] { TexlStrings.LeftRightArg1, TexlStrings.LeftRightArg2 };
+        }
+
+        internal override IRCallNode CreateIRCallNode(IRTranslatorContext context, CallNode node, List<IntermediateNode> args, IR.Symbols.ScopeSymbol scope)
+        {
+            args[1] = new IRCallNode(context.GetIRContext(node.Args.Children[1]), BuiltinFunctionsCore.Trunc, args[1]);
+            return base.CreateIRCallNode(context, node, args, scope);
         }
     }
 
