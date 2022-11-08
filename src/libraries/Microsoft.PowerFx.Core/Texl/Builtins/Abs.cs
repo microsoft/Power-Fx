@@ -19,6 +19,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         {
         }
 
+        /// <summary>
+        /// This is used at IR phase to convert all possible blank args to zero.
+        /// </summary>
         internal override IR.Nodes.CallNode CreateIRCallNode(IRTranslator.IRTranslatorContext context, PowerFx.Syntax.CallNode node, List<IntermediateNode> args, ScopeSymbol scope)
         {
             args[0] = BlankToZeroIRCallNode(args[0], context.GetIRContext(node.Args.Children[0]));

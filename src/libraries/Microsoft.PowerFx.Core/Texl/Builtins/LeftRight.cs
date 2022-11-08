@@ -35,9 +35,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             yield return new[] { TexlStrings.LeftRightArg1, TexlStrings.LeftRightArg2 };
         }
 
+        /// <summary>
+        /// This is used at IR Phase to convert 1st arg (0-based index) to an integer.
+        /// </summary>
         internal override IRCallNode CreateIRCallNode(IRTranslatorContext context, CallNode node, List<IntermediateNode> args, IR.Symbols.ScopeSymbol scope)
         {
-            args[1] = new IRCallNode(context.GetIRContext(node.Args.Children[1]), BuiltinFunctionsCore.Trunc, args[1]);
+            args[1] = NumberTruncateIRCallNode(args[1], context.GetIRContext(node.Args.Children[1]));
             return base.CreateIRCallNode(context, node, args, scope);
         }
     }

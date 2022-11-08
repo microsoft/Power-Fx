@@ -1368,6 +1368,12 @@ namespace Microsoft.PowerFx.Core.Functions
             };
         }
 
+        /// <summary>
+        /// This can be overridden so function can add preprocessing capabilities at IR phase.
+        /// Consider using Helper function such as <see cref="BlankToZeroIRCallNode(IntermediateNode, IRContext)"/>, 
+        /// <see cref="BlankToEmptyStringIRCallNode(IntermediateNode, IRContext)"/>,
+        /// <see cref="NumberTruncateIRCallNode(IntermediateNode, IRContext)"/> to add preprocessing when overriding.
+        /// </summary>
         internal virtual IRCallNode CreateIRCallNode(IRTranslatorContext context, CallNode node, List<IntermediateNode> args, IR.Symbols.ScopeSymbol scope)
         {
             if (scope != null)
@@ -1378,6 +1384,12 @@ namespace Microsoft.PowerFx.Core.Functions
             return new IRCallNode(context.GetIRContext(node), this, args);
         }
 
+        /// <summary>
+        /// Helper function to Wrap IR node into a Call node that converts blank arg to zero.
+        /// </summary>
+        /// <param name="arg"> arg's IR node which needs to be wrapped.</param>
+        /// <param name="context">IRContext for the <paramref name="arg"/>.</param>
+        /// <returns>Call node that converts blank arg to zero.</returns>
         internal IRCallNode BlankToZeroIRCallNode(IntermediateNode arg, IRContext context)
         {
             var zeroNumLitNode = new NumberLiteralNode(IRContext.NotInSource(FormulaType.Number), 0);
@@ -1386,12 +1398,29 @@ namespace Microsoft.PowerFx.Core.Functions
             return new IRCallNode(context, BuiltinFunctionsCore.If, isBlankCallNode, zeroNumLitNode, arg);
         }
 
+        /// <summary>
+        /// Helper function to Wrap IR node into a Call node that converts blank arg to empty string.
+        /// </summary>
+        /// <param name="arg"> arg's IR node which needs to be wrapped.</param>
+        /// <param name="context">IRContext for the <paramref name="arg"/>.</param>
+        /// <returns>Call node that converts blank arg to empty string.</returns>
         internal IRCallNode BlankToEmptyStringIRCallNode(IntermediateNode arg, IRContext context)
         {
             var emptyTextLitNode = new TextLiteralNode(IRContext.NotInSource(FormulaType.String), string.Empty);
             var isBlankCallNode = new IRCallNode(IRContext.NotInSource(FormulaType.Boolean), BuiltinFunctionsCore.IsBlank, arg);
 
             return new IRCallNode(context, BuiltinFunctionsCore.If, isBlankCallNode, emptyTextLitNode, arg);
+        }
+
+        /// <summary>
+        /// Helper function to Wrap IR node into a Call node that converts Number arg to integer.
+        /// </summary>
+        /// <param name="arg"> arg's IR node which needs to be wrapped.</param>
+        /// <param name="context">IRContext for the <paramref name="arg"/>.</param>
+        /// <returns>Call node that converts number arg to zero.</returns>
+        internal IRCallNode NumberTruncateIRCallNode(IntermediateNode arg, IRContext context)
+        {
+            return new IRCallNode(context, BuiltinFunctionsCore.Trunc, arg);
         }
     }
 }

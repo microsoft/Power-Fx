@@ -84,6 +84,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return fArgsValid;
         }
 
+        /// <summary>
+        /// This is used at IR phase to convert all possible blank args to empty string.
+        /// </summary>
         internal override IR.Nodes.CallNode CreateIRCallNode(IRTranslator.IRTranslatorContext context, PowerFx.Syntax.CallNode node, List<IntermediateNode> args, ScopeSymbol scope)
         {
             for (var i = 0; i < args.Count; i++)

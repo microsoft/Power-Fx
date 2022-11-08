@@ -382,6 +382,11 @@ namespace Microsoft.PowerFx.Functions
                 return CommonErrors.GenericInvalidArgument(irContext);
             }
 
+            if (count.Value % 1 != 0)
+            {
+                throw new InvalidCoercionException("The Argument should have been coerced to an integer at the IR phase");
+            }
+
             return new StringValue(irContext, leftOrRight(source.Value, (int)count.Value));
         }
 
