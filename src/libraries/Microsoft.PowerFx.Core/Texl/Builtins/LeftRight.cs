@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
@@ -38,10 +39,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         /// <summary>
         /// This is used at IR Phase to convert 1st arg (0-based index) to an integer.
         /// </summary>
-        internal override IRCallNode CreateIRCallNode(IRTranslatorContext context, CallNode node, List<IntermediateNode> args, IR.Symbols.ScopeSymbol scope)
+        internal override IRCallNode CreateIRCallNode(IRContext context, List<IntermediateNode> args, IR.Symbols.ScopeSymbol scope)
         {
-            args[1] = NumberTruncateIRCallNode(args[1], context.GetIRContext(node.Args.Children[1]));
-            return base.CreateIRCallNode(context, node, args, scope);
+            args[1] = NumberTruncateIRCallNode(args[1]);
+            return base.CreateIRCallNode(context, args, scope);
         }
     }
 
