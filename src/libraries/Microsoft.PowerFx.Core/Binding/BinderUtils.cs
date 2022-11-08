@@ -9,6 +9,7 @@ using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Logging.Trackers;
+using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
@@ -846,6 +847,92 @@ namespace Microsoft.PowerFx.Core.Binding
                     Contracts.Assert(false);
                     return new BinderCheckTypeResult() { Node = node, NodeType = DType.Error };
             }
+        }
+
+        public static bool TryGetConstantValue(CheckTypesContext context, TexlNode node, out string nodeValue)
+        {
+            Contracts.AssertValue(node);
+            nodeValue = null;
+            switch (node.Kind)
+            {
+                case NodeKind.StrLit:
+                    nodeValue = node.AsStrLit().Value;
+                    return true;
+                case NodeKind.BinaryOp:
+                    var binaryOpNode = node.AsBinaryOp();
+                    if (binaryOpNode.Op == BinaryOp.Concat)
+                    {
+                        if (TryGetConstantValue(context, binaryOpNode.Left, out var left) && TryGetConstantValue(context, binaryOpNode.Right, out var right))
+                        {
+                            nodeValue = string.Concat(left, right);
+                            return true;
+                        }
+                    }
+
+                    break;
+                case NodeKind.Call:
+                    var callNode = node.AsCall();
+                    if (callNode.Head.Name.Value == BuiltinFunctionsCore.Concatenate.Name)
+                    {
+                        var parameters = new List<string>();
+                        foreach (var argNode in callNode.Args.Children)
+                        {
+                            if (TryGetConstantValue(context, argNode, out var argValue))
+                            {
+                                parameters.Add(argValue);
+                            }
+                            else
+                            {
+                                break;
+                            }
+                        }
+
+                        if (parameters.Count == callNode.Args.Count)
+                        {
+                            nodeValue = string.Join(string.Empty, parameters);
+                            return true;
+                        }
+                    }
+
+                    break;
+                case NodeKind.FirstName:
+                    // Possibly a non-qualified enum value
+                    var firstNameNode = node.AsFirstName();
+                    if (context.NameResolver.Lookup(firstNameNode.Ident.Name, out var firstNameInfo, NameLookupPreferences.None))
+                    {
+                        if (firstNameInfo.Kind == BindKind.Enum)
+                        {
+                            if (firstNameInfo.Data is string enumValue)
+                            {
+                                nodeValue = enumValue;
+                                return true;
+                            }
+                        }
+                    }
+
+                    break;
+                case NodeKind.DottedName:
+                    // Possibly an enumeration
+                    var dottedNameNode = node.AsDottedName();
+                    if (dottedNameNode.Left.Kind == NodeKind.FirstName)
+                    {
+                        if (context.NameResolver.EntityScope.TryGetNamedEnum(dottedNameNode.Left.AsFirstName().Ident.Name, out var enumType))
+                        {
+                            if (enumType.TryGetEnumValue(dottedNameNode.Right.Name, out var enumValue))
+                            {
+                                if (enumValue is string strValue)
+                                {
+                                    nodeValue = strValue;
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+
+                    break;
+            }
+
+            return false;
         }
     }
 }
