@@ -16,6 +16,16 @@ namespace Microsoft.PowerFx.Core.App.ErrorContainers
 
         public DocumentErrorSeverity DefaultSeverity => DocumentErrorSeverity.Critical;
 
+        public void ConcatErrors(IEnumerable<TexlError> errors)
+        {
+            if (_errors == null)
+            {
+                _errors = new List<TexlError>();
+            }
+
+            _errors.AddRange(errors);
+        }
+
         public bool HasErrors()
         {
             return CollectionUtils.Size(_errors) > 0;

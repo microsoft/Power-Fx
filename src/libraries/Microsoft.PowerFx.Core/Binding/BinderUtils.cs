@@ -138,8 +138,20 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 var localWarnings = new LimitedSeverityErrorContainer(errors, DocumentErrorSeverity.Warning);
 
+                var checkTypeErrors = new ErrorContainer();
+
                 // Typecheck the invocation and infer the return type.
-                typeCheckSucceeded = maybeFunc.CheckTypes(context, args, argTypes, localWarnings, out returnType, out nodeToCoercedTypeMap);
+                typeCheckSucceeded = maybeFunc.CheckTypes(context, args, argTypes, checkTypeErrors, out returnType, out nodeToCoercedTypeMap);
+
+                // Adding back all the errors to local warnings
+                foreach (var error in checkTypeErrors.GetErrors())
+                {
+                    //// Only add error for nodes apart from Unknown.
+                    //if (!txb.GetType(error.Node).IsDeferred)
+                    //{
+                    //    localWarnings.EnsureError(error.Node, error.ErrorResourceKey);
+                    //}
+                }
 
                 if (typeCheckSucceeded)
                 {
@@ -178,6 +190,39 @@ namespace Microsoft.PowerFx.Core.Binding
             nodeToCoercedTypeMap = null;
             returnType = null;
             return false;
+        }
+
+        /// <summary>
+        /// Typecheck the invocation and infer the return type. Error on deferred(unknown) arg is not considered.
+        /// </summary>
+        internal static bool HandleCheckInvocationWithUnknown(TexlFunction maybeFunc, TexlBinding txb, TexlNode[] args, DType[] argTypes, out ErrorContainer checkInvocationErrors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        {
+            // This error container is used as temporary container so we can trap type mismatch kind of error for
+            // deferred (unknown) type args and validate all the errors were caused due to deferred(unknown) type.
+            checkInvocationErrors = new ErrorContainer();
+
+            var typeCheckSucceeded = maybeFunc.HandleCheckInvocation(txb, args, argTypes, checkInvocationErrors, out returnType, out nodeToCoercedTypeMap);
+
+            // If type check failed and errors were due to Unknown type node we would like to consider the typeChecking passed.
+            if (!typeCheckSucceeded && checkInvocationErrors.HasErrors() && checkInvocationErrors.GetErrors().All(error => txb.GetType(error.Node).IsDeferred))
+            {
+                // If one of the arg was unknown and that generated error (e.g. type mismatch)
+                // and return type could not be calculated and was error we assign it as unknown.
+                // and if return type was Table, we assign it to be table of unknown, so operation like In can work.
+                switch (returnType.Kind)
+                {
+                    case DKind.Error:
+                        returnType = DType.Deferred;
+                        break;
+                    case DKind.Table:
+                        returnType = DType.EmptyRecord.Add(new TypedName(DType.Deferred, new DName(TexlFunction.ColumnName_ValueStr))).ToTable();
+                        break;
+                }
+
+                return true;
+            }
+
+            return typeCheckSucceeded;
         }
 
         /// <summary>
@@ -665,7 +710,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
             // EqualOp is only allowed on primitive types, polymorphic lookups, and control types.
             if (!(typeLeft.IsPrimitive && typeRight.IsPrimitive) && !(typeLeft.IsPolymorphic && typeRight.IsPolymorphic) && !(typeLeft.IsControl && typeRight.IsControl)
-                && !(typeLeft.IsPolymorphic && typeRight.IsRecord) && !(typeLeft.IsRecord && typeRight.IsPolymorphic))
+                && !(typeLeft.IsPolymorphic && typeRight.IsRecord) && !(typeLeft.IsRecord && typeRight.IsPolymorphic) && !(typeLeft.IsDeferred || typeRight.IsDeferred))
             {
                 var leftTypeDisambiguation = typeLeft.IsOptionSet && typeLeft.OptionSetInfo != null ? $"({typeLeft.OptionSetInfo.EntityName})" : string.Empty;
                 var rightTypeDisambiguation = typeRight.IsOptionSet && typeRight.OptionSetInfo != null ? $"({typeRight.OptionSetInfo.EntityName})" : string.Empty;
