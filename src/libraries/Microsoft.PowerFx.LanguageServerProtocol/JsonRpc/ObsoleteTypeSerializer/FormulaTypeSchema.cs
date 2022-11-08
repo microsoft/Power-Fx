@@ -31,7 +31,8 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             EntityRecord,
             EntityTable,
             Unknown,
-            Error
+            Error,
+            Deferred
         }
 
         /// <summary>
