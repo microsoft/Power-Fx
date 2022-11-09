@@ -6615,4 +6615,12 @@
     <value>This feature is deprecated and is no longer supported.</value>
     <comment>An error message for deprecated features.</comment>
   </data>
+  <data name="ErrSelfInvalidReference" xml:space="preserve">
+    <value>Self is not a valid reference in this expression.</value>
+    <comment>An error message for invalid self keyword usage.</comment>
+  </data>
+  <data name="ErrParentInvalidReference" xml:space="preserve">
+    <value>Parent is not a valid reference in this expression.</value>
+    <comment>An error message for invalid parent keyword usage.</comment>
+  </data>
 </root>
