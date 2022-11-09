@@ -101,8 +101,8 @@ namespace Microsoft.PowerFx.Functions
             DType collectionType = argTypes[0];
             if (!collectionType.IsTable)
             {
-                fValid = false;
                 errors.EnsureError(args[0], ErrNeedTable_Func, Name);
+                fValid = false;
             }
 
             var argCount = argTypes.Length;
@@ -144,12 +144,6 @@ namespace Microsoft.PowerFx.Functions
                     {
                         errors.EnsureError(DocumentErrorSeverity.Severe, args[i], ErrTableDoesNotAcceptThisType);
                     }
-                }
-
-                // Only warn about no-op record inputs if there are no data sources that would use reference identity for comparison.
-                else if (!collectionType.AssociatedDataSources.Any() && !recordAcceptsCollection)
-                {
-                    errors.EnsureError(DocumentErrorSeverity.Warning, args[i], ErrTableDoesNotAcceptThisType);
                 }
             }
 
