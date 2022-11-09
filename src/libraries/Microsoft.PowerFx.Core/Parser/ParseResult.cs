@@ -28,7 +28,7 @@ namespace Microsoft.PowerFx
         /// <summary>
         /// List of errors or warnings. Check <see cref="ExpressionError.IsWarning"/>.
         /// </summary>
-        public IEnumerable<ExpressionError> Errors => ExpressionError.New(_errors, Locale);
+        public IEnumerable<ExpressionError> Errors => ExpressionError.New(_errors, ErrorMessageLocale);
 
         /// <summary>
         /// True if there were parse errors. 
@@ -46,16 +46,19 @@ namespace Microsoft.PowerFx
 
         internal SourceList After { get; }
 
-        internal CultureInfo Locale { get; }
+        /// <summary>
+        /// Locale that error messages (if any) will be translated to.
+        /// </summary>
+        internal CultureInfo ErrorMessageLocale { get; }
 
         // Original script. 
         // All the spans in the tokens are relative to this. 
         public string Text { get; }
 
-        internal ParseResult(TexlNode root, List<TexlError> errors, bool hasError, List<CommentToken> comments, SourceList before, SourceList after, string text, CultureInfo locale)
+        internal ParseResult(TexlNode root, List<TexlError> errors, bool hasError, List<CommentToken> comments, SourceList before, SourceList after, string text, CultureInfo errorMessageLocale)
             : this(root, errors, hasError, comments, before, after, text)
         {
-            Locale = locale;
+            ErrorMessageLocale = errorMessageLocale;
         }
 
         internal ParseResult(TexlNode root, List<TexlError> errors, bool hasError, List<CommentToken> comments, SourceList before, SourceList after, string text)
