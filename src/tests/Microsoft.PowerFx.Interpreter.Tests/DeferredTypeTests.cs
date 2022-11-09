@@ -71,12 +71,12 @@ namespace Microsoft.PowerFx.Interpreter
 
             Assert.True(result.IsSuccess);
 
-            //Assert.True(result.Errors.Count() > 0);
-            
-            //Assert.True(result.Errors.All(error => error.MessageKey.Equals(TexlStrings.WarnUnknownType.Key)));
+            Assert.True(result.Errors.Count() > 0);
 
-            //Assert.Throws<NotSupportedException>(() => CheckResultExtensions.GetEvaluator(result));
-            //Assert.Throws<AggregateException>(() => engine.Eval(script));
+            Assert.True(result.Errors.All(error => error.MessageKey.Equals(TexlStrings.WarnDeferredType.Key)));
+
+            Assert.Throws<NotSupportedException>(() => CheckResultExtensions.GetEvaluator(result));
+            Assert.Throws<AggregateException>(() => engine.Eval(script));
         }
 
         private void TestBindingError(string script, Features features, string errorMessage, SymbolTable symbolTable = null)
