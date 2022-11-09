@@ -160,7 +160,7 @@ namespace Microsoft.PowerFx.Intellisense
         internal static bool TryParseFunctionNameWithNamespace(string functionName, out Identifier ident)
         {
             ident = null;
-            var parseResult = TexlParser.ParseScript($"{functionName}()", CultureInfo.InvariantCulture);
+            var parseResult = TexlParser.ParseScript($"{functionName}()");
             if (!parseResult.IsSuccess)
             {
                 return false;

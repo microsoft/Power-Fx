@@ -13,8 +13,6 @@ namespace Microsoft.PowerFx.Tests
 {
     public sealed class FormatterTests : PowerFxTest
     {
-        private readonly CultureInfo _defaultLocale = new ("en-US");
-
         [Theory]
         [InlineData(
             "Collect(Yep, { a: [1], b: \"Hello\" })",
@@ -32,7 +30,6 @@ namespace Microsoft.PowerFx.Tests
         {
             var result = ParseScript(
                 script,
-                _defaultLocale,
                 flags: Flags.EnableExpressionChaining);
 
             Assert.Equal(expected, result.GetAnonymizedFormula());
@@ -58,7 +55,6 @@ namespace Microsoft.PowerFx.Tests
         {
             var result = ParseScript(
                 script,
-                _defaultLocale,
                 flags: Flags.EnableExpressionChaining);
 
             Assert.Equal(expected, StructuralPrint.Print(result.Root, nameProvider: new TestSanitizer()));
@@ -75,7 +71,6 @@ namespace Microsoft.PowerFx.Tests
             Preview.FeatureFlags.StringInterpolation = true;
             var result = ParseScript(
                 script,
-                _defaultLocale,
                 flags: Flags.EnableExpressionChaining);
 
             // Can't pretty print a script with errors.
@@ -165,12 +160,12 @@ namespace Microsoft.PowerFx.Tests
         {
             Preview.FeatureFlags.StringInterpolation = true;
 
-            var result = Format(script, _defaultLocale);
+            var result = Format(script);
             Assert.NotNull(result);
             Assert.Equal(expected, result);
 
             // Ensure idempotence
-            result = Format(result, _defaultLocale);
+            result = Format(result);
             Assert.NotNull(result);
             Assert.Equal(expected, result);
         }
