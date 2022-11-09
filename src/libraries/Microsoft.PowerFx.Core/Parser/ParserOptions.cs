@@ -16,6 +16,11 @@ namespace Microsoft.PowerFx
     public class ParserOptions
     {
         /// <summary>
+        /// If true, This would allow users to do partial type checking by enabling support for Unknown type in input.
+        /// </summary>
+        public bool AllowDeferredType { get; set; }
+
+        /// <summary>
         /// If true, allow parsing a chaining operator. This is only used for side-effecting operations.
         /// </summary>
         public bool AllowsSideEffects { get; set; }

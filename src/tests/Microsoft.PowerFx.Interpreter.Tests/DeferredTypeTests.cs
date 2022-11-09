@@ -11,7 +11,7 @@ using Xunit;
 
 namespace Microsoft.PowerFx.Interpreter
 {
-    public class DefeeredTypeTests
+    public class DeferredTypeTests
     {
         [Theory]
         [InlineData("X")]
@@ -39,7 +39,7 @@ namespace Microsoft.PowerFx.Interpreter
             Preview.FeatureFlags.StringInterpolation = true;
             var symbolTable = new SymbolTable();
             symbolTable.AddVariable("X", FormulaType.Unknown);
-            TestDeferredTypeBindingWarning(script, Features.EnableDeferredType, symbolTable);
+            TestDeferredTypeBindingWarning(script, symbolTable);
         }
 
         [Theory]
@@ -56,18 +56,18 @@ namespace Microsoft.PowerFx.Interpreter
             symbolTable.AddVariable("X", FormulaType.Unknown);
             symbolTable.AddVariable("N", FormulaType.Number);
             symbolTable.AddVariable("R", RecordType.Empty());
-            TestBindingError(script, Features.EnableDeferredType, errorMessage, symbolTable);
+            TestBindingError(script, errorMessage, symbolTable);
         }
 
-        private void TestDeferredTypeBindingWarning(string script, Features features, SymbolTable symbolTable = null)
+        private void TestDeferredTypeBindingWarning(string script, SymbolTable symbolTable = null)
         {
-            var config = new PowerFxConfig(features)
+            var config = new PowerFxConfig()
             {
                 SymbolTable = symbolTable
             };
 
             var engine = new RecalcEngine(config);
-            var result = engine.Check(script);
+            var result = engine.Check(script, new ParserOptions() { AllowDeferredType = true });
 
             Assert.True(result.IsSuccess);
             Assert.True(result.Errors.Count() > 0);
@@ -77,15 +77,15 @@ namespace Microsoft.PowerFx.Interpreter
             Assert.Throws<AggregateException>(() => engine.Eval(script));
         }
 
-        private void TestBindingError(string script, Features features, string errorMessage, SymbolTable symbolTable = null)
+        private void TestBindingError(string script, string errorMessage, SymbolTable symbolTable = null)
         {
-            var config = new PowerFxConfig(features)
+            var config = new PowerFxConfig()
             {
                 SymbolTable = symbolTable
             };
 
             var engine = new Engine(config);
-            var result = engine.Check(script);
+            var result = engine.Check(script, new ParserOptions() { AllowDeferredType = true });
 
             Assert.False(result.IsSuccess);
 

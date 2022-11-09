@@ -28,10 +28,5 @@ namespace Microsoft.PowerFx
         /// Filter(A, A[@Value] = 2)
         /// </summary>
         DisableRowScopeDisambiguationSyntax = 0x4,
-
-        /// <summary>
-        /// This would allow users to do partial type checking by enabling support for Unknown type in input.
-        /// </summary>
-        EnableDeferredType = 0x8,
     }
 }

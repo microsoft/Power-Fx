@@ -177,7 +177,7 @@ namespace Microsoft.PowerFx
         /// <returns></returns>
         public CheckResult Check(ParseResult parse, RecordType parameterType, ParserOptions options = null)
         {
-            var bindingConfig = new BindingConfig(allowsSideEffects: options?.AllowsSideEffects == true);
+            var bindingConfig = new BindingConfig(allowsSideEffects: options?.AllowsSideEffects == true, allowDeferredType: options?.AllowDeferredType == true);
             var symbols = SymbolTable.NewFromRecord(parameterType);
 
             return CheckInternal(parse, bindingConfig, symbols);
@@ -197,7 +197,7 @@ namespace Microsoft.PowerFx
             ParserOptions options = null,
             ReadOnlySymbolTable symbolTable = null)
         {
-            var bindingConfig = new BindingConfig(allowsSideEffects: options?.AllowsSideEffects == true);
+            var bindingConfig = new BindingConfig(allowsSideEffects: options?.AllowsSideEffects == true, allowDeferredType: options?.AllowDeferredType == true);
 
             return CheckInternal(parse, bindingConfig, symbolTable);
         }
@@ -229,7 +229,7 @@ namespace Microsoft.PowerFx
             };
 
             // If the result is not sucess or has warning related to DeferredArgs we don't want to calculate return type or generate the IR Tree.
-            if (result.IsSuccess && !(binding.Features.HasFlag(Features.EnableDeferredType) && result.HasDeferredArgsWarning))
+            if (result.IsSuccess && !(binding.BindingConfig.AllowDeferredType && result.HasDeferredArgsWarning))
             {
                 result.TopLevelIdentifiers = DependencyFinder.FindDependencies(binding.Top, binding);
 

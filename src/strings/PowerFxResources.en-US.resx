@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -2161,7 +2161,7 @@
     <comment>Warning given when service function returns dynamic metadata.</comment>
   </data>
   <data name="WarnUnknownType" xml:space="preserve">
-    <value>Warning: unknown type provided.</value>
+    <value>Warning: Unknown type provided.</value>
     <comment>Warning given when input has unknown Type.</comment>
   </data>
   <data name="FindArg1" xml:space="preserve">

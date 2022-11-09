@@ -19,10 +19,16 @@ namespace Microsoft.PowerFx.Core.Binding
 
         public bool UseThisRecordForRuleScope { get; }
 
-        public BindingConfig(bool allowsSideEffects = false, bool useThisRecordForRuleScope = false)
+        /// <summary>
+        /// This would allow users to do partial type checking by enabling support for Unknown type in input.
+        /// </summary>
+        public bool AllowDeferredType { get; }
+
+        public BindingConfig(bool allowsSideEffects = false, bool useThisRecordForRuleScope = false, bool allowDeferredType = false)
         {
             AllowsSideEffects = allowsSideEffects;
             UseThisRecordForRuleScope = useThisRecordForRuleScope;
+            AllowDeferredType = allowDeferredType;
         }
     }
 }
