@@ -18,22 +18,16 @@ using Microsoft.PowerFx.Core.Functions.DLP;
 using Microsoft.PowerFx.Core.Functions.FunctionArgValidators;
 using Microsoft.PowerFx.Core.Functions.Publish;
 using Microsoft.PowerFx.Core.Functions.TransportSchemas;
-using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Logging.Trackers;
-using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
-using Microsoft.PowerFx.Types;
 using BinaryOpNode = Microsoft.PowerFx.Syntax.BinaryOpNode;
 using CallNode = Microsoft.PowerFx.Syntax.CallNode;
-using IRCallNode = Microsoft.PowerFx.Core.IR.Nodes.CallNode;
 
 namespace Microsoft.PowerFx.Core.Functions
 {
-    using static Microsoft.PowerFx.Core.IR.IRTranslator;
     using FunctionInfo = Microsoft.PowerFx.Core.Functions.TransportSchemas.FunctionInfo;
 
     [ThreadSafeImmutable]
