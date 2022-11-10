@@ -331,8 +331,10 @@ namespace Microsoft.PowerFx.Core.IR
                         return BlankToEmptyStringIRCallNode(argIR);
                     case IRPreProcessor.NumberTruncate:
                         return NumberTruncateIRCallNode(argIR);
-                    default:
+                    case IRPreProcessor.None:
                         return argIR;
+                    default:
+                        throw new NotSupportedException($"{nameof(preProcessor)} not supported");
                 }
             }
 
@@ -341,7 +343,7 @@ namespace Microsoft.PowerFx.Core.IR
             /// </summary>
             /// <param name="arg"> arg's IR node which needs to be wrapped.</param>
             /// <returns>Call node that converts blank arg to zero.</returns>
-            private CallNode BlankToZeroIRCallNode(IntermediateNode arg)
+            private static CallNode BlankToZeroIRCallNode(IntermediateNode arg)
             {
                 var zeroNumLitNode = new NumberLiteralNode(IRContext.NotInSource(FormulaType.Number), 0);
                 var isBlankCallNode = new CallNode(IRContext.NotInSource(FormulaType.Boolean), BuiltinFunctionsCore.IsBlank, arg);
@@ -354,7 +356,7 @@ namespace Microsoft.PowerFx.Core.IR
             /// </summary>
             /// <param name="arg"> arg's IR node which needs to be wrapped.</param>
             /// <returns>Call node that converts blank arg to empty string.</returns>
-            private CallNode BlankToEmptyStringIRCallNode(IntermediateNode arg)
+            private static CallNode BlankToEmptyStringIRCallNode(IntermediateNode arg)
             {
                 var emptyTextLitNode = new TextLiteralNode(IRContext.NotInSource(FormulaType.String), string.Empty);
                 var isBlankCallNode = new CallNode(IRContext.NotInSource(FormulaType.Boolean), BuiltinFunctionsCore.IsBlank, arg);
@@ -367,7 +369,7 @@ namespace Microsoft.PowerFx.Core.IR
             /// </summary>
             /// <param name="arg"> arg's IR node which needs to be wrapped.</param>
             /// <returns>Call node that converts number arg to zero.</returns>
-            private CallNode NumberTruncateIRCallNode(IntermediateNode arg)
+            private static CallNode NumberTruncateIRCallNode(IntermediateNode arg)
             {
                 return new CallNode(IRContext.NotInSource(FormulaType.Number), BuiltinFunctionsCore.Trunc, arg);
             }
