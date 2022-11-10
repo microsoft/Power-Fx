@@ -725,8 +725,8 @@ namespace Microsoft.PowerFx.Core.Binding
             }
 
             // Special case for guid, it should produce an error on being compared to non-guid types
-            if ((typeLeft.Equals(DType.Guid) && !typeRight.Equals(DType.Guid)) ||
-                (typeRight.Equals(DType.Guid) && !typeLeft.Equals(DType.Guid)))
+            if ((typeLeft.Equals(DType.Guid) && !(typeRight.Equals(DType.Guid) || typeRight.IsDeferred)) ||
+                (typeRight.Equals(DType.Guid) && !(typeLeft.Equals(DType.Guid) || typeLeft.IsDeferred)))
             {
                 errorContainer.EnsureError(
                     DocumentErrorSeverity.Severe,

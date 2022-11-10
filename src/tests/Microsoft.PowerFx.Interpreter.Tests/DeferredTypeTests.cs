@@ -19,12 +19,27 @@ namespace Microsoft.PowerFx.Interpreter
         [InlineData("!X")]
         [InlineData("Table(X)")]
         [InlineData("X.Field1")]
+        [InlineData("{test: X}")]
+
         [InlineData("X + 1")]
-        [InlineData("X + Date(2022, 10, 27)")]
+        [InlineData("X + DateTime(2022, 11, 10, 0, 0, 0)")]
+        [InlineData("X + Date(2022, 11, 10)")]
+        [InlineData("X + Time(0, 0, 0)")]
+        [InlineData("1 + X")]
+        [InlineData("DateTime(2022, 11, 10, 0, 0, 0) + X")]
+        [InlineData("Date(2022, 11, 10) + X")]
+        [InlineData("Time(0, 0, 0) + X")]
+
         [InlineData("X * 1")]
+        [InlineData("And(X, 1=1)")]
+        [InlineData("X&\"test\"")]
+        [InlineData("X = 1")]
+        [InlineData("X = GUID(\"5cc45615-f759-4a53-b225-d3a2497f60ad\")")]
+
         [InlineData("X < 2")]
         [InlineData("\"The\" in X")]
-        [InlineData("123 in X")]
+        [InlineData("123 in X")] // check
+        [InlineData("X in [1, 2, 3]")] // check
         [InlineData("123 in Table(X)")]
         [InlineData("IsBlank(X)")]
         [InlineData("IsError(X)")]
