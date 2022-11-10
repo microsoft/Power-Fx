@@ -7,6 +7,7 @@ using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.IR.Symbols;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Syntax;
 
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
@@ -22,10 +23,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         /// <summary>
         /// This is used at IR phase to convert all possible blank args to zero.
         /// </summary>
-        internal override IR.Nodes.CallNode CreateIRCallNode(IRContext context, List<IntermediateNode> args, ScopeSymbol scope)
+        internal override IRPreProcessor GetIRPreProcessors(int argIndex)
         {
-            args[0] = BlankToZeroIRCallNode(args[0]);
-            return base.CreateIRCallNode(context, args, scope);
+            return IRPreProcessor.BlankToZero;
         }
     }
 

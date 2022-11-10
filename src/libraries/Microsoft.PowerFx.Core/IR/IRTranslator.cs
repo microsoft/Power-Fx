@@ -297,18 +297,79 @@ namespace Microsoft.PowerFx.Core.IR
                 for (var i = 0; i < carg; ++i)
                 {
                     var arg = node.Args.Children[i];
+                    IntermediateNode argIR;
+                    var argPreProcessor = func.GetIRPreProcessors(i);
                     if (func.IsLazyEvalParam(i))
                     {
                         var child = arg.Accept(this, scope != null ? context.With(scope) : context);
-                        args.Add(new LazyEvalNode(context.GetIRContext(arg), child));
+                        argIR = new LazyEvalNode(context.GetIRContext(arg), child);
                     }
                     else
                     {
-                        args.Add(arg.Accept(this, context));
+                        argIR = arg.Accept(this, context);
                     }
+
+                    argIR = MaybeInjectPreProcessor(argIR, argPreProcessor);
+                    args.Add(argIR);
                 }
 
-                return MaybeInjectCoercion(node, func.CreateIRCallNode(context.GetIRContext(node), args, scope), context);
+                if (scope != null)
+                {
+                    return MaybeInjectCoercion(node, new CallNode(context.GetIRContext(node), func, scope, args), context);
+                }
+
+                return MaybeInjectCoercion(node, new CallNode(context.GetIRContext(node), func, args), context);
+            }
+
+            private IntermediateNode MaybeInjectPreProcessor(IntermediateNode argIR, IRPreProcessor preProcessor)
+            {
+                switch (preProcessor)
+                {
+                    case IRPreProcessor.BlankToZero:
+                        return BlankToZeroIRCallNode(argIR);
+                    case IRPreProcessor.BlankToEmptyString: 
+                        return BlankToEmptyStringIRCallNode(argIR);
+                    case IRPreProcessor.NumberTruncate:
+                        return NumberTruncateIRCallNode(argIR);
+                    default:
+                        return argIR;
+                }
+            }
+
+            /// <summary>
+            /// Helper function to Wrap IR node into a Call node that converts blank arg to zero.
+            /// </summary>
+            /// <param name="arg"> arg's IR node which needs to be wrapped.</param>
+            /// <returns>Call node that converts blank arg to zero.</returns>
+            private CallNode BlankToZeroIRCallNode(IntermediateNode arg)
+            {
+                var zeroNumLitNode = new NumberLiteralNode(IRContext.NotInSource(FormulaType.Number), 0);
+                var isBlankCallNode = new CallNode(IRContext.NotInSource(FormulaType.Boolean), BuiltinFunctionsCore.IsBlank, arg);
+
+                return new CallNode(IRContext.NotInSource(FormulaType.Number), BuiltinFunctionsCore.If, isBlankCallNode, zeroNumLitNode, arg);
+            }
+
+            /// <summary>
+            /// Helper function to Wrap IR node into a Call node that converts blank arg to empty string.
+            /// </summary>
+            /// <param name="arg"> arg's IR node which needs to be wrapped.</param>
+            /// <returns>Call node that converts blank arg to empty string.</returns>
+            private CallNode BlankToEmptyStringIRCallNode(IntermediateNode arg)
+            {
+                var emptyTextLitNode = new TextLiteralNode(IRContext.NotInSource(FormulaType.String), string.Empty);
+                var isBlankCallNode = new CallNode(IRContext.NotInSource(FormulaType.Boolean), BuiltinFunctionsCore.IsBlank, arg);
+
+                return new CallNode(IRContext.NotInSource(FormulaType.String), BuiltinFunctionsCore.If, isBlankCallNode, emptyTextLitNode, arg);
+            }
+
+            /// <summary>
+            /// Helper function to Wrap IR node into a Call node that converts Number arg to integer.
+            /// </summary>
+            /// <param name="arg"> arg's IR node which needs to be wrapped.</param>
+            /// <returns>Call node that converts number arg to zero.</returns>
+            private CallNode NumberTruncateIRCallNode(IntermediateNode arg)
+            {
+                return new CallNode(IRContext.NotInSource(FormulaType.Number), BuiltinFunctionsCore.Trunc, arg);
             }
 
             public override IntermediateNode Visit(FirstNameNode node, IRTranslatorContext context)

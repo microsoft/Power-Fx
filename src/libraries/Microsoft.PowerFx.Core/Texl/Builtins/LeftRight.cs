@@ -39,10 +39,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         /// <summary>
         /// This is used at IR Phase to convert 1st arg (0-based index) to an integer.
         /// </summary>
-        internal override IRCallNode CreateIRCallNode(IRContext context, List<IntermediateNode> args, IR.Symbols.ScopeSymbol scope)
+        internal override IRPreProcessor GetIRPreProcessors(int argIndex)
         {
-            args[1] = NumberTruncateIRCallNode(args[1]);
-            return base.CreateIRCallNode(context, args, scope);
+            if (argIndex > 0)
+            {
+                return IRPreProcessor.NumberTruncate;
+            }
+
+            return IRPreProcessor.None;
         }
     }
 

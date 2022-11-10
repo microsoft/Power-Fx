@@ -87,14 +87,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         /// <summary>
         /// This is used at IR phase to convert all possible blank args to empty string.
         /// </summary>
-        internal override IR.Nodes.CallNode CreateIRCallNode(IRContext context, List<IntermediateNode> args, ScopeSymbol scope)
+        internal override IRPreProcessor GetIRPreProcessors(int argIndex)
         {
-            for (var i = 0; i < args.Count; i++)
-            {
-                args[i] = BlankToEmptyStringIRCallNode(args[i]);
-            }
-
-            return base.CreateIRCallNode(context, args, scope);
+            return IRPreProcessor.BlankToEmptyString;
         }
     }
 
