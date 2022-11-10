@@ -198,6 +198,12 @@ namespace Microsoft.PowerFx.Functions
             DType dataSourceType = argTypes[0];
             DType retType = DType.EmptyRecord;
 
+            if (!dataSourceType.IsTable)
+            {
+                errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrNeedValidVariableName_Arg, Name);
+                isValid = false;
+            }
+
             foreach (var assocDS in dataSourceType.AssociatedDataSources)
             {
                 retType = DType.AttachDataSourceInfo(retType, assocDS);
@@ -206,8 +212,6 @@ namespace Microsoft.PowerFx.Functions
             for (var i = 1; i < args.Length; i++)
             {
                 DType curType = argTypes[i];
-
-                var tableType = (TableType)FormulaType.Build(dataSourceType);
 
                 if (!curType.IsRecord)
                 {

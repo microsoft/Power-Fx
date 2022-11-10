@@ -46,3 +46,12 @@ Errors: Error 29-52: The specified column 'surname' does not exist. The column w
 
 >> Collect(FirstN(Table({name: "hello"}), 0), {name: "textInput1"})
 {name:"textInput1"}
+
+>> Collect(Foo,r2)
+Errors: Error 8-11: Name isn't valid. 'Foo' isn't recognized.|Error 0-15: The function 'Collect' has some invalid arguments.
+
+>> Collect(Foo,Bar)
+Errors: Error 8-11: Name isn't valid. 'Foo' isn't recognized.|Error 12-15: Name isn't valid. 'Bar' isn't recognized.|Error 0-16: The function 'Collect' has some invalid arguments.
+
+>> Collect(1/0,Foo)
+Errors: Error 12-15: Name isn't valid. 'Foo' isn't recognized.

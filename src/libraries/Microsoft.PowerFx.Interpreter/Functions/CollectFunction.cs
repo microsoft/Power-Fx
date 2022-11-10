@@ -175,27 +175,29 @@ namespace Microsoft.PowerFx.Interpreter
 
             // Need a collection for the 1st arg
             DType collectionType = argTypes[0];
-            if (!collectionType.IsTable)
+            if (collectionType.IsTable)
+            {
+                // Get the unified collected type on the RHS. This will generate appropriate
+                // document errors for invalid arguments such as unsupported aggregate types.
+                fValid &= TryGetUnifiedCollectedType(args, argTypes, errors, out DType collectedType);
+                Contracts.Assert(collectedType.IsTable);
+
+                // The item type must be compatible with the collection schema.
+                var fError = false;
+                returnType = DType.Union(ref fError, collectionType, collectedType, useLegacyDateTimeAccepts: true);
+                if (fError)
+                {
+                    fValid = false;
+                    if (!SetErrorForMismatchedColumns(collectionType, collectedType, args[1], errors))
+                    {
+                        errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrNeedValidVariableName_Arg);
+                    }
+                }
+            }
+            else
             {
                 errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrNeedValidVariableName_Arg, Name);
                 fValid = false;
-            }
-
-            // Get the unified collected type on the RHS. This will generate appropriate
-            // document errors for invalid arguments such as unsupported aggregate types.
-            fValid &= TryGetUnifiedCollectedType(args, argTypes, errors, out DType collectedType);
-            Contracts.Assert(collectedType.IsTable);
-
-            // The item type must be compatible with the collection schema.
-            var fError = false;
-            returnType = DType.Union(ref fError, collectionType, collectedType, useLegacyDateTimeAccepts: true);
-            if (fError)
-            {
-                fValid = false;
-                if (!SetErrorForMismatchedColumns(collectionType, collectedType, args[1], errors))
-                {
-                    errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrNeedValidVariableName_Arg);
-                }
             }
 
             return fValid;
