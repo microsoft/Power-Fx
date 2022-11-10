@@ -22,6 +22,7 @@ namespace Microsoft.PowerFx.Interpreter
         [InlineData("{test: X}")]
 
         [InlineData("X + 1")]
+        [InlineData("X + \"1\"")]
         [InlineData("X + DateTime(2022, 11, 10, 0, 0, 0)")]
         [InlineData("X + Date(2022, 11, 10)")]
         [InlineData("X + Time(0, 0, 0)")]
@@ -59,6 +60,7 @@ namespace Microsoft.PowerFx.Interpreter
 
         [Theory]
         [InlineData("$\"Test {X} {R}\"", "Invalid argument type (Record). Expecting a Text value instead.")]
+        [InlineData("X + R", "Invalid argument type. Expecting one of the following: Number, Text, Boolean.")]
         [InlineData("Table(X, N)", "Cannot use a non-record value in this context")]
         [InlineData("X.field + N.field", "Invalid use of '.'")]
         [InlineData("Index([1,2,3], X).missing", "Name isn't valid. 'missing' isn't recognized")]
