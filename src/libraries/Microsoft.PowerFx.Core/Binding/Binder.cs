@@ -3048,7 +3048,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 if (!(_nameResolver.CurrentEntity is IExternalControl) || !_nameResolver.LookupParent(out var lookupInfo))
                 {
-                    _txb.ErrorContainer.Error(node, TexlStrings.ErrInvalidParentUse);
+                    _txb.ErrorContainer.Error(node, TexlStrings.ErrArgNotAValidIdentifier_Name, node.Kind);
                     _txb.SetType(node, DType.Error);
                     return;
                 }
@@ -3075,7 +3075,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 if (!_nameResolver.LookupSelf(out var lookupInfo))
                 {
-                    _txb.ErrorContainer.Error(node, TexlStrings.ErrInvalidIdentifier);
+                    _txb.ErrorContainer.Error(node, TexlStrings.ErrArgNotAValidIdentifier_Name, node.Kind);
                     _txb.SetType(node, DType.Error);
                     return;
                 }
