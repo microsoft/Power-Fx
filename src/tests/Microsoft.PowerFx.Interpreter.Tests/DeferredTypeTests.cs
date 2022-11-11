@@ -20,6 +20,8 @@ namespace Microsoft.PowerFx.Interpreter
         [InlineData("Table(X)")]
         [InlineData("X.Field1")]
         [InlineData("{test: X}")]
+        [InlineData("RX.XF")]
+        [InlineData("RX.XF + 1")]
 
         [InlineData("X + 1")]
         [InlineData("X + \"1\"")]
@@ -50,11 +52,17 @@ namespace Microsoft.PowerFx.Interpreter
         [InlineData("Index([1,2,3].Value, X)")]
 
         // Ensures expression binds without any errors - but issues a warning for the deferred(unknown) type.
-        public void DeferredTypeTest_EnableDeferredType(string script)
+        public void DeferredTypeTest(string script)
         {
             Preview.FeatureFlags.StringInterpolation = true;
             var symbolTable = new SymbolTable();
+
+            // Record with deferred field
+            var rX = RecordType.Empty().Add("XF", FormulaType.Deferred);
+
             symbolTable.AddVariable("X", FormulaType.Deferred);
+            symbolTable.AddVariable("RX", rX);
+
             TestDeferredTypeBindingWarning(script, Features.None, symbolTable);
         }
 
@@ -66,7 +74,7 @@ namespace Microsoft.PowerFx.Interpreter
         [InlineData("Index([1,2,3], X).missing", "Name isn't valid. 'missing' isn't recognized")]
 
         // Ensures expression issues an error if it exists, despite the deferred type.
-        public void DeferredTypeTest_EnableDeferredType_Negative(string script, string errorMessage)
+        public void DeferredTypeTest_Negative(string script, string errorMessage)
         {
             Preview.FeatureFlags.StringInterpolation = true;
             var symbolTable = new SymbolTable();
