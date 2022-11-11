@@ -107,6 +107,27 @@ namespace Microsoft.PowerFx.Core.App.ErrorContainers
             }
         }
 
+        private sealed class ErrorsFrozenInvocation : FrozenInvocation
+        {
+            private readonly TexlNode _node;
+            private readonly DType _nodeType;
+            private readonly KeyValuePair<string, DType> _schemaDifference;
+            private readonly DType _schemaDifferenceType;
+
+            public ErrorsFrozenInvocation(TexlNode node, DType nodeType, KeyValuePair<string, DType> schemaDifference, DType schemaDifferenceType)
+            {
+                _node = node;
+                _nodeType = nodeType;
+                _schemaDifference = schemaDifference;
+                _schemaDifferenceType = schemaDifferenceType;
+            }
+
+            public override void Invoke(IErrorContainer errors)
+            {
+                errors.Errors(_node, _nodeType, _schemaDifference, _schemaDifferenceType);
+            }
+        }
+
         public void Undiscard()
         {
             foreach (var invocation in _frozenInvocations)
@@ -175,7 +196,10 @@ namespace Microsoft.PowerFx.Core.App.ErrorContainers
             if (_maximumSeverity >= DocumentErrorSeverity.Severe)
             {
                 _errors.Errors(node, nodeType, schemaDifference, schemaDifferenceType);
+                return;
             }
+
+            _frozenInvocations.Add(new ErrorsFrozenInvocation(node, nodeType, schemaDifference, schemaDifferenceType));
         }
     }
 }
