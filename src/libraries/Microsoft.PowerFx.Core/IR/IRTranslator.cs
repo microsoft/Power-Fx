@@ -475,6 +475,11 @@ namespace Microsoft.PowerFx.Core.IR
                             throw new NotSupportedException();
                         }
 
+                        if (typeRhs.IsDeferred)
+                        {
+                            throw new NotSupportedException("Deferred(Unknown) is not supported");
+                        }
+
                         if (left is ScopeAccessNode valueAccess && valueAccess.Value is ScopeSymbol scope)
                         {
                             result = new ScopeAccessNode(context.GetIRContext(node), new ScopeAccessSymbol(scope, scope.AddOrGetIndexForField(nameRhs)));

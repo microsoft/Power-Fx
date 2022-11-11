@@ -3442,6 +3442,11 @@ namespace Microsoft.PowerFx.Core.Binding
                     _txb.FlagPathAsAsync(node);
                 }
 
+                if (typeRhs.IsDeferred)
+                {
+                    _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Warning, node, TexlStrings.WarnDeferredType);
+                }
+
                 // Set the type for the dotted node itself.
                 if (leftType.IsEnum)
                 {
@@ -4849,11 +4854,11 @@ namespace Microsoft.PowerFx.Core.Binding
                 // Typecheck the invocation and infer the return type.
                 // fArgsValid = func.HandleCheckInvocation(_txb, args, argTypes, _txb.ErrorContainer, out returnType, out var nodeToCoercedTypeMap);
 
-                fArgsValid = HandleCheckInvocationWithUnknown(func, _txb, args, argTypes, out var checkInvocationErrors, out returnType, out var nodeToCoercedTypeMap);
+                fArgsValid = HandleCheckInvocationWithDeferred(func, _txb, args, argTypes, out var checkInvocationErrors, out returnType, out var nodeToCoercedTypeMap);
 
                 if (!fArgsValid)
                 {
-                    _txb.ErrorContainer.ConcatErrors(checkInvocationErrors.GetErrors());
+                    _txb.ErrorContainer.MergeErrors(checkInvocationErrors.GetErrors());
                 }
 
                 if (!fArgsValid && !func.HasPreciseErrors)
