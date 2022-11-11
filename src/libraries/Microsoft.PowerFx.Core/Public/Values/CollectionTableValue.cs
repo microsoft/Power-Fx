@@ -95,6 +95,25 @@ namespace Microsoft.PowerFx.Types
             return DValue<RecordValue>.Of(record);
         }
 
+        public override async Task<DValue<BooleanValue>> ClearAsync(CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            if (_sourceList == null)
+            {
+                return await base.ClearAsync(cancellationToken);
+            }
+
+            _sourceList.Clear();
+
+            if (_sourceList.Count == 0)
+            {
+                return DValue<BooleanValue>.Of(New(true));
+            }
+
+            return DValue<BooleanValue>.Of(New(false));
+        }
+
         protected override bool TryGetIndex(int index1, out DValue<RecordValue> record)
         {
             var index0 = index1 - 1;

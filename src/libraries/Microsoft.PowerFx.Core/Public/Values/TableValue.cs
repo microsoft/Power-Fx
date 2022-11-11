@@ -112,6 +112,11 @@ namespace Microsoft.PowerFx.Types
             return DValue<BooleanValue>.Of(NotImplemented(IRContext));
         }
 
+        public virtual async Task<DValue<BooleanValue>> ClearAsync(CancellationToken cancellationToken)
+        {
+            return DValue<BooleanValue>.Of(NotImplemented(IRContext));
+        }
+
         /// <summary>
         /// Patch implementation for derived classes.
         /// </summary>

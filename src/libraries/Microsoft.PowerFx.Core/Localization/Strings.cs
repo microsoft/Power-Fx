@@ -464,6 +464,9 @@ namespace Microsoft.PowerFx.Core.Localization
         public static StringGetter PatchBaseRecordArg = (b) => StringResources.Get("PatchBaseRecordArg", b);
         public static StringGetter PatchChangeRecordsArg = (b) => StringResources.Get("PatchChangeRecordsArg", b);
 
+        public static StringGetter AboutClear = (b) => StringResources.Get("AboutClear", b);
+        public static StringGetter ClearCollectionArg = (b) => StringResources.Get("ClearCollectionArg", b);
+
         public static StringGetter AboutRemove = (b) => StringResources.Get("AboutRemove", b);
         public static StringGetter RemoveDataSourceArg = (b) => StringResources.Get("RemoveDataSourceArg", b);
         public static StringGetter RemoveRecordsArg = (b) => StringResources.Get("RemoveRecordsArg", b);
