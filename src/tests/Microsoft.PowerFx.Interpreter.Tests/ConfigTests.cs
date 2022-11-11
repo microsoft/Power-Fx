@@ -205,18 +205,20 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         public async Task Shared()
         {
             // Share a config
-            var sCommon = new SymbolTable();
+            var sCommon = new SymbolTable { DebugName = "Common" };
             sCommon.AddFunction(new Func1Function());
 
             var s3 = new SymbolTable
             {
-                Parent = sCommon
+                Parent = sCommon,
+                DebugName = "S3"
             };
             s3.AddFunction(new MultiplyFunction(3));
 
             var s4 = new SymbolTable
             {
-                Parent = sCommon
+                Parent = sCommon,
+                DebugName = "S4"
             };
             s4.AddFunction(new MultiplyFunction(4));
 
@@ -607,9 +609,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var r2 = new SymbolValues
             {
-                DebugName = "Runtime-X",
-                Parent = r1
+                DebugName = "Runtime-X",                
             }.Add("x", FormulaValue.New(3));
+            var r12 = ReadOnlySymbolValues.Compose(r2, r1);
 
             var engine = new RecalcEngine();
 
@@ -618,7 +620,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 "User(x)",
                 CancellationToken.None,
                 symbolTable: s1,
-                runtimeConfig: r2);
+                runtimeConfig: r12);
 
             Assert.Equal("Bill3", result.ToObject());
         }
@@ -627,7 +629,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         public async Task SimpleParameters()
         {
             var s1 = new SymbolTable();
-            s1.AddVariable("p1", FormulaValue.New(12));
+            s1.AddConstant("p1", FormulaValue.New(12));
 
             var engine = new Engine(new PowerFxConfig());
             var check = engine.Check("p1", symbolTable: s1);
@@ -755,17 +757,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
     // Extension methods, need to be in a top-level class. 
     internal static class MyTestExt
     {
-        public static void AddVariable(this SymbolTable symbolTable, string name, FormulaValue value)
-        {
-            symbolTable.AddConstant(name, value);
-        }
-
         public static void AddDataverse(this PowerFxConfig config, string valueName, FormulaValue value)
         {
             var symbolTable = new DataverseSymbolTable
             {
                 _valueName = valueName,
-                _value = new DataverseSymbolTable.Wrapper { Value = value },
+                _value = value,
                 Parent = config.SymbolTable
             };
 
@@ -778,26 +775,18 @@ namespace Microsoft.PowerFx.Interpreter.Tests
     internal class DataverseSymbolTable : SymbolTable
     {
         public string _valueName;
-        public Wrapper _value;
-
-        // IR will fetch via a ICanGetValue
-        public class Wrapper : ICanGetValue
-        {
-            public FormulaValue Value { get; set; }
-        }
+        public FormulaValue _value;
 
         internal override bool TryLookup(DName name, out NameLookupInfo nameInfo)
         {
             if (name.Value == _valueName)
             {
-                ICanGetValue irValue = _value;
-
                 nameInfo = new NameLookupInfo(
                     BindKind.PowerFxResolvedObject,
-                    _value.Value.Type._type,
+                    _value.Type._type,
                     DPath.Root,
                     0,
-                    data: irValue);
+                    data: _value);
                 return true;
             }
 

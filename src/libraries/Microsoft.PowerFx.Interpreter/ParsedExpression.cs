@@ -39,7 +39,9 @@ namespace Microsoft.PowerFx
 
         public static async Task<FormulaValue> EvalAsync(this IExpressionEvaluator expr, CancellationToken cancellationToken, RecordValue parameters)
         {
-            var runtimeConfig = SymbolValues.NewFromRecord(parameters);
+            // If we eval with a RecordValue, we must have called Check with a RecordType. 
+            var parameterType = ((ParsedExpression)expr)._parameterSymbolTable;
+            var runtimeConfig = SymbolValues.NewFromRecord(parameterType, parameters);
             return await expr.EvalAsync(cancellationToken, runtimeConfig);
         }
 
@@ -63,8 +65,24 @@ namespace Microsoft.PowerFx
 
             result.ThrowOnErrors();
 
+            ReadOnlySymbolValues globals = null;
+            var allSymbols = result.Symbols;
+                
+            if (result.Source is RecalcEngine recalcEngine)
+            {
+                // Pull global values from the engine. 
+                globals = recalcEngine._symbolValues;
+            }
+
             (var irnode, var ruleScopeSymbol) = IRTranslator.Translate(result._binding);
-            return new ParsedExpression(irnode, ruleScopeSymbol, stackMarker, result.CultureInfo);
+            var expr = new ParsedExpression(irnode, ruleScopeSymbol, stackMarker, result.CultureInfo)
+            {
+                _globals = globals,
+                _allSymbols = allSymbols,
+                _parameterSymbolTable = result.Parameters
+            };
+
+            return expr;
         }
     }
 
@@ -75,6 +93,10 @@ namespace Microsoft.PowerFx
         private readonly CultureInfo _cultureInfo;
         private readonly StackDepthCounter _stackMarker;
 
+        internal ReadOnlySymbolValues _globals;
+        internal ReadOnlySymbolTable _allSymbols;
+        internal ReadOnlySymbolTable _parameterSymbolTable;
+
         internal ParsedExpression(IntermediateNode irnode, ScopeSymbol topScope, StackDepthCounter stackMarker, CultureInfo cultureInfo = null)
         {
             _irnode = irnode;
@@ -83,7 +105,8 @@ namespace Microsoft.PowerFx
             _cultureInfo = cultureInfo ?? CultureInfo.CurrentCulture;
         }
 
-        public async Task<FormulaValue> EvalAsync(RecordValue parameters, CancellationToken cancellationToken)
+        // Obsolete. Use IExpressionEvaluator. 
+        async Task<FormulaValue> IExpression.EvalAsync(RecordValue parameters, CancellationToken cancellationToken)
         {
             var useRowScope = _topScopeSymbol.AccessedFields.Count > 0;
             ReadOnlySymbolValues runtimeConfig = null;
@@ -110,8 +133,13 @@ namespace Microsoft.PowerFx
 
         public async Task<FormulaValue> EvalAsync(CancellationToken cancellationToken, ReadOnlySymbolValues runtimeConfig = null)
         {
-            var culture = runtimeConfig?.GetService<CultureInfo>() ?? _cultureInfo;
-            var evalVisitor = new EvalVisitor(culture, cancellationToken, runtimeConfig);
+            ReadOnlySymbolValues runtimeConfig2 = ComposedReadOnlySymbolValues.New(
+                _allSymbols,
+                runtimeConfig,
+                _globals);
+
+            var culture = runtimeConfig2.GetService<CultureInfo>() ?? _cultureInfo;
+            var evalVisitor = new EvalVisitor(culture, cancellationToken, runtimeConfig2);
 
             try
             {
@@ -126,7 +154,7 @@ namespace Microsoft.PowerFx
 
         internal async Task<FormulaValue> EvalAsyncInternal(RecordValue parameters, CancellationToken cancel, StackDepthCounter stackMarker)
         {
-            var runtimeConfig = SymbolValues.NewFromRecord(parameters);
+            var runtimeConfig = SymbolValues.NewFromRecord(_parameterSymbolTable, parameters);
             parameters = RecordValue.Empty();
 
             // We don't catch the max call depth exception here becuase someone could swallow the error with an "IfError" check.

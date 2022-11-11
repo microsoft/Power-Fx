@@ -90,6 +90,28 @@ namespace Microsoft.PowerFx.Core.Tests
             AssertUnique(set, s1);
         }
 
+        // Ensure Storage slots are densely assigned 
+        [Fact]
+        public void Slots()
+        {
+            var symTable = new SymbolTable();
+            var s1 = symTable.AddVariable("x1", FormulaType.Number);
+            Assert.Same(s1.Owner, symTable);
+            Assert.Equal(0, s1.SlotIndex); // Densely packed
+
+            var s2 = symTable.AddVariable("x2", FormulaType.Number);
+            Assert.Same(s2.Owner, symTable);
+            Assert.Equal(1, s2.SlotIndex); // Densely packed
+
+            symTable.RemoveVariable("x1");
+            Assert.Equal(-1, s1.SlotIndex); // disposed 
+
+            // Fills in gap
+            var s3 = symTable.AddVariable("x3", FormulaType.Number);
+            Assert.Same(s3.Owner, symTable);
+            Assert.Equal(0, s3.SlotIndex); // Densely packed
+        }
+
         [Fact]
         public void Overwrite()
         {
@@ -98,7 +120,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             // Can't overwrite (even with same type)
             var v1 = s1.VersionHash;
-            Assert.Throws<ArgumentException>(() => s1.AddVariable("x", FormulaType.Number));
+            Assert.Throws<InvalidOperationException>(() => s1.AddVariable("x", FormulaType.Number));
 
             // Even a failed mutation changes the version hash. 
             Assert.NotEqual(v1, s1.VersionHash);

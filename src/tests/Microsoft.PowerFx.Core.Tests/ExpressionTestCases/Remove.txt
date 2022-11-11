@@ -151,3 +151,9 @@ Table({Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true},{F
   Remove(t1,First(Filter(t1, DisplayNameField2 = "earth")));
   t1
 Table({Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false},{Field1:3,Field2:"earth",Field3:DateTime(2030,2,1,0,0,0,0),Field4:true},{Field1:4,Field2:"earth",Field3:DateTime(2040,2,1,0,0,0,0),Field4:false})
+
+>> Remove(Foo, {Field1:5}, "All")
+Errors: Error 7-10: Name isn't valid. 'Foo' isn't recognized.|Error 0-30: The function 'Remove' has some invalid arguments.
+
+>> Remove(Foo, Bar)
+Errors: Error 7-10: Name isn't valid. 'Foo' isn't recognized.|Error 12-15: Name isn't valid. 'Bar' isn't recognized.|Error 0-16: The function 'Remove' has some invalid arguments.

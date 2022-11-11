@@ -111,24 +111,12 @@ namespace Microsoft.PowerFx.Core.Errors
 
         private static readonly string HowToFixSuffix = "_HowToFix";
 
-        [Obsolete("Use overload with explicit Culture")]
         internal BaseError(IDocumentError innerError, Exception internalException, DocumentErrorKind kind, DocumentErrorSeverity severity, ErrorResourceKey errKey, params object[] args)
-            : this(innerError, internalException, kind, severity, null, errKey, textSpan: null, sinkTypeErrors: null, args: args)
+            : this(innerError, internalException, kind, severity, errKey, textSpan: null, sinkTypeErrors: null, args: args)
         {
         }
 
-        [Obsolete("Use overload with explicit Culture")]
         internal BaseError(IDocumentError innerError, Exception internalException, DocumentErrorKind kind, DocumentErrorSeverity severity, ErrorResourceKey errKey, Span textSpan, IEnumerable<string> sinkTypeErrors, params object[] args)
-            : this(innerError, internalException, kind, severity, null, errKey, textSpan, sinkTypeErrors, args)
-        {
-        }
-
-        internal BaseError(IDocumentError innerError, Exception internalException, DocumentErrorKind kind, DocumentErrorSeverity severity, CultureInfo locale, ErrorResourceKey errKey, params object[] args)
-            : this(innerError, internalException, kind, severity, locale, errKey, textSpan: null, sinkTypeErrors: null, args: args)
-        {
-        }
-
-        internal BaseError(IDocumentError innerError, Exception internalException, DocumentErrorKind kind, DocumentErrorSeverity severity, CultureInfo locale, ErrorResourceKey errKey, Span textSpan, IEnumerable<string> sinkTypeErrors, params object[] args)
         {
             Contracts.AssertValueOrNull(innerError);
             Contracts.AssertValueOrNull(args);
@@ -148,10 +136,10 @@ namespace Microsoft.PowerFx.Core.Errors
             MessageKey = errKey.Key;
             MessageArgs = args;
 
-            (var shortMessage, var longMessage) = ErrorUtils.GetLocalizedErrorContent(errKey, locale, out var errorResource);
+            (var shortMessage, var longMessage) = ErrorUtils.GetLocalizedErrorContent(errKey, null, out var errorResource);
 
-            ShortMessage = ErrorUtils.FormatMessage(shortMessage, locale, args);
-            LongMessage = ErrorUtils.FormatMessage(longMessage, locale, args);
+            ShortMessage = ErrorUtils.FormatMessage(shortMessage, null, args);
+            LongMessage = ErrorUtils.FormatMessage(longMessage, null, args);
             HowToFixMessages = errorResource?.GetValues(ErrorResource.HowToFixTag) ?? GetHowToFix(errKey.Key);
             WhyToFixMessage = errorResource?.GetSingleValue(ErrorResource.WhyToFixTag) ?? string.Empty;
             Links = errorResource?.HelpLinks;

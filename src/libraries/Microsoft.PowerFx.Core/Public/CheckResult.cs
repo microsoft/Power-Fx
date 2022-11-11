@@ -52,6 +52,11 @@ namespace Microsoft.PowerFx
         public IExpression Expression { get; set; }
 
         /// <summary>
+        /// The source engine this was created against. 
+        /// </summary>
+        internal Engine Source { get; set; }
+
+        /// <summary>
         /// True if no errors. 
         /// </summary>
         public bool IsSuccess => !Errors.Any(x => !x.IsWarning);
@@ -67,6 +72,12 @@ namespace Microsoft.PowerFx
         /// Symbols passed to this binding. May be null. 
         /// </summary>
         public ReadOnlySymbolTable Symbols { get; set; }
+
+        /// <summary>
+        /// Parameters are the subset of symbols that must be passed in Eval() for each evaluation. 
+        /// This lets us associated the type in Check()  with the values in Eval().
+        /// </summary>
+        internal ReadOnlySymbolTable Parameters { get; set; }
 
         /// <summary>
         /// Culture info passed to this binding. May be null. 

@@ -162,13 +162,13 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             Assert.True(kvp.Key == varName);
             Assert.Equal(BindKind.PowerFxResolvedObject, kvp.Value.Kind);
-            Assert.IsType<RecalcFormulaInfo>(kvp.Value.Data);
+            Assert.IsType<NameSymbol>(kvp.Value.Data);
 
             var b = resolver.Lookup(new DName(varName), out var nameInfo, NameLookupPreferences.GlobalsOnly);
 
             Assert.True(b);
             Assert.Equal(BindKind.PowerFxResolvedObject, nameInfo.Kind);
-            Assert.IsType<RecalcFormulaInfo>(nameInfo.Data);
+            Assert.IsType<NameSymbol>(nameInfo.Data);
         }
     }
 }

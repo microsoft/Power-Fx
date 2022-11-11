@@ -12,6 +12,7 @@ using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx
 {
@@ -19,7 +20,7 @@ namespace Microsoft.PowerFx
     /// Composition of multiple <see cref="ReadOnlySymbolTable"/> into a single table.
     /// </summary>
     internal class ComposedReadOnlySymbolTable : ReadOnlySymbolTable, INameResolver, IGlobalSymbolNameResolver, IEnumStore
-    {
+    {        
         private readonly IEnumerable<ReadOnlySymbolTable> _symbolTables;
 
         // In priority order. 
@@ -27,9 +28,11 @@ namespace Microsoft.PowerFx
         {
             _symbolTables = symbolTables;
 
-            DebugName = string.Join(",", symbolTables.Select(t => t.DebugName));
+            DebugName = "(" + string.Join(",", symbolTables.Select(t => t.DebugName)) + ")";
         }
 
+        internal override IEnumerable<ReadOnlySymbolTable> SubTables => _symbolTables;
+        
         internal override VersionHash VersionHash
         {
             get
@@ -42,6 +45,19 @@ namespace Microsoft.PowerFx
 
                 return hash;
             }
+        }
+
+        public override FormulaType GetTypeFromSlot(ISymbolSlot slot)
+        {
+            if (slot.Owner == this)
+            {
+                // A slot's owner must be a "leaf node" symbol table and note 
+                // a composed type.
+                // Check to avoid recursion.
+                throw new InvalidOperationException("Slot has illegal owner.");
+            }
+
+            return slot.Owner.GetTypeFromSlot(slot);
         }
 
         // Expose the list to aide in intellisense suggestions. 
