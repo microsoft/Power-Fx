@@ -59,6 +59,12 @@ namespace Microsoft.PowerFx.Types
             return true;
         }
 
+        // Check for field existence, avoids the overhead of actually building the return type. 
+        internal bool HasFieldLogical(string logicalName)
+        {
+            return _type.TryGetType(new DName(logicalName), out _);
+        }
+
         internal bool HasField(string displayOrLogicalName)
         {
             Contracts.CheckNonEmpty(displayOrLogicalName, nameof(displayOrLogicalName));

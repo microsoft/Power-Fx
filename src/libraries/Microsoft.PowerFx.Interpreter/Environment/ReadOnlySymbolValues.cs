@@ -13,26 +13,18 @@ namespace Microsoft.PowerFx
     /// Runtime values corresponding to static values described in a <see cref="SymbolTable"/>.
     /// See <see cref="SymbolValues"/> for a mutable derived class. 
     /// </summary>
-    [DebuggerDisplay("{DebugName}")]
+    [DebuggerDisplay("{this.GetType().Name}({DebugName})")]
     public abstract class ReadOnlySymbolValues : IServiceProvider
     {
-        internal VersionHash _version = VersionHash.New();
-
-        private ReadOnlySymbolTable _symbolTableSnapshot;
+        private readonly ReadOnlySymbolTable _symbolTable;
 
         // Helper in debugging. Useful when we have multiple symbol tables chained. 
-        public string DebugName { get; init; } = "(RuntimeValues)";
+        public string DebugName { get; init; } = "RuntimeValues";
 
-        // This will also mark dirty any symbol table that we handed out. 
-        public void Inc()
-        {
-            if (_symbolTableSnapshot != null)
-            {
-                _symbolTableSnapshot.Inc();
-            }
-
-            _version.Inc();
-        }
+        /// <summary>
+        /// Get the symbol table that these values correspond to.
+        /// </summary>
+        public ReadOnlySymbolTable SymbolTable => _symbolTable;
 
         /// <summary>
         /// Expose services to functions. For example, this can provide TimeZone information to the 
@@ -50,29 +42,32 @@ namespace Microsoft.PowerFx
             return (T)GetService(typeof(T));
         }
 
+        protected ReadOnlySymbolValues(ReadOnlySymbolTable symbolTable)
+        {
+            _symbolTable = symbolTable;
+        }
+
+        internal virtual void AddSymbolMap(IDictionary<ReadOnlySymbolTable, ReadOnlySymbolValues> map)
+        {
+            // If a derived class supports multiple symbols tables, then override this to add them. 
+            map[_symbolTable] = this;
+        }
+
         /// <summary>
-        /// Get a snapshot of the current set of symbols. 
+        /// Get value of a slot previously provided by <see cref="Set(ISymbolSlot, FormulaValue)"/>. 
         /// </summary>
-        /// <returns></returns>
-        public ReadOnlySymbolTable GetSymbolTableSnapshot()
-        {
-            if (_symbolTableSnapshot != null)
-            {
-                // Invalidate the previous one
-                _symbolTableSnapshot.Inc();
-            }
+        /// <param name="slot">Slot provided by the associated SymbolTable. </param>
+        /// <returns>Value for this slot or BlankValue if no value is set yet.</returns>
+        public abstract FormulaValue Get(ISymbolSlot slot);
 
-            _symbolTableSnapshot = GetSymbolTableSnapshotWorker();
-            return _symbolTableSnapshot;
-        }
-
-        protected abstract ReadOnlySymbolTable GetSymbolTableSnapshotWorker();
-
-        public virtual bool TryGetValue(string name, out FormulaValue value)
-        {
-            value = null;
-            return false;
-        }
+        /// <summary>
+        /// Set a value for a given slot. 
+        /// Set(x, value) function from the language will eventually call this, where the binder 
+        /// has resolved 'x' to a slot.
+        /// </summary>
+        /// <param name="slot">Slot provided by the associated SymbolTable. </param>
+        /// <param name="value">new value to update this record to. </param>
+        public abstract void Set(ISymbolSlot slot, FormulaValue value);
 
         /// <summary>
         /// Get symbol values where each symbol is a field of the record. 
@@ -81,29 +76,24 @@ namespace Microsoft.PowerFx
         /// <returns></returns>
         public static ReadOnlySymbolValues NewFromRecord(RecordValue parameters)
         {
-            return new RowScopeSymbolValues(parameters, false);
+            var symTable = ReadOnlySymbolTable.NewFromRecord(parameters.Type, allowThisRecord: false, allowMutable: false);
+
+            return NewFromRecord(symTable, parameters);
         }
 
-        /// <summary>
-        /// Includes 'ThisRecord'.
-        /// </summary>
-        /// <param name="parameters"></param>
-        /// <param name="parent"></param>
-        /// <param name="debugName"></param>
-        /// <returns></returns>
-        public static ReadOnlySymbolValues NewRowScope(RecordValue parameters, ReadOnlySymbolValues parent = null, string debugName = null)
+        // Create and bind against existing symbol table. 
+        public static ReadOnlySymbolValues NewFromRecord(ReadOnlySymbolTable table, RecordValue parameters)
         {
-            ReadOnlySymbolValues s = new RowScopeSymbolValues(parameters, true)
+            if (table is SymbolTableOverRecordType recordTable)
             {
-                DebugName = debugName ?? "(rowScope)"
-            };
-
-            if (parent != null)
+                var symValue = new RowScopeSymbolValues(recordTable, parameters);
+                return symValue;
+            } 
+            else
             {
-                s = Compose(s, parent);
+                // Should have been created by ReadOnlySymbolTable.NewFromRecord*
+                throw new ArgumentException($"Symbol Table must be for Records");
             }
-
-            return s;
         }
 
         /// <summary>
@@ -116,14 +106,16 @@ namespace Microsoft.PowerFx
             where T : FormulaValue
         {
             // Accept T to allow derived FormulaValue collections. 
-            var s = new SymbolValues
-            {
-                Parent = parent
-            };
+            var s = new SymbolValues();
             
             foreach (var kv in values)
             {
                 s.Add(kv.Key, kv.Value);
+            }
+
+            if (parent != null)
+            {
+                return Compose(s, parent);
             }
 
             return s;
@@ -136,7 +128,25 @@ namespace Microsoft.PowerFx
         /// <returns></returns>
         public static ReadOnlySymbolValues Compose(params ReadOnlySymbolValues[] tables)
         {
-            return new ComposedReadOnlySymbolTableValues(tables);
+            var list = tables.Where(table => table != null).ToArray();
+            if (list.Length == 1)
+            {
+                return list[0];
+            }
+
+            var symTables = Array.ConvertAll(list, symValue => symValue.SymbolTable);
+
+            var symTable = ReadOnlySymbolTable.Compose(symTables);
+
+            var x = symTable.CreateValues(tables);
+
+            return x;
+        }
+
+        // Helper to call on Get/Set to ensure slot can be used with this value
+        protected void ValidateSlot(ISymbolSlot slot)
+        {
+            _symbolTable.ValidateSlot(slot);
         }
     }
 }

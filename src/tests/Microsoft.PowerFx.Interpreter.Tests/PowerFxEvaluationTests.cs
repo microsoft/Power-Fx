@@ -287,13 +287,14 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     parameters = RecordValue.Empty();
                 }
 
-                var check = engine.Check(expr, parameters.Type, options: iSetup.Flags.ToParserOptions());
+                var symbolTable = ReadOnlySymbolTable.NewFromRecord(parameters.Type);
+                var check = engine.Check(expr, options: iSetup.Flags.ToParserOptions(), symbolTable: symbolTable);
                 if (!check.IsSuccess)
                 {
                     return new RunResult(check);
                 }
 
-                var rtConfig = SymbolValues.NewFromRecord(parameters);
+                var rtConfig = SymbolValues.NewFromRecord(symbolTable, parameters);
                                 
                 if (iSetup.TimeZoneInfo != null)
                 {
