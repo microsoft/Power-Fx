@@ -30,3 +30,6 @@ Errors: Error 6-9: Name isn't valid. 'Foo' isn't recognized.|Error 0-10: The fun
 
 >> IsError(Clear(1))
 Errors: Error 14-15: Invalid argument type (Number). Expecting a Table value instead.|Error 8-16: The function 'Clear' has some invalid arguments.
+
+>> Clear(1/0)
+Errors: Error 7-8: Invalid argument type (Number). Expecting a Table value instead.|Error 0-10: The function 'Clear' has some invalid arguments.
