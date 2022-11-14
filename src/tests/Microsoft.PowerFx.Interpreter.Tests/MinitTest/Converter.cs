@@ -16,10 +16,10 @@ namespace Microsoft.PowerFx.Minit
         // Builtin Identifiers
         // PowerFx can have identifiers that represent filters. 
         // Refer to all events in the process 
-        private const string AllEvents = "ProcessEvents";
+        public const string AllEvents = "ProcessEvents";
 
         // Refer to all events in a given case. 
-        private const string CaseEvents = "CaseEvents";
+        public const string CaseEvents = "CaseEvents";
 
         // By default, all events have 3 fields builtin. 
         // They can have additional custom fields too ("Attributes")
