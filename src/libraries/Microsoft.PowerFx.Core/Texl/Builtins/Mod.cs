@@ -38,8 +38,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool IsSelfContained => true;
 
-        public override bool CheckTypesAndSemanticsOnly => true;
-
         public ModTFunction()
             : base("Mod", TexlStrings.AboutModT, FunctionCategories.Table, DType.EmptyTable, 0, 2, 2)
         {

@@ -375,8 +375,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => true;
 
-        public override bool CheckTypesAndSemanticsOnly => true;
-
         internal static readonly List<string> SubDayStringList = new List<string>() { "Hours", "Minutes", "Seconds", "Milliseconds" };
 
         public DateAddFunction()
@@ -442,8 +440,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool IsSelfContained => true;
 
         public override bool SupportsParamCoercion => true;
-
-        public override bool CheckTypesAndSemanticsOnly => true;
 
         public DateAddTFunction()
             : base("DateAdd", TexlStrings.AboutDateAddT, FunctionCategories.Table, DType.EmptyTable, 0, 2, 3)
@@ -591,8 +587,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool IsSelfContained => true;
 
         public override bool SupportsParamCoercion => true;
-
-        public override bool CheckTypesAndSemanticsOnly => true;
 
         public DateDiffTFunction()
             : base("DateDiff", TexlStrings.AboutDateDiffT, FunctionCategories.Table, DType.EmptyTable, 0, 2, 3)

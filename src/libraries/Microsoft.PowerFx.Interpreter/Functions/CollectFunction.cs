@@ -39,8 +39,6 @@ namespace Microsoft.PowerFx.Interpreter
 
         public override bool SupportsParamCoercion => false;
 
-        public override bool CheckTypesAndSemanticsOnly => true;
-
         public override bool ArgMatchesDatasourceType(int argNum)
         {
             return argNum >= 1;

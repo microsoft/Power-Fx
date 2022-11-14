@@ -15,8 +15,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Split(text:s, separator:s)
     internal class SplitFunction : StringTwoArgFunction
     {
-        public override bool CheckTypesAndSemanticsOnly => true;
-
         public SplitFunction()
             : base("Split", TexlStrings.AboutSplit, DType.EmptyTable)
         {

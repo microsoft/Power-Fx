@@ -38,8 +38,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => true;
 
-        public override bool CheckTypesAndSemanticsOnly => true;
-
         public ReplaceTFunction()
             : base("Replace", TexlStrings.AboutReplaceT, FunctionCategories.Table, DType.EmptyTable, 0, 4, 4)
         {

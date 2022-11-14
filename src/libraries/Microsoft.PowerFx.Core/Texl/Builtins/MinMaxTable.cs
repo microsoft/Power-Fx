@@ -21,8 +21,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override DelegationCapability FunctionDelegationCapability => _delegationCapability;
 
-        public override bool CheckTypesAndSemanticsOnly => true;
-
         public MinMaxTableFunction(bool isMin)
             : base(isMin ? "Min" : "Max", isMin ? TexlStrings.AboutMinT : TexlStrings.AboutMaxT, FunctionCategories.Table)
         {
