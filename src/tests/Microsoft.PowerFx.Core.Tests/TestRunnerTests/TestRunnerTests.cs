@@ -492,6 +492,35 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Contains("(IsError() followup call", message);
         }
 
+        // Ensure we only do the IsError followup call if there is an error in the baseline text
+        // (not just if a derived IsError() returns true)
+        [Fact]
+        public void TestErrorOverride3()
+        {
+            // Test override BaseRunner.IsError
+            var runner = new MockErrorRunner
+            {
+                _hook = (expr, setup) =>
+                    expr switch
+                    {
+                        "1" => FormulaValue.New(1),
+                        "IsError(1)" => throw new InvalidOperationException($"Should call IsError() follow since .txt didn't have error"),
+                        _ => throw new InvalidOperationException()
+                    },
+                _isError = (value) => throw new InvalidOperationException($"Should call IsError() follow since .txt didn't have error")
+            };
+
+            var test = new TestCase
+            {
+                Input = "1",
+                Expected = "1" // don't expect error
+            };
+
+            // On #error for x, test runner  will also call IsError(x)
+            var (result, message) = runner.RunTestCase(test);
+            Assert.Equal(TestResult.Pass, result);
+        }
+
         private static void AddFile(TestRunner runner, string filename)
         {
             var test1 = Path.GetFullPath(filename, TxtFileDataAttribute.GetDefaultTestDir("TestRunnerTests"));
