@@ -151,13 +151,13 @@ Error(Table({Kind:ErrorKind.Numeric},{Kind:ErrorKind.Div0}))
 Error({Kind:ErrorKind.InvalidArgument})
 
 >> DateAdd(If(1/0<2,Date(2000,1,1)), If(Sqrt(-1)<0,3))
-Error(Table({Kind:ErrorKind.Numeric},{Kind:ErrorKind.Div0}))
+Error(Table({Kind:ErrorKind.Div0},{Kind:ErrorKind.Numeric}))
 
 >> DateDiff(Date(2000,1,1), Date(2022,1,1), "invalidunit")
 Error({Kind:ErrorKind.InvalidArgument})
 
 >> DateDiff(If(1/0<2,Date(2000,1,1)), If(Sqrt(-1)<0,Date(2022,1,1)))
-Error(Table({Kind:ErrorKind.Numeric},{Kind:ErrorKind.Div0}))
+Error(Table({Kind:ErrorKind.Div0},{Kind:ErrorKind.Numeric}))
 
 >> DateTime(-1, -1, -1, -1, -1, -1, -1)
 Error({Kind:ErrorKind.InvalidArgument})
@@ -199,7 +199,7 @@ Error({Kind:ErrorKind.Validation})
 Error({Kind:ErrorKind.Network})
 
 >> Error(Table({Kind:15},{Kind:14}))
-Error(Table({Kind:ErrorKind.BadLanguageCode},{Kind:ErrorKind.BadRegex}))
+Error(Table({Kind:ErrorKind.BadRegex},{Kind:ErrorKind.BadLanguageCode}))
 
 >> Exp(1000000)
 Error({Kind:ErrorKind.Numeric})
@@ -317,7 +317,7 @@ Error({Kind:ErrorKind.Div0})
 Table({Value:0},{Value:-2},{Value:-13},{Value:1},{Value:-25})
 
 >> Index(If(1/0<2,[1,2,3]),Sqrt(-1))
-Error(Table({Kind:ErrorKind.Numeric},{Kind:ErrorKind.Div0}))
+Error(Table({Kind:ErrorKind.Div0},{Kind:ErrorKind.Numeric}))
 
 >> Index([1,2,3,4],0)
 Error({Kind:ErrorKind.InvalidArgument})
@@ -326,7 +326,7 @@ Error({Kind:ErrorKind.InvalidArgument})
 Error({Kind:ErrorKind.InvalidArgument})
 
 >> Index(If(1/0<2,ParseJSON("[1,2,3]")),Sqrt(-1))
-Error(Table({Kind:ErrorKind.Numeric},{Kind:ErrorKind.Div0}))
+Error(Table({Kind:ErrorKind.Div0},{Kind:ErrorKind.Numeric}))
 
 >> Index(ParseJSON("[1,2,3]"),0)
 Error({Kind:ErrorKind.InvalidArgument})
@@ -347,7 +347,7 @@ Error({Kind:ErrorKind.Div0})
 Error({Kind:ErrorKind.Numeric})
 
 >> Left(If(1/0<2,"Hello"),Sqrt(-1))
-Error(Table({Kind:ErrorKind.Numeric},{Kind:ErrorKind.Div0}))
+Error(Table({Kind:ErrorKind.Div0},{Kind:ErrorKind.Numeric}))
 
 >> Left("Hello",-1)
 Error({Kind:ErrorKind.InvalidArgument})
@@ -399,7 +399,7 @@ Error(Table({Kind:ErrorKind.Numeric},{Kind:ErrorKind.Div0}))
 Error({Kind:ErrorKind.Div0})
 
 >> Mid(Char(0),1/0,Sqrt(-1))
-Error(Table({Kind:ErrorKind.Div0},{Kind:ErrorKind.Numeric},{Kind:ErrorKind.InvalidArgument}))
+Error(Table({Kind:ErrorKind.InvalidArgument},{Kind:ErrorKind.Div0},{Kind:ErrorKind.Numeric}))
 
 >> Mid("Hello", 0)
 Error({Kind:ErrorKind.InvalidArgument})
@@ -423,7 +423,7 @@ Error({Kind:ErrorKind.Div0})
 Error({Kind:ErrorKind.Numeric})
 
 >> Mod(Sqrt(-1),If(Char(0)="a",1))
-Error(Table({Kind:ErrorKind.InvalidArgument},{Kind:ErrorKind.Numeric}))
+Error(Table({Kind:ErrorKind.Numeric},{Kind:ErrorKind.InvalidArgument}))
 
 >> Month(If(1/0<2,Date(2022,1,1)))
 Error({Kind:ErrorKind.Div0})
@@ -466,7 +466,7 @@ Error({Kind:ErrorKind.Numeric})
 Error(Table({Kind:ErrorKind.InvalidArgument},{Kind:ErrorKind.Numeric}))
 
 >> Replace(Char(0),Sqrt(-1),1/0,Char(256))
-Error(Table({Kind:ErrorKind.Div0},{Kind:ErrorKind.InvalidArgument},{Kind:ErrorKind.InvalidArgument},{Kind:ErrorKind.Numeric}))
+Error(Table({Kind:ErrorKind.InvalidArgument},{Kind:ErrorKind.Numeric},{Kind:ErrorKind.Div0},{Kind:ErrorKind.InvalidArgument}))
 
 >> Replace("Hello world",-1,5,"new")
 Error({Kind:ErrorKind.InvalidArgument})
@@ -478,7 +478,7 @@ Error({Kind:ErrorKind.InvalidArgument})
 Error({Kind:ErrorKind.InvalidArgument})
 
 >> Right(If(1/0,"Hello"), Sqrt(-1))
-Error(Table({Kind:ErrorKind.Numeric},{Kind:ErrorKind.Div0}))
+Error(Table({Kind:ErrorKind.Div0},{Kind:ErrorKind.Numeric}))
 
 >> Round(Sqrt(-1), 1/0)
 Error(Table({Kind:ErrorKind.Numeric},{Kind:ErrorKind.Div0}))
@@ -499,7 +499,7 @@ Error({Kind:ErrorKind.Div0})
 Error({Kind:ErrorKind.InvalidArgument})
 
 >> Sequence(Sqrt(-1),1/0,If(Char(0)="a",1))
-Error(Table({Kind:ErrorKind.Div0},{Kind:ErrorKind.Numeric},{Kind:ErrorKind.InvalidArgument}))
+Error(Table({Kind:ErrorKind.Numeric},{Kind:ErrorKind.Div0},{Kind:ErrorKind.InvalidArgument}))
 
 >> Shuffle(If(1/0<2,[1,2,3]))
 Error({Kind:ErrorKind.Div0})
@@ -517,7 +517,7 @@ Error({Kind:ErrorKind.Div0})
 Error({Kind:ErrorKind.Numeric})
 
 >> Split(Char(-4), If(1/0<2,"."))
-Error(Table({Kind:ErrorKind.Div0},{Kind:ErrorKind.InvalidArgument}))
+Error(Table({Kind:ErrorKind.InvalidArgument},{Kind:ErrorKind.Div0}))
 
 >> Sqrt(-1)
 Error({Kind:ErrorKind.Numeric})
@@ -532,7 +532,7 @@ Error({Kind:ErrorKind.Div0})
 Table({Value:1},{Value:-24},{Value:2},{Value:-13},{Value:3},{Value:-25})
 
 >> StartsWith(Char(-4), If(1/0<2,"."))
-Error(Table({Kind:ErrorKind.Div0},{Kind:ErrorKind.InvalidArgument}))
+Error(Table({Kind:ErrorKind.InvalidArgument},{Kind:ErrorKind.Div0}))
 
 >> StdevP(2, Sqrt(-1), 3, 1/0, 4)
 Error(Table({Kind:ErrorKind.Numeric},{Kind:ErrorKind.Div0}))
@@ -545,7 +545,7 @@ Error({Kind:ErrorKind.Numeric})
 Error({Kind:ErrorKind.Div0})
 
 >> Substitute(Char(0),If(Sqrt(-1)<0,"d"),If(1/0<2,"e"),Sqrt(-1))
-Error(Table({Kind:ErrorKind.Div0},{Kind:ErrorKind.InvalidArgument},{Kind:ErrorKind.Numeric},{Kind:ErrorKind.Numeric}))
+Error(Table({Kind:ErrorKind.InvalidArgument},{Kind:ErrorKind.Numeric},{Kind:ErrorKind.Div0},{Kind:ErrorKind.Numeric}))
 
 >> Substitute("Hello world", "he", "HE", 0)
 Error({Kind:ErrorKind.InvalidArgument})
@@ -587,7 +587,7 @@ Error({Kind:ErrorKind.Div0})
 Error({Kind:ErrorKind.BadLanguageCode})
 
 >> Text(Char(0), If(1/0<2,"format"), If(Sqrt(-1)<0,"language"))
-Error(Table({Kind:ErrorKind.Div0},{Kind:ErrorKind.Numeric},{Kind:ErrorKind.InvalidArgument}))
+Error(Table({Kind:ErrorKind.InvalidArgument},{Kind:ErrorKind.Div0},{Kind:ErrorKind.Numeric}))
 
 >> Text(ParseJSON("1"))
 Error({Kind:ErrorKind.InvalidArgument})

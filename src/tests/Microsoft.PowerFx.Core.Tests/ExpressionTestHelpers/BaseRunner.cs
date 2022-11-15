@@ -217,7 +217,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 return (TestResult.Fail, $"Threw exception: {e.Message}, {e.StackTrace}");
             }
 
-            if (IsError(result) && testCase.Input != null)
+            if (result is not ErrorValue && expected.StartsWith("Error") && IsError(result) && testCase.Input != null)
             {
                 // If they override IsError, then do additional checks. 
                 return await RunErrorCaseAsync(testCase);

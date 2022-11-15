@@ -291,7 +291,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 // Unsupported can't skip error. We should match the error. 
                 var test = new TestCase
                 {
-                    Expected = "#error",
+                    Expected = "Error({Kind:ErrorKind.Custom})",
                 };
                 var (result, message) = runner.RunTestCase(test);
 
@@ -437,7 +437,7 @@ namespace Microsoft.PowerFx.Core.Tests
             var test = new TestCase
             {
                 Input = "1",
-                Expected = "#error"
+                Expected = "Error({Kind:ErrorKind.Custom})"
             };
 
             // On #error for x, test runner  will also call IsError(x)
@@ -469,7 +469,7 @@ namespace Microsoft.PowerFx.Core.Tests
             var test = new TestCase
             {
                 Input = "1",
-                Expected = "#error"
+                Expected = "Error({Kind:ErrorKind.Custom})"
             };
 
             // On #error for x, test runner  will also call IsError(x)
