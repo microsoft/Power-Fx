@@ -4852,11 +4852,10 @@ namespace Microsoft.PowerFx.Core.Binding
                 bool fArgsValid;
 
                 // Typecheck the invocation and infer the return type.
-                // fArgsValid = func.HandleCheckInvocation(_txb, args, argTypes, _txb.ErrorContainer, out returnType, out var nodeToCoercedTypeMap);
 
                 fArgsValid = HandleCheckInvocationWithDeferred(func, _txb, args, argTypes, out var checkInvocationErrors, out returnType, out var nodeToCoercedTypeMap);
 
-                if (!fArgsValid)
+                if (checkInvocationErrors.HasErrors())
                 {
                     _txb.ErrorContainer.MergeErrors(checkInvocationErrors.GetErrors());
                 }
