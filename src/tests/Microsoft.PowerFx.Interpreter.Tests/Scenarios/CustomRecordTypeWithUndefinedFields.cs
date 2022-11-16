@@ -17,6 +17,15 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         private readonly RecordType _customRecordType;
         private readonly TestObj _testObj;
 
+        [Fact]
+        public void TestAccept()
+        {
+            var t = _customRecordType._type;
+            var ok = t.Accepts(t);
+
+            Assert.True(ok);
+        }
+
         public CustomRecordTypeWithUndefinedFields()
         {
             _originalRecordType = RecordType
@@ -162,7 +171,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     return false;
                 }
 
-                return RealRecordType.Equals(otherRecordType);
+                return RealRecordType.Equals(otherRecordType.RealRecordType);
             }
 
             public override int GetHashCode()
