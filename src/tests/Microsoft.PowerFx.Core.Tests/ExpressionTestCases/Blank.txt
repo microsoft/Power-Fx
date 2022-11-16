@@ -29,7 +29,7 @@ true
 false
 
 >> 5 / Blank()
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Blank()%
 0
@@ -125,13 +125,13 @@ false
 
 // ========= Error expressions =========
 >> IsBlank(Abs(1/0))
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> IsBlank(Abs("sampleText"))
-#Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> IsBlank(Ln(0.00))
-#Error(Kind=Numeric)
+Error({Kind:ErrorKind.Numeric})
 
 >> Blank(
 Errors: Error 6-6: Expected an operand. The formula or expression expects a valid operand. For example, you can add the operand '2' to the expression ' 1 +_' so that the result is '3'. Or, you can add the operand "there" to the expression '"Hi "& _ ' so that the result is 'Hi there'.|Error 6-6: Unexpected characters. The formula contains 'Eof' where 'ParenClose' is expected.

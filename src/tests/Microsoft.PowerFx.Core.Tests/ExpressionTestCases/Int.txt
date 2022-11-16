@@ -52,7 +52,7 @@
 
 // ******** NULL and ERROR PARAMETERS ********
 >> Int(1/0)
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 // Excel returns 0
 >> Int(Blank())
@@ -61,7 +61,7 @@
 // ******** STRING PARAMETERS ********
 
 >> Int("sampleText")
-#Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Int("10.5678")
 10
@@ -78,9 +78,9 @@
 0
 
 >> Int("true")
-#Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Int("false")
-#Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 

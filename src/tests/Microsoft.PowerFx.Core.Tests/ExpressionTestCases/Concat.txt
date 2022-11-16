@@ -90,13 +90,13 @@
 Blank()
 
 >> Concat(ForAll(Sort([60, 61, 0, 63, 64], 1/Value), Char(Value)), Value)
-#Error
+Error({Kind:ErrorKind.Div0})
 
 >> Concat(Table({a: "one"}, {a: "two"}, {a: "three"}), a, ", ")
 "one, two, three"
 
 >> Concat(Table({a: "one"}, {a: "two"}, {a: "three"}), a, Left(", ", -1))
-#Error
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> With({a:"."}, Concat(Sequence(5, 65), Char(Value), $"-{a}-"))
 "A-.-B-.-C-.-D-.-E"
@@ -110,4 +110,4 @@ Errors: Error 43-48: Name isn't valid. 'Value' isn't recognized.
 
 // Errors in the lambda
 >> Concat([2, 1, 0, -1, -2], Text(1 / Value), ",")
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})

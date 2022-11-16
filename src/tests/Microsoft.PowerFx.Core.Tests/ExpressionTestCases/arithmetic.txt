@@ -16,16 +16,16 @@
 3
 
 >> 1 + (1/0)
-#Error
+Error({Kind:ErrorKind.Div0})
 
 >> 1 - (1/0)
-#Error
+Error({Kind:ErrorKind.Div0})
 
 >> 1 * (1/0)
-#Error
+Error({Kind:ErrorKind.Div0})
 
 >> 1 / (1/0)
-#Error
+Error({Kind:ErrorKind.Div0})
 
 >> 5-3
 2
@@ -35,7 +35,7 @@
 -3
 
 >> -(1/0)
-#Error
+Error({Kind:ErrorKind.Div0})
 
 >> 5 - -3
 8
@@ -59,7 +59,7 @@
 2
 
 >> (1/0)%
-#Error
+Error({Kind:ErrorKind.Div0})
 
 >> 1 * 50%
 0.5
@@ -104,19 +104,19 @@ false
 true
 
 >> 5 < 1/0
-#Error
+Error({Kind:ErrorKind.Div0})
 
 >> 5 <= 1/0
-#Error
+Error({Kind:ErrorKind.Div0})
 
 >> 5 > 1/0
-#Error
+Error({Kind:ErrorKind.Div0})
 
 >> 5 >= 1/0
-#Error
+Error({Kind:ErrorKind.Div0})
 
 >> 5 = 1/0
-#Error
+Error({Kind:ErrorKind.Div0})
 
 >> 5 <> 1/0
-#Error
+Error({Kind:ErrorKind.Div0})

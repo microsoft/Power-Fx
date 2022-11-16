@@ -59,7 +59,7 @@ Errors: Error 0-32: The function 'Patch' has some invalid arguments.|Error 14-31
 
 >> Patch(t1, r1, {Field1:1/0});
    t1
-Table({Field1:Microsoft.PowerFx.Types.ErrorValue,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})
+Table({Field1:Error({Kind:ErrorKind.Div0}),Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})
 
 >> Patch(t1, Blank(), {Field1:10})
 Blank()
@@ -118,7 +118,7 @@ Table({Field1:1,Field2:"mars",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})
 
 >> Patch(t1, First(t1), {DisplayNameField1:1/0});
    t1
-Table({Field1:Microsoft.PowerFx.Types.ErrorValue,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})
+Table({Field1:Error({Kind:ErrorKind.Div0}),Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})
 
 >> Patch(t1, First(t1), {DisplayNameField1:1/0}, {DisplayNameField1:Blank()}, {DisplayNameField1:0});
    t1

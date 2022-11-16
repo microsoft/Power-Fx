@@ -1,21 +1,21 @@
-﻿#SETUP: ConsistentOneColumnTableResult
+#SETUP: ConsistentOneColumnTableResult
 
 >> Exp([false, 0])
-[1,1]
+Table({Value:1},{Value:1})
 
 >> Exp(Table({a: Ln(3)}, {a: 0}))
-[3,1]
+Table({Value:3},{Value:1})
 
 >> Exp(Table({a: 1/0}, {a: -750}))
-[Microsoft.PowerFx.Types.ErrorValue,0]
+Table({Value:Error({Kind:ErrorKind.Div0})},{Value:0})
 
 //Rounding values as the test runner returns a different precision for table inputs
 
 >> Round(Exp(Table({a: -0}, {a: 5}, {a: 2.302585092994045})), 7)
-[1,148.4131591,10]
+Table({Value:1},{Value:148.4131591},{Value:10})
 
 >> Round(Exp(Table({a: -5}, {a: 2.34567}, {a: 1})), 8)
-[0.00673795,10.44026536,2.71828183]
+Table({Value:0.00673795},{Value:10.44026536},{Value:2.71828183})
 
 >> Round(Exp(Table({a: "10"}, {a: "-10.123"})), 8)
-[22026.46579481,4.015E-05]
+Table({Value:22026.46579481},{Value:4.015E-05})

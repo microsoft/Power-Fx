@@ -291,7 +291,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 // Unsupported can't skip error. We should match the error. 
                 var test = new TestCase
                 {
-                    Expected = "#error",
+                    Expected = "Error({Kind:ErrorKind.Custom})",
                 };
                 var (result, message) = runner.RunTestCase(test);
 
@@ -306,7 +306,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             var test = new TestCase
             {
-                Expected = "#ERROR"
+                Expected = "Error()"
             };
             var (result, message) = runner.RunTestCase(test);
 
@@ -331,28 +331,14 @@ namespace Microsoft.PowerFx.Core.Tests
 
             var test = new TestCase
             {
-                Expected = "#Error(Kind=InvalidFunctionUsage)" // validation by enum name
+                Expected = "Error({Kind:ErrorKind.InvalidFunctionUsage})" // validation by enum name
             };
             var (result, message) = runner.RunTestCase(test);
             Assert.Equal(TestResult.Pass, result);
 
             test = new TestCase
             {
-                Expected = "#Error(Kind=16)" // // validation by enum value
-            };
-            (result, message) = runner.RunTestCase(test);
-            Assert.Equal(TestResult.Pass, result);
-
-            test = new TestCase
-            {
-                Expected = "#Error(Kind=Div0)" // // failure if error kind does not match
-            };
-            (result, message) = runner.RunTestCase(test);
-            Assert.Equal(TestResult.Fail, result);
-
-            test = new TestCase
-            {
-                Expected = "#Error(Kind=13)" // // failure if numeric error kind does not match
+                Expected = "Error({Kind:ErrorKind.Div0})" // // failure if error kind does not match
             };
             (result, message) = runner.RunTestCase(test);
             Assert.Equal(TestResult.Fail, result);
@@ -451,7 +437,7 @@ namespace Microsoft.PowerFx.Core.Tests
             var test = new TestCase
             {
                 Input = "1",
-                Expected = "#error"
+                Expected = "Error({Kind:ErrorKind.Custom})"
             };
 
             // On #error for x, test runner  will also call IsError(x)
@@ -483,7 +469,7 @@ namespace Microsoft.PowerFx.Core.Tests
             var test = new TestCase
             {
                 Input = "1",
-                Expected = "#error"
+                Expected = "Error({Kind:ErrorKind.Custom})"
             };
 
             // On #error for x, test runner  will also call IsError(x)
