@@ -4885,11 +4885,8 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 if (TryGetBestOverload(_txb, node, argTypes, overloads, out var function, out var nodeToCoercedTypeMap, out var returnType, out var warnings))
                 {
-                    if (function.CheckTypesAndSemanticsOnly)
-                    {
-                        // CheckSemantics may produce errors that are being ignored.
-                        warnings.Undiscard();
-                    }
+                    // CheckSemantics may produce errors that are being ignored.
+                    warnings.Undiscard();
 
                     _txb.SetInfo(node, new CallInfo(function, node));
                     _txb.SetType(node, returnType);

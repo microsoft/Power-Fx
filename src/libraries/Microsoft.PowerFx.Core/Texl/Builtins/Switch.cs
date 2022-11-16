@@ -31,8 +31,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         // We do not support coercion for the 1st param, or the match params, only the result params. 
         public override bool SupportsParamCoercion => true;
 
-        public override bool CheckTypesAndSemanticsOnly => true;
-
         public SwitchFunction()
             : base("Switch", TexlStrings.AboutSwitch, FunctionCategories.Logical, DType.Unknown, 0, 3, int.MaxValue)
         {

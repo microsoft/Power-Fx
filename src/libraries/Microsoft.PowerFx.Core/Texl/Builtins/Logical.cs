@@ -25,8 +25,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => true;
 
-        public override bool CheckTypesAndSemanticsOnly => true;
-
         internal readonly bool _isAnd;
 
         public VariadicLogicalFunction(bool isAnd)

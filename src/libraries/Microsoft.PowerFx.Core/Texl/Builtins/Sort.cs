@@ -29,8 +29,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => false;
 
-        public override bool CheckTypesAndSemanticsOnly => true;
-
         public SortFunction()
             : base("Sort", TexlStrings.AboutSort, FunctionCategories.Table, DType.EmptyTable, 0x02, 2, 3, DType.EmptyTable)
         {

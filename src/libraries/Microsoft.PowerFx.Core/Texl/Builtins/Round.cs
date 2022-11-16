@@ -38,8 +38,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => true;
 
-        public override bool CheckTypesAndSemanticsOnly => true;
-
         public TableRoundingFunction(string name, TexlStrings.StringGetter description)
             : base(name, description, FunctionCategories.Table, DType.EmptyTable, 0, 2, 2)
         {

@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -29,7 +30,9 @@ namespace Microsoft.PowerFx.Tests
         }
 
         // Set the response, returned by SendAsync
+#pragma warning disable CA2213 // Disposable fields should be disposed
         public HttpResponseMessage _nextResponse;
+#pragma warning restore CA2213 // Disposable fields should be disposed
 
         public void SetResponseFromFile(string filename, HttpStatusCode status = HttpStatusCode.OK)
         {

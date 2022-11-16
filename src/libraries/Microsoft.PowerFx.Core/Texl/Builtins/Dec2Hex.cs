@@ -46,8 +46,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool HasPreciseErrors => true;
 
-        public override bool CheckTypesAndSemanticsOnly => true;
-
         private static readonly DType TabularReturnType = DType.CreateTable(new TypedName(DType.String, ColumnName_Value));
 
         public Dec2HexTFunction()
