@@ -4883,10 +4883,9 @@ namespace Microsoft.PowerFx.Core.Binding
                 var carg = args.Length;
                 var argTypes = args.Select(_txb.GetType).ToArray();
 
-                if (TryGetBestOverload(_txb, node, argTypes, overloads, out var function, out var nodeToCoercedTypeMap, out var returnType, out var warnings))
+                if (TryGetBestOverload(_txb.CheckTypesContext, _txb.ErrorContainer, node, argTypes, overloads, out var function, out var nodeToCoercedTypeMap, out var returnType))
                 {
-                    // CheckSemantics may produce errors that are being ignored.
-                    warnings.Undiscard();
+                    function.CheckSemantics(_txb, args, argTypes, _txb.ErrorContainer);
 
                     _txb.SetInfo(node, new CallInfo(function, node));
                     _txb.SetType(node, returnType);

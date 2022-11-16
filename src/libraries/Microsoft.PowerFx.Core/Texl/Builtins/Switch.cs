@@ -83,7 +83,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         // Type check an invocation of the function with the specified args (and their corresponding types).
         // Return true if everything aligns, false otherwise.
         // This override does not post any document errors (i.e. it performs the typechecks quietly).
-        protected override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(context);
             Contracts.AssertValue(args);
