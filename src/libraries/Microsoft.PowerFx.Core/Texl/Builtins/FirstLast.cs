@@ -25,8 +25,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => false;
 
-        public override bool CheckTypesAndSemanticsOnly => true;
-
         private readonly bool _isFirst;
 
         public FirstLastFunction(bool isFirst)

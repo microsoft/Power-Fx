@@ -118,8 +118,6 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
 
             public override bool IsSelfContained => true;
 
-            public override bool CheckTypesAndSemanticsOnly => true;
-
             public bool CheckNumericTableOverload { get; set; }
 
             public bool CheckStringTableOverload { get; set; }
