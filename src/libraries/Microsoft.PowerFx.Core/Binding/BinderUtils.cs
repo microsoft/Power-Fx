@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.PowerFx.Core.App.Controls;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
+using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
@@ -143,14 +144,35 @@ namespace Microsoft.PowerFx.Core.Binding
                 // Typecheck the invocation and infer the return type.
                 typeCheckSucceeded = maybeFunc.CheckTypes(context, args, argTypes, checkTypeErrors, out returnType, out nodeToCoercedTypeMap);
 
+                if (!typeCheckSucceeded && checkTypeErrors.HasErrors() &&
+                    checkTypeErrors.GetErrors().All(error => context.NameResolver.Lookup(new DName(error.Tok.ToString()), out NameLookupInfo nameLookup) && nameLookup.Type.IsDeferred))
+                {
+                    typeCheckSucceeded = true;
+
+                    // If one of the arg was unknown and that generated error (e.g. type mismatch)
+                    // and return type could not be calculated and was error we assign it as unknown.
+                    // and if return type was Table, we assign it to be table of deferred, so operation like In can work.
+                    switch (returnType.Kind)
+                    {
+                        case DKind.Error:
+                            returnType = DType.Deferred;
+                            break;
+                        case DKind.Table:
+                            returnType = DType.EmptyRecord.Add(new TypedName(DType.Deferred, new DName(TexlFunction.ColumnName_ValueStr))).ToTable();
+                            break;
+                    }
+                }
+
                 // Adding back all the errors to local warnings
                 foreach (var error in checkTypeErrors.GetErrors())
                 {
-                    //// Only add error for nodes apart from Unknown.
-                    //if (!txb.GetType(error.Node).IsDeferred)
-                    //{
-                    //    localWarnings.EnsureError(error.Node, error.ErrorResourceKey);
-                    //}
+                    var isLookupSuccess = context.NameResolver.Lookup(new DName(error.Tok.ToString()), out var nameLookupInfo);
+
+                    // Only add error for nodes apart from Unknown type argument.
+                    if (!isLookupSuccess || nameLookupInfo.Type.IsDeferred)
+                    {
+                        localWarnings.EnsureError(error.Node, error.ErrorResourceKey);
+                    }
                 }
 
                 if (typeCheckSucceeded)
