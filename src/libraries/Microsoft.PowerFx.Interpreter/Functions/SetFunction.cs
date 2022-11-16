@@ -50,7 +50,7 @@ namespace Microsoft.PowerFx.Interpreter
         }
 
         // 2nd argument should be same type as 1st argument. 
-        protected override void CheckSemantics(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors)
+        public override void CheckSemantics(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors)
         {
             base.CheckSemantics(binding, args, argTypes, errors);
 
