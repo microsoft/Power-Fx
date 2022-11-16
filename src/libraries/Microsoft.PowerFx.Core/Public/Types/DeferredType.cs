@@ -8,6 +8,7 @@ namespace Microsoft.PowerFx.Types
 {
     /// <summary>
     /// An unknown type, attached to syntax nodes whose type cannot be determined.
+    /// NOTE: it's not valid to even attempt to execute an expression that references a deferred type.
     /// </summary>
     public sealed class DeferredType : FormulaType
     {

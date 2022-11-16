@@ -208,7 +208,7 @@ namespace Microsoft.PowerFx.Core.Binding
             {
                 // If one of the arg was unknown and that generated error (e.g. type mismatch)
                 // and return type could not be calculated and was error we assign it as unknown.
-                // and if return type was Table, we assign it to be table of unknown, so operation like In can work.
+                // and if return type was Table, we assign it to be table of deferred, so operation like In can work.
                 switch (returnType.Kind)
                 {
                     case DKind.Error:

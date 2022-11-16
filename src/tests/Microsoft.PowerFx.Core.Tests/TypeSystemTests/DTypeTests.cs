@@ -363,6 +363,17 @@ namespace Microsoft.PowerFx.Tests
             Assert.False(DType.Number.Accepts(DType.EmptyTable));
             Assert.False(DType.Number.Accepts(DType.EmptyRecord));
 
+            Assert.False(DType.Deferred.Accepts(DType.String));
+            Assert.False(DType.Deferred.Accepts(DType.Hyperlink));
+            Assert.False(DType.Deferred.Accepts(DType.Guid));
+            Assert.False(DType.Deferred.Accepts(DType.Image));
+            Assert.False(DType.Deferred.Accepts(DType.Media));
+            Assert.False(DType.Deferred.Accepts(DType.Blob));
+            Assert.False(DType.Deferred.Accepts(DType.Boolean));
+            Assert.False(DType.Deferred.Accepts(DType.EmptyTable));
+            Assert.False(DType.Deferred.Accepts(DType.EmptyRecord));
+            Assert.False(DType.Deferred.Accepts(DType.Number));
+
             Assert.False(DType.Boolean.Accepts(DType.String));
             Assert.False(DType.Boolean.Accepts(DType.Number));
             Assert.False(DType.Boolean.Accepts(DType.Color));
@@ -556,6 +567,7 @@ namespace Microsoft.PowerFx.Tests
         public void NonHierarchicalDTypes()
         {
             Assert.True(DType.Unknown.ChildCount == 0);
+            Assert.True(DType.Deferred.ChildCount == 0);
             Assert.True(DType.Error.ChildCount == 0);
             Assert.True(DType.Number.ChildCount == 0);
             Assert.True(DType.String.ChildCount == 0);
@@ -1345,6 +1357,7 @@ namespace Microsoft.PowerFx.Tests
         public void DTypeSpecParsing_SimpleTypes()
         {
             Assert.True(DType.TryParse(DType.Unknown.ToString(), out DType type) && type == DType.Unknown);
+            Assert.True(DType.TryParse(DType.Deferred.ToString(), out type) && type == DType.Deferred);
             Assert.True(DType.TryParse(DType.Error.ToString(), out type) && type == DType.Error);
             Assert.True(DType.TryParse(DType.Number.ToString(), out type) && type == DType.Number);
             Assert.True(DType.TryParse(DType.Boolean.ToString(), out type) && type == DType.Boolean);
@@ -1425,8 +1438,9 @@ namespace Microsoft.PowerFx.Tests
                 new TypedName(DType.Color, new DName("Color")),
                 new TypedName(DType.Unknown, new DName("Unknown")),
                 new TypedName(DType.Error, new DName("Err")),
+                new TypedName(DType.Deferred, new DName("Deferred")),
                 new TypedName(DType.ObjNull, new DName("ONull")));
-            Assert.True(DType.TryParse("*[Num:n, Bool:b, Str:s, Date:d, Hyper:h, Img:i, Currency:$, Color:c, Unknown:?, Err:e, ONull:N]", out type) && type == type2);
+            Assert.True(DType.TryParse("*[Num:n, Bool:b, Str:s, Date:d, Hyper:h, Img:i, Currency:$, Color:c, Unknown:?, Err:e, Deferred:X, ONull:N]", out type) && type == type2);
 
             // ![A:n,B:s,C:![D:n,E:%s[R:"red",G:"green",B:"blue"]]]
             type2 = DType.CreateRecord(
