@@ -35,7 +35,7 @@ namespace Microsoft.PowerFx.Tests
                 _defaultLocale,
                 flags: Flags.EnableExpressionChaining);
 
-            Assert.Equal(expected, StructuralPrint.Print(result.Root));
+            Assert.Equal(expected, result.GetAnonymizedFormula());
         }
 
         private class TestSanitizer : ISanitizedNameProvider

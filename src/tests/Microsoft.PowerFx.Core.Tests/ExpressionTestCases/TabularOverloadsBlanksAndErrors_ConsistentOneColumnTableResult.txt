@@ -1,0 +1,85 @@
+﻿#SETUP: ConsistentOneColumnTableResult
+
+>> Concatenate(["hello", "hi"], If(1/0<2," world"))
+[Microsoft.PowerFx.Types.ErrorValue,Microsoft.PowerFx.Types.ErrorValue]
+
+>> Concatenate(Char(0), ["hello", "great", "world"])
+[Microsoft.PowerFx.Types.ErrorValue,Microsoft.PowerFx.Types.ErrorValue,Microsoft.PowerFx.Types.ErrorValue]
+
+>> Concatenate(["hello", "hi"], " ", ["John", "Jane", "Jim", "Joan"])
+["hello John","hi Jane",Microsoft.PowerFx.Types.ErrorValue,Microsoft.PowerFx.Types.ErrorValue]
+
+>> Concat(Concatenate(["one", "two"], Text(1/0)), IfError(Value, $"Error(Kind={FirstError.Kind})"), ", ")
+"Error(Kind=13), Error(Kind=13)"
+
+>> Concat(Concatenate(Char(0), ["hello", "great", "world"]), IfError(Value, $"Error(Kind={FirstError.Kind})"), ", ")
+"Error(Kind=25), Error(Kind=25), Error(Kind=25)"
+
+>> Concat(Concatenate(["hello", "hi"], " ", ["John", "Jane", "Jim", "Joan"]), IfError(Value, $"Error(Kind={FirstError.Kind})"), ", ")
+"hello John, hi Jane, Error(Kind=27), Error(Kind=27)"
+
+>> Find(["a", "b"], If(1/0<2,"abcdefg"))
+[Microsoft.PowerFx.Types.ErrorValue,Microsoft.PowerFx.Types.ErrorValue]
+
+>> Find(Char(0), ["hello", "great", "world"])
+[Microsoft.PowerFx.Types.ErrorValue,Microsoft.PowerFx.Types.ErrorValue,Microsoft.PowerFx.Types.ErrorValue]
+
+>> Find(["a", "b", "c"], "The quick brown fox jumped over the lazy dog", [1, 2, 3, 4, 5])
+[38,11,8,Microsoft.PowerFx.Types.ErrorValue,Microsoft.PowerFx.Types.ErrorValue]
+
+>> Concat(Find(["a", "b"], If(1/0<2,"abcdefg")), IfError(Text(Value), $"Error(Kind={FirstError.Kind})"), ", ")
+"Error(Kind=13), Error(Kind=13)"
+
+>> Concat(Find(Char(0), ["hello", "great", "world"]), IfError(Text(Value), $"Error(Kind={FirstError.Kind})"), ", ")
+"Error(Kind=25), Error(Kind=25), Error(Kind=25)"
+
+>> Concat(Find(["a", "b", "c"], "The quick brown fox jumped over the lazy dog", [1, 2, 3, 4, 5]), IfError(Text(Value), $"Error(Kind={FirstError.Kind})"), ", ")
+"38, 11, 8, Error(Kind=27), Error(Kind=27)"
+
+>> Round(Sqrt(-1), [1, 2, 3])
+[Microsoft.PowerFx.Types.ErrorValue,Microsoft.PowerFx.Types.ErrorValue,Microsoft.PowerFx.Types.ErrorValue]
+
+>> Concat(Round(Sqrt(-1), [1, 2, 3]), IfError(Text(Value), $"Error(Kind={FirstError.Kind})"), ", ")
+"Error(Kind=24), Error(Kind=24), Error(Kind=24)"
+
+>> Concatenate(["hello", "hi"], If(1<0," world"))
+["hello","hi"]
+
+>> Concatenate(If(1<0,"hi"), ["hello", "great", "world"])
+["hello","great","world"]
+
+>> Find(["a", "b"], If(1<0,"abcdefg"))
+[Blank(),Blank()]
+
+>> Find(If(1<0,"a"), ["hello", "great", "world"])
+[1,1,1]
+
+>> Round(If(1<0,2), [1, 2, 3])
+[0,0,0]
+
+>> Concatenate(Filter(["hello", "hi"], Len(Value)>10), " world")
+[]
+
+>> Concatenate("hello ", Filter(["world", "day"],Len(Value)>10))
+[]
+
+>> Find(Filter(["hello", "hi"], Len(Value)>10), " world")
+[]
+
+>> Find("a", Filter(["world", "day"],Len(Value)>10))
+[]
+
+>> Round(1234.5678, Filter([1, 2, 3], Value > 10))
+[]
+
+>> Concatenate(Filter([1], Value > 10), "test")
+[]
+
+>> Concatenate(Blank(), Filter([1], Value > 10))
+Blank()
+
+>> Concatenate(Blank(), "test")
+"test"
+
+>> Concatenate(Blank(), ["test"], Filter([1], Value > 10))
+Blank()

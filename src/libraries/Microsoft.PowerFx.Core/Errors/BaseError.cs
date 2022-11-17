@@ -113,16 +113,22 @@ namespace Microsoft.PowerFx.Core.Errors
 
         [Obsolete("Use overload with explicit Culture")]
         internal BaseError(IDocumentError innerError, Exception internalException, DocumentErrorKind kind, DocumentErrorSeverity severity, ErrorResourceKey errKey, params object[] args)
-            : this(innerError, internalException, kind, severity, errKey, textSpan: null, sinkTypeErrors: null, locale: null, args: args)
+            : this(innerError, internalException, kind, severity, null, errKey, textSpan: null, sinkTypeErrors: null, args: args)
         {
         }
 
-        internal BaseError(IDocumentError innerError, Exception internalException, DocumentErrorKind kind, DocumentErrorSeverity severity, ErrorResourceKey errKey, CultureInfo locale, params object[] args)
-            : this(innerError, internalException, kind, severity, errKey, textSpan: null, sinkTypeErrors: null, locale: locale, args: args)
+        [Obsolete("Use overload with explicit Culture")]
+        internal BaseError(IDocumentError innerError, Exception internalException, DocumentErrorKind kind, DocumentErrorSeverity severity, ErrorResourceKey errKey, Span textSpan, IEnumerable<string> sinkTypeErrors, params object[] args)
+            : this(innerError, internalException, kind, severity, null, errKey, textSpan, sinkTypeErrors, args)
         {
         }
 
-        internal BaseError(IDocumentError innerError, Exception internalException, DocumentErrorKind kind, DocumentErrorSeverity severity, ErrorResourceKey errKey, Span textSpan, IEnumerable<string> sinkTypeErrors, CultureInfo locale, params object[] args)
+        internal BaseError(IDocumentError innerError, Exception internalException, DocumentErrorKind kind, DocumentErrorSeverity severity, CultureInfo locale, ErrorResourceKey errKey, params object[] args)
+            : this(innerError, internalException, kind, severity, locale, errKey, textSpan: null, sinkTypeErrors: null, args: args)
+        {
+        }
+
+        internal BaseError(IDocumentError innerError, Exception internalException, DocumentErrorKind kind, DocumentErrorSeverity severity, CultureInfo locale, ErrorResourceKey errKey, Span textSpan, IEnumerable<string> sinkTypeErrors, params object[] args)
         {
             Contracts.AssertValueOrNull(innerError);
             Contracts.AssertValueOrNull(args);

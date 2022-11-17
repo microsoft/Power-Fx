@@ -78,3 +78,15 @@ Errors: Error 6-25: Invalid argument type. Expecting a Record value, but of a di
 
 >> "Result: " & IfError({a:{a1:true},b:"hello"}, {a:1,b:"error 1"}, {a:{a1:{a2:3}},b:"world"}, {a:1,b:"error 2"}, {a:1,b:"valid"}, {a:1,b:"error 3"}).a
 "Result: 1"
+
+>> Error("lorem ipsum")
+#Error(Kind=Custom)
+
+>> IfError(Error("lorem ipsum"), FirstError.Message)
+"lorem ipsum"
+
+>> Date(2000, Sqrt(-1), Error("lorem ipsum"))
+#Error(Kind=Numeric,Custom)
+
+>> ForAll(Len(["abc", Error("lorem ipsum"), Sqrt(-1)+"", "hello"]), IfError(Result, -FirstError.Kind))
+[3,-1000,-24,5]

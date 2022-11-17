@@ -93,6 +93,27 @@ namespace Microsoft.PowerFx
             return s;
         }
 
+        /// <summary>
+        /// Helper to create a symbol table around a set of core functions.
+        /// Important that this is mutable so that it can be changed across engines. 
+        /// </summary>
+        /// <returns>SymbolTable with supported functions.</returns>
+        public SymbolTable GetMutableCopyOfFunctions()
+        {
+            var s = new SymbolTable()
+            {
+                DebugName = DebugName + " (Functions only)",
+                Parent = Parent,
+            };
+
+            foreach (var func in _functions)
+            {
+                s.AddFunction(func); 
+            }
+
+            return s;
+        }
+
         private protected readonly Dictionary<string, NameLookupInfo> _variables = new Dictionary<string, NameLookupInfo>();
 
         internal readonly Dictionary<DName, IExternalEntity> _environmentSymbols = new Dictionary<DName, IExternalEntity>();
@@ -215,6 +236,18 @@ namespace Microsoft.PowerFx
 
                     return true;
                 }
+                else if (symbol is IExternalDataSource)
+                {
+                    nameInfo = new NameLookupInfo(
+                        BindKind.Data,
+                        symbol.Type,
+                        DPath.Root,
+                        0,
+                        symbol,
+                        displayName);
+
+                    return true;
+                }
                 else
                 {
                     throw new NotImplementedException($"{symbol.GetType().Name} not supported.");
@@ -277,7 +310,7 @@ namespace Microsoft.PowerFx
         // Methods from INameResolver that we default / don't implement
         IExternalDocument INameResolver.Document => default;
 
-        IExternalEntityScope INameResolver.EntityScope => throw new NotImplementedException();
+        IExternalEntityScope INameResolver.EntityScope => default;
 
         IExternalEntity INameResolver.CurrentEntity => default;
 

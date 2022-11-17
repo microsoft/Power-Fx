@@ -353,34 +353,82 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 Thread.CurrentThread.CurrentCulture = new CultureInfo("tr-TR");
 
                 var config = new PowerFxConfig(CultureInfo.InvariantCulture);
-                var engine = new RecalcEngine(config);
 
-                var symbols = new SymbolValues();
+                var upperExpression = "Upper(\"INDIGO inDigo\")";
+                var lowerExpression = "Lower(\"INDIGO inDigo\")";
+                var properExpression = "Proper(\"INDIGO inDigo\")";
 
-                var upperExpression = "Upper(\"inDigo\")";
-                var lowerExpression = "Lower(\"inDigo\")";
-                var properExpression = "Proper(\"inDigo\")";
-
-                var datetimeExpression = "Text(DateTimeValue(\"Perşembe 06 Ekim 2022 14:19:06\", \"tr-TR\"))";
+                var datetimeExpression = "Text(DateTimeValue(\"Perşembe 6 Ekim 2022 14:19:06\", \"tr-TR\"))";
 
                 try
                 {
+                    // Engine will use custom locale (invariant)
+                    var engine = new RecalcEngine(config);
+
                     var result = engine.Eval(upperExpression);
-                    Assert.Equal("INDIGO", (result as StringValue).Value);
+                    Assert.Equal("INDIGO INDIGO", (result as StringValue).Value);
 
                     result = engine.Eval(lowerExpression);
-                    Assert.Equal("indigo", (result as StringValue).Value);
+                    Assert.Equal("indigo indigo", (result as StringValue).Value);
 
                     result = engine.Eval(properExpression);
-                    Assert.Equal("Indigo", (result as StringValue).Value);
+                    Assert.Equal("Indigo Indigo", (result as StringValue).Value);
 
                     result = engine.Eval(datetimeExpression);
                     Assert.Equal("10/06/2022 14:19", (result as StringValue).Value);
+
+                    // Engine will use thread locale (tr-TR)
+                    var engine2 = new RecalcEngine(new PowerFxConfig());
+
+                    result = engine2.Eval(upperExpression);
+                    Assert.Equal("INDIGO İNDİGO", (result as StringValue).Value);
+
+                    result = engine2.Eval(lowerExpression);
+                    Assert.Equal("ındıgo indigo", (result as StringValue).Value);
+
+                    result = engine2.Eval(properExpression);
+                    Assert.Equal("Indıgo İndigo", (result as StringValue).Value);
                 }
                 catch (Exception ex)
                 {
                     exception = ex;
-                }                
+                }
+            });
+
+            t.Start();
+            t.Join();
+
+            if (exception != null)
+            {
+                throw exception;
+            }
+        }
+
+        // Verify if text is transformed using the correct culture info (PowerFxConfig and global settings)
+        // Origin: https://github.com/microsoft/Power-Fx/issues/111
+        [Fact]
+        public void RecalcEngine_Symbol_CultureInfo6()
+        {
+            Exception exception = null;
+
+            var t = new Thread(() =>
+            {
+                Thread.CurrentThread.CurrentCulture = new CultureInfo("bg-BG");
+
+                try
+                {
+                    const string formula = "Concatenate(\"Hello\", \" World!\")";
+                    var defaultCulture = CultureInfo.CreateSpecificCulture("en");
+                    var engine = new RecalcEngine(new PowerFxConfig(defaultCulture));
+                    var result = engine.Eval(formula);
+
+                    var helloWorld = Assert.IsType<string>(result.ToObject());
+                    Assert.Equal("Hello World!", helloWorld);
+                }
+                catch (Exception ex)
+                {
+                    exception = ex;
+                }
             });
 
             t.Start();
@@ -679,6 +727,28 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var result = await eval.EvalAsync(CancellationToken.None);
 
             Assert.Equal(33.0, result.ToObject());
+        }
+
+        [Theory]
+        [InlineData("Abs", "Abs(-1)")]
+        [InlineData("Abs", "If(true,Abs(-1))")]
+        [InlineData("Abs", "If(false,Abs(-1))")]
+        public void MutableSupportedFunctionsTest(string functionName, string expression)
+        {
+            var engine = new Engine(new PowerFxConfig());
+            var symbolTable = engine.SupportedFunctions.GetMutableCopyOfFunctions();
+
+            symbolTable.RemoveFunction(functionName);
+
+            var engine2 = new Engine2();
+            engine2.UpdateSupportedFunctions(symbolTable);
+
+            var checkFalse = engine2.Check(expression);
+            var checkTrue = engine2.Check("Value(\"1\")");
+
+            Assert.True(checkTrue.IsSuccess);
+            Assert.False(checkFalse.IsSuccess);
+            Assert.Contains(checkFalse.Errors, e => e.MessageKey == "ErrUnknownFunction" && e.Message.Contains($"'{functionName}' is an unknown or unsupported function."));
         }
     } // end test class
 

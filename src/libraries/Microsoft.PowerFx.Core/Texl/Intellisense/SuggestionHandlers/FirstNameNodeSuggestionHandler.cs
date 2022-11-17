@@ -71,7 +71,8 @@ namespace Microsoft.PowerFx.Intellisense
 
                     intellisenseData.AddAdditionalSuggestionsForKeywordSymbols(curNode);
                 }
-                else if (IsBracketOpen(tok.Span.Lim, cursorPos, intellisenseData.Script))
+                else if (IsBracketOpen(tok.Span.Lim, cursorPos, intellisenseData.Script) && 
+                    !intellisenseData.Features.HasFlag(Features.DisableRowScopeDisambiguationSyntax))
                 {
                     AddSuggestionsForScopeFields(intellisenseData, intellisenseData.Binding.GetType(firstNameNode));
                 }

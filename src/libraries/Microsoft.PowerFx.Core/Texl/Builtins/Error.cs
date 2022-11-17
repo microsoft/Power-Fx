@@ -28,6 +28,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => true;
 
+        public override bool CheckTypesAndSemanticsOnly => true;
+
         public ErrorFunction()
             : base("Error", TexlStrings.AboutError, FunctionCategories.Logical, DType.ObjNull, 0, 1, 1)
         {
@@ -43,7 +45,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return new List<string>() { EnumConstants.ErrorKindEnumString };
         }
 
-        public override bool CheckInvocation(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        protected override bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
@@ -64,10 +66,16 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var argument = args[0];
             var argumentType = argTypes[0];
 
-            if (argumentType.Kind != DKind.Record && argumentType.Kind != DKind.Table)
+            if (argumentType.Kind != DKind.Record && argumentType.Kind != DKind.Table && argumentType.Kind != DKind.String)
             {
                 errors.EnsureError(argument, TexlStrings.ErrBadType);
                 return false;
+            }
+
+            // Custom error message
+            if (argumentType.Kind == DKind.String)
+            {
+                return true;
             }
 
             // We cache the whole name list regardless of path.

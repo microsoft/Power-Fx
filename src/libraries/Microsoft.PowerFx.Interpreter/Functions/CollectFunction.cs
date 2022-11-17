@@ -39,6 +39,8 @@ namespace Microsoft.PowerFx.Interpreter
 
         public override bool SupportsParamCoercion => false;
 
+        public override bool CheckTypesAndSemanticsOnly => true;
+
         public override bool ArgMatchesDatasourceType(int argNum)
         {
             return argNum >= 1;
@@ -149,8 +151,6 @@ namespace Microsoft.PowerFx.Interpreter
                 {
                     fValid &= DropAllOfKindNested(ref itemType, errors, args[i], DKind.DataEntity);
                 }
-
-                fValid &= DropAttachmentsIfExists(ref itemType, errors, args[i]);
             }
 
             Contracts.Assert(!itemType.IsValid || itemType.IsTable);
@@ -159,7 +159,7 @@ namespace Microsoft.PowerFx.Interpreter
         }
 
         // Typecheck an invocation of Collect.
-        public override bool CheckInvocation(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        protected override bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
@@ -168,7 +168,7 @@ namespace Microsoft.PowerFx.Interpreter
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            var fValid = base.CheckInvocation(binding, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fValid = base.CheckTypes(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
             Contracts.Assert(returnType.IsTable);
 
             DType dataSourceType = argTypes[0];

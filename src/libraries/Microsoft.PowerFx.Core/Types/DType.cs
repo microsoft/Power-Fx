@@ -19,14 +19,6 @@ namespace Microsoft.PowerFx.Core.Types
     [ThreadSafeImmutable]
     internal class DType : ICheckable
     {
-        /// <summary>
-        /// The last parameter type of service functions is a record.  The fields of this argument do not have to
-        /// be defined in order for an invocation to correctly type check.  The individual field types must match
-        /// the expected type exactly, however, so it is necessary to set this value for a single aggregate DType
-        /// and not for the individual field types within.
-        /// </summary>
-        public bool AreFieldsOptional { get; set; } = false;
-
         public const char EnumPrefix = '%';
         public const string MetaFieldName = "meta-6de62757-ecb6-4be6-bb85-349b3c7938a9";
 
@@ -118,24 +110,34 @@ namespace Microsoft.PowerFx.Core.Types
 
         public static Dictionary<DKind, DKind> KindToSuperkindMapping => _kindToSuperkindMapping.Value;
 
+        #region Core fields 
+        public DKind Kind { get; }
+
+        // Fields of an aggregate type (Record/table).  Just logical names. 
+        // Immutable tree. 
         public TypeTree TypeTree { get; }
 
         // These are default values except for Enums.
         public DKind EnumSuperkind { get; }
 
+        // Don't use this. Use option sets instead. 
+        // Special case for old enums. 
         public ValueTree ValueTree { get; }
 
-        // Intended future home of all lazy type expansion (Control, Relationship, Other)
+        #endregion 
+
+        #region New Generic versions of legacy features. 
+
+        /// <summary>
+        /// Intended future home of all lazy type expansion (Control, Relationship, Other).
+        /// </summary>
         internal readonly LazyTypeProvider LazyTypeProvider;
 
-        internal HashSet<IExternalTabularDataSource> AssociatedDataSources { get; }
-
-        internal IExternalOptionSet OptionSetInfo { get; }
-
-        internal IExternalViewInfo ViewInfo { get; }
-
-        // Eventually, all display names should come from this centralized source
-        // We should not be using individual DataSource/OptionSet/View references
+        /// <summary>
+        /// Provides a logical / display name mapping. 
+        /// Eventually, all display names should come from this centralized source.
+        /// We should not be using individual DataSource/OptionSet/View references.
+        /// </summary>
         internal DisplayNameProvider DisplayNameProvider { get; private set; }
 
         /// <summary>
@@ -145,6 +147,59 @@ namespace Microsoft.PowerFx.Core.Types
         /// Null for non-named value DTypes.
         /// </summary>
         internal string NamedValueKind { get; }
+
+        /// <summary>
+        /// Describes OptionSets. Includes display names and naming info. 
+        /// Can create <see cref="OptionSetValue"/>s. 
+        /// </summary>
+        internal IExternalOptionSet OptionSetInfo { get; }
+
+        #endregion
+
+        #region Fields for Dataverse Support 
+        
+        // These are legacy implementation that are special cases for dataverse concepts. 
+        // We're trying to move away from these to the more generic versions. 
+
+        // External data source for a tabular connection, like a Dataverse Entity or Sharepoint.
+        // Can also provide Display Names.
+        internal HashSet<IExternalTabularDataSource> AssociatedDataSources { get; }
+
+        // Describes a relationships on tabular connections. 
+        // This is a "placeholder" field that can expand to another entity (ala a TypeRef). 
+        // Can also provide Display Names.
+        // Should eventually be subsumed by LazyTypeProvider
+        public IExpandInfo ExpandInfo { get; }
+
+        // This is very similar interface to OptionSets, could potentially unify. 
+        internal IExternalViewInfo ViewInfo { get; }
+
+        public IPolymorphicInfo PolymorphicInfo { get; }
+
+        public IDataColumnMetadata Metadata { get; }
+
+        #endregion
+
+        #region Bad Fields
+
+        // These fields are extra state for hacks that should be removed. 
+
+        private readonly bool _isFile;
+
+        private readonly bool _isLargeImage;
+
+        private bool? _isActivityPointer;
+
+        /// <summary>
+        /// Hack for binding Service Function optional parameters. 
+        /// The last parameter type of service functions is a record.  The fields of this argument do not have to
+        /// be defined in order for an invocation to correctly type check.  The individual field types must match
+        /// the expected type exactly, however, so it is necessary to set this value for a single aggregate DType
+        /// and not for the individual field types within.
+        /// </summary>
+        public bool AreFieldsOptional { get; set; } = false;
+
+        #endregion 
 
         /// <summary>
         ///  Whether this type is a subtype of all possible types, meaning that it can be placed in
@@ -509,8 +564,6 @@ namespace Microsoft.PowerFx.Core.Types
 #endif
         }
 
-        public DKind Kind { get; }
-
         public bool IsValid => Kind >= DKind._Min && Kind < DKind._Lim;
 
         public bool IsUnknown => Kind == DKind.Unknown;
@@ -545,15 +598,9 @@ namespace Microsoft.PowerFx.Core.Types
 
         public bool IsUntypedObject => Kind == DKind.UntypedObject;
 
-        private readonly bool _isFile;
-
         public bool IsFile => _isFile || Kind == DKind.File;
 
-        private readonly bool _isLargeImage;
-
         public bool IsLargeImage => _isLargeImage || Kind == DKind.LargeImage;
-
-        private bool? _isActivityPointer;
 
         public bool IsActivityPointer
         {
@@ -569,12 +616,6 @@ namespace Microsoft.PowerFx.Core.Types
                 return _isActivityPointer.Value;
             }
         }
-
-        public IExpandInfo ExpandInfo { get; }
-
-        public IPolymorphicInfo PolymorphicInfo { get; }
-
-        public IDataColumnMetadata Metadata { get; }
 
         public DType AttachmentType => IsAttachment ? LazyTypeProvider.GetExpandedType(IsTable) : DType.Invalid;
 
@@ -639,7 +680,7 @@ namespace Microsoft.PowerFx.Core.Types
             var returnType = type.Clone();
             returnType.AssociatedDataSources.Add(dsInfo);
 
-            if (!attachToNestedType)
+            if (!attachToNestedType || type.IsLazyType)
             {
                 return returnType;
             }
