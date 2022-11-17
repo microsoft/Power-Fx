@@ -20,7 +20,7 @@ namespace Microsoft.PowerFx.Core
         /// <summary>
         /// Callback action on command executed.
         /// </summary>
-        /// <param name="codeActionResult">CodeActionResult instance.</param>
-        void OnCommandExecuted(CodeActionResult codeActionResult);
+        /// <param name="codeAction">CodeAction instance.</param>
+        void OnCommandExecuted(CodeAction codeAction);
     }
 }

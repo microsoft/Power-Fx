@@ -99,12 +99,12 @@ namespace Microsoft.PowerFx
             return list.ToArray();
         }
 
-        void IPowerFxScopeQuickFix.OnCommandExecuted(CodeActionResult codeActionResult)
+        void IPowerFxScopeQuickFix.OnCommandExecuted(CodeAction codeAction)
         {
-            if (!string.IsNullOrEmpty(codeActionResult.ActionResultContext?.HandlerName) &&
-                _handlers.TryGetValue(codeActionResult.ActionResultContext.HandlerName, out ICodeFixHandler handler))
+            if (!string.IsNullOrEmpty(codeAction.ActionResultContext?.HandlerName) &&
+                _handlers.TryGetValue(codeAction.ActionResultContext.HandlerName, out ICodeFixHandler handler))
             {
-                handler.OnCodeActionApplied(codeActionResult);
+                handler.OnCodeActionApplied(codeAction);
             }
         }
     }

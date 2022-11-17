@@ -71,7 +71,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             return x;
         }
 
-        public void OnCodeActionApplied(CodeActionResult codeActionResult)
+        public void OnCodeActionApplied(CodeAction codeAction)
         {
             // Empty implementaion.
         }

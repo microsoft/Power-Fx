@@ -158,7 +158,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             switch (commandExecutedParams.Command)
             {
                 case CommandName.CodeActionApplied:
-                    var codeActionResult = JsonSerializer.Deserialize<CodeActionResult>(commandExecutedParams.Argument);
+                    var codeActionResult = JsonRpcHelper.Deserialize<CodeAction>(commandExecutedParams.Argument);
                     if (codeActionResult.ActionResultContext == null)
                     {
                         return;

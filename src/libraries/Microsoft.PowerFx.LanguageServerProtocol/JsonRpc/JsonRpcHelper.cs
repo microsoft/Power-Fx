@@ -66,5 +66,10 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                 method,
                 @params
             }, _jsonSerializerOptions);
+
+        public static T Deserialize<T>(string data)
+        {
+            return JsonSerializer.Deserialize<T>(data, _jsonSerializerOptions);
+        }
     }
 }

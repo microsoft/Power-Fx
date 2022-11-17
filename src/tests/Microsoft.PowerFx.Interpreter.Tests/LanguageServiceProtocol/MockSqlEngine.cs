@@ -48,7 +48,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             };
         }
 
-        public void OnCommandExecuted(CodeActionResult codeActionResult)
+        public void OnCommandExecuted(CodeAction codeAction)
         {
         }
     }
