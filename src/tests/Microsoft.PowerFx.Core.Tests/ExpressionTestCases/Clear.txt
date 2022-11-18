@@ -14,6 +14,9 @@
 >> Clear([1,2,3])
 Blank()
 
+>> Clear(Error({Kind:ErrorKind.Custom}))
+Error({Kind:ErrorKind.Custom})
+
 >> Clear()
 Errors: Error 0-7: Invalid number of arguments: received 0, expected 1.
 

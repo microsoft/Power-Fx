@@ -35,16 +35,6 @@ namespace Microsoft.PowerFx.Functions
             yield return new[] { ClearCollectionArg };
         }
 
-        public override IEnumerable<StringGetter[]> GetSignatures(int arity)
-        {
-            if (arity > 3)
-            {
-                return GetGenericSignatures(arity, PatchDataSourceArg, PatchBaseRecordArg, PatchChangeRecordsArg);
-            }
-
-            return base.GetSignatures(arity);
-        }
-
         public override bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
