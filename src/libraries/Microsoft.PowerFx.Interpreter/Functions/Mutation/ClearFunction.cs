@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
+using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Functions.DLP;
@@ -24,10 +25,8 @@ namespace Microsoft.PowerFx.Functions
     {
         public override bool IsSelfContained => false;
 
-        public override bool CheckTypesAndSemanticsOnly => true;
-
         public ClearFunction()
-            : base("Clear", AboutClear, FunctionCategories.Behavior | FunctionCategories.Behavior, DType.Boolean, 0, 1, 1, DType.EmptyTable)
+            : base("Clear", AboutClear, FunctionCategories.Behavior, DType.EmptyTable, 0, 1, 1, DType.EmptyTable)
         {
         }
 
@@ -46,7 +45,7 @@ namespace Microsoft.PowerFx.Functions
             return base.GetSignatures(arity);
         }
 
-        protected override bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public override bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
@@ -56,6 +55,7 @@ namespace Microsoft.PowerFx.Functions
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
             var fValid = base.CheckTypes(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            Contracts.Assert(returnType.IsTable);
 
             DType dataSourceType = argTypes[0];
 
@@ -68,6 +68,9 @@ namespace Microsoft.PowerFx.Functions
                 fValid = false;
             }
 
+            // Clear returns the new (cleared) collection, so the return schema is the same as the collection schema.
+            returnType = collectionType;
+
             return fValid;
         }
 
@@ -78,9 +81,9 @@ namespace Microsoft.PowerFx.Functions
                 return errorValue;
             }
 
-            if (args[0] is BlankValue blnakValue)
+            if (args[0] is BlankValue)
             {
-                return blnakValue;
+                return FormulaValue.NewBlank(FormulaType.Boolean);
             }
 
             var datasource = (TableValue)args[0];

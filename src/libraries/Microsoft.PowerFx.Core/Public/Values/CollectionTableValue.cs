@@ -106,12 +106,7 @@ namespace Microsoft.PowerFx.Types
 
             _sourceList.Clear();
 
-            if (_sourceList.Count == 0)
-            {
-                return DValue<BooleanValue>.Of(New(true));
-            }
-
-            return DValue<BooleanValue>.Of(New(false));
+            return DValue<BooleanValue>.Of(FormulaValue.NewBlank(FormulaType.Boolean));
         }
 
         protected override bool TryGetIndex(int index1, out DValue<RecordValue> record)

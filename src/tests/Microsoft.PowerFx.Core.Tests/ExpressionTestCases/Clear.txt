@@ -7,20 +7,18 @@
 
 >> Collect(t1, r2);
   Collect(t1, {Field1:3,Field2:"mars",Field3:DateTime(2022,3,1,0,0,0,0),Field4:false});
-  If(Clear(t1), "Cleared", "Failed")
+  Clear(t1);
+  If(CountRows(t1) = 0, "Cleared", "Failed")
 "Cleared"
 
->> Clear(t1)
-true
-
->> IsBlank(Clear(Blank()))
-true
-
->> IsError(Clear(Error({Kind: ErrorKind.Validation})))
-true
+>> Clear([1,2,3])
+Blank()
 
 >> Clear()
 Errors: Error 0-7: Invalid number of arguments: received 0, expected 1.
+
+>> Clear(1)
+Errors: Error 6-7: Invalid argument type (Number). Expecting a Table value instead.|Error 0-8: The function 'Clear' has some invalid arguments.
 
 >> Clear(t1, t1)
 Errors: Error 0-13: Invalid number of arguments: received 2, expected 1.
