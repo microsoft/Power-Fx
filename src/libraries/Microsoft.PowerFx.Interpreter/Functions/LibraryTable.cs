@@ -418,15 +418,15 @@ namespace Microsoft.PowerFx.Functions
             var errors = new List<ErrorValue>();
             bool allNumbers = true, allStrings = true, allBooleans = true, allDatetimes = true, allDates = true;
 
-            foreach (var (row, sortValue) in pairs)
+            foreach (var (row, distinctValue) in pairs)
             {
-                allNumbers &= IsValueTypeErrorOrBlank<NumberValue>(sortValue);
-                allStrings &= IsValueTypeErrorOrBlank<StringValue>(sortValue);
-                allBooleans &= IsValueTypeErrorOrBlank<BooleanValue>(sortValue);
-                allDatetimes &= IsValueTypeErrorOrBlank<DateTimeValue>(sortValue);
-                allDates &= IsValueTypeErrorOrBlank<DateValue>(sortValue);
+                allNumbers &= IsValueTypeErrorOrBlank<NumberValue>(distinctValue);
+                allStrings &= IsValueTypeErrorOrBlank<StringValue>(distinctValue);
+                allBooleans &= IsValueTypeErrorOrBlank<BooleanValue>(distinctValue);
+                allDatetimes &= IsValueTypeErrorOrBlank<DateTimeValue>(distinctValue);
+                allDates &= IsValueTypeErrorOrBlank<DateValue>(distinctValue);
 
-                if (sortValue is ErrorValue errorValue)
+                if (distinctValue is ErrorValue errorValue)
                 {
                     errors.Add(errorValue);
                 }
@@ -561,19 +561,19 @@ namespace Microsoft.PowerFx.Functions
             // Have to handle null
             var addBlankValue = false;
 
-            foreach (var (row, sortValue) in pairs)
+            foreach (var (row, distinctValue) in pairs)
             {
-                if (sortValue?.ToObject() == null)
+                if (distinctValue is BlankValue)
                 {
                     addBlankValue = true;
                     continue;
                 }
 
-                var key = (TDotNetPrimitive)sortValue?.ToObject();
+                var key = (TDotNetPrimitive)distinctValue?.ToObject();
   
                 if (!values.ContainsKey(key))
                 {
-                    var insert = FormulaValue.NewRecordFromFields(new NamedValue(name, sortValue));
+                    var insert = FormulaValue.NewRecordFromFields(new NamedValue(name, distinctValue));
                     values.Add(key, DValue<RecordValue>.Of(insert));
                 }
             }
