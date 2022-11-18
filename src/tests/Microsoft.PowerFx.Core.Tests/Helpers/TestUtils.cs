@@ -118,8 +118,6 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
 
             public override bool IsSelfContained => true;
 
-            public override bool CheckTypesAndSemanticsOnly => true;
-
             public bool CheckNumericTableOverload { get; set; }
 
             public bool CheckStringTableOverload { get; set; }
@@ -136,7 +134,7 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
                 yield break;
             }
 
-            protected override bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> coercedArgs)
+            public override bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> coercedArgs)
             {
                 var isValid = base.CheckTypes(args, argTypes, errors, out returnType, out coercedArgs);
 

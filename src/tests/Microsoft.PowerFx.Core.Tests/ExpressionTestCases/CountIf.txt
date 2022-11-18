@@ -10,14 +10,14 @@
 0
 
 >> CountIf(Sort([-2, -1, 0, 1, 2], 1 / Value), Value > 2)
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> CountIf([1, 2, 0, 4, 5], 1/Value > 2)
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 // CountIf with record errors
 >> CountIf(Filter([-2, -1, 0, 1, 2], Sqrt(1/Value) > 0), Value > 0)
-#Error(Kind=Numeric)
+Error({Kind:ErrorKind.Numeric})
 
 // CountIf with record errors, dealing with them
 >> CountIf(Filter([-2, -1, 0, 1, 2], Sqrt(1/Value) > 0), IsError(ThisRecord))

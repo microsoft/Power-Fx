@@ -104,7 +104,7 @@
 0
 
 >> CountRows(Sort(["-2","-1","0",1,2],1/Value))
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 // ******** NULL and ERROR RECORDS ********
 
@@ -114,10 +114,10 @@
 
 // Error records
 >> CountRows(Table({a:1},{a:2},If(Sqrt(-1)<1,{a:3}),{a:4}))
-#Error(Kind=Numeric)
+Error({Kind:ErrorKind.Numeric})
 
 >> CountRows(Filter([-2, -1, 0, 1, 2], 1 / Value < 3))
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 // All error values
 >> CountRows([1/0])

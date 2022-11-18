@@ -1,34 +1,34 @@
-﻿// *********** Single-argument functions ***********
+// *********** Single-argument functions ***********
 
 >> Abs(If(1/0<2,[1]))
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Abs(If(1<0,[1]))
 Blank()
 
 >> Abs(Filter([1,2,3], Value > 10))
-[]
+Table()
 
 >> Boolean(If(1/0<2,["true"]))
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Boolean(If(1<0,["true"]))
 Blank()
 
 >> Boolean(Filter(["true","false"], Len(Value) > 10))
-[]
+Table()
 
 >> Boolean(If(1/0<2,[1]))
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Boolean(If(1<0,[1]))
 Blank()
 
 >> Boolean(Filter([1,2,3], Value > 10))
-[]
+Table()
 
 >> Char(If(1/0<2,[61]))
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Char(If(1<0,[61]))
 Blank()
@@ -37,25 +37,25 @@ Blank()
 Table()
 
 >> Exp(If(1/0<2,[1]))
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Exp(If(1<0,[1]))
 Blank()
 
 >> Exp(Filter([1,2,3], Value > 10))
-[]
+Table()
 
 >> Int(If(1/0<2,[1]))
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Int(If(1<0,[1]))
 Blank()
 
 >> Int(Filter([1,2,3], Value > 10))
-[]
+Table()
 
 >> Len(If(1/0<2,["true"]))
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Len(If(1<0,["true"]))
 Blank()
@@ -64,96 +64,96 @@ Blank()
 Table()
 
 >> Ln(If(1/0<2,[1]))
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Ln(If(1<0,[1]))
 Blank()
 
 >> Ln(Filter([1,2,3], Value > 10))
-[]
+Table()
 
 >> Sqrt(If(1/0<2,[1]))
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Sqrt(If(1<0,[1]))
 Blank()
 
 >> Sqrt(Filter([1,2,3], Value > 10))
-[]
+Table()
 
 // *********** 2+-argument functions, errors ***********
 
 >> Concatenate(If(1/0<2,["hello", "hi"]), " world")
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Concatenate("hello ", If(Sqrt(-1)<0,["world", "day"]))
-#Error(Kind=Numeric)
+Error({Kind:ErrorKind.Numeric})
 
 >> Concatenate(["hello", "hi"], If(1/0<2," world"))
-Table({Result:Microsoft.PowerFx.Types.ErrorValue},{Result:Microsoft.PowerFx.Types.ErrorValue})
+Table({Result:Error({Kind:ErrorKind.Div0})},{Result:Error({Kind:ErrorKind.Div0})})
 
 >> Concatenate(Char(0), ["hello", "great", "world"])
-Table({Result:Microsoft.PowerFx.Types.ErrorValue},{Result:Microsoft.PowerFx.Types.ErrorValue},{Result:Microsoft.PowerFx.Types.ErrorValue})
+Table({Result:Error({Kind:ErrorKind.InvalidArgument})},{Result:Error({Kind:ErrorKind.InvalidArgument})},{Result:Error({Kind:ErrorKind.InvalidArgument})})
 
 >> Concatenate(["hello", "hi"], " ", ["John", "Jane", "Jim", "Joan"])
-Table({Result:"hello John"},{Result:"hi Jane"},{Result:Microsoft.PowerFx.Types.ErrorValue},{Result:Microsoft.PowerFx.Types.ErrorValue})
+Table({Result:"hello John"},{Result:"hi Jane"},{Result:Error({Kind:ErrorKind.NotApplicable})},{Result:Error({Kind:ErrorKind.NotApplicable})})
 
->> Concat(Concatenate(["one", "two"], Text(1/0)), IfError(Result, $"Error(Kind={FirstError.Kind})"), ", ")
-"Error(Kind=13), Error(Kind=13)"
+>> Concat(Concatenate(["one", "two"], Text(1/0)), IfError(Result, $"Error({{Kind:{FirstError.Kind}}})"), ", ")
+"Error({Kind:13}), Error({Kind:13})"
 
->> Concat(Concatenate(Char(0), ["hello", "great", "world"]), IfError(Result, $"Error(Kind={FirstError.Kind})"), ", ")
-"Error(Kind=25), Error(Kind=25), Error(Kind=25)"
+>> Concat(Concatenate(Char(0), ["hello", "great", "world"]), IfError(Result, $"Error({{Kind:{FirstError.Kind}}})"), ", ")
+"Error({Kind:25}), Error({Kind:25}), Error({Kind:25})"
 
->> Concat(Concatenate(["hello", "hi"], " ", ["John", "Jane", "Jim", "Joan"]), IfError(Result, $"Error(Kind={FirstError.Kind})"), ", ")
-"hello John, hi Jane, Error(Kind=27), Error(Kind=27)"
+>> Concat(Concatenate(["hello", "hi"], " ", ["John", "Jane", "Jim", "Joan"]), IfError(Result, $"Error({{Kind:{FirstError.Kind}}})"), ", ")
+"hello John, hi Jane, Error({Kind:27}), Error({Kind:27})"
 
 >> Find(If(1/0<2,["hello", "hi"]), " world")
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Find("a", If(Sqrt(-1)<0,["world", "day"]))
-#Error(Kind=Numeric)
+Error({Kind:ErrorKind.Numeric})
 
 >> Find(["a", "b"], If(1/0<2,"abcdefg"))
-Table({Result:Microsoft.PowerFx.Types.ErrorValue},{Result:Microsoft.PowerFx.Types.ErrorValue})
+Table({Result:Error({Kind:ErrorKind.Div0})},{Result:Error({Kind:ErrorKind.Div0})})
 
 >> Find(Char(0), ["hello", "great", "world"])
-Table({Result:Microsoft.PowerFx.Types.ErrorValue},{Result:Microsoft.PowerFx.Types.ErrorValue},{Result:Microsoft.PowerFx.Types.ErrorValue})
+Table({Result:Error({Kind:ErrorKind.InvalidArgument})},{Result:Error({Kind:ErrorKind.InvalidArgument})},{Result:Error({Kind:ErrorKind.InvalidArgument})})
 
 >> Find(["a", "b", "c"], "The quick brown fox jumped over the lazy dog", [1, 2, 3, 4, 5])
-Table({Result:38},{Result:11},{Result:8},{Result:Microsoft.PowerFx.Types.ErrorValue},{Result:Microsoft.PowerFx.Types.ErrorValue})
+Table({Result:38},{Result:11},{Result:8},{Result:Error({Kind:ErrorKind.NotApplicable})},{Result:Error({Kind:ErrorKind.NotApplicable})})
 
->> Concat(Find(["a", "b"], If(1/0<2,"abcdefg")), IfError(Text(Result), $"Error(Kind={FirstError.Kind})"), ", ")
-"Error(Kind=13), Error(Kind=13)"
+>> Concat(Find(["a", "b"], If(1/0<2,"abcdefg")), IfError(Text(Result), $"Error({{Kind:{FirstError.Kind}}})"), ", ")
+"Error({Kind:13}), Error({Kind:13})"
 
->> Concat(Find(Char(0), ["hello", "great", "world"]), IfError(Text(Result), $"Error(Kind={FirstError.Kind})"), ", ")
-"Error(Kind=25), Error(Kind=25), Error(Kind=25)"
+>> Concat(Find(Char(0), ["hello", "great", "world"]), IfError(Text(Result), $"Error({{Kind:{FirstError.Kind}}})"), ", ")
+"Error({Kind:25}), Error({Kind:25}), Error({Kind:25})"
 
->> Concat(Find(["a", "b", "c"], "The quick brown fox jumped over the lazy dog", [1, 2, 3, 4, 5]), IfError(Text(Result), $"Error(Kind={FirstError.Kind})"), ", ")
-"38, 11, 8, Error(Kind=27), Error(Kind=27)"
+>> Concat(Find(["a", "b", "c"], "The quick brown fox jumped over the lazy dog", [1, 2, 3, 4, 5]), IfError(Text(Result), $"Error({{Kind:{FirstError.Kind}}})"), ", ")
+"38, 11, 8, Error({Kind:27}), Error({Kind:27})"
 
 >> Round(If(1/0<2,[12.34, 56.78]), 1)
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Round(1234.5678, If(Sqrt(-1)<0,[1, 2, 3]))
-#Error(Kind=Numeric)
+Error({Kind:ErrorKind.Numeric})
 
 >> Round([12.34, 56.78], 1/0)
-[Microsoft.PowerFx.Types.ErrorValue,Microsoft.PowerFx.Types.ErrorValue]
+Table({Value:Error({Kind:ErrorKind.Div0})},{Value:Error({Kind:ErrorKind.Div0})})
 
 >> Round(Sqrt(-1), [1, 2, 3])
-Table({Result:Microsoft.PowerFx.Types.ErrorValue},{Result:Microsoft.PowerFx.Types.ErrorValue},{Result:Microsoft.PowerFx.Types.ErrorValue})
+Table({Result:Error({Kind:ErrorKind.Numeric})},{Result:Error({Kind:ErrorKind.Numeric})},{Result:Error({Kind:ErrorKind.Numeric})})
 
 >> Round([123.456, 234.567], [1, 2, 3])
-[123.5,234.57,Microsoft.PowerFx.Types.ErrorValue]
+Table({Value:123.5},{Value:234.57},{Value:Error({Kind:ErrorKind.NotApplicable})})
 
->> Concat(Round([12.34, 56.78], 1/0), IfError(Text(Value), $"Error(Kind={FirstError.Kind})"), ", ")
-"Error(Kind=13), Error(Kind=13)"
+>> Concat(Round([12.34, 56.78], 1/0), IfError(Text(Value), $"Error({{Kind:{FirstError.Kind}}})"), ", ")
+"Error({Kind:13}), Error({Kind:13})"
 
->> Concat(Round(Sqrt(-1), [1, 2, 3]), IfError(Text(Result), $"Error(Kind={FirstError.Kind})"), ", ")
-"Error(Kind=24), Error(Kind=24), Error(Kind=24)"
+>> Concat(Round(Sqrt(-1), [1, 2, 3]), IfError(Text(Result), $"Error({{Kind:{FirstError.Kind}}})"), ", ")
+"Error({Kind:24}), Error({Kind:24}), Error({Kind:24})"
 
->> Concat(Round([123.456, 234.567], [1, 2, 3]), IfError(Text(Value), $"Error(Kind={FirstError.Kind})"), ", ")
-"123.5, 234.57, Error(Kind=27)"
+>> Concat(Round([123.456, 234.567], [1, 2, 3]), IfError(Text(Value), $"Error({{Kind:{FirstError.Kind}}})"), ", ")
+"123.5, 234.57, Error({Kind:27})"
 
 // *********** 2+-argument functions, blanks ***********
 
@@ -188,7 +188,7 @@ Blank()
 Blank()
 
 >> Round([12.34, 56.78], If(1<0,1))
-[12,57]
+Table({Value:12},{Value:57})
 
 >> Round(If(1<0,2), [1, 2, 3])
 Table({Result:0},{Result:0},{Result:0})
@@ -208,7 +208,7 @@ Table()
 Table()
 
 >> Round(Filter([12.34, 56.78], Value > 100), 1)
-[]
+Table()
 
 >> Round(1234.5678, Filter([1, 2, 3], Value > 10))
 Table()
@@ -220,10 +220,10 @@ Blank()
 Blank()
 
 >> Concatenate(["a","b"], If(1/0<2,["abcdef", "ghijkl"]))
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Find(If(1/0<2,["a","b"]), ["abcdef", "ghijkl"])
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Concatenate(["a","b"], If(1<0,["abcdef", "ghijkl"]))
 Blank()
@@ -232,16 +232,16 @@ Blank()
 Blank()
 
 >> Concatenate(If(1<0,["a","b"]), If(1/0<2,["abcdef", "ghijkl"]))
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Concatenate( If(Sqrt(-1)<0,["Hi", "hello"]), If(1/0<2, " world") )
-#Error(Kind=Numeric)
+Error({Kind:ErrorKind.Numeric})
 
 >> Concatenate( If(Sqrt(-1)<0,"Hello"), If(1/0<2, [" world", "people"]) )
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Concatenate( If(Sqrt(-1)<0,["Hi", "hello"]), If(1/0<2, [" world", "people"]) )
-#Error(Kind=Numeric, Div0)
+Error(Table({Kind:ErrorKind.Numeric},{Kind:ErrorKind.Div0}))
 
 >> Concatenate(Filter([1,2], Value<>Value), If(1/0<0, "test"))
 Table()

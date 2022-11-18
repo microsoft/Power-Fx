@@ -2,16 +2,16 @@
 {Value:30}
 
 >> Index([1, 2, 3, 4, 5], 6)
-#Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Index([1, 2, 3, 4, 5], -1)
-#Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Index([1, 2, 3, 4, 5], 0)
-#Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Index([1, 2, 3, 4, 5], Blank())
-#Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Index(Blank(), 2)
 Blank()
@@ -20,13 +20,13 @@ Blank()
 {Value:7}
 
 >> Index([1, 2, 3, 4, 5], 1/0)
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Index(Table({a:"1", b:"101"}, {a:"2"}, {b:"3"}), 1)
 {a:"1",b:"101"}
 
 >> Index(Filter([1,2,3],Value=4),2)
-#Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Index(Table({a:{Value:2},b:1},{a:{Value:1},b:2}), 1).a
 {Value:2}
@@ -47,7 +47,7 @@ Blank()
 "asdf"
 
 >> Index(Error({Kind: 11}), 1)
-#Error(Kind=Validation)
+Error({Kind:ErrorKind.Validation})
 
 >> Index([1, 2, 3, 4, 5], Error({Kind: 11}))
-#Error(Kind=Validation)
+Error({Kind:ErrorKind.Validation})

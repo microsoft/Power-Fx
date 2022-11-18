@@ -1,18 +1,18 @@
-﻿>> ForAll([1,2,3], ThisRecord)
-[1,2,3]
+>> ForAll([1,2,3], ThisRecord)
+Table({Value:1},{Value:2},{Value:3})
 
 >> ForAll([1,2,3], ThisRecord.Value)
-[1,2,3]
+Table({Value:1},{Value:2},{Value:3})
 
 >> ForAll([1,2,3] As X, X)
-[1,2,3]
+Table({Value:1},{Value:2},{Value:3})
 
 >> ForAll([1,2,3] As X, X.Value)
-[1,2,3]
+Table({Value:1},{Value:2},{Value:3})
 
 
 >> ForAll([1,2,3],Value*Value)
-[1,4,9]
+Table({Value:1},{Value:4},{Value:9})
 
 // As renames
 >> First(ForAll([1,2,3] As X, X)).Value
@@ -22,26 +22,26 @@
 1
 
 >> ForAll(Sort([60, 61, 62, 63, 64], 1/Value), Char(Value))
-["@","?",">","=","<"]
+Table({Value:"@"},{Value:"?"},{Value:">"},{Value:"="},{Value:"<"})
 
 // ForAll with empty table
 >> ForAll(FirstN([60, 61, 62, 63, 64], Blank()), Char(Value))
-[]
+Table()
 
 >> ForAll(Sort([60, 61, 0, 63, 64], 1/Value), Char(Value))
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> ForAll(Table({Value:1,Zulu:1}, {Value:0,Zulu:0}, {Value:2,Zulu:2}), 1/ThisRecord.Value)
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> First(LastN(ForAll(Table({Value:1,Zulu:1}, {Value:0,Zulu:0}, {Value:2,Zulu:2}), 1/ThisRecord.Value), 2)).Value
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Table({Value:1},First(LastN(ForAll(Table({Value:1,Zulu:1}, {Value:0,Zulu:0}, {Value:2,Zulu:2}), 1/ThisRecord.Value), 2)),{Value:2})
-Table({Value:1},Microsoft.PowerFx.Types.ErrorValue,{Value:2})
+Table({Value:1},Error({Kind:ErrorKind.Div0}),{Value:2})
 
 >> First(First(LastN(ForAll(Table({Value:1}, {Value:0}, {Value:2}), Table({a: 1/ThisRecord.Value})), 2)).Value)
-{a:Microsoft.PowerFx.Types.ErrorValue}
+{a:Error({Kind:ErrorKind.Div0})}
 
 >> ForAll([1,2,3], {C:1})
 Table({C:1},{C:1},{C:1})

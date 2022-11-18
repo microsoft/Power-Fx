@@ -23,8 +23,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool IsSelfContained => true;
 
-        public override bool CheckTypesAndSemanticsOnly => true;
-
         public TextFunction()
             : base("Text", TexlStrings.AboutText, FunctionCategories.Table | FunctionCategories.Text | FunctionCategories.DateTime, DType.String, 0, 1, 3, DType.Number, DType.String, DType.String)
         {
@@ -36,7 +34,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             yield return new[] { TexlStrings.TextArg1, TexlStrings.TextArg2, TexlStrings.TextArg3 };
         }
 
-        protected override bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public override bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);

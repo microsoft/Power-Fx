@@ -24,8 +24,6 @@ namespace Microsoft.PowerFx.Functions
     {
         public override bool RequiresDataSourceScope => true;
 
-        public override bool CheckTypesAndSemanticsOnly => true;
-
         public override bool ArgMatchesDatasourceType(int argNum)
         {
             return argNum >= 1;
@@ -41,7 +39,7 @@ namespace Microsoft.PowerFx.Functions
         {
         }
 
-        protected override bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public override bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
@@ -161,8 +159,6 @@ namespace Microsoft.PowerFx.Functions
     {
         public override bool IsSelfContained => false;
 
-        public override bool CheckTypesAndSemanticsOnly => true;
-
         public PatchFunction()
             : base("Patch", AboutPatch, FunctionCategories.Table | FunctionCategories.Behavior, DType.EmptyRecord, 0, 3, int.MaxValue, DType.EmptyTable, DType.EmptyRecord, DType.EmptyRecord)
         {
@@ -185,7 +181,7 @@ namespace Microsoft.PowerFx.Functions
             return base.GetSignatures(arity);
         }
 
-        protected override bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public override bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
@@ -198,6 +194,12 @@ namespace Microsoft.PowerFx.Functions
             DType dataSourceType = argTypes[0];
             DType retType = DType.EmptyRecord;
 
+            if (!dataSourceType.IsTable)
+            {
+                errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrNeedValidVariableName_Arg, Name);
+                isValid = false;
+            }
+
             foreach (var assocDS in dataSourceType.AssociatedDataSources)
             {
                 retType = DType.AttachDataSourceInfo(retType, assocDS);
@@ -206,8 +208,6 @@ namespace Microsoft.PowerFx.Functions
             for (var i = 1; i < args.Length; i++)
             {
                 DType curType = argTypes[i];
-
-                var tableType = (TableType)FormulaType.Build(dataSourceType);
 
                 if (!curType.IsRecord)
                 {

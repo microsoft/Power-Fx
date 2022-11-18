@@ -3,58 +3,51 @@
 
 using System;
 using System.Collections.Generic;
+using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx
 {
     /// <summary>
     /// Mutable collection for runtime Values for a <see cref="SymbolTable"/>.
+    /// Will lazily create a symbol table. 
+    /// To match to an existing symbol table, call <see cref="SymbolExtensions.CreateValues(ReadOnlySymbolTable, ReadOnlySymbolValues[])"/>.
     /// </summary>
     public class SymbolValues : ReadOnlySymbolValues
     {
-        // Map of name to values. Lazy created.
-        private Dictionary<string, FormulaValue> _symbolValues;
+        // Map of name Slots --> Values. 
+        // Index by Slot.SlotIndex. This could be optimized to be a dense array. 
+        private readonly Dictionary<int, Tuple<ISymbolSlot, FormulaValue>> _symbolValues = new Dictionary<int, Tuple<ISymbolSlot, FormulaValue>>();
 
         // Services for runtime functions. Lazy created.
         private Dictionary<Type, object> _services;
 
+        private readonly SymbolTable _symTable;
+
         /// <summary>
-        /// Enable chaining of lookups. Chaining is handled by calling the base methods. 
+        /// Register an event to invoke when <see cref="Set(ISymbolSlot, FormulaValue)"/> is called.
         /// </summary>
-        public ReadOnlySymbolValues Parent { get; init; }
+        public event Action<ISymbolSlot, FormulaValue> OnUpdate;
 
-        // SymbolTable describes what values we have in the config. 
-        // By default, compute it based on the previous AddVariable calls. 
-        // A base class can override and do this more efficiently. 
-        protected override ReadOnlySymbolTable GetSymbolTableSnapshotWorker()
+        // Table will be inferred from the values we add. 
+        // Take debugName as a parameter so that we can pass it to SymbolTable that we create.
+        public SymbolValues(string debugName = null)
+            : this(new SymbolTable { DebugName = debugName ?? "RuntimeValues" })
         {
-            // This creates a new SymbolTable and copies values over. 
-            // But we could have an optimize version that returns a 
-            // derived ReadOnlySymbolTable who overrides TryLookup and binds directly to
-            // our same dictionary. 
+        }
 
-            var table = new SymbolTable
-            {
-                DebugName = DebugName,
-                Parent = Parent?.GetSymbolTableSnapshot()
-            };
+        // Values for an existing table.
+        public SymbolValues(SymbolTable table)
+            : base(table)
+        {
+            _symTable = table ?? throw new ArgumentNullException(nameof(table));
 
-            if (_symbolValues != null)
-            {
-                foreach (var kv in _symbolValues)
-                {
-                    table.AddVariable(kv.Key, kv.Value.Type);
-                }
-            }
-
-            return table;
+            DebugName = table.DebugName;
         }
 
         public SymbolValues AddService<T>(T data)
         {
-            // this changes the symbols.
-            Inc();
-
+            // this changes the symbols.            
             if (_services == null)
             {
                 _services = new Dictionary<Type, object>();
@@ -65,18 +58,17 @@ namespace Microsoft.PowerFx
             return this;
         }
 
+        /// <summary>
+        /// Convenience method to add a new unique symbol.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public SymbolValues Add(string name, FormulaValue value)
         {
-            // this changes the symbols.
-            Inc();
+            var slot = _symTable.AddVariable(name, value.Type, mutable: true);
+            Set(slot, value);
 
-            if (_symbolValues == null)
-            {
-                _symbolValues = new Dictionary<string, FormulaValue>(StringComparer.Ordinal);
-            }
-
-            // Can't already exist. 
-            _symbolValues.Add(name, value);
             return this;
         }
 
@@ -87,28 +79,41 @@ namespace Microsoft.PowerFx
                 return data;
             }
 
-            if (Parent != null)
-            {
-                return Parent.GetService(serviceType);
-            }
-
             return null;
         }
 
-        public override bool TryGetValue(string name, out FormulaValue value)
+        public override void Set(ISymbolSlot slot, FormulaValue value)
         {
-            if (_symbolValues != null && _symbolValues.TryGetValue(name, out value))
+            ValidateSlot(slot);
+
+            if (value == null)
             {
-                return true;
+                _symbolValues.Remove(slot.SlotIndex);
+            }
+            else
+            {
+                _symTable.ValidateAccepts(slot, value.Type);
+                _symbolValues[slot.SlotIndex] = Tuple.Create(slot, value);
             }
 
-            if (Parent != null)
+            OnUpdate?.Invoke(slot, value);
+        }
+
+        public override FormulaValue Get(ISymbolSlot slot)
+        {
+            ValidateSlot(slot);
+
+            if (_symbolValues.TryGetValue(slot.SlotIndex, out var value))
             {
-                return Parent.TryGetValue(name, out value);
+                if (!value.Item1.IsDisposed())
+                {
+                    return value.Item2;
+                }
             }
 
-            value = null;
-            return false;
+            // Return a blank, which needs to be typed.
+            var type = _symTable.GetTypeFromSlot(slot);
+            return FormulaValue.NewBlank(type);
         }
     }
 }

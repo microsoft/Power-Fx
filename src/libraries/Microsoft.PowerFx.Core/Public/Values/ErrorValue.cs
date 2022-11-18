@@ -1,7 +1,9 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Types;
@@ -77,9 +79,14 @@ namespace Microsoft.PowerFx.Types
         {            
             var flag = true;
 
-            sb.Append("Error(Table(");
+            sb.Append("Error(");
 
-            foreach (var errorValue in _errors)
+            if (_errors.Count > 1)
+            {
+                sb.Append("Table(");
+            }          
+
+            foreach (var error in _errors)
             {
                 if (!flag)
                 {
@@ -89,18 +96,23 @@ namespace Microsoft.PowerFx.Types
                 flag = false;
 
                 sb.Append("{Kind:ErrorKind.");
-                sb.Append(errorValue.Kind.ToString());
+                sb.Append(error.Kind.ToString());
 
-                if (errorValue.Message != null)
+                if (error.Message != null && !settings.UseCompactRepresentation)
                 {
                     sb.Append(", Message:");
-                    sb.Append(CharacterUtils.ToPlainText(errorValue.Message));
+                    sb.Append(CharacterUtils.ToPlainText(error.Message));
                 }
 
                 sb.Append("}");
             }
 
-            sb.Append("))");
+            sb.Append(")");
+
+            if (_errors.Count > 1)
+            {
+                sb.Append(")");
+            }
         }
     }
 }

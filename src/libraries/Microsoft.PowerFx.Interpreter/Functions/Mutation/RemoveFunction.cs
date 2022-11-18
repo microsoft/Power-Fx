@@ -62,8 +62,6 @@ namespace Microsoft.PowerFx.Functions
     {
         public override bool IsSelfContained => false;
 
-        public override bool CheckTypesAndSemanticsOnly => true;
-
         public RemoveFunction()
         : base("Remove", AboutRemove, FunctionCategories.Table | FunctionCategories.Behavior, DType.Boolean, 0, 2, int.MaxValue, DType.EmptyTable, DType.EmptyRecord)
         {
@@ -85,7 +83,7 @@ namespace Microsoft.PowerFx.Functions
             return base.GetSignatures(arity);
         }
 
-        protected override bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public override bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
@@ -101,8 +99,8 @@ namespace Microsoft.PowerFx.Functions
             DType collectionType = argTypes[0];
             if (!collectionType.IsTable)
             {
-                fValid = false;
                 errors.EnsureError(args[0], ErrNeedTable_Func, Name);
+                fValid = false;
             }
 
             var argCount = argTypes.Length;
@@ -144,12 +142,6 @@ namespace Microsoft.PowerFx.Functions
                     {
                         errors.EnsureError(DocumentErrorSeverity.Severe, args[i], ErrTableDoesNotAcceptThisType);
                     }
-                }
-
-                // Only warn about no-op record inputs if there are no data sources that would use reference identity for comparison.
-                else if (!collectionType.AssociatedDataSources.Any() && !recordAcceptsCollection)
-                {
-                    errors.EnsureError(DocumentErrorSeverity.Warning, args[i], ErrTableDoesNotAcceptThisType);
                 }
             }
 

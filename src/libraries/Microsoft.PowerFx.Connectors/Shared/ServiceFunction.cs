@@ -57,7 +57,6 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
         public override Capabilities Capabilities => Capabilities.OutboundInternetAccess | Capabilities.EnterpriseAuthentication | Capabilities.PrivateNetworkAccess;
         public override bool IsHidden => _isHidden;
         public override bool IsSelfContained => !_isBehaviorOnly;
-        public override bool CheckTypesAndSemanticsOnly => true;
 
         public ServiceFunction(IService parentService, DPath theNamespace, string name, string localeSpecificName, string description,
             DType returnType, BigInteger maskLambdas, int arityMin, int arityMax, bool isBehaviorOnly, bool isAutoRefreshable, bool isDynamic, bool isCacheEnabled, int cacheTimetoutMs, bool isHidden,
@@ -230,7 +229,7 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
         }
 #endif
 
-        protected override bool CheckTypes(TexlNode[] args, DType[] argTypes,
+        public override bool CheckTypes(TexlNode[] args, DType[] argTypes,
             IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);

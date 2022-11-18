@@ -18,13 +18,13 @@ Blank()
 Blank()
 
 >> Sum(Sort([-2, -1, 0, 1, 2], 1 / Value), Value)
-#Error
+Error({Kind:ErrorKind.Div0})
 
 >> Sum(1, 2, 3, Blank(), 2, 3)
 11
 
 >> Sum([1, 2, 1/0, 4, 5], Value)
-#Error
+Error({Kind:ErrorKind.Div0})
 
 >> IsBlank(Average(Filter([1,2,3],Value > 10), Value))
-#Error
+Error({Kind:ErrorKind.Div0})

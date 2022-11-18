@@ -3297,7 +3297,7 @@
     
   </data>
   <data name="ErrRemoveAllArg" xml:space="preserve">
-    <value>Nếu được cung cấp, đối số cuối cùng phải là "Tất cả". Có lỗi đánh máy không?</value>
+    <value>Nếu được cung cấp, đối số cuối cùng phải là "RemoveFlags.All". Có lỗi đánh máy không?</value>
     
   </data>
   <data name="PenMode_Draw_DisplayName" xml:space="preserve">
@@ -4663,6 +4663,68 @@
   </data>
   <data name="SetArg2" xml:space="preserve">
     <value>giá trị</value>
+    
+  </data>
+  <data name="AboutDec2Hex" xml:space="preserve">
+    <value>Chuyển đổi một số thập phân sang số thập lục phân</value>
+    
+  </data>
+  <data name="Dec2HexArg1" xml:space="preserve">
+    <value>số</value>
+  </data>
+  <data name="AboutDec2Hex_number" xml:space="preserve">
+    <value>Một giá trị số thập phân để chuyển đổi sang chuỗi thập lục phân.</value>
+    
+  </data>
+  <data name="Dec2HexArg2" xml:space="preserve">
+    <value>địa điểm</value>
+  </data>
+  <data name="AboutDec2Hex_places" xml:space="preserve">
+    <value>Một giá trị số để thêm phần đệm vào chuỗi thập lục phân.</value>
+    
+  </data>
+  <data name="AboutDec2HexT" xml:space="preserve">
+    <value>Chuyển đổi một cột số thập phân sang số thập lục phân</value>
+    
+  </data>
+  <data name="Dec2HexTArg1" xml:space="preserve">
+    <value>bảng</value>
+  </data>
+  <data name="Dec2HexTArg2" xml:space="preserve">
+    <value>địa điểm</value>
+  </data>
+  <data name="AboutDec2HexT_places" xml:space="preserve">
+    <value>Một giá trị số hoặc mảng giá trị để thêm phần đệm vào chuỗi thập lục phân.</value>
+    
+  </data>
+  <data name="AboutDec2Hex_table" xml:space="preserve">
+    <value>Một cột gồm các giá trị số thập phân cần chuyển đổi sang số thập lục phân.</value>
+    
+  </data>
+  <data name="AboutHex2Dec" xml:space="preserve">
+    <value>Chuyển đổi một số thập lục phân sang số thập phân</value>
+    
+  </data>
+  <data name="Hex2DecArg1" xml:space="preserve">
+    <value>số</value>
+  </data>
+  <data name="AboutHex2Dec_number" xml:space="preserve">
+    <value>Một chuỗi thập lục phân cần chuyển đổi sang chuỗi thập phân.</value>
+    
+  </data>
+  <data name="AboutHex2DecT" xml:space="preserve">
+    <value>Chuyển đổi một cột số thập lục phân sang số thập phân</value>
+    
+  </data>
+  <data name="Hex2DecTArg1" xml:space="preserve">
+    <value>bảng</value>
+  </data>
+  <data name="AboutHex2Dec_table" xml:space="preserve">
+    <value>Một cột gồm các chuỗi thập lục phân cần chuyển đổi sang chuỗi thập phân.</value>
+    
+  </data>
+  <data name="ErrDeprecated" xml:space="preserve">
+    <value>Tính năng này không được dùng nữa và không còn được hỗ trợ.</value>
     
   </data>
 </root>

@@ -20,8 +20,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool IsSelfContained => true;
 
-        public override bool CheckTypesAndSemanticsOnly => true;
-
         public override DelegationCapability FunctionDelegationCapability => DelegationCapability.Null | DelegationCapability.Filter;
 
         public IsBlankFunctionBase(string name, TexlStrings.StringGetter description, FunctionCategories functionCategories, DType returnType, BigInteger maskLambdas, int arityMin, int arityMax)
@@ -29,7 +27,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         {
         }
 
-        protected override bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public override bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);

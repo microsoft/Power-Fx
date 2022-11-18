@@ -28,8 +28,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => true;
 
-        public override bool CheckTypesAndSemanticsOnly => true;
-
         public ErrorFunction()
             : base("Error", TexlStrings.AboutError, FunctionCategories.Logical, DType.ObjNull, 0, 1, 1)
         {
@@ -45,7 +43,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return new List<string>() { EnumConstants.ErrorKindEnumString };
         }
 
-        protected override bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public override bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);

@@ -161,10 +161,10 @@ DateTime(2022,3,8,0,0,0,0)
 200
 
 >> Max("sampleText")
-#Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Min("sampleText")
-#Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Max("10")
 10
@@ -185,10 +185,10 @@ DateTime(2022,3,8,0,0,0,0)
 9
 
 >> Max("100", "AB")
-#Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Min("100", "AB")
-#Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Max(true,true)
 1
@@ -209,30 +209,30 @@ DateTime(2022,3,8,0,0,0,0)
 0
 
 >> Max("true","false")
-#Error(Kind=InvalidArgument, InvalidArgument)
+Error(Table({Kind:ErrorKind.InvalidArgument},{Kind:ErrorKind.InvalidArgument}))
 
 >> Min("true","false")
-#Error(Kind=InvalidArgument, InvalidArgument)
+Error(Table({Kind:ErrorKind.InvalidArgument},{Kind:ErrorKind.InvalidArgument}))
 
 // ****** Errors, scalar arguments ******
 
 >> Max(1/0)
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Min(1/0)
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Max(Time(3,4,5), Time(2,1/0,8))
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Min(Time(3,4,5), Time(2,1/0,8))
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Max(1, 3, Sqrt(-1), -3)
-#Error(Kind=Numeric)
+Error({Kind:ErrorKind.Numeric})
 
 >> Min(1, 3, Sqrt(-1), -3)
-#Error(Kind=Numeric)
+Error({Kind:ErrorKind.Numeric})
 
 // ****** Table + expression, numeric ******
 
@@ -289,16 +289,16 @@ Date(2000,1,11)
 // ****** Errors, table + expression ******
 
 >> Max([1, 2, 1/0, 4, 5], Value)
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Min([1, 2, 1/0, 4, 5], Value)
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Max(If(Sqrt(-1) < 1, [1,2,3]), Value)
-#Error(Kind=Numeric)
+Error({Kind:ErrorKind.Numeric})
 
 >> Min(If(Sqrt(-1) < 1, [1,2,3]), Value)
-#Error(Kind=Numeric)
+Error({Kind:ErrorKind.Numeric})
 
 // ****** Compiler errors ******
 

@@ -53,27 +53,27 @@ Blank()
 
 // Switch case with Error as the condition, and without default result
 >> Switch(1/0,0,3,1,5,2,7)
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 // Switch case with Error as the condition, and with default result
 >> Switch(1/0,0,3,1,5,2,7,11)
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 // Switch case with Error as the condition and as exact match
 >> Switch(1/0,1,0,1/0,3,2,5,2,7,11)
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 // Switch case with Error as the condition and as one of the result
 >> Switch(1/0,1,0,3,1/0,1,5,2,7)
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 // Switch case with Error as the result of the exact match
 >> Switch(1,0,3,1,1/0,2,7)
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 // Switch case with Error as one of the match
 >> Switch(1,1/0,3,1,5,2,7,11)
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 // Conditions not reached are not evaluated
 >> Switch(1,0,3,1,5,1/0,7,11)
@@ -89,7 +89,7 @@ Blank()
 
 // Default result reached and evaluated 
 >> Switch(-1,0,3,1,5,2,7,1/0)
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 
 // ************************************** STRING CASES **************************************
@@ -147,16 +147,16 @@ Blank()
 Blank()
 
 >> Switch(1/0,"zero","one","two")",
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Switch("zero",1/0,"one","two")",
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Switch("zero","one",1/0,"two")",
 "two"
 
 >> Switch("zero","one","two",1/0)",
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 
 // ************************************** DIFFERENT DATAYPE RESULTS
@@ -188,7 +188,7 @@ Date(2000,1,10)
 
 //Number-String
 >> Switch("Case1","Case2",1,"Case1","Result2")
-#Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 //Number-Boolean
 >> Switch("Case1","Case2",1,"Case1",true)
@@ -317,14 +317,14 @@ Date(200,1,1)
 Date(2001,12,5)
 
 >> Switch("Case1","Case2",Date(2000,1,4),"Case1","AB$%^")
-#Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 //Date-Boolean
 >> Switch("Case1","Case2",Date(2000,1,4),"Case1",false)
-#Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Switch("Case1","Case2",Date(2000,1,4),"Case1",true)
-#Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 //Date-Date
 >> Switch("Case1","Case2",Date(2000,1,4),"Case1",Date(2000,1,5))
@@ -367,14 +367,14 @@ Date(2000,1,10)
 12:00 AM
 
 >> Switch("Case1","Case2",Time(6,30,30),"Case1","AB$%^")
-#Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 //Time-Boolean
 >> Switch("Case1","Case2",Time(6,30,30),"Case1",false)
-#Error
+Error({Kind:ErrorKind.Div0})
 
 >> Switch("Case1","Case2",Time(6,30,30),"Case1",true)
-#Error
+Error({Kind:ErrorKind.Div0})
 
 //Time-Date
 >> Switch("Case1","Case2",Time(6,30,30),"Case1",Date(2000,1,5))
@@ -417,14 +417,14 @@ Date(2000,1,10)
 12/5/2001 12:00 AM
 
 >> Switch("Case1","Case2",DateTimeValue("4/1/2001 10:00:00"),"Case1","AB$%^")
-#Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 //DateTime-Boolean
 >> Switch("Case1","Case2",DateTimeValue("4/1/2001 10:00:00"),"Case1",false)
-#Error
+Error({Kind:ErrorKind.Div0})
 
 >> Switch("Case1","Case2",DateTimeValue("4/1/2001 10:00:00"),"Case1",true)
-#Error
+Error({Kind:ErrorKind.Div0})
 
 //DateTime-Date
 >> Switch("Case1","Case2",DateTimeValue("4/1/2001 10:00:00"),"Case1",Date(2000,1,5))

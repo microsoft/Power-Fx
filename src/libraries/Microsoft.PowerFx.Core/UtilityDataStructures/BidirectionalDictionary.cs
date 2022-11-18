@@ -27,6 +27,8 @@ namespace Microsoft.PowerFx.Core.UtilityDataStructures
             }
         }
 
+        public int Count => _firstToSecond.Count;
+
         public bool Add(TFirst first, TSecond second)
         {
             if (_firstToSecond.ContainsKey(first) || _secondToFirst.ContainsKey(second))

@@ -27,7 +27,7 @@ namespace Microsoft.PowerFx.Types
 
         public override void ToExpression(StringBuilder sb, FormulaValueSerializerSettings settings)
         {
-            sb.Append($"DateValue({CharacterUtils.ToPlainText(Value.ToString("o"))})");
+            sb.Append($"Date({Value.Year},{Value.Month},{Value.Day})");
         }
     }
 }
