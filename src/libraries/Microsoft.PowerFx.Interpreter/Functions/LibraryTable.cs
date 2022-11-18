@@ -395,7 +395,7 @@ namespace Microsoft.PowerFx.Functions
             return new InMemoryTableValue(irContext, shuffledRecords);
         }
 
-        private static async Task<(DValue<RecordValue> row, FormulaValue sortValue)> ApplySortLambda(EvalVisitor runner, EvalVisitorContext context, DValue<RecordValue> row, LambdaFormulaValue lambda)
+        private static async Task<(DValue<RecordValue> row, FormulaValue sortValue)> ApplyLambda(EvalVisitor runner, EvalVisitorContext context, DValue<RecordValue> row, LambdaFormulaValue lambda)
         {
             if (!row.IsValue)
             {
@@ -403,22 +403,9 @@ namespace Microsoft.PowerFx.Functions
             }
 
             var childContext = context.SymbolContext.WithScopeValues(row.Value);
-            var sortValue = await lambda.EvalInRowScopeAsync(context.NewScope(childContext));
+            var lambdaValue = await lambda.EvalInRowScopeAsync(context.NewScope(childContext));
 
-            return (row, sortValue);
-        }
-
-        private static async Task<(DValue<RecordValue> row, FormulaValue sortValue)> ApplyDistinctLambda(EvalVisitor runner, EvalVisitorContext context, DValue<RecordValue> row, LambdaFormulaValue lambda)
-        {
-            if (!row.IsValue)
-            {
-                return (row, row.ToFormulaValue());
-            }
-
-            var childContext = context.SymbolContext.WithScopeValues(row.Value);
-            var distinctValue = await lambda.EvalInRowScopeAsync(context.NewScope(childContext));
-
-            return (row, distinctValue);
+            return (row, lambdaValue);
         }
 
         public static async ValueTask<FormulaValue> DistinctTable(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
@@ -426,7 +413,7 @@ namespace Microsoft.PowerFx.Functions
             var arg0 = (TableValue)args[0];
             var arg1 = (LambdaFormulaValue)args[1];
 
-            var pairs = (await Task.WhenAll(arg0.Rows.Select(row => ApplyDistinctLambda(runner, context, row, arg1)))).ToList();
+            var pairs = (await Task.WhenAll(arg0.Rows.Select(row => ApplyLambda(runner, context, row, arg1)))).ToList();
 
             var errors = new List<ErrorValue>();
             bool allNumbers = true, allStrings = true, allBooleans = true, allDatetimes = true, allDates = true;
@@ -497,7 +484,7 @@ namespace Microsoft.PowerFx.Functions
                 }
             }
 
-            var pairs = (await Task.WhenAll(arg0.Rows.Select(row => ApplySortLambda(runner, context, row, arg1)))).ToList();
+            var pairs = (await Task.WhenAll(arg0.Rows.Select(row => ApplyLambda(runner, context, row, arg1)))).ToList();
 
             bool allNumbers = true, allStrings = true, allBooleans = true, allDatetimes = true, allDates = true, allOptionSets = true;
 
