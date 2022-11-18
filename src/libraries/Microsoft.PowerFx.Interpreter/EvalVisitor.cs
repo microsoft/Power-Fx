@@ -425,7 +425,7 @@ namespace Microsoft.PowerFx
                     {
                         Message = "Accessing a field is not valid on this value",
                         Span = node.IRContext.SourceContext,
-                        Kind = ErrorKind.BadLanguageCode
+                        Kind = ErrorKind.InvalidArgument
                     });
                 }
             }

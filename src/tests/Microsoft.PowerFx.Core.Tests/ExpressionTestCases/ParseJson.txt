@@ -36,7 +36,7 @@ Blank()
 Blank()
 
 >> Value(ParseJSON("""s""").a)
-Error({Kind:ErrorKind.BadLanguageCode})
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Value(ParseJSON("This "" Is , "" Invalid ").a)
 Error({Kind:ErrorKind.InvalidArgument})
