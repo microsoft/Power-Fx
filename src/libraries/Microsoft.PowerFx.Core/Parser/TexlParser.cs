@@ -830,12 +830,7 @@ namespace Microsoft.PowerFx.Core.Parser
                 case TokKind.StrInterpStart:
                     var res = ParseStringInterpolation();
                     var tokCur = _curs.TokCur;
-                    if (Preview.FeatureFlags.StringInterpolation)
-                    {
-                        return res;
-                    }
-
-                    return CreateError(tokCur, TexlStrings.ErrBadToken);
+                    return res;
                 case TokKind.StrLit:
                     return new StrLitNode(ref _idNext, _curs.TokMove().As<StrLitToken>());
 
