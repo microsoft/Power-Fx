@@ -40,6 +40,7 @@ namespace Microsoft.PowerFx.Interpreter
         [InlineData("X = GUID(\"5cc45615-f759-4a53-b225-d3a2497f60ad\")")]
 
         [InlineData("X < 2")]
+        [InlineData("X < DateTime(2022,11,10,0,0,0)")]
         [InlineData("\"The\" in X")]
         [InlineData("123 in X")] // check
         [InlineData("X in [1, 2, 3]")] // check
@@ -50,7 +51,6 @@ namespace Microsoft.PowerFx.Interpreter
         [InlineData("Value(X)")]
         [InlineData("Boolean(X)")]
         [InlineData("Index([1,2,3].Value, X)")]
-        [InlineData("X < DateTime(2022,11,10,0,0,0)")]
 
         // Ensures expression binds without any errors - but issues a warning for the deferred(unknown) type.
         public void DeferredTypeTest(string script)
