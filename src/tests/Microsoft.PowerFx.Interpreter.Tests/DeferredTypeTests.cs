@@ -50,6 +50,7 @@ namespace Microsoft.PowerFx.Interpreter
         [InlineData("Value(X)")]
         [InlineData("Boolean(X)")]
         [InlineData("Index([1,2,3].Value, X)")]
+        [InlineData("X < DateTime(2022,11,10,0,0,0)")]
 
         // Ensures expression binds without any errors - but issues a warning for the deferred(unknown) type.
         public void DeferredTypeTest(string script)
@@ -72,6 +73,7 @@ namespace Microsoft.PowerFx.Interpreter
         [InlineData("Table(X, N)", "Cannot use a non-record value in this context")]
         [InlineData("X.field + N.field", "Invalid use of '.'")]
         [InlineData("Index([1,2,3], X).missing", "Name isn't valid. 'missing' isn't recognized")]
+        [InlineData("X < \"2021-12-09T20:28:52Z\"", "Invalid argument type. Expecting one of the following: Number, Date, Time, DateTime.")]
 
         // Ensures expression issues an error if it exists, despite the deferred type.
         public void DeferredTypeTest_Negative(string script, string errorMessage)
