@@ -68,7 +68,7 @@ namespace Microsoft.PowerFx.Functions
                 StandardErrorHandling<NumberValue>(
                     BuiltinFunctionsCore.Abs.Name,
                     expandArguments: NoArgExpansion,
-                    replaceBlankValues: ReplaceBlankWithZero,
+                    replaceBlankValues: DoNotReplaceBlank,  // Now blanks are replaced at IR Phase
                     checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,

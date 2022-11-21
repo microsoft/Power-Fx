@@ -36,17 +36,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             yield return new[] { TexlStrings.LeftRightArg1, TexlStrings.LeftRightArg2 };
         }
 
-        /// <summary>
-        /// This is used at IR Phase to convert 1st arg (0-based index) to an integer.
-        /// </summary>
-        internal override IRPreProcessor GetIRPreProcessors(int argIndex)
+        internal override IRFunctionPtr GetIRPreProcessorHandler()
         {
-            if (argIndex > 0)
-            {
-                return IRPreProcessor.NumberTruncate;
-            }
-
-            return IRPreProcessor.None;
+            return IRTranslator.IRErrorHandling(
+                    expandArguments: IRTranslator.IRNoArgExpansion,
+                    replaceBlankValues: IRTranslator.IRDoNotReplaceBlank,
+                    truncateNumber: IRTranslator.IRTruncateNumberFromIndex(1));
         }
     }
 

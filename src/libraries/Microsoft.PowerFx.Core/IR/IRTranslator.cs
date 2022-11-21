@@ -297,21 +297,18 @@ namespace Microsoft.PowerFx.Core.IR
                 for (var i = 0; i < carg; ++i)
                 {
                     var arg = node.Args.Children[i];
-                    IntermediateNode argIR;
-                    var argPreProcessor = func.GetIRPreProcessors(i);
                     if (func.IsLazyEvalParam(i))
                     {
                         var child = arg.Accept(this, scope != null ? context.With(scope) : context);
-                        argIR = new LazyEvalNode(context.GetIRContext(arg), child);
+                        args.Add(new LazyEvalNode(context.GetIRContext(arg), child));
                     }
                     else
                     {
-                        argIR = arg.Accept(this, context);
+                        args.Add(arg.Accept(this, context));
                     }
-
-                    argIR = MaybeInjectPreProcessor(argIR, argPreProcessor);
-                    args.Add(argIR);
                 }
+
+                args = func.GetIRPreProcessorHandler().Invoke(args).ToList();
 
                 if (scope != null)
                 {
@@ -319,59 +316,6 @@ namespace Microsoft.PowerFx.Core.IR
                 }
 
                 return MaybeInjectCoercion(node, new CallNode(context.GetIRContext(node), func, args), context);
-            }
-
-            private IntermediateNode MaybeInjectPreProcessor(IntermediateNode argIR, IRPreProcessor preProcessor)
-            {
-                switch (preProcessor)
-                {
-                    case IRPreProcessor.BlankToZero:
-                        return BlankToZeroIRCallNode(argIR);
-                    case IRPreProcessor.BlankToEmptyString: 
-                        return BlankToEmptyStringIRCallNode(argIR);
-                    case IRPreProcessor.NumberTruncate:
-                        return NumberTruncateIRCallNode(argIR);
-                    case IRPreProcessor.None:
-                        return argIR;
-                    default:
-                        throw new NotSupportedException($"{nameof(preProcessor)} not supported");
-                }
-            }
-
-            /// <summary>
-            /// Helper function to Wrap IR node into a Call node that converts blank arg to zero.
-            /// </summary>
-            /// <param name="arg"> arg's IR node which needs to be wrapped.</param>
-            /// <returns>Call node that converts blank arg to zero.</returns>
-            private static CallNode BlankToZeroIRCallNode(IntermediateNode arg)
-            {
-                var zeroNumLitNode = new NumberLiteralNode(IRContext.NotInSource(FormulaType.Number), 0);
-                var isBlankCallNode = new CallNode(IRContext.NotInSource(FormulaType.Boolean), BuiltinFunctionsCore.IsBlank, arg);
-
-                return new CallNode(IRContext.NotInSource(FormulaType.Number), BuiltinFunctionsCore.If, isBlankCallNode, zeroNumLitNode, arg);
-            }
-
-            /// <summary>
-            /// Helper function to Wrap IR node into a Call node that converts blank arg to empty string.
-            /// </summary>
-            /// <param name="arg"> arg's IR node which needs to be wrapped.</param>
-            /// <returns>Call node that converts blank arg to empty string.</returns>
-            private static CallNode BlankToEmptyStringIRCallNode(IntermediateNode arg)
-            {
-                var emptyTextLitNode = new TextLiteralNode(IRContext.NotInSource(FormulaType.String), string.Empty);
-                var isBlankCallNode = new CallNode(IRContext.NotInSource(FormulaType.Boolean), BuiltinFunctionsCore.IsBlank, arg);
-
-                return new CallNode(IRContext.NotInSource(FormulaType.String), BuiltinFunctionsCore.If, isBlankCallNode, emptyTextLitNode, arg);
-            }
-
-            /// <summary>
-            /// Helper function to Wrap IR node into a Call node that converts Number arg to integer.
-            /// </summary>
-            /// <param name="arg"> arg's IR node which needs to be wrapped.</param>
-            /// <returns>Call node that converts number arg to zero.</returns>
-            private static CallNode NumberTruncateIRCallNode(IntermediateNode arg)
-            {
-                return new CallNode(IRContext.NotInSource(FormulaType.Number), BuiltinFunctionsCore.Trunc, arg);
             }
 
             public override IntermediateNode Visit(FirstNameNode node, IRTranslatorContext context)
@@ -831,6 +775,116 @@ namespace Microsoft.PowerFx.Core.IR
 
                 return new UnaryOpNode(IRContext.NotInSource(FormulaType.Build(toType)), unaryOpKind, child);
             }
+        }
+
+        internal delegate IEnumerable<IntermediateNode> IRFunctionPtr(IEnumerable<IntermediateNode> args);
+
+        #region Common Blank Replacement Pipeline Stages
+
+        /// <summary>
+        /// Helper function to Wrap IR node into a Call node that converts blank arg to zero.
+        /// </summary>
+        /// <param name="args"> args IR node which needs to be wrapped.</param>
+        /// <returns>Call node that converts blank arg to zero.</returns>
+        internal static IEnumerable<IntermediateNode> IRReplaceBlankWithZero(IEnumerable<IntermediateNode> args)
+        {
+            var zeroNumLitNode = new NumberLiteralNode(IRContext.NotInSource(FormulaType.Number), 0);
+            var res = new List<IntermediateNode>();
+
+            foreach (var arg in args)
+            {
+                var isBlankCallNode = new CallNode(IRContext.NotInSource(FormulaType.Boolean), BuiltinFunctionsCore.IsBlank, arg);
+                var resCallNode = new CallNode(IRContext.NotInSource(FormulaType.Number), BuiltinFunctionsCore.If, isBlankCallNode, zeroNumLitNode, arg);
+                res.Add(resCallNode);
+            }
+
+            return res;
+        }
+
+        /// <summary>
+        /// Helper function to Wrap IR node into a Call node that converts blank arg to empty string.
+        /// </summary>
+        /// <param name="args"> args IR node which needs to be wrapped.</param>
+        /// <returns>Call node that converts blank arg to empty string.</returns>
+        internal static IEnumerable<IntermediateNode> IRReplaceBlankWithEmptyString(IEnumerable<IntermediateNode> args)
+        {
+            var emptyTextLitNode = new TextLiteralNode(IRContext.NotInSource(FormulaType.String), string.Empty);
+            var res = new List<IntermediateNode>();
+
+            foreach (var arg in args)
+            {
+                var isBlankCallNode = new CallNode(IRContext.NotInSource(FormulaType.Boolean), BuiltinFunctionsCore.IsBlank, arg);
+                var resCallNode = new CallNode(IRContext.NotInSource(FormulaType.String), BuiltinFunctionsCore.If, isBlankCallNode, emptyTextLitNode, arg);
+                res.Add(resCallNode);
+            }
+
+            return res;
+        }
+
+        #endregion
+
+        #region Common Preprocessing Pipeline Stages
+
+        /// <summary>
+        /// Helper function to Wrap IR node into a Call node that converts Number arg to integer.
+        /// </summary>
+        /// <param name="index"> 0-based inclusive index, starting from index all args would be truncated.</param>
+        /// <returns>delegate that converts number arg to zero.</returns>
+        internal static Func<IEnumerable<IntermediateNode>, IEnumerable<IntermediateNode>> IRTruncateNumberFromIndex(int index)
+        {
+            return (args) =>
+            {
+                var len = args.Count();
+                var res = new List<IntermediateNode>(args);
+
+                for (var i = 0; i < len; i++)
+                {
+                    if (i >= index)
+                    {
+                        res[i] = new CallNode(IRContext.NotInSource(FormulaType.Number), BuiltinFunctionsCore.Trunc, res[i]);
+                    }
+                }
+
+                return res;
+            };
+        }
+
+        #endregion
+
+        #region No Op Pipeline Stages
+
+        internal static IEnumerable<IntermediateNode> IRDoNotReplaceBlank(IEnumerable<IntermediateNode> args)
+        {
+            return args;
+        }
+
+        internal static IEnumerable<IntermediateNode> IRNoArgExpansion(IEnumerable<IntermediateNode> args)
+        {
+            return args;
+        }
+
+        internal static IEnumerable<IntermediateNode> IRNoArgTruncate(IEnumerable<IntermediateNode> args)
+        {
+            return args;
+        }
+
+        #endregion
+
+        internal static IRFunctionPtr IRErrorHandling(
+                Func<IEnumerable<IntermediateNode>, IEnumerable<IntermediateNode>> expandArguments,
+                Func<IEnumerable<IntermediateNode>, IEnumerable<IntermediateNode>> replaceBlankValues,
+                Func<IEnumerable<IntermediateNode>, IEnumerable<IntermediateNode>> truncateNumber)
+        {
+            return (args) =>
+            {
+                var argumentsExpanded = expandArguments(args);
+
+                var blankValuesReplaced = replaceBlankValues(argumentsExpanded);
+
+                var trunctedArgs = truncateNumber(blankValuesReplaced);
+
+                return trunctedArgs;
+            };
         }
 
         internal class IRTranslatorContext

@@ -28,6 +28,7 @@ using CallNode = Microsoft.PowerFx.Syntax.CallNode;
 
 namespace Microsoft.PowerFx.Core.Functions
 {
+    using static Microsoft.PowerFx.Core.IR.IRTranslator;
     using FunctionInfo = Microsoft.PowerFx.Core.Functions.TransportSchemas.FunctionInfo;
 
     [ThreadSafeImmutable]
@@ -1362,14 +1363,12 @@ namespace Microsoft.PowerFx.Core.Functions
             };
         }
 
-        /// <summary>
-        /// This can be overridden so function can add preprocessing capabilities at IR phase.
-        /// </summary>
-        /// <param name="argIndex"> Index of argument for which preprocessing will be applied.</param>
-        /// <returns> Returns <see cref="IRPreProcessor"/> for argument at index <paramref name="argIndex"/> for preprocessing. </returns>
-        internal virtual IRPreProcessor GetIRPreProcessors(int argIndex)
+        internal virtual IRFunctionPtr GetIRPreProcessorHandler()
         {
-            return IRPreProcessor.None;
+            return IRErrorHandling(
+                    expandArguments: IRNoArgExpansion,
+                    replaceBlankValues: IRDoNotReplaceBlank,
+                    truncateNumber: IRNoArgTruncate);
         }
     }
 }

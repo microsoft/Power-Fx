@@ -12,6 +12,7 @@ using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
+using static Microsoft.PowerFx.Core.IR.IRTranslator;
 
 #pragma warning disable SA1402 // File may only contain a single type
 #pragma warning disable SA1649 // File name should match first type name
@@ -87,9 +88,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         /// <summary>
         /// This is used at IR phase to convert all possible blank args to empty string.
         /// </summary>
-        internal override IRPreProcessor GetIRPreProcessors(int argIndex)
+        internal override IRFunctionPtr GetIRPreProcessorHandler()
         {
-            return IRPreProcessor.BlankToEmptyString;
+            return IRErrorHandling(
+                    expandArguments: IRNoArgExpansion,
+                    replaceBlankValues: IRReplaceBlankWithEmptyString,
+                    truncateNumber: IRNoArgTruncate);
         }
     }
 

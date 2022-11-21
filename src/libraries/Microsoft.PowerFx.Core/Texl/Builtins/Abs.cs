@@ -8,6 +8,7 @@ using Microsoft.PowerFx.Core.IR.Symbols;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Syntax;
+using static Microsoft.PowerFx.Core.IR.IRTranslator;
 
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
@@ -20,12 +21,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         {
         }
 
-        /// <summary>
-        /// This is used at IR phase to convert all possible blank args to zero.
-        /// </summary>
-        internal override IRPreProcessor GetIRPreProcessors(int argIndex)
+        internal override IRFunctionPtr GetIRPreProcessorHandler()
         {
-            return IRPreProcessor.BlankToZero;
+            return IRErrorHandling(
+                    expandArguments: IRNoArgExpansion,
+                    replaceBlankValues: IRReplaceBlankWithZero,
+                    truncateNumber: IRNoArgTruncate);
         }
     }
 
