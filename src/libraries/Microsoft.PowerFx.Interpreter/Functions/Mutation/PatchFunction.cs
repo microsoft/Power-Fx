@@ -259,7 +259,7 @@ namespace Microsoft.PowerFx.Functions
                             CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i], coercionType);
                         }
 
-                        retType = DType.Union(dataSourceType.ToRecord(), coercionType);
+                        retType = DType.Union(retType, coercionType);
                     }
                 }
                 else if (isSafeToUnion)
