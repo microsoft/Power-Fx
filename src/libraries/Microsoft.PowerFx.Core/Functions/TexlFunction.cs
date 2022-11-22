@@ -1363,12 +1363,19 @@ namespace Microsoft.PowerFx.Core.Functions
             };
         }
 
-        internal virtual IRFunctionPtr GetIRPreProcessorHandler()
+        internal virtual IRFunctionPtr GetReplaceBlankHandler()
         {
-            return IRErrorHandling(
-                    expandArguments: IRNoArgExpansion,
-                    replaceBlankValues: IRDoNotReplaceBlank,
-                    truncateNumber: IRNoArgTruncate);
+            return IRDoNotReplaceBlank;
+        }
+
+        internal virtual IRFunctionPtr GetTruncateNumberHandler()
+        {
+            return IRNoArgTruncate;
+        }
+
+        internal virtual IRFunctionPtr GetArgExpansionHandler()
+        {
+            return IRNoArgExpansion;
         }
     }
 }

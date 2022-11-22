@@ -36,12 +36,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             yield return new[] { TexlStrings.LeftRightArg1, TexlStrings.LeftRightArg2 };
         }
 
-        internal override IRFunctionPtr GetIRPreProcessorHandler()
+        internal override IRFunctionPtr GetTruncateNumberHandler()
         {
-            return IRTranslator.IRErrorHandling(
-                    expandArguments: IRTranslator.IRNoArgExpansion,
-                    replaceBlankValues: IRTranslator.IRDoNotReplaceBlank,
-                    truncateNumber: IRTranslator.IRTruncateNumberFromIndex(1));
+            return IRTruncateNumberFromIndex(1);
         }
     }
 

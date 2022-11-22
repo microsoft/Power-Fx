@@ -308,7 +308,14 @@ namespace Microsoft.PowerFx.Core.IR
                     }
                 }
 
-                args = func.GetIRPreProcessorHandler().Invoke(args).ToList();
+                var argTypes = node.Args.Children.Select(node => context.Binding.GetType(node)).ToArray();
+
+                // Call to error Handling pipeline
+                args = IRErrorHandling(
+                    expandArguments: func.GetArgExpansionHandler(),
+                    replaceBlankValues: func.GetReplaceBlankHandler(),
+                    truncateNumber: func.GetTruncateNumberHandler())
+                    .Invoke(args).ToList();
 
                 if (scope != null)
                 {
@@ -781,40 +788,31 @@ namespace Microsoft.PowerFx.Core.IR
 
         #region Common Blank Replacement Pipeline Stages
 
-        /// <summary>
-        /// Helper function to Wrap IR node into a Call node that converts blank arg to zero.
-        /// </summary>
-        /// <param name="args"> args IR node which needs to be wrapped.</param>
-        /// <returns>Call node that converts blank arg to zero.</returns>
-        internal static IEnumerable<IntermediateNode> IRReplaceBlankWithZero(IEnumerable<IntermediateNode> args)
-        {
-            var zeroNumLitNode = new NumberLiteralNode(IRContext.NotInSource(FormulaType.Number), 0);
-            var res = new List<IntermediateNode>();
-
-            foreach (var arg in args)
-            {
-                var isBlankCallNode = new CallNode(IRContext.NotInSource(FormulaType.Boolean), BuiltinFunctionsCore.IsBlank, arg);
-                var resCallNode = new CallNode(IRContext.NotInSource(FormulaType.Number), BuiltinFunctionsCore.If, isBlankCallNode, zeroNumLitNode, arg);
-                res.Add(resCallNode);
-            }
-
-            return res;
-        }
-
-        /// <summary>
-        /// Helper function to Wrap IR node into a Call node that converts blank arg to empty string.
-        /// </summary>
-        /// <param name="args"> args IR node which needs to be wrapped.</param>
-        /// <returns>Call node that converts blank arg to empty string.</returns>
-        internal static IEnumerable<IntermediateNode> IRReplaceBlankWithEmptyString(IEnumerable<IntermediateNode> args)
+        internal static IEnumerable<IntermediateNode> IRReplaceBlank(IEnumerable<IntermediateNode> args)
         {
             var emptyTextLitNode = new TextLiteralNode(IRContext.NotInSource(FormulaType.String), string.Empty);
+            var zeroNumLitNode = new NumberLiteralNode(IRContext.NotInSource(FormulaType.Number), 0);
+
             var res = new List<IntermediateNode>();
 
             foreach (var arg in args)
             {
                 var isBlankCallNode = new CallNode(IRContext.NotInSource(FormulaType.Boolean), BuiltinFunctionsCore.IsBlank, arg);
-                var resCallNode = new CallNode(IRContext.NotInSource(FormulaType.String), BuiltinFunctionsCore.If, isBlankCallNode, emptyTextLitNode, arg);
+
+                IntermediateNode resCallNode;
+                if (arg.IRContext.ResultType._type == DType.String && arg is not TextLiteralNode)
+                {
+                    resCallNode = new CallNode(IRContext.NotInSource(FormulaType.String), BuiltinFunctionsCore.If, isBlankCallNode, emptyTextLitNode, arg);
+                }
+                else if (arg.IRContext.ResultType._type == DType.Number && arg is not NumberLiteralNode)
+                {
+                    resCallNode = new CallNode(IRContext.NotInSource(FormulaType.Number), BuiltinFunctionsCore.If, isBlankCallNode, zeroNumLitNode, arg);
+                }
+                else
+                {
+                    resCallNode = arg;
+                }
+                
                 res.Add(resCallNode);
             }
 
@@ -830,7 +828,7 @@ namespace Microsoft.PowerFx.Core.IR
         /// </summary>
         /// <param name="index"> 0-based inclusive index, starting from index all args would be truncated.</param>
         /// <returns>delegate that converts number arg to zero.</returns>
-        internal static Func<IEnumerable<IntermediateNode>, IEnumerable<IntermediateNode>> IRTruncateNumberFromIndex(int index)
+        internal static IRFunctionPtr IRTruncateNumberFromIndex(int index)
         {
             return (args) =>
             {
@@ -839,7 +837,7 @@ namespace Microsoft.PowerFx.Core.IR
 
                 for (var i = 0; i < len; i++)
                 {
-                    if (i >= index)
+                    if (i >= index && !(res[i] is NumberLiteralNode numberLiteral && numberLiteral.LiteralValue % 1 == 0))
                     {
                         res[i] = new CallNode(IRContext.NotInSource(FormulaType.Number), BuiltinFunctionsCore.Trunc, res[i]);
                     }
@@ -871,9 +869,9 @@ namespace Microsoft.PowerFx.Core.IR
         #endregion
 
         internal static IRFunctionPtr IRErrorHandling(
-                Func<IEnumerable<IntermediateNode>, IEnumerable<IntermediateNode>> expandArguments,
-                Func<IEnumerable<IntermediateNode>, IEnumerable<IntermediateNode>> replaceBlankValues,
-                Func<IEnumerable<IntermediateNode>, IEnumerable<IntermediateNode>> truncateNumber)
+                IRFunctionPtr expandArguments,
+                IRFunctionPtr replaceBlankValues,
+                IRFunctionPtr truncateNumber)
         {
             return (args) =>
             {
