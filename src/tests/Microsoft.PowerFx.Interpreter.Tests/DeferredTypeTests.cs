@@ -58,7 +58,6 @@ namespace Microsoft.PowerFx.Interpreter
         // Ensures expression binds without any errors - but issues a warning for the deferred(unknown) type.
         public void DeferredTypeTest(string script)
         {
-            Preview.FeatureFlags.StringInterpolation = true;
             var symbolTable = new SymbolTable();
 
             // Record with deferred field
@@ -84,7 +83,6 @@ namespace Microsoft.PowerFx.Interpreter
         // NOTE: All error are discarded for function calls e.g. You don't get any errors for Table(deferred, number).
         public void DeferredTypeTest_Negative(string script, string errorMessage)
         {
-            Preview.FeatureFlags.StringInterpolation = true;
             var symbolTable = new SymbolTable();
             symbolTable.AddVariable("X", FormulaType.Deferred);
             symbolTable.AddVariable("N", FormulaType.Number);
