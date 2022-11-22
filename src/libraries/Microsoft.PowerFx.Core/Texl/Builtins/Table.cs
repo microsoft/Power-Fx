@@ -60,7 +60,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             for (var i = 0; i < argTypes.Length; i++)
             {
                 var argType = argTypes[i];
-                if (!argType.IsRecord)
+                if (!(argType.IsRecord || argType.IsDeferred))
                 {
                     errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrNeedRecord);
                     isValid = false;

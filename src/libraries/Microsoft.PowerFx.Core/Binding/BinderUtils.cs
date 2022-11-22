@@ -139,39 +139,19 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 var localWarnings = new LimitedSeverityErrorContainer(errors, DocumentErrorSeverity.Warning);
 
-                var checkTypeErrors = new ErrorContainer();
-
                 // Typecheck the invocation and infer the return type.
-                typeCheckSucceeded = maybeFunc.CheckTypes(context, args, argTypes, checkTypeErrors, out returnType, out nodeToCoercedTypeMap);
+                typeCheckSucceeded = maybeFunc.CheckTypes(context, args, argTypes, localWarnings, out returnType, out nodeToCoercedTypeMap);
 
-                if (!typeCheckSucceeded && checkTypeErrors.HasErrors() &&
-                    checkTypeErrors.GetErrors().All(error => context.NameResolver.Lookup(new DName(error.Tok.ToString()), out NameLookupInfo nameLookup) && nameLookup.Type.IsDeferred))
+                var isDeferredArgPresent = argTypes.Any(type => type.IsDeferred);
+
+                if (!typeCheckSucceeded && isDeferredArgPresent)
                 {
                     typeCheckSucceeded = true;
 
-                    // If one of the arg was unknown and that generated error (e.g. type mismatch)
-                    // and return type could not be calculated and was error we assign it as unknown.
-                    // and if return type was Table, we assign it to be table of deferred, so operation like In can work.
-                    switch (returnType.Kind)
+                    // If one of the arg was deferred and return type could not be calculated and was error, we assign it to deferred as safeguard.
+                    if (returnType.IsError)
                     {
-                        case DKind.Error:
-                            returnType = DType.Deferred;
-                            break;
-                        case DKind.Table:
-                            returnType = DType.EmptyRecord.Add(new TypedName(DType.Deferred, new DName(TexlFunction.ColumnName_ValueStr))).ToTable();
-                            break;
-                    }
-                }
-
-                // Adding back all the errors to local warnings
-                foreach (var error in checkTypeErrors.GetErrors())
-                {
-                    var isLookupSuccess = context.NameResolver.Lookup(new DName(error.Tok.ToString()), out var nameLookupInfo);
-
-                    // Only add error for nodes apart from Unknown type argument.
-                    if (!isLookupSuccess || nameLookupInfo.Type.IsDeferred)
-                    {
-                        localWarnings.EnsureError(error.Node, error.ErrorResourceKey);
+                        returnType = DType.Deferred;
                     }
                 }
 
@@ -212,39 +192,6 @@ namespace Microsoft.PowerFx.Core.Binding
             nodeToCoercedTypeMap = null;
             returnType = null;
             return false;
-        }
-
-        /// <summary>
-        /// Typecheck the invocation and infer the return type. Error on deferred(unknown) arg is not considered.
-        /// </summary>
-        internal static bool HandleCheckInvocationWithDeferred(TexlFunction maybeFunc, TexlBinding txb, TexlNode[] args, DType[] argTypes, out ErrorContainer checkInvocationErrors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
-        {
-            // This error container is used as temporary container so we can trap type mismatch kind of error for
-            // deferred (unknown) type args and validate all the errors were caused due to deferred(unknown) type.
-            checkInvocationErrors = new ErrorContainer();
-
-            var typeCheckSucceeded = maybeFunc.HandleCheckInvocation(txb, args, argTypes, checkInvocationErrors, out returnType, out nodeToCoercedTypeMap);
-
-            // If type check failed and errors were due to Unknown type node we would like to consider the typeChecking passed.
-            if (!typeCheckSucceeded && checkInvocationErrors.HasErrors() && checkInvocationErrors.GetErrors().All(error => txb.GetType(error.Node).IsDeferred))
-            {
-                // If one of the arg was unknown and that generated error (e.g. type mismatch)
-                // and return type could not be calculated and was error we assign it as unknown.
-                // and if return type was Table, we assign it to be table of deferred, so operation like In can work.
-                switch (returnType.Kind)
-                {
-                    case DKind.Error:
-                        returnType = DType.Deferred;
-                        break;
-                    case DKind.Table:
-                        returnType = DType.EmptyRecord.Add(new TypedName(DType.Deferred, new DName(TexlFunction.ColumnName_ValueStr))).ToTable();
-                        break;
-                }
-
-                return true;
-            }
-
-            return typeCheckSucceeded;
         }
 
         /// <summary>

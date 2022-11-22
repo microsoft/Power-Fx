@@ -42,8 +42,8 @@ namespace Microsoft.PowerFx.Interpreter
         [InlineData("X < 2")]
         [InlineData("X < DateTime(2022,11,10,0,0,0)")]
         [InlineData("\"The\" in X")]
-        [InlineData("123 in X")] // check
-        [InlineData("X in [1, 2, 3]")] // check
+        [InlineData("123 in X")]
+        [InlineData("X in [1, 2, 3]")]
         [InlineData("123 in Table(X)")]
         [InlineData("IsBlank(X)")]
         [InlineData("IsError(X)")]
@@ -51,6 +51,9 @@ namespace Microsoft.PowerFx.Interpreter
         [InlineData("Value(X)")]
         [InlineData("Boolean(X)")]
         [InlineData("Index([1,2,3].Value, X)")]
+        [InlineData("Sum(X, 1) < 5")]
+        [InlineData("Sum(X, 1, R) < 5")] // All error are discarded for function calls, hence we don't get error for RecordType here.
+        [InlineData("Sum(X, T) < 5")] // Since we discard all errors for function calls, Function calls are biased to non tabular overload.
 
         // Ensures expression binds without any errors - but issues a warning for the deferred(unknown) type.
         public void DeferredTypeTest(string script)
@@ -63,6 +66,8 @@ namespace Microsoft.PowerFx.Interpreter
 
             symbolTable.AddVariable("X", FormulaType.Deferred);
             symbolTable.AddVariable("RX", rX);
+            symbolTable.AddVariable("R", RecordType.Empty());
+            symbolTable.AddVariable("T", RecordType.Empty().ToTable());
 
             TestDeferredTypeBindingWarning(script, Features.None, symbolTable);
         }
@@ -70,12 +75,13 @@ namespace Microsoft.PowerFx.Interpreter
         [Theory]
         [InlineData("$\"Test {X} {R}\"", "Invalid argument type (Record). Expecting a Text value instead.")]
         [InlineData("X + R", "Invalid argument type. Expecting one of the following: Number, Text, Boolean.")]
-        [InlineData("Table(X, N)", "Cannot use a non-record value in this context")]
         [InlineData("X.field + N.field", "Invalid use of '.'")]
         [InlineData("Index([1,2,3], X).missing", "Name isn't valid. 'missing' isn't recognized")]
         [InlineData("X < \"2021-12-09T20:28:52Z\"", "Invalid argument type. Expecting one of the following: Number, Date, Time, DateTime.")]
+        [InlineData("First(Sum(X, 1))", "Invalid argument type (Number). Expecting a Table value instead.")]
 
         // Ensures expression issues an error if it exists, despite the deferred type.
+        // NOTE: All error are discarded for function calls e.g. You don't get any errors for Table(deferred, number).
         public void DeferredTypeTest_Negative(string script, string errorMessage)
         {
             Preview.FeatureFlags.StringInterpolation = true;

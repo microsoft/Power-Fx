@@ -8,6 +8,7 @@ using System.Text;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Errors;
+using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Functions.Delegation;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Utils;
@@ -2580,7 +2581,7 @@ namespace Microsoft.PowerFx.Core.Types
                 type2 = type2.LazyTypeProvider.GetExpandedType(type2.IsTable);
             }
 
-            if (type1.IsAggregate && type2.IsAggregate)
+            if ((type1.IsAggregate || type1.IsDeferred) && (type2.IsAggregate || type2.IsDeferred))
             {
                 if (type1 == ObjNull)
                 {
@@ -2592,7 +2593,7 @@ namespace Microsoft.PowerFx.Core.Types
                     return CreateDTypeWithConnectedDataSourceInfoMetadata(type1, type2.AssociatedDataSources, type2.DisplayNameProvider);
                 }
 
-                if (type1.Kind != type2.Kind)
+                if ((type1.Kind != type2.Kind) && !(type1.IsDeferred || type2.IsDeferred))
                 {
                     fError = true;
                     return Error;
@@ -2621,11 +2622,16 @@ namespace Microsoft.PowerFx.Core.Types
         private static DType UnionCore(ref bool fError, DType type1, DType type2, bool useLegacyDateTimeAccepts = false)
         {
             type1.AssertValid();
-            Contracts.Assert(type1.IsAggregate);
+            Contracts.Assert(type1.IsAggregate || type1.IsDeferred);
             type2.AssertValid();
-            Contracts.Assert(type2.IsAggregate);
+            Contracts.Assert(type2.IsAggregate || type2.IsDeferred);
 
             var result = type1;
+
+            if (type1.IsDeferred || type2.IsDeferred)
+            {
+                result = DType.EmptyRecord.Add(new TypedName(DType.Deferred, new DName(TexlFunction.ColumnName_ValueStr)));
+            }
 
             foreach (var pair in type2.GetNames(DPath.Root))
             {
