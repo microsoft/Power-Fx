@@ -192,7 +192,7 @@ namespace Microsoft.PowerFx.Functions
             var isValid = base.CheckTypes(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
 
             DType dataSourceType = argTypes[0];
-            DType retType = DType.EmptyRecord;
+            DType retType = dataSourceType.IsError ? DType.EmptyRecord : dataSourceType.ToRecord();
 
             if (!dataSourceType.IsTable)
             {
@@ -246,8 +246,6 @@ namespace Microsoft.PowerFx.Functions
                     }
                 }
 
-                var fError = false;
-
                 if (isValid && SupportsParamCoercion && !dataSourceType.Accepts(curType))
                 {
                     if (!curType.TryGetCoercionSubType(dataSourceType, out DType coercionType, out var coercionNeeded))
@@ -261,22 +259,7 @@ namespace Microsoft.PowerFx.Functions
                             CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i], coercionType);
                         }
 
-                        // Promote the arg type to a table to facilitate unioning.
-                        if (!coercionType.IsTable)
-                        {
-                            coercionType = coercionType.ToTable();
-                        }
-
-                        retType = DType.Union(ref fError, dataSourceType, coercionType, useLegacyDateTimeAccepts: true);
-
-                        if (fError)
-                        {
-                            isValid = false;
-                            if (!SetErrorForMismatchedColumns(dataSourceType, coercionType, args[1], errors))
-                            {
-                                errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrNeedValidVariableName_Arg);
-                            }
-                        }
+                        retType = DType.Union(retType, coercionType);
                     }
                 }
                 else if (isSafeToUnion)
