@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Errors;
@@ -54,7 +55,9 @@ namespace Microsoft.PowerFx.Interpreter
               DType.EmptyTable,
               0, // no lambdas
               2,
-              2) // Not handling multiple arguments for now
+              2, // Not handling multiple arguments for now
+              DType.EmptyTable,
+              DType.EmptyRecord)
         {
         }
 
@@ -97,9 +100,16 @@ namespace Microsoft.PowerFx.Interpreter
             DType itemType = DType.Invalid;
 
             DType dataSourceType = argTypes[0];
-            var tableType = (TableType)FormulaType.Build(dataSourceType);
+            var tableType = FormulaType.Build(dataSourceType) as TableType;
 
             var argc = args.Length;
+
+            if (tableType == null)
+            {
+                errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrBadType_ExpectedType_ProvidedType, DType.EmptyTable.GetKindString(), argTypes[0].GetKindString());
+                collectedType = DType.EmptyTable;
+                return false;
+            }
 
             for (var i = 1; i < argc; i++)
             {
@@ -169,8 +179,6 @@ namespace Microsoft.PowerFx.Interpreter
             var fValid = base.CheckTypes(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
             Contracts.Assert(returnType.IsTable);
 
-            DType dataSourceType = argTypes[0];
-
             // Need a collection for the 1st arg
             DType collectionType = argTypes[0];
             if (collectionType.IsTable)
@@ -194,7 +202,7 @@ namespace Microsoft.PowerFx.Interpreter
             }
             else
             {
-                errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrNeedValidVariableName_Arg, Name);
+                errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrBadType_ExpectedType_ProvidedType, DType.EmptyTable.GetKindString(), argTypes[0].GetKindString());
                 fValid = false;
             }
 
