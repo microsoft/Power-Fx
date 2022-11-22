@@ -82,5 +82,13 @@ namespace Microsoft.PowerFx.Tests
             Assert.Throws<ArgumentException>(
                 () => r1.TryGetFieldType(string.Empty, out var actualLogical, out var formulaType));
         }
+
+        [Fact]
+        public void DefaultOptionSetValueTypeTest()
+        {
+            var opt = new OptionSetValueType();
+            Assert.Null(opt.LogicalNames);
+            Assert.False(opt.TryGetValue("random", out _));
+        }
     }
 }
