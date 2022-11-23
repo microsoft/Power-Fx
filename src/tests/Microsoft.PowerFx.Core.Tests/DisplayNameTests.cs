@@ -210,11 +210,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
         [Theory]
-        [InlineData("If(B, Num, 1234)", "If(A, Num, 1234)", "B", "A")]
-        [InlineData("RecordNest.SomeString", "RecordNest.SomeString", "B", "A")]
-        [InlineData("RecordNest.SomeString", "RecordNest.Foo", "RecordNest.SomeString", "Foo")]
-        [InlineData("RecordNest.SomeString", "Foo.SomeString", "RecordNest", "Foo")]
-        [InlineData("First(Nested).Inner", "First(Nested).Inner", "B", "A")]
         [InlineData("First(Nested).Inner", "First(Nested).Bar", "Nested.Inner", "Bar")]
         [InlineData("First(Nested).Inner", "First(Bar).Inner", "Nested", "Bar")]
         [InlineData("First(Nested).InnerDisplay", "First(Bar).Inner", "Nested", "Bar")]
@@ -233,6 +228,19 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("firstos.option_1 <> Os1Value", "firstos.option_1 <> Os1ValueRenamed", "Os1Value", "Os1ValueRenamed")] // Globals
         [InlineData("TestSecondOptionSet.Option3 = DisplayOS2Value", "secondos.option_3 = Os2ValueRenamed", "Os2Value", "Os2ValueRenamed")]
         [InlineData("If(false, TestSecondOptionSet.Option4, Os2Value)", "If(false, secondos.option_4, Os2ValueRenamed)", "Os2Value", "Os2ValueRenamed")]
+
+        // Not found
+        [InlineData("First(Nested).Inner", "First(Nested).Inner", "Nested.Missing", "Bar")]
+        [InlineData("First(Nested).Inner", "First(Nested).Inner", "Missing", "Bar")]
+        [InlineData("First(Nested).InnerDisplay", "First(Nested).InnerDisplay", "Missing", "Bar")]
+        [InlineData("First(Nested).InnerDisplay", "First(Nested).InnerDisplay", "Nested.Missing", "InnerRenamedLogicalName")]
+        [InlineData("With({SomeValue: 123}, RecordNest.nest2.datetest)", "With({SomeValue: 123}, RecordNest.nest2.datetest)", "RecordNest.nest2.Missing", "Foo")]
+        [InlineData("With({RecordNest: {nest2: {datetest: 123}}}, RecordNest.nest2.datetest)", "With({RecordNest: {nest2: {datetest: 123}}}, RecordNest.nest2.datetest)", "RecordNest.nest2.Missing", "Foo")]
+        [InlineData("With(RecordNest, SomeString + nest2.datetest)", "With(RecordNest, SomeString + nest2.datetest)", "Missing", "Foo")]
+        [InlineData("TestSecondOptionSet.Option3 = DisplayOS2Value", "TestSecondOptionSet.Option3 = DisplayOS2Value", "Missing", "Os2ValueRenamed")]
+        [InlineData("If(false, TestSecondOptionSet.Option4, Os2Value)", "If(false, TestSecondOptionSet.Option4, Os2Value)", "Missing", "Os2ValueRenamed")]
+        [InlineData("B & Invalid()", "B & Invalid()", "M", "A")]
+        [InlineData("B + + + ", "B + + + ", "M", "A")]
         public void RenameParameter(string expressionBase, string expectedExpression, string path, string newName)
         {
             var config = new PowerFxConfig(CultureInfo.InvariantCulture);
@@ -276,7 +284,14 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var renamer = engine.CreateFieldRenamer(r1, dpath, new DName(newName));
 
-            Assert.Equal(expectedExpression, renamer.ApplyRename(expressionBase));
+            if (renamer.Find(expressionBase))
+            {
+                Assert.Equal(expectedExpression, renamer.ApplyRename(expressionBase));
+            }
+            else
+            {
+                Assert.Equal(engine.GetInvariantExpression(expressionBase, r1), renamer.ApplyRename(expressionBase));
+            }
         }
 
         [Fact]
@@ -326,6 +341,37 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 updateDisplayNames: true);
 
             Assert.Empty(binding.NodesToReplace);
+        }
+
+        // Verify lookup methods against logical/display names. 
+        [Fact]
+        public void FieldLookup()
+        {
+            var r1 = RecordType.Empty()
+                .Add(new NamedFormulaType("Num", FormulaType.Number, "SomeDisplayNum"))
+                .Add(new NamedFormulaType("B", FormulaType.Boolean, "SomeDisplayB"));
+
+            FormulaType type;
+            
+            type = r1.GetFieldType("Num");
+            Assert.Equal(FormulaType.Number, type);
+
+            // Display name not found because we only lookup logical 
+            var found = r1.TryGetFieldType("SomeDisplayNum", out type);
+            Assert.False(found);
+            Assert.Equal(FormulaType.Blank, type);
+
+            // Lookup to get display name 
+            found = r1.TryGetFieldType("Num", out var logical, out type);
+            Assert.True(found);
+            Assert.Equal(FormulaType.Number, type);
+            Assert.Equal("Num", logical);
+
+            // This overload handles display name
+            found = r1.TryGetFieldType("SomeDisplayNum", out logical, out type);
+            Assert.True(found);
+            Assert.Equal(FormulaType.Number, type);
+            Assert.Equal("Num", logical);
         }
     }
 

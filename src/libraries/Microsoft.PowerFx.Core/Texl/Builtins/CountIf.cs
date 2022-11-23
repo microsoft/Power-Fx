@@ -27,8 +27,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool HasPreciseErrors => true;
 
-        public override bool CheckTypesAndSemanticsOnly => true;
-
         public override DelegationCapability FunctionDelegationCapability => DelegationCapability.Filter | DelegationCapability.Count;
 
         public CountIfFunction()
@@ -59,7 +57,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return base.GetSignatures(arity);
         }
 
-        protected override bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public override bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertValue(argTypes);

@@ -43,7 +43,6 @@ namespace Microsoft.PowerFx.Core.Parser
         private readonly List<CommentToken> _comments = new List<CommentToken>();
         private SourceList _before;
         private SourceList _after;
-        private readonly CultureInfo _locale;
         private readonly Features _features;
 
         // Represents temporary extra trivia, for when a parsing method
@@ -51,7 +50,7 @@ namespace Microsoft.PowerFx.Core.Parser
         // collected by the next call to ParseTrivia.
         private ITexlSource _extraTrivia;
 
-        private TexlParser(IReadOnlyList<Token> tokens, Flags flags, CultureInfo locale, Features features = Features.None)
+        private TexlParser(IReadOnlyList<Token> tokens, Flags flags, Features features = Features.None)
         {
             Contracts.AssertValue(tokens);
 
@@ -59,17 +58,16 @@ namespace Microsoft.PowerFx.Core.Parser
             _curs = new TokenCursor(tokens);
             _flagsMode = new Stack<Flags>();
             _flagsMode.Push(flags);
-            _locale = locale;
             _features = features;
         }
 
-        public static ParseUDFsResult ParseUDFsScript(string script, CultureInfo loc)
+        public static ParseUDFsResult ParseUDFsScript(string script, CultureInfo loc = null)
         {
             Contracts.AssertValue(script);
             Contracts.AssertValueOrNull(loc);
 
             var formulaTokens = TokenizeScript(script, loc, Flags.NamedFormulas);
-            var parser = new TexlParser(formulaTokens, Flags.NamedFormulas, loc);
+            var parser = new TexlParser(formulaTokens, Flags.NamedFormulas);
 
             return parser.ParseUDFs(script);
         }
@@ -227,11 +225,11 @@ namespace Microsoft.PowerFx.Core.Parser
             Contracts.AssertValueOrNull(loc);
 
             var tokens = TokenizeScript(script, loc, flags);
-            var parser = new TexlParser(tokens, flags, loc, features);
+            var parser = new TexlParser(tokens, flags, features);
             List<TexlError> errors = null;
             var parsetree = parser.Parse(ref errors);
 
-            return new ParseResult(parsetree, errors, errors?.Any() ?? false, parser._comments, parser._before, parser._after, script);
+            return new ParseResult(parsetree, errors, errors?.Any() ?? false, parser._comments, parser._before, parser._after, script, loc);
         }
 
         public static ParseFormulasResult ParseFormulasScript(string script, CultureInfo loc = null)
@@ -240,7 +238,7 @@ namespace Microsoft.PowerFx.Core.Parser
             Contracts.AssertValueOrNull(loc);
 
             var formulaTokens = TokenizeScript(script, loc, Flags.NamedFormulas);
-            var parser = new TexlParser(formulaTokens, Flags.NamedFormulas, loc);
+            var parser = new TexlParser(formulaTokens, Flags.NamedFormulas);
 
             return parser.ParseFormulas(script);
         }
@@ -832,12 +830,7 @@ namespace Microsoft.PowerFx.Core.Parser
                 case TokKind.StrInterpStart:
                     var res = ParseStringInterpolation();
                     var tokCur = _curs.TokCur;
-                    if (Preview.FeatureFlags.StringInterpolation)
-                    {
-                        return res;
-                    }
-
-                    return CreateError(tokCur, TexlStrings.ErrBadToken);
+                    return res;
                 case TokKind.StrLit:
                     return new StrLitNode(ref _idNext, _curs.TokMove().As<StrLitToken>());
 
@@ -1484,7 +1477,7 @@ namespace Microsoft.PowerFx.Core.Parser
             Contracts.AssertValue(tok);
             Contracts.AssertValue(errKey.Key);
 
-            var err = new TexlError(tok, DocumentErrorSeverity.Critical, _locale, errKey);
+            var err = new TexlError(tok, DocumentErrorSeverity.Critical, errKey);
             CollectionUtils.Add(ref _errors, err);
             return err;
         }
@@ -1495,7 +1488,7 @@ namespace Microsoft.PowerFx.Core.Parser
             Contracts.AssertValue(errKey.Key);
             Contracts.AssertValueOrNull(args);
 
-            var err = new TexlError(tok, DocumentErrorSeverity.Critical, _locale, errKey, args);
+            var err = new TexlError(tok, DocumentErrorSeverity.Critical, errKey, args);
             CollectionUtils.Add(ref _errors, err);
 
             return err;
@@ -1593,17 +1586,10 @@ namespace Microsoft.PowerFx.Core.Parser
             }
         }
 
-        [Obsolete("Use overload with explicit Culture")]
         public static string Format(string text)
-        {
-            return Format(text, null);
-        }
-
-        public static string Format(string text, CultureInfo locale)
         {
             var result = ParseScript(
                 text,
-                locale,
                 flags: Flags.EnableExpressionChaining);
 
             // Can't pretty print a script with errors.

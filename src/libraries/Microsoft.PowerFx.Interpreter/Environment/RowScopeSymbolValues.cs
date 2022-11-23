@@ -16,45 +16,41 @@ namespace Microsoft.PowerFx
     internal class RowScopeSymbolValues : ReadOnlySymbolValues
     {
         private readonly RecordValue _parameter;
-        private readonly bool _allowThisRecord;
 
-        public RowScopeSymbolValues(RecordValue parameter, bool allowThisRecord)
+        private readonly SymbolTableOverRecordType _table;
+
+        public RowScopeSymbolValues(SymbolTableOverRecordType symTable, RecordValue parameter)
+            : base(symTable)
         {
+            if (symTable.Parent != null)
+            {
+                throw new InvalidOperationException($"Can't handle Record symbols with a parent. Use Compose instead");
+            }
+
             _parameter = parameter;
-            _allowThisRecord = allowThisRecord;
+
+            DebugName = symTable.DebugName;
+
+            _table = symTable;
         }
 
-        public override bool TryGetValue(string name, out FormulaValue value)
+        public override void Set(ISymbolSlot slot, FormulaValue value)
         {
-            if (_allowThisRecord && name == "ThisRecord")
+            ValidateSlot(slot);
+
+            if (_table.IsThisRecord(slot))
             {
-                value = _parameter;
-                return true;
+                // Binder should have prevented this since ThisRecord isn't mutable
+                throw new InterpreterConfigException($"Can't set ThisRecord");
             }
 
-            if (!_parameter.Type.HasField(name))
-            {
-                // If it's not in this table. Be sure to not claim it so that 
-                // we can still check a parent scope. 
-                value = null;
-                return false;
-            }
-
-            value = _parameter.GetField(name);
-            return value != null;
+            _table.SetValue(slot, _parameter, value);
         }
 
-        protected override ReadOnlySymbolTable GetSymbolTableSnapshotWorker()
+        public override FormulaValue Get(ISymbolSlot slot)
         {
-            SymbolTable table1 = null;
-            if (_allowThisRecord)
-            {
-                table1 = new SymbolTable();
-                table1.AddVariable("ThisRecord", _parameter.Type);
-            }
-
-            var table = ReadOnlySymbolTable.NewFromRecord(_parameter.Type, table1);
-            return table;
+            ValidateSlot(slot);
+            return _table.GetValue(slot, _parameter);
         }
     }
 }

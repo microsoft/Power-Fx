@@ -11,9 +11,11 @@ using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 using static Microsoft.PowerFx.Core.Localization.TexlStrings;
@@ -77,8 +79,6 @@ namespace Microsoft.PowerFx
 
         public override bool SupportsParamCoercion => false;
 
-        public override bool CheckTypesAndSemanticsOnly => true;
-
         public Func<FormulaValue[], Task<FormulaValue>> _impl;
 
         public CustomSetPropertyFunction(string name)
@@ -94,7 +94,7 @@ namespace Microsoft.PowerFx
         }
 
         // 2nd argument should be same type as 1st argument. 
-        protected override bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public override bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
@@ -336,17 +336,51 @@ namespace Microsoft.PowerFx
                 }
             }
 
-            foreach (var arg in args)
+            List<ErrorValue> errors = null;
+            for (var i = 0; i < args.Length; i++)
             {
-                if (arg is LambdaFormulaValue lambda)
+                object arg = args[i];
+
+                // In case, ReflectionFunction was created using the constructor which takes paramtypes as optional argument paramtypes could be null.
+                var expectedType = _info.ParamTypes.Length <= i ? default : _info.ParamTypes[i];
+                if (arg is ErrorValue ev)
+                {
+                    if (errors == null)
+                    {
+                        errors = new List<ErrorValue>();
+                    }
+
+                    errors.Add(ev);
+                }
+                else if (arg is BlankValue && expectedType is NumberType)
+                {
+                    arg = FormulaValue.New(0);
+                }
+                else if (arg is BlankValue && expectedType is StringType)
+                {
+                    arg = FormulaValue.New(string.Empty);
+                }
+                else if (arg is BlankValue)
+                {
+                    if (errors == null)
+                    {
+                        errors = new List<ErrorValue>();
+                    }
+
+                    errors.Add(CommonErrors.RuntimeTypeMismatch(IRContext.NotInSource(FormulaType.Blank)));
+                }
+                else if (arg is LambdaFormulaValue lambda)
                 {
                     Func<Task<BooleanValue>> argLambda = async () => (BooleanValue)await lambda.EvalAsync();
-                    args2.Add(argLambda);
+                    arg = argLambda;
                 }
-                else
-                {
-                    args2.Add(arg);
-                }
+
+                args2.Add(arg);
+            }
+
+            if (errors != null)
+            {
+                return ErrorValue.Combine(IRContext.NotInSource(_info.RetType), errors);
             }
 
             if (_info._isAsync)

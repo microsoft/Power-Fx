@@ -56,6 +56,7 @@ namespace Microsoft.PowerFx.Tests
                 $"{ns}.{nameof(SymbolExtensions)}",
                 $"{nsType}.{nameof(ObjectRecordValue)}",
                 $"{nsType}.{nameof(QueryableTableValue)}",
+                $"{ns}.InterpreterConfigException",
                 $"{ns}.Interpreter.{nameof(NotDelegableException)}",
                 $"{ns}.Interpreter.UDF.{nameof(DefineFunctionsResult)}",                               
 
@@ -176,10 +177,10 @@ namespace Microsoft.PowerFx.Tests
                 engine.DeleteFormula("B"));
 
             engine.DeleteFormula("D");
-            Assert.False(engine.Formulas.TryGetValue("D", out var retD));
+            Assert.False(engine.TryGetByName("D", out var retD));
 
             engine.DeleteFormula("C");
-            Assert.False(engine.Formulas.TryGetValue("C", out var retC));
+            Assert.False(engine.TryGetByName("C", out var retC));
 
             // After C and D are deleted, deleting B should pass
             engine.DeleteFormula("B");
@@ -211,6 +212,36 @@ namespace Microsoft.PowerFx.Tests
             AssertUpdate("B-->9;C-->70;");
         }
 
+        private static readonly ParserOptions _opts = new ParserOptions { AllowsSideEffects = true };
+
+        [Fact]
+        public void SetFormula()
+        {
+            var config = new PowerFxConfig();
+            config.EnableSetFunction();
+            var engine = new RecalcEngine(config);
+
+            engine.UpdateVariable("A", 1);
+            engine.SetFormula("B", "A*2", OnUpdate);
+            AssertUpdate("B-->2;");
+
+            // Can't set formulas, they're read only 
+            var check = engine.Check("Set(B, 12)"); 
+            Assert.False(check.IsSuccess);
+
+            // Set() function triggers recalc chain. 
+            engine.Eval("Set(A,2)", options: _opts);
+            AssertUpdate("B-->4;");
+
+            // Compare Before/After set within an expression.
+            // Before (A,B) = 2,4 
+            // After  (A,B) = 3,6
+            var result = engine.Eval("With({x:A, y:B}, Set(A,3); x & y & A & B)", options: _opts);
+            Assert.Equal("2436", result.ToObject());
+
+            AssertUpdate("B-->6;");
+        }
+
         [Fact]
         public void BasicEval()
         {
@@ -238,7 +269,7 @@ namespace Microsoft.PowerFx.Tests
             engine.UpdateVariable("a", FormulaValue.New(12));
 
             // not supported: Can't change a variable's type.
-            Assert.Throws<NotSupportedException>(() =>
+            Assert.Throws<InvalidOperationException>(() =>
                 engine.UpdateVariable("a", FormulaValue.New("str")));
         }
 
@@ -582,6 +613,32 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal(11.0, (double)formulaValue.ToObject());
         }
 
+        // Test Globals + Locals + GetValuator() 
+        [Fact]
+        public void CheckGlobalAndLocal()
+        {
+            var engine = new RecalcEngine();
+            engine.UpdateVariable("y", FormulaValue.New(10));
+
+            var result = engine.Check(
+                "x+y",
+                RecordType.Empty().Add(
+                    new NamedFormulaType("x", FormulaType.Number)));
+
+            // Test that parsing worked
+            Assert.True(result.IsSuccess);
+            Assert.NotNull(result.Expression);
+            Assert.True(result.ReturnType is NumberType);
+
+            // Test evaluation of parsed expression
+            var recordValue = FormulaValue.NewRecordFromFields(
+                new NamedValue("x", FormulaValue.New(5)));
+
+            var formulaValue = result.GetEvaluator().Eval(recordValue);
+
+            Assert.Equal(15.0, (double)formulaValue.ToObject());
+        }
+
         [Fact]
         public void CheckIntefaceSuccess()
         {
@@ -850,6 +907,67 @@ namespace Microsoft.PowerFx.Tests
                 var name = typeof(TestRandService).FullName;
                 Assert.Equal($"IRandomService ({name}) returned an illegal value 9999. Must be between 0 and 1", e.Message);
             }
+        }
+
+        [Fact]
+        public async Task ExecutingWithRemovedVarFails()
+        {
+            var symTable = new SymbolTable();
+            var slot = symTable.AddVariable("x", FormulaType.Number);
+
+            var engine = new RecalcEngine();
+            var result = engine.Check("x+1", symbolTable: symTable);
+            Assert.True(result.IsSuccess);
+
+            var eval = result.GetEvaluator();
+            var symValues = symTable.CreateValues();
+            symValues.Set(slot, FormulaValue.New(10));
+
+            var result1 = await eval.EvalAsync(CancellationToken.None, symValues);
+            Assert.Equal(11.0, result1.ToObject());
+
+            // Adding a variable is ok. 
+            var slotY = symTable.AddVariable("y", FormulaType.Number);
+            result1 = await eval.EvalAsync(CancellationToken.None, symValues);
+            Assert.Equal(11.0, result1.ToObject());
+
+            // Executing an existing IR fails if it uses a deleted variable.
+            symTable.RemoveVariable("x");
+            await Assert.ThrowsAsync<InvalidOperationException>(() => eval.EvalAsync(CancellationToken.None, symValues));
+
+            // Even re-adding with same type still fails. 
+            // (somebody could have re-added with a different type)
+            var slot2 = symTable.AddVariable("x", FormulaType.Number);
+            symValues.Set(slot2, FormulaValue.New(20));
+
+            await Assert.ThrowsAsync<InvalidOperationException>(() => eval.EvalAsync(CancellationToken.None, symValues));
+        }
+
+        // execute w/ missing var (never adding to SymValues)
+        [Fact]
+        public async Task ExecutingWithMissingVar()
+        {
+            var engine = new Engine(new PowerFxConfig());
+
+            var recordType = RecordType.Empty()
+                .Add("x", FormulaType.Number)
+                .Add("y", FormulaType.Number);
+                        
+            var result = engine.Check("x+y", recordType);
+            var eval = result.GetEvaluator();
+
+            var recordXY = RecordValue.NewRecordFromFields(
+                new NamedValue("x", FormulaValue.New(10)),
+                new NamedValue("y", FormulaValue.New(100)));
+
+            var result2 = eval.Eval(recordXY);
+            Assert.Equal(110.0, result2.ToObject());
+
+            // Missing y , treated as blank (0)
+            var recordX = RecordValue.NewRecordFromFields(
+                new NamedValue("x", FormulaValue.New(10)));
+            result2 = eval.Eval(recordX);
+            Assert.Equal(10.0, result2.ToObject());
         }
 
         private class TestRandService : IRandomService

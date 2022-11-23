@@ -32,12 +32,13 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var databaseTable = DatabaseTable.CreateTestTable(0);
             var symbols = new SymbolTable();
 
-            symbols.AddVariable("Table", DatabaseTable.TestTableType);
+            var slot = symbols.AddVariable("Table", DatabaseTable.TestTableType);
             symbols.EnableMutationFunctions();
 
             var engine = new RecalcEngine();
-            var runtimeConfig = ReadOnlySymbolValues.New(new Dictionary<string, DatabaseTable>() { { "Table", databaseTable } });
-
+            var runtimeConfig = new SymbolValues(symbols);
+            runtimeConfig.Set(slot, databaseTable);
+            
             CheckResult check = engine.Check(expr, symbolTable: symbols, options: new ParserOptions() { AllowsSideEffects = true });
             Assert.Equal(checkSuccess, check.IsSuccess);
 
@@ -62,11 +63,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var databaseTable = DatabaseTable.CreateTestTable(patchDelay: 20000);
             var symbols = new SymbolTable();
 
-            symbols.AddVariable("Table", DatabaseTable.TestTableType);
+            var slot = symbols.AddVariable("Table", DatabaseTable.TestTableType);
             symbols.EnableMutationFunctions();
 
             var engine = new RecalcEngine();
-            var runtimeConfig = ReadOnlySymbolValues.New(new Dictionary<string, DatabaseTable>() { { "Table", databaseTable } });
+            var runtimeConfig = new SymbolValues(symbols);
+            runtimeConfig.Set(slot, databaseTable);
 
             CheckResult check = engine.Check(expr, symbolTable: symbols, options: new ParserOptions() { AllowsSideEffects = true });
             Assert.True(check.IsSuccess);

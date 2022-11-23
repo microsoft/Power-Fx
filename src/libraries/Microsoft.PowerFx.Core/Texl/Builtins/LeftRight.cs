@@ -41,8 +41,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => true;
 
-        public override bool CheckTypesAndSemanticsOnly => true;
-
         public LeftRightTableScalarFunction(bool isLeft)
             : base(isLeft ? "Left" : "Right", isLeft ? TexlStrings.AboutLeftT : TexlStrings.AboutRightT, FunctionCategories.Table, DType.EmptyTable, 0, 2, 2, DType.EmptyTable, DType.Number)
         {
@@ -60,7 +58,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return GetUniqueTexlRuntimeName(suffix: "_TS");
         }
 
-        protected override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
@@ -93,8 +91,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => true;
 
-        public override bool CheckTypesAndSemanticsOnly => true;
-
         public LeftRightTableTableFunction(bool isLeft)
             : base(isLeft ? "Left" : "Right", isLeft ? TexlStrings.AboutLeftT : TexlStrings.AboutRightT, FunctionCategories.Table, DType.EmptyTable, 0, 2, 2, DType.EmptyTable, DType.EmptyTable)
         {
@@ -112,7 +108,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return GetUniqueTexlRuntimeName(suffix: "_TT");
         }
 
-        protected override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
@@ -148,8 +144,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => true;
 
-        public override bool CheckTypesAndSemanticsOnly => true;
-
         public LeftRightScalarTableFunction(bool isLeft)
             : base(isLeft ? "Left" : "Right", isLeft ? TexlStrings.AboutLeftT : TexlStrings.AboutRightT, FunctionCategories.Table, DType.EmptyTable, 0, 2, 2, DType.String, DType.EmptyTable)
         {
@@ -167,7 +161,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return GetUniqueTexlRuntimeName(suffix: "_ST");
         }
 
-        protected override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);

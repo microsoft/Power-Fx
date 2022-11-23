@@ -181,10 +181,10 @@
 
 // ******** NULL and ERROR PARAMETERS ********
 >> Round(1/0,1)
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Round(1,1/0)
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Round(Blank(),1)
 0
@@ -204,10 +204,10 @@
 // ******** STRING PARAMETERS ********
 
 >> Round("sampleText",1)
-#Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Round("10.5678","ABC")
-#Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Round("-10.5678","2")
 -10.57
@@ -233,6 +233,6 @@
 0
 
 >> Round("true","false")
-#Error(Kind=InvalidArgument, InvalidArgument)
+Error(Table({Kind:ErrorKind.InvalidArgument},{Kind:ErrorKind.InvalidArgument}))
 
 

@@ -29,8 +29,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => false;
 
-        public override bool CheckTypesAndSemanticsOnly => true;
-
         public SortByColumnsFunction()
             : base("SortByColumns", TexlStrings.AboutSortByColumns, FunctionCategories.Table, DType.EmptyTable, 0, 2, int.MaxValue, DType.EmptyTable, DType.String)
         {
@@ -62,7 +60,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return base.GetSignatures(arity);
         }
 
-        protected override bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public override bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
@@ -366,8 +364,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => false;
 
-        public override bool CheckTypesAndSemanticsOnly => true;
-
         public SortByColumnsOrderTableFunction()
             : base("SortByColumns", TexlStrings.AboutSortByColumnsWithOrderValues, FunctionCategories.Table, DType.EmptyTable, 0, 3, 3, DType.EmptyTable, DType.String, DType.EmptyTable)
         {
@@ -388,7 +384,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return new List<string>() { LanguageConstants.SortOrderEnumString };
         }
 
-        protected override bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public override bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);

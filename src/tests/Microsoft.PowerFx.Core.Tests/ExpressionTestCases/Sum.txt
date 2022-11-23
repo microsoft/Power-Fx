@@ -12,7 +12,7 @@
 
 // Excel gives compile error and mention typo in the formula. Suggest to correct 1E+308 to E1+308
 >> Sum(1E+308, 1E+308)
-#Error(Kind=Numeric)
+Error({Kind:ErrorKind.Numeric})
 
 // Negative Integer Parameters
 
@@ -38,7 +38,7 @@
 
 // ******** NULL and ERROR PARAMETERS ********
 >> Sum(1/0)
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 // Excel returns 0
 >> Sum(Blank())
@@ -60,7 +60,7 @@ Blank()
 // ******** STRING PARAMETERS ********
 
 >> Sum("sampleText")
-#Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Sum("10")
 10
@@ -72,7 +72,7 @@ Blank()
 19
 
 >> Sum("100", "AB")
-#Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 // ******** BOOLEAN PARAMETERS ********
 
@@ -86,7 +86,7 @@ Blank()
 1
 
 >> Sum("true","false")
-#Error(Kind=InvalidArgument, InvalidArgument)
+Error(Table({Kind:ErrorKind.InvalidArgument},{Kind:ErrorKind.InvalidArgument}))
 
 // ***********  TABLE + EXPRESSION *************
 
@@ -112,7 +112,7 @@ Blank()
 9
 
 >> Sum(If(1/0<2,[1,2,3,4]),Value)
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 // Blank rows
 >> Sum(Table({a:1},If(1<0,{a:2}),{a:3},If(1<0,{a:4}),{a:5}), Coalesce(a, 100))

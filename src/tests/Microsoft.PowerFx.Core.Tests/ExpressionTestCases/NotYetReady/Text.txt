@@ -35,7 +35,7 @@
 
 //Error message: Language code not supported
 >> Text(Date(2016,1,31), "dddd mmmm d", "fsdff")
-#Error
+Error({Kind:ErrorKind.BadLanguageCode})
 
 //Excel doesn't support DateTimeValue function or the DateTimeFormat formats
 >> Text(DateTimeValue("March 30, 2022 5:30 PM"), DateTimeFormat.LongDateTime24)

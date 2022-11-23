@@ -38,10 +38,10 @@
 13
 
 >> IfError(1/0, Error({Kind:FirstError.Kind}))
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> IfError(1/0, Error(FirstError))
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> IfError(Error({Kind:12}), FirstError.Kind)
 12
@@ -62,7 +62,7 @@
 "Error"
 
 >> IfError({a:1, b:"hello"}, {a:2, b:"good morning"}, {a:1/0, b:"Error"}).a
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> IfError(Error({Kind: ErrorKind.Validation}),"Error")
 "Error"
@@ -84,7 +84,7 @@
 
 // Number-String
 >> IfError(1/0, "Division by zero error")
-#Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 //Test number parameter converted to text
 >> IfError(Text(1/0), "Division by zero error")
@@ -123,7 +123,7 @@
 1
 
 >> IfError(Error({Kind: 13}), 1/0)
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 
 // Error-String

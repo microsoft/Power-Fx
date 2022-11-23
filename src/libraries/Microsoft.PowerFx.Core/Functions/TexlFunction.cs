@@ -55,7 +55,7 @@ namespace Microsoft.PowerFx.Core.Functions
         // and the specific return type will depend on the argument types.
         // If the function can return some shape of record, which depends on the argument types,
         // DType.EmptyRecord should be used. Similarly for tables and DType.EmptyTable.
-        // CheckInvocation can be used to infer the exact return type of a specific invocation.
+        // CheckTypes can be used to infer the exact return type of a specific invocation.
         public DType ReturnType { get; }
 
         // Function arity (expected min/max number of arguments).
@@ -118,7 +118,7 @@ namespace Microsoft.PowerFx.Core.Functions
         public virtual bool CanBeUsedInTests => !CreatesImplicitScreenDependency;
 
         /// <summary>
-        /// Whether the function always produces a visible error if CheckInvocation returns invalid.
+        /// Whether the function always produces a visible error if CheckTypes returns invalid.
         /// This can be used to prevent the overall "Function has invalid arguments" error.
         /// </summary>
         public virtual bool HasPreciseErrors => false;
@@ -385,123 +385,37 @@ namespace Microsoft.PowerFx.Core.Functions
             return char.ToLowerInvariant(name[0]).ToString() + name.Substring(1) + suffix + (IsAsync && !suppressAsync ? "Async" : string.Empty);
         }
 
-        [Obsolete("Override CheckTypes instead. If binder access is needed to generate errors, override CheckSemantics. Override the bool property CheckTypesAndSemanticsOnly and set it to true if you override either of these methods.", false)]
-        protected virtual bool CheckInvocation(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
-        {
-            return CheckInvocation(binding.CheckTypesContext, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
-        }
-
-        [Obsolete("Override CheckTypes instead. If binder access is needed to generate errors, override CheckSemantics. Override the bool property CheckTypesAndSemanticsOnly and set it to true if you override either of these methods.", false)]
-        protected virtual bool CheckInvocation(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
-        {
-            return CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
-        }
-
-        // Type check an invocation of the function with the specified args (and their corresponding types).
-        // Return true if everything aligns even with coercion, false otherwise.
-        // By default, the out returnType will be the one advertised via the constructor. If this.ReturnType
-        // is either Unknown or an aggregate type, this method needs to be specialized.
-        protected virtual bool CheckInvocation(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
-        {
-            return CheckTypesCore(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
-        }
-
         #region CheckInvocation Replacement Project
         public bool HandleCheckInvocation(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
-            if (CheckTypesAndSemanticsOnly)
-            {
-                Contracts.Assert(!CompareLegacyCheckInvocation);
-
-                var result = CheckTypes(binding.CheckTypesContext, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
-                CheckSemantics(binding, args, argTypes, errors, ref nodeToCoercedTypeMap);
-                return result;
-            }
-
-            if (CompareLegacyCheckInvocation)
-            {
-                Contracts.Assert(!CheckTypesAndSemanticsOnly);
-
-                var checkTypesErrors = new ErrorContainer();
-                var checkTypesResult = CheckTypes(binding.CheckTypesContext, args, argTypes, checkTypesErrors, out var checkTypesReturnType, out var checkTypesNodeMap);
-                CheckSemantics(binding, args, argTypes, checkTypesErrors, ref checkTypesNodeMap);
-
-                var legacyErrors = new ErrorContainer();
-#pragma warning disable CS0618 // Type or member is obsolete
-                var legacyResult = CheckInvocation(binding, args, argTypes, legacyErrors, out var legacyReturnType, out var legacyNodeMap);
-#pragma warning restore CS0618 // Type or member is obsolete
-
-                CompareResultToLegacyCheckInvocation(
-                    checkTypesResult,
-                    checkTypesErrors,
-                    checkTypesReturnType,
-                    checkTypesNodeMap,
-                    legacyResult,
-                    legacyErrors,
-                    legacyReturnType,
-                    legacyNodeMap);
-            }
-
-#pragma warning disable CS0618 // Type or member is obsolete
-            return CheckInvocation(binding, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
-#pragma warning restore CS0618 // Type or member is obsolete
+            var result = CheckTypes(binding.CheckTypesContext, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            CheckSemantics(binding, args, argTypes, errors, ref nodeToCoercedTypeMap);
+            return result;
         }
 
         /// <summary>
-        /// Opt-in to using the new CheckTypes/CheckSemantics and then compare the results to legacy CheckInvocation.
+        /// Perform sub-expression type checking and produce a return type.
         /// </summary>
-        public virtual bool CompareLegacyCheckInvocation => false;
-
-        /// <summary>
-        /// Opt-in to using the new CheckTypes/CheckSemantics methods without calling CheckInvocation.
-        /// </summary>
-        public virtual bool CheckTypesAndSemanticsOnly => false;
-
-        /// <summary>
-        /// Perform sub-expression type checking and produce a return type. This method will eventually replace CheckInvocation.
-        /// </summary>
-        protected virtual bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public virtual bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
-            Contracts.Assert(CheckTypesAndSemanticsOnly || CompareLegacyCheckInvocation);
-
             return CheckTypes(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
         }
 
-        protected virtual bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public virtual bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
-            Contracts.Assert(CheckTypesAndSemanticsOnly || CompareLegacyCheckInvocation);
-
             return CheckTypesCore(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
         }
 
         /// <summary>
         /// Perform expression-level semantics checks which require a binding. May produce coercions.
         /// </summary>
-        protected virtual void CheckSemantics(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors, ref Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public virtual void CheckSemantics(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors, ref Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
-            Contracts.Assert(CheckTypesAndSemanticsOnly || CompareLegacyCheckInvocation);
-
             CheckSemantics(binding, args, argTypes, errors);
         }
 
-        protected virtual void CheckSemantics(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors)
+        public virtual void CheckSemantics(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors)
         {
-            Contracts.Assert(CheckTypesAndSemanticsOnly || CompareLegacyCheckInvocation);
-        }
-
-        // This method can be overridden in a derived class and then a breakpoint can be used to inspect the
-        // output of both methods.
-        protected virtual void CompareResultToLegacyCheckInvocation(
-            bool result,
-            IErrorContainer errors,
-            DType returnType,
-            Dictionary<TexlNode, DType> nodeToCoercedTypeMap,
-            bool legacyResult,
-            IErrorContainer legacyErrors,
-            DType legacyReturnType,
-            Dictionary<TexlNode, DType> legacyNodeToCoercedTypeMap)
-        {
-            Contracts.Assert(CompareLegacyCheckInvocation);
         }
         #endregion
 

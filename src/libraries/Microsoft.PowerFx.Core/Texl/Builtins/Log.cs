@@ -42,8 +42,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool IsSelfContained => true;
 
-        public override bool CheckTypesAndSemanticsOnly => true;
-
         public LogTFunction()
             : base("Log", TexlStrings.AboutLogT, FunctionCategories.MathAndStat, DType.EmptyTable, 0, 1, 2)
         {
@@ -59,7 +57,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return GetUniqueTexlRuntimeName(suffix: "_T");
         }
 
-        protected override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);

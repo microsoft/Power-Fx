@@ -38,6 +38,29 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             }
         }
 
+#if false
+        // Helper to run a single .txt 
+        [Fact]
+        public void RunOne()
+        {
+            var path = @"D:\dev\pa2\Power-Fx\src\tests\Microsoft.PowerFx.Core.Tests\ExpressionTestCases\OptionSet.txt";
+            var line = 41;
+
+            var runner = new InterpreterRunner();
+            var testRunner = new TestRunner(runner);
+
+            testRunner.AddFile(path);
+
+            // We can filter to just cases we want 
+            if (line > 0)
+            {
+                testRunner.Tests.RemoveAll(x => x.SourceLine != line);
+            }
+
+            var result = testRunner.RunTests();
+        }
+#endif
+
         // Since test discovery runs in a separate process, run a dedicated 
         // parse pass as a single unit test to verify all the .txt will parse. 
         // This doesn't actually run any tests. 

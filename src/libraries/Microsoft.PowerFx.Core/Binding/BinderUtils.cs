@@ -9,6 +9,7 @@ using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Logging.Trackers;
+using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
@@ -77,11 +78,14 @@ namespace Microsoft.PowerFx.Core.Binding
         }
 
         /// <summary>
-        /// Tries to get the best suited overload for <paramref name="node"/> according to <paramref name="txb"/> and
+        /// Tries to get the best suited overload for <paramref name="node"/> according to <paramref name="context"/> and
         /// returns true if it is found.
         /// </summary>
-        /// <param name="txb">
-        /// Binding that will help select the best overload.
+        /// <param name="context">
+        /// CheckTypesContext used for calls to CheckTypes.
+        /// </param>
+        /// <param name="errors">
+        /// An IErrorContainer to collect errors.
         /// </param>
         /// <param name="node">
         /// CallNode for which the best overload will be determined.
@@ -102,13 +106,10 @@ namespace Microsoft.PowerFx.Core.Binding
         /// <param name="returnType">
         /// The return type for <paramref name="bestOverload"/>.
         /// </param>
-        /// <param name="warnings">
-        /// Any recorded warnings that may have been produced by CheckTypes/CheckSemantics or CheckInvocation.
-        /// </param>
         /// <returns>
         /// True if a valid overload was found, false if not.
         /// </returns>
-        internal static bool TryGetBestOverload(TexlBinding txb, CallNode node, DType[] argTypes, TexlFunction[] overloads, out TexlFunction bestOverload, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap, out DType returnType, out LimitedSeverityErrorContainer warnings)
+        internal static bool TryGetBestOverload(CheckTypesContext context, IErrorContainer errors, CallNode node, DType[] argTypes, TexlFunction[] overloads, out TexlFunction bestOverload, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap, out DType returnType)
         {
             Contracts.AssertValue(node, nameof(node));
             Contracts.AssertValue(overloads, nameof(overloads));
@@ -121,7 +122,6 @@ namespace Microsoft.PowerFx.Core.Binding
             var matchingFuncWithCoercionReturnType = DType.Invalid;
             nodeToCoercedTypeMap = null;
             Dictionary<TexlNode, DType> matchingFuncWithCoercionNodeToCoercedTypeMap = null;
-            LimitedSeverityErrorContainer matchingFuncWithCoercionWarnings = null;
 
             foreach (var maybeFunc in overloads)
             {
@@ -136,10 +136,10 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 var typeCheckSucceeded = false;
 
-                var localWarnings = new LimitedSeverityErrorContainer(txb.ErrorContainer, DocumentErrorSeverity.Warning);
+                var localWarnings = new LimitedSeverityErrorContainer(errors, DocumentErrorSeverity.Warning);
 
                 // Typecheck the invocation and infer the return type.
-                typeCheckSucceeded = maybeFunc.HandleCheckInvocation(txb, args, argTypes, localWarnings, out returnType, out nodeToCoercedTypeMap);
+                typeCheckSucceeded = maybeFunc.CheckTypes(context, args, argTypes, localWarnings, out returnType, out nodeToCoercedTypeMap);
 
                 if (typeCheckSucceeded)
                 {
@@ -148,7 +148,6 @@ namespace Microsoft.PowerFx.Core.Binding
                         // We found an overload that matches without type coercion.  The correct return type
                         // and, trivially, the nodeToCoercedTypeMap are properly set at this point.
                         bestOverload = maybeFunc;
-                        warnings = localWarnings;
                         return true;
                     }
 
@@ -161,7 +160,6 @@ namespace Microsoft.PowerFx.Core.Binding
                         matchingFuncWithCoercionNodeToCoercedTypeMap = nodeToCoercedTypeMap;
                         matchingFuncWithCoercion = maybeFunc;
                         matchingFuncWithCoercionReturnType = returnType;
-                        matchingFuncWithCoercionWarnings = localWarnings;
                     }
                 }
             }
@@ -172,7 +170,6 @@ namespace Microsoft.PowerFx.Core.Binding
                 bestOverload = matchingFuncWithCoercion;
                 nodeToCoercedTypeMap = matchingFuncWithCoercionNodeToCoercedTypeMap;
                 returnType = matchingFuncWithCoercionReturnType;
-                warnings = matchingFuncWithCoercionWarnings;
                 return true;
             }
 
@@ -180,7 +177,6 @@ namespace Microsoft.PowerFx.Core.Binding
             bestOverload = null;
             nodeToCoercedTypeMap = null;
             returnType = null;
-            warnings = null;
             return false;
         }
 
@@ -846,6 +842,92 @@ namespace Microsoft.PowerFx.Core.Binding
                     Contracts.Assert(false);
                     return new BinderCheckTypeResult() { Node = node, NodeType = DType.Error };
             }
+        }
+
+        public static bool TryGetConstantValue(CheckTypesContext context, TexlNode node, out string nodeValue)
+        {
+            Contracts.AssertValue(node);
+            nodeValue = null;
+            switch (node.Kind)
+            {
+                case NodeKind.StrLit:
+                    nodeValue = node.AsStrLit().Value;
+                    return true;
+                case NodeKind.BinaryOp:
+                    var binaryOpNode = node.AsBinaryOp();
+                    if (binaryOpNode.Op == BinaryOp.Concat)
+                    {
+                        if (TryGetConstantValue(context, binaryOpNode.Left, out var left) && TryGetConstantValue(context, binaryOpNode.Right, out var right))
+                        {
+                            nodeValue = string.Concat(left, right);
+                            return true;
+                        }
+                    }
+
+                    break;
+                case NodeKind.Call:
+                    var callNode = node.AsCall();
+                    if (callNode.Head.Name.Value == BuiltinFunctionsCore.Concatenate.Name)
+                    {
+                        var parameters = new List<string>();
+                        foreach (var argNode in callNode.Args.Children)
+                        {
+                            if (TryGetConstantValue(context, argNode, out var argValue))
+                            {
+                                parameters.Add(argValue);
+                            }
+                            else
+                            {
+                                break;
+                            }
+                        }
+
+                        if (parameters.Count == callNode.Args.Count)
+                        {
+                            nodeValue = string.Join(string.Empty, parameters);
+                            return true;
+                        }
+                    }
+
+                    break;
+                case NodeKind.FirstName:
+                    // Possibly a non-qualified enum value
+                    var firstNameNode = node.AsFirstName();
+                    if (context.NameResolver.Lookup(firstNameNode.Ident.Name, out var firstNameInfo, NameLookupPreferences.None))
+                    {
+                        if (firstNameInfo.Kind == BindKind.Enum)
+                        {
+                            if (firstNameInfo.Data is string enumValue)
+                            {
+                                nodeValue = enumValue;
+                                return true;
+                            }
+                        }
+                    }
+
+                    break;
+                case NodeKind.DottedName:
+                    // Possibly an enumeration
+                    var dottedNameNode = node.AsDottedName();
+                    if (dottedNameNode.Left.Kind == NodeKind.FirstName)
+                    {
+                        if (context.NameResolver.EntityScope.TryGetNamedEnum(dottedNameNode.Left.AsFirstName().Ident.Name, out var enumType))
+                        {
+                            if (enumType.TryGetEnumValue(dottedNameNode.Right.Name, out var enumValue))
+                            {
+                                if (enumValue is string strValue)
+                                {
+                                    nodeValue = strValue;
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+
+                    break;
+            }
+
+            return false;
         }
     }
 }

@@ -18,7 +18,14 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         {
             var engine = new RecalcEngine(new PowerFxConfig());
 
-            foreach (var dt in new[] { DateTime.Now, DateTime.UtcNow, DateTime.Parse("10/10/2022") })
+            DateTime[] dateTimeArray = new[]
+            {
+                WithoutSubMilliseconds(DateTime.Now),
+                WithoutSubMilliseconds(DateTime.UtcNow),
+                DateTime.Parse("10/10/2022")
+            };
+
+            foreach (var dt in dateTimeArray)
             {
                 if (dt.Kind == DateTimeKind.Utc)
                 {
@@ -32,7 +39,16 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
                     Assert.Equal(dateTimeValue.Value, dateTimeValueDeserialized.Value);
                 }
-            }            
-        }            
+            }
+        }
+
+        /// <summary>
+        /// This is necessary due to the fact that serialization ignores tick precision.
+        /// https://github.com/microsoft/Power-Fx/issues/849.
+        /// </summary>
+        private static DateTime WithoutSubMilliseconds(DateTime dt)
+        {
+            return new DateTime(dt.Year, dt.Month, dt.Day, dt.Hour, dt.Minute, dt.Second, dt.Millisecond, dt.Kind);
+        }
     }
 }

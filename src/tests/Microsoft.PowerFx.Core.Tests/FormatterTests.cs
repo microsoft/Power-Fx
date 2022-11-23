@@ -13,8 +13,6 @@ namespace Microsoft.PowerFx.Tests
 {
     public sealed class FormatterTests : PowerFxTest
     {
-        private readonly CultureInfo _defaultLocale = new ("en-US");
-
         [Theory]
         [InlineData(
             "Collect(Yep, { a: [1], b: \"Hello\" })",
@@ -32,7 +30,6 @@ namespace Microsoft.PowerFx.Tests
         {
             var result = ParseScript(
                 script,
-                _defaultLocale,
                 flags: Flags.EnableExpressionChaining);
 
             Assert.Equal(expected, result.GetAnonymizedFormula());
@@ -58,7 +55,6 @@ namespace Microsoft.PowerFx.Tests
         {
             var result = ParseScript(
                 script,
-                _defaultLocale,
                 flags: Flags.EnableExpressionChaining);
 
             Assert.Equal(expected, StructuralPrint.Print(result.Root, nameProvider: new TestSanitizer()));
@@ -72,10 +68,8 @@ namespace Microsoft.PowerFx.Tests
         [InlineData("RGBA(\n    255,\n    /*r   */255,   ", true)]
         public void TestSeverityLevelsForPrettyPrint(string script, bool expected)
         {
-            Preview.FeatureFlags.StringInterpolation = true;
             var result = ParseScript(
                 script,
-                _defaultLocale,
                 flags: Flags.EnableExpressionChaining);
 
             // Can't pretty print a script with errors.
@@ -163,14 +157,12 @@ namespace Microsoft.PowerFx.Tests
         [InlineData("$\"This is {{\"Another\"}} interpolated {{string}}\"", "$\"This is {{\"Another\"}} interpolated {{string}}\"")]
         public void TestPrettyPrint(string script, string expected)
         {
-            Preview.FeatureFlags.StringInterpolation = true;
-
-            var result = Format(script, _defaultLocale);
+            var result = Format(script);
             Assert.NotNull(result);
             Assert.Equal(expected, result);
 
             // Ensure idempotence
-            result = Format(result, _defaultLocale);
+            result = Format(result);
             Assert.NotNull(result);
             Assert.Equal(expected, result);
         }

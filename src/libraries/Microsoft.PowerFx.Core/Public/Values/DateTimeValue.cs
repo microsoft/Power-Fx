@@ -28,7 +28,7 @@ namespace Microsoft.PowerFx.Types
 
         public override void ToExpression(StringBuilder sb, FormulaValueSerializerSettings settings)
         {
-            sb.Append($"DateTimeValue({CharacterUtils.ToPlainText(Value.ToString("o", CultureInfo.InvariantCulture))})");
+            sb.Append($"DateTime({Value.Year},{Value.Month},{Value.Day},{Value.Hour},{Value.Minute},{Value.Second},{Value.Millisecond})");
         }
     }
 }

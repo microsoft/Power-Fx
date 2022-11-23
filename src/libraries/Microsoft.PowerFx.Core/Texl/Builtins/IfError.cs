@@ -26,8 +26,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => true;
 
-        public override bool CheckTypesAndSemanticsOnly => true;
-
         public IfErrorFunction()
             : base("IfError", TexlStrings.AboutIfError, FunctionCategories.Logical, DType.Unknown, 0, 2, int.MaxValue)
         {
@@ -58,7 +56,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return base.GetSignatures(arity);
         }
 
-        protected override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(context);
             Contracts.AssertValue(args);

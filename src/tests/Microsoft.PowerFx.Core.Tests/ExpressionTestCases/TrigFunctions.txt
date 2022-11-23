@@ -80,7 +80,7 @@
 0
 
 >> Cot(0)
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> 1 / Cot(Pi()) // not quite infinity, but a very large number
 0
@@ -104,7 +104,7 @@
 -1
 
 >> Cot(Blank())
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Asin(0)
 0
@@ -167,7 +167,7 @@
 1.570796327
 
 >> Atan2(0, 0)
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Atan2(0, 1)
 1.570796327
@@ -194,10 +194,10 @@
 3.141592654
 
 >> Atan2(Blank(), Blank())
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Atan2(Sqrt(-1), 0)
-#Error(Kind=Numeric)
+Error({Kind:ErrorKind.Numeric})
 
 >> Degrees(0)
 0

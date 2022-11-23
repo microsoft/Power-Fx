@@ -19,8 +19,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => false;
 
-        public override bool CheckTypesAndSemanticsOnly => true;
-
         public IsErrorFunction()
             : base("IsError", TexlStrings.AboutIsError, FunctionCategories.Logical, DType.Boolean, 0, 1, 1)
         {
@@ -31,7 +29,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             yield return new[] { TexlStrings.IsErrorArg };
         }
 
-        protected override bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public override bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertValue(argTypes);

@@ -20,8 +20,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool IsSelfContained => true;
 
-        public override bool CheckTypesAndSemanticsOnly => true;
-
         public StatisticalFunction(string name, TexlStrings.StringGetter description, FunctionCategories fc)
             : base(name, description, fc, DType.Number, 0, 1, int.MaxValue, DType.Number)
         {
@@ -44,7 +42,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return base.GetSignatures(arity);
         }
 
-        protected override bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public override bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);

@@ -11624,26 +11624,26 @@
 
 // 0 not in list of supported StartofWeek Excel codes
 >> WeekNum(Date(2016, 1, 3),0)
-#Error(Kind=InvalidFunctionUsage)
+Error({Kind:ErrorKind.InvalidFunctionUsage})
 
 //MondayZero StartOfWeek enumeration is not supported by WeekNum function
 >> WeekNum(Date(2020, 5, 3),StartOfWeek.MondayZero)
-#Error(Kind=InvalidFunctionUsage)
+Error({Kind:ErrorKind.InvalidFunctionUsage})
 
 // 5 not in list of supported StartofWeek Excel codes
 >> WeekNum(Date(2016, 1, 3),5)
-#Error(Kind=InvalidFunctionUsage)
+Error({Kind:ErrorKind.InvalidFunctionUsage})
 
 // Decimal number error code not supported
 >> WeekNum(Date(2016, 1, 3),12.5)
-#Error(Kind=InvalidFunctionUsage)
+Error({Kind:ErrorKind.InvalidFunctionUsage})
 
 // Negative error code not supported
 >> WeekNum(Date(2016, 1, 3),-12)
-#Error(Kind=InvalidFunctionUsage)
+Error({Kind:ErrorKind.InvalidFunctionUsage})
 
 >> WeekNum(DateValue("1/2/2022"),1E308)
-#Error(Kind=InvalidFunctionUsage)
+Error({Kind:ErrorKind.InvalidFunctionUsage})
 
 
 // ******************************** NUMBER PARAMETERS ********************************
@@ -11672,7 +11672,7 @@
 
 // Invalid String passed as DateTimeValue
 >> WeekNum("ABC",StartOfWeek.Sunday)
-#Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 // Valid date passed as string in DateTimeValue parameter
 >> WeekNum("1/2/2022",StartOfWeek.Sunday)
@@ -11684,7 +11684,7 @@
 
 //Valid StartOfWeek enumeration passed as String
 >> WeekNum(DateValue("1/2/2022"),"StartOfWeek.Sunday")
-#Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 // Valid StartOfWeek excel code passed as String
 >> WeekNum(DateValue("1/2/2022"),"12")
@@ -11692,7 +11692,7 @@
 
 // Invalid string passed as StartofWeek parameter
 >> WeekNum(Date(2016, 1, 3),"abc")
-#Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 // ******************************** BOOLEAN PARAMETERS ********************************
 
@@ -11702,31 +11702,31 @@
 
 // Boolean value false coerced to Excel code 0, which is unsupported StartOfWeek code
 >> WeekNum(DateValue("1/2/2022"),false)
-#Error(Kind=InvalidFunctionUsage)
+Error({Kind:ErrorKind.InvalidFunctionUsage})
 
 // Boolean value true passed as string is treated as invalid argument
 >> WeekNum(DateValue("1/2/2022"),"true")
-#Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 // Boolean value true passed as string is treated as invalid argument
 >> WeekNum(DateValue("1/2/2022"),"false")
-#Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 // Boolean value true passed as DateTimeValue parameter
 >> WeekNum(DateTimeValue(true),1)
-#Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 // Boolean value true passed as DateTimeValue parameter
 >> WeekNum(DateTimeValue("true"),1)
-#Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 // Boolean value true passed as DateTimeValue parameter
 >> WeekNum(DateTimeValue(false),1)
-#Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 // Boolean value true passed as DateTimeValue parameter
 >> WeekNum(DateTimeValue("false"),1)
-#Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 // ******************************** NULL AND ERROR PARAMETERS ********************************
 
@@ -11780,12 +11780,12 @@
  
 // 1/0 as StartOfWeek code
 >> WeekNum(DateValue("1/2/2022"),1/0)
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 // 1/0 as DateTime value
 >> WeekNum(1/0,1)
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 //Very large number as DateTimeValue
 >> WeekNum(1E308,1)
-#Error
+Error({Kind:ErrorKind.Div0})

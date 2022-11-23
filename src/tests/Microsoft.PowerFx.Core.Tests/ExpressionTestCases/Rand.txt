@@ -52,7 +52,7 @@ true
 100
 
 >> RandBetween(4.7, 4.5)
-#Error
+Error({Kind:ErrorKind.Numeric})
 
 // Just like Excel, if there is no integer between the two numbers, take ceiling
 >> Sum(Sequence(100), RandBetween(3.5, 3.7))

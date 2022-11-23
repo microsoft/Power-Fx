@@ -35,4 +35,4 @@ Table()
 Table()
 
 >> Split(Text(1/0), "")
-#Error
+Error({Kind:ErrorKind.Div0})

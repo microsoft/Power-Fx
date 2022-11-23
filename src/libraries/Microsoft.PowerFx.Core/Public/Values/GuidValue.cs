@@ -24,7 +24,7 @@ namespace Microsoft.PowerFx.Types
 
         public override void ToExpression(StringBuilder sb, FormulaValueSerializerSettings settings)
         {
-            sb.Append($"GUID({CharacterUtils.ToPlainText(Value.ToString("N"))})");
+            sb.Append($"GUID({CharacterUtils.ToPlainText(Value.ToString("D"))})");
         }
     }
 }

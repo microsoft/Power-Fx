@@ -22,8 +22,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => false;
 
-        public override bool CheckTypesAndSemanticsOnly => true;
-
         public DropColumnsFunction()
             : base("DropColumns", TexlStrings.AboutDropColumns, FunctionCategories.Table, DType.EmptyTable, 0, 2, int.MaxValue, DType.EmptyTable)
         {
@@ -46,7 +44,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return base.GetSignatures(arity);
         }
 
-        protected override bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public override bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertValue(argTypes);
