@@ -77,7 +77,7 @@ namespace Microsoft.PowerFx
                 throw new ArgumentNullException(nameof(codeFixHandler));
             }
 
-            _handlers.Add(codeFixHandler.GetType().Name, codeFixHandler);
+            _handlers.Add(codeFixHandler.GetType().AssemblyQualifiedName, codeFixHandler);
         }
 
         CodeActionResult[] IPowerFxScopeQuickFix.Suggest(string expression)

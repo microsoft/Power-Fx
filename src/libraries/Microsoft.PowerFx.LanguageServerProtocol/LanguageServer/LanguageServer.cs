@@ -150,8 +150,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
 
             if (string.IsNullOrWhiteSpace(commandExecutedParams.Argument))
             {
-                //TODO: Log argument is null.
-
+                _sendToClient(JsonRpcHelper.CreateErrorResult(id, JsonRpcHelper.ErrorCode.PropertyValueRequired, $"{nameof(CommandExecutedParams.Argument)} is null or empty."));
                 return;
             }
 

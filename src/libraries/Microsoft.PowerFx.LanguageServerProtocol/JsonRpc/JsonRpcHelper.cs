@@ -29,6 +29,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             MethodNotFound = -32601,
             InvalidParams = -32602,
             InternalError = -32603,
+            PropertyValueRequired = -32604,
             ServerError = -32000
         }
 
