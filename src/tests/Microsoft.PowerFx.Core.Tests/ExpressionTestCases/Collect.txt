@@ -36,13 +36,13 @@ Errors: Error 0-19: Invalid number of arguments: received 3, expected 2.
 Errors: Error 0-25: Invalid number of arguments: received 3, expected 2.
 
 >> Collect(t1, "x")
-Errors: Error 12-15: Invalid argument type (Text). Expecting a Record value instead.|Error 12-15: Invalid argument type. Cannot use Text values in this context.
+Errors: Error 12-15: Invalid argument type (Text). Expecting a Record value instead.|Error 12-15: Invalid argument type. Cannot use Text values in this context.|Error 0-16: The function 'Collect' has some invalid arguments.
 
 >> Collect(t1, 1)
 Errors: Error 12-13: Invalid argument type (Number). Expecting a Record value instead.|Error 12-13: Invalid argument type. Cannot use Number values in this context.|Error 0-14: The function 'Collect' has some invalid arguments.
 
 >> Collect(Table({name: "VC"}), {surname: "textInput1"})
-Errors: Error 29-52: The specified column 'surname' does not exist. The column with the most similar name is 'name'.|Error 0-53: The function 'Collect' has some invalid arguments.
+{surname:"textInput1"}
 
 >> Collect(FirstN(Table({name: "hello"}), 0), {name: "textInput1"})
 {name:"textInput1"}
@@ -57,26 +57,19 @@ Errors: Error 8-11: Name isn't valid. 'Foo' isn't recognized.|Error 12-15: Name 
 Errors: Error 12-15: Name isn't valid. 'Foo' isn't recognized.
 
 >> Collect(Error({Kind:ErrorKind.Custom}), r2)
-Errors: Error 8-38: Invalid argument type (ObjNull). Expecting a Table value instead.|Error 0-43: The function 'Collect' has some invalid arguments.
+Error({Kind:ErrorKind.Custom})
 
-// !JYL! (ObjNull)???
->> Collect(Error({Kind:ErrorKind.Custom}), Error({Kind:ErrorKind.Custom}))
-Errors: Error 8-38: Invalid argument type (ObjNull). Expecting a Table value instead.|Error 0-71: The function 'Collect' has some invalid arguments.
+>> Collect(Error({Kind:ErrorKind.Custom}), Error({Kind:ErrorKind.Div0}))
+Error({Kind:ErrorKind.Custom})
 
-// !JYL! (ObjNull)???
 >> Collect(Blank(), r2)
-Errors: Error 8-15: Invalid argument type (ObjNull). Expecting a Table value instead.|Error 0-20: The function 'Collect' has some invalid arguments.
+Blank()
 
-// !JYL! (ObjNull)???
 >> Collect(Blank(), Blank())
-Errors: Error 8-15: Invalid argument type (ObjNull). Expecting a Table value instead.|Error 0-25: The function 'Collect' has some invalid arguments.
-
->> Collect("", r2)
-Errors: Error 8-10: Invalid argument type (Text). Expecting a Table value instead.|Error 0-15: The function 'Collect' has some invalid arguments.
+Blank()
 
 >> Collect("", "")
-Errors: Error 8-10: Invalid argument type (Text). Expecting a Table value instead.|Error 12-14: Invalid argument type (Text). Expecting a Record value instead.|Error 0-15: The function 'Collect' has some invalid arguments.
+Errors: Error 8-10: Invalid argument type (Text). Expecting a Table value instead.|Error 12-14: Invalid argument type (Text). Expecting a Record value instead.|Error 12-14: Invalid argument type. Cannot use Text values in this context.|Error 0-15: The function 'Collect' has some invalid arguments.
 
-// !JYL! (_Min)???
 >> Collect(If(false,Blank()),r2)
-Errors: Error 8-25: Invalid argument type (_Min). Expecting a Table value instead.|Error 0-29: The function 'Collect' has some invalid arguments.
+Errors: Error 8-25: The function 'Collect' has some invalid arguments.

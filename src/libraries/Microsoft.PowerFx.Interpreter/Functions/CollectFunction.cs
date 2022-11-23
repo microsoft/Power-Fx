@@ -9,11 +9,14 @@ using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
+using static Microsoft.PowerFx.Syntax.PrettyPrintVisitor;
 
 namespace Microsoft.PowerFx.Interpreter
 {
@@ -57,7 +60,7 @@ namespace Microsoft.PowerFx.Interpreter
               2,
               2, // Not handling multiple arguments for now
               DType.EmptyTable,
-              DType.EmptyRecord)
+              DType.EmptyRecord) 
         {
         }
 
@@ -99,17 +102,7 @@ namespace Microsoft.PowerFx.Interpreter
             var fValid = true;
             DType itemType = DType.Invalid;
 
-            DType dataSourceType = argTypes[0];
-            var tableType = FormulaType.Build(dataSourceType) as TableType;
-
             var argc = args.Length;
-
-            if (tableType == null)
-            {
-                errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrBadType_ExpectedType_ProvidedType, DType.EmptyTable.GetKindString(), argTypes[0].GetKindString());
-                collectedType = DType.EmptyTable;
-                return false;
-            }
 
             for (var i = 1; i < argc; i++)
             {
@@ -121,16 +114,6 @@ namespace Microsoft.PowerFx.Interpreter
                     errors.EnsureError(args[i], TexlStrings.ErrBadType_Type, argType.GetKindString());
                     fValid = false;
                     continue;
-                }
-
-                foreach (var typedName in argType.GetNames(DPath.Root))
-                {
-                    if (!tableType.HasField(typedName.Name))
-                    {
-                        dataSourceType.ReportNonExistingName(FieldNameKind.Display, errors, typedName.Name, args[i]);
-                        fValid = false;
-                        continue;
-                    }
                 }
 
                 // Promote the arg type to a table to facilitate unioning.
@@ -179,31 +162,33 @@ namespace Microsoft.PowerFx.Interpreter
             var fValid = base.CheckTypes(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
             Contracts.Assert(returnType.IsTable);
 
+            // TASK: 75145: SPEC: what if the types align for arg0, but arg0 is not a name node? For example:
+            //      Collect( Filter(T,A<2), {A:10} )
+            // The current behavior is that Collect has no side effects for transient tables/collections.
+
             // Need a collection for the 1st arg
             DType collectionType = argTypes[0];
-            if (collectionType.IsTable)
+            if (!collectionType.IsTable)
             {
-                // Get the unified collected type on the RHS. This will generate appropriate
-                // document errors for invalid arguments such as unsupported aggregate types.
-                fValid &= TryGetUnifiedCollectedType(args, argTypes, errors, out DType collectedType);
-                Contracts.Assert(collectedType.IsTable);
-
-                // The item type must be compatible with the collection schema.
-                var fError = false;
-                returnType = DType.Union(ref fError, collectionType, collectedType, useLegacyDateTimeAccepts: true);
-                if (fError)
-                {
-                    fValid = false;
-                    if (!SetErrorForMismatchedColumns(collectionType, collectedType, args[1], errors))
-                    {
-                        errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrNeedValidVariableName_Arg);
-                    }
-                }
-            }
-            else
-            {
-                errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrBadType_ExpectedType_ProvidedType, DType.EmptyTable.GetKindString(), argTypes[0].GetKindString());
+                errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrInvalidArgs_Func, Name);
                 fValid = false;
+            }
+
+            // Get the unified collected type on the RHS. This will generate appropriate
+            // document errors for invalid arguments such as unsupported aggregate types.
+            fValid &= TryGetUnifiedCollectedType(args, argTypes, errors, out DType collectedType);
+            Contracts.Assert(collectedType.IsTable);
+
+            // The item type must be compatible with the collection schema.
+            var fError = false;
+            returnType = DType.Union(ref fError, collectionType, collectedType, useLegacyDateTimeAccepts: true);
+            if (fError)
+            {
+                fValid = false;
+                if (!SetErrorForMismatchedColumns(collectionType, collectedType, args[1], errors))
+                {
+                    errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrNeedValidVariableName_Arg, Name);
+                }
             }
 
             return fValid;
@@ -227,22 +212,45 @@ namespace Microsoft.PowerFx.Interpreter
 
         public async Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancellationToken)
         {
-            var arg0 = (TableValue)args[0];
+            var arg0 = args[0];
             var arg1 = args[1];
 
+            // PA returns arg0.
+            // PFx returns arg1 for now except when arg0 is anything but TableValue, return arg0 or RuntimeTypeMismatch error.
+            if (arg0 is BlankValue)
+            {
+                return arg0;
+            }
+            else if (arg0 is ErrorValue)
+            {
+                return arg0;
+            }
+
+            if (arg0 is not TableValue)
+            {
+                return CommonErrors.RuntimeTypeMismatch(IRContext.NotInSource(arg0.Type));
+            }
+
+            // If arg0 is valid, then return arg1.
             if (arg1 is BlankValue)
             {
-                return FormulaValue.NewBlank();
+                return arg1;
             }
             else if (arg1 is ErrorValue)
             {
                 return arg1;
             }
 
-            var record = (RecordValue)arg1;
+            if (arg1 is not RecordValue)
+            {
+                return CommonErrors.RuntimeTypeMismatch(IRContext.NotInSource(arg1.Type));
+            }
+
+            var tableValue = arg0 as TableValue;
+            var recordValue = arg1 as RecordValue;
 
             cancellationToken.ThrowIfCancellationRequested();
-            var result = await arg0.AppendAsync(record, cancellationToken);
+            var result = await tableValue.AppendAsync(recordValue, cancellationToken);
 
             return result.ToFormulaValue();
         }
