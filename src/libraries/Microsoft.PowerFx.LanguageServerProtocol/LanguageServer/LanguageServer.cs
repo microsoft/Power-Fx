@@ -160,6 +160,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                     var codeActionResult = JsonRpcHelper.Deserialize<CodeAction>(commandExecutedParams.Argument);
                     if (codeActionResult.ActionResultContext == null)
                     {
+                        _sendToClient(JsonRpcHelper.CreateErrorResult(id, JsonRpcHelper.ErrorCode.PropertyValueRequired, $"{nameof(CodeAction.ActionResultContext)} is null or empty."));
                         return;
                     }
 
@@ -171,7 +172,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
 
                     break;
                 default:
-                    // TODO: Handle fallback cases (unsupported command).
+                    _sendToClient(JsonRpcHelper.CreateErrorResult(id, JsonRpcHelper.ErrorCode.InvalidRequest, $"{commandExecutedParams.Command} is not supported."));
                     break;
             }
         }
