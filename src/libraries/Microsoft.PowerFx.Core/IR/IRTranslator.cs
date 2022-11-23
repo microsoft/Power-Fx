@@ -311,10 +311,10 @@ namespace Microsoft.PowerFx.Core.IR
                 var argTypes = node.Args.Children.Select(node => context.Binding.GetType(node)).ToArray();
 
                 // Call to error Handling pipeline
-                args = IRErrorHandling(
-                    expandArguments: func.GetArgExpansionHandler(),
-                    replaceBlankValues: func.GetReplaceBlankHandler(),
-                    truncateNumber: func.GetTruncateNumberHandler())
+                args = IRErrorHandlingPipeline(
+                    expandArguments: func.GetIRPreProcessorArgExpansion(),
+                    replaceBlankValues: func.GetIRPreProcessorReplaceBlank(),
+                    truncateNumber: func.GetIRPreProcessorTruncateNumber())
                     .Invoke(args).ToList();
 
                 if (scope != null)
@@ -868,7 +868,7 @@ namespace Microsoft.PowerFx.Core.IR
 
         #endregion
 
-        internal static IRFunctionPtr IRErrorHandling(
+        internal static IRFunctionPtr IRErrorHandlingPipeline(
                 IRFunctionPtr expandArguments,
                 IRFunctionPtr replaceBlankValues,
                 IRFunctionPtr truncateNumber)

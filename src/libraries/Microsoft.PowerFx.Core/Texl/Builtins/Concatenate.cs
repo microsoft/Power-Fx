@@ -88,7 +88,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         /// <summary>
         /// This is used at IR phase to convert all possible blank args to empty string.
         /// </summary>
-        internal override IRFunctionPtr GetReplaceBlankHandler()
+        internal override IRFunctionPtr GetIRPreProcessorReplaceBlank()
         {
             return IRReplaceBlank;
         }

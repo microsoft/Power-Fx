@@ -21,7 +21,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         {
         }
 
-        internal override IRFunctionPtr GetReplaceBlankHandler()
+        internal override IRFunctionPtr GetIRPreProcessorReplaceBlank()
         {
             return IRReplaceBlank;
         }
