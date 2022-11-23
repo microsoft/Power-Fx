@@ -68,7 +68,6 @@ namespace Microsoft.PowerFx.Tests
         [InlineData("RGBA(\n    255,\n    /*r   */255,   ", true)]
         public void TestSeverityLevelsForPrettyPrint(string script, bool expected)
         {
-            Preview.FeatureFlags.StringInterpolation = true;
             var result = ParseScript(
                 script,
                 flags: Flags.EnableExpressionChaining);
@@ -158,8 +157,6 @@ namespace Microsoft.PowerFx.Tests
         [InlineData("$\"This is {{\"Another\"}} interpolated {{string}}\"", "$\"This is {{\"Another\"}} interpolated {{string}}\"")]
         public void TestPrettyPrint(string script, string expected)
         {
-            Preview.FeatureFlags.StringInterpolation = true;
-
             var result = Format(script);
             Assert.NotNull(result);
             Assert.Equal(expected, result);

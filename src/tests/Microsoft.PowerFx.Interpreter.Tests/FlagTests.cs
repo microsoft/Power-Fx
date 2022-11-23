@@ -7,7 +7,6 @@ using System.Linq;
 using System.Text;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Parser;
-using Microsoft.PowerFx.Preview;
 using Microsoft.PowerFx.Types;
 using Xunit;
 

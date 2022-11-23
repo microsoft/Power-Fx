@@ -40,7 +40,7 @@ namespace Microsoft.PowerFx.Types
         /// <summary>
         /// List of logical names within this option set. 
         /// </summary>
-        public IEnumerable<DName> LogicalNames => _type.OptionSetInfo.OptionNames; 
+        public IEnumerable<DName> LogicalNames => _type.OptionSetInfo?.OptionNames; 
 
         /// <summary>
         /// Try to get a value given the logical name. 
@@ -53,7 +53,7 @@ namespace Microsoft.PowerFx.Types
             var info = _type.OptionSetInfo;
 
             // Verify this value exists in the option set. 
-            if (info.DisplayNameProvider.TryGetDisplayName(new DName(logicalName), out var displayName))
+            if (info != null && info.DisplayNameProvider.TryGetDisplayName(new DName(logicalName), out var displayName))
             {
                 osValue = new OptionSetValue(logicalName, this);
                 return true;
