@@ -721,7 +721,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 
             Assert.NotNull(codeActionResult);
             Assert.NotNull(codeActionResult.ActionResultContext);
-            Assert.Equal(nameof(BlankHandler), codeActionResult.ActionResultContext.HandlerName);
+            Assert.Equal(typeof(BlankHandler).FullName, codeActionResult.ActionResultContext.HandlerName);
             Assert.Equal("Suggestion", codeActionResult.ActionResultContext.ActionIdentifier);
 
             _sendToClientData.Clear();

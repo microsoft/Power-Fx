@@ -54,7 +54,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
                         Title = Title,
                         ActionResultContext = new CodeActionResultContext
                         {
-                            HandlerName = nameof(BlankHandler),
+                            HandlerName = typeof(BlankHandler).FullName,
                             ActionIdentifier = "Suggestion"
                         }
                     });
