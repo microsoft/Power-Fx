@@ -78,6 +78,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         private const int ServerErrorEnd = -32000;
         private const int ServerNotInitialized = -32002;
         private const int UnknownErrorCode = -32001;
+        private const int PropertyValueRequired = -32604;
 
         [Fact]
         public void TestTopParseError()
@@ -739,11 +740,63 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
                         Uri = documentUri
                     },
                     Command = CommandName.CodeActionApplied,
-                    Argument = JsonSerializer.Serialize(codeActionResult)
+                    Argument = JsonRpcHelper.Serialize(codeActionResult)
                 }
             }));
 
             Assert.Empty(_sendToClientData);
+
+            _sendToClientData.Clear();
+
+            testServer1 = new TestLanguageServer(_sendToClientData.Add, scopeFactory);
+
+            testServer1.OnDataReceived(JsonSerializer.Serialize(new
+            {
+                jsonrpc = "2.0",
+                id = "testDocument1",
+                method = CustomProtocolNames.CommandExecuted,
+                @params = new CommandExecutedParams()
+                {
+                    TextDocument = new TextDocumentIdentifier()
+                    {
+                        Uri = documentUri
+                    },
+                    Command = CommandName.CodeActionApplied,
+                    Argument = ""
+                }
+            }));
+
+            Assert.Single(_sendToClientData);
+            var errorResponse = JsonSerializer.Deserialize<JsonRpcErrorResponse>(_sendToClientData[0], _jsonSerializerOptions);
+            Assert.Equal("2.0", errorResponse.Jsonrpc);
+            Assert.Equal("testDocument1", errorResponse.Id);
+            Assert.Equal(PropertyValueRequired, errorResponse.Error.Code);
+
+            _sendToClientData.Clear();
+
+            testServer1 = new TestLanguageServer(_sendToClientData.Add, scopeFactory);
+            codeActionResult.ActionResultContext = null;
+            testServer1.OnDataReceived(JsonSerializer.Serialize(new
+            {
+                jsonrpc = "2.0",
+                id = "testDocument1",
+                method = CustomProtocolNames.CommandExecuted,
+                @params = new CommandExecutedParams()
+                {
+                    TextDocument = new TextDocumentIdentifier()
+                    {
+                        Uri = documentUri
+                    },
+                    Command = CommandName.CodeActionApplied,
+                    Argument = JsonRpcHelper.Serialize(codeActionResult)
+                }
+            }));
+
+            Assert.Single(_sendToClientData);
+            errorResponse = JsonSerializer.Deserialize<JsonRpcErrorResponse>(_sendToClientData[0], _jsonSerializerOptions);
+            Assert.Equal("2.0", errorResponse.Jsonrpc);
+            Assert.Equal("testDocument1", errorResponse.Id);
+            Assert.Equal(PropertyValueRequired, errorResponse.Error.Code);
         }
 
         [Theory]
