@@ -70,7 +70,7 @@ namespace Microsoft.PowerFx
 
         #endregion
 
-        [Obsolete($"{nameof(AddQuickFixHandler)} is deprericated, please use {nameof(RegisterQuickFixHandler)} method.")]
+        [Obsolete("AddQuickFixHandler is deprericated, please use RegisterQuickFixHandler method.")]
         public void AddQuickFixHandler(ICodeFixHandler codeFixHandler)
         {
             _RegisterQuickFixHandler(codeFixHandler);
