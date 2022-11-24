@@ -11,6 +11,11 @@ namespace Microsoft.PowerFx.Core.Entities
 {
     internal interface IExternalEntity
     {
+        /// <summary>
+        /// This is the Host's symbolic name - not the logical name or entity display name. 
+        /// Eg, "Accounts_2" , not "account". 
+        /// This information may also be baked into the type. 
+        /// </summary>
         DName EntityName { get; }
 
         DType Type { get; }

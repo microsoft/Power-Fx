@@ -29,7 +29,7 @@ namespace Microsoft.PowerFx.Interpreter
     {
         // Set() is a behavior function. 
         public override bool IsSelfContained => false;
-                
+
         public override IEnumerable<StringGetter[]> GetSignatures()
         {
             yield return new[] { TexlStrings.SetArg1, TexlStrings.SetArg2 };
@@ -50,9 +50,10 @@ namespace Microsoft.PowerFx.Interpreter
         }
 
         // 2nd argument should be same type as 1st argument. 
-        public override bool CheckInvocation(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public override void CheckSemantics(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors)
         {
-            Contracts.AssertValue(binding);
+            base.CheckSemantics(binding, args, argTypes, errors);
+
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
             Contracts.AssertValue(argTypes);
@@ -61,29 +62,31 @@ namespace Microsoft.PowerFx.Interpreter
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            nodeToCoercedTypeMap = null;
-            returnType = DType.Boolean;
-
             var arg0 = argTypes[0];
 
             var firstName = args[0].AsFirstName();
 
-            // Global-scoped variable name should be a firstName.
-            if (firstName == null)
+            if (firstName != null)
             {
-                errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrNeedValidVariableName_Arg, Name, args[0]);
-                return false;
+                var info = binding.GetInfo(firstName);
+                if (info.Data is NameSymbol nameSymbol && nameSymbol.IsMutable)
+                {
+                    // We have a variable. type check
+                    var arg1 = argTypes[1];
+
+                    if (!arg0.Accepts(arg1))
+                    {
+                        errors.EnsureError(DocumentErrorSeverity.Critical, args[1], ErrBadType);
+                        return;
+                    }
+
+                    // Success
+                    return;
+                }
             }
 
-            var arg1 = argTypes[1];
-
-            if (!arg0.Accepts(arg1))
-            {
-                errors.EnsureError(DocumentErrorSeverity.Critical, args[1], ErrBadType);
-                return false;
-            }
-
-            return true;
+            errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrNeedValidVariableName_Arg, Name, args[0]);
+            return;
         }
     }
 }

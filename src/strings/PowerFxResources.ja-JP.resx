@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -3268,6 +3268,38 @@
     <value>コントラストのテーマ</value>
     
   </data>
+  <data name="AboutPatch" xml:space="preserve">
+    <value>指定された行に更新を適用し、指定されたデータソースの行を変更します。更新された行を返します。</value>
+    
+  </data>
+  <data name="PatchDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="PatchBaseRecordArg" xml:space="preserve">
+    <value>base_record</value>
+    
+  </data>
+  <data name="PatchChangeRecordsArg" xml:space="preserve">
+    <value>change_record(s)</value>
+    
+  </data>
+  <data name="AboutRemove" xml:space="preserve">
+    <value>データ ソースから指定されたレコードを削除します</value>
+    
+  </data>
+  <data name="RemoveDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="RemoveRecordsArg" xml:space="preserve">
+    <value>remove_record(s)</value>
+    
+  </data>
+  <data name="ErrRemoveAllArg" xml:space="preserve">
+    <value>指定する場合、最後の引数は 'RemoveFlags.All' である必要があります。入力ミスを確認してください。</value>
+    
+  </data>
   <data name="PenMode_Draw_DisplayName" xml:space="preserve">
     <value>描画</value>
     
@@ -3924,12 +3956,20 @@
     <value>計算式列では使用できません。</value>
     
   </data>
+  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
+    <value>{0} 関数の引数の数が無効です: 受取済み {1}、必要 {2}</value>
+    
+  </data>
   <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
     <value>計算式列に含まれる関数 {1} で引数 {0} を使用することはできません。</value>
     
   </data>
   <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
     <value>計算式列で、この引数をこの型で渡すことはできません。</value>
+    
+  </data>
+  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
+    <value>数式列では、この引数を {0} 型として渡せません。</value>
     
   </data>
   <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
@@ -3948,6 +3988,10 @@
     <value>計算式列では、短い文字列形式の日時のみを使用できます。</value>
     
   </data>
+  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
+    <value>{0} 引数の時間の単位は、{1} 日付計算関数で無効またはサポートされていません。</value>
+    
+  </data>
   <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
     <value>計算式列はロケール固有の書式トークン ("." や "," など) をサポートしていません。</value>
     
@@ -3956,8 +4000,16 @@
     <value>計算式列は {0} をサポートしていません。代わりに {1} を使用します。</value>
     
   </data>
+  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
+    <value>数式列では、この操作を {0} 型で実行できません。</value>
+    
+  </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
     <value>結果の種類 {0} は、計算式列に対応していません。</value>
+    
+  </data>
+  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
+    <value>数式列はレコード全体の直接参照に対応していません。レコードが含む有効なフィールドを参照してください。</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
@@ -3972,8 +4024,20 @@
     <value>型が {0}、形式が {1} である列は、計算式列に対応していません。</value>
     
   </data>
+  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
+    <value>数式列はレコードやテーブルの強制変換に対応していません。</value>
+    
+  </data>
   <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
     <value>計算式を 1,000 文字より長くすることはできません。</value>
+    
+  </data>
+  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
+    <value>数式列は単一列テーブルに対応していません。</value>
+    
+  </data>
+  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
+    <value>数式列で仮想テーブル {0} を参照できません。</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
@@ -4601,7 +4665,66 @@
     <value>値</value>
     
   </data>
-  <data name="ErrExpectedIdentifierArg_Name" xmlns:space="preserve">
-    <value>引数 '{0}' が無効です。識別子が必要です。</value>
+  <data name="AboutDec2Hex" xml:space="preserve">
+    <value>10 進数を 16 進に変換する</value>
+    
+  </data>
+  <data name="Dec2HexArg1" xml:space="preserve">
+    <value>数値</value>
+  </data>
+  <data name="AboutDec2Hex_number" xml:space="preserve">
+    <value>16 進文字列に変換する数値の 10 進値です。</value>
+    
+  </data>
+  <data name="Dec2HexArg2" xml:space="preserve">
+    <value>場所</value>
+  </data>
+  <data name="AboutDec2Hex_places" xml:space="preserve">
+    <value>16 進文字列にパディングを追加する数値です。</value>
+    
+  </data>
+  <data name="AboutDec2HexT" xml:space="preserve">
+    <value>10 進数の列を 16 進に変換する</value>
+    
+  </data>
+  <data name="Dec2HexTArg1" xml:space="preserve">
+    <value>テーブル</value>
+  </data>
+  <data name="Dec2HexTArg2" xml:space="preserve">
+    <value>場所</value>
+  </data>
+  <data name="AboutDec2HexT_places" xml:space="preserve">
+    <value>16 進文字列にパディングを追加する数値または値の配列です。</value>
+    
+  </data>
+  <data name="AboutDec2Hex_table" xml:space="preserve">
+    <value>16 進に変換する 10 進数の値の列です。</value>
+    
+  </data>
+  <data name="AboutHex2Dec" xml:space="preserve">
+    <value>16 進数値を 10 進に変換する</value>
+    
+  </data>
+  <data name="Hex2DecArg1" xml:space="preserve">
+    <value>数値</value>
+  </data>
+  <data name="AboutHex2Dec_number" xml:space="preserve">
+    <value>16 進文字列を 10 進に変換します。</value>
+    
+  </data>
+  <data name="AboutHex2DecT" xml:space="preserve">
+    <value>16 進数の列を 10 進に変換する</value>
+    
+  </data>
+  <data name="Hex2DecTArg1" xml:space="preserve">
+    <value>テーブル</value>
+  </data>
+  <data name="AboutHex2Dec_table" xml:space="preserve">
+    <value>10 進に変換する 16 進文字列の列です。</value>
+    
+  </data>
+  <data name="ErrDeprecated" xml:space="preserve">
+    <value>この機能は廃止されたため、現在はサポートされていません。</value>
+    
   </data>
 </root>

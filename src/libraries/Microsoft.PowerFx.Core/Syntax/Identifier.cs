@@ -16,6 +16,10 @@ namespace Microsoft.PowerFx.Syntax
         internal readonly Token AtToken; // The "@" token, if any. May be null.
         internal readonly IdentToken Token;
 
+        public Span Span => HasAtToken ? 
+            new Span(AtToken.Span.Min, Token.Span.Lim) : 
+            Token.Span;
+
         /// <summary>
         /// The simple name of the identifier.
         /// </summary>
@@ -26,7 +30,10 @@ namespace Microsoft.PowerFx.Syntax
         /// </summary>
         public DPath Namespace { get; }
 
-        internal bool HasAtToken => AtToken != null;
+        /// <summary>
+        /// Whether this identifier has <c>@</c> token, used to distinguish <c>X</c> from <c>[@X]</c>.
+        /// </summary>
+        public bool HasAtToken => AtToken != null;
 
         internal Identifier(DPath theNamespace, Token atToken, IdentToken tok)
         {

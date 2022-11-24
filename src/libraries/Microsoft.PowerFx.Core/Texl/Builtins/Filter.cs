@@ -49,16 +49,28 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return base.GetSignatures(arity);
         }
 
-        public override bool CheckInvocation(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public override bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertValue(argTypes);
             Contracts.Assert(args.Length == argTypes.Length);
             Contracts.AssertValue(errors);
             nodeToCoercedTypeMap = null;
-            var viewCount = 0;
 
-            var fArgsValid = CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fArgsValid = base.CheckTypes(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+
+            // The first Texl function arg determines the cursor type, the scope type for the lambda params, and the return type.
+            fArgsValid &= ScopeInfo.CheckInput(args[0], argTypes[0], errors, out var typeScope);
+
+            Contracts.Assert(typeScope.IsRecord);
+            returnType = typeScope.ToTable();
+
+            return fArgsValid;
+        }
+
+        public override void CheckSemantics(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors)
+        {
+            var viewCount = 0;
 
             var dataSourceVisitor = new ViewFilterDataSourceVisitor(binding);
 
@@ -71,7 +83,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     {
                         // Only one view expected
                         errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrOnlyOneViewExpected);
-                        fArgsValid = false;
                         continue;
                     }
 
@@ -83,7 +94,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     {
                         // Only one view expected
                         errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrOnlyOneViewExpected);
-                        fArgsValid = false;
                         continue;
                     }
 
@@ -94,13 +104,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         if (viewInfo.RelatedEntityName != dataSourceInfo.Name)
                         {
                             errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrViewFromCurrentTableExpected, dataSourceInfo.Name);
-                            fArgsValid = false;
                         }
                     }
                     else
                     {
                         errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrBooleanExpected);
-                        fArgsValid = false;
                     }
 
                     continue;
@@ -112,18 +120,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 else if (!argTypes[i].CoercesTo(DType.Boolean))
                 {
                     errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrBooleanExpected);
-                    fArgsValid = false;
                     continue;
                 }
             }
-
-            // The first Texl function arg determines the cursor type, the scope type for the lambda params, and the return type.
-            fArgsValid &= ScopeInfo.CheckInput(args[0], argTypes[0], errors, out var typeScope);
-
-            Contracts.Assert(typeScope.IsRecord);
-            returnType = typeScope.ToTable();
-
-            return fArgsValid;
         }
 
         // Verifies if given callnode can be server delegatable or not.

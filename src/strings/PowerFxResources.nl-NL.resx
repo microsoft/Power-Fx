@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -3268,6 +3268,38 @@
     <value>Contrastthema</value>
     
   </data>
+  <data name="AboutPatch" xml:space="preserve">
+    <value>Hiermee worden de updates toegepast op de opgegeven rijen en wordt de rij in de opgegeven gegevensbron gewijzigd. De bijgewerkte rij wordt geretourneerd.</value>
+    
+  </data>
+  <data name="PatchDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="PatchBaseRecordArg" xml:space="preserve">
+    <value>base_record</value>
+    
+  </data>
+  <data name="PatchChangeRecordsArg" xml:space="preserve">
+    <value>change_record(s)</value>
+    
+  </data>
+  <data name="AboutRemove" xml:space="preserve">
+    <value>Verwijdert een specifieke record of records uit een gegevensbron</value>
+    
+  </data>
+  <data name="RemoveDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="RemoveRecordsArg" xml:space="preserve">
+    <value>remove_record(s)</value>
+    
+  </data>
+  <data name="ErrRemoveAllArg" xml:space="preserve">
+    <value>Het laatste argument moet, indien opgegeven, 'RemoveFlags.All' zijn. Is er een typfout?</value>
+    
+  </data>
   <data name="PenMode_Draw_DisplayName" xml:space="preserve">
     <value>Tekenen</value>
     
@@ -3924,12 +3956,20 @@
     <value>Niet ondersteund in formulekolommen.</value>
     
   </data>
+  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
+    <value>Ongeldig aantal argumenten voor functie {0}: {1} ontvangen {2} verwacht</value>
+    
+  </data>
   <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
     <value>Het argument {0} wordt niet ondersteund voor de functie {1} in formulekolommen.</value>
     
   </data>
   <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
     <value>Dit argument kan niet worden doorgegeven als dit type in formulekolommen.</value>
+    
+  </data>
+  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
+    <value>Dit argument kan niet worden doorgegeven als type {0} in formulekolommen.</value>
     
   </data>
   <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
@@ -3948,6 +3988,10 @@
     <value>Alleen tekenreeksen voor de korte datum- en tijdnotatie worden ondersteund in formulekolommen.</value>
     
   </data>
+  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
+    <value>Het argument {0} is een ongeldige/niet-ondersteunde tijdseenheid voor de rekenkundige functie {1} van de datum.</value>
+    
+  </data>
   <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
     <value>Landspecifieke opmaaktokens, zoals '.' en ',', worden niet ondersteund in formulekolommen.</value>
     
@@ -3956,8 +4000,16 @@
     <value>{0} wordt niet ondersteund in formulekolommen. Gebruik {1}.</value>
     
   </data>
+  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
+    <value>Deze bewerking kan niet worden uitgevoerd op type {0} in formulekolommen.</value>
+    
+  </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
     <value>Het resultaattype {0} wordt niet ondersteund in formulekolommen.</value>
+    
+  </data>
+  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
+    <value>Rechtstreeks verwijzen naar een volledige record wordt niet ondersteund in formulekolommen. Verwijzing naar een geldig veld in de record.</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
@@ -3972,8 +4024,20 @@
     <value>Kolommen van het type {0} met {1} worden niet ondersteund in formulekolommen.</value>
     
   </data>
+  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
+    <value>Afwijken van records of tabellen wordt niet ondersteund in formulekolommen.</value>
+    
+  </data>
   <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
     <value>Formules kunnen niet langer zijn dan 1000 tekens.</value>
+    
+  </data>
+  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
+    <value>Tabellen met één kolom worden niet ondersteund in formulekolommen.</value>
+    
+  </data>
+  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
+    <value>Kan niet verwijzen naar virtuele tabel {0} in formulekolommen.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
@@ -4601,7 +4665,66 @@
     <value>waarde</value>
     
   </data>
-  <data name="ErrExpectedIdentifierArg_Name" xmlns:space="preserve">
-    <value>Argument '{0}' is ongeldig, verwacht een id.</value>
+  <data name="AboutDec2Hex" xml:space="preserve">
+    <value>Converteert een decimaal getal naar een hexadecimal getal</value>
+    
+  </data>
+  <data name="Dec2HexArg1" xml:space="preserve">
+    <value>getal</value>
+  </data>
+  <data name="AboutDec2Hex_number" xml:space="preserve">
+    <value>Een numerieke decimale waarde om te converteren naar een hexadecimale tekenreeks.</value>
+    
+  </data>
+  <data name="Dec2HexArg2" xml:space="preserve">
+    <value>plaatsen</value>
+  </data>
+  <data name="AboutDec2Hex_places" xml:space="preserve">
+    <value>Een numerieke waarde om opvulling aan een hexadecimale tekenreeks toe te voegen.</value>
+    
+  </data>
+  <data name="AboutDec2HexT" xml:space="preserve">
+    <value>Converteert een kolom met decimale getallen naar hexadecimale getallen</value>
+    
+  </data>
+  <data name="Dec2HexTArg1" xml:space="preserve">
+    <value>tabel</value>
+  </data>
+  <data name="Dec2HexTArg2" xml:space="preserve">
+    <value>plaatsen</value>
+  </data>
+  <data name="AboutDec2HexT_places" xml:space="preserve">
+    <value>Een numerieke waarde of reeks van waarden om opvulling aan hexadecimale tekenreeksen toe te voegen.</value>
+    
+  </data>
+  <data name="AboutDec2Hex_table" xml:space="preserve">
+    <value>Een kolom met numerieke decimale waarden om te converteren naar hexadecimale getallen.</value>
+    
+  </data>
+  <data name="AboutHex2Dec" xml:space="preserve">
+    <value>Converteert een hexadecimaal getal naar een decimaal getal</value>
+    
+  </data>
+  <data name="Hex2DecArg1" xml:space="preserve">
+    <value>getal</value>
+  </data>
+  <data name="AboutHex2Dec_number" xml:space="preserve">
+    <value>Een hexadecimale tekenreeks geconverteerd naar een decimale tekenreeks.</value>
+    
+  </data>
+  <data name="AboutHex2DecT" xml:space="preserve">
+    <value>Converteert een kolom met hexadecimale getallen naar decimale getallen</value>
+    
+  </data>
+  <data name="Hex2DecTArg1" xml:space="preserve">
+    <value>tabel</value>
+  </data>
+  <data name="AboutHex2Dec_table" xml:space="preserve">
+    <value>Een kolom met hexadecimale tekenreeksen om te converteren naar decimale tekenreeksen.</value>
+    
+  </data>
+  <data name="ErrDeprecated" xml:space="preserve">
+    <value>Deze functie is afgeschaft en wordt niet meer ondersteund.</value>
+    
   </data>
 </root>

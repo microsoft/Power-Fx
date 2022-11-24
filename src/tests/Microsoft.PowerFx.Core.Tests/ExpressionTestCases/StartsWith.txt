@@ -134,23 +134,27 @@ true
 
 // Invalid operation: Division by zero
 >> StartsWith("hello",1/0)
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 // Invalid operation: Division by zero
 >> StartsWith(1/0,"hello")
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
-// Null text case
+// Null text case - coerced to ""
 >> StartsWith(Blank(),"ok")
 false
 
-// Null end case
+// Null start case - coerced to ""
 >> StartsWith("Hello",Blank())
-false
+true
 
-// Null both case
+// Null start case - coerced to ""
+>> StartsWith("",Blank())
+true
+
+// Null both case - coerced to ""
 >> StartsWith(Blank(),Blank())
-false
+true
 
 
 // ******** BOOLEAN PARAMETERS ********

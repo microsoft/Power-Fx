@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -498,37 +498,37 @@
     <value>O valor do texto para converter em um valor booliano.</value>
   </data>
   <data name="AboutBooleanT" xml:space="preserve">
-    <value>Converts a column of text values to a column of boolean values.</value>
+    <value>Converte uma coluna de valores de texto em uma coluna de valores boolianos.</value>
     
   </data>
   <data name="BooleanTArg1" xml:space="preserve">
-    <value>input</value>
+    <value>entrada</value>
     
   </data>
   <data name="AboutBooleanT_input" xml:space="preserve">
-    <value>A column of text values to process.</value>
+    <value>Uma coluna de valores de texto a serem processados.</value>
   </data>
   <data name="AboutBooleanN" xml:space="preserve">
-    <value>Converts a 'number' to a boolean value.</value>
+    <value>Converte um "número" em um valor booliano.</value>
     
   </data>
   <data name="BooleanNArg1" xml:space="preserve">
-    <value>number</value>
+    <value>número</value>
     
   </data>
   <data name="AboutBooleanN_number" xml:space="preserve">
-    <value>The number value to convert to a boolean value.</value>
+    <value>O valor numérico a ser convertido em um valor booliano.</value>
   </data>
   <data name="AboutBooleanNT" xml:space="preserve">
-    <value>Converts a column of numeric values to a column of boolean values.</value>
+    <value>Converte uma coluna de valores numéricos em uma coluna de valores boolianos.</value>
     
   </data>
   <data name="BooleanNTArg1" xml:space="preserve">
-    <value>input</value>
+    <value>entrada</value>
     
   </data>
   <data name="AboutBooleanNT_input" xml:space="preserve">
-    <value>A column of number values to process.</value>
+    <value>Uma coluna de valores numéricos para processar.</value>
   </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Retorna o primeiro argumento que não está em branco</value>
@@ -3268,6 +3268,38 @@
     <value>Tema de contraste</value>
     
   </data>
+  <data name="AboutPatch" xml:space="preserve">
+    <value>Aplica as atualizações para a linha especificada e altera a linha na fonte de dados especificada. Retorna a linha atualizada.</value>
+    
+  </data>
+  <data name="PatchDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="PatchBaseRecordArg" xml:space="preserve">
+    <value>base_record</value>
+    
+  </data>
+  <data name="PatchChangeRecordsArg" xml:space="preserve">
+    <value>change_record(s)</value>
+    
+  </data>
+  <data name="AboutRemove" xml:space="preserve">
+    <value>Remove um registro específico ou registros de uma fonte de dados</value>
+    
+  </data>
+  <data name="RemoveDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="RemoveRecordsArg" xml:space="preserve">
+    <value>remover_registro(s)</value>
+    
+  </data>
+  <data name="ErrRemoveAllArg" xml:space="preserve">
+    <value>Se fornecido, o último argumento deve ser 'RemoveFlags.All'. Há um erro de digitação?</value>
+    
+  </data>
   <data name="PenMode_Draw_DisplayName" xml:space="preserve">
     <value>Desenhar</value>
     
@@ -3924,12 +3956,20 @@
     <value>Não há suporte nas colunas de fórmula.</value>
     
   </data>
+  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
+    <value>Número inválido de argumentos para a função {0}: foram recebidos {1}, eram esperados {2}</value>
+    
+  </data>
   <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
     <value>Não há suporte para o argumento {0} da função {1} nas colunas de fórmula.</value>
     
   </data>
   <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>Este argumento não pode ser transmitido como este tipo nas colunas de fórmula.</value>
+    <value>Este argumento não pode ser transmitido como este tipo em colunas com fórmula.</value>
+    
+  </data>
+  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
+    <value>Este argumento não pode ser transmitido como o tipo {0} nas colunas com fórmula.</value>
     
   </data>
   <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
@@ -3948,6 +3988,10 @@
     <value>Somente as cadeias de caracteres de formato de data e hora têm suporte nas colunas de fórmula.</value>
     
   </data>
+  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
+    <value>O argumento {0} é uma unidade de tempo inválida/sem suporte para a função aritmética de data {1}.</value>
+    
+  </data>
   <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
     <value>Os tokens de formatação específicos da localidade, como "." e "," não têm suporte em colunas de fórmulas.</value>
     
@@ -3956,8 +4000,16 @@
     <value>{0} não tem suporte em colunas de fórmulas, use {1}.</value>
     
   </data>
+  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
+    <value>Esta operação não pode ser realizada no tipo {0} em colunas com fórmula.</value>
+    
+  </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
     <value>O tipo de resultado {0} não tem suporte em colunas de fórmula.</value>
+    
+  </data>
+  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
+    <value>Não há suporte para a referência direta a um registro inteiro em colunas com fórmula. Referencie um campo válido no registro.</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
@@ -3972,8 +4024,20 @@
     <value>Colunas do tipo {0} com o formato {1} não têm suporte em colunas de fórmula.</value>
     
   </data>
+  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
+    <value>Não há suporte para coerção de registros ou tabelas em colunas com fórmula.</value>
+    
+  </data>
   <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
     <value>As fórmulas não podem ter mais de 1.000 caracteres.</value>
+    
+  </data>
+  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
+    <value>Tabelas com uma única coluna não têm suporte em colunas com fórmula.</value>
+    
+  </data>
+  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
+    <value>Não é possível referenciar a tabela virtual {0} em colunas com fórmula.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
@@ -4601,7 +4665,66 @@
     <value>valor</value>
     
   </data>
-  <data name="ErrExpectedIdentifierArg_Name" xmlns:space="preserve">
-    <value>O argumento "{0}" é inválido, espera-se um identificador.</value>
+  <data name="AboutDec2Hex" xml:space="preserve">
+    <value>Converte um número decimal em hexadecimal</value>
+    
+  </data>
+  <data name="Dec2HexArg1" xml:space="preserve">
+    <value>número</value>
+  </data>
+  <data name="AboutDec2Hex_number" xml:space="preserve">
+    <value>Um valor decimal numérico para converter em cadeia de caracteres hexadecimais.</value>
+    
+  </data>
+  <data name="Dec2HexArg2" xml:space="preserve">
+    <value>casas</value>
+  </data>
+  <data name="AboutDec2Hex_places" xml:space="preserve">
+    <value>Um valor numérico para adicionar preenchimento à cadeia de caracteres hexadecimais.</value>
+    
+  </data>
+  <data name="AboutDec2HexT" xml:space="preserve">
+    <value>Converte uma coluna de números decimais em hexadecimals</value>
+    
+  </data>
+  <data name="Dec2HexTArg1" xml:space="preserve">
+    <value>tabela</value>
+  </data>
+  <data name="Dec2HexTArg2" xml:space="preserve">
+    <value>casas</value>
+  </data>
+  <data name="AboutDec2HexT_places" xml:space="preserve">
+    <value>Um valor ou uma matriz numérica de valores para adicionar preenchimento a cadeias de caracteres hexadecimais.</value>
+    
+  </data>
+  <data name="AboutDec2Hex_table" xml:space="preserve">
+    <value>Uma coluna de valores decimais numéricos para converter em hexadecimals.</value>
+    
+  </data>
+  <data name="AboutHex2Dec" xml:space="preserve">
+    <value>Converte um número hexadecimal em decimal</value>
+    
+  </data>
+  <data name="Hex2DecArg1" xml:space="preserve">
+    <value>número</value>
+  </data>
+  <data name="AboutHex2Dec_number" xml:space="preserve">
+    <value>Uma conversão de cadeia de caracteres hexadecimais em decimais.</value>
+    
+  </data>
+  <data name="AboutHex2DecT" xml:space="preserve">
+    <value>Converte uma coluna de números hexadecimais em decimais</value>
+    
+  </data>
+  <data name="Hex2DecTArg1" xml:space="preserve">
+    <value>tabela</value>
+  </data>
+  <data name="AboutHex2Dec_table" xml:space="preserve">
+    <value>Uma coluna de cadeias de caracteres hexadecimais para converter em decimais.</value>
+    
+  </data>
+  <data name="ErrDeprecated" xml:space="preserve">
+    <value>Este recurso é preterido e não tem mais suporte.</value>
+    
   </data>
 </root>

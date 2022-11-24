@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -3268,6 +3268,38 @@
     <value>Kontrastní motiv</value>
     
   </data>
+  <data name="AboutPatch" xml:space="preserve">
+    <value>Aplikuje aktualizace pro zadaný řádek a změní řádek v zadaném zdroji dat. Vrátí aktualizovaný řádek.</value>
+    
+  </data>
+  <data name="PatchDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="PatchBaseRecordArg" xml:space="preserve">
+    <value>base_record</value>
+    
+  </data>
+  <data name="PatchChangeRecordsArg" xml:space="preserve">
+    <value>change_record(s)</value>
+    
+  </data>
+  <data name="AboutRemove" xml:space="preserve">
+    <value>Odebere určitý záznam nebo záznamy ze zdroje dat</value>
+    
+  </data>
+  <data name="RemoveDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="RemoveRecordsArg" xml:space="preserve">
+    <value>remove_record(s)</value>
+    
+  </data>
+  <data name="ErrRemoveAllArg" xml:space="preserve">
+    <value>Pokud je zadán, musí být posledním argumentem „RemoveFlags.All“. Jedná se o překlep?</value>
+    
+  </data>
   <data name="PenMode_Draw_DisplayName" xml:space="preserve">
     <value>Kreslení</value>
     
@@ -3924,12 +3956,20 @@
     <value>Není podporováno ve sloupcích vzorce.</value>
     
   </data>
+  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
+    <value>Neplatný počet argumentů pro funkci {0}: přijaté {1}, očekávané {2}</value>
+    
+  </data>
   <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
     <value>Argument {0} není podporován pro funkci {1} ve sloupcích vzorce.</value>
     
   </data>
   <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
     <value>Tento argument nelze předat jako tento typ ve sloupcích vzorce.</value>
+    
+  </data>
+  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
+    <value>Tento argument nelze předat jako typ {0} ve sloupcích vzorce.</value>
     
   </data>
   <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
@@ -3948,6 +3988,10 @@
     <value>Ve sloupcích vzorce jsou podporovány pouze řetězce krátkého formátu data a času.</value>
     
   </data>
+  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
+    <value>Argument {0} je neplatná/nepodporovaná jednotka času pro aritmetickou funkci data {1}</value>
+    
+  </data>
   <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
     <value>Tokeny formátování specifické pro národní prostředí, jako jsou "." a "," nejsou ve sloupcích vzorců podporovány.</value>
     
@@ -3956,8 +4000,16 @@
     <value>{0} není ve sloupcích vzorců podporován, použijte místo toho {1}.</value>
     
   </data>
+  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
+    <value>Tuto operaci nelze provést u typu {0} ve sloupcích vzorců.</value>
+    
+  </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
     <value>Typ výsledku {0} není ve sloupcích vzorců podporován.</value>
+    
+  </data>
+  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
+    <value>Přímý odkaz na celý záznam není ve sloupcích vzorců podporován. Uveďte platné pole v záznamu.</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
@@ -3972,8 +4024,20 @@
     <value>Sloupce typu {0} s formátem {1} nejsou ve sloupcích vzorců podporovány.</value>
     
   </data>
+  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
+    <value>Vynucení záznamů nebo tabulek není ve sloupcích vzorců podporováno.</value>
+    
+  </data>
   <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
     <value>Vzorce nesmí být delší než 1000 znaků.</value>
+    
+  </data>
+  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
+    <value>Tabulky s jedním sloupcem nejsou ve sloupcích vzorců podporovány.</value>
+    
+  </data>
+  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
+    <value>Nelze odkazovat na virtuální tabulku {0} ve sloupcích vzorců.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
@@ -4601,7 +4665,66 @@
     <value>hodnota</value>
     
   </data>
-  <data name="ErrExpectedIdentifierArg_Name" xmlns:space="preserve">
-    <value>Argument "{0}" je neplatný, očekávaný identifikátor.</value>
+  <data name="AboutDec2Hex" xml:space="preserve">
+    <value>Převede desítkové číslo na šestnáctkové</value>
+    
+  </data>
+  <data name="Dec2HexArg1" xml:space="preserve">
+    <value>číslo</value>
+  </data>
+  <data name="AboutDec2Hex_number" xml:space="preserve">
+    <value>Číselná desítková hodnota, kterou chcete převést na šestnáctkový řetězec.</value>
+    
+  </data>
+  <data name="Dec2HexArg2" xml:space="preserve">
+    <value>místa</value>
+  </data>
+  <data name="AboutDec2Hex_places" xml:space="preserve">
+    <value>Číselná hodnota pro přidání vyplnění do šestnáctkového řetězce.</value>
+    
+  </data>
+  <data name="AboutDec2HexT" xml:space="preserve">
+    <value>Převede sloupec desítkových čísel na šestnáctková</value>
+    
+  </data>
+  <data name="Dec2HexTArg1" xml:space="preserve">
+    <value>tabulka</value>
+  </data>
+  <data name="Dec2HexTArg2" xml:space="preserve">
+    <value>místa</value>
+  </data>
+  <data name="AboutDec2HexT_places" xml:space="preserve">
+    <value>Číselná hodnota nebo pole hodnot pro přidání vyplnění do šestnáctkových řetězců.</value>
+    
+  </data>
+  <data name="AboutDec2Hex_table" xml:space="preserve">
+    <value>Sloupec číselných desítkových hodnot pro převod na šestnáctkové.</value>
+    
+  </data>
+  <data name="AboutHex2Dec" xml:space="preserve">
+    <value>Převede šestnáctkové číslo na desítkové</value>
+    
+  </data>
+  <data name="Hex2DecArg1" xml:space="preserve">
+    <value>číslo</value>
+  </data>
+  <data name="AboutHex2Dec_number" xml:space="preserve">
+    <value>Převod šestnáctkového řetězce na desítkový.</value>
+    
+  </data>
+  <data name="AboutHex2DecT" xml:space="preserve">
+    <value>Převede sloupec šestnáctkových čísel na desítková</value>
+    
+  </data>
+  <data name="Hex2DecTArg1" xml:space="preserve">
+    <value>tabulka</value>
+  </data>
+  <data name="AboutHex2Dec_table" xml:space="preserve">
+    <value>Sloupec šestnáctkových řetězců pro převod na desítková čísla.</value>
+    
+  </data>
+  <data name="ErrDeprecated" xml:space="preserve">
+    <value>Tato funkce je zastaralá a již není podporována.</value>
+    
   </data>
 </root>

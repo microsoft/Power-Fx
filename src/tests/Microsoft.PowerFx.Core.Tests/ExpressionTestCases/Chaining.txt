@@ -10,30 +10,30 @@
 50
 
 >> 3; 1/0; 5
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> 3; If(false, 1/0, 4)
 4
 
 >> 3; If(true, 1/0, 4)
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> 1/0; 7; Sqrt(-1); Left("hello", -1); 4
-#Error(Kind=Div0, Numeric, Numeric)
+Error(Table({Kind:ErrorKind.Div0},{Kind:ErrorKind.Numeric},{Kind:ErrorKind.InvalidArgument}))
 
 >> IfError(1/0; 7; Sqrt(-1); 3; Left("hello", -1); "s", Concat(AllErrors, $"Kind={Kind}", ", "))
-"Kind=13, Kind=24, Kind=24"
+"Kind=13, Kind=24, Kind=25"
 
 >> If(false;true, 1;2,3;4) 
 2
 
 >> 1; If(true, 2; 1/0; 3, 5;6;7)
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 
 // single expressions are not supported as chains
 >> (1;(2;7));3;4
-Errors: Error 2-3: Unexpected characters. The formula contains 'ParenClose' where 'Semicolon' is expected.|Error 5-6: Unexpected characters. The formula contains 'ParenClose' where 'Semicolon' is expected.|Error 7-8: Unexpected characters. Characters are used in the formula in an unexpected way.
+Errors: Error 2-3: Unexpected characters. The formula contains 'Semicolon' where 'ParenClose' is expected.|Error 5-6: Unexpected characters. The formula contains 'Semicolon' where 'ParenClose' is expected.|Error 7-8: Unexpected characters. Characters are used in the formula in an unexpected way.
 
 
 >> If(true, 1;2 , 4)

@@ -6,10 +6,10 @@ true
 true
 
 >> IsToday(Date(-1, 2, 3))
-#Error
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> IsToday(Date(Blank(), 2, 3))
-false
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> IsToday(Date(2012,1,1))
 false
@@ -17,7 +17,8 @@ false
 >> IsToday(DateAdd(Today(),-1))
 false
 
->> DateDiff(Now(), Today(), TimeUnit.Minutes) <> 0
+// Either we are very near midnight (00:00), or there will be a difference in minutes between now and today
+>> With({n:Now(),t:Today()},(Hour(n) = 0 And Minute(n) = 0) Or (DateDiff(n, t, TimeUnit.Minutes) < 0))
 true
 
 >> Date(Year(Today()), Month(Today()), Day(Today())) = Today()

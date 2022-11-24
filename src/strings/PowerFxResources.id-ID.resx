@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -3268,6 +3268,38 @@
     <value>Tema kontras</value>
     
   </data>
+  <data name="AboutPatch" xml:space="preserve">
+    <value>Menerapkan pembaruan ke baris yang ditentukan dan mengubah baris di sumber data tertentu. Mengembalikan baris yang diperbarui.</value>
+    
+  </data>
+  <data name="PatchDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="PatchBaseRecordArg" xml:space="preserve">
+    <value>base_record</value>
+    
+  </data>
+  <data name="PatchChangeRecordsArg" xml:space="preserve">
+    <value>change_record(s)</value>
+    
+  </data>
+  <data name="AboutRemove" xml:space="preserve">
+    <value>Menghapus satu atau beberapa rekaman tertentu dari sumber data</value>
+    
+  </data>
+  <data name="RemoveDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="RemoveRecordsArg" xml:space="preserve">
+    <value>remove_record(s)</value>
+    
+  </data>
+  <data name="ErrRemoveAllArg" xml:space="preserve">
+    <value>Jika diberikan, argumen terakhir harus 'RemoveFlags.All'. Apakah ada kesalahan ketik?</value>
+    
+  </data>
   <data name="PenMode_Draw_DisplayName" xml:space="preserve">
     <value>Gambar</value>
     
@@ -3924,12 +3956,20 @@
     <value>Tidak didukung di kolom formula.</value>
     
   </data>
+  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
+    <value>Jumlah argumen tidak valid untuk fungsi {0}: diterima {1}, diharapkan {2}</value>
+    
+  </data>
   <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
     <value>Argumen {0} tidak didukung untuk fungsi {1} di kolom formula.</value>
     
   </data>
   <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>Argumen ini tidak dapat diteruskan sebagai jenis ini di kolom formula.</value>
+    <value>Argumen ini tidak dapat diteruskan sebagai tipe ini di kolom rumus.</value>
+    
+  </data>
+  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
+    <value>Argumen ini tidak dapat diteruskan sebagai tipe {0} di kolom rumus.</value>
     
   </data>
   <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
@@ -3948,6 +3988,10 @@
     <value>Hanya string format tanggal dan waktu pendek yang didukung di kolom formula.</value>
     
   </data>
+  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
+    <value>Argumen {0} adalah satuan waktu yang tidak valid/tidak didukung untuk fungsi aritmetika tanggal {1}.</value>
+    
+  </data>
   <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
     <value>Token pemformatan khusus lokal seperti "." dan "," tidak didukung di kolom rumus.</value>
     
@@ -3956,8 +4000,16 @@
     <value>{0} tidak didukung di kolom rumus, gunakan {1} sebagai gantinya.</value>
     
   </data>
+  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
+    <value>Operasi ini tidak dapat dilakukan pada tipe {0} di kolom rumus.</value>
+    
+  </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
     <value>Jenis hasil {0} tidak didukung di kolom rumus.</value>
+    
+  </data>
+  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
+    <value>Mereferensikan seluruh rekaman secara langsung tidak didukung di kolom rumus. Referensikan bidang yang valid di rekaman.</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
@@ -3972,8 +4024,20 @@
     <value>Kolom jenis {0} dengan format {1} tidak didukung di kolom rumus.</value>
     
   </data>
+  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
+    <value>Rekaman atau tabel yang memaksa tidak didukung di kolom rumus.</value>
+    
+  </data>
   <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
     <value>Rumus tidak boleh lebih dari 1.000 karakter.</value>
+    
+  </data>
+  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
+    <value>Tabel satu kolom tidak didukung di kolom rumus.</value>
+    
+  </data>
+  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
+    <value>Tidak dapat mereferensikan tabel virtual {0} di kolom rumus.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
@@ -4601,7 +4665,66 @@
     <value>nilai</value>
     
   </data>
-  <data name="ErrExpectedIdentifierArg_Name" xmlns:space="preserve">
-    <value>Argumen '{0}' tidak valid, diharapkan pengidentifikasi.</value>
+  <data name="AboutDec2Hex" xml:space="preserve">
+    <value>Mengonversi angka desimal ke heksadesimal</value>
+    
+  </data>
+  <data name="Dec2HexArg1" xml:space="preserve">
+    <value>angka</value>
+  </data>
+  <data name="AboutDec2Hex_number" xml:space="preserve">
+    <value>Nilai desimal numerik untuk dikonversi ke string heksadesimal.</value>
+    
+  </data>
+  <data name="Dec2HexArg2" xml:space="preserve">
+    <value>tempat</value>
+  </data>
+  <data name="AboutDec2Hex_places" xml:space="preserve">
+    <value>Nilai numerik untuk menambahkan padding ke string heksadesimal.</value>
+    
+  </data>
+  <data name="AboutDec2HexT" xml:space="preserve">
+    <value>Mengonversi kolom angka desimal ke heksadesimal</value>
+    
+  </data>
+  <data name="Dec2HexTArg1" xml:space="preserve">
+    <value>tabel</value>
+  </data>
+  <data name="Dec2HexTArg2" xml:space="preserve">
+    <value>tempat</value>
+  </data>
+  <data name="AboutDec2HexT_places" xml:space="preserve">
+    <value>Nilai numerik atau larik nilai untuk menambahkan padding ke string heksadesimal.</value>
+    
+  </data>
+  <data name="AboutDec2Hex_table" xml:space="preserve">
+    <value>Kolom nilai desimal numerik untuk dikonversi ke heksadesimal.</value>
+    
+  </data>
+  <data name="AboutHex2Dec" xml:space="preserve">
+    <value>Mengonversi angka heksadesimal ke desimal</value>
+    
+  </data>
+  <data name="Hex2DecArg1" xml:space="preserve">
+    <value>angka</value>
+  </data>
+  <data name="AboutHex2Dec_number" xml:space="preserve">
+    <value>String heksadesimal dikonversi ke desimal.</value>
+    
+  </data>
+  <data name="AboutHex2DecT" xml:space="preserve">
+    <value>Mengonversi kolom angka heksadesimal ke desimal</value>
+    
+  </data>
+  <data name="Hex2DecTArg1" xml:space="preserve">
+    <value>tabel</value>
+  </data>
+  <data name="AboutHex2Dec_table" xml:space="preserve">
+    <value>Kolom string heksadesimal untuk dikonversi ke desimal.</value>
+    
+  </data>
+  <data name="ErrDeprecated" xml:space="preserve">
+    <value>Fitur ini tidak digunakan lagi dan sudah tidak didukung.</value>
+    
   </data>
 </root>

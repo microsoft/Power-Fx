@@ -19,20 +19,20 @@ namespace Microsoft.PowerFx
     /// </summary>
     public sealed class PowerFxConfig
     {
-        private bool _isLocked;
-        private readonly HashSet<TexlFunction> _extraFunctions = new HashSet<TexlFunction>();
-        private readonly Dictionary<DName, IExternalEntity> _environmentSymbols;
-        private DisplayNameProvider _environmentSymbolDisplayNameProvider;
-
         internal static readonly int DefaultMaxCallDepth = 20;
 
-        // By default, we pull the core functions. 
-        // These can be overridden. 
-        private IEnumerable<TexlFunction> _coreFunctions = BuiltinFunctionsCore.BuiltinFunctionsLibrary;
+        /// <summary>
+        /// Global symbols. Additional symbols beyond default function set. 
+        /// </summary>
+        public SymbolTable SymbolTable { get; set; } = new SymbolTable
+        {
+            DebugName = "DefaultConfig"
+        };
 
-        internal IEnumerable<TexlFunction> Functions => _coreFunctions.Concat(_extraFunctions);
+        [Obsolete("Use Config.EnumStore or symboltable directly")]
+        internal EnumStoreBuilder EnumStoreBuilder => SymbolTable.EnumStoreBuilder;
 
-        internal EnumStoreBuilder EnumStoreBuilder { get; }
+        internal IEnumStore EnumStore => ReadOnlySymbolTable.Compose(SymbolTable);
 
         public CultureInfo CultureInfo { get; }
 
@@ -43,11 +43,8 @@ namespace Microsoft.PowerFx
         private PowerFxConfig(CultureInfo cultureInfo, EnumStoreBuilder enumStoreBuilder, Features features = Features.None)
         {
             CultureInfo = cultureInfo ?? CultureInfo.CurrentCulture;
-            Features = features;
-            _isLocked = false;
-            _environmentSymbols = new Dictionary<DName, IExternalEntity>();
-            _environmentSymbolDisplayNameProvider = new SingleSourceDisplayNameProvider();
-            EnumStoreBuilder = enumStoreBuilder;
+            Features = features;            
+            SymbolTable.EnumStoreBuilder = enumStoreBuilder;
             MaxCallDepth = DefaultMaxCallDepth;
         }
 
@@ -59,6 +56,15 @@ namespace Microsoft.PowerFx
             : this(cultureInfo, Features.None)
         {
         }
+
+        /// <summary>
+        /// Information about available functions.
+        /// </summary>
+        [Obsolete("Migrate to SymbolTables")]
+        public IEnumerable<FunctionInfo> FunctionInfos => 
+            new Engine(this).SupportedFunctions.Functions
+            .Concat(SymbolTable.Functions)
+            .Select(f => new FunctionInfo(f));
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PowerFxConfig"/> class.
@@ -80,103 +86,64 @@ namespace Microsoft.PowerFx
         }
 
         /// <summary>
-        /// Information about available functions.
-        /// </summary>
-        public IEnumerable<FunctionInfo> FunctionInfos => Functions.Select(f => new FunctionInfo(f));
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PowerFxConfig"/> class.
-        /// Copy constructor. Should only be used on a locked PowerFxConfig object. 
-        /// </summary>
-        /// <param name="other">Config to clone from.</param>
-        private PowerFxConfig(PowerFxConfig other)
-        {
-            _isLocked = other._isLocked;
-            _extraFunctions = other._extraFunctions;
-            _environmentSymbols = other._environmentSymbols;
-            _environmentSymbolDisplayNameProvider = other._environmentSymbolDisplayNameProvider;
-            _coreFunctions = other._coreFunctions;
-            EnumStoreBuilder = other.EnumStoreBuilder;
-            CultureInfo = other.CultureInfo;
-        }
-
-        /// <summary>
         /// Stopgap until Enum Store is refactored. Do not rely on, this will be removed. 
         /// </summary>
         internal static PowerFxConfig BuildWithEnumStore(CultureInfo cultureInfo, EnumStoreBuilder enumStoreBuilder)
         {
-            return new PowerFxConfig(cultureInfo, enumStoreBuilder);
+            return BuildWithEnumStore(cultureInfo, enumStoreBuilder, Features.None); 
+        }
+
+        internal static PowerFxConfig BuildWithEnumStore(CultureInfo cultureInfo, EnumStoreBuilder enumStoreBuilder, Features features)
+        {
+            return BuildWithEnumStore(cultureInfo, enumStoreBuilder, Core.Texl.BuiltinFunctionsCore.BuiltinFunctionsLibrary, features: features);
         }
 
         internal static PowerFxConfig BuildWithEnumStore(CultureInfo cultureInfo, EnumStoreBuilder enumStoreBuilder, IEnumerable<TexlFunction> coreFunctions)
         {
-            var config = new PowerFxConfig(cultureInfo, enumStoreBuilder);
-            config.SetCoreFunctions(coreFunctions);
+            return BuildWithEnumStore(cultureInfo, enumStoreBuilder, coreFunctions, Features.None);
+        }
+
+        internal static PowerFxConfig BuildWithEnumStore(CultureInfo cultureInfo, EnumStoreBuilder enumStoreBuilder, IEnumerable<TexlFunction> coreFunctions, Features features)
+        {
+            var config = new PowerFxConfig(cultureInfo, enumStoreBuilder, features);
+
+            foreach (var func in coreFunctions)
+            {
+                config.AddFunction(func);
+            }
+
             return config;
         }
 
-        /// <summary>
-        /// List all functions names registered in the config. 
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerable<string> GetAllFunctionNames()
-        {
-            return Functions.Select(func => func.Name).Distinct();
-        }
-
-        internal IEnumerable<IExternalEntity> GetSymbols() => _environmentSymbols.Values;
-
-        internal string GetSuggestableSymbolName(IExternalEntity entity)
-        {
-            var name = entity.EntityName;
-            if (_environmentSymbolDisplayNameProvider.TryGetDisplayName(name, out var displayName))
-            {
-                return displayName.Value;
-            }
-
-            return name.Value;
-        }
-
-        internal void AddEntity(IExternalEntity entity, DName displayName = default)
-        {
-            CheckUnlocked();
-
-            // Attempt to update display name provider before symbol table,
-            // since it can throw on collision and we want to leave the config in a good state.
-            // For entities without a display name, add (logical, logical) pair to still be included in collision checks.
-            if (_environmentSymbolDisplayNameProvider is SingleSourceDisplayNameProvider ssDnp)
-            {
-                _environmentSymbolDisplayNameProvider = ssDnp.AddField(entity.EntityName, displayName != default ? displayName : entity.EntityName);
-            }
-
-            _environmentSymbols.Add(entity.EntityName, entity);
-        }
-
-        // Sets the "core" builtin functions. This can vary from host to host. 
-        // Overwrite list and set. 
+        // For PAClient cases - JSRunner,Dataverse. These don't derive from Engine. 
+        [Obsolete("Migrate to SymbolTables")]
         internal void SetCoreFunctions(IEnumerable<TexlFunction> functions)
         {
-            CheckUnlocked();
-
-            _coreFunctions = functions ?? throw new ArgumentNullException(nameof(functions));
-            EnumStoreBuilder.WithRequiredEnums(functions);
+            foreach (var func in functions)
+            {
+                AddFunction(func);
+            }
         }
+
+        internal IEnumerable<IExternalEntity> GetSymbols() => SymbolTable._environmentSymbols.Values;
+
+        internal string GetSuggestableSymbolName(IExternalEntity entity)
+            => SymbolTable.GetSuggestableSymbolName(entity);
+
+        internal void AddEntity(IExternalEntity entity, DName displayName = default)
+            => SymbolTable.AddEntity(entity, displayName);
 
         internal void AddFunction(TexlFunction function)
         {
-            CheckUnlocked();
-
             var comparer = new TexlFunctionComparer();
-            if (!_coreFunctions.Contains(function, comparer) && !_extraFunctions.Contains(function, comparer))
+            if (!SymbolTable.Functions.Contains(function, comparer))
             {
-                _extraFunctions.Add(function);
+                SymbolTable.AddFunction(function);
             }
             else
             {
                 throw new ArgumentException($"Function {function.Name} is already part of core or extra functions");
             }
-
-            EnumStoreBuilder.WithRequiredEnums(new List<TexlFunction>() { function });
         }
 
         public void AddOptionSet(OptionSet optionSet, DName optionalDisplayName = default)
@@ -185,44 +152,6 @@ namespace Microsoft.PowerFx
         }
 
         internal bool TryGetSymbol(DName name, out IExternalEntity symbol, out DName displayName)
-        {
-            var lookupName = name;
-            if (_environmentSymbolDisplayNameProvider.TryGetDisplayName(name, out displayName))
-            {
-                lookupName = name;
-            }
-            else if (_environmentSymbolDisplayNameProvider.TryGetLogicalName(name, out var logicalName))
-            {
-                lookupName = logicalName;
-                displayName = name;
-            }
-
-            return _environmentSymbols.TryGetValue(lookupName, out symbol);
-        }
-
-        /// <summary>
-        /// Some scenarios require that lookups be done with logical names only.
-        /// This returns the same PowerFxConfig with the display name provider disabled.
-        /// </summary>
-        /// <returns></returns>
-        internal PowerFxConfig WithoutDisplayNames()
-        {
-            return new PowerFxConfig(this) { _environmentSymbolDisplayNameProvider = DisabledDisplayNameProvider.Instance };
-        }
-
-        internal void Lock()
-        {
-            CheckUnlocked();
-
-            _isLocked = true;
-        }
-
-        private void CheckUnlocked()
-        {
-            if (_isLocked)
-            {
-                throw new InvalidOperationException("This PowerFxConfig instance is locked");
-            }
-        }
+            => SymbolTable.TryGetSymbol(name, out symbol, out displayName);
     }
 }

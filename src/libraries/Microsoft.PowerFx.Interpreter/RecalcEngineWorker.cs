@@ -43,9 +43,9 @@ namespace Microsoft.PowerFx
             // Dispatch update hooks. 
             foreach (var varName in _sendUpdates.OrderBy(x => x))
             {
-                var info = _parent.Formulas[varName];
+                var info = _parent.GetByName(varName);
 
-                var newValue = info.Value;
+                var newValue = _parent.GetValue(varName);
                 info._onUpdate?.Invoke(varName, newValue);
             }
         }
@@ -58,7 +58,7 @@ namespace Microsoft.PowerFx
                 return; // already computed. 
             }
 
-            var fi = _parent.Formulas[name];
+            var fi = _parent.GetByName(name);
 
             // Now calculate this node. Will recalc any dependencies if needed.                 
             if (fi._binding != null)
@@ -68,22 +68,26 @@ namespace Microsoft.PowerFx
                 (var irnode, var ruleScopeSymbol) = IRTranslator.Translate(binding);
 
                 var scope = this;
-                var v = new EvalVisitor(_cultureInfo, CancellationToken.None);
+
+                var symbols = _parent._symbolValues;
+
+                var v = new EvalVisitor(_cultureInfo, CancellationToken.None, symbols);
 
                 var newValue = irnode.Accept(v, new EvalVisitorContext(SymbolContext.New(), new StackDepthCounter(_parent.Config.MaxCallDepth))).Result;
 
-                var equal = fi.Value != null && // null on initial run. 
-                    RuntimeHelpers.AreEqual(newValue, fi.Value);
+                var val = _parent.GetValue(name);
+                var equal = val is BlankValue && // blank on initial run. 
+                    RuntimeHelpers.AreEqual(newValue, val);
 
                 if (!equal)
                 {
                     _sendUpdates.Add(name);
-                }
 
-                fi.Value = newValue;
+                    _parent._symbolValues.Set(fi.Slot, newValue);
+                }
             }
 
-            _calcs[name] = fi.Value;
+            _calcs[name] = _parent.GetValue(name);
         }
 
         // Recalc Name and any downstream formulas that may now be updated.
@@ -91,7 +95,7 @@ namespace Microsoft.PowerFx
         {
             RecalcWorker2(name);
 
-            var fi = _parent.Formulas[name];
+            var fi = _parent.GetByName(name);
 
             // Propagate changes.
             foreach (var x in fi._usedBy)

@@ -8,8 +8,8 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Functions
@@ -54,10 +54,23 @@ namespace Microsoft.PowerFx.Functions
 
                     var childContext = context.SymbolContext.WithScopeValues(row.Value);
 
-                    var result = await arg1.EvalAsync(runner, new EvalVisitorContext(childContext, context.StackDepthCounter));
+                    var result = await arg1.EvalInRowScopeAsync(context.NewScope(childContext));
 
-                    var str = (StringValue)result;
-                    sb.Append(str.Value);
+                    string str;
+                    if (result is ErrorValue ev)
+                    {
+                        return ev;
+                    }
+                    else if (result is BlankValue)
+                    {
+                        str = string.Empty;
+                    }
+                    else
+                    {
+                        str = ((StringValue)result).Value;
+                    }
+
+                    sb.Append(str);
                 }
             }
 
@@ -111,7 +124,17 @@ namespace Microsoft.PowerFx.Functions
                 return new BlankValue(irContext);
             }
 
-            var (val, err) = ConvertToNumber(str, runner.CultureInfo);
+            // culture will have Cultural info in case one was passed in argument else it will have the default one.
+            var culture = runner.CultureInfo;
+            if (args.Length > 1)
+            {
+                if (args[1] is StringValue cultureArg && !TryGetCulture(cultureArg.Value, out culture))
+                {
+                    return CommonErrors.BadLanguageCode(irContext, cultureArg.Value);
+                }
+            }
+
+            var (val, err) = ConvertToNumber(str, culture);
 
             if (err == ConvertionStatus.Ok)
             {
@@ -125,9 +148,9 @@ namespace Microsoft.PowerFx.Functions
         public static FormulaValue Text(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             // only DateValue and DateTimeValue are supported for now with custom format strings.
-            if (args.Length > 1 && args[0] is StringValue)
+            if (args[0] is StringValue sv)
             {
-                return CommonErrors.NotYetImplementedError(irContext, "Text() doesn't support format args for type StringValue");
+                return new StringValue(irContext, sv.Value);
             }
 
             string resultString = null;
@@ -139,10 +162,12 @@ namespace Microsoft.PowerFx.Functions
             }
 
             var culture = runner.CultureInfo;
-            if (args.Length > 2 && args[2] is StringValue locale)
+            if (args.Length > 2 && args[2] is StringValue languageCode)
             {
-                // Supplied culture
-                culture = new CultureInfo(locale.Value);
+                if (!TryGetCulture(languageCode.Value, out culture))
+                {
+                    return CommonErrors.BadLanguageCode(irContext, languageCode.Value);
+                }
             }
 
             switch (args[0])
@@ -229,8 +254,6 @@ namespace Microsoft.PowerFx.Functions
         // Take first non-blank value.
         public static async ValueTask<FormulaValue> Coalesce(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            var errors = new List<ErrorValue>();
-
             foreach (var arg in args)
             {
                 runner.CheckCancel();
@@ -242,46 +265,32 @@ namespace Microsoft.PowerFx.Functions
                     var val = res.Value;
                     if (!(val is StringValue str && str.Value == string.Empty))
                     {
-                        if (errors.Count == 0)
-                        {
-                            return res.ToFormulaValue();
-                        }
-                        else
-                        {
-                            return ErrorValue.Combine(irContext, errors);
-                        }
+                        return res.ToFormulaValue();
                     }
                 }
 
                 if (res.IsError)
                 {
-                    errors.Add(res.Error);
+                    return res.Error;
                 }
             }
 
-            if (errors.Count == 0)
-            {
-                return new BlankValue(irContext);
-            }
-            else
-            {
-                return ErrorValue.Combine(irContext, errors);
-            }
+            return new BlankValue(irContext);
         }
 
-        public static FormulaValue Lower(IRContext irContext, StringValue[] args)
+        public static FormulaValue Lower(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, StringValue[] args)
         {
-            return new StringValue(irContext, args[0].Value.ToLower());
+            return new StringValue(irContext, runner.CultureInfo.TextInfo.ToLower(args[0].Value));
         }
 
-        public static FormulaValue Upper(IRContext irContext, StringValue[] args)
+        public static FormulaValue Upper(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, StringValue[] args)
         {
-            return new StringValue(irContext, args[0].Value.ToUpper());
+            return new StringValue(irContext, runner.CultureInfo.TextInfo.ToUpper(args[0].Value));
         }
 
         public static FormulaValue Proper(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, StringValue[] args)
         {
-            return new StringValue(irContext, runner.CultureInfo.TextInfo.ToTitleCase(args[0].Value.ToLower()));
+            return new StringValue(irContext, runner.CultureInfo.TextInfo.ToTitleCase(runner.CultureInfo.TextInfo.ToLower(args[0].Value)));
         }
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-len
@@ -399,6 +408,11 @@ namespace Microsoft.PowerFx.Functions
             var count = ((NumberValue)args[2]).Value;
             var replacement = ((StringValue)args[3]).Value;
 
+            if (start <= 0 || count < 0)
+            {
+                return CommonErrors.ArgumentOutOfRange(irContext);
+            }
+
             if (start >= int.MaxValue)
             {
                 start = source.Length + 1;
@@ -430,19 +444,19 @@ namespace Microsoft.PowerFx.Functions
         private static FormulaValue Substitute(IRContext irContext, FormulaValue[] args)
         {
             var source = (StringValue)args[0];
+            var match = (StringValue)args[1];
+            var replacement = (StringValue)args[2];
 
-            if (args[1] is BlankValue || (args[1] is StringValue sv && string.IsNullOrEmpty(sv.Value)))
+            if (string.IsNullOrEmpty(match.Value))
             {
                 return source;
             }
 
-            var match = (StringValue)args[1];
-            var replacement = (StringValue)args[2];
-
             var instanceNum = -1;
-            if (args[3] is NumberValue nv)
+            if (args.Length > 3)
             {
-                if (nv.Value >= int.MaxValue)
+                var nv = (NumberValue)args[3];
+                if (nv.Value > source.Value.Length)
                 {
                     return source;
                 }

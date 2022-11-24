@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -498,7 +498,7 @@
     <value>Textvärdet som ska konverteras till ett booleskt värde.</value>
   </data>
   <data name="AboutBooleanT" xml:space="preserve">
-    <value>Converts a column of text values to a column of boolean values.</value>
+    <value>Konverterar en kolumn med textvärden till en kolumn med booleska värden.</value>
     
   </data>
   <data name="BooleanTArg1" xml:space="preserve">
@@ -506,21 +506,21 @@
     
   </data>
   <data name="AboutBooleanT_input" xml:space="preserve">
-    <value>A column of text values to process.</value>
+    <value>En kolumn med textvärden att bearbeta.</value>
   </data>
   <data name="AboutBooleanN" xml:space="preserve">
-    <value>Converts a 'number' to a boolean value.</value>
+    <value>Konverterar ett "tal" till ett booleskt värde.</value>
     
   </data>
   <data name="BooleanNArg1" xml:space="preserve">
-    <value>number</value>
+    <value>tal</value>
     
   </data>
   <data name="AboutBooleanN_number" xml:space="preserve">
-    <value>The number value to convert to a boolean value.</value>
+    <value>Det numeriska värdet som ska konverteras till ett booleskt värde.</value>
   </data>
   <data name="AboutBooleanNT" xml:space="preserve">
-    <value>Converts a column of numeric values to a column of boolean values.</value>
+    <value>Konverterar en kolumn med numeriska värden till en kolumn med booleska värden.</value>
     
   </data>
   <data name="BooleanNTArg1" xml:space="preserve">
@@ -528,7 +528,7 @@
     
   </data>
   <data name="AboutBooleanNT_input" xml:space="preserve">
-    <value>A column of number values to process.</value>
+    <value>En kolumn med numeriska värden att bearbeta.</value>
   </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Returnerar det första icke-tomma argumentet</value>
@@ -3268,6 +3268,38 @@
     <value>Kontrasttema</value>
     
   </data>
+  <data name="AboutPatch" xml:space="preserve">
+    <value>Tillämpar uppdateringarna på den angivna raden och ändrar raden i den angivna datakällan. Returnerar den uppdaterade raden.</value>
+    
+  </data>
+  <data name="PatchDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="PatchBaseRecordArg" xml:space="preserve">
+    <value>base_record</value>
+    
+  </data>
+  <data name="PatchChangeRecordsArg" xml:space="preserve">
+    <value>change_record(s)</value>
+    
+  </data>
+  <data name="AboutRemove" xml:space="preserve">
+    <value>Tar bort en viss post eller poster från en datakälla</value>
+    
+  </data>
+  <data name="RemoveDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="RemoveRecordsArg" xml:space="preserve">
+    <value>remove_record(s)</value>
+    
+  </data>
+  <data name="ErrRemoveAllArg" xml:space="preserve">
+    <value>Om detta anges måste det sista argumentet vara "RemoveFlags.All". Finns det något stavfel?</value>
+    
+  </data>
   <data name="PenMode_Draw_DisplayName" xml:space="preserve">
     <value>Rita</value>
     
@@ -3924,12 +3956,20 @@
     <value>Stöds inte i formelkolumner.</value>
     
   </data>
+  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
+    <value>Ogiltigt antal argument för funktionen {0}: mottaget {1}, förväntat {2}</value>
+    
+  </data>
   <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
     <value>Argumentet {0} stöds inte för funktionen {1} i formelkolumner.</value>
     
   </data>
   <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
     <value>Det här argumentet kan inte skickas som den här typen i formelkolumner.</value>
+    
+  </data>
+  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
+    <value>Det här argumentet kan inte skickas som typen {0} i formelkolumner.</value>
     
   </data>
   <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
@@ -3948,6 +3988,10 @@
     <value>Endast de korta strängarna för datum- och tidsformat stöds i formelkolumner.</value>
     
   </data>
+  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
+    <value>Argumentet {0} är en ogiltig tidsenhet eller tidsenhet som inte stöds för den aritmetiska funktionen {1}.</value>
+    
+  </data>
   <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
     <value>Språkspecifika formateringstoken som "." och "," stöds inte i formelkolumner.</value>
     
@@ -3956,8 +4000,16 @@
     <value>{0} stöds inte i formelkolumner. Använd {1} i stället.</value>
     
   </data>
+  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
+    <value>Den här åtgärden kan inte utföras på typen {0} i formelkolumner.</value>
+    
+  </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
     <value>Resultattypen {0} stöds inte i formelkolumner.</value>
+    
+  </data>
+  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
+    <value>Direkt refererande av en hel post stöds inte i formelkolumner. Referera till ett giltigt fält i posten.</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
@@ -3972,8 +4024,20 @@
     <value>Kolumner av typen {0} med formatet {1} stöds inte i formelkolumner.</value>
     
   </data>
+  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
+    <value>Det går inte att använda flera samtidiga poster eller tabeller i formelkolumner.</value>
+    
+  </data>
   <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
     <value>Formler får inte vara längre än 1 000 tecken.</value>
+    
+  </data>
+  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
+    <value>Tabeller med en kolumn stöds inte i formelkolumner.</value>
+    
+  </data>
+  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
+    <value>Det går inte att referera till den virtuella tabellen {0} i formelkolumner.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
@@ -4601,7 +4665,66 @@
     <value>värde</value>
     
   </data>
-  <data name="ErrExpectedIdentifierArg_Name" xmlns:space="preserve">
-    <value>Argumentet "{0}" är ogiltigt, förväntat en identifierare.</value>
+  <data name="AboutDec2Hex" xml:space="preserve">
+    <value>Konverterar ett decimaltal till ett hexadecimalt värde</value>
+    
+  </data>
+  <data name="Dec2HexArg1" xml:space="preserve">
+    <value>tal</value>
+  </data>
+  <data name="AboutDec2Hex_number" xml:space="preserve">
+    <value>Ett numeriskt decimalvärde för att konvertera till en hexadecimal sträng.</value>
+    
+  </data>
+  <data name="Dec2HexArg2" xml:space="preserve">
+    <value>platser</value>
+  </data>
+  <data name="AboutDec2Hex_places" xml:space="preserve">
+    <value>Ett numeriskt värde för att lägga till utfyllnad i en hexadecimal sträng.</value>
+    
+  </data>
+  <data name="AboutDec2HexT" xml:space="preserve">
+    <value>Konverterar en kolumn med decimaltal till hexadecimala värden</value>
+    
+  </data>
+  <data name="Dec2HexTArg1" xml:space="preserve">
+    <value>tabell</value>
+  </data>
+  <data name="Dec2HexTArg2" xml:space="preserve">
+    <value>platser</value>
+  </data>
+  <data name="AboutDec2HexT_places" xml:space="preserve">
+    <value>Ett numeriskt värde eller en matris med värden för att lägga till utfyllnad i hexadecimala strängar.</value>
+    
+  </data>
+  <data name="AboutDec2Hex_table" xml:space="preserve">
+    <value>En kolumn med numeriska decimalvärden för att konvertera till hexadecimala värden.</value>
+    
+  </data>
+  <data name="AboutHex2Dec" xml:space="preserve">
+    <value>Konverterar ett hexadecimalt tal till decimaltal</value>
+    
+  </data>
+  <data name="Hex2DecArg1" xml:space="preserve">
+    <value>tal</value>
+  </data>
+  <data name="AboutHex2Dec_number" xml:space="preserve">
+    <value>En hexadecimal sträng för att konvertera till decimaltal.</value>
+    
+  </data>
+  <data name="AboutHex2DecT" xml:space="preserve">
+    <value>Konverterar en kolumn med hexadecimala tal till decimaltal</value>
+    
+  </data>
+  <data name="Hex2DecTArg1" xml:space="preserve">
+    <value>tabell</value>
+  </data>
+  <data name="AboutHex2Dec_table" xml:space="preserve">
+    <value>En kolumn med hexadecimala strängar för att konvertera till decimaltal.</value>
+    
+  </data>
+  <data name="ErrDeprecated" xml:space="preserve">
+    <value>Den här funktionen är inaktuell och stöds inte längre.</value>
+    
   </data>
 </root>

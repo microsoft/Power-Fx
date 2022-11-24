@@ -5,6 +5,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Types;
 using Xunit;
@@ -260,7 +261,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             // Verify runtime resultStr
             var resultStr = val.Dump();
 
-            Assert.Equal("[10,20]", resultStr);
+            Assert.Equal("Table({Value:10},{Value:20})", resultStr);
 
             // Must use NewSingleColumnTable to create a single column table.
             Assert.Throws<InvalidOperationException>(() => NewTableT(r1, r2));
@@ -291,10 +292,10 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             // Converts to single column 
             var obj = value.ToObject();
 
-            Assert.Equal((ICollection)obj, new[] { 1.0, 2.0, 3.0 });
+            Assert.Equal(new[] { 1.0, 2.0, 3.0 }, (ICollection)obj);
 
             var resultStr = value.Dump();
-            Assert.Equal("[1,2,3]", resultStr);
+            Assert.Equal("Table({Value:1},{Value:2},{Value:3})", resultStr);
         }
 
         [Fact]
@@ -346,7 +347,17 @@ namespace Microsoft.PowerFx.Interpreter.Tests
     {
         public static string Dump(this FormulaValue value)
         {
-            return TestRunner.TestToString(value);
+            var sb = new StringBuilder();
+
+            var settings = new FormulaValueSerializerSettings()
+            {
+                UseCompactRepresentation = true,
+            };
+
+            // Serializer will produce a human-friedly representation of the value
+            value.ToExpression(sb, settings);
+
+            return sb.ToString(); 
         }
     }
 }

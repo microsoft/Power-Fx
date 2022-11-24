@@ -4,12 +4,11 @@
 using System;
 using System.Diagnostics;
 using System.Linq;
-using System.Security.Cryptography;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Types;
-using Newtonsoft.Json.Linq;
 
 namespace Microsoft.PowerFx.Core.Tests
 {
@@ -89,8 +88,6 @@ namespace Microsoft.PowerFx.Core.Tests
         /// <param name="setupHandlerName">Optional name of a setup handler to run. Throws SetupHandlerNotImplemented if not found.</param>
         /// <returns>Result of evaluating Expr.</returns>
         protected abstract Task<RunResult> RunAsyncInternal(string expr, string setupHandlerName = null);
-
-        private static readonly Regex RuntimeErrorExpectedResultRegex = new Regex(@"\#error(?:\(Kind=(?<errorKind>[^\)]+)\))?", RegexOptions.IgnoreCase);
 
         /// <summary>
         /// Returns (Pass,Fail,Skip) and a status message.
@@ -193,7 +190,7 @@ namespace Microsoft.PowerFx.Core.Tests
                     // Matching text to CheckResult.ThrowOnErrors()
                     // Expected will contain the full error message, like:
                     //    Errors: Error 15-16: Incompatible types for comparison. These types can't be compared: UntypedObject, UntypedObject.
-                    var expectedCompilerError = expected.StartsWith("Errors: "); // $$$ Match error message. 
+                    var expectedCompilerError = expected.StartsWith("Errors: Error") || expected.StartsWith("Errors: Warning"); // $$$ Match error message. 
                     if (expectedCompilerError)
                     {
                         var msg = $"Errors: " + string.Join("\r\n", runResult.Errors.Select(err => err.ToString()).ToArray());
@@ -220,75 +217,10 @@ namespace Microsoft.PowerFx.Core.Tests
                 return (TestResult.Fail, $"Threw exception: {e.Message}, {e.StackTrace}");
             }
 
-            // Check for a runtime-error
-            var expectedRuntimeErrorMatch = RuntimeErrorExpectedResultRegex.Match(expected);
-            if (expectedRuntimeErrorMatch.Success)
+            if (result is not ErrorValue && expected.StartsWith("Error") && IsError(result) && testCase.Input != null)
             {
-                var expectedErrorKindGroup = expectedRuntimeErrorMatch.Groups["errorKind"];
-                var expectedErrorKind = expectedErrorKindGroup.Success ? expectedErrorKindGroup.Value : null;
-                if (result is ErrorValue errorResult)
-                {
-                    if (expectedErrorKind == null)
-                    {
-                        // If no kind is part of the expected value, just return a pass if the result is an error
-                        return (TestResult.Pass, null);
-                    }
-
-                    var expectedErrorKinds = expectedErrorKind.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToArray();
-
-                    if (errorResult.Errors.Count != expectedErrorKinds.Count())
-                    {
-                        return (TestResult.Fail, $"Received {errorResult.Errors.Count} errors while we were expecting {expectedErrorKinds.Count()} errors.\r\n" +
-                                                 $"Received {string.Join(", ", errorResult.Errors.Select(e => e.Kind))} and was expecting {expectedErrorKind}");
-                    }
-
-                    var results = errorResult.Errors.Select((er, i) =>
-                    {
-                        var actualErrorKind = er.Kind;
-                        var expectedKind = expectedErrorKinds[i];
-
-                        if (int.TryParse(expectedKind, out var numericErrorKind))
-                        {
-                            // Error given as the internal value
-                            if (numericErrorKind == (int)actualErrorKind)
-                            {
-                                return (tr: TestResult.Pass, err: null);
-                            }
-                            else
-                            {
-                                return (tr: TestResult.Fail, err: $"Received an error, but expected kind={expectedKind} and received {actualErrorKind} ({(int)actualErrorKind})");
-                            }
-                        }
-                        else if (Enum.TryParse<ErrorKind>(expectedKind, out var errorKind))
-                        {
-                            // Error given as the enum name
-                            if (errorKind == actualErrorKind)
-                            {
-                                return (tr: TestResult.Pass, null);
-                            }
-                            else
-                            {
-                                return (tr: TestResult.Fail, err: $"Received an error, but expected kind={errorKind} and received {actualErrorKind}");
-                            }
-                        }
-                        else
-                        {
-                            return (tr: TestResult.Fail, err: $"Invalid expected error kind: {expectedKind}");
-                        }
-                    }).ToArray();
-
-                    if (results.All(r => r.tr == TestResult.Pass))
-                    {
-                        return (TestResult.Pass, null);
-                    }
-
-                    return (TestResult.Fail, string.Join("\r\n", results.Select(r => r.err)));
-                }
-                else if (IsError(result))
-                {
-                    // If they override IsError, then do additional checks. 
-                    return await RunErrorCaseAsync(testCase);
-                }
+                // If they override IsError, then do additional checks. 
+                return await RunErrorCaseAsync(testCase);
             }
 
             // If the actual result is not an error, we'll fail with a mismatch below
@@ -305,7 +237,17 @@ namespace Microsoft.PowerFx.Core.Tests
             }
             else
             {
-                var actualStr = TestRunner.TestToString(result);
+                var sb = new StringBuilder();
+
+                var settings = new FormulaValueSerializerSettings()
+                {
+                    UseCompactRepresentation = true,
+                };
+
+                // Serializer will produce a human-friedly representation of the value
+                result.ToExpression(sb, settings);
+
+                var actualStr = sb.ToString();
 
                 if (string.Equals(expected, actualStr, StringComparison.Ordinal))
                 {

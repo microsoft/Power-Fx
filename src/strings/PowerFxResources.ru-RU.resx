@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -3268,6 +3268,38 @@
     <value>Контрастная тема</value>
     
   </data>
+  <data name="AboutPatch" xml:space="preserve">
+    <value>Применяет обновления к заданной строке и изменяет строку в указанном источнике данных. Возвращает обновленную строку.</value>
+    
+  </data>
+  <data name="PatchDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="PatchBaseRecordArg" xml:space="preserve">
+    <value>base_record</value>
+    
+  </data>
+  <data name="PatchChangeRecordsArg" xml:space="preserve">
+    <value>change_record(s)</value>
+    
+  </data>
+  <data name="AboutRemove" xml:space="preserve">
+    <value>Удаление определенной записи или записей из источника данных</value>
+    
+  </data>
+  <data name="RemoveDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="RemoveRecordsArg" xml:space="preserve">
+    <value>remove_record(s)</value>
+    
+  </data>
+  <data name="ErrRemoveAllArg" xml:space="preserve">
+    <value>Если указано, последний аргумент должен быть "RemoveFlags.All". Проверьте правописание.</value>
+    
+  </data>
   <data name="PenMode_Draw_DisplayName" xml:space="preserve">
     <value>Нарисовать</value>
     
@@ -3924,12 +3956,20 @@
     <value>Не поддерживается в столбцах формул.</value>
     
   </data>
+  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
+    <value>Недопустимое число аргументов для функции {0}: получено {1}, ожидалось {2}</value>
+    
+  </data>
   <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
     <value>Аргумент {0} не поддерживается для функции {1} в столбцах формул.</value>
     
   </data>
   <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
     <value>Этот аргумент нельзя передавать в качестве этого типа в столбцах формул.</value>
+    
+  </data>
+  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
+    <value>Этот аргумент нельзя передавать в качестве типа {0} в столбцах формул.</value>
     
   </data>
   <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
@@ -3948,6 +3988,10 @@
     <value>В столбцах формул поддерживаются только строки в коротком формате даты и времени.</value>
     
   </data>
+  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
+    <value>Аргумент {0} представляет собой недопустимую/неподдерживаемую единицу времени для функции операций с датами {1}.</value>
+    
+  </data>
   <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
     <value>Зависящие от локали лексемы форматирования, такие как "." и "," не поддерживаются в столбцах формул.</value>
     
@@ -3956,8 +4000,16 @@
     <value>{0} не поддерживается в столбцах формул. Используйте {1}.</value>
     
   </data>
+  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
+    <value>Эту операцию нельзя выполнять над типом {0} в столбцах формул.</value>
+    
+  </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
     <value>Тип результата {0} не поддерживается в столбцах формул.</value>
+    
+  </data>
+  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
+    <value>Непосредственные ссылки на всю запись не поддерживаются в столбцах формул. Ссылка должна указывать на допустимое поле в записи.</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
@@ -3972,8 +4024,20 @@
     <value>Столбцы типа "{0}" с форматом {1} не поддерживаются в столбцах формул.</value>
     
   </data>
+  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
+    <value>Приведение типов записей или таблиц не поддерживается в столбцах формул.</value>
+    
+  </data>
   <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
     <value>Длина формулы не может превышать 1000 символов.</value>
+    
+  </data>
+  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
+    <value>Таблицы из одного столбца не поддерживаются в столбцах формул.</value>
+    
+  </data>
+  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
+    <value>В столбцах формул нельзя ссылаться на виртуальную таблицу {0}.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
@@ -4601,7 +4665,66 @@
     <value>значение</value>
     
   </data>
-  <data name="ErrExpectedIdentifierArg_Name" xmlns:space="preserve">
-    <value>Аргумент '{0}' недопустим, ожидается идентификатор.</value>
+  <data name="AboutDec2Hex" xml:space="preserve">
+    <value>Преобразует десятичное число в шестнадцатеричный формат</value>
+    
+  </data>
+  <data name="Dec2HexArg1" xml:space="preserve">
+    <value>число</value>
+  </data>
+  <data name="AboutDec2Hex_number" xml:space="preserve">
+    <value>Числовое десятичное значение для преобразования в шестнадцатеричный формат.</value>
+    
+  </data>
+  <data name="Dec2HexArg2" xml:space="preserve">
+    <value>места</value>
+  </data>
+  <data name="AboutDec2Hex_places" xml:space="preserve">
+    <value>Числовое значение для добавления отступа в строку в шестнадцатеричном формате.</value>
+    
+  </data>
+  <data name="AboutDec2HexT" xml:space="preserve">
+    <value>Преобразует столбец десятичных чисел в шестнадцатеричный формат</value>
+    
+  </data>
+  <data name="Dec2HexTArg1" xml:space="preserve">
+    <value>таблица</value>
+  </data>
+  <data name="Dec2HexTArg2" xml:space="preserve">
+    <value>места</value>
+  </data>
+  <data name="AboutDec2HexT_places" xml:space="preserve">
+    <value>Числовое значение или массив значений для добавления отступа в строки в шестнадцатеричном формате.</value>
+    
+  </data>
+  <data name="AboutDec2Hex_table" xml:space="preserve">
+    <value>Столбец числовых десятичных значений для преобразования в шестнадцатеричный формат.</value>
+    
+  </data>
+  <data name="AboutHex2Dec" xml:space="preserve">
+    <value>Преобразует шестнадцатеричное число в десятичное</value>
+    
+  </data>
+  <data name="Hex2DecArg1" xml:space="preserve">
+    <value>число</value>
+  </data>
+  <data name="AboutHex2Dec_number" xml:space="preserve">
+    <value>Преобразование шестнадцатеричной строки в десятичный формат.</value>
+    
+  </data>
+  <data name="AboutHex2DecT" xml:space="preserve">
+    <value>Преобразует столбец шестнадцатеричных чисел в десятичный формат</value>
+    
+  </data>
+  <data name="Hex2DecTArg1" xml:space="preserve">
+    <value>таблица</value>
+  </data>
+  <data name="AboutHex2Dec_table" xml:space="preserve">
+    <value>Столбец шестнадцатеричных строк для преобразования в десятичный формат.</value>
+    
+  </data>
+  <data name="ErrDeprecated" xml:space="preserve">
+    <value>Эта функция устарела и больше не поддерживается.</value>
+    
   </data>
 </root>

@@ -1,10 +1,18 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Runtime.Serialization;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Types
@@ -18,7 +26,7 @@ namespace Microsoft.PowerFx.Types
         /// Often marshalling an array will create a Single Column Tables with a single "Value" column. 
         /// </summary>
         public const string ValueName = "Value";
-        
+
         /// <summary>
         /// DName for ValueName.
         /// </summary>
@@ -27,6 +35,8 @@ namespace Microsoft.PowerFx.Types
         public abstract IEnumerable<DValue<RecordValue>> Rows { get; }
 
         public bool IsColumn => IRContext.ResultType._type.IsColumn;
+
+        public new TableType Type => (TableType)base.Type;
 
         internal TableValue(IRContext irContext)
             : base(irContext)
@@ -67,26 +77,84 @@ namespace Microsoft.PowerFx.Types
             record = Rows.ElementAtOrDefault(index0);
             return record != null;
         }
-                
+
         private static ErrorValue ArgumentOutOfRange(IRContext irContext)
         {
             return new ErrorValue(irContext, new ExpressionError()
             {
                 Message = "Argument out of range",
                 Span = irContext.SourceContext,
-                Kind = ErrorKind.Numeric
+                Kind = ErrorKind.InvalidArgument
             });
+        }
+
+        private static ErrorValue NotImplemented(IRContext irContext, [CallerMemberName] string methodName = null)
+        {
+            return new ErrorValue(irContext, new ExpressionError()
+            {
+                Message = $"{methodName} is not supported on this table instance.",
+                Span = irContext.SourceContext,
+                Kind = ErrorKind.Internal
+            });
+        }
+
+        // Return appended value 
+        // - Error, 
+        // - with updated values
+        // Async because derived classes may back this with a network call. 
+        public virtual async Task<DValue<RecordValue>> AppendAsync(RecordValue record, CancellationToken cancellationToken)
+        {
+            return DValue<RecordValue>.Of(NotImplemented(IRContext));
+        }
+
+        public virtual async Task<DValue<BooleanValue>> RemoveAsync(IEnumerable<FormulaValue> recordsToRemove, bool all, CancellationToken cancellationToken)
+        {
+            return DValue<BooleanValue>.Of(NotImplemented(IRContext));
+        }
+
+        /// <summary>
+        /// Patch implementation for derived classes.
+        /// </summary>
+        /// <param name="baseRecord">A record to modify.</param>
+        /// <param name="changeRecord">A record that contains properties to modify the base record. All display names are resolved.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        /// <returns></returns>
+        protected virtual async Task<DValue<RecordValue>> PatchCoreAsync(RecordValue baseRecord, RecordValue changeRecord, CancellationToken cancellationToken)
+        {
+            return DValue<RecordValue>.Of(NotImplemented(IRContext));
+        }
+
+        /// <summary>
+        /// Modifies one record in a data source.
+        /// </summary>
+        /// <param name="baseRecord">A record to modify.</param>
+        /// <param name="changeRecord">A record that contains properties to modify the base record.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        /// <returns>The updated record.</returns>
+        public async Task<DValue<RecordValue>> PatchAsync(RecordValue baseRecord, RecordValue changeRecord, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            var recordType = Type.ToRecord();
+
+            // IR has already resolved to logical names because of 
+            // RequiresDataSourceScope, ArgMatchesDatasourceType on function.
+            return await PatchCoreAsync(baseRecord, changeRecord, cancellationToken);
         }
 
         public override object ToObject()
         {
             if (IsColumn)
             {
-                var array = Rows.Select(val =>
+                var array = Rows.Select(async val =>
                 {
                     if (val.IsValue)
                     {
-                        return val.Value.Fields.First().Value.ToObject();
+                        await foreach (var field in val.Value.GetFieldsAsync(CancellationToken.None))
+                        {
+                            return field.Value.ToObject();
+                        }
+
+                        return null;
                     }
                     else if (val.IsBlank)
                     {
@@ -97,7 +165,8 @@ namespace Microsoft.PowerFx.Types
                         return val.Error.ToObject();
                     }
                 }).ToArray();
-                return array;
+                Task.WaitAll(array);
+                return array.Select(tsk => tsk.Result).ToArray();
             }
             else
             {
@@ -123,6 +192,44 @@ namespace Microsoft.PowerFx.Types
         public override void Visit(IValueVisitor visitor)
         {
             visitor.Visit(this);
+        }
+
+        public override void ToExpression(StringBuilder sb, FormulaValueSerializerSettings settings)
+        {
+            // Table() is not legal, so we need an alternate expression to capture the table's type.
+            if (!Rows.Any())
+            {
+                if (settings.UseCompactRepresentation)
+                {
+                    sb.Append("Table()");
+
+                    return;
+                }
+
+                sb.Append("FirstN(");
+                Type.DefaultExpressionValue(sb);
+                sb.Append(",0)");
+            }
+            else
+            {
+                var flag = true;
+
+                sb.Append("Table(");
+
+                foreach (var row in Rows)
+                {
+                    if (!flag)
+                    {
+                        sb.Append(",");
+                    }
+
+                    flag = false;
+
+                    row.ToFormulaValue().ToExpression(sb, settings);
+                }
+
+                sb.Append(")");
+            }
         }
     }
 }

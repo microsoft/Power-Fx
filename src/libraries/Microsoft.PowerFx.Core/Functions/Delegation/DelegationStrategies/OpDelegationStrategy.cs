@@ -91,10 +91,14 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
                 // Set(Names, ["Foo", Bar"]); Filter(Accounts, 'Account Name' in Names) - Using variable of type table
                 // ClearCollect(Names, Accounts); Filter(Accounts, 'Account Name' in Names.'Account Name') - using column from collection.
                 // This won't be delegated - Filter(Accounts, 'Account Name' in Accounts.'Account Name') as Accounts.'Account Name' is async.
-                if ((binding.Document.Properties.EnabledFeatures.IsEnhancedDelegationEnabled &&
-                    isRHSNode && (opDelStrategy as BinaryOpDelegationStrategy)?.Op == BinaryOp.In && !binding.IsAsync(node) && binding.GetType(node).IsTable && binding.GetType(node).IsColumn &&
-                    metadata.IsDelegationSupportedByTable(DelegationCapability.CdsIn)) ||
-                    IsValidNode(node, binding))
+                if (isRHSNode && binding.Document.Properties.EnabledFeatures.IsEnhancedDelegationEnabled
+                    && (opDelStrategy as BinaryOpDelegationStrategy)?.Op == BinaryOp.In && !binding.IsAsync(node) && binding.GetType(node).IsTable && binding.GetType(node).IsColumn &&
+                    opDelStrategy.IsOpSupportedByTable(metadata, node, binding))
+                {
+                    return true;
+                }
+
+                if (!binding.IsRowScope(node) && IsValidNode(node, binding))
                 {
                     return true;
                 }
@@ -167,6 +171,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
                 default:
                     {
                         var kind = node.Kind;
+
                         if (kind != NodeKind.BoolLit && kind != NodeKind.StrLit && kind != NodeKind.NumLit)
                         {
                             var telemetryMessage = string.Format("NodeKind {0} unsupported.", kind);

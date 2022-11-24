@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -3452,6 +3452,10 @@
     <value>Internal</value>
     <comment>{Locked} Enum value</comment>
   </data>
+  <data name="ErrorKind_NotApplicable_Name" xml:space="preserve">
+    <value>NotApplicable</value>
+    <comment>{Locked} Enum value</comment>
+  </data>
   <data name="Post" xml:space="preserve">
     <value>Post</value>
     <comment>Button text to post comment</comment>
@@ -5004,6 +5008,38 @@
     <value>Contrast theme</value>
     <comment>Display text representing the Contrast value of TeamsTheme enum (TeamsTheme_Contrast_Name). The possible values for this enumeration are: Default, Dark, Contrast.</comment>
   </data>
+  <data name="AboutPatch" xml:space="preserve">
+    <value>Applies the updates to the specified row and changes the row in the specified datasource. Returns the updated row.</value>
+    <comment>Description of 'Patch' function.</comment>
+  </data>
+  <data name="PatchDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    <comment>function_parameter - First parameter for the Patch function. The data source that contains the records that you want to modify or will contain the records that you want to create.</comment>
+  </data>
+  <data name="PatchBaseRecordArg" xml:space="preserve">
+    <value>base_record</value>
+    <comment>function_parameter - Second parameter for the Patch function. The record to modify or create. If the record came from a data source, the record is found and modified. If the result of Defaults is used, a record is created.</comment>
+  </data>
+  <data name="PatchChangeRecordsArg" xml:space="preserve">
+    <value>change_record(s)</value>
+    <comment>function_parameter - Third parameter for the Patch function. One or more records that contain properties to modify in the BaseRecord. Change records are processed in order from the beginning of the argument list to the end, with later property values overriding earlier ones.</comment>
+  </data>
+  <data name="AboutRemove" xml:space="preserve">
+    <value>Removes a specific record or records from a data source</value>
+    <comment>Description of 'Remove' function.</comment>
+  </data>
+  <data name="RemoveDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    <comment>function_parameter - First parameter for the Remove function. The data source that contains the records that you want to remove from.</comment>
+  </data>
+  <data name="RemoveRecordsArg" xml:space="preserve">
+    <value>remove_record(s)</value>
+    <comment>function_parameter - One or more records to be removed.</comment>
+  </data>
+  <data name="ErrRemoveAllArg" xml:space="preserve">
+    <value>If provided, last argument must be 'RemoveFlags.All'. Is there a typo?</value>
+    <comment>{Locked=RemoveFlags.All} Error Message, RemoveFlags.All is an enum value that does not get localized.</comment>
+  </data>
   <data name="PenMode_Draw_DisplayName" xml:space="preserve">
     <value>Draw</value>
     <comment>Display text representing the Draw value of PenMode enum (PenMode_Draw_Name). The possible values for this enumeration are: Draw, Erase.</comment>
@@ -5669,11 +5705,11 @@
     <comment>Error Message. Used in formula columns for arguments that are not supported there.  The {0} will be the name of the argument that is not supported.  The {1} will be the name of the function.</comment>
   </data>
   <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>This argument can not be passed as this type in formula columns.</value>
+    <value>This argument cannot be passed as this type in formula columns.</value>
     <comment>Error Message. Used in formula columns for an argument where the type is not supported. {0} is the attempted type the argument is being coerced to.</comment>
   </data>
   <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
-    <value>This argument can not be passed as type {0} in formula columns.</value>
+    <value>This argument cannot be passed as type {0} in formula columns.</value>
     <comment>Error Message. Used in formula columns for an argument where the type is not supported. {0} is the attempted type the argument is being coerced to.</comment>
   </data>
   <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
@@ -5705,7 +5741,7 @@
     <comment>Error Message. Used in formula columns for scenarios where the maker attempts to use a function that is not supported, providing an alternate function name.  The {0} will be the name of the function that is not supported, and {1} is the name of the suggested alternate.</comment>
   </data>
   <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
-    <value>This operation can not be performed on type {0} in formula columns.</value>
+    <value>This operation cannot be performed on type {0} in formula columns.</value>
     <comment>Error Message. Used in formula columns for scenarios where the maker attempts to perform an unsupported operatiom. The {0} will be the type the operation is not supported for.</comment>
   </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
@@ -5741,7 +5777,7 @@
     <comment>Error Message. Used in formula columns for a formula that references a single-column table.</comment>
   </data>
   <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
-    <value>Can not reference virtual table {0} in formula columns.</value>
+    <value>Cannot reference virtual table {0} in formula columns.</value>
     <comment>Error Message. Used in formula columns for a formula that references a virtual table.</comment>
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
@@ -6509,38 +6545,6 @@
     <value>The first argument of '{0}' should be a valid variable name, and cannot conflict with any existing control, screen, collection, or data source names. Found type '{1}'</value>
     <comment>Error Message</comment>
   </data>
-  <data name="ErrUDF_MissingIdentifier" xml:space="preserve">
-    <value>User Defined Function is missing a valid name</value>
-    <comment>Error Message</comment>
-  </data>
-  <data name="ErrUDF_MissingOpenParen" xml:space="preserve">
-    <value>User Defined Function is missing a '(' here</value>
-    <comment>Error Message</comment>
-  </data>
-  <data name="ErrUDF_MissingEqual" xml:space="preserve">
-    <value>User Defined Function is missing a '=' here</value>
-    <comment>Error Message</comment>
-  </data>
-  <data name="ErrUDF_MissingCloseParen" xml:space="preserve">
-    <value>User Defined Function is missing a ')' here</value>
-    <comment>Error Message</comment>
-  </data>
-  <data name="ErrUDF_MissingSemicolon" xml:space="preserve">
-    <value>User Defined Function is missing a ';' here</value>
-    <comment>Error Message</comment>
-  </data>
-  <data name="ErrUDF_MissingComma" xml:space="preserve">
-    <value>User Defined Function is missing a ',' here</value>
-    <comment>Error Message</comment>
-  </data>
-  <data name="ErrUDF_MissingColon" xml:space="preserve">
-    <value>User Defined Function is missing an ':' here</value>
-    <comment>Error Message</comment>
-  </data>
-  <data name="ErrUDF_DuplicateArgName" xml:space="preserve">
-    <value>User Defined Function has a duplicate argument name</value>
-    <comment>Error Message</comment>
-  </data>
   <data name="AboutSet" xml:space="preserve">
     <value>Create and set a global variable.</value>
     <comment>Description of 'Set' function.</comment>
@@ -6549,8 +6553,66 @@
     <value>value</value>
     <comment>function_parameter - Second argument to the Set function - any Power Apps value.</comment>
   </data>
-  <data name="ErrExpectedIdentifierArg_Name" xml:space="preserve">
-    <value>Argument '{0}' is invalid, expected an identifier.</value>
-    <comment>Error Message.</comment>
+  <data name="AboutDec2Hex" xml:space="preserve">
+    <value>Converts a decimal number to hexadecimal</value>
+    <comment>Description of 'Dec2Hex' function.</comment>
+  </data>
+  <data name="Dec2HexArg1" xml:space="preserve">
+    <value>number</value>
+  </data>
+  <data name="AboutDec2Hex_number" xml:space="preserve">
+    <value>A numeric decimal value to convert to hexadecimal string.</value>
+    <comment>Description of 'Dec2HexArg1' function parameter.</comment>
+  </data>
+  <data name="Dec2HexArg2" xml:space="preserve">
+    <value>places</value>
+  </data>
+  <data name="AboutDec2Hex_places" xml:space="preserve">
+    <value>A numeric value to add padding to hexadecimal string.</value>
+    <comment>Description of 'Dec2HexArg2' function parameter.</comment>
+  </data>
+  <data name="AboutDec2HexT" xml:space="preserve">
+    <value>Converts a column of decimal numbers to hexadecimals</value>
+    <comment>Description of 'Dec2HexT' function.</comment>
+  </data>
+  <data name="Dec2HexTArg1" xml:space="preserve">
+    <value>table</value>
+  </data>
+  <data name="Dec2HexTArg2" xml:space="preserve">
+    <value>places</value>
+  </data>
+  <data name="AboutDec2HexT_places" xml:space="preserve">
+    <value>A numeric value or array of values to add padding to hexadecimal strings.</value>
+    <comment>Description of 'Dec2HexArgT2' function parameter.</comment>
+  </data>
+  <data name="AboutDec2Hex_table" xml:space="preserve">
+    <value>A column of numeric decimal values to convert to hexadecimals.</value>
+    <comment>Description of 'Dec2HexTArg1' function parameter.</comment>
+  </data>
+  <data name="AboutHex2Dec" xml:space="preserve">
+    <value>Converts a hexadecimal number to decimal</value>
+    <comment>Description of 'Hex2Dec' function.</comment>
+  </data>
+  <data name="Hex2DecArg1" xml:space="preserve">
+    <value>number</value>
+  </data>
+  <data name="AboutHex2Dec_number" xml:space="preserve">
+    <value>A hexadecimal string convert to decimal.</value>
+    <comment>Description of 'Hex2DecArg1' function parameter.</comment>
+  </data>
+  <data name="AboutHex2DecT" xml:space="preserve">
+    <value>Converts a column of hexadecimal numbers to decimals</value>
+    <comment>Description of 'Hex2DecT' function.</comment>
+  </data>
+  <data name="Hex2DecTArg1" xml:space="preserve">
+    <value>table</value>
+  </data>
+  <data name="AboutHex2Dec_table" xml:space="preserve">
+    <value>A column of hexadecimal strings to convert to decimals.</value>
+    <comment>Description of 'Hex2DecTArg1' function parameter.</comment>
+  </data>
+  <data name="ErrDeprecated" xml:space="preserve">
+    <value>This feature is deprecated and is no longer supported.</value>
+    <comment>An error message for deprecated features.</comment>
   </data>
 </root>

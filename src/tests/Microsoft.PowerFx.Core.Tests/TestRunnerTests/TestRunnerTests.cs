@@ -291,7 +291,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 // Unsupported can't skip error. We should match the error. 
                 var test = new TestCase
                 {
-                    Expected = "#error",
+                    Expected = "Error({Kind:ErrorKind.Custom})",
                 };
                 var (result, message) = runner.RunTestCase(test);
 
@@ -306,7 +306,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             var test = new TestCase
             {
-                Expected = "#ERROR"
+                Expected = "Error()"
             };
             var (result, message) = runner.RunTestCase(test);
 
@@ -331,28 +331,14 @@ namespace Microsoft.PowerFx.Core.Tests
 
             var test = new TestCase
             {
-                Expected = "#Error(Kind=InvalidFunctionUsage)" // validation by enum name
+                Expected = "Error({Kind:ErrorKind.InvalidFunctionUsage})" // validation by enum name
             };
             var (result, message) = runner.RunTestCase(test);
             Assert.Equal(TestResult.Pass, result);
 
             test = new TestCase
             {
-                Expected = "#Error(Kind=16)" // // validation by enum value
-            };
-            (result, message) = runner.RunTestCase(test);
-            Assert.Equal(TestResult.Pass, result);
-
-            test = new TestCase
-            {
-                Expected = "#Error(Kind=Div0)" // // failure if error kind does not match
-            };
-            (result, message) = runner.RunTestCase(test);
-            Assert.Equal(TestResult.Fail, result);
-
-            test = new TestCase
-            {
-                Expected = "#Error(Kind=13)" // // failure if numeric error kind does not match
+                Expected = "Error({Kind:ErrorKind.Div0})" // // failure if error kind does not match
             };
             (result, message) = runner.RunTestCase(test);
             Assert.Equal(TestResult.Fail, result);
@@ -451,7 +437,7 @@ namespace Microsoft.PowerFx.Core.Tests
             var test = new TestCase
             {
                 Input = "1",
-                Expected = "#error"
+                Expected = "Error({Kind:ErrorKind.Custom})"
             };
 
             // On #error for x, test runner  will also call IsError(x)
@@ -483,13 +469,42 @@ namespace Microsoft.PowerFx.Core.Tests
             var test = new TestCase
             {
                 Input = "1",
-                Expected = "#error"
+                Expected = "Error({Kind:ErrorKind.Custom})"
             };
 
             // On #error for x, test runner  will also call IsError(x)
             var (result, message) = runner.RunTestCase(test);
             Assert.Equal(TestResult.Fail, result);
             Assert.Contains("(IsError() followup call", message);
+        }
+
+        // Ensure we only do the IsError followup call if there is an error in the baseline text
+        // (not just if a derived IsError() returns true)
+        [Fact]
+        public void TestErrorOverride3()
+        {
+            // Test override BaseRunner.IsError
+            var runner = new MockErrorRunner
+            {
+                _hook = (expr, setup) =>
+                    expr switch
+                    {
+                        "1" => FormulaValue.New(1),
+                        "IsError(1)" => throw new InvalidOperationException($"Should call IsError() follow since .txt didn't have error"),
+                        _ => throw new InvalidOperationException()
+                    },
+                _isError = (value) => throw new InvalidOperationException($"Should call IsError() follow since .txt didn't have error")
+            };
+
+            var test = new TestCase
+            {
+                Input = "1",
+                Expected = "1" // don't expect error
+            };
+
+            // On #error for x, test runner  will also call IsError(x)
+            var (result, message) = runner.RunTestCase(test);
+            Assert.Equal(TestResult.Pass, result);
         }
 
         private static void AddFile(TestRunner runner, string filename)

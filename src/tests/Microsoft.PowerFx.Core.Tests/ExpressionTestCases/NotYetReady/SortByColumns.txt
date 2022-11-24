@@ -102,14 +102,14 @@
 // ******** NULL and ERROR PARAMETERS ********
 
 >> SortByColumns([-2, -1, 5, 1, 2], "Value", If(1/0<2,SortOrder.Ascending,SortOrder.Descending))
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 //Error passed as one of the table records
 >> SortByColumns([-2, -1, 5, 1/0, 2], "Value")
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> SortByColumns(["a", "b", "D", "x", "J", Error({Kind: 11})], "Value")
-#Error(Kind=Validation)
+Error({Kind:ErrorKind.Validation})
 
 
 >> SortByColumns(Table({Value:Blank()}),"Value")
@@ -129,7 +129,7 @@
 
 // Sort on error source
 >> SortByColumns(If(Left("Hello", -1) = "",[1,2,3,4]), "Value", SortOrder.Ascending)
-#Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
   
 // Sort null table with single valid column
 >> SortByColumns(If(1<0,[1,2,3]), "Value",SortOrder.Ascending)
@@ -325,7 +325,7 @@ Table({Age:2,First:"Bob",HasId:true,Properties:{HasDog:true,Vaccinated:true}},{A
   If(Left("Hello", -1) = "", { First: "Bob", Last: "Smith", Age: 2, Gender: "Male", Vaccinated: true, HasDog: true }),
   { First: "John", Last: "Batali", Age: 17, Gender: "Male", Vaccinated: false, HasDog: false }
   ),"First")
-#Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> SortByColumns(Table(
   { First: "Bob", Last: "Smith", Age: 2, Gender: "Male", Vaccinated: true, HasDog: true },
@@ -334,7 +334,7 @@ Table({Age:2,First:"Bob",HasId:true,Properties:{HasDog:true,Vaccinated:true}},{A
   If(Left("Hello", -1) = "", { First: "Bob", Last: "Smith", Age: 2, Gender: "Male", Vaccinated: true, HasDog: true }),
   { First: "John", Last: "Batali", Age: 17, Gender: "Male", Vaccinated: false, HasDog: false }
   ),"First", SortOrder.Descending)
-#Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 
 // SORT A TABLE WITH BLANK ROWS - ASCENDING ORDER
@@ -523,7 +523,7 @@ Table({ 'A\"B': "Wonderland" }, { 'A\"B': "Samantha" }, { 'A\"B': "Mary" }, { 'A
   { First: "Helio", Last: Left("Hello", -1), Age: 263, Gender: "Unknown", Vaccinated: Blank(), HasDog: Blank() },
   { First: "Mary", Last: "Harris", Age: 48, Gender: "Female", Vaccinated: false, HasDog: false },
   { First: "Titan", Last: Left("Hello", -1), Age: 792, Gender: "Unknown", Vaccinated: Blank(), HasDog: Blank() }),"Last", SortOrder.Ascending,"Age", SortOrder.Descending)
-#Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 
 // SORT ON TABLE WITH SOME COLUMNS HAVING ERROR VALUES, BUT DOESN"T TOUCH ERROR - ASCENDING ORDER
@@ -534,7 +534,7 @@ Table({ 'A\"B': "Wonderland" }, { 'A\"B': "Samantha" }, { 'A\"B': "Mary" }, { 'A
   { First: "Helio", Last: Left("Hello", -1), Age: 263, Gender: "Unknown", Vaccinated: Blank(), HasDog: Blank() },
   { First: "Mary", Last: "Harris", Age: 48, Gender: "Female", Vaccinated: false, HasDog: false },
   { First: "Titan", Last: Left("Hello", -1), Age: 792, Gender: "Unknown", Vaccinated: Blank(), HasDog: Blank() }),"First", SortOrder.Ascending,"Age", SortOrder.Descending)
-Table({First:"Alice",Last:"Smith",Age:5,Gender:"Female",Vaccinated:true,HasDog:true}, {First:"Bob",Last:"Smith",Age:2,Gender:"Male",Vaccinated:true,HasDog:true}, {First:"Helio",Last:#Error(Kind=25),Age:263,Gender:"Unknown",Vaccinated:Blank(),HasDog:false}, {First:"Mary",Last:"Harris",Age:48,Gender:"Female",Vaccinated:false,HasDog:false}, {First:"Titan",Last:#Error(Kind=25),Age:792,Gender:"Unknown",Vaccinated:Blank(),HasDog:false})
+Table({First:"Alice",Last:"Smith",Age:5,Gender:"Female",Vaccinated:true,HasDog:true}, {First:"Bob",Last:"Smith",Age:2,Gender:"Male",Vaccinated:true,HasDog:true}, {First:"Helio",Last:Error({Kind:ErrorKind.InvalidArgument}),Age:263,Gender:"Unknown",Vaccinated:Blank(),HasDog:false}, {First:"Mary",Last:"Harris",Age:48,Gender:"Female",Vaccinated:false,HasDog:false}, {First:"Titan",Last:Error({Kind:ErrorKind.InvalidArgument}),Age:792,Gender:"Unknown",Vaccinated:Blank(),HasDog:false})
 
 
 // SORT ON TABLE WITH ERROR PASSED AS SORT COLUMN NAME - ASCENDING ORDER
@@ -558,7 +558,7 @@ Table({First:"Alice",Last:"Smith",Age:5,Gender:"Female",Vaccinated:true,HasDog:t
   { First: "Maria", Last: "Martinez", Age: 20, Gender: "Female", Vaccinated: true, HasDog: false },
   { First: Blank(), Last: "Rodriguez", Age: Blank(), Gender: "Female", Vaccinated: Blank(), HasDog: Blank() },
   { First: "Jaideep", Last: "Lopez", Age: 29, Gender: "Male", Vaccinated: true, HasDog: false }),Left("Hello", -1), SortOrder.Ascending,"Age", SortOrder.Descending)
-#Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 
 // SORT ON TABLE WITH ERROR PASSED AS SORT ORDER - ASCENDING ORDER
@@ -582,7 +582,7 @@ Table({First:"Alice",Last:"Smith",Age:5,Gender:"Female",Vaccinated:true,HasDog:t
   { First: "Maria", Last: "Martinez", Age: 20, Gender: "Female", Vaccinated: true, HasDog: false },
   { First: Blank(), Last: "Rodriguez", Age: Blank(), Gender: "Female", Vaccinated: Blank(), HasDog: Blank() },
   { First: "Jaideep", Last: "Lopez", Age: 29, Gender: "Male", Vaccinated: true, HasDog: false }),"First", Left("Hello", -1))
-#Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 
 // MULTIPLE COLUMNS USED FOR SORTING ORDER
@@ -814,7 +814,7 @@ Table({Age:2,First:"Bob",HasId:true,Properties:{HasDog:true,Vaccinated:true}},{A
   { First: "Maria", Last: "Martinez", Age: 20, Gender: "Female", Vaccinated: true, HasDog: false },
   If(Left("Hello", -1) = "", { First: "Bob", Last: "Smith", Age: 2, Gender: "Male", Vaccinated: true, HasDog: true }),
   { First: "Jaideep", Last: "Lopez", Age: 29, Gender: "Male", Vaccinated: true, HasDog: false }), "First", ["Alice" ,"Amelia" ,"Andrew" ,"Bob" ,"Dora" ,"Emily" ,"Helio" ,"Jaideep" ,"John" ,"Maria" ,"Mary" ,"Nizam" ,"Titan"])
-#Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 
 // Sort on error rows, with order values descending
@@ -837,7 +837,7 @@ Table({Age:2,First:"Bob",HasId:true,Properties:{HasDog:true,Vaccinated:true}},{A
   { First: "Maria", Last: "Martinez", Age: 20, Gender: "Female", Vaccinated: true, HasDog: false },
   If(Left("Hello", -1) = "", { First: "Bob", Last: "Smith", Age: 2, Gender: "Male", Vaccinated: true, HasDog: true }),
   { First: "Jaideep", Last: "Lopez", Age: 29, Gender: "Male", Vaccinated: true, HasDog: false }), "First", ["Titan" ,"Nizam" ,"Mary" ,"Maria" ,"John" ,"Jaideep" ,"Helio" ,"Emily" ,"Dora" ,"Bob" ,"Andrew" ,"Amelia" ,"Alice"])
-#Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 
 // Sort on null rows, with order values ascending
@@ -983,7 +983,7 @@ Table({ "A\"B": "Wonderland" }, { "A\"B": "Samantha" }, { "A\"B": "Mary" }, { "A
   { name: "1:1", Day: "Tuesday" },
   { name: "Team Meeting", Day: "Monday" },
   { name: "Scrum Meeting 2", Day: "Tuesday" }), "Day", Left("Hello", -1))
-#Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 
 // Sort on error source
@@ -999,7 +999,7 @@ Table({ "A\"B": "Wonderland" }, { "A\"B": "Samantha" }, { "A\"B": "Mary" }, { "A
   { name: "1:1", Day: "Tuesday" },
   { name: "Team Meeting", Day: "Monday" },
   { name: "Scrum Meeting 2", Day: "Tuesday" })), "Day", ["Monday","Tuesday","Wednesday","Thursday","Friday"])
-#Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 
 // Sort with error values table row
@@ -1014,7 +1014,7 @@ Table({ "A\"B": "Wonderland" }, { "A\"B": "Samantha" }, { "A\"B": "Mary" }, { "A
   { name: "1:1", Day: "Tuesday" },
   { name: "Team Meeting", Day: "Monday" },
   { name: "Scrum Meeting 2", Day: "Tuesday" }), "Day", Table({ Value: "Monday" },{ Value: "Tuesday" },If(Sqrt(-1) < 0, { Value: "Wednesday" }),{ Value: "Thursday" },{ Value: "Friday" }))
-#Error(Kind=Numeric)
+Error({Kind:ErrorKind.Numeric})
 
 
 // Sort with error inside values table property
@@ -1029,7 +1029,7 @@ Table({ "A\"B": "Wonderland" }, { "A\"B": "Samantha" }, { "A\"B": "Mary" }, { "A
   { name: "1:1", Day: "Tuesday" },
   { name: "Team Meeting", Day: "Monday" },
   { name: "Scrum Meeting 2", Day: "Tuesday" }), "Day", ["Monday","Tuesday","Wednesday",Left("Hello", -1),"Friday"])
-#Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
   
 // Sort calendar, with error in a column of the source referenced by the order values
 >> SortByColumns(Table(
@@ -1043,7 +1043,7 @@ Table({ "A\"B": "Wonderland" }, { "A\"B": "Samantha" }, { "A\"B": "Mary" }, { "A
   { name: "1:1", Day: "Tuesday" },
   { name: "Team Meeting", Day: "Monday" },
   { name: "Scrum Meeting 2", Day: "Tuesday" }),"Day", ["Monday","Tuesday","Wednesday","Thursday","Friday"])
-#Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 
 // Sort calendar, with error in a column of the source NOT referenced by the order values
@@ -1058,7 +1058,7 @@ Table({ "A\"B": "Wonderland" }, { "A\"B": "Samantha" }, { "A\"B": "Mary" }, { "A
   { name: Left("Hello", -1), Day: "Tuesday" },
   { name: "Team Meeting", Day: "Monday" },
   { name: "Scrum Meeting 2", Day: "Tuesday" }),"Day", ["Monday","Tuesday","Wednesday","Thursday","Friday"])
-Table({name:"Scrum Meeting 1",Day:Monday}, {name:"Project Meeting 1",Day:Monday}, {name:"Team Meeting",Day:Monday}, {name:#Error(Kind=25),Day:Tuesday}, {name:"Scrum Meeting 2",Day:Tuesday}, {name:"Scrum Meeting 3",Day:Wednesday}, {name:"Project Meeting 2",Day:Wednesday}, {name:"Scrum Meeting 4",Day:Thursday}, {name:"Project Meeting 3",Day:Friday}, {name:"Scrum Meeting 5",Day:Friday})
+Table({name:"Scrum Meeting 1",Day:Monday}, {name:"Project Meeting 1",Day:Monday}, {name:"Team Meeting",Day:Monday}, {name:Error({Kind:ErrorKind.InvalidArgument}),Day:Tuesday}, {name:"Scrum Meeting 2",Day:Tuesday}, {name:"Scrum Meeting 3",Day:Wednesday}, {name:"Project Meeting 2",Day:Wednesday}, {name:"Scrum Meeting 4",Day:Thursday}, {name:"Project Meeting 3",Day:Friday}, {name:"Scrum Meeting 5",Day:Friday})
 
 
 // Sort on error values for some columns
@@ -1068,7 +1068,7 @@ Table({name:"Scrum Meeting 1",Day:Monday}, {name:"Project Meeting 1",Day:Monday}
   { First: "Alice", Last: Left("Hello", -1) },
   { First: "John", Last: "Batali", Age: 17 },
   { First: "Emily", Last: Left("Hello", -1), Age: 29 }), "Last", ["Batali","Smith"])
-#Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 
 // Sort table with error values for some columns but doesn't touch error values, ascending.
@@ -1077,7 +1077,7 @@ Table({name:"Scrum Meeting 1",Day:Monday}, {name:"Project Meeting 1",Day:Monday}
   { First: "Alice", Last: Left("Hello", -1) },
   { First: "John", Last: "Batali", Age: 17 },
   { First: "Emily", Last: Left("Hello", -1), Age: 29 }), "First", ["Alice","Emily","Bob","John"])
-Table({First:"Alice",Last:#Error(Kind=25)}, {First:"Emily",Last:#Error(Kind=25),Age:29}, {First:"Bob",Last:"Smith",Age:2}, {First:"John",Last:"Batali",Age:17})
+Table({First:"Alice",Last:Error({Kind:ErrorKind.InvalidArgument})}, {First:"Emily",Last:Error({Kind:ErrorKind.InvalidArgument}),Age:29}, {First:"Bob",Last:"Smith",Age:2}, {First:"John",Last:"Batali",Age:17})
 
 
 // All duplicate values in order table
@@ -1093,7 +1093,7 @@ Table({First:"Alice",Last:#Error(Kind=25)}, {First:"Emily",Last:#Error(Kind=25),
   { name: "Scrum Meeting 4", Day: "Tuesday" },
   { name: "Team Meeting", Day: "Monday" },
   { name: "Scrum Meeting 2", Day: "Tuesday" }),"Day",["Monday","Monday"])
-#Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 
 // Some duplicate values in order table
@@ -1109,4 +1109,4 @@ Table({First:"Alice",Last:#Error(Kind=25)}, {First:"Emily",Last:#Error(Kind=25),
   { name: "Scrum Meeting 4", Day: "Tuesday" },
   { name: "Team Meeting", Day: "Monday" },
   { name: "Scrum Meeting 2", Day: "Tuesday" }),"Day",["Monday","Tuesday", Blank(), "Monday"])
-#Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})

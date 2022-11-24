@@ -40,6 +40,13 @@ namespace Microsoft.PowerFx.Core.Tests
                 var value = GetValue(dotnetType);
                 var fxValue = PrimitiveValueConversions.Marshal(value, dotnetType);
                 Assert.Equal(fxType, fxValue.Type.GetType());
+
+                var expr = actualFxType.DefaultExpressionValue();
+                var engine = new Engine(new PowerFxConfig());
+
+                var check = engine.Check(expr);
+
+                Assert.Equal(check.ReturnType, actualFxType);
             }
         }
 

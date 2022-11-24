@@ -111,7 +111,7 @@ namespace Microsoft.PowerFx.Core.IR
                 var children = node.Children.Select(child => child.Accept(this, context)).ToArray();
                 var irContext = context.GetIRContext(node);
 
-                if (!context.Binding.Features.HasTableSyntaxDoesntWrapRecords() || (children.Any() && children.First() is not RecordNode))
+                if (!context.Binding.CheckTypesContext.Features.HasTableSyntaxDoesntWrapRecords() || (children.Any() && children.First() is not RecordNode))
                 {
                     // Let's add "Value:" here                    
                     children = children.Select(childNode =>
@@ -188,8 +188,8 @@ namespace Microsoft.PowerFx.Core.IR
                     case BinaryOpKind.AddDayAndDate:
                         binaryOpResult = new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.AddDateAndDay, right, left);
                         break;
-                    case BinaryOpKind.AddMillisecondsAndTime:
-                        binaryOpResult = new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.AddTimeAndMilliseconds, right, left);
+                    case BinaryOpKind.AddNumberAndTime:
+                        binaryOpResult = new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.AddTimeAndNumber, right, left);
                         break;
                     case BinaryOpKind.AddDayAndDateTime:
                         binaryOpResult = new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.AddDateTimeAndDay, right, left);
@@ -224,6 +224,49 @@ namespace Microsoft.PowerFx.Core.IR
                         }
 
                         binaryOpResult = new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.DateDifference, left, unaryNegate.Child);
+                        break;
+
+                    case BinaryOpKind.TimeDifference:
+                        // Validated in Matrix + Binder
+                        if (right is not UnaryOpNode { Op: UnaryOpKind.Negate } unaryNegate2)
+                        {
+                            throw new NotSupportedException();
+                        }
+
+                        binaryOpResult = new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.TimeDifference, left, unaryNegate2.Child);
+                        break;
+
+                    case BinaryOpKind.AddDateAndTime:
+                        if (right is not UnaryOpNode { Op: UnaryOpKind.Negate } unaryNegate3)
+                        {
+                            binaryOpResult = new BinaryOpNode(context.GetIRContext(node), kind, left, right);
+                        }
+                        else
+                        {
+                            binaryOpResult = new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.SubtractDateAndTime, left, unaryNegate3.Child);
+                        }
+
+                        break;
+
+                    case BinaryOpKind.SubtractNumberAndDate:
+                    case BinaryOpKind.SubtractNumberAndDateTime:
+                        // Validated in Matrix + Binder
+                        if (right is not UnaryOpNode { Op: UnaryOpKind.Negate } unaryNegate4)
+                        {
+                            throw new NotSupportedException();
+                        }
+
+                        binaryOpResult = new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.SubtractNumberAndDate, left, unaryNegate4.Child);
+                        break;
+
+                    case BinaryOpKind.SubtractNumberAndTime:
+                        // Validated in Matrix + Binder
+                        if (right is not UnaryOpNode { Op: UnaryOpKind.Negate } unaryNegate5)
+                        {
+                            throw new NotSupportedException();
+                        }
+
+                        binaryOpResult = new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.SubtractNumberAndTime, left, unaryNegate5.Child);
                         break;
 
                     // All others used directly
@@ -567,7 +610,7 @@ namespace Microsoft.PowerFx.Core.IR
                 }
             }
 
-            private AggregateCoercionNode GetAggregateCoercionNode(UnaryOpKind unaryOpKind, IntermediateNode child, IRTranslatorContext context, DType fromType, DType toType)
+            private IntermediateNode GetAggregateCoercionNode(UnaryOpKind unaryOpKind, IntermediateNode child, IRTranslatorContext context, DType fromType, DType toType)
             {
                 var fieldCoercions = new Dictionary<DName, IntermediateNode>();
                 var scope = GetNewScope();
@@ -585,14 +628,14 @@ namespace Microsoft.PowerFx.Core.IR
                             continue;
                         }
 
-                        fieldCoercions.Add(
-                            fromField.Name,
-                            InjectCoercion(
-                                new ScopeAccessNode(IRContext.NotInSource(FormulaType.Build(fromField.Type)), new ScopeAccessSymbol(scope, scope.AddOrGetIndexForField(fromField.Name))),
-                                context,
-                                fromField.Type,
-                                toFieldType));
+                        var innerCoersion = InjectCoercion(new ScopeAccessNode(IRContext.NotInSource(FormulaType.Build(fromField.Type)), new ScopeAccessSymbol(scope, scope.AddOrGetIndexForField(fromField.Name))), context, fromField.Type, toFieldType);
+                        fieldCoercions.Add(fromField.Name, innerCoersion);
                     }
+                }
+
+                if (!fieldCoercions.Any())
+                {
+                    return child;
                 }
 
                 return new AggregateCoercionNode(IRContext.NotInSource(FormulaType.Build(toType)), unaryOpKind, scope, child, fieldCoercions);

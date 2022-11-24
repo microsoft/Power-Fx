@@ -23,9 +23,17 @@ namespace Microsoft.PowerFx
         ConsistentOneColumnTableResult = 0x2,
 
         /// <summary>
+        /// Disables support for row-scope disambiguation syntax.
+        /// Now,for example user would need to use Filter(A, ThisRecord.Value = 2) or Filter(A As Foo, Foo.Value = 2)
+        /// instead of
+        /// Filter(A, A[@Value] = 2)
+        /// </summary>
+        DisableRowScopeDisambiguationSyntax = 0x4,
+
+        /// <summary>
         /// Enable Identifier support for describing column names
         /// Added on 20ieth July 2022.
         /// </summary>
-        SupportIdentifiers = 0x4,
+        SupportIdentifiers = 0x8,
     }
 }

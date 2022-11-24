@@ -263,7 +263,8 @@ namespace Microsoft.PowerFx.Intellisense
             Contracts.AssertValid(type);
             Contracts.AssertValue(data);
 
-            foreach (var field in type.GetNames(DPath.Root))
+            foreach (var field in type.GetRootFieldNames()
+                .Select(field => (Type: type.GetType(field), Name: field)))
             {
                 var usedName = field.Name;
                 if (DType.TryGetDisplayNameForColumn(type, usedName, out var maybeDisplayName))
@@ -417,7 +418,8 @@ namespace Microsoft.PowerFx.Intellisense
         {
             Contracts.AssertValid(scopeType);
 
-            foreach (var name in scopeType.GetNames(DPath.Root))
+            foreach (var name in scopeType.GetRootFieldNames()
+                .Select(field => (Type: scopeType.GetType(field), Name: field)))
             {
                 yield return new KeyValuePair<string, DType>("\"" + CharacterUtils.ExcelEscapeString(name.Name.Value) + "\"", name.Type);
             }
@@ -435,7 +437,8 @@ namespace Microsoft.PowerFx.Intellisense
             }
 
             var suggestions = new List<KeyValuePair<string, DType>>();
-            foreach (var tName in typeToSuggestFrom.GetNames(DPath.Root))
+            foreach (var tName in typeToSuggestFrom.GetRootFieldNames()
+                .Select(field => (Type: typeToSuggestFrom.GetType(field), Name: field)))
             {
                 if (suggestionType.Accepts(tName.Type))
                 {
@@ -715,11 +718,21 @@ namespace Microsoft.PowerFx.Intellisense
                 AddSuggestion(intellisenseData, funcNamespace.Name, SuggestionKind.Global, SuggestionIconKind.Other, DType.Unknown, requiresSuggestionEscaping: true);
             }
 
-            if (intellisenseData.Binding.NameResolver is IGlobalSymbolNameResolver nr2 && nr2.GlobalSymbols != null)
+            if (intellisenseData.Binding.NameResolver is IGlobalSymbolNameResolver nr2)
             {
-                foreach (var symbol in nr2.GlobalSymbols.Where(symbol => IsMatch(symbol.Key, intellisenseData.MatchingStr)))
+                var globalSymbols = nr2.GlobalSymbols;
+                if (globalSymbols != null)
                 {
-                    CheckAndAddSuggestion(new IntellisenseSuggestion(new UIString(symbol.Key), SuggestionKind.Global, SuggestionIconKind.Other, symbol.Value.Type, -1, symbol.Value.DisplayName, null, null), intellisenseData.Suggestions);
+                    foreach (var symbol in globalSymbols)
+                    {
+                        var suggestableName = symbol.Key;
+                        if (symbol.Value.DisplayName.IsValid)
+                        {
+                            suggestableName = symbol.Value.DisplayName.Value;
+                        }
+
+                        AddSuggestion(intellisenseData, suggestableName, SuggestionKind.Global, SuggestionIconKind.Other, symbol.Value.Type, true);
+                    }
                 }
             }
         }

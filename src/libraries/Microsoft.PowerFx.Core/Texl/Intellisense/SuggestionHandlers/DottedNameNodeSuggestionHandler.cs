@@ -199,8 +199,6 @@ namespace Microsoft.PowerFx.Intellisense
                     IntellisenseHelper.AddTopLevelSuggestions(intellisenseData, type);
                     return;
                 }
-
-                IntellisenseHelper.AddSuggestionsForNamesInType(type, intellisenseData, createTableSuggestion: true);
             }
         }
     }

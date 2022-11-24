@@ -93,24 +93,24 @@
 
 //Erroneous sort formula
 >> Sort([-2, -1, 0, 1, 2], 1 / Value)
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Sort([-2, -1, 5, 1, 2], 1/0, SortOrder.Descending)
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 //Error passed as one of the table records
 >> Sort([-2, -1, 5, 1/0, 2], Value)
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> Sort(["a", "b", "D", "x", "J", Error({Kind: 11})], Value)
-#Error(Kind=Validation)
+Error({Kind:ErrorKind.Validation})
 
 >> Sort([1/0], Blank())
-Table({Value:#Error(Kind=13)})
+Table({Value:Error({Kind:ErrorKind.Div0})})
 
 // Sort error with bool value as sort formula
 >> Sort([1/0],true)
-Table({Value:#Error(Kind=13)})
+Table({Value:Error({Kind:ErrorKind.Div0})})
 
 >> Sort([Blank()],true)
 [Blank()]
@@ -419,7 +419,7 @@ Table({Age:2,First:"Bob",Gender:"Male",HasDog:true,Last:Blank(),Vaccinated:true}
   { First: "Maria", Last: "Martinez", Age: 20, Gender: "Female", Vaccinated: true, HasDog: false },
   { First: "Ivor", Last: Blank(), Age: Blank(), Gender: "Female", Vaccinated: Blank(), HasDog: Blank() },
   { First: "Jaideep", Last: "Lopez", Age: 29, Gender: "Male", Vaccinated: true, HasDog: false }), 1/0)
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 
 // SORT FORMULA - IF VACCINATED=TRUE, PASS ERROR AS THE SORT PARAMETER
@@ -443,7 +443,7 @@ Table({Age:2,First:"Bob",Gender:"Male",HasDog:true,Last:Blank(),Vaccinated:true}
   { First: "Maria", Last: "Martinez", Age: 20, Gender: "Female", Vaccinated: true, HasDog: false },
   { First: "Ivor", Last: Blank(), Age: Blank(), Gender: "Female", Vaccinated: Blank(), HasDog: Blank() },
   { First: "Jaideep", Last: "Lopez", Age: 29, Gender: "Male", Vaccinated: true, HasDog: false }), If(Vaccinated=true,1/0))
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 
 // SORT A TABLE WITH ERROR ROWS - ASCENDING ORDER
@@ -456,7 +456,7 @@ Table({Age:2,First:"Bob",Gender:"Male",HasDog:true,Last:Blank(),Vaccinated:true}
   If(Left("Hello", -1) = "", { First: "Bob", Last: "Smith", Age: 2, Gender: "Male", Vaccinated: true, HasDog: true }),
   { First: "John", Last: "Batali", Age: 17, Gender: "Male", Vaccinated: false, HasDog: false }
   ),If(IsBlankOrError(ThisRecord), Blank(), First))
-Table({First:"Alice",Last:"Smith",Age:5,Gender:"Female",Vaccinated:true,HasDog:true},{First:"Bob",Last:"Smith",Age:2,Gender:"Male",Vaccinated:true,HasDog:true},{First:"Dora",Last:"TheExplorer",Age:4,Gender:"Female",Vaccinated:false,HasDog:true},{First:"John",Last:"Batali",Age:17,Gender:"Male",Vaccinated:false,HasDog:false},#Error(Kind=25))
+Table({First:"Alice",Last:"Smith",Age:5,Gender:"Female",Vaccinated:true,HasDog:true},{First:"Bob",Last:"Smith",Age:2,Gender:"Male",Vaccinated:true,HasDog:true},{First:"Dora",Last:"TheExplorer",Age:4,Gender:"Female",Vaccinated:false,HasDog:true},{First:"John",Last:"Batali",Age:17,Gender:"Male",Vaccinated:false,HasDog:false},Error({Kind:ErrorKind.InvalidArgument}))
 
 
 // SORT A TABLE WITH BLANK ROWS - ASCENDING ORDER
@@ -492,7 +492,7 @@ Table({Age:5,First:"Alice",Gender:"Female",HasDog:true,Last:"Smith",Vaccinated:t
   { First: "Helio", Last: Left("Hello", -1), Age: 263, Gender: "Unknown", Vaccinated: Blank(), HasDog: Blank() },
   { First: "Mary", Last: "Harris", Age: 48, Gender: "Female", Vaccinated: false, HasDog: false },
   { First: "Titan", Last: Left("Hello", -1), Age: 792, Gender: "Unknown", Vaccinated: Blank(), HasDog: Blank() }),Last)
-#Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 // SORT ON TABLE WITH WITH ERROR VALUES FOR SOME COLUMNS, BUT DOESN'T TOUCH ERROR - ASCENDING ORDER
 
@@ -504,7 +504,7 @@ Table({Age:5,First:"Alice",Gender:"Female",HasDog:true,Last:"Smith",Vaccinated:t
       { First: "Helio", Last: Left("Hello", -1), Age: 263, Gender: "Unknown", Vaccinated: Blank(), HasDog: Blank() },
       { First: "Mary", Last: "Harris", Age: 48, Gender: "Female", Vaccinated: false, HasDog: false },
       { First: "Titan", Last: Left("Hello", -1), Age: 792, Gender: "Unknown", Vaccinated: Blank(), HasDog: Blank() }),First)
-Table({First:"Alice",Last:"Smith",Age:5,Gender:"Female",Vaccinated:true,HasDog:true},{First:"Bob",Last:"Smith",Age:2,Gender:"Male",Vaccinated:true,HasDog:true},{First:"Emily",Last:"Jones",Age:29,Gender:"Female",Vaccinated:true,HasDog:false},{First:"Helio",Last:#Error(Kind=25),Age:263,Gender:"Unknown",Vaccinated:Blank(),HasDog:false},{First:"John",Last:"Batali",Age:17,Gender:"Male",Vaccinated:false,HasDog:false},{First:"Mary",Last:"Harris",Age:48,Gender:"Female",Vaccinated:false,HasDog:false},{First:"Titan",Last:#Error(Kind=25),Age:792,Gender:"Unknown",Vaccinated:Blank(),HasDog:false})
+Table({First:"Alice",Last:"Smith",Age:5,Gender:"Female",Vaccinated:true,HasDog:true},{First:"Bob",Last:"Smith",Age:2,Gender:"Male",Vaccinated:true,HasDog:true},{First:"Emily",Last:"Jones",Age:29,Gender:"Female",Vaccinated:true,HasDog:false},{First:"Helio",Last:Error({Kind:ErrorKind.InvalidArgument}),Age:263,Gender:"Unknown",Vaccinated:Blank(),HasDog:false},{First:"John",Last:"Batali",Age:17,Gender:"Male",Vaccinated:false,HasDog:false},{First:"Mary",Last:"Harris",Age:48,Gender:"Female",Vaccinated:false,HasDog:false},{First:"Titan",Last:Error({Kind:ErrorKind.InvalidArgument}),Age:792,Gender:"Unknown",Vaccinated:Blank(),HasDog:false})
 
 
 // SORT ON TABLE WITH ERROR VALUES FOR SOME COLUMNS, BUT THE ERROR IS HANDLED - ASCENDING ORDER
@@ -517,7 +517,7 @@ Table({First:"Alice",Last:"Smith",Age:5,Gender:"Female",Vaccinated:true,HasDog:t
       { First: "Helio", Last: Left("Hello", -1), Age: 263, Gender: "Unknown", Vaccinated: Blank(), HasDog: Blank() },
       { First: "Mary", Last: "Harris", Age: 48, Gender: "Female", Vaccinated: false, HasDog: false },
       { First: "Titan", Last: Left("Hello", -1), Age: 792, Gender: "Unknown", Vaccinated: Blank(), HasDog: Blank() }),If(IsBlankOrError(Last),"",Last))
-Table({First:"Helio",Last:#Error(Kind=25),Age:263,Gender:"Unknown",Vaccinated:Blank(),HasDog:false},{First:"Titan",Last:#Error(Kind=25),Age:792,Gender:"Unknown",Vaccinated:Blank(),HasDog:false},{First:"John",Last:"Batali",Age:17,Gender:"Male",Vaccinated:false,HasDog:false},{First:"Mary",Last:"Harris",Age:48,Gender:"Female",Vaccinated:false,HasDog:false},{First:"Emily",Last:"Jones",Age:29,Gender:"Female",Vaccinated:true,HasDog:false},{First:"Bob",Last:"Smith",Age:2,Gender:"Male",Vaccinated:true,HasDog:true},{First:"Alice",Last:"Smith",Age:5,Gender:"Female",Vaccinated:true,HasDog:true})
+Table({First:"Helio",Last:Error({Kind:ErrorKind.InvalidArgument}),Age:263,Gender:"Unknown",Vaccinated:Blank(),HasDog:false},{First:"Titan",Last:Error({Kind:ErrorKind.InvalidArgument}),Age:792,Gender:"Unknown",Vaccinated:Blank(),HasDog:false},{First:"John",Last:"Batali",Age:17,Gender:"Male",Vaccinated:false,HasDog:false},{First:"Mary",Last:"Harris",Age:48,Gender:"Female",Vaccinated:false,HasDog:false},{First:"Emily",Last:"Jones",Age:29,Gender:"Female",Vaccinated:true,HasDog:false},{First:"Bob",Last:"Smith",Age:2,Gender:"Male",Vaccinated:true,HasDog:true},{First:"Alice",Last:"Smith",Age:5,Gender:"Female",Vaccinated:true,HasDog:true})
 
 // SORT HIERARCHICAL DATA ON BOOL EXPRESSION - ASCENDING ORDER 
 

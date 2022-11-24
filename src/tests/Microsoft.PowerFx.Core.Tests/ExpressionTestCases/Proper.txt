@@ -5,7 +5,7 @@
 ""
 
 >> Proper(Text(1/0, "000"))
-#Error
+Error({Kind:ErrorKind.Div0})
 
 >> Proper("Important!")
 "Important!"

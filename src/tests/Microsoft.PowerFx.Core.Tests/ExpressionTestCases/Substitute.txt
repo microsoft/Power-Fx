@@ -119,9 +119,9 @@
 >> Substitute("HelloHelloHello", Blank(), "Je", 2)
 "HelloHelloHello"
 
-//Excel doesn't support Blank() in the forth argument and throws error
+// Blank() is coerced to 0, which is invalid
 >> Substitute("HelloHelloHello", "He", "Je", Blank())
-"JelloJelloJello"
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Substitute("HelloHelloHello", "He", "")
 "llollollo"
@@ -140,39 +140,39 @@
 
 //Invalid operation: Division by zero error
 >> Substitute("HelloHelloHello", "He", "Je", 1/0)
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 //Invalid operation: Division by zero error
 >> Substitute("HelloHelloHello", 1/0, "Je", 1)
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 //Invalid operation: Division by zero error
 >> Substitute("HelloHelloHello", "He", 1/0, 1)
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 //Error message: The forth argument to the 'Substitute' function should be greater than or equal to 1
 >> Substitute("HelloHelloHello", "He", "Je", 0)
-#Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 //Error message: The forth argument to the 'Substitute' function should be greater than or equal to 1
 >> Substitute("HelloHelloHello", "He", "Je", -2)
-#Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 //Error message: The forth argument to the 'Substitute' function should be greater than or equal to 1 (Here "false" is treated as 0)
 >> Substitute(true,"r","a",false)
-#Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 //Error message: The forth argument to the 'Substitute' function should be greater than or equal to 1 (Here "false" is treated as 0)
 >> Substitute("HelloWorld","Hello",true,false)
-#Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 //Error message: Invalid argument to the 'Value' function
 >> Substitute("HelloHelloHello", "He", "Je", "abc")
-#Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 //Error message: Invalid argument to the 'Value' function
 >> Substitute("true","r","a","true")
-#Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 
 // ******** FUNCTION VALUE AS PARAMETERS ********

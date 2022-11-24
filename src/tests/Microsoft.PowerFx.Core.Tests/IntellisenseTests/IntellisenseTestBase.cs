@@ -44,6 +44,14 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
 
         internal IIntellisenseResult Suggest(string expression, PowerFxConfig config, RecordType parameterType)
         {
+            (var expression2, var cursorPosition) = Decode(expression);
+            return Suggest(expression2, parameterType, cursorPosition, config);
+        }
+
+        // Tests use | to indicate cursor position within an expression string. 
+        // Return the cursos position and string (without the |). 
+        internal (string, int) Decode(string expression)
+        {
             Assert.NotNull(expression);
 
             var cursorMatches = Regex.Matches(expression, @"\|");
@@ -52,12 +60,15 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
 
             expression = expression.Replace("|", string.Empty);
 
-            return Suggest(expression, parameterType, cursorPosition, config);
+            return (expression, cursorPosition);
         }
 
         internal IIntellisenseResult Suggest(string expression, RecordType parameterType, int cursorPosition, PowerFxConfig config)
         {
-            var engine = new Engine(config);
+            var engine = new Engine(config)
+            {
+                SupportedFunctions = new SymbolTable()
+            };
 
             var suggestions = engine.Suggest(expression, parameterType, cursorPosition);
 

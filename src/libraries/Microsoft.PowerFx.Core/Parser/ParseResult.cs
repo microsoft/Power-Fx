@@ -2,9 +2,11 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using Microsoft.PowerFx.Core.Errors;
+using Microsoft.PowerFx.Core.Logging;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Syntax.SourceInformation;
@@ -26,7 +28,7 @@ namespace Microsoft.PowerFx
         /// <summary>
         /// List of errors or warnings. Check <see cref="ExpressionError.IsWarning"/>.
         /// </summary>
-        public IEnumerable<ExpressionError> Errors => ExpressionError.New(_errors);
+        public IEnumerable<ExpressionError> Errors => ExpressionError.New(_errors, ErrorMessageLocale);
 
         /// <summary>
         /// True if there were parse errors. 
@@ -44,7 +46,22 @@ namespace Microsoft.PowerFx
 
         internal SourceList After { get; }
 
-        internal ParseResult(TexlNode root, List<TexlError> errors, bool hasError, List<CommentToken> comments, SourceList before, SourceList after)
+        /// <summary>
+        /// Locale that error messages (if any) will be translated to.
+        /// </summary>
+        internal CultureInfo ErrorMessageLocale { get; }
+
+        // Original script. 
+        // All the spans in the tokens are relative to this. 
+        public string Text { get; }
+
+        internal ParseResult(TexlNode root, List<TexlError> errors, bool hasError, List<CommentToken> comments, SourceList before, SourceList after, string text, CultureInfo errorMessageLocale)
+            : this(root, errors, hasError, comments, before, after, text)
+        {
+            ErrorMessageLocale = errorMessageLocale;
+        }
+
+        internal ParseResult(TexlNode root, List<TexlError> errors, bool hasError, List<CommentToken> comments, SourceList before, SourceList after, string text)
         {
             Contracts.AssertValue(root);
             Contracts.AssertValue(comments);
@@ -58,6 +75,8 @@ namespace Microsoft.PowerFx
             Comments = comments;
             Before = before;
             After = after;
+
+            Text = text;
         }
 
         internal string ParseErrorText => !HasError ? string.Empty : string.Join("\r\n", _errors.Select((err, i) =>
@@ -66,5 +85,13 @@ namespace Microsoft.PowerFx
             err.FormatCore(sb);            
             return $"Err#{++i} {sb}";
         }));
+
+        /// <summary>
+        /// Converts the current formula into an anonymized format suitable for logging.
+        /// </summary>
+        public string GetAnonymizedFormula()
+        {
+            return StructuralPrint.Print(Root);
+        }
     }
 }

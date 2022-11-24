@@ -19,14 +19,19 @@ namespace Microsoft.PowerFx
         /// If true, allow parsing a chaining operator. This is only used for side-effecting operations.
         /// </summary>
         public bool AllowsSideEffects { get; set; }
-                
-        internal CultureInfo Culture { get; set; }
+
+        public CultureInfo Culture { get; set; }
 
         internal ParseResult Parse(string script)
         {
+            return Parse(script, Features.None);
+        }
+
+        internal ParseResult Parse(string script, Features features)
+        {
             var flags = AllowsSideEffects ? TexlParser.Flags.EnableExpressionChaining : TexlParser.Flags.None;
 
-            return TexlParser.ParseScript(script, Culture, flags);
+            return TexlParser.ParseScript(script, features, Culture, flags);
         }
     }
 }

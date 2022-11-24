@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -498,37 +498,37 @@
     <value>Текстове значення для перетворення на логічне значення.</value>
   </data>
   <data name="AboutBooleanT" xml:space="preserve">
-    <value>Converts a column of text values to a column of boolean values.</value>
+    <value>Перетворює стовпець текстових значень на стовпець логічних значень.</value>
     
   </data>
   <data name="BooleanTArg1" xml:space="preserve">
-    <value>input</value>
+    <value>вхідні дані</value>
     
   </data>
   <data name="AboutBooleanT_input" xml:space="preserve">
-    <value>A column of text values to process.</value>
+    <value>Стовпець текстових значень, які потрібно обробити.</value>
   </data>
   <data name="AboutBooleanN" xml:space="preserve">
-    <value>Converts a 'number' to a boolean value.</value>
+    <value>Перетворює "число" на логічне значення.</value>
     
   </data>
   <data name="BooleanNArg1" xml:space="preserve">
-    <value>number</value>
+    <value>число</value>
     
   </data>
   <data name="AboutBooleanN_number" xml:space="preserve">
-    <value>The number value to convert to a boolean value.</value>
+    <value>Числове значення, яке потрібно перетворити на логічне значення.</value>
   </data>
   <data name="AboutBooleanNT" xml:space="preserve">
-    <value>Converts a column of numeric values to a column of boolean values.</value>
+    <value>Перетворює стовпець числових значень на стовпець логічних значень.</value>
     
   </data>
   <data name="BooleanNTArg1" xml:space="preserve">
-    <value>input</value>
+    <value>вхідні дані</value>
     
   </data>
   <data name="AboutBooleanNT_input" xml:space="preserve">
-    <value>A column of number values to process.</value>
+    <value>Стовпець числових значень, який потрібно обробити.</value>
   </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Повертає перший непустий аргумент.</value>
@@ -3268,6 +3268,38 @@
     <value>Контрастна тема</value>
     
   </data>
+  <data name="AboutPatch" xml:space="preserve">
+    <value>Застосовує оновлення до вказаного рядка й змінює його в зазначеному джерелі даних. Повертає оновлений рядок.</value>
+    
+  </data>
+  <data name="PatchDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="PatchBaseRecordArg" xml:space="preserve">
+    <value>base_record</value>
+    
+  </data>
+  <data name="PatchChangeRecordsArg" xml:space="preserve">
+    <value>change_record(s)</value>
+    
+  </data>
+  <data name="AboutRemove" xml:space="preserve">
+    <value>Видаляє певний запис або записи із джерела даних</value>
+    
+  </data>
+  <data name="RemoveDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="RemoveRecordsArg" xml:space="preserve">
+    <value>remove_record(s)</value>
+    
+  </data>
+  <data name="ErrRemoveAllArg" xml:space="preserve">
+    <value>Якщо цей параметр вказано, значення останнього аргументу має бути "RemoveFlags.All". Можливо, наявна орфографічна помилка?</value>
+    
+  </data>
   <data name="PenMode_Draw_DisplayName" xml:space="preserve">
     <value>Малювати</value>
     
@@ -3924,12 +3956,20 @@
     <value>Не підтримується в стовпцях формул.</value>
     
   </data>
+  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
+    <value>Неприпустима кількість аргументів для функції {0}: отримано {1}, очікувалось {2}</value>
+    
+  </data>
   <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
     <value>Аргумент {0} не підтримується для функції {1} у стовпцях формул.</value>
     
   </data>
   <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
     <value>Цей аргумент не можна передати як цей тип у стовпцях формул.</value>
+    
+  </data>
+  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
+    <value>Цей аргумент не можна передати як тип {0} у стовпцях формул.</value>
     
   </data>
   <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
@@ -3948,6 +3988,10 @@
     <value>У стовпцях формул підтримуються лише рядки короткого формату дати й часу.</value>
     
   </data>
+  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
+    <value>Аргумент {0} є неприпустимою або непідтримуваною одиницею часу для функції арифметичної дати {1}.</value>
+    
+  </data>
   <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
     <value>Спеціальні маркери форматування для певної локалізації, наприклад "." та "," не підтримуються у стовпцях формул.</value>
     
@@ -3956,8 +4000,16 @@
     <value>{0} не підтримується у стовпцях формул. Натомість використовуйте {1}.</value>
     
   </data>
+  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
+    <value>Цю операцію не можна виконати як тип {0} у стовпцях формул.</value>
+    
+  </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
     <value>Тип результату {0} не підтримується у стовпцях формул.</value>
+    
+  </data>
+  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
+    <value>Пряме посилання на весь запис не підтримується в стовпцях формул. Створіть посилання на припустиме поле в записі.</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
@@ -3972,8 +4024,20 @@
     <value>Стовпці типу {0} з форматом {1} не підтримуються у стовпцях формул.</value>
     
   </data>
+  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
+    <value>Утримання записів або таблиць не підтримується у стовпцях формул.</value>
+    
+  </data>
   <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
     <value>Довжина формули не може перевищувати 1000 символів.</value>
+    
+  </data>
+  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
+    <value>Таблиці з одним стовпцем не підтримуються в стовпцях формул.</value>
+    
+  </data>
+  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
+    <value>Не можна посилатися на віртуальну таблицю {0} в стовпцях формул.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
@@ -4601,7 +4665,66 @@
     <value>значення</value>
     
   </data>
-  <data name="ErrExpectedIdentifierArg_Name" xmlns:space="preserve">
-    <value>Аргумент "{0}" недійсний, очікуваний ідентифікатор.</value>
+  <data name="AboutDec2Hex" xml:space="preserve">
+    <value>Перетворює десяткове число на шістнадцяткове</value>
+    
+  </data>
+  <data name="Dec2HexArg1" xml:space="preserve">
+    <value>число</value>
+  </data>
+  <data name="AboutDec2Hex_number" xml:space="preserve">
+    <value>Числове десяткове значення для перетворення на шістнадцятковий рядок.</value>
+    
+  </data>
+  <data name="Dec2HexArg2" xml:space="preserve">
+    <value>місця</value>
+  </data>
+  <data name="AboutDec2Hex_places" xml:space="preserve">
+    <value>Числове значення для додавання заповнення до шістнадцяткового рядка.</value>
+    
+  </data>
+  <data name="AboutDec2HexT" xml:space="preserve">
+    <value>Перетворює стовпець десяткових чисел на шістнадцяткові числа</value>
+    
+  </data>
+  <data name="Dec2HexTArg1" xml:space="preserve">
+    <value>таблиця</value>
+  </data>
+  <data name="Dec2HexTArg2" xml:space="preserve">
+    <value>місця</value>
+  </data>
+  <data name="AboutDec2HexT_places" xml:space="preserve">
+    <value>Числове значення або масив значень для додавання заповнення до шістнадцяткових рядків.</value>
+    
+  </data>
+  <data name="AboutDec2Hex_table" xml:space="preserve">
+    <value>Стовпець числових десяткових значень для перетворення на шістнадцяткові числа.</value>
+    
+  </data>
+  <data name="AboutHex2Dec" xml:space="preserve">
+    <value>Перетворює шістнадцяткове число на десяткове</value>
+    
+  </data>
+  <data name="Hex2DecArg1" xml:space="preserve">
+    <value>число</value>
+  </data>
+  <data name="AboutHex2Dec_number" xml:space="preserve">
+    <value>Перетворення шістнадцяткового рядка на десятковий.</value>
+    
+  </data>
+  <data name="AboutHex2DecT" xml:space="preserve">
+    <value>Перетворює стовпець шістнадцяткових чисел на десяткові числа</value>
+    
+  </data>
+  <data name="Hex2DecTArg1" xml:space="preserve">
+    <value>таблиця</value>
+  </data>
+  <data name="AboutHex2Dec_table" xml:space="preserve">
+    <value>Стовпець шістнадцяткових рядків для перетворення на десяткові числа.</value>
+    
+  </data>
+  <data name="ErrDeprecated" xml:space="preserve">
+    <value>Цю функцію вилучено. Вона більше не підтримується.</value>
+    
   </data>
 </root>

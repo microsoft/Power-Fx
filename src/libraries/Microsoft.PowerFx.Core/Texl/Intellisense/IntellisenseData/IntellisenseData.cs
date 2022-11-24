@@ -16,7 +16,11 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
     // The IntellisenseData class contains the pre-parsed data for Intellisense to provide suggestions
     internal class IntellisenseData : IIntellisenseData
     {
+        // $$$ This should probably be symbol and not just config. 
         protected readonly PowerFxConfig _powerFxConfig;
+
+        internal Features Features => _powerFxConfig.Features;
+
         private readonly IEnumStore _enumStore;
 
         public IntellisenseData(PowerFxConfig powerFxConfig, IEnumStore enumStore, IIntellisenseContext context, DType expectedType, TexlBinding binding, TexlFunction curFunc, TexlNode curNode, int argIndex, int argCount, IsValidSuggestion isValidSuggestionFunc, IList<DType> missingTypes, List<CommentToken> comments)

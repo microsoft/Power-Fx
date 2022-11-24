@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -498,37 +498,37 @@
     <value>Vrednost besedila, ki jo želite pretvoriti v logično vrednost.</value>
   </data>
   <data name="AboutBooleanT" xml:space="preserve">
-    <value>Converts a column of text values to a column of boolean values.</value>
+    <value>Pretvori stolpec besedilnih vrednosti v stolpec logičnih vrednosti.</value>
     
   </data>
   <data name="BooleanTArg1" xml:space="preserve">
-    <value>input</value>
+    <value>vnos</value>
     
   </data>
   <data name="AboutBooleanT_input" xml:space="preserve">
-    <value>A column of text values to process.</value>
+    <value>Stolpec besedilnih vrednosti za obdelavo</value>
   </data>
   <data name="AboutBooleanN" xml:space="preserve">
-    <value>Converts a 'number' to a boolean value.</value>
+    <value>Pretvori »število« v logično vrednost.</value>
     
   </data>
   <data name="BooleanNArg1" xml:space="preserve">
-    <value>number</value>
+    <value>število</value>
     
   </data>
   <data name="AboutBooleanN_number" xml:space="preserve">
-    <value>The number value to convert to a boolean value.</value>
+    <value>Številska vrednost za pretvorbo v logično vrednost</value>
   </data>
   <data name="AboutBooleanNT" xml:space="preserve">
-    <value>Converts a column of numeric values to a column of boolean values.</value>
+    <value>Pretvori stolpec številskih vrednosti v stolpec logičnih vrednosti.</value>
     
   </data>
   <data name="BooleanNTArg1" xml:space="preserve">
-    <value>input</value>
+    <value>vnos</value>
     
   </data>
   <data name="AboutBooleanNT_input" xml:space="preserve">
-    <value>A column of number values to process.</value>
+    <value>Stolpec številskih vrednosti za obdelavo</value>
   </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Vrne prvi neprazen argument</value>
@@ -3268,6 +3268,38 @@
     <value>Kontrastna tema</value>
     
   </data>
+  <data name="AboutPatch" xml:space="preserve">
+    <value>Uporabi posodobitve v določeni vrstici in spremeni vrstico v določenem viru podatkov. Vrne posodobljeno vrstico.</value>
+    
+  </data>
+  <data name="PatchDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="PatchBaseRecordArg" xml:space="preserve">
+    <value>base_record</value>
+    
+  </data>
+  <data name="PatchChangeRecordsArg" xml:space="preserve">
+    <value>change_record(s)</value>
+    
+  </data>
+  <data name="AboutRemove" xml:space="preserve">
+    <value>Odstrani določen zapis ali zapise iz vira podatkov</value>
+    
+  </data>
+  <data name="RemoveDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="RemoveRecordsArg" xml:space="preserve">
+    <value>remove_record(s)</value>
+    
+  </data>
+  <data name="ErrRemoveAllArg" xml:space="preserve">
+    <value>Če je navedeno, mora biti zadnji argument »RemoveFlags.All«. Ali ste našli tipkarsko napako?</value>
+    
+  </data>
   <data name="PenMode_Draw_DisplayName" xml:space="preserve">
     <value>Risanje</value>
     
@@ -3924,12 +3956,20 @@
     <value>Ni podprto v stolpcih s formulo.</value>
     
   </data>
+  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
+    <value>Neveljavno število argumentov za funkcijo {0} – prejeto: {1}, pričakovano: {2}</value>
+    
+  </data>
   <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
     <value>Argument {0} ni podprt za funkcijo {1} v stolpcih s formulo.</value>
     
   </data>
   <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>Tega argumenta ni mogoče prenesti kot to vrsto v stolpce s formulo.</value>
+    <value>Tega argumenta ni mogoče prenesti v stolpce s formulami kot to vrsto.</value>
+    
+  </data>
+  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
+    <value>Tega argumenta ni mogoče prenesti v stolpce s formulami kot vrsto {0}.</value>
     
   </data>
   <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
@@ -3948,6 +3988,10 @@
     <value>V stolpcih s formulo so podprti samo nizi s kratko obliko zapisa datuma in ure.</value>
     
   </data>
+  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
+    <value>Argument {0} je neveljaven/nepodprta časovna enota za aritmetično funkcijo datuma {1}.</value>
+    
+  </data>
   <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
     <value>Žetoni za oblikovanje za določeno območje, kot sta ».« in »,«, niso podprti v stolpcih s formulo.</value>
     
@@ -3956,8 +4000,16 @@
     <value>{0} ni podprto v stolpcih formule, namesto tega uporabite {1}.</value>
     
   </data>
+  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
+    <value>Tega postopka ni mogoče izvesti v stolpcih s formulami za vrsto {0}.</value>
+    
+  </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
     <value>Vrsta rezultata {0} ni podprta v stolpcih s formulo.</value>
+    
+  </data>
+  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
+    <value>Neposreden sklic na celoten zapis ni podprt v stolpcih formule. Uporabite sklic na veljavno polje v zapisu.</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
@@ -3972,8 +4024,20 @@
     <value>Stolpci vrste {0} z obliko zapisa {1} niso podprti v stolpcih s formulo.</value>
     
   </data>
+  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
+    <value>Vsiljevanje zapisov ali tabel ni podprto v stolpcih formule.</value>
+    
+  </data>
   <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
     <value>Formule ne smejo vsebovati več kot 1000 znakov.</value>
+    
+  </data>
+  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
+    <value>Tabele z enim stolpcem niso podprte v stolpcih formule.</value>
+    
+  </data>
+  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
+    <value>Na navidezno tabelo {0} v stolpcih s formulami se ni mogoče sklicevati.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
@@ -4601,7 +4665,66 @@
     <value>vrednost</value>
     
   </data>
-  <data name="ErrExpectedIdentifierArg_Name" xmlns:space="preserve">
-    <value>Argument "{0}" je neveljaven, pričakovani identifikator.</value>
+  <data name="AboutDec2Hex" xml:space="preserve">
+    <value>Converts a decimal number to hexadecimal</value>
+    
+  </data>
+  <data name="Dec2HexArg1" xml:space="preserve">
+    <value>number</value>
+  </data>
+  <data name="AboutDec2Hex_number" xml:space="preserve">
+    <value>A numeric decimal value to convert to hexadecimal string.</value>
+    
+  </data>
+  <data name="Dec2HexArg2" xml:space="preserve">
+    <value>places</value>
+  </data>
+  <data name="AboutDec2Hex_places" xml:space="preserve">
+    <value>A numeric value to add padding to hexadecimal string.</value>
+    
+  </data>
+  <data name="AboutDec2HexT" xml:space="preserve">
+    <value>Converts a column of decimal numbers to hexadecimals</value>
+    
+  </data>
+  <data name="Dec2HexTArg1" xml:space="preserve">
+    <value>table</value>
+  </data>
+  <data name="Dec2HexTArg2" xml:space="preserve">
+    <value>places</value>
+  </data>
+  <data name="AboutDec2HexT_places" xml:space="preserve">
+    <value>A numeric value or array of values to add padding to hexadecimal strings.</value>
+    
+  </data>
+  <data name="AboutDec2Hex_table" xml:space="preserve">
+    <value>A column of numeric decimal values to convert to hexadecimals.</value>
+    
+  </data>
+  <data name="AboutHex2Dec" xml:space="preserve">
+    <value>Converts a hexadecimal number to decimal</value>
+    
+  </data>
+  <data name="Hex2DecArg1" xml:space="preserve">
+    <value>number</value>
+  </data>
+  <data name="AboutHex2Dec_number" xml:space="preserve">
+    <value>A hexadecimal string convert to decimal.</value>
+    
+  </data>
+  <data name="AboutHex2DecT" xml:space="preserve">
+    <value>Converts a column of hexadecimal numbers to decimals</value>
+    
+  </data>
+  <data name="Hex2DecTArg1" xml:space="preserve">
+    <value>table</value>
+  </data>
+  <data name="AboutHex2Dec_table" xml:space="preserve">
+    <value>A column of hexadecimal strings to convert to decimals.</value>
+    
+  </data>
+  <data name="ErrDeprecated" xml:space="preserve">
+    <value>This feature is deprecated and is no longer supported.</value>
+    
   </data>
 </root>

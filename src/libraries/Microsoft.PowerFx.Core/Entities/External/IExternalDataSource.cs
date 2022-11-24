@@ -7,7 +7,7 @@ using Microsoft.PowerFx.Core.Types;
 
 namespace Microsoft.PowerFx.Core.Entities
 {
-    internal interface IExternalDataSource : IExternalEntity
+    internal interface IExternalDataSource : IExternalEntity, IExternalPageableSymbol
     {
         string Name { get; }
 
@@ -18,8 +18,6 @@ namespace Microsoft.PowerFx.Core.Entities
         bool RequiresAsync { get; }
 
         IExternalDataEntityMetadataProvider DataEntityMetadataProvider { get; }
-
-        bool IsPageable { get; }
 
         DataSourceKind Kind { get; }
 

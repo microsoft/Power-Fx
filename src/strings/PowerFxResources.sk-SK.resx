@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -3268,6 +3268,38 @@
     <value>Kontrastný motív</value>
     
   </data>
+  <data name="AboutPatch" xml:space="preserve">
+    <value>Použije aktualizácie na zadaný riadok a zmení riadok v zadanom zdroji údajov. Vráti aktualizovaný riadok.</value>
+    
+  </data>
+  <data name="PatchDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="PatchBaseRecordArg" xml:space="preserve">
+    <value>base_record</value>
+    
+  </data>
+  <data name="PatchChangeRecordsArg" xml:space="preserve">
+    <value>change_record(s)</value>
+    
+  </data>
+  <data name="AboutRemove" xml:space="preserve">
+    <value>Odstráni konkrétny záznam alebo záznamy zo zdroja údajov</value>
+    
+  </data>
+  <data name="RemoveDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="RemoveRecordsArg" xml:space="preserve">
+    <value>remove_record(s)</value>
+    
+  </data>
+  <data name="ErrRemoveAllArg" xml:space="preserve">
+    <value>Ak je zadaný, posledný argument musí byť RemoveFlags.All. Je tam preklep?</value>
+    
+  </data>
   <data name="PenMode_Draw_DisplayName" xml:space="preserve">
     <value>Kresliť</value>
     
@@ -3924,12 +3956,20 @@
     <value>Táto možnosť nie je v stĺpcoch vzorcov podporovaná.</value>
     
   </data>
+  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
+    <value>Neplatný počet argumentov pre {0} funkciu: prijatý počet: {1}, očakávaný počet: {2}</value>
+    
+  </data>
   <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
     <value>Argument {0} nie je podporovaný pre funkciu {1} v stĺpcoch vzorcov.</value>
     
   </data>
   <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>Tento argument nie je možné odovzdať ako tento typ v stĺpcoch vzorcov.</value>
+    <value>Tento typ argumentu nie je možné odovzdať do stĺpcov vzorcov.</value>
+    
+  </data>
+  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
+    <value>Typ {0} argumentu nie je možné odovzdať do stĺpcov vzorcov.</value>
     
   </data>
   <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
@@ -3948,6 +3988,10 @@
     <value>V stĺpcoch vzorcov sú podporované len reťazce s krátkym formátom dátumu a času.</value>
     
   </data>
+  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
+    <value>Argument {0} je neplatná/nepodporovaná jednotka času pre aritmetickú funkciu dátumu {1}.</value>
+    
+  </data>
   <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
     <value>Formátovacie tokeny špecifické pre miestne nastavenia, ako napríklad „.“ a „,“, nie sú v stĺpcoch vzorcov podporované.</value>
     
@@ -3956,8 +4000,16 @@
     <value>Funkcia {0} nie je podporovaná v stĺpcoch vzorcov, použite namiesto toho funkciu {1}.</value>
     
   </data>
+  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
+    <value>Túto operáciu nie je možné vykonať na type {0} v stĺpcoch vzorcov.</value>
+    
+  </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
     <value>Typ výsledku {0} nie je v stĺpcoch vzorcov podporovaný.</value>
+    
+  </data>
+  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
+    <value>Priame odkazovanie na celý záznam nie je v stĺpcoch vzorcov podporované. Vytvorte odkaz na platné pole v zázname.</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
@@ -3972,8 +4024,20 @@
     <value>Stĺpce typu {0} vo formáte {1} nie sú v stĺpcoch vzorcov podporované.</value>
     
   </data>
+  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
+    <value>Vynútenie záznamov alebo tabuliek nie je v stĺpcoch vzorcov podporované.</value>
+    
+  </data>
   <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
     <value>Vzorce nemôžu byť dlhšie ako 1 000 znakov.</value>
+    
+  </data>
+  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
+    <value>Tabuľky s jedným stĺpcom nie sú v stĺpcoch vzorcov podporované.</value>
+    
+  </data>
+  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
+    <value>V stĺpcoch vzorcov nemožno odkazovať na virtuálnu tabuľku {0}.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
@@ -4601,7 +4665,66 @@
     <value>hodnota</value>
     
   </data>
-  <data name="ErrExpectedIdentifierArg_Name" xmlns:space="preserve">
-    <value>Argument "{0}" je neplatný, očakávaný identifikátor.</value>
+  <data name="AboutDec2Hex" xml:space="preserve">
+    <value>Skonvertuje desiatkové číslo na šestnástkové</value>
+    
+  </data>
+  <data name="Dec2HexArg1" xml:space="preserve">
+    <value>číslo</value>
+  </data>
+  <data name="AboutDec2Hex_number" xml:space="preserve">
+    <value>Číselná desiatková hodnota, ktorá sa má skonvertovať na šestnástkový reťazec.</value>
+    
+  </data>
+  <data name="Dec2HexArg2" xml:space="preserve">
+    <value>miesta</value>
+  </data>
+  <data name="AboutDec2Hex_places" xml:space="preserve">
+    <value>Číselná hodnota na pridanie výplne do šestnástkového reťazca.</value>
+    
+  </data>
+  <data name="AboutDec2HexT" xml:space="preserve">
+    <value>Skonvertuje stĺpec desiatkových čísel na šestnástkové</value>
+    
+  </data>
+  <data name="Dec2HexTArg1" xml:space="preserve">
+    <value>tabuľka</value>
+  </data>
+  <data name="Dec2HexTArg2" xml:space="preserve">
+    <value>miesta</value>
+  </data>
+  <data name="AboutDec2HexT_places" xml:space="preserve">
+    <value>Číselná hodnota alebo pole hodnôt na pridanie výplne do šestnástkových reťazcov.</value>
+    
+  </data>
+  <data name="AboutDec2Hex_table" xml:space="preserve">
+    <value>Stĺpec číselných desiatkových hodnôt, ktoré sa majú skonvertovať na šestnástkové.</value>
+    
+  </data>
+  <data name="AboutHex2Dec" xml:space="preserve">
+    <value>Skonvertuje šestnástkové číslo na desiatkové</value>
+    
+  </data>
+  <data name="Hex2DecArg1" xml:space="preserve">
+    <value>číslo</value>
+  </data>
+  <data name="AboutHex2Dec_number" xml:space="preserve">
+    <value>Šestnástkový reťazec, ktorý sa má skonvertovať na desiatkový.</value>
+    
+  </data>
+  <data name="AboutHex2DecT" xml:space="preserve">
+    <value>Skonvertuje stĺpec šestnástkových čísel na desiatkové</value>
+    
+  </data>
+  <data name="Hex2DecTArg1" xml:space="preserve">
+    <value>tabuľka</value>
+  </data>
+  <data name="AboutHex2Dec_table" xml:space="preserve">
+    <value>Stĺpec šestnástkových reťazcov, ktoré sa majú skonvertovať na desiatkové.</value>
+    
+  </data>
+  <data name="ErrDeprecated" xml:space="preserve">
+    <value>Táto funkcia je zastaraná a už nie je podporovaná.</value>
+    
   </data>
 </root>

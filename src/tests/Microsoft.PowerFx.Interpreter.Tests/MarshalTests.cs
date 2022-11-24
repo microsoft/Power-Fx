@@ -35,7 +35,7 @@ namespace Microsoft.PowerFx.Tests
         {
             var cache = new TypeMarshallerCache();
             var val1 = FormulaValue.New(17);
-         
+
             var val2 = cache.Marshal(val1);
 
             Assert.Equal(val1.ToObject(), val2.ToObject());
@@ -99,6 +99,32 @@ namespace Microsoft.PowerFx.Tests
             public int Data { get; set; }
 
             public TestNode Next { get; set; }
+        }
+
+        [Fact]
+        public void TestNullableType()
+        {
+            var typeMarshallerCache = new TypeMarshallerCache();
+            var typeMarshaller = typeMarshallerCache.GetMarshaller(typeof(TestNullableObj));
+
+            var fxObj = typeMarshallerCache.Marshal(new TestNullableObj());
+            var fxObj2 = typeMarshallerCache.Marshal(new TestNullableObj { IntField = 12 });
+
+            var engine = new RecalcEngine();
+
+            engine.UpdateVariable("fxObj", fxObj);
+            engine.UpdateVariable("fxObj2", fxObj2);
+
+            var result = engine.Eval("fxObj.IntField");
+            var result2 = engine.Eval("fxObj2.IntField");
+
+            Assert.IsType<BlankValue>(result);
+            Assert.IsType<NumberType>(result.Type);
+            Assert.Null(result.ToObject());
+
+            Assert.IsType<NumberValue>(result2);
+            Assert.IsType<NumberType>(result2.Type);
+            Assert.Equal(12D, result2.ToObject());
         }
 
         [Fact]
@@ -249,6 +275,11 @@ namespace Microsoft.PowerFx.Tests
             Assert.Throws<NameCollisionException>(() => cache.GetMarshaller(obj.GetType()));
         }
 
+        private class TestNullableObj
+        {
+            public int? IntField { get; set; }
+        }
+
         private class TestObj
         {
             internal int _counter;
@@ -373,7 +404,7 @@ namespace Microsoft.PowerFx.Tests
             var result1 = engine.Eval("If(false, {field1:11, field2:22}, x).field1");
             Assert.Equal(999.0, result1.ToObject());
         }
-        
+
         [Fact]
         public void TypeProjectionWithCustomRecords()
         {
@@ -405,7 +436,7 @@ namespace Microsoft.PowerFx.Tests
             {
             }
 
-            public MyRecordValue() 
+            public MyRecordValue()
                 : base(_type)
             {
             }
@@ -419,7 +450,7 @@ namespace Microsoft.PowerFx.Tests
                 }
 
                 result = null;
-                return false;                
+                return false;
             }
 
             public override object ToObject()
@@ -435,7 +466,7 @@ namespace Microsoft.PowerFx.Tests
         [InlineData(typeof(MyBadRecordValue))]
         [InlineData(typeof(MyBadRecordValue2))]
         [InlineData(typeof(MyBadRecordValueMismatch))]
-        [InlineData(typeof(MyBadRecordValueThrows))]        
+        [InlineData(typeof(MyBadRecordValueThrows))]
         public async Task HostBugNullMismatch(Type recordType)
         {
             var x = (RecordValue)Activator.CreateInstance(recordType);
@@ -455,10 +486,10 @@ namespace Microsoft.PowerFx.Tests
                 Assert.Equal(999.0, result.ToObject());
             }
             else
-            { 
+            {
                 await Assert.ThrowsAsync<InvalidOperationException>(async () =>
                     await engine.EvalAsync("x.field1", CancellationToken.None));
-            }            
+            }
         }
 
         private class MyBadRecordValueMismatch : MyRecordValue
@@ -528,7 +559,7 @@ namespace Microsoft.PowerFx.Tests
 
             Assert.Equal(expected, fxObj.Dump());
         }
-             
+
         // Use 'new' to create a property in derived that collides with base. 
         private class Derived2Poco : BasePoco
         {
@@ -576,7 +607,7 @@ namespace Microsoft.PowerFx.Tests
         // With polymorphism, we pull the derived property. 
         [Theory]
         [InlineData(typeof(VirtualDerived), "{Base:30,Derived:40}")]
-        [InlineData(typeof(VirtualBase), "{Base:30}")] 
+        [InlineData(typeof(VirtualBase), "{Base:30}")]
         public void InheritenceVirtuals(Type marshalAsType, string expected)
         {
             var obj = new VirtualDerived();
@@ -584,7 +615,7 @@ namespace Microsoft.PowerFx.Tests
             var cache = new TypeMarshallerCache();
 
             var fxObj = cache.Marshal(obj, marshalAsType);
-            Assert.Equal(expected, fxObj.Dump());            
+            Assert.Equal(expected, fxObj.Dump());
         }
 
         // Marshal an array of records to a table. 
@@ -723,7 +754,7 @@ namespace Microsoft.PowerFx.Tests
         public void CustomMarshallerType()
         {
             var cache = new TypeMarshallerCache();
-                        
+
             var marshaler = new WidgetMarshallerProvider();
             cache = cache.NewPrepend(marshaler);
 
@@ -765,7 +796,7 @@ namespace Microsoft.PowerFx.Tests
             // Verify we didn't retrieve a separate marshaller for a different expression
             Assert.Equal(1, marshaler._counter);
         }
-        
+
         // Test something that can't be marshalled. 
         [Fact]
         public void FailMarshal()
@@ -793,8 +824,8 @@ namespace Microsoft.PowerFx.Tests
 
             // Lazy access - shouldn't ever call the enumerator.
             public IEnumerator<TestObj> GetEnumerator() => throw new NotImplementedException();
-            
-            IEnumerator IEnumerable.GetEnumerator() => throw new NotImplementedException();            
+
+            IEnumerator IEnumerable.GetEnumerator() => throw new NotImplementedException();
         }
 
         // Verify it's lazy and enumerator is never called. 
@@ -802,7 +833,7 @@ namespace Microsoft.PowerFx.Tests
         public void TableIndex()
         {
             var cache = new TypeMarshallerCache();
-            
+
             // _counter bumped for each field fetch. 
             // _counter2 bumped for each index fetch. 
             var values = new TestObj[]

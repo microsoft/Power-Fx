@@ -38,10 +38,10 @@
 ""
 
 >> Left("HelloWorld","true")
-#Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Left("HelloWorld","false")
-#Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 // ******** EMPTY STRING, BLANK and ERROR PARAMETERS ********
 
@@ -73,23 +73,23 @@ true
 ""
 
 >> Left(Blank(),-1)
-#Error(Kind=Numeric)
+Error({Kind:ErrorKind.InvalidArgument})
 
 //Error: The second argument to the Left function is invalid
 >> Left("HelloWorld", -1)
-#Error(Kind=Numeric)
+Error({Kind:ErrorKind.InvalidArgument})
 
 //Error: The second argument to the Left function is invalid
 >> Left("HelloWorld"," ")
-#Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 //Invalid operation: Division by zero
 >> Left(1/0,1)
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 //Invalid operation: Division by zero
 >> Left("HelloWorld",1/0)
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 // ******** FUNCTION VALUE AS PARAMETERS ********
 

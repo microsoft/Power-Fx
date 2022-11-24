@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -3268,6 +3268,38 @@
     <value>Temaet Kontrast</value>
     
   </data>
+  <data name="AboutPatch" xml:space="preserve">
+    <value>Anvender opdateringerne til den angivne række og ændrer rækken i den angivne datakilde. Returnerer den opdaterede række.</value>
+    
+  </data>
+  <data name="PatchDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="PatchBaseRecordArg" xml:space="preserve">
+    <value>base_record</value>
+    
+  </data>
+  <data name="PatchChangeRecordsArg" xml:space="preserve">
+    <value>change_record(s)</value>
+    
+  </data>
+  <data name="AboutRemove" xml:space="preserve">
+    <value>Fjerner en bestemt post eller bestemte poster fra en datakilde</value>
+    
+  </data>
+  <data name="RemoveDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="RemoveRecordsArg" xml:space="preserve">
+    <value>remove_record(s)</value>
+    
+  </data>
+  <data name="ErrRemoveAllArg" xml:space="preserve">
+    <value>Hvis det er angivet, skal det sidste argument være 'RemoveFlags.All'. Er der en tastefejl?</value>
+    
+  </data>
   <data name="PenMode_Draw_DisplayName" xml:space="preserve">
     <value>Tegn</value>
     
@@ -3924,12 +3956,20 @@
     <value>Understøttes ikke i formelkolonner.</value>
     
   </data>
+  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
+    <value>Ugyldigt antal argumenter for {0} funktion: modtaget {1}, forventet {2}</value>
+    
+  </data>
   <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
     <value>Argumentet {0} understøttes ikke for funktionen {1} i formelkolonner.</value>
     
   </data>
   <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
     <value>Dette argument kan ikke overføres, da denne type er i formelkolonner.</value>
+    
+  </data>
+  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
+    <value>Dette argument kan ikke overføres som type {0} i formelkolonner.</value>
     
   </data>
   <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
@@ -3948,6 +3988,10 @@
     <value>Det er kun korte strenge til dato- og klokkeslætsformat, der understøttes i formelkolonnerne.</value>
     
   </data>
+  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
+    <value>{0}-argumentet er en ugyldig/ikke understøttet tidsenhed for {1}-dataaritmetisk funktion.</value>
+    
+  </data>
   <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
     <value>Landestandardspecifikke formateringstokener som "." og "," understøttes ikke i formelkolonner.</value>
     
@@ -3956,8 +4000,16 @@
     <value>{0} understøttes ikke i formelkolonner. Brug {1} i stedet.</value>
     
   </data>
+  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
+    <value>Denne handling kan ikke udføres på type {0} i formelkolonnerne.</value>
+    
+  </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
     <value>Resultattypen {0} understøttes ikke i formelkolonnerne.</value>
+    
+  </data>
+  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
+    <value>Direkte henvisning til en hel post er ikke understøttet i formelkolonner. Henvis venligst til et gyldigt felt i posten.</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
@@ -3972,8 +4024,20 @@
     <value>Kolonner af typen {0} i formatet {1} understøttes ikke i formelkolonner.</value>
     
   </data>
+  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
+    <value>Det er ikke understøttet at tvinge poster eller tabeller i formelkolonner.</value>
+    
+  </data>
   <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
     <value>Formler må ikke være længere end 1000 tegn.</value>
+    
+  </data>
+  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
+    <value>Tabeller med en enkelt kolonne understøttes ikke i formelkolonner.</value>
+    
+  </data>
+  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
+    <value>Der kan ikke refereres til virtuel tabel {0} i formelkolonner.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
@@ -4601,7 +4665,66 @@
     <value>værdi</value>
     
   </data>
-  <data name="ErrExpectedIdentifierArg_Name" xmlns:space="preserve">
-    <value>Argumentet »{0}« er ugyldigt, forventes en identifikator.</value>
+  <data name="AboutDec2Hex" xml:space="preserve">
+    <value>Konverterer et decimaltal til hexadecimalt tal</value>
+    
+  </data>
+  <data name="Dec2HexArg1" xml:space="preserve">
+    <value>tal</value>
+  </data>
+  <data name="AboutDec2Hex_number" xml:space="preserve">
+    <value>En numerisk decimalværdi, der skal konverteres til hexadecimal streng.</value>
+    
+  </data>
+  <data name="Dec2HexArg2" xml:space="preserve">
+    <value>steder</value>
+  </data>
+  <data name="AboutDec2Hex_places" xml:space="preserve">
+    <value>En numerisk værdi, der føjer udfyldning til hexadecimal streng.</value>
+    
+  </data>
+  <data name="AboutDec2HexT" xml:space="preserve">
+    <value>Konverterer en kolonne med decimaltal til hexadecimale tal</value>
+    
+  </data>
+  <data name="Dec2HexTArg1" xml:space="preserve">
+    <value>tabel</value>
+  </data>
+  <data name="Dec2HexTArg2" xml:space="preserve">
+    <value>steder</value>
+  </data>
+  <data name="AboutDec2HexT_places" xml:space="preserve">
+    <value>En numerisk værdi eller matrix med værdier, der føjer udfyldning til hexadecimale strenge.</value>
+    
+  </data>
+  <data name="AboutDec2Hex_table" xml:space="preserve">
+    <value>En kolonne med numeriske decimalværdier, der skal konverteres til hexadecimale værdier.</value>
+    
+  </data>
+  <data name="AboutHex2Dec" xml:space="preserve">
+    <value>Konverterer et hexadecimalt tal til decimaltal</value>
+    
+  </data>
+  <data name="Hex2DecArg1" xml:space="preserve">
+    <value>tal</value>
+  </data>
+  <data name="AboutHex2Dec_number" xml:space="preserve">
+    <value>En hexadecimal streng konverteres til decimal streng.</value>
+    
+  </data>
+  <data name="AboutHex2DecT" xml:space="preserve">
+    <value>Konverterer en kolonne med hexadecimale tal til decimaltal</value>
+    
+  </data>
+  <data name="Hex2DecTArg1" xml:space="preserve">
+    <value>tabel</value>
+  </data>
+  <data name="AboutHex2Dec_table" xml:space="preserve">
+    <value>En kolonne med hexadecimale strenge, der skal konverteres til decimale strenge.</value>
+    
+  </data>
+  <data name="ErrDeprecated" xml:space="preserve">
+    <value>Denne funktion udfases og understøttes ikke længere.</value>
+    
   </data>
 </root>

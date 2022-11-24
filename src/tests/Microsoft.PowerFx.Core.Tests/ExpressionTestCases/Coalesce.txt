@@ -8,10 +8,32 @@
 >> Coalesce( "", "x" )
 "x"
 
+>> Coalesce("", "2")
+"2"
+
+>> Coalesce("", "a")
+"a"
+
 >> Coalesce( Blank(), "", Blank(), "", "3", "4" )
 "3"
 
+>> Coalesce(Blank(), "", Blank(), "", Blank(), " ", "3", "4")
+" "
+
+// Blank values
 >> Coalesce("")
+Blank()
+
+>> Coalesce("","")
+Blank()
+
+>> Coalesce("",Blank(),"")
+Blank()
+
+>> Coalesce("",Blank(),"",Blank())
+Blank()
+
+>> Coalesce("",Blank(),"",Blank(),"")
 Blank()
 
 // Lazy evaluation, doesn't eval all arguements. 
@@ -24,9 +46,229 @@ false
 >> Coalesce(true,false)
 true
 
-// Hits product bug?
 >> Coalesce(Blank())
 Blank()
 
+// ****************************** NON-EMPTY STRING PARAMETER ******************************
+>> Coalesce(" ", "a")
+" "
+
+>> Coalesce(5, 1/0)
+5
+
+// ****************************** ERROR PARAMETER ******************************
+
 >> Coalesce(Blank(), 1/0, 10)
-#Error
+Error({Kind:ErrorKind.Div0})
+
+>> Coalesce(1/0, Blank(), 10)
+Error({Kind:ErrorKind.Div0})
+
+>> Coalesce(1/0, 10, Blank())
+Error({Kind:ErrorKind.Div0})
+
+>> Coalesce(Blank(), 1, Left("Hello", -1))
+1
+
+>> Coalesce("", 1, Left("Hello", -1))
+"1"
+
+>> Coalesce(Left("Hello", -1),"",1)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Coalesce(Left("Hello", -1),Blank(),1)
+Error({Kind:ErrorKind.InvalidArgument})
+
+// ****************************** DATATYPE CONVERSION CASES ******************************
+
+// NUMBER-NUMBER
+>> Coalesce(Blank(), 1, 2)
+1
+
+>> Coalesce("", 1, 2)
+"1"
+
+// NUMBER-STRING
+>> Coalesce(Blank(), 1, "Hello")
+1
+
+>> Coalesce("", 1, "2")
+"1"
+
+// NUMBER-BOOLEAN
+>> Coalesce(Blank(), 1, true)
+1
+
+>> Coalesce("", 1, false)
+"1"
+
+// NUMBER-DATE
+>> Coalesce(Blank(), 1, Date(12,12,2000))
+1
+
+>> Coalesce("", 1, Date(2000,2,12))
+"1"
+
+// NUMBER-TIME
+>> Coalesce(Blank(), 1, Time(6,30,0))
+1
+
+>> Coalesce("", 1, Time(18,30,0))
+"1"
+
+// NUMBER-DATETIME
+>> Coalesce(Blank(), 1, DateTime(2000,2,12,18,30,0))
+1
+
+>> Coalesce("", 1, DateTime(2000,2,12,18,30,0))
+"1"
+
+// ******************************************************************************************
+
+// STRING-NUMBER
+>> Coalesce(Blank(), "Hello", 2)
+"Hello"
+
+>> Coalesce("", "Hello", 2)
+"Hello"
+
+// STRING-STRING
+>> Coalesce(Blank(), "Hello", "ABC")
+"Hello"
+
+>> Coalesce("", "Hello", "2")
+"Hello"
+
+// STRING-BOOLEAN
+>> Coalesce(If(1<0,"null"), true)
+"true"
+
+>> Coalesce(If(1<0,"null"), false)
+"false"
+
+>> Coalesce("", "Hello", false)
+"Hello"
+
+// STRING-DATE
+>> Coalesce(Blank(), "Hello", Date(12,12,2000))
+"Hello"
+
+>> Coalesce("", "Hello", Date(2000,2,12))
+"Hello"
+
+// STRING-TIME
+>> Coalesce(Blank(), "Hello", Time(6,30,0))
+"Hello"
+
+>> Coalesce("", "Hello", Time(18,30,0))
+"Hello"
+
+// STRING-DATETIME
+>> Coalesce(Blank(), "Hello", DateTime(2000,2,12,18,30,0))
+"Hello"
+
+>> Coalesce("", "Hello", DateTime(2000,2,12,18,30,0))
+"Hello"
+
+// ******************************************************************************************
+
+// BOOLEAN-NUMBER
+>> Coalesce(Blank(), true, 2)
+true
+
+>> Coalesce("", true, 2)
+"true"
+
+>> Coalesce(If(1<0,true), 2)
+true
+
+>> Coalesce(If(1<0,true), 0)
+false
+
+// BOOLEAN-BOOLEAN
+>> Coalesce(Blank(), true, true)
+true
+
+>> Coalesce("", true, false)
+"true"
+
+// BOOLEAN-DATE
+// Boolean-Date type conversion is not supported
+
+>> Coalesce(If(1<0,false), Date(2000,2,12))
+Errors: Error 24-39: Invalid argument type (Date). Expecting a Boolean value instead.|Error 0-40: The function 'Coalesce' has some invalid arguments.
+
+// BOOLEAN-TIME
+// Boolean-Time type conversion is not supported
+
+>> Coalesce(If(1<0,false), Time(12,34,56))
+Errors: Error 24-38: Invalid argument type (Time). Expecting a Boolean value instead.|Error 0-39: The function 'Coalesce' has some invalid arguments.
+
+// BOOLEAN-DATETIME
+// Boolean-DateTime type conversion is not supported
+
+>> Coalesce(If(1<0,false), DateTime(2000,1,2,12,34,56))
+Errors: Error 24-51: Invalid argument type (DateTime). Expecting a Boolean value instead.|Error 0-52: The function 'Coalesce' has some invalid arguments.
+
+// DATE-NUMBER
+>> Coalesce(If(1<0,Date(2000,12,11)), 2)
+Date(1900,1,1)
+
+// DATE-STRING
+>> Coalesce(If(1<0,Date(2000,12,11)), "2021-09-07")
+Date(2021,9,7)
+
+>> Coalesce("", Date(2000,12,11), "2")
+"12/11/2000"
+
+// DATE-BOOLEAN
+// Date-Boolean type conversion is not supported
+
+>> Coalesce(If(1<0,Date(2000,2,12)), false)
+Errors: Error 34-39: Invalid argument type (Boolean). Expecting a Date value instead.|Error 0-40: The function 'Coalesce' has some invalid arguments.
+
+// TIME-BOOLEAN
+// Time-Boolean type conversion is not supported
+
+>> Coalesce(If(1<0,Time(12,34,56)), true)
+Errors: Error 33-37: Invalid argument type (Boolean). Expecting a Time value instead.|Error 0-38: The function 'Coalesce' has some invalid arguments.
+
+// DATETIME-BOOLEAN
+// DateTime-Boolean type conversion is not supported
+
+>> Coalesce(If(1<0,DateTime(2000,1,2,12,34,56)), false)
+Errors: Error 46-51: Invalid argument type (Boolean). Expecting a DateTime value instead.|Error 0-52: The function 'Coalesce' has some invalid arguments.
+
+// DATE-DATE
+>> Coalesce(If(1<0,Date(2022,1,1)), Date(2021,9,8))
+Date(2021,9,8)
+
+// TIME-NUMBER
+>> Coalesce(If(1<0,Time(6,30,30)), 0.2)
+Time(4,48,0,0)
+
+// NUMBER-TIME
+>> Coalesce(If(1<0,4), Time(6,0,0))
+0.25
+
+// TIME-STRING
+// This may not work in different locales
+>> Coalesce("", Time(12,0,0))
+"12:00 PM"
+
+// DATETIME-NUMBER
+>> Coalesce(If(1<0,DateTime(2000,1,2,3,4,5)), 44805.5)
+DateTime(2022,9,1,12,0,0,0)
+
+// NUMBER-DATETIME
+>> Coalesce(If(1<0,1), DateTime(2022,9,1,12,0,0,0))
+44805.5
+
+// DATETIME-STRING
+>> Coalesce(If(1<0,DateTime(2000,1,2,3,4,5,6)), "2022-08-07T12:34:56")
+DateTime(2022,8,7,12,34,56,0)
+
+// STRING-DATETIME
+// This may not work in different locales
+>> Coalesce("",DateTime(2022,1,2,6,30,0))
+"1/2/2022 6:30 AM"

@@ -23,7 +23,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             // TODO: Checking public types for now because some internal ones fail (e.g., DType)
             foreach (var t in asm.GetTypes()
-                                 .Where(t => t.IsPublic && t.GetCustomAttribute<ThreadSafeImmutableAttribute>() != null))
+                                 .Where(t => t.IsPublic && t.GetCustomAttribute<ThreadSafeImmutableAttribute>(inherit: false) != null))
             {
                 // Check properties
                 foreach (var prop in t.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static))
@@ -31,14 +31,24 @@ namespace Microsoft.PowerFx.Core.Tests
                     var propName = $"{t.FullName}.{prop.Name}";
                     checkedCount++;
 
-                    if (prop.CanWrite)
+                    if (prop.SetMethod != null && prop.SetMethod.IsPublic)
                     {
-                        errors.AppendLine($"{propName} has setter");
+                        // C# "Init" keyword is semantically immutable, but appears mutable to reflection at runtime.
+                        // See https://alistairevans.co.uk/2020/11/01/detecting-init-only-properties-with-reflection-in-c-9/
+                        var isInitKeyword = prop.SetMethod.ReturnParameter.GetRequiredCustomModifiers().Contains(typeof(System.Runtime.CompilerServices.IsExternalInit));
+                        if (!isInitKeyword)
+                        {
+                            errors.AppendLine($"{propName} has setter");
+                        }
                     }
 
                     if (!AnalyzeThreadSafety.IsTypeImmutable(prop.PropertyType))
                     {
-                        errors.AppendLine($"{propName} type ({prop.PropertyType.FullName}) is mutable");
+                        // Values types are safe because we return a copy. 
+                        if (!prop.PropertyType.IsValueType)
+                        {
+                            errors.AppendLine($"{propName} type ({prop.PropertyType.FullName}) is mutable");
+                        }
                     }
                 }
 

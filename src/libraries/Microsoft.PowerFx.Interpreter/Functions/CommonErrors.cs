@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Types;
 
@@ -15,7 +14,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 Message = "Runtime type mismatch",
                 Span = irContext.SourceContext,
-                Kind = ErrorKind.Validation
+                Kind = ErrorKind.InvalidArgument
             });
         }
 
@@ -26,16 +25,6 @@ namespace Microsoft.PowerFx.Functions
                 Message = "Argument out of range",
                 Span = irContext.SourceContext,
                 Kind = ErrorKind.InvalidArgument
-            });
-        }
-
-        public static ErrorValue NumericOutOfRange(IRContext irContext)
-        {
-            return new ErrorValue(irContext, new ExpressionError()
-            {
-                Message = "Numeric out of range",
-                Span = irContext.SourceContext,
-                Kind = ErrorKind.Numeric
             });
         }
 
@@ -53,7 +42,7 @@ namespace Microsoft.PowerFx.Functions
         {
             return new ErrorValue(irContext, new ExpressionError()
             {
-                Message = "Divide by zero",
+                Message = "Invalid operation: division by zero.",
                 Span = irContext.SourceContext,
                 Kind = ErrorKind.Div0
             });
@@ -69,11 +58,31 @@ namespace Microsoft.PowerFx.Functions
             });
         }
 
-        public static ErrorValue InvalidDateTimeError(IRContext irContext)
+        public static ErrorValue BadLanguageCode(IRContext irContext, string languageCode)
+        {
+            return new ErrorValue(irContext, new ExpressionError()
+            {
+                Message = $"Language code {languageCode} not supported",
+                Span = irContext.SourceContext,
+                Kind = ErrorKind.BadLanguageCode
+            });
+        }
+
+        public static ErrorValue InvalidDateTimeParsingError(IRContext irContext)
         {
             return new ErrorValue(irContext, new ExpressionError()
             {
                 Message = "The Date/Time could not be parsed",
+                Span = irContext.SourceContext,
+                Kind = ErrorKind.InvalidArgument
+            });
+        }
+
+        public static ErrorValue InvalidDateTimeError(IRContext irContext)
+        {
+            return new ErrorValue(irContext, new ExpressionError()
+            {
+                Message = "Invalid date/time value",
                 Span = irContext.SourceContext,
                 Kind = ErrorKind.InvalidArgument
             });
@@ -166,6 +175,16 @@ namespace Microsoft.PowerFx.Functions
                 Message = "Max call depth exceeded",
                 Span = irContext.SourceContext,
                 Kind = ErrorKind.Internal
+            });
+        }
+
+        internal static FormulaValue CustomError(IRContext irContext, string message)
+        {
+            return new ErrorValue(irContext, new ExpressionError()
+            {
+                Message = message,
+                Span = irContext.SourceContext,
+                Kind = ErrorKind.Custom
             });
         }
     }

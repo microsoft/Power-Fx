@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
@@ -96,7 +97,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool SupportsParamCoercion => true;
 
         public DateTimeFunction()
-            : base("DateTime", TexlStrings.AboutTime, FunctionCategories.DateTime, DType.DateTime, 0, 6, 7, DType.Number, DType.Number, DType.Number, DType.Number, DType.Number, DType.Number, DType.Number)
+            : base("DateTime", TexlStrings.AboutDateTime, FunctionCategories.DateTime, DType.DateTime, 0, 6, 7, DType.Number, DType.Number, DType.Number, DType.Number, DType.Number, DType.Number, DType.Number)
         {
         }
 
@@ -400,7 +401,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return argumentIndex == 2;
         }
 
-        public override bool CheckInvocation(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public override bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
@@ -409,7 +410,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            var fValid = CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fValid = base.CheckTypes(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
             Contracts.Assert(returnType == DType.DateTime);
 
             var type0 = argTypes[0];
@@ -417,13 +418,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             if (fValid)
             {
                 // Arg0 should be either a DateTime or Date.
-                if (type0.Kind == DKind.Date)
-                {
-                    // Max resolution we support right now is "Days". If we start supporting sub-day resolutions
-                    // then we need to revisit this and return DateTime in those cases.
-                    returnType = DType.Date;
-                }
-                else if (type0.Kind == DKind.DateTime)
+                if (type0.Kind == DKind.Date || type0.Kind == DKind.DateTime)
                 {
                     returnType = ReturnType;
                 }
@@ -467,7 +462,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return GetUniqueTexlRuntimeName(suffix: "_T");
         }
 
-        public override bool CheckInvocation(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
@@ -476,7 +471,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            var fValid = CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
 
             var type0 = argTypes[0];
             var type1 = argTypes[1];
@@ -489,18 +484,19 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 // for DateTime alone is sufficient.
                 fValid &= CheckDateColumnType(type0, args[0], errors, ref nodeToCoercedTypeMap);
 
-                // Borrow the return type from the 1st arg
-                returnType = type0;
+                if (fValid)
+                {
+                    var resultColumnType = context.Features.HasFlag(Features.ConsistentOneColumnTableResult)
+                        ? ColumnName_Value
+                        : type0.GetNames(DPath.Root).Single().Name;
+                    returnType = DType.CreateTable(new TypedName(DType.DateTime, resultColumnType));
+                }
             }
             else
             {
-                if (type0.Kind == DKind.DateTime)
+                if (type0.Kind == DKind.DateTime || type0.Kind == DKind.Date)
                 {
-                    returnType = DType.CreateTable(new TypedName(DType.DateTime, GetOneColumnTableResultName(binding)));
-                }
-                else if (type0.Kind == DKind.Date)
-                {
-                    returnType = DType.CreateTable(new TypedName(DType.Date, GetOneColumnTableResultName(binding)));
+                    returnType = DType.CreateTable(new TypedName(DType.DateTime, GetOneColumnTableResultName(context.Features)));
                 }
                 else if (type0.CoercesTo(DType.DateTime))
                 {
@@ -613,7 +609,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return GetUniqueTexlRuntimeName(suffix: "_T");
         }
 
-        public override bool CheckInvocation(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
@@ -622,12 +618,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            var fValid = CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
 
             var type0 = argTypes[0];
             var type1 = argTypes[1];
 
-            returnType = DType.CreateTable(new TypedName(DType.Number, GetOneColumnTableResultName(binding)));
+            returnType = DType.CreateTable(new TypedName(DType.Number, GetOneColumnTableResultName(context.Features)));
 
             // Arg0 should be either a date or a column of dates.
             if (type0.IsTable)

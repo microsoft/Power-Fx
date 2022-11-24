@@ -3,62 +3,59 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Binding;
-using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Core.Texl;
-using Microsoft.PowerFx.Core.Types;
-using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Interpreter.UDF;
 using Microsoft.PowerFx.Types;
-using static Microsoft.PowerFx.Interpreter.UDFHelper;
 
 namespace Microsoft.PowerFx
 {
     /// <summary>
     /// Holds a set of Power Fx variables and formulas. Formulas are recalculated when their dependent variables change.
     /// </summary>
-    public sealed class RecalcEngine : Engine, IScope, IPowerFxEngine
+    public sealed class RecalcEngine : Engine, IPowerFxEngine
     {
-        internal Dictionary<string, RecalcFormulaInfo> Formulas { get; } = new Dictionary<string, RecalcFormulaInfo>();
+        // Map SlotIndex --> Value
+        internal Dictionary<int, RecalcFormulaInfo> Formulas { get; } = new Dictionary<int, RecalcFormulaInfo>();
 
-        internal Dictionary<string, TexlFunction> _customFuncs = new Dictionary<string, TexlFunction>();
+        internal readonly SymbolTable _symbolTable;
+        internal readonly SymbolValues _symbolValues;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RecalcEngine"/> class.
         /// Create a new power fx engine. 
         /// </summary>
         public RecalcEngine()
-            : this(new PowerFxConfig(null))
+            : this(new PowerFxConfig())
         {
         }
 
         public RecalcEngine(PowerFxConfig powerFxConfig)
-            : base(AddInterpreterFunctions(powerFxConfig))
+            : base(powerFxConfig)
         {
+            _symbolTable = new SymbolTable { DebugName = "Globals" };
+            _symbolValues = new SymbolValues(_symbolTable);
+            _symbolValues.OnUpdate += OnSymbolValuesOnUpdate;
+
+            EngineSymbols = _symbolTable;
+
+            // Add Builtin functions that aren't yet in the shared library. 
+            SupportedFunctions = _interpreterSupportedFunctions;
         }
 
-        // Add Builtin functions that aren't yet in the shared library. 
-        private static PowerFxConfig AddInterpreterFunctions(PowerFxConfig powerFxConfig)
-        {
-            // Set to Interpreter's implemented list (not necessarily same as defaults)
-            powerFxConfig.SetCoreFunctions(Library.FunctionList);
+        // Set of default functions supported by the interpreter. 
+        private static readonly ReadOnlySymbolTable _interpreterSupportedFunctions = ReadOnlySymbolTable.NewDefault(Library.FunctionList);
 
-            return powerFxConfig;
-        }
-
-        /// <inheritdoc/>
-        private protected override INameResolver CreateResolver(PowerFxConfig alternateConfig = null)
+        // For internal testing
+        internal INameResolver TestCreateResolver()
         {
-            // The RecalcEngineResolver allows access to the values from UpdateValue. 
-            var resolver = new RecalcEngineResolver(this, alternateConfig ?? Config);
-            return resolver;
+            return CreateResolverInternal();
         }
 
         /// <inheritdoc/>
@@ -77,7 +74,10 @@ namespace Microsoft.PowerFx
             result.ThrowOnErrors();
 
             (var irnode, var ruleScopeSymbol) = IRTranslator.Translate(result._binding);
-            return new ParsedExpression(irnode, ruleScopeSymbol, stackMarker);
+            return new ParsedExpression(irnode, ruleScopeSymbol, stackMarker, result.CultureInfo)
+            {
+                _parameterSymbolTable = result.Parameters
+            };
         }
 
         /// <summary>
@@ -90,16 +90,18 @@ namespace Microsoft.PowerFx
             return CreateEvaluatorDirect(result, new StackDepthCounter(PowerFxConfig.DefaultMaxCallDepth));
         }
 
-        // This handles lookups in the global scope. 
-        FormulaValue IScope.Resolve(string name)
+        // Event handler fired when we update symbol values. 
+        private void OnSymbolValuesOnUpdate(ISymbolSlot slot, FormulaValue arg2)
         {
-            if (Formulas.TryGetValue(name, out var info))
+            if (Formulas.TryGetValue(slot.SlotIndex, out var info))
             {
-                return info.Value;
+                if (!info.IsFormula)
+                {    
+                    // IF we've updated a non-formula (variable), then trigger the recalc chain.
+                    // Cascading formula recalc will be triggered by Recalc chain. 
+                    Recalc(info.Name);
+                }
             }
-
-            // Binder should have caught. 
-            throw new InvalidOperationException($"Can't resolve '{name}'");
         }
 
         public void UpdateVariable(string name, double value)
@@ -116,25 +118,23 @@ namespace Microsoft.PowerFx
         {
             var x = value;
 
-            if (Formulas.TryGetValue(name, out var fi))
+            if (TryGetByName(name, out var fi))
             {
-                // Type should match?
-                if (fi._type != x.Type)
-                {
-                    throw new NotSupportedException($"Can't change '{name}''s type from {fi._type} to {x.Type}.");
-                }
-
-                fi.Value = x;
+                // Set() will validate type compatibility
+                _symbolValues.Set(fi.Slot, value);
 
                 // Be sure to preserve used-by set. 
             }
             else
             {
-                Formulas[name] = new RecalcFormulaInfo { Value = x, _type = x.IRContext.ResultType };
+                // New
+                var slot = _symbolTable.AddVariable(name, value.Type, mutable: true);
+
+                Formulas[slot.SlotIndex] = RecalcFormulaInfo.NewVariable(slot, name, x.IRContext.ResultType);
+                _symbolValues.Set(slot, value);
             }
 
-            // Could trigger recalcs?
-            Recalc(name);
+            // Recalc was triggered by SymbolValue Set's OnUpdate handler. 
         }
 
         /// <summary>
@@ -149,17 +149,37 @@ namespace Microsoft.PowerFx
         {
             return EvalAsync(expressionText, CancellationToken.None, parameters, options).Result;
         }
-
-        public async Task<FormulaValue> EvalAsync(string expressionText, CancellationToken cancel, RecordValue parameters = null, ParserOptions options = null)
+      
+        public async Task<FormulaValue> EvalAsync(string expressionText, CancellationToken cancellationToken, RecordValue parameters, ParserOptions options = null)
         {
             if (parameters == null)
             {
                 parameters = RecordValue.Empty();
             }
 
-            var check = Check(expressionText, (RecordType)parameters.IRContext.ResultType, options);
+            var symbolValues = ReadOnlySymbolValues.NewFromRecord(parameters);
+
+            return await EvalAsync(expressionText, cancellationToken, options, null, symbolValues);
+        }
+
+        public async Task<FormulaValue> EvalAsync(string expressionText, CancellationToken cancellationToken, ParserOptions options = null, ReadOnlySymbolTable symbolTable = null, ReadOnlySymbolValues runtimeConfig = null)
+        {
+            // We could have any combination of symbols and runtime values. 
+            // - RuntimeConfig may be null if we don't need it. 
+            // - Some Symbols are metadata-only (like option sets, UDFs, constants, etc)
+            // and hence don't require a corresponnding runtime Symbol Value. 
+            var parameterSymbols = runtimeConfig?.SymbolTable;
+            var symbolsAll = ReadOnlySymbolTable.Compose(parameterSymbols, symbolTable);
+
+            var check = Check(expressionText, options, symbolsAll);
             check.ThrowOnErrors();
-            return await check.Expression.EvalAsync(parameters, cancel);
+
+            check.Parameters = parameterSymbols;
+            var stackMarker = new StackDepthCounter(Config.MaxCallDepth);
+            var eval = check.GetEvaluator(stackMarker);
+
+            var result = await eval.EvalAsync(cancellationToken, runtimeConfig);
+            return result;
         }
 
         public DefineFunctionsResult DefineFunctions(string script)
@@ -168,9 +188,10 @@ namespace Microsoft.PowerFx
             var result = parsedUDFS.GetParsed();
 
             var udfDefinitions = result.UDFs.Select(udf => new UDFDefinition(
-                udf.Ident.ToString(), 
-                udf.Body.ToString(), 
+                udf.Ident.ToString(),
+                udf.Body.ToString(),
                 FormulaType.GetFromStringOrNull(udf.ReturnType.ToString()),
+                udf.IsImperative,
                 udf.Args.Select(arg => new NamedFormulaType(arg.VarIdent.ToString(), FormulaType.GetFromStringOrNull(arg.VarType.ToString()))).ToArray())).ToArray();
             return DefineFunctions(udfDefinitions);
         }
@@ -188,21 +209,23 @@ namespace Microsoft.PowerFx
                 record = record.Add(p);
             }
 
-            var check = new CheckWrapper(this, definition.Body, record);
+            var check = new CheckWrapper(this, definition.Body, record, definition.IsImperative);
 
             var func = new UserDefinedTexlFunction(definition.Name, definition.ReturnType, definition.Parameters, check);
-            if (_customFuncs.ContainsKey(definition.Name))
+
+            var exists = _symbolTable.Functions.Any(x => x.Name == definition.Name);
+            if (exists)
             {
                 throw new InvalidOperationException($"Function {definition.Name} is already defined");
             }
 
-            _customFuncs[definition.Name] = func;
+            _symbolTable.AddFunction(func);
             return new UDFLazyBinder(func, definition.Name);
         }
 
         private void RemoveFunction(string name)
         {
-            _customFuncs.Remove(name);
+            _symbolTable.RemoveFunction(name);
         }
 
         /// <summary>
@@ -220,7 +243,7 @@ namespace Microsoft.PowerFx
             {
                 binders.Add(DefineFunction(definition));
             }
-            
+
             foreach (UDFLazyBinder lazyBinder in binders)
             {
                 var possibleErrors = lazyBinder.Bind();
@@ -260,14 +283,12 @@ namespace Microsoft.PowerFx
         /// <param name="onUpdate">Callback to fire when this value is updated.</param>
         public void SetFormula(string name, FormulaWithParameters expr, Action<string, FormulaValue> onUpdate)
         {
-            if (Formulas.ContainsKey(name))
-            {
-                throw new InvalidOperationException($"Can't change existing formula: {name}");
-            }
-
             var check = Check(expr._expression, expr._schema);
             check.ThrowOnErrors();
             var binding = check._binding;
+
+            // This will fail if it already exists 
+            var slot = _symbolTable.AddVariable(name, check.ReturnType, mutable: false);
 
             // We can't have cycles because:
             // - formulas can only refer to already-defined values
@@ -275,19 +296,13 @@ namespace Microsoft.PowerFx
             var dependsOn = check.TopLevelIdentifiers;
 
             var type = FormulaType.Build(binding.ResultType);
-            var info = new RecalcFormulaInfo
-            {
-                _dependsOn = dependsOn,
-                _type = type,
-                _binding = binding,
-                _onUpdate = onUpdate
-            };
+            var info = RecalcFormulaInfo.NewFormula(slot, name, type, dependsOn, binding, onUpdate);
 
-            Formulas[name] = info;
+            Formulas[slot.SlotIndex] = info;
 
             foreach (var x in dependsOn)
             {
-                Formulas[x]._usedBy.Add(name);
+                GetByName(x)._usedBy.Add(name);
             }
 
             Recalc(name);
@@ -307,19 +322,20 @@ namespace Microsoft.PowerFx
         /// <param name="name">Formula name.</param>
         public void DeleteFormula(string name)
         {
-            if (Formulas.TryGetValue(name, out var fi))
+            if (TryGetByName(name, out var fi))
             {
                 if (fi._usedBy.Count == 0)
                 {
                     foreach (var dependsOnName in fi._dependsOn)
                     {
-                        if (Formulas.TryGetValue(dependsOnName, out var info))
+                        if (TryGetByName(dependsOnName, out var info))
                         {
                             info._usedBy.Remove(name);
                         }
                     }
 
-                    Formulas.Remove(name);
+                    Formulas.Remove(fi.Slot.SlotIndex);
+                    _symbolTable.RemoveVariable(name);
                 }
                 else
                 {
@@ -339,8 +355,36 @@ namespace Microsoft.PowerFx
         /// <returns></returns>
         public FormulaValue GetValue(string name)
         {
-            var fi = Formulas[name];
-            return fi.Value;
+            TryGetByName(name, out var fi);
+            var value = _symbolValues.Get(fi.Slot);
+            return value;
+        }
+
+        internal RecalcFormulaInfo GetByName(string name)
+        {
+            if (TryGetByName(name, out var fi))
+            {
+                return fi;
+            }
+
+            throw new InvalidOperationException($"{name} not found");
+        }
+
+        internal bool TryGetByName(string name, out RecalcFormulaInfo info)
+        {
+            if (_symbolTable.TryLookupSlot(name, out var slot))
+            {
+                if (slot.Owner != _symbolTable)
+                {
+                    throw _symbolTable.NewBadSlotException(slot); 
+                }
+                    
+                info = Formulas[slot.SlotIndex];
+                return true;
+            }
+
+            info = null;
+            return false;
         }
     } // end class RecalcEngine
 }

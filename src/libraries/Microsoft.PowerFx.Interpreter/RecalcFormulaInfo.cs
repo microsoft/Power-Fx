@@ -10,8 +10,37 @@ namespace Microsoft.PowerFx
 {
     // Information needed for recalc engine
     // Could represent either a fixed variable or a formula. 
-    internal class RecalcFormulaInfo : ICanGetValue, ICanSetValue
+    internal class RecalcFormulaInfo
     {
+        private RecalcFormulaInfo() 
+        { 
+        }
+        
+        public static RecalcFormulaInfo NewVariable(ISymbolSlot slot, string name, FormulaType type)
+        {
+            return new RecalcFormulaInfo
+            {
+                Name = name,
+                _type = type,
+                Slot = slot
+            };
+        }
+
+        public static RecalcFormulaInfo NewFormula(ISymbolSlot slot, string name, FormulaType type, HashSet<string> dependsOn, TexlBinding binding, Action<string, FormulaValue> onUpdate)
+        {
+            return new RecalcFormulaInfo
+            {
+                Name = name,
+                _dependsOn = dependsOn,
+                _type = type,
+                _binding = binding,
+                _onUpdate = onUpdate,
+                Slot = slot
+            };
+        }
+
+        public string Name { get; private set; }
+
         // Other variables that this formula depends on. 
         public HashSet<string> _dependsOn;
 
@@ -28,22 +57,11 @@ namespace Microsoft.PowerFx
         // For recalc, needed for execution 
         public TexlBinding _binding;
 
-        // Cached value
-        public FormulaValue Value { get; set; }
+        // Value is on Parent's symbol table, accessed via Slot. 
+        public ISymbolSlot Slot { get; set; }
 
-        void ICanSetValue.SetValue(FormulaValue newValue)
-        {
-            Value = newValue;
-        }
-    }
-
-    internal interface ICanSetValue
-    {
-        void SetValue(FormulaValue newValue);
-    }
-
-    internal interface ICanGetValue
-    {
-        FormulaValue Value { get; }
+        // True iff this is a formula that is recalculated. 
+        // Formulas aren't mutable. 
+        public bool IsFormula => _binding != null;     
     }
 }

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -498,37 +498,37 @@
     <value>Teksto reikšmė, kurią reikia konvertuoti į Bulio logikos reikšmę.</value>
   </data>
   <data name="AboutBooleanT" xml:space="preserve">
-    <value>Converts a column of text values to a column of boolean values.</value>
+    <value>Konvertuoja teksto reikšmių stulpelį į Bulio logikos reikšmių stulpelį.</value>
     
   </data>
   <data name="BooleanTArg1" xml:space="preserve">
-    <value>input</value>
+    <value>įvestis</value>
     
   </data>
   <data name="AboutBooleanT_input" xml:space="preserve">
-    <value>A column of text values to process.</value>
+    <value>Teksto reikšmių stulpelis, skirtas apdoroti.</value>
   </data>
   <data name="AboutBooleanN" xml:space="preserve">
-    <value>Converts a 'number' to a boolean value.</value>
+    <value>Konvertuoja skaičių į Bulio logikos reikšmę.</value>
     
   </data>
   <data name="BooleanNArg1" xml:space="preserve">
-    <value>number</value>
+    <value>skaičius</value>
     
   </data>
   <data name="AboutBooleanN_number" xml:space="preserve">
-    <value>The number value to convert to a boolean value.</value>
+    <value>Skaitinė reikšmė, kurią reikia konvertuoti į Bulio logikos reikšmę.</value>
   </data>
   <data name="AboutBooleanNT" xml:space="preserve">
-    <value>Converts a column of numeric values to a column of boolean values.</value>
+    <value>Konvertuoja skaitinių reikšmių stulpelį į Bulio logikos reikšmių stulpelį.</value>
     
   </data>
   <data name="BooleanNTArg1" xml:space="preserve">
-    <value>input</value>
+    <value>įvestis</value>
     
   </data>
   <data name="AboutBooleanNT_input" xml:space="preserve">
-    <value>A column of number values to process.</value>
+    <value>Apdorotinų skaitinių reikšmių stulpelis.</value>
   </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Pateikiamas pirmasis netuščias argumentas</value>
@@ -3268,6 +3268,38 @@
     <value>Didelio kontrasto tema</value>
     
   </data>
+  <data name="AboutPatch" xml:space="preserve">
+    <value>Taiko naujinimus nurodytai eilutei ir pakeičia eilutę į nurodytą duomenų šaltinį. Pateikia atnaujintą eilutę.</value>
+    
+  </data>
+  <data name="PatchDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="PatchBaseRecordArg" xml:space="preserve">
+    <value>base_record</value>
+    
+  </data>
+  <data name="PatchChangeRecordsArg" xml:space="preserve">
+    <value>change_record(s)</value>
+    
+  </data>
+  <data name="AboutRemove" xml:space="preserve">
+    <value>Pašalina iš duomenų šaltinio konkretų įrašą arba įrašus</value>
+    
+  </data>
+  <data name="RemoveDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="RemoveRecordsArg" xml:space="preserve">
+    <value>remove_record(s)</value>
+    
+  </data>
+  <data name="ErrRemoveAllArg" xml:space="preserve">
+    <value>Jei pateikta, paskutinis argumentas turi būti „RemoveFlags.All“. Ar tai spaudos klaida?</value>
+    
+  </data>
   <data name="PenMode_Draw_DisplayName" xml:space="preserve">
     <value>Piešti</value>
     
@@ -3924,12 +3956,20 @@
     <value>Formulės stulpeliuose nepalaikoma.</value>
     
   </data>
+  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
+    <value>Netinkamas funkcijos {0} argumentų skaičius: gautas – {1}, numatytas – {2}</value>
+    
+  </data>
   <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
     <value>Formulės stulpeliuose funkcijos {1} argumentas {0} nepalaikomas.</value>
     
   </data>
   <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
     <value>Šio argumento negalima perduoti formulės stulpeliuose kaip šio tipo.</value>
+    
+  </data>
+  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
+    <value>Šio argumento negalima perduoti formulės stulpeliuose kaip tipo {0}.</value>
     
   </data>
   <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
@@ -3948,6 +3988,10 @@
     <value>Formulės stulpeliuose palaikomos tik trumpo datos ir laiko formato eilutės.</value>
     
   </data>
+  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
+    <value>Argumentas {0} yra netinkamas / nepalaikomas datos aritmetinės funkcijos {1} laiko vienetas.</value>
+    
+  </data>
   <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
     <value>Formulės stulpeliuose lokalėms būdingi formatavimo atpažinimo ženklai (pvz., „.“ ir „,“) nepalaikomi.</value>
     
@@ -3956,8 +4000,16 @@
     <value>Funkcija {0} formulės stulpeliuose nepalaikoma, vietoj jos naudokite {1}.</value>
     
   </data>
+  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
+    <value>Šios operacijos negalima atlikti formulės stulpelių tipe {0}.</value>
+    
+  </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
     <value>{0} tipo rezultatas formulės stulpeliuose nepalaikomas.</value>
+    
+  </data>
+  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
+    <value>Formulės stulpeliuose nepalaikoma tiesioginė nuoroda į visą įrašą. Nurodykite tinkamą įrašo lauką.</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
@@ -3972,8 +4024,20 @@
     <value>{0} tipo stulpeliai, kurių formatas {1}, formulės stulpeliuose nepalaikomi.</value>
     
   </data>
+  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
+    <value>Įrašų arba lentelių vertimas formulės stulpeliuose nepalaikomas.</value>
+    
+  </data>
   <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
     <value>Formulės negali būti ilgesnės nei 1000 simbolių.</value>
+    
+  </data>
+  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
+    <value>Vieno stulpelio lentelės formulės stulpeliuose nepalaikomos.</value>
+    
+  </data>
+  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
+    <value>Negalima nurodyti virtualiosios lentelės {0} formulės stulpeliuose.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
@@ -4601,7 +4665,66 @@
     <value>reikšmė</value>
     
   </data>
-  <data name="ErrExpectedIdentifierArg_Name" xmlns:space="preserve">
-    <value>Argumentas "{0}" yra negaliojantis, tikimasi identifikatoriaus.</value>
+  <data name="AboutDec2Hex" xml:space="preserve">
+    <value>Konvertuoja dešimtainį skaičių į šešioliktainį</value>
+    
+  </data>
+  <data name="Dec2HexArg1" xml:space="preserve">
+    <value>skaičius</value>
+  </data>
+  <data name="AboutDec2Hex_number" xml:space="preserve">
+    <value>Skaitinė dešimtainė reikšmė konvertavimui į šešioliktainio formato eilutę.</value>
+    
+  </data>
+  <data name="Dec2HexArg2" xml:space="preserve">
+    <value>vietos</value>
+  </data>
+  <data name="AboutDec2Hex_places" xml:space="preserve">
+    <value>Skaitinė reikšmė, norint pridėti užpildymą šešioliktainio formato eilutei.</value>
+    
+  </data>
+  <data name="AboutDec2HexT" xml:space="preserve">
+    <value>Konvertuoja dešimtainių skaičių stulpelį į šešioliktainius</value>
+    
+  </data>
+  <data name="Dec2HexTArg1" xml:space="preserve">
+    <value>lentelė</value>
+  </data>
+  <data name="Dec2HexTArg2" xml:space="preserve">
+    <value>vietos</value>
+  </data>
+  <data name="AboutDec2HexT_places" xml:space="preserve">
+    <value>Skaitinė reikšmė arba reikšmių masyvas, norint pridėti užpildymą šešioliktainio formato eilutėms.</value>
+    
+  </data>
+  <data name="AboutDec2Hex_table" xml:space="preserve">
+    <value>Skaitinių dešimtainių dalių reikšmių stulpelis konvertavimui į šešioliktainius.</value>
+    
+  </data>
+  <data name="AboutHex2Dec" xml:space="preserve">
+    <value>Konvertuoja šešioliktainį skaičių į dešimtainį</value>
+    
+  </data>
+  <data name="Hex2DecArg1" xml:space="preserve">
+    <value>skaičius</value>
+  </data>
+  <data name="AboutHex2Dec_number" xml:space="preserve">
+    <value>Šešioliktainio formato eilutės konvertavimas į dešimtainį skaičių.</value>
+    
+  </data>
+  <data name="AboutHex2DecT" xml:space="preserve">
+    <value>Konvertuoja šešioliktainių skaičių stulpelį į dešimtainius</value>
+    
+  </data>
+  <data name="Hex2DecTArg1" xml:space="preserve">
+    <value>lentelė</value>
+  </data>
+  <data name="AboutHex2Dec_table" xml:space="preserve">
+    <value>Šešioliktainio formato eilučių stulpelis konvertavimui į dešimtainius skaičius.</value>
+    
+  </data>
+  <data name="ErrDeprecated" xml:space="preserve">
+    <value>Ši funkcija nerekomenduojama ir nebepalaikoma.</value>
+    
   </data>
 </root>

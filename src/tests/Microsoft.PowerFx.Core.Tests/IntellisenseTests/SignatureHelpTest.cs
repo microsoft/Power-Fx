@@ -20,9 +20,13 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         /// instead include the subpath bin/(Debug|Release).AnyCPU, depending on whether the assembly was
         /// built in debug or release mode.
         /// </summary>
-        private static readonly string _signatureHelpDirectory = Path.Join(Directory.GetCurrentDirectory(), "IntellisenseTests", "TestSignatures")
-            .Replace(Path.Join("bin", "Debug.AnyCPU"), "src")
-            .Replace(Path.Join("bin", "Release.AnyCPU"), "src");
+        private static readonly string _baseDirectory = Path.Join(Directory.GetCurrentDirectory(), "IntellisenseTests", "TestSignatures");
+
+        private static readonly string _signatureHelpDirectory = RegenerateSignatureHelp ?
+            _baseDirectory
+                .Replace(Path.Join("bin", "Debug", "netcoreapp3.1"), string.Empty)
+                .Replace(Path.Join("bin", "Release", "netcoreapp3.1"), string.Empty) :
+            _baseDirectory;
 
         /// <summary>
         /// Reads the current signature help test, located in the TestSignatures directory, deserializes and
@@ -93,7 +97,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("If(true, If(true, 0, 1)|)", 8)]
         [InlineData("Filter|", 9)]
         [InlineData("|", 10)]
-        public void TestSignatureHelp(string expression, int helpId) => CheckSignatureHelpTest(Suggest(expression, new PowerFxConfig(null)).SignatureHelp, helpId);
+        public void TestSignatureHelp(string expression, int helpId) => CheckSignatureHelpTest(Suggest(expression, SuggestTests.Default).SignatureHelp, helpId);
 
         [Fact]
         public void TestRegenerateSignatureHelpIsOff() => Assert.False(RegenerateSignatureHelp);

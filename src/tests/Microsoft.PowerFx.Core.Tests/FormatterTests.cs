@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Globalization;
 using System.Linq;
 using Microsoft.PowerFx.Core.Logging;
 using Microsoft.PowerFx.Core.Tests;
@@ -11,7 +12,7 @@ using static Microsoft.PowerFx.Core.Parser.TexlParser;
 namespace Microsoft.PowerFx.Tests
 {
     public sealed class FormatterTests : PowerFxTest
-    {       
+    {
         [Theory]
         [InlineData(
             "Collect(Yep, { a: [1], b: \"Hello\" })",
@@ -31,7 +32,7 @@ namespace Microsoft.PowerFx.Tests
                 script,
                 flags: Flags.EnableExpressionChaining);
 
-            Assert.Equal(expected, StructuralPrint.Print(result.Root));
+            Assert.Equal(expected, result.GetAnonymizedFormula());
         }
 
         private class TestSanitizer : ISanitizedNameProvider
@@ -67,7 +68,6 @@ namespace Microsoft.PowerFx.Tests
         [InlineData("RGBA(\n    255,\n    /*r   */255,   ", true)]
         public void TestSeverityLevelsForPrettyPrint(string script, bool expected)
         {
-            Preview.FeatureFlags.StringInterpolation = true;
             var result = ParseScript(
                 script,
                 flags: Flags.EnableExpressionChaining);
@@ -157,7 +157,6 @@ namespace Microsoft.PowerFx.Tests
         [InlineData("$\"This is {{\"Another\"}} interpolated {{string}}\"", "$\"This is {{\"Another\"}} interpolated {{string}}\"")]
         public void TestPrettyPrint(string script, string expected)
         {
-            Preview.FeatureFlags.StringInterpolation = true;
             var result = Format(script);
             Assert.NotNull(result);
             Assert.Equal(expected, result);

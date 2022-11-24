@@ -3,24 +3,22 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
-using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.Localization;
-using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Interpreter.UDF;
 using Microsoft.PowerFx.Types;
 using Xunit;
 using Xunit.Sdk;
-using static Microsoft.PowerFx.Interpreter.UDFHelper;
 
 namespace Microsoft.PowerFx.Tests
 {
@@ -35,10 +33,15 @@ namespace Microsoft.PowerFx.Tests
             var nsType = "Microsoft.PowerFx.Types";
             var allowed = new HashSet<string>()
             {
+                $"{ns}.{nameof(CheckResultExtensions)}",
+                $"{ns}.{nameof(ReadOnlySymbolValues)}",
                 $"{ns}.{nameof(RecalcEngine)}",
                 $"{ns}.{nameof(ReflectionFunction)}",
+#pragma warning disable CS0618 // Type or member is obsolete
                 $"{ns}.{nameof(RecalcEngineScope)}",
+#pragma warning restore CS0618 // Type or member is obsolete
                 $"{ns}.{nameof(PowerFxConfigExtensions)}",
+                $"{ns}.{nameof(IExpressionEvaluator)}",
                 $"{ns}.{nameof(ITypeMarshallerProvider)}",
                 $"{ns}.{nameof(ITypeMarshaller)}",
                 $"{ns}.{nameof(IDynamicTypeMarshaller)}",
@@ -46,11 +49,19 @@ namespace Microsoft.PowerFx.Tests
                 $"{ns}.{nameof(ObjectMarshaller)}",
                 $"{ns}.{nameof(PrimitiveMarshallerProvider)}",
                 $"{ns}.{nameof(PrimitiveTypeMarshaller)}",
+                $"{ns}.{nameof(SymbolValues)}",
                 $"{ns}.{nameof(TableMarshallerProvider)}",
                 $"{ns}.{nameof(TypeMarshallerCache)}",
                 $"{ns}.{nameof(TypeMarshallerCacheExtensions)}",
+                $"{ns}.{nameof(SymbolExtensions)}",
                 $"{nsType}.{nameof(ObjectRecordValue)}",
-                $"{ns}.Interpreter.UDF.{nameof(DefineFunctionsResult)}"
+                $"{nsType}.{nameof(QueryableTableValue)}",
+                $"{ns}.InterpreterConfigException",
+                $"{ns}.Interpreter.{nameof(NotDelegableException)}",
+                $"{ns}.Interpreter.UDF.{nameof(DefineFunctionsResult)}",                               
+
+                // Services for functions. 
+                $"{ns}.Functions.IRandomService"
             };
 
             var sb = new StringBuilder();
@@ -166,10 +177,10 @@ namespace Microsoft.PowerFx.Tests
                 engine.DeleteFormula("B"));
 
             engine.DeleteFormula("D");
-            Assert.False(engine.Formulas.TryGetValue("D", out var retD));
+            Assert.False(engine.TryGetByName("D", out var retD));
 
             engine.DeleteFormula("C");
-            Assert.False(engine.Formulas.TryGetValue("C", out var retC));
+            Assert.False(engine.TryGetByName("C", out var retC));
 
             // After C and D are deleted, deleting B should pass
             engine.DeleteFormula("B");
@@ -201,6 +212,36 @@ namespace Microsoft.PowerFx.Tests
             AssertUpdate("B-->9;C-->70;");
         }
 
+        private static readonly ParserOptions _opts = new ParserOptions { AllowsSideEffects = true };
+
+        [Fact]
+        public void SetFormula()
+        {
+            var config = new PowerFxConfig();
+            config.EnableSetFunction();
+            var engine = new RecalcEngine(config);
+
+            engine.UpdateVariable("A", 1);
+            engine.SetFormula("B", "A*2", OnUpdate);
+            AssertUpdate("B-->2;");
+
+            // Can't set formulas, they're read only 
+            var check = engine.Check("Set(B, 12)"); 
+            Assert.False(check.IsSuccess);
+
+            // Set() function triggers recalc chain. 
+            engine.Eval("Set(A,2)", options: _opts);
+            AssertUpdate("B-->4;");
+
+            // Compare Before/After set within an expression.
+            // Before (A,B) = 2,4 
+            // After  (A,B) = 3,6
+            var result = engine.Eval("With({x:A, y:B}, Set(A,3); x & y & A & B)", options: _opts);
+            Assert.Equal("2436", result.ToObject());
+
+            AssertUpdate("B-->6;");
+        }
+
         [Fact]
         public void BasicEval()
         {
@@ -228,7 +269,7 @@ namespace Microsoft.PowerFx.Tests
             engine.UpdateVariable("a", FormulaValue.New(12));
 
             // not supported: Can't change a variable's type.
-            Assert.Throws<NotSupportedException>(() =>
+            Assert.Throws<InvalidOperationException>(() =>
                 engine.UpdateVariable("a", FormulaValue.New("str")));
         }
 
@@ -255,6 +296,7 @@ namespace Microsoft.PowerFx.Tests
                 "foo",
                 "x * y",
                 FormulaType.Number,
+                false,
                 new NamedFormulaType("x", FormulaType.Number),
                 new NamedFormulaType("y", FormulaType.Number))).Errors;
             Assert.False(enumerable.Any());
@@ -272,6 +314,7 @@ namespace Microsoft.PowerFx.Tests
                     "foo",
                     body,
                     FormulaType.Number,
+                    false,
                     new NamedFormulaType("x", FormulaType.Number))).Errors;
             var result = recalcEngine.Eval("foo(0)");
             Assert.Equal(2.0, result.ToObject());
@@ -287,7 +330,8 @@ namespace Microsoft.PowerFx.Tests
                 new UDFDefinition(
                     "foo",
                     "foo()",
-                    FormulaType.Blank)).Errors.Any());
+                    FormulaType.Blank,
+                    false)).Errors.Any());
             var result = recalcEngine.Eval("foo()");
             Assert.IsType<ErrorValue>(result);
         }
@@ -306,7 +350,7 @@ namespace Microsoft.PowerFx.Tests
             var variable = new NamedFormulaType("x", FormulaType.Number);
 
             Assert.False(recalcEngine.DefineFunctions(
-                new UDFDefinition(funcName, body, returnType, variable)).Errors.Any());
+                new UDFDefinition(funcName, body, returnType, false, variable)).Errors.Any());
             Assert.Equal(1.0, recalcEngine.Eval("hailstone(192)").ToObject());
         }
 
@@ -325,11 +369,13 @@ namespace Microsoft.PowerFx.Tests
                 "odd",
                 bodyOdd,
                 FormulaType.Boolean,
+                false,
                 new NamedFormulaType("number", FormulaType.Number));
             var udfEven = new UDFDefinition(
                 "even",
                 bodyEven,
                 FormulaType.Boolean,
+                false,
                 new NamedFormulaType("number", FormulaType.Number));
 
             Assert.False(recalcEngine.DefineFunctions(udfOdd, udfEven).Errors.Any());
@@ -344,8 +390,8 @@ namespace Microsoft.PowerFx.Tests
             var config = new PowerFxConfig(null);
             var recalcEngine = new RecalcEngine(config);
             Assert.Throws<InvalidOperationException>(() => recalcEngine.DefineFunctions(
-                new UDFDefinition("foo", "foo()", FormulaType.Blank),
-                new UDFDefinition("foo", "x+1", FormulaType.Number)));
+                new UDFDefinition("foo", "foo()", FormulaType.Blank, false),
+                new UDFDefinition("foo", "x+1", FormulaType.Number, false)));
         }
 
         [Fact]
@@ -353,7 +399,7 @@ namespace Microsoft.PowerFx.Tests
         {
             var config = new PowerFxConfig(null);
             var recalcEngine = new RecalcEngine(config);
-            Assert.True(recalcEngine.DefineFunctions(new UDFDefinition("foo", "x[", FormulaType.Blank)).Errors.Any());
+            Assert.True(recalcEngine.DefineFunctions(new UDFDefinition("foo", "x[", FormulaType.Blank, false)).Errors.Any());
         }
 
         [Fact]
@@ -361,7 +407,7 @@ namespace Microsoft.PowerFx.Tests
         {
             var config = new PowerFxConfig(null);
             var recalcEngine = new RecalcEngine(config);
-            Assert.False(recalcEngine.DefineFunctions(new UDFDefinition("foo", "x+1", FormulaType.Number, new NamedFormulaType("x", FormulaType.Number))).Errors.Any());
+            Assert.False(recalcEngine.DefineFunctions(new UDFDefinition("foo", "x+1", FormulaType.Number, false, new NamedFormulaType("x", FormulaType.Number))).Errors.Any());
             Assert.False(recalcEngine.Check("foo(False)").IsSuccess);
             Assert.False(recalcEngine.Check("foo(Table( { Value: \"Strawberry\" }, { Value: \"Vanilla\" } ))").IsSuccess);
             Assert.True(recalcEngine.Check("foo(1)").IsSuccess);
@@ -401,19 +447,19 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void CheckFunctionCounts()
         {
-            var config = new PowerFxConfig();
+            var engine1 = new Engine(new PowerFxConfig());
 
             // Pick a function in core but not implemented in interpreter.
             var nyiFunc = BuiltinFunctionsCore.ISOWeekNum;
 
-            Assert.Contains(nyiFunc, config.Functions);
+            Assert.Contains(nyiFunc, engine1.Functions);
 
             // RecalcEngine will add the interpreter's functions. 
-            var engine = new RecalcEngine(config);
+            var engine2 = new RecalcEngine();
 
-            Assert.DoesNotContain(nyiFunc, config.Functions);
+            Assert.DoesNotContain(nyiFunc, engine2.Functions);
 
-            var names = engine.GetAllFunctionNames().ToArray();
+            var names = engine2.GetAllFunctionNames().ToArray();
             Assert.True(names.Length > 100);
 
             // Spot check some known functions
@@ -563,8 +609,34 @@ namespace Microsoft.PowerFx.Tests
             // Test evaluation of parsed expression
             var recordValue = FormulaValue.NewRecordFromFields(
                 new NamedValue("x", FormulaValue.New(5)));
-            var formulaValue = result.Expression.Eval(recordValue);
+            var formulaValue = result.GetEvaluator().Eval(recordValue);
             Assert.Equal(11.0, (double)formulaValue.ToObject());
+        }
+
+        // Test Globals + Locals + GetValuator() 
+        [Fact]
+        public void CheckGlobalAndLocal()
+        {
+            var engine = new RecalcEngine();
+            engine.UpdateVariable("y", FormulaValue.New(10));
+
+            var result = engine.Check(
+                "x+y",
+                RecordType.Empty().Add(
+                    new NamedFormulaType("x", FormulaType.Number)));
+
+            // Test that parsing worked
+            Assert.True(result.IsSuccess);
+            Assert.NotNull(result.Expression);
+            Assert.True(result.ReturnType is NumberType);
+
+            // Test evaluation of parsed expression
+            var recordValue = FormulaValue.NewRecordFromFields(
+                new NamedValue("x", FormulaValue.New(5)));
+
+            var formulaValue = result.GetEvaluator().Eval(recordValue);
+
+            Assert.Equal(15.0, (double)formulaValue.ToObject());
         }
 
         [Fact]
@@ -588,31 +660,34 @@ namespace Microsoft.PowerFx.Tests
         }
 
         [Fact]
-        public void RecalcEngineLocksConfig()
+        public void RecalcEngineMutateConfig()
         {
             var config = new PowerFxConfig(null);
-            config.SetCoreFunctions(new TexlFunction[0]); // clear builtins
-            config.AddFunction(BuiltinFunctionsCore.Blank);
+            config.SymbolTable.AddFunction(BuiltinFunctionsCore.Blank);
 
-            var recalcEngine = new Engine(config);
+            var recalcEngine = new Engine(config)
+            {
+                SupportedFunctions = new SymbolTable() // clear builtins
+            };
 
             var func = BuiltinFunctionsCore.AsType; // Function not already in engine
-            Assert.DoesNotContain(func, config.Functions); // didn't get auto-added by engine.
+            Assert.DoesNotContain(func, recalcEngine.Functions); // didn't get auto-added by engine.
 
+            // We can mutate config after engine is created.
             var optionSet = new OptionSet("foo", DisplayNameUtility.MakeUnique(new Dictionary<string, string>() { { "one key", "one value" } }));
-            Assert.Throws<InvalidOperationException>(() => config.AddFunction(func));
-            Assert.Throws<InvalidOperationException>(() => config.AddOptionSet(optionSet));
+            config.SymbolTable.AddFunction(func);
+            config.SymbolTable.AddEntity(optionSet);
 
-            Assert.False(config.TryGetSymbol(new DName("foo"), out _, out _));
+            Assert.True(config.TryGetSymbol(new DName("foo"), out _, out _));
+            Assert.Contains(func, recalcEngine.Functions); // function was added to the config.
 
-            Assert.DoesNotContain(BuiltinFunctionsCore.Abs, config.Functions);
+            Assert.DoesNotContain(BuiltinFunctionsCore.Abs, recalcEngine.Functions);
         }
 
         [Fact]
         public void RecalcEngine_AddFunction_Twice()
         {
             var config = new PowerFxConfig(null);
-            config.SetCoreFunctions(new TexlFunction[0]);
             config.AddFunction(BuiltinFunctionsCore.Blank);
 
             Assert.Throws<ArgumentException>(() => config.AddFunction(BuiltinFunctionsCore.Blank));
@@ -685,10 +760,6 @@ namespace Microsoft.PowerFx.Tests
             var checkResult = recalcEngine.Check("SortOrder.Ascending");
             Assert.True(checkResult.IsSuccess);
             Assert.IsType<StringType>(checkResult.ReturnType);
-
-            var enums = config.EnumStoreBuilder.Build().EnumSymbols;
-
-            Assert.True(enums.Count() > 0);
         }
 
         [Fact]
@@ -736,8 +807,8 @@ namespace Microsoft.PowerFx.Tests
                 "A(x: Number): Number = If(Mod(x, 2) = 0, B(x/2), B(x));" +
                 "B(x: Number): Number = If(Mod(x, 3) = 0, C(x/3), C(x));" +
                 "C(x: Number): Number = If(Mod(x, 5) = 0, D(x/5), D(x));" +
-                "D(x: Number): Number = If(Mod(x, 7) = 0, F(x/7), F(x));" +
-                "F(x: Number): Number = If(x = 1, 1, A(x+1));");
+                "D(x: Number): Number { If(Mod(x, 7) = 0, F(x/7), F(x)) };" +
+                "F(x: Number): Number { If(x = 1, 1, A(x+1)) };");
             Assert.Equal(1.0, recalcEngine.Eval("A(12654)").ToObject());
         }
 
@@ -745,7 +816,7 @@ namespace Microsoft.PowerFx.Tests
         public void DoubleDefinitionTest()
         {
             var recalcEngine = new RecalcEngine(new PowerFxConfig(null));
-            Assert.Throws<InvalidOperationException>(() => recalcEngine.DefineFunctions("Foo(): Number = 10; Foo(x: Number): String = \"hi\""));
+            Assert.Throws<InvalidOperationException>(() => recalcEngine.DefineFunctions("Foo(): Number = 10; Foo(x: Number): String = \"hi\";"));
         }
 
         [Fact]
@@ -753,6 +824,161 @@ namespace Microsoft.PowerFx.Tests
         {
             var recalcEngine = new RecalcEngine(new PowerFxConfig(null));
             Assert.True(recalcEngine.DefineFunctions("Foo(): String = 10;").Errors.Any());
+        }
+
+        [Fact]
+        public void TestWithTimeZoneInfo()
+        {
+            // CultureInfo not set in PowerFxConfig as we use Symbols
+            var pfxConfig = new PowerFxConfig();
+            var recalcEngine = new RecalcEngine(pfxConfig);
+            var symbols = new SymbolValues();
+
+            // 10/30/22 is the date where DST applies in France (https://www.timeanddate.com/time/change/france/paris)
+            // So adding 2 hours to 1:34am will result in 2:34am
+            var frTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Romance Standard Time");
+            symbols.SetTimeZone(frTimeZone);
+
+            var jaCulture = new CultureInfo("ja-JP");
+            symbols.SetCulture(jaCulture);
+
+            Assert.Same(frTimeZone, symbols.GetService<TimeZoneInfo>());
+            Assert.Same(jaCulture, symbols.GetService<CultureInfo>());
+
+            var fv = recalcEngine.EvalAsync(
+                @"Text(DateAdd(DateTimeValue(""dimanche 30 octobre 2022 01:34:03"", ""fr-FR""), ""2"", ""hours""), ""dddd, MMMM dd, yyyy hh:mm:ss"")",
+                CancellationToken.None,
+                runtimeConfig: symbols).Result;
+
+            Assert.NotNull(fv);
+            Assert.IsType<StringValue>(fv);
+
+            // Then we convert the result to Japanese date/time format (English equivalent: "Sunday, October 30, 2022 02:34:03")
+            Assert.Equal("日曜日, 10月 30, 2022 02:34:03", fv.ToObject());
+        }
+
+        [Fact]
+        public void TestMultiReturn()
+        {
+            var recalcEngine = new RecalcEngine(new PowerFxConfig(null));
+            var str = "Foo(x: Number): Number { 1+1; 2+2; };";
+            recalcEngine.DefineFunctions(str);
+            Assert.Equal(4.0, recalcEngine.Eval("Foo(1)", null, new ParserOptions { AllowsSideEffects = true }).ToObject());
+        }
+
+        [Fact]
+        public void FunctionServices()
+        {
+            var engine = new RecalcEngine();
+            var values = new SymbolValues();
+            values.AddService<IRandomService>(new TestRandService());
+
+            // Rand 
+            var result = engine.EvalAsync("Rand()", CancellationToken.None, runtimeConfig: values).Result;
+            Assert.Equal(0.5, result.ToObject());
+
+            // 1 service can impact multiple functions. 
+            // It also doesn't replace the function, so existing function logic (errors, range checks, etc) still is used. 
+            // RandBetween maps 0.5 to 6. 
+            result = engine.EvalAsync("RandBetween(1,10)", CancellationToken.None, runtimeConfig: values).Result;
+            Assert.Equal(6.0, result.ToObject());
+        }
+
+        [Fact]
+        public async Task FunctionServicesHostBug()
+        {
+            // Need to protect against bogus values from a poorly implemented service.
+            // These are exceptions, not ErrorValues, since it's a host bug. 
+            var engine = new RecalcEngine();
+            var values = new SymbolValues();
+
+            // Host bug, service should be 0...1, this is out of range. 
+            var buggyService = new TestRandService { _value = 9999 };
+
+            values.AddService<IRandomService>(buggyService);
+
+            try
+            {
+                await engine.EvalAsync("Rand()", CancellationToken.None, runtimeConfig: values);
+                Assert.False(true); // should have thrown on illegal IRandomService service.
+            }
+            catch (InvalidOperationException e)
+            {
+                var name = typeof(TestRandService).FullName;
+                Assert.Equal($"IRandomService ({name}) returned an illegal value 9999. Must be between 0 and 1", e.Message);
+            }
+        }
+
+        [Fact]
+        public async Task ExecutingWithRemovedVarFails()
+        {
+            var symTable = new SymbolTable();
+            var slot = symTable.AddVariable("x", FormulaType.Number);
+
+            var engine = new RecalcEngine();
+            var result = engine.Check("x+1", symbolTable: symTable);
+            Assert.True(result.IsSuccess);
+
+            var eval = result.GetEvaluator();
+            var symValues = symTable.CreateValues();
+            symValues.Set(slot, FormulaValue.New(10));
+
+            var result1 = await eval.EvalAsync(CancellationToken.None, symValues);
+            Assert.Equal(11.0, result1.ToObject());
+
+            // Adding a variable is ok. 
+            var slotY = symTable.AddVariable("y", FormulaType.Number);
+            result1 = await eval.EvalAsync(CancellationToken.None, symValues);
+            Assert.Equal(11.0, result1.ToObject());
+
+            // Executing an existing IR fails if it uses a deleted variable.
+            symTable.RemoveVariable("x");
+            await Assert.ThrowsAsync<InvalidOperationException>(() => eval.EvalAsync(CancellationToken.None, symValues));
+
+            // Even re-adding with same type still fails. 
+            // (somebody could have re-added with a different type)
+            var slot2 = symTable.AddVariable("x", FormulaType.Number);
+            symValues.Set(slot2, FormulaValue.New(20));
+
+            await Assert.ThrowsAsync<InvalidOperationException>(() => eval.EvalAsync(CancellationToken.None, symValues));
+        }
+
+        // execute w/ missing var (never adding to SymValues)
+        [Fact]
+        public async Task ExecutingWithMissingVar()
+        {
+            var engine = new Engine(new PowerFxConfig());
+
+            var recordType = RecordType.Empty()
+                .Add("x", FormulaType.Number)
+                .Add("y", FormulaType.Number);
+                        
+            var result = engine.Check("x+y", recordType);
+            var eval = result.GetEvaluator();
+
+            var recordXY = RecordValue.NewRecordFromFields(
+                new NamedValue("x", FormulaValue.New(10)),
+                new NamedValue("y", FormulaValue.New(100)));
+
+            var result2 = eval.Eval(recordXY);
+            Assert.Equal(110.0, result2.ToObject());
+
+            // Missing y , treated as blank (0)
+            var recordX = RecordValue.NewRecordFromFields(
+                new NamedValue("x", FormulaValue.New(10)));
+            result2 = eval.Eval(recordX);
+            Assert.Equal(10.0, result2.ToObject());
+        }
+
+        private class TestRandService : IRandomService
+        {
+            public double _value = 0.5;
+
+            // Returns between 0 and 1. 
+            public double NextDouble()
+            {
+                return _value;
+            }
         }
 
         #region Test

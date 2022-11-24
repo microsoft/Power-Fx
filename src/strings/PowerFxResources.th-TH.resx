@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -3268,6 +3268,38 @@
     <value>ธีมความคมชัด</value>
     
   </data>
+  <data name="AboutPatch" xml:space="preserve">
+    <value>ใช้การอัปเดตกับแถวที่กำหนด และเปลี่ยนแปลงแถวในแหล่งข้อมูลที่กำหนด ส่งกลับแถวที่อัปเดตแล้ว</value>
+    
+  </data>
+  <data name="PatchDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="PatchBaseRecordArg" xml:space="preserve">
+    <value>base_record</value>
+    
+  </data>
+  <data name="PatchChangeRecordsArg" xml:space="preserve">
+    <value>change_record(s)</value>
+    
+  </data>
+  <data name="AboutRemove" xml:space="preserve">
+    <value>นำเรกคอร์ดที่ระบุออกจากแหล่งข้อมูล</value>
+    
+  </data>
+  <data name="RemoveDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="RemoveRecordsArg" xml:space="preserve">
+    <value>remove_record(s)</value>
+    
+  </data>
+  <data name="ErrRemoveAllArg" xml:space="preserve">
+    <value>หากระบุ อาร์กิวเมนต์สุดท้ายต้องเป็น 'RemoveFlags.All' มีการพิมพ์ผิดหรือไม่</value>
+    
+  </data>
   <data name="PenMode_Draw_DisplayName" xml:space="preserve">
     <value>วาด</value>
     
@@ -3924,12 +3956,20 @@
     <value>ไม่ได้รับการสนับสนุนในคอลัมน์สูตร</value>
     
   </data>
+  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
+    <value>จำนวนอาร์กิวเมนต์ที่ไม่ถูกต้องสำหรับฟังก์ชัน {0}: ได้รับ {1}, ที่คาดไว้ {2}</value>
+    
+  </data>
   <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
     <value>อาร์กิวเมนต์ {0} ไม่ได้รับการสนับสนุนสำหรับฟังก์ชัน {1} ในคอลัมน์สูตร</value>
     
   </data>
   <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
     <value>ไม่สามารถส่งผ่านอาร์กิวเมนต์เป็นชนิดนี้ในคอลัมน์สูตรได้</value>
+    
+  </data>
+  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
+    <value>ไม่สามารถส่งผ่านอาร์กิวเมนต์เป็นชนิด {0} ในคอลัมน์สูตร</value>
     
   </data>
   <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
@@ -3948,6 +3988,10 @@
     <value>คอลัมน์สูตรสนับสนุนเฉพาะสตริงรูปแบบวันที่และเวลาแบบสั้นเท่านั้น</value>
     
   </data>
+  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
+    <value>อาร์กิวเมนต์ {0} เป็นหน่วยเวลาที่ไม่ถูกต้อง/ไม่ได้รับการสนับสนุนสำหรับฟังก์ชันเลขคณิตของวันที่ {1}</value>
+    
+  </data>
   <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
     <value>โทเค็นการจัดรูปแบบเฉพาะตำแหน่งที่ตั้ง เช่น "." และ "," ไม่ได้รับการสนับสนุนในคอลัมน์สูตร</value>
     
@@ -3956,8 +4000,16 @@
     <value>{0} ไม่ได้รับการสนับสนุนในคอลัมน์สูตร ให้ใช้ {1} แทน</value>
     
   </data>
+  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
+    <value>ไม่สามารถดำเนินการนี้กับชนิด {0} ในคอลัมน์สูตร</value>
+    
+  </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
     <value>ชนิดผลลัพธ์ {0} ไม่ได้รับการสนับสนุนในคอลัมน์สูตร</value>
+    
+  </data>
+  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
+    <value>การอ้างอิงโดยตรงทั้งเรกคอร์ดไม่ได้รับการสนับสนุนในคอลัมน์สูตร โปรดอ้างอิงฟิลด์ที่ถูกต้องในเรกคอร์ด</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
@@ -3972,8 +4024,20 @@
     <value>คอลัมน์ชนิด {0} ที่มีรูปแบบ {1} ไม่ได้รับการสนับสนุนในคอลัมน์สูตร</value>
     
   </data>
+  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
+    <value>การแปลงข้อมูลเรกคอร์ดหรือตารางไม่ได้รับการสนับสนุนในคอลัมน์สูตร</value>
+    
+  </data>
   <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
     <value>สูตรต้องมีความยาวไม่เกิน 1000 อักขระ</value>
+    
+  </data>
+  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
+    <value>ตารางคอลัมน์เดียวไม่ได้รับการสนับสนุนในคอลัมน์สูตร</value>
+    
+  </data>
+  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
+    <value>ไม่สามารถอ้างอิงตารางเสมือน {0} ในคอลัมน์สูตร</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
@@ -4601,7 +4665,66 @@
     <value>ค่า</value>
     
   </data>
-  <data name="ErrExpectedIdentifierArg_Name" xmlns:space="preserve">
-    <value>อาร์กิวเมนต์ '{0}' ไม่ถูกต้อง คาดว่าตัวระบุ</value>
+  <data name="AboutDec2Hex" xml:space="preserve">
+    <value>แปลงเลขฐานสิบเป็นเลขฐานสิบหก</value>
+    
+  </data>
+  <data name="Dec2HexArg1" xml:space="preserve">
+    <value>ตัวเลข</value>
+  </data>
+  <data name="AboutDec2Hex_number" xml:space="preserve">
+    <value>ค่าตัวเลขฐานสิบที่จะแปลงเป็นสตริงเลขฐานสิบหก</value>
+    
+  </data>
+  <data name="Dec2HexArg2" xml:space="preserve">
+    <value>สถานที่</value>
+  </data>
+  <data name="AboutDec2Hex_places" xml:space="preserve">
+    <value>ค่าตัวเลขเพื่อเพิ่มการเสริมเต็มให้กับสตริงเลขฐานสิบหก</value>
+    
+  </data>
+  <data name="AboutDec2HexT" xml:space="preserve">
+    <value>แปลงคอลัมน์ของเลขฐานสิบเป็นเลขฐานสิบหก</value>
+    
+  </data>
+  <data name="Dec2HexTArg1" xml:space="preserve">
+    <value>ตาราง</value>
+  </data>
+  <data name="Dec2HexTArg2" xml:space="preserve">
+    <value>สถานที่</value>
+  </data>
+  <data name="AboutDec2HexT_places" xml:space="preserve">
+    <value>ค่าตัวเลขหรืออาร์เรย์ของค่าเพื่อเพิ่มการเสริมเต็มให้กับสตริงเลขฐานสิบหก</value>
+    
+  </data>
+  <data name="AboutDec2Hex_table" xml:space="preserve">
+    <value>คอลัมน์ของค่าเลขฐานสิบที่จะแปลงเป็นเลขฐานสิบหก</value>
+    
+  </data>
+  <data name="AboutHex2Dec" xml:space="preserve">
+    <value>แปลงเลขฐานสิบหกเป็นเลขฐานสิบ</value>
+    
+  </data>
+  <data name="Hex2DecArg1" xml:space="preserve">
+    <value>ตัวเลข</value>
+  </data>
+  <data name="AboutHex2Dec_number" xml:space="preserve">
+    <value>สตริงเลขฐานสิบหกแปลงเป็นเลขฐานสิบ</value>
+    
+  </data>
+  <data name="AboutHex2DecT" xml:space="preserve">
+    <value>แปลงคอลัมน์ของเลขฐานสิบหกเป็นเลขฐานสิบ</value>
+    
+  </data>
+  <data name="Hex2DecTArg1" xml:space="preserve">
+    <value>ตาราง</value>
+  </data>
+  <data name="AboutHex2Dec_table" xml:space="preserve">
+    <value>คอลัมน์ของสตริงเลขฐานสิบหกที่จะแปลงเป็นเลขฐานสิบ</value>
+    
+  </data>
+  <data name="ErrDeprecated" xml:space="preserve">
+    <value>คุณลักษณะนี้ไม่สนับสนุนและไม่ได้รับการรองรับอีกต่อไป</value>
+    
   </data>
 </root>

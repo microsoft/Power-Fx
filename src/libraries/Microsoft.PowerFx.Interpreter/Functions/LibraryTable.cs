@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Functions
@@ -31,14 +32,7 @@ namespace Microsoft.PowerFx.Functions
                 else
                 {
                     var childContext = context.SymbolContext.WithScopeValues(row.Value);
-                    var value = await arg2.EvalAsync(runner, new EvalVisitorContext(childContext, context.StackDepthCounter));
-
-                    if (value is NumberValue number)
-                    {
-                        value = FiniteChecker(irContext, 0, number);
-                    }
-
-                    return value;
+                    return await arg2.EvalInRowScopeAsync(context.NewScope(childContext));
                 }
             }
 
@@ -47,7 +41,20 @@ namespace Microsoft.PowerFx.Functions
 
         public static FormulaValue First(IRContext irContext, TableValue[] args)
         {
-            return args[0].Rows.FirstOrDefault()?.ToFormulaValue() ?? new BlankValue(irContext);
+            var arg0 = args[0];
+
+            if (arg0 is QueryableTableValue tableQueryable)
+            {
+                try
+                {
+                    return tableQueryable.FirstN(1).Rows.FirstOrDefault()?.ToFormulaValue() ?? new BlankValue(irContext);
+                }
+                catch (NotDelegableException)
+                {
+                }
+            }
+
+            return arg0.Rows.FirstOrDefault()?.ToFormulaValue() ?? new BlankValue(irContext);
         }
 
         public static FormulaValue Last(IRContext irContext, TableValue[] args)
@@ -69,6 +76,17 @@ namespace Microsoft.PowerFx.Functions
 
             var arg0 = (TableValue)args[0];
             var arg1 = (NumberValue)args[1];
+
+            if (arg0 is QueryableTableValue queryableTable)
+            {
+                try
+                {
+                    return queryableTable.FirstN((int)arg1.Value);
+                }
+                catch (NotDelegableException)
+                {
+                }
+            }
 
             var rows = arg0.Rows.Take((int)arg1.Value);
             return new InMemoryTableValue(irContext, rows);
@@ -139,7 +157,7 @@ namespace Microsoft.PowerFx.Functions
 
                     foreach (var column in newColumns)
                     {
-                        var value = await column.Lambda.EvalAsync(runner, new EvalVisitorContext(childContext, context.StackDepthCounter));
+                        var value = await column.Lambda.EvalInRowScopeAsync(context.NewScope(childContext));
                         fields.Add(new NamedValue(column.Name, value));
                     }
 
@@ -186,10 +204,10 @@ namespace Microsoft.PowerFx.Functions
 
             if (arg0 is TableValue table)
             {
-                var errors = table.Rows.Where(r => r.IsError).Select(r => r.Error);
-                if (errors.Any())
+                var error = table.Rows.Where(r => r.IsError).Select(r => r.Error).FirstOrDefault();
+                if (error != null)
                 {
-                    return ErrorValue.Combine(irContext, errors);
+                    return error;
                 }
 
                 var count = table.Count();
@@ -212,8 +230,6 @@ namespace Microsoft.PowerFx.Functions
 
             if (arg0 is TableValue table)
             {
-                var errors = new List<ErrorValue>();
-
                 foreach (var row in table.Rows)
                 {
                     if (row.IsBlank)
@@ -222,27 +238,20 @@ namespace Microsoft.PowerFx.Functions
                     }
                     else if (row.IsError)
                     {
-                        errors.Add(row.Error);
-                        continue;
+                        return row.Error;
                     }
 
                     var field = row.Value.Fields.First().Value;
 
                     if (field is ErrorValue error)
                     {
-                        errors.Add(error);
-                        continue;
+                        return error;
                     }
 
                     if (field is NumberValue)
                     {
                         count++;
                     }
-                }
-
-                if (errors.Count != 0)
-                {
-                    return ErrorValue.Combine(irContext, errors);
                 }
 
                 return new NumberValue(irContext, count);
@@ -264,8 +273,6 @@ namespace Microsoft.PowerFx.Functions
             {
                 var count = 0;
 
-                var errors = new List<ErrorValue>();
-
                 foreach (var row in table.Rows)
                 {
                     if (row.IsBlank)
@@ -274,27 +281,20 @@ namespace Microsoft.PowerFx.Functions
                     }
                     else if (row.IsError)
                     {
-                        errors.Add(row.Error);
-                        continue;
+                        return row.Error;
                     }
 
                     var field = row.Value.Fields.First().Value;
 
                     if (field is ErrorValue error)
                     {
-                        errors.Add(error);
-                        continue;
+                        return error;
                     }
 
                     if (field is not BlankValue)
                     {
                         count++;
                     }
-                }
-
-                if (errors.Count != 0)
-                {
-                    return ErrorValue.Combine(irContext, errors);
                 }
 
                 return new NumberValue(irContext, count);
@@ -316,19 +316,18 @@ namespace Microsoft.PowerFx.Functions
 
             var count = 0;
 
-            var errors = new List<ErrorValue>();
-
             foreach (var row in sources.Rows)
             {
-                if (row.IsValue)
+                if (row.IsValue || row.IsError)
                 {
-                    var childContext = context.SymbolContext.WithScopeValues(row.Value);
-                    var result = await filter.EvalAsync(runner, new EvalVisitorContext(childContext, context.StackDepthCounter));
+                    var childContext = row.IsValue ?
+                        context.SymbolContext.WithScopeValues(row.Value) :
+                        context.SymbolContext.WithScopeValues(row.Error);
+                    var result = await filter.EvalInRowScopeAsync(context.NewScope(childContext));
 
                     if (result is ErrorValue error)
                     {
-                        errors.Add(error);
-                        continue;
+                        return error;
                     }
 
                     var include = ((BooleanValue)result).Value;
@@ -338,16 +337,6 @@ namespace Microsoft.PowerFx.Functions
                         count++;
                     }
                 }
-
-                if (row.IsError)
-                {
-                    errors.Add(row.Error);
-                }
-            }
-
-            if (errors.Count != 0)
-            {
-                return ErrorValue.Combine(irContext, errors);
             }
 
             return new NumberValue(irContext, count);
@@ -370,6 +359,17 @@ namespace Microsoft.PowerFx.Functions
                 });
             }
 
+            if (arg0 is QueryableTableValue tableQueryable)
+            {
+                try
+                {
+                    return tableQueryable.Filter(arg1, runner, context);
+                }
+                catch (NotDelegableException)
+                {
+                }
+            }
+
             var rows = await LazyFilterAsync(runner, context, arg0.Rows, arg1);
 
             return new InMemoryTableValue(irContext, rows);
@@ -384,17 +384,14 @@ namespace Microsoft.PowerFx.Functions
             return arg0.Index(rowIndex).ToFormulaValue();
         }
 
-        public static FormulaValue Shuffle(IRContext irContext, FormulaValue[] args)
+        public static FormulaValue Shuffle(IServiceProvider services, IRContext irContext, FormulaValue[] args)
         {
             var table = (TableValue)args[0];
             var records = table.Rows;
 
-            lock (_randomizerLock)
-            {
-                _random ??= new Random();
-            }
+            var random = services.GetService<IRandomService>(_defaultRandService);
 
-            var shuffledRecords = records.OrderBy(a => _random.Next()).ToList();
+            var shuffledRecords = records.OrderBy(a => random.SafeNextDouble()).ToList();
             return new InMemoryTableValue(irContext, shuffledRecords);
         }
 
@@ -406,7 +403,7 @@ namespace Microsoft.PowerFx.Functions
             }
 
             var childContext = context.SymbolContext.WithScopeValues(row.Value);
-            var sortValue = await lambda.EvalAsync(runner, new EvalVisitorContext(childContext, context.StackDepthCounter));
+            var sortValue = await lambda.EvalInRowScopeAsync(context.NewScope(childContext));
 
             return (row, sortValue);
         }
@@ -417,10 +414,22 @@ namespace Microsoft.PowerFx.Functions
             var arg1 = (LambdaFormulaValue)args[1];
             var arg2 = (StringValue)args[2];
 
+            var isDescending = arg2.Value.ToLower() == "descending";
+
+            if (arg0 is QueryableTableValue queryableTable)
+            {
+                try
+                {
+                    return queryableTable.Sort(arg1, isDescending, runner, context);
+                }
+                catch (NotDelegableException)
+                {
+                }
+            }
+
             var pairs = (await Task.WhenAll(arg0.Rows.Select(row => ApplySortLambda(runner, context, row, arg1)))).ToList();
 
-            var errors = new List<ErrorValue>();
-            bool allNumbers = true, allStrings = true, allBooleans = true, allDatetimes = true, allDates = true;
+            bool allNumbers = true, allStrings = true, allBooleans = true, allDatetimes = true, allDates = true, allOptionSets = true;
 
             foreach (var (row, sortValue) in pairs)
             {
@@ -429,26 +438,21 @@ namespace Microsoft.PowerFx.Functions
                 allBooleans &= IsValueTypeErrorOrBlank<BooleanValue>(sortValue);
                 allDatetimes &= IsValueTypeErrorOrBlank<DateTimeValue>(sortValue);
                 allDates &= IsValueTypeErrorOrBlank<DateValue>(sortValue);
+                allOptionSets &= IsValueTypeErrorOrBlank<OptionSetValue>(sortValue);
 
                 if (sortValue is ErrorValue errorValue)
                 {
-                    errors.Add(errorValue);
+                    return errorValue;
                 }
             }
 
-            if (!(allNumbers || allStrings || allBooleans || allDatetimes || allDates))
+            if (!(allNumbers || allStrings || allBooleans || allDatetimes || allDates || allOptionSets))
             {
-                errors.Add(CommonErrors.RuntimeTypeMismatch(irContext));
-                return ErrorValue.Combine(irContext, errors);
-            }
-
-            if (errors.Count != 0)
-            {
-                return ErrorValue.Combine(irContext, errors);
+                return CommonErrors.RuntimeTypeMismatch(irContext);
             }
 
             var compareToResultModifier = 1;
-            if (arg2.Value.ToLower() == "descending")
+            if (isDescending)
             {
                 compareToResultModifier = -1;
             }
@@ -469,9 +473,17 @@ namespace Microsoft.PowerFx.Functions
             {
                 return SortValueType<DateTimeValue, DateTime>(pairs, irContext, compareToResultModifier);
             }
-            else
+            else if (allDates)
             {
                 return SortValueType<DateValue, DateTime>(pairs, irContext, compareToResultModifier);
+            }
+            else if (allOptionSets)
+            {
+                return SortOptionSet(pairs, irContext, compareToResultModifier);
+            }
+            else
+            {
+                return CommonErrors.RuntimeTypeMismatch(irContext);
             }
         }
 
@@ -504,6 +516,27 @@ namespace Microsoft.PowerFx.Functions
             return new InMemoryTableValue(irContext, pairs.Select(pair => pair.row));
         }
 
+        private static FormulaValue SortOptionSet(List<(DValue<RecordValue> row, FormulaValue sortValue)> pairs, IRContext irContext, int compareToResultModifier)
+        {
+            pairs.Sort((a, b) =>
+            {
+                if (a.sortValue is BlankValue)
+                {
+                    return b.sortValue is BlankValue ? 0 : 1;
+                }
+                else if (b.sortValue is BlankValue)
+                {
+                    return -1;
+                }
+
+                var n1 = a.sortValue as OptionSetValue;
+                var n2 = b.sortValue as OptionSetValue;
+                return n1.Option.CompareTo(n2.Option) * compareToResultModifier;
+            });
+
+            return new InMemoryTableValue(irContext, pairs.Select(pair => pair.row));
+        }
+
         private static async Task<DValue<RecordValue>> LazyFilterRowAsync(
            EvalVisitor runner,
            EvalVisitorContext context,
@@ -527,7 +560,7 @@ namespace Microsoft.PowerFx.Functions
             }
 
             // Filter evals to a boolean 
-            var result = await filter.EvalAsync(runner, new EvalVisitorContext(childContext, context.StackDepthCounter));
+            var result = await filter.EvalInRowScopeAsync(context.NewScope(childContext));
             var include = false;
             if (result is BooleanValue booleanValue)
             {

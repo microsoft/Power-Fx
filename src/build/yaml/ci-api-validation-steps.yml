@@ -5,30 +5,37 @@ parameters:
 
 steps:
 - task: DownloadPipelineArtifact@2
-  displayName: 'Download $(PackageName).dll from Artifacts'
+  displayName: 'Download OutputDlls from Artifacts'
   inputs:
     artifactName: 'OutputDlls-$(BuildConfiguration)'
-    patterns: '$(PackageName).dll'
-    targetPath: '$(System.ArtifactsDirectory)/Artifacts'
+    targetPath: '$(System.ArtifactsDirectory)/OutputDlls'
 
-- task: NuGetCommand@2
-  displayName: 'NuGet install $(PackageName) v ${{ parameters.ContractVersion }}'
+- task: DownloadPipelineArtifact@2
+  displayName: 'Download ContractDlls from Artifacts'
   inputs:
-    command: custom
-    arguments: 'install $(PackageName) -Version ${{ parameters.ContractVersion }} -OutputDirectory $(System.DefaultWorkingDirectory)\DownloadedNuGet'
+    artifactName: 'ContractDlls'
+    targetPath: '$(System.ArtifactsDirectory)/ContractDlls'
+
+- powershell: |
+    Write-Host "The following API compatibility issues are suppressed:";
+    Get-Content "ApiCompatBaseline.txt";
+  displayName: 'Show API compat issue suppression list in ApiCompatBaseline.txt'
+  continueOnError: true
 
 - task: SOUTHWORKS.binaries-comparer.custom-build-release-task.binaries-comparer@0
   displayName: 'Compare binaries'
   inputs:
-    contractsRootFolder: 'DownloadedNuGet\$(PackageName).${{ parameters.ContractVersion }}\lib\netstandard2.0'
+    contractsRootFolder: '$(System.ArtifactsDirectory)/ContractDlls'
     contractsFileName: '$(PackageName).dll'
-    implFolder: '$(System.ArtifactsDirectory)/Artifacts'
+    implFolder: '$(System.ArtifactsDirectory)/OutputDlls'
     failOnIssue: false
     resolveFx: false
     generateLog: true
     outputFilename: '$(PackageName).${{ parameters.ContractVersion }}.CompatResults.txt'
     outputFolder: '$(Build.ArtifactStagingDirectory)'
-    useBaseline: false
+    useBaseline: true
+    baselineFile: ApiCompatBaseline.txt
+  continueOnError: true
 
 - powershell: |
     $filePath = "$(Build.ArtifactStagingDirectory)\$(PackageName).${{ parameters.ContractVersion }}.CompatResults.txt"
@@ -39,6 +46,7 @@ steps:
       $content = "The binary compatibility report for library '$(PackageName)' wasn't generated. This may have happened because the NuGet library '$(PackageName)' for version '$(ContractVersion)' was unavailable or a connectivity issue."
       New-Item -Path '$(Build.ArtifactStagingDirectory)' -Name '$(PackageName).${{ parameters.ContractVersion }}.CompatResults.txt' -ItemType "file" -Value $content
       $content;
+      Write-Host "##vso[task.complete result=Failed;]";
       return;
     }
 

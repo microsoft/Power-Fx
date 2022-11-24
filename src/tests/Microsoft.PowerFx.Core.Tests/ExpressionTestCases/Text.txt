@@ -7,18 +7,6 @@
 >> Text(Blank(), "#.000")
 ""
 
->> Char(65)
-"A"
-
->> Char(Blank())
-Blank()
-
->> Char(660/10)
-"B"
-
->> Char(1/0)
-#Error
-
 // ******** NUMBER PARAMETERS ********
 
 //Excel needs two parameters for Text function
@@ -101,6 +89,10 @@ Blank()
 >> Text("HELLO")
 "HELLO"
 
+// Calling Text on a string value returns that value
+>> Text("abc", "0.00")
+"abc"
+
 // ******** BOOLEAN PARAMETERS ********
 
 //Excel needs two parameters for Text function
@@ -168,7 +160,7 @@ Blank()
 
 
 >> Text(1/0, "#.000")
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 // ******** DATE/TIME PARAMETERS ********
 

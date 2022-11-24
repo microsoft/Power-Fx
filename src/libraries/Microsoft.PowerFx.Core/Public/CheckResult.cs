@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Errors;
@@ -37,11 +38,11 @@ namespace Microsoft.PowerFx
         /// </summary>
         public IEnumerable<ExpressionError> Errors { get; set; }
 
-        private IEnumerable<ExpressionError> BindingErrors => ExpressionError.New(_binding.ErrorContainer.GetErrors());
+        private IEnumerable<ExpressionError> BindingErrors => ExpressionError.New(_binding?.ErrorContainer.GetErrors(), CultureInfo);
 
         internal void SetErrors(IEnumerable<IDocumentError> errors)
         {
-            Errors = ExpressionError.New(errors);
+            Errors = ExpressionError.New(errors, CultureInfo);
         }
 
         /// <summary>
@@ -49,6 +50,11 @@ namespace Microsoft.PowerFx
         /// Null on failure or if there is no evaluation. 
         /// </summary>
         public IExpression Expression { get; set; }
+
+        /// <summary>
+        /// The source engine this was created against. 
+        /// </summary>
+        internal Engine Source { get; set; }
 
         /// <summary>
         /// True if no errors. 
@@ -63,15 +69,37 @@ namespace Microsoft.PowerFx
         public ParseResult Parse { get; set; }
 
         /// <summary>
+        /// Symbols passed to this binding. May be null. 
+        /// </summary>
+        public ReadOnlySymbolTable Symbols { get; set; }
+
+        /// <summary>
+        /// Parameters are the subset of symbols that must be passed in Eval() for each evaluation. 
+        /// This lets us associated the type in Check()  with the values in Eval().
+        /// </summary>
+        internal ReadOnlySymbolTable Parameters { get; set; }
+
+        /// <summary>
+        /// Culture info passed to this binding. May be null. 
+        /// </summary>
+        internal CultureInfo CultureInfo { get; set; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="CheckResult"/> class.
         /// </summary>
         public CheckResult()
         {
         }
 
-        internal CheckResult(ParseResult parse, TexlBinding binding = null)
+        internal CheckResult(ParseResult parse, TexlBinding binding = null) 
+            : this(parse, null, binding)
+        {
+        }
+
+        internal CheckResult(ParseResult parse, CultureInfo locale, TexlBinding binding = null)
         {
             Parse = parse ?? throw new ArgumentNullException(nameof(parse));
+            CultureInfo = locale;
 
             _binding = binding;
 

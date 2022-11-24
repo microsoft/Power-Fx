@@ -12,62 +12,70 @@ namespace Microsoft.PowerFx.Functions
     {
         #region Operator Standard Error Handling Wrappers
         public static readonly AsyncFunctionPtr OperatorBinaryAdd = StandardErrorHandling<NumberValue>(
+            "+",
             expandArguments: NoArgExpansion,
             replaceBlankValues: ReplaceBlankWithZero,
             checkRuntimeTypes: ExactValueType<NumberValue>,
-            checkRuntimeValues: FiniteChecker,
+            checkRuntimeValues: DeferRuntimeTypeChecking,
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
             targetFunction: NumericAdd);
 
         public static readonly AsyncFunctionPtr OperatorBinaryMul = StandardErrorHandling<NumberValue>(
+            "*",
             expandArguments: NoArgExpansion,
             replaceBlankValues: ReplaceBlankWithZero,
             checkRuntimeTypes: ExactValueType<NumberValue>,
-            checkRuntimeValues: FiniteChecker,
+            checkRuntimeValues: DeferRuntimeTypeChecking,
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
             targetFunction: NumericMul);
 
         public static readonly AsyncFunctionPtr OperatorBinaryDiv = StandardErrorHandling<NumberValue>(
+            "/",
             expandArguments: NoArgExpansion,
             replaceBlankValues: ReplaceBlankWithZero,
             checkRuntimeTypes: ExactValueType<NumberValue>,
-            checkRuntimeValues: DivideByZeroChecker,
+            checkRuntimeValues: DeferRuntimeTypeChecking,
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
             targetFunction: NumericDiv);
 
         public static readonly AsyncFunctionPtr OperatorBinaryGt = StandardErrorHandling<NumberValue>(
+            ">",
             expandArguments: NoArgExpansion,
             replaceBlankValues: ReplaceBlankWithZero,
             checkRuntimeTypes: ExactValueType<NumberValue>,
-            checkRuntimeValues: FiniteChecker,
+            checkRuntimeValues: DeferRuntimeTypeChecking,
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
             targetFunction: NumericGt);
 
         public static readonly AsyncFunctionPtr OperatorBinaryGeq = StandardErrorHandling<NumberValue>(
+            ">=",
             expandArguments: NoArgExpansion,
             replaceBlankValues: ReplaceBlankWithZero,
             checkRuntimeTypes: ExactValueType<NumberValue>,
-            checkRuntimeValues: FiniteChecker,
+            checkRuntimeValues: DeferRuntimeTypeChecking,
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
             targetFunction: NumericGeq);
 
         public static readonly AsyncFunctionPtr OperatorBinaryLt = StandardErrorHandling<NumberValue>(
+            "<",
             expandArguments: NoArgExpansion,
             replaceBlankValues: ReplaceBlankWithZero,
             checkRuntimeTypes: ExactValueType<NumberValue>,
-            checkRuntimeValues: FiniteChecker,
+            checkRuntimeValues: DeferRuntimeTypeChecking,
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
             targetFunction: NumericLt);
 
         public static readonly AsyncFunctionPtr OperatorBinaryLeq = StandardErrorHandling<NumberValue>(
+            "<=",
             expandArguments: NoArgExpansion,
             replaceBlankValues: ReplaceBlankWithZero,
             checkRuntimeTypes: ExactValueType<NumberValue>,
-            checkRuntimeValues: FiniteChecker,
+            checkRuntimeValues: DeferRuntimeTypeChecking,
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
             targetFunction: NumericLeq);
 
         public static readonly AsyncFunctionPtr OperatorBinaryEq = StandardErrorHandling<FormulaValue>(
+            "=",
             expandArguments: NoArgExpansion,
             replaceBlankValues: DoNotReplaceBlank,
             checkRuntimeTypes: DeferRuntimeTypeChecking,
@@ -76,6 +84,7 @@ namespace Microsoft.PowerFx.Functions
             targetFunction: AreEqual);
 
         public static readonly AsyncFunctionPtr OperatorBinaryNeq = StandardErrorHandling<FormulaValue>(
+            "<>",
             expandArguments: NoArgExpansion,
             replaceBlankValues: DoNotReplaceBlank,
             checkRuntimeTypes: DeferRuntimeTypeChecking,
@@ -84,6 +93,7 @@ namespace Microsoft.PowerFx.Functions
             targetFunction: NotEqual);
 
         public static readonly AsyncFunctionPtr OperatorTextIn = StandardErrorHandling(
+            "in",
             expandArguments: NoArgExpansion,
             replaceBlankValues: DoNotReplaceBlank,
             checkRuntimeTypes: DeferRuntimeTypeChecking,
@@ -92,6 +102,7 @@ namespace Microsoft.PowerFx.Functions
             targetFunction: StringInOperator(false));
 
         public static readonly AsyncFunctionPtr OperatorTextInExact = StandardErrorHandling(
+            "exactin",
             expandArguments: NoArgExpansion,
             replaceBlankValues: DoNotReplaceBlank,
             checkRuntimeTypes: DeferRuntimeTypeChecking,
@@ -100,6 +111,7 @@ namespace Microsoft.PowerFx.Functions
             targetFunction: StringInOperator(true));
 
         public static readonly AsyncFunctionPtr OperatorScalarTableIn = StandardErrorHandling(
+            "in",
             expandArguments: NoArgExpansion,
             replaceBlankValues: DoNotReplaceBlank,
             checkRuntimeTypes: DeferRuntimeTypeChecking,
@@ -108,6 +120,7 @@ namespace Microsoft.PowerFx.Functions
             targetFunction: InScalarTableOperator(false));
 
         public static readonly AsyncFunctionPtr OperatorScalarTableInExact = StandardErrorHandling(
+            "exactin",
             expandArguments: NoArgExpansion,
             replaceBlankValues: DoNotReplaceBlank,
             checkRuntimeTypes: DeferRuntimeTypeChecking,
@@ -116,6 +129,7 @@ namespace Microsoft.PowerFx.Functions
             targetFunction: InScalarTableOperator(true));
 
         public static readonly AsyncFunctionPtr OperatorAddDateAndTime = StandardErrorHandling<FormulaValue>(
+            "+",
             expandArguments: NoArgExpansion,
             replaceBlankValues: DoNotReplaceBlank,
             checkRuntimeTypes: ExactSequence(
@@ -125,27 +139,56 @@ namespace Microsoft.PowerFx.Functions
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
             targetFunction: AddDateAndTime);
 
+        public static readonly AsyncFunctionPtr OperatorAddTimeAndNumber = StandardErrorHandling<FormulaValue>(
+            "+",
+            expandArguments: NoArgExpansion,
+            replaceBlankValues: ReplaceBlankWith(
+                new TimeValue(IRContext.NotInSource(FormulaType.Time), TimeSpan.Zero),
+                new NumberValue(IRContext.NotInSource(FormulaType.Number), 0)),
+            checkRuntimeTypes: ExactSequence(
+                TimeOrDateTime,
+                ExactValueType<NumberValue>),
+            checkRuntimeValues: DeferRuntimeValueChecking,
+            returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+            targetFunction: AddTimeAndNumber);
+
+        public static readonly AsyncFunctionPtr OperatorAddTimeAndTime = StandardErrorHandling<FormulaValue>(
+            "+",
+            expandArguments: NoArgExpansion,
+            replaceBlankValues: ReplaceBlankWith(
+                new TimeValue(IRContext.NotInSource(FormulaType.Time), TimeSpan.Zero),
+                new TimeValue(IRContext.NotInSource(FormulaType.Time), TimeSpan.Zero)),
+            checkRuntimeTypes: ExactSequence(
+                TimeOrDateTime,
+                TimeOrDateTime),
+            checkRuntimeValues: DeferRuntimeValueChecking,
+            returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+            targetFunction: AddTimeAndTime);
+
         public static readonly AsyncFunctionPtr OperatorAddDateAndDay = StandardErrorHandling<FormulaValue>(
+            "+",
             expandArguments: NoArgExpansion,
             replaceBlankValues: DoNotReplaceBlank,
             checkRuntimeTypes: ExactSequence(
                 DateOrDateTime,
                 ExactValueType<NumberValue>),
-            checkRuntimeValues: FiniteChecker,
+            checkRuntimeValues: DeferRuntimeTypeChecking,
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
             targetFunction: AddDateAndDay);
 
         public static readonly AsyncFunctionPtr OperatorAddDateTimeAndDay = StandardErrorHandling<FormulaValue>(
+            "+",
             expandArguments: NoArgExpansion,
             replaceBlankValues: DoNotReplaceBlank,
             checkRuntimeTypes: ExactSequence(
                 DateOrDateTime,
                 ExactValueType<NumberValue>),
-            checkRuntimeValues: FiniteChecker,
+            checkRuntimeValues: DeferRuntimeTypeChecking,
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
             targetFunction: AddDateTimeAndDay);
 
         public static readonly AsyncFunctionPtr OperatorDateDifference = StandardErrorHandling<FormulaValue>(
+            "-",
             expandArguments: NoArgExpansion,
             replaceBlankValues: DoNotReplaceBlank,
             checkRuntimeTypes: ExactSequence(
@@ -156,6 +199,7 @@ namespace Microsoft.PowerFx.Functions
             targetFunction: DateDifference);
 
         public static readonly AsyncFunctionPtr OperatorTimeDifference = StandardErrorHandling<FormulaValue>(
+            "-",
             expandArguments: NoArgExpansion,
             replaceBlankValues: DoNotReplaceBlank,
             checkRuntimeTypes: ExactSequence(
@@ -165,7 +209,41 @@ namespace Microsoft.PowerFx.Functions
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
             targetFunction: TimeDifference);
 
+        public static readonly AsyncFunctionPtr OperatorSubtractDateAndTime = StandardErrorHandling<FormulaValue>(
+            "-",
+            expandArguments: NoArgExpansion,
+            replaceBlankValues: DoNotReplaceBlank,
+            checkRuntimeTypes: ExactSequence(
+                DateOrDateTime,
+                ExactValueType<TimeValue>),
+            checkRuntimeValues: DeferRuntimeValueChecking,
+            returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+            targetFunction: SubtractDateAndTime);
+
+        public static readonly AsyncFunctionPtr OperatorSubtractNumberAndDate = StandardErrorHandling<FormulaValue>(
+            "-",
+            expandArguments: NoArgExpansion,
+            replaceBlankValues: DoNotReplaceBlank,
+            checkRuntimeTypes: ExactSequence(
+                ExactValueType<NumberValue>,
+                DateOrDateTime),
+            checkRuntimeValues: DeferRuntimeValueChecking,
+            returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+            targetFunction: SubtractNumberAndDate);
+
+        public static readonly AsyncFunctionPtr OperatorSubtractNumberAndTime = StandardErrorHandling<FormulaValue>(
+            "-",
+            expandArguments: NoArgExpansion,
+            replaceBlankValues: DoNotReplaceBlank,
+            checkRuntimeTypes: ExactSequence(
+                ExactValueType<NumberValue>,
+                ExactValueType<TimeValue>),
+            checkRuntimeValues: DeferRuntimeValueChecking,
+            returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+            targetFunction: SubtractNumberAndTime);
+
         public static readonly AsyncFunctionPtr OperatorLtDateTime = StandardErrorHandling<FormulaValue>(
+            "<",
             expandArguments: NoArgExpansion,
             replaceBlankValues: ReplaceBlankWith(
                 new DateTimeValue(IRContext.NotInSource(FormulaType.DateTime), _epoch),
@@ -178,6 +256,7 @@ namespace Microsoft.PowerFx.Functions
             targetFunction: LtDateTime);
 
         public static readonly AsyncFunctionPtr OperatorLeqDateTime = StandardErrorHandling<FormulaValue>(
+            "<=",
             expandArguments: NoArgExpansion,
             replaceBlankValues: ReplaceBlankWith(
                 new DateTimeValue(IRContext.NotInSource(FormulaType.DateTime), _epoch),
@@ -190,6 +269,7 @@ namespace Microsoft.PowerFx.Functions
             targetFunction: LeqDateTime);
 
         public static readonly AsyncFunctionPtr OperatorGtDateTime = StandardErrorHandling<FormulaValue>(
+            ">",
             expandArguments: NoArgExpansion,
             replaceBlankValues: ReplaceBlankWith(
                 new DateTimeValue(IRContext.NotInSource(FormulaType.DateTime), _epoch),
@@ -202,6 +282,7 @@ namespace Microsoft.PowerFx.Functions
             targetFunction: GtDateTime);
 
         public static readonly AsyncFunctionPtr OperatorGeqDateTime = StandardErrorHandling<FormulaValue>(
+            ">=",
             expandArguments: NoArgExpansion,
             replaceBlankValues: ReplaceBlankWith(
                 new DateTimeValue(IRContext.NotInSource(FormulaType.DateTime), _epoch),
@@ -214,6 +295,7 @@ namespace Microsoft.PowerFx.Functions
             targetFunction: GeqDateTime);
 
         public static readonly AsyncFunctionPtr OperatorLtDate = StandardErrorHandling<FormulaValue>(
+            "<",
             expandArguments: NoArgExpansion,
             replaceBlankValues: ReplaceBlankWith(
                 new DateValue(IRContext.NotInSource(FormulaType.Date), _epoch),
@@ -226,6 +308,7 @@ namespace Microsoft.PowerFx.Functions
             targetFunction: LtDate);
 
         public static readonly AsyncFunctionPtr OperatorLeqDate = StandardErrorHandling<FormulaValue>(
+            "<=",
             expandArguments: NoArgExpansion,
             replaceBlankValues: ReplaceBlankWith(
                 new DateValue(IRContext.NotInSource(FormulaType.Date), _epoch),
@@ -238,6 +321,7 @@ namespace Microsoft.PowerFx.Functions
             targetFunction: LeqDate);
 
         public static readonly AsyncFunctionPtr OperatorGtDate = StandardErrorHandling<FormulaValue>(
+            ">",
             expandArguments: NoArgExpansion,
             replaceBlankValues: ReplaceBlankWith(
                 new DateValue(IRContext.NotInSource(FormulaType.Date), _epoch),
@@ -250,6 +334,7 @@ namespace Microsoft.PowerFx.Functions
             targetFunction: GtDate);
 
         public static readonly AsyncFunctionPtr OperatorGeqDate = StandardErrorHandling<FormulaValue>(
+            ">=",
             expandArguments: NoArgExpansion,
             replaceBlankValues: ReplaceBlankWith(
                 new DateValue(IRContext.NotInSource(FormulaType.Date), _epoch),
@@ -262,6 +347,7 @@ namespace Microsoft.PowerFx.Functions
             targetFunction: GeqDate);
 
         public static readonly AsyncFunctionPtr OperatorLtTime = StandardErrorHandling<FormulaValue>(
+            "<",
             expandArguments: NoArgExpansion,
             replaceBlankValues: ReplaceBlankWith(
                 new TimeValue(IRContext.NotInSource(FormulaType.Time), TimeSpan.Zero),
@@ -274,6 +360,7 @@ namespace Microsoft.PowerFx.Functions
             targetFunction: LtTime);
 
         public static readonly AsyncFunctionPtr OperatorLeqTime = StandardErrorHandling<FormulaValue>(
+            "<=",
             expandArguments: NoArgExpansion,
             replaceBlankValues: ReplaceBlankWith(
                 new TimeValue(IRContext.NotInSource(FormulaType.Time), TimeSpan.Zero),
@@ -286,6 +373,7 @@ namespace Microsoft.PowerFx.Functions
             targetFunction: LeqTime);
 
         public static readonly AsyncFunctionPtr OperatorGtTime = StandardErrorHandling<FormulaValue>(
+            ">",
             expandArguments: NoArgExpansion,
             replaceBlankValues: ReplaceBlankWith(
                 new TimeValue(IRContext.NotInSource(FormulaType.Time), TimeSpan.Zero),
@@ -298,6 +386,7 @@ namespace Microsoft.PowerFx.Functions
             targetFunction: GtTime);
 
         public static readonly AsyncFunctionPtr OperatorGeqTime = StandardErrorHandling<FormulaValue>(
+            ">=",
             expandArguments: NoArgExpansion,
             replaceBlankValues: ReplaceBlankWith(
                 new TimeValue(IRContext.NotInSource(FormulaType.Time), TimeSpan.Zero),
@@ -322,10 +411,16 @@ namespace Microsoft.PowerFx.Functions
             return new NumberValue(irContext, result);
         }
 
-        private static NumberValue NumericDiv(IRContext irContext, NumberValue[] args)
+        private static FormulaValue NumericDiv(IRContext irContext, NumberValue[] args)
         {
-            var result = args[0].Value / args[1].Value;
-            return new NumberValue(irContext, result);
+            var dividend = args[0].Value;
+            var divisor = args[1].Value;
+            if (divisor == 0)
+            {
+                return CommonErrors.DivByZeroError(irContext);
+            }
+
+            return new NumberValue(irContext, dividend / divisor);
         }
 
         private static BooleanValue NumericGt(IRContext irContext, NumberValue[] args)
@@ -433,44 +528,21 @@ namespace Microsoft.PowerFx.Functions
             };
         }
 
-        private static FormulaValue AddDateAndTime(IRContext irContext, FormulaValue[] args)
+        private static FormulaValue AddDateAndTime(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            DateTime arg0;
-            switch (args[0])
-            {
-                case DateTimeValue dtv:
-                    arg0 = dtv.Value;
-                    break;
-                case DateValue dv:
-                    arg0 = dv.Value;
-                    break;
-                default:
-                    return CommonErrors.RuntimeTypeMismatch(irContext);
-            }
-
-            var arg1 = (TimeValue)args[1];
-
-            try
-            {
-                var result = arg0.Add(arg1.Value);
-                return new DateTimeValue(irContext, result);
-            }
-            catch
-            {
-                return CommonErrors.ArgumentOutOfRange(irContext);
-            }
+            return DateAdd(runner, context, irContext, args);
         }
 
-        private static FormulaValue AddDateAndDay(IRContext irContext, FormulaValue[] args)
+        private static FormulaValue AddTimeAndNumber(IRContext irContext, FormulaValue[] args)
         {
-            DateTime arg0;
+            TimeSpan arg0;
             switch (args[0])
             {
                 case DateTimeValue dtv:
-                    arg0 = dtv.Value;
+                    arg0 = new TimeSpan(0, dtv.Value.Hour, dtv.Value.Minute, dtv.Value.Second, dtv.Value.Millisecond);
                     break;
-                case DateValue dv:
-                    arg0 = dv.Value;
+                case TimeValue tv:
+                    arg0 = tv.Value;
                     break;
                 default:
                     return CommonErrors.RuntimeTypeMismatch(irContext);
@@ -480,15 +552,8 @@ namespace Microsoft.PowerFx.Functions
 
             try
             {
-                var result = arg0.AddDays(arg1.Value);
-                if (args[0] is DateTimeValue)
-                {
-                    return new DateTimeValue(irContext, result);
-                }
-                else
-                {
-                    return new DateValue(irContext, result.Date);
-                }
+                var result = arg0.Add(TimeSpan.FromDays(arg1.Value));
+                return new TimeValue(irContext, result);
             }
             catch
             {
@@ -496,32 +561,52 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
-        private static FormulaValue AddDateTimeAndDay(IRContext irContext, FormulaValue[] args)
+        private static FormulaValue AddTimeAndTime(IRContext irContext, FormulaValue[] args)
         {
-            DateTime arg0;
+            TimeSpan arg0, arg1;
             switch (args[0])
             {
                 case DateTimeValue dtv:
-                    arg0 = dtv.Value;
+                    arg0 = new TimeSpan(0, dtv.Value.Hour, dtv.Value.Minute, dtv.Value.Second, dtv.Value.Millisecond);
                     break;
-                case DateValue dv:
-                    arg0 = dv.Value;
+                case TimeValue tv:
+                    arg0 = tv.Value;
                     break;
                 default:
                     return CommonErrors.RuntimeTypeMismatch(irContext);
             }
 
-            var arg1 = (NumberValue)args[1];
+            switch (args[1])
+            {
+                case DateTimeValue dtv:
+                    arg1 = new TimeSpan(0, dtv.Value.Hour, dtv.Value.Minute, dtv.Value.Second, dtv.Value.Millisecond);
+                    break;
+                case TimeValue tv:
+                    arg1 = tv.Value;
+                    break;
+                default:
+                    return CommonErrors.RuntimeTypeMismatch(irContext);
+            }
 
             try
             {
-                var result = arg0.AddDays(arg1.Value);
-                return new DateTimeValue(irContext, result);
+                var result = arg0.Add(arg1);
+                return new TimeValue(irContext, result);
             }
             catch
             {
                 return CommonErrors.ArgumentOutOfRange(irContext);
             }
+        }
+
+        private static FormulaValue AddDateAndDay(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        {
+            return DateAdd(runner, context, irContext, new FormulaValue[3] { args[0], args[1], StringValue.New("Days") });
+        }
+
+        private static FormulaValue AddDateTimeAndDay(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        {
+            return DateAdd(runner, context, irContext, new FormulaValue[3] { args[0], args[1], StringValue.New("Days") });
         }
 
         private static FormulaValue DateDifference(IRContext irContext, FormulaValue[] args)
@@ -562,7 +647,32 @@ namespace Microsoft.PowerFx.Functions
             var arg1 = (TimeValue)args[1];
 
             var result = arg0.Value.Subtract(arg1.Value);
-            return new TimeValue(irContext, result);
+            return new NumberValue(irContext, result.TotalDays);
+        }
+
+        private static FormulaValue SubtractDateAndTime(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        {
+            return DateAdd(runner, context, irContext, new FormulaValue[2] { args[0], TimeValue.New(new TimeSpan(-((TimeValue)args[1]).Value.Ticks)) });            
+        }
+
+        private static FormulaValue SubtractNumberAndDate(IRContext irContext, FormulaValue[] args)
+        {
+            return OperatorNotSupportedError(irContext);
+        }
+
+        private static FormulaValue SubtractNumberAndTime(IRContext irContext, FormulaValue[] args)
+        {
+            return OperatorNotSupportedError(irContext);
+        }
+
+        public static ErrorValue OperatorNotSupportedError(IRContext irContext)
+        {
+            return new ErrorValue(irContext, new ExpressionError()
+            {
+                Message = $"The operator is invalid for these types",
+                Span = irContext.SourceContext,
+                Kind = ErrorKind.NotSupported
+            });
         }
 
         private static FormulaValue LtDateTime(IRContext irContext, FormulaValue[] args)

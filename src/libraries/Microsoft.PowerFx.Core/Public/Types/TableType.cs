@@ -1,29 +1,29 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Syntax;
 
 namespace Microsoft.PowerFx.Types
-{
-    public abstract class TableType : AggregateType
+{       
+    /// <summary>
+    /// Represents a table type within Power Fx. 
+    /// Build using <see cref="Empty()"/> and <see cref="Add(NamedFormulaType)"/>
+    /// or call <see cref="RecordType.ToTable()"/> on a derived table type.
+    /// </summary>
+    public sealed class TableType : AggregateType
     {
+        public override IEnumerable<string> FieldNames => _type.GetRootFieldNames().Select(name => name.Value);
+
         internal TableType(DType type)
             : base(type)
         {
             Contracts.Assert(type.IsTable);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TableType"/> class.
-        /// Derived classes calling this must override <see cref="AggregateType.FieldNames"/>
-        /// and <see cref="AggregateType.TryGetFieldType(string, out FormulaType)"/>.
-        /// </summary>
-        public TableType()
-            : base(true)
-        {
         }
 
         public override void Visit(ITypeVisitor vistor)
@@ -31,17 +31,6 @@ namespace Microsoft.PowerFx.Types
             vistor.Visit(this);
         }
 
-        internal string SingleColumnFieldName
-        {
-            get
-            {
-                Contracts.Assert(FieldNames.Count() == 1);
-                return FieldNames.First();
-            }
-        }
-
-        internal FormulaType SingleColumnFieldType => GetFieldType(SingleColumnFieldName);
-        
         /// <summary>
         /// Converts this type to a table.
         /// If this type was a Table of a derived RecordType,
@@ -59,13 +48,12 @@ namespace Microsoft.PowerFx.Types
         }
         
         /// <summary>
-        /// By default, adding a field to a TableType requires the type to be fully expanded
-        /// Override if your derived class can change that behavior.
+        /// Adding a field to a TableType requires the type to be fully expanded.
         /// </summary>
         /// <param name="field">Field being added.</param>
-        public virtual TableType Add(NamedFormulaType field)
+        public TableType Add(NamedFormulaType field)
         {
-            return new KnownTableType(AddFieldToType(field));
+            return new TableType(AddFieldToType(field));
         }
         
         /// <summary>
@@ -84,7 +72,55 @@ namespace Microsoft.PowerFx.Types
         /// <returns>An empty TableType instance.</returns>
         public static TableType Empty()
         {
-            return new KnownTableType();
+            return new TableType(DType.EmptyTable);
+        }
+    
+        internal string SingleColumnFieldName
+        {
+            get
+            {
+                Contracts.Assert(FieldNames.Count() == 1);
+                return FieldNames.First();
+            }
+        }
+
+        internal FormulaType SingleColumnFieldType => GetFieldType(SingleColumnFieldName);
+
+        public override bool Equals(object other)
+        {
+            if (other is not TableType otherTableType)
+            {
+                return false;
+            }
+
+            if (_type.IsLazyType && otherTableType._type.IsLazyType && _type.IsTable == otherTableType._type.IsTable)
+            {
+                return _type.LazyTypeProvider.BackingFormulaType.Equals(otherTableType._type.LazyTypeProvider.BackingFormulaType);
+            }
+
+            return _type.Equals(otherTableType._type);
+        }
+
+        public override int GetHashCode()
+        {
+            return _type.GetHashCode();
+        }
+
+        internal override void DefaultExpressionValue(StringBuilder sb)
+        {
+            var symbolName = TableSymbolName;
+            if (symbolName != null)
+            {
+                // If this is coming from a symbol, we need to reference that. 
+                sb.Append(IdentToken.MakeValidIdentifier(symbolName));
+                return;
+            }
+
+            sb.Append("Table(");
+
+            ToRecord().DefaultExpressionValue(sb);
+
+            sb.Append(")");
         }
     }
 }

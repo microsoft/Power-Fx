@@ -4,14 +4,24 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Texl;
+using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Functions
 {
     internal static partial class Library
     {
+        private static bool IsValidDateTimeUO(string s)
+        {
+            return Regex.IsMatch(s, @"^[0-9]{4,4}-[0-1][0-9]-[0-3][0-9](T[0-2][0-9]:[0-5][0-9]:[0-5][0-9](\.[0-9]{3,3})?Z?)?$");
+        }
+
         public static FormulaValue Index_UO(IRContext irContext, FormulaValue[] args)
         {
             var arg0 = (UntypedObjectValue)args[0];
@@ -57,7 +67,7 @@ namespace Microsoft.PowerFx.Functions
                 return new NumberValue(irContext, number);
             }
 
-            return CommonErrors.RuntimeTypeMismatch(irContext);
+            return GetTypeMismatchError(irContext, BuiltinFunctionsCore.Value_UO.Name, DType.Number.GetKindString(), impl);
         }
 
         public static FormulaValue Text_UO(IRContext irContext, UntypedObjectValue[] args)
@@ -70,7 +80,7 @@ namespace Microsoft.PowerFx.Functions
                 return new StringValue(irContext, str);
             }
 
-            return CommonErrors.RuntimeTypeMismatch(irContext);
+            return GetTypeMismatchError(irContext, BuiltinFunctionsCore.Text_UO.Name, DType.String.GetKindString(), impl);
         }
 
         public static FormulaValue Table_UO(IRContext irContext, UntypedObjectValue[] args)
@@ -99,13 +109,18 @@ namespace Microsoft.PowerFx.Functions
         {
             if (arg is UntypedObjectValue cov)
             {
+                if (cov.Impl.Type == FormulaType.Blank)
+                {
+                    return new BlankValue(irContext);
+                }
+
                 if (!(cov.Impl.Type is ExternalType et && et.Kind == ExternalTypeKind.Array))
                 {
                     return new ErrorValue(irContext, new ExpressionError()
                     {
                         Message = "The UntypedObject does not represent an array",
                         Span = irContext.SourceContext,
-                        Kind = ErrorKind.InvalidFunctionUsage
+                        Kind = ErrorKind.InvalidArgument
                     });
                 }
             }
@@ -123,7 +138,7 @@ namespace Microsoft.PowerFx.Functions
                 return new BooleanValue(irContext, b);
             }
 
-            return CommonErrors.RuntimeTypeMismatch(irContext);
+            return GetTypeMismatchError(irContext, BuiltinFunctionsCore.Boolean_UO.Name, DType.Boolean.GetKindString(), impl);
         }
 
         public static FormulaValue CountRows_UO(IRContext irContext, UntypedObjectValue[] args)
@@ -135,25 +150,28 @@ namespace Microsoft.PowerFx.Functions
                 return new NumberValue(irContext, impl.GetArrayLength());
             }
 
-            return CommonErrors.RuntimeTypeMismatch(irContext);
+            return GetTypeMismatchError(irContext, BuiltinFunctionsCore.CountRows_UO.Name, DType.EmptyTable.GetKindString(), impl);
         }
 
-        public static FormulaValue DateValue_UO(IRContext irContext, UntypedObjectValue[] args)
+        public static FormulaValue DateValue_UO(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, UntypedObjectValue[] args)
         {
             var impl = args[0].Impl;
 
             if (impl.Type == FormulaType.String)
             {
                 var s = impl.GetString();
-                if (DateTime.TryParseExact(s, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime res))
+
+                if (IsValidDateTimeUO(s) && DateTime.TryParse(s, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime datetime))
                 {
-                    return new DateValue(irContext, res.Date);
+                    datetime = MakeValidDateTime(runner, datetime, runner.GetService<TimeZoneInfo>() ?? TimeZoneInfo.Local);
+
+                    return new DateValue(irContext, datetime);
                 }
 
-                return CommonErrors.InvalidDateTimeError(irContext);
+                return CommonErrors.InvalidDateTimeParsingError(irContext);
             }
 
-            return CommonErrors.RuntimeTypeMismatch(irContext);
+            return GetTypeMismatchError(irContext, BuiltinFunctionsCore.DateValue_UO.Name, DType.String.GetKindString(), impl);
         }
 
         public static FormulaValue TimeValue_UO(IRContext irContext, UntypedObjectValue[] args)
@@ -168,13 +186,13 @@ namespace Microsoft.PowerFx.Functions
                     return new TimeValue(irContext, res);
                 }
 
-                return CommonErrors.InvalidDateTimeError(irContext);
+                return CommonErrors.InvalidDateTimeParsingError(irContext);
             }
 
-            return CommonErrors.RuntimeTypeMismatch(irContext);
+            return GetTypeMismatchError(irContext, BuiltinFunctionsCore.TimeValue_UO.Name, DType.String.GetKindString(), impl);
         }
 
-        public static FormulaValue DateTimeValue_UO(IRContext irContext, UntypedObjectValue[] args)
+        public static FormulaValue DateTimeValue_UO(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, UntypedObjectValue[] args)
         {
             var impl = args[0].Impl;
 
@@ -182,19 +200,17 @@ namespace Microsoft.PowerFx.Functions
             {
                 var s = impl.GetString();
 
-                // Year-month-date, the literal T, Hours-minutes-seconds
-                // F is 10ths of a second if non-zero, K is time zone information
-                var iso8601Format = "yyyy-MM-dd'T'HH:mm:ss.FFFK";
-
-                if (DateTime.TryParseExact(s, iso8601Format, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime res))
+                if (IsValidDateTimeUO(s) && DateTime.TryParse(s, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime datetime))
                 {
-                    return new DateTimeValue(irContext, res);
+                    datetime = MakeValidDateTime(runner, datetime, runner.GetService<TimeZoneInfo>() ?? TimeZoneInfo.Local);
+
+                    return new DateTimeValue(irContext, datetime);
                 }
 
-                return CommonErrors.InvalidDateTimeError(irContext);
+                return CommonErrors.InvalidDateTimeParsingError(irContext);
             }
 
-            return CommonErrors.RuntimeTypeMismatch(irContext);
+            return GetTypeMismatchError(irContext, BuiltinFunctionsCore.DateTimeValue_UO.Name, DType.String.GetKindString(), impl);
         }
 
         public static FormulaValue Guid_UO(IRContext irContext, UntypedObjectValue[] args)
@@ -207,7 +223,49 @@ namespace Microsoft.PowerFx.Functions
                 return Guid(irContext, new StringValue[] { str });
             }
 
-            return CommonErrors.RuntimeTypeMismatch(irContext);
+            return GetTypeMismatchError(irContext, BuiltinFunctionsCore.GUID_UO.Name, DType.String.GetKindString(), impl);
+        }
+
+        private static ErrorValue GetTypeMismatchError(IRContext irContext, string functionName, string expectedType, IUntypedObject actualValue)
+        {
+            return new ErrorValue(irContext, new ExpressionError
+            {
+                Kind = ErrorKind.InvalidArgument,
+                Span = irContext.SourceContext,
+                Message = $"The untyped object argument to the '{functionName}' function has an incorrect type. Expected: {expectedType}, Actual: {actualValue.Type}."
+            });
+        }
+
+        public static async ValueTask<FormulaValue> ForAll_UO(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        {
+            var arg0 = (UntypedObjectValue)args[0];
+            var arg1 = (LambdaFormulaValue)args[1];
+
+            var items = new List<DValue<UntypedObjectValue>>();
+
+            var len = arg0.Impl.GetArrayLength();
+
+            for (var i = 0; i < len; i++)
+            {
+                runner.CheckCancel();
+
+                var element = arg0.Impl[i];
+                var item = new UntypedObjectValue(IRContext.NotInSource(FormulaType.UntypedObject), element);
+
+                items.Add(DValue<UntypedObjectValue>.Of(item));
+            }
+
+            var rowsAsync = LazyForAll(runner, context, items, arg1);
+
+            var rows = await Task.WhenAll(rowsAsync);
+
+            var errorRows = rows.OfType<ErrorValue>();
+            if (errorRows.Any())
+            {
+                return ErrorValue.Combine(irContext, errorRows);
+            }
+
+            return new InMemoryTableValue(irContext, StandardTableNodeRecords(irContext, rows, forceSingleColumn: false));
         }
     }
 }

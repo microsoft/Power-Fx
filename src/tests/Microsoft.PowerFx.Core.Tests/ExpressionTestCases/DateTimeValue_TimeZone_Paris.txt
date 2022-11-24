@@ -1,0 +1,49 @@
+﻿// (UTC+01:00) Brussels, Copenhagen, Madrid, Paris
+#SETUP: TimeZoneInfo("Romance Standard Time")
+
+>> DateTimeValue("2022-08-23T12:00:00Z") 
+DateTime(2022,8,23,14,0,0,0) 
+
+>> DateTimeValue("2022-08-23T12:00:00") 
+DateTime(2022,8,23,12,0,0,0)
+
+>> DateTimeValue("jeudi 21 juillet 2022 19:34:03", "fr-FR")
+DateTime(2022,7,21,19,34,3,0)
+
+>> DateTimeValue("jeudi 21 juillet 2022 19:34:03", "unknown")
+Error({Kind:ErrorKind.BadLanguageCode})
+
+// The result of this expression depends on current TimeZoneInfo. 
+// In Seattle TimeZoneInfo, this would trip over daylight savings and be 4:00am. 
+// In Paris timezoneinfo - which does not do daylight savings at the same date, we get 3:00am.
+// https://www.timeanddate.com/time/change/usa/seattle
+// https://www.timeanddate.com/time/change/france/paris
+>> Text(DateAdd(DateTime(2022,3,13,1,0,0), 2, TimeUnit.Hours))
+"3/13/2022 3:00 AM"
+
+>> Text(DateAdd(DateTime(2022,3,27,1,0,0), 2, TimeUnit.Hours))
+"3/27/2022 4:00 AM"
+
+>> DateAdd((Date(2022, 3, 13) + Time(1,0,0)), 90, TimeUnit.Minutes) 
+DateTime(2022,3,13,2,30,0,0)
+
+>> DateDiff(DateTime(2022,3,27,1,0,0), DateTime(2022,3,27,4,0,0), TimeUnit.Hours)
+2
+
+>> DateDiff(DateTime(2022,3,13,1,0,0), DateTime(2022,3,13,4,0,0), TimeUnit.Hours)
+3
+
+>> TimeZoneOffset(DateTime(2022,3,27,1,0,0))/60
+-1
+
+>> TimeZoneOffset(DateTime(2022,3,27,4,0,0))/60
+-2
+
+>> DateTimeValue("2022-09-29T20:00:00")
+DateTime(2022,9,29,20,0,0,0)
+
+>> DateTimeValue("2022-09-29T20:00:00Z")
+DateTime(2022,9,29,22,0,0,0)
+
+>> DateTimeValue("2022-09-29T20:00:00-08:00")
+DateTime(2022,9,30,6,0,0,0)

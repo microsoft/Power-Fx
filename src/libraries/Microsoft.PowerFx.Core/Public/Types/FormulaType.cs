@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Text;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
@@ -136,7 +137,7 @@ namespace Microsoft.PowerFx.Types
                 case DKind.Record:
                     return new KnownRecordType(type);
                 case DKind.Table:
-                    return new KnownTableType(type);
+                    return new TableType(type);
                 case DKind.Number: return Number;
                 case DKind.String: return String;
                 case DKind.Boolean: return Boolean;
@@ -192,7 +193,7 @@ namespace Microsoft.PowerFx.Types
                         return table;
                     }
 
-                    return new KnownTableType(type);
+                    return new TableType(type);
                 default:
                     return new UnsupportedType(type);
             }
@@ -233,5 +234,19 @@ namespace Microsoft.PowerFx.Types
         #endregion // Equality
 
         public abstract void Visit(ITypeVisitor vistor);
+
+        internal virtual void DefaultExpressionValue(StringBuilder sb)
+        {
+            throw new NotSupportedException($"{GetType().FullName} doesn't implement DefaultExpressionValue.");
+        }
+
+        internal string DefaultExpressionValue()
+        {
+            var sb = new StringBuilder();
+
+            DefaultExpressionValue(sb);
+
+            return sb.ToString();
+        }
     }
 }

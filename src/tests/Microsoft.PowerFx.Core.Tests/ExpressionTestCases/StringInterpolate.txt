@@ -73,10 +73,10 @@ Errors: Error 2-2: Unexpected characters. Characters are used in the formula in 
 "! 1/1/1980 !"
 
 >> $""""
-"""
+""""
 
 >> """"
-"""
+""""
 
 >> $"! {With({a:4,b:6},a*b)} !"
 "! 24 !"
@@ -91,7 +91,7 @@ Errors: Error 2-2: Unexpected characters. Characters are used in the formula in 
 "! !"
 
 >> $"! "" !"
-"! " !"
+"! "" !"
 
 >> $"! {{1,2}} !"
 "! {1,2} !"

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -498,37 +498,37 @@
     <value>Tekstualna vrednost koju treba konvertovati u Bulovu vrednost.</value>
   </data>
   <data name="AboutBooleanT" xml:space="preserve">
-    <value>Converts a column of text values to a column of boolean values.</value>
+    <value>Konvertuje kolonu tekstualnih vrednosti u kolonu Bulovih vrednosti.</value>
     
   </data>
   <data name="BooleanTArg1" xml:space="preserve">
-    <value>input</value>
+    <value>unos</value>
     
   </data>
   <data name="AboutBooleanT_input" xml:space="preserve">
-    <value>A column of text values to process.</value>
+    <value>Kolona vrednosti teksta za obradu.</value>
   </data>
   <data name="AboutBooleanN" xml:space="preserve">
-    <value>Converts a 'number' to a boolean value.</value>
+    <value>Konvertuje „broj“ u Bulovu vrednost.</value>
     
   </data>
   <data name="BooleanNArg1" xml:space="preserve">
-    <value>number</value>
+    <value>broj</value>
     
   </data>
   <data name="AboutBooleanN_number" xml:space="preserve">
-    <value>The number value to convert to a boolean value.</value>
+    <value>Brojčana vrednost koju treba konvertovati u Bulovu vrednost.</value>
   </data>
   <data name="AboutBooleanNT" xml:space="preserve">
-    <value>Converts a column of numeric values to a column of boolean values.</value>
+    <value>Konvertuje kolonu numeričkih vrednosti u kolonu Bulovih vrednosti.</value>
     
   </data>
   <data name="BooleanNTArg1" xml:space="preserve">
-    <value>input</value>
+    <value>unos</value>
     
   </data>
   <data name="AboutBooleanNT_input" xml:space="preserve">
-    <value>A column of number values to process.</value>
+    <value>Kolona vrednosti brojeva za obradu.</value>
   </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Vraća prvi argument koji nije prazan</value>
@@ -3268,6 +3268,38 @@
     <value>Kontrastna tema</value>
     
   </data>
+  <data name="AboutPatch" xml:space="preserve">
+    <value>Primenjuje ispravke na navedeni red i menja red u navedeni izvor podataka. Vraća ažurirani red.</value>
+    
+  </data>
+  <data name="PatchDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="PatchBaseRecordArg" xml:space="preserve">
+    <value>base_record</value>
+    
+  </data>
+  <data name="PatchChangeRecordsArg" xml:space="preserve">
+    <value>change_record(s)</value>
+    
+  </data>
+  <data name="AboutRemove" xml:space="preserve">
+    <value>Uklanja određeni zapis ili zapise iz izvora podataka</value>
+    
+  </data>
+  <data name="RemoveDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="RemoveRecordsArg" xml:space="preserve">
+    <value>remove_record(s)</value>
+    
+  </data>
+  <data name="ErrRemoveAllArg" xml:space="preserve">
+    <value>Ako je naveden, poslednji argument mora da bude „RemoveFlags.All“. Da li postoji greška u kucanju?</value>
+    
+  </data>
   <data name="PenMode_Draw_DisplayName" xml:space="preserve">
     <value>Crtanje</value>
     
@@ -3924,12 +3956,20 @@
     <value>Nije podržano u kolonama formula.</value>
     
   </data>
+  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
+    <value>Nevažeći broj argumenata za funkciju {0}: primljeno {1}, očekivano {2}</value>
+    
+  </data>
   <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
     <value>Argument {0} nije podržan za funkciju {1} u kolonama formula.</value>
     
   </data>
   <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
     <value>Nije moguće proslediti ovaj argument kao ovaj tip u kolonama formula.</value>
+    
+  </data>
+  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
+    <value>Nije moguće proslediti ovaj argument kao tip {0} u kolonama formula.</value>
     
   </data>
   <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
@@ -3948,6 +3988,10 @@
     <value>U kolonama formula podržane su samo niske formata kratkog datuma i vremena.</value>
     
   </data>
+  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
+    <value>Argument {0} je nevažeća/nepodržana jedinica vremena za funkciju aritmetičkog datuma {1}.</value>
+    
+  </data>
   <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
     <value>Tokeni oblikovanja specifični za lokalni standard, kao što su „.“ i „,“ nisu podržani u kolonama formula.</value>
     
@@ -3956,8 +4000,16 @@
     <value>Funkcija {0} nije podržana u kolonama formula, koristite {1} umesto nje.</value>
     
   </data>
+  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
+    <value>Nije moguće izvršiti ovu operaciju na tipu {0} u kolonama formule.</value>
+    
+  </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
     <value>Tip rezultata {0} nije podržan u kolonama sa formulama.</value>
+    
+  </data>
+  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
+    <value>Direktno upućivanje na ceo zapis nije podržano u kolonama formula. Postavite važeće polje u zapisu kao referencu.</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
@@ -3972,8 +4024,20 @@
     <value>Kolone tipa {0} sa formatom {1} nisu podržane u kolonama sa formulama.</value>
     
   </data>
+  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
+    <value>Prinuda zapisa ili tabela nije podržana u kolonama sa formulama.</value>
+    
+  </data>
   <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
     <value>Formule ne mogu biti duže od 1000 znakova.</value>
+    
+  </data>
+  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
+    <value>Tabele sa jednom kolonom nisu podržane u kolonama sa formulama.</value>
+    
+  </data>
+  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
+    <value>Nije moguće postaviti virtuelnu tabelu {0} kao referencu u kolonama sa formulama.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
@@ -4601,7 +4665,66 @@
     <value>vrednost</value>
     
   </data>
-  <data name="ErrExpectedIdentifierArg_Name" xmlns:space="preserve">
-    <value>Argument "{0}" je nevažeći, očekuje se identifikator.</value>
+  <data name="AboutDec2Hex" xml:space="preserve">
+    <value>Konvertuje decimalni broj u heksadecimalni</value>
+    
+  </data>
+  <data name="Dec2HexArg1" xml:space="preserve">
+    <value>broj</value>
+  </data>
+  <data name="AboutDec2Hex_number" xml:space="preserve">
+    <value>Numerička decimalna vrednost za konvertovanje u heksadecimalnu nisku.</value>
+    
+  </data>
+  <data name="Dec2HexArg2" xml:space="preserve">
+    <value>mesta</value>
+  </data>
+  <data name="AboutDec2Hex_places" xml:space="preserve">
+    <value>Numerička vrednost za dodavanje popunjavanja heksadecimalnoj niski.</value>
+    
+  </data>
+  <data name="AboutDec2HexT" xml:space="preserve">
+    <value>Konvertuje kolonu decimalnih brojeva u heksadecimalne</value>
+    
+  </data>
+  <data name="Dec2HexTArg1" xml:space="preserve">
+    <value>tabela</value>
+  </data>
+  <data name="Dec2HexTArg2" xml:space="preserve">
+    <value>mesta</value>
+  </data>
+  <data name="AboutDec2HexT_places" xml:space="preserve">
+    <value>Numerička vrednost ili niz vrednosti za dodavanje popunjavanja heksadecimalnim niskama.</value>
+    
+  </data>
+  <data name="AboutDec2Hex_table" xml:space="preserve">
+    <value>Kolona numeričkih decimalnih vrednosti za konvertovanje u heksadecimalne.</value>
+    
+  </data>
+  <data name="AboutHex2Dec" xml:space="preserve">
+    <value>Konvertuje heksadecimalni broj u decimalni</value>
+    
+  </data>
+  <data name="Hex2DecArg1" xml:space="preserve">
+    <value>broj</value>
+  </data>
+  <data name="AboutHex2Dec_number" xml:space="preserve">
+    <value>Heksidecimalna niska konvertovana u decimalni broj.</value>
+    
+  </data>
+  <data name="AboutHex2DecT" xml:space="preserve">
+    <value>Konvertuje kolonu heksadecimalnih brojeva u decimalne</value>
+    
+  </data>
+  <data name="Hex2DecTArg1" xml:space="preserve">
+    <value>tabela</value>
+  </data>
+  <data name="AboutHex2Dec_table" xml:space="preserve">
+    <value>Kolona heksidecimalnih niski za konvertovanje u decimalne.</value>
+    
+  </data>
+  <data name="ErrDeprecated" xml:space="preserve">
+    <value>Ova funkcija je zastarela i više nije podržana.</value>
+    
   </data>
 </root>

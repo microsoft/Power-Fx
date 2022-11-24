@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -498,7 +498,7 @@
     <value>बूलियन मान में बदला जाने वाला टेक्स्ट मान.</value>
   </data>
   <data name="AboutBooleanT" xml:space="preserve">
-    <value>पाठ मानों के कॉलम को बूलियन मानों के कॉलम में परिवर्तित करता है.</value>
+    <value>पाठ मानों के कॉलम को बूलियन मानों के कॉलम में रूपांतरित करता है.</value>
     
   </data>
   <data name="BooleanTArg1" xml:space="preserve">
@@ -509,7 +509,7 @@
     <value>संसाधित किए जाने वाले पाठ मानों का स्तंभ.</value>
   </data>
   <data name="AboutBooleanN" xml:space="preserve">
-    <value>एक 'संख्या' को एक बूलियन मान में परिवर्तित करता है.</value>
+    <value>एक 'संख्या' को एक बूलियन मान में रूपांतरित करता है.</value>
     
   </data>
   <data name="BooleanNArg1" xml:space="preserve">
@@ -520,7 +520,7 @@
     <value>बूलियन मान में कनवर्ट करने के लिए संख्या मान.</value>
   </data>
   <data name="AboutBooleanNT" xml:space="preserve">
-    <value>संख्यात्मक मानों के कॉलम को बूलियन मानों के कॉलम में परिवर्तित करता है.</value>
+    <value>संख्यात्मक मानों के कॉलम को बूलियन मानों के कॉलम में रूपांतरित करता है.</value>
     
   </data>
   <data name="BooleanNTArg1" xml:space="preserve">
@@ -3268,6 +3268,38 @@
     <value>कॉन्ट्रास्ट विषयवस्तु</value>
     
   </data>
+  <data name="AboutPatch" xml:space="preserve">
+    <value>अद्यतनों को निर्दिष्ट पंक्ति पर लागू करता है और निर्दिष्ट डेटास्रोत की पंक्ति को बदलता है. अद्यतित पंक्ति लौटाता है.</value>
+    
+  </data>
+  <data name="PatchDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="PatchBaseRecordArg" xml:space="preserve">
+    <value>base_record</value>
+    
+  </data>
+  <data name="PatchChangeRecordsArg" xml:space="preserve">
+    <value>change_record(s)</value>
+    
+  </data>
+  <data name="AboutRemove" xml:space="preserve">
+    <value>डेटा स्रोत से कोई विशेष रिकॉर्ड या रिकॉर्ड्स हटाता है</value>
+    
+  </data>
+  <data name="RemoveDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="RemoveRecordsArg" xml:space="preserve">
+    <value>remove_record(s)</value>
+    
+  </data>
+  <data name="ErrRemoveAllArg" xml:space="preserve">
+    <value>यदि प्रदान किया गया है, तो अंतिम तर्क 'RemoveFlags.All' होना चाहिए. क्या कोई टाइपो है?</value>
+    
+  </data>
   <data name="PenMode_Draw_DisplayName" xml:space="preserve">
     <value>आरेखित करें</value>
     
@@ -3924,12 +3956,20 @@
     <value>फॉर्मूला कॉलम में समर्थित नहीं है.</value>
     
   </data>
+  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
+    <value>{0} फ़ंक्शन के लिए तर्कों की अमान्य संख्या: {1} प्राप्त हुआ, अपेक्षित {2}</value>
+    
+  </data>
   <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
     <value>फॉर्मूला कॉलम में {1} फ़ंक्शन के लिए {0} तर्क समर्थित नहीं है.</value>
     
   </data>
   <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>इस तर्क को फॉर्मूला कॉलम में इस प्रकार के रूप में पास नहीं किया जा सकता है.</value>
+    <value>इस तर्क को सूत्र स्तंभों में इस प्रकार के रूप में पारित नहीं किया जा सकता है.</value>
+    
+  </data>
+  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
+    <value>इस तर्क को सूत्र स्तंभों में {0} प्रकार के रूप में पारित नहीं किया जा सकता.</value>
     
   </data>
   <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
@@ -3948,6 +3988,10 @@
     <value>फॉर्मूला कॉलम में केवल छोटी दिनांक और समय प्रारूप स्ट्रिंग समर्थित हैं.</value>
     
   </data>
+  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
+    <value>{0} तर्क {1} दिनांक अंकगणितीय फ़ंक्शन के लिए समय की अमान्य/असमर्थित इकाई है.</value>
+    
+  </data>
   <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
     <value>फॉर्मूला कॉलमों में स्थानीय-विशिष्ट फॉर्मेटिंग टोकन जैसे "." और "," समर्थित नहीं हैं.</value>
     
@@ -3956,8 +4000,16 @@
     <value>फॉर्मूला कॉलमों में {0} समर्थित नहीं है, इसकी जगह {1} उपयोग करें.</value>
     
   </data>
+  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
+    <value>यह संचालन सूत्र स्तंभों में प्रकार {0} पर नहीं किया जा सकता है.</value>
+    
+  </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
     <value>परिणाम प्रकार {0} फॉर्मूला स्तंभों में समर्थित नहीं है.</value>
+    
+  </data>
+  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
+    <value>सूत्र स्तंभों में सीधे किसी संपूर्ण रिकॉर्ड को संदर्भित करना समर्थित नहीं है. कृपया रिकॉर्ड में किसी मान्य फ़ील्ड का संदर्भ दें.</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
@@ -3972,8 +4024,20 @@
     <value>{1} प्रारूप वाले {0} प्रकार के स्तंभ फॉर्मूला स्तंभों में समर्थित नहीं हैं.</value>
     
   </data>
+  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
+    <value>सूत्र स्तंभों में बलपूर्वक रिकॉर्ड या तालिकाएं समर्थित नहीं हैं.</value>
+    
+  </data>
   <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
     <value>फॉर्मूला 1000 अक्षरों से ज्यादा लंबे नहीं हो सकते.</value>
+    
+  </data>
+  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
+    <value>सूत्र स्तंभों में एकल-स्तंभ तालिकाएँ समर्थित नहीं हैं.</value>
+    
+  </data>
+  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
+    <value>सूत्र स्तंभों में वर्चुअल तालिका {0} संदर्भित नहीं कर सकता.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
@@ -4601,7 +4665,66 @@
     <value>मान</value>
     
   </data>
-  <data name="ErrExpectedIdentifierArg_Name" xmlns:space="preserve">
-    <value>तर्क '{0}' अमान्य है, किसी पहचानकर्ता की अपेक्षा है.</value>
+  <data name="AboutDec2Hex" xml:space="preserve">
+    <value>दशमलव संख्या को हेक्साडेसिमल में बदलें</value>
+    
+  </data>
+  <data name="Dec2HexArg1" xml:space="preserve">
+    <value>संख्या</value>
+  </data>
+  <data name="AboutDec2Hex_number" xml:space="preserve">
+    <value>हेक्साडेसिमल स्ट्रिंग में बदलने के लिए संख्यात्मक दशमलव मान.</value>
+    
+  </data>
+  <data name="Dec2HexArg2" xml:space="preserve">
+    <value>स्थान</value>
+  </data>
+  <data name="AboutDec2Hex_places" xml:space="preserve">
+    <value>हेक्साडेसिमल स्ट्रिंग में पैडिंग जोड़ने के लिए कोई संख्यात्मक मान.</value>
+    
+  </data>
+  <data name="AboutDec2HexT" xml:space="preserve">
+    <value>दशमलव संख्याओं के कॉलम को हेक्साडेसिमल में बदलें</value>
+    
+  </data>
+  <data name="Dec2HexTArg1" xml:space="preserve">
+    <value>तालिका</value>
+  </data>
+  <data name="Dec2HexTArg2" xml:space="preserve">
+    <value>स्थान</value>
+  </data>
+  <data name="AboutDec2HexT_places" xml:space="preserve">
+    <value>हेक्साडेसिमल स्ट्रिंग्स में पैडिंग जोड़ने के लिए संख्यात्मक मान या मानों को व्यवस्थित करें.</value>
+    
+  </data>
+  <data name="AboutDec2Hex_table" xml:space="preserve">
+    <value>संख्यात्मक दशमलव मान का कोई कॉलम जिसे हेक्साडेसिमल में बदलता है.</value>
+    
+  </data>
+  <data name="AboutHex2Dec" xml:space="preserve">
+    <value>हेक्साडेसिमल संख्या को दशमलव में बदलता है</value>
+    
+  </data>
+  <data name="Hex2DecArg1" xml:space="preserve">
+    <value>संख्या</value>
+  </data>
+  <data name="AboutHex2Dec_number" xml:space="preserve">
+    <value>एक हेक्साडेसिमल स्ट्रिंग दशमलव में बदलती है.</value>
+    
+  </data>
+  <data name="AboutHex2DecT" xml:space="preserve">
+    <value>हेक्साडेसिमल संख्याओं के कॉलम को दशमलव में बदलता है</value>
+    
+  </data>
+  <data name="Hex2DecTArg1" xml:space="preserve">
+    <value>तालिका</value>
+  </data>
+  <data name="AboutHex2Dec_table" xml:space="preserve">
+    <value>दशमलव में बदलने के लिए हेक्साडेसिमल स्ट्रिंग का एक कॉलम.</value>
+    
+  </data>
+  <data name="ErrDeprecated" xml:space="preserve">
+    <value>यह सुविधा अप्रचलित कर दी गई है और यह अब समर्थित नहीं है.</value>
+    
   </data>
 </root>

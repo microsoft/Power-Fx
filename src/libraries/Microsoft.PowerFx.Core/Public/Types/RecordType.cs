@@ -4,8 +4,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Syntax;
 
 namespace Microsoft.PowerFx.Types
 {
@@ -35,6 +38,17 @@ namespace Microsoft.PowerFx.Types
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RecordType"/> class with <see cref="DisplayNameProvider"/>.
+        /// Derived classes calling this must override <see cref="AggregateType.FieldNames"/>
+        /// and <see cref="AggregateType.TryGetFieldType(string, out FormulaType)"/>.
+        /// </summary>
+        /// <param name="displayNameProvider">Provide DispayNamerovide to be used.</param>
+        public RecordType(DisplayNameProvider displayNameProvider)
+            : base(false, displayNameProvider)
+        {
+        }
+
         public override void Visit(ITypeVisitor vistor)
         {
             vistor.Visit(this);
@@ -53,7 +67,7 @@ namespace Microsoft.PowerFx.Types
                 return table;
             }
             
-            return new KnownTableType(_type.ToTable());
+            return new TableType(_type.ToTable());
         }
 
         /// <summary>
@@ -83,6 +97,40 @@ namespace Microsoft.PowerFx.Types
         public static RecordType Empty()
         {
             return new KnownRecordType();
+        }
+
+        internal override void DefaultExpressionValue(StringBuilder sb)
+        {
+            var symbolName = TableSymbolName;
+            if (symbolName != null)
+            {
+                // If this is coming from a symbol, we need to reference that. 
+                // Get a blank record of the given Symbol type. 
+                sb.Append("First(FirstN(");
+                sb.Append(IdentToken.MakeValidIdentifier(symbolName));
+                sb.Append(",0))");
+                return;
+            }
+
+            var flag = true;
+
+            sb.Append("{");
+
+            foreach (var field in GetFieldTypes())
+            {
+                if (!flag)
+                {
+                    sb.Append(",");
+                }
+
+                flag = false;
+                
+                sb.Append($"{IdentToken.MakeValidIdentifier(field.Name)}:");
+
+                field.Type.DefaultExpressionValue(sb);
+            }
+
+            sb.Append("}");
         }
     }
 }

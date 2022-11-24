@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Parser;
@@ -73,7 +74,7 @@ namespace Microsoft.PowerFx.Intellisense
             foreach (var fnc in fncs)
             {
                 var result =
-                    fnc.CheckInvocation(
+                    fnc.HandleCheckInvocation(
                         _checkResult._binding,
                         args.ToArray(),
                         types,

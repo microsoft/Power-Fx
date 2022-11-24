@@ -62,7 +62,7 @@
 
 //Invalid operation: Division by zero
 >>TrimEnds(1/0)
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 >> TrimEnds("  1/0   ")
 "1/0"

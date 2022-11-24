@@ -15,7 +15,7 @@ using Xunit;
 namespace Microsoft.PowerFx.Tests
 {
     public class BindingEngineTests : PowerFxTest
-    {       
+    {
         [Fact]
         public void CheckSuccess()
         {
@@ -51,7 +51,7 @@ namespace Microsoft.PowerFx.Tests
 
             var r = RecordType.Empty().Add(
                    new NamedFormulaType("x", FormulaType.Number));
-                        
+
             var check = engine.Check(parse, r);
             Assert.True(check.IsSuccess);
 
@@ -65,7 +65,7 @@ namespace Microsoft.PowerFx.Tests
         public void CheckChainingParseSuccess()
         {
             var opts = new ParserOptions
-            {  
+            {
                 AllowsSideEffects = true
             };
 
@@ -91,7 +91,7 @@ namespace Microsoft.PowerFx.Tests
 
             Assert.True(result.HasError);
             Assert.Single(result.Errors);
-                        
+
             AssertContainsError(result, "Error 4-4: Expected an operand");
         }
 
@@ -105,7 +105,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.False(result.IsSuccess);
             Assert.True(result.Errors.Count() >= 1);
             AssertContainsError(result, "Error 4-4: Expected an operand");
-        }        
+        }
 
         [Fact]
         public void CheckParseErrorCommaSeparatedLocale()
@@ -114,7 +114,7 @@ namespace Microsoft.PowerFx.Tests
             var result = engine.Parse("3.145");
 
             Assert.False(result.IsSuccess);
-            Assert.StartsWith("Error 2-5: Unexpected character", result.Errors.First().ToString());
+            Assert.StartsWith("Error 2-5: Caratteri non previsti", result.Errors.First().ToString());
         }
 
         [Fact]
@@ -143,6 +143,30 @@ namespace Microsoft.PowerFx.Tests
 
             Assert.False(result.IsSuccess);
             AssertContainsError(result, "Error 2-5: Name isn't valid. 'foo' isn't recognized");
+        }
+
+        [Theory]
+
+        // Binding errors
+        [InlineData("3+foo+2", "Error 2-5: Il nome non è valido. \"foo\" non riconosciuto.", "it-IT")]
+        [InlineData("Foo()", "Error 0-5: 'Foo' est une fonction inconnue ou non prise en charge.", "fr-FR")]
+        [InlineData("AAA", "Error 0-3: O nome não é válido. 'AAA' não é reconhecido.", "pt-BR")]
+        [InlineData("Bar()", "Error 0-5: \"Bar\" — неизвестная или неподдерживаемая функция.", "ru-RU")]
+        [InlineData("Table({a:BB})", "Error 9-11: Name isn't valid. 'BB' isn't recognized.", "en-US")]
+
+        // Parse errors
+        [InlineData("2e.5", "Error 1-2: È previsto un operatore. A questo punto della formula è previsto un operatore, ad esempio +, * o &.", "it-IT")]
+        [InlineData(".2.3", "Error 0-1: Caractères inattendus. Des caractères sont utilisés dans la formule de manière inattendue.", "fr-FR")]
+        [InlineData("2EEE5", "Error 1-5: Operador esperado. Esperamos um operador como +, * ou & neste ponto na fórmula.", "pt-BR")]
+        [InlineData("7E1111111", "Error 0-9: Numerická hodnota je príliš veľká.", "sk-SK")]
+        [InlineData("4E88888", "Error 0-7: Numeric value is too large.", "en-US")]
+        public void CheckBindError2(string expression, string expected, string locale)
+        {
+            var engine = new Engine(new PowerFxConfig(CultureInfo.GetCultureInfo(locale)));
+            var result = engine.Check(expression);
+
+            Assert.False(result.IsSuccess);
+            AssertContainsError(result, expected);
         }
 
         [Fact]
@@ -235,7 +259,7 @@ namespace Microsoft.PowerFx.Tests
                 ".Loop.Loop.Loop.Loop.Loop.Loop.Loop.Loop.Loop" +
                 ".Loop.Loop.Loop.Loop.Loop.Loop.Loop.Loop.Loop" +
                 ".Loop.Loop.Loop.Loop.Loop.Loop.Loop.Loop.Loop", lazyTypeInstance);
-            
+
             Assert.True(result.IsSuccess);
             Assert.IsType<LazyRecursiveRecordType>(result.ReturnType);
             Assert.Equal(lazyTypeInstance, result.ReturnType);
@@ -244,7 +268,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.False(lazyTypeInstance.EnumerableIterated);
         }
 
-        private class LazyRecursiveRecordType : RecordType
+        internal class LazyRecursiveRecordType : RecordType
         {
             public override IEnumerable<string> FieldNames => GetFieldNames();
 
@@ -299,7 +323,7 @@ namespace Microsoft.PowerFx.Tests
             var lazyTypeInstance = new LazyRecursiveRecordType();
 
             var result = engine.Check("First(Table(Loop, {A: SomeString}))", lazyTypeInstance);
-            
+
             Assert.True(result.IsSuccess);
             Assert.IsType<KnownRecordType>(result.ReturnType);
 
@@ -309,10 +333,25 @@ namespace Microsoft.PowerFx.Tests
             Assert.True(lazyTypeInstance.EnumerableIterated);
         }
 
+        [Fact]
+        public void CheckShuffleLazyTable()
+        {
+            var config = new PowerFxConfig();
+            var engine = new Engine(config);
+
+            var lazyTypeInstance = new LazyRecursiveRecordType().ToTable();
+
+            var result = engine.Check("Shuffle(Table)", RecordType.Empty().Add("Table", lazyTypeInstance));
+            Assert.True(result.IsSuccess);
+
+            var tableType = Assert.IsType<TableType>(result.ReturnType);
+            Assert.IsType<LazyRecursiveRecordType>(tableType.ToRecord());
+        }
+
         /// <summary>
         /// A function with behavior/side-effects used in testing.
         /// </summary>
-        private class BehaviorFunction : TexlFunction
+        internal class BehaviorFunction : TexlFunction
         {
             public BehaviorFunction()
                 : base(
