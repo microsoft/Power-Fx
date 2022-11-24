@@ -45,7 +45,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return base.GetSignatures(arity);
         }
 
-        public override bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertValue(argTypes);
@@ -66,7 +66,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 returnType = argTypes[0];
             }
 
-            var supportIndentifiers = binding.Features.HasFlag(Features.SupportIdentifiers);
+            var supportIndentifiers = context.Features.HasFlag(Features.SupportIdentifiers);
 
             // The result type has N fewer columns, as specified by (args[1],args[2],args[3],...)
             var count = args.Length;
@@ -118,10 +118,19 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     continue;
                 }
 
-                DName? displayName;
+                // DName? displayName;
+                //var columnName = nameArg is FirstNameNode firstNameNode && ((displayName = context.binding.GetDisplayName(firstNameNode)) != null)
+                //    ? displayName.Value
+                //    : new DName(expectedColumnName);
 
-                var columnName = nameArg is FirstNameNode firstNameNode && ((displayName = binding.GetDisplayName(firstNameNode)) != null)
-                    ? displayName.Value
+                // var xxx = argTypes[0].DisplayNameProvider.TryGetLogicalName(new DName(expectedColumnName), out var logicalName);
+
+                // var columnName = new DName(expectedColumnName);
+
+                var columnName = nameArg is FirstNameNode && 
+                                 argTypes[0].DisplayNameProvider != null && 
+                                 argTypes[0].DisplayNameProvider.TryGetLogicalName(new DName(expectedColumnName), out var logicalDName)
+                    ? logicalDName 
                     : new DName(expectedColumnName);
 
                 // Verify that the name exists.

@@ -57,6 +57,19 @@ namespace Microsoft.PowerFx
         {
         }
 
+        internal PowerFxConfig(CultureInfo culture, SymbolTable symbols, Features features)
+        {
+            CultureInfo = culture ?? CultureInfo.CurrentCulture;
+            SymbolTable = symbols;
+            Features = features;
+            MaxCallDepth = DefaultMaxCallDepth;
+        }
+       
+        internal PowerFxConfig WithCulture(CultureInfo newCulture)            
+        {
+            return new PowerFxConfig(newCulture, SymbolTable, Features);            
+        }
+
         /// <summary>
         /// Information about available functions.
         /// </summary>
