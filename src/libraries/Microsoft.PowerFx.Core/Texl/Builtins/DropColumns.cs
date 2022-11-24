@@ -118,15 +118,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     continue;
                 }
 
-                // DName? displayName;
-                //var columnName = nameArg is FirstNameNode firstNameNode && ((displayName = context.binding.GetDisplayName(firstNameNode)) != null)
-                //    ? displayName.Value
-                //    : new DName(expectedColumnName);
-
-                // var xxx = argTypes[0].DisplayNameProvider.TryGetLogicalName(new DName(expectedColumnName), out var logicalName);
-
-                // var columnName = new DName(expectedColumnName);
-
                 var columnName = nameArg is FirstNameNode && 
                                  argTypes[0].DisplayNameProvider != null && 
                                  argTypes[0].DisplayNameProvider.TryGetLogicalName(new DName(expectedColumnName), out var logicalDName)
