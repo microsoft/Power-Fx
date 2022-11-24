@@ -37,7 +37,7 @@ namespace Microsoft.PowerFx.Core
                 new Core.Entities.QueryOptions.DataSourceToQueryOptionsMap(),
                 formula.ParseTree,
                 resolver,
-                config,
+                bindingConfig,
                 ruleScope: parameters?._type,
                 updateDisplayNames: toDisplay,
                 forceUpdateDisplayNames: toDisplay,
