@@ -13,13 +13,13 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 {
     // Sample CodeFix handler to convert 
     //   Blank(x) --> IsBlank(x) 
-    public class BlankHandler : ICodeFixHandler
+    public class BlankHandler : CodeFixHandler<ICodeFixHandler>, ICodeFixHandler
     {
         public const string Title = "Blank() --> IsBlank()";
 
-        public async Task<IEnumerable<CodeActionResult>> SuggestFixesAsync(Engine engine, CheckResult result, CancellationToken cancel)
+        public override async Task<IEnumerable<CodeActionResult>> SuggestFixesAsync(Engine engine, CheckResult result, CancellationToken cancel)
         {
-            var v = new CodeFixVisitor
+            var v = new CodeFixVisitor(this)
             {
                 _check = result,
                 _expression = result.Parse.Text,
@@ -33,9 +33,16 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 
         private class CodeFixVisitor : IdentityTexlVisitor
         {
+            private readonly ICodeFixHandler codeFixHandler;
+
             public CheckResult _check;
             public string _expression;
             public List<CodeActionResult> _fixes;
+
+            public CodeFixVisitor(ICodeFixHandler codeFixHandler)
+            {
+                this.codeFixHandler = codeFixHandler;
+            }
 
             public override void PostVisit(CallNode node)
             {
@@ -54,7 +61,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
                         Title = Title,
                         ActionResultContext = new CodeActionResultContext
                         {
-                            HandlerName = typeof(BlankHandler).FullName,
+                            HandlerName = codeFixHandler.HandlerName,
                             ActionIdentifier = "Suggestion"
                         }
                     });
@@ -69,11 +76,6 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             var x = left + newText + right;
 
             return x;
-        }
-
-        public void OnCodeActionApplied(CodeAction codeAction)
-        {
-            // Empty implementaion.
         }
     }
 }

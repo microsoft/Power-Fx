@@ -37,7 +37,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
 
             Assert.Throws<ArgumentNullException>(() => scope.AddQuickFixHandler(null));
             scope.AddQuickFixHandler(new MyEmptyHandler());
-            scope.AddQuickFixHandler(new MyHandler());            
+            scope.AddQuickFixHandler(new MyHandler());
 
             IPowerFxScopeQuickFix quickFix = scope;
             var fixes = quickFix.Suggest("1+"); // error
@@ -48,14 +48,9 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
             Assert.Equal("MyTitle", fix.Title);
         }
 
-        private class MyEmptyHandler : ICodeFixHandler
+        private class MyEmptyHandler : CodeFixHandler<ICodeFixHandler>
         {
-            public void OnCodeActionApplied(CodeAction codeAction)
-            {
-                // Empty implementaion.
-            }
-
-            public async Task<IEnumerable<CodeActionResult>> SuggestFixesAsync(
+            public override async Task<IEnumerable<CodeActionResult>> SuggestFixesAsync(
                 Engine engine,
                 CheckResult checkResult,
                 CancellationToken cancel)
@@ -64,15 +59,10 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
             }
         }
 
-        private class MyHandler : ICodeFixHandler
+        private class MyHandler : CodeFixHandler<ICodeFixHandler>
         {
-            public void OnCodeActionApplied(CodeAction codeAction)
-            {
-                // Empty implementaion.
-            }
-
-            public async Task<IEnumerable<CodeActionResult>> SuggestFixesAsync(
-                Engine engine, 
+            public override async Task<IEnumerable<CodeActionResult>> SuggestFixesAsync(
+                Engine engine,
                 CheckResult checkResult,
                 CancellationToken cancel)
             {

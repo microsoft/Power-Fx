@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.PowerFx;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.LanguageServerProtocol.Protocol;
@@ -23,5 +24,7 @@ namespace Microsoft.PowerFx
             CancellationToken cancel);
 
         void OnCodeActionApplied(CodeAction codeAction);
+
+        string HandlerName { get; }
     }
 }

@@ -36,7 +36,7 @@ namespace Microsoft.PowerFx
         internal readonly ReadOnlySymbolTable _symbols;
 
         // List of handlers to get code-fix suggestions. 
-        private readonly Dictionary<string, ICodeFixHandler> _handlers = new Dictionary<string, ICodeFixHandler>();
+        private readonly Dictionary<string, CodeFixHandler<ICodeFixHandler>> _handlers = new Dictionary<string, CodeFixHandler<ICodeFixHandler>>();
 
         internal EditorContextScope(
             Engine engine,
@@ -70,14 +70,14 @@ namespace Microsoft.PowerFx
 
         #endregion
 
-        public void AddQuickFixHandler(ICodeFixHandler codeFixHandler)
+        public void AddQuickFixHandler(CodeFixHandler<ICodeFixHandler> codeFixHandler)
         {
             if (codeFixHandler == null)
             {
                 throw new ArgumentNullException(nameof(codeFixHandler));
             }
 
-            _handlers.Add(codeFixHandler.GetType().FullName, codeFixHandler);
+            _handlers.Add(codeFixHandler.HandlerName, codeFixHandler);
         }
 
         CodeActionResult[] IPowerFxScopeQuickFix.Suggest(string expression)
@@ -102,7 +102,7 @@ namespace Microsoft.PowerFx
         void IPowerFxScopeQuickFix.OnCommandExecuted(CodeAction codeAction)
         {
             if (!string.IsNullOrEmpty(codeAction.ActionResultContext?.HandlerName) &&
-                _handlers.TryGetValue(codeAction.ActionResultContext.HandlerName, out ICodeFixHandler handler))
+                _handlers.TryGetValue(codeAction.ActionResultContext.HandlerName, out CodeFixHandler<ICodeFixHandler> handler))
             {
                 handler.OnCodeActionApplied(codeAction);
             }

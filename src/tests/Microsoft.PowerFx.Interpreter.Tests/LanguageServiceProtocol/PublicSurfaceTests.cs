@@ -31,6 +31,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
                 "Microsoft.PowerFx.EditorEngineExtensions",
                 "Microsoft.PowerFx.EditorContextScope",
                 "Microsoft.PowerFx.ICodeFixHandler",
+                "Microsoft.PowerFx.CodeFixHandler`1",
                 "Microsoft.PowerFx.Core.IPowerFxScopeFactory",
                 "Microsoft.PowerFx.Core.IPowerFxScopeQuickFix",
 
