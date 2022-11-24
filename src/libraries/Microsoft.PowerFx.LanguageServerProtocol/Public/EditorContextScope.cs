@@ -36,7 +36,7 @@ namespace Microsoft.PowerFx
         internal readonly ReadOnlySymbolTable _symbols;
 
         // List of handlers to get code-fix suggestions. 
-        private readonly Dictionary<string, CodeFixHandler<ICodeFixHandler>> _handlers = new Dictionary<string, CodeFixHandler<ICodeFixHandler>>();
+        private readonly Dictionary<string, ICodeFixHandler> _handlers = new Dictionary<string, ICodeFixHandler>();
 
         internal EditorContextScope(
             Engine engine,
@@ -70,14 +70,15 @@ namespace Microsoft.PowerFx
 
         #endregion
 
-        public void AddQuickFixHandler(CodeFixHandler<ICodeFixHandler> codeFixHandler)
+        [Obsolete($"{nameof(AddQuickFixHandler)} is deprericated, please use {nameof(RegisterQuickFixHandler)} method.")]
+        public void AddQuickFixHandler(ICodeFixHandler codeFixHandler)
         {
-            if (codeFixHandler == null)
-            {
-                throw new ArgumentNullException(nameof(codeFixHandler));
-            }
+            _RegisterQuickFixHandler(codeFixHandler);
+        }
 
-            _handlers.Add(codeFixHandler.HandlerName, codeFixHandler);
+        public void RegisterQuickFixHandler(CodeFixHandler<ICodeFixHandler> codeFixHandler)
+        {
+            _RegisterQuickFixHandler(codeFixHandler);
         }
 
         CodeActionResult[] IPowerFxScopeQuickFix.Suggest(string expression)
@@ -102,10 +103,20 @@ namespace Microsoft.PowerFx
         void IPowerFxScopeQuickFix.OnCommandExecuted(CodeAction codeAction)
         {
             if (!string.IsNullOrEmpty(codeAction.ActionResultContext?.HandlerName) &&
-                _handlers.TryGetValue(codeAction.ActionResultContext.HandlerName, out CodeFixHandler<ICodeFixHandler> handler))
+                _handlers.TryGetValue(codeAction.ActionResultContext.HandlerName, out ICodeFixHandler handler))
             {
                 handler.OnCodeActionApplied(codeAction);
             }
+        }
+
+        private void _RegisterQuickFixHandler(ICodeFixHandler codeFixHandler)
+        {
+            if (codeFixHandler == null)
+            {
+                throw new ArgumentNullException(nameof(codeFixHandler));
+            }
+
+            _handlers.Add(codeFixHandler.HandlerName, codeFixHandler);
         }
     }
 }

@@ -614,7 +614,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             var scopeFactory = new TestPowerFxScopeFactory((string documentUri) =>
             {
                 var scope = engine.CreateEditorScope();
-                scope.AddQuickFixHandler(new BlankHandler());
+                scope.RegisterQuickFixHandler(new BlankHandler());
                 return scope;
             });
 
@@ -676,7 +676,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             var scopeFactory = new TestPowerFxScopeFactory((string documentUri) =>
             {
                 var scope = engine.CreateEditorScope();
-                scope.AddQuickFixHandler(new BlankHandler());
+                scope.RegisterQuickFixHandler(new BlankHandler());
                 return scope;
             });
 

@@ -35,9 +35,9 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
 
             var scope = engine.CreateEditorScope();
 
-            Assert.Throws<ArgumentNullException>(() => scope.AddQuickFixHandler(null));
-            scope.AddQuickFixHandler(new MyEmptyHandler());
-            scope.AddQuickFixHandler(new MyHandler());
+            Assert.Throws<ArgumentNullException>(() => scope.RegisterQuickFixHandler(null));
+            scope.RegisterQuickFixHandler(new MyEmptyHandler());
+            scope.RegisterQuickFixHandler(new MyHandler());
 
             IPowerFxScopeQuickFix quickFix = scope;
             var fixes = quickFix.Suggest("1+"); // error
