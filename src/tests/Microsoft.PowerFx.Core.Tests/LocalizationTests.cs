@@ -87,8 +87,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 {
                     errors.AppendLine($"{field.Name}: {ex.Message}");
                 }                
-            }
-            
+            }            
 
             if (errors.Length > 0)
             {
