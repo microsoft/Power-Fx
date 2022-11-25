@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -4726,5 +4726,8 @@
   <data name="ErrDeprecated" xml:space="preserve">
     <value>यह सुविधा अप्रचलित कर दी गई है और यह अब समर्थित नहीं है.</value>
     
+  </data>
+  <data name="ErrExpectedIdentifierArg_Name" xmlns:space="preserve">
+    <value>अपेक्षित पहचानकर्ता का नाम</value>
   </data>
 </root>

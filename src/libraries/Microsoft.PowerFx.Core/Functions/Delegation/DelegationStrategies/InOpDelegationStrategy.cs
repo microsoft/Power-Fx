@@ -157,7 +157,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
                 !columnMetadata.FilterDelegationMetadata.IsDelegationSupportedByColumn(columnPath, DelegationCapability.IndexOf | DelegationCapability.GreaterThan) &&
                 !columnMetadata.FilterDelegationMetadata.IsDelegationSupportedByColumn(columnPath, DelegationCapability.SubStringOf | DelegationCapability.Equal))
             {
-                SuggestDelegationHintAndAddTelemetryMessage(node, binding, FormatTelemetryMessage("Not supported by column."), TexlStrings.OpNotSupportedByColumnSuggestionMessage_OpNotSupportedByColumn, CharacterUtils.MakeSafeForFormatString(columnName.Value));
+                SuggestDelegationHintAndAddTelemetryMessage(node, binding, FormatTelemetryMessage("Not supported by column."), TexlStrings.SuggestRemoteExecutionHint_OpNotSupportedByColumn, CharacterUtils.MakeSafeForFormatString(columnName.Value));
                 return false;
             }
 
@@ -171,7 +171,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
 
             if (!metadata.IsBinaryOpInDelegationSupported(Op))
             {
-                SuggestDelegationHint(column, binding, TexlStrings.OpNotSupportedByClientSuggestionMessage_OpNotSupportedByClient, Op.ToString());
+                SuggestDelegationHint(column, binding, TexlStrings.SuggestRemoteExecutionHint_OpNotSupportedByClient, Op.ToString());
                 return false;
             }
 
@@ -188,7 +188,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
 
             if (!metadata.IsBinaryOpInDelegationSupported(Op))
             {
-                SuggestDelegationHint(node, binding, TexlStrings.OpNotSupportedByClientSuggestionMessage_OpNotSupportedByClient, Op.ToString());
+                SuggestDelegationHint(node, binding, TexlStrings.SuggestRemoteExecutionHint_OpNotSupportedByClient, Op.ToString());
                 return false;
             }
 
@@ -214,7 +214,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
 
             if (!supported)
             {
-                SuggestDelegationHint(node, binding, TexlStrings.OpNotSupportedByServiceSuggestionMessage_OpNotSupportedByService, Op.ToString());
+                SuggestDelegationHint(node, binding, TexlStrings.SuggestRemoteExecutionHint_OpNotSupportedByService, Op.ToString());
                 return false;
             }
 

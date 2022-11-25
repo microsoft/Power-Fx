@@ -174,8 +174,8 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
                 if (!BinderUtils.TryConvertNodeToDPath(binding, node, out var columnPath) || !metadata.IsDelegationSupportedByColumn(columnPath, Function.FunctionDelegationCapability))
                 {
                     var safeColumnName = CharacterUtils.MakeSafeForFormatString(columnPath.ToDottedSyntax());
-                    var message = string.Format(StringResources.Get(TexlStrings.OpNotSupportedByColumnSuggestionMessage_OpNotSupportedByColumn), safeColumnName);
-                    SuggestDelegationHintAndAddTelemetryMessage(node, binding, message, TexlStrings.OpNotSupportedByColumnSuggestionMessage_OpNotSupportedByColumn, safeColumnName);
+                    var message = string.Format(StringResources.Get(TexlStrings.SuggestRemoteExecutionHint_OpNotSupportedByColumn), safeColumnName);
+                    SuggestDelegationHintAndAddTelemetryMessage(node, binding, message, TexlStrings.SuggestRemoteExecutionHint_OpNotSupportedByColumn, safeColumnName);
                     TrackingProvider.Instance.SetDelegationTrackerStatus(DelegationStatus.NoDelSupportByColumn, node, binding, Function, DelegationTelemetryInfo.CreateNoDelSupportByColumnTelemetryInfo(columnPath.ToDottedSyntax()));
                     return false;
                 }
@@ -212,8 +212,8 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             if (!entityCapabilityMetadata.IsDelegationSupportedByColumn(entityColumnPath, Function.FunctionDelegationCapability))
             {
                 var safeColumnName = CharacterUtils.MakeSafeForFormatString(columnName.Value);
-                var message = string.Format(StringResources.Get(TexlStrings.OpNotSupportedByColumnSuggestionMessage_OpNotSupportedByColumn), safeColumnName);
-                SuggestDelegationHintAndAddTelemetryMessage(node, binding, message, TexlStrings.OpNotSupportedByColumnSuggestionMessage_OpNotSupportedByColumn, safeColumnName);
+                var message = string.Format(StringResources.Get(TexlStrings.SuggestRemoteExecutionHint_OpNotSupportedByColumn), safeColumnName);
+                SuggestDelegationHintAndAddTelemetryMessage(node, binding, message, TexlStrings.SuggestRemoteExecutionHint_OpNotSupportedByColumn, safeColumnName);
                 TrackingProvider.Instance.SetDelegationTrackerStatus(DelegationStatus.NoDelSupportByColumn, node, binding, Function, DelegationTelemetryInfo.CreateNoDelSupportByColumnTelemetryInfo(columnName));
                 return false;
             }
@@ -304,8 +304,8 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             if (!metadata.FilterDelegationMetadata.IsDelegationSupportedByColumn(columnPath, capability))
             {
                 var safeColumnName = CharacterUtils.MakeSafeForFormatString(columnName.Value);
-                var message = string.Format(StringResources.Get(TexlStrings.OpNotSupportedByColumnSuggestionMessage_OpNotSupportedByColumn), safeColumnName);
-                SuggestDelegationHintAndAddTelemetryMessage(node, binding, message, TexlStrings.OpNotSupportedByColumnSuggestionMessage_OpNotSupportedByColumn, safeColumnName);
+                var message = string.Format(StringResources.Get(TexlStrings.SuggestRemoteExecutionHint_OpNotSupportedByColumn), safeColumnName);
+                SuggestDelegationHintAndAddTelemetryMessage(node, binding, message, TexlStrings.SuggestRemoteExecutionHint_OpNotSupportedByColumn, safeColumnName);
                 TrackingProvider.Instance.SetDelegationTrackerStatus(DelegationStatus.NoDelSupportByColumn, node, binding, Function, DelegationTelemetryInfo.CreateNoDelSupportByColumnTelemetryInfo(firstNameInfo));
                 return false;
             }

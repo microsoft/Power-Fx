@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -4726,5 +4726,8 @@
   <data name="ErrDeprecated" xml:space="preserve">
     <value>이 기능은 사용되지 않으며 더 이상 지원되지 않습니다.</value>
     
+  </data>
+  <data name="ErrExpectedIdentifierArg_Name" xmlns:space="preserve">
+    <value>예상 식별자 이름</value>
   </data>
 </root>

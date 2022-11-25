@@ -1,4 +1,4 @@
-﻿#SETUP: SupportIdentifiers
+﻿#SETUP: SupportColumnNamesAsIdentifiers
 
 >> AddColumns([1,2,3,4,5], Double, Value * 2)
 Table({Double:2,Value:1},{Double:4,Value:2},{Double:6,Value:3},{Double:8,Value:4},{Double:10,Value:5})
@@ -47,3 +47,15 @@ Table({Value:1,cu:1,sq:1},{Value:2,cu:8,sq:4},{Value:3,cu:27,sq:9})
 
 >> AddColumns([1,2,3], sq, Value * Value, cu, sq * Value)
 Errors: Error 43-45: Name isn't valid. 'sq' isn't recognized.
+
+>> AddColumns([1,2], _, _ * _)
+Errors: Error 21-22: Name isn't valid. '_' isn't recognized.|Error 25-26: Name isn't valid. '_' isn't recognized.
+
+>> AddColumns([1,2], _, Value * Value)
+Table({Value:1,_:1},{Value:2,_:4})
+
+>> AddColumns([1,2], z, Blank())
+Table({Value:1,z:Blank()},{Value:2,z:Blank()})
+
+>> AddColumns([1,2], 3, Value * Value)
+Errors: Error 18-19: Expected identifier name|Error 0-35: The function 'AddColumns' has some invalid arguments.

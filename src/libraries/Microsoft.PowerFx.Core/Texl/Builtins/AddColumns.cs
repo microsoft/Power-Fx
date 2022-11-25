@@ -77,7 +77,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 errors.EnsureError(DocumentErrorSeverity.Severe, args[0].Parent.CastList().Parent.CastCall(), TexlStrings.ErrBadArityOdd, count);
             }
 
-            var supportIndentifiers = context.Features.HasFlag(Features.SupportIdentifiers);
+            var supportColumnNamesAsIdentifiers = context.Features.HasFlag(Features.SupportColumnNamesAsIdentifiers);
 
             for (var i = 1; i < count; i += 2)
             {
@@ -88,7 +88,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 // Verify we have a string literal for the column name. Accd to spec, we don't support
                 // arbitrary expressions that evaluate to string values, because these values contribute to
                 // type analysis, so they need to be known upfront (before AddColumns executes).
-                if (supportIndentifiers)
+                if (supportColumnNamesAsIdentifiers)
                 {
                     if (nameArg is not FirstNameNode identifierNode)
                     {

@@ -42,7 +42,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             if (!result)
             {
                 TrackingProvider.Instance.AddSuggestionMessage(FormatTelemetryMessage("Operator not supported by column."), column, binder);
-                SuggestDelegationHint(column, binder, TexlStrings.OpNotSupportedByColumnSuggestionMessage_OpNotSupportedByColumn, CharacterUtils.MakeSafeForFormatString(columnPath.ToString()));
+                SuggestDelegationHint(column, binder, TexlStrings.SuggestRemoteExecutionHint_OpNotSupportedByColumn, CharacterUtils.MakeSafeForFormatString(columnPath.ToString()));
             }
 
             return result;
@@ -56,13 +56,13 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
 
             if (!metadata.IsBinaryOpInDelegationSupported(Op))
             {
-                SuggestDelegationHint(node, binding, TexlStrings.OpNotSupportedByClientSuggestionMessage_OpNotSupportedByClient, Op.ToString());
+                SuggestDelegationHint(node, binding, TexlStrings.SuggestRemoteExecutionHint_OpNotSupportedByClient, Op.ToString());
                 return false;
             }
 
             if (!metadata.IsBinaryOpSupportedByTable(Op))
             {
-                SuggestDelegationHint(node, binding, TexlStrings.OpNotSupportedByServiceSuggestionMessage_OpNotSupportedByService, Op.ToString());
+                SuggestDelegationHint(node, binding, TexlStrings.SuggestRemoteExecutionHint_OpNotSupportedByService, Op.ToString());
                 return false;
             }
 

@@ -55,13 +55,13 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
 
             if (!metadata.IsUnaryOpInDelegationSupported(Op))
             {
-                SuggestDelegationHint(node, binding, TexlStrings.OpNotSupportedByClientSuggestionMessage_OpNotSupportedByClient, Op.ToString());
+                SuggestDelegationHint(node, binding, TexlStrings.SuggestRemoteExecutionHint_OpNotSupportedByClient, Op.ToString());
                 return false;
             }
 
             if (!metadata.IsUnaryOpSupportedByTable(Op))
             {
-                SuggestDelegationHint(node, binding, TexlStrings.OpNotSupportedByServiceSuggestionMessage_OpNotSupportedByService, Op.ToString());
+                SuggestDelegationHint(node, binding, TexlStrings.SuggestRemoteExecutionHint_OpNotSupportedByService, Op.ToString());
                 return false;
             }
 

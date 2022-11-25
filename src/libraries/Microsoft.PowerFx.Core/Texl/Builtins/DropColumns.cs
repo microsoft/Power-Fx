@@ -66,7 +66,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 returnType = argTypes[0];
             }
 
-            var supportIndentifiers = context.Features.HasFlag(Features.SupportIdentifiers);
+            var supportColumnNamesAsIdentifiers = context.Features.HasFlag(Features.SupportColumnNamesAsIdentifiers);
 
             // The result type has N fewer columns, as specified by (args[1],args[2],args[3],...)
             var count = args.Length;
@@ -79,7 +79,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 // Verify we have a string literal for the column name. Accd to spec, we don't support
                 // arbitrary expressions that evaluate to string values, because these values contribute to
                 // type analysis, so they need to be known upfront (before DropColumns executes).                            
-                if (supportIndentifiers)
+                if (supportColumnNamesAsIdentifiers)
                 {
                     if (nameArg is not FirstNameNode identifierNode)
                     {
@@ -118,11 +118,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     continue;
                 }
 
-                var columnName = nameArg is FirstNameNode && 
-                                 argTypes[0].DisplayNameProvider != null && 
-                                 argTypes[0].DisplayNameProvider.TryGetLogicalName(new DName(expectedColumnName), out var logicalDName)
-                    ? logicalDName 
-                    : new DName(expectedColumnName);
+                var columnName = new DName(nameArg is FirstNameNode && argTypes[0].DisplayNameProvider != null && DType.TryGetLogicalNameForColumn(argTypes[0], expectedColumnName, out var logicalName)
+                                         ? logicalName
+                                         : expectedColumnName);
 
                 // Verify that the name exists.
                 if (!returnType.TryGetType(columnName, out var columnType))

@@ -80,7 +80,7 @@ namespace Microsoft.PowerFx.Core.Functions
 
         /// <summary>
         /// Returns true if the function expect identifiers, false otherwise.
-        /// Needs to be overloaded for functions having identiifer parameters.
+        /// Needs to be overloaded for functions having identifier parameters.
         /// Also overload IsIdentifierParam method. 
         /// </summary>
         public virtual bool HasIdentifiers => false;

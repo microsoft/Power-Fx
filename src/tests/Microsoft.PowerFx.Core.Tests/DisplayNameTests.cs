@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Glue;
@@ -11,6 +12,7 @@ using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Tests;
 using Microsoft.PowerFx.Types;
@@ -454,6 +456,42 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var result = engine.Check(input, parameters);
             var actual = result.IsSuccess;
             Assert.Equal(succeeds, actual);
+        }
+
+        [Theory]
+        [InlineData("d", "displayName")]
+        [InlineData("D", "displayName")]
+        [InlineData("di", "displayName")]
+        [InlineData("DI", "displayName")]
+        [InlineData("dis", "displayName")]
+        [InlineData("DIs", "displayName")]
+        [InlineData("display", "displayName")]
+        [InlineData("displayname", "displayName")]
+        [InlineData("l", "logicalB")]
+        [InlineData("L", "logicalB")]
+        [InlineData("lo", "logicalB")]
+        [InlineData("LO", "logicalB")]
+        [InlineData("logical", "logicalB")]
+        [InlineData("logicalB", "logicalB")]
+        public void TestSuggestIdentifier(string txt, string expected)
+        {
+            var pfxConfig = new PowerFxConfig(Features.SupportColumnNamesAsIdentifiers);
+            var recalcEngine = new Engine(pfxConfig);
+            var rt = RecordType.Empty()
+                .Add(new NamedFormulaType("logicalA", FormulaType.Number, displayName: "displayName"))
+                .Add(new NamedFormulaType("logicalB", FormulaType.Number));
+
+            var intellisenseResult = recalcEngine.Suggest($"DropColumns(myTable, {txt}", rt, 21 + txt.Length);
+
+            Assert.NotNull(intellisenseResult);
+            Assert.NotNull(intellisenseResult.Suggestions);
+            Assert.True(intellisenseResult.Suggestions.Any());
+
+            var intellisenseSuggestion = intellisenseResult.Suggestions.FirstOrDefault(s => s.DisplayText.Text == expected) as IntellisenseSuggestion;
+
+            Assert.NotNull(intellisenseSuggestion);
+            Assert.Equal(expected, intellisenseSuggestion.Text);
+            Assert.Equal(DType.Number, intellisenseSuggestion.Type);
         }
     }
 }

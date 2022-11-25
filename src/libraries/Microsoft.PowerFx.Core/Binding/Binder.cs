@@ -4319,7 +4319,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                     var isIdentifier =
                         args[i] is FirstNameNode &&
-                        _features.HasFlag(Features.SupportIdentifiers) &&
+                        _features.HasFlag(Features.SupportColumnNamesAsIdentifiers) &&
                         maybeFunc.IsIdentifierParam(i);
 
                     // Use the new scope only for lambda args.
@@ -4333,7 +4333,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     }
                     else
                     {
-                        // This is an identifier, no associated type 
+                        // This is an identifier, no associated type
                         argTypes[i] = DType.Unknown;
                     }
 
@@ -4359,7 +4359,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 _currentScope = scopeNew.Parent;
                 PostVisit(node.Args);
 
-                if (maybeFunc.HasIdentifiers && _features.HasFlag(Features.SupportIdentifiers))
+                if (maybeFunc.HasIdentifiers && _features.HasFlag(Features.SupportColumnNamesAsIdentifiers))
                 {
                     var i = 0;
 

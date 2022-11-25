@@ -1,4 +1,4 @@
-﻿#SETUP: SupportIdentifiers
+﻿#SETUP: SupportColumnNamesAsIdentifiers
 
 >> DropColumns(Table({a:1,b:2},{a:3,b:4}), b)
 Table({a:1},{a:3})
@@ -20,3 +20,9 @@ Errors: Error 43-44: The specified column 'a' does not exist. The column with th
 
 >> DropColumns([1, 2, 3], Value)
 Table({},{},{})
+
+>> DropColumns([1, 2], 3)
+Errors: Error 20-21: Expected identifier name|Error 0-22: The function 'DropColumns' has some invalid arguments.
+
+>> DropColumns([1, 2], z)
+Errors: Error 20-21: The specified column 'z' does not exist.|Error 0-22: The function 'DropColumns' has some invalid arguments.
