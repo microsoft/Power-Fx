@@ -90,7 +90,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             TryGetValidDataSourceForDelegation(callNode, binding, DelegationCapability.CountDistinct, out dataSource);
             if (dataSource != null && dataSource.IsDelegatable)
             {
-                binding.ErrorContainer.EnsureError(DocumentErrorSeverity.Warning, callNode, TexlStrings.SuggestRemoteExecutionHint_OpNotSupportedByService, Name);
+                binding.ErrorContainer.EnsureError(DocumentErrorSeverity.Warning, callNode, TexlStrings.OpNotSupportedByServiceSuggestionMessage_OpNotSupportedByService, Name);
             }
 
             return false;

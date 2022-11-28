@@ -157,7 +157,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
                 !columnMetadata.FilterDelegationMetadata.IsDelegationSupportedByColumn(columnPath, DelegationCapability.IndexOf | DelegationCapability.GreaterThan) &&
                 !columnMetadata.FilterDelegationMetadata.IsDelegationSupportedByColumn(columnPath, DelegationCapability.SubStringOf | DelegationCapability.Equal))
             {
-                SuggestDelegationHintAndAddTelemetryMessage(node, binding, FormatTelemetryMessage("Not supported by column."), TexlStrings.SuggestRemoteExecutionHint_OpNotSupportedByColumn, CharacterUtils.MakeSafeForFormatString(columnName.Value));
+                SuggestDelegationHintAndAddTelemetryMessage(node, binding, FormatTelemetryMessage("Not supported by column."), TexlStrings.OpNotSupportedByColumnSuggestionMessage_OpNotSupportedByColumn, CharacterUtils.MakeSafeForFormatString(columnName.Value));
                 return false;
             }
 
@@ -171,7 +171,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
 
             if (!metadata.IsBinaryOpInDelegationSupported(Op))
             {
-                SuggestDelegationHint(column, binding, TexlStrings.SuggestRemoteExecutionHint_OpNotSupportedByClient, Op.ToString());
+                SuggestDelegationHint(column, binding, TexlStrings.OpNotSupportedByClientSuggestionMessage_OpNotSupportedByClient, Op.ToString());
                 return false;
             }
 
@@ -188,14 +188,14 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
 
             if (!metadata.IsBinaryOpInDelegationSupported(Op))
             {
-                SuggestDelegationHint(node, binding, TexlStrings.SuggestRemoteExecutionHint_OpNotSupportedByClient, Op.ToString());
+                SuggestDelegationHint(node, binding, TexlStrings.OpNotSupportedByClientSuggestionMessage_OpNotSupportedByClient, Op.ToString());
                 return false;
             }
 
             // RHS always needs to be firstname node or dottedname lambda access to support delegation.
             var isRHSFirstName = _binaryOpNode.Right.Kind == NodeKind.FirstName;
             var isRHSRecordScope = binding.IsFullRecordRowScopeAccess(_binaryOpNode.Right);
-            
+
             // Check if this is a table delegation for CDS in operator
             var isCdsInTableDelegation = binding.Document.Properties.EnabledFeatures.IsEnhancedDelegationEnabled && metadata.IsDelegationSupportedByTable(DelegationCapability.CdsIn) &&
                 /* Left node can be first name, row scope lambda or a lookup column */
@@ -214,7 +214,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
 
             if (!supported)
             {
-                SuggestDelegationHint(node, binding, TexlStrings.SuggestRemoteExecutionHint_OpNotSupportedByService, Op.ToString());
+                SuggestDelegationHint(node, binding, TexlStrings.OpNotSupportedByServiceSuggestionMessage_OpNotSupportedByService, Op.ToString());
                 return false;
             }
 
