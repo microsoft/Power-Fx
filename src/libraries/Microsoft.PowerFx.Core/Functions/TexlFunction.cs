@@ -477,6 +477,12 @@ namespace Microsoft.PowerFx.Core.Functions
 
             for (var i = count; i < args.Length; i++)
             {
+                // Identifiers don't have a type
+                if (IsIdentifierParam(i))
+                {
+                    continue;
+                }
+
                 var type = argTypes[i];
                 if (type.IsError)
                 {

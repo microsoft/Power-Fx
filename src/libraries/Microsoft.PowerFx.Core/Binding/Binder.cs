@@ -4334,10 +4334,13 @@ namespace Microsoft.PowerFx.Core.Binding
                     else
                     {
                         // This is an identifier, no associated type
-                        argTypes[i] = DType.Unknown;
+                        argTypes[i] = null;
                     }
 
-                    Contracts.Assert(argTypes[i].IsValid);
+                    if (!isIdentifier)
+                    {
+                        Contracts.Assert(argTypes[i].IsValid);
+                    }
 
                     // Async lambdas are not (yet) supported for this function. Flag these with errors.
                     if (_txb.IsAsync(args[i]) && !scopeInfo.SupportsAsyncLambdas)

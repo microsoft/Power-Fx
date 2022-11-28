@@ -43,7 +43,7 @@ namespace Microsoft.PowerFx
         private PowerFxConfig(CultureInfo cultureInfo, EnumStoreBuilder enumStoreBuilder, Features features = Features.None)
         {
             CultureInfo = cultureInfo ?? CultureInfo.CurrentCulture;
-            Features = features;            
+            Features = features;
             SymbolTable.EnumStoreBuilder = enumStoreBuilder;
             MaxCallDepth = DefaultMaxCallDepth;
         }
@@ -57,27 +57,19 @@ namespace Microsoft.PowerFx
         {
         }
 
-        internal PowerFxConfig(CultureInfo culture, SymbolTable symbols, Features features)
+        internal PowerFxConfig WithCulture(CultureInfo newCulture)
         {
-            CultureInfo = culture ?? CultureInfo.CurrentCulture;
-            SymbolTable = symbols;
-            Features = features;
-            MaxCallDepth = DefaultMaxCallDepth;
-        }
-       
-        internal PowerFxConfig WithCulture(CultureInfo newCulture)            
-        {
-            return new PowerFxConfig(newCulture, SymbolTable, Features);            
+            return new PowerFxConfig(newCulture, Features) { SymbolTable = this.SymbolTable };
         }
 
         /// <summary>
         /// Information about available functions.
         /// </summary>
         [Obsolete("Migrate to SymbolTables")]
-        public IEnumerable<FunctionInfo> FunctionInfos => 
-            new Engine(this).SupportedFunctions.Functions
-            .Concat(SymbolTable.Functions)
-            .Select(f => new FunctionInfo(f));
+        public IEnumerable<FunctionInfo> FunctionInfos =>
+                new Engine(this).SupportedFunctions.Functions
+                .Concat(SymbolTable.Functions)
+                .Select(f => new FunctionInfo(f));
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PowerFxConfig"/> class.
@@ -103,7 +95,7 @@ namespace Microsoft.PowerFx
         /// </summary>
         internal static PowerFxConfig BuildWithEnumStore(CultureInfo cultureInfo, EnumStoreBuilder enumStoreBuilder)
         {
-            return BuildWithEnumStore(cultureInfo, enumStoreBuilder, Features.None); 
+            return BuildWithEnumStore(cultureInfo, enumStoreBuilder, Features.None);
         }
 
         internal static PowerFxConfig BuildWithEnumStore(CultureInfo cultureInfo, EnumStoreBuilder enumStoreBuilder, Features features)
