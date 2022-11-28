@@ -62,7 +62,7 @@ namespace Microsoft.PowerFx
         /// </summary>
         public bool IsSuccess => !Errors.Any(x => !x.IsWarning);
 
-        public bool HasDeferredArgsWarning => Errors.Any(x => x.IsWarning && x.MessageKey.Equals(TexlStrings.WarnDeferredType.Key));
+        internal bool HasDeferredArgsWarning => Errors.Any(x => x.IsWarning && x.MessageKey.Equals(TexlStrings.WarnDeferredType.Key));
 
         internal TexlBinding _binding;
 

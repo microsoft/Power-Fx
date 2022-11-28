@@ -4851,11 +4851,30 @@ namespace Microsoft.PowerFx.Core.Binding
                 var argTypes = args.Select(_txb.GetType).ToArray();
                 bool fArgsValid;
 
+                // This error container is used as temporary container so we can trap type mismatch kind of error for
+                // deferred (unknown) type args and validate all the errors were caused due to deferred(unknown) type.
+                var checkInvocationErrors = new ErrorContainer();
+
                 // Typecheck the invocation and infer the return type.
+                fArgsValid = func.HandleCheckInvocation(_txb, args, argTypes, checkInvocationErrors, out returnType, out var nodeToCoercedTypeMap);
 
-                fArgsValid = HandleCheckInvocationWithDeferred(func, _txb, args, argTypes, out var checkInvocationErrors, out returnType, out var nodeToCoercedTypeMap);
+                var isDeferredArgPresent = argTypes.Any(type => type.IsDeferred);
 
-                if (checkInvocationErrors.HasErrors())
+                // If type check failed and errors were due to Unknown type node we would like to consider the typeChecking passed and discard all the errors.
+                if (!fArgsValid && isDeferredArgPresent)
+                {
+                    fArgsValid = true;
+
+                    // If one of the arg was deferred and
+                    // return type could not be calculated and was error, we assign it to deferred as safeguard.
+                    // returnType was EmptyTable, we assign it to deferred as safeguard e.g. Table(Deferred) => deferred,
+                    // this is because we don't want to embed deferred type inside of any aggregate type.
+                    if (returnType.IsError || returnType.Equals(DType.EmptyTable))
+                    {
+                        returnType = DType.Deferred;
+                    }
+                }
+                else
                 {
                     _txb.ErrorContainer.MergeErrors(checkInvocationErrors.GetErrors());
                 }
@@ -5059,6 +5078,10 @@ namespace Microsoft.PowerFx.Core.Binding
                         {
                             _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, node.Children[i], TexlStrings.ErrMultipleValuesForField_Name, displayName);
                         }
+                        else if (_txb.GetType(node.Children[i]).IsDeferred)
+                        {
+                            _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, node.Children[i], TexlStrings.ErrRecordDoesNotAcceptThisType);
+                        }
                         else
                         {
                             nodeType = nodeType.Add(fieldName, _txb.GetType(node.Children[i]));
@@ -5084,15 +5107,15 @@ namespace Microsoft.PowerFx.Core.Binding
                     var childType = _txb.GetType(child);
                     isSelfContainedConstant &= _txb.IsSelfContainedConstant(child);
 
-                    if (!exprType.IsValid)
+                    if (!childType.IsDeferred && !exprType.IsValid)
                     {
                         exprType = childType;
                     }
-                    else if (exprType.CanUnionWith(childType))
+                    else if (!childType.IsDeferred && exprType.CanUnionWith(childType))
                     {
                         exprType = DType.Union(exprType, childType);
                     }
-                    else if (childType.CoercesTo(exprType))
+                    else if (!childType.IsDeferred && childType.CoercesTo(exprType))
                     {
                         _txb.SetCoercedType(child, exprType);
                     }

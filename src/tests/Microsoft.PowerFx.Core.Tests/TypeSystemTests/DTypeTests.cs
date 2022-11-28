@@ -15,13 +15,13 @@ namespace Microsoft.PowerFx.Tests
 {
     public class DTypeTests
     {
-        private DType AttachmentTableType => DType.CreateAttachmentType(DType.CreateTable(new TypedName(DType.String, new DName("DisplayName"))));
+        private static DType AttachmentTableType => DType.CreateAttachmentType(DType.CreateTable(new TypedName(DType.String, new DName("DisplayName"))));
 
-        private DType AttachmentRecordType => DType.CreateAttachmentType(DType.CreateRecord(new TypedName(DType.Number, new DName("Wrapped"))));
+        private static DType AttachmentRecordType => DType.CreateAttachmentType(DType.CreateRecord(new TypedName(DType.Number, new DName("Wrapped"))));
 
-        private IExternalEntity _optionSet;
+        private static IExternalEntity _optionSet;
 
-        private DType OptionSetType
+        private static DType OptionSetType
         {
             get
             {
@@ -41,9 +41,9 @@ namespace Microsoft.PowerFx.Tests
             }
         }
 
-        private DType OptionSetValueType => DType.CreateOptionSetValueType(OptionSetType.OptionSetInfo);
+        private static DType OptionSetValueType => DType.CreateOptionSetValueType(OptionSetType.OptionSetInfo);
 
-        private DType MultiSelectOptionSetType
+        private static DType MultiSelectOptionSetType
         {
             get
             {
@@ -51,6 +51,14 @@ namespace Microsoft.PowerFx.Tests
                 return DType.CreateTable(optionSetColumn);
             }
         }
+
+        private static readonly DType[] _dTypes = new[]
+            {
+                DType.Unknown, DType.Error, DType.Number, DType.Boolean, DType.String, DType.Hyperlink, DType.Image,
+                DType.PenImage, DType.Media, DType.Blob, DType.Color, DType.Currency, DType.EmptyRecord, DType.EmptyTable,
+                DType.EmptyEnum, DType.Date, DType.Time, DType.Guid, DType.Polymorphic, DType.Deferred, AttachmentTableType,
+                AttachmentRecordType, OptionSetType, MultiSelectOptionSetType
+            };
 
         [Fact]
         public void MaxDepth()
@@ -154,88 +162,28 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void ErrorIsSupertypeOfAll()
         {
-            Assert.True(DType.Error.Accepts(DType.Unknown));
-            Assert.True(DType.Error.Accepts(DType.Deferred));
-            Assert.True(DType.Error.Accepts(DType.Error));
-            Assert.True(DType.Error.Accepts(DType.Boolean));
-            Assert.True(DType.Error.Accepts(DType.DateTime));
-            Assert.True(DType.Error.Accepts(DType.EmptyRecord));
-            Assert.True(DType.Error.Accepts(DType.EmptyTable));
-            Assert.True(DType.Error.Accepts(DType.Hyperlink));
-            Assert.True(DType.Error.Accepts(DType.Image));
-            Assert.True(DType.Error.Accepts(DType.PenImage));
-            Assert.True(DType.Error.Accepts(DType.Media));
-            Assert.True(DType.Error.Accepts(DType.Blob));
-            Assert.True(DType.Error.Accepts(DType.Color));
-            Assert.True(DType.Error.Accepts(DType.Currency));
-            Assert.True(DType.Error.Accepts(DType.Number));
-            Assert.True(DType.Error.Accepts(DType.String));
-            Assert.True(DType.Error.Accepts(DType.EmptyEnum));
-            Assert.True(DType.Error.Accepts(DType.Date));
-            Assert.True(DType.Error.Accepts(DType.Time));
-            Assert.True(DType.Error.Accepts(DType.Guid));
-            Assert.True(DType.Error.Accepts(AttachmentTableType));
-            Assert.True(DType.Error.Accepts(AttachmentRecordType));
-            Assert.True(DType.Error.Accepts(OptionSetType));
-            Assert.True(DType.Error.Accepts(MultiSelectOptionSetType));
-            Assert.True(DType.Error.Accepts(DType.Polymorphic));
+            foreach (var dType in _dTypes)
+            {
+                Assert.True(DType.Error.Accepts(dType));
+            }
         }
 
         [Fact]
         public void UnknownIsSubtypeOfAll()
         {
-            Assert.True(DType.Unknown.Accepts(DType.Unknown));
-            Assert.True(DType.Error.Accepts(DType.Unknown));
-            Assert.True(DType.Number.Accepts(DType.Unknown));
-            Assert.True(DType.Boolean.Accepts(DType.Unknown));
-            Assert.True(DType.String.Accepts(DType.Unknown));
-            Assert.True(DType.Hyperlink.Accepts(DType.Unknown));
-            Assert.True(DType.Image.Accepts(DType.Unknown));
-            Assert.True(DType.PenImage.Accepts(DType.Unknown));
-            Assert.True(DType.Media.Accepts(DType.Unknown));
-            Assert.True(DType.Blob.Accepts(DType.Unknown));
-            Assert.True(DType.Color.Accepts(DType.Unknown));
-            Assert.True(DType.Currency.Accepts(DType.Unknown));
-            Assert.True(DType.EmptyRecord.Accepts(DType.Unknown));
-            Assert.True(DType.EmptyTable.Accepts(DType.Unknown));
-            Assert.True(DType.EmptyEnum.Accepts(DType.Unknown));
-            Assert.True(DType.Date.Accepts(DType.Unknown));
-            Assert.True(DType.Time.Accepts(DType.Unknown));
-            Assert.True(DType.Guid.Accepts(DType.Unknown));
-            Assert.True(AttachmentTableType.Accepts(DType.Unknown));
-            Assert.True(AttachmentRecordType.Accepts(DType.Unknown));
-            Assert.True(OptionSetType.Accepts(DType.Unknown));
-            Assert.True(MultiSelectOptionSetType.Accepts(DType.Unknown));
-            Assert.True(DType.Polymorphic.Accepts(DType.Unknown));
+            foreach (var dType in _dTypes)
+            {
+                Assert.True(dType.Accepts(DType.Unknown));
+            }
         }
 
         [Fact]
         public void DeferredIsSubtypeOfAll()
         {
-            Assert.True(DType.Unknown.Accepts(DType.Deferred));
-            Assert.True(DType.Error.Accepts(DType.Deferred));
-            Assert.True(DType.Number.Accepts(DType.Deferred));
-            Assert.True(DType.Boolean.Accepts(DType.Deferred));
-            Assert.True(DType.String.Accepts(DType.Deferred));
-            Assert.True(DType.Hyperlink.Accepts(DType.Deferred));
-            Assert.True(DType.Image.Accepts(DType.Deferred));
-            Assert.True(DType.PenImage.Accepts(DType.Deferred));
-            Assert.True(DType.Media.Accepts(DType.Deferred));
-            Assert.True(DType.Blob.Accepts(DType.Deferred));
-            Assert.True(DType.Color.Accepts(DType.Deferred));
-            Assert.True(DType.Currency.Accepts(DType.Deferred));
-            Assert.True(DType.EmptyRecord.Accepts(DType.Deferred));
-            Assert.True(DType.EmptyTable.Accepts(DType.Deferred));
-            Assert.True(DType.EmptyEnum.Accepts(DType.Deferred));
-            Assert.True(DType.Date.Accepts(DType.Deferred));
-            Assert.True(DType.Time.Accepts(DType.Deferred));
-            Assert.True(DType.Guid.Accepts(DType.Deferred));
-            Assert.True(AttachmentTableType.Accepts(DType.Deferred));
-            Assert.True(AttachmentRecordType.Accepts(DType.Deferred));
-            Assert.True(OptionSetType.Accepts(DType.Deferred));
-            Assert.True(MultiSelectOptionSetType.Accepts(DType.Deferred));
-            Assert.True(DType.Polymorphic.Accepts(DType.Deferred));
-            Assert.True(DType.Deferred.Accepts(DType.Deferred));
+            foreach (var dType in _dTypes)
+            {
+                Assert.True(dType.Accepts(DType.Deferred));
+            }
         }
 
         [Fact]

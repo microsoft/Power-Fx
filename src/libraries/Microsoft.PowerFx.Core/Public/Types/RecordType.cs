@@ -85,6 +85,11 @@ namespace Microsoft.PowerFx.Types
         /// </summary>
         public RecordType Add(string logicalName, FormulaType type, string optionalDisplayName = null)
         {
+            if (type._type.IsDeferred)
+            {
+                throw new NotSupportedException();
+            }
+
             return Add(new NamedFormulaType(new TypedName(type._type, new DName(logicalName)), optionalDisplayName));
         }
 

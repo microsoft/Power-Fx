@@ -121,6 +121,11 @@ namespace Microsoft.PowerFx.Types
 
         private protected DType AddFieldToType(NamedFormulaType field)
         {
+            if (field._typedName.Type.IsDeferred)
+            {
+                throw new NotSupportedException();
+            }
+
             var displayNameProvider = _type.DisplayNameProvider;
             if (displayNameProvider == null)
             {

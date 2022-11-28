@@ -6222,6 +6222,10 @@
     <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     <comment>{Locked}</comment>
   </data>
+  <data name="ErrorResource_ErrRecordDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
+    <value>Incompatible type. The item you are trying to put into a record has a type that is not compatible with the record.</value>
+    <comment>Error Message.</comment>
+  </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
     <value>Incompatible type. The item you are trying to put into a table has a type that is not compatible with the table.</value>
     <comment>Error Message.</comment>
