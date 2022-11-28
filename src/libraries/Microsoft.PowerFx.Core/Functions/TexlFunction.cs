@@ -452,11 +452,18 @@ namespace Microsoft.PowerFx.Core.Functions
         {
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
-            Contracts.AssertValue(argTypes);
-            Contracts.AssertAllValid(argTypes);
+            Contracts.AssertValue(argTypes);            
             Contracts.Assert(args.Length == argTypes.Length);
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
+
+            for (int i = 0; i < argTypes.Length; i++)
+            {
+                if (!IsIdentifierParam(i))
+                {
+                    Contracts.AssertValid(argTypes[i]);
+                }
+            }
 
             var fValid = true;
             var count = Math.Min(args.Length, ParamTypes.Length);
