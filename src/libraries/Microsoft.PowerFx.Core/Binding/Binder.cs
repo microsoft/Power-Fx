@@ -4861,20 +4861,9 @@ namespace Microsoft.PowerFx.Core.Binding
                 var isDeferredArgPresent = argTypes.Any(type => type.IsDeferred);
 
                 // If type check failed and errors were due to Unknown type node we would like to consider the typeChecking passed and discard all the errors.
-                if (!fArgsValid && isDeferredArgPresent)
-                {
-                    fArgsValid = true;
+                (fArgsValid, returnType) = CheckDeferredType(argTypes, returnType, fArgsValid);
 
-                    // If one of the arg was deferred and
-                    // return type could not be calculated and was error, we assign it to deferred as safeguard.
-                    // returnType was EmptyTable, we assign it to deferred as safeguard e.g. Table(Deferred) => deferred,
-                    // this is because we don't want to embed deferred type inside of any aggregate type.
-                    if (returnType.IsError || returnType.Equals(DType.EmptyTable))
-                    {
-                        returnType = DType.Deferred;
-                    }
-                }
-                else
+                if(!isDeferredArgPresent)
                 {
                     _txb.ErrorContainer.MergeErrors(checkInvocationErrors.GetErrors());
                 }

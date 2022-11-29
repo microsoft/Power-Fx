@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.PowerFx.Core.App.Controls;
@@ -143,21 +144,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 // Typecheck the invocation and infer the return type.
                 typeCheckSucceeded = maybeFunc.CheckTypes(context, args, argTypes, localWarnings, out returnType, out nodeToCoercedTypeMap);
 
-                var isDeferredArgPresent = argTypes.Any(type => type.IsDeferred);
-
-                if (!typeCheckSucceeded && isDeferredArgPresent)
-                {
-                    typeCheckSucceeded = true;
-
-                    // If one of the arg was deferred and
-                    // return type could not be calculated and was error, we assign it to deferred as safeguard.
-                    // returnType was EmptyTable, we assign it to deferred as safeguard e.g. Table(Deferred) => deferred,
-                    // this is because we don't want to embed deferred type inside of any aggregate type.
-                    if (returnType.IsError || returnType.Equals(DType.EmptyTable))
-                    {
-                        returnType = DType.Deferred;
-                    }
-                }
+                (typeCheckSucceeded, returnType) = CheckDeferredType(argTypes, returnType, typeCheckSucceeded);
 
                 if (typeCheckSucceeded)
                 {
@@ -196,6 +183,26 @@ namespace Microsoft.PowerFx.Core.Binding
             nodeToCoercedTypeMap = null;
             returnType = null;
             return false;
+        }
+
+        internal static (bool typeCheckSucceeded, DType returnType) CheckDeferredType(DType[] argTypes, DType returnType, bool typeCheckSucceeded)
+        {
+            var isDeferredArgPresent = argTypes.Any(type => type.IsDeferred);
+
+            if (!typeCheckSucceeded && isDeferredArgPresent)
+            {
+                typeCheckSucceeded = true;
+
+                // If one of the arg was deferred and
+                // return type could not be calculated and was error, we assign it to deferred as safeguard.
+                // returnType was EmptyTable, we assign it to deferred as safeguard e.g. Table(Deferred) => deferred,
+                // this is because we don't want to embed deferred type inside of any aggregate type.
+                if (returnType.IsError || returnType.Equals(DType.EmptyTable))
+                {
+                    returnType = DType.Deferred;
+                }
+            }
+            return(typeCheckSucceeded, returnType);
         }
 
         /// <summary>

@@ -1342,6 +1342,12 @@ namespace Microsoft.PowerFx.Core.Types
             Contracts.Assert(IsAggregate);
             Contracts.Assert(typedName.IsValid);
 
+            // We don't want to allow building aggregate types around deferred type.
+            if(typedName.Type.IsDeferred)
+            {
+                throw new NotSupportedException();
+            }
+
             return Add(typedName.Name, typedName.Type);
         }
 
