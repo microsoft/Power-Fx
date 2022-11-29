@@ -13,6 +13,13 @@ using Xunit;
 
 namespace Microsoft.PowerFx.Interpreter
 {
+    /// <summary>
+    /// Assumptions on Deferred Type:
+    /// 1. you can't construct deferred type around aggregate type e.g. Record type, TableType
+    /// 2. Function calls discard all the errors if any arg present is deferred type. e.g. Sum(deferred, Record) would not give any error for Record Type.
+    /// 3. Function Overload resolution is biased to scaler type, because we discard error and make the first overload valid it matches to scaler one and 
+    /// does not try and go to Tabular overload. e.g. Sum(deferred) return type is number, and not the table of numbers.
+    /// </summary>
     public class DeferredTypeTests
     {
         [Theory]
@@ -22,12 +29,12 @@ namespace Microsoft.PowerFx.Interpreter
         [InlineData("Table(X)", "X")]
         [InlineData("X.Field1", "X")]
 
-        [InlineData("X + 1", "X")] // resolve
-        [InlineData("X + \"1\"", "X")] // resolve
+        [InlineData("X + 1", "X")]
+        [InlineData("X + \"1\"", "X")]
         [InlineData("X + DateTime(2022, 11, 10, 0, 0, 0)", "d")]
         [InlineData("X + Date(2022, 11, 10)", "d")]
         [InlineData("X + Time(0, 0, 0)", "T")]
-        [InlineData("1 + X", "X")] // resolve
+        [InlineData("1 + X", "X")]
         [InlineData("DateTime(2022, 11, 10, 0, 0, 0) + X", "d")]
         [InlineData("Date(2022, 11, 10) + X", "d")]
         [InlineData("Time(0, 0, 0) + X", "T")]
