@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -4726,11 +4726,5 @@
   <data name="ErrDeprecated" xml:space="preserve">
     <value>Tính năng này không được dùng nữa và không còn được hỗ trợ.</value>
     
-  </data>
-  <data name="ErrExpectedIdentifierArg_Name" xmlns:space="preserve">
-    <value>Tên nhận dạng dự kiến</value>
-  </data>
-  <data name="ErrInvalidFunction" xmlns:space="preserve">
-    <value>Hàm này không rõ ràng, nó chứa các biểu thức lambda và mã định danh cột cho cùng một đối số.</value>
   </data>
 </root>

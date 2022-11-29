@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -4726,11 +4726,5 @@
   <data name="ErrDeprecated" xml:space="preserve">
     <value>Ta funkcja jest przestarzała i nie jest już obsługiwana.</value>
     
-  </data>
-  <data name="ErrExpectedIdentifierArg_Name" xmlns:space="preserve">
-    <value>Oczekiwana nazwa identyfikatora</value>
-  </data>
-  <data name="ErrInvalidFunction" xmlns:space="preserve">
-    <value>Ta funkcja jest niejednoznaczna, zawiera wyrażenia lambda i identyfikatory kolumn dla tego samego argumentu.</value>
   </data>
 </root>

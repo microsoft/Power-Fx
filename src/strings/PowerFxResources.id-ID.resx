@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -4726,11 +4726,5 @@
   <data name="ErrDeprecated" xml:space="preserve">
     <value>Fitur ini tidak digunakan lagi dan sudah tidak didukung.</value>
     
-  </data>
-  <data name="ErrExpectedIdentifierArg_Name" xmlns:space="preserve">
-    <value>Nama pengidentifikasi yang diharapkan</value>
-  </data>
-  <data name="ErrInvalidFunction" xmlns:space="preserve">
-    <value>Fungsi ini ambigu, berisi ekspresi lambda dan pengidentifikasi kolom untuk argumen yang sama.</value>
   </data>
 </root>

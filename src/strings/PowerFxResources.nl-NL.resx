@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -4726,11 +4726,5 @@
   <data name="ErrDeprecated" xml:space="preserve">
     <value>Deze functie is afgeschaft en wordt niet meer ondersteund.</value>
     
-  </data>
-  <data name="ErrExpectedIdentifierArg_Name" xmlns:space="preserve">
-    <value>Verwachte id-naam</value>
-  </data>
-  <data name="ErrInvalidFunction" xmlns:space="preserve">
-    <value>Deze functie is dubbelzinnig, het bevat lambda-expressies en kolom-id's voor hetzelfde argument.</value>
   </data>
 </root>

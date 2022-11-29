@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -4726,11 +4726,5 @@
   <data name="ErrDeprecated" xml:space="preserve">
     <value>Ova funkcija je zastarela i više nije podržana.</value>
     
-  </data>
-  <data name="ErrExpectedIdentifierArg_Name" xmlns:space="preserve">
-    <value>Očekivano ime identifikatora</value>
-  </data>
-  <data name="ErrInvalidFunction" xmlns:space="preserve">
-    <value>Ova funkcija je dvosmislena, sadrži lambda izraze i identifikatore kolona za isti argument.</value>
   </data>
 </root>

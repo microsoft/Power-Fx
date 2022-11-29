@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -4726,11 +4726,5 @@
   <data name="ErrDeprecated" xml:space="preserve">
     <value>यह सुविधा अप्रचलित कर दी गई है और यह अब समर्थित नहीं है.</value>
     
-  </data>
-  <data name="ErrExpectedIdentifierArg_Name" xmlns:space="preserve">
-    <value>अपेक्षित पहचानकर्ता का नाम</value>
-  </data>
-  <data name="ErrInvalidFunction" xmlns:space="preserve">
-    <value>यह फ़ंक्शन अस्पष्ट है, इसमें एक ही तर्क के लिए लैम्ब्डा अभिव्यक्तियां और कॉलम पहचानकर्ता शामिल हैं।</value>
   </data>
 </root>

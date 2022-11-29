@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -4726,11 +4726,5 @@
   <data name="ErrDeprecated" xml:space="preserve">
     <value>此功能已淘汰，不再受支援。</value>
     
-  </data>
-  <data name="ErrExpectedIdentifierArg_Name" xmlns:space="preserve">
-    <value>預期的標識碼名稱</value>
-  </data>
-  <data name="ErrInvalidFunction" xmlns:space="preserve">
-    <value>此函數不明確，它包含同一參數的 lambda 表達式和列標識符。</value>
   </data>
 </root>
