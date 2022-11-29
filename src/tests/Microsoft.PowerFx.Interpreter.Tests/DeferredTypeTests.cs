@@ -70,6 +70,13 @@ namespace Microsoft.PowerFx.Interpreter
         [InlineData("ForAll(ParseJSON(\"[1]\"), X)", "X")]
         [InlineData("Abs(Table(X))", "n")]
         [InlineData("Power(2, Table(X))", "n")]
+        [InlineData("Switch(X, 0, 0, 1, 1)", "n")]
+        [InlineData("Switch(0, 0, X, 1, 1)", "n")]
+        [InlineData("Switch(0, 0, X, 1, X)", "X")]
+        [InlineData("Switch(0, 0, X, 1, \"test\")", "s")]
+        [InlineData("Set(N, X); N", "n")]
+        [InlineData("Set(N, X); Set(N, 5); N", "n")]
+        [InlineData("Set(XM, X); XM", "X")]
 
         // Ensures expression binds without any errors - but issues a warning for the deferred(unknown) type.
         public void DeferredTypeTest(string script, string expectedReturnType)
@@ -79,6 +86,8 @@ namespace Microsoft.PowerFx.Interpreter
             symbolTable.AddVariable("X", FormulaType.Deferred);
             symbolTable.AddVariable("R", RecordType.Empty());
             symbolTable.AddVariable("T", RecordType.Empty().ToTable());
+            symbolTable.AddVariable("N", FormulaType.Number, mutable: true);
+            symbolTable.AddVariable("XM", FormulaType.Deferred, mutable: true);
 
             TestDeferredTypeBindingWarning(script, Features.None, TestUtils.DT(expectedReturnType), symbolTable);
         }
@@ -130,9 +139,11 @@ namespace Microsoft.PowerFx.Interpreter
                 SymbolTable = symbolTable
             };
 
-            var engine = new RecalcEngine(config);
-            var result = engine.Check(script);
+            config.EnableSetFunction();
 
+            var engine = new RecalcEngine(config);
+            var result = engine.Check(script, options: new ParserOptions() { AllowsSideEffects = true });
+            
             Assert.True(result.IsSuccess);
 
             var returnType = FormulaType.Build(result._binding.ResultType);
