@@ -4365,6 +4365,9 @@ namespace Microsoft.PowerFx.Core.Binding
                 // Typecheck the invocation and infer the return type.
                 fArgsValid &= maybeFunc.HandleCheckInvocation(_txb, args, argTypes, _txb.ErrorContainer, out var returnType, out var nodeToCoercedTypeMap);
 
+                // If type check failed and errors were due to Unknown type arg we would like to consider the typeChecking passed and discard all the errors.
+                (fArgsValid, returnType) = CheckDeferredType(argTypes, returnType, fArgsValid);
+
                 // This is done because later on, if a CallNode has a return type of Error, you can assert HasErrors on it.
                 // This was not done for UnaryOpNodes, BinaryOpNodes, CompareNodes.
                 // This doesn't need to be done on the other nodes (but can) because their return type doesn't depend
@@ -4687,6 +4690,10 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 // Typecheck the invocation and infer the return type.
                 fArgsValid = func.HandleCheckInvocation(_txb, args, argTypes, _txb.ErrorContainer, out returnType, out _);
+
+                // If type check failed and errors were due to Unknown type arg we would like to consider the typeChecking passed and discard all the errors.
+                (fArgsValid, returnType) = CheckDeferredType(argTypes, returnType, fArgsValid);
+
                 if (!fArgsValid)
                 {
                     _txb.ErrorContainer.Error(DocumentErrorSeverity.Severe, node, TexlStrings.ErrInvalidArgs_Func, func.Name);
@@ -4860,7 +4867,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 var isDeferredArgPresent = argTypes.Any(type => type.IsDeferred);
 
-                // If type check failed and errors were due to Unknown type node we would like to consider the typeChecking passed and discard all the errors.
+                // If type check failed and errors were due to Unknown type arg we would like to consider the typeChecking passed and discard all the errors.
                 (fArgsValid, returnType) = CheckDeferredType(argTypes, returnType, fArgsValid);
 
                 if(!isDeferredArgPresent)

@@ -59,6 +59,10 @@ namespace Microsoft.PowerFx.Interpreter
         [InlineData("If(true, X)", "X")]
         [InlineData("If(true, X, 1)", "n")]
         [InlineData("If(true, X, X)", "X")]
+        [InlineData("ForAll([1,2,3], X)", "X")]
+        [InlineData("ForAll(ParseJSON(\"[1]\"), X)", "X")]
+        [InlineData("Abs(Table(X))", "n")]
+        [InlineData("Power(2, Table(X))", "n")]
 
         // Ensures expression binds without any errors - but issues a warning for the deferred(unknown) type.
         public void DeferredTypeTest(string script, string expectedReturnType)
