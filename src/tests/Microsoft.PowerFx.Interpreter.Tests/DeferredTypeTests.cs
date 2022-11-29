@@ -94,6 +94,9 @@ namespace Microsoft.PowerFx.Interpreter
         // Can't create aggregates around Deferred type.
         [InlineData("[X]", "Incompatible type. The item you are trying to put into a table has a type that is not compatible with the table.")]
         [InlineData("{test: X}", "Incompatible type. The item you are trying to put into a record has a type that is not compatible with the record.")]
+        [InlineData("{ a: { a: { a: X } } }", "Incompatible type. The item you are trying to put into a record has a type that is not compatible with the record.")]
+        [InlineData("Table({ a: X })", "Incompatible type. The item you are trying to put into a record has a type that is not compatible with the record.")]
+        [InlineData("Table({ a: { a: { a: X } } })", "Incompatible type. The item you are trying to put into a record has a type that is not compatible with the record.")]
 
         // Ensures expression issues an error if it exists, despite the deferred type.
         // NOTE: All error are discarded for function calls e.g. You don't get any errors for Table(deferred, number).

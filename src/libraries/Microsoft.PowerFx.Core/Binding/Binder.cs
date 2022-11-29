@@ -4360,13 +4360,14 @@ namespace Microsoft.PowerFx.Core.Binding
                 _currentScope = scopeNew.Parent;
                 PostVisit(node.Args);
 
-                // Typecheck the invocation.
+                // Temporary error container which can be discarded if deferred type arg is present.
+                var checkErrorContainer = new ErrorContainer();
 
                 // Typecheck the invocation and infer the return type.
-                fArgsValid &= maybeFunc.HandleCheckInvocation(_txb, args, argTypes, _txb.ErrorContainer, out var returnType, out var nodeToCoercedTypeMap);
+                fArgsValid &= maybeFunc.HandleCheckInvocation(_txb, args, argTypes, checkErrorContainer, out var returnType, out var nodeToCoercedTypeMap);
 
                 // If type check failed and errors were due to Unknown type arg we would like to consider the typeChecking passed and discard all the errors.
-                (fArgsValid, returnType) = CheckDeferredType(argTypes, returnType, fArgsValid);
+                (fArgsValid, returnType) = CheckDeferredType(argTypes, returnType, fArgsValid, checkErrorContainer, _txb.ErrorContainer);
 
                 // This is done because later on, if a CallNode has a return type of Error, you can assert HasErrors on it.
                 // This was not done for UnaryOpNodes, BinaryOpNodes, CompareNodes.
@@ -4688,11 +4689,14 @@ namespace Microsoft.PowerFx.Core.Binding
                 var argTypes = args.Select(_txb.GetType).ToArray();
                 bool fArgsValid;
 
+                // Temporary error container which can be discarded if deferred type arg is present.
+                var checkErrorContainer = new ErrorContainer();
+
                 // Typecheck the invocation and infer the return type.
-                fArgsValid = func.HandleCheckInvocation(_txb, args, argTypes, _txb.ErrorContainer, out returnType, out _);
+                fArgsValid = func.HandleCheckInvocation(_txb, args, argTypes, checkErrorContainer, out returnType, out _);
 
                 // If type check failed and errors were due to Unknown type arg we would like to consider the typeChecking passed and discard all the errors.
-                (fArgsValid, returnType) = CheckDeferredType(argTypes, returnType, fArgsValid);
+                (fArgsValid, returnType) = CheckDeferredType(argTypes, returnType, fArgsValid, checkErrorContainer, _txb.ErrorContainer);
 
                 if (!fArgsValid)
                 {
@@ -4860,20 +4864,13 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 // This error container is used as temporary container so we can trap type mismatch kind of error for
                 // deferred (unknown) type args and validate all the errors were caused due to deferred(unknown) type.
-                var checkInvocationErrors = new ErrorContainer();
+                var checkErrorContainer = new ErrorContainer();
 
                 // Typecheck the invocation and infer the return type.
-                fArgsValid = func.HandleCheckInvocation(_txb, args, argTypes, checkInvocationErrors, out returnType, out var nodeToCoercedTypeMap);
-
-                var isDeferredArgPresent = argTypes.Any(type => type.IsDeferred);
+                fArgsValid = func.HandleCheckInvocation(_txb, args, argTypes, checkErrorContainer, out returnType, out var nodeToCoercedTypeMap);
 
                 // If type check failed and errors were due to Unknown type arg we would like to consider the typeChecking passed and discard all the errors.
-                (fArgsValid, returnType) = CheckDeferredType(argTypes, returnType, fArgsValid);
-
-                if(!isDeferredArgPresent)
-                {
-                    _txb.ErrorContainer.MergeErrors(checkInvocationErrors.GetErrors());
-                }
+                (fArgsValid, returnType) = CheckDeferredType(argTypes, returnType, fArgsValid, checkErrorContainer, _txb.ErrorContainer);
 
                 if (!fArgsValid && !func.HasPreciseErrors)
                 {

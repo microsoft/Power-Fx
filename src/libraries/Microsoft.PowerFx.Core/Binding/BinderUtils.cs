@@ -185,7 +185,16 @@ namespace Microsoft.PowerFx.Core.Binding
             return false;
         }
 
-        internal static (bool typeCheckSucceeded, DType returnType) CheckDeferredType(DType[] argTypes, DType returnType, bool typeCheckSucceeded)
+        /// <summary>
+        /// if <paramref name="typeCheckSucceeded"/> failed and DeferredType arg is present, discard all the error and succeed the type check.
+        /// Keep <paramref name="errorContainer"/> and <paramref name="checkErrorContainer"/> null if no need to merge errors.
+        /// </summary>
+        /// <param name="argTypes"> types of all the args.</param>
+        /// <param name="returnType"> return type determined by function's check type.</param>
+        /// <param name="typeCheckSucceeded"> function's check type succeeded or not.</param>
+        /// <param name="checkErrorContainer"> Temp error container used for type checking only.</param>
+        /// <param name="errorContainer"> Binder's error container.</param>
+        internal static (bool typeCheckSucceeded, DType returnType) CheckDeferredType(DType[] argTypes, DType returnType, bool typeCheckSucceeded, ErrorContainer checkErrorContainer = null, ErrorContainer errorContainer = null)
         {
             var isDeferredArgPresent = argTypes.Any(type => type.IsDeferred);
 
@@ -202,6 +211,11 @@ namespace Microsoft.PowerFx.Core.Binding
                     returnType = DType.Deferred;
                 }
             }
+            else if(checkErrorContainer!=null && errorContainer!=null)
+            {
+                errorContainer.MergeErrors(checkErrorContainer.GetErrors());
+            }
+
             return(typeCheckSucceeded, returnType);
         }
 
