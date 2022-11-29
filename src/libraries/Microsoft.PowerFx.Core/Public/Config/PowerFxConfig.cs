@@ -153,7 +153,7 @@ namespace Microsoft.PowerFx
                     // and checking up to 20 arguments is enough for this validation
                     for (var i = 0; i < Math.Min(function.MaxArity, 20); i++)
                     {
-                        if (function.IsLambdaParam(i) && function.IsIdentifierParam(i))
+                        if (function.HasLambdas && function.HasColumnIdentifiers && function.IsLambdaParam(i) && function.IsIdentifierParam(i))
                         {
                             (var message, var _) = ErrorUtils.GetLocalizedErrorContent(TexlStrings.ErrInvalidFunction, null, out var errorResource);
                             throw new ArgumentException(message);
