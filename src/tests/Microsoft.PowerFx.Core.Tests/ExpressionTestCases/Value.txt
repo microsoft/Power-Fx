@@ -474,6 +474,17 @@ Error({Kind:ErrorKind.InvalidArgument})
 >> Value("false")
 Error({Kind:ErrorKind.InvalidArgument})
 
+// ******** DATE/TIME PARAMETERS ********
+
+>> Value(Date(2022,11,21))
+44886
+
+>> Value(DateTime(2022,11,21,6,0,0))
+44886.25
+
+>> Value(Time(12,0,0))
+0.5
+
 // ******** INVALID, NULL and ERROR PARAMETERS ********
 
 //Alphabetical String passed as parameter

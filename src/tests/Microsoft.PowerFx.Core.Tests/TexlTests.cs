@@ -1354,16 +1354,6 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Fact]
-        public void TexlFunctionTypeSemanticsText_Negative()
-        {
-            // Can't use both numeric formatting and date/time formatting within the same format string.
-            TestBindingErrors(
-                "Text(123, \"###.####    dddd, mm/dd/yy, at hh:mm:ss am/pm\")",
-                DType.String,
-                expectedErrorCount: 2);
-        }
-
-        [Fact]
         public void TexlFunctionTypeSemanticsToday()
         {
             TestSimpleBindingSuccess("Today()", DType.Date);

@@ -99,35 +99,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 return isValid;
             }
 
-            StrLitNode formatNode;
             if (!DType.String.Accepts(argTypes[1]))
             {
                 errors.EnsureError(DocumentErrorSeverity.Severe, args[1], TexlStrings.ErrStringExpected);
                 isValid = false;
-            }
-            else if ((formatNode = args[1].AsStrLit()) != null)
-            {
-                // Verify statically that the format string doesn't contain BOTH numeric and date/time
-                // format specifiers. If it does, that's an error accd to Excel and our spec.
-                var fmt = formatNode.Value;
-
-                // But firstly skip any locale-prefix
-                if (fmt.StartsWith("[$-"))
-                {
-                    var end = fmt.IndexOf(']', 3);
-                    if (end > 0)
-                    {
-                        fmt = fmt.Substring(end + 1);
-                    }
-                }
-
-                var hasDateTimeFmt = fmt.IndexOfAny(new char[] { 'm', 'd', 'y', 'h', 'H', 's', 'a', 'A', 'p', 'P' }) >= 0;
-                var hasNumericFmt = fmt.IndexOfAny(new char[] { '0', '#' }) >= 0;
-                if (hasDateTimeFmt && hasNumericFmt)
-                {
-                    errors.EnsureError(DocumentErrorSeverity.Moderate, formatNode, TexlStrings.ErrIncorrectFormat_Func, Name);
-                    isValid = false;
-                }
             }
 
             if (args.Length > 2)
