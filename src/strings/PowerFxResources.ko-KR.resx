@@ -4730,4 +4730,7 @@
   <data name="ErrExpectedIdentifierArg_Name" xmlns:space="preserve">
     <value>예상 식별자 이름</value>
   </data>
+  <data name="ErrInvalidFunction" xmlns:space="preserve">
+    <value>이 함수는 모호하며 동일한 인수에 대한 람다 식과 열 식별자를 포함합니다.</value>
+  </data>
 </root>

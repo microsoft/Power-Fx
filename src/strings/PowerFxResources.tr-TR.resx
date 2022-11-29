@@ -4730,4 +4730,7 @@
   <data name="ErrExpectedIdentifierArg_Name" xmlns:space="preserve">
     <value>Beklenen tanımlayıcı adı</value>
   </data>
+  <data name="ErrInvalidFunction" xmlns:space="preserve">
+    <value>Bu işlev belirsizdir, aynı bağımsız değişken için lambda ifadeleri ve sütun tanımlayıcıları içerir.</value>
+  </data>
 </root>

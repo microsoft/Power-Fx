@@ -4730,4 +4730,7 @@
   <data name="ErrExpectedIdentifierArg_Name" xmlns:space="preserve">
     <value>Verwachte id-naam</value>
   </data>
+  <data name="ErrInvalidFunction" xmlns:space="preserve">
+    <value>Deze functie is dubbelzinnig, het bevat lambda-expressies en kolom-id's voor hetzelfde argument.</value>
+  </data>
 </root>

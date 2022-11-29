@@ -4730,4 +4730,7 @@
   <data name="ErrExpectedIdentifierArg_Name" xmlns:space="preserve">
     <value>Oczekiwana nazwa identyfikatora</value>
   </data>
+  <data name="ErrInvalidFunction" xmlns:space="preserve">
+    <value>Ta funkcja jest niejednoznaczna, zawiera wyrażenia lambda i identyfikatory kolumn dla tego samego argumentu.</value>
+  </data>
 </root>

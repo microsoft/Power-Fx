@@ -4730,4 +4730,7 @@
   <data name="ErrExpectedIdentifierArg_Name" xmlns:space="preserve">
     <value>Очекивано име идентификатора</value>
   </data>
+  <data name="ErrInvalidFunction" xmlns:space="preserve">
+    <value>Ова функција је двосмислена, садржи ламбда изразе и идентификаторе колона за исти аргумент.</value>
+  </data>
 </root>

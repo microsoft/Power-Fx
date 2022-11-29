@@ -4730,4 +4730,7 @@
   <data name="ErrExpectedIdentifierArg_Name" xmlns:space="preserve">
     <value>Nama pengidentifikasi yang diharapkan</value>
   </data>
+  <data name="ErrInvalidFunction" xmlns:space="preserve">
+    <value>Fungsi ini ambigu, berisi ekspresi lambda dan pengidentifikasi kolom untuk argumen yang sama.</value>
+  </data>
 </root>

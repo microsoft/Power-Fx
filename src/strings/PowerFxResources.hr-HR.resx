@@ -4730,4 +4730,7 @@
   <data name="ErrExpectedIdentifierArg_Name" xmlns:space="preserve">
     <value>Očekivani naziv identifikatora</value>
   </data>
+  <data name="ErrInvalidFunction" xmlns:space="preserve">
+    <value>Ova funkcija je dvosmislena, sadrži lambda izraze i identifikatore stupaca za isti argument.</value>
+  </data>
 </root>

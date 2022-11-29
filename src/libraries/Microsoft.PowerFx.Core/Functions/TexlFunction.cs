@@ -83,7 +83,7 @@ namespace Microsoft.PowerFx.Core.Functions
         /// Needs to be overloaded for functions having identifier parameters.
         /// Also overload IsIdentifierParam method. 
         /// </summary>
-        public virtual bool HasIdentifiers => false;
+        public virtual bool HasColumnIdentifiers => false;
 
         // Return true if lambda args should affect ECS, false otherwise.
         public virtual bool HasEcsExcemptLambdas => false;
@@ -452,7 +452,7 @@ namespace Microsoft.PowerFx.Core.Functions
         {
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
-            Contracts.AssertValue(argTypes);            
+            Contracts.AssertValue(argTypes);
             Contracts.Assert(args.Length == argTypes.Length);
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);

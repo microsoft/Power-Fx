@@ -4730,4 +4730,7 @@
   <data name="ErrExpectedIdentifierArg_Name" xmlns:space="preserve">
     <value>Күтілетін идентификатор атауы</value>
   </data>
+  <data name="ErrInvalidFunction" xmlns:space="preserve">
+    <value>Бұл функция екі ұшты, оның құрамында бірдей аргумент үшін Lambda өрнектері мен баған идентификаторлары бар.</value>
+  </data>
 </root>

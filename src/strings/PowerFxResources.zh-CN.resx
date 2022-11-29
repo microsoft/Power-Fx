@@ -4730,4 +4730,7 @@
   <data name="ErrExpectedIdentifierArg_Name" xmlns:space="preserve">
     <value>预期的标识符名称</value>
   </data>
+  <data name="ErrInvalidFunction" xmlns:space="preserve">
+    <value>此函数不明确，它包含同一参数的 lambda 表达式和列标识符。</value>
+  </data>
 </root>

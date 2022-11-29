@@ -4730,4 +4730,7 @@
   <data name="ErrExpectedIdentifierArg_Name" xmlns:space="preserve">
     <value>Nom identificador esperat</value>
   </data>
+  <data name="ErrInvalidFunction" xmlns:space="preserve">
+    <value>Aquesta funció és ambigua, conté expressions lambda i identificadors de columnes per al mateix argument.</value>
+  </data>
 </root>

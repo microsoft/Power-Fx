@@ -4730,4 +4730,7 @@
   <data name="ErrExpectedIdentifierArg_Name" xmlns:space="preserve">
     <value>Várt azonosító neve</value>
   </data>
+  <data name="ErrInvalidFunction" xmlns:space="preserve">
+    <value>Ez a függvény kétértelmű, lambda kifejezéseket és oszlopazonosítókat tartalmaz ugyanahhoz az argumentumhoz.</value>
+  </data>
 </root>

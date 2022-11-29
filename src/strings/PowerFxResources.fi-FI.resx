@@ -4730,4 +4730,7 @@
   <data name="ErrExpectedIdentifierArg_Name" xmlns:space="preserve">
     <value>Odotetun tunnisteen nimi</value>
   </data>
+  <data name="ErrInvalidFunction" xmlns:space="preserve">
+    <value>Tämä funktio on epäselvä, se sisältää lambda-lausekkeita ja saraketunnisteita samalle argumentille.</value>
+  </data>
 </root>

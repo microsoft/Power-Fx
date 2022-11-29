@@ -4068,7 +4068,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 // If there are no overloads with lambdas or identifiers, we can continue the visitation and
                 // yield to the normal overload resolution.
-                var overloadsWithLambdasOrIdentifiers = overloads.Where(func => func.HasLambdas || func.HasIdentifiers);
+                var overloadsWithLambdasOrIdentifiers = overloads.Where(func => func.HasLambdas || func.HasColumnIdentifiers);
                 if (!overloadsWithLambdasOrIdentifiers.Any())
                 {
                     // We may still need a scope to determine inline-record types
@@ -4127,7 +4127,6 @@ namespace Microsoft.PowerFx.Core.Binding
                 // its lambda mask), which in turn requires binding the args (for their types).
                 Contracts.Assert(overloadsWithLambdasOrIdentifiers.Count() == 1, "Incorrect multiple overloads with lambdas.");
                 var maybeFunc = overloadsWithLambdasOrIdentifiers.Single();
-                Contracts.Assert(maybeFunc.HasLambdas || maybeFunc.HasIdentifiers);
 
                 if (overloadWithUntypedObjectLambda != null)
                 {
@@ -4244,7 +4243,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 DName scopeIdent = default;
                 var identRequired = false;
                 var fArgsValid = true;
-                if (scopeInfo?.ScopeType != null)
+                if (scopeInfo.ScopeType != null)
                 {
                     typeScope = scopeInfo.ScopeType;
 
@@ -4317,8 +4316,7 @@ namespace Microsoft.PowerFx.Core.Binding
                         _txb.AddVolatileVariables(args[i], volatileVariables);
                     }
 
-                    var isIdentifier =
-                        args[i] is FirstNameNode &&
+                    var isIdentifier = args[i] is FirstNameNode &&
                         _features.HasFlag(Features.SupportColumnNamesAsIdentifiers) &&
                         maybeFunc.IsIdentifierParam(i);
 
@@ -4330,16 +4328,13 @@ namespace Microsoft.PowerFx.Core.Binding
                         args[i].Accept(this);
                         _txb.AddVolatileVariables(node, _txb.GetVolatileVariables(args[i]));
                         argTypes[i] = _txb.GetType(args[i]);
+
+                        Contracts.Assert(argTypes[i].IsValid);
                     }
                     else
                     {
-                        // This is an identifier, no associated type
-                        argTypes[i] = null;
-                    }
-
-                    if (!isIdentifier)
-                    {
-                        Contracts.Assert(argTypes[i].IsValid);
+                        // This is an identifier, no associated type, let's make it invalid
+                        argTypes[i] = DType.Invalid;
                     }
 
                     // Async lambdas are not (yet) supported for this function. Flag these with errors.
@@ -4362,24 +4357,19 @@ namespace Microsoft.PowerFx.Core.Binding
                 _currentScope = scopeNew.Parent;
                 PostVisit(node.Args);
 
-                if (maybeFunc.HasIdentifiers && _features.HasFlag(Features.SupportColumnNamesAsIdentifiers))
+                if (maybeFunc.HasColumnIdentifiers && _features.HasFlag(Features.SupportColumnNamesAsIdentifiers))
                 {
                     var i = 0;
 
                     foreach (var arg in args)
                     {
-                        i++;
-
                         if (arg is FirstNameNode firstNameNode && maybeFunc.IsIdentifierParam(i))
                         {
-                            var displayName = GetLogicalNodeNameAndUpdateDisplayNames(argTypes[0], firstNameNode.Ident, out _);
+                            _ = GetLogicalNodeNameAndUpdateDisplayNames(argTypes[0], firstNameNode.Ident, out _);
 
-                            if (argTypes[0].TryGetType(displayName, out var fieldType))
-                            {
-                                var fileNameInfo = FirstNameInfo.Create(firstNameNode, new NameLookupInfo(BindKind.NamedValue, fieldType, DPath.Root, 0, displayName: new DName(displayName)));
-                                _txb.SetInfo(firstNameNode, fileNameInfo);
-                            }
                         }
+
+                        i++;
                     }
                 }
 
@@ -4735,7 +4725,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 // already processed in PreVisit.
                 var funcNamespace = _txb.GetFunctionNamespace(node, this);
                 var overloads = LookupFunctions(funcNamespace, node.Head.Name.Value)
-                    .Where(fnc => !fnc.HasLambdas && !fnc.HasIdentifiers)
+                    .Where(fnc => !fnc.HasLambdas && !fnc.HasColumnIdentifiers)
                     .ToArray();
 
                 TexlFunction funcWithScope = null;

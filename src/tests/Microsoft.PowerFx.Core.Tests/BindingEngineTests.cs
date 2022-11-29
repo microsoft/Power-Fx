@@ -1,16 +1,19 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Tests;
+using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
 using Xunit;
+using Xunit.Sdk;
 
 namespace Microsoft.PowerFx.Tests
 {
@@ -268,6 +271,27 @@ namespace Microsoft.PowerFx.Tests
             Assert.False(lazyTypeInstance.EnumerableIterated);
         }
 
+        [Fact]
+        public void CheckFunctionsWithColumnIdentifierAndLambda()
+        {
+            var config = new PowerFxConfig();
+            var gotException = false;
+
+            try
+            {
+                config.AddFunction(new LambdaAndColumnIdentifierFunction());
+            }
+            catch (ArgumentException ex)
+            {
+                Assert.Equal("This function is ambiguous, it contains lambda expressions and column identifiers for the same argument.", ex.Message);
+                gotException = true;
+            }
+            finally
+            {
+                Assert.True(gotException);
+            }
+        }
+
         internal class LazyRecursiveRecordType : RecordType
         {
             public override IEnumerable<string> FieldNames => GetFieldNames();
@@ -372,6 +396,35 @@ namespace Microsoft.PowerFx.Tests
             public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
             {
                 yield break;
+            }
+        }
+
+        internal class LambdaAndColumnIdentifierFunction : TexlFunction
+        {
+            public LambdaAndColumnIdentifierFunction()
+                : base(DPath.Root, "LambdaAndColumnIdentifierFunction", "LambdaAndColumnIdentifierFunction", TexlStrings.AboutSet, FunctionCategories.Text, DType.Boolean, 0x1, 1, 1)
+            {
+            }
+
+            public override bool HasLambdas => true;
+
+            public override bool HasColumnIdentifiers => true;
+
+            public override bool IsSelfContained => false;
+
+            public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
+            {
+                yield break;
+            }
+
+            public override bool IsLambdaParam(int index)
+            {
+                return true;
+            }
+
+            public override bool IsIdentifierParam(int index)
+            {
+                return true;
             }
         }
 

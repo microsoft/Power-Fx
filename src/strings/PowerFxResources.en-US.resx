@@ -6619,4 +6619,8 @@
     <value>Expected identifier name</value>
     <comment>Error Message.</comment>
   </data>
+  <data name="ErrInvalidFunction" xml:space="preserve">
+    <value>This function is ambiguous, it contains lambda expressions and column identifiers for the same argument.</value>
+    <comment>Error Message.</comment>
+  </data>
 </root>

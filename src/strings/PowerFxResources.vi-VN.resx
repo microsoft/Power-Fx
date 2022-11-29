@@ -4730,4 +4730,7 @@
   <data name="ErrExpectedIdentifierArg_Name" xmlns:space="preserve">
     <value>Tên nhận dạng dự kiến</value>
   </data>
+  <data name="ErrInvalidFunction" xmlns:space="preserve">
+    <value>Hàm này không rõ ràng, nó chứa các biểu thức lambda và mã định danh cột cho cùng một đối số.</value>
+  </data>
 </root>

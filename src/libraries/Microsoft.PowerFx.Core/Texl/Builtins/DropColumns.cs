@@ -18,7 +18,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public override bool IsSelfContained => true;
 
-        public override bool HasIdentifiers => true;
+        public override bool HasColumnIdentifiers => true;
 
         public override bool SupportsParamCoercion => false;
 
@@ -96,7 +96,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 {
                     StrLitNode strLitNode = nameArg.AsStrLit();
 
-                    if (nameArgType.Kind != DKind.String && strLitNode == null)
+                    if (nameArgType.Kind != DKind.String || strLitNode == null)
                     {
                         fArgsValid = false;
 

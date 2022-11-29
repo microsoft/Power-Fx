@@ -4730,4 +4730,7 @@
   <data name="ErrExpectedIdentifierArg_Name" xmlns:space="preserve">
     <value>Eeldatava identifikaatori nimi</value>
   </data>
+  <data name="ErrInvalidFunction" xmlns:space="preserve">
+    <value>See funktsioon on mitmetähenduslik, sisaldab sama argumendi lambda-avaldisi ja veeruidentifikaatoreid.</value>
+  </data>
 </root>

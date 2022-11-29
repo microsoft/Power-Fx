@@ -4730,4 +4730,7 @@
   <data name="ErrExpectedIdentifierArg_Name" xmlns:space="preserve">
     <value>Nume de identificator așteptat</value>
   </data>
+  <data name="ErrInvalidFunction" xmlns:space="preserve">
+    <value>Această funcție este ambiguă, conține expresii lambda și identificatori de coloană pentru același argument.</value>
+  </data>
 </root>

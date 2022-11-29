@@ -4730,4 +4730,7 @@
   <data name="ErrExpectedIdentifierArg_Name" xmlns:space="preserve">
     <value>Pričakovano ime identifikatorja</value>
   </data>
+  <data name="ErrInvalidFunction" xmlns:space="preserve">
+    <value>Ta funkcija je nedvomna, vsebuje lambda izraze in identifikatorje stolpcev za isti argument.</value>
+  </data>
 </root>

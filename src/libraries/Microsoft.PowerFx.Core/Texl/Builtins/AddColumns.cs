@@ -22,7 +22,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool HasLambdas => true;
 
-        public override bool HasIdentifiers => true;
+        public override bool HasColumnIdentifiers => true;
 
         public override bool IsSelfContained => true;
 
@@ -105,9 +105,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 {
                     StrLitNode strLitNode = nameArg.AsStrLit();
 
-                    if (nameArgType.Kind != DKind.String && strLitNode == null)
+                    if (nameArgType.Kind != DKind.String || strLitNode == null)
                     {
-                        fArgsValid = false;
+                        fArgsValid = false; 
 
                         // Argument '{0}' is invalid, expected a text literal.
                         errors.EnsureError(DocumentErrorSeverity.Severe, nameArg, TexlStrings.ErrExpectedStringLiteralArg_Name, nameArg.ToString());

@@ -4730,4 +4730,7 @@
   <data name="ErrExpectedIdentifierArg_Name" xmlns:space="preserve">
     <value>ชื่อตัวระบุที่คาดไว้</value>
   </data>
+  <data name="ErrInvalidFunction" xmlns:space="preserve">
+    <value>ฟังก์ชันนี้คลุมเครือ ประกอบด้วยนิพจน์แลมบ์ดาและตัวระบุคอลัมน์สําหรับอาร์กิวเมนต์เดียวกัน</value>
+  </data>
 </root>

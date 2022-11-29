@@ -4730,4 +4730,7 @@
   <data name="ErrExpectedIdentifierArg_Name" xmlns:space="preserve">
     <value>Paredzamā identifikatora nosaukums</value>
   </data>
+  <data name="ErrInvalidFunction" xmlns:space="preserve">
+    <value>Šī funkcija ir neskaidra, tajā ir lambda izteiksmes un kolonnu identifikatori tam pašam argumentam.</value>
+  </data>
 </root>

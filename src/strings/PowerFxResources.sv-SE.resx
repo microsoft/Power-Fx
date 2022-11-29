@@ -4730,4 +4730,7 @@
   <data name="ErrExpectedIdentifierArg_Name" xmlns:space="preserve">
     <value>Förväntat identifierarnamn</value>
   </data>
+  <data name="ErrInvalidFunction" xmlns:space="preserve">
+    <value>Denna funktion är tvetydig, den innehåller lambdauttryck och kolumnidentifierare för samma argument.</value>
+  </data>
 </root>
