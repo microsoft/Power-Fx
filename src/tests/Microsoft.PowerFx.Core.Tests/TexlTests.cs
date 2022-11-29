@@ -1346,11 +1346,26 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("Text(123, \"dddd, mm/dd/yy, at hh:mm:ss am/pm\")")]
         [InlineData("Text(\"hello world\")")]
         [InlineData("Text(\"hello world\", \"mm/dd/yyyy\")")]
+        [InlineData("Text(123, \"yyyy-mm-dd hh:mm:ss.000\") // 0 is valid if after seconds")]
+        [InlineData("Text(Now(), \"yyyy-mm-dd hh:mm:ss.000\") // 0 is valid if after seconds")]
         public void TexlFunctionTypeSemanticsText(string script)
         {
             TestSimpleBindingSuccess(
                 script,
                 DType.String);
+        }
+
+        [Theory]
+        [InlineData("Text(123, \"###.####    dddd, mm/dd/yy, at hh:mm:ss am/pm\")")]
+        [InlineData("Text(123, \"###.#### \" & \"   dddd, mm/dd/yy, at hh:mm:ss am/pm\")")]
+        [InlineData("Text(Now(), \"yyyy-mm-dd 0 hh:mm:ss.000\") // 0 is only valid after seconds")]
+        public void TexlFunctionTypeSemanticsText_Negative(string script)
+        {
+            // Can't use both numeric formatting and date/time formatting within the same format string.
+            TestBindingErrors(
+                script,
+                DType.String,
+                expectedErrorCount: 2);
         }
 
         [Fact]
