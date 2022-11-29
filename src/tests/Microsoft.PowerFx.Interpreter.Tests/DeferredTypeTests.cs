@@ -54,6 +54,12 @@ namespace Microsoft.PowerFx.Interpreter
         [InlineData("Sum(X, 1, R) < 5", "b")] // All error are discarded for function calls, hence we don't get error for RecordType here.
         [InlineData("Sum(X, T) < 5", "b")] // Since we discard all errors for function calls, Function calls are biased to non tabular overload.
 
+        [InlineData("Sum(X, X)", "n")]
+        [InlineData("X.Field1.Field1", "X")]
+        [InlineData("If(true, X)", "X")]
+        [InlineData("If(true, X, 1)", "n")]
+        [InlineData("If(true, X, X)", "X")]
+
         // Ensures expression binds without any errors - but issues a warning for the deferred(unknown) type.
         public void DeferredTypeTest(string script, string expectedReturnType)
         {

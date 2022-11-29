@@ -182,7 +182,11 @@ namespace Microsoft.PowerFx.Tests
         {
             foreach (var dType in _dTypes)
             {
-                Assert.True(dType.Accepts(DType.Deferred));
+                // Deferred is subtype of all except unknown.
+                if(dType!= DType.Unknown)
+                {
+                    Assert.True(dType.Accepts(DType.Deferred));
+                }
             }
         }
 
