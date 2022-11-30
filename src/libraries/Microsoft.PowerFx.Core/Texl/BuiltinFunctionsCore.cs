@@ -71,6 +71,7 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction DateAddT = _library.Append(new DateAddTFunction());
         public static readonly TexlFunction DateDiff = _library.Append(new DateDiffFunction());
         public static readonly TexlFunction DateDiffT = _library.Append(new DateDiffTFunction());
+        public static readonly TexlFunction DateTime = _library.Append(new DateTimeFunction());
         public static readonly TexlFunction DateTimeValue = _library.Append(new DateTimeValueFunction());
         public static readonly TexlFunction DateTimeValue_UO = _library.Append(new DateTimeValueFunction_UO());
         public static readonly TexlFunction DateValue = _library.Append(new DateValueFunction());
@@ -208,9 +209,6 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction WeekNum = _library.Append(new WeekNumFunction());
         public static readonly TexlFunction With = _library.Append(new WithFunction());
         public static readonly TexlFunction Year = _library.Append(new YearFunction());
-
-        // NOTE: These functions should not be part of the core library until they are implemented in all runtimes
-        public static readonly TexlFunction DateTime = _featureGateFunctions.Append(new DateTimeFunction());
 
         public static readonly TexlFunction Dec2Hex = _featureGateFunctions.Append(new Dec2HexFunction());
         public static readonly TexlFunction Dec2HexT = _featureGateFunctions.Append(new Dec2HexTFunction());
