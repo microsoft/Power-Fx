@@ -911,7 +911,8 @@ namespace Microsoft.PowerFx.Core.Binding
                     var dottedNameNode = node.AsDottedName();
                     if (dottedNameNode.Left.Kind == NodeKind.FirstName)
                     {
-                        if (context.NameResolver.EntityScope.TryGetNamedEnum(dottedNameNode.Left.AsFirstName().Ident.Name, out var enumType))
+                        DType enumType = null;
+                        if (context.NameResolver.EntityScope?.TryGetNamedEnum(dottedNameNode.Left.AsFirstName().Ident.Name, out enumType) == true)
                         {
                             if (enumType.TryGetEnumValue(dottedNameNode.Right.Name, out var enumValue))
                             {
