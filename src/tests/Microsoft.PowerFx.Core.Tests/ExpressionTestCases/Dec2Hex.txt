@@ -47,7 +47,7 @@
 "B2D4"
 
 >> Dec2Hex(45780, 3)
-Error({Kind:ErrorKind.InvalidArgument})
+Error({Kind:ErrorKind.Numeric})
 
 >> Dec2Hex(45780, 4)
 "B2D4"

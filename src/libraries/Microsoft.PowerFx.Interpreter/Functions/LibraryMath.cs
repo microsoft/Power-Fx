@@ -934,7 +934,12 @@ namespace Microsoft.PowerFx.Functions
             // places need to be greater or equal to length of hexadecimal when number is positive
             if (places != 0 && result.Length > places && number > 0)
             {
-                return CommonErrors.GenericInvalidArgument(irContext);
+                return new ErrorValue(irContext, new ExpressionError()
+                {
+                    Message = $"Places argument must be big enough to hold the result",
+                    Span = irContext.SourceContext,
+                    Kind = ErrorKind.Numeric
+                });
             }
 
             return new StringValue(irContext, result);
