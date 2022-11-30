@@ -57,7 +57,8 @@ namespace Microsoft.PowerFx.Tests
                 DType.Unknown, DType.Error, DType.Number, DType.Boolean, DType.String, DType.Hyperlink, DType.Image,
                 DType.PenImage, DType.Media, DType.Blob, DType.Color, DType.Currency, DType.EmptyRecord, DType.EmptyTable,
                 DType.EmptyEnum, DType.Date, DType.Time, DType.Guid, DType.Polymorphic, DType.Deferred, AttachmentTableType,
-                AttachmentRecordType, OptionSetType, MultiSelectOptionSetType
+                AttachmentRecordType, OptionSetType, MultiSelectOptionSetType, DType.ObjNull, DType.OptionSet, 
+                DType.OptionSetValue, DType.View, DType.ViewValue, DType.UntypedObject
             };
 
         [Fact]
@@ -1303,6 +1304,16 @@ namespace Microsoft.PowerFx.Tests
             // supertype of a record with a table:
             superType = DType.Supertype(type4, type14);
             Assert.Equal(DKind.Error, superType.Kind);
+
+            foreach (var dType in _dTypes)
+            {
+                // Deferred is subtype of all except unknown.
+                if(dType!= DType.Unknown)
+                {
+                    superType = DType.Supertype(dType, DType.Deferred);
+                    Assert.Equal(dType.Kind, superType.Kind);
+                }
+            }
         }
         
         [Fact]
@@ -1603,6 +1614,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.True(DType.TryParse("%s[A:\"hello\"]", out type) && type.CoercesTo(DType.String));
             Assert.True(DType.ObjNull.CoercesTo(DType.String));
             Assert.False(DType.Error.CoercesTo(DType.String));
+            Assert.True(DType.Deferred.CoercesTo(DType.String));
 
             // Coercion to number
             Assert.True(DType.Boolean.CoercesTo(DType.Number));
@@ -1627,6 +1639,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.False(DType.TryParse("%s[A:\"hello\"]", out type) && type.CoercesTo(DType.Number));
             Assert.True(DType.ObjNull.CoercesTo(DType.Number));
             Assert.False(DType.Error.CoercesTo(DType.Number));
+            Assert.True(DType.Deferred.CoercesTo(DType.Number));
 
             // Coercion to boolean
             Assert.True(DType.Boolean.CoercesTo(DType.Boolean));
@@ -1651,6 +1664,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.False(DType.TryParse("%s[A:\"hello\"]", out type) && type.CoercesTo(DType.Boolean));
             Assert.True(DType.ObjNull.CoercesTo(DType.Boolean));
             Assert.False(DType.Error.CoercesTo(DType.Boolean));
+            Assert.True(DType.Deferred.CoercesTo(DType.Boolean));
 
             // Coercion to currency
             Assert.True(DType.Boolean.CoercesTo(DType.Currency));
@@ -1676,6 +1690,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.True(DType.TryParse("%$[A:2]", out type) && type.CoercesTo(DType.Currency));
             Assert.True(DType.ObjNull.CoercesTo(DType.Currency));
             Assert.False(DType.Error.CoercesTo(DType.Currency));
+            Assert.True(DType.Deferred.CoercesTo(DType.Currency));
 
             // Coercion to color
             Assert.False(DType.Boolean.CoercesTo(DType.Color));
@@ -1701,6 +1716,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.False(DType.TryParse("%s[A:\"hello\"]", out type) && type.CoercesTo(DType.Color));
             Assert.True(DType.ObjNull.CoercesTo(DType.Color));
             Assert.False(DType.Error.CoercesTo(DType.Color));
+            Assert.True(DType.Deferred.CoercesTo(DType.Color));
 
             // Coercion to dateTime
             Assert.False(DType.Boolean.CoercesTo(DType.DateTime));
@@ -1726,6 +1742,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.False(DType.TryParse("%s[A:\"hello\"]", out type) && type.CoercesTo(DType.DateTime));
             Assert.True(DType.ObjNull.CoercesTo(DType.DateTime));
             Assert.False(DType.Error.CoercesTo(DType.DateTime));
+            Assert.True(DType.Deferred.CoercesTo(DType.DateTime));
 
             // Coercion to image
             Assert.False(DType.Boolean.CoercesTo(DType.Image));
@@ -1751,6 +1768,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.True(DType.TryParse("%i[A:\"hello.jpg\"]", out type) && type.CoercesTo(DType.Image));
             Assert.True(DType.ObjNull.CoercesTo(DType.Image));
             Assert.False(DType.Error.CoercesTo(DType.Image));
+            Assert.True(DType.Deferred.CoercesTo(DType.Image));
 
             // Coercion to penimage
             Assert.False(DType.Boolean.CoercesTo(DType.PenImage));
@@ -1775,6 +1793,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.False(DType.TryParse("%s[A:\"hello\"]", out type) && type.CoercesTo(DType.PenImage));
             Assert.True(DType.ObjNull.CoercesTo(DType.PenImage));
             Assert.False(DType.Error.CoercesTo(DType.PenImage));
+            Assert.True(DType.Deferred.CoercesTo(DType.PenImage));
 
             // Coercion to media
             Assert.False(DType.Boolean.CoercesTo(DType.Media));
@@ -1800,6 +1819,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.True(DType.TryParse("%m[A:\"hello\"]", out type) && type.CoercesTo(DType.Media));
             Assert.True(DType.ObjNull.CoercesTo(DType.Media));
             Assert.False(DType.Error.CoercesTo(DType.Media));
+            Assert.True(DType.Deferred.CoercesTo(DType.Media));
 
             // Coercion to document
             Assert.False(DType.Boolean.CoercesTo(DType.Blob));
@@ -1825,6 +1845,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.True(DType.TryParse("%o[A:\"hello\"]", out type) && type.CoercesTo(DType.Blob));
             Assert.True(DType.ObjNull.CoercesTo(DType.Blob));
             Assert.False(DType.Error.CoercesTo(DType.Blob));
+            Assert.True(DType.Deferred.CoercesTo(DType.Blob));
 
             // Coercion to hyperlink
             Assert.False(DType.Boolean.CoercesTo(DType.Hyperlink));
@@ -1850,6 +1871,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.True(DType.TryParse("%h[A:\"hello\"]", out type) && type.CoercesTo(DType.Hyperlink));
             Assert.True(DType.ObjNull.CoercesTo(DType.Hyperlink));
             Assert.False(DType.Error.CoercesTo(DType.Hyperlink));
+            Assert.True(DType.Deferred.CoercesTo(DType.Hyperlink));
 
             // Coercion to table
             Assert.False(DType.Boolean.CoercesTo(DType.EmptyTable));
@@ -1887,6 +1909,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.False(DType.TryParse("%s[A:\"hello\"]", out type) && type.CoercesTo(DType.EmptyTable));
             Assert.True(DType.ObjNull.CoercesTo(DType.EmptyTable));
             Assert.False(DType.Error.CoercesTo(DType.EmptyTable));
+            Assert.True(DType.Deferred.CoercesTo(DType.EmptyTable));
 
             // Coercion to record
             Assert.False(DType.Boolean.CoercesTo(DType.EmptyRecord));
@@ -1911,6 +1934,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.False(DType.TryParse("%s[A:\"hello\"]", out type) && type.CoercesTo(DType.EmptyRecord));
             Assert.True(DType.ObjNull.CoercesTo(DType.EmptyRecord));
             Assert.False(DType.Error.CoercesTo(DType.EmptyRecord));
+            Assert.True(DType.Deferred.CoercesTo(DType.EmptyRecord));
 
             // Coercion to Date
             Assert.False(DType.Boolean.CoercesTo(DType.Date));
@@ -1936,6 +1960,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.False(DType.TryParse("%s[A:\"hello\"]", out type) && type.CoercesTo(DType.Date));
             Assert.True(DType.ObjNull.CoercesTo(DType.Date));
             Assert.False(DType.Error.CoercesTo(DType.Date));
+            Assert.True(DType.Deferred.CoercesTo(DType.Date));
 
             // Coercion to Time
             Assert.False(DType.Boolean.CoercesTo(DType.Time));
@@ -1961,6 +1986,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.False(DType.TryParse("%s[A:\"hello\"]", out type) && type.CoercesTo(DType.Time));
             Assert.True(DType.ObjNull.CoercesTo(DType.Time));
             Assert.False(DType.Error.CoercesTo(DType.Time));
+            Assert.True(DType.Deferred.CoercesTo(DType.Time));
 
             // Coercion to Attachment Table type
             Assert.False(DType.Boolean.CoercesTo(AttachmentTableType));
@@ -1984,6 +2010,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.False(DType.TryParse("%s[A:\"hello\"]", out type) && type.CoercesTo(AttachmentTableType));
             Assert.True(DType.ObjNull.CoercesTo(AttachmentTableType));
             Assert.False(DType.Error.CoercesTo(AttachmentTableType));
+            Assert.True(DType.Deferred.CoercesTo(AttachmentTableType));
 
             // Coercion to Attachment Record type
             Assert.False(DType.Boolean.CoercesTo(AttachmentRecordType));
@@ -2007,6 +2034,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.False(DType.TryParse("%s[A:\"hello\"]", out type) && type.CoercesTo(AttachmentRecordType));
             Assert.True(DType.ObjNull.CoercesTo(AttachmentRecordType));
             Assert.False(DType.Error.CoercesTo(AttachmentRecordType));
+            Assert.True(DType.Deferred.CoercesTo(AttachmentRecordType));
 
             // Coercion to Error type
             Assert.True(DType.Error.CoercesTo(DType.Error));
@@ -2119,11 +2147,13 @@ namespace Microsoft.PowerFx.Tests
             TestUnion("*[A:n]", "*[B:n]", "*[A:n, B:n]");
             TestUnion("*[A:n]", "*[B:s]", "*[A:n, B:s]");
             TestUnion("*[A:n]", "*[B:b]", "*[A:n, B:b]");
+            TestUnion("*[A:n]", "X", "*[A:n]");
 
             TestUnion("*[]", "*[A:n, B:b, D:d]", "*[A:n, B:b, D:d]");
             TestUnion("*[A:n, B:b, D:d]", "*[]", "*[A:n, B:b, D:d]");
             TestUnion("*[A:n, B:b, D:d]", "*[A:n, B:b]", "*[A:n, B:b, D:d]");
             TestUnion("*[A:n, B:b, D:d]", "*[X:s, Y:n]", "*[A:n, B:b, D:d, X:s, Y:n]");
+            TestUnion("*[A:n, B:b, D:d]", "X", "*[A:n, B:b, D:d]");
 
             // Tests for Type DataNull, DataNull is compatable with any data type, regardless of order.
             TestUnion("N", "N", "N");
@@ -2156,6 +2186,7 @@ namespace Microsoft.PowerFx.Tests
             TestUnion("![A:n, Nest:*[X:n, Y:n, Z:b]]", "![]", "![A:n, Nest:*[X:n, Y:n, Z:b]]");
             TestUnion("*[A:n, Nest:*[X:n, Y:n, Z:b]]", "*[]", "*[A:n, Nest:*[X:n, Y:n, Z:b]]");
             TestUnion("*[A:n, Nest:*[X:n, Y:c, Z:b]]", "*[X:s, Nest:*[X:$, Y:n, W:s]]", "*[A:n, X:s, Nest:*[X:n, Y:e, Z:b, W:s]]");
+            TestUnion("*[A:n, Nest:*[X:n, Y:c, Z:b]]", "X", "*[A:n, Nest:*[X:n, Y:c, Z:b]]");
 
             // Unresolvable conflicts
             TestUnion("*[A:n]", "*[A:s]", "*[A:e]");
@@ -2170,6 +2201,12 @@ namespace Microsoft.PowerFx.Tests
             TestUnion(type2, type2, type2);
             TestUnion(DType.Unknown, type1, type1.LazyTypeProvider.GetExpandedType(type1.IsTable));
             TestUnion(DType.ObjNull, type1, type1.LazyTypeProvider.GetExpandedType(type1.IsTable));
+
+            var typeEncodings = "ebnshdipmgo$cDTlLNZPQqVOX";
+            foreach(var type in typeEncodings)
+            {
+                TestUnion(type.ToString(), "X", type.ToString());
+            }
         }
         
         [Fact]

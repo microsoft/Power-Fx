@@ -93,19 +93,19 @@ namespace Microsoft.PowerFx.Interpreter
         }
 
         [Theory]
-        [InlineData("$\"Test {X} {R}\"", "Invalid argument type (Record). Expecting a Text value instead.")]
-        [InlineData("X + R", "Invalid argument type. Expecting one of the following: Number, Text, Boolean.")]
-        [InlineData("X.field + N.field", "Invalid use of '.'")]
-        [InlineData("Index([1,2,3], X).missing", "Name isn't valid. 'missing' isn't recognized")]
-        [InlineData("X < \"2021-12-09T20:28:52Z\"", "Invalid argument type. Expecting one of the following: Number, Date, Time, DateTime.")]
-        [InlineData("First(Sum(X, 1))", "Invalid argument type (Number). Expecting a Table value instead.")]
+        [InlineData("$\"Test {X} {R}\"", "ErrBadType_ExpectedType_ProvidedType")]
+        [InlineData("X + R", "ErrBadType_ExpectedTypesCSV")]
+        [InlineData("X.field + N.field", "ErrInvalidDot")]
+        [InlineData("Index([1,2,3], X).missing", "ErrInvalidName")]
+        [InlineData("X < \"2021-12-09T20:28:52Z\"", "ErrBadType_ExpectedTypesCSV")]
+        [InlineData("First(Sum(X, 1))", "ErrBadType_ExpectedType_ProvidedType")]
 
         // Can't create aggregates around Deferred type.
-        [InlineData("[X]", "Incompatible type. The item you are trying to put into a table has a type that is not compatible with the table.")]
-        [InlineData("{test: X}", "Incompatible type. The item you are trying to put into a record has a type that is not compatible with the record.")]
-        [InlineData("{ a: { a: { a: X } } }", "Incompatible type. The item you are trying to put into a record has a type that is not compatible with the record.")]
-        [InlineData("Table({ a: X })", "Incompatible type. The item you are trying to put into a record has a type that is not compatible with the record.")]
-        [InlineData("Table({ a: { a: { a: X } } })", "Incompatible type. The item you are trying to put into a record has a type that is not compatible with the record.")]
+        [InlineData("[X]", "ErrTableDoesNotAcceptThisType")]
+        [InlineData("{test: X}", "ErrRecordDoesNotAcceptThisType")]
+        [InlineData("{ a: { a: { a: X } } }", "ErrRecordDoesNotAcceptThisType")]
+        [InlineData("Table({ a: X })", "ErrRecordDoesNotAcceptThisType")]
+        [InlineData("Table({ a: { a: { a: X } } })", "ErrRecordDoesNotAcceptThisType")]
 
         // Ensures expression issues an error if it exists, despite the deferred type.
         // NOTE: All error are discarded for function calls e.g. You don't get any errors for Table(deferred, number).
@@ -158,7 +158,7 @@ namespace Microsoft.PowerFx.Interpreter
             Assert.Throws<AggregateException>(() => engine.Eval(script));
         }
 
-        private void TestBindingError(string script, Features features, string errorMessage, SymbolTable symbolTable = null)
+        private void TestBindingError(string script, Features features, string errorMessageKey, SymbolTable symbolTable = null)
         {
             var config = new PowerFxConfig(features)
             {
@@ -170,7 +170,7 @@ namespace Microsoft.PowerFx.Interpreter
 
             Assert.False(result.IsSuccess);
 
-            Assert.Contains(result.Errors, error => error.Message.Contains(errorMessage));
+            Assert.Contains(result.Errors, error => error.MessageKey.Equals(errorMessageKey));
         }
     }
 }
