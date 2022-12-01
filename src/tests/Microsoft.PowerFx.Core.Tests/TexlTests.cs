@@ -241,6 +241,30 @@ namespace Microsoft.PowerFx.Core.Tests
                 Features.ConsistentOneColumnTableResult);
         }
 
+        [Theory]
+        [InlineData("Concat([], \"\")")]
+        [InlineData("Concat([1, 2, 3], Text(Value))")]
+        [InlineData("Concat(Table({a:1, b:\"hello\"}, {b:\"world\"}), b)")]
+        [InlineData("Concat([1, 2, 3], Text(Value), \",\")")]
+        [InlineData("Concat([1, 2, 3], Text(Value), Text(Today()))")]
+        [InlineData("Concat([], 1)")]
+        [InlineData("Concat([1, 2, 3], Value)")]
+        [InlineData("Concat([], 1)")]
+        [InlineData("Concat([\"a\", \"b\", \"C\"], Value, 1)")]
+        public void TexlFunctionTypeSemanticsConcat(string script)
+        {
+            TestSimpleBindingSuccess(script, DType.String);
+        }
+
+        [Theory]
+        [InlineData("Concat(Table({a:1, b:\"hello\"}, {b:\"world\"}), [\"hello\", \"world\"])")]
+        [InlineData("Concat([1, 2, 3], {Value:Value})")]
+        [InlineData("Concat([1, 2, 3], Value, {a:1})")]
+        public void TexlFunctionTypeSemanticsConcat_Negative(string script)
+        {
+            TestBindingErrors(script, DType.String);
+        }
+
         [Fact]
         public void TexlFunctionTypeSemanticsCount()
         {

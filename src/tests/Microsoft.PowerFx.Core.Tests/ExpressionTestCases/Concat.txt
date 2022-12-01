@@ -111,3 +111,11 @@ Errors: Error 43-48: Name isn't valid. 'Value' isn't recognized.
 // Errors in the lambda
 >> Concat([2, 1, 0, -1, -2], Text(1 / Value), ",")
 Error({Kind:ErrorKind.Div0})
+
+// Coercion on lambda
+>> Concat([1, 2, 3], Value, ",")
+"1,2,3"
+
+// Coercion on separator
+>> Concat([1, 2, 3], "a" & Value, 0)
+"a10a20a3"

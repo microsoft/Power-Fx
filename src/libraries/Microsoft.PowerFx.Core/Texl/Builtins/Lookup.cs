@@ -45,6 +45,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             var fValid = base.CheckTypes(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
 
+            if (!fValid)
+            {
+                return false;
+            }
+
             // The return type is dictated by the last argument (projection) if one exists. Otherwise it's based on first argument (source).
             returnType = args.Length == 2 ? argTypes[0].ToRecord() : argTypes[2];
 
