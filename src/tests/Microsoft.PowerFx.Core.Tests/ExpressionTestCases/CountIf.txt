@@ -23,8 +23,13 @@ Error({Kind:ErrorKind.Numeric})
 >> CountIf(Filter([-2, -1, 0, 1, 2], Sqrt(1/Value) > 0), IsError(ThisRecord))
 3
 
->> CountIf([1, 2, 3, 4], 123)
-Errors: Error 22-25: Expected boolean. We expect a boolean (true/false) at this point in the formula.
+// Coercion from number to boolean
+>> CountIf([-1, 0, 1, 0, -1, 0, 1], Value)
+4
 
->> CountIf([1, 2, 3, 4], "abc")
-Errors: Error 22-27: Expected boolean. We expect a boolean (true/false) at this point in the formula.
+// Coercion from string to boolean
+>> CountIf(["true", "false", "TRUE", "FALSE", "True", "False"], Value)
+3
+
+>> CountIf([1, 2, 3, 4], Today())
+Errors: Error 22-29: Invalid argument type (Date). Expecting a Boolean value instead.|Error 0-30: The function 'CountIf' has some invalid arguments.

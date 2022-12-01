@@ -280,21 +280,17 @@ namespace Microsoft.PowerFx.Core.Tests
                 symbol);
         }
 
-        [Fact]
-        public void TexlFunctionTypeSemanticsCountIf()
+        [Theory]
+        [InlineData("CountIf(Table, A < 10)")]
+        [InlineData("CountIf(Table, A < 10, A > 0, A <> 2)")]
+        [InlineData("CountIf([1,2,3], Value) // Coercion from number to boolean")]
+        [InlineData("CountIf([\"false\",\"true\",\"false\"], Value) // Coercion from text to boolean")]
+        public void TexlFunctionTypeSemanticsCountIf(string expression)
         {
             var symbol = new SymbolTable();
             symbol.AddVariable("Table", new TableType(TestUtils.DT("*[A:n]")));
 
-            TestSimpleBindingSuccess(
-                "CountIf(Table, A < 10)",
-                DType.Number,
-                symbol);
-
-            TestSimpleBindingSuccess(
-                "CountIf(Table, A < 10, A > 0, A <> 2)",
-                DType.Number,
-                symbol);
+            TestSimpleBindingSuccess(expression, DType.Number, symbol);
         }
 
         [Fact]
