@@ -241,30 +241,6 @@ namespace Microsoft.PowerFx.Core.Tests
                 Features.ConsistentOneColumnTableResult);
         }
 
-        [Theory]
-        [InlineData("Concat([], \"\")")]
-        [InlineData("Concat([1, 2, 3], Text(Value))")]
-        [InlineData("Concat(Table({a:1, b:\"hello\"}, {b:\"world\"}), b)")]
-        [InlineData("Concat([1, 2, 3], Text(Value), \",\")")]
-        [InlineData("Concat([1, 2, 3], Text(Value), Text(Today()))")]
-        [InlineData("Concat([], 1)")]
-        [InlineData("Concat([1, 2, 3], Value)")]
-        [InlineData("Concat([], 1)")]
-        [InlineData("Concat([\"a\", \"b\", \"C\"], Value, 1)")]
-        public void TexlFunctionTypeSemanticsConcat(string script)
-        {
-            TestSimpleBindingSuccess(script, DType.String);
-        }
-
-        [Theory]
-        [InlineData("Concat(Table({a:1, b:\"hello\"}, {b:\"world\"}), [\"hello\", \"world\"])")]
-        [InlineData("Concat([1, 2, 3], {Value:Value})")]
-        [InlineData("Concat([1, 2, 3], Value, {a:1})")]
-        public void TexlFunctionTypeSemanticsConcat_Negative(string script)
-        {
-            TestBindingErrors(script, DType.String);
-        }
-
         [Fact]
         public void TexlFunctionTypeSemanticsCount()
         {
@@ -1859,29 +1835,28 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("Concat([], \"\")", "s")]
-        [InlineData("Concat([1, 2, 3], Text(Value))", "s")]
-        [InlineData("Concat(Table({a:1, b:\"hello\"}, {b:\"world\"}), b)", "s")]
-        [InlineData("Concat([1, 2, 3], Text(Value), \",\")", "s")]
-        [InlineData("Concat([1, 2, 3], Text(Value), Text(Today()))", "s")]
-        public void TexlFunctionTypeSemanticsConcat(string script, string expectedType)
+        [InlineData("Concat([], \"\")")]
+        [InlineData("Concat([1, 2, 3], Text(Value))")]
+        [InlineData("Concat(Table({a:1, b:\"hello\"}, {b:\"world\"}), b)")]
+        [InlineData("Concat([1, 2, 3], Text(Value), \",\")")]
+        [InlineData("Concat([1, 2, 3], Text(Value), Text(Today()))")]
+        [InlineData("Concat([], 1)")]
+        [InlineData("Concat([1, 2, 3], Value)")]
+        [InlineData("Concat([], 1)")]
+        [InlineData("Concat([\"a\", \"b\", \"C\"], Value, 1)")]
+        public void TexlFunctionTypeSemanticsConcat(string script)
         {
-            Assert.True(DType.TryParse(expectedType, out DType type));
-            Assert.True(type.IsValid);
-            TestSimpleBindingSuccess(script, type);
+            TestSimpleBindingSuccess(script, DType.String);
         }
 
         [Theory]
-        [InlineData("Concat([], 1)", "s")]
-        [InlineData("Concat([1, 2, 3], Value)", "s")]
-        [InlineData("Concat(Table({a:1, b:\"hello\"}, {b:\"world\"}), [\"hello\", \"world\"])", "s")]
-        [InlineData("Concat([1, 2, 3], Value, Today())", "s")]
-        [InlineData("Concat([1, 2, 3], Value, 1)", "s")]
-        public void TexlFunctionTypeSemanticsConcat_Negative(string script, string expectedType)
+        [InlineData("Concat(Table({a:1, b:\"hello\"}, {b:\"world\"}), [\"hello\", \"world\"])")]
+        [InlineData("Concat([1, 2, 3], {Value:Value})")]
+        [InlineData("Concat([1, 2, 3], Value, {a:1})")]
+        [InlineData("Concat({a:1,b:\"hello\"}, b)")]
+        public void TexlFunctionTypeSemanticsConcat_Negative(string script)
         {
-            Assert.True(DType.TryParse(expectedType, out DType type));
-            Assert.True(type.IsValid);
-            TestBindingErrors(script, type);
+            TestBindingErrors(script, DType.String);
         }
 
         [Theory]
