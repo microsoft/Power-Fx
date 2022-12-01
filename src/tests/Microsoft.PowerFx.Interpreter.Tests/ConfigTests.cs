@@ -69,15 +69,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
              .Add(new NamedFormulaType("Num", FormulaType.Number, "DisplayNum"));
 
             var s = ReadOnlySymbolTable.NewFromRecord(r1);
-            var s2 = new SymbolTable() { Parent = s };
 
-            var config = new PowerFxConfig
-            {
-                SymbolTable = s2
-            };
-
-            var engine = new RecalcEngine(config);
-            var check = engine.Check("DisplayNum + 2");
+            var engine = new RecalcEngine();
+            var check = engine.Check("DisplayNum + 2", symbolTable: s);
 
             Assert.True(check.IsSuccess);
         }
@@ -183,20 +177,18 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             s1.AddFunction(new MultiplyFunction(3));
             s1.AddFunction(new Func1Function());
 
-            var s2 = new SymbolTable
-            {
-                Parent = s1
-            };
+            var s2 = new SymbolTable();
             s2.AddFunction(new MultiplyFunction(4)); // Shadows s1
+            var s21 = ReadOnlySymbolTable.Compose(s2, s1);
 
             var engine = new RecalcEngine();
 
             // Multiply was shadowed
-            var result = await engine.EvalAsync("Multiply(2)", CancellationToken.None, symbolTable: s2);
+            var result = await engine.EvalAsync("Multiply(2)", CancellationToken.None, symbolTable: s21);
             Assert.Equal(2 * 4.0, result.ToObject());
 
             // Func1 was not shadowed, so inherit. 
-            result = await engine.EvalAsync("Func1(2)", CancellationToken.None, symbolTable: s2);
+            result = await engine.EvalAsync("Func1(2)", CancellationToken.None, symbolTable: s21);
             Assert.Equal(2 * 2.0, result.ToObject());
         }
 
@@ -210,17 +202,17 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var s3 = new SymbolTable
             {
-                Parent = sCommon,
                 DebugName = "S3"
             };
             s3.AddFunction(new MultiplyFunction(3));
+            var s3Common = ReadOnlySymbolTable.Compose(s3, sCommon);
 
             var s4 = new SymbolTable
             {
-                Parent = sCommon,
                 DebugName = "S4"
             };
             s4.AddFunction(new MultiplyFunction(4));
+            var s4Common = ReadOnlySymbolTable.Compose(s4, sCommon);
 
             // Per expression.
             // Same engine *instance*, same expression, but different configs. 
@@ -231,13 +223,13 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var result3 = await engine.EvalAsync(
                 expr,
                 CancellationToken.None,
-                symbolTable: s3); // 1*2 & 2*3  = "26"
+                symbolTable: s3Common); // 1*2 & 2*3  = "26"
             Assert.Equal("26", result3.ToObject());
 
             var result4 = await engine.EvalAsync(
                 expr,
                 CancellationToken.None,
-                symbolTable: s4); // 1*2 & 2*4  = "28"            
+                symbolTable: s4Common); // 1*2 & 2*4  = "28"            
             Assert.Equal("28", result4.ToObject());
         }
 
@@ -714,14 +706,13 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Fact]
         public async Task Dataverse()
         {
-            var c1 = new PowerFxConfig();
-
             // these will injecting a resolver
-            c1.AddDataverse("Value1", FormulaValue.New(11));
-            c1.AddDataverse("Value2", FormulaValue.New(22));
+            var s1 = AddDataverse("Value1", FormulaValue.New(11));
+            var s2 = AddDataverse("Value2", FormulaValue.New(22));
+            var s12 = ReadOnlySymbolTable.Compose(s1, s2);
 
-            var engine = new RecalcEngine(c1);
-            var check = engine.Check("Value1 + Value2");
+            var engine = new RecalcEngine();
+            var check = engine.Check("Value1 + Value2", symbolTable: s12);
 
             Assert.True(check.IsSuccess);
 
@@ -752,22 +743,15 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.False(checkFalse.IsSuccess);
             Assert.Contains(checkFalse.Errors, e => e.MessageKey == "ErrUnknownFunction" && e.Message.Contains($"'{functionName}' is an unknown or unsupported function."));
         }
-    } // end test class
 
-    // Extension methods, need to be in a top-level class. 
-    internal static class MyTestExt
-    {
-        public static void AddDataverse(this PowerFxConfig config, string valueName, FormulaValue value)
+        private static SymbolTable AddDataverse(string valueName, FormulaValue value)
         {
             var symbolTable = new DataverseSymbolTable
             {
                 _valueName = valueName,
                 _value = value,
-                Parent = config.SymbolTable
             };
-
-            // Add to chain. 
-            config.SymbolTable = symbolTable;
+            return symbolTable;
         }
     }
 

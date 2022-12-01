@@ -82,7 +82,9 @@ namespace Microsoft.PowerFx
                     CreateValues(map, inner);
                 }
 
+#pragma warning disable CS0618 // Type or member is obsolete
                 CreateValues(map, symbolTable.Parent);
+#pragma warning restore CS0618 // Type or member is obsolete
                 return;
             }
             else if (symbolTable is SymbolTableOverRecordType)
@@ -98,7 +100,9 @@ namespace Microsoft.PowerFx
                     DebugName = symbolTable2.DebugName
                 };
 
+#pragma warning disable CS0618 // Type or member is obsolete
                 CreateValues(map, symbolTable.Parent);
+#pragma warning restore CS0618 // Type or member is obsolete
                 map[symbolTable] = symValues;
                 return;
             }
