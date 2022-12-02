@@ -68,7 +68,7 @@ namespace Microsoft.PowerFx
         // Additional symbols for the engine.
         // A derived engine can replace this completely to inject engine-specific virtuals. 
         // These symbols then feed into the resolver
-        protected SymbolTable EngineSymbols { get; set; }
+        protected ReadOnlySymbolTable EngineSymbols { get; set; }
 
         /// <summary>
         /// Create a resolver for use in binding. This is called from <see cref="Check(string, RecordType, ParserOptions)"/>.
