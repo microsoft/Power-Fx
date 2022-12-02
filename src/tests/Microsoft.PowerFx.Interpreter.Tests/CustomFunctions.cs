@@ -77,6 +77,40 @@ namespace Microsoft.PowerFx.Tests
         }
 
         [Fact]
+        public void InvalidDeferredFunctionTest()
+        {
+            var config = new PowerFxConfig(null);
+            Assert.Throws<NotSupportedException>( () => config.AddFunction(new InvalidDeferredFunction()));
+            Assert.Throws<NotSupportedException>( () => config.AddFunction(new InvalidArgDeferredFunction()));
+        }
+
+        private class InvalidDeferredFunction : ReflectionFunction
+        {
+            public InvalidDeferredFunction()
+                : base("InvalidDeferred", FormulaType.Deferred)
+            {
+            }
+
+            public StringValue Execute()
+            {
+                return FormulaValue.New("test");
+            }
+        }
+
+        private class InvalidArgDeferredFunction : ReflectionFunction
+        {
+            public InvalidArgDeferredFunction()
+                : base("InvalidDeferred", FormulaType.String, FormulaType.Deferred)
+            {
+            }
+
+            public StringValue Execute(StringValue stringValue)
+            {
+                return FormulaValue.New("test");
+            }
+        }
+
+        [Fact]
         public async void CustomFunction_CallBack()
         {
             var config = new PowerFxConfig(null);
