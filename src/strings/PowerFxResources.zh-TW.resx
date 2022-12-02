@@ -4670,7 +4670,7 @@
     
   </data>
   <data name="Dec2HexArg1" xml:space="preserve">
-    <value>number</value>
+    <value>數字</value>
   </data>
   <data name="AboutDec2Hex_number" xml:space="preserve">
     <value>要轉換為十六進位字串的十進位數值。</value>
@@ -4706,7 +4706,7 @@
     
   </data>
   <data name="Hex2DecArg1" xml:space="preserve">
-    <value>number</value>
+    <value>數字</value>
   </data>
   <data name="AboutHex2Dec_number" xml:space="preserve">
     <value>十六進位字串會轉換為十進位。</value>

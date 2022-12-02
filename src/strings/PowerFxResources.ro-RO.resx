@@ -4709,7 +4709,7 @@
     <value>număr</value>
   </data>
   <data name="AboutHex2Dec_number" xml:space="preserve">
-    <value>Un șir hexazecimal de convertit la zecimal</value>
+    <value>Un șir hexazecimal de convertit în zecimal.</value>
     
   </data>
   <data name="AboutHex2DecT" xml:space="preserve">
