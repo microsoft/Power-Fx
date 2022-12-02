@@ -6621,6 +6621,6 @@
   </data>
   <data name="WarnDeferredType" xml:space="preserve">
     <value>Warning: Deferred type provided.</value>
-    <comment>Warning given when the input has deffered Type.</comment>
+    <comment>Warning given when the input has deferred Type. Deferred type is unknown type at compile time and correct type will be supplied by user before evaluation.</comment>
   </data>
 </root>
