@@ -201,7 +201,7 @@ namespace Microsoft.PowerFx
         // _environmentSymbols have the display name support (they update the _environmentSymbolDisplayNameProvider)
         // Merge _variables with _environmentSymbols to provide display name support for variables.. 
         // Both ultimately serve in INameResolver.Lookup 
-        private protected readonly Dictionary<string, NameLookupInfo> _variables = new Dictionary<string, NameLookupInfo>();
+        internal readonly Dictionary<string, NameLookupInfo> _variables = new Dictionary<string, NameLookupInfo>();
 
         internal readonly Dictionary<DName, IExternalEntity> _environmentSymbols = new Dictionary<DName, IExternalEntity>();
 
@@ -261,23 +261,13 @@ namespace Microsoft.PowerFx
             }
         }
 
-        internal string GetSuggestableSymbolName(IExternalEntity entity)
-        {
-            var name = entity.EntityName;
-            if (_environmentSymbolDisplayNameProvider.TryGetDisplayName(name, out var displayName))
-            {
-                return displayName.Value;
-            }
-
-            return name.Value;
-        }
-
-        internal bool TryGetSymbol(DName name, out IExternalEntity symbol, out DName displayName)
+        internal bool TryGetVariable(DName name, out NameLookupInfo symbol, out DName displayName)
         {
             var lookupName = name;
+
             if (_environmentSymbolDisplayNameProvider.TryGetDisplayName(name, out displayName))
             {
-                lookupName = name;
+                // do nothing as provided name can be used for lookup with logical name
             }
             else if (_environmentSymbolDisplayNameProvider.TryGetLogicalName(name, out var logicalName))
             {
@@ -285,7 +275,7 @@ namespace Microsoft.PowerFx
                 displayName = name;
             }
 
-            return _environmentSymbols.TryGetValue(lookupName, out symbol);
+            return _variables.TryGetValue(lookupName, out symbol);
         }
 
         // Derived symbol tables can hook. 
@@ -303,43 +293,10 @@ namespace Microsoft.PowerFx
                 return true;
             }
 
-            if (_variables.TryGetValue(name.Value, out nameInfo))
+            // This does a display-name aware lookup from _variables 
+            if (TryGetVariable(name, out nameInfo, out _))
             {
                 return true;
-            }
-
-            // This does a display-name aware lookup from _environmentSymbols 
-            if (TryGetSymbol(name, out var symbol, out var displayName))
-            {
-                // Special case symbols
-                if (symbol is IExternalOptionSet optionSet)
-                {
-                    nameInfo = new NameLookupInfo(
-                        BindKind.OptionSet,
-                        optionSet.Type,
-                        DPath.Root,
-                        0,
-                        optionSet,
-                        displayName);
-
-                    return true;
-                }
-                else if (symbol is IExternalDataSource)
-                {
-                    nameInfo = new NameLookupInfo(
-                        BindKind.Data,
-                        symbol.Type,
-                        DPath.Root,
-                        0,
-                        symbol,
-                        displayName);
-
-                    return true;
-                }
-                else
-                {
-                    throw new NotImplementedException($"{symbol.GetType().Name} not supported.");
-                }
             }
 
             var enumValue = GetEnumSymbolSnapshot.FirstOrDefault(symbol => symbol.InvariantName == name);

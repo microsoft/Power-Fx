@@ -314,7 +314,7 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
         {
             foreach (var global in _powerFxConfig.GetSymbols())
             {
-                IntellisenseHelper.AddSuggestion(this, _powerFxConfig.GetSuggestableSymbolName(global), SuggestionKind.Global, SuggestionIconKind.Other, global.Type, requiresSuggestionEscaping: true);
+                IntellisenseHelper.AddSuggestion(this, global.DisplayName, SuggestionKind.Global, SuggestionIconKind.Other, global.Type, requiresSuggestionEscaping: true);
             }
         }
 
@@ -342,7 +342,7 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
         /// <returns>
         /// Sequence of suggestions for first name node context.
         /// </returns>
-        internal virtual IEnumerable<string> SuggestableFirstNames => _powerFxConfig.GetSymbols().Select(_powerFxConfig.GetSuggestableSymbolName);
+        internal virtual IEnumerable<string> SuggestableFirstNames => _powerFxConfig.GetSymbols().Select( symbol => symbol.DisplayName.Value);
 
         /// <summary>
         /// Invokes <see cref="AddSuggestionsForConstantKeywords"/> to supply suggestions for constant

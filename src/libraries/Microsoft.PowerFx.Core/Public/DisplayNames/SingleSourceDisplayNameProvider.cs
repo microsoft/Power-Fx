@@ -77,5 +77,24 @@ namespace Microsoft.PowerFx.Core
         {
             return _logicalToDisplay.TryGetValue(logicalName, out displayName);
         }
+
+        public DisplayNameProvider RemoveField(DName lookupName)
+        {
+            if (_logicalToDisplay.TryGetValue(lookupName, out var displayName))
+            {
+                var logicalToDisplay = _logicalToDisplay.Remove(lookupName);
+                var displayToLogic = _displayToLogical.Remove(displayName);
+                return new SingleSourceDisplayNameProvider(logicalToDisplay, displayToLogic);
+
+            }
+            else if (_displayToLogical.TryGetValue(lookupName, out var logicalName))
+            {
+                var displayToLogic = _displayToLogical.Remove(lookupName);
+                var logicalToDisplay = _logicalToDisplay.Remove(logicalName);
+                return new SingleSourceDisplayNameProvider(logicalToDisplay, displayToLogic);
+            }
+
+            return this;
+        }
     }
 }
