@@ -293,6 +293,19 @@ namespace Microsoft.PowerFx.Core.Tests
             TestSimpleBindingSuccess(expression, DType.Number, symbol);
         }
 
+        [Theory]
+        [InlineData("CountIf(Table, Today() + A)")]
+        [InlineData("CountIf(Table, A > 0, Today() + A)")]
+        [InlineData("CountIf(Table, {Result:A})")]
+        [InlineData("CountIf(First(Table), true)")]
+        public void TexlFunctionTypeSemanticsCountIf_Negative(string expression)
+        {
+            var symbol = new SymbolTable();
+            symbol.AddVariable("Table", new TableType(TestUtils.DT("*[A:n]")));
+
+            TestBindingErrors(expression, DType.Number, symbol);
+        }
+
         [Fact]
         public void TexlFunctionTypeSemanticsCountRows()
         {
