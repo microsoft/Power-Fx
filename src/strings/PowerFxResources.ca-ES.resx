@@ -4670,7 +4670,7 @@
     
   </data>
   <data name="Dec2HexArg1" xml:space="preserve">
-    <value>nombre</value>
+    <value>número</value>
   </data>
   <data name="AboutDec2Hex_number" xml:space="preserve">
     <value>Valor decimal numèric que es convertirà en cadena hexadecimal.</value>
@@ -4706,7 +4706,7 @@
     
   </data>
   <data name="Hex2DecArg1" xml:space="preserve">
-    <value>nombre</value>
+    <value>número</value>
   </data>
   <data name="AboutHex2Dec_number" xml:space="preserve">
     <value>Una cadena hexadecimal que es converteix en decimal.</value>

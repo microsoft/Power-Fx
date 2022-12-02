@@ -4694,7 +4694,7 @@
     <value>स्थान</value>
   </data>
   <data name="AboutDec2HexT_places" xml:space="preserve">
-    <value>हेक्साडेसिमल स्ट्रिंग्स में पैडिंग जोड़ने के लिए संख्यात्मक मान या मानों को व्यवस्थित करें.</value>
+    <value>हेक्साडेसिमल स्ट्रिंग्स में पैडिंग जोड़ने के लिए संख्यात्मक मान या सरणी को व्यवस्थित करें.</value>
     
   </data>
   <data name="AboutDec2Hex_table" xml:space="preserve">
