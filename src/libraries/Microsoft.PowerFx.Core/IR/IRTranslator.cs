@@ -29,6 +29,8 @@ namespace Microsoft.PowerFx.Core.IR
 {
     internal class IRTranslator
     {
+        private const string DeferredNotSupportedExceptionMsg = "Deferred(Unknown) is not supported in expressions to be evaluated. This is always an error, deferred is only valid when calling Check";
+
         /// <summary>
         /// Returns the top node of the IR tree, and a symbol that corresponds to the Rule Scope.
         /// </summary>
@@ -321,6 +323,13 @@ namespace Microsoft.PowerFx.Core.IR
                 Contracts.AssertValue(node);
                 Contracts.AssertValue(context);
 
+                var nodeType = context.Binding.GetType(node);
+
+                if (nodeType.IsDeferred)
+                {
+                    throw new NotSupportedException(DeferredNotSupportedExceptionMsg);
+                }
+
                 var info = context.Binding.GetInfo(node);
                 if (info == null)
                 {
@@ -466,6 +475,11 @@ namespace Microsoft.PowerFx.Core.IR
                         {
                             Contracts.Assert(false, "QualifiedValues not yet supported by PowerFx");
                             throw new NotSupportedException();
+                        }
+
+                        if (typeRhs.IsDeferred)
+                        {
+                            throw new NotSupportedException(DeferredNotSupportedExceptionMsg);
                         }
 
                         if (left is ScopeAccessNode valueAccess && valueAccess.Value is ScopeSymbol scope)

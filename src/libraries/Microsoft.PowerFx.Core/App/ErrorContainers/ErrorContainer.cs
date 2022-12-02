@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
@@ -15,6 +16,18 @@ namespace Microsoft.PowerFx.Core.App.ErrorContainers
         private List<TexlError> _errors;
 
         public DocumentErrorSeverity DefaultSeverity => DocumentErrorSeverity.Critical;
+
+        public void MergeErrors(IEnumerable<TexlError> errors)
+        {
+            if (_errors == null)
+            {
+                _errors = new List<TexlError>();
+            }
+
+            errors = errors.Where(e => !HasErrors(e.Node, e.Severity)).ToList();
+
+            _errors.AddRange(errors);
+        }
 
         public bool HasErrors()
         {

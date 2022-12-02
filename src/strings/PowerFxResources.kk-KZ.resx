@@ -4694,7 +4694,7 @@
     <value>орындар</value>
   </data>
   <data name="AboutDec2HexT_places" xml:space="preserve">
-    <value>Он алтылық жолдарға қосылатын сандық мән немесе мәндер жиымы.</value>
+    <value>Он алтылық жолдарға қосылатын сандық мән немесе мәндер массиві.</value>
     
   </data>
   <data name="AboutDec2Hex_table" xml:space="preserve">
