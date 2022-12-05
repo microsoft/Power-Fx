@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Web;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Localization;
@@ -558,11 +560,52 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Equal(InvalidParams, errorResponse.Error.Code);
         }
 
+        class DummyQuickFixHandler : CodeFixHandler
+        {
+            public override async Task<IEnumerable<CodeFixSuggestion>> SuggestFixesAsync(Engine engine, CheckResult checkResult, CancellationToken cancel)
+            {
+                return new CodeFixSuggestion[]
+                {
+                    new CodeFixSuggestion
+                    {
+                        SuggestedText = "TestText1",
+                        Title = "TestTitle1"
+                    }
+                };
+            }
+        }
+
+        // Failure from one handler shouldn't block others. 
+        public class ExceptionQuickFixHandler : CodeFixHandler
+        {
+            public int _counter = 0;
+
+            public override async Task<IEnumerable<CodeFixSuggestion>> SuggestFixesAsync(Engine engine, CheckResult checkResult, CancellationToken cancel)
+            {
+                _counter++;
+                throw new Exception($"expected failure");
+            }
+        }
+
         [Fact]
         public void TestCodeAction()
         {
-            var scopeFactory = new TestPowerFxScopeFactory((string documentUri) => new MockSqlEngine());
+            var failHandler = new ExceptionQuickFixHandler();
+            var engine = new Engine(new PowerFxConfig());
+            var editor = engine.CreateEditorScope();
+            editor.AddQuickFixHandler(new DummyQuickFixHandler());
+            editor.AddQuickFixHandler(failHandler);
+
+            var scopeFactory = new TestPowerFxScopeFactory((string documentUri) => editor);
             var testServer = new TestLanguageServer(_sendToClientData.Add, scopeFactory);
+            
+            var errorList = new List<Exception>();
+
+            testServer.LogUnhandledExceptionHandler += (ex) =>
+            {
+                errorList.Add(ex);
+            };
+
             var documentUri = "powerfx://test?expression=IsBlank(&context={\"A\":1,\"B\":[1,2,3]}";
 
             testServer.OnDataReceived(JsonSerializer.Serialize(new
@@ -603,6 +646,10 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.NotEmpty(response.Result[CodeActionKind.QuickFix][0].Edit.Changes);
             Assert.Contains(documentUri, response.Result[CodeActionKind.QuickFix][0].Edit.Changes.Keys);
             Assert.Equal("TestText1", response.Result[CodeActionKind.QuickFix][0].Edit.Changes[documentUri][0].NewText);
+
+            // Fail handler was invokde, but didn't block us. 
+            Assert.Equal(1, failHandler._counter); // Invoked
+            Assert.Equal(1, errorList.Count);
         }
 
         // Test a codefix using a customization, ICodeFixHandler

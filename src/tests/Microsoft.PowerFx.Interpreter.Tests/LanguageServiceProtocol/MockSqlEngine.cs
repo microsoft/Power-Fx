@@ -7,7 +7,7 @@ using Microsoft.PowerFx.LanguageServerProtocol.Protocol;
 
 namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 {
-    public class MockSqlEngine : IPowerFxScope, IPowerFxScopeQuickFix
+    public class MockSqlEngine : IPowerFxScope
     {
         public CheckResult Check(string expression)
         {
@@ -22,34 +22,6 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         public string ConvertToDisplay(string expression)
         {
             return expression.Replace("new_price", "Price").Replace("new_quantity", "Quantity");
-        }
-
-        public CodeActionResult[] Suggest(string expression)
-        {
-            return new CodeActionResult[]
-            {
-                new CodeActionResult
-                {
-                    Text = "TestText1", Title = "TestTitle1",
-                    Range = new Range
-                    {
-                        Start = new Position
-                        {
-                            Line = 0,
-                            Character = 0
-                        },
-                        End = new Position
-                        {
-                            Line = 0,
-                            Character = 10
-                        }
-                    }
-                }
-            };
-        }
-
-        public void OnCommandExecuted(CodeAction codeAction)
-        {
         }
     }
 }

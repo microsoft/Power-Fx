@@ -16,7 +16,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
         [Fact]
         public void Test()
         {
-            var asm = typeof(ICodeFixHandler).Assembly;
+            var asm = typeof(EditorContextScope).Assembly;
 
             // The goal for public namespaces is to make the SDK easy for the consumer. 
             // Namespace principles for public classes:
@@ -30,7 +30,6 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
                 // Public APIs 
                 "Microsoft.PowerFx.EditorEngineExtensions",
                 "Microsoft.PowerFx.EditorContextScope",
-                "Microsoft.PowerFx.ICodeFixHandler",
                 "Microsoft.PowerFx.Core.IPowerFxScopeFactory",
                 "Microsoft.PowerFx.Core.IPowerFxScopeQuickFix",
 

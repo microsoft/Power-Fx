@@ -165,7 +165,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                     }
 
                     var scope = _scopeFactory.GetOrCreateInstance(commandExecutedParams.TextDocument.Uri);
-                    if (scope is IPowerFxScopeQuickFix scopeQuickFix)
+                    if (scope is EditorContextScope scopeQuickFix)
                     {
                         scopeQuickFix.OnCommandExecuted(codeActionResult);
                     }
@@ -381,9 +381,9 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                     case CodeActionKind.QuickFix:
                         var scope = _scopeFactory.GetOrCreateInstance(documentUri);
 
-                        if (scope is IPowerFxScopeQuickFix scopeQuickFix)
+                        if (scope is EditorContextScope scopeQuickFix)
                         {
-                            var result = scopeQuickFix.Suggest(expression);
+                            var result = scopeQuickFix.SuggestFixes(expression, LogUnhandledExceptionHandler);
 
                             var items = new List<CodeAction>();
 
