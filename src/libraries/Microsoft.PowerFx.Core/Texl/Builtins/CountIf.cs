@@ -76,8 +76,15 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
                 else if (!DType.Boolean.Accepts(argTypes[i]))
                 {
-                    errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrBooleanExpected);
-                    fValid = false;
+                    if (argTypes[i].CoercesTo(DType.Boolean))
+                    {
+                        CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i], DType.Boolean, allowDupes: true);
+                    }
+                    else
+                    {
+                        errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrBooleanExpected);
+                        fValid = false;
+                    }
                 }
             }
 
