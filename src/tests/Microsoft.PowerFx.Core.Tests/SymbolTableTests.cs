@@ -19,11 +19,12 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.True(set.Add(hash), "Hash value should be unique");
         }
 
-        private static void AssertUnique(HashSet<VersionHash> set, SymbolTable symbolTable)
+        private static void AssertUnique(HashSet<VersionHash> set, ReadOnlySymbolTable symbolTable)
         {
             AssertUnique(set, symbolTable.VersionHash);
         }
 
+#pragma warning disable CS0618 // Type or member is obsolete
         [Fact]
         public void Parent()
         {
@@ -39,6 +40,7 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Same(s1.Parent, s0);
             Assert.Same(r1.Parent, s0);
         }
+#pragma warning restore CS0618 // Type or member is obsolete
 
         // Changing the config changes its hash
         [Fact]
@@ -49,45 +51,52 @@ namespace Microsoft.PowerFx.Core.Tests
             var s0 = new SymbolTable();
             AssertUnique(set, s0);
 
-            var s1 = new SymbolTable
-            {
-                Parent = s0
-            };
+            var s1 = new SymbolTable();
+            var s10 = ReadOnlySymbolTable.Compose(s1, s0);
             AssertUnique(set, s1);
+            AssertUnique(set, s10);
 
             s1.AddVariable("x", FormulaType.Number);
             AssertUnique(set, s1);
+            AssertUnique(set, s10);
 
             s1.RemoveVariable("x");
             AssertUnique(set, s1);
+            AssertUnique(set, s10);
 
             // Same as before, but should still be unique VersionHash!
             s1.AddVariable("x", FormulaType.Number);
             AssertUnique(set, s1);
+            AssertUnique(set, s10);
 
             // Try other mutations
             s1.AddConstant("c", FormulaValue.New(1));
             AssertUnique(set, s1);
+            AssertUnique(set, s10);
 
             // New function 
             var func = new PowerFx.Tests.BindingEngineTests.BehaviorFunction();
             var funcName = func.Name;
             s1.AddFunction(func);
             AssertUnique(set, s1);
+            AssertUnique(set, s10);
 
             s1.RemoveFunction(funcName);
             AssertUnique(set, s1);
+            AssertUnique(set, s10);
 
             s1.RemoveFunction(func);
             AssertUnique(set, s1);
+            AssertUnique(set, s10);
 
             var optionSet = new OptionSet("foo", DisplayNameUtility.MakeUnique(new Dictionary<string, string>() { { "one key", "one value" } }));
             s1.AddEntity(optionSet);
             AssertUnique(set, s1);
+            AssertUnique(set, s10);
 
             // Adding to parent still changes our checksum (even if shadowed)
             s0.AddVariable("x", FormulaType.Number);
-            AssertUnique(set, s1);
+            AssertUnique(set, s10);
         }
 
         // Ensure Storage slots are densely assigned 
@@ -134,13 +143,11 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal(FormulaType.String, result.ReturnType);
 
             // But can shadow. 
-            var s2 = new SymbolTable
-            {
-                Parent = s1
-            };
+            var s2 = new SymbolTable();            
+            var s21 = ReadOnlySymbolTable.Compose(s2, s1);
 
-            s2.AddVariable("x", FormulaType.Boolean);
-            result = _engine.Check("x", symbolTable: s2);
+            s2.AddVariable("x", FormulaType.Boolean); // hides s1.
+            result = _engine.Check("x", symbolTable: s21);
             Assert.Equal(FormulaType.Boolean, result.ReturnType);
         }
 
@@ -193,8 +200,10 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.DoesNotContain(symbolTableCopy1.Functions, f => f.Name == "Abs");
             Assert.DoesNotContain(symbolTableCopy2.Functions, f => f.Name == "Day");
 
+#pragma warning disable CS0618 // Type or member is obsolete
             Assert.Same(symbolTableCopy1.Parent, symbolTableOriginal.Parent);
             Assert.Same(symbolTableCopy2.Parent, symbolTableOriginal.Parent);
+#pragma warning restore CS0618 // Type or member is obsolete
 
             // Check if nothing else has been copied
             Assert.Empty(symbolTableCopy1.SymbolNames);

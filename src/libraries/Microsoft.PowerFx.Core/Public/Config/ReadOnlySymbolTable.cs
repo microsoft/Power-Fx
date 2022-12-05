@@ -58,6 +58,7 @@ namespace Microsoft.PowerFx
 
         // Should remove. 
         // https://github.com/microsoft/Power-Fx/issues/828
+        [Obsolete("Use Composition instead of Parent Pointer")]
         public ReadOnlySymbolTable Parent => _parent;
 
         internal virtual IEnumerable<ReadOnlySymbolTable> SubTables
@@ -183,7 +184,9 @@ namespace Microsoft.PowerFx
             var s = new SymbolTable()
             {
                 DebugName = DebugName + " (Functions only)",
+#pragma warning disable CS0618 // Type or member is obsolete
                 Parent = Parent,
+#pragma warning restore CS0618 // Type or member is obsolete
             };
 
             foreach (var func in _functions)
