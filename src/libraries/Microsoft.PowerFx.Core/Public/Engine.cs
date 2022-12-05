@@ -230,7 +230,7 @@ namespace Microsoft.PowerFx
                 Parameters = symbolTable // just the parameters (provided at runtime)
             };
 
-            if (result.IsSuccess)
+            if (result.IsSuccess && !result.HasDeferredArgsWarning)
             {
                 result.TopLevelIdentifiers = DependencyFinder.FindDependencies(binding.Top, binding);
 

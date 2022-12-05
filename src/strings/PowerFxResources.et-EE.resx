@@ -4666,65 +4666,65 @@
     
   </data>
   <data name="AboutDec2Hex" xml:space="preserve">
-    <value>Converts a decimal number to hexadecimal</value>
+    <value>Teisendab kümnendarvu kuueteistkümnendarvuks</value>
     
   </data>
   <data name="Dec2HexArg1" xml:space="preserve">
-    <value>number</value>
+    <value>arv</value>
   </data>
   <data name="AboutDec2Hex_number" xml:space="preserve">
-    <value>A numeric decimal value to convert to hexadecimal string.</value>
+    <value>Arvuline kümnendväärtus kuueteistkümnendstringiks teisendamiseks.</value>
     
   </data>
   <data name="Dec2HexArg2" xml:space="preserve">
-    <value>places</value>
+    <value>kohad</value>
   </data>
   <data name="AboutDec2Hex_places" xml:space="preserve">
-    <value>A numeric value to add padding to hexadecimal string.</value>
+    <value>Arvväärtus kuueteistkümnendstringile täidise lisamiseks.</value>
     
   </data>
   <data name="AboutDec2HexT" xml:space="preserve">
-    <value>Converts a column of decimal numbers to hexadecimals</value>
+    <value>Teisendab kümnendarvude veeru kuueteistkümnendarvudeks</value>
     
   </data>
   <data name="Dec2HexTArg1" xml:space="preserve">
-    <value>table</value>
+    <value>tabel</value>
   </data>
   <data name="Dec2HexTArg2" xml:space="preserve">
-    <value>places</value>
+    <value>kohad</value>
   </data>
   <data name="AboutDec2HexT_places" xml:space="preserve">
-    <value>A numeric value or array of values to add padding to hexadecimal strings.</value>
+    <value>Arvväärtus või väärtuste massiiv kuueteistkümnendstringidele täidise lisamiseks.</value>
     
   </data>
   <data name="AboutDec2Hex_table" xml:space="preserve">
-    <value>A column of numeric decimal values to convert to hexadecimals.</value>
+    <value>Arvuliste kümnendväärtuste veerg kuueteistkümnendarvudeks teisendamiseks.</value>
     
   </data>
   <data name="AboutHex2Dec" xml:space="preserve">
-    <value>Converts a hexadecimal number to decimal</value>
+    <value>Teisendab kuueteistkümnendarvu kümnendarvuks</value>
     
   </data>
   <data name="Hex2DecArg1" xml:space="preserve">
-    <value>number</value>
+    <value>arv</value>
   </data>
   <data name="AboutHex2Dec_number" xml:space="preserve">
-    <value>A hexadecimal string convert to decimal.</value>
+    <value>Kuueteistkümnendstring kümnendarvuks teisendamiseks.</value>
     
   </data>
   <data name="AboutHex2DecT" xml:space="preserve">
-    <value>Converts a column of hexadecimal numbers to decimals</value>
+    <value>Teisendab kuueteistkümnendarvude veeru kümnendarvudeks</value>
     
   </data>
   <data name="Hex2DecTArg1" xml:space="preserve">
-    <value>table</value>
+    <value>tabel</value>
   </data>
   <data name="AboutHex2Dec_table" xml:space="preserve">
-    <value>A column of hexadecimal strings to convert to decimals.</value>
+    <value>Kuueteistkümnendstringide veerg kümnendarvudeks teisendamiseks.</value>
     
   </data>
   <data name="ErrDeprecated" xml:space="preserve">
-    <value>This feature is deprecated and is no longer supported.</value>
+    <value>See funktsioon on iganenud ja seda ei toetata enam.</value>
     
   </data>
 </root>

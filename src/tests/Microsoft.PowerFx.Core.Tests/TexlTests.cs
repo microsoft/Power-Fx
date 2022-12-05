@@ -1346,6 +1346,10 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("Text(123, \"dddd, mm/dd/yy, at hh:mm:ss am/pm\")")]
         [InlineData("Text(\"hello world\")")]
         [InlineData("Text(\"hello world\", \"mm/dd/yyyy\")")]
+        [InlineData("Text(1.23, \"[$-en-us]0.00\")")]
+        [InlineData("Text(1.23, \"[$-fr-fr]0,00\")")]
+        [InlineData("Text(123, \"yyyy-mm-dd hh:mm:ss.000\") // 0 is valid if after seconds")]
+        [InlineData("Text(Now(), \"yyyy-mm-dd hh:mm:ss.000\") // 0 is valid if after seconds")]
         public void TexlFunctionTypeSemanticsText(string script)
         {
             TestSimpleBindingSuccess(
@@ -1353,12 +1357,15 @@ namespace Microsoft.PowerFx.Core.Tests
                 DType.String);
         }
 
-        [Fact]
-        public void TexlFunctionTypeSemanticsText_Negative()
+        [Theory]
+        [InlineData("Text(123, \"###.####    dddd, mm/dd/yy, at hh:mm:ss am/pm\")")]
+        [InlineData("Text(123, \"###.#### \" & \"   dddd, mm/dd/yy, at hh:mm:ss am/pm\")")]
+        [InlineData("Text(Now(), \"yyyy-mm-dd 0 hh:mm:ss.000\") // 0 is only valid after seconds")]
+        public void TexlFunctionTypeSemanticsText_Negative(string script)
         {
             // Can't use both numeric formatting and date/time formatting within the same format string.
             TestBindingErrors(
-                "Text(123, \"###.####    dddd, mm/dd/yy, at hh:mm:ss am/pm\")",
+                script,
                 DType.String,
                 expectedErrorCount: 2);
         }
@@ -1828,29 +1835,28 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("Concat([], \"\")", "s")]
-        [InlineData("Concat([1, 2, 3], Text(Value))", "s")]
-        [InlineData("Concat(Table({a:1, b:\"hello\"}, {b:\"world\"}), b)", "s")]
-        [InlineData("Concat([1, 2, 3], Text(Value), \",\")", "s")]
-        [InlineData("Concat([1, 2, 3], Text(Value), Text(Today()))", "s")]
-        public void TexlFunctionTypeSemanticsConcat(string script, string expectedType)
+        [InlineData("Concat([], \"\")")]
+        [InlineData("Concat([1, 2, 3], Text(Value))")]
+        [InlineData("Concat(Table({a:1, b:\"hello\"}, {b:\"world\"}), b)")]
+        [InlineData("Concat([1, 2, 3], Text(Value), \",\")")]
+        [InlineData("Concat([1, 2, 3], Text(Value), Text(Today()))")]
+        [InlineData("Concat([], 1)")]
+        [InlineData("Concat([1, 2, 3], Value)")]
+        [InlineData("Concat([], 1)")]
+        [InlineData("Concat([\"a\", \"b\", \"C\"], Value, 1)")]
+        public void TexlFunctionTypeSemanticsConcat(string script)
         {
-            Assert.True(DType.TryParse(expectedType, out DType type));
-            Assert.True(type.IsValid);
-            TestSimpleBindingSuccess(script, type);
+            TestSimpleBindingSuccess(script, DType.String);
         }
 
         [Theory]
-        [InlineData("Concat([], 1)", "s")]
-        [InlineData("Concat([1, 2, 3], Value)", "s")]
-        [InlineData("Concat(Table({a:1, b:\"hello\"}, {b:\"world\"}), [\"hello\", \"world\"])", "s")]
-        [InlineData("Concat([1, 2, 3], Value, Today())", "s")]
-        [InlineData("Concat([1, 2, 3], Value, 1)", "s")]
-        public void TexlFunctionTypeSemanticsConcat_Negative(string script, string expectedType)
+        [InlineData("Concat(Table({a:1, b:\"hello\"}, {b:\"world\"}), [\"hello\", \"world\"])")]
+        [InlineData("Concat([1, 2, 3], {Value:Value})")]
+        [InlineData("Concat([1, 2, 3], Value, {a:1})")]
+        [InlineData("Concat({a:1,b:\"hello\"}, b)")]
+        public void TexlFunctionTypeSemanticsConcat_Negative(string script)
         {
-            Assert.True(DType.TryParse(expectedType, out DType type));
-            Assert.True(type.IsValid);
-            TestBindingErrors(script, type);
+            TestBindingErrors(script, DType.String);
         }
 
         [Theory]
