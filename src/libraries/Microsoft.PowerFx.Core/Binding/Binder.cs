@@ -4958,11 +4958,10 @@ namespace Microsoft.PowerFx.Core.Binding
                         DType.TryGetLogicalNameForColumn(scope.Type, name.Value, out maybeLogicalName)))
                     {
                         name = new DName(maybeLogicalName);
-                    }
-
-                    if (scope.Type.TryGetType(name, out var tmpType))
-                    {
-                        return true;
+                        if (scope.Type.TryGetType(name, out var tmpType))
+                        {
+                            return true;
+                        }
                     }
                 }
 

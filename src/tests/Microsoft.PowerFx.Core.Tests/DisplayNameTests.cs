@@ -373,6 +373,20 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.Equal(FormulaType.Number, type);
             Assert.Equal("Num", logical);
         }
+
+        [Theory]
+        [InlineData("ForAll(Nested, { Inner: 123 })", "ForAll(NestedDisplay, { Inner: 123 })")]
+        public void ConvertToDisplayNamesForAllNoScopes(string expression, string expected)
+        {
+            var r1 = RecordType.Empty()
+                .Add(new NamedFormulaType(
+                        "Nested",
+                        TableType.Empty().Add(new NamedFormulaType("Inner", FormulaType.Number, "InnerDisplay")),
+                        "NestedDisplay"));
+
+            var outDisplayExpression = _engine.GetDisplayExpression(expression, r1);
+            Assert.Equal(expected, outDisplayExpression);
+        }
     }
 
     public class CommaSeparatedDecimalLocaleConversionTests
