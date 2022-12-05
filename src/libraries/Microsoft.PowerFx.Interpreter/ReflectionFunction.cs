@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 using System.Reflection;
 using System.Threading;
@@ -171,6 +172,11 @@ namespace Microsoft.PowerFx
             if (m == null)
             {
                 throw new InvalidOperationException($"Missing Execute method");
+            }
+
+            if (returnType._type.IsDeferred || paramTypes.Any(type => type._type.IsDeferred))
+            {
+                throw new NotSupportedException();
             }
 
             _info = new FunctionDescr

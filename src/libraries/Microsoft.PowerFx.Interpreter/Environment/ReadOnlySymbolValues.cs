@@ -47,12 +47,6 @@ namespace Microsoft.PowerFx
             _symbolTable = symbolTable;
         }
 
-        internal virtual void AddSymbolMap(IDictionary<ReadOnlySymbolTable, ReadOnlySymbolValues> map)
-        {
-            // If a derived class supports multiple symbols tables, then override this to add them. 
-            map[_symbolTable] = this;
-        }
-
         /// <summary>
         /// Get value of a slot previously provided by <see cref="Set(ISymbolSlot, FormulaValue)"/>. 
         /// </summary>

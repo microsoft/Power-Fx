@@ -13,4 +13,15 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
         /// </summary>
         public const string QuickFix = "quickfix";
     }
+
+    /// <summary>
+    /// Command name constants.
+    /// </summary>
+    public class CommandName
+    {
+        /// <summary>
+        /// Code action applied command.
+        /// </summary>
+        public const string CodeActionApplied = "codeActionApplied";
+    }
 }

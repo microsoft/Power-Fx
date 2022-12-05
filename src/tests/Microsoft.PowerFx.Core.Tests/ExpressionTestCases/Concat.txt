@@ -111,3 +111,24 @@ Errors: Error 43-48: Name isn't valid. 'Value' isn't recognized.
 // Errors in the lambda
 >> Concat([2, 1, 0, -1, -2], Text(1 / Value), ",")
 Error({Kind:ErrorKind.Div0})
+
+// Coercions on lambda
+>> Concat([1, 2, 3], Value, ",")
+"1,2,3"
+
+>> Concat([1, 2, 3], Mod(Value, 2) = 0, ",")
+"false,true,false"
+
+>> Concat([1, 2, 3], Date(2020 + Value,1,1), ",")
+"1/1/2021,1/1/2022,1/1/2023"
+
+>> Concat([1, 2, 3], Time(10 + Value, Value * 10, 0), ",")
+"11:10 AM,12:20 PM,1:30 PM"
+
+// Coercion on separator
+>> Concat([1, 2, 3], "a" & Value, 0)
+"a10a20a3"
+
+// Coercion on separator
+>> Concat([1, 2, 3], $"-a{Value}-", false)
+"-a1-false-a2-false-a3-"

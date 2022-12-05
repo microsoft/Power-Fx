@@ -24,6 +24,10 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
 
         public override string ToString()
         {
+            if (Value is ISymbolSlot slot)
+            {
+                return $"ResolvedObject({slot.DebugName()})";
+            }
             return $"ResolvedObject({Value})";
         }
     }

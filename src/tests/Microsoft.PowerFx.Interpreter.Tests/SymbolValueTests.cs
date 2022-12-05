@@ -429,8 +429,13 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var result = engine.EvalAsync("a + b + global", CancellationToken.None, runtimeConfig: r2).Result;
 
             Assert.Equal(111.0, result.ToObject());
-        }
 
+            // Without a parent
+            var r3 = ReadOnlySymbolValues.New(dict);
+            var result3 = engine.EvalAsync("a + b", CancellationToken.None, runtimeConfig: r2).Result;
+            Assert.Equal(11.0, result3.ToObject());
+        }
+             
         [Fact]
         public void Test1()
         {
@@ -617,6 +622,44 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             // can't assign a string to a number
             var symValues = new SymbolValues(symTable1);
             Assert.Throws<InvalidOperationException>(() => symValues.Set(slot, FormulaValue.New("abc")));
+        }
+
+
+        [Fact]
+        public void CreateSingle()
+        {
+            // Compose on a single item is an identity
+            var s1 = new SymbolValues();
+            var s2 = ReadOnlySymbolValues.Compose(s1);
+
+            Assert.Same(s2, s1);
+        }
+
+        // Trying to provide Multiple Values for the same SymbolTable is an error 
+        // That could lead to an ambiguity about which values to use. 
+        [Fact]
+        public void MultipleValues()
+        {
+            var symTable1 = new SymbolTable { DebugName = "L1" };
+            var slot = symTable1.AddVariable("x", FormulaType.Number);
+
+            // can't assign a string to a number
+            var values1 = new SymbolValues(symTable1) { DebugName = "V1" };
+            var values2 = new SymbolValues(symTable1) { DebugName = "V1" };
+
+            symTable1.CreateValues(values1); // ok 
+
+            try
+            {
+                symTable1.CreateValues(values1, values2); // error
+            }
+            catch(InvalidOperationException e)
+            {
+                // Message should be useful. 
+                Assert.Contains(symTable1.DebugName, e.Message);
+                Assert.Contains(values1.DebugName, e.Message);
+                Assert.Contains(values2.DebugName, e.Message);
+            }
         }
 
         // Get a convenient string representation of a SymbolValue
