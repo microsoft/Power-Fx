@@ -42,5 +42,10 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
         /// Gets or sets code action command.
         /// </summary>
         public CodeActionCommand Command { get; set; }
+
+        /// <summary>
+        /// Gets or sets the code action context.
+        /// </summary>
+        public CodeActionResultContext ActionResultContext { get; set; }
     }
 }

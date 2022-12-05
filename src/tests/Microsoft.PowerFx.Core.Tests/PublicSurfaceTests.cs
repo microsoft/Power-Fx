@@ -157,6 +157,8 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Intellisense.SuggestionKind",
                 "Microsoft.PowerFx.Intellisense.TokenResultType",
                 "Microsoft.PowerFx.Intellisense.UIString",
+                "Microsoft.PowerFx.Intellisense.CodeFixHandler",
+                "Microsoft.PowerFx.Intellisense.CodeFixSuggestion",
 
                 // TBD ...
                 "Microsoft.PowerFx.Core.DisplayNameProvider",
