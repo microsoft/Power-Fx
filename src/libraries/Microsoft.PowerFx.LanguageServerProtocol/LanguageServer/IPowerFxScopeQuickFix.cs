@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using Microsoft.PowerFx.LanguageServerProtocol.Protocol;
 
 namespace Microsoft.PowerFx.Core
@@ -8,6 +9,7 @@ namespace Microsoft.PowerFx.Core
     /// <summary>
     /// Provides quick fix.
     /// </summary>
+    [Obsolete("Use EditorContextScope instead")]
     public interface IPowerFxScopeQuickFix
     {
         /// <summary>

@@ -113,6 +113,9 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                         case TextDocumentNames.CodeAction:
                             HandleCodeActionRequest(id, paramsJson);
                             break;
+                        case CustomProtocolNames.CommandExecuted:
+                            HandleCommandExecutedRequest(id, paramsJson);
+                            break;
                         default:
                             _sendToClient(JsonRpcHelper.CreateErrorResult(id, JsonRpcHelper.ErrorCode.MethodNotFound));
                             break;
@@ -125,6 +128,52 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
 
                 _sendToClient(JsonRpcHelper.CreateErrorResult(id, JsonRpcHelper.ErrorCode.InternalError, ex.Message));
                 return;
+            }
+        }
+
+        private void HandleCommandExecutedRequest(string id, string paramsJson)
+        {
+            if (id == null)
+            {
+                _sendToClient(JsonRpcHelper.CreateErrorResult(id, JsonRpcHelper.ErrorCode.InvalidRequest));
+                return;
+            }
+
+            Contracts.AssertValue(id);
+            Contracts.AssertValue(paramsJson);
+
+            if (!TryParseParams(paramsJson, out CommandExecutedParams commandExecutedParams))
+            {
+                _sendToClient(JsonRpcHelper.CreateErrorResult(id, JsonRpcHelper.ErrorCode.ParseError));
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(commandExecutedParams.Argument))
+            {
+                _sendToClient(JsonRpcHelper.CreateErrorResult(id, JsonRpcHelper.ErrorCode.PropertyValueRequired, $"{nameof(CommandExecutedParams.Argument)} is null or empty."));
+                return;
+            }
+
+            switch (commandExecutedParams.Command)
+            {
+                case CommandName.CodeActionApplied:
+                    var codeActionResult = JsonRpcHelper.Deserialize<CodeAction>(commandExecutedParams.Argument);
+                    if (codeActionResult.ActionResultContext == null)
+                    {
+                        _sendToClient(JsonRpcHelper.CreateErrorResult(id, JsonRpcHelper.ErrorCode.PropertyValueRequired, $"{nameof(CodeAction.ActionResultContext)} is null or empty."));
+                        return;
+                    }
+
+                    var scope = _scopeFactory.GetOrCreateInstance(commandExecutedParams.TextDocument.Uri);
+                    if (scope is EditorContextScope scopeQuickFix)
+                    {
+                        scopeQuickFix.OnCommandExecuted(codeActionResult);
+                    }
+
+                    break;
+                default:
+                    _sendToClient(JsonRpcHelper.CreateErrorResult(id, JsonRpcHelper.ErrorCode.InvalidRequest, $"{commandExecutedParams.Command} is not supported."));
+                    break;
             }
         }
 
@@ -332,9 +381,9 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                     case CodeActionKind.QuickFix:
                         var scope = _scopeFactory.GetOrCreateInstance(documentUri);
 
-                        if (scope is IPowerFxScopeQuickFix scopeQuickFix)
+                        if (scope is EditorContextScope scopeQuickFix)
                         {
-                            var result = scopeQuickFix.Suggest(expression);
+                            var result = scopeQuickFix.SuggestFixes(expression, LogUnhandledExceptionHandler);
 
                             var items = new List<CodeAction>();
 
@@ -348,7 +397,8 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                                     Edit = new WorkspaceEdit
                                     {
                                         Changes = new Dictionary<string, TextEdit[]> { { documentUri, new[] { new TextEdit { Range = range, NewText = item.Text } } } }
-                                    }
+                                    },
+                                    ActionResultContext = item.ActionResultContext
                                 });
                             }
 

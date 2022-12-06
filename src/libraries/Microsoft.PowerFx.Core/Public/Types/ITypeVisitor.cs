@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using Microsoft.PowerFx.Core.Public.Types;
+
 namespace Microsoft.PowerFx.Types
 {
     /// <summary>
@@ -41,6 +43,8 @@ namespace Microsoft.PowerFx.Types
         void Visit(UnsupportedType type);
 
         void Visit(UnknownType type);
+
+        void Visit(DeferredType type);
 
         void Visit(BindingErrorType type);
     }
