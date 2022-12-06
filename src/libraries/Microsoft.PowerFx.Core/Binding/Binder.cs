@@ -4957,8 +4957,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     if (!scope.SkipForInlineRecords && (DType.TryGetConvertedDisplayNameAndLogicalNameForColumn(scope.Type, name.Value, out var maybeLogicalName, out var tmp) ||
                         DType.TryGetLogicalNameForColumn(scope.Type, name.Value, out maybeLogicalName)))
                     {
-                        name = new DName(maybeLogicalName);
-                        if (scope.Type.TryGetType(name, out var tmpType))
+                        if (scope.Type.TryGetType(new DName(maybeLogicalName), out var tmpType))
                         {
                             return true;
                         }

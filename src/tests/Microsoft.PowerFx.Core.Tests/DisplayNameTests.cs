@@ -375,14 +375,20 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
         [Theory]
-        [InlineData("ForAll(Nested, { Inner: 123 })", "ForAll(NestedDisplay, { Inner: 123 })")]
+        [InlineData("ForAll(Outer, { Inner: 123 })", "ForAll(OuterDisplay, { Inner: 123 })")]
+        [InlineData("ForAll(Outer, ForAll(Inner, { OuterField: 123, InnerField: 456 })", "ForAll(OuterDisplay, ForAll(InnerDisplay, { OuterField: 123, InnerField: 456 })")]
+        [InlineData("ForAll(Inner, { InnerField: 123 })", "ForAll(InnerDisplay, { InnerField: 123 })")]
         public void ConvertToDisplayNamesForAllNoScopes(string expression, string expected)
         {
             var r1 = RecordType.Empty()
                 .Add(new NamedFormulaType(
-                        "Nested",
-                        TableType.Empty().Add(new NamedFormulaType("Inner", FormulaType.Number, "InnerDisplay")),
-                        "NestedDisplay"));
+                        "Inner",
+                        TableType.Empty().Add(new NamedFormulaType("InnerField", FormulaType.Number, "InnerFieldDisplay")),
+                        "InnerDisplay"))
+                .Add(new NamedFormulaType(
+                        "Outer",
+                        TableType.Empty().Add(new NamedFormulaType("OuterField", FormulaType.Number, "OuterFieldDisplay")),
+                        "OuterDisplay"));
 
             var outDisplayExpression = _engine.GetDisplayExpression(expression, r1);
             Assert.Equal(expected, outDisplayExpression);
