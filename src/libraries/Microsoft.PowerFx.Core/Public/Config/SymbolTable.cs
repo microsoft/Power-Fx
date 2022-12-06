@@ -26,6 +26,8 @@ namespace Microsoft.PowerFx
         private readonly SlotMap<NameLookupInfo?> _slots = new SlotMap<NameLookupInfo?>();
 
         // Expose public setters
+        // https://github.com/microsoft/Power-Fx/issues/828
+        [Obsolete("Use Composition instead of Parent Pointer")]
         public new ReadOnlySymbolTable Parent
         {
             get => _parent;

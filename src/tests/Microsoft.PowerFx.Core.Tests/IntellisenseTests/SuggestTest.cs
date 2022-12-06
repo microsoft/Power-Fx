@@ -237,7 +237,9 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         {
             config.SymbolTable = new SymbolTable 
             {
+#pragma warning disable CS0618 // Type or member is obsolete
                 Parent = config.SymbolTable,
+#pragma warning restore CS0618 // Type or member is obsolete
                 DebugName = "Extra Table"
             };
         }
