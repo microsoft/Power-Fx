@@ -50,7 +50,7 @@ namespace Microsoft.PowerFx
         }
 
         // Set of default functions supported by the interpreter. 
-        private static readonly ReadOnlySymbolTable _interpreterSupportedFunctions = ReadOnlySymbolTable.NewDefault(Library.FunctionList);
+        private static readonly ReadOnlySymbolTable _interpreterSupportedFunctions = ReadOnlySymbolTable.NewDefault(Library.TexlFunctionImplementations.ToTexlFunctions());
 
         // For internal testing
         internal INameResolver TestCreateResolver()
@@ -213,7 +213,7 @@ namespace Microsoft.PowerFx
 
             var func = new UserDefinedTexlFunction(definition.Name, definition.ReturnType, definition.Parameters, check);
 
-            var exists = _symbolTable.Functions.Any(x => x.Name == definition.Name);
+            var exists = _symbolTable.Functions.Any(definition.Name);
             if (exists)
             {
                 throw new InvalidOperationException($"Function {definition.Name} is already defined");

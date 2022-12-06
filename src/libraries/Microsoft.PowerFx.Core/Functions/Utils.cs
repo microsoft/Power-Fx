@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Collections.Generic;
 using System.Numerics;
 using Microsoft.PowerFx.Core.Utils;
 
@@ -14,6 +15,13 @@ namespace Microsoft.PowerFx.Core.Functions
             Contracts.Assert(bitIndex >= 0);
 
             return !(value & (BigInteger.One << bitIndex)).IsZero;
+        }
+        public static void AddRange<T>(this HashSet<T> hashset, HashSet<T> hashset2)
+        {
+            foreach (var t in hashset2)
+            {
+                hashset.Add(t);
+            }
         }
     }
 }

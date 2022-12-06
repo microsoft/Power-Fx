@@ -37,27 +37,15 @@ namespace Microsoft.PowerFx.Functions
 
         public static readonly IReadOnlyDictionary<TexlFunction, AsyncFunctionPtr> FunctionImplementations;
 
+        internal static readonly TexlFunctionSet<TexlFunctionImplementation> TexlFunctionImplementations = new TexlFunctionSet<TexlFunctionImplementation>();
+
         static Library()
         {
-            var allFunctions = new Dictionary<TexlFunction, AsyncFunctionPtr>();
-            foreach (var func in SimpleFunctionImplementations)
-            {
-                allFunctions.Add(func.Key, func.Value);
-            }
+            TexlFunctionImplementations.Add(SimpleFunctionImplementations.Select(f => new TexlFunctionImplementation(f.Key, f.Value)));
+            TexlFunctionImplementations.Add(SimpleFunctionTabularOverloadImplementations.Select(f => new TexlFunctionImplementation(f.Key, f.Value)));
+            TexlFunctionImplementations.Add(SimpleFunctionMultiArgsTabularOverloadImplementations.Select(f => new TexlFunctionImplementation(f.Key, f.Value)));
 
-            foreach (var func in SimpleFunctionTabularOverloadImplementations)
-            {
-                Contracts.Assert(allFunctions.Any(f => f.Key.Name == func.Key.Name), "It needs to be an overload");
-                allFunctions.Add(func.Key, func.Value);
-            }
-
-            foreach (var func in SimpleFunctionMultiArgsTabularOverloadImplementations)
-            {
-                Contracts.Assert(allFunctions.Any(f => f.Key.Name == func.Key.Name), "It needs to be an overload");
-                allFunctions.Add(func.Key, func.Value);
-            }
-
-            FunctionImplementations = allFunctions;
+            FunctionImplementations = TexlFunctionImplementations.Functions.ToDictionary(tfi => tfi.function, tfi => tfi.functionPtr as AsyncFunctionPtr);
         }
 
         // Some TexlFunctions are overloaded

@@ -34,7 +34,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
         DPath CurrentEntityPath { get; }
 
-        IEnumerable<TexlFunction> Functions { get; }
+        TexlFunctionSet<TexlFunction> Functions { get; }
 
         // This advertises whether the INameResolver instance will suggest unqualified enums ("Hours")
         // or only qualified enums ("TimeUnit.Hours").

@@ -249,6 +249,8 @@ namespace Microsoft.PowerFx
             }
             else
             {
+                // *** DO NOT USE FunctionImplementations
+                // $$$ Needs optimization
                 if (FunctionImplementations.TryGetValue(func, out var ptr))
                 {
                     var result = await ptr(this, context.IncrementStackDepthCounter(childContext), node.IRContext, args);

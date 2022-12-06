@@ -9,8 +9,8 @@ using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Glue;
+using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types;
-using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Syntax;
@@ -41,7 +41,7 @@ namespace Microsoft.PowerFx
         // All functions that powerfx core knows about. 
         // Derived engines may only support a subset of these builtins, 
         // and they may add their own custom ones. 
-        private static readonly ReadOnlySymbolTable _allBuiltinCoreFunctions = ReadOnlySymbolTable.NewDefault(Core.Texl.BuiltinFunctionsCore.BuiltinFunctionsLibrary);
+        private static readonly ReadOnlySymbolTable _allBuiltinCoreFunctions = ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library);
 
         /// <summary>
         /// Builtin functions supported by this engine. 
@@ -50,21 +50,21 @@ namespace Microsoft.PowerFx
 
         // By default, we pull the core functions. 
         // These can be overridden. 
-        internal IEnumerable<TexlFunction> Functions => CreateResolverInternal().Functions;
+        internal TexlFunctionSet<TexlFunction> Functions => CreateResolverInternal().Functions;
 
         /// <summary>
         /// Get all functions from the config and symbol tables. 
         /// </summary>
-        public IEnumerable<FunctionInfo> FunctionInfos => Functions.Select(f => new FunctionInfo(f));
+        public IEnumerable<FunctionInfo> FunctionInfos => Functions.Functions.Select(f => new FunctionInfo(f));
 
         /// <summary>
         /// List all functions (both builtin and custom) registered with this evaluator. 
         /// </summary>
         public IEnumerable<string> GetAllFunctionNames()
         {
-            return FunctionInfos.Select(func => func.Name).Distinct();
+            return Functions.Keys;
+            //return FunctionInfos.Select(func => func.Name).Distinct();
         }
-
         // Additional symbols for the engine.
         // A derived engine can replace this completely to inject engine-specific virtuals. 
         // These symbols then feed into the resolver

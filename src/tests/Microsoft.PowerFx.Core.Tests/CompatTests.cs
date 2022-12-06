@@ -32,6 +32,7 @@ namespace Microsoft.PowerFx.Core.Tests
             config.AddFunction(func);
 
             // Includes default functions 
+            // $$$ FunctionInfos is obsolete
             var functions = config.FunctionInfos.ToArray();
 
             Assert.True(functions.Length > 100);

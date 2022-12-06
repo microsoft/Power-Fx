@@ -157,7 +157,7 @@ namespace Microsoft.PowerFx
 
         // Helper to create a ReadOnly symbol table around a set of core functions.
         // Important that this is readonly so that it can be safely shared across engines. 
-        internal static ReadOnlySymbolTable NewDefault(IEnumerable<TexlFunction> coreFunctions)
+        internal static ReadOnlySymbolTable NewDefault(TexlFunctionSet<TexlFunction> coreFunctions)
         {
             var s = new SymbolTable
             {
@@ -165,10 +165,7 @@ namespace Microsoft.PowerFx
                 DebugName = $"BuiltinFunctions ({coreFunctions.Count()})"
             };
 
-            foreach (var func in coreFunctions)
-            {
-                s.AddFunction(func); // will also add enum. 
-            }
+            s.AddFunctions(coreFunctions);
 
             return s;
         }
@@ -186,10 +183,7 @@ namespace Microsoft.PowerFx
                 Parent = Parent,
             };
 
-            foreach (var func in _functions)
-            {
-                s.AddFunction(func); 
-            }
+            s.AddFunctions(_functions);
 
             return s;
         }
@@ -204,7 +198,7 @@ namespace Microsoft.PowerFx
 
         internal DisplayNameProvider _environmentSymbolDisplayNameProvider = new SingleSourceDisplayNameProvider();
 
-        private protected readonly List<TexlFunction> _functions = new List<TexlFunction>();
+        private protected readonly TexlFunctionSet<TexlFunction> _functions = new TexlFunctionSet<TexlFunction>();
 
         // Which enums are available. 
         // These do not compose - only bottom one wins. 
@@ -234,10 +228,10 @@ namespace Microsoft.PowerFx
 
         IEnumerable<EnumSymbol> IEnumStore.EnumSymbols => GetEnumSymbolSnapshot;
 
-        internal IEnumerable<TexlFunction> Functions => ((INameResolver)this).Functions;
+        internal TexlFunctionSet<TexlFunction> Functions => ((INameResolver)this).Functions;
 
-        IEnumerable<TexlFunction> INameResolver.Functions => _functions; 
-        
+        TexlFunctionSet<TexlFunction> INameResolver.Functions => _functions;
+
         IEnumerable<KeyValuePair<string, NameLookupInfo>> IGlobalSymbolNameResolver.GlobalSymbols => _variables;
 
         /// <summary>
@@ -355,9 +349,7 @@ namespace Microsoft.PowerFx
             Contracts.Check(theNamespace.IsValid, "The namespace is invalid.");
             Contracts.CheckNonEmpty(name, "name");
 
-            // See TexlFunctionsLibrary.Lookup
-            // return _functionLibrary.Lookup(theNamespace, name, localeInvariant, null);            
-            var functionLibrary = _functions.Where(func => func.Namespace == theNamespace && name == (localeInvariant ? func.LocaleInvariantName : func.Name)); // Base filter
+            var functionLibrary = localeInvariant ? Functions.WithInvariantName(name, theNamespace) : Functions.WithName(name, theNamespace);
             return functionLibrary;
         }
 
@@ -365,7 +357,8 @@ namespace Microsoft.PowerFx
         {
             Contracts.Check(nameSpace.IsValid, "The namespace is invalid.");
 
-            return _functions.Where(function => function.Namespace.Equals(nameSpace));
+            // $$$ Needs optimization            
+            return _functions.Functions.Where(function => function.Namespace.Equals(nameSpace));
         }
 
         bool INameResolver.LookupEnumValueByInfoAndLocName(object enumInfo, DName locName, out object value)

@@ -96,7 +96,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("Dis|", "DisplayOpt", "DisplayRowScope")] // Match to row scope       
         public void TestSuggestOptionSetsDisplayName(string expression, params string[] expectedSuggestions)
         {
-            var config = PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder(), new TexlFunction[0]);
+            var config = PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder(), new TexlFunctionSet<TexlFunction>());
 
             var optionSet = new OptionSet("OptionSet", DisplayNameUtility.MakeUnique(new Dictionary<string, string>()
             {

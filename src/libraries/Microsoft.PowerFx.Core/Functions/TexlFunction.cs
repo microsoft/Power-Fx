@@ -29,7 +29,7 @@ namespace Microsoft.PowerFx.Core.Functions
     using FunctionInfo = Microsoft.PowerFx.Core.Functions.TransportSchemas.FunctionInfo;
 
     [ThreadSafeImmutable]
-    internal abstract class TexlFunction : IFunction
+    internal abstract class TexlFunction : IFunction, ITexlFunction
     {
         // Column name when Features.ConsistentOneColumnTableResult is enabled.
         public const string ColumnName_ValueStr = "Value";
@@ -1358,6 +1358,11 @@ namespace Microsoft.PowerFx.Core.Functions
                     }).ToArray()
                 }).ToArray()
             };
+        }
+
+        public TexlFunction ToTexlFunctions()
+        {
+            return this;
         }
     }
 }

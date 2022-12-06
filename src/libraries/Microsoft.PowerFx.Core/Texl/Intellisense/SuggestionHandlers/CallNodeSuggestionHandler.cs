@@ -48,7 +48,7 @@ namespace Microsoft.PowerFx.Intellisense
                     // Cursor is in the head.
                     // Suggest function names.
                     // Get the matching string as a substring from the script so that the whitespace is preserved.
-                    var replacementLength = IntellisenseHelper.GetReplacementLength(intellisenseData, spanMin, spanLim, intellisenseData.Binding.NameResolver.Functions.Select(function => function.Name));
+                    var replacementLength = IntellisenseHelper.GetReplacementLength(intellisenseData, spanMin, spanLim, intellisenseData.Binding.NameResolver.Functions.Keys);
 
                     // If we are replacing the full token, also include the opening paren (since this will be provided by the suggestion)
                     if (replacementLength == spanLim - spanMin)

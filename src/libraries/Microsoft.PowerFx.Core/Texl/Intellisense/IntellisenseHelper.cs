@@ -626,7 +626,8 @@ namespace Microsoft.PowerFx.Intellisense
             // TASK: 76039: Intellisense: Update intellisense to filter suggestions based on the expected type of the text being typed in UI
             Contracts.AssertValue(intellisenseData);
 
-            foreach (var function in intellisenseData.Binding.NameResolver.Functions)
+            // $$$ Needs optimization
+            foreach (var function in intellisenseData.Binding.NameResolver.Functions.Functions)
             {
                 var qualifiedName = function.QualifiedName;
                 var highlightStart = qualifiedName.IndexOf(intellisenseData.MatchingStr, StringComparison.OrdinalIgnoreCase);
@@ -707,7 +708,8 @@ namespace Microsoft.PowerFx.Intellisense
             intellisenseData.AddCustomSuggestionsForGlobals();
 
             // Suggest function namespaces
-            var namespaces = intellisenseData.Binding.NameResolver.Functions.Select(func => func.Namespace).Distinct();
+            // $$$ Needs optimization
+            var namespaces = intellisenseData.Binding.NameResolver.Functions.Functions.Select(func => func.Namespace).Distinct();
             foreach (var funcNamespace in namespaces)
             {
                 if (funcNamespace == DPath.Root)

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Microsoft.PowerFx.Core;
+using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Texl;
@@ -61,9 +62,9 @@ namespace Microsoft.PowerFx
         /// Information about available functions.
         /// </summary>
         [Obsolete("Migrate to SymbolTables")]
-        public IEnumerable<FunctionInfo> FunctionInfos => 
-            new Engine(this).SupportedFunctions.Functions
-            .Concat(SymbolTable.Functions)
+        public IEnumerable<FunctionInfo> FunctionInfos =>
+            new Engine(this).SupportedFunctions.Functions.Functions
+            .Concat(SymbolTable.Functions.Functions)
             .Select(f => new FunctionInfo(f));
 
         /// <summary>
@@ -72,7 +73,7 @@ namespace Microsoft.PowerFx
         /// <param name="cultureInfo">Culture to use.</param>
         /// <param name="features">Features to use.</param>
         public PowerFxConfig(CultureInfo cultureInfo, Features features)
-            : this(cultureInfo, new EnumStoreBuilder().WithRequiredEnums(BuiltinFunctionsCore.BuiltinFunctionsLibrary), features)
+            : this(cultureInfo, new EnumStoreBuilder().WithRequiredEnums(BuiltinFunctionsCore._library), features)
         {
         }
 
@@ -95,22 +96,19 @@ namespace Microsoft.PowerFx
 
         internal static PowerFxConfig BuildWithEnumStore(CultureInfo cultureInfo, EnumStoreBuilder enumStoreBuilder, Features features)
         {
-            return BuildWithEnumStore(cultureInfo, enumStoreBuilder, Core.Texl.BuiltinFunctionsCore.BuiltinFunctionsLibrary, features: features);
+            return BuildWithEnumStore(cultureInfo, enumStoreBuilder, BuiltinFunctionsCore._library, features: features);
         }
 
-        internal static PowerFxConfig BuildWithEnumStore(CultureInfo cultureInfo, EnumStoreBuilder enumStoreBuilder, IEnumerable<TexlFunction> coreFunctions)
+        internal static PowerFxConfig BuildWithEnumStore(CultureInfo cultureInfo, EnumStoreBuilder enumStoreBuilder, TexlFunctionSet<TexlFunction> coreFunctions)
         {
             return BuildWithEnumStore(cultureInfo, enumStoreBuilder, coreFunctions, Features.None);
         }
 
-        internal static PowerFxConfig BuildWithEnumStore(CultureInfo cultureInfo, EnumStoreBuilder enumStoreBuilder, IEnumerable<TexlFunction> coreFunctions, Features features)
+        internal static PowerFxConfig BuildWithEnumStore(CultureInfo cultureInfo, EnumStoreBuilder enumStoreBuilder, TexlFunctionSet<TexlFunction> coreFunctions, Features features)
         {
             var config = new PowerFxConfig(cultureInfo, enumStoreBuilder, features);
 
-            foreach (var func in coreFunctions)
-            {
-                config.AddFunction(func);
-            }
+            config.AddFunctions(coreFunctions);
 
             return config;
         }
@@ -135,15 +133,12 @@ namespace Microsoft.PowerFx
 
         internal void AddFunction(TexlFunction function)
         {
-            var comparer = new TexlFunctionComparer();
-            if (!SymbolTable.Functions.Contains(function, comparer))
-            {
-                SymbolTable.AddFunction(function);
-            }
-            else
-            {
-                throw new ArgumentException($"Function {function.Name} is already part of core or extra functions");
-            }
+            SymbolTable.AddFunction(function);
+        }
+
+        internal void AddFunctions(TexlFunctionSet<TexlFunction> functionSet)
+        {
+            SymbolTable.AddFunctions(functionSet);
         }
 
         public void AddOptionSet(OptionSet optionSet, DName optionalDisplayName = default)

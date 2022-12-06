@@ -179,19 +179,21 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.NotEqual(copyCount1, symbolTableCopy1.Functions.Count());
             Assert.NotEqual(copyCount2, symbolTableCopy2.Functions.Count());
 
-            Assert.Contains(symbolTableOriginal.Functions, f => f.Name == "Abs");
-            Assert.Contains(symbolTableOriginal.Functions, f => f.Name == "Day");
-            Assert.Contains(symbolTableOriginal.Functions, f => f.Name == "Text");
-            Assert.Contains(symbolTableOriginal.Functions, f => f.Name == "Value");
-            Assert.Contains(symbolTableCopy1.Functions, f => f.Name == "Day");
-            Assert.Contains(symbolTableCopy1.Functions, f => f.Name == "Text");
-            Assert.Contains(symbolTableCopy1.Functions, f => f.Name == "Value");
-            Assert.Contains(symbolTableCopy2.Functions, f => f.Name == "Abs");
-            Assert.Contains(symbolTableCopy2.Functions, f => f.Name == "Text");
-            Assert.Contains(symbolTableCopy2.Functions, f => f.Name == "Value");
+            Assert.True(symbolTableOriginal.Functions.Any("Abs"));
+            Assert.True(symbolTableOriginal.Functions.Any("Day"));
+            Assert.True(symbolTableOriginal.Functions.Any("Text"));
+            Assert.True(symbolTableOriginal.Functions.Any("Value"));
 
-            Assert.DoesNotContain(symbolTableCopy1.Functions, f => f.Name == "Abs");
-            Assert.DoesNotContain(symbolTableCopy2.Functions, f => f.Name == "Day");
+            Assert.True(symbolTableCopy1.Functions.Any("Day"));
+            Assert.True(symbolTableCopy1.Functions.Any("Text"));
+            Assert.True(symbolTableCopy1.Functions.Any("Value"));
+
+            Assert.True(symbolTableCopy2.Functions.Any("Abs"));
+            Assert.True(symbolTableCopy2.Functions.Any("Text"));
+            Assert.True(symbolTableCopy2.Functions.Any("Value"));
+
+            Assert.False(symbolTableCopy1.Functions.Any("Abs"));
+            Assert.False(symbolTableCopy2.Functions.Any("Day"));
 
             Assert.Same(symbolTableCopy1.Parent, symbolTableOriginal.Parent);
             Assert.Same(symbolTableCopy2.Parent, symbolTableOriginal.Parent);

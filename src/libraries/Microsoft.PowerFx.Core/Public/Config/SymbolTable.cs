@@ -179,14 +179,23 @@ namespace Microsoft.PowerFx
         {
             Inc();
 
-            _functions.RemoveAll(func => func.Name == name);
+            _functions.RemoveAll(name);
         }
 
         internal void RemoveFunction(TexlFunction function)
         {
             Inc();
 
-            _functions.RemoveAll(func => func == function);
+            _functions.RemoveAll(function);
+        }
+
+        internal void AddFunctions(TexlFunctionSet<TexlFunction> functions)
+        {
+            Inc();
+            _functions.Add(functions);
+
+            // Add any associated enums 
+            EnumStoreBuilder?.WithRequiredEnums(functions);
         }
 
         internal void AddFunction(TexlFunction function)
@@ -195,7 +204,7 @@ namespace Microsoft.PowerFx
             _functions.Add(function);
 
             // Add any associated enums 
-            EnumStoreBuilder?.WithRequiredEnums(new List<TexlFunction>() { function });
+            EnumStoreBuilder?.WithRequiredEnums(new TexlFunctionSet<TexlFunction>(function));
         }
 
         internal EnumStoreBuilder EnumStoreBuilder

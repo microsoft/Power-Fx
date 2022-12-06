@@ -49,7 +49,7 @@ namespace Microsoft.PowerFx.Core.Utils
 
             if (flags.HasFlag(GetTokensFlags.AllFunctions))
             {
-                foreach (var item in binding.NameResolver.Functions)
+                foreach (var item in binding.NameResolver.Functions.Functions)
                 {
                     tokens[item.QualifiedName] = TokenResultType.Function;
                 }

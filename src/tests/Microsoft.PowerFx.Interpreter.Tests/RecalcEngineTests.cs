@@ -452,12 +452,12 @@ namespace Microsoft.PowerFx.Tests
             // Pick a function in core but not implemented in interpreter.
             var nyiFunc = BuiltinFunctionsCore.ISOWeekNum;
 
-            Assert.Contains(nyiFunc, engine1.Functions);
+            Assert.Contains(nyiFunc, engine1.Functions.Functions);
 
             // RecalcEngine will add the interpreter's functions. 
             var engine2 = new RecalcEngine();
 
-            Assert.DoesNotContain(nyiFunc, engine2.Functions);
+            Assert.DoesNotContain(nyiFunc, engine2.Functions.Functions);
 
             var names = engine2.GetAllFunctionNames().ToArray();
             Assert.True(names.Length > 100);
@@ -671,7 +671,7 @@ namespace Microsoft.PowerFx.Tests
             };
 
             var func = BuiltinFunctionsCore.AsType; // Function not already in engine
-            Assert.DoesNotContain(func, recalcEngine.Functions); // didn't get auto-added by engine.
+            Assert.DoesNotContain(func, recalcEngine.Functions.Functions); // didn't get auto-added by engine.
 
             // We can mutate config after engine is created.
             var optionSet = new OptionSet("foo", DisplayNameUtility.MakeUnique(new Dictionary<string, string>() { { "one key", "one value" } }));
@@ -679,9 +679,9 @@ namespace Microsoft.PowerFx.Tests
             config.SymbolTable.AddEntity(optionSet);
 
             Assert.True(config.TryGetSymbol(new DName("foo"), out _, out _));
-            Assert.Contains(func, recalcEngine.Functions); // function was added to the config.
+            Assert.Contains(func, recalcEngine.Functions.Functions); // function was added to the config.
 
-            Assert.DoesNotContain(BuiltinFunctionsCore.Abs, recalcEngine.Functions);
+            Assert.DoesNotContain(BuiltinFunctionsCore.Abs, recalcEngine.Functions.Functions);
         }
 
         [Fact]

@@ -20,7 +20,7 @@ namespace Microsoft.PowerFx
     /// Composition of multiple <see cref="ReadOnlySymbolTable"/> into a single table.
     /// </summary>
     internal class ComposedReadOnlySymbolTable : ReadOnlySymbolTable, INameResolver, IGlobalSymbolNameResolver, IEnumStore
-    {        
+    {
         private readonly IEnumerable<ReadOnlySymbolTable> _symbolTables;
 
         // In priority order. 
@@ -32,7 +32,7 @@ namespace Microsoft.PowerFx
         }
 
         internal override IEnumerable<ReadOnlySymbolTable> SubTables => _symbolTables;
-        
+
         internal override VersionHash VersionHash
         {
             get
@@ -60,18 +60,19 @@ namespace Microsoft.PowerFx
             return slot.Owner.GetTypeFromSlot(slot);
         }
 
+        TexlFunctionSet<TexlFunction> __functions = null;
+
         // Expose the list to aide in intellisense suggestions. 
-        IEnumerable<TexlFunction> INameResolver.Functions
+        TexlFunctionSet<TexlFunction> INameResolver.Functions
         {
             get
             {
-                foreach (INameResolver table in _symbolTables)
+                if (__functions == null)
                 {
-                    foreach (var function in table.Functions)
-                    {
-                        yield return function;
-                    }
+                    __functions = new TexlFunctionSet<TexlFunction>(_symbolTables.Select(t => t.Functions));
                 }
+
+                return __functions;
             }
         }
 
@@ -134,8 +135,9 @@ namespace Microsoft.PowerFx
             Contracts.Check(theNamespace.IsValid, "The namespace is invalid.");
             Contracts.CheckNonEmpty(name, "name");
 
+            var functionLibrary = localeInvariant ? Functions.WithInvariantName(name, theNamespace) : Functions.WithName(name, theNamespace);
+
             // See TexlFunctionsLibrary.Lookup
-            var functionLibrary = Functions.Where(func => func.Namespace == theNamespace && name == (localeInvariant ? func.LocaleInvariantName : func.Name)); // Base filter
             return functionLibrary;
         }
 
@@ -143,7 +145,8 @@ namespace Microsoft.PowerFx
         {
             Contracts.Check(nameSpace.IsValid, "The namespace is invalid.");
 
-            return Functions.Where(function => function.Namespace.Equals(nameSpace));
+            // $$$ Needs optimization
+            return Functions.Functions.Where(function => function.Namespace.Equals(nameSpace));
         }
 
         public virtual bool LookupEnumValueByInfoAndLocName(object enumInfo, DName locName, out object value)

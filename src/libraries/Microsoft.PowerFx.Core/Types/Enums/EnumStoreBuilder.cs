@@ -291,10 +291,10 @@ namespace Microsoft.PowerFx.Core.Types.Enums
         private Dictionary<string, DType> _enumTypes;
 
         #region Internal methods
-        internal EnumStoreBuilder WithRequiredEnums(IEnumerable<TexlFunction> functions)
+        internal EnumStoreBuilder WithRequiredEnums(TexlFunctionSet<TexlFunction> functions)
         {
             var missingEnums = new Dictionary<string, string>();
-            foreach (var function in functions)
+            foreach (var function in functions.Functions)
             {
                 var requiredEnumNames = function.GetRequiredEnumNames();
                 foreach (var name in requiredEnumNames)
