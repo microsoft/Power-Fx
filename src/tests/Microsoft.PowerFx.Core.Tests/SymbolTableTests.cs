@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
@@ -149,6 +150,42 @@ namespace Microsoft.PowerFx.Core.Tests
             s2.AddVariable("x", FormulaType.Boolean); // hides s1.
             result = _engine.Check("x", symbolTable: s21);
             Assert.Equal(FormulaType.Boolean, result.ReturnType);
+        }
+
+        [Fact]
+        public void Compose()
+        {
+            var func1 = new PowerFx.Tests.BindingEngineTests.BehaviorFunction();
+            var func2 = new PowerFx.Tests.BindingEngineTests.BehaviorFunction();
+
+            Assert.Equal(func1.Name, func2.Name); // same name, difference instances
+            Assert.NotSame(func1, func2);
+
+            var s1 = new SymbolTable { DebugName = "Sym1" };
+            var s2 = new SymbolTable { DebugName = "Sym2" };
+
+            var s12 = ReadOnlySymbolTable.Compose(s1, s2);
+
+            Assert.Equal(0, s12.Functions.Count());
+            
+            s2.AddFunction(func2);
+            var funcs = s12.Functions.ToArray();
+            Assert.Equal(1, funcs.Length);
+            Assert.Same(func2, funcs[0]);
+
+            // Superceded 
+            s1.AddFunction(func1);
+            funcs = s12.Functions.ToArray(); // Query again
+            Assert.Equal(2, funcs.Length); // both even though they have same name
+
+            // Enumerable is ordered. Takes s1 since that's higher precedence. 
+            Assert.Same(func1, funcs[0]);
+            
+            // Returns all combined. 
+            INameResolver nr = s12;
+            var list = nr.LookupFunctions(func1.Namespace, func1.Name).ToArray();
+            Assert.Equal(2, list.Length); // both even though they have same name
+            Assert.Same(func1, list[0]);
         }
 
         [Fact]
