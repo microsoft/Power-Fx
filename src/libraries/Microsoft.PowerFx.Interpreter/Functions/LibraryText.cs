@@ -102,6 +102,11 @@ namespace Microsoft.PowerFx.Functions
                 return n;
             }
 
+            if (arg0 is BooleanValue b)
+            {
+                return BooleanToNumber(irContext, new BooleanValue[] { b });
+            }
+
             if (arg0 is DateValue dv)
             {
                 return DateToNumber(irContext, new DateValue[] { dv });

@@ -48,7 +48,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             var isValid = true;
             var argType = argTypes[0];
-            if (!DType.Number.Accepts(argType) && !DType.String.Accepts(argType))
+            if (!DType.Number.Accepts(argType) && !DType.String.Accepts(argType) && !DType.Boolean.Accepts(argType))
             {
                 if (argType.CoercesTo(DType.DateTime) && !argType.IsControl)
                 {
