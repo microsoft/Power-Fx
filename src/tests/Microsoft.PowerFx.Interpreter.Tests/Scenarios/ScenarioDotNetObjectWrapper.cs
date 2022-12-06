@@ -48,7 +48,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("Index(array, 0)", "#error")] // Out of bounds, low
         [InlineData("Index(array, -1)", "#error")] // Out of bounds, low
         [InlineData("Index(array, 100)", "#error")] // Out of bounds, high
-        [InlineData("Text(obj.Value)", "#error")] // cast error. 
+        [InlineData("Text(obj.Value)", "10")] // cast error. 
         public void Test(string expr, object expected)
         {
             var engine = new RecalcEngine();
