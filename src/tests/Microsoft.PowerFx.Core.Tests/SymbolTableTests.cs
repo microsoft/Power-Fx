@@ -158,7 +158,7 @@ namespace Microsoft.PowerFx.Core.Tests
             var func1 = new PowerFx.Tests.BindingEngineTests.BehaviorFunction();
             var func2 = new PowerFx.Tests.BindingEngineTests.BehaviorFunction();
 
-            Assert.Equal(func1.Name, func2.Name); // same name, difference instances
+            Assert.Equal(func1.Name, func2.Name); // same name, different instances
             Assert.NotSame(func1, func2);
 
             var s1 = new SymbolTable { DebugName = "Sym1" };
