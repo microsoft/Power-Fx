@@ -1363,6 +1363,6 @@ namespace Microsoft.PowerFx.Core.Functions
         public TexlFunction ToTexlFunctions()
         {
             return this;
-        }
+        }      
     }
 }

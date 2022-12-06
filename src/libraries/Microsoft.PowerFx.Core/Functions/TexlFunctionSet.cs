@@ -104,9 +104,12 @@ namespace Microsoft.PowerFx.Core.Functions
             var fList = WithName(function.Name);
 
             if (fList.Any())
-            {
-                // Need to check duplicate function
-                // throw new ArgumentException($"Function {function.Name} is already part of core or extra functions");
+            {                
+                if (fList.Contains(function))
+                {
+                    throw new ArgumentException($"Function {function.Name} is already part of core or extra functions");
+                }
+
                 fList.Add(function);
             }
             else

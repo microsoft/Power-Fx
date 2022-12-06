@@ -31,7 +31,7 @@ namespace Microsoft.PowerFx.Performance.Tests
         [Benchmark]
         public CheckResult Check()
         {
-            var expr = "Power(x.y,3) <  100 ";
+            var expr = "Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1)";
             var check = engine.Check(expr, symbolTable: symbolTable);
             return check;
         }

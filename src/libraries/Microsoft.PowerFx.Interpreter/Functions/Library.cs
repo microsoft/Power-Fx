@@ -36,7 +36,7 @@ namespace Microsoft.PowerFx.Functions
         public static IEnumerable<TexlFunction> FunctionList => FunctionImplementations.Keys;
 
         public static readonly IReadOnlyDictionary<TexlFunction, AsyncFunctionPtr> FunctionImplementations;
-
+        
         internal static readonly TexlFunctionSet<TexlFunctionImplementation> TexlFunctionImplementations = new TexlFunctionSet<TexlFunctionImplementation>();
 
         static Library()
