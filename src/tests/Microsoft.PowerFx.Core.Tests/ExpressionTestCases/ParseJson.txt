@@ -75,6 +75,15 @@ true
 >> Boolean(ParseJSON("""false"""))
 false
 
+>> Boolean(ParseJSON("""tRuE"""))
+true
+
+>> Boolean(ParseJSON("""fAlSe"""))
+false
+
+>> Boolean(ParseJSON("""F"""))
+Error({Kind:ErrorKind.InvalidArgument})
+
 >> Boolean(ParseJSON("1"))
 true
 

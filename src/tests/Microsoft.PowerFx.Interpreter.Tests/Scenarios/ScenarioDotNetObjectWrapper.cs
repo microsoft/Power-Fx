@@ -37,6 +37,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
         [Theory]
         [InlineData("Value(obj.Next.Value)", 20.0)]
+        [InlineData("Text(obj.Value)", "10")]
         [InlineData("obj.missing", null)] // missing fields are blank
         [InlineData("IsBlank(obj.Next.Next)", true)]
         [InlineData("IsBlank(obj.Next)", false)]
@@ -48,7 +49,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("Index(array, 0)", "#error")] // Out of bounds, low
         [InlineData("Index(array, -1)", "#error")] // Out of bounds, low
         [InlineData("Index(array, 100)", "#error")] // Out of bounds, high
-        [InlineData("Text(obj.Value)", "10")] // cast error. 
         public void Test(string expr, object expected)
         {
             var engine = new RecalcEngine();
