@@ -15,7 +15,7 @@ namespace Microsoft.PowerFx.Performance.Tests.UnitTests
 
             for (var i = 0; i < 10000; i++)
             {
-                var cr = pt.Check();
+                var cr = pt.Check20();
                 Assert.True(cr.IsSuccess);
             }
         }

@@ -29,9 +29,46 @@ namespace Microsoft.PowerFx.Performance.Tests
         }
 
         [Benchmark]
-        public CheckResult Check()
+        public CheckResult Check1()
+        {
+            var expr = "Sum(1)";
+
+            var check = engine.Check(expr, symbolTable: symbolTable);
+            return check;
+        }
+
+        [Benchmark]
+        public CheckResult Check2()
+        {
+            var expr = "Sum(1) + Sum(1)";
+
+            var check = engine.Check(expr, symbolTable: symbolTable);
+            return check;
+        }
+
+        [Benchmark]
+        public CheckResult Check5()
+        {
+            var expr = "Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1)";
+
+            var check = engine.Check(expr, symbolTable: symbolTable);
+            return check;
+        }
+
+        [Benchmark]
+        public CheckResult Check20()
         {
             var expr = "Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1)";
+
+            var check = engine.Check(expr, symbolTable: symbolTable);
+            return check;
+        }
+
+        [Benchmark]
+        public CheckResult Check50()
+        {
+            var expr = "Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1)";
+
             var check = engine.Check(expr, symbolTable: symbolTable);
             return check;
         }
