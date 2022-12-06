@@ -4951,11 +4951,13 @@ namespace Microsoft.PowerFx.Core.Binding
                 for (scope = _currentScope; scope != null; scope = scope.Parent)
                 {
                     Contracts.AssertValue(scope);
+                    if (scope.SkipForInlineRecords)
+                        continue;
 
                     // If scope type is a data source, the node may be a display name instead of logical.
                     // Attempt to get the logical name to use for type checking
-                    if (!scope.SkipForInlineRecords && (DType.TryGetConvertedDisplayNameAndLogicalNameForColumn(scope.Type, name.Value, out var maybeLogicalName, out var tmp) ||
-                        DType.TryGetLogicalNameForColumn(scope.Type, name.Value, out maybeLogicalName)))
+                    if (DType.TryGetConvertedDisplayNameAndLogicalNameForColumn(scope.Type, name.Value, out var maybeLogicalName, out var tmp) ||
+                        DType.TryGetLogicalNameForColumn(scope.Type, name.Value, out maybeLogicalName))
                     {
                         if (scope.Type.TryGetType(new DName(maybeLogicalName), out var tmpType))
                         {
