@@ -28,5 +28,10 @@ namespace Microsoft.PowerFx
         /// Filter(A, A[@Value] = 2)
         /// </summary>
         DisableRowScopeDisambiguationSyntax = 0x4,
+
+        /// <summary>
+        /// All features enabled
+        /// </summary>
+        All = ~0
     }
 }

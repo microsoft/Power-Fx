@@ -15,7 +15,7 @@
   <PropertyGroup>
     <DebugType>Full</DebugType>
     <DebugSymbols>true</DebugSymbols>
-    <LangVersion>latest</LangVersion>
+    <LangVersion>9.0</LangVersion>
   </PropertyGroup>
 
   <!-- <PropertyGroup>
@@ -58,11 +58,15 @@
     <Product>Microsoft Bot Builder SDK</Product>
     <Copyright>© Microsoft Corporation. All rights reserved.</Copyright>
   </PropertyGroup>
-
-  <PropertyGroup>
-    <AssemblyOriginatorKeyFile>$(SolutionDir)\build\35MSSharedLib1024.snk</AssemblyOriginatorKeyFile>
+  
+  <PropertyGroup Condition="'$(Project)'!='Microsoft.PowerFx.Performance.Tests'">
+    <AssemblyOriginatorKeyFile Condition="EXISTS('..\..\..\src\build\35MSSharedLib1024.snk')">..\..\..\src\build\35MSSharedLib1024.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>
     <DelaySign>true</DelaySign>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)'!='DEBUG'">
+    <Optimize>True</Optimize>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TF_BUILD)' != '' ">
