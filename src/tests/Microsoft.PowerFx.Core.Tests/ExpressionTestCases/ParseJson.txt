@@ -17,6 +17,9 @@
 >> Value(ParseJSON("""5"""))
 5
 
+>> Value(ParseJSON("""123,456"""))
+123456
+
 >> Value(ParseJSON("""a"""))
 Error({Kind:ErrorKind.InvalidArgument})
 
