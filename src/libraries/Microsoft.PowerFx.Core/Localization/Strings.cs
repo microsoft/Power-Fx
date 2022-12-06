@@ -550,6 +550,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrColumnTypeMismatch_ColName_ExpectedType_ActualType = new ErrorResourceKey("ErrColumnTypeMismatch_ColName_ExpectedType_ActualType");
         public static ErrorResourceKey ErrColumnMissing_ColName_ExpectedType = new ErrorResourceKey("ErrColumnMissing_ColName_ExpectedType");
         public static ErrorResourceKey ErrTableDoesNotAcceptThisType = new ErrorResourceKey("ErrTableDoesNotAcceptThisType");
+        public static ErrorResourceKey ErrRecordDoesNotAcceptThisType = new ErrorResourceKey("ErrRecordDoesNotAcceptThisType");
         public static ErrorResourceKey ErrTypeError = new ErrorResourceKey("ErrTypeError");
         public static ErrorResourceKey ErrTypeError_Ex1_Ex2_Found = new ErrorResourceKey("ErrTypeError_Ex1_Ex2_Found");
         public static ErrorResourceKey ErrTypeError_Arg_Expected_Found = new ErrorResourceKey("ErrTypeError_Arg_Expected_Found");
@@ -583,6 +584,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey WarnColumnNameSpecifiedMultipleTimes_Name = new ErrorResourceKey("WarnColumnNameSpecifiedMultipleTimes_Name");
         public static ErrorResourceKey WarnLiteralPredicate = new ErrorResourceKey("WarnLiteralPredicate");
         public static ErrorResourceKey WarnDynamicMetadata = new ErrorResourceKey("WarnDynamicMetadata");
+        public static ErrorResourceKey WarnDeferredType = new ErrorResourceKey("WarnDeferredType");
 
         public static StringGetter InfoMessage = (b) => StringResources.Get("InfoMessage", b);
         public static StringGetter InfoNode_Node = (b) => StringResources.Get("InfoNode_Node", b);

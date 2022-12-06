@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using Microsoft.PowerFx.Core.Binding;
@@ -45,7 +46,27 @@ namespace Microsoft.PowerFx
             // These take precedence and are all added first. 
             foreach (var symValues in existing)
             {
-                symValues.AddSymbolMap(map);
+                if (symValues is ComposedReadOnlySymbolValues composed)
+                {
+                    foreach (var kv in composed._map)
+                    {
+                        // quick Integrity checks - these should never fail. 
+                        if (!Object.ReferenceEquals(kv.Key, kv.Value.SymbolTable))
+                        {
+                            throw new InvalidOperationException($"Table doesn't match");
+                        }
+                        if (kv.Value is ComposedReadOnlySymbolValues)
+                        {
+                            throw new InvalidOperationException($"ComposedSymbolValues should have been flattened ");
+                        }
+                        
+                        Add(map, kv.Value);
+                    }
+                }
+                else
+                {
+                    Add(map, symValues);
+                }                
             }
             
             CreateValues(map, symbolTable);
@@ -58,6 +79,23 @@ namespace Microsoft.PowerFx
             }
 
             return new ComposedReadOnlySymbolValues(symbolTable, map, existing);
+        }
+
+        private static void Add(Dictionary<ReadOnlySymbolTable, ReadOnlySymbolValues> map, ReadOnlySymbolValues symValues)
+        {
+            var symTable = symValues.SymbolTable;
+            try
+            {
+                map.Add(symTable, symValues);
+            }
+            catch
+            {
+                // Give better error.
+                if (map.TryGetValue(symTable, out var existingSymValues))
+                {
+                    throw new InvalidOperationException($"SymbolTable {symTable.DebugName()} already has SymbolValues '{existingSymValues.DebugName}' associated with it. Can't add '{symValues.DebugName}'");
+                }
+            }
         }
 
         // Walk the symbolTable tree and for each node, create the corresponding symbol values. 
@@ -82,7 +120,9 @@ namespace Microsoft.PowerFx
                     CreateValues(map, inner);
                 }
 
+#pragma warning disable CS0618 // Type or member is obsolete
                 CreateValues(map, symbolTable.Parent);
+#pragma warning restore CS0618 // Type or member is obsolete
                 return;
             }
             else if (symbolTable is SymbolTableOverRecordType)
@@ -98,21 +138,15 @@ namespace Microsoft.PowerFx
                     DebugName = symbolTable2.DebugName
                 };
 
+#pragma warning disable CS0618 // Type or member is obsolete
                 CreateValues(map, symbolTable.Parent);
+#pragma warning restore CS0618 // Type or member is obsolete
                 map[symbolTable] = symValues;
                 return;
             }
             else
             {
                 throw new NotImplementedException($"Unhandled symbol table kind: {symbolTable.DebugName} of type {symbolTable.GetType().FullName} ");
-            }
-        }
-
-        internal override void AddSymbolMap(IDictionary<ReadOnlySymbolTable, ReadOnlySymbolValues> map)
-        {
-            foreach (var kv in _map)
-            {
-                map[kv.Key] = kv.Value;
             }
         }
 

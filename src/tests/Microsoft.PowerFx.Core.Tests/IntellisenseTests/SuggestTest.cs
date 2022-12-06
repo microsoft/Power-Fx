@@ -115,7 +115,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
 
         // CallNodeSuggestionHandler
         [InlineData("ForAll|([1],Value)", "ForAll")]
-        [InlineData("at|(", "Atan", "Atan2", "Concat", "Concatenate", "Date", "DateAdd", "DateDiff", "DateTimeValue", "DateValue")]
+        [InlineData("at|(", "Atan", "Atan2", "Concat", "Concatenate", "Date", "DateAdd", "DateDiff", "DateTime", "DateTimeValue", "DateValue")]
         [InlineData("Atan |(")]
         [InlineData("Clock.A|(", "Clock.AmPm", "Clock.AmPmShort")]
         [InlineData("ForAll([\"test\"],EndsWith(|))", "Value")]
@@ -237,7 +237,9 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         {
             config.SymbolTable = new SymbolTable 
             {
+#pragma warning disable CS0618 // Type or member is obsolete
                 Parent = config.SymbolTable,
+#pragma warning restore CS0618 // Type or member is obsolete
                 DebugName = "Extra Table"
             };
         }

@@ -6222,6 +6222,10 @@
     <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     <comment>{Locked}</comment>
   </data>
+  <data name="ErrorResource_ErrRecordDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
+    <value>Incompatible type. The item you are trying to put into a record has a type that is not compatible with the record.</value>
+    <comment>Error Message.</comment>
+  </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
     <value>Incompatible type. The item you are trying to put into a table has a type that is not compatible with the table.</value>
     <comment>Error Message.</comment>
@@ -6614,6 +6618,10 @@
   <data name="ErrDeprecated" xml:space="preserve">
     <value>This feature is deprecated and is no longer supported.</value>
     <comment>An error message for deprecated features.</comment>
+  </data>
+  <data name="WarnDeferredType" xml:space="preserve">
+    <value>Warning: Deferred type provided.</value>
+    <comment>Warning given when the input has deferred Type. Deferred type is unknown type at compile time and correct type will be supplied by user before evaluation.</comment>
   </data>
   <data name="ErrExpectedIdentifierArg_Name" xml:space="preserve">
     <value>Expected identifier name</value>

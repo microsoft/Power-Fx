@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Web;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Localization;
@@ -78,6 +80,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         private const int ServerErrorEnd = -32000;
         private const int ServerNotInitialized = -32002;
         private const int UnknownErrorCode = -32001;
+        private const int PropertyValueRequired = -32604;
 
         [Fact]
         public void TestTopParseError()
@@ -557,18 +560,59 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Equal(InvalidParams, errorResponse.Error.Code);
         }
 
+        class DummyQuickFixHandler : CodeFixHandler
+        {
+            public override async Task<IEnumerable<CodeFixSuggestion>> SuggestFixesAsync(Engine engine, CheckResult checkResult, CancellationToken cancel)
+            {
+                return new CodeFixSuggestion[]
+                {
+                    new CodeFixSuggestion
+                    {
+                        SuggestedText = "TestText1",
+                        Title = "TestTitle1"
+                    }
+                };
+            }
+        }
+
+        // Failure from one handler shouldn't block others. 
+        public class ExceptionQuickFixHandler : CodeFixHandler
+        {
+            public int _counter = 0;
+
+            public override async Task<IEnumerable<CodeFixSuggestion>> SuggestFixesAsync(Engine engine, CheckResult checkResult, CancellationToken cancel)
+            {
+                _counter++;
+                throw new Exception($"expected failure");
+            }
+        }
+
         [Fact]
         public void TestCodeAction()
         {
-            var scopeFactory = new TestPowerFxScopeFactory((string documentUri) => new MockSqlEngine());
+            var failHandler = new ExceptionQuickFixHandler();
+            var engine = new Engine(new PowerFxConfig());
+            var editor = engine.CreateEditorScope();
+            editor.AddQuickFixHandler(new DummyQuickFixHandler());
+            editor.AddQuickFixHandler(failHandler);
+
+            var scopeFactory = new TestPowerFxScopeFactory((string documentUri) => editor);
             var testServer = new TestLanguageServer(_sendToClientData.Add, scopeFactory);
+            
+            var errorList = new List<Exception>();
+
+            testServer.LogUnhandledExceptionHandler += (ex) =>
+            {
+                errorList.Add(ex);
+            };
+
             var documentUri = "powerfx://test?expression=IsBlank(&context={\"A\":1,\"B\":[1,2,3]}";
 
             testServer.OnDataReceived(JsonSerializer.Serialize(new
             {
                 jsonrpc = "2.0",
                 id = "testDocument1",
-                method = "textDocument/codeAction",
+                method = TextDocumentNames.CodeAction,
                 @params = new CodeActionParams()
                 {
                     TextDocument = new TextDocumentIdentifier()
@@ -602,6 +646,10 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.NotEmpty(response.Result[CodeActionKind.QuickFix][0].Edit.Changes);
             Assert.Contains(documentUri, response.Result[CodeActionKind.QuickFix][0].Edit.Changes.Keys);
             Assert.Equal("TestText1", response.Result[CodeActionKind.QuickFix][0].Edit.Changes[documentUri][0].NewText);
+
+            // Fail handler was invokde, but didn't block us. 
+            Assert.Equal(1, failHandler._counter); // Invoked
+            Assert.Equal(1, errorList.Count);
         }
 
         // Test a codefix using a customization, ICodeFixHandler
@@ -629,7 +677,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             {
                 jsonrpc = "2.0",
                 id = "testDocument1",
-                method = "textDocument/codeAction",
+                method = TextDocumentNames.CodeAction,
                 @params = new CodeActionParams()
                 {
                     TextDocument = new TextDocumentIdentifier()
@@ -665,6 +713,137 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Contains(documentUri, response.Result[CodeActionKind.QuickFix][0].Edit.Changes.Keys);
 
             Assert.Equal(updated, response.Result[CodeActionKind.QuickFix][0].Edit.Changes[documentUri][0].NewText);
+        }
+
+        [Fact]
+        public void TestCodeActionCommandExecuted()
+        {
+            var engine = new RecalcEngine();
+
+            var scopeFactory = new TestPowerFxScopeFactory((string documentUri) =>
+            {
+                var scope = engine.CreateEditorScope();
+                scope.AddQuickFixHandler(new BlankHandler());
+                return scope;
+            });
+
+            var testServer = new TestLanguageServer(_sendToClientData.Add, scopeFactory);
+            var documentUri = "powerfx://test?expression=Blank(A)&context={\"A\":1,\"B\":[1,2,3]}";
+
+            testServer.OnDataReceived(JsonSerializer.Serialize(new
+            {
+                jsonrpc = "2.0",
+                id = "testDocument1",
+                method = TextDocumentNames.CodeAction,
+                @params = new CodeActionParams()
+                {
+                    TextDocument = new TextDocumentIdentifier()
+                    {
+                        Uri = documentUri
+                    },
+                    Range = new LanguageServerProtocol.Protocol.Range()
+                    {
+                        Start = new Position
+                        {
+                            Line = 0,
+                            Character = 0
+                        },
+                        End = new Position
+                        {
+                            Line = 0,
+                            Character = 10
+                        }
+                    },
+                    Context = new CodeActionContext() { Only = new[] { CodeActionKind.QuickFix } }
+                }
+            }));
+
+            Assert.Single(_sendToClientData);
+            var response = JsonSerializer.Deserialize<JsonRpcCodeActionResponse>(_sendToClientData[0], _jsonSerializerOptions);
+            Assert.Equal("2.0", response.Jsonrpc);
+            Assert.Equal("testDocument1", response.Id);
+            Assert.NotEmpty(response.Result);
+
+            var codeActionResult = response.Result[CodeActionKind.QuickFix][0];
+
+            Assert.NotNull(codeActionResult);
+            Assert.NotNull(codeActionResult.ActionResultContext);
+            Assert.Equal(typeof(BlankHandler).FullName, codeActionResult.ActionResultContext.HandlerName);
+            Assert.Equal("Suggestion", codeActionResult.ActionResultContext.ActionIdentifier);
+
+            _sendToClientData.Clear();
+
+            var testServer1 = new TestLanguageServer(_sendToClientData.Add, scopeFactory);
+
+            testServer1.OnDataReceived(JsonSerializer.Serialize(new
+            {
+                jsonrpc = "2.0",
+                id = "testDocument1",
+                method = CustomProtocolNames.CommandExecuted,
+                @params = new CommandExecutedParams()
+                {
+                    TextDocument = new TextDocumentIdentifier()
+                    {
+                        Uri = documentUri
+                    },
+                    Command = CommandName.CodeActionApplied,
+                    Argument = JsonRpcHelper.Serialize(codeActionResult)
+                }
+            }));
+
+            Assert.Empty(_sendToClientData);
+
+            _sendToClientData.Clear();
+
+            testServer1 = new TestLanguageServer(_sendToClientData.Add, scopeFactory);
+
+            testServer1.OnDataReceived(JsonSerializer.Serialize(new
+            {
+                jsonrpc = "2.0",
+                id = "testDocument1",
+                method = CustomProtocolNames.CommandExecuted,
+                @params = new CommandExecutedParams()
+                {
+                    TextDocument = new TextDocumentIdentifier()
+                    {
+                        Uri = documentUri
+                    },
+                    Command = CommandName.CodeActionApplied,
+                    Argument = ""
+                }
+            }));
+
+            Assert.Single(_sendToClientData);
+            var errorResponse = JsonSerializer.Deserialize<JsonRpcErrorResponse>(_sendToClientData[0], _jsonSerializerOptions);
+            Assert.Equal("2.0", errorResponse.Jsonrpc);
+            Assert.Equal("testDocument1", errorResponse.Id);
+            Assert.Equal(PropertyValueRequired, errorResponse.Error.Code);
+
+            _sendToClientData.Clear();
+
+            testServer1 = new TestLanguageServer(_sendToClientData.Add, scopeFactory);
+            codeActionResult.ActionResultContext = null;
+            testServer1.OnDataReceived(JsonSerializer.Serialize(new
+            {
+                jsonrpc = "2.0",
+                id = "testDocument1",
+                method = CustomProtocolNames.CommandExecuted,
+                @params = new CommandExecutedParams()
+                {
+                    TextDocument = new TextDocumentIdentifier()
+                    {
+                        Uri = documentUri
+                    },
+                    Command = CommandName.CodeActionApplied,
+                    Argument = JsonRpcHelper.Serialize(codeActionResult)
+                }
+            }));
+
+            Assert.Single(_sendToClientData);
+            errorResponse = JsonSerializer.Deserialize<JsonRpcErrorResponse>(_sendToClientData[0], _jsonSerializerOptions);
+            Assert.Equal("2.0", errorResponse.Jsonrpc);
+            Assert.Equal("testDocument1", errorResponse.Id);
+            Assert.Equal(PropertyValueRequired, errorResponse.Error.Code);
         }
 
         [Theory]

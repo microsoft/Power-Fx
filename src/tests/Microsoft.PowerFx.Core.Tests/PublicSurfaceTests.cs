@@ -138,6 +138,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Types.TimeType",
                 "Microsoft.PowerFx.Types.TimeValue",
                 "Microsoft.PowerFx.Types.UnknownType",
+                "Microsoft.PowerFx.Types.DeferredType",
                 "Microsoft.PowerFx.Types.UnsupportedType",
                 "Microsoft.PowerFx.Types.UntypedObjectType",
                 "Microsoft.PowerFx.Types.UntypedObjectValue",
@@ -156,6 +157,8 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Intellisense.SuggestionKind",
                 "Microsoft.PowerFx.Intellisense.TokenResultType",
                 "Microsoft.PowerFx.Intellisense.UIString",
+                "Microsoft.PowerFx.Intellisense.CodeFixHandler",
+                "Microsoft.PowerFx.Intellisense.CodeFixSuggestion",
 
                 // TBD ...
                 "Microsoft.PowerFx.Core.DisplayNameProvider",

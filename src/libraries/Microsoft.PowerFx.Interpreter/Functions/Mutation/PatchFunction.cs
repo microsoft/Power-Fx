@@ -192,13 +192,14 @@ namespace Microsoft.PowerFx.Functions
             var isValid = base.CheckTypes(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
 
             DType dataSourceType = argTypes[0];
-            DType retType = dataSourceType.IsError ? DType.EmptyRecord : dataSourceType.ToRecord();
 
             if (!dataSourceType.IsTable)
             {
                 errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrNeedValidVariableName_Arg, Name);
-                isValid = false;
+                return false;
             }
+
+            DType retType = dataSourceType.IsError ? DType.EmptyRecord : dataSourceType.ToRecord();
 
             foreach (var assocDS in dataSourceType.AssociatedDataSources)
             {

@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.LanguageServerProtocol
@@ -87,6 +88,11 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             public void Visit(UnknownType type)
             {
                 Result = new FormulaTypeSchema() { Type = FormulaTypeSchema.ParamType.Unknown };
+            }
+
+            public void Visit(DeferredType type)
+            {
+                Result = new FormulaTypeSchema() { Type = FormulaTypeSchema.ParamType.Deferred };
             }
 
             public void Visit(BindingErrorType type)

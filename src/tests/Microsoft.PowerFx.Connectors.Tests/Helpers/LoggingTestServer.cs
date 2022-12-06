@@ -51,6 +51,12 @@ namespace Microsoft.PowerFx.Tests
             _nextResponse = response;
         }
 
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+            _nextResponse?.Dispose();
+        }
+
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             var method = request.Method;
