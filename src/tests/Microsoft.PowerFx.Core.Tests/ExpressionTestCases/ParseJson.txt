@@ -20,6 +20,9 @@
 >> Value(ParseJSON("""123,456"""))
 123456
 
+>> Value(ParseJSON("""123,456"""), "fr-FR")
+123.456
+
 >> Value(ParseJSON("""a"""))
 Error({Kind:ErrorKind.InvalidArgument})
 

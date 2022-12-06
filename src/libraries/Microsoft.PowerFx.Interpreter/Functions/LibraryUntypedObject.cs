@@ -52,13 +52,18 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
-        public static FormulaValue Value_UO(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, UntypedObjectValue[] args)
+        public static FormulaValue Value_UO(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            var impl = args[0].Impl;
+            var uo = args[0] as UntypedObjectValue;
+            var impl = uo.Impl;
 
             if (impl.Type == FormulaType.String)
             {
                 var str = new StringValue(IRContext.NotInSource(FormulaType.String), impl.GetString());
+                if (args.Length > 1)
+                {
+                    return Value(runner, context, irContext, new FormulaValue[] { str, args[1] });
+                }
                 return Value(runner, context, irContext, new FormulaValue[] { str });
             }
             else if (impl.Type == FormulaType.Number)
