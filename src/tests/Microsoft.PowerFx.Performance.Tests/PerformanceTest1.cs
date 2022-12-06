@@ -19,10 +19,6 @@ namespace Microsoft.PowerFx.Performance.Tests
         private ISymbolSlot slot;
         private Engine engine;
 
-        public PerformanceTest1()
-        {
-        }
-
         [GlobalSetup]
         public void GlobalSetup()
         {

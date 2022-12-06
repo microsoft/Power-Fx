@@ -1,18 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
-using BenchmarkDotNet.Attributes;
-using BenchmarkDotNet.Columns;
-using BenchmarkDotNet.Configs;
-using BenchmarkDotNet.Diagnosers;
-using BenchmarkDotNet.Diagnostics.Windows;
-using BenchmarkDotNet.Exporters;
-using BenchmarkDotNet.Filters;
-using BenchmarkDotNet.Jobs;
-using BenchmarkDotNet.Loggers;
 using BenchmarkDotNet.Running;
-using BenchmarkDotNet.Toolchains.InProcess;
 
 namespace Microsoft.PowerFx.Performance.Tests
 {
@@ -29,7 +18,6 @@ namespace Microsoft.PowerFx.Performance.Tests
              * 
              * 
              */
-
 
             var summary = BenchmarkRunner.Run<PerformanceTest1>();
         }
