@@ -197,13 +197,7 @@ namespace Microsoft.PowerFx
             return s;
         }
 
-        // https://github.com/microsoft/Power-Fx/issues/779
-        // _environmentSymbols have the display name support (they update the _environmentSymbolDisplayNameProvider)
-        // Merge _variables with _environmentSymbols to provide display name support for variables.. 
-        // Both ultimately serve in INameResolver.Lookup 
         internal readonly Dictionary<string, NameLookupInfo> _variables = new Dictionary<string, NameLookupInfo>();
-
-        internal readonly Dictionary<DName, IExternalEntity> _environmentSymbols = new Dictionary<DName, IExternalEntity>();
 
         internal DisplayNameProvider _environmentSymbolDisplayNameProvider = new SingleSourceDisplayNameProvider();
 

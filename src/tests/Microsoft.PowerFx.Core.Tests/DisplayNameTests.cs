@@ -116,10 +116,18 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             // Adds display name for a variable.
             symbol.AddVariable("logicalVariable", FormulaType.Number, displayName: "displayVariable");
+            symbol.AddVariable("logicalVariable2", FormulaType.Number, displayName: "displayVariable2");
 
             // should throw if try to add same name constant
             Assert.Throws<NameCollisionException>(() => symbol.AddConstant("logicalVariable", FormulaValue.New(1)));
             Assert.Throws<NameCollisionException>(() => symbol.AddConstant("displayVariable", FormulaValue.New(1)));
+
+            // should be able to remove variable using display name
+            Assert.Throws<NameCollisionException>(() => symbol.AddConstant("logicalVariable2", FormulaValue.New(1)));
+            Assert.Throws<NameCollisionException>(() => symbol.AddConstant("displayVariable2", FormulaValue.New(1)));
+            symbol.RemoveVariable("displayVariable2");
+            symbol.AddConstant("logicalVariable2", FormulaValue.New(1));
+            symbol.AddConstant("displayVariable2", FormulaValue.New(1));
 
             var config = new PowerFxConfig() { SymbolTable = symbol };
 
@@ -152,6 +160,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             // logicalVariable is logical name for variable logicalVariable
             Assert.Throws<NameCollisionException>(() => config.AddEntity(optionSet3, new DName("logicalVariable")));
+
+            // Remove variable and remove from display name as well.
+            symbol.RemoveVariable("logicalVariable");
+
+            // Now below should not throw an exception.
+            config.AddEntity(optionSet3, new DName("displayVariable"));
         }
 
         [Fact]

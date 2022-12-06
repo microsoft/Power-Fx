@@ -77,10 +77,10 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
         [Theory]
-        [InlineData("displayVariable + 1", "logicalVariable + 1", 2)]
-        [InlineData("logicalVariable + 1", "logicalVariable + 1", 2)]
-        [InlineData("If(true, logicalVariable)", "If(true, logicalVariable)", 1)]
-        public async void TopLevelVariableDisplayName(string expression, string expectedInvariantExpression, double expected)
+        [InlineData("displayVariable + 1", "logicalVariable + 1", "displayVariable + 1", 2)]
+        [InlineData("logicalVariable + 1", "logicalVariable + 1", "displayVariable + 1", 2)]
+        [InlineData("If(true, logicalVariable)", "If(true, logicalVariable)", "If(true, displayVariable)", 1)]
+        public async void TopLevelVariableDisplayName(string expression, string expectedInvariantExpression,string expectedDisplayExpression, double expected)
         {
             var symbol = new SymbolTable();
 
@@ -101,6 +101,10 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var actualInvariantExpression = engine.GetInvariantExpression(expression, null);
             Assert.Equal(expectedInvariantExpression, actualInvariantExpression);
+
+            var actualDisplayExpression = engine.GetDisplayExpression(expression, RecordType.Empty());
+            Assert.Equal(expectedDisplayExpression, actualDisplayExpression);
+
         }
 
         // Bind a function, eval it separately.

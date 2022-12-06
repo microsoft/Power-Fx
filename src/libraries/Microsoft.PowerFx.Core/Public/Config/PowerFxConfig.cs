@@ -126,7 +126,10 @@ namespace Microsoft.PowerFx
             }
         }
 
-        internal IEnumerable<NameLookupInfo> GetSymbols() => SymbolTable._variables.Values;
+        internal bool GetSymbols(string name, out NameLookupInfo symbol) => SymbolTable._variables.TryGetValue(name, out symbol);
+
+        internal IEnumerable<string> GetSuggestableSymbolName() => SymbolTable._variables.Keys;
+
 
         internal void AddEntity(IExternalEntity entity, DName displayName = default)
             => SymbolTable.AddEntity(entity, displayName);

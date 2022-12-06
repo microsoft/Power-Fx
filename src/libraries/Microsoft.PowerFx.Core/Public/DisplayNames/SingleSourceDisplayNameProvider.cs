@@ -78,7 +78,12 @@ namespace Microsoft.PowerFx.Core
             return _logicalToDisplay.TryGetValue(logicalName, out displayName);
         }
 
-        public DisplayNameProvider RemoveField(DName lookupName)
+        /// <summary>
+        /// Removes field based on given <paramref name="lookupName"/>.
+        /// </summary>
+        /// <param name="lookupName"> logical or display name of the field.</param>
+        /// <returns></returns>
+        public SingleSourceDisplayNameProvider RemoveField(DName lookupName)
         {
             if (_logicalToDisplay.TryGetValue(lookupName, out var displayName))
             {
