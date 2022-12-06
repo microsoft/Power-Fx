@@ -33,6 +33,7 @@ namespace Microsoft.PowerFx
 
             if (info == null)
             {
+                // Occurs when an identifier is used
                 return;
             }
 

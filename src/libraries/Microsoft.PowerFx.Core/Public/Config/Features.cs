@@ -32,7 +32,7 @@ namespace Microsoft.PowerFx
 
         /// <summary>
         /// Enable Identifier support for describing column names
-        /// Added on 20ieth July 2022.
+        /// Added on 6th December 2022.
         /// </summary>
         SupportColumnNamesAsIdentifiers = 0x8,
     }
