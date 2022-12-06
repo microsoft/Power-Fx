@@ -23,6 +23,12 @@
 >> Value(ParseJSON("""123,456"""), "fr-FR")
 123.456
 
+>> Value(ParseJSON("""123.456"""), "es-ES")
+123456
+
+>> Value(ParseJSON("123.456"), "es-ES")
+123.456
+
 >> Value(ParseJSON("""a"""))
 Error({Kind:ErrorKind.InvalidArgument})
 
@@ -92,6 +98,9 @@ true
 
 >> Boolean(ParseJSON("0"))
 false
+
+>> Boolean(ParseJSON("5"))
+true
 
 >> Boolean(ParseJSON("null"))
 Blank()
