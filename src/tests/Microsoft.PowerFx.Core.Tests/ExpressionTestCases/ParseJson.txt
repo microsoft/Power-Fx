@@ -9,13 +9,25 @@
 5
 
 >> Value(ParseJSON("true"))
-Error({Kind:ErrorKind.InvalidArgument})
+1
 
 >> Value(ParseJSON("false"))
-Error({Kind:ErrorKind.InvalidArgument})
+0
 
 >> Value(ParseJSON("""5"""))
-Error({Kind:ErrorKind.InvalidArgument})
+5
+
+>> Value(ParseJSON("""123,456"""))
+123456
+
+>> Value(ParseJSON("""123,456"""), "fr-FR")
+123.456
+
+>> Value(ParseJSON("""123.456"""), "es-ES")
+123456
+
+>> Value(ParseJSON("123.456"), "es-ES")
+123.456
 
 >> Value(ParseJSON("""a"""))
 Error({Kind:ErrorKind.InvalidArgument})
@@ -52,19 +64,43 @@ Error({Kind:ErrorKind.InvalidArgument})
 Blank()
 
 >> Text(ParseJSON("true"))
-Error({Kind:ErrorKind.InvalidArgument})
+"true"
 
 >> Text(ParseJSON("false"))
-Error({Kind:ErrorKind.InvalidArgument})
+"false"
 
 >> Text(ParseJSON("5"))
-Error({Kind:ErrorKind.InvalidArgument})
+"5"
 
 >> Boolean(ParseJSON("true"))
 true
 
 >> Boolean(ParseJSON("false"))
 false
+
+>> Boolean(ParseJSON("""true"""))
+true
+
+>> Boolean(ParseJSON("""false"""))
+false
+
+>> Boolean(ParseJSON("""tRuE"""))
+true
+
+>> Boolean(ParseJSON("""fAlSe"""))
+false
+
+>> Boolean(ParseJSON("""F"""))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Boolean(ParseJSON("1"))
+true
+
+>> Boolean(ParseJSON("0"))
+false
+
+>> Boolean(ParseJSON("5"))
+true
 
 >> Boolean(ParseJSON("null"))
 Blank()
@@ -139,7 +175,7 @@ Error({Kind:ErrorKind.Div0})
 Table({Value:"1"},{Value:"false"},{Value:"hello"})
 
 >> ForAll(ParseJSON("[1,true,3,false]"), Value(ThisRecord))
-Error(Table({Kind:ErrorKind.InvalidArgument},{Kind:ErrorKind.InvalidArgument}))
+Table({Value:1},{Value:1},{Value:3},{Value:0})
 
 >> ForAll(ParseJSON("[1,2,3]"), If(Value(ThisRecord) < 2, Value(ThisRecord), ThisRecord))
 Errors: Error 74-84: Invalid argument type (UntypedObject). Expecting a Number value instead.|Error 29-85: The function 'If' has some invalid arguments.
