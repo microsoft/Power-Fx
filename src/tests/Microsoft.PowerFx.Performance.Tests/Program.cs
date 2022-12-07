@@ -18,7 +18,7 @@ namespace Microsoft.PowerFx.Performance.Tests
              * 
              * 
              */
-
+            
             var summary = BenchmarkRunner.Run<PerformanceTest1>();
         }
     }

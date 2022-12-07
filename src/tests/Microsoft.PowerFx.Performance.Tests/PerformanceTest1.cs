@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Globalization;
+using System.Linq;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Diagnostics.Windows;
 using BenchmarkDotNet.Diagnostics.Windows.Configs;
@@ -11,66 +12,52 @@ using Microsoft.PowerFx.Types;
 namespace Microsoft.PowerFx.Performance.Tests
 {
     [EtwProfiler]
+    [CsvExporter]
     [MinColumn, Q1Column, MeanColumn, Q3Column, MaxColumn]
     public class PerformanceTest1 : PowerFxTest
-    {
-        private RecordValue record;
-        private SymbolTable symbolTable;
-        private ISymbolSlot slot;
+    {        
+        private PowerFxConfig powerFxConfig;        
         private Engine engine;
+        private RecalcEngine recalcEngine;
+        private ParserOptions parserOptions;
 
         [GlobalSetup]
         public void GlobalSetup()
         {
-            record = FormulaValue.NewRecordFromFields(new NamedValue("y", FormulaValue.New(11)));
-            symbolTable = new SymbolTable { DebugName = "PerformanceTest1" };
-            slot = symbolTable.AddVariable("x", record.Type);
-            engine = new Engine(new PowerFxConfig(new CultureInfo("en-US"), Features.All));
+            powerFxConfig = new PowerFxConfig(new CultureInfo("en-US"), Features.All);
+            engine = new Engine(powerFxConfig);
+            parserOptions = new ParserOptions() { AllowsSideEffects = true, Culture = new CultureInfo("en-US") };
+            recalcEngine = new RecalcEngine(powerFxConfig);
+        }
+
+        [Params(1, 2, 5, 10, 20, 50, 100)]
+        public int N { get; set; }
+
+        [Benchmark]
+        public ParseResult Parse()
+        {
+            var expr = string.Join(" + ", Enumerable.Repeat("Sum(1)", N));
+
+            var parse = engine.Parse(expr, parserOptions);
+            return parse;
         }
 
         [Benchmark]
-        public CheckResult Check1()
+        public CheckResult Check()
         {
-            var expr = "Sum(1)";
+            var expr = string.Join(" + ", Enumerable.Repeat("Sum(1)", N));
 
-            var check = engine.Check(expr, symbolTable: symbolTable);
+            var check = engine.Check(expr);
             return check;
         }
 
         [Benchmark]
-        public CheckResult Check2()
+        public FormulaValue Eval()
         {
-            var expr = "Sum(1) + Sum(1)";
+            var expr = string.Join(" + ", Enumerable.Repeat("Sum(1)", N));
 
-            var check = engine.Check(expr, symbolTable: symbolTable);
-            return check;
-        }
-
-        [Benchmark]
-        public CheckResult Check5()
-        {
-            var expr = "Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1)";
-
-            var check = engine.Check(expr, symbolTable: symbolTable);
-            return check;
-        }
-
-        [Benchmark]
-        public CheckResult Check20()
-        {
-            var expr = "Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1)";
-
-            var check = engine.Check(expr, symbolTable: symbolTable);
-            return check;
-        }
-
-        [Benchmark]
-        public CheckResult Check50()
-        {
-            var expr = "Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1) + Sum(1)";
-
-            var check = engine.Check(expr, symbolTable: symbolTable);
-            return check;
+            var result = recalcEngine.Eval(expr);
+            return result;
         }
     }
 }

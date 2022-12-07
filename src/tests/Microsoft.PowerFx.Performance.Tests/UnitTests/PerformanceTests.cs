@@ -12,10 +12,11 @@ namespace Microsoft.PowerFx.Performance.Tests.UnitTests
         {
             var pt = new PerformanceTest1();
             pt.GlobalSetup();
+            pt.N = 20;
 
             for (var i = 0; i < 10000; i++)
             {
-                var cr = pt.Check20();
+                var cr = pt.Check();
                 Assert.True(cr.IsSuccess);
             }
         }
