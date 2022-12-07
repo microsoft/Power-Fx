@@ -313,9 +313,21 @@ namespace Microsoft.PowerFx.Functions
             return new NumberValue(irContext, b ? 1.0 : 0.0);
         }
 
-        public static FormulaValue TextToBoolean(IRContext irContext, StringValue[] args)
+        public static FormulaValue TextToBoolean(IRContext irContext, FormulaValue[] args)
         {
-            var val = args[0].Value;
+            string val = default;
+            if (args[0] is BooleanValue bv)
+            {
+                return bv;
+            }
+            else if (args[0] is StringValue s)
+            {
+                val = s.Value;
+            }
+            else
+            {
+                CommonErrors.RuntimeTypeMismatch(irContext);
+            }
 
             if (string.IsNullOrEmpty(val))
             {

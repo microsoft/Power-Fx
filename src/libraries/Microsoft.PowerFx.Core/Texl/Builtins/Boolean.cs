@@ -1,8 +1,11 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
+using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
@@ -27,6 +30,30 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public BooleanFunction()
             : base(BooleanInvariantFunctionName, TexlStrings.AboutBoolean, FunctionCategories.Text, DType.Boolean, 0, 1, 1, DType.String)
         {
+        }
+
+        public override bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        {
+            Contracts.AssertValue(args);
+            Contracts.AssertAllValues(args);
+            Contracts.AssertValue(argTypes);
+            Contracts.AssertAllValid(argTypes);
+            Contracts.Assert(args.Length == argTypes.Length);
+            Contracts.AssertValue(errors);
+            Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
+
+            nodeToCoercedTypeMap = null;
+
+            var isValid = true;
+            var argType = argTypes[0];
+            if (!(DType.Boolean.Accepts(argType) || DType.String.Accepts(argType)))
+            {
+                errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrNumberOrStringExpected);
+                isValid = false;
+            }
+
+            returnType = DType.Boolean;
+            return isValid;
         }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
@@ -65,7 +92,27 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             var arg = args[0];
             var argType = argTypes[0];
-            fValid &= CheckStringColumnType(argType, arg, errors, ref nodeToCoercedTypeMap);
+
+            Contracts.Assert(argType.IsValid);
+            Contracts.AssertValue(arg);
+            Contracts.AssertValue(errors);
+
+            IEnumerable<TypedName> columns;
+            if (!argType.IsTable || (columns = argType.GetNames(DPath.Root)).Count() != 1)
+            {
+                errors.EnsureError(DocumentErrorSeverity.Severe, arg, TexlStrings.ErrInvalidSchemaNeedCol);
+                fValid = false;
+            }
+            else
+            {
+                var column = columns.Single();
+                if (!(DType.String.Accepts(column.Type) || DType.Boolean.Accepts(column.Type)))
+                {
+                    errors.EnsureError(DocumentErrorSeverity.Severe, arg, TexlStrings.ErrInvalidSchemaNeedStringCol_Col, column.Name.Value);
+                    fValid = false;
+                }
+            }
+
 
             var rowType = DType.EmptyRecord.Add(new TypedName(DType.Boolean, ColumnName_Value));
             returnType = rowType.ToTable();
@@ -143,7 +190,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var arg = args[0];
             var argType = argTypes[0];
             fValid &= CheckNumericColumnType(argType, arg, errors, ref nodeToCoercedTypeMap);
-
+            
             var rowType = DType.EmptyRecord.Add(new TypedName(DType.Boolean, ColumnName_Value));
             returnType = rowType.ToTable();
 
