@@ -4,11 +4,13 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
 
@@ -242,9 +244,9 @@ namespace Microsoft.PowerFx.Functions
                     return info.LongDatePattern;
                 case "utc":
                     return info.UniversalSortableDateTimePattern;
+                default:
+                    return ResolveAmbiguities(format);
             }
-
-            return format;
         }
 
         private static string ReplaceWith24HourClock(string format)
@@ -253,6 +255,76 @@ namespace Microsoft.PowerFx.Functions
                              @"(?(openAMPM) h+(?<nonHours>[^ht]+)$ " +
                              @"| \s*h+(?<nonHours>[^ht]+)\s*t+)";
             return Regex.Replace(format, pattern, "HH${nonHours}", RegexOptions.IgnorePatternWhitespace);
+        }
+
+        /// <summary>
+        /// Resolves month/minute ambiguity and 24h vs AM/PM.
+        /// </summary>
+        /// <param name="format">Format string.</param>
+        /// <returns></returns>
+        private static string ResolveAmbiguities(string format)
+        {
+            if (format.Length == 0)
+            {
+                return format;
+            }
+
+            // Handling especial cases
+            if (format.Length == 1)
+            {
+                // Cases not supported by Excel are not handled ie 'G'
+                var singleCharMatch = Regex.Match(format, "[dDhHmMsSyY]");
+
+                if (singleCharMatch.Success)
+                {
+                    switch (singleCharMatch.Value)
+                    {
+                        case "m":
+                        case "h":
+                            return $"%{singleCharMatch.Value.ToUpperInvariant()}";
+                        default:
+                            return $"%{singleCharMatch.Value}";
+                    }
+                    
+                }
+
+                return format;
+            }
+
+            var time12hMatch = Regex.Match(format, "[aA][mM]\\/[pP][mM]|[aA]\\/[pP]");
+
+            // Replace reserved chars
+            format = Regex.Replace(format, "[aA][mM]\\/[pP][mM]", "tt");
+            format = Regex.Replace(format, "[aA]\\/[pP]", "t");
+            format = Regex.Replace(format, "[hH]", time12hMatch.Success ? "h" : "H");
+            format = Regex.Replace(format, "[yY]", "y");
+            format = Regex.Replace(format, "[dD]", "d");
+            format = Regex.Replace(format, "[sS]", "s");
+
+            // All "m" char to upper case to express months
+            format = Regex.Replace(format, "[mM]", "M");
+
+            // Find all "m" chrs for minutes, before seconds
+            var minutesBeforeSecondsRegex = "[M]+[^dDyYhHmM]+[sS]";
+            var minutesBeforeSecondsMatch = Regex.Match(format, minutesBeforeSecondsRegex);
+
+            if (minutesBeforeSecondsMatch.Success)
+            {
+                var afterBeforeMinutes = format.Substring(minutesBeforeSecondsMatch.Index, minutesBeforeSecondsMatch.Length);
+                format = format.Substring(0, minutesBeforeSecondsMatch.Index) + afterBeforeMinutes.Replace('M', 'm') + format.Substring(minutesBeforeSecondsMatch.Index + minutesBeforeSecondsMatch.Length);
+            }
+
+            // Find all "m" chrs for minutes, after hours
+            var minutesAfterHoursRegex = "[hH][^dDyYmM]+[mM]+";
+            var minutesAfterHoursMatch = Regex.Match(format, minutesAfterHoursRegex);
+
+            if (minutesAfterHoursMatch.Success)
+            {
+                var afterHourFormat = format.Substring(minutesAfterHoursMatch.Index, minutesAfterHoursMatch.Length);
+                format = format.Substring(0, minutesAfterHoursMatch.Index) + afterHourFormat.Replace('M', 'm') + format.Substring(minutesAfterHoursMatch.Index + minutesAfterHoursMatch.Length);
+            }
+
+            return format;
         }
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-isblank-isempty

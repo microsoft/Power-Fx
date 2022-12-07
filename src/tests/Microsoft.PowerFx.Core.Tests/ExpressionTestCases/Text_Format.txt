@@ -1,0 +1,200 @@
+﻿>> Text(DateTime(2022,12,1,23,45,59), "YYYY-MM-DD HH:MM:SS AM/PM")
+"2022-12-01 11:45:59 PM"
+
+>> Text(DateTime(2022,12,1,23,45,59), "yYyY-Mm-dd Hh:Mm:Ss Am/pM")
+"2022-12-01 11:45:59 PM"
+
+>> Text(DateTime(2022,12,1,23,45,59), "YYYY-MM-DD HH:MM:SS A/P")
+"2022-12-01 11:45:59 P"
+
+>> Text(DateTime(2022,12,1,23,45,59), "YYYY-MM-DD HH:MM:SS a/pa/p")
+"2022-12-01 11:45:59 PM"
+
+>> Text(DateTime(2022,12,1,23,45,59), "yYyY-Mm-dd Hh:Mm:Ss")
+"2022-12-01 23:45:59"
+
+>> Text(DateTime(2022,12,1,23,45,59), "yY-m-d h:M:Ss")
+"22-12-1 23:45:59"
+
+>> Text(DateTime(2022,12,1,23,5,9), "yY-m-d h:M:S")
+"22-12-1 23:5:9"
+
+>> Text(DateTime(2022,1,1,23,45,59), "MM MM MM:SS M")
+"01 01 45:59 1"
+
+>> Text(DateTime(2022,1,1,23,45,59), "mm mm H:m m")
+"01 01 23:45 1"
+
+>> Text(DateTime(2022,12,1,23,45,59), "mmmm H:m m")
+"December 23:45 12"
+
+>> Text(DateTime(2022,12,1,23,45,59), "mmmm")
+"December"
+
+>> Text(DateTime(2022,12,1,23,45,59), "mmm")
+"Dec"
+
+>> Text(DateTime(2022,12,1,23,45,59), "mm")
+"12"
+
+>> Text(DateTime(2022,12,1,23,45,59), "m")
+"12"
+
+>> Text(DateTime(2022,1,1,23,45,59), "m")
+"1"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "dddd, mmm """" dd, yyy") // date18
+"Friday, Jun  03, 1983"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "dddd, mmm"""" dd, yyy") // date19
+"Friday, Jun 03, 1983"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "dddd, mmm""""dd, yyy") // date20
+"Friday, Jun03, 1983"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), """d"" dddd, mmm dd, yyy") // date21
+"d Friday, Jun 03, 1983"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "dddd, mmm ""d"" dd, yyy") // date22
+"Friday, Jun d 03, 1983"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "hh:mm:ss") // time1
+"02:53:09"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "HH:MM:SS") // time1b
+"02:53:09"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "Hh:Mm:Ss") // time1c
+"02:53:09"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "hH:mM:sS") // time1d
+"02:53:09"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "hh:mm:s") // time2
+"02:53:9"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "HH:MM:S") // time2b
+"02:53:9"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "hh:mm") // time3
+"02:53"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "HH:MM") // time3b
+"02:53"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "mm:ss") // time4
+"53:09"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "MM:SS") // time4b
+"53:09"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "mm:hh") // time5
+"06:02"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "MM:HH") // time5b
+"06:02"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "hh:yyyy:mm") // time6
+"02:1983:06"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "HH:YYYY:MM") // time6b
+"02:1983:06"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "ha/p") // time7
+"2A"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "HA/P") // time7b
+"2A"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "hha/p") // time8
+"02A"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "HHA/P") // time8b
+"02A"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "hAM/PM") // time9
+"2AM"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "HAM/PM") // time9b
+"2AM"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "hhAM/PM") // time10
+"02AM"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "HHAM/PM") // time10b
+"02AM"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "h:mm a/p") // time11
+"2:53 A"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "H:MM a/p") // time11b
+"2:53 A"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "hh:mm a/p") // time12
+"02:53 A"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "HH:MM a/p") // time12b
+"02:53 A"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "h:mm AM/PM") // time13
+"2:53 AM"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "H:MM AM/PM") // time13b
+"2:53 AM"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "hh:mm AM/PM") // time14
+"02:53 AM"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "HH:MM AM/PM") // time14b
+"02:53 AM"
+
+>> Text(DateTime(2013, 6, 19, 10, 48, 38, 100), "hh:mm:ss AM/PM") // time15
+"10:48:38 AM"
+
+>> Text(DateTime(2013, 6, 19, 10, 48, 38, 100), "HH:MM:SS AM/PM") // time15b
+"10:48:38 AM"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "H:mm:ss AM/PM") // time18
+"2:53:09 AM"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "HH:mm:ss AM/PM") // time19
+"02:53:09 AM"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "HHH:mm:ss AM/PM") // time20
+"02:53:09 AM"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "HHHHHH:mm:ss AM/PM") // time21
+"02:53:09 AM"
+
+>> Text(DateTime(2013, 6, 19, 10, 48, 38, 100), "H:mm:ss AM/PM") // time22
+"10:48:38 AM"
+
+>> Text(DateTime(2013, 6, 19, 10, 48, 38, 100), "HH:mm:ss AM/PM") // time23
+"10:48:38 AM"
+
+>> Text(DateTime(2013, 6, 19, 10, 48, 38, 100), "HHH:mm:ss AM/PM") // time24
+"10:48:38 AM"
+
+>> Text(DateTime(2013, 6, 19, 10, 48, 38, 100), "HHHHHH:mm:ss AM/PM") // time25
+"10:48:38 AM"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 3), "mm:ss.0") // time43b
+"53:09.0"
+
+>> Text(423456789013, "0") // not-time45c
+"423456789013"
+
+>> Text(423456789003, "0") // not-time46c
+"423456789003"
+
+>> Text(DateTime(1970, 1, 1, 14, 32, 25, 678), "'longdatetime'") // time47
+"Thursday, January 1, 1970 2:32:25 PM"
+
+>> Text(DateTime(1970, 1, 1, 14, 32, 25, 678), "'shortdatetime'") // time48
+"1/1/1970 2:32 PM"
+
+>> Text(DateTime(1970, 1, 1, 14, 32, 25, 678), "'longtime'") // time53
+"2:32:25 PM"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 123), "mmm ""[de]+de"" dd yyyy") // time76
+"Jun [de]+de 03 1983"
