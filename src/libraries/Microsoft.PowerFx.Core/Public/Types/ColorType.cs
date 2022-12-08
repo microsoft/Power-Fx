@@ -26,7 +26,7 @@ namespace Microsoft.PowerFx.Types
 
         internal override void DefaultExpressionValue(StringBuilder sb)
         {
-            sb.Append($"RGBA(0, 0, 0, 1)");
+            sb.Append($"RGBA(0, 0, 0, 0)");
         }
     }
 }
