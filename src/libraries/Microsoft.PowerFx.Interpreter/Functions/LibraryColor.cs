@@ -80,5 +80,26 @@ namespace Microsoft.PowerFx.Functions
 
             return new ColorValue(irContext, Color.FromArgb(a, r, g, b));
         }
+
+        public static FormulaValue ColorFade(IRContext irContext, FormulaValue[] args)
+        {
+            var color = (ColorValue)args[0];
+            var fadeDelta = ((NumberValue)args[1]).Value;
+
+            // Ensure fade amount is between -1 and 1
+            if (fadeDelta < -1.0d || fadeDelta > 1.0d)
+            {
+                return CommonErrors.ArgumentOutOfRange(irContext);
+            }
+            
+            var interpolator = Math.Abs(fadeDelta);
+            var inverseInterpolator = 1 - interpolator;
+            double targetComponent = fadeDelta < 0x00 ? 0x00 : 0xFF;
+            targetComponent *= interpolator;
+            var fadedRed = (int)Math.Floor(color.Value.R * inverseInterpolator + targetComponent);
+            var fadedGreen = (int)Math.Floor(color.Value.G * inverseInterpolator + targetComponent);
+            var fadedBlue = (int)Math.Floor(color.Value.B * inverseInterpolator + targetComponent);
+            return new ColorValue(irContext, Color.FromArgb(color.Value.A, fadedRed, fadedGreen, fadedBlue));
+        }
     }
 }

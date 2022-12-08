@@ -268,6 +268,19 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: ColorValue_UO)
             },
             {
+                BuiltinFunctionsCore.ColorFade,
+                StandardErrorHandling<FormulaValue>(
+                    BuiltinFunctionsCore.ColorFade.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactSequence(
+                        ExactValueTypeOrBlank<ColorValue>,
+                        ExactValueTypeOrBlank<NumberValue>),
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: ColorFade)
+            },
+            {
                 BuiltinFunctionsCore.Cos,
                 StandardErrorHandling<NumberValue>(
                     BuiltinFunctionsCore.Cos.Name,
