@@ -268,26 +268,6 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: ColorValue_UO)
             },
             {
-                BuiltinFunctionsCore.ConcatenateT,
-                StandardErrorHandlingAsync(
-                    BuiltinFunctionsCore.ConcatenateT.Name,
-                    expandArguments: NoArgExpansion,
-                    replaceBlankValues: DoNotReplaceBlank,
-                    checkRuntimeTypes: ExactValueTypeOrTableOrBlank<StringValue>,
-                    checkRuntimeValues: DeferRuntimeValueChecking,
-                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-                    targetFunction: MultiSingleColumnTable(
-                            StandardErrorHandling<StringValue>(
-                                BuiltinFunctionsCore.Concatenate.Name,
-                                expandArguments: NoArgExpansion,
-                                replaceBlankValues: ReplaceBlankWithEmptyString,
-                                checkRuntimeTypes: ExactValueType<StringValue>,
-                                checkRuntimeValues: DeferRuntimeValueChecking,
-                                returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-                                targetFunction: Concatenate),
-                            transposeEmptyTable: true))
-            },
-            {
                 BuiltinFunctionsCore.Cos,
                 StandardErrorHandling<NumberValue>(
                     BuiltinFunctionsCore.Cos.Name,

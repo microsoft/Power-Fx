@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Diagnostics.Contracts;
 using System.Drawing;
 using System.Text;
@@ -23,7 +24,7 @@ namespace Microsoft.PowerFx.Types
 
         public override void ToExpression(StringBuilder sb, FormulaValueSerializerSettings settings)
         {
-            throw new System.NotImplementedException();
+            sb.Append($"RGBA({Value.R},{Value.G},{Value.B},{Math.Round(Value.A / 255.0, 3)})");
         }
     }
 }

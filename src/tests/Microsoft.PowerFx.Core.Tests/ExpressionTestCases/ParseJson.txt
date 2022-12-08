@@ -328,13 +328,13 @@ RGBA(1,2,3,0.016)
 RGBA(1,2,3,1)
 
 >> ColorValue(ParseJSON("""Red"""))
-#Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> ColorValue(ParseJSON("""#RRGGBBAA"""))
-#Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> ColorValue(ParseJSON("""#000000ZZ"""))
-#Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> ColorValue(ParseJSON("null"))
 Blank()

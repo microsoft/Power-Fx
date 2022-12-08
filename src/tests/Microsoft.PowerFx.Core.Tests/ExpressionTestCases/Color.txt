@@ -32,22 +32,22 @@ RGBA(0,0,0,1)
 RGBA(255,0,0,1)
 
 >> ColorValue("#0g020304")
-#Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> ColorValue("#010g0304")
-#Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> ColorValue("#01020g04")
-#Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> ColorValue("#0102030g")
-#Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> ColorValue("010203")
-#Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> ColorValue("01020304")
-#Error(Kind=InvalidArgument)
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> ColorValue(Blank())
 Blank()
