@@ -1539,25 +1539,9 @@ namespace Microsoft.PowerFx.Functions
         private static IReadOnlyDictionary<TexlFunction, AsyncFunctionPtr> SimpleFunctionMultiArgsTabularOverloadImplementations { get; } = new Dictionary<TexlFunction, AsyncFunctionPtr>
         {
             {
-                BuiltinFunctionsCore.FindT,
-                StandardErrorHandlingAsync<FormulaValue>(
-                    BuiltinFunctionsCore.FindT.Name,
-                    expandArguments: NoArgExpansion,
-                    replaceBlankValues: DoNotReplaceBlank,
-                    checkRuntimeTypes: ExactSequence(
-                        ExactValueTypeOrTableOrBlank<StringValue>,
-                        ExactValueTypeOrTableOrBlank<StringValue>,
-                        ExactValueTypeOrTableOrBlank<NumberValue>),
-                    checkRuntimeValues: DeferRuntimeValueChecking,
-                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-                    targetFunction: MultiSingleColumnTable(
-                            SimpleFunctionImplementations[BuiltinFunctionsCore.Find]),
-                    isMultiArgTabularOverload: true)
-            },
-            {
                 BuiltinFunctionsCore.ColorFadeT,
                 StandardErrorHandlingAsync(
-                    BuiltinFunctionsCore.RoundT.Name,
+                    BuiltinFunctionsCore.ColorFadeT.Name,
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: ExactSequence(
@@ -1593,6 +1577,22 @@ namespace Microsoft.PowerFx.Functions
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: MultiSingleColumnTable(
                             SimpleFunctionImplementations[BuiltinFunctionsCore.Dec2Hex]),
+                    isMultiArgTabularOverload: true)
+            },
+            {
+                BuiltinFunctionsCore.FindT,
+                StandardErrorHandlingAsync<FormulaValue>(
+                    BuiltinFunctionsCore.FindT.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactSequence(
+                        ExactValueTypeOrTableOrBlank<StringValue>,
+                        ExactValueTypeOrTableOrBlank<StringValue>,
+                        ExactValueTypeOrTableOrBlank<NumberValue>),
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: MultiSingleColumnTable(
+                            SimpleFunctionImplementations[BuiltinFunctionsCore.Find]),
                     isMultiArgTabularOverload: true)
             },
             {
