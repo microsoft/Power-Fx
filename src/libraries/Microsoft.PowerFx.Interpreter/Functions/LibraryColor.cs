@@ -16,6 +16,12 @@ namespace Microsoft.PowerFx.Functions
 {
     internal partial class Library
     {
+        // ColorTable is ARGB
+        private static readonly Regex RegexColorTable = new (@"^#(?<a>[0-9a-fA-F]{2})(?<r>[0-9a-fA-F]{2})(?<g>[0-9a-fA-F]{2})(?<b>[0-9a-fA-F]{2})?$", RegexOptions.Compiled);
+
+        // CSS format is RGBA
+        private static readonly Regex RegexCSS = new (@"^#(?<r>[0-9a-fA-F]{2})(?<g>[0-9a-fA-F]{2})(?<b>[0-9a-fA-F]{2})(?<a>[0-9a-fA-F]{2})?$", RegexOptions.Compiled);
+        
         public static FormulaValue ColorValue(IRContext irContext, StringValue[] args)
         {
             var val = args[0].Value;
@@ -29,16 +35,11 @@ namespace Microsoft.PowerFx.Functions
             if (ColorTable.InvariantNameToHexMap.ContainsKey(val))
             {
                 var hexStringColor = string.Format("#{0:X8}", ColorTable.InvariantNameToHexMap[val]);
-
-                // ColorTable is ARGB
-                var regex = new Regex(@"^#(?<a>[0-9a-fA-F]{2})(?<r>[0-9a-fA-F]{2})(?<g>[0-9a-fA-F]{2})(?<b>[0-9a-fA-F]{2})?$");
-                match = regex.Match(hexStringColor);
+                match = RegexColorTable.Match(hexStringColor);
             }
             else
             {
-                // CSS format is RGBA
-                var regex = new Regex(@"^#(?<r>[0-9a-fA-F]{2})(?<g>[0-9a-fA-F]{2})(?<b>[0-9a-fA-F]{2})(?<a>[0-9a-fA-F]{2})?$");
-                match = regex.Match(val);
+                match = RegexCSS.Match(val);
             }
 
             if (match.Success)
@@ -56,11 +57,6 @@ namespace Microsoft.PowerFx.Functions
 
         public static FormulaValue RGBA(IRContext irContext, NumberValue[] args)
         {
-            if (args.Length != 4)
-            {
-                return CommonErrors.GenericInvalidArgument(irContext);
-            }
-
             // Ensure rgb numbers are in range (0-255)
             if (args[0].Value < 0.0d || args[0].Value > 255.0d
                 || args[1].Value < 0.0d || args[1].Value > 255.0d
