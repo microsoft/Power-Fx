@@ -1,12 +1,14 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Diagnostics.Windows;
 using BenchmarkDotNet.Diagnostics.Windows.Configs;
 using Microsoft.PowerFx.Core.Tests;
+using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Performance.Tests
@@ -30,8 +32,17 @@ namespace Microsoft.PowerFx.Performance.Tests
             recalcEngine = new RecalcEngine(powerFxConfig);
         }
 
-        [Params(1, 2, 5, 10, 20, 50, 100)]
+        [Params(1, 5, 10)]
         public int N { get; set; }
+
+        [Benchmark]
+        public IReadOnlyList<Token> Tokenize()
+        {
+            var expr = string.Join(" + ", Enumerable.Repeat("Sum(1)", N));
+
+            var tokens = engine.Tokenize(expr);
+            return tokens;
+        }
 
         [Benchmark]
         public ParseResult Parse()
