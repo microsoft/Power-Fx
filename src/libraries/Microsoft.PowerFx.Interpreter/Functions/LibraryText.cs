@@ -245,7 +245,7 @@ namespace Microsoft.PowerFx.Functions
                 case "utc":
                     return info.UniversalSortableDateTimePattern;
                 default:
-                    return ResolveAmbiguities(format);
+                    return ResolveDateTimeFormatAmbiguities(format);
             }
         }
 
@@ -262,7 +262,7 @@ namespace Microsoft.PowerFx.Functions
         /// </summary>
         /// <param name="format">Format string.</param>
         /// <returns></returns>
-        private static string ResolveAmbiguities(string format)
+        private static string ResolveDateTimeFormatAmbiguities(string format)
         {
             if (format.Length == 0)
             {
@@ -272,56 +272,46 @@ namespace Microsoft.PowerFx.Functions
             // Handling especial cases
             if (format.Length == 1)
             {
-                // Cases not supported by Excel are not handled ie 'G'
-                var singleCharMatch = Regex.Match(format, "[dDhHmMsSyY]");
-
-                if (singleCharMatch.Success)
+                switch (format)
                 {
-                    switch (singleCharMatch.Value)
-                    {
-                        case "m":
-                        case "h":
-                            return $"%{singleCharMatch.Value.ToUpperInvariant()}";
-                        default:
-                            return $"%{singleCharMatch.Value}";
-                    }
-                    
+                    case "m":
+                    case "h":
+                        return $"%{format.ToUpperInvariant()}";
+                    default:
+                        return $"%{format}";
                 }
-
-                return format;
             }
 
-            var time12hMatch = Regex.Match(format, "[aA][mM]\\/[pP][mM]|[aA]\\/[pP]");
+            Regex minutesBeforeSecondsRegex = new Regex("[M]+[^dDyYhHmM]+[sS]", RegexOptions.Compiled);
+            Regex minutesAfterHoursRegex = new Regex("[hH][^dDyYmM]+[M]+", RegexOptions.Compiled);
+            Regex time12hRegex = new Regex("[aA][mM]\\/[pP][mM]|[aA]\\/[pP]", RegexOptions.Compiled);
+            Regex ampmReplaceRegex = new Regex("[aA][mM]\\/[pP][mM]", RegexOptions.Compiled);
+            Regex apReplaceRegex = new Regex("[aA]\\/[pP]", RegexOptions.Compiled);
 
-            // Replace reserved chars
-            format = Regex.Replace(format, "[aA][mM]\\/[pP][mM]", "tt");
-            format = Regex.Replace(format, "[aA]\\/[pP]", "t");
-            format = Regex.Replace(format, "[hH]", time12hMatch.Success ? "h" : "H");
-            format = Regex.Replace(format, "[yY]", "y");
-            format = Regex.Replace(format, "[dD]", "d");
-            format = Regex.Replace(format, "[sS]", "s");
+            var hourChar = time12hRegex.Match(format).Success ? 'h' : 'H';
 
-            // All "m" char to upper case to express months
-            format = Regex.Replace(format, "[mM]", "M");
+            format = ampmReplaceRegex.Replace(format, "tt");
+            format = apReplaceRegex.Replace(format, "t");
+            format = format.Replace('Y', 'y')
+                           .Replace('m', 'M') // All "m" char to upper case to express months
+                           .Replace('D', 'd')
+                           .Replace('H', hourChar)
+                           .Replace('h', hourChar)
+                           .Replace('S', 's')
+                           .Replace('F', 'f');
 
-            // Find all "m" chrs for minutes, before seconds
-            var minutesBeforeSecondsRegex = "[M]+[^dDyYhHmM]+[sS]";
-            var minutesBeforeSecondsMatch = Regex.Match(format, minutesBeforeSecondsRegex);
-
-            if (minutesBeforeSecondsMatch.Success)
+            // Find all "m" chars for minutes, before seconds
+            foreach (Match match in minutesBeforeSecondsRegex.Matches(format))
             {
-                var afterBeforeMinutes = format.Substring(minutesBeforeSecondsMatch.Index, minutesBeforeSecondsMatch.Length);
-                format = format.Substring(0, minutesBeforeSecondsMatch.Index) + afterBeforeMinutes.Replace('M', 'm') + format.Substring(minutesBeforeSecondsMatch.Index + minutesBeforeSecondsMatch.Length);
-            }
+                var afterBeforeMinutes = format.Substring(match.Index, match.Length);
+                format = format.Substring(0, match.Index) + afterBeforeMinutes.Replace('M', 'm') + format.Substring(match.Index + match.Length);
+            }            
 
-            // Find all "m" chrs for minutes, after hours
-            var minutesAfterHoursRegex = "[hH][^dDyYmM]+[mM]+";
-            var minutesAfterHoursMatch = Regex.Match(format, minutesAfterHoursRegex);
-
-            if (minutesAfterHoursMatch.Success)
+            // Find all "m" chars for minutes, after hours
+            foreach (Match match in minutesAfterHoursRegex.Matches(format))
             {
-                var afterHourFormat = format.Substring(minutesAfterHoursMatch.Index, minutesAfterHoursMatch.Length);
-                format = format.Substring(0, minutesAfterHoursMatch.Index) + afterHourFormat.Replace('M', 'm') + format.Substring(minutesAfterHoursMatch.Index + minutesAfterHoursMatch.Length);
+                var afterHourFormat = format.Substring(match.Index, match.Length);
+                format = format.Substring(0, match.Index) + afterHourFormat.Replace('M', 'm') + format.Substring(match.Index + match.Length);
             }
 
             return format;
