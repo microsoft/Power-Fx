@@ -235,17 +235,6 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: Char)
             },
             {
-                BuiltinFunctionsCore.Concatenate,
-                StandardErrorHandling<StringValue>(
-                    BuiltinFunctionsCore.Concatenate.Name,
-                    expandArguments: NoArgExpansion,
-                    replaceBlankValues: ReplaceBlankWithEmptyString,
-                    checkRuntimeTypes: ExactValueType<StringValue>,
-                    checkRuntimeValues: DeferRuntimeValueChecking,
-                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-                    targetFunction: Concatenate)
-            },
-            {
                 BuiltinFunctionsCore.ColorValue,
                 StandardErrorHandling<StringValue>(
                     BuiltinFunctionsCore.ColorValue.Name,
@@ -279,6 +268,18 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: ColorFade)
+            },
+
+            {
+                BuiltinFunctionsCore.Concatenate,
+                StandardErrorHandling<StringValue>(
+                    BuiltinFunctionsCore.Concatenate.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: ReplaceBlankWithEmptyString,
+                    checkRuntimeTypes: ExactValueType<StringValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: Concatenate)
             },
             {
                 BuiltinFunctionsCore.Cos,
@@ -1551,6 +1552,21 @@ namespace Microsoft.PowerFx.Functions
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: MultiSingleColumnTable(
                             SimpleFunctionImplementations[BuiltinFunctionsCore.Find]),
+                    isMultiArgTabularOverload: true)
+            },
+            {
+                BuiltinFunctionsCore.ColorFadeT,
+                StandardErrorHandlingAsync(
+                    BuiltinFunctionsCore.RoundT.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactSequence(
+                        ExactValueTypeOrTableOrBlank<ColorValue>,
+                        ExactValueTypeOrBlank<NumberValue>),
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: MultiSingleColumnTable(
+                            SimpleFunctionImplementations[BuiltinFunctionsCore.ColorFade]),
                     isMultiArgTabularOverload: true)
             },
             {

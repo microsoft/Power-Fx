@@ -48,3 +48,12 @@ RGBA(127,0,0,1)
 
 >> ColorFade(RGBA(255,0,0,1), "0.5")
 RGBA(255,127,127,1)
+
+>> ColorFade(RGBA(255,0,0,1), Blank())
+Blank()
+
+>> ColorFade(Blank(), -1)
+Blank()
+
+>> ColorFade(If(1<0, RGBA(255,0,0,1)), If(1<0, 0))
+Blank()
