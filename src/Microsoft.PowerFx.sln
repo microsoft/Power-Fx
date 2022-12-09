@@ -39,6 +39,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.PowerFx.Connector
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.PowerFx.Connectors.Tests", "tests\Microsoft.PowerFx.Connectors.Tests\Microsoft.PowerFx.Connectors.Tests.csproj", "{81586372-FE63-4F6D-923D-B47E94487676}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.PowerFx.Performance.Tests", "tests\Microsoft.PowerFx.Performance.Tests\Microsoft.PowerFx.Performance.Tests.csproj", "{5A2EEF08-7A8A-43E6-B498-EFB32B98CC5A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -77,6 +79,9 @@ Global
 		{81586372-FE63-4F6D-923D-B47E94487676}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{81586372-FE63-4F6D-923D-B47E94487676}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{81586372-FE63-4F6D-923D-B47E94487676}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5A2EEF08-7A8A-43E6-B498-EFB32B98CC5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A2EEF08-7A8A-43E6-B498-EFB32B98CC5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A2EEF08-7A8A-43E6-B498-EFB32B98CC5A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -90,6 +95,7 @@ Global
 		{ED98A690-863A-443C-9DBB-8F0F5BCACE2B} = {4269F3C3-6B42-419B-B64A-3E6DC0F1574A}
 		{CEE27893-EE7D-4832-858F-70AF6BA325E3} = {4269F3C3-6B42-419B-B64A-3E6DC0F1574A}
 		{81586372-FE63-4F6D-923D-B47E94487676} = {AD743B78-D61F-4FBF-B620-FA83CE599A50}
+		{5A2EEF08-7A8A-43E6-B498-EFB32B98CC5A} = {AD743B78-D61F-4FBF-B620-FA83CE599A50}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {30372F91-B206-4351-A621-F0E2773C337B}
