@@ -1,0 +1,62 @@
+﻿>> ColorFade(RGBA(255,0,0,1), 0)
+RGBA(255,0,0,1)
+
+>> ColorFade(RGBA(255,0,0,1), 0%)
+RGBA(255,0,0,1)
+
+>> ColorFade(RGBA(255,0,0,1), 1)
+RGBA(255,255,255,1)
+
+>> ColorFade(RGBA(255,0,0,1), 100%)
+RGBA(255,255,255,1)
+
+>> ColorFade(RGBA(255,0,0,1), -1)
+RGBA(0,0,0,1)
+
+>> ColorFade(RGBA(255,0,0,1), -100%)
+RGBA(0,0,0,1)
+
+>> ColorFade(RGBA(255,0,0,1), -1.1)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ColorFade(RGBA(255,0,0,1), -101%)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ColorFade(RGBA(255,0,0,1), 1.1)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ColorFade(RGBA(255,0,0,1), 101%)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ColorFade(RGBA(255,100,0,1), 0.5)
+RGBA(255,177,127,1)
+
+>> ColorFade(RGBA(255,0,0,1), 0.5)
+RGBA(255,127,127,1)
+
+>> ColorFade(ColorValue("Red"), 0.5)
+RGBA(255,127,127,1)
+
+>> ColorFade(ColorValue("#FF0000FF"), 0.5)
+RGBA(255,127,127,1)
+
+>> ColorFade(RGBA(255,100,0,1), -0.5)
+RGBA(127,50,0,1)
+
+>> ColorFade(RGBA(255,0,0,1), -0.5)
+RGBA(127,0,0,1)
+
+>> ColorFade(RGBA(255,0,0,1), "0.5")
+RGBA(255,127,127,1)
+
+>> ColorFade(RGBA(255,0,0,1), Blank())
+Blank()
+
+>> ColorFade(Blank(), -1)
+Blank()
+
+>> ColorFade(If(1<0, RGBA(255,0,0,1)), If(1<0, 0))
+Blank()
+
+>> ColorFade(RGBA(255,0,0,1), 1/0)
+Error({Kind:ErrorKind.Div0})

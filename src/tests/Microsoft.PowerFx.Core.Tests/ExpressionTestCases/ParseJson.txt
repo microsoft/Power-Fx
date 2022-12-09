@@ -320,3 +320,21 @@ Blank()
 
 >> Text(Index(ParseJSON("[ { ""a"" : 10 }, { ""b"" : ""str"" } ]"),2).a)
 Blank()
+
+>> ColorValue(ParseJSON("""#01020304"""))
+RGBA(1,2,3,0.016)
+
+>> ColorValue(ParseJSON("""#010203"""))
+RGBA(1,2,3,1)
+
+>> ColorValue(ParseJSON("""Red"""))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ColorValue(ParseJSON("""#RRGGBBAA"""))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ColorValue(ParseJSON("""#000000ZZ"""))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ColorValue(ParseJSON("null"))
+Blank()

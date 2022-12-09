@@ -25,6 +25,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData(typeof(TimeSpan), typeof(TimeType))]
         [InlineData(typeof(string), typeof(StringType))]
         [InlineData(typeof(object), null)] // no match
+        [InlineData(typeof(System.Drawing.Color), typeof(ColorType))]
         public void TestAll(Type dotnetType, Type fxType)
         {            
             var provder = new PrimitiveMarshallerProvider();
