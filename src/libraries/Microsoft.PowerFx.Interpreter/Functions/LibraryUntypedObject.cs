@@ -302,5 +302,26 @@ namespace Microsoft.PowerFx.Functions
 
             return new InMemoryTableValue(irContext, StandardTableNodeRecords(irContext, rows, forceSingleColumn: false));
         }
+
+        public static FormulaValue ColorValue_UO(IRContext irContext, UntypedObjectValue[] args)
+        {
+            var impl = args[0].Impl;
+
+            if (impl.Type == FormulaType.String)
+            {
+                var str = impl.GetString();
+
+                if (Regex.IsMatch(str, @"^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$"))
+                {
+                    return ColorValue(irContext, new StringValue[] { FormulaValue.New(str) });
+                }
+                else
+                {
+                    return CommonErrors.InvalidColorFormatError(irContext);
+                }
+            }
+
+            return GetTypeMismatchError(irContext, BuiltinFunctionsCore.ColorValue_UO.Name, DType.String.GetKindString(), impl);
+        }
     }
 }
