@@ -1,0 +1,62 @@
+﻿>> ColorValue("#01020304")
+RGBA(1,2,3,0.016)
+
+>> ColorValue("#010203")
+RGBA(1,2,3,1)
+
+>> ColorValue("#aabbccdd")
+RGBA(170,187,204,0.867)
+
+>> ColorValue("#aabbcc")
+RGBA(170,187,204,1)
+
+>> ColorValue("#AABBCCDD")
+RGBA(170,187,204,0.867)
+
+>> ColorValue("#AABBCC")
+RGBA(170,187,204,1)
+
+>> ColorValue("#ffffffff")
+RGBA(255,255,255,1)
+
+>> ColorValue("#FFFFFFFF")
+RGBA(255,255,255,1)
+
+>> ColorValue("#00000000")
+RGBA(0,0,0,0)
+
+>> ColorValue("#000000")
+RGBA(0,0,0,1)
+
+>> ColorValue("Red")
+RGBA(255,0,0,1)
+
+>> ColorValue("red")
+RGBA(255,0,0,1)
+
+>> ColorValue("Invalid")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ColorValue("#0g020304")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ColorValue("#010g0304")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ColorValue("#01020g04")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ColorValue("#0102030g")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ColorValue("010203")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ColorValue("01020304")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ColorValue(Blank())
+Blank()
+
+>> ColorValue("")
+Blank()

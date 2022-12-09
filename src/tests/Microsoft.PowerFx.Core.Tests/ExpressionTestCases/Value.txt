@@ -468,11 +468,11 @@ true
 
 // ******** BOOLEAN PARAMETERS ********
 
->> Value("true")
-Error({Kind:ErrorKind.InvalidArgument})
+>> Value(true)
+1
 
->> Value("false")
-Error({Kind:ErrorKind.InvalidArgument})
+>> Value(false)
+0
 
 // ******** DATE/TIME PARAMETERS ********
 
