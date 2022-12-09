@@ -358,7 +358,9 @@ namespace Microsoft.PowerFx
             Contracts.Check(nameSpace.IsValid, "The namespace is invalid.");
 
             // $$$ Needs optimization            
+#pragma warning disable CS0612 // Type or member is obsolete
             return _functions.Functions.Where(function => function.Namespace.Equals(nameSpace));
+#pragma warning restore CS0612 // Type or member is obsolete
         }
 
         bool INameResolver.LookupEnumValueByInfoAndLocName(object enumInfo, DName locName, out object value)

@@ -31,6 +31,7 @@ namespace Microsoft.PowerFx
 
         /// <summary>
         /// All features enabled
+        /// [USE WITH CAUTION] In using this value, you expose your code to future features.
         /// </summary>
         All = ~0
     }

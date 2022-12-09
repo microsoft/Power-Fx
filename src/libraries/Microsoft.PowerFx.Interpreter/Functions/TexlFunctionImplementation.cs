@@ -2,9 +2,11 @@
 // Licensed under the MIT license.
 
 using Microsoft.PowerFx.Core.Utils;
+using static Microsoft.PowerFx.Functions.Library;
 
 namespace Microsoft.PowerFx.Core.Functions
 {
+    // Associates a TexlFunction with its corresponding AsyncFunctionPtr
     internal class TexlFunctionImplementation : ITexlFunction
     {
         public string Name => function.Name;
@@ -14,9 +16,9 @@ namespace Microsoft.PowerFx.Core.Functions
         public string LocaleInvariantName => function.LocaleInvariantName;
 
         internal TexlFunction function;
-        internal object functionPtr;
+        internal AsyncFunctionPtr functionPtr;
 
-        public TexlFunctionImplementation(TexlFunction func, object funcptr)
+        public TexlFunctionImplementation(TexlFunction func, AsyncFunctionPtr funcptr)
         {
             function = func;
             functionPtr = funcptr;

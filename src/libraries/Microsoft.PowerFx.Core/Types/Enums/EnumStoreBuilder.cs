@@ -294,6 +294,7 @@ namespace Microsoft.PowerFx.Core.Types.Enums
         internal EnumStoreBuilder WithRequiredEnums(TexlFunctionSet<TexlFunction> functions)
         {
             var missingEnums = new Dictionary<string, string>();
+#pragma warning disable CS0612 // Type or member is obsolete
             foreach (var function in functions.Functions)
             {
                 var requiredEnumNames = function.GetRequiredEnumNames();
@@ -305,6 +306,7 @@ namespace Microsoft.PowerFx.Core.Types.Enums
                     }
                 }
             }
+#pragma warning restore CS0612 // Type or member is obsolete
 
             foreach (var missingEnum in missingEnums)
             {

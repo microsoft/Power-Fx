@@ -59,6 +59,7 @@
     <Copyright>© Microsoft Corporation. All rights reserved.</Copyright>
   </PropertyGroup>
   
+  <!-- Exclude performance test project from delay signing -->
   <PropertyGroup Condition="'$(Project)'!='Microsoft.PowerFx.Performance.Tests'">
     <AssemblyOriginatorKeyFile Condition="EXISTS('..\..\..\src\build\35MSSharedLib1024.snk')">..\..\..\src\build\35MSSharedLib1024.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>

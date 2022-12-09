@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
@@ -201,6 +202,32 @@ namespace Microsoft.PowerFx.Core.Tests
             // Check if nothing else has been copied
             Assert.Empty(symbolTableCopy1.SymbolNames);
             Assert.Empty(symbolTableCopy2.SymbolNames);
+        }
+
+        [Fact]
+        public void ComposedReadOnlySymbolTableFunctionCacheTest()
+        {
+            var symbolTable = new SymbolTable();
+            symbolTable.AddFunction(new BlankFunction());
+
+            var composed = new ComposedReadOnlySymbolTable(new SymbolTableEnumerator(symbolTable));
+            var func1 = composed.Functions;
+
+            Assert.NotNull(func1);
+            Assert.Equal(1, func1.Count());
+
+            var func2 = composed.Functions;
+
+            Assert.NotNull(func2);
+            Assert.Equal(1, func2.Count());
+
+            Assert.Same(func1, func2);
+
+            symbolTable.AddFunction(new SqrtFunction());
+
+            var func3 = composed.Functions;
+            Assert.NotNull(func3);
+            Assert.Equal(2, func3.Count());
         }
     }
 }

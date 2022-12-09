@@ -45,7 +45,9 @@ namespace Microsoft.PowerFx.Functions
             TexlFunctionImplementations.Add(SimpleFunctionTabularOverloadImplementations.Select(f => new TexlFunctionImplementation(f.Key, f.Value)));
             TexlFunctionImplementations.Add(SimpleFunctionMultiArgsTabularOverloadImplementations.Select(f => new TexlFunctionImplementation(f.Key, f.Value)));
 
-            FunctionImplementations = TexlFunctionImplementations.Functions.ToDictionary(tfi => tfi.function, tfi => tfi.functionPtr as AsyncFunctionPtr);
+#pragma warning disable CS0612 // Type or member is obsolete
+            FunctionImplementations = TexlFunctionImplementations.Functions.ToDictionary(tfi => tfi.function, tfi => tfi.functionPtr);
+#pragma warning restore CS0612 // Type or member is obsolete
         }
 
         // Some TexlFunctions are overloaded

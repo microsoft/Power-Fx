@@ -60,19 +60,25 @@ namespace Microsoft.PowerFx
             return slot.Owner.GetTypeFromSlot(slot);
         }
 
-        TexlFunctionSet<TexlFunction> __functions = null;
+        TexlFunctionSet<TexlFunction> _nameResolverFunctions = null;
+        HashSet<VersionHash> _nameResolverFunctionsVersions = null;
 
         // Expose the list to aide in intellisense suggestions. 
         TexlFunctionSet<TexlFunction> INameResolver.Functions
         {
             get
             {
-                if (__functions == null)
+                if (_nameResolverFunctions != null &&
+                    _nameResolverFunctionsVersions != null &&
+                    _nameResolverFunctionsVersions.SetEquals(_symbolTables.Select(t => t.VersionHash)))
                 {
-                    __functions = new TexlFunctionSet<TexlFunction>(_symbolTables.Select(t => t.Functions));
+                    return _nameResolverFunctions;
                 }
 
-                return __functions;
+                _nameResolverFunctions = new TexlFunctionSet<TexlFunction>(_symbolTables.Select(t => t.Functions));
+                _nameResolverFunctionsVersions = new HashSet<VersionHash>(_symbolTables.Select(t => t.VersionHash));
+
+                return _nameResolverFunctions;
             }
         }
 
@@ -146,7 +152,9 @@ namespace Microsoft.PowerFx
             Contracts.Check(nameSpace.IsValid, "The namespace is invalid.");
 
             // $$$ Needs optimization
+#pragma warning disable CS0612 // Type or member is obsolete
             return Functions.Functions.Where(function => function.Namespace.Equals(nameSpace));
+#pragma warning restore CS0612 // Type or member is obsolete
         }
 
         public virtual bool LookupEnumValueByInfoAndLocName(object enumInfo, DName locName, out object value)

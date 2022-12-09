@@ -13,14 +13,14 @@ namespace Microsoft.PowerFx.Core.Functions
     internal class TexlFunctionSet<T>
         where T : ITexlFunction
     {
-        private Dictionary<string, HashSet<T>> _functions;
-        private Dictionary<string, HashSet<T>> _functionsInvariant;
+        private Dictionary<string, List<T>> _functions;
+        private Dictionary<string, List<T>> _functionsInvariant;
         private int _count;
 
         internal TexlFunctionSet()
         {
-            _functions = new Dictionary<string, HashSet<T>>();
-            _functionsInvariant = new Dictionary<string, HashSet<T>>();
+            _functions = new Dictionary<string, List<T>>();
+            _functionsInvariant = new Dictionary<string, List<T>>();
             _count = 0;
         }
 
@@ -32,8 +32,8 @@ namespace Microsoft.PowerFx.Core.Functions
                 throw new ArgumentNullException($"{nameof(function)} cannot be null", nameof(function));
             }
 
-            _functions.Add(function.Name, new HashSet<T>() { function });
-            _functionsInvariant.Add(function.LocaleInvariantName, new HashSet<T>() { function });
+            _functions.Add(function.Name, new List<T>() { function });
+            _functionsInvariant.Add(function.LocaleInvariantName, new List<T>() { function });
             _count = 1;
         }
 
@@ -51,7 +51,7 @@ namespace Microsoft.PowerFx.Core.Functions
             }
         }
 
-        internal TexlFunctionSet(Dictionary<string, HashSet<T>> functions, Dictionary<string, HashSet<T>> functionsInvariant, int count)
+        internal TexlFunctionSet(Dictionary<string, List<T>> functions, Dictionary<string, List<T>> functionsInvariant, int count)
         {
             _functions = functions ?? throw new ArgumentNullException($"{nameof(functions)} cannot be null", nameof(functions));
             _functionsInvariant = functionsInvariant ?? throw new ArgumentNullException($"{nameof(functionsInvariant)} cannot be null", nameof(functionsInvariant));
@@ -60,8 +60,8 @@ namespace Microsoft.PowerFx.Core.Functions
 
         internal TexlFunctionSet(TexlFunctionSet<T> other)
         {
-            _functions = new Dictionary<string, HashSet<T>>(other._functions);
-            _functionsInvariant = new Dictionary<string, HashSet<T>>(other._functionsInvariant);
+            _functions = new Dictionary<string, List<T>>(other._functions);
+            _functionsInvariant = new Dictionary<string, List<T>>(other._functionsInvariant);
             _count = other._count;
         }
 
@@ -80,6 +80,7 @@ namespace Microsoft.PowerFx.Core.Functions
         }
 
         // Slow API, only use for backward compatibility
+        [Obsolete]
         internal IEnumerable<T> Functions
         {
             get
@@ -114,7 +115,7 @@ namespace Microsoft.PowerFx.Core.Functions
             }
             else
             {
-                _functions.Add(function.Name, new HashSet<T>() { function });
+                _functions.Add(function.Name, new List<T>() { function });
             }
 
             var fInvariantList = WithInvariantName(function.LocaleInvariantName);
@@ -127,7 +128,7 @@ namespace Microsoft.PowerFx.Core.Functions
             }
             else
             {
-                _functionsInvariant.Add(function.LocaleInvariantName, new HashSet<T>() { function });
+                _functionsInvariant.Add(function.LocaleInvariantName, new List<T>() { function });
             }
 
             _count++;
@@ -146,8 +147,8 @@ namespace Microsoft.PowerFx.Core.Functions
 
             if (_count == 0)
             {
-                _functions = new Dictionary<string, HashSet<T>>(functionSet._functions);
-                _functionsInvariant = new Dictionary<string, HashSet<T>>(functionSet._functionsInvariant);
+                _functions = new Dictionary<string, List<T>>(functionSet._functions);
+                _functionsInvariant = new Dictionary<string, List<T>>(functionSet._functionsInvariant);
                 _count = functionSet._count;
             }
             else
@@ -200,13 +201,13 @@ namespace Microsoft.PowerFx.Core.Functions
             }
         }
 
-        internal Dictionary<string, HashSet<T>>.KeyCollection Keys => _functions.Keys;
-        internal Dictionary<string, HashSet<T>>.KeyCollection InvariantKeys => _functionsInvariant.Keys;
+        internal Dictionary<string, List<T>>.KeyCollection Keys => _functions.Keys;
+        internal Dictionary<string, List<T>>.KeyCollection InvariantKeys => _functionsInvariant.Keys;
 
-        internal HashSet<T> WithName(string name) => _functions.ContainsKey(name) ? _functions[name] : new HashSet<T>();
-        internal HashSet<T> WithName(string name, DPath ns) => _functions.ContainsKey(name) ? new HashSet<T>(_functions[name].Where(f => f.Namespace == ns)) : new HashSet<T>();
-        internal HashSet<T> WithInvariantName(string name) => _functionsInvariant.ContainsKey(name) ? _functionsInvariant[name] : new HashSet<T>();
-        internal HashSet<T> WithInvariantName(string name, DPath ns) => _functionsInvariant.ContainsKey(name) ? new HashSet<T>(_functionsInvariant[name].Where(f => f.Namespace == ns)) : new HashSet<T>();
+        internal List<T> WithName(string name) => _functions.ContainsKey(name) ? _functions[name] : new List<T>();
+        internal List<T> WithName(string name, DPath ns) => _functions.ContainsKey(name) ? new List<T>(_functions[name].Where(f => f.Namespace == ns)) : new List<T>();
+        internal List<T> WithInvariantName(string name) => _functionsInvariant.ContainsKey(name) ? _functionsInvariant[name] : new List<T>();
+        internal List<T> WithInvariantName(string name, DPath ns) => _functionsInvariant.ContainsKey(name) ? new List<T>(_functionsInvariant[name].Where(f => f.Namespace == ns)) : new List<T>();
 
         internal TexlFunctionSet<TexlFunction> ToTexlFunctions()
         {
@@ -215,18 +216,18 @@ namespace Microsoft.PowerFx.Core.Functions
                 return this as TexlFunctionSet<TexlFunction>;
             }
 
-            var _f = new Dictionary<string, HashSet<TexlFunction>>();
+            var _f = new Dictionary<string, List<TexlFunction>>();
 
-            foreach (var t in _functions)
+            foreach (var kvp in _functions)
             {
-                _f.Add(t.Key, new HashSet<TexlFunction>(t.Value.Select(f => f.ToTexlFunctions())));
+                _f.Add(kvp.Key, new List<TexlFunction>(kvp.Value.Select(f => f.ToTexlFunctions())));
             }
 
-            var _fi = new Dictionary<string, HashSet<TexlFunction>>();
+            var _fi = new Dictionary<string, List<TexlFunction>>();
 
             foreach (var t in _functionsInvariant)
             {
-                _fi.Add(t.Key, new HashSet<TexlFunction>(t.Value.Select(f => f.ToTexlFunctions())));
+                _fi.Add(t.Key, new List<TexlFunction>(t.Value.Select(f => f.ToTexlFunctions())));
             }
 
             return new TexlFunctionSet<TexlFunction>(_f, _fi, _count);

@@ -55,7 +55,10 @@ namespace Microsoft.PowerFx
         /// <summary>
         /// Get all functions from the config and symbol tables. 
         /// </summary>
-        public IEnumerable<FunctionInfo> FunctionInfos => Functions.Functions.Select(f => new FunctionInfo(f));
+        public IEnumerable<FunctionInfo> FunctionInfos =>
+#pragma warning disable CS0612 // Type or member is obsolete
+            Functions.Functions.Select(f => new FunctionInfo(f));
+#pragma warning restore CS0612 // Type or member is obsolete
 
         /// <summary>
         /// List all functions (both builtin and custom) registered with this evaluator. 
@@ -212,7 +215,7 @@ namespace Microsoft.PowerFx
             // Ok to continue with binding even if there are parse errors. 
             // We can still use that for intellisense.             
             var resolver = CreateResolverInternal(out var combinedSymbols, symbolTable);
-            
+
             var glue = CreateBinderGlue();
 
             var binding = TexlBinding.Run(
@@ -295,7 +298,7 @@ namespace Microsoft.PowerFx
         /// </summary>
         [Obsolete("Use overload without expression")]
         public IIntellisenseResult Suggest(string expression, CheckResult checkResult, int cursorPosition)
-        {            
+        {
             var binding = checkResult._binding;
             var formula = new Formula(expression, Config.CultureInfo);
             formula.ApplyParse(checkResult.Parse);

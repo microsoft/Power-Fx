@@ -627,6 +627,7 @@ namespace Microsoft.PowerFx.Intellisense
             Contracts.AssertValue(intellisenseData);
 
             // $$$ Needs optimization
+#pragma warning disable CS0612 // Type or member is obsolete
             foreach (var function in intellisenseData.Binding.NameResolver.Functions.Functions)
             {
                 var qualifiedName = function.QualifiedName;
@@ -644,6 +645,7 @@ namespace Microsoft.PowerFx.Intellisense
                     }
                 }
             }
+#pragma warning restore CS0612 // Type or member is obsolete
         }
 
         /// <summary>
@@ -709,7 +711,9 @@ namespace Microsoft.PowerFx.Intellisense
 
             // Suggest function namespaces
             // $$$ Needs optimization
+#pragma warning disable CS0612 // Type or member is obsolete
             var namespaces = intellisenseData.Binding.NameResolver.Functions.Functions.Select(func => func.Namespace).Distinct();
+#pragma warning restore CS0612 // Type or member is obsolete
             foreach (var funcNamespace in namespaces)
             {
                 if (funcNamespace == DPath.Root)

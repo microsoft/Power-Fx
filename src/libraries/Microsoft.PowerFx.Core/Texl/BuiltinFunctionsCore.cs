@@ -15,10 +15,14 @@ namespace Microsoft.PowerFx.Core.Texl
     internal class BuiltinFunctionsCore
     {
         // Slow API, only use for backward compatibility
+#pragma warning disable CS0612 // Type or member is obsolete
         public static IEnumerable<TexlFunction> BuiltinFunctionsLibrary => _library.Functions;
+#pragma warning restore CS0612 // Type or member is obsolete
 
         // Slow API, only use for backward compatibility
+#pragma warning disable CS0612 // Type or member is obsolete
         internal static IEnumerable<TexlFunction> TestOnly_AllBuiltinFunctions => _library.Clone().Add(_featureGateFunctions).Functions;
+#pragma warning restore CS0612 // Type or member is obsolete
 
         // Functions in this list are shared and may show up in other hosts by default.
         internal static readonly TexlFunctionSet<TexlFunction> _library = new TexlFunctionSet<TexlFunction>();
