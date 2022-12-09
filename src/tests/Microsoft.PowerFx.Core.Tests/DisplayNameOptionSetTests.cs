@@ -106,13 +106,13 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                         
             config.AddEntity(otherOptionSet, new DName("NonColliding"));
 
-            Assert.True(config.TryGetSymbol(new DName("OptionSet"), out _, out var displayName));
+            Assert.True(config.TryGetVariable(new DName("OptionSet"), out var displayName));
             Assert.Equal("SomeDisplayName", displayName.Value);
-            Assert.True(config.TryGetSymbol(new DName("OtherOptionSet"), out _, out displayName));
+            Assert.True(config.TryGetVariable(new DName("OtherOptionSet"), out displayName));
             Assert.Equal("NonColliding", displayName.Value);
-            Assert.True(config.TryGetSymbol(new DName("NonColliding"), out _, out displayName));
+            Assert.True(config.TryGetVariable(new DName("NonColliding"), out displayName));
             Assert.Equal("NonColliding", displayName.Value);
-            Assert.True(config.TryGetSymbol(new DName("SomeDisplayName"), out _, out displayName));
+            Assert.True(config.TryGetVariable(new DName("SomeDisplayName"), out displayName));
             Assert.Equal("SomeDisplayName", displayName.Value);
         }
     }

@@ -110,6 +110,62 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.Throws<NameCollisionException>(() => r1.Add(new NamedFormulaType("DisplayNum", FormulaType.Date, "NoCollision")));
             Assert.Throws<NameCollisionException>(() => r1.Add(new NamedFormulaType("NoCollision", FormulaType.Date, "DisplayNum")));
             Assert.Throws<NameCollisionException>(() => r1.Add(new NamedFormulaType("NoCollision", FormulaType.Date, "Num")));
+
+            // Collision on symbol table
+            var symbol = new SymbolTable();
+
+            // Adds display name for a variable.
+            symbol.AddVariable("logicalVariable", FormulaType.Number, displayName: "displayVariable");
+            symbol.AddVariable("logicalVariable2", FormulaType.Number, displayName: "displayVariable2");
+
+            // should throw if try to add same name constant
+            Assert.Throws<NameCollisionException>(() => symbol.AddConstant("logicalVariable", FormulaValue.New(1)));
+            Assert.Throws<NameCollisionException>(() => symbol.AddConstant("displayVariable", FormulaValue.New(1)));
+
+            // should be able to remove variable using display name
+            Assert.Throws<NameCollisionException>(() => symbol.AddConstant("logicalVariable2", FormulaValue.New(1)));
+            Assert.Throws<NameCollisionException>(() => symbol.AddConstant("displayVariable2", FormulaValue.New(1)));
+            symbol.RemoveVariable("displayVariable2");
+            symbol.AddConstant("logicalVariable2", FormulaValue.New(1));
+            symbol.AddConstant("displayVariable2", FormulaValue.New(1));
+
+            var config = new PowerFxConfig() { SymbolTable = symbol };
+
+            // should throw if try to add same name entity
+            // displayVariable is display name for variable logicalVariable
+            var optionSet = new OptionSet("displayVariable", DisplayNameUtility.MakeUnique(new Dictionary<string, string>()
+            {
+                    { "foo", "Option1" },
+                    { "baz", "foo" }
+            }));
+            Assert.Throws<NameCollisionException>(() => config.AddEntity(optionSet, new DName("newName")));
+
+            // logicalVariable is logical name for variable logicalVariable.
+            var optionSet2 = new OptionSet("logicalVariable", DisplayNameUtility.MakeUnique(new Dictionary<string, string>()
+            {
+                    { "foo", "Option1" },
+                    { "baz", "foo" }
+            }));
+            Assert.Throws<NameCollisionException>(() => config.AddEntity(optionSet2, new DName("newName")));
+
+            // option set with new name.
+            var optionSet3 = new OptionSet("newName", DisplayNameUtility.MakeUnique(new Dictionary<string, string>()
+            {
+                    { "foo", "Option1" },
+                    { "baz", "foo" }
+            }));
+
+            // displayVariable is display name for variable logicalVariable
+            Assert.Throws<NameCollisionException>(() => config.AddEntity(optionSet3, new DName("displayVariable")));
+
+            // logicalVariable is logical name for variable logicalVariable
+            Assert.Throws<NameCollisionException>(() => config.AddEntity(optionSet3, new DName("logicalVariable")));
+
+            // Remove variable and remove from display name as well.
+            symbol.RemoveVariable("logicalVariable");
+
+            // Now below should not throw an exception.
+            config.AddEntity(optionSet3, new DName("displayVariable"));
         }
 
         [Fact]
@@ -372,6 +428,26 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.True(found);
             Assert.Equal(FormulaType.Number, type);
             Assert.Equal("Num", logical);
+        }
+
+        [Theory]
+        [InlineData("ForAll(Outer, { Inner: 123 })", "ForAll(OuterDisplay, { Inner: 123 })")]
+        [InlineData("ForAll(Outer, ForAll(Inner, { OuterField: 123, InnerField: 456 })", "ForAll(OuterDisplay, ForAll(InnerDisplay, { OuterField: 123, InnerField: 456 })")]
+        [InlineData("ForAll(Inner, { InnerField: 123 })", "ForAll(InnerDisplay, { InnerField: 123 })")]
+        public void ConvertToDisplayNamesForAllNoScopes(string expression, string expected)
+        {
+            var r1 = RecordType.Empty()
+                .Add(new NamedFormulaType(
+                        "Inner",
+                        TableType.Empty().Add(new NamedFormulaType("InnerField", FormulaType.Number, "InnerFieldDisplay")),
+                        "InnerDisplay"))
+                .Add(new NamedFormulaType(
+                        "Outer",
+                        TableType.Empty().Add(new NamedFormulaType("OuterField", FormulaType.Number, "OuterFieldDisplay")),
+                        "OuterDisplay"));
+
+            var outDisplayExpression = _engine.GetDisplayExpression(expression, r1);
+            Assert.Equal(expected, outDisplayExpression);
         }
     }
 
