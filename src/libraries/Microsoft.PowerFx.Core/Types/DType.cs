@@ -19,14 +19,6 @@ namespace Microsoft.PowerFx.Core.Types
     [ThreadSafeImmutable]
     internal class DType : ICheckable
     {
-        /// <summary>
-        /// The last parameter type of service functions is a record.  The fields of this argument do not have to
-        /// be defined in order for an invocation to correctly type check.  The individual field types must match
-        /// the expected type exactly, however, so it is necessary to set this value for a single aggregate DType
-        /// and not for the individual field types within.
-        /// </summary>
-        public bool AreFieldsOptional { get; set; } = false;
-
         public const char EnumPrefix = '%';
         public const string MetaFieldName = "meta-6de62757-ecb6-4be6-bb85-349b3c7938a9";
 
@@ -59,6 +51,7 @@ namespace Microsoft.PowerFx.Core.Types
         public static readonly DType NamedValue = new DType(DKind.NamedValue);
         public static readonly DType MinimalLargeImage = CreateMinimalLargeImageType();
         public static readonly DType UntypedObject = new DType(DKind.UntypedObject);
+        public static readonly DType Deferred = new DType(DKind.Deferred);
 
         public static readonly DType Invalid = new DType();
 
@@ -118,24 +111,34 @@ namespace Microsoft.PowerFx.Core.Types
 
         public static Dictionary<DKind, DKind> KindToSuperkindMapping => _kindToSuperkindMapping.Value;
 
+        #region Core fields 
+        public DKind Kind { get; }
+
+        // Fields of an aggregate type (Record/table).  Just logical names. 
+        // Immutable tree. 
         public TypeTree TypeTree { get; }
 
         // These are default values except for Enums.
         public DKind EnumSuperkind { get; }
 
+        // Don't use this. Use option sets instead. 
+        // Special case for old enums. 
         public ValueTree ValueTree { get; }
 
-        // Intended future home of all lazy type expansion (Control, Relationship, Other)
+        #endregion 
+
+        #region New Generic versions of legacy features. 
+
+        /// <summary>
+        /// Intended future home of all lazy type expansion (Control, Relationship, Other).
+        /// </summary>
         internal readonly LazyTypeProvider LazyTypeProvider;
 
-        internal HashSet<IExternalTabularDataSource> AssociatedDataSources { get; }
-
-        internal IExternalOptionSet OptionSetInfo { get; }
-
-        internal IExternalViewInfo ViewInfo { get; }
-
-        // Eventually, all display names should come from this centralized source
-        // We should not be using individual DataSource/OptionSet/View references
+        /// <summary>
+        /// Provides a logical / display name mapping. 
+        /// Eventually, all display names should come from this centralized source.
+        /// We should not be using individual DataSource/OptionSet/View references.
+        /// </summary>
         internal DisplayNameProvider DisplayNameProvider { get; private set; }
 
         /// <summary>
@@ -145,6 +148,59 @@ namespace Microsoft.PowerFx.Core.Types
         /// Null for non-named value DTypes.
         /// </summary>
         internal string NamedValueKind { get; }
+
+        /// <summary>
+        /// Describes OptionSets. Includes display names and naming info. 
+        /// Can create <see cref="OptionSetValue"/>s. 
+        /// </summary>
+        internal IExternalOptionSet OptionSetInfo { get; }
+
+        #endregion
+
+        #region Fields for Dataverse Support 
+        
+        // These are legacy implementation that are special cases for dataverse concepts. 
+        // We're trying to move away from these to the more generic versions. 
+
+        // External data source for a tabular connection, like a Dataverse Entity or Sharepoint.
+        // Can also provide Display Names.
+        internal HashSet<IExternalTabularDataSource> AssociatedDataSources { get; }
+
+        // Describes a relationships on tabular connections. 
+        // This is a "placeholder" field that can expand to another entity (ala a TypeRef). 
+        // Can also provide Display Names.
+        // Should eventually be subsumed by LazyTypeProvider
+        public IExpandInfo ExpandInfo { get; }
+
+        // This is very similar interface to OptionSets, could potentially unify. 
+        internal IExternalViewInfo ViewInfo { get; }
+
+        public IPolymorphicInfo PolymorphicInfo { get; }
+
+        public IDataColumnMetadata Metadata { get; }
+
+        #endregion
+
+        #region Bad Fields
+
+        // These fields are extra state for hacks that should be removed. 
+
+        private readonly bool _isFile;
+
+        private readonly bool _isLargeImage;
+
+        private bool? _isActivityPointer;
+
+        /// <summary>
+        /// Hack for binding Service Function optional parameters. 
+        /// The last parameter type of service functions is a record.  The fields of this argument do not have to
+        /// be defined in order for an invocation to correctly type check.  The individual field types must match
+        /// the expected type exactly, however, so it is necessary to set this value for a single aggregate DType
+        /// and not for the individual field types within.
+        /// </summary>
+        public bool AreFieldsOptional { get; set; } = false;
+
+        #endregion 
 
         /// <summary>
         ///  Whether this type is a subtype of all possible types, meaning that it can be placed in
@@ -509,11 +565,11 @@ namespace Microsoft.PowerFx.Core.Types
 #endif
         }
 
-        public DKind Kind { get; }
-
         public bool IsValid => Kind >= DKind._Min && Kind < DKind._Lim;
 
         public bool IsUnknown => Kind == DKind.Unknown;
+
+        public bool IsDeferred => Kind == DKind.Deferred;
 
         public bool IsError => Kind == DKind.Error;
 
@@ -545,15 +601,9 @@ namespace Microsoft.PowerFx.Core.Types
 
         public bool IsUntypedObject => Kind == DKind.UntypedObject;
 
-        private readonly bool _isFile;
-
         public bool IsFile => _isFile || Kind == DKind.File;
 
-        private readonly bool _isLargeImage;
-
         public bool IsLargeImage => _isLargeImage || Kind == DKind.LargeImage;
-
-        private bool? _isActivityPointer;
 
         public bool IsActivityPointer
         {
@@ -569,12 +619,6 @@ namespace Microsoft.PowerFx.Core.Types
                 return _isActivityPointer.Value;
             }
         }
-
-        public IExpandInfo ExpandInfo { get; }
-
-        public IPolymorphicInfo PolymorphicInfo { get; }
-
-        public IDataColumnMetadata Metadata { get; }
 
         public DType AttachmentType => IsAttachment ? LazyTypeProvider.GetExpandedType(IsTable) : DType.Invalid;
 
@@ -639,7 +683,7 @@ namespace Microsoft.PowerFx.Core.Types
             var returnType = type.Clone();
             returnType.AssociatedDataSources.Add(dsInfo);
 
-            if (!attachToNestedType)
+            if (!attachToNestedType || type.IsLazyType)
             {
                 return returnType;
             }
@@ -1298,6 +1342,12 @@ namespace Microsoft.PowerFx.Core.Types
             Contracts.Assert(IsAggregate);
             Contracts.Assert(typedName.IsValid);
 
+            // We don't want to allow building aggregate types around deferred type.
+            if(typedName.Type.IsDeferred)
+            {
+                throw new NotSupportedException();
+            }
+
             return Add(typedName.Name, typedName.Type);
         }
 
@@ -1654,13 +1704,6 @@ namespace Microsoft.PowerFx.Core.Types
                 fValid &= !fError;
             }
 
-            if (type.ContainsAttachmentType(DPath.Root))
-            {
-                var fError = false;
-                type = type.DropAllMatching(ref fError, DPath.Root, type => type.IsAttachment);
-                fValid &= !fError;
-            }
-
             if (!fValid)
             {
                 type = Unknown;
@@ -1672,7 +1715,7 @@ namespace Microsoft.PowerFx.Core.Types
         /// <summary>
         /// Covers Lazy.Accepts(other) scenarios.
         /// </summary>
-        private bool LazyTypeAccepts(DType other)
+        private bool LazyTypeAccepts(DType other, bool exact)
         {
             Contracts.AssertValid(other);
             Contracts.Assert(IsLazyType);
@@ -1685,16 +1728,16 @@ namespace Microsoft.PowerFx.Core.Types
                     return other.LazyTypeProvider.BackingFormulaType.Equals(LazyTypeProvider.BackingFormulaType) && IsTable == other.IsTable;
                 case DKind.Record:
                 case DKind.Table:
-                    return LazyTypeProvider.GetExpandedType(IsTable).Accepts(other, true);
+                    return LazyTypeProvider.GetExpandedType(IsTable).Accepts(other, exact);
                 default:
-                    return other.Kind == DKind.Unknown;
+                    return other.Kind == DKind.Unknown || other.Kind == DKind.Deferred;
             }
         }
 
         /// <summary>
         /// Covers Known.Accepts(Lazy) scenarios.
         /// </summary>
-        private bool AcceptsLazyType(DType lazy)
+        private bool AcceptsLazyType(DType lazy, bool exact)
         {
             Contracts.Assert(IsAggregate);
             Contracts.Assert(lazy.IsLazyType);
@@ -1706,7 +1749,7 @@ namespace Microsoft.PowerFx.Core.Types
 
             foreach (var namedType in GetNames(DPath.Root))
             {
-                if (!lazy.TryGetType(namedType.Name, out var otherField) || !namedType.Type.Accepts(otherField))
+                if (!lazy.TryGetType(namedType.Name, out var otherField) || !namedType.Type.Accepts(otherField, exact))
                 {
                     return false;
                 }
@@ -1742,7 +1785,7 @@ namespace Microsoft.PowerFx.Core.Types
 
                     return expandedEntityType.Accepts(type, true);
                 default:
-                    return type.Kind == DKind.Unknown;
+                    return type.Kind == DKind.Unknown || type.Kind == DKind.Deferred;
             }
         }
 
@@ -1815,6 +1858,7 @@ namespace Microsoft.PowerFx.Core.Types
             bool DefaultReturnValue(DType targetType) =>
                     targetType.Kind == Kind ||
                     targetType.Kind == DKind.Unknown ||
+                    targetType.Kind == DKind.Deferred ||
                     (targetType.Kind == DKind.Enum && Accepts(targetType.GetEnumSupertype()));
 
             bool accepts;
@@ -1825,7 +1869,7 @@ namespace Microsoft.PowerFx.Core.Types
                     break;
 
                 case DKind.Polymorphic:
-                    accepts = type.Kind == DKind.Polymorphic || type.Kind == DKind.Record || type.Kind == DKind.Unknown;
+                    accepts = type.Kind == DKind.Polymorphic || type.Kind == DKind.Record || type.Kind == DKind.Unknown || type.Kind == DKind.Deferred;
                     break;
 
                 case DKind.Record:
@@ -1833,7 +1877,7 @@ namespace Microsoft.PowerFx.Core.Types
                 case DKind.LargeImage:
                     if (type.IsLazyType)
                     {
-                        return AcceptsLazyType(type);
+                        return AcceptsLazyType(type, exact);
                     }
 
                     if (Kind == type.Kind)
@@ -1841,13 +1885,13 @@ namespace Microsoft.PowerFx.Core.Types
                         return TreeAccepts(this, TypeTree, type.TypeTree, out schemaDifference, out schemaDifferenceType, exact, useLegacyDateTimeAccepts);
                     }
 
-                    accepts = type.Kind == DKind.Unknown;
+                    accepts = type.Kind == DKind.Unknown || type.Kind == DKind.Deferred;
                     break;
 
                 case DKind.Table:                    
                     if (type.IsLazyType)
                     {
-                        return AcceptsLazyType(type);
+                        return AcceptsLazyType(type, exact);
                     }
 
                     if (Kind == type.Kind || type.IsExpandEntity)
@@ -1855,18 +1899,20 @@ namespace Microsoft.PowerFx.Core.Types
                         return TreeAccepts(this, TypeTree, type.TypeTree, out schemaDifference, out schemaDifferenceType, exact, useLegacyDateTimeAccepts);
                     }
 
-                    accepts = (IsMultiSelectOptionSet() && TypeTree.GetPairs().First().Value.OptionSetInfo == type.OptionSetInfo) || type.Kind == DKind.Unknown;
+                    accepts = (IsMultiSelectOptionSet() && TypeTree.GetPairs().First().Value.OptionSetInfo == type.OptionSetInfo) || type.Kind == DKind.Unknown || type.Kind == DKind.Deferred;
                     break;
 
                 case DKind.Enum:
-                    accepts = (Kind != type.Kind && type.Kind == DKind.Unknown) ||
+                    accepts = (Kind != type.Kind && (type.Kind == DKind.Unknown || type.Kind == DKind.Deferred)) ||
                               (EnumSuperkind == type.EnumSuperkind && EnumTreeAccepts(ValueTree, type.ValueTree, exact));
                     break;
 
                 case DKind.Unknown:
                     accepts = type.Kind == DKind.Unknown;
                     break;
-
+                case DKind.Deferred:
+                    accepts = type.Kind == DKind.Deferred || type.Kind == DKind.Unknown;
+                    break;
                 case DKind.String:
                     accepts =
                         type.Kind == Kind ||
@@ -1876,6 +1922,7 @@ namespace Microsoft.PowerFx.Core.Types
                         type.Kind == DKind.Media ||
                         type.Kind == DKind.Blob ||
                         type.Kind == DKind.Unknown ||
+                        type.Kind == DKind.Deferred ||
                         type.Kind == DKind.Guid ||
                         (type.Kind == DKind.Enum && Accepts(type.GetEnumSupertype()));
                     break;
@@ -1885,6 +1932,7 @@ namespace Microsoft.PowerFx.Core.Types
                         type.Kind == Kind ||
                         type.Kind == DKind.Currency ||
                         type.Kind == DKind.Unknown ||
+                        type.Kind == DKind.Deferred ||
                         (useLegacyDateTimeAccepts &&
                             (type.Kind == DKind.DateTime ||
                             type.Kind == DKind.Date ||
@@ -1945,32 +1993,32 @@ namespace Microsoft.PowerFx.Core.Types
                     accepts = (type.Kind == Kind &&
                                 type.Metadata.Name == Metadata.Name &&
                                 type.Metadata.Type == Metadata.Type &&
-                                type.Metadata.ParentTableMetadata.Name == Metadata.ParentTableMetadata.Name) || type.Kind == DKind.Unknown;
+                                type.Metadata.ParentTableMetadata.Name == Metadata.ParentTableMetadata.Name) || type.Kind == DKind.Unknown || type.Kind == DKind.Deferred;
                     break;
                 case DKind.OptionSet:
                 case DKind.OptionSetValue:
                     accepts = (type.Kind == Kind &&
                                 (OptionSetInfo == null || type.OptionSetInfo == null || type.OptionSetInfo == OptionSetInfo)) ||
-                               type.Kind == DKind.Unknown;
+                               type.Kind == DKind.Unknown || type.Kind == DKind.Deferred;
                     break;
                 case DKind.View:
                 case DKind.ViewValue:
                     accepts = (type.Kind == Kind &&
                                 (ViewInfo == null || type.ViewInfo == null || type.ViewInfo == ViewInfo)) ||
-                               type.Kind == DKind.Unknown;
+                               type.Kind == DKind.Unknown || type.Kind == DKind.Deferred;
                     break;
 
                 case DKind.NamedValue:
                     accepts = (type.Kind == Kind && NamedValueKind == type.NamedValueKind) ||
-                              type.Kind == DKind.Unknown;
+                              type.Kind == DKind.Unknown || type.Kind == DKind.Deferred;
                     break;
                 case DKind.UntypedObject:
-                    accepts = type.Kind == DKind.UntypedObject || type.Kind == DKind.Unknown;
+                    accepts = type.Kind == DKind.UntypedObject || type.Kind == DKind.Unknown || type.Kind == DKind.Deferred;
                     break;
 
                 case DKind.LazyTable:
                 case DKind.LazyRecord:
-                    accepts = LazyTypeAccepts(type);
+                    accepts = LazyTypeAccepts(type, exact);
                     break;
                 default:
                     Contracts.Assert(false);
@@ -2434,6 +2482,7 @@ namespace Microsoft.PowerFx.Core.Types
         }
 
         /// <summary>
+        /// This API is very specific for Canvas. Don't call it unless you know exactly what you're doing. 
         /// Returns true iff <paramref name="displayName"/> was found within <paramref name="type"/>'s old display
         /// name mapping and sets <paramref name="logicalName"/> and <paramref name="newDisplayName"/>
         /// according to the new mapping.
@@ -3256,6 +3305,8 @@ namespace Microsoft.PowerFx.Core.Types
                     return "x";
                 case DKind.Unknown:
                     return "?";
+                case DKind.Deferred:
+                    return "X";
                 case DKind.Error:
                     return "e";
                 case DKind.Boolean:

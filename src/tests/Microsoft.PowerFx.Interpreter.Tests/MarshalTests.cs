@@ -102,6 +102,32 @@ namespace Microsoft.PowerFx.Tests
         }
 
         [Fact]
+        public void TestNullableType()
+        {
+            var typeMarshallerCache = new TypeMarshallerCache();
+            var typeMarshaller = typeMarshallerCache.GetMarshaller(typeof(TestNullableObj));
+
+            var fxObj = typeMarshallerCache.Marshal(new TestNullableObj());
+            var fxObj2 = typeMarshallerCache.Marshal(new TestNullableObj { IntField = 12 });
+
+            var engine = new RecalcEngine();
+
+            engine.UpdateVariable("fxObj", fxObj);
+            engine.UpdateVariable("fxObj2", fxObj2);
+
+            var result = engine.Eval("fxObj.IntField");
+            var result2 = engine.Eval("fxObj2.IntField");
+
+            Assert.IsType<BlankValue>(result);
+            Assert.IsType<NumberType>(result.Type);
+            Assert.Null(result.ToObject());
+
+            Assert.IsType<NumberValue>(result2);
+            Assert.IsType<NumberType>(result2.Type);
+            Assert.Equal(12D, result2.ToObject());
+        }
+
+        [Fact]
         public void TestBlank()
         {
             var node1 = new TestNode
@@ -247,6 +273,11 @@ namespace Microsoft.PowerFx.Tests
             var cache = TypeMarshallerCache.New(new CollideObjectMarshallerProvider());
 
             Assert.Throws<NameCollisionException>(() => cache.GetMarshaller(obj.GetType()));
+        }
+
+        private class TestNullableObj
+        {
+            public int? IntField { get; set; }
         }
 
         private class TestObj

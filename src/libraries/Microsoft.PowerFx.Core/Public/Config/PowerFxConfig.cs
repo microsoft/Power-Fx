@@ -90,12 +90,22 @@ namespace Microsoft.PowerFx
         /// </summary>
         internal static PowerFxConfig BuildWithEnumStore(CultureInfo cultureInfo, EnumStoreBuilder enumStoreBuilder)
         {
-            return BuildWithEnumStore(cultureInfo, enumStoreBuilder, Core.Texl.BuiltinFunctionsCore.BuiltinFunctionsLibrary);
+            return BuildWithEnumStore(cultureInfo, enumStoreBuilder, Features.None); 
+        }
+
+        internal static PowerFxConfig BuildWithEnumStore(CultureInfo cultureInfo, EnumStoreBuilder enumStoreBuilder, Features features)
+        {
+            return BuildWithEnumStore(cultureInfo, enumStoreBuilder, Core.Texl.BuiltinFunctionsCore.BuiltinFunctionsLibrary, features: features);
         }
 
         internal static PowerFxConfig BuildWithEnumStore(CultureInfo cultureInfo, EnumStoreBuilder enumStoreBuilder, IEnumerable<TexlFunction> coreFunctions)
         {
-            var config = new PowerFxConfig(cultureInfo, enumStoreBuilder);
+            return BuildWithEnumStore(cultureInfo, enumStoreBuilder, coreFunctions, Features.None);
+        }
+
+        internal static PowerFxConfig BuildWithEnumStore(CultureInfo cultureInfo, EnumStoreBuilder enumStoreBuilder, IEnumerable<TexlFunction> coreFunctions, Features features)
+        {
+            var config = new PowerFxConfig(cultureInfo, enumStoreBuilder, features);
 
             foreach (var func in coreFunctions)
             {

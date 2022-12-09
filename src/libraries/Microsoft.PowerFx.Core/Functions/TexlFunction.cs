@@ -31,6 +31,9 @@ namespace Microsoft.PowerFx.Core.Functions
     [ThreadSafeImmutable]
     internal abstract class TexlFunction : IFunction
     {
+        // Column name when Features.ConsistentOneColumnTableResult is enabled.
+        public const string ColumnName_ValueStr = "Value";
+
         // A default "no-op" error container that does not post document errors.
         public static IErrorContainer DefaultErrorContainer => new DefaultNoOpErrorContainer();
 
@@ -52,7 +55,7 @@ namespace Microsoft.PowerFx.Core.Functions
         // and the specific return type will depend on the argument types.
         // If the function can return some shape of record, which depends on the argument types,
         // DType.EmptyRecord should be used. Similarly for tables and DType.EmptyTable.
-        // CheckInvocation can be used to infer the exact return type of a specific invocation.
+        // CheckTypes can be used to infer the exact return type of a specific invocation.
         public DType ReturnType { get; }
 
         // Function arity (expected min/max number of arguments).
@@ -115,7 +118,7 @@ namespace Microsoft.PowerFx.Core.Functions
         public virtual bool CanBeUsedInTests => !CreatesImplicitScreenDependency;
 
         /// <summary>
-        /// Whether the function always produces a visible error if CheckInvocation returns invalid.
+        /// Whether the function always produces a visible error if CheckTypes returns invalid.
         /// This can be used to prevent the overall "Function has invalid arguments" error.
         /// </summary>
         public virtual bool HasPreciseErrors => false;
@@ -382,19 +385,39 @@ namespace Microsoft.PowerFx.Core.Functions
             return char.ToLowerInvariant(name[0]).ToString() + name.Substring(1) + suffix + (IsAsync && !suppressAsync ? "Async" : string.Empty);
         }
 
-        public virtual bool CheckInvocation(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        #region CheckInvocation Replacement Project
+        public bool HandleCheckInvocation(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
-            return CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var result = CheckTypes(binding.CheckTypesContext, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            CheckSemantics(binding, args, argTypes, errors, ref nodeToCoercedTypeMap);
+            return result;
         }
 
-        // Type check an invocation of the function with the specified args (and their corresponding types).
-        // Return true if everything aligns even with coercion, false otherwise.
-        // By default, the out returnType will be the one advertised via the constructor. If this.ReturnType
-        // is either Unknown or an aggregate type, this method needs to be specialized.
-        public virtual bool CheckInvocation(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        /// <summary>
+        /// Perform sub-expression type checking and produce a return type.
+        /// </summary>
+        public virtual bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
-            return CheckInvocationCore(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            return CheckTypes(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
         }
+
+        public virtual bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        {
+            return CheckTypesCore(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+        }
+
+        /// <summary>
+        /// Perform expression-level semantics checks which require a binding. May produce coercions.
+        /// </summary>
+        public virtual void CheckSemantics(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors, ref Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        {
+            CheckSemantics(binding, args, argTypes, errors);
+        }
+
+        public virtual void CheckSemantics(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors)
+        {
+        }
+        #endregion
 
         public virtual bool CheckForDynamicReturnType(TexlBinding binding, TexlNode[] args)
         {
@@ -418,7 +441,7 @@ namespace Microsoft.PowerFx.Core.Functions
             return SupportsParamCoercion && (argIndex <= MinArity || argIndex <= MaxArity);
         }
 
-        private bool CheckInvocationCore(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        private bool CheckTypesCore(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
@@ -1122,37 +1145,6 @@ namespace Microsoft.PowerFx.Core.Functions
                     dataSource.DelegationMetadata.VerifyValue().TableCapabilities.HasCapability(expectedCapability.Capabilities);
         }
 
-        /// <summary>
-        /// Removes the Attachments field from <paramref name="itemType"/> if it is defined and returns true if
-        /// successful and false if an error was present.  If the Attachments field is not defined, does nothing
-        /// and returns true.
-        /// </summary>
-        /// <remarks>
-        /// We ignore the Attachments field on all types in the invocation because it is a special column that
-        /// is delay loaded.  It is stripped from the type when used in functions like Set and is ignored in
-        /// Collect.CheckInvocation.
-        /// </remarks>
-        /// <param name="itemType">Type that may define Attachments.</param>
-        /// <param name="errors">Errors.</param>
-        /// <param name="node">Node to which <paramref name="itemType"/> is associated.</param>
-        /// <returns>
-        /// True if operation succeeded, if no Attachments field is defined or the Attachments field
-        /// has been successfully removed from <paramref name="itemType"/>, false otherwise.
-        /// </returns>
-        protected bool DropAttachmentsIfExists(ref DType itemType, IErrorContainer errors, TexlNode node)
-        {
-            Contracts.AssertValid(itemType);
-            Contracts.AssertValue(errors);
-            Contracts.AssertValue(node);
-
-            if (itemType.ContainsAttachmentType(DPath.Root))
-            {
-                return DropAllMatchingNested(ref itemType, errors, node, type => type.IsAttachment);
-            }
-
-            return true;
-        }
-
         // Helper to drop all of a single types from a result type
         protected bool DropAllOfKindNested(ref DType itemType, IErrorContainer errors, TexlNode node, DKind kind)
         {
@@ -1282,7 +1274,7 @@ namespace Microsoft.PowerFx.Core.Functions
             return false;
         }
 
-        protected bool CheckAllParamsAreTypeOrSingleColumnTable(DType desiredType, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        protected bool CheckAllParamsAreTypeOrSingleColumnTable(CheckTypesContext context, DType desiredType, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
@@ -1305,11 +1297,17 @@ namespace Microsoft.PowerFx.Core.Functions
                 {
                     if (fValid && nodeToCoercedTypeMap.Any())
                     {
-                        returnType = DType.CreateTable(new TypedName(desiredType, argTypes[i].GetNames(DPath.Root).Single().Name));
+                        var resultColumnName = context.Features.HasFlag(Features.ConsistentOneColumnTableResult)
+                            ? new DName(ColumnName_ValueStr)
+                            : argTypes[i].GetNames(DPath.Root).Single().Name;
+
+                        returnType = DType.CreateTable(new TypedName(desiredType, resultColumnName));
                     }
                     else
                     {
-                        returnType = argTypes[i];
+                        returnType = context.Features.HasFlag(Features.ConsistentOneColumnTableResult)
+                            ? DType.CreateTable(new TypedName(desiredType, new DName(ColumnName_ValueStr)))
+                            : argTypes[i];
                     }
                 }
             }

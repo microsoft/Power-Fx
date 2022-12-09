@@ -48,9 +48,8 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.PowerFxConfig",
                 "Microsoft.PowerFx.ReadOnlySymbolTable",
                 "Microsoft.PowerFx.SymbolTable",
-
-                // Feature flags are experimental - hosts shouldn't use it. 
-                "Microsoft.PowerFx.Preview.FeatureFlags",
+                "Microsoft.PowerFx.FormulaValueSerializerSettings",
+                "Microsoft.PowerFx.ISymbolSlot",
 
                 // Lexer                
                 "Microsoft.PowerFx.Syntax.BinaryOp",
@@ -139,6 +138,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Types.TimeType",
                 "Microsoft.PowerFx.Types.TimeValue",
                 "Microsoft.PowerFx.Types.UnknownType",
+                "Microsoft.PowerFx.Types.DeferredType",
                 "Microsoft.PowerFx.Types.UnsupportedType",
                 "Microsoft.PowerFx.Types.UntypedObjectType",
                 "Microsoft.PowerFx.Types.UntypedObjectValue",
@@ -157,12 +157,12 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Intellisense.SuggestionKind",
                 "Microsoft.PowerFx.Intellisense.TokenResultType",
                 "Microsoft.PowerFx.Intellisense.UIString",
+                "Microsoft.PowerFx.Intellisense.CodeFixHandler",
+                "Microsoft.PowerFx.Intellisense.CodeFixSuggestion",
 
                 // TBD ...
                 "Microsoft.PowerFx.Core.DisplayNameProvider",
                 "Microsoft.PowerFx.Core.DisplayNameUtility",
-                "Microsoft.PowerFx.Core.FormulaTypeSchema",
-                "Microsoft.PowerFx.Core.FormulaTypeToSchemaConverter",
                 "Microsoft.PowerFx.Core.Localization.ErrorResourceKey",                
                 "Microsoft.PowerFx.Core.RenameDriver",
                 "Microsoft.PowerFx.Core.Utils.DName",

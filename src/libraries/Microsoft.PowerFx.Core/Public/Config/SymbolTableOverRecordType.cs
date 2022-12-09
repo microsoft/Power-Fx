@@ -1,10 +1,12 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.UtilityDataStructures;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
 
@@ -15,12 +17,38 @@ namespace Microsoft.PowerFx
     internal class SymbolTableOverRecordType : ReadOnlySymbolTable, IGlobalSymbolNameResolver
     {
         private readonly RecordType _type;
+        private readonly bool _mutable;
+        private readonly bool _allowThisRecord;
 
-        public SymbolTableOverRecordType(RecordType type, ReadOnlySymbolTable parent = null)
+        private readonly NameLookupInfo _thisRecord;
+
+        // Mapping between slots and logical names on RecordType.
+        // name --> Slot; used at design time to ensure same slot per field. 
+        private readonly Dictionary<string, NameSymbol> _map = new Dictionary<string, NameSymbol>(); 
+
+        public SymbolTableOverRecordType(RecordType type, ReadOnlySymbolTable parent = null, bool mutable = false, bool allowThisRecord = false)
         {
             _type = type;
             _debugName = "per-eval";
             _parent = parent;
+            _mutable = mutable;
+            _allowThisRecord = allowThisRecord;
+
+            if (_allowThisRecord)
+            {
+                var data = new NameSymbol(TexlBinding.ThisRecordDefaultName, mutable: false)
+                {
+                    Owner = this,
+                    SlotIndex = int.MaxValue
+                };
+
+                _thisRecord = new NameLookupInfo(
+                       BindKind.PowerFxResolvedObject,
+                       type._type,
+                       DPath.Root,
+                       0,
+                       data: data);
+            }
         }
 
         // Key is the logical name. 
@@ -36,18 +64,27 @@ namespace Microsoft.PowerFx
             }
         }
 
+        public bool IsThisRecord(ISymbolSlot slot)
+        {
+            return slot.SlotIndex == int.MaxValue;
+        }
+
         internal override bool TryLookup(DName name, out NameLookupInfo nameInfo)
         {
-            // Lookup must handle display names
-            // This is consistent with RowScope. 
-            if (!DType.TryGetConvertedDisplayNameAndLogicalNameForColumn(_type._type, name, out var logicalName, out _))
+            if (_allowThisRecord)
             {
-                logicalName = name.Value;
+                if (name == TexlBinding.ThisRecordDefaultName)
+                {
+                    nameInfo = _thisRecord;
+                    return true;
+                }
             }
 
-            if (_type.TryGetFieldType(logicalName, out var type))
+            // Lookup must handle display names
+            // This is consistent with RowScope. 
+            if (_type.TryGetFieldType(name.Value, out var logicalName, out var type))
             {
-                nameInfo = Create(name.Value, type);
+                nameInfo = Create(logicalName, type);
                 return true;
             }
 
@@ -55,16 +92,64 @@ namespace Microsoft.PowerFx
             return false;
         }
 
-        private NameLookupInfo Create(string name, FormulaType type)
+        public FormulaValue GetValue(ISymbolSlot slot, RecordValue value)
         {
-            var hasDisplayName = DType.TryGetDisplayNameForColumn(_type._type, name, out var displayName);
+            if (IsThisRecord(slot))
+            {
+                return value;
+            }
+
+            var logicalName = GetFieldName(slot);
+            var field = value.GetField(logicalName);
+            return field;
+        }
+
+        public void SetValue(ISymbolSlot slot, RecordValue value, FormulaValue newValue)
+        {
+            var logicalName = GetFieldName(slot);
+            value.UpdateField(logicalName, newValue);
+        }
+
+        public override FormulaType GetTypeFromSlot(ISymbolSlot slot)
+        {
+            var name = GetFieldName(slot);
+            _type.TryGetFieldType(name, out var logicalName, out var type);
+            return type;
+        }
+
+        // Slot was created by this SymbolTable. 
+        internal string GetFieldName(ISymbolSlot slot)
+        {
+            if (slot is NameSymbol data)
+            {
+                return data.Name;
+            }
+
+            throw NewBadSlotException(slot); 
+        }
+
+        private NameLookupInfo Create(string logicalName, FormulaType type)
+        {
+            var hasDisplayName = DType.TryGetDisplayNameForColumn(_type._type, logicalName, out var displayName);
+
+            if (!_map.TryGetValue(logicalName, out var data))
+            {                                                
+                var slotIdx = _map.Count;
+
+                data = new NameSymbol(logicalName, _mutable)
+                {
+                    Owner = this,
+                    SlotIndex = slotIdx
+                };
+                _map.Add(logicalName, data);
+            }
 
             return new NameLookupInfo(
                    BindKind.PowerFxResolvedObject,
                    type._type,
                    DPath.Root,
                    0,
-                   data: new NameSymbol(name),
+                   data: data,
                    displayName: hasDisplayName ? new DName(displayName) : default);
         }
     }

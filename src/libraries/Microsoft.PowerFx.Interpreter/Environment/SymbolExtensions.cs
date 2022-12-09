@@ -30,5 +30,14 @@ namespace Microsoft.PowerFx
         {
             symbols.AddService(culture ?? throw new ArgumentNullException(nameof(culture)));
         }
+
+        /// <summary>
+        /// Create a set of values against this symbol table.
+        /// </summary>
+        /// <returns></returns>
+        public static ReadOnlySymbolValues CreateValues(this ReadOnlySymbolTable symbolTable, params ReadOnlySymbolValues[] existing)
+        {
+            return ComposedReadOnlySymbolValues.New(symbolTable, existing);
+        }
     }
 }

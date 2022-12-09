@@ -39,16 +39,15 @@ namespace Microsoft.PowerFx.Functions
         {
         }
 
-        public override bool CheckInvocation(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public override bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
-            Contracts.AssertValue(binding);
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
             Contracts.AssertValue(argTypes);
             Contracts.Assert(args.Length == argTypes.Length);
             Contracts.AssertValue(errors);
 
-            var isValid = CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var isValid = base.CheckTypes(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
 
             return isValid;
         }
@@ -182,19 +181,25 @@ namespace Microsoft.PowerFx.Functions
             return base.GetSignatures(arity);
         }
 
-        public override bool CheckInvocation(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public override bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
-            Contracts.AssertValue(binding);
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
             Contracts.AssertValue(argTypes);
             Contracts.Assert(args.Length == argTypes.Length);
             Contracts.AssertValue(errors);
 
-            var isValid = CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var isValid = base.CheckTypes(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
 
             DType dataSourceType = argTypes[0];
-            DType retType = DType.EmptyRecord;
+
+            if (!dataSourceType.IsTable)
+            {
+                errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrNeedValidVariableName_Arg, Name);
+                return false;
+            }
+
+            DType retType = dataSourceType.IsError ? DType.EmptyRecord : dataSourceType.ToRecord();
 
             foreach (var assocDS in dataSourceType.AssociatedDataSources)
             {
@@ -204,8 +209,6 @@ namespace Microsoft.PowerFx.Functions
             for (var i = 1; i < args.Length; i++)
             {
                 DType curType = argTypes[i];
-
-                var tableType = (TableType)FormulaType.Build(dataSourceType);
 
                 if (!curType.IsRecord)
                 {
@@ -244,8 +247,6 @@ namespace Microsoft.PowerFx.Functions
                     }
                 }
 
-                var fError = false;
-
                 if (isValid && SupportsParamCoercion && !dataSourceType.Accepts(curType))
                 {
                     if (!curType.TryGetCoercionSubType(dataSourceType, out DType coercionType, out var coercionNeeded))
@@ -259,22 +260,7 @@ namespace Microsoft.PowerFx.Functions
                             CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i], coercionType);
                         }
 
-                        // Promote the arg type to a table to facilitate unioning.
-                        if (!coercionType.IsTable)
-                        {
-                            coercionType = coercionType.ToTable();
-                        }
-
-                        retType = DType.Union(ref fError, dataSourceType, coercionType, useLegacyDateTimeAccepts: true);
-
-                        if (fError)
-                        {
-                            isValid = false;
-                            if (!SetErrorForMismatchedColumns(dataSourceType, coercionType, args[1], errors))
-                            {
-                                errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrNeedValidVariableName_Arg);
-                            }
-                        }
+                        retType = DType.Union(retType, coercionType);
                     }
                 }
                 else if (isSafeToUnion)

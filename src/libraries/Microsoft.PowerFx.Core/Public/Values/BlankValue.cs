@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Diagnostics;
+using System.Text;
 using Microsoft.PowerFx.Core.IR;
 
 namespace Microsoft.PowerFx.Types
@@ -27,6 +28,26 @@ namespace Microsoft.PowerFx.Types
         public override void Visit(IValueVisitor visitor)
         {
             visitor.Visit(this);
+        }
+
+        public override void ToExpression(StringBuilder sb, FormulaValueSerializerSettings settings)
+        {
+            if (settings.UseCompactRepresentation)
+            {
+                sb.Append("Blank()");
+                return;
+            }
+
+            if (Type is BlankType)
+            {
+                Type.DefaultExpressionValue(sb);
+            }
+            else
+            {
+                sb.Append($"If(false,");
+                Type.DefaultExpressionValue(sb);
+                sb.Append(")");
+            }
         }
     }
 }

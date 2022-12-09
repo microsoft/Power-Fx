@@ -15,7 +15,10 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
             Converters =
             {
+                // Serialize types without accounting for any defined type names
+#pragma warning disable CS0618 // Type or member is obsolete. This will be cleaned up when the formula bar is ready to accept the updated schema.
                 new FormulaTypeJsonConverter()
+#pragma warning restore CS0618
             }
         };
 
@@ -26,6 +29,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             MethodNotFound = -32601,
             InvalidParams = -32602,
             InternalError = -32603,
+            PropertyValueRequired = -32604,
             ServerError = -32000
         }
 
@@ -63,5 +67,15 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                 method,
                 @params
             }, _jsonSerializerOptions);
+
+        public static string Serialize<T>(T data)
+        {
+            return JsonSerializer.Serialize<T>(data, _jsonSerializerOptions);
+        }
+
+        public static T Deserialize<T>(string data)
+        {
+            return JsonSerializer.Deserialize<T>(data, _jsonSerializerOptions);
+        }
     }
 }

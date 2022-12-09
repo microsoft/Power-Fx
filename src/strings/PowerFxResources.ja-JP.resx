@@ -3268,6 +3268,38 @@
     <value>コントラストのテーマ</value>
     
   </data>
+  <data name="AboutPatch" xml:space="preserve">
+    <value>指定された行に更新を適用し、指定されたデータソースの行を変更します。更新された行を返します。</value>
+    
+  </data>
+  <data name="PatchDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="PatchBaseRecordArg" xml:space="preserve">
+    <value>base_record</value>
+    
+  </data>
+  <data name="PatchChangeRecordsArg" xml:space="preserve">
+    <value>change_record(s)</value>
+    
+  </data>
+  <data name="AboutRemove" xml:space="preserve">
+    <value>データ ソースから指定されたレコードを削除します</value>
+    
+  </data>
+  <data name="RemoveDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="RemoveRecordsArg" xml:space="preserve">
+    <value>remove_record(s)</value>
+    
+  </data>
+  <data name="ErrRemoveAllArg" xml:space="preserve">
+    <value>指定する場合、最後の引数は 'RemoveFlags.All' である必要があります。入力ミスを確認してください。</value>
+    
+  </data>
   <data name="PenMode_Draw_DisplayName" xml:space="preserve">
     <value>描画</value>
     
@@ -4631,6 +4663,68 @@
   </data>
   <data name="SetArg2" xml:space="preserve">
     <value>値</value>
+    
+  </data>
+  <data name="AboutDec2Hex" xml:space="preserve">
+    <value>10 進数を 16 進に変換する</value>
+    
+  </data>
+  <data name="Dec2HexArg1" xml:space="preserve">
+    <value>数値</value>
+  </data>
+  <data name="AboutDec2Hex_number" xml:space="preserve">
+    <value>16 進文字列に変換する数値の 10 進値です。</value>
+    
+  </data>
+  <data name="Dec2HexArg2" xml:space="preserve">
+    <value>場所</value>
+  </data>
+  <data name="AboutDec2Hex_places" xml:space="preserve">
+    <value>16 進文字列にパディングを追加する数値です。</value>
+    
+  </data>
+  <data name="AboutDec2HexT" xml:space="preserve">
+    <value>10 進数の列を 16 進に変換する</value>
+    
+  </data>
+  <data name="Dec2HexTArg1" xml:space="preserve">
+    <value>テーブル</value>
+  </data>
+  <data name="Dec2HexTArg2" xml:space="preserve">
+    <value>場所</value>
+  </data>
+  <data name="AboutDec2HexT_places" xml:space="preserve">
+    <value>16 進文字列にパディングを追加する数値または値の配列です。</value>
+    
+  </data>
+  <data name="AboutDec2Hex_table" xml:space="preserve">
+    <value>16 進に変換する 10 進数の値の列です。</value>
+    
+  </data>
+  <data name="AboutHex2Dec" xml:space="preserve">
+    <value>16 進数値を 10 進に変換する</value>
+    
+  </data>
+  <data name="Hex2DecArg1" xml:space="preserve">
+    <value>数値</value>
+  </data>
+  <data name="AboutHex2Dec_number" xml:space="preserve">
+    <value>16 進文字列を 10 進に変換します。</value>
+    
+  </data>
+  <data name="AboutHex2DecT" xml:space="preserve">
+    <value>16 進数の列を 10 進に変換する</value>
+    
+  </data>
+  <data name="Hex2DecTArg1" xml:space="preserve">
+    <value>テーブル</value>
+  </data>
+  <data name="AboutHex2Dec_table" xml:space="preserve">
+    <value>10 進に変換する 16 進文字列の列です。</value>
+    
+  </data>
+  <data name="ErrDeprecated" xml:space="preserve">
+    <value>この機能は廃止されたため、現在はサポートされていません。</value>
     
   </data>
 </root>

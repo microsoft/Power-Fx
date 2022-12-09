@@ -47,6 +47,8 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         
         internal static PowerFxConfig Default => PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder().WithDefaultEnums());
 
+        internal static PowerFxConfig Default_DisableRowScopeDisambiguationSyntax => PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder().WithDefaultEnums(), Features.DisableRowScopeDisambiguationSyntax);
+
         // No enums, no functions. Adding functions will add back in associated enums, so to be truly empty, ensure no functions. 
         private PowerFxConfig EmptyEverything => PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder(), new TexlFunction[0]);
 
@@ -113,7 +115,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
 
         // CallNodeSuggestionHandler
         [InlineData("ForAll|([1],Value)", "ForAll")]
-        [InlineData("at|(", "Atan", "Atan2", "Concat", "Concatenate", "Date", "DateAdd", "DateDiff", "DateTimeValue", "DateValue")]
+        [InlineData("at|(", "Atan", "Atan2", "Concat", "Concatenate", "Date", "DateAdd", "DateDiff", "DateTime", "DateTimeValue", "DateValue")]
         [InlineData("Atan |(")]
         [InlineData("Clock.A|(", "Clock.AmPm", "Clock.AmPmShort")]
         [InlineData("ForAll([\"test\"],EndsWith(|))", "Value")]
@@ -131,13 +133,13 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("true &|", "&", "&&")]
 
         // UnaryOpNodeSuggestionHandler
-        [InlineData("Not| false", "Not", "NotificationType", "NotificationType.Error", "NotificationType.Information", "NotificationType.Success", "NotificationType.Warning", "ErrorKind.FileNotFound", "ErrorKind.NotFound", "ErrorKind.NotSupported", "Icon.Note", "Icon.Notebook")]
+        [InlineData("Not| false", "Not", "NotificationType", "NotificationType.Error", "NotificationType.Information", "NotificationType.Success", "NotificationType.Warning", "ErrorKind.FileNotFound", "ErrorKind.NotApplicable", "ErrorKind.NotFound", "ErrorKind.NotSupported", "Icon.Note", "Icon.Notebook")]
         [InlineData("| Not false")]
         [InlineData("Not |")]
 
         // StrInterpSuggestionHandler
-        [InlineData("With( {Apples:3}, $\"We have {appl|", "Apples")]
-        [InlineData("With( {Apples:3}, $\"We have {appl|} apples.", "Apples")]
+        [InlineData("With( {Apples:3}, $\"We have {appl|", "Apples", "ErrorKind.NotApplicable")]
+        [InlineData("With( {Apples:3}, $\"We have {appl|} apples.", "Apples", "ErrorKind.NotApplicable")]
         [InlineData("$\"This is a randomly generated number: {rand|", "Rand", "RandBetween")]
 
         // StrNumLitNodeSuggestionHandler
@@ -179,8 +181,6 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         {
             // Note that the expression string needs to have balanced quotes or we hit a bug in NUnit running the tests:
             //   https://github.com/nunit/nunit3-vs-adapter/issues/691
-
-            Preview.FeatureFlags.StringInterpolation = true;
             var config = Default;
             var actualSuggestions = SuggestStrings(expression, config);
             Assert.Equal(expectedSuggestions, actualSuggestions);
@@ -204,7 +204,6 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("DisplayMode|")]
         public void TestSuggestEmptyEnumList(string expression, params string[] expectedSuggestions)
         {
-            Preview.FeatureFlags.StringInterpolation = true;
             var config = EmptyEverything;
             var actualSuggestions = SuggestStrings(expression, config);
             Assert.Equal(expectedSuggestions, actualSuggestions);
@@ -223,7 +222,6 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("Calendar.Months|", "MonthsLong", "MonthsShort")]
         public void TestSuggestEmptyAll(string expression, params string[] expectedSuggestions)
         {
-            Preview.FeatureFlags.StringInterpolation = true;
             var config = MinimalEnums;
             var actualSuggestions = SuggestStrings(expression, config);
             Assert.Equal(expectedSuggestions, actualSuggestions);
@@ -239,7 +237,9 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         {
             config.SymbolTable = new SymbolTable 
             {
+#pragma warning disable CS0618 // Type or member is obsolete
                 Parent = config.SymbolTable,
+#pragma warning restore CS0618 // Type or member is obsolete
                 DebugName = "Extra Table"
             };
         }
@@ -284,6 +284,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("RecordName[|", "![RecordName: ![StringName: s, NumberName: n]]", "@NumberName", "@StringName")]
         [InlineData("RecordName[|", "![RecordName: ![]]")]
         [InlineData("Test |", "![Test: s]", "-", "&", "&&", "*", "/", "^", "||", "+", "<", "<=", "<>", "=", ">", ">=", "And", "As", "exactin", "in", "Or")]
+        [InlineData("Filter(Table, Table[|", "![Table: *[Column: s]]", "@Column")]
 
         // ErrorNodeSuggestionHandler
         [InlineData("ForAll(Table,`|", "![Table: *[Column: s]]", "Column", "ThisRecord")]
@@ -300,7 +301,24 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             actualSuggestions = SuggestStrings(expression, config, context);
             Assert.Equal(expectedSuggestions, actualSuggestions);
         }
-        
+
+        [Theory]
+        [InlineData("RecordName[|", "![RecordName: ![StringName: s, NumberName: n]]")]
+        [InlineData("Filter(Table, Table[|", "![Table: *[Column: s]]")]
+        public void TestSuggestWithContext_DisableRowScopeDisambiguationSyntax(string expression, string context, params string[] expectedSuggestions)
+        {
+            Assert.NotNull(context);
+
+            var config = Default_DisableRowScopeDisambiguationSyntax;
+            var actualSuggestions = SuggestStrings(expression, config, context);
+            Assert.Equal(expectedSuggestions, actualSuggestions);
+
+            // With adjusted config 
+            AdjustConfig(config);
+            actualSuggestions = SuggestStrings(expression, config, context);
+            Assert.Equal(expectedSuggestions, actualSuggestions);
+        }
+
         [Theory]
         [InlineData("So|", true, "SomeString")]
         [InlineData("Loop.Loop.Loop.So|", true, "SomeString")]

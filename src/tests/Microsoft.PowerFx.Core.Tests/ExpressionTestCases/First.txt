@@ -1,4 +1,4 @@
-﻿>> First([1, 2, 3, 4, 5])
+>> First([1, 2, 3, 4, 5])
 {Value:1}
 
 >> First(Blank())
@@ -8,28 +8,28 @@ Blank()
 {Value:1}
 
 >> First([1/0, 2, 3]).Value
-#Error
+Error({Kind:ErrorKind.Div0})
 
 >> First(Sort([-2, -1, 0, 1, 2], 1 / Value))
-#Error
+Error({Kind:ErrorKind.Div0})
 
 >> FirstN([1, 2, 3, 4, 5], 2)
-[1,2]
+Table({Value:1},{Value:2})
 
 >> FirstN([1, 2, 3, 4, 5], 1)
-[1]
+Table({Value:1})
 
 >> FirstN([1, 2, 3, 4, 5])
-[1]
+Table({Value:1})
 
 >> FirstN([1, 2, 3, 4, 5], 6)
-[1,2,3,4,5]
+Table({Value:1},{Value:2},{Value:3},{Value:4},{Value:5})
 
 >> FirstN([1, 2, 3, 4, 5], -1)
-[]
+Table()
 
 >> FirstN([1, 2, 3, 4, 5], Blank())
-[]
+Table()
 
 >> FirstN(Blank(), 2)
 Blank()
@@ -38,10 +38,10 @@ Blank()
 Blank()
 
 >> FirstN(Sort([-2, -1, 0, 1, 2], 1 / Value), 2)
-#Error
+Error({Kind:ErrorKind.Div0})
 
 >> FirstN([1, 2, 3, 4, 5], 1/0)
-#Error
+Error({Kind:ErrorKind.Div0})
 
 >> First(Table({a:1,b:2},{c:3})).c
 Blank()
@@ -68,4 +68,4 @@ Blank()
 Blank()
 
 >> FirstN(Filter([1,2,3],Value=4),2)
-[]
+Table()

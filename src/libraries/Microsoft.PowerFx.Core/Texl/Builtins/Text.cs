@@ -2,7 +2,9 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
+using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
@@ -34,7 +36,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             yield return new[] { TexlStrings.TextArg1, TexlStrings.TextArg2, TexlStrings.TextArg3 };
         }
 
-        public override bool CheckInvocation(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public override bool CheckTypes(CheckTypesContext checkTypesContext, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
@@ -99,33 +101,40 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 return isValid;
             }
 
-            StrLitNode formatNode;
             if (!DType.String.Accepts(argTypes[1]))
             {
                 errors.EnsureError(DocumentErrorSeverity.Severe, args[1], TexlStrings.ErrStringExpected);
                 isValid = false;
             }
-            else if ((formatNode = args[1].AsStrLit()) != null)
+            else if (BinderUtils.TryGetConstantValue(checkTypesContext, args[1], out var formatArg))
             {
                 // Verify statically that the format string doesn't contain BOTH numeric and date/time
-                // format specifiers. If it does, that's an error accd to Excel and our spec.
-                var fmt = formatNode.Value;
+                // format specifiers. If it does, that's an error according to Excel and our spec.
 
                 // But firstly skip any locale-prefix
-                if (fmt.StartsWith("[$-"))
+                if (formatArg.StartsWith("[$-"))
                 {
-                    var end = fmt.IndexOf(']', 3);
+                    var end = formatArg.IndexOf(']', 3);
                     if (end > 0)
                     {
-                        fmt = fmt.Substring(end + 1);
+                        formatArg = formatArg.Substring(end + 1);
                     }
                 }
 
-                var hasDateTimeFmt = fmt.IndexOfAny(new char[] { 'm', 'd', 'y', 'h', 'H', 's', 'a', 'A', 'p', 'P' }) >= 0;
-                var hasNumericFmt = fmt.IndexOfAny(new char[] { '0', '#' }) >= 0;
+                var hasDateTimeFmt = formatArg.IndexOfAny(new char[] { 'm', 'd', 'y', 'h', 'H', 's', 'a', 'A', 'p', 'P' }) >= 0;
+                var hasNumericFmt = formatArg.IndexOfAny(new char[] { '0', '#' }) >= 0;
                 if (hasDateTimeFmt && hasNumericFmt)
                 {
-                    errors.EnsureError(DocumentErrorSeverity.Moderate, formatNode, TexlStrings.ErrIncorrectFormat_Func, Name);
+                    // Check if the date time format contains '0's after the seconds specifier, which
+                    // is used for fractional seconds - in which case it is valid
+                    var formatWithoutZeroSubseconds = Regex.Replace(formatArg, @"[sS]\.?(0+)",
+                        m => m.Groups[1].Success ? "" : m.Groups[1].Value);
+                    hasNumericFmt = formatWithoutZeroSubseconds.IndexOfAny(new char[] { '0', '#' }) >= 0;
+                }
+
+                if (hasDateTimeFmt && hasNumericFmt)
+                {
+                    errors.EnsureError(DocumentErrorSeverity.Moderate, args[1], TexlStrings.ErrIncorrectFormat_Func, Name);
                     isValid = false;
                 }
             }

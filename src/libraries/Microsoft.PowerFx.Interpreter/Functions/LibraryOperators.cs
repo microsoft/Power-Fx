@@ -528,32 +528,9 @@ namespace Microsoft.PowerFx.Functions
             };
         }
 
-        private static FormulaValue AddDateAndTime(IRContext irContext, FormulaValue[] args)
+        private static FormulaValue AddDateAndTime(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            DateTime arg0;
-            switch (args[0])
-            {
-                case DateTimeValue dtv:
-                    arg0 = dtv.Value;
-                    break;
-                case DateValue dv:
-                    arg0 = dv.Value;
-                    break;
-                default:
-                    return CommonErrors.RuntimeTypeMismatch(irContext);
-            }
-
-            var arg1 = (TimeValue)args[1];
-
-            try
-            {
-                var result = arg0.Add(arg1.Value);
-                return new DateTimeValue(irContext, result);
-            }
-            catch
-            {
-                return CommonErrors.ArgumentOutOfRange(irContext);
-            }
+            return DateAdd(runner, context, irContext, args);
         }
 
         private static FormulaValue AddTimeAndNumber(IRContext irContext, FormulaValue[] args)
@@ -622,60 +599,14 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
-        private static FormulaValue AddDateAndDay(IRContext irContext, FormulaValue[] args)
+        private static FormulaValue AddDateAndDay(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            DateTime arg0;
-            switch (args[0])
-            {
-                case DateTimeValue dtv:
-                    arg0 = dtv.Value;
-                    break;
-                case DateValue dv:
-                    arg0 = dv.Value;
-                    break;
-                default:
-                    return CommonErrors.RuntimeTypeMismatch(irContext);
-            }
-
-            var arg1 = (NumberValue)args[1];
-
-            try
-            {
-                var result = arg0.AddDays(arg1.Value);
-                return new DateTimeValue(irContext, result);
-            }
-            catch
-            {
-                return CommonErrors.ArgumentOutOfRange(irContext);
-            }
+            return DateAdd(runner, context, irContext, new FormulaValue[3] { args[0], args[1], StringValue.New("Days") });
         }
 
-        private static FormulaValue AddDateTimeAndDay(IRContext irContext, FormulaValue[] args)
+        private static FormulaValue AddDateTimeAndDay(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            DateTime arg0;
-            switch (args[0])
-            {
-                case DateTimeValue dtv:
-                    arg0 = dtv.Value;
-                    break;
-                case DateValue dv:
-                    arg0 = dv.Value;
-                    break;
-                default:
-                    return CommonErrors.RuntimeTypeMismatch(irContext);
-            }
-
-            var arg1 = (NumberValue)args[1];
-
-            try
-            {
-                var result = arg0.AddDays(arg1.Value);
-                return new DateTimeValue(irContext, result);
-            }
-            catch
-            {
-                return CommonErrors.ArgumentOutOfRange(irContext);
-            }
+            return DateAdd(runner, context, irContext, new FormulaValue[3] { args[0], args[1], StringValue.New("Days") });
         }
 
         private static FormulaValue DateDifference(IRContext irContext, FormulaValue[] args)
@@ -719,25 +650,9 @@ namespace Microsoft.PowerFx.Functions
             return new NumberValue(irContext, result.TotalDays);
         }
 
-        private static FormulaValue SubtractDateAndTime(IRContext irContext, FormulaValue[] args)
+        private static FormulaValue SubtractDateAndTime(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            DateTime arg0;
-            switch (args[0])
-            {
-                case DateTimeValue dtv:
-                    arg0 = dtv.Value;
-                    break;
-                case DateValue dv:
-                    arg0 = dv.Value;
-                    break;
-                default:
-                    return CommonErrors.RuntimeTypeMismatch(irContext);
-            }
-
-            var arg1 = (TimeValue)args[1];
-
-            var result = arg0.Subtract(arg1.Value);
-            return new DateTimeValue(irContext, result);
+            return DateAdd(runner, context, irContext, new FormulaValue[2] { args[0], TimeValue.New(new TimeSpan(-((TimeValue)args[1]).Value.Ticks)) });            
         }
 
         private static FormulaValue SubtractNumberAndDate(IRContext irContext, FormulaValue[] args)

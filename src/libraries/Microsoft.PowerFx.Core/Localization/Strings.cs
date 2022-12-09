@@ -459,6 +459,20 @@ namespace Microsoft.PowerFx.Core.Localization
         public static StringGetter RemoveDataSourceArg = (b) => StringResources.Get("RemoveDataSourceArg", b);
         public static StringGetter RemoveRecordsArg = (b) => StringResources.Get("RemoveRecordsArg", b);
 
+        public static StringGetter AboutDec2Hex = (b) => StringResources.Get("AboutDec2Hex", b);
+        public static StringGetter Dec2HexArg1 = (b) => StringResources.Get("Dec2HexArg1", b);
+        public static StringGetter Dec2HexArg2 = (b) => StringResources.Get("Dec2HexArg2", b);
+
+        public static StringGetter AboutDec2HexT = (b) => StringResources.Get("AboutDec2HexT", b);
+        public static StringGetter Dec2HexTArg1 = (b) => StringResources.Get("Dec2HexTArg1", b);
+        public static StringGetter Dec2HexTArg2 = (b) => StringResources.Get("Dec2HexTArg2", b);
+
+        public static StringGetter AboutHex2Dec = (b) => StringResources.Get("AboutHex2Dec", b);
+        public static StringGetter Hex2DecArg1 = (b) => StringResources.Get("Hex2DecArg1", b);
+
+        public static StringGetter AboutHex2DecT = (b) => StringResources.Get("AboutHex2DecT", b);
+        public static StringGetter Hex2DecTArg1 = (b) => StringResources.Get("Hex2DecTArg1", b);
+
         // Previously, errors were listed here in the form of a StringGetter, which would be evaluated to fetch
         // an error message to pass to the BaseError class constructor. We are switching to passing the message key itself
         // to the BaseError class, and the BaseError itself is responsible for fetching the resource. (This allows the
@@ -536,6 +550,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrColumnTypeMismatch_ColName_ExpectedType_ActualType = new ErrorResourceKey("ErrColumnTypeMismatch_ColName_ExpectedType_ActualType");
         public static ErrorResourceKey ErrColumnMissing_ColName_ExpectedType = new ErrorResourceKey("ErrColumnMissing_ColName_ExpectedType");
         public static ErrorResourceKey ErrTableDoesNotAcceptThisType = new ErrorResourceKey("ErrTableDoesNotAcceptThisType");
+        public static ErrorResourceKey ErrRecordDoesNotAcceptThisType = new ErrorResourceKey("ErrRecordDoesNotAcceptThisType");
         public static ErrorResourceKey ErrTypeError = new ErrorResourceKey("ErrTypeError");
         public static ErrorResourceKey ErrTypeError_Ex1_Ex2_Found = new ErrorResourceKey("ErrTypeError_Ex1_Ex2_Found");
         public static ErrorResourceKey ErrTypeError_Arg_Expected_Found = new ErrorResourceKey("ErrTypeError_Arg_Expected_Found");
@@ -559,6 +574,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrInvalidControlReference = new ErrorResourceKey("ErrInvalidControlReference");
         public static ErrorResourceKey ErrInvalidStringInterpolation = new ErrorResourceKey("ErrInvalidStringInterpolation");
         public static ErrorResourceKey ErrEmptyIsland = new ErrorResourceKey("ErrEmptyIsland");
+        public static ErrorResourceKey ErrDeprecated = new ErrorResourceKey("ErrDeprecated");
 
         public static ErrorResourceKey ErrErrorIrrelevantField = new ErrorResourceKey("ErrErrorIrrelevantField");
         public static ErrorResourceKey ErrAsNotInContext = new ErrorResourceKey("ErrAsNotInContext");
@@ -566,6 +582,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey WarnColumnNameSpecifiedMultipleTimes_Name = new ErrorResourceKey("WarnColumnNameSpecifiedMultipleTimes_Name");
         public static ErrorResourceKey WarnLiteralPredicate = new ErrorResourceKey("WarnLiteralPredicate");
         public static ErrorResourceKey WarnDynamicMetadata = new ErrorResourceKey("WarnDynamicMetadata");
+        public static ErrorResourceKey WarnDeferredType = new ErrorResourceKey("WarnDeferredType");
 
         public static StringGetter InfoMessage = (b) => StringResources.Get("InfoMessage", b);
         public static StringGetter InfoNode_Node = (b) => StringResources.Get("InfoNode_Node", b);

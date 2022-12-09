@@ -3268,6 +3268,38 @@
     <value>Tema kontras</value>
     
   </data>
+  <data name="AboutPatch" xml:space="preserve">
+    <value>Menggunakan kemas kini pada baris yang ditentukan dan mengubah baris dalam sumber data yang ditentukan. Mengembalikan baris yang dikemas kini.</value>
+    
+  </data>
+  <data name="PatchDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="PatchBaseRecordArg" xml:space="preserve">
+    <value>base_record</value>
+    
+  </data>
+  <data name="PatchChangeRecordsArg" xml:space="preserve">
+    <value>change_record(s)</value>
+    
+  </data>
+  <data name="AboutRemove" xml:space="preserve">
+    <value>Mengalih keluar rekod tertentu atau rekod daripada sumber data</value>
+    
+  </data>
+  <data name="RemoveDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="RemoveRecordsArg" xml:space="preserve">
+    <value>remove_record</value>
+    
+  </data>
+  <data name="ErrRemoveAllArg" xml:space="preserve">
+    <value>Jika diberikan, argumen terakhir mestilah 'RemoveFlags.All'. Adakah terdapat kesilapan tipografi?</value>
+    
+  </data>
   <data name="PenMode_Draw_DisplayName" xml:space="preserve">
     <value>Lukis</value>
     
@@ -4631,6 +4663,68 @@
   </data>
   <data name="SetArg2" xml:space="preserve">
     <value>nilai</value>
+    
+  </data>
+  <data name="AboutDec2Hex" xml:space="preserve">
+    <value>Menukar nombor perpuluhan kepada perenambelasan</value>
+    
+  </data>
+  <data name="Dec2HexArg1" xml:space="preserve">
+    <value>nombor</value>
+  </data>
+  <data name="AboutDec2Hex_number" xml:space="preserve">
+    <value>Nilai perpuluhan angka untuk ditukar kepada rentetan perenambelasan.</value>
+    
+  </data>
+  <data name="Dec2HexArg2" xml:space="preserve">
+    <value>tempat perpuluhan</value>
+  </data>
+  <data name="AboutDec2Hex_places" xml:space="preserve">
+    <value>Nilai angka untuk ditambahkan pelapik pada rentetan perenambelasan.</value>
+    
+  </data>
+  <data name="AboutDec2HexT" xml:space="preserve">
+    <value>Menukar lajur nombor perpuluhan kepada perenambelasan</value>
+    
+  </data>
+  <data name="Dec2HexTArg1" xml:space="preserve">
+    <value>jadual</value>
+  </data>
+  <data name="Dec2HexTArg2" xml:space="preserve">
+    <value>tempat perpuluhan</value>
+  </data>
+  <data name="AboutDec2HexT_places" xml:space="preserve">
+    <value>Nilai angka atau tatasusunan nilai untuk menambahkan pelapik pada rentetan perenambelasan.</value>
+    
+  </data>
+  <data name="AboutDec2Hex_table" xml:space="preserve">
+    <value>Lajur nilai perpuluhan angka untuk ditukar kepada perenambelasan.</value>
+    
+  </data>
+  <data name="AboutHex2Dec" xml:space="preserve">
+    <value>Menukar nombor perenambelasan kepada perpuluhan</value>
+    
+  </data>
+  <data name="Hex2DecArg1" xml:space="preserve">
+    <value>nombor</value>
+  </data>
+  <data name="AboutHex2Dec_number" xml:space="preserve">
+    <value>Rentetan perenambelasan ditukar kepada perpuluhan.</value>
+    
+  </data>
+  <data name="AboutHex2DecT" xml:space="preserve">
+    <value>Menukar lajur nombor perenambelasan kepada perpuluhan</value>
+    
+  </data>
+  <data name="Hex2DecTArg1" xml:space="preserve">
+    <value>jadual</value>
+  </data>
+  <data name="AboutHex2Dec_table" xml:space="preserve">
+    <value>Lajur rentetan perenambelasan untuk ditukar kepada perpuluhan.</value>
+    
+  </data>
+  <data name="ErrDeprecated" xml:space="preserve">
+    <value>Ciri ini ditamatkan dan tidak lagi disokong.</value>
     
   </data>
 </root>

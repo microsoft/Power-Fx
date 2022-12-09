@@ -52,4 +52,4 @@ steps:
 
     New-Item -Path $file -ItemType "file" -Value $content -Force;
     '-------------'; get-content "$file"; '===================';
-  displayName: Create nuget.config for SDK feed
+  displayName: SDK feed setup

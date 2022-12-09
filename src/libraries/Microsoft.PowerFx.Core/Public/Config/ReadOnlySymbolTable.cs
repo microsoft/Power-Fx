@@ -23,9 +23,9 @@ namespace Microsoft.PowerFx
     /// the binder.   
     /// See <see cref="SymbolTable"/> for mutable version. 
     /// </summary>
-    [DebuggerDisplay("{_debugName}")]
+    [DebuggerDisplay("{_debugName}_{GetHashCode()}")]
     [ThreadSafeImmutable]
-    public class ReadOnlySymbolTable : INameResolver, IGlobalSymbolNameResolver, IEnumStore
+    public abstract class ReadOnlySymbolTable : INameResolver, IGlobalSymbolNameResolver, IEnumStore
     {
         // Changed on each update. 
         // Host can use to ensure that a symbol table wasn't mutated on us.                 
@@ -56,22 +56,103 @@ namespace Microsoft.PowerFx
             init => _debugName = value;
         }
 
+        // Should remove. 
+        // https://github.com/microsoft/Power-Fx/issues/828
+        [Obsolete("Use Composition instead of Parent Pointer")]
         public ReadOnlySymbolTable Parent => _parent;
 
-        /// <summary>
-        /// Create a symbol table where symbols match the fields of the record.
-        /// </summary>
-        /// <param name="type"></param>
-        /// <param name="parent"></param>
-        /// <returns></returns>
-        public static ReadOnlySymbolTable NewFromRecord(RecordType type, ReadOnlySymbolTable parent = null)
+        internal virtual IEnumerable<ReadOnlySymbolTable> SubTables
         {
-            return new SymbolTableOverRecordType(type ?? RecordType.Empty(), parent);
+            get
+            {
+                if (_parent == null)
+                {
+                    return new ReadOnlySymbolTable[] { this };
+                }
+                else
+                {
+                    return new ReadOnlySymbolTable[] { this, _parent };
+                }
+            }
+        }
+
+        /// <summary>
+        /// Find the variable by name within this symbol table. 
+        /// </summary>
+        /// <param name="name">name of the variable.</param>
+        /// <param name="slot">slot allocated for this variable.</param>
+        /// <returns></returns>
+        public bool TryLookupSlot(string name, out ISymbolSlot slot)
+        {
+            INameResolver resolver = this;
+
+            if (resolver.Lookup(new DName(name), out var info))
+            {
+                if (info.Data is NameSymbol data)
+                {
+                    slot = data;
+                    return true;
+                }
+            }
+
+            slot = null;
+            return false;
+        }
+
+        /// <summary>
+        /// Given a valid slot, get the type. 
+        /// </summary>
+        /// <param name="slot"></param>
+        /// <returns></returns>
+        public virtual FormulaType GetTypeFromSlot(ISymbolSlot slot)
+        {
+            ValidateSlot(slot);
+
+            IGlobalSymbolNameResolver resolver = this;
+            foreach (var x in resolver.GlobalSymbols)
+            {
+                if (x.Value.Data is ISymbolSlot slot2)
+                {
+                    if (slot2.SlotIndex == slot.SlotIndex) 
+                    {
+                        return FormulaType.Build(x.Value.Type);
+                    }
+                }
+            }
+
+            throw NewBadSlotException(slot);
+        }
+
+        // Helper to call on Get/Set to ensure slot can be used with this value
+        internal void ValidateSlot(ISymbolSlot slot)
+        {
+            if (slot.Owner != this)
+            {
+                throw NewBadSlotException(slot);
+            }
+
+            slot.ThrowIfDisposed();
+        }
+
+        internal Exception NewBadSlotException(ISymbolSlot slot)
+        {
+            return new InvalidOperationException($"Slot {slot.DebugName()} is not valid on Symbol Table {this.DebugName()}");
+        }
+
+        public static ReadOnlySymbolTable NewFromRecord(
+            RecordType type,
+            string debugName = null,
+            bool allowThisRecord = false,
+            bool allowMutable = false)
+        {
+            return new SymbolTableOverRecordType(type ?? RecordType.Empty(), null, mutable: allowMutable, allowThisRecord: allowThisRecord)
+            {
+                DebugName = debugName ?? (allowThisRecord ? "RowScope" : "FromRecord")
+            };
         }
 
         public static ReadOnlySymbolTable Compose(params ReadOnlySymbolTable[] tables)
         {
-            // SymbolTableResolver walks Walks parents.
             return new ComposedReadOnlySymbolTable(new SymbolTableEnumerator(tables));
         }
 
@@ -93,6 +174,33 @@ namespace Microsoft.PowerFx
             return s;
         }
 
+        /// <summary>
+        /// Helper to create a symbol table around a set of core functions.
+        /// Important that this is mutable so that it can be changed across engines. 
+        /// </summary>
+        /// <returns>SymbolTable with supported functions.</returns>
+        public SymbolTable GetMutableCopyOfFunctions()
+        {
+            var s = new SymbolTable()
+            {
+                DebugName = DebugName + " (Functions only)",
+#pragma warning disable CS0618 // Type or member is obsolete
+                Parent = Parent,
+#pragma warning restore CS0618 // Type or member is obsolete
+            };
+
+            foreach (var func in _functions)
+            {
+                s.AddFunction(func); 
+            }
+
+            return s;
+        }
+
+        // https://github.com/microsoft/Power-Fx/issues/779
+        // _environmentSymbols have the display name support (they update the _environmentSymbolDisplayNameProvider)
+        // Merge _variables with _environmentSymbols to provide display name support for variables.. 
+        // Both ultimately serve in INameResolver.Lookup 
         private protected readonly Dictionary<string, NameLookupInfo> _variables = new Dictionary<string, NameLookupInfo>();
 
         internal readonly Dictionary<DName, IExternalEntity> _environmentSymbols = new Dictionary<DName, IExternalEntity>();
@@ -200,6 +308,7 @@ namespace Microsoft.PowerFx
                 return true;
             }
 
+            // This does a display-name aware lookup from _environmentSymbols 
             if (TryGetSymbol(name, out var symbol, out var displayName))
             {
                 // Special case symbols
@@ -211,6 +320,18 @@ namespace Microsoft.PowerFx
                         DPath.Root,
                         0,
                         optionSet,
+                        displayName);
+
+                    return true;
+                }
+                else if (symbol is IExternalDataSource)
+                {
+                    nameInfo = new NameLookupInfo(
+                        BindKind.Data,
+                        symbol.Type,
+                        DPath.Root,
+                        0,
+                        symbol,
                         displayName);
 
                     return true;
@@ -277,7 +398,7 @@ namespace Microsoft.PowerFx
         // Methods from INameResolver that we default / don't implement
         IExternalDocument INameResolver.Document => default;
 
-        IExternalEntityScope INameResolver.EntityScope => throw new NotImplementedException();
+        IExternalEntityScope INameResolver.EntityScope => default;
 
         IExternalEntity INameResolver.CurrentEntity => default;
 

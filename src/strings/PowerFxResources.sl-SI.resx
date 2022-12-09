@@ -3268,6 +3268,38 @@
     <value>Kontrastna tema</value>
     
   </data>
+  <data name="AboutPatch" xml:space="preserve">
+    <value>Uporabi posodobitve v določeni vrstici in spremeni vrstico v določenem viru podatkov. Vrne posodobljeno vrstico.</value>
+    
+  </data>
+  <data name="PatchDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="PatchBaseRecordArg" xml:space="preserve">
+    <value>base_record</value>
+    
+  </data>
+  <data name="PatchChangeRecordsArg" xml:space="preserve">
+    <value>change_record(s)</value>
+    
+  </data>
+  <data name="AboutRemove" xml:space="preserve">
+    <value>Odstrani določen zapis ali zapise iz vira podatkov</value>
+    
+  </data>
+  <data name="RemoveDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="RemoveRecordsArg" xml:space="preserve">
+    <value>remove_record(s)</value>
+    
+  </data>
+  <data name="ErrRemoveAllArg" xml:space="preserve">
+    <value>Če je navedeno, mora biti zadnji argument »RemoveFlags.All«. Ali ste našli tipkarsko napako?</value>
+    
+  </data>
   <data name="PenMode_Draw_DisplayName" xml:space="preserve">
     <value>Risanje</value>
     
@@ -3933,11 +3965,11 @@
     
   </data>
   <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>This argument cannot be passed as this type in formula columns.</value>
+    <value>Tega argumenta ni mogoče prenesti v stolpce s formulami kot to vrsto.</value>
     
   </data>
   <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
-    <value>This argument cannot be passed as type {0} in formula columns.</value>
+    <value>Tega argumenta ni mogoče prenesti v stolpce s formulami kot vrsto {0}.</value>
     
   </data>
   <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
@@ -3969,7 +4001,7 @@
     
   </data>
   <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
-    <value>This operation cannot be performed on type {0} in formula columns.</value>
+    <value>Tega postopka ni mogoče izvesti v stolpcih s formulami za vrsto {0}.</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
@@ -4005,7 +4037,7 @@
     
   </data>
   <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
-    <value>Cannot reference virtual table {0} in formula columns.</value>
+    <value>Na navidezno tabelo {0} v stolpcih s formulami se ni mogoče sklicevati.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
@@ -4631,6 +4663,68 @@
   </data>
   <data name="SetArg2" xml:space="preserve">
     <value>vrednost</value>
+    
+  </data>
+  <data name="AboutDec2Hex" xml:space="preserve">
+    <value>Pretvori decimalno število v šestnajstiško</value>
+    
+  </data>
+  <data name="Dec2HexArg1" xml:space="preserve">
+    <value>število</value>
+  </data>
+  <data name="AboutDec2Hex_number" xml:space="preserve">
+    <value>Številska decimalna vrednost za pretvorbo v šestnajstiški niz.</value>
+    
+  </data>
+  <data name="Dec2HexArg2" xml:space="preserve">
+    <value>mesta</value>
+  </data>
+  <data name="AboutDec2Hex_places" xml:space="preserve">
+    <value>Številska vrednost za dodajanje zapolnjevanja šestnajstiškemu nizu.</value>
+    
+  </data>
+  <data name="AboutDec2HexT" xml:space="preserve">
+    <value>Pretvori stolpec decimalnih števil v šestnajstiška</value>
+    
+  </data>
+  <data name="Dec2HexTArg1" xml:space="preserve">
+    <value>tabela</value>
+  </data>
+  <data name="Dec2HexTArg2" xml:space="preserve">
+    <value>mesta</value>
+  </data>
+  <data name="AboutDec2HexT_places" xml:space="preserve">
+    <value>Številska vrednost ali polje vrednosti za dodajanje zapolnjevanja šestnajstiškim nizom.</value>
+    
+  </data>
+  <data name="AboutDec2Hex_table" xml:space="preserve">
+    <value>Stolpec številskih decimalnih vrednosti za pretvorbo v šestnajstiške.</value>
+    
+  </data>
+  <data name="AboutHex2Dec" xml:space="preserve">
+    <value>Pretvori šestnajstiško število v decimalno število</value>
+    
+  </data>
+  <data name="Hex2DecArg1" xml:space="preserve">
+    <value>število</value>
+  </data>
+  <data name="AboutHex2Dec_number" xml:space="preserve">
+    <value>Šestnajstiški niz pretvori v decimalni.</value>
+    
+  </data>
+  <data name="AboutHex2DecT" xml:space="preserve">
+    <value>Pretvori stolpec šestnajstiških števil v decimalna</value>
+    
+  </data>
+  <data name="Hex2DecTArg1" xml:space="preserve">
+    <value>tabela</value>
+  </data>
+  <data name="AboutHex2Dec_table" xml:space="preserve">
+    <value>Stolpec šestnajstiških nizov za pretvorbo v decimalne.</value>
+    
+  </data>
+  <data name="ErrDeprecated" xml:space="preserve">
+    <value>Ta funkcija je opuščena in ni več podprta.</value>
     
   </data>
 </root>

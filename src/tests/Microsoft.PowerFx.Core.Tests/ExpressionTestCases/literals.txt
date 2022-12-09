@@ -1,4 +1,4 @@
-﻿
+
 >> 1.0
 1
 
@@ -13,7 +13,7 @@
 
 // Basic table literal , single column 
 >> [1,4,2,7]
-[1,4,2,7]
+Table({Value:1},{Value:4},{Value:2},{Value:7})
 
 // Table literal, full records.
 >> Table({b:1,a:2},{a:4,b:3})

@@ -3268,6 +3268,38 @@
     <value>Тема с контраст</value>
     
   </data>
+  <data name="AboutPatch" xml:space="preserve">
+    <value>Прилага актуализациите към указания ред и променя реда в указания източник на данни. Връща актуализирания ред.</value>
+    
+  </data>
+  <data name="PatchDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="PatchBaseRecordArg" xml:space="preserve">
+    <value>base_record</value>
+    
+  </data>
+  <data name="PatchChangeRecordsArg" xml:space="preserve">
+    <value>change_record(s)</value>
+    
+  </data>
+  <data name="AboutRemove" xml:space="preserve">
+    <value>Премахва конкретен запис или записи от източник на данни</value>
+    
+  </data>
+  <data name="RemoveDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="RemoveRecordsArg" xml:space="preserve">
+    <value>remove_record(s)</value>
+    
+  </data>
+  <data name="ErrRemoveAllArg" xml:space="preserve">
+    <value>Ако е посочен, последният аргумент трябва да бъде RemoveFlags.All. Има ли грешка?</value>
+    
+  </data>
   <data name="PenMode_Draw_DisplayName" xml:space="preserve">
     <value>Чертане</value>
     
@@ -4631,6 +4663,68 @@
   </data>
   <data name="SetArg2" xml:space="preserve">
     <value>стойност</value>
+    
+  </data>
+  <data name="AboutDec2Hex" xml:space="preserve">
+    <value>Преобразува десетично число в шестнадесетично</value>
+    
+  </data>
+  <data name="Dec2HexArg1" xml:space="preserve">
+    <value>число</value>
+  </data>
+  <data name="AboutDec2Hex_number" xml:space="preserve">
+    <value>Числова десетична стойност за преобразуване в шестнадесетичен низ.</value>
+    
+  </data>
+  <data name="Dec2HexArg2" xml:space="preserve">
+    <value>знаци</value>
+  </data>
+  <data name="AboutDec2Hex_places" xml:space="preserve">
+    <value>Числова стойност за добавяне на допълване към шестнадесетичния низ.</value>
+    
+  </data>
+  <data name="AboutDec2HexT" xml:space="preserve">
+    <value>Преобразува колона от десетични числа в шестнадесетични числа</value>
+    
+  </data>
+  <data name="Dec2HexTArg1" xml:space="preserve">
+    <value>таблица</value>
+  </data>
+  <data name="Dec2HexTArg2" xml:space="preserve">
+    <value>знаци</value>
+  </data>
+  <data name="AboutDec2HexT_places" xml:space="preserve">
+    <value>Числова стойност или масив от стойности за добавяне на допълване към шестнадесетичните низове.</value>
+    
+  </data>
+  <data name="AboutDec2Hex_table" xml:space="preserve">
+    <value>Колона с числови десетични стойности, които да бъдат преобразувани в шестнадесетични числа.</value>
+    
+  </data>
+  <data name="AboutHex2Dec" xml:space="preserve">
+    <value>Преобразува шестнадесетично число в десетично</value>
+    
+  </data>
+  <data name="Hex2DecArg1" xml:space="preserve">
+    <value>число</value>
+  </data>
+  <data name="AboutHex2Dec_number" xml:space="preserve">
+    <value>Шестнадесетичен низ, който да бъде преобразуван в десетично число.</value>
+    
+  </data>
+  <data name="AboutHex2DecT" xml:space="preserve">
+    <value>Преобразува колона от шестнадесетични числа в десетични</value>
+    
+  </data>
+  <data name="Hex2DecTArg1" xml:space="preserve">
+    <value>таблица</value>
+  </data>
+  <data name="AboutHex2Dec_table" xml:space="preserve">
+    <value>Колона от шестнадесетични низове, които да бъдат преобразувани в десетични числа.</value>
+    
+  </data>
+  <data name="ErrDeprecated" xml:space="preserve">
+    <value>Тази функция е отхвърлена и вече не се поддържа.</value>
     
   </data>
 </root>

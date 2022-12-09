@@ -36,13 +36,40 @@ Errors: Error 0-19: Invalid number of arguments: received 3, expected 2.
 Errors: Error 0-25: Invalid number of arguments: received 3, expected 2.
 
 >> Collect(t1, "x")
-Errors: Error 12-15: Invalid argument type. Cannot use Text values in this context.|Error 0-16: The function 'Collect' has some invalid arguments.
+Errors: Error 12-15: Invalid argument type (Text). Expecting a Record value instead.|Error 12-15: Invalid argument type. Cannot use Text values in this context.|Error 0-16: The function 'Collect' has some invalid arguments.
 
 >> Collect(t1, 1)
-Errors: Error 12-13: Invalid argument type. Cannot use Number values in this context.|Error 0-14: The function 'Collect' has some invalid arguments.
+Errors: Error 12-13: Invalid argument type (Number). Expecting a Record value instead.|Error 12-13: Invalid argument type. Cannot use Number values in this context.|Error 0-14: The function 'Collect' has some invalid arguments.
 
 >> Collect(Table({name: "VC"}), {surname: "textInput1"})
-Errors: Error 29-52: The specified column 'surname' does not exist. The column with the most similar name is 'name'.|Error 0-53: The function 'Collect' has some invalid arguments.
+{surname:"textInput1"}
 
 >> Collect(FirstN(Table({name: "hello"}), 0), {name: "textInput1"})
 {name:"textInput1"}
+
+>> Collect(Foo,r2)
+Errors: Error 8-11: Name isn't valid. 'Foo' isn't recognized.|Error 0-15: The function 'Collect' has some invalid arguments.
+
+>> Collect(Foo,Bar)
+Errors: Error 8-11: Name isn't valid. 'Foo' isn't recognized.|Error 12-15: Name isn't valid. 'Bar' isn't recognized.|Error 0-16: The function 'Collect' has some invalid arguments.
+
+>> Collect(1/0,Foo)
+Errors: Error 12-15: Name isn't valid. 'Foo' isn't recognized.
+
+>> Collect(Error({Kind:ErrorKind.Custom}), r2)
+Error({Kind:ErrorKind.Custom})
+
+>> Collect(Error({Kind:ErrorKind.Custom}), Error({Kind:ErrorKind.Div0}))
+Error({Kind:ErrorKind.Custom})
+
+>> Collect(Blank(), r2)
+Blank()
+
+>> Collect(Blank(), Blank())
+Blank()
+
+>> Collect("", "")
+Errors: Error 8-10: Invalid argument type (Text). Expecting a Table value instead.|Error 12-14: Invalid argument type (Text). Expecting a Record value instead.|Error 12-14: Invalid argument type. Cannot use Text values in this context.|Error 0-15: The function 'Collect' has some invalid arguments.
+
+>> Collect(If(false,Blank()),r2)
+Errors: Error 8-25: The function 'Collect' has some invalid arguments.

@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Globalization;
 using System.Linq;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Parser;
@@ -11,7 +12,7 @@ using Xunit;
 namespace Microsoft.PowerFx.Core.Tests
 {
     public class ParseTests : PowerFxTest
-    {      
+    {
         [Theory]
         [InlineData("0")]
         [InlineData("-0")]
@@ -733,14 +734,14 @@ namespace Microsoft.PowerFx.Core.Tests
 
         internal void TestFormulasParseRoundtrip(string script)
         {
-            var result = TexlParser.ParseFormulasScript(script);
+            var result = TexlParser.ParseFormulasScript(script, new CultureInfo("en-US"));
 
             Assert.False(result.HasError);
         }
 
         internal void TestFormulasParseError(string script)
         {
-            var result = TexlParser.ParseFormulasScript(script);
+            var result = TexlParser.ParseFormulasScript(script, new CultureInfo("en-US"));
 
             Assert.True(result.HasError);
         }

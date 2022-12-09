@@ -3,11 +3,13 @@
 
 using System;
 using System.Collections.Generic;
+using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Types;
 
-namespace Microsoft.PowerFx.Core
+namespace Microsoft.PowerFx.LanguageServerProtocol
 {
-    public static class FormulaTypeToSchemaConverter
+    [Obsolete("Use methods from Microsoft.PowerFx.Core.FormulaTypeToSchemaHelper instead. This JSON representation of types is not supported.")]
+    internal static class FormulaTypeToSchemaConverter
     {
         public static FormulaTypeSchema Convert(FormulaType type)
         {
@@ -20,7 +22,7 @@ namespace Microsoft.PowerFx.Core
         {
             public FormulaTypeSchema Result;
 
-#region Primitive Types
+            #region Primitive Types
             public void Visit(BlankType type)
             {
                 Result = new FormulaTypeSchema() { Type = FormulaTypeSchema.ParamType.Blank };
@@ -40,7 +42,7 @@ namespace Microsoft.PowerFx.Core
             {
                 Result = new FormulaTypeSchema() { Type = FormulaTypeSchema.ParamType.String };
             }
-                        
+
             public void Visit(HyperlinkType type)
             {
                 Result = new FormulaTypeSchema() { Type = FormulaTypeSchema.ParamType.Hyperlink };
@@ -88,6 +90,11 @@ namespace Microsoft.PowerFx.Core
                 Result = new FormulaTypeSchema() { Type = FormulaTypeSchema.ParamType.Unknown };
             }
 
+            public void Visit(DeferredType type)
+            {
+                Result = new FormulaTypeSchema() { Type = FormulaTypeSchema.ParamType.Deferred };
+            }
+
             public void Visit(BindingErrorType type)
             {
                 Result = new FormulaTypeSchema() { Type = FormulaTypeSchema.ParamType.Error };
@@ -115,7 +122,7 @@ namespace Microsoft.PowerFx.Core
             }
 
             public void Visit(TableType type)
-            {                
+            {
                 Result = new FormulaTypeSchema()
                 {
                     Type = FormulaTypeSchema.ParamType.Table,
@@ -134,7 +141,7 @@ namespace Microsoft.PowerFx.Core
 
                 return fields;
             }
-#endregion
+            #endregion
         }
     }
 }

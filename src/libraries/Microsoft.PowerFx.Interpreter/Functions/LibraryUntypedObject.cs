@@ -52,11 +52,21 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
-        public static FormulaValue Value_UO(IRContext irContext, UntypedObjectValue[] args)
+        public static FormulaValue Value_UO(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            var impl = args[0].Impl;
+            var uo = args[0] as UntypedObjectValue;
+            var impl = uo.Impl;
 
-            if (impl.Type == FormulaType.Number)
+            if (impl.Type == FormulaType.String)
+            {
+                var str = new StringValue(IRContext.NotInSource(FormulaType.String), impl.GetString());
+                if (args.Length > 1)
+                {
+                    return Value(runner, context, irContext, new FormulaValue[] { str, args[1] });
+                }
+                return Value(runner, context, irContext, new FormulaValue[] { str });
+            }
+            else if (impl.Type == FormulaType.Number)
             {
                 var number = impl.GetDouble();
                 if (IsInvalidDouble(number))
@@ -66,11 +76,16 @@ namespace Microsoft.PowerFx.Functions
 
                 return new NumberValue(irContext, number);
             }
+            else if (impl.Type == FormulaType.Boolean)
+            {
+                var b = new BooleanValue(IRContext.NotInSource(FormulaType.Boolean), impl.GetBoolean());
+                return BooleanToNumber(irContext, new BooleanValue[] { b });
+            }
 
             return GetTypeMismatchError(irContext, BuiltinFunctionsCore.Value_UO.Name, DType.Number.GetKindString(), impl);
         }
 
-        public static FormulaValue Text_UO(IRContext irContext, UntypedObjectValue[] args)
+        public static FormulaValue Text_UO(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, UntypedObjectValue[] args)
         {
             var impl = args[0].Impl;
 
@@ -78,6 +93,16 @@ namespace Microsoft.PowerFx.Functions
             {
                 var str = impl.GetString();
                 return new StringValue(irContext, str);
+            }
+            else if (impl.Type == FormulaType.Number)
+            {
+                var n = new NumberValue(IRContext.NotInSource(FormulaType.Number), impl.GetDouble());
+                return Text(runner, context, irContext, new FormulaValue[] { n });
+            }
+            else if (impl.Type == FormulaType.Boolean)
+            {
+                var b = impl.GetBoolean();
+                return new StringValue(irContext, PowerFxBooleanToString(b));
             }
 
             return GetTypeMismatchError(irContext, BuiltinFunctionsCore.Text_UO.Name, DType.String.GetKindString(), impl);
@@ -132,7 +157,17 @@ namespace Microsoft.PowerFx.Functions
         {
             var impl = args[0].Impl;
 
-            if (impl.Type == FormulaType.Boolean)
+            if (impl.Type == FormulaType.String)
+            {
+                var str = new StringValue(IRContext.NotInSource(FormulaType.String), impl.GetString());
+                return TextToBoolean(irContext, new StringValue[] { str });
+            }
+            else if (impl.Type == FormulaType.Number)
+            {
+                var n = new NumberValue(IRContext.NotInSource(FormulaType.Number), impl.GetDouble());
+                return NumberToBoolean(irContext, new NumberValue[] { n });
+            }
+            else if (impl.Type == FormulaType.Boolean)
             {
                 var b = impl.GetBoolean();
                 return new BooleanValue(irContext, b);
@@ -153,7 +188,7 @@ namespace Microsoft.PowerFx.Functions
             return GetTypeMismatchError(irContext, BuiltinFunctionsCore.CountRows_UO.Name, DType.EmptyTable.GetKindString(), impl);
         }
 
-        public static FormulaValue DateValue_UO(IRContext irContext, UntypedObjectValue[] args)
+        public static FormulaValue DateValue_UO(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, UntypedObjectValue[] args)
         {
             var impl = args[0].Impl;
 
@@ -161,9 +196,11 @@ namespace Microsoft.PowerFx.Functions
             {
                 var s = impl.GetString();
 
-                if (IsValidDateTimeUO(s) && DateTime.TryParse(s, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime res))
+                if (IsValidDateTimeUO(s) && DateTime.TryParse(s, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime datetime))
                 {
-                    return new DateValue(irContext, res.Date);
+                    datetime = MakeValidDateTime(runner, datetime, runner.GetService<TimeZoneInfo>() ?? TimeZoneInfo.Local);
+
+                    return new DateValue(irContext, datetime);
                 }
 
                 return CommonErrors.InvalidDateTimeParsingError(irContext);
@@ -190,7 +227,7 @@ namespace Microsoft.PowerFx.Functions
             return GetTypeMismatchError(irContext, BuiltinFunctionsCore.TimeValue_UO.Name, DType.String.GetKindString(), impl);
         }
 
-        public static FormulaValue DateTimeValue_UO(IRContext irContext, UntypedObjectValue[] args)
+        public static FormulaValue DateTimeValue_UO(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, UntypedObjectValue[] args)
         {
             var impl = args[0].Impl;
 
@@ -198,9 +235,11 @@ namespace Microsoft.PowerFx.Functions
             {
                 var s = impl.GetString();
 
-                if (IsValidDateTimeUO(s) && DateTime.TryParse(s, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime res))
+                if (IsValidDateTimeUO(s) && DateTime.TryParse(s, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime datetime))
                 {
-                    return new DateTimeValue(irContext, res);
+                    datetime = MakeValidDateTime(runner, datetime, runner.GetService<TimeZoneInfo>() ?? TimeZoneInfo.Local);
+
+                    return new DateTimeValue(irContext, datetime);
                 }
 
                 return CommonErrors.InvalidDateTimeParsingError(irContext);

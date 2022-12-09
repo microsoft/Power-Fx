@@ -4,15 +4,18 @@
 // ******************************** TIMEZONEOFFSET FUNCTION - CONVERTING TO AND FROM UTC TIME TESTCASES ********************************
 
 //Convert to UTC time - No DST - Difference of 8 hours (480 minutes) from UTC time (i.e. UTC-8:00)
->> DateAdd( DateTime(2000,1,1,0,0,0), TimeZoneOffset(), TimeUnit.Minutes)
-DateTime(2000,1,1,7,0,0,0)
+>> DateAdd( DateTime(2000,1,1,0,0,0), TimeZoneOffset(DateTime(2000,1,1,0,0,0)), TimeUnit.Minutes)
+DateTime(2000,1,1,8,0,0,0)
+
+>> DateAdd( DateTime(2000,7,1,0,0,0), TimeZoneOffset(DateTime(2000,7,1,0,0,0)), TimeUnit.Minutes)
+DateTime(2000,7,1,7,0,0,0)
 
 //Converting from UTC time
 >> DateAdd( DateTime(2000,1,1,7,0,0), -TimeZoneOffset(DateTime(2000,1,1,7,0,0)), TimeUnit.Minutes)
 DateTime(1999,12,31,23,0,0,0)
 
 //Convert to UTC time during DST - Difference of 7 hours (420 minutes) from UTC time (i.e. UTC-7:00)
->> DateAdd( DateTime(2013,7,15,13,0,0), TimeZoneOffset(), TimeUnit.Minutes)
+>> DateAdd( DateTime(2013,7,15,13,0,0), TimeZoneOffset(DateTime(2013,7,15,13,0,0)), TimeUnit.Minutes)
 DateTime(2013,7,15,20,0,0,0)
 
 //Converting from UTC time during DST
@@ -212,6 +215,9 @@ DateTime(2017,11,5,3,0,0,0)
 DateTime(2016,11,5,3,0,0,0)
 
 // Year should be properly added, approaches but does not jump DST boundary
-// 11/5/2017 01:00:00.000 GMT-0700 + 1yr = 11/5/2018 01:00:00.000 GMT-0700
+// 11/5/2017 01:00:00.000 GMT-0700 is ambiguous
 >> DateAdd(DateTime(2017,11,5,1,0,0,0),1,TimeUnit.Years)
 DateTime(2018,11,5,1,0,0,0)
+
+>> DateAdd(Date(2021,3,14), 1, TimeUnit.Years)
+DateTime(2022,3,14,0,0,0,0)

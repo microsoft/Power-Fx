@@ -43,13 +43,14 @@ namespace Microsoft.PowerFx.Core.Parser
         private readonly List<CommentToken> _comments = new List<CommentToken>();
         private SourceList _before;
         private SourceList _after;
+        private readonly Features _features;
 
         // Represents temporary extra trivia, for when a parsing method
         // had to parse tailing trivia to do 1-lookahead. Will be
         // collected by the next call to ParseTrivia.
         private ITexlSource _extraTrivia;
 
-        private TexlParser(IReadOnlyList<Token> tokens, Flags flags)
+        private TexlParser(IReadOnlyList<Token> tokens, Flags flags, Features features = Features.None)
         {
             Contracts.AssertValue(tokens);
 
@@ -57,6 +58,7 @@ namespace Microsoft.PowerFx.Core.Parser
             _curs = new TokenCursor(tokens);
             _flagsMode = new Stack<Flags>();
             _flagsMode.Push(flags);
+            _features = features;
         }
 
         public static ParseUDFsResult ParseUDFsScript(string script, CultureInfo loc = null)
@@ -214,15 +216,20 @@ namespace Microsoft.PowerFx.Core.Parser
         // caller, so precedenceTokens provide a list of stripped tokens.
         internal static ParseResult ParseScript(string script, CultureInfo loc = null, Flags flags = Flags.None)
         {
+            return ParseScript(script, Features.None, loc, flags);
+        }
+
+        internal static ParseResult ParseScript(string script, Features features, CultureInfo loc = null, Flags flags = Flags.None)
+        {
             Contracts.AssertValue(script);
             Contracts.AssertValueOrNull(loc);
 
             var tokens = TokenizeScript(script, loc, flags);
-            var parser = new TexlParser(tokens, flags);
+            var parser = new TexlParser(tokens, flags, features);
             List<TexlError> errors = null;
             var parsetree = parser.Parse(ref errors);
 
-            return new ParseResult(parsetree, errors, errors?.Any() ?? false, parser._comments, parser._before, parser._after, script);
+            return new ParseResult(parsetree, errors, errors?.Any() ?? false, parser._comments, parser._before, parser._after, script, loc);
         }
 
         public static ParseFormulasResult ParseFormulasScript(string script, CultureInfo loc = null)
@@ -701,6 +708,11 @@ namespace Microsoft.PowerFx.Core.Parser
                             {
                                 goto default;
                             }
+                            
+                            if (_features.HasFlag(Features.DisableRowScopeDisambiguationSyntax))
+                            {
+                                PostError(_curs.TokCur, errKey: TexlStrings.ErrDeprecated);
+                            }
 
                             node = ParseScopeField(first);
                             break;
@@ -818,12 +830,7 @@ namespace Microsoft.PowerFx.Core.Parser
                 case TokKind.StrInterpStart:
                     var res = ParseStringInterpolation();
                     var tokCur = _curs.TokCur;
-                    if (Preview.FeatureFlags.StringInterpolation)
-                    {
-                        return res;
-                    }
-
-                    return CreateError(tokCur, TexlStrings.ErrBadToken);
+                    return res;
                 case TokKind.StrLit:
                     return new StrLitNode(ref _idNext, _curs.TokMove().As<StrLitToken>());
 
@@ -1518,7 +1525,7 @@ namespace Microsoft.PowerFx.Core.Parser
         {
             Contracts.Assert(tidWanted != tok.Kind);
 
-            PostError(tok, TexlStrings.ErrExpectedFound_Ex_Fnd, tidWanted, tok);
+            PostError(tok, TexlStrings.ErrExpectedFound_Ex_Fnd, tok, tidWanted);
         }
 
         // Gets the string corresponding to token kinds used in binary or unary nodes.

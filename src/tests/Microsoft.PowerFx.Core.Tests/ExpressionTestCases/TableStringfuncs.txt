@@ -6,28 +6,28 @@ Table({Result:"a1"},{Result:"a2"})
 Table()
 
 >> Concatenate("a", If(1<0, ["txt"]))
-Table()
+Blank()
 
 >> Concatenate("a", If(1/0<2, ["txt"]))
-#Error
+Error({Kind:ErrorKind.Div0})
 
 >> Concatenate("a", ["hello", Mid("great", -1), "world"])
-Table({Result:"ahello"},{Result:Microsoft.PowerFx.Types.ErrorValue},{Result:"aworld"})
+Table({Result:"ahello"},{Result:Error({Kind:ErrorKind.InvalidArgument})},{Result:"aworld"})
 
 >> Concatenate("a", Table({a:"one"},If(1<0,{a:"two"}),{a:"three"}))
 Table({Result:"aone"},{Result:"a"},{Result:"athree"})
 
 >> Concatenate("a", Table({a:"one"},If(1/0<2,{a:"two"}),{a:"three"}))
-Table({Result:"aone"},Microsoft.PowerFx.Types.ErrorValue,{Result:"athree"})
+Table({Result:"aone"},Error({Kind:ErrorKind.Div0}),{Result:"athree"})
 
 >> Concatenate(Blank(), ["hello", Mid("great", -1), "world"])
-Table({Result:"hello"},{Result:Microsoft.PowerFx.Types.ErrorValue},{Result:"world"})
+Blank()
 
 >> Concatenate(Blank(), Table({a:"one"},If(1<0,{a:"two"}),{a:"three"}))
-Table({Result:"one"},{Result:""},{Result:"three"})
+Blank()
 
 >> Concatenate(Blank(), Table({a:"one"},If(1/0<2,{a:"two"}),{a:"three"}))
-Table({Result:"one"},Microsoft.PowerFx.Types.ErrorValue,{Result:"three"})
+Blank()
 
 // Table + Scalar (Reverse Arguments)
 >> Concatenate(Table({b:"1"},{b:"2"}), "a")
@@ -37,47 +37,47 @@ Table({Result:"1a"},{Result:"2a"})
 Table()
 
 >> Concatenate(If(1<0, ["txt"]), "a")
-Table()
+Blank()
 
 >> Concatenate(If(1/0<2, ["txt"]), "a")
-#Error
+Error({Kind:ErrorKind.Div0})
 
 >> Concatenate(["hello", Mid("great", -1), "world"], "a")
-Table({Result:"helloa"},{Result:Microsoft.PowerFx.Types.ErrorValue},{Result:"worlda"})
+Table({Result:"helloa"},{Result:Error({Kind:ErrorKind.InvalidArgument})},{Result:"worlda"})
 
 >> Concatenate(Table({a:"one"},If(1<0,{a:"two"}),{a:"three"}), "a")
 Table({Result:"onea"},{Result:"a"},{Result:"threea"})
 
 >> Concatenate(Table({a:"one"},If(1/0<2,{a:"two"}),{a:"three"}), "a")
-Table({Result:"onea"},Microsoft.PowerFx.Types.ErrorValue,{Result:"threea"})
+Table({Result:"onea"},Error({Kind:ErrorKind.Div0}),{Result:"threea"})
 
 >> Concatenate(["hello", Mid("great", -1), "world"], Blank())
-Table({Result:"hello"},{Result:Microsoft.PowerFx.Types.ErrorValue},{Result:"world"})
+Blank()
 
 >> Concatenate(Table({a:"one"},If(1<0,{a:"two"}),{a:"three"}), Blank())
-Table({Result:"one"},{Result:""},{Result:"three"})
+Blank()
 
 >> Concatenate(Table({a:"one"},If(1/0<2,{a:"two"}),{a:"three"}), Blank())
-Table({Result:"one"},Microsoft.PowerFx.Types.ErrorValue,{Result:"three"})
+Blank()
 
 // Table + Table
 >> Concatenate(["one", "two"], [1, 2, 3, 4])
-Table({Result:"one1"},{Result:"two2"},{Result:"3"},{Result:"4"})
+Table({Result:"one1"},{Result:"two2"},{Result:Error({Kind:ErrorKind.NotApplicable})},{Result:Error({Kind:ErrorKind.NotApplicable})})
 
 >> Concatenate(["one", "two"], LastN(Table({b:"1"},{b:"2"}), 0))
-Table({Result:"one"},{Result:"two"})
+Table({Result:Error({Kind:ErrorKind.NotApplicable})},{Result:Error({Kind:ErrorKind.NotApplicable})})
 
 >> Concatenate(["one", "two"], If(1<0, ["txt"]))
-Table({Result:"one"},{Result:"two"})
+Blank()
 
 >> Concatenate(["one", "two"], If(1/0<2, ["txt"]))
-Microsoft.PowerFx.Types.ErrorValue
+Error({Kind:ErrorKind.Div0})
 
 >> Concatenate(["one", "two"], Table({a:"one"},If(1<0,{a:"two"}),{a:"three"}))
-Table({Result:"oneone"},{Result:"two"},{Result:"three"})
+Table({Result:"oneone"},{Result:"two"},{Result:Error({Kind:ErrorKind.NotApplicable})})
 
 >> Concatenate(["one", "two"], ["hello", Mid("great", -1), "world"])
-Table({Result:"onehello"},{Result:Microsoft.PowerFx.Types.ErrorValue},{Result:"world"})
+Table({Result:"onehello"},{Result:Error({Kind:ErrorKind.InvalidArgument})},{Result:Error({Kind:ErrorKind.NotApplicable})})
 
 >> Concatenate(["a","b","c","d"], "-", ["1", "2"], "-", ["x", "y", "z"], "!")
-Table({Result:"a-1-x!"},{Result:"b-2-y!"},{Result:"c--z!"},{Result:"d--!"})
+Table({Result:"a-1-x!"},{Result:"b-2-y!"},{Result:Error({Kind:ErrorKind.NotApplicable})},{Result:Error({Kind:ErrorKind.NotApplicable})})

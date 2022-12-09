@@ -3268,6 +3268,38 @@
     <value>Kontrasta dizains</value>
     
   </data>
+  <data name="AboutPatch" xml:space="preserve">
+    <value>Lieto atjauninājumus norādītajā rindā un maina rindu norādītajā datu avotā. Atgriež atjaunināto rindu.</value>
+    
+  </data>
+  <data name="PatchDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="PatchBaseRecordArg" xml:space="preserve">
+    <value>base_record</value>
+    
+  </data>
+  <data name="PatchChangeRecordsArg" xml:space="preserve">
+    <value>change_record(s)</value>
+    
+  </data>
+  <data name="AboutRemove" xml:space="preserve">
+    <value>Noņem noteiktu ierakstu vai ierakstus no datu avota</value>
+    
+  </data>
+  <data name="RemoveDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="RemoveRecordsArg" xml:space="preserve">
+    <value>noņemt_ierakstu(s)</value>
+    
+  </data>
+  <data name="ErrRemoveAllArg" xml:space="preserve">
+    <value>Ja tiek norādīts, pēdējam argumentam ir jābūt “RemoveFlags.All”. Vai šeit ir pareizrakstības kļūda?</value>
+    
+  </data>
   <data name="PenMode_Draw_DisplayName" xml:space="preserve">
     <value>Zīmēt</value>
     
@@ -4631,6 +4663,68 @@
   </data>
   <data name="SetArg2" xml:space="preserve">
     <value>vērtība</value>
+    
+  </data>
+  <data name="AboutDec2Hex" xml:space="preserve">
+    <value>Pārvērš decimāldaļskaitli par heksadecimālu skaitli</value>
+    
+  </data>
+  <data name="Dec2HexArg1" xml:space="preserve">
+    <value>skaitlis</value>
+  </data>
+  <data name="AboutDec2Hex_number" xml:space="preserve">
+    <value>Skaitliska decimāldaļskaitļa vērtība, kas jāpārvērš par heksadecimālu virkni.</value>
+    
+  </data>
+  <data name="Dec2HexArg2" xml:space="preserve">
+    <value>vietas</value>
+  </data>
+  <data name="AboutDec2Hex_places" xml:space="preserve">
+    <value>Skaitliska vērtība iekšējās atkāpes pievienošanai heksadecimālai virknei.</value>
+    
+  </data>
+  <data name="AboutDec2HexT" xml:space="preserve">
+    <value>Pārvērš decimāldaļskaitļus kolonnā par heksadecimāliem skaitļiem</value>
+    
+  </data>
+  <data name="Dec2HexTArg1" xml:space="preserve">
+    <value>tabula</value>
+  </data>
+  <data name="Dec2HexTArg2" xml:space="preserve">
+    <value>vietas</value>
+  </data>
+  <data name="AboutDec2HexT_places" xml:space="preserve">
+    <value>Skaitliska vērtība vai vērtību masīvs iekšējās atkāpes pievienošanai heksadecimālajām virknēm.</value>
+    
+  </data>
+  <data name="AboutDec2Hex_table" xml:space="preserve">
+    <value>Kolonna ar decimāldaļskaitļu vērtībām, kas jāpārvērš par heksadecimāliem skaitļiem.</value>
+    
+  </data>
+  <data name="AboutHex2Dec" xml:space="preserve">
+    <value>Heksadecimāls skaitlis tiek pārvērsts par decimāldaļskaitli</value>
+    
+  </data>
+  <data name="Hex2DecArg1" xml:space="preserve">
+    <value>skaitlis</value>
+  </data>
+  <data name="AboutHex2Dec_number" xml:space="preserve">
+    <value>Heksadecimāla virkne tiek pārvērsta par decimāldaļskaitli.</value>
+    
+  </data>
+  <data name="AboutHex2DecT" xml:space="preserve">
+    <value>Heksadecimālie skaitļi kolonnā tiek pārvērsti par decimāldaļskaitļiem</value>
+    
+  </data>
+  <data name="Hex2DecTArg1" xml:space="preserve">
+    <value>tabula</value>
+  </data>
+  <data name="AboutHex2Dec_table" xml:space="preserve">
+    <value>Kolonna ar heksadecimālām virknēm, kas jāpārvērš par decimāldaļskaitļiem.</value>
+    
+  </data>
+  <data name="ErrDeprecated" xml:space="preserve">
+    <value>Šis līdzeklis ir novecojis un vairs netiek atbalstīts.</value>
     
   </data>
 </root>

@@ -68,7 +68,7 @@ namespace Microsoft.PowerFx
         // Additional symbols for the engine.
         // A derived engine can replace this completely to inject engine-specific virtuals. 
         // These symbols then feed into the resolver
-        protected SymbolTable EngineSymbols { get; set; }
+        protected ReadOnlySymbolTable EngineSymbols { get; set; }
 
         /// <summary>
         /// Create a resolver for use in binding. This is called from <see cref="Check(string, RecordType, ParserOptions)"/>.
@@ -126,7 +126,7 @@ namespace Microsoft.PowerFx
         /// <returns></returns>
         public ParseResult Parse(string expressionText, ParserOptions options = null)
         {
-            return Parse(expressionText, options, Config.CultureInfo);
+            return Parse(expressionText, Config.Features, options, Config.CultureInfo);
         }
 
         /// <summary>
@@ -138,12 +138,20 @@ namespace Microsoft.PowerFx
         /// <returns></returns>
         public static ParseResult Parse(string expressionText, ParserOptions options = null, CultureInfo cultureInfo = null)
         {
+            return Parse(expressionText, Features.None, options, cultureInfo);
+        }
+
+        /// <summary>
+        /// Parse the expression without doing any binding.
+        /// </summary>
+        public static ParseResult Parse(string expressionText, Features features, ParserOptions options = null, CultureInfo cultureInfo = null)
+        {
             options ??= new ParserOptions();
 
             // If culture isn't explicitly set, use the one from PowerFx Config
             options.Culture ??= cultureInfo;
 
-            var result = options.Parse(expressionText);
+            var result = options.Parse(expressionText, features);
             return result;
         }
 
@@ -215,12 +223,14 @@ namespace Microsoft.PowerFx
                 ruleScope: null,
                 features: Config.Features);
 
-            var result = new CheckResult(parse, binding)
+            var result = new CheckResult(parse, Config.CultureInfo, binding)
             {
-                Symbols = combinedSymbols
+                Source = this,
+                Symbols = combinedSymbols, // all symbols
+                Parameters = symbolTable // just the parameters (provided at runtime)
             };
 
-            if (result.IsSuccess)
+            if (result.IsSuccess && !result.HasDeferredArgsWarning)
             {
                 result.TopLevelIdentifiers = DependencyFinder.FindDependencies(binding.Top, binding);
 

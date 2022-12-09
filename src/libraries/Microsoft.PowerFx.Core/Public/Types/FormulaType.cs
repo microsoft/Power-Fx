@@ -4,7 +4,9 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Text;
 using Microsoft.PowerFx.Core.Entities;
+using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 
@@ -49,6 +51,8 @@ namespace Microsoft.PowerFx.Types
         public static FormulaType Guid { get; } = new GuidType();
 
         public static FormulaType Unknown { get; } = new UnknownType();
+
+        public static FormulaType Deferred { get; } = new DeferredType();
 
         public static FormulaType BindingError { get; } = new BindingErrorType();
         
@@ -233,5 +237,19 @@ namespace Microsoft.PowerFx.Types
         #endregion // Equality
 
         public abstract void Visit(ITypeVisitor vistor);
+
+        internal virtual void DefaultExpressionValue(StringBuilder sb)
+        {
+            throw new NotSupportedException($"{GetType().FullName} doesn't implement DefaultExpressionValue.");
+        }
+
+        internal string DefaultExpressionValue()
+        {
+            var sb = new StringBuilder();
+
+            DefaultExpressionValue(sb);
+
+            return sb.ToString();
+        }
     }
 }

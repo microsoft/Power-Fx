@@ -7,9 +7,12 @@ using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Runtime.Serialization;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Types
@@ -189,6 +192,44 @@ namespace Microsoft.PowerFx.Types
         public override void Visit(IValueVisitor visitor)
         {
             visitor.Visit(this);
+        }
+
+        public override void ToExpression(StringBuilder sb, FormulaValueSerializerSettings settings)
+        {
+            // Table() is not legal, so we need an alternate expression to capture the table's type.
+            if (!Rows.Any())
+            {
+                if (settings.UseCompactRepresentation)
+                {
+                    sb.Append("Table()");
+
+                    return;
+                }
+
+                sb.Append("FirstN(");
+                Type.DefaultExpressionValue(sb);
+                sb.Append(",0)");
+            }
+            else
+            {
+                var flag = true;
+
+                sb.Append("Table(");
+
+                foreach (var row in Rows)
+                {
+                    if (!flag)
+                    {
+                        sb.Append(",");
+                    }
+
+                    flag = false;
+
+                    row.ToFormulaValue().ToExpression(sb, settings);
+                }
+
+                sb.Append(")");
+            }
         }
     }
 }

@@ -17,37 +17,14 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void ResourceLoadsOnlyRequiredLocales()
         {
-            // Get a string from En-Us to ensure it's loaded
+            // Get a string from En-Us and to De-DE ensure they're loaded
             Assert.NotNull(StringResources.Get("AboutIf", "en-US"));
+            Assert.NotNull(StringResources.Get("ErrGeneralError", "de-DE"));
 
-            var loaded = string.Empty;
-            var loadedCount = 0;
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
 
-            void ResourceAssemblyLoadHandler(object sender, AssemblyLoadEventArgs args)
-            {
-                loaded = args.LoadedAssembly.FullName;
-                loadedCount++;
-            }
-
-            try 
-            {
-                AppDomain.CurrentDomain.AssemblyLoad += ResourceAssemblyLoadHandler;
-
-                // Fallback locale (en-US) is already loaded above
-                var generalError = StringResources.Get("ErrGeneralError");
-                Assert.Empty(loaded);
-
-                // Other locales force a new assembly load
-                generalError = StringResources.Get("ErrGeneralError", "de-DE");
-                Assert.Contains("de-DE", loaded);
-
-                // No other assemblies were loaded
-                Assert.Equal(1, loadedCount);
-            }
-            finally 
-            {
-                AppDomain.CurrentDomain.AssemblyLoad -= ResourceAssemblyLoadHandler; 
-            }
+            Assert.True(assemblies.Where(x => x.FullName.Contains("Culture=en-US")).Any());
+            Assert.True(assemblies.Where(x => x.FullName.Contains("Culture=de-DE")).Any());
         }
 
         [Fact]
@@ -57,36 +34,19 @@ namespace Microsoft.PowerFx.Tests
             var enUsERContent = StringResources.GetErrorResource(TexlStrings.ErrBadToken);
             var enUsBasicContent = StringResources.Get("AboutAbs");
 
-            var loaded = string.Empty;
-            var loadedCount = 0;
-            void ResourceAssemblyLoadHandler(object sender, AssemblyLoadEventArgs args)
-            {
-                loaded = args.LoadedAssembly.FullName;
-                loadedCount++;
-            }
+            CultureInfo.CurrentUICulture = CultureInfo.CreateSpecificCulture("fr-FR");
 
-            try 
-            {
-                AppDomain.CurrentDomain.AssemblyLoad += ResourceAssemblyLoadHandler;
-                CultureInfo.CurrentUICulture = CultureInfo.CreateSpecificCulture("fr-FR");
+            var frERContent = StringResources.GetErrorResource(TexlStrings.ErrBadToken);
+            var frBasicContent = StringResources.Get("AboutAbs");
 
-                var frERContent = StringResources.GetErrorResource(TexlStrings.ErrBadToken);
-                var frBasicContent = StringResources.Get("AboutAbs");
-                Assert.Contains("fr-FR", loaded);
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
 
-                // No other assemblies were loaded
-                Assert.Equal(1, loadedCount);
+            Assert.True(assemblies.Where(x => x.FullName.Contains("Culture=fr-FR")).Any());
 
-                // Strings are not the same as enUS
-                // Not validating content directly, since it might change
-                Assert.NotEqual(enUsBasicContent, frBasicContent);
-                Assert.NotEqual(enUsERContent.GetSingleValue(ErrorResource.ShortMessageTag), frERContent.GetSingleValue(ErrorResource.ShortMessageTag));
-            }
-            finally
-            {
-                CultureInfo.CurrentUICulture = initialCulture;
-                AppDomain.CurrentDomain.AssemblyLoad -= ResourceAssemblyLoadHandler; 
-            }
+            // Strings are not the same as enUS
+            // Not validating content directly, since it might change
+            Assert.NotEqual(enUsBasicContent, frBasicContent);
+            Assert.NotEqual(enUsERContent.GetSingleValue(ErrorResource.ShortMessageTag), frERContent.GetSingleValue(ErrorResource.ShortMessageTag));
         }        
 
         [Fact]

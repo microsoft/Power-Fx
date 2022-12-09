@@ -39,7 +39,7 @@ Blank()
 true
 
 >> Switch(1/0, 1, 8, 2, 9)
-#Error
+Error({Kind:ErrorKind.Div0})
 
 >> Switch(1, 1/0, 2, 1, 3)
-#Error
+Error({Kind:ErrorKind.Div0})

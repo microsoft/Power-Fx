@@ -498,7 +498,7 @@
     <value>बूलियन मान में बदला जाने वाला टेक्स्ट मान.</value>
   </data>
   <data name="AboutBooleanT" xml:space="preserve">
-    <value>पाठ मानों के कॉलम को बूलियन मानों के कॉलम में परिवर्तित करता है.</value>
+    <value>पाठ मानों के कॉलम को बूलियन मानों के कॉलम में रूपांतरित करता है.</value>
     
   </data>
   <data name="BooleanTArg1" xml:space="preserve">
@@ -509,7 +509,7 @@
     <value>संसाधित किए जाने वाले पाठ मानों का स्तंभ.</value>
   </data>
   <data name="AboutBooleanN" xml:space="preserve">
-    <value>एक 'संख्या' को एक बूलियन मान में परिवर्तित करता है.</value>
+    <value>एक 'संख्या' को एक बूलियन मान में रूपांतरित करता है.</value>
     
   </data>
   <data name="BooleanNArg1" xml:space="preserve">
@@ -520,7 +520,7 @@
     <value>बूलियन मान में कनवर्ट करने के लिए संख्या मान.</value>
   </data>
   <data name="AboutBooleanNT" xml:space="preserve">
-    <value>संख्यात्मक मानों के कॉलम को बूलियन मानों के कॉलम में परिवर्तित करता है.</value>
+    <value>संख्यात्मक मानों के कॉलम को बूलियन मानों के कॉलम में रूपांतरित करता है.</value>
     
   </data>
   <data name="BooleanNTArg1" xml:space="preserve">
@@ -3268,6 +3268,38 @@
     <value>कॉन्ट्रास्ट विषयवस्तु</value>
     
   </data>
+  <data name="AboutPatch" xml:space="preserve">
+    <value>अद्यतनों को निर्दिष्ट पंक्ति पर लागू करता है और निर्दिष्ट डेटास्रोत की पंक्ति को बदलता है. अद्यतित पंक्ति लौटाता है.</value>
+    
+  </data>
+  <data name="PatchDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="PatchBaseRecordArg" xml:space="preserve">
+    <value>base_record</value>
+    
+  </data>
+  <data name="PatchChangeRecordsArg" xml:space="preserve">
+    <value>change_record(s)</value>
+    
+  </data>
+  <data name="AboutRemove" xml:space="preserve">
+    <value>डेटा स्रोत से कोई विशेष रिकॉर्ड या रिकॉर्ड्स हटाता है</value>
+    
+  </data>
+  <data name="RemoveDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="RemoveRecordsArg" xml:space="preserve">
+    <value>remove_record(s)</value>
+    
+  </data>
+  <data name="ErrRemoveAllArg" xml:space="preserve">
+    <value>यदि प्रदान किया गया है, तो अंतिम तर्क 'RemoveFlags.All' होना चाहिए. क्या कोई टाइपो है?</value>
+    
+  </data>
   <data name="PenMode_Draw_DisplayName" xml:space="preserve">
     <value>आरेखित करें</value>
     
@@ -4631,6 +4663,68 @@
   </data>
   <data name="SetArg2" xml:space="preserve">
     <value>मान</value>
+    
+  </data>
+  <data name="AboutDec2Hex" xml:space="preserve">
+    <value>दशमलव संख्या को हेक्साडेसिमल में बदलें</value>
+    
+  </data>
+  <data name="Dec2HexArg1" xml:space="preserve">
+    <value>संख्या</value>
+  </data>
+  <data name="AboutDec2Hex_number" xml:space="preserve">
+    <value>हेक्साडेसिमल स्ट्रिंग में बदलने के लिए संख्यात्मक दशमलव मान.</value>
+    
+  </data>
+  <data name="Dec2HexArg2" xml:space="preserve">
+    <value>स्थान</value>
+  </data>
+  <data name="AboutDec2Hex_places" xml:space="preserve">
+    <value>हेक्साडेसिमल स्ट्रिंग में पैडिंग जोड़ने के लिए कोई संख्यात्मक मान.</value>
+    
+  </data>
+  <data name="AboutDec2HexT" xml:space="preserve">
+    <value>दशमलव संख्याओं के कॉलम को हेक्साडेसिमल में बदलें</value>
+    
+  </data>
+  <data name="Dec2HexTArg1" xml:space="preserve">
+    <value>तालिका</value>
+  </data>
+  <data name="Dec2HexTArg2" xml:space="preserve">
+    <value>स्थान</value>
+  </data>
+  <data name="AboutDec2HexT_places" xml:space="preserve">
+    <value>हेक्साडेसिमल स्ट्रिंग्स में पैडिंग जोड़ने के लिए संख्यात्मक मान या सरणी को व्यवस्थित करें.</value>
+    
+  </data>
+  <data name="AboutDec2Hex_table" xml:space="preserve">
+    <value>संख्यात्मक दशमलव मान का कोई कॉलम जिसे हेक्साडेसिमल में बदलता है.</value>
+    
+  </data>
+  <data name="AboutHex2Dec" xml:space="preserve">
+    <value>हेक्साडेसिमल संख्या को दशमलव में बदलता है</value>
+    
+  </data>
+  <data name="Hex2DecArg1" xml:space="preserve">
+    <value>संख्या</value>
+  </data>
+  <data name="AboutHex2Dec_number" xml:space="preserve">
+    <value>एक हेक्साडेसिमल स्ट्रिंग दशमलव में बदलती है.</value>
+    
+  </data>
+  <data name="AboutHex2DecT" xml:space="preserve">
+    <value>हेक्साडेसिमल संख्याओं के कॉलम को दशमलव में बदलता है</value>
+    
+  </data>
+  <data name="Hex2DecTArg1" xml:space="preserve">
+    <value>तालिका</value>
+  </data>
+  <data name="AboutHex2Dec_table" xml:space="preserve">
+    <value>दशमलव में बदलने के लिए हेक्साडेसिमल स्ट्रिंग का एक कॉलम.</value>
+    
+  </data>
+  <data name="ErrDeprecated" xml:space="preserve">
+    <value>यह सुविधा अप्रचलित कर दी गई है और यह अब समर्थित नहीं है.</value>
     
   </data>
 </root>

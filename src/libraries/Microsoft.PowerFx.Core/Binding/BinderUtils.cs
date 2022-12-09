@@ -1,17 +1,21 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.PowerFx.Core.App.Controls;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
+using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Logging.Trackers;
+using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
+using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core.Binding
 {
@@ -77,11 +81,14 @@ namespace Microsoft.PowerFx.Core.Binding
         }
 
         /// <summary>
-        /// Tries to get the best suited overload for <paramref name="node"/> according to <paramref name="txb"/> and
+        /// Tries to get the best suited overload for <paramref name="node"/> according to <paramref name="context"/> and
         /// returns true if it is found.
         /// </summary>
-        /// <param name="txb">
-        /// Binding that will help select the best overload.
+        /// <param name="context">
+        /// CheckTypesContext used for calls to CheckTypes.
+        /// </param>
+        /// <param name="errors">
+        /// An IErrorContainer to collect errors.
         /// </param>
         /// <param name="node">
         /// CallNode for which the best overload will be determined.
@@ -105,7 +112,7 @@ namespace Microsoft.PowerFx.Core.Binding
         /// <returns>
         /// True if a valid overload was found, false if not.
         /// </returns>
-        internal static bool TryGetBestOverload(TexlBinding txb, CallNode node, DType[] argTypes, TexlFunction[] overloads, out TexlFunction bestOverload, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap, out DType returnType)
+        internal static bool TryGetBestOverload(CheckTypesContext context, IErrorContainer errors, CallNode node, DType[] argTypes, TexlFunction[] overloads, out TexlFunction bestOverload, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap, out DType returnType)
         {
             Contracts.AssertValue(node, nameof(node));
             Contracts.AssertValue(overloads, nameof(overloads));
@@ -132,10 +139,12 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 var typeCheckSucceeded = false;
 
-                IErrorContainer warnings = new LimitedSeverityErrorContainer(txb.ErrorContainer, DocumentErrorSeverity.Warning);
+                var localWarnings = new LimitedSeverityErrorContainer(errors, DocumentErrorSeverity.Warning);
 
                 // Typecheck the invocation and infer the return type.
-                typeCheckSucceeded = maybeFunc.CheckInvocation(txb, args, argTypes, warnings, out returnType, out nodeToCoercedTypeMap);
+                typeCheckSucceeded = maybeFunc.CheckTypes(context, args, argTypes, localWarnings, out returnType, out nodeToCoercedTypeMap);
+
+                (typeCheckSucceeded, returnType) = CheckDeferredType(argTypes, returnType, typeCheckSucceeded);
 
                 if (typeCheckSucceeded)
                 {
@@ -174,6 +183,64 @@ namespace Microsoft.PowerFx.Core.Binding
             nodeToCoercedTypeMap = null;
             returnType = null;
             return false;
+        }
+
+        /// <summary>
+        /// if <paramref name="typeCheckSucceeded"/> failed and DeferredType arg is present, discard all the error and succeed the type check.
+        /// Keep <paramref name="errorContainer"/> and <paramref name="checkErrorContainer"/> null if no need to merge errors.
+        /// </summary>
+        /// <param name="argTypes"> types of all the args.</param>
+        /// <param name="returnType"> return type determined by function's check type.</param>
+        /// <param name="typeCheckSucceeded"> function's check type succeeded or not.</param>
+        /// <param name="checkErrorContainer"> Temp error container used for type checking only.</param>
+        /// <param name="errorContainer"> Binder's error container.</param>
+        internal static (bool typeCheckSucceeded, DType returnType) CheckDeferredType(DType[] argTypes, DType returnType, bool typeCheckSucceeded, ErrorContainer checkErrorContainer = null, ErrorContainer errorContainer = null)
+        {
+            var isDeferredArgPresent = argTypes.Any(type => type.IsDeferred);
+
+            if (!typeCheckSucceeded && isDeferredArgPresent)
+            {
+                typeCheckSucceeded = true;
+
+                // If one of the arg was deferred and
+                // return type could not be calculated and was error, we assign it to deferred as safeguard.
+                // returnType was EmptyTable, we assign it to deferred as safeguard e.g. Table(Deferred) => deferred,
+                // this is because we don't want to embed deferred type inside of any aggregate type.
+                if (returnType.IsError || returnType.Equals(DType.EmptyTable))
+                {
+                    returnType = DType.Deferred;
+                }
+            }
+            else if(checkErrorContainer!=null && errorContainer!=null)
+            {
+                errorContainer.MergeErrors(checkErrorContainer.GetErrors());
+            }
+
+            return(typeCheckSucceeded, returnType);
+        }
+
+        /// <summary>
+        /// Returns best overload in case there are no matches based on first argument and order.
+        /// </summary>
+        internal static TexlFunction FindBestErrorOverload(TexlFunction[] overloads, DType[] argTypes, int cArg)
+        {
+            var candidates = overloads.Where(overload => overload.MinArity <= cArg && cArg <= overload.MaxArity);
+            if (cArg == 0)
+            {
+                return candidates.FirstOrDefault();
+            }
+
+            // Consider overloads that have DType.Error parameter the last
+            candidates = candidates.OrderBy(candidate => candidate.ParamTypes.Length > 0 && candidate.ParamTypes[0] == DType.Error).ToArray();
+            foreach (var candidate in candidates)
+            {
+                if (candidate.ParamTypes.Length > 0 && candidate.ParamTypes[0].Accepts(argTypes[0]))
+                {
+                    return candidate;
+                }
+            }
+
+            return candidates.FirstOrDefault();
         }
 
         /// <summary>
@@ -589,6 +656,13 @@ namespace Microsoft.PowerFx.Core.Binding
                             // Regular Addition
                             var leftResAdd = CheckTypeCore(errorContainer, node.Left, leftType, DType.Number, /* coerced: */ DType.String, DType.Boolean);
                             var rightResAdd = CheckTypeCore(errorContainer, node.Right, rightType, DType.Number, /* coerced: */ DType.String, DType.Boolean);
+                            
+                            // Deferred + number or number + Deferred
+                            if (leftKind == DKind.Deferred || rightKind == DKind.Deferred)
+                            {
+                                return new BinderCheckTypeResult() { Node = node, NodeType = DType.Deferred, Coercions = leftResAdd.Coercions.Concat(rightResAdd.Coercions).ToList() };
+                            }
+
                             return new BinderCheckTypeResult() { Node = node, NodeType = DType.Number, Coercions = leftResAdd.Coercions.Concat(rightResAdd.Coercions).ToList() };
                     }
             }
@@ -637,7 +711,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
             // EqualOp is only allowed on primitive types, polymorphic lookups, and control types.
             if (!(typeLeft.IsPrimitive && typeRight.IsPrimitive) && !(typeLeft.IsPolymorphic && typeRight.IsPolymorphic) && !(typeLeft.IsControl && typeRight.IsControl)
-                && !(typeLeft.IsPolymorphic && typeRight.IsRecord) && !(typeLeft.IsRecord && typeRight.IsPolymorphic))
+                && !(typeLeft.IsPolymorphic && typeRight.IsRecord) && !(typeLeft.IsRecord && typeRight.IsPolymorphic) && !(typeLeft.IsDeferred || typeRight.IsDeferred))
             {
                 var leftTypeDisambiguation = typeLeft.IsOptionSet && typeLeft.OptionSetInfo != null ? $"({typeLeft.OptionSetInfo.EntityName})" : string.Empty;
                 var rightTypeDisambiguation = typeRight.IsOptionSet && typeRight.OptionSetInfo != null ? $"({typeRight.OptionSetInfo.EntityName})" : string.Empty;
@@ -652,8 +726,8 @@ namespace Microsoft.PowerFx.Core.Binding
             }
 
             // Special case for guid, it should produce an error on being compared to non-guid types
-            if ((typeLeft.Equals(DType.Guid) && !typeRight.Equals(DType.Guid)) ||
-                (typeRight.Equals(DType.Guid) && !typeLeft.Equals(DType.Guid)))
+            if ((typeLeft.Equals(DType.Guid) && !(typeRight.Equals(DType.Guid) || typeRight.IsDeferred)) ||
+                (typeRight.Equals(DType.Guid) && !(typeLeft.Equals(DType.Guid) || typeLeft.IsDeferred)))
             {
                 errorContainer.EnsureError(
                     DocumentErrorSeverity.Severe,
@@ -814,6 +888,93 @@ namespace Microsoft.PowerFx.Core.Binding
                     Contracts.Assert(false);
                     return new BinderCheckTypeResult() { Node = node, NodeType = DType.Error };
             }
+        }
+
+        public static bool TryGetConstantValue(CheckTypesContext context, TexlNode node, out string nodeValue)
+        {
+            Contracts.AssertValue(node);
+            nodeValue = null;
+            switch (node.Kind)
+            {
+                case NodeKind.StrLit:
+                    nodeValue = node.AsStrLit().Value;
+                    return true;
+                case NodeKind.BinaryOp:
+                    var binaryOpNode = node.AsBinaryOp();
+                    if (binaryOpNode.Op == BinaryOp.Concat)
+                    {
+                        if (TryGetConstantValue(context, binaryOpNode.Left, out var left) && TryGetConstantValue(context, binaryOpNode.Right, out var right))
+                        {
+                            nodeValue = string.Concat(left, right);
+                            return true;
+                        }
+                    }
+
+                    break;
+                case NodeKind.Call:
+                    var callNode = node.AsCall();
+                    if (callNode.Head.Name.Value == BuiltinFunctionsCore.Concatenate.Name)
+                    {
+                        var parameters = new List<string>();
+                        foreach (var argNode in callNode.Args.Children)
+                        {
+                            if (TryGetConstantValue(context, argNode, out var argValue))
+                            {
+                                parameters.Add(argValue);
+                            }
+                            else
+                            {
+                                break;
+                            }
+                        }
+
+                        if (parameters.Count == callNode.Args.Count)
+                        {
+                            nodeValue = string.Join(string.Empty, parameters);
+                            return true;
+                        }
+                    }
+
+                    break;
+                case NodeKind.FirstName:
+                    // Possibly a non-qualified enum value
+                    var firstNameNode = node.AsFirstName();
+                    if (context.NameResolver.Lookup(firstNameNode.Ident.Name, out var firstNameInfo, NameLookupPreferences.None))
+                    {
+                        if (firstNameInfo.Kind == BindKind.Enum)
+                        {
+                            if (firstNameInfo.Data is string enumValue)
+                            {
+                                nodeValue = enumValue;
+                                return true;
+                            }
+                        }
+                    }
+
+                    break;
+                case NodeKind.DottedName:
+                    // Possibly an enumeration
+                    var dottedNameNode = node.AsDottedName();
+                    if (dottedNameNode.Left.Kind == NodeKind.FirstName)
+                    {
+                        DType enumType = null;
+                        if (context.NameResolver.EntityScope?.TryGetNamedEnum(dottedNameNode.Left.AsFirstName().Ident.Name, out enumType) == true)
+                        {
+                            if (enumType.TryGetEnumValue(dottedNameNode.Right.Name, out var enumValue))
+                            {
+                                if (enumValue is string strValue)
+                                {
+                                    nodeValue = strValue;
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+
+                    break;
+            }
+
+            return false;
         }
     }
 }

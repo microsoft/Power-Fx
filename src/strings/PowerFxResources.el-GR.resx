@@ -3268,6 +3268,38 @@
     <value>Θέμα αντίθεσης</value>
     
   </data>
+  <data name="AboutPatch" xml:space="preserve">
+    <value>Εφαρμόζει τις ενημερώσεις στην καθορισμένη γραμμή και αλλάζει τη γραμμή στην καθορισμένη προέλευση δεδομένων. Επιστρέφει την ενημερωμένη γραμμή.</value>
+    
+  </data>
+  <data name="PatchDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="PatchBaseRecordArg" xml:space="preserve">
+    <value>base_record</value>
+    
+  </data>
+  <data name="PatchChangeRecordsArg" xml:space="preserve">
+    <value>change_record(s)</value>
+    
+  </data>
+  <data name="AboutRemove" xml:space="preserve">
+    <value>Καταργεί μια συγκεκριμένη καρτέλα ή καρτέλες από μια προέλευση δεδομένων</value>
+    
+  </data>
+  <data name="RemoveDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="RemoveRecordsArg" xml:space="preserve">
+    <value>remove_record(s)</value>
+    
+  </data>
+  <data name="ErrRemoveAllArg" xml:space="preserve">
+    <value>Αν παρέχεται, το τελευταίο όρισμα πρέπει να είναι "RemoveFlags.All". Υπάρχει τυπογραφικό λάθος;</value>
+    
+  </data>
   <data name="PenMode_Draw_DisplayName" xml:space="preserve">
     <value>Σχεδίαση</value>
     
@@ -4631,6 +4663,68 @@
   </data>
   <data name="SetArg2" xml:space="preserve">
     <value>τιμή</value>
+    
+  </data>
+  <data name="AboutDec2Hex" xml:space="preserve">
+    <value>Μετατρέπει έναν δεκαδικό αριθμό σε δεκαεξαδικό</value>
+    
+  </data>
+  <data name="Dec2HexArg1" xml:space="preserve">
+    <value>αριθμός</value>
+  </data>
+  <data name="AboutDec2Hex_number" xml:space="preserve">
+    <value>Μια αριθμητική δεκαδική τιμή για μετατροπή σε δεκαεξαδική συμβολοσειρά.</value>
+    
+  </data>
+  <data name="Dec2HexArg2" xml:space="preserve">
+    <value>μέρη</value>
+  </data>
+  <data name="AboutDec2Hex_places" xml:space="preserve">
+    <value>Μια αριθμητική τιμή για προσθήκη αναπλήρωσης σε δεκαεξαδική συμβολοσειρά.</value>
+    
+  </data>
+  <data name="AboutDec2HexT" xml:space="preserve">
+    <value>Μετατρέπει μια στήλη δεκαδικών αριθμών σε δεκαεξαδικούς</value>
+    
+  </data>
+  <data name="Dec2HexTArg1" xml:space="preserve">
+    <value>πίνακας</value>
+  </data>
+  <data name="Dec2HexTArg2" xml:space="preserve">
+    <value>μέρη</value>
+  </data>
+  <data name="AboutDec2HexT_places" xml:space="preserve">
+    <value>Μια αριθμητική τιμή ή ένας πίνακας τιμών για προσθήκη αναπλήρωσης σε δεκαεξαδικές συμβολοσειρές.</value>
+    
+  </data>
+  <data name="AboutDec2Hex_table" xml:space="preserve">
+    <value>Μια στήλη αριθμητικών δεκαδικών τιμών για μετατροπή σε δεκαεξαδικούς.</value>
+    
+  </data>
+  <data name="AboutHex2Dec" xml:space="preserve">
+    <value>Μετατρέπει έναν δεκαεξαδικό αριθμό σε δεκαδικό</value>
+    
+  </data>
+  <data name="Hex2DecArg1" xml:space="preserve">
+    <value>αριθμός</value>
+  </data>
+  <data name="AboutHex2Dec_number" xml:space="preserve">
+    <value>Μια μετατροπή δεκαεξαδικής συμβολοσειράς σε δεκαδική.</value>
+    
+  </data>
+  <data name="AboutHex2DecT" xml:space="preserve">
+    <value>Μετατρέπει μια στήλη δεκαεξαδικών τιμών σε δεκαδικούς</value>
+    
+  </data>
+  <data name="Hex2DecTArg1" xml:space="preserve">
+    <value>πίνακας</value>
+  </data>
+  <data name="AboutHex2Dec_table" xml:space="preserve">
+    <value>Μια στήλη δεκαεξαδικών συμβολοσειρών για μετατροπή σε δεκαδικές.</value>
+    
+  </data>
+  <data name="ErrDeprecated" xml:space="preserve">
+    <value>Αυτή η δυνατότητα δεν χρησιμοποιείται και δεν υποστηρίζεται πλέον.</value>
     
   </data>
 </root>

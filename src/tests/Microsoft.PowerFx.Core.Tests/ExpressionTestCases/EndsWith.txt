@@ -132,23 +132,27 @@ true
 
 //Invalid operation: Division by zero
 >> EndsWith("hello",1/0)
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 //Invalid operation: Division by zero
 >> EndsWith(1/0,"hello")
-#Error(Kind=Div0)
+Error({Kind:ErrorKind.Div0})
 
 //Null text case
 >> EndsWith(Blank(),"ok")
 false
 
-//Null end case
+//Null end case - coerced to ""
 >> EndsWith("Hello",Blank())
-false
+true
 
-//Null both case
+//Null end case - coerced to ""
+>> EndsWith("",Blank())
+true
+
+//Null both case - both coerced to ""
 >> EndsWith(Blank(),Blank())
-false
+true
 
 
 // ******** BOOLEAN PARAMETERS ********

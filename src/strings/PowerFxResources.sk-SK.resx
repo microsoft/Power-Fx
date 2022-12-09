@@ -3268,6 +3268,38 @@
     <value>Kontrastný motív</value>
     
   </data>
+  <data name="AboutPatch" xml:space="preserve">
+    <value>Použije aktualizácie na zadaný riadok a zmení riadok v zadanom zdroji údajov. Vráti aktualizovaný riadok.</value>
+    
+  </data>
+  <data name="PatchDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="PatchBaseRecordArg" xml:space="preserve">
+    <value>base_record</value>
+    
+  </data>
+  <data name="PatchChangeRecordsArg" xml:space="preserve">
+    <value>change_record(s)</value>
+    
+  </data>
+  <data name="AboutRemove" xml:space="preserve">
+    <value>Odstráni konkrétny záznam alebo záznamy zo zdroja údajov</value>
+    
+  </data>
+  <data name="RemoveDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="RemoveRecordsArg" xml:space="preserve">
+    <value>remove_record(s)</value>
+    
+  </data>
+  <data name="ErrRemoveAllArg" xml:space="preserve">
+    <value>Ak je zadaný, posledný argument musí byť RemoveFlags.All. Je tam preklep?</value>
+    
+  </data>
   <data name="PenMode_Draw_DisplayName" xml:space="preserve">
     <value>Kresliť</value>
     
@@ -3933,11 +3965,11 @@
     
   </data>
   <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>This argument cannot be passed as this type in formula columns.</value>
+    <value>Tento typ argumentu nie je možné odovzdať do stĺpcov vzorcov.</value>
     
   </data>
   <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
-    <value>This argument cannot be passed as type {0} in formula columns.</value>
+    <value>Typ {0} argumentu nie je možné odovzdať do stĺpcov vzorcov.</value>
     
   </data>
   <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
@@ -3969,7 +4001,7 @@
     
   </data>
   <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
-    <value>This operation cannot be performed on type {0} in formula columns.</value>
+    <value>Túto operáciu nie je možné vykonať na type {0} v stĺpcoch vzorcov.</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
@@ -4005,7 +4037,7 @@
     
   </data>
   <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
-    <value>Cannot reference virtual table {0} in formula columns.</value>
+    <value>V stĺpcoch vzorcov nemožno odkazovať na virtuálnu tabuľku {0}.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
@@ -4631,6 +4663,68 @@
   </data>
   <data name="SetArg2" xml:space="preserve">
     <value>hodnota</value>
+    
+  </data>
+  <data name="AboutDec2Hex" xml:space="preserve">
+    <value>Skonvertuje desiatkové číslo na šestnástkové</value>
+    
+  </data>
+  <data name="Dec2HexArg1" xml:space="preserve">
+    <value>číslo</value>
+  </data>
+  <data name="AboutDec2Hex_number" xml:space="preserve">
+    <value>Číselná desiatková hodnota, ktorá sa má skonvertovať na šestnástkový reťazec.</value>
+    
+  </data>
+  <data name="Dec2HexArg2" xml:space="preserve">
+    <value>miesta</value>
+  </data>
+  <data name="AboutDec2Hex_places" xml:space="preserve">
+    <value>Číselná hodnota na pridanie výplne do šestnástkového reťazca.</value>
+    
+  </data>
+  <data name="AboutDec2HexT" xml:space="preserve">
+    <value>Skonvertuje stĺpec desiatkových čísel na šestnástkové</value>
+    
+  </data>
+  <data name="Dec2HexTArg1" xml:space="preserve">
+    <value>tabuľka</value>
+  </data>
+  <data name="Dec2HexTArg2" xml:space="preserve">
+    <value>miesta</value>
+  </data>
+  <data name="AboutDec2HexT_places" xml:space="preserve">
+    <value>Číselná hodnota alebo pole hodnôt na pridanie výplne do šestnástkových reťazcov.</value>
+    
+  </data>
+  <data name="AboutDec2Hex_table" xml:space="preserve">
+    <value>Stĺpec číselných desiatkových hodnôt, ktoré sa majú skonvertovať na šestnástkové.</value>
+    
+  </data>
+  <data name="AboutHex2Dec" xml:space="preserve">
+    <value>Skonvertuje šestnástkové číslo na desiatkové</value>
+    
+  </data>
+  <data name="Hex2DecArg1" xml:space="preserve">
+    <value>číslo</value>
+  </data>
+  <data name="AboutHex2Dec_number" xml:space="preserve">
+    <value>Šestnástkový reťazec, ktorý sa má skonvertovať na desiatkový.</value>
+    
+  </data>
+  <data name="AboutHex2DecT" xml:space="preserve">
+    <value>Skonvertuje stĺpec šestnástkových čísel na desiatkové</value>
+    
+  </data>
+  <data name="Hex2DecTArg1" xml:space="preserve">
+    <value>tabuľka</value>
+  </data>
+  <data name="AboutHex2Dec_table" xml:space="preserve">
+    <value>Stĺpec šestnástkových reťazcov, ktoré sa majú skonvertovať na desiatkové.</value>
+    
+  </data>
+  <data name="ErrDeprecated" xml:space="preserve">
+    <value>Táto funkcia je zastaraná a už nie je podporovaná.</value>
     
   </data>
 </root>

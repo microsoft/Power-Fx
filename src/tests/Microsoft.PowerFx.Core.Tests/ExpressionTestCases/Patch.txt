@@ -57,9 +57,19 @@ Errors: Error 0-32: The function 'Patch' has some invalid arguments.|Error 14-31
 >> Patch(Table(r1, r2), r1, {Field2:"Venus"})
 {Field1:1,Field2:"Venus",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}
 
+>> Patch(t1, First(t1), {Field2:"Venus"}).Field2
+"Venus"
+
+>> Collect(t1, r2);
+  Patch(t1, Last(t1), {Field1:10}, {Field2:"Venus"}, {Field4:true}).Field1
+10
+
+>> If(Patch(t1, First(t1), {Field4:false}).Field4, 1,0)
+0
+
 >> Patch(t1, r1, {Field1:1/0});
    t1
-Table({Field1:Microsoft.PowerFx.Types.ErrorValue,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})
+Table({Field1:Error({Kind:ErrorKind.Div0}),Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})
 
 >> Patch(t1, Blank(), {Field1:10})
 Blank()
@@ -118,7 +128,7 @@ Table({Field1:1,Field2:"mars",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})
 
 >> Patch(t1, First(t1), {DisplayNameField1:1/0});
    t1
-Table({Field1:Microsoft.PowerFx.Types.ErrorValue,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})
+Table({Field1:Error({Kind:ErrorKind.Div0}),Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})
 
 >> Patch(t1, First(t1), {DisplayNameField1:1/0}, {DisplayNameField1:Blank()}, {DisplayNameField1:0});
    t1
@@ -174,4 +184,12 @@ Table({Field1:100,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:false}
   Collect(t1, {DisplayNameField1:6,Field2:"saturn",Field3:DateTime(2033,1,1,0,0,0,0),DisplayNameField4:false});
   Patch(t1, Last(Filter(t1, Field4 = false)), {DisplayNameField2: "phobos"});
 {Field1:6,Field2:"phobos",Field3:DateTime(2033,1,1,0,0,0,0),Field4:false}
-  
+
+>> Patch(Foo, First(t1), {DisplayNameField2:"jupter"})
+Errors: Error 6-9: Name isn't valid. 'Foo' isn't recognized.|Error 0-51: The function 'Patch' has some invalid arguments.
+
+>> Patch(Foo, Bar, {DisplayNameField2:"jupter"})
+Errors: Error 6-9: Name isn't valid. 'Foo' isn't recognized.|Error 11-14: Name isn't valid. 'Bar' isn't recognized.|Error 0-45: The function 'Patch' has some invalid arguments.
+
+>> Patch(r1, Foo)
+Errors: Error 10-13: Name isn't valid. 'Foo' isn't recognized.|Error 0-14: The function 'Patch' has some invalid arguments.

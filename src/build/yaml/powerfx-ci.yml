@@ -158,6 +158,47 @@ stages:
       continueOnError: true
 
     - powershell: |
+        # Set up tokens for private sources
+        $file = "$(Build.SourcesDirectory)\nuget.config";
+        $ErrorActionPreference = 'SilentlyContinue';
+        nuget sources update -ConfigFile "$file" -Name "SDK_Dotnet_V4_org" -username "ContractDlls" -password "$(System.AccessToken)";
+        nuget sources update -ConfigFile "$file" -Name "PowerFx" -username "ContractDlls" -password "$(System.AccessToken)";
+        $ErrorActionPreference = 'Continue';
+        '-------------'; get-content "$file"; '===================';
+
+        $PackageNames = "$(PackagesToValidate)";
+        $ApiContractVersion = "$(GetContract.ContractVersion)";
+        $TempContractInstallDirectory = ".\TempContractInstallDir";
+        $OutputDirectory = ".\ContractDlls";
+
+        Write-Host "`nDownloading packages version $ApiContractVersion.";
+
+        New-Item -ItemType directory -Path $OutputDirectory -Force | Out-Null;
+
+        $Names = $PackageNames.Split(',');
+
+        foreach ($Name in $Names) {
+          "---- $Name ------------------";
+          nuget install $Name -Version $ApiContractVersion -OutputDirectory $TempContractInstallDirectory -DirectDownload -NonInteractive;
+
+          if ($LASTEXITCODE -eq 0) {
+            Copy-Item "$TempContractInstallDirectory\$Name.$ApiContractVersion\lib\netstandard2.0\$Name.dll" $OutputDirectory;
+          }
+          else {
+            Write-Host "##vso[task.complete result=Failed;]";
+          }
+        }
+      displayName: 'Download Contract DLLs to ContractDlls folder'
+      continueOnError: true
+
+    - task: PublishPipelineArtifact@0
+      inputs:
+        artifactName: 'ContractDlls'
+        targetPath: ContractDlls
+      displayName: 'Push to ContractDlls in Artifacts'
+      continueOnError: true
+
+    - powershell: |
         $multiconfig = '{';
         $env:PackagesToValidate.Split(",") | ForEach {
           $library = $_.Trim()
@@ -184,7 +225,7 @@ stages:
       contractVersion: $[ dependencies.generate_multiconfig_var.outputs['GetContract.ContractVersion'] ]
 
     steps:
-    - checkout: none
+    - checkout: self
 
     - template: feed-setup-step.yml
       parameters: 
@@ -196,7 +237,7 @@ stages:
 
   - job: post_results_to_gitHub
     dependsOn: check_api_for
-    condition: and(succeeded(), ne(dependencies.generate_multiconfig_var.outputs['generate_var.MULTICONFIG'], '{}'), ne(variables['System.PullRequest.IsFork'], 'True'))
+    condition: ne(dependencies.generate_multiconfig_var.outputs['generate_var.MULTICONFIG'], '{}')
 
     steps:
     - checkout: none

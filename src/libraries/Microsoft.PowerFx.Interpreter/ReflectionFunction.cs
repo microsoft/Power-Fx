@@ -3,6 +3,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Numerics;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -10,9 +12,11 @@ using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 using static Microsoft.PowerFx.Core.Localization.TexlStrings;
@@ -24,7 +28,9 @@ namespace Microsoft.PowerFx
     /// </summary>
     internal class CustomTexlFunction : TexlFunction
     {
-        public Func<IServiceProvider, FormulaValue[], FormulaValue> _impl;
+        public Func<IServiceProvider, FormulaValue[], CancellationToken, Task<FormulaValue>> _impl;
+
+        internal BigInteger LamdaParamMask;
 
         public override bool SupportsParamCoercion => true;
 
@@ -50,9 +56,14 @@ namespace Microsoft.PowerFx
             yield return new[] { SG("Arg 1") };
         }
 
-        public virtual FormulaValue Invoke(IServiceProvider serviceProvider, FormulaValue[] args)
+        public virtual Task<FormulaValue> InvokeAsync(IServiceProvider serviceProvider, FormulaValue[] args, CancellationToken cancellationToken)
         {
-            return _impl(serviceProvider, args);
+            return _impl(serviceProvider, args, cancellationToken);
+        }
+
+        public override bool IsLazyEvalParam(int index)
+        {
+            return LamdaParamMask.TestBit(index);
         }
     }
 
@@ -69,7 +80,7 @@ namespace Microsoft.PowerFx
 
         public override bool SupportsParamCoercion => false;
 
-        public Func<FormulaValue[], FormulaValue> _impl;
+        public Func<FormulaValue[], Task<FormulaValue>> _impl;
 
         public CustomSetPropertyFunction(string name)
             : base(DPath.Root, name, name, SG(name), FunctionCategories.Behavior, DType.Boolean, 0, 2, 2)
@@ -84,9 +95,8 @@ namespace Microsoft.PowerFx
         }
 
         // 2nd argument should be same type as 1st argument. 
-        public override bool CheckInvocation(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public override bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
-            Contracts.AssertValue(binding);
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
             Contracts.AssertValue(argTypes);
@@ -123,7 +133,7 @@ namespace Microsoft.PowerFx
         public async Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancellationToken)
         {
             var result = _impl(args);
-            return result;
+            return await result;
         }
     }
 
@@ -164,6 +174,11 @@ namespace Microsoft.PowerFx
                 throw new InvalidOperationException($"Missing Execute method");
             }
 
+            if (returnType._type.IsDeferred || paramTypes.Any(type => type._type.IsDeferred))
+            {
+                throw new NotSupportedException();
+            }
+
             _info = new FunctionDescr
             {
                 Name = name,
@@ -185,6 +200,10 @@ namespace Microsoft.PowerFx
             public Type _configType;
 
             public MethodInfo _method;
+
+            public bool _isAsync;
+
+            public BigInteger LamdaParamMask;
         }
 
         private FunctionDescr Scan()
@@ -207,21 +226,46 @@ namespace Microsoft.PowerFx
                 info.RetType = GetType(m.ReturnType);
 
                 var paramTypes = new List<FormulaType>();
-                foreach (var p in m.GetParameters())
+
+                info._isAsync = m.ReturnType.BaseType == typeof(Task);
+
+                var parameters = m.GetParameters();
+                for (var i = 0; i < parameters.Length; i++)
                 {
-                    if (typeof(FormulaValue).IsAssignableFrom(p.ParameterType))
+                    if (i == parameters.Length - 1 && info._isAsync)
                     {
-                        paramTypes.Add(GetType(p.ParameterType));
-                    } 
-                    else if (p.ParameterType == ConfigType)
+                        if (parameters[i].ParameterType != typeof(CancellationToken))
+                        {
+                            throw new InvalidOperationException($"Last argument must be a cancellation token.");
+                        }
+                    }
+                    else if (typeof(FormulaValue).IsAssignableFrom(parameters[i].ParameterType))
+                    {
+                        paramTypes.Add(GetType(parameters[i].ParameterType));
+                    }
+                    else if (parameters[i].ParameterType == ConfigType)
                     {
                         // Not a Formulatype, pull from RuntimeConfig
-                        info._configType = p.ParameterType;
-                    } 
-                    else
+                        info._configType = parameters[i].ParameterType;
+                    }
+                    else if (parameters[i].ParameterType == typeof(CancellationToken) && info._isAsync)
                     {
-                        // Unknonw parameter type
-                        throw new InvalidOperationException($"Unknown parameter type: {p.Name}, {p.ParameterType}");
+                        throw new InvalidOperationException($"Cancellation token must be the last argument.");
+                    }
+                    else if (parameters[i].ParameterType == typeof(Func<Task<BooleanValue>>))
+                    {
+                        info.LamdaParamMask = info.LamdaParamMask | BigInteger.One << i;
+                        paramTypes.Add(FormulaType.Boolean);
+                    }
+                    else if (parameters[i].ParameterType.BaseType == typeof(MulticastDelegate))
+                    {
+                        // Currently only Func<Task<BooleanValue> is supported.
+                        throw new InvalidOperationException($"Unknown parameter type: {parameters[i].Name}, {parameters[i].ParameterType}. Only {typeof(Func<Task<BooleanValue>>)} is supported");
+                    }
+                    else
+                    { 
+                        // Unknown parameter type
+                        throw new InvalidOperationException($"Unknown parameter type: {parameters[i].Name}, {parameters[i].ParameterType}");
                     }
                 }
 
@@ -238,6 +282,12 @@ namespace Microsoft.PowerFx
         {
             // Handle any FormulaType deriving from Primitive<T>
             var tBase = t.BaseType;
+
+            if (tBase == typeof(Task))
+            {
+                tBase = t.GenericTypeArguments[0].BaseType;
+            }
+
             if (Utility.TryGetElementType(tBase, typeof(PrimitiveValue<>), out var typeArg))
             {
                 if (PrimitiveValueConversions.TryGetFormulaType(typeArg, out var formulaType))
@@ -258,17 +308,23 @@ namespace Microsoft.PowerFx
             {
                 return new CustomSetPropertyFunction(info.Name)
                 {
-                    _impl = args => Invoke(null, args)
+                    _impl = args => InvokeAsync(null, args, CancellationToken.None)
                 };
             }
 
             return new CustomTexlFunction(info.Name, info.RetType, info.ParamTypes)
             {
-                _impl = (runtimeConfig, args) => Invoke(runtimeConfig, args)
+                _impl = (runtimeConfig, args, cancellationToken) => InvokeAsync(runtimeConfig, args, cancellationToken),
+                LamdaParamMask = info.LamdaParamMask,
             };
         }
 
         public FormulaValue Invoke(IServiceProvider serviceProvider, FormulaValue[] args)
+        {
+            return InvokeAsync(serviceProvider, args, CancellationToken.None).Result;
+        }
+
+        public async Task<FormulaValue> InvokeAsync(IServiceProvider serviceProvider, FormulaValue[] args, CancellationToken cancellationToken)
         {
             Scan();
 
@@ -286,14 +342,97 @@ namespace Microsoft.PowerFx
                 }
             }
 
-            foreach (var arg in args)
+            List<ErrorValue> errors = null;
+            for (var i = 0; i < args.Length; i++)
             {
+                object arg = args[i];
+
+                // In case, ReflectionFunction was created using the constructor which takes paramtypes as optional argument paramtypes could be null.
+                var expectedType = _info.ParamTypes.Length <= i ? default : _info.ParamTypes[i];
+                if (arg is ErrorValue ev)
+                {
+                    if (errors == null)
+                    {
+                        errors = new List<ErrorValue>();
+                    }
+
+                    errors.Add(ev);
+                }
+                else if (arg is BlankValue && expectedType is NumberType)
+                {
+                    arg = FormulaValue.New(0);
+                }
+                else if (arg is BlankValue && expectedType is StringType)
+                {
+                    arg = FormulaValue.New(string.Empty);
+                }
+                else if (arg is BlankValue)
+                {
+                    if (errors == null)
+                    {
+                        errors = new List<ErrorValue>();
+                    }
+
+                    errors.Add(CommonErrors.RuntimeTypeMismatch(IRContext.NotInSource(FormulaType.Blank)));
+                }
+                else if (arg is LambdaFormulaValue lambda)
+                {
+                    Func<Task<BooleanValue>> argLambda = async () => (BooleanValue)await lambda.EvalAsync();
+                    arg = argLambda;
+                }
+
                 args2.Add(arg);
+            }
+
+            if (errors != null)
+            {
+                return ErrorValue.Combine(IRContext.NotInSource(_info.RetType), errors);
+            }
+
+            if (_info._isAsync)
+            {
+                args2.Add(cancellationToken);
             }
 
             var result = _info._method.Invoke(this, args2.ToArray());
 
+            if (_info._isAsync)
+            {
+                var resultType = result.GetType().GenericTypeArguments[0];
+                var formulaValueResult = await Unwrap(result, resultType);
+                return formulaValueResult;
+            }
+
             return (FormulaValue)result;
+        }
+
+        private static async Task<FormulaValue> Unwrap(object obj, Type resultType)
+        {
+            var t1 = typeof(Helper<>).MakeGenericType(resultType);
+            var helper = Activator.CreateInstance(t1);
+            var t2 = (Helper)helper;
+
+            FormulaValue result = await t2.Unwrap(obj);
+
+            return result;
+        }
+
+        private abstract class Helper
+        {
+            // where obj is Task<T>, T is FormulaValue 
+            public abstract Task<FormulaValue> Unwrap(object obj);
+        }
+
+        private class Helper<T> : Helper
+            where T : FormulaValue
+        {
+            // where obj is Task<T>, T is FormulaValue 
+            public override async Task<FormulaValue> Unwrap(object obj)
+            {
+                var t = (Task<T>)obj;
+                var result = await t;
+                return result;
+            }
         }
     }
 

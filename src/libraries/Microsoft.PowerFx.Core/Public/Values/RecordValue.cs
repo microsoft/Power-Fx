@@ -5,10 +5,14 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Dynamic;
+using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Syntax;
 
 namespace Microsoft.PowerFx.Types
 {
@@ -123,7 +127,7 @@ namespace Microsoft.PowerFx.Types
                 }
                 else if (result is TableValue tableValue)
                 {
-                    result = new InMemoryTableValue(IRContext.NotInSource(fieldType), tableValue.Rows);
+                    result = CompileTimeTypeWrapperTableValue.AdjustType((TableType)fieldType, tableValue);
                 }
                 else
                 {
@@ -213,6 +217,34 @@ namespace Microsoft.PowerFx.Types
             });
 
             return DValue<RecordValue>.Of(errorValue);
-        }        
+        }
+
+        public override void ToExpression(StringBuilder sb, FormulaValueSerializerSettings settings)
+        {
+            var flag = true;
+
+            sb.Append("{");
+
+            // Deterministic. Printing fields in order.
+            var fields = Fields.ToArray();
+            Array.Sort(fields, (a, b) => string.CompareOrdinal(a.Name, b.Name));
+
+            foreach (var field in fields)
+            {
+                if (!flag)
+                {
+                    sb.Append(",");
+                }
+
+                flag = false;
+
+                sb.Append(IdentToken.MakeValidIdentifier(field.Name));
+                sb.Append(':');
+
+                field.Value.ToExpression(sb, settings);
+            }
+
+            sb.Append("}");
+        }
     }
 }

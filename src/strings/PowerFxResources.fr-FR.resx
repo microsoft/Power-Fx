@@ -371,7 +371,7 @@
     
   </data>
   <data name="AboutDropColumns_source" xml:space="preserve">
-    <value>Valeur de table dont supprimer des colonnes.</value>
+    <value>Table pour laquelle supprimer des colonnes.</value>
   </data>
   <data name="AboutDropColumns_column_name" xml:space="preserve">
     <value>Nom d’une colonne à supprimer.</value>
@@ -2638,7 +2638,7 @@
     
   </data>
   <data name="AboutShowColumns_source" xml:space="preserve">
-    <value>Valeur de table dont supprimer des colonnes.</value>
+    <value>Table pour laquelle supprimer des colonnes.</value>
   </data>
   <data name="AboutShowColumns_column_name" xml:space="preserve">
     <value>Nom d’une colonne à conserver.</value>
@@ -3266,6 +3266,38 @@
   </data>
   <data name="TeamsTheme_Contrast_DisplayName" xml:space="preserve">
     <value>Thème contrasté</value>
+    
+  </data>
+  <data name="AboutPatch" xml:space="preserve">
+    <value>Applique les mises à jour à la ligne spécifiée, et modifie celle-ci dans la source de données spécifiée. Retourne la ligne mise à jour.</value>
+    
+  </data>
+  <data name="PatchDataSourceArg" xml:space="preserve">
+    <value>source_données</value>
+    
+  </data>
+  <data name="PatchBaseRecordArg" xml:space="preserve">
+    <value>enregistrement_base</value>
+    
+  </data>
+  <data name="PatchChangeRecordsArg" xml:space="preserve">
+    <value>modifier_enregistrement(s)</value>
+    
+  </data>
+  <data name="AboutRemove" xml:space="preserve">
+    <value>Supprime un enregistrement ou des enregistrements spécifiques d’une source de données</value>
+    
+  </data>
+  <data name="RemoveDataSourceArg" xml:space="preserve">
+    <value>source_données</value>
+    
+  </data>
+  <data name="RemoveRecordsArg" xml:space="preserve">
+    <value>supprimer_enregistrement(s)</value>
+    
+  </data>
+  <data name="ErrRemoveAllArg" xml:space="preserve">
+    <value>Si fourni, le dernier argument doit être « RemoveFlags.All ». Y a-t-il une erreur de saisie ?</value>
     
   </data>
   <data name="PenMode_Draw_DisplayName" xml:space="preserve">
@@ -3933,11 +3965,11 @@
     
   </data>
   <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>This argument cannot be passed as this type in formula columns.</value>
+    <value>Cet argument ne peut pas être transmis en tant que ce type dans les colonnes de formule.</value>
     
   </data>
   <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
-    <value>This argument cannot be passed as type {0} in formula columns.</value>
+    <value>Impossible de transmettre cet argument en tant que type {0} dans les colonnes de formules.</value>
     
   </data>
   <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
@@ -3969,7 +4001,7 @@
     
   </data>
   <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
-    <value>This operation cannot be performed on type {0} in formula columns.</value>
+    <value>Impossible d’effectuer cette opération sur le type {0} dans les colonnes de formules.</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
@@ -4005,7 +4037,7 @@
     
   </data>
   <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
-    <value>Cannot reference virtual table {0} in formula columns.</value>
+    <value>Impossible de référencer la table virtuelle {0} dans les colonnes de formules.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
@@ -4631,6 +4663,68 @@
   </data>
   <data name="SetArg2" xml:space="preserve">
     <value>valeur</value>
+    
+  </data>
+  <data name="AboutDec2Hex" xml:space="preserve">
+    <value>Convertit un nombre décimal en nombre hexadécimal</value>
+    
+  </data>
+  <data name="Dec2HexArg1" xml:space="preserve">
+    <value>nombre</value>
+  </data>
+  <data name="AboutDec2Hex_number" xml:space="preserve">
+    <value>Valeur décimale numérique à convertir en chaîne hexadécimale.</value>
+    
+  </data>
+  <data name="Dec2HexArg2" xml:space="preserve">
+    <value>lieux</value>
+  </data>
+  <data name="AboutDec2Hex_places" xml:space="preserve">
+    <value>Valeur numérique pour ajouter un remplissage à la chaîne hexadécimale.</value>
+    
+  </data>
+  <data name="AboutDec2HexT" xml:space="preserve">
+    <value>Convertit une colonne de nombres décimaux en nombres hexadécimaux</value>
+    
+  </data>
+  <data name="Dec2HexTArg1" xml:space="preserve">
+    <value>table</value>
+  </data>
+  <data name="Dec2HexTArg2" xml:space="preserve">
+    <value>lieux</value>
+  </data>
+  <data name="AboutDec2HexT_places" xml:space="preserve">
+    <value>Valeur numérique ou tableau de valeurs pour ajouter un remplissage aux chaînes hexadécimales.</value>
+    
+  </data>
+  <data name="AboutDec2Hex_table" xml:space="preserve">
+    <value>Colonne de valeurs décimales numériques à convertir en valeurs hexadécimales.</value>
+    
+  </data>
+  <data name="AboutHex2Dec" xml:space="preserve">
+    <value>Convertit un nombre hexadécimal en nombre décimal</value>
+    
+  </data>
+  <data name="Hex2DecArg1" xml:space="preserve">
+    <value>nombre</value>
+  </data>
+  <data name="AboutHex2Dec_number" xml:space="preserve">
+    <value>Chaîne hexadécimale convertie en chaîne décimale.</value>
+    
+  </data>
+  <data name="AboutHex2DecT" xml:space="preserve">
+    <value>Convertit une colonne de nombres hexadécimaux en nombres décimaux</value>
+    
+  </data>
+  <data name="Hex2DecTArg1" xml:space="preserve">
+    <value>table</value>
+  </data>
+  <data name="AboutHex2Dec_table" xml:space="preserve">
+    <value>Colonne de chaînes hexadécimales à convertir en chaînes décimales.</value>
+    
+  </data>
+  <data name="ErrDeprecated" xml:space="preserve">
+    <value>Cette fonctionnalité est déconseillée et n’est plus prise en charge.</value>
     
   </data>
 </root>

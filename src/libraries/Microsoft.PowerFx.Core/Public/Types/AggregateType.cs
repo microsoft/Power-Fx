@@ -59,6 +59,12 @@ namespace Microsoft.PowerFx.Types
             return true;
         }
 
+        // Check for field existence, avoids the overhead of actually building the return type. 
+        internal bool HasFieldLogical(string logicalName)
+        {
+            return _type.TryGetType(new DName(logicalName), out _);
+        }
+
         internal bool HasField(string displayOrLogicalName)
         {
             Contracts.CheckNonEmpty(displayOrLogicalName, nameof(displayOrLogicalName));
@@ -146,5 +152,25 @@ namespace Microsoft.PowerFx.Types
         // Keeping around to resolve a diamond dependency issue, remove once FormulaRepair is updated
         [Obsolete("This method was replaced with GetFieldTypes", true)]
         public IEnumerable<NamedFormulaType> GetNames() => GetFieldTypes();
+
+        /// <summary>
+        /// Get a symbol name - which is the name this was added with in the symbol table. 
+        /// This may be null. 
+        /// This may often be a Display Name or whatever the host assigned, like "Accounts_2".
+        /// </summary>
+        public virtual string TableSymbolName
+        {
+            get
+            {
+                var ds = _type.AssociatedDataSources.FirstOrDefault();
+
+                if (ds != null)
+                { 
+                    return ds.EntityName.Value;
+                }
+
+                return null;
+            }
+        }
     }
 }
