@@ -16,7 +16,6 @@ using Xunit;
 
 namespace Microsoft.PowerFx.Interpreter.Tests
 {
-#pragma warning disable CS0618 // Type or member is obsolete
     public class SymbolValueTests
     {
         // Mutating variables still invalidates a symbol table.
@@ -59,7 +58,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.Null(v1);
 
             var symbols = locals.SymbolTable;
+#pragma warning disable CS0618 // Type or member is obsolete
             Assert.Null(symbols.Parent);
+#pragma warning restore CS0618 // Type or member is obsolete
 
             // Internal hook is null;
             var a = new DName("a");
@@ -434,7 +435,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var result3 = engine.EvalAsync("a + b", CancellationToken.None, runtimeConfig: r2).Result;
             Assert.Equal(11.0, result3.ToObject());
         }
-             
+
         [Fact]
         public void Test1()
         {
@@ -623,7 +624,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.Throws<InvalidOperationException>(() => symValues.Set(slot, FormulaValue.New("abc")));
         }
 
-
         [Fact]
         public void CreateSingle()
         {
@@ -652,12 +652,86 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             {
                 symTable1.CreateValues(values1, values2); // error
             }
-            catch(InvalidOperationException e)
+            catch (InvalidOperationException e)
             {
                 // Message should be useful. 
                 Assert.Contains(symTable1.DebugName, e.Message);
                 Assert.Contains(values1.DebugName, e.Message);
                 Assert.Contains(values2.DebugName, e.Message);
+            }
+        }
+
+        // Demonstrate how to use ThisItem in a loop.
+        // All Loop iterations can access common global state,
+        // but also have their own loop-specific identifer. 
+        [Fact]
+        public async Task ThisItemTest()
+        {
+            var symTableGlobals = new SymbolTable { DebugName = "Globals" };
+            var slotGlobal = symTableGlobals.AddVariable("globalVar", FormulaType.Number);
+
+            // Note from PowerFx perspective, there is nothing special about the identifier 'ThisItem'.
+            // It's all determined by SymbolTable topology. 
+            var symTableThisItem = new SymbolTable { DebugName = "ThisItem" };
+            var slotThisItem = symTableThisItem.AddVariable("ThisItem", FormulaType.Number);
+
+            // Combine together
+            var symTable = ReadOnlySymbolTable.Compose(symTableThisItem, symTableGlobals);
+
+            var expr = "globalVar + ThisItem";
+            
+            // Compile once outside the loop, then run many times. 
+            var engine = new RecalcEngine();
+            var check = engine.Check(expr, symbolTable: symTable);
+            check.ThrowOnErrors();
+
+            // Now move to runtime...
+            var run = check.GetEvaluator();
+
+            // all loop bodies can read-only access common global state. 
+            var symValuesGlobals = symTableGlobals.CreateValues();
+            symValuesGlobals.Set(slotGlobal, FormulaValue.New(1000));
+
+            // Loop body can be run in parallel since each eval is independent. 
+            // An there are no mutations on shared state.
+            Parallel.For(0, 10, (i) =>
+            {
+                // Each loop body gets its own iteration-specific values.
+                var symValuesThisItem = symTableThisItem.CreateValues();
+                symValuesThisItem.Set(slotThisItem, FormulaValue.New(i));
+
+                var symValues = symTable.CreateValues(symValuesGlobals, symValuesThisItem);
+
+                // In the loop, just eval.
+                var result = run.Eval(symValues);
+
+                var expected = (double)1000 + i; // matches 'expr'
+                Assert.Equal(expected, result.ToObject());
+            });
+
+            // ThisItem is also immutable.
+            // But we could do other mutations from within - but if it's shared state, be careful to not run in parallel.
+            {
+                var symValuesThisItem = symTableThisItem.CreateValues();
+                symValuesThisItem.Set(slotThisItem, FormulaValue.New(5));
+
+                // Add another table with a mutable var, 'Counter', and demonstrate 
+                // we can call Set. 
+                var symTable2 = new SymbolTable();
+                symTable2.EnableMutationFunctions();
+                var slot = symTable2.AddVariable("counter", FormulaType.Number, mutable: true);
+
+                var symTableAll = ReadOnlySymbolTable.Compose(symTable2, symTableThisItem);
+                var symValuesAll = symTableAll.CreateValues(symValuesThisItem);
+
+                var opts = new ParserOptions { AllowsSideEffects = true };
+                var result = engine.EvalAsync("Set(counter, ThisItem);counter", CancellationToken.None, options: opts, runtimeConfig: symValuesAll).Result;
+
+                Assert.Equal(5.0, result.ToObject());
+
+                // but we can't call Set on ThisItem 
+                var check2 = engine.Check("Set(ThisItem, 5)", options: opts, symbolTable: symValuesAll.SymbolTable);
+                Assert.False(check2.IsSuccess);
             }
         }
 

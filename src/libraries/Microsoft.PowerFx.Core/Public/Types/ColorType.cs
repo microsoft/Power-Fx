@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Text;
 using Microsoft.PowerFx.Core.Types;
 
 namespace Microsoft.PowerFx.Types
@@ -21,6 +22,11 @@ namespace Microsoft.PowerFx.Types
         public override string ToString()
         {
             return "Color";
+        }
+
+        internal override void DefaultExpressionValue(StringBuilder sb)
+        {
+            sb.Append($"RGBA(0, 0, 0, 0)");
         }
     }
 }

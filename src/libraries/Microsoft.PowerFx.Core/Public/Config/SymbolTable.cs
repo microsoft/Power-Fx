@@ -26,6 +26,8 @@ namespace Microsoft.PowerFx
         private readonly SlotMap<NameLookupInfo?> _slots = new SlotMap<NameLookupInfo?>();
 
         // Expose public setters
+        // https://github.com/microsoft/Power-Fx/issues/828
+        [Obsolete("Use Composition instead of Parent Pointer")]
         public new ReadOnlySymbolTable Parent
         {
             get => _parent;
@@ -36,12 +38,13 @@ namespace Microsoft.PowerFx
             }
         }
 
-        private void ValidateName(string name)
+        private DName ValidateName(string name)
         {
             if (!DName.IsValidDName(name))
             {
                 throw new ArgumentException("Invalid name: ${name}");
             }
+            return new DName(name);
         }
 
         public override FormulaType GetTypeFromSlot(ISymbolSlot slot)
@@ -86,6 +89,7 @@ namespace Microsoft.PowerFx
         /// <summary>
         /// Provide variable for binding only.
         /// Value must be provided at runtime.
+        /// This can throw an exception in case of there is a conflict in name with existing names.
         /// </summary>
         /// <param name="name"></param>
         /// <param name="type"></param>
@@ -93,15 +97,14 @@ namespace Microsoft.PowerFx
         /// <param name="displayName"></param>
         public ISymbolSlot AddVariable(string name, FormulaType type, bool mutable = false, string displayName = null)
         {
-            if (displayName != null)
-            {
-                // Include parameter so that it's not a breaking change when we enable.
-                // https://github.com/microsoft/Power-Fx/issues/779
-                throw new NotImplementedException("DisplayName support for variables not implemented yet");
-            }
-
             Inc();
-            ValidateName(name);
+            DName displayDName = default;
+            DName varDName = ValidateName(name);
+
+            if(displayName != null)
+            {
+                displayDName = ValidateName(displayName);
+            }
 
             if (_variables.ContainsKey(name))
             {
@@ -120,9 +123,18 @@ namespace Microsoft.PowerFx
                 type._type,
                 DPath.Root,
                 0,
-                data: data);
+                data: data,
+                displayName:displayDName);
 
             _slots.Set(slotIndex, info);
+
+            // Attempt to update display name provider before symbol table,
+            // since it can throw on collision and we want to leave the config in a good state.
+            if (_environmentSymbolDisplayNameProvider is SingleSourceDisplayNameProvider ssDnp)
+            {
+                _environmentSymbolDisplayNameProvider = ssDnp.AddField(varDName, displayDName != default ? displayDName : varDName);
+            }
+
             _variables.Add(name, info); // can't exist
 
             return data;
@@ -147,16 +159,42 @@ namespace Microsoft.PowerFx
                 0,
                 data);
 
+            // Attempt to update display name provider before symbol table,
+            // since it can throw on collision and we want to leave the config in a good state.
+            // add (logical, logical) pair to display name provider so it still can be included in collision checks.
+            if (_environmentSymbolDisplayNameProvider is SingleSourceDisplayNameProvider ssDnp)
+            {
+                var dName = new DName(name);
+                _environmentSymbolDisplayNameProvider = ssDnp.AddField(dName, dName);
+            }
+
             _variables.Add(name, info); // can't exist
         }
 
         /// <summary>
-        /// Remove variable of given name. 
+        /// Remove variable, entity or constant of a given name. 
         /// </summary>
-        /// <param name="name"></param>
+        /// <param name="name">display or logical name for the variable or entity to be removed. Logical name of constant to be removed.</param>
         public void RemoveVariable(string name)
         {
             Inc();
+           
+            // Also remove from display name provider
+            if (_environmentSymbolDisplayNameProvider is SingleSourceDisplayNameProvider ssDP)
+            {
+                var lookupName = new DName(name);
+
+                if(_environmentSymbolDisplayNameProvider.TryGetDisplayName(lookupName, out var displayName))
+                {
+                    // Do nothing as supplied name was logical name.
+                }
+                else if(_environmentSymbolDisplayNameProvider.TryGetLogicalName(lookupName, out var logicalName))
+                {
+                    name = logicalName.Value;
+                    lookupName = logicalName;
+                }
+                _environmentSymbolDisplayNameProvider = ssDP.RemoveField(lookupName);
+            }
 
             if (_variables.TryGetValue(name, out var info))
             {
@@ -220,16 +258,44 @@ namespace Microsoft.PowerFx
         internal void AddEntity(IExternalEntity entity, DName displayName = default)
         {
             Inc();
+            NameLookupInfo nameInfo;
+
+            if (entity is IExternalOptionSet optionSet)
+            {
+                nameInfo = new NameLookupInfo(
+                    BindKind.OptionSet,
+                    optionSet.Type,
+                    DPath.Root,
+                    0,
+                    optionSet,
+                    displayName);
+            }
+            else if (entity is IExternalDataSource)
+            {
+                nameInfo = new NameLookupInfo(
+                    BindKind.Data,
+                    entity.Type,
+                    DPath.Root,
+                    0,
+                    entity,
+                    displayName);
+            }
+            else
+            {
+                throw new NotImplementedException($"{entity.GetType().Name} not supported.");
+            }
+
 
             // Attempt to update display name provider before symbol table,
             // since it can throw on collision and we want to leave the config in a good state.
             // For entities without a display name, add (logical, logical) pair to still be included in collision checks.
             if (_environmentSymbolDisplayNameProvider is SingleSourceDisplayNameProvider ssDnp)
             {
-                _environmentSymbolDisplayNameProvider = ssDnp.AddField(entity.EntityName, displayName != default ? displayName : entity.EntityName);
+                displayName = displayName != default ? displayName : entity.EntityName;
+                _environmentSymbolDisplayNameProvider = ssDnp.AddField(entity.EntityName, displayName);
             }
 
-            _environmentSymbols.Add(entity.EntityName, entity);
+            _variables.Add(entity.EntityName, nameInfo);
         }
     }
 }

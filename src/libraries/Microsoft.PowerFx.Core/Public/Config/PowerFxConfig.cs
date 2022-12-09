@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Microsoft.PowerFx.Core;
+using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Functions;
@@ -123,10 +124,10 @@ namespace Microsoft.PowerFx
             }
         }
 
-        internal IEnumerable<IExternalEntity> GetSymbols() => SymbolTable._environmentSymbols.Values;
+        internal bool GetSymbols(string name, out NameLookupInfo symbol) => SymbolTable._variables.TryGetValue(name, out symbol);
 
-        internal string GetSuggestableSymbolName(IExternalEntity entity)
-            => SymbolTable.GetSuggestableSymbolName(entity);
+        internal IEnumerable<string> GetSuggestableSymbolName() => SymbolTable._variables.Keys;
+
 
         internal void AddEntity(IExternalEntity entity, DName displayName = default)
             => SymbolTable.AddEntity(entity, displayName);
@@ -146,7 +147,7 @@ namespace Microsoft.PowerFx
             AddEntity(optionSet, optionalDisplayName);
         }
 
-        internal bool TryGetSymbol(DName name, out IExternalEntity symbol, out DName displayName)
-            => SymbolTable.TryGetSymbol(name, out symbol, out displayName);
+        internal bool TryGetVariable(DName name, out DName displayName)
+            => SymbolTable.TryGetVariable(name, out _, out displayName); 
     }
 }

@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Drawing;
 using Microsoft.PowerFx.Core.IR;
 
 namespace Microsoft.PowerFx.Types
@@ -126,6 +127,11 @@ namespace Microsoft.PowerFx.Types
             return new UntypedObjectValue(
                 IRContext.NotInSource(new UntypedObjectType()),
                 untypedObject);
+        }
+
+        public static ColorValue New(Color value)
+        {
+            return new ColorValue(IRContext.NotInSource(FormulaType.Color), value);
         }
     }
 }
