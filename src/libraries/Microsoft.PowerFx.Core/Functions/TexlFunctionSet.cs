@@ -122,8 +122,11 @@ namespace Microsoft.PowerFx.Core.Functions
 
             if (fInvariantList.Any())
             {
-                // Need to check duplicate function
-                // throw new ArgumentException($"Function {function.Name} is already part of core or extra functions");
+                if (fInvariantList.Contains(function))
+                {
+                    throw new ArgumentException($"Function {function.Name} is already part of core or extra functions");
+                }
+                
                 fInvariantList.Add(function);
             }
             else
