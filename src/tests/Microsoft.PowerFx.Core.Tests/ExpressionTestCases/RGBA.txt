@@ -46,8 +46,10 @@ RGBA(0,0,0,1)
 >> RGBA(255,255,255,Blank())
 RGBA(255,255,255,0)
 
+// This is due to rounding error and not due to language semantics. 
 >> RGBA(255,255,255,0.003)
 RGBA(255,255,255,0.004)
 
+// This is due to rounding error and not due to language semantics. 
 >> RGBA(255,255,255,0.0003)
 RGBA(255,255,255,0)
