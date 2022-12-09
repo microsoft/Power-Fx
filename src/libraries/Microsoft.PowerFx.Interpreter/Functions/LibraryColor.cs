@@ -44,15 +44,20 @@ namespace Microsoft.PowerFx.Functions
 
             if (match.Success)
             {
-                var r = byte.Parse(match.Groups["r"].Value, System.Globalization.NumberStyles.HexNumber);
-                var g = byte.Parse(match.Groups["g"].Value, System.Globalization.NumberStyles.HexNumber);
-                var b = byte.Parse(match.Groups["b"].Value, System.Globalization.NumberStyles.HexNumber);
-                var a = match.Groups["a"].Captures.Count == 1 ? byte.Parse(match.Groups["a"].Value, System.Globalization.NumberStyles.HexNumber) : 255;
+                var r = ParseColor(match, "r");
+                var g = ParseColor(match, "g");
+                var b = ParseColor(match, "b");
+                var a = match.Groups["a"].Captures.Count == 1 ? ParseColor(match, "a") : 255;
 
                 return new ColorValue(irContext, Color.FromArgb(a, r, g, b));
             }
 
             return CommonErrors.InvalidColorFormatError(irContext);
+        }
+
+        private static byte ParseColor(Match match, string color)
+        {
+            return byte.Parse(match.Groups[color].Value, System.Globalization.NumberStyles.HexNumber);
         }
 
         public static FormulaValue RGBA(IRContext irContext, NumberValue[] args)

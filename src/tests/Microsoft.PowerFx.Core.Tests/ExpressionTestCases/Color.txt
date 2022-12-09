@@ -31,6 +31,12 @@ RGBA(0,0,0,1)
 >> ColorValue("Red")
 RGBA(255,0,0,1)
 
+>> ColorValue("red")
+RGBA(255,0,0,1)
+
+>> ColorValue("Invalid")
+Error({Kind:ErrorKind.InvalidArgument})
+
 >> ColorValue("#0g020304")
 Error({Kind:ErrorKind.InvalidArgument})
 

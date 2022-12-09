@@ -57,3 +57,6 @@ Blank()
 
 >> ColorFade(If(1<0, RGBA(255,0,0,1)), If(1<0, 0))
 Blank()
+
+>> ColorFade(RGBA(255,0,0,1), 1/0)
+Error({Kind:ErrorKind.Div0})
