@@ -76,6 +76,37 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.True(check.IsSuccess);
         }
 
+        [Theory]
+        [InlineData("displayVariable + 1", "logicalVariable + 1", "displayVariable + 1", 2)]
+        [InlineData("logicalVariable + 1", "logicalVariable + 1", "displayVariable + 1", 2)]
+        [InlineData("If(true, logicalVariable)", "If(true, logicalVariable)", "If(true, displayVariable)", 1)]
+        public async void TopLevelVariableDisplayName(string expression, string expectedInvariantExpression,string expectedDisplayExpression, double expected)
+        {
+            var symbol = new SymbolTable();
+
+            // Adds display name for a variable.
+            var logicalVariableSlot = symbol.AddVariable("logicalVariable", FormulaType.Number, displayName: "displayVariable");
+            var r1 = new SymbolValues(symbol);
+            r1.Set(logicalVariableSlot, FormulaValue.New(1));
+
+            var config = new PowerFxConfig() { SymbolTable = symbol };
+
+            var engine = new RecalcEngine(config);
+
+            var check = engine.Check(expression);
+            Assert.True(check.IsSuccess);
+
+            var eval = await engine.EvalAsync(expression,CancellationToken.None, runtimeConfig: r1);
+            Assert.Equal(expected, eval.ToObject());
+
+            var actualInvariantExpression = engine.GetInvariantExpression(expression, null);
+            Assert.Equal(expectedInvariantExpression, actualInvariantExpression);
+
+            var actualDisplayExpression = engine.GetDisplayExpression(expression, RecordType.Empty());
+            Assert.Equal(expectedDisplayExpression, actualDisplayExpression);
+
+        }
+
         // Bind a function, eval it separately.
         // But still share symbol values.
         [Fact]

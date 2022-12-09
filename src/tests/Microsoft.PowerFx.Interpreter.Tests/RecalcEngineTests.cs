@@ -678,7 +678,7 @@ namespace Microsoft.PowerFx.Tests
             config.SymbolTable.AddFunction(func);
             config.SymbolTable.AddEntity(optionSet);
 
-            Assert.True(config.TryGetSymbol(new DName("foo"), out _, out _));
+            Assert.True(config.TryGetVariable(new DName("foo"), out _));
             Assert.Contains(func, recalcEngine.Functions); // function was added to the config.
 
             Assert.DoesNotContain(BuiltinFunctionsCore.Abs, recalcEngine.Functions);

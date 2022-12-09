@@ -2749,6 +2749,10 @@ namespace Microsoft.PowerFx.Core.Binding
                     {
                         _txb.NodesToReplace.Add(new KeyValuePair<Token, string>(node.Token, entity.EntityName));
                     }
+                    else if(lookupInfo.Data is NameSymbol nameSymbol)
+                    {
+                        _txb.NodesToReplace.Add(new KeyValuePair<Token, string>(node.Token, nameSymbol.Name));
+                    }
                 }
 
                 // Internal control references are not allowed in component input properties.
