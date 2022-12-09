@@ -316,6 +316,8 @@ namespace Microsoft.PowerFx.Functions
         public static FormulaValue TextToBoolean(IRContext irContext, FormulaValue[] args)
         {
             string val = default;
+
+            // args can only be BooleanValue or StringValue, else ChekType would have raised an error.
             if (args[0] is BooleanValue bv)
             {
                 return bv;
@@ -323,10 +325,6 @@ namespace Microsoft.PowerFx.Functions
             else if (args[0] is StringValue s)
             {
                 val = s.Value;
-            }
-            else
-            {
-                CommonErrors.RuntimeTypeMismatch(irContext);
             }
 
             if (string.IsNullOrEmpty(val))
