@@ -118,7 +118,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     continue;
                 }
 
-                var columnName = new DName(nameArg is FirstNameNode && argTypes[0].DisplayNameProvider != null && DType.TryGetLogicalNameForColumn(argTypes[0], expectedColumnName, out var logicalName)
+                var columnName = new DName(nameArg is FirstNameNode && DType.TryGetLogicalNameForColumn(argTypes[0], expectedColumnName, out var logicalName)
                                          ? logicalName
                                          : expectedColumnName);
 
