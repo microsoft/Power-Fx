@@ -1,0 +1,40 @@
+﻿#SETUP: SupportColumnNamesAsIdentifiers
+
+>> DropColumns(Table({a:1,b:2},{a:3,b:4}), b)
+Table({a:1},{a:3})
+
+>> DropColumns(Table({a:1,b:2},{a:3,b:4}), b, a)
+Table({},{})
+
+>> DropColumns(Table({a:1,b:2},{a:3,b:4}), a, b)
+Table({},{})
+
+>> DropColumns(DropColumns(Table({a:1,b:2},{a:3,b:4}), a), b)
+Table({},{})
+
+>> DropColumns(AddColumns(Table({a:1,b:2},{a:3,b:4}), c, a * b), a)
+Table({b:2,c:2},{b:4,c:12})
+
+>> DropColumns(AddColumns(Table({a:1,b:2},{a:3,b:4}), c, a * b), b)
+Table({a:1,c:2},{a:3,c:12})
+
+>> DropColumns(AddColumns(Table({a:1,b:2},{a:3,b:4}), c, a * b), c)
+Table({a:1,b:2},{a:3,b:4})
+
+>> AddColumns(DropColumns(Table({a:1,b:2},{a:3,b:4}), a), a, b * b * b)
+Table({a:8,b:2},{a:64,b:4})
+
+>> DropColumns(Table({a:1,b:2},{a:3,b:4}), a, a)
+Errors: Error 43-44: The specified column 'a' does not exist. The column with the most similar name is 'b'.|Error 0-45: The function 'DropColumns' has some invalid arguments.
+
+>> Last(DropColumns(Table({a:1,b:2},{a:3,b:4}), b)).a
+3
+
+>> DropColumns([1, 2, 3], Value)
+Table({},{},{})
+
+>> DropColumns([1, 2], 3)
+Errors: Error 20-21: Expected identifier name|Error 0-22: The function 'DropColumns' has some invalid arguments.
+
+>> DropColumns([1, 2], z)
+Errors: Error 20-21: The specified column 'z' does not exist.|Error 0-22: The function 'DropColumns' has some invalid arguments.

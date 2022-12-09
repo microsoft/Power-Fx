@@ -15,14 +15,20 @@ namespace Microsoft.PowerFx.Core
 {
     internal class ExpressionLocalizationHelper
     {
-        internal static string ConvertExpression(string expressionText, RecordType parameters, BindingConfig config, INameResolver resolver, IBinderGlue binderGlue, CultureInfo userCulture, bool toDisplay)
+        [Obsolete("Use ConvertExpression with PowerFxConfig parameter instead of CultureInfo", false)]
+        internal static string ConvertExpression(string expressionText, RecordType parameters, BindingConfig bindingConfig, INameResolver resolver, IBinderGlue binderGlue, CultureInfo culture, bool toDisplay)
         {
-            var targetLexer = toDisplay ? TexlLexer.GetLocalizedInstance(userCulture) : TexlLexer.InvariantLexer;
-            var sourceLexer = toDisplay ? TexlLexer.InvariantLexer : TexlLexer.GetLocalizedInstance(userCulture);
+            return ConvertExpression(expressionText, parameters, bindingConfig, resolver, binderGlue, new PowerFxConfig(culture), toDisplay);
+        }
+
+        internal static string ConvertExpression(string expressionText, RecordType parameters, BindingConfig bindingConfig, INameResolver resolver, IBinderGlue binderGlue, PowerFxConfig fxConfig, bool toDisplay)
+        {
+            var targetLexer = toDisplay ? TexlLexer.GetLocalizedInstance(fxConfig.CultureInfo) : TexlLexer.InvariantLexer;
+            var sourceLexer = toDisplay ? TexlLexer.InvariantLexer : TexlLexer.GetLocalizedInstance(fxConfig.CultureInfo);
 
             var worklist = GetLocaleSpecificTokenConversions(expressionText, sourceLexer, targetLexer);
 
-            var formula = new Formula(expressionText, toDisplay ? CultureInfo.InvariantCulture : userCulture);
+            var formula = new Formula(expressionText, toDisplay ? CultureInfo.InvariantCulture : fxConfig.CultureInfo);
             formula.EnsureParsed(TexlParser.Flags.None);
 
             var binding = TexlBinding.Run(
@@ -31,10 +37,11 @@ namespace Microsoft.PowerFx.Core
                 new Core.Entities.QueryOptions.DataSourceToQueryOptionsMap(),
                 formula.ParseTree,
                 resolver,
-                config,
+                bindingConfig,
                 ruleScope: parameters?._type,
                 updateDisplayNames: toDisplay,
-                forceUpdateDisplayNames: toDisplay);
+                forceUpdateDisplayNames: toDisplay,
+                features: fxConfig.Features);
 
             foreach (var token in binding.NodesToReplace)
             {

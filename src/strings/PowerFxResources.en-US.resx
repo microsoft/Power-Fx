@@ -6623,4 +6623,12 @@
     <value>Warning: Deferred type provided.</value>
     <comment>Warning given when the input has deferred Type. Deferred type is unknown type at compile time and correct type will be supplied by user before evaluation.</comment>
   </data>
+  <data name="ErrExpectedIdentifierArg_Name" xml:space="preserve">
+    <value>Expected identifier name</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrInvalidFunction" xml:space="preserve">
+    <value>This function is ambiguous, it contains lambda expressions and column identifiers for the same argument.</value>
+    <comment>Error Message.</comment>
+  </data>
 </root>

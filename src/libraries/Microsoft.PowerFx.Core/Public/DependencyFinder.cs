@@ -31,6 +31,12 @@ namespace Microsoft.PowerFx
         {
             var info = _binding.GetInfo(node);
 
+            if (info == null)
+            {
+                // Occurs when an identifier is used
+                return;
+            }
+
             var name = node.Ident.Name.Value;
 
             // Only include dependencies from the incoming context (Fields)

@@ -494,6 +494,17 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: Dec2Hex)
             },
             {
+                BuiltinFunctionsCore.DropColumns,
+                StandardErrorHandlingAsync<FormulaValue>(
+                    BuiltinFunctionsCore.DropColumns.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: DropColumnsTypeChecker,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: DropColumns)
+            },
+            {
                 BuiltinFunctionsCore.EndsWith,
                 StandardErrorHandling<StringValue>(
                     BuiltinFunctionsCore.EndsWith.Name,

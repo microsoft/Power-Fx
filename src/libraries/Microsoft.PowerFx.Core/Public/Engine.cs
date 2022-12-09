@@ -345,7 +345,7 @@ namespace Microsoft.PowerFx
         /// <returns>The formula, with all identifiers converted to invariant form.</returns>
         public string GetInvariantExpression(string expressionText, RecordType parameters)
         {
-            return ExpressionLocalizationHelper.ConvertExpression(expressionText, parameters, BindingConfig.Default, CreateResolverInternal(), CreateBinderGlue(), Config.CultureInfo, toDisplay: false);
+            return ExpressionLocalizationHelper.ConvertExpression(expressionText, parameters, BindingConfig.Default, CreateResolverInternal(), CreateBinderGlue(), Config, toDisplay: false);
         }
 
         /// <summary>
@@ -364,7 +364,7 @@ namespace Microsoft.PowerFx
 
         public string GetDisplayExpression(string expressionText, ReadOnlySymbolTable symbolTable)
         {
-            return ExpressionLocalizationHelper.ConvertExpression(expressionText, null, BindingConfig.Default, CreateResolverInternal(symbolTable), CreateBinderGlue(), Config.CultureInfo, toDisplay: true);
+            return ExpressionLocalizationHelper.ConvertExpression(expressionText, null, BindingConfig.Default, CreateResolverInternal(symbolTable), CreateBinderGlue(), Config, toDisplay: true);
         }
     }
 }

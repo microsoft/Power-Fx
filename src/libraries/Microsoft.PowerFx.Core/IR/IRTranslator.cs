@@ -39,11 +39,18 @@ namespace Microsoft.PowerFx.Core.IR
             Contracts.AssertValue(binding);
 
             var ruleScopeSymbol = new ScopeSymbol(0);
-            return (binding.Top.Accept(new IRTranslatorVisitor(), new IRTranslatorContext(binding, ruleScopeSymbol)), ruleScopeSymbol);
+            return (binding.Top.Accept(new IRTranslatorVisitor(binding.Features), new IRTranslatorContext(binding, ruleScopeSymbol)), ruleScopeSymbol);
         }
 
         private class IRTranslatorVisitor : TexlFunctionalVisitor<IntermediateNode, IRTranslatorContext>
         {
+            private readonly Features _features;
+
+            public IRTranslatorVisitor(Features features)
+            {
+                _features = features;
+            }
+
             public override IntermediateNode Visit(BlankNode node, IRTranslatorContext context)
             {
                 Contracts.AssertValue(node);
@@ -299,7 +306,18 @@ namespace Microsoft.PowerFx.Core.IR
                 for (var i = 0; i < carg; ++i)
                 {
                     var arg = node.Args.Children[i];
-                    if (func.IsLazyEvalParam(i))
+
+                    var supportColumnNamesAsIdentifiers = _features.HasFlag(Features.SupportColumnNamesAsIdentifiers);
+                    if (supportColumnNamesAsIdentifiers && func.IsIdentifierParam(i))
+                    {
+                        var identifierNode = arg.AsFirstName();
+                        Contracts.Assert(identifierNode != null);
+
+                        // Transform the identifier node as a string literal
+                        var nodeName = context.Binding.TryGetReplacedIdentName(identifierNode.Ident, out var newIdent) ? new DName(newIdent) : identifierNode.Ident.Name;
+                        args.Add(new TextLiteralNode(context.GetIRContext(arg, DType.String), nodeName.Value));
+                    }
+                    else if (func.IsLazyEvalParam(i))
                     {
                         var child = arg.Accept(this, scope != null ? context.With(scope) : context);
                         args.Add(new LazyEvalNode(context.GetIRContext(arg), child));
@@ -817,6 +835,11 @@ namespace Microsoft.PowerFx.Core.IR
             public IRContext GetIRContext(TexlNode node)
             {
                 return new IRContext(node.GetTextSpan(), FormulaType.Build(Binding.GetType(node)));
+            }
+
+            public IRContext GetIRContext(TexlNode node, DType type)
+            {
+                return new IRContext(node.GetTextSpan(), FormulaType.Build(type));
             }
         }
     }

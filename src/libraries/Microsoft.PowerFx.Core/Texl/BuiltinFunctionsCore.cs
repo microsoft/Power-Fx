@@ -21,7 +21,7 @@ namespace Microsoft.PowerFx.Core.Texl
         // Functions in this list are shared and may show up in other hosts by default.
         private static readonly List<TexlFunction> _library = new List<TexlFunction>(200);
         private static readonly List<TexlFunction> _featureGateFunctions = new List<TexlFunction>();
-        
+
         public static readonly TexlFunction AmPm = _library.Append(new AmPmFunction());
         public static readonly TexlFunction AmPmShort = _library.Append(new AmPmShortFunction());
         public static readonly TexlFunction Abs = _library.Append(new AbsFunction());
@@ -79,6 +79,7 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction Day = _library.Append(new DayFunction());
         public static readonly TexlFunction Degrees = _library.Append(new DegreesFunction());
         public static readonly TexlFunction DegreesT = _library.Append(new DegreesTableFunction());
+        public static readonly TexlFunction DropColumns = _library.Append(new DropColumnsFunction());
         public static readonly TexlFunction EndsWith = _library.Append(new EndsWithFunction());
         public static readonly TexlFunction Error = _library.Append(new ErrorFunction());
         public static readonly TexlFunction Exp = _library.Append(new ExpFunction());
@@ -119,7 +120,7 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction Ln = _library.Append(new LnFunction());
         public static readonly TexlFunction LnT = _library.Append(new LnTableFunction());
         public static readonly TexlFunction Log = _library.Append(new LogFunction());
-        public static readonly TexlFunction LogT = _library.Append(new LogTFunction());        
+        public static readonly TexlFunction LogT = _library.Append(new LogTFunction());
         public static readonly TexlFunction LookUp = _library.Append(new LookUpFunction());
         public static readonly TexlFunction Lower = _library.Append(new LowerUpperFunction(isLower: true));
         public static readonly TexlFunction LowerT = _library.Append(new LowerUpperTFunction(isLower: true));
