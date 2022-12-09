@@ -266,7 +266,7 @@ namespace Microsoft.PowerFx.Functions
                         ExactValueTypeOrBlank<ColorValue>,
                         ExactValueTypeOrBlank<NumberValue>),
                     checkRuntimeValues: DeferRuntimeValueChecking,
-                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: ColorFade)
             },
 
