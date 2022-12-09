@@ -170,13 +170,17 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal(0, s12.Functions.Count());
             
             s2.AddFunction(func2);
-            var funcs = s12.Functions.ToArray();
+#pragma warning disable CS0612 // Type or member is obsolete
+            var funcs = s12.Functions.Functions.ToArray();
+#pragma warning restore CS0612 // Type or member is obsolete
             Assert.Equal(1, funcs.Length);
             Assert.Same(func2, funcs[0]);
 
             // Superceded 
             s1.AddFunction(func1);
-            funcs = s12.Functions.ToArray(); // Query again
+#pragma warning disable CS0612 // Type or member is obsolete
+            funcs = s12.Functions.Functions.ToArray(); // Query again
+#pragma warning restore CS0612 // Type or member is obsolete
             Assert.Equal(2, funcs.Length); // both even though they have same name
 
             // Enumerable is ordered. Takes s1 since that's higher precedence. 

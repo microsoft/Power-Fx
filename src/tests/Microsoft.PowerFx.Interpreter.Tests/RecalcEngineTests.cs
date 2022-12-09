@@ -687,7 +687,7 @@ namespace Microsoft.PowerFx.Tests
             config.SymbolTable.AddFunction(func);
             config.SymbolTable.AddEntity(optionSet);
 
-            Assert.True(config.TryGetSymbol(new DName("foo"), out _, out _));
+            Assert.True(config.TryGetVariable(new DName("foo"), out _));
 #pragma warning disable CS0612 // Type or member is obsolete
             Assert.Contains(func, recalcEngine.Functions.Functions); // function was added to the config.
 #pragma warning restore CS0612 // Type or member is obsolete
