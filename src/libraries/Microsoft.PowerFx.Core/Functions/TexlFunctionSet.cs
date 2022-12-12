@@ -162,9 +162,7 @@ namespace Microsoft.PowerFx.Core.Functions
                     var newFuncs = functionSet.WithName(key);
 
                     if (fList.Any())
-                    {
-                        // Need to check duplicate function
-                        // throw new ArgumentException($"Function {function.Name} is already part of core or extra functions");
+                    {                        
                         fList.AddRange(newFuncs);
                     }
                     else
