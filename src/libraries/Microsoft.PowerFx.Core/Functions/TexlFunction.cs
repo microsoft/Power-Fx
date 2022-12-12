@@ -78,6 +78,13 @@ namespace Microsoft.PowerFx.Core.Functions
         // Return true if the function expects lambda arguments, false otherwise.
         public virtual bool HasLambdas => !_maskLambdas.IsZero;
 
+        /// <summary>
+        /// Returns true if the function expect identifiers, false otherwise.
+        /// Needs to be overloaded for functions having identifier parameters.
+        /// Also overload IsIdentifierParam method. 
+        /// </summary>
+        public virtual bool HasColumnIdentifiers => false;
+
         // Return true if lambda args should affect ECS, false otherwise.
         public virtual bool HasEcsExcemptLambdas => false;
 
@@ -446,10 +453,17 @@ namespace Microsoft.PowerFx.Core.Functions
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
             Contracts.AssertValue(argTypes);
-            Contracts.AssertAllValid(argTypes);
             Contracts.Assert(args.Length == argTypes.Length);
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
+
+            for (int i = 0; i < argTypes.Length; i++)
+            {
+                if (!IsIdentifierParam(i))
+                {
+                    Contracts.AssertValid(argTypes[i]);
+                }
+            }
 
             var fValid = true;
             var count = Math.Min(args.Length, ParamTypes.Length);
@@ -470,6 +484,12 @@ namespace Microsoft.PowerFx.Core.Functions
 
             for (var i = count; i < args.Length; i++)
             {
+                // Identifiers don't have a type
+                if (IsIdentifierParam(i))
+                {
+                    continue;
+                }
+
                 var type = argTypes[i];
                 if (type.IsError)
                 {
@@ -521,6 +541,18 @@ namespace Microsoft.PowerFx.Core.Functions
         }
 
         public virtual bool IsEcsExcemptedLambda(int index)
+        {
+            Contracts.Assert(index >= 0);
+
+            return false;
+        }
+
+        /// <summary>
+        /// Returns true if the parameter is an identifier.
+        /// </summary>
+        /// <param name="index">Parameter's index.</param>
+        /// <returns>Boolean representing if the parameter is an identifier.</returns>
+        public virtual bool IsIdentifierParam(int index)
         {
             Contracts.Assert(index >= 0);
 

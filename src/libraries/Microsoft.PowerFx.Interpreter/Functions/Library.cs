@@ -256,7 +256,7 @@ namespace Microsoft.PowerFx.Functions
                         ExactValueTypeOrBlank<ColorValue>,
                         ExactValueTypeOrBlank<NumberValue>),
                     checkRuntimeValues: DeferRuntimeValueChecking,
-                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: ColorFade)
             },
 
@@ -482,6 +482,17 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: Dec2Hex)
+            },
+            {
+                BuiltinFunctionsCore.DropColumns,
+                StandardErrorHandlingAsync<FormulaValue>(
+                    BuiltinFunctionsCore.DropColumns.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: DropColumnsTypeChecker,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: DropColumns)
             },
             {
                 BuiltinFunctionsCore.EndsWith,

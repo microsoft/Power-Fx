@@ -5,11 +5,14 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Xml.Linq;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Entities;
+using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
@@ -45,7 +48,7 @@ namespace Microsoft.PowerFx
         private PowerFxConfig(CultureInfo cultureInfo, EnumStoreBuilder enumStoreBuilder, Features features = Features.None)
         {
             CultureInfo = cultureInfo ?? CultureInfo.CurrentCulture;
-            Features = features;            
+            Features = features;
             SymbolTable.EnumStoreBuilder = enumStoreBuilder;
             MaxCallDepth = DefaultMaxCallDepth;
         }
@@ -57,6 +60,11 @@ namespace Microsoft.PowerFx
         public PowerFxConfig(CultureInfo cultureInfo = null)
             : this(cultureInfo, Features.None)
         {
+        }
+
+        internal PowerFxConfig WithCulture(CultureInfo newCulture)
+        {
+            return new PowerFxConfig(newCulture, Features) { SymbolTable = this.SymbolTable };
         }
 
         /// <summary>
@@ -92,7 +100,7 @@ namespace Microsoft.PowerFx
         /// </summary>
         internal static PowerFxConfig BuildWithEnumStore(CultureInfo cultureInfo, EnumStoreBuilder enumStoreBuilder)
         {
-            return BuildWithEnumStore(cultureInfo, enumStoreBuilder, Features.None); 
+            return BuildWithEnumStore(cultureInfo, enumStoreBuilder, Features.None);
         }
 
         internal static PowerFxConfig BuildWithEnumStore(CultureInfo cultureInfo, EnumStoreBuilder enumStoreBuilder, Features features)
@@ -134,7 +142,45 @@ namespace Microsoft.PowerFx
 
         internal void AddFunction(TexlFunction function)
         {
-            SymbolTable.AddFunction(function);
+            var comparer = new TexlFunctionComparer();
+
+            if (!SymbolTable.Functions.Contains(function, comparer))
+            {
+                if (function.HasLambdas || function.HasColumnIdentifiers)
+                {
+                    // We limit to 20 arguments as MaxArity could be set to int.MaxValue 
+                    // and checking up to 20 arguments is enough for this validation
+                    for (var i = 0; i < Math.Min(function.MaxArity, 20); i++)
+                    {
+                        if (function.HasLambdas && function.HasColumnIdentifiers && function.IsLambdaParam(i) && function.IsIdentifierParam(i))
+                        {
+                            (var message, var _) = ErrorUtils.GetLocalizedErrorContent(TexlStrings.ErrInvalidFunction, null, out var errorResource);
+                            throw new ArgumentException(message);
+                        }
+                    }
+
+                    var overloads = SymbolTable.Functions.Where(tf => tf.Name == function.Name && (tf.HasLambdas || tf.HasColumnIdentifiers));
+
+                    if (overloads.Any())
+                    {
+                        for (var i = 0; i < Math.Min(function.MaxArity, 20); i++)
+                        {
+                            if ((function.IsLambdaParam(i) && overloads.Any(ov => ov.HasColumnIdentifiers && ov.IsIdentifierParam(i))) ||
+                                (function.IsIdentifierParam(i) && overloads.Any(ov => ov.HasLambdas && ov.IsLambdaParam(i))))
+                            {
+                                (var message, var _) = ErrorUtils.GetLocalizedErrorContent(TexlStrings.ErrInvalidFunction, null, out var errorResource);
+                                throw new ArgumentException(message);
+                            }
+                        }
+                    }
+                }
+
+                SymbolTable.AddFunction(function);
+            }
+            else
+            {
+                throw new ArgumentException($"Function {function.Name} is already part of core or extra functions");
+            }            
         }
 
         internal void AddFunctions(TexlFunctionSet<TexlFunction> functionSet)

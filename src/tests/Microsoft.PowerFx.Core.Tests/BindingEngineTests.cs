@@ -1,16 +1,19 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Tests;
+using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
 using Xunit;
+using Xunit.Sdk;
 
 namespace Microsoft.PowerFx.Tests
 {
@@ -268,6 +271,113 @@ namespace Microsoft.PowerFx.Tests
             Assert.False(lazyTypeInstance.EnumerableIterated);
         }
 
+        [Fact]
+        public void CheckFunctionsWithColumnIdentifierAndLambda_OneFunction()
+        {
+            var config = new PowerFxConfig();
+            var gotException = false;
+
+            try
+            {
+                config.AddFunction(new LambdaAndColumnIdentifierFunction());
+            }
+            catch (ArgumentException ex)
+            {
+                Assert.Equal("This function is ambiguous, it contains lambda expressions and column identifiers for the same argument.", ex.Message);
+                gotException = true;
+            }
+            finally
+            {
+                Assert.True(gotException);
+            }
+        }
+
+        [Fact]
+        public void CheckFunctionsWithColumnIdentifierAndLambda_Overloads_TwoFunctions()
+        {
+            var funcs = new TexlFunction[] { new LambdaFunction(0x1), new ColumnIdentifierFunction(0x1) };
+
+            for (var i = 0; i < 2; i++)
+            {
+                var config = new PowerFxConfig();
+                var gotException = false;
+
+                config.AddFunction(funcs[i % 2]);
+
+                try
+                {
+                    config.AddFunction(funcs[(i + 1) % 2]);
+                }
+                catch (ArgumentException ex)
+                {
+                    Assert.Equal("This function is ambiguous, it contains lambda expressions and column identifiers for the same argument.", ex.Message);
+                    gotException = true;
+                }
+                finally
+                {
+                    Assert.True(gotException);
+                }
+            }
+        }
+
+        [Fact]
+        public void CheckFunctionsWithColumnIdentifierAndLambda_Overloads_NoConflict()
+        {
+            var funcs = new TexlFunction[] { new LambdaFunction(0x1), new ColumnIdentifierFunction(0x2) };
+
+            for (var i = 0; i < 2; i++)
+            {
+                var config = new PowerFxConfig();                
+
+                config.AddFunction(funcs[i % 2]);
+                config.AddFunction(funcs[(i + 1) % 2]);                
+            }
+        }
+
+        [Fact]
+        public void CheckFunctionsWithColumnIdentifierAndLambda_Overloads_NoConflict2()
+        {
+            var funcs = new TexlFunction[] { new LambdaFunction(0x1), new ColumnIdentifierFunction(0x2), new LambdaFunction(0x4), new ColumnIdentifierFunction(0x8) };
+
+            for (var i = 0; i < 4; i++)
+            {
+                var config = new PowerFxConfig();
+
+                config.AddFunction(funcs[i % 4]);
+                config.AddFunction(funcs[(i + 1) % 4]);
+                config.AddFunction(funcs[(i + 2) % 4]);
+                config.AddFunction(funcs[(i + 3) % 4]);
+            }
+        }
+
+        [Fact]
+        public void CheckFunctionsWithColumnIdentifierAndLambda_Overloads_Conflict()
+        {
+            var funcs = new TexlFunction[] { new LambdaFunction(0x1), new ColumnIdentifierFunction(0x2), new ColumnIdentifierFunction(0x1) };
+
+            for (var i = 0; i < 3; i++)
+            {
+                var config = new PowerFxConfig();
+                var gotException = false;                
+
+                try
+                {
+                    config.AddFunction(funcs[i % 3]);
+                    config.AddFunction(funcs[(i + 1) % 3]);
+                    config.AddFunction(funcs[(i + 2) % 3]);
+                }
+                catch (ArgumentException ex)
+                {
+                    Assert.Equal("This function is ambiguous, it contains lambda expressions and column identifiers for the same argument.", ex.Message);
+                    gotException = true;
+                }
+                finally
+                {
+                    Assert.True(gotException);
+                }
+            }
+        }
+
         internal class LazyRecursiveRecordType : RecordType
         {
             public override IEnumerable<string> FieldNames => GetFieldNames();
@@ -372,6 +482,89 @@ namespace Microsoft.PowerFx.Tests
             public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
             {
                 yield break;
+            }
+        }
+
+        internal class LambdaAndColumnIdentifierFunction : TexlFunction
+        {
+            public LambdaAndColumnIdentifierFunction()
+                : base(DPath.Root, "LambdaAndColumnIdentifierFunction", "LambdaAndColumnIdentifierFunction", TexlStrings.AboutSet, FunctionCategories.Text, DType.Boolean, 0x1, 1, 1)
+            {
+            }
+
+            public override bool HasLambdas => true;
+
+            public override bool HasColumnIdentifiers => true;
+
+            public override bool IsSelfContained => false;
+
+            public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
+            {
+                yield break;
+            }
+
+            public override bool IsLambdaParam(int index)
+            {
+                return true;
+            }
+
+            public override bool IsIdentifierParam(int index)
+            {
+                return true;
+            }
+        }
+
+        internal class LambdaFunction : TexlFunction
+        {
+            private readonly int _mask = 0;
+
+            public LambdaFunction(int mask)
+                : base(DPath.Root, "TestFunction1", "TestFunction1", TexlStrings.AboutSet, FunctionCategories.Text, DType.Boolean, mask, 1, 1)
+            {
+                _mask = mask;
+            }
+
+            public override bool HasLambdas => true;
+
+            public override bool HasColumnIdentifiers => false;
+
+            public override bool IsSelfContained => false;
+
+            public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
+            {
+                yield break;
+            }
+
+            public override bool IsLambdaParam(int index)
+            {
+                return (_mask & (1 << index)) != 0;
+            }
+        }
+
+        internal class ColumnIdentifierFunction : TexlFunction
+        {
+            private readonly int _mask = 0;
+
+            public ColumnIdentifierFunction(int mask)
+                : base(DPath.Root, "TestFunction1", "TestFunction1", TexlStrings.AboutSet, FunctionCategories.Text, DType.Boolean, 0x0, 1, 1)
+            {
+                _mask = mask;
+            }
+
+            public override bool HasLambdas => false;
+
+            public override bool HasColumnIdentifiers => true;
+
+            public override bool IsSelfContained => false;
+
+            public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
+            {
+                yield break;
+            }
+
+            public override bool IsIdentifierParam(int index)
+            {
+                return (_mask & (1 << index)) != 0;
             }
         }
 
