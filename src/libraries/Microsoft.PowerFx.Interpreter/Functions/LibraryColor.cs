@@ -88,8 +88,19 @@ namespace Microsoft.PowerFx.Functions
 
         public static FormulaValue ColorFade(IRContext irContext, FormulaValue[] args)
         {
+
+            if (args[0] is BlankValue)
+            {
+                args[0] = FormulaValue.New(Color.FromArgb(255, 0, 0, 0));
+            }
+            if (args[1] is BlankValue)
+            {
+                args[1] = FormulaValue.New(0);
+            }
+
             var color = (ColorValue)args[0];
             var fadeDelta = ((NumberValue)args[1]).Value;
+
 
             // Ensure fade amount is between -1 and 1
             if (fadeDelta < -1.0d || fadeDelta > 1.0d)

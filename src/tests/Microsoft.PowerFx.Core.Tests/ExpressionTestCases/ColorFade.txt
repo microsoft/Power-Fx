@@ -50,13 +50,13 @@ RGBA(127,0,0,1)
 RGBA(255,127,127,1)
 
 >> ColorFade(RGBA(255,0,0,1), Blank())
-Blank()
+RGBA(255,0,0,1)
 
 >> ColorFade(Blank(), -1)
-Blank()
+RGBA(0,0,0,1)
 
 >> ColorFade(If(1<0, RGBA(255,0,0,1)), If(1<0, 0))
-Blank()
+RGBA(0,0,0,1)
 
 >> ColorFade(RGBA(255,0,0,1), 1/0)
 Error({Kind:ErrorKind.Div0})
