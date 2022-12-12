@@ -661,6 +661,33 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             }
         }
 
+        // Trying to eval with missing symbol values will fail
+        [Fact]
+        public async Task MissingSymbolValues()
+        {
+            // Get meaningful error if we eval with the "wrong" symbols 
+            var symTable1 = new SymbolTable { DebugName = "L1" };
+            symTable1.AddVariable("var1", FormulaType.Number); 
+
+            var engine = new RecalcEngine();
+            var check = engine.Check("1+2", symbolTable: symTable1);
+
+            
+            var symTable2 = new SymbolTable { DebugName = "L2" };
+            var symValues2 = symTable2.CreateValues();
+            var run = check.GetEvaluator();
+
+            // Pass in symbolValues that aren't associated with symTable1 used in check. 
+            Assert.NotSame(symTable1, symValues2.SymbolTable);
+
+            // Catch and proactively get error. 
+            await Assert.ThrowsAsync<InvalidOperationException>(async () => await run.EvalAsync(CancellationToken.None, symValues2));
+
+            // Works when we pass in right symbol values (tied to what we checked against)
+            var symValues1 = symTable1.CreateValues();
+            run.Eval(symValues1);
+        }
+
         // Demonstrate how to use ThisItem in a loop.
         // All Loop iterations can access common global state,
         // but also have their own loop-specific identifer. 

@@ -25,6 +25,12 @@ namespace Microsoft.PowerFx
     {
         private readonly SlotMap<NameLookupInfo?> _slots = new SlotMap<NameLookupInfo?>();
 
+        /// <summary>
+        /// Does this SymbolTable require a corresponding SymbolValue?
+        /// True if we have AddVariables, but not needed if we just have constants or functions.
+        /// </summary>
+        public bool NeedsValues => !_slots.IsEmpty;
+
         // Expose public setters
         // https://github.com/microsoft/Power-Fx/issues/828
         [Obsolete("Use Composition instead of Parent Pointer")]
@@ -101,7 +107,7 @@ namespace Microsoft.PowerFx
             DName displayDName = default;
             DName varDName = ValidateName(name);
 
-            if(displayName != null)
+            if (displayName != null)
             {
                 displayDName = ValidateName(displayName);
             }
@@ -111,7 +117,7 @@ namespace Microsoft.PowerFx
                 throw new InvalidOperationException($"{name} is already defined");
             }
 
-            var slotIndex = _slots.Add(null);
+            var slotIndex = _slots.Alloc();
             var data = new NameSymbol(name, mutable)
             {
                 Owner = this,
@@ -126,7 +132,7 @@ namespace Microsoft.PowerFx
                 data: data,
                 displayName:displayDName);
 
-            _slots.Set(slotIndex, info);
+            _slots.SetInitial(slotIndex, info);
 
             // Attempt to update display name provider before symbol table,
             // since it can throw on collision and we want to leave the config in a good state.

@@ -134,6 +134,7 @@ namespace Microsoft.PowerFx
         public async Task<FormulaValue> EvalAsync(CancellationToken cancellationToken, ReadOnlySymbolValues runtimeConfig = null)
         {
             ReadOnlySymbolValues runtimeConfig2 = ComposedReadOnlySymbolValues.New(
+                false,
                 _allSymbols,
                 runtimeConfig,
                 _globals);
