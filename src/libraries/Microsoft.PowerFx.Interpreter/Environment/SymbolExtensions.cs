@@ -37,7 +37,7 @@ namespace Microsoft.PowerFx
         /// <returns></returns>
         public static ReadOnlySymbolValues CreateValues(this ReadOnlySymbolTable symbolTable, params ReadOnlySymbolValues[] existing)
         {
-            return ComposedReadOnlySymbolValues.New(symbolTable, existing);
+            return ComposedReadOnlySymbolValues.New(true, symbolTable, existing);
         }
     }
 }

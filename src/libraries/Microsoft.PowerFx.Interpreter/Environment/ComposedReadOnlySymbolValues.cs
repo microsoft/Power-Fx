@@ -35,6 +35,7 @@ namespace Microsoft.PowerFx
         // Graft in existing nodes (avoids allocating a new one). 
         // Parameters allows specifying an override in the map.
         internal static ReadOnlySymbolValues New(
+            bool canCreateNew,
             ReadOnlySymbolTable symbolTable,
             params ReadOnlySymbolValues[] existing)
         {
@@ -69,7 +70,7 @@ namespace Microsoft.PowerFx
                 }                
             }
             
-            CreateValues(map, symbolTable);
+            CreateValues(canCreateNew, map, symbolTable);
 
             // Optimization
             if (map.Count == 1)
@@ -100,6 +101,7 @@ namespace Microsoft.PowerFx
 
         // Walk the symbolTable tree and for each node, create the corresponding symbol values. 
         private static void CreateValues(
+            bool canCreateNew,
             Dictionary<ReadOnlySymbolTable, ReadOnlySymbolValues> map,
             ReadOnlySymbolTable symbolTable)
         {
@@ -117,11 +119,11 @@ namespace Microsoft.PowerFx
             {
                 foreach (var inner in composed.SubTables)
                 {
-                    CreateValues(map, inner);
+                    CreateValues(canCreateNew, map, inner);
                 }
 
 #pragma warning disable CS0618 // Type or member is obsolete
-                CreateValues(map, symbolTable.Parent);
+                CreateValues(canCreateNew, map, symbolTable.Parent);
 #pragma warning restore CS0618 // Type or member is obsolete
                 return;
             }
@@ -133,13 +135,21 @@ namespace Microsoft.PowerFx
             }
             else if (symbolTable is SymbolTable symbolTable2)
             {
+                if (!canCreateNew)
+                {
+                    if (symbolTable2.NeedsValues) // $$$ Move broader
+                    {
+                        var msg = $"Missing SymbolValues for {symbolTable.DebugName()}";
+                        throw new InvalidOperationException(msg);
+                    }
+                }
                 var symValues = new SymbolValues(symbolTable2)
                 {
                     DebugName = symbolTable2.DebugName
                 };
 
 #pragma warning disable CS0618 // Type or member is obsolete
-                CreateValues(map, symbolTable.Parent);
+                CreateValues(canCreateNew, map, symbolTable.Parent);
 #pragma warning restore CS0618 // Type or member is obsolete
                 map[symbolTable] = symValues;
                 return;
