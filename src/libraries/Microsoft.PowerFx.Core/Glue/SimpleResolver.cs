@@ -15,6 +15,7 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Glue
 {
+    // This is still used in DataverseResolver.
     [Obsolete("Use symbol table")]
     internal class SimpleResolver : ComposedReadOnlySymbolTable
     {

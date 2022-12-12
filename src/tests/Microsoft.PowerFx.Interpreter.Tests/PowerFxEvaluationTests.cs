@@ -86,13 +86,10 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var t2 = FormulaValue.NewTable(rType, r1, r2, r3, r4);
             var t3 = FormulaValue.NewTable(rType, r1, r2, r3, r5, r4);
 
-            var symbol = new SymbolTable() { Parent = config.SymbolTable };
-
+            var symbol = config.SymbolTable;
             symbol.AddConstant("t1", t1);
             symbol.AddConstant("t2", t2);
             symbol.AddConstant("t3", t3);
-
-            config.SymbolTable = symbol;
 
             return (new RecalcEngine(config), null);
         }
