@@ -12,9 +12,6 @@ using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 
-#pragma warning disable SA1402 // File may only contain a single type
-#pragma warning disable SA1649 // File name should match first type name
-
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
     // AddColumns(source:*[...], name:s, valueFunc:func<_>, name:s, valueFunc:func<_>, ...)
@@ -24,6 +21,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool SkipScopeForInlineRecords => true;
 
         public override bool HasLambdas => true;
+
+        public override bool HasColumnIdentifiers => true;
 
         public override bool IsSelfContained => true;
 
@@ -55,7 +54,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return base.GetSignatures(arity);
         }
 
-        public override bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertValue(argTypes);
@@ -78,41 +77,68 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 errors.EnsureError(DocumentErrorSeverity.Severe, args[0].Parent.CastList().Parent.CastCall(), TexlStrings.ErrBadArityOdd, count);
             }
 
+            var supportColumnNamesAsIdentifiers = context.Features.HasFlag(Features.SupportColumnNamesAsIdentifiers);
+
             for (var i = 1; i < count; i += 2)
             {
+                string expectedColumnName = null;
                 var nameArg = args[i];
                 var nameArgType = argTypes[i];
 
                 // Verify we have a string literal for the column name. Accd to spec, we don't support
                 // arbitrary expressions that evaluate to string values, because these values contribute to
                 // type analysis, so they need to be known upfront (before AddColumns executes).
-                StrLitNode nameNode;
-                if (nameArgType.Kind != DKind.String ||
-                    (nameNode = nameArg.AsStrLit()) == null)
+                if (supportColumnNamesAsIdentifiers)
                 {
-                    fArgsValid = false;
-                    errors.EnsureError(DocumentErrorSeverity.Severe, nameArg, TexlStrings.ErrExpectedStringLiteralArg_Name, nameArg.ToString());
-                    continue;
+                    if (nameArg is not FirstNameNode identifierNode)
+                    {
+                        fArgsValid = false;
+
+                        // Argument '{0}' is invalid, expected an identifier.
+                        errors.EnsureError(DocumentErrorSeverity.Severe, nameArg, TexlStrings.ErrExpectedIdentifierArg_Name, nameArg.ToString());
+                        continue;
+                    }
+
+                    expectedColumnName = identifierNode.Ident.Name;
+                }
+                else
+                {
+                    StrLitNode strLitNode = nameArg.AsStrLit();
+
+                    if (nameArgType.Kind != DKind.String || strLitNode == null)
+                    {
+                        fArgsValid = false; 
+
+                        // Argument '{0}' is invalid, expected a text literal.
+                        errors.EnsureError(DocumentErrorSeverity.Severe, nameArg, TexlStrings.ErrExpectedStringLiteralArg_Name, nameArg.ToString());
+                        continue;
+                    }
+
+                    expectedColumnName = strLitNode.Value;
                 }
 
                 // Verify that the name is valid.
-                if (!DName.IsValidDName(nameNode.Value))
+                if (!DName.IsValidDName(expectedColumnName))
                 {
                     fArgsValid = false;
-                    errors.EnsureError(DocumentErrorSeverity.Severe, nameArg, TexlStrings.ErrArgNotAValidIdentifier_Name, nameNode.Value);
+
+                    // Argument '{0}' is not a valid identifier.
+                    errors.EnsureError(DocumentErrorSeverity.Severe, nameArg, TexlStrings.ErrArgNotAValidIdentifier_Name, expectedColumnName);
                     continue;
                 }
 
-                var columnName = new DName(nameNode.Value);
+                var columnName = new DName(expectedColumnName);
                 if (DType.TryGetDisplayNameForColumn(typeScope, columnName, out var colName))
                 {
                     columnName = new DName(colName);
                 }
 
                 // Verify that the name doesn't already exist as either a logical or display name
-                if (typeScope.TryGetType(columnName, out var columnType) || DType.TryGetLogicalNameForColumn(typeScope, columnName, out var unused))
+                if (typeScope.TryGetType(columnName, out var columnType) || DType.TryGetLogicalNameForColumn(typeScope, columnName, out _))
                 {
                     fArgsValid = false;
+
+                    // A column named '{0}' already exists.
                     errors.EnsureError(DocumentErrorSeverity.Moderate, nameArg, TexlStrings.ErrColExists_Name, columnName);
                     continue;
                 }
@@ -177,6 +203,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return index >= 2 && ((index & 1) == 0);
         }
 
+        public override bool IsIdentifierParam(int index)
+        {
+            Contracts.Assert(index >= 0);
+
+            // Left to right mask (infinite): ...010101010 
+            return index >= 1 && ((index & 1) == 1);
+        }
+
         public override bool AllowsRowScopedParamDelegationExempted(int index)
         {
             Contracts.Assert(index >= 0);
@@ -185,6 +219,3 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         }
     }
 }
-
-#pragma warning restore SA1402 // File may only contain a single type
-#pragma warning restore SA1649 // File name should match first type name
