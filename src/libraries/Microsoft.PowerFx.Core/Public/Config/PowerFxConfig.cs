@@ -138,9 +138,7 @@ namespace Microsoft.PowerFx
             => SymbolTable.AddEntity(entity, displayName);
 
         internal void AddFunction(TexlFunction function)
-        {
-            var comparer = new TexlFunctionComparer();
-
+        {            
             if (function.HasLambdas || function.HasColumnIdentifiers)
             {
                 // We limit to 20 arguments as MaxArity could be set to int.MaxValue 
@@ -170,13 +168,7 @@ namespace Microsoft.PowerFx
                 }
             }
 
-            SymbolTable.AddFunction(function);
-
-            //}
-            //else
-            //{
-            //    throw new ArgumentException($"Function {function.Name} is already part of core or extra functions");
-            //}            
+            SymbolTable.AddFunction(function);           
         }
 
         internal void AddFunctions(TexlFunctionSet<TexlFunction> functionSet)

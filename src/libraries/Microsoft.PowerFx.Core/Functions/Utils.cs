@@ -16,12 +16,5 @@ namespace Microsoft.PowerFx.Core.Functions
 
             return !(value & (BigInteger.One << bitIndex)).IsZero;
         }
-        public static void AddRange<T>(this HashSet<T> hashset, HashSet<T> hashset2)
-        {
-            foreach (var t in hashset2)
-            {
-                hashset.Add(t);
-            }
-        }
     }
 }

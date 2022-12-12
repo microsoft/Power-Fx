@@ -215,7 +215,6 @@ namespace Microsoft.PowerFx
             // Ok to continue with binding even if there are parse errors. 
             // We can still use that for intellisense.             
             var resolver = CreateResolverInternal(out var combinedSymbols, symbolTable);
-
             var glue = CreateBinderGlue();
 
             var binding = TexlBinding.Run(
