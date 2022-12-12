@@ -285,7 +285,6 @@ namespace Microsoft.PowerFx
                 throw new NotImplementedException($"{entity.GetType().Name} not supported.");
             }
 
-
             // Attempt to update display name provider before symbol table,
             // since it can throw on collision and we want to leave the config in a good state.
             // For entities without a display name, add (logical, logical) pair to still be included in collision checks.
