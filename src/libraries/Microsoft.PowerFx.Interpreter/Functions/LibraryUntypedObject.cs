@@ -310,15 +310,7 @@ namespace Microsoft.PowerFx.Functions
             if (impl.Type == FormulaType.String)
             {
                 var str = impl.GetString();
-
-                if (Regex.IsMatch(str, @"^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$"))
-                {
-                    return ColorValue(irContext, new StringValue[] { FormulaValue.New(str) });
-                }
-                else
-                {
-                    return CommonErrors.InvalidColorFormatError(irContext);
-                }
+                return ColorValue(irContext, new StringValue[] { FormulaValue.New(str) });
             }
 
             return GetTypeMismatchError(irContext, BuiltinFunctionsCore.ColorValue_UO.Name, DType.String.GetKindString(), impl);
