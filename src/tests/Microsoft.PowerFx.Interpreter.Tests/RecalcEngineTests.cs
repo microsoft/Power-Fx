@@ -970,6 +970,25 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal(10.0, result2.ToObject());
         }
 
+        [Fact]
+        public void GetVariableRecalcEngine()
+        {
+            var config = new PowerFxConfig();
+
+            var engine = new RecalcEngine(config);
+            engine.UpdateVariable("A", FormulaValue.New(0));
+
+            Assert.True(engine.TryGetVariableType("A", out var type));
+            Assert.Equal(FormulaType.Number, type);
+
+            Assert.False(engine.TryGetVariableType("Invalid", out type));
+            Assert.Equal(default, type);
+
+            engine.DeleteFormula("A");
+            Assert.False(engine.TryGetVariableType("A", out type));
+            Assert.Equal(default, type);
+        }
+
         private class TestRandService : IRandomService
         {
             public double _value = 0.5;
