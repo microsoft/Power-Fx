@@ -20,8 +20,8 @@ Errors: Error 45-48: The specified column 'a' does not exist. The column with th
 >> DropColumns([1, 2, 3], "Value")
 Table({},{},{})
 
->> DropColumns([1, 2, 3], 5);
-Errors: Error 25-26: Expected operator. We expect an operator such as +, *, or & at this point in the formula.|Error 26-26: Expected an operand. The formula or expression expects a valid operand. For example, you can add the operand '2' to the expression ' 1 +_' so that the result is '3'. Or, you can add the operand "there" to the expression '"Hi "& _ ' so that the result is 'Hi there'.|Error 23-24: Argument '5' is invalid, expected a text literal.|Error 0-25: The function 'DropColumns' has some invalid arguments.|Error 25-26: Expected operator. We expect an operator such as +, *, or & at this point in the formula.
+>> DropColumns([1, 2, 3], 5)
+Errors: Error 23-24: Argument '5' is invalid, expected a text literal.|Error 0-25: The function 'DropColumns' has some invalid arguments.
 
->> DropColumns([1, 2, 3], "");
-Errors: Error 26-27: Expected operator. We expect an operator such as +, *, or & at this point in the formula.|Error 27-27: Expected an operand. The formula or expression expects a valid operand. For example, you can add the operand '2' to the expression ' 1 +_' so that the result is '3'. Or, you can add the operand "there" to the expression '"Hi "& _ ' so that the result is 'Hi there'.|Error 23-25: Argument '' is not a valid identifier.|Error 0-26: The function 'DropColumns' has some invalid arguments.|Error 26-27: Expected operator. We expect an operator such as +, *, or & at this point in the formula.
+>> DropColumns([1, 2, 3], "")
+Errors: Error 23-25: Argument '' is not a valid identifier.|Error 0-26: The function 'DropColumns' has some invalid arguments.
