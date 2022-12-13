@@ -9,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Interpreter.UDF;
@@ -326,11 +327,14 @@ namespace Microsoft.PowerFx
             {
                 if (fi._usedBy.Count == 0)
                 {
-                    foreach (var dependsOnName in fi._dependsOn)
+                    if(fi._dependsOn != null)
                     {
-                        if (TryGetByName(dependsOnName, out var info))
+                        foreach (var dependsOnName in fi._dependsOn)
                         {
-                            info._usedBy.Remove(name);
+                            if (TryGetByName(dependsOnName, out var info))
+                            {
+                                info._usedBy.Remove(name);
+                            }
                         }
                     }
 
@@ -384,6 +388,19 @@ namespace Microsoft.PowerFx
             }
 
             info = null;
+            return false;
+        }
+
+        public bool TryGetVariableType(string name, out FormulaType type)
+        {
+            type = default;
+            var symbols = CreateResolverInternal();
+            
+            if (symbols.Lookup(new DName(name), out var nameLookupInfo))
+            {
+                type = FormulaType.Build(nameLookupInfo.Type);
+                return true;
+            }
             return false;
         }
     } // end class RecalcEngine
