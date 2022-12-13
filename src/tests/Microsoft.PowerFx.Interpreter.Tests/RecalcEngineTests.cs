@@ -971,25 +971,21 @@ namespace Microsoft.PowerFx.Tests
         }
 
         [Fact]
-        public void GetVariable()
+        public void GetVariableRecalcEngine()
         {
-            var symbol = new SymbolTable();
-            var config = new PowerFxConfig() { SymbolTable = symbol };
-            symbol.AddVariable("A", FormulaType.Number);
-            symbol.AddConstant("B", FormulaValue.New("test"));
+            var config = new PowerFxConfig();
 
             var engine = new RecalcEngine(config);
-            engine.UpdateVariable("C", FormulaValue.New("test"));
+            engine.UpdateVariable("A", FormulaValue.New(0));
 
             Assert.True(engine.TryGetVariableType("A", out var type));
             Assert.Equal(FormulaType.Number, type);
 
-            Assert.True(engine.TryGetVariableType("B", out type));
-            Assert.Equal(FormulaType.String, type);
+            Assert.False(engine.TryGetVariableType("Invalid", out type));
+            Assert.Equal(default, type);
 
-            engine.DeleteFormula("C");
-
-            Assert.False(engine.TryGetVariableType("C", out type));
+            engine.DeleteFormula("A");
+            Assert.False(engine.TryGetVariableType("A", out type));
             Assert.Equal(default, type);
         }
 

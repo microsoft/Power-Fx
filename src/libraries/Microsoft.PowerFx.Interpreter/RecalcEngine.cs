@@ -394,9 +394,8 @@ namespace Microsoft.PowerFx
         public bool TryGetVariableType(string name, out FormulaType type)
         {
             type = default;
-            var symbols = CreateResolverInternal();
-            
-            if (symbols.Lookup(new DName(name), out var nameLookupInfo))
+
+            if (_symbolTable.TryGetVariable(new DName(name), out var nameLookupInfo, out _))
             {
                 type = FormulaType.Build(nameLookupInfo.Type);
                 return true;
