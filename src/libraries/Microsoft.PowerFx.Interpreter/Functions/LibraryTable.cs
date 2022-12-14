@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
 
@@ -428,18 +429,13 @@ namespace Microsoft.PowerFx.Functions
 
                 if (distinctValue is ErrorValue errorValue)
                 {
-                    errors.Add(errorValue);
+                    return errorValue;
                 }
             }
 
             if (!(allNumbers || allStrings || allBooleans || allDatetimes || allDates))
             {
                 errors.Add(CommonErrors.RuntimeTypeMismatch(irContext));
-                return ErrorValue.Combine(irContext, errors);
-            }
-
-            if (errors.Count != 0)
-            {
                 return ErrorValue.Combine(irContext, errors);
             }
 
@@ -550,42 +546,28 @@ namespace Microsoft.PowerFx.Functions
             return val is T || val is BlankValue || val is ErrorValue;
         }
 
-        private static FormulaValue DistinctValueType<TPFxPrimitive, TDotNetPrimitive>(List<(DValue<RecordValue> row, FormulaValue sortValue)> pairs, IRContext irContext)
+        private static FormulaValue DistinctValueType<TPFxPrimitive, TDotNetPrimitive>(List<(DValue<RecordValue> row, FormulaValue distinctValue)> pairs, IRContext irContext)
             where TPFxPrimitive : PrimitiveValue<TDotNetPrimitive>
             where TDotNetPrimitive : IComparable<TDotNetPrimitive>
         {
-            var values = new Dictionary<TDotNetPrimitive, DValue<RecordValue>>();
+            var lookup = new HashSet<object>();
+            var result = new List<DValue<RecordValue>>();
             var name = ((TableType)irContext.ResultType).SingleColumnFieldName;
-            var type = ((TableType)irContext.ResultType).SingleColumnFieldType;
-
-            // Have to handle null
-            var addBlankValue = false;
+            var type = irContext.ResultType;
 
             foreach (var (row, distinctValue) in pairs)
             {
-                if (distinctValue is BlankValue)
-                {
-                    addBlankValue = true;
-                    continue;
-                }
-
-                var key = (TDotNetPrimitive)distinctValue?.ToObject();
-  
-                if (!values.ContainsKey(key))
+                var key = distinctValue?.ToObject();
+        
+                if (!lookup.Contains(key))
                 {
                     var insert = FormulaValue.NewRecordFromFields(new NamedValue(name, distinctValue));
-                    values.Add(key, DValue<RecordValue>.Of(insert));
+                    lookup.Add(key);
+                    result.Add(DValue<RecordValue>.Of(insert));
                 }
             }
 
-            var append = Enumerable.Empty<DValue<RecordValue>>();
-            if (addBlankValue)
-            {
-                var emptyRecord = DValue<RecordValue>.Of(FormulaValue.NewRecordFromFields(new NamedValue(name, FormulaValue.NewBlank(type))));
-                append = new List<DValue<RecordValue>> { emptyRecord };
-            }
-
-            return new InMemoryTableValue(irContext, values.Values.Concat(append));
+            return new InMemoryTableValue(irContext, result);
         }
 
         private static FormulaValue SortValueType<TPFxPrimitive, TDotNetPrimitive>(List<(DValue<RecordValue> row, FormulaValue sortValue)> pairs, IRContext irContext, int compareToResultModifier)

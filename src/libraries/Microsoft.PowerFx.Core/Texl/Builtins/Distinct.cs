@@ -51,15 +51,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var fValid = CheckTypes(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
             Contracts.Assert(returnType.IsTable);
 
-            var lambdaType = argTypes[1];
-
-            returnType = DType.CreateTable(new TypedName(new DType(lambdaType.Kind), GetOneColumnTableResultName(context.Features)));
-
             var exprType = argTypes[1];
+
+            returnType = DType.CreateTable(new TypedName(exprType, GetOneColumnTableResultName(context.Features)));
+
             if (!exprType.IsPrimitive || exprType.IsOptionSet)
             {
                 fValid = false;
-                errors.EnsureError(args[1], TexlStrings.ErrSortWrongType);
+                errors.EnsureError(args[1], TexlStrings.ErrDistinctWrongType);
             }
 
             return fValid;

@@ -574,6 +574,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrColumnDoesNotExist_Name_Similar = new ErrorResourceKey("ErrColumnDoesNotExist_Name_Similar");
         public static ErrorResourceKey ErrSortIncorrectOrder = new ErrorResourceKey("ErrSortIncorrectOrder");
         public static ErrorResourceKey ErrSortWrongType = new ErrorResourceKey("ErrSortWrongType");
+        public static ErrorResourceKey ErrDistinctWrongType = new ErrorResourceKey("ErrDistinctWrongType");
         public static ErrorResourceKey ErrFunctionDoesNotAcceptThisType_Function_Expected = new ErrorResourceKey("ErrFunctionDoesNotAcceptThisType_Function_Expected");
         public static ErrorResourceKey ErrIncorrectFormat_Func = new ErrorResourceKey("ErrIncorrectFormat_Func");
         public static ErrorResourceKey ErrAsyncLambda = new ErrorResourceKey("ErrAsyncLambda");

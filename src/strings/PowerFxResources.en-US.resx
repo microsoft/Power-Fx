@@ -1897,6 +1897,10 @@
     <value>Cannot sort on the expression type.</value>
     <comment>Error Message.</comment>
   </data>
+  <data name="ErrDistinctWrongType" xml:space="preserve">
+    <value>Cannot apply distinct on the expression type.</value>
+    <comment>Error Message.</comment>
+  </data>
   <data name="ErrFunctionDoesNotAcceptThisType_Function_Expected" xml:space="preserve">
     <value>Type error: {0} expects either {1} or a table column of {1} type.</value>
     <comment>Error Message.</comment>
