@@ -438,27 +438,7 @@ namespace Microsoft.PowerFx.Functions
                 errors.Add(CommonErrors.RuntimeTypeMismatch(irContext));
                 return ErrorValue.Combine(irContext, errors);
             }
-
-            if (allNumbers)
-            {
-                return DistinctValueType<NumberValue, double>(pairs, irContext);
-            }
-            else if (allStrings)
-            {
-                return DistinctValueType<StringValue, string>(pairs, irContext);
-            }
-            else if (allBooleans)
-            {
-                return DistinctValueType<BooleanValue, bool>(pairs, irContext);
-            }
-            else if (allDatetimes)
-            {
-                return DistinctValueType<DateTimeValue, DateTime>(pairs, irContext);
-            }
-            else
-            {
-                return DistinctValueType<DateValue, DateTime>(pairs, irContext);
-            }
+            return DistinctValueType(pairs, irContext);
         }
 
         public static async ValueTask<FormulaValue> SortTable(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
@@ -546,9 +526,7 @@ namespace Microsoft.PowerFx.Functions
             return val is T || val is BlankValue || val is ErrorValue;
         }
 
-        private static FormulaValue DistinctValueType<TPFxPrimitive, TDotNetPrimitive>(List<(DValue<RecordValue> row, FormulaValue distinctValue)> pairs, IRContext irContext)
-            where TPFxPrimitive : PrimitiveValue<TDotNetPrimitive>
-            where TDotNetPrimitive : IComparable<TDotNetPrimitive>
+        private static FormulaValue DistinctValueType(List<(DValue<RecordValue> row, FormulaValue distinctValue)> pairs, IRContext irContext)
         {
             var lookup = new HashSet<object>();
             var result = new List<DValue<RecordValue>>();
