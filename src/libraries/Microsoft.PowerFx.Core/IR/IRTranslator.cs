@@ -301,9 +301,33 @@ namespace Microsoft.PowerFx.Core.IR
                     scope = GetNewScope();
                 }
 
+                for (var i = 0; i < carg; ++i)
+                {
+                    var arg = node.Args.Children[i];
+
+                    var supportColumnNamesAsIdentifiers = _features.HasFlag(Features.SupportColumnNamesAsIdentifiers);
+                    if (supportColumnNamesAsIdentifiers && func.IsIdentifierParam(i))
+                    {
+                        var identifierNode = arg.AsFirstName();
+                        Contracts.Assert(identifierNode != null);
+                        // Transform the identifier node as a string literal
+                        var nodeName = context.Binding.TryGetReplacedIdentName(identifierNode.Ident, out var newIdent) ? new DName(newIdent) : identifierNode.Ident.Name;
+                        args.Add(new TextLiteralNode(context.GetIRContext(arg, DType.String), nodeName.Value));
+                    }
+                    else if (func.IsLazyEvalParam(i))
+                    {
+                        var child = arg.Accept(this, scope != null ? context.With(scope) : context);
+                        args.Add(new LazyEvalNode(context.GetIRContext(arg), child));
+                    }
+                    else
+                    {
+                        args.Add(arg.Accept(this, context));
+                    }
+                }
+
                 // this can rewrite the entire call node to any intermediate node.
                 // e.g. For Boolean(true), Instead of IR as Call(Boolean, true) it can be rewritten directly to emit true.
-                var irNode = func.CreateIRCallNode(node, context, this, scope, _features);
+                var irNode = func.CreateIRCallNode(node, context, args, scope);
 
                 if (scope != null)
                 {

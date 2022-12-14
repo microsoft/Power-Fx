@@ -1401,37 +1401,10 @@ namespace Microsoft.PowerFx.Core.Functions
 
         /// <summary>
         /// Override this method to rewrite the CallNode that is generated.
-        /// e.g. Boolean(true) would want to emit the arg true directly instead of function call.
+        /// e.g. Boolean(true) would want to emit the arg true directly instead of a function call.
         /// </summary>
-        internal virtual IntermediateNode CreateIRCallNode(CallNode node, IRTranslatorContext context, IRTranslatorVisitor visitor, ScopeSymbol scope, Features features)
+        internal virtual IntermediateNode CreateIRCallNode(CallNode node, IRTranslatorContext context, List<IntermediateNode> args, ScopeSymbol scope)
         {
-            var args = new List<IntermediateNode>();
-            var carg = node.Args.Count;
-            for (var i = 0; i < carg; ++i)
-            {
-                var arg = node.Args.Children[i];
-
-                var supportColumnNamesAsIdentifiers = features.HasFlag(Features.SupportColumnNamesAsIdentifiers);
-                if (supportColumnNamesAsIdentifiers && IsIdentifierParam(i))
-                {
-                    var identifierNode = arg.AsFirstName();
-                    Contracts.Assert(identifierNode != null);
-
-                    // Transform the identifier node as a string literal
-                    var nodeName = context.Binding.TryGetReplacedIdentName(identifierNode.Ident, out var newIdent) ? new DName(newIdent) : identifierNode.Ident.Name;
-                    args.Add(new TextLiteralNode(context.GetIRContext(arg, DType.String), nodeName.Value));
-                }
-                else if (IsLazyEvalParam(i))
-                {
-                    var child = arg.Accept(visitor, scope != null ? context.With(scope) : context);
-                    args.Add(new LazyEvalNode(context.GetIRContext(arg), child));
-                }
-                else
-                {
-                    args.Add(arg.Accept(visitor, context));
-                }
-            }
-
             if (scope != null)
             {
                 return new IRCallNode(context.GetIRContext(node), this, scope, args);

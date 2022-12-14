@@ -7,6 +7,7 @@ using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.IR.Symbols;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
@@ -66,16 +67,15 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         /// <summary>
         /// If arg is BoolLit node, no need to make a function call to boolean function. It can just emit arg directly.
         /// </summary>
-        internal override IR.Nodes.IntermediateNode CreateIRCallNode(PowerFx.Syntax.CallNode node, IRTranslator.IRTranslatorContext context, IRTranslator.IRTranslatorVisitor visitor, ScopeSymbol scope, Features features)
+        internal override IR.Nodes.IntermediateNode CreateIRCallNode(PowerFx.Syntax.CallNode node, IRTranslator.IRTranslatorContext context, List<IntermediateNode> args, ScopeSymbol scope)
         {
-            var arg = node.Args.Children[0];
-            if(arg is BoolLitNode)
+            if(args[0].IRContext.ResultType._type == DType.Boolean)
             {
-                return arg.Accept(visitor, context); 
+                return args[0]; 
             }
             else
             {
-                return base.CreateIRCallNode(node, context, visitor, scope, features);
+                return base.CreateIRCallNode(node, context, args, scope);
             }
         }
     }
@@ -148,18 +148,18 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         /// If arg is Table of boolean, no need to make a function call to boolean function. It can just emit the table 
         /// arg directly.
         /// </summary>
-        internal override IR.Nodes.IntermediateNode CreateIRCallNode(PowerFx.Syntax.CallNode node, IRTranslator.IRTranslatorContext context, IRTranslator.IRTranslatorVisitor visitor, ScopeSymbol scope, Features features)
+        internal override IR.Nodes.IntermediateNode CreateIRCallNode(PowerFx.Syntax.CallNode node, IRTranslator.IRTranslatorContext context, List<IntermediateNode> args, ScopeSymbol scope)
         {
-            var children = node.Args.Children[0].Accept(visitor, context);
+            var child = args[0];
             var rowType = DType.EmptyRecord.Add(new TypedName(DType.Boolean, ColumnName_Value));
-            var returnType = rowType.ToTable();
-            if (node.Args.Children[0] is TableNode table && children.IRContext.ResultType._type == returnType)
+            var booleanTReturnType = rowType.ToTable();
+            if (child.IRContext.ResultType._type == booleanTReturnType)
             {
-                return node.Args.Children[0].Accept(visitor, context);
+                return child;
             }
             else
             {
-                return base.CreateIRCallNode(node, context, visitor, scope, features);
+                return base.CreateIRCallNode(node, context, args, scope);
             }
         }
     }

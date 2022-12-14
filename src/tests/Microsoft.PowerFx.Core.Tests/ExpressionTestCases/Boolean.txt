@@ -72,3 +72,12 @@ Table({Value:false},{Value:true},{Value:Error({Kind:ErrorKind.InvalidArgument})}
 
 >> Boolean(["true", false])
 Table({Value:true},{Value:false})
+
+>> Boolean(true Or true)
+true
+
+>> Boolean(If(1<0, true))
+Blank()
+
+>> Boolean(If(0<1, true))
+true
