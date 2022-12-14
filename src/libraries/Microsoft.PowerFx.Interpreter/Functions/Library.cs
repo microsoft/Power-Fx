@@ -196,14 +196,14 @@ namespace Microsoft.PowerFx.Functions
             },
             {
                 BuiltinFunctionsCore.BooleanB,
-                StandardErrorHandling<NumberValue>(
+                StandardErrorHandling<StringValue>(
                     BuiltinFunctionsCore.BooleanN.Name,
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
-                    checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<StringValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
-                    targetFunction: NumberToBoolean)
+                    targetFunction: TextToBoolean)
             },
             {
                 BuiltinFunctionsCore.Boolean_UO,
