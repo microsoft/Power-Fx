@@ -1,0 +1,33 @@
+﻿
+>> Boolean(["true", "True", "TRUE", "false", "False", "FALSE"])
+Table({Value:true},{Value:true},{Value:true},{Value:false},{Value:false},{Value:false})
+
+>> Boolean(["true", 1])
+Table({Value:true},{Value:Error({Kind:ErrorKind.InvalidArgument})})
+
+>> Boolean(["true", false])
+Table({Value:true},{Value:false})
+
+>> Boolean([0, 1, 2])
+Table({Value:false},{Value:true},{Value:true})
+
+>> Boolean([0, "true"])
+Table({Value:false},{Value:Error({Kind:ErrorKind.InvalidArgument})})
+
+>> Boolean([0, true])
+Table({Value:false},{Value:true})
+
+>> Boolean([])
+Errors: Error 0-11: The function 'Boolean' has some invalid arguments.|Error 8-10: Invalid schema, expected a one-column table.
+
+>> Boolean([false])
+Table({Value:false})
+
+>> Boolean([true, 0, "true"])
+Table({Value:true},{Value:false},{Value:true})
+
+>> Boolean([0, true, "false"])
+Table({Value:false},{Value:true},{Value:Error({Kind:ErrorKind.InvalidArgument})})
+
+>> Boolean([Blank(), true])
+Table({Value:Blank()},{Value:true})
