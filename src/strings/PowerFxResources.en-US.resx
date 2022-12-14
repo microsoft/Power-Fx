@@ -1799,7 +1799,7 @@
     <comment>Error Message.</comment>
   </data>
   <data name="ErrTextFormatTooLarge" xml:space="preserve">
-    <value>Format string size is too large.</value>
+    <value>Format string size can't be more than {0} characters.</value>
     <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
