@@ -527,6 +527,5 @@
   "mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm")
 Error({Kind:ErrorKind.Custom})
 
-// !JYL! Need a more precise error message?
 >> Text(1, "00.00 dd-mm-yyyy")
 Errors: Error 0-27: The function 'Text' has some invalid arguments.|Error 8-26: Incorrect format specifier for 'Text'.
