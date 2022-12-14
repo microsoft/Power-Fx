@@ -195,6 +195,17 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: NumberToBoolean)
             },
             {
+                BuiltinFunctionsCore.BooleanB,
+                StandardErrorHandling<NumberValue>(
+                    BuiltinFunctionsCore.BooleanN.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: NumberToBoolean)
+            },
+            {
                 BuiltinFunctionsCore.Boolean_UO,
                 StandardErrorHandling<UntypedObjectValue>(
                     BuiltinFunctionsCore.Boolean_UO.Name,
@@ -1516,6 +1527,10 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.BooleanN_T,
                 StandardErrorHandlingTabularOverload<NumberValue>(BuiltinFunctionsCore.BooleanN_T.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.BooleanN])
+            },
+            {
+                BuiltinFunctionsCore.BooleanB_T,
+                StandardErrorHandlingTabularOverload<NumberValue>(BuiltinFunctionsCore.BooleanB_T.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.BooleanB])
             },
             {
                 BuiltinFunctionsCore.CharT,

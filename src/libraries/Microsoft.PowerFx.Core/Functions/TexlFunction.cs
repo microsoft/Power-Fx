@@ -1075,6 +1075,13 @@ namespace Microsoft.PowerFx.Core.Functions
             return CheckColumnType(type, arg, DType.DateTime, errors, TexlStrings.ErrInvalidSchemaNeedDateCol_Col, ref nodeToCoercedTypeMap);
         }
 
+        // Check that the type of a specified node is a boolean column type, and possibly emit errors
+        // accordingly. Returns true if the types align, false otherwise.
+        protected bool CheckBooleanColumnType(DType type, TexlNode arg, IErrorContainer errors, ref Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        {
+            return CheckColumnType(type, arg, DType.Boolean, errors, TexlStrings.ErrInvalidSchemaNeedColorCol_Col, ref nodeToCoercedTypeMap);
+        }
+
         // Enumerate some of the function signatures for a specified arity and known parameter descriptions.
         // The last parameter may be repeated as many times as necessary in order to satisfy the arity constraint.
         protected IEnumerable<TexlStrings.StringGetter[]> GetGenericSignatures(int arity, params TexlStrings.StringGetter[] args)

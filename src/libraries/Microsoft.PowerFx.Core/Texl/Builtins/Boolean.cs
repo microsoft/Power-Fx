@@ -38,46 +38,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         {
             yield return new[] { TexlStrings.BooleanArg1 };
         }
-
-        public override bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
-        {
-            Contracts.AssertValue(args);
-            Contracts.AssertAllValues(args);
-            Contracts.AssertValue(argTypes);
-            Contracts.AssertAllValid(argTypes);
-            Contracts.Assert(args.Length == argTypes.Length);
-            Contracts.AssertValue(errors);
-            Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
-
-            nodeToCoercedTypeMap = null;
-
-            var isValid = true;
-            var argType = argTypes[0];
-            if (!(DType.Boolean.Accepts(argType) || DType.String.Accepts(argType)))
-            {
-                errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrNumberOrStringExpected);
-                isValid = false;
-            }
-
-            returnType = DType.Boolean;
-            return isValid;
-        }
-
-
-        /// <summary>
-        /// If arg's result type is Boolean, no need to make a function call to Boolean() function. It can just emit arg directly.
-        /// </summary>
-        internal override IR.Nodes.IntermediateNode CreateIRCallNode(PowerFx.Syntax.CallNode node, IRTranslator.IRTranslatorContext context, List<IntermediateNode> args, ScopeSymbol scope)
-        {
-            if(args[0].IRContext.ResultType._type == DType.Boolean)
-            {
-                return args[0]; 
-            }
-            else
-            {
-                return base.CreateIRCallNode(node, context, args, scope);
-            }
-        }
     }
 
     // Boolean(E:*[s])
@@ -110,26 +70,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             var arg = args[0];
             var argType = argTypes[0];
-
-            Contracts.Assert(argType.IsValid);
-            Contracts.AssertValue(arg);
-            Contracts.AssertValue(errors);
-
-            IEnumerable<TypedName> columns;
-            if (!argType.IsTable || (columns = argType.GetNames(DPath.Root)).Count() != 1)
-            {
-                errors.EnsureError(DocumentErrorSeverity.Severe, arg, TexlStrings.ErrInvalidSchemaNeedCol);
-                fValid = false;
-            }
-            else
-            {
-                var column = columns.Single();
-                if (!(DType.String.Accepts(column.Type) || DType.Boolean.Accepts(column.Type)))
-                {
-                    errors.EnsureError(DocumentErrorSeverity.Severe, arg, TexlStrings.ErrInvalidSchemaNeedStringCol_Col, column.Name.Value);
-                    fValid = false;
-                }
-            }
+            fValid &= CheckStringColumnType(argType, arg, errors, ref nodeToCoercedTypeMap);
 
             var rowType = DType.EmptyRecord.Add(new TypedName(DType.Boolean, ColumnName_Value));
             returnType = rowType.ToTable();
@@ -142,25 +83,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertNonEmpty(paramName);
 
             return StringResources.TryGet("AboutBooleanT_" + paramName, out paramDescription);
-        }
-
-        /// <summary>
-        /// If arg is Table of boolean, no need to make a function call to boolean function. It can just emit the table 
-        /// arg directly.
-        /// </summary>
-        internal override IR.Nodes.IntermediateNode CreateIRCallNode(PowerFx.Syntax.CallNode node, IRTranslator.IRTranslatorContext context, List<IntermediateNode> args, ScopeSymbol scope)
-        {
-            var child = args[0];
-            var rowType = DType.EmptyRecord.Add(new TypedName(DType.Boolean, ColumnName_Value));
-            var booleanTReturnType = rowType.ToTable();
-            if (child.IRContext.ResultType._type == booleanTReturnType)
-            {
-                return child;
-            }
-            else
-            {
-                return base.CreateIRCallNode(node, context, args, scope);
-            }
         }
     }
 
@@ -238,6 +160,110 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertNonEmpty(paramName);
 
             return StringResources.TryGet("AboutBooleanNT_" + paramName, out paramDescription);
+        }
+    }
+
+    // Boolean(arg:b)
+    // Corresponding Excel and DAX function: Boolean
+    internal sealed class BooleanBFunction : BuiltinFunction
+    {
+        public override bool IsSelfContained => true;
+
+        public override bool SupportsParamCoercion => false;
+
+        public BooleanBFunction()
+            : base(BooleanFunction.BooleanInvariantFunctionName, TexlStrings.AboutBooleanN, FunctionCategories.Text, DType.Boolean, 0, 1, 1, DType.Boolean)
+        {
+        }
+
+        public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
+        {
+            yield return new[] { TexlStrings.BooleanArg1 };
+        }
+
+        public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
+        {
+            return GetUniqueTexlRuntimeName(suffix: "B");
+        }
+
+        /// <summary>
+        /// If arg's result type is Boolean, no need to make a function call to Boolean() function. It can just emit arg directly.
+        /// </summary>
+        internal override IR.Nodes.IntermediateNode CreateIRCallNode(PowerFx.Syntax.CallNode node, IRTranslator.IRTranslatorContext context, List<IntermediateNode> args, ScopeSymbol scope)
+        {
+            if (args[0].IRContext.ResultType._type == DType.Boolean)
+            {
+                return args[0];
+            }
+            else
+            {
+                return base.CreateIRCallNode(node, context, args, scope);
+            }
+        }
+    }
+
+    // Boolean(E:*[b])
+    // Corresponding Excel and DAX function: Boolean
+    internal sealed class BooleanBFunction_T : BuiltinFunction
+    {
+        public override bool IsSelfContained => true;
+
+        public override bool SupportsParamCoercion => false;
+
+        public BooleanBFunction_T()
+            : base(BooleanFunction.BooleanInvariantFunctionName, TexlStrings.AboutBooleanBT, FunctionCategories.Table, DType.EmptyTable, 0, 1, 1, DType.EmptyTable)
+        {
+        }
+
+        public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
+        {
+            yield return new[] { TexlStrings.BooleanNTArg1 };
+        }
+
+        public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
+        {
+            return GetUniqueTexlRuntimeName(suffix: "B_T");
+        }
+
+        public override bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        {
+            var fValid = base.CheckTypes(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            Contracts.Assert(returnType.IsTable);
+
+            var arg = args[0];
+            var argType = argTypes[0];
+            fValid &= CheckBooleanColumnType(argType, arg, errors, ref nodeToCoercedTypeMap);
+
+            var rowType = DType.EmptyRecord.Add(new TypedName(DType.Boolean, ColumnName_Value));
+            returnType = rowType.ToTable();
+
+            return fValid;
+        }
+
+        public override bool TryGetParamDescription(string paramName, out string paramDescription)
+        {
+            Contracts.AssertNonEmpty(paramName);
+
+            return StringResources.TryGet("AboutBooleanBT_" + paramName, out paramDescription);
+        }
+
+        /// <summary>
+        /// If arg is Table of boolean, no need to make a function call to boolean function. It can just emit the table 
+        /// arg directly.
+        /// </summary>
+        internal override IR.Nodes.IntermediateNode CreateIRCallNode(PowerFx.Syntax.CallNode node, IRTranslator.IRTranslatorContext context, List<IntermediateNode> args, ScopeSymbol scope)
+        {
+            var child = args[0];
+            var rowType = DType.EmptyRecord.Add(new TypedName(DType.Boolean, ColumnName_Value));
+            var booleanTReturnType = rowType.ToTable();
+            if (child.IRContext.ResultType._type == booleanTReturnType)
+            {
+                return child;
+            }
+            else
+            {
+                return base.CreateIRCallNode(node, context, args, scope);
+            }
         }
     }
 

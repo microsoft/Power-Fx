@@ -330,11 +330,6 @@ namespace Microsoft.PowerFx.Core.IR
                 // e.g. For Boolean(true), Instead of IR as Call(Boolean, true) it can be rewritten directly to emit true.
                 var irNode = func.CreateIRCallNode(node, context, args, scope);
 
-                if (scope != null)
-                {
-                    return MaybeInjectCoercion(node, irNode, context);
-                }
-
                 return MaybeInjectCoercion(node, irNode, context);
             }
 
