@@ -2,8 +2,12 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
+using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.IR.Symbols;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
@@ -32,6 +36,47 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
             yield return new[] { TexlStrings.BooleanArg1 };
+        }
+
+        public override bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        {
+            Contracts.AssertValue(args);
+            Contracts.AssertAllValues(args);
+            Contracts.AssertValue(argTypes);
+            Contracts.AssertAllValid(argTypes);
+            Contracts.Assert(args.Length == argTypes.Length);
+            Contracts.AssertValue(errors);
+            Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
+
+            nodeToCoercedTypeMap = null;
+
+            var isValid = true;
+            var argType = argTypes[0];
+            if (!(DType.Boolean.Accepts(argType) || DType.String.Accepts(argType)))
+            {
+                errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrNumberOrStringExpected);
+                isValid = false;
+            }
+
+            returnType = DType.Boolean;
+            return isValid;
+        }
+
+
+        /// <summary>
+        /// If arg is BoolLit node, no need to make a function call to boolean function. It can just emit arg directly.
+        /// </summary>
+        internal override IR.Nodes.IntermediateNode CreateIRCallNode(PowerFx.Syntax.CallNode node, IRTranslator.IRTranslatorContext context, IRTranslator.IRTranslatorVisitor visitor, ScopeSymbol scope, Features features)
+        {
+            var arg = node.Args.Children[0];
+            if(arg is BoolLitNode)
+            {
+                return arg.Accept(visitor, context); 
+            }
+            else
+            {
+                return base.CreateIRCallNode(node, context, visitor, scope, features);
+            }
         }
     }
 
@@ -65,7 +110,26 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             var arg = args[0];
             var argType = argTypes[0];
-            fValid &= CheckStringColumnType(argType, arg, errors, ref nodeToCoercedTypeMap);
+
+            Contracts.Assert(argType.IsValid);
+            Contracts.AssertValue(arg);
+            Contracts.AssertValue(errors);
+
+            IEnumerable<TypedName> columns;
+            if (!argType.IsTable || (columns = argType.GetNames(DPath.Root)).Count() != 1)
+            {
+                errors.EnsureError(DocumentErrorSeverity.Severe, arg, TexlStrings.ErrInvalidSchemaNeedCol);
+                fValid = false;
+            }
+            else
+            {
+                var column = columns.Single();
+                if (!(DType.String.Accepts(column.Type) || DType.Boolean.Accepts(column.Type)))
+                {
+                    errors.EnsureError(DocumentErrorSeverity.Severe, arg, TexlStrings.ErrInvalidSchemaNeedStringCol_Col, column.Name.Value);
+                    fValid = false;
+                }
+            }
 
             var rowType = DType.EmptyRecord.Add(new TypedName(DType.Boolean, ColumnName_Value));
             returnType = rowType.ToTable();
@@ -78,6 +142,25 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertNonEmpty(paramName);
 
             return StringResources.TryGet("AboutBooleanT_" + paramName, out paramDescription);
+        }
+
+        /// <summary>
+        /// If arg is Table of boolean, no need to make a function call to boolean function. It can just emit the table 
+        /// arg directly.
+        /// </summary>
+        internal override IR.Nodes.IntermediateNode CreateIRCallNode(PowerFx.Syntax.CallNode node, IRTranslator.IRTranslatorContext context, IRTranslator.IRTranslatorVisitor visitor, ScopeSymbol scope, Features features)
+        {
+            var children = node.Args.Children[0].Accept(visitor, context);
+            var rowType = DType.EmptyRecord.Add(new TypedName(DType.Boolean, ColumnName_Value));
+            var returnType = rowType.ToTable();
+            if (node.Args.Children[0] is TableNode table && children.IRContext.ResultType._type == returnType)
+            {
+                return node.Args.Children[0].Accept(visitor, context);
+            }
+            else
+            {
+                return base.CreateIRCallNode(node, context, visitor, scope, features);
+            }
         }
     }
 

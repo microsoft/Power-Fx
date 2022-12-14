@@ -53,7 +53,22 @@ Table({Value:false},{Value:true},{Value:true})
 Errors: Error 0-11: The function 'Boolean' has some invalid arguments.|Error 8-10: Invalid schema, expected a one-column table.
 
 >> Boolean(true)
-Errors: Error 0-13: The function 'Boolean' has some invalid arguments.|Error 8-12: Invalid argument type (Boolean). Expecting a Text value instead.
+true
 
 >> Boolean(false)
-Errors: Error 0-14: The function 'Boolean' has some invalid arguments.|Error 8-13: Invalid argument type (Boolean). Expecting a Text value instead.
+false
+
+>> Boolean([false])
+Table({Value:false})
+
+>> Boolean([true, 0, "true"])
+Table({Value:true},{Value:false},{Value:true})
+
+>> Boolean([0, true])
+Table({Value:false},{Value:true})
+
+>> Boolean([0, true, "false"])
+Table({Value:false},{Value:true},{Value:Error({Kind:ErrorKind.InvalidArgument})})
+
+>> Boolean(["true", false])
+Table({Value:true},{Value:false})
