@@ -1,5 +1,4 @@
-﻿
->> Boolean(["true", "True", "TRUE", "false", "False", "FALSE"])
+﻿>> Boolean(["true", "True", "TRUE", "false", "False", "FALSE"])
 Table({Value:true},{Value:true},{Value:true},{Value:false},{Value:false},{Value:false})
 
 >> Boolean(["true", 1])

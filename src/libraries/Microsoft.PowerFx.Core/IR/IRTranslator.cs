@@ -42,7 +42,7 @@ namespace Microsoft.PowerFx.Core.IR
             return (binding.Top.Accept(new IRTranslatorVisitor(binding.Features), new IRTranslatorContext(binding, ruleScopeSymbol)), ruleScopeSymbol);
         }
 
-        internal class IRTranslatorVisitor : TexlFunctionalVisitor<IntermediateNode, IRTranslatorContext>
+        private class IRTranslatorVisitor : TexlFunctionalVisitor<IntermediateNode, IRTranslatorContext>
         {
             private readonly Features _features;
 
@@ -310,6 +310,7 @@ namespace Microsoft.PowerFx.Core.IR
                     {
                         var identifierNode = arg.AsFirstName();
                         Contracts.Assert(identifierNode != null);
+
                         // Transform the identifier node as a string literal
                         var nodeName = context.Binding.TryGetReplacedIdentName(identifierNode.Ident, out var newIdent) ? new DName(newIdent) : identifierNode.Ident.Name;
                         args.Add(new TextLiteralNode(context.GetIRContext(arg, DType.String), nodeName.Value));

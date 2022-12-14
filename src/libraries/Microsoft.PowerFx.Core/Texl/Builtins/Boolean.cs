@@ -65,7 +65,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
 
         /// <summary>
-        /// If arg is BoolLit node, no need to make a function call to boolean function. It can just emit arg directly.
+        /// If arg's result type is Boolean, no need to make a function call to Boolean() function. It can just emit arg directly.
         /// </summary>
         internal override IR.Nodes.IntermediateNode CreateIRCallNode(PowerFx.Syntax.CallNode node, IRTranslator.IRTranslatorContext context, List<IntermediateNode> args, ScopeSymbol scope)
         {
