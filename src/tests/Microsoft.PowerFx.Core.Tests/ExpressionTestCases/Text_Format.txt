@@ -528,10 +528,7 @@
 Error({Kind:ErrorKind.InvalidArgument})
 
 >> Text(1, "00.00 dd-mm-yyyy")
-Errors: Error 0-27: The function 'Text' has some invalid arguments.|Error 8-26: Incorrect format specifier for 'Text'.
+Errors: Error 0-27: The function 'Text' has some invalid arguments.|Warning 8-26: Incorrect format specifier for 'Text'.
 
 >> Text(1, "M#")
-Errors: Error 0-13: The function 'Text' has some invalid arguments.|Error 8-12: Incorrect format specifier for 'Text'.
-
->> Text(1, "M""#""")
-false
+Errors: Error 0-13: The function 'Text' has some invalid arguments.|Warning 8-12: Incorrect format specifier for 'Text'.

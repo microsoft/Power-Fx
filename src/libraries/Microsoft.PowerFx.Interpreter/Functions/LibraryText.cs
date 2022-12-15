@@ -208,7 +208,7 @@ namespace Microsoft.PowerFx.Functions
                     if (TextFormatUtils.IsDateTimeFormat(formatString))
                     {
                         // It's a number, formatted as date/time. Let's convert it to a date/time value first
-                        var newDateTime = Library.NumberToDateTime(runner, context, irContext, new NumberValue[] { num });
+                        var newDateTime = Library.NumberToDateTime(runner, context, IRContext.NotInSource(FormulaType.DateTime), new NumberValue[] { num });
                         resultString = ExpandDateTimeExcelFormatSpecifiers(formatString, "g", newDateTime.Value, culture, runner.CancelationToken);
                     }
                     else
@@ -223,7 +223,7 @@ namespace Microsoft.PowerFx.Functions
 
                     if (args[0] is TimeValue t)
                     {
-                        dateTimeValue = Library.TimeToDateTime(runner, context, irContext, new TimeValue[] { t });
+                        dateTimeValue = Library.TimeToDateTime(runner, context, IRContext.NotInSource(FormulaType.DateTime), new TimeValue[] { t });
                     }
                     else if (args[0] is DateValue d)
                     {
@@ -237,7 +237,7 @@ namespace Microsoft.PowerFx.Functions
                     if (TextFormatUtils.IsNumericFormat(formatString))
                     {
                         // It's a datetime, formatted as number. Let's convert it to a number value first
-                        var newNumber = Library.DateTimeToNumber(irContext, new DateTimeValue[] { dateTimeValue });
+                        var newNumber = Library.DateTimeToNumber(IRContext.NotInSource(FormulaType.Number), new DateTimeValue[] { dateTimeValue });
                         resultString = newNumber.Value.ToString(formatString ?? "g", culture);
                     }
                     else
