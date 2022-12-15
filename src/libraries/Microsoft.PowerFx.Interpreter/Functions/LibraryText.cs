@@ -209,7 +209,7 @@ namespace Microsoft.PowerFx.Functions
                     {
                         // It's a number, formatted as date/time. Let's convert it to a date/time value first
                         var newDateTime = Library.NumberToDateTime(runner, context, IRContext.NotInSource(FormulaType.DateTime), new NumberValue[] { num });
-                        resultString = ExpandDateTimeExcelFormatSpecifiers(formatString, "g", newDateTime.Value, culture, runner.CancelationToken);
+                        resultString = ExpandDateTimeExcelFormatSpecifiers(formatString, "g", newDateTime.Value, culture, runner.CancellationToken);
                     }
                     else
                     {
@@ -242,7 +242,7 @@ namespace Microsoft.PowerFx.Functions
                     }
                     else
                     {
-                        resultString = ExpandDateTimeExcelFormatSpecifiers(formatString, "g", dateTimeValue.Value, culture, runner.CancelationToken);
+                        resultString = ExpandDateTimeExcelFormatSpecifiers(formatString, "g", dateTimeValue.Value, culture, runner.CancellationToken);
                     }
                     break;
             }
@@ -326,12 +326,14 @@ namespace Microsoft.PowerFx.Functions
 
         private static string ResolveDateTimeFormatAmbiguities(string format, DateTime dateTime, CultureInfo culture, CancellationToken cancellationToken)
         {
-            format = ReplaceDoubleQuotedStrings(format, out var replaceList, cancellationToken);        
-            format = TokenizeDatetimeFormat(format, cancellationToken);
-            format = DetokenizeDatetimeFormat(format, dateTime, culture);
-            format = RestoreDoubleQuotedStrings(format, replaceList, cancellationToken);
+            var resultString = format;
 
-            return format;
+            resultString = ReplaceDoubleQuotedStrings(resultString, out var replaceList, cancellationToken);
+            resultString = TokenizeDatetimeFormat(resultString, cancellationToken);
+            resultString = DetokenizeDatetimeFormat(resultString, dateTime, culture);
+            resultString = RestoreDoubleQuotedStrings(resultString, replaceList, cancellationToken);
+
+            return resultString;
         }
 
         private static string RestoreDoubleQuotedStrings(string format, List<string> replaceList, CancellationToken cancellationToken)
@@ -375,19 +377,19 @@ namespace Microsoft.PowerFx.Functions
 
             // Day component            
             format = _daysDetokenizeRegex.Replace(format, dateTime.ToString("dddd", culture))
-                          .Replace("\u0004\u0004\u0004", dateTime.ToString("dddd", culture).Substring(0, 3))
+                          .Replace("\u0004\u0004\u0004", dateTime.ToString("ddd", culture))
                           .Replace("\u0004\u0004", dateTime.ToString("dd", culture))
                           .Replace("\u0004", dateTime.ToString("%d", culture));
 
             // Month component
             format = _monthsDetokenizeRegex.Replace(format, dateTime.ToString("MMMM", culture))
-                          .Replace("\u0003\u0003\u0003", dateTime.ToString("MMMM", culture).Substring(0, 3))
+                          .Replace("\u0003\u0003\u0003", dateTime.ToString("MMM", culture))
                           .Replace("\u0003\u0003", dateTime.ToString("MM", culture))
                           .Replace("\u0003", dateTime.ToString("%M", culture));
 
             // Year component
             format = _yearsDetokenizeRegex.Replace(format, dateTime.ToString("yyyy", culture));
-            format = _years2DetokenizeRegex.Replace(format, dateTime.ToString("yyyy", culture).Substring(2, 2));
+            format = _years2DetokenizeRegex.Replace(format, dateTime.ToString("yy", culture));
 
             // Hour component
             format = _hoursDetokenizeRegex.Replace(format, hasAmPm ? dateTime.ToString("hh", culture) : dateTime.ToString("HH", culture))

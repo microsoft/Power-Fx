@@ -33,7 +33,7 @@ namespace Microsoft.PowerFx
 
         private readonly CancellationToken _cancellationToken;
 
-        internal CancellationToken CancelationToken => _cancellationToken;
+        internal CancellationToken CancellationToken => _cancellationToken;
 
         public EvalVisitor(CultureInfo cultureInfo, CancellationToken cancellationToken, ReadOnlySymbolValues runtimeConfig = null)
         {

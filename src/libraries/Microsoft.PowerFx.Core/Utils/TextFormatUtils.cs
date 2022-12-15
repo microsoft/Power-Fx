@@ -11,7 +11,7 @@ namespace Microsoft.PowerFx.Core.Utils
 {
     internal sealed class TextFormatUtils
     {
-        static public DateTime BaseDateTime => new DateTime(1899, 12, 30, 0, 0, 0, 0, DateTimeKind.Local);
+        static readonly private Regex _formatWithoutZeroSubsecondsRegex = new Regex(@"[sS]\.?(0+)", RegexOptions.Compiled);
 
         public static bool IsValidFormatArg(string formatArg, out bool hasDateTimeFmt, out bool hasNumericFmt)
         {
@@ -34,7 +34,7 @@ namespace Microsoft.PowerFx.Core.Utils
             {
                 // Check if the date time format contains '0's after the seconds specifier, which
                 // is used for fractional seconds - in which case it is valid
-                var formatWithoutZeroSubseconds = Regex.Replace(formatArg, @"[sS]\.?(0+)",
+                var formatWithoutZeroSubseconds = _formatWithoutZeroSubsecondsRegex.Replace(formatArg,
                     m => m.Groups[1].Success ? "" : m.Groups[1].Value);
                 hasNumericFmt = formatWithoutZeroSubseconds.IndexOfAny(new char[] { '0', '#' }) >= 0;
             }
