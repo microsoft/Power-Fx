@@ -7,7 +7,6 @@ using System.Linq;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Diagnostics.Windows;
 using BenchmarkDotNet.Diagnostics.Windows.Configs;
-using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 
@@ -16,7 +15,7 @@ namespace Microsoft.PowerFx.Performance.Tests
     [EtwProfiler] // https://benchmarkdotnet.org/articles/features/etwprofiler.html
     [CsvExporter] // https://benchmarkdotnet.org/articles/configs/exporters.html
     [MinColumn, Q1Column, MeanColumn, Q3Column, MaxColumn]
-    public class PerformanceTest1 : PowerFxTest
+    public class PerformanceTest1
     {
         private PowerFxConfig powerFxConfig;
         private Engine engine;

@@ -8,6 +8,7 @@
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
     <StartupObject>Microsoft.PowerFx.Performance.Tests.Program</StartupObject>
     <LangVersion>9.0</LangVersion>
+    <AssemblyName>Microsoft.PowerFx.Performance.Benchmarks</AssemblyName>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)'!='Debug' or '$(TURN_OFF_WARNING_AS_ERROR)'!='True' ">
@@ -23,14 +24,7 @@
     <PackageReference Include="BenchmarkDotNet" Version="0.13.2" />
     <PackageReference Include="BenchmarkDotNet.Diagnostics.Windows" Version="0.13.2" />
     <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="6.0.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
-    <PackageReference Include="xunit" Version="2.4.1" />
-    <PackageReference Include="xunit.extensibility.core" Version="2.4.1" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
@@ -40,7 +34,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\libraries\Microsoft.PowerFx.Core\Microsoft.PowerFx.Core.csproj" />
     <ProjectReference Include="..\..\libraries\Microsoft.PowerFx.Interpreter\Microsoft.PowerFx.Interpreter.csproj" />
-    <ProjectReference Include="..\Microsoft.PowerFx.Core.Tests\Microsoft.PowerFx.Core.Tests.csproj" />
   </ItemGroup>  
 
 </Project>
