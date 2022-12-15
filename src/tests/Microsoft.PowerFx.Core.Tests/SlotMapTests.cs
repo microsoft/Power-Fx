@@ -69,7 +69,7 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         // Value should be string form of expected slot. 
-        static int Add(SlotMap<string> map, string value)
+        private static int Add(SlotMap<string> map, string value)
         {
             var i = map.Alloc();
             map.SetInitial(i, value);

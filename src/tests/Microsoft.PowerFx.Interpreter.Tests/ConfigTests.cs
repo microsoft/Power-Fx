@@ -80,7 +80,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("displayVariable + 1", "logicalVariable + 1", "displayVariable + 1", 2)]
         [InlineData("logicalVariable + 1", "logicalVariable + 1", "displayVariable + 1", 2)]
         [InlineData("If(true, logicalVariable)", "If(true, logicalVariable)", "If(true, displayVariable)", 1)]
-        public async void TopLevelVariableDisplayName(string expression, string expectedInvariantExpression,string expectedDisplayExpression, double expected)
+        public async void TopLevelVariableDisplayName(string expression, string expectedInvariantExpression, string expectedDisplayExpression, double expected)
         {
             var symbol = new SymbolTable();
 
@@ -96,7 +96,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var check = engine.Check(expression);
             Assert.True(check.IsSuccess);
 
-            var eval = await engine.EvalAsync(expression,CancellationToken.None, runtimeConfig: r1);
+            var eval = await engine.EvalAsync(expression, CancellationToken.None, runtimeConfig: r1);
             Assert.Equal(expected, eval.ToObject());
 
             var actualInvariantExpression = engine.GetInvariantExpression(expression, null);
@@ -104,7 +104,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var actualDisplayExpression = engine.GetDisplayExpression(expression, RecordType.Empty());
             Assert.Equal(expectedDisplayExpression, actualDisplayExpression);
-
         }
 
         // Bind a function, eval it separately.
@@ -632,7 +631,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var r2 = new SymbolValues
             {
-                DebugName = "Runtime-X",                
+                DebugName = "Runtime-X",
             }.Add("x", FormulaValue.New(3));
             var r12 = ReadOnlySymbolValues.Compose(r2, r1);
 

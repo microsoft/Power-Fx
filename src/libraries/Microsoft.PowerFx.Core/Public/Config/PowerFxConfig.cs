@@ -138,7 +138,6 @@ namespace Microsoft.PowerFx
 
         internal IEnumerable<string> GetSuggestableSymbolName() => SymbolTable._variables.Keys;
 
-
         internal void AddEntity(IExternalEntity entity, DName displayName = default)
             => SymbolTable.AddEntity(entity, displayName);
 
@@ -191,6 +190,6 @@ namespace Microsoft.PowerFx
         }
 
         internal bool TryGetVariable(DName name, out DName displayName)
-            => SymbolTable.TryGetVariable(name, out _, out displayName); 
+            => SymbolTable.TryGetVariable(name, out _, out displayName);
     }
 }

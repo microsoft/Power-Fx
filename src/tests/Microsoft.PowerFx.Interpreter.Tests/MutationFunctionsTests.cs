@@ -113,6 +113,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
         [Theory]
+
         // Collect
         // Primitives + primitives
         [InlineData("Collect({0},{0})")]

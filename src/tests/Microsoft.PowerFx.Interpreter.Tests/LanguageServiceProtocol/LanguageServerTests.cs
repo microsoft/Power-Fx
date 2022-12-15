@@ -560,7 +560,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Equal(InvalidParams, errorResponse.Error.Code);
         }
 
-        class DummyQuickFixHandler : CodeFixHandler
+        private class DummyQuickFixHandler : CodeFixHandler
         {
             public override async Task<IEnumerable<CodeFixSuggestion>> SuggestFixesAsync(Engine engine, CheckResult checkResult, CancellationToken cancel)
             {
@@ -649,7 +649,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 
             // Fail handler was invokde, but didn't block us. 
             Assert.Equal(1, failHandler._counter); // Invoked
-            Assert.Equal(1, errorList.Count);
+            Assert.Single(errorList);
         }
 
         // Test a codefix using a customization, ICodeFixHandler
@@ -809,7 +809,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
                         Uri = documentUri
                     },
                     Command = CommandName.CodeActionApplied,
-                    Argument = ""
+                    Argument = string.Empty
                 }
             }));
 

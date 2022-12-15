@@ -62,7 +62,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            var fArgsValid = base.CheckTypes(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fArgsValid = CheckTypes(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
 
             // The first arg determines the scope type for the lambda params, and the return type.
             fArgsValid &= ScopeInfo.CheckInput(args[0], argTypes[0], errors, out var typeScope);
@@ -107,7 +107,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                     if (nameArgType.Kind != DKind.String || strLitNode == null)
                     {
-                        fArgsValid = false; 
+                        fArgsValid = false;
 
                         // Argument '{0}' is invalid, expected a text literal.
                         errors.EnsureError(DocumentErrorSeverity.Severe, nameArg, TexlStrings.ErrExpectedStringLiteralArg_Name, nameArg.ToString());

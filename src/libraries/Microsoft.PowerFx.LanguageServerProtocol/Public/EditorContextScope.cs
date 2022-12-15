@@ -95,6 +95,7 @@ namespace Microsoft.PowerFx
             {
                 throw new InvalidOperationException($"Handler '{handlerName}' already exists");
             }
+
             _handlers.Add(handlerName, codeFixHandler);
         }
 

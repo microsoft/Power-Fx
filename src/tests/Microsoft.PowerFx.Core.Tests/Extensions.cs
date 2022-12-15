@@ -129,7 +129,6 @@ namespace Microsoft.PowerFx.Core.Tests
                     sb.Append(TexlLexer.EscapeName(kvp2.Value.Value));
                 }
 
-
                 sb.Append(":");
                 kvp.Value.AppendTo(sb);
                 strPre = ", ";

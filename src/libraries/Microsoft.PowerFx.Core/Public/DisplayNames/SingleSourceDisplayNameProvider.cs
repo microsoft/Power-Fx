@@ -90,7 +90,6 @@ namespace Microsoft.PowerFx.Core
                 var logicalToDisplay = _logicalToDisplay.Remove(lookupName);
                 var displayToLogic = _displayToLogical.Remove(displayName);
                 return new SingleSourceDisplayNameProvider(logicalToDisplay, displayToLogic);
-
             }
             else if (_displayToLogical.TryGetValue(lookupName, out var logicalName))
             {

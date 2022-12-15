@@ -153,7 +153,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var lookup = r1.GetService(typeof(MyService));
             Assert.Same(lookup, service1);
 
-            var r2 = new SymbolValues();            
+            var r2 = new SymbolValues();
             var r21 = ReadOnlySymbolValues.Compose(r2, r1);
 
             // Finds in child
@@ -275,7 +275,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             // chcek missing 
             found = symbolTable.TryLookupSlot("missing", out var slot3);
             Assert.False(found);
-            Assert.Null(slot3);            
+            Assert.Null(slot3);
         }
 
         [Fact]
@@ -309,7 +309,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var r2 = NewRowScope(record, r1);
 
             var table = r2.SymbolTable;
-            
+
             var engine = new RecalcEngine();
 
             var result = engine.EvalAsync("ThisRecord.a + a + b", CancellationToken.None, runtimeConfig: r2).Result;
@@ -343,7 +343,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             public override IEnumerable<string> FieldNames => throw new NotImplementedException();
 
             public override bool Equals(object other) => throw new NotImplementedException();
-            
+
             public override int GetHashCode() => throw new NotImplementedException();
         }
 
@@ -386,7 +386,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.Equal("x2", result.ToObject());
 
             culture2 = r3.GetService<CultureInfo>();
-            Assert.Same(culture1, culture2);           
+            Assert.Same(culture1, culture2);
         }
 
         [Fact]
@@ -441,7 +441,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         {
             var symbolTable = new SymbolTable
             {
-                 DebugName = "My Locals"
+                DebugName = "My Locals"
             };
             var slot1 = symbolTable.AddVariable("x", FormulaType.Number);
 
@@ -473,7 +473,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             Assert.Equal("v2=20;|v1=1;v2=<shadow>;|", Get(sym2));
 
-            sym2.UpdateValue("v2", FormulaValue.New(21));            
+            sym2.UpdateValue("v2", FormulaValue.New(21));
             Assert.Equal("v2=21;|v1=1;v2=<shadow>;|", Get(sym2));
             Assert.Equal("v1=1;v2=2;|", Get(sym1)); // v2 in parent not updated 
 
@@ -511,7 +511,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var sym2 = ReadOnlySymbolValues.Compose(sym1, sym2a);
 
-            sym2.UpdateValue("v2a", FormulaValue.New(2));            
+            sym2.UpdateValue("v2a", FormulaValue.New(2));
             Assert.Equal("|v2a=2;|", Get(sym2));
         }
 
@@ -531,7 +531,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.Equal("num=11;|", Get(sym));
 
             // No 'ThisRecord'
-            var ok = sym.TryGetValue("ThisRecord", out var x);            
+            var ok = sym.TryGetValue("ThisRecord", out var x);
             Assert.False(ok);
             Assert.Null(x);
 
@@ -592,7 +592,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var symTable1 = new SymbolTable { DebugName = "L1" };
             var slot = symTable1.AddVariable("x", FormulaType.Number);
 
-            var record = FormulaValue.NewRecordFromFields(                
+            var record = FormulaValue.NewRecordFromFields(
                 new NamedValue("x", FormulaValue.New(11)));
             var recordType = record.Type;
 
@@ -667,12 +667,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         {
             // Get meaningful error if we eval with the "wrong" symbols 
             var symTable1 = new SymbolTable { DebugName = "L1" };
-            symTable1.AddVariable("var1", FormulaType.Number); 
+            symTable1.AddVariable("var1", FormulaType.Number);
 
             var engine = new RecalcEngine();
             var check = engine.Check("1+2", symbolTable: symTable1);
 
-            
             var symTable2 = new SymbolTable { DebugName = "L2" };
             var symValues2 = symTable2.CreateValues();
             var run = check.GetEvaluator();
@@ -706,7 +705,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var symTable = ReadOnlySymbolTable.Compose(symTableThisItem, symTableGlobals);
 
             var expr = "globalVar + ThisItem";
-            
+
             // Compile once outside the loop, then run many times. 
             var engine = new RecalcEngine();
             var check = engine.Check(expr, symbolTable: symTable);
@@ -731,8 +730,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
                 // In the loop, just eval.
                 var result = run.Eval(symValues);
-
-                var expected = (double)1000 + i; // matches 'expr'
+                var expected = 1000D + i; // matches 'expr'
                 Assert.Equal(expected, result.ToObject());
             });
 
@@ -752,7 +750,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 var symValuesAll = symTableAll.CreateValues(symValuesThisItem);
 
                 var opts = new ParserOptions { AllowsSideEffects = true };
-                var result = engine.EvalAsync("Set(counter, ThisItem);counter", CancellationToken.None, options: opts, runtimeConfig: symValuesAll).Result;
+                var result = await engine.EvalAsync("Set(counter, ThisItem);counter", CancellationToken.None, options: opts, runtimeConfig: symValuesAll);
 
                 Assert.Equal(5.0, result.ToObject());
 
@@ -790,7 +788,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                         sb.Append("<shadow>");
                     }
 
-                    sb.Append(';');             
+                    sb.Append(';');
                 }
 
                 sb.Append('|'); // break between symbol tables.
@@ -829,7 +827,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             throw new InvalidOperationException();
         }
-                
+
         public static bool TryGetValue(this ReadOnlySymbolValues symValues, string name, out FormulaValue value)
         {
             if (symValues.SymbolTable.TryLookupSlot(name, out var slot))

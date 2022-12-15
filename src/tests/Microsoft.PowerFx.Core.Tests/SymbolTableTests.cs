@@ -166,11 +166,11 @@ namespace Microsoft.PowerFx.Core.Tests
 
             var s12 = ReadOnlySymbolTable.Compose(s1, s2);
 
-            Assert.Equal(0, s12.Functions.Count());
+            Assert.Empty(s12.Functions);
             
             s2.AddFunction(func2);
             var funcs = s12.Functions.ToArray();
-            Assert.Equal(1, funcs.Length);
+            Assert.Single(funcs);
             Assert.Same(func2, funcs[0]);
 
             // Superceded 

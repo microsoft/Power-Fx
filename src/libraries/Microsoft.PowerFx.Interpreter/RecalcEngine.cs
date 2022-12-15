@@ -97,7 +97,7 @@ namespace Microsoft.PowerFx
             if (Formulas.TryGetValue(slot.SlotIndex, out var info))
             {
                 if (!info.IsFormula)
-                {    
+                {
                     // IF we've updated a non-formula (variable), then trigger the recalc chain.
                     // Cascading formula recalc will be triggered by Recalc chain. 
                     Recalc(info.Name);
@@ -150,7 +150,7 @@ namespace Microsoft.PowerFx
         {
             return EvalAsync(expressionText, CancellationToken.None, parameters, options).Result;
         }
-      
+
         public async Task<FormulaValue> EvalAsync(string expressionText, CancellationToken cancellationToken, RecordValue parameters, ParserOptions options = null)
         {
             if (parameters == null)
@@ -327,7 +327,7 @@ namespace Microsoft.PowerFx
             {
                 if (fi._usedBy.Count == 0)
                 {
-                    if(fi._dependsOn != null)
+                    if (fi._dependsOn != null)
                     {
                         foreach (var dependsOnName in fi._dependsOn)
                         {
@@ -380,9 +380,9 @@ namespace Microsoft.PowerFx
             {
                 if (slot.Owner != _symbolTable)
                 {
-                    throw _symbolTable.NewBadSlotException(slot); 
+                    throw _symbolTable.NewBadSlotException(slot);
                 }
-                    
+
                 info = Formulas[slot.SlotIndex];
                 return true;
             }
@@ -400,6 +400,7 @@ namespace Microsoft.PowerFx
                 type = FormulaType.Build(nameLookupInfo.Type);
                 return true;
             }
+
             return false;
         }
     } // end class RecalcEngine
