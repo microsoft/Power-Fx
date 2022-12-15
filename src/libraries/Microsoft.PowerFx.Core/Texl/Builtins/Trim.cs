@@ -38,13 +38,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override DelegationCapability FunctionDelegationCapability => DelegationCapability.Trim;
 
-        public override bool IsRowScopedServerDelegatable(CallNode callNode, TexlBinding binding, OperationCapabilityMetadata metadata)
+        public override bool IsRowScopedServerDelegatable(CallNode callNode, TexlBinding binding, OperationCapabilityMetadata metadata, bool generateHints = true)
         {
             Contracts.AssertValue(callNode);
             Contracts.AssertValue(binding);
             Contracts.AssertValue(metadata);
 
-            return base.IsRowScopedServerDelegatable(callNode, binding, metadata);
+            return base.IsRowScopedServerDelegatable(callNode, binding, metadata, generateHints);
         }
     }
 

@@ -19,7 +19,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         {
         }
 
-        public override bool IsRowScopedServerDelegatable(CallNode callNode, TexlBinding binding, OperationCapabilityMetadata metadata)
+        public override bool IsRowScopedServerDelegatable(CallNode callNode, TexlBinding binding, OperationCapabilityMetadata metadata, bool generateHints = true)
         {
             return false;
         }

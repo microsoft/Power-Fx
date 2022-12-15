@@ -702,7 +702,7 @@ namespace Microsoft.PowerFx.Core.Functions
 
         // Returns true if function is row scoped and supports delegation.
         // Needs to be overriden by functions (For example, IsBlank) which are not server delegatable themselves but can become one when scoped inside a delegatable function.
-        public virtual bool IsRowScopedServerDelegatable(CallNode callNode, TexlBinding binding, OperationCapabilityMetadata metadata)
+        public virtual bool IsRowScopedServerDelegatable(CallNode callNode, TexlBinding binding, OperationCapabilityMetadata metadata, bool generateHints = true)
         {
             Contracts.AssertValue(callNode);
             Contracts.AssertValue(binding);
@@ -1209,7 +1209,7 @@ namespace Microsoft.PowerFx.Core.Functions
             return false;
         }
 
-        public virtual IOpDelegationStrategy GetOpDelegationStrategy(BinaryOp op, BinaryOpNode opNode)
+        public virtual IOpDelegationStrategy GetOpDelegationStrategy(BinaryOp op, BinaryOpNode opNode, bool generateHints = true)
         {
             Contracts.AssertValueOrNull(opNode);
 
@@ -1218,10 +1218,10 @@ namespace Microsoft.PowerFx.Core.Functions
                 Contracts.AssertValue(opNode);
                 Contracts.Assert(opNode.Op == op);
 
-                return new InOpDelegationStrategy(opNode, this);
+                return new InOpDelegationStrategy(opNode, this, generateHints);
             }
 
-            return new DefaultBinaryOpDelegationStrategy(op, this);
+            return new DefaultBinaryOpDelegationStrategy(op, this, generateHints);
         }
 
         // This updates the field projection info for datasources. For most of the functions, binder takes care of it.
@@ -1232,24 +1232,24 @@ namespace Microsoft.PowerFx.Core.Functions
             return false;
         }
 
-        public IOpDelegationStrategy GetOpDelegationStrategy(UnaryOp op)
+        public IOpDelegationStrategy GetOpDelegationStrategy(UnaryOp op, bool generateHints = true)
         {
-            return new DefaultUnaryOpDelegationStrategy(op, this);
+            return new DefaultUnaryOpDelegationStrategy(op, this, generateHints);
         }
 
-        public ICallNodeDelegatableNodeValidationStrategy GetCallNodeDelegationStrategy()
+        public ICallNodeDelegatableNodeValidationStrategy GetCallNodeDelegationStrategy(bool generateHints = true)
         {
-            return new DelegationValidationStrategy(this);
+            return new DelegationValidationStrategy(this, generateHints);
         }
 
-        public IDottedNameNodeDelegatableNodeValidationStrategy GetDottedNameNodeDelegationStrategy()
+        public IDottedNameNodeDelegatableNodeValidationStrategy GetDottedNameNodeDelegationStrategy(bool generateHints = true)
         {
-            return new DelegationValidationStrategy(this);
+            return new DelegationValidationStrategy(this, generateHints);
         }
 
-        public IFirstNameNodeDelegatableNodeValidationStrategy GetFirstNameNodeDelegationStrategy()
+        public IFirstNameNodeDelegatableNodeValidationStrategy GetFirstNameNodeDelegationStrategy(bool generateHints = true)
         {
-            return new DelegationValidationStrategy(this);
+            return new DelegationValidationStrategy(this, generateHints);
         }
 
         // Check the type of a specified node against an expected type (either desiredType or DType.Table with a desiredType column)

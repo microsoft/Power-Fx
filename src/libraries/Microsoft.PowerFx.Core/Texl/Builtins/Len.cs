@@ -33,9 +33,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override DelegationCapability FunctionDelegationCapability => DelegationCapability.Length;
 
-        public override bool IsRowScopedServerDelegatable(CallNode callNode, TexlBinding binding, OperationCapabilityMetadata metadata)
+        public override bool IsRowScopedServerDelegatable(CallNode callNode, TexlBinding binding, OperationCapabilityMetadata metadata, bool generateHints = true)
         {
-            return base.IsRowScopedServerDelegatable(callNode, binding, metadata);
+            return base.IsRowScopedServerDelegatable(callNode, binding, metadata, generateHints);
         }
     }
 

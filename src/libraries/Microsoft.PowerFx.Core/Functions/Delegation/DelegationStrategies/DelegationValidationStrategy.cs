@@ -31,14 +31,17 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
     internal class DelegationValidationStrategy
         : ICallNodeDelegatableNodeValidationStrategy, IDottedNameNodeDelegatableNodeValidationStrategy, IFirstNameNodeDelegatableNodeValidationStrategy
     {
-        public DelegationValidationStrategy(TexlFunction function)
+        public DelegationValidationStrategy(TexlFunction function, bool generateHints = true)
         {
             Contracts.AssertValue(function);
 
             Function = function;
+            GenerateHints = generateHints;
         }
 
         protected TexlFunction Function { get; }
+
+        protected bool GenerateHints { get; }
 
         protected void AddSuggestionMessageToTelemetry(string telemetryMessage, TexlNode node, TexlBinding binding)
         {
@@ -61,6 +64,12 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
         // Helper used to provide hints when we detect non-delegable parts of the expression due to server restrictions.
         protected void SuggestDelegationHint(TexlNode node, TexlBinding binding, ErrorResourceKey? suggestionKey, params object[] args)
         {
+            if (!GenerateHints)
+            {
+                // suppress the delegation hints if only running to generate telemetry
+                return;
+            }
+
             Contracts.AssertValue(node);
             Contracts.AssertValue(binding);
             Contracts.Assert(suggestionKey == null || suggestionKey?.Key != string.Empty);
@@ -339,7 +348,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             }
 
             var callInfo = binding.GetInfo(node);
-            if (callInfo?.Function != null && ((TexlFunction)callInfo.Function).IsRowScopedServerDelegatable(node, binding, metadata))
+            if (callInfo?.Function != null && ((TexlFunction)callInfo.Function).IsRowScopedServerDelegatable(node, binding, metadata, GenerateHints))
             {
                 return true;
             }

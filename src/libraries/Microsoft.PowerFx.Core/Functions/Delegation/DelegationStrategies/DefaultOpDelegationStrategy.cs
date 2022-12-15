@@ -7,8 +7,8 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
 {
     internal sealed class DefaultBinaryOpDelegationStrategy : BinaryOpDelegationStrategy
     {
-        public DefaultBinaryOpDelegationStrategy(BinaryOp op, TexlFunction function)
-            : base(op, function)
+        public DefaultBinaryOpDelegationStrategy(BinaryOp op, TexlFunction function, bool generateHints = true)
+            : base(op, function, generateHints)
         {
         }
     }

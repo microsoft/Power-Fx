@@ -30,7 +30,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         {
         }
 
-        protected bool IsRowScopedServerDelegatableHelper(CallNode callNode, TexlBinding binding, OperationCapabilityMetadata metadata)
+        protected bool IsRowScopedServerDelegatableHelper(CallNode callNode, TexlBinding binding, OperationCapabilityMetadata metadata, bool generateHints)
         {
             Contracts.AssertValue(callNode);
             Contracts.AssertValue(binding);
@@ -58,7 +58,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 switch (argKind)
                 {
                     case NodeKind.FirstName:
-                        var firstNameStrategy = GetFirstNameNodeDelegationStrategy();
+                        var firstNameStrategy = GetFirstNameNodeDelegationStrategy(generateHints);
                         if (!firstNameStrategy.IsValidFirstNameNode(arg.AsFirstName(), binding, null))
                         {
                             return false;
@@ -71,7 +71,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                             return false;
                         }
 
-                        var cNodeStrategy = GetCallNodeDelegationStrategy();
+                        var cNodeStrategy = GetCallNodeDelegationStrategy(generateHints);
                         if (!cNodeStrategy.IsValidCallNode(arg.AsCall(), binding, metadata))
                         {
                             return false;
@@ -82,7 +82,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         break;
                     case NodeKind.DottedName:
                         {
-                            var dottedStrategy = GetDottedNameNodeDelegationStrategy();
+                            var dottedStrategy = GetDottedNameNodeDelegationStrategy(generateHints);
                             return dottedStrategy.IsValidDottedNameNode(arg.AsDottedName(), binding, metadata, null);
                         }
 

@@ -5,6 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text;
+using Microsoft.PowerFx.Core.Binding;
+using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Entities.Delegation;
 using Microsoft.PowerFx.Core.Entities.QueryOptions;
@@ -36,19 +38,30 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
 
     internal class TestDelegationMetadata : IDelegationMetadata
     {
+        DelegationCapability _capability;
+        DType _schema;
+        Core.Functions.Delegation.DelegationMetadata.FilterOpMetadata _filterDelegationMetadata;
+
+        public TestDelegationMetadata(DelegationCapability capability = default, DType schema = default, Core.Functions.Delegation.DelegationMetadata.FilterOpMetadata filterDelegationMetadata = default)
+        {
+            _capability = capability;
+            _schema = schema ?? EntityRecordType._type;
+            _filterDelegationMetadata = filterDelegationMetadata;
+        }
+
         public static RecordType EntityRecordType => RecordType.Empty()
                                                          .Add("logicStr2", FormulaType.String, "MyStr2")
                                                          .Add("logicDate2", FormulaType.DateTime, "MyDate2");
 
-        public DType Schema => EntityRecordType._type;
+        public DType Schema => _schema;
 
-        public DelegationCapability TableAttributes => throw new NotImplementedException();
+        public DelegationCapability TableAttributes => _capability;
 
-        public DelegationCapability TableCapabilities => throw new NotImplementedException();
+        public DelegationCapability TableCapabilities => _capability;
 
         public Core.Functions.Delegation.DelegationMetadata.SortOpMetadata SortDelegationMetadata => throw new NotImplementedException();
 
-        public Core.Functions.Delegation.DelegationMetadata.FilterOpMetadata FilterDelegationMetadata => throw new NotImplementedException();
+        public Core.Functions.Delegation.DelegationMetadata.FilterOpMetadata FilterDelegationMetadata => _filterDelegationMetadata;
 
         public Core.Functions.Delegation.DelegationMetadata.GroupOpMetadata GroupDelegationMetadata => throw new NotImplementedException();
 
@@ -118,19 +131,19 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
 
         public string Name { get; }
 
-        public bool IsSelectable => throw new NotImplementedException();
+        public virtual bool IsSelectable => throw new NotImplementedException();
 
-        public bool IsDelegatable => throw new NotImplementedException();
+        public virtual bool IsDelegatable => throw new NotImplementedException();
 
         public bool RequiresAsync => throw new NotImplementedException();
 
         public IExternalDataEntityMetadataProvider DataEntityMetadataProvider => ExternalDataEntityMetadataProvider;
 
-        public DataSourceKind Kind => throw new NotImplementedException();
+        public virtual DataSourceKind Kind => throw new NotImplementedException();
 
         public IExternalTableMetadata TableMetadata => throw new NotImplementedException();
 
-        public DelegationMetadata DelegationMetadata => throw new NotImplementedException();
+        public virtual IDelegationMetadata DelegationMetadata => throw new NotImplementedException();
 
         public DName EntityName => new DName(Name);
 
@@ -138,7 +151,7 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
 
         public bool IsPageable => false;
 
-        public TabularDataQueryOptions QueryOptions => throw new NotImplementedException();
+        public virtual TabularDataQueryOptions QueryOptions => throw new NotImplementedException();
 
         public bool IsConvertingDisplayNameMapping => false;
 
@@ -146,7 +159,7 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
 
         public BidirectionalDictionary<string, string> PreviousDisplayNameMapping => null;
 
-        IDelegationMetadata IExternalDataSource.DelegationMetadata => throw new NotImplementedException();
+        IDelegationMetadata IExternalDataSource.DelegationMetadata => DelegationMetadata;
 
         public bool CanIncludeExpand(IExpandInfo expandToAdd)
         {
@@ -158,7 +171,7 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
             throw new NotImplementedException();
         }
 
-        public bool CanIncludeSelect(string selectColumnName)
+        public virtual bool CanIncludeSelect(string selectColumnName)
         {
             throw new NotImplementedException();
         }
@@ -168,15 +181,83 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
             throw new NotImplementedException();
         }
 
-        public IReadOnlyList<string> GetKeyColumns()
+        public virtual IReadOnlyList<string> GetKeyColumns()
         {
-            throw new NotImplementedException();
+            return new List<string>();
         }
 
         public IEnumerable<string> GetKeyColumns(IExpandInfo expandInfo)
         {
             throw new NotImplementedException();
         }
+    }
+
+    internal class TestDelegableDataSource : TestDataSource
+    {
+        TabularDataQueryOptions _queryOptions;
+        IDelegationMetadata _delegationMetadata;
+
+        internal TestDelegableDataSource(string name, DType schema, IDelegationMetadata delegationMetadata) : base(name, schema)
+        {
+            _queryOptions = new TabularDataQueryOptions(this);
+            _delegationMetadata = delegationMetadata;
+        }
+
+        public override bool IsSelectable => true;
+
+        public override bool IsDelegatable => true;
+
+        public override bool CanIncludeSelect(string selectColumnName)
+        {
+            return true;
+        }
+
+        public override TabularDataQueryOptions QueryOptions => new TabularDataQueryOptions(this);
+
+        public override IDelegationMetadata DelegationMetadata => _delegationMetadata;
+
+        public override DataSourceKind Kind => DataSourceKind.Connected;
+    }
+
+    internal class TestExternalEntityScope : IExternalEntityScope
+    {
+        private SymbolTable _symbol;
+
+        public TestExternalEntityScope(SymbolTable symbol)
+        {
+            this._symbol = symbol;
+        }
+
+        public bool TryGetNamedEnum(DName identName, out DType enumType) => throw new NotImplementedException();
+
+        public bool TryGetCdsDataSourceWithLogicalName(string datasetName, string expandInfoIdentity, out IExternalCdsDataSource dataSource) => throw new NotImplementedException();
+
+        public IExternalTabularDataSource GetTabularDataSource(string identName) => throw new NotImplementedException();
+
+        public bool TryGetEntity<T>(DName currentEntityEntityName, out T externalEntity)
+            where T : class, IExternalEntity
+        {
+            externalEntity = default;
+            NameLookupInfo lookupInfo;
+            if (_symbol.TryGetVariable(currentEntityEntityName, out lookupInfo, out _))
+            {
+                externalEntity = lookupInfo.Data as T;
+                return true;
+            }
+            return false;
+        }
+    }
+
+    internal class DelegatableSymbolTable : SymbolTable
+    {
+        IExternalEntityScope _externalEntityScope;
+
+        public DelegatableSymbolTable() : base()
+        {
+            _externalEntityScope = new TestExternalEntityScope(this);
+        }
+
+        internal override IExternalEntityScope InternalEntityScope => _externalEntityScope;
     }
 
     internal class TestExpandInfo : IExpandInfo

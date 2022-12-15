@@ -349,7 +349,8 @@ namespace Microsoft.PowerFx
         // Methods from INameResolver that we default / don't implement
         IExternalDocument INameResolver.Document => default;
 
-        IExternalEntityScope INameResolver.EntityScope => default;
+        internal virtual IExternalEntityScope InternalEntityScope => default;
+        IExternalEntityScope INameResolver.EntityScope => InternalEntityScope;
 
         IExternalEntity INameResolver.CurrentEntity => default;
 

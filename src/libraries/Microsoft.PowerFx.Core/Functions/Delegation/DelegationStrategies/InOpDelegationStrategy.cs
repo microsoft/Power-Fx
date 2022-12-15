@@ -16,8 +16,8 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
     {
         private readonly BinaryOpNode _binaryOpNode;
 
-        public InOpDelegationStrategy(BinaryOpNode node, TexlFunction function)
-            : base(BinaryOp.In, function)
+        public InOpDelegationStrategy(BinaryOpNode node, TexlFunction function, bool generateHints = true)
+            : base(BinaryOp.In, function, generateHints)
         {
             Contracts.AssertValue(node);
             Contracts.Assert(node.Op == BinaryOp.In);

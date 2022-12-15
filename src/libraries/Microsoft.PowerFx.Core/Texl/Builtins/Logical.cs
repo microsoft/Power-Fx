@@ -87,7 +87,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return fArgsValid;
         }
 
-        public override bool IsRowScopedServerDelegatable(CallNode callNode, TexlBinding binding, OperationCapabilityMetadata metadata)
+        public override bool IsRowScopedServerDelegatable(CallNode callNode, TexlBinding binding, OperationCapabilityMetadata metadata, bool generateHints = true)
         {
             Contracts.AssertValue(callNode);
             Contracts.AssertValue(binding);
@@ -116,7 +116,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 {
                     case NodeKind.FirstName:
                         {
-                            var firstNameStrategy = GetFirstNameNodeDelegationStrategy();
+                            var firstNameStrategy = GetFirstNameNodeDelegationStrategy(generateHints);
                             if (!firstNameStrategy.IsValidFirstNameNode(arg.AsFirstName(), binding, null))
                             {
                                 return false;
@@ -127,10 +127,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                     case NodeKind.Call:
                         {
-                            var cNodeStrategy = GetCallNodeDelegationStrategy();
+                            var cNodeStrategy = GetCallNodeDelegationStrategy(generateHints);
                             if (!cNodeStrategy.IsValidCallNode(arg.AsCall(), binding, metadata))
                             {
-                                SuggestDelegationHint(arg, binding);
+                                if (generateHints)
+                                {
+                                    SuggestDelegationHint(arg, binding);
+                                }
                                 return false;
                             }
 
@@ -139,10 +142,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                     case NodeKind.DottedName:
                         {
-                            var dottedStrategy = GetDottedNameNodeDelegationStrategy();
+                            var dottedStrategy = GetDottedNameNodeDelegationStrategy(generateHints);
                             if (!dottedStrategy.IsValidDottedNameNode(arg.AsDottedName(), binding, metadata, null))
                             {
-                                SuggestDelegationHint(arg, binding);
+                                if (generateHints)
+                                {
+                                    SuggestDelegationHint(arg, binding);
+                                }
                                 return false;
                             }
 
@@ -152,10 +158,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     case NodeKind.BinaryOp:
                         {
                             var opNode = arg.AsBinaryOp();
-                            var binaryOpNodeValidationStrategy = GetOpDelegationStrategy(opNode.Op, opNode);
+                            var binaryOpNodeValidationStrategy = GetOpDelegationStrategy(opNode.Op, opNode, generateHints);
                             if (!binaryOpNodeValidationStrategy.IsSupportedOpNode(opNode, metadata, binding))
                             {
-                                SuggestDelegationHint(arg, binding);
+                                if (generateHints)
+                                {
+                                    SuggestDelegationHint(arg, binding);
+                                }
                                 return false;
                             }
 
@@ -165,10 +174,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     case NodeKind.UnaryOp:
                         {
                             var opNode = arg.AsUnaryOpLit();
-                            var unaryOpNodeValidationStrategy = GetOpDelegationStrategy(opNode.Op);
+                            var unaryOpNodeValidationStrategy = GetOpDelegationStrategy(opNode.Op, generateHints);
                             if (!unaryOpNodeValidationStrategy.IsSupportedOpNode(opNode, metadata, binding))
                             {
-                                SuggestDelegationHint(arg, binding);
+                                if (generateHints)
+                                {
+                                    SuggestDelegationHint(arg, binding);
+                                }
                                 return false;
                             }
 

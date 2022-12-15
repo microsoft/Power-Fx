@@ -35,7 +35,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override DelegationCapability FunctionDelegationCapability => DelegationCapability.Not | DelegationCapability.Filter;
 
         // For binary op node args, we need to use filter delegation strategy. Hence we override this method here.
-        public override IOpDelegationStrategy GetOpDelegationStrategy(BinaryOp op, BinaryOpNode opNode)
+        public override IOpDelegationStrategy GetOpDelegationStrategy(BinaryOp op, BinaryOpNode opNode, bool generateHints = true)
         {
             Contracts.AssertValueOrNull(opNode);
 
@@ -44,13 +44,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 Contracts.AssertValue(opNode);
                 Contracts.Assert(opNode.Op == op);
 
-                return new InOpDelegationStrategy(opNode, BuiltinFunctionsCore.Filter);
+                return new InOpDelegationStrategy(opNode, BuiltinFunctionsCore.Filter, generateHints);
             }
 
-            return new DefaultBinaryOpDelegationStrategy(op, BuiltinFunctionsCore.Filter);
+            return new DefaultBinaryOpDelegationStrategy(op, BuiltinFunctionsCore.Filter, generateHints);
         }
 
-        public override bool IsRowScopedServerDelegatable(CallNode callNode, TexlBinding binding, OperationCapabilityMetadata metadata)
+        public override bool IsRowScopedServerDelegatable(CallNode callNode, TexlBinding binding, OperationCapabilityMetadata metadata, bool generateHints = true)
         {
             Contracts.AssertValue(callNode);
             Contracts.AssertValue(binding);

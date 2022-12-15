@@ -55,13 +55,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.Assert(paramTypes[0] == DType.DateTime);
         }
 
-        public override bool IsRowScopedServerDelegatable(CallNode callNode, TexlBinding binding, OperationCapabilityMetadata metadata)
+        public override bool IsRowScopedServerDelegatable(CallNode callNode, TexlBinding binding, OperationCapabilityMetadata metadata, bool generateHints = true)
         {
             Contracts.AssertValue(callNode);
             Contracts.AssertValue(binding);
             Contracts.AssertValue(metadata);
 
-            return base.IsRowScopedServerDelegatable(callNode, binding, metadata);
+            return base.IsRowScopedServerDelegatable(callNode, binding, metadata, generateHints);
         }
     }
 

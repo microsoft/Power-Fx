@@ -181,5 +181,20 @@ namespace Microsoft.PowerFx
             lookupInfo = default;
             return false;
         }
+
+        internal override IExternalEntityScope InternalEntityScope
+        {
+            get
+            {
+                foreach (INameResolver table in _symbolTables)
+                {
+                    if (table.EntityScope != null)
+                    {
+                        return table.EntityScope;
+                    }
+                }
+                return default;
+            }
+        }
     }
 }

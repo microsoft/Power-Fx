@@ -21,13 +21,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         {
         }
 
-        public override bool IsRowScopedServerDelegatable(CallNode callNode, TexlBinding binding, OperationCapabilityMetadata metadata)
+        public override bool IsRowScopedServerDelegatable(CallNode callNode, TexlBinding binding, OperationCapabilityMetadata metadata, bool generateHints = true)
         {
             Contracts.AssertValue(callNode);
             Contracts.AssertValue(binding);
             Contracts.AssertValue(metadata);
 
-            return IsRowScopedServerDelegatableHelper(callNode, binding, metadata);
+            return IsRowScopedServerDelegatableHelper(callNode, binding, metadata, generateHints);
         }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()

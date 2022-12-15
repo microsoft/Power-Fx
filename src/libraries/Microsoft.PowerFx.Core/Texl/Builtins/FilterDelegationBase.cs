@@ -5,6 +5,7 @@ using System.Numerics;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Functions.Delegation;
 using Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata;
+using Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
@@ -62,15 +63,15 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return true;
         }
 
-        protected bool IsValidDelegatableFilterPredicateNode(TexlNode dsNode, TexlBinding binding, FilterOpMetadata filterMetadata)
+        protected bool IsValidDelegatableFilterPredicateNode(TexlNode dsNode, TexlBinding binding, FilterOpMetadata filterMetadata, bool generateHints = true)
         {
             Contracts.AssertValue(dsNode);
             Contracts.AssertValue(binding);
             Contracts.AssertValue(filterMetadata);
 
-            var firstNameStrategy = GetFirstNameNodeDelegationStrategy();
-            var dottedNameStrategy = GetDottedNameNodeDelegationStrategy();
-            var cNodeStrategy = GetCallNodeDelegationStrategy();
+            var firstNameStrategy = GetFirstNameNodeDelegationStrategy(generateHints);
+            var dottedNameStrategy = GetDottedNameNodeDelegationStrategy(generateHints);
+            var cNodeStrategy = GetCallNodeDelegationStrategy(generateHints);
 
             NodeKind kind;
             kind = dsNode.Kind;
@@ -80,7 +81,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 case NodeKind.BinaryOp:
                     {
                         var opNode = dsNode.AsBinaryOp();
-                        var binaryOpNodeValidationStrategy = GetOpDelegationStrategy(opNode.Op, opNode);
+                        var binaryOpNodeValidationStrategy = GetOpDelegationStrategy(opNode.Op, opNode, generateHints);
                         Contracts.AssertValue(opNode);
 
                         if (!binaryOpNodeValidationStrategy.IsSupportedOpNode(opNode, filterMetadata, binding))
@@ -114,12 +115,15 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 case NodeKind.UnaryOp:
                     {
                         var opNode = dsNode.AsUnaryOpLit();
-                        var unaryOpNodeValidationStrategy = GetOpDelegationStrategy(opNode.Op);
+                        var unaryOpNodeValidationStrategy = GetOpDelegationStrategy(opNode.Op, generateHints);
                         Contracts.AssertValue(opNode);
 
                         if (!unaryOpNodeValidationStrategy.IsSupportedOpNode(opNode, filterMetadata, binding))
                         {
-                            SuggestDelegationHint(dsNode, binding);
+                            if (generateHints)
+                            {
+                                SuggestDelegationHint(dsNode, binding);
+                            }
                             return false;
                         }
 
@@ -140,7 +144,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     {
                         if (kind != NodeKind.BoolLit)
                         {
-                            SuggestDelegationHint(dsNode, binding, string.Format("Not supported node {0}.", kind));
+                            if (generateHints)
+                            {
+                                SuggestDelegationHint(dsNode, binding, string.Format("Not supported node {0}.", kind));
+                            }
                             return false;
                         }
 

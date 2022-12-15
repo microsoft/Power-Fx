@@ -14,8 +14,8 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
     {
         private readonly TexlFunction _function;
 
-        public UnaryOpDelegationStrategy(UnaryOp op, TexlFunction function)
-            : base(function)
+        public UnaryOpDelegationStrategy(UnaryOp op, TexlFunction function, bool generateHints = true)
+            : base(function, generateHints)
         {
             Contracts.AssertValue(function);
 
@@ -89,7 +89,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
                             return false;
                         }
 
-                        var dottedNodeValStrategy = _function.GetDottedNameNodeDelegationStrategy();
+                        var dottedNodeValStrategy = _function.GetDottedNameNodeDelegationStrategy(GenerateHints);
                         return dottedNodeValStrategy.IsValidDottedNameNode(node.AsDottedName(), binding, metadata, opDelStrategy);
                     }
 
@@ -100,13 +100,13 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
                             return false;
                         }
 
-                        var cNodeValStrategy = _function.GetCallNodeDelegationStrategy();
+                        var cNodeValStrategy = _function.GetCallNodeDelegationStrategy(GenerateHints);
                         return cNodeValStrategy.IsValidCallNode(node.AsCall(), binding, metadata);
                     }
 
                 case NodeKind.FirstName:
                     {
-                        var firstNameNodeValStrategy = _function.GetFirstNameNodeDelegationStrategy();
+                        var firstNameNodeValStrategy = _function.GetFirstNameNodeDelegationStrategy(GenerateHints);
                         return firstNameNodeValStrategy.IsValidFirstNameNode(node.AsFirstName(), binding, opDelStrategy);
                     }
 
@@ -118,7 +118,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
                         }
 
                         var unaryOpNode = node.AsUnaryOpLit().VerifyValue();
-                        opDelStrategy = _function.GetOpDelegationStrategy(unaryOpNode.Op).VerifyValue();
+                        opDelStrategy = _function.GetOpDelegationStrategy(unaryOpNode.Op, GenerateHints).VerifyValue();
 
                         var unaryOpDelStrategy = (opDelStrategy as UnaryOpDelegationStrategy).VerifyValue();
                         Contracts.Assert(unaryOpDelStrategy.Op == unaryOpNode.Op);
@@ -140,7 +140,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
                         }
 
                         var binaryOpNode = node.AsBinaryOp().VerifyValue();
-                        var binaryOpNodeDelValidationStrategy = _function.GetOpDelegationStrategy(binaryOpNode.Op, binaryOpNode);
+                        var binaryOpNodeDelValidationStrategy = _function.GetOpDelegationStrategy(binaryOpNode.Op, binaryOpNode, GenerateHints);
                         return binaryOpNodeDelValidationStrategy.IsSupportedOpNode(node.AsBinaryOp(), metadata, binding);
                     }
             }
@@ -166,7 +166,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
                 return false;
             }
 
-            var opDelStrategy = _function.GetOpDelegationStrategy(unaryOpNode.Op);
+            var opDelStrategy = _function.GetOpDelegationStrategy(unaryOpNode.Op, GenerateHints);
             var unaryOpDelStrategy = (opDelStrategy as UnaryOpDelegationStrategy).VerifyValue();
             Contracts.Assert(unaryOpDelStrategy.Op == unaryOpNode.Op);
 
