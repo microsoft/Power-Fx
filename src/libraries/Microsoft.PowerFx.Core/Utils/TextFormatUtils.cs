@@ -11,7 +11,7 @@ namespace Microsoft.PowerFx.Core.Utils
 {
     internal sealed class TextFormatUtils
     {
-        static public DateTime BaseDateTime => new DateTime(1899, 12, 30, 0, 0, 0, 0);
+        static public DateTime BaseDateTime => new DateTime(1899, 12, 30, 0, 0, 0, 0, DateTimeKind.Local);
 
         public static bool IsValidFormatArg(string formatArg, out bool hasDateTimeFmt, out bool hasNumericFmt)
         {
@@ -65,15 +65,6 @@ namespace Microsoft.PowerFx.Core.Utils
             }
 
             return IsValidFormatArg(formatArg, out var hasDateTimeFmt, out _) && hasDateTimeFmt;
-        }
-
-        public static DateTime NumberValueToDateTime(NumberValue numberValue)
-        {
-            var millisecondsPerDay = 86400000; // hours * minutes * seconds * 1000
-            var intPart = (int)Math.Floor(numberValue.Value);
-            var fracPart = numberValue.Value - intPart;
-
-            return BaseDateTime.AddDays(intPart).AddMilliseconds((int)(fracPart * millisecondsPerDay));
         }
     }
 }

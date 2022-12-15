@@ -108,6 +108,16 @@ namespace Microsoft.PowerFx.Functions
             });
         }
 
+        public static ErrorValue GenericInvalidArgument(IRContext irContext, string message)
+        {
+            return new ErrorValue(irContext, new ExpressionError()
+            {
+                Message = message,
+                Span = irContext.SourceContext,
+                Kind = ErrorKind.InvalidArgument
+            });
+        }
+
         public static ErrorValue InvalidBooleanFormatError(IRContext irContext)
         {
             return new ErrorValue(irContext, new ExpressionError()

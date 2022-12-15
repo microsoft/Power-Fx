@@ -175,12 +175,6 @@ namespace Microsoft.PowerFx.Functions
         {
             const int formatSize = 100;
 
-            // Only DateValue and DateTimeValue are supported for now with custom format strings.
-            if (args[0] is StringValue sv)
-            {
-                return new StringValue(irContext, sv.Value);
-            }
-
             string resultString = null;
             string formatString = null;
 
@@ -202,30 +196,54 @@ namespace Microsoft.PowerFx.Functions
             if (formatString != null && formatString.Length > formatSize)
             {
                 var customErrorMessage = StringResources.Get(TexlStrings.ErrTextFormatTooLarge, culture.Name);
-                return CommonErrors.CustomError(irContext, string.Format(customErrorMessage, formatSize));
+                return CommonErrors.GenericInvalidArgument(irContext, string.Format(customErrorMessage, formatSize));
             }
 
             switch (args[0])
             {
+                case StringValue sv:
+                    resultString = sv.Value;
+                    break;
                 case NumberValue num:
                     if (TextFormatUtils.IsDateTimeFormat(formatString))
                     {
                         // It's a number, formatted as date/time. Let's convert it to a date/time value first
-                        resultString = ExpandDateTimeExcelFormatSpecifiers(formatString, "g", TextFormatUtils.NumberValueToDateTime(num), culture, runner.CancelationToken);
+                        var newDateTime = Library.NumberToDateTime(runner, context, irContext, new NumberValue[] { num });
+                        resultString = ExpandDateTimeExcelFormatSpecifiers(formatString, "g", newDateTime.Value, culture, runner.CancelationToken);
                     }
                     else
                     {
                         resultString = num.Value.ToString(formatString ?? "g", culture);
                     }                    
                     break;
-                case DateValue d:
-                    resultString = ExpandDateTimeExcelFormatSpecifiers(formatString, "M/d/yyyy", d.Value, culture, runner.CancelationToken);
-                    break;
-                case DateTimeValue dt:
-                    resultString = ExpandDateTimeExcelFormatSpecifiers(formatString, "g", dt.Value, culture, runner.CancelationToken);
-                    break;
-                case TimeValue t:
-                    resultString = ExpandDateTimeExcelFormatSpecifiers(formatString, "t", _epoch.Add(t.Value), culture, runner.CancelationToken);
+                case DateValue:
+                case DateTimeValue:
+                case TimeValue:
+                    DateTimeValue dateTimeValue;
+
+                    if (args[0] is TimeValue t)
+                    {
+                        dateTimeValue = Library.TimeToDateTime(runner, context, irContext, new TimeValue[] { t });
+                    }
+                    else if (args[0] is DateValue d)
+                    {
+                        dateTimeValue = FormulaValue.New(d.Value);
+                    }
+                    else
+                    {
+                        dateTimeValue = args[0] as DateTimeValue;
+                    }
+
+                    if (TextFormatUtils.IsNumericFormat(formatString))
+                    {
+                        // It's a datetime, formatted as number. Let's convert it to a number value first
+                        var newNumber = Library.DateTimeToNumber(irContext, new DateTimeValue[] { dateTimeValue });
+                        resultString = newNumber.Value.ToString(formatString ?? "g", culture);
+                    }
+                    else
+                    {
+                        resultString = ExpandDateTimeExcelFormatSpecifiers(formatString, "g", dateTimeValue.Value, culture, runner.CancelationToken);
+                    }
                     break;
             }
 
@@ -236,20 +254,14 @@ namespace Microsoft.PowerFx.Functions
 
             return CommonErrors.NotYetImplementedError(irContext, $"Text format for {args[0]?.GetType().Name}");
         }
-
+        
         internal static string ExpandDateTimeExcelFormatSpecifiers(string format, string defaultFormat, DateTime dateTime, CultureInfo culture, CancellationToken cancellationToken)
         {
             if (format == null)
             {
                 return dateTime.ToString(defaultFormat, culture);
             }
-
-            // Is a number format?
-            if (TextFormatUtils.IsNumericFormat(format))
-            {
-                return (dateTime - TextFormatUtils.BaseDateTime).TotalDays.ToString(format ?? defaultFormat, culture);
-            }
-
+            
             // DateTime format
             switch (format.ToLower())
             {
@@ -432,14 +444,24 @@ namespace Microsoft.PowerFx.Functions
                 match = _minutesAfterHoursRegex.Match(format);
             }
 
-            format = Regex.Replace(format, "[mM]", "\u0003");
-            format = Regex.Replace(format, "[dD]", "\u0004");
-            format = Regex.Replace(format, "[yY]", "\u0005");
-            format = Regex.Replace(format, "[hH]", "\u0006");
-            format = Regex.Replace(format, "[sS]", "\u0008");
-            format = format.Replace('0', '\u000E');
+            var sb = new StringBuilder();
+            foreach (var c in format)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
 
-            return format;
+                switch (c)
+                {
+                    case 'm': case 'M': sb.Append('\u0003'); break;
+                    case 'd': case 'D': sb.Append('\u0004'); break;
+                    case 'y': case 'Y': sb.Append('\u0005'); break;
+                    case 'h': case 'H': sb.Append('\u0006'); break;
+                    case 's': case 'S': sb.Append('\u0008'); break;
+                    case '0': sb.Append('\u000E'); break;
+                    default: sb.Append(c); break;
+                }
+            }
+
+            return sb.ToString();
         }
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-isblank-isempty

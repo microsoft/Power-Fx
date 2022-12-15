@@ -112,7 +112,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 // format specifiers. If it does, that's an error according to Excel and our spec.
                 if (!TextFormatUtils.IsValidFormatArg(formatArg, out _, out _))
                 {
-                    errors.EnsureError(DocumentErrorSeverity.Severe, args[1], TexlStrings.ErrIncorrectFormat_Func, Name);
+                    errors.EnsureError(DocumentErrorSeverity.Moderate, args[1], TexlStrings.ErrIncorrectFormat_Func, Name);
                     isValid = false;
                 }
             }
