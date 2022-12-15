@@ -416,28 +416,6 @@ namespace Microsoft.PowerFx.Functions
 
             var pairs = (await Task.WhenAll(arg0.Rows.Select(row => ApplyLambda(runner, context, row, arg1)))).ToList();
 
-            var errors = new List<ErrorValue>();
-            bool allNumbers = true, allStrings = true, allBooleans = true, allDatetimes = true, allDates = true;
-
-            foreach (var (row, distinctValue) in pairs)
-            {
-                allNumbers &= IsValueTypeErrorOrBlank<NumberValue>(distinctValue);
-                allStrings &= IsValueTypeErrorOrBlank<StringValue>(distinctValue);
-                allBooleans &= IsValueTypeErrorOrBlank<BooleanValue>(distinctValue);
-                allDatetimes &= IsValueTypeErrorOrBlank<DateTimeValue>(distinctValue);
-                allDates &= IsValueTypeErrorOrBlank<DateValue>(distinctValue);
-
-                if (distinctValue is ErrorValue errorValue)
-                {
-                    return errorValue;
-                }
-            }
-
-            if (!(allNumbers || allStrings || allBooleans || allDatetimes || allDates))
-            {
-                errors.Add(CommonErrors.RuntimeTypeMismatch(irContext));
-                return ErrorValue.Combine(irContext, errors);
-            }
             return DistinctValueType(pairs, irContext);
         }
 
@@ -535,8 +513,13 @@ namespace Microsoft.PowerFx.Functions
 
             foreach (var (row, distinctValue) in pairs)
             {
-                var key = distinctValue?.ToObject();
-        
+                if (distinctValue is ErrorValue errorValue)
+                {
+                    return errorValue;
+                }
+
+                var key = distinctValue.ToObject();
+
                 if (!lookup.Contains(key))
                 {
                     var insert = FormulaValue.NewRecordFromFields(new NamedValue(name, distinctValue));
