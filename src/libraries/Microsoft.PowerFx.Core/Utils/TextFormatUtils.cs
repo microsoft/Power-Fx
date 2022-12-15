@@ -46,25 +46,5 @@ namespace Microsoft.PowerFx.Core.Utils
 
             return true;
         }
-
-        public static bool IsNumericFormat(string formatArg)
-        {
-            if (formatArg == null)
-            {
-                return false;
-            }
-
-            return IsValidFormatArg(formatArg, out _, out var hasNumericFmt) && hasNumericFmt;
-        }
-
-        public static bool IsDateTimeFormat(string formatArg)
-        {
-            if (formatArg == null)
-            {
-                return false;
-            }
-
-            return IsValidFormatArg(formatArg, out var hasDateTimeFmt, out _) && hasDateTimeFmt;
-        }
     }
 }

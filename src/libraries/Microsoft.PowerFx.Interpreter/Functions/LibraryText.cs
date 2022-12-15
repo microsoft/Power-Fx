@@ -10,6 +10,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using Microsoft.PowerFx.Core.App;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Localization;
@@ -199,13 +200,22 @@ namespace Microsoft.PowerFx.Functions
                 return CommonErrors.GenericInvalidArgument(irContext, string.Format(customErrorMessage, formatSize));
             }
 
+            var hasDateTimeFmt = false;
+            var hasNumberFmt = false;
+
+            if (formatString != null && !TextFormatUtils.IsValidFormatArg(formatString, out hasDateTimeFmt, out hasNumberFmt))
+            {
+                var customErrorMessage = StringResources.Get(TexlStrings.ErrIncorrectFormat_Func, culture.Name);
+                return CommonErrors.GenericInvalidArgument(irContext, string.Format(customErrorMessage, "Text"));
+            }
+
             switch (args[0])
             {
                 case StringValue sv:
                     resultString = sv.Value;
                     break;
                 case NumberValue num:
-                    if (TextFormatUtils.IsDateTimeFormat(formatString))
+                    if (formatString != null && hasDateTimeFmt)
                     {
                         // It's a number, formatted as date/time. Let's convert it to a date/time value first
                         var newDateTime = Library.NumberToDateTime(runner, context, IRContext.NotInSource(FormulaType.DateTime), new NumberValue[] { num });
@@ -234,7 +244,7 @@ namespace Microsoft.PowerFx.Functions
                         dateTimeValue = args[0] as DateTimeValue;
                     }
 
-                    if (TextFormatUtils.IsNumericFormat(formatString))
+                    if (formatString != null && hasNumberFmt)
                     {
                         // It's a datetime, formatted as number. Let's convert it to a number value first
                         var newNumber = Library.DateTimeToNumber(IRContext.NotInSource(FormulaType.Number), new DateTimeValue[] { dateTimeValue });
