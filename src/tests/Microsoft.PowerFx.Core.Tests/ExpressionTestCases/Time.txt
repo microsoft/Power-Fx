@@ -105,7 +105,7 @@ Error({Kind:ErrorKind.Div0})
 "09:24:00"
 
 >> Text(Time(23, 59, 59, 999), "HH:mm:ss.fff")
-"23:59:59.999"
+"23:59:59.fff"
 
 >> Date(2011, 2, 3) + Time(1, 2, 3)
 DateTime(2011,2,3,1,2,3,0)

@@ -1798,6 +1798,10 @@
     <value>Numeric value is too large.</value>
     <comment>Error Message.</comment>
   </data>
+  <data name="ErrTextFormatTooLarge" xml:space="preserve">
+    <value>Format string size can't be more than {0} characters.</value>
+    <comment>Error Message.</comment>
+  </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
     <value>This Data source is invalid. Please fix the error in "Data sources" pane by clicking "Content -&gt; Data sources" or "View -&gt; Options"</value>
     <comment>Error Message.</comment>
