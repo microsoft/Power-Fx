@@ -29,6 +29,7 @@ namespace PowerFxHostSamples
             }
 
             var config = new PowerFxConfig(toenable);
+            config.SymbolTable.EnableMutationFunctions();
 
             config.AddFunction(new HelpFunction());
             config.AddFunction(new ResetFunction());
@@ -157,7 +158,8 @@ namespace PowerFxHostSamples
                     // eval and print everything else
                     else
                     {
-                        var result = _engine.Eval(expr);
+                        var opts = new ParserOptions { AllowsSideEffects = true };
+                        var result = _engine.Eval(expr, options: opts);
 
                         if (result is ErrorValue errorValue)
                         {
