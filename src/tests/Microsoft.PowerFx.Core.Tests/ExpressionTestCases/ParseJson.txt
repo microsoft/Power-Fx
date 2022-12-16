@@ -178,7 +178,7 @@ Table({Value:"1"},{Value:"false"},{Value:"hello"})
 Table({Value:1},{Value:1},{Value:3},{Value:0})
 
 >> ForAll(ParseJSON("[1,2,3]"), If(Value(ThisRecord) < 2, Value(ThisRecord), ThisRecord))
-Errors: Error 74-84: Invalid argument type (UntypedObject). Expecting a Number value instead.|Error 29-85: The function 'If' has some invalid arguments.
+Table({Value:1},{Value:2},{Value:3})
 
 >> ForAll(ParseJSON("[1,2,3]"), ThisItem)
 Errors: Error 29-37: Name isn't valid. 'ThisItem' isn't recognized.|Error 0-38: The function 'ForAll' has some invalid arguments.
