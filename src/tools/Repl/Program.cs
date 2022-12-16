@@ -16,7 +16,7 @@ namespace PowerFxHostSamples
 {
     public static class ConsoleRepl
     {
-        private static RecalcEngine engine;
+        private static RecalcEngine _engine;
         private static bool _formatTable = true;
         private const string OptionFormatTable = "FormatTable";
 
@@ -44,7 +44,7 @@ namespace PowerFxHostSamples
 
             config.AddOptionSet(optionsSet);
 
-            engine = new RecalcEngine(config);
+            _engine = new RecalcEngine(config);
         }
 
         public static void Main()
@@ -58,7 +58,7 @@ namespace PowerFxHostSamples
 
             foreach (Features feature in (Features[])Enum.GetValues(typeof(Features)))
             {
-                if ((engine.Config.Features & feature) == feature && feature != Features.None)
+                if ((_engine.Config.Features & feature) == feature && feature != Features.None)
                 {
                     enabled.Append(" " + feature.ToString());
                 }
@@ -76,6 +76,50 @@ namespace PowerFxHostSamples
             REPL(Console.In, false);
         }
 
+        // Pattern match for Set(x,y) so that we can define the variable
+        public static bool TryMatchSet(string expr, out string arg0name, out FormulaValue varValue)
+        {
+            var parserOptions = new ParserOptions { AllowsSideEffects = true };
+
+            var parse = _engine.Parse(expr);
+            if (parse.IsSuccess)
+            {
+                if (parse.Root.Kind == Microsoft.PowerFx.Syntax.NodeKind.Call)
+                {
+                    if (parse.Root is Microsoft.PowerFx.Syntax.CallNode call)
+                    {
+                        if (call.Head.Name.Value == "Set")
+                        {
+                            // Infer type based on arg1. 
+                            var arg0 = call.Args.ChildNodes[0];
+                            if (arg0 is Microsoft.PowerFx.Syntax.FirstNameNode arg0node)
+                            {
+                                arg0name = arg0node.Ident.Name.Value;
+
+                                var arg1 = call.Args.ChildNodes[1];
+                                var arg1expr = arg1.GetCompleteSpan().GetFragment(expr);
+
+                                var check = _engine.Check(arg1expr);
+                                if (check.IsSuccess)
+                                {
+                                    var arg1Type = check.ReturnType;
+
+                                    varValue = check.GetEvaluator().Eval();                                                                        
+                                    _engine.UpdateVariable(arg0name, varValue);
+
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            varValue = null;
+            arg0name = null;
+            return false;
+        }
+
         public static void REPL(TextReader input, bool echo)
         {
             string expr;
@@ -88,24 +132,22 @@ namespace PowerFxHostSamples
                 try
                 {
                     // variable assignment: Set( <ident>, <expr> )
-                    if ((match = Regex.Match(expr, @"^\s*Set\(\s*(?<ident>\w+)\s*,\s*(?<expr>.*)\)", RegexOptions.Singleline)).Success)
+                    if (TryMatchSet(expr, out var varName, out var varValue))
                     {
-                        var r = engine.Eval(match.Groups["expr"].Value);
-                        Console.WriteLine(match.Groups["ident"].Value + ": " + PrintResult(r));
-                        engine.UpdateVariable(match.Groups["ident"].Value, r);
+                        Console.WriteLine(varName + ": " + PrintResult(varValue));
                     }
 
                     // formula definition: <ident> = <formula>
                     else if ((match = Regex.Match(expr, @"^\s*(?<ident>\w+)\s*=(?<formula>.*)$", RegexOptions.Singleline)).Success)
                     {
-                        engine.SetFormula(match.Groups["ident"].Value, match.Groups["formula"].Value, OnUpdate);
+                        _engine.SetFormula(match.Groups["ident"].Value, match.Groups["formula"].Value, OnUpdate);
                     }
 
                     // function definition: <ident>( <ident> : <type>, ... ) : <type> = <formula>
                     //                      <ident>( <ident> : <type>, ... ) : <type> { <formula>; <formula>; ... }
                     else if (Regex.IsMatch(expr, @"^\s*\w+\((\s*\w+\s*\:\s*\w+\s*,?)*\)\s*\:\s*\w+\s*(\=|\{).*$", RegexOptions.Singleline))
                     {
-                        var res = engine.DefineFunctions(expr);
+                        var res = _engine.DefineFunctions(expr);
                         if (res.Errors.Count() > 0)
                         {
                             throw new Exception("Error: " + res.Errors.First());
@@ -115,7 +157,7 @@ namespace PowerFxHostSamples
                     // eval and print everything else
                     else
                     {
-                        var result = engine.Eval(expr);
+                        var result = _engine.Eval(expr);
 
                         if (result is ErrorValue errorValue)
                         {
@@ -495,7 +537,7 @@ namespace PowerFxHostSamples
                 var column = 0;
                 var funcList = string.Empty;
 #pragma warning disable CS0618 // Type or member is obsolete
-                var funcNames = engine.Config.FunctionInfos.Select(x => x.Name).Distinct();
+                var funcNames = _engine.Config.FunctionInfos.Select(x => x.Name).Distinct();
 #pragma warning restore CS0618 // Type or member is obsolete
 
                 foreach (var func in funcNames)
