@@ -58,7 +58,7 @@
     <Rule Id="SA1026" Action="Error" />
     <Rule Id="SA1027" Action="Error" />
     <Rule Id="SA1028" Action="None" />       <!-- Code should not contain trailing whitespace -->
-    <Rule Id="SA1100" Action="Error" />
+    <Rule Id="SA1100" Action="None" />       <!-- Do not prefix calls with base unless local implementation exists -->
     <Rule Id="SA1102" Action="Error" />
     <Rule Id="SA1103" Action="Error" />
     <Rule Id="SA1104" Action="Error" />
