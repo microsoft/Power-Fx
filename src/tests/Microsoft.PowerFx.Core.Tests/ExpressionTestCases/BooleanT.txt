@@ -30,3 +30,6 @@ Table({Value:false},{Value:true},{Value:Error({Kind:ErrorKind.InvalidArgument})}
 
 >> Boolean([Blank(), true])
 Table({Value:Blank()},{Value:true})
+
+>> Boolean(If(1<0,[false]))
+Blank()
