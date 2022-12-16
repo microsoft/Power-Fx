@@ -33,3 +33,6 @@ Table({Value:Blank()},{Value:true})
 
 >> Boolean(If(1<0,[false]))
 Blank()
+
+>> Boolean(Filter([false], Value))
+Table()
