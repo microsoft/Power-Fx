@@ -57,3 +57,6 @@ Blank()
 
 >> Boolean(If(0<1, true))
 true
+
+>> Boolean(IfError(true, false))
+true
