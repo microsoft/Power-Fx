@@ -3079,6 +3079,26 @@ namespace Microsoft.PowerFx.Core.Types
                 return true;
             }
 
+            if (Kind == DKind.UntypedObject)
+            {
+                isSafe = false;
+                if (typeDest.Kind == DKind.String ||
+                    typeDest.Kind == DKind.Number ||
+                    typeDest.Kind == DKind.Boolean ||
+                    typeDest.Kind == DKind.Date ||
+                    typeDest.Kind == DKind.Time ||
+                    typeDest.Kind == DKind.DateTime)
+                {
+                    coercionType = typeDest;
+                    return true;
+                }
+                else
+                {
+                    coercionType = this;
+                    return false;
+                }
+            }
+
             if (Kind == DKind.Error)
             {
                 isSafe = false;

@@ -35,6 +35,11 @@ namespace Microsoft.PowerFx.Core.IR
                 }
             }
 
+            if (fromType.IsUntypedObject)
+            {
+                return GetUntypedObjectCoercion(toType);
+            }
+
             return FlattenCoercionMatrix(fromType, toType);
         }
 
@@ -349,6 +354,27 @@ namespace Microsoft.PowerFx.Core.IR
             else
             {
                 return CoercionKind.None; // Implicit coercion?
+            }
+        }
+
+        private static CoercionKind GetUntypedObjectCoercion(DType toType)
+        {
+            switch (toType.Kind)
+            {
+                case DKind.String:
+                    return CoercionKind.UntypedToText;
+                case DKind.Boolean:
+                    return CoercionKind.UntypedToBoolean;
+                case DKind.Number:
+                    return CoercionKind.UntypedToNumber;
+                case DKind.Date:
+                    return CoercionKind.UntypedToDate;
+                case DKind.Time:
+                    return CoercionKind.UntypedToTime;
+                case DKind.DateTime:
+                    return CoercionKind.UntypedToDateTime;
+                default:
+                    return CoercionKind.None;
             }
         }
     }
