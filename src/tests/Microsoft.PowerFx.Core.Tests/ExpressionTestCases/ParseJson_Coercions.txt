@@ -1,4 +1,6 @@
-﻿>> If(false, 4, ParseJSON("5"))
+﻿// The If function will attempt to coerce the else clause to the same type as the then clause
+// this allows us to control the exact expected coercion type
+>> If(false, 4, ParseJSON("5"))
 5
 
 >> If(false, "s", ParseJSON("""t"""))
@@ -16,12 +18,12 @@
 >> Text(If(false, Time(0,0,0), TimeValue(ParseJSON("""08:03:05.000"""))), "HH:mm:ss")
 "08:03:05"
 
->> Filter(ParseJSON("[1,2,3]"), true)
-Errors: Error 7-27: Untyped objects cannot be used as the first argument to functions which support record scopes.|Error 0-34: The function 'Filter' has some invalid arguments.
-
 >> Sum(ParseJSON("[1,2,3]"), Blank())
 Errors: Error 4-24: Untyped objects cannot be used as the first argument to functions which support record scopes.|Error 0-34: The function 'Sum' has some invalid arguments.
 
 // Arity error code path for Sum
 >> Sum(ParseJSON("[1,2,3]"))
-Errors: Error 0-25: Untyped objects cannot be used as the first argument to functions which support record scopes.|Error 0-25: The function 'Sum' has some invalid arguments.
+Errors: Error 4-24: Untyped objects cannot be used as the first argument to functions which support record scopes.|Error 0-25: The function 'Sum' has some invalid arguments.
+
+>> Filter(ParseJSON("[1,2,3]"), true)
+Errors: Error 7-27: Untyped objects cannot be used as the first argument to functions which support record scopes.|Error 0-34: The function 'Filter' has some invalid arguments.

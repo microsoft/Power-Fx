@@ -4045,6 +4045,15 @@ namespace Microsoft.PowerFx.Core.Binding
                 }
             }
 
+            private void UntypedObjectScopeError(CallNode node, TexlFunction maybeFunc, TexlNode firstArg)
+            {
+                _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, firstArg, TexlStrings.ErrUntypedObjectScope);
+                _txb.ErrorContainer.Error(node, TexlStrings.ErrInvalidArgs_Func, maybeFunc.Name);
+
+                _txb.SetInfo(node, new CallInfo(maybeFunc, node, null, default, false, _currentScope.Nest));
+                _txb.SetType(node, maybeFunc.ReturnType);
+            }
+
             public override bool PreVisit(CallNode node)
             {
                 AssertValid();
@@ -4251,11 +4260,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     }
                     else
                     {
-                        _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, nodeInput, TexlStrings.ErrUntypedObjectScope);
-                        _txb.ErrorContainer.Error(node, TexlStrings.ErrInvalidArgs_Func, maybeFunc.Name);
-
-                        _txb.SetInfo(node, new CallInfo(maybeFunc, node, null, default, false, _currentScope.Nest));
-                        _txb.SetType(node, maybeFunc.ReturnType);
+                        UntypedObjectScopeError(node, maybeFunc, nodeInput);
 
                         PreVisitBottomUp(node, 1);
                         FinalizeCall(node);
@@ -4837,11 +4842,7 @@ namespace Microsoft.PowerFx.Core.Binding
                         // already an error for this node, add the ErrUntypedObjectScope
                         var functionWithLambdas = functionsWithLambdas.Single();
 
-                        _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, node, TexlStrings.ErrUntypedObjectScope);
-                        _txb.ErrorContainer.Error(node, TexlStrings.ErrInvalidArgs_Func, functionWithLambdas.Name);
-
-                        _txb.SetInfo(node, new CallInfo(functionWithLambdas, node, null, default, false, _currentScope.Nest));
-                        _txb.SetType(node, functionWithLambdas.ReturnType);
+                        UntypedObjectScopeError(node, functionWithLambdas, args[0]);
                         return;
                     }
                 }
