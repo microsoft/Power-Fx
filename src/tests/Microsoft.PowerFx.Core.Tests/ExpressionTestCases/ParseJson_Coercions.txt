@@ -17,4 +17,11 @@
 "08:03:05"
 
 >> Filter(ParseJSON("[1,2,3]"), true)
-Errors: Error 7-27: Invalid argument type.|Error 0-34: The function 'Filter' has some invalid arguments.
+Errors: Error 7-27: Untyped objects cannot be used as the first argument to functions which support record scopes.|Error 0-34: The function 'Filter' has some invalid arguments.
+
+>> Sum(ParseJSON("[1,2,3]"), Blank())
+Errors: Error 4-24: Untyped objects cannot be used as the first argument to functions which support record scopes.|Error 0-34: The function 'Sum' has some invalid arguments.
+
+// Arity error code path for Sum
+>> Sum(ParseJSON("[1,2,3]"))
+Errors: Error 0-25: Untyped objects cannot be used as the first argument to functions which support record scopes.|Error 0-25: The function 'Sum' has some invalid arguments.
