@@ -278,7 +278,7 @@
     <Rule Id="CA1069" Action="None" />
     <Rule Id="CA1070" Action="Warning" />
     <Rule Id="CA1303" Action="Error" />
-    <Rule Id="CA1304" Action="Warning" />       <!-- REQUIRED * CA1304: Specify CultureInfo -->
+    <Rule Id="CA1304" Action="Warning" />    <!-- REQUIRED * CA1304: Specify CultureInfo -->
     <Rule Id="CA1305" Action="None" />       <!-- REQUIRED * CA1305: Specify IFormatProvider -->
     <Rule Id="CA1307" Action="None" />       <!-- REQUIRED * CA1307: Specify StringComparison for clarity -->
     <Rule Id="CA1308" Action="None" />
