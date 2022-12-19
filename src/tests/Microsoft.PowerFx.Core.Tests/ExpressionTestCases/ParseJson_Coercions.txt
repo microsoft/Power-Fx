@@ -27,3 +27,457 @@ Errors: Error 4-24: Untyped objects cannot be used as the first argument to func
 
 >> Filter(ParseJSON("[1,2,3]"), true)
 Errors: Error 7-27: Untyped objects cannot be used as the first argument to functions which support record scopes.|Error 0-34: The function 'Filter' has some invalid arguments.
+
+// Comparison tests
+>> Abs(5)
+5
+
+>> Abs(ParseJSON("5"))
+5
+
+>> Acot(5)
+0.19739555984988066
+
+>> Acot(ParseJSON("5"))
+0.19739555984988066
+
+>> And(true)
+true
+
+>> And(ParseJSON("true"))
+true
+
+>> Atan(5)
+1.373400766945016
+
+>> Atan(ParseJSON("5"))
+1.373400766945016
+
+>> Atan2(5, 5)
+0.7853981633974483
+
+>> Atan2(ParseJSON("5"), 5)
+0.7853981633974483
+
+>> Atan2(5, ParseJSON("5"))
+0.7853981633974483
+
+>> Average(5)
+5
+
+>> Char(36)
+"$"
+
+>> Char(ParseJSON("36"))
+"$"
+
+>> Cos(5)
+0.28366218546322625
+
+>> Cos(ParseJSON("5"))
+0.28366218546322625
+
+>> Cot(5)
+-0.2958129155327455
+
+>> Cot(ParseJSON("5"))
+-0.2958129155327455
+
+>> Day(DateTimeValue("2022-12-19T12:08:45.000Z"))
+19
+
+>> Day(ParseJSON("""2022-12-19T12:08:45.000Z"""))
+19
+
+>> Degrees(5)
+286.4788975654116
+
+>> Degrees(ParseJSON("5"))
+286.4788975654116
+
+>> EndsWith("Hello World", "Hello World")
+true
+
+>> EndsWith(ParseJSON("""Hello World"""), "Hello World")
+true
+
+>> EndsWith("Hello World", ParseJSON("""Hello World"""))
+true
+
+>> Exp(5)
+148.41315910257657
+
+>> Exp(ParseJSON("5"))
+148.41315910257657
+
+>> Find("Hello World", "Hello World")
+1
+
+>> Find(ParseJSON("""Hello World"""), "Hello World")
+1
+
+>> Find("Hello World", ParseJSON("""Hello World"""))
+1
+
+>> Find("Hello World", "Hello World", 5)
+Blank()
+
+>> Find(ParseJSON("""Hello World"""), "Hello World", 5)
+Blank()
+
+>> Find("Hello World", ParseJSON("""Hello World"""), 5)
+Blank()
+
+>> Find("Hello World", "Hello World", ParseJSON("5"))
+Blank()
+
+>> Hour(DateTimeValue("2022-12-19T12:08:45.000Z"))
+4
+
+>> Hour(ParseJSON("""2022-12-19T12:08:45.000Z"""))
+4
+
+>> Int(5)
+5
+
+>> Int(ParseJSON("5"))
+5
+
+>> IsToday(DateTimeValue("2022-12-19T12:08:45.000Z"))
+true
+
+>> IsToday(ParseJSON("""2022-12-19T12:08:45.000Z"""))
+true
+
+>> Left("Hello World", 5)
+"Hello"
+
+>> Left(ParseJSON("""Hello World"""), 5)
+"Hello"
+
+>> Left("Hello World", ParseJSON("5"))
+"Hello"
+
+>> Len("Hello World")
+11
+
+>> Len(ParseJSON("""Hello World"""))
+11
+
+>> Ln(5)
+1.6094379124341003
+
+>> Ln(ParseJSON("5"))
+1.6094379124341003
+
+>> Log(5)
+0.6989700043360187
+
+>> Log(ParseJSON("5"))
+0.6989700043360187
+
+>> Log(5, 5)
+1
+
+>> Log(ParseJSON("5"), 5)
+1
+
+>> Log(5, ParseJSON("5"))
+1
+
+>> Lower("Hello World")
+"hello world"
+
+>> Lower(ParseJSON("""Hello World"""))
+"hello world"
+
+>> Max(5)
+5
+
+>> Mid("Hello World", 5)
+"o World"
+
+>> Mid(ParseJSON("""Hello World"""), 5)
+"o World"
+
+>> Mid("Hello World", ParseJSON("5"))
+"o World"
+
+>> Mid("Hello World", 5, 5)
+"o Wor"
+
+>> Mid(ParseJSON("""Hello World"""), 5, 5)
+"o Wor"
+
+>> Mid("Hello World", ParseJSON("5"), 5)
+"o Wor"
+
+>> Mid("Hello World", 5, ParseJSON("5"))
+"o Wor"
+
+>> Min(5)
+5
+
+>> Minute(DateTimeValue("2022-12-19T12:08:45.000Z"))
+8
+
+>> Minute(ParseJSON("""2022-12-19T12:08:45.000Z"""))
+8
+
+>> Mod(5, 5)
+0
+
+>> Mod(ParseJSON("5"), 5)
+0
+
+>> Mod(5, ParseJSON("5"))
+0
+
+>> Month(DateTimeValue("2022-12-19T12:08:45.000Z"))
+12
+
+>> Month(ParseJSON("""2022-12-19T12:08:45.000Z"""))
+12
+
+>> Not(true)
+false
+
+>> Not(ParseJSON("true"))
+false
+
+>> Or(true)
+true
+
+>> Or(ParseJSON("true"))
+true
+
+>> Power(5, 5)
+3125
+
+>> Power(ParseJSON("5"), 5)
+3125
+
+>> Power(5, ParseJSON("5"))
+3125
+
+>> Proper("Hello World")
+"Hello World"
+
+>> Proper(ParseJSON("""Hello World"""))
+"Hello World"
+
+>> Radians(5)
+0.08726646259971647
+
+>> Radians(ParseJSON("5"))
+0.08726646259971647
+
+>> RandBetween(5, 5)
+5
+
+>> RandBetween(ParseJSON("5"), 5)
+5
+
+>> RandBetween(5, ParseJSON("5"))
+5
+
+>> Replace("Hello World", 5, 5, "Hello World")
+"HellHello Worldld"
+
+>> Replace(ParseJSON("""Hello World"""), 5, 5, "Hello World")
+"HellHello Worldld"
+
+>> Replace("Hello World", ParseJSON("5"), 5, "Hello World")
+"HellHello Worldld"
+
+>> Replace("Hello World", 5, ParseJSON("5"), "Hello World")
+"HellHello Worldld"
+
+>> Replace("Hello World", 5, 5, ParseJSON("""Hello World"""))
+"HellHello Worldld"
+
+>> Right("Hello World", 5)
+"World"
+
+>> Right(ParseJSON("""Hello World"""), 5)
+"World"
+
+>> Right("Hello World", ParseJSON("5"))
+"World"
+
+>> Round(5, 5)
+5
+
+>> Round(ParseJSON("5"), 5)
+5
+
+>> Round(5, ParseJSON("5"))
+5
+
+>> RoundDown(5, 5)
+5
+
+>> RoundDown(ParseJSON("5"), 5)
+5
+
+>> RoundDown(5, ParseJSON("5"))
+5
+
+>> RoundUp(5, 5)
+5
+
+>> RoundUp(ParseJSON("5"), 5)
+5
+
+>> RoundUp(5, ParseJSON("5"))
+5
+
+>> Second(DateTimeValue("2022-12-19T12:08:45.000Z"))
+45
+
+>> Second(ParseJSON("""2022-12-19T12:08:45.000Z"""))
+45
+
+>> Sequence(5)
+Table({Value:1},{Value:2},{Value:3},{Value:4},{Value:5})
+
+>> Sequence(ParseJSON("5"))
+Table({Value:1},{Value:2},{Value:3},{Value:4},{Value:5})
+
+>> Sequence(5, 5)
+Table({Value:5},{Value:6},{Value:7},{Value:8},{Value:9})
+
+>> Sequence(ParseJSON("5"), 5)
+Table({Value:5},{Value:6},{Value:7},{Value:8},{Value:9})
+
+>> Sequence(5, ParseJSON("5"))
+Table({Value:5},{Value:6},{Value:7},{Value:8},{Value:9})
+
+>> Sequence(5, 5, 5)
+Table({Value:5},{Value:10},{Value:15},{Value:20},{Value:25})
+
+>> Sequence(ParseJSON("5"), 5, 5)
+Table({Value:5},{Value:10},{Value:15},{Value:20},{Value:25})
+
+>> Sequence(5, ParseJSON("5"), 5)
+Table({Value:5},{Value:10},{Value:15},{Value:20},{Value:25})
+
+>> Sequence(5, 5, ParseJSON("5"))
+Table({Value:5},{Value:10},{Value:15},{Value:20},{Value:25})
+
+>> Sin(5)
+-0.9589242746631385
+
+>> Sin(ParseJSON("5"))
+-0.9589242746631385
+
+>> Split("Hello World", "Hello World")
+Table({Result:""},{Result:""})
+
+>> Split(ParseJSON("""Hello World"""), "Hello World")
+Table({Result:""},{Result:""})
+
+>> Split("Hello World", ParseJSON("""Hello World"""))
+Table({Result:""},{Result:""})
+
+>> Sqrt(5)
+2.23606797749979
+
+>> Sqrt(ParseJSON("5"))
+2.23606797749979
+
+>> StartsWith("Hello World", "Hello World")
+true
+
+>> StartsWith(ParseJSON("""Hello World"""), "Hello World")
+true
+
+>> StartsWith("Hello World", ParseJSON("""Hello World"""))
+true
+
+>> StdevP(5)
+0
+
+>> Substitute("Hello World", "Hello World", "Hello World")
+"Hello World"
+
+>> Substitute(ParseJSON("""Hello World"""), "Hello World", "Hello World")
+"Hello World"
+
+>> Substitute("Hello World", ParseJSON("""Hello World"""), "Hello World")
+"Hello World"
+
+>> Substitute("Hello World", "Hello World", ParseJSON("""Hello World"""))
+"Hello World"
+
+>> Substitute("Hello World", "Hello World", "Hello World", 5)
+"Hello World"
+
+>> Substitute(ParseJSON("""Hello World"""), "Hello World", "Hello World", 5)
+"Hello World"
+
+>> Substitute("Hello World", ParseJSON("""Hello World"""), "Hello World", 5)
+"Hello World"
+
+>> Substitute("Hello World", "Hello World", ParseJSON("""Hello World"""), 5)
+"Hello World"
+
+>> Substitute("Hello World", "Hello World", "Hello World", ParseJSON("5"))
+"Hello World"
+
+>> Sum(5)
+5
+
+>> Tan(5)
+-3.380515006246586
+
+>> Tan(ParseJSON("5"))
+-3.380515006246586
+
+>> TimeZoneOffset(DateTimeValue("2022-12-19T12:08:45.000Z"))
+480
+
+>> TimeZoneOffset(ParseJSON("""2022-12-19T12:08:45.000Z"""))
+480
+
+>> Trim("Hello World")
+"Hello World"
+
+>> Trim(ParseJSON("""Hello World"""))
+"Hello World"
+
+>> TrimEnds("Hello World")
+"Hello World"
+
+>> TrimEnds(ParseJSON("""Hello World"""))
+"Hello World"
+
+>> Trunc(5)
+5
+
+>> Trunc(ParseJSON("5"))
+5
+
+>> Trunc(5, 5)
+5
+
+>> Trunc(ParseJSON("5"), 5)
+5
+
+>> Trunc(5, ParseJSON("5"))
+5
+
+>> Upper("Hello World")
+"HELLO WORLD"
+
+>> Upper(ParseJSON("""Hello World"""))
+"HELLO WORLD"
+
+>> VarP(5)
+0
+
+>> Year(DateTimeValue("2022-12-19T12:08:45.000Z"))
+2022
+
+>> Year(ParseJSON("""2022-12-19T12:08:45.000Z"""))
+2022
