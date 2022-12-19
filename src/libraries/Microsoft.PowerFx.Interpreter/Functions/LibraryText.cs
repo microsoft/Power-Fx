@@ -4,11 +4,18 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Xml.Linq;
+using Microsoft.PowerFx.Core.App;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Localization;
+using Microsoft.PowerFx.Core.Types.Enums;
+using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
 
@@ -16,6 +23,21 @@ namespace Microsoft.PowerFx.Functions
 {
     internal static partial class Library
     {
+        static readonly private Regex _ampmReplaceRegex = new Regex("[aA][mM]\\/[pP][mM]", RegexOptions.Compiled);
+        static readonly private Regex _apReplaceRegex = new Regex("[aA]\\/[pP]", RegexOptions.Compiled);
+        static readonly private Regex _minutesBeforeSecondsRegex = new Regex("[mM][^dDyYhH]+[sS]", RegexOptions.Compiled);
+        static readonly private Regex _minutesAfterHoursRegex = new Regex("[hH][^dDyYmM]+[mM]", RegexOptions.Compiled);
+        static readonly private Regex _minutesRegex = new Regex("[mM]", RegexOptions.Compiled);
+        static readonly private Regex _internalStringRegex = new Regex("([\"][^\"]*[\"])", RegexOptions.Compiled);
+        static readonly private Regex _daysDetokenizeRegex = new Regex("[\u0004][\u0004][\u0004][\u0004]+", RegexOptions.Compiled);
+        static readonly private Regex _monthsDetokenizeRegex = new Regex("[\u0003][\u0003][\u0003][\u0003]+", RegexOptions.Compiled);
+        static readonly private Regex _yearsDetokenizeRegex = new Regex("[\u0005][\u0005][\u0005]+", RegexOptions.Compiled);
+        static readonly private Regex _years2DetokenizeRegex = new Regex("[\u0005]+", RegexOptions.Compiled);
+        static readonly private Regex _hoursDetokenizeRegex = new Regex("[\u0006][\u0006]+", RegexOptions.Compiled);
+        static readonly private Regex _minutesDetokenizeRegex = new Regex("[\u000A][\u000A]+", RegexOptions.Compiled);
+        static readonly private Regex _secondsDetokenizeRegex = new Regex("[\u0008][\u0008]+", RegexOptions.Compiled);
+        static readonly private Regex _milisecondsDetokenizeRegex = new Regex("[\u000e][\u000e][\u000e]+", RegexOptions.Compiled);
+
         // Char is used for PA string escaping 
         public static FormulaValue Char(IRContext irContext, NumberValue[] args)
         {
@@ -152,11 +174,7 @@ namespace Microsoft.PowerFx.Functions
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-text
         public static FormulaValue Text(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            // only DateValue and DateTimeValue are supported for now with custom format strings.
-            if (args[0] is StringValue sv)
-            {
-                return new StringValue(irContext, sv.Value);
-            }
+            const int formatSize = 100;
 
             string resultString = null;
             string formatString = null;
@@ -175,27 +193,67 @@ namespace Microsoft.PowerFx.Functions
                 }
             }
 
+            // We limit the format string size
+            if (formatString != null && formatString.Length > formatSize)
+            {
+                var customErrorMessage = StringResources.Get(TexlStrings.ErrTextFormatTooLarge, culture.Name);
+                return CommonErrors.GenericInvalidArgument(irContext, string.Format(customErrorMessage, formatSize));
+            }
+
+            var hasDateTimeFmt = false;
+            var hasNumberFmt = false;
+
+            if (formatString != null && !TextFormatUtils.IsValidFormatArg(formatString, out hasDateTimeFmt, out hasNumberFmt))
+            {
+                var customErrorMessage = StringResources.Get(TexlStrings.ErrIncorrectFormat_Func, culture.Name);
+                return CommonErrors.GenericInvalidArgument(irContext, string.Format(customErrorMessage, "Text"));
+            }
+
             switch (args[0])
             {
+                case StringValue sv:
+                    resultString = sv.Value;
+                    break;
                 case NumberValue num:
-                    resultString = num.Value.ToString(formatString ?? "g", culture);
+                    if (formatString != null && hasDateTimeFmt)
+                    {
+                        // It's a number, formatted as date/time. Let's convert it to a date/time value first
+                        var newDateTime = Library.NumberToDateTime(runner, context, IRContext.NotInSource(FormulaType.DateTime), new NumberValue[] { num });
+                        resultString = ExpandDateTimeExcelFormatSpecifiers(formatString, "g", newDateTime.Value, culture, runner.CancellationToken);
+                    }
+                    else
+                    {
+                        resultString = num.Value.ToString(formatString ?? "g", culture);
+                    }                    
                     break;
-                case StringValue s:
-                    resultString = s.Value;
-                    break;
-                case DateValue d:
-                    formatString = ExpandDateTimeFormatSpecifiers(formatString, culture);
-                    resultString = d.Value.ToString(formatString ?? "M/d/yyyy", culture);
-                    break;
-                case DateTimeValue dt:
-                    formatString = ExpandDateTimeFormatSpecifiers(formatString, culture);
-                    resultString = dt.Value.ToString(formatString ?? "g", culture);
-                    break;
-                case TimeValue t:
-                    formatString = ExpandDateTimeFormatSpecifiers(formatString, culture);
-                    resultString = _epoch.Add(t.Value).ToString(formatString ?? "t", culture);
-                    break;
-                default:
+                case DateValue:
+                case DateTimeValue:
+                case TimeValue:
+                    DateTimeValue dateTimeValue;
+
+                    if (args[0] is TimeValue t)
+                    {
+                        dateTimeValue = Library.TimeToDateTime(runner, context, IRContext.NotInSource(FormulaType.DateTime), new TimeValue[] { t });
+                    }
+                    else if (args[0] is DateValue d)
+                    {
+                        dateTimeValue = FormulaValue.New(d.Value);
+                    }
+                    else
+                    {
+                        dateTimeValue = args[0] as DateTimeValue;
+                    }
+
+                    if (formatString != null && hasNumberFmt)
+                    {
+                        // It's a datetime, formatted as number. Let's convert it to a number value first
+                        var newNumber = Library.DateTimeToNumber(IRContext.NotInSource(FormulaType.Number), new DateTimeValue[] { dateTimeValue });
+                        resultString = newNumber.Value.ToString(formatString ?? "g", culture);
+                    }
+                    else
+                    {
+                        resultString = ExpandDateTimeExcelFormatSpecifiers(formatString, "g", dateTimeValue.Value, culture, runner.CancellationToken);
+                    }
                     break;
             }
 
@@ -206,53 +264,216 @@ namespace Microsoft.PowerFx.Functions
 
             return CommonErrors.NotYetImplementedError(irContext, $"Text format for {args[0]?.GetType().Name}");
         }
-
-        internal static string ExpandDateTimeFormatSpecifiers(string format, CultureInfo culture)
+        
+        internal static string ExpandDateTimeExcelFormatSpecifiers(string format, string defaultFormat, DateTime dateTime, CultureInfo culture, CancellationToken cancellationToken)
         {
             if (format == null)
             {
-                return format;
+                return dateTime.ToString(defaultFormat, culture);
             }
+            
+            // DateTime format
+            switch (format.ToLower())
+            {
+                case "'shortdatetime24'":
+                case "'shortdatetime'":
+                case "'shorttime24'":
+                case "'shorttime'":
+                case "'shortdate'":
+                case "'longdatetime24'":
+                case "'longdatetime'":
+                case "'longtime24'":
+                case "'longtime'":
+                case "'longdate'":
+                    return dateTime.ToString(ExpandDateTimeFormatSpecifiers(format, culture));
+                default:
+                    return ResolveDateTimeFormatAmbiguities(format, dateTime, culture, cancellationToken);
+            }
+        }
 
+        internal static string ExpandDateTimeFormatSpecifiers(string format, CultureInfo culture)
+        {
             var info = DateTimeFormatInfo.GetInstance(culture);
 
-            switch (format.ToLower().Trim('\''))
+            switch (format.ToLower())
             {
-                case "shortdatetime24":
+                case "'shortdatetime24'":
                     // TODO: This might be wrong for some cultures
                     return ReplaceWith24HourClock(info.ShortDatePattern + " " + info.ShortTimePattern);
-                case "shortdatetime":
+                case "'shortdatetime'":
                     // TODO: This might be wrong for some cultures
                     return info.ShortDatePattern + " " + info.ShortTimePattern;
-                case "shorttime24":
+                case "'shorttime24'":
                     return ReplaceWith24HourClock(info.ShortTimePattern);
-                case "shorttime":
+                case "'shorttime'":
                     return info.ShortTimePattern;
-                case "shortdate":
+                case "'shortdate'":
                     return info.ShortDatePattern;
-                case "longdatetime24":
+                case "'longdatetime24'":
                     return ReplaceWith24HourClock(info.FullDateTimePattern);
-                case "longdatetime":
+                case "'longdatetime'":
                     return info.FullDateTimePattern;
-                case "longtime24":
+                case "'longtime24'":
                     return ReplaceWith24HourClock(info.LongTimePattern);
-                case "longtime":
+                case "'longtime'":
                     return info.LongTimePattern;
-                case "longdate":
+                case "'longdate'":
                     return info.LongDatePattern;
-                case "utc":
+                case "'utc'":
                     return info.UniversalSortableDateTimePattern;
+                default:
+                    return format;
+            }
+        }
+
+        private static string ReplaceWith24HourClock(string format)
+        {
+            format = Regex.Replace(format, "[hH]", "H");
+            format = Regex.Replace(format, "t+", "");
+
+            return format.Trim();
+        }
+
+        private static string ResolveDateTimeFormatAmbiguities(string format, DateTime dateTime, CultureInfo culture, CancellationToken cancellationToken)
+        {
+            var resultString = format;
+
+            resultString = ReplaceDoubleQuotedStrings(resultString, out var replaceList, cancellationToken);
+            resultString = TokenizeDatetimeFormat(resultString, cancellationToken);
+            resultString = DetokenizeDatetimeFormat(resultString, dateTime, culture);
+            resultString = RestoreDoubleQuotedStrings(resultString, replaceList, cancellationToken);
+
+            return resultString;
+        }
+
+        private static string RestoreDoubleQuotedStrings(string format, List<string> replaceList, CancellationToken cancellationToken)
+        {
+            var stringReplaceRegex = new Regex("\u0011");
+            var array = replaceList.ToArray();
+            var index = 0;
+
+            var match = stringReplaceRegex.Match(format);
+
+            while (match.Success)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+
+                format = format.Substring(0, match.Index) + array[index++].Replace("\"", string.Empty) + format.Substring(match.Index + match.Length);
+                match = stringReplaceRegex.Match(format);
             }
 
             return format;
         }
 
-        private static string ReplaceWith24HourClock(string format)
+        private static string ReplaceDoubleQuotedStrings(string format, out List<string> replaceList, CancellationToken cancellationToken)
         {
-            var pattern = @"^(?<openAMPM>\s*t+\s*)? " +
-                             @"(?(openAMPM) h+(?<nonHours>[^ht]+)$ " +
-                             @"| \s*h+(?<nonHours>[^ht]+)\s*t+)";
-            return Regex.Replace(format, pattern, "HH${nonHours}", RegexOptions.IgnorePatternWhitespace);
+            var ret = string.Empty;
+
+            replaceList = new List<string>();
+
+            foreach (Match match in _internalStringRegex.Matches(format))
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+
+                replaceList.Add(match.Value);
+            }
+
+            return _internalStringRegex.Replace(format, "\u0011");
+        }
+
+        private static string DetokenizeDatetimeFormat(string format, DateTime dateTime, CultureInfo culture)
+        {
+            var hasAmPm = format.Contains('\u0001') || format.Contains('\u0002');
+
+            // Day component            
+            format = _daysDetokenizeRegex.Replace(format, dateTime.ToString("dddd", culture))
+                          .Replace("\u0004\u0004\u0004", dateTime.ToString("ddd", culture))
+                          .Replace("\u0004\u0004", dateTime.ToString("dd", culture))
+                          .Replace("\u0004", dateTime.ToString("%d", culture));
+
+            // Month component
+            format = _monthsDetokenizeRegex.Replace(format, dateTime.ToString("MMMM", culture))
+                          .Replace("\u0003\u0003\u0003", dateTime.ToString("MMM", culture))
+                          .Replace("\u0003\u0003", dateTime.ToString("MM", culture))
+                          .Replace("\u0003", dateTime.ToString("%M", culture));
+
+            // Year component
+            format = _yearsDetokenizeRegex.Replace(format, dateTime.ToString("yyyy", culture));
+            format = _years2DetokenizeRegex.Replace(format, dateTime.ToString("yy", culture));
+
+            // Hour component
+            format = _hoursDetokenizeRegex.Replace(format, hasAmPm ? dateTime.ToString("hh", culture) : dateTime.ToString("HH", culture))
+                          .Replace("\u0006", hasAmPm ? dateTime.ToString("%h", culture) : dateTime.ToString("%H", culture));
+
+            // Minute component
+            format = _minutesDetokenizeRegex.Replace(format, dateTime.ToString("mm", culture))
+                          .Replace("\u000A", dateTime.ToString("%m", culture));
+
+            // Second component
+            format = _secondsDetokenizeRegex.Replace(format, dateTime.ToString("ss", culture))
+                          .Replace("\u0008", dateTime.ToString("%s", culture));
+
+            // Milliseconds component
+            format = _milisecondsDetokenizeRegex.Replace(format, dateTime.ToString("fff", culture))
+                          .Replace("\u000E\u000E", dateTime.ToString("ff", culture))
+                          .Replace("\u000E", dateTime.ToString("%f", culture));
+
+            // AM/PM component
+            format = format.Replace("\u0001", dateTime.ToString("tt", culture))
+                           .Replace("\u0002", dateTime.ToString("%t", culture).ToLower());
+
+            return format;
+        }
+
+        private static string TokenizeDatetimeFormat(string format, CancellationToken cancellationToken)
+        {
+            // Temporary replacements to avoid collisions with upcoming month names, etc.
+            format = _ampmReplaceRegex.Replace(format, "\u0001");
+            format = _apReplaceRegex.Replace(format, "\u0002");
+
+            // Find all "m" chars for minutes, before seconds
+            var match = _minutesBeforeSecondsRegex.Match(format);
+            while (match.Success)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+
+                format = format.Substring(0, match.Index) + "\u000A" + format.Substring(match.Index + 1);
+                match = _minutesBeforeSecondsRegex.Match(format);
+            }
+
+            // Find all "m" chars for minutes, after hours
+            match = _minutesAfterHoursRegex.Match(format);
+            while (match.Success)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+
+                var afterHourFormat = format.Substring(match.Index);
+                var minuteAfterHourPosition = _minutesRegex.Match(afterHourFormat);
+                var pos = match.Index + minuteAfterHourPosition.Index;
+
+                format = format.Substring(0, pos) + "\u000A" + format.Substring(pos + 1);
+
+                match = _minutesAfterHoursRegex.Match(format);
+            }
+
+            var sb = new StringBuilder();
+            foreach (var c in format)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+
+                switch (c)
+                {
+                    case 'm': case 'M': sb.Append('\u0003'); break;
+                    case 'd': case 'D': sb.Append('\u0004'); break;
+                    case 'y': case 'Y': sb.Append('\u0005'); break;
+                    case 'h': case 'H': sb.Append('\u0006'); break;
+                    case 's': case 'S': sb.Append('\u0008'); break;
+                    case '0': sb.Append('\u000E'); break;
+                    default: sb.Append(c); break;
+                }
+            }
+
+            return sb.ToString();
         }
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-isblank-isempty

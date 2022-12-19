@@ -678,7 +678,7 @@ namespace Microsoft.PowerFx.Tests
             config.SymbolTable.AddFunction(func);
             config.SymbolTable.AddEntity(optionSet);
 
-            Assert.True(config.TryGetSymbol(new DName("foo"), out _, out _));
+            Assert.True(config.TryGetVariable(new DName("foo"), out _));
             Assert.Contains(func, recalcEngine.Functions); // function was added to the config.
 
             Assert.DoesNotContain(BuiltinFunctionsCore.Abs, recalcEngine.Functions);
@@ -968,6 +968,25 @@ namespace Microsoft.PowerFx.Tests
                 new NamedValue("x", FormulaValue.New(10)));
             result2 = eval.Eval(recordX);
             Assert.Equal(10.0, result2.ToObject());
+        }
+
+        [Fact]
+        public void GetVariableRecalcEngine()
+        {
+            var config = new PowerFxConfig();
+
+            var engine = new RecalcEngine(config);
+            engine.UpdateVariable("A", FormulaValue.New(0));
+
+            Assert.True(engine.TryGetVariableType("A", out var type));
+            Assert.Equal(FormulaType.Number, type);
+
+            Assert.False(engine.TryGetVariableType("Invalid", out type));
+            Assert.Equal(default, type);
+
+            engine.DeleteFormula("A");
+            Assert.False(engine.TryGetVariableType("A", out type));
+            Assert.Equal(default, type);
         }
 
         private class TestRandService : IRandomService

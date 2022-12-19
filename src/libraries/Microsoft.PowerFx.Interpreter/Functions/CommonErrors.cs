@@ -98,11 +98,11 @@ namespace Microsoft.PowerFx.Functions
             });
         }
 
-        public static ErrorValue GenericInvalidArgument(IRContext irContext)
+        public static ErrorValue GenericInvalidArgument(IRContext irContext, string message = "Invalid Argument")
         {
             return new ErrorValue(irContext, new ExpressionError()
             {
-                Message = "Invalid Argument",
+                Message = message,
                 Span = irContext.SourceContext,
                 Kind = ErrorKind.InvalidArgument
             });

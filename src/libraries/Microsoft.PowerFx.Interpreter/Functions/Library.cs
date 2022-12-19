@@ -235,6 +235,42 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: Char)
             },
             {
+                BuiltinFunctionsCore.ColorValue,
+                StandardErrorHandling<StringValue>(
+                    BuiltinFunctionsCore.ColorValue.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<StringValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: ColorValue)
+            },
+            {
+                BuiltinFunctionsCore.ColorValue_UO,
+                StandardErrorHandling<UntypedObjectValue>(
+                    BuiltinFunctionsCore.ColorValue.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<UntypedObjectValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: ColorValue_UO)
+            },
+            {
+                BuiltinFunctionsCore.ColorFade,
+                StandardErrorHandling<FormulaValue>(
+                    BuiltinFunctionsCore.ColorFade.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactSequence(
+                        ExactValueTypeOrBlank<ColorValue>,
+                        ExactValueTypeOrBlank<NumberValue>),
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: ColorFade)
+            },
+
+            {
                 BuiltinFunctionsCore.Concatenate,
                 StandardErrorHandling<StringValue>(
                     BuiltinFunctionsCore.Concatenate.Name,
@@ -456,6 +492,17 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: Dec2Hex)
+            },
+            {
+                BuiltinFunctionsCore.DropColumns,
+                StandardErrorHandlingAsync<FormulaValue>(
+                    BuiltinFunctionsCore.DropColumns.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: DropColumnsTypeChecker,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: DropColumns)
             },
             {
                 BuiltinFunctionsCore.EndsWith,
@@ -1022,6 +1069,17 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: Replace)
             },
             {
+                BuiltinFunctionsCore.RGBA,
+                StandardErrorHandling<NumberValue>(
+                    BuiltinFunctionsCore.RGBA.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: ReplaceBlankWithZero,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: RGBA)
+            },
+            {
                 BuiltinFunctionsCore.Right,
                 StandardErrorHandling<FormulaValue>(
                     BuiltinFunctionsCore.Right.Name,
@@ -1492,19 +1550,18 @@ namespace Microsoft.PowerFx.Functions
         private static IReadOnlyDictionary<TexlFunction, AsyncFunctionPtr> SimpleFunctionMultiArgsTabularOverloadImplementations { get; } = new Dictionary<TexlFunction, AsyncFunctionPtr>
         {
             {
-                BuiltinFunctionsCore.FindT,
-                StandardErrorHandlingAsync<FormulaValue>(
-                    BuiltinFunctionsCore.FindT.Name,
+                BuiltinFunctionsCore.ColorFadeT,
+                StandardErrorHandlingAsync(
+                    BuiltinFunctionsCore.ColorFadeT.Name,
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: ExactSequence(
-                        ExactValueTypeOrTableOrBlank<StringValue>,
-                        ExactValueTypeOrTableOrBlank<StringValue>,
-                        ExactValueTypeOrTableOrBlank<NumberValue>),
+                        ExactValueTypeOrTableOrBlank<ColorValue>,
+                        ExactValueTypeOrBlank<NumberValue>),
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: MultiSingleColumnTable(
-                            SimpleFunctionImplementations[BuiltinFunctionsCore.Find]),
+                            SimpleFunctionImplementations[BuiltinFunctionsCore.ColorFade]),
                     isMultiArgTabularOverload: true)
             },
             {
@@ -1531,6 +1588,22 @@ namespace Microsoft.PowerFx.Functions
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: MultiSingleColumnTable(
                             SimpleFunctionImplementations[BuiltinFunctionsCore.Dec2Hex]),
+                    isMultiArgTabularOverload: true)
+            },
+            {
+                BuiltinFunctionsCore.FindT,
+                StandardErrorHandlingAsync<FormulaValue>(
+                    BuiltinFunctionsCore.FindT.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactSequence(
+                        ExactValueTypeOrTableOrBlank<StringValue>,
+                        ExactValueTypeOrTableOrBlank<StringValue>,
+                        ExactValueTypeOrTableOrBlank<NumberValue>),
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: MultiSingleColumnTable(
+                            SimpleFunctionImplementations[BuiltinFunctionsCore.Find]),
                     isMultiArgTabularOverload: true)
             },
             {

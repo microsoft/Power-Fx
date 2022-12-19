@@ -1798,6 +1798,10 @@
     <value>Numeric value is too large.</value>
     <comment>Error Message.</comment>
   </data>
+  <data name="ErrTextFormatTooLarge" xml:space="preserve">
+    <value>Format string size can't be more than {0} characters.</value>
+    <comment>Error Message.</comment>
+  </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
     <value>This Data source is invalid. Please fix the error in "Data sources" pane by clicking "Content -&gt; Data sources" or "View -&gt; Options"</value>
     <comment>Error Message.</comment>
@@ -6622,5 +6626,13 @@
   <data name="WarnDeferredType" xml:space="preserve">
     <value>Warning: Deferred type provided.</value>
     <comment>Warning given when the input has deferred Type. Deferred type is unknown type at compile time and correct type will be supplied by user before evaluation.</comment>
+  </data>
+  <data name="ErrExpectedIdentifierArg_Name" xml:space="preserve">
+    <value>Expected identifier name</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrInvalidFunction" xml:space="preserve">
+    <value>This function is ambiguous, it contains lambda expressions and column identifiers for the same argument.</value>
+    <comment>Error Message.</comment>
   </data>
 </root>
