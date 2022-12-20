@@ -1,0 +1,11 @@
+﻿>> Set(x, [1,2,3])
+Table({Value:1},{Value:2},{Value:3})
+
+// collect returns the record that was added 
+>> Collect(x, {Value : 4 })
+{Value:4}
+
+// Original was mutated
+>> x
+Table({Value:1},{Value:2},{Value:3},{Value:4})
+
