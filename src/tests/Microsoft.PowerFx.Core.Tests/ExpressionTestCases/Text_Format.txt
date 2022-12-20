@@ -531,7 +531,7 @@ Error({Kind:ErrorKind.InvalidArgument})
 Errors: Error 0-27: The function 'Text' has some invalid arguments.|Warning 8-26: Incorrect format specifier for 'Text'.
 
 >> Text(1, "M#")
-Errors: Error 0-13: The function 'Text' has some invalid arguments.|Warning 8-12: Incorrect format specifier for 'Text'.
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Text(Time(2, 53, 9, 3), "mm:ss.00") 
 "53:09.00"
@@ -598,3 +598,7 @@ Errors: Error 0-13: The function 'Text' has some invalid arguments.|Warning 8-12
 
 >> With({format:"0.00 dd/mm/yyyy"},Text(123, format))
 Error({Kind:ErrorKind.InvalidArgument})
+
+// Unrecognized '$' and 'M' char are copied to output. 
+>> Text(123.466, "[$-en-US]$#0.0M") 
+"$123.5M"
