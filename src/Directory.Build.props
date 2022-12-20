@@ -32,16 +32,18 @@
   </ItemGroup>
 
   <PropertyGroup Condition=" '$(Configuration)-$(TURN_OFF_STYLECOP_DEBUG)' == 'Debug-True' " >
-    <EnforceCodeStyleInBuild>false</EnforceCodeStyleInBuild>
-    <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)PowerFx.Off.ruleset</CodeAnalysisRuleSet>
+    <EnforceCodeStyleInBuild>false</EnforceCodeStyleInBuild>  
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)-$(TURN_OFF_STYLECOP_DEBUG)' != 'Debug-True' " >
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
-    <CodeAnalysisRuleSet Condition=" !($(MSBuildProjectName.EndsWith('.Tests'))) ">$(MSBuildThisFileDirectory)PowerFx.ruleset</CodeAnalysisRuleSet>
-    <CodeAnalysisRuleSet Condition=" $(MSBuildProjectName.EndsWith('.Tests')) ">$(MSBuildThisFileDirectory)PowerFx.Tests.ruleset</CodeAnalysisRuleSet>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+  
+  <PropertyGroup>
+    <CodeAnalysisRuleSet Condition=" !($(MSBuildProjectName.EndsWith('.Tests'))) ">$(MSBuildThisFileDirectory)PowerFx.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet Condition=" $(MSBuildProjectName.EndsWith('.Tests')) ">$(MSBuildThisFileDirectory)PowerFx.Tests.ruleset</CodeAnalysisRuleSet>    
   </PropertyGroup>
 
   <PropertyGroup>
