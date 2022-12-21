@@ -11,7 +11,7 @@ namespace Microsoft.AppMagic.Transport
     [AttributeUsage(AttributeTargets.Method)]
     public class TransportMethodAttribute : Attribute
     {
-        public TransportMethodAttribute(bool supportSynchronousClient = false, TransportBatchingMode batchingMode = TransportBatchingMode.Default, bool isParallel = false, bool zzz = true)
+        public TransportMethodAttribute(bool supportSynchronousClient = false, TransportBatchingMode batchingMode = TransportBatchingMode.Default, bool isParallel = false, bool abc = true)
         {
             SupportSynchronousClient = supportSynchronousClient;
             BatchingMode = batchingMode;
