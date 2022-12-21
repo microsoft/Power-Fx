@@ -1,0 +1,5 @@
+﻿#OVERRIDE: Text_Format.txt
+
+// https://github.com/microsoft/Power-Fx/issues/932
+>> Text(123.466, "[$-en-US]$#0.0M") 
+Error({Kind:ErrorKind.InvalidArgument})
