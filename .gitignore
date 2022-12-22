@@ -348,3 +348,12 @@ MigrationBackup/
 
 # JetBrains Rider IDE Files
 src/.idea
+
+# Output folder
+Output/
+
+# Tool folder
+tool/
+
+# ApiCompat suppression files
+suppress.*.xml
