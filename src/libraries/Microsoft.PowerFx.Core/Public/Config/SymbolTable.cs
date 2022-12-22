@@ -101,8 +101,7 @@ namespace Microsoft.PowerFx
         /// <param name="type"></param>
         /// <param name="mutable"></param>
         /// <param name="displayName"></param>
-        /// <param name="doo"></param>
-        public ISymbolSlot AddVariable(string name, FormulaType type, bool mutable = false, string displayName = null, double doo = 3.44)
+        public ISymbolSlot AddVariable(string name, FormulaType type, bool mutable = false, string displayName = null)
         {
             Inc();
             DName displayDName = default;
