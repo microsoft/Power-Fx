@@ -175,7 +175,7 @@ namespace Microsoft.PowerFx
         }
 
         /// <summary>
-        /// Set a value created by <see cref="SymbolTable.AddVariable(string, FormulaType, bool, string)"/>.
+        /// Set a value created by <see cref="SymbolTable.AddVariable(string, FormulaType, bool, string, double)"/>.
         /// </summary>
         /// <param name="slot"></param>
         /// <param name="value"></param>
