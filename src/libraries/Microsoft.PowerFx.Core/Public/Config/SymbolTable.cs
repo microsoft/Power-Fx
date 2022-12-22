@@ -53,7 +53,7 @@ namespace Microsoft.PowerFx
             return new DName(name);
         }
 
-        public override FormulaType GetTypeFromSlot(ISymbolSlot slot, string xyz = "jj")
+        public override FormulaType GetTypeFromSlot(ISymbolSlot slot)
         {
             if (_slots.TryGet(slot.SlotIndex, out var nameInfo))
             {
@@ -101,7 +101,8 @@ namespace Microsoft.PowerFx
         /// <param name="type"></param>
         /// <param name="mutable"></param>
         /// <param name="displayName"></param>
-        public ISymbolSlot AddVariable(string name, FormulaType type, bool mutable = false, string displayName = null)
+        /// <param name="doo"></param>
+        public ISymbolSlot AddVariable(string name, FormulaType type, bool mutable = false, string displayName = null, double doo = 3.44)
         {
             Inc();
             DName displayDName = default;
