@@ -184,8 +184,9 @@ namespace Microsoft.PowerFx
                 Name = name,
                 RetType = returnType,
                 ParamTypes = paramTypes,
-                _method = m
-            };
+                _method = m,
+                _isAsync = m.ReturnType.BaseType == typeof(Task)
+        };
         }
 
         private class FunctionDescr

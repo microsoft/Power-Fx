@@ -392,6 +392,42 @@ namespace Microsoft.PowerFx.Tests
             }
         }
 
+        [Fact]
+        public async void CustomAsyncFuntionUsingCtor()
+        {
+            var config = new PowerFxConfig(null);
+
+            config.AddFunction(new TestCtorCustomAsyncFunction());
+            var engine = new RecalcEngine(config);
+
+            // Shows up in enumeration
+            var func = engine.GetAllFunctionNames().First(name => name == "CustomAsync");
+            Assert.NotNull(func);
+
+            // Can be invoked. 
+            using var cts = new CancellationTokenSource();
+            var resultAsync = await engine.EvalAsync("CustomAsync(\"test\")", cts.Token);
+
+            Assert.Equal("test", resultAsync.ToObject());
+        }
+
+        private class TestCtorCustomAsyncFunction : ReflectionFunction
+        {
+
+            public TestCtorCustomAsyncFunction() :
+                base("CustomAsync", FormulaType.String, FormulaType.String)
+            {
+
+            }
+
+            // Must have "Execute" method. 
+            // Cancellation Token must be the last argument for custom async function.
+            public async Task<StringValue> Execute(StringValue input, CancellationToken cancellationToken)
+            {
+                return input;
+            }
+        }
+
         private class TestCustomWaitAsyncFunction : ReflectionFunction
         {
             private readonly TaskCompletionSource<FormulaValue> _waiter = new TaskCompletionSource<FormulaValue>();
