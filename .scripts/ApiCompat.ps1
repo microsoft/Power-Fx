@@ -25,7 +25,7 @@ foreach ($a in $xfiles.ApiCompat.Assembly)
     dotnet $apiTool --suppression-file $s --left-assembly $apiToolLeft --right-assembly $apiToolRight --enable-rule-attributes-must-match --enable-rule-cannot-change-parameter-name --generate-suppression-file
     
     [xml]$x = Get-Content $s
-    $e += [string]::Join("`n" + [char]0x274C, ($x.Suppressions.Suppression | % { $_.DiagnosticId + " " + $_.Target })).Trim()
+    $e += [string]::Join(" --" + [char]0x274C, ($x.Suppressions.Suppression | % { $_.DiagnosticId + " " + $_.Target })).Trim()
 }
 
 Write-Host "##[error] $e"
