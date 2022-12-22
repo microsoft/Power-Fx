@@ -44,7 +44,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.PowerFx.Performan
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{5EEC2873-35B5-4364-A2A0-97AAD7BF960D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Repl", "tools\Repl\Repl.csproj", "{142854D7-409C-4C87-A5B8-39B51477F5B2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Repl", "tools\Repl\Repl.csproj", "{142854D7-409C-4C87-A5B8-39B51477F5B2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
