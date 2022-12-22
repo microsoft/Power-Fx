@@ -29,6 +29,7 @@ namespace PowerFxHostSamples
             }
 
             var config = new PowerFxConfig(toenable);
+            config.SymbolTable.EnableMutationFunctions();
 
             config.AddFunction(new HelpFunction());
             config.AddFunction(new ResetFunction());
@@ -38,9 +39,9 @@ namespace PowerFxHostSamples
             config.AddFunction(new ImportFunction());
 
             var optionsSet = new OptionSet("Options", DisplayNameUtility.MakeUnique(new Dictionary<string, string>()
-                                                {
-                                                        { OptionFormatTable, OptionFormatTable },
-                                                }));
+                                            {
+                                                    { OptionFormatTable, OptionFormatTable },
+                                            }));
 
             config.AddOptionSet(optionsSet);
 
@@ -106,7 +107,7 @@ namespace PowerFxHostSamples
                                 {
                                     var arg1Type = check.ReturnType;
 
-                                    varValue = check.GetEvaluator().Eval();                                                                        
+                                    varValue = check.GetEvaluator().Eval();
                                     _engine.UpdateVariable(arg0name, varValue);
 
                                     return true;
@@ -159,7 +160,8 @@ namespace PowerFxHostSamples
                     // eval and print everything else
                     else
                     {
-                        var result = _engine.Eval(expr);
+                        var opts = new ParserOptions { AllowsSideEffects = true };
+                        var result = _engine.Eval(expr, options: opts);
 
                         if (result is ErrorValue errorValue)
                         {
@@ -246,7 +248,7 @@ namespace PowerFxHostSamples
                     foreach (var c in exprPartial)
                     {
                         // don't need to worry about escaping as it looks like two 
-                        if (c == '"' && !singleQuote) 
+                        if (c == '"' && !singleQuote)
                         {
                             doubleQuote = !doubleQuote; // strings that are back to back
                         }
