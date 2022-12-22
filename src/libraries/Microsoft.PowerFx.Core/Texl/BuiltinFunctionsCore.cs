@@ -81,7 +81,6 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction Day = _library.Append(new DayFunction());
         public static readonly TexlFunction Degrees = _library.Append(new DegreesFunction());
         public static readonly TexlFunction DegreesT = _library.Append(new DegreesTableFunction());
-        public static readonly TexlFunction Distinct = _library.Append(new DistinctFunction());
         public static readonly TexlFunction DropColumns = _library.Append(new DropColumnsFunction());
         public static readonly TexlFunction EndsWith = _library.Append(new EndsWithFunction());
         public static readonly TexlFunction Error = _library.Append(new ErrorFunction());

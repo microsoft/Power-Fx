@@ -32,6 +32,10 @@ Table({Result:4},{Result:1},{Result:0})
 >> Distinct(Table({FirstName:"Harry"},{FirstName:Blank()},{FirstName:"Sally"},{FirstName:"Harry"},{FirstName:Blank()},{FirstName:"Alice"},{FirstName:"Sally"}), FirstName)
 Table({Result:"Harry"},{Result:Blank()},{Result:"Sally"},{Result:"Alice"})
 
+// Distinct is case sensitive
+>> Distinct(Table({FirstName:"Harry"},{FirstName:"HARRY"},{FirstName:"Sally"},{FirstName:"Harry"},{FirstName:"Alice"},{FirstName:"Sally"}), FirstName)
+Table({Result:"Harry"},{Result:"HARRY"},{Result:"Sally"},{Result:"Alice"})
+
 // Distinct values from an error table
 >> Distinct(If(1/0<2,[1,2,3]), true)
 Error({Kind:ErrorKind.Div0})
@@ -50,6 +54,9 @@ Table({Result:10},{Result:9},{Result:8})
 
 >> Distinct(Blank(), true)
 Blank()
+
+>> Distinct([1/0], Value)
+Error({Kind:ErrorKind.Div0})
 
 >> Distinct([], true)
 Table()
