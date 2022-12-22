@@ -53,7 +53,7 @@ namespace Microsoft.PowerFx
             return new DName(name);
         }
 
-        public override FormulaType GetTypeFromSlot(ISymbolSlot slot)
+        public override FormulaType GetTypeFromSlot(ISymbolSlot slot, string xyz = "jj")
         {
             if (_slots.TryGet(slot.SlotIndex, out var nameInfo))
             {
