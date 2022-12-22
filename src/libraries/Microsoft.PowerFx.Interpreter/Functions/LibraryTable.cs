@@ -506,10 +506,9 @@ namespace Microsoft.PowerFx.Functions
 
         private static FormulaValue DistinctValueType(List<(DValue<RecordValue> row, FormulaValue distinctValue)> pairs, IRContext irContext)
         {
-            var lookup = new HashSet<string>();
+            var lookup = new HashSet<object>();
             var result = new List<DValue<RecordValue>>();
             var name = ((TableType)irContext.ResultType).SingleColumnFieldName;
-            var type = irContext.ResultType;
 
             foreach (var (row, distinctValue) in pairs)
             {
@@ -518,19 +517,17 @@ namespace Microsoft.PowerFx.Functions
                     return errorValue;
                 }
 
-                var key = distinctValue.ToObject();
-
-                if(key != null && key is not object)
+                if(!distinctValue.Type._type.IsPrimitive)
                 {
-                    return CommonErrors.RuntimeTypeMismatch(irContext);
+                    return CommonErrors.OnlyPrimitiveValuesAllowed(irContext);
                 }
 
-                var keySerialized = System.Text.Json.JsonSerializer.Serialize(key);
+                var key = distinctValue.ToObject();
 
-                if (!lookup.Contains(keySerialized))
+                if (!lookup.Contains(key))
                 {
                     var insert = FormulaValue.NewRecordFromFields(new NamedValue(name, distinctValue));
-                    lookup.Add(keySerialized);
+                    lookup.Add(key);
                     result.Add(DValue<RecordValue>.Of(insert));
                 }
             }

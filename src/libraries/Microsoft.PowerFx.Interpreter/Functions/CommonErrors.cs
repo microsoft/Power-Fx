@@ -187,5 +187,15 @@ namespace Microsoft.PowerFx.Functions
                 Kind = ErrorKind.Custom
             });
         }
+
+        internal static FormulaValue OnlyPrimitiveValuesAllowed(IRContext irContext)
+        {
+            return new ErrorValue(irContext, new ExpressionError()
+            {
+                Message = "Only primitive values are allowed for the operation",
+                Span = irContext.SourceContext,
+                Kind = ErrorKind.InvalidArgument
+            });
+        }
     }
 }

@@ -55,12 +55,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             returnType = DType.CreateTable(new TypedName(exprType, GetOneColumnTableResultName(context.Features)));
 
-            //if (!exprType.IsPrimitive || exprType.IsOptionSet)
-            //{
-            //    fValid = false;
-            //    errors.EnsureError(args[1], TexlStrings.ErrDistinctWrongType);
-            //}
-
             return fValid;
         }
 
