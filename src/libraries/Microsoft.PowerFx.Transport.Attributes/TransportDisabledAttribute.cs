@@ -11,7 +11,7 @@ namespace Microsoft.AppMagic.Transport
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Method | AttributeTargets.Constructor, Inherited = true)]
     public class TransportDisabledAttribute : Attribute
     {
-        public TransportDisabledAttribute(bool ihuh = true, string qsdfj = "kljl")
+        public TransportDisabledAttribute()
         {
         }
     }
