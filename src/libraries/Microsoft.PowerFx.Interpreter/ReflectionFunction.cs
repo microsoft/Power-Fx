@@ -179,44 +179,52 @@ namespace Microsoft.PowerFx
                 throw new NotSupportedException();
             }
 
-            _info = new FunctionDescr
-            {
-                Name = name,
-                RetType = returnType,
-                ParamTypes = paramTypes,
-                _method = m,
-                _isAsync = m.ReturnType.BaseType == typeof(Task)
-        };
+            var isAsync = m.ReturnType.BaseType == typeof(Task);
+
+            var configType = ConfigType?? default(Type);
+
+            // config type bug
+            _info = new FunctionDescr(name, m, returnType, paramTypes, configType, BigInteger.Zero, isAsync);
         }
 
         private class FunctionDescr
         {
-            public FormulaType RetType;
+            internal string Name { get; }
+
+            internal MethodInfo _method { get; }
+
+            internal FormulaType RetType { get; }
 
             // User-facing parameter types. 
-            public FormulaType[] ParamTypes;
-            public string Name;
+            internal FormulaType[] ParamTypes { get; }
 
             // If not null, then arg0 is from RuntimeConfig
-            public Type _configType;
+            internal Type _configType { get; }
 
-            public MethodInfo _method;
+            internal bool _isAsync { get; }
 
-            public bool _isAsync;
+            internal BigInteger LamdaParamMask { get; }
 
-            public BigInteger LamdaParamMask;
+            public FunctionDescr(string name, MethodInfo method, FormulaType retType, FormulaType[] paramTypes, Type configType, BigInteger lamdaParamMask, bool isAsync = false)
+            {
+                Name = name;
+                _method = method;
+                RetType = retType;
+                ParamTypes = paramTypes;
+                _configType = configType;
+                _isAsync = isAsync;
+                LamdaParamMask = lamdaParamMask;
+            }
         }
 
         private FunctionDescr Scan()
         {
             if (_info == null)
             {
-                var info = new FunctionDescr();
-
                 var t = GetType();
 
                 var suffix = "Function";
-                info.Name = t.Name.Substring(0, t.Name.Length - suffix.Length);
+                var name = t.Name.Substring(0, t.Name.Length - suffix.Length);
 
                 var m = t.GetMethod("Execute", BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance);
                 if (m == null)
@@ -224,16 +232,20 @@ namespace Microsoft.PowerFx
                     throw new InvalidOperationException($"Missing Execute method");
                 }
 
-                info.RetType = GetType(m.ReturnType);
+                var returnType = GetType(m.ReturnType);
 
                 var paramTypes = new List<FormulaType>();
 
-                info._isAsync = m.ReturnType.BaseType == typeof(Task);
+                var isAsync = m.ReturnType.BaseType == typeof(Task);
 
                 var parameters = m.GetParameters();
+
+                var configType = default(Type);
+
+                BigInteger LamdaParamMask = default(BigInteger);
                 for (var i = 0; i < parameters.Length; i++)
                 {
-                    if (i == parameters.Length - 1 && info._isAsync)
+                    if (i == parameters.Length - 1 && isAsync)
                     {
                         if (parameters[i].ParameterType != typeof(CancellationToken))
                         {
@@ -247,15 +259,15 @@ namespace Microsoft.PowerFx
                     else if (parameters[i].ParameterType == ConfigType)
                     {
                         // Not a Formulatype, pull from RuntimeConfig
-                        info._configType = parameters[i].ParameterType;
+                        configType = parameters[i].ParameterType;
                     }
-                    else if (parameters[i].ParameterType == typeof(CancellationToken) && info._isAsync)
+                    else if (parameters[i].ParameterType == typeof(CancellationToken) && isAsync)
                     {
                         throw new InvalidOperationException($"Cancellation token must be the last argument.");
                     }
                     else if (parameters[i].ParameterType == typeof(Func<Task<BooleanValue>>))
                     {
-                        info.LamdaParamMask = info.LamdaParamMask | BigInteger.One << i;
+                        LamdaParamMask = LamdaParamMask | BigInteger.One << i;
                         paramTypes.Add(FormulaType.Boolean);
                     }
                     else if (parameters[i].ParameterType.BaseType == typeof(MulticastDelegate))
@@ -270,10 +282,9 @@ namespace Microsoft.PowerFx
                     }
                 }
 
-                info.ParamTypes = paramTypes.ToArray();
-                info._method = m;
+                var ParamTypes = paramTypes.ToArray();
 
-                _info = info;
+                _info = new FunctionDescr(name, m, returnType, paramTypes.ToArray(), configType, LamdaParamMask,isAsync);
             }
 
             return _info;

@@ -68,6 +68,11 @@ namespace Microsoft.PowerFx.Tests
         // Must have "Function" suffix. 
         private class TestCustomFunction : ReflectionFunction
         {
+            public TestCustomFunction():
+                base("TestCustom", FormulaType.Boolean, FormulaType.Number, FormulaType.Boolean, FormulaType.String)
+            {
+
+            }
             // Must have "Execute" method. 
             public static StringValue Execute(NumberValue x, BooleanValue b, StringValue s)
             {
@@ -415,7 +420,7 @@ namespace Microsoft.PowerFx.Tests
         {
 
             public TestCtorCustomAsyncFunction() :
-                base("CustomAsync", FormulaType.String, FormulaType.String)
+                base("CustomAsync", FormulaType.Boolean, FormulaType.String)
             {
 
             }
@@ -424,7 +429,7 @@ namespace Microsoft.PowerFx.Tests
             // Cancellation Token must be the last argument for custom async function.
             public async Task<StringValue> Execute(StringValue input, CancellationToken cancellationToken)
             {
-                return input;
+                return FormulaValue.New("test");
             }
         }
 
