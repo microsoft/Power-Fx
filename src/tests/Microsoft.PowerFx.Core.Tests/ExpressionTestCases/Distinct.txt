@@ -83,7 +83,10 @@ Table({Result:1},{Result:2},{Result:3},{Result:4})
 Table({Result:GUID("c203b79b-b985-42f0-b523-c10eb64387c6")})
 
 >> Distinct(Table({a:1,b:2},{a:3,b:4},{a:5,b:6}), Table({test: a * 2}))
-Errors: Error 47-67: Cannot apply distinct on the expression type.|Error 0-68: The function 'Distinct' has some invalid arguments.
+Table({Result:Table({test:2})},{Result:Table({test:6})},{Result:Table({test:10})})
+
+>> Distinct(Table({a:1,b:2},{a:3,b:4},{a:5,b:6}), Table({test: a * 2, test2: b * 1}))
+Table({Result:Table({test:2,test2:2})},{Result:Table({test:6,test2:4})},{Result:Table({test:10,test2:6})})
 
 >> Distinct(Table({a:1,b:2},{a:3,b:4},{a:5,b:6}), Blank())
 Table({Result:Blank()})
