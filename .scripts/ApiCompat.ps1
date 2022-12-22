@@ -1,5 +1,9 @@
 
-## $BuildConfiguration="Release"
+param(
+	[Parameter(Mandatory = $true)] [String]$BuildConfiguration
+)
+
+Write-Host "BuildConfiguration" $BuildConfiguration
 
 $apiTool="tool\.store\microsoft.dotnet.apicompat.tool\7.0.100\microsoft.dotnet.apicompat.tool\7.0.100\tools\net6.0\any\Microsoft.DotNet.ApiCompat.Tool.dll"        
 $apiToolRightFolder="Output"
@@ -17,7 +21,7 @@ foreach ($a in $xfiles.ApiCompat.Assembly)
     
     Set-Content $s "<Suppressions/>"
 
-    Write-Host "Checking" $n
+    Write-Host "Checking" $n "..."
     dotnet $apiTool --suppression-file $s --left-assembly $apiToolLeft --right-assembly $apiToolRight --enable-rule-attributes-must-match --enable-rule-cannot-change-parameter-name --generate-suppression-file
     
     [xml]$x = Get-Content $s
@@ -34,3 +38,4 @@ else
 {
     Write-Host "##vso[task.setvariable variable=ApiCompat;issecret=false]No public API change."
 }
+
