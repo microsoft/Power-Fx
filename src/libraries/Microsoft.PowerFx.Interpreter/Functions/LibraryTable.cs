@@ -530,6 +530,7 @@ namespace Microsoft.PowerFx.Functions
                     lookup.Add(key);
                     result.Add(DValue<RecordValue>.Of(insert));
                 }
+
             }
 
             return new InMemoryTableValue(irContext, result);
