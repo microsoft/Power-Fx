@@ -1,0 +1,22 @@
+<ApiCompat>   
+  <Assembly>
+    <Name>Microsoft.PowerFx.Core</Name>
+    <Location>src\libraries\Microsoft.PowerFx.Core\bin\$BuildConfiguration\netstandard2.0</Location>
+  </Assembly>  
+  <Assembly>
+    <Name>Microsoft.PowerFx.LanguageServerProtocol</Name>
+    <Location>src\libraries\Microsoft.PowerFx.LanguageServerProtocol\bin\$BuildConfiguration\netstandard2.0</Location>
+  </Assembly>  
+  <Assembly>
+    <Name>Microsoft.PowerFx.Interpreter</Name>
+    <Location>src\libraries\Microsoft.PowerFx.Interpreter\bin\$BuildConfiguration\netstandard2.0</Location>
+  </Assembly>  
+  <Assembly>
+    <Name>Microsoft.PowerFx.Connectors</Name>
+    <Location>src\libraries\Microsoft.PowerFx.Connectors\bin\$BuildConfiguration\netstandard2.0</Location>
+  </Assembly>  
+  <Assembly>
+    <Name>Microsoft.PowerFx.Transport.Attributes</Name>
+    <Location>src\libraries\Microsoft.PowerFx.Transport.Attributes\bin\$BuildConfiguration\netstandard2.0</Location>
+  </Assembly> 
+</ApiCompat>
