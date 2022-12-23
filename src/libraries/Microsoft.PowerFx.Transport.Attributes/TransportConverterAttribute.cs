@@ -19,7 +19,7 @@ namespace Microsoft.AppMagic.Transport
             string cSharpPredicateForOmittingFromDto = null,
             string csharpQuotedJsonStringExpression = null,
             string typescriptPropertyStateSyncExpression = null,
-            string typescriptValueExpressionForUndefinedValueAppearingInDto = null, string foo="kkk")
+            string typescriptValueExpressionForUndefinedValueAppearingInDto = null)
         {
             OriginalType = originalType;
             SurrogateType = surrogateType;

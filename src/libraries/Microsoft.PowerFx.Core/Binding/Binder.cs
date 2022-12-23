@@ -352,7 +352,7 @@ namespace Microsoft.PowerFx.Core.Binding
             DType ruleScope = null,
             bool forceUpdateDisplayNames = false,
             IExternalRule rule = null,
-            Features features = Features.None, string xyz = "lmlkjl")
+            Features features = Features.None)
         {
             Contracts.AssertValue(node);
             Contracts.AssertValueOrNull(resolver);

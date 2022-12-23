@@ -139,7 +139,7 @@ namespace Microsoft.PowerFx
             return functionLibrary;
         }
 
-        public IEnumerable<TexlFunction> LookupFunctionsInNamespace(DPath nameSpace, double dd = 17.7)
+        public IEnumerable<TexlFunction> LookupFunctionsInNamespace(DPath nameSpace)
         {
             Contracts.Check(nameSpace.IsValid, "The namespace is invalid.");
 

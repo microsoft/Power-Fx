@@ -108,8 +108,8 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
 
         // We do, however, if the one column table is a literal.
         [InlineData("[\"test\"].| ")]
-        //[InlineData("Calendar.|", "MonthsLong", "MonthsShort", "WeekdaysLong", "WeekdaysShort")]
-        //[InlineData("Calendar.Months|", "MonthsLong", "MonthsShort")]
+        [InlineData("Calendar.|", "MonthsLong", "MonthsShort", "WeekdaysLong", "WeekdaysShort")]
+        [InlineData("Calendar.Months|", "MonthsLong", "MonthsShort")]
         [InlineData("Color.AliceBl|", "AliceBlue")]
         [InlineData("Color.Pale|", "PaleGoldenRod", "PaleGreen", "PaleTurquoise", "PaleVioletRed")]
 
@@ -217,9 +217,9 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         /// <summary>
         /// In cases for Intellisense with an empty enum store, but still builtin functions. 
         /// </summary>
-        //[Theory] 
-        //[InlineData("Calendar.|", "MonthsLong", "MonthsShort", "WeekdaysLong", "WeekdaysShort")]
-        //[InlineData("Calendar.Months|", "MonthsLong", "MonthsShort")]
+        [Theory] 
+        [InlineData("Calendar.|", "MonthsLong", "MonthsShort", "WeekdaysLong", "WeekdaysShort")]
+        [InlineData("Calendar.Months|", "MonthsLong", "MonthsShort")]
         public void TestSuggestEmptyAll(string expression, params string[] expectedSuggestions)
         {
             var config = MinimalEnums;
