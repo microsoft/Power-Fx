@@ -217,7 +217,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         /// <summary>
         /// In cases for Intellisense with an empty enum store, but still builtin functions. 
         /// </summary>
-        [Theory] 
+        [Theory]
         [InlineData("Calendar.|", "MonthsLong", "MonthsShort", "WeekdaysLong", "WeekdaysShort")]
         [InlineData("Calendar.Months|", "MonthsLong", "MonthsShort")]
         public void TestSuggestEmptyAll(string expression, params string[] expectedSuggestions)
