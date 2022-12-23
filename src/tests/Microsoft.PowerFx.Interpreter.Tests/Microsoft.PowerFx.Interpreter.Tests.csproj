@@ -41,6 +41,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="MutationScripts\**">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Update="InterpreterExpressionTestCases\*.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
