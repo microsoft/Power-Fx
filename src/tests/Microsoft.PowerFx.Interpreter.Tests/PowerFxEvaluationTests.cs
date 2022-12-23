@@ -340,6 +340,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 {
                     return new RunResult(check);
                 }
+
                 var result = check.GetEvaluator().Eval();
                 return new RunResult(result);
             }
