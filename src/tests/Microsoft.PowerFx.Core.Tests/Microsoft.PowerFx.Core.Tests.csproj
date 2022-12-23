@@ -14,12 +14,7 @@
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)'!='Debug' or '$(TURN_OFF_WARNING_AS_ERROR)'!='True' ">
-    <EnableNETAnalyzers>True</EnableNETAnalyzers>
-    <AnalysisLevel>latest</AnalysisLevel>
-    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
-    <CodeAnalysisTreatWarningsAsErrors>False</CodeAnalysisTreatWarningsAsErrors>
-    <RunAnalyzersDuringBuild>True</RunAnalyzersDuringBuild>
+  <PropertyGroup Condition="'$(Configuration)'!='Debug' or '$(TURN_OFF_WARNING_AS_ERROR)'!='True' ">    
     <RunAnalyzersDuringLiveAnalysis>True</RunAnalyzersDuringLiveAnalysis>
     <_SkipUpgradeNetAnalyzersNuGetWarning>True</_SkipUpgradeNetAnalyzersNuGetWarning>
   </PropertyGroup>

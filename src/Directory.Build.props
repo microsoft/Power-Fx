@@ -32,13 +32,20 @@
   </ItemGroup>
 
   <PropertyGroup Condition=" '$(Configuration)-$(TURN_OFF_STYLECOP_DEBUG)' == 'Debug-True' " >
+    <EnableNETAnalyzers>false</EnableNETAnalyzers>    
     <EnforceCodeStyleInBuild>false</EnforceCodeStyleInBuild>  
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <CodeAnalysisTreatWarningsAsErrors>false</CodeAnalysisTreatWarningsAsErrors>
+    <RunAnalyzersDuringBuild>False</RunAnalyzersDuringBuild>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)-$(TURN_OFF_STYLECOP_DEBUG)' != 'Debug-True' " >
+    <EnableNETAnalyzers>True</EnableNETAnalyzers>
+    <AnalysisLevel>latest</AnalysisLevel>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
+    <RunAnalyzersDuringBuild>True</RunAnalyzersDuringBuild>
   </PropertyGroup>
   
   <PropertyGroup>

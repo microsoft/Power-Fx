@@ -9,12 +9,7 @@
     <OutputType>Exe</OutputType>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)'!='Debug' or '$(TURN_OFF_WARNING_AS_ERROR)'!='True' ">
-    <EnableNETAnalyzers>false</EnableNETAnalyzers>
-    <AnalysisLevel>latest</AnalysisLevel>
-    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
-    <CodeAnalysisTreatWarningsAsErrors>false</CodeAnalysisTreatWarningsAsErrors>
-    <RunAnalyzersDuringBuild>False</RunAnalyzersDuringBuild>
+  <PropertyGroup Condition="'$(Configuration)'!='Debug' or '$(TURN_OFF_WARNING_AS_ERROR)'!='True' ">    
     <RunAnalyzersDuringLiveAnalysis>False</RunAnalyzersDuringLiveAnalysis>
   </PropertyGroup>
   
