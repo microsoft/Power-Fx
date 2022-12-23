@@ -9,7 +9,7 @@ $apiTool="tool\.store\microsoft.dotnet.apicompat.tool\7.0.100\microsoft.dotnet.a
 $apiToolRightFolder="Output"
 
 [xml]$xfiles = Get-Content .\ApiCompat.Files.xml
-$e = [char]0x274C
+$e = "<br />" + [char]0x274C
 
 foreach ($a in $xfiles.ApiCompat.Assembly)
 {
@@ -25,11 +25,11 @@ foreach ($a in $xfiles.ApiCompat.Assembly)
     dotnet $apiTool --suppression-file $s --left-assembly $apiToolLeft --right-assembly $apiToolRight --enable-rule-attributes-must-match --enable-rule-cannot-change-parameter-name --generate-suppression-file
     
     [xml]$x = Get-Content $s
-    $e += [string]::Join([char]0x274C, ($x.Suppressions.Suppression | % { $_.DiagnosticId + " " + $_.Target })).Trim()
+    $e += [string]::Join("<br />" + [char]0x274C, ($x.Suppressions.Suppression | % { $_.DiagnosticId + " " + $_.Target })).Trim()
 }
 
 
-if ($e.Length -gt 2)
+if ($e.Length -gt 8)
 {
     Write-Host "##[error] $e"
     Write-Host "##vso[task.setvariable variable=ApiCompat;issecret=false]Public API changes: $e"
