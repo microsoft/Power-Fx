@@ -1389,6 +1389,23 @@
   <data name="AboutDegrees_input" xml:space="preserve">
     <value>A column of numeric values (in radians) to process.</value>
   </data>
+  <data name="AboutDistinct" xml:space="preserve">
+    <value>Evaluates an expression over one or more columns of the table and returns a one-column table that contains distinct (unique) values for the evaluated expression.</value>
+  </data>
+  <data name="DistinctArg1" xml:space="preserve">
+    <value>source</value>
+    <comment>function_parameter - First parameter to the Distinct function - the source (collection / table) to have distinct elements retrieved.</comment>
+  </data>
+  <data name="DistinctArg2" xml:space="preserve">
+    <value>expression</value>
+    <comment>function_parameter - Second parameter to the Distinct function - the expression that will generate the distinct values to be returned.</comment>
+  </data>
+  <data name="AboutDistinct_source" xml:space="preserve">
+    <value>A table from which distinct values will be extracted.</value>
+  </data>
+  <data name="AboutDistinct_expression" xml:space="preserve">
+    <value>An expression evaluated over each row in the input table, and which provides values for the Distinct operation.</value>
+  </data>
   <data name="AboutAtan2" xml:space="preserve">
     <value>Returns the arctangent (in radians) of the specified x- and y-coordinates.</value>
   </data>
@@ -1878,6 +1895,10 @@
   </data>
   <data name="ErrSortWrongType" xml:space="preserve">
     <value>Cannot sort on the expression type.</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrDistinctWrongType" xml:space="preserve">
+    <value>Cannot apply distinct on the expression type.</value>
     <comment>Error Message.</comment>
   </data>
   <data name="ErrFunctionDoesNotAcceptThisType_Function_Expected" xml:space="preserve">
