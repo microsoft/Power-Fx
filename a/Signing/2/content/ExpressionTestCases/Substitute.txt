@@ -1,0 +1,195 @@
+// ******** STRING PARAMETERS ********
+
+>> Substitute("HelloHelloHello", "He", "Je")
+"JelloJelloJello"
+
+>> Substitute("HelloHelloHello", "He", "Je", 2)
+"HelloJelloHello"
+
+>> Substitute("HelloHelloHello", "He", "Je", "2")
+"HelloJelloHello"
+
+>> Substitute("HelloHelloHello", "He", "Je", Len("He") + 1)
+"HelloHelloJello"
+
+>> Substitute("HelloHelloHello", "He", "Je", 2.4)
+"HelloJelloHello"
+
+>> Substitute("HelloHelloHello", "He", "Je", 2.7)
+"HelloJelloHello"
+
+>> Substitute("HelloHelloHello", "Je", "yy", 1)
+"HelloHelloHello"
+
+>> Substitute("HelloHelloHello", "He", "Je", 4)
+"HelloHelloHello"
+
+>> Substitute("HelloHelloHello", "He", "Je", 100)
+"HelloHelloHello"
+
+>> Substitute("HelloHelloHello", "He", "Je", 5e100)
+"HelloHelloHello"
+
+>> Substitute("Hello", "Hello", "Greetings")
+"Greetings"
+
+// ******** NUMBER PARAMETERS ********
+
+>> Substitute(123123123,2,7)
+"173173173"
+
+//Number passed as a string parameter
+>> Substitute("123123123","2","7")
+"173173173"
+
+>> Substitute(-123.43,3,10,1)
+"-1210.43"
+
+//Number passed as a string parameter
+>> Substitute("-123.43","3","10","2")
+"-123.410"
+
+
+// ******** BOOLEAN PARAMETERS ********
+
+//Excel does not accept boolean values in forth argument
+>> Substitute(true,"r","a",true)
+"taue"
+
+>> Substitute("true","r","a",true)
+"taue"
+
+>> Substitute(true,true,false)
+"false"
+
+>> Substitute(true,true,false,1)
+"false"
+
+//Excel tries to find "TRUE" in the string "truetrue". As the string doesn't match, it returns the original string "truetrue"
+>> Substitute("truetrue",true,false,2)
+"truefalse"
+
+//Excel does not accept boolean values in forth argument
+>> Substitute("HelloWorld","Hello",true,true)
+"trueWorld"
+
+//Excel does not accept boolean values in forth argument
+>> Substitute("HelloWorld","World",false,true)
+"Hellofalse"
+
+>> Substitute("true",true,"false")
+"false"
+
+
+// ******** EMPTY STRING, BLANK and ERROR PARAMETERS ********
+
+>> Substitute("", "", "")
+""
+
+>> Substitute(Blank(), Blank(), Blank())
+""
+
+>> Substitute("", "", "", 10) 
+""
+
+>> Substitute(Blank(), Blank(), Blank(),10)
+""
+
+>> Substitute(Blank(), "", "")
+""
+
+>> Substitute(Blank(), "", "", 10) 
+""
+
+>> Substitute("", "He", "Je") 
+""
+
+>> Substitute(Blank(), "He", "Je") 
+""
+
+>> Substitute("", "", "Je") 
+""
+
+>> Substitute(Blank(), Blank(), "Je") 
+""
+
+>> Substitute("HelloHelloHello", Blank(), "Je")
+"HelloHelloHello"
+
+>> Substitute("HelloHelloHello", Blank(), "Je", 2)
+"HelloHelloHello"
+
+// Blank() is coerced to 0, which is invalid
+>> Substitute("HelloHelloHello", "He", "Je", Blank())
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Substitute("HelloHelloHello", "He", "")
+"llollollo"
+
+>> Substitute("HelloHelloHello", "He", Blank())
+"llollollo"
+
+>> Substitute("HelloHelloHello", "He", "", 2)
+"HellolloHello"
+
+>> Substitute("HelloHelloHello", "He", Blank(), 2)
+"HellolloHello"
+
+>> Substitute("HelloHelloHello", "", "Je")
+"HelloHelloHello"
+
+//Invalid operation: Division by zero error
+>> Substitute("HelloHelloHello", "He", "Je", 1/0)
+Error({Kind:ErrorKind.Div0})
+
+//Invalid operation: Division by zero error
+>> Substitute("HelloHelloHello", 1/0, "Je", 1)
+Error({Kind:ErrorKind.Div0})
+
+//Invalid operation: Division by zero error
+>> Substitute("HelloHelloHello", "He", 1/0, 1)
+Error({Kind:ErrorKind.Div0})
+
+//Error message: The forth argument to the 'Substitute' function should be greater than or equal to 1
+>> Substitute("HelloHelloHello", "He", "Je", 0)
+Error({Kind:ErrorKind.InvalidArgument})
+
+//Error message: The forth argument to the 'Substitute' function should be greater than or equal to 1
+>> Substitute("HelloHelloHello", "He", "Je", -2)
+Error({Kind:ErrorKind.InvalidArgument})
+
+//Error message: The forth argument to the 'Substitute' function should be greater than or equal to 1 (Here "false" is treated as 0)
+>> Substitute(true,"r","a",false)
+Error({Kind:ErrorKind.InvalidArgument})
+
+//Error message: The forth argument to the 'Substitute' function should be greater than or equal to 1 (Here "false" is treated as 0)
+>> Substitute("HelloWorld","Hello",true,false)
+Error({Kind:ErrorKind.InvalidArgument})
+
+//Error message: Invalid argument to the 'Value' function
+>> Substitute("HelloHelloHello", "He", "Je", "abc")
+Error({Kind:ErrorKind.InvalidArgument})
+
+//Error message: Invalid argument to the 'Value' function
+>> Substitute("true","r","a","true")
+Error({Kind:ErrorKind.InvalidArgument})
+
+
+// ******** FUNCTION VALUE AS PARAMETERS ********
+
+>> Substitute(Concatenate("Jane", "Doe", "Smith"),"Doe","John")
+"JaneJohnSmith"
+
+>> Substitute(Left("HelloWorld", "7"),"He","Je",1)
+"JelloWo"
+
+//Excel returns "28117"
+>> Substitute(Date(1976, 12,23),12,14)
+"14/23/1976"
+
+
+// ******* ALL THE PARAMETERS TYPE *******
+
+//Excel returns "JaneSmith67890TRUE12.00028117FALSE"
+>> Substitute("Jane" & "Smith" & 67890 & true & Blank() & Text(12, "#.000") & Date(1976, 12,23) & true,true,false,2)
+"JaneSmith67890true12.00012/23/1976false"

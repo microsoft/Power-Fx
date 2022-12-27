@@ -1,0 +1,25 @@
+#SETUP: ConsistentOneColumnTableResult
+
+>> Len(["abc", "def"])
+Table({Value:3},{Value:3})
+
+>> Len([])
+Errors: Error 0-7: The function 'Len' has some invalid arguments.|Error 4-6: Invalid schema, expected a one-column table.
+
+>> Len("foo")
+3
+
+>> Len(12345)
+5
+
+>> Len(true)
+4
+
+>> Len("")
+0
+
+>> Len(Blank())
+0
+
+>> Len([123, -2344566, 0567])
+Table({Value:3},{Value:8},{Value:3})

@@ -1,0 +1,340 @@
+// Value tests
+>> Value(Index(ParseJSON("[5]"), 1))
+5
+
+>> IfError(Text(Index(ParseJSON("123"),1)),$"Kind={FirstError.Kind}")
+"Kind=25"
+
+>> Value(ParseJSON("5"))
+5
+
+>> Value(ParseJSON("true"))
+1
+
+>> Value(ParseJSON("false"))
+0
+
+>> Value(ParseJSON("""5"""))
+5
+
+>> Value(ParseJSON("""123,456"""))
+123456
+
+>> Value(ParseJSON("""123,456"""), "fr-FR")
+123.456
+
+>> Value(ParseJSON("""123.456"""), "es-ES")
+123456
+
+>> Value(ParseJSON("123.456"), "es-ES")
+123.456
+
+>> Value(ParseJSON("""a"""))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Value(ParseJSON("null"))
+Blank()
+
+>> Value(ParseJSON("{""a"": 5}").a)
+5
+
+>> Value(ParseJSON("{""a"": 5, ""A"": 10}").a)
+5
+
+>> Value(ParseJSON("{""a"": 5, ""A"": 10}").A)
+10
+
+>> Value(ParseJSON("{""a"": 5}").b)
+Blank()
+
+>> Value(ParseJSON("""s""").a)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Value(ParseJSON("This "" Is , "" Invalid ").a)
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Text tests
+>> Text(Index(ParseJSON("[""s""]"), 1))
+"s"
+
+>> Text(ParseJSON("""s"""))
+"s"
+
+>> Text(ParseJSON("null"))
+Blank()
+
+>> Text(ParseJSON("true"))
+"true"
+
+>> Text(ParseJSON("false"))
+"false"
+
+>> Text(ParseJSON("5"))
+"5"
+
+>> Boolean(ParseJSON("true"))
+true
+
+>> Boolean(ParseJSON("false"))
+false
+
+>> Boolean(ParseJSON("""true"""))
+true
+
+>> Boolean(ParseJSON("""false"""))
+false
+
+>> Boolean(ParseJSON("""tRuE"""))
+true
+
+>> Boolean(ParseJSON("""fAlSe"""))
+false
+
+>> Boolean(ParseJSON("""F"""))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Boolean(ParseJSON("1"))
+true
+
+>> Boolean(ParseJSON("0"))
+false
+
+>> Boolean(ParseJSON("5"))
+true
+
+>> Boolean(ParseJSON("null"))
+Blank()
+
+>> ParseJSON("{""a"": null}").a
+Blank()
+
+>> ParseJSON("{""a"": null}").a.b
+Blank()
+
+>> ParseJSON("null").a
+Blank()
+
+>> ParseJSON("null").a.b
+Blank()
+
+>> ParseJSON("{}").a
+Blank()
+
+>> ParseJSON("{}").a.b
+Blank()
+
+>> Sum(Table(ParseJSON("[1, 2, 3, 4, 5]")), Value(Value))
+15
+
+>> ForAll(ParseJSON("[5, 6, 7]"), Value(ThisRecord))
+Table({Value:5},{Value:6},{Value:7})
+
+>> ForAll(ParseJSON("5"), Value(ThisRecord))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ForAll(ParseJSON("5"), IfError(Value(ThisRecord), -1))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ForAll(ParseJSON("null"), Value(ThisRecord))
+Blank()
+
+>> ForAll(ParseJSON("[null, null, null]"), Value(ThisRecord))
+Table({Value:Blank()},{Value:Blank()},{Value:Blank()})
+
+>> ForAll(ParseJSON("[5, null, 7]"), Value(ThisRecord))
+Table({Value:5},{Value:Blank()},{Value:7})
+
+>> ForAll(ParseJSON("[""hi"", null, ""hello""]"), Text(ThisRecord))
+Table({Value:"hi"},{Value:Blank()},{Value:"hello"})
+
+>> ForAll(ParseJSON("[true, null, false]"), Boolean(ThisRecord))
+Table({Value:true},{Value:Blank()},{Value:false})
+
+>> ForAll(ParseJSON("[""2011-01-15"", null]"), Text(DateValue(ThisRecord), "yyyy-MM-dd"))
+Table({Value:"2011-01-15"},{Value:""})
+
+>> ForAll(ParseJSON("[""08:03:05.000"", null]"), Text(TimeValue(ThisRecord), "HH:mm:ss"))
+Table({Value:"08:03:05"},{Value:""})
+
+>> ForAll(ParseJSON("[""5cc45615-f759-4a53-b225-d3a2497f60ad"", null]"), GUID(ThisRecord))
+Table({Value:GUID("5cc45615-f759-4a53-b225-d3a2497f60ad")},{Value:Blank()})
+
+>> ForAll(ParseJSON("[1]"), Value(ThisRecord) / 0)
+Error({Kind:ErrorKind.Div0})
+
+>> CountRows(ForAll(ParseJSON("[1,2,3]"), Value(ThisRecord)))
+3
+
+>> Sum(ForAll(ParseJSON("[5, 6, 7]"), Value(ThisRecord)), Value)
+18
+
+>> Sum(ForAll(ParseJSON("[5, 6, 7]"), ThisRecord), Value(Value))
+18
+
+>> ForAll(ParseJSON("[1,{""a"":false},""hello""]"), IfError(Text(ThisRecord), IfError(Text(Value(ThisRecord)), Text(Boolean(ThisRecord.a)))))
+Table({Value:"1"},{Value:"false"},{Value:"hello"})
+
+>> ForAll(ParseJSON("[1,true,3,false]"), Value(ThisRecord))
+Table({Value:1},{Value:1},{Value:3},{Value:0})
+
+>> ForAll(ParseJSON("[1,2,3]"), If(Value(ThisRecord) < 2, Value(ThisRecord), ThisRecord))
+Errors: Error 74-84: Invalid argument type (UntypedObject). Expecting a Number value instead.|Error 29-85: The function 'If' has some invalid arguments.
+
+>> ForAll(ParseJSON("[1,2,3]"), ThisItem)
+Errors: Error 29-37: Name isn't valid. 'ThisItem' isn't recognized.|Error 0-38: The function 'ForAll' has some invalid arguments.
+
+>> ParseJSON("5") + ParseJSON("5")
+Errors: Error 0-14: Invalid argument type. Expecting one of the following: Number, Text, Boolean.|Error 17-31: Invalid argument type. Expecting one of the following: Number, Text, Boolean.
+
+>> ParseJSON("5") - ParseJSON("5")
+Errors: Error 17-31: Invalid argument type. Expecting one of the following: Number, Text, Boolean.|Error 0-14: Invalid argument type. Expecting one of the following: Number, Text, Boolean.
+
+>> ParseJSON("5") * ParseJSON("5")
+Errors: Error 0-14: Invalid argument type. Expecting one of the following: Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime.|Error 17-31: Invalid argument type. Expecting one of the following: Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime.
+
+>> ParseJSON("5") / ParseJSON("5")
+Errors: Error 0-14: Invalid argument type. Expecting one of the following: Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime.|Error 17-31: Invalid argument type. Expecting one of the following: Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime.
+
+>> ParseJSON("5") = ParseJSON("5")
+Errors: Error 15-16: Incompatible types for comparison. These types can't be compared: UntypedObject, UntypedObject.
+
+>> ParseJSON("5") > ParseJSON("5")
+Errors: Error 0-14: Invalid argument type. Expecting one of the following: Number, Date, Time, DateTime.|Error 17-31: Invalid argument type. Expecting one of the following: Number, Date, Time, DateTime.
+
+>> ParseJSON("5") < ParseJSON("5")
+Errors: Error 0-14: Invalid argument type. Expecting one of the following: Number, Date, Time, DateTime.|Error 17-31: Invalid argument type. Expecting one of the following: Number, Date, Time, DateTime.
+
+>> ParseJSON("5") <> ParseJSON("5")
+Errors: Error 15-17: Incompatible types for comparison. These types can't be compared: UntypedObject, UntypedObject.
+
+>> ParseJSON("5") >= ParseJSON("5")
+Errors: Error 0-14: Invalid argument type. Expecting one of the following: Number, Date, Time, DateTime.|Error 18-32: Invalid argument type. Expecting one of the following: Number, Date, Time, DateTime.
+
+>> ParseJSON("5") <= ParseJSON("5")
+Errors: Error 0-14: Invalid argument type. Expecting one of the following: Number, Date, Time, DateTime.|Error 18-32: Invalid argument type. Expecting one of the following: Number, Date, Time, DateTime.
+
+>> CountRows(ParseJSON("[1, 2, 3]"))
+3
+
+>> CountRows(ParseJSON("[]"))
+0
+
+>> CountRows(ParseJSON("1"))
+Error({Kind:ErrorKind.InvalidArgument})
+
+// --- Testing heterogeneous arrays --
+
+>> Text(Index(ParseJSON("{""a"": 5, ""b"": [{""c"": 174 }, {""c"": ""foo"" }] }").b, 2).c)
+"foo"
+
+>> Value(Index(ParseJSON("{""a"": 5, ""b"": [{""c"": 19 }, {""c"": ""foo"" }] }").b, 1).c)
+19
+
+>> DateDiff(DateValue(ParseJSON("""2011-01-15""")), DateValue(ParseJSON("""2011-01-30""")))
+15
+
+>> DateValue(ParseJSON("""2011-1-15"""))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> DateValue(ParseJSON("""2011-01"""))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> DateValue(ParseJSON("""2011"""))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> DateValue(ParseJSON("null"))
+Blank()
+
+>> DateValue(ParseJSON("""abcdef"""))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> DateDiff(DateTimeValue(ParseJSON("""2011-01-15T08:00:00.000Z""")), DateTimeValue(ParseJSON("""2011-01-30T08:00:00.000Z""")))
+15
+
+>> DateDiff(DateTimeValue(ParseJSON("""2011-01-15T08:00:00Z""")), DateTimeValue(ParseJSON("""2011-01-30T08:00:00Z""")))
+15
+
+>> DateDiff(DateTimeValue(ParseJSON("""2011-01-15T08:00:00.000""")), DateTimeValue(ParseJSON("""2011-01-30T08:00:00.000""")))
+15
+
+>> DateDiff(DateTimeValue(ParseJSON("""2011-01-15T00:00:00""")), DateTimeValue(ParseJSON("""2011-01-30""")))
+15
+
+>> DateTimeValue(ParseJSON("""2011-01-15T08:0:00.000Z"""))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> DateTimeValue(ParseJSON("""2011-01-15T08"""))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> DateTimeValue(ParseJSON("""2011T08:00:00.000Z"""))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> DateTimeValue(ParseJSON("null"))
+Blank()
+
+>> DateTimeValue(ParseJSON("""abcdef"""))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(DateTimeValue(ParseJSON("""2022-05-05""")), "yyyy-MM-dd HH:mm:ss")
+"2022-05-05 00:00:00"
+
+>> DateDiff(DateValue(ParseJSON("""2011-01-15T08:00:00.000Z""")), DateValue(ParseJSON("""2011-01-30T08:00:00.000Z""")))
+15
+
+>> DateDiff(DateValue(ParseJSON("""2011-01-15T08:00:00Z""")), DateValue(ParseJSON("""2011-01-30T08:00:00Z""")))
+15
+
+>> DateDiff(DateValue(ParseJSON("""2011-01-15T00:00:00""")), DateValue(ParseJSON("""2011-01-30""")))
+15
+
+>> DateDiff(DateValue(ParseJSON("""2011-01-15T08:00:00.000""")), DateValue(ParseJSON("""2011-01-30T08:00:00.000""")))
+15
+
+>> Text(TimeValue(ParseJSON("""08:03:05.000""")), "HH:mm:ss")
+"08:03:05"
+
+>> TimeValue(ParseJSON("""08:93:05.000"""))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> TimeValue(ParseJSON("null"))
+Blank()
+
+>> TimeValue(ParseJSON("""abcdef"""))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> GUID(ParseJSON("""5cc45615-f759-4a53-b225-d3a2497f60ad"""))
+GUID("5cc45615-f759-4a53-b225-d3a2497f60ad")
+
+>> GUID(ParseJSON("null"))
+Blank()
+
+// heterogeneous/ mixed-type arrays
+>> Value(Index(ParseJSON("[ { ""a"" : 10 }, { ""b"" : ""str"" } ]"),1).a)
+10
+
+>> Value(Index(ParseJSON("[ { ""a"" : 10 }, { ""b"" : ""str"" } ]"),1).b)
+Blank()
+
+>> Text(Index(ParseJSON("[ { ""a"" : 10 }, { ""b"" : ""str"" } ]"),2).b)
+"str"
+
+>> Text(Index(ParseJSON("[ { ""a"" : 10 }, { ""b"" : ""str"" } ]"),2).a)
+Blank()
+
+>> ColorValue(ParseJSON("""#01020304"""))
+RGBA(1,2,3,0.016)
+
+>> ColorValue(ParseJSON("""#010203"""))
+RGBA(1,2,3,1)
+
+>> ColorValue(ParseJSON("""Red"""))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ColorValue(ParseJSON("""#RRGGBBAA"""))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ColorValue(ParseJSON("""#000000ZZ"""))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ColorValue(ParseJSON("null"))
+Blank()

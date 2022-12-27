@@ -1,0 +1,50 @@
+>> AddColumns([1,2,3,4,5], "Double", Value * 2)
+Table({Double:2,Value:1},{Double:4,Value:2},{Double:6,Value:3},{Double:8,Value:4},{Double:10,Value:5})
+
+>> AddColumns([1,2,3,4,5], "Value", Value * 2)
+Errors: Warning 24-31: A column named 'Value' already exists.|Error 0-43: The function 'AddColumns' has some invalid arguments.
+
+>> AddColumns([1,2,3,4,5], "Blanks", Blank())
+Table({Blanks:Blank(),Value:1},{Blanks:Blank(),Value:2},{Blanks:Blank(),Value:3},{Blanks:Blank(),Value:4},{Blanks:Blank(),Value:5})
+
+>> AddColumns([1,2,0,4,5], "Div", 20/Value)
+Table({Div:20,Value:1},{Div:10,Value:2},{Div:Error({Kind:ErrorKind.Div0}),Value:0},{Div:5,Value:4},{Div:4,Value:5})
+
+>> AddColumns(Sort([-2, -1, 0, 1, 2], 1 / Value), "Double", Value * 2)
+Error({Kind:ErrorKind.Div0})
+
+>> AddColumns(LastN([1, 2, 3, 4, 5], Blank()), "Double", Value * 2)
+Table()
+
+>> AddColumns(If(1<0, [1, 2, 3]), "Double", Value * 2)
+Blank()
+
+>> AddColumns(Table({a: 1}, {a: 2}), "b", a * a * a)
+Table({a:1,b:1},{a:2,b:8})
+
+>> AddColumns(Table({a: 1, b: {c: 3}}, {a: 2, b: {c: 4}}), "b.d", a * a * a)
+Table({a:1,b:{c:3},'b.d':1},{a:2,b:{c:4},'b.d':8})
+
+>> AddColumns(Table({a: 1, b: {c: 3}}, {a: 2, b: {c: 4}}), "b d", a * a * a)
+Table({a:1,b:{c:3},'b d':1},{a:2,b:{c:4},'b d':8})
+
+>> AddColumns(Table({a: 1}, {a: 2}), "b", c)
+Errors: Error 39-40: Name isn't valid. 'c' isn't recognized.|Error 0-41: The function 'AddColumns' has some invalid arguments.
+
+>> With( { b : 15 }, AddColumns([1,2], "b", Value * b))
+Table({Value:1,b:15},{Value:2,b:30})
+
+>> AddColumns([], "Value", 1)
+Table()
+
+>> AddColumns([1,2,3], "sq", Value * Value, "cu", Value * Value * Value)
+Table({Value:1,cu:1,sq:1},{Value:2,cu:8,sq:4},{Value:3,cu:27,sq:9})
+
+>> AddColumns([1,2,3], "sq", Value * Value, "cu", sq * Value)
+Errors: Error 47-49: Name isn't valid. 'sq' isn't recognized.
+
+>> AddColumns([1, 2, 3], 5, Value * Value)
+Errors: Error 22-23: Argument '5' is invalid, expected a text literal.|Error 0-39: The function 'AddColumns' has some invalid arguments.
+
+>> AddColumns([1, 2, 3], "", Value * Value)
+Errors: Error 22-24: Argument '' is not a valid identifier.|Error 0-40: The function 'AddColumns' has some invalid arguments.

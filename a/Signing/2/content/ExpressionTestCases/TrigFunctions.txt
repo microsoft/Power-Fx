@@ -1,0 +1,263 @@
+﻿>> Sin(0)
+0
+
+>> Sin(Pi())
+0
+
+>> Sin(Pi()/2)
+1
+
+>> Sin(-Pi()/2)
+-1
+
+>> Sin(3*Pi()/2)
+-1
+
+>> Sin(2*Pi())
+-0
+
+>> Sin(Pi()/4)
+0.707106781
+
+>> Sin(-Pi()/4)
+-0.707106781
+
+>> Sin(Blank())
+0
+
+>> Cos(0)
+1
+
+>> Cos(Pi())
+-1
+
+>> Cos(Pi()/2)
+0
+
+>> Cos(-Pi()/2)
+0
+
+>> Cos(3*Pi()/2)
+-0
+
+>> Cos(2*Pi())
+1
+
+>> Cos(Pi()/4)
+0.707106781
+
+>> Cos(-Pi()/4)
+0.707106781
+
+>> Cos(Blank())
+1
+
+>> Tan(0)
+0
+
+>> Tan(Pi())
+-0
+
+>> 1 / Tan(Pi()/2) // not quite infinity, but a very large number
+0
+
+>> 1 / Tan(-Pi()/2) // not quite infinity, but a very large number
+0
+
+>> 1 / Tan(3*Pi()/2) // not quite infinity, but a very large number
+0
+
+>> Tan(2*Pi())
+-0
+
+>> Tan(Pi()/4)
+1
+
+>> Tan(-Pi()/4)
+-1
+
+>> Tan(Blank())
+0
+
+>> Cot(0)
+Error({Kind:ErrorKind.Div0})
+
+>> 1 / Cot(Pi()) // not quite infinity, but a very large number
+0
+
+>> Cot(Pi()/2)
+0
+
+>> Cot(-Pi()/2)
+-0
+
+>> Cot(3*Pi()/2)
+0
+
+>> 1 / Cot(2*Pi()) // not quite infinity, but a very large number
+0
+
+>> Cot(Pi()/4)
+1
+
+>> Cot(-Pi()/4)
+-1
+
+>> Cot(Blank())
+Error({Kind:ErrorKind.Div0})
+
+>> Asin(0)
+0
+
+>> Asin(1)
+1.570796327
+
+>> Asin(-1)
+-1.570796327
+
+>> Asin(Blank())
+0
+
+>> Acos(0)
+1.570796327
+
+>> Acos(1)
+0
+
+>> Acos(-1)
+3.141592654
+
+>> Acos(Blank())
+1.570796327
+
+>> Atan(0)
+0
+
+>> Atan(1e100)
+1.570796327
+
+>> Atan(-1e100)
+-1.570796327
+
+>> Atan(1)
+0.785398163
+
+>> Atan(-1)
+-0.785398163
+
+>> Atan(Blank())
+0
+
+>> Acot(0)
+1.570796327
+
+>> Acot(1e100)
+0
+
+>> Acot(-1e100)
+3.141592654
+
+>> Acot(1)
+0.785398163
+
+>> Acot(-1)
+2.35619449
+
+>> Acot(Blank())
+1.570796327
+
+>> Atan2(0, 0)
+Error({Kind:ErrorKind.Div0})
+
+>> Atan2(0, 1)
+1.570796327
+
+>> Atan2(1, 0)
+0
+
+>> Atan2(1, 1)
+0.785398163
+
+>> Atan2(-234, 0)
+3.141592654
+
+>> Atan2(0, -0.01)
+-1.570796327
+
+>> Atan2(2, 5)
+1.19028995
+
+>> Atan2(1, Blank()) // Blanks are coerced to zero
+0
+
+>> Atan2(-2, Blank())
+3.141592654
+
+>> Atan2(Blank(), Blank())
+Error({Kind:ErrorKind.Div0})
+
+>> Atan2(Sqrt(-1), 0)
+Error({Kind:ErrorKind.Numeric})
+
+>> Degrees(0)
+0
+
+>> Degrees(Pi())
+180
+
+>> Degrees(Pi()/2)
+90
+
+>> Degrees(-Pi()/2)
+-90
+
+>> Degrees(3*Pi()/2)
+270
+
+>> Degrees(2*Pi())
+360
+
+>> Degrees(Pi()/4)
+45
+
+>> Degrees(-Pi()/4)
+-45
+
+>> Degrees(Pi()*10)
+1800
+
+>> Degrees(1)
+57.295779513
+
+>> Degrees(-1)
+-57.295779513
+
+>> Degrees(Blank())
+0
+
+>> Radians(0)
+0
+
+>> Radians(1)
+0.017453293
+
+>> Radians(-1)
+-0.017453293
+
+>> Radians(180)
+3.141592654
+
+>> Radians(90)
+1.570796327
+
+>> Radians(-180)
+-3.141592654
+
+>> Radians(-90)
+-1.570796327
+
+>> Radians(-360)
+-6.283185307
+
+>> Radians(Blank())
+0

@@ -1,0 +1,795 @@
+﻿// https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-value
+
+// Default to invariant
+>> Value("-5")
+-5
+
+>> Value("5")
+5
+
+>> Value("123,456.78")
+123456.78
+
+>> Value("xxx")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Value( "$ 12.34" )
+12.34
+
+>> Value( "24e3" )
+24000
+
+>> Value( "12.34%" )
+0.1234
+
+>> IsError(Value("%"))
+true
+
+// leading and trailing whitespace ignored
+>> Value(" %10")
+0.1
+
+>> Value("10% ")
+0.1
+
+// percent can also be a prefix
+>> Value("%10")
+0.1
+
+// Value on a number is just passthrough
+>> Value(123)
+123
+
+// ******** VALID STRING PARAMETERS ********
+
+// ******** NUMBERS IN STRING PARAMETERS ********
+
+>> Value("0")
+0
+ 
+>> Value("1")
+1
+ 
+>> Value("-1")
+-1
+ 
+>> Value("-1000")
+-1000
+
+>> Value("0.0")
+0
+ 
+>> Value("1.23")
+1.23
+ 
+
+
+>> Value(" 1.23 ")
+1.23
+
+>> Value(" -1.23 ")
+-1.23
+
+>> Value("1.2")
+1.2
+ 
+>> Value(".123")
+0.123
+ 
+>> Value("123.")
+123
+ 
+>> Value("123.0")
+123
+ 
+>> Value("+.123")
+0.123
+ 
+>> Value("-.123")
+-0.123
+ 
+>> Value("-123.")
+-123
+ 
+>> Value("2e3")
+2000
+ 
+>> Value("2.1e3")
+2100
+ 
+>> Value("-2.1e3")
+-2100
+
+>> Value("100e-2")
+1
+
+>> Value("2e+3")
+2000
+
+>> Value("+2e3")
+2000
+
+>> Value("+100e-2")
+1
+
+>> Value("+2e+3")
+2000
+
+>> Value("-2e3")
+-2000
+
+>> Value("-100e-2")
+-1
+
+>> Value("-2e+3")
+-2000
+
+>> Value("-1,000")
+-1000
+
+>> Value("-1,000,000")
+-1000000
+
+>> Value("1,000,000")
+1000000
+
+>> Value("1,000")
+1000
+
+>> Value("$1234.567")
+1234.567
+
+>> Value("$ 1234.567")
+1234.567
+
+>> Value("$+1234.567")
+1234.567
+
+>> Value("$ +1234.567")
+1234.567
+
+>> Value("$-1234.567")
+-1234.567
+
+>> Value("$ -1234.567")
+-1234.567
+
+>> Value("-$1234.567")
+-1234.567
+
+>> Value("+$1234.567")
+1234.567
+
+>> Value("%123")
+1.23
+
+>> Value("%1.23")
+0.0123
+
+>> Value(" %123.")
+1.23
+
+>> Value("+%123")
+1.23
+
+>> Value("+%1.23")
+0.0123
+
+>> Value("+%123.")
+1.23
+
+>> Value("%+123")
+1.23
+
+>> Value("%+1.23")
+0.0123
+
+>> Value("%+123.")
+1.23
+
+>> Value("%-123")
+-1.23
+
+>> Value("%-1.23")
+-0.0123
+
+>> Value("%-123.")
+-1.23
+
+>> Value("-%123")
+-1.23
+
+>> Value("-%1.23")
+-0.0123
+
+>> Value("-%123.")
+-1.23
+
+>> Value("123%")
+1.23
+
+>> Value("1.23%")
+0.0123
+
+>> Value("123.%")
+1.23
+
+>> Value("+123%")
+1.23
+
+>> Value("+1.23%")
+0.0123
+
+>> Value("+123.%")
+1.23
+
+>> Value("-123%")
+-1.23
+
+>> Value("-1.23%")
+-0.0123
+
+>> Value("-123.%")
+-1.23
+
+>> Value("2.1e3%")
+21
+
+>> Value("%2e3")
+20
+
+>> Value("%100e-2")
+0.01
+
+>> Value("%2e+3")
+20
+
+>> Value("+%2e3")
+20
+
+>> Value("+%100e-2")
+0.01
+
+>> Value("+%2e+3")
+20
+
+>> Value("2e3%")
+20
+
+>> Value("100e-2%")
+0.01
+
+>> Value("2e+3%")
+20
+
+>> Value("-%100e-2")
+-0.01
+
+>> Value("+2e3%")
+20
+
+>> Value("+100e-2%")
+0.01
+
+>> Value("+2e+3%")
+20
+
+>> Value("-%2e3")
+-20
+
+>> Value("-%2e+3")
+-20
+
+>> Value("-2e3%")
+-20
+
+>> Value("-100e-2%")
+-0.01
+
+>> Value("-2e+3%")
+-20
+
+>> Value("% 123")
+1.23
+
+>> Value("% 1.23")
+0.0123
+
+>> Value("% 123.")
+1.23
+
+>> Value("% -123")
+-1.23
+
+// >> Value("%\t-123")
+// -1.23
+
+>> Value("123 %")
+1.23
+
+// >> Value("123\t%")
+// 1.23
+
+>> Value("1.23 %")
+0.0123
+
+>> Value("+123 %")
+1.23
+
+>> Value("-123 %")
+-1.23
+
+// >> Value("-123\t%")
+// -1.23
+
+>> Value("% 2e3")
+20
+
+>> Value("% 100e-2")
+0.01
+
+>> Value("% 2e+3")
+20
+
+>> Value("2e3 %")
+20
+
+>> Value("100e-2 %")
+0.01
+
+>> Value("- 123 %")
+-1.23
+
+>> Value("- 1000")
+-1000
+
+>> Value("+ 1000")
+1000
+
+>> Value("- 1,000,000")
+-1000000
+
+>> Value("+ 1,000,000")
+1000000
+
+>> Value("$+ 1234.567")
+1234.567
+
+>> Value("$ + 1234.567")
+1234.567
+
+>> Value("$- 1234.567")
+-1234.567
+
+>> Value("$ - 1234.567")
+-1234.567
+
+>> Value("- $1234.567")
+-1234.567
+
+>> Value("- $ 1234.567")
+-1234.567
+
+>> Value("+ $1234.567")
+1234.567
+
+>> Value("+ $ 1234.567")
+1234.567
+
+>> Value("+ .123")
+0.123
+
+>> Value("- .123")
+-0.123
+
+>> Value("- 123.")
+-123
+
+>> Value("+ 123.")
+123
+
+>> Value("+ %123")
+1.23
+
+>> Value("+% 123")
+1.23
+
+>> Value("+ % 123")
+1.23
+
+>> Value("%- 123")
+-1.23
+
+>> Value("% - 123")
+-1.23
+
+>> Value("+ 123%")
+1.23
+
+>> Value("+ 123 %")
+1.23
+
+>> Value("- 123%")
+-1.23
+
+>> Value("+ %2e3")
+20
+
+>> Value("+% 2e3")
+20
+
+>> Value("+ % 2e3")
+20
+
+>> Value("(123)")
+-123
+
+>> Value(" (123)")
+-123
+
+
+
+>> Value("(123 )")
+-123
+
+>> Value("(123) ")
+-123
+
+>> Value("%(123)")
+-1.23
+
+
+>> Value("(123) %")
+-1.23
+
+>> Value("$(123)")
+-123
+
+>> Value("($123)")
+-123
+
+>> Value(" $ (123)")
+-123
+
+// ******** NUMBER PARAMETERS ********
+
+>> Value(0)
+0
+
+>> Value(-123.456)
+-123.456
+
+// floating point error handling
+>> Value("1.2e-3")
+0.0012
+
+>> Value("123,456", "es-ES" )
+123.456
+
+// ******** BOOLEAN PARAMETERS ********
+
+>> Value(true)
+1
+
+>> Value(false)
+0
+
+// ******** DATE/TIME PARAMETERS ********
+
+>> Value(Date(2022,11,21))
+44886
+
+>> Value(DateTime(2022,11,21,6,0,0))
+44886.25
+
+>> Value(Time(12,0,0))
+0.5
+
+// ******** INVALID, NULL and ERROR PARAMETERS ********
+
+//Alphabetical String passed as parameter
+>> Value("Hello")
+Error({Kind:ErrorKind.InvalidArgument})
+
+//Excel return error (Error message : A value used in the formula is of the wrong data type)
+>> Value("")
+Blank()
+
+//Excel returns True
+>> IsError(Value(""))
+false
+
+//Excel returns 0
+>> Value(Blank())
+Blank()
+
+//Error message: Invalid operation - Division by zero
+>> Value(1/0)
+Error({Kind:ErrorKind.Div0})
+
+//Error message: We cannot convert the value to a number
+>> Value("%")
+Error({Kind:ErrorKind.InvalidArgument})
+
+//Error message: Invalid arguments to the Value function
+>> Value("1%00")
+Error({Kind:ErrorKind.InvalidArgument})
+
+//Error message: Invalid arguments to the Value function [Currency symbol allowed as prefix and not in between the string]
+>> Value("12$34")
+Error({Kind:ErrorKind.InvalidArgument})
+
+//Error message: Invalid arguments to the Value function [Currency symbol allowed as prefix and not in between the string]
+>> Value("12$34.567")
+Error({Kind:ErrorKind.InvalidArgument})
+
+//Error message: Invalid arguments to the Value function [Currency symbol allowed as prefix and not in between the string]
+>> Value("-12$34")
+Error({Kind:ErrorKind.InvalidArgument})
+
+//Error message: Invalid arguments to the Value function [Currency symbol allowed as prefix and not in between the string]
+>> Value("-12$34.567")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// +- together is not valid.
+>> Value("+-1")
+Error({Kind:ErrorKind.InvalidArgument})
+  
+// +- together is not valid.  
+>> Value("-+1")
+Error({Kind:ErrorKind.InvalidArgument})
+  
+// 'a' is not allowed.  
+>> Value("a")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// 'a' is not allowed.
+>> Value("a12")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// 'a' is not allowed.  
+>> Value("12a")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// 'b' is not allowed.  
+>> Value("1b2")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// 'c' is not allowed.
+>> Value("12.33c")
+Error({Kind:ErrorKind.InvalidArgument})
+  
+// 'A' is not allowed.  
+>> Value("12.33A")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// ';' is not allowed as it's not a thousand separator.
+>> Value("123;456.789")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// '#' is not allowed as it's not the default currency symbol for en-US.
+>> Value("#123,456.789")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// '*' is not allowed as it's not the default decimal symbol.
+>> Value("123,456*789")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// ; is not allowed.
+>> Value("123;")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// ' is not allowed.
+>> Value("123'")
+Error({Kind:ErrorKind.InvalidArgument})
+ 
+// " is not allowed. 
+// >> Value("\"123\"")
+// Error({Kind:ErrorKind.Div0})
+
+// multiple decimal separators are not allowed.
+>> Value("2.3.5")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// exponent form and decimal cannot be mixed.
+>> Value("2e3.5")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// exponent form and decimal cannot be mixed.
+>> Value("2e-3.5")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// currency symbol and % cannot be mixed.
+>> Value("$%1.3")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// currency symbol and % cannot be mixed.
+>> Value("$%1")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// multiple occurrences of %.
+>> Value("%1.3%")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// multiple occurrences of %.
+>> Value("%%1.3")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// multiple occurrences of %.
+>> Value("%1%.3")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// invalid occurrence of %.
+>> Value("0.%3")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// invalid occurrence of %.
+>> Value("1%.3")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// invalid occurrence of %.
+>> Value("1%2.3")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// multiple occurrences of %.
+>> Value("0.%%3")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// multiple occurrences of %.
+>> Value("0.3%%")
+Error({Kind:ErrorKind.InvalidArgument})
+  
+// multiple occurrences of %.
+>> Value("0.%3%")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// -+ cannot be mixed.
+>> Value("-%+1")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// -+ cannot be mixed.
+>> Value("+%-1")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// no +- after decimal symbol.
+>> Value("100.+3")
+Error({Kind:ErrorKind.InvalidArgument})
+ 
+// no +- after decimal symbol.
+>> Value("100.-3")
+Error({Kind:ErrorKind.InvalidArgument})
+  
+// space anywhere other than beginning/end is not allowed.
+>> Value("1 .23")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// just the decimal symbol is invalid.
+>> Value(".")
+Error({Kind:ErrorKind.InvalidArgument})
+  
+// invalid.
+>> Value("+.")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// invalid.
+>> Value("-.")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Value("e")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Value("2e")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Value("2e+")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Value("2e-")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Value("e3")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Value("e+3")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Value("e-3")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Value(" e")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Value("e ")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Value("2e ")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Value(" 2e")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Value(" 2e+")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Value("2e+ ")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Value(" 2e-")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Value("2e- ")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Value(" e3")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Value("e3 ")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Value(" e+3")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Value("e+3 ")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Value(" e-3")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Value("e-3 ")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Value("$12.3%+")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Value("   ")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Value("1 23")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Value("123 .45")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Value("123. 45")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Value("1 23.45")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Value("1  23.45")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Value("123 e45")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Value("123 e 45")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Value("123e+ 45")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Value("123e +45")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Value("123e- 45")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Value("123e -45")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// cannot have both () and -
+>> Value("%(-123)")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// cannot have both () and +
+>> Value("%(+123)")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// cannot have both () and -
+>> Value("(-123)")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// cannot have both () and +
+>> Value("(+123)")
+Error({Kind:ErrorKind.InvalidArgument})
+

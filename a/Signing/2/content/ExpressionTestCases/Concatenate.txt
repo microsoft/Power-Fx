@@ -1,0 +1,72 @@
+﻿>> Concatenate("777", ["abc"], ["1", "2"])
+Table({Result:"777abc1"},{Result:Error({Kind:ErrorKind.NotApplicable})})
+
+>> Concatenate("777", Filter(["empty table"], Value <> Value), ["1", "2"])
+Table({Result:Error({Kind:ErrorKind.NotApplicable})},{Result:Error({Kind:ErrorKind.NotApplicable})})
+
+// ******** VALID STRING PARAMETERS ********
+
+>> Concatenate("Jane")
+"Jane"
+
+>> Concatenate("Jane", "Doe")
+"JaneDoe"
+
+>> Concatenate("Jane", " Doe", "Smith")
+"Jane DoeSmith"
+
+>> Concatenate("")
+""
+
+>> If(Len(Concatenate(" ", " "))=2,true)   
+true
+
+// ******** NULL and ERROR PARAMETERS ********
+
+>> Concatenate(Blank())
+""
+
+>> Concatenate(Blank(),Blank())
+""
+
+>> Concatenate(Blank(), " Doe")
+" Doe"
+ 
+>> Concatenate(Blank(), "Doe")
+"Doe"
+
+>> Concatenate("Jane", Blank())
+"Jane"
+
+>> Concatenate("Jane", Blank(),"Doe")
+"JaneDoe"
+
+>> Concatenate(Blank(), "Jane", Blank(),"Doe")
+"JaneDoe"
+
+//Invalid operation: Division by zero
+>> Concatenate("Jane", 1/0)
+Error({Kind:ErrorKind.Div0})
+
+//Invalid operation: Division by zero
+>> Concatenate("Jane", 1/0, "Doe")
+Error({Kind:ErrorKind.Div0})
+
+// ******** BOOLEAN PARAMETERS ********
+>> Concatenate(true,false)
+"truefalse"
+
+>> Concatenate("true","false")
+"truefalse"
+
+// ******** PARAMETERS OF ALL DATATYPES: Integer, String, Decimal, Null, Negative, Boolean and Function ********
+
+>> Concatenate(174,"Jane",4.678,Blank(),"Doe",-1,false,Len("abc"))
+"174Jane4.678Doe-1false3"
+
+
+// ******** LONG STRING PARAMETERS ********
+
+>> Concatenate("This is really very long string This is really very long string This is really very long string" ,"This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string")
+"This is really very long string This is really very long string This is really very long stringThis is really very long string This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string"
+

@@ -1,0 +1,195 @@
+// ******** STRING PARAMETERS ********
+
+//Basic positive case
+>> EndsWith("Hello","o")
+true
+
+//Basic negative case
+>> EndsWith("Hello","A")
+false
+
+//Basic positive multichar case
+>> EndsWith("Hello","lo")
+true
+
+//Basic negative multichar case
+>> EndsWith("Hello","Ha")
+false
+
+//Substring case
+>> EndsWith("Hello","ell")
+false
+
+//Complete string case
+>> EndsWith("Hello","Hello")
+true
+
+//Extra letters case
+>> EndsWith("Hello","Hello sir")
+false
+
+//Case sensitive case
+>> EndsWith("Hello","Lo")
+true
+
+//Empty text case
+>> EndsWith("","Hi")
+false
+
+//Empty end case
+>> EndsWith("Hi","")
+true
+
+//Empty both case
+>> EndsWith("","")
+true
+
+//Space begins text case
+>> EndsWith(" A B","A B")
+true
+
+//Space around ends case
+>> EndsWith("A B "," B ")
+true
+
+//One char longer end case
+>> EndsWith("a","aa")
+false
+
+// ******** NUMBER PARAMETERS ********
+
+// Basic positive case
+>> EndsWith(123456,"6")
+true
+
+>> EndsWith(123456,6)
+true
+
+// Basic negative case
+>> EndsWith(123456,"A")
+false
+
+>> EndsWith(123456,3)
+false
+
+>> EndsWith("Hello",1)
+false
+
+// Basic positive multichar case
+>> EndsWith(123456,"56")
+true
+
+>> EndsWith(123456,56)
+true
+
+// Basic negative multichar case
+>> EndsWith(123456,"abc")
+false
+
+>> EndsWith(123456,786)
+false
+
+>> EndsWith("Hello",14)
+false
+
+// Substring case
+>> EndsWith(12356,235)
+false
+
+>> EndsWith(12356,"235")
+false
+
+// Complete string case
+>> EndsWith(123456,"123456")
+true
+
+>> EndsWith(123456,123456)
+true
+
+// Extra letters case
+>> EndsWith(123456,"456789")
+false
+
+// Empty text case
+>> EndsWith("",123456)
+false
+
+// Empty end case
+>> EndsWith(123456,"")
+true
+
+// One char longer end case
+>> EndsWith(123456,1234567)
+false
+
+//Decimal numbers
+>> EndsWith(65.78,".78")
+true
+
+
+
+// ******** NULL and ERROR PARAMETERS ********
+
+//Invalid operation: Division by zero
+>> EndsWith("hello",1/0)
+Error({Kind:ErrorKind.Div0})
+
+//Invalid operation: Division by zero
+>> EndsWith(1/0,"hello")
+Error({Kind:ErrorKind.Div0})
+
+//Null text case
+>> EndsWith(Blank(),"ok")
+false
+
+//Null end case - coerced to ""
+>> EndsWith("Hello",Blank())
+true
+
+//Null end case - coerced to ""
+>> EndsWith("",Blank())
+true
+
+//Null both case - both coerced to ""
+>> EndsWith(Blank(),Blank())
+true
+
+
+// ******** BOOLEAN PARAMETERS ********
+
+>> EndsWith(true,true)
+true
+
+>> EndsWith(false,false)
+true
+
+>> EndsWith(true,false)
+false
+
+>> EndsWith(false,true)
+false
+
+>> EndsWith(54321,true)
+false
+
+>> EndsWith("Hello0",false)
+false
+
+>> EndsWith("The boolean value 'false' is coerced to the string false", false)
+true
+
+>> EndsWith("The boolean value 'true' is coerced to the string true", true)
+true
+
+>> EndsWith("true",true)
+true
+
+>> EndsWith(false,"true")
+false
+
+// ******** FUNCTION VALUE AS PARAMETERS ********
+>> EndsWith("GoodMorning",Right("SunnyMorning", 5))
+true
+
+>> EndsWith(5467,Len("Morning"))
+true

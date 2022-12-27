@@ -1,0 +1,173 @@
+﻿
+>> Average(1,0,5)
+2
+
+>> Average("1",0,5) // coerce
+2
+
+>> Average(1,Blank(),5)
+3
+
+// ******** INTEGER PARAMETERS ********
+
+// Positive Integer Parameters
+
+>> Average(0)
+0
+
+>> Average(0,0,0,0)
+0
+
+>> Average(1, 2, 3, 4, 5)
+3
+
+// Negative Integer Parameters
+
+>> Average(-0,-0,-0,-0)
+0
+
+>> Average(-2, -2, -3, -4, -5)
+-3.2
+
+// ******** DECIMAL PARAMETERS ********
+
+>> Average(2.34567)
+2.34567
+
+//Excel returns -0.781666667
+>> Average(-1.234, 2.345, -3.456)
+-0.78166667
+
+
+// ******** NULL and ERROR PARAMETERS ********
+
+>> Average(1/0)
+Error({Kind:ErrorKind.Div0})
+
+>> Average(Blank())
+Error({Kind:ErrorKind.Div0})
+
+>> Average("")
+Error({Kind:ErrorKind.Div0})
+
+>> Average(Blank(),1,1,Blank())
+1
+
+>> Average(Blank(),Blank(),Blank(),Blank())
+Error({Kind:ErrorKind.Div0})
+
+>> Average(1, Blank(), 2, Blank(), 3, Blank(), 4, Blank(), 5)
+3
+
+>> Average(-2, Blank(), -2, Blank(), -3, Blank(), -4, Blank(), -5)
+-3.2
+
+//Excel gives compile error and mention typo in the formula. Suggest to correct 1E+308 to E1+308
+>> Average(1E+308, 1E+308)
+Error({Kind:ErrorKind.Numeric})
+
+// ******** STRING PARAMETERS ********
+
+>> Average("sampleText")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Average("10")
+10
+
+>> Average("-10.123", 1.234)
+-4.4445
+
+>> Average("9", "10")
+9.5
+
+>> Average("100", "AB")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// ******** BOOLEAN PARAMETERS ********
+
+>> Average(true,true)
+1
+
+>> Average(false,false)
+0
+
+>> Average(true,false)
+0.5
+
+>> Average("true", true)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Average("true","true")
+Error(Table({Kind:ErrorKind.InvalidArgument},{Kind:ErrorKind.InvalidArgument}))
+
+>> Average("false","false")
+Error(Table({Kind:ErrorKind.InvalidArgument},{Kind:ErrorKind.InvalidArgument}))
+
+// ******** DATE PARAMETERS (interpreted as numbers) ********
+
+>> Average(Date(2022, 10, 1), Date(2022, 10, 3))
+44836
+
+>> Average(Date(2022, 10, 1), Date(2022, 10, 3), Date(2022, 10, 5))
+44837
+
+>> Average(DateTime(2022, 10, 1, 6, 0, 0), DateTime(2022, 10, 2, 18, 0, 0))
+44836
+
+>> Average(DateTime(2022, 10, 1, 6, 0, 0), DateTime(2022, 10, 1, 18, 0, 0))
+44835.5
+
+// ***********  TABLE *************
+
+>> Average([1,2,3], Value)
+2
+
+>> Average([1,2,3,4], 0)
+0
+
+>> Average([1,2,3,4], Value)
+2.5
+
+>> Average([1,2,3,4,5], Value^2)
+11
+
+>> Average([1,2,3,4,5], With({Square:Value^2},Square))
+11
+
+>> Average(AddColumns([1,2,3,4,5], "Square", Value^2), Square)
+11
+
+>> Average([1,2/0,3,Sqrt(-4),5], IfError(Value, 0))
+1.8
+
+>> Average([1,2/0,3,Sqrt(-4),5], IfError(Value, Blank()))
+3
+
+>> Average(Table({a:1},If(1/0<2,{a:2}),{a:3},If(Sqrt(-1)<0,{a:4}),{a:5}), IfError(a, 0))
+1.8
+
+>> Average(Table({a:1},If(1/0<2,{a:2}),{a:3},If(Sqrt(-1)<0,{a:4}),{a:5}), If(Not IsError(a), a))
+3
+
+>> Sum(If(1/0<2,[1,2,3,4]),Value)
+Error({Kind:ErrorKind.Div0})
+
+// Empty table
+>> Average(Filter([1, 2, 3, 4, 5], Value > 10), Value)
+Error({Kind:ErrorKind.Div0})
+
+>> Average(If(1<0,[1, 2, 3]), Value)
+Blank()
+
+>> Average(Sort([-2, -1, 0, 1, 2], 1 / Value), Value)
+Error({Kind:ErrorKind.Div0})
+
+>> Average(1, 2, 3, Blank(), 2, 2)
+2
+
+>> Average([1, 2, 1/0, 4, 5], Value)
+Error({Kind:ErrorKind.Div0})
+
+// Blank rows
+>> Average(Table({a:1},If(1<0,{a:2}),{a:3},If(1<0,{a:4}),{a:5}), Coalesce(a, 100))
+41.8

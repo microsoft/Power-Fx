@@ -1,0 +1,265 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.PowerFx.Transport.Attributes</name>
+    </assembly>
+    <members>
+        <member name="P:Microsoft.AppMagic.Transport.DtoUndefinedValueMapping.CSharpPredicateForOmittingFromDto">
+            <summary>
+            If set, indicates the expression to get the default type value in the C#.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AppMagic.Transport.DtoUndefinedValueMapping.TypescriptValueExpressionForUndefinedValueAppearingInDto">
+            <summary>
+            If set, indicates that method result should assume a particular default wire value in Typescript for this type,
+            instead of null.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AppMagic.Transport.PropertyStateSyncDefaultValueExpression.CSharpQuotedJsonStringExpression">
+            <summary>
+            If set, indicates that property state synchronization should assume a particular default wire value in CSharp for this type,
+            instead of null.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AppMagic.Transport.PropertyStateSyncDefaultValueExpression.TypescriptPropertyStateSyncExpression">
+            <summary>
+            If set, indicates that property state synchronization should assume a particular default wire value in Typescript for this type,
+            instead of null.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AppMagic.Transport.TransportBatchingMode">
+            <summary>
+            Describes which batching policy should be applied to the api.
+            </summary>
+            <remarks>
+            Must be manually kept in sync with Transport.d.ts.
+            </remarks>
+        </member>
+        <member name="F:Microsoft.AppMagic.Transport.TransportBatchingMode.Default">
+            <summary>
+            Default. Uses the current default policy.
+            </summary>
+            <remarks>
+            Initially, the default policy is "Immediate" to maintain backwards compatibility. At some future point, prefer 
+            "Batched" mode, as it's more efficient, but can greatly disturb application timing.
+            </remarks>
+        </member>
+        <member name="F:Microsoft.AppMagic.Transport.TransportBatchingMode.Immediate">
+            <summary>
+            Forces the request to be sent immediately.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AppMagic.Transport.TransportBatchingMode.Normal">
+            <summary>
+            Queues the request until the end of the current JavaScript turn. Increases the chance that another call will be batched
+            with this one, while reducing the change of regressing user-perceived latency.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AppMagic.Transport.TransportBatchingMode.Deferred">
+            <summary>
+            Deferred priority. The call is queued for a short period of time before sending, to increase the chance of 
+            batching with other calls.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AppMagic.Transport.TransportBatchingMode.LowPriority">
+            <summary>
+            Deferred, possibly indefinitely. The call will only be sent if a later one is sent with higher priority, or if the maximum
+            queue size is exceeded.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AppMagic.Transport.TransportConverterAttribute">
+            <summary>
+            Applied to a converter class. Provides a conversion for a custom type.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AppMagic.Transport.TransportConverterAttribute.OriginalType">
+            <summary>
+            Type being converted from. This is the type that will appear in the user-visible api.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AppMagic.Transport.TransportConverterAttribute.SurrogateType">
+            <summary>
+            Type being converted to. This will be used as the wire format when OriginalType is passed across transport.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AppMagic.Transport.TransportConverterAttribute.AlternateTypescriptType">
+            <summary>
+            Allows choosing a different name in Typescript for 'OriginalType'. If null, uses the C# type name.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AppMagic.Transport.TransportConverterAttribute.AlternateTypescriptConverter">
+            <summary>
+            Allows choosing a different name in Typescript for the converter type. If null, uses the C# type name.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AppMagic.Transport.TransportConverterAttribute.PropertyStateSyncDefaultValue">
+            <summary>
+            If set, indicates that property state synchronization should assume a particular default wire value in CSharp and Typescript for this type,
+            instead of null.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AppMagic.Transport.TransportConverterAttribute.MethodResultDefaultValue">
+            <summary>
+            If set, indicates that method result should assume a particular default wire value in CSharp and Typescript for this type,
+            instead of null.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AppMagic.Transport.TransportDisabledAttribute">
+            <summary>
+            If present, indicates that transport should ignore the property, field, constructor, or method to which this attribute is applied.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AppMagic.Transport.TransportKind">
+            <summary>
+            Describes which transport algorithm to apply to a type. See <see cref="T:Microsoft.AppMagic.Transport.TransportTypeAttribute"/> for details.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AppMagic.Transport.TransportKind.ByValue">
+            <summary>
+            Wire format is passed by-value. A copy of the data structure is made when transporting.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AppMagic.Transport.TransportKind.ServerRemoted">
+            <summary>
+            C# server remoting. Javascript receives a proxy to this object.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AppMagic.Transport.TransportKind.Custom">
+            <summary>
+            Custom transport. The User or runtime is responsible for implementing serialization of this type.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AppMagic.Transport.TransportKind.Enum">
+            <summary>
+            For internal use only. Used on enums.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AppMagic.Transport.TransportKind.SymmetricRemoted">
+            <summary>
+            For interfaces that can be implemented either by JavaScript or C#
+            </summary>
+        </member>
+        <member name="T:Microsoft.AppMagic.Transport.TransportMethodAttribute">
+            <summary>
+            Enables transport on the specified method. See <see cref="T:Microsoft.AppMagic.Transport.TransportTypeAttribute"/> for more information.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AppMagic.Transport.TransportMethodAttribute.Deferred">
+            <summary>
+            Deferred methods must return 'void' or 'Task', and are bundled with the next non-deferred api call.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AppMagic.Transport.TransportMethodAttribute.SupportSynchronousClient">
+            <summary>
+            For back-compat, support blocking callers.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AppMagic.Transport.TransportMethodAttribute.BatchingMode">
+            <summary>
+            Defines batching.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AppMagic.Transport.TransportMethodAttribute.IsParallel">
+            <summary>
+            Whether the method can be executed in parallel with other methods marked the same way.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AppMagic.Transport.TransportPropertyAttribute">
+            <summary>
+            Enables transport on the specified property. See <see cref="T:Microsoft.AppMagic.Transport.TransportTypeAttribute"/> for more information.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AppMagic.Transport.TransportPropertyAttribute.GenerateSynchronousSetterTemplateInProxyClass">
+            <summary>
+            When defined, generates a synchronous setter method that redirects to "set{PropertyName}". This
+            allows the programmer to manually define how set calls should be marshalled. The user is still
+            responsible for defining the appropriate setter method in either the base class or original
+            C# class.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AppMagic.Transport.TransportPropertyAttribute.UseDiffSync">
+            <summary>
+            If the marked property is a <c>ITrackedCollection</c>, and it gets updated,
+            state synchronization will not send the entire collection to the client, only
+            a set of differences to be applied.
+            </summary>
+            <remarks>
+            Be careful when using this feature, because the state synchronization on the client side
+            for such <c>ITrackedCollection</c> instances may not be complete after a method
+            return, if out-of-order execution happens.
+            Collection is not passed fully each time here, but as a set of differences, and they
+            need to be applied in order.
+            This means, that if the collection is modified by the <b>synchronous</b> and
+            <b>asynchronous</b> methods that got processed out-of-order, it's state may not be valid
+            right after synchronous method return.
+            See the <c>ConnectionState.ts::_dispatchPropertyStateSynchronization</c> method more information.
+            </remarks>
+        </member>
+        <member name="T:Microsoft.AppMagic.Transport.TransportTypeAttribute">
+             <summary>
+             Designates a class or interface as a transport type.
+             </summary>
+             <remarks>
+             Transport code generation generates proxies, dto types, and converters for any type annotated with this attribute.
+             Transport enabled methods and properties may only use supported transport types.
+             
+             There are 3 kinds of annotated transport types:
+             - ByValue (default). The public properties of this type are copied on the wire to the client, which receives
+                 its own copy of the object.
+             - ServerRemoted. A reference to an instance is stored in the IdKeeper for the ConnectionState, and its ID in that table
+                 is sent on the wire. The client receives a proxy object with the transport enabled properties and methods on this type.
+                 Method calls have their arguments converted into wire format, sent to the server, executed, and the result serialized on
+                 the wire and returned. The return type is converted into a promise if it isn't already. Properties on the server object
+                 are sent by value to the client, and updated after most remoted method calls.
+             - Custom. The user specifies a class that provides dto conversion methods for this type. The wire format for the object is 
+                 determined by the dto type that the user choses. This is intended to be used as part of migration from existing proxies.
+            
+             See specification for more information: https://microsoft.sharepoint.com/teams/appPlatform/PowerApps/Shared%20Documents/Engineering/WebAuthoring/NextTransportFull.docx?web=1.
+             </remarks>
+        </member>
+        <member name="P:Microsoft.AppMagic.Transport.TransportTypeAttribute.CustomTypescriptBaseClass">
+            <summary>
+            Allows providing a custom base class. This is intended for use during transition from hand-written proxies, allowing
+            the custom base class to provide implementations of missing functionality. For instance, it could provide implementations
+            of methods or properties that were disabled via [TransportDisable].
+            </summary>
+        </member>
+        <member name="P:Microsoft.AppMagic.Transport.TransportTypeAttribute.CustomDtoName">
+            <summary>
+            Allows overriding generated dto type name, e.g. to avoid collision with an existing type. Do not fully qualify name.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AppMagic.Transport.TransportTypeAttribute.IsMethodCustomizationEnabled">
+            <summary>
+            Allows overriding method behavior via the base type, without replacing the generated methods completely.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AppMagic.Transport.TransportUnionAttribute">
+             <summary>
+             Designates a member as a union type instead of its normal C# type.
+             </summary>
+             <remarks>
+             Allows a member to be serialized with the appropriate transport type, when the runtime instance is one of many possible serializable types.
+            
+             If a type implements more than one transport type, it will be marshalled as the first type appearing in the possibleTypes list that it
+             is an instance of.
+            
+             For example, if a byvalue type has a field "[TransportUnion(typeof(IControl), typeof(Document))] public object Entity;", it will be marshalled
+             first as IControl if it implements IControl, as Document if it's an instance of Document, as null if it's null, or an error raised if none of the above.
+            
+             # When used on fields, properties, method parameters, or method return types
+            
+             Normally, transport codegen uses the C# declared type for the field, but in some cases that may not be specific enough. For instance, Document.DataSources
+             only exposes the base interface, and EntityEventArgs.Entity is typed as 'object'.
+            
+             Any value with [TransportUnion] attribute applied will instead be marshalled as a type descriminated union. If the value is
+             an instance of any of the specified types, then it will be marshalled as appropriate for that type. Otherwise, an error will occur.
+            
+             # When used on interfaces and classes
+            
+             If a class or interface is marked as a union, it indicates that the actual runtime instance will be one of the specified subtypes of that interface. The
+             union marked class or interface will be represented on the wire as a union so that the other party knows which kind of proxy to create.
+             </remarks>
+        </member>
+    </members>
+</doc>

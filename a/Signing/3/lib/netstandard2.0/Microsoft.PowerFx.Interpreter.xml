@@ -1,0 +1,533 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.PowerFx.Interpreter</name>
+    </assembly>
+    <members>
+        <member name="M:Microsoft.PowerFx.ComposedReadOnlySymbolValues.Set(Microsoft.PowerFx.ISymbolSlot,Microsoft.PowerFx.Types.FormulaValue)">
+            <summary>
+            Set a value created by <see cref="M:Microsoft.PowerFx.SymbolTable.AddVariable(System.String,Microsoft.PowerFx.Types.FormulaType,System.Boolean,System.String)"/>.
+            </summary>
+            <param name="slot"></param>
+            <param name="value"></param>
+        </member>
+        <member name="M:Microsoft.PowerFx.PowerFxConfigExtensions.EnableSetFunction(Microsoft.PowerFx.PowerFxConfig)">
+            <summary>
+            Enable a Set() function which allows scripts to do <see cref="M:Microsoft.PowerFx.RecalcEngine.UpdateVariable(System.String,Microsoft.PowerFx.Types.FormulaValue)"/>.
+            </summary>
+            <param name="powerFxConfig"></param>
+        </member>
+        <member name="M:Microsoft.PowerFx.PowerFxConfigExtensions.EnableMutationFunctions(Microsoft.PowerFx.SymbolTable)">
+            <summary>
+            Enable all multation functions which allows scripts to execute side effect behavior.
+            </summary>
+            <param name="symbolTable"></param>
+        </member>
+        <member name="T:Microsoft.PowerFx.ReadOnlySymbolValues">
+            <summary>
+            Runtime values corresponding to static values described in a <see cref="P:Microsoft.PowerFx.ReadOnlySymbolValues.SymbolTable"/>.
+            See <see cref="T:Microsoft.PowerFx.SymbolValues"/> for a mutable derived class. 
+            </summary>
+        </member>
+        <member name="P:Microsoft.PowerFx.ReadOnlySymbolValues.SymbolTable">
+            <summary>
+            Get the symbol table that these values correspond to.
+            </summary>
+        </member>
+        <member name="M:Microsoft.PowerFx.ReadOnlySymbolValues.GetService(System.Type)">
+            <summary>
+            Expose services to functions. For example, this can provide TimeZone information to the 
+            Now()/TimeZoneInfo()/etc. Or current culture to the various text parsing functions. 
+            </summary>
+            <param name="serviceType">type of service requested.</param>
+            <returns>Return null if service is not provided.</returns>
+        </member>
+        <member name="M:Microsoft.PowerFx.ReadOnlySymbolValues.Get(Microsoft.PowerFx.ISymbolSlot)">
+            <summary>
+            Get value of a slot previously provided by <see cref="M:Microsoft.PowerFx.ReadOnlySymbolValues.Set(Microsoft.PowerFx.ISymbolSlot,Microsoft.PowerFx.Types.FormulaValue)"/>. 
+            </summary>
+            <param name="slot">Slot provided by the associated SymbolTable. </param>
+            <returns>Value for this slot or BlankValue if no value is set yet.</returns>
+        </member>
+        <member name="M:Microsoft.PowerFx.ReadOnlySymbolValues.Set(Microsoft.PowerFx.ISymbolSlot,Microsoft.PowerFx.Types.FormulaValue)">
+            <summary>
+            Set a value for a given slot. 
+            Set(x, value) function from the language will eventually call this, where the binder 
+            has resolved 'x' to a slot.
+            </summary>
+            <param name="slot">Slot provided by the associated SymbolTable. </param>
+            <param name="value">new value to update this record to. </param>
+        </member>
+        <member name="M:Microsoft.PowerFx.ReadOnlySymbolValues.NewFromRecord(Microsoft.PowerFx.Types.RecordValue)">
+            <summary>
+            Get symbol values where each symbol is a field of the record. 
+            </summary>
+            <param name="parameters"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.PowerFx.ReadOnlySymbolValues.New``1(System.Collections.Generic.IReadOnlyDictionary{System.String,``0},Microsoft.PowerFx.ReadOnlySymbolValues)">
+            <summary>
+            Create values over existing collection.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="values"></param>
+            <param name="parent"></param>
+        </member>
+        <member name="M:Microsoft.PowerFx.ReadOnlySymbolValues.Compose(Microsoft.PowerFx.ReadOnlySymbolValues[])">
+            <summary>
+            Compose multiple symbol values into a single one. 
+            </summary>
+            <param name="tables">Ordered list of symbol tables.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.PowerFx.RowScopeSymbolValues">
+            <summary>
+            Create Symbol values around a RecordValue. 
+            Ensure lazy evaluation semantics, just like RecordValue/RecordType.
+            </summary>
+        </member>
+        <member name="M:Microsoft.PowerFx.SymbolExtensions.SetTimeZone(Microsoft.PowerFx.SymbolValues,System.TimeZoneInfo)">
+            <summary>
+            Set TimeZoneInfo.
+            </summary>
+            <param name="symbols">SymbolValues where to set the TimeZoneInfo.</param>
+            <param name="timezone">TimeZoneInfo to set.</param>
+            <exception cref="T:System.ArgumentNullException">When timezone is null.</exception>
+        </member>
+        <member name="M:Microsoft.PowerFx.SymbolExtensions.SetCulture(Microsoft.PowerFx.SymbolValues,System.Globalization.CultureInfo)">
+            <summary>
+            Set CultureInfo.
+            </summary>
+            <param name="symbols">SymbolValues where to set the CultureInfo.</param>
+            <param name="culture">CultureInfo to set.</param>
+            <exception cref="T:System.ArgumentNullException">When culture is null.</exception>
+        </member>
+        <member name="M:Microsoft.PowerFx.SymbolExtensions.CreateValues(Microsoft.PowerFx.ReadOnlySymbolTable,Microsoft.PowerFx.ReadOnlySymbolValues[])">
+            <summary>
+            Create a set of values against this symbol table.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.PowerFx.SymbolValues">
+            <summary>
+            Mutable collection for runtime Values for a <see cref="T:Microsoft.PowerFx.SymbolTable"/>.
+            Will lazily create a symbol table. 
+            To match to an existing symbol table, call <see cref="M:Microsoft.PowerFx.SymbolExtensions.CreateValues(Microsoft.PowerFx.ReadOnlySymbolTable,Microsoft.PowerFx.ReadOnlySymbolValues[])"/>.
+            </summary>
+        </member>
+        <member name="E:Microsoft.PowerFx.SymbolValues.OnUpdate">
+            <summary>
+            Register an event to invoke when <see cref="M:Microsoft.PowerFx.SymbolValues.Set(Microsoft.PowerFx.ISymbolSlot,Microsoft.PowerFx.Types.FormulaValue)"/> is called.
+            </summary>
+        </member>
+        <member name="M:Microsoft.PowerFx.SymbolValues.Add(System.String,Microsoft.PowerFx.Types.FormulaValue)">
+            <summary>
+            Convenience method to add a new unique symbol.
+            </summary>
+            <param name="name"></param>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.PowerFx.EvalVisitor.GetService``1">
+            <summary>
+            Get a service from the <see cref="T:Microsoft.PowerFx.ReadOnlySymbolValues"/>. Returns null if not present.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.PowerFx.Interpreter.ObjectRecordType">
+            <summary>
+            Lazy FormulaType wrapper for marshalled C# objects.
+            Uses the backing Type to provide identity for equality operations.
+            </summary>
+        </member>
+        <member name="T:Microsoft.PowerFx.Interpreter.MaxCallDepthException">
+            <summary>
+            This is an interpreter internal excpetion and should be converted to a ErrorValue before returning to the host.
+            </summary>
+        </member>
+        <member name="T:Microsoft.PowerFx.Interpreter.NotDelegableException">
+            <summary>
+            Used to fail attempted delegation and fall back to in memory evaluation.
+            Should always be caught by PowerFx code.
+            </summary>
+        </member>
+        <member name="T:Microsoft.PowerFx.Interpreter.StackDepthCounter">
+            <summary>
+            This keeps track of how many calls deep we are in a function.
+            </summary>
+        </member>
+        <member name="T:Microsoft.PowerFx.Interpreter.UDF.CheckWrapper">
+            <summary>
+            CheckWrapper delays the evaluation of the body to the Get call while taking in all the parameters needed to make the Check call.
+            </summary>
+        </member>
+        <member name="T:Microsoft.PowerFx.Functions.IRandomService">
+            <summary>
+            Service for any functions needing Random behavior, 
+            such as Rand(), RandBetween(), or Shuffle().
+            </summary>
+        </member>
+        <member name="M:Microsoft.PowerFx.Functions.IRandomService.NextDouble">
+            <summary>
+            Returns a random floating-point number that is greater than or equal to 0.0, and less than 1.0.
+            Should be from a linear distribution. 
+            Expected this call is thread-safe and may be called concurrently from multiple threads.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.PowerFx.Functions.Library.StandardErrorHandlingAsync``1(System.String,System.Func{Microsoft.PowerFx.Core.IR.IRContext,System.Collections.Generic.IEnumerable{Microsoft.PowerFx.Types.FormulaValue},System.Collections.Generic.IEnumerable{Microsoft.PowerFx.Types.FormulaValue}},System.Func{Microsoft.PowerFx.Core.IR.IRContext,System.Int32,Microsoft.PowerFx.Types.FormulaValue},System.Func{Microsoft.PowerFx.Core.IR.IRContext,System.Int32,Microsoft.PowerFx.Types.FormulaValue,Microsoft.PowerFx.Types.FormulaValue},System.Func{Microsoft.PowerFx.Core.IR.IRContext,System.Int32,Microsoft.PowerFx.Types.FormulaValue,Microsoft.PowerFx.Types.FormulaValue},Microsoft.PowerFx.Functions.Library.ReturnBehavior,System.Func{Microsoft.PowerFx.EvalVisitor,Microsoft.PowerFx.EvalVisitorContext,Microsoft.PowerFx.Core.IR.IRContext,``0[],System.Threading.Tasks.ValueTask{Microsoft.PowerFx.Types.FormulaValue}},System.Boolean)">
+            <summary>
+            A pipeline that maps blanks to a value, checks
+            runtime types, and possibly map values to errors
+            before filtering errors and possibly returning
+            an ErrorValue instead of executing.
+            </summary>
+            <typeparam name="T">The specific FormulaValue type that the implementation of the builtin expects, for exmaple NumberValue for math functions.</typeparam>
+            <param name="functionName">The name of the Power Fx function, which is used in a possible error message.</param>
+            <param name="expandArguments">This stage of the pipeline can be used to expand an argument list if some of the arguments are optional and missing.</param>
+            <param name="replaceBlankValues">This stage can be used to transform Blank() into something else, for example the number 0.</param>
+            <param name="checkRuntimeTypes">This stage can be used to check to that all the arguments have type T, or check that all arguments have type T | Blank(), etc.</param>
+            <param name="checkRuntimeValues">This stage can be used to generate errors if specific values occur in the arguments, for example infinity, NaN, etc.</param>
+            <param name="returnBehavior">A flag that can be used to activate pre-defined early return behavior, such as returning Blank() if any argument is Blank().</param>
+            <param name="targetFunction">The implementation of the builtin function.</param>
+            <param name="isMultiArgTabularOverload">If True returns error table in case of error args.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.PowerFx.InterpreterConfigException">
+            <summary>
+            The interpreter is called in an illegal way. 
+            </summary>
+        </member>
+        <member name="T:Microsoft.PowerFx.ITypeMarshallerProvider">
+            <summary>
+            Handles marshalling a given type. Invoked by the <see cref="T:Microsoft.PowerFx.TypeMarshallerCache"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.PowerFx.ITypeMarshallerProvider.TryGetMarshaller(System.Type,Microsoft.PowerFx.TypeMarshallerCache,Microsoft.PowerFx.ITypeMarshaller@)">
+            <summary>
+            Return false if it doesn't handle it. 
+            A single ITypeMarshaller can be created once per type and then reused for each instance. 
+            Pass in a cache for aggregate types that need to marshal sub types.
+            </summary>
+            <param name="type"></param>
+            <param name="cache"></param>
+            <param name="marshaller"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.PowerFx.ITypeMarshaller">
+            <summary>
+            A marshaller for a given System.Type to a given power fx type. .
+            This can only marshal types that have a static mapping to a FormulaType.
+            </summary>
+        </member>
+        <member name="M:Microsoft.PowerFx.ITypeMarshaller.Marshal(System.Object)">
+            <summary>
+            Marshal an dotnet object instance to a FormulaValue or throws on error. 
+            If value is null, then this returns a blank value. 
+            </summary>
+            <param name="value">an object instance. </param>
+            <returns>a formulaValue for this instance of type <see cref="P:Microsoft.PowerFx.ITypeMarshaller.Type"/>.</returns>
+            <remarks>
+            Implementor can assume that:
+            - value is not null. The cache wrapper it in a <see cref="T:Microsoft.PowerFx.TypeMarshallerCache.NullCheckerMarshaller"/>
+            - the value matches the type check in the provider.
+            </remarks>
+        </member>
+        <member name="T:Microsoft.PowerFx.IDynamicTypeMarshaller">
+            <summary>
+            Some types (like Dictionary, JObject, or DataTable) are dynamic.     
+            Dynamic marshallers can take a runtime instance and then inspect the runtime properties 
+            and create a strongly-typed <see cref="T:Microsoft.PowerFx.Types.FormulaType"/>.
+            Whereas <see cref="T:Microsoft.PowerFx.ITypeMarshaller"/> only accepts the static type, so it must marshal these
+            dynamic objects as weakly-typed <see cref="T:Microsoft.PowerFx.Types.UntypedObjectType"/>.
+            </summary>
+        </member>
+        <member name="T:Microsoft.PowerFx.ObjectMarshaller">
+            <summary>
+            Marshal a specific type of object to a record. 
+            </summary>
+        </member>
+        <member name="T:Microsoft.PowerFx.ObjectMarshaller.FieldValueMarshaller">
+            <summary>
+            Value Marshalling function for a field.
+            </summary>
+        </member>
+        <member name="T:Microsoft.PowerFx.ObjectMarshaller.FieldTypeAndValueMarshallerGetter">
+            <summary>
+            Method that should return the Type and Value Marshalling function for a field.
+            </summary>
+        </member>
+        <member name="P:Microsoft.PowerFx.ObjectMarshaller.Microsoft#PowerFx#ITypeMarshaller#Type">
+            <inheritdoc/>
+        </member>
+        <member name="P:Microsoft.PowerFx.ObjectMarshaller.Type">
+            <summary>
+            Strongly typed wrapper for Type. 
+            </summary>
+        </member>
+        <member name="M:Microsoft.PowerFx.ObjectMarshaller.#ctor(System.Collections.Generic.Dictionary{System.String,Microsoft.PowerFx.ObjectMarshaller.FieldTypeAndValueMarshallerGetter},System.Type)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.PowerFx.ObjectMarshaller"/> class.
+            </summary>
+        </member>
+        <member name="M:Microsoft.PowerFx.ObjectMarshaller.Marshal(System.Object)">
+            <inheritdoc/>
+        </member>
+        <member name="T:Microsoft.PowerFx.ObjectMarshallerProvider">
+            <summary>
+            Marshal .Net classes (with fields) to <see cref="T:Microsoft.PowerFx.Types.RecordValue"/>. 
+            This supports both strong typing and lazy marshalling. 
+            It will return a <see cref="T:Microsoft.PowerFx.ObjectMarshaller"/>. 
+            </summary>
+        </member>
+        <member name="M:Microsoft.PowerFx.ObjectMarshallerProvider.GetFxName(System.Reflection.PropertyInfo)">
+            <summary>
+            Provides a customization point to control how properties are marshalled. 
+            This returns null to skip the property, else return the name it should have on the power fx record.
+            If this is insufficient, a caller can always implement their own marshaller and return a 
+            a <see cref="T:Microsoft.PowerFx.ObjectMarshaller"/> directly. 
+            </summary>
+        </member>
+        <member name="M:Microsoft.PowerFx.ObjectMarshallerProvider.TryGetMarshaller(System.Type,Microsoft.PowerFx.TypeMarshallerCache,Microsoft.PowerFx.ITypeMarshaller@)">
+            <inheritdoc/>
+        </member>
+        <member name="T:Microsoft.PowerFx.PrimitiveMarshallerProvider">
+            <summary>
+            Marshalling provider to handle builtin primitive types. 
+            </summary>
+        </member>
+        <member name="M:Microsoft.PowerFx.PrimitiveMarshallerProvider.TryGetMarshaller(System.Type,Microsoft.PowerFx.TypeMarshallerCache,Microsoft.PowerFx.ITypeMarshaller@)">
+            <inheritdoc/>
+        </member>
+        <member name="T:Microsoft.PowerFx.PrimitiveTypeMarshaller">
+            <summary>
+            Marshaller for builtin primitives. 
+            </summary>
+        </member>
+        <member name="P:Microsoft.PowerFx.PrimitiveTypeMarshaller.Type">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.PowerFx.PrimitiveTypeMarshaller.#ctor(Microsoft.PowerFx.Types.FormulaType)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.PowerFx.PrimitiveTypeMarshaller"/> class.
+            </summary>
+            <param name="fxType">The power fx type this marshals to.</param>
+        </member>
+        <member name="M:Microsoft.PowerFx.PrimitiveTypeMarshaller.Marshal(System.Object)">
+            <inheritdoc/>
+        </member>
+        <member name="T:Microsoft.PowerFx.TableMarshallerProvider">
+            <summary>
+            Marshal .Net classes (with fields). This supports strong typing and lazy marshalling. 
+            Handles any IEnumerable (including arrays).
+            </summary>
+        </member>
+        <member name="M:Microsoft.PowerFx.TableMarshallerProvider.TryGetMarshaller(System.Type,Microsoft.PowerFx.TypeMarshallerCache,Microsoft.PowerFx.ITypeMarshaller@)">
+            <inheritdoc/>
+        </member>
+        <member name="T:Microsoft.PowerFx.TypeMarshallerCache">
+            <summary>
+            Marshal .net objects into Power Fx values.  
+            This allows customizing the marshallers, as well as caching the conversion rules for a given type. 
+            This is an immutable object representing a collection of immutable providers. 
+            </summary>
+        </member>
+        <member name="P:Microsoft.PowerFx.TypeMarshallerCache.Empty">
+            <summary>
+            Empty type marshaller, without any defaults. 
+            </summary>
+        </member>
+        <member name="F:Microsoft.PowerFx.TypeMarshallerCache._marshallers">
+            <summary>
+            Ordered list of type marshallers. First marshaller to handle is used. 
+            </summary>
+        </member>
+        <member name="M:Microsoft.PowerFx.TypeMarshallerCache.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.PowerFx.TypeMarshallerCache"/> class.
+            Create marshaller with default list.
+            </summary>
+        </member>
+        <member name="M:Microsoft.PowerFx.TypeMarshallerCache.NewPrepend(System.Collections.Generic.IEnumerable{Microsoft.PowerFx.ITypeMarshallerProvider})">
+            <summary>
+            Create a new cache that includes the new providers and then chains to this cache.
+            </summary>
+            <param name="providers">list of providers.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.PowerFx.TypeMarshallerCache.WithDynamicMarshallers(Microsoft.PowerFx.IDynamicTypeMarshaller[])">
+            <summary>
+            Return a new cache that includes the given dynamic marshallers. 
+            These will be invoked on <see cref="M:Microsoft.PowerFx.TypeMarshallerCache.Marshal``1(``0)"/>.
+            </summary>
+            <param name="dynamicMarshallers"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.PowerFx.TypeMarshallerCache.New(Microsoft.PowerFx.ObjectMarshallerProvider)">
+            <summary>
+             Create a cache with the the default marshallers and the specified object marshaller.
+            </summary>
+            <param name="objectProvider"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.PowerFx.TypeMarshallerCache.GetMarshaller(System.Type)">
+            <summary>
+            Returns a marshaller for the given type. 
+            </summary>
+            <param name="type">dot net type to marshal.</param>
+            <returns>A marshaller instance that can marshal objects of the given type.</returns>
+        </member>
+        <member name="M:Microsoft.PowerFx.TypeMarshallerCache.Marshal(System.Object,System.Type)">
+            <summary>
+            Helper to marshal an arbitrary object to a FormulaValue. 
+            This can use runtime checks (like null to blank), and then 
+            just calls <see cref="M:Microsoft.PowerFx.TypeMarshallerCache.GetMarshaller(System.Type)"/>. 
+            </summary>
+            <param name="value">the object instance to marshal.</param>
+            <param name="type">The type to marshal as. For example, if this is a base type, then 
+            the derived properties available at runtime are not marshalled.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.PowerFx.TypeMarshallerCacheExtensions">
+            <summary>
+            Marshal .net objects into Power Fx values.  
+            This allows customizing the marshallers, as well as caching the conversion rules for a given type. 
+            This is an immutable object representing a collection of immutable providers. 
+            </summary>
+        </member>
+        <member name="M:Microsoft.PowerFx.TypeMarshallerCacheExtensions.NewRecord``1(Microsoft.PowerFx.TypeMarshallerCache,``0)">
+            <summary>
+            Create a record by reflecting over the object's public properties.
+            </summary>
+            <typeparam name="T">static type to reflect over.</typeparam>
+            <param name="cache"></param>
+            <param name="obj"></param>
+            <returns>a new record value.</returns>
+        </member>
+        <member name="T:Microsoft.PowerFx.IExpressionEvaluator">
+            <summary>
+            Evaluate an expression that was successfully bound.  
+            Get this from <see cref="T:Microsoft.PowerFx.CheckResult"/>.GetEvaluator() extension method.
+            </summary>
+        </member>
+        <member name="M:Microsoft.PowerFx.CheckResultExtensions.GetEvaluator(Microsoft.PowerFx.CheckResult)">
+            <summary>
+            Get an evaluator for this expression which can be executed many times. 
+            </summary>
+            <param name="result">Result of a successful binding.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.PowerFx.RecalcEngine">
+            <summary>
+            Holds a set of Power Fx variables and formulas. Formulas are recalculated when their dependent variables change.
+            </summary>
+        </member>
+        <member name="M:Microsoft.PowerFx.RecalcEngine.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.PowerFx.RecalcEngine"/> class.
+            Create a new power fx engine. 
+            </summary>
+        </member>
+        <member name="M:Microsoft.PowerFx.RecalcEngine.CreateEvaluator(Microsoft.PowerFx.CheckResult)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.PowerFx.RecalcEngine.CreateEvaluatorDirect(Microsoft.PowerFx.CheckResult)">
+            <summary>
+            Create an evaluator over the existing binding.
+            </summary>
+            <param name = "result" >A successful binding from a previous call to.<see cref="M:Microsoft.PowerFx.Engine.Check(System.String,Microsoft.PowerFx.Types.RecordType,Microsoft.PowerFx.ParserOptions)"/>. </param>        
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.PowerFx.RecalcEngine.UpdateVariable(System.String,Microsoft.PowerFx.Types.FormulaValue)">
+            <summary>
+            Create or update a named variable to a value. 
+            </summary>
+            <param name="name">variable name. This can be used in other formulas.</param>
+            <param name="value">constant value.</param>
+        </member>
+        <member name="M:Microsoft.PowerFx.RecalcEngine.Eval(System.String,Microsoft.PowerFx.Types.RecordValue,Microsoft.PowerFx.ParserOptions)">
+            <summary>
+            Evaluate an expression as text and return the result.
+            </summary>
+            <param name="expressionText">textual representation of the formula.</param>
+            <param name="parameters">parameters for formula. The fields in the parameter record can 
+            be acecssed as top-level identifiers in the formula.</param>
+            <param name="options"></param>
+            <returns>The formula's result.</returns>
+        </member>
+        <member name="M:Microsoft.PowerFx.RecalcEngine.DefineFunction(Microsoft.PowerFx.Interpreter.UDFDefinition)">
+            <summary>
+            For private use because we don't want anyone defining a function without binding it.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.PowerFx.RecalcEngine.DefineFunctions(System.Collections.Generic.IEnumerable{Microsoft.PowerFx.Interpreter.UDFDefinition})">
+            <summary>
+            Tries to define and bind all the functions here. If any function names conflict returns an expression error. 
+            Also returns any errors from binding failing. All functions defined here are removed if any of them contain errors.
+            </summary>
+            <param name="udfDefinitions"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.PowerFx.RecalcEngine.SetFormula(System.String,Microsoft.PowerFx.FormulaWithParameters,System.Action{System.String,Microsoft.PowerFx.Types.FormulaValue})">
+            <summary>
+            Create a formula that will be recalculated when its dependent values change.
+            </summary>
+            <param name="name">name of formula. This can be used in other formulas.</param>
+            <param name="expr">expression.</param>
+            <param name="onUpdate">Callback to fire when this value is updated.</param>
+        </member>
+        <member name="M:Microsoft.PowerFx.RecalcEngine.DeleteFormula(System.String)">
+            <summary>
+            Delete formula that was previously created.
+            </summary>
+            <param name="name">Formula name.</param>
+        </member>
+        <member name="M:Microsoft.PowerFx.RecalcEngine.GetValue(System.String)">
+            <summary>
+            Get the current value of a formula. 
+            </summary>
+            <param name="name"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.PowerFx.RecalcEngineScope">
+            <summary>
+            Implement a <see cref="T:Microsoft.PowerFx.Intellisense.IPowerFxScope"/> for intellisense on top of an <see cref="T:Microsoft.PowerFx.Engine"/> instance.
+            </summary>
+        </member>
+        <member name="T:Microsoft.PowerFx.CustomTexlFunction">
+            <summary>
+            Internal adapter for adding custom functions. 
+            </summary>
+        </member>
+        <member name="T:Microsoft.PowerFx.ReflectionFunction">
+            <summary>
+            Base class for importing a C# function into Power Fx. 
+            Dervied class should follow this convention:
+            - class name should folow this convention: "[Method Name]" + "Function"
+            - it should have a public static  method 'Execute'. this class will reflect over that signature to import to power fx. 
+            </summary>
+        </member>
+        <member name="M:Microsoft.PowerFx.ReflectionFunction.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.PowerFx.ReflectionFunction"/> class.
+            Assume by defaults. Will reflect to get primitive types.
+            </summary>
+        </member>
+        <member name="T:Microsoft.PowerFx.Types.ObjectRecordValue">
+            <summary>
+            Represent a Record that's backed by a DotNet object. 
+            Field access is lazy.
+            </summary>
+        </member>
+        <member name="P:Microsoft.PowerFx.Types.ObjectRecordValue.Source">
+            <summary>
+            The host object that this was originally created around. 
+            </summary>
+        </member>
+        <member name="M:Microsoft.PowerFx.Types.ObjectRecordValue.TryGetField(Microsoft.PowerFx.Types.FormulaType,System.String,Microsoft.PowerFx.Types.FormulaValue@)">
+            <inheritdoc/>
+        </member>
+    </members>
+</doc>

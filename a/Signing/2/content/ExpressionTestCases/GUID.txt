@@ -1,0 +1,33 @@
+﻿>> GUID("5cc45615-f759-4a53-b225-d3a2497f60ad")
+GUID("5cc45615-f759-4a53-b225-d3a2497f60ad")
+
+// No dashes
+>> GUID("5cc45615f7594a53b225d3a2497f60ad")
+GUID("5cc45615-f759-4a53-b225-d3a2497f60ad")
+
+// Upper case
+>> GUID("C203B79B-B985-42F0-B523-C10EB64387C6")
+GUID("c203b79b-b985-42f0-b523-c10eb64387c6")
+
+// Correct format, invalid chars
+>> GUID("5zz45615-f759-4a53-b225-d3a2497f60ad")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Dashes in wrong place
+>> GUID("5cc45615-f75-94a5-3b225d3a24-97f60ad")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> GUID(Text(1/0))
+Error({Kind:ErrorKind.Div0})
+
+>> GUID(Blank())
+Blank()
+
+>> GUID("")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> GUID("shortstring")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> GUID("thisisastringthatismuchlongerthanaguidshouldbeitisquitealongstringandwillfinderrorswithlongstringsinthisfunction")
+Error({Kind:ErrorKind.InvalidArgument})

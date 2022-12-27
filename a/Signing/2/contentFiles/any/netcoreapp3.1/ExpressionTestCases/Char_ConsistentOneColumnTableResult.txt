@@ -1,0 +1,15 @@
+#SETUP: ConsistentOneColumnTableResult
+
+>> Char([36,37])
+Table({Value:"$"},{Value:"%"})
+
+>> Char(Table({a:72},{a:101},{a:108},{a:108},{a:111}))
+Table({Value:"H"},{Value:"e"},{Value:"l"},{Value:"l"},{Value:"o"})
+
+>> Char([87, 111, 114, 108, 100])
+Table({Value:"W"},{Value:"o"},{Value:"r"},{Value:"l"},{Value:"d"})
+
+// ******** OUT-OF-RANGE PARAMETERS: Parameters outside range of 1 - 255 ********
+
+>> Char(Table({a:32},{a:257},{a:65},{a:Blank()},{a:97}))
+Table({Value:" "},{Value:Error({Kind:ErrorKind.InvalidArgument})},{Value:"A"},{Value:Error({Kind:ErrorKind.InvalidArgument})},{Value:"a"})

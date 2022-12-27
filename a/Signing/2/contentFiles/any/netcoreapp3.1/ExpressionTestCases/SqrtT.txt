@@ -1,0 +1,18 @@
+
+>> Sqrt([1, 529, 144, 324])
+Table({Value:1},{Value:23},{Value:12},{Value:18})
+
+>> Sqrt([])
+Errors: Error 0-8: The function 'Sqrt' has some invalid arguments.|Error 5-7: Invalid schema, expected a one-column table.
+
+>> Sqrt([9, -1])
+Table({Value:3},{Value:Error({Kind:ErrorKind.Numeric})})
+
+>> Sqrt([Blank(), 1444])
+Table({Value:0},{Value:38})
+
+>> Sqrt(Table({a:0}, {a:1}, {a:4}, {a:9}, {a:16}))
+Table({a:0},{a:1},{a:2},{a:3},{a:4})
+
+>> Sqrt(Table({a:1,b:2},{a:4,b:8}))
+Errors: Error 0-32: The function 'Sqrt' has some invalid arguments.|Error 5-31: Invalid schema, expected a one-column table.

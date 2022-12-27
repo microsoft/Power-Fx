@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>Microsoft.PowerFx.Transport.Attributes</id>
+    <version>0.3.0-local</version>
+    <title>Microsoft PowerFx Transport Attributes</title>
+    <authors>Microsoft</authors>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <license type="expression">MIT</license>
+    <licenseUrl>https://licenses.nuget.org/MIT</licenseUrl>
+    <icon>icon.png</icon>
+    <projectUrl>https://github.com/microsoft/Power-Fx</projectUrl>
+    <iconUrl>https://raw.githubusercontent.com/microsoft/Power-Fx/master/icon.png</iconUrl>
+    <description>This provides attributes used by Microsoft.PowerFx.Core</description>
+    <copyright>© Microsoft Corporation. All rights reserved.</copyright>
+    <tags>powerfx</tags>
+    <repository type="git" url="https://github.com/microsoft/Power-Fx" commit="5da9f6bfe64b2e6c4ebeb70da32aef3c612233f1" />
+    <dependencies>
+      <group targetFramework=".NETStandard2.0" />
+    </dependencies>
+  </metadata>
+</package>

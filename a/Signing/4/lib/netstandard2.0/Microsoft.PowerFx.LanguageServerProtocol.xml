@@ -1,0 +1,734 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.PowerFx.LanguageServerProtocol</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.PowerFx.LanguageServerProtocol.JsonRpcHelper">
+            <summary>
+            JSON-RPC helper class that follows JSON-RPC 2.0 spec https://www.jsonrpc.org/specification.
+            </summary>
+        </member>
+        <member name="P:Microsoft.PowerFx.LanguageServerProtocol.FormulaTypeSchema.Type">
+            <summary>
+            Represents the type of this item. For some complex types, additional optional data is required.
+            </summary>
+        </member>
+        <member name="P:Microsoft.PowerFx.LanguageServerProtocol.FormulaTypeSchema.Fields">
+            <summary>
+            Optional. For Records and Tables, contains the list of fields.
+            </summary>
+        </member>
+        <member name="P:Microsoft.PowerFx.LanguageServerProtocol.FormulaTypeSchema.Required">
+            <summary>
+            Optional. Used for external schema definitions and input validation.
+            </summary>
+        </member>
+        <member name="P:Microsoft.PowerFx.LanguageServerProtocol.FormulaTypeSchema.TableLogicalName">
+            <summary>
+            Optional. For entities, specifies the table logical name.
+            </summary>
+        </member>
+        <member name="P:Microsoft.PowerFx.LanguageServerProtocol.FormulaTypeSchema.OptionSetName">
+            <summary>
+            Optional. For Option Set Values, specifies the option set logical name.
+            </summary>
+        </member>
+        <member name="T:Microsoft.PowerFx.LanguageServerProtocol.CodeActionKind">
+            <summary>
+            Code action kind constants.
+            </summary>
+        </member>
+        <member name="F:Microsoft.PowerFx.LanguageServerProtocol.CodeActionKind.QuickFix">
+            <summary>
+            Code action kind quickfix.
+            </summary>
+        </member>
+        <member name="T:Microsoft.PowerFx.LanguageServerProtocol.CommandName">
+            <summary>
+            Command name constants.
+            </summary>
+        </member>
+        <member name="F:Microsoft.PowerFx.LanguageServerProtocol.CommandName.CodeActionApplied">
+            <summary>
+            Code action applied command.
+            </summary>
+        </member>
+        <member name="T:Microsoft.PowerFx.LanguageServerProtocol.LanguageServer">
+             <summary>
+             PowerFx Language server implementation
+            
+             LanguageServer can receive request/notification payload from client, it can also send request/notification to client.
+            
+             LanguageServer is hosted inside WebSocket or HTTP/HTTPS service
+               * For WebSocket, OnDataReceived() is for incoming traffic, SendToClient() is for outgoing traffic
+               * For HTTP/HTTPS, OnDataReceived() is for HTTP/HTTPS request, SendToClient() is queued up in next HTTP/HTTPS response.
+             </summary>
+        </member>
+        <member name="E:Microsoft.PowerFx.LanguageServerProtocol.LanguageServer.LogUnhandledExceptionHandler">
+            <summary>
+            Callback for host to get notified of unhandled exceptions that are happening asynchronously.
+            This should be used for logging purposes. 
+            </summary>
+        </member>
+        <member name="M:Microsoft.PowerFx.LanguageServerProtocol.LanguageServer.OnDataReceived(System.String)">
+            <summary>
+            Received request/notification payload from client.
+            </summary>
+        </member>
+        <member name="M:Microsoft.PowerFx.LanguageServerProtocol.LanguageServer.DocumentSeverityToDiagnosticSeverityMap(Microsoft.PowerFx.ErrorSeverity)">
+            <summary>
+            PowerFx classifies diagnostics by <see cref="T:Microsoft.PowerFx.Core.Errors.DocumentErrorSeverity"/>, LSP classifies them by
+            <see cref="T:Microsoft.PowerFx.LanguageServerProtocol.Protocol.DiagnosticSeverity"/>. This method maps the former to the latter.
+            </summary>
+            <param name="severity">
+            <see cref="T:Microsoft.PowerFx.Core.Errors.DocumentErrorSeverity"/> which will be mapped to the LSP eequivalent.
+            </param>
+            <returns>
+            <see cref="T:Microsoft.PowerFx.LanguageServerProtocol.Protocol.DiagnosticSeverity"/> equivalent to <see cref="T:Microsoft.PowerFx.Core.Errors.DocumentErrorSeverity"/>.
+            </returns>
+        </member>
+        <member name="M:Microsoft.PowerFx.LanguageServerProtocol.LanguageServer.GetRange(System.String,Microsoft.PowerFx.Syntax.Span)">
+            <summary>
+            Construct a Range based on a Span for a given expression.
+            </summary>
+            <param name="expression">The expression.</param>
+            <param name="span">The Span.</param>
+            <returns>Generated Range.</returns>
+        </member>
+        <member name="M:Microsoft.PowerFx.LanguageServerProtocol.LanguageServer.GetCharPosition(System.String,System.Int32)">
+            <summary>
+            Get the charactor position (starts with 1) from its line.
+            e.g. "123\n1{2}3" ==> 2 ({x} is the input char at position)
+                 "12{\n}123" ==> 3 ('\n' belongs to the previous line "12\n", the last char is '2' with index of 3).
+            </summary>
+            <param name="expression">The expression content.</param>
+            <param name="position">The charactor position (starts with 0).</param>
+            <returns>The charactor position (starts with 1) from its line.</returns>
+        </member>
+        <member name="M:Microsoft.PowerFx.LanguageServerProtocol.LanguageServer.GetPosition(System.String,System.Int32,System.Int32)">
+            <summary>
+            Get the position offset (starts with 0) in Expression from line/character (starts with 0)
+            e.g. "123", line:0, char:1 => 1.
+            </summary>
+        </member>
+        <member name="T:Microsoft.PowerFx.LanguageServerProtocol.Protocol.CodeAction">
+            <summary>
+            Code action object model.
+            https://docs.microsoft.com/en-us/dotnet/api/microsoft.visualstudio.languageserver.protocol.codeaction?view=visualstudiosdk-2019.
+            </summary>
+        </member>
+        <member name="M:Microsoft.PowerFx.LanguageServerProtocol.Protocol.CodeAction.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.PowerFx.LanguageServerProtocol.Protocol.CodeAction"/> class.
+            ctor.
+            </summary>
+        </member>
+        <member name="P:Microsoft.PowerFx.LanguageServerProtocol.Protocol.CodeAction.Title">
+            <summary>
+            Get or sets the title of the code action.
+            </summary>
+        </member>
+        <member name="P:Microsoft.PowerFx.LanguageServerProtocol.Protocol.CodeAction.Kind">
+            <summary>
+            Gets or sets the code action kind.
+            </summary>
+        </member>
+        <member name="P:Microsoft.PowerFx.LanguageServerProtocol.Protocol.CodeAction.Diagnostics">
+            <summary>
+            An array of diagnostic information items.
+            </summary>
+        </member>
+        <member name="P:Microsoft.PowerFx.LanguageServerProtocol.Protocol.CodeAction.Edit">
+            <summary>
+            Gets or sets supported code action edits.
+            </summary>
+        </member>
+        <member name="P:Microsoft.PowerFx.LanguageServerProtocol.Protocol.CodeAction.Command">
+            <summary>
+            Gets or sets code action command.
+            </summary>
+        </member>
+        <member name="P:Microsoft.PowerFx.LanguageServerProtocol.Protocol.CodeAction.ActionResultContext">
+            <summary>
+            Gets or sets the code action context.
+            </summary>
+        </member>
+        <member name="T:Microsoft.PowerFx.LanguageServerProtocol.Protocol.CodeActionCommand">
+            <summary>
+            Code action command object model.
+            </summary>
+        </member>
+        <member name="M:Microsoft.PowerFx.LanguageServerProtocol.Protocol.CodeActionCommand.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.PowerFx.LanguageServerProtocol.Protocol.CodeActionCommand"/> class.
+            ctor.
+            </summary>
+        </member>
+        <member name="P:Microsoft.PowerFx.LanguageServerProtocol.Protocol.CodeActionCommand.Title">
+            <summary>
+            Gets or sets title of the command.
+            </summary>
+        </member>
+        <member name="P:Microsoft.PowerFx.LanguageServerProtocol.Protocol.CodeActionCommand.Command">
+            <summary>
+            Gets or sets command to be executed.
+            </summary>
+        </member>
+        <member name="P:Microsoft.PowerFx.LanguageServerProtocol.Protocol.CodeActionCommand.Arguments">
+            <summary>
+            Gets or sets command arguments.
+            </summary>
+        </member>
+        <member name="T:Microsoft.PowerFx.LanguageServerProtocol.Protocol.CodeActionContext">
+            <summary>
+            Code action context object model.
+            </summary>
+        </member>
+        <member name="M:Microsoft.PowerFx.LanguageServerProtocol.Protocol.CodeActionContext.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.PowerFx.LanguageServerProtocol.Protocol.CodeActionContext"/> class.
+            ctor.
+            </summary>
+        </member>
+        <member name="P:Microsoft.PowerFx.LanguageServerProtocol.Protocol.CodeActionContext.Diagnostics">
+            <summary>
+            An array of diagnostic information items.
+            </summary>
+        </member>
+        <member name="P:Microsoft.PowerFx.LanguageServerProtocol.Protocol.CodeActionContext.Only">
+            <summary>
+            List of code action kind string values.
+            </summary>
+        </member>
+        <member name="T:Microsoft.PowerFx.LanguageServerProtocol.Protocol.CodeActionParams">
+            <summary>
+            Code action request parameters.
+            </summary>
+        </member>
+        <member name="M:Microsoft.PowerFx.LanguageServerProtocol.Protocol.CodeActionParams.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.PowerFx.LanguageServerProtocol.Protocol.CodeActionParams"/> class.
+            ctor.
+            </summary>
+        </member>
+        <member name="P:Microsoft.PowerFx.LanguageServerProtocol.Protocol.CodeActionParams.TextDocument">
+            <summary>
+            Gets or sets text document object.
+            </summary>
+        </member>
+        <member name="P:Microsoft.PowerFx.LanguageServerProtocol.Protocol.CodeActionParams.Range">
+            <summary>
+            Gets or sets current editor value range object.
+            </summary>
+        </member>
+        <member name="P:Microsoft.PowerFx.LanguageServerProtocol.Protocol.CodeActionParams.Context">
+            <summary>
+            Code action context carries additonal information.
+            </summary>
+        </member>
+        <member name="T:Microsoft.PowerFx.LanguageServerProtocol.Protocol.CodeActionResult">
+            <summary>
+            Code action response (ex. Quick fix).
+            </summary>
+        </member>
+        <member name="P:Microsoft.PowerFx.LanguageServerProtocol.Protocol.CodeActionResult.Title">
+            <summary>
+            Gets or sets title to be displayed on code fix suggestion.
+            </summary>
+        </member>
+        <member name="P:Microsoft.PowerFx.LanguageServerProtocol.Protocol.CodeActionResult.Text">
+            <summary>
+            Gets or sets code fix expression text to be applied.
+            </summary>
+        </member>
+        <member name="P:Microsoft.PowerFx.LanguageServerProtocol.Protocol.CodeActionResult.Range">
+            <summary>
+            Gets or sets code fix range.
+            </summary>
+        </member>
+        <member name="P:Microsoft.PowerFx.LanguageServerProtocol.Protocol.CodeActionResult.ActionResultContext">
+            <summary>
+            Gets or sets code action context.
+            </summary>
+        </member>
+        <member name="T:Microsoft.PowerFx.LanguageServerProtocol.Protocol.CodeActionResultContext">
+            <summary>
+            CodeAction context object model.
+            </summary>
+        </member>
+        <member name="T:Microsoft.PowerFx.LanguageServerProtocol.Protocol.CommandExecutedParams">
+            <summary>
+            The command executed result.
+            </summary>
+        </member>
+        <member name="P:Microsoft.PowerFx.LanguageServerProtocol.Protocol.CommandExecutedParams.Command">
+            <summary>
+            Gets or sets the command name.
+            </summary>
+        </member>
+        <member name="P:Microsoft.PowerFx.LanguageServerProtocol.Protocol.CommandExecutedParams.Argument">
+            <summary>
+            Gets or sets the arguments.
+            </summary>
+        </member>
+        <member name="P:Microsoft.PowerFx.LanguageServerProtocol.Protocol.CompletionContext.TriggerKind">
+            <summary>
+            How the completion was triggered.
+            </summary>
+        </member>
+        <member name="P:Microsoft.PowerFx.LanguageServerProtocol.Protocol.CompletionContext.TriggerCharacter">
+            <summary>
+            The trigger character (a single character) that has trigger code
+            complete. Is undefined if
+            `triggerKind !== CompletionTriggerKind.TriggerCharacter`.
+            </summary>
+        </member>
+        <member name="P:Microsoft.PowerFx.LanguageServerProtocol.Protocol.CompletionItem.Label">
+            <summary>
+            The label of this completion item. By default
+            also the text that is inserted when selecting
+            this completion.
+            </summary>
+        </member>
+        <member name="P:Microsoft.PowerFx.LanguageServerProtocol.Protocol.CompletionItem.Kind">
+            <summary>
+            The kind of this completion item. Based of the kind
+            an icon is chosen by the editor. The standardized set
+            of available values is defined in `CompletionItemKind`.
+            </summary>
+        </member>
+        <member name="P:Microsoft.PowerFx.LanguageServerProtocol.Protocol.CompletionItem.Detail">
+            <summary>
+            A human-readable string with additional information
+            about this item, like type or symbol information.
+            </summary>
+        </member>
+        <member name="P:Microsoft.PowerFx.LanguageServerProtocol.Protocol.CompletionItem.Documentation">
+            <summary>
+            A human-readable string that represents a doc-comment.
+            </summary>
+        </member>
+        <member name="T:Microsoft.PowerFx.LanguageServerProtocol.Protocol.CompletionItemKind">
+            <summary>
+            The kind of a completion entry.
+            </summary>
+        </member>
+        <member name="P:Microsoft.PowerFx.LanguageServerProtocol.Protocol.CompletionList.IsIncomplete">
+            <summary>
+            This list is not complete. Further typing should result in recomputing
+            this list.
+            </summary>
+        </member>
+        <member name="P:Microsoft.PowerFx.LanguageServerProtocol.Protocol.CompletionList.Items">
+            <summary>
+            The completion items.
+            </summary>
+        </member>
+        <member name="P:Microsoft.PowerFx.LanguageServerProtocol.Protocol.CompletionParams.Context">
+            <summary>
+            The completion context. This is only available if the client specifies
+            to send this using the client capability
+            `completion.contextSupport === true`.
+            </summary>
+        </member>
+        <member name="F:Microsoft.PowerFx.LanguageServerProtocol.Protocol.CompletionTriggerKind.Invoked">
+            <summary>
+            Completion was triggered by typing an identifier (24x7 code
+            complete), manual invocation (e.g Ctrl+Space) or via API.
+            </summary>
+        </member>
+        <member name="F:Microsoft.PowerFx.LanguageServerProtocol.Protocol.CompletionTriggerKind.TriggerCharacter">
+            <summary>
+            Completion was triggered by a trigger character specified by
+            the `triggerCharacters` properties of the
+            `CompletionRegistrationOptions`.
+            </summary>
+        </member>
+        <member name="F:Microsoft.PowerFx.LanguageServerProtocol.Protocol.CompletionTriggerKind.TriggerForIncompleteCompletions">
+            <summary>
+            Completion was re-triggered as the current completion list is incomplete.
+            </summary>
+        </member>
+        <member name="T:Microsoft.PowerFx.LanguageServerProtocol.Protocol.CustomProtocolNames">
+            <summary>
+            Custom LSP protocol starts with '$/', not all client supports.
+            </summary>
+        </member>
+        <member name="P:Microsoft.PowerFx.LanguageServerProtocol.Protocol.Diagnostic.Range">
+            <summary>
+            The range at which the message applies.
+            </summary>
+        </member>
+        <member name="P:Microsoft.PowerFx.LanguageServerProtocol.Protocol.Diagnostic.Message">
+            <summary>
+            The diagnostic's message.
+            </summary>
+        </member>
+        <member name="P:Microsoft.PowerFx.LanguageServerProtocol.Protocol.Diagnostic.Severity">
+            <summary>
+            A diagnostic instance may represent an error, warning, hint, etc., and each may impose different
+            behavior on an editor.  This member indicates the diagnostic's kind.
+            </summary>
+        </member>
+        <member name="F:Microsoft.PowerFx.LanguageServerProtocol.Protocol.DiagnosticSeverity.Error">
+            <summary>
+            Reports an error.
+            </summary>
+        </member>
+        <member name="F:Microsoft.PowerFx.LanguageServerProtocol.Protocol.DiagnosticSeverity.Warning">
+            <summary>
+            Reports a warning.
+            </summary>
+        </member>
+        <member name="F:Microsoft.PowerFx.LanguageServerProtocol.Protocol.DiagnosticSeverity.Information">
+            <summary>
+            Reports information.
+            </summary>
+        </member>
+        <member name="F:Microsoft.PowerFx.LanguageServerProtocol.Protocol.DiagnosticSeverity.Hint">
+            <summary>
+            Reports a hint.
+            </summary>
+        </member>
+        <member name="P:Microsoft.PowerFx.LanguageServerProtocol.Protocol.DidChangeTextDocumentParams.TextDocument">
+            <summary>
+            The document that did change.The version number points
+            to the version after all provided content changes have
+            been applied.
+            </summary>
+        </member>
+        <member name="P:Microsoft.PowerFx.LanguageServerProtocol.Protocol.DidChangeTextDocumentParams.ContentChanges">
+            <summary>
+            The actual content changes.
+            </summary>
+        </member>
+        <member name="P:Microsoft.PowerFx.LanguageServerProtocol.Protocol.DidOpenTextDocumentParams.TextDocument">
+            <summary>
+            The document that was opened.
+            </summary>
+        </member>
+        <member name="P:Microsoft.PowerFx.LanguageServerProtocol.Protocol.InitialFixupParams.TextDocument">
+            <summary>
+            The document that was opened.
+            </summary>
+        </member>
+        <member name="T:Microsoft.PowerFx.LanguageServerProtocol.Protocol.ParameterInformation">
+            <summary>
+            Represents a parameter of a callable-signature. A parameter can
+            have a label and a doc-comment.
+            </summary>
+        </member>
+        <member name="P:Microsoft.PowerFx.LanguageServerProtocol.Protocol.ParameterInformation.Label">
+             <summary>
+             The label of this parameter information.
+            
+             Either a string or an inclusive start and exclusive end offsets within
+             its containing signature label. (see SignatureInformation.label). The
+             offsets are based on a UTF-16 string representation as `Position` and
+             `Range` does.
+            
+             *Note*: a label of type string should be a substring of its containing
+             signature label. Its intended use case is to highlight the parameter
+             label part in the `SignatureInformation.label`.
+             </summary>
+        </member>
+        <member name="P:Microsoft.PowerFx.LanguageServerProtocol.Protocol.ParameterInformation.Documentation">
+            <summary>
+            The human-readable doc-comment of this parameter. Will be shown
+            in the UI but can be omitted.
+            </summary>
+        </member>
+        <member name="P:Microsoft.PowerFx.LanguageServerProtocol.Protocol.Position.Line">
+            <summary>
+            Line position in a document (zero-based).
+            </summary>
+        </member>
+        <member name="P:Microsoft.PowerFx.LanguageServerProtocol.Protocol.Position.Character">
+             <summary>
+             Character offset on a line in a document (zero-based). Assuming that
+             the line is represented as a string, the `character` value represents
+             the gap between the `character` and `character + 1`.
+            
+             If the character value is greater than the line length it defaults back
+             to the line length.
+             </summary>
+        </member>
+        <member name="P:Microsoft.PowerFx.LanguageServerProtocol.Protocol.PublishDiagnosticsParams.Uri">
+            <summary>
+            The URI for which diagnostic information is reported.
+            </summary>
+        </member>
+        <member name="P:Microsoft.PowerFx.LanguageServerProtocol.Protocol.PublishDiagnosticsParams.Diagnostics">
+            <summary>
+            An array of diagnostic information items.
+            </summary>
+        </member>
+        <member name="P:Microsoft.PowerFx.LanguageServerProtocol.Protocol.PublishExpressionTypeParams.Uri">
+            <summary>
+            The URI for which the expression type is reported.
+            </summary>
+        </member>
+        <member name="P:Microsoft.PowerFx.LanguageServerProtocol.Protocol.PublishExpressionTypeParams.Type">
+            <summary>
+            The detected type of the expression.
+            </summary>
+        </member>
+        <member name="P:Microsoft.PowerFx.LanguageServerProtocol.Protocol.PublishTokensParams.Uri">
+            <summary>
+            The URI for which token information is reported.
+            </summary>
+        </member>
+        <member name="P:Microsoft.PowerFx.LanguageServerProtocol.Protocol.PublishTokensParams.Tokens">
+            <summary>
+            A map of token information items.
+            </summary>
+        </member>
+        <member name="P:Microsoft.PowerFx.LanguageServerProtocol.Protocol.Range.Start">
+            <summary>
+            The range's start position.
+            </summary>
+        </member>
+        <member name="P:Microsoft.PowerFx.LanguageServerProtocol.Protocol.Range.End">
+            <summary>
+            The range's end position.
+            </summary>
+        </member>
+        <member name="T:Microsoft.PowerFx.LanguageServerProtocol.Protocol.SignatureHelp">
+            <summary>
+            Signature help represents the signature of something
+            callable. There can be multiple signatures but only one
+            active and only one active parameter.
+            </summary>
+        </member>
+        <member name="P:Microsoft.PowerFx.LanguageServerProtocol.Protocol.SignatureHelp.Signatures">
+            <summary>
+            One or more signatures. If no signatures are available the signature help
+            request should return `null`.
+            </summary>
+        </member>
+        <member name="P:Microsoft.PowerFx.LanguageServerProtocol.Protocol.SignatureHelp.ActiveSignature">
+             <summary>
+             The active signature. If omitted or the value lies outside the
+             range of `signatures` the value defaults to zero or is ignored if
+             the `SignatureHelp` has no signatures.
+            
+             Whenever possible implementors should make an active decision about
+             the active signature and shouldn't rely on a default value.
+            
+             In future version of the protocol this property might become
+             mandatory to better express this.
+             </summary>
+        </member>
+        <member name="P:Microsoft.PowerFx.LanguageServerProtocol.Protocol.SignatureHelp.ActiveParameter">
+            <summary>
+            The active parameter of the active signature. If omitted or the value
+            lies outside the range of `signatures[activeSignature].parameters`
+            defaults to 0 if the active signature has parameters. If
+            the active signature has no parameters it is ignored.
+            In future version of the protocol this property might become
+            mandatory to better express the active parameter if the
+            active signature does have any.
+            </summary>
+        </member>
+        <member name="T:Microsoft.PowerFx.LanguageServerProtocol.Protocol.SignatureHelpContext">
+            <summary>
+            Additional information about the context in which a signature help request
+            was triggered.
+            </summary>
+        </member>
+        <member name="P:Microsoft.PowerFx.LanguageServerProtocol.Protocol.SignatureHelpContext.TriggerKind">
+            <summary>
+            Action that caused signature help to be triggered.
+            </summary>
+        </member>
+        <member name="P:Microsoft.PowerFx.LanguageServerProtocol.Protocol.SignatureHelpContext.TriggerCharacter">
+             <summary>
+             Character that caused signature help to be triggered.
+            
+             This is undefined when triggerKind !==
+             SignatureHelpTriggerKind.TriggerCharacter.
+             </summary>
+        </member>
+        <member name="P:Microsoft.PowerFx.LanguageServerProtocol.Protocol.SignatureHelpContext.IsRetrigger">
+            <summary>
+            `true` if signature help was already showing when it was triggered.
+            
+            Retriggers occur when the signature help is already active and can be
+            caused by actions such as typing a trigger character, a cursor move, or
+            document content changes.
+            </summary>
+        </member>
+        <member name="P:Microsoft.PowerFx.LanguageServerProtocol.Protocol.SignatureHelpContext.ActiveSignatureHelp">
+             <summary>
+             The currently active `SignatureHelp`.
+            
+             The `activeSignatureHelp` has its `SignatureHelp.activeSignature` field
+             updated based on the user navigating through available signatures.
+             </summary>
+        </member>
+        <member name="P:Microsoft.PowerFx.LanguageServerProtocol.Protocol.SignatureHelpParams.Context">
+            <summary>
+            The signature help context. This is only available if the client
+            specifies to send this using the client capability
+            `textDocument.signatureHelp.contextSupport === true`.
+            </summary>
+        </member>
+        <member name="F:Microsoft.PowerFx.LanguageServerProtocol.Protocol.SignatureHelpTriggerKind.Invoked">
+            <summary>
+            Signature help was invoked manually by the user or by a command.
+            </summary>
+        </member>
+        <member name="F:Microsoft.PowerFx.LanguageServerProtocol.Protocol.SignatureHelpTriggerKind.TriggerCharacter">
+            <summary>
+            Signature help was triggered by a trigger character.
+            </summary>
+        </member>
+        <member name="F:Microsoft.PowerFx.LanguageServerProtocol.Protocol.SignatureHelpTriggerKind.ContentChange">
+            <summary>
+            Signature help was triggered by the cursor moving or by the document
+            content changing.
+            </summary>
+        </member>
+        <member name="T:Microsoft.PowerFx.LanguageServerProtocol.Protocol.SignatureInformation">
+            <summary>
+            Represents the signature of something callable. A signature
+            can have a label, like a function-name, a doc-comment, and
+            a set of parameters.
+            </summary>
+        </member>
+        <member name="P:Microsoft.PowerFx.LanguageServerProtocol.Protocol.SignatureInformation.Label">
+            <summary>
+            The label of this signature. Will be shown in
+            the UI.
+            </summary>
+        </member>
+        <member name="P:Microsoft.PowerFx.LanguageServerProtocol.Protocol.SignatureInformation.Documentation">
+            <summary>
+            The human-readable doc-comment of this signature. Will be shown
+            in the UI but can be omitted.
+            </summary>
+        </member>
+        <member name="P:Microsoft.PowerFx.LanguageServerProtocol.Protocol.SignatureInformation.Parameters">
+            <summary>
+            The parameters of this signature.
+            </summary>
+        </member>
+        <member name="P:Microsoft.PowerFx.LanguageServerProtocol.Protocol.SignatureInformation.ActiveParameter">
+             <summary>
+             The index of the active parameter.
+            
+             If provided, this is used in place of `SignatureHelp.activeParameter`.
+             </summary>
+        </member>
+        <member name="P:Microsoft.PowerFx.LanguageServerProtocol.Protocol.TextDocumentContentChangeEvent.Text">
+            <summary>
+            The new text of the whole document.
+            </summary>
+        </member>
+        <member name="P:Microsoft.PowerFx.LanguageServerProtocol.Protocol.TextDocumentIdentifier.Uri">
+            <summary>
+            The text document's URI.
+            </summary>
+        </member>
+        <member name="P:Microsoft.PowerFx.LanguageServerProtocol.Protocol.TextDocumentItem.Uri">
+            <summary>
+            The text document's URI.
+            </summary>
+        </member>
+        <member name="P:Microsoft.PowerFx.LanguageServerProtocol.Protocol.TextDocumentItem.LanguageId">
+            <summary>
+            The text document's language identifier.
+            </summary>
+        </member>
+        <member name="P:Microsoft.PowerFx.LanguageServerProtocol.Protocol.TextDocumentItem.Version">
+            <summary>
+            The version number of this document (it will increase after each
+            change, including undo/redo).
+            </summary>
+        </member>
+        <member name="P:Microsoft.PowerFx.LanguageServerProtocol.Protocol.TextDocumentItem.Text">
+            <summary>
+            The content of the opened text document.
+            </summary>
+        </member>
+        <member name="P:Microsoft.PowerFx.LanguageServerProtocol.Protocol.TextDocumentPositionParams.TextDocument">
+            <summary>
+            The text document.
+            </summary>
+        </member>
+        <member name="P:Microsoft.PowerFx.LanguageServerProtocol.Protocol.TextDocumentPositionParams.Position">
+            <summary>
+            The position inside the text document.
+            </summary>
+        </member>
+        <member name="T:Microsoft.PowerFx.LanguageServerProtocol.Protocol.TextEdit">
+            <summary>
+            Text edit object model.
+            </summary>
+        </member>
+        <member name="P:Microsoft.PowerFx.LanguageServerProtocol.Protocol.TextEdit.Range">
+            <summary>
+            Gets or sets the target range object.
+            </summary>
+        </member>
+        <member name="P:Microsoft.PowerFx.LanguageServerProtocol.Protocol.TextEdit.NewText">
+            <summary>
+            Gets or sets new text to be replace when command executed.
+            </summary>
+        </member>
+        <member name="P:Microsoft.PowerFx.LanguageServerProtocol.Protocol.VersionedTextDocumentIdentifier.Version">
+             <summary>
+             The version number of this document.
+            
+             The version number of a document will increase after each change,
+             including undo/redo. The number doesn't need to be consecutive.
+             </summary>
+        </member>
+        <member name="T:Microsoft.PowerFx.LanguageServerProtocol.Protocol.WorkspaceEdit">
+            <summary>
+            Workpsace edit object model.
+            https://microsoft.github.io/language-server-protocol/specifications/specification-3-17/#workspaceEdit.
+            </summary>
+        </member>
+        <member name="M:Microsoft.PowerFx.LanguageServerProtocol.Protocol.WorkspaceEdit.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.PowerFx.LanguageServerProtocol.Protocol.WorkspaceEdit"/> class.
+            ctor.
+            </summary>
+        </member>
+        <member name="P:Microsoft.PowerFx.LanguageServerProtocol.Protocol.WorkspaceEdit.Changes">
+            <summary>
+            Gets or sets suggested changes.
+            </summary>
+        </member>
+        <member name="T:Microsoft.PowerFx.Core.IPowerFxScopeQuickFix">
+            <summary>
+            Provides quick fix.
+            </summary>
+        </member>
+        <member name="M:Microsoft.PowerFx.Core.IPowerFxScopeQuickFix.Suggest(System.String)">
+            <summary>
+            Provider quick fix suggesions.
+            </summary>
+            <param name="expression">The formula expression.</param>
+            <returns>Collection of quick fixes.</returns>
+        </member>
+        <member name="M:Microsoft.PowerFx.EditorEngineExtensions.CreateEditorScope(Microsoft.PowerFx.Engine,Microsoft.PowerFx.ParserOptions,Microsoft.PowerFx.ReadOnlySymbolTable)">
+            <summary>
+            A scope is the context for a specific formula bar. This will accept the text from the formula bar (editor), use the additional parameters here, and then call Engine.Check(). 
+            </summary>
+            <param name="engine">The engine.</param>
+            <param name="parserOptions">Options to pass to Engine.Check.</param>
+            <param name="symbols">Additonal "local" symbols to pass to Engine.Check.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.PowerFx.EditorContextScope">
+            <summary>
+            Implement a<see cref="T:Microsoft.PowerFx.Intellisense.IPowerFxScope"/> for intellisense on top of an<see cref="T:Microsoft.PowerFx.Engine"/> instance.
+             A scope is the context for a specific formula bar. 
+             This includes helpers to aide in customizing the editing experience. 
+            </summary>
+        </member>
+    </members>
+</doc>

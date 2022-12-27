@@ -1,0 +1,124 @@
+﻿// Test String interpolation feature. 
+
+>> $"Hello {"World!"}"
+"Hello World!"
+
+>> $"Hello {"World!"} 2"
+"Hello World! 2"
+
+>> $"One {$"Two {"Three"}"} Four"
+"One Two Three Four"
+
+>> $"This string {{{"has"}}} curly braces"
+"This string {has} curly braces"
+
+>> $"This string {{ has }} curly braces"
+"This string { has } curly braces"
+
+>> "This string {{ has }} curly braces"
+"This string {{ has }} curly braces"
+
+>> $""
+""
+
+>> $"{}"
+Errors: Error 3-4: Empty expressions cannot appear inside an interpolated string.
+
+>> $"Hello"
+"Hello"
+
+>> $"{123}"
+"123"
+
+>> $"{123}{456}"
+"123456"
+
+>> $"{"
+Errors: Error 3-4: Unexpected characters. Characters are used in the formula in an unexpected way.|Error 4-4: Unexpected characters. Characters are used in the formula in an unexpected way.
+
+>> $"}"
+Errors: Error 2-2: Unexpected characters. Characters are used in the formula in an unexpected way.
+
+>> $"{" & ""
+Errors: Error 3-9: Unexpected characters. Characters are used in the formula in an unexpected way.|Error 9-9: Unexpected characters. Characters are used in the formula in an unexpected way.
+
+>> $"}" & ""
+Errors: Error 2-2: Unexpected characters. Characters are used in the formula in an unexpected way.
+
+>> $"{
+Errors: Error 3-3: Unexpected characters. Characters are used in the formula in an unexpected way.
+
+>> $"}
+Errors: Error 2-2: Unexpected characters. Characters are used in the formula in an unexpected way.|Error 3-3: Unexpected characters. Characters are used in the formula in an unexpected way.
+
+>> $"{1}{2}{{3{{4{{5{{6{{7"
+"12{3{4{5{6{7"
+
+>> $"{{"
+"{"
+
+>> $"{{a}}"
+"{a}"
+
+>> $"-{{a}}-"
+"-{a}-"
+
+>> $"-{{a}}"
+"-{a}"
+
+>> $"{{a}}-"
+"{a}-"
+
+>> $"! {Date(1980,1,1)} !"
+"! 1/1/1980 !"
+
+>> $""""
+""""
+
+>> """"
+""""
+
+>> $"! {With({a:4,b:6},a*b)} !"
+"! 24 !"
+
+>> $"! {With({array:[1,5,9]},Sum(Sequence(CountRows(array)) As Index,Power(Last(FirstN(array,Index.Value)).Value, Index.Value)))} !"
+"! 755 !"
+
+>> $"! {$"{$"{true}"}"} !"
+"! true !"
+
+>> $"! !"
+"! !"
+
+>> $"! "" !"
+"! "" !"
+
+>> $"! {{1,2}} !"
+"! {1,2} !"
+
+>> $"! {[1,2]} !"
+Errors: Error 5-10: Invalid argument type (Table). Expecting a Text value instead.|Error 0-14: Expressions which appear inside an interpolated string must evaluate to a Text value or to a compatible type.
+
+>> $"! {Table({a:1})} !"
+Errors: Error 5-17: Invalid argument type (Table). Expecting a Text value instead.|Error 0-21: Expressions which appear inside an interpolated string must evaluate to a Text value or to a compatible type.
+
+>> $"! {{a:1,b:2}} !"
+"! {a:1,b:2} !"
+
+>> $"! { {a:1,b:2} } !"
+Errors: Error 6-15: Invalid argument type (Record). Expecting a Text value instead.|Error 0-20: Expressions which appear inside an interpolated string must evaluate to a Text value or to a compatible type.
+
+>> $"Hello {"
+Errors: Error 9-10: Unexpected characters. Characters are used in the formula in an unexpected way.|Error 10-10: Unexpected characters. Characters are used in the formula in an unexpected way.
+
+>> $"Hello {}"
+Errors: Error 9-10: Empty expressions cannot appear inside an interpolated string.
+
+>> $"! { {a:1,b:2}.a } !"
+"! 1 !"
+
+>> $"! {First([{a:1,b:2}.a]).Value} !"
+"! 1 !"
+
+>> First([$"{ {a:1,b:2,c:3}.a }"]).Value
+"1"

@@ -1,0 +1,144 @@
+﻿>> Find(Blank(), [""], [1])
+Errors: Error 0-24: The function 'Find' has some invalid arguments.|Error 14-18: Invalid argument type (Table). Expecting a Text value instead.|Error 20-23: Invalid argument type (Table). Expecting a Number value instead.
+
+>> Find([""], [""], Blank())
+Errors: Error 0-25: The function 'Find' has some invalid arguments.|Error 5-9: Invalid argument type (Table). Expecting a Text value instead.|Error 11-15: Invalid argument type (Table). Expecting a Text value instead.
+
+>> Find(If(false, ["blank table"], Blank()), If(false, ["blank table"], Blank()), [1])
+Blank()
+
+>> Find(If(false, ["blank table"], Blank()), If(false, ["blank table"], Blank()), [2])
+Blank()
+
+>> Find(If(false, ["blank table"], Blank()), "textToBeSearchedIn", [5])
+Blank()
+
+>> Find("textToSearch", If(false, ["blank table"], Blank()), [1])
+Blank()
+
+>> Find([Blank(), "", ","], If(false, ["blank table"], Blank()), 1)
+Blank()
+
+>> Find(["b"], ["abc", "cde"])
+Table({Result:2},{Result:Error({Kind:ErrorKind.NotApplicable})})
+
+>> Find(["b"], ["abc", "cde"], If(false, [0], Blank()))
+Blank()
+
+>> Find(["b"], ["abc", "cde"], Filter([0], Value <> Value))
+Table({Result:Error({Kind:ErrorKind.NotApplicable})},{Result:Error({Kind:ErrorKind.NotApplicable})})
+
+>> Find([Blank(), "", ","], If(false, ["blank table"], Blank()), [1, 2, 3])
+Blank()
+
+>> Find(If(false, ["blank table"], Blank()), [Blank(), "", "textToBeSearchedIn"], 1)
+Blank()
+
+>> Find(If(false, ["blank table"], Blank()), [Blank(), "", "textToBeSearchedIn"], [1, 2, 3])
+Blank()
+
+>> Find([Blank(), "", ","], "textToBeSearchedIn,textToBeSearchedIn", 1)
+Table({Result:1},{Result:1},{Result:19})
+
+>> Find([Blank(), "", ",", ","], "textToBeSearchedIn,textToBeSearchedIn", [1, 2, 3, 20])
+Table({Result:1},{Result:2},{Result:19},{Result:Blank()})
+
+>> Find(",", ["textToBeSearchedIn,textToBeSearchedIn"], 1)
+Table({Result:19})
+
+>> Find(",", ["textToBeSearchedIn,textToBeSearchedIn", "textToBeSearchedIn,textToBeSearchedIn,", "textToBeSearchedIn,textToBeSearchedIn"], [1, 20, 40])
+Table({Result:19},{Result:38},{Result:Error({Kind:ErrorKind.InvalidArgument})})
+
+>> Find([Blank(), "", ","], ["textToBeSearchedIn,textToBeSearchedIn", "textToBeSearchedIn,textToBeSearchedIn,", "textToBeSearchedIn,textToBeSearchedIn"], [1, 10, 9])
+Table({Result:1},{Result:10},{Result:19})
+
+>> Find(",", "textToBeSearchedIn,textToBeSearchedIn", [1, 2, 19, 20])
+Table({Result:19},{Result:19},{Result:19},{Result:Blank()})
+
+>> Find([Blank(), "", ","], If(false, ["blank table"], Blank()))
+Blank()
+
+>> Find(If(false, ["blank table"], Blank()), [Blank(), "", "textToBeSearchedIn"])
+Blank()
+
+>> Find([Blank(), "", ","], "textToBeSearchedIn,textToBeSearchedIn")
+Table({Result:1},{Result:1},{Result:19})
+
+>> Find(",", ["textToBeSearchedIn,textToBeSearchedIn"])
+Table({Result:19})
+
+>> Find([Blank(), "", ","], ["textToBeSearchedIn,textToBeSearchedIn", "textToBeSearchedIn,textToBeSearchedIn,", "textToBeSearchedIn,textToBeSearchedIn"])
+Table({Result:1},{Result:1},{Result:19})
+
+>> Find([Blank(), ","], ["lastName,firstName", "lastName,firstName,", "lastName,firstName", Blank()])
+Table({Result:1},{Result:9},{Result:Error({Kind:ErrorKind.NotApplicable})},{Result:Error({Kind:ErrorKind.NotApplicable})})
+
+>> Find([Blank(), ",", "", "findMe"], [Blank(), "lastName,firstName"])
+Table({Result:1},{Result:9},{Result:Error({Kind:ErrorKind.NotApplicable})},{Result:Error({Kind:ErrorKind.NotApplicable})})
+
+>> Find([Blank(), ","], ["lastName,firstName",], [9, 2, 3])
+Table({Result:9},{Result:Error({Kind:ErrorKind.NotApplicable})},{Result:Error({Kind:ErrorKind.NotApplicable})})
+
+>> Find([Blank(), ",", "", "findMe"], [Blank(), "lastName,firstName"], 10)
+Table({Result:Error({Kind:ErrorKind.InvalidArgument})},{Result:Blank()},{Result:Error({Kind:ErrorKind.NotApplicable})},{Result:Error({Kind:ErrorKind.NotApplicable})})
+
+>> Find([",", Blank()], "lastName,firstName", [1, 2, 3])
+Table({Result:9},{Result:2},{Result:Error({Kind:ErrorKind.NotApplicable})})
+
+>> Find(",", [Blank(), "lastName,firstName", "lastName,firstName"], [1, 2])
+Table({Result:Blank()},{Result:9},{Result:Error({Kind:ErrorKind.NotApplicable})})
+
+>> Find(Filter(["empty table"], Value <> Value), "", 1)
+Table()
+
+>> Find("", Filter(["empty table"], Value <> Value), 1)
+Table()
+
+>> Find("textToFind", Filter(["empty table"], Value <> Value), 2)
+Table()
+
+>> Find(Filter(["empty table"], Value <> Value), Filter(["empty table"], Value <> Value))
+Table()
+
+>> Find(Filter(["empty table"], Value <> Value), Filter(["empty table"], Value <> Value), Filter(["empty table"], Value <> Value))
+Table()
+
+>> Find(Filter(["empty table"], Value <> Value), [Blank(), "lastName,firstName", "lastName,firstName"], 2)
+Table({Result:Error({Kind:ErrorKind.NotApplicable})},{Result:Error({Kind:ErrorKind.NotApplicable})},{Result:Error({Kind:ErrorKind.NotApplicable})})
+
+>> Find(Filter(["empty table"], Value <> Value), "textToSearch", [1, 2])
+Table({Result:Error({Kind:ErrorKind.NotApplicable})},{Result:Error({Kind:ErrorKind.NotApplicable})})
+
+>> Find([",", Blank(), ""], Filter(["empty table"], Value <> Value), 2)
+Table({Result:Error({Kind:ErrorKind.NotApplicable})},{Result:Error({Kind:ErrorKind.NotApplicable})},{Result:Error({Kind:ErrorKind.NotApplicable})})
+
+>> Find(",", Filter(["empty table"], Value <> Value), [1, 1])
+Table({Result:Error({Kind:ErrorKind.NotApplicable})},{Result:Error({Kind:ErrorKind.NotApplicable})})
+
+>> Find([Blank(), ",", "", "findMe"], [Blank(), "lastName,firstName", "lastName,firstName"], Filter(["empty table"], Value <> Value))
+Table({Result:Error({Kind:ErrorKind.NotApplicable})},{Result:Error({Kind:ErrorKind.NotApplicable})},{Result:Error({Kind:ErrorKind.NotApplicable})},{Result:Error({Kind:ErrorKind.NotApplicable})})
+
+>> Find(",", [Blank(), "lastName,firstName"], Filter(["empty table"], Value <> Value))
+Table({Result:Error({Kind:ErrorKind.NotApplicable})},{Result:Error({Kind:ErrorKind.NotApplicable})})
+
+>> Find("c", Table({ within: "abc" }, { within: Error({Kind: ErrorKind.Validation}) }, { within: "cde" }))
+Table({Result:3},{Result:Error({Kind:ErrorKind.Validation})},{Result:1})
+
+>> Find("c", ["abc", Error({Kind: ErrorKind.Validation}), "cde"])
+Table({Result:3},{Result:Error({Kind:ErrorKind.Validation})},{Result:1})
+
+>> Find(Table({ find: "a" }, { find: Error({Kind: ErrorKind.Validation}) }, { find: "b" }), "abc")
+Table({Result:1},{Result:Error({Kind:ErrorKind.Validation})},{Result:2})
+
+>> Find(["a", Error({Kind: ErrorKind.Validation}), "b"], "abc")
+Table({Result:1},{Result:Error({Kind:ErrorKind.Validation})},{Result:2})
+
+>> Find(Table({ find: "a" }, { find: Mid("Hello", -1) }, { find: "b" }, If(1/0>2, { find: "e" }), { find: "c" }), Table({ within: "abc" }, If(Sqrt(-1)<0, { within: "err" }), { within: Left("err", -1) }, If(Right("err", -3) = "err", { within: "err" }), { within: "abc" }))
+Table({Result:1},Error({Kind:ErrorKind.Numeric}),{Result:Error({Kind:ErrorKind.InvalidArgument})},Error({Kind:ErrorKind.Div0}),{Result:3})
+//actual: Error({Kind:ErrorKind.Div0})
+
+>> Find(Table({ find: "a" }, { find: "b" }, { find: "c" }), If(1/0>2,"abcdef"))
+Table({Result:Error({Kind:ErrorKind.Div0})},{Result:Error({Kind:ErrorKind.Div0})},{Result:Error({Kind:ErrorKind.Div0})})
+
+>> Find(If(Sqrt(-1)<0,"First second third"), Table({ within: "First" }, { within: "Second" }))
+Table({Result:Error({Kind:ErrorKind.Numeric})},{Result:Error({Kind:ErrorKind.Numeric})})

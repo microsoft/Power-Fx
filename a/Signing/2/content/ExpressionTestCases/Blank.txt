@@ -1,0 +1,137 @@
+﻿
+
+// Blank is type compatible with other types
+>> If(true, 2,Blank())
+2
+
+>> If(false, 2,Blank())
+Blank()
+
+>> If(false, Blank(), "hi")
+"hi"
+
+//-----------------------------------------------
+// Numerically, Blank() evaulates to 0
+
+>> Blank() - Blank()
+0
+
+>> Blank() + Blank()
+0
+
+>> Blank() - 5
+-5
+
+>> -5 < Blank()
+true
+
+>> 5 < Blank()
+false
+
+>> 5 / Blank()
+Error({Kind:ErrorKind.Div0})
+
+>> Blank()%
+0
+
+// But Blank is not 0 
+>> Blank() = 0
+false
+
+>> Blank() <> 0
+true
+
+>> 0 = Blank()
+false
+
+>> 0 <> Blank()
+true
+
+>> IsBlank(0)
+false
+
+// https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-isblank-isempty
+
+>> Blank()
+Blank()
+
+//-----------------------------------------------
+// String 
+>> IsBlank("")
+true
+
+// whitespace 
+>> IsBlank(" ")
+false
+
+>> IsBlank(Blank())
+true
+
+//-----------------------------------------------
+// Booleans 
+>> Not(Blank())
+true
+
+>> IsBlank(false)
+false
+
+>> IsBlank(true)
+false
+
+// Blank is interesting because some functions return that when the arg is missing. 
+// An If function with no ElseResult. Because the condition is always false, this If always returns blank.
+>> IsBlank( If( false, false ) )
+true
+
+// Acts like a number
+>> 5 + Blank()
+5
+
+// Acts like "", but still not a string  
+>> "A" & Blank() & "B"
+"AB"
+
+>> Len(Blank()) 
+0
+
+>> Blank() = Blank()
+true
+
+>> Blank() <> Blank()
+false
+
+// Typed blank values
+>> If(1<0,1) = If(1<0,4)
+true
+
+>> If(1<0,false) = If(1<0,true)
+true
+
+>> If(1<0,Date(1999,12,31)) = If(1<0,Date(2022,1,1))
+true
+
+>> If(1<0,"str") = If(1<0,"str2")
+true
+
+// Blank and empty string
+>> Blank() = ""
+false
+
+>> Blank() <> ""
+true
+
+>> IsBlank(Blank() + Blank())
+false
+
+// ========= Error expressions =========
+>> IsBlank(Abs(1/0))
+Error({Kind:ErrorKind.Div0})
+
+>> IsBlank(Abs("sampleText"))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> IsBlank(Ln(0.00))
+Error({Kind:ErrorKind.Numeric})
+
+>> Blank(
+Errors: Error 6-6: Expected an operand. The formula or expression expects a valid operand. For example, you can add the operand '2' to the expression ' 1 +_' so that the result is '3'. Or, you can add the operand "there" to the expression '"Hi "& _ ' so that the result is 'Hi there'.|Error 6-6: Unexpected characters. The formula contains 'Eof' where 'ParenClose' is expected.

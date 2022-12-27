@@ -1,0 +1,82 @@
+// ******** STRING PARAMETERS ********
+
+>> Upper("aBCd  eFGhIJK ")
+"ABCD  EFGHIJK "
+
+>> Upper("Important!")
+"IMPORTANT!"
+
+>> Upper("HeLlO wOrLd")
+"HELLO WORLD"
+
+>> Upper("all lower")
+"ALL LOWER"
+
+>> Upper("ALL CAPS" & " HelLo")
+"ALL CAPS HELLO"
+
+>> Upper("E. E. Cummings")
+"E. E. CUMMINGS"
+
+>> Upper("123 456")
+"123 456"
+
+>> Upper(" \\t ")
+" \\T "
+
+// Excel throws compile error - Text values in formula are limited to 255 characters
+>> Upper("This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string")
+"THIS IS REALLY VERY LONG STRING THIS IS REALLY VERY LONG STRING THIS IS REALLY VERY LONG STRING THIS IS REALLY VERY LONG STRING THIS IS REALLY VERY LONG STRING THIS IS REALLY VERY LONG STRING THIS IS REALLY VERY LONG STRING THIS IS REALLY VERY LONG STRING THIS IS REALLY VERY LONG STRING THIS IS REALLY VERY LONG STRING THIS IS REALLY VERY LONG STRING THIS IS REALLY VERY LONG STRING THIS IS REALLY VERY LONG STRING THIS IS REALLY VERY LONG STRING THIS IS REALLY VERY LONG STRING THIS IS REALLY VERY LONG STRING THIS IS REALLY VERY LONG STRING THIS IS REALLY VERY LONG STRING"
+
+
+// ******** NUMBER PARAMETERS ********
+>> Upper(12345)
+"12345"
+
+>> Upper(-123.45)
+"-123.45"
+
+// ******** BOOLEAN PARAMETERS ********
+
+>> Upper(true)
+"TRUE"
+
+>> Upper(false)
+"FALSE"
+
+>> Upper("true")
+"TRUE"
+
+>> Upper("false")
+"FALSE"
+
+// ******** BLANK, NULL and ERROR PARAMETERS ********
+
+>> Upper("")
+""
+
+>> If(Len(Upper(" "))=1,true)   
+true
+
+>> Upper(Blank())
+""
+
+//Invalid operation: Division by zero
+>> Upper(1/0)
+Error({Kind:ErrorKind.Div0})
+
+// ******** FUNCTION VALUE AS PARAMETERS ********
+
+>> Upper(Text(12, "#.000"))
+"12.000"
+
+>> Upper(Concatenate("Jane", "Doe"))
+"JANEDOE"
+
+>> Upper(Date(1976, 12,23))
+"12/23/1976"
+
+// ******* ALL THE PARAMETERS TYPE *******
+
+>> Upper("Jane" & "Smith" & 67890 & true & Blank() & Text(12, "#.000") & Date(1976, 12,23))
+"JANESMITH67890TRUE12.00012/23/1976"

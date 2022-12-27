@@ -1,0 +1,108 @@
+﻿
+// In (Case insensitive), ExactIn (case sensitive)
+// Scalar, Table forms. 
+// https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/operators#in-and-exactin-operators
+
+
+>> ("a" & 1/0) in "abc"
+Error({Kind:ErrorKind.Div0}) 
+
+>> "a" in ("abc" & 1/0)
+Error({Kind:ErrorKind.Div0}) 
+
+// 
+// Scalar
+
+>> "e" in "applE"
+true
+
+>> "e" exactin "applE"
+false
+
+>> "x y" exactin "abx yz"
+true
+
+>> "*" in "apple"
+false
+
+>> "x" in "apple"
+false
+
+>> "" in "apple"
+true
+
+>> "" in ""
+true
+
+
+// If Blank is on either side, operator is false. 
+// Use If() to coerce Blank to string. 
+>> Blank() in Blank()
+false
+
+// Case where Blank() doesn't act like ""
+>> If(false, "", Blank()) in "abc"
+false
+
+>> "" in If(false, Blank(), "")
+true
+
+>> "" in If(true, Blank(), "")
+false
+
+
+// Will coerce
+// Sql doesn't yet handle non string literals in LHS
+
+>> 5 in "5"
+true
+
+>> 6 in "5"
+false
+
+>> 1+2 in "3"
+true
+
+>> "1+2" in "3"
+false
+
+// Test some examples with potential wildcard and escape characters. 
+
+>> "[[]" in "SQL literal ["
+false
+
+>> "[[]" in "SQL literal [[]"
+true
+
+>> "[']" in "SQL literal '"
+false
+
+>> "[']" in "SQL literal [']"
+true
+
+>> "'" in "SQL literal '"
+true
+
+>> "Jane" in ["Jane", "John"]
+true
+
+>> "John" in ["Jane", "John"]
+true
+
+>> "JANE" in ["Jane", "John"]
+true
+
+>> "jOHN" in ["Jane", "John"]
+true
+
+>> "Jane" exactin ["Jane", "John"]
+true
+
+>> "John" exactin ["Jane", "John"]
+true
+
+>> "JANE" exactin ["Jane", "John"]
+false
+
+>> "jOHN" exactin ["Jane", "John"]
+false

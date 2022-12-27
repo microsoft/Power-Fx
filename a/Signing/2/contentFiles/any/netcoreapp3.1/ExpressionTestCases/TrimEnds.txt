@@ -1,0 +1,78 @@
+// ******** STRING PARAMETERS ********
+
+>> TrimEnds("   Hello     World   ")
+"Hello     World"
+
+>> TrimEnds("  Jane  Doe  ")
+"Jane  Doe"
+
+>> TrimEnds("  Jack  and   Jill       ")
+"Jack  and   Jill"
+
+>> TrimEnds("Already Trimmed")
+"Already Trimmed"
+
+>> TrimEnds("   Venus  ,  Earth ,  Mars ")
+"Venus  ,  Earth ,  Mars"
+
+>> TrimEnds("Oil and Water  ")
+"Oil and Water"
+
+>> TrimEnds("foo " & " bar   ")
+"foo  bar"
+
+>> TrimEnds(" 12345    ")
+"12345"
+
+
+>> TrimEnds("               This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string This is really very long              string This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string This is really verylong string         ")
+"This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string This is really very long              string This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string This is really verylong string"
+
+// ******** NUMBER PARAMETERS ********
+>> TrimEnds(  12345    )
+"12345"
+
+>> TrimEnds(  -123.45   )
+"-123.45"
+
+// ******** BOOLEAN PARAMETERS ********
+
+>> TrimEnds(  true   )
+"true"
+
+>> TrimEnds(  false    )
+"false"
+
+>> TrimEnds(  "true"   )
+"true"
+
+>> TrimEnds("  false    ")
+"false"
+
+// ******** BLANK, NULL and ERROR PARAMETERS ********
+
+>> TrimEnds("")
+""
+
+>> TrimEnds("   ")
+""
+
+>> TrimEnds(Blank())
+""
+
+//Invalid operation: Division by zero
+>>TrimEnds(1/0)
+Error({Kind:ErrorKind.Div0})
+
+>> TrimEnds("  1/0   ")
+"1/0"
+
+// ******** FUNCTION VALUE AS PARAMETERS ********
+
+>> TrimEnds(Concatenate("  Jane   "," Doe   "))
+"Jane    Doe"
+
+// ******* ALL THE PARAMETERS TYPE *******
+
+>> TrimEnds("   foo   " & 67890 & "    " & false & Blank() & Text(12, "#.000") & Date(1976, 12,23) & "   ")
+"foo   67890    false12.00012/23/1976"

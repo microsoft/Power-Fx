@@ -1,0 +1,11 @@
+﻿>> {'abc \ " \0 \b \t \n \v \f \r \u0085 \u2028 \u2029def':1}
+{'abc \ " \0 \b \t \n \v \f \r \u0085 \u2028 \u2029def':1}
+
+>> {'abc \ " \0 \b \t \n \v \f \r \u0085 \u2028 \u2029def':1}.'abc \ " \0 \b \t \n \v \f \r \u0085 \u2028 \u2029def'
+1
+
+>> {'hello " world':"hello world"}
+{'hello " world':"hello world"}
+
+>> ForAll(Table({'hello " world':"hello world", a:1}), {'needs '' escaping':$"{a} - {'hello " world'}"})
+Table({'needs '' escaping':"1 - hello world"})

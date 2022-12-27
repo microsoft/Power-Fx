@@ -1,0 +1,123 @@
+// ******** INTEGER PARAMETERS ********
+
+// Positive Integer Parameters
+>> Sum(0)
+0
+
+>> Sum(0,0,0,0)
+0
+
+>> Sum(1, 2, 3, 4, 5)
+15
+
+// Excel gives compile error and mention typo in the formula. Suggest to correct 1E+308 to E1+308
+>> Sum(1E+308, 1E+308)
+Error({Kind:ErrorKind.Numeric})
+
+// Negative Integer Parameters
+
+>> Sum(-0)
+0
+
+>> Sum(-1, -2, -3, -4, -5)
+-15
+
+>> Sum(-123, 234, -3456, 4567, -5678)
+-4456
+
+// ******** DECIMAL PARAMETERS ********
+
+>> Sum(0.00, -0.00, 0.000)
+0
+
+>> Sum(2.34567)
+2.34567
+
+>> Sum(-1.23, 23.4, -345.6, 4567.89, -5678.912)
+-1434.452
+
+// ******** NULL and ERROR PARAMETERS ********
+>> Sum(1/0)
+Error({Kind:ErrorKind.Div0})
+
+// Excel returns 0
+>> Sum(Blank())
+Blank()
+
+// Excel returns 0
+>> Sum(Blank(),Blank(),Blank(),Blank())
+Blank()
+
+>> Sum(Blank(),0,0,Blank())
+0
+
+>> Sum(1, Blank(), 2, Blank(), 3, Blank(), 4, Blank(), 5)
+15
+
+>> Sum(-1, Blank(), -2, Blank(), -3, Blank(), -4, Blank(), -5)
+-15
+
+// ******** STRING PARAMETERS ********
+
+>> Sum("sampleText")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Sum("10")
+10
+
+>> Sum("-10.123", 1.234)
+-8.889
+
+>> Sum("9", "10")
+19
+
+>> Sum("100", "AB")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// ******** BOOLEAN PARAMETERS ********
+
+>> Sum(true,true)
+2
+
+>> Sum(false,false)
+0
+
+>> Sum(true,false)
+1
+
+>> Sum("true","false")
+Error(Table({Kind:ErrorKind.InvalidArgument},{Kind:ErrorKind.InvalidArgument}))
+
+// ***********  TABLE + EXPRESSION *************
+
+>> Sum([1,2,3,4], 0)
+0
+
+>> Sum([1,2,3,4], Value)
+10
+
+>> Sum([1,2,3,4,5], Value^2)
+55
+
+>> Sum([1,2,3,4,5], With({Square:Value^2},Square))
+55
+
+>> Sum(AddColumns([1,2,3,4,5], "Square", Value^2), Square)
+55
+
+>> Sum([1,2/0,3,Sqrt(-4),5], IfError(Value, 0))
+9
+
+>> Sum(Table({a:1},If(1/0<2,{a:2}),{a:3},If(Sqrt(-1)<0,{a:4}),{a:5}), IfError(a, 0))
+9
+
+>> Sum(If(1/0<2,[1,2,3,4]),Value)
+Error({Kind:ErrorKind.Div0})
+
+// Blank rows
+>> Sum(Table({a:1},If(1<0,{a:2}),{a:3},If(1<0,{a:4}),{a:5}), Coalesce(a, 100))
+209
+
+// Empty table
+>> Sum(Filter([1,2,3], Value > 10), Value)
+Blank()

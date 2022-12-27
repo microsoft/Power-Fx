@@ -1,0 +1,643 @@
+﻿// ************************* SCALAR PARAMETERS *************************
+
+>> Find(",", "LastName,FirstName")
+9
+
+>> Find(",", "LastName,FirstName", 2)
+9
+
+>> Find(",", "LastName,FirstName", 9)
+9
+
+>> Find(",", "LastName,FirstName", 9.5)
+9
+
+>> Find(",", "LastName,FirstName", 10)
+Blank()
+
+>> Find("#", "LastName,FirstName")
+Blank()
+
+>> Find("#", "LastName,FirstName", 3)
+Blank()
+
+>> Find("#", "LastName,FirstName", 100)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Find(",", "LastName,First,Name")
+9
+
+>> Find(",", "LastName,First,Name", 2)
+9
+
+>> Find(",", "LastName,First,Name", 9)
+9
+
+>> Find(",", "LastName,First,Name", 10)
+15
+
+>> Find(",", "LastNameFirstName,")
+18
+
+>> Find(",", "LastNameFirstName,", 18)
+18
+
+>> Find(",", "LastNameFirstName,", 19)
+Blank()
+
+>> Find("MULTIPLECHARS", "LastNameMULTIPLECHARSFirstName")
+9
+
+>> Find("MULTIPLECHARS", "LastNameMULTIPLEFirstName")
+Blank()
+
+>> Find(",", ",,,,,,")
+1
+
+>> Find(",", ",,,,,,", 2)
+2
+
+>> Find(",", "LastName,FirstName", -1)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Find(",", "LastName,FirstName", 0)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Find("B", "LastNameisBiller")
+11
+
+>> Find("B", "LastNameisbiller")
+Blank()
+
+>> Find("b", "LastNameisbiller")
+11
+
+>> Find("b", "LastNameisBiller")
+Blank()
+
+>> Find("BB", "LastNameisBBiller")
+11
+
+>> Find("BB", "LastNameisBbiller")
+Blank()
+
+>> Find("bb", "LastNameisbbiller")
+11
+
+>> Find("bb", "LastNameisbBiller")
+Blank()
+
+>> Find("B", "LastNameisBillerFirstNameisBethy")
+11
+
+>> Find("B", "LastNameisBillerFirstNameisBethy", 2)
+11
+
+>> Find("B", "LastNameisBillerFirstNameisBethy", 11)
+11
+
+>> Find("B", "LastNameisBillerFirstNameisBethy", 12)
+28
+
+>> Find("B", "LastNameisBillerFirstNameisbethy", 12)
+Blank()
+
+
+// ************************* SCALAR PARAMETERS - EMPTY, NULL or ERROR *************************
+
+>> Find("", "")
+1
+
+>> Find("", "", -1)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Find("", "", 0)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Find("", "", 1)
+1
+
+>> Find("", "", 2)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Find("", "textToBeSearchedIn")
+1
+
+>> Find("", "textToBeSearchedIn", -1)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Find("", "textToBeSearchedIn", 0)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Find("", "textToBeSearchedIn", 1)
+1
+
+>> Find("", "textToBeSearchedIn", 2)
+4
+
+>> Find("", "textToBeSearchedIn", 100)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Find("textToFind", "")
+Blank()
+
+>> Find("textToFind", "",-1)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Find("textToFind", "",0)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Find("textToFind", "",1)
+Blank()
+
+>> Find("textToFind", "",2)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Find(Blank(), Blank())
+1
+
+>> Find(Blank(), Blank(), -1)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Find(Blank(), Blank(), 0)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Find(Blank(), Blank(), 1)
+1
+
+>> Find(Blank(), Blank(), 2)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Find(Blank(), "textToBeSearchedIn")
+1
+
+>> Find(Blank(), "textToBeSearchedIn", 2)
+2
+
+>> Find("textToFind", Blank())
+Blank()
+
+>> Find("textToFind", Blank(), 3)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Find(Blank(), "")
+1
+
+>> Find("", Blank())
+1
+
+>> Find(",", "LastName,FirstName", Blank())
+Blank()
+
+>> Find(1/0, "", 1)
+Error({Kind:ErrorKind.Div0})
+
+>> Find(1, 1/0, 1)
+Error({Kind:ErrorKind.Div0})
+
+>> Find(1, 1, 1/0)
+Error({Kind:ErrorKind.Div0})
+
+>> Find(18, 18, ErrorKind.Sync)
+1
+
+>> Find(18, 18, ErrorKind.MissingRequired)
+Blank()
+
+>> Find(1, ErrorKind.BadRegex)
+1
+
+>> Find(1, ErrorKind.BadRegex, 1)
+1
+
+>> Find(1, ErrorKind.BadRegex, 2)
+Blank()
+
+>> Find(1, ErrorKind.BadRegex, 3)
+Blank()
+
+>> Find(1, ErrorKind.BadRegex, 4)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Find(ErrorKind.BadRegex, 156)
+1
+
+>> Find(ErrorKind.BadRegex, 156, 1)
+1
+
+>> Find(ErrorKind.BadRegex, 156, 2)
+Blank()
+
+>> Find(ErrorKind.BadRegex, 156, 4)
+Blank()
+
+>> Find(ErrorKind.BadRegex, 156, 5)
+Error({Kind:ErrorKind.InvalidArgument})
+
+
+// ************************* TABLE PARAMETERS *************************
+
+// ======================== SCENARIO 1 ========================
+// findText: null, withinText: null, startIndex: [{ start: 1 }]
+
+>> Find(If(1<0,["string"]),If(1<0,["string"]),Table({start:1}))
+Table({Result:1})
+
+// ======================== SCENARIO 2 ========================
+// findText: null, withinText: null, startIndex: [{ start: 2 }] 
+
+>> Find(If(1<0,["string"]),If(1<0,["string"]),Table({start:2}))
+Table({Result:Error({Kind:ErrorKind.InvalidArgument})})
+
+// ======================== SCENARIO 3 ========================
+// findText: null, withinText: "textToBeSearchedIn", startIndex: [{ start: 5 }]
+
+>> Find(If(1<0,["string"]),"textToBeSearchedIn",Table({start:5}))
+Table({Result:5})
+
+// ======================== SCENARIO 4 ========================
+// findText: "textToSearch", withinText: null, startIndex: [{ start: 1 }] 
+
+>> Find("textToSearch",If(1<0,["string"]),[1])
+Table({Result:Blank()})
+
+// ======================== SCENARIO 5 ========================
+// findText: [{ find: null }, { find: '' }, { find: ',' }], withinText: null, startIndex: 1
+
+>> Find(Table(
+    {find: Blank()},
+    {find: ""},
+    {find: ","}),
+    If(1<0,["string"]),1)
+Table({Result:1},{Result:1},{Result:Blank()})
+
+
+// ======================== SCENARIO 6 ========================
+// findText: [{ find: null }, { find: '' }, { find: ',' }], withinText: null, startIndex: [{ start: 1 }, { start: 2 }, { start: 3 }]
+
+>> Find(Table(
+   {find: Blank()},
+   {find: ""},
+   {find: ","}),
+   If(1<0,["string"]),[1,2,3])
+Table({Result:1},{Result:Error({Kind:ErrorKind.InvalidArgument})},{Result:Error({Kind:ErrorKind.InvalidArgument})})
+
+
+// ======================== SCENARIO 7 ========================
+// findText: null, withinText: [{ within: null }, { within: '' }, { within: 'textToBeSearchedIn' }], startIndex: 1
+
+>> Find(If(1<0,["string"]),
+   Table(
+   {within: Blank()},
+   {within: ""},
+   {within: "textToBeSearchedIn"}),
+   1)
+Table({Result:1},{Result:1},{Result:1})
+// Question: Is the StartIndex parameter correct?
+   
+// ======================== SCENARIO 8 ========================
+// findText: null, withinText: [{ within: null }, { within: '' }, { within: 'textToBeSearchedIn' }], startIndex: [{ start: 1 }, { start: 2 }, { start: 3 }]
+
+>> Find(If(1<0,["string"]),
+   Table(
+   {within: Blank()},
+   {within: ""},
+   {within: "textToBeSearchedIn"}),
+   [1,2,3])
+Table({Result:1},{Result:Error({Kind:ErrorKind.InvalidArgument})},{Result:3})
+
+
+// ======================== SCENARIO 9 ========================
+// : findText: [{ find: null }, { find: '' }, { find: ',' }], withinText: 'textToBeSearchedIn,textToBeSearchedIn', startIndex: 1
+
+>> Find(Table(
+   {find: Blank()},
+   {find: ""},
+   {find: ","}),
+   "textToBeSearchedIn,textToBeSearchedIn",
+   1)
+Table({Result:1},{Result:1},{Result:19})
+
+
+// ======================== SCENARIO 10 ========================
+// findText: [{ find: null }, { find: '' }, { find: ',' }, { find: ',' }], withinText: 'textToBeSearchedIn,textToBeSearchedIn', startIndex: [{ start: 1 }, { start: 2 }, { start: 3 }, { start: 20 }]
+>> Find(
+   Table(
+   {find: Blank()},{find: ""},{find: ","},{find: ","}),
+   "textToBeSearchedIn,textToBeSearchedIn",
+   Table({start:1},{start:2},{start:3},{start:20}))
+Table({Result:1},{Result:2},{Result:19},{Result:Blank()})
+
+
+// ======================== SCENARIO 11 ========================   
+// findText: ',', withinText: [{ within: 'textToBeSearchedIn,textToBeSearchedIn' }], startIndex: 1
+
+>> Find(",", Table({within: "textToBeSearchedIn,textToBeSearchedIn"}),1)
+Table({Result:19})
+
+//  ======================== SCENARIO 12 ========================
+// findText: ',', 
+// withinText: [{ within: 'textToBeSearchedIn,textToBeSearchedIn' },{ within: 'textToBeSearchedIn,textToBeSearchedIn,' },{ within: 'textToBeSearchedIn,textToBeSearchedIn' },]
+// startIndex: [{ start: 1 }, { start: 20 }, { start: 40 }]   
+
+>> Find(",", 
+   Table({within: "textToBeSearchedIn,textToBeSearchedIn"},{within: "textToBeSearchedIn,textToBeSearchedIn,"},{within: "textToBeSearchedIn,textToBeSearchedIn"}),
+   [1,20,40])
+Table({Result:19},{Result:38},{Result:Error({Kind:ErrorKind.InvalidArgument})})
+
+
+//  ======================== SCENARIO 13 ========================
+// findText: [{ find: null }, { find: '' }, { find: ',' }]
+// withinText: [{ within: 'textToBeSearchedIn,textToBeSearchedIn' },{ within: 'textToBeSearchedIn,textToBeSearchedIn,' },{ within: 'textToBeSearchedIn,textToBeSearchedIn' }]
+// startIndex: [{ start: 1 }, { start: 10 }, { start: 9 }]
+
+>> Find(
+   Table({find: Blank()},{find: ""},{find: ","}), 
+   Table({within: "textToBeSearchedIn,textToBeSearchedIn"},{within: "textToBeSearchedIn,textToBeSearchedIn,"},{within: "textToBeSearchedIn,textToBeSearchedIn"}),
+   [1,10,9])
+Table({Result:1},{Result:10},{Result:19})
+
+
+//  ======================== SCENARIO 14 ========================
+// findText: ',', withinText: 'textToBeSearchedIn,textToBeSearchedIn', startIndex: [{ start: 1 }, { start: 2 }, { start: 19 }, { start: 20 }]
+
+>> Find(
+   ",", 
+   "textToBeSearchedIn,textToBeSearchedIn",
+   [1,2,19,20])
+Table({Result:19},{Result:19},{Result:19},{Result:Blank()})
+
+
+//  ======================== SCENARIO 15 ========================
+//  findText: [{ find: null }, { find: '' }, { find: ',' }], withinText: null,
+
+>> Find(
+   Table({find: Blank()},{find: ""},{find: ","}), 
+   If(1<0,["string"]))
+Table({Result:1},{Result:1},{Result:Blank()})
+
+
+//  ======================== SCENARIO 16 ========================
+//  findText: null, withinText: [{ within: null }, { within: '' }, { within: 'textToBeSearchedIn' }]
+
+>> Find(
+   If(1<0,["string"]),
+   Table({within: Blank()},{within: ""},{within: "textToBeSearchedIn"})) 
+Table({Result:1},{Result:1},{Result:1})
+
+
+//  ======================== SCENARIO 17 ========================
+//  findText: [{ find: null }, { find: '' }, { find: ',' }] , withinText: 'textToBeSearchedIn,textToBeSearchedIn'
+
+>> Find(
+   Table({find: Blank()},{find: ""},{find: ","}),  	
+   "textToBeSearchedIn,textToBeSearchedIn" )
+Table({Result:1},{Result:1},{Result:19})
+
+
+//  ======================== SCENARIO 18 ========================
+//  findText: ',' , withinText: [{ within: 'textToBeSearchedIn,textToBeSearchedIn' }],
+
+>> Find(
+   ",",  	
+   Table({within:"textToBeSearchedIn,textToBeSearchedIn"})
+   )
+Table({Result:19})
+
+
+//  ======================== SCENARIO 19 ========================
+//  findText: [{ find: null }, { find: '' }, { find: ',' }], 
+//  withinText: [{ within: 'textToBeSearchedIn,textToBeSearchedIn' },{ within: 'textToBeSearchedIn,textToBeSearchedIn,' },{ within: 'textToBeSearchedIn,textToBeSearchedIn' }]
+
+>> Find(
+   Table({find: Blank()},{find: ""},{find: ","}), 
+   Table({within: "textToBeSearchedIn,textToBeSearchedIn"},{within: "textToBeSearchedIn,textToBeSearchedIn,"},{within: "textToBeSearchedIn,textToBeSearchedIn"})
+   )
+Table({Result:1},{Result:1},{Result:19})
+
+
+//  ======================== SCENARIO 20 ========================
+//  findText: [{ find: null }, { find: ',' }]
+//  withinText: [{ within: 'lastName,firstName' },{ within: 'lastName,firstName,' },{ within: 'lastName,firstName' },{ within: null }]
+
+>> Find(
+   Table({find: Blank()},{find: ","}), 
+   Table({within: "lastName,firstName"},{within: "lastName,firstName,"},{within: "lastName,firstName"},{within: Blank()})
+   )
+Table({Result:1},{Result:9},{Result:1},{Result:1})
+
+
+//  ======================== SCENARIO 21 ========================
+//  findText: [{ find: null }, { find: ',' }, { find: '' }, { find: 'findMe' }], withinText: [{ within: null }, { within: 'lastName,firstName' }]
+
+>> Find(
+   Table({find: Blank()},{find: ","},{find: ""},{find: "findMe"}), 
+   Table({within: Blank()},{within: "lastName,firstName"})
+   )
+Table({Result:1},{Result:9},{Result:1},{Result:Blank()})
+
+
+//  ======================== SCENARIO 22 ========================
+// findText: [{ find: null }, { find: ',' }], WithinText: [{ within: 'lastName,firstName' }], startIndex: [{ start: 9 }, { start: 2 }, { start: 3 }]
+
+>> Find(
+   Table({find: Blank()},{find: ","}), 
+   Table({within: "lastName,firstName"}),
+   [9,2,3]
+   )
+Table({Result:9},{Result:Error({Kind:ErrorKind.InvalidArgument})},{Result:Error({Kind:ErrorKind.InvalidArgument})})
+
+
+//  ======================== SCENARIO 23 ========================
+//  findText: [{ find: null }, { find: ',' }, { find: '' }, { find: 'findMe' }]
+//  withinText: [{ within: null }, { within: 'lastName,firstName' }]
+//  startIndex: 10
+
+>> Find(
+   Table({find: Blank()},{find: ","},{find: ""},{find: "findMe"}), 
+   Table({within: Blank()},{within: "lastName,firstName"}),
+   10
+   )
+Table({Result:Error({Kind:ErrorKind.InvalidArgument})},{Result:Blank()},{Result:Error({Kind:ErrorKind.InvalidArgument})},{Result:Error({Kind:ErrorKind.InvalidArgument})})
+
+
+//  ======================== SCENARIO 24 ========================
+//  findText: [{ find: ',' }, { find: null }], withinText: 'lastName,firstName', startIndex: [{ start: 1 }, { start: 2 }, { start: 3 }]
+
+>> Find(
+   Table({find: ","},{find: Blank()}), 
+   "lastName,firstName",
+   [1,2,3]
+   )
+Table({Result:9},{Result:2},{Result:3})
+
+
+//  ======================== SCENARIO 25 ========================
+//  findText: ',', withinText: [{ within: null }, { within: 'lastName,firstName' }, { within: 'lastName,firstName' }], startIndex: [{ start: 1 }, { start: 2 }],
+
+>> Find(
+   ",", 
+   Table({within:Blank()},{within:"lastName,firstName"},{within:"lastName,firstName"}),
+   [1,2]
+   )
+Table({Result:Blank()},{Result:9},{Result:Blank()})
+
+
+//  ======================== SCENARIO 26 ========================
+//  findText: [], withinText: '', startIndex: 1,
+
+>> Find(Filter(["string"], Len(Value) > 10),"",1)
+Table()
+
+
+//  ======================== SCENARIO 27 ========================
+// findText: '', withinText: [], startIndex: 1,
+
+>> Find("", Filter(["string"], Len(Value) > 10),1)
+Table()
+
+
+//  ======================== SCENARIO 28 ========================
+//  findText: 'textToFind', withinText: [], startIndex: 2
+
+>> Find("textToFind", Filter(["string"], Len(Value) > 10),2)
+Table()
+
+
+//  ======================== SCENARIO 29 ========================
+//  findText: [],withinText: []
+
+>> Find(Filter(["string"], Len(Value) > 10), Filter(["string"], Len(Value) > 10))
+Table()
+
+
+//  ======================== SCENARIO 30 ========================
+//  findText: [],withinText: [], startIndex: []
+
+>> Find(Filter(["string"], Len(Value) > 10), Filter(["string"], Len(Value) > 10), Filter([1, 2, 3], Value > 100))
+Table()
+
+
+//  ======================== SCENARIO 31 ========================
+//  findText: [],withinText: [{ within: null }, { within: 'lastName,firstName' }, { within: 'lastName,firstName' }], startIndex: 2
+
+>> Find(
+   Filter(["string"], Len(Value) > 10),
+   Table({within:Blank()},{within:"lastName,firstName"},{within:"lastName,firstName"}),
+   2)
+Table()
+
+//  ======================== SCENARIO 32 ========================
+//  findText: [], withinText: 'textToSearch', startIndex: [{ start: 1 }, { start: 2 }],
+
+>> Find(
+   Filter(["string"], Len(Value) > 10),
+   "textToSearch",
+   [1,2])
+Table()
+
+
+//  ======================== SCENARIO 33 ========================
+//  findText: [{ find: ',' }, { find: null }, { find: '' }], withinText: [], startIndex: 2
+
+>> Find(
+   Table({find:","},{find:Blank()},{find:""}),
+   Filter(["string"], Len(Value) > 10),
+   2)
+Table()
+
+
+//  ======================== SCENARIO 34 ========================
+//  findText: ',', withinText: [], startIndex: [{ start: 1 }, { start: 1 }],
+
+>> Find(
+   ",",
+   Filter(["string"], Len(Value) > 10),
+   [1,1])
+Table()
+
+//  ======================== SCENARIO 35 ========================
+//  findText: [{ find: null }, { find: ',' }, { find: '' }, { find: 'findMe' }],
+//  withinText: [{ within: null }, { within: 'lastName,firstName' }, { within: 'lastName,firstName' }],
+//  startIndex: [],
+
+>> Find(
+   Table({find: Blank()},{find: ","},{find: ""},{find: "findMe"}),
+   Table({within:Blank()},{within:"lastName,firstName"},{within:"lastName,firstName"}),
+   Filter([1, 2, 3], Value > 100)
+   )
+Table()
+
+
+//  ======================== SCENARIO 36 ========================
+//  findText: ',', withinText: [{ within: null }, { within: 'lastName,firstName' }], startIndex: []
+
+>> Find(
+   ",",
+   Table({within: Blank()},{within: "lastName,firstName"}),
+   Filter([1, 2, 3], Value > 100)
+   )
+Table()
+
+
+//  ======================== SCENARIO 37 ========================
+//  findText: 'c', withinText: [{ within: 'abc' }, { within: anError }, { within: 'cde' }],
+
+>> Find(
+   "c",
+   Table({within: "abc"},{within: Error({Kind: Validation})}, {within: "cde"})
+   )
+Table({Result:3},{Result:Error({Kind:ErrorKind.Validation})},{Result:1})
+
+
+//  ======================== SCENARIO 38 ========================
+//  findText: 'c', withinText: [{ within: 'abc' }, anError, { within: 'cde' }],
+	
+>> Find(
+   "c",
+   Table({within: "abc"},{within: Error({Kind: Validation})}, {within: "cde"}),
+   [3,1/0,1]
+   )
+Table({Result:3},{Result:Error({Kind:ErrorKind.Validation})},{Result:1})
+
+
+//  ======================== SCENARIO 39 ========================
+//  findText: [{ find: 'a' }, { find: anError }, { find: 'b' }], withinText: 'abc',
+	
+>> Find(
+   Table({find:"a"},{find:Error({Kind: Validation})},{find:"b"}),
+   "abc",
+   [1,1/0,2]
+   )
+Table({Result:1},{Result:Error({Kind:ErrorKind.Validation})},{Result:2})
+
+
+//  ======================== SCENARIO 40 ========================
+//  findText: [{ find: 'a' }, { find: anError }, { find: 'b' }, anError, { find: 'c' }], 
+//  withinText: [{ within: 'abc' }, anError, { within: anError }, anError, { within: 'abc' }],
+	
+>> Find(
+   Table({find:"a"},{find:Error({Kind: Validation})},{find:"b"},{find:Error({Kind: InvalidArgument})},{find:"c"}),
+   Table({within:"abc"}, Error({Kind: InvalidArgument}), {within:Error({Kind: Validation})}, Error({Kind: Div0}), {within:"abc"})
+   )
+Table({Result:1},Error({Kind:ErrorKind.InvalidArgument}),{Result:Error({Kind:ErrorKind.Validation})},Error({Kind:ErrorKind.Div0}),{Result:3})
+
+
+//  ======================== SCENARIO 41 ========================
+//  findText: [{ find: 'a' }, { find: 'b' }, { find: 'c' }], withinText: anError 
+	
+>> Find(
+   Table({find:"a"},{find:"b"},{find:"c"}),
+   1/0
+   )
+Table({Result:Error({Kind:ErrorKind.Div0})},{Result:Error({Kind:ErrorKind.Div0})},{Result:Error({Kind:ErrorKind.Div0})})
+
+
+//  ======================== SCENARIO 42 ========================
+//  findText: anError, withinText: [{ within: 'First' }, { within: 'Second' }]
+	
+>> Find(
+   Text(1/0),
+   Table({within:"First"},{within:"Second"}),
+   )
+Table({Result:Error({Kind:ErrorKind.Div0})},{Result:Error({Kind:ErrorKind.Div0})})

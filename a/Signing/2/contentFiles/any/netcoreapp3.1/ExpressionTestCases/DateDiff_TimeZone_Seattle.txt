@@ -1,0 +1,181 @@
+﻿// (UTC-08:00) Pacific Time (US & Canada)
+#SETUP: TimeZoneInfo("Pacific Standard Time")
+
+// ******************************** DST SPRING FORWARD TESTCASES ********************************
+
+// Millisecond should be properly differenced, jumping the DST boundary
+// 3/12/2017 03:00:00.000 GMT-0700 - 1ms = 3/12/2017 01:59:59.999 GMT-0800
+>> DateDiff(DateTime(2017,3,12,3,0,0), DateTime(2017,3,12,1,59,59,999), TimeUnit.Milliseconds)
+-1
+	
+// Millisecond should be properly diffed, jumping the DST boundary
+// 3/12/2017 01:59:59.999 GMT-0800 + 1ms = 3/12/2017 03:00:00.000 GMT-0700
+>> DateDiff(DateTime(2017,3,12,1,59,59,999), DateTime(2017,3,12,3,0,0), TimeUnit.Milliseconds)
+1
+
+// Second should be properly diffed, jumping the DST boundary
+// 3/12/2017 03:00:00.000 GMT-0700 - 1s = 3/12/2017 01:59:59.000 GMT-0800
+>> DateDiff(DateTime(2017,3,12,3,0,0), DateTime(2017,3,12,1,59,59), TimeUnit.Seconds)
+-1
+
+// Second should be properly diffed, jumping the DST boundary
+// 3/12/2017 01:59:59.000 GMT-0800 + 1s = 3/12/2017 03:00:00.000 GMT-0700
+>> DateDiff(DateTime(2017,3,12,1,59,59), DateTime(2017,3,12,3,0,0), TimeUnit.Seconds)
+1
+
+// Minute should be properly diffed, jumping the DST boundary
+// 3/12/2017 03:00:00.000 GMT-0700 - 1min = 3/12/2017 01:59:00.000 GMT-0800
+>> DateDiff(DateTime(2017,3,12,3,0,0), DateTime(2017,3,12,1,59,0), TimeUnit.Minutes)
+-1
+
+// Minute should be properly diffed, jumping the DST boundary
+// 3/12/2017 01:59:00.000 GMT-0800 + 1min = 3/12/2017 03:00:00.000 GMT-0700
+>> DateDiff(DateTime(2017,3,12,1,59,0), DateTime(2017,3,12,3,0,0), TimeUnit.Minutes)
+1
+
+// Hour should be properly diffed, jumping the DST boundary
+// 3/12/2017 03:00:00.000 GMT-0700 - 1hr = 3/12/2017 01:00:00.000 GMT-0800
+>> DateDiff(DateTime(2017,3,12,3,0,0), DateTime(2017,3,12,1,0,0), TimeUnit.Hours)
+-1
+
+// Hour should be properly diffed, jumping the DST boundary
+// 3/12/2017 01:00:00.000 GMT-0800 + 1hr = 3/12/2017 03:00:00.000 GMT-0700
+>> DateDiff(DateTime(2017,3,12,1,0,0), DateTime(2017,3,12,3,0,0), TimeUnit.Hours)
+1
+
+// Day should be properly diffed, jumping the DST boundary
+// 3/12/2017 03:00:00.000 GMT-0700 - 1d = 3/11/2017 03:00:00.000 GMT-0800
+>> DateDiff(DateTime(2017,3,12,3,0,0), DateTime(2017,3,11,3,0,0), TimeUnit.Days)
+-1
+
+// Day should be properly diffed, jumping the DST boundary
+// 3/11/2017 03:00:00.000 GMT-0800 + 1d = 3/12/2017 03:00:00.000 GMT-0700
+>> DateDiff(DateTime(2017,3,11,3,0,0), DateTime(2017,3,12,3,0,0), TimeUnit.Days)
+1
+
+// Month should be properly diffed, jumping the DST boundary
+// 3/12/2017 03:00:00.000 GMT-0700 - 1mo = 2/12/2017 03:00:00.000 GMT-0800
+>> DateDiff(DateTime(2017,3,12,3,0,0), DateTime(2017,2,12,3,0,0), TimeUnit.Months)
+-1
+
+// Month should be properly diffed, jumping the DST boundary
+// 2/12/2017 03:00:00.000 GMT-0800 + 1mo = 3/12/2017 03:00:00.000 GMT-0700
+>> DateDiff(DateTime(2017,2,12,3,0,0), DateTime(2017,3,12,3,0,0), TimeUnit.Months)
+1
+
+// Quarter should be properly diffed, jumping the DST boundary
+// 3/12/2017 03:00:00.000 GMT-0700 - 1q = 12/12/2016 03:00:00.000 GMT-0800
+>> DateDiff(DateTime(2017,3,12,3,0,0), DateTime(2016,12,12,3,0,0), TimeUnit.Quarters)
+-1
+
+// Quarter should be properly diffed, jumping the DST boundary
+// 12/12/2016 03:00:00.000 GMT-0800 + 1q = 3/12/2017 03:00:00.000 GMT-0700
+>> DateDiff(DateTime(2016,12,12,3,0,0), DateTime(2017,3,12,3,0,0), TimeUnit.Quarters)
+1
+
+// Year should be properly diffed
+// 3/12/2017 03:00:00.000 GMT-0700 - 1yr = 3/12/2016 03:00:00.000 GMT-0700
+>> DateDiff(DateTime(2017,3,12,3,0,0), DateTime(2016,3,12,3,0,0), TimeUnit.Years)
+-1
+
+// Year should be properly diffed
+// 3/12/2016 03:00:00.000 GMT-0700 + 1yr = 3/12/2017 03:00:00.000 GMT-0700
+>> DateDiff(DateTime(2016,3,12,3,0,0), DateTime(2017,3,12,3,0,0), TimeUnit.Years)
+1
+
+// ******************************** DST FALL BACK TESTCASES ********************************
+
+// Millisecond should be properly subtracted, jumping the DST boundary
+// 11/5/2017 02:00:00.001 GMT-0800 - 2h2ms = 11/5/2017 00:59:59.999 GMT-0700
+>> DateDiff(DateTime(2017,11,5,2,0,0,1), DateTime(2017,11,5,0,59,59,999), TimeUnit.Milliseconds)
+-7200002
+
+// Millisecond should be properly added, jumping the DST boundary
+// 11/5/2017 00:59:59.999 GMT-0700 + 2h2ms = 11/5/2017 02:00:00.001 GMT-0800
+>> DateDiff(DateTime(2017,11,5,0,59,59,999), DateTime(2017,11,5,2,0,0,1), TimeUnit.Milliseconds)
+7200002
+
+// Second should be properly subtracted, jumping the DST boundary
+// 11/5/2017 02:00:01 GMT-0800 - 2h2s = 11/5/2017 00:59:59 GMT-0700
+>> DateDiff(DateTime(2017,11,5,2,0,1), DateTime(2017,11,5,0,59,59), TimeUnit.Seconds)
+-7202
+
+// Second should be properly added, jumping the DST boundary
+// 11/5/2017 00:59:59 GMT-0700 + 2h2s = 11/5/2017 02:00:01 GMT-0800
+>> DateDiff(DateTime(2017,11,5,0,59,59), DateTime(2017,11,5,2,0,1), TimeUnit.Seconds)
+7202
+
+// Minute should be properly subtracted, jumping the DST boundary
+// 11/5/2017 02:01:00 GMT-0800 - 2h2m = 11/5/2017 00:59:00 GMT-0700
+>> DateDiff(DateTime(2017,11,5,2,1,0), DateTime(2017,11,5,0,59,0), TimeUnit.Minutes)
+-122
+
+// Minute should be properly added, jumping the DST boundary
+// 11/5/2017 00:59:00 GMT-0700 + 2h2m = 11/5/2017 02:01:00 GMT-0800
+>> DateDiff(DateTime(2017,11,5,0,59,0), DateTime(2017,11,5,2,1,0), TimeUnit.Minutes)
+122
+
+// Hour should be properly subtracted, jumping the DST boundary
+// 11/5/2017 03:00:00.000 GMT-0800 - 4hr = 11/5/2017 00:00:00.000 GMT-0700
+>> DateDiff(DateTime(2017,11,5,3,0,0), DateTime(2017,11,5,0,0,0), TimeUnit.Hours)
+-4
+
+// Hour should be properly added, jumping the DST boundary
+// 11/5/2017 00:00:00.000 GMT-0700 + 4hr = 11/5/2017 03:00:00.000 GMT-0800
+>> DateDiff(DateTime(2017,11,5,0,0,0), DateTime(2017,11,5,3,0,0), TimeUnit.Hours)
+4
+
+// Day should be properly subtracted, jumping the DST boundary
+// 11/5/2017 03:00:00.000 GMT-0800 - 1d = 11/4/2017 03:00:00.000 GMT-0700
+>> DateDiff(DateTime(2017,11,5,3,0,0), DateTime(2017,11,4,3,0,0), TimeUnit.Days)
+-1
+
+// Day should be properly added, approaches but does not jump DST boundary
+// 11/4/2017 03:00:00.000 GMT-0700 + 1d = 11/5/2017 03:00:00.000 GMT-0700
+>> DateDiff(DateTime(2017,11,4,3,0,0), DateTime(2017,11,5,3,0,0), TimeUnit.Days)
+1
+
+// Month should be properly subtracted, jumping the DST boundary
+// 11/5/2017 03:00:00.000 GMT-0800 - 1mo = 10/5/2017 03:00:00.000 GMT-0700
+>> DateDiff(DateTime(2017,11,5,3,0,0), DateTime(2017,10,5,3,0,0), TimeUnit.Months)
+-1
+
+// Month should be properly added, approaches but does not jump DST boundary
+// 11/5/2017 01:00:00.000 GMT-0700 is ambiguous
+>> DateDiff(DateTime(2017,10,5,1,0,0), DateTime(2017,11,5,1,0,0), TimeUnit.Months)
+1
+
+// Month should be properly added, jumping the DST boundary
+// 10/5/2017 03:00:00.000 GMT-0700 + 1mo = 11/5/2017 03:00:00.000 GMT-0800
+>> DateDiff(DateTime(2017,10,5,3,0,0), DateTime(2017,11,5,3,0,0), TimeUnit.Months)
+1
+
+// Quarter should be properly subtracted, jumping the DST boundary
+// 11/5/2017 03:00:00.000 GMT-0800 - 1q = 8/5/2017 03:00:00.000 GMT-0700
+>> DateDiff(DateTime(2017,11,5,3,0,0), DateTime(2017,8,5,3,0,0), TimeUnit.Quarters)
+-1
+
+// Quarter should be properly added, approaches but does not jump DST boundary
+// 11/5/2017 01:00:00.000 GMT-0700 is ambiguous
+>> DateDiff(DateTime(2017,8,5,1,0,0), DateTime(2017,11,5,1,0,0), TimeUnit.Quarters)
+1
+
+// Quarter should be properly added, jumping the DST boundary
+// 8/5/2017 03:00:00.000 GMT-0700 + 1q = 11/5/2017 03:00:00.000 GMT-0800
+>> DateDiff(DateTime(2017,8,5,3,0,0), DateTime(2017,11,5,3,0,0), TimeUnit.Quarters)
+1
+
+// Year should be properly subtracted, jumping the DST boundary
+// 11/5/2017 03:00:00.000 GMT-0800 - 1yr = 11/5/2016 03:00:00.000 GMT-0700
+>> DateDiff(DateTime(2017,11,5,3,0,0), DateTime(2016,11,5,3,0,0), TimeUnit.Years)
+-1
+
+// Year should be properly added, approaches but does not jump DST boundary
+// 11/5/2017 01:00:00.000 GMT-0700 is ambiguous
+>> DateDiff(DateTime(2016,11,5,1,0,0), DateTime(2017,11,5,1,0,0), TimeUnit.Years)
+1
+
+// Year should be properly added, jumping the DST boundary
+// 11/5/2016 03:00:00.000 GMT-0700 + 1yr = 11/5/2017 03:00:00.000 GMT-0800
+>> DateDiff(DateTime(2016,11,5,3,0,0), DateTime(2017,11,5,3,0,0), TimeUnit.Years)
+1
