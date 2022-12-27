@@ -530,6 +530,28 @@
   <data name="AboutBooleanNT_input" xml:space="preserve">
     <value>A column of number values to process.</value>
   </data>
+  <data name="AboutBooleanB" xml:space="preserve">
+    <value>Converts a 'boolean' to a boolean value.</value>
+    <comment>Description of 'Boolean' function.</comment>
+  </data>
+  <data name="BooleanBArg1" xml:space="preserve">
+    <value>boolean</value>
+    <comment>function_parameter - First argument to the Boolean function - the boolean that will be converted to a boolean.</comment>
+  </data>
+  <data name="AboutBooleanB_boolean" xml:space="preserve">
+    <value>The boolean value to convert to a boolean value.</value>
+  </data>
+  <data name="AboutBooleanBT" xml:space="preserve">
+    <value>Converts a column of boolean values to a column of boolean values.</value>
+    <comment>Description of 'Boolean' function.</comment>
+  </data>
+  <data name="BooleanBTArg1" xml:space="preserve">
+    <value>input</value>
+    <comment>function_parameter - First argument to the Boolean function - a column of boolean values.</comment>
+  </data>
+  <data name="AboutBooleanBT_input" xml:space="preserve">
+    <value>A column of boolean values to process.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Returns the first non blank argument</value>
     <comment>Description of 'Coalesce' function.</comment>

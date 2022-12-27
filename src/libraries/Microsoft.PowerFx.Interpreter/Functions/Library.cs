@@ -194,6 +194,20 @@ namespace Microsoft.PowerFx.Functions
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: NumberToBoolean)
             },
+
+            // This implementation is not actually used for this as this is handled at IR level. 
+            // This is a placeholder, so that RecalcEngine._interpreterSupportedFunctions can add it for txt tests.
+            {
+                BuiltinFunctionsCore.BooleanB,
+                StandardErrorHandling<StringValue>(
+                    BuiltinFunctionsCore.BooleanN.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<StringValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: TextToBoolean)
+            },
             {
                 BuiltinFunctionsCore.Boolean_UO,
                 StandardErrorHandling<UntypedObjectValue>(
@@ -1514,6 +1528,13 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.BooleanN_T,
                 StandardErrorHandlingTabularOverload<NumberValue>(BuiltinFunctionsCore.BooleanN_T.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.BooleanN])
+            },
+
+            // This implementation is not actually used for this as this is handled at IR level. 
+            // This is a placeholder, so that RecalcEngine._interpreterSupportedFunctions can add it for txt tests.
+            {
+                BuiltinFunctionsCore.BooleanB_T,
+                StandardErrorHandlingTabularOverload<StringValue>(BuiltinFunctionsCore.BooleanB_T.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.BooleanB])
             },
             {
                 BuiltinFunctionsCore.CharT,
