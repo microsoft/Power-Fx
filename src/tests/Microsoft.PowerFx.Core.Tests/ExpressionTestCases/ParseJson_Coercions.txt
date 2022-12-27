@@ -25,6 +25,10 @@ Errors: Error 4-24: Untyped objects cannot be used as the first argument to func
 >> Sum(ParseJSON("[1,2,3]"))
 Errors: Error 4-24: Untyped objects cannot be used as the first argument to functions which support record scopes.|Error 0-25: The function 'Sum' has some invalid arguments.
 
+// Scalar version of Sum
+>> Sum([ParseJSON("1"), ParseJSON("2"), ParseJSON("3")], Value)
+6
+
 >> Filter(ParseJSON("[1,2,3]"), true)
 Errors: Error 7-27: Untyped objects cannot be used as the first argument to functions which support record scopes.|Error 0-34: The function 'Filter' has some invalid arguments.
 
