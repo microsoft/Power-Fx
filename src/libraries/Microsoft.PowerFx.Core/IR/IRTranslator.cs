@@ -805,6 +805,10 @@ namespace Microsoft.PowerFx.Core.IR
                         return new CallNode(IRContext.NotInSource(FormulaType.Build(toType)), BuiltinFunctionsCore.TimeValue_UO, child);
                     case CoercionKind.UntypedToDateTime:
                         return new CallNode(IRContext.NotInSource(FormulaType.Build(toType)), BuiltinFunctionsCore.DateTimeValue_UO, child);
+                    case CoercionKind.UntypedToColor:
+                        return new CallNode(IRContext.NotInSource(FormulaType.Build(toType)), BuiltinFunctionsCore.ColorValue_UO, child);
+                    case CoercionKind.UntypedToGUID:
+                        return new CallNode(IRContext.NotInSource(FormulaType.Build(toType)), BuiltinFunctionsCore.GUID_UO, child);
                     case CoercionKind.None:
                         // No coercion needed, return the child node
                         return child;

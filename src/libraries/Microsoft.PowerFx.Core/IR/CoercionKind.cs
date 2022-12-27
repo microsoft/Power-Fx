@@ -66,5 +66,7 @@ namespace Microsoft.PowerFx.Core.IR
         UntypedToDate,
         UntypedToTime,
         UntypedToDateTime,
+        UntypedToColor,
+        UntypedToGUID
     }
 }

@@ -3087,7 +3087,9 @@ namespace Microsoft.PowerFx.Core.Types
                     typeDest.Kind == DKind.Boolean ||
                     typeDest.Kind == DKind.Date ||
                     typeDest.Kind == DKind.Time ||
-                    typeDest.Kind == DKind.DateTime)
+                    typeDest.Kind == DKind.DateTime ||
+                    typeDest.Kind == DKind.Color ||
+                    typeDest.Kind == DKind.Guid)
                 {
                     coercionType = typeDest;
                     return true;

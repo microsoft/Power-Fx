@@ -12,6 +12,12 @@
 >> If(ParseJSON("true"), 1, 0)
 1
 
+>> If(false, ColorValue("#aabbcc"), ParseJSON("""#aabbcc"""))
+RGBA(170,187,204,1)
+
+>> If(false, GUID("5cc45615-f759-4a53-b225-d3a2497f60ad"), ParseJSON("""5cc45615-f759-4a53-b225-d3a2497f60ad"""))
+GUID("5cc45615-f759-4a53-b225-d3a2497f60ad")
+
 >> DateDiff(If(false, DateTime(0,0,0,0,0,0), DateTimeValue(ParseJSON("""2011-01-15T08:00:00.000Z"""))), DateTimeValue(ParseJSON("""2011-01-30T08:00:00.000Z""")))
 15
 

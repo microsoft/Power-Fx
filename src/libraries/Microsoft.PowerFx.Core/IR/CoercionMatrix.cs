@@ -373,6 +373,10 @@ namespace Microsoft.PowerFx.Core.IR
                     return CoercionKind.UntypedToTime;
                 case DKind.DateTime:
                     return CoercionKind.UntypedToDateTime;
+                case DKind.Color:
+                    return CoercionKind.UntypedToColor;
+                case DKind.Guid:
+                    return CoercionKind.UntypedToGUID;
                 default:
                     return CoercionKind.None;
             }
