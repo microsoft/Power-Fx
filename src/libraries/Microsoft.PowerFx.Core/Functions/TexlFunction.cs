@@ -26,8 +26,6 @@ using Microsoft.PowerFx.Syntax;
 
 namespace Microsoft.PowerFx.Core.Functions
 {
-    using FunctionInfo = Microsoft.PowerFx.Core.Functions.TransportSchemas.FunctionInfo;
-
     [ThreadSafeImmutable]
     internal abstract class TexlFunction : IFunction
     {
@@ -68,7 +66,7 @@ namespace Microsoft.PowerFx.Core.Functions
 
         private SignatureConstraint _signatureConstraint;
 
-        private FunctionInfo _cachedFunctionInfo;
+        private TransportSchemas.FunctionInfo _cachedFunctionInfo;
 
         private string _cachedLocaleName;
 
@@ -457,7 +455,7 @@ namespace Microsoft.PowerFx.Core.Functions
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            for (int i = 0; i < argTypes.Length; i++)
+            for (var i = 0; i < argTypes.Length; i++)
             {
                 if (!IsIdentifierParam(i))
                 {
@@ -1360,7 +1358,7 @@ namespace Microsoft.PowerFx.Core.Functions
 
         #endregion
 
-        internal FunctionInfo Info(string locale)
+        internal TransportSchemas.FunctionInfo Info(string locale)
         {
             // If the locale has changed, we want to reset the function info to one of the new locale
             if (CurrentLocaleInfo.CurrentUILanguageName == _cachedLocaleName && _cachedFunctionInfo != null)
@@ -1369,7 +1367,7 @@ namespace Microsoft.PowerFx.Core.Functions
             }
 
             _cachedLocaleName = CurrentLocaleInfo.CurrentUILanguageName;
-            return _cachedFunctionInfo = new FunctionInfo()
+            return _cachedFunctionInfo = new TransportSchemas.FunctionInfo()
             {
                 Label = Name,
                 Detail = Description,
