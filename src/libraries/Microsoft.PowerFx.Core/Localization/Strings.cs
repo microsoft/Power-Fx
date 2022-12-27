@@ -165,6 +165,10 @@ namespace Microsoft.PowerFx.Core.Localization
         public static StringGetter SortArg2 = (b) => StringResources.Get("SortArg2", b);
         public static StringGetter SortArg3 = (b) => StringResources.Get("SortArg3", b);
 
+        public static StringGetter AboutDistinct = (b) => StringResources.Get("AboutDistinct", b);
+        public static StringGetter DistinctArg1 = (b) => StringResources.Get("DistinctArg1", b);
+        public static StringGetter DistinctArg2 = (b) => StringResources.Get("DistinctArg2", b);
+
         public static StringGetter AboutSortByColumns = (b) => StringResources.Get("AboutSortByColumns", b);
         public static StringGetter SortByColumnsArg1 = (b) => StringResources.Get("SortByColumnsArg1", b);
         public static StringGetter SortByColumnsArg2 = (b) => StringResources.Get("SortByColumnsArg2", b);
@@ -570,6 +574,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrColumnDoesNotExist_Name_Similar = new ErrorResourceKey("ErrColumnDoesNotExist_Name_Similar");
         public static ErrorResourceKey ErrSortIncorrectOrder = new ErrorResourceKey("ErrSortIncorrectOrder");
         public static ErrorResourceKey ErrSortWrongType = new ErrorResourceKey("ErrSortWrongType");
+        public static ErrorResourceKey ErrDistinctWrongType = new ErrorResourceKey("ErrDistinctWrongType");
         public static ErrorResourceKey ErrFunctionDoesNotAcceptThisType_Function_Expected = new ErrorResourceKey("ErrFunctionDoesNotAcceptThisType_Function_Expected");
         public static ErrorResourceKey ErrIncorrectFormat_Func = new ErrorResourceKey("ErrIncorrectFormat_Func");
         public static ErrorResourceKey ErrAsyncLambda = new ErrorResourceKey("ErrAsyncLambda");
