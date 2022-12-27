@@ -14,11 +14,6 @@
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)'!='Debug' or '$(TURN_OFF_WARNING_AS_ERROR)'!='True' ">    
-    <RunAnalyzersDuringLiveAnalysis>True</RunAnalyzersDuringLiveAnalysis>
-    <_SkipUpgradeNetAnalyzersNuGetWarning>True</_SkipUpgradeNetAnalyzersNuGetWarning>
-  </PropertyGroup>
-
   <!-- Nuget Properties -->
   <PropertyGroup>
     <PackageId>Microsoft.PowerFx.Core.Tests</PackageId>

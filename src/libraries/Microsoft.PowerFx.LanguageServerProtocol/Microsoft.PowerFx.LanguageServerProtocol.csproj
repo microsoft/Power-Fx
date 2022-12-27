@@ -15,11 +15,6 @@
     <Description>The LanguageServerProtocol of the Power Fx compiler. See more from https://microsoft.github.io/language-server-protocol/ </Description>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)'!='Debug' or '$(TURN_OFF_WARNING_AS_ERROR)'!='True' ">    
-    <RunAnalyzersDuringLiveAnalysis>True</RunAnalyzersDuringLiveAnalysis>
-    <_SkipUpgradeNetAnalyzersNuGetWarning>True</_SkipUpgradeNetAnalyzersNuGetWarning>
-  </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="System.Text.Json" Version="5.0.2" />
     <PackageReference Include="System.Collections.Immutable" Version="5.0.0" />
