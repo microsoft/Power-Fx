@@ -9,6 +9,7 @@ using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Texl;
+using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Interpreter;
@@ -18,6 +19,12 @@ namespace Microsoft.PowerFx.Functions
 {
     internal static partial class Library
     {
+        /// <summary>
+        /// This isn't part of <see cref="BuiltinFunctionsCore"/> since PA has different implementation of
+        /// Texl Instance of <see cref="DistinctFunction"/>.
+        /// </summary>
+        public static readonly TexlFunction DistinctInterpreterFunction = new DistinctFunction();
+
         private static readonly DateTime _epoch = new DateTime(1899, 12, 30, 0, 0, 0, 0);
 
         // Helper to get a service or fallback to a default if the service is missing.
@@ -505,6 +512,19 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: Dec2Hex)
+            },
+            {
+                 DistinctInterpreterFunction,
+                StandardErrorHandlingAsync<FormulaValue>(
+                    DistinctInterpreterFunction.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactSequence(
+                        ExactValueTypeOrBlank<TableValue>,
+                        ExactValueTypeOrBlank<LambdaFormulaValue>),
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: DistinctTable)
             },
             {
                 BuiltinFunctionsCore.DropColumns,

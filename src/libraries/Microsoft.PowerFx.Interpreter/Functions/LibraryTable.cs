@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
 
@@ -395,7 +396,7 @@ namespace Microsoft.PowerFx.Functions
             return new InMemoryTableValue(irContext, shuffledRecords);
         }
 
-        private static async Task<(DValue<RecordValue> row, FormulaValue sortValue)> ApplySortLambda(EvalVisitor runner, EvalVisitorContext context, DValue<RecordValue> row, LambdaFormulaValue lambda)
+        private static async Task<(DValue<RecordValue> row, FormulaValue lambdaValue)> ApplyLambda(EvalVisitor runner, EvalVisitorContext context, DValue<RecordValue> row, LambdaFormulaValue lambda)
         {
             if (!row.IsValue)
             {
@@ -403,9 +404,21 @@ namespace Microsoft.PowerFx.Functions
             }
 
             var childContext = context.SymbolContext.WithScopeValues(row.Value);
-            var sortValue = await lambda.EvalInRowScopeAsync(context.NewScope(childContext));
+            var lambdaValue = await lambda.EvalInRowScopeAsync(context.NewScope(childContext));
 
-            return (row, sortValue);
+            return (row, lambdaValue);
+        }
+
+        public static async ValueTask<FormulaValue> DistinctTable(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        {
+            var arg0 = (TableValue)args[0];
+            var arg1 = (LambdaFormulaValue)args[1];
+
+            var values = arg0.Rows.Select(row => ApplyLambda(runner, context, row, arg1));
+            var pairResults = await Task.WhenAll(values);
+            var pairs = pairResults.ToList();
+
+            return DistinctValueType(pairs, irContext);
         }
 
         public static async ValueTask<FormulaValue> SortTable(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
@@ -427,7 +440,7 @@ namespace Microsoft.PowerFx.Functions
                 }
             }
 
-            var pairs = (await Task.WhenAll(arg0.Rows.Select(row => ApplySortLambda(runner, context, row, arg1)))).ToList();
+            var pairs = (await Task.WhenAll(arg0.Rows.Select(row => ApplyLambda(runner, context, row, arg1)))).ToList();
 
             bool allNumbers = true, allStrings = true, allBooleans = true, allDatetimes = true, allDates = true, allOptionSets = true;
 
@@ -491,6 +504,38 @@ namespace Microsoft.PowerFx.Functions
             where T : FormulaValue
         {
             return val is T || val is BlankValue || val is ErrorValue;
+        }
+
+        private static FormulaValue DistinctValueType(List<(DValue<RecordValue> row, FormulaValue distinctValue)> pairs, IRContext irContext)
+        {
+            var lookup = new HashSet<object>();
+            var result = new List<DValue<RecordValue>>();
+            var name = ((TableType)irContext.ResultType).SingleColumnFieldName;
+
+            foreach (var (row, distinctValue) in pairs)
+            {
+                if (distinctValue is ErrorValue errorValue)
+                {
+                    return errorValue;
+                }
+
+                if(!distinctValue.Type._type.IsPrimitive)
+                {
+                    return CommonErrors.OnlyPrimitiveValuesAllowed(irContext);
+                }
+
+                var key = distinctValue.ToObject();
+
+                if (!lookup.Contains(key))
+                {
+                    var insert = FormulaValue.NewRecordFromFields(new NamedValue(name, distinctValue));
+                    lookup.Add(key);
+                    result.Add(DValue<RecordValue>.Of(insert));
+                }
+
+            }
+
+            return new InMemoryTableValue(irContext, result);
         }
 
         private static FormulaValue SortValueType<TPFxPrimitive, TDotNetPrimitive>(List<(DValue<RecordValue> row, FormulaValue sortValue)> pairs, IRContext irContext, int compareToResultModifier)
