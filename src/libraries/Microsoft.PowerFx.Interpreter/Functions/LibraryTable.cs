@@ -396,7 +396,7 @@ namespace Microsoft.PowerFx.Functions
             return new InMemoryTableValue(irContext, shuffledRecords);
         }
 
-        private static async Task<(DValue<RecordValue> row, FormulaValue sortValue)> ApplyLambda(EvalVisitor runner, EvalVisitorContext context, DValue<RecordValue> row, LambdaFormulaValue lambda)
+        private static async Task<(DValue<RecordValue> row, FormulaValue lambdaValue)> ApplyLambda(EvalVisitor runner, EvalVisitorContext context, DValue<RecordValue> row, LambdaFormulaValue lambda)
         {
             if (!row.IsValue)
             {
@@ -414,7 +414,9 @@ namespace Microsoft.PowerFx.Functions
             var arg0 = (TableValue)args[0];
             var arg1 = (LambdaFormulaValue)args[1];
 
-            var pairs = (await Task.WhenAll(arg0.Rows.Select(row => ApplyLambda(runner, context, row, arg1)))).ToList();
+            var values = arg0.Rows.Select(row => ApplyLambda(runner, context, row, arg1));
+            var pairResults = await Task.WhenAll(values);
+            var pairs = pairResults.ToList();
 
             return DistinctValueType(pairs, irContext);
         }
