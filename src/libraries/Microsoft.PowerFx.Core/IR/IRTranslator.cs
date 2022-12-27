@@ -289,8 +289,6 @@ namespace Microsoft.PowerFx.Core.IR
                 var carg = node.Args.Count;
                 var func = (TexlFunction)info.Function;
 
-                var resultType = context.Binding.GetType(node);
-
                 if (func == null || carg < func.MinArity || carg > func.MaxArity)
                 {
                     throw new NotImplementedException();
@@ -328,12 +326,11 @@ namespace Microsoft.PowerFx.Core.IR
                     }
                 }
 
-                if (scope != null)
-                {
-                    return MaybeInjectCoercion(node, new CallNode(context.GetIRContext(node), func, scope, args), context);
-                }
+                // this can rewrite the entire call node to any intermediate node.
+                // e.g. For Boolean(true), Instead of IR as Call(Boolean, true) it can be rewritten directly to emit true.
+                var irNode = func.CreateIRCallNode(node, context, args, scope);
 
-                return MaybeInjectCoercion(node, new CallNode(context.GetIRContext(node), func, args), context);
+                return MaybeInjectCoercion(node, irNode, context);
             }
 
             public override IntermediateNode Visit(FirstNameNode node, IRTranslatorContext context)

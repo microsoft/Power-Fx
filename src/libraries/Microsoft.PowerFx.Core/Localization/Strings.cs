@@ -99,6 +99,11 @@ namespace Microsoft.PowerFx.Core.Localization
         public static StringGetter AboutBooleanNT = (b) => StringResources.Get("AboutBooleanNT", b);
         public static StringGetter BooleanNTArg1 = (b) => StringResources.Get("BooleanNTArg1", b);
 
+        public static StringGetter AboutBooleanB = (b) => StringResources.Get("AboutBooleanB", b);
+        public static StringGetter BooleanBArg1 = (b) => StringResources.Get("BooleanBArg1", b);
+        public static StringGetter AboutBooleanBT = (b) => StringResources.Get("AboutBooleanBT", b);
+        public static StringGetter BooleanBTArg1 = (b) => StringResources.Get("BooleanBTArg1", b);
+
         public static StringGetter AboutConcatenate = (b) => StringResources.Get("AboutConcatenate", b);
         public static StringGetter ConcatenateArg1 = (b) => StringResources.Get("ConcatenateArg1", b);
         public static StringGetter AboutConcatenateT = (b) => StringResources.Get("AboutConcatenateT", b);
