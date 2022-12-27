@@ -514,7 +514,7 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: Dec2Hex)
             },
             {
-                 DistinctInterpreterFunction,
+                DistinctInterpreterFunction,
                 StandardErrorHandlingAsync<FormulaValue>(
                     DistinctInterpreterFunction.Name,
                     expandArguments: NoArgExpansion,
