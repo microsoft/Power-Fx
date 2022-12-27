@@ -18,14 +18,21 @@ using Microsoft.PowerFx.Core.Functions.DLP;
 using Microsoft.PowerFx.Core.Functions.FunctionArgValidators;
 using Microsoft.PowerFx.Core.Functions.Publish;
 using Microsoft.PowerFx.Core.Functions.TransportSchemas;
+using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.IR.Nodes;
+using Microsoft.PowerFx.Core.IR.Symbols;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Logging.Trackers;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
+using CallNode = Microsoft.PowerFx.Syntax.CallNode;
+using BinaryOpNode = Microsoft.PowerFx.Syntax.BinaryOpNode;
+using IRCallNode = Microsoft.PowerFx.Core.IR.Nodes.CallNode;
 
 namespace Microsoft.PowerFx.Core.Functions
 {
+    using static Microsoft.PowerFx.Core.IR.IRTranslator;
     using FunctionInfo = Microsoft.PowerFx.Core.Functions.TransportSchemas.FunctionInfo;
 
     [ThreadSafeImmutable]
@@ -1068,6 +1075,13 @@ namespace Microsoft.PowerFx.Core.Functions
             return CheckColumnType(type, arg, DType.DateTime, errors, TexlStrings.ErrInvalidSchemaNeedDateCol_Col, ref nodeToCoercedTypeMap);
         }
 
+        // Check that the type of a specified node is a boolean column type, and possibly emit errors
+        // accordingly. Returns true if the types align, false otherwise.
+        protected bool CheckBooleanColumnType(DType type, TexlNode arg, IErrorContainer errors, ref Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        {
+            return CheckColumnType(type, arg, DType.Boolean, errors, TexlStrings.ErrInvalidSchemaNeedColorCol_Col, ref nodeToCoercedTypeMap);
+        }
+
         // Enumerate some of the function signatures for a specified arity and known parameter descriptions.
         // The last parameter may be repeated as many times as necessary in order to satisfy the arity constraint.
         protected IEnumerable<TexlStrings.StringGetter[]> GetGenericSignatures(int arity, params TexlStrings.StringGetter[] args)
@@ -1390,6 +1404,20 @@ namespace Microsoft.PowerFx.Core.Functions
                     }).ToArray()
                 }).ToArray()
             };
+        }
+
+        /// <summary>
+        /// Override this method to rewrite the CallNode that is generated.
+        /// e.g. Boolean(true) would want to emit the arg true directly instead of a function call.
+        /// </summary>
+        internal virtual IntermediateNode CreateIRCallNode(CallNode node, IRTranslatorContext context, List<IntermediateNode> args, ScopeSymbol scope)
+        {
+            if (scope != null)
+            {
+                return new IRCallNode(context.GetIRContext(node), this, scope, args);
+            }
+
+            return new IRCallNode(context.GetIRContext(node), this, args);
         }
     }
 }
