@@ -79,7 +79,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
 
             // Also got error reported. 
             Assert.Equal(1, failHandler._counter); // was invoked
-            Assert.Equal(1, errorList.Count);
+            Assert.Single(errorList);
             var ex2 = errorList[0];
 
             Assert.Contains(failHandler.HandlerName, ex2.Message);            
@@ -106,13 +106,13 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
             };
             scope.OnCommandExecuted(ca); // nop
 
-            ca.ActionResultContext.HandlerName = "";
+            ca.ActionResultContext.HandlerName = string.Empty;
             scope.OnCommandExecuted(ca); // nop
 
             ca.ActionResultContext.HandlerName = "   "; // whitespace
             scope.OnCommandExecuted(ca); // nop
 
-            Assert.Equal(0, handler._onExecuted.Count); // all were nops.
+            Assert.Empty(handler._onExecuted); // all were nops.
 
             // Set to real value from Suggest to get callback
             var fix = fixes[0];
@@ -121,7 +121,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
                  ActionResultContext = fix.ActionResultContext
             };            
             scope.OnCommandExecuted(ca);
-            Assert.Equal(1, handler._onExecuted.Count);
+            Assert.Single(handler._onExecuted);
             Assert.Equal("Action1", handler._onExecuted[0]);
         }
 

@@ -52,10 +52,11 @@ namespace Microsoft.PowerFx
                     foreach (var kv in composed._map)
                     {
                         // quick Integrity checks - these should never fail. 
-                        if (!Object.ReferenceEquals(kv.Key, kv.Value.SymbolTable))
+                        if (!object.ReferenceEquals(kv.Key, kv.Value.SymbolTable))
                         {
                             throw new InvalidOperationException($"Table doesn't match");
                         }
+
                         if (kv.Value is ComposedReadOnlySymbolValues)
                         {
                             throw new InvalidOperationException($"ComposedSymbolValues should have been flattened ");
@@ -137,12 +138,14 @@ namespace Microsoft.PowerFx
             {
                 if (!canCreateNew)
                 {
-                    if (symbolTable2.NeedsValues) // $$$ Move broader
+                    // $$$ Move broader
+                    if (symbolTable2.NeedsValues) 
                     {
                         var msg = $"Missing SymbolValues for {symbolTable.DebugName()}";
                         throw new InvalidOperationException(msg);
                     }
                 }
+
                 var symValues = new SymbolValues(symbolTable2)
                 {
                     DebugName = symbolTable2.DebugName

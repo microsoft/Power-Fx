@@ -290,7 +290,6 @@ namespace Microsoft.PowerFx.Functions
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: ColorFade)
             },
-
             {
                 BuiltinFunctionsCore.Concatenate,
                 StandardErrorHandling<StringValue>(
@@ -515,7 +514,7 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: Dec2Hex)
             },
             {
-                 DistinctInterpreterFunction,
+                DistinctInterpreterFunction,
                 StandardErrorHandlingAsync<FormulaValue>(
                     DistinctInterpreterFunction.Name,
                     expandArguments: NoArgExpansion,
@@ -1482,8 +1481,7 @@ namespace Microsoft.PowerFx.Functions
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: ExactSequence(
                         ExactValueTypeOrBlank<UntypedObjectValue>,
-                        ExactValueTypeOrBlank<StringValue>
-                        ),
+                        ExactValueTypeOrBlank<StringValue>),
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: Value_UO)

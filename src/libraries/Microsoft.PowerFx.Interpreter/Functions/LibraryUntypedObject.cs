@@ -64,6 +64,7 @@ namespace Microsoft.PowerFx.Functions
                 {
                     return Value(runner, context, irContext, new FormulaValue[] { str, args[1] });
                 }
+
                 return Value(runner, context, irContext, new FormulaValue[] { str });
             }
             else if (impl.Type == FormulaType.Number)

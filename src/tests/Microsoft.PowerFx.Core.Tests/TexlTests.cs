@@ -1841,8 +1841,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("Concat([1, 2, 3], Text(Value), \",\")")]
         [InlineData("Concat([1, 2, 3], Text(Value), Text(Today()))")]
         [InlineData("Concat([], 1)")]
-        [InlineData("Concat([1, 2, 3], Value)")]
-        [InlineData("Concat([], 1)")]
+        [InlineData("Concat([1, 2, 3], Value)")]        
         [InlineData("Concat([\"a\", \"b\", \"C\"], Value, 1)")]
         public void TexlFunctionTypeSemanticsConcat(string script)
         {

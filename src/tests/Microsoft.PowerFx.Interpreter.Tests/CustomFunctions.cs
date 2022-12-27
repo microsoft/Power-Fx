@@ -80,8 +80,8 @@ namespace Microsoft.PowerFx.Tests
         public void InvalidDeferredFunctionTest()
         {
             var config = new PowerFxConfig(null);
-            Assert.Throws<NotSupportedException>( () => config.AddFunction(new InvalidDeferredFunction()));
-            Assert.Throws<NotSupportedException>( () => config.AddFunction(new InvalidArgDeferredFunction()));
+            Assert.Throws<NotSupportedException>(() => config.AddFunction(new InvalidDeferredFunction()));
+            Assert.Throws<NotSupportedException>(() => config.AddFunction(new InvalidArgDeferredFunction()));
         }
 
         private class InvalidDeferredFunction : ReflectionFunction
@@ -152,7 +152,7 @@ namespace Microsoft.PowerFx.Tests
             var result = await engine.EvalAsync("Wait(Helper() = 3)", cts.Token);
             Assert.Equal(true, result.ToObject());
         }
-        
+
         private class WaitFunction : ReflectionFunction
         {
             // Must have "Execute" method. 
@@ -160,7 +160,7 @@ namespace Microsoft.PowerFx.Tests
             // Any arg can be a boolean callback function.
             public static async Task<BooleanValue> Execute(Func<Task<BooleanValue>> expression, CancellationToken cancellationToken)
             {
-                while (!(await expression()).Value) 
+                while (!(await expression()).Value)
                 {
                     cancellationToken.ThrowIfCancellationRequested();
                 }
@@ -179,7 +179,7 @@ namespace Microsoft.PowerFx.Tests
                 _func = func;
                 _counter = FormulaValue.New(0);
             }
-              
+
             public NumberValue Execute()
             {
                 _counter = _func(_counter);
@@ -536,9 +536,9 @@ namespace Microsoft.PowerFx.Tests
 
         private abstract class SetFieldBaseFunction : ReflectionFunction
         {
-            public SetFieldBaseFunction(FormulaType fieldType) 
+            public SetFieldBaseFunction(FormulaType fieldType)
                 : base("SetField", FormulaType.String, fieldType)
-            {                
+            {
             }
 
             public StringValue Execute(FormulaValue newValue)

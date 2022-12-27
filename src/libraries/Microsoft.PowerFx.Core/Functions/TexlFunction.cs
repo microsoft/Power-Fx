@@ -18,7 +18,6 @@ using Microsoft.PowerFx.Core.Functions.DLP;
 using Microsoft.PowerFx.Core.Functions.FunctionArgValidators;
 using Microsoft.PowerFx.Core.Functions.Publish;
 using Microsoft.PowerFx.Core.Functions.TransportSchemas;
-using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.IR.Symbols;
 using Microsoft.PowerFx.Core.Localization;
@@ -26,15 +25,12 @@ using Microsoft.PowerFx.Core.Logging.Trackers;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
+using static Microsoft.PowerFx.Core.IR.IRTranslator;
 using CallNode = Microsoft.PowerFx.Syntax.CallNode;
-using BinaryOpNode = Microsoft.PowerFx.Syntax.BinaryOpNode;
 using IRCallNode = Microsoft.PowerFx.Core.IR.Nodes.CallNode;
 
 namespace Microsoft.PowerFx.Core.Functions
 {
-    using static Microsoft.PowerFx.Core.IR.IRTranslator;
-    using FunctionInfo = Microsoft.PowerFx.Core.Functions.TransportSchemas.FunctionInfo;
-
     [ThreadSafeImmutable]
     internal abstract class TexlFunction : IFunction
     {
@@ -75,7 +71,7 @@ namespace Microsoft.PowerFx.Core.Functions
 
         private SignatureConstraint _signatureConstraint;
 
-        private FunctionInfo _cachedFunctionInfo;
+        private TransportSchemas.FunctionInfo _cachedFunctionInfo;
 
         private string _cachedLocaleName;
 
@@ -464,7 +460,7 @@ namespace Microsoft.PowerFx.Core.Functions
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            for (int i = 0; i < argTypes.Length; i++)
+            for (var i = 0; i < argTypes.Length; i++)
             {
                 if (!IsIdentifierParam(i))
                 {
@@ -1223,7 +1219,7 @@ namespace Microsoft.PowerFx.Core.Functions
             return false;
         }
 
-        public virtual IOpDelegationStrategy GetOpDelegationStrategy(BinaryOp op, BinaryOpNode opNode)
+        public virtual IOpDelegationStrategy GetOpDelegationStrategy(BinaryOp op, PowerFx.Syntax.BinaryOpNode opNode)
         {
             Contracts.AssertValueOrNull(opNode);
 
@@ -1374,7 +1370,7 @@ namespace Microsoft.PowerFx.Core.Functions
 
         #endregion
 
-        internal FunctionInfo Info(string locale)
+        internal TransportSchemas.FunctionInfo Info(string locale)
         {
             // If the locale has changed, we want to reset the function info to one of the new locale
             if (CurrentLocaleInfo.CurrentUILanguageName == _cachedLocaleName && _cachedFunctionInfo != null)
@@ -1383,7 +1379,7 @@ namespace Microsoft.PowerFx.Core.Functions
             }
 
             _cachedLocaleName = CurrentLocaleInfo.CurrentUILanguageName;
-            return _cachedFunctionInfo = new FunctionInfo()
+            return _cachedFunctionInfo = new TransportSchemas.FunctionInfo()
             {
                 Label = Name,
                 Detail = Description,

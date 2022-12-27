@@ -2749,7 +2749,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     {
                         _txb.NodesToReplace.Add(new KeyValuePair<Token, string>(node.Token, entity.EntityName));
                     }
-                    else if(lookupInfo.Data is NameSymbol nameSymbol)
+                    else if (lookupInfo.Data is NameSymbol nameSymbol)
                     {
                         _txb.NodesToReplace.Add(new KeyValuePair<Token, string>(node.Token, nameSymbol.Name));
                     }
@@ -4386,7 +4386,6 @@ namespace Microsoft.PowerFx.Core.Binding
                         if (arg is FirstNameNode firstNameNode && maybeFunc.IsIdentifierParam(i))
                         {
                             _ = GetLogicalNodeNameAndUpdateDisplayNames(argTypes[0], firstNameNode.Ident, out _);
-
                         }
 
                         i++;
@@ -5014,7 +5013,9 @@ namespace Microsoft.PowerFx.Core.Binding
                 {
                     Contracts.AssertValue(scope);
                     if (scope.SkipForInlineRecords)
+                    {
                         continue;
+                    }
 
                     // If scope type is a data source, the node may be a display name instead of logical.
                     // Attempt to get the logical name to use for type checking

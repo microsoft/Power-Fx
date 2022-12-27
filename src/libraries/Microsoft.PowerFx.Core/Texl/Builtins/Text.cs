@@ -127,8 +127,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 {
                     // Check if the date time format contains '0's after the seconds specifier, which
                     // is used for fractional seconds - in which case it is valid
-                    var formatWithoutZeroSubseconds = Regex.Replace(formatArg, @"[sS]\.?(0+)",
-                        m => m.Groups[1].Success ? "" : m.Groups[1].Value);
+                    var formatWithoutZeroSubseconds = Regex.Replace(formatArg, @"[sS]\.?(0+)", m => m.Groups[1].Success ? string.Empty : m.Groups[1].Value);
                     hasNumericFmt = formatWithoutZeroSubseconds.IndexOfAny(new char[] { '0', '#' }) >= 0;
                 }
 

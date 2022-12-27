@@ -107,7 +107,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                     if (nameArgType.Kind != DKind.String || strLitNode == null)
                     {
-                        fArgsValid = false; 
+                        fArgsValid = false;
 
                         // Argument '{0}' is invalid, expected a text literal.
                         errors.EnsureError(DocumentErrorSeverity.Severe, nameArg, TexlStrings.ErrExpectedStringLiteralArg_Name, nameArg.ToString());

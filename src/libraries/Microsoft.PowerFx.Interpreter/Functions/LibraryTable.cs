@@ -519,7 +519,7 @@ namespace Microsoft.PowerFx.Functions
                     return errorValue;
                 }
 
-                if(!distinctValue.Type._type.IsPrimitive)
+                if (!distinctValue.Type._type.IsPrimitive)
                 {
                     return CommonErrors.OnlyPrimitiveValuesAllowed(irContext);
                 }
@@ -532,7 +532,6 @@ namespace Microsoft.PowerFx.Functions
                     lookup.Add(key);
                     result.Add(DValue<RecordValue>.Of(insert));
                 }
-
             }
 
             return new InMemoryTableValue(irContext, result);

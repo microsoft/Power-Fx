@@ -72,7 +72,9 @@ namespace PowerFxHostSamples
 
             Console.WriteLine($"Experimental features enabled:{enabled}");
 
+#pragma warning disable CA1303 // Do not pass literals as localized parameters
             Console.WriteLine($"Enter Excel formulas.  Use \"Help()\" for details.");
+#pragma warning restore CA1303 // Do not pass literals as localized parameters
 
             REPL(Console.In, false);
         }
@@ -221,7 +223,9 @@ namespace PowerFxHostSamples
 
                     if (exprPartial == null && !echo)
                     {
+#pragma warning disable CA1303 // Do not pass literals as localized parameters
                         Console.Write("\n> ");
+#pragma warning restore CA1303 // Do not pass literals as localized parameters
                     }
 
                     exprOne = input.ReadLine();

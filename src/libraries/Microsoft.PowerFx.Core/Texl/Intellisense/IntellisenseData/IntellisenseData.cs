@@ -280,7 +280,7 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
             Contracts.AssertValue(function);
             Contracts.AssertValue(scopeType);
 
-            return ArgumentSuggestions.GetArgumentSuggestions(TryGetEnumSymbol,  SuggestUnqualifiedEnums, function, scopeType, argumentIndex, out requiresSuggestionEscaping);
+            return ArgumentSuggestions.GetArgumentSuggestions(TryGetEnumSymbol, SuggestUnqualifiedEnums, function, scopeType, argumentIndex, out requiresSuggestionEscaping);
         }
 
         /// <summary>
@@ -315,10 +315,11 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
             foreach (var global in _powerFxConfig.GetSuggestableSymbolName())
             {
                 DType type = default;
-                if(_powerFxConfig.GetSymbols(global, out var nameInfo))
+                if (_powerFxConfig.GetSymbols(global, out var nameInfo))
                 {
                     type = nameInfo.Type;
                 }
+
                 IntellisenseHelper.AddSuggestion(this, global, SuggestionKind.Global, SuggestionIconKind.Other, type, requiresSuggestionEscaping: true);
             }
         }

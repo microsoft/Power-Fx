@@ -50,6 +50,7 @@ namespace Microsoft.PowerFx
             {
                 throw new ArgumentException("Invalid name: ${name}");
             }
+
             return new DName(name);
         }
 
@@ -60,7 +61,7 @@ namespace Microsoft.PowerFx
                 return FormulaType.Build(nameInfo.Value.Type);
             }
 
-            throw NewBadSlotException(slot); 
+            throw NewBadSlotException(slot);
         }
 
         // Ensure that newType can be assigned to the given slot. 
@@ -69,7 +70,7 @@ namespace Microsoft.PowerFx
             if (_slots.TryGet(slot.SlotIndex, out var nameInfo))
             {
                 var srcType = nameInfo.Value.Type;
-                
+
                 if (newType is RecordType)
                 {
                     // Lazy RecordTypes don't validate. 
@@ -123,14 +124,14 @@ namespace Microsoft.PowerFx
                 Owner = this,
                 SlotIndex = slotIndex
             };
-            
+
             var info = new NameLookupInfo(
                 BindKind.PowerFxResolvedObject,
                 type._type,
                 DPath.Root,
                 0,
                 data: data,
-                displayName:displayDName);
+                displayName: displayDName);
 
             _slots.SetInitial(slotIndex, info);
 
@@ -184,21 +185,22 @@ namespace Microsoft.PowerFx
         public void RemoveVariable(string name)
         {
             Inc();
-           
+
             // Also remove from display name provider
             if (_environmentSymbolDisplayNameProvider is SingleSourceDisplayNameProvider ssDP)
             {
                 var lookupName = new DName(name);
 
-                if(_environmentSymbolDisplayNameProvider.TryGetDisplayName(lookupName, out var displayName))
+                if (_environmentSymbolDisplayNameProvider.TryGetDisplayName(lookupName, out var displayName))
                 {
                     // Do nothing as supplied name was logical name.
                 }
-                else if(_environmentSymbolDisplayNameProvider.TryGetLogicalName(lookupName, out var logicalName))
+                else if (_environmentSymbolDisplayNameProvider.TryGetLogicalName(lookupName, out var logicalName))
                 {
                     name = logicalName.Value;
                     lookupName = logicalName;
                 }
+
                 _environmentSymbolDisplayNameProvider = ssDP.RemoveField(lookupName);
             }
 
@@ -281,7 +283,6 @@ namespace Microsoft.PowerFx
             {
                 throw new NotImplementedException($"{entity.GetType().Name} not supported.");
             }
-
 
             // Attempt to update display name provider before symbol table,
             // since it can throw on collision and we want to leave the config in a good state.

@@ -23,20 +23,20 @@ namespace Microsoft.PowerFx.Functions
 {
     internal static partial class Library
     {
-        static readonly private Regex _ampmReplaceRegex = new Regex("[aA][mM]\\/[pP][mM]", RegexOptions.Compiled);
-        static readonly private Regex _apReplaceRegex = new Regex("[aA]\\/[pP]", RegexOptions.Compiled);
-        static readonly private Regex _minutesBeforeSecondsRegex = new Regex("[mM][^dDyYhH]+[sS]", RegexOptions.Compiled);
-        static readonly private Regex _minutesAfterHoursRegex = new Regex("[hH][^dDyYmM]+[mM]", RegexOptions.Compiled);
-        static readonly private Regex _minutesRegex = new Regex("[mM]", RegexOptions.Compiled);
-        static readonly private Regex _internalStringRegex = new Regex("([\"][^\"]*[\"])", RegexOptions.Compiled);
-        static readonly private Regex _daysDetokenizeRegex = new Regex("[\u0004][\u0004][\u0004][\u0004]+", RegexOptions.Compiled);
-        static readonly private Regex _monthsDetokenizeRegex = new Regex("[\u0003][\u0003][\u0003][\u0003]+", RegexOptions.Compiled);
-        static readonly private Regex _yearsDetokenizeRegex = new Regex("[\u0005][\u0005][\u0005]+", RegexOptions.Compiled);
-        static readonly private Regex _years2DetokenizeRegex = new Regex("[\u0005]+", RegexOptions.Compiled);
-        static readonly private Regex _hoursDetokenizeRegex = new Regex("[\u0006][\u0006]+", RegexOptions.Compiled);
-        static readonly private Regex _minutesDetokenizeRegex = new Regex("[\u000A][\u000A]+", RegexOptions.Compiled);
-        static readonly private Regex _secondsDetokenizeRegex = new Regex("[\u0008][\u0008]+", RegexOptions.Compiled);
-        static readonly private Regex _milisecondsDetokenizeRegex = new Regex("[\u000e][\u000e][\u000e]+", RegexOptions.Compiled);
+        private static readonly Regex _ampmReplaceRegex = new Regex("[aA][mM]\\/[pP][mM]", RegexOptions.Compiled);
+        private static readonly Regex _apReplaceRegex = new Regex("[aA]\\/[pP]", RegexOptions.Compiled);
+        private static readonly Regex _minutesBeforeSecondsRegex = new Regex("[mM][^dDyYhH]+[sS]", RegexOptions.Compiled);
+        private static readonly Regex _minutesAfterHoursRegex = new Regex("[hH][^dDyYmM]+[mM]", RegexOptions.Compiled);
+        private static readonly Regex _minutesRegex = new Regex("[mM]", RegexOptions.Compiled);
+        private static readonly Regex _internalStringRegex = new Regex("([\"][^\"]*[\"])", RegexOptions.Compiled);
+        private static readonly Regex _daysDetokenizeRegex = new Regex("[\u0004][\u0004][\u0004][\u0004]+", RegexOptions.Compiled);
+        private static readonly Regex _monthsDetokenizeRegex = new Regex("[\u0003][\u0003][\u0003][\u0003]+", RegexOptions.Compiled);
+        private static readonly Regex _yearsDetokenizeRegex = new Regex("[\u0005][\u0005][\u0005]+", RegexOptions.Compiled);
+        private static readonly Regex _years2DetokenizeRegex = new Regex("[\u0005]+", RegexOptions.Compiled);
+        private static readonly Regex _hoursDetokenizeRegex = new Regex("[\u0006][\u0006]+", RegexOptions.Compiled);
+        private static readonly Regex _minutesDetokenizeRegex = new Regex("[\u000A][\u000A]+", RegexOptions.Compiled);
+        private static readonly Regex _secondsDetokenizeRegex = new Regex("[\u0008][\u0008]+", RegexOptions.Compiled);
+        private static readonly Regex _milisecondsDetokenizeRegex = new Regex("[\u000e][\u000e][\u000e]+", RegexOptions.Compiled);
 
         // Char is used for PA string escaping 
         public static FormulaValue Char(IRContext irContext, NumberValue[] args)
@@ -224,7 +224,8 @@ namespace Microsoft.PowerFx.Functions
                     else
                     {
                         resultString = num.Value.ToString(formatString ?? "g", culture);
-                    }                    
+                    }
+
                     break;
                 case DateValue:
                 case DateTimeValue:
@@ -254,6 +255,7 @@ namespace Microsoft.PowerFx.Functions
                     {
                         resultString = ExpandDateTimeExcelFormatSpecifiers(formatString, "g", dateTimeValue.Value, culture, runner.CancellationToken);
                     }
+
                     break;
             }
 
@@ -264,14 +266,14 @@ namespace Microsoft.PowerFx.Functions
 
             return CommonErrors.NotYetImplementedError(irContext, $"Text format for {args[0]?.GetType().Name}");
         }
-        
+
         internal static string ExpandDateTimeExcelFormatSpecifiers(string format, string defaultFormat, DateTime dateTime, CultureInfo culture, CancellationToken cancellationToken)
         {
             if (format == null)
             {
                 return dateTime.ToString(defaultFormat, culture);
             }
-            
+
             // DateTime format
             switch (format.ToLower())
             {
@@ -329,7 +331,7 @@ namespace Microsoft.PowerFx.Functions
         private static string ReplaceWith24HourClock(string format)
         {
             format = Regex.Replace(format, "[hH]", "H");
-            format = Regex.Replace(format, "t+", "");
+            format = Regex.Replace(format, "t+", string.Empty);
 
             return format.Trim();
         }

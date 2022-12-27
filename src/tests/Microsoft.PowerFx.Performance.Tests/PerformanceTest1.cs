@@ -14,21 +14,25 @@ namespace Microsoft.PowerFx.Performance.Tests
 {
     [EtwProfiler] // https://benchmarkdotnet.org/articles/features/etwprofiler.html
     [CsvExporter] // https://benchmarkdotnet.org/articles/configs/exporters.html
-    [MinColumn, Q1Column, MeanColumn, Q3Column, MaxColumn]
+    [MinColumn]
+    [Q1Column]
+    [MeanColumn]
+    [Q3Column]
+    [MaxColumn]
     public class PerformanceTest1
     {
-        private PowerFxConfig powerFxConfig;
-        private Engine engine;
-        private RecalcEngine recalcEngine;
-        private ParserOptions parserOptions;
+        private PowerFxConfig _powerFxConfig;
+        private Engine _engine;
+        private RecalcEngine _recalcEngine;
+        private ParserOptions _parserOptions;
 
         [GlobalSetup]
         public void GlobalSetup()
         {
-            powerFxConfig = new PowerFxConfig(new CultureInfo("en-US"), Features.All);
-            engine = new Engine(powerFxConfig);
-            parserOptions = new ParserOptions() { AllowsSideEffects = true, Culture = new CultureInfo("en-US") };
-            recalcEngine = new RecalcEngine(powerFxConfig);
+            _powerFxConfig = new PowerFxConfig(new CultureInfo("en-US"), Features.All);
+            _engine = new Engine(_powerFxConfig);
+            _parserOptions = new ParserOptions() { AllowsSideEffects = true, Culture = new CultureInfo("en-US") };
+            _recalcEngine = new RecalcEngine(_powerFxConfig);
         }
 
         [Params(1, 5, 10)]
@@ -39,7 +43,7 @@ namespace Microsoft.PowerFx.Performance.Tests
         {
             var expr = string.Join(" + ", Enumerable.Repeat("Sum(1)", N));
 
-            var tokens = engine.Tokenize(expr);
+            var tokens = _engine.Tokenize(expr);
             return tokens;
         }
 
@@ -48,7 +52,7 @@ namespace Microsoft.PowerFx.Performance.Tests
         {
             var expr = string.Join(" + ", Enumerable.Repeat("Sum(1)", N));
 
-            var parse = engine.Parse(expr, parserOptions);
+            var parse = _engine.Parse(expr, _parserOptions);
             return parse;
         }
 
@@ -57,7 +61,7 @@ namespace Microsoft.PowerFx.Performance.Tests
         {
             var expr = string.Join(" + ", Enumerable.Repeat("Sum(1)", N));
 
-            var check = engine.Check(expr);
+            var check = _engine.Check(expr);
             return check;
         }
 
@@ -66,7 +70,7 @@ namespace Microsoft.PowerFx.Performance.Tests
         {
             var expr = string.Join(" + ", Enumerable.Repeat("Sum(1)", N));
 
-            var result = recalcEngine.Eval(expr);
+            var result = _recalcEngine.Eval(expr);
             return result;
         }
     }

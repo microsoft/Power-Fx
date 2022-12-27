@@ -211,12 +211,12 @@ namespace Microsoft.PowerFx.Core.Binding
                     returnType = DType.Deferred;
                 }
             }
-            else if(checkErrorContainer!=null && errorContainer!=null)
+            else if (checkErrorContainer != null && errorContainer != null)
             {
                 errorContainer.MergeErrors(checkErrorContainer.GetErrors());
             }
 
-            return(typeCheckSucceeded, returnType);
+            return (typeCheckSucceeded, returnType);
         }
 
         /// <summary>
@@ -656,7 +656,7 @@ namespace Microsoft.PowerFx.Core.Binding
                             // Regular Addition
                             var leftResAdd = CheckTypeCore(errorContainer, node.Left, leftType, DType.Number, /* coerced: */ DType.String, DType.Boolean);
                             var rightResAdd = CheckTypeCore(errorContainer, node.Right, rightType, DType.Number, /* coerced: */ DType.String, DType.Boolean);
-                            
+
                             // Deferred + number or number + Deferred
                             if (leftKind == DKind.Deferred || rightKind == DKind.Deferred)
                             {

@@ -21,7 +21,7 @@ namespace Microsoft.PowerFx.Functions
 
         // CSS format is RGBA
         private static readonly Regex RegexCSS = new (@"^#(?<r>[0-9a-fA-F]{2})(?<g>[0-9a-fA-F]{2})(?<b>[0-9a-fA-F]{2})(?<a>[0-9a-fA-F]{2})?$", RegexOptions.Compiled);
-        
+
         public static FormulaValue ColorValue(IRContext irContext, StringValue[] args)
         {
             var val = args[0].Value;
@@ -101,20 +101,19 @@ namespace Microsoft.PowerFx.Functions
             var color = (ColorValue)args[0];
             var fadeDelta = ((NumberValue)args[1]).Value;
 
-
             // Ensure fade amount is between -1 and 1
             if (fadeDelta < -1.0d || fadeDelta > 1.0d)
             {
                 return CommonErrors.ArgumentOutOfRange(irContext);
             }
-            
+
             var interpolator = Math.Abs(fadeDelta);
             var inverseInterpolator = 1 - interpolator;
             double targetComponent = fadeDelta < 0x00 ? 0x00 : 0xFF;
             targetComponent *= interpolator;
-            var fadedRed = (int)Math.Floor(color.Value.R * inverseInterpolator + targetComponent);
-            var fadedGreen = (int)Math.Floor(color.Value.G * inverseInterpolator + targetComponent);
-            var fadedBlue = (int)Math.Floor(color.Value.B * inverseInterpolator + targetComponent);
+            var fadedRed = (int)Math.Floor((color.Value.R * inverseInterpolator) + targetComponent);
+            var fadedGreen = (int)Math.Floor((color.Value.G * inverseInterpolator) + targetComponent);
+            var fadedBlue = (int)Math.Floor((color.Value.B * inverseInterpolator) + targetComponent);
             return new ColorValue(irContext, Color.FromArgb(color.Value.A, fadedRed, fadedGreen, fadedBlue));
         }
     }
