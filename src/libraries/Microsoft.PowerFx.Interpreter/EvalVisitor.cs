@@ -554,7 +554,21 @@ namespace Microsoft.PowerFx
 
         public override async ValueTask<FormulaValue> Visit(SingleColumnTableAccessNode node, EvalVisitorContext context)
         {
-            return CommonErrors.NotYetImplementedError(node.IRContext, "Single column table access");
+            CheckCancel();
+
+            var left = await node.From.Accept(this, context);
+
+            if (left is BlankValue)
+            {
+                return new BlankValue(node.IRContext);
+            }
+
+            if (left is ErrorValue)
+            {
+                return left;
+            }
+
+            return (TableValue)left;
         }
 
         public override async ValueTask<FormulaValue> Visit(ErrorNode node, EvalVisitorContext context)

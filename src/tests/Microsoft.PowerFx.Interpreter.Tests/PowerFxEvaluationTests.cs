@@ -208,6 +208,23 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 recordWithRecord3
             });
 
+            var rValueType = RecordType.Empty()
+                .Add(new NamedFormulaType("Value", FormulaType.Number));
+
+            var recordValue1 = FormulaValue.NewRecordFromFields(rValueType, new List<NamedValue>() { new NamedValue("Value", FormulaValue.New(1)) });
+            var recordValue2 = FormulaValue.NewRecordFromFields(rValueType, new List<NamedValue>() { new NamedValue("Value", FormulaValue.New(2)) });
+            var recordValue3 = FormulaValue.NewRecordFromFields(rValueType, new List<NamedValue>() { new NamedValue("Value", FormulaValue.New(3)) });
+
+            var tValues = FormulaValue.NewTable(rValueType, recordValue1, recordValue2, recordValue3);
+
+            var rDummyType = RecordType.Empty()
+                .Add(new NamedFormulaType("v", FormulaType.Number))
+                .Add(new NamedFormulaType("t", TableType.Empty().Add(new NamedFormulaType("Value", FormulaType.Number))));
+
+            var rDummy = FormulaValue.NewRecordFromFields(rDummyType, new NamedValue("v", FormulaValue.New(0)), new NamedValue("t", tValues));
+
+            var t3 = FormulaValue.NewTable(rDummyType, rDummy);
+
             var symbol = new SymbolTable();
 
             symbol.EnableMutationFunctions();
@@ -216,6 +233,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             symbol.AddConstant("r1", r1);
             symbol.AddConstant("r2", r2);
             symbol.AddConstant("t2", t2);
+            symbol.AddConstant("t3", t3);
+            symbol.AddConstant("rDummy", rDummy);
             symbol.AddConstant("rwr1", recordWithRecord1);
             symbol.AddConstant("rwr2", recordWithRecord2);
             symbol.AddConstant("rwr3", recordWithRecord3);
