@@ -3,6 +3,9 @@
 >> If(false, 4, ParseJSON("5"))
 5
 
+>> If(true, 4, ParseJSON("5"))
+4
+
 >> If(false, "s", ParseJSON("""t"""))
 "t"
 
