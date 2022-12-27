@@ -77,18 +77,5 @@ Errors: Error 8-25: The function 'Collect' has some invalid arguments.
 >> Collect(t1,{Price:200}).Price
 200
 
->> Collect(t3.t,{Value:200}).Value
-200
-
->> Collect(t3.t,{Value:200})
-{Value:200}
-
 >> Collect([1,2,3],{Value:200}).Value
 200
-
-// Original test case: Set(x, { v :1 , t: [1,2,3]});With({ y : x.t}, Collect(y, { Value: 99}));x.t
->> With({ y : rDummy.t}, Collect(y, { Value: 99}));rDummy.t
-Table({Value:1},{Value:2},{Value:3},{Value:99})
-
->> With({ y : First(t3).t}, Collect(y, { Value: 99}));First(t3).t
-Table({Value:1},{Value:2},{Value:3},{Value:99})

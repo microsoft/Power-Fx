@@ -160,7 +160,6 @@ namespace Microsoft.PowerFx.Interpreter
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
             var fValid = base.CheckTypes(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
-            //Contracts.Assert(returnType.IsTable);
 
             // Need a collection for the 1st arg
             DType collectionType = argTypes[0];
