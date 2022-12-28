@@ -1266,8 +1266,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Equal(documentUri, response.Result.Uri);
             Assert.Equal("Price * Quantity", response.Result.Text);
         }
-
-        // https://github.com/microsoft/Power-Fx/issues/918
+        
         [Fact]
         public void ErrorIsLocalized()
         {
