@@ -55,7 +55,7 @@ namespace Microsoft.PowerFx.Interpreter
               "Collect",
               TexlStrings.AboutSet,
               FunctionCategories.Behavior,
-              DType.EmptyTable,
+              DType.EmptyRecord,
               0, // no lambdas
               2,
               2, // Not handling multiple arguments for now
@@ -117,9 +117,9 @@ namespace Microsoft.PowerFx.Interpreter
                 }
 
                 // Promote the arg type to a table to facilitate unioning.
-                if (!argType.IsTable)
+                if (!argType.IsRecord)
                 {
-                    argType = argType.ToTable();
+                    argType = argType.ToRecord();
                 }
 
                 if (!itemType.IsValid)
@@ -144,8 +144,8 @@ namespace Microsoft.PowerFx.Interpreter
                 }
             }
 
-            Contracts.Assert(!itemType.IsValid || itemType.IsTable);
-            collectedType = itemType.IsValid ? itemType : DType.EmptyTable;
+            Contracts.Assert(!itemType.IsValid || itemType.IsRecord);
+            collectedType = itemType.IsValid ? itemType : DType.EmptyRecord;
             return fValid;
         }
 
@@ -160,11 +160,6 @@ namespace Microsoft.PowerFx.Interpreter
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
             var fValid = base.CheckTypes(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
-            Contracts.Assert(returnType.IsTable);
-
-            // TASK: 75145: SPEC: what if the types align for arg0, but arg0 is not a name node? For example:
-            //      Collect( Filter(T,A<2), {A:10} )
-            // The current behavior is that Collect has no side effects for transient tables/collections.
 
             // Need a collection for the 1st arg
             DType collectionType = argTypes[0];
@@ -177,17 +172,20 @@ namespace Microsoft.PowerFx.Interpreter
             // Get the unified collected type on the RHS. This will generate appropriate
             // document errors for invalid arguments such as unsupported aggregate types.
             fValid &= TryGetUnifiedCollectedType(args, argTypes, errors, out DType collectedType);
-            Contracts.Assert(collectedType.IsTable);
+            Contracts.Assert(collectedType.IsRecord);
 
-            // The item type must be compatible with the collection schema.
-            var fError = false;
-            returnType = DType.Union(ref fError, collectionType, collectedType, useLegacyDateTimeAccepts: true);
-            if (fError)
+            if (fValid)
             {
-                fValid = false;
-                if (!SetErrorForMismatchedColumns(collectionType, collectedType, args[1], errors))
+                // The item type must be compatible with the collection schema.
+                var fError = false;
+                returnType = DType.Union(ref fError, collectionType.ToRecord(), collectedType, useLegacyDateTimeAccepts: true);
+                if (fError)
                 {
-                    errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrNeedValidVariableName_Arg, Name);
+                    fValid = false;
+                    if (!SetErrorForMismatchedColumns(collectionType, collectedType, args[1], errors))
+                    {
+                        errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrNeedValidVariableName_Arg, Name);
+                    }
                 }
             }
 

@@ -1,0 +1,8 @@
+﻿>> Set(x, { v :1 , t: [1,2,3]})
+{t:Table({Value:1},{Value:2},{Value:3}),v:1}
+
+>> With({ y : x.t}, Collect(y, { Value: 99}))
+{Value:99}
+
+>> x.t
+Table({Value:1},{Value:2},{Value:3},{Value:99})
