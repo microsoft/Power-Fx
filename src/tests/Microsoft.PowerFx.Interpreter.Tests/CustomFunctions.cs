@@ -5,6 +5,7 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Types;
 using Xunit;
@@ -73,6 +74,71 @@ namespace Microsoft.PowerFx.Tests
             {
                 var val = x.Value.ToString() + "," + b.Value.ToString() + "," + s.Value.ToString();
                 return FormulaValue.New(val);
+            }
+        }
+
+        [Fact]
+        public void CustomRecordFunction()
+        {
+            var config = new PowerFxConfig(null);
+            config.AddFunction(new TestRecordCustomFunction());
+
+            // Invalid function
+            config.AddFunction(new TestInvalidRecordCustomFunction());
+
+            var engine = new RecalcEngine(config);
+
+            // Shows up in enuemeration
+            var func = engine.GetAllFunctionNames().First(name => name == "RecordTest");
+            Assert.NotNull(func);
+            var invalidFunc = engine.GetAllFunctionNames().First(name => name == "InvalidRecordTest");
+            Assert.NotNull(invalidFunc);
+
+            // Can be invoked. 
+            var result = engine.Eval("RecordTest()");
+            Assert.IsNotType<ErrorValue>(result);
+
+            var errorResult = engine.Eval("InvalidRecordTest()");
+            Assert.IsType<ErrorValue>(errorResult);
+        }
+
+        // Must have "Function" suffix. 
+        private class TestRecordCustomFunction : ReflectionFunction
+        {
+            public TestRecordCustomFunction() 
+                : base(
+                      "RecordTest",
+                      RecordType.Empty().Add(new NamedFormulaType("num", FormulaType.Number)))
+            {
+            }
+
+            // Must have "Execute" method. 
+            public static RecordValue Execute()
+            {
+                var record = RecordType.Empty()
+                    .Add(new NamedFormulaType("num", FormulaType.Number));
+                var val = FormulaValue.NewRecordFromFields(record, new NamedValue("num", FormulaValue.New(1)));
+                return val;
+            }
+        }
+
+        // Must have "Function" suffix. 
+        private class TestInvalidRecordCustomFunction : ReflectionFunction
+        {
+            public TestInvalidRecordCustomFunction()
+                : base(
+                      "InvalidRecordTest",
+                      RecordType.Empty().Add(new NamedFormulaType("num", FormulaType.Number)))
+            {
+            }
+
+            // Must have "Execute" method. 
+            public static RecordValue Execute()
+            {
+                var recordType = RecordType.Empty()
+                    .Add(new NamedFormulaType("num1", FormulaType.Number));
+                var val = FormulaValue.NewRecordFromFields(recordType, new NamedValue("num1", FormulaValue.New(1)));
+                return val;
             }
         }
 
@@ -389,6 +455,40 @@ namespace Microsoft.PowerFx.Tests
             {
                 var val = x.Value.ToString() + "," + b.Value.ToString();
                 return FormulaValue.New(val);
+            }
+        }
+
+        [Fact]
+        public async void CustomAsyncFuntionUsingCtor()
+        {
+            var config = new PowerFxConfig(null);
+
+            config.AddFunction(new TestCtorCustomAsyncFunction());
+            var engine = new RecalcEngine(config);
+
+            // Shows up in enumeration
+            var func = engine.GetAllFunctionNames().First(name => name == "CustomAsync");
+            Assert.NotNull(func);
+
+            // Can be invoked. 
+            using var cts = new CancellationTokenSource();
+            var resultAsync = await engine.EvalAsync("CustomAsync(\"test\")", cts.Token);
+
+            Assert.Equal("test", resultAsync.ToObject());
+        }
+
+        private class TestCtorCustomAsyncFunction : ReflectionFunction
+        {
+            public TestCtorCustomAsyncFunction() 
+                : base("CustomAsync", FormulaType.String, FormulaType.String)
+            {
+            }
+
+            // Must have "Execute" method. 
+            // Cancellation Token must be the last argument for custom async function.
+            public async Task<StringValue> Execute(StringValue input, CancellationToken cancellationToken)
+            {
+                return FormulaValue.New("test");
             }
         }
 
