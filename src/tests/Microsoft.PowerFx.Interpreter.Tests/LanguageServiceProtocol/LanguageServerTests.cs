@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text.Json;
 using System.Text.RegularExpressions;
@@ -1264,6 +1265,46 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Equal("123", response.Id);
             Assert.Equal(documentUri, response.Result.Uri);
             Assert.Equal("Price * Quantity", response.Result.Text);
+        }
+
+        // https://github.com/microsoft/Power-Fx/issues/918
+        [Fact]
+        public void ErrorIsLocalized()
+        {
+            var engine = new Engine(new PowerFxConfig());
+
+            // ParseOptions locale
+            var locale = CultureInfo.CreateSpecificCulture("fr-FR");
+
+            engine.Config.AddFunction(new BehaviorFunction());
+
+            _sendToClientData = new List<string>();
+            _scopeFactory = new TestPowerFxScopeFactory(
+                (string documentUri) => engine.CreateEditorScope(new ParserOptions() { Culture = locale }, GetFromUri(documentUri)),
+                GetParserOptions(false));
+            _testServer = new TestLanguageServer(_sendToClientData.Add, _scopeFactory);
+
+            _testServer.OnDataReceived(
+                JsonSerializer.Serialize(new
+                {
+                    jsonrpc = "2.0",
+                    method = "textDocument/didOpen",
+                    @params = new DidOpenTextDocumentParams()
+                    {
+                        TextDocument = new TextDocumentItem()
+                        {
+                            Uri = "powerfx://app",
+                            LanguageId = "powerfx",
+                            Version = 1,
+                            Text = "Bla."
+                        }
+                    }
+                }));
+
+            CheckBehaviorError(_sendToClientData[0], false, out var diags);
+
+            // Checking if contains text in the correct locale
+            Assert.Contains("Caractères inattendus.", diags.First().Message); // the value should be localized. Resx files have this localized.
         }
     }
 }
