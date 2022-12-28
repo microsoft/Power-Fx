@@ -105,12 +105,11 @@ namespace Microsoft.PowerFx.Tests
         // Must have "Function" suffix. 
         private class TestRecordCustomFunction : ReflectionFunction
         {
-            public TestRecordCustomFunction():
-                 base("RecordTest",
-                     RecordType.Empty()
-                    .Add(new NamedFormulaType("num", FormulaType.Number)))
+            public TestRecordCustomFunction() 
+                : base(
+                      "RecordTest",
+                      RecordType.Empty().Add(new NamedFormulaType("num", FormulaType.Number)))
             {
-
             }
 
             // Must have "Execute" method. 
@@ -126,12 +125,11 @@ namespace Microsoft.PowerFx.Tests
         // Must have "Function" suffix. 
         private class TestInvalidRecordCustomFunction : ReflectionFunction
         {
-            public TestInvalidRecordCustomFunction() :
-                 base("InvalidRecordTest",
-                     RecordType.Empty()
-                    .Add(new NamedFormulaType("num", FormulaType.Number)))
+            public TestInvalidRecordCustomFunction()
+                : base(
+                      "InvalidRecordTest",
+                      RecordType.Empty().Add(new NamedFormulaType("num", FormulaType.Number)))
             {
-
             }
 
             // Must have "Execute" method. 
@@ -481,11 +479,9 @@ namespace Microsoft.PowerFx.Tests
 
         private class TestCtorCustomAsyncFunction : ReflectionFunction
         {
-
-            public TestCtorCustomAsyncFunction() :
-                base("CustomAsync", FormulaType.String, FormulaType.String)
+            public TestCtorCustomAsyncFunction() 
+                : base("CustomAsync", FormulaType.String, FormulaType.String)
             {
-
             }
 
             // Must have "Execute" method. 

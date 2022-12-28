@@ -181,7 +181,7 @@ namespace Microsoft.PowerFx
 
             var isAsync = m.ReturnType.BaseType == typeof(Task);
 
-            var configType = ConfigType ?? default(Type);
+            var configType = ConfigType ?? default;
 
             _info = new FunctionDescr(name, m, returnType, paramTypes, configType, BigInteger.Zero, isAsync);
         }
@@ -241,7 +241,7 @@ namespace Microsoft.PowerFx
 
                 var configType = default(Type);
 
-                BigInteger lamdaParamMask = default(BigInteger);
+                BigInteger lamdaParamMask = default;
                 for (var i = 0; i < parameters.Length; i++)
                 {
                     if (i == parameters.Length - 1 && isAsync)
@@ -280,8 +280,6 @@ namespace Microsoft.PowerFx
                         throw new InvalidOperationException($"Unknown parameter type: {parameters[i].Name}, {parameters[i].ParameterType}");
                     }
                 }
-
-                var paramTypes = paramTypes.ToArray();
 
                 _info = new FunctionDescr(name, m, returnType, paramTypes.ToArray(), configType, lamdaParamMask, isAsync);
             }
