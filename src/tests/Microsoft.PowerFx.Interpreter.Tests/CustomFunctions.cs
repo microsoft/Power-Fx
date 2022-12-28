@@ -135,9 +135,9 @@ namespace Microsoft.PowerFx.Tests
             // Must have "Execute" method. 
             public static RecordValue Execute()
             {
-                var record = RecordType.Empty()
+                var recordType = RecordType.Empty()
                     .Add(new NamedFormulaType("num1", FormulaType.Number));
-                var val = FormulaValue.NewRecordFromFields(record, new NamedValue("num", FormulaValue.New(1)));
+                var val = FormulaValue.NewRecordFromFields(recordType, new NamedValue("num1", FormulaValue.New(1)));
                 return val;
             }
         }
