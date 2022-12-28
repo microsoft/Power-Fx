@@ -420,7 +420,7 @@ namespace Microsoft.PowerFx
                     string.Format("Return type should have been {0}, found {1}", _info.RetType._type, formulaResult.Type._type));
             }
 
-            return (FormulaValue)result;
+            return formulaResult;
         }
 
         private static async Task<FormulaValue> Unwrap(object obj, Type resultType)
