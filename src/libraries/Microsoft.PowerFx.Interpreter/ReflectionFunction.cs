@@ -181,9 +181,8 @@ namespace Microsoft.PowerFx
 
             var isAsync = m.ReturnType.BaseType == typeof(Task);
 
-            var configType = ConfigType?? default(Type);
+            var configType = ConfigType ?? default(Type);
 
-            // config type bug
             _info = new FunctionDescr(name, m, returnType, paramTypes, configType, BigInteger.Zero, isAsync);
         }
 
@@ -191,7 +190,7 @@ namespace Microsoft.PowerFx
         {
             internal string Name { get; }
 
-            internal MethodInfo _method { get; }
+            internal MethodInfo Method { get; }
 
             internal FormulaType RetType { get; }
 
@@ -199,20 +198,20 @@ namespace Microsoft.PowerFx
             internal FormulaType[] ParamTypes { get; }
 
             // If not null, then arg0 is from RuntimeConfig
-            internal Type _configType { get; }
+            internal Type ConfigType { get; }
 
-            internal bool _isAsync { get; }
+            internal bool IsAsync { get; }
 
             internal BigInteger LamdaParamMask { get; }
 
             public FunctionDescr(string name, MethodInfo method, FormulaType retType, FormulaType[] paramTypes, Type configType, BigInteger lamdaParamMask, bool isAsync = false)
             {
                 Name = name;
-                _method = method;
+                Method = method;
                 RetType = retType;
                 ParamTypes = paramTypes;
-                _configType = configType;
-                _isAsync = isAsync;
+                ConfigType = configType;
+                IsAsync = isAsync;
                 LamdaParamMask = lamdaParamMask;
             }
         }
@@ -242,7 +241,7 @@ namespace Microsoft.PowerFx
 
                 var configType = default(Type);
 
-                BigInteger LamdaParamMask = default(BigInteger);
+                BigInteger lamdaParamMask = default(BigInteger);
                 for (var i = 0; i < parameters.Length; i++)
                 {
                     if (i == parameters.Length - 1 && isAsync)
@@ -267,7 +266,7 @@ namespace Microsoft.PowerFx
                     }
                     else if (parameters[i].ParameterType == typeof(Func<Task<BooleanValue>>))
                     {
-                        LamdaParamMask = LamdaParamMask | BigInteger.One << i;
+                        lamdaParamMask = lamdaParamMask | BigInteger.One << i;
                         paramTypes.Add(FormulaType.Boolean);
                     }
                     else if (parameters[i].ParameterType.BaseType == typeof(MulticastDelegate))
@@ -282,9 +281,9 @@ namespace Microsoft.PowerFx
                     }
                 }
 
-                var ParamTypes = paramTypes.ToArray();
+                var paramTypes = paramTypes.ToArray();
 
-                _info = new FunctionDescr(name, m, returnType, paramTypes.ToArray(), configType, LamdaParamMask,isAsync);
+                _info = new FunctionDescr(name, m, returnType, paramTypes.ToArray(), configType, lamdaParamMask, isAsync);
             }
 
             return _info;
@@ -350,7 +349,7 @@ namespace Microsoft.PowerFx
                 }
                 else
                 {
-                    throw new InvalidOperationException($"Call to {_info.Name} is missing config type {_info._configType.FullName}");
+                    throw new InvalidOperationException($"Call to {_info.Name} is missing config type {_info.ConfigType.FullName}");
                 }
             }
 
@@ -401,18 +400,26 @@ namespace Microsoft.PowerFx
                 return ErrorValue.Combine(IRContext.NotInSource(_info.RetType), errors);
             }
 
-            if (_info._isAsync)
+            if (_info.IsAsync)
             {
                 args2.Add(cancellationToken);
             }
 
-            var result = _info._method.Invoke(this, args2.ToArray());
+            var result = _info.Method.Invoke(this, args2.ToArray());
 
-            if (_info._isAsync)
+            if (_info.IsAsync)
             {
                 var resultType = result.GetType().GenericTypeArguments[0];
-                var formulaValueResult = await Unwrap(result, resultType);
-                return formulaValueResult;
+                result = await Unwrap(result, resultType);
+            }
+
+            var formulaResult = (FormulaValue)result;   
+            
+            if (formulaResult != null && formulaResult.Type != _info.RetType)
+            {
+                return CommonErrors.CustomError(
+                    formulaResult.IRContext,
+                    string.Format("Return type should have been {0}, found {1}", _info.RetType._type, formulaResult.Type._type));
             }
 
             return (FormulaValue)result;

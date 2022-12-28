@@ -5,6 +5,7 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Types;
 using Xunit;
@@ -68,16 +69,78 @@ namespace Microsoft.PowerFx.Tests
         // Must have "Function" suffix. 
         private class TestCustomFunction : ReflectionFunction
         {
-            public TestCustomFunction():
-                base("TestCustom", FormulaType.Boolean, FormulaType.Number, FormulaType.Boolean, FormulaType.String)
-            {
-
-            }
             // Must have "Execute" method. 
             public static StringValue Execute(NumberValue x, BooleanValue b, StringValue s)
             {
                 var val = x.Value.ToString() + "," + b.Value.ToString() + "," + s.Value.ToString();
                 return FormulaValue.New(val);
+            }
+        }
+
+        [Fact]
+        public void CustomRecordFunction()
+        {
+            var config = new PowerFxConfig(null);
+            config.AddFunction(new TestRecordCustomFunction());
+
+            // Invalid function
+            config.AddFunction(new TestInvalidRecordCustomFunction());
+
+            var engine = new RecalcEngine(config);
+
+            // Shows up in enuemeration
+            var func = engine.GetAllFunctionNames().First(name => name == "RecordTest");
+            Assert.NotNull(func);
+            var invalidFunc = engine.GetAllFunctionNames().First(name => name == "InvalidRecordTest");
+            Assert.NotNull(invalidFunc);
+
+            // Can be invoked. 
+            var result = engine.Eval("RecordTest()");
+            Assert.IsNotType<ErrorValue>(result);
+
+            var errorResult = engine.Eval("InvalidRecordTest()");
+            Assert.IsType<ErrorValue>(errorResult);
+        }
+
+        // Must have "Function" suffix. 
+        private class TestRecordCustomFunction : ReflectionFunction
+        {
+            public TestRecordCustomFunction():
+                 base("RecordTest",
+                     RecordType.Empty()
+                    .Add(new NamedFormulaType("num", FormulaType.Number)))
+            {
+
+            }
+
+            // Must have "Execute" method. 
+            public static RecordValue Execute()
+            {
+                var record = RecordType.Empty()
+                    .Add(new NamedFormulaType("num", FormulaType.Number));
+                var val = FormulaValue.NewRecordFromFields(record, new NamedValue("num", FormulaValue.New(1)));
+                return val;
+            }
+        }
+
+        // Must have "Function" suffix. 
+        private class TestInvalidRecordCustomFunction : ReflectionFunction
+        {
+            public TestInvalidRecordCustomFunction() :
+                 base("InvalidRecordTest",
+                     RecordType.Empty()
+                    .Add(new NamedFormulaType("num", FormulaType.Number)))
+            {
+
+            }
+
+            // Must have "Execute" method. 
+            public static RecordValue Execute()
+            {
+                var record = RecordType.Empty()
+                    .Add(new NamedFormulaType("num1", FormulaType.Number));
+                var val = FormulaValue.NewRecordFromFields(record, new NamedValue("num", FormulaValue.New(1)));
+                return val;
             }
         }
 
@@ -420,7 +483,7 @@ namespace Microsoft.PowerFx.Tests
         {
 
             public TestCtorCustomAsyncFunction() :
-                base("CustomAsync", FormulaType.Boolean, FormulaType.String)
+                base("CustomAsync", FormulaType.String, FormulaType.String)
             {
 
             }
