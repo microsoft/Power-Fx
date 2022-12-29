@@ -218,9 +218,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 var s = impl.GetString();
 
-                TimeSpan res;
-
-                if (TimeSpan.TryParseExact(s, @"hh\:mm\:ss\.FFFFFFF", CultureInfo.InvariantCulture, TimeSpanStyles.None, out res) ||
+                if (TimeSpan.TryParseExact(s, @"hh\:mm\:ss\.FFFFFFF", CultureInfo.InvariantCulture, TimeSpanStyles.None, out var res) ||
                     TimeSpan.TryParseExact(s, @"hh\:mm\:ss", CultureInfo.InvariantCulture, TimeSpanStyles.None, out res))
                 {
                     return new TimeValue(irContext, res);
