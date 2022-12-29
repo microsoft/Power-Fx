@@ -12,7 +12,10 @@
 "Cleared"
 
 >> Clear([1,2,3])
-Blank()
+true
+
+>> Clear(t1);Clear(t2)
+true
 
 >> Clear(Error({Kind:ErrorKind.Custom}))
 Error({Kind:ErrorKind.Custom})

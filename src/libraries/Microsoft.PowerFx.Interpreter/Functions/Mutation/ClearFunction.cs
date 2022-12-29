@@ -26,7 +26,7 @@ namespace Microsoft.PowerFx.Functions
         public override bool IsSelfContained => false;
 
         public ClearFunction()
-            : base("Clear", AboutClear, FunctionCategories.Behavior, DType.EmptyTable, 0, 1, 1, DType.EmptyTable)
+            : base("Clear", AboutClear, FunctionCategories.Behavior, DType.Boolean, 0, 1, 1, DType.EmptyTable)
         {
         }
 
@@ -45,7 +45,7 @@ namespace Microsoft.PowerFx.Functions
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
             var fValid = base.CheckTypes(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
-            Contracts.Assert(returnType.IsTable);
+            Contracts.Assert(returnType.Kind is DKind.Boolean);
 
             DType dataSourceType = argTypes[0];
 

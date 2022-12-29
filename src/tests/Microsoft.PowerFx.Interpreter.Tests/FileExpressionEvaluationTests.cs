@@ -69,6 +69,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Theory]
         [InlineData("Simple1.txt")]
         [InlineData("Collect.txt")]
+        [InlineData("Clear.txt")]
         public void RunMutationTests(string file)
         {
             // var path = @"D:\dev\pa2\Power-Fx\src\tests\Microsoft.PowerFx.Interpreter.Tests\MutationScripts\Simple1.txt";
