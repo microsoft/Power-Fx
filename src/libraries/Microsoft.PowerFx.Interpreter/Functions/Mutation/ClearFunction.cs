@@ -26,7 +26,7 @@ namespace Microsoft.PowerFx.Functions
         public override bool IsSelfContained => false;
 
         public ClearFunction()
-            : base("Clear", AboutClear, FunctionCategories.Behavior, DType.Boolean, 0, 1, 1, DType.EmptyTable)
+            : base("Clear", TexlStrings.AboutClear, FunctionCategories.Behavior, DType.Boolean, 0, 1, 1, DType.EmptyTable)
         {
         }
 

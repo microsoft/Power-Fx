@@ -1,0 +1,71 @@
+﻿>> Set(t1, Table({a:1},{a:2},{a:3}))
+Table({a:1},{a:2},{a:3})
+
+>> Set(r1, {a:99})
+{a:99}
+
+>> ClearCollect(t1,{a:99})
+{a:99}
+
+>> t1
+Table({a:99})
+
+>> ClearCollect(t1,Blank())
+Blank()
+
+>> ClearCollect(t1,Error({Kind:ErrorKind.Custom}))
+Error({Kind:ErrorKind.Custom})
+
+>> With({x:[1,2,3]},ClearCollect(x,{Value:99}))
+{Value:99}
+
+>> With({x:[1,2,3]},ClearCollect(x,{Value:88});x)
+Table({Value:88})
+
+>> ClearCollect(t1)
+Errors: Error 0-16: Invalid number of arguments: received 1, expected 2.
+
+>> ClearCollect(t1, r1, r1)
+Errors: Error 0-24: Invalid number of arguments: received 3, expected 2.
+
+>> ClearCollect(t1, r1, 1; 2; r1)
+Errors: Error 0-30: Invalid number of arguments: received 3, expected 2.
+
+>> ClearCollect(t1, "x")
+Errors: Error 17-20: Invalid argument type (Text). Expecting a Record value instead.|Error 17-20: Invalid argument type. Cannot use Text values in this context.|Error 0-21: The function 'ClearCollect' has some invalid arguments.
+
+>> ClearCollect(t1, 1)
+Errors: Error 17-18: Invalid argument type (Number). Expecting a Record value instead.|Error 17-18: Invalid argument type. Cannot use Number values in this context.|Error 0-19: The function 'ClearCollect' has some invalid arguments.
+
+>> ClearCollect(Table({name: "VC"}), {surname: "textInput1"})
+{surname:"textInput1"}
+
+>> ClearCollect(FirstN(Table({name: "hello"}), 0), {name: "textInput1"})
+{name:"textInput1"}
+
+>> ClearCollect(Foo,r1)
+Errors: Error 13-16: Name isn't valid. 'Foo' isn't recognized.|Error 0-20: The function 'ClearCollect' has some invalid arguments.
+
+>> ClearCollect(Foo,Bar)
+Errors: Error 13-16: Name isn't valid. 'Foo' isn't recognized.|Error 17-20: Name isn't valid. 'Bar' isn't recognized.|Error 0-21: The function 'ClearCollect' has some invalid arguments.
+
+>> ClearCollect(1/0,Foo)
+Errors: Error 17-20: Name isn't valid. 'Foo' isn't recognized.|Error 14-15: Invalid argument type (Number). Expecting a Table value instead.|Error 0-21: The function 'ClearCollect' has some invalid arguments.
+
+>> ClearCollect(Error({Kind:ErrorKind.Custom}), r1)
+Error({Kind:ErrorKind.Custom})
+
+>> ClearCollect(Error({Kind:ErrorKind.Custom}), Error({Kind:ErrorKind.Div0}))
+Error({Kind:ErrorKind.Custom})
+
+>> ClearCollect(Blank(), r1)
+Blank()
+
+>> ClearCollect(Blank(), Blank())
+Blank()
+
+>> ClearCollect("", "")
+Errors: Error 13-15: Invalid argument type (Text). Expecting a Table value instead.|Error 17-19: Invalid argument type (Text). Expecting a Record value instead.|Error 17-19: Invalid argument type. Cannot use Text values in this context.|Error 0-20: The function 'ClearCollect' has some invalid arguments.
+
+>> ClearCollect(If(false,Blank()),r1)
+Errors: Error 13-30: The function 'ClearCollect' has some invalid arguments.
