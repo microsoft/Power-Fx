@@ -47,8 +47,6 @@ namespace Microsoft.PowerFx.Functions
             var fValid = base.CheckTypes(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
             Contracts.Assert(returnType.Kind is DKind.Boolean);
 
-            DType dataSourceType = argTypes[0];
-
             // Need a collection for the 1st arg
             DType collectionType = argTypes[0];
 
@@ -57,9 +55,6 @@ namespace Microsoft.PowerFx.Functions
                 errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrNeedValidVariableName_Arg, Name);
                 fValid = false;
             }
-
-            // Clear returns the new (cleared) collection, so the return schema is the same as the collection schema.
-            returnType = collectionType;
 
             return fValid;
         }
