@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using System.Numerics;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -16,6 +17,7 @@ using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
+using static Microsoft.PowerFx.Core.Localization.TexlStrings;
 using static Microsoft.PowerFx.Syntax.PrettyPrintVisitor;
 
 namespace Microsoft.PowerFx.Interpreter
@@ -48,15 +50,22 @@ namespace Microsoft.PowerFx.Interpreter
             return argNum >= 1;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CollectFunction"/> class.
+        /// To be consumed by ClearCollect function.
+        /// </summary>
+        protected CollectFunction(string name, TexlStrings.StringGetter description)
+            : base(name, description, FunctionCategories.Behavior, DType.EmptyRecord, 0, 2, 2, DType.EmptyTable, DType.EmptyRecord)
+        {
+        }
+
         public CollectFunction()
         : base(
-              DPath.Root,
               "Collect",
-              "Collect",
-              TexlStrings.AboutSet,
+              TexlStrings.AboutCollect,
               FunctionCategories.Behavior,
               DType.EmptyRecord,
-              0, // no lambdas
+              0,
               2,
               2, // Not handling multiple arguments for now
               DType.EmptyTable,
@@ -64,22 +73,9 @@ namespace Microsoft.PowerFx.Interpreter
         {
         }
 
-        public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
+        public override IEnumerable<StringGetter[]> GetSignatures()
         {
-            // PR REVIEWERS: These are wrong signature texts.
-            yield return new[] { TexlStrings.WithArg1, TexlStrings.WithArg2 };
-            yield return new[] { TexlStrings.WithArg1, TexlStrings.WithArg2, TexlStrings.WithArg2 };
-            yield return new[] { TexlStrings.WithArg1, TexlStrings.WithArg2, TexlStrings.WithArg2, TexlStrings.WithArg2 };
-        }
-
-        public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures(int arity)
-        {
-            if (arity > 2)
-            {
-                return GetGenericSignatures(arity, TexlStrings.WithArg1, TexlStrings.WithArg2);
-            }
-
-            return base.GetSignatures(arity);
+            yield return new[] { TexlStrings.CollectDataSourceArg, TexlStrings.CollectRecordArg };
         }
 
         public virtual DType GetCollectedType(DType argType)
@@ -208,7 +204,7 @@ namespace Microsoft.PowerFx.Interpreter
             return Arg0RequiresAsync(callNode, binding);
         }
 
-        public async Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancellationToken)
+        public virtual async Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancellationToken)
         {
             var arg0 = args[0];
             var arg1 = args[1];

@@ -5055,13 +5055,37 @@
     <value>Contrast theme</value>
     <comment>Display text representing the Contrast value of TeamsTheme enum (TeamsTheme_Contrast_Name). The possible values for this enumeration are: Default, Dark, Contrast.</comment>
   </data>
+  <data name="AboutCollect" xml:space="preserve">
+    <value>Adds records to a data source.</value>
+    <comment>Description of 'Clear' function.</comment>
+  </data>
+  <data name="CollectDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    <comment>function_parameter - First parameter for the Collect function. The data source that you want to add data to.</comment>
+  </data>
+  <data name="CollectRecordArg" xml:space="preserve">
+    <value>record</value>
+    <comment>function_parameter - Second parameter for the Collect function. The record to be added.</comment>
+  </data>
   <data name="AboutClear" xml:space="preserve">
-    <value>deletes all the records of a collection. The columns of the collection will remain.</value>
+    <value>Deletes all the records of a collection. The columns of the collection will remain.</value>
+    <comment>Description of 'Clear' function.</comment>
+  </data>
+  <data name="AboutClearCollect" xml:space="preserve">
+    <value>Deletes all the records from a collection. And then adds a different set of records to the same collection.</value>
     <comment>Description of 'Clear' function.</comment>
   </data>
   <data name="ClearCollectionArg" xml:space="preserve">
     <value>data_source</value>
     <comment>function_parameter - First parameter for the Clear function. The data source that you want to clear from all elements.</comment>
+  </data>
+  <data name="ClearCollectDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    <comment>function_parameter - First parameter for the ClearCollect function. The data source that contains the records that you want to modify or will contain the records that you want to create.</comment>
+  </data>
+  <data name="ClearCollectRecordArg" xml:space="preserve">
+    <value>record</value>
+    <comment>function_parameter - Second parameter for the ClearCollect function. The record to be added.</comment>
   </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>Applies the updates to the specified row and changes the row in the specified datasource. Returns the updated row.</value>

@@ -44,6 +44,7 @@ namespace Microsoft.PowerFx
             symbolTable.AddFunction(new PatchFunction());
             symbolTable.AddFunction(new RemoveFunction());
             symbolTable.AddFunction(new ClearFunction());
+            symbolTable.AddFunction(new ClearCollectFunction());
         }
     }
 }
