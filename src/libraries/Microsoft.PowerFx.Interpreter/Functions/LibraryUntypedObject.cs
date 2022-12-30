@@ -19,7 +19,7 @@ namespace Microsoft.PowerFx.Functions
     {
         private static bool IsValidDateTimeUO(string s)
         {
-            return Regex.IsMatch(s, @"^[0-9]{4,4}-[0-1][0-9]-[0-3][0-9](T[0-2][0-9]:[0-5][0-9]:[0-5][0-9](\.[0-9]{3,3})?Z?)?$");
+            return Regex.IsMatch(s, @"^[0-9]{4,4}-[0-1][0-9]-[0-3][0-9](T[0-2][0-9]:[0-5][0-9]:[0-5][0-9](\.[0-9]{0,7})?Z?)?$");
         }
 
         public static FormulaValue Index_UO(IRContext irContext, FormulaValue[] args)
@@ -217,7 +217,9 @@ namespace Microsoft.PowerFx.Functions
             if (impl.Type == FormulaType.String)
             {
                 var s = impl.GetString();
-                if (TimeSpan.TryParseExact(s, @"hh\:mm\:ss\.FFF", CultureInfo.InvariantCulture, TimeSpanStyles.None, out TimeSpan res))
+
+                if (TimeSpan.TryParseExact(s, @"hh\:mm\:ss\.FFFFFFF", CultureInfo.InvariantCulture, TimeSpanStyles.None, out var res) ||
+                    TimeSpan.TryParseExact(s, @"hh\:mm\:ss", CultureInfo.InvariantCulture, TimeSpanStyles.None, out res))
                 {
                     return new TimeValue(irContext, res);
                 }

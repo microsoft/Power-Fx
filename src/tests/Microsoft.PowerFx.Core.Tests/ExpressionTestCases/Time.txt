@@ -356,3 +356,12 @@ Errors: Error 7-11: Invalid argument type (Boolean). Expecting a DateTime value 
 
 >> Second(true)
 Errors: Error 7-11: Invalid argument type (Boolean). Expecting a DateTime value instead.
+
+>> TimeValue("11:12:00.000")
+Time(11,12,0,0)
+
+>> TimeValue("11:12:00")
+Time(11,12,0,0)
+
+>> TimeValue("11:12:00.1234567")
+Time(11,12,0,123)
