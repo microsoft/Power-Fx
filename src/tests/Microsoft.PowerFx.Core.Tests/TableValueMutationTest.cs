@@ -84,5 +84,27 @@ namespace Microsoft.PowerFx.Core.Tests
             //Assert.True(result.IsError);
             //Assert.Equal("PatchAsync is not supported on this table instance.", result.Error.Errors[0].Message);
         }
+
+        [Fact]
+        public async Task ClearTest()
+        {
+            var r1 = FormulaValue.NewRecordFromFields(new NamedValue("f1", FormulaValue.New(1)));
+            var r2 = FormulaValue.NewRecordFromFields(new NamedValue("f1", FormulaValue.New(2)));
+
+            // Mutable
+            var t1 = FormulaValue.NewTable(r1.Type, new List<RecordValue>() { r1, r2 });
+
+            await t1.ClearAsync(CancellationToken.None);
+
+            Assert.Equal(0, t1.Count());
+
+            // Immutable
+            IEnumerable<RecordValue> source = new RecordValue[] { r1, r2 };
+            var t2 = FormulaValue.NewTable(r1.Type, source);
+            var result = await t2.ClearAsync(CancellationToken.None);
+
+            Assert.True(result.IsError);
+            Assert.Equal("ClearAsync is not supported on this table instance.", result.Error.Errors[0].Message);
+        }
     }
 }

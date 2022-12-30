@@ -5055,6 +5055,14 @@
     <value>Contrast theme</value>
     <comment>Display text representing the Contrast value of TeamsTheme enum (TeamsTheme_Contrast_Name). The possible values for this enumeration are: Default, Dark, Contrast.</comment>
   </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>deletes all the records of a collection. The columns of the collection will remain.</value>
+    <comment>Description of 'Clear' function.</comment>
+  </data>
+  <data name="ClearCollectionArg" xml:space="preserve">
+    <value>data_source</value>
+    <comment>function_parameter - First parameter for the Clear function. The data source that you want to clear from all elements.</comment>
+  </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>Applies the updates to the specified row and changes the row in the specified datasource. Returns the updated row.</value>
     <comment>Description of 'Patch' function.</comment>

@@ -1,0 +1,39 @@
+﻿#SETUP: EnableExpressionChaining,MutationFunctionsTestSetup
+
+// Check MutationFunctionsTestSetup handler (PowerFxEvaluationTests.cs) for documentation.
+
+>> Clear(t1);CountRows(t1)
+0
+
+>> Collect(t1, r2);
+  Collect(t1, {Field1:3,Field2:"mars",Field3:DateTime(2022,3,1,0,0,0,0),Field4:false});
+  Clear(t1);
+  If(CountRows(t1) = 0, "Cleared", "Failed")
+"Cleared"
+
+>> Clear([1,2,3])
+true
+
+>> Clear(t1);Clear(t2)
+true
+
+>> Clear(Error({Kind:ErrorKind.Custom}))
+Error({Kind:ErrorKind.Custom})
+
+>> Clear()
+Errors: Error 0-7: Invalid number of arguments: received 0, expected 1.
+
+>> Clear(1)
+Errors: Error 6-7: Invalid argument type (Number). Expecting a Table value instead.|Error 0-8: The function 'Clear' has some invalid arguments.
+
+>> Clear(t1, t1)
+Errors: Error 0-13: Invalid number of arguments: received 2, expected 1.
+
+>> Clear(Foo)
+Errors: Error 6-9: Name isn't valid. 'Foo' isn't recognized.|Error 0-10: The function 'Clear' has some invalid arguments.
+
+>> IsError(Clear(1))
+Errors: Error 14-15: Invalid argument type (Number). Expecting a Table value instead.|Error 8-16: The function 'Clear' has some invalid arguments.
+
+>> Clear(1/0)
+Errors: Error 7-8: Invalid argument type (Number). Expecting a Table value instead.|Error 0-10: The function 'Clear' has some invalid arguments.
