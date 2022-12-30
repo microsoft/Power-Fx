@@ -25,21 +25,39 @@ namespace Microsoft.PowerFx
     // Use Task for public methods, but ValueTask for internal methods that we expect to be mostly sync. 
     internal class EvalVisitor : IRNodeVisitor<ValueTask<FormulaValue>, EvalVisitorContext>
     {
-        private readonly CultureInfo _defaultCultureInfo;
-
-        public CultureInfo CultureInfo => GetService<CultureInfo>() ?? _defaultCultureInfo;
+        private readonly CultureInfo _cultureInfo;
 
         private readonly ReadOnlySymbolValues _runtimeConfig;
 
         private readonly CancellationToken _cancellationToken;
 
+<<<<<<< HEAD
         internal CancellationToken CancellationToken => _cancellationToken;
+=======
+        private readonly IServiceProvider _services;
 
+        public IServiceProvider FunctionServices => _services;
+>>>>>>> Remove IServiceProvider from SymbolValues
+
+        public CultureInfo CultureInfo => _cultureInfo;
+
+        /* $$$
         public EvalVisitor(CultureInfo cultureInfo, CancellationToken cancellationToken, ReadOnlySymbolValues runtimeConfig = null)
         {
             _defaultCultureInfo = cultureInfo;
             _cancellationToken = cancellationToken;
             _runtimeConfig = runtimeConfig;
+        }*/
+
+        public EvalVisitor(RuntimeConfig config, CancellationToken cancellationToken)
+        {
+            _runtimeConfig = config.Values; // may be null 
+            _cancellationToken = cancellationToken;
+
+            _services = config.Services ?? new BasicServiceProvider();
+            
+            // $$$ Pass in culture?
+            _cultureInfo = GetService<CultureInfo>();
         }
 
         /// <summary>
@@ -49,12 +67,7 @@ namespace Microsoft.PowerFx
         /// <returns></returns>
         public T GetService<T>()
         {
-            if (_runtimeConfig != null)
-            {
-                return _runtimeConfig.GetService<T>();
-            }
-
-            return default;
+            return (T)_services.GetService(typeof(T));            
         }
 
         public bool TryGetService<T>(out T result)
@@ -62,8 +75,6 @@ namespace Microsoft.PowerFx
             result = GetService<T>();
             return result != null;
         }
-
-        public IServiceProvider FunctionServices => _runtimeConfig;
 
         // Check this cooperatively - especially in any loop. 
         public void CheckCancel()
@@ -246,7 +257,7 @@ namespace Microsoft.PowerFx
             }
             else if (func is CustomTexlFunction customTexlFunc)
             {
-                var result = await customTexlFunc.InvokeAsync(_runtimeConfig, args, _cancellationToken);
+                var result = await customTexlFunc.InvokeAsync(FunctionServices, args, _cancellationToken);
                 return result;
             }
             else

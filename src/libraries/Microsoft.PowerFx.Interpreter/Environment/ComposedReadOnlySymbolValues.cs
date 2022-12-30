@@ -16,17 +16,12 @@ namespace Microsoft.PowerFx
         // Map to composed tables 
         private readonly IReadOnlyDictionary<ReadOnlySymbolTable, ReadOnlySymbolValues> _map;
 
-        // Existing services providers. Chain to in order.
-        private readonly IServiceProvider[] _existing;
-
         private ComposedReadOnlySymbolValues(
             ReadOnlySymbolTable symbolTable,
-            IReadOnlyDictionary<ReadOnlySymbolTable, ReadOnlySymbolValues> map,
-            IServiceProvider[] existing)
+            IReadOnlyDictionary<ReadOnlySymbolTable, ReadOnlySymbolValues> map)
             : base(symbolTable)
         {
             _map = map;
-            _existing = existing;
             DebugName = symbolTable.DebugName;
         }
 
@@ -80,7 +75,7 @@ namespace Microsoft.PowerFx
                 return symValues;
             }
 
-            return new ComposedReadOnlySymbolValues(symbolTable, map, existing);
+            return new ComposedReadOnlySymbolValues(symbolTable, map);
         }
 
         private static void Add(Dictionary<ReadOnlySymbolTable, ReadOnlySymbolValues> map, ReadOnlySymbolValues symValues)
@@ -161,20 +156,6 @@ namespace Microsoft.PowerFx
             {
                 throw new NotImplementedException($"Unhandled symbol table kind: {symbolTable.DebugName} of type {symbolTable.GetType().FullName} ");
             }
-        }
-
-        public override object GetService(Type serviceType)
-        {
-            foreach (var table in _existing)
-            {
-                var service = table.GetService(serviceType);
-                if (service != null)
-                {
-                    return service;
-                }
-            }
-
-            return null;
         }
 
         /// <summary>

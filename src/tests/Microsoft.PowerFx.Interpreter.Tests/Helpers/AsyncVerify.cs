@@ -75,7 +75,7 @@ namespace Microsoft.PowerFx.Tests
 
         public async Task<FormulaValue> EvalAsync(RecalcEngine engine, string expr, InternalSetup setup)
         {
-            var rtConfig = new SymbolValues();
+            var rtConfig = new RuntimeConfig();
 
             if (setup.TimeZoneInfo != null)
             {

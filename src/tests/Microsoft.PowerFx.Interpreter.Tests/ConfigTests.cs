@@ -266,17 +266,17 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Fact]
         public void RecalcEngine_Symbol_CultureInfo()
         {
-            var us_Symbols = new SymbolValues();
+            var us_Symbols = new RuntimeConfig();
             var us_Culture = new CultureInfo("en-US");
             us_Symbols.AddService(us_Culture);
             var us_ParserOptions = new ParserOptions() { Culture = us_Culture };
 
-            var fr_Symbols = new SymbolValues();
+            var fr_Symbols = new RuntimeConfig();
             var fr_Culture = new CultureInfo("fr-FR");
             fr_Symbols.AddService(fr_Culture);
             var fr_ParserOptions = new ParserOptions() { Culture = fr_Culture };
 
-            var fa_Symbols = new SymbolValues();
+            var fa_Symbols = new RuntimeConfig();
             var fa_Culture = new CultureInfo("fa-IR");
             fa_Symbols.AddService(fa_Culture);
 
@@ -294,12 +294,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Fact]
         public void RecalcEngine_Symbol_CultureInfo2()
         {
-            var us_Symbols = new SymbolValues();
+            var us_Symbols = new RuntimeConfig();
             var us_Culture = new CultureInfo("en-US");
             us_Symbols.AddService(us_Culture);
             var us_ParserOptions = new ParserOptions() { Culture = us_Culture };
 
-            var fr_Symbols = new SymbolValues();
+            var fr_Symbols = new RuntimeConfig();
             var fr_Culture = new CultureInfo("fr-FR");
             fr_Symbols.AddService(fr_Culture);
             var fr_ParserOptions = new ParserOptions() { Culture = fr_Culture };
@@ -323,7 +323,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var config = new PowerFxConfig(CultureInfo.InvariantCulture);
             var engine = new RecalcEngine(config);
 
-            var tr_symbols = new SymbolValues();
+            var tr_symbols = new RuntimeConfig();
 
             tr_symbols.AddService(new CultureInfo("tr-TR"));
 
@@ -348,7 +348,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var config = new PowerFxConfig(CultureInfo.InvariantCulture);
             var engine = new RecalcEngine(config);
 
-            var us_symbols = new SymbolValues();
+            var us_symbols = new RuntimeConfig();
 
             us_symbols.AddService(new CultureInfo("en-US"));
 
@@ -561,8 +561,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             foreach (var name in new string[] { "Bill", "Steve", "Satya" })
             {
-                var runtime = new SymbolValues()
-                    .AddService(new UserFunction.Runtime { _name = name });
+                var runtime = new RuntimeConfig();
+                runtime.AddService(new UserFunction.Runtime { _name = name });
                 var result = await expr.EvalAsync(CancellationToken.None, runtime);
 
                 var expected = name + "3";
@@ -602,8 +602,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var s1 = new SymbolTable();
             s1.AddFunction(new UserFunction());
 
-            var runtime = new SymbolValues()
-                .AddService(new UserFunction.Runtime { _name = "Bill" });
+            var runtime = new RuntimeConfig();
+            runtime.AddService(new UserFunction.Runtime { _name = "Bill" });
 
             var engine = new RecalcEngine();
 
@@ -624,16 +624,17 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var s1 = new SymbolTable();
             s1.AddFunction(new UserFunction());
 
-            var r1 = new SymbolValues
-            {
-                DebugName = "Runtime-AddUserService"
-            }.AddService(new UserFunction.Runtime { _name = "Bill" });
-
+            
             var r2 = new SymbolValues
             {
                 DebugName = "Runtime-X",
             }.Add("x", FormulaValue.New(3));
-            var r12 = ReadOnlySymbolValues.Compose(r2, r1);
+
+            var r12 = new RuntimeConfig
+            {
+                 Values = r2
+            };
+            r12.AddService(new UserFunction.Runtime { _name = "Bill" });
 
             var engine = new RecalcEngine();
 
