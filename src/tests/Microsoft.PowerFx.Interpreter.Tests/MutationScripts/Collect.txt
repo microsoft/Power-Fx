@@ -1,8 +1,26 @@
 ﻿>> Set(x, { v :1 , t: [1,2,3]})
 {t:Table({Value:1},{Value:2},{Value:3}),v:1}
 
+>> 0;x.t
+Table({Value:1},{Value:2},{Value:3})
+
 >> With({ y : x.t}, Collect(y, { Value: 99}))
 {Value:99}
 
->> x.t
+>> 1;x.t
 Table({Value:1},{Value:2},{Value:3},{Value:99})
+
+>> Collect(x.t,{Value:88})
+{Value:88}
+
+>> 2;x.t
+Table({Value:1},{Value:2},{Value:3},{Value:99},{Value:88})
+
+>> Collect(x.t,Collect(x.t,{Value:77}));x.t
+Table({Value:1},{Value:2},{Value:3},{Value:99},{Value:88},{Value:77},{Value:77})
+
+>> Collect(x.t, With({z:x.v}, {Value:z}));x.t
+Table({Value:1},{Value:2},{Value:3},{Value:99},{Value:88},{Value:77},{Value:77},{Value:1})
+
+>> Collect(x.t, With({z:x.v}, Collect(x.t,{Value:z})));x.t
+Table({Value:1},{Value:2},{Value:3},{Value:99},{Value:88},{Value:77},{Value:77},{Value:1},{Value:1},{Value:1})
