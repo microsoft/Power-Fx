@@ -36,7 +36,7 @@ namespace Microsoft.PowerFx.Functions
         private static readonly Regex _hoursDetokenizeRegex = new Regex("[\u0006][\u0006]+", RegexOptions.Compiled);
         private static readonly Regex _minutesDetokenizeRegex = new Regex("[\u000A][\u000A]+", RegexOptions.Compiled);
         private static readonly Regex _secondsDetokenizeRegex = new Regex("[\u0008][\u0008]+", RegexOptions.Compiled);
-        private static readonly Regex _milisecondsDetokenizeRegex = new Regex("[\u000e][\u000e][\u000e]+", RegexOptions.Compiled);
+        private static readonly Regex _milisecondsDetokenizeRegex = new Regex("[\u000e]+", RegexOptions.Compiled);
 
         // Char is used for PA string escaping 
         public static FormulaValue Char(IRContext irContext, NumberValue[] args)
@@ -219,7 +219,14 @@ namespace Microsoft.PowerFx.Functions
                     {
                         // It's a number, formatted as date/time. Let's convert it to a date/time value first
                         var newDateTime = Library.NumberToDateTime(runner, context, IRContext.NotInSource(FormulaType.DateTime), new NumberValue[] { num });
-                        resultString = ExpandDateTimeExcelFormatSpecifiers(formatString, "g", newDateTime.Value, culture, runner.CancellationToken);
+                        try
+                        {
+                            resultString = ExpandDateTimeExcelFormatSpecifiers(formatString, "g", newDateTime.Value, culture, runner.CancellationToken);
+                        }
+                        catch (FormatException)
+                        {
+                            return CommonErrors.GenericInvalidArgument(irContext, StringResources.Get(TexlStrings.ErrTextInvalidFormat, culture.Name));
+                        }
                     }
                     else
                     {
@@ -253,7 +260,14 @@ namespace Microsoft.PowerFx.Functions
                     }
                     else
                     {
-                        resultString = ExpandDateTimeExcelFormatSpecifiers(formatString, "g", dateTimeValue.Value, culture, runner.CancellationToken);
+                        try
+                        {
+                            resultString = ExpandDateTimeExcelFormatSpecifiers(formatString, "g", dateTimeValue.Value, culture, runner.CancellationToken);
+                        }
+                        catch (FormatException)
+                        {
+                            return CommonErrors.GenericInvalidArgument(irContext, StringResources.Get(TexlStrings.ErrTextInvalidFormat, culture.Name));
+                        }
                     }
 
                     break;
@@ -416,9 +430,18 @@ namespace Microsoft.PowerFx.Functions
                           .Replace("\u0008", dateTime.ToString("%s", culture));
 
             // Milliseconds component
-            format = _milisecondsDetokenizeRegex.Replace(format, dateTime.ToString("fff", culture))
-                          .Replace("\u000E\u000E", dateTime.ToString("ff", culture))
-                          .Replace("\u000E", dateTime.ToString("%f", culture));
+            format = _milisecondsDetokenizeRegex.Replace(format, match =>
+            {
+                var len = match.Groups[0].Value.Length;
+                if (len > 7)
+                {
+                    // Exception will be replaced by an error in the caller
+                    throw new FormatException("Only 7 digits are supported");
+                }
+
+                var subSecondFormat = len == 1 ? "%f" : new string('f', len);
+                return dateTime.ToString(subSecondFormat, culture);
+            });
 
             // AM/PM component
             format = format.Replace("\u0001", dateTime.ToString("tt", culture))
