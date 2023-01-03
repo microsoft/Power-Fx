@@ -7,6 +7,7 @@ using System.Linq;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Diagnostics.Windows;
 using BenchmarkDotNet.Diagnostics.Windows.Configs;
+using BenchmarkDotNet.Jobs;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 
@@ -19,6 +20,7 @@ namespace Microsoft.PowerFx.Performance.Tests
     [MeanColumn]
     [Q3Column]
     [MaxColumn]
+    [SimpleJob(runtimeMoniker: RuntimeMoniker.NetCoreApp31)]
     public class PerformanceTest1
     {
         private PowerFxConfig _powerFxConfig;
