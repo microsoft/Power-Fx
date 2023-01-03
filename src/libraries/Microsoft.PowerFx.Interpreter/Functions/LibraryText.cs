@@ -219,14 +219,7 @@ namespace Microsoft.PowerFx.Functions
                     {
                         // It's a number, formatted as date/time. Let's convert it to a date/time value first
                         var newDateTime = Library.NumberToDateTime(runner, context, IRContext.NotInSource(FormulaType.DateTime), new NumberValue[] { num });
-                        try
-                        {
-                            resultString = ExpandDateTimeExcelFormatSpecifiers(formatString, "g", newDateTime.Value, culture, runner.CancellationToken);
-                        }
-                        catch (FormatException)
-                        {
-                            return CommonErrors.GenericInvalidArgument(irContext, StringResources.Get(TexlStrings.ErrTextInvalidFormat, culture.Name));
-                        }
+                        return ExpandDateTimeExcelFormatSpecifiers(irContext, formatString, "g", newDateTime.Value, culture, runner.CancellationToken);
                     }
                     else
                     {
@@ -260,14 +253,7 @@ namespace Microsoft.PowerFx.Functions
                     }
                     else
                     {
-                        try
-                        {
-                            resultString = ExpandDateTimeExcelFormatSpecifiers(formatString, "g", dateTimeValue.Value, culture, runner.CancellationToken);
-                        }
-                        catch (FormatException)
-                        {
-                            return CommonErrors.GenericInvalidArgument(irContext, StringResources.Get(TexlStrings.ErrTextInvalidFormat, culture.Name));
-                        }
+                        return ExpandDateTimeExcelFormatSpecifiers(irContext, formatString, "g", dateTimeValue.Value, culture, runner.CancellationToken);
                     }
 
                     break;
@@ -281,11 +267,11 @@ namespace Microsoft.PowerFx.Functions
             return CommonErrors.NotYetImplementedError(irContext, $"Text format for {args[0]?.GetType().Name}");
         }
 
-        internal static string ExpandDateTimeExcelFormatSpecifiers(string format, string defaultFormat, DateTime dateTime, CultureInfo culture, CancellationToken cancellationToken)
+        internal static FormulaValue ExpandDateTimeExcelFormatSpecifiers(IRContext irContext, string format, string defaultFormat, DateTime dateTime, CultureInfo culture, CancellationToken cancellationToken)
         {
             if (format == null)
             {
-                return dateTime.ToString(defaultFormat, culture);
+                return new StringValue(irContext, dateTime.ToString(defaultFormat, culture));
             }
 
             // DateTime format
@@ -301,9 +287,17 @@ namespace Microsoft.PowerFx.Functions
                 case "'longtime24'":
                 case "'longtime'":
                 case "'longdate'":
-                    return dateTime.ToString(ExpandDateTimeFormatSpecifiers(format, culture));
+                    return new StringValue(irContext, dateTime.ToString(ExpandDateTimeFormatSpecifiers(format, culture)));
                 default:
-                    return ResolveDateTimeFormatAmbiguities(format, dateTime, culture, cancellationToken);
+                    try
+                    {
+                        var stringResult = ResolveDateTimeFormatAmbiguities(format, dateTime, culture, cancellationToken);
+                        return new StringValue(irContext, stringResult);
+                    }
+                    catch (FormatException)
+                    {
+                        return CommonErrors.GenericInvalidArgument(irContext, StringResources.Get(TexlStrings.ErrTextInvalidFormat, culture.Name));
+                    }
             }
         }
 
