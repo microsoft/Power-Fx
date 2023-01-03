@@ -35,7 +35,9 @@ namespace Microsoft.PowerFx
         /// </summary>
         public ReadOnlySymbolValues Values { get; set; }
 
-        // $$$ Can this just be a IServiceProvider? But then how do we add to it?
+        /// <summary>
+        /// Mutable set of serivces for runtime functions and evaluation. 
+        /// </summary>
         public BasicServiceProvider Services { get; set; } = new BasicServiceProvider();
 
         IServiceProvider IRuntimeConfig.Services => Services;

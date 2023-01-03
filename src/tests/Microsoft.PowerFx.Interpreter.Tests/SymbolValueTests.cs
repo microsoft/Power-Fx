@@ -283,18 +283,14 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             public override int GetHashCode() => throw new NotImplementedException();
         }
-
-        /* $$$ Split this into 2 tests. 
+                
         // Test Composing symbol tables. 
         [Fact]
-        public void Compose()
+        public void Compose1()
         {
-            var culture1 = new CultureInfo("en-us");
-
             var r1 = new SymbolValues { DebugName = "L1" };
             r1.Add("x", FormulaValue.New("x1"));
-            r1.AddService(culture1);
-
+            
             var r2 = new SymbolValues { DebugName = "L2" };
             r2.Add("y", FormulaValue.New("y2"));
             r2.Add("x", FormulaValue.New("x2"));
@@ -313,19 +309,13 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             found = r3.TryGetValue("missing", out result);
             Assert.False(found);
             Assert.Null(result);
-
-            var culture2 = r3.GetService<CultureInfo>();
-            Assert.Same(culture1, culture2);
-
+            
             // Flipping the order changes precedence
             r3 = ReadOnlySymbolValues.Compose(r2, r1);
             found = r3.TryGetValue("x", out result);
             Assert.True(found);
-            Assert.Equal("x2", result.ToObject());
-
-            culture2 = r3.GetService<CultureInfo>();
-            Assert.Same(culture1, culture2);
-        }*/
+            Assert.Equal("x2", result.ToObject());            
+        }
 
         [Fact]
         public void ComposeNest()
