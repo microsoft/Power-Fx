@@ -36,7 +36,7 @@ namespace Microsoft.PowerFx
         {
             existing = existing.Where(x => x != null).ToArray();
 
-            var map = new Dictionary<ReadOnlySymbolTable, ReadOnlySymbolValues>();
+            var existingMap = new Dictionary<ReadOnlySymbolTable, ReadOnlySymbolValues>();
 
             // Graft in existing entries.
             // These take precedence and are all added first. 
@@ -57,16 +57,26 @@ namespace Microsoft.PowerFx
                             throw new InvalidOperationException($"ComposedSymbolValues should have been flattened ");
                         }
                         
-                        Add(map, kv.Value);
+                        Add(existingMap, kv.Value);
                     }
                 }
                 else
                 {
-                    Add(map, symValues);
+                    Add(existingMap, symValues);
                 }                
             }
-            
-            CreateValues(canCreateNew, map, symbolTable);
+
+            // CreateValues will remove from existingMap, so anything left is extra.
+            var map = new Dictionary<ReadOnlySymbolTable, ReadOnlySymbolValues>();
+            CreateValues(canCreateNew, existingMap, map, symbolTable);
+
+            if (existingMap.Count > 0)
+            {
+                // There were existing SymbolValues that don't match. 
+                var kv = existingMap.First();
+                var msg = $"SymbolValues '{kv.Value.DebugName}' matches to symbol table '{kv.Key.DebugName}', which is not part of symbol table '{symbolTable.DebugName}'.";
+                throw new InvalidOperationException(msg);
+            }
 
             // Optimization
             if (map.Count == 1)
@@ -98,6 +108,7 @@ namespace Microsoft.PowerFx
         // Walk the symbolTable tree and for each node, create the corresponding symbol values. 
         private static void CreateValues(
             bool canCreateNew,
+            Dictionary<ReadOnlySymbolTable, ReadOnlySymbolValues> existingMap,
             Dictionary<ReadOnlySymbolTable, ReadOnlySymbolValues> map,
             ReadOnlySymbolTable symbolTable)
         {
@@ -108,6 +119,14 @@ namespace Microsoft.PowerFx
 
             if (map.ContainsKey(symbolTable))
             {
+                // Common if this was set by existing SymbolValues.
+                return;
+            }
+
+            if (existingMap.TryGetValue(symbolTable, out var existingValues))
+            {
+                existingMap.Remove(symbolTable);
+                map.Add(symbolTable, existingValues);
                 return;
             }
 
@@ -115,11 +134,11 @@ namespace Microsoft.PowerFx
             {
                 foreach (var inner in composed.SubTables)
                 {
-                    CreateValues(canCreateNew, map, inner);
+                    CreateValues(canCreateNew, existingMap, map, inner);
                 }
 
 #pragma warning disable CS0618 // Type or member is obsolete
-                CreateValues(canCreateNew, map, symbolTable.Parent);
+                CreateValues(canCreateNew, existingMap, map, symbolTable.Parent);
 #pragma warning restore CS0618 // Type or member is obsolete
                 return;
             }
@@ -147,7 +166,7 @@ namespace Microsoft.PowerFx
                 };
 
 #pragma warning disable CS0618 // Type or member is obsolete
-                CreateValues(canCreateNew, map, symbolTable.Parent);
+                CreateValues(canCreateNew, existingMap, map, symbolTable.Parent);
 #pragma warning restore CS0618 // Type or member is obsolete
                 map[symbolTable] = symValues;
                 return;

@@ -687,6 +687,29 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var symValues1 = symTable1.CreateValues();
             run.Eval(symValues1);
         }
+                
+        // Fail when trying to eval with an extra SymbolValue that doesn't below.
+        [Fact]
+        public async Task MismatchedSymbolValues()
+        {
+            var symValue = new SymbolValues { DebugName = "Extra" };
+            var engine = new RecalcEngine();
+
+            // Succeeds since eval will get the symbol table from values 
+            await engine.EvalAsync("1+2", CancellationToken.None, runtimeConfig: symValue);
+
+            // Check() without binding to a symbol table
+            var check = engine.Check("1+2");
+            Assert.True(check.IsSuccess);
+
+            var run = check.GetEvaluator();
+
+            // Succeeds, no extra SymbolValues
+            await run.EvalAsync(CancellationToken.None, new RuntimeConfig());
+
+            // Fails, extra symbol Values 
+            await Assert.ThrowsAsync<InvalidOperationException>(async () => await run.EvalAsync(CancellationToken.None, new RuntimeConfig(symValue)));
+        }
 
         // Demonstrate how to use ThisItem in a loop.
         // All Loop iterations can access common global state,
