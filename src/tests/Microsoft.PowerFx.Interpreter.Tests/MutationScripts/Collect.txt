@@ -24,3 +24,9 @@ Table({Value:1},{Value:2},{Value:3},{Value:99},{Value:88},{Value:77},{Value:77},
 
 >> Collect(x.t, With({z:x.v}, Collect(x.t,{Value:z})));x.t
 Table({Value:1},{Value:2},{Value:3},{Value:99},{Value:88},{Value:77},{Value:77},{Value:1},{Value:1},{Value:1})
+
+>> Collect(x.t,{Value:200})
+{Value:200}
+
+>> Collect([1,2,3],{Value:200})
+{Value:200}
