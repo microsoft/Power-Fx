@@ -623,7 +623,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         {
             var s1 = new SymbolTable();
             s1.AddFunction(new UserFunction());
-
             
             var r2 = new SymbolValues
             {

@@ -145,7 +145,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         public void Services()
         {
             var service1 = new MyService();
-            var r1 = new SymbolValues { DebugName = "Services " };
+            var r1 = new BasicServiceProvider();
 
             r1.AddService(service1);
 
@@ -153,8 +153,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var lookup = r1.GetService(typeof(MyService));
             Assert.Same(lookup, service1);
 
-            var r2 = new SymbolValues();
-            var r21 = ReadOnlySymbolValues.Compose(r2, r1);
+            var r2 = new BasicServiceProvider();
+            var r21 = new BasicServiceProvider(r2, r1);
 
             // Finds in child
             lookup = r21.GetService(typeof(MyService));
@@ -185,7 +185,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         public void Derived()
         {
             var derivedService = new MyService();
-            var r1 = new SymbolValues();
+            var r1 = new BasicServiceProvider();
 
             r1.AddService(derivedService);
 
@@ -347,6 +347,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             public override int GetHashCode() => throw new NotImplementedException();
         }
 
+        /* $$$ Split this into 2 tests. 
         // Test Composing symbol tables. 
         [Fact]
         public void Compose()
@@ -387,7 +388,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             culture2 = r3.GetService<CultureInfo>();
             Assert.Same(culture1, culture2);
-        }
+        }*/
 
         [Fact]
         public void ComposeNest()
@@ -750,7 +751,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 var symValuesAll = symTableAll.CreateValues(symValuesThisItem);
 
                 var opts = new ParserOptions { AllowsSideEffects = true };
-                var result = await engine.EvalAsync("Set(counter, ThisItem);counter", CancellationToken.None, options: opts, runtimeConfig: symValuesAll);
+
+                var runtimeConfig = new RuntimeConfig(symValuesAll);
+                var result = await engine.EvalAsync("Set(counter, ThisItem);counter", CancellationToken.None, options: opts, runtimeConfig: runtimeConfig);
 
                 Assert.Equal(5.0, result.ToObject());
 

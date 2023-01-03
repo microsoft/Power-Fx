@@ -50,7 +50,6 @@ namespace Microsoft.PowerFx
             return await expr.EvalAsync(cancellationToken, new RuntimeConfig(runtimeConfig));
         }
 
-
         public static async Task<FormulaValue> EvalAsync(this IExpressionEvaluator expr, CancellationToken cancellationToken, ReadOnlySymbolValues symbolValues)
         {
             var runtimeConfig = new RuntimeConfig(symbolValues);
@@ -155,9 +154,14 @@ namespace Microsoft.PowerFx
             // var culture = runtimeConfig.GetService<CultureInfo>() ?? _cultureInfo;
             var runtimeConfig2 = new RuntimeConfig
             {
-                 Values = symbolValues,
-                 Services = runtimeConfig.Services // $$$ 
+                Values = symbolValues
             };
+
+            // $$$ Anti-pattern.
+            if (runtimeConfig != null)
+            {
+                runtimeConfig2.Services = runtimeConfig.Services;
+            }
 
             // If RuntimeConfig doesn't have a culture, fallback to the culture used for parsing. 
             var culture = runtimeConfig2.GetService<CultureInfo>();

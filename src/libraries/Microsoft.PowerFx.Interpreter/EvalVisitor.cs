@@ -31,13 +31,11 @@ namespace Microsoft.PowerFx
 
         private readonly CancellationToken _cancellationToken;
 
-<<<<<<< HEAD
         internal CancellationToken CancellationToken => _cancellationToken;
-=======
+
         private readonly IServiceProvider _services;
 
         public IServiceProvider FunctionServices => _services;
->>>>>>> Remove IServiceProvider from SymbolValues
 
         public CultureInfo CultureInfo => _cultureInfo;
 
