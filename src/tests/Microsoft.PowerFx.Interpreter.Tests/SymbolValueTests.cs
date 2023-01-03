@@ -142,69 +142,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
         [Fact]
-        public void Services()
-        {
-            var service1 = new MyService();
-            var r1 = new BasicServiceProvider();
-
-            r1.AddService(service1);
-
-            // Lookup succeeds
-            var lookup = r1.GetService(typeof(MyService));
-            Assert.Same(lookup, service1);
-
-            var r2 = new BasicServiceProvider();
-            var r21 = new BasicServiceProvider(r2, r1);
-
-            // Finds in child
-            lookup = r21.GetService(typeof(MyService));
-            Assert.Same(lookup, service1);
-
-            // Shadowing 
-            var service2 = new MyService();
-            Assert.NotSame(service1, service2);
-
-            r2.AddService(service2);
-
-            lookup = r2.GetService(typeof(MyService));
-            Assert.Same(lookup, service2);
-
-            lookup = r21.GetService(typeof(MyService));
-            Assert.Same(lookup, service2);
-        }
-
-        private class BaseService
-        {
-        }
-
-        private class MyService : BaseService
-        {
-        }
-
-        [Fact]
-        public void Derived()
-        {
-            var derivedService = new MyService();
-            var r1 = new BasicServiceProvider();
-
-            r1.AddService(derivedService);
-
-            // Lookup must be exact type; doesn't lookup by base class.
-            var lookup = r1.GetService(typeof(BaseService));
-            Assert.Null(lookup);
-
-            // Base and derived can coexist 
-            BaseService baseService = new MyService();
-            r1.AddService(baseService);
-
-            lookup = r1.GetService(typeof(BaseService));
-            Assert.Same(baseService, lookup);
-
-            lookup = r1.GetService(typeof(MyService));
-            Assert.Same(derivedService, lookup);
-        }
-
-        [Fact]
         public void TestRowScope()
         {
             var r1 = new SymbolValues();

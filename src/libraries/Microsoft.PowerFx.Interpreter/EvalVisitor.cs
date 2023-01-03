@@ -25,9 +25,7 @@ namespace Microsoft.PowerFx
     // Use Task for public methods, but ValueTask for internal methods that we expect to be mostly sync. 
     internal class EvalVisitor : IRNodeVisitor<ValueTask<FormulaValue>, EvalVisitorContext>
     {
-        private readonly CultureInfo _cultureInfo;
-
-        private readonly ReadOnlySymbolValues _runtimeConfig;
+        private readonly ReadOnlySymbolValues _symbolValues;
 
         private readonly CancellationToken _cancellationToken;
 
@@ -37,25 +35,16 @@ namespace Microsoft.PowerFx
 
         public IServiceProvider FunctionServices => _services;
 
-        public CultureInfo CultureInfo => _cultureInfo;
+        public CultureInfo CultureInfo { get; private set; }
 
-        /* $$$
-        public EvalVisitor(CultureInfo cultureInfo, CancellationToken cancellationToken, ReadOnlySymbolValues runtimeConfig = null)
+        public EvalVisitor(IRuntimeConfig config, CancellationToken cancellationToken)
         {
-            _defaultCultureInfo = cultureInfo;
-            _cancellationToken = cancellationToken;
-            _runtimeConfig = runtimeConfig;
-        }*/
-
-        public EvalVisitor(RuntimeConfig config, CancellationToken cancellationToken)
-        {
-            _runtimeConfig = config.Values; // may be null 
+            _symbolValues = config.Values; // may be null 
             _cancellationToken = cancellationToken;
 
             _services = config.Services ?? new BasicServiceProvider();
-            
-            // $$$ Pass in culture?
-            _cultureInfo = GetService<CultureInfo>();
+
+            CultureInfo = GetService<CultureInfo>();
         }
 
         /// <summary>
@@ -160,9 +149,9 @@ namespace Microsoft.PowerFx
             {
                 if (obj.Value is ISymbolSlot sym)
                 {
-                    if (_runtimeConfig != null)
+                    if (_symbolValues != null)
                     {
-                        _runtimeConfig.Set(sym, newValue);
+                        _symbolValues.Set(sym, newValue);
                         return FormulaValue.New(true);
                     }
 
@@ -621,9 +610,9 @@ namespace Microsoft.PowerFx
 
         private FormulaValue GetVariableOrFail(ResolvedObjectNode node, ISymbolSlot slot)
         {
-            if (_runtimeConfig != null)                
+            if (_symbolValues != null)                
             {
-                var value = _runtimeConfig.Get(slot);
+                var value = _symbolValues.Get(slot);
                 if (value != null)
                 {
                     return value;

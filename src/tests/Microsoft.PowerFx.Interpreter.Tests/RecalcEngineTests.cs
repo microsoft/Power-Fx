@@ -47,6 +47,8 @@ namespace Microsoft.PowerFx.Tests
                 $"{ns}.{nameof(IDynamicTypeMarshaller)}",
                 $"{ns}.{nameof(ObjectMarshallerProvider)}",
                 $"{ns}.{nameof(ObjectMarshaller)}",
+                $"{ns}.{nameof(BasicServiceProvider)}",
+                $"{ns}.{nameof(IRuntimeConfig)}",
                 $"{ns}.{nameof(RuntimeConfig)}",
                 $"{ns}.{nameof(PrimitiveMarshallerProvider)}",
                 $"{ns}.{nameof(PrimitiveTypeMarshaller)}",

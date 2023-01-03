@@ -9,11 +9,26 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx
 {
+    // This should have read-only views on all members. 
+    // Assume any field is nullable. 
+    public interface IRuntimeConfig
+    {
+        /// <summary>
+        /// This should match the SymbolTable provided at bind time. 
+        /// </summary>
+        public ReadOnlySymbolValues Values { get; }
+
+        /// <summary>
+        /// Services. 
+        /// </summary>
+        public IServiceProvider Services { get; }
+    }
+
     /// <summary>
     /// Runtime configuration for the execution of an expression.
     /// This can be reused across multiple evals - so it shouldn't have any state that expires such as a cancellation token. 
     /// </summary>
-    public sealed class RuntimeConfig
+    public sealed class RuntimeConfig : IRuntimeConfig
     {
         /// <summary>
         /// This should match the SymbolTable provided at bind time. 
@@ -23,14 +38,8 @@ namespace Microsoft.PowerFx
         // $$$ Can this just be a IServiceProvider? But then how do we add to it?
         public BasicServiceProvider Services { get; set; } = new BasicServiceProvider();
 
-        // Other services:
-        // CultureInfo, Timezone, Clock, 
-        // Stack depth 
-        // Max memory 
-        // Logging
-        // 
+        IServiceProvider IRuntimeConfig.Services => Services;
 
-        // $$$ Implicit conversion operator?
         public RuntimeConfig()
         {
         }
@@ -43,9 +52,15 @@ namespace Microsoft.PowerFx
         public RuntimeConfig(ReadOnlySymbolValues values, CultureInfo runtimeCulture)
         {
             Values = values;
-            AddService(runtimeCulture); // $$$ Nom utates the services... which could be shared. 
+            AddService(runtimeCulture);
         }
 
+        // Add services for runtime usage. This could include custom services used by a Functions,
+        // or builtin services like:
+        // - CultureInfo, Timezone, Clock, 
+        // - Stack depth 
+        // - Max memory 
+        // - Logging
         public void AddService<T>(T service)
         {
             Services.AddService(typeof(T), service);
@@ -54,65 +69,6 @@ namespace Microsoft.PowerFx
         public T GetService<T>()
         {
             return (T)Services.GetService(typeof(T));
-        }
-    }
-
-    // $$$
-    // Use existing?
-    // https://learn.microsoft.com/en-us/dotnet/api/microsoft.extensions.dependencyinjection.serviceprovider?view=dotnet-plat-ext-7.0 ? 
-    public sealed class BasicServiceProvider : IServiceProvider
-    {
-        private readonly IServiceProvider[] _inners;
-
-        private readonly Dictionary<Type, object> _services = new Dictionary<Type, object>();
-
-        public BasicServiceProvider() 
-            : this(null)
-        {
-        }
-
-        // Chain to an inner service. 
-        public BasicServiceProvider(params IServiceProvider[] inners)
-        {
-            _inners = (inners?.Length == 0) ? null : inners;
-        }
-
-        public void AddService<T>(T service)
-        {
-            AddService(typeof(T), service);
-        }
-
-        public void AddService(Type serviceType, object service)
-        {
-            if (serviceType == null)
-            {
-                throw new ArgumentNullException(nameof(serviceType));
-            }
-
-            _services[serviceType] = service ?? throw new ArgumentNullException(nameof(service));
-        }
-
-        // Null if service is missing 
-        public object GetService(Type serviceType)
-        {
-            if (!_services.TryGetValue(serviceType, out var service))
-            {
-                if (_inners != null)
-                {
-                    foreach (var inner in _inners)
-                    {
-                        service = inner.GetService(serviceType);
-                        if (service != null)
-                        {
-                            return service;
-                        }
-                    }
-                }
-
-                return null;
-            }
-
-            return service;
         }
     }
 }

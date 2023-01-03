@@ -19,7 +19,7 @@ namespace Microsoft.PowerFx
     /// </summary>
     public interface IExpressionEvaluator
     {
-        public Task<FormulaValue> EvalAsync(CancellationToken cancellationToken, RuntimeConfig runtimeConfig = null);
+        public Task<FormulaValue> EvalAsync(CancellationToken cancellationToken, IRuntimeConfig runtimeConfig = null);
     }
 
     // Extensions for adding evaluation methods. 
@@ -32,7 +32,7 @@ namespace Microsoft.PowerFx
             return expr.EvalAsync(CancellationToken.None, new RuntimeConfig(runtimeConfig)).Result;
         }
 
-        public static FormulaValue Eval(this IExpressionEvaluator expr, RuntimeConfig runtimeConfig = null)
+        public static FormulaValue Eval(this IExpressionEvaluator expr, IRuntimeConfig runtimeConfig = null)
         {
             return expr.EvalAsync(CancellationToken.None, runtimeConfig).Result;
         }
@@ -143,7 +143,7 @@ namespace Microsoft.PowerFx
             }
         }
 
-        public async Task<FormulaValue> EvalAsync(CancellationToken cancellationToken, RuntimeConfig runtimeConfig = null)
+        public async Task<FormulaValue> EvalAsync(CancellationToken cancellationToken, IRuntimeConfig runtimeConfig = null)
         {
             ReadOnlySymbolValues symbolValues = ComposedReadOnlySymbolValues.New(
                 false,
@@ -151,24 +151,19 @@ namespace Microsoft.PowerFx
                 runtimeConfig?.Values,
                 _globals);
 
-            // var culture = runtimeConfig.GetService<CultureInfo>() ?? _cultureInfo;
+            IServiceProvider innerServices = null;
+            if (_cultureInfo != null)
+            {
+                var temp = new BasicServiceProvider();
+                temp.AddService(_cultureInfo);
+                innerServices = temp;
+            }
+
             var runtimeConfig2 = new RuntimeConfig
             {
-                Values = symbolValues
+                Values = symbolValues,
+                Services = new BasicServiceProvider(runtimeConfig?.Services, innerServices)
             };
-
-            // $$$ Anti-pattern.
-            if (runtimeConfig != null)
-            {
-                runtimeConfig2.Services = runtimeConfig.Services;
-            }
-
-            // If RuntimeConfig doesn't have a culture, fallback to the culture used for parsing. 
-            var culture = runtimeConfig2.GetService<CultureInfo>();
-            if (culture == null && _cultureInfo != null)
-            {
-                runtimeConfig2.SetCulture(_cultureInfo);
-            }
 
             var evalVisitor = new EvalVisitor(runtimeConfig2, cancellationToken);
 
