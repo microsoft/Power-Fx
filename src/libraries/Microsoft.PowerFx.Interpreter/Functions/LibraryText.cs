@@ -433,12 +433,6 @@ namespace Microsoft.PowerFx.Functions
             format = _milisecondsDetokenizeRegex.Replace(format, match =>
             {
                 var len = match.Groups[0].Value.Length;
-                if (len > 7)
-                {
-                    // Exception will be replaced by an error in the caller
-                    throw new FormatException("Only 7 digits are supported");
-                }
-
                 var subSecondFormat = len == 1 ? "%f" : new string('f', len);
                 return dateTime.ToString(subSecondFormat, culture);
             });
