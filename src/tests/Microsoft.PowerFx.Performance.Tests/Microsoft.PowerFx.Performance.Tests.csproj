@@ -10,6 +10,7 @@
     <LangVersion>9.0</LangVersion>
     <AssemblyName>Microsoft.PowerFx.Performance.Tests</AssemblyName>
     <SignAssembly>False</SignAssembly>
+    <DelaySign>False</DelaySign>
   </PropertyGroup>
 
   <ItemGroup>
