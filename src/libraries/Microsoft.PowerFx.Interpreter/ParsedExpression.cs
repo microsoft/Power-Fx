@@ -162,7 +162,7 @@ namespace Microsoft.PowerFx
             var runtimeConfig2 = new RuntimeConfig
             {
                 Values = symbolValues,
-                Services = new BasicServiceProvider(runtimeConfig?.Services, innerServices)
+                ServiceProvider = new BasicServiceProvider(runtimeConfig?.ServiceProvider, innerServices)
             };
 
             var evalVisitor = new EvalVisitor(runtimeConfig2, cancellationToken);

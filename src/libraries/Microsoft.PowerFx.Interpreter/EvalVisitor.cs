@@ -42,7 +42,7 @@ namespace Microsoft.PowerFx
             _symbolValues = config.Values; // may be null 
             _cancellationToken = cancellationToken;
 
-            _services = config.Services ?? new BasicServiceProvider();
+            _services = config.ServiceProvider ?? new BasicServiceProvider();
 
             CultureInfo = GetService<CultureInfo>();
         }

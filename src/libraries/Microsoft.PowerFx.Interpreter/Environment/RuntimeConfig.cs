@@ -19,9 +19,9 @@ namespace Microsoft.PowerFx
         public ReadOnlySymbolValues Values { get; }
 
         /// <summary>
-        /// Services. 
+        /// Mutable set of serivces for runtime functions and evaluation. 
         /// </summary>
-        public IServiceProvider Services { get; }
+        public IServiceProvider ServiceProvider { get; }
     }
 
     /// <summary>
@@ -38,9 +38,9 @@ namespace Microsoft.PowerFx
         /// <summary>
         /// Mutable set of serivces for runtime functions and evaluation. 
         /// </summary>
-        public BasicServiceProvider Services { get; set; } = new BasicServiceProvider();
+        public BasicServiceProvider ServiceProvider { get; set; } = new BasicServiceProvider();
 
-        IServiceProvider IRuntimeConfig.Services => Services;
+        IServiceProvider IRuntimeConfig.ServiceProvider => ServiceProvider;
 
         public RuntimeConfig()
         {
@@ -65,12 +65,12 @@ namespace Microsoft.PowerFx
         // - Logging
         public void AddService<T>(T service)
         {
-            Services.AddService(typeof(T), service);
+            ServiceProvider.AddService(typeof(T), service);
         }
 
         public T GetService<T>()
         {
-            return (T)Services.GetService(typeof(T));
+            return (T)ServiceProvider.GetService(typeof(T));
         }
     }
 }
