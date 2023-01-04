@@ -140,8 +140,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var engine = new RecalcEngine(config);
 
             var expr = "Set(x, x+1);x";
-            
-            var result = engine.EvalAsync(expr, CancellationToken.None, options: _opts, runtimeConfig: sym).Result;
+
+            var runtimeConfig = new RuntimeConfig(sym);
+            var result = engine.EvalAsync(expr, CancellationToken.None, options: _opts, runtimeConfig: runtimeConfig).Result;
             Assert.Equal(13.0, result.ToObject());
 
             result = sym.Get(slotX);
@@ -263,7 +264,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             foreach (var symValue in new[] { symValues1, symValues2 })
             {
-                var result = eval.EvalAsync(CancellationToken.None, runtimeConfig: symValue);
+                var runtimeConfig = new RuntimeConfig(symValue);
+                var result = eval.EvalAsync(CancellationToken.None, runtimeConfig: runtimeConfig);
             }
 
             AssertValue(symValues1, "num", 15.0);
@@ -290,7 +292,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             config.EnableSetFunction();
             var engine = new RecalcEngine(config);
 
-            var result = engine.EvalAsync(expr, CancellationToken.None, options: _opts, runtimeConfig: sym).Result;
+            var runtimeConfig = new RuntimeConfig(sym);
+            var result = engine.EvalAsync(expr, CancellationToken.None, options: _opts, runtimeConfig: runtimeConfig).Result;
 
             Assert.Equal(12.0, result.ToObject());
 
@@ -344,7 +347,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.True(check1.IsSuccess);
 
             // Verify evaluation. 
-            var result = engine.EvalAsync(expr, CancellationToken.None, options: _opts, runtimeConfig: sym).Result;
+            var runtimeConfig = new RuntimeConfig(sym);
+            var result = engine.EvalAsync(expr, CancellationToken.None, options: _opts, runtimeConfig: runtimeConfig).Result;
 
             Assert.Equal(25.0, result.ToObject());
 
