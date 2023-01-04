@@ -18,10 +18,11 @@ namespace Microsoft.PowerFx.Performance.Tests
     [MinColumn]
     [Q1Column]
     [MeanColumn]
+    [MedianColumn]
     [Q3Column]
     [MaxColumn]
     [SimpleJob(runtimeMoniker: RuntimeMoniker.NetCoreApp31)]
-    public class PerformanceTest1
+    public class BasicPerformance
     {
         private PowerFxConfig _powerFxConfig;
         private Engine _engine;
