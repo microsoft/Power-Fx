@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Text.Json.Serialization;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Utils;
@@ -21,17 +20,14 @@ namespace Microsoft.PowerFx.Core
         public SchemaTypeName Type { get; set; }
 
         // Optional, description for the type
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string Description { get; set; }        
 
         // Optional, help link for the type
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string Help { get; set; }
 
         /// <summary>
         /// Optional. For Records and Tables, contains the list of fields.
         /// </summary>
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public Dictionary<string, FormulaTypeSchema> Fields { get; set; }
 
         public FormulaType ToFormulaType(DefinedTypeSymbolTable definedTypeSymbols)
@@ -115,7 +111,6 @@ namespace Microsoft.PowerFx.Core
     {
         public string Name { get; init; }
 
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public bool IsTable { get; init; }
 
         public static SchemaTypeName RecordTypeName => new () { Name = "Record", IsTable = false };

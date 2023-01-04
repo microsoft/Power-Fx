@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.PowerFx;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
@@ -259,6 +260,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 RecordValue parameters;
                 var iSetup = InternalSetup.Parse(setupHandlerName);
                 var config = new PowerFxConfig(features: iSetup.Features);
+                config.EnableParseJSONFunction();
 
                 if (string.Equals(iSetup.HandlerName, "AsyncTestSetup", StringComparison.OrdinalIgnoreCase))
                 {

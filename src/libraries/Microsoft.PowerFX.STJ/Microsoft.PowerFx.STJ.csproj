@@ -10,17 +10,17 @@
   <!-- Nuget Properties -->
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <PackageId>Microsoft.PowerFx.Core</PackageId>
-    <Title>Microsoft Power Fx Compiler</Title>
-    <Description>The core library for all Microsoft Power Fx Compiler targets</Description>
-    <Summary>The core library for all Microsoft Power Fx Compiler targets</Summary>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <PackageId>Microsoft.PowerFx.STJ</PackageId>
+    <Title>Microsoft Power Fx JSON</Title>
+    <Description>The library for all Microsoft Power Fx JSON functionalities</Description>
+    <Summary>The library for all Microsoft Power Fx JSON functionalities</Summary>
+    <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <GenerateNeutralResourcesLanguageAttribute>false</GenerateNeutralResourcesLanguageAttribute>
+    <AssemblyOriginatorKeyFile>..\..\..\src\build\35MSSharedLib1024.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Collections.Immutable" Version="5.0.0" />
-    <PackageReference Include="System.Memory" Version="4.5.4" />
+    <PackageReference Include="System.Text.Json" Version="5.0.2" />
   </ItemGroup>
 
   <ItemGroup>
@@ -34,6 +34,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Microsoft.PowerFx.Transport.Attributes\Microsoft.PowerFx.Transport.Attributes.csproj" />
+    <ProjectReference Include="..\Microsoft.PowerFx.Core\Microsoft.PowerFx.Core.csproj" />
+    <ProjectReference Include="..\Microsoft.PowerFx.Interpreter\Microsoft.PowerFx.Interpreter.csproj" />
   </ItemGroup>
 </Project>

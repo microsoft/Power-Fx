@@ -24,34 +24,11 @@ namespace Microsoft.PowerFx
         private readonly RecordType _contextType;
         private readonly ParserOptions _parserOptions;
         
-        private RecalcEngineScope(Engine engine, RecordType contextType, ParserOptions options)
+        public RecalcEngineScope(Engine engine, RecordType contextType, ParserOptions options)
         {
             _engine = engine;
             _contextType = contextType;
             _parserOptions = options;
-        }
-
-        public static RecalcEngineScope FromRecord(Engine engine, RecordType type, ParserOptions options = null)
-        {
-            return new RecalcEngineScope(engine, type, options);
-        }
-
-        public static RecalcEngineScope FromUri(Engine engine, string uri, ParserOptions options = null)
-        {
-            var uriObj = new Uri(uri);
-            var contextJson = HttpUtility.ParseQueryString(uriObj.Query).Get("context");
-            if (contextJson == null)
-            {
-                contextJson = "{}";
-            }
-
-            return FromJson(engine, contextJson, options);
-        }
-
-        public static RecalcEngineScope FromJson(Engine engine, string json, ParserOptions options = null)
-        {
-            var context = FormulaValue.FromJson(json);
-            return FromRecord(engine, (RecordType)context.Type, options);
         }
 
         public CheckResult Check(string expression)

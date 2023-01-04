@@ -10,18 +10,16 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata
     /// <summary>
     /// This represents a delegatable operation metadata about the imported delegatable CdpDataSourceInfo.
     /// </summary>
-    internal sealed partial class DelegationMetadata : IDelegationMetadata
+    internal partial class DelegationMetadataBase : IDelegationMetadata
     {
         private readonly CompositeCapabilityMetadata _compositeMetadata;
 
-        public DelegationMetadata(DType schema, string delegationMetadataJson)
+        public DelegationMetadataBase(DType schema, CompositeCapabilityMetadata compositeMetadata)
         {
             Contracts.AssertValid(schema);
+            Contracts.AssertValue(compositeMetadata);
 
-            var metadataParser = new DelegationMetadataParser();
-            _compositeMetadata = metadataParser.Parse(delegationMetadataJson, schema);
-            Contracts.AssertValue(_compositeMetadata);
-
+            _compositeMetadata = compositeMetadata;
             Schema = schema;
         }
 

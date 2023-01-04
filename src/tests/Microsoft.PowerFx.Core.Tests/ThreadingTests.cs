@@ -40,6 +40,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "DelegationCapability._operatorToDelegationCapabilityMap",
                 "ODataFunctionMappings.BinaryOpToOperatorMap",
                 "ODataFunctionMappings.UnaryOpToOperatorMap",
+                "PowerFxConfig.ParseJSONImpl",
                        
                 // Potential bugs, Need more review...
                 "ArgumentSuggestions.CustomFunctionSuggestionProviders",

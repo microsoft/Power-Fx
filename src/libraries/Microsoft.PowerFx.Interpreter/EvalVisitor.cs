@@ -12,10 +12,12 @@ using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.IR.Symbols;
+using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
+using static Microsoft.PowerFx.Engine;
 using static Microsoft.PowerFx.Functions.Library;
 
 namespace Microsoft.PowerFx

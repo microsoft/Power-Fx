@@ -10,7 +10,6 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
     <PackageReference Include="xunit" Version="2.4.1" />
     <PackageReference Include="xunit.extensibility.core" Version="2.4.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
@@ -25,18 +24,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\libraries\Microsoft.PowerFX.STJ\Microsoft.PowerFx.STJ.csproj" />
     <ProjectReference Include="..\Microsoft.PowerFx.Core.Tests\Microsoft.PowerFx.Core.Tests.csproj" />
     <ProjectReference Include="..\..\libraries\Microsoft.PowerFx.Interpreter\Microsoft.PowerFx.Interpreter.csproj" />
-    <ProjectReference Include="..\..\libraries\Microsoft.PowerFx.LanguageServerProtocol\Microsoft.PowerFx.LanguageServerProtocol.csproj" />
+    <ProjectReference Include="..\..\libraries\Microsoft.PowerFX.STJ\Microsoft.PowerFx.STJ.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="MutationScripts\**">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <None Update="InterpreterExpressionTestCases\*.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
+  
 </Project>

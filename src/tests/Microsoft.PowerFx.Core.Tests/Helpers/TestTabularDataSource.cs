@@ -130,7 +130,7 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
 
         public IExternalTableMetadata TableMetadata => throw new NotImplementedException();
 
-        public DelegationMetadata DelegationMetadata => throw new NotImplementedException();
+        public DelegationMetadataBase DelegationMetadata => throw new NotImplementedException();
 
         public DName EntityName => new DName(Name);
 

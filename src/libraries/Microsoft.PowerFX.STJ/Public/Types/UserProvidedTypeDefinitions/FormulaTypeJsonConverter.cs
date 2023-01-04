@@ -16,6 +16,13 @@ namespace Microsoft.PowerFx.Core
     {
         private readonly DefinedTypeSymbolTable _definedTypes;
 
+        private static readonly ISet<string> _jsonIgnoreWhenNull = new HashSet<string>()
+        {
+            "Description",
+            "Help",
+            "Fields",
+        };
+
         public FormulaTypeJsonConverter(DefinedTypeSymbolTable definedTypes)
         {
             _definedTypes = definedTypes;
@@ -30,7 +37,21 @@ namespace Microsoft.PowerFx.Core
         public override void Write(Utf8JsonWriter writer, FormulaType value, JsonSerializerOptions options)
         {
             var schemaPoco = value.ToSchema(_definedTypes);
-            JsonSerializer.Serialize(writer, schemaPoco, options);
+
+            writer.WriteStartObject();
+
+            using (var document = JsonDocument.Parse(JsonSerializer.Serialize(schemaPoco, options)))
+            {
+                foreach (var property in document.RootElement.EnumerateObject())
+                {
+                    if (!(_jsonIgnoreWhenNull.Contains(property.Name) && property.Value.ValueKind == JsonValueKind.Null))
+                    {
+                        property.WriteTo(writer);
+                    }
+                }
+            }
+
+            writer.WriteEndObject();
         }
     }
 }

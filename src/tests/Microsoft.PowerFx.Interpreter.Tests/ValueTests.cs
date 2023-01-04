@@ -270,7 +270,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Fact]
         public void SingleColumnTable()
         {
-            TableValue value = (TableValue)FormulaValue.FromJson("[1,2,3]");
+            TableValue value = (TableValue)FormulaValueJSON.FromJson("[1,2,3]");
 
             TableType type = (TableType)value.Type;
 

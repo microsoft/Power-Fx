@@ -5,6 +5,7 @@ using System.IO;
 using System.Text.Json;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Tests.Helpers;
+using Microsoft.PowerFx.STJ;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
@@ -102,7 +103,8 @@ namespace Microsoft.PowerFx.Tests
                 {
                     // Serialize types without accounting for any defined type names
                     new FormulaTypeJsonConverter(new DefinedTypeSymbolTable())
-                }
+                },
+                DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault
             });
         }
 
@@ -116,7 +118,8 @@ namespace Microsoft.PowerFx.Tests
                 {
                     // Serialize types without accounting for any defined type names
                     new FormulaTypeJsonConverter(new DefinedTypeSymbolTable())
-                }
+                },
+                DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault
             });
         }
 
