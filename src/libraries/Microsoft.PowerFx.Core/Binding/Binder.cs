@@ -121,7 +121,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
         public bool HasLocalScopeReferences { get; private set; }
 
-        public ErrorContainer ErrorContainer { get; } = new ErrorContainer();
+        public ErrorContainer ErrorContainer { get; set; } = new ErrorContainer();
 
         /// <summary>
         /// The maximum number of selects in a table that will be included in data call.
