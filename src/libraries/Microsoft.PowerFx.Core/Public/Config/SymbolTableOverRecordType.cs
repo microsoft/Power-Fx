@@ -30,7 +30,6 @@ namespace Microsoft.PowerFx
         {
             _type = type;
             _debugName = "per-eval";
-            _parent = parent;
             _mutable = mutable;
             _allowThisRecord = allowThisRecord;
 
