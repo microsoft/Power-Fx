@@ -530,6 +530,28 @@
   <data name="AboutBooleanNT_input" xml:space="preserve">
     <value>En kolonne af numeriske værdier, der skal behandles.</value>
   </data>
+  <data name="AboutBooleanB" xml:space="preserve">
+    <value>Konverterer en "boolesk" til en boolesk værdi.</value>
+    
+  </data>
+  <data name="BooleanBArg1" xml:space="preserve">
+    <value>boolesk</value>
+    
+  </data>
+  <data name="AboutBooleanB_boolean" xml:space="preserve">
+    <value>Den booleske værdi, der skal konverteres til en boolesk værdi.</value>
+  </data>
+  <data name="AboutBooleanBT" xml:space="preserve">
+    <value>Konverterer en kolonne med booleske værdier til en kolonne med booleske værdier.</value>
+    
+  </data>
+  <data name="BooleanBTArg1" xml:space="preserve">
+    <value>input</value>
+    
+  </data>
+  <data name="AboutBooleanBT_input" xml:space="preserve">
+    <value>En kolonne med booleske værdier, der skal behandles.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Returnerer det første ikke-tomme argument</value>
     
@@ -1367,6 +1389,23 @@
   <data name="AboutDegrees_input" xml:space="preserve">
     <value>En kolonne med numeriske værdier (i radianer), der skal behandles.</value>
   </data>
+  <data name="AboutDistinct" xml:space="preserve">
+    <value>Evaluerer et udtryk over en eller flere af tabellens kolonner og returnerer en tabel med én kolonne, der indeholder specifikke (unikke) værdier for det evaluerede udtryk.</value>
+  </data>
+  <data name="DistinctArg1" xml:space="preserve">
+    <value>kilde</value>
+    
+  </data>
+  <data name="DistinctArg2" xml:space="preserve">
+    <value>udtryk</value>
+    
+  </data>
+  <data name="AboutDistinct_source" xml:space="preserve">
+    <value>En tabel, hvorfra specifikke værdier bliver udtrukket.</value>
+  </data>
+  <data name="AboutDistinct_expression" xml:space="preserve">
+    <value>Et udtryk, der evalueres for hver række i input-tabellen, og som giver værdier for den specifikke handling.</value>
+  </data>
   <data name="AboutAtan2" xml:space="preserve">
     <value>Returnerer buetangenten (i radianer) for de angivne x- og y-koordinater.</value>
   </data>
@@ -1798,6 +1837,14 @@
     <value>Numerisk værdi er for stor.</value>
     
   </data>
+  <data name="ErrTextFormatTooLarge" xml:space="preserve">
+    <value>Formatstrengstørrelsen må ikke være mere end {0} tegn.</value>
+    
+  </data>
+  <data name="ErrTextInvalidFormat" xml:space="preserve">
+    <value>Ugyldigt format.</value>
+    
+  </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
     <value>Datakilden er ugyldig. Udbedr fejlen i datakildepanelet ved at klikke på "Indhold-&gt; Datakilder" eller "Se-&gt; Indstillinger"</value>
     
@@ -1852,6 +1899,10 @@
   </data>
   <data name="ErrSortWrongType" xml:space="preserve">
     <value>Kan ikke sortere efter udtrykstypen.</value>
+    
+  </data>
+  <data name="ErrDistinctWrongType" xml:space="preserve">
+    <value>Kan ikke anvende særskilt på udtrykstypen.</value>
     
   </data>
   <data name="ErrFunctionDoesNotAcceptThisType_Function_Expected" xml:space="preserve">
@@ -3268,6 +3319,38 @@
     <value>Temaet Kontrast</value>
     
   </data>
+  <data name="AboutCollect" xml:space="preserve">
+    <value>Føjer poster til en datakilde.</value>
+    
+  </data>
+  <data name="CollectDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="CollectRecordArg" xml:space="preserve">
+    <value>post</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>Sletter alle poster i en samling. Kolonnerne i samlingen forbliver.</value>
+    
+  </data>
+  <data name="AboutClearCollect" xml:space="preserve">
+    <value>Sletter alle poster fra en samling. Og tilføjer derefter et andet sæt poster til den samme samling.</value>
+    
+  </data>
+  <data name="ClearCollectionArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="ClearCollectDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="ClearCollectRecordArg" xml:space="preserve">
+    <value>post</value>
+    
+  </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>Anvender opdateringerne til den angivne række og ændrer rækken i den angivne datakilde. Returnerer den opdaterede række.</value>
     
@@ -4398,6 +4481,10 @@
     <value>Artikel: Formelreference til Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrRecordDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
+    <value>Inkompatibel type. Det element, du forsøger at sætte i en record, har en type, der ikke er kompatibel med denne record.</value>
+    
+  </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
     <value>Inkompatibel type. Det element, du forsøger at sætte i en tabel, har en type, der ikke er kompatibel med tabellen.</value>
     
@@ -4725,6 +4812,18 @@
   </data>
   <data name="ErrDeprecated" xml:space="preserve">
     <value>Denne funktion udfases og understøttes ikke længere.</value>
+    
+  </data>
+  <data name="WarnDeferredType" xml:space="preserve">
+    <value>Advarsel: Udskudt type leveret.</value>
+    
+  </data>
+  <data name="ErrExpectedIdentifierArg_Name" xml:space="preserve">
+    <value>Navn på forventet id</value>
+    
+  </data>
+  <data name="ErrInvalidFunction" xml:space="preserve">
+    <value>Denne funktion er entydig. Den indeholder lambda-udtryk og kolonne-id'er for det samme argument.</value>
     
   </data>
 </root>
