@@ -530,6 +530,28 @@
   <data name="AboutBooleanNT_input" xml:space="preserve">
     <value>Käsiteltävien numeroarvojen sarake.</value>
   </data>
+  <data name="AboutBooleanB" xml:space="preserve">
+    <value>Muuntaa totuusarvotyypin totuusarvoksi.</value>
+    
+  </data>
+  <data name="BooleanBArg1" xml:space="preserve">
+    <value>totuusarvo</value>
+    
+  </data>
+  <data name="AboutBooleanB_boolean" xml:space="preserve">
+    <value>Totuusarvoksi muunnettava totuusarvo.</value>
+  </data>
+  <data name="AboutBooleanBT" xml:space="preserve">
+    <value>Muuntaa totuusarvojen sarakkeen totuusarvojen sarakkeeksi.</value>
+    
+  </data>
+  <data name="BooleanBTArg1" xml:space="preserve">
+    <value>syöte</value>
+    
+  </data>
+  <data name="AboutBooleanBT_input" xml:space="preserve">
+    <value>Käsiteltävä totuusarvosarake.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Palauttaa ensimmäisen muun kuin tyhjän argumentin</value>
     
@@ -1367,6 +1389,23 @@
   <data name="AboutDegrees_input" xml:space="preserve">
     <value>Käsiteltävien numeroarvojen (radiaaneina) sarake.</value>
   </data>
+  <data name="AboutDistinct" xml:space="preserve">
+    <value>Arvioi lausekkeen taulukon yhden usean sarakkeen suhteen ja palauttaa yksisarakkeisen taulukon, joka sisältää erilaisia (yksilöiviä) arvoja arvioidulle lausekkeelle.</value>
+  </data>
+  <data name="DistinctArg1" xml:space="preserve">
+    <value>lähde</value>
+    
+  </data>
+  <data name="DistinctArg2" xml:space="preserve">
+    <value>lauseke</value>
+    
+  </data>
+  <data name="AboutDistinct_source" xml:space="preserve">
+    <value>Taulukko, josta erilaiset (distinct) arvot poimitaan.</value>
+  </data>
+  <data name="AboutDistinct_expression" xml:space="preserve">
+    <value>Syötetaulukon kullekin riville arvioitava lauseke, joka antaa arvot Distinct-toiminnolle.</value>
+  </data>
   <data name="AboutAtan2" xml:space="preserve">
     <value>Palauttaa määritettyjen x- ja y-koordinaattien arkustagentin (radiaaneina).</value>
   </data>
@@ -1798,6 +1837,14 @@
     <value>Numeerinen arvo on liian suuri.</value>
     
   </data>
+  <data name="ErrTextFormatTooLarge" xml:space="preserve">
+    <value>Muodon merkkijonon koko voi olla enintään {0} merkkiä.</value>
+    
+  </data>
+  <data name="ErrTextInvalidFormat" xml:space="preserve">
+    <value>Virheellinen muoto.</value>
+    
+  </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
     <value>Tämä tietolähde on virheellinen. Korjaa virhe Tietolähteet-ruudussa valitsemalla Sisältö -&gt; Tietolähteet tai Näytä -&gt; Asetukset</value>
     
@@ -1852,6 +1899,10 @@
   </data>
   <data name="ErrSortWrongType" xml:space="preserve">
     <value>Lausekkeen tyypin mukaan ei voi lajitella.</value>
+    
+  </data>
+  <data name="ErrDistinctWrongType" xml:space="preserve">
+    <value>Tälle lauseketyypille ei voi käyttää distinct-toimintoa.</value>
     
   </data>
   <data name="ErrFunctionDoesNotAcceptThisType_Function_Expected" xml:space="preserve">
@@ -3268,6 +3319,38 @@
     <value>Kontrasti-teema</value>
     
   </data>
+  <data name="AboutCollect" xml:space="preserve">
+    <value>Lisää tietueet tietolähteeseen.</value>
+    
+  </data>
+  <data name="CollectDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="CollectRecordArg" xml:space="preserve">
+    <value>record</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>Poistaa kaikki kokoelman tietueet. Kokoelman sarakkeet säilyvät.</value>
+    
+  </data>
+  <data name="AboutClearCollect" xml:space="preserve">
+    <value>Poistaa kaikki tietueet kokoelmasta. Lisää sitten toisen tietuejoukon samaan kokoelmaan.</value>
+    
+  </data>
+  <data name="ClearCollectionArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="ClearCollectDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="ClearCollectRecordArg" xml:space="preserve">
+    <value>record</value>
+    
+  </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>Ottaa päivitykset käyttöön määritetylle riville ja muuttaa rivin määritetyssä tietolähteessä. Palauttaa päivitetyn rivin.</value>
     
@@ -4398,6 +4481,10 @@
     <value>Artikkeli: Power Appsin kaavojen viiteopas</value>
     
   </data>
+  <data name="ErrorResource_ErrRecordDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
+    <value>Yhteensopimaton tyyppi. Kohteella, jonka yrität sijoittaa tietueeseen, on tyyppi, joka ei ole yhteensopiva tietueen kanssa.</value>
+    
+  </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
     <value>Yhteensopimaton tyyppi. Kohteella, jonka yrität sijoittaa taulukkoon, on tyyppi, joka ei ole yhteensopiva taulukon kanssa.</value>
     
@@ -4725,6 +4812,18 @@
   </data>
   <data name="ErrDeprecated" xml:space="preserve">
     <value>Tämä ominaisuus on vanhentunut, eikä sitä enää tueta.</value>
+    
+  </data>
+  <data name="WarnDeferredType" xml:space="preserve">
+    <value>Varoitus: lykätty tyyppi annettu.</value>
+    
+  </data>
+  <data name="ErrExpectedIdentifierArg_Name" xml:space="preserve">
+    <value>Odotettu tunnuksen nimi</value>
+    
+  </data>
+  <data name="ErrInvalidFunction" xml:space="preserve">
+    <value>Tämä funktio on epäselvä, se sisältää Lambda-lausekkeita ja saraketunnisteita samalle argumentille.</value>
     
   </data>
 </root>
