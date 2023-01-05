@@ -235,13 +235,14 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         // Add an extra (empy) symbol table into the config and ensure we get the same results. 
         private void AdjustConfig(PowerFxConfig config)
         {
+            /*
             config.SymbolTable = new SymbolTable 
             {
 #pragma warning disable CS0618 // Type or member is obsolete
                 Parent = config.SymbolTable,
 #pragma warning restore CS0618 // Type or member is obsolete
                 DebugName = "Extra Table"
-            };
+            };*/
         }
 
         /// <summary>
