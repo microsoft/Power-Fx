@@ -7,6 +7,8 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Numerics;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Entities;
@@ -25,6 +27,7 @@ using Microsoft.PowerFx.Core.Logging.Trackers;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
+using Microsoft.PowerFx.Types;
 using static Microsoft.PowerFx.Core.IR.IRTranslator;
 using CallNode = Microsoft.PowerFx.Syntax.CallNode;
 using IRCallNode = Microsoft.PowerFx.Core.IR.Nodes.CallNode;
@@ -1415,5 +1418,11 @@ namespace Microsoft.PowerFx.Core.Functions
 
             return new IRCallNode(context.GetIRContext(node), this, args);
         }
+    }
+
+    // A function capable of async invokes. 
+    internal interface IAsyncTexlFunction
+    {
+        Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancellationToken);
     }
 }

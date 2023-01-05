@@ -26,7 +26,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Microsoft.PowerFx.Core.Tests\Microsoft.PowerFx.Core.Tests.csproj" />
     <ProjectReference Include="..\..\libraries\Microsoft.PowerFx.Interpreter\Microsoft.PowerFx.Interpreter.csproj" />
-    <ProjectReference Include="..\..\libraries\Microsoft.PowerFX.STJ\Microsoft.PowerFx.STJ.csproj" />
+    <ProjectReference Include="..\..\libraries\Microsoft.PowerFx.Json\Microsoft.PowerFx.Json.csproj" />
   </ItemGroup>
   
 </Project>

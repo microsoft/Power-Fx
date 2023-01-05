@@ -3,16 +3,18 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.SymbolStore;
 using System.Text;
 using Microsoft.PowerFx;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
-namespace Microsoft.PowerFx.Json.Tests
+namespace Microsoft.PowerFx.STJ.Tests
 {
     public class ParseJSONTests
     {
+        // This demos how to enable ParseJSON function.
         [Fact]
         public void BasicParseJson()
         {

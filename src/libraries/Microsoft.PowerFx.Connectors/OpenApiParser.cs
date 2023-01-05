@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Numerics;
 using Microsoft.AppMagic.Authoring.Texl.Builtins;
 using Microsoft.OpenApi.Models;
+using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using static Microsoft.PowerFx.Connectors.OpenApiHelperFunctions;

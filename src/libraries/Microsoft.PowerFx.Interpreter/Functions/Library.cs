@@ -64,19 +64,6 @@ namespace Microsoft.PowerFx.Functions
                 allFunctions.Add(func.Key, func.Value);
             }
 
-            if (PowerFxConfig.ParseJSONImpl != null)
-            {
-                AsyncFunctionPtr ptr = StandardErrorHandling<StringValue>(
-                    BuiltinFunctionsCore.ParseJSON.Name,
-                    expandArguments: NoArgExpansion,
-                    replaceBlankValues: DoNotReplaceBlank,
-                    checkRuntimeTypes: ExactValueTypeOrBlank<StringValue>,
-                    checkRuntimeValues: DeferRuntimeValueChecking,
-                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
-                    targetFunction: PowerFxConfig.ParseJSONImpl);
-                allFunctions.Add(BuiltinFunctionsCore.ParseJSON, ptr);
-            }
-
             FunctionImplementations = allFunctions;
         }
 

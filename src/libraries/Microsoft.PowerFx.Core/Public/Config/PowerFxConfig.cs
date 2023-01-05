@@ -5,18 +5,14 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Xml.Linq;
-using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
-using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx
 {
@@ -193,7 +189,5 @@ namespace Microsoft.PowerFx
 
         internal bool TryGetVariable(DName name, out DName displayName)
             => SymbolTable.TryGetVariable(name, out _, out displayName);
-
-        internal static Func<IRContext, StringValue[], FormulaValue> ParseJSONImpl;
     }
 }

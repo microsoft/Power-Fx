@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.Web;
 using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Connectors.Execution;
+using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;

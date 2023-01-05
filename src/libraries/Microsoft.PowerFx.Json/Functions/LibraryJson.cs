@@ -1,0 +1,146 @@
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Text.Json;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Localization;
+using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Types;
+
+namespace Microsoft.PowerFx.Functions
+{
+    internal sealed class ParseJSONFunction : BuiltinFunction, IAsyncTexlFunction
+    {
+        public const string ParseJSONInvariantFunctionName = "ParseJSON";
+
+        public override bool IsSelfContained => true;
+
+        public override bool SupportsParamCoercion => false;
+
+        public ParseJSONFunction()
+            : base(ParseJSONInvariantFunctionName, TexlStrings.AboutParseJSON, FunctionCategories.Text, DType.UntypedObject, 0, 1, 1, DType.String)
+        {
+        }
+
+        public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
+        {
+            yield return new[] { TexlStrings.ParseJSONArg1 };
+        }
+
+        public async Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancellationToken)
+        {
+            var irContext = IRContext.NotInSource(FormulaType.UntypedObject);
+            var arg = args[0];
+
+            if (arg is BlankValue || arg is ErrorValue)
+            {
+                return arg;
+            }
+            else if (arg is not StringValue)
+            {
+                return new ErrorValue(irContext, new ExpressionError()
+                {
+                    Message = "Runtime type mismatch",
+                    Span = irContext.SourceContext,
+                    Kind = ErrorKind.InvalidArgument
+                });
+            }
+            
+            var json = ((StringValue)arg).Value;
+            JsonElement result;
+            try
+            {
+                using (var document = JsonDocument.Parse(json))
+                {
+                    // Clone must be used here because the original element will be disposed
+                    result = document.RootElement.Clone();
+                }
+
+                // Map null to blank
+                if (result.ValueKind == JsonValueKind.Null)
+                {
+                    return new BlankValue(IRContext.NotInSource(FormulaType.Blank));
+                }
+
+                return new UntypedObjectValue(irContext, new JsonUntypedObject(result));
+            }
+            catch (JsonException ex)
+            {
+                return new ErrorValue(irContext, new ExpressionError()
+                {
+                    Message = $"The Json could not be parsed: {ex.Message}",
+                    Span = irContext.SourceContext,
+                    Kind = ErrorKind.InvalidArgument
+                });
+            }
+        }
+
+        internal class JsonUntypedObject : IUntypedObject
+        {
+            private readonly JsonElement _element;
+
+            public JsonUntypedObject(JsonElement element)
+            {
+                _element = element;
+            }
+
+            public FormulaType Type
+            {
+                get
+                {
+                    switch (_element.ValueKind)
+                    {
+                        case JsonValueKind.Object:
+                            return ExternalType.ObjectType;
+                        case JsonValueKind.Array:
+                            return ExternalType.ArrayType;
+                        case JsonValueKind.String:
+                            return FormulaType.String;
+                        case JsonValueKind.Number:
+                            return FormulaType.Number;
+                        case JsonValueKind.True:
+                        case JsonValueKind.False:
+                            return FormulaType.Boolean;
+                    }
+
+                    return FormulaType.Blank;
+                }
+            }
+
+            public IUntypedObject this[int index] => new JsonUntypedObject(_element[index]);
+
+            public int GetArrayLength()
+            {
+                return _element.GetArrayLength();
+            }
+
+            public double GetDouble()
+            {
+                return _element.GetDouble();
+            }
+
+            public string GetString()
+            {
+                return _element.GetString();
+            }
+
+            public bool GetBoolean()
+            {
+                return _element.GetBoolean();
+            }
+
+            public bool TryGetProperty(string value, out IUntypedObject result)
+            {
+                var res = _element.TryGetProperty(value, out var je);
+                result = new JsonUntypedObject(je);
+                return res;
+            }
+        }
+    }
+}

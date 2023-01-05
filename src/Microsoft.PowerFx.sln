@@ -46,9 +46,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{5EEC2873
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Repl", "tools\Repl\Repl.csproj", "{142854D7-409C-4C87-A5B8-39B51477F5B2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.PowerFx.STJ", "libraries\Microsoft.PowerFX.STJ\Microsoft.PowerFx.STJ.csproj", "{D4CC6660-8C30-41E5-A28A-C018DDDF8D96}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.PowerFx.Json", "libraries\Microsoft.PowerFx.Json\Microsoft.PowerFx.Json.csproj", "{D4CC6660-8C30-41E5-A28A-C018DDDF8D96}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.PowerFx.STJ.Tests", "tests\Microsoft.PowerFx.STJ.Tests\Microsoft.PowerFx.STJ.Tests.csproj", "{8986E836-2F55-4D71-B23E-50F4A8427A5B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.PowerFx.Json.Tests", "tests\Microsoft.PowerFx.Json.Tests\Microsoft.PowerFx.Json.Tests.csproj", "{8986E836-2F55-4D71-B23E-50F4A8427A5B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
