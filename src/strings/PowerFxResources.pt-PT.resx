@@ -530,6 +530,28 @@
   <data name="AboutBooleanNT_input" xml:space="preserve">
     <value>Uma coluna de valores numéricos a processar.</value>
   </data>
+  <data name="AboutBooleanB" xml:space="preserve">
+    <value>Converte um "booleano" num valor booleano.</value>
+    
+  </data>
+  <data name="BooleanBArg1" xml:space="preserve">
+    <value>booleano</value>
+    
+  </data>
+  <data name="AboutBooleanB_boolean" xml:space="preserve">
+    <value>O valor booleano a converter num valor booleano.</value>
+  </data>
+  <data name="AboutBooleanBT" xml:space="preserve">
+    <value>Converte uma coluna de valores booleanos numa coluna de valores booleanos.</value>
+    
+  </data>
+  <data name="BooleanBTArg1" xml:space="preserve">
+    <value>entrada</value>
+    
+  </data>
+  <data name="AboutBooleanBT_input" xml:space="preserve">
+    <value>Uma coluna de valores booleanos a processar.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Devolve o primeiro argumento que não está em branco</value>
     
@@ -1367,6 +1389,23 @@
   <data name="AboutDegrees_input" xml:space="preserve">
     <value>Uma coluna de valores numéricos (em radianos) a processar.</value>
   </data>
+  <data name="AboutDistinct" xml:space="preserve">
+    <value>Avalia uma expressão sobre uma ou mais colunas da tabela e devolve uma tabela de uma coluna que contém valores (únicos) distintos para a expressão avaliada.</value>
+  </data>
+  <data name="DistinctArg1" xml:space="preserve">
+    <value>origem</value>
+    
+  </data>
+  <data name="DistinctArg2" xml:space="preserve">
+    <value>expressão</value>
+    
+  </data>
+  <data name="AboutDistinct_source" xml:space="preserve">
+    <value>Uma tabela a partir da qual os valores distintos serão extraídos.</value>
+  </data>
+  <data name="AboutDistinct_expression" xml:space="preserve">
+    <value>Uma expressão avaliada em cada linha na tabela de entrada, que fornece valores para a operação Distinct.</value>
+  </data>
   <data name="AboutAtan2" xml:space="preserve">
     <value>Devolve o arco tangente (em radianos) das coordenadas x e y especificadas.</value>
   </data>
@@ -1798,6 +1837,14 @@
     <value>O valor numérico é demasiado grande.</value>
     
   </data>
+  <data name="ErrTextFormatTooLarge" xml:space="preserve">
+    <value>O tamanho da cadeia do formato não pode ter mais de {0} carateres.</value>
+    
+  </data>
+  <data name="ErrTextInvalidFormat" xml:space="preserve">
+    <value>Formato inválido.</value>
+    
+  </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
     <value>Esta Origem de dados é inválida. Corrija o erro no painel "Origens de dados" clicando em "Conteúdo -&gt; Origens de dados" ou em "Visualização -&gt; Opções"</value>
     
@@ -1852,6 +1899,10 @@
   </data>
   <data name="ErrSortWrongType" xml:space="preserve">
     <value>Não é possível ordenar o tipo de expressão.</value>
+    
+  </data>
+  <data name="ErrDistinctWrongType" xml:space="preserve">
+    <value>Não é possível aplicar distinct no tipo de expressão.</value>
     
   </data>
   <data name="ErrFunctionDoesNotAcceptThisType_Function_Expected" xml:space="preserve">
@@ -3268,6 +3319,38 @@
     <value>Tema de contraste</value>
     
   </data>
+  <data name="AboutCollect" xml:space="preserve">
+    <value>Adiciona registos a uma origem de dados.</value>
+    
+  </data>
+  <data name="CollectDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="CollectRecordArg" xml:space="preserve">
+    <value>registo</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>Elimina todos os registos de uma coleção. As colunas da coleção permanecerão.</value>
+    
+  </data>
+  <data name="AboutClearCollect" xml:space="preserve">
+    <value>Elimina todos os registos de uma coleção e, em seguida, adiciona um conjunto de registos diferente à mesma coleção.</value>
+    
+  </data>
+  <data name="ClearCollectionArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="ClearCollectDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="ClearCollectRecordArg" xml:space="preserve">
+    <value>registo</value>
+    
+  </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>Aplica as atualizações à linha especificada e altera a linha na origem de dados especificada. Devolve a linha atualizada.</value>
     
@@ -4398,6 +4481,10 @@
     <value>Artigo: referência de fórmulas do Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrRecordDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
+    <value>Tipo incompatível. O item que está a tentar colocar num registo tem um tipo que não é compatível com o registo.</value>
+    
+  </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
     <value>Tipo incompatível. O item que está a tentar colocar numa tabela tem um tipo que não é compatível com a tabela.</value>
     
@@ -4725,6 +4812,18 @@
   </data>
   <data name="ErrDeprecated" xml:space="preserve">
     <value>Esta funcionalidade foi preterida e já não é suportada.</value>
+    
+  </data>
+  <data name="WarnDeferredType" xml:space="preserve">
+    <value>Aviso: tipo adiado fornecido.</value>
+    
+  </data>
+  <data name="ErrExpectedIdentifierArg_Name" xml:space="preserve">
+    <value>Nome do identificador esperado</value>
+    
+  </data>
+  <data name="ErrInvalidFunction" xml:space="preserve">
+    <value>Esta função é ambígua: contém expressões lambda e identificadores de coluna para o mesmo argumento.</value>
     
   </data>
 </root>

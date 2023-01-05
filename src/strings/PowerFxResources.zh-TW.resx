@@ -530,6 +530,28 @@
   <data name="AboutBooleanNT_input" xml:space="preserve">
     <value>要處理的數字值資料行。</value>
   </data>
+  <data name="AboutBooleanB" xml:space="preserve">
+    <value>將「布林值」轉換為布林值。</value>
+    
+  </data>
+  <data name="BooleanBArg1" xml:space="preserve">
+    <value>布林值</value>
+    
+  </data>
+  <data name="AboutBooleanB_boolean" xml:space="preserve">
+    <value>要轉換為布林值的布林值。</value>
+  </data>
+  <data name="AboutBooleanBT" xml:space="preserve">
+    <value>將布林值資料行轉換為布林值資料行。</value>
+    
+  </data>
+  <data name="BooleanBTArg1" xml:space="preserve">
+    <value>輸入</value>
+    
+  </data>
+  <data name="AboutBooleanBT_input" xml:space="preserve">
+    <value>要處理的布林值資料行。</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>傳回第一個非空白的引數</value>
     
@@ -1367,6 +1389,23 @@
   <data name="AboutDegrees_input" xml:space="preserve">
     <value>要處理的數值資料行 (以弧度為單位)。</value>
   </data>
+  <data name="AboutDistinct" xml:space="preserve">
+    <value>對資料表的一或多個資料行評估運算式，並傳回單一資料行的資料表，其內含評估運算式的相異 (不重複) 值。</value>
+  </data>
+  <data name="DistinctArg1" xml:space="preserve">
+    <value>來源</value>
+    
+  </data>
+  <data name="DistinctArg2" xml:space="preserve">
+    <value>運算式</value>
+    
+  </data>
+  <data name="AboutDistinct_source" xml:space="preserve">
+    <value>將擷取其 Distinct 值的資料表。</value>
+  </data>
+  <data name="AboutDistinct_expression" xml:space="preserve">
+    <value>對輸入資料表中的每一個資料列進行評估，並為 Distinct 作業提供值的運算式。</value>
+  </data>
   <data name="AboutAtan2" xml:space="preserve">
     <value>傳回指定之 x 及 y 座標的反正切值 (以弧度為單位)。</value>
   </data>
@@ -1798,6 +1837,14 @@
     <value>數值太大。</value>
     
   </data>
+  <data name="ErrTextFormatTooLarge" xml:space="preserve">
+    <value>格式字串大小不能超過 {0} 個字元。</value>
+    
+  </data>
+  <data name="ErrTextInvalidFormat" xml:space="preserve">
+    <value>無效的格式。</value>
+    
+  </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
     <value>此資料來源無效。請在 [資料來源] 窗格中按一下 [內容] -&gt; [資料來源] 或 [檢視] -&gt; [選項]，以修正錯誤。</value>
     
@@ -1852,6 +1899,10 @@
   </data>
   <data name="ErrSortWrongType" xml:space="preserve">
     <value>無法排序運算式類型。</value>
+    
+  </data>
+  <data name="ErrDistinctWrongType" xml:space="preserve">
+    <value>無法對運算式類型套用 Distinct。</value>
     
   </data>
   <data name="ErrFunctionDoesNotAcceptThisType_Function_Expected" xml:space="preserve">
@@ -3268,6 +3319,38 @@
     <value>對比佈景主題</value>
     
   </data>
+  <data name="AboutCollect" xml:space="preserve">
+    <value>新增記錄至資料來源。</value>
+    
+  </data>
+  <data name="CollectDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="CollectRecordArg" xml:space="preserve">
+    <value>記錄</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>刪除集合的所有記錄。將保留集合的資料行。</value>
+    
+  </data>
+  <data name="AboutClearCollect" xml:space="preserve">
+    <value>刪除集合中的所有記錄。然後新增其他記錄集至同一個集合。</value>
+    
+  </data>
+  <data name="ClearCollectionArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="ClearCollectDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="ClearCollectRecordArg" xml:space="preserve">
+    <value>記錄</value>
+    
+  </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>將更新套用至指定的資料列，並變更指定資料來源中的資料列。傳回更新後的資料列。</value>
     
@@ -3297,7 +3380,7 @@
     
   </data>
   <data name="ErrRemoveAllArg" xml:space="preserve">
-    <value>如果提供，最後一個引數必須是「RemoveFlags.All」。是否有錯別字?</value>
+    <value>如果提供，最後一個引數必須是 'RemoveFlags.All"。是否有錯別字?</value>
     
   </data>
   <data name="PenMode_Draw_DisplayName" xml:space="preserve">
@@ -4398,6 +4481,10 @@
     <value>文章: Power Apps 的公式參考</value>
     
   </data>
+  <data name="ErrorResource_ErrRecordDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
+    <value>不相容的類型。您所嘗試置入記錄的物件包含與記錄不相容的類型。</value>
+    
+  </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
     <value>不相容的類型。您所嘗試置入資料表的物件包含與資料表不相容的類型。</value>
     
@@ -4725,6 +4812,18 @@
   </data>
   <data name="ErrDeprecated" xml:space="preserve">
     <value>此功能已淘汰，不再受支援。</value>
+    
+  </data>
+  <data name="WarnDeferredType" xml:space="preserve">
+    <value>警告: 已提供延期類型。</value>
+    
+  </data>
+  <data name="ErrExpectedIdentifierArg_Name" xml:space="preserve">
+    <value>預期的識別碼名稱</value>
+    
+  </data>
+  <data name="ErrInvalidFunction" xml:space="preserve">
+    <value>此函式不明確，其包含同一個引數的 Lambda 運算式和資料行識別碼。</value>
     
   </data>
 </root>

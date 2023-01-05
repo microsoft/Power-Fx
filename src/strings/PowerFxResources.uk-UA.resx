@@ -530,6 +530,28 @@
   <data name="AboutBooleanNT_input" xml:space="preserve">
     <value>Стовпець числових значень, який потрібно обробити.</value>
   </data>
+  <data name="AboutBooleanB" xml:space="preserve">
+    <value>Перетворює "boolean" на логічне значення.</value>
+    
+  </data>
+  <data name="BooleanBArg1" xml:space="preserve">
+    <value>логічний</value>
+    
+  </data>
+  <data name="AboutBooleanB_boolean" xml:space="preserve">
+    <value>Логічне значення, яке потрібно перетворити на логічне значення.</value>
+  </data>
+  <data name="AboutBooleanBT" xml:space="preserve">
+    <value>Перетворює стовпець логічних значень на стовпець логічних значень.</value>
+    
+  </data>
+  <data name="BooleanBTArg1" xml:space="preserve">
+    <value>вхідні дані</value>
+    
+  </data>
+  <data name="AboutBooleanBT_input" xml:space="preserve">
+    <value>Стовпець логічних значень, який потрібно обробити.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Повертає перший непустий аргумент.</value>
     
@@ -1367,6 +1389,23 @@
   <data name="AboutDegrees_input" xml:space="preserve">
     <value>Стовпець числових значень (у радіанах) для обробки.</value>
   </data>
+  <data name="AboutDistinct" xml:space="preserve">
+    <value>Обчислює вираз стосовно одного або кількох стовпців таблиці й повертає таблицю з одним стовпцем, що містить лише унікальні значення, отримані в ході обчислення.</value>
+  </data>
+  <data name="DistinctArg1" xml:space="preserve">
+    <value>джерело</value>
+    
+  </data>
+  <data name="DistinctArg2" xml:space="preserve">
+    <value>вираз</value>
+    
+  </data>
+  <data name="AboutDistinct_source" xml:space="preserve">
+    <value>Таблиця, з якої потрібно видобувати унікальні значення.</value>
+  </data>
+  <data name="AboutDistinct_expression" xml:space="preserve">
+    <value>Вираз, що обчислюється стосовно кожного рядка вхідної таблиці й надає значення для операції Distinct.</value>
+  </data>
   <data name="AboutAtan2" xml:space="preserve">
     <value>Повертає значення арктангенса (у радіанах) для вказаних координат X та Y.</value>
   </data>
@@ -1798,6 +1837,14 @@
     <value>Числове значення завелике.</value>
     
   </data>
+  <data name="ErrTextFormatTooLarge" xml:space="preserve">
+    <value>Розмір рядка формату не може бути більше {0} симв.</value>
+    
+  </data>
+  <data name="ErrTextInvalidFormat" xml:space="preserve">
+    <value>Invalid format.</value>
+    
+  </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
     <value>Неприпустиме джерело даних. Виправте помилку в області "Джерела даних", натиснувши елементи "Вміст" -&gt; "Джерела даних" або "Подання" -&gt; "Параметри".</value>
     
@@ -1852,6 +1899,10 @@
   </data>
   <data name="ErrSortWrongType" xml:space="preserve">
     <value>Неможливо відсортувати за типом виразу.</value>
+    
+  </data>
+  <data name="ErrDistinctWrongType" xml:space="preserve">
+    <value>Неможливо застосувати операцію вибору унікальних значень для цього типу виразу.</value>
     
   </data>
   <data name="ErrFunctionDoesNotAcceptThisType_Function_Expected" xml:space="preserve">
@@ -3268,6 +3319,38 @@
     <value>Контрастна тема</value>
     
   </data>
+  <data name="AboutCollect" xml:space="preserve">
+    <value>Додаються записи до джерела даних.</value>
+    
+  </data>
+  <data name="CollectDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="CollectRecordArg" xml:space="preserve">
+    <value>запис</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>Видаляються всі записи колекції. Стовпці колекції залишаються.</value>
+    
+  </data>
+  <data name="AboutClearCollect" xml:space="preserve">
+    <value>Видаляються всі записи з колекції, після чого до тієї ж колекції додається інший набір записів.</value>
+    
+  </data>
+  <data name="ClearCollectionArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="ClearCollectDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="ClearCollectRecordArg" xml:space="preserve">
+    <value>запис</value>
+    
+  </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>Застосовує оновлення до вказаного рядка й змінює його в зазначеному джерелі даних. Повертає оновлений рядок.</value>
     
@@ -4398,6 +4481,10 @@
     <value>Стаття: "Посилання на формулу в Power Apps"</value>
     
   </data>
+  <data name="ErrorResource_ErrRecordDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
+    <value>Несумісний тип. Елемент, який ви намагаєтеся вставити в запис, має несумісний із нею тип.</value>
+    
+  </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
     <value>Несумісний тип. Елемент, який ви намагаєтеся вставити в таблицю, має несумісний із нею тип.</value>
     
@@ -4725,6 +4812,18 @@
   </data>
   <data name="ErrDeprecated" xml:space="preserve">
     <value>Цю функцію вилучено. Вона більше не підтримується.</value>
+    
+  </data>
+  <data name="WarnDeferredType" xml:space="preserve">
+    <value>Попередження! Надано відкладений тип.</value>
+    
+  </data>
+  <data name="ErrExpectedIdentifierArg_Name" xml:space="preserve">
+    <value>Очікуване ім’я ідентифікатора</value>
+    
+  </data>
+  <data name="ErrInvalidFunction" xml:space="preserve">
+    <value>Ця функція неоднозначна, вона містить лямбда-вирази та ідентифікатори стовпців для одного аргументу.</value>
     
   </data>
 </root>
