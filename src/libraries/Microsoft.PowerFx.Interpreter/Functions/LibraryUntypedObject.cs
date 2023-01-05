@@ -201,7 +201,7 @@ namespace Microsoft.PowerFx.Functions
                 {
                     datetime = MakeValidDateTime(runner, datetime, runner.GetService<TimeZoneInfo>() ?? TimeZoneInfo.Local);
 
-                    return new DateValue(irContext, datetime.Date);
+                    return new DateValue(irContext, datetime);
                 }
 
                 return CommonErrors.InvalidDateTimeParsingError(irContext);
