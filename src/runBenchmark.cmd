@@ -1,7 +1,7 @@
 @echo off
 if not exist "BenchmarkDotNet.Artifacts" md "BenchmarkDotNet.Artifacts"
-wmic CPU get Caption, CurrentClockSpeed, Name, NumberOfCores, NumberOfLogicalProcessors > BenchmarkDotNet.Artifacts\cpu.csv
-wmic MEMORYCHIP get capacity, devicelocator > BenchmarkDotNet.Artifacts\memory.csv
+wmic cpu get Caption, CurrentClockSpeed, Name, NumberOfCores, NumberOfLogicalProcessors > BenchmarkDotNet.Artifacts\cpu.csv
+wmic computersystem get TotalPhysicalMemory > BenchmarkDotNet.Artifacts\memory.csv
 for /f %%a in ('dotnet --list-sdks ^| findstr 3\.1') do set dotnetver=%%a
 set MSBuildSDKsPath=C:\Program Files\dotnet\sdk\%dotnetver%\sdks
 if not exist global.json dotnet new globaljson --sdk-version %dotnetver%

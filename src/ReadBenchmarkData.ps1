@@ -5,8 +5,29 @@
     exit
 }
 
+function ConvertToMs([string]$str)
+{
+    try
+    {
+        $parts = $str.Split(@(' '), [System.StringSplitOptions]::RemoveEmptyEntries)
+        $val = [double]$parts[0]
+        if ($parts[1] -eq "ns") { $val /= 1000 }
+        elseif ($parts[1] -eq "s") { $val *= 1000}
+        elseif ($parts[1] -eq "ms") { } ## Do nothing
+        else { throw ("Unknown unit: " + $parts[1]) }
+        $val
+    }
+    catch
+    {
+        Write-Error $_               
+    }
+}
+
+Write-Host "------ Context ------"
+
 $cpuFile = "BenchmarkDotNet.Artifacts\cpu.csv"
 $memoryFile = "BenchmarkDotNet.Artifacts\memory.csv"
+$referenceFile = "BenchmarkDotNet.Artifacts\results\Microsoft.PowerFx.Performance.Tests.Reference-report-github.md"
 
 ## Read CPU file, fixed size columns
 $index = 0; $x = 0
@@ -70,9 +91,9 @@ foreach ($line in (Get-Content $memoryFile))
         [void]$hdrs.Add($x)
     }
 
-    if ($index -ne 0)
+    if ($index -eq 1)
     {
-        $memory += [double]::Parse($line.Substring($hdrs[0], $hdrs[1] - $hdrs[0]).Trim());
+        $memory = [double]::Parse($line.Substring($hdrs[0], $hdrs[1] - $hdrs[0]).Trim());
     }
 
     $index++
@@ -80,3 +101,70 @@ foreach ($line in (Get-Content $memoryFile))
 
 $memoryGB = $memory / [double]1024 / [double]1024 / [double]1024;
 Write-Host "Memory (GB)       : $memoryGB"
+
+$index = 0
+foreach ($line in (Get-Content $referenceFile))
+{
+    if ($index -in @(2, 4))
+    {
+        foreach ($a in ($line.Split(@(','), [System.StringSplitOptions]::RemoveEmptyEntries) | % { $_.Trim() }))
+        {
+            $b = $a.Split(@('='), [System.StringSplitOptions]::RemoveEmptyEntries) | % { $_.Trim() }
+            if ($b[0] -eq 'BenchmarkDotNet') { $bmdnVersion = $b[1] }
+            if ($b[0] -eq 'OS') { $osVersion = $b[1] }
+            if ($b[0] -eq 'VM') { $vmType = $b[1] }
+            if ($b[0] -in @('.Net Core SDK', '.NET SDK')) { $dnRTVersion = $b[1] }
+        }        
+    }    
+    if ($index -eq 6)
+    {
+        $a = $line.Split(@(':'), [System.StringSplitOptions]::RemoveEmptyEntries) | % { $_.Trim() }
+        $dnVersion = $a[1]
+    }
+
+    $index++
+}
+
+Write-Host "BenchmarkDotNet   : $bmdnVersion"
+Write-Host "OS Version        : $osVersion"
+Write-Host "VM Type           : $vmType"
+Write-Host ".Net RT Version   : $dnRTVersion"
+Write-Host ".Net Version      : $dnVersion"
+
+Write-Host
+
+## Always start the list of results with the Reference CSV file
+$list = (Get-Item -Filter *.csv -Path '.\BenchmarkDotNet.Artifacts\results\*' | % { $_.FullName })
+foreach ($file in [System.Linq.Enumerable]::OrderBy($list, [Func[object, string]] { param($s) if ($s -match 'Reference-report\.csv') { "" } else { $s } }))
+{
+    $t = [System.IO.Path]::GetFileNameWithoutExtension($file).Split(@('.'))[-1]
+    $testCategory = $t.Substring(0, $t.Length - 7)
+
+    Write-Host "------ $testCategory ------"
+   
+    $table = [System.Data.DataTable]::new()
+    [void]$table.Columns.Add("TestName", [string]);      $table.Columns["TestName"].AllowDBNull = $false    
+    [void]$table.Columns.Add("N", [int]);                $table.Columns["N"].AllowDBNull = $true                 ## Optional column, depends on the test
+    [void]$table.Columns.Add("Mean", [double]);          $table.Columns["Mean"].AllowDBNull = $false
+    [void]$table.Columns.Add("StdDev", [double]);        $table.Columns["StdDev"].AllowDBNull = $false
+    [void]$table.Columns.Add("Min", [double]);           $table.Columns["Min"].AllowDBNull = $false
+    [void]$table.Columns.Add("Q1", [double]);            $table.Columns["Q1"].AllowDBNull = $false
+    [void]$table.Columns.Add("Median", [double]);        $table.Columns["Median"].AllowDBNull = $false
+    [void]$table.Columns.Add("Q3", [double]);            $table.Columns["Q3"].AllowDBNull = $false
+    [void]$table.Columns.Add("Max", [double]);           $table.Columns["Max"].AllowDBNull = $false
+
+    foreach ($row in (Import-Csv $file | Select-Object Method, Runtime, N, Mean, StdDev, Min, Q1, Median, Q3, Max))
+    {
+        $mean = ConvertToMs($row.Mean)
+        $stddev = ConvertToMs($row.StdDev)
+        $min = ConvertToMs($row.Min)
+        $q1 = ConvertToMs($row.Q1)
+        $median = ConvertToMs($row.Median)
+        $q3 = ConvertToMs($row.Q3)
+        $max = ConvertToMs($row.Max)
+
+        [void]$table.Rows.Add($row.Method, $row.N, $mean, $stddev, $min, $q1, $median, $q3, $max)
+    }
+
+    $table | Sort-Object TestName, N | ft 
+}
