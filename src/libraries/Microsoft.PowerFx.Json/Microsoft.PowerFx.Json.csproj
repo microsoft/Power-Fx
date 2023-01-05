@@ -10,7 +10,7 @@
   <!-- Nuget Properties -->
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <PackageId>Microsoft.PowerFx.STJ</PackageId>
+    <PackageId>Microsoft.PowerFx.Json</PackageId>
     <Title>Microsoft Power Fx JSON</Title>
     <Description>The library for all Microsoft Power Fx JSON functionalities</Description>
     <Summary>The library for all Microsoft Power Fx JSON functionalities</Summary>
