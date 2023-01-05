@@ -58,9 +58,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.Null(v1);
 
             var symbols = locals.SymbolTable;
-#pragma warning disable CS0618 // Type or member is obsolete
-            Assert.Null(symbols.Parent);
-#pragma warning restore CS0618 // Type or member is obsolete
 
             // Internal hook is null;
             var a = new DName("a");

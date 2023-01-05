@@ -7,9 +7,10 @@ using System.Collections.Generic;
 
 namespace Microsoft.PowerFx
 {
+    // $$$ Can we delete?
+
     /// <summary>
     /// Enumerate through a chain of symbol tables in depth first order. 
-    /// Ignores nulls, walks <see cref="ReadOnlySymbolTable.Parent"/>.
     /// Throws if there are any loops. 
     /// </summary>
     internal class SymbolTableEnumerator : IEnumerable<ReadOnlySymbolTable>
@@ -41,9 +42,7 @@ namespace Microsoft.PowerFx
                     }
 
                     yield return t;
-#pragma warning disable CS0618 // Type or member is obsolete
-                    t = t.Parent;
-#pragma warning restore CS0618 // Type or member is obsolete
+                    t = null;
                 }
             }
         }

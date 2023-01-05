@@ -7,6 +7,7 @@ using Xunit;
 
 namespace Microsoft.PowerFx.Core.Tests
 {
+#if false // $$$
 #pragma warning disable CS0618 // Type or member is obsolete
     public class SymbolTableEnumeratorTests
     {
@@ -56,4 +57,5 @@ namespace Microsoft.PowerFx.Core.Tests
         }
     }
 #pragma warning restore CS0618 // Type or member is obsolete
+#endif
 }
