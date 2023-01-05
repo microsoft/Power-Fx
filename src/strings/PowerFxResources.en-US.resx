@@ -6617,10 +6617,6 @@
     <value>As is not permitted in this context</value>
     <comment>{Locked=As} This is an error message that shows up when the As keyword is used but is not valid</comment>
   </data>
-  <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
-    <value>Untyped objects cannot be used as the first argument to functions which support record scopes.</value>
-    <comment>This error message shows up when using untyped objects as the first arugment to functions with lambda overloads</comment>
-  </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>Named formula must end with a semicolon.</value>
     <comment>A semicolon must terminate named formulas. For example, a=10;</comment>
