@@ -15,7 +15,7 @@ function ConvertToMs([string]$str)
         $parts = $str.Split(@(' '), [System.StringSplitOptions]::RemoveEmptyEntries)
         $val = [double]$parts[0]
         if ($parts[1] -eq "ns") { $val /= 1000000 }
-        elseif ($parts[i] -eq "µs") { $val /= 1000 }
+        elseif ($parts[1] -eq "µs") { $val /= 1000 }
         elseif ($parts[1] -eq "s") { $val *= 1000}
         elseif ($parts[1] -eq "ms") { } ## Do nothing
         else { throw ("Unknown unit: " + $parts[1]) }
