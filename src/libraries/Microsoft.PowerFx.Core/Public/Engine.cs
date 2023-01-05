@@ -100,8 +100,7 @@ namespace Microsoft.PowerFx
                 return existing;
             }
 
-            var list = new SymbolTableEnumerator(localSymbols, EngineSymbols, SupportedFunctions, Config.SymbolTable);
-            symbols = new ComposedReadOnlySymbolTable(list);
+            symbols = ReadOnlySymbolTable.Compose(localSymbols, EngineSymbols, SupportedFunctions, Config.SymbolTable);
             return symbols;
         }
 

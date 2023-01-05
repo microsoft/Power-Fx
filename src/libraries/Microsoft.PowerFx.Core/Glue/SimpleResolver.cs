@@ -24,7 +24,7 @@ namespace Microsoft.PowerFx.Core.Glue
         /// </summary>
         /// <param name="config"></param>        
         public SimpleResolver(PowerFxConfig config)
-            : base(new SymbolTableEnumerator(config.SymbolTable))
+            : base(new ReadOnlySymbolTable[] { config.SymbolTable })
         {
         }
     }

@@ -148,7 +148,7 @@ namespace Microsoft.PowerFx
 
         public static ReadOnlySymbolTable Compose(params ReadOnlySymbolTable[] tables)
         {
-            return new ComposedReadOnlySymbolTable(new SymbolTableEnumerator(tables));
+            return new ComposedReadOnlySymbolTable(tables);
         }
 
         // Helper to create a ReadOnly symbol table around a set of core functions.
