@@ -36,7 +36,7 @@ namespace Microsoft.PowerFx
             if (symbolTable is ComposedReadOnlySymbolTable composed)
             {
                 tw.WriteLine(indent + " Composed {");
-                foreach (var table in symbolTable.SubTables)
+                foreach (var table in composed.SubTables)
                 {
                     Dump(table, tw, indent + "  ");
                 }
