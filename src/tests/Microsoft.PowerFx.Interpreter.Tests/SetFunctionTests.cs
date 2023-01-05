@@ -386,5 +386,21 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var symTable = ReadOnlySymbolTable.NewFromRecord(type, allowMutable: true);
             return symTable;
         }
+
+        [Fact]
+        public void NewErrorMessageWithTypes()
+        {
+            // Create an engine with variable and enable mutation functions
+            var engine = new RecalcEngine(new PowerFxConfig());
+            engine.UpdateVariable("testDoubleVariable", 2.0);
+            engine.Config.SymbolTable.EnableMutationFunctions();
+
+            // Run compliation check
+            var check = engine.Check("Set(testDoubleVariable, true)", options: _opts);
+
+            // Verify check
+            Assert.False(check.IsSuccess);
+            Assert.Contains(check.Errors, d => d.Message.Contains("Invalid argument type (Boolean). Expecting a Number value instead."));
+        }
     }
 }
