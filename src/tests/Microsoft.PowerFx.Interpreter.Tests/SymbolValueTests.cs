@@ -719,7 +719,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var seen = new HashSet<string>();
 
-            foreach (var symbolTable in symbolTableAll.SubTables)
+            IEnumerable<ReadOnlySymbolTable> tables =
+                (symbolTableAll is ComposedReadOnlySymbolTable composed) ?
+                    composed.SubTables :
+                    new ReadOnlySymbolTable[] { symbolTableAll };
+
+            foreach (var symbolTable in tables)
             {
                 foreach (var sym in symbolTable.SymbolNames.OrderBy(x => x.Name.Value))
                 {

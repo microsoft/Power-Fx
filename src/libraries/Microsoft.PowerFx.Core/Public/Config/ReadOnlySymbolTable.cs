@@ -34,8 +34,7 @@ namespace Microsoft.PowerFx
         /// <summary>
         /// This can be compared to determine if the symbol table was mutated during an operation. 
         /// </summary>
-        internal virtual VersionHash VersionHash => _parent == null ?
-            _version : _version.Combine(_parent.VersionHash);
+        internal virtual VersionHash VersionHash => _version;
 
         /// <summary>
         /// Notify the symbol table has changed. 
@@ -44,9 +43,7 @@ namespace Microsoft.PowerFx
         {
             _version.Inc();
         }
-
-        private protected ReadOnlySymbolTable _parent;
-
+                
         private protected string _debugName = "SymbolTable";
 
         // Helper in debugging. Useful when we have multiple symbol tables chained. 
@@ -54,21 +51,6 @@ namespace Microsoft.PowerFx
         {
             get => _debugName;
             init => _debugName = value;
-        }
-
-        internal virtual IEnumerable<ReadOnlySymbolTable> SubTables
-        {
-            get
-            {
-                if (_parent == null)
-                {
-                    return new ReadOnlySymbolTable[] { this };
-                }
-                else
-                {
-                    return new ReadOnlySymbolTable[] { this, _parent };
-                }
-            }
         }
 
         /// <summary>
