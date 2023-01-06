@@ -70,3 +70,6 @@ Table({b:1},{b:-11},{b:3},{b:-7},{b:5})
 // Blank rows
 >> ForAll(Table({a:1},If(1<0,{a:2}),{a:3},If(1<0,{a:4}),{a:5}), {b:Coalesce(a, 100)})
 Table({b:1},{b:100},{b:3},{b:100},{b:5})
+
+>> ForAll([true,false],  If(ThisRecord.Value, {x:1,y:2}, Blank()))
+Table({x:1,y:2},{x:Blank(),y:Blank()})
