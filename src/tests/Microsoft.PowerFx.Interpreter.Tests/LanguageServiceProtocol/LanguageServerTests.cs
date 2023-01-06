@@ -67,7 +67,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
                 json = "{}";
             }
 
-            var record = (RecordValue)FormulaValue.FromJson(json);
+            var record = (RecordValue)FormulaValueJSON.FromJson(json);
             return ReadOnlySymbolTable.NewFromRecord(record.Type);
         }
 

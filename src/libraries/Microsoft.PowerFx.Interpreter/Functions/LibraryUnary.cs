@@ -11,7 +11,7 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Functions
 {
-    internal partial class Library
+    internal static partial class Library
     {
         #region Standard Error Handling Wrappers for Unary Operators
         public static IReadOnlyDictionary<UnaryOpKind, AsyncFunctionPtr> UnaryOps { get; } = new Dictionary<UnaryOpKind, AsyncFunctionPtr>()

@@ -10,26 +10,30 @@
   <!-- Nuget Properties -->
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <PackageId>Microsoft.PowerFx.Connectors</PackageId>
-    <Title>Microsoft Power Fx Connector Support</Title>
-    <Description>Connectors</Description>
-    <EnforceCodeStyleInBuild>false</EnforceCodeStyleInBuild>
+    <PackageId>Microsoft.PowerFx.Json</PackageId>
+    <Title>Microsoft Power Fx JSON</Title>
+    <Description>The library for all Microsoft Power Fx JSON functionalities</Description>
+    <Summary>The library for all Microsoft Power Fx JSON functionalities</Summary>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <GenerateNeutralResourcesLanguageAttribute>false</GenerateNeutralResourcesLanguageAttribute>
+    <AssemblyOriginatorKeyFile>..\..\..\src\build\35MSSharedLib1024.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Text.Json" Version="5.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="..\..\strings\PowerFxResources.*.resx">
+      <Link>strings\%(Filename)%(Extension)</Link>
+    </EmbeddedResource>
+  </ItemGroup>
 
   <ItemGroup>
     <AdditionalFiles Include="..\..\stylecop.json" Link="stylecop.json" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.OpenApi.Readers" Version="1.3.1" />
-    <PackageReference Include="System.Text.Json" Version="5.0.2" />
-    <PackageReference Include="System.Collections.Immutable" Version="5.0.0" />
-    <PackageReference Include="System.Memory" Version="4.5.4" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Microsoft.PowerFx.Core\Microsoft.PowerFx.Core.csproj" />
-    <ProjectReference Include="..\Microsoft.PowerFx.Interpreter\Microsoft.PowerFx.Interpreter.csproj" />
-    <ProjectReference Include="..\Microsoft.PowerFx.Json\Microsoft.PowerFx.Json.csproj" />
   </ItemGroup>
 </Project>

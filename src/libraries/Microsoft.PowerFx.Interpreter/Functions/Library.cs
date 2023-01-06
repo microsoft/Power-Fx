@@ -1020,17 +1020,6 @@ namespace Microsoft.PowerFx.Functions
                 Or
             },
             {
-                BuiltinFunctionsCore.ParseJSON,
-                StandardErrorHandling<StringValue>(
-                    BuiltinFunctionsCore.ParseJSON.Name,
-                    expandArguments: NoArgExpansion,
-                    replaceBlankValues: DoNotReplaceBlank,
-                    checkRuntimeTypes: ExactValueTypeOrBlank<StringValue>,
-                    checkRuntimeValues: DeferRuntimeValueChecking,
-                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
-                    targetFunction: ParseJSON)
-            },
-            {
                 BuiltinFunctionsCore.Proper,
                 StandardErrorHandling<StringValue>(
                     BuiltinFunctionsCore.Proper.Name,

@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Texl;
+using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Functions;
@@ -467,7 +468,7 @@ namespace Microsoft.PowerFx.Tests
 
             // Spot check some known functions
             Assert.Contains("Cos", names);
-            Assert.Contains("ParseJSON", names);
+            Assert.Contains("Filter", names);
 
             Assert.Contains("Cos", names);
         }
