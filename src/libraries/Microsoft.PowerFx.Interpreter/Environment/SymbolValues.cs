@@ -19,9 +19,6 @@ namespace Microsoft.PowerFx
         // Index by Slot.SlotIndex. This could be optimized to be a dense array. 
         private readonly Dictionary<int, Tuple<ISymbolSlot, FormulaValue>> _symbolValues = new Dictionary<int, Tuple<ISymbolSlot, FormulaValue>>();
 
-        // Services for runtime functions. Lazy created.
-        private Dictionary<Type, object> _services;
-
         private readonly SymbolTable _symTable;
 
         /// <summary>
@@ -45,19 +42,6 @@ namespace Microsoft.PowerFx
             DebugName = table.DebugName;
         }
 
-        public SymbolValues AddService<T>(T data)
-        {
-            // this changes the symbols.            
-            if (_services == null)
-            {
-                _services = new Dictionary<Type, object>();
-            }
-
-            // Can't already exist. 
-            _services.Add(typeof(T), data);
-            return this;
-        }
-
         /// <summary>
         /// Convenience method to add a new unique symbol.
         /// </summary>
@@ -70,16 +54,6 @@ namespace Microsoft.PowerFx
             Set(slot, value);
 
             return this;
-        }
-
-        public override object GetService(Type serviceType)
-        {
-            if (_services != null && _services.TryGetValue(serviceType, out var data))
-            {
-                return data;
-            }
-
-            return null;
         }
 
         public override void Set(ISymbolSlot slot, FormulaValue value)

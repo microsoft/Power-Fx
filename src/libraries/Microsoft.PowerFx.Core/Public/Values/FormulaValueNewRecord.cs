@@ -8,7 +8,6 @@ using System.Diagnostics.Contracts;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text.Json;
 using Microsoft.PowerFx.Core.IR;
 
 namespace Microsoft.PowerFx.Types

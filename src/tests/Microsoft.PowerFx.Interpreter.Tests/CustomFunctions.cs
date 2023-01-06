@@ -397,8 +397,8 @@ namespace Microsoft.PowerFx.Tests
 
             foreach (var name in new string[] { "Bill", "Steve", "Satya" })
             {
-                var runtime = new SymbolValues()
-                    .AddService(new UserAsyncFunction.Runtime { _name = name });
+                var runtime = new RuntimeConfig();
+                runtime.AddService(new UserAsyncFunction.Runtime { _name = name });
                 var result = await expr.EvalAsync(CancellationToken.None, runtime);
 
                 var expected = name + "3";

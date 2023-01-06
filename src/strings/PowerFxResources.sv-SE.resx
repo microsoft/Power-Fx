@@ -530,6 +530,28 @@
   <data name="AboutBooleanNT_input" xml:space="preserve">
     <value>En kolumn med numeriska värden att bearbeta.</value>
   </data>
+  <data name="AboutBooleanB" xml:space="preserve">
+    <value>Konverterar en "boolesk" till ett booleskt värde.</value>
+    
+  </data>
+  <data name="BooleanBArg1" xml:space="preserve">
+    <value>boolesk</value>
+    
+  </data>
+  <data name="AboutBooleanB_boolean" xml:space="preserve">
+    <value>Det booleska värdet som ska konverteras till ett booleskt värde.</value>
+  </data>
+  <data name="AboutBooleanBT" xml:space="preserve">
+    <value>Konverterar en kolumn med booleska värden till en kolumn med booleska värden.</value>
+    
+  </data>
+  <data name="BooleanBTArg1" xml:space="preserve">
+    <value>indata</value>
+    
+  </data>
+  <data name="AboutBooleanBT_input" xml:space="preserve">
+    <value>En kolumn med booleska värden att bearbeta.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Returnerar det första icke-tomma argumentet</value>
     
@@ -1367,6 +1389,23 @@
   <data name="AboutDegrees_input" xml:space="preserve">
     <value>En kolumn med numeriska värden (i radianer) att bearbeta.</value>
   </data>
+  <data name="AboutDistinct" xml:space="preserve">
+    <value>Utvärderar ett uttryck för en eller flera kolumner i tabellen och returnerar en enkolumnstabell som innehåller distinkta (unika) värden för det utvärderade uttrycket.</value>
+  </data>
+  <data name="DistinctArg1" xml:space="preserve">
+    <value>källa</value>
+    
+  </data>
+  <data name="DistinctArg2" xml:space="preserve">
+    <value>uttryck</value>
+    
+  </data>
+  <data name="AboutDistinct_source" xml:space="preserve">
+    <value>En tabell som distinkta värden kommer extraheras från.</value>
+  </data>
+  <data name="AboutDistinct_expression" xml:space="preserve">
+    <value>Ett uttryck som utvärderas för varje rad i indatatabellen och som ger värden för den distinkta åtgärden.</value>
+  </data>
   <data name="AboutAtan2" xml:space="preserve">
     <value>Returnerar arctangens (i radianer) för angivna x- och y-koordinater.</value>
   </data>
@@ -1798,6 +1837,14 @@
     <value>Det numeriska värdet är för stort.</value>
     
   </data>
+  <data name="ErrTextFormatTooLarge" xml:space="preserve">
+    <value>Storlek på formatsträng får inte vara fler än {0} tecken.</value>
+    
+  </data>
+  <data name="ErrTextInvalidFormat" xml:space="preserve">
+    <value>Ogiltigt format.</value>
+    
+  </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
     <value>Den här datakällan är ogiltig. Åtgärda felet i panelen "Datakällor" genom att klicka på "Innehåll -&gt; Datakällor" eller "Visa -&gt; Alternativ"</value>
     
@@ -1852,6 +1899,10 @@
   </data>
   <data name="ErrSortWrongType" xml:space="preserve">
     <value>Det går inte att sortera efter uttryckstyp.</value>
+    
+  </data>
+  <data name="ErrDistinctWrongType" xml:space="preserve">
+    <value>Det går inte att tillämpa distinkt på uttryckstypen.</value>
     
   </data>
   <data name="ErrFunctionDoesNotAcceptThisType_Function_Expected" xml:space="preserve">
@@ -3268,6 +3319,38 @@
     <value>Kontrasttema</value>
     
   </data>
+  <data name="AboutCollect" xml:space="preserve">
+    <value>Lägger till poster i en datakälla.</value>
+    
+  </data>
+  <data name="CollectDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="CollectRecordArg" xml:space="preserve">
+    <value>post</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>raderar alla poster i en samling. Kolumnerna i samlingen förblir kvar.</value>
+    
+  </data>
+  <data name="AboutClearCollect" xml:space="preserve">
+    <value>Raderar alla poster från en samling. Och lägger sedan till en annan uppsättning poster i samma samling.</value>
+    
+  </data>
+  <data name="ClearCollectionArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="ClearCollectDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="ClearCollectRecordArg" xml:space="preserve">
+    <value>post</value>
+    
+  </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>Tillämpar uppdateringarna på den angivna raden och ändrar raden i den angivna datakällan. Returnerar den uppdaterade raden.</value>
     
@@ -4398,6 +4481,10 @@
     <value>Artikel: formelreferens för Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrRecordDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
+    <value>Inkompatibel typ. Objektet du försöker lägga till i en post har en typ som inte är kompatibel med posten.</value>
+    
+  </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
     <value>Inkompatibel typ. Objektet du försöker lägga till i en tabell har en typ som inte är kompatibel med tabellen.</value>
     
@@ -4725,6 +4812,18 @@
   </data>
   <data name="ErrDeprecated" xml:space="preserve">
     <value>Den här funktionen är inaktuell och stöds inte längre.</value>
+    
+  </data>
+  <data name="WarnDeferredType" xml:space="preserve">
+    <value>Varning! En senarelagd typ har angetts.</value>
+    
+  </data>
+  <data name="ErrExpectedIdentifierArg_Name" xml:space="preserve">
+    <value>Förväntat namn på identifierare</value>
+    
+  </data>
+  <data name="ErrInvalidFunction" xml:space="preserve">
+    <value>Denna funktion är tvetydig. Den innehåller lambda-uttryck och kolumnidentifierare för samma argument.</value>
     
   </data>
 </root>

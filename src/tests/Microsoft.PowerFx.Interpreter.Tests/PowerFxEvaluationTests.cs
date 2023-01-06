@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.PowerFx;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
@@ -259,6 +260,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 RecordValue parameters;
                 var iSetup = InternalSetup.Parse(setupHandlerName);
                 var config = new PowerFxConfig(features: iSetup.Features);
+                config.EnableParseJSONFunction();
 
                 if (string.Equals(iSetup.HandlerName, "AsyncTestSetup", StringComparison.OrdinalIgnoreCase))
                 {
@@ -292,16 +294,15 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     return new RunResult(check);
                 }
 
-                var rtConfig = SymbolValues.NewFromRecord(symbolTable, parameters);
+                var symbolValues = SymbolValues.NewFromRecord(symbolTable, parameters);
+                var runtimeConfig = new RuntimeConfig(symbolValues);
                                 
                 if (iSetup.TimeZoneInfo != null)
-                {
-                    var commonSymbols = new SymbolValues();
-                    commonSymbols.AddService(iSetup.TimeZoneInfo);
-                    rtConfig = ReadOnlySymbolValues.Compose(rtConfig, commonSymbols);
+                {                    
+                    runtimeConfig.AddService(iSetup.TimeZoneInfo);
                 }
 
-                var newValue = await check.GetEvaluator().EvalAsync(CancellationToken.None, rtConfig);
+                var newValue = await check.GetEvaluator().EvalAsync(CancellationToken.None, runtimeConfig);
 
                 // UntypedObjectType type is currently not supported for serialization.
                 if (newValue.Type is UntypedObjectType)
@@ -310,7 +311,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 }
 
                 // Serialization test. Serialized expression must produce an identical result.
-                var newValueDeserialized = await engine.EvalAsync(newValue.ToExpression(), CancellationToken.None, runtimeConfig: rtConfig);
+                var newValueDeserialized = await engine.EvalAsync(newValue.ToExpression(), CancellationToken.None, runtimeConfig: runtimeConfig);
 
                 return new RunResult(newValueDeserialized);
             }

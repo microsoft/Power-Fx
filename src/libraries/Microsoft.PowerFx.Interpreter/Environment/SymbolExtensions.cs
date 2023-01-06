@@ -15,7 +15,7 @@ namespace Microsoft.PowerFx
         /// <param name="symbols">SymbolValues where to set the TimeZoneInfo.</param>
         /// <param name="timezone">TimeZoneInfo to set.</param>
         /// <exception cref="ArgumentNullException">When timezone is null.</exception>
-        public static void SetTimeZone(this SymbolValues symbols, TimeZoneInfo timezone)
+        public static void SetTimeZone(this RuntimeConfig symbols, TimeZoneInfo timezone)
         {
             symbols.AddService(timezone ?? throw new ArgumentNullException(nameof(timezone)));
         }
@@ -26,7 +26,7 @@ namespace Microsoft.PowerFx
         /// <param name="symbols">SymbolValues where to set the CultureInfo.</param>
         /// <param name="culture">CultureInfo to set.</param>
         /// <exception cref="ArgumentNullException">When culture is null.</exception>
-        public static void SetCulture(this SymbolValues symbols, CultureInfo culture)
+        public static void SetCulture(this RuntimeConfig symbols, CultureInfo culture)
         {
             symbols.AddService(culture ?? throw new ArgumentNullException(nameof(culture)));
         }

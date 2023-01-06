@@ -194,10 +194,14 @@ csharp_style_prefer_switch_expression = true:suggestion
 csharp_style_prefer_not_pattern = true:suggestion
 csharp_style_prefer_extended_property_pattern = true:suggestion
 
+# IDE0003: Name can be simplified
+dotnet_diagnostic.IDE0003.severity = none
 # IDE0004: Cast is redundant
 dotnet_diagnostic.IDE0004.severity = warning
 # IDE0005: Using directive is unnecessary ## REQUIRED
 dotnet_diagnostic.IDE0005.severity = none
+# IDE0007: use 'var' instead of explicit type 
+dotnet_diagnostic.IDE0007.severity = none
 # IDE0032: Use auto property
 dotnet_diagnostic.IDE0032.severity = none
 # IDE0052: Private member can be removed as the value assigned to it is never read

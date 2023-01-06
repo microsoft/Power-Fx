@@ -530,6 +530,28 @@
   <data name="AboutBooleanNT_input" xml:space="preserve">
     <value>要处理的数值组成的列。</value>
   </data>
+  <data name="AboutBooleanB" xml:space="preserve">
+    <value>将“布尔型”转换为布尔值。</value>
+    
+  </data>
+  <data name="BooleanBArg1" xml:space="preserve">
+    <value>布尔</value>
+    
+  </data>
+  <data name="AboutBooleanB_boolean" xml:space="preserve">
+    <value>要转换为布尔值的布尔值。</value>
+  </data>
+  <data name="AboutBooleanBT" xml:space="preserve">
+    <value>将布尔值列转换为布尔值列。</value>
+    
+  </data>
+  <data name="BooleanBTArg1" xml:space="preserve">
+    <value>输入</value>
+    
+  </data>
+  <data name="AboutBooleanBT_input" xml:space="preserve">
+    <value>要处理的布尔值列。</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>返回第一个非空白参数</value>
     
@@ -1367,6 +1389,23 @@
   <data name="AboutDegrees_input" xml:space="preserve">
     <value>要处理的数值组成的列(以弧度为单位)。</value>
   </data>
+  <data name="AboutDistinct" xml:space="preserve">
+    <value>对表的一列或多列计算表达式，并返回由一组列组成的表，其中包含计算的表达式的非重复(唯一)值。</value>
+  </data>
+  <data name="DistinctArg1" xml:space="preserve">
+    <value>源</value>
+    
+  </data>
+  <data name="DistinctArg2" xml:space="preserve">
+    <value>表达式</value>
+    
+  </data>
+  <data name="AboutDistinct_source" xml:space="preserve">
+    <value>将从中提取非重复值的表。</value>
+  </data>
+  <data name="AboutDistinct_expression" xml:space="preserve">
+    <value>对输入表中为 Distinct 运算提供值的每一行计算的表达式。</value>
+  </data>
   <data name="AboutAtan2" xml:space="preserve">
     <value>返回指定 x 和 y 坐标的反正切(以弧度为单位)。</value>
   </data>
@@ -1798,6 +1837,14 @@
     <value>数值太大。</value>
     
   </data>
+  <data name="ErrTextFormatTooLarge" xml:space="preserve">
+    <value>格式字符串大小不能超过 {0} 个字符。</value>
+    
+  </data>
+  <data name="ErrTextInvalidFormat" xml:space="preserve">
+    <value>格式无效。</value>
+    
+  </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
     <value>此数据源无效。请通过单击“内容 -&gt; 数据源”或“查看 -&gt; 选项”来修复“数据源”窗格中的错误</value>
     
@@ -1852,6 +1899,10 @@
   </data>
   <data name="ErrSortWrongType" xml:space="preserve">
     <value>无法对表达式类型进行排序。</value>
+    
+  </data>
+  <data name="ErrDistinctWrongType" xml:space="preserve">
+    <value>无法对表达式类型应用 Distinct。</value>
     
   </data>
   <data name="ErrFunctionDoesNotAcceptThisType_Function_Expected" xml:space="preserve">
@@ -3268,6 +3319,38 @@
     <value>对比度主题</value>
     
   </data>
+  <data name="AboutCollect" xml:space="preserve">
+    <value>将记录添加到数据源。</value>
+    
+  </data>
+  <data name="CollectDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="CollectRecordArg" xml:space="preserve">
+    <value>记录</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>删除集合的所有记录。将保留集合的列。</value>
+    
+  </data>
+  <data name="AboutClearCollect" xml:space="preserve">
+    <value>删除集合中的所有记录。然后向同一集合添加另一组记录。</value>
+    
+  </data>
+  <data name="ClearCollectionArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="ClearCollectDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="ClearCollectRecordArg" xml:space="preserve">
+    <value>记录</value>
+    
+  </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>将更新应用到指定行并更改指定数据源中的行。返回更新的行。</value>
     
@@ -4398,6 +4481,10 @@
     <value>文章: 针对 Power Apps 的公式引用</value>
     
   </data>
+  <data name="ErrorResource_ErrRecordDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
+    <value>类型不兼容。您正在尝试放入记录中的项的类型与记录不兼容。</value>
+    
+  </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
     <value>类型不兼容。你正在尝试放入表格的项的类型与表不兼容。</value>
     
@@ -4725,6 +4812,18 @@
   </data>
   <data name="ErrDeprecated" xml:space="preserve">
     <value>此功能已被弃用并且不再受支持。</value>
+    
+  </data>
+  <data name="WarnDeferredType" xml:space="preserve">
+    <value>警告: 提供了延迟类型。</value>
+    
+  </data>
+  <data name="ErrExpectedIdentifierArg_Name" xml:space="preserve">
+    <value>预期标识符名称</value>
+    
+  </data>
+  <data name="ErrInvalidFunction" xml:space="preserve">
+    <value>此函数不明确，其中包含同一参数的 Lambda 表达式和列标识符。</value>
     
   </data>
 </root>

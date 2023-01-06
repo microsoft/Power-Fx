@@ -14,7 +14,7 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Functions
 {
-    internal partial class Library
+    internal static partial class Library
     {
         // ColorTable is ARGB
         private static readonly Regex RegexColorTable = new (@"^#(?<a>[0-9a-fA-F]{2})(?<r>[0-9a-fA-F]{2})(?<g>[0-9a-fA-F]{2})(?<b>[0-9a-fA-F]{2})?$", RegexOptions.Compiled);

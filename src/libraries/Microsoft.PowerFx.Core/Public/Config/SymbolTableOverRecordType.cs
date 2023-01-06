@@ -24,13 +24,14 @@ namespace Microsoft.PowerFx
 
         // Mapping between slots and logical names on RecordType.
         // name --> Slot; used at design time to ensure same slot per field. 
-        private readonly Dictionary<string, NameSymbol> _map = new Dictionary<string, NameSymbol>(); 
+        private readonly Dictionary<string, NameSymbol> _map = new Dictionary<string, NameSymbol>();
+
+        internal RecordType Type => _type;
 
         public SymbolTableOverRecordType(RecordType type, ReadOnlySymbolTable parent = null, bool mutable = false, bool allowThisRecord = false)
         {
             _type = type;
             _debugName = "per-eval";
-            _parent = parent;
             _mutable = mutable;
             _allowThisRecord = allowThisRecord;
 
