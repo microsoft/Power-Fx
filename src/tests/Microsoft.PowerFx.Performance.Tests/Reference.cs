@@ -27,6 +27,12 @@ namespace Microsoft.PowerFx.Performance.Tests
     [Q3Column]
     [MaxColumn]
     [SimpleJob(runtimeMoniker: RuntimeMoniker.NetCoreApp31)]
+    // The objective of this set of tests is to serve as a reference in order to
+    // compare results between them if the server on which they are run have
+    // different performances
+    // - FixedDuration is supposed to take 100ms, always
+    // - FixedLoop will always have a fixed set of instructions and its duration
+    //   should only depend on the CPU speed
     public class Reference
     {
         [GlobalSetup]
@@ -46,7 +52,7 @@ namespace Microsoft.PowerFx.Performance.Tests
 
         [Benchmark]
         [MethodImpl(MethodImplOptions.NoOptimization | MethodImplOptions.NoInlining)]
-        public long Loop()
+        public long FixedLoop()
         {
             var j = 0;
             for (var i = 0; i < 10000000; i++)
