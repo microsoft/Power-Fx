@@ -7,19 +7,24 @@ using System.Linq;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Diagnostics.Windows;
 using BenchmarkDotNet.Diagnostics.Windows.Configs;
+using BenchmarkDotNet.Jobs;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Performance.Tests
 {
+    [MemoryDiagnoser]
+    [NativeMemoryProfiler]    
     [EtwProfiler] // https://benchmarkdotnet.org/articles/features/etwprofiler.html
     [CsvExporter] // https://benchmarkdotnet.org/articles/configs/exporters.html
     [MinColumn]
     [Q1Column]
     [MeanColumn]
+    [MedianColumn]
     [Q3Column]
     [MaxColumn]
-    public class PerformanceTest1
+    [SimpleJob(runtimeMoniker: RuntimeMoniker.NetCoreApp31)]
+    public class BasicPerformance
     {
         private PowerFxConfig _powerFxConfig;
         private Engine _engine;
