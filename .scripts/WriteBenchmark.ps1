@@ -171,14 +171,18 @@ $Connection.Open()
 $Command = New-Object System.Data.SQLClient.SQLCommand
 $Command.Connection = $Connection
 
-$insertQuery = "insert into Runs ([TimeStamp], [Hash], [Pipeline], [BuildId], [BuildNumber], [BuildConfiguration], [Branch]) values (getutcdate(), '$pfxHash', '$env:BUILD_DEFINITIONNAME', '$env:BUILD_BUILDID', '$env:BUILD_BUILDNUMBER', '$env:BUILDCONFIGURATION', '$pfxBranch'); select scope_identity() as 'Id'"
+$insertQuery =  "insert into Runs ([TimeStamp], [Hash], [Pipeline], [BuildId], [BuildNumber], [BuildConfiguration], [Branch]) "
+$insertQuery += "values (getutcdate(), '$pfxHash', '$env:BUILD_DEFINITIONNAME', '$env:BUILD_BUILDID', '$env:BUILD_BUILDNUMBER', '$env:BUILDCONFIGURATION', '$pfxBranch');"
+$insertQuery += "select scope_identity() as 'Id'"
 
 $Command.CommandText = $insertquery
 $runId = $Command.ExecuteScalar()
 
 Write-Host "RunId:     $runId"
 
-$insertQuery = "insert into Contexts ([RunId], [CPUModel], [CPUSpeedMHz], [CPUName], [NumberCores], [LogicalProcessors], [MemoryGB], [BenchMarkDotNetVersion], [OS], [VM], [DotNetRuntime], [DotNetVersion]) values ('$runId', '$cpuModel', '$cpuSpeed', '$cpuName', '$numberCores', '$numberLogicalProcs', '$memoryGB', '$bmdnVersion', '$osVersion', '$vmType', '$dnRTVersion', '$dnVersion'); select scope_identity() as 'Id'"
+$insertQuery =  "insert into Contexts ([RunId], [CPUModel], [CPUSpeedMHz], [CPUName], [NumberCores], [LogicalProcessors], [MemoryGB], [BenchMarkDotNetVersion], [OS], [VM], [DotNetRuntime], [DotNetVersion]) "
+$insertQuery += "values ('$runId', '$cpuModel', '$cpuSpeed', '$cpuName', '$numberCores', '$numberLogicalProcs', '$memoryGB', '$bmdnVersion', '$osVersion', '$vmType', '$dnRTVersion', '$dnVersion');"
+$insertQuery += "select scope_identity() as 'Id'"
 
 $Command.CommandText = $insertquery
 $contextId = $Command.ExecuteScalar()
@@ -234,8 +238,18 @@ foreach ($file in [System.Linq.Enumerable]::OrderBy($list, [Func[object, string]
         $q3 = $row.Q3
         $max = $row.Max
 
-        $insertQuery = "insert into Tests ([RunId], [ContextId], [TestName], [N], [MeanMs], [StdDevMs], [MinMs], [Q1Ms], [MedianMs], [Q3Ms], [MaxMs]) values ('$runId', '$contextId', '$testName', " 
-        if ($n.GetType() -eq [DBNull]) { $insertQuery += "null" } else { $insertQuery += "'$n'" } 
+        $insertQuery =  "insert into Tests ([RunId], [ContextId], [TestName], [N], [MeanMs], [StdDevMs], [MinMs], [Q1Ms], [MedianMs], [Q3Ms], [MaxMs]) "
+        $insertQuery += "values ('$runId', '$contextId', '$testName', "
+
+        if ($n.GetType() -eq [DBNull]) 
+        {
+            $insertQuery += "null" 
+        } 
+        else 
+        { 
+            $insertQuery += "'$n'" 
+        } 
+
         $insertQuery += ", '$mean', '$stdDev', '$min', '$q1', '$median', '$q3', '$max'); select scope_identity() as 'Id'"
                 
         $Command.CommandText = $insertquery
