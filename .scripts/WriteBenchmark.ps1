@@ -14,11 +14,14 @@ function ConvertToMs([string]$str)
     {
         $parts = $str.Split(@(' '), [System.StringSplitOptions]::RemoveEmptyEntries)
         $val = [double]$parts[0]
-        if ($parts[1] -eq "ns") { $val /= 1000000 }
-        elseif ($parts[1] -eq "µs") { $val /= 1000 }
-        elseif ($parts[1] -eq "s") { $val *= 1000}
-        elseif ($parts[1] -eq "ms") { } ## Do nothing
-        else { throw ("Unknown unit: " + $parts[1]) }
+
+        ## Convert to milliseconds
+        if     ($parts[1] -eq "s")  { $val *= 1000    }
+        elseif ($parts[1] -eq "ms") {                 } ## Do nothing
+        elseif ($parts[1] -eq "µs") { $val /= 1000    }
+        elseif ($parts[1] -eq "ns") { $val /= 1000000 }
+        else   { throw ("Unknown unit: " + $parts[1]) }
+
         $val
     }
     catch
@@ -244,3 +247,5 @@ foreach ($file in [System.Linq.Enumerable]::OrderBy($list, [Func[object, string]
     Write-Host "TestIds: " ([String]::Join(', ', $ctxids.ToArray()))
     Write-Host
 }
+
+Write-Host "--- End of script ---"
