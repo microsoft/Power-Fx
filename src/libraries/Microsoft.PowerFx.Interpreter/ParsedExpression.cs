@@ -19,7 +19,7 @@ namespace Microsoft.PowerFx
     /// </summary>
     public interface IExpressionEvaluator
     {
-        public Task<FormulaValue> EvalAsync(CancellationToken cancellationToken, ReadOnlySymbolValues runtimeConfig = null);
+        public Task<FormulaValue> EvalAsync(CancellationToken cancellationToken, IRuntimeConfig runtimeConfig = null);
     }
 
     // Extensions for adding evaluation methods. 
@@ -27,7 +27,12 @@ namespace Microsoft.PowerFx
     // Creating an evaluator uses internal state. 
     public static class CheckResultExtensions
     {
-        public static FormulaValue Eval(this IExpressionEvaluator expr, ReadOnlySymbolValues runtimeConfig = null)
+        public static FormulaValue Eval(this IExpressionEvaluator expr, ReadOnlySymbolValues runtimeConfig)
+        {
+            return expr.EvalAsync(CancellationToken.None, new RuntimeConfig(runtimeConfig)).Result;
+        }
+
+        public static FormulaValue Eval(this IExpressionEvaluator expr, IRuntimeConfig runtimeConfig = null)
         {
             return expr.EvalAsync(CancellationToken.None, runtimeConfig).Result;
         }
@@ -42,6 +47,12 @@ namespace Microsoft.PowerFx
             // If we eval with a RecordValue, we must have called Check with a RecordType. 
             var parameterType = ((ParsedExpression)expr)._parameterSymbolTable;
             var runtimeConfig = SymbolValues.NewFromRecord(parameterType, parameters);
+            return await expr.EvalAsync(cancellationToken, new RuntimeConfig(runtimeConfig));
+        }
+
+        public static async Task<FormulaValue> EvalAsync(this IExpressionEvaluator expr, CancellationToken cancellationToken, ReadOnlySymbolValues symbolValues)
+        {
+            var runtimeConfig = new RuntimeConfig(symbolValues);
             return await expr.EvalAsync(cancellationToken, runtimeConfig);
         }
 
@@ -109,17 +120,18 @@ namespace Microsoft.PowerFx
         async Task<FormulaValue> IExpression.EvalAsync(RecordValue parameters, CancellationToken cancellationToken)
         {
             var useRowScope = _topScopeSymbol.AccessedFields.Count > 0;
-            ReadOnlySymbolValues runtimeConfig = null;
+            ReadOnlySymbolValues symbolValues = null;
 
             // For backwards compat - if a caller with internals access created a IR that binds to 
             // rowscope directly, then apply parameters to row scope. 
             if (!useRowScope)
             {
-                runtimeConfig = SymbolValues.NewFromRecord(parameters);
+                symbolValues = SymbolValues.NewFromRecord(parameters);
                 parameters = RecordValue.Empty();
             }
 
-            var evalVisitor = new EvalVisitor(_cultureInfo, cancellationToken, runtimeConfig);
+            var runtimeConfig = new RuntimeConfig(symbolValues, _cultureInfo);
+            var evalVisitor = new EvalVisitor(runtimeConfig, cancellationToken);
             try
             {
                 var newValue = await _irnode.Accept(evalVisitor, new EvalVisitorContext(SymbolContext.NewTopScope(_topScopeSymbol, parameters), _stackMarker));
@@ -131,16 +143,29 @@ namespace Microsoft.PowerFx
             }
         }
 
-        public async Task<FormulaValue> EvalAsync(CancellationToken cancellationToken, ReadOnlySymbolValues runtimeConfig = null)
+        public async Task<FormulaValue> EvalAsync(CancellationToken cancellationToken, IRuntimeConfig runtimeConfig = null)
         {
-            ReadOnlySymbolValues runtimeConfig2 = ComposedReadOnlySymbolValues.New(
+            ReadOnlySymbolValues symbolValues = ComposedReadOnlySymbolValues.New(
                 false,
                 _allSymbols,
-                runtimeConfig,
+                runtimeConfig?.Values,
                 _globals);
 
-            var culture = runtimeConfig2.GetService<CultureInfo>() ?? _cultureInfo;
-            var evalVisitor = new EvalVisitor(culture, cancellationToken, runtimeConfig2);
+            IServiceProvider innerServices = null;
+            if (_cultureInfo != null)
+            {
+                var temp = new BasicServiceProvider();
+                temp.AddService(_cultureInfo);
+                innerServices = temp;
+            }
+
+            var runtimeConfig2 = new RuntimeConfig
+            {
+                Values = symbolValues,
+                ServiceProvider = new BasicServiceProvider(runtimeConfig?.ServiceProvider, innerServices)
+            };
+
+            var evalVisitor = new EvalVisitor(runtimeConfig2, cancellationToken);
 
             try
             {
@@ -155,12 +180,21 @@ namespace Microsoft.PowerFx
 
         internal async Task<FormulaValue> EvalAsyncInternal(RecordValue parameters, CancellationToken cancel, StackDepthCounter stackMarker)
         {
-            var runtimeConfig = SymbolValues.NewFromRecord(_parameterSymbolTable, parameters);
+            var symbolValues = SymbolValues.NewFromRecord(_parameterSymbolTable, parameters);
             parameters = RecordValue.Empty();
+
+            var runtimeConfig2 = new RuntimeConfig
+            {
+                Values = symbolValues                
+            };
+            if (_cultureInfo != null)
+            {
+                runtimeConfig2.SetCulture(_cultureInfo);
+            }
 
             // We don't catch the max call depth exception here becuase someone could swallow the error with an "IfError" check.
             // Instead we only catch at the top of parsed expression, which is the above function.
-            var ev2 = new EvalVisitor(_cultureInfo, cancel, runtimeConfig);
+            var ev2 = new EvalVisitor(runtimeConfig2, cancel);
             var newValue = await _irnode.Accept(ev2, new EvalVisitorContext(SymbolContext.NewTopScope(_topScopeSymbol, parameters), stackMarker));
             return newValue;
         }

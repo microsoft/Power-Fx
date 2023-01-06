@@ -1841,6 +1841,10 @@
     <value>Format string size can't be more than {0} characters.</value>
     <comment>Error Message.</comment>
   </data>
+  <data name="ErrTextInvalidFormat" xml:space="preserve">
+    <value>Invalid format.</value>
+    <comment>Error Message returned by the Text function when the format passed to it is invalid.</comment>
+  </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
     <value>This Data source is invalid. Please fix the error in "Data sources" pane by clicking "Content -&gt; Data sources" or "View -&gt; Options"</value>
     <comment>Error Message.</comment>

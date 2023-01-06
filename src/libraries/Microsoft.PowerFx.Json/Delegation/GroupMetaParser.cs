@@ -8,7 +8,7 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata
 {
-    internal sealed partial class DelegationMetadata : IDelegationMetadata
+    internal sealed partial class DelegationMetadata : DelegationMetadataBase
     {
         private sealed class GroupMetaParser : MetaParser
         {

@@ -530,6 +530,28 @@
   <data name="AboutBooleanNT_input" xml:space="preserve">
     <value>Apstrādājamā skaitlisko vērtību kolonna.</value>
   </data>
+  <data name="AboutBooleanB" xml:space="preserve">
+    <value>Pārvērš “Būla vērtību” par Būla vērtību.</value>
+    
+  </data>
+  <data name="BooleanBArg1" xml:space="preserve">
+    <value>būla vērtība</value>
+    
+  </data>
+  <data name="AboutBooleanB_boolean" xml:space="preserve">
+    <value>Būla vērtība, kas jāpārvērš par Būla vērtību.</value>
+  </data>
+  <data name="AboutBooleanBT" xml:space="preserve">
+    <value>Pārvērš Būla vērtību kolonnu par Būla vērtību kolonnu.</value>
+    
+  </data>
+  <data name="BooleanBTArg1" xml:space="preserve">
+    <value>ievade</value>
+    
+  </data>
+  <data name="AboutBooleanBT_input" xml:space="preserve">
+    <value>Apstrādājamā Būla vērtību kolonna.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Atgriež pirmo argumentu, kurš nav tukšs.</value>
     
@@ -1367,6 +1389,23 @@
   <data name="AboutDegrees_input" xml:space="preserve">
     <value>Apstrādājamā skaitlisko vērtību (radiānos) kolonna.</value>
   </data>
+  <data name="AboutDistinct" xml:space="preserve">
+    <value>Novērtē izteiksmi attiecībā pret vienu vai vairākām tabulas kolonnām un atgriež vienas kolonnas tabulu, kas satur atsevišķas (unikālas) vērtības novērtētajai izteiksmei.</value>
+  </data>
+  <data name="DistinctArg1" xml:space="preserve">
+    <value>avots</value>
+    
+  </data>
+  <data name="DistinctArg2" xml:space="preserve">
+    <value>izteiksme</value>
+    
+  </data>
+  <data name="AboutDistinct_source" xml:space="preserve">
+    <value>Tabula, no kuras tiks izgūtas atšķirīgās vērtības.</value>
+  </data>
+  <data name="AboutDistinct_expression" xml:space="preserve">
+    <value>Izteiksme, kas novērtēta attiecībā pret katru rindu ievades tabulā un kas nodrošina vērtības atšķirīgu vērtību operācijai.</value>
+  </data>
   <data name="AboutAtan2" xml:space="preserve">
     <value>Atgriež norādīto x un y koordinātu arktangensu (radiānos).</value>
   </data>
@@ -1798,6 +1837,14 @@
     <value>Skaitliskā vērtība ir pārāk liela..</value>
     
   </data>
+  <data name="ErrTextFormatTooLarge" xml:space="preserve">
+    <value>Formāta virkne nevar būt lielāka par {0} rakstzīmēm.</value>
+    
+  </data>
+  <data name="ErrTextInvalidFormat" xml:space="preserve">
+    <value>Nederīgs formāts.</value>
+    
+  </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
     <value>Šis datu avots nav derīgs. Lūdzu, novērsiet kļūdu rūtī "Datu avoti", noklikšķinot uz "Saturs -&gt; Datu avoti" vai "Skatīt -&gt; Opcijas"</value>
     
@@ -1852,6 +1899,10 @@
   </data>
   <data name="ErrSortWrongType" xml:space="preserve">
     <value>Nevar kārtot pēc izteiksmes tipa.</value>
+    
+  </data>
+  <data name="ErrDistinctWrongType" xml:space="preserve">
+    <value>Izteiksmes veidam nevar lietot atšķirīgas vērtības.</value>
     
   </data>
   <data name="ErrFunctionDoesNotAcceptThisType_Function_Expected" xml:space="preserve">
@@ -3268,6 +3319,38 @@
     <value>Kontrasta dizains</value>
     
   </data>
+  <data name="AboutCollect" xml:space="preserve">
+    <value>Pievieno ierakstus datu avotam.</value>
+    
+  </data>
+  <data name="CollectDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="CollectRecordArg" xml:space="preserve">
+    <value>ieraksts</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>Dzēš visus kolekcijas ierakstus. Kolekcijas kolonnas tiek atstātas.</value>
+    
+  </data>
+  <data name="AboutClearCollect" xml:space="preserve">
+    <value>Dzēš visus ierakstus no kolekcijas. Un pēc tam tai pašai kolekcijai pievieno citu ierakstu kopu.</value>
+    
+  </data>
+  <data name="ClearCollectionArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="ClearCollectDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="ClearCollectRecordArg" xml:space="preserve">
+    <value>ieraksts</value>
+    
+  </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>Lieto atjauninājumus norādītajā rindā un maina rindu norādītajā datu avotā. Atgriež atjaunināto rindu.</value>
     
@@ -4398,6 +4481,10 @@
     <value>Raksts: Formula reference for Power Apps (Formulas atsauce pakalpojumam Power Apps)</value>
     
   </data>
+  <data name="ErrorResource_ErrRecordDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
+    <value>Nesaderīgs tips. Vienumam, kuru mēģināt ievadīt ierakstā, ir ar ierakstu nesaderīgs tips.</value>
+    
+  </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
     <value>Nesaderīgs tips. Vienumam, kuru mēģināt ievadīt tabulā, ir ar tabulu nesaderīgs tips.</value>
     
@@ -4725,6 +4812,18 @@
   </data>
   <data name="ErrDeprecated" xml:space="preserve">
     <value>Šis līdzeklis ir novecojis un vairs netiek atbalstīts.</value>
+    
+  </data>
+  <data name="WarnDeferredType" xml:space="preserve">
+    <value>Brīdinājums. Norādīts atlikta ieraksta tips.</value>
+    
+  </data>
+  <data name="ErrExpectedIdentifierArg_Name" xml:space="preserve">
+    <value>Paredzētais identifikatora nosaukums</value>
+    
+  </data>
+  <data name="ErrInvalidFunction" xml:space="preserve">
+    <value>Šī funkcija ir neviennozīmīga. Tajā ir ietvertas LAMBDA izteiksmes un kolonnu identifikatori vienam un tam pašam argumentam.</value>
     
   </data>
 </root>

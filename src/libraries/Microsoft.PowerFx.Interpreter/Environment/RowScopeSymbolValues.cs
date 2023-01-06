@@ -22,13 +22,6 @@ namespace Microsoft.PowerFx
         public RowScopeSymbolValues(SymbolTableOverRecordType symTable, RecordValue parameter)
             : base(symTable)
         {
-#pragma warning disable CS0618 // Type or member is obsolete
-            if (symTable.Parent != null)
-#pragma warning restore CS0618 // Type or member is obsolete
-            {
-                throw new InvalidOperationException($"Can't handle Record symbols with a parent. Use Compose instead");
-            }
-
             _parameter = parameter;
 
             DebugName = symTable.DebugName;

@@ -31,19 +31,6 @@ namespace Microsoft.PowerFx
         /// </summary>
         public bool NeedsValues => !_slots.IsEmpty;
 
-        // Expose public setters
-        // https://github.com/microsoft/Power-Fx/issues/828
-        [Obsolete("Use Composition instead of Parent Pointer")]
-        public new ReadOnlySymbolTable Parent
-        {
-            get => _parent;
-            init
-            {
-                Inc();
-                _parent = value;
-            }
-        }
-
         private DName ValidateName(string name)
         {
             if (!DName.IsValidDName(name))

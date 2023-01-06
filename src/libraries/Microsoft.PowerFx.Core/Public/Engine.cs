@@ -10,7 +10,6 @@ using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.Types;
-using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Syntax;
@@ -100,8 +99,7 @@ namespace Microsoft.PowerFx
                 return existing;
             }
 
-            var list = new SymbolTableEnumerator(localSymbols, EngineSymbols, SupportedFunctions, Config.SymbolTable);
-            symbols = new ComposedReadOnlySymbolTable(list);
+            symbols = ReadOnlySymbolTable.Compose(localSymbols, EngineSymbols, SupportedFunctions, Config.SymbolTable);
             return symbols;
         }
 

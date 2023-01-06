@@ -17,7 +17,7 @@ namespace Microsoft.PowerFx.Tests
     {
         private static EditorContextScope FromJson(Engine engine, string json, ParserOptions options = null)
         {
-            var context = (RecordValue)FormulaValue.FromJson(json);
+            var context = (RecordValue)FormulaValueJSON.FromJson(json);
             var symbols = ReadOnlySymbolTable.NewFromRecord(context.Type);
             return engine.CreateEditorScope(options, symbols);
         }

@@ -159,17 +159,24 @@ namespace Microsoft.PowerFx
             }
 
             var symbolValues = ReadOnlySymbolValues.NewFromRecord(parameters);
+            var runtimeConfig = new RuntimeConfig(symbolValues);
 
-            return await EvalAsync(expressionText, cancellationToken, options, null, symbolValues);
+            return await EvalAsync(expressionText, cancellationToken, options, null, runtimeConfig);
         }
 
-        public async Task<FormulaValue> EvalAsync(string expressionText, CancellationToken cancellationToken, ParserOptions options = null, ReadOnlySymbolTable symbolTable = null, ReadOnlySymbolValues runtimeConfig = null)
+        public async Task<FormulaValue> EvalAsync(string expressionText, CancellationToken cancellationToken, ReadOnlySymbolValues runtimeConfig)
+        {
+            var runtimeConfig2 = new RuntimeConfig(runtimeConfig);
+            return await EvalAsync(expressionText, cancellationToken, runtimeConfig: runtimeConfig2);
+        }
+
+        public async Task<FormulaValue> EvalAsync(string expressionText, CancellationToken cancellationToken, ParserOptions options = null, ReadOnlySymbolTable symbolTable = null, RuntimeConfig runtimeConfig = null)
         {
             // We could have any combination of symbols and runtime values. 
             // - RuntimeConfig may be null if we don't need it. 
             // - Some Symbols are metadata-only (like option sets, UDFs, constants, etc)
             // and hence don't require a corresponnding runtime Symbol Value. 
-            var parameterSymbols = runtimeConfig?.SymbolTable;
+            var parameterSymbols = runtimeConfig?.Values?.SymbolTable;
             var symbolsAll = ReadOnlySymbolTable.Compose(parameterSymbols, symbolTable);
 
             var check = Check(expressionText, options, symbolsAll);

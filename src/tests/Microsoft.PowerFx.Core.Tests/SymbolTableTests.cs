@@ -25,24 +25,6 @@ namespace Microsoft.PowerFx.Core.Tests
             AssertUnique(set, symbolTable.VersionHash);
         }
 
-#pragma warning disable CS0618 // Type or member is obsolete
-        [Fact]
-        public void Parent()
-        {
-            var s0 = new SymbolTable();
-            var s1 = new SymbolTable
-            {
-                Parent = s0
-            };
-            
-            ReadOnlySymbolTable r0 = s0;
-            ReadOnlySymbolTable r1 = s1;
-
-            Assert.Same(s1.Parent, s0);
-            Assert.Same(r1.Parent, s0);
-        }
-#pragma warning restore CS0618 // Type or member is obsolete
-
         // Changing the config changes its hash
         [Fact]
         public void ConfigHash()
@@ -236,11 +218,6 @@ namespace Microsoft.PowerFx.Core.Tests
 
             Assert.DoesNotContain(symbolTableCopy1.Functions, f => f.Name == "Abs");
             Assert.DoesNotContain(symbolTableCopy2.Functions, f => f.Name == "Day");
-
-#pragma warning disable CS0618 // Type or member is obsolete
-            Assert.Same(symbolTableCopy1.Parent, symbolTableOriginal.Parent);
-            Assert.Same(symbolTableCopy2.Parent, symbolTableOriginal.Parent);
-#pragma warning restore CS0618 // Type or member is obsolete
 
             // Check if nothing else has been copied
             Assert.Empty(symbolTableCopy1.SymbolNames);
