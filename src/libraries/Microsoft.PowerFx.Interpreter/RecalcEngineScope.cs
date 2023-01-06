@@ -24,7 +24,7 @@ namespace Microsoft.PowerFx
         private readonly RecordType _contextType;
         private readonly ParserOptions _parserOptions;
         
-        public RecalcEngineScope(Engine engine, RecordType contextType, ParserOptions options)
+        private RecalcEngineScope(Engine engine, RecordType contextType, ParserOptions options)
         {
             _engine = engine;
             _contextType = contextType;

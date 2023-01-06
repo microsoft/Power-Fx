@@ -28,5 +28,12 @@
     <ProjectReference Include="..\..\libraries\Microsoft.PowerFx.Interpreter\Microsoft.PowerFx.Interpreter.csproj" />
     <ProjectReference Include="..\..\libraries\Microsoft.PowerFx.Json\Microsoft.PowerFx.Json.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="TypeSystemTests\JsonTypeSnapshots\**">
+      <Link>TypeSystemTests\JsonTypeSnapshots\%(FileName)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
   
 </Project>

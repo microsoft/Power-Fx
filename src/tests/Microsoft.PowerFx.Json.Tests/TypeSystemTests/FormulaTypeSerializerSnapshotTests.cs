@@ -116,8 +116,7 @@ namespace Microsoft.PowerFx.Tests
                 {
                     // Serialize types without accounting for any defined type names
                     new FormulaTypeJsonConverter(new DefinedTypeSymbolTable())
-                },
-                DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault
+                }
             });
         }
 

@@ -14,7 +14,7 @@
     <Title>Microsoft Power Fx JSON</Title>
     <Description>The library for all Microsoft Power Fx JSON functionalities</Description>
     <Summary>The library for all Microsoft Power Fx JSON functionalities</Summary>
-    <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <GenerateNeutralResourcesLanguageAttribute>false</GenerateNeutralResourcesLanguageAttribute>
     <AssemblyOriginatorKeyFile>..\..\..\src\build\35MSSharedLib1024.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>

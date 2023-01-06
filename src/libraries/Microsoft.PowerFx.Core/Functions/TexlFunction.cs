@@ -1419,10 +1419,4 @@ namespace Microsoft.PowerFx.Core.Functions
             return new IRCallNode(context.GetIRContext(node), this, args);
         }
     }
-
-    // A function capable of async invokes. 
-    internal interface IAsyncTexlFunction
-    {
-        Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancellationToken);
-    }
 }
