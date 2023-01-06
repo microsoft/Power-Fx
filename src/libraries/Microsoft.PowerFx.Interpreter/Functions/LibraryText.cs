@@ -680,16 +680,11 @@ namespace Microsoft.PowerFx.Functions
             return new InMemoryTableValue(irContext, StandardTableNodeRecords(irContext, rows.ToArray(), forceSingleColumn: true));
         }
 
-        private static FormulaValue Substitute(IRContext irContext, FormulaValue[] args)
+        private static FormulaValue Substitute(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             var source = (StringValue)args[0];
             var match = (StringValue)args[1];
             var replacement = (StringValue)args[2];
-
-            if (string.IsNullOrEmpty(match.Value))
-            {
-                return source;
-            }
 
             var instanceNum = -1;
             if (args.Length > 3)
@@ -703,12 +698,55 @@ namespace Microsoft.PowerFx.Functions
                 instanceNum = (int)nv.Value;
             }
 
+            // Compute max possible memory this operation may need.
+            var sourceLen = source.Value.Length;
+            var matchLen = match.Value.Length;
+            var replacementLen = replacement.Value.Length;
+                        
+            int maxLenChars;
+            if (instanceNum < 0)
+            {
+                // Replace all instances. 
+                // Maximum possible length of Substitute, convert all the Match to Replacement. 
+                // Unicode, so 2B per character.
+                if (matchLen == 0)
+                {
+                    maxLenChars = sourceLen;
+                }
+                else
+                {
+                    maxLenChars = sourceLen / matchLen * replacementLen;
+                }
+            } 
+            else
+            {
+                // Only replace 1 instance 
+                maxLenChars = sourceLen + replacementLen;
+            }
+
+            var maxLenBytes = maxLenChars * 2;
+            runner.Governor.PollMemory(maxLenBytes);
+
+            var result = SubstituteWorker(runner, source, match, replacement, instanceNum);
+
+            return result; 
+        }
+
+        private static StringValue SubstituteWorker(EvalVisitor eval, StringValue source, StringValue match, StringValue replacement, int instanceNum)
+        {
+            if (string.IsNullOrEmpty(match.Value))
+            {
+                return source;
+            }
+
             var sourceValue = source.Value;
             var idx = sourceValue.IndexOf(match.Value);
             if (instanceNum < 0)
             {
                 while (idx >= 0)
                 {
+                    eval.CheckCancel();
+
                     var temp = sourceValue.Substring(0, idx) + replacement.Value;
                     sourceValue = sourceValue.Substring(idx + match.Value.Length);
                     var idx2 = sourceValue.IndexOf(match.Value);
@@ -729,6 +767,8 @@ namespace Microsoft.PowerFx.Functions
                 var num = 0;
                 while (idx >= 0 && ++num < instanceNum)
                 {
+                    eval.CheckCancel();
+
                     var idx2 = sourceValue.Substring(idx + match.Value.Length).IndexOf(match.Value);
                     if (idx2 < 0)
                     {
@@ -746,7 +786,7 @@ namespace Microsoft.PowerFx.Functions
                 }
             }
 
-            return new StringValue(irContext, sourceValue);
+            return FormulaValue.New(sourceValue);
         }
 
         public static FormulaValue StartsWith(IRContext irContext, StringValue[] args)

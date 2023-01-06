@@ -18,6 +18,8 @@ namespace Microsoft.PowerFx.Core.Tests
 
         internal TimeZoneInfo TimeZoneInfo { get; set; }
 
+        internal bool DisableMemChecks { get; set; }
+
         internal static InternalSetup Parse(string setupHandlerName)
         {
             var iSetup = new InternalSetup();
@@ -31,7 +33,12 @@ namespace Microsoft.PowerFx.Core.Tests
 
             foreach (var part in parts.ToArray())
             {
-                if (Enum.TryParse<TexlParser.Flags>(part, out var flag))
+                if (string.Equals(part, "DisableMemChecks", StringComparison.OrdinalIgnoreCase))
+                {
+                    iSetup.DisableMemChecks = true;
+                    parts.Remove(part);
+                }
+                else if (Enum.TryParse<TexlParser.Flags>(part, out var flag))
                 {
                     iSetup.Flags |= flag;
                     parts.Remove(part);
