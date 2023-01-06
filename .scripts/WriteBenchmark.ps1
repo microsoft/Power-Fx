@@ -163,7 +163,6 @@ Write-Host ".Net Version      : $dnVersion"
 
 Write-Host
 
-
 $Connection = New-Object System.Data.SQLClient.SQLConnection
 $Connection.ConnectionString = $ConnectionString
 $Connection.Open()

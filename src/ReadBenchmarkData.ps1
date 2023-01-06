@@ -11,10 +11,14 @@ function ConvertToMs([string]$str)
     {
         $parts = $str.Split(@(' '), [System.StringSplitOptions]::RemoveEmptyEntries)
         $val = [double]$parts[0]
-        if ($parts[1] -eq "ns") { $val /= 1000 }
-        elseif ($parts[1] -eq "s") { $val *= 1000}
-        elseif ($parts[1] -eq "ms") { } ## Do nothing
-        else { throw ("Unknown unit: " + $parts[1]) }
+
+        ## Convert to milliseconds
+        if     ($parts[1] -eq "s")  { $val *= 1000    }
+        elseif ($parts[1] -eq "ms") {                 } ## Do nothing
+        elseif ($parts[1] -eq "µs") { $val /= 1000    }
+        elseif ($parts[1] -eq "ns") { $val /= 1000000 }
+        else   { throw ("Unknown unit: " + $parts[1]) }
+
         $val
     }
     catch
@@ -23,7 +27,8 @@ function ConvertToMs([string]$str)
     }
 }
 
-Write-Host "------ Context ------"
+
+Write-Host "------ Test context ------"
 
 $cpuFile = "BenchmarkDotNet.Artifacts\cpu.csv"
 $memoryFile = "BenchmarkDotNet.Artifacts\memory.csv"
@@ -100,6 +105,7 @@ foreach ($line in (Get-Content $memoryFile))
 }
 
 $memoryGB = $memory / [double]1024 / [double]1024 / [double]1024;
+
 Write-Host "Memory (GB)       : $memoryGB"
 
 $index = 0
@@ -140,7 +146,7 @@ foreach ($file in [System.Linq.Enumerable]::OrderBy($list, [Func[object, string]
     $t = [System.IO.Path]::GetFileNameWithoutExtension($file).Split(@('.'))[-1]
     $testCategory = $t.Substring(0, $t.Length - 7)
 
-    Write-Host "------ $testCategory ------"
+    Write-Host "------ [TEST] $testCategory ------"
    
     $table = [System.Data.DataTable]::new()
     [void]$table.Columns.Add("TestName", [string]);      $table.Columns["TestName"].AllowDBNull = $false    
@@ -166,5 +172,8 @@ foreach ($file in [System.Linq.Enumerable]::OrderBy($list, [Func[object, string]
         [void]$table.Rows.Add($row.Method, $row.N, $mean, $stddev, $min, $q1, $median, $q3, $max)
     }
 
-    $table | Sort-Object TestName, N | ft 
+    $table | Sort-Object TestName, N | ft     
+    Write-Host
 }
+
+Write-Host "--- End of script ---"
