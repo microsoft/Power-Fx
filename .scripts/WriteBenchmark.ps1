@@ -12,14 +12,43 @@ function ConvertToMs([string]$str)
 {
     try
     {
+        if (($str.Trim() -eq '-') -or [string]::IsNullOrEmpty($str.Trim()))
+        {
+            $val = [double]0
+        }
+        else
+        {
+            $parts = $str.Split(@(' '), [System.StringSplitOptions]::RemoveEmptyEntries)
+            $val = [double]$parts[0]
+
+            ## Convert to milliseconds
+            if     ($parts[1] -eq "s")  { $val *= 1000    }
+            elseif ($parts[1] -eq "ms") {                 } ## Do nothing
+            elseif ($parts[1] -eq "µs") { $val /= 1000    }
+            elseif ($parts[1] -eq "ns") { $val /= 1000000 }
+            else   { throw ("Unknown unit: " + $parts[1]) }
+        }
+
+        $val
+    }
+    catch
+    {
+        Write-Error $_               
+    }
+}
+
+function ConvertToBytes([string]$str)
+{
+    try
+    {
         $parts = $str.Split(@(' '), [System.StringSplitOptions]::RemoveEmptyEntries)
         $val = [double]$parts[0]
 
         ## Convert to milliseconds
-        if     ($parts[1] -eq "s")  { $val *= 1000    }
-        elseif ($parts[1] -eq "ms") {                 } ## Do nothing
-        elseif ($parts[1] -eq "µs") { $val /= 1000    }
-        elseif ($parts[1] -eq "ns") { $val /= 1000000 }
+        if     ($parts[1] -eq "B")  {                    } ## Do nothing
+        elseif ($parts[1] -eq "kB") { $val *= 1024       } 
+        elseif ($parts[1] -eq "MB") { $val *= 1048576    }
+        elseif ($parts[1] -eq "GB") { $val *= 1073741824 }
         else   { throw ("Unknown unit: " + $parts[1]) }
 
         $val
@@ -199,17 +228,23 @@ foreach ($file in [System.Linq.Enumerable]::OrderBy($list, [Func[object, string]
     Write-Host "------ [TEST] $testCategory ------"
    
     $table = [System.Data.DataTable]::new()
-    [void]$table.Columns.Add("TestName", [string]);      $table.Columns["TestName"].AllowDBNull = $false    
-    [void]$table.Columns.Add("N", [int]);                $table.Columns["N"].AllowDBNull = $true                 ## Optional column, depends on the test
-    [void]$table.Columns.Add("Mean", [double]);          $table.Columns["Mean"].AllowDBNull = $false
-    [void]$table.Columns.Add("StdDev", [double]);        $table.Columns["StdDev"].AllowDBNull = $false
-    [void]$table.Columns.Add("Min", [double]);           $table.Columns["Min"].AllowDBNull = $false
-    [void]$table.Columns.Add("Q1", [double]);            $table.Columns["Q1"].AllowDBNull = $false
-    [void]$table.Columns.Add("Median", [double]);        $table.Columns["Median"].AllowDBNull = $false
-    [void]$table.Columns.Add("Q3", [double]);            $table.Columns["Q3"].AllowDBNull = $false
-    [void]$table.Columns.Add("Max", [double]);           $table.Columns["Max"].AllowDBNull = $false
+    [void]$table.Columns.Add("TestName", [string]);                $table.Columns["TestName"].AllowDBNull = $false    
+    [void]$table.Columns.Add("N", [int]);                          $table.Columns["N"].AllowDBNull = $true                 ## Optional column, depends on the test
+    [void]$table.Columns.Add("Mean", [double]);                    $table.Columns["Mean"].AllowDBNull = $false
+    [void]$table.Columns.Add("StdDev", [double]);                  $table.Columns["StdDev"].AllowDBNull = $false
+    [void]$table.Columns.Add("Min", [double]);                     $table.Columns["Min"].AllowDBNull = $false
+    [void]$table.Columns.Add("Q1", [double]);                      $table.Columns["Q1"].AllowDBNull = $false
+    [void]$table.Columns.Add("Median", [double]);                  $table.Columns["Median"].AllowDBNull = $false
+    [void]$table.Columns.Add("Q3", [double]);                      $table.Columns["Q3"].AllowDBNull = $false
+    [void]$table.Columns.Add("Max", [double]);                     $table.Columns["Max"].AllowDBNull = $false
+    [void]$table.Columns.Add("Gen0", [double]);                    $table.Columns["Gen0"].AllowDBNull = $false
+    [void]$table.Columns.Add("Gen1", [double]);                    $table.Columns["Gen1"].AllowDBNull = $false
+    [void]$table.Columns.Add("Allocated", [double]);               $table.Columns["Allocated"].AllowDBNull = $false
+    [void]$table.Columns.Add("AllocatedNativeMemory", [double]);   $table.Columns["AllocatedNativeMemory"].AllowDBNull = $false
+    [void]$table.Columns.Add("NativeMemoryLeak", [double]);        $table.Columns["NativeMemoryLeak"].AllowDBNull = $false
 
-    foreach ($row in (Import-Csv $file | Select-Object Method, Runtime, N, Mean, StdDev, Min, Q1, Median, Q3, Max))
+
+    foreach ($row in (Import-Csv $file | Select-Object Method, Runtime, N, Mean, StdDev, Min, Q1, Median, Q3, Max, Gen0, Gen1, Allocated, 'Allocated Native Memory', 'Native Memory Leak'))
     {
         $mean = ConvertToMs($row.Mean)
         $stddev = ConvertToMs($row.StdDev)
@@ -219,10 +254,19 @@ foreach ($file in [System.Linq.Enumerable]::OrderBy($list, [Func[object, string]
         $q3 = ConvertToMs($row.Q3)
         $max = ConvertToMs($row.Max)
 
-        [void]$table.Rows.Add($row.Method, $row.N, $mean, $stddev, $min, $q1, $median, $q3, $max)
+        $gen0 = $row.Gen0                           ## Gen X means number of GC collections per 1000 operations for that generation
+        $gen1 = $row.Gen1
+        $alloc = ConvertToBytes($row.Allocated)
+        $native = ConvertToBytes($row.'Allocated Native Memory')
+        $leak = ConvertToBytes($row.'Native Memory Leak')
+
+        if (($gen0 -eq $null) -or ($gen0.Trim() -eq '-') -or  [string]::IsNullOrEmpty($gen0.Trim())) { $gen0 = [double]0 }
+        if (($gen1 -eq $null) -or ($gen1.Trim() -eq '-') -or  [string]::IsNullOrEmpty($gen1.Trim())) { $gen1 = [double]0 }
+
+        [void]$table.Rows.Add($row.Method, $row.N, $mean, $stddev, $min, $q1, $median, $q3, $max, $gen0, $gen1, $alloc, $native, $leak)
     }
 
-    $table | Sort-Object TestName, N | ft 
+    $table | Sort-Object TestName, N | ft TestName, N, Mean, StdDev, Min, Q1, Median, Q3, Max, Gen0, Gen1, Allocated, AllocatedNativeMemory, NativeMemoryLeak  
 
     $ctxids = [System.Collections.ArrayList]::new()
     foreach ($row in $table)
@@ -236,8 +280,13 @@ foreach ($file in [System.Linq.Enumerable]::OrderBy($list, [Func[object, string]
         $median = $row.Median
         $q3 = $row.Q3
         $max = $row.Max
+        $gen0 = $row.Gen0
+        $gen1 = $row.Gen1
+        $alloc = $row.Allocated
+        $native = $row.AllocatedNativeMemory
+        $leak = $row.NativeMemoryLeak
 
-        $insertQuery =  "insert into Tests ([RunId], [ContextId], [TestName], [N], [MeanMs], [StdDevMs], [MinMs], [Q1Ms], [MedianMs], [Q3Ms], [MaxMs]) "
+        $insertQuery =  "insert into Tests ([RunId], [ContextId], [TestName], [N], [MeanMs], [StdDevMs], [MinMs], [Q1Ms], [MedianMs], [Q3Ms], [MaxMs], [Gen0], [Gen1], [Allocated], [AllocatedNativeMemory], [NativeMemoryLeak]) "
         $insertQuery += "values ('$runId', '$contextId', '$testName', "
 
         if ($n.GetType() -eq [DBNull]) 
@@ -249,7 +298,8 @@ foreach ($file in [System.Linq.Enumerable]::OrderBy($list, [Func[object, string]
             $insertQuery += "'$n'" 
         } 
 
-        $insertQuery += ", '$mean', '$stdDev', '$min', '$q1', '$median', '$q3', '$max'); select scope_identity() as 'Id'"
+        $insertQuery += ", '$mean', '$stdDev', '$min', '$q1', '$median', '$q3', '$max', '$gen0', '$gen1', '$alloc', '$native', '$leak'); "
+        $insertQuery += "select scope_identity() as 'Id'"
                 
         $Command.CommandText = $insertquery
         $id = $Command.ExecuteScalar()

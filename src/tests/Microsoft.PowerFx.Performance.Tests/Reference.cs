@@ -16,6 +16,8 @@ using Microsoft.PowerFx.Syntax;
 
 namespace Microsoft.PowerFx.Performance.Tests
 {
+    [MemoryDiagnoser]
+    [NativeMemoryProfiler]    
     [EtwProfiler] // https://benchmarkdotnet.org/articles/features/etwprofiler.html
     [CsvExporter] // https://benchmarkdotnet.org/articles/configs/exporters.html
     [MinColumn]
