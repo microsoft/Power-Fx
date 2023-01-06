@@ -82,10 +82,10 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("DateAdd([Date(2000,1,1)],1)", "*[Value:d]")]
-        [InlineData("DateAdd([Date(2000,1,1)],[3])", "*[Value:d]")]
-        [InlineData("DateAdd(Table({a:Date(2000,1,1)}),[3])", "*[a:d]")]
-        [InlineData("DateAdd(Date(2000,1,1),[1])", "*[Result:d]")]
+        [InlineData("DateAdd([Date(2000,1,1)],1)", "*[Value:D]")]
+        [InlineData("DateAdd([Date(2000,1,1)],[3])", "*[Value:D]")]
+        [InlineData("DateAdd(Table({a:Date(2000,1,1)}),[3])", "*[a:D]")]
+        [InlineData("DateAdd(Date(2000,1,1),[1])", "*[Result:D]")]
         [InlineData("DateAdd(DateTimeValue(\"1 Jan 2015\"), 2)", "d")]
         [InlineData("DateAdd(DateTimeValue(\"1 Jan 2015\"), 2, TimeUnit.Years)", "d")]
         [InlineData("DateAdd(DateTimeValue(\"1 Jan 2015\"), \"hello\")", "d")]
@@ -99,9 +99,9 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("DateAdd([Date(2000,1,1)],1)", "*[Value:d]")]
-        [InlineData("DateAdd([Date(2000,1,1)],[3])", "*[Value:d]")]
-        [InlineData("DateAdd(Date(2000,1,1),[1])", "*[Result:d]")]
+        [InlineData("DateAdd([Date(2000,1,1)],1)", "*[Value:D]")]
+        [InlineData("DateAdd([Date(2000,1,1)],[3])", "*[Value:D]")]
+        [InlineData("DateAdd(Date(2000,1,1),[1])", "*[Result:D]")]
         [InlineData("DateAdd([DateTimeValue(\"1 Jan 2015\")],1)", "*[Value:d]")]
         [InlineData("DateAdd([DateTimeValue(\"1 Jan 2015\")],[3])", "*[Value:d]")]
         [InlineData("DateAdd(DateTimeValue(\"1 Jan 2015\"),[1])", "*[Result:d]")]
@@ -119,10 +119,10 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("DateAdd([Date(2000,1,1)],1)", "*[Value:d]")]
-        [InlineData("DateAdd([Date(2000,1,1)],[3])", "*[Value:d]")]
-        [InlineData("DateAdd(Table({a:Date(2000,1,1)}),[3])", "*[Value:d]")]
-        [InlineData("DateAdd(Date(2000,1,1),[1])", "*[Value:d]")]
+        [InlineData("DateAdd([Date(2000,1,1)],1)", "*[Value:D]")]
+        [InlineData("DateAdd([Date(2000,1,1)],[3])", "*[Value:D]")]
+        [InlineData("DateAdd(Table({a:Date(2000,1,1)}),[3])", "*[Value:D]")]
+        [InlineData("DateAdd(Date(2000,1,1),[1])", "*[Value:D]")]
         [InlineData("DateAdd([DateTimeValue(\"1 Jan 2015\")],1)", "*[Value:d]")]
         [InlineData("DateAdd([DateTimeValue(\"1 Jan 2015\")],[3])", "*[Value:d]")]
         [InlineData("DateAdd(DateTimeValue(\"1 Jan 2015\"),[1])", "*[Value:d]")]
