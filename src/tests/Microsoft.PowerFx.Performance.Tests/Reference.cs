@@ -27,6 +27,7 @@ namespace Microsoft.PowerFx.Performance.Tests
     [Q3Column]
     [MaxColumn]
     [SimpleJob(runtimeMoniker: RuntimeMoniker.NetCoreApp31)]
+    
     // The objective of this set of tests is to serve as a reference in order to
     // compare results between them if the server on which they are run have
     // different performances
