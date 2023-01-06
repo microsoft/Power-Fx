@@ -3,23 +3,19 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Text.Json;
 using Microsoft.PowerFx.Core.IR;
 
 namespace Microsoft.PowerFx.Types
 {
-    // Marshalling from Json. These are convenience operations. 
-    public partial class FormulaValue
+    public class FormulaValueJSON
     {
         /// <summary>
         /// Convenience method to create a value from a json representation. 
         /// </summary>
-        /// <param name="jsonString"></param>
         public static FormulaValue FromJson(string jsonString)
         {
             try
@@ -135,7 +131,7 @@ namespace Microsoft.PowerFx.Types
             // Handle the single-column-table case. 
             var defaultField = new NamedValue(TableValue.ValueName, rawVal);
 
-            var val = NewRecordFromFields(defaultField);
+            var val = FormulaValue.NewRecordFromFields(defaultField);
             return val;
         }
     }

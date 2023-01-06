@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Diagnostics;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 
@@ -8,6 +9,7 @@ namespace Microsoft.PowerFx.Types
 {
     // Useful for representing fields in an aggregate.  
     [ThreadSafeImmutable]
+    [DebuggerDisplay("{Name}: {Type}")]
     public sealed class NamedFormulaType
     {
         internal readonly TypedName _typedName;

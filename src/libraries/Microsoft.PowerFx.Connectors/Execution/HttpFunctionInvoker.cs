@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.Web;
 using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Connectors.Execution;
+using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
@@ -168,7 +169,7 @@ namespace Microsoft.PowerFx.Connectors
             {                
                 return string.IsNullOrWhiteSpace(text) 
                     ? FormulaValue.NewBlank(_returnType) 
-                    : FormulaValue.FromJson(text); // $$$ Do we need to check response media type to confirm that the content is indeed json?
+                    : FormulaValueJSON.FromJson(text); // $$$ Do we need to check response media type to confirm that the content is indeed json?
             }
 
             return FormulaValue.NewError(

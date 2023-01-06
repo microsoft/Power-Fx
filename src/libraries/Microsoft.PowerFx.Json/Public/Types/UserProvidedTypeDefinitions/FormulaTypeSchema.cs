@@ -22,7 +22,7 @@ namespace Microsoft.PowerFx.Core
 
         // Optional, description for the type
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public string Description { get; set; }        
+        public string Description { get; set; }
 
         // Optional, help link for the type
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
