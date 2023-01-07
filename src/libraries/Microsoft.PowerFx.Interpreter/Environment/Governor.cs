@@ -22,17 +22,25 @@ namespace Microsoft.PowerFx
 {
     /// <summary>
     /// Throttling object to allow a host to control limits of memory and hardware resources.
+    /// These virtuals are called by the evaluator, and exceptions thrown by them will abort the evaluation. 
+    /// This is a service passed to <see cref="RuntimeConfig"/>, and a derived class can override and throw their own host exceptions if hardware limits are exceeded.
     /// </summary>
     public class Governor
     {
-        // Called by evaluator when allocating large memory blocks 
-        // to ensure there's storage to proceed. 
+        /// <summary>
+        /// Called by evaluator before allocating large memory blocks 
+        /// to ensure there's storage to proceed. 
+        /// This allows failure before we start to eval a memory intensive operation. 
+        /// </summary>
+        /// <param name="allocateBytes">Predicted number of bytes this function may need in order to execute. </param>
         public virtual void PollMemory(long allocateBytes)
         {
         }
 
-        // Called throughout engine. This can monitor system resources (like memory)
-        // and throw an exception to abort execution. 
+        /// <summary>
+        /// Called throughout engine. This can monitor system resources (like memory) 
+        /// and throw an exception to abort execution. 
+        /// </summary>
         public virtual void Poll()
         {
         }
