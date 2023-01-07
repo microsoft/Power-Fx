@@ -14,19 +14,10 @@
     <Title>Microsoft Power Fx JSON</Title>
     <Description>The library for all Microsoft Power Fx JSON functionalities</Description>
     <Summary>The library for all Microsoft Power Fx JSON functionalities</Summary>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <GenerateNeutralResourcesLanguageAttribute>false</GenerateNeutralResourcesLanguageAttribute>
-    <AssemblyOriginatorKeyFile>..\..\..\src\build\35MSSharedLib1024.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="System.Text.Json" Version="5.0.2" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Include="..\..\strings\PowerFxResources.*.resx">
-      <Link>strings\%(Filename)%(Extension)</Link>
-    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>
