@@ -185,7 +185,7 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
 
         public IExternalTableMetadata TableMetadata => throw new NotImplementedException();
 
-        public virtual IDelegationMetadata DelegationMetadata => DelegationMetadata;
+        public virtual IDelegationMetadata DelegationMetadata => throw new NotImplementedException();
 
         public DName EntityName => new DName(Name);
 
@@ -201,7 +201,7 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
 
         public BidirectionalDictionary<string, string> PreviousDisplayNameMapping => null;
 
-        IDelegationMetadata IExternalDataSource.DelegationMetadata => throw new NotImplementedException();
+        IDelegationMetadata IExternalDataSource.DelegationMetadata => DelegationMetadata;
 
         public bool CanIncludeExpand(IExpandInfo expandToAdd)
         {
@@ -260,6 +260,11 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
         public override IDelegationMetadata DelegationMetadata => _delegationMetadata;
 
         public override DataSourceKind Kind => DataSourceKind.Connected;
+
+        public override IReadOnlyList<string> GetKeyColumns()
+        {
+            return new List<string>();
+        }
     }
 
     internal class TestExpandInfo : IExpandInfo
