@@ -1,5 +1,5 @@
 ﻿param(
-	[Parameter (Mandatory = $false)]  [String]$ConnectionString
+	[Parameter (Mandatory = $true)] [String]$ConnectionString
 )
 
 ## $env:BUILD_SOURCESDIRECTORY = "C:\Data\2\Power-Fx"
@@ -195,35 +195,32 @@ Write-Host ".Net Version      : $dnVersion"
 
 Write-Host
 
-if ($ConnectionString -ne $null)
-{
-    $Connection.Open()
-    $Connection = New-Object System.Data.SQLClient.SQLConnection
-    $Connection.ConnectionString = $ConnectionString
-    $Connection.Open()
+$Connection.Open()
+$Connection = New-Object System.Data.SQLClient.SQLConnection
+$Connection.ConnectionString = $ConnectionString
+$Connection.Open()
 
-    $Command = New-Object System.Data.SQLClient.SQLCommand
-    $Command.Connection = $Connection
+$Command = New-Object System.Data.SQLClient.SQLCommand
+$Command.Connection = $Connection
 
-    $insertQuery =  "insert into Runs ([TimeStamp], [Hash], [Pipeline], [BuildId], [BuildNumber], [BuildConfiguration], [Branch]) "
-    $insertQuery += "values (getutcdate(), '$pfxHash', '$env:BUILD_DEFINITIONNAME', '$env:BUILD_BUILDID', '$env:BUILD_BUILDNUMBER', '$env:BUILDCONFIGURATION', '$pfxBranch');"
-    $insertQuery += "select scope_identity() as 'Id'"
+$insertQuery =  "insert into Runs ([TimeStamp], [Hash], [Pipeline], [BuildId], [BuildNumber], [BuildConfiguration], [Branch]) "
+$insertQuery += "values (getutcdate(), '$pfxHash', '$env:BUILD_DEFINITIONNAME', '$env:BUILD_BUILDID', '$env:BUILD_BUILDNUMBER', '$env:BUILDCONFIGURATION', '$pfxBranch');"
+$insertQuery += "select scope_identity() as 'Id'"
 
-    $Command.CommandText = $insertquery
-    $runId = $Command.ExecuteScalar()
+$Command.CommandText = $insertquery
+$runId = $Command.ExecuteScalar()
 
-    Write-Host "RunId:     $runId"
+Write-Host "RunId:     $runId"
 
-    $insertQuery =  "insert into Contexts ([RunId], [CPUModel], [CPUSpeedMHz], [CPUName], [NumberCores], [LogicalProcessors], [MemoryGB], [BenchMarkDotNetVersion], [OS], [VM], [DotNetRuntime], [DotNetVersion]) "
-    $insertQuery += "values ('$runId', '$cpuModel', '$cpuSpeed', '$cpuName', '$numberCores', '$numberLogicalProcs', '$memoryGB', '$bmdnVersion', '$osVersion', '$vmType', '$dnRTVersion', '$dnVersion');"
-    $insertQuery += "select scope_identity() as 'Id'"
+$insertQuery =  "insert into Contexts ([RunId], [CPUModel], [CPUSpeedMHz], [CPUName], [NumberCores], [LogicalProcessors], [MemoryGB], [BenchMarkDotNetVersion], [OS], [VM], [DotNetRuntime], [DotNetVersion]) "
+$insertQuery += "values ('$runId', '$cpuModel', '$cpuSpeed', '$cpuName', '$numberCores', '$numberLogicalProcs', '$memoryGB', '$bmdnVersion', '$osVersion', '$vmType', '$dnRTVersion', '$dnVersion');"
+$insertQuery += "select scope_identity() as 'Id'"
 
-    $Command.CommandText = $insertquery
-    $contextId = $Command.ExecuteScalar()
+$Command.CommandText = $insertquery
+$contextId = $Command.ExecuteScalar()
 
-    Write-Host "ContextId: $contextId"
-    Write-Host
-}
+Write-Host "ContextId: $contextId"
+Write-Host
 
 ## Always start the list of results with the Reference CSV file
 $list = (Get-Item -Filter *.csv -Path '.\BenchmarkDotNet.Artifacts\results\*' | % { $_.FullName })
@@ -250,7 +247,6 @@ foreach ($file in [System.Linq.Enumerable]::OrderBy($list, [Func[object, string]
     [void]$table.Columns.Add("AllocatedNativeMemory", [double]);   $table.Columns["AllocatedNativeMemory"].AllowDBNull = $false
     [void]$table.Columns.Add("NativeMemoryLeak", [double]);        $table.Columns["NativeMemoryLeak"].AllowDBNull = $false
 
-
     foreach ($row in (Import-Csv -Encoding UTF8 $file | Select-Object Method, Runtime, N, Mean, StdDev, Min, Q1, Median, Q3, Max, Gen0, Gen1, Allocated, 'Allocated Native Memory', 'Native Memory Leak'))
     {
         $mean = ConvertToMs($row.Mean)
@@ -275,50 +271,47 @@ foreach ($file in [System.Linq.Enumerable]::OrderBy($list, [Func[object, string]
 
     $table | Sort-Object TestName, N | ft TestName, N, Mean, StdDev, Min, Q1, Median, Q3, Max, Gen0, Gen1, Allocated, AllocatedNativeMemory, NativeMemoryLeak  
 
-    if ($ConnectionString -ne $null)
+    $ctxids = [System.Collections.ArrayList]::new()
+    foreach ($row in $table)
     {
-        $ctxids = [System.Collections.ArrayList]::new()
-        foreach ($row in $table)
+        $testName = $row.TestName
+        $n = $row.N
+        $mean = $row.Mean
+        $stdDev = $row.StdDev
+        $min = $row.Min
+        $q1 = $row.Q1
+        $median = $row.Median
+        $q3 = $row.Q3
+        $max = $row.Max
+        $gen0 = $row.Gen0
+        $gen1 = $row.Gen1
+        $alloc = $row.Allocated
+        $native = $row.AllocatedNativeMemory
+        $leak = $row.NativeMemoryLeak
+
+        $insertQuery =  "insert into Tests ([RunId], [ContextId], [TestName], [N], [MeanMs], [StdDevMs], [MinMs], [Q1Ms], [MedianMs], [Q3Ms], [MaxMs], [Gen0], [Gen1], [Allocated], [AllocatedNativeMemory], [NativeMemoryLeak]) "
+        $insertQuery += "values ('$runId', '$contextId', '$testName', "
+
+        if ($n.GetType() -eq [DBNull]) 
         {
-            $testName = $row.TestName
-            $n = $row.N
-            $mean = $row.Mean
-            $stdDev = $row.StdDev
-            $min = $row.Min
-            $q1 = $row.Q1
-            $median = $row.Median
-            $q3 = $row.Q3
-            $max = $row.Max
-            $gen0 = $row.Gen0
-            $gen1 = $row.Gen1
-            $alloc = $row.Allocated
-            $native = $row.AllocatedNativeMemory
-            $leak = $row.NativeMemoryLeak
+            $insertQuery += "null" 
+        } 
+        else 
+        { 
+            $insertQuery += "'$n'" 
+        } 
 
-            $insertQuery =  "insert into Tests ([RunId], [ContextId], [TestName], [N], [MeanMs], [StdDevMs], [MinMs], [Q1Ms], [MedianMs], [Q3Ms], [MaxMs], [Gen0], [Gen1], [Allocated], [AllocatedNativeMemory], [NativeMemoryLeak]) "
-            $insertQuery += "values ('$runId', '$contextId', '$testName', "
-
-            if ($n.GetType() -eq [DBNull]) 
-            {
-                $insertQuery += "null" 
-            } 
-            else 
-            { 
-                $insertQuery += "'$n'" 
-            } 
-
-            $insertQuery += ", '$mean', '$stdDev', '$min', '$q1', '$median', '$q3', '$max', '$gen0', '$gen1', '$alloc', '$native', '$leak'); "
-            $insertQuery += "select scope_identity() as 'Id'"
+        $insertQuery += ", '$mean', '$stdDev', '$min', '$q1', '$median', '$q3', '$max', '$gen0', '$gen1', '$alloc', '$native', '$leak'); "
+        $insertQuery += "select scope_identity() as 'Id'"
                 
-            $Command.CommandText = $insertquery
-            $id = $Command.ExecuteScalar()
+        $Command.CommandText = $insertquery
+        $id = $Command.ExecuteScalar()
 
-            [void]$ctxids.Add($id)
-        }
-
-        Write-Host "TestIds: " ([String]::Join(', ', $ctxids.ToArray()))
-        Write-Host
+        [void]$ctxids.Add($id)
     }
+
+    Write-Host "TestIds: " ([String]::Join(', ', $ctxids.ToArray()))
+    Write-Host    
 }
 
 Write-Host "--- End of script ---"
