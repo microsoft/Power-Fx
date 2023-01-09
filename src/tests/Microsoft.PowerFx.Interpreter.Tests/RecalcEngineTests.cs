@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Texl;
+using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Functions;
@@ -47,6 +48,9 @@ namespace Microsoft.PowerFx.Tests
                 $"{ns}.{nameof(IDynamicTypeMarshaller)}",
                 $"{ns}.{nameof(ObjectMarshallerProvider)}",
                 $"{ns}.{nameof(ObjectMarshaller)}",
+                $"{ns}.{nameof(BasicServiceProvider)}",
+                $"{ns}.{nameof(IRuntimeConfig)}",
+                $"{ns}.{nameof(RuntimeConfig)}",
                 $"{ns}.{nameof(PrimitiveMarshallerProvider)}",
                 $"{ns}.{nameof(PrimitiveTypeMarshaller)}",
                 $"{ns}.{nameof(SymbolValues)}",
@@ -464,7 +468,7 @@ namespace Microsoft.PowerFx.Tests
 
             // Spot check some known functions
             Assert.Contains("Cos", names);
-            Assert.Contains("ParseJSON", names);
+            Assert.Contains("Filter", names);
 
             Assert.Contains("Cos", names);
         }
@@ -832,7 +836,7 @@ namespace Microsoft.PowerFx.Tests
             // CultureInfo not set in PowerFxConfig as we use Symbols
             var pfxConfig = new PowerFxConfig();
             var recalcEngine = new RecalcEngine(pfxConfig);
-            var symbols = new SymbolValues();
+            var symbols = new RuntimeConfig();
 
             // 10/30/22 is the date where DST applies in France (https://www.timeanddate.com/time/change/france/paris)
             // So adding 2 hours to 1:34am will result in 2:34am
@@ -870,7 +874,7 @@ namespace Microsoft.PowerFx.Tests
         public void FunctionServices()
         {
             var engine = new RecalcEngine();
-            var values = new SymbolValues();
+            var values = new RuntimeConfig();
             values.AddService<IRandomService>(new TestRandService());
 
             // Rand 
@@ -890,7 +894,7 @@ namespace Microsoft.PowerFx.Tests
             // Need to protect against bogus values from a poorly implemented service.
             // These are exceptions, not ErrorValues, since it's a host bug. 
             var engine = new RecalcEngine();
-            var values = new SymbolValues();
+            var values = new RuntimeConfig();
 
             // Host bug, service should be 0...1, this is out of range. 
             var buggyService = new TestRandService { _value = 9999 };

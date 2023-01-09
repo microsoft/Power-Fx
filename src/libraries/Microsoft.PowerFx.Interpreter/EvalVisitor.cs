@@ -9,6 +9,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Entities;
+using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.IR.Symbols;
@@ -25,21 +26,26 @@ namespace Microsoft.PowerFx
     // Use Task for public methods, but ValueTask for internal methods that we expect to be mostly sync. 
     internal class EvalVisitor : IRNodeVisitor<ValueTask<FormulaValue>, EvalVisitorContext>
     {
-        private readonly CultureInfo _defaultCultureInfo;
-
-        public CultureInfo CultureInfo => GetService<CultureInfo>() ?? _defaultCultureInfo;
-
-        private readonly ReadOnlySymbolValues _runtimeConfig;
+        private readonly ReadOnlySymbolValues _symbolValues;
 
         private readonly CancellationToken _cancellationToken;
 
         internal CancellationToken CancellationToken => _cancellationToken;
 
-        public EvalVisitor(CultureInfo cultureInfo, CancellationToken cancellationToken, ReadOnlySymbolValues runtimeConfig = null)
+        private readonly IServiceProvider _services;
+
+        public IServiceProvider FunctionServices => _services;
+
+        public CultureInfo CultureInfo { get; private set; }
+
+        public EvalVisitor(IRuntimeConfig config, CancellationToken cancellationToken)
         {
-            _defaultCultureInfo = cultureInfo;
+            _symbolValues = config.Values; // may be null 
             _cancellationToken = cancellationToken;
-            _runtimeConfig = runtimeConfig;
+
+            _services = config.ServiceProvider ?? new BasicServiceProvider();
+
+            CultureInfo = GetService<CultureInfo>();
         }
 
         /// <summary>
@@ -49,12 +55,7 @@ namespace Microsoft.PowerFx
         /// <returns></returns>
         public T GetService<T>()
         {
-            if (_runtimeConfig != null)
-            {
-                return _runtimeConfig.GetService<T>();
-            }
-
-            return default;
+            return (T)_services.GetService(typeof(T));            
         }
 
         public bool TryGetService<T>(out T result)
@@ -62,8 +63,6 @@ namespace Microsoft.PowerFx
             result = GetService<T>();
             return result != null;
         }
-
-        public IServiceProvider FunctionServices => _runtimeConfig;
 
         // Check this cooperatively - especially in any loop. 
         public void CheckCancel()
@@ -151,9 +150,9 @@ namespace Microsoft.PowerFx
             {
                 if (obj.Value is ISymbolSlot sym)
                 {
-                    if (_runtimeConfig != null)
+                    if (_symbolValues != null)
                     {
-                        _runtimeConfig.Set(sym, newValue);
+                        _symbolValues.Set(sym, newValue);
                         return FormulaValue.New(true);
                     }
 
@@ -246,7 +245,7 @@ namespace Microsoft.PowerFx
             }
             else if (func is CustomTexlFunction customTexlFunc)
             {
-                var result = await customTexlFunc.InvokeAsync(_runtimeConfig, args, _cancellationToken);
+                var result = await customTexlFunc.InvokeAsync(FunctionServices, args, _cancellationToken);
                 return result;
             }
             else
@@ -612,9 +611,9 @@ namespace Microsoft.PowerFx
 
         private FormulaValue GetVariableOrFail(ResolvedObjectNode node, ISymbolSlot slot)
         {
-            if (_runtimeConfig != null)                
+            if (_symbolValues != null)                
             {
-                var value = _runtimeConfig.Get(slot);
+                var value = _symbolValues.Get(slot);
                 if (value != null)
                 {
                     return value;

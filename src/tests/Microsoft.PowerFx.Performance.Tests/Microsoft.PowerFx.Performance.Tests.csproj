@@ -8,7 +8,9 @@
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
     <StartupObject>Microsoft.PowerFx.Performance.Tests.Program</StartupObject>
     <LangVersion>9.0</LangVersion>
-    <AssemblyName>Microsoft.PowerFx.Performance.Benchmarks</AssemblyName>
+    <AssemblyName>Microsoft.PowerFx.Performance.Tests</AssemblyName>
+    <SignAssembly>False</SignAssembly>
+    <DelaySign>False</DelaySign>
   </PropertyGroup>
 
   <ItemGroup>

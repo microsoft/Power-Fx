@@ -38,6 +38,16 @@ namespace Microsoft.PowerFx.Types
 
         public new TableType Type => (TableType)base.Type;
 
+        public TableValue(RecordType recordType)
+            : this(IRContext.NotInSource(recordType.ToTable()))
+        {
+        }
+
+        public TableValue(TableType type)
+            : this(IRContext.NotInSource(type))
+        {
+        }
+
         internal TableValue(IRContext irContext)
             : base(irContext)
         {

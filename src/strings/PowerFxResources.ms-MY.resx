@@ -530,6 +530,28 @@
   <data name="AboutBooleanNT_input" xml:space="preserve">
     <value>Lajur nilai nombor untuk diproses.</value>
   </data>
+  <data name="AboutBooleanB" xml:space="preserve">
+    <value>Menukar 'Boolean' kepada nilai Boolean.</value>
+    
+  </data>
+  <data name="BooleanBArg1" xml:space="preserve">
+    <value>Boolean</value>
+    
+  </data>
+  <data name="AboutBooleanB_boolean" xml:space="preserve">
+    <value>Nilai Boolean untuk ditukar kepada nilai Boolean.</value>
+  </data>
+  <data name="AboutBooleanBT" xml:space="preserve">
+    <value>Menukar lajur nilai Boolean kepada lajur nilai Boolean.</value>
+    
+  </data>
+  <data name="BooleanBTArg1" xml:space="preserve">
+    <value>input</value>
+    
+  </data>
+  <data name="AboutBooleanBT_input" xml:space="preserve">
+    <value>Lajur nilai Boolean untuk diproses.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Mengembalikan argumen bukan kosong pertama</value>
     
@@ -1367,6 +1389,23 @@
   <data name="AboutDegrees_input" xml:space="preserve">
     <value>Lajur nilai nombor (dalam radian) untuk diproses.</value>
   </data>
+  <data name="AboutDistinct" xml:space="preserve">
+    <value>Menilai ungkapan satu atau lebih lajur jadual dan mengembalikan jadual satu lajur yang mengandungi nilai yang berbeza (unik) untuk ungkapan yang dinilai.</value>
+  </data>
+  <data name="DistinctArg1" xml:space="preserve">
+    <value>sumber</value>
+    
+  </data>
+  <data name="DistinctArg2" xml:space="preserve">
+    <value>ungkapan</value>
+    
+  </data>
+  <data name="AboutDistinct_source" xml:space="preserve">
+    <value>Jadual yang nilai berbezanya akan diekstrak.</value>
+  </data>
+  <data name="AboutDistinct_expression" xml:space="preserve">
+    <value>Ungkapan dinilaikan terhadap setiap baris dalam jadual input dan yang memberikan nilai untuk operasi Berbeza.</value>
+  </data>
   <data name="AboutAtan2" xml:space="preserve">
     <value>Mengembalikan lengkuk tangen (dalam radian) koordinat_x dan koordinat_y yang ditentukan.</value>
   </data>
@@ -1798,6 +1837,14 @@
     <value>Nilai angka terlalu besar.</value>
     
   </data>
+  <data name="ErrTextFormatTooLarge" xml:space="preserve">
+    <value>Saiz rentetan format tidak boleh melebihi {0} aksara.</value>
+    
+  </data>
+  <data name="ErrTextInvalidFormat" xml:space="preserve">
+    <value>Format tidak sah.</value>
+    
+  </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
     <value>Sumber Data sini tidak sah. Sila betulkan ralat dalam anak tetingkap "Sumber Data" dengan mengklik "Kandungan -&gt; Sumber data" atau "Lihat -&gt; Opsyen"</value>
     
@@ -1852,6 +1899,10 @@
   </data>
   <data name="ErrSortWrongType" xml:space="preserve">
     <value>Tidak boleh mengisih pada jenis ungkapan.</value>
+    
+  </data>
+  <data name="ErrDistinctWrongType" xml:space="preserve">
+    <value>Tidak boleh menggunakan berbeza pada jenis ungkapan.</value>
     
   </data>
   <data name="ErrFunctionDoesNotAcceptThisType_Function_Expected" xml:space="preserve">
@@ -3268,6 +3319,38 @@
     <value>Tema kontras</value>
     
   </data>
+  <data name="AboutCollect" xml:space="preserve">
+    <value>Menambahkan rekod kepada sumber data.</value>
+    
+  </data>
+  <data name="CollectDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="CollectRecordArg" xml:space="preserve">
+    <value>rekod</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>Memadamkan semua rekod koleksi. Lajur koleksi akan dikekalkan.</value>
+    
+  </data>
+  <data name="AboutClearCollect" xml:space="preserve">
+    <value>Memadamkan semua rekod daripada koleksi. Kemudian, menambahkan set rekod yang berbeza kepada koleksi yang sama.</value>
+    
+  </data>
+  <data name="ClearCollectionArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="ClearCollectDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="ClearCollectRecordArg" xml:space="preserve">
+    <value>rekod</value>
+    
+  </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>Menggunakan kemas kini pada baris yang ditentukan dan mengubah baris dalam sumber data yang ditentukan. Mengembalikan baris yang dikemas kini.</value>
     
@@ -4398,6 +4481,10 @@
     <value>Artikel: Rujukan formula untuk Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrRecordDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
+    <value>Jenis tidak serasi. Item yang cuba anda masukkan ke dalam rekod mempunyai jenis yang tidak serasi dengan rekod.</value>
+    
+  </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
     <value>Jenis tidak serasi. Item yang cuba anda masukkan ke dalam jadual adalah daripada jenis yang tidak serasi dengan jadual.</value>
     
@@ -4725,6 +4812,18 @@
   </data>
   <data name="ErrDeprecated" xml:space="preserve">
     <value>Ciri ini ditamatkan dan tidak lagi disokong.</value>
+    
+  </data>
+  <data name="WarnDeferredType" xml:space="preserve">
+    <value>Amaran: Jenis tertunda disediakan.</value>
+    
+  </data>
+  <data name="ErrExpectedIdentifierArg_Name" xml:space="preserve">
+    <value>Nama pengecam dijangkakan</value>
+    
+  </data>
+  <data name="ErrInvalidFunction" xml:space="preserve">
+    <value>Fungsi ini samar-samar, ia mengandungi ungkapan LAMBDA dan pengecam lajur untuk argumen yang sama.</value>
     
   </data>
 </root>

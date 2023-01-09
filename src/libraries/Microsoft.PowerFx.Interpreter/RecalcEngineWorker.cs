@@ -71,7 +71,8 @@ namespace Microsoft.PowerFx
 
                 var symbols = _parent._symbolValues;
 
-                var v = new EvalVisitor(_cultureInfo, CancellationToken.None, symbols);
+                var runtimeConfig = new RuntimeConfig(symbols, _cultureInfo);
+                var v = new EvalVisitor(runtimeConfig, CancellationToken.None);
 
                 var newValue = irnode.Accept(v, new EvalVisitorContext(SymbolContext.New(), new StackDepthCounter(_parent.Config.MaxCallDepth))).Result;
 
