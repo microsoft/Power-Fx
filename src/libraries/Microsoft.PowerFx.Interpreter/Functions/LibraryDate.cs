@@ -11,7 +11,7 @@ using static System.TimeZoneInfo;
 
 namespace Microsoft.PowerFx.Functions
 {
-    internal partial class Library
+    internal static partial class Library
     {
         public static FormulaValue Today(IRContext irContext, FormulaValue[] args)
         {

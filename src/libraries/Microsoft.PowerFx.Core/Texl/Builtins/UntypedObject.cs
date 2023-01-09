@@ -10,7 +10,7 @@ using Microsoft.PowerFx.Core.Types;
 
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
-    internal sealed class ParseJSONFunction : BuiltinFunction
+    internal class ParseJSONFunction : BuiltinFunction
     {
         public const string ParseJSONInvariantFunctionName = "ParseJSON";
 

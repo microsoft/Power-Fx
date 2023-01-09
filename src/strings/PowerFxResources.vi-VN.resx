@@ -530,6 +530,28 @@
   <data name="AboutBooleanNT_input" xml:space="preserve">
     <value>Cột chứa các giá trị số cần xử lý.</value>
   </data>
+  <data name="AboutBooleanB" xml:space="preserve">
+    <value>Chuyển đổi một "boolean" thành một giá trị boolean.</value>
+    
+  </data>
+  <data name="BooleanBArg1" xml:space="preserve">
+    <value>boolean</value>
+    
+  </data>
+  <data name="AboutBooleanB_boolean" xml:space="preserve">
+    <value>Giá trị boolean cần chuyển đổi thành giá trị boolean.</value>
+  </data>
+  <data name="AboutBooleanBT" xml:space="preserve">
+    <value>Chuyển đổi một cột giá trị boolean thành một cột giá trị boolean.</value>
+    
+  </data>
+  <data name="BooleanBTArg1" xml:space="preserve">
+    <value>đầu vào</value>
+    
+  </data>
+  <data name="AboutBooleanBT_input" xml:space="preserve">
+    <value>Cột giá trị boolean cần xử lý.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Trả về đối số không trống đầu tiên</value>
     
@@ -1367,6 +1389,23 @@
   <data name="AboutDegrees_input" xml:space="preserve">
     <value>Một cột giá trị số (theo radian) để xử lý.</value>
   </data>
+  <data name="AboutDistinct" xml:space="preserve">
+    <value>Đánh giá một biểu thức qua một hoặc nhiều cột của bảng và trả về bảng một cột chứa các giá trị riêng (duy nhất) cho biểu thức được đánh giá.</value>
+  </data>
+  <data name="DistinctArg1" xml:space="preserve">
+    <value>nguồn</value>
+    
+  </data>
+  <data name="DistinctArg2" xml:space="preserve">
+    <value>biểu thức</value>
+    
+  </data>
+  <data name="AboutDistinct_source" xml:space="preserve">
+    <value>Bảng mà các giá trị riêng biệt sẽ được trích xuất từ đó.</value>
+  </data>
+  <data name="AboutDistinct_expression" xml:space="preserve">
+    <value>Biểu thức được đánh giá qua mỗi hàng trong bảng đầu vào và cung cấp giá trị cho phép tính Distinct.</value>
+  </data>
   <data name="AboutAtan2" xml:space="preserve">
     <value>Trả lại các giá trị arctang (theo radian) của các tọa độ x và y cụ thể.</value>
   </data>
@@ -1798,6 +1837,14 @@
     <value>Giá trị số quá lớn.</value>
     
   </data>
+  <data name="ErrTextFormatTooLarge" xml:space="preserve">
+    <value>Kích thước chuỗi định dạng không được lớn hơn {0} ký tự.</value>
+    
+  </data>
+  <data name="ErrTextInvalidFormat" xml:space="preserve">
+    <value>Định dạng không hợp lệ.</value>
+    
+  </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
     <value>Nguồn Dữ liệu này không hợp lệ. Vui lòng khắc phục lỗi trong ngăn "Nguồn dữ liệu" bằng cách bấm vào "Nội dung -&gt; Nguồn dữ liệu" hoặc "Xem -&gt; Tùy chọn"</value>
     
@@ -1852,6 +1899,10 @@
   </data>
   <data name="ErrSortWrongType" xml:space="preserve">
     <value>Không thể sắp xếp trên loại biểu thức.</value>
+    
+  </data>
+  <data name="ErrDistinctWrongType" xml:space="preserve">
+    <value>Không áp dụng được mệnh đề Distinct cho loại biểu thức.</value>
     
   </data>
   <data name="ErrFunctionDoesNotAcceptThisType_Function_Expected" xml:space="preserve">
@@ -3268,6 +3319,38 @@
     <value>Giao diện tương phản</value>
     
   </data>
+  <data name="AboutCollect" xml:space="preserve">
+    <value>Thêm bản ghi vào nguồn dữ liệu.</value>
+    
+  </data>
+  <data name="CollectDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="CollectRecordArg" xml:space="preserve">
+    <value>record</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>Xóa tất cả các bản ghi của một bộ sưu tập. Các cột của bộ sưu tập sẽ vẫn còn.</value>
+    
+  </data>
+  <data name="AboutClearCollect" xml:space="preserve">
+    <value>Xóa tất cả các bản ghi khỏi bộ sưu tập. Sau đó, thêm một bộ bản ghi khác nhau vào cùng một bộ sưu tập.</value>
+    
+  </data>
+  <data name="ClearCollectionArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="ClearCollectDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="ClearCollectRecordArg" xml:space="preserve">
+    <value>record</value>
+    
+  </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>Áp dụng nội dung cập nhật cho hàng được chỉ định, đồng thời thay đổi hàng trong nguồn dữ liệu được chỉ định. Trả về hàng đã cập nhật.</value>
     
@@ -4398,6 +4481,10 @@
     <value>Bài viết: Tham chiếu công thức cho Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrRecordDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
+    <value>Loại không tương thích. Mục bạn đang tìm cách đưa vào bản ghi thuộc loại không tương thích với bản ghi.</value>
+    
+  </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
     <value>Loại không tương thích. Mục bạn đang tìm cách đưa vào bảng thuộc loại không tương thích với bảng.</value>
     
@@ -4725,6 +4812,18 @@
   </data>
   <data name="ErrDeprecated" xml:space="preserve">
     <value>Tính năng này không được dùng nữa và không còn được hỗ trợ.</value>
+    
+  </data>
+  <data name="WarnDeferredType" xml:space="preserve">
+    <value>Cảnh báo: Đã cung cấp loại bị hoãn lại.</value>
+    
+  </data>
+  <data name="ErrExpectedIdentifierArg_Name" xml:space="preserve">
+    <value>Tên mã định danh dự kiến</value>
+    
+  </data>
+  <data name="ErrInvalidFunction" xml:space="preserve">
+    <value>Hàm này không rõ ràng, chứa các biểu thức lambda và mã định danh cột cho cùng một đối số.</value>
     
   </data>
 </root>

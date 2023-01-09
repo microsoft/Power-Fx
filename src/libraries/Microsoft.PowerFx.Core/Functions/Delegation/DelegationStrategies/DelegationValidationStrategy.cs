@@ -249,9 +249,9 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             Contracts.AssertValue(info);
 
             IDelegationMetadata metadata = null;
-            if (info.Data is DelegationMetadata.DelegationMetadata)
+            if (info.Data is DelegationMetadata.DelegationMetadataBase)
             {
-                return info.Data as DelegationMetadata.DelegationMetadata;
+                return info.Data as DelegationMetadata.DelegationMetadataBase;
             }
 
             if (info.Data is IExpandInfo)

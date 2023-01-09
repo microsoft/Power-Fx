@@ -530,6 +530,28 @@
   <data name="AboutBooleanNT_input" xml:space="preserve">
     <value>Колона вредности бројева за обраду.</value>
   </data>
+  <data name="AboutBooleanB" xml:space="preserve">
+    <value>Конвертује „Булов“ у Булову вредност.</value>
+    
+  </data>
+  <data name="BooleanBArg1" xml:space="preserve">
+    <value>Булов</value>
+    
+  </data>
+  <data name="AboutBooleanB_boolean" xml:space="preserve">
+    <value>Булова вредност коју треба конвертовати у Булову вредност.</value>
+  </data>
+  <data name="AboutBooleanBT" xml:space="preserve">
+    <value>Конвертује колону Булових вредности у колону Булових вредности.</value>
+    
+  </data>
+  <data name="BooleanBTArg1" xml:space="preserve">
+    <value>унос</value>
+    
+  </data>
+  <data name="AboutBooleanBT_input" xml:space="preserve">
+    <value>Колона Булових вредности за обраду.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Враћа први аргумент који није празан</value>
     
@@ -1367,6 +1389,23 @@
   <data name="AboutDegrees_input" xml:space="preserve">
     <value>Колона нумеричких вредности (у радијанима) које треба обрадити.</value>
   </data>
+  <data name="AboutDistinct" xml:space="preserve">
+    <value>Проверава израз преко неких колона табеле и враћа табелу са једном колоном која садржи посебне (јединствене) вредности за проверени израз.</value>
+  </data>
+  <data name="DistinctArg1" xml:space="preserve">
+    <value>извор</value>
+    
+  </data>
+  <data name="DistinctArg2" xml:space="preserve">
+    <value>израз</value>
+    
+  </data>
+  <data name="AboutDistinct_source" xml:space="preserve">
+    <value>Табела из које ће посебне вредности бити издвојене.</value>
+  </data>
+  <data name="AboutDistinct_expression" xml:space="preserve">
+    <value>Израз проверен преко сваког реда у улазној табели који обезбеђује вредности за ову посебну операцију.</value>
+  </data>
   <data name="AboutAtan2" xml:space="preserve">
     <value>Враћа аркус тангенс наведене x- и y-координате (у радијанима).</value>
   </data>
@@ -1798,6 +1837,14 @@
     <value>Нумеричка вредност је превелика.</value>
     
   </data>
+  <data name="ErrTextFormatTooLarge" xml:space="preserve">
+    <value>Највећи број знакова које величина ниске формата може имати је {0}.</value>
+    
+  </data>
+  <data name="ErrTextInvalidFormat" xml:space="preserve">
+    <value>Неважећи формат.</value>
+    
+  </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
     <value>Овај извор података је неважећи. Поправите грешку у окну „Извори података“ тако што ћете изабрати ставке „Садржај –&gt; Извори података“ или „Приказ –&gt; Опције“</value>
     
@@ -1852,6 +1899,10 @@
   </data>
   <data name="ErrSortWrongType" xml:space="preserve">
     <value>Није могуће сортирати на типу израза.</value>
+    
+  </data>
+  <data name="ErrDistinctWrongType" xml:space="preserve">
+    <value>Није могуће применити разликовање на типу израза.</value>
     
   </data>
   <data name="ErrFunctionDoesNotAcceptThisType_Function_Expected" xml:space="preserve">
@@ -3268,6 +3319,38 @@
     <value>Контрастна тема</value>
     
   </data>
+  <data name="AboutCollect" xml:space="preserve">
+    <value>Додаје записе извору података.</value>
+    
+  </data>
+  <data name="CollectDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="CollectRecordArg" xml:space="preserve">
+    <value>запис</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>Брише све записе колекције. Колоне колекције ће остати.</value>
+    
+  </data>
+  <data name="AboutClearCollect" xml:space="preserve">
+    <value>Брише све записе из колекције. Затим додаје други скуп записа истој колекцији.</value>
+    
+  </data>
+  <data name="ClearCollectionArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="ClearCollectDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="ClearCollectRecordArg" xml:space="preserve">
+    <value>запис</value>
+    
+  </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>Примењује исправке на наведени ред и мења ред у наведени извор података. Враћа ажурирани ред.</value>
     
@@ -4398,6 +4481,10 @@
     <value>Чланак: Референца формуле за Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrRecordDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
+    <value>Некомпатибилан тип. Ставка коју покушавате да сместите у запис припада типу који није компатибилан са записом.</value>
+    
+  </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
     <value>Некомпатибилан тип. Ставка коју покушавате да сместите у табелу припада типу који није компатибилан са табелом.</value>
     
@@ -4725,6 +4812,18 @@
   </data>
   <data name="ErrDeprecated" xml:space="preserve">
     <value>Ова функција је застарела и више није подржана.</value>
+    
+  </data>
+  <data name="WarnDeferredType" xml:space="preserve">
+    <value>Упозорење: Наведен је одложени тип.</value>
+    
+  </data>
+  <data name="ErrExpectedIdentifierArg_Name" xml:space="preserve">
+    <value>Очекивани назив идентификатора</value>
+    
+  </data>
+  <data name="ErrInvalidFunction" xml:space="preserve">
+    <value>Ова функција је двосмислена, садржи ламбда изразе и идентификаторе колона за исти аргумент.</value>
     
   </data>
 </root>

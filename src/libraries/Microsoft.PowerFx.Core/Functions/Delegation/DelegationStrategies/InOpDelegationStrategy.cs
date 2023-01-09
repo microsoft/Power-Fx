@@ -141,7 +141,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
                 return false;
             }
 
-            IDelegationMetadata columnMetadata = info.Data as DelegationMetadata.DelegationMetadata;
+            IDelegationMetadata columnMetadata = info.Data as DelegationMetadata.DelegationMetadataBase;
 
             // For this to be delegable, rhs needs to be a column that belongs to innermost scoped delegable datasource.
             if (columnMetadata == null || info.UpCount != 0)

@@ -76,7 +76,7 @@ namespace Microsoft.PowerFx.Interpreter
 
                     if (!arg0.Accepts(arg1))
                     {
-                        errors.EnsureError(DocumentErrorSeverity.Critical, args[1], ErrBadType);
+                        errors.EnsureError(DocumentErrorSeverity.Critical, args[1], ErrBadType_ExpectedType_ProvidedType, arg0.GetKindString(), arg1.GetKindString());
                         return;
                     }
 

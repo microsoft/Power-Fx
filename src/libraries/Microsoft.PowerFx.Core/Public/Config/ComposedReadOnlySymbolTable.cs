@@ -24,14 +24,14 @@ namespace Microsoft.PowerFx
         private readonly IEnumerable<ReadOnlySymbolTable> _symbolTables;
 
         // In priority order. 
-        public ComposedReadOnlySymbolTable(SymbolTableEnumerator symbolTables)
+        public ComposedReadOnlySymbolTable(params ReadOnlySymbolTable[] symbolTables)
         {
-            _symbolTables = symbolTables;
+            _symbolTables = symbolTables.Where(x => x != null);
 
-            DebugName = "(" + string.Join(",", symbolTables.Select(t => t.DebugName)) + ")";
+            DebugName = "(" + string.Join(",", _symbolTables.Select(t => t.DebugName)) + ")";
         }
 
-        internal override IEnumerable<ReadOnlySymbolTable> SubTables => _symbolTables;
+        internal IEnumerable<ReadOnlySymbolTable> SubTables => _symbolTables;
         
         internal override VersionHash VersionHash
         {
