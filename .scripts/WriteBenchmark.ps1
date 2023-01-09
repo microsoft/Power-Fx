@@ -1,5 +1,5 @@
-param(
-	[Parameter (Mandatory = $true)]  [String]$ConnectionString
+﻿param(
+	[Parameter (Mandatory = $true)] [String]$ConnectionString
 )
 
 ## $env:BUILD_SOURCESDIRECTORY = "C:\Data\2\Power-Fx"
@@ -24,7 +24,7 @@ function ConvertToMs([string]$str)
             ## Convert to milliseconds
             if     ($parts[1] -eq "s")  { $val *= 1000    }
             elseif ($parts[1] -eq "ms") {                 } ## Do nothing
-            elseif ($parts[1] -eq "�s") { $val /= 1000    }
+            elseif ($parts[1] -eq "μs") { $val /= 1000    }
             elseif ($parts[1] -eq "ns") { $val /= 1000000 }
             else   { throw ("Unknown unit: " + $parts[1]) }
         }
@@ -58,6 +58,9 @@ function ConvertToBytes([string]$str)
         Write-Error $_               
     }
 }
+
+## Display PowerShell version
+$PSVersionTable
 
 ## Retrieve Power Fx latest Git hash and Git remote branch
 cd ($env:BUILD_SOURCESDIRECTORY)
@@ -243,8 +246,7 @@ foreach ($file in [System.Linq.Enumerable]::OrderBy($list, [Func[object, string]
     [void]$table.Columns.Add("AllocatedNativeMemory", [double]);   $table.Columns["AllocatedNativeMemory"].AllowDBNull = $false
     [void]$table.Columns.Add("NativeMemoryLeak", [double]);        $table.Columns["NativeMemoryLeak"].AllowDBNull = $false
 
-
-    foreach ($row in (Import-Csv $file | Select-Object Method, Runtime, N, Mean, StdDev, Min, Q1, Median, Q3, Max, Gen0, Gen1, Allocated, 'Allocated Native Memory', 'Native Memory Leak'))
+    foreach ($row in (Import-Csv -Encoding UTF8 $file | Select-Object Method, Runtime, N, Mean, StdDev, Min, Q1, Median, Q3, Max, Gen0, Gen1, Allocated, 'Allocated Native Memory', 'Native Memory Leak'))
     {
         $mean = ConvertToMs($row.Mean)
         $stddev = ConvertToMs($row.StdDev)
@@ -308,7 +310,7 @@ foreach ($file in [System.Linq.Enumerable]::OrderBy($list, [Func[object, string]
     }
 
     Write-Host "TestIds: " ([String]::Join(', ', $ctxids.ToArray()))
-    Write-Host
+    Write-Host    
 }
 
 Write-Host "--- End of script ---"

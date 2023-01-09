@@ -597,7 +597,7 @@ namespace Microsoft.PowerFx.Core.Binding
                         default:
                             // Date + number = Date
                             var resRight = CheckTypeCore(errorContainer, node.Right, rightType, DType.Number, /* coerced: */ DType.String, DType.Boolean);
-                            return new BinderCheckTypeResult() { Node = node, NodeType = DType.DateTime, Coercions = resRight.Coercions };
+                            return new BinderCheckTypeResult() { Node = node, NodeType = DType.Date, Coercions = resRight.Coercions };
                     }
 
                 case DKind.Time:
@@ -647,7 +647,7 @@ namespace Microsoft.PowerFx.Core.Binding
                         case DKind.Date:
                             // number + Date = Date
                             var leftResDate = CheckTypeCore(errorContainer, node.Left, leftType, DType.Number, /* coerced: */ DType.String, DType.Boolean);
-                            return new BinderCheckTypeResult() { Node = node, NodeType = DType.DateTime, Coercions = leftResDate.Coercions };
+                            return new BinderCheckTypeResult() { Node = node, NodeType = DType.Date, Coercions = leftResDate.Coercions };
                         case DKind.Time:
                             // number + Time = Time
                             var leftResTime = CheckTypeCore(errorContainer, node.Left, leftType, DType.Number, /* coerced: */ DType.String, DType.Boolean);

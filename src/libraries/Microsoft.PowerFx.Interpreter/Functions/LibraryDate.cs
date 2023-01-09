@@ -130,7 +130,14 @@ namespace Microsoft.PowerFx.Functions
 
                 newDate = MakeValidDateTime(runner, newDate, timeZoneInfo);
 
-                return new DateTimeValue(irContext, newDate);
+                if (irContext.ResultType._type.Kind == Core.Types.DKind.Date)
+                {
+                    return new DateValue(irContext, newDate);
+                }
+                else
+                {
+                    return new DateTimeValue(irContext, newDate);
+                }
             }
             catch
             {

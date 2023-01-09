@@ -420,7 +420,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 // Arg0 should be either a DateTime or Date.
                 if (type0.Kind == DKind.Date || type0.Kind == DKind.DateTime)
                 {
-                    returnType = ReturnType;
+                    returnType = type0;
                 }
                 else
                 {
@@ -486,17 +486,19 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                 if (fValid)
                 {
-                    var resultColumnType = context.Features.HasFlag(Features.ConsistentOneColumnTableResult)
+                    var inputColumn = type0.GetNames(DPath.Root).Single();
+                    var resultColumnType = inputColumn.Type;
+                    var resultColumnName = context.Features.HasFlag(Features.ConsistentOneColumnTableResult)
                         ? ColumnName_Value
-                        : type0.GetNames(DPath.Root).Single().Name;
-                    returnType = DType.CreateTable(new TypedName(DType.DateTime, resultColumnType));
+                        : inputColumn.Name;
+                    returnType = DType.CreateTable(new TypedName(resultColumnType, resultColumnName));
                 }
             }
             else
             {
                 if (type0.Kind == DKind.DateTime || type0.Kind == DKind.Date)
                 {
-                    returnType = DType.CreateTable(new TypedName(DType.DateTime, GetOneColumnTableResultName(context.Features)));
+                    returnType = DType.CreateTable(new TypedName(type0, GetOneColumnTableResultName(context.Features)));
                 }
                 else if (type0.CoercesTo(DType.DateTime))
                 {
