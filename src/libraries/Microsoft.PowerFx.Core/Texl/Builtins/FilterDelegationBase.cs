@@ -79,11 +79,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             ErrorContainer originalErrorContainer = null;
             try
             {
-                // if hints should not be generated, create a temporary error container
+                // if hints should not be generated, create a temporary override error container to hold the unwanted warnings/hints
                 if (!generateHints)
                 {
                     originalErrorContainer = binding.ErrorContainer;
-                    binding.ErrorContainer = new ErrorContainer();
+                    binding.OverrideErrorContainer(new ErrorContainer());
                 }
 
                 switch (kind)
@@ -161,10 +161,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
             finally
             {
-                // restore the original error container, if necessary
+                // restore the original error container, if necessary, discarding any warnings added
                 if (originalErrorContainer != null)
                 {
-                    binding.ErrorContainer = originalErrorContainer;
+                    binding.OverrideErrorContainer(originalErrorContainer);
                 }
             }
 

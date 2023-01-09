@@ -3046,10 +3046,11 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("Filter(DS, StartsWith(Value, \"d\"))", false)]
-        [InlineData("Filter(DS, Left(Value, 1) = \"d\")", true)]
-        [InlineData("Filter(DS, Substitute(Value, \"x\", \"y\"))", true)]
-        [InlineData("Filter(DS, Value(Value) <= 3 Or Value(Value) > 7)", true)]
+        [InlineData("*Filter*(DS, StartsWith(Value, \"d\"))", false)]
+        [InlineData("*Filter*(DS, Left(Value, 1) = \"d\")", true)]
+        [InlineData("*Filter*(DS, Substitute(Value, \"x\", \"y\"))", true)]
+        [InlineData("*Filter*(DS, Value(Value) <= 3 Or Value(Value) > 7)", true)]
+        [InlineData("*Filter*(DS, IsBlank(First(*Filter*(DS, StartsWith(Value, \"d\")))))", true)]
         public void TestSilentValidDelegatableFilterPredicateNode(string script, bool warnings)
         {
             var schema = DType.CreateTable(new TypedName(TestUtils.DT("s"), new DName("Value")));
@@ -3083,7 +3084,8 @@ namespace Microsoft.PowerFx.Core.Tests
                 var engine = new Engine(config);
 
                 // first run using the original Filter
-                var result = engine.Check(script);
+                var filterScript = script.Replace("*Filter*", "Filter");
+                var result = engine.Check(filterScript);
 
                 Assert.True(result.IsSuccess);
 
@@ -3097,7 +3099,8 @@ namespace Microsoft.PowerFx.Core.Tests
                 }
 
                 // then run with the mock filter function that does silent delgation checks
-                result = engine.Check("TestSilent" + script);
+                var silentFilterScript = script.Replace("*Filter*", "TestSilentFilter");
+                result = engine.Check(silentFilterScript);
 
                 Assert.True(result.IsSuccess);
                 Assert.False(result.Errors.Count() > 0, "No warnings expected in silent function");

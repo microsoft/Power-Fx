@@ -121,7 +121,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
         public bool HasLocalScopeReferences { get; private set; }
 
-        public ErrorContainer ErrorContainer { get; set; } = new ErrorContainer();
+        public ErrorContainer ErrorContainer { get; private set; } = new ErrorContainer();
 
         /// <summary>
         /// The maximum number of selects in a table that will be included in data call.
@@ -2336,6 +2336,16 @@ namespace Microsoft.PowerFx.Core.Binding
         public bool IsAsyncWithNoSideEffects(TexlNode node)
         {
             return IsAsync(node) && !HasSideEffects(node);
+        }
+
+        /// <summary>
+        /// Override the error container.  Should only be used for scenarios where the current error container needs to be updated, for example, 
+        /// to run validation logic that should not produce visible errors for the consumer.
+        /// </summary>
+        /// <param name="container">The new error container.</param>
+        internal void OverrideErrorContainer(ErrorContainer container)
+        {
+            ErrorContainer = container;
         }
 
         private class Visitor : TexlVisitor
