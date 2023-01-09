@@ -59,6 +59,9 @@ function ConvertToBytes([string]$str)
     }
 }
 
+## Display PowerShell version
+$PSVersionTable
+
 ## Retrieve Power Fx latest Git hash and Git remote branch
 cd ($env:BUILD_SOURCESDIRECTORY)
 $pfxHash = (git log -n 1 --pretty=%H).ToString()
@@ -244,7 +247,7 @@ foreach ($file in [System.Linq.Enumerable]::OrderBy($list, [Func[object, string]
     [void]$table.Columns.Add("NativeMemoryLeak", [double]);        $table.Columns["NativeMemoryLeak"].AllowDBNull = $false
 
 
-    foreach ($row in (Import-Csv $file | Select-Object Method, Runtime, N, Mean, StdDev, Min, Q1, Median, Q3, Max, Gen0, Gen1, Allocated, 'Allocated Native Memory', 'Native Memory Leak'))
+    foreach ($row in (Import-Csv -Encoding UTF8 $file | Select-Object Method, Runtime, N, Mean, StdDev, Min, Q1, Median, Q3, Max, Gen0, Gen1, Allocated, 'Allocated Native Memory', 'Native Memory Leak'))
     {
         $mean = ConvertToMs($row.Mean)
         $stddev = ConvertToMs($row.StdDev)
