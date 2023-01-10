@@ -4729,6 +4729,10 @@
     <value>Märksõna "Kui" pole selles kontekstis lubatud</value>
     
   </data>
+  <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
+    <value>Tippimata objekte ei saa kasutada esimese argumendina funktsioonidele, mis toetavad kirje ulatusi.</value>
+    
+  </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>Nimetatud valem peab lõppema semikooloniga.</value>
     

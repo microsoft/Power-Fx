@@ -4729,6 +4729,10 @@
     <value>As не е разрешено в този контекст</value>
     
   </data>
+  <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
+    <value>Обекти без тип не могат да се използват като първи аргумент на функции, които поддържат обхвати на записи.</value>
+    
+  </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>Наименуваната формула трябва да завършва с точка и запетая.</value>
     

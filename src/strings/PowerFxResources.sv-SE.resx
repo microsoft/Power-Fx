@@ -4729,6 +4729,10 @@
     <value>As tillåts inte i den här kontexten</value>
     
   </data>
+  <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
+    <value>Objekt utan typ kan inte användas som första argument för funktioner som stöder postomfattningar.</value>
+    
+  </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>Den namngivna formeln måste sluta med ett semikolon.</value>
     

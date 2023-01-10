@@ -4729,6 +4729,10 @@
     <value>Slovo „Ako“ nie je v tomto kontexte povolené</value>
     
   </data>
+  <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
+    <value>Netypové objekty nemožno používať ako prvý argument pre funkcie, ktoré podporujú rozsahy záznamov.</value>
+    
+  </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>Pomenovaný vzorec sa musí končiť bodkočiarkou.</value>
     

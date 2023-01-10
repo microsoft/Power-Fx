@@ -4729,6 +4729,10 @@
     <value>As-kohde ei ole sallittu tässä kontekstissa</value>
     
   </data>
+  <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
+    <value>Tyypittämättömiä objekteja ei voi käyttää ensimmäisenä argumenttina funktioille, jotka tukevat tietueiden vaikutusalueita.</value>
+    
+  </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>Nimetyn kaavan täytyy päättyä puolipisteeseen.</value>
     

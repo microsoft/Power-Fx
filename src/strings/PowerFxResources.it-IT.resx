@@ -4729,6 +4729,10 @@
     <value>L'uso di As non è consentito in questo contesto</value>
     
   </data>
+  <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
+    <value>Impossibile utilizzare oggetti senza tipo come primo argomento per le funzioni che supportano gli ambiti dei record.</value>
+    
+  </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>La formula con nome deve terminare con un punto e virgola.</value>
     

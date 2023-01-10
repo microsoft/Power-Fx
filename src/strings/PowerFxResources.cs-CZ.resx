@@ -4729,6 +4729,10 @@
     <value>Jak se v tomto kontextu nepovoluje</value>
     
   </data>
+  <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
+    <value>Objekty bez typu nelze použít jako první argument pro funkce, které podporují obory záznamů.</value>
+    
+  </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>Pojmenovaný vzorec musí končit středníkem.</value>
     

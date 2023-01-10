@@ -4729,6 +4729,10 @@
     <value>As er ikke tillatt i denne konteksten</value>
     
   </data>
+  <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
+    <value>Objekter uten type kan ikke brukes som det første argumentet for funksjoner som støtter oppføringsomfang.</value>
+    
+  </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>Navngitt formel må slutte med et semikolon.</value>
     

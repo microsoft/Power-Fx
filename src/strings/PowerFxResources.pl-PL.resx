@@ -4729,6 +4729,10 @@
     <value>Słowo kluczowe As jest niedozwolone w tym kontekście</value>
     
   </data>
+  <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
+    <value>Obiektów bez typu nie można używać jako pierwszego argumentu funkcji, które obsługują zakresy rekordów.</value>
+    
+  </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>Nazwana formuła musi kończyć się średnikiem.</value>
     

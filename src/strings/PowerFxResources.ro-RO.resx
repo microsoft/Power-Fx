@@ -4729,6 +4729,10 @@
     <value>„Ca atare” nu este permis în acest context</value>
     
   </data>
+  <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
+    <value>Obiectele atipice nu pot fi utilizate ca prim argument pentru funcțiile care acceptă domenii de înregistrare. </value>
+    
+  </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>Formula numită trebuie să se termine cu punct și virgulă.</value>
     

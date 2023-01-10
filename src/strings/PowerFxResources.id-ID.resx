@@ -4729,6 +4729,10 @@
     <value>Karena tidak diizinkan dalam konteks ini</value>
     
   </data>
+  <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
+    <value>Objek tidak bertipe tidak dapat digunakan sebagai argumen pertama untuk fungsi yang mendukung cakupan rekaman.</value>
+    
+  </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>Rumus bernama harus diakhiri dengan titik koma.</value>
     

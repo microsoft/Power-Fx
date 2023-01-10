@@ -4729,6 +4729,10 @@
     <value>« As » n’est pas autorisé dans ce contexte</value>
     
   </data>
+  <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
+    <value>Les objets sans type ne peuvent pas être utilisés en tant que premier argument des fonctions qui prennent en charge les étendues d’enregistrement.</value>
+    
+  </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>La formule nommée doit se terminer par un point-virgule.</value>
     
