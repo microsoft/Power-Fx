@@ -4729,6 +4729,10 @@
     <value>„As“ ist in diesem Kontext nicht zulässig.</value>
     
   </data>
+  <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
+    <value>Untyped objects cannot be used as the first argument to functions which support record scopes.</value>
+    
+  </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>Die benannte Formel muss mit einem Semikolon enden.</value>
     

@@ -4729,6 +4729,10 @@
     <value>Бұл контекстте рұқсат етілмеген</value>
     
   </data>
+  <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
+    <value>Терілмеген нысандар жазба ауқымдарын қолдайтын функцияларға бірінші аргумент ретінде пайдаланылмайды.</value>
+    
+  </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>Аталған формула үтір нүктемен аяқталуға тиіс.</value>
     

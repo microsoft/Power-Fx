@@ -1842,7 +1842,7 @@
     
   </data>
   <data name="ErrTextInvalidFormat" xml:space="preserve">
-    <value>Invalid format.</value>
+    <value>Неприпустимий формат.</value>
     
   </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
@@ -4727,6 +4727,10 @@
   </data>
   <data name="ErrorResource_ErrAsNotInContext_ShortMessage" xml:space="preserve">
     <value>Це не дозволено в цьому контексті</value>
+    
+  </data>
+  <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
+    <value>Untyped objects cannot be used as the first argument to functions which support record scopes.</value>
     
   </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">

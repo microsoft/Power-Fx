@@ -4729,6 +4729,10 @@
     <value>As não é permitido neste contexto</value>
     
   </data>
+  <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
+    <value>Os objetos sem tipo não podem ser usados como o primeiro argumento para funções com suporte a escopos de registro.</value>
+    
+  </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>A fórmula nomeada deve terminar com um ponto e vírgula.</value>
     

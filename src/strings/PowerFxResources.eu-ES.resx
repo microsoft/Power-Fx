@@ -4729,6 +4729,10 @@
     <value>As ez da onartzen testuinguru honetan</value>
     
   </data>
+  <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
+    <value>Motarik gabeko objektuak ezin dira erabili lehen argumentu gisa erregistro-esparruak onartzen dituzten funtzioetan.</value>
+    
+  </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>Izendatutako formulak puntu eta komaz amaitu behar du.</value>
     

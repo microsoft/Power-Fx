@@ -4729,6 +4729,10 @@
     <value>此上下文中不允许使用 As</value>
     
   </data>
+  <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
+    <value>非类型化对象不能用作支持记录范围的函数的第一个参数。</value>
+    
+  </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>命名公式必须以分号结束。</value>
     

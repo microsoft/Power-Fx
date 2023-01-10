@@ -4729,6 +4729,10 @@
     <value>Реч „као“ није дозвољена у овом контексту</value>
     
   </data>
+  <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
+    <value>Нетипизирани објекти се не могу користити као први аргумент за функције које подржавају опсеге записа.</value>
+    
+  </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>Именована формула мора да се заврши тачком и зарезом.</value>
     

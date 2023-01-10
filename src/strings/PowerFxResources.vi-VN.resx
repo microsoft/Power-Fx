@@ -4729,6 +4729,10 @@
     <value>Không được phép sử dụng từ As trong ngữ cảnh này</value>
     
   </data>
+  <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
+    <value>Không thể dùng các đối tượng chưa nhập làm đối số đầu tiên cho các hàm hỗ trợ phạm vi bản ghi.</value>
+    
+  </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>Công thức được đặt tên phải kết thúc bằng dấu chấm phẩy.</value>
     

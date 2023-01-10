@@ -4729,6 +4729,10 @@
     <value>जैसा कि इस संदर्भ में अनुमति नहीं है</value>
     
   </data>
+  <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
+    <value>रिकॉर्ड स्कोप का समर्थन करने वाले कार्यों के पहले तर्क के रूप में अनटाइप्ड ऑब्जेक्ट्स का इस्तेमाल नहीं किया जा सकता है.</value>
+    
+  </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>नामांकित सूत्र अर्धविराम के साथ समाप्त होना चाहिए.</value>
     

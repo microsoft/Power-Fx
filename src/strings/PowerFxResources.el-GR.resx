@@ -4729,6 +4729,10 @@
     <value>Η λέξη-κλειδί As δεν επιτρέπεται σε αυτό το περιβάλλον</value>
     
   </data>
+  <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
+    <value>Τα μη πληκτρολογημένα αντικείμενα δεν μπορούν να χρησιμοποιηθούν ως το πρώτο όρισμα για λειτουργίες που υποστηρίζουν πεδία καρτελών.</value>
+    
+  </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>Ο καθορισμένος τύπος πρέπει να τελειώνει με ερωτηματικό.</value>
     
