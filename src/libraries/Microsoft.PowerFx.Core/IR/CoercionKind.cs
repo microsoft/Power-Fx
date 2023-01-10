@@ -59,5 +59,14 @@ namespace Microsoft.PowerFx.Core.IR
 
         BooleanToOptionSet,
         AggregateToDataEntity,
+
+        UntypedToText,
+        UntypedToBoolean,
+        UntypedToNumber,
+        UntypedToDate,
+        UntypedToTime,
+        UntypedToDateTime,
+        UntypedToColor,
+        UntypedToGUID
     }
 }
