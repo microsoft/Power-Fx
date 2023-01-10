@@ -793,6 +793,22 @@ namespace Microsoft.PowerFx.Core.IR
                     case CoercionKind.AggregateToDataEntity:
                         unaryOpKind = UnaryOpKind.AggregateToDataEntity;
                         break;
+                    case CoercionKind.UntypedToText:
+                        return new CallNode(IRContext.NotInSource(FormulaType.Build(toType)), BuiltinFunctionsCore.Text_UO, child);
+                    case CoercionKind.UntypedToNumber:
+                        return new CallNode(IRContext.NotInSource(FormulaType.Build(toType)), BuiltinFunctionsCore.Value_UO, child);
+                    case CoercionKind.UntypedToBoolean:
+                        return new CallNode(IRContext.NotInSource(FormulaType.Build(toType)), BuiltinFunctionsCore.Boolean_UO, child);
+                    case CoercionKind.UntypedToDate:
+                        return new CallNode(IRContext.NotInSource(FormulaType.Build(toType)), BuiltinFunctionsCore.DateValue_UO, child);
+                    case CoercionKind.UntypedToTime:
+                        return new CallNode(IRContext.NotInSource(FormulaType.Build(toType)), BuiltinFunctionsCore.TimeValue_UO, child);
+                    case CoercionKind.UntypedToDateTime:
+                        return new CallNode(IRContext.NotInSource(FormulaType.Build(toType)), BuiltinFunctionsCore.DateTimeValue_UO, child);
+                    case CoercionKind.UntypedToColor:
+                        return new CallNode(IRContext.NotInSource(FormulaType.Build(toType)), BuiltinFunctionsCore.ColorValue_UO, child);
+                    case CoercionKind.UntypedToGUID:
+                        return new CallNode(IRContext.NotInSource(FormulaType.Build(toType)), BuiltinFunctionsCore.GUID_UO, child);
                     case CoercionKind.None:
                         // No coercion needed, return the child node
                         return child;

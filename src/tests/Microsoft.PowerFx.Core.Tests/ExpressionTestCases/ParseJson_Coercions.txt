@@ -1,0 +1,320 @@
+﻿// The If function will attempt to coerce the else clause to the same type as the then clause
+// this allows us to control the exact expected coercion type
+>> If(false, 4, ParseJSON("5"))
+5
+
+>> If(true, 4, ParseJSON("5"))
+4
+
+>> If(false, "s", ParseJSON("""t"""))
+"t"
+
+>> If(ParseJSON("true"), 1, 0)
+1
+
+>> If(false, ColorValue("#aabbcc"), ParseJSON("""#aabbcc"""))
+RGBA(170,187,204,1)
+
+>> If(false, GUID("5cc45615-f759-4a53-b225-d3a2497f60ad"), ParseJSON("""5cc45615-f759-4a53-b225-d3a2497f60ad"""))
+GUID("5cc45615-f759-4a53-b225-d3a2497f60ad")
+
+>> DateDiff(If(false, DateTime(0,0,0,0,0,0), DateTimeValue(ParseJSON("""2011-01-15T08:00:00.000Z"""))), DateTimeValue(ParseJSON("""2011-01-30T08:00:00.000Z""")))
+15
+
+>> DateDiff(If(false, Date(0,0,0), DateValue(ParseJSON("""2011-01-15T00:00:00"""))), DateValue(ParseJSON("""2011-01-30""")))
+15
+
+>> Text(If(false, Time(0,0,0), TimeValue(ParseJSON("""08:03:05.000"""))), "HH:mm:ss")
+"08:03:05"
+
+>> Sum(ParseJSON("[1,2,3]"), Blank())
+Errors: Error 4-24: Untyped objects cannot be used as the first argument to functions which support record scopes.|Error 0-34: The function 'Sum' has some invalid arguments.
+
+// Arity error code path for Sum
+>> Sum(ParseJSON("[1,2,3]"))
+Errors: Error 4-24: Untyped objects cannot be used as the first argument to functions which support record scopes.|Error 0-25: The function 'Sum' has some invalid arguments.
+
+// Scalar version of Sum
+>> Sum([ParseJSON("1"), ParseJSON("2"), ParseJSON("3")], Value)
+6
+
+>> Filter(ParseJSON("[1,2,3]"), true)
+Errors: Error 7-27: Untyped objects cannot be used as the first argument to functions which support record scopes.|Error 0-34: The function 'Filter' has some invalid arguments.
+
+// Comparison tests
+>> Abs(5) = Abs(ParseJSON("5"))
+true
+
+>> Acot(5) = Acot(ParseJSON("5"))
+true
+
+>> And(true) = And(ParseJSON("true"))
+true
+
+>> Atan(5) = Atan(ParseJSON("5"))
+true
+
+>> Atan2(5, 5) = Atan2(ParseJSON("5"), 5)
+true
+
+>> Atan2(5, 5) = Atan2(5, ParseJSON("5"))
+true
+
+>> Char(5) = Char(ParseJSON("5"))
+true
+
+>> Cos(5) = Cos(ParseJSON("5"))
+true
+
+>> Cot(5) = Cot(ParseJSON("5"))
+true
+
+>> Day(DateTimeValue("2022-12-19T12:08:45.000Z")) = Day(ParseJSON("""2022-12-19T12:08:45.000Z"""))
+true
+
+>> Degrees(5) = Degrees(ParseJSON("5"))
+true
+
+>> EndsWith("Hello World", "Hello World") = EndsWith(ParseJSON("""Hello World"""), "Hello World")
+true
+
+>> EndsWith("Hello World", "Hello World") = EndsWith("Hello World", ParseJSON("""Hello World"""))
+true
+
+>> Exp(5) = Exp(ParseJSON("5"))
+true
+
+>> Find("Hello World", "Hello World") = Find(ParseJSON("""Hello World"""), "Hello World")
+true
+
+>> Find("Hello World", "Hello World") = Find("Hello World", ParseJSON("""Hello World"""))
+true
+
+>> Find("Hello World", "Hello World", 5) = Find(ParseJSON("""Hello World"""), "Hello World", 5)
+true
+
+>> Find("Hello World", "Hello World", 5) = Find("Hello World", ParseJSON("""Hello World"""), 5)
+true
+
+>> Find("Hello World", "Hello World", 5) = Find("Hello World", "Hello World", ParseJSON("5"))
+true
+
+>> Hour(DateTimeValue("2022-12-19T12:08:45.000Z")) = Hour(ParseJSON("""2022-12-19T12:08:45.000Z"""))
+true
+
+>> Int(5) = Int(ParseJSON("5"))
+true
+
+>> IsToday(DateTimeValue("2022-12-19T12:08:45.000Z")) = IsToday(ParseJSON("""2022-12-19T12:08:45.000Z"""))
+true
+
+>> Left("Hello World", 5) = Left(ParseJSON("""Hello World"""), 5)
+true
+
+>> Left("Hello World", 5) = Left("Hello World", ParseJSON("5"))
+true
+
+>> Len("Hello World") = Len(ParseJSON("""Hello World"""))
+true
+
+>> Ln(5) = Ln(ParseJSON("5"))
+true
+
+>> Log(5) = Log(ParseJSON("5"))
+true
+
+>> Log(5, 5) = Log(ParseJSON("5"), 5)
+true
+
+>> Log(5, 5) = Log(5, ParseJSON("5"))
+true
+
+>> Lower("Hello World") = Lower(ParseJSON("""Hello World"""))
+true
+
+>> Mid("Hello World", 5) = Mid(ParseJSON("""Hello World"""), 5)
+true
+
+>> Mid("Hello World", 5) = Mid("Hello World", ParseJSON("5"))
+true
+
+>> Mid("Hello World", 5, 5) = Mid(ParseJSON("""Hello World"""), 5, 5)
+true
+
+>> Mid("Hello World", 5, 5) = Mid("Hello World", ParseJSON("5"), 5)
+true
+
+>> Mid("Hello World", 5, 5) = Mid("Hello World", 5, ParseJSON("5"))
+true
+
+>> Minute(DateTimeValue("2022-12-19T12:08:45.000Z")) = Minute(ParseJSON("""2022-12-19T12:08:45.000Z"""))
+true
+
+>> Mod(5, 5) = Mod(ParseJSON("5"), 5)
+true
+
+>> Mod(5, 5) = Mod(5, ParseJSON("5"))
+true
+
+>> Month(DateTimeValue("2022-12-19T12:08:45.000Z")) = Month(ParseJSON("""2022-12-19T12:08:45.000Z"""))
+true
+
+>> Not(true) = Not(ParseJSON("true"))
+true
+
+>> Or(true) = Or(ParseJSON("true"))
+true
+
+>> Power(5, 5) = Power(ParseJSON("5"), 5)
+true
+
+>> Power(5, 5) = Power(5, ParseJSON("5"))
+true
+
+>> Proper("Hello World") = Proper(ParseJSON("""Hello World"""))
+true
+
+>> Radians(5) = Radians(ParseJSON("5"))
+true
+
+>> RandBetween(5, 5) = RandBetween(ParseJSON("5"), 5)
+true
+
+>> RandBetween(5, 5) = RandBetween(5, ParseJSON("5"))
+true
+
+>> Replace("Hello World", 5, 5, "Hello World") = Replace(ParseJSON("""Hello World"""), 5, 5, "Hello World")
+true
+
+>> Replace("Hello World", 5, 5, "Hello World") = Replace("Hello World", ParseJSON("5"), 5, "Hello World")
+true
+
+>> Replace("Hello World", 5, 5, "Hello World") = Replace("Hello World", 5, ParseJSON("5"), "Hello World")
+true
+
+>> Replace("Hello World", 5, 5, "Hello World") = Replace("Hello World", 5, 5, ParseJSON("""Hello World"""))
+true
+
+>> Right("Hello World", 5) = Right(ParseJSON("""Hello World"""), 5)
+true
+
+>> Right("Hello World", 5) = Right("Hello World", ParseJSON("5"))
+true
+
+>> Round(5, 5) = Round(ParseJSON("5"), 5)
+true
+
+>> Round(5, 5) = Round(5, ParseJSON("5"))
+true
+
+>> RoundDown(5, 5) = RoundDown(ParseJSON("5"), 5)
+true
+
+>> RoundDown(5, 5) = RoundDown(5, ParseJSON("5"))
+true
+
+>> RoundUp(5, 5) = RoundUp(ParseJSON("5"), 5)
+true
+
+>> RoundUp(5, 5) = RoundUp(5, ParseJSON("5"))
+true
+
+>> Second(DateTimeValue("2022-12-19T12:08:45.000Z")) = Second(ParseJSON("""2022-12-19T12:08:45.000Z"""))
+true
+
+>> Sin(5) = Sin(ParseJSON("5"))
+true
+
+>> Sqrt(5) = Sqrt(ParseJSON("5"))
+true
+
+>> StartsWith("Hello World", "Hello World") = StartsWith(ParseJSON("""Hello World"""), "Hello World")
+true
+
+>> StartsWith("Hello World", "Hello World") = StartsWith("Hello World", ParseJSON("""Hello World"""))
+true
+
+>> Substitute("Hello World", "Hello World", "Hello World") = Substitute(ParseJSON("""Hello World"""), "Hello World", "Hello World")
+true
+
+>> Substitute("Hello World", "Hello World", "Hello World") = Substitute("Hello World", ParseJSON("""Hello World"""), "Hello World")
+true
+
+>> Substitute("Hello World", "Hello World", "Hello World") = Substitute("Hello World", "Hello World", ParseJSON("""Hello World"""))
+true
+
+>> Substitute("Hello World", "Hello World", "Hello World", 5) = Substitute(ParseJSON("""Hello World"""), "Hello World", "Hello World", 5)
+true
+
+>> Substitute("Hello World", "Hello World", "Hello World", 5) = Substitute("Hello World", ParseJSON("""Hello World"""), "Hello World", 5)
+true
+
+>> Substitute("Hello World", "Hello World", "Hello World", 5) = Substitute("Hello World", "Hello World", ParseJSON("""Hello World"""), 5)
+true
+
+>> Substitute("Hello World", "Hello World", "Hello World", 5) = Substitute("Hello World", "Hello World", "Hello World", ParseJSON("5"))
+true
+
+>> Tan(5) = Tan(ParseJSON("5"))
+true
+
+>> TimeZoneOffset(DateTimeValue("2022-12-19T12:08:45.000Z")) = TimeZoneOffset(ParseJSON("""2022-12-19T12:08:45.000Z"""))
+true
+
+>> Trim("Hello World") = Trim(ParseJSON("""Hello World"""))
+true
+
+>> TrimEnds("Hello World") = TrimEnds(ParseJSON("""Hello World"""))
+true
+
+>> Trunc(5) = Trunc(ParseJSON("5"))
+true
+
+>> Trunc(5, 5) = Trunc(ParseJSON("5"), 5)
+true
+
+>> Trunc(5, 5) = Trunc(5, ParseJSON("5"))
+true
+
+>> Upper("Hello World") = Upper(ParseJSON("""Hello World"""))
+true
+
+>> Year(DateTimeValue("2022-12-19T12:08:45.000Z")) = Year(ParseJSON("""2022-12-19T12:08:45.000Z"""))
+true
+
+// Table comparison tests
+>> Sequence(5)
+Table({Value:1},{Value:2},{Value:3},{Value:4},{Value:5})
+
+>> Sequence(ParseJSON("5"))
+Table({Value:1},{Value:2},{Value:3},{Value:4},{Value:5})
+
+>> Sequence(5, 5)
+Table({Value:5},{Value:6},{Value:7},{Value:8},{Value:9})
+
+>> Sequence(ParseJSON("5"), 5)
+Table({Value:5},{Value:6},{Value:7},{Value:8},{Value:9})
+
+>> Sequence(5, ParseJSON("5"))
+Table({Value:5},{Value:6},{Value:7},{Value:8},{Value:9})
+
+>> Sequence(5, 5, 5)
+Table({Value:5},{Value:10},{Value:15},{Value:20},{Value:25})
+
+>> Sequence(ParseJSON("5"), 5, 5)
+Table({Value:5},{Value:10},{Value:15},{Value:20},{Value:25})
+
+>> Sequence(5, ParseJSON("5"), 5)
+Table({Value:5},{Value:10},{Value:15},{Value:20},{Value:25})
+
+>> Sequence(5, 5, ParseJSON("5"))
+Table({Value:5},{Value:10},{Value:15},{Value:20},{Value:25})
+
+>> Split("Hello World", "Hello World")
+Table({Result:""},{Result:""})
+
+>> Split(ParseJSON("""Hello World"""), "Hello World")
+Table({Result:""},{Result:""})
+
+>> Split("Hello World", ParseJSON("""Hello World"""))
+Table({Result:""},{Result:""})

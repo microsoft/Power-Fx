@@ -4055,6 +4055,15 @@ namespace Microsoft.PowerFx.Core.Binding
                 }
             }
 
+            private void UntypedObjectScopeError(CallNode node, TexlFunction maybeFunc, TexlNode firstArg)
+            {
+                _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, firstArg, TexlStrings.ErrUntypedObjectScope);
+                _txb.ErrorContainer.Error(node, TexlStrings.ErrInvalidArgs_Func, maybeFunc.Name);
+
+                _txb.SetInfo(node, new CallInfo(maybeFunc, node, null, default, false, _currentScope.Nest));
+                _txb.SetType(node, maybeFunc.ReturnType);
+            }
+
             public override bool PreVisit(CallNode node)
             {
                 AssertValid();
@@ -4252,10 +4261,22 @@ namespace Microsoft.PowerFx.Core.Binding
                 nodeInput.Accept(this);
 
                 // At this point we know the type of the first argument, so we can check for untyped objects
-                if (overloadWithUntypedObjectLambda != null && _txb.GetType(nodeInput) == DType.UntypedObject)
+                if (_txb.GetType(nodeInput) == DType.UntypedObject)
                 {
-                    maybeFunc = overloadWithUntypedObjectLambda;
-                    scopeInfo = maybeFunc.ScopeInfo;
+                    if (overloadWithUntypedObjectLambda != null)
+                    {
+                        maybeFunc = overloadWithUntypedObjectLambda;
+                        scopeInfo = maybeFunc.ScopeInfo;
+                    }
+                    else
+                    {
+                        UntypedObjectScopeError(node, maybeFunc, nodeInput);
+
+                        PreVisitBottomUp(node, 1);
+                        FinalizeCall(node);
+
+                        return false;
+                    }
                 }
 
                 FirstNameNode dsNode;
@@ -4816,6 +4837,23 @@ namespace Microsoft.PowerFx.Core.Binding
                     if (args[i].Kind == NodeKind.As)
                     {
                         _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrAsNotInContext);
+                    }
+                }
+
+                if (argCount > 0 && _txb.GetType(args[0]).Kind == DKind.UntypedObject)
+                {
+                    var functionsWithLambdas = LookupFunctions(funcNamespace, node.Head.Name.Value).Where(fnc => fnc.HasLambdas);
+
+                    if (functionsWithLambdas.Any() && !_txb.ErrorContainer.HasErrors(node))
+                    {
+                        // PreVisitBottomUp is called along the arity error code path. For functions such as Sum,
+                        // there is an overload with a lambda as well as an overload with scalars. Using untyped
+                        // object as a single parameter for such functions should be an error. If there is not
+                        // already an error for this node, add the ErrUntypedObjectScope
+                        var functionWithLambdas = functionsWithLambdas.Single();
+
+                        UntypedObjectScopeError(node, functionWithLambdas, args[0]);
+                        return;
                     }
                 }
 
