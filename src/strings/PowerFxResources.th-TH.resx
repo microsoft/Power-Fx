@@ -4729,6 +4729,10 @@
     <value>ไม่ได้รับอนุญาตในบริบทนี้</value>
     
   </data>
+  <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
+    <value>ออบเจ็กต์ที่ไม่ได้ระบุชนิดไม่สามารถใช้เป็นอาร์กิวเมนต์แรกสำหรับฟังก์ชันที่สนับสนุนขอบเขตเรกคอร์ดได้</value>
+    
+  </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>สูตรที่ระบุชื่อต้องลงท้ายด้วยเครื่องหมายอัฒภาค</value>
     

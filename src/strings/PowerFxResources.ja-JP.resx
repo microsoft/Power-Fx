@@ -4729,6 +4729,10 @@
     <value>As はこのコンテキストで許可されていません</value>
     
   </data>
+  <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
+    <value>型指定されていないオブジェクトを、レコード スコープをサポートする関数への第一引数として使用することはできません。</value>
+    
+  </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>名前付き計算式はセミコロンで終わる必要があります。</value>
     

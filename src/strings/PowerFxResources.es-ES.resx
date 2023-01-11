@@ -4729,6 +4729,10 @@
     <value>No se permite el uso de "As" en este contexto.</value>
     
   </data>
+  <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
+    <value>Los objetos sin tipo no se pueden usar como primer argumento para funciones que admiten ámbitos de registro.</value>
+    
+  </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>La fórmula con nombre debe terminar con punto y coma.</value>
     

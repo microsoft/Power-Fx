@@ -4729,6 +4729,10 @@
     <value>在此內容中不允許 As</value>
     
   </data>
+  <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
+    <value>非類型化物件無法用做支援記錄範圍之函式的第一個引數。</value>
+    
+  </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>命名公式必須以分號結尾。</value>
     

@@ -4729,6 +4729,10 @@
     <value>Raktinis žodis „kaip“ šiame kontekste neleidžiamas</value>
     
   </data>
+  <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
+    <value>Neapibrėžto tipo objektai negali būti naudojami kaip pirmas argumentas funkcijoms, palaikančioms įrašų aprėptis.</value>
+    
+  </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>Įvardytoji formulė turi baigtis kabliataškiu.</value>
     

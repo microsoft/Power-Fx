@@ -4729,6 +4729,10 @@
     <value>As er ikke tilladt i denne kontekst</value>
     
   </data>
+  <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
+    <value>Ikke-indtastede objekter kan ikke bruges som det første argument for funktioner, der understøtter postomfang.</value>
+    
+  </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>Den navngivne formel skal slutte med et semikolon.</value>
     

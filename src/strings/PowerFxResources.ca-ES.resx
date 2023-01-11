@@ -4729,6 +4729,10 @@
     <value>La paraula clau "As" no es permet en aquest context</value>
     
   </data>
+  <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
+    <value>Els objectes sense tipus no es poden utilitzar com a primer argument per a funcions que admeten àmbits de registre.</value>
+    
+  </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>La fórmula amb nom ha d'acabar amb un punt i coma.</value>
     

@@ -4729,6 +4729,10 @@
     <value>Az As nem engedélyezett ebben a környezetben</value>
     
   </data>
+  <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
+    <value>Nem használhatók típus nélküli objektumok a rekord hatókörét támogató függvények első argumentumaként.</value>
+    
+  </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>A megnevezett képletnek pontosvesszővel kell végződnie.</value>
     

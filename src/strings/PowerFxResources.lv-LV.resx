@@ -4729,6 +4729,10 @@
     <value>Jo šajā kontekstā nav atļauts</value>
     
   </data>
+  <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
+    <value>Objektus bez tipa nevar lietot kā pirmo argumentu funkcijām, kas atbalsta ierakstu tvērumus.</value>
+    
+  </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>Nosauktajai formulai jābeidzas ar semikolu.</value>
     

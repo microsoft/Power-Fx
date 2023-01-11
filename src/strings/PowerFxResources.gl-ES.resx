@@ -4729,6 +4729,10 @@
     <value>Porque non se permite neste contexto</value>
     
   </data>
+  <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
+    <value>Os obxectos sen tipo non se poden usar como primeiro argumento de funcións que admitan ámbitos de rexistro.</value>
+    
+  </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>As fórmulas con nome deben rematar en punto e coma.</value>
     

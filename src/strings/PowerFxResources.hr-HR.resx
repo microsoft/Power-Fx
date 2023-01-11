@@ -4729,6 +4729,10 @@
     <value>Kakvo jest nije dopušteno u ovom kontekstu</value>
     
   </data>
+  <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
+    <value>Netipizirani objekti ne mogu se upotrijebiti kao prvi argument funkcijama koje podržavaju dosege zapisa.</value>
+    
+  </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>Imenovana formula mora završiti točkom sa zarezom.</value>
     

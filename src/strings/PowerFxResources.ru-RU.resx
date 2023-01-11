@@ -4729,6 +4729,10 @@
     <value>Ключевое слово "As" не допускается в этом контексте.</value>
     
   </data>
+  <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
+    <value>Нетипизированные объекты нельзя использовать в качестве первого аргумента для функций, которые поддерживают области действия записей.</value>
+    
+  </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>Именованная формула должна заканчиваться точкой с запятой.</value>
     
