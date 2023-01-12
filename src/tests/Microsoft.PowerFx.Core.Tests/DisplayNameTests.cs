@@ -32,7 +32,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 {
                     "Num" => FormulaType.Number,
                     "B" => FormulaType.Boolean,
-                    "Nested" => TableType.Empty().Add(new NamedFormulaType("Inner", FormulaType.Number, "InnerDisplay")),
+                    "Nested" => TableType.Empty()
+                        .Add(new NamedFormulaType("Inner", FormulaType.Number, "InnerDisplay"))
+                        .Add(new NamedFormulaType("DisplayNum", FormulaType.Number, "InnerLogicalConflicts")),
                     _ => FormulaType.Blank
                 };
 
@@ -65,7 +67,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     {
                         "Num" => "DisplayNum",
                         "B" => "DisplayB",
-                        "Inner" => "InnerDisplay",
                         "Nested" => "NestedDisplay",
                         _ => null
                     };
@@ -79,7 +80,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     {
                         "DisplayNum" => "Num",
                         "DisplayB" => "B",
-                        "InnerDisplay" => "Inner",
                         "NestedDisplay" => "Nested",
                         _ => null
                     };
@@ -202,13 +202,18 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("If(DisplayB, DisplayNum, 1234)", "If(DisplayB, DisplayNum, 1234)", true)]
         [InlineData("If(DisplayB, Num, 1234)", "If(DisplayB, DisplayNum, 1234)", true)]
         [InlineData("Sum(Nested, Inner)", "Sum(NestedDisplay, InnerDisplay)", true)]
-        [InlineData("Sum(Nested /* The source */ , Inner /* Sum over the InnerDisplay column */)", "Sum(NestedDisplay /* The source */ , InnerDisplay /* Sum over the InnerDisplay column */)", true)]
+        [InlineData("Sum(Nested /* The source */ , Inner /* Sum over the InnerDisplay column */)", "Sum(NestedDisplay /* The source */ , InnerDisplay /* Sum over the InnerDisplay column */)", true)]        
+        [InlineData("First(Nested.Inner).Inner", "First(NestedDisplay.InnerDisplay).InnerDisplay", true)]
+        [InlineData("First(Nested).DisplayNum", "First(NestedDisplay).InnerLogicalConflicts", true)]
         [InlineData("If(DisplayB, DisplayNum, 1234)", "If(B, Num, 1234)", false)]
         [InlineData("If(B, Num, 1234)", "If(B, Num, 1234)", false)]
         [InlineData("If(DisplayB, Num, 1234)", "If(B, Num, 1234)", false)]
         [InlineData("Sum(NestedDisplay, InnerDisplay)", "Sum(Nested, Inner)", false)]
         [InlineData("Sum(NestedDisplay /* The source */ , InnerDisplay /* Sum over the InnerDisplay column */)", "Sum(Nested /* The source */ , Inner /* Sum over the InnerDisplay column */)", false)]
         [InlineData("Sum(NestedDisplay, ThisRecord.InnerDisplay)", "Sum(Nested, ThisRecord.Inner)", false)]
+        [InlineData("First(NestedDisplay.InnerDisplay).InnerDisplay", "First(Nested.Inner).Inner", false)]
+        [InlineData("First(NestedDisplay).InnerLogicalConflicts", "First(Nested).DisplayNum", false)]
+        [InlineData("First(NestedDisplay).DisplayNum", "First(Nested).DisplayNum", false)]
         public void ValidateDisplayNames(string inputExpression, string outputExpression, bool toDisplay)
         {
             var r1 = RecordType.Empty()
@@ -216,7 +221,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 .Add(new NamedFormulaType("B", FormulaType.Boolean, "DisplayB"))
                 .Add(new NamedFormulaType(
                     "Nested", 
-                    TableType.Empty().Add(new NamedFormulaType("Inner", FormulaType.Number, "InnerDisplay")), 
+                    TableType.Empty()
+                        .Add(new NamedFormulaType("Inner", FormulaType.Number, "InnerDisplay"))
+                        .Add(new NamedFormulaType("DisplayNum", FormulaType.Number, "InnerLogicalConflicts")), 
                     "NestedDisplay"));
 
             // Below Record r2 Tests the second method where we provide DisplayNameProvider via constructor to 
