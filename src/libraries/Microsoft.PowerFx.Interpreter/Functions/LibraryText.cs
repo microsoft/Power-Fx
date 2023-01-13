@@ -727,12 +727,12 @@ namespace Microsoft.PowerFx.Functions
             var maxLenBytes = maxLenChars * 2;
             runner.Governor.PollMemory(maxLenBytes);
 
-            var result = SubstituteWorker(runner, source, match, replacement, instanceNum);
+            var result = SubstituteWorker(runner, irContext, source, match, replacement, instanceNum);
 
-            return result; 
+            return result;
         }
 
-        private static StringValue SubstituteWorker(EvalVisitor eval, StringValue source, StringValue match, StringValue replacement, int instanceNum)
+        private static StringValue SubstituteWorker(EvalVisitor eval, IRContext irContext, StringValue source, StringValue match, StringValue replacement, int instanceNum)
         {
             if (string.IsNullOrEmpty(match.Value))
             {
@@ -786,7 +786,7 @@ namespace Microsoft.PowerFx.Functions
                 }
             }
 
-            return FormulaValue.New(sourceValue);
+            return new StringValue(irContext, sourceValue);
         }
 
         public static FormulaValue StartsWith(IRContext irContext, StringValue[] args)

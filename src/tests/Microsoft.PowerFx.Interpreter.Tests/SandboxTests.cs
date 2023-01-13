@@ -83,7 +83,7 @@ namespace Microsoft.PowerFx.Tests
         {
             var engine = new RecalcEngine();
 
-            var mem = new BasicGovernor(DefaultMemorySizeBytes);
+            var mem = new SingleThreadedGovernor(DefaultMemorySizeBytes);
 
             var runtimeConfig = new RuntimeConfig();
             runtimeConfig.AddService<Governor>(mem);
@@ -112,7 +112,7 @@ namespace Microsoft.PowerFx.Tests
         {
             var engine = new RecalcEngine();
 
-            var mem = new BasicGovernor(DefaultMemorySizeBytes);
+            var mem = new SingleThreadedGovernor(DefaultMemorySizeBytes);
 
             var runtimeConfig = new RuntimeConfig();
             runtimeConfig.AddService<Governor>(mem);
@@ -132,11 +132,11 @@ namespace Microsoft.PowerFx.Tests
             Assert.Throws<GovernorException>(() => mem.Poll());
 
             // But creating a new one works. 
-            runtimeConfig.AddService<Governor>(new BasicGovernor(DefaultMemorySizeBytes));
+            runtimeConfig.AddService<Governor>(new SingleThreadedGovernor(DefaultMemorySizeBytes));
             result = await engine.EvalAsync(smallExpr, CancellationToken.None, runtimeConfig: runtimeConfig);
         }
 
-        private class TestIgnorePrePollGovernor : BasicGovernor
+        private class TestIgnorePrePollGovernor : SingleThreadedGovernor
         {
             public TestIgnorePrePollGovernor(long maxAllowedBytes)
                 : base(maxAllowedBytes)

@@ -17,12 +17,12 @@ namespace Microsoft.PowerFx.Tests
         }
     }
 
-    internal class BasicGovernor : Governor
+    internal class SingleThreadedGovernor : Governor
     {
         private readonly long _memStart;
         private readonly long _maxAllowedBytes;
 
-        public BasicGovernor(long maxAllowedBytes)
+        public SingleThreadedGovernor(long maxAllowedBytes)
         {
             // This API requires NetStandard 2.1.
             // Interpreter is built against 2.0.
@@ -56,7 +56,7 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void BasicGovernorTest()
         {
-            var governor = new BasicGovernor(10 * 1000);
+            var governor = new SingleThreadedGovernor(10 * 1000);
             governor.Poll(); // safe
 
             Assert.Throws<GovernorException>(() => governor.PollMemory(20 * 1000));
@@ -68,7 +68,7 @@ namespace Microsoft.PowerFx.Tests
             bytes = null; // GC will free it up, process can continue.
 
             // New counter is fine. 
-            var governor2 = new BasicGovernor(10 * 1000);
+            var governor2 = new SingleThreadedGovernor(10 * 1000);
             governor2.Poll(); // safe
         }
     }

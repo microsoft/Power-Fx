@@ -308,7 +308,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 if (!iSetup.DisableMemChecks)
                 {
                     var kbytes = 1000;
-                    var mem = new BasicGovernor(10 * 1000 * kbytes);
+                    var mem = new SingleThreadedGovernor(10 * 1000 * kbytes);
                     runtimeConfig.AddService<Governor>(mem);
                 }
 
