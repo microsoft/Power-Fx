@@ -680,6 +680,44 @@ namespace Microsoft.PowerFx.Functions
             return new InMemoryTableValue(irContext, StandardTableNodeRecords(irContext, rows.ToArray(), forceSingleColumn: true));
         }
 
+        // This is static analysis before actually executing, so just use string lengths and avoid contents. 
+        internal static int SubstituteGetResultLength(
+            int sourceLen, int matchLen, int replacementLen, bool replaceAll)
+        {
+            int maxLenChars;
+
+            if (matchLen > sourceLen)
+            {
+                // Match is too large, can't be found.
+                // So will not match and just return original.
+                return sourceLen;
+            }
+
+            if (replaceAll)
+            {
+                // Replace all instances. 
+                // Maximum possible length of Substitute, convert all the Match to Replacement. 
+                // Unicode, so 2B per character.
+                if (matchLen == 0)
+                {
+                    maxLenChars = sourceLen;
+                }
+                else
+                {
+                    // Round up as conservative estimate. 
+                    maxLenChars = (int)Math.Ceiling((double)sourceLen / matchLen) * replacementLen;
+                }
+            }
+            else
+            {
+                // Only replace 1 instance 
+                maxLenChars = sourceLen - matchLen + replacementLen;
+            }
+
+            // If not match found, will still be source length 
+            return Math.Max(sourceLen,  maxLenChars);
+        }
+
         private static FormulaValue Substitute(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             var source = (StringValue)args[0];
@@ -699,35 +737,17 @@ namespace Microsoft.PowerFx.Functions
             }
 
             // Compute max possible memory this operation may need.
+            // Compute max possible memory this operation may need.
             var sourceLen = source.Value.Length;
             var matchLen = match.Value.Length;
             var replacementLen = replacement.Value.Length;
-                        
-            int maxLenChars;
-            if (instanceNum < 0)
-            {
-                // Replace all instances. 
-                // Maximum possible length of Substitute, convert all the Match to Replacement. 
-                // Unicode, so 2B per character.
-                if (matchLen == 0)
-                {
-                    maxLenChars = sourceLen;
-                }
-                else
-                {
-                    maxLenChars = sourceLen / matchLen * replacementLen;
-                }
-            } 
-            else
-            {
-                // Only replace 1 instance 
-                maxLenChars = sourceLen + replacementLen;
-            }
 
-            var maxLenBytes = maxLenChars * 2;
-            runner.Governor.PollMemory(maxLenBytes);
+            var maxLenChars = SubstituteGetResultLength(sourceLen, matchLen, replacementLen, instanceNum < 0);
+            runner.Governor.CanAllocateString(maxLenChars);
 
             var result = SubstituteWorker(runner, irContext, source, match, replacement, instanceNum);
+
+            Contracts.Assert(result.Value.Length <= maxLenChars);
 
             return result;
         }

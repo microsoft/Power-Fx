@@ -35,7 +35,7 @@ namespace Microsoft.PowerFx.Tests
         // This API requires at least NetStandard 2.1. 
         public long CurrentBytesUsed => GC.GetAllocatedBytesForCurrentThread() - _memStart;
 
-        public override void PollMemory(long allocateBytes)
+        public override void CanAllocateBytes(long allocateBytes)
         {
             var used = CurrentBytesUsed;
             if (used + allocateBytes > _maxAllowedBytes)
@@ -46,7 +46,7 @@ namespace Microsoft.PowerFx.Tests
 
         public override void Poll()
         {
-            PollMemory(0);
+            CanAllocateBytes(0);
         }
     }
 
@@ -59,7 +59,7 @@ namespace Microsoft.PowerFx.Tests
             var governor = new SingleThreadedGovernor(10 * 1000);
             governor.Poll(); // safe
 
-            Assert.Throws<GovernorException>(() => governor.PollMemory(20 * 1000));
+            Assert.Throws<GovernorException>(() => governor.CanAllocateBytes(20 * 1000));
 
             var bytes = new byte[40 * 1000];
 

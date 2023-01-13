@@ -33,8 +33,15 @@ namespace Microsoft.PowerFx
         /// This allows failure before we start to eval a memory intensive operation. 
         /// </summary>
         /// <param name="allocateBytes">Predicted number of bytes this function may need in order to execute. </param>
-        public virtual void PollMemory(long allocateBytes)
+        public virtual void CanAllocateBytes(long allocateBytes)
         {
+        }
+
+        public virtual void CanAllocateString(long stringLength)
+        {
+            // .Net strings are an array of characters.
+            var allocateBytes = stringLength * sizeof(char);
+            this.CanAllocateBytes(allocateBytes);
         }
 
         /// <summary>

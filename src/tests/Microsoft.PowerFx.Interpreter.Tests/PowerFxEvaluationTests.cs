@@ -305,7 +305,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 // Ensure tests can run with governor on. 
                 // Some tests that use large memory can disable via:
                 //    #SETUP: DisableMemChecks
-                if (!iSetup.DisableMemChecks)
+                if (!iSetup.DisableMemoryChecks)
                 {
                     var kbytes = 1000;
                     var mem = new SingleThreadedGovernor(10 * 1000 * kbytes);

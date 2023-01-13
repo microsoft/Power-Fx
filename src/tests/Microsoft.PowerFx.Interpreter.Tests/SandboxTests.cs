@@ -143,7 +143,7 @@ namespace Microsoft.PowerFx.Tests
             {
             }
 
-            public override void PollMemory(long allocateBytes)
+            public override void CanAllocateBytes(long allocateBytes)
             {
                 // nop. Ignore these warnings. Just rely on Poll.
             }
@@ -169,6 +169,26 @@ namespace Microsoft.PowerFx.Tests
             {
                 await engine.EvalAsync(expr, cts.Token);
             });
+        }
+
+        // Substitute(source, match, replace) // all instances 
+        // Substitute(source, match, replace, instanceNum) // just one
+        [Theory]
+        [InlineData(2, 1, 5, true, 10)] // 2 * (1 char -->5 chars)
+        [InlineData(4, 1, 5, true, 20)] // 4 * (1 char -->5 chars)
+        [InlineData(12, 3, 5, true, 20)] // 12/3 * 4
+        [InlineData(5, 8, 7, true, 5)] // 8>5, so can't be found. 
+        [InlineData(5, 5, 2, true, 5)] // 1 match, if not found, original length
+        [InlineData(5, 5, 9, true, 9)] // 1 match, if found, replacement length
+        [InlineData(5, 3, 6, true, 12)] // rounds up. 
+        [InlineData(5, 3, 1, true, 5)] 
+        [InlineData(4, 1, 5, false, 8)] // just first,  (4-1+5)
+        [InlineData(4, 5, 3, false, 4)]
+        public void TestSubstitutePrePoll(int sourceLen, int matchLen, int replacementLen, bool replaceAll, int expectedMaxLenChars)
+        {
+            var maxLenChars = Functions.Library.SubstituteGetResultLength(sourceLen, matchLen, replacementLen, replaceAll);
+
+            Assert.Equal(expectedMaxLenChars, maxLenChars);
         }
     }
 }
