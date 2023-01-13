@@ -41,7 +41,7 @@ namespace Microsoft.PowerFx
         private readonly Engine _engine;
         private readonly ParserOptions _parserOptions;
         private readonly ReadOnlySymbolTable _symbols;
-
+        
         // List of handlers to get code-fix suggestions. 
         // Key is CodeFixHandler.HandlerName
         private readonly Dictionary<string, CodeFixHandler> _handlers = new Dictionary<string, CodeFixHandler>();
@@ -72,11 +72,28 @@ namespace Microsoft.PowerFx
 
         IIntellisenseResult IPowerFxScope.Suggest(string expression, int cursorPosition)
         {
-            var check = Check(expression);
+            // Suggestions just need the binding, not other things like Dependency Info or errors. 
+            var check = new CheckResult(this._engine)
+                .SetText(expression, _parserOptions)
+                .SetBindingInfo(_symbols);
+
             return _engine.Suggest(check, cursorPosition);
         }
 
         #endregion
+
+        public void AddQuickFixHandlers(params CodeFixHandler[] codeFixHandlers)
+        {
+            this.AddQuickFixHandlers((IEnumerable<CodeFixHandler>)codeFixHandlers);
+        }
+
+        public void AddQuickFixHandlers(IEnumerable<CodeFixHandler> codeFixHandlers)
+        {
+            foreach (var handler in codeFixHandlers)
+            {
+                this.AddQuickFixHandler(handler);
+            }
+        }
 
         public void AddQuickFixHandler(CodeFixHandler codeFixHandler)
         {

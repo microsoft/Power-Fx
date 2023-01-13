@@ -32,7 +32,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var evalResult = checkResult.GetEvaluator().EvalAsync(CancellationToken.None, runtimeConfig).Result;
             Assert.IsNotType<ErrorValue>(evalResult);
 
-            var ir = IRTranslator.Translate(checkResult._binding).ToString();
+            var ir = IRTranslator.Translate(checkResult.Binding).ToString();
             Assert.DoesNotContain("AggregateCoercionNode", ir);
         }
     }

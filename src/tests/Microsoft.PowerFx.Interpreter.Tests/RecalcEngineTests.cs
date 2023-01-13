@@ -511,7 +511,6 @@ namespace Microsoft.PowerFx.Tests
 
             Assert.True(result.IsSuccess);
             Assert.Equal(1, result.Errors.Count(x => x.Severity == ErrorSeverity.Warning));
-            Assert.NotNull(result.Expression);
         }
 
         [Fact]
@@ -589,7 +588,6 @@ namespace Microsoft.PowerFx.Tests
             var result = engine.Check("3+foo+2", RecordType.Empty()); // foo is undefined 
 
             Assert.False(result.IsSuccess);
-            Assert.Null(result.Expression);
             Assert.Single(result.Errors);
             Assert.StartsWith("Error 2-5: Name isn't valid. 'foo' isn't recognized", result.Errors.First().ToString());
         }
@@ -605,7 +603,6 @@ namespace Microsoft.PowerFx.Tests
 
             // Test that parsing worked
             Assert.True(result.IsSuccess);
-            Assert.NotNull(result.Expression);
             Assert.True(result.ReturnType is NumberType);
             Assert.Single(result.TopLevelIdentifiers);
             Assert.Equal("x", result.TopLevelIdentifiers.First());
@@ -631,7 +628,6 @@ namespace Microsoft.PowerFx.Tests
 
             // Test that parsing worked
             Assert.True(result.IsSuccess);
-            Assert.NotNull(result.Expression);
             Assert.True(result.ReturnType is NumberType);
 
             // Test evaluation of parsed expression
