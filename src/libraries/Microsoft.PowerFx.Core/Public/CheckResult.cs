@@ -46,6 +46,11 @@ namespace Microsoft.PowerFx
 
         #endregion
 
+        [Obsolete("Use public constructor")]
+        internal CheckResult()
+        {
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="CheckResult"/> class.
         /// </summary>
@@ -65,7 +70,7 @@ namespace Microsoft.PowerFx
         /// <param name="extraErrors"></param>
         public CheckResult(IEnumerable<ExpressionError> extraErrors)
         {
-            this._errors2.AddRange(extraErrors);
+            this._errors.AddRange(extraErrors);
         }
 
         #region Set info from User. 
@@ -153,8 +158,8 @@ namespace Microsoft.PowerFx
 
         /// <summary>
         /// Binding, computed from <see cref="ApplyBindingInternal"/>.
-        /// </summary>
-        private TexlBinding _binding;
+        /// </summary>        
+        internal TexlBinding _binding;
 
         /// <summary> 
         /// Return type of the expression. Null if type can't be determined. 
@@ -190,7 +195,7 @@ namespace Microsoft.PowerFx
         #region Results from Errors
 
         // All errors accumulated. 
-        private readonly List<ExpressionError> _errors2 = new List<ExpressionError>();
+        private readonly List<ExpressionError> _errors = new List<ExpressionError>();
         #endregion
 
         #region Results from IR 
@@ -217,12 +222,18 @@ namespace Microsoft.PowerFx
         /// or any custom errors passes explicit to the ctor.
         /// Not null, but empty on success.
         /// </summary>
-        public IEnumerable<ExpressionError> Errors => _errors2;
-        
+        public IEnumerable<ExpressionError> Errors
+        {
+            get => _errors;
+
+            [Obsolete("use constructor to set errors")]
+            set => _errors.AddRange(value);
+        }
+
         /// <summary>
         /// True if no errors for stages run so far. 
         /// </summary>
-        public bool IsSuccess => !_errors2.Any(x => !x.IsWarning);              
+        public bool IsSuccess => !_errors.Any(x => !x.IsWarning);              
 
         /// <summary>
         /// Helper to throw if <see cref="IsSuccess"/> is false.
@@ -236,7 +247,7 @@ namespace Microsoft.PowerFx
             }
         }
 
-        internal bool HasDeferredArgsWarning => _errors2.Any(x => x.IsWarning && x.MessageKey.Equals(TexlStrings.WarnDeferredType.Key));
+        internal bool HasDeferredArgsWarning => _errors.Any(x => x.IsWarning && x.MessageKey.Equals(TexlStrings.WarnDeferredType.Key));
 
         /// <summary>
         /// Full set of Symbols passed to this binding. 
@@ -280,7 +291,7 @@ namespace Microsoft.PowerFx
                 var result = Engine.Parse(_expression, Source.Config.Features, _parserOptions);
                 this.Parse = result;
 
-                _errors2.AddRange(this.Parse.Errors);
+                _errors.AddRange(this.Parse.Errors);
             }
 
             return this.Parse;
@@ -328,7 +339,7 @@ namespace Microsoft.PowerFx
 
                 // Add the errors
                 var bindingErrors = ExpressionError.New(binding.ErrorContainer.GetErrors(), CultureInfo);
-                _errors2.AddRange(bindingErrors);
+                _errors.AddRange(bindingErrors);
 
                 if (this.IsSuccess && !this.HasDeferredArgsWarning)
                 {
@@ -373,7 +384,7 @@ namespace Microsoft.PowerFx
                 // PostCheck may refer to binding. 
                 var extraErrors = Source.InvokePostCheck(this);
 
-                _errors2.AddRange(extraErrors);
+                _errors.AddRange(extraErrors);
             }
             
             return this.Errors;

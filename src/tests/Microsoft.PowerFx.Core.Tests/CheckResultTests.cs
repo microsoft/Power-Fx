@@ -37,6 +37,21 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Fact]
+        public void EmptyErrors()
+        {
+            var errorList = new List<ExpressionError>();
+
+            var check = new CheckResult(errorList); // 0-length is ok 
+            Assert.True(check.IsSuccess); // Initialized with errors. 
+            check.ThrowOnErrors();
+
+            // Takes snapshot - so adding new errors doesn't change. 
+            errorList.Add(new ExpressionError { Message = "new error" });
+
+            Assert.Empty(check.Errors);
+        }
+
+        [Fact]
         public void ExtraErrors()
         {
             var engine = new ExtraErrorsEngine();

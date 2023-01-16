@@ -207,6 +207,13 @@ namespace Microsoft.PowerFx
             return Check(parse, parameterType);
         }
 
+        [Obsolete("Use other check overload. Shouldn't need both ParserOptions and ParseResult.")]
+        internal CheckResult Check(ParseResult parse, ParserOptions options)
+        {
+            parse.Options = options;
+            return Check(parse, null, options);
+        }
+
         public CheckResult Check(ParseResult parse, RecordType parameterType = null)
         {
             var check = new CheckResult(this)
