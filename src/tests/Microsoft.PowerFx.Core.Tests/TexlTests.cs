@@ -10,6 +10,8 @@ using Microsoft.PowerFx.Core.App.Controls;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.Functions.Delegation;
+using Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata;
 using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Parser;
@@ -48,9 +50,9 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("-Date(2001,1,1)", "D")]
         [InlineData("-Time(2,1,1)", "T")]
         [InlineData("-DateTimeValue(\"1 Jan 2015\")", "d")]
-        [InlineData("Date(2000,1,1) + 5", "d")]
-        [InlineData("5 + Date(2000,1,1)", "d")]
-        [InlineData("5 - Date(2000,1,1)", "d")]
+        [InlineData("Date(2000,1,1) + 5", "D")]
+        [InlineData("5 + Date(2000,1,1)", "D")]
+        [InlineData("5 - Date(2000,1,1)", "D")]
         [InlineData("Time(20,1,1) + Time(19,1,1)", "T")]
         [InlineData("DateTimeValue(\"1 Jan 2015\") + Time(20,1,1)", "d")]
         [InlineData("Time(20,1,1) + DateTimeValue(\"1 Jan 2015\")", "d")]
@@ -82,10 +84,10 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("DateAdd([Date(2000,1,1)],1)", "*[Value:d]")]
-        [InlineData("DateAdd([Date(2000,1,1)],[3])", "*[Value:d]")]
-        [InlineData("DateAdd(Table({a:Date(2000,1,1)}),[3])", "*[a:d]")]
-        [InlineData("DateAdd(Date(2000,1,1),[1])", "*[Result:d]")]
+        [InlineData("DateAdd([Date(2000,1,1)],1)", "*[Value:D]")]
+        [InlineData("DateAdd([Date(2000,1,1)],[3])", "*[Value:D]")]
+        [InlineData("DateAdd(Table({a:Date(2000,1,1)}),[3])", "*[a:D]")]
+        [InlineData("DateAdd(Date(2000,1,1),[1])", "*[Result:D]")]
         [InlineData("DateAdd(DateTimeValue(\"1 Jan 2015\"), 2)", "d")]
         [InlineData("DateAdd(DateTimeValue(\"1 Jan 2015\"), 2, TimeUnit.Years)", "d")]
         [InlineData("DateAdd(DateTimeValue(\"1 Jan 2015\"), \"hello\")", "d")]
@@ -99,9 +101,9 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("DateAdd([Date(2000,1,1)],1)", "*[Value:d]")]
-        [InlineData("DateAdd([Date(2000,1,1)],[3])", "*[Value:d]")]
-        [InlineData("DateAdd(Date(2000,1,1),[1])", "*[Result:d]")]
+        [InlineData("DateAdd([Date(2000,1,1)],1)", "*[Value:D]")]
+        [InlineData("DateAdd([Date(2000,1,1)],[3])", "*[Value:D]")]
+        [InlineData("DateAdd(Date(2000,1,1),[1])", "*[Result:D]")]
         [InlineData("DateAdd([DateTimeValue(\"1 Jan 2015\")],1)", "*[Value:d]")]
         [InlineData("DateAdd([DateTimeValue(\"1 Jan 2015\")],[3])", "*[Value:d]")]
         [InlineData("DateAdd(DateTimeValue(\"1 Jan 2015\"),[1])", "*[Result:d]")]
@@ -119,10 +121,10 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("DateAdd([Date(2000,1,1)],1)", "*[Value:d]")]
-        [InlineData("DateAdd([Date(2000,1,1)],[3])", "*[Value:d]")]
-        [InlineData("DateAdd(Table({a:Date(2000,1,1)}),[3])", "*[Value:d]")]
-        [InlineData("DateAdd(Date(2000,1,1),[1])", "*[Value:d]")]
+        [InlineData("DateAdd([Date(2000,1,1)],1)", "*[Value:D]")]
+        [InlineData("DateAdd([Date(2000,1,1)],[3])", "*[Value:D]")]
+        [InlineData("DateAdd(Table({a:Date(2000,1,1)}),[3])", "*[Value:D]")]
+        [InlineData("DateAdd(Date(2000,1,1),[1])", "*[Value:D]")]
         [InlineData("DateAdd([DateTimeValue(\"1 Jan 2015\")],1)", "*[Value:d]")]
         [InlineData("DateAdd([DateTimeValue(\"1 Jan 2015\")],[3])", "*[Value:d]")]
         [InlineData("DateAdd(DateTimeValue(\"1 Jan 2015\"),[1])", "*[Value:d]")]
@@ -3041,6 +3043,72 @@ namespace Microsoft.PowerFx.Core.Tests
             symbol.AddEntity(new TestDataSource("DS", schema));
 
             TestSimpleBindingSuccess("If(true, DS, DS)", schema, symbol);
+        }
+
+        [Theory]
+        [InlineData("*Filter*(DS, StartsWith(Value, \"d\"))", false)]
+        [InlineData("*Filter*(DS, Left(Value, 1) = \"d\")", true)]
+        [InlineData("*Filter*(DS, Substitute(Value, \"x\", \"y\"))", true)]
+        [InlineData("*Filter*(DS, Value(Value) <= 3 Or Value(Value) > 7)", true)]
+        [InlineData("*Filter*(DS, IsBlank(First(*Filter*(DS, StartsWith(Value, \"d\")))))", true)]
+        public void TestSilentValidDelegatableFilterPredicateNode(string script, bool warnings)
+        {
+            var schema = DType.CreateTable(new TypedName(TestUtils.DT("s"), new DName("Value")));
+
+            var symbol = new DelegatableSymbolTable();
+            symbol.AddEntity(
+                new TestDelegableDataSource(
+                    "DS",
+                    schema,
+                    new TestDelegationMetadata(
+                        DelegationCapability.Filter,
+                        schema,
+                        new FilterOpMetadata(
+                            schema,
+                            new Dictionary<DPath, DelegationCapability>(),
+                            new Dictionary<DPath, DelegationCapability>(),
+                            new DelegationCapability(DelegationCapability.Equal | DelegationCapability.StartsWith),
+                            null))));
+
+            var silentFilterFunction = new TestUtils.MockSilentDelegableFilterFunction("TestSilentFilter", script);
+
+            try
+            {
+                symbol.AddFunction(silentFilterFunction);
+
+                var config = new PowerFxConfig
+                {
+                    SymbolTable = symbol
+                };
+
+                var engine = new Engine(config);
+
+                // first run using the original Filter
+                var filterScript = script.Replace("*Filter*", "Filter");
+                var result = engine.Check(filterScript);
+
+                Assert.True(result.IsSuccess);
+
+                if (warnings)
+                {
+                    Assert.True(result.Errors.Count() > 0, "Expected warnings in original function");
+                }
+                else
+                {
+                    Assert.False(result.Errors.Count() > 0, "No warnings expected in original function");
+                }
+
+                // then run with the mock filter function that does silent delgation checks
+                var silentFilterScript = script.Replace("*Filter*", "TestSilentFilter");
+                result = engine.Check(silentFilterScript);
+
+                Assert.True(result.IsSuccess);
+                Assert.False(result.Errors.Count() > 0, "No warnings expected in silent function");
+            }
+            finally
+            {
+                symbol.RemoveFunction(silentFilterFunction);
+            }
         }
 
         private void TestBindingPurity(string script, bool isPure, SymbolTable symbolTable = null)

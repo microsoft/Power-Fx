@@ -2386,13 +2386,8 @@ namespace Microsoft.PowerFx.Core.Types
             type.AssertValid();
             Contracts.AssertValueOrNull(connectedDataSourceInfoSet);
 
-            if (connectedDataSourceInfoSet == null || connectedDataSourceInfoSet.Count == 0)
-            {
-                return type;
-            }
-
             var returnType = type;
-            foreach (var cds in connectedDataSourceInfoSet)
+            foreach (var cds in connectedDataSourceInfoSet ?? Enumerable.Empty<IExternalTabularDataSource>())
             {
                 returnType = AttachDataSourceInfo(returnType, cds);
             }
@@ -3077,6 +3072,28 @@ namespace Microsoft.PowerFx.Core.Types
             {
                 coercionType = typeDest;
                 return true;
+            }
+
+            if (Kind == DKind.UntypedObject)
+            {
+                isSafe = false;
+                if (typeDest.Kind == DKind.String ||
+                    typeDest.Kind == DKind.Number ||
+                    typeDest.Kind == DKind.Boolean ||
+                    typeDest.Kind == DKind.Date ||
+                    typeDest.Kind == DKind.Time ||
+                    typeDest.Kind == DKind.DateTime ||
+                    typeDest.Kind == DKind.Color ||
+                    typeDest.Kind == DKind.Guid)
+                {
+                    coercionType = typeDest;
+                    return true;
+                }
+                else
+                {
+                    coercionType = this;
+                    return false;
+                }
             }
 
             if (Kind == DKind.Error)

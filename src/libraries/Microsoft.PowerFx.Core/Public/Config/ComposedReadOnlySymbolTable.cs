@@ -181,5 +181,23 @@ namespace Microsoft.PowerFx
             lookupInfo = default;
             return false;
         }
+
+        internal override IExternalEntityScope InternalEntityScope
+        {
+            get
+            {
+                // returns the first EntityScope from composed tables
+                // intended for unit testing purposes
+                foreach (INameResolver table in _symbolTables)
+                {
+                    if (table.EntityScope != null)
+                    {
+                        return table.EntityScope;
+                    }
+                }
+
+                return default;
+            }
+        }
     }
 }

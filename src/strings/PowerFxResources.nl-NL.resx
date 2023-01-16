@@ -4729,6 +4729,10 @@
     <value>De term 'as' is niet toegestaan in deze context</value>
     
   </data>
+  <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
+    <value>Objecten zonder type kunnen niet worden gebruikt als het eerste argument voor functies die recordbereiken ondersteunen.</value>
+    
+  </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>De genoemde formule moet eindigen met een puntkomma.</value>
     

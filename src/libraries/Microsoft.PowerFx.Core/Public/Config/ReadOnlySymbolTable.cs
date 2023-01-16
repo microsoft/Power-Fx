@@ -318,12 +318,18 @@ namespace Microsoft.PowerFx
             return false;
         }
 
+        #region INameResolver - only implemented for unit testing for scenarios that use the full name resolver
+
+        internal virtual IExternalEntityScope InternalEntityScope => default;
+
+        IExternalEntityScope INameResolver.EntityScope => InternalEntityScope;
+
+        #endregion
+
         #region INameResolver - not implemented
 
         // Methods from INameResolver that we default / don't implement
         IExternalDocument INameResolver.Document => default;
-
-        IExternalEntityScope INameResolver.EntityScope => default;
 
         IExternalEntity INameResolver.CurrentEntity => default;
 

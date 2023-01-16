@@ -4729,6 +4729,10 @@
     <value>As não é permitido neste contexto</value>
     
   </data>
+  <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
+    <value>Não é possível utilizar objetos sem tipo como primeiro argumento de funções que suportam âmbitos de registo.</value>
+    
+  </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>A fórmula com nome tem de terminar com um ponto e vírgula.</value>
     

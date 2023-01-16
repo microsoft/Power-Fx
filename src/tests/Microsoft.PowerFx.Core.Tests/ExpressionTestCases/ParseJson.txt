@@ -8,6 +8,9 @@
 >> Value(ParseJSON("5"))
 5
 
+>> Value(ParseJSON("5")) = Value("5")
+true
+
 >> Value(ParseJSON("true"))
 1
 
@@ -60,6 +63,9 @@ Error({Kind:ErrorKind.InvalidArgument})
 >> Text(ParseJSON("""s"""))
 "s"
 
+>> Text(ParseJSON("""s""")) = Text("s")
+true
+
 >> Text(ParseJSON("null"))
 Blank()
 
@@ -77,6 +83,12 @@ true
 
 >> Boolean(ParseJSON("false"))
 false
+
+>> Boolean(ParseJSON("true")) = Boolean("true")
+true
+
+>> Boolean(ParseJSON("false")) = Boolean("false")
+true
 
 >> Boolean(ParseJSON("""true"""))
 true
@@ -178,7 +190,7 @@ Table({Value:"1"},{Value:"false"},{Value:"hello"})
 Table({Value:1},{Value:1},{Value:3},{Value:0})
 
 >> ForAll(ParseJSON("[1,2,3]"), If(Value(ThisRecord) < 2, Value(ThisRecord), ThisRecord))
-Errors: Error 74-84: Invalid argument type (UntypedObject). Expecting a Number value instead.|Error 29-85: The function 'If' has some invalid arguments.
+Table({Value:1},{Value:2},{Value:3})
 
 >> ForAll(ParseJSON("[1,2,3]"), ThisItem)
 Errors: Error 29-37: Name isn't valid. 'ThisItem' isn't recognized.|Error 0-38: The function 'ForAll' has some invalid arguments.
@@ -269,6 +281,9 @@ Error({Kind:ErrorKind.InvalidArgument})
 >> DateTimeValue(ParseJSON("""2011T08:00:00.000Z"""))
 Error({Kind:ErrorKind.InvalidArgument})
 
+>> DateTimeValue(ParseJSON("""2011-01-15T08:00:00.000Z""")) = DateTimeValue("2011-01-15T08:00:00.000Z")
+true
+
 >> DateTimeValue(ParseJSON("null"))
 Blank()
 
@@ -290,8 +305,14 @@ Error({Kind:ErrorKind.InvalidArgument})
 >> DateDiff(DateValue(ParseJSON("""2011-01-15T08:00:00.000""")), DateValue(ParseJSON("""2011-01-30T08:00:00.000""")))
 15
 
+>> DateValue(ParseJSON("""2011-01-15T08:00:00.000""")) = DateValue("2011-01-15T08:00:00.000")
+true
+
 >> Text(TimeValue(ParseJSON("""08:03:05.000""")), "HH:mm:ss")
 "08:03:05"
+
+>> TimeValue(ParseJSON("""08:03:05.000""")) = TimeValue("08:03:05.000")
+true
 
 >> TimeValue(ParseJSON("""08:93:05.000"""))
 Error({Kind:ErrorKind.InvalidArgument})
@@ -304,6 +325,9 @@ Error({Kind:ErrorKind.InvalidArgument})
 
 >> GUID(ParseJSON("""5cc45615-f759-4a53-b225-d3a2497f60ad"""))
 GUID("5cc45615-f759-4a53-b225-d3a2497f60ad")
+
+>> GUID(ParseJSON("""5cc45615-f759-4a53-b225-d3a2497f60ad""")) = GUID("5cc45615-f759-4a53-b225-d3a2497f60ad")
+true
 
 >> GUID(ParseJSON("null"))
 Blank()
@@ -326,6 +350,9 @@ RGBA(1,2,3,0.016)
 
 >> ColorValue(ParseJSON("""#010203"""))
 RGBA(1,2,3,1)
+
+>> ColorValue(ParseJSON("""#010203""")) = ColorValue("#010203")
+true
 
 >> ColorValue(ParseJSON("""Red"""))
 Error({Kind:ErrorKind.InvalidArgument})
