@@ -152,12 +152,11 @@ namespace Microsoft.PowerFx.Tests
         // Verify cancellation.
         // Expression that takes a long time to run.  Doesn't need much stack or memory.  
         [Theory]
-        [InlineData("ForAll(Sequence(K), ForAll(Sequence(K), ForAll(Sequence(K), 5)))")]
-        [InlineData("ForAll(Sequence(1000), Max(Sequence(K), Value))")]
+        [InlineData("CountRows(ForAll(Sequence(K), CountRows(ForAll(Sequence(K), CountRows(Sequence(K))))))")]
         public async Task InfiniteLoop(string expr)
         {
             var engine = new RecalcEngine();
-            engine.UpdateVariable("K", 5);
+            engine.UpdateVariable("K", 10 * 1000);
 
             // Can be invoked. 
             using var cts = new CancellationTokenSource();
