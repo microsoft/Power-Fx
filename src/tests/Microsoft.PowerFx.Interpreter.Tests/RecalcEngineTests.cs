@@ -37,6 +37,7 @@ namespace Microsoft.PowerFx.Tests
                 $"{ns}.{nameof(CheckResultExtensions)}",
                 $"{ns}.{nameof(ReadOnlySymbolValues)}",
                 $"{ns}.{nameof(RecalcEngine)}",
+                $"{ns}.{nameof(Governor)}",
                 $"{ns}.{nameof(ReflectionFunction)}",
 #pragma warning disable CS0618 // Type or member is obsolete
                 $"{ns}.{nameof(RecalcEngineScope)}",
@@ -764,24 +765,6 @@ namespace Microsoft.PowerFx.Tests
             var checkResult = recalcEngine.Check("SortOrder.Ascending");
             Assert.True(checkResult.IsSuccess);
             Assert.IsType<StringType>(checkResult.ReturnType);
-        }
-
-        [Fact]
-        public async void MaxRecursionDepthTest()
-        {
-            var config = new PowerFxConfig(null)
-            {
-                MaxCallDepth = 5
-            };
-            var recalcEngine = new RecalcEngine(config);
-            Assert.IsType<ErrorValue>(recalcEngine.Eval("Abs(Abs(Abs(Abs(Abs(Abs(1))))))"));
-            Assert.IsType<NumberValue>(recalcEngine.Eval("Abs(Abs(Abs(Abs(Abs(1)))))"));
-            Assert.IsType<NumberValue>(recalcEngine.Eval(
-                @"Sum(
-                Sum(Sum(1),1),
-                Sum(Sum(1),1),
-                Sum(Sum(1),1)
-                )"));
         }
 
         [Fact]
