@@ -72,7 +72,7 @@ namespace Microsoft.PowerFx
             ReadOnlySymbolValues globals = null;
             var allSymbols = result.AllSymbols;
                 
-            if (result.Source is RecalcEngine recalcEngine)
+            if (result.Engine is RecalcEngine recalcEngine)
             {
                 // Pull global values from the engine. 
                 globals = recalcEngine._symbolValues;

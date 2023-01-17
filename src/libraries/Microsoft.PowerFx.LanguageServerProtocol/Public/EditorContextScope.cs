@@ -89,7 +89,8 @@ namespace Microsoft.PowerFx
 
         public void AddQuickFixHandlers(IEnumerable<CodeFixHandler> codeFixHandlers)
         {
-            foreach (var handler in codeFixHandlers)
+            var list = codeFixHandlers ?? throw new ArgumentNullException(nameof(codeFixHandlers));
+            foreach (var handler in list)
             {
                 this.AddQuickFixHandler(handler);
             }

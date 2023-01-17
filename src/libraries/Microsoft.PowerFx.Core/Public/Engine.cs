@@ -42,7 +42,7 @@ namespace Microsoft.PowerFx
         /// <param name="powerFxConfig"></param>
         public Engine(PowerFxConfig powerFxConfig)
         {
-            Config = powerFxConfig;
+            Config = powerFxConfig ?? throw new ArgumentNullException(nameof(powerFxConfig));
         }
 
         // All functions that powerfx core knows about. 
@@ -249,7 +249,7 @@ namespace Microsoft.PowerFx
         // Called after check result, can inject additional errors or constraints. 
         protected virtual IEnumerable<ExpressionError> PostCheck(CheckResult check)
         {
-            return new ExpressionError[0];
+            return Enumerable.Empty<ExpressionError>();
         }
 
         internal IEnumerable<ExpressionError> InvokePostCheck(CheckResult check)

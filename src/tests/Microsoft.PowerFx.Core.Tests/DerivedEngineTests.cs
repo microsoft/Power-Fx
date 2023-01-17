@@ -42,7 +42,7 @@ namespace Microsoft.PowerFx.Tests
 
             var errors = result.Errors.ToArray();
             Assert.Single(errors);
-            Assert.Contains("Test: can't have string litera", errors[0].Message);
+            Assert.Contains("Test: can't have string literal", errors[0].Message);
         }
 
         [Theory]
@@ -180,7 +180,7 @@ namespace Microsoft.PowerFx.Tests
                 {
                     if (name.Value == "extra")
                     {
-                        nameInfo = new NameLookupInfo(BindKind.PowerFxResolvedObject,   DType.Number, DPath.Root, 0);
+                        nameInfo = new NameLookupInfo(BindKind.PowerFxResolvedObject, DType.Number, DPath.Root, 0);
                         return true;                        
                     }
 

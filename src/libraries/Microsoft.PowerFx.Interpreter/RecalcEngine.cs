@@ -163,7 +163,6 @@ namespace Microsoft.PowerFx
             var check = Check(expressionText, options, symbolsAll);
             check.ThrowOnErrors();
 
-            // check.Parameters = parameterSymbols;
             var stackMarker = new StackDepthCounter(Config.MaxCallDepth);
             var eval = check.GetEvaluator(stackMarker);
 

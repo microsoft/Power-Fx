@@ -17,13 +17,12 @@ namespace Microsoft.PowerFx.Core.Tests
         {
             // CheckResult must have an engine so that it can invoke operations.
             Assert.Throws<ArgumentNullException>(() => new CheckResult((Engine)null));
+            Assert.Throws<ArgumentNullException>(() => new CheckResult((IEnumerable<ExpressionError>)null));
         }
 
         [Fact]
         public void Errors()
         {
-            Assert.Throws<ArgumentNullException>(() => new CheckResult((IEnumerable<ExpressionError>)null));
-
             var error = new ExpressionError { Message = "MyError" };
             var errors = new[] { error };
 
@@ -49,6 +48,13 @@ namespace Microsoft.PowerFx.Core.Tests
             errorList.Add(new ExpressionError { Message = "new error" });
 
             Assert.Empty(check.Errors);
+
+            // Other operations will now fail
+            var parse = ParseResult.ErrorTooLarge("abc", 2); // any parse result
+
+            Assert.Throws<InvalidOperationException>(() => check.SetText("1+2"));
+            Assert.Throws<InvalidOperationException>(() => check.SetText(parse));
+            Assert.Throws<InvalidOperationException>(() => check.SetBindingInfo());
         }
 
         [Fact]
@@ -118,7 +124,7 @@ namespace Microsoft.PowerFx.Core.Tests
         }
         
         [Fact]
-        public void ParseResult()
+        public void ParseResultTest()
         {
             var check = new CheckResult(new Engine());
             Assert.Throws<ArgumentNullException>(() => check.SetText((ParseResult)null));
@@ -166,8 +172,8 @@ namespace Microsoft.PowerFx.Core.Tests
             {
                 Culture = new System.Globalization.CultureInfo("fr-FR")
             };
-            check.SetText("1,234", opts); // , is decimal separate for fr-FR.
-            
+            check.SetText("1,234", opts); // , is decimal separator for fr-FR.
+
             var parse = check.ApplyParse();
             Assert.Same(opts, parse.Options);
 
@@ -256,6 +262,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             var ir = check.ApplyIR();
             Assert.NotNull(ir);
+            Assert.Equal("BinaryOp(AddNumbers, Number(1), Number(2))", ir.TopNode.ToString());
         }
 
         // IR can only be produced for successful bindings

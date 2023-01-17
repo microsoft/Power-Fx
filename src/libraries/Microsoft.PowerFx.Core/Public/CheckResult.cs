@@ -60,7 +60,7 @@ namespace Microsoft.PowerFx
             this._engine = source ?? throw new ArgumentNullException(nameof(source));
         }
 
-        internal Engine Source => _engine;
+        internal Engine Engine => _engine;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CheckResult"/> class.
@@ -77,6 +77,11 @@ namespace Microsoft.PowerFx
 
         public CheckResult SetText(ParseResult parse)
         {
+            if (_engine == null)
+            {
+                throw new InvalidOperationException($"Can't call {nameof(SetText)} without an engine.");
+            }
+
             if (parse == null)
             {
                 throw new ArgumentNullException(nameof(parse));    
@@ -96,6 +101,11 @@ namespace Microsoft.PowerFx
 
         public CheckResult SetText(string expression, ParserOptions parserOptions = null)
         {
+            if (_engine == null)
+            {
+                throw new InvalidOperationException($"Can't call {nameof(SetText)} without an engine.");
+            }
+
             expression = expression ?? throw new ArgumentNullException(nameof(expression));
 
             if (_expression != null)
@@ -104,7 +114,7 @@ namespace Microsoft.PowerFx
             }
 
             _expression = expression;
-            _parserOptions = parserOptions ?? Source.GetDefaultParserOptionsCopy();
+            _parserOptions = parserOptions ?? Engine.GetDefaultParserOptionsCopy();
 
             return this;
         }
@@ -112,6 +122,11 @@ namespace Microsoft.PowerFx
         // Symbols could be null if no additional symbols are provided. 
         public CheckResult SetBindingInfo(ReadOnlySymbolTable symbols)
         {
+            if (_engine == null)
+            {
+                throw new InvalidOperationException($"Can't call {nameof(SetText)} without an engine.");
+            }
+
             if (_setBindingCalled)
             {
                 throw new InvalidOperationException($"Can only call {nameof(SetBindingInfo)} once.");
@@ -265,7 +280,7 @@ namespace Microsoft.PowerFx
         /// <summary>
         /// Culture info passed to this binding. May be null. 
         /// </summary>
-        internal CultureInfo CultureInfo => this.Source.Config.CultureInfo;
+        internal CultureInfo CultureInfo => this.Engine.Config.CultureInfo;
 
         internal void ThrowIfSymbolsChanged()
         {
@@ -288,7 +303,7 @@ namespace Microsoft.PowerFx
 
             if (this.Parse == null)
             {
-                var result = Engine.Parse(_expression, Source.Config.Features, _parserOptions);
+                var result = Engine.Parse(_expression, Engine.Config.Features, _parserOptions);
                 this.Parse = result;
 
                 _errors.AddRange(this.Parse.Errors);
@@ -328,7 +343,7 @@ namespace Microsoft.PowerFx
                     throw new InvalidOperationException($"Must call {nameof(SetBindingInfo)} before calling {nameof(ApplyBinding)}.");
                 }
 
-                (var binding, var combinedSymbols) = Source.ComputeBinding(this);
+                (var binding, var combinedSymbols) = Engine.ComputeBinding(this);
 
                 this.ThrowIfSymbolsChanged();
                 
@@ -338,7 +353,7 @@ namespace Microsoft.PowerFx
                 this.AllSymbols = combinedSymbols;
 
                 // Add the errors
-                var bindingErrors = ExpressionError.New(binding.ErrorContainer.GetErrors(), CultureInfo);
+                IEnumerable<ExpressionError> bindingErrors = ExpressionError.New(binding.ErrorContainer.GetErrors(), CultureInfo);
                 _errors.AddRange(bindingErrors);
 
                 if (this.IsSuccess && !this.HasDeferredArgsWarning)
@@ -382,7 +397,7 @@ namespace Microsoft.PowerFx
 
                 // Plus engine's may have additional constaints. 
                 // PostCheck may refer to binding. 
-                var extraErrors = Source.InvokePostCheck(this);
+                var extraErrors = Engine.InvokePostCheck(this);
 
                 _errors.AddRange(extraErrors);
             }

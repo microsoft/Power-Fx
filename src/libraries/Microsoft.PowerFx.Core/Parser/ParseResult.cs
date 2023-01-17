@@ -79,7 +79,7 @@ namespace Microsoft.PowerFx
 
             int id = 0;
             TexlNode root = new ErrorNode(ref id, tok, err.ShortMessage);
-            List<CommentToken> comments = new List<CommentToken>();
+            var comments = new List<CommentToken>();
 
             return new ParseResult(root, errors, true, comments, null, null, text);         
         }
