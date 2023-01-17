@@ -3507,7 +3507,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     }
                     else
                     {
-                        _txb.SetType(node, DType.CreateDTypeWithConnectedDataSourceInfoMetadata(DType.CreateTable(new TypedName(typeRhs, nameRhs)), typeRhs.AssociatedDataSources, typeRhs.DisplayNameProvider));
+                        _txb.SetType(node, DType.CreateDTypeWithConnectedDataSourceInfoMetadata(DType.CreateTable(new TypedName(typeRhs, nameRhs)), leftType.AssociatedDataSources, leftType.DisplayNameProvider));
                     }
                 }
                 else
