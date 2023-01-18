@@ -550,6 +550,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrOperatorExpected = new ErrorResourceKey("ErrOperatorExpected");
         public static ErrorResourceKey ErrNumberExpected = new ErrorResourceKey("ErrNumberExpected");
         public static ErrorResourceKey ErrNumberTooLarge = new ErrorResourceKey("ErrNumberTooLarge");
+        public static ErrorResourceKey ErrTextTooLarge = new ErrorResourceKey("ErrTextTooLarge");
         public static ErrorResourceKey ErrTextFormatTooLarge = new ErrorResourceKey("ErrTextFormatTooLarge");
         public static ErrorResourceKey ErrTextInvalidFormat = new ErrorResourceKey("ErrTextInvalidFormat");
         public static ErrorResourceKey ErrBooleanExpected = new ErrorResourceKey("ErrBooleanExpected");

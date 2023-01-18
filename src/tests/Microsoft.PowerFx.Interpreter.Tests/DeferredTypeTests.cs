@@ -148,9 +148,9 @@ namespace Microsoft.PowerFx.Interpreter
             
             Assert.True(result.IsSuccess);
 
-            var returnType = FormulaType.Build(result._binding.ResultType);
+            var returnType = FormulaType.Build(result.Binding.ResultType);
 
-            Assert.Equal(expected, result._binding.ResultType);
+            Assert.Equal(expected, result.Binding.ResultType);
 
             Assert.True(result.Errors.Count() > 0);
 
