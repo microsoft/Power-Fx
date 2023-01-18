@@ -518,6 +518,27 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
+        [InlineData("1234+6789+1234")] // Valid parse
+        [InlineData("1234+6789+++++")] // Invalid parse
+        public void MaxExpressionLength(string expr)
+        {
+            var opts = new ParserOptions
+            {
+                 MaxExpressionLength = 10
+            };
+
+            var parseResult = Engine.Parse(expr, opts);
+            Assert.False(parseResult.IsSuccess);
+            Assert.True(parseResult.HasError);
+
+            // Only 1 error for being too long.
+            // Any other errors indicate additional work that we shouldn't have done. 
+            var errors = parseResult.Errors;
+            Assert.Single(errors);
+            Assert.Equal("Error 0-14: Expression can't be more than 10 characters. The expression is 14 characters.", errors.First().ToString());
+        }
+
+        [Theory]
         [InlineData("")]
         [InlineData("  ")]
         [InlineData("//LineComment")]
