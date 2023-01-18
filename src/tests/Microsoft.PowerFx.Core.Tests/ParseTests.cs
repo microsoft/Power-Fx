@@ -669,6 +669,9 @@ namespace Microsoft.PowerFx.Core.Tests
 
         [Theory]
         [InlineData("a = 10")]
+        [InlineData("a = ;")]
+        [InlineData("b=10;a = ;c=3;")]
+        [InlineData("/*b=10*/;a = ;c=3;")]
         [InlineData("Formul@ = 10; b = 20;")]
         [InlineData("a;")]
         [InlineData(";")]
