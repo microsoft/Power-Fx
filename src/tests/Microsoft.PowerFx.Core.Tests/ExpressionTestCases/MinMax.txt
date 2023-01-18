@@ -1,4 +1,6 @@
-﻿// ****** Numeric arguments, scalar arguments ******
+﻿#SETUP: DisableMemChecks
+
+// ****** Numeric arguments, scalar arguments ******
 
 >> Max(1)
 1

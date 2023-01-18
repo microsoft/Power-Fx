@@ -79,7 +79,7 @@ namespace Microsoft.PowerFx.Core.Tests
             var engine = new Engine(new PowerFxConfig());
             var result = engine.Check(script);
             
-            Assert.Equal(DType.Error, result._binding.ResultType);            
+            Assert.Equal(DType.Error, result.Binding.ResultType);            
             Assert.False(result.IsSuccess);
         }
 
@@ -116,7 +116,7 @@ namespace Microsoft.PowerFx.Core.Tests
             var result = engine.Check(expression);
 
             Assert.True(DType.TryParse(expectedType, out var expectedDType));
-            Assert.Equal(expectedDType, result._binding.ResultType);
+            Assert.Equal(expectedDType, result.Binding.ResultType);
             Assert.True(result.IsSuccess);
         }
 
@@ -137,7 +137,7 @@ namespace Microsoft.PowerFx.Core.Tests
             var result = engine.Check(expression);
 
             Assert.True(DType.TryParse(expectedType, out var expectedDType));
-            Assert.Equal(expectedDType, result._binding.ResultType);
+            Assert.Equal(expectedDType, result.Binding.ResultType);
             Assert.True(result.IsSuccess);
         }
 
@@ -3121,9 +3121,9 @@ namespace Microsoft.PowerFx.Core.Tests
             var engine = new Engine(config);
             var result = engine.Check(script);
 
-            Assert.NotNull(result._binding);
+            Assert.NotNull(result.Binding);
         
-            Assert.Equal(isPure, result._binding.IsPure(result.Parse.Root));
+            Assert.Equal(isPure, result.Binding.IsPure(result.Parse.Root));
         }
 
         private void TestBindingWarning(string script, DType expectedType, int? expectedErrorCount, SymbolTable symbolTable = null)
@@ -3136,11 +3136,11 @@ namespace Microsoft.PowerFx.Core.Tests
             var engine = new Engine(config);
             var result = engine.Check(script);
             
-            Assert.Equal(expectedType, result._binding.ResultType);
-            Assert.True(result._binding.ErrorContainer.HasErrors());
+            Assert.Equal(expectedType, result.Binding.ResultType);
+            Assert.True(result.Binding.ErrorContainer.HasErrors());
             if (expectedErrorCount != null)
             {
-                Assert.Equal(expectedErrorCount, result._binding.ErrorContainer.GetErrors().Count());
+                Assert.Equal(expectedErrorCount, result.Binding.ErrorContainer.GetErrors().Count());
             }
 
             Assert.True(result.IsSuccess);
@@ -3156,8 +3156,8 @@ namespace Microsoft.PowerFx.Core.Tests
             var engine = new Engine(config);
             var result = engine.Check(script);
 
-            Assert.Equal(expectedType, result._binding.ResultType);
-            Assert.Equal(expectedErrorCount, result._binding.ErrorContainer.GetErrors().Count());
+            Assert.Equal(expectedType, result.Binding.ResultType);
+            Assert.Equal(expectedErrorCount, result.Binding.ErrorContainer.GetErrors().Count());
             Assert.False(result.IsSuccess);
         }
 
@@ -3171,7 +3171,7 @@ namespace Microsoft.PowerFx.Core.Tests
             var engine = new Engine(config);
             var result = engine.Check(script);
 
-            Assert.Equal(expectedType, result._binding.ResultType);
+            Assert.Equal(expectedType, result.Binding.ResultType);
             Assert.False(result.IsSuccess);
         }
 
@@ -3189,7 +3189,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             var engine = new Engine(config);
             var result = engine.Check(script);
-            Assert.Equal(expectedType, result._binding.ResultType);
+            Assert.Equal(expectedType, result.Binding.ResultType);
             Assert.True(result.IsSuccess);
         }
     }

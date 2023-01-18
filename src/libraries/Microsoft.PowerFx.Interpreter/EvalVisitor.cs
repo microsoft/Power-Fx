@@ -38,6 +38,8 @@ namespace Microsoft.PowerFx
 
         public CultureInfo CultureInfo { get; private set; }
 
+        public Governor Governor { get; private set; }
+        
         public EvalVisitor(IRuntimeConfig config, CancellationToken cancellationToken)
         {
             _symbolValues = config.Values; // may be null 
@@ -45,6 +47,8 @@ namespace Microsoft.PowerFx
 
             _services = config.ServiceProvider ?? new BasicServiceProvider();
 
+            Governor = GetService<Governor>() ?? new Governor();
+            
             CultureInfo = GetService<CultureInfo>();
         }
 
@@ -69,6 +73,8 @@ namespace Microsoft.PowerFx
         {
             // Throws OperationCanceledException exception
             _cancellationToken.ThrowIfCancellationRequested();
+
+            Governor.Poll();
         }
 
         // Helper to eval an arg that might be a lambda.
@@ -232,38 +238,40 @@ namespace Microsoft.PowerFx
 
             var childContext = context.SymbolContext.WithScope(node.Scope);
 
+            FormulaValue result;
             if (func is IAsyncTexlFunction asyncFunc)
             {
-                var result = await asyncFunc.InvokeAsync(args, _cancellationToken);
-                return result;
+                result = await asyncFunc.InvokeAsync(args, _cancellationToken);
             }
             else if (func is UserDefinedTexlFunction udtf)
             {
                 // $$$ Should add _runtimeConfig
-                var result = await udtf.InvokeAsync(args, _cancellationToken, context.StackDepthCounter.Increment());
-                return result;
+                result = await udtf.InvokeAsync(args, _cancellationToken, context.StackDepthCounter.Increment());
             }
             else if (func is CustomTexlFunction customTexlFunc)
             {
-                var result = await customTexlFunc.InvokeAsync(FunctionServices, args, _cancellationToken);
-                return result;
+                // If custom function throws an exception, don't catch it - let it propagate up to the host.
+                result = await customTexlFunc.InvokeAsync(FunctionServices, args, _cancellationToken);
             }
             else
             {
                 if (FunctionImplementations.TryGetValue(func, out var ptr))
                 {
-                    var result = await ptr(this, context.IncrementStackDepthCounter(childContext), node.IRContext, args);
+                    result = await ptr(this, context.IncrementStackDepthCounter(childContext), node.IRContext, args);
 
                     if (IfFunction.CanCheckIfReturn(func))
                     {
                         Contract.Assert(result.IRContext.ResultType == node.IRContext.ResultType || result is ErrorValue || result.IRContext.ResultType is BlankType);
                     }
-
-                    return result;
                 }
-
-                return CommonErrors.NotYetImplementedError(node.IRContext, $"Missing func: {func.Name}");
+                else
+                {
+                    result = CommonErrors.NotYetImplementedError(node.IRContext, $"Missing func: {func.Name}");
+                }
             }
+
+            CheckCancel();
+            return result;
         }
 
         public override async ValueTask<FormulaValue> Visit(BinaryOpNode node, EvalVisitorContext context)
