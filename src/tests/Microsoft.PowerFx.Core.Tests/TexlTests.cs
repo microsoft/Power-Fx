@@ -10,6 +10,8 @@ using Microsoft.PowerFx.Core.App.Controls;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.Functions.Delegation;
+using Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata;
 using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Parser;
@@ -77,7 +79,7 @@ namespace Microsoft.PowerFx.Core.Tests
             var engine = new Engine(new PowerFxConfig());
             var result = engine.Check(script);
             
-            Assert.Equal(DType.Error, result._binding.ResultType);            
+            Assert.Equal(DType.Error, result.Binding.ResultType);            
             Assert.False(result.IsSuccess);
         }
 
@@ -114,7 +116,7 @@ namespace Microsoft.PowerFx.Core.Tests
             var result = engine.Check(expression);
 
             Assert.True(DType.TryParse(expectedType, out var expectedDType));
-            Assert.Equal(expectedDType, result._binding.ResultType);
+            Assert.Equal(expectedDType, result.Binding.ResultType);
             Assert.True(result.IsSuccess);
         }
 
@@ -135,7 +137,7 @@ namespace Microsoft.PowerFx.Core.Tests
             var result = engine.Check(expression);
 
             Assert.True(DType.TryParse(expectedType, out var expectedDType));
-            Assert.Equal(expectedDType, result._binding.ResultType);
+            Assert.Equal(expectedDType, result.Binding.ResultType);
             Assert.True(result.IsSuccess);
         }
 
@@ -3043,6 +3045,72 @@ namespace Microsoft.PowerFx.Core.Tests
             TestSimpleBindingSuccess("If(true, DS, DS)", schema, symbol);
         }
 
+        [Theory]
+        [InlineData("*Filter*(DS, StartsWith(Value, \"d\"))", false)]
+        [InlineData("*Filter*(DS, Left(Value, 1) = \"d\")", true)]
+        [InlineData("*Filter*(DS, Substitute(Value, \"x\", \"y\"))", true)]
+        [InlineData("*Filter*(DS, Value(Value) <= 3 Or Value(Value) > 7)", true)]
+        [InlineData("*Filter*(DS, IsBlank(First(*Filter*(DS, StartsWith(Value, \"d\")))))", true)]
+        public void TestSilentValidDelegatableFilterPredicateNode(string script, bool warnings)
+        {
+            var schema = DType.CreateTable(new TypedName(TestUtils.DT("s"), new DName("Value")));
+
+            var symbol = new DelegatableSymbolTable();
+            symbol.AddEntity(
+                new TestDelegableDataSource(
+                    "DS",
+                    schema,
+                    new TestDelegationMetadata(
+                        DelegationCapability.Filter,
+                        schema,
+                        new FilterOpMetadata(
+                            schema,
+                            new Dictionary<DPath, DelegationCapability>(),
+                            new Dictionary<DPath, DelegationCapability>(),
+                            new DelegationCapability(DelegationCapability.Equal | DelegationCapability.StartsWith),
+                            null))));
+
+            var silentFilterFunction = new TestUtils.MockSilentDelegableFilterFunction("TestSilentFilter", script);
+
+            try
+            {
+                symbol.AddFunction(silentFilterFunction);
+
+                var config = new PowerFxConfig
+                {
+                    SymbolTable = symbol
+                };
+
+                var engine = new Engine(config);
+
+                // first run using the original Filter
+                var filterScript = script.Replace("*Filter*", "Filter");
+                var result = engine.Check(filterScript);
+
+                Assert.True(result.IsSuccess);
+
+                if (warnings)
+                {
+                    Assert.True(result.Errors.Count() > 0, "Expected warnings in original function");
+                }
+                else
+                {
+                    Assert.False(result.Errors.Count() > 0, "No warnings expected in original function");
+                }
+
+                // then run with the mock filter function that does silent delgation checks
+                var silentFilterScript = script.Replace("*Filter*", "TestSilentFilter");
+                result = engine.Check(silentFilterScript);
+
+                Assert.True(result.IsSuccess);
+                Assert.False(result.Errors.Count() > 0, "No warnings expected in silent function");
+            }
+            finally
+            {
+                symbol.RemoveFunction(silentFilterFunction);
+            }
+        }
+
         private void TestBindingPurity(string script, bool isPure, SymbolTable symbolTable = null)
         {
             var config = new PowerFxConfig
@@ -3053,9 +3121,9 @@ namespace Microsoft.PowerFx.Core.Tests
             var engine = new Engine(config);
             var result = engine.Check(script);
 
-            Assert.NotNull(result._binding);
+            Assert.NotNull(result.Binding);
         
-            Assert.Equal(isPure, result._binding.IsPure(result.Parse.Root));
+            Assert.Equal(isPure, result.Binding.IsPure(result.Parse.Root));
         }
 
         private void TestBindingWarning(string script, DType expectedType, int? expectedErrorCount, SymbolTable symbolTable = null)
@@ -3068,11 +3136,11 @@ namespace Microsoft.PowerFx.Core.Tests
             var engine = new Engine(config);
             var result = engine.Check(script);
             
-            Assert.Equal(expectedType, result._binding.ResultType);
-            Assert.True(result._binding.ErrorContainer.HasErrors());
+            Assert.Equal(expectedType, result.Binding.ResultType);
+            Assert.True(result.Binding.ErrorContainer.HasErrors());
             if (expectedErrorCount != null)
             {
-                Assert.Equal(expectedErrorCount, result._binding.ErrorContainer.GetErrors().Count());
+                Assert.Equal(expectedErrorCount, result.Binding.ErrorContainer.GetErrors().Count());
             }
 
             Assert.True(result.IsSuccess);
@@ -3088,8 +3156,8 @@ namespace Microsoft.PowerFx.Core.Tests
             var engine = new Engine(config);
             var result = engine.Check(script);
 
-            Assert.Equal(expectedType, result._binding.ResultType);
-            Assert.Equal(expectedErrorCount, result._binding.ErrorContainer.GetErrors().Count());
+            Assert.Equal(expectedType, result.Binding.ResultType);
+            Assert.Equal(expectedErrorCount, result.Binding.ErrorContainer.GetErrors().Count());
             Assert.False(result.IsSuccess);
         }
 
@@ -3103,7 +3171,7 @@ namespace Microsoft.PowerFx.Core.Tests
             var engine = new Engine(config);
             var result = engine.Check(script);
 
-            Assert.Equal(expectedType, result._binding.ResultType);
+            Assert.Equal(expectedType, result.Binding.ResultType);
             Assert.False(result.IsSuccess);
         }
 
@@ -3121,7 +3189,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             var engine = new Engine(config);
             var result = engine.Check(script);
-            Assert.Equal(expectedType, result._binding.ResultType);
+            Assert.Equal(expectedType, result.Binding.ResultType);
             Assert.True(result.IsSuccess);
         }
     }

@@ -69,24 +69,19 @@ namespace Microsoft.PowerFx
 
         internal static IExpressionEvaluator GetEvaluator(this CheckResult result, StackDepthCounter stackMarker)
         {
-            if (result._binding == null)
-            {
-                throw new InvalidOperationException($"Requires successful binding");
-            }
-
-            result.ThrowOnErrors();
-
             ReadOnlySymbolValues globals = null;
-            var allSymbols = result.Symbols;
+            var allSymbols = result.AllSymbols;
                 
-            if (result.Source is RecalcEngine recalcEngine)
+            if (result.Engine is RecalcEngine recalcEngine)
             {
                 // Pull global values from the engine. 
                 globals = recalcEngine._symbolValues;
             }
 
-            (var irnode, var ruleScopeSymbol) = IRTranslator.Translate(result._binding);
-            var expr = new ParsedExpression(irnode, ruleScopeSymbol, stackMarker, result.CultureInfo)
+            var irResult = result.ApplyIR();
+            result.ThrowOnErrors();
+
+            var expr = new ParsedExpression(irResult.TopNode, irResult.RuleScopeSymbol, stackMarker, result.CultureInfo)
             {
                 _globals = globals,
                 _allSymbols = allSymbols,

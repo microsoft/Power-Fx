@@ -20,7 +20,18 @@ namespace Microsoft.PowerFx
         /// </summary>
         public bool AllowsSideEffects { get; set; }
 
+        /// <summary>
+        /// The culture that an expression will parse with. 
+        /// This primarily determines numeric decimal separator character
+        /// as well as chaining operator. 
+        /// </summary>
         public CultureInfo Culture { get; set; }
+
+        /// <summary>
+        /// If greater than 0, enforces a maximum length on a single expression. 
+        /// It is an immediate parser error if the expression is too long. 
+        /// </summary>
+        public int MaxExpressionLength { get; set; }
 
         internal ParseResult Parse(string script)
         {
@@ -29,9 +40,19 @@ namespace Microsoft.PowerFx
 
         internal ParseResult Parse(string script, Features features)
         {
+            if (MaxExpressionLength > 0 && script.Length > MaxExpressionLength)
+            {
+                // If too long, don't even attempt to lex or parse it. 
+                var result2 = ParseResult.ErrorTooLarge(script, MaxExpressionLength);
+                result2.Options = this;
+                return result2;
+            }
+
             var flags = AllowsSideEffects ? TexlParser.Flags.EnableExpressionChaining : TexlParser.Flags.None;
 
-            return TexlParser.ParseScript(script, features, Culture, flags);
+            var result = TexlParser.ParseScript(script, features, Culture, flags);
+            result.Options = this;
+            return result;
         }
     }
 }

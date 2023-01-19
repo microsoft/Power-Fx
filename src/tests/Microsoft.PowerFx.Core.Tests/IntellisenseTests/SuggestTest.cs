@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -345,6 +346,24 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             AdjustConfig(config);
             actualSuggestions = SuggestStrings(expression, config, lazyInstance);
             Assert.Equal(expectedSuggestions, actualSuggestions);
+        }
+
+        [Fact]
+        public void SuggestDoesNotNeedErrors()
+        {
+            var engine = new Engine(new PowerFxConfig());
+            var check = new CheckResult(engine);
+
+            // Error, text isn't set
+            Assert.Throws<InvalidOperationException>(() => engine.Suggest(check, 1));
+
+            check.SetText("1+2");
+            check.SetBindingInfo();
+            var suggest = engine.Suggest(check, 1);
+            Assert.NotNull(suggest);
+                                    
+            check.ApplyErrors();
+            Assert.Empty(check.Errors);
         }
 
         private class LazyRecursiveRecordType : RecordType

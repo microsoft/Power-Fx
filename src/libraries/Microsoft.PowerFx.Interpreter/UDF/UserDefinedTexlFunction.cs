@@ -46,7 +46,8 @@ namespace Microsoft.PowerFx.Interpreter
                 return check.Errors;
             }
 
-            if (check.Expression is ParsedExpression parsed)
+            var expr2 = check.GetEvaluator();
+            if (expr2 is ParsedExpression parsed)
             {
                 _expr = parsed;
             }
