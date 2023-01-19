@@ -29,6 +29,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Responses\Azure Cognitive Service for Language_Response.json" />
+    <None Remove="Swagger\Azure Cognitive Service for Language.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\libraries\Microsoft.PowerFx.Connectors\Microsoft.PowerFx.Connectors.csproj" />
     <ProjectReference Include="..\Microsoft.PowerFx.Core.Tests\Microsoft.PowerFx.Core.Tests.csproj" />
     <ProjectReference Include="..\..\libraries\Microsoft.PowerFx.Interpreter\Microsoft.PowerFx.Interpreter.csproj" />

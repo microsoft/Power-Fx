@@ -61,6 +61,11 @@ namespace Microsoft.PowerFx.Connectors.Execution
 
                 if (namedValue == null)
                 {
+                    if (property.Value.IsInternal())
+                    {
+                        continue;
+                    }
+
                     throw new NotImplementedException($"Missing property {property.Key}, object is too complex or not supported");
                 }
 
@@ -164,7 +169,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
                     {
                         // DateTimeValue and DateValue
                         WriteDateTimeValue(dt.Value);
-                    }
+                    }                   
                     else 
                     {
                         throw new ArgumentException($"Expected StringValue and got {fv?.GetType()?.Name ?? "<null>"} value, for property {propertyName}");
