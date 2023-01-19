@@ -47,8 +47,8 @@ namespace Microsoft.PowerFx.Connectors
         public readonly int ArityMax;
         public readonly OpenApiOperation Operation;
 
-        private readonly Dictionary<string, (FormulaValue, DType)> _parameterDefaultValues = new ();
-        private readonly Dictionary<TypedName, List<string>> _parameterOptions = new ();
+        private readonly Dictionary<string, (FormulaValue, DType)> _parameterDefaultValues = new();
+        private readonly Dictionary<TypedName, List<string>> _parameterOptions = new();
         #endregion // ServiceFunction args
 
         public bool HasBodyParameter => Operation.RequestBody != null;
@@ -268,12 +268,9 @@ namespace Microsoft.PowerFx.Connectors
                 {
                     map.Add(parameterName, value);
                 }
-                else
+                else if (value is RecordValue r)
                 {
-                    if (value is RecordValue r)
-                    {
-                        map[parameterName] = MergeRecords(map[parameterName] as RecordValue, r);
-                    }
+                    map[parameterName] = MergeRecords(map[parameterName] as RecordValue, r);
                 }
             }
 
@@ -337,7 +334,7 @@ namespace Microsoft.PowerFx.Connectors
                     }
                     else
                     {
-                        throw new NotImplementedException($"Cannot merge {field1.Name} of type {field1.Value.GetType().Name} with {field2.Name} of type {field2.Value.GetType().Name}");
+                        throw new ArgumentException($"Cannot merge {field1.Name} of type {field1.Value.GetType().Name} with {field2.Name} of type {field2.Value.GetType().Name}");
                     }
                 }
             }

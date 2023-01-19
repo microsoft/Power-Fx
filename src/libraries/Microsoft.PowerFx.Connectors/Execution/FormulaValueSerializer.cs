@@ -87,9 +87,9 @@ namespace Microsoft.PowerFx.Connectors.Execution
                 case "array":
                     // array                    
                     StartArray(propertyName);
-                         
+
                     foreach (var item in (fv as TableValue).Rows)
-                    {                        
+                    {
                         var rva = item.Value;
 
                         if (rva.Fields.Count() != 1)
@@ -105,13 +105,13 @@ namespace Microsoft.PowerFx.Connectors.Execution
                         StartArrayElement(propertyName);
                         WriteValue(rva.Fields.First().Value);
                     }
-                    
+
                     EndArray();
                     break;
 
                 case "null":
                     // nullable
-                    throw new NotImplementedException($"null schema type not supported yet for property {propertyName}");                    
+                    throw new NotImplementedException($"null schema type not supported yet for property {propertyName}");
 
                 case "number":
                     // float, double                    
@@ -120,7 +120,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
                     if (fv is NumberValue numberValue)
                     {
                         WriteNumberValue(numberValue.Value);
-                    }                                       
+                    }
                     else
                     {
                         throw new ArgumentException($"Expected NumberValue (number) and got {fv?.GetType()?.Name ?? "<null>"} value, for property {propertyName}");
@@ -169,8 +169,8 @@ namespace Microsoft.PowerFx.Connectors.Execution
                     {
                         // DateTimeValue and DateValue
                         WriteDateTimeValue(dt.Value);
-                    }                   
-                    else 
+                    }
+                    else
                     {
                         throw new ArgumentException($"Expected StringValue and got {fv?.GetType()?.Name ?? "<null>"} value, for property {propertyName}");
                     }
@@ -179,14 +179,14 @@ namespace Microsoft.PowerFx.Connectors.Execution
 
                 case "object":
                     // collection of property/value pairs                                                         
-                    WriteObject(propertyName, propertySchema, (fv as RecordValue).Fields);                    
+                    WriteObject(propertyName, propertySchema, (fv as RecordValue).Fields);
                     break;
 
                 default:
                     throw new NotImplementedException($"Not supported property type {propertySchema?.Type ?? "<null>"} for property {propertyName}");
             }
         }
-      
+
         private void WriteValue(FormulaValue value)
         {
             if (value == null || value is BlankValue)
@@ -203,9 +203,9 @@ namespace Microsoft.PowerFx.Connectors.Execution
             }
             else if (value is BooleanValue booleanValue)
             {
-                WriteBooleanValue(booleanValue.Value);                
-            }            
-            else if (value is PrimitiveValue<DateTime> dt) 
+                WriteBooleanValue(booleanValue.Value);
+            }
+            else if (value is PrimitiveValue<DateTime> dt)
             {
                 // DateTimeValue and DateValue
                 WriteDateTimeValue(dt.Value);
