@@ -6625,6 +6625,10 @@
     <value>Named formula must end with a semicolon.</value>
     <comment>A semicolon must terminate named formulas. For example, a=10;</comment>
   </data>
+  <data name="ErrNamedFormula_MissingValue" xml:space="preserve">
+    <value>Named formula must be an expression.</value>
+    <comment>This error message shows up when Named formula is not an expression. For example, a = ;</comment>
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula '{0}' already exists.</value>
   </data>
