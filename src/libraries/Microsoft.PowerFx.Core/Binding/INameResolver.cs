@@ -58,12 +58,6 @@ namespace Microsoft.PowerFx.Core.Binding
         /// </returns>
         IEnumerable<TexlFunction> LookupFunctionsInNamespace(DPath nameSpace);
 
-        // Return true if the specified boxed enum info contains a value for the given locale-specific name.
-        bool LookupEnumValueByInfoAndValueName(object enumInfo, DName locName, out object value);
-
-        // Return true if the specified enum type contains a value for the given locale-specific name.
-        bool LookupEnumValueByTypeAndLocName(DType enumType, DName locName, out object value);
-
         // Looks up the parent control for the current context.
         bool LookupParent(out NameLookupInfo lookupInfo);
 

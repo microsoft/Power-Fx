@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Utils;
@@ -20,6 +21,8 @@ namespace Microsoft.PowerFx.Core.Types.Enums
         /// </summary>
         public string Name { get; set; }
 
+        public IEnumerable<string> Members => EnumType.GetAllNames(DPath.Root).Select(member => member.Name.Value);
+
         public EnumSymbol(DName name, DType enumSpec)
         {
             Contracts.AssertValid(name);
@@ -31,7 +34,7 @@ namespace Microsoft.PowerFx.Core.Types.Enums
 
         /// <summary>
         /// Look up an enum value by its unqualified name.
-        /// For example, locName="Droit" --> invName="Right", value="right".
+        /// For example, unqualifiedName="Right" -> value="right".
         /// </summary>
         public bool TryLookupValueByName(string unqualifiedName, out object value)
         {

@@ -167,7 +167,7 @@ namespace Microsoft.PowerFx.Core.Types.Enums
                 {
                     EnumConstants.DataSourceInfoEnumString,
                     "%s[DisplayName:\"displayname\", Required:\"required\", MaxLength:\"maxlength\", MinLength:\"minlength\", MaxValue:\"maxvalue\", MinValue:\"minvalue\", " +
-                    "AllowedValues:\"allowedvalues\", EditPermission:\"editpermission\", ReadPermission:\"readpermission\", CreatePermission:\"createpermission\", " +
+                    "AllowedValues:\"allowedvalues\", EditPermissions:\"editpermission\", ReadPermission:\"readpermission\", CreatePermission:\"createpermission\", " +
                     "DeletePermission:\"deletepermission\"]"
                 },
                 {
