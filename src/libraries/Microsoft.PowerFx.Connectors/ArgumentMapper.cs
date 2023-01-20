@@ -47,8 +47,8 @@ namespace Microsoft.PowerFx.Connectors
         public readonly int ArityMax;
         public readonly OpenApiOperation Operation;
 
-        private readonly Dictionary<string, (FormulaValue, DType)> _parameterDefaultValues = new();
-        private readonly Dictionary<TypedName, List<string>> _parameterOptions = new();
+        private readonly Dictionary<string, (FormulaValue, DType)> _parameterDefaultValues = new ();
+        private readonly Dictionary<TypedName, List<string>> _parameterOptions = new ();
         #endregion // ServiceFunction args
 
         public bool HasBodyParameter => Operation.RequestBody != null;
