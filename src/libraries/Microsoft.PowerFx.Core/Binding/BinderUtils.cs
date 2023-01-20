@@ -112,12 +112,11 @@ namespace Microsoft.PowerFx.Core.Binding
         /// <returns>
         /// True if a valid overload was found, false if not.
         /// </returns>
-        internal static bool TryGetBestOverload(CheckTypesContext context, IErrorContainer errors, CallNode node, DType[] argTypes, TexlFunction[] overloads, out TexlFunction bestOverload, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap, out DType returnType)
+        internal static bool TryGetBestOverload(CheckTypesContext context, IErrorContainer errors, CallNode node, TexlNode[] args, DType[] argTypes, TexlFunction[] overloads, out TexlFunction bestOverload, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap, out DType returnType)
         {
             Contracts.AssertValue(node, nameof(node));
             Contracts.AssertValue(overloads, nameof(overloads));
 
-            var args = node.Args.Children;
             var carg = args.Length;
             returnType = DType.Unknown;
 

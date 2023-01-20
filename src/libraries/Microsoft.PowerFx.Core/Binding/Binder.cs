@@ -4978,7 +4978,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 var carg = args.Length;
                 var argTypes = args.Select(_txb.GetType).ToArray();
 
-                if (TryGetBestOverload(_txb.CheckTypesContext, _txb.ErrorContainer, node, argTypes, overloads, out var function, out var nodeToCoercedTypeMap, out var returnType))
+                if (TryGetBestOverload(_txb.CheckTypesContext, _txb.ErrorContainer, node, node.Args.Children, argTypes, overloads, out var function, out var nodeToCoercedTypeMap, out var returnType))
                 {
                     function.CheckSemantics(_txb, args, argTypes, _txb.ErrorContainer);
 
