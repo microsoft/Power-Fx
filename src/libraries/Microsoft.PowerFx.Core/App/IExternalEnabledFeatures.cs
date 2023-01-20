@@ -21,7 +21,7 @@ namespace Microsoft.PowerFx.Core.App
 
         bool IsDynamicSchemaEnabled { get; }
 
-        bool IsEnhancedComponentFunctionProperty { get; }
+        bool IsEnhancedComponentFunctionPropertyEnabled { get; }
     }
 
     internal sealed class DefaultEnabledFeatures : IExternalEnabledFeatures
@@ -36,6 +36,6 @@ namespace Microsoft.PowerFx.Core.App
 
         public bool IsDynamicSchemaEnabled => true;
 
-        public bool IsEnhancedComponentFunctionProperty => false;
+        public bool IsEnhancedComponentFunctionPropertyEnabled => true;
     }
 }

@@ -3288,7 +3288,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     // TODO remove feature gate when ECS flag is completely rolled out
                     if (template.IsComponent &&
                         (property.IsScopeVariable ||
-                        ((_txb.Document?.Properties?.EnabledFeatures?.IsEnhancedComponentFunctionProperty ?? false) && property.IsScopedProperty)))
+                        ((_txb.Document?.Properties?.EnabledFeatures?.IsEnhancedComponentFunctionPropertyEnabled ?? false) && property.IsScopedProperty)))
                     {
                         SetDottedNameError(node, TexlStrings.ErrInvalidPropertyReference);
                         return;
