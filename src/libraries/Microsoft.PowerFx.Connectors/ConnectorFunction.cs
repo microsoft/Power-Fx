@@ -22,6 +22,8 @@ namespace Microsoft.PowerFx.Connectors
     {
         public string Name { get; }
 
+        public string OriginalName => Operation.OperationId;
+
         public string Description => Operation.Description ?? $"Invoke {Name}";
 
         public string Summary => Operation.Summary;

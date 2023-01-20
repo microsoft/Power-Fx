@@ -58,6 +58,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
             ConnectorFunction function = OpenApiParser.GetFunctions(doc).OrderBy(cf => cf.Name).ToList()[19];
 
             Assert.Equal("ConversationAnalysisAnalyzeConversationConversation", function.Name);
+            Assert.Equal("ConversationAnalysis_AnalyzeConversation_Conversation", function.OriginalName);
+            Assert.Equal("/apim/cognitiveservicestextanalytics/{connectionId}/language/:analyze-conversations", function.OperationPath);
 
             Assert.Equal(2, function.RequiredParameters.Length);
             Assert.Equal(3, function.HiddenRequiredParameters.Length);
