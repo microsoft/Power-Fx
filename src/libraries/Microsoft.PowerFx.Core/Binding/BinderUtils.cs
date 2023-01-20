@@ -93,6 +93,9 @@ namespace Microsoft.PowerFx.Core.Binding
         /// <param name="node">
         /// CallNode for which the best overload will be determined.
         /// </param>
+        /// <param name="args">
+        /// List of argument nodes for <paramref name="node"/>.
+        /// </param>
         /// <param name="argTypes">
         /// List of argument types for <paramref name="node.Args"/>.
         /// </param>
