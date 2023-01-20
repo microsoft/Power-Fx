@@ -165,7 +165,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             using PowerPlatformConnectorClient client = new PowerPlatformConnectorClient("https://lucgen-apim.azure-api.net", "aaa373836ffd4915bf6eefd63d164adc" /* environment Id */, "16e7c181-2f8d-4cae-b1f0-179c5c4e4d8b" /* connectionId */, () => "No Auth", httpClient)
             { 
-                SessionId = "a41bd03b-6c3c-4509-a844-e8c51b61f878" 
+                SessionId = "a41bd03b-6c3c-4509-a844-e8c51b61f878",                
             };
 
             FormulaValue result = await function.InvokeAync(client, new FormulaValue[] { analysisInputParam, parametersParam }, CancellationToken.None);
@@ -173,6 +173,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             string input = testConnector._log.ToString();
             string output = System.Text.Json.JsonSerializer.Serialize(result.ToObject());
 
+            var version = PowerPlatformConnectorClient.Version;
             var expectedInput =
 @$"POST https://lucgen-apim.azure-api.net/invoke
  authority: lucgen-apim.azure-api.net
@@ -183,7 +184,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
  x-ms-client-session-id: a41bd03b-6c3c-4509-a844-e8c51b61f878
  x-ms-request-method: POST
  x-ms-request-url: /apim/cognitiveservicestextanalytics/16e7c181-2f8d-4cae-b1f0-179c5c4e4d8b/language/:analyze-conversations?api-version=2022-05-01
- x-ms-user-agent: PowerFx/0.3.0.0
+ x-ms-user-agent: PowerFx/{version}
  [content-header] Content-Type: application/json; charset=utf-8
  [body] {{""kind"":""Conversation"",""analysisInput"":{{""conversationItem"":{{""id"":""0"",""participantId"":""0"",""language"":""en-us"",""modality"":""text"",""text"":""Book me a flight for Munich""}}}},""parameters"":{{""projectName"":""project1"",""deploymentName"":""deploy1"",""verbose"":true,""stringIndexType"":""TextElement_V8""}}}}
 ";
