@@ -59,7 +59,7 @@ namespace Microsoft.PowerFx.Core.Binding
         IEnumerable<TexlFunction> LookupFunctionsInNamespace(DPath nameSpace);
 
         // Return true if the specified boxed enum info contains a value for the given locale-specific name.
-        bool LookupEnumValueByInfoAndLocName(object enumInfo, DName locName, out object value);
+        bool LookupEnumValueByInfoAndValueName(object enumInfo, DName locName, out object value);
 
         // Return true if the specified enum type contains a value for the given locale-specific name.
         bool LookupEnumValueByTypeAndLocName(DType enumType, DName locName, out object value);

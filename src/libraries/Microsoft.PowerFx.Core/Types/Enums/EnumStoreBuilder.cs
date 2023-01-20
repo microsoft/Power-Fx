@@ -344,20 +344,20 @@ namespace Microsoft.PowerFx.Core.Types.Enums
             return enumTypes;
         }
 
-        private IEnumerable<Tuple<DName, DName, DType>> EnumTuples()
+        private IEnumerable<(DName name, DType typeSpec)> Enums()
         {
             CollectionUtils.EnsureInstanceCreated(ref _enumTypes, () =>
             {
                 return RegenerateEnumTypes();
             });
 
-            var list = ImmutableList.CreateBuilder<Tuple<DName, DName, DType>>();
+            var list = ImmutableList.CreateBuilder<(DName name, DType typeSpec)>();
             foreach (var enumSpec in _workingEnums)
             {
                 Contracts.Assert(DName.IsValidDName(enumSpec.Key));
 
                 var name = new DName(enumSpec.Key);
-                list.Add(new Tuple<DName, DName, DType>(name, name, _enumTypes[enumSpec.Key]));
+                list.Add((name, _enumTypes[enumSpec.Key]));
             }
 
             return list.ToImmutable();
@@ -371,9 +371,9 @@ namespace Microsoft.PowerFx.Core.Types.Enums
         {
             var list = ImmutableList.CreateBuilder<EnumSymbol>();
             var customEnumLocDict = ImmutableDictionary<string, Dictionary<string, string>>.Empty;
-            foreach (var enumValue in EnumTuples())
+            foreach (var (name, typeSpec) in Enums())
             {
-                list.Add(new EnumSymbol(customEnumLocDict, enumValue.Item1, enumValue.Item2, enumValue.Item3));
+                list.Add(new EnumSymbol(name, typeSpec));
             }
 
             return list.ToImmutable();

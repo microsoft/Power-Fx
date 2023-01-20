@@ -159,7 +159,7 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
         internal virtual bool DoesNameCollide(string name)
         {
             return (from enumSymbol in _enumStore.EnumSymbols
-                    where (from localizedEnum in enumSymbol.LocalizedEnumValues where localizedEnum == name select localizedEnum).Any()
+                    where (from localizedEnum in enumSymbol.EnumValues where localizedEnum == name select localizedEnum).Any()
                     select enumSymbol).Count() > 1;
         }
 
