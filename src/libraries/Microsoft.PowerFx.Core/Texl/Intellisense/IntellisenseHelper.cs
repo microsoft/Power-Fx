@@ -230,7 +230,7 @@ namespace Microsoft.PowerFx.Intellisense
             Contracts.AssertValue(enumInfo);
             Contracts.AssertValue(prefix);
 
-            var anyCollisionExists = false;
+            var fullyQualifyAll = false;
             var locNameTypePairs = new List<Tuple<string, DType>>();
 
             foreach (var typedName in enumInfo.EnumType.GetNames(DPath.Root))
@@ -241,7 +241,7 @@ namespace Microsoft.PowerFx.Intellisense
                 {
                     var candidate = prefix + escapedLocName;
                     var canAddSuggestion = _addSuggestionDryRunHelper.AddSuggestion(intellisenseData, candidate, SuggestionKind.Global, SuggestionIconKind.Other, typedName.Type, false);
-                    shouldFullyQualify = shouldFullyQualify || canAddSuggestion;
+                    fullyQualifyAll = fullyQualifyAll || canAddSuggestion;
                 }
 
                 locNameTypePairs.Add(new Tuple<string, DType>(escapedLocName, typedName.Type));
@@ -249,7 +249,7 @@ namespace Microsoft.PowerFx.Intellisense
 
             foreach (var locNameTypePair in locNameTypePairs)
             {
-                var suggestion = anyCollisionExists || !intellisenseData.SuggestUnqualifiedEnums ? prefix + locNameTypePair.Item1 : locNameTypePair.Item1;
+                var suggestion = fullyQualifyAll || !intellisenseData.SuggestUnqualifiedEnums ? prefix + locNameTypePair.Item1 : locNameTypePair.Item1;
                 AddSuggestion(intellisenseData, suggestion, SuggestionKind.Global, SuggestionIconKind.Other, locNameTypePair.Item2, false);
             }
         }

@@ -370,7 +370,6 @@ namespace Microsoft.PowerFx.Core.Types.Enums
         private ImmutableList<EnumSymbol> RegenerateEnumSymbols()
         {
             var list = ImmutableList.CreateBuilder<EnumSymbol>();
-            var customEnumLocDict = ImmutableDictionary<string, Dictionary<string, string>>.Empty;
             foreach (var (name, typeSpec) in Enums())
             {
                 list.Add(new EnumSymbol(name, typeSpec));
