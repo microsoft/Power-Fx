@@ -61,10 +61,50 @@ namespace FunctionTestGen
                     continue;
                 }
 
-                PrintTest(texlFunction);
+                //PrintTest(texlFunction);
+            }
+
+            foreach (var texlFunction in BuiltinFunctionsCore.BuiltinFunctionsLibrary)
+            {
+                if (texlFunction.HasLambdas &&
+                    texlFunction.SupportsParamCoercion &&
+                    !skippedFunctions.Contains(texlFunction.Name))
+                {
+                    PrintLambdaTest(texlFunction);
+                }
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1303:Do not pass literals as localized parameters", Justification = "Code gen package")]
+        private static void PrintLambdaTest(TexlFunction texlFunction)
+        {
+            for (var arity = texlFunction.MinArity; arity <= texlFunction.MaxArity; arity++)
+            {
+                if (arity == 0)
+                {
+                    continue;
+                }
+
+                var callArgDefaults = new string[arity];
+
+                for (var i = 0; i < arity; i++)
+                {
+                    if (texlFunction.ParamTypes.Length > i)
+                    {
+                        callArgDefaults[i] = texlFunction.ParamTypes[i].Kind.ToString();
+                    }
+                    else
+                    {
+                        return;
+                    }
+                }
+
+                var defaultCall = $"{texlFunction.Name}({string.Join(", ", callArgDefaults)})";
+                Console.WriteLine(defaultCall);
+            }
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1303:Do not pass literals as localized parameters", Justification = "Code gen package")]
         private static void PrintTest(TexlFunction texlFunction)
         {
             for (var arity = texlFunction.MinArity; arity <= texlFunction.MaxArity; arity++)
