@@ -188,6 +188,15 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             Assert.Equal(expectedInput, input);
         }
+
+        [Fact]
+
+        public void LQA_Load()
+        {
+            OpenApiDocument doc = Helpers.ReadSwagger(@"Swagger\Language - Question Answering.json");
+            List<ServiceFunction> functionList = OpenApiParser.Parse("LQA", doc);
+            Assert.Contains(functionList, sf => sf.GetUniqueTexlRuntimeName() == "lQA__GetAnswersFromText");
+        }
     }
 
     public static class Extensions
