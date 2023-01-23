@@ -2386,13 +2386,8 @@ namespace Microsoft.PowerFx.Core.Types
             type.AssertValid();
             Contracts.AssertValueOrNull(connectedDataSourceInfoSet);
 
-            if (connectedDataSourceInfoSet == null || connectedDataSourceInfoSet.Count == 0)
-            {
-                return type;
-            }
-
             var returnType = type;
-            foreach (var cds in connectedDataSourceInfoSet)
+            foreach (var cds in connectedDataSourceInfoSet ?? Enumerable.Empty<IExternalTabularDataSource>())
             {
                 returnType = AttachDataSourceInfo(returnType, cds);
             }

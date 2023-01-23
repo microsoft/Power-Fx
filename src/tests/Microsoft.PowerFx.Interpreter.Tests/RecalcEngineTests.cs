@@ -37,6 +37,7 @@ namespace Microsoft.PowerFx.Tests
                 $"{ns}.{nameof(CheckResultExtensions)}",
                 $"{ns}.{nameof(ReadOnlySymbolValues)}",
                 $"{ns}.{nameof(RecalcEngine)}",
+                $"{ns}.{nameof(Governor)}",
                 $"{ns}.{nameof(ReflectionFunction)}",
 #pragma warning disable CS0618 // Type or member is obsolete
                 $"{ns}.{nameof(RecalcEngineScope)}",
@@ -511,7 +512,6 @@ namespace Microsoft.PowerFx.Tests
 
             Assert.True(result.IsSuccess);
             Assert.Equal(1, result.Errors.Count(x => x.Severity == ErrorSeverity.Warning));
-            Assert.NotNull(result.Expression);
         }
 
         [Fact]
@@ -589,7 +589,6 @@ namespace Microsoft.PowerFx.Tests
             var result = engine.Check("3+foo+2", RecordType.Empty()); // foo is undefined 
 
             Assert.False(result.IsSuccess);
-            Assert.Null(result.Expression);
             Assert.Single(result.Errors);
             Assert.StartsWith("Error 2-5: Name isn't valid. 'foo' isn't recognized", result.Errors.First().ToString());
         }
@@ -605,7 +604,6 @@ namespace Microsoft.PowerFx.Tests
 
             // Test that parsing worked
             Assert.True(result.IsSuccess);
-            Assert.NotNull(result.Expression);
             Assert.True(result.ReturnType is NumberType);
             Assert.Single(result.TopLevelIdentifiers);
             Assert.Equal("x", result.TopLevelIdentifiers.First());
@@ -631,7 +629,6 @@ namespace Microsoft.PowerFx.Tests
 
             // Test that parsing worked
             Assert.True(result.IsSuccess);
-            Assert.NotNull(result.Expression);
             Assert.True(result.ReturnType is NumberType);
 
             // Test evaluation of parsed expression
@@ -764,24 +761,6 @@ namespace Microsoft.PowerFx.Tests
             var checkResult = recalcEngine.Check("SortOrder.Ascending");
             Assert.True(checkResult.IsSuccess);
             Assert.IsType<StringType>(checkResult.ReturnType);
-        }
-
-        [Fact]
-        public async void MaxRecursionDepthTest()
-        {
-            var config = new PowerFxConfig(null)
-            {
-                MaxCallDepth = 5
-            };
-            var recalcEngine = new RecalcEngine(config);
-            Assert.IsType<ErrorValue>(recalcEngine.Eval("Abs(Abs(Abs(Abs(Abs(Abs(1))))))"));
-            Assert.IsType<NumberValue>(recalcEngine.Eval("Abs(Abs(Abs(Abs(Abs(1)))))"));
-            Assert.IsType<NumberValue>(recalcEngine.Eval(
-                @"Sum(
-                Sum(Sum(1),1),
-                Sum(Sum(1),1),
-                Sum(Sum(1),1)
-                )"));
         }
 
         [Fact]

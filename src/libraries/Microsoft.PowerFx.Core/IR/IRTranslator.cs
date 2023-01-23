@@ -27,6 +27,12 @@ using UnaryOpNode = Microsoft.PowerFx.Core.IR.Nodes.UnaryOpNode;
 
 namespace Microsoft.PowerFx.Core.IR
 {
+    internal class IRResult
+    {
+        public IntermediateNode TopNode;
+        public ScopeSymbol RuleScopeSymbol;
+    }
+
     internal class IRTranslator
     {
         private const string DeferredNotSupportedExceptionMsg = "Deferred(Unknown) is not supported in expressions to be evaluated. This is always an error, deferred is only valid when calling Check";

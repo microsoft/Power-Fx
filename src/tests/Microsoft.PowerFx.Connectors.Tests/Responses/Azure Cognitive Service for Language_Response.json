@@ -1,0 +1,21 @@
+{
+  "kind": "ConversationResult",
+  "result": {
+    "prediction": {
+      "entities": [],
+      "intents": [
+        {
+          "category": "Book me a flight to Paris next week",
+          "confidenceScore": 0.89360607
+        },
+        {
+          "category": "None",
+          "confidenceScore": 0
+        }
+      ],
+      "projectKind": "Conversation",
+      "topIntent": "Book me a flight to Paris next week"
+    },
+    "query": "Book me a flight for Munich"
+  }
+}

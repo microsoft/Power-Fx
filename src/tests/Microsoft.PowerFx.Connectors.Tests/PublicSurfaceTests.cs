@@ -32,7 +32,9 @@ namespace Microsoft.PowerFx.Connector.Tests
               "Microsoft.PowerFx.Connectors.CachingHttpClient",
               "Microsoft.PowerFx.Connectors.OpenApiExtensions",
               "Microsoft.PowerFx.Connectors.ODataQueryableTableValue",
-              "Microsoft.PowerFx.Connectors.ODataParameters"
+              "Microsoft.PowerFx.Connectors.ODataParameters",
+              "Microsoft.PowerFx.Connectors.ConnectorParameter",
+              "Microsoft.PowerFx.Connectors.ConnectorFunction"
             };
 
             var sb = new StringBuilder();

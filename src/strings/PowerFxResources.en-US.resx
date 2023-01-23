@@ -1837,6 +1837,10 @@
     <value>Numeric value is too large.</value>
     <comment>Error Message.</comment>
   </data>
+  <data name="ErrTextTooLarge" xml:space="preserve">
+    <value>Expression can't be more than {0} characters. The expression is {1} characters.</value>
+    <comment>Error Message when the expression text is too long.</comment>
+  </data>
   <data name="ErrTextFormatTooLarge" xml:space="preserve">
     <value>Format string size can't be more than {0} characters.</value>
     <comment>Error Message.</comment>
@@ -5851,10 +5855,6 @@
     <value>Coercing records or tables is not supported in formula columns.</value>
     <comment>Error Message. Used in formula columns for a formula where the maker attempts record-record or table-table coercion.</comment>
   </data>
-  <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
-    <value>Formulas can't be longer than 1000 characters.</value>
-    <comment>Error Message. Used in formula columns for a formula where the text is too long.</comment>
-  </data>
   <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
     <value>Single-column tables are not supported in formula columns.</value>
     <comment>Error Message. Used in formula columns for a formula that references a single-column table.</comment>
@@ -6624,6 +6624,10 @@
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>Named formula must end with a semicolon.</value>
     <comment>A semicolon must terminate named formulas. For example, a=10;</comment>
+  </data>
+  <data name="ErrNamedFormula_MissingValue" xml:space="preserve">
+    <value>Named formula must be an expression.</value>
+    <comment>This error message shows up when Named formula is not an expression. For example, a = ;</comment>
   </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula '{0}' already exists.</value>
