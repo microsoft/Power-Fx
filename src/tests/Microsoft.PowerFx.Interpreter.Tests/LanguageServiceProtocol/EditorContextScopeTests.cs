@@ -125,6 +125,34 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
             Assert.Equal("Action1", handler._onExecuted[0]);
         }
 
+        // Calling Suggest() on intellisense doesn't need to compute errors
+        [Fact]
+        public void SuggestDoesntNeedErrors()
+        {
+            var engine = new MyEngine();
+
+            IPowerFxScope ctx = engine.CreateEditorScope();
+            var result = ctx.Suggest("1+2", 1);
+
+            Assert.Equal(0, engine.PostCheckCounter);            
+        }
+
+        private class MyEngine : Engine
+        {
+            public MyEngine()
+                : base(new PowerFxConfig())
+            {
+            }
+
+            public int PostCheckCounter = 0;
+                    
+            protected override IEnumerable<ExpressionError> PostCheck(CheckResult check)
+            {
+                PostCheckCounter++;
+                return base.PostCheck(check);
+            }
+        }
+
         [Fact]
         public void HandlerName()
         {
