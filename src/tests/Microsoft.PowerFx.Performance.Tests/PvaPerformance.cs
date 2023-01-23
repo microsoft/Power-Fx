@@ -173,6 +173,7 @@ namespace Microsoft.PowerFx.Performance.Tests
                 }
             }
 
+            displayName = null;
             return false;
         }
 
@@ -187,6 +188,7 @@ namespace Microsoft.PowerFx.Performance.Tests
                 }
             }
 
+            logicalName = null;
             return false;
         }
     }
