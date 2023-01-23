@@ -356,7 +356,7 @@ namespace Microsoft.PowerFx
                 IEnumerable<ExpressionError> bindingErrors = ExpressionError.New(binding.ErrorContainer.GetErrors(), CultureInfo);
                 _errors.AddRange(bindingErrors);
 
-                if (this.IsSuccess && !this.HasDeferredArgsWarning)
+                if (this.IsSuccess)
                 {
                     // TODO: Fix FormulaType.Build to not throw exceptions for Enum types then remove this check
                     if (binding.ResultType.Kind != DKind.Enum)
