@@ -4,13 +4,10 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using BenchmarkDotNet.Attributes;
-using BenchmarkDotNet.Configs;
 using BenchmarkDotNet.Diagnostics.Windows;
 using BenchmarkDotNet.Diagnostics.Windows.Configs;
 using BenchmarkDotNet.Jobs;
@@ -31,9 +28,13 @@ namespace Microsoft.PowerFx.Performance.Tests
     [MaxColumn]
     [SimpleJob(runtimeMoniker: RuntimeMoniker.NetCoreApp31)]
     public class PvaPerformance
-    {        
+    {
+        private const int ExpressionNumber = 100;
+
         private ParserOptions _parserOptions;
         private RecalcEngine _engine;
+        private string[] _expressions;
+        private Random _rnd;
 
         [GlobalSetup]
         public void GlobalSetup()
@@ -49,6 +50,14 @@ namespace Microsoft.PowerFx.Performance.Tests
             }
 
             _engine = new RecalcEngine(powerFxConfig);
+            _rnd = new Random();
+
+            _expressions = new string[ExpressionNumber];
+
+            for (int i = 0; i < ExpressionNumber; i++)
+            {
+                _expressions[i] = GetRandomExpression();
+            }
         }
 
         [Benchmark]
@@ -69,7 +78,7 @@ namespace Microsoft.PowerFx.Performance.Tests
         [Benchmark]
         public ParseResult PvaRecalcEngineParse()
         {
-            var expression = GetRandomExpression();
+            string expression = _expressions[_rnd.Next(0, ExpressionNumber)];
             ParseResult parseResult = _engine.Parse(expression, _parserOptions);
 
             if (!parseResult.IsSuccess)
@@ -83,7 +92,7 @@ namespace Microsoft.PowerFx.Performance.Tests
         [Benchmark]
         public CheckResult PvaRecalcEngineCheck()
         {
-            var expression = GetRandomExpression();
+            string expression = _expressions[_rnd.Next(0, ExpressionNumber)];
             CheckResult checkResult = _engine.Check(expression, _parserOptions);
 
             if (!checkResult.IsSuccess)
