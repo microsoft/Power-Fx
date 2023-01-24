@@ -11,10 +11,19 @@ namespace Microsoft.PowerFx.Core.Functions
 {
     internal class TexlFunctionSet
     {
+        // Dictionary key: function.Name
         private Dictionary<string, List<TexlFunction>> _functions;
+
+        // Dictionary key: function.LocaleInvariantName
         private Dictionary<string, List<TexlFunction>> _functionsInvariant;
+
+        // Dictionary key: function.Namespace
         private Dictionary<DPath, List<TexlFunction>> _namespaces;
+
+        // List of all function.GetRequiredEnumNames()
         private List<string> _enums;
+
+        // Cont of functions
         private int _count;
 
         internal Dictionary<string, List<TexlFunction>>.KeyCollection FunctionNames => _functions.Keys;
