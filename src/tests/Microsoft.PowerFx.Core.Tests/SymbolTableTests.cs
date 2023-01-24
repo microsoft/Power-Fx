@@ -209,21 +209,21 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.NotEqual(copyCount1, symbolTableCopy1.Functions.Count());
             Assert.NotEqual(copyCount2, symbolTableCopy2.Functions.Count());
 
-            Assert.True(symbolTableOriginal.Functions.Any("Abs"));
-            Assert.True(symbolTableOriginal.Functions.Any("Day"));
-            Assert.True(symbolTableOriginal.Functions.Any("Text"));
-            Assert.True(symbolTableOriginal.Functions.Any("Value"));
+            Assert.True(symbolTableOriginal.Functions.AnyWithName("Abs"));
+            Assert.True(symbolTableOriginal.Functions.AnyWithName("Day"));
+            Assert.True(symbolTableOriginal.Functions.AnyWithName("Text"));
+            Assert.True(symbolTableOriginal.Functions.AnyWithName("Value"));
 
-            Assert.True(symbolTableCopy1.Functions.Any("Day"));
-            Assert.True(symbolTableCopy1.Functions.Any("Text"));
-            Assert.True(symbolTableCopy1.Functions.Any("Value"));
+            Assert.True(symbolTableCopy1.Functions.AnyWithName("Day"));
+            Assert.True(symbolTableCopy1.Functions.AnyWithName("Text"));
+            Assert.True(symbolTableCopy1.Functions.AnyWithName("Value"));
 
-            Assert.True(symbolTableCopy2.Functions.Any("Abs"));
-            Assert.True(symbolTableCopy2.Functions.Any("Text"));
-            Assert.True(symbolTableCopy2.Functions.Any("Value"));
+            Assert.True(symbolTableCopy2.Functions.AnyWithName("Abs"));
+            Assert.True(symbolTableCopy2.Functions.AnyWithName("Text"));
+            Assert.True(symbolTableCopy2.Functions.AnyWithName("Value"));
 
-            Assert.False(symbolTableCopy1.Functions.Any("Abs"));
-            Assert.False(symbolTableCopy2.Functions.Any("Day"));
+            Assert.False(symbolTableCopy1.Functions.AnyWithName("Abs"));
+            Assert.False(symbolTableCopy2.Functions.AnyWithName("Day"));
 
             // Check if nothing else has been copied
             Assert.Empty(symbolTableCopy1.SymbolNames);

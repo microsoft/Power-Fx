@@ -304,7 +304,7 @@ namespace Microsoft.PowerFx.Core.Functions
             return _count != 0;
         }
 
-        internal bool Any(string name) => _functions.ContainsKey(name);
+        internal bool AnyWithName(string name) => _functions.ContainsKey(name);
 
         internal void RemoveAll(string name)
         {

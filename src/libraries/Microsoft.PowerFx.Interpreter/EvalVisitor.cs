@@ -254,9 +254,7 @@ namespace Microsoft.PowerFx
                 result = await customTexlFunc.InvokeAsync(FunctionServices, args, _cancellationToken);
             }
             else
-            {
-                // *** DO NOT USE FunctionImplementations
-                // $$$ Needs optimization
+            {               
                 if (FunctionImplementations.TryGetValue(func, out var ptr))
                 {
                     result = await ptr(this, context.IncrementStackDepthCounter(childContext), node.IRContext, args);

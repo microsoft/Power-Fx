@@ -295,18 +295,13 @@ namespace Microsoft.PowerFx.Core.Types.Enums
         {
             var missingEnums = new Dictionary<string, string>();
 
-//#pragma warning disable CS0618 // Type or member is obsolete
-            //foreach (var function in functions.Functions)
-            {                
-                foreach (var name in functions.Enums)
+            foreach (var name in functions.Enums)
+            {
+                if (!_workingEnums.ContainsKey(name) && !missingEnums.ContainsKey(name))
                 {
-                    if (!_workingEnums.ContainsKey(name) && !missingEnums.ContainsKey(name))
-                    {
-                        missingEnums.Add(name, DefaultEnums[name]);
-                    }
+                    missingEnums.Add(name, DefaultEnums[name]);
                 }
             }
-#pragma warning restore CS0618 // Type or member is obsolete
 
             foreach (var missingEnum in missingEnums)
             {

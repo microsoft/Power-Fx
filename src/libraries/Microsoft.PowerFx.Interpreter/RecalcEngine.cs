@@ -199,9 +199,8 @@ namespace Microsoft.PowerFx
             var check = new CheckWrapper(this, definition.Body, record, definition.IsImperative);
 
             var func = new UserDefinedTexlFunction(definition.Name, definition.ReturnType, definition.Parameters, check);
-
-            var exists = _symbolTable.Functions.Any(definition.Name);
-            if (exists)
+            
+            if (_symbolTable.Functions.AnyWithName(definition.Name))
             {
                 throw new InvalidOperationException($"Function {definition.Name} is already defined");
             }
