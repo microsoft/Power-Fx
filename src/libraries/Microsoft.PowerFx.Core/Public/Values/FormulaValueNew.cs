@@ -2,7 +2,9 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using Microsoft.PowerFx.Core.IR;
 
 namespace Microsoft.PowerFx.Types
@@ -120,6 +122,11 @@ namespace Microsoft.PowerFx.Types
         public static ErrorValue NewError(ExpressionError error, FormulaType type)
         {
             return new ErrorValue(IRContext.NotInSource(type), error);
+        }
+
+        public static ErrorValue NewError(IEnumerable<ExpressionError> error, FormulaType type)
+        {
+            return new ErrorValue(IRContext.NotInSource(type), error.ToList());
         }
 
         public static UntypedObjectValue New(IUntypedObject untypedObject)
