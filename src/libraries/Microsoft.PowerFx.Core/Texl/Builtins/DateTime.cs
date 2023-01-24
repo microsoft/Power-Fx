@@ -422,7 +422,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     // Arg0 should be a Time, DateTime or Date.
                     returnType = type0;
                 }
-                else if (nodeToCoercedTypeMap.TryGetValue(args[0], out var coercedType))
+                else if (nodeToCoercedTypeMap != null && nodeToCoercedTypeMap.TryGetValue(args[0], out var coercedType))
                 {
                     // Or a type that can be coerced to it
                     returnType = coercedType;
