@@ -64,6 +64,7 @@ namespace Microsoft.PowerFx.Tests
                 $"{nsType}.{nameof(QueryableTableValue)}",
                 $"{ns}.InterpreterConfigException",
                 $"{ns}.Interpreter.{nameof(NotDelegableException)}",
+                $"{ns}.Interpreter.{nameof(CustomFunctionErrorException)}",
                 $"{ns}.Interpreter.UDF.{nameof(DefineFunctionsResult)}",                               
 
                 // Services for functions. 
