@@ -32,7 +32,7 @@ namespace Microsoft.PowerFx.Core.Tests
             config.AddFunction(func);
 
             // Includes default functions 
-            var functions = config.FunctionInfos.ToArray();
+            var functions = config.FunctionInfos.ToArray(); // Obsolete API
 
             Assert.True(functions.Length > 100);
             Assert.Contains(functions, x => x.Name == func.Name);

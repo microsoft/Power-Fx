@@ -626,7 +626,9 @@ namespace Microsoft.PowerFx.Intellisense
             // TASK: 76039: Intellisense: Update intellisense to filter suggestions based on the expected type of the text being typed in UI
             Contracts.AssertValue(intellisenseData);
 
-            foreach (var function in intellisenseData.Binding.NameResolver.Functions)
+            // $$$ Needs optimization
+#pragma warning disable CS0618 // Type or member is obsolete
+            foreach (var function in intellisenseData.Binding.NameResolver.Functions.Functions)
             {
                 var qualifiedName = function.QualifiedName;
                 var highlightStart = qualifiedName.IndexOf(intellisenseData.MatchingStr, StringComparison.OrdinalIgnoreCase);
@@ -643,6 +645,7 @@ namespace Microsoft.PowerFx.Intellisense
                     }
                 }
             }
+#pragma warning restore CS0618 // Type or member is obsolete
         }
 
         /// <summary>
@@ -706,9 +709,8 @@ namespace Microsoft.PowerFx.Intellisense
 
             intellisenseData.AddCustomSuggestionsForGlobals();
 
-            // Suggest function namespaces
-            var namespaces = intellisenseData.Binding.NameResolver.Functions.Select(func => func.Namespace).Distinct();
-            foreach (var funcNamespace in namespaces)
+            // Suggest function namespaces                                        
+            foreach (var funcNamespace in intellisenseData.Binding.NameResolver.Functions.NamespaceKeys)
             {
                 if (funcNamespace == DPath.Root)
                 {

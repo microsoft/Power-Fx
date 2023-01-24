@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.PowerFx.Core.App;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Entities;
@@ -20,7 +19,7 @@ namespace Microsoft.PowerFx
     /// Composition of multiple <see cref="ReadOnlySymbolTable"/> into a single table.
     /// </summary>
     internal class ComposedReadOnlySymbolTable : ReadOnlySymbolTable, INameResolver, IGlobalSymbolNameResolver, IEnumStore
-    {        
+    {
         private readonly IEnumerable<ReadOnlySymbolTable> _symbolTables;
 
         // In priority order. 
@@ -32,7 +31,7 @@ namespace Microsoft.PowerFx
         }
 
         internal IEnumerable<ReadOnlySymbolTable> SubTables => _symbolTables;
-        
+
         internal override VersionHash VersionHash
         {
             get
@@ -60,18 +59,25 @@ namespace Microsoft.PowerFx
             return slot.Owner.GetTypeFromSlot(slot);
         }
 
+        private TexlFunctionSet<TexlFunction> _nameResolverFunctions = null;
+        private HashSet<VersionHash> _nameResolverFunctionsVersions = null;
+
         // Expose the list to aide in intellisense suggestions. 
-        IEnumerable<TexlFunction> INameResolver.Functions
+        TexlFunctionSet<TexlFunction> INameResolver.Functions
         {
             get
             {
-                foreach (INameResolver table in _symbolTables)
+                if (_nameResolverFunctions != null &&
+                    _nameResolverFunctionsVersions != null &&
+                    _nameResolverFunctionsVersions.SetEquals(_symbolTables.Select(t => t.VersionHash)))
                 {
-                    foreach (var function in table.Functions)
-                    {
-                        yield return function;
-                    }
+                    return _nameResolverFunctions;
                 }
+
+                _nameResolverFunctions = new TexlFunctionSet<TexlFunction>(_symbolTables.Select(t => t.Functions));
+                _nameResolverFunctionsVersions = new HashSet<VersionHash>(_symbolTables.Select(t => t.VersionHash));
+
+                return _nameResolverFunctions;
             }
         }
 
@@ -134,16 +140,15 @@ namespace Microsoft.PowerFx
             Contracts.Check(theNamespace.IsValid, "The namespace is invalid.");
             Contracts.CheckNonEmpty(name, "name");
 
-            // See TexlFunctionsLibrary.Lookup
-            var functionLibrary = Functions.Where(func => func.Namespace == theNamespace && name == (localeInvariant ? func.LocaleInvariantName : func.Name)); // Base filter
-            return functionLibrary;
+            return localeInvariant 
+                        ? Functions.WithInvariantName(name, theNamespace) 
+                        : Functions.WithName(name, theNamespace);            
         }
-
+        
         public IEnumerable<TexlFunction> LookupFunctionsInNamespace(DPath nameSpace)
         {
             Contracts.Check(nameSpace.IsValid, "The namespace is invalid.");
-
-            return Functions.Where(function => function.Namespace.Equals(nameSpace));
+            return Functions.WithNamespace(nameSpace);           
         }
 
         public virtual bool LookupEnumValueByInfoAndLocName(object enumInfo, DName locName, out object value)

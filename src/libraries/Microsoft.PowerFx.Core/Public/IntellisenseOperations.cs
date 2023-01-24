@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Parser;
@@ -152,8 +151,7 @@ namespace Microsoft.PowerFx.Intellisense
         // Gets all functions by identifier (possible multiple results due to overloads).
         private IEnumerable<TexlFunction> GetFunctionsByIdentifier(Identifier ident)
         {
-            return _checkResult._binding.NameResolver.Functions
-                                        .Where(fnc => fnc.Name == ident.Name && fnc.Namespace == ident.Namespace);
+            return _checkResult._binding.NameResolver.Functions.WithName(ident.Name, ident.Namespace);
         }
 
         // Parse a function name string into an identifier (namespace and name).

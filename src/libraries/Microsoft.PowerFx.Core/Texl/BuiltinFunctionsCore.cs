@@ -2,10 +2,8 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Texl.Builtins;
-using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Texl
 {
@@ -14,13 +12,17 @@ namespace Microsoft.PowerFx.Core.Texl
     // - just functions that are ported over to Language.Core
     internal class BuiltinFunctionsCore
     {
-        public static IEnumerable<TexlFunction> BuiltinFunctionsLibrary => _library;
+        // Slow API, only use for backward compatibility
+#pragma warning disable CS0618 // Type or member is obsolete        
+        public static IEnumerable<TexlFunction> BuiltinFunctionsLibrary => _library.Functions;
 
-        internal static IEnumerable<TexlFunction> TestOnly_AllBuiltinFunctions => _library.Concat(_featureGateFunctions);
+        // Slow API, only use for backward compatibility
+        internal static IEnumerable<TexlFunction> TestOnly_AllBuiltinFunctions => _library.Clone().Add(_featureGateFunctions).Functions;
+#pragma warning restore CS0618 // Type or member is obsolete
 
         // Functions in this list are shared and may show up in other hosts by default.
-        private static readonly List<TexlFunction> _library = new List<TexlFunction>(200);
-        private static readonly List<TexlFunction> _featureGateFunctions = new List<TexlFunction>();
+        internal static readonly TexlFunctionSet<TexlFunction> _library = new TexlFunctionSet<TexlFunction>();
+        private static readonly TexlFunctionSet<TexlFunction> _featureGateFunctions = new TexlFunctionSet<TexlFunction>();
 
         public static readonly TexlFunction AmPm = _library.Append(new AmPmFunction());
         public static readonly TexlFunction AmPmShort = _library.Append(new AmPmShortFunction());

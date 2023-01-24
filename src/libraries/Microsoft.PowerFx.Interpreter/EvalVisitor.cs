@@ -55,7 +55,7 @@ namespace Microsoft.PowerFx
         /// <returns></returns>
         public T GetService<T>()
         {
-            return (T)_services.GetService(typeof(T));            
+            return (T)_services.GetService(typeof(T));
         }
 
         public bool TryGetService<T>(out T result)
@@ -157,7 +157,7 @@ namespace Microsoft.PowerFx
                     }
 
                     // This may happen if the runtime symbols are missing a value and we failed to update. 
-                }    
+                }
             }
 
             // Fail?
@@ -250,6 +250,8 @@ namespace Microsoft.PowerFx
             }
             else
             {
+                // *** DO NOT USE FunctionImplementations
+                // $$$ Needs optimization
                 if (FunctionImplementations.TryGetValue(func, out var ptr))
                 {
                     var result = await ptr(this, context.IncrementStackDepthCounter(childContext), node.IRContext, args);
@@ -611,7 +613,7 @@ namespace Microsoft.PowerFx
 
         private FormulaValue GetVariableOrFail(ResolvedObjectNode node, ISymbolSlot slot)
         {
-            if (_symbolValues != null)                
+            if (_symbolValues != null)
             {
                 var value = _symbolValues.Get(slot);
                 if (value != null)

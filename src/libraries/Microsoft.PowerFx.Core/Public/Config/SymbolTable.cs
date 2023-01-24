@@ -2,7 +2,6 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Binding;
@@ -212,14 +211,23 @@ namespace Microsoft.PowerFx
         {
             Inc();
 
-            _functions.RemoveAll(func => func.Name == name);
+            _functions.RemoveAll(name);
         }
 
         internal void RemoveFunction(TexlFunction function)
         {
             Inc();
 
-            _functions.RemoveAll(func => func == function);
+            _functions.RemoveAll(function);
+        }
+
+        internal void AddFunctions(TexlFunctionSet<TexlFunction> functions)
+        {
+            Inc();
+            _functions.Add(functions);
+
+            // Add any associated enums 
+            EnumStoreBuilder?.WithRequiredEnums(functions);
         }
 
         internal void AddFunction(TexlFunction function)
@@ -228,7 +236,7 @@ namespace Microsoft.PowerFx
             _functions.Add(function);
 
             // Add any associated enums 
-            EnumStoreBuilder?.WithRequiredEnums(new List<TexlFunction>() { function });
+            EnumStoreBuilder?.WithRequiredEnums(new TexlFunctionSet<TexlFunction>(function));
         }
 
         internal EnumStoreBuilder EnumStoreBuilder
@@ -248,23 +256,11 @@ namespace Microsoft.PowerFx
 
             if (entity is IExternalOptionSet optionSet)
             {
-                nameInfo = new NameLookupInfo(
-                    BindKind.OptionSet,
-                    optionSet.Type,
-                    DPath.Root,
-                    0,
-                    optionSet,
-                    displayName);
+                nameInfo = new NameLookupInfo(BindKind.OptionSet, optionSet.Type, DPath.Root, 0, optionSet, displayName);
             }
             else if (entity is IExternalDataSource)
             {
-                nameInfo = new NameLookupInfo(
-                    BindKind.Data,
-                    entity.Type,
-                    DPath.Root,
-                    0,
-                    entity,
-                    displayName);
+                nameInfo = new NameLookupInfo(BindKind.Data, entity.Type, DPath.Root, 0, entity, displayName);
             }
             else
             {

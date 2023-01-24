@@ -37,9 +37,10 @@ namespace Microsoft.PowerFx
         /// Added on 6th December 2022.
         /// </summary>
         SupportColumnNamesAsIdentifiers = 0x8,
-        
+
         /// <summary>        
         /// All features enabled
+        /// [USE WITH CAUTION] In using this value, you expose your code to future features.
         /// </summary>
         All = ~0
     }

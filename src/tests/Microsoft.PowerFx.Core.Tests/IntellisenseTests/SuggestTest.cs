@@ -2,9 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types.Enums;
@@ -14,7 +12,7 @@ using Xunit;
 namespace Microsoft.PowerFx.Tests.IntellisenseTests
 {
     public class SuggestTests : IntellisenseTestBase
-    {      
+    {
         /// <summary>
         /// This method does the same as <see cref="Suggest"/>, but filters the suggestions by their text so
         /// that they can be more easily compared.
@@ -44,16 +42,16 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             var intellisense = Suggest(expression, config, context);
             return intellisense.Suggestions.Select(suggestion => suggestion.DisplayText.Text).ToArray();
         }
-        
+
         internal static PowerFxConfig Default => PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder().WithDefaultEnums());
 
         internal static PowerFxConfig Default_DisableRowScopeDisambiguationSyntax => PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder().WithDefaultEnums(), Features.DisableRowScopeDisambiguationSyntax);
 
         // No enums, no functions. Adding functions will add back in associated enums, so to be truly empty, ensure no functions. 
-        private PowerFxConfig EmptyEverything => PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder(), new TexlFunction[0]);
+        private PowerFxConfig EmptyEverything => PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder(), new TexlFunctionSet<TexlFunction>());
 
         // No extra enums, but standard functions (which will include some enums).
-        private PowerFxConfig MinimalEnums => PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder().WithRequiredEnums(BuiltinFunctionsCore.BuiltinFunctionsLibrary));        
+        private PowerFxConfig MinimalEnums => PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder().WithRequiredEnums(BuiltinFunctionsCore._library));
 
         /// <summary>
         /// Compares expected suggestions with suggestions made by PFx Intellisense for a given
@@ -184,9 +182,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             var config = Default;
             var actualSuggestions = SuggestStrings(expression, config);
             Assert.Equal(expectedSuggestions, actualSuggestions);
-
-            // With adjusted config 
-            AdjustConfig(config);
+            
             actualSuggestions = SuggestStrings(expression, config);
             Assert.Equal(expectedSuggestions, actualSuggestions);
         }
@@ -207,9 +203,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             var config = EmptyEverything;
             var actualSuggestions = SuggestStrings(expression, config);
             Assert.Equal(expectedSuggestions, actualSuggestions);
-
-            // With adjusted config 
-            AdjustConfig(config);
+                     
             actualSuggestions = SuggestStrings(expression, config);
             Assert.Equal(expectedSuggestions, actualSuggestions);
         }
@@ -225,24 +219,9 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             var config = MinimalEnums;
             var actualSuggestions = SuggestStrings(expression, config);
             Assert.Equal(expectedSuggestions, actualSuggestions);
-
-            // With adjusted config 
-            AdjustConfig(config);
+            
             actualSuggestions = SuggestStrings(expression, config);
             Assert.Equal(expectedSuggestions, actualSuggestions);
-        }
-
-        // Add an extra (empy) symbol table into the config and ensure we get the same results. 
-        private void AdjustConfig(PowerFxConfig config)
-        {
-            /*
-            config.SymbolTable = new SymbolTable 
-            {
-#pragma warning disable CS0618 // Type or member is obsolete
-                Parent = config.SymbolTable,
-#pragma warning restore CS0618 // Type or member is obsolete
-                DebugName = "Extra Table"
-            };*/
         }
 
         /// <summary>
@@ -272,8 +251,6 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             var actualSuggestions = SuggestStrings(expression, Default, context);
             Assert.True(actualSuggestions.Length > 0);
 
-            // With adjusted config 
-            AdjustConfig(config);
             actualSuggestions = SuggestStrings(expression, config);
             Assert.True(actualSuggestions.Length > 0);
         }
@@ -297,8 +274,6 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             var actualSuggestions = SuggestStrings(expression, config, context);
             Assert.Equal(expectedSuggestions, actualSuggestions);
 
-            // With adjusted config 
-            AdjustConfig(config);
             actualSuggestions = SuggestStrings(expression, config, context);
             Assert.Equal(expectedSuggestions, actualSuggestions);
         }
@@ -314,8 +289,6 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             var actualSuggestions = SuggestStrings(expression, config, context);
             Assert.Equal(expectedSuggestions, actualSuggestions);
 
-            // With adjusted config 
-            AdjustConfig(config);
             actualSuggestions = SuggestStrings(expression, config, context);
             Assert.Equal(expectedSuggestions, actualSuggestions);
         }
@@ -334,15 +307,13 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             var config = PowerFxConfig.BuildWithEnumStore(
                 null,
                 new EnumStoreBuilder(),
-                new TexlFunction[] { BuiltinFunctionsCore.EndsWith, BuiltinFunctionsCore.Filter, BuiltinFunctionsCore.Table });
+                new TexlFunctionSet<TexlFunction>(new[] { BuiltinFunctionsCore.EndsWith, BuiltinFunctionsCore.Filter, BuiltinFunctionsCore.Table }));
             var actualSuggestions = SuggestStrings(expression, config, lazyInstance);
             Assert.Equal(expectedSuggestions, actualSuggestions);
-            
+
             // Intellisense requires iterating the field names for some operations
             Assert.Equal(requiresExpansion, lazyInstance.EnumerableIterated);
 
-            // With adjusted config 
-            AdjustConfig(config);
             actualSuggestions = SuggestStrings(expression, config, lazyInstance);
             Assert.Equal(expectedSuggestions, actualSuggestions);
         }
@@ -398,7 +369,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             public override int GetHashCode()
             {
                 return 1;
-            }   
+            }
         }
     }
 }

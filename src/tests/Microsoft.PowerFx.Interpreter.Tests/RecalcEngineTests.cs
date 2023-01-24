@@ -9,9 +9,10 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
+using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Texl;
-using Microsoft.PowerFx.Core.Texl.Builtins;
+using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Functions;
@@ -230,7 +231,7 @@ namespace Microsoft.PowerFx.Tests
             AssertUpdate("B-->2;");
 
             // Can't set formulas, they're read only 
-            var check = engine.Check("Set(B, 12)"); 
+            var check = engine.Check("Set(B, 12)");
             Assert.False(check.IsSuccess);
 
             // Set() function triggers recalc chain. 
@@ -451,26 +452,30 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void CheckFunctionCounts()
         {
-            var engine1 = new Engine(new PowerFxConfig());
+            var config = new PowerFxConfig();
+            config.EnableParseJSONFunction();
+
+            var engine1 = new Engine(config);
 
             // Pick a function in core but not implemented in interpreter.
             var nyiFunc = BuiltinFunctionsCore.ISOWeekNum;
 
-            Assert.Contains(nyiFunc, engine1.Functions);
+#pragma warning disable CS0618 // Type or member is obsolete
+            Assert.Contains(nyiFunc, engine1.Functions.Functions);
+#pragma warning restore CS0618 // Type or member is obsolete
 
             // RecalcEngine will add the interpreter's functions. 
-            var engine2 = new RecalcEngine();
+            var engine2 = new RecalcEngine(config);
 
-            Assert.DoesNotContain(nyiFunc, engine2.Functions);
+#pragma warning disable CS0618 // Type or member is obsolete
+            Assert.DoesNotContain(nyiFunc, engine2.Functions.Functions);
+#pragma warning restore CS0618 // Type or member is obsolete
 
-            var names = engine2.GetAllFunctionNames().ToArray();
-            Assert.True(names.Length > 100);
+            Assert.True(engine2.FunctionCount > 100);
 
             // Spot check some known functions
-            Assert.Contains("Cos", names);
-            Assert.Contains("Filter", names);
-
-            Assert.Contains("Cos", names);
+            Assert.NotEmpty(engine2.Functions.WithName("Cos"));
+            Assert.NotEmpty(engine2.Functions.WithName("ParseJSON"));            
         }
 
         [Fact]
@@ -675,7 +680,9 @@ namespace Microsoft.PowerFx.Tests
             };
 
             var func = BuiltinFunctionsCore.AsType; // Function not already in engine
-            Assert.DoesNotContain(func, recalcEngine.Functions); // didn't get auto-added by engine.
+#pragma warning disable CS0618 // Type or member is obsolete
+            Assert.DoesNotContain(func, recalcEngine.Functions.Functions); // didn't get auto-added by engine.
+#pragma warning restore CS0618 // Type or member is obsolete
 
             // We can mutate config after engine is created.
             var optionSet = new OptionSet("foo", DisplayNameUtility.MakeUnique(new Dictionary<string, string>() { { "one key", "one value" } }));
@@ -683,9 +690,13 @@ namespace Microsoft.PowerFx.Tests
             config.SymbolTable.AddEntity(optionSet);
 
             Assert.True(config.TryGetVariable(new DName("foo"), out _));
-            Assert.Contains(func, recalcEngine.Functions); // function was added to the config.
+#pragma warning disable CS0618 // Type or member is obsolete
+            Assert.Contains(func, recalcEngine.Functions.Functions); // function was added to the config.
+#pragma warning restore CS0618 // Type or member is obsolete
 
-            Assert.DoesNotContain(BuiltinFunctionsCore.Abs, recalcEngine.Functions);
+#pragma warning disable CS0618 // Type or member is obsolete
+            Assert.DoesNotContain(BuiltinFunctionsCore.Abs, recalcEngine.Functions.Functions);
+#pragma warning restore CS0618 // Type or member is obsolete
         }
 
         [Fact]
@@ -695,6 +706,88 @@ namespace Microsoft.PowerFx.Tests
             config.AddFunction(BuiltinFunctionsCore.Blank);
 
             Assert.Throws<ArgumentException>(() => config.AddFunction(BuiltinFunctionsCore.Blank));
+        }
+
+        [Fact]
+        public void RecalcEngine_FunctionOrdering1()
+        {
+            var config = new PowerFxConfig(new CultureInfo("en-US"), Features.All);
+            config.AddFunction(new TestFunctionMultiply());
+            config.AddFunction(new TestFunctionSubstract());
+
+            var engine = new RecalcEngine(config);
+            var result = engine.Eval("Func(7, 11)");
+
+            Assert.IsType<NumberValue>(result);
+            
+            // Multiply function is first and a valid overload so that's the one we use as coercion is valid for this one
+            Assert.Equal(77.0, (result as NumberValue).Value);
+        }
+
+        [Fact]
+        public void RecalcEngine_FunctionOrdering2()
+        {
+            var config = new PowerFxConfig(new CultureInfo("en-US"), Features.All);
+            config.AddFunction(new TestFunctionSubstract());
+            config.AddFunction(new TestFunctionMultiply());
+
+            var engine = new RecalcEngine(config);
+            var result = engine.Eval("Func(7, 11)");
+
+            Assert.IsType<NumberValue>(result);
+            
+            // Substract function is first and a valid overload so that's the one we use as coercion is valid for this one
+            Assert.Equal(-4.0, (result as NumberValue).Value);
+        }
+
+        private class TestFunctionMultiply : CustomTexlFunction
+        {
+            public override bool IsSelfContained => true;
+
+            public override bool SupportsParamCoercion => true;
+
+            public TestFunctionMultiply()
+                : base("Func", DType.Number, DType.Number, DType.String)
+            {
+            }
+
+            public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
+            {
+                yield return new[] { TexlStrings.IsBlankArg1 };
+            }
+
+            public override Task<FormulaValue> InvokeAsync(IServiceProvider serviceProvider, FormulaValue[] args, CancellationToken cancellationToken)
+            {
+                var arg0 = args[0] as NumberValue;
+                var arg1 = args[1] as StringValue;
+
+                return Task.FromResult<FormulaValue>(NumberValue.New(arg0.Value * double.Parse(arg1.Value)));
+            }
+        }
+
+        private class TestFunctionSubstract : CustomTexlFunction
+        {
+            public override bool IsSelfContained => true;
+
+            public override bool SupportsParamCoercion => true;
+
+            public TestFunctionSubstract()
+                : base("Func", DType.Number, DType.String, DType.Number)
+            {
+            }
+
+            public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
+            {
+                yield return new[] { TexlStrings.IsBlankArg1 };
+            }
+
+            public override Task<FormulaValue> InvokeAsync(IServiceProvider serviceProvider, FormulaValue[] args, CancellationToken cancellationToken)
+            {
+                var arg0 = args[0] as StringValue;
+                var arg1 = args[1] as NumberValue;
+
+                return Task.FromResult<FormulaValue>(NumberValue.New(double.Parse(arg0.Value) - arg1.Value));
+            }
         }
 
         [Fact]
@@ -956,7 +1049,7 @@ namespace Microsoft.PowerFx.Tests
             var recordType = RecordType.Empty()
                 .Add("x", FormulaType.Number)
                 .Add("y", FormulaType.Number);
-                        
+
             var result = engine.Check("x+y", recordType);
             var eval = result.GetEvaluator();
 

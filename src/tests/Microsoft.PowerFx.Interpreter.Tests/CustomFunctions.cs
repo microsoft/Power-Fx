@@ -21,8 +21,8 @@ namespace Microsoft.PowerFx.Tests
             config.AddFunction(new TestCustomFunction());
             var engine = new RecalcEngine(config);
 
-            // Shows up in enuemeration
-            var func = engine.GetAllFunctionNames().First(name => name == "TestCustom");
+            // Shows up in enumeration
+            var func = engine.GetFunctionsByName("TestCustom");
             Assert.NotNull(func);
 
             // Can be invoked. 
@@ -48,7 +48,7 @@ namespace Microsoft.PowerFx.Tests
             var engine = new RecalcEngine(config);
 
             // Shows up in enumeration
-            var func = engine.GetAllFunctionNames().First(name => name == "TestCustom");
+            var func = engine.GetFunctionsByName("TestCustom");
             Assert.NotNull(func);
 
             // With error as arg.
@@ -89,9 +89,9 @@ namespace Microsoft.PowerFx.Tests
             var engine = new RecalcEngine(config);
 
             // Shows up in enuemeration
-            var func = engine.GetAllFunctionNames().First(name => name == "RecordTest");
+            var func = engine.GetFunctionsByName("RecordTest");
             Assert.NotNull(func);
-            var invalidFunc = engine.GetAllFunctionNames().First(name => name == "InvalidRecordTest");
+            var invalidFunc = engine.GetFunctionsByName("InvalidRecordTest");
             Assert.NotNull(invalidFunc);
 
             // Can be invoked. 
@@ -184,7 +184,7 @@ namespace Microsoft.PowerFx.Tests
             var engine = new RecalcEngine(config);
 
             // Shows up in enuemeration
-            var func = engine.GetAllFunctionNames().First(name => name == "TestCallback");
+            var func = engine.GetFunctionsByName("TestCallback");
             Assert.NotNull(func);
 
             var result = engine.Eval("TestCallback(1=2)");
@@ -210,7 +210,7 @@ namespace Microsoft.PowerFx.Tests
             var engine = new RecalcEngine(config);
 
             // Shows up in enuemeration
-            var func = engine.GetAllFunctionNames().First(name => name == "Wait");
+            var func = engine.GetFunctionsByName("Wait");
             Assert.NotNull(func);
 
             // Can be invoked. 
@@ -282,7 +282,7 @@ namespace Microsoft.PowerFx.Tests
             var engine = new RecalcEngine(config);
 
             // Shows up in enuemeration
-            var func = engine.GetAllFunctionNames().First(name => name == "MockAnd2Arg");
+            var func = engine.GetFunctionsByName("MockAnd2Arg");
             Assert.NotNull(func);
 
             // Can be invoked. 
@@ -319,7 +319,7 @@ namespace Microsoft.PowerFx.Tests
             var engine = new RecalcEngine(config);
 
             // Shows up in enumeration
-            var func = engine.GetAllFunctionNames().First(name => name == "TestCustomAsync");
+            var func = engine.GetFunctionsByName("TestCustomAsync");
             Assert.NotNull(func);
 
             // Can be invoked. 
@@ -467,7 +467,7 @@ namespace Microsoft.PowerFx.Tests
             var engine = new RecalcEngine(config);
 
             // Shows up in enumeration
-            var func = engine.GetAllFunctionNames().First(name => name == "CustomAsync");
+            var func = engine.GetFunctionsByName("CustomAsync");
             Assert.NotNull(func);
 
             // Can be invoked. 
@@ -624,8 +624,8 @@ namespace Microsoft.PowerFx.Tests
             config.AddFunction(new SetFieldStrFunction());
             var engine = new RecalcEngine(config);
 
-            var count = engine.GetAllFunctionNames().Count(name => name == "SetField");
-            Assert.Equal(1, count); // no duplicates
+            var setFieldFunctions = engine.GetFunctionsByName("SetField");
+            Assert.Equal(2, setFieldFunctions.Count); 
 
             // Duplicates?
             var result = engine.Eval(expr);
