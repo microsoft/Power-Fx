@@ -423,12 +423,24 @@ namespace Microsoft.PowerFx
             if (_info.IsAsync)
             {
                 var resultType = result.GetType().GenericTypeArguments[0];
-                result = await Unwrap(result, resultType);
+                try
+                {
+                    result = await Unwrap(result, resultType);
+                }
+                catch (CustomFunctionErrorException customFunctionErrorException)
+                {
+                    return CommonErrors.CustomError(IRContext.NotInSource(_info.RetType), customFunctionErrorException.Message);
+                }
             }
 
             var formulaResult = (FormulaValue)result;   
             
-            if (formulaResult != null && formulaResult.Type != _info.RetType)
+            if (formulaResult == null)
+            {
+                formulaResult = FormulaValue.NewBlank(_info.RetType);
+            }
+
+            if (formulaResult.Type != _info.RetType)
             {
                 return CommonErrors.CustomError(
                     formulaResult.IRContext,
@@ -436,20 +448,6 @@ namespace Microsoft.PowerFx
             }
 
             return formulaResult;
-        }
-
-        private static bool IsCompatibleType(FormulaType potentialReturnType, FormulaType returnType)
-        {
-            //if (potentialReturnType is IUntypedObject && returnType is IUntypedObject)
-            //{
-            //    return true;
-            //}
-            //else if (potentialReturnType is IUntypedObject || returnType is IUntypedObject)
-            //{
-            //    return false;
-            //}
-
-            return potentialReturnType._type == returnType._type;
         }
 
         private static async Task<FormulaValue> Unwrap(object obj, Type resultType)

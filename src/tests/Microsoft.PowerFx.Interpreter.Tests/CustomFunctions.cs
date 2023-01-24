@@ -39,18 +39,44 @@ namespace Microsoft.PowerFx.Tests
             }
         }
 
+        public class AsyncCustomFunctionError : ReflectionFunction
+        {
+            public AsyncCustomFunctionError()
+                : base("CustomFunctionError2", FormulaType.Number, FormulaType.Number)
+            {
+            }
+
+            public static async Task<NumberValue> Execute(NumberValue arg, CancellationToken cancellationToken)
+            {
+                if (arg.Value < 0)
+                {
+                    throw new CustomFunctionErrorException("arg should be greater than 0");
+                }
+                else if (arg.Value == 0)
+                {
+                    throw new NotSupportedException();
+                }
+
+                return arg;
+            }
+        }
+
         [Fact]
-        public void CustomFunctionErrorTest()
+        public async Task CustomFunctionErrorTest()
         {
             var config = new PowerFxConfig(null);
             config.AddFunction(new CustomFunctionError());
+            config.AddFunction(new AsyncCustomFunctionError());
             var engine = new RecalcEngine(config);
 
-            // Shows up in enuemeration
+            // Shows up in enumeration
             var func = engine.GetAllFunctionNames().First(name => name == "CustomFunctionError");
             Assert.NotNull(func);
 
-            // Can be invoked. 
+            var func2 = engine.GetAllFunctionNames().First(name => name == "CustomFunctionError2");
+            Assert.NotNull(func2);
+
+            // Test for non async invokes.
             var result = engine.Eval("CustomFunctionError(20)");
             Assert.IsType<NumberValue>(result);
             Assert.Equal(20d, ((NumberValue)result).Value);
@@ -60,6 +86,47 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal("arg should be greater than 0", ((ErrorValue)errorResult).Errors.First().Message);
 
             Assert.Throws<AggregateException>(() => engine.Eval("CustomFunctionError(0)"));
+
+            // Test for async invokes
+            var result2 = engine.Eval("CustomFunctionError2(20)");
+            Assert.IsType<NumberValue>(result2);
+            Assert.Equal(20d, ((NumberValue)result2).Value);
+
+            var errorResult2 = await engine.EvalAsync("CustomFunctionError2(-1)", CancellationToken.None);
+            Assert.IsType<ErrorValue>(errorResult2);
+            Assert.Equal("arg should be greater than 0", ((ErrorValue)errorResult2).Errors.First().Message);
+
+            await Assert.ThrowsAsync<NotSupportedException>(() => engine.EvalAsync("CustomFunctionError2(0)", CancellationToken.None));
+        }
+
+        public class NullFunctionReturn : ReflectionFunction
+        {
+            public NullFunctionReturn()
+                : base("NullFunction", FormulaType.Number)
+            {
+            }
+
+            public static async Task<NumberValue> Execute(CancellationToken cancellationToken)
+            {
+                return null;
+            }
+        }
+
+        [Fact]
+        public async Task NullToBlankTest()
+        {
+            var config = new PowerFxConfig(null);
+            config.AddFunction(new NullFunctionReturn());
+            var engine = new RecalcEngine(config);
+
+            // Shows up in enumeration
+            var func = engine.GetAllFunctionNames().First(name => name == "NullFunction");
+            Assert.NotNull(func);
+
+            // Can be invoked. 
+            var result = await engine.EvalAsync("NullFunction()", CancellationToken.None);
+            Assert.IsType<BlankValue>(result);
+            Assert.IsType<NumberType>(result.IRContext.ResultType);
         }
 
         [Fact]
