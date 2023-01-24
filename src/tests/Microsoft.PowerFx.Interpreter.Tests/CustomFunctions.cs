@@ -28,10 +28,12 @@ namespace Microsoft.PowerFx.Tests
             {
                 if (arg.Value < 0)
                 {
+                    // CustomFunctionErrorException is caught and converted to error value.
                     throw new CustomFunctionErrorException("arg should be greater than 0");
                 }
                 else if (arg.Value == 0)
                 {
+                    // All other exceptions are uncaught and will abort the eval.
                     throw new NotSupportedException();
                 }
 
@@ -50,10 +52,12 @@ namespace Microsoft.PowerFx.Tests
             {
                 if (arg.Value < 0)
                 {
+                    // CustomFunctionErrorException is caught and converted to error value.
                     throw new CustomFunctionErrorException("arg should be greater than 0");
                 }
                 else if (arg.Value == 0)
                 {
+                    // All other exceptions are uncaught and will abort the eval.
                     throw new NotSupportedException();
                 }
 
@@ -126,7 +130,7 @@ namespace Microsoft.PowerFx.Tests
             // Can be invoked. 
             var result = await engine.EvalAsync("NullFunction()", CancellationToken.None);
             Assert.IsType<BlankValue>(result);
-            Assert.IsType<NumberType>(result.IRContext.ResultType);
+            Assert.IsType<NumberType>(result.Type);
         }
 
         [Fact]
