@@ -16,6 +16,47 @@ namespace Microsoft.PowerFx.Connectors
 {
     internal class OpenApiParser
     {
+        public static List<ConnectorFunction> GetFunctions(OpenApiDocument openApiDocument)
+        {
+            if (openApiDocument == null)
+            {
+                throw new ArgumentNullException(nameof(openApiDocument));
+            }
+
+            if (openApiDocument.Paths == null)
+            {
+                throw new InvalidOperationException($"OpenApiDocument is invalid - has null paths");
+            }
+
+            List<ConnectorFunction> functions = new ();
+            string basePath = openApiDocument.GetBasePath();
+
+            foreach (KeyValuePair<string, OpenApiPathItem> kv in openApiDocument.Paths)
+            {
+                string path = kv.Key;
+                OpenApiPathItem ops = kv.Value;
+
+                foreach (KeyValuePair<OperationType, OpenApiOperation> kv2 in ops.Operations) 
+                {
+                    HttpMethod verb = kv2.Key.ToHttpMethod(); // "GET", "POST"
+                    OpenApiOperation op = kv2.Value;
+
+                    // We only want to keep "actions"
+                    if (op.IsTrigger())
+                    {
+                        continue;
+                    }
+                    
+                    string operationName = NormalizeOperationId(op.OperationId) ?? path.Replace("/", string.Empty);
+                    string opPath = basePath != null ? basePath + path : path;
+
+                    functions.Add(new ConnectorFunction(op, operationName, opPath, verb));            
+                }
+            }
+
+            return functions;
+        }
+
         // Parse an OpenApiDocument and return functions. 
         public static List<ServiceFunction> Parse(string functionNamespace, OpenApiDocument openApiDocument, HttpMessageInvoker httpClient = null, ICachingHttpClient cache = null)
         {
@@ -35,6 +76,7 @@ namespace Microsoft.PowerFx.Connectors
 
             if (openApiDocument.Paths == null)
             {
+                // OpenAPI spec: Paths is a required parameter
                 throw new InvalidOperationException($"OpenApiDocument is invalid - has null paths");
             }
 
@@ -114,12 +156,11 @@ namespace Microsoft.PowerFx.Connectors
             return newFunctions;
         }
        
-        private static bool IsSafeHttpMethod(HttpMethod httpMethod)
+        internal static bool IsSafeHttpMethod(HttpMethod httpMethod)
         {
             // HTTP/1.1 spec states that only GET and HEAD requests are 'safe' by default.
             // https://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html
-            return httpMethod == HttpMethod.Get ||
-                httpMethod == HttpMethod.Head;
+            return httpMethod == HttpMethod.Get || httpMethod == HttpMethod.Head;
         }
     }
 }

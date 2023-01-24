@@ -146,7 +146,7 @@ namespace Microsoft.PowerFx
                 tw.WriteLine();
             }
 
-            if (check._binding != null)
+            if (check.Binding != null)
             {
                 tw.WriteLine($"{indent}Binding: {Dump(check.ReturnType)}");
                 tw.WriteLine();
@@ -174,10 +174,10 @@ namespace Microsoft.PowerFx
             }
 
             // Symbols last - they can be very large 
-            if (check.Symbols != null)
+            if (check.AllSymbols != null)
             {
                 tw.WriteLine($"{indent}Symbols:");
-                Dump(check.Symbols, tw, indent + "   ");
+                Dump(check.AllSymbols, tw, indent + "   ");
             }
         }
     }

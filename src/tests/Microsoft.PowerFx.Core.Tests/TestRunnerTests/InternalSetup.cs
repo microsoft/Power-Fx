@@ -18,6 +18,12 @@ namespace Microsoft.PowerFx.Core.Tests
 
         internal TimeZoneInfo TimeZoneInfo { get; set; }
 
+        /// <summary>
+        /// By default, we run expressions with a memory governor to enforce a limited amount of memory. 
+        /// When true, disable memory checks and allow expression to use as much memory as it needs. 
+        /// </summary>
+        internal bool DisableMemoryChecks { get; set; }
+
         internal static InternalSetup Parse(string setupHandlerName)
         {
             var iSetup = new InternalSetup();
@@ -31,7 +37,12 @@ namespace Microsoft.PowerFx.Core.Tests
 
             foreach (var part in parts.ToArray())
             {
-                if (Enum.TryParse<TexlParser.Flags>(part, out var flag))
+                if (string.Equals(part, "DisableMemChecks", StringComparison.OrdinalIgnoreCase))
+                {
+                    iSetup.DisableMemoryChecks = true;
+                    parts.Remove(part);
+                }
+                else if (Enum.TryParse<TexlParser.Flags>(part, out var flag))
                 {
                     iSetup.Flags |= flag;
                     parts.Remove(part);

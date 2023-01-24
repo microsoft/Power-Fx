@@ -46,6 +46,8 @@ namespace Microsoft.PowerFx.Intellisense
                 throw new ArgumentNullException(nameof(args));
             }
 
+            var binding = _checkResult.Binding;
+
             foreach ((var arg, var index) in args.Select((value, index) => (value, index)))
             {
                 if (arg == null)
@@ -53,13 +55,13 @@ namespace Microsoft.PowerFx.Intellisense
                     throw new ArgumentNullException(nameof(args), $"Argument {index} is null");
                 }
 
-                if (!_checkResult._binding.IsNodeValid(arg))
+                if (!binding.IsNodeValid(arg))
                 {
                     throw new ArgumentException($"Argument {index} does not belong to this result");
                 }
             }
 
-            var types = args.Select(node => _checkResult._binding.GetType(node)).ToArray();
+            var types = args.Select(node => binding.GetType(node)).ToArray();
 
             if (!TryParseFunctionNameWithNamespace(functionName, out var fncIdent))
             {
@@ -74,10 +76,10 @@ namespace Microsoft.PowerFx.Intellisense
             {
                 var result =
                     fnc.HandleCheckInvocation(
-                        _checkResult._binding,
+                        _checkResult.Binding,
                         args.ToArray(),
                         types,
-                        _checkResult._binding.ErrorContainer,
+                        binding.ErrorContainer,
                         out var retDType,
                         out _);
 
@@ -151,7 +153,7 @@ namespace Microsoft.PowerFx.Intellisense
         // Gets all functions by identifier (possible multiple results due to overloads).
         private IEnumerable<TexlFunction> GetFunctionsByIdentifier(Identifier ident)
         {
-            return _checkResult._binding.NameResolver.Functions.WithName(ident.Name, ident.Namespace);
+            return _checkResult.Binding.NameResolver.Functions.WithName(ident.Name, ident.Namespace);
         }
 
         // Parse a function name string into an identifier (namespace and name).

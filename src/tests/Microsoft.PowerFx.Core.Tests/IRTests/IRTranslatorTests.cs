@@ -37,7 +37,7 @@ namespace Microsoft.PowerFx.Core.Tests
             var result = engine.Check(expression, parameterType);
             result.ThrowOnErrors();
             
-            (var irNode, var ruleScopeSymbol) = IRTranslator.Translate(result._binding);
+            (var irNode, var ruleScopeSymbol) = IRTranslator.Translate(result.Binding);
            
             var callNode = (CallNode)irNode;
 

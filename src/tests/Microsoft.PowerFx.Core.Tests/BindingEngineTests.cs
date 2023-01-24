@@ -138,6 +138,13 @@ namespace Microsoft.PowerFx.Tests
         }
 
         [Fact]
+        public void CheckNullRef()
+        {
+            var engine = new Engine(new PowerFxConfig());
+            Assert.Throws<ArgumentNullException>(() => engine.Check((string)null));
+        }
+
+        [Fact]
         public void CheckBindError()
         {
             var config = new PowerFxConfig();
@@ -245,7 +252,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.True(result1.IsSuccess);
 
             var parseResult2 = engine.Parse(formula, options);
-            var result2 = engine.Check(parseResult2, options: options);
+            var result2 = engine.Check(parseResult2);
             Assert.True(result2.IsSuccess);
         }
 
