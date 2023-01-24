@@ -198,7 +198,7 @@ namespace Microsoft.PowerFx.Core.Functions
             _count++;
 
             return function;
-        }        
+        }
 
         internal TexlFunctionSet Add(TexlFunctionSet functionSet)
         {
@@ -240,7 +240,7 @@ namespace Microsoft.PowerFx.Core.Functions
                     var newFuncs = functionSet.WithInvariantNameInternal(key);
 
                     if (fInvariantList.Any())
-                    {                        
+                    {
                         fInvariantList.AddRange(newFuncs);
                     }
                     else
@@ -322,7 +322,7 @@ namespace Microsoft.PowerFx.Core.Functions
                         _namespaces[f.Namespace] = fnsList;
                     }
 
-                    f.GetRequiredEnumNames().ToList().ForEach(removedEnum => _enums.Remove(removedEnum));                    
+                    f.GetRequiredEnumNames().ToList().ForEach(removedEnum => _enums.Remove(removedEnum));
                 }
             }
 
