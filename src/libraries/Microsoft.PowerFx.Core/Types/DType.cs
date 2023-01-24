@@ -862,6 +862,7 @@ namespace Microsoft.PowerFx.Core.Types
         public static DType CreateOptionSetType(IExternalOptionSet info)
         {
             Contracts.AssertValue(info);
+            Contracts.Assert(info.BackingKind is DKind.String or DKind.Number or DKind.Boolean or DKind.Color);
 
             var typedNames = new List<TypedName>();
 
@@ -3153,7 +3154,7 @@ namespace Microsoft.PowerFx.Core.Types
                     isSafe = Kind != DKind.String;
                     doesCoerce = Kind == DKind.String ||
                                  Number.Accepts(this) ||
-                                 (Kind == DKind.OptionSetValue && OptionSetInfo != null && OptionSetInfo.IsBooleanValued);
+                                 (Kind == DKind.OptionSetValue && OptionSetInfo != null && OptionSetInfo.IsBooleanValued());
                     break;
                 case DKind.DateTime:
                 case DKind.Date:
@@ -3200,7 +3201,7 @@ namespace Microsoft.PowerFx.Core.Types
                 case DKind.Enum:
                     return CoercesTo(typeDest.GetEnumSupertype(), out isSafe, out coercionType, out schemaDifference, out schemaDifferenceType);
                 case DKind.OptionSetValue:
-                    doesCoerce = (typeDest.OptionSetInfo?.IsBooleanValued ?? false) && Kind == DKind.Boolean && !isTopLevelCoercion;
+                    doesCoerce = (typeDest.OptionSetInfo?.IsBooleanValued() ?? false) && Kind == DKind.Boolean && !isTopLevelCoercion;
                     break;
             }
 

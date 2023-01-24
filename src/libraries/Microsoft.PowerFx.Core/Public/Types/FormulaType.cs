@@ -155,7 +155,7 @@ namespace Microsoft.PowerFx.Types
                 case DKind.DateTimeNoTimeZone: return DateTimeNoTimeZone;
 
                 case DKind.OptionSetValue:
-                    var isBoolean = type.OptionSetInfo?.IsBooleanValued;
+                    var isBoolean = type.OptionSetInfo?.IsBooleanValued();
                     if (isBoolean.HasValue && isBoolean.Value)
                     {
                         return Boolean;

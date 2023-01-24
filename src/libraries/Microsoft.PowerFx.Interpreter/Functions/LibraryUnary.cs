@@ -460,11 +460,39 @@ namespace Microsoft.PowerFx.Functions
             return new DateTimeValue(irContext, date);
         }
 
-        public static FormulaValue OptionSetValueToString(IRContext irContext, OptionSetValue[] args)
+        public static StringValue OptionSetValueToString(IRContext irContext, OptionSetValue[] args)
         {
             var optionSet = args[0];
-            var displayName = optionSet.DisplayName;
-            return new StringValue(irContext, displayName);
+            if (optionSet.ExecutionValue is string evalValue)
+            {                
+                return new StringValue(irContext, evalValue);
+            }
+
+            return new StringValue(irContext, optionSet.DisplayName);
+        }
+        
+        public static FormulaValue OptionSetValueToNumber(IRContext irContext, OptionSetValue[] args)
+        {
+            var optionSet = args[0];
+            if (optionSet.ExecutionValue is double evalValue)
+            {                
+                return new NumberValue(irContext, evalValue);
+            }
+
+            // Type checker should not attempt to coerce a non-number-backed option set to a number.
+            return CommonErrors.UnreachableCodeError(irContext);
+        }
+
+        public static FormulaValue OptionSetValueToBoolean(IRContext irContext, OptionSetValue[] args)
+        {
+            var optionSet = args[0];
+            if (optionSet.ExecutionValue is string evalValue)
+            {                
+                return new StringValue(irContext, evalValue);
+            }
+
+            // Type checker should not attempt to coerce a non-boolean-backed option set to a boolean.
+            return CommonErrors.UnreachableCodeError(irContext);
         }
         #endregion
     }

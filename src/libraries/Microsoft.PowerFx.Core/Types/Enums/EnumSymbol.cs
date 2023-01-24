@@ -6,30 +6,43 @@ using System.Linq;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core.Types.Enums
 {
     /// <summary>
     /// Entity info that respresents an enum, such as "Align" or "Font".
     /// </summary>
-    internal sealed class EnumSymbol
+    internal sealed class EnumSymbol : IExternalOptionSet
     {
+        public DName EntityName { get; }
+
         public DType EnumType { get; }
+                
+        public DType OptionSetType { get; }
 
         /// <summary>
-        /// The name for the enum.
+        /// Formula Type corresponding to this Enum.
+        /// Use in function declarations, etc to refer to this type.
         /// </summary>
-        public string Name { get; set; }
+        public OptionSetValueType FormulaType { get; }
 
-        public IEnumerable<string> Members => EnumType.GetAllNames(DPath.Root).Select(member => member.Name.Value);
+        public DKind BackingKind => EnumType.EnumSuperkind;
+
+        public DisplayNameProvider DisplayNameProvider => DisabledDisplayNameProvider.Instance;
+
+        public IEnumerable<DName> OptionNames => EnumType.GetAllNames(DPath.Root).Select(typedName => typedName.Name);
 
         public EnumSymbol(DName name, DType enumSpec)
         {
             Contracts.AssertValid(name);
             Contracts.Assert(enumSpec.IsEnum);
 
-            Name = name;
+            EntityName = name;
             EnumType = enumSpec;
+            
+            FormulaType = new OptionSetValueType(this);
+            OptionSetType = DType.CreateOptionSetType(this);
         }
 
         /// <summary>
@@ -43,5 +56,26 @@ namespace Microsoft.PowerFx.Core.Types.Enums
 
             return EnumType.TryGetEnumValue(new DName(unqualifiedName), out value);
         }
+
+        public bool TryGetValue(DName fieldName, out OptionSetValue optionSetValue)
+        {
+            if (!TryLookupValueByName(fieldName, out var value))
+            {
+                optionSetValue = null;
+                return false;
+            }
+
+            optionSetValue = new OptionSetValue(fieldName, FormulaType, value);
+            return true;
+        }
+
+        public bool IsConvertingDisplayNameMapping => false;
+
+        /// <summary>
+        /// Don't access the type of an EnumSymbol. They should always be accesed via either
+        /// <see cref="EnumType"/> or <see cref="OptionSetType"/> depending on the value of 
+        /// <see cref="Features.StronglyTypedBuiltinEnums"/>.
+        /// </summary>
+        public DType Type => throw new System.NotSupportedException("Don't access the type of an EnumSymbol directly, it depends on the value of a feature flag");
     }
 }

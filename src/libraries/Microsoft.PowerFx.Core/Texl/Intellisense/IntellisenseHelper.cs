@@ -753,7 +753,7 @@ namespace Microsoft.PowerFx.Intellisense
             foreach (var enumInfo in intellisenseData.EnumSymbols)
             {
                 var enumType = enumInfo.EnumType;
-                var enumName = enumInfo.Name;
+                var enumName = enumInfo.EntityName.Value;
 
                 // TASK: 76039: Intellisense: Update intellisense to filter suggestions based on the expected type of the text being typed in UI
                 AddSuggestion(intellisenseData, enumName, SuggestionKind.Enum, SuggestionIconKind.Other, enumType, requiresSuggestionEscaping: true);

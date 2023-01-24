@@ -159,7 +159,7 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
         internal virtual bool DoesUnqualifiedEnumNameCollide(string name)
         {
             return _enumStore.EnumSymbols
-                .Where(enumSymbol => enumSymbol.Members.Any(member => member == name))
+                .Where(enumSymbol => enumSymbol.OptionNames.Any(member => member == name))
                 .Any();
         }
 
@@ -190,7 +190,7 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
         {
             Contracts.AssertValue(name);
 
-            symbol = EnumSymbols.Where(symbol => symbol.Name == name).FirstOrDefault();
+            symbol = EnumSymbols.Where(symbol => symbol.EntityName.Value == name).FirstOrDefault();
             return symbol != null;
         }
 

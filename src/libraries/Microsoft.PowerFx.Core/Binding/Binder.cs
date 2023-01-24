@@ -20,6 +20,7 @@ using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
@@ -2819,6 +2820,14 @@ namespace Microsoft.PowerFx.Core.Binding
                 if (lookupType.IsDeferred)
                 {
                     _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Warning, node, TexlStrings.WarnDeferredType);
+                }
+
+                // If we retrieved a builtin enum, use the option set type instead of the weaker enum type
+                if (_features.HasFlag(Features.StronglyTypedBuiltinEnums) &&
+                    lookupInfo.Kind == BindKind.Enum &&
+                    lookupInfo.Data is EnumSymbol enumSymbol)
+                {
+                    lookupType = enumSymbol.OptionSetType;
                 }
 
                 // Make a note of this global's type, as identifier by the resolver.

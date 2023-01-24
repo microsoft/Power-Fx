@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
 
@@ -19,10 +20,18 @@ namespace Microsoft.PowerFx.Core.Entities
         /// </summary>
         IEnumerable<DName> OptionNames { get; }
                 
-        bool IsBooleanValued { get; }
+        DKind BackingKind { get; }
 
         bool IsConvertingDisplayNameMapping { get; }
 
         bool TryGetValue(DName fieldName, out OptionSetValue optionSetValue);
+    }
+
+    internal static class OptionSetExtensions
+    {
+        public static bool IsBooleanValued(this IExternalOptionSet optionSet)
+        {
+            return optionSet.BackingKind == DKind.Boolean;
+        }
     }
 }
