@@ -74,10 +74,14 @@ namespace Microsoft.PowerFx.Tests
             var engine = new RecalcEngine(config);
 
             // Shows up in enumeration
+#pragma warning disable CS0618 // Type or member is obsolete
             var func = engine.GetAllFunctionNames().First(name => name == "CustomFunctionError");
+#pragma warning restore CS0618 // Type or member is obsolete
             Assert.NotNull(func);
 
+#pragma warning disable CS0618 // Type or member is obsolete
             var func2 = engine.GetAllFunctionNames().First(name => name == "CustomFunctionError2");
+#pragma warning restore CS0618 // Type or member is obsolete
             Assert.NotNull(func2);
 
             // Test for non async invokes.
@@ -124,7 +128,9 @@ namespace Microsoft.PowerFx.Tests
             var engine = new RecalcEngine(config);
 
             // Shows up in enumeration
+#pragma warning disable CS0618 // Type or member is obsolete
             var func = engine.GetAllFunctionNames().First(name => name == "NullFunction");
+#pragma warning restore CS0618 // Type or member is obsolete
             Assert.NotNull(func);
 
             // Can be invoked. 
