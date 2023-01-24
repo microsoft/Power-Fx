@@ -79,7 +79,7 @@ namespace Microsoft.PowerFx.Core.Functions
         {
             if (functions == null)
             {
-                throw new ArgumentNullException($"{nameof(functions)} cannot be null", nameof(functions));
+                throw new ArgumentNullException(nameof(functions));
             }
 
             foreach (var func in functions)
@@ -111,7 +111,7 @@ namespace Microsoft.PowerFx.Core.Functions
         {
             if (functionSets == null)
             {
-                throw new ArgumentNullException($"{nameof(functionSets)} cannot be null", nameof(functionSets));
+                throw new ArgumentNullException(nameof(functionSets));
             }
 
             foreach (var functionSet in functionSets)
