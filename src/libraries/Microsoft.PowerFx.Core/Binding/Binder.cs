@@ -3270,8 +3270,11 @@ namespace Microsoft.PowerFx.Core.Binding
                         return;
                     }
 
-                    // We block the property access usage for scoped component properties.
-                    if (template.IsComponent && property.IsScopeVariable)
+                    // We block the property access usage for scoped component properties or functional properties
+                    // TODO remove feature gate when ECS flag is completely rolled out
+                    if (template.IsComponent &&
+                        (property.IsScopeVariable ||
+                        ((_txb.Document?.Properties?.EnabledFeatures?.IsEnhancedComponentFunctionPropertyEnabled ?? false) && property.IsScopedProperty)))
                     {
                         SetDottedNameError(node, TexlStrings.ErrInvalidPropertyReference);
                         return;

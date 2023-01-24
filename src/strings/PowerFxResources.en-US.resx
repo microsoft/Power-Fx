@@ -4293,10 +4293,10 @@
     <comment>Error Message.</comment>
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
-    <value>This error appears when a formula refers to component behavior properties with invalid syntax. (For example, Component.OnCustomChange instead of Component.OnCustomChange())</value>
+    <value>This error appears when a formula refers to component function properties with invalid syntax. (For example, Component.CustomFunction instead of Component.CustomFunction())</value>
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
-    <value>Use correct syntax to refer to component behavior property. For example, Component.OnCustomChange()</value>
+    <value>Use correct syntax to refer to component function property. For example, Component.CustomFunction()</value>
     <comment>1 How to fix the error. </comment>
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_Link_1" xml:space="preserve">
