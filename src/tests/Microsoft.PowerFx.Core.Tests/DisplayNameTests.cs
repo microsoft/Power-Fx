@@ -250,6 +250,40 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             }
         }
 
+        // Display name with symbol tables 
+        [Theory]
+        [InlineData("ThisRecord.new_field", "ThisRecord.Field")]
+        [InlineData("First(crf_table).new_field", "First(Table).Field")]
+        [InlineData("123.456", "123,456")] // culture toke
+        public void DisplayNames(string logical, string display)
+        {
+            // Simulate symbols like dataverse. 
+            var r1 = RecordType.Empty()
+              .Add(new NamedFormulaType("new_field", FormulaType.Number, "Field"));
+
+            var rowScopeSymbols = ReadOnlySymbolTable.NewFromRecord(r1, allowThisRecord: true);
+            
+            var globalSymbols = new SymbolTable { DebugName = "Globals" };
+            var tableType = r1.ToTable();
+            globalSymbols.AddVariable("crf_table", tableType, displayName: "Table");
+
+            var allSymbols = ReadOnlySymbolTable.Compose(rowScopeSymbols, globalSymbols);
+
+            var frCultureOpts = new ParserOptions { Culture = new CultureInfo("fr-FR") };
+
+            var engine = new Engine();
+            var check = new CheckResult(engine)
+                .SetText(display, parserOptions: frCultureOpts)
+                .SetBindingInfo(allSymbols);
+
+            check.ApplyBinding();
+            Assert.True(check.IsSuccess);
+
+            var invariant = check.ApplyGetInvariant();
+
+            Assert.Equal(logical, invariant);
+        }
+
         [Fact]
         public void ConvertToDisplayNamesNoNames()
         {

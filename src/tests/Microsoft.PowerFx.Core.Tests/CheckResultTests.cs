@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
@@ -12,6 +13,10 @@ namespace Microsoft.PowerFx.Core.Tests
 {
     public class CheckResultTests
     {
+        // A non-default culture that  uses comma as a decimal separator
+        private static readonly CultureInfo _frCulture = new CultureInfo("fr-FR");
+        private static readonly ParserOptions _frCultureOpts = new ParserOptions { Culture = _frCulture };
+
         [Fact]
         public void Ctors()
         {
@@ -168,10 +173,7 @@ namespace Microsoft.PowerFx.Core.Tests
         public void ParserOptions()
         {
             var check = new CheckResult(new Engine());
-            var opts = new ParserOptions
-            {
-                Culture = new System.Globalization.CultureInfo("fr-FR")
-            };
+            var opts = _frCultureOpts;
             check.SetText("1,234", opts); // , is decimal separator for fr-FR.
 
             var parse = check.ApplyParse();
@@ -279,6 +281,48 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.False(check.IsSuccess);
 
             Assert.Throws<InvalidOperationException>(() => check.ApplyIR());
+        }
+
+        // CheckResult properly wired up to invariant translator. 
+        // More tests at DisplayNameTests
+        [Fact]
+        public void TestApplyGetInvariant()
+        {
+            var check = new CheckResult(new Engine());
+
+            Assert.Throws<InvalidOperationException>(() => check.ApplyGetInvariant());
+
+            var r1 = RecordType.Empty()
+              .Add(new NamedFormulaType("new_field", FormulaType.Number, "Field"));
+
+            // display name: Field --> new_field
+            // lexer locale: 2,3 --> 2.3
+            check.SetText("Field + 2,3", _frCultureOpts);
+            Assert.Throws<InvalidOperationException>(() => check.ApplyGetInvariant());
+
+            check.SetBindingInfo(r1);
+            var invariant = check.ApplyGetInvariant();
+
+            Assert.Equal("new_field + 2.3", invariant);
+        }
+
+        // CheckResult properly wired up to Apply logging. 
+        [Theory]
+        [InlineData("123+abc", "#$number$# + #$firstname$#", true)] // display names
+        [InlineData("123+", "#$number$# + #$error$#", false)] // error 
+        [InlineData("123,456", "#$number$#", true)] // locales 
+        [InlineData("Power(2,3)", "Power(#$number$#)", true)] // functions aren't Pii
+        public void TestApplyGetLogging(string expr, string execptedLog, bool success)
+        {
+            var check = new CheckResult(new Engine());
+
+            Assert.Throws<InvalidOperationException>(() => check.ApplyGetLogging());
+
+            // Only requires text, not binding
+            check.SetText(expr, _frCultureOpts);
+            var log = check.ApplyGetLogging();
+            Assert.Equal(success, check.IsSuccess);
+            Assert.Equal(execptedLog, log);
         }
     }
 }
