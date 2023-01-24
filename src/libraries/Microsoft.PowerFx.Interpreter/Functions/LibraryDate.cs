@@ -60,6 +60,9 @@ namespace Microsoft.PowerFx.Functions
                 case DateValue dv:
                     datetime = dv.Value;
                     break;
+                case TimeValue tv:
+                    datetime = _epoch.Add(tv.Value);
+                    break;
                 default:
                     return CommonErrors.RuntimeTypeMismatch(irContext);
             }
@@ -133,6 +136,10 @@ namespace Microsoft.PowerFx.Functions
                 if (irContext.ResultType._type.Kind == Core.Types.DKind.Date)
                 {
                     return new DateValue(irContext, newDate);
+                }
+                else if (irContext.ResultType._type.Kind == Core.Types.DKind.Time)
+                {
+                    return new TimeValue(irContext, newDate.Subtract(_epoch));
                 }
                 else
                 {

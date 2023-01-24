@@ -417,10 +417,15 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             if (fValid)
             {
-                // Arg0 should be either a DateTime or Date.
-                if (type0.Kind == DKind.Date || type0.Kind == DKind.DateTime)
+                if (type0.Kind == DKind.Date || type0.Kind == DKind.DateTime || type0.Kind == DKind.Time)
                 {
+                    // Arg0 should be a Time, DateTime or Date.
                     returnType = type0;
+                }
+                else if (nodeToCoercedTypeMap.TryGetValue(args[0], out var coercedType))
+                {
+                    // Or a type that can be coerced to it
+                    returnType = coercedType;
                 }
                 else
                 {
@@ -488,6 +493,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 {
                     var inputColumn = type0.GetNames(DPath.Root).Single();
                     var resultColumnType = inputColumn.Type;
+                    if (nodeToCoercedTypeMap != null && nodeToCoercedTypeMap.TryGetValue(args[0], out var coercedType))
+                    {
+                        resultColumnType = coercedType.GetColumnTypeFromSingleColumnTable();
+                    }
+
                     var resultColumnName = context.Features.HasFlag(Features.ConsistentOneColumnTableResult)
                         ? ColumnName_Value
                         : inputColumn.Name;
@@ -496,13 +506,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
             else
             {
-                if (type0.Kind == DKind.DateTime || type0.Kind == DKind.Date)
+                if (type0.Kind == DKind.DateTime || type0.Kind == DKind.Date || type0.Kind == DKind.Time)
                 {
                     returnType = DType.CreateTable(new TypedName(type0, GetOneColumnTableResultName(context.Features)));
                 }
                 else if (type0.CoercesTo(DType.DateTime))
                 {
                     CollectionUtils.Add(ref nodeToCoercedTypeMap, args[0], DType.DateTime);
+                    returnType = DType.CreateTable(new TypedName(DType.DateTime, GetOneColumnTableResultName(context.Features)));
                 }
                 else
                 {
