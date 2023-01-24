@@ -291,7 +291,7 @@ namespace Microsoft.PowerFx.Core.Types.Enums
         private Dictionary<string, DType> _enumTypes;
 
         #region Internal methods
-        internal EnumStoreBuilder WithRequiredEnums(TexlFunctionSet<TexlFunction> functions)
+        internal EnumStoreBuilder WithRequiredEnums(TexlFunctionSet functions)
         {
             var missingEnums = new Dictionary<string, string>();
 

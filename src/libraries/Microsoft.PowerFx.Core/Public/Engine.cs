@@ -58,7 +58,7 @@ namespace Microsoft.PowerFx
 
         // By default, we pull the core functions. 
         // These can be overridden. 
-        internal TexlFunctionSet<TexlFunction> Functions => CreateResolverInternal().Functions;
+        internal TexlFunctionSet Functions => CreateResolverInternal().Functions;
 
         /// <summary>
         /// Get all functions from the config and symbol tables. 
@@ -74,10 +74,10 @@ namespace Microsoft.PowerFx
         public IEnumerable<string> GetAllFunctionNames()
 #pragma warning restore CA1024 // Use properties where appropriate
         {
-            return Functions.Keys;
+            return Functions.FunctionNames;
         }
 
-        internal List<TexlFunction> GetFunctionsByName(string name) => Functions.WithName(name);
+        internal IEnumerable<TexlFunction> GetFunctionsByName(string name) => Functions.WithName(name);
 
         internal int FunctionCount => Functions.Count();
 

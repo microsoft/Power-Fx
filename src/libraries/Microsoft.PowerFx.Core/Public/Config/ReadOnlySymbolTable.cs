@@ -135,7 +135,7 @@ namespace Microsoft.PowerFx
 
         // Helper to create a ReadOnly symbol table around a set of core functions.
         // Important that this is readonly so that it can be safely shared across engines. 
-        internal static ReadOnlySymbolTable NewDefault(TexlFunctionSet<TexlFunction> coreFunctions)
+        internal static ReadOnlySymbolTable NewDefault(TexlFunctionSet coreFunctions)
         {
             var s = new SymbolTable
             {
@@ -169,7 +169,7 @@ namespace Microsoft.PowerFx
 
         internal DisplayNameProvider _environmentSymbolDisplayNameProvider = new SingleSourceDisplayNameProvider();
 
-        private protected readonly TexlFunctionSet<TexlFunction> _functions = new TexlFunctionSet<TexlFunction>();
+        private protected readonly TexlFunctionSet _functions = new TexlFunctionSet();
 
         // Which enums are available. 
         // These do not compose - only bottom one wins. 
@@ -199,9 +199,9 @@ namespace Microsoft.PowerFx
 
         IEnumerable<EnumSymbol> IEnumStore.EnumSymbols => GetEnumSymbolSnapshot;
 
-        internal TexlFunctionSet<TexlFunction> Functions => ((INameResolver)this).Functions;
+        internal TexlFunctionSet Functions => ((INameResolver)this).Functions;
 
-        TexlFunctionSet<TexlFunction> INameResolver.Functions => _functions;
+        TexlFunctionSet INameResolver.Functions => _functions;
 
         IEnumerable<KeyValuePair<string, NameLookupInfo>> IGlobalSymbolNameResolver.GlobalSymbols => _variables;
 

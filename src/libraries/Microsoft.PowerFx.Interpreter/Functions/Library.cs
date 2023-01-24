@@ -11,7 +11,6 @@ using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
-using Microsoft.PowerFx.Interpreter.Functions;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Functions
@@ -41,19 +40,29 @@ namespace Microsoft.PowerFx.Functions
 
         public static IEnumerable<TexlFunction> FunctionList => FunctionImplementations.Keys;
 
-        public static readonly IReadOnlyDictionary<TexlFunction, AsyncFunctionPtr> FunctionImplementations;
-
-        internal static readonly TexlFunctionSet<TexlFunctionImplementation> TexlFunctionImplementations = new TexlFunctionSet<TexlFunctionImplementation>();
+        public static readonly IReadOnlyDictionary<TexlFunction, AsyncFunctionPtr> FunctionImplementations;        
 
         static Library()
         {
-            TexlFunctionImplementations.Add(SimpleFunctionImplementations.Select(f => new TexlFunctionImplementation(f.Key, f.Value)));
-            TexlFunctionImplementations.Add(SimpleFunctionTabularOverloadImplementations.Select(f => new TexlFunctionImplementation(f.Key, f.Value)));
-            TexlFunctionImplementations.Add(SimpleFunctionMultiArgsTabularOverloadImplementations.Select(f => new TexlFunctionImplementation(f.Key, f.Value)));
+            var allFunctions = new Dictionary<TexlFunction, AsyncFunctionPtr>();
+            foreach (var func in SimpleFunctionImplementations)
+            {
+                allFunctions.Add(func.Key, func.Value);
+            }
 
-#pragma warning disable CS0618 // Type or member is obsolete
-            FunctionImplementations = TexlFunctionImplementations.Functions.ToDictionary(tfi => tfi.Function, tfi => tfi.FunctionPtr);
-#pragma warning restore CS0618 // Type or member is obsolete
+            foreach (var func in SimpleFunctionTabularOverloadImplementations)
+            {
+                Contracts.Assert(allFunctions.Any(f => f.Key.Name == func.Key.Name), "It needs to be an overload");
+                allFunctions.Add(func.Key, func.Value);
+            }
+
+            foreach (var func in SimpleFunctionMultiArgsTabularOverloadImplementations)
+            {
+                Contracts.Assert(allFunctions.Any(f => f.Key.Name == func.Key.Name), "It needs to be an overload");
+                allFunctions.Add(func.Key, func.Value);
+            }
+
+            FunctionImplementations = allFunctions;
         }
 
         // Some TexlFunctions are overloaded

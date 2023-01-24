@@ -32,7 +32,7 @@ using IRCallNode = Microsoft.PowerFx.Core.IR.Nodes.CallNode;
 namespace Microsoft.PowerFx.Core.Functions
 {
     [ThreadSafeImmutable]
-    internal abstract class TexlFunction : IFunction, ITexlFunction
+    internal abstract class TexlFunction : IFunction
     {
         // Column name when Features.ConsistentOneColumnTableResult is enabled.
         public const string ColumnName_ValueStr = "Value";

@@ -625,7 +625,7 @@ namespace Microsoft.PowerFx.Tests
             var engine = new RecalcEngine(config);
 
             var setFieldFunctions = engine.GetFunctionsByName("SetField");
-            Assert.Equal(2, setFieldFunctions.Count); 
+            Assert.Equal(2, setFieldFunctions.Count()); 
 
             // Duplicates?
             var result = engine.Eval(expr);

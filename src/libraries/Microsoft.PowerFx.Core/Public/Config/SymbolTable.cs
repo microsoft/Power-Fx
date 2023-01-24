@@ -221,7 +221,7 @@ namespace Microsoft.PowerFx
             _functions.RemoveAll(function);
         }
 
-        internal void AddFunctions(TexlFunctionSet<TexlFunction> functions)
+        internal void AddFunctions(TexlFunctionSet functions)
         {
             Inc();
             _functions.Add(functions);
@@ -236,7 +236,7 @@ namespace Microsoft.PowerFx
             _functions.Add(function);
 
             // Add any associated enums 
-            EnumStoreBuilder?.WithRequiredEnums(new TexlFunctionSet<TexlFunction>(function));
+            EnumStoreBuilder?.WithRequiredEnums(new TexlFunctionSet(function));
         }
 
         internal EnumStoreBuilder EnumStoreBuilder

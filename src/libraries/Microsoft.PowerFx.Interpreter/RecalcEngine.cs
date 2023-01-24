@@ -50,7 +50,7 @@ namespace Microsoft.PowerFx
         }
 
         // Set of default functions supported by the interpreter. 
-        private static readonly ReadOnlySymbolTable _interpreterSupportedFunctions = ReadOnlySymbolTable.NewDefault(Library.TexlFunctionImplementations.ToTexlFunctions());
+        private static readonly ReadOnlySymbolTable _interpreterSupportedFunctions = ReadOnlySymbolTable.NewDefault(Library.FunctionList.ToTexlFunctionSet());
 
         // For internal testing
         internal INameResolver TestCreateResolver()

@@ -105,12 +105,12 @@ namespace Microsoft.PowerFx
             return BuildWithEnumStore(cultureInfo, enumStoreBuilder, BuiltinFunctionsCore._library, features: features);
         }
 
-        internal static PowerFxConfig BuildWithEnumStore(CultureInfo cultureInfo, EnumStoreBuilder enumStoreBuilder, TexlFunctionSet<TexlFunction> coreFunctions)
+        internal static PowerFxConfig BuildWithEnumStore(CultureInfo cultureInfo, EnumStoreBuilder enumStoreBuilder, TexlFunctionSet coreFunctions)
         {
             return BuildWithEnumStore(cultureInfo, enumStoreBuilder, coreFunctions, Features.None);
         }
 
-        internal static PowerFxConfig BuildWithEnumStore(CultureInfo cultureInfo, EnumStoreBuilder enumStoreBuilder, TexlFunctionSet<TexlFunction> coreFunctions, Features features)
+        internal static PowerFxConfig BuildWithEnumStore(CultureInfo cultureInfo, EnumStoreBuilder enumStoreBuilder, TexlFunctionSet coreFunctions, Features features)
         {
             var config = new PowerFxConfig(cultureInfo, enumStoreBuilder, features);
 
@@ -170,7 +170,7 @@ namespace Microsoft.PowerFx
             SymbolTable.AddFunction(function);
         }
 
-        internal void AddFunctions(TexlFunctionSet<TexlFunction> functionSet)
+        internal void AddFunctions(TexlFunctionSet functionSet)
         {
             SymbolTable.AddFunctions(functionSet);
         }

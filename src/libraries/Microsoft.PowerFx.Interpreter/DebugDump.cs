@@ -56,12 +56,11 @@ namespace Microsoft.PowerFx
                 {
                     tw.WriteLine();
                     tw.WriteLine($"{indent} Functions ({symbolTable.Functions.Count()}) total:");
-#pragma warning disable CS0618 // Type or member is obsolete
-                    foreach (var func in symbolTable.Functions.Functions)
+
+                    foreach (var funcName in symbolTable.Functions.FunctionNames)
                     {
-                        tw.WriteLine($"{indent} {func.Name}");
+                        tw.WriteLine($"{indent} {funcName}");
                     }
-#pragma warning restore CS0618 // Type or member is obsolete
                 }
             }
 

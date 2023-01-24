@@ -2,6 +2,8 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections.Generic;
+using Microsoft.PowerFx.Core.Functions;
 
 namespace Microsoft.PowerFx.Functions
 {
@@ -27,6 +29,18 @@ namespace Microsoft.PowerFx.Functions
 
             // ambiguous times (like 5 Nov 2023 01:10:00 is ambiguous in PST timezone) will be considered valid
             return true;
+        }
+
+        internal static TexlFunctionSet ToTexlFunctionSet(this IEnumerable<TexlFunction> functions)
+        {
+            TexlFunctionSet tfs = new TexlFunctionSet();
+
+            foreach (TexlFunction function in functions)
+            {
+                tfs.Add(function);
+            }
+
+            return tfs;
         }
     }
 }

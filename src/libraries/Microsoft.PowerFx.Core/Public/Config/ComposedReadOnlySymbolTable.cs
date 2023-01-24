@@ -59,11 +59,11 @@ namespace Microsoft.PowerFx
             return slot.Owner.GetTypeFromSlot(slot);
         }
 
-        private TexlFunctionSet<TexlFunction> _nameResolverFunctions = null;
+        private TexlFunctionSet _nameResolverFunctions = null;
         private HashSet<VersionHash> _nameResolverFunctionsVersions = null;
 
         // Expose the list to aide in intellisense suggestions. 
-        TexlFunctionSet<TexlFunction> INameResolver.Functions
+        TexlFunctionSet INameResolver.Functions
         {
             get
             {
@@ -74,7 +74,7 @@ namespace Microsoft.PowerFx
                     return _nameResolverFunctions;
                 }
 
-                _nameResolverFunctions = new TexlFunctionSet<TexlFunction>(_symbolTables.Select(t => t.Functions));
+                _nameResolverFunctions = new TexlFunctionSet(_symbolTables.Select(t => t.Functions));
                 _nameResolverFunctionsVersions = new HashSet<VersionHash>(_symbolTables.Select(t => t.VersionHash));
 
                 return _nameResolverFunctions;

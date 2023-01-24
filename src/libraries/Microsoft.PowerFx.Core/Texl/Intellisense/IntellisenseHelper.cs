@@ -710,7 +710,7 @@ namespace Microsoft.PowerFx.Intellisense
             intellisenseData.AddCustomSuggestionsForGlobals();
 
             // Suggest function namespaces                                        
-            foreach (var funcNamespace in intellisenseData.Binding.NameResolver.Functions.NamespaceKeys)
+            foreach (var funcNamespace in intellisenseData.Binding.NameResolver.Functions.Namespaces)
             {
                 if (funcNamespace == DPath.Root)
                 {

@@ -16,10 +16,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         {
             var asm = typeof(RecalcEngine).Assembly;
             var bugsFieldType = new HashSet<Type>();
-            var bugNames = new HashSet<string>()
-            {
-                "Library.TexlFunctionImplementations"
-            };
+            var bugNames = new HashSet<string>();
 
             AnalyzeThreadSafety.CheckStatics(asm, bugsFieldType, bugNames);
         }
