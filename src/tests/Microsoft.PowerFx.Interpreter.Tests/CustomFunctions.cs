@@ -3,10 +3,13 @@
 
 using System;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Tests;
+using Microsoft.PowerFx.Functions;
+using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
@@ -14,6 +17,51 @@ namespace Microsoft.PowerFx.Tests
 {
     public class CustomFunctions : PowerFxTest
     {
+        public class CustomFunctionError : ReflectionFunction
+        {
+            public CustomFunctionError()
+                : base("CustomFunctionError", FormulaType.Number, FormulaType.Number) 
+            {
+            }
+
+            public static NumberValue Execute(NumberValue arg) 
+            {
+                if (arg.Value < 0)
+                {
+                    throw new CustomFunctionErrorException("arg should be greater than 0");
+                }
+                else if (arg.Value == 0)
+                {
+                    throw new NotSupportedException();
+                }
+
+                return arg;
+            }
+        }
+
+        [Fact]
+        public void CustomFunctionErrorTest()
+        {
+            var config = new PowerFxConfig(null);
+            config.AddFunction(new CustomFunctionError());
+            var engine = new RecalcEngine(config);
+
+            // Shows up in enuemeration
+            var func = engine.GetAllFunctionNames().First(name => name == "CustomFunctionError");
+            Assert.NotNull(func);
+
+            // Can be invoked. 
+            var result = engine.Eval("CustomFunctionError(20)");
+            Assert.IsType<NumberValue>(result);
+            Assert.Equal(20d, ((NumberValue)result).Value);
+
+            var errorResult = engine.Eval("CustomFunctionError(-1)");
+            Assert.IsType<ErrorValue>(errorResult);
+            Assert.Equal("arg should be greater than 0", ((ErrorValue)errorResult).Errors.First().Message);
+
+            Assert.Throws<AggregateException>(() => engine.Eval("CustomFunctionError(0)"));
+        }
+
         [Fact]
         public void CustomFunction()
         {

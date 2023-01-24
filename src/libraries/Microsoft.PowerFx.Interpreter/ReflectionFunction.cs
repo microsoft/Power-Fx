@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Numerics;
 using System.Reflection;
 using System.Threading;
@@ -17,6 +18,7 @@ using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Functions;
+using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 using static Microsoft.PowerFx.Core.Localization.TexlStrings;
@@ -403,7 +405,20 @@ namespace Microsoft.PowerFx
                 args2.Add(cancellationToken);
             }
 
-            var result = _info.Method.Invoke(this, args2.ToArray());
+            object result = default;
+            try
+            {
+                result = _info.Method.Invoke(this, args2.ToArray());
+            }
+            catch (TargetInvocationException e)
+            {
+                if (e.InnerException is CustomFunctionErrorException customFunctionErrorException)
+                {
+                    return CommonErrors.CustomError(IRContext.NotInSource(_info.RetType), customFunctionErrorException.Message);
+                }
+
+                throw e;
+            }
 
             if (_info.IsAsync)
             {
@@ -421,6 +436,20 @@ namespace Microsoft.PowerFx
             }
 
             return formulaResult;
+        }
+
+        private static bool IsCompatibleType(FormulaType potentialReturnType, FormulaType returnType)
+        {
+            //if (potentialReturnType is IUntypedObject && returnType is IUntypedObject)
+            //{
+            //    return true;
+            //}
+            //else if (potentialReturnType is IUntypedObject || returnType is IUntypedObject)
+            //{
+            //    return false;
+            //}
+
+            return potentialReturnType._type == returnType._type;
         }
 
         private static async Task<FormulaValue> Unwrap(object obj, Type resultType)
