@@ -392,3 +392,12 @@ true
 
 >> IsBlank(ParseJSON("{""a"":null,""b"":""""}").c)
 true
+
+>> Text(ParseJSON("{""a"":null,""b"":""""}").a) = Blank()
+true
+
+>> Text(ParseJSON("{""a"":null,""b"":""""}").b) = Blank()
+false
+
+>> Text(ParseJSON("{""a"":null,""b"":""""}").c) = Blank()
+true
