@@ -72,7 +72,7 @@ namespace Microsoft.PowerFx.Tests
 
         // Pick a "small" memory size that's large enough to execute basic expressions but will
         // fail on intentionally large expressions. 
-        private const int DefaultMemorySizeBytes = 50 * 1000;
+        private const int DefaultMemorySizeBytes = 100 * 1024;
 
         // Verify memory limits. 
         [Theory]
