@@ -33,10 +33,10 @@ namespace Microsoft.PowerFx
         /// This is critical for calling back to populate the rest of the results. 
         /// </summary>
         private readonly Engine _engine;
-       
+
         // The raw expression test. 
         private string _expression;
-        
+
         private ParserOptions _parserOptions;
 
         // Information for binding. 
@@ -84,7 +84,7 @@ namespace Microsoft.PowerFx
 
             if (parse == null)
             {
-                throw new ArgumentNullException(nameof(parse));    
+                throw new ArgumentNullException(nameof(parse));
             }
 
             if (_expression != null)
@@ -157,7 +157,7 @@ namespace Microsoft.PowerFx
         // No additional binding is required
         public CheckResult SetBindingInfo()
         {
-            return SetBindingInfo((RecordType)null);            
+            return SetBindingInfo((RecordType)null);
         }
         #endregion
 
@@ -248,7 +248,7 @@ namespace Microsoft.PowerFx
         /// <summary>
         /// True if no errors for stages run so far. 
         /// </summary>
-        public bool IsSuccess => !_errors.Any(x => !x.IsWarning);              
+        public bool IsSuccess => !_errors.Any(x => !x.IsWarning);
 
         /// <summary>
         /// Helper to throw if <see cref="IsSuccess"/> is false.
@@ -275,7 +275,18 @@ namespace Microsoft.PowerFx
         /// Parameters are the subset of symbols that must be passed in Eval() for each evaluation. 
         /// This lets us associated the type in Check()  with the values in Eval().
         /// </summary>
-        internal ReadOnlySymbolTable Parameters => _symbols;
+        internal ReadOnlySymbolTable Parameters 
+        {
+            get
+            {
+                if (!this._setBindingCalled)
+                {
+                    throw new InvalidOperationException($"Must call {nameof(SetBindingInfo)} first.");
+                }
+
+                return _symbols;
+            }
+        }
 
         /// <summary>
         /// Culture info passed to this binding. May be null. 
@@ -346,7 +357,7 @@ namespace Microsoft.PowerFx
                 (var binding, var combinedSymbols) = Engine.ComputeBinding(this);
 
                 this.ThrowIfSymbolsChanged();
-                
+
                 // Don't modify any fields until after we've verified the symbols haven't change.
 
                 this._binding = binding;
@@ -401,7 +412,7 @@ namespace Microsoft.PowerFx
 
                 _errors.AddRange(extraErrors);
             }
-            
+
             return this.Errors;
         }
 
@@ -418,7 +429,7 @@ namespace Microsoft.PowerFx
                 {
                     TopNode = irnode,
                     RuleScopeSymbol = ruleScopeSymbol
-                };                
+                };
             }
 
             return _irresult;
@@ -429,7 +440,7 @@ namespace Microsoft.PowerFx
         /// </summary>
         /// <param name="node"></param>
         /// <returns></returns>
-        public FormulaType GetNodeType(TexlNode node) 
+        public FormulaType GetNodeType(TexlNode node)
         {
             if (node == null)
             {
@@ -437,10 +448,49 @@ namespace Microsoft.PowerFx
             }
 
             var type = this.Binding.GetType(node);
-            return FormulaType.Build(type);            
+            return FormulaType.Build(type);
         }
 
         internal IReadOnlyDictionary<string, TokenResultType> GetTokens(GetTokensFlags flags) => GetTokensUtils.GetTokens(this.Binding, flags);
+
+        private string _expressionInvariant;
+
+        // form of expression with personal info removed,
+        // suitable for logging the structure of a formula.
+        private string _expressionAnonymous;
+
+        /// <summary>
+        /// Get the invariant form of the expression.  
+        /// </summary>
+        /// <returns></returns>
+        public string ApplyGetInvariant()
+        {
+            if (_expressionInvariant == null)
+            {
+                this.GetParseFormula(); // will verify 
+                var symbols = this.Parameters; // will throw
+
+                _expressionInvariant = _engine.GetInvariantExpressionWorker(this._expression, symbols, parseCulture: _parserOptions.Culture);
+            }
+
+            return _expressionInvariant;
+        }
+
+        /// <summary>
+        /// Get anonymous form of expression with all PII removed. Suitable for logging to 
+        /// capture the structure of the expression.
+        /// </summary>
+        public string ApplyGetLogging()
+        {
+            if (_expressionAnonymous == null)
+            {
+                var parse = ApplyParse();
+                
+                _expressionAnonymous = parse.GetAnonymizedFormula();
+            }
+
+            return _expressionAnonymous;
+        }
     }
 
     // Internal interface to ensure that Result objects have a common contract
