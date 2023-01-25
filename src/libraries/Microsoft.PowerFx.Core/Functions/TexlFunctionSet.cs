@@ -207,65 +207,54 @@ namespace Microsoft.PowerFx.Core.Functions
                 throw new ArgumentNullException($"{nameof(functionSet)} cannot be null", nameof(functionSet));
             }
 
-            if (_count == 0)
+            foreach (var key in functionSet.FunctionNames)
             {
-                _functions = new Dictionary<string, List<TexlFunction>>(functionSet._functions);
-                _functionsInvariant = new Dictionary<string, List<TexlFunction>>(functionSet._functionsInvariant);
-                _namespaces = new Dictionary<DPath, List<TexlFunction>>(functionSet._namespaces);
-                _enums = new List<string>(functionSet._enums);
-                _count = functionSet._count;
+                var fList = WithNameInternal(key);
+                var newFuncs = functionSet.WithNameInternal(key);
+
+                if (fList.Any())
+                {
+                    fList.AddRange(newFuncs);
+                }
+                else
+                {
+                    _functions.Add(key, newFuncs);
+                }
+
+                _count += newFuncs.Count();
             }
-            else
+
+            foreach (var key in functionSet.InvariantFunctionNames)
             {
-                foreach (var key in functionSet.FunctionNames)
+                var fInvariantList = WithInvariantNameInternal(key);
+                var newFuncs = functionSet.WithInvariantNameInternal(key);
+
+                if (fInvariantList.Any())
                 {
-                    var fList = WithNameInternal(key);
-                    var newFuncs = functionSet.WithNameInternal(key);
-
-                    if (fList.Any())
-                    {
-                        fList.AddRange(newFuncs);
-                    }
-                    else
-                    {
-                        _functions.Add(key, newFuncs);
-                    }
-
-                    _count += newFuncs.Count();
+                    fInvariantList.AddRange(newFuncs);
                 }
-
-                foreach (var key in functionSet.InvariantFunctionNames)
+                else
                 {
-                    var fInvariantList = WithInvariantNameInternal(key);
-                    var newFuncs = functionSet.WithInvariantNameInternal(key);
-
-                    if (fInvariantList.Any())
-                    {
-                        fInvariantList.AddRange(newFuncs);
-                    }
-                    else
-                    {
-                        _functionsInvariant.Add(key, newFuncs);
-                    }
+                    _functionsInvariant.Add(key, newFuncs);
                 }
-
-                foreach (var key in functionSet.Namespaces)
-                {
-                    var fnsList = WithNamespaceInternal(key);
-                    var newFuncs = functionSet.WithNamespaceInternal(key);
-
-                    if (fnsList.Any())
-                    {
-                        fnsList.AddRange(newFuncs);
-                    }
-                    else
-                    {
-                        _namespaces.Add(key, newFuncs);
-                    }
-                }
-
-                _enums.AddRange(functionSet._enums);
             }
+
+            foreach (var key in functionSet.Namespaces)
+            {
+                var fnsList = WithNamespaceInternal(key);
+                var newFuncs = functionSet.WithNamespaceInternal(key);
+
+                if (fnsList.Any())
+                {
+                    fnsList.AddRange(newFuncs);
+                }
+                else
+                {
+                    _namespaces.Add(key, newFuncs);
+                }
+            }
+
+            _enums.AddRange(functionSet._enums);
 
             return this;
         }
