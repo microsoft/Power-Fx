@@ -60,24 +60,26 @@ namespace Microsoft.PowerFx
         }
 
         private TexlFunctionSet _nameResolverFunctions = null;
-        private HashSet<VersionHash> _nameResolverFunctionsVersions = null;
+        private VersionHash _nameResolverFunctionsTimestamp = VersionHash.New();
 
         // Expose the list to aide in intellisense suggestions. 
         TexlFunctionSet INameResolver.Functions
         {
             get
             {
-                if (_nameResolverFunctions != null &&
-                    _nameResolverFunctionsVersions != null &&
-                    _nameResolverFunctionsVersions.SetEquals(_symbolTables.Select(t => t.VersionHash)))
+                var current = this.VersionHash;
+                if (current != _nameResolverFunctionsTimestamp)
                 {
-                    return _nameResolverFunctions;
+                    _nameResolverFunctions = null;       
                 }
 
-                _nameResolverFunctions = new TexlFunctionSet(_symbolTables.Select(t => t.Functions));
-                _nameResolverFunctionsVersions = new HashSet<VersionHash>(_symbolTables.Select(t => t.VersionHash));
+                if (_nameResolverFunctions == null)
+                {
+                    _nameResolverFunctions = new TexlFunctionSet(_symbolTables.Select(t => t.Functions));
+                    _nameResolverFunctionsTimestamp = current;
+                }
 
-                return _nameResolverFunctions;
+                return _nameResolverFunctions;                
             }
         }
 
@@ -140,15 +142,15 @@ namespace Microsoft.PowerFx
             Contracts.Check(theNamespace.IsValid, "The namespace is invalid.");
             Contracts.CheckNonEmpty(name, "name");
 
-            return localeInvariant 
-                        ? Functions.WithInvariantName(name, theNamespace) 
-                        : Functions.WithName(name, theNamespace);            
+            return localeInvariant
+                        ? Functions.WithInvariantName(name, theNamespace)
+                        : Functions.WithName(name, theNamespace);
         }
-        
+
         public IEnumerable<TexlFunction> LookupFunctionsInNamespace(DPath nameSpace)
         {
             Contracts.Check(nameSpace.IsValid, "The namespace is invalid.");
-            return Functions.WithNamespace(nameSpace);           
+            return Functions.WithNamespace(nameSpace);
         }
 
         public virtual bool LookupEnumValueByInfoAndLocName(object enumInfo, DName locName, out object value)
