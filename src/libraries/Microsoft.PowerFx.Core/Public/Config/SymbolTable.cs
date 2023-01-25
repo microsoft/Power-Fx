@@ -224,6 +224,12 @@ namespace Microsoft.PowerFx
         internal void AddFunctions(TexlFunctionSet functions)
         {
             Inc();
+
+            if (functions._count == 0)
+            {
+                return;
+            }
+
             _functions.Add(functions);
 
             // Add any associated enums 

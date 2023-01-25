@@ -24,7 +24,7 @@ namespace Microsoft.PowerFx.Core.Functions
         private List<string> _enums;
 
         // Count of functions
-        private int _count;
+        internal int _count;
 
         internal Dictionary<string, List<TexlFunction>>.KeyCollection FunctionNames => _functions.Keys;
 
@@ -107,7 +107,10 @@ namespace Microsoft.PowerFx.Core.Functions
 
             foreach (var functionSet in functionSets)
             {
-                Add(functionSet);
+                if (functionSet._count > 0)
+                {
+                    Add(functionSet);
+                }
             }
         }
 
@@ -195,8 +198,8 @@ namespace Microsoft.PowerFx.Core.Functions
         {
             if (functionSet == null)
             {
-                throw new ArgumentNullException($"{nameof(functionSet)} cannot be null", nameof(functionSet));
-            }
+                throw new ArgumentNullException(nameof(functionSet));
+            }           
 
             foreach (var key in functionSet.FunctionNames)
             {
