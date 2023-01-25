@@ -1655,24 +1655,13 @@ namespace Microsoft.PowerFx.Functions
             var recordType = tableType.ToRecord();
             return args.Select(arg =>
             {
-                if (!forceSingleColumn)
+                if (!forceSingleColumn && arg is RecordValue rv)
                 {
-                    if (arg is RecordValue record)
-                    {
-                        return DValue<RecordValue>.Of(record);
-                    }
-                    else if (arg is BlankValue bv)
-                    {
-                        var len = tableType.FieldNames.Count();
-                        var fields = new List<NamedValue>();
-
-                        foreach (var field in tableType.FieldNames)
-                        {
-                            fields.Add(new NamedValue(field, bv));
-                        }
-
-                        return DValue<RecordValue>.Of(FormulaValue.NewRecordFromFields(fields.ToArray()));
-                    }
+                    return DValue<RecordValue>.Of(rv);
+                }
+                else if (!forceSingleColumn && arg is BlankValue bv && tableType.FieldNames.Count() > 1)
+                {
+                    return DValue<RecordValue>.Of(bv);
                 }
 
                 // Handle the single-column-table case. 

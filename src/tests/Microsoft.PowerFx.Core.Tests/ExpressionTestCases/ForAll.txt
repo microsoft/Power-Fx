@@ -72,4 +72,7 @@ Table({b:1},{b:-11},{b:3},{b:-7},{b:5})
 Table({b:1},{b:100},{b:3},{b:100},{b:5})
 
 >> ForAll([true,false],  If(ThisRecord.Value, {x:1,y:2}, Blank()))
-Table({x:1,y:2},{x:Blank(),y:Blank()})
+Table({x:1,y:2},Blank())
+
+>> Last(ForAll([true,false], If(ThisRecord.Value, {x:1,y:2}, Blank()))).x
+Blank()
