@@ -60,7 +60,7 @@ namespace Microsoft.PowerFx
         }
 
         private TexlFunctionSet _nameResolverFunctions = null;
-        private VersionHash _nameResolverFunctionsTimestamp = VersionHash.New();
+        private VersionHash _cachedVersionHash = VersionHash.New();
 
         // Expose the list to aide in intellisense suggestions. 
         TexlFunctionSet INameResolver.Functions
@@ -68,7 +68,7 @@ namespace Microsoft.PowerFx
             get
             {
                 var current = this.VersionHash;
-                if (current != _nameResolverFunctionsTimestamp)
+                if (current != _cachedVersionHash)
                 {
                     _nameResolverFunctions = null;       
                 }
@@ -76,7 +76,7 @@ namespace Microsoft.PowerFx
                 if (_nameResolverFunctions == null)
                 {
                     _nameResolverFunctions = new TexlFunctionSet(_symbolTables.Select(t => t.Functions));
-                    _nameResolverFunctionsTimestamp = current;
+                    _cachedVersionHash = current;
                 }
 
                 return _nameResolverFunctions;                
