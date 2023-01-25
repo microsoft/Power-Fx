@@ -88,15 +88,6 @@ namespace Microsoft.PowerFx.Core.Functions
             }
         }
 
-        private TexlFunctionSet(Dictionary<string, List<TexlFunction>> functions, Dictionary<string, List<TexlFunction>> functionsInvariant, Dictionary<DPath, List<TexlFunction>> functionNamespaces, List<string> enums, int count)
-        {
-            _functions = functions ?? throw new ArgumentNullException($"{nameof(functions)} cannot be null", nameof(functions));
-            _functionsInvariant = functionsInvariant ?? throw new ArgumentNullException($"{nameof(functionsInvariant)} cannot be null", nameof(functionsInvariant));
-            _namespaces = functionNamespaces ?? throw new ArgumentNullException($"{nameof(functionNamespaces)} cannot be null", nameof(functionNamespaces));
-            _enums = enums ?? throw new ArgumentNullException($"{nameof(enums)} cannot be null", nameof(enums));
-            _count = count;
-        }
-
         internal TexlFunctionSet(TexlFunctionSet other)
         {
             _functions = new Dictionary<string, List<TexlFunction>>(other._functions);
