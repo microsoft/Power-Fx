@@ -62,15 +62,15 @@ namespace Microsoft.PowerFx
 
         /// <summary>
         /// Get all functions from the config and symbol tables. 
-        /// </summary>
-        [Obsolete("Slow API. Use With* APIs to select functions.")]
+        /// </summary>        
+#pragma warning disable CS0618 // Type or member is obsolete
         public IEnumerable<FunctionInfo> FunctionInfos => Functions.Functions.Select(f => new FunctionInfo(f));
+#pragma warning restore CS0618 // Type or member is obsolete
 
         /// <summary>
         /// List all functions (both builtin and custom) registered with this evaluator. 
         /// </summary>
-#pragma warning disable CA1024 // Use properties where appropriate
-        [Obsolete("Slow API. Use With* APIs to select functions.")]
+#pragma warning disable CA1024 // Use properties where appropriate        
         public IEnumerable<string> GetAllFunctionNames()
 #pragma warning restore CA1024 // Use properties where appropriate
         {

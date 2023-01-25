@@ -11,6 +11,7 @@ using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
@@ -146,6 +147,18 @@ namespace Microsoft.PowerFx
             s.AddFunctions(coreFunctions);
 
             return s;
+        }
+
+        internal static ReadOnlySymbolTable NewDefault(IEnumerable<TexlFunction> functions)
+        {            
+            TexlFunctionSet tfs = new TexlFunctionSet();
+
+            foreach (TexlFunction function in functions)
+            {
+                tfs.Add(function);
+            }
+
+            return NewDefault(tfs);
         }
 
         /// <summary>
