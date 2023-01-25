@@ -188,7 +188,7 @@ namespace Microsoft.PowerFx.Core.Types.Enums
                 },
                 {
                     EnumConstants.ErrorKindEnumString,
-                    "%n[None:0, Sync:1, MissingRequired:2, CreatePermission:3, EditPermission:4, DeletePermission:5, Conflict:6, NotFound:7, " +
+                    "%n[None:0, Sync:1, MissingRequired:2, CreatePermission:3, EditPermissions:4, DeletePermissions:5, Conflict:6, NotFound:7, " +
                     "ConstraintViolated:8, GeneratedValue:9, ReadOnlyValue:10, Validation: 11, Unknown: 12, Div0: 13, BadLanguageCode: 14, " +
                     "BadRegex: 15, InvalidFunctionUsage: 16, FileNotFound: 17, AnalysisError: 18, ReadPermission: 19, NotSupported: 20, " +
                     "InsufficientMemory: 21, QuotaExceeded: 22, Network: 23, Numeric: 24, InvalidArgument: 25, Internal: 26, NotApplicable: 27, Custom: 1000]"
@@ -344,20 +344,20 @@ namespace Microsoft.PowerFx.Core.Types.Enums
             return enumTypes;
         }
 
-        private IEnumerable<Tuple<DName, DName, DType>> EnumTuples()
+        private IEnumerable<(DName name, DType typeSpec)> Enums()
         {
             CollectionUtils.EnsureInstanceCreated(ref _enumTypes, () =>
             {
                 return RegenerateEnumTypes();
             });
 
-            var list = ImmutableList.CreateBuilder<Tuple<DName, DName, DType>>();
+            var list = ImmutableList.CreateBuilder<(DName name, DType typeSpec)>();
             foreach (var enumSpec in _workingEnums)
             {
                 Contracts.Assert(DName.IsValidDName(enumSpec.Key));
 
                 var name = new DName(enumSpec.Key);
-                list.Add(new Tuple<DName, DName, DType>(name, name, _enumTypes[enumSpec.Key]));
+                list.Add((name, _enumTypes[enumSpec.Key]));
             }
 
             return list.ToImmutable();
@@ -370,10 +370,9 @@ namespace Microsoft.PowerFx.Core.Types.Enums
         private ImmutableList<EnumSymbol> RegenerateEnumSymbols()
         {
             var list = ImmutableList.CreateBuilder<EnumSymbol>();
-            var customEnumLocDict = ImmutableDictionary<string, Dictionary<string, string>>.Empty;
-            foreach (var enumValue in EnumTuples())
+            foreach (var (name, typeSpec) in Enums())
             {
-                list.Add(new EnumSymbol(customEnumLocDict, enumValue.Item1, enumValue.Item2, enumValue.Item3));
+                list.Add(new EnumSymbol(name, typeSpec));
             }
 
             return list.ToImmutable();

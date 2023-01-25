@@ -108,8 +108,7 @@ namespace Microsoft.PowerFx.Intellisense
                 requiresSuggestionEscaping = false;
                 foreach (var name in enumInfo.EnumType.GetNames(DPath.Root))
                 {
-                    enumInfo.TryGetLocValueName(name.Name.Value, out var locName).Verify();
-                    retVal.Add(new KeyValuePair<string, DType>(TexlLexer.EscapeName(enumInfo.Name) + TexlLexer.PunctuatorDot + TexlLexer.EscapeName(locName), name.Type));
+                    retVal.Add(new KeyValuePair<string, DType>(TexlLexer.EscapeName(enumInfo.Name) + TexlLexer.PunctuatorDot + TexlLexer.EscapeName(name.Name.Value), name.Type));
                 }
 
                 return retVal;
@@ -175,14 +174,13 @@ namespace Microsoft.PowerFx.Intellisense
                 Contracts.AssertValue(enumInfo);
                 foreach (var name in enumInfo.EnumType.GetNames(DPath.Root))
                 {
-                    enumInfo.TryGetLocValueName(name.Name.Value, out var locName).Verify();
                     if (suggestUnqualifedEnums)
                     {
-                        retVal.Add(new KeyValuePair<string, DType>(TexlLexer.EscapeName(locName), name.Type));
+                        retVal.Add(new KeyValuePair<string, DType>(TexlLexer.EscapeName(name.Name.Value), name.Type));
                     }
                     else
                     {
-                        retVal.Add(new KeyValuePair<string, DType>(TexlLexer.EscapeName(enumInfo.Name) + TexlLexer.PunctuatorDot + TexlLexer.EscapeName(locName), name.Type));
+                        retVal.Add(new KeyValuePair<string, DType>(TexlLexer.EscapeName(enumInfo.Name) + TexlLexer.PunctuatorDot + TexlLexer.EscapeName(name.Name.Value), name.Type));
                     }
                 }
             }

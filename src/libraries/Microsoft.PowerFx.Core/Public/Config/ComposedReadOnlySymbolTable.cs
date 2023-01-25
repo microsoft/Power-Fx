@@ -146,28 +146,6 @@ namespace Microsoft.PowerFx
             return Functions.Where(function => function.Namespace.Equals(nameSpace));
         }
 
-        public virtual bool LookupEnumValueByInfoAndLocName(object enumInfo, DName locName, out object value)
-        {
-            value = null;
-            var castEnumInfo = enumInfo as EnumSymbol;
-            return castEnumInfo?.TryLookupValueByLocName(locName.Value, out _, out value) ?? false;
-        }
-
-        public virtual bool LookupEnumValueByTypeAndLocName(DType enumType, DName locName, out object value)
-        {
-            // Slower O(n) lookup involving a walk over the registered enums...
-            foreach (INameResolver table in _symbolTables)
-            {
-                if (table.LookupEnumValueByTypeAndLocName(enumType, locName, out value))
-                {
-                    return true;
-                }
-            }
-
-            value = null;
-            return false;
-        }
-
         public virtual bool LookupGlobalEntity(DName name, out NameLookupInfo lookupInfo)
         {
             foreach (INameResolver table in _symbolTables)
