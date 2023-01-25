@@ -252,14 +252,17 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
         // Display name with symbol tables 
         [Theory]
+        [InlineData("new_field + 2", "Field + 2")]
         [InlineData("ThisRecord.new_field", "ThisRecord.Field")]
         [InlineData("First(crf_table).new_field", "First(Table).Field")]
         [InlineData("123.456", "123,456")] // culture toke
-        public void DisplayNames(string logical, string display)
+        [InlineData("new_field + new_field2", "Field + Field2", "new_field + Field2")] // Mixed
+        public void DisplayNamesWithSymbols(string logical, string display, string mixedExpression = null)
         {
             // Simulate symbols like dataverse. 
             var r1 = RecordType.Empty()
-              .Add(new NamedFormulaType("new_field", FormulaType.Number, "Field"));
+              .Add(new NamedFormulaType("new_field", FormulaType.Number, "Field"))
+              .Add(new NamedFormulaType("new_field2", FormulaType.Number, "Field2"));
 
             var rowScopeSymbols = ReadOnlySymbolTable.NewFromRecord(r1, allowThisRecord: true);
             
@@ -269,11 +272,10 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var allSymbols = ReadOnlySymbolTable.Compose(rowScopeSymbols, globalSymbols);
 
-            var frCultureOpts = new ParserOptions { Culture = new CultureInfo("fr-FR") };
-
-            var engine = new Engine();
+            var config = new PowerFxConfig(new CultureInfo("fr-FR"));
+            var engine = new Engine(config);
             var check = new CheckResult(engine)
-                .SetText(display, parserOptions: frCultureOpts)
+                .SetText(mixedExpression ?? display)
                 .SetBindingInfo(allSymbols);
 
             check.ApplyBinding();
@@ -282,6 +284,16 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var invariant = check.ApplyGetInvariant();
 
             Assert.Equal(logical, invariant);
+
+            // Get display
+            var displayActual = engine.GetDisplayExpression(logical, allSymbols);
+            Assert.Equal(display, displayActual);
+
+            if (mixedExpression != null)
+            {
+                displayActual = engine.GetDisplayExpression(mixedExpression, allSymbols);
+                Assert.Equal(display, displayActual);
+            }
         }
 
         [Fact]
