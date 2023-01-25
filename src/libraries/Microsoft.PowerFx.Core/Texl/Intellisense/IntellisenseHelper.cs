@@ -230,22 +230,18 @@ namespace Microsoft.PowerFx.Intellisense
             Contracts.AssertValue(enumInfo);
             Contracts.AssertValue(prefix);
 
-            var anyCollisionExists = false;
+            var fullyQualifyAll = false;
             var locNameTypePairs = new List<Tuple<string, DType>>();
 
-            // We do not need to get the localized names since GetNames will only return invariant.
-            // Instead, we use the invariant names later with the enumInfo to retrieve the localized name.
             foreach (var typedName in enumInfo.EnumType.GetNames(DPath.Root))
             {
-                enumInfo.TryGetLocValueName(typedName.Name.Value, out var locName).Verify();
-                var escapedLocName = TexlLexer.EscapeName(locName);
-
-                var collisionExists = intellisenseData.DoesNameCollide(locName);
-                if (collisionExists)
+                var escapedLocName = TexlLexer.EscapeName(typedName.Name.Value);
+                var shouldFullyQualify = !intellisenseData.SuggestUnqualifiedEnums || intellisenseData.DoesUnqualifiedEnumNameCollide(typedName.Name.Value);
+                if (shouldFullyQualify)
                 {
                     var candidate = prefix + escapedLocName;
                     var canAddSuggestion = _addSuggestionDryRunHelper.AddSuggestion(intellisenseData, candidate, SuggestionKind.Global, SuggestionIconKind.Other, typedName.Type, false);
-                    anyCollisionExists = anyCollisionExists || canAddSuggestion;
+                    fullyQualifyAll = fullyQualifyAll || canAddSuggestion;
                 }
 
                 locNameTypePairs.Add(new Tuple<string, DType>(escapedLocName, typedName.Type));
@@ -253,7 +249,7 @@ namespace Microsoft.PowerFx.Intellisense
 
             foreach (var locNameTypePair in locNameTypePairs)
             {
-                var suggestion = anyCollisionExists || !intellisenseData.SuggestUnqualifiedEnums ? prefix + locNameTypePair.Item1 : locNameTypePair.Item1;
+                var suggestion = fullyQualifyAll || !intellisenseData.SuggestUnqualifiedEnums ? prefix + locNameTypePair.Item1 : locNameTypePair.Item1;
                 AddSuggestion(intellisenseData, suggestion, SuggestionKind.Global, SuggestionIconKind.Other, locNameTypePair.Item2, false);
             }
         }

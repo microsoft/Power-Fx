@@ -261,7 +261,7 @@ namespace Microsoft.PowerFx
                 return true;
             }
 
-            var enumValue = GetEnumSymbolSnapshot.FirstOrDefault(symbol => symbol.InvariantName == name);
+            var enumValue = GetEnumSymbolSnapshot.FirstOrDefault(symbol => symbol.Name == name);
             if (enumValue != null)
             {
                 nameInfo = new NameLookupInfo(BindKind.Enum, enumValue.EnumType, DPath.Root, 0, enumValue);
@@ -287,28 +287,6 @@ namespace Microsoft.PowerFx
             Contracts.Check(nameSpace.IsValid, "The namespace is invalid.");
             
             return _functions.WithNamespace(nameSpace);
-        }
-
-        bool INameResolver.LookupEnumValueByInfoAndLocName(object enumInfo, DName locName, out object value)
-        {
-            value = null;
-            var castEnumInfo = enumInfo as EnumSymbol;
-            return castEnumInfo?.TryLookupValueByLocName(locName.Value, out _, out value) ?? false;
-        }
-
-        bool INameResolver.LookupEnumValueByTypeAndLocName(DType enumType, DName locName, out object value)
-        {
-            // Slower O(n) lookup involving a walk over the registered enums...
-            foreach (var info in GetEnumSymbolSnapshot)
-            {
-                if (info.EnumType == enumType)
-                {
-                    return info.TryLookupValueByLocName(locName.Value, out _, out value);
-                }
-            }
-
-            value = null;
-            return false;
         }
 
         #region INameResolver - only implemented for unit testing for scenarios that use the full name resolver
