@@ -23,7 +23,7 @@ namespace Microsoft.PowerFx.Core.Functions
         // List of all function.GetRequiredEnumNames()
         private List<string> _enums;
 
-        // Cont of functions
+        // Count of functions
         private int _count;
 
         internal Dictionary<string, List<TexlFunction>>.KeyCollection FunctionNames => _functions.Keys;
@@ -64,7 +64,7 @@ namespace Microsoft.PowerFx.Core.Functions
         {
             if (function == null)
             {
-                throw new ArgumentNullException($"{nameof(function)} cannot be null", nameof(function));
+                throw new ArgumentNullException(nameof(function));
             }
 
             _functions.Add(function.Name, new List<TexlFunction>() { function });
@@ -142,7 +142,7 @@ namespace Microsoft.PowerFx.Core.Functions
         {
             if (function == null)
             {
-                throw new ArgumentNullException($"{nameof(function)} cannot be null", nameof(function));
+                throw new ArgumentNullException(nameof(function));
             }
 
             var fList = WithNameInternal(function.Name);
