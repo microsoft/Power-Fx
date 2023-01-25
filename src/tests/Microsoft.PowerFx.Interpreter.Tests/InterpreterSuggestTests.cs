@@ -179,6 +179,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("Patch(Table({a:1, b:2}), {|", "a:", "b:")]
         [InlineData("Patch({a:1, b:2}, {|", "a:", "b:")]
         [InlineData("ClearCollect(Table({a:1, b:2}), {|", "a:", "b:")]
+        [InlineData("Remove(Table({a:1, b:2}), {|", "a:", "b:")]
         public void TestSuggestMutationFunctions(string expression, params string[] expectedSuggestions)
         {
             var config = SuggestTests.Default;
