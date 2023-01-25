@@ -59,6 +59,15 @@ namespace Microsoft.PowerFx.Core.Functions
             _count = 0;
         }
 
+        private TexlFunctionSet(Dictionary<string, List<TexlFunction>> functions, Dictionary<string, List<TexlFunction>> functionsInvariant, Dictionary<DPath, List<TexlFunction>> functionNamespaces, List<string> enums, int count)
+        {
+            _functions = functions ?? throw new ArgumentNullException(nameof(functions));
+            _functionsInvariant = functionsInvariant ?? throw new ArgumentNullException(nameof(functionsInvariant));
+            _namespaces = functionNamespaces ?? throw new ArgumentNullException(nameof(functionNamespaces));
+            _enums = enums ?? throw new ArgumentNullException(nameof(enums));
+            _count = count;
+        }
+
         internal TexlFunctionSet(TexlFunction function)
             : this()
         {
@@ -70,7 +79,7 @@ namespace Microsoft.PowerFx.Core.Functions
             _functions.Add(function.Name, new List<TexlFunction>() { function });
             _functionsInvariant.Add(function.LocaleInvariantName, new List<TexlFunction>() { function });
             _namespaces.Add(function.Namespace, new List<TexlFunction> { function });
-            _enums = function.GetRequiredEnumNames().ToList();
+            _enums = new List<string>(function.GetRequiredEnumNames());
             _count = 1;
         }
 
@@ -188,7 +197,6 @@ namespace Microsoft.PowerFx.Core.Functions
             }
 
             _enums.AddRange(function.GetRequiredEnumNames());
-
             _count++;
 
             return function;
@@ -199,56 +207,67 @@ namespace Microsoft.PowerFx.Core.Functions
             if (functionSet == null)
             {
                 throw new ArgumentNullException(nameof(functionSet));
-            }           
-
-            foreach (var key in functionSet.FunctionNames)
-            {
-                var fList = WithNameInternal(key);
-                var newFuncs = functionSet.WithNameInternal(key);
-
-                if (fList.Any())
-                {
-                    fList.AddRange(newFuncs);
-                }
-                else
-                {
-                    _functions.Add(key, newFuncs);
-                }
-
-                _count += newFuncs.Count();
             }
 
-            foreach (var key in functionSet.InvariantFunctionNames)
+            if (_count == 0)
             {
-                var fInvariantList = WithInvariantNameInternal(key);
-                var newFuncs = functionSet.WithInvariantNameInternal(key);
-
-                if (fInvariantList.Any())
-                {
-                    fInvariantList.AddRange(newFuncs);
-                }
-                else
-                {
-                    _functionsInvariant.Add(key, newFuncs);
-                }
+                _functions = new Dictionary<string, List<TexlFunction>>(functionSet._functions);
+                _functionsInvariant = new Dictionary<string, List<TexlFunction>>(functionSet._functionsInvariant);
+                _namespaces = new Dictionary<DPath, List<TexlFunction>>(functionSet._namespaces);
+                _enums = new List<string>(functionSet._enums);
+                _count = functionSet._count;
             }
-
-            foreach (var key in functionSet.Namespaces)
+            else
             {
-                var fnsList = WithNamespaceInternal(key);
-                var newFuncs = functionSet.WithNamespaceInternal(key);
+                foreach (var key in functionSet.FunctionNames)
+                {
+                    var fList = WithNameInternal(key);
+                    var newFuncs = functionSet.WithNameInternal(key);
 
-                if (fnsList.Any())
-                {
-                    fnsList.AddRange(newFuncs);
+                    if (fList.Any())
+                    {
+                        fList.AddRange(newFuncs);
+                    }
+                    else
+                    {
+                        _functions.Add(key, newFuncs);
+                    }
+
+                    _count += newFuncs.Count();
                 }
-                else
+
+                foreach (var key in functionSet.InvariantFunctionNames)
                 {
-                    _namespaces.Add(key, newFuncs);
+                    var fInvariantList = WithInvariantNameInternal(key);
+                    var newFuncs = functionSet.WithInvariantNameInternal(key);
+
+                    if (fInvariantList.Any())
+                    {
+                        fInvariantList.AddRange(newFuncs);
+                    }
+                    else
+                    {
+                        _functionsInvariant.Add(key, newFuncs);
+                    }
                 }
+
+                foreach (var key in functionSet.Namespaces)
+                {
+                    var fnsList = WithNamespaceInternal(key);
+                    var newFuncs = functionSet.WithNamespaceInternal(key);
+
+                    if (fnsList.Any())
+                    {
+                        fnsList.AddRange(newFuncs);
+                    }
+                    else
+                    {
+                        _namespaces.Add(key, newFuncs);
+                    }
+                }
+
+                _enums.AddRange(functionSet._enums);
             }
-
-            _enums.AddRange(functionSet._enums);
 
             return this;
         }
