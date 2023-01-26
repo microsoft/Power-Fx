@@ -268,6 +268,50 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: OptionSetValueToString)
+            },
+            {
+                UnaryOpKind.BooleanOptionSetToNumber,
+                StandardErrorHandling<OptionSetValue>(
+                    functionName: null, // internal function, no user-facing name
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<OptionSetValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: BooleanOptionSetValueToNumber)
+            },
+            {
+                UnaryOpKind.OptionSetToNumber,
+                StandardErrorHandling<OptionSetValue>(
+                    functionName: null, // internal function, no user-facing name
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<OptionSetValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: OptionSetValueToNumber)
+            },
+            {
+                UnaryOpKind.OptionSetToBoolean,
+                StandardErrorHandling<OptionSetValue>(
+                    functionName: null, // internal function, no user-facing name
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<OptionSetValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: OptionSetValueToBoolean)
+            },
+            {
+                UnaryOpKind.OptionSetToColor,
+                StandardErrorHandling<OptionSetValue>(
+                    functionName: null, // internal function, no user-facing name
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<OptionSetValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: OptionSetValueToColor)
             }
         };
         #endregion
@@ -492,6 +536,41 @@ namespace Microsoft.PowerFx.Functions
             }
 
             // Type checker should not attempt to coerce a non-boolean-backed option set to a boolean.
+            return CommonErrors.UnreachableCodeError(irContext);
+        }
+
+        public static FormulaValue OptionSetValueToColor(IRContext irContext, OptionSetValue[] args)
+        {
+            var optionSet = args[0];
+            if (optionSet.ExecutionValue is double evalValue)
+            {
+                // Color enums are backed by a double
+                return new ColorValue(irContext, ToColor(evalValue));
+            }
+
+            // IR Gen should not attempt to coerce a non-boolean-backed option set to a number using this operation.
+            return CommonErrors.UnreachableCodeError(irContext);
+        }
+
+        private static System.Drawing.Color ToColor(double doubValue)
+        {
+            var value = Convert.ToUInt32(doubValue);
+            return System.Drawing.Color.FromArgb(
+                        (byte)((value >> 24) & 0xFF),
+                        (byte)((value >> 16) & 0xFF),
+                        (byte)((value >> 8) & 0xFF),
+                        (byte)(value & 0xFF));
+        }
+
+        public static FormulaValue BooleanOptionSetValueToNumber(IRContext irContext, OptionSetValue[] args)
+        {
+            var optionSet = args[0];
+            if (optionSet.ExecutionValue is bool evalValue)
+            {                
+                return new NumberValue(irContext, evalValue ? 1 : 0);
+            }
+
+            // IR Gen should not attempt to coerce a non-boolean-backed option set to a number using this operation.
             return CommonErrors.UnreachableCodeError(irContext);
         }
         #endregion

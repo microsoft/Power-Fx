@@ -39,6 +39,8 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
         TextToBoolean,
         OptionSetToBoolean,
 
+        OptionSetToColor,
+
         RecordToRecord, // See field mappings
         TableToTable,
         RecordToTable,

@@ -237,7 +237,7 @@ namespace Microsoft.PowerFx.Core.IR
             Contracts.Assert(
                 DType.String.Accepts(fromType) || DType.Boolean.Accepts(fromType) || DType.Number.Accepts(fromType) ||
                 DType.DateTime.Accepts(fromType) || DType.Time.Accepts(fromType) || DType.Date.Accepts(fromType) || DType.DateTimeNoTimeZone.Accepts(fromType) ||
-                fromType.IsControl || (DType.OptionSetValue.Accepts(fromType) && (fromType.OptionSetInfo?.IsBooleanValued() ?? false)), "Unsupported type coercion");
+                fromType.IsControl || (DType.OptionSetValue.Accepts(fromType) && ((fromType.OptionSetInfo?.BackingKind == DKind.Boolean) || fromType.OptionSetInfo?.BackingKind == DKind.Number)), "Unsupported type coercion");
 
             if (DType.String.Accepts(fromType))
             {

@@ -9,7 +9,7 @@ using Microsoft.PowerFx.Types;
 namespace Microsoft.PowerFx.Core.Entities
 {
     /// <summary>
-    /// Describe an option set - maybe implemented by each back end over their existing enum-like symbols. 
+    /// Describes an option set - may be implemented by each back end over their existing enum-like symbols. 
     /// </summary>
     internal interface IExternalOptionSet : IExternalEntity
     {
@@ -19,7 +19,7 @@ namespace Microsoft.PowerFx.Core.Entities
         /// Logical names for the fields in this Option Set.
         /// </summary>
         IEnumerable<DName> OptionNames { get; }
-                
+
         DKind BackingKind { get; }
 
         bool IsConvertingDisplayNameMapping { get; }

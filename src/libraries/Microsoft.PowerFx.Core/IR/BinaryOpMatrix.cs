@@ -43,21 +43,18 @@ namespace Microsoft.PowerFx.Core.IR
         {
             var kindToUse = leftType.Accepts(rightType) ? leftType.Kind : rightType.Kind;
 
-            if (!leftType.Accepts(rightType) && !rightType.Accepts(leftType))
+            // If there is coercion involved, pick the coerced type.
+            if (binding.TryGetCoercedType(node.Left, out var leftCoerced))
             {
-                // There is coercion involved, pick the coerced type.
-                if (binding.TryGetCoercedType(node.Left, out var leftCoerced))
-                {
-                    kindToUse = leftCoerced.Kind;
-                }
-                else if (binding.TryGetCoercedType(node.Right, out var rightCoerced))
-                {
-                    kindToUse = rightCoerced.Kind;
-                }
-                else
-                {
-                    return BinaryOpKind.Invalid;
-                }
+                kindToUse = leftCoerced.Kind;
+            }
+            else if (binding.TryGetCoercedType(node.Right, out var rightCoerced))
+            {
+                kindToUse = rightCoerced.Kind;
+            }
+            else if (!leftType.Accepts(rightType) && !rightType.Accepts(leftType))
+            {
+                return BinaryOpKind.Invalid;
             }
 
             switch (kindToUse)

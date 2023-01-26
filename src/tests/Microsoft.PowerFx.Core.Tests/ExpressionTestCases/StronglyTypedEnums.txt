@@ -3,12 +3,17 @@
 >> ErrorKind.Div0 = Color.Red
 Errors: Error 15-16: Incompatible types for comparison. These types can't be compared: OptionSetValue(ErrorKind), OptionSetValue(Color).
 
+>> Color.Red
+RGBA(255, 0, 0, 0)
+
+>> Color.Red < Color.Green
+Errors: ...
+
 >> With({ErrorSev: ErrorSeverity.Warning}, ErrorSev < ErrorSeverity.Severe) 
 true
 
-// Maybe should see about making this erroneous?
 >> With({ErrorSev: ErrorSeverity.Warning}, ErrorSev < StartOfWeek.Saturday) 
-true
+Errors: Error 49-50: Incompatible types for comparison. These types can't be compared: OptionSetValue(ErrorSeverity), OptionSetValue(StartOfWeek).
 
 // Coercion to string uses backing values
 >> JSONFormat.IndentFour & JSONFormat.IncludeBinaryData

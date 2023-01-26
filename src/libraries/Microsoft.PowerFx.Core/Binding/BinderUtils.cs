@@ -673,12 +673,56 @@ namespace Microsoft.PowerFx.Core.Binding
 
         private static BinderCheckTypeResult CheckComparisonArgTypesCore(IErrorContainer errorContainer, TexlNode left, TexlNode right, DType typeLeft, DType typeRight)
         {
+            // Special case for number-backed BuiltIn Option Sets:
+            if (typeLeft.Kind == DKind.OptionSetValue || typeRight.Kind == DKind.OptionSetValue)
+            {                
+                var leftTypeDisambiguation = typeLeft.IsOptionSet && typeLeft.OptionSetInfo != null ? $"({typeLeft.OptionSetInfo.EntityName})" : string.Empty;
+
+                // Mismatched option sets can't be compared
+                if (!typeLeft.Accepts(typeRight))
+                {
+                    var rightTypeDisambiguation = typeRight.IsOptionSet && typeRight.OptionSetInfo != null ? $"({typeRight.OptionSetInfo.EntityName})" : string.Empty;
+
+                    errorContainer.EnsureError(
+                        DocumentErrorSeverity.Severe,
+                        left.Parent,
+                        TexlStrings.ErrIncompatibleTypesForEquality_Left_Right,
+                        typeLeft.GetKindString() + leftTypeDisambiguation,
+                        typeRight.GetKindString() + rightTypeDisambiguation);
+
+                    return new BinderCheckTypeResult();
+                }
+
+                // Option set must be numeric to compare. 
+                if (typeLeft.OptionSetInfo?.BackingKind != DKind.Number || typeRight.OptionSetInfo?.BackingKind != DKind.Number)
+                {
+                    Contracts.Assert(typeLeft.OptionSetInfo?.BackingKind == DKind.Number && typeRight.OptionSetInfo?.BackingKind == DKind.Number);
+
+                    errorContainer.EnsureError(
+                        DocumentErrorSeverity.Severe,
+                        left.Parent,
+                        TexlStrings.ErrUnOrderedTypeForComparison_Type,
+                        typeLeft.GetKindString() + leftTypeDisambiguation);
+
+                    return new BinderCheckTypeResult();
+                }
+                                
+                return new BinderCheckTypeResult() 
+                {
+                    Coercions = new List<BinderCoercionResult>()
+                    {
+                        new BinderCoercionResult() { Node = left, CoercedType = DType.Number },                    
+                        new BinderCoercionResult() { Node = right, CoercedType = DType.Number },
+                    }
+                };
+            }
+
             // Excel's type coercion for inequality operators is inconsistent / borderline wrong, so we can't
             // use it as a reference. For example, in Excel '2 < TRUE' produces TRUE, but so does '2 < FALSE'.
             // Sticking to a restricted set of numeric-like types for now until evidence arises to support the need for coercion.
             var resLeft = CheckComparisonTypeOneOfCore(errorContainer, left, typeLeft, DType.Number, DType.Date, DType.Time, DType.DateTime);
             var resRight = CheckComparisonTypeOneOfCore(errorContainer, right, typeRight, DType.Number, DType.Date, DType.Time, DType.DateTime);
-
+            
             var coercions = new List<BinderCoercionResult>();
             coercions.AddRange(resLeft.Coercions);
             coercions.AddRange(resRight.Coercions);
@@ -960,8 +1004,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     var dottedNameNode = node.AsDottedName();
                     if (dottedNameNode.Left.Kind == NodeKind.FirstName)
                     {
-                        DType enumType = null;
-                        if (context.NameResolver.EntityScope?.TryGetNamedEnum(dottedNameNode.Left.AsFirstName().Ident.Name, out enumType) == true)
+                        if (context.NameResolver.EntityScope?.TryGetNamedEnum(dottedNameNode.Left.AsFirstName().Ident.Name, out DType enumType) == true)
                         {
                             if (enumType.TryGetEnumValue(dottedNameNode.Right.Name, out var enumValue))
                             {

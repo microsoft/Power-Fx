@@ -29,7 +29,8 @@ namespace Microsoft.PowerFx.Types
             Contracts.Assert(value == null || 
                 (type._type.OptionSetInfo.BackingKind == DKind.String && value is string) ||
                 (type._type.OptionSetInfo.BackingKind == DKind.Boolean && value is bool) ||
-                (type._type.OptionSetInfo.BackingKind == DKind.Number && value is double));
+                (type._type.OptionSetInfo.BackingKind == DKind.Number && value is double) ||
+                (type._type.OptionSetInfo.BackingKind == DKind.Color && value is double));
 
             Option = option;
             ExecutionValue = value;
