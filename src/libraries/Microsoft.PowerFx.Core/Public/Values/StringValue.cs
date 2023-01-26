@@ -13,7 +13,7 @@ namespace Microsoft.PowerFx.Types
         internal StringValue(IRContext irContext, string value)
             : base(irContext, value)
         {
-            Contract.Assert(IRContext.ResultType == FormulaType.String);
+            Contract.Assert(IRContext.ResultType == FormulaType.String || IRContext.ResultType == FormulaType.Hyperlink);
         }
 
         public override void Visit(IValueVisitor visitor)

@@ -173,6 +173,10 @@ namespace Microsoft.PowerFx.Types
             {
                 result = FormulaValue.New((Color)value);
             }
+            else if (type == FormulaType.Hyperlink)
+            {
+                result = FormulaValue.NewUrl((string)value);
+            }
 
             return result != null;
         }
