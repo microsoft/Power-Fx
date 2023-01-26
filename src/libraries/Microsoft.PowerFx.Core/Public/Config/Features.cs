@@ -43,7 +43,7 @@ namespace Microsoft.PowerFx
         /// them as aliases for values of string/number/boolean types
         /// Added January 2023.
         /// </summary>
-        StronglyTypedBuiltinEnums = 0x16,
+        StronglyTypedBuiltinEnums = 0x10,
 
         /// <summary>        
         /// All features enabled
