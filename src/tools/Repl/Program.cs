@@ -368,6 +368,7 @@ namespace PowerFxHostSamples
                         if (row.Value != null)
                         {
                             columnCount = Math.Max(columnCount, row.Value.Fields.Count());
+                            break;
                         }
                     }
 
@@ -436,15 +437,19 @@ namespace PowerFxHostSamples
 
                         foreach (var row in table.Rows)
                         {
+                            column = 0;
+                            resultString += "\n ";
                             if (row.Value != null)
                             {
-                                column = 0;
-                                resultString += "\n ";
                                 foreach (var field in row.Value.Fields)
                                 {
                                     resultString += " " + PrintResult(field.Value, true).PadLeft(columnWidth[column]) + "  ";
                                     column++;
                                 }
+                            }
+                            else
+                            {
+                                resultString += row.IsError ? row.Error?.Errors?[0].Message : "Blank()";
                             }
                         }
                     }
