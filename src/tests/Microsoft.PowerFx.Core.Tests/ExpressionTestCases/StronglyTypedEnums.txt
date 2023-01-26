@@ -6,23 +6,34 @@ Errors: Error 15-16: Incompatible types for comparison. These types can't be com
 >> Color.Red
 Color.Red
 
+// Coercion to Color
 >> ColorFade(Color.Red, 0)
 RGBA(255,0,0,1)
 
 >> Color.Red < Color.Green
 Errors: Error 10-11: Unable to compare values of type OptionSetValue(Color).
 
+// Number backed enums support gt/lt/geq/leq, but enforce type checks
 >> With({ErrorSev: ErrorSeverity.Warning}, ErrorSev < ErrorSeverity.Severe) 
 true
+
+>> ErrorSeverity.Warning < 5
+Errors: Error 22-23: Incompatible types for comparison. These types can't be compared: OptionSetValue(ErrorSeverity), Number.
 
 >> With({ErrorSev: ErrorSeverity.Warning}, ErrorSev < StartOfWeek.Saturday) 
 Errors: Error 49-50: Incompatible types for comparison. These types can't be compared: OptionSetValue(ErrorSeverity), OptionSetValue(StartOfWeek).
 
-// Coercion to string uses backing values
+// Coercion to string uses backing values if the enum is string-backed
 >> JSONFormat.IndentFour & JSONFormat.IncludeBinaryData
 "4B"
 
-// Functions can enforce strong type
+// Non string-backed enums use the name when coerced to string?
+// This might not be great, but it matches the CDS Option Set behavior?
+// We could block this or use the stringified backing value instead but it'd be a bit hackier
+>> "Color: " & Color.Red
+"Color: Red"
+
+// Functions can enforce expecting an enum type
 >> DateAdd(Date(2011,1,15), 100000000, "milliseconds")
 Errors: ...
 
