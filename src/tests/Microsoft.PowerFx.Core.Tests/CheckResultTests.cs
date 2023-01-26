@@ -253,6 +253,53 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal(FormulaType.Number, check.GetNodeType(check.Parse.Root));
         }
 
+        [Fact]
+        public void BindingSymbols()
+        {
+            // Test Symbol property. 
+            var config = new PowerFxConfig();
+            config.SymbolTable.AddVariable("Global1", FormulaType.Number);
+
+            var localSymbols = new SymbolTable { DebugName = "Locals" };
+            localSymbols.AddVariable("Local1", FormulaType.Number);
+
+            var check = new CheckResult(new Engine(config));
+
+            check.SetText("Global1 + Local1 +"); // has error.
+            check.SetBindingInfo(localSymbols);
+
+            Assert.Throws<InvalidOperationException>(() => check.Symbols);
+
+            check.ApplyBinding();
+            Assert.False(check.IsSuccess); // Still have symbols even on binding errors. 
+            
+            // Validate symbol table.
+            var allSymbols = check.Symbols;
+            Assert.NotNull(allSymbols);
+
+            var ok = allSymbols.TryLookupSlot("Global1", out var slotGlobal);
+            Assert.True(ok);
+            Assert.Same(config.SymbolTable, slotGlobal.Owner);
+
+            ok = allSymbols.TryLookupSlot("Local1", out var slotLocal);
+            Assert.True(ok);
+            Assert.Same(localSymbols, slotLocal.Owner);            
+        }
+
+        // Still have Symbols even if we thing it's empty 
+        [Fact]
+        public void BindingSymbolsEmpty()
+        {
+            var check = new CheckResult(new Engine());
+            check.SetText("1+2");
+            check.SetBindingInfo();
+
+            check.ApplyBinding();
+
+            var allSymbols = check.Symbols;
+            Assert.NotNull(allSymbols);
+        }
+
         [Fact] 
         public void TestIR()
         {

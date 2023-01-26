@@ -264,12 +264,26 @@ namespace Microsoft.PowerFx
 
         internal bool HasDeferredArgsWarning => _errors.Any(x => x.IsWarning && x.MessageKey.Equals(TexlStrings.WarnDeferredType.Key));
 
+        internal ReadOnlySymbolTable AllSymbols { get; private set; }
+
         /// <summary>
         /// Full set of Symbols passed to this binding. 
         /// Can include symbols from Config, Engine, and Parameters, 
         /// May be null. 
+        /// Set after binding. 
         /// </summary>
-        internal ReadOnlySymbolTable AllSymbols { get; private set; }
+        public ReadOnlySymbolTable Symbols
+        {
+            get
+            {
+                if (_binding == null)
+                {
+                    throw new InvalidOperationException($"Must call {nameof(ApplyBinding)} before accessing combined Sybmols.");
+                }
+
+                return this.AllSymbols;
+            }
+        }
 
         /// <summary>
         /// Parameters are the subset of symbols that must be passed in Eval() for each evaluation. 
