@@ -270,17 +270,6 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: OptionSetValueToString)
             },
             {
-                UnaryOpKind.BooleanOptionSetToNumber,
-                StandardErrorHandling<OptionSetValue>(
-                    functionName: null, // internal function, no user-facing name
-                    expandArguments: NoArgExpansion,
-                    replaceBlankValues: DoNotReplaceBlank,
-                    checkRuntimeTypes: ExactValueTypeOrBlank<OptionSetValue>,
-                    checkRuntimeValues: DeferRuntimeValueChecking,
-                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
-                    targetFunction: BooleanOptionSetValueToNumber)
-            },
-            {
                 UnaryOpKind.OptionSetToNumber,
                 StandardErrorHandling<OptionSetValue>(
                     functionName: null, // internal function, no user-facing name
@@ -560,18 +549,6 @@ namespace Microsoft.PowerFx.Functions
                         (byte)((value >> 16) & 0xFF),
                         (byte)((value >> 8) & 0xFF),
                         (byte)(value & 0xFF));
-        }
-
-        public static FormulaValue BooleanOptionSetValueToNumber(IRContext irContext, OptionSetValue[] args)
-        {
-            var optionSet = args[0];
-            if (optionSet.ExecutionValue is bool evalValue)
-            {                
-                return new NumberValue(irContext, evalValue ? 1 : 0);
-            }
-
-            // IR Gen should not attempt to coerce a non-boolean-backed option set to a number using this operation.
-            return CommonErrors.UnreachableCodeError(irContext);
         }
         #endregion
     }

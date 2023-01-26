@@ -3174,7 +3174,8 @@ namespace Microsoft.PowerFx.Core.Types
                     doesCoerce = Kind == DKind.String ||
                                  Number.Accepts(this) ||
                                  Boolean.Accepts(this) ||
-                                 DateTime.Accepts(this);
+                                 DateTime.Accepts(this) ||
+                                 (Kind == DKind.OptionSetValue && OptionSetInfo != null && OptionSetInfo.BackingKind == DKind.Number);
                     break;
                 case DKind.Currency:
                     // Ill-formatted strings coerce to null; unsafe.
@@ -3197,6 +3198,9 @@ namespace Microsoft.PowerFx.Core.Types
                     break;
                 case DKind.Blob:
                     doesCoerce = Kind != DKind.Guid && String.Accepts(this);
+                    break;
+                case DKind.Color:
+                    doesCoerce = Kind == DKind.OptionSetValue && OptionSetInfo != null && OptionSetInfo.BackingKind == DKind.Color;
                     break;
                 case DKind.Enum:
                     return CoercesTo(typeDest.GetEnumSupertype(), out isSafe, out coercionType, out schemaDifference, out schemaDifferenceType);

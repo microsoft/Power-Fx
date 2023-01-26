@@ -4,10 +4,13 @@
 Errors: Error 15-16: Incompatible types for comparison. These types can't be compared: OptionSetValue(ErrorKind), OptionSetValue(Color).
 
 >> Color.Red
-RGBA(255, 0, 0, 0)
+Color.Red
+
+>> ColorFade(Color.Red, 0)
+RGBA(255,0,0,1)
 
 >> Color.Red < Color.Green
-Errors: ...
+Errors: Error 10-11: Unable to compare values of type OptionSetValue(Color).
 
 >> With({ErrorSev: ErrorSeverity.Warning}, ErrorSev < ErrorSeverity.Severe) 
 true

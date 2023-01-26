@@ -712,9 +712,6 @@ namespace Microsoft.PowerFx.Core.IR
                     case CoercionKind.BooleanToNumber:
                         unaryOpKind = UnaryOpKind.BooleanToNumber;
                         break;
-                    case CoercionKind.BooleanOptionSetToNumber:
-                        unaryOpKind = UnaryOpKind.BooleanOptionSetToNumber;
-                        break;
                     case CoercionKind.OptionSetToNumber:
                         unaryOpKind = UnaryOpKind.OptionSetToNumber;
                         break;

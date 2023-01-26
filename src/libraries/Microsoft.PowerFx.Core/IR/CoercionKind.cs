@@ -9,7 +9,6 @@ namespace Microsoft.PowerFx.Core.IR
 
         TextToNumber,
         BooleanToNumber,
-        BooleanOptionSetToNumber,
         OptionSetToNumber,
         DateToNumber,
         TimeToNumber,

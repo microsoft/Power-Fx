@@ -696,8 +696,6 @@ namespace Microsoft.PowerFx.Core.Binding
                 // Option set must be numeric to compare. 
                 if (typeLeft.OptionSetInfo?.BackingKind != DKind.Number || typeRight.OptionSetInfo?.BackingKind != DKind.Number)
                 {
-                    Contracts.Assert(typeLeft.OptionSetInfo?.BackingKind == DKind.Number && typeRight.OptionSetInfo?.BackingKind == DKind.Number);
-
                     errorContainer.EnsureError(
                         DocumentErrorSeverity.Severe,
                         left.Parent,

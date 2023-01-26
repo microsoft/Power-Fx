@@ -53,8 +53,16 @@ namespace Microsoft.PowerFx.Core.IR
                     return GetToNumberCoercion(fromType);
 
                 case DKind.Color:
+                    if (DType.OptionSetValue.Accepts(fromType) && fromType.OptionSetInfo?.BackingKind == DKind.Color)
+                    {
+                        return CoercionKind.OptionSetToColor;
+                    }
+
+                    Contracts.Assert(false, "Unsupported type coercion");
+                    break;
+
                 case DKind.PenImage:
-                    // It is not safe to coerce these.
+                    // It is not safe to coerce this type.
                     Contracts.Assert(false, "Unsupported type coercion");
                     break;
 
@@ -262,11 +270,6 @@ namespace Microsoft.PowerFx.Core.IR
             if (fromType.Kind == DKind.Date)
             {
                 return CoercionKind.DateToNumber;
-            }
-
-            if (DType.OptionSetValue.Accepts(fromType) && (fromType.OptionSetInfo?.IsBooleanValued() ?? false))
-            {
-                return CoercionKind.BooleanOptionSetToNumber;
             }
 
             if (DType.OptionSetValue.Accepts(fromType) && (fromType.OptionSetInfo?.BackingKind == DKind.Number))
