@@ -479,6 +479,12 @@ namespace Microsoft.PowerFx.Core.Functions
             // Type check the args
             for (var i = 0; i < count; i++)
             {
+                // Identifiers don't have a type
+                if (IsIdentifierParam(i))
+                {
+                    continue;
+                }
+
                 var typeChecks = CheckType(args[i], argTypes[i], ParamTypes[i], errors, SupportCoercionForArg(i), out DType coercionType);
                 if (typeChecks && coercionType != null)
                 {
