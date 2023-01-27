@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Binding;
@@ -282,10 +283,12 @@ namespace Microsoft.PowerFx.Functions
                 StandardErrorHandling<FormulaValue>(
                     BuiltinFunctionsCore.ColorFade.Name,
                     expandArguments: NoArgExpansion,
-                    replaceBlankValues: DoNotReplaceBlank,
+                    replaceBlankValues: ReplaceBlankWith(
+                        new ColorValue(IRContext.NotInSource(FormulaType.Color), Color.FromArgb(0, 0, 0, 0)),
+                        new NumberValue(IRContext.NotInSource(FormulaType.Number), 0)),
                     checkRuntimeTypes: ExactSequence(
-                        ExactValueTypeOrBlank<ColorValue>,
-                        ExactValueTypeOrBlank<NumberValue>),
+                        ExactValueType<ColorValue>,
+                        ExactValueType<NumberValue>),
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: ColorFade)
@@ -738,7 +741,7 @@ namespace Microsoft.PowerFx.Functions
                 StandardErrorHandling<FormulaValue>(
                     BuiltinFunctionsCore.Index_UO.Name,
                     expandArguments: NoArgExpansion,
-                    replaceBlankValues: DoNotReplaceBlank,
+                    replaceBlankValues: ReplaceBlankWithZeroForSpecificIndices(1),
                     checkRuntimeTypes: ExactSequence(
                         ExactValueTypeOrBlank<UntypedObjectValue>,
                         ExactValueTypeOrBlank<NumberValue>),
@@ -1397,7 +1400,8 @@ namespace Microsoft.PowerFx.Functions
                 StandardErrorHandling<FormulaValue>(
                     BuiltinFunctionsCore.TimeZoneOffset.Name,
                     expandArguments: NoArgExpansion,
-                    replaceBlankValues: DoNotReplaceBlank,
+                    replaceBlankValues: ReplaceBlankWith(
+                        new DateTimeValue(IRContext.NotInSource(FormulaType.DateTime), _epoch)),
                     checkRuntimeTypes: DateOrDateTime,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
@@ -1655,9 +1659,13 @@ namespace Microsoft.PowerFx.Functions
             var recordType = tableType.ToRecord();
             return args.Select(arg =>
             {
-                if (!forceSingleColumn && arg is RecordValue record)
+                if (!forceSingleColumn && arg is RecordValue rv)
                 {
-                    return DValue<RecordValue>.Of(record);
+                    return DValue<RecordValue>.Of(rv);
+                }
+                else if (!forceSingleColumn && arg is BlankValue bv && tableType.FieldNames.Count() > 1)
+                {
+                    return DValue<RecordValue>.Of(bv);
                 }
 
                 // Handle the single-column-table case. 
