@@ -145,3 +145,27 @@ true
 
 >> If(1<0,1) >= 0
 true
+
+>> 1 < Blank()
+false
+
+>> 1 > Blank()
+true
+
+>> 1 <= Blank()
+false
+
+>> 1 >= Blank()
+true
+
+>> Blank() < 0
+false
+
+>> Blank() > 0
+false
+
+>> Blank() <= 0
+true
+
+>> Blank() >= 0
+true

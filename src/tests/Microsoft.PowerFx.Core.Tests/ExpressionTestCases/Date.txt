@@ -160,7 +160,6 @@ true
 true
 
 // Blank Date comparisons
-// SQL Null comparisons are always false
 >> If(1<0,Date(1,1,1)) < Date(2011,1,30)
 true
 
