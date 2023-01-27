@@ -34,21 +34,19 @@ true
 >> "" in ""
 true
 
-
-// If Blank is on either side, operator is false. 
-// Use If() to coerce Blank to string. 
->> Blank() in Blank()
-false
+// Blank values are coerced to strings
+>> If(1<0,"blank 1") in If(1<0,"blank 2")
+true
 
 // Case where Blank() doesn't act like ""
 >> If(false, "", Blank()) in "abc"
-false
+true
 
 >> "" in If(false, Blank(), "")
 true
 
 >> "" in If(true, Blank(), "")
-false
+true
 
 
 // Will coerce
