@@ -18,10 +18,32 @@ namespace Microsoft.PowerFx
     /// </summary>
     public class ExpressionError
     {
+        public ExpressionError()
+        {
+        }
+
         /// <summary>
         /// A description of the error message. 
         /// </summary>
-        public string Message { get; set; }
+        public string Message
+        {
+            get
+            {
+                if (_message == null && this.MessageKey != null)
+                {
+                    (var shortMessage, var _) = ErrorUtils.GetLocalizedErrorContent(new ErrorResourceKey(this.MessageKey), _messageLocale, out _);
+
+                    var msg = ErrorUtils.FormatMessage(shortMessage, _messageLocale, _messageArgs);
+
+                    _message = msg;
+                }
+
+                return _message;
+            }
+
+            // If this is set directly, it will skip localization. 
+            set => _message = value;
+        }
 
         /// <summary>
         /// Source location for this error.
@@ -42,6 +64,43 @@ namespace Microsoft.PowerFx
         /// </summary>
         public bool IsWarning => Severity < ErrorSeverity.Severe;
 
+        // localize message lazily 
+        private string _message; 
+        private object[] _messageArgs;
+        private CultureInfo _messageLocale;
+
+        internal CultureInfo MessageLocale => _messageLocale;
+
+        /// <summary>
+        /// Get a copy of this error message for the given locale. 
+        /// <see cref="Message"/> will get lazily localized using <see cref="MessageKey"/>.
+        /// </summary>
+        /// <param name="culture"></param>
+        /// <returns></returns>
+        public ExpressionError GetInLocale(CultureInfo culture)
+        {
+            // In order to localize, we need a message key
+            if (this.MessageKey != null)
+            {
+                var error = new ExpressionError
+                {
+                    Span = this.Span,
+                    Kind = this.Kind,
+                    Severity = this.Severity,
+                    MessageKey = this.MessageKey
+                };
+
+                // New message can be localized
+                error._message = null; // will be lazily computed in new locale 
+                error._messageArgs = this._messageArgs;
+                error._messageLocale = culture;
+
+                return error;
+            }
+           
+            return this;            
+        }   
+
         public override string ToString()
         {
             var prefix = IsWarning ? "Warning" : "Error";
@@ -51,7 +110,7 @@ namespace Microsoft.PowerFx
             }
             else
             {
-                return $"{prefix} {Message}";
+                return $"{prefix}: {Message}";
             }    
         }
 
@@ -60,7 +119,8 @@ namespace Microsoft.PowerFx
         {
             return new ExpressionError
             {
-                Message = error.ShortMessage,
+                _message = error.ShortMessage,
+                _messageArgs = error.MessageArgs,
                 Span = error.TextSpan,
                 Severity = (ErrorSeverity)error.Severity,
                 MessageKey = error.MessageKey
@@ -69,11 +129,10 @@ namespace Microsoft.PowerFx
 
         internal static ExpressionError New(IDocumentError error, CultureInfo locale)
         {
-            (var shortMessage, var _) = ErrorUtils.GetLocalizedErrorContent(new ErrorResourceKey(error.MessageKey), locale, out _);           
-
             return new ExpressionError
             {
-                Message = ErrorUtils.FormatMessage(shortMessage, locale, error.MessageArgs),
+                _messageLocale = locale,
+                _messageArgs = error.MessageArgs,
                 Span = error.TextSpan,
                 Severity = (ErrorSeverity)error.Severity,
                 MessageKey = error.MessageKey
