@@ -27,18 +27,10 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             foreach (var dt in dateTimeArray)
             {
-                if (dt.Kind == DateTimeKind.Utc)
-                {
-                    // UTC is not allowed
-                    Assert.Throws<ArgumentException>(() => FormulaValue.New(DateTime.UtcNow));
-                }
-                else
-                {
-                    var dateTimeValue = FormulaValue.New(dt);
-                    var dateTimeValueDeserialized = (DateTimeValue)engine.Eval(dateTimeValue.ToExpression());
+                var dateTimeValue = FormulaValue.New(dt);
+                var dateTimeValueDeserialized = (DateTimeValue)engine.Eval(dateTimeValue.ToExpression());
 
-                    Assert.Equal(dateTimeValue.Value, dateTimeValueDeserialized.Value);
-                }
+                Assert.Equal(dateTimeValue.Value, dateTimeValueDeserialized.Value);
             }
         }
 

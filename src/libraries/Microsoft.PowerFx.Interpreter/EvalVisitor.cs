@@ -642,6 +642,22 @@ namespace Microsoft.PowerFx
                 var value = _symbolValues.Get(slot);
                 if (value != null)
                 {
+                    DateTime dateTime = default;
+                    if (value is DateTimeValue dtv)
+                    {
+                        dateTime = dtv.Value;
+                    }
+                    else if (value is DateValue dv)
+                    {
+                        dateTime = dv.Value;
+                    }
+
+                    if (value is DateTimeValue || value is DateValue)
+                    {
+                        var tzi = GetService<TimeZoneInfo>() ?? TimeZoneInfo.Local;
+                        value = new DateTimeValue(value.IRContext, PotenntiallyConvertToUtc(dateTime, tzi));
+                    }
+
                     return value;
                 }
             }

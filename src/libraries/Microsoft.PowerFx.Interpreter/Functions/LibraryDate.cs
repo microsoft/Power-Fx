@@ -22,7 +22,7 @@ namespace Microsoft.PowerFx.Functions
         }
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-now-today-istoday
-        public static FormulaValue IsToday(IRContext irContext, FormulaValue[] args)
+        public static FormulaValue IsToday(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             DateTime arg0;
             switch (args[0])
@@ -37,7 +37,21 @@ namespace Microsoft.PowerFx.Functions
                     return CommonErrors.RuntimeTypeMismatch(irContext);
             }
 
-            var now = DateTime.Today;
+            var timeZoneInfo = runner.GetService<TimeZoneInfo>() ?? Local;
+
+            DateTime now = default;
+
+            if (timeZoneInfo.BaseUtcOffset == TimeSpan.Zero)
+            {
+                now = DateTime.UtcNow;
+                arg0 = PotenntiallyConvertToUtc(arg0, timeZoneInfo);
+            }
+            else
+            {
+                now = DateTime.Today;
+                arg0 = PotenntiallyConvertFromUtc(arg0, timeZoneInfo);
+            }
+        
             var same = (arg0.Year == now.Year) && (arg0.Month == now.Month) && (arg0.Day == now.Day);
             return new BooleanValue(irContext, same);
         }
@@ -539,7 +553,13 @@ namespace Microsoft.PowerFx.Functions
             // such as: Date(2000, 25, 69) -> 3/10/2002
             try
             {
-                var datetime = new DateTime(year, 1, 1)
+                var timeZoneInfo = runner.GetService<TimeZoneInfo>() ?? Local;
+
+                var dateTimeKind = timeZoneInfo.BaseUtcOffset == TimeSpan.Zero ?
+                    DateTimeKind.Utc :
+                    DateTimeKind.Unspecified;
+
+                var datetime = new DateTime(year, 1, 1, 0, 0, 0, dateTimeKind)
                     .AddMonths(month - 1)
                     .AddDays(day - 1);
 
@@ -592,7 +612,12 @@ namespace Microsoft.PowerFx.Functions
 
             try
             {
-                var dateTime = new DateTime(year, 1, 1)
+                var timeZoneInfo = runner.GetService<TimeZoneInfo>() ?? LocalTimeZone;
+                var dateTimeKind = timeZoneInfo.BaseUtcOffset == TimeSpan.Zero ?
+                    DateTimeKind.Utc :
+                    DateTimeKind.Unspecified;
+
+                var dateTime = new DateTime(year, 1, 1, 0, 0, 0, dateTimeKind)
                     .AddMonths(month - 1)
                     .AddDays(day - 1)
                     .AddHours(hour)
@@ -600,8 +625,8 @@ namespace Microsoft.PowerFx.Functions
                     .AddSeconds(second)
                     .AddMilliseconds(millisecond);
 
-                dateTime = MakeValidDateTime(runner, dateTime, runner.GetService<TimeZoneInfo>() ?? LocalTimeZone);
-
+                dateTime = MakeValidDateTime(runner, dateTime, timeZoneInfo);
+                dateTime = PotenntiallyConvertToUtc(dateTime, timeZoneInfo);
                 return new DateTimeValue(irContext, dateTime);
             }
             catch (ArgumentOutOfRangeException)
@@ -616,6 +641,33 @@ namespace Microsoft.PowerFx.Functions
 
             var datetime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, tzInfo);
             return new DateTimeValue(irContext, datetime);
+        }
+
+        /// <summary>
+        /// This function is used to convert Local time if Time Zone is set to UTC
+        /// and given time is in Local time.
+        /// </summary>
+        /// <param name="dateTime">Date Time to be converted.</param>
+        /// <param name="timeZoneInfo"> Current Engine's Timezone.</param>
+        /// <returns></returns>
+        internal static DateTime PotenntiallyConvertToUtc(DateTime dateTime, TimeZoneInfo timeZoneInfo)
+        {
+            if (dateTime.Kind != DateTimeKind.Utc && timeZoneInfo.BaseUtcOffset == TimeSpan.Zero)
+            {
+                dateTime = ConvertTimeToUtc(dateTime);
+            }
+
+            return dateTime;
+        }
+
+        internal static DateTime PotenntiallyConvertFromUtc(DateTime dateTime, TimeZoneInfo timeZoneInfo)
+        {
+            if (dateTime.Kind == DateTimeKind.Utc && timeZoneInfo.BaseUtcOffset != TimeSpan.Zero)
+            {
+                dateTime = ConvertTimeFromUtc(dateTime, timeZoneInfo);
+            }
+
+            return dateTime;
         }
 
         private static FormulaValue DateParse(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, StringValue[] args)
