@@ -264,7 +264,7 @@ namespace Microsoft.PowerFx
 
         internal bool HasDeferredArgsWarning => _errors.Any(x => x.IsWarning && x.MessageKey.Equals(TexlStrings.WarnDeferredType.Key));
 
-        internal ReadOnlySymbolTable AllSymbols { get; private set; }
+        private ReadOnlySymbolTable _allSymbols;
 
         /// <summary>
         /// Full set of Symbols passed to this binding. 
@@ -281,7 +281,7 @@ namespace Microsoft.PowerFx
                     throw new InvalidOperationException($"Must call {nameof(ApplyBinding)} before accessing combined Sybmols.");
                 }
 
-                return this.AllSymbols;
+                return this._allSymbols;
             }
         }
 
@@ -375,7 +375,7 @@ namespace Microsoft.PowerFx
                 // Don't modify any fields until after we've verified the symbols haven't change.
 
                 this._binding = binding;
-                this.AllSymbols = combinedSymbols;
+                this._allSymbols = combinedSymbols;
 
                 // Add the errors
                 IEnumerable<ExpressionError> bindingErrors = ExpressionError.New(binding.ErrorContainer.GetErrors(), CultureInfo);

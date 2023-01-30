@@ -245,6 +245,9 @@ Error({Kind:ErrorKind.InvalidArgument})
 >> DateDiff(DateValue(ParseJSON("""2011-01-15""")), DateValue(ParseJSON("""2011-01-30""")))
 15
 
+>> Value(Index(ParseJSON("[1,2,3]"), If(1<0,1)))
+Error({Kind:ErrorKind.InvalidArgument})
+
 >> DateValue(ParseJSON("""2011-1-15"""))
 Error({Kind:ErrorKind.InvalidArgument})
 
