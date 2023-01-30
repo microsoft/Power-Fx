@@ -80,7 +80,7 @@ namespace Microsoft.PowerFx
             var irResult = result.ApplyIR();
             result.ThrowOnErrors();
 
-            var expr = new ParsedExpression(irResult.TopNode, irResult.RuleScopeSymbol, stackMarker, result.CultureInfo)
+            var expr = new ParsedExpression(irResult.TopNode, irResult.RuleScopeSymbol, stackMarker, result.ParserCultureInfo)
             {
                 _globals = globals,
                 _allSymbols = result.Symbols,
