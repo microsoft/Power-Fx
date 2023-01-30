@@ -17,10 +17,10 @@ namespace Microsoft.PowerFx.Functions
     internal static partial class Library
     {
         // ColorTable is ARGB
-        private static readonly Regex RegexColorTable = new (@"^#(?<a>[0-9a-fA-F]{2})(?<r>[0-9a-fA-F]{2})(?<g>[0-9a-fA-F]{2})(?<b>[0-9a-fA-F]{2})?$", RegexOptions.Compiled);
+        private static readonly Regex RegexColorTable = new Regex(@"^#(?<a>[0-9a-fA-F]{2})(?<r>[0-9a-fA-F]{2})(?<g>[0-9a-fA-F]{2})(?<b>[0-9a-fA-F]{2})?$", LibraryFlags.RegExFlags);
 
         // CSS format is RGBA
-        private static readonly Regex RegexCSS = new (@"^#(?<r>[0-9a-fA-F]{2})(?<g>[0-9a-fA-F]{2})(?<b>[0-9a-fA-F]{2})(?<a>[0-9a-fA-F]{2})?$", RegexOptions.Compiled);
+        private static readonly Regex RegexCSS = new Regex(@"^#(?<r>[0-9a-fA-F]{2})(?<g>[0-9a-fA-F]{2})(?<b>[0-9a-fA-F]{2})(?<a>[0-9a-fA-F]{2})?$", LibraryFlags.RegExFlags);
 
         public static FormulaValue ColorValue(IRContext irContext, StringValue[] args)
         {
