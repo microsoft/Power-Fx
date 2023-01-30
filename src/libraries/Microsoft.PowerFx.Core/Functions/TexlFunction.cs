@@ -25,6 +25,7 @@ using Microsoft.PowerFx.Core.IR.Symbols;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Logging.Trackers;
 using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
@@ -411,12 +412,7 @@ namespace Microsoft.PowerFx.Core.Functions
         /// </summary>
         public virtual bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
-            return CheckTypes(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
-        }
-
-        public virtual bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
-        {
-            return CheckTypesCore(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            return CheckTypesCore(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
         }
 
         /// <summary>
@@ -454,7 +450,7 @@ namespace Microsoft.PowerFx.Core.Functions
             return SupportsParamCoercion && (argIndex <= MinArity || argIndex <= MaxArity);
         }
 
-        private bool CheckTypesCore(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        private bool CheckTypesCore(CheckTypesContext checkTypesContext, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
@@ -479,6 +475,14 @@ namespace Microsoft.PowerFx.Core.Functions
             // Type check the args
             for (var i = 0; i < count; i++)
             {
+                var expectedParamType = ParamTypes[i];
+
+                // If the strong-enum type flag is disabled, treat an enum option set type as the enum supertype instead
+                if (checkTypesContext.Features.HasFlag(Features.StronglyTypedBuiltinEnums) && expectedParamType.OptionSetInfo is EnumSymbol enumSymbol)
+                {
+                    expectedParamType = enumSymbol.EnumType;
+                }
+
                 var typeChecks = CheckType(args[i], argTypes[i], ParamTypes[i], errors, SupportCoercionForArg(i), out DType coercionType);
                 if (typeChecks && coercionType != null)
                 {

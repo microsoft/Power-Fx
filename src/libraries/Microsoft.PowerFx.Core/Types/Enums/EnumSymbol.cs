@@ -45,6 +45,19 @@ namespace Microsoft.PowerFx.Core.Types.Enums
             OptionSetType = DType.CreateOptionSetType(this);
         }
 
+        public EnumSymbol(DName name, DType backingType, IEnumerable<KeyValuePair<string, object>> members)
+        {
+            Contracts.AssertValid(name);
+
+            EntityName = name;
+            EnumType = DType.CreateEnum(
+                backingType,
+                members.Select(kvp => new KeyValuePair<DName, object>(new DName(kvp.Key), kvp.Value)));
+
+            FormulaType = new OptionSetValueType(this);
+            OptionSetType = DType.CreateOptionSetType(this);
+        }
+
         /// <summary>
         /// Look up an enum value by its unqualified name.
         /// For example, unqualifiedName="Right" -> value="right".
