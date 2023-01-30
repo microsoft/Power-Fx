@@ -52,8 +52,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 
             _sendToClientData = new List<string>();
             _scopeFactory = new TestPowerFxScopeFactory(
-                (string documentUri) => engine.CreateEditorScope(options, GetFromUri(documentUri)),
-                options);
+                (string documentUri) => engine.CreateEditorScope(options, GetFromUri(documentUri)));
             _testServer = new TestLanguageServer(_sendToClientData.Add, _scopeFactory);
         }
 
@@ -1279,8 +1278,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 
             _sendToClientData = new List<string>();
             _scopeFactory = new TestPowerFxScopeFactory(
-                (string documentUri) => engine.CreateEditorScope(new ParserOptions() { Culture = locale }, GetFromUri(documentUri)),
-                GetParserOptions(false));
+                (string documentUri) => engine.CreateEditorScope(new ParserOptions() { Culture = locale }, GetFromUri(documentUri)));
             _testServer = new TestLanguageServer(_sendToClientData.Add, _scopeFactory);
 
             _testServer.OnDataReceived(

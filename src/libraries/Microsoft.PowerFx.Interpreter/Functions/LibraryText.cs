@@ -21,22 +21,30 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Functions
 {
+    // Due to .Net static ctor initialization, must place in a separate class from Library. 
+    internal static class LibraryFlags
+    {
+        public static readonly RegexOptions RegExFlags = RegexOptions.Compiled | RegexOptions.CultureInvariant;
+    }
+
     internal static partial class Library
     {
-        private static readonly Regex _ampmReplaceRegex = new Regex("[aA][mM]\\/[pP][mM]", RegexOptions.Compiled);
-        private static readonly Regex _apReplaceRegex = new Regex("[aA]\\/[pP]", RegexOptions.Compiled);
-        private static readonly Regex _minutesBeforeSecondsRegex = new Regex("[mM][^dDyYhH]+[sS]", RegexOptions.Compiled);
-        private static readonly Regex _minutesAfterHoursRegex = new Regex("[hH][^dDyYmM]+[mM]", RegexOptions.Compiled);
-        private static readonly Regex _minutesRegex = new Regex("[mM]", RegexOptions.Compiled);
-        private static readonly Regex _internalStringRegex = new Regex("([\"][^\"]*[\"])", RegexOptions.Compiled);
-        private static readonly Regex _daysDetokenizeRegex = new Regex("[\u0004][\u0004][\u0004][\u0004]+", RegexOptions.Compiled);
-        private static readonly Regex _monthsDetokenizeRegex = new Regex("[\u0003][\u0003][\u0003][\u0003]+", RegexOptions.Compiled);
-        private static readonly Regex _yearsDetokenizeRegex = new Regex("[\u0005][\u0005][\u0005]+", RegexOptions.Compiled);
-        private static readonly Regex _years2DetokenizeRegex = new Regex("[\u0005]+", RegexOptions.Compiled);
-        private static readonly Regex _hoursDetokenizeRegex = new Regex("[\u0006][\u0006]+", RegexOptions.Compiled);
-        private static readonly Regex _minutesDetokenizeRegex = new Regex("[\u000A][\u000A]+", RegexOptions.Compiled);
-        private static readonly Regex _secondsDetokenizeRegex = new Regex("[\u0008][\u0008]+", RegexOptions.Compiled);
-        private static readonly Regex _milisecondsDetokenizeRegex = new Regex("[\u000e]+", RegexOptions.Compiled);
+        private static readonly RegexOptions RegExFlags = LibraryFlags.RegExFlags;
+
+        private static readonly Regex _ampmReplaceRegex = new Regex("[aA][mM]\\/[pP][mM]", RegExFlags);
+        private static readonly Regex _apReplaceRegex = new Regex("[aA]\\/[pP]", RegExFlags);
+        private static readonly Regex _minutesBeforeSecondsRegex = new Regex("[mM][^dDyYhH]+[sS]", RegExFlags);
+        private static readonly Regex _minutesAfterHoursRegex = new Regex("[hH][^dDyYmM]+[mM]", RegExFlags);
+        private static readonly Regex _minutesRegex = new Regex("[mM]", RegExFlags);
+        private static readonly Regex _internalStringRegex = new Regex("([\"][^\"]*[\"])", RegExFlags);
+        private static readonly Regex _daysDetokenizeRegex = new Regex("[\u0004][\u0004][\u0004][\u0004]+", RegExFlags);
+        private static readonly Regex _monthsDetokenizeRegex = new Regex("[\u0003][\u0003][\u0003][\u0003]+", RegExFlags);
+        private static readonly Regex _yearsDetokenizeRegex = new Regex("[\u0005][\u0005][\u0005]+", RegExFlags);
+        private static readonly Regex _years2DetokenizeRegex = new Regex("[\u0005]+", RegExFlags);
+        private static readonly Regex _hoursDetokenizeRegex = new Regex("[\u0006][\u0006]+", RegExFlags);
+        private static readonly Regex _minutesDetokenizeRegex = new Regex("[\u000A][\u000A]+", RegExFlags);
+        private static readonly Regex _secondsDetokenizeRegex = new Regex("[\u0008][\u0008]+", RegExFlags);
+        private static readonly Regex _milisecondsDetokenizeRegex = new Regex("[\u000e]+", RegExFlags);
 
         // Char is used for PA string escaping 
         public static FormulaValue Char(IRContext irContext, NumberValue[] args)
