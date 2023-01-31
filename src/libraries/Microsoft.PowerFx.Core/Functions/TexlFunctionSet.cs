@@ -194,9 +194,9 @@ namespace Microsoft.PowerFx.Core.Functions
 
             if (_count == 0)
             {
-                _functions = new Dictionary<string, List<TexlFunction>>(functionSet._functions);
-                _functionsInvariant = new Dictionary<string, List<TexlFunction>>(functionSet._functionsInvariant);
-                _namespaces = new Dictionary<DPath, List<TexlFunction>>(functionSet._namespaces);
+                _functions = functionSet._functions.ToDictionary(kvp => kvp.Key, kvp => new List<TexlFunction>(kvp.Value));
+                _functionsInvariant = functionSet._functionsInvariant.ToDictionary(kvp => kvp.Key, kvp => new List<TexlFunction>(kvp.Value));
+                _namespaces = functionSet._namespaces.ToDictionary(kvp => kvp.Key, kvp => new List<TexlFunction>(kvp.Value));
                 _enums = new List<string>(functionSet._enums);
                 _count = functionSet._count;
             }
