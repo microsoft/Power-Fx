@@ -54,7 +54,7 @@ namespace Microsoft.PowerFx.Core.Functions
         internal TexlFunctionSet()
         {
             _functions = new Dictionary<string, List<TexlFunction>>();
-            _functionsInvariant = new Dictionary<string, List<TexlFunction>>();
+            _functionsInvariant = new Dictionary<string, List<TexlFunction>>(StringComparer.OrdinalIgnoreCase);
             _namespaces = new Dictionary<DPath, List<TexlFunction>>();
             _enums = new List<string>();
             _count = 0;
@@ -277,16 +277,13 @@ namespace Microsoft.PowerFx.Core.Functions
 
         internal void RemoveAll(string name)
         {
-            List<TexlFunction> removed = null;
-
-            if (_functions.ContainsKey(name))
-            {
-                removed = WithNameInternal(name);
+            if (_functions.TryGetValue(name, out List<TexlFunction> removed))            
+            {                
                 _count -= removed.Count();
                 _functions.Remove(name);
             }
 
-            if (_functionsInvariant.ContainsKey(name))
+            if (_functionsInvariant.TryGetValue(name, out _))
             {
                 _functionsInvariant.Remove(name);
             }
@@ -304,7 +301,6 @@ namespace Microsoft.PowerFx.Core.Functions
                     else
                     {
                         fnsList.Remove(f);
-                        _namespaces[f.Namespace] = fnsList;
                     }
 
                     f.GetRequiredEnumNames().ToList().ForEach(removedEnum => _enums.Remove(removedEnum));
@@ -316,7 +312,46 @@ namespace Microsoft.PowerFx.Core.Functions
 
         internal void RemoveAll(TexlFunction function)
         {
-            RemoveAll(function.Name);
+            if (_functions.TryGetValue(function.Name, out List<TexlFunction> funcs))
+            {
+                _count--;
+                funcs.Remove(function);
+
+                if (!funcs.Any())
+                {
+                    _functions.Remove(function.Name);
+                }
+            }
+
+            if (_functionsInvariant.TryGetValue(function.Name, out List<TexlFunction> funcs2))
+            {
+                funcs2.Remove(function);
+
+                if (!funcs2.Any())
+                {
+                    _functionsInvariant.Remove(function.Name);
+                }
+            }
+
+            if (_namespaces.TryGetValue(function.Namespace, out List<TexlFunction> funcs3))
+            {
+                funcs3.Remove(function);
+
+                if (!funcs3.Any())
+                {
+                    _namespaces.Remove(function.Namespace);
+                }
+            }
+
+            IEnumerable<string> enums = function.GetRequiredEnumNames();
+
+            if (enums.Any())
+            {
+                foreach (string enumName in enums)
+                {
+                    _enums.Remove(enumName);
+                }
+            }
         }
     }
 }
