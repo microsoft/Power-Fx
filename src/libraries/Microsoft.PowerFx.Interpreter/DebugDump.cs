@@ -145,10 +145,17 @@ namespace Microsoft.PowerFx
                 tw.WriteLine();
             }
 
-            if (check.Binding != null)
+            try
             {
-                tw.WriteLine($"{indent}Binding: {Dump(check.ReturnType)}");
-                tw.WriteLine();
+                if (check.Binding != null)
+                {
+                    tw.WriteLine($"{indent}Binding: {Dump(check.ReturnType)}");
+                    tw.WriteLine();
+                }
+            }
+            catch
+            {
+                tw.WriteLine($"{indent}No Binding");
             }
 
             if (check.Errors.Any())
@@ -163,20 +170,34 @@ namespace Microsoft.PowerFx
             }
             else
             {
-                var run = check.GetEvaluator();
-                if (run is ParsedExpression run2)
+                try
                 {
-                    tw.WriteLine($"{indent}IR:");
-                    tw.WriteLine(Dump(run2._irnode));
-                    tw.WriteLine();
+                    var run = check.GetEvaluator();
+                    if (run is ParsedExpression run2)
+                    {
+                        tw.WriteLine($"{indent}IR:");
+                        tw.WriteLine(Dump(run2._irnode));
+                        tw.WriteLine();
+                    }
+                }
+                catch
+                {
+                    tw.WriteLine($"{indent}No IR");
                 }
             }
 
             // Symbols last - they can be very large 
-            if (check.AllSymbols != null)
+            try
             {
-                tw.WriteLine($"{indent}Symbols:");
-                Dump(check.AllSymbols, tw, indent + "   ");
+                if (check.Symbols != null)
+                {
+                    tw.WriteLine($"{indent}Symbols:");
+                    Dump(check.Symbols, tw, indent + "   ");
+                }
+            }
+            catch
+            {
+                tw.WriteLine($"{indent}No Symbols");
             }
         }
     }
