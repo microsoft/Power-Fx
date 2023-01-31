@@ -17,7 +17,7 @@ namespace Microsoft.PowerFx.Core.Texl
         public static IEnumerable<TexlFunction> BuiltinFunctionsLibrary => _library.Functions;
 
         // Slow API, only use for backward compatibility
-        internal static IEnumerable<TexlFunction> TestOnly_AllBuiltinFunctions => _library.Clone().Add(_featureGateFunctions).Functions;
+        internal static IEnumerable<TexlFunction> TestOnly_AllBuiltinFunctions => _library.Add(_featureGateFunctions).Functions;
 #pragma warning restore CS0618 // Type or member is obsolete
 
         // Functions in this list are shared and may show up in other hosts by default.

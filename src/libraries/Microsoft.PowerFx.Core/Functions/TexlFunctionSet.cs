@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Linq;
 using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Utils;
 
@@ -34,19 +35,19 @@ namespace Microsoft.PowerFx.Core.Functions
 
         internal IEnumerable<TexlFunction> WithName(string name) => WithNameInternal(name);
 
-        private List<TexlFunction> WithNameInternal(string name) => _functions.ContainsKey(name) ? _functions[name] : new List<TexlFunction>();
+        private List<TexlFunction> WithNameInternal(string name) => _functions.TryGetValue(name, out List<TexlFunction> result) ? result : new List<TexlFunction>();                
 
-        internal IEnumerable<TexlFunction> WithName(string name, DPath ns) => _functions.ContainsKey(name) ? new List<TexlFunction>(_functions[name].Where(f => f.Namespace == ns)) : new List<TexlFunction>();
+        internal IEnumerable<TexlFunction> WithName(string name, DPath ns) => _functions.TryGetValue(name, out List<TexlFunction> result) ? result.Where(f => f.Namespace == ns) : new List<TexlFunction>();
 
         internal IEnumerable<TexlFunction> WithInvariantName(string name) => WithInvariantNameInternal(name);
 
-        private List<TexlFunction> WithInvariantNameInternal(string name) => _functionsInvariant.ContainsKey(name) ? _functionsInvariant[name] : new List<TexlFunction>();
+        private List<TexlFunction> WithInvariantNameInternal(string name) => _functionsInvariant.TryGetValue(name, out List<TexlFunction> result) ? result : new List<TexlFunction>();
 
-        internal IEnumerable<TexlFunction> WithInvariantName(string name, DPath ns) => _functionsInvariant.ContainsKey(name) ? new List<TexlFunction>(_functionsInvariant[name].Where(f => f.Namespace == ns)) : new List<TexlFunction>();
+        internal IEnumerable<TexlFunction> WithInvariantName(string name, DPath ns) => _functionsInvariant.TryGetValue(name, out List<TexlFunction> result) ? result.Where(f => f.Namespace == ns) : new List<TexlFunction>();
 
         internal IEnumerable<TexlFunction> WithNamespace(DPath ns) => WithNamespaceInternal(ns);
 
-        private List<TexlFunction> WithNamespaceInternal(DPath ns) => _namespaces.ContainsKey(ns) ? _namespaces[ns] : new List<TexlFunction>();
+        private List<TexlFunction> WithNamespaceInternal(DPath ns) => _namespaces.TryGetValue(ns, out List<TexlFunction> result) ? result : new List<TexlFunction>();
 
         internal IEnumerable<string> Enums => _enums;
 
@@ -57,15 +58,6 @@ namespace Microsoft.PowerFx.Core.Functions
             _namespaces = new Dictionary<DPath, List<TexlFunction>>();
             _enums = new List<string>();
             _count = 0;
-        }
-
-        private TexlFunctionSet(Dictionary<string, List<TexlFunction>> functions, Dictionary<string, List<TexlFunction>> functionsInvariant, Dictionary<DPath, List<TexlFunction>> functionNamespaces, List<string> enums, int count)
-        {
-            _functions = functions ?? throw new ArgumentNullException(nameof(functions));
-            _functionsInvariant = functionsInvariant ?? throw new ArgumentNullException(nameof(functionsInvariant));
-            _namespaces = functionNamespaces ?? throw new ArgumentNullException(nameof(functionNamespaces));
-            _enums = enums ?? throw new ArgumentNullException(nameof(enums));
-            _count = count;
         }
 
         internal TexlFunctionSet(TexlFunction function)
@@ -95,15 +87,6 @@ namespace Microsoft.PowerFx.Core.Functions
             {
                 Add(func);
             }
-        }
-
-        internal TexlFunctionSet(TexlFunctionSet other)
-        {
-            _functions = new Dictionary<string, List<TexlFunction>>(other._functions);
-            _functionsInvariant = new Dictionary<string, List<TexlFunction>>(other._functionsInvariant);
-            _namespaces = new Dictionary<DPath, List<TexlFunction>>(other._namespaces);
-            _enums = new List<string>(other._enums);
-            _count = other._count;
         }
 
         internal TexlFunctionSet(IEnumerable<TexlFunctionSet> functionSets)
@@ -334,11 +317,6 @@ namespace Microsoft.PowerFx.Core.Functions
         internal void RemoveAll(TexlFunction function)
         {
             RemoveAll(function.Name);
-        }
-
-        internal TexlFunctionSet Clone()
-        {
-            return new TexlFunctionSet(this);
         }
     }
 }
