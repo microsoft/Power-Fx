@@ -1,0 +1,20 @@
+﻿
+// Test mutations on a collection from ForAll() 
+
+// These are all verified in Power Apps 
+// 
+
+>> With({ t : Sequence(4)},  Collect(t, { Value : 99}); Concat(t, Value))
+"123499"
+
+>> With({ t : ForAll(Sequence(4), Value*10)},  Collect(t, { Value : 99}); Concat(t, Value)); 
+"1020304099"
+
+
+// Inner sequence is unchaged 
+>> With( { t : Sequence(5)}, 
+      With( {t2 : ForAll(t, Value * 2)},
+        Collect(t2, { Value : 99 }); 
+        Concat(t, Value) & "," & Concat(t2, Value)
+      )) 
+"12345,24681099"
