@@ -249,7 +249,6 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Empty(tfs.WithNamespace(DPath.Root));
         }
 
-
         private class TestTexlFunction : TexlFunction
         {
             private readonly int _requiredEnums = 0;
