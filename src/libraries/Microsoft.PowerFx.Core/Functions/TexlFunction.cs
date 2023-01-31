@@ -399,7 +399,6 @@ namespace Microsoft.PowerFx.Core.Functions
             return char.ToLowerInvariant(name[0]).ToString() + name.Substring(1) + suffix + (IsAsync && !suppressAsync ? "Async" : string.Empty);
         }
 
-        #region CheckInvocation Replacement Project
         public bool HandleCheckInvocation(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             var result = CheckTypes(binding.CheckTypesContext, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
@@ -426,7 +425,6 @@ namespace Microsoft.PowerFx.Core.Functions
         public virtual void CheckSemantics(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors)
         {
         }
-        #endregion
 
         public virtual bool CheckForDynamicReturnType(TexlBinding binding, TexlNode[] args)
         {
@@ -450,7 +448,7 @@ namespace Microsoft.PowerFx.Core.Functions
             return SupportsParamCoercion && (argIndex <= MinArity || argIndex <= MaxArity);
         }
 
-        private bool CheckTypesCore(CheckTypesContext checkTypesContext, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        private bool CheckTypesCore(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
@@ -478,7 +476,7 @@ namespace Microsoft.PowerFx.Core.Functions
                 var expectedParamType = ParamTypes[i];
 
                 // If the strong-enum type flag is disabled, treat an enum option set type as the enum supertype instead
-                if (!checkTypesContext.Features.HasFlag(Features.StronglyTypedBuiltinEnums) && expectedParamType.OptionSetInfo is EnumSymbol enumSymbol)
+                if (!context.Features.HasFlag(Features.StronglyTypedBuiltinEnums) && expectedParamType.OptionSetInfo is EnumSymbol enumSymbol)
                 {
                     expectedParamType = enumSymbol.EnumType;
                 }

@@ -24,6 +24,8 @@ namespace Microsoft.PowerFx.Functions
 
         public override bool RequiresDataSourceScope => true;
 
+        public override bool CanSuggestInputColumns => true;
+
         public override bool ArgMatchesDatasourceType(int argNum)
         {
             return argNum >= 1;
