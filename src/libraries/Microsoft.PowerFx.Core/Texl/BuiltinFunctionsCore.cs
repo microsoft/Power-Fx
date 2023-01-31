@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Texl.Builtins;
 

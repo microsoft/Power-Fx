@@ -45,13 +45,17 @@ namespace Microsoft.PowerFx.Core.Tests
         [Fact]
         public void TextFunctionSet_Ctor()
         {
-            _ = new TexlFunctionSet();
+            var tfs = new TexlFunctionSet();
+
+            Assert.NotNull(tfs);
+            Assert.False(tfs.Any());
         }
 
         [Fact]
         public void TextFunctionSet_Ctor_NullFunction()
         {
             Assert.Throws<ArgumentNullException>(() => new TexlFunctionSet((TexlFunction)null));
+            Assert.Throws<ArgumentNullException>(() => new TexlFunctionSet((IEnumerable<TexlFunctionSet>)null));
         }
 
         [Fact]
@@ -64,8 +68,13 @@ namespace Microsoft.PowerFx.Core.Tests
         [Obsolete("Contains testing Obsolete functions")]
         public void TextFunctionSet_OneFunc()
         {
-            var tfs = new TexlFunctionSet();
+            var tfs = new TexlFunctionSet();            
             var func1 = new TestTexlFunction("func1");
+
+            Assert.Throws<ArgumentNullException>(() => tfs.Add((TexlFunction)null));
+            Assert.Throws<ArgumentNullException>(() => tfs.Add((TexlFunctionSet)null));
+            Assert.Throws<ArgumentNullException>(() => tfs.Add((IEnumerable<TexlFunction>)null));
+
             tfs.Add(func1);
 
             Assert.Empty(tfs.Enums);
@@ -73,6 +82,8 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Contains(tfs.Functions, f => f == func1);
             Assert.Contains(tfs.WithName("func1"), f => f == func1);
             Assert.Contains(tfs.WithInvariantName("func1"), f => f == func1);
+            Assert.Contains(tfs.WithInvariantName("func1", DPath.Root), f => f == func1);
+            Assert.Empty(tfs.WithInvariantName("func1", DPath.Root.Append(new DName("other"))));
             Assert.Empty(tfs.WithName("FUNC1"));
             Assert.Contains(tfs.WithInvariantName("FUNC1"), f => f == func1);
             Assert.True(tfs.AnyWithName("func1"));
@@ -101,7 +112,9 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Contains(tfs.WithName("func1"), f => f == func1);
             Assert.Contains(tfs.WithName("func2"), f => f == func2);
             Assert.Contains(tfs.WithInvariantName("func1"), f => f == func1);
+            Assert.Contains(tfs.WithInvariantName("func1", DPath.Root), f => f == func1);
             Assert.Contains(tfs.WithInvariantName("func2"), f => f == func2);
+            Assert.Contains(tfs.WithInvariantName("func2", DPath.Root), f => f == func2);
             Assert.Empty(tfs.WithName("FUNC1"));
             Assert.Empty(tfs.WithName("FUNC2"));
             Assert.Contains(tfs.WithInvariantName("FUNC1"), f => f == func1);
@@ -117,6 +130,8 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Contains(tfs.FunctionNames, f => f == "func2");            
             Assert.Contains(tfs.InvariantFunctionNames, f => f == "func1");
             Assert.Contains(tfs.InvariantFunctionNames, f => f == "func2");
+
+            Assert.Throws<ArgumentException>(() => tfs.Add(func1));            
         }
 
         [Fact]
@@ -253,8 +268,8 @@ namespace Microsoft.PowerFx.Core.Tests
         {
             private readonly int _requiredEnums = 0;
                 
-            public TestTexlFunction(string name, DType type = null, int requiredEnums = 0)
-                : this(DPath.Root, name, name, (string locale) => name, FunctionCategories.Text, type ?? DType.String, 0, 1, 1, type ?? DType.String)
+            public TestTexlFunction(string name, DType type = null, int requiredEnums = 0, DPath? path = null)
+                : this(path ?? DPath.Root, name, name, (string locale) => name, FunctionCategories.Text, type ?? DType.String, 0, 1, 1, type ?? DType.String)
             {
                 _requiredEnums = requiredEnums;
             }

@@ -112,7 +112,7 @@ namespace Microsoft.PowerFx.Core.Functions
         {
             get
             {
-                foreach (var kvp in _functions)
+                foreach (var kvp in _functions.ToList())
                 {
                     foreach (var func in kvp.Value)
                     {
@@ -257,6 +257,11 @@ namespace Microsoft.PowerFx.Core.Functions
 
         internal void Add(IEnumerable<TexlFunction> functions)
         {
+            if (functions == null)
+            {
+                throw new ArgumentNullException(nameof(functions));
+            }
+
             foreach (var t in functions)
             {
                 Add(t);
