@@ -268,6 +268,17 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: OptionSetValueToString)
+            },
+            {
+                UnaryOpKind.TextToHyperlink,
+                StandardErrorHandling<StringValue>(
+                    functionName: null, // internal function, no user-facing name
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<StringValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: TextToHyperlink)
             }
         };
         #endregion
@@ -333,6 +344,12 @@ namespace Microsoft.PowerFx.Functions
             }
 
             return CommonErrors.InvalidBooleanFormatError(irContext);
+        }
+
+        public static FormulaValue TextToHyperlink(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, StringValue[] args)
+        {
+            var val = args[0].Value;
+            return FormulaValue.NewUrl(val);
         }
 
         public static FormulaValue DateToNumber(IRContext irContext, FormulaValue[] args)

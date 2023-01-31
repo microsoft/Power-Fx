@@ -35,5 +35,33 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var ir = IRTranslator.Translate(checkResult.Binding).ToString();
             Assert.DoesNotContain("AggregateCoercionNode", ir);
         }
+
+        [Theory]
+
+        [InlineData("EndsWith(hyperlinkVar,\".com\")")]
+        [InlineData("Text(hyperlinkVar)")]
+        [InlineData("hyperlinkVar & extraHyperlinkVar")]
+        [InlineData("hyperlinkVar & extraHyperlinkVar & stringVar")]
+        [InlineData("With({t1:Table({a:hyperlinkVar})},Patch(t1,First(t1),{a:stringVar}))")]
+        public void TempTest(string expr)
+        {
+            var url1 = "https://www.msn.com";
+            var url2 = "https://www.microsoft.com";
+
+            var engine = new RecalcEngine(new PowerFxConfig());
+
+            var hyperlinkVar = FormulaValue.NewUrl(url1);
+            var extraHyperlinkVar = FormulaValue.NewUrl(url2);
+            var stringVar = FormulaValue.New("lichess.org");
+
+            engine.Config.SymbolTable.EnableMutationFunctions();
+            engine.Config.SymbolTable.AddConstant("hyperlinkVar", hyperlinkVar);
+            engine.Config.SymbolTable.AddConstant("extraHyperlinkVar", extraHyperlinkVar);
+            engine.Config.SymbolTable.AddConstant("stringVar", stringVar);
+
+            var result = engine.Eval(expr, options: new ParserOptions() { AllowsSideEffects = true });
+
+            Assert.IsNotType<ErrorValue>(result);
+        }
     }
 }

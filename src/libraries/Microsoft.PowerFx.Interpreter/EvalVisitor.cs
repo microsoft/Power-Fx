@@ -508,6 +508,24 @@ namespace Microsoft.PowerFx
 
                 return new InMemoryTableValue(node.IRContext, resultRows);
             }
+            else if (node.Op == UnaryOpKind.RecordToRecord)
+            {
+                var fields = new List<NamedValue>();
+                var scopeContext = context.SymbolContext.WithScope(node.Scope);
+                var newScope = scopeContext.WithScopeValues((RecordValue)arg1);
+
+                foreach (var coercion in node.FieldCoercions)
+                {
+                    CheckCancel();
+
+                    var newValue = await coercion.Value.Accept(this, context.NewScope(newScope));
+                    var name = coercion.Key;
+
+                    fields.Add(new NamedValue(name.Value, newValue));
+                }
+
+                return FormulaValue.NewRecordFromFields(fields);
+            }
 
             return CommonErrors.UnreachableCodeError(node.IRContext);
         }
