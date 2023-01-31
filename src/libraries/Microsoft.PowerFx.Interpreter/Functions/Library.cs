@@ -1702,7 +1702,7 @@ namespace Microsoft.PowerFx.Functions
             return new BooleanValue(irContext, IsBlank(arg0));
         }
 
-        public static bool IsBlank(FormulaValue arg)
+        private static bool IsBlank(FormulaValue arg)
         {
             if (arg is BlankValue)
             {
@@ -1712,6 +1712,11 @@ namespace Microsoft.PowerFx.Functions
             if (arg is StringValue str)
             {
                 return str.Value.Length == 0;
+            }
+
+            if (arg is UntypedObjectValue uo && uo.Impl.Type == FormulaType.String)
+            {
+                return uo.Impl.GetString().Length == 0;
             }
 
             return false;

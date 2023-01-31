@@ -386,3 +386,21 @@ Time(11,12,0,0)
 
 >> TimeValue(ParseJSON("""11:12:00.1234567"""))
 Time(11,12,0,123)
+
+>> IsBlank(ParseJSON("{""a"":null,""b"":""""}").a)
+true
+
+>> IsBlank(ParseJSON("{""a"":null,""b"":""""}").b)
+true
+
+>> IsBlank(ParseJSON("{""a"":null,""b"":""""}").c)
+true
+
+>> Text(ParseJSON("{""a"":null,""b"":""""}").a) = Blank()
+true
+
+>> Text(ParseJSON("{""a"":null,""b"":""""}").b) = Blank()
+false
+
+>> Text(ParseJSON("{""a"":null,""b"":""""}").c) = Blank()
+true
