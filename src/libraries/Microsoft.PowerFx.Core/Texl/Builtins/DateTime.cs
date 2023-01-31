@@ -221,7 +221,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool SupportsParamCoercion => true;
 
         public WeekdayFunction()
-            : base("Weekday", TexlStrings.AboutWeekday, FunctionCategories.DateTime, DType.Number, 0, 1, 2, DType.DateTime, DType.Number)
+            : base("Weekday", TexlStrings.AboutWeekday, FunctionCategories.DateTime, DType.Number, 0, 1, 2, DType.DateTime, BuiltInEnums.StartOfWeekEnum.FormulaType._type)
         {
         }
 
@@ -378,7 +378,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         internal static readonly List<string> SubDayStringList = new List<string>() { "Hours", "Minutes", "Seconds", "Milliseconds" };
 
         public DateAddFunction()
-            : base("DateAdd", TexlStrings.AboutDateAdd, FunctionCategories.DateTime, DType.DateTime, 0, 2, 3, DType.DateTime, DType.Number, DType.String)
+            : base("DateAdd", TexlStrings.AboutDateAdd, FunctionCategories.DateTime, DType.DateTime, 0, 2, 3, DType.DateTime, DType.Number, BuiltInEnums.TimeUnitEnum.FormulaType._type)
         {
         }
 
@@ -530,11 +530,25 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             var hasUnits = args.Length == 3;
-            if (hasUnits && !DType.String.Accepts(argTypes[2]))
+
+            var arg2ExpectedType = context.Features.HasFlag(Features.StronglyTypedBuiltinEnums) ?
+                BuiltInEnums.TimeUnitEnum.OptionSetType :
+                DType.String;
+
+            if (hasUnits)
             {
-                // Arg2 should be a string
-                fValid = false;
-                errors.EnsureError(DocumentErrorSeverity.Severe, args[2], TexlStrings.ErrStringExpected);
+                if (!arg2ExpectedType.Accepts(argTypes[2]))
+                {
+                    // Arg2 should be a BuiltInEnums.TimeUnitEnum.OptionSetType
+                    fValid = false;
+                    errors.TypeMismatchError(args[2], arg2ExpectedType, argTypes[2]);
+                }
+                else if (arg2ExpectedType.OptionSetInfo is EnumSymbol enumSymbol1)
+                {
+                    // For implementations, coerce enum option set values to the backing type
+                    var coercionType = enumSymbol1.EnumType.GetEnumSupertype();
+                    CollectionUtils.Add(ref nodeToCoercedTypeMap, args[2], coercionType);
+                }
             }
 
             // At least one arg has to be a table.
@@ -559,7 +573,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool SupportsParamCoercion => true;
 
         public DateDiffFunction()
-            : base("DateDiff", TexlStrings.AboutDateDiff, FunctionCategories.DateTime, DType.Number, 0, 2, 3, DType.DateTime, DType.DateTime, BuiltInEnums.TimeUnitEnum.OptionSetType)
+            : base("DateDiff", TexlStrings.AboutDateDiff, FunctionCategories.DateTime, DType.Number, 0, 2, 3, DType.DateTime, DType.DateTime, BuiltInEnums.TimeUnitEnum.FormulaType._type)
         {
         }
 
@@ -665,12 +679,25 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
             }
 
+            var arg2ExpectedType = context.Features.HasFlag(Features.StronglyTypedBuiltinEnums) ?
+                BuiltInEnums.TimeUnitEnum.FormulaType._type :
+                DType.String;
+
             var hasUnits = args.Length == 3;
-            if (hasUnits && !DType.String.Accepts(argTypes[2]))
+            if (hasUnits)
             {
-                // Arg2 should be a string
-                fValid = false;
-                errors.EnsureError(DocumentErrorSeverity.Severe, args[2], TexlStrings.ErrStringExpected);
+                if (!arg2ExpectedType.Accepts(argTypes[2]))
+                {
+                    // Arg2 should be a BuiltInEnums.TimeUnitEnum.OptionSetType
+                    fValid = false;
+                    errors.TypeMismatchError(args[2], arg2ExpectedType, argTypes[2]);
+                }
+                else if (arg2ExpectedType.OptionSetInfo is EnumSymbol enumSymbol1)
+                {
+                    // For implementations, coerce enum option set values to the backing type
+                    var coercionType = enumSymbol1.EnumType.GetEnumSupertype();
+                    CollectionUtils.Add(ref nodeToCoercedTypeMap, args[2], coercionType);
+                }
             }
 
             // At least one arg has to be a table.

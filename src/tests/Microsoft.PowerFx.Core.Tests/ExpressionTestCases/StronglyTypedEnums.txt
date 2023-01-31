@@ -35,7 +35,7 @@ Errors: Error 49-50: Incompatible types for comparison. These types can't be com
 
 // Functions can enforce expecting an enum type
 >> DateAdd(Date(2011,1,15), 100000000, "milliseconds")
-Errors: ...
+Errors: Error 36-50: Invalid argument type (Text). Expecting a OptionSetValue(TimeUnit) value instead.|Error 0-51: The function 'DateAdd' has some invalid arguments.
 
 >> DateAdd(Date(2011,1,15), 100000000, TimeUnit.Milliseconds)
 Date(2011,1,16)

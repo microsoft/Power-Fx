@@ -478,15 +478,24 @@ namespace Microsoft.PowerFx.Core.Functions
                 var expectedParamType = ParamTypes[i];
 
                 // If the strong-enum type flag is disabled, treat an enum option set type as the enum supertype instead
-                if (checkTypesContext.Features.HasFlag(Features.StronglyTypedBuiltinEnums) && expectedParamType.OptionSetInfo is EnumSymbol enumSymbol)
+                if (!checkTypesContext.Features.HasFlag(Features.StronglyTypedBuiltinEnums) && expectedParamType.OptionSetInfo is EnumSymbol enumSymbol)
                 {
                     expectedParamType = enumSymbol.EnumType;
                 }
 
-                var typeChecks = CheckType(args[i], argTypes[i], ParamTypes[i], errors, SupportCoercionForArg(i), out DType coercionType);
-                if (typeChecks && coercionType != null)
+                var typeChecks = CheckType(args[i], argTypes[i], expectedParamType, errors, SupportCoercionForArg(i), out DType coercionType);
+                if (typeChecks)
                 {
-                    CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i], coercionType);
+                    // For implementations, coerce enum option set values to the backing type
+                    if (expectedParamType.OptionSetInfo is EnumSymbol enumSymbol1)
+                    {
+                        coercionType = enumSymbol1.EnumType.GetEnumSupertype();
+                    }
+
+                    if (coercionType != null)
+                    {
+                        CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i], coercionType);
+                    }
                 }
 
                 fValid &= typeChecks;
@@ -1001,7 +1010,7 @@ namespace Microsoft.PowerFx.Core.Functions
                 }
             }
 
-            if (nodeType.Kind == expectedType.Kind)
+            if (nodeType.Kind == expectedType.Kind && !expectedType.IsOptionSet)
             {
                 // If coercion type is non null and coercion difference is, then the node should have been coercible.
                 // This likely indicates a bug in CoercesTo, called above
@@ -1009,7 +1018,7 @@ namespace Microsoft.PowerFx.Core.Functions
             }
             else
             {
-                errors.EnsureError(DocumentErrorSeverity.Severe, node, TexlStrings.ErrBadType_ExpectedType_ProvidedType, expectedType.GetKindString(), nodeType.GetKindString());
+                errors.TypeMismatchError(node, expectedType, nodeType);
             }
 
             return false;

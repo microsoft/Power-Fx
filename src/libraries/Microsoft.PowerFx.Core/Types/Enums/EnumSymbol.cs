@@ -13,6 +13,7 @@ namespace Microsoft.PowerFx.Core.Types.Enums
     /// <summary>
     /// Entity info that respresents an enum, such as "Align" or "Font".
     /// </summary>
+    [ThreadSafeImmutable]
     internal sealed class EnumSymbol : IExternalOptionSet
     {
         public DName EntityName { get; }
@@ -90,5 +91,17 @@ namespace Microsoft.PowerFx.Core.Types.Enums
         /// <see cref="Features.StronglyTypedBuiltinEnums"/>.
         /// </summary>
         public DType Type => throw new System.NotSupportedException("Don't access the type of an EnumSymbol directly, it depends on the value of a feature flag");
+
+        public override bool Equals(object obj)
+        {
+            return obj is EnumSymbol other &&
+                EntityName == other.EntityName &&
+                EnumType == other.EnumType;
+        }
+
+        public override int GetHashCode()
+        {
+            return Hashing.CombineHash(EntityName.GetHashCode(), EnumType.GetHashCode());
+        }
     }
 }

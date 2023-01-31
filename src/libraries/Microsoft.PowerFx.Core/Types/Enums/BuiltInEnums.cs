@@ -11,12 +11,12 @@ namespace Microsoft.PowerFx.Core.Types.Enums
 {
     internal static class BuiltInEnums
     {
-        public static EnumSymbol ColorEnum = new EnumSymbol(
+        public static readonly EnumSymbol ColorEnum = new EnumSymbol(
             new DName(EnumConstants.ColorEnumString),
             DType.Color,
-            ColorTable.InvariantNameToHexMap.Select(kvp => new KeyValuePair<string, object>(kvp.Key, kvp.Value)));
+            ColorTable.InvariantNameToHexMap.Select(kvp => new KeyValuePair<string, object>(kvp.Key, Convert.ToDouble(kvp.Value))));
 
-        public static EnumSymbol StartOfWeekEnum = new EnumSymbol(
+        public static readonly EnumSymbol StartOfWeekEnum = new EnumSymbol(
             new DName(EnumConstants.StartOfWeekEnumString),
             DType.Number,
             new Dictionary<string, object>()
@@ -31,7 +31,7 @@ namespace Microsoft.PowerFx.Core.Types.Enums
                 { "Saturday", 16 },
             });
 
-        public static EnumSymbol DateTimeFormatEnum = new EnumSymbol(
+        public static readonly EnumSymbol DateTimeFormatEnum = new EnumSymbol(
             new DName(EnumConstants.DateTimeFormatEnumString),
             DType.String,
             new Dictionary<string, object>()
@@ -49,7 +49,7 @@ namespace Microsoft.PowerFx.Core.Types.Enums
                 { "UTC", "utc" }
             });
 
-        public static EnumSymbol TimeUnitEnum = new EnumSymbol(
+        public static readonly EnumSymbol TimeUnitEnum = new EnumSymbol(
             new DName(EnumConstants.TimeUnitEnumString),
             DType.String,
             new Dictionary<string, object>()
@@ -64,7 +64,7 @@ namespace Microsoft.PowerFx.Core.Types.Enums
                 { "Milliseconds", "milliseconds" },
             });
 
-        public static EnumSymbol SortOrderEnum = new EnumSymbol(
+        public static readonly EnumSymbol SortOrderEnum = new EnumSymbol(
             new DName(LanguageConstants.SortOrderEnumString),
             DType.String,
             new Dictionary<string, object>()
