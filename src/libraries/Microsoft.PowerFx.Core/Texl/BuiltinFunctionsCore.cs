@@ -11,15 +11,7 @@ namespace Microsoft.PowerFx.Core.Texl
     // - no ControlInfo dependency 
     // - just functions that are ported over to Language.Core
     internal class BuiltinFunctionsCore
-    {
-        // Slow API, only use for backward compatibility
-#pragma warning disable CS0618 // Type or member is obsolete        
-        public static IEnumerable<TexlFunction> BuiltinFunctionsLibrary => _library.Functions;
-
-        // Slow API, only use for backward compatibility
-        internal static IEnumerable<TexlFunction> TestOnly_AllBuiltinFunctions => _library.Add(_featureGateFunctions).Functions;
-#pragma warning restore CS0618 // Type or member is obsolete
-
+    {        
         // Functions in this list are shared and may show up in other hosts by default.
         internal static readonly TexlFunctionSet _library = new TexlFunctionSet();
         private static readonly TexlFunctionSet _featureGateFunctions = new TexlFunctionSet();
@@ -222,5 +214,13 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction IsUTCToday = _featureGateFunctions.Append(new IsUTCTodayFunction());
         public static readonly TexlFunction UTCNow = _featureGateFunctions.Append(new UTCNowFunction());
         public static readonly TexlFunction UTCToday = _featureGateFunctions.Append(new UTCTodayFunction());
+
+        // Slow API, only use for backward compatibility
+#pragma warning disable CS0618 // Type or member is obsolete        
+        public static IEnumerable<TexlFunction> BuiltinFunctionsLibrary => _library.Functions;
+
+        // Slow API, only use for backward compatibility
+        internal static IEnumerable<TexlFunction> TestOnly_AllBuiltinFunctions => _library.Add(_featureGateFunctions).Functions;
+#pragma warning restore CS0618 // Type or member is obsolete
     }
 }
