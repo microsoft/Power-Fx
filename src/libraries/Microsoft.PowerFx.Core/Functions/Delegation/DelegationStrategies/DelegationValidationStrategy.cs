@@ -404,7 +404,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
 
                 if (isAsync)
                 {
-                    TrackingProvider.Instance.SetDelegationTrackerStatus(DelegationStatus.AsyncPredicate, node, binding, Function);
+                    TrackingProvider.Instance.SetDelegationTrackerStatus(DelegationStatus.AsyncPredicate, node, binding, Function, DelegationTelemetryInfo.CreateAsyncNodeTelemetryInfo(node, binding));
                 }
 
                 if (!isPure)

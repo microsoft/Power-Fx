@@ -80,11 +80,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                 if (binding.GetType(args[1]) != DType.Number)
                 {
-                    TrackingProvider.Instance.SetDelegationTrackerStatus(DelegationStatus.NotANumberArgType, callNode, binding, this, DelegationTelemetryInfo.CreateEmptyDelegationTelemetryInfo());
+                    TrackingProvider.Instance.SetDelegationTrackerStatus(DelegationStatus.NotANumberArgType, callNode, binding, this, DelegationTelemetryInfo.CreateUnsupportArgTelmetryInfo(binding.GetType(args[1])));
                 }
                 else
                 {
-                    TrackingProvider.Instance.SetDelegationTrackerStatus(DelegationStatus.InvalidArgType, callNode, binding, this, DelegationTelemetryInfo.CreateEmptyDelegationTelemetryInfo());
+                    TrackingProvider.Instance.SetDelegationTrackerStatus(DelegationStatus.InvalidArgType, callNode, binding, this, DelegationTelemetryInfo.CreateUnsupportArgTelmetryInfo(binding.GetType(args[1])));
                 }
 
                 return false;
