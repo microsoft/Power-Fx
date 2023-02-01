@@ -14,7 +14,7 @@ using static Microsoft.PowerFx.Connectors.OpenApiHelperFunctions;
 
 namespace Microsoft.PowerFx.Connectors
 {
-    internal class OpenApiParser
+    public class OpenApiParser
     {
         public static List<ConnectorFunction> GetFunctions(OpenApiDocument openApiDocument)
         {
