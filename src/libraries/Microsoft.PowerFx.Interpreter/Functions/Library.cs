@@ -404,7 +404,7 @@ namespace Microsoft.PowerFx.Functions
                         new NumberValue(IRContext.NotInSource(FormulaType.Number), 0),
                         new StringValue(IRContext.NotInSource(FormulaType.String), "days")),
                     checkRuntimeTypes: ExactSequence(
-                        DateOrDateTime,
+                        DateOrTimeOrDateTime,
                         ExactValueTypeOrBlank<NumberValue>,
                         ExactValueTypeOrBlank<StringValue>),
                     checkRuntimeValues: DeferRuntimeValueChecking,
