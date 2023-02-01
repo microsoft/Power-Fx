@@ -10,7 +10,7 @@ namespace Microsoft.PowerFx.Core.Utils
         /// <summary>
         /// The string value representing SortOrder enum.
         /// </summary>
-        public static string SortOrderEnumString => StringResources.Get("LocaleSpecificEnum_SortOrder");
+        public static string SortOrderEnumString => "SortOrder";
 
         /// <summary>
         /// Defines ascending sort order string constant.
@@ -31,10 +31,5 @@ namespace Microsoft.PowerFx.Core.Utils
         /// The string value representing the locale invariant clock function namespace.
         /// </summary>
         internal const string InvariantClockNamespace = "Clock";
-
-        /// <summary>
-        /// The invariant string value representing SortOrder enum.
-        /// </summary>
-        internal static string SortOrderEnumStringInvariant => "SortOrder";
     }
 }
