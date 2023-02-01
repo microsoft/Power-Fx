@@ -108,5 +108,10 @@ namespace Microsoft.PowerFx.Core.Logging.Trackers
 
             return new DelegationTelemetryInfo(dType.ToString());
         }
+
+        public static DelegationTelemetryInfo CreateUnSupportedDistinctArgTelmetryInfo(int condition)
+        {
+            return new DelegationTelemetryInfo(condition.ToString());
+        }
     }
 }
