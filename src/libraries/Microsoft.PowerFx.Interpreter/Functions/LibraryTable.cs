@@ -420,6 +420,7 @@ namespace Microsoft.PowerFx.Functions
 
             foreach (var pair in values)
             {
+                runner.CheckCancel();
                 pairs.Add(await pair);
             }
 
