@@ -16,7 +16,7 @@ namespace Microsoft.PowerFx.Connectors
 {
     public class OpenApiParser
     {
-        public static List<ConnectorFunction> GetFunctions(OpenApiDocument openApiDocument)
+        public static IEnumerable<ConnectorFunction> GetFunctions(OpenApiDocument openApiDocument)
         {
             if (openApiDocument == null)
             {
