@@ -268,6 +268,28 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: OptionSetValueToString)
+            },
+            {
+                UnaryOpKind.HyperlinkToText,
+                StandardErrorHandling<HyperlinkValue>(
+                    functionName: null, // internal function, no user-facing name
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<HyperlinkValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: HyperlinkToText)
+            },
+            {
+                UnaryOpKind.TextToHyperlink,
+                StandardErrorHandling<StringValue>(
+                    functionName: null, // internal function, no user-facing name
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<StringValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: TextToHyperlink)
             }
         };
         #endregion
@@ -333,6 +355,18 @@ namespace Microsoft.PowerFx.Functions
             }
 
             return CommonErrors.InvalidBooleanFormatError(irContext);
+        }
+
+        public static StringValue HyperlinkToText(IRContext irContext, HyperlinkValue[] args)
+        {
+            var value = args[0].Value;
+            return new StringValue(irContext, value);
+        }
+
+        public static HyperlinkValue TextToHyperlink(IRContext irContext, StringValue[] args)
+        {
+            var value = args[0].Value;
+            return FormulaValue.NewUrl(value);
         }
 
         public static FormulaValue DateToNumber(IRContext irContext, FormulaValue[] args)

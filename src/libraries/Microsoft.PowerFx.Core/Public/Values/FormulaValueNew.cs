@@ -69,6 +69,11 @@ namespace Microsoft.PowerFx.Types
             return new StringValue(ir, value);
         }
 
+        public static HyperlinkValue NewUrl(string value)
+        {
+            return new HyperlinkValue(IRContext.NotInSource(FormulaType.Hyperlink), value);
+        }
+
         public static BooleanValue New(bool value)
         {
             return new BooleanValue(IRContext.NotInSource(FormulaType.Boolean), value);

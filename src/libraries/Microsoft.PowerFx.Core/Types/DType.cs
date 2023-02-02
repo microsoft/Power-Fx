@@ -1916,7 +1916,10 @@ namespace Microsoft.PowerFx.Core.Types
                 case DKind.String:
                     accepts =
                         type.Kind == Kind ||
-                        type.Kind == DKind.Hyperlink ||
+
+                        // !!!???
+                        //type.Kind == DKind.Hyperlink || 
+
                         type.Kind == DKind.Image ||
                         type.Kind == DKind.PenImage ||
                         type.Kind == DKind.Media ||

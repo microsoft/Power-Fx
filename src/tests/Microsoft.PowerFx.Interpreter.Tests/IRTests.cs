@@ -58,5 +58,39 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             Assert.IsNotType<ErrorValue>(result);
         }
+
+        [Theory]
+        [InlineData("stringVar & hyperlinkVar", "somethinghttps://www.bing.com")]
+        [InlineData("stringVar & hyperlinkVar & 1", "somethinghttps://www.bing.com1")]
+        [InlineData("Upper(hyperlinkVar)", "HTTPS://WWW.BING.COM")]
+        [InlineData("Text(hyperlinkVar)", "https://www.bing.com")]
+        [InlineData("Proper(hyperlinkVar)", "Https://Www.Bing.Com")]
+        [InlineData("With({t1:Table({a:stringVar})},Patch(t1,First(t1),{a:hyperlinkVar});First(t1).a)", "https://www.bing.com")]
+        [InlineData("With({t1:Table({a:hyperlinkVar})},Patch(t1,First(t1),{a:stringVar});First(t1).a)", "something")]
+        public void HyperlinkTextCoercionTest(string expr, string expected)
+        {
+            var engine = new RecalcEngine(new PowerFxConfig());
+
+            var stringVar = FormulaValue.New("something");
+            var integerVar = FormulaValue.New(1);
+            var hyperlinkVar = FormulaValue.NewUrl("https://www.bing.com");
+
+            engine.Config.SymbolTable.EnableMutationFunctions();
+            engine.Config.SymbolTable.AddConstant("stringVar", stringVar);
+            engine.Config.SymbolTable.AddConstant("hyperlinkVar", hyperlinkVar);
+
+            var result = engine.Eval(expr, options: new ParserOptions() { AllowsSideEffects = true });
+
+            Assert.IsNotType<ErrorValue>(result);
+
+            if (result is HyperlinkValue hValue)
+            {
+                Assert.Equal(expected, hValue.Value);
+            }
+            else if (result is StringValue sValue)
+            {
+                Assert.Equal(expected, sValue.Value);
+            }            
+        }
     }
 }

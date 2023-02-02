@@ -306,7 +306,8 @@ namespace Microsoft.PowerFx.Core.IR
             var acceptsG = DType.Guid.Accepts(fromType);
             var acceptsOS = DType.OptionSetValue.Accepts(fromType);
             var acceptsV = DType.ViewValue.Accepts(fromType);
-            Contracts.Assert(acceptsN || acceptsB || acceptsDT || acceptsD || acceptsT || acceptsS || acceptsG || acceptsOS || acceptsV, "Unsupported type coercion");
+            var acceptsH = DType.Hyperlink.Accepts(fromType);
+            Contracts.Assert(acceptsN || acceptsB || acceptsDT || acceptsD || acceptsT || acceptsS || acceptsG || acceptsOS || acceptsV || acceptsH, "Unsupported type coercion");
 
             if (DType.Number.Accepts(fromType) || DType.DateTime.Accepts(fromType))
             {
@@ -340,7 +341,7 @@ namespace Microsoft.PowerFx.Core.IR
                     case DKind.Media:
                         return CoercionKind.MediaToHyperlink;
                     default:
-                        return CoercionKind.None;
+                        return CoercionKind.HyperlinkToText; // !!!???
                 }
             }
             else if (DType.OptionSetValue.Accepts(fromType))

@@ -32,5 +32,7 @@ namespace Microsoft.PowerFx.Types
         void Visit(ColorValue value);
 
         void Visit(GuidValue value);
+
+        void Visit(HyperlinkValue value);
     }
 }

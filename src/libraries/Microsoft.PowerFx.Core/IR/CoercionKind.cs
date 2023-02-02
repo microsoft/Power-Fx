@@ -34,6 +34,7 @@ namespace Microsoft.PowerFx.Core.IR
         DateToText,
         TimeToText,
         DateTimeToText,
+        HyperlinkToText,
 
         NumberToBoolean,
         TextToBoolean,

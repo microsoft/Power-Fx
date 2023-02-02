@@ -799,6 +799,9 @@ namespace Microsoft.PowerFx.Core.IR
                     case CoercionKind.AggregateToDataEntity:
                         unaryOpKind = UnaryOpKind.AggregateToDataEntity;
                         break;
+                    case CoercionKind.HyperlinkToText:
+                        unaryOpKind = UnaryOpKind.HyperlinkToText;
+                        break;
                     case CoercionKind.UntypedToText:
                         return new CallNode(IRContext.NotInSource(FormulaType.Build(toType)), BuiltinFunctionsCore.Text_UO, child);
                     case CoercionKind.UntypedToNumber:
