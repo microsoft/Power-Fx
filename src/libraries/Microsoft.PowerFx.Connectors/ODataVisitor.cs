@@ -155,8 +155,8 @@ namespace Microsoft.PowerFx.Connectors
             {
                 BooleanValue booleanValue => SerializeBooleanValue(booleanValue.Value),
                 ColorValue colorValue => throw new NotDelegableException(),
-                DateTimeValue dateTimeValue => dateTimeValue.Value.ToString("yyyy-MM-ddTHH:mm:ssZ"),
-                DateValue dateValue => dateValue.Value.ToString("yyyy-MM-dd"),
+                DateTimeValue dateTimeValue => dateTimeValue.GetConvertedValue(null).ToString("yyyy-MM-ddTHH:mm:ssZ"),
+                DateValue dateValue => dateValue.GetConvertedValue(null).ToString("yyyy-MM-dd"),
                 GuidValue guidValue => guidValue.Value.ToString(),
                 NumberValue numberValue => SerializeNumberValue(numberValue.Value),
                 StringValue stringValue => SerializeStringValue(stringValue.Value),

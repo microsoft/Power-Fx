@@ -40,9 +40,9 @@
 
 ## Daily Builds
 Daily builds of the Power Fx packages are published to Azure Artifacts. 
-- The [Azure Artifacts daily feed](https://dev.azure.com/ConversationalAI/BotFramework/_packaging?_a=feed&feed=SDK) carries the most recent packages. To consume them, specify this package source: 
+- The [Azure Artifacts daily feed](https://dev.azure.com/Power-Fx/Power%20Fx/_artifacts/feed/PowerFx) carries the most recent packages. To consume them, specify this package source: 
 ```
-https://pkgs.dev.azure.com/ConversationalAI/BotFramework/_packaging/SDK/nuget/v3/index.json
+https://pkgs.dev.azure.com/Power-Fx/7dd30b4a-31be-4ac9-a649-e6addd4d5b0a/_packaging/PowerFx/nuget/v3/index.json
 ```
 
 - For detailed instructions [visit this page](dailyBuilds.md).
