@@ -139,16 +139,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
 
                 var nextArgIdx = i + 1;
-                if (nextArgIdx < args.Length)
+                if (nextArgIdx < args.Length && argTypes[nextArgIdx] != DType.String)
                 {
-                    var isNotString = argTypes[nextArgIdx] != DType.String;
-                    var isNotIdentifier = args[nextArgIdx] is not FirstNameNode;
-
-                    if ((supportColumnNamesAsIdentifiers && isNotIdentifier) || (!supportColumnNamesAsIdentifiers && isNotString))
-                    {
-                        fValid = false;
-                        errors.EnsureError(args[i + 1], TexlStrings.ErrSortIncorrectOrder);
-                    }
+                    fValid = false;
+                    errors.EnsureError(args[i + 1], TexlStrings.ErrSortIncorrectOrder);
                 }
             }
 
