@@ -1999,7 +1999,7 @@ namespace Microsoft.PowerFx.Core.Types
                 case DKind.OptionSet:
                 case DKind.OptionSetValue:
                     accepts = (type.Kind == Kind &&
-                                (OptionSetInfo == null || type.OptionSetInfo == null || type.OptionSetInfo == OptionSetInfo)) ||
+                                (OptionSetInfo == null || type.OptionSetInfo == null || type.OptionSetInfo.Equals(OptionSetInfo))) ||
                                type.Kind == DKind.Unknown || type.Kind == DKind.Deferred;
                     break;
                 case DKind.View:

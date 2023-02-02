@@ -6,6 +6,14 @@ Errors: Error 15-16: Incompatible types for comparison. These types can't be com
 >> Color.Red
 Color.Red
 
+// Both string backed enums, but incompatble for comparison
+>> TimeUnit.Days <> JSONFormat.IndentFour
+Errors: Error 14-16: Incompatible types for comparison. These types can't be compared: OptionSetValue(TimeUnit), OptionSetValue(JSONFormat).
+
+// Valid to compare to strings
+>> TimeUnit.Days <> "abc"
+true
+
 // Coercion to Color
 >> ColorFade(Color.Red, 0)
 RGBA(255,0,0,1)
@@ -18,7 +26,10 @@ Errors: Error 10-11: Unable to compare values of type OptionSetValue(Color).
 true
 
 >> ErrorSeverity.Warning < 5
-Errors: Error 22-23: Incompatible types for comparison. These types can't be compared: OptionSetValue(ErrorSeverity), Number.
+true
+
+>> ErrorSeverity.Warning = 5
+false
 
 >> With({ErrorSev: ErrorSeverity.Warning}, ErrorSev < StartOfWeek.Saturday) 
 Errors: Error 49-50: Incompatible types for comparison. These types can't be compared: OptionSetValue(ErrorSeverity), OptionSetValue(StartOfWeek).
@@ -35,7 +46,7 @@ Errors: Error 49-50: Incompatible types for comparison. These types can't be com
 
 // Functions can enforce expecting an enum type
 >> DateAdd(Date(2011,1,15), 100000000, "milliseconds")
-Errors: ...
+Errors: Error 36-50: Invalid argument type (Text). Expecting a OptionSetValue(TimeUnit) value instead.|Error 0-51: The function 'DateAdd' has some invalid arguments.
 
 >> DateAdd(Date(2011,1,15), 100000000, TimeUnit.Milliseconds)
 Date(2011,1,16)

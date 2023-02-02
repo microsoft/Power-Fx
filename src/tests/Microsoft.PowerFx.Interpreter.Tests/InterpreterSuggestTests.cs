@@ -170,5 +170,22 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.Equal(BindKind.PowerFxResolvedObject, nameInfo.Kind);
             Assert.IsType<NameSymbol>(nameInfo.Data);
         }
+
+        [Theory]
+        [InlineData("Collect|", "Collect", "ClearCollect")]
+        [InlineData("Patc|", "Patch")]
+        [InlineData("Collect(Table({a:1, b:2}), {|", "a:", "b:")]
+        [InlineData("Collect(Table({a:1, 'test space': \"test\"), {|", "a:", "'test space':")]
+        [InlineData("Patch(Table({a:1, b:2}), {|", "a:", "b:")]
+        [InlineData("Patch({a:1, b:2}, {|", "a:", "b:")]
+        [InlineData("ClearCollect(Table({a:1, b:2}), {|", "a:", "b:")]
+        [InlineData("Remove(Table({a:1, b:2}), {|", "a:", "b:")]
+        public void TestSuggestMutationFunctions(string expression, params string[] expectedSuggestions)
+        {
+            var config = SuggestTests.Default;
+            config.SymbolTable.EnableMutationFunctions();
+            var actualSuggestions = SuggestStrings(expression, config, null);
+            Assert.Equal(expectedSuggestions, actualSuggestions);
+        }
     }
 }

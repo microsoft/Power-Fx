@@ -108,6 +108,24 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal(17.0, ((NumberValue)result).Value);
         }
 
+        [Fact]
+        public void EvalWithoutParse()
+        {
+            var engine = new RecalcEngine();
+            engine.UpdateVariable("x", 2);
+
+            var check = new CheckResult(engine)
+                .SetText("x*3")
+                .SetBindingInfo();
+
+            // Call Evaluator directly.
+            // Ensure it also pulls engine's symbols. 
+            var run = check.GetEvaluator();
+
+            var result = run.Eval();
+            Assert.Equal(2.0 * 3, result.ToObject());
+        }
+
         /// <summary>
         /// Test that helps to ensure that RecalcEngine performs evaluation in thread safe manner.
         /// </summary>

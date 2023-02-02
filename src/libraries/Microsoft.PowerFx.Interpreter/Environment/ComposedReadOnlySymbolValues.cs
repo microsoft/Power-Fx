@@ -74,7 +74,7 @@ namespace Microsoft.PowerFx
             {
                 // There were existing SymbolValues that don't match. 
                 var kv = existingMap.First();
-                var msg = $"SymbolValues '{kv.Value.DebugName}' matches to symbol table '{kv.Key.DebugName}', which is not part of symbol table '{symbolTable.DebugName}'.";
+                var msg = $"SymbolValues '{kv.Value.DebugName}' matches to symbol table '{kv.Key.DebugName}', which is not part of symbol table '{symbolTable?.DebugName}'.";
                 throw new InvalidOperationException(msg);
             }
 

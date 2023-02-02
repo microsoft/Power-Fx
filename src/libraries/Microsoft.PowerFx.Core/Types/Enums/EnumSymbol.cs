@@ -13,6 +13,7 @@ namespace Microsoft.PowerFx.Core.Types.Enums
     /// <summary>
     /// Entity info that respresents an enum, such as "Align" or "Font".
     /// </summary>
+    [ThreadSafeImmutable]
     internal sealed class EnumSymbol : IExternalOptionSet
     {
         public DName EntityName { get; }
@@ -41,6 +42,19 @@ namespace Microsoft.PowerFx.Core.Types.Enums
             EntityName = name;
             EnumType = enumSpec;
             
+            FormulaType = new OptionSetValueType(this);
+            OptionSetType = DType.CreateOptionSetType(this);
+        }
+
+        public EnumSymbol(DName name, DType backingType, IEnumerable<KeyValuePair<string, object>> members)
+        {
+            Contracts.AssertValid(name);
+
+            EntityName = name;
+            EnumType = DType.CreateEnum(
+                backingType,
+                members.Select(kvp => new KeyValuePair<DName, object>(new DName(kvp.Key), kvp.Value)));
+
             FormulaType = new OptionSetValueType(this);
             OptionSetType = DType.CreateOptionSetType(this);
         }
@@ -77,5 +91,17 @@ namespace Microsoft.PowerFx.Core.Types.Enums
         /// <see cref="Features.StronglyTypedBuiltinEnums"/>.
         /// </summary>
         public DType Type => throw new System.NotSupportedException("Don't access the type of an EnumSymbol directly, it depends on the value of a feature flag");
+
+        public override bool Equals(object obj)
+        {
+            return obj is EnumSymbol other &&
+                EntityName == other.EntityName &&
+                EnumType == other.EnumType;
+        }
+
+        public override int GetHashCode()
+        {
+            return Hashing.CombineHash(EntityName.GetHashCode(), EnumType.GetHashCode());
+        }
     }
 }

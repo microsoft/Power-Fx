@@ -15,6 +15,7 @@ using Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata;
 using Microsoft.PowerFx.Core.Functions.FunctionArgValidators;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 
@@ -30,7 +31,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool SupportsParamCoercion => false;
 
         public SortByColumnsFunction()
-            : base("SortByColumns", TexlStrings.AboutSortByColumns, FunctionCategories.Table, DType.EmptyTable, 0, 2, int.MaxValue, DType.EmptyTable, DType.String)
+            : base("SortByColumns", TexlStrings.AboutSortByColumns, FunctionCategories.Table, DType.EmptyTable, 0, 2, int.MaxValue, DType.EmptyTable, DType.String, BuiltInEnums.SortOrderEnum.OptionSetType)
         {
             _sortOrderValidator = ArgValidators.SortOrderValidator;
 
@@ -60,7 +61,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return base.GetSignatures(arity);
         }
 
-        public override bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
@@ -69,8 +70,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            var fValid = base.CheckTypes(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
             Contracts.Assert(returnType.IsTable);
+
+            var orderExpectedType = context.Features.HasFlag(Features.StronglyTypedBuiltinEnums) ?
+                BuiltInEnums.TimeUnitEnum.FormulaType._type :
+                DType.String;
 
             returnType = argTypes[0];
 
@@ -113,10 +118,19 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
 
                 var nextArgIdx = i + 1;
-                if (nextArgIdx < args.Length && argTypes[nextArgIdx] != DType.String)
+                if (nextArgIdx < args.Length)
                 {
-                    fValid = false;
-                    errors.EnsureError(args[i + 1], TexlStrings.ErrSortIncorrectOrder);
+                    if (!orderExpectedType.Accepts(argTypes[nextArgIdx]))
+                    {
+                        fValid = false;
+                        errors.TypeMismatchError(args[i + 1], argTypes[nextArgIdx], argTypes[2]);
+                    }
+                    else if (orderExpectedType.OptionSetInfo is EnumSymbol enumSymbol1)
+                    {
+                        // For implementations, coerce enum option set values to the backing type
+                        var coercionType = enumSymbol1.EnumType.GetEnumSupertype();
+                        CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i + 1], coercionType);
+                    }
                 }
             }
 
@@ -384,7 +398,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return new List<string>() { LanguageConstants.SortOrderEnumString };
         }
 
-        public override bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
@@ -393,7 +407,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            var fValid = base.CheckTypes(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
             Contracts.Assert(returnType.IsTable);
 
             returnType = argTypes[0];

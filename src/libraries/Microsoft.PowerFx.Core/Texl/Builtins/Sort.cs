@@ -15,6 +15,7 @@ using Microsoft.PowerFx.Core.Functions.FunctionArgValidators;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Logging.Trackers;
 using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 
@@ -47,7 +48,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return new List<string>() { LanguageConstants.SortOrderEnumString };
         }
 
-        public override bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
@@ -56,7 +57,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            var fValid = base.CheckTypes(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
             Contracts.Assert(returnType.IsTable);
 
             returnType = argTypes[0];
@@ -68,10 +69,23 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 errors.EnsureError(args[1], TexlStrings.ErrSortWrongType);
             }
 
-            if (args.Length == 3 && argTypes[2] != DType.String)
+            var orderExpectedType = context.Features.HasFlag(Features.StronglyTypedBuiltinEnums) ?
+                BuiltInEnums.TimeUnitEnum.FormulaType._type :
+                DType.String;
+
+            if (args.Length == 3)
             {
-                fValid = false;
-                errors.EnsureError(args[2], TexlStrings.ErrSortIncorrectOrder);
+                if (!orderExpectedType.Accepts(argTypes[2]))
+                {
+                    fValid = false;
+                    errors.TypeMismatchError(args[2], orderExpectedType, argTypes[2]);
+                }
+                else if (orderExpectedType.OptionSetInfo is EnumSymbol enumSymbol1)
+                {
+                    // For implementations, coerce enum option set values to the backing type
+                    var coercionType = enumSymbol1.EnumType.GetEnumSupertype();
+                    CollectionUtils.Add(ref nodeToCoercedTypeMap, args[2], coercionType);
+                }
             }
 
             return fValid;

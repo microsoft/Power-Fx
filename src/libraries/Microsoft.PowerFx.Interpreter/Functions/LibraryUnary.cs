@@ -498,7 +498,7 @@ namespace Microsoft.PowerFx.Functions
             var optionSet = args[0];
             if (optionSet.ExecutionValue is string evalValue)
             {                
-                return new StringValue(irContext, evalValue);
+                return new StringValue(IRContext.NotInSource(FormulaType.String), evalValue);
             }
 
             return new StringValue(irContext, optionSet.DisplayName);
@@ -509,7 +509,7 @@ namespace Microsoft.PowerFx.Functions
             var optionSet = args[0];
             if (optionSet.ExecutionValue is double evalValue)
             {                
-                return new NumberValue(irContext, evalValue);
+                return new NumberValue(IRContext.NotInSource(FormulaType.Number), evalValue);
             }
 
             // Type checker should not attempt to coerce a non-number-backed option set to a number.
@@ -521,7 +521,7 @@ namespace Microsoft.PowerFx.Functions
             var optionSet = args[0];
             if (optionSet.ExecutionValue is string evalValue)
             {                
-                return new StringValue(irContext, evalValue);
+                return new StringValue(IRContext.NotInSource(FormulaType.Boolean), evalValue);
             }
 
             // Type checker should not attempt to coerce a non-boolean-backed option set to a boolean.
@@ -534,7 +534,7 @@ namespace Microsoft.PowerFx.Functions
             if (optionSet.ExecutionValue is double evalValue)
             {
                 // Color enums are backed by a double
-                return new ColorValue(irContext, ToColor(evalValue));
+                return new ColorValue(IRContext.NotInSource(FormulaType.Color), ToColor(evalValue));
             }
 
             // IR Gen should not attempt to coerce a non-boolean-backed option set to a number using this operation.

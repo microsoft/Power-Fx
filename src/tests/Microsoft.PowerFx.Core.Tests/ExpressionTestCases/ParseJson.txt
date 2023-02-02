@@ -245,6 +245,9 @@ Error({Kind:ErrorKind.InvalidArgument})
 >> DateDiff(DateValue(ParseJSON("""2011-01-15""")), DateValue(ParseJSON("""2011-01-30""")))
 15
 
+>> Value(Index(ParseJSON("[1,2,3]"), If(1<0,1)))
+Error({Kind:ErrorKind.InvalidArgument})
+
 >> DateValue(ParseJSON("""2011-1-15"""))
 Error({Kind:ErrorKind.InvalidArgument})
 
@@ -383,3 +386,21 @@ Time(11,12,0,0)
 
 >> TimeValue(ParseJSON("""11:12:00.1234567"""))
 Time(11,12,0,123)
+
+>> IsBlank(ParseJSON("{""a"":null,""b"":""""}").a)
+true
+
+>> IsBlank(ParseJSON("{""a"":null,""b"":""""}").b)
+true
+
+>> IsBlank(ParseJSON("{""a"":null,""b"":""""}").c)
+true
+
+>> Text(ParseJSON("{""a"":null,""b"":""""}").a) = Blank()
+true
+
+>> Text(ParseJSON("{""a"":null,""b"":""""}").b) = Blank()
+false
+
+>> Text(ParseJSON("{""a"":null,""b"":""""}").c) = Blank()
+true

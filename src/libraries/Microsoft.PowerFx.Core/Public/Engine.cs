@@ -406,7 +406,14 @@ namespace Microsoft.PowerFx
             var ruleScope = this.GetRuleScope();
             var symbolTable = (parameters == null) ? null : SymbolTable.NewFromRecord(parameters);
 
-            return ExpressionLocalizationHelper.ConvertExpression(expressionText, ruleScope, GetDefaultBindingConfig(), CreateResolverInternal(symbolTable), CreateBinderGlue(), Config, toDisplay: false);
+            return GetInvariantExpressionWorker(expressionText, symbolTable, Config.CultureInfo);
+        }
+
+        internal string GetInvariantExpressionWorker(string expressionText, ReadOnlySymbolTable symbolTable, CultureInfo parseCulture)
+        {
+            var ruleScope = this.GetRuleScope();
+
+            return ExpressionLocalizationHelper.ConvertExpression(expressionText, ruleScope, GetDefaultBindingConfig(), CreateResolverInternal(symbolTable), CreateBinderGlue(), parseCulture, Config.Features, toDisplay: false);
         }
 
         /// <summary>

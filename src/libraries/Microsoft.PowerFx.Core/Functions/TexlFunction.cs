@@ -25,6 +25,7 @@ using Microsoft.PowerFx.Core.IR.Symbols;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Logging.Trackers;
 using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
@@ -398,7 +399,6 @@ namespace Microsoft.PowerFx.Core.Functions
             return char.ToLowerInvariant(name[0]).ToString() + name.Substring(1) + suffix + (IsAsync && !suppressAsync ? "Async" : string.Empty);
         }
 
-        #region CheckInvocation Replacement Project
         public bool HandleCheckInvocation(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             var result = CheckTypes(binding.CheckTypesContext, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
@@ -411,12 +411,7 @@ namespace Microsoft.PowerFx.Core.Functions
         /// </summary>
         public virtual bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
-            return CheckTypes(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
-        }
-
-        public virtual bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
-        {
-            return CheckTypesCore(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            return CheckTypesCore(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
         }
 
         /// <summary>
@@ -430,7 +425,6 @@ namespace Microsoft.PowerFx.Core.Functions
         public virtual void CheckSemantics(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors)
         {
         }
-        #endregion
 
         public virtual bool CheckForDynamicReturnType(TexlBinding binding, TexlNode[] args)
         {
@@ -454,7 +448,7 @@ namespace Microsoft.PowerFx.Core.Functions
             return SupportsParamCoercion && (argIndex <= MinArity || argIndex <= MaxArity);
         }
 
-        private bool CheckTypesCore(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        private bool CheckTypesCore(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
@@ -479,10 +473,27 @@ namespace Microsoft.PowerFx.Core.Functions
             // Type check the args
             for (var i = 0; i < count; i++)
             {
-                var typeChecks = CheckType(args[i], argTypes[i], ParamTypes[i], errors, SupportCoercionForArg(i), out DType coercionType);
-                if (typeChecks && coercionType != null)
+                var expectedParamType = ParamTypes[i];
+
+                // If the strong-enum type flag is disabled, treat an enum option set type as the enum supertype instead
+                if (!context.Features.HasFlag(Features.StronglyTypedBuiltinEnums) && expectedParamType.OptionSetInfo is EnumSymbol enumSymbol)
                 {
-                    CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i], coercionType);
+                    expectedParamType = enumSymbol.EnumType;
+                }
+
+                var typeChecks = CheckType(args[i], argTypes[i], expectedParamType, errors, SupportCoercionForArg(i), out DType coercionType);
+                if (typeChecks)
+                {
+                    // For implementations, coerce enum option set values to the backing type
+                    if (expectedParamType.OptionSetInfo is EnumSymbol enumSymbol1)
+                    {
+                        coercionType = enumSymbol1.EnumType.GetEnumSupertype();
+                    }
+
+                    if (coercionType != null)
+                    {
+                        CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i], coercionType);
+                    }
                 }
 
                 fValid &= typeChecks;
@@ -997,7 +1008,7 @@ namespace Microsoft.PowerFx.Core.Functions
                 }
             }
 
-            if (nodeType.Kind == expectedType.Kind)
+            if (nodeType.Kind == expectedType.Kind && !expectedType.IsOptionSet)
             {
                 // If coercion type is non null and coercion difference is, then the node should have been coercible.
                 // This likely indicates a bug in CoercesTo, called above
@@ -1005,7 +1016,7 @@ namespace Microsoft.PowerFx.Core.Functions
             }
             else
             {
-                errors.EnsureError(DocumentErrorSeverity.Severe, node, TexlStrings.ErrBadType_ExpectedType_ProvidedType, expectedType.GetKindString(), nodeType.GetKindString());
+                errors.TypeMismatchError(node, expectedType, nodeType);
             }
 
             return false;

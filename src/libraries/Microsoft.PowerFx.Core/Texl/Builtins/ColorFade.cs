@@ -36,7 +36,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override IEnumerable<string> GetRequiredEnumNames()
         {
-            return new List<string>() { EnumConstants.ColorEnumString };
+            return new List<string>() { BuiltInEnums.ColorEnum.EntityName.Value };
         }
     }
 }

@@ -95,7 +95,7 @@ namespace Microsoft.PowerFx.Functions
         public static readonly AsyncFunctionPtr OperatorTextIn = StandardErrorHandling(
             "in",
             expandArguments: NoArgExpansion,
-            replaceBlankValues: DoNotReplaceBlank,
+            replaceBlankValues: ReplaceBlankWithEmptyString,
             checkRuntimeTypes: DeferRuntimeTypeChecking,
             checkRuntimeValues: DeferRuntimeValueChecking,
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
@@ -104,7 +104,7 @@ namespace Microsoft.PowerFx.Functions
         public static readonly AsyncFunctionPtr OperatorTextInExact = StandardErrorHandling(
             "exactin",
             expandArguments: NoArgExpansion,
-            replaceBlankValues: DoNotReplaceBlank,
+            replaceBlankValues: ReplaceBlankWithEmptyString,
             checkRuntimeTypes: DeferRuntimeTypeChecking,
             checkRuntimeValues: DeferRuntimeValueChecking,
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
@@ -131,7 +131,9 @@ namespace Microsoft.PowerFx.Functions
         public static readonly AsyncFunctionPtr OperatorAddDateAndTime = StandardErrorHandling<FormulaValue>(
             "+",
             expandArguments: NoArgExpansion,
-            replaceBlankValues: DoNotReplaceBlank,
+            replaceBlankValues: ReplaceBlankWith(
+                new DateValue(IRContext.NotInSource(FormulaType.Date), _epoch),
+                new TimeValue(IRContext.NotInSource(FormulaType.Time), TimeSpan.Zero)),
             checkRuntimeTypes: ExactSequence(
                 DateOrDateTime,
                 ExactValueType<TimeValue>),
@@ -168,7 +170,9 @@ namespace Microsoft.PowerFx.Functions
         public static readonly AsyncFunctionPtr OperatorAddDateAndDay = StandardErrorHandling<FormulaValue>(
             "+",
             expandArguments: NoArgExpansion,
-            replaceBlankValues: DoNotReplaceBlank,
+            replaceBlankValues: ReplaceBlankWith(
+                new DateValue(IRContext.NotInSource(FormulaType.Date), _epoch),
+                new NumberValue(IRContext.NotInSource(FormulaType.Number), 0)),
             checkRuntimeTypes: ExactSequence(
                 DateOrDateTime,
                 ExactValueType<NumberValue>),
@@ -179,7 +183,9 @@ namespace Microsoft.PowerFx.Functions
         public static readonly AsyncFunctionPtr OperatorAddDateTimeAndDay = StandardErrorHandling<FormulaValue>(
             "+",
             expandArguments: NoArgExpansion,
-            replaceBlankValues: DoNotReplaceBlank,
+            replaceBlankValues: ReplaceBlankWith(
+                new DateValue(IRContext.NotInSource(FormulaType.Date), _epoch),
+                new NumberValue(IRContext.NotInSource(FormulaType.Number), 0)),
             checkRuntimeTypes: ExactSequence(
                 DateOrDateTime,
                 ExactValueType<NumberValue>),
@@ -190,7 +196,9 @@ namespace Microsoft.PowerFx.Functions
         public static readonly AsyncFunctionPtr OperatorDateDifference = StandardErrorHandling<FormulaValue>(
             "-",
             expandArguments: NoArgExpansion,
-            replaceBlankValues: DoNotReplaceBlank,
+            replaceBlankValues: ReplaceBlankWith(
+                new DateValue(IRContext.NotInSource(FormulaType.Date), _epoch),
+                new DateValue(IRContext.NotInSource(FormulaType.Date), _epoch)),
             checkRuntimeTypes: ExactSequence(
                 DateOrDateTime,
                 DateOrDateTime),
@@ -201,7 +209,9 @@ namespace Microsoft.PowerFx.Functions
         public static readonly AsyncFunctionPtr OperatorTimeDifference = StandardErrorHandling<FormulaValue>(
             "-",
             expandArguments: NoArgExpansion,
-            replaceBlankValues: DoNotReplaceBlank,
+            replaceBlankValues: ReplaceBlankWith(
+                new TimeValue(IRContext.NotInSource(FormulaType.Time), TimeSpan.Zero),
+                new TimeValue(IRContext.NotInSource(FormulaType.Time), TimeSpan.Zero)),
             checkRuntimeTypes: ExactSequence(
                 ExactValueType<TimeValue>,
                 ExactValueType<TimeValue>),
@@ -212,7 +222,9 @@ namespace Microsoft.PowerFx.Functions
         public static readonly AsyncFunctionPtr OperatorSubtractDateAndTime = StandardErrorHandling<FormulaValue>(
             "-",
             expandArguments: NoArgExpansion,
-            replaceBlankValues: DoNotReplaceBlank,
+            replaceBlankValues: ReplaceBlankWith(
+                new DateValue(IRContext.NotInSource(FormulaType.Date), _epoch),
+                new TimeValue(IRContext.NotInSource(FormulaType.Time), TimeSpan.Zero)),
             checkRuntimeTypes: ExactSequence(
                 DateOrDateTime,
                 ExactValueType<TimeValue>),
