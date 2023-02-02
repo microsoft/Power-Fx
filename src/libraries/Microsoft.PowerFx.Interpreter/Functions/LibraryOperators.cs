@@ -545,20 +545,10 @@ namespace Microsoft.PowerFx.Functions
             return DateAdd(runner, context, irContext, args);
         }
 
-        private static FormulaValue AddTimeAndNumber(IRContext irContext, FormulaValue[] args)
+        private static FormulaValue AddTimeAndNumber(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            TimeSpan arg0;
-            switch (args[0])
-            {
-                case DateTimeValue dtv:
-                    arg0 = new TimeSpan(0, dtv.Value.Hour, dtv.Value.Minute, dtv.Value.Second, dtv.Value.Millisecond);
-                    break;
-                case TimeValue tv:
-                    arg0 = tv.Value;
-                    break;
-                default:
-                    return CommonErrors.RuntimeTypeMismatch(irContext);
-            }
+            var timeZoneInfo = runner.TimeZoneInfo;
+            TimeSpan arg0 = runner.GetNormalizedTimeSpanWithoutDay(args[0]);
 
             var arg1 = (NumberValue)args[1];
 
@@ -573,32 +563,13 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
-        private static FormulaValue AddTimeAndTime(IRContext irContext, FormulaValue[] args)
+        private static FormulaValue AddTimeAndTime(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
+            var timeZoneInfo = runner.TimeZoneInfo;
             TimeSpan arg0, arg1;
-            switch (args[0])
-            {
-                case DateTimeValue dtv:
-                    arg0 = new TimeSpan(0, dtv.Value.Hour, dtv.Value.Minute, dtv.Value.Second, dtv.Value.Millisecond);
-                    break;
-                case TimeValue tv:
-                    arg0 = tv.Value;
-                    break;
-                default:
-                    return CommonErrors.RuntimeTypeMismatch(irContext);
-            }
+            arg0 = runner.GetNormalizedTimeSpanWithoutDay(args[0]);
 
-            switch (args[1])
-            {
-                case DateTimeValue dtv:
-                    arg1 = new TimeSpan(0, dtv.Value.Hour, dtv.Value.Minute, dtv.Value.Second, dtv.Value.Millisecond);
-                    break;
-                case TimeValue tv:
-                    arg1 = tv.Value;
-                    break;
-                default:
-                    return CommonErrors.RuntimeTypeMismatch(irContext);
-            }
+            arg1 = runner.GetNormalizedTimeSpanWithoutDay(args[1]);
 
             try
             {
@@ -621,33 +592,12 @@ namespace Microsoft.PowerFx.Functions
             return DateAdd(runner, context, irContext, new FormulaValue[3] { args[0], args[1], StringValue.New("Days") });
         }
 
-        private static FormulaValue DateDifference(IRContext irContext, FormulaValue[] args)
+        private static FormulaValue DateDifference(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            DateTime arg0;
-            switch (args[0])
-            {
-                case DateTimeValue dtv:
-                    arg0 = dtv.Value;
-                    break;
-                case DateValue dv:
-                    arg0 = dv.Value;
-                    break;
-                default:
-                    return CommonErrors.RuntimeTypeMismatch(irContext);
-            }
+            var timeZoneInfo = runner.TimeZoneInfo;
+            DateTime arg0 = runner.GetNormalizedDateTime(args[0]);
 
-            DateTime arg1;
-            switch (args[1])
-            {
-                case DateTimeValue dtv:
-                    arg1 = dtv.Value;
-                    break;
-                case DateValue dv:
-                    arg1 = dv.Value;
-                    break;
-                default:
-                    return CommonErrors.RuntimeTypeMismatch(irContext);
-            }
+            DateTime arg1 = runner.GetNormalizedDateTime(args[1]);
 
             var result = arg0.Subtract(arg1);
             return new NumberValue(irContext, result.Days);
@@ -687,257 +637,89 @@ namespace Microsoft.PowerFx.Functions
             });
         }
 
-        private static FormulaValue LtDateTime(IRContext irContext, FormulaValue[] args)
+        private static FormulaValue LtDateTime(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            DateTime arg0;
-            switch (args[0])
-            {
-                case DateTimeValue dtv:
-                    arg0 = dtv.Value;
-                    break;
-                case DateValue dv:
-                    arg0 = dv.Value;
-                    break;
-                default:
-                    return CommonErrors.RuntimeTypeMismatch(irContext);
-            }
-
-            DateTime arg1;
-            switch (args[1])
-            {
-                case DateTimeValue dtv:
-                    arg1 = dtv.Value;
-                    break;
-                case DateValue dv:
-                    arg1 = dv.Value;
-                    break;
-                default:
-                    return CommonErrors.RuntimeTypeMismatch(irContext);
-            }
+            var timeZoneInfo = runner.TimeZoneInfo;
+            DateTime arg0 = runner.GetNormalizedDateTime(args[0]);
+            
+            DateTime arg1 = runner.GetNormalizedDateTime(args[1]);
 
             var result = arg0 < arg1;
             return new BooleanValue(irContext, result);
         }
 
-        private static FormulaValue LeqDateTime(IRContext irContext, FormulaValue[] args)
+        private static FormulaValue LeqDateTime(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            DateTime arg0;
-            switch (args[0])
-            {
-                case DateTimeValue dtv:
-                    arg0 = dtv.Value;
-                    break;
-                case DateValue dv:
-                    arg0 = dv.Value;
-                    break;
-                default:
-                    return CommonErrors.RuntimeTypeMismatch(irContext);
-            }
+            var timeZoneInfo = runner.TimeZoneInfo;
+            DateTime arg0 = runner.GetNormalizedDateTime(args[0]);
 
-            DateTime arg1;
-            switch (args[1])
-            {
-                case DateTimeValue dtv:
-                    arg1 = dtv.Value;
-                    break;
-                case DateValue dv:
-                    arg1 = dv.Value;
-                    break;
-                default:
-                    return CommonErrors.RuntimeTypeMismatch(irContext);
-            }
+            DateTime arg1 = runner.GetNormalizedDateTime(args[1]);
 
             var result = arg0 <= arg1;
             return new BooleanValue(irContext, result);
         }
 
-        private static FormulaValue GtDateTime(IRContext irContext, FormulaValue[] args)
+        private static FormulaValue GtDateTime(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            DateTime arg0;
-            switch (args[0])
-            {
-                case DateTimeValue dtv:
-                    arg0 = dtv.Value;
-                    break;
-                case DateValue dv:
-                    arg0 = dv.Value;
-                    break;
-                default:
-                    return CommonErrors.RuntimeTypeMismatch(irContext);
-            }
+            var timeZoneInfo = runner.TimeZoneInfo;
+            DateTime arg0 = runner.GetNormalizedDateTime(args[0]);
 
-            DateTime arg1;
-            switch (args[1])
-            {
-                case DateTimeValue dtv:
-                    arg1 = dtv.Value;
-                    break;
-                case DateValue dv:
-                    arg1 = dv.Value;
-                    break;
-                default:
-                    return CommonErrors.RuntimeTypeMismatch(irContext);
-            }
+            DateTime arg1 = runner.GetNormalizedDateTime(args[1]);
 
             var result = arg0 > arg1;
             return new BooleanValue(irContext, result);
         }
 
-        private static FormulaValue GeqDateTime(IRContext irContext, FormulaValue[] args)
+        private static FormulaValue GeqDateTime(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            DateTime arg0;
-            switch (args[0])
-            {
-                case DateTimeValue dtv:
-                    arg0 = dtv.Value;
-                    break;
-                case DateValue dv:
-                    arg0 = dv.Value;
-                    break;
-                default:
-                    return CommonErrors.RuntimeTypeMismatch(irContext);
-            }
+            var timeZoneInfo = runner.TimeZoneInfo;
+            DateTime arg0 = runner.GetNormalizedDateTime(args[0]);
 
-            DateTime arg1;
-            switch (args[1])
-            {
-                case DateTimeValue dtv:
-                    arg1 = dtv.Value;
-                    break;
-                case DateValue dv:
-                    arg1 = dv.Value;
-                    break;
-                default:
-                    return CommonErrors.RuntimeTypeMismatch(irContext);
-            }
+            DateTime arg1 = runner.GetNormalizedDateTime(args[1]);
 
             var result = arg0 >= arg1;
             return new BooleanValue(irContext, result);
         }
 
-        private static FormulaValue LtDate(IRContext irContext, FormulaValue[] args)
+        private static FormulaValue LtDate(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            DateTime arg0;
-            switch (args[0])
-            {
-                case DateTimeValue dtv:
-                    arg0 = dtv.Value;
-                    break;
-                case DateValue dv:
-                    arg0 = dv.Value;
-                    break;
-                default:
-                    return CommonErrors.RuntimeTypeMismatch(irContext);
-            }
+            var timeZoneInfo = runner.TimeZoneInfo;
+            DateTime arg0 = runner.GetNormalizedDateTime(args[0]);
 
-            DateTime arg1;
-            switch (args[1])
-            {
-                case DateTimeValue dtv:
-                    arg1 = dtv.Value;
-                    break;
-                case DateValue dv:
-                    arg1 = dv.Value;
-                    break;
-                default:
-                    return CommonErrors.RuntimeTypeMismatch(irContext);
-            }
+            DateTime arg1 = runner.GetNormalizedDateTime(args[1]);
 
             var result = arg0 < arg1;
             return new BooleanValue(irContext, result);
         }
 
-        private static FormulaValue LeqDate(IRContext irContext, FormulaValue[] args)
+        private static FormulaValue LeqDate(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            DateTime arg0;
-            switch (args[0])
-            {
-                case DateTimeValue dtv:
-                    arg0 = dtv.Value;
-                    break;
-                case DateValue dv:
-                    arg0 = dv.Value;
-                    break;
-                default:
-                    return CommonErrors.RuntimeTypeMismatch(irContext);
-            }
+            var timeZoneInfo = runner.TimeZoneInfo;
+            DateTime arg0 = runner.GetNormalizedDateTime(args[0]);
 
-            DateTime arg1;
-            switch (args[1])
-            {
-                case DateTimeValue dtv:
-                    arg1 = dtv.Value;
-                    break;
-                case DateValue dv:
-                    arg1 = dv.Value;
-                    break;
-                default:
-                    return CommonErrors.RuntimeTypeMismatch(irContext);
-            }
+            DateTime arg1 = runner.GetNormalizedDateTime(args[1]);
 
             var result = arg0 <= arg1;
             return new BooleanValue(irContext, result);
         }
 
-        private static FormulaValue GtDate(IRContext irContext, FormulaValue[] args)
+        private static FormulaValue GtDate(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            DateTime arg0;
-            switch (args[0])
-            {
-                case DateTimeValue dtv:
-                    arg0 = dtv.Value;
-                    break;
-                case DateValue dv:
-                    arg0 = dv.Value;
-                    break;
-                default:
-                    return CommonErrors.RuntimeTypeMismatch(irContext);
-            }
+            var timeZoneInfo = runner.TimeZoneInfo;
+            DateTime arg0 = runner.GetNormalizedDateTime(args[0]);
 
-            DateTime arg1;
-            switch (args[1])
-            {
-                case DateTimeValue dtv:
-                    arg1 = dtv.Value;
-                    break;
-                case DateValue dv:
-                    arg1 = dv.Value;
-                    break;
-                default:
-                    return CommonErrors.RuntimeTypeMismatch(irContext);
-            }
+            DateTime arg1 = runner.GetNormalizedDateTime(args[1]);
 
             var result = arg0 > arg1;
             return new BooleanValue(irContext, result);
         }
 
-        private static FormulaValue GeqDate(IRContext irContext, FormulaValue[] args)
+        private static FormulaValue GeqDate(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            DateTime arg0;
-            switch (args[0])
-            {
-                case DateTimeValue dtv:
-                    arg0 = dtv.Value;
-                    break;
-                case DateValue dv:
-                    arg0 = dv.Value;
-                    break;
-                default:
-                    return CommonErrors.RuntimeTypeMismatch(irContext);
-            }
+            var timeZoneInfo = runner.TimeZoneInfo;
+            DateTime arg0 = runner.GetNormalizedDateTime(args[0]);
 
-            DateTime arg1;
-            switch (args[1])
-            {
-                case DateTimeValue dtv:
-                    arg1 = dtv.Value;
-                    break;
-                case DateValue dv:
-                    arg1 = dv.Value;
-                    break;
-                default:
-                    return CommonErrors.RuntimeTypeMismatch(irContext);
-            }
+            DateTime arg1 = runner.GetNormalizedDateTime(args[1]);
 
             var result = arg0 >= arg1;
             return new BooleanValue(irContext, result);

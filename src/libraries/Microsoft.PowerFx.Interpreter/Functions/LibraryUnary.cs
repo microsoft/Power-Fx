@@ -335,28 +335,19 @@ namespace Microsoft.PowerFx.Functions
             return CommonErrors.InvalidBooleanFormatError(irContext);
         }
 
-        public static FormulaValue DateToNumber(IRContext irContext, FormulaValue[] args)
+        public static FormulaValue DateToNumber(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            DateTime arg0;
-            switch (args[0])
-            {
-                case DateTimeValue dtv:
-                    arg0 = dtv.Value;
-                    break;
-                case DateValue dv:
-                    arg0 = dv.Value;
-                    break;
-                default:
-                    return CommonErrors.RuntimeTypeMismatch(irContext);
-            }
+            var timeZoneInfo = runner.TimeZoneInfo;
+            DateTime arg0 = runner.GetNormalizedDateTime(args[0]);
 
             var diff = arg0.Subtract(_epoch).TotalDays;
             return new NumberValue(irContext, diff);
         }
 
-        public static NumberValue DateTimeToNumber(IRContext irContext, DateTimeValue[] args)
+        public static NumberValue DateTimeToNumber(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, DateTimeValue[] args)
         {
-            var d = args[0].Value;
+            var timeZoneInfo = runner.TimeZoneInfo;
+            var d = args[0].GetConvertedValue(timeZoneInfo);
             var diff = d.Subtract(_epoch).TotalDays;
             return new NumberValue(irContext, diff);
         }
@@ -373,30 +364,32 @@ namespace Microsoft.PowerFx.Functions
             var n = args[0].Value;
             var date = _epoch.AddDays(n);
 
-            date = MakeValidDateTime(runner, date, runner.GetService<TimeZoneInfo>() ?? LocalTimeZone);            
+            date = MakeValidDateTime(runner, date, runner.GetService<TimeZoneInfo>());            
 
             return new DateTimeValue(irContext, date);
         }
 
-        public static FormulaValue DateToDateTime(IRContext irContext, FormulaValue[] args)
+        public static FormulaValue DateToDateTime(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
+            var timeZoneInfo = runner.TimeZoneInfo;
             switch (args[0])
             {
                 case DateTimeValue dtv:
                     return dtv;
                 case DateValue dv:
-                    return new DateTimeValue(irContext, dv.Value);
+                    return new DateTimeValue(irContext, dv.GetConvertedValue(timeZoneInfo));
                 default:
                     return CommonErrors.RuntimeTypeMismatch(irContext);
             }
         }
 
-        public static FormulaValue DateTimeToDate(IRContext irContext, FormulaValue[] args)
+        public static FormulaValue DateTimeToDate(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
+            var timeZoneInfo = runner.TimeZoneInfo;
             switch (args[0])
             {
                 case DateTimeValue dtv:
-                    var startOfDate = dtv.Value.Date;
+                    var startOfDate = dtv.GetConvertedValue(timeZoneInfo).Date;
                     return new DateValue(irContext, startOfDate);
                 case DateValue dv:
                     return dv;
@@ -418,20 +411,10 @@ namespace Microsoft.PowerFx.Functions
             return new TimeValue(irContext, days);
         }
 
-        public static FormulaValue DateTimeToTime(IRContext irContext, FormulaValue[] args)
+        public static FormulaValue DateTimeToTime(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            DateTime arg0;
-            switch (args[0])
-            {
-                case DateTimeValue dtv:
-                    arg0 = dtv.Value;
-                    break;
-                case DateValue dv:
-                    arg0 = dv.Value;
-                    break;
-                default:
-                    return CommonErrors.RuntimeTypeMismatch(irContext);
-            }
+            TimeZoneInfo timeZoneInfo = runner.TimeZoneInfo;
+            DateTime arg0 = runner.GetNormalizedDateTime(args[0]);
 
             var time = arg0.TimeOfDay;
             return new TimeValue(irContext, time);
@@ -455,7 +438,7 @@ namespace Microsoft.PowerFx.Functions
             var t = args[0].Value;
             var date = _epoch.Add(t);
 
-            date = MakeValidDateTime(runner, date, runner.GetService<TimeZoneInfo>() ?? LocalTimeZone);
+            date = MakeValidDateTime(runner, date, runner.GetService<TimeZoneInfo>());
 
             return new DateTimeValue(irContext, date);
         }

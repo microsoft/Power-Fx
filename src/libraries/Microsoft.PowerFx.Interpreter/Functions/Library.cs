@@ -26,7 +26,7 @@ namespace Microsoft.PowerFx.Functions
         /// </summary>
         public static readonly TexlFunction DistinctInterpreterFunction = new DistinctFunction();
 
-        private static readonly DateTime _epoch = new DateTime(1899, 12, 30, 0, 0, 0, 0);
+        internal static readonly DateTime _epoch = new DateTime(1899, 12, 30, 0, 0, 0, 0);
 
         // Helper to get a service or fallback to a default if the service is missing.
         private static T GetService<T>(this IServiceProvider services, T defaultService)
