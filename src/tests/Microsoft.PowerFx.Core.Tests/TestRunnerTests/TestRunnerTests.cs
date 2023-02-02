@@ -352,7 +352,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             var test = new TestCase
             {
-                Expected = "Errors: Error X"
+                Expected = "Errors: Error: X"
             };
             var (result, message) = runner.RunTestCase(test);
 

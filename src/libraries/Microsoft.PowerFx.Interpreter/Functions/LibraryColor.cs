@@ -17,10 +17,10 @@ namespace Microsoft.PowerFx.Functions
     internal static partial class Library
     {
         // ColorTable is ARGB
-        private static readonly Regex RegexColorTable = new (@"^#(?<a>[0-9a-fA-F]{2})(?<r>[0-9a-fA-F]{2})(?<g>[0-9a-fA-F]{2})(?<b>[0-9a-fA-F]{2})?$", RegexOptions.Compiled);
+        private static readonly Regex RegexColorTable = new Regex(@"^#(?<a>[0-9a-fA-F]{2})(?<r>[0-9a-fA-F]{2})(?<g>[0-9a-fA-F]{2})(?<b>[0-9a-fA-F]{2})?$", LibraryFlags.RegExFlags);
 
         // CSS format is RGBA
-        private static readonly Regex RegexCSS = new (@"^#(?<r>[0-9a-fA-F]{2})(?<g>[0-9a-fA-F]{2})(?<b>[0-9a-fA-F]{2})(?<a>[0-9a-fA-F]{2})?$", RegexOptions.Compiled);
+        private static readonly Regex RegexCSS = new Regex(@"^#(?<r>[0-9a-fA-F]{2})(?<g>[0-9a-fA-F]{2})(?<b>[0-9a-fA-F]{2})(?<a>[0-9a-fA-F]{2})?$", LibraryFlags.RegExFlags);
 
         public static FormulaValue ColorValue(IRContext irContext, StringValue[] args)
         {
@@ -88,16 +88,6 @@ namespace Microsoft.PowerFx.Functions
 
         public static FormulaValue ColorFade(IRContext irContext, FormulaValue[] args)
         {
-            if (args[0] is BlankValue)
-            {
-                args[0] = FormulaValue.New(Color.FromArgb(0, 0, 0, 0));
-            }
-
-            if (args[1] is BlankValue)
-            {
-                args[1] = FormulaValue.New(0);
-            }
-
             var color = (ColorValue)args[0];
             var fadeDelta = ((NumberValue)args[1]).Value;
 

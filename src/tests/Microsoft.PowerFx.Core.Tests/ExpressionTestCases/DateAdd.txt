@@ -370,17 +370,25 @@ Error({Kind:ErrorKind.Div0})
 >> DateAdd(Date(2000,1,1),1,Text(1/0))
 Error({Kind:ErrorKind.Div0})
 
+// ****************************** TIME ARGUMENTS *****************************
+
+// Time
+>> DateAdd(Time(12,34,56), 0.25)
+Time(18,34,56,0)
+
+// Time
+>> Text(DateAdd(Time(12,34,56,789), 2), "yyyy-mm-dd hh:mm:ss.000")
+"1900-01-01 12:34:56.789"
+
 // ******************************** COERCIONS ********************************
 
-// Bug 15467760
 // Number to date
-// >> DateAdd(1, 1)
-// DateTime(1900,1,1,0,0,0,0)
+>> DateAdd(1, 1)
+DateTime(1900,1,1,0,0,0,0)
 
-// Bug 15467760
 // String to date
-// >> DateAdd("2000-01-01", 1)
-// DateTime(2000,1,2,0,0,0,0)
+>> DateAdd("2000-01-01", 1)
+DateTime(2000,1,2,0,0,0,0)
 
 // Boolean to date
 >> DateAdd(false, 1)

@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Threading;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Types;
@@ -34,6 +35,28 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var ir = IRTranslator.Translate(checkResult.Binding).ToString();
             Assert.DoesNotContain("AggregateCoercionNode", ir);
+        }
+
+        [Theory]
+
+        [InlineData("With({t1:Table({a:stringVar})},Patch(t1,First(t1),{a:integerVar}))")]
+        [InlineData("With({t1:Table({a:5})},Patch(t1,First(t1),{a:datetimeVar}))")]
+        public void RecordToRecordAggregateCoercionTest(string expr)
+        {
+            var engine = new RecalcEngine(new PowerFxConfig());
+
+            var stringVar = FormulaValue.New("lichess.org");
+            var integerVar = FormulaValue.New(1);
+            var datetimeVar = FormulaValue.New(DateTime.Now);
+
+            engine.Config.SymbolTable.EnableMutationFunctions();
+            engine.Config.SymbolTable.AddConstant("stringVar", stringVar);
+            engine.Config.SymbolTable.AddConstant("integerVar", integerVar);
+            engine.Config.SymbolTable.AddConstant("datetimeVar", datetimeVar);
+
+            var result = engine.Eval(expr, options: new ParserOptions() { AllowsSideEffects = true });
+
+            Assert.IsNotType<ErrorValue>(result);
         }
     }
 }
