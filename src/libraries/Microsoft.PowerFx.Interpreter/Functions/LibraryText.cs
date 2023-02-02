@@ -139,12 +139,12 @@ namespace Microsoft.PowerFx.Functions
 
             if (arg0 is DateValue dv)
             {
-                return DateToNumber(irContext, new DateValue[] { dv });
+                return DateToNumber(runner, context, irContext, new DateValue[] { dv });
             }
 
             if (arg0 is DateTimeValue dtv)
             {
-                return DateTimeToNumber(irContext, new DateTimeValue[] { dtv });
+                return DateTimeToNumber(runner, context, irContext, new DateTimeValue[] { dtv });
             }
 
             string str = null;
@@ -182,6 +182,7 @@ namespace Microsoft.PowerFx.Functions
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-text
         public static FormulaValue Text(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
+            var timeZoneInfo = runner.TimeZoneInfo;
             const int formatSize = 100;
 
             string resultString = null;
@@ -227,7 +228,7 @@ namespace Microsoft.PowerFx.Functions
                     {
                         // It's a number, formatted as date/time. Let's convert it to a date/time value first
                         var newDateTime = Library.NumberToDateTime(runner, context, IRContext.NotInSource(FormulaType.DateTime), new NumberValue[] { num });
-                        return ExpandDateTimeExcelFormatSpecifiers(irContext, formatString, "g", newDateTime.Value, culture, runner.CancellationToken);
+                        return ExpandDateTimeExcelFormatSpecifiers(irContext, formatString, "g", newDateTime.GetConvertedValue(timeZoneInfo), culture, runner.CancellationToken);
                     }
                     else
                     {
@@ -246,7 +247,7 @@ namespace Microsoft.PowerFx.Functions
                     }
                     else if (args[0] is DateValue d)
                     {
-                        dateTimeValue = FormulaValue.New(d.Value);
+                        dateTimeValue = FormulaValue.New(d.GetConvertedValue(timeZoneInfo));
                     }
                     else
                     {
@@ -256,12 +257,12 @@ namespace Microsoft.PowerFx.Functions
                     if (formatString != null && hasNumberFmt)
                     {
                         // It's a datetime, formatted as number. Let's convert it to a number value first
-                        var newNumber = Library.DateTimeToNumber(IRContext.NotInSource(FormulaType.Number), new DateTimeValue[] { dateTimeValue });
+                        var newNumber = Library.DateTimeToNumber(runner, context, IRContext.NotInSource(FormulaType.Number), new DateTimeValue[] { dateTimeValue });
                         resultString = newNumber.Value.ToString(formatString ?? "g", culture);
                     }
                     else
                     {
-                        return ExpandDateTimeExcelFormatSpecifiers(irContext, formatString, "g", dateTimeValue.Value, culture, runner.CancellationToken);
+                        return ExpandDateTimeExcelFormatSpecifiers(irContext, formatString, "g", dateTimeValue.GetConvertedValue(timeZoneInfo), culture, runner.CancellationToken);
                     }
 
                     break;
