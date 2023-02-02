@@ -30,7 +30,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 var dateTimeValue = FormulaValue.New(dt);
                 var dateTimeValueDeserialized = (DateTimeValue)engine.Eval(dateTimeValue.ToExpression());
 
-                Assert.Equal(dateTimeValue.Value, dateTimeValueDeserialized.Value);
+                Assert.Equal(dateTimeValue.GetConvertedValue(null), dateTimeValueDeserialized.GetConvertedValue(null));
             }
         }
 
