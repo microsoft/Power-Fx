@@ -171,10 +171,6 @@ namespace Microsoft.PowerFx
             return s;
         }
 
-        internal readonly Dictionary<string, NameLookupInfo> _variables = new Dictionary<string, NameLookupInfo>();
-
-        internal DisplayNameProvider _environmentSymbolDisplayNameProvider = new SingleSourceDisplayNameProvider();
-
         private protected readonly List<TexlFunction> _functions = new List<TexlFunction>();
 
         // Which enums are available. 
@@ -209,7 +205,7 @@ namespace Microsoft.PowerFx
 
         IEnumerable<TexlFunction> INameResolver.Functions => _functions; 
         
-        IEnumerable<KeyValuePair<string, NameLookupInfo>> IGlobalSymbolNameResolver.GlobalSymbols => _variables;
+        IEnumerable<KeyValuePair<string, NameLookupInfo>> IGlobalSymbolNameResolver.GlobalSymbols => Enumerable.Empty<KeyValuePair<string, NameLookupInfo>>();
 
         /// <summary>
         /// Get symbol names in this current scope.
@@ -229,21 +225,12 @@ namespace Microsoft.PowerFx
             }
         }
 
-        internal bool TryGetVariable(DName name, out NameLookupInfo symbol, out DName displayName)
+        // $$$ Merge with TryLookup? 
+        internal virtual bool TryGetVariable(DName name, out NameLookupInfo symbol, out DName displayName)
         {
-            var lookupName = name;
-
-            if (_environmentSymbolDisplayNameProvider.TryGetDisplayName(name, out displayName))
-            {
-                // do nothing as provided name can be used for lookup with logical name
-            }
-            else if (_environmentSymbolDisplayNameProvider.TryGetLogicalName(name, out var logicalName))
-            {
-                lookupName = logicalName;
-                displayName = name;
-            }
-
-            return _variables.TryGetValue(lookupName, out symbol);
+            symbol = default;
+            displayName = default;
+            return false;
         }
 
         // Derived symbol tables can hook. 

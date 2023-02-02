@@ -21,9 +21,15 @@ namespace Microsoft.PowerFx
     /// This is a publicly facing class around a <see cref="INameResolver"/>.
     /// </summary>
     [DebuggerDisplay("{DebugName}")]
-    public class SymbolTable : ReadOnlySymbolTable
+    public class SymbolTable : ReadOnlySymbolTable, IGlobalSymbolNameResolver
     {
         private readonly SlotMap<NameLookupInfo?> _slots = new SlotMap<NameLookupInfo?>();
+
+        internal readonly Dictionary<string, NameLookupInfo> _variables = new Dictionary<string, NameLookupInfo>();
+
+        internal DisplayNameProvider _environmentSymbolDisplayNameProvider = new SingleSourceDisplayNameProvider();
+
+        IEnumerable<KeyValuePair<string, NameLookupInfo>> IGlobalSymbolNameResolver.GlobalSymbols => _variables;
 
         /// <summary>
         /// Does this SymbolTable require a corresponding SymbolValue?
@@ -78,6 +84,23 @@ namespace Microsoft.PowerFx
             }
 
             throw NewBadSlotException(slot);
+        }
+
+        internal override bool TryGetVariable(DName name, out NameLookupInfo symbol, out DName displayName)
+        {
+            var lookupName = name;
+
+            if (_environmentSymbolDisplayNameProvider.TryGetDisplayName(name, out displayName))
+            {
+                // do nothing as provided name can be used for lookup with logical name
+            }
+            else if (_environmentSymbolDisplayNameProvider.TryGetLogicalName(name, out var logicalName))
+            {
+                lookupName = logicalName;
+                displayName = name;
+            }
+
+            return _variables.TryGetValue(lookupName, out symbol);
         }
 
         /// <summary>
