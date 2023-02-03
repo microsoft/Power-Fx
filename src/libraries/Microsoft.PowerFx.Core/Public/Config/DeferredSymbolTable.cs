@@ -55,8 +55,7 @@ namespace Microsoft.PowerFx
 
         private readonly SlotMap<NameLookupInfo?> _slots = new SlotMap<NameLookupInfo?>();
 
-        // Called by 
-        // $$$ OVerride full
+        // Override lookup.
         bool INameResolver.Lookup(DName name, out NameLookupInfo nameInfo, NameLookupPreferences preferences)
         {
             if (_displayNameLookup.TryGetLogicalOrDisplayName(name, out var logical, out var display))
