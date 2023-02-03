@@ -130,8 +130,8 @@ namespace Microsoft.PowerFx.Connectors.Execution
             {
                 if (disposing)
                 {
+                    _writer?.Dispose();
                     _stream?.Dispose();
-                    _writer?.Dispose();                    
                 }
 
                 _wasDisposed = true;
