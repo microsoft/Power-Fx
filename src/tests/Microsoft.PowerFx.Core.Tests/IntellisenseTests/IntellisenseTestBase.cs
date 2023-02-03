@@ -45,7 +45,14 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         internal IIntellisenseResult Suggest(string expression, PowerFxConfig config, RecordType parameterType)
         {
             (var expression2, var cursorPosition) = Decode(expression);
-            return Suggest(expression2, parameterType, cursorPosition, config);
+            var symTable = ReadOnlySymbolTable.NewFromRecord(parameterType);
+            return Suggest(expression2, symTable, cursorPosition, config);
+        }
+
+        internal IIntellisenseResult Suggest(string expression, PowerFxConfig config, ReadOnlySymbolTable symTable)
+        {
+            (var expression2, var cursorPosition) = Decode(expression);
+            return Suggest(expression2, symTable, cursorPosition, config);
         }
 
         // Tests use | to indicate cursor position within an expression string. 
@@ -63,15 +70,16 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             return (expression, cursorPosition);
         }
 
-        internal IIntellisenseResult Suggest(string expression, RecordType parameterType, int cursorPosition, PowerFxConfig config)
+        internal IIntellisenseResult Suggest(string expression, ReadOnlySymbolTable symTable, int cursorPosition, PowerFxConfig config)
         {
             var engine = new Engine(config)
             {
                 SupportedFunctions = new SymbolTable()
             };
 
-            var suggestions = engine.Suggest(expression, parameterType, cursorPosition);
-
+            var checkResult = engine.Check(expression, symbolTable: symTable);
+            var suggestions = engine.Suggest(checkResult, cursorPosition);
+            
             if (suggestions.Exception != null)
             {
                 throw suggestions.Exception;

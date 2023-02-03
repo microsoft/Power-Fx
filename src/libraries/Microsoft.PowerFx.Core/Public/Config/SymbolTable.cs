@@ -25,9 +25,10 @@ namespace Microsoft.PowerFx
     {
         private readonly SlotMap<NameLookupInfo?> _slots = new SlotMap<NameLookupInfo?>();
 
+        // $$$ NEeded by config... make private?
         internal readonly Dictionary<string, NameLookupInfo> _variables = new Dictionary<string, NameLookupInfo>();
 
-        internal DisplayNameProvider _environmentSymbolDisplayNameProvider = new SingleSourceDisplayNameProvider();
+        private DisplayNameProvider _environmentSymbolDisplayNameProvider = new SingleSourceDisplayNameProvider();
 
         IEnumerable<KeyValuePair<string, NameLookupInfo>> IGlobalSymbolNameResolver.GlobalSymbols => _variables;
 
@@ -52,35 +53,6 @@ namespace Microsoft.PowerFx
             if (_slots.TryGet(slot.SlotIndex, out var nameInfo))
             {
                 return FormulaType.Build(nameInfo.Value.Type);
-            }
-
-            throw NewBadSlotException(slot);
-        }
-
-        // Ensure that newType can be assigned to the given slot. 
-        internal void ValidateAccepts(ISymbolSlot slot, FormulaType newType)
-        {
-            if (_slots.TryGet(slot.SlotIndex, out var nameInfo))
-            {
-                var srcType = nameInfo.Value.Type;
-
-                if (newType is RecordType)
-                {
-                    // Lazy RecordTypes don't validate. 
-                    // https://github.com/microsoft/Power-Fx/issues/833
-                    return;
-                }
-
-                var ok = srcType.Accepts(newType._type);
-
-                if (ok)
-                {
-                    return;
-                }
-
-                var name = (nameInfo.Value.Data as NameSymbol)?.Name;
-
-                throw new InvalidOperationException($"Can't change '{name}' from {srcType} to {newType._type}.");
             }
 
             throw NewBadSlotException(slot);

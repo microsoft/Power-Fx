@@ -100,6 +100,30 @@ namespace Microsoft.PowerFx
             throw NewBadSlotException(slot);
         }
 
+        // Ensure that newType can be assigned to the given slot. 
+        internal void ValidateAccepts(ISymbolSlot slot, FormulaType newType)
+        {
+            var srcType = this.GetTypeFromSlot(slot);
+
+            if (newType is RecordType)
+            {
+                // Lazy RecordTypes don't validate. 
+                // https://github.com/microsoft/Power-Fx/issues/833
+                return;
+            }
+
+            var ok = srcType._type.Accepts(newType._type);
+
+            if (ok)
+            {
+                return;
+            }
+
+            var name = slot.DebugName();
+
+            throw new InvalidOperationException($"Can't change '{name}' from {srcType} to {newType._type}.");
+        }
+
         // Helper to call on Get/Set to ensure slot can be used with this value
         internal void ValidateSlot(ISymbolSlot slot)
         {
@@ -114,6 +138,23 @@ namespace Microsoft.PowerFx
         internal Exception NewBadSlotException(ISymbolSlot slot)
         {
             return new InvalidOperationException($"Slot {slot.DebugName()} is not valid on Symbol Table {this.DebugName()}");
+        }
+
+        /// <summary>
+        /// Create a symbol table around the DisplayNameProvider. 
+        /// The set of symbols is fixed and determined by the DisplayNameProvider, 
+        /// but their type info is lazily hydrated. 
+        /// </summary>
+        /// <returns></returns>
+        public static ReadOnlySymbolTable NewFromDeferred(
+            DisplayNameProvider map,
+            Func<string, string, FormulaType> fetchTypeInfo,
+            string debugName = null)
+        {
+            return new DeferredSymbolTable(map, fetchTypeInfo)
+            {
+                DebugName = debugName
+            };
         }
 
         public static ReadOnlySymbolTable NewFromRecord(
