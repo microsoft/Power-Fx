@@ -22,7 +22,7 @@ namespace Microsoft.PowerFx
     /// Good when we can quickly load the names (to populate the intellisense completion list), but then load remaining symbol details on-demand. 
     /// </summary>
     [DebuggerDisplay("{DebugName}")]
-    internal class DeferredSymbolTable : ReadOnlySymbolTable, IGlobalSymbolNameResolver
+    internal class DeferredSymbolTable : ReadOnlySymbolTable, IGlobalSymbolNameResolver, INameResolver
     {
         // All possible tables we could add. 
         private readonly DisplayNameProvider _displayNameLookup;
@@ -57,7 +57,7 @@ namespace Microsoft.PowerFx
 
         // Called by 
         // $$$ OVerride full
-        internal override bool TryLookup(DName name, out NameLookupInfo nameInfo)
+        bool INameResolver.Lookup(DName name, out NameLookupInfo nameInfo, NameLookupPreferences preferences)
         {
             if (_displayNameLookup.TryGetLogicalOrDisplayName(name, out var logical, out var display))
             {
@@ -146,11 +146,12 @@ namespace Microsoft.PowerFx
                     if (!_variables.TryGetValue(logical.Value, out var nameInfo))
                     {
                         // We don't have type yet, make a placeholder. 
+                        var placeholder = Core.Types.DType.ObjNull;
                         var display = kv.Value;
 
                         nameInfo = new NameLookupInfo(
                             BindKind.PowerFxResolvedObject,
-                            Core.Types.DType.ObjNull,
+                            placeholder,
                             DPath.Root,
                             0,
                             data: null,

@@ -266,7 +266,7 @@ namespace Microsoft.PowerFx
             }
         }
 
-        // $$$ Merge with TryLookup? 
+        // Hook from Lookup - Get just variables. 
         internal virtual bool TryGetVariable(DName name, out NameLookupInfo symbol, out DName displayName)
         {
             symbol = default;
