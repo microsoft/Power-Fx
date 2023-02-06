@@ -213,3 +213,16 @@ Error({Kind:ErrorKind.Div0})
 //Excel needs two parameters for Text function
 >> Text(DateTimeValue("01/04/2003"))
 "1/4/2003 12:00 AM"
+
+//Test Date, Time and Datetime to Text
+>> Text(DateTime(2023,2,5,0,0,0))
+"2/5/2023 12:00 AM"
+
+>> Text(Date(2023,2,5))
+"2/5/2023"
+
+>> Text(Time(2,4,5))
+"2:04 AM"
+
+>> Text(Time(17,2,3))
+"5:02 PM"
