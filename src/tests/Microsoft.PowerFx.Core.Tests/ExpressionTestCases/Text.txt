@@ -226,3 +226,12 @@ Error({Kind:ErrorKind.Div0})
 
 >> Text(Time(17,2,3))
 "5:02 PM"
+
+>> Text(DateValue("02/05/2023"))
+"2/5/2023"
+
+>> Text(DateTimeValue("02/05/2023"))
+"2/5/2023 12:00 AM"
+
+>> Text(TimeValue("15:06"))
+"3:06 PM"
