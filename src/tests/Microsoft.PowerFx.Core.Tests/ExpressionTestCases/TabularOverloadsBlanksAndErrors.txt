@@ -89,47 +89,11 @@ Error({Kind:ErrorKind.Div0})
 >> Concatenate("hello ", If(Sqrt(-1)<0,["world", "day"]))
 Error({Kind:ErrorKind.Numeric})
 
->> Concatenate(["hello", "hi"], If(1/0<2," world"))
-Table({Result:Error({Kind:ErrorKind.Div0})},{Result:Error({Kind:ErrorKind.Div0})})
-
->> Concatenate(Char(0), ["hello", "great", "world"])
-Table({Result:Error({Kind:ErrorKind.InvalidArgument})},{Result:Error({Kind:ErrorKind.InvalidArgument})},{Result:Error({Kind:ErrorKind.InvalidArgument})})
-
->> Concatenate(["hello", "hi"], " ", ["John", "Jane", "Jim", "Joan"])
-Table({Result:"hello John"},{Result:"hi Jane"},{Result:Error({Kind:ErrorKind.NotApplicable})},{Result:Error({Kind:ErrorKind.NotApplicable})})
-
->> Concat(Concatenate(["one", "two"], Text(1/0)), IfError(Result, $"Error({{Kind:{FirstError.Kind}}})"), ", ")
-"Error({Kind:13}), Error({Kind:13})"
-
->> Concat(Concatenate(Char(0), ["hello", "great", "world"]), IfError(Result, $"Error({{Kind:{FirstError.Kind}}})"), ", ")
-"Error({Kind:25}), Error({Kind:25}), Error({Kind:25})"
-
->> Concat(Concatenate(["hello", "hi"], " ", ["John", "Jane", "Jim", "Joan"]), IfError(Result, $"Error({{Kind:{FirstError.Kind}}})"), ", ")
-"hello John, hi Jane, Error({Kind:27}), Error({Kind:27})"
-
 >> Find(If(1/0<2,["hello", "hi"]), " world")
 Error({Kind:ErrorKind.Div0})
 
 >> Find("a", If(Sqrt(-1)<0,["world", "day"]))
 Error({Kind:ErrorKind.Numeric})
-
->> Find(["a", "b"], If(1/0<2,"abcdefg"))
-Table({Result:Error({Kind:ErrorKind.Div0})},{Result:Error({Kind:ErrorKind.Div0})})
-
->> Find(Char(0), ["hello", "great", "world"])
-Table({Result:Error({Kind:ErrorKind.InvalidArgument})},{Result:Error({Kind:ErrorKind.InvalidArgument})},{Result:Error({Kind:ErrorKind.InvalidArgument})})
-
->> Find(["a", "b", "c"], "The quick brown fox jumped over the lazy dog", [1, 2, 3, 4, 5])
-Table({Result:38},{Result:11},{Result:8},{Result:Error({Kind:ErrorKind.NotApplicable})},{Result:Error({Kind:ErrorKind.NotApplicable})})
-
->> Concat(Find(["a", "b"], If(1/0<2,"abcdefg")), IfError(Text(Result), $"Error({{Kind:{FirstError.Kind}}})"), ", ")
-"Error({Kind:13}), Error({Kind:13})"
-
->> Concat(Find(Char(0), ["hello", "great", "world"]), IfError(Text(Result), $"Error({{Kind:{FirstError.Kind}}})"), ", ")
-"Error({Kind:25}), Error({Kind:25}), Error({Kind:25})"
-
->> Concat(Find(["a", "b", "c"], "The quick brown fox jumped over the lazy dog", [1, 2, 3, 4, 5]), IfError(Text(Result), $"Error({{Kind:{FirstError.Kind}}})"), ", ")
-"38, 11, 8, Error({Kind:27}), Error({Kind:27})"
 
 >> Round(If(1/0<2,[12.34, 56.78]), 1)
 Error({Kind:ErrorKind.Div0})
@@ -140,17 +104,11 @@ Error({Kind:ErrorKind.Numeric})
 >> Round([12.34, 56.78], 1/0)
 Table({Value:Error({Kind:ErrorKind.Div0})},{Value:Error({Kind:ErrorKind.Div0})})
 
->> Round(Sqrt(-1), [1, 2, 3])
-Table({Result:Error({Kind:ErrorKind.Numeric})},{Result:Error({Kind:ErrorKind.Numeric})},{Result:Error({Kind:ErrorKind.Numeric})})
-
 >> Round([123.456, 234.567], [1, 2, 3])
 Table({Value:123.5},{Value:234.57},{Value:Error({Kind:ErrorKind.NotApplicable})})
 
 >> Concat(Round([12.34, 56.78], 1/0), IfError(Text(Value), $"Error({{Kind:{FirstError.Kind}}})"), ", ")
 "Error({Kind:13}), Error({Kind:13})"
-
->> Concat(Round(Sqrt(-1), [1, 2, 3]), IfError(Text(Result), $"Error({{Kind:{FirstError.Kind}}})"), ", ")
-"Error({Kind:24}), Error({Kind:24}), Error({Kind:24})"
 
 >> Concat(Round([123.456, 234.567], [1, 2, 3]), IfError(Text(Value), $"Error({{Kind:{FirstError.Kind}}})"), ", ")
 "123.5, 234.57, Error({Kind:27})"
@@ -163,23 +121,11 @@ Blank()
 >> Concatenate("hello ", If(1<0,["world", "day"]))
 Blank()
 
->> Concatenate(["hello", "hi"], If(1<0," world"))
-Table({Result:"hello"},{Result:"hi"})
-
->> Concatenate(If(1<0,"hi"), ["hello", "great", "world"])
-Table({Result:"hello"},{Result:"great"},{Result:"world"})
-
 >> Find(If(1<0,["hello", "hi"]), " world")
 Blank()
 
 >> Find("a", If(1<0,["world", "day"]))
 Blank()
-
->> Find(["a", "b"], If(1<0,"abcdefg"))
-Table({Result:Blank()},{Result:Blank()})
-
->> Find(If(1<0,"a"), ["hello", "great", "world"])
-Table({Result:1},{Result:1},{Result:1})
 
 >> Round(If(1<0,[12.34, 56.78]), 1)
 Blank()
@@ -189,9 +135,6 @@ Blank()
 
 >> Round([12.34, 56.78], If(1<0,1))
 Table({Value:12},{Value:57})
-
->> Round(If(1<0,2), [1, 2, 3])
-Table({Result:0},{Result:0},{Result:0})
 
 // *********** 2+-argument functions, empty tables ***********
 

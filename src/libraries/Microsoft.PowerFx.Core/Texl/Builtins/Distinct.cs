@@ -53,7 +53,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             var exprType = argTypes[1];
 
-            returnType = DType.CreateTable(new TypedName(exprType, GetOneColumnTableResultName(context.Features)));
+            returnType = DType.CreateTable(new TypedName(exprType, ColumnName_Value));
 
             return fValid;
         }

@@ -1,8 +1,8 @@
 ﻿>> Concatenate("777", ["abc"], ["1", "2"])
-Table({Result:"777abc1"},{Result:Error({Kind:ErrorKind.NotApplicable})})
+Table({Value:"777abc1"},{Value:Error({Kind:ErrorKind.NotApplicable})})
 
 >> Concatenate("777", Filter(["empty table"], Value <> Value), ["1", "2"])
-Table({Result:Error({Kind:ErrorKind.NotApplicable})},{Result:Error({Kind:ErrorKind.NotApplicable})})
+Table({Value:Error({Kind:ErrorKind.NotApplicable})},{Value:Error({Kind:ErrorKind.NotApplicable})})
 
 // ******** VALID STRING PARAMETERS ********
 

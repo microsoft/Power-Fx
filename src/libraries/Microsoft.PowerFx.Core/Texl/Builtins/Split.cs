@@ -37,7 +37,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var fValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
             Contracts.Assert(returnType.IsTable);
 
-            returnType = DType.CreateTable(new TypedName(DType.String, GetOneColumnTableResultName(context.Features)));
+            returnType = DType.CreateTable(new TypedName(DType.String, ColumnName_Value));
             return fValid;
         }
     }

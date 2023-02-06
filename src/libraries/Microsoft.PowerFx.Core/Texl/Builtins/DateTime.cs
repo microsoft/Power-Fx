@@ -498,22 +498,19 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         resultColumnType = coercedType.GetColumnTypeFromSingleColumnTable();
                     }
 
-                    var resultColumnName = context.Features.HasFlag(Features.ConsistentOneColumnTableResult)
-                        ? ColumnName_Value
-                        : inputColumn.Name;
-                    returnType = DType.CreateTable(new TypedName(resultColumnType, resultColumnName));
+                    returnType = DType.CreateTable(new TypedName(resultColumnType, ColumnName_Value));
                 }
             }
             else
             {
                 if (type0.Kind == DKind.DateTime || type0.Kind == DKind.Date || type0.Kind == DKind.Time)
                 {
-                    returnType = DType.CreateTable(new TypedName(type0, GetOneColumnTableResultName(context.Features)));
+                    returnType = DType.CreateTable(new TypedName(type0, ColumnName_Value));
                 }
                 else if (type0.CoercesTo(DType.DateTime))
                 {
                     CollectionUtils.Add(ref nodeToCoercedTypeMap, args[0], DType.DateTime);
-                    returnType = DType.CreateTable(new TypedName(DType.DateTime, GetOneColumnTableResultName(context.Features)));
+                    returnType = DType.CreateTable(new TypedName(DType.DateTime, ColumnName_Value));
                 }
                 else
                 {
@@ -636,7 +633,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var type0 = argTypes[0];
             var type1 = argTypes[1];
 
-            returnType = DType.CreateTable(new TypedName(DType.Number, GetOneColumnTableResultName(context.Features)));
+            returnType = DType.CreateTable(new TypedName(DType.Number, ColumnName_Value));
 
             // Arg0 should be either a date or a column of dates.
             if (type0.IsTable)

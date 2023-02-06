@@ -1333,20 +1333,7 @@ namespace Microsoft.PowerFx.Core.Functions
                 // If there are any table args, the return type depends on the first such arg.
                 if (isTable && returnType == DType.Invalid)
                 {
-                    if (fValid && nodeToCoercedTypeMap.Any())
-                    {
-                        var resultColumnName = context.Features.HasFlag(Features.ConsistentOneColumnTableResult)
-                            ? new DName(ColumnName_ValueStr)
-                            : argTypes[i].GetNames(DPath.Root).Single().Name;
-
-                        returnType = DType.CreateTable(new TypedName(desiredType, resultColumnName));
-                    }
-                    else
-                    {
-                        returnType = context.Features.HasFlag(Features.ConsistentOneColumnTableResult)
-                            ? DType.CreateTable(new TypedName(desiredType, new DName(ColumnName_ValueStr)))
-                            : argTypes[i];
-                    }
+                    returnType = DType.CreateTable(new TypedName(desiredType, new DName(ColumnName_ValueStr)));
                 }
             }
 

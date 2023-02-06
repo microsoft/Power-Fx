@@ -8,18 +8,18 @@ Table({Value:1},{Value:3},{Value:6},{Value:8})
 >> Round([1.23, 4.56, 7.89, 10.12], 1)
 Table({Value:1.2},{Value:4.6},{Value:7.9},{Value:10.1})
 
->> Round([-9.8765, -8.7654, -7.6543, -6.5432, -5.4321], 2)
+>> Round(Table({a: -9.8765}, {a: -8.7654}, {a: -7.6543}, {a: -6.5432}, {a: -5.4321}), 2)
 Table({Value:-9.88},{Value:-8.77},{Value:-7.65},{Value:-6.54},{Value:-5.43})
 
 >> Round(Filter([1,2,3], Value > 10), 0) // Empty table
 Table()
 
 // Scalar and table
->> Round(1234.5678, [-2, 1, 0, 1, 2])
-Table({Result:1200},{Result:1234.6},{Result:1235},{Result:1234.6},{Result:1234.57})
+>> Round(1234.5678, Table({a: -2}, {a: 1}, {a: 0}, {a: 1}, {a: 2}))
+Table({Value:1200},{Value:1234.6},{Value:1235},{Value:1234.6},{Value:1234.57})
 
 // Table and table
->> Round([123.456, 345.678], [1, 2])
+>> Round(Table({a: 123.456}, {a: 345.678}), [1, 2])
 Table({Value:123.5},{Value:345.68})
 
 // Blank values

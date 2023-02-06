@@ -77,7 +77,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             fValid &= CheckStringColumnType(argTypes[0], args[0], errors, ref nodeToCoercedTypeMap);
 
             // Synthesize a new return type
-            returnType = DType.CreateTable(new TypedName(DType.Number, GetOneColumnTableResultName(context.Features)));
+            returnType = DType.CreateTable(new TypedName(DType.Number, ColumnName_Value));
 
             return fValid;
         }

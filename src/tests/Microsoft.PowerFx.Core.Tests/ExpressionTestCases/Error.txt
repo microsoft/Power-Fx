@@ -88,5 +88,5 @@ Error({Kind:ErrorKind.Custom})
 >> Date(2000, Sqrt(-1), Error("lorem ipsum"))
 Error(Table({Kind:ErrorKind.Numeric},{Kind:ErrorKind.Custom}))
 
->> ForAll(Len(["abc", Error("lorem ipsum"), Sqrt(-1)+"", "hello"]), IfError(Result, -FirstError.Kind))
+>> ForAll(Len(["abc", Error("lorem ipsum"), Sqrt(-1)+"", "hello"]), IfError(Value, -FirstError.Kind))
 Table({Value:3},{Value:-1000},{Value:-24},{Value:5})

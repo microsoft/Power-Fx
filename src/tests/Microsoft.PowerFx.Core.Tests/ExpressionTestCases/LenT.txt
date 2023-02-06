@@ -1,0 +1,11 @@
+>> Len(["abc", "def"])
+Table({Value:3},{Value:3})
+
+>> Len([123, -2344566, 0567])
+Table({Value:3},{Value:8},{Value:3})
+
+>> Len(Table({a: "string"}, {a: Blank()}))
+Table({Value:6},{Value:0})
+
+>> Len(Len(Table({b: "doubledigitlength"}, {b:"length"}, {b: ""})))
+Table({Value:2},{Value:1},{Value:1})

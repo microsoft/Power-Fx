@@ -7,19 +7,19 @@
 Error({Kind:ErrorKind.InvalidArgument})
 
 >> Char(["55", "56", "57"])
-Table({Result:"7"},{Result:"8"},{Result:"9"})
+Table({Value:"7"},{Value:"8"},{Value:"9"})
 
 >> Char(["55", "Error Coercion", "57"])
-Table({Result:"7"},{Result:Error({Kind:ErrorKind.InvalidArgument})},{Result:"9"})
+Table({Value:"7"},{Value:Error({Kind:ErrorKind.InvalidArgument})},{Value:"9"})
 
 >> Concatenate(123, "456")
 "123456"
 
 >> Concatenate(-1, ["456", "abc"] )
-Table({Result:"-1456"},{Result:"-1abc"})
+Table({Value:"-1456"},{Value:"-1abc"})
 
 >> Concatenate([-1, 123], ["456", "abc"] )
-Table({Result:"-1456"},{Result:"123abc"})
+Table({Value:"-1456"},{Value:"123abc"})
 
 >> IsToday(100)
 false
@@ -28,7 +28,7 @@ false
 4
 
 >> Len([123, -2344566, 0567])
-Table({Result:3},{Result:8},{Result:3})
+Table({Value:3},{Value:8},{Value:3})
 
 >> Day(Average(Date(1900, 1, 2), Date(1900, 1, 4)))
 3

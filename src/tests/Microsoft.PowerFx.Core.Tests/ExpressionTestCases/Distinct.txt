@@ -8,33 +8,33 @@ Table()
 
 // Constant expressions
 >> Distinct(Table({a:1,b:2},{a:3,b:4},{a:5,b:6}), true)
-Table({Result:true})
+Table({Value:true})
 
 >> Distinct(Table({a:1,b:2},{a:3,b:4},{a:5,b:6}), false)
-Table({Result:false})
+Table({Value:false})
 
 // Distinct values for a column
 >> Distinct(Table({a:1,b:2},{a:3,b:4},{a:5,b:6}), a)
-Table({Result:1},{Result:3},{Result:5})
+Table({Value:1},{Value:3},{Value:5})
 
 // Distinct values for an expression
 >> Distinct(Table({a:1,b:2},{a:3,b:4},{a:5,b:6}), a * 2)
-Table({Result:2},{Result:6},{Result:10})
+Table({Value:2},{Value:6},{Value:10})
 
 >> Distinct(Table({a:1,b:2},{a:3,b:4},{a:5,b:6}), Trunc(a / 2))
-Table({Result:0},{Result:1},{Result:2})
+Table({Value:0},{Value:1},{Value:2})
 
 // Distinct values for an expression that generates same result
 >> Distinct([-2,-1,0,1,0],Value^2)
-Table({Result:4},{Result:1},{Result:0})
+Table({Value:4},{Value:1},{Value:0})
 
 // Distinct values with blanks
 >> Distinct(Table({FirstName:"Harry"},{FirstName:Blank()},{FirstName:"Sally"},{FirstName:"Harry"},{FirstName:Blank()},{FirstName:"Alice"},{FirstName:"Sally"}), FirstName)
-Table({Result:"Harry"},{Result:Blank()},{Result:"Sally"},{Result:"Alice"})
+Table({Value:"Harry"},{Value:Blank()},{Value:"Sally"},{Value:"Alice"})
 
 // Distinct is case sensitive
 >> Distinct(Table({FirstName:"Harry"},{FirstName:"HARRY"},{FirstName:"Sally"},{FirstName:"Harry"},{FirstName:"Alice"},{FirstName:"Sally"}), FirstName)
-Table({Result:"Harry"},{Result:"HARRY"},{Result:"Sally"},{Result:"Alice"})
+Table({Value:"Harry"},{Value:"HARRY"},{Value:"Sally"},{Value:"Alice"})
 
 // Distinct values from an error table
 >> Distinct(If(1/0<2,[1,2,3]), true)
@@ -46,18 +46,18 @@ Error({Kind:ErrorKind.Div0})
 
 // Distinct values where expression handles errors
 >> Distinct(Table({a:1},{a:2},{a:If(1/0<2,{a:2}).a},{a:7},{a:Sqrt(-1)},{a:-13},{a:2}), IfError(a,-FirstError.Kind))
-Table({Result:1},{Result:2},{Result:-13},{Result:7},{Result:-24})
+Table({Value:1},{Value:2},{Value:-13},{Value:7},{Value:-24})
 
 // Distinct which ignores columns with errors
 >> Distinct(Table({a:10,b:1/0},{a:9,b:Sqrt(-1)},{a:8,b:3},{a:10,b:1/0},{a:8,b:Ln(-1)}), a)
-Table({Result:10},{Result:9},{Result:8})
+Table({Value:10},{Value:9},{Value:8})
 
 // The Distinct keeps the same ordering as the input
 >> Distinct([1,2,3,2,1], Value)
-Table({Result:1},{Result:2},{Result:3})
+Table({Value:1},{Value:2},{Value:3})
 
 >> Distinct([3,2,1,3,3,3,3], Value)
-Table({Result:3},{Result:2},{Result:1})
+Table({Value:3},{Value:2},{Value:1})
 
 >> Distinct(Blank(), true)
 Blank()
@@ -68,8 +68,8 @@ Error({Kind:ErrorKind.Div0})
 >> Distinct([], true)
 Table()
 
->> Sort(Distinct([{FirstName: "Harry"}, {FirstName: "Sally"}, {FirstName: "Harry"}, {FirstName: "Alice"}, {FirstName: "Sally"}], Value.FirstName), Result)
-Table({Result:"Alice"},{Result:"Harry"},{Result:"Sally"})
+>> Sort(Distinct([{FirstName: "Harry"}, {FirstName: "Sally"}, {FirstName: "Harry"}, {FirstName: "Alice"}, {FirstName: "Sally"}], Value.FirstName), Value)
+Table({Value:"Alice"},{Value:"Harry"},{Value:"Sally"})
 
 >> Distinct(Error("error"), true)
 Error({Kind:ErrorKind.Custom})
@@ -81,16 +81,16 @@ Error({Kind:ErrorKind.Custom})
 Error({Kind:ErrorKind.Custom})
 
 >> Distinct([{A: 1, B: 1}, {A: 2, B: 2}, {A: 3, B: 3}, {A: Error("error"), B: 4}], Value.B)
-Table({Result:1},{Result:2},{Result:3},{Result:4})
+Table({Value:1},{Value:2},{Value:3},{Value:4})
 
 >> Distinct([{A: 1}, {A: 2}, {A: 3}, Error("error")], IfError(Value.A, 4))
-Table({Result:1},{Result:2},{Result:3},{Result:4})
+Table({Value:1},{Value:2},{Value:3},{Value:4})
 
 >> Distinct([GUID("c203b79b-b985-42f0-b523-c10eb64387c6"), GUID("c203b79b-b985-42f0-b523-c10eb64387c6")], Value)
-Table({Result:GUID("c203b79b-b985-42f0-b523-c10eb64387c6")})
+Table({Value:GUID("c203b79b-b985-42f0-b523-c10eb64387c6")})
 
 >> Distinct(Table({a:1,b:2},{a:3,b:4},{a:5,b:6}), Blank())
-Table({Result:Blank()})
+Table({Value:Blank()})
 
 // Distinct only supports Primitive types.
 >> Distinct(Table({a:1,b:2},{a:3,b:4},{a:5,b:6}), Table({test: a * 2}))

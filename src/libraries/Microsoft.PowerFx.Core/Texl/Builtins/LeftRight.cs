@@ -74,9 +74,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             // Typecheck the input table
             fValid &= CheckStringColumnType(argTypes[0], args[0], errors, ref nodeToCoercedTypeMap);
 
-            returnType = context.Features.HasFlag(Features.ConsistentOneColumnTableResult)
-                ? DType.CreateTable(new TypedName(DType.String, new DName(ColumnName_ValueStr)))
-                : argTypes[0];
+            returnType = DType.CreateTable(new TypedName(DType.String, ColumnName_Value));
 
             return fValid;
         }
@@ -127,9 +125,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             // Typecheck the count table
             fValid &= CheckNumericColumnType(argTypes[1], args[1], errors, ref nodeToCoercedTypeMap);
 
-            returnType = context.Features.HasFlag(Features.ConsistentOneColumnTableResult)
-                ? DType.CreateTable(new TypedName(DType.String, new DName(ColumnName_ValueStr)))
-                : argTypes[0];
+            returnType = DType.CreateTable(new TypedName(DType.String, ColumnName_Value));
 
             return fValid;
         }
@@ -178,7 +174,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             fValid &= CheckNumericColumnType(argTypes[1], args[1], errors, ref nodeToCoercedTypeMap);
 
             // Synthesize a new return type
-            returnType = DType.CreateTable(new TypedName(DType.String, GetOneColumnTableResultName(context.Features)));
+            returnType = DType.CreateTable(new TypedName(DType.String, ColumnName_Value));
 
             return fValid;
         }

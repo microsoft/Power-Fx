@@ -311,10 +311,10 @@ Table({Value:5},{Value:10},{Value:15},{Value:20},{Value:25})
 Table({Value:5},{Value:10},{Value:15},{Value:20},{Value:25})
 
 >> Split("Hello World", "Hello World")
-Table({Result:""},{Result:""})
+Table({Value:""},{Value:""})
 
 >> Split(ParseJSON("""Hello World"""), "Hello World")
-Table({Result:""},{Result:""})
+Table({Value:""},{Value:""})
 
 >> Split("Hello World", ParseJSON("""Hello World"""))
-Table({Result:""},{Result:""})
+Table({Value:""},{Value:""})

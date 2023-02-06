@@ -2,15 +2,15 @@
 Table({Value:0},{Value:0})
 
 >> Ln(Table({a: Exp(22)}, {a: Exp(-33)}))
-Table({a:22},{a:-33})
+Table({Value:22},{Value:-33})
 
 >> Ln(Table({a: -57.88}, {a: 1/0}))
-Table({a:Error({Kind:ErrorKind.Numeric})},{a:Error({Kind:ErrorKind.Div0})})
+Table({Value:Error({Kind:ErrorKind.Numeric})},{Value:Error({Kind:ErrorKind.Div0})})
 
 //Rounding values as the test runner returns a different precision for table inputs
 
 >> Round(Ln(Table({a: 5}, {a: 430}, {a: 2.34567})), 8)
-Table({a:1.60943791},{a:6.06378521},{a:0.85257108})
+Table({Value:1.60943791},{Value:6.06378521},{Value:0.85257108})
 
 >> Round(Ln(Table({a: "-10.123"}, {a: "10"})), 8)
-Table({a:Error({Kind:ErrorKind.Numeric})},{a:2.30258509})
+Table({Value:Error({Kind:ErrorKind.Numeric})},{Value:2.30258509})
