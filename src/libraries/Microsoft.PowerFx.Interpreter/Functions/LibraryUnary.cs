@@ -3,11 +3,17 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Xml;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
+using Microsoft.PowerFx.Core.Texl;
+using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Interpreter;
+using Microsoft.PowerFx.Interpreter.Exceptions;
 using Microsoft.PowerFx.Types;
+using static Microsoft.PowerFx.Syntax.PrettyPrintVisitor;
 
 namespace Microsoft.PowerFx.Functions
 {
@@ -335,6 +341,30 @@ namespace Microsoft.PowerFx.Functions
             return CommonErrors.InvalidBooleanFormatError(irContext);
         }
 
+        public static FormulaValue GetBoolean(IRContext irContext, FormulaValue value)
+        {
+            FormulaValue result = null;
+            switch (value)
+            {
+                case StringValue sv:
+                    result = TextToBoolean(irContext, new StringValue[] { sv });
+                    break;
+                case NumberValue num:
+                    result = NumberToBoolean(irContext, new NumberValue[] { num });
+                    break;
+                case BooleanValue boolVal:
+                    result = new BooleanValue(irContext, boolVal.Value);
+                    break;
+            }
+            
+            if (result != null)
+            {
+                return result;
+            }
+
+            return CommonErrors.NotYetImplementedError(irContext, $"Text format for {value?.GetType().Name}");
+        }
+
         public static FormulaValue DateToNumber(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             var timeZoneInfo = runner.TimeZoneInfo;
@@ -344,9 +374,38 @@ namespace Microsoft.PowerFx.Functions
             return new NumberValue(irContext, diff);
         }
 
+        public static FormulaValue DateToNumber(FormattingInfo formatInfo, IRContext irContext, FormulaValue[] args)
+        {
+            var timeZoneInfo = formatInfo.TimeZoneInfo;
+            DateTime arg0;
+
+            switch (args[0])
+            {
+                case DateTimeValue dtv:
+                    arg0 = dtv.GetConvertedValue(timeZoneInfo);
+                    break;
+                case DateValue dv:
+                    arg0 = dv.GetConvertedValue(timeZoneInfo);
+                    break;
+                default:
+                    throw CommonExceptions.RuntimeMisMatch;
+            }
+
+            var diff = arg0.Subtract(_epoch).TotalDays;
+            return new NumberValue(irContext, diff);
+        }
+
         public static NumberValue DateTimeToNumber(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, DateTimeValue[] args)
         {
             var timeZoneInfo = runner.TimeZoneInfo;
+            var d = args[0].GetConvertedValue(timeZoneInfo);
+            var diff = d.Subtract(_epoch).TotalDays;
+            return new NumberValue(irContext, diff);
+        }
+
+        public static NumberValue DateTimeToNumber(FormattingInfo formatInfo, IRContext irContext, DateTimeValue[] args)
+        {
+            var timeZoneInfo = formatInfo.TimeZoneInfo;
             var d = args[0].GetConvertedValue(timeZoneInfo);
             var diff = d.Subtract(_epoch).TotalDays;
             return new NumberValue(irContext, diff);
@@ -364,7 +423,17 @@ namespace Microsoft.PowerFx.Functions
             var n = args[0].Value;
             var date = _epoch.AddDays(n);
 
-            date = MakeValidDateTime(runner, date, runner.GetService<TimeZoneInfo>());            
+            date = MakeValidDateTime(runner, date, runner.GetService<TimeZoneInfo>());
+
+            return new DateTimeValue(irContext, date);
+        }
+
+        public static DateTimeValue NumberToDateTime(FormattingInfo formatInfo, IRContext irContext, NumberValue[] args)
+        {
+            var n = args[0].Value;
+            var date = _epoch.AddDays(n);
+
+            date = MakeValidDateTime(formatInfo.TimeZoneInfo, date);
 
             return new DateTimeValue(irContext, date);
         }
@@ -381,6 +450,34 @@ namespace Microsoft.PowerFx.Functions
                 default:
                     return CommonErrors.RuntimeTypeMismatch(irContext);
             }
+        }
+
+        public static FormulaValue GetDateTime(FormattingInfo formatInfo, IRContext irContext, FormulaValue value)
+        {
+            FormulaValue result = null;
+            var timeZoneInfo = formatInfo.TimeZoneInfo;
+            switch (value)
+            {
+                case StringValue st:
+                    result = DateTimeParse(formatInfo, irContext, new StringValue[] { st });
+                    break;
+                case NumberValue num:
+                    result = NumberToDateTime(formatInfo, irContext, new NumberValue[] { num });
+                    break;
+                case DateValue dv:
+                    result = new DateTimeValue(irContext, dv.GetConvertedValue(timeZoneInfo));
+                    break;
+                case DateTimeValue dtv:
+                    result = dtv;
+                    break;
+            }
+
+            if (result != null)
+            {
+                return result;
+            }
+
+            return CommonErrors.NotYetImplementedError(irContext, $"Text format for {value?.GetType().Name}");
         }
 
         public static FormulaValue DateTimeToDate(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
@@ -439,6 +536,16 @@ namespace Microsoft.PowerFx.Functions
             var date = _epoch.Add(t);
 
             date = MakeValidDateTime(runner, date, runner.GetService<TimeZoneInfo>());
+
+            return new DateTimeValue(irContext, date);
+        }
+
+        public static DateTimeValue TimeToDateTime(FormattingInfo formatInfo, IRContext irContext, TimeValue[] args)
+        {
+            var t = args[0].Value;
+            var date = _epoch.Add(t);
+
+            date = MakeValidDateTime(formatInfo.TimeZoneInfo, date);
 
             return new DateTimeValue(irContext, date);
         }

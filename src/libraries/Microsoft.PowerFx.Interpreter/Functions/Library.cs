@@ -4,7 +4,9 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Functions;
@@ -44,6 +46,15 @@ namespace Microsoft.PowerFx.Functions
         public static IEnumerable<TexlFunction> FunctionList => FunctionImplementations.Keys;
 
         public static readonly IReadOnlyDictionary<TexlFunction, AsyncFunctionPtr> FunctionImplementations;
+
+        internal class FormattingInfo
+        {
+            public CultureInfo CultureInfo { get; set; }
+
+            public CancellationToken CancellationToken { get; set; }
+
+            public TimeZoneInfo TimeZoneInfo { get; set; }
+        }
 
         static Library()
         {

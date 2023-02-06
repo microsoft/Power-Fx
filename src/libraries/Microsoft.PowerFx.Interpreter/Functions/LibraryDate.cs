@@ -146,6 +146,17 @@ namespace Microsoft.PowerFx.Functions
             return GetNextValidDate(datetime, timeZoneInfo);
         }
 
+        private static DateTime MakeValidDateTime(TimeZoneInfo timeZoneInfo, DateTime datetime)
+        {
+            if (datetime.IsValid(timeZoneInfo))
+            {
+                return datetime;
+            }
+
+            // If the date is invalid, we want to return the next valid date/time
+            return GetNextValidDate(datetime, timeZoneInfo);
+        }
+
         private static DateTime GetNextValidDate(DateTime invalidDate, TimeZoneInfo timeZoneInfo)
         {
             // Determine which adjustment rule applies to the current date
@@ -563,10 +574,15 @@ namespace Microsoft.PowerFx.Functions
 
         public static FormulaValue DateTimeParse(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, StringValue[] args)
         {
+            return DateTimeParse(CreateFormattingInfo(runner), irContext, args);
+        }
+
+        public static FormulaValue DateTimeParse(FormattingInfo formatInfo, IRContext irContext, StringValue[] args)
+        {
             var str = args[0].Value;
 
             // culture will have Cultural info in-case one was passed in argument else it will have the default one.
-            CultureInfo culture = runner.CultureInfo;
+            CultureInfo culture = formatInfo.CultureInfo;
             if (args.Length > 1)
             {
                 var languageCode = args[1].Value;
@@ -584,7 +600,7 @@ namespace Microsoft.PowerFx.Functions
 
             if (DateTime.TryParse(str, culture, DateTimeStyles.None, out var result))
             {
-                var tzi = runner.TimeZoneInfo;
+                var tzi = formatInfo.TimeZoneInfo;
 
                 if (result.Kind == DateTimeKind.Local)
                 {
