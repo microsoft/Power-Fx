@@ -167,6 +167,17 @@ namespace Microsoft.PowerFx.Functions
         {
             protected DateTime _minValueDT = DateTime.MaxValue;
             protected int _count = 0;
+            private readonly TimeZoneInfo _timeZoneInfo;
+
+            public MinDateAndDateTimeAgg(TimeZoneInfo timeZoneInfo)
+            {
+                _timeZoneInfo = timeZoneInfo;
+            }
+
+            public MinDateAndDateTimeAgg(IServiceProvider serviceProvider)
+                : this(serviceProvider.GetService<TimeZoneInfo>())
+            {
+            }
 
             public void Apply(FormulaValue value)
             {
@@ -176,13 +187,14 @@ namespace Microsoft.PowerFx.Functions
                 }
 
                 DateTime dt = DateTime.MaxValue;
+
                 switch (value)
                 {
                     case DateTimeValue dtv:
-                        dt = dtv.Value;
+                        dt = dtv.GetConvertedValue(_timeZoneInfo);
                         break;
                     case DateValue dv:
-                        dt = dv.Value;
+                        dt = dv.GetConvertedValue(_timeZoneInfo);
                         break;
                 }
 
@@ -282,6 +294,17 @@ namespace Microsoft.PowerFx.Functions
         {
             protected DateTime _maxValueDT = DateTime.MinValue;
             protected int _count = 0;
+            private readonly TimeZoneInfo _timeZoneInfo;
+
+            public MaxDateAndDateTimeAgg(TimeZoneInfo timeZoneInfo)
+            {
+                _timeZoneInfo = timeZoneInfo;
+            }
+
+            public MaxDateAndDateTimeAgg(IServiceProvider serviceProvider) 
+                : this(serviceProvider.GetService<TimeZoneInfo>())
+            {
+            }
 
             public void Apply(FormulaValue value)
             {
@@ -294,10 +317,10 @@ namespace Microsoft.PowerFx.Functions
                 switch (value)
                 {
                     case DateTimeValue dtv:
-                        dt = dtv.Value;
+                        dt = dtv.GetConvertedValue(_timeZoneInfo);
                         break;
                     case DateValue dv:
-                        dt = dv.Value;
+                        dt = dv.GetConvertedValue(_timeZoneInfo);
                         break;
                 }
 
@@ -436,7 +459,7 @@ namespace Microsoft.PowerFx.Functions
         }
 
         // Sum(1,2,3)     
-        internal static FormulaValue Sum(IRContext irContext, FormulaValue[] args)
+        internal static FormulaValue Sum(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             return RunAggregator(new SumAgg(), irContext, args);
         }
@@ -448,7 +471,7 @@ namespace Microsoft.PowerFx.Functions
         }
 
         // VarP(1,2,3)
-        internal static FormulaValue Var(IRContext irContext, FormulaValue[] args)
+        internal static FormulaValue Var(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             return RunAggregator(new VarianceAgg(), irContext, args);
         }
@@ -459,7 +482,7 @@ namespace Microsoft.PowerFx.Functions
             return await RunAggregatorAsync("VarP", new VarianceAgg(), runner, context, irContext, args);
         }
 
-        internal static FormulaValue Stdev(IRContext irContext, FormulaValue[] args)
+        internal static FormulaValue Stdev(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             return RunAggregator(new StdDeviationAgg(), irContext, args);
         }
@@ -470,9 +493,9 @@ namespace Microsoft.PowerFx.Functions
         }
 
         // Max(1,2,3)     
-        internal static FormulaValue Max(IRContext irContext, FormulaValue[] args)
+        internal static FormulaValue Max(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            var agg = GetMinMaxAggType(irContext, false);
+            var agg = GetMinMaxAggType(runner.FunctionServices, irContext, false);
 
             if (agg != null)
             {
@@ -487,7 +510,7 @@ namespace Microsoft.PowerFx.Functions
         // Max([1,2,3], Value * Value)     
         public static async ValueTask<FormulaValue> MaxTable(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            var agg = GetMinMaxAggType(irContext, false);
+            var agg = GetMinMaxAggType(runner.FunctionServices, irContext, false);
 
             if (agg != null)
             {
@@ -500,9 +523,9 @@ namespace Microsoft.PowerFx.Functions
         }
 
         // Min(1,2,3)     
-        internal static FormulaValue Min(IRContext irContext, FormulaValue[] args)
+        internal static FormulaValue Min(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            var agg = GetMinMaxAggType(irContext, true);
+            var agg = GetMinMaxAggType(runner.FunctionServices, irContext, true);
 
             if (agg != null)
             {
@@ -517,7 +540,7 @@ namespace Microsoft.PowerFx.Functions
         // Min([1,2,3], Value * Value)     
         public static async ValueTask<FormulaValue> MinTable(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            var agg = GetMinMaxAggType(irContext, true);
+            var agg = GetMinMaxAggType(runner.FunctionServices, irContext, true);
 
             if (agg != null)
             {
@@ -529,7 +552,7 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
-        private static IAggregator GetMinMaxAggType(IRContext irContext, bool isMin)
+        private static IAggregator GetMinMaxAggType(IServiceProvider serviceProvider, IRContext irContext, bool isMin)
         {
             IAggregator agg;
             if (irContext.ResultType == FormulaType.Number)
@@ -538,7 +561,7 @@ namespace Microsoft.PowerFx.Functions
             }
             else if (irContext.ResultType == FormulaType.DateTime || irContext.ResultType == FormulaType.Date)
             {
-                agg = isMin ? new MinDateAndDateTimeAgg() : new MaxDateAndDateTimeAgg();
+                agg = isMin ? new MinDateAndDateTimeAgg(serviceProvider) : new MaxDateAndDateTimeAgg(serviceProvider);
             }
             else if (irContext.ResultType == FormulaType.Time)
             {
@@ -554,7 +577,7 @@ namespace Microsoft.PowerFx.Functions
 
         // Average ignores blanks.
         // Average(1,2,3)
-        public static FormulaValue Average(IRContext irContext, FormulaValue[] args)
+        public static FormulaValue Average(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             return RunAggregator(new AverageAgg(), irContext, args);
         }
