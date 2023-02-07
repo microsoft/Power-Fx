@@ -47,6 +47,10 @@ namespace Microsoft.PowerFx.Types
             // Since we can't convert LocalKind time to UTC, if the time was of kind local just change kind.
             if (value.Kind == DateTimeKind.Local && timeZoneInfo.BaseUtcOffset == TimeSpan.Zero)
             {
+                return DateTime.SpecifyKind(value, DateTimeKind.Utc);
+            }
+            else if (value.Kind == DateTimeKind.Local && timeZoneInfo.BaseUtcOffset != TimeSpan.Zero)
+            {
                 return DateTime.SpecifyKind(value, DateTimeKind.Unspecified);
             }
             else if (value.Kind == DateTimeKind.Unspecified && timeZoneInfo.BaseUtcOffset == TimeSpan.Zero)
