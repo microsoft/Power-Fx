@@ -1303,5 +1303,44 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             // Checking if contains text in the correct locale
             Assert.Contains("Caractères inattendus.", diags.First().Message); // the value should be localized. Resx files have this localized.
         }
+
+        // Test showing how LSP can fully customize check result. 
+        [Fact]
+        public void CustomCheckResult()
+        {
+            _scopeFactory = new TestPowerFxScopeFactory(this.TestCreateEditorScope);
+            _testServer = new TestLanguageServer(_sendToClientData.Add, _scopeFactory);
+
+            _testServer.OnDataReceived(
+             JsonSerializer.Serialize(new
+             {
+                 jsonrpc = "2.0",
+                 method = "textDocument/didOpen",
+                 @params = new DidOpenTextDocumentParams()
+                 {
+                     TextDocument = new TextDocumentItem()
+                     {
+                         Uri = "powerfx://app",
+                         LanguageId = "powerfx",
+                         Version = 1,
+                         Text = "12+34" // number, expecting string 
+                     }
+                 }
+             }));
+
+            CheckBehaviorError(_sendToClientData[0], false, out var diags);
+
+            Assert.Contains("The type of this expression does not match the expected type 'Text'. Found type 'Number'.", diags.First().Message);
+        }
+
+        private EditorContextScope TestCreateEditorScope(string documentUri)
+        {
+            var engine = new Engine();
+
+            return new EditorContextScope((expression) => new CheckResult(engine)
+                .SetText(expression)
+                .SetBindingInfo()
+                .SetExpectedReturnValue(FormulaType.String));
+        }
     }
 }
