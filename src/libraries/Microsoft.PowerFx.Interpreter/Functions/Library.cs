@@ -26,7 +26,7 @@ namespace Microsoft.PowerFx.Functions
         /// </summary>
         public static readonly TexlFunction DistinctInterpreterFunction = new DistinctFunction();
 
-        private static readonly DateTime _epoch = new DateTime(1899, 12, 30, 0, 0, 0, 0);
+        internal static readonly DateTime _epoch = new DateTime(1899, 12, 30, 0, 0, 0, 0);
 
         // Helper to get a service or fallback to a default if the service is missing.
         private static T GetService<T>(this IServiceProvider services, T defaultService)
@@ -404,7 +404,7 @@ namespace Microsoft.PowerFx.Functions
                         new NumberValue(IRContext.NotInSource(FormulaType.Number), 0),
                         new StringValue(IRContext.NotInSource(FormulaType.String), "days")),
                     checkRuntimeTypes: ExactSequence(
-                        DateOrDateTime,
+                        DateOrTimeOrDateTime,
                         ExactValueTypeOrBlank<NumberValue>,
                         ExactValueTypeOrBlank<StringValue>),
                     checkRuntimeValues: DeferRuntimeValueChecking,
@@ -1583,73 +1583,23 @@ namespace Microsoft.PowerFx.Functions
         {
             {
                 BuiltinFunctionsCore.ColorFadeT,
-                StandardErrorHandlingAsync(
-                    BuiltinFunctionsCore.ColorFadeT.Name,
-                    expandArguments: NoArgExpansion,
-                    replaceBlankValues: DoNotReplaceBlank,
-                    checkRuntimeTypes: ExactSequence(
-                        ExactValueTypeOrTableOrBlank<ColorValue>,
-                        ExactValueTypeOrBlank<NumberValue>),
-                    checkRuntimeValues: DeferRuntimeValueChecking,
-                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-                    targetFunction: MultiSingleColumnTable(
-                            SimpleFunctionImplementations[BuiltinFunctionsCore.ColorFade]),
-                    isMultiArgTabularOverload: true)
+                NoErrorHandling(MultiSingleColumnTable(SimpleFunctionImplementations[BuiltinFunctionsCore.ColorFade]))
             },
             {
                 BuiltinFunctionsCore.ConcatenateT,
-                StandardErrorHandlingAsync(
-                    BuiltinFunctionsCore.ConcatenateT.Name,
-                    expandArguments: NoArgExpansion,
-                    replaceBlankValues: DoNotReplaceBlank,
-                    checkRuntimeTypes: ExactValueTypeOrTableOrBlank<StringValue>,
-                    checkRuntimeValues: DeferRuntimeValueChecking,
-                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-                    targetFunction: MultiSingleColumnTable(
-                            SimpleFunctionImplementations[BuiltinFunctionsCore.Concatenate]),
-                    isMultiArgTabularOverload: true)
+                NoErrorHandling(MultiSingleColumnTable(SimpleFunctionImplementations[BuiltinFunctionsCore.Concatenate]))
             },
             {
                 BuiltinFunctionsCore.Dec2HexT,
-                StandardErrorHandlingAsync(
-                    BuiltinFunctionsCore.Dec2HexT.Name,
-                    expandArguments: NoArgExpansion,
-                    replaceBlankValues: DoNotReplaceBlank,
-                    checkRuntimeTypes: ExactValueTypeOrTableOrBlank<NumberValue>,
-                    checkRuntimeValues: DeferRuntimeValueChecking,
-                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-                    targetFunction: MultiSingleColumnTable(
-                            SimpleFunctionImplementations[BuiltinFunctionsCore.Dec2Hex]),
-                    isMultiArgTabularOverload: true)
+                NoErrorHandling(MultiSingleColumnTable(SimpleFunctionImplementations[BuiltinFunctionsCore.Dec2Hex]))
             },
             {
                 BuiltinFunctionsCore.FindT,
-                StandardErrorHandlingAsync<FormulaValue>(
-                    BuiltinFunctionsCore.FindT.Name,
-                    expandArguments: NoArgExpansion,
-                    replaceBlankValues: DoNotReplaceBlank,
-                    checkRuntimeTypes: ExactSequence(
-                        ExactValueTypeOrTableOrBlank<StringValue>,
-                        ExactValueTypeOrTableOrBlank<StringValue>,
-                        ExactValueTypeOrTableOrBlank<NumberValue>),
-                    checkRuntimeValues: DeferRuntimeValueChecking,
-                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-                    targetFunction: MultiSingleColumnTable(
-                            SimpleFunctionImplementations[BuiltinFunctionsCore.Find]),
-                    isMultiArgTabularOverload: true)
+                NoErrorHandling(MultiSingleColumnTable(SimpleFunctionImplementations[BuiltinFunctionsCore.Find]))
             },
             {
                 BuiltinFunctionsCore.RoundT,
-                StandardErrorHandlingAsync(
-                    BuiltinFunctionsCore.RoundT.Name,
-                    expandArguments: NoArgExpansion,
-                    replaceBlankValues: DoNotReplaceBlank,
-                    checkRuntimeTypes: ExactValueTypeOrTableOrBlank<NumberValue>,
-                    checkRuntimeValues: DeferRuntimeValueChecking,
-                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-                    targetFunction: MultiSingleColumnTable(
-                            SimpleFunctionImplementations[BuiltinFunctionsCore.Round]),
-                    isMultiArgTabularOverload: true)
+                NoErrorHandling(MultiSingleColumnTable(SimpleFunctionImplementations[BuiltinFunctionsCore.Round]))
             },
         };
 
@@ -1981,14 +1931,20 @@ namespace Microsoft.PowerFx.Functions
 
         // ForAll([1,2,3,4,5], Value * Value)
         public static async ValueTask<FormulaValue> ForAll(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
-        {// Streaming 
+        {
+            // Streaming 
             var arg0 = (TableValue)args[0];
             var arg1 = (LambdaFormulaValue)args[1];
 
             var rowsAsync = LazyForAll(runner, context, arg0.Rows, arg1);
 
-            // TODO: verify semantics in the case of heterogeneous record lists
-            var rows = await Task.WhenAll(rowsAsync);
+            var rows = new List<FormulaValue>();
+
+            foreach (var row in rowsAsync)
+            {
+                runner.CheckCancel();
+                rows.Add(await row);
+            }
 
             var errorRows = rows.OfType<ErrorValue>();
             if (errorRows.Any())
@@ -1996,7 +1952,7 @@ namespace Microsoft.PowerFx.Functions
                 return ErrorValue.Combine(irContext, errorRows);
             }
 
-            return new InMemoryTableValue(irContext, StandardTableNodeRecords(irContext, rows, forceSingleColumn: false));
+            return new InMemoryTableValue(irContext, StandardTableNodeRecords(irContext, rows.ToArray(), forceSingleColumn: false));
         }
 
         private static IEnumerable<Task<FormulaValue>> LazyForAll(

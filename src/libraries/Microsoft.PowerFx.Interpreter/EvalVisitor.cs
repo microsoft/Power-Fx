@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Entities;
@@ -16,6 +17,7 @@ using Microsoft.PowerFx.Core.IR.Symbols;
 using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter;
+using Microsoft.PowerFx.Interpreter.Exceptions;
 using Microsoft.PowerFx.Types;
 using static Microsoft.PowerFx.Functions.Library;
 
@@ -38,6 +40,10 @@ namespace Microsoft.PowerFx
 
         public CultureInfo CultureInfo { get; private set; }
 
+        public TimeZoneInfo TimeZoneInfo { get; private set; }
+
+        public DateTimeKind DateTimeKind => TimeZoneInfo.BaseUtcOffset == TimeSpan.Zero ? DateTimeKind.Utc : DateTimeKind.Unspecified;
+
         public Governor Governor { get; private set; }
         
         public EvalVisitor(IRuntimeConfig config, CancellationToken cancellationToken)
@@ -46,6 +52,8 @@ namespace Microsoft.PowerFx
             _cancellationToken = cancellationToken;
 
             _services = config.ServiceProvider ?? new BasicServiceProvider();
+
+            TimeZoneInfo = GetService<TimeZoneInfo>() ?? TimeZoneInfo.Local;
 
             Governor = GetService<Governor>() ?? new Governor();
             
@@ -257,7 +265,22 @@ namespace Microsoft.PowerFx
             {
                 if (FunctionImplementations.TryGetValue(func, out var ptr))
                 {
-                    result = await ptr(this, context.IncrementStackDepthCounter(childContext), node.IRContext, args);
+                    try
+                    {
+                        result = await ptr(this, context.IncrementStackDepthCounter(childContext), node.IRContext, args);
+                    }
+                    catch (CustomFunctionErrorException ex)
+                    {
+                        var irContext = node.IRContext;
+                        result = new ErrorValue(
+                            irContext, 
+                            new ExpressionError()
+                            {
+                                Message = ex.Message,
+                                Span = irContext.SourceContext,
+                                Kind = ex.ErrorKind
+                            });
+                    }
 
                     if (IfFunction.CanCheckIfReturn(func))
                     {
@@ -647,6 +670,61 @@ namespace Microsoft.PowerFx
             }
 
             return ResolvedObjectHelpers.ResolvedObjectError(node);
+        }
+
+        public DateTime GetNormalizedDateTime(FormulaValue arg)
+        {
+            switch (arg)
+            {
+                case DateTimeValue dtv:
+                    return dtv.GetConvertedValue(TimeZoneInfo);
+                case DateValue dv:
+                    return dv.GetConvertedValue(TimeZoneInfo);
+                default:
+                    throw CommonExceptions.RuntimeMisMatch;
+            }
+        }
+
+        public DateTime GetNormalizedDateTimeAllowTimeValue(FormulaValue arg)
+        {
+            switch (arg)
+            {
+                case DateTimeValue dtv:
+                    return dtv.GetConvertedValue(TimeZoneInfo);
+                case DateValue dv:
+                    return dv.GetConvertedValue(TimeZoneInfo);
+                case TimeValue tv:
+                    return _epoch.Add(tv.Value);
+                default:
+                    throw CommonExceptions.RuntimeMisMatch;
+            }
+        }
+
+        public TimeSpan GetNormalizedTimeSpan(FormulaValue arg)
+        {
+            switch (arg)
+            {
+                case DateTimeValue dtv:
+                    return dtv.GetConvertedValue(TimeZoneInfo).TimeOfDay;
+                case TimeValue dv:
+                    return dv.Value;
+                default:
+                    throw CommonExceptions.RuntimeMisMatch;
+            }
+        }
+
+        public TimeSpan GetNormalizedTimeSpanWithoutDay(FormulaValue arg)
+        {
+            switch (arg)
+            {
+                case DateTimeValue dtv:
+                    var dtvValue = dtv.GetConvertedValue(TimeZoneInfo);
+                    return new TimeSpan(0, dtvValue.Hour, dtvValue.Minute, dtvValue.Second, dtvValue.Millisecond);
+                case TimeValue tv:
+                    return tv.Value;
+                default:
+                    throw CommonExceptions.RuntimeMisMatch;
+            }
         }
     }
 }

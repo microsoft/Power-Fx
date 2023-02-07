@@ -232,7 +232,7 @@ Blank()
 Blank()
 
 >> Concatenate(If(1<0,["a","b"]), If(1/0<2,["abcdef", "ghijkl"]))
-Error({Kind:ErrorKind.Div0})
+Blank()
 
 >> Concatenate( If(Sqrt(-1)<0,["Hi", "hello"]), If(1/0<2, " world") )
 Error({Kind:ErrorKind.Numeric})
@@ -241,7 +241,7 @@ Error({Kind:ErrorKind.Numeric})
 Error({Kind:ErrorKind.Div0})
 
 >> Concatenate( If(Sqrt(-1)<0,["Hi", "hello"]), If(1/0<2, [" world", "people"]) )
-Error(Table({Kind:ErrorKind.Numeric},{Kind:ErrorKind.Div0}))
+Error({Kind:ErrorKind.Numeric})
 
 >> Concatenate(Filter([1,2], Value<>Value), If(1/0<0, "test"))
 Table()

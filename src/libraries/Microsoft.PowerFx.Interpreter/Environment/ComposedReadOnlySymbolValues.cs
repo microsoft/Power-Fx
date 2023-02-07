@@ -165,6 +165,16 @@ namespace Microsoft.PowerFx
                 map[symbolTable] = symValues;
                 return;
             }
+            else if (symbolTable is DeferredSymbolTable symbolTable3)
+            {
+                var symValues = new SymbolValues(symbolTable3)
+                {
+                    DebugName = symbolTable3.DebugName
+                };
+
+                map[symbolTable] = symValues;
+                return;
+            }
             else
             {
                 throw new NotImplementedException($"Unhandled symbol table kind: {symbolTable.DebugName} of type {symbolTable.GetType().FullName} ");

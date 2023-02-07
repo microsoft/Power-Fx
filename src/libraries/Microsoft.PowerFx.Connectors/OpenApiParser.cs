@@ -14,9 +14,9 @@ using static Microsoft.PowerFx.Connectors.OpenApiHelperFunctions;
 
 namespace Microsoft.PowerFx.Connectors
 {
-    internal class OpenApiParser
+    public class OpenApiParser
     {
-        public static List<ConnectorFunction> GetFunctions(OpenApiDocument openApiDocument)
+        public static IEnumerable<ConnectorFunction> GetFunctions(OpenApiDocument openApiDocument)
         {
             if (openApiDocument == null)
             {
@@ -58,7 +58,7 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         // Parse an OpenApiDocument and return functions. 
-        public static List<ServiceFunction> Parse(string functionNamespace, OpenApiDocument openApiDocument, HttpMessageInvoker httpClient = null, ICachingHttpClient cache = null)
+        internal static List<ServiceFunction> Parse(string functionNamespace, OpenApiDocument openApiDocument, HttpMessageInvoker httpClient = null, ICachingHttpClient cache = null)
         {
             if (openApiDocument == null)
             {

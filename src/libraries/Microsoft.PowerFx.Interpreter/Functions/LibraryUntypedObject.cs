@@ -197,9 +197,12 @@ namespace Microsoft.PowerFx.Functions
             {
                 var s = impl.GetString();
 
-                if (IsValidDateTimeUO(s) && DateTime.TryParse(s, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime datetime))
+                if (IsValidDateTimeUO(s) && DateTime.TryParse(s, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out DateTime datetime))
                 {
-                    datetime = MakeValidDateTime(runner, datetime, runner.GetService<TimeZoneInfo>() ?? TimeZoneInfo.Local);
+                    var timeZoneInfo = runner.TimeZoneInfo;
+                    datetime = MakeValidDateTime(runner, datetime, timeZoneInfo);
+
+                    datetime = DateTimeValue.GetConvertedDateTimeValue(datetime, timeZoneInfo);
 
                     return new DateValue(irContext, datetime.Date);
                 }
@@ -238,9 +241,11 @@ namespace Microsoft.PowerFx.Functions
             {
                 var s = impl.GetString();
 
-                if (IsValidDateTimeUO(s) && DateTime.TryParse(s, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime datetime))
+                if (IsValidDateTimeUO(s) && DateTime.TryParse(s, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out DateTime datetime))
                 {
-                    datetime = MakeValidDateTime(runner, datetime, runner.GetService<TimeZoneInfo>() ?? TimeZoneInfo.Local);
+                    datetime = MakeValidDateTime(runner, datetime, runner.TimeZoneInfo);
+                    
+                    datetime = DateTimeValue.GetConvertedDateTimeValue(datetime, runner.TimeZoneInfo);
 
                     return new DateTimeValue(irContext, datetime);
                 }
@@ -295,7 +300,12 @@ namespace Microsoft.PowerFx.Functions
 
             var rowsAsync = LazyForAll(runner, context, items, arg1);
 
-            var rows = await Task.WhenAll(rowsAsync);
+            var rows = new List<FormulaValue>();
+
+            foreach (var row in rowsAsync)
+            {
+                rows.Add(await row);
+            }
 
             var errorRows = rows.OfType<ErrorValue>();
             if (errorRows.Any())
@@ -303,7 +313,7 @@ namespace Microsoft.PowerFx.Functions
                 return ErrorValue.Combine(irContext, errorRows);
             }
 
-            return new InMemoryTableValue(irContext, StandardTableNodeRecords(irContext, rows, forceSingleColumn: false));
+            return new InMemoryTableValue(irContext, StandardTableNodeRecords(irContext, rows.ToArray(), forceSingleColumn: false));
         }
 
         public static FormulaValue ColorValue_UO(IRContext irContext, UntypedObjectValue[] args)

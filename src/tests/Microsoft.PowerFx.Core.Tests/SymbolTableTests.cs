@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.PowerFx.Core.Binding;
+using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
@@ -222,6 +223,42 @@ namespace Microsoft.PowerFx.Core.Tests
             // Check if nothing else has been copied
             Assert.Empty(symbolTableCopy1.SymbolNames);
             Assert.Empty(symbolTableCopy2.SymbolNames);
+        }
+
+        [Theory]
+        [InlineData("logical1+ 5", true)] // logical name
+        [InlineData("display1 + 5", true)] // display name
+        [InlineData("missing + 5", false)] // display name
+        [InlineData("logical1 + logical1", true)] // logical name
+        public void Deferred(string expr, bool expectSuccess)
+        {
+            var map = new SingleSourceDisplayNameProvider(new Dictionary<DName, DName>
+            {
+                { new DName("logical1"), new DName("display1") }
+            });
+
+            int callbackCount = 0;
+            var symTable = new DeferredSymbolTable(map, (disp, logical) =>
+            {
+                callbackCount++;
+                return FormulaType.Number;
+            });
+
+            var check = new CheckResult(new Engine());
+            check.SetText(expr);
+            check.SetBindingInfo(symTable);
+
+            check.ApplyBinding();
+            if (expectSuccess)
+            {
+                Assert.True(check.IsSuccess);
+                Assert.Equal(1, callbackCount);
+            }
+            else
+            {
+                Assert.False(check.IsSuccess);
+                Assert.Equal(0, callbackCount);
+            }
         }
     }
 }

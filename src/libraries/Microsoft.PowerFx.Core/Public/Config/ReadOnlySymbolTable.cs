@@ -100,6 +100,30 @@ namespace Microsoft.PowerFx
             throw NewBadSlotException(slot);
         }
 
+        // Ensure that newType can be assigned to the given slot. 
+        internal void ValidateAccepts(ISymbolSlot slot, FormulaType newType)
+        {
+            var srcType = this.GetTypeFromSlot(slot);
+
+            if (newType is RecordType)
+            {
+                // Lazy RecordTypes don't validate. 
+                // https://github.com/microsoft/Power-Fx/issues/833
+                return;
+            }
+
+            var ok = srcType._type.Accepts(newType._type);
+
+            if (ok)
+            {
+                return;
+            }
+
+            var name = slot.DebugName();
+
+            throw new InvalidOperationException($"Can't change '{name}' from {srcType} to {newType._type}.");
+        }
+
         // Helper to call on Get/Set to ensure slot can be used with this value
         internal void ValidateSlot(ISymbolSlot slot)
         {
@@ -114,6 +138,23 @@ namespace Microsoft.PowerFx
         internal Exception NewBadSlotException(ISymbolSlot slot)
         {
             return new InvalidOperationException($"Slot {slot.DebugName()} is not valid on Symbol Table {this.DebugName()}");
+        }
+
+        /// <summary>
+        /// Create a symbol table around the DisplayNameProvider. 
+        /// The set of symbols is fixed and determined by the DisplayNameProvider, 
+        /// but their type info is lazily hydrated. 
+        /// </summary>
+        /// <returns></returns>
+        public static ReadOnlySymbolTable NewFromDeferred(
+            DisplayNameProvider map,
+            Func<string, string, FormulaType> fetchTypeInfo,
+            string debugName = null)
+        {
+            return new DeferredSymbolTable(map, fetchTypeInfo)
+            {
+                DebugName = debugName
+            };
         }
 
         public static ReadOnlySymbolTable NewFromRecord(
@@ -171,10 +212,6 @@ namespace Microsoft.PowerFx
             return s;
         }
 
-        internal readonly Dictionary<string, NameLookupInfo> _variables = new Dictionary<string, NameLookupInfo>();
-
-        internal DisplayNameProvider _environmentSymbolDisplayNameProvider = new SingleSourceDisplayNameProvider();
-
         private protected readonly List<TexlFunction> _functions = new List<TexlFunction>();
 
         // Which enums are available. 
@@ -209,7 +246,7 @@ namespace Microsoft.PowerFx
 
         IEnumerable<TexlFunction> INameResolver.Functions => _functions; 
         
-        IEnumerable<KeyValuePair<string, NameLookupInfo>> IGlobalSymbolNameResolver.GlobalSymbols => _variables;
+        IEnumerable<KeyValuePair<string, NameLookupInfo>> IGlobalSymbolNameResolver.GlobalSymbols => Enumerable.Empty<KeyValuePair<string, NameLookupInfo>>();
 
         /// <summary>
         /// Get symbol names in this current scope.
@@ -229,21 +266,12 @@ namespace Microsoft.PowerFx
             }
         }
 
-        internal bool TryGetVariable(DName name, out NameLookupInfo symbol, out DName displayName)
+        // Hook from Lookup - Get just variables. 
+        internal virtual bool TryGetVariable(DName name, out NameLookupInfo symbol, out DName displayName)
         {
-            var lookupName = name;
-
-            if (_environmentSymbolDisplayNameProvider.TryGetDisplayName(name, out displayName))
-            {
-                // do nothing as provided name can be used for lookup with logical name
-            }
-            else if (_environmentSymbolDisplayNameProvider.TryGetLogicalName(name, out var logicalName))
-            {
-                lookupName = logicalName;
-                displayName = name;
-            }
-
-            return _variables.TryGetValue(lookupName, out symbol);
+            symbol = default;
+            displayName = default;
+            return false;
         }
 
         // Derived symbol tables can hook. 

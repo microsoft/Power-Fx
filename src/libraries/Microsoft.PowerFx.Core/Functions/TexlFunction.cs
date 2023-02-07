@@ -473,6 +473,12 @@ namespace Microsoft.PowerFx.Core.Functions
             // Type check the args
             for (var i = 0; i < count; i++)
             {
+                // Identifiers don't have a type
+                if (IsIdentifierParam(i))
+                {
+                    continue;
+                }
+
                 var expectedParamType = ParamTypes[i];
 
                 // If the strong-enum type flag is disabled, treat an enum option set type as the enum supertype instead

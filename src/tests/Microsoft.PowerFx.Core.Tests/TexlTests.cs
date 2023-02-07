@@ -84,14 +84,17 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("DateAdd([Date(2000,1,1)],1)", "*[Value:D]")]
-        [InlineData("DateAdd([Date(2000,1,1)],[3])", "*[Value:D]")]
-        [InlineData("DateAdd(Table({a:Date(2000,1,1)}),[3])", "*[a:D]")]
-        [InlineData("DateAdd(Date(2000,1,1),[1])", "*[Result:D]")]
+        [InlineData("DateAdd(Date(2000,1,1), 1)", "D")]
+        [InlineData("DateAdd(Date(2000,1,1), 1, TimeUnit.Months)", "D")]
+        [InlineData("DateAdd(Date(2000,1,1), \"2\")", "D")] // Coercion on delta argument from string
+        [InlineData("DateAdd(Date(2000,1,1), true)", "D")] // Coercion on delta argument from boolean
         [InlineData("DateAdd(DateTimeValue(\"1 Jan 2015\"), 2)", "d")]
         [InlineData("DateAdd(DateTimeValue(\"1 Jan 2015\"), 2, TimeUnit.Years)", "d")]
         [InlineData("DateAdd(DateTimeValue(\"1 Jan 2015\"), \"hello\")", "d")]
         [InlineData("DateAdd(DateTimeValue(\"1 Jan 2015\"), \"hello\", 3)", "d")]
+        [InlineData("DateAdd(\"2000-01-01\", 1)", "d")] // Coercion on date argument from string
+        [InlineData("DateAdd(45678, 1)", "d")] // Coercion on date argument from number
+        [InlineData("DateAdd(Time(12,34,56), 1)", "T")] // Coercion on date argument from time
         public void TexlDateAdd(string script, string expectedType)
         {
             Assert.True(DType.TryParse(expectedType, out var type));
@@ -103,10 +106,17 @@ namespace Microsoft.PowerFx.Core.Tests
         [Theory]
         [InlineData("DateAdd([Date(2000,1,1)],1)", "*[Value:D]")]
         [InlineData("DateAdd([Date(2000,1,1)],[3])", "*[Value:D]")]
+        [InlineData("DateAdd(Table({a:Date(2000,1,1)}),[3])", "*[a:D]")]
         [InlineData("DateAdd(Date(2000,1,1),[1])", "*[Result:D]")]
+        [InlineData("DateAdd(\"2021-02-03\",[1])", "*[Result:d]")] // Coercion from string
+        [InlineData("DateAdd(44955,[1])", "*[Result:d]")] // Coercion from number
+        [InlineData("DateAdd(Time(12,0,0),[1])", "*[Result:T]")] // Coercion from time
         [InlineData("DateAdd([DateTimeValue(\"1 Jan 2015\")],1)", "*[Value:d]")]
         [InlineData("DateAdd([DateTimeValue(\"1 Jan 2015\")],[3])", "*[Value:d]")]
         [InlineData("DateAdd(DateTimeValue(\"1 Jan 2015\"),[1])", "*[Result:d]")]
+        [InlineData("DateAdd([\"2011-02-03\"],1)", "*[Value:d]")] // Coercion from string
+        [InlineData("DateAdd([44900],1)", "*[Value:d]")] // Coercion from number
+        [InlineData("DateAdd([Time(12,0,0)],1)", "*[Value:T]")] // Coercion from time
         [InlineData("DateDiff([Date(2000,1,1)],[Date(2001,1,1)],\"years\")", "*[Result:n]")]
         [InlineData("DateDiff(Date(2000,1,1),[Date(2001,1,1)],\"years\")", "*[Result:n]")]
         [InlineData("DateDiff([Date(2000,1,1)],Date(2001,1,1),\"years\")", "*[Result:n]")]
@@ -142,8 +152,8 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("DateAdd(Table({v:Date(2022,1,1),s:9},{v:Date(2022,2,2),s:25}), 2, TimeUnit.Days)")]
-        [InlineData("DateAdd(DropColumns([Date(2022,1,1),Date(2022,2,2)],\"Value\"), 2, TimeUnit.Days)")]
+        [InlineData("DateAdd(Table({v:Date(2022,1,1),s:9},{v:Date(2022,2,2),s:25}), 2, TimeUnit.Days)")] // Not a single-column table
+        [InlineData("DateAdd(DropColumns([Date(2022,1,1),Date(2022,2,2)],\"Value\"), 2, TimeUnit.Days)")] // Not a single-column table
         [InlineData("DateDiff(Table({v:Date(2022,1,1),s:9},{v:Date(2022,2,2),s:25}), Date(2022,12,12), TimeUnit.Days)")]
         [InlineData("DateDiff(DropColumns([Date(2022,1,1),Date(2022,2,2)],\"Value\"), Date(2022,2,2), TimeUnit.Days)")]
         public void TexlDateTableFunctions_Negative(string expression)

@@ -81,21 +81,11 @@ namespace Microsoft.PowerFx.Types
                 throw new ArgumentException("Invalid DateValue, the provided DateTime contains a non-zero TimeOfDay");
             }
 
-            if (value.Kind == DateTimeKind.Utc)
-            {
-                throw new ArgumentException("Invalid DateValue, the provided DateTime must be local");
-            }
-
             return new DateValue(IRContext.NotInSource(FormulaType.Date), value);
         }
 
         public static DateTimeValue New(DateTime value)
         {
-            if (value.Kind == DateTimeKind.Utc)
-            {
-                throw new ArgumentException("Invalid DateTimeValue, the provided DateTime must be local");
-            }
-
             return new DateTimeValue(IRContext.NotInSource(FormulaType.DateTime), value);
         }
 
