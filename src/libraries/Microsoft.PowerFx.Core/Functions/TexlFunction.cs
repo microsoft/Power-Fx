@@ -25,6 +25,7 @@ using Microsoft.PowerFx.Core.IR.Symbols;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Logging.Trackers;
 using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
@@ -37,6 +38,27 @@ namespace Microsoft.PowerFx.Core.Functions
     [ThreadSafeImmutable]
     internal abstract class TexlFunction : IFunction
     {
+        /// <summary>
+        /// Function can override this method to provide BlankHandling policy for argument.
+        /// </summary>
+        /// <param name="index">0 based Index of argument.</param>
+        /// <returns></returns>
+        public virtual ArgPreprocessor GetArgBlankHandlerPolicy(int index)
+        {
+            return ArgPreprocessor.None;
+        }
+
+        internal ArgPreprocessor GetDefaultArgBlankHandlerPolicy(int index)
+        {
+            var paramType = ParamTypes[index] ?? DType.Unknown;
+            if (paramType == DType.Number)
+            {
+                return ArgPreprocessor.ReplaceWithZero;
+            }
+
+            return ArgPreprocessor.None;
+        }
+
         // Column name when Features.ConsistentOneColumnTableResult is enabled.
         public const string ColumnName_ValueStr = "Value";
 

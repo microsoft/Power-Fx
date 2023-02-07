@@ -7,6 +7,7 @@ using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 
@@ -19,6 +20,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Corresponding Excel function: Char
     internal sealed class CharFunction : BuiltinFunction
     {
+        public override ArgPreprocessor GetArgBlankHandlerPolicy(int index)
+        {
+            return base.GetDefaultArgBlankHandlerPolicy(index);
+        }
+
         public override bool IsSelfContained => true;
 
         public override bool SupportsParamCoercion => true;

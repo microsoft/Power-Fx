@@ -709,6 +709,11 @@ namespace Microsoft.PowerFx.Functions
             return new BlankValue(irContext);
         }
 
+        private static FormulaValue NoOpAlreadyHandledByIR(IRContext irContext, int index)
+        {
+            return new BlankValue(irContext);
+        }
+
         // This function should be used when type checking is too unique and needs to be located
         // within the body of the builtin function itself
         private static FormulaValue DeferRuntimeTypeChecking(IRContext irContext, int index, FormulaValue arg)

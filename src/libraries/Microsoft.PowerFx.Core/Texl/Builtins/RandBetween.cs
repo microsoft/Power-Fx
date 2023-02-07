@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Types.Enums;
 
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
@@ -12,6 +13,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Equivalent DAX/Excel function: RandBetween
     internal sealed class RandBetweenFunction : BuiltinFunction
     {
+        public override ArgPreprocessor GetArgBlankHandlerPolicy(int index)
+        {
+            return base.GetDefaultArgBlankHandlerPolicy(index);
+        }
+
         // Multiple invocations may produce different return values.
         public override bool IsStateless => false;
 

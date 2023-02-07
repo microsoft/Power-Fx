@@ -4,15 +4,19 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.IR.Symbols;
 using Microsoft.PowerFx.Core.Texl;
+using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
+using static Microsoft.PowerFx.Syntax.PrettyPrintVisitor;
 using BinaryOpNode = Microsoft.PowerFx.Core.IR.Nodes.BinaryOpNode;
 using CallNode = Microsoft.PowerFx.Core.IR.Nodes.CallNode;
 using ErrorNode = Microsoft.PowerFx.Core.IR.Nodes.ErrorNode;
@@ -182,7 +186,7 @@ namespace Microsoft.PowerFx.Core.IR
                         binaryOpResult = new CallNode(context.GetIRContext(node), BuiltinFunctionsCore.Power, left, right);
                         break;
                     case BinaryOpKind.Concatenate:
-                        binaryOpResult = new CallNode(context.GetIRContext(node), BuiltinFunctionsCore.Concatenate, left, right);
+                        binaryOpResult = ConcatenateArgs(left, right);
                         break;
                     case BinaryOpKind.Or:
                     case BinaryOpKind.And:
@@ -332,11 +336,69 @@ namespace Microsoft.PowerFx.Core.IR
                     }
                 }
 
+                args = ReplaceBlankWithDefault(args, func);
+
                 // this can rewrite the entire call node to any intermediate node.
                 // e.g. For Boolean(true), Instead of IR as Call(Boolean, true) it can be rewritten directly to emit true.
                 var irNode = func.CreateIRCallNode(node, context, args, scope);
 
                 return MaybeInjectCoercion(node, irNode, context);
+            }
+
+            private List<IntermediateNode> ReplaceBlankWithDefault(List<IntermediateNode> args, TexlFunction func)
+            {
+                var len = args.Count;
+                List<IntermediateNode> convertedArgs = new List<IntermediateNode>(len);
+
+                for (var i = 0; i < len; i++)
+                {
+                    IntermediateNode convertedNode = default;
+                    var blankHandlerPolicy = func.GetArgBlankHandlerPolicy(i);
+
+                    switch (blankHandlerPolicy)
+                    {
+                        case ArgPreprocessor.ReplaceWithZero:
+                            convertedNode = ReplaceBlankWithZero(args[i]);
+                            break;
+                        default:
+                            convertedNode = args[i];
+                            break;
+                    }
+
+                    convertedArgs.Add(convertedNode);
+                }
+
+                return convertedArgs;
+            }
+
+            private static IntermediateNode ReplaceBlankWithZero(IntermediateNode arg)
+            {
+                var zeroNumLitNode = new NumberLiteralNode(IRContext.NotInSource(FormulaType.Number), 0);
+                var convertedNode = new CallNode(IRContext.NotInSource(FormulaType.Number), BuiltinFunctionsCore.Coalesce, arg, zeroNumLitNode);
+                return convertedNode;
+            }
+
+            private static IntermediateNode ConcatenateArgs(IntermediateNode arg1, IntermediateNode arg2)
+            {
+                var concatenateArgs = new List<IntermediateNode>();
+                foreach (var arg in new[] { arg1, arg2 })
+                {
+                    // if arg is call node to Concatenate unpack it, and pass it as arg to outer Concatenate
+                    if (arg is CallNode maybeConcatenate && maybeConcatenate.Function is ConcatenateFunction concatenateFunction)
+                    {
+                        foreach (var argC in maybeConcatenate.Args)
+                        {
+                            concatenateArgs.Add(argC);
+                        }
+                    }
+                    else
+                    {
+                        concatenateArgs.Add(arg);
+                    }
+                }
+
+                var concatenatedNode = new CallNode(IRContext.NotInSource(FormulaType.String), BuiltinFunctionsCore.Concatenate, concatenateArgs);
+                return concatenatedNode;
             }
 
             public override IntermediateNode Visit(FirstNameNode node, IRTranslatorContext context)

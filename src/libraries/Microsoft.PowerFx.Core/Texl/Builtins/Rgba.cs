@@ -5,12 +5,18 @@ using System.Collections.Generic;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Types.Enums;
 
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
     // RGBA(red, green, blue, alpha)
     internal sealed class RGBAFunction : BuiltinFunction
     {
+        public override ArgPreprocessor GetArgBlankHandlerPolicy(int index)
+        {
+            return base.GetDefaultArgBlankHandlerPolicy(index);
+        }
+
         public override bool IsTrackedInTelemetry => false;
 
         public override bool SupportsParamCoercion => true;

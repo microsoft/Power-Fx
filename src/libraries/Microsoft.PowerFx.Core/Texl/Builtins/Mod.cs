@@ -8,6 +8,7 @@ using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 
@@ -16,6 +17,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Mod(number:n, divisor:n)
     internal sealed class ModFunction : BuiltinFunction
     {
+        public override ArgPreprocessor GetArgBlankHandlerPolicy(int index)
+        {
+            return base.GetDefaultArgBlankHandlerPolicy(index);
+        }
+
         public override bool SupportsParamCoercion => true;
 
         public override bool IsSelfContained => true;

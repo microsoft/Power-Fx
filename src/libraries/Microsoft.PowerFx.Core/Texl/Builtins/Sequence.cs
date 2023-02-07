@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Texl.Builtins
@@ -12,6 +13,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Sequence(records:n, start:n, step:n): *[Value:n]
     internal sealed class SequenceFunction : BuiltinFunction
     {
+        public override ArgPreprocessor GetArgBlankHandlerPolicy(int index)
+        {
+            return base.GetDefaultArgBlankHandlerPolicy(index);
+        }
+
         public override bool IsSelfContained => true;
 
         public override bool SupportsParamCoercion => true;
