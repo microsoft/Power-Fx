@@ -17,9 +17,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Mod(number:n, divisor:n)
     internal sealed class ModFunction : BuiltinFunction
     {
-        public override ArgPreprocessor GetArgBlankHandlerPolicy(int index)
+        public override ArgPreprocessor GetArgPreprocessor(int index)
         {
-            return base.GetDefaultArgBlankHandlerPolicy(index);
+            return base.GetDefaultArgPreprocessor(index);
         }
 
         public override bool SupportsParamCoercion => true;

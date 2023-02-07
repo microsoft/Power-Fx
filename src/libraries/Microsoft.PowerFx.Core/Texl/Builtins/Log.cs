@@ -17,9 +17,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Equivalent Excel function: Log
     internal sealed class LogFunction : BuiltinFunction
     {
-        public override ArgPreprocessor GetArgBlankHandlerPolicy(int index)
+        public override ArgPreprocessor GetArgPreprocessor(int index)
         {
-            return base.GetDefaultArgBlankHandlerPolicy(index);
+            return base.GetDefaultArgPreprocessor(index);
         }
 
         public override bool SupportsParamCoercion => true;

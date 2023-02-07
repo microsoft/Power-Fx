@@ -13,9 +13,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Sequence(records:n, start:n, step:n): *[Value:n]
     internal sealed class SequenceFunction : BuiltinFunction
     {
-        public override ArgPreprocessor GetArgBlankHandlerPolicy(int index)
+        public override ArgPreprocessor GetArgPreprocessor(int index)
         {
-            return base.GetDefaultArgBlankHandlerPolicy(index);
+            return base.GetDefaultArgPreprocessor(index);
         }
 
         public override bool IsSelfContained => true;

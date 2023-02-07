@@ -21,9 +21,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Equivalent DAX/Excel function: Date
     internal sealed class DateFunction : BuiltinFunction
     {
-        public override ArgPreprocessor GetArgBlankHandlerPolicy(int index)
+        public override ArgPreprocessor GetArgPreprocessor(int index)
         {
-            return base.GetDefaultArgBlankHandlerPolicy(index);
+            return base.GetDefaultArgPreprocessor(index);
         }
 
         public override bool IsSelfContained => true;
@@ -74,9 +74,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Equivalent DAX/Excel function: Time
     internal sealed class TimeFunction : BuiltinFunction
     {
-        public override ArgPreprocessor GetArgBlankHandlerPolicy(int index)
+        public override ArgPreprocessor GetArgPreprocessor(int index)
         {
-            return base.GetDefaultArgBlankHandlerPolicy(index);
+            return base.GetDefaultArgPreprocessor(index);
         }
 
         public override bool IsSelfContained => true;
@@ -100,9 +100,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // DateTime(year, month, day, hour, minute, second[, millisecond])
     internal sealed class DateTimeFunction : BuiltinFunction
     {
-        public override ArgPreprocessor GetArgBlankHandlerPolicy(int index)
+        public override ArgPreprocessor GetArgPreprocessor(int index)
         {
-            return base.GetDefaultArgBlankHandlerPolicy(index);
+            return base.GetDefaultArgPreprocessor(index);
         }
 
         public override bool IsSelfContained => true;

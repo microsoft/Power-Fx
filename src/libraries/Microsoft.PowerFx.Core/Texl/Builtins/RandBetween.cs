@@ -13,9 +13,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Equivalent DAX/Excel function: RandBetween
     internal sealed class RandBetweenFunction : BuiltinFunction
     {
-        public override ArgPreprocessor GetArgBlankHandlerPolicy(int index)
+        public override ArgPreprocessor GetArgPreprocessor(int index)
         {
-            return base.GetDefaultArgBlankHandlerPolicy(index);
+            return base.GetDefaultArgPreprocessor(index);
         }
 
         // Multiple invocations may produce different return values.

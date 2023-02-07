@@ -18,9 +18,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Truncate by rounding toward zero.
     internal sealed class TruncFunction : BuiltinFunction
     {
-        public override ArgPreprocessor GetArgBlankHandlerPolicy(int index)
+        public override ArgPreprocessor GetArgPreprocessor(int index)
         {
-            return base.GetDefaultArgBlankHandlerPolicy(index);
+            return base.GetDefaultArgPreprocessor(index);
         }
 
         public override bool IsSelfContained => true;

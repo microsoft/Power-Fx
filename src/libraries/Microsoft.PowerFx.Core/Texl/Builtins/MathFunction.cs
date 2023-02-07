@@ -17,9 +17,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Abstract base class for all 1-arg math functions that return numeric values.
     internal abstract class MathOneArgFunction : BuiltinFunction
     {
-        public override ArgPreprocessor GetArgBlankHandlerPolicy(int index)
+        public override ArgPreprocessor GetArgPreprocessor(int index)
         {
-            return base.GetDefaultArgBlankHandlerPolicy(index);
+            return base.GetDefaultArgPreprocessor(index);
         }
 
         public override bool SupportsParamCoercion => true;

@@ -16,9 +16,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Equivalent Excel function: Atan2
     internal sealed class Atan2Function : BuiltinFunction
     {
-        public override ArgPreprocessor GetArgBlankHandlerPolicy(int index)
+        public override ArgPreprocessor GetArgPreprocessor(int index)
         {
-            return base.GetDefaultArgBlankHandlerPolicy(index);
+            return base.GetDefaultArgPreprocessor(index);
         }
 
         public override bool IsSelfContained => true;

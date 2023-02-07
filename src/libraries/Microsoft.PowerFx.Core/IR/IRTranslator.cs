@@ -353,7 +353,7 @@ namespace Microsoft.PowerFx.Core.IR
                 for (var i = 0; i < len; i++)
                 {
                     IntermediateNode convertedNode = default;
-                    var blankHandlerPolicy = func.GetArgBlankHandlerPolicy(i);
+                    var blankHandlerPolicy = func.GetArgPreprocessor(i);
 
                     switch (blankHandlerPolicy)
                     {

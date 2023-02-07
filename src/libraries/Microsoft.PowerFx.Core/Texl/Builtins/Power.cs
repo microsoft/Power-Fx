@@ -17,9 +17,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Equivalent DAX function: Power
     internal sealed class PowerFunction : BuiltinFunction
     {
-        public override ArgPreprocessor GetArgBlankHandlerPolicy(int index)
+        public override ArgPreprocessor GetArgPreprocessor(int index)
         {
-            return base.GetDefaultArgBlankHandlerPolicy(index);
+            return base.GetDefaultArgPreprocessor(index);
         }
 
         public override bool SupportsParamCoercion => true;

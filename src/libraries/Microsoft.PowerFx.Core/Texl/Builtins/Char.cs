@@ -20,9 +20,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Corresponding Excel function: Char
     internal sealed class CharFunction : BuiltinFunction
     {
-        public override ArgPreprocessor GetArgBlankHandlerPolicy(int index)
+        public override ArgPreprocessor GetArgPreprocessor(int index)
         {
-            return base.GetDefaultArgBlankHandlerPolicy(index);
+            return base.GetDefaultArgPreprocessor(index);
         }
 
         public override bool IsSelfContained => true;
