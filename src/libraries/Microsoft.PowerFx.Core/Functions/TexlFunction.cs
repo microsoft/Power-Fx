@@ -484,7 +484,7 @@ namespace Microsoft.PowerFx.Core.Functions
                 // If the strong-enum type flag is disabled, treat an enum option set type as the enum supertype instead
                 if (!context.Features.HasFlag(Features.StronglyTypedBuiltinEnums) && expectedParamType.OptionSetInfo is EnumSymbol enumSymbol)
                 {
-                    expectedParamType = enumSymbol.EnumType;
+                    expectedParamType = enumSymbol.EnumType.GetEnumSupertype();
                 }
 
                 var typeChecks = CheckType(args[i], argTypes[i], expectedParamType, errors, SupportCoercionForArg(i), out DType coercionType);
