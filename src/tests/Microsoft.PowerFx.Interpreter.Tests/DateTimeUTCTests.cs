@@ -168,8 +168,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             _engine.Config.AddFunction(new ToUntypedObjectFunction());
 
             var expectedUTC = new DateTime(2022, 11, 21, 12, 13, 30, DateTimeKind.Utc);
-            
-            //var expectedLocal = new DateTime(2022, 11, 21, 12, 13, 30, DateTimeKind.Local);
 
             var expectedLocal = TimeZoneInfo.ConvertTimeFromUtc(expectedUTC, _istTimeZone);
 
@@ -221,8 +219,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             _engine.Config.AddFunction(new ToUntypedObjectFunction());
 
             var expectedUTC = new DateTime(2022, 11, 21, 22, 13, 30, DateTimeKind.Utc);
-
-            //var expectedLocal = new DateTime(2022, 11, 21, 12, 13, 30, DateTimeKind.Local);
 
             var expectedLocal = TimeZoneInfo.ConvertTimeFromUtc(expectedUTC, _istTimeZone).Date;
 
