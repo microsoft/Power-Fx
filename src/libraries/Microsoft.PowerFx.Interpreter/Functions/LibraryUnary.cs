@@ -322,17 +322,70 @@ namespace Microsoft.PowerFx.Functions
                 return new BlankValue(irContext);
             }
 
+<<<<<<< HEAD
             var lower = val.ToLowerInvariant();
+=======
+            bool isBoolean = TryTextToBoolean(irContext, args[0], out BooleanValue result);
+
+            return isBoolean ? result : CommonErrors.InvalidBooleanFormatError(irContext);
+        }
+
+        public static bool TryTextToBoolean(IRContext irContext, StringValue value, out BooleanValue result)
+        {
+            result = null;
+            var lower = value.Value.ToLowerInvariant();
+
+>>>>>>> ee034846 (update)
             if (lower == "true")
             {
-                return new BooleanValue(irContext, true);
+                result = new BooleanValue(irContext, true);
             }
             else if (lower == "false")
             {
-                return new BooleanValue(irContext, false);
+                result = new BooleanValue(irContext, false);
             }
 
+<<<<<<< HEAD
             return CommonErrors.InvalidBooleanFormatError(irContext);
+=======
+            return result != null;
+        }
+
+        public static bool TryGetBoolean(IRContext irContext, FormulaValue value, out BooleanValue result)
+        {
+            result = null;
+            switch (value)
+            {
+                case StringValue sv:
+                    if (string.IsNullOrEmpty(sv.Value))
+                    {
+                        return false;
+                    }
+
+                    return TryTextToBoolean(irContext, sv, out result);
+                case NumberValue num:
+                    result = NumberToBoolean(irContext, new NumberValue[] { num });
+                    break;
+                case BooleanValue boolVal:
+                    result = boolVal;
+                    break;
+            }
+            
+            return result != null;
+        }
+
+        public static DateTime GetNormalizedDateTime(FormulaValue value, TimeZoneInfo timeZoneInfo)
+        {
+            switch (value)
+            {
+                case DateTimeValue dtv:
+                    return dtv.GetConvertedValue(timeZoneInfo);
+                case DateValue dv:
+                    return dv.GetConvertedValue(timeZoneInfo);
+                default:
+                    throw CommonExceptions.RuntimeMisMatch;
+            }
+>>>>>>> ee034846 (update)
         }
 
         public static FormulaValue DateToNumber(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)

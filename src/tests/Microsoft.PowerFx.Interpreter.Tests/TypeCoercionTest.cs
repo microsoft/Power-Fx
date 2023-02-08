@@ -63,7 +63,11 @@ namespace Microsoft.PowerFx.Tests
             }
             else
             {
+<<<<<<< HEAD
                 Assert.False(isSucceeded);
+=======
+                Assert.False(isSucceeded); 
+>>>>>>> ee034846 (update)
                 Assert.Null(resultBoolean);
             }
 
