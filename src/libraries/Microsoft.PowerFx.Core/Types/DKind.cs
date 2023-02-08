@@ -41,7 +41,7 @@ namespace Microsoft.PowerFx.Core.Types
         Time = 9,
         DateTime = 10,
         Hyperlink = 11,
-        Currency = 12,
+        Decimal = 12,
         Image = 13,
         Color = 14,
         Enum = 15,

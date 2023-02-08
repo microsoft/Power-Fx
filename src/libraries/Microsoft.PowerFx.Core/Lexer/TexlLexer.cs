@@ -24,7 +24,10 @@ namespace Microsoft.PowerFx.Syntax
         [Flags]
         public enum Flags
         {
-            None,
+            None = 0,
+
+            // When specified, literal numbers are treated as floats.  By default, literal numbers are decimals.
+            NumberIsFloat = 1 << 0
         }
 
         // Locale-invariant syntax.
@@ -848,6 +851,7 @@ namespace Microsoft.PowerFx.Syntax
             private readonly int _charCount;
             private readonly StringBuilder _sb; // Used while building a token.
             private readonly Stack<LexerMode> _modeStack;
+            private readonly bool _numberIsFloat;
 
             private int _currentTokenPos; // The start of the current token.
 
@@ -861,6 +865,8 @@ namespace Microsoft.PowerFx.Syntax
                 _text = text;
                 _charCount = _text.Length;
                 _sb = sb;
+
+                _numberIsFloat = flags.HasFlag(TexlLexer.Flags.NumberIsFloat);
 
                 _modeStack = new Stack<LexerMode>();
                 _modeStack.Push(LexerMode.Normal);
@@ -1177,15 +1183,30 @@ namespace Microsoft.PowerFx.Syntax
                     }
                 }
 
-                // Parsing in the current culture, to allow the CLR to correctly parse non-arabic numerals.
-                if (!double.TryParse(_sb.ToString(), NumberStyles.Float, _lex._numberFormatInfo, out var value) || double.IsNaN(value) || double.IsInfinity(value))
+                if (_numberIsFloat)
                 {
-                    return isCorrect ?
-                        new ErrorToken(GetTextSpan(), TexlStrings.ErrNumberTooLarge) :
-                        new ErrorToken(GetTextSpan());
-                }
+                    // Parsing in the current culture, to allow the CLR to correctly parse non-arabic numerals.
+                    if (!double.TryParse(_sb.ToString(), NumberStyles.Float, _lex._numberFormatInfo, out var value) || double.IsNaN(value) || double.IsInfinity(value))
+                    {
+                        return isCorrect ?
+                            new ErrorToken(GetTextSpan(), TexlStrings.ErrNumberTooLarge) :
+                            new ErrorToken(GetTextSpan());
+                    }
 
-                return new NumLitToken(value, GetTextSpan());
+                    return new NumLitToken(value, GetTextSpan());
+                }
+                else
+                {
+                    // Parsing in the current culture, to allow the CLR to correctly parse non-arabic numerals.
+                    if (!decimal.TryParse(_sb.ToString(), NumberStyles.Float, _lex._numberFormatInfo, out var value))
+                    {
+                        return isCorrect ?
+                            new ErrorToken(GetTextSpan(), TexlStrings.ErrNumberTooLarge) :
+                            new ErrorToken(GetTextSpan());
+                    }
+
+                    return new DecLitToken(value, GetTextSpan());
+                }
             }
 
             private bool IsSign(char ch)

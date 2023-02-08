@@ -176,6 +176,7 @@ namespace Microsoft.PowerFx.Connectors
         // See https://swagger.io/docs/specification/data-models/data-types/
         public static (FormulaType, RecordType) ToFormulaType(this OpenApiSchema schema, Stack<string> chain = null, int level = 0)
         {
+            // Decimal TODO: Impact of Decimal? Int64?
             if (chain == null)
             {
                 chain = new Stack<string>();

@@ -160,7 +160,7 @@ namespace Microsoft.PowerFx.Core.Tests
             // Still assign some types
             var node = ((BinaryOpNode)parse.Root).Left;
             var type = check.GetNodeType(node);
-            Assert.Equal(FormulaType.Number, type);
+            Assert.True(type == FormulaType.Number || type == FormulaType.Decimal);
         }
 
         // Ensure we can pass in ParserOptions. 
@@ -178,8 +178,8 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Same(opts, parse.Options);
 
             Assert.True(check.IsSuccess);
-            var value = ((NumLitNode)parse.Root).ActualNumValue;
-            Assert.Equal(1.234, value);
+            var value = parse.Root.ToString();
+            Assert.Equal("1.234", value);
         }
 
         [Fact]
@@ -262,7 +262,8 @@ namespace Microsoft.PowerFx.Core.Tests
 
             var ir = check.ApplyIR();
             Assert.NotNull(ir);
-            Assert.Equal("BinaryOp(AddNumbers, Number(1), Number(2))", ir.TopNode.ToString());
+            Assert.True(ir.TopNode.ToString() == "BinaryOp(AddNumbers, Number(1), Number(2))" ||
+                        ir.TopNode.ToString() == "BinaryOp(AddDecimals, Decimal(1), Decimal(2))");
         }
 
         // IR can only be produced for successful bindings

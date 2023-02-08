@@ -13,8 +13,8 @@ namespace Microsoft.PowerFx.Core.Tests
         [Theory]
         [InlineData(typeof(double), typeof(NumberType))]
         [InlineData(typeof(int), typeof(NumberType))]
-        [InlineData(typeof(decimal), typeof(NumberType))]
-        [InlineData(typeof(long), typeof(NumberType))]
+        [InlineData(typeof(decimal), typeof(DecimalType))]
+        [InlineData(typeof(long), typeof(DecimalType))]
         [InlineData(typeof(float), typeof(NumberType))]
         [InlineData(typeof(Guid), typeof(GuidType))]
         [InlineData(typeof(bool), typeof(BooleanType))]
@@ -41,7 +41,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 var fxValue = PrimitiveValueConversions.Marshal(value, dotnetType);
                 Assert.Equal(fxType, fxValue.Type.GetType());
 
-                var expr = actualFxType.DefaultExpressionValue();
+                var expr = actualFxType.DefaultUniqueExpressionValue();
                 var engine = new Engine(new PowerFxConfig());
 
                 var check = engine.Check(expr);

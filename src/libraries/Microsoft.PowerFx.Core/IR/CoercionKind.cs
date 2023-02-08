@@ -7,12 +7,22 @@ namespace Microsoft.PowerFx.Core.IR
     {
         None,
 
+        DecimalToNumber,
+        NumberToDecimal,
+
         TextToNumber,
         BooleanToNumber,
         BooleanOptionSetToNumber,
         DateToNumber,
         TimeToNumber,
         DateTimeToNumber,
+
+        TextToDecimal,
+        BooleanToDecimal,
+        BooleanOptionSetToDecimal,
+        DateToDecimal,
+        TimeToDecimal,
+        DateTimeToDecimal,
 
         BlobToHyperlink,
         ImageToHyperlink,
@@ -34,8 +44,10 @@ namespace Microsoft.PowerFx.Core.IR
         DateToText,
         TimeToText,
         DateTimeToText,
+        DecimalToText,
 
         NumberToBoolean,
+        DecimalToBoolean,
         TextToBoolean,
         BooleanOptionSetToBoolean,
 

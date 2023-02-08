@@ -163,6 +163,39 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
+        private class MinDecimalAgg : IAggregator
+        {
+            protected decimal _minValue = decimal.MaxValue;
+            protected int _count = 0;
+
+            public void Apply(FormulaValue value)
+            {
+                if (value is BlankValue)
+                {
+                    return;
+                }
+
+                var n1 = ((DecimalValue)value).Value;
+
+                if (n1 < _minValue)
+                {
+                    _minValue = n1;
+                }
+
+                _count++;
+            }
+
+            public FormulaValue GetResult(IRContext irContext)
+            {
+                if (_count == 0)
+                {
+                    return new BlankValue(irContext);
+                }
+
+                return new DecimalValue(irContext, _minValue);
+            }
+        }
+
         private class MinDateAndDateTimeAgg : IAggregator
         {
             protected DateTime _minValueDT = DateTime.MaxValue;
@@ -275,6 +308,39 @@ namespace Microsoft.PowerFx.Functions
                 }
 
                 return new NumberValue(irContext, _maxValue);
+            }
+        }
+
+        private class MaxDecimalAgg : IAggregator
+        {
+            protected decimal _maxValue = decimal.MinValue;
+            protected int _count = 0;
+
+            public void Apply(FormulaValue value)
+            {
+                if (value is BlankValue)
+                {
+                    return;
+                }
+
+                var n1 = ((DecimalValue)value).Value;
+
+                if (n1 > _maxValue)
+                {
+                    _maxValue = n1;
+                }
+
+                _count++;
+            }
+
+            public FormulaValue GetResult(IRContext irContext)
+            {
+                if (_count == 0)
+                {
+                    return new BlankValue(irContext);
+                }
+
+                return new DecimalValue(irContext, _maxValue);
             }
         }
 
@@ -535,6 +601,10 @@ namespace Microsoft.PowerFx.Functions
             if (irContext.ResultType == FormulaType.Number)
             {
                 agg = isMin ? new MinNumberAgg() : new MaxNumberAgg();
+            }
+            else if (irContext.ResultType == FormulaType.Decimal)
+            {
+                agg = isMin ? new MinDecimalAgg() : new MaxDecimalAgg();
             }
             else if (irContext.ResultType == FormulaType.DateTime || irContext.ResultType == FormulaType.Date)
             {

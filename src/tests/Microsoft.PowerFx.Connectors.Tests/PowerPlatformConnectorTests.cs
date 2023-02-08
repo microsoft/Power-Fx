@@ -233,7 +233,7 @@ namespace Microsoft.PowerFx.Tests
             var result = await engine.EvalAsync(
                 @"AzureBlobStorage.CreateFile(""container"", ""bora1.txt"", ""abc"").Size",
                 CancellationToken.None,
-                options: new ParserOptions() { AllowsSideEffects = true });
+                options: new ParserOptions(engine.Config.Features) { AllowsSideEffects = true });
 
             dynamic res = result.ToObject();
             var size = (double)res;
@@ -279,8 +279,9 @@ namespace Microsoft.PowerFx.Tests
             config.AddBehaviorFunction();
 
             var engine = new Engine(config);
-            var check = engine.Check(expr, RecordType.Empty(), withAllowSideEffects ? new ParserOptions() { AllowsSideEffects = true } : null);
-
+            
+            var check = engine.Check(expr, RecordType.Empty(), withAllowSideEffects ? new ParserOptions(config.Features) { AllowsSideEffects = true } : null);
+            
             if (expectedBehaviorError)
             {
                 Assert.Contains(check.Errors, d => d.Message == Extensions.GetErrBehaviorPropertyExpectedMessage());

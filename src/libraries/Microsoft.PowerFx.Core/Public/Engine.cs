@@ -118,7 +118,7 @@ namespace Microsoft.PowerFx
 
         public virtual ParserOptions GetDefaultParserOptionsCopy()
         {
-            return new ParserOptions
+            return new ParserOptions(Config.Features)
             {
                  Culture = this.Config.CultureInfo,
                  AllowsSideEffects = false,
@@ -168,7 +168,7 @@ namespace Microsoft.PowerFx
                 throw new ArgumentNullException(nameof(expressionText));
             }
 
-            options ??= new ParserOptions();
+            options ??= new ParserOptions(features);
 
             // If culture isn't explicitly set, use the one from PowerFx Config
             options.Culture ??= cultureInfo;

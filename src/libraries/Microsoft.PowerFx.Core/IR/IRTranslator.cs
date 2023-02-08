@@ -91,6 +91,16 @@ namespace Microsoft.PowerFx.Core.IR
                 return MaybeInjectCoercion(node, new NumberLiteralNode(context.GetIRContext(node), value), context);
             }
 
+            public override IntermediateNode Visit(DecLitNode node, IRTranslatorContext context)
+            {
+                Contracts.AssertValue(node);
+                Contracts.AssertValue(context);
+
+                // I think node.NumValue might be dead code, this could be cleaned up
+                var value = node.Value?.Value ?? node.DecValue;
+                return MaybeInjectCoercion(node, new DecimalLiteralNode(context.GetIRContext(node), value), context);
+            }
+
             public override IntermediateNode Visit(TexlRecordNode node, IRTranslatorContext context)
             {
                 Contracts.AssertValue(node);
@@ -143,18 +153,19 @@ namespace Microsoft.PowerFx.Core.IR
                 Contracts.AssertValue(context);
 
                 var child = node.Child.Accept(this, context);
+                var irc = context.GetIRContext(node);
 
                 IntermediateNode result;
                 switch (node.Op)
                 {
                     case UnaryOp.Not:
-                        result = new CallNode(context.GetIRContext(node), BuiltinFunctionsCore.Not, child);
+                        result = new CallNode(irc, BuiltinFunctionsCore.Not, child);
                         break;
                     case UnaryOp.Minus:
-                        result = new UnaryOpNode(context.GetIRContext(node), UnaryOpKind.Negate, child);
+                        result = new UnaryOpNode(irc, irc.ResultType == FormulaType.Decimal ? UnaryOpKind.NegateDecimal : UnaryOpKind.Negate, child);
                         break;
                     case UnaryOp.Percent:
-                        result = new UnaryOpNode(context.GetIRContext(node), UnaryOpKind.Percent, child);
+                        result = new UnaryOpNode(irc, irc.ResultType == FormulaType.Decimal ? UnaryOpKind.PercentDecimal : UnaryOpKind.Percent, child);
                         break;
                     default:
                         throw new NotSupportedException();
@@ -682,6 +693,11 @@ namespace Microsoft.PowerFx.Core.IR
                     case CoercionKind.TextToNumber:
                         return new CallNode(IRContext.NotInSource(FormulaType.Build(toType)), BuiltinFunctionsCore.Value, child);
 
+                    case CoercionKind.DecimalToNumber:
+                        return new CallNode(IRContext.NotInSource(FormulaType.Build(toType)), BuiltinFunctionsCore.Float, child);
+                    case CoercionKind.NumberToDecimal:
+                        return new CallNode(IRContext.NotInSource(FormulaType.Build(toType)), BuiltinFunctionsCore.Decimal, child);
+
                     case CoercionKind.DateToText:
                     case CoercionKind.TimeToText:
                     case CoercionKind.DateTimeToText:
@@ -747,6 +763,9 @@ namespace Microsoft.PowerFx.Core.IR
                         break;
                     case CoercionKind.NumberToText:
                         unaryOpKind = UnaryOpKind.NumberToText;
+                        break;
+                    case CoercionKind.DecimalToText:
+                        unaryOpKind = UnaryOpKind.DecimalToText;
                         break;
                     case CoercionKind.BooleanToText:
                         unaryOpKind = UnaryOpKind.BooleanToText;

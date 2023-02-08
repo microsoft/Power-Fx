@@ -25,13 +25,13 @@ namespace Microsoft.PowerFx.Core.Types
         public static readonly DType Unknown = new DType(DKind.Unknown);
         public static readonly DType Boolean = new DType(DKind.Boolean);
         public static readonly DType Number = new DType(DKind.Number);
+        public static readonly DType Decimal = new DType(DKind.Decimal);
         public static readonly DType String = new DType(DKind.String);
         public static readonly DType DateTimeNoTimeZone = new DType(DKind.DateTimeNoTimeZone);
         public static readonly DType DateTime = new DType(DKind.DateTime);
         public static readonly DType Date = new DType(DKind.Date);
         public static readonly DType Time = new DType(DKind.Time);
         public static readonly DType Hyperlink = new DType(DKind.Hyperlink);
-        public static readonly DType Currency = new DType(DKind.Currency);
         public static readonly DType Image = new DType(DKind.Image);
         public static readonly DType PenImage = new DType(DKind.PenImage);
         public static readonly DType Media = new DType(DKind.Media);
@@ -65,7 +65,7 @@ namespace Microsoft.PowerFx.Core.Types
             yield return Date;
             yield return Time;
             yield return Hyperlink;
-            yield return Currency;
+            yield return Decimal;
             yield return Image;
             yield return PenImage;
             yield return Media;
@@ -90,7 +90,7 @@ namespace Microsoft.PowerFx.Core.Types
                 { DKind.DateTime, DKind.Error },
                 { DKind.Hyperlink, DKind.String },
                 { DKind.Guid, DKind.Error },
-                { DKind.Currency, DKind.Number },
+                { DKind.Decimal, DKind.Error },
                 { DKind.Color, DKind.Error },
                 { DKind.Control, DKind.Error },
                 { DKind.DataEntity, DKind.Error },
@@ -1930,7 +1930,20 @@ namespace Microsoft.PowerFx.Core.Types
                 case DKind.Number:
                     accepts =
                         type.Kind == Kind ||
-                        type.Kind == DKind.Currency ||
+                        type.Kind == DKind.Unknown ||
+                        type.Kind == DKind.Deferred ||
+                        (useLegacyDateTimeAccepts &&
+                            (type.Kind == DKind.DateTime ||
+                            type.Kind == DKind.Date ||
+                            type.Kind == DKind.Time ||
+                            type.Kind == DKind.DateTimeNoTimeZone)) ||
+                        (type.Kind == DKind.Enum && Accepts(type.GetEnumSupertype()));
+                    break;
+
+                case DKind.Decimal:
+                    // Decimal TODO: Review, especially compare with Number and date/time and enum handling
+                    accepts =
+                        type.Kind == Kind ||
                         type.Kind == DKind.Unknown ||
                         type.Kind == DKind.Deferred ||
                         (useLegacyDateTimeAccepts &&
@@ -1968,9 +1981,6 @@ namespace Microsoft.PowerFx.Core.Types
                     break;
                 case DKind.Blob:
                     accepts = (!exact && (type.Kind == DKind.String || type.Kind == DKind.Hyperlink)) || DefaultReturnValue(type);
-                    break;
-                case DKind.Currency:
-                    accepts = (!exact && type.Kind == DKind.Number) || DefaultReturnValue(type);
                     break;
                 case DKind.DateTime:
                     accepts = (type.Kind == DKind.Date || type.Kind == DKind.Time || type.Kind == DKind.DateTimeNoTimeZone || (useLegacyDateTimeAccepts && !exact && type.Kind == DKind.Number)) || DefaultReturnValue(type);
@@ -3153,6 +3163,7 @@ namespace Microsoft.PowerFx.Core.Types
                     isSafe = Kind != DKind.String;
                     doesCoerce = Kind == DKind.String ||
                                  Number.Accepts(this) ||
+                                 Decimal.Accepts(this) ||
                                  (Kind == DKind.OptionSetValue && OptionSetInfo != null && OptionSetInfo.IsBooleanValued);
                     break;
                 case DKind.DateTime:
@@ -3165,6 +3176,7 @@ namespace Microsoft.PowerFx.Core.Types
                     isSafe = Kind != DKind.String;
                     doesCoerce = Kind == DKind.String ||
                                  Number.Accepts(this) ||
+                                 Decimal.Accepts(this) ||
                                  DateTime.Accepts(this);
                     break;
                 case DKind.Number:
@@ -3173,14 +3185,18 @@ namespace Microsoft.PowerFx.Core.Types
                     doesCoerce = Kind == DKind.String ||
                                  Number.Accepts(this) ||
                                  Boolean.Accepts(this) ||
+                                 Decimal.Accepts(this) ||
                                  DateTime.Accepts(this);
                     break;
-                case DKind.Currency:
+                case DKind.Decimal:
+                    // Decimal TODO: Review overflow from number, isSafe?
                     // Ill-formatted strings coerce to null; unsafe.
                     isSafe = Kind != DKind.String;
                     doesCoerce = Kind == DKind.String ||
-                                 Kind == DKind.Number ||
-                                 Boolean.Accepts(this);
+                                 Number.Accepts(this) ||
+                                 Boolean.Accepts(this) ||
+                                 Decimal.Accepts(this) ||
+                                 DateTime.Accepts(this);
                     break;
                 case DKind.String:
                     doesCoerce = Kind != DKind.Color && Kind != DKind.Control && Kind != DKind.DataEntity && Kind != DKind.OptionSet && Kind != DKind.View && Kind != DKind.Polymorphic && Kind != DKind.File && Kind != DKind.LargeImage;
@@ -3346,8 +3362,6 @@ namespace Microsoft.PowerFx.Core.Types
                     return "i";
                 case DKind.PenImage:
                     return "p";
-                case DKind.Currency:
-                    return "$";
                 case DKind.Color:
                     return "c";
                 case DKind.Record:
@@ -3394,6 +3408,8 @@ namespace Microsoft.PowerFx.Core.Types
                     return "V";
                 case DKind.UntypedObject:
                     return "O";
+                case DKind.Decimal:
+                    return "w";
             }
         }
 

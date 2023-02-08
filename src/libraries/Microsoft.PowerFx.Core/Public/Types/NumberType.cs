@@ -27,5 +27,38 @@ namespace Microsoft.PowerFx.Types
         {
             sb.Append("0");
         }
+
+        internal override void DefaultUniqueExpressionValue(StringBuilder sb)
+        {
+            sb.Append("Float(0)");
+        }
+    }
+
+    public class DecimalType : FormulaType
+    {
+        internal DecimalType()
+            : base(new DType(DKind.Decimal))
+        {
+        }
+
+        public override void Visit(ITypeVisitor vistor)
+        {
+            vistor.Visit(this);
+        }
+
+        public override string ToString()
+        {
+            return "Decimal";
+        }
+
+        internal override void DefaultExpressionValue(StringBuilder sb)
+        {
+            sb.Append("0");
+        }
+
+        internal override void DefaultUniqueExpressionValue(StringBuilder sb)
+        {
+            sb.Append("Decimal(0)");
+        }
     }
 }

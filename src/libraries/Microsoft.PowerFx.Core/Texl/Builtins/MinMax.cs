@@ -41,8 +41,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var fArgsValid = true;
             returnType = argTypes[0];
 
-            // If there is mixing of Date and DateTime, coerce Date to DateTime
-            if (Array.TrueForAll(argTypes, element => element.Kind == DKind.Date || element.Kind == DKind.DateTime) && !Array.TrueForAll(argTypes, element => element.Kind == DKind.Date))
+            // All decimals returns a decimal, not a number and no coercions required
+            if (Array.TrueForAll(argTypes, element => element.Kind == DKind.Decimal))
+            {
+                returnType = DType.Decimal;
+            } // If there is mixing of Date and DateTime, coerce Date to DateTime
+            else if (Array.TrueForAll(argTypes, element => element.Kind == DKind.Date || element.Kind == DKind.DateTime) && !Array.TrueForAll(argTypes, element => element.Kind == DKind.Date))
             {
                 for (var i = 0; i < argTypes.Length; i++)
                 {

@@ -37,6 +37,7 @@ namespace Microsoft.PowerFx
         InvalidArgument = 25,
         Internal = 26,
         NotApplicable = 27,
+        Overflow = 28,          // Decimal TODO: fold into Numeric?  Odd error message in canvas for IfError(1e308*10,FirstError.Message) about non-finite number?  Where is Excel's #Value?
         Custom = 1000,
     }
 }

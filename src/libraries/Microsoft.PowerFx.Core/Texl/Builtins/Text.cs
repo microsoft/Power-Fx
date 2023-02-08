@@ -53,8 +53,21 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var arg0Type = argTypes[0];
 
             var isValidString = true;
-            var isValidNumber = CheckType(arg0, arg0Type, DType.Number, DefaultErrorContainer, out var matchedWithCoercion);
-            var arg0CoercedType = matchedWithCoercion ? DType.Number : DType.Invalid;
+            var isValidNumber = false;
+            var matchedWithCoercion = false;
+            DType arg0CoercedType = null;
+
+            if (arg0Type == DType.Decimal)
+            {
+                isValidNumber = true;
+                matchedWithCoercion = false;
+                arg0CoercedType = DType.Decimal;
+            }
+            else
+            {
+                isValidNumber = CheckType(arg0, arg0Type, DType.Number, DefaultErrorContainer, out matchedWithCoercion);
+                arg0CoercedType = matchedWithCoercion ? DType.Number : DType.Invalid;
+            }
 
             if (!isValidNumber || matchedWithCoercion)
             {

@@ -3,6 +3,7 @@
 
 using System;
 using System.Drawing;
+using System.Text;
 using Microsoft.PowerFx.Core.IR;
 
 namespace Microsoft.PowerFx.Types
@@ -19,6 +20,11 @@ namespace Microsoft.PowerFx.Types
             return new NumberValue(IRContext.NotInSource(FormulaType.Number), number);
         }
 
+        public static DecimalValue New(decimal number)
+        {
+            return new DecimalValue(IRContext.NotInSource(FormulaType.Decimal), number);
+        }
+
         public static FormulaValue New(double? number)
         {
             if (number.HasValue)
@@ -29,16 +35,9 @@ namespace Microsoft.PowerFx.Types
             return new BlankValue(IRContext.NotInSource(FormulaType.Number));
         }
 
-        public static NumberValue New(decimal number)
+        public static DecimalValue New(long number)
         {
-            // $$$ Is this safe? or loss in precision?
-            return new NumberValue(IRContext.NotInSource(FormulaType.Number), (double)number);
-        }
-
-        public static NumberValue New(long number)
-        {
-            // $$$ Is this safe? or loss in precision?
-            return new NumberValue(IRContext.NotInSource(FormulaType.Number), (double)number);
+            return new DecimalValue(IRContext.NotInSource(FormulaType.Decimal), (decimal)number);
         }
 
         public static NumberValue New(int number)

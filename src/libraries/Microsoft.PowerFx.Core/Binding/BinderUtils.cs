@@ -637,35 +637,56 @@ namespace Microsoft.PowerFx.Core.Binding
                             return new BinderCheckTypeResult() { Node = node, NodeType = DType.Time, Coercions = resRight.Coercions };
                     }
 
-                default:
+                default: // number and decimal
                     switch (rightKind)
                     {
                         case DKind.DateTime:
-                            // number + DateTime = DateTime
-                            var leftResDateTime = CheckTypeCore(errorContainer, node.Left, leftType, DType.Number, /* coerced: */ DType.String, DType.Boolean);
+                            // number/decimal + DateTime = DateTime
+                            var leftResDateTime = CheckTypeCore(errorContainer, node.Left, leftType, DType.Number, /* coerced: */ DType.Decimal, DType.String, DType.Boolean);
                             return new BinderCheckTypeResult() { Node = node, NodeType = DType.DateTime, Coercions = leftResDateTime.Coercions };
                         case DKind.Date:
-                            // number + Date = Date
-                            var leftResDate = CheckTypeCore(errorContainer, node.Left, leftType, DType.Number, /* coerced: */ DType.String, DType.Boolean);
-                            return new BinderCheckTypeResult() { Node = node, NodeType = DType.Date, Coercions = leftResDate.Coercions };
+                            // number/decimal + Date = Date
+                            var leftResDate = CheckTypeCore(errorContainer, node.Left, leftType, DType.Number, /* coerced: */ DType.Decimal, DType.String, DType.Boolean);
+                            return new BinderCheckTypeResult() { Node = node, NodeType = DType.DateTime, Coercions = leftResDate.Coercions };
                         case DKind.Time:
-                            // number + Time = Time
-                            var leftResTime = CheckTypeCore(errorContainer, node.Left, leftType, DType.Number, /* coerced: */ DType.String, DType.Boolean);
+                            // number/decimal + Time = Time
+                            var leftResTime = CheckTypeCore(errorContainer, node.Left, leftType, DType.Number, /* coerced: */ DType.Decimal, DType.String, DType.Boolean);
                             return new BinderCheckTypeResult() { Node = node, NodeType = DType.Time, Coercions = leftResTime.Coercions };
                         default:
                             // Regular Addition
-                            var leftResAdd = CheckTypeCore(errorContainer, node.Left, leftType, DType.Number, /* coerced: */ DType.String, DType.Boolean);
-                            var rightResAdd = CheckTypeCore(errorContainer, node.Right, rightType, DType.Number, /* coerced: */ DType.String, DType.Boolean);
+                            // Decimal TODO: Deferred behavior
+                            if (leftType == DType.Decimal && rightType == DType.Decimal)
+                            {
+                                return new BinderCheckTypeResult()
+                                {
+                                    Node = node,
+                                    NodeType = DType.Decimal,
+                                    Coercions = null
+                                };
+                            }
+
+                            var leftResAdd = CheckTypeCore(errorContainer, node.Left, leftType, DType.Number, /* coerced: */ DType.Decimal, DType.String, DType.Boolean);
+                            var rightResAdd = CheckTypeCore(errorContainer, node.Right, rightType, DType.Number, /* coerced: */ DType.Decimal, DType.String, DType.Boolean);
 
                             // Deferred + number or number + Deferred
                             if (leftKind == DKind.Deferred || rightKind == DKind.Deferred)
                             {
-                                return new BinderCheckTypeResult() { Node = node, NodeType = DType.Deferred, Coercions = leftResAdd.Coercions.Concat(rightResAdd.Coercions).ToList() };
+                                return new BinderCheckTypeResult()
+                                {
+                                    Node = node,
+                                    NodeType = DType.Deferred,
+                                    Coercions = leftResAdd.Coercions.Concat(rightResAdd.Coercions).ToList()
+                                };
                             }
 
-                            return new BinderCheckTypeResult() { Node = node, NodeType = DType.Number, Coercions = leftResAdd.Coercions.Concat(rightResAdd.Coercions).ToList() };
+                            return new BinderCheckTypeResult()
+                            {
+                                Node = node,
+                                NodeType = leftType == DType.Decimal && rightType == DType.Decimal ? DType.Decimal : DType.Number,
+                                Coercions = leftResAdd.Coercions.Concat(rightResAdd.Coercions).ToList()
+                            };
                     }
-            }
+            } 
         }
 
         private static BinderCheckTypeResult CheckComparisonArgTypesCore(IErrorContainer errorContainer, TexlNode left, TexlNode right, DType typeLeft, DType typeRight)
@@ -673,12 +694,25 @@ namespace Microsoft.PowerFx.Core.Binding
             // Excel's type coercion for inequality operators is inconsistent / borderline wrong, so we can't
             // use it as a reference. For example, in Excel '2 < TRUE' produces TRUE, but so does '2 < FALSE'.
             // Sticking to a restricted set of numeric-like types for now until evidence arises to support the need for coercion.
-            var resLeft = CheckComparisonTypeOneOfCore(errorContainer, left, typeLeft, DType.Number, DType.Date, DType.Time, DType.DateTime);
-            var resRight = CheckComparisonTypeOneOfCore(errorContainer, right, typeRight, DType.Number, DType.Date, DType.Time, DType.DateTime);
+            var resLeft = CheckComparisonTypeOneOfCore(errorContainer, left, typeLeft, DType.Number, DType.Decimal, DType.Date, DType.Time, DType.DateTime);
+            var resRight = CheckComparisonTypeOneOfCore(errorContainer, right, typeRight, DType.Number, DType.Decimal, DType.Date, DType.Time, DType.DateTime);
 
             var coercions = new List<BinderCoercionResult>();
             coercions.AddRange(resLeft.Coercions);
             coercions.AddRange(resRight.Coercions);
+
+            // Float is higher precedence than Decimal.
+            // Coerce decimal to number before further coercions required for date/time to number.
+            if (DType.Decimal.Accepts(typeLeft) && !DType.Decimal.Accepts(typeRight))
+            {
+                coercions.Add(new BinderCoercionResult() { Node = left, CoercedType = DType.Number });
+                typeLeft = DType.Number;
+            }
+            else if (!DType.Decimal.Accepts(typeLeft) && DType.Decimal.Accepts(typeRight))
+            {
+                coercions.Add(new BinderCoercionResult() { Node = right, CoercedType = DType.Number });
+                typeRight = DType.Number;
+            }
 
             if (!typeLeft.Accepts(typeRight) && !typeRight.Accepts(typeLeft))
             {
@@ -801,7 +835,7 @@ namespace Microsoft.PowerFx.Core.Binding
             switch (node.Op)
             {
                 case UnaryOp.Not:
-                    var resNot = CheckTypeCore(errorContainer, node.Child, childType, DType.Boolean, /* coerced: */ DType.Number, DType.String, DType.OptionSetValue);
+                    var resNot = CheckTypeCore(errorContainer, node.Child, childType, DType.Boolean, /* coerced: */ DType.Number, DType.Decimal, DType.String, DType.OptionSetValue);
                     return new BinderCheckTypeResult() { Node = node, NodeType = DType.Boolean, Coercions = resNot.Coercions };
                 case UnaryOp.Minus:
                     switch (childType.Kind)
@@ -814,14 +848,16 @@ namespace Microsoft.PowerFx.Core.Binding
                         case DKind.DateTime:
                             // Important to keep the type of minus-datetime as datetime, to allow d-d/D-d to be detected
                             return new BinderCheckTypeResult() { Node = node, NodeType = DType.DateTime };
+                        case DKind.Decimal:
+                            return new BinderCheckTypeResult() { Node = node, NodeType = DType.Decimal };
                         default:
                             var resDefault = CheckTypeCore(errorContainer, node.Child, childType, DType.Number, /* coerced: */ DType.String, DType.Boolean);
                             return new BinderCheckTypeResult() { Node = node, NodeType = DType.Number, Coercions = resDefault.Coercions };
                     }
 
                 case UnaryOp.Percent:
-                    var resPercent = CheckTypeCore(errorContainer, node.Child, childType, DType.Number, /* coerced: */ DType.String, DType.Boolean, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime);
-                    return new BinderCheckTypeResult() { Node = node, NodeType = DType.Number, Coercions = resPercent.Coercions };
+                    var resPercent = CheckTypeCore(errorContainer, node.Child, childType, DType.Number, /* coerced: */ DType.Decimal, DType.String, DType.Boolean, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime);
+                    return new BinderCheckTypeResult() { Node = node, NodeType = childType.Kind == DKind.Decimal ? DType.Decimal : DType.Number, Coercions = resPercent.Coercions };
                 default:
                     Contracts.Assert(false);
                     return new BinderCheckTypeResult() { Node = node, NodeType = DType.Error };
@@ -845,19 +881,39 @@ namespace Microsoft.PowerFx.Core.Binding
                 case BinaryOp.Power:
                 case BinaryOp.Mul:
                 case BinaryOp.Div:
-                    var resLeftDiv = CheckTypeCore(errorContainer, leftNode, leftType, DType.Number, /* coerced: */ DType.String, DType.Boolean, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime);
-                    var resRightDiv = CheckTypeCore(errorContainer, rightNode, rightType, DType.Number, /* coerced: */ DType.String, DType.Boolean, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime);
-                    return new BinderCheckTypeResult() { Node = node, NodeType = DType.Number, Coercions = resLeftDiv.Coercions.Concat(resRightDiv.Coercions).ToList() };
+                    // Floating point has precedence
+                    // Decimal TODO, decimal switch
+                    // Decimal TODO, mixing Decimal with enum or other non-float
+                    if (node.Op != BinaryOp.Power && leftType == DType.Decimal && rightType == DType.Decimal)
+                    {
+                        return new BinderCheckTypeResult()
+                        {
+                            Node = node,
+                            NodeType = DType.Decimal,
+                            Coercions = null
+                        };
+                    }
+
+                    var resLeftDiv = CheckTypeCore(errorContainer, leftNode, leftType, DType.Number, /* coerced: */ DType.Decimal, DType.String, DType.Boolean, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime);
+                    var resRightDiv = CheckTypeCore(errorContainer, rightNode, rightType, DType.Number, /* coerced: */ DType.Decimal, DType.String, DType.Boolean, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime);
+                    return new BinderCheckTypeResult()
+                    {
+                        Node = node,
+
+                        // Decimal TODO: decimal switch
+                        NodeType = node.Op == BinaryOp.Power || leftType == DType.Number || rightType == DType.Number ? DType.Number : DType.Decimal,
+                        Coercions = resLeftDiv.Coercions.Concat(resRightDiv.Coercions).ToList()
+                    };
 
                 case BinaryOp.Or:
                 case BinaryOp.And:
-                    var resLeftAnd = CheckTypeCore(errorContainer, leftNode, leftType, DType.Boolean, /* coerced: */ DType.Number, DType.String, DType.OptionSetValue);
-                    var resRightAnd = CheckTypeCore(errorContainer, rightNode, rightType, DType.Boolean, /* coerced: */ DType.Number, DType.String, DType.OptionSetValue);
+                    var resLeftAnd = CheckTypeCore(errorContainer, leftNode, leftType, DType.Boolean, /* coerced: */ DType.Number, DType.Decimal, DType.String, DType.OptionSetValue);
+                    var resRightAnd = CheckTypeCore(errorContainer, rightNode, rightType, DType.Boolean, /* coerced: */ DType.Number, DType.Decimal, DType.String, DType.OptionSetValue);
                     return new BinderCheckTypeResult() { Node = node, NodeType = DType.Boolean, Coercions = resLeftAnd.Coercions.Concat(resRightAnd.Coercions).ToList() };
 
                 case BinaryOp.Concat:
-                    var resLeftConcat = CheckTypeCore(errorContainer, leftNode, leftType, DType.String, /* coerced: */ DType.Number, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime, DType.Boolean, DType.OptionSetValue, DType.ViewValue);
-                    var resRightConcat = CheckTypeCore(errorContainer, rightNode, rightType, DType.String, /* coerced: */ DType.Number, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime, DType.Boolean, DType.OptionSetValue, DType.ViewValue);
+                    var resLeftConcat = CheckTypeCore(errorContainer, leftNode, leftType, DType.String, /* coerced: */ DType.Number, DType.Decimal, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime, DType.Boolean, DType.OptionSetValue, DType.ViewValue);
+                    var resRightConcat = CheckTypeCore(errorContainer, rightNode, rightType, DType.String, /* coerced: */ DType.Number, DType.Decimal, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime, DType.Boolean, DType.OptionSetValue, DType.ViewValue);
                     return new BinderCheckTypeResult() { Node = node, NodeType = DType.String, Coercions = resLeftConcat.Coercions.Concat(resRightConcat.Coercions).ToList() };
 
                 case BinaryOp.Error:

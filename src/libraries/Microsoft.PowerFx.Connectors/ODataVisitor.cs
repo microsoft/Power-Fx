@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Globalization;
+using Microsoft.CodeAnalysis.Operations;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.IR.Symbols;
@@ -24,6 +25,11 @@ namespace Microsoft.PowerFx.Connectors
         public override string Visit(NumberLiteralNode node, ODataVisitorContext runContext)
         {
             return SerializeNumberValue(node.LiteralValue);
+        }
+
+        public override string Visit(DecimalLiteralNode node, ODataVisitorContext runContext)
+        {
+            return SerializeDecimalValue(node.LiteralValue);
         }
 
         public override string Visit(BooleanLiteralNode node, ODataVisitorContext runContext)
@@ -167,6 +173,8 @@ namespace Microsoft.PowerFx.Connectors
 
         private static string SerializeNumberValue(double value) => value.ToString(CultureInfo.InvariantCulture);
 
+        private static string SerializeDecimalValue(decimal value) => value.ToString(CultureInfo.InvariantCulture);
+
         private static string SerializeStringValue(string value) => '\'' + value.Replace("'", "''") + '\'';
 
         private static string SerializeBooleanValue(bool value) => value ? "true" : "false";
@@ -187,6 +195,13 @@ namespace Microsoft.PowerFx.Connectors
                 BinaryOpKind.SubtractNumberAndTime => "-",
                 BinaryOpKind.DivNumbers => "/",
 
+                BinaryOpKind.AddDecimals => "+",
+                BinaryOpKind.DivDecimals => "/",
+
+                // Decimal TODO: Numbers wasn't here?
+                BinaryOpKind.MulNumbers => "*",
+                BinaryOpKind.MulDecimals => "*",
+
                 BinaryOpKind.EqNumbers => "eq",
                 BinaryOpKind.EqBoolean => "eq",
                 BinaryOpKind.EqText => "eq",
@@ -194,7 +209,6 @@ namespace Microsoft.PowerFx.Connectors
                 BinaryOpKind.EqTime => "eq",
                 BinaryOpKind.EqDateTime => "eq",
                 BinaryOpKind.EqHyperlink => "eq",
-                BinaryOpKind.EqCurrency => "eq",
                 BinaryOpKind.EqImage => "eq",
                 BinaryOpKind.EqColor => "eq",
                 BinaryOpKind.EqMedia => "eq",
@@ -204,6 +218,7 @@ namespace Microsoft.PowerFx.Connectors
                 BinaryOpKind.EqViewValue => "eq",
                 BinaryOpKind.EqNamedValue => "eq",
                 BinaryOpKind.EqNull => "eq",
+                BinaryOpKind.EqDecimals => "eq",
                 BinaryOpKind.NeqNumbers => "ne",
                 BinaryOpKind.NeqBoolean => "ne",
                 BinaryOpKind.NeqText => "ne",
@@ -211,7 +226,6 @@ namespace Microsoft.PowerFx.Connectors
                 BinaryOpKind.NeqTime => "ne",
                 BinaryOpKind.NeqDateTime => "ne",
                 BinaryOpKind.NeqHyperlink => "ne",
-                BinaryOpKind.NeqCurrency => "ne",
                 BinaryOpKind.NeqImage => "ne",
                 BinaryOpKind.NeqColor => "ne",
                 BinaryOpKind.NeqMedia => "ne",
@@ -221,10 +235,15 @@ namespace Microsoft.PowerFx.Connectors
                 BinaryOpKind.NeqViewValue => "ne",
                 BinaryOpKind.NeqNamedValue => "ne",
                 BinaryOpKind.NeqNull => "ne",
+                BinaryOpKind.NeqDecimals => "ne",
                 BinaryOpKind.LtNumbers => "lt",
                 BinaryOpKind.LeqNumbers => "le",
                 BinaryOpKind.GtNumbers => "gt",
                 BinaryOpKind.GeqNumbers => "ge",
+                BinaryOpKind.LtDecimals => "lt",
+                BinaryOpKind.LeqDecimals => "le",
+                BinaryOpKind.GtDecimals => "gt",
+                BinaryOpKind.GeqDecimals => "ge",
                 BinaryOpKind.LtDateTime => "lt",
                 BinaryOpKind.LeqDateTime => "le",
                 BinaryOpKind.GtDateTime => "gt",

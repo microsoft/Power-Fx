@@ -1582,6 +1582,11 @@ namespace Microsoft.PowerFx.Core.Binding
             return BinderNodesVisitor.NumericLiterals;
         }
 
+        public IEnumerable<DecLitNode> GetDecimalLiterals()
+        {
+            return BinderNodesVisitor.DecimalLiterals;
+        }
+
         public IEnumerable<StrLitNode> GetStringLiterals()
         {
             return BinderNodesVisitor.StringLiterals;
@@ -2529,6 +2534,16 @@ namespace Microsoft.PowerFx.Core.Binding
                 _txb.SetConstant(node, true);
                 _txb.SetSelfContainedConstant(node, true);
                 _txb.SetType(node, DType.Number);
+            }
+
+            public override void Visit(DecLitNode node)
+            {
+                AssertValid();
+                Contracts.AssertValue(node);
+
+                _txb.SetConstant(node, true);
+                _txb.SetSelfContainedConstant(node, true);
+                _txb.SetType(node, DType.Decimal);
             }
 
             public DName GetLogicalNodeNameAndUpdateDisplayNames(DType type, Identifier ident, bool isThisItem = false)

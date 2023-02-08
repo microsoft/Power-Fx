@@ -15,14 +15,14 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Fact]
         public void ValidateNoRecordToRecordAggregateCoercion()
         {
-            var tableType = TableType.Empty().Add(new NamedFormulaType(new TypedName(DType.Currency, new DName("Currency"))));
+            var tableType = TableType.Empty().Add(new NamedFormulaType(new TypedName(DType.Decimal, new DName("Decimal"))));
 
             var symbols = new SymbolTable { DebugName = "ST1 " };
             symbols.EnableMutationFunctions();
             var slot = symbols.AddVariable("MyTable", tableType);
 
             var engine = new RecalcEngine(new PowerFxConfig());
-            var checkResult = engine.Check("Patch(MyTable, { Currency: 1.2 }, { Currency: 1.5 })", new ParserOptions() { AllowsSideEffects = true }, symbolTable: symbols);
+            var checkResult = engine.Check("Patch(MyTable, { Decimal: 1.2 }, { Decimal: 1.5 })", new ParserOptions() { AllowsSideEffects = true }, symbolTable: symbols);
 
             checkResult.ThrowOnErrors();
 

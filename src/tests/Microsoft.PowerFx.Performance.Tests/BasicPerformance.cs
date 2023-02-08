@@ -36,7 +36,7 @@ namespace Microsoft.PowerFx.Performance.Tests
         {
             _powerFxConfig = new PowerFxConfig(new CultureInfo("en-US"), Features.All);
             _engine = new Engine(_powerFxConfig);
-            _parserOptions = new ParserOptions() { AllowsSideEffects = true, Culture = new CultureInfo("en-US") };
+            _parserOptions = new ParserOptions(Features.None) { AllowsSideEffects = true, Culture = new CultureInfo("en-US") };
             _recalcEngine = new RecalcEngine(_powerFxConfig);
         }
 

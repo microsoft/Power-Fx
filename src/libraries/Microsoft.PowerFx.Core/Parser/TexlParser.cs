@@ -24,7 +24,10 @@ namespace Microsoft.PowerFx.Core.Parser
             EnableExpressionChaining = 1 << 0,
 
             // When specified, this is a named formula to be parsed. Mutually exclusive to EnableExpressionChaining.
-            NamedFormulas = 1 << 1
+            NamedFormulas = 1 << 1,
+
+            // When specified, literal numbers are treated as floats.  By default, literal numbers are decimals.
+            NumberIsFloat = 1 << 2
         }
 
         private bool _hasSemicolon = false;
@@ -303,10 +306,11 @@ namespace Microsoft.PowerFx.Core.Parser
 
         private static IReadOnlyList<Token> TokenizeScript(string script, CultureInfo loc, Flags flags = Flags.None)
         {
+            // Decimal TODO: Who uses this without flags?
             Contracts.AssertValue(script);
             Contracts.AssertValueOrNull(loc);
 
-            var lexerFlags = TexlLexer.Flags.None;
+            var lexerFlags = flags.HasFlag(Flags.NumberIsFloat) ? TexlLexer.Flags.NumberIsFloat : TexlLexer.Flags.None;
             loc ??= CultureInfo.CurrentCulture;
 
             return TexlLexer.GetLocalizedInstance(loc).LexSource(script, lexerFlags);
@@ -639,6 +643,7 @@ namespace Microsoft.PowerFx.Core.Parser
 
                         case TokKind.Ident:
                         case TokKind.NumLit:
+                        case TokKind.DecLit:
                         case TokKind.StrLit:
                         case TokKind.True:
                         case TokKind.False:
@@ -829,6 +834,8 @@ namespace Microsoft.PowerFx.Core.Parser
                 // Literals
                 case TokKind.NumLit:
                     return new NumLitNode(ref _idNext, _curs.TokMove().As<NumLitToken>());
+                case TokKind.DecLit:
+                    return new DecLitNode(ref _idNext, _curs.TokMove().As<DecLitToken>());
                 case TokKind.True:
                 case TokKind.False:
                     return new BoolLitNode(ref _idNext, _curs.TokMove());

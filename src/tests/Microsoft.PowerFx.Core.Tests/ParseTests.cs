@@ -45,10 +45,50 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("-123456789")]
         [InlineData("123456789.987654321", "123456789.98765433")]
         [InlineData("-123456789.987654321", "-123456789.98765433")]
+        [InlineData("1.00000000000000000000001", "1")]
         [InlineData("2.E5", "200000")]
         public void TexlParseNumericLiterals(string script, string expected = null)
         {
-            TestRoundtrip(script, expected);
+            TestRoundtrip(script, expected, NodeKind.Error, null, TexlParser.Flags.NumberIsFloat);
+        }
+
+        [Theory]
+        [InlineData("0")]
+        [InlineData("-0")]
+        [InlineData("1")]
+        [InlineData("-1")]
+        [InlineData("1.0", "1")]
+        [InlineData("-1.0", "-1")]
+        [InlineData("1.123456789")]
+        [InlineData("-1.123456789")]
+        [InlineData("0.0", "0")]
+        [InlineData("0.000000", "0")]
+        [InlineData("0.000001", "1E-06")]
+        [InlineData("0.123456789")]
+        [InlineData("-0.0", "-0")]
+        [InlineData("-0.000000", "-0")]
+        [InlineData("-0.000001", "-1E-06")]
+        [InlineData("-0.123456789")]
+        [InlineData("0.99999999")]
+        [InlineData("9.99999999")]
+        [InlineData("-0.99999999")]
+        [InlineData("-9.99999999")]
+        [InlineData("-100")]
+        [InlineData("10e4", "100000")]
+        [InlineData("10e-4", "0.001")]
+        [InlineData("10e+4", "100000")]
+        [InlineData("-10e4", "-100000")]
+        [InlineData("-10e-4", "-0.001")]
+        [InlineData("-10e+4", "-100000")]
+        [InlineData("123456789")]
+        [InlineData("-123456789")]
+        [InlineData("123456789.987654321", "123456789.987654321")]
+        [InlineData("-123456789.987654321", "-123456789.987654321")]
+        [InlineData("1.00000000000000000000001", "1.00000000000000000000001")]
+        [InlineData("2.E5", "200000")]
+        public void TexlParseDecimalLiterals(string script, string expected = null)
+        {
+            TestRoundtrip(script, expected, NodeKind.Error, null, TexlParser.Flags.None);
         }
 
         [Theory]

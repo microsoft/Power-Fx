@@ -8,6 +8,8 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
         // Value operations
         Negate,
         Percent,
+        NegateDecimal,
+        PercentDecimal,
 
         // Coercion operations
         BooleanToNumber,
@@ -33,6 +35,7 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
         BooleanToText,
         OptionSetToText,
         ViewToText,
+        DecimalToText,
 
         NumberToBoolean,
         TextToBoolean,

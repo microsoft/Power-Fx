@@ -20,6 +20,15 @@ namespace Microsoft.PowerFx.Functions
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
             targetFunction: NumericAdd);
 
+        public static readonly AsyncFunctionPtr OperatorDecimalBinaryAdd = StandardErrorHandling<DecimalValue>(
+            "+",
+            expandArguments: NoArgExpansion,
+            replaceBlankValues: ReplaceBlankWithZero,
+            checkRuntimeTypes: ExactValueType<DecimalValue>,
+            checkRuntimeValues: DeferRuntimeTypeChecking,
+            returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+            targetFunction: DecimalAdd);
+
         public static readonly AsyncFunctionPtr OperatorBinaryMul = StandardErrorHandling<NumberValue>(
             "*",
             expandArguments: NoArgExpansion,
@@ -28,6 +37,15 @@ namespace Microsoft.PowerFx.Functions
             checkRuntimeValues: DeferRuntimeTypeChecking,
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
             targetFunction: NumericMul);
+
+        public static readonly AsyncFunctionPtr OperatorDecimalBinaryMul = StandardErrorHandling<DecimalValue>(
+            "*",
+            expandArguments: NoArgExpansion,
+            replaceBlankValues: ReplaceBlankWithZero,
+            checkRuntimeTypes: ExactValueType<DecimalValue>,
+            checkRuntimeValues: DeferRuntimeTypeChecking,
+            returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+            targetFunction: DecimalMul);
 
         public static readonly AsyncFunctionPtr OperatorBinaryDiv = StandardErrorHandling<NumberValue>(
             "/",
@@ -38,6 +56,15 @@ namespace Microsoft.PowerFx.Functions
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
             targetFunction: NumericDiv);
 
+        public static readonly AsyncFunctionPtr OperatorDecimalBinaryDiv = StandardErrorHandling<DecimalValue>(
+            "/",
+            expandArguments: NoArgExpansion,
+            replaceBlankValues: ReplaceBlankWithZero,
+            checkRuntimeTypes: ExactValueType<DecimalValue>,
+            checkRuntimeValues: DeferRuntimeTypeChecking,
+            returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+            targetFunction: DecimalDiv);
+
         public static readonly AsyncFunctionPtr OperatorBinaryGt = StandardErrorHandling<NumberValue>(
             ">",
             expandArguments: NoArgExpansion,
@@ -46,6 +73,15 @@ namespace Microsoft.PowerFx.Functions
             checkRuntimeValues: DeferRuntimeTypeChecking,
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
             targetFunction: NumericGt);
+
+        public static readonly AsyncFunctionPtr OperatorDecimalBinaryGt = StandardErrorHandling<DecimalValue>(
+            ">",
+            expandArguments: NoArgExpansion,
+            replaceBlankValues: ReplaceBlankWithZero,
+            checkRuntimeTypes: ExactValueType<DecimalValue>,
+            checkRuntimeValues: DeferRuntimeTypeChecking,
+            returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+            targetFunction: DecimalGt);
 
         public static readonly AsyncFunctionPtr OperatorBinaryGeq = StandardErrorHandling<NumberValue>(
             ">=",
@@ -56,6 +92,15 @@ namespace Microsoft.PowerFx.Functions
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
             targetFunction: NumericGeq);
 
+        public static readonly AsyncFunctionPtr OperatorDecimalBinaryGeq = StandardErrorHandling<DecimalValue>(
+            ">=",
+            expandArguments: NoArgExpansion,
+            replaceBlankValues: ReplaceBlankWithZero,
+            checkRuntimeTypes: ExactValueType<DecimalValue>,
+            checkRuntimeValues: DeferRuntimeTypeChecking,
+            returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+            targetFunction: DecimalGeq);
+
         public static readonly AsyncFunctionPtr OperatorBinaryLt = StandardErrorHandling<NumberValue>(
             "<",
             expandArguments: NoArgExpansion,
@@ -65,6 +110,15 @@ namespace Microsoft.PowerFx.Functions
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
             targetFunction: NumericLt);
 
+        public static readonly AsyncFunctionPtr OperatorDecimalBinaryLt = StandardErrorHandling<DecimalValue>(
+            "<",
+            expandArguments: NoArgExpansion,
+            replaceBlankValues: ReplaceBlankWithZero,
+            checkRuntimeTypes: ExactValueType<DecimalValue>,
+            checkRuntimeValues: DeferRuntimeTypeChecking,
+            returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+            targetFunction: DecimalLt);
+
         public static readonly AsyncFunctionPtr OperatorBinaryLeq = StandardErrorHandling<NumberValue>(
             "<=",
             expandArguments: NoArgExpansion,
@@ -73,6 +127,15 @@ namespace Microsoft.PowerFx.Functions
             checkRuntimeValues: DeferRuntimeTypeChecking,
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
             targetFunction: NumericLeq);
+
+        public static readonly AsyncFunctionPtr OperatorDecimalBinaryLeq = StandardErrorHandling<DecimalValue>(
+            "<=",
+            expandArguments: NoArgExpansion,
+            replaceBlankValues: ReplaceBlankWithZero,
+            checkRuntimeTypes: ExactValueType<DecimalValue>,
+            checkRuntimeValues: DeferRuntimeTypeChecking,
+            returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+            targetFunction: DecimalLeq);
 
         public static readonly AsyncFunctionPtr OperatorBinaryEq = StandardErrorHandling<FormulaValue>(
             "=",
@@ -442,6 +505,54 @@ namespace Microsoft.PowerFx.Functions
         }
 
         private static BooleanValue NumericLeq(IRContext irContext, NumberValue[] args)
+        {
+            var result = args[0].Value <= args[1].Value;
+            return new BooleanValue(irContext, result);
+        }
+
+        private static DecimalValue DecimalAdd(IRContext irContext, DecimalValue[] args)
+        {
+            var result = args[0].Value + args[1].Value;
+            return new DecimalValue(irContext, result);
+        }
+
+        private static DecimalValue DecimalMul(IRContext irContext, DecimalValue[] args)
+        {
+            var result = args[0].Value * args[1].Value;
+            return new DecimalValue(irContext, result);
+        }
+
+        private static FormulaValue DecimalDiv(IRContext irContext, DecimalValue[] args)
+        {
+            var dividend = args[0].Value;
+            var divisor = args[1].Value;
+            if (divisor == 0m)
+            {
+                return CommonErrors.DivByZeroError(irContext);
+            }
+
+            return new DecimalValue(irContext, dividend / divisor);
+        }
+
+        private static BooleanValue DecimalGt(IRContext irContext, DecimalValue[] args)
+        {
+            var result = args[0].Value > args[1].Value;
+            return new BooleanValue(irContext, result);
+        }
+
+        private static BooleanValue DecimalGeq(IRContext irContext, DecimalValue[] args)
+        {
+            var result = args[0].Value >= args[1].Value;
+            return new BooleanValue(irContext, result);
+        }
+
+        private static BooleanValue DecimalLt(IRContext irContext, DecimalValue[] args)
+        {
+            var result = args[0].Value < args[1].Value;
+            return new BooleanValue(irContext, result);
+        }
+
+        private static BooleanValue DecimalLeq(IRContext irContext, DecimalValue[] args)
         {
             var result = args[0].Value <= args[1].Value;
             return new BooleanValue(irContext, result);

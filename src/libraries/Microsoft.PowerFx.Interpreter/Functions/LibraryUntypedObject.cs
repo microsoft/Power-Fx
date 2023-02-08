@@ -77,6 +77,12 @@ namespace Microsoft.PowerFx.Functions
 
                 return new NumberValue(irContext, number);
             }
+            else if (impl.Type == FormulaType.Decimal)
+            {
+                // Decimal TODO: Badly formed decimal, error return?
+                var dec = impl.GetDecimal();
+                return new DecimalValue(irContext, dec);
+            }
             else if (impl.Type == FormulaType.Boolean)
             {
                 var b = new BooleanValue(IRContext.NotInSource(FormulaType.Boolean), impl.GetBoolean());

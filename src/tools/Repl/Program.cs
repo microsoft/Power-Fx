@@ -19,16 +19,20 @@ namespace PowerFxHostSamples
         private static RecalcEngine _engine;
         private static bool _formatTable = true;
         private const string OptionFormatTable = "FormatTable";
+        private static Features _features = Features.All;
 
         private static void ResetEngine()
         {
-            Features toenable = 0;
+            var config = new PowerFxConfig(_features);
+            Dictionary<string, string> options = new Dictionary<string, string>
+            {
+                { OptionFormatTable, OptionFormatTable }
+            };
             foreach (Features feature in (Features[])Enum.GetValues(typeof(Features)))
             {
-                toenable |= feature;
+                options.Add(feature.ToString(), feature.ToString());
             }
 
-            var config = new PowerFxConfig(toenable);
             config.SymbolTable.EnableMutationFunctions();
 
             config.AddFunction(new HelpFunction());
@@ -38,10 +42,7 @@ namespace PowerFxHostSamples
             config.AddFunction(new ResetImportFunction());
             config.AddFunction(new ImportFunction());
 
-            var optionsSet = new OptionSet("Options", DisplayNameUtility.MakeUnique(new Dictionary<string, string>()
-                                            {
-                                                    { OptionFormatTable, OptionFormatTable },
-                                            }));
+            var optionsSet = new OptionSet("Options", DisplayNameUtility.MakeUnique(options));
 
             config.AddOptionSet(optionsSet);
 
@@ -82,7 +83,7 @@ namespace PowerFxHostSamples
         // Pattern match for Set(x,y) so that we can define the variable
         public static bool TryMatchSet(string expr, out string arg0name, out FormulaValue varValue)
         {
-            var parserOptions = new ParserOptions { AllowsSideEffects = true };
+            var parserOptions = new ParserOptions(Features.None) { AllowsSideEffects = true };
 
             var parse = _engine.Parse(expr);
             if (parse.IsSuccess)
@@ -160,7 +161,7 @@ namespace PowerFxHostSamples
                     // eval and print everything else
                     else
                     {
-                        var opts = new ParserOptions { AllowsSideEffects = true };
+                        var opts = new ParserOptions(_engine.Config.Features) { AllowsSideEffects = true };
                         var result = _engine.Eval(expr, options: opts);
 
                         if (result is ErrorValue errorValue)
@@ -475,15 +476,23 @@ namespace PowerFxHostSamples
                     _formatTable = value.Value;
                     return value;
                 }
-                else
+
+                foreach (Features feature in (Features[])Enum.GetValues(typeof(Features)))
                 {
-                    return FormulaValue.NewError(new ExpressionError()
+                    if (option.Value.ToLower() == feature.ToString().ToLower())
                     {
+                        _features = _features & ~feature | (value.Value ? feature : Features.None);
+                        ResetEngine();
+                        return value;
+                    }
+                }
+
+                return FormulaValue.NewError(new ExpressionError()
+                {
                         Kind = ErrorKind.InvalidArgument,
                         Severity = ErrorSeverity.Critical,
                         Message = $"Invalid option name: {option.Value}."
-                    });
-                }
+                });
             }
         }
 

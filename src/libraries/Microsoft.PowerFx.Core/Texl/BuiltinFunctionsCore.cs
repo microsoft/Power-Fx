@@ -81,6 +81,7 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction Day = _library.Append(new DayFunction());
         public static readonly TexlFunction Dec2Hex = _library.Append(new Dec2HexFunction());
         public static readonly TexlFunction Dec2HexT = _library.Append(new Dec2HexTFunction());
+        public static readonly TexlFunction Decimal = _library.Append(new DecimalFunction());
         public static readonly TexlFunction Degrees = _library.Append(new DegreesFunction());
         public static readonly TexlFunction DegreesT = _library.Append(new DegreesTableFunction());
         public static readonly TexlFunction DropColumns = _library.Append(new DropColumnsFunction());
@@ -93,6 +94,7 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction FindT = _library.Append(new FindTFunction());
         public static readonly TexlFunction First = _library.Append(new FirstLastFunction(isFirst: true));
         public static readonly TexlFunction FirstN = _library.Append(new FirstLastNFunction(isFirst: true));
+        public static readonly TexlFunction Float = _library.Append(new FloatFunction());
         public static readonly TexlFunction ForAll = _library.Append(new ForAllFunction());
         public static readonly TexlFunction ForAll_UO = _library.Append(new ForAllFunction_UO());
         public static readonly TexlFunction GUIDPure = _library.Append(new GUIDPureFunction());

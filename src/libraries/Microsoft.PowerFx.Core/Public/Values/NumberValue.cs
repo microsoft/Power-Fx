@@ -25,4 +25,23 @@ namespace Microsoft.PowerFx.Types
             sb.Append(Value.ToString());
         }
     }
+
+    public class DecimalValue : PrimitiveValue<decimal>
+    {
+        internal DecimalValue(IRContext irContext, decimal value)
+            : base(irContext, value)
+        {
+            Contract.Assert(IRContext.ResultType == FormulaType.Decimal);
+        }
+
+        public override void Visit(IValueVisitor visitor)
+        {
+            visitor.Visit(this);
+        }
+
+        public override void ToExpression(StringBuilder sb, FormulaValueSerializerSettings settings)
+        {
+            sb.Append(Value.ToString());
+        }
+    }
 }

@@ -119,9 +119,114 @@ namespace Microsoft.PowerFx.Functions
         {
             var arg0 = args[0];
 
+#if false     // Decimal TODO: Decimal switch
+            // Decimal TODO: Should Value pass through all numeric types as is, or convert to default type?
             if (arg0 is NumberValue n)
             {
                 return n;
+            }
+
+            if (arg0 is DecimalValue d)
+            {
+                return new NumberValue(irContext, (double)d.Value);
+            }
+
+            if (arg0 is BooleanValue b)
+            {
+                return BooleanToNumber(irContext, new BooleanValue[] { b });
+            }
+
+            if (arg0 is DateValue dv)
+            {
+                return DateToNumber(irContext, new DateValue[] { dv });
+            }
+
+            if (arg0 is DateTimeValue dtv)
+            {
+                return DateTimeToNumber(irContext, new DateTimeValue[] { dtv });
+            }
+#else
+            // Decimal TODO: Should Value pass through all numeric types as is, or convert to default type?
+            if (arg0 is NumberValue n)
+            {
+                // Decimal TODO: Overflow
+                return new DecimalValue(irContext, (decimal)n.Value);
+            }
+
+            if (arg0 is DecimalValue d)
+            {
+                return d;
+            }
+
+            if (arg0 is BooleanValue b)
+            {
+                return BooleanToDecimal(irContext, new BooleanValue[] { b });
+            }
+
+            if (arg0 is DateValue dv)
+            {
+                return DateToDecimal(irContext, new DateValue[] { dv });
+            }
+
+            if (arg0 is DateTimeValue dtv)
+            {
+                return DateTimeToDecimal(irContext, new DateTimeValue[] { dtv });
+            }
+#endif
+
+            string str = null;
+
+            if (arg0 is StringValue sv)
+            {
+                str = sv.Value; // No Trim
+            }
+
+            if (string.IsNullOrEmpty(str))
+            {
+                return new BlankValue(irContext);
+            }
+
+            // culture will have Cultural info in case one was passed in argument else it will have the default one.
+            var culture = runner.CultureInfo;
+            if (args.Length > 1)
+            {
+                if (args[1] is StringValue cultureArg && !TryGetCulture(cultureArg.Value, out culture))
+                {
+                    return CommonErrors.BadLanguageCode(irContext, cultureArg.Value);
+                }
+            }
+
+#if true  // Decimal TODO: Decimal switch
+            var (val, err) = ConvertToNumber(str, culture);
+
+            if (err == ConvertionStatus.Ok)
+            {
+                return new NumberValue(irContext, val);
+            }
+#else
+            var (val, err) = ConvertToDecimal(str, culture);
+
+            if (err == ConvertionStatus.Ok)
+            {
+                return new DecimalValue(irContext, val);
+            }
+#endif
+
+            return CommonErrors.ArgumentOutOfRange(irContext);
+        }
+
+        public static FormulaValue Float(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        {
+            var arg0 = args[0];
+
+            if (arg0 is NumberValue n)
+            {
+                return n;
+            }
+
+            if (arg0 is DecimalValue d)
+            {
+                return new NumberValue(irContext, (double)d.Value);
             }
 
             if (arg0 is BooleanValue b)
@@ -171,9 +276,72 @@ namespace Microsoft.PowerFx.Functions
             return CommonErrors.ArgumentOutOfRange(irContext);
         }
 
+        public static FormulaValue Decimal(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        {
+            var arg0 = args[0];
+
+            if (arg0 is NumberValue n)
+            {
+                // Decimal TODO: Decimal overflow error
+                return new DecimalValue(irContext, (decimal)n.Value);
+            }
+
+            if (arg0 is DecimalValue d)
+            {
+                return d;
+            }
+
+            if (arg0 is BooleanValue b)
+            {
+                return BooleanToDecimal(irContext, new BooleanValue[] { b });
+            }
+
+            if (arg0 is DateValue dv)
+            {
+                return DateToDecimal(irContext, new DateValue[] { dv });
+            }
+
+            if (arg0 is DateTimeValue dtv)
+            {
+                return DateTimeToDecimal(irContext, new DateTimeValue[] { dtv });
+            }
+
+            string str = null;
+
+            if (arg0 is StringValue sv)
+            {
+                str = sv.Value; // No Trim
+            }
+
+            if (string.IsNullOrEmpty(str))
+            {
+                return new BlankValue(irContext);
+            }
+
+            // culture will have Cultural info in case one was passed in argument else it will have the default one.
+            var culture = runner.CultureInfo;
+            if (args.Length > 1)
+            {
+                if (args[1] is StringValue cultureArg && !TryGetCulture(cultureArg.Value, out culture))
+                {
+                    return CommonErrors.BadLanguageCode(irContext, cultureArg.Value);
+                }
+            }
+
+            var (val, err) = ConvertToDecimal(str, culture);
+
+            if (err == ConvertionStatus.Ok)
+            {
+                return new DecimalValue(irContext, val);
+            }
+
+            return CommonErrors.ArgumentOutOfRange(irContext);
+        }
+
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-text
         public static FormulaValue Text(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
+            // Decimal TODO: Text(Decimal(12345.6789),"#,###.00")
             const int formatSize = 100;
 
             string resultString = null;
@@ -224,6 +392,22 @@ namespace Microsoft.PowerFx.Functions
                     else
                     {
                         resultString = num.Value.ToString(formatString ?? "g", culture);
+                    }
+
+                    break;
+
+                case DecimalValue dec:
+                    if (formatString != null && hasDateTimeFmt)
+                    {
+                        // It's a number, formatted as date/time. Let's convert it to a date/time value first
+                        // Decimal TODO: Overflow
+                        var decNum = new NumberValue(irContext, (double)dec.Value);
+                        var newDateTime = Library.NumberToDateTime(runner, context, IRContext.NotInSource(FormulaType.DateTime), new NumberValue[] { decNum });
+                        return ExpandDateTimeExcelFormatSpecifiers(irContext, formatString, "g", newDateTime.Value, culture, runner.CancellationToken);
+                    }
+                    else
+                    {
+                        resultString = dec.Value.ToString(formatString ?? "g", culture);
                     }
 
                     break;

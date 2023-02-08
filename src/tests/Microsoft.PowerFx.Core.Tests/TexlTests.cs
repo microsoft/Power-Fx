@@ -1702,11 +1702,11 @@ namespace Microsoft.PowerFx.Core.Tests
         [Fact]
         public void TestBindingErrorsOnDuplicateFieldNames()
         {
-            TestBindingErrors("{A:1, A:2}", TestUtils.DT("![A:n]"));
-            TestBindingErrors("{A:1, A:2, A:3}", TestUtils.DT("![A:n]"));
-            TestBindingErrors("{A:1, B:true, A:2, B:3, A:3}", TestUtils.DT("![A:n, B:b]"));
-            TestBindingErrors("{A:1, A:\"hello\"}", TestUtils.DT("![A:n]"));
-            TestBindingErrors("{A:1, B:2, C:3, D:4, E:5, F:true, A:\"hello\"}", TestUtils.DT("![A:n, B:n, C:n, D:n, E:n, F:b]"));
+            TestBindingErrors("{A:1, A:2}", TestUtils.DT("![A:w]"));
+            TestBindingErrors("{A:1, A:2, A:3}", TestUtils.DT("![A:w]"));
+            TestBindingErrors("{A:1, B:true, A:2, B:3, A:3}", TestUtils.DT("![A:w, B:b]"));
+            TestBindingErrors("{A:1, A:\"hello\"}", TestUtils.DT("![A:w]"));
+            TestBindingErrors("{A:1, B:2, C:3, D:4, E:5, F:true, A:\"hello\"}", TestUtils.DT("![A:w, B:w, C:w, D:w, E:w, F:b]"));
         }
 
         [Theory]
@@ -2240,13 +2240,27 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("Sum(T, 1)", "n")]
         [InlineData("Average(T, \"Item\")", "n")]
         [InlineData("Filter(T, true)", "*[Item:n]")]
         public void TestWarningOnLiteralPredicate(string script, string expectedType)
         {
             var symbol = new SymbolTable();
             symbol.AddVariable("T", new TableType(TestUtils.DT("*[Item:n]")));
+            TestBindingWarning(
+                script,
+                TestUtils.DT(expectedType),
+                expectedErrorCount: null,
+                symbolTable: symbol);
+        }
+
+        [Theory]
+        [InlineData("Sum(T, 1)", "w")]
+        [InlineData("Average(T, \"Item\")", "w")]
+        [InlineData("Filter(T, true)", "*[Item:w]")]
+        public void TestWarningOnDecimalLiteralPredicate(string script, string expectedType)
+        {
+            var symbol = new SymbolTable();
+            symbol.AddVariable("T", new TableType(TestUtils.DT("*[Item:w]")));
             TestBindingWarning(
                 script,
                 TestUtils.DT(expectedType),

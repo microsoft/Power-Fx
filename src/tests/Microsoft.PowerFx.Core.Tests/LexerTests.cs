@@ -15,7 +15,12 @@ namespace Microsoft.PowerFx.Core.Tests
     {
         private void AssertTokens(string value, params TokKind[] tokKinds)
         {
-            var tokens = TexlLexer.InvariantLexer.LexSource(value);
+            AssertTokens(TexlLexer.Flags.None, value, tokKinds);
+        }
+
+        private void AssertTokens(TexlLexer.Flags flags, string value, params TokKind[] tokKinds)
+        {
+            var tokens = TexlLexer.InvariantLexer.LexSource(value, flags);
             Assert.NotNull(tokens);
             Assert.Equal(tokKinds.Length, tokens.Count);
             Assert.True(tokens.Zip(tokKinds, (t, k) => t.Kind == k).All(b => b));
@@ -184,11 +189,21 @@ namespace Microsoft.PowerFx.Core.Tests
         [Fact]
         public void TestLexNumbersWithLanguageSettings()
         {
+            var iSetup = InternalSetup.Parse($"NumberIsFloat");
+
             var tokens = TexlLexer.GetLocalizedInstance(GetFrenchSettings()).LexSource("123456,78");
             Assert.NotNull(tokens);
             Assert.Equal(2, tokens.Count);
-            Assert.Equal(TokKind.NumLit, tokens[0].Kind);
-            Assert.Equal(123456.78, tokens[0].As<NumLitToken>().Value);
+            if (iSetup.Features == Features.NumberIsFloat)
+            {
+                Assert.True(tokens[0].Kind == TokKind.NumLit);
+                Assert.Equal(123456.78, tokens[0].As<NumLitToken>().Value);
+            }
+            else
+            {
+                Assert.True(tokens[0].Kind == TokKind.DecLit);
+                Assert.Equal(123456.78m, tokens[0].As<DecLitToken>().Value);
+            }
         }
 
         [Fact]
@@ -198,14 +213,29 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.NotNull(tokens);
             Assert.Equal(8, tokens.Count);
             Assert.Equal(TokKind.BracketOpen, tokens[0].Kind);
-            Assert.Equal(TokKind.NumLit, tokens[1].Kind);
-            Assert.Equal(1.2, tokens[1].As<NumLitToken>().Value);
-            Assert.Equal(TokKind.Comma, tokens[2].Kind);
-            Assert.Equal(TokKind.NumLit, tokens[3].Kind);
-            Assert.Equal(2.3, tokens[3].As<NumLitToken>().Value);
-            Assert.Equal(TokKind.Comma, tokens[4].Kind);
-            Assert.Equal(TokKind.NumLit, tokens[5].Kind);
-            Assert.Equal(4, tokens[5].As<NumLitToken>().Value);
+            if (tokens[0].Kind == TokKind.NumLit)
+            {
+                Assert.Equal(TokKind.NumLit, tokens[1].Kind);
+                Assert.Equal(1.2, tokens[1].As<NumLitToken>().Value);
+                Assert.Equal(TokKind.Comma, tokens[2].Kind);
+                Assert.Equal(TokKind.NumLit, tokens[3].Kind);
+                Assert.Equal(2.3, tokens[3].As<NumLitToken>().Value);
+                Assert.Equal(TokKind.Comma, tokens[4].Kind);
+                Assert.Equal(TokKind.NumLit, tokens[5].Kind);
+                Assert.Equal(4, tokens[5].As<NumLitToken>().Value);
+            }
+            else
+            {
+                Assert.Equal(TokKind.DecLit, tokens[1].Kind);
+                Assert.Equal(1.2m, tokens[1].As<DecLitToken>().Value);
+                Assert.Equal(TokKind.Comma, tokens[2].Kind);
+                Assert.Equal(TokKind.DecLit, tokens[3].Kind);
+                Assert.Equal(2.3m, tokens[3].As<DecLitToken>().Value);
+                Assert.Equal(TokKind.Comma, tokens[4].Kind);
+                Assert.Equal(TokKind.DecLit, tokens[5].Kind);
+                Assert.Equal(4, tokens[5].As<DecLitToken>().Value);
+            }
+
             Assert.Equal(TokKind.BracketClose, tokens[6].Kind);
             Assert.Equal(TokKind.Eof, tokens[7].Kind);
         }
@@ -371,11 +401,17 @@ namespace Microsoft.PowerFx.Core.Tests
             var lexer = TexlLexer.GetLocalizedInstance(null);
             Assert.Equal(lexer.LocalizedPunctuatorDecimalSeparator, TexlLexer.PunctuatorDecimalSeparatorInvariant);
 
-            var tokens = lexer.LexSource("123456.78");
+            var tokens = lexer.LexSource("123456.78", TexlLexer.Flags.NumberIsFloat);
             Assert.NotNull(tokens);
             Assert.Equal(2, tokens.Count);
             Assert.Equal(TokKind.NumLit, tokens[0].Kind);
             Assert.Equal(123456.78, tokens[0].As<NumLitToken>().Value);
+
+            tokens = lexer.LexSource("123456.78");
+            Assert.NotNull(tokens);
+            Assert.Equal(2, tokens.Count);
+            Assert.Equal(TokKind.DecLit, tokens[0].Kind);
+            Assert.Equal(123456.78m, tokens[0].As<DecLitToken>().Value);
 
             CultureInfo.CurrentCulture = oldCulture;
         }
@@ -423,6 +459,7 @@ namespace Microsoft.PowerFx.Core.Tests
         public void TestStringInterpolationWithTable()
         {
             AssertTokens(
+                TexlLexer.Flags.NumberIsFloat,
                 "$\"Hello {Table({a: 5})} World!\"",
                 TokKind.StrInterpStart,
                 TokKind.StrLit,
@@ -434,6 +471,25 @@ namespace Microsoft.PowerFx.Core.Tests
                 TokKind.Colon,
                 TokKind.Whitespace,
                 TokKind.NumLit,
+                TokKind.CurlyClose,
+                TokKind.ParenClose,
+                TokKind.IslandEnd,
+                TokKind.StrLit,
+                TokKind.StrInterpEnd,
+                TokKind.Eof);
+
+            AssertTokens(
+                "$\"Hello {Table({a: 5})} World!\"",
+                TokKind.StrInterpStart,
+                TokKind.StrLit,
+                TokKind.IslandStart,
+                TokKind.Ident,
+                TokKind.ParenOpen,
+                TokKind.CurlyOpen,
+                TokKind.Ident,
+                TokKind.Colon,
+                TokKind.Whitespace,
+                TokKind.DecLit,
                 TokKind.CurlyClose,
                 TokKind.ParenClose,
                 TokKind.IslandEnd,

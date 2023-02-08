@@ -39,6 +39,28 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: NumericPercent)
             },
             {
+                UnaryOpKind.NegateDecimal,
+                StandardErrorHandling<DecimalValue>(
+                    "-",
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: ReplaceBlankWithZero,
+                    checkRuntimeTypes: ExactValueType<DecimalValue>,
+                    checkRuntimeValues: DeferRuntimeTypeChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: DecimalNegate)
+            },
+            {
+                UnaryOpKind.PercentDecimal,
+                StandardErrorHandling<DecimalValue>(
+                    "%",
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: ReplaceBlankWithZero,
+                    checkRuntimeTypes: ExactValueType<DecimalValue>,
+                    checkRuntimeValues: DeferRuntimeTypeChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: DecimalPercent)
+            },
+            {
                 UnaryOpKind.NumberToText,
                 StandardErrorHandling<NumberValue>(
                     functionName: null, // internal function, no user-facing name
@@ -48,6 +70,17 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeValues: DeferRuntimeTypeChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: NumberToText)
+            },
+            {
+                UnaryOpKind.DecimalToText,
+                StandardErrorHandling<DecimalValue>(
+                    functionName: null, // internal function, no user-facing name
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<DecimalValue>,
+                    checkRuntimeValues: DeferRuntimeTypeChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: DecimalToText)
             },
             {
                 UnaryOpKind.NumberToBoolean,
@@ -279,10 +312,27 @@ namespace Microsoft.PowerFx.Functions
             return new NumberValue(irContext, result);
         }
 
+        private static DecimalValue DecimalNegate(IRContext irContext, DecimalValue[] args)
+        {
+            var result = -args[0].Value;
+            return new DecimalValue(irContext, result);
+        }
+
         private static NumberValue NumericPercent(IRContext irContext, NumberValue[] args)
         {
             var result = args[0].Value / 100.0;
             return new NumberValue(irContext, result);
+        }
+
+        private static DecimalValue DecimalPercent(IRContext irContext, DecimalValue[] args)
+        {
+            var result = args[0].Value / 100m;
+            return new DecimalValue(irContext, result);
+        }
+
+        public static FormulaValue DecimalToText(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, DecimalValue[] args)
+        {
+            return Text(runner, context, irContext, args);
         }
 
         public static FormulaValue NumberToText(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, NumberValue[] args)
@@ -294,6 +344,31 @@ namespace Microsoft.PowerFx.Functions
         {
             var n = args[0].Value;
             return new BooleanValue(irContext, n != 0.0);
+        }
+
+        public static BooleanValue NumberToDecimal(IRContext irContext, DecimalValue[] args)
+        {
+            var n = args[0].Value;
+            return new BooleanValue(irContext, n != 0m);
+        }
+
+        public static DecimalValue BooleanToDecimal(IRContext irContext, BooleanValue[] args)
+        {
+            var b = args[0].Value;
+            return new DecimalValue(irContext, b ? 1m : 0m);
+        }
+
+        public static FormulaValue DateToDecimal(IRContext irContext, FormulaValue[] args)
+        {
+            // no loss of precision as underlying system .TotalDays returns a double
+            return new DecimalValue(irContext, (decimal)((NumberValue)DateToNumber(irContext, args)).Value);
+        }
+
+        public static DecimalValue DateTimeToDecimal(IRContext irContext, DateTimeValue[] args)
+        {
+            var d = args[0].Value;
+            var diff = d.Subtract(_epoch).TotalDays;
+            return new DecimalValue(irContext, (decimal)diff);
         }
 
         public static StringValue BooleanToText(IRContext irContext, BooleanValue[] args)

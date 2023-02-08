@@ -111,6 +111,30 @@ namespace Microsoft.PowerFx.Tests
             throw new InvalidOperationException($"Not a number type");
         }
 
+        public decimal GetDecimal()
+        {
+            // Decimal TODO
+            // Fx will only call this helper for decimals. 
+            Assert.True(Type == FormulaType.Decimal);
+
+            if (_source is int valInt)
+            {
+                return valInt;
+            }
+
+            if (_source is double valDouble)
+            {
+                return (decimal)valDouble;
+            }
+
+            if (_source is decimal valDecimal)
+            {
+                return valDecimal;
+            }
+
+            throw new InvalidOperationException($"Not a number type");
+        }
+
         public string GetString()
         {
             Assert.True(Type == FormulaType.String);
