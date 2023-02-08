@@ -124,12 +124,16 @@ namespace Microsoft.PowerFx.Functions
             var len = element.GetArrayLength();
 
             var list = new List<IUntypedObject>();
-            for (int i = 1; i <= (int)arg1.Value && len - i >= 0; i++)
+            var takeCount = (int)arg1.Value;
+            for (int i = 0; i < takeCount; i++)
             {
-                list.Add(element[len - i]);
+                var takeIndex = len - takeCount + i;
+                if (takeIndex >= 0)
+                {
+                    list.Add(element[takeIndex]);
+                }
             }
 
-            list.Reverse();
             var result = new ArrayUntypedObject(list);
 
             return new UntypedObjectValue(irContext, result);
