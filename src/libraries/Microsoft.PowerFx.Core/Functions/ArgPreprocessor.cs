@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Microsoft.PowerFx.Core.Types.Enums
+namespace Microsoft.PowerFx.Core.Functions
 {
     internal enum ArgPreprocessor
     {
