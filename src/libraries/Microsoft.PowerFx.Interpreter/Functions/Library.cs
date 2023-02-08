@@ -4,9 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Globalization;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Functions;
@@ -47,13 +45,14 @@ namespace Microsoft.PowerFx.Functions
 
         public static readonly IReadOnlyDictionary<TexlFunction, AsyncFunctionPtr> FunctionImplementations;
 
-        internal class FormattingInfo
+        public static FormattingInfo CreateFormattingInfo(EvalVisitor runner)
         {
-            public CultureInfo CultureInfo { get; set; }
-
-            public CancellationToken CancellationToken { get; set; }
-
-            public TimeZoneInfo TimeZoneInfo { get; set; }
+            return new FormattingInfo()
+            {
+                CultureInfo = runner.CultureInfo,
+                CancellationToken = runner.CancellationToken,
+                TimeZoneInfo = runner.GetService<TimeZoneInfo>() ?? TimeZoneInfo.Local
+            };
         }
 
         static Library()

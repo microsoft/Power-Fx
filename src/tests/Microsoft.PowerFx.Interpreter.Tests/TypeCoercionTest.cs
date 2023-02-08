@@ -9,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Tests;
+using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Interpreter.Marshal;
 using Microsoft.PowerFx.Interpreter.Tests;
@@ -18,201 +19,93 @@ using Xunit;
 
 namespace Microsoft.PowerFx.Tests
 {
-    // Test type coercion between C# objects and Power Fx values. 
+    // Test type coercion from FormualValue to target type 
     public class TypeCoercionTest : PowerFxTest
     {
-        [Fact]
-        public void TryCoerce()
+        // From number to other types
+        [Theory]
+        [InlineData(1, "true", "1", "1", "12/31/1899 12:00 AM")]
+        [InlineData(0, "false", "0", "0", "12/30/1899 12:00 AM")]
+        [InlineData(44962, "true", "44962", "44962", "2/5/2023 12:00 AM")]
+        public void TryCoerceFromNumberTest(double value, string exprBool, string exprNumber, string exprStr, string exprDateTime)
         {
-            TryCoerceToSuccess(null, FormulaType.String, FormulaValue.NewBlank(FormulaType.String));
-            TryCoerceToFailure(new StringValue(IRContext.NotInSource(FormulaType.String), "TestLink"), FormulaType.Hyperlink);
+            TryCoerceToTargetTypes(FormulaValue.New(value), exprBool, exprNumber, exprStr, exprDateTime);
         }
 
-        [Fact]
-        public void TryCoerceToBoolean()
+        // From string to other types
+        [Theory]
+        [InlineData("", null, null, "", null)]
+        [InlineData("1", null, "1", "1", null)]
+        [InlineData("true", "true", null, "true", null)]
+        [InlineData("false", "false", null, "false", null)]
+        [InlineData("This is a string", null, null, "This is a string", null)]
+        public void TryCoerceFromStringTest(string value, string exprBool, string exprNumber, string exprStr, string exprDateTime)
         {
-            // From Number to Boolean
-            TryCoerceFromNumberToBooleanSuccess(0, false);
-            TryCoerceFromNumberToBooleanSuccess(0.0, false);
-            TryCoerceFromNumberToBooleanSuccess(1, true);
-            TryCoerceFromNumberToBooleanSuccess(1.1, true);
-            TryCoerceFromNumberToBooleanSuccess(12345.123, true);
-        
-            // From Boolean to Boolean
-            TryCoerceFromBooleanToBooleanSuccess(true, true);
-            TryCoerceFromBooleanToBooleanSuccess(false, false);
-
-            // From String to Boolean
-            // Expect success
-            TryCoerceFromStringToBooleanSuccess("true", true);
-            TryCoerceFromStringToBooleanSuccess("false", false);
-            TryCoerceFromStringToBooleanSuccess("True", true);
-            TryCoerceFromStringToBooleanSuccess("False", false);
-
-            // Expect failure
-            TryCoerceFromStringToBooleanFailure("1");
-            TryCoerceFromStringToBooleanFailure("0");
+            TryCoerceToTargetTypes(FormulaValue.New(value), exprBool, exprNumber, exprStr, exprDateTime);
         }
 
-        [Fact]
-        public void TryCoerceToString()
+        // From boolean to other types
+        [Theory]
+        [InlineData(true, "true", "1", "true", null)]
+        [InlineData(false, "false", "0", "false", null)]
+        public void TryCoerceFromBooleanTest(bool value, string exprBool, string exprNumber, string exprStr, string exprDateTime)
         {
-            // From Number to String
-            TryCoerceFromNumberToStringSuccess(5, "5");
-            TryCoerceFromNumberToStringSuccess(1.2, "1.2");
-
-            // From DateTime to String
-            var dateTime = new DateTime(2023, 2, 1, 0, 0, 0, 0);
-            TryCoerceFromDateTimeToStringSuccess(dateTime, dateTime.ToString("M/d/yyyy hh:mm tt"));
-
-            // From Boolean to String
-            TryCoerceFromBooleanToStringSuccess(true, "true");
-            TryCoerceFromBooleanToStringSuccess(false, "false");
-
-            // From String to String
-            TryCoerceFromStringToStringSuccess("test string", "test string");
+            TryCoerceToTargetTypes(FormulaValue.New(value), exprBool, exprNumber, exprStr, exprDateTime);
         }
 
-        [Fact]
-        public void TryCoerceToNumber()
+        // From dateTime to other types
+        [Theory]
+        [InlineData("2/5/2023", null, "44962", "2/5/2023 12:00 AM", "2/5/2023 12:00 AM")]
+        public void TryCoerceFromDateTimeTest(string value, string exprBool, string exprNumber, string exprStr, string exprDateTime)
         {
-            // From DateTime to Number
-            var dateTime = new DateTime(2023, 2, 1, 0, 0, 0, 0);
-            TryCoerceFromDateTimeToNumberSuccess(dateTime, dateTime.ToOADate());
-
-            // From Boolean to Number
-            TryCoerceFromBooleanToNumberSuccess(true, 1);
-            TryCoerceFromBooleanToNumberSuccess(false, 0);
-
-            // From Number to Number
-            TryCoerceFromNumberToNumberSuccess(12, 12);
-            TryCoerceFromNumberToNumberSuccess(1.2, 1.2);
-
-            // From String to Number
-            TryCoerceFromStringToNumberSuccess("23", 23);
-            TryCoerceFromStringToNumberSuccess("12.34", 12.34);
-
-            // Expect failure
-            TryCoerceFromStringToNumberFailure("test12");
+            TryCoerceToTargetTypes(FormulaValue.New(DateTime.Parse(value)), exprBool, exprNumber, exprStr, exprDateTime);
         }
 
-        [Fact]
-        public void TryCoerceToDateTime()
+        private void TryCoerceToTargetTypes(FormulaValue inputValue, string exprBool, string exprNumber, string exprStr, string exprDateTime)
         {
-            var dateTime = new DateTime(2023, 2, 1, 0, 0, 0, 0);
-                        
-            // From String to DateTime
-            TryCoerceFromStringToDateTimeSuccess(dateTime.ToString(), dateTime);
+            bool isSucceeded = TypeCoercionProvider.TryCoerceTo(inputValue, out BooleanValue resultBoolean);
+            if (exprBool != null)
+            {
+                Assert.True(isSucceeded);
+                Assert.Equal(bool.Parse(exprBool), resultBoolean.Value);
+            }
+            else
+            {
+                Assert.False(isSucceeded);
+            }
 
-            // From Number to DateTime 44958
-            TryCoerceFromNumberToDateTimeSuccess(dateTime.ToOADate(), dateTime);
-            
-            // From DateTime to DateTime
-            TryCoerceFromDateTimeToDateTimeSuccess(dateTime, dateTime);
+            isSucceeded = TypeCoercionProvider.TryCoerceTo(inputValue, out NumberValue resultNumber);
+            if (exprNumber != null)
+            {
+                Assert.True(isSucceeded);
+                Assert.Equal(double.Parse(exprNumber), resultNumber.Value);
+            }
+            else
+            {
+                Assert.False(isSucceeded);
+            }
 
-            // Expect failure
-            TryCoerceFromStringToDateTimeFailure("day1month2year2023");
-        }
+            isSucceeded = TypeCoercionProvider.TryCoerceTo(inputValue, out StringValue resultString);
+            if (exprStr != null)
+            {
+                Assert.True(isSucceeded);
+                Assert.Equal(exprStr, resultString.Value);
+            }
+            else
+            {
+                Assert.False(isSucceeded);
+            }
 
-        private void TryCoerceToSuccess(FormulaValue inputValue, FormulaType targetType, FormulaValue expectedValue)
-        {
-            var isSucceeded = TypeCoercionProvider.TryCoerceTo(inputValue, targetType, out FormulaValue result);
-
-            Assert.True(isSucceeded);
-            Assert.Equal(targetType, result.Type);
-            Assert.Equal(expectedValue.ToString(), result.ToString());
-        }
-
-        private void TryCoerceToFailure(FormulaValue inputValue, FormulaType targetType)
-        {
-            var isSucceeded = TypeCoercionProvider.TryCoerceTo(inputValue, targetType, out FormulaValue result);
-
-            Assert.False(isSucceeded);
-        }
-
-        private void TryCoerceFromStringToBooleanSuccess(string inputValue, bool expectedValue)
-        {
-            TryCoerceToSuccess(new StringValue(IRContext.NotInSource(FormulaType.String), inputValue), FormulaType.Boolean, new BooleanValue(IRContext.NotInSource(FormulaType.Boolean), expectedValue));
-        }
-
-        private void TryCoerceFromStringToBooleanFailure(string inputValue)
-        {
-            TryCoerceToFailure(new StringValue(IRContext.NotInSource(FormulaType.String), inputValue), FormulaType.Boolean);
-        }
-
-        private void TryCoerceFromNumberToBooleanSuccess(double inputValue, bool expectedValue)
-        {
-            TryCoerceToSuccess(new NumberValue(IRContext.NotInSource(FormulaType.Number), inputValue), FormulaType.Boolean, new BooleanValue(IRContext.NotInSource(FormulaType.Boolean), expectedValue));
-        }
-
-        private void TryCoerceFromBooleanToBooleanSuccess(bool inputValue, bool expectedValue)
-        {
-            TryCoerceToSuccess(new BooleanValue(IRContext.NotInSource(FormulaType.Boolean), inputValue), FormulaType.Boolean, new BooleanValue(IRContext.NotInSource(FormulaType.Boolean), expectedValue));
-        }
-
-        private void TryCoerceFromNumberToStringSuccess(double inputValue, string expectedValue)
-        {
-            TryCoerceToSuccess(new NumberValue(IRContext.NotInSource(FormulaType.Number), inputValue), FormulaType.String, new StringValue(IRContext.NotInSource(FormulaType.String), expectedValue));
-        }
-
-        private void TryCoerceFromDateTimeToStringSuccess(DateTime inputValue, string expectedValue)
-        {
-            TryCoerceToSuccess(new DateTimeValue(IRContext.NotInSource(FormulaType.DateTime), inputValue), FormulaType.String, new StringValue(IRContext.NotInSource(FormulaType.String), expectedValue));
-        }
-
-        private void TryCoerceFromBooleanToStringSuccess(bool inputValue, string expectedValue)
-        {
-            TryCoerceToSuccess(new BooleanValue(IRContext.NotInSource(FormulaType.Boolean), inputValue), FormulaType.String, new StringValue(IRContext.NotInSource(FormulaType.String), expectedValue));
-        }
-
-        private void TryCoerceFromStringToStringSuccess(string inputValue, string expectedValue)
-        {
-            TryCoerceToSuccess(new StringValue(IRContext.NotInSource(FormulaType.String), inputValue), FormulaType.String, new StringValue(IRContext.NotInSource(FormulaType.String), expectedValue));
-        }
-
-        private void TryCoerceFromNumberToNumberSuccess(double inputValue, double expectedValue)
-        {
-            TryCoerceToSuccess(new NumberValue(IRContext.NotInSource(FormulaType.Number), inputValue), FormulaType.Number, new NumberValue(IRContext.NotInSource(FormulaType.Number), expectedValue));
-        }
-
-        private void TryCoerceFromDateTimeToNumberSuccess(DateTime inputValue, double expectedValue)
-        {
-            TryCoerceToSuccess(new DateTimeValue(IRContext.NotInSource(FormulaType.DateTime), inputValue), FormulaType.Number, new NumberValue(IRContext.NotInSource(FormulaType.Number), expectedValue));
-        }
-
-        private void TryCoerceFromBooleanToNumberSuccess(bool inputValue, double expectedValue)
-        {
-            TryCoerceToSuccess(new BooleanValue(IRContext.NotInSource(FormulaType.Boolean), inputValue), FormulaType.Number, new NumberValue(IRContext.NotInSource(FormulaType.Number), expectedValue));
-        }
-
-        private void TryCoerceFromStringToNumberSuccess(string inputValue, double expectedValue)
-        {
-            TryCoerceToSuccess(new StringValue(IRContext.NotInSource(FormulaType.String), inputValue), FormulaType.Number, new NumberValue(IRContext.NotInSource(FormulaType.Number), expectedValue));
-        }
-
-        private void TryCoerceFromStringToNumberFailure(string inputValue)
-        {
-            TryCoerceToFailure(new StringValue(IRContext.NotInSource(FormulaType.String), inputValue), FormulaType.Number);
-        }
-
-        private void TryCoerceFromNumberToDateTimeSuccess(double inputValue, DateTime expectedValue)
-        {
-            TryCoerceToSuccess(new NumberValue(IRContext.NotInSource(FormulaType.Number), inputValue), FormulaType.DateTime, new DateTimeValue(IRContext.NotInSource(FormulaType.DateTime), expectedValue));
-        }
-
-        private void TryCoerceFromDateTimeToDateTimeSuccess(DateTime inputValue, DateTime expectedValue)
-        {
-            TryCoerceToSuccess(new DateTimeValue(IRContext.NotInSource(FormulaType.DateTime), inputValue), FormulaType.DateTime, new DateTimeValue(IRContext.NotInSource(FormulaType.DateTime), expectedValue));
-        }
-
-        private void TryCoerceFromStringToDateTimeSuccess(string inputValue, DateTime expectedValue)
-        {
-            TryCoerceToSuccess(new StringValue(IRContext.NotInSource(FormulaType.String), inputValue), FormulaType.DateTime, new DateTimeValue(IRContext.NotInSource(FormulaType.DateTime), expectedValue));
-        }
-
-        private void TryCoerceFromStringToDateTimeFailure(string inputValue)
-        {
-            TryCoerceToFailure(new StringValue(IRContext.NotInSource(FormulaType.String), inputValue), FormulaType.DateTime);
+            isSucceeded = TypeCoercionProvider.TryCoerceTo(inputValue, out DateTimeValue resultDateTime);
+            if (exprDateTime != null)
+            {
+                Assert.True(isSucceeded);
+                Assert.Equal(DateTime.Parse(exprDateTime), resultDateTime.GetConvertedValue(TimeZoneInfo.Local));
+            }
+            else
+            {
+                Assert.False(isSucceeded);
+            }
         }
     }
 }
