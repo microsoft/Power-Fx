@@ -242,6 +242,17 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             Assert.Equal(expectedSuggestions, actualSuggestions);
         }
 
+        [Theory]
+        [InlineData("SortByColumns(|", 2, "The table to sort", "SortByColumns(source, column, order, ...)")]
+        public void TestIntellisenseFunctionParameterDescription(string expression, int expectedOverloadCount, string expectedDescription, string expectedDisplayText)
+        {
+            var result = Suggest(expression, Default);
+            Assert.Equal(expectedOverloadCount, result.FunctionOverloads.Count());
+            var currentOverload = result.FunctionOverloads.ToArray()[result.CurrentFunctionOverloadIndex];
+            Assert.Equal(expectedDisplayText, currentOverload.DisplayText.Text);
+            Assert.Equal(expectedDescription, currentOverload.FunctionParameterDescription);
+        }
+
         // Add an extra (empy) symbol table into the config and ensure we get the same results. 
         private void AdjustConfig(PowerFxConfig config)
         {
