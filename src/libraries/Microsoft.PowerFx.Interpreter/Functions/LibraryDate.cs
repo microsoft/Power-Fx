@@ -17,11 +17,10 @@ namespace Microsoft.PowerFx.Functions
 {
     internal static partial class Library
     {
-        public static FormulaValue Today(IRContext irContext, FormulaValue[] args)
+        public static async ValueTask<FormulaValue> Today(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            // $$$ timezone?
-            var date = DateTime.Today;
-
+            var timeZoneInfo = runner.TimeZoneInfo;
+            var date = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, timeZoneInfo).Date;
             return new DateValue(irContext, date);
         }
 
