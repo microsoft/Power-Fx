@@ -645,7 +645,7 @@ namespace Microsoft.PowerFx.Functions
                 BuiltinFunctionsCore.FirstN_UO,
                 StandardErrorHandling<FormulaValue>(
                     BuiltinFunctionsCore.FirstN.Name,
-                    expandArguments: InsertDefaultValues(outputArgsCount: 2, fillWith: new NumberValue(IRContext.NotInSource(FormulaType.Number), 1)),
+                    expandArguments: NoArgExpansion,
                     replaceBlankValues: ReplaceBlankWithZeroForSpecificIndices(1),
                     checkRuntimeTypes: ExactSequence(
                         ExactValueTypeOrBlank<UntypedObjectValue>,
@@ -873,7 +873,7 @@ namespace Microsoft.PowerFx.Functions
                 BuiltinFunctionsCore.LastN_UO,
                 StandardErrorHandling<FormulaValue>(
                     BuiltinFunctionsCore.LastN.Name,
-                    expandArguments: InsertDefaultValues(outputArgsCount: 2, fillWith: new NumberValue(IRContext.NotInSource(FormulaType.Number), 1)),
+                    expandArguments: NoArgExpansion,
                     replaceBlankValues: ReplaceBlankWithZeroForSpecificIndices(1),
                     checkRuntimeTypes: ExactSequence(
                         ExactValueTypeOrBlank<UntypedObjectValue>,
