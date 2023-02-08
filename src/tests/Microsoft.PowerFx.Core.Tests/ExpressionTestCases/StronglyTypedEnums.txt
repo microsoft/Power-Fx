@@ -1,14 +1,14 @@
 ﻿#SETUP: StronglyTypedBuiltinEnums,AllEnumsSetup
 
 >> ErrorKind.Div0 = Color.Red
-Errors: Error 15-16: Incompatible types for comparison. These types can't be compared: OptionSetValue(ErrorKind), OptionSetValue(Color).
+Errors: Error 15-16: Incompatible types for comparison. These types can't be compared: OptionSetValue (ErrorKind), OptionSetValue (Color).
 
 >> Color.Red
 Color.Red
 
 // Both string backed enums, but incompatble for comparison
 >> TimeUnit.Days <> JSONFormat.IndentFour
-Errors: Error 14-16: Incompatible types for comparison. These types can't be compared: OptionSetValue(TimeUnit), OptionSetValue(JSONFormat).
+Errors: Error 14-16: Incompatible types for comparison. These types can't be compared: OptionSetValue (TimeUnit), OptionSetValue (JSONFormat).
 
 // Valid to compare to strings
 >> TimeUnit.Days <> "abc"
@@ -19,7 +19,7 @@ true
 RGBA(255,0,0,1)
 
 >> Color.Red < Color.Green
-Errors: Error 10-11: Unable to compare values of type OptionSetValue(Color).
+Errors: Error 10-11: Unable to compare values of type OptionSetValue (Color).
 
 // Number backed enums support gt/lt/geq/leq, but enforce type checks
 >> With({ErrorSev: ErrorSeverity.Warning}, ErrorSev < ErrorSeverity.Severe) 
@@ -32,7 +32,7 @@ true
 false
 
 >> With({ErrorSev: ErrorSeverity.Warning}, ErrorSev < StartOfWeek.Saturday) 
-Errors: Error 49-50: Incompatible types for comparison. These types can't be compared: OptionSetValue(ErrorSeverity), OptionSetValue(StartOfWeek).
+Errors: Error 49-50: Incompatible types for comparison. These types can't be compared: OptionSetValue (ErrorSeverity), OptionSetValue (StartOfWeek).
 
 // Coercion to string uses backing values if the enum is string-backed
 >> JSONFormat.IndentFour & JSONFormat.IncludeBinaryData
@@ -46,7 +46,20 @@ Errors: Error 49-50: Incompatible types for comparison. These types can't be com
 
 // Functions can enforce expecting an enum type
 >> DateAdd(Date(2011,1,15), 100000000, "milliseconds")
-Errors: Error 36-50: Invalid argument type (Text). Expecting a OptionSetValue(TimeUnit) value instead.|Error 0-51: The function 'DateAdd' has some invalid arguments.
+Errors: Error 36-50: Invalid argument type (Text). Expecting a OptionSetValue (TimeUnit) value instead.|Error 0-51: The function 'DateAdd' has some invalid arguments.
 
 >> DateAdd(Date(2011,1,15), 100000000, TimeUnit.Milliseconds)
 Date(2011,1,16)
+
+
+>> Text(TimeUnit.Months)
+"months"
+
+>> Upper(TimeUnit.Quarters)
+"QUARTERS"
+
+>> If(true, "A", TimeUnit.Seconds)
+"A"
+
+>> If(true, 1, TimeUnit.Seconds)
+Errors: Error...

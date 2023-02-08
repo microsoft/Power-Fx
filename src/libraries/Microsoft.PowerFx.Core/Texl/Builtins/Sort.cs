@@ -70,7 +70,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             var orderExpectedType = context.Features.HasFlag(Features.StronglyTypedBuiltinEnums) ?
-                BuiltInEnums.TimeUnitEnum.FormulaType._type :
+                BuiltInEnums.SortOrderEnum.FormulaType._type :
                 DType.String;
 
             if (args.Length == 3)

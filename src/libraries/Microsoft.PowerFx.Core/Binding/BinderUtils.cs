@@ -673,19 +673,29 @@ namespace Microsoft.PowerFx.Core.Binding
 
         private static BinderCheckTypeResult CheckComparisonArgTypesCore(IErrorContainer errorContainer, TexlNode left, TexlNode right, DType typeLeft, DType typeRight)
         {
+            var coercions = new List<BinderCoercionResult>();
+
             // Special case for number-backed BuiltIn Option Sets:
             if (typeLeft.Kind == DKind.OptionSetValue || typeRight.Kind == DKind.OptionSetValue)
-            {                
-                var leftTypeDisambiguation = typeLeft.IsOptionSet && typeLeft.OptionSetInfo != null ? $"({typeLeft.OptionSetInfo.EntityName})" : string.Empty;
-
+            {
                 // Option set must be numeric to compare. 
-                if ((typeLeft.OptionSetInfo?.BackingKind ?? DKind.Number) != DKind.Number || (typeRight.OptionSetInfo?.BackingKind ?? DKind.Number) != DKind.Number)
+                if ((typeLeft.OptionSetInfo?.BackingKind ?? DKind.Number) != DKind.Number)
                 {
                     errorContainer.EnsureError(
                         DocumentErrorSeverity.Severe,
                         left.Parent,
                         TexlStrings.ErrUnOrderedTypeForComparison_Type,
-                        typeLeft.GetKindString() + leftTypeDisambiguation);
+                        typeLeft.GetKindString());
+
+                    return new BinderCheckTypeResult();
+                }
+                else if ((typeRight.OptionSetInfo?.BackingKind ?? DKind.Number) != DKind.Number)
+                {
+                    errorContainer.EnsureError(
+                        DocumentErrorSeverity.Severe,
+                        left.Parent,
+                        TexlStrings.ErrUnOrderedTypeForComparison_Type,
+                        typeRight.GetKindString());
 
                     return new BinderCheckTypeResult();
                 }
@@ -693,35 +703,31 @@ namespace Microsoft.PowerFx.Core.Binding
                 // Mismatched option sets can't be compared
                 if (typeLeft.Kind == DKind.OptionSetValue && typeRight.Kind == DKind.OptionSetValue && !typeLeft.Accepts(typeRight))
                 {
-                    var rightTypeDisambiguation = typeRight.IsOptionSet && typeRight.OptionSetInfo != null ? $"({typeRight.OptionSetInfo.EntityName})" : string.Empty;
-
                     errorContainer.EnsureError(
                         DocumentErrorSeverity.Severe,
                         left.Parent,
                         TexlStrings.ErrIncompatibleTypesForEquality_Left_Right,
-                        typeLeft.GetKindString() + leftTypeDisambiguation,
-                        typeRight.GetKindString() + rightTypeDisambiguation);
+                        typeLeft.GetKindString(),
+                        typeRight.GetKindString());
 
                     return new BinderCheckTypeResult();
                 }
-                else if (typeLeft.Kind == DKind.OptionSetValue && typeLeft.OptionSetInfo?.BackingKind == typeRight.Kind)
+                else if (typeLeft.Kind == DKind.OptionSetValue)
                 {
+                    // The other value (right in this case) needs to be a number or coerced to a number in order to compare
+                    var rightResult = CheckComparisonTypeOneOfCore(errorContainer, right, typeRight, DType.Number, DType.Date, DType.Time, DType.DateTime);
+
                     // Comparing option sets to their backing kind is permitted, and coerces the option set to the backing kind. In this case, always number, checked above.
-                    return new BinderCheckTypeResult() { Coercions = new[] { new BinderCoercionResult() { Node = left, CoercedType = DType.Number } } };
+                    coercions.Add(new BinderCoercionResult() { Node = left, CoercedType = DType.Number });
                 }
-                else if (typeRight.Kind == DKind.OptionSetValue && typeRight.OptionSetInfo?.BackingKind == typeLeft.Kind)
+                else if (typeRight.Kind == DKind.OptionSetValue)
                 {
-                    return new BinderCheckTypeResult() { Coercions = new[] { new BinderCoercionResult() { Node = right, CoercedType = DType.Number } } };
+                    var leftResult = CheckComparisonTypeOneOfCore(errorContainer, left, typeLeft, DType.Number, DType.Date, DType.Time, DType.DateTime);
+
+                    coercions.Add(new BinderCoercionResult() { Node = right, CoercedType = DType.Number });
                 }
 
-                return new BinderCheckTypeResult() 
-                {
-                    Coercions = new List<BinderCoercionResult>()
-                    {
-                        new BinderCoercionResult() { Node = left, CoercedType = DType.Number },                    
-                        new BinderCoercionResult() { Node = right, CoercedType = DType.Number },
-                    }
-                };
+                return new BinderCheckTypeResult() { Coercions = coercions };
             }
 
             // Excel's type coercion for inequality operators is inconsistent / borderline wrong, so we can't
@@ -729,8 +735,7 @@ namespace Microsoft.PowerFx.Core.Binding
             // Sticking to a restricted set of numeric-like types for now until evidence arises to support the need for coercion.
             var resLeft = CheckComparisonTypeOneOfCore(errorContainer, left, typeLeft, DType.Number, DType.Date, DType.Time, DType.DateTime);
             var resRight = CheckComparisonTypeOneOfCore(errorContainer, right, typeRight, DType.Number, DType.Date, DType.Time, DType.DateTime);
-            
-            var coercions = new List<BinderCoercionResult>();
+
             coercions.AddRange(resLeft.Coercions);
             coercions.AddRange(resRight.Coercions);
 
@@ -767,15 +772,12 @@ namespace Microsoft.PowerFx.Core.Binding
             if (!(typeLeft.IsPrimitive && typeRight.IsPrimitive) && !(typeLeft.IsPolymorphic && typeRight.IsPolymorphic) && !(typeLeft.IsControl && typeRight.IsControl)
                 && !(typeLeft.IsPolymorphic && typeRight.IsRecord) && !(typeLeft.IsRecord && typeRight.IsPolymorphic) && !(typeLeft.IsDeferred || typeRight.IsDeferred))
             {
-                var leftTypeDisambiguation = typeLeft.IsOptionSet && typeLeft.OptionSetInfo != null ? $"({typeLeft.OptionSetInfo.EntityName})" : string.Empty;
-                var rightTypeDisambiguation = typeRight.IsOptionSet && typeRight.OptionSetInfo != null ? $"({typeRight.OptionSetInfo.EntityName})" : string.Empty;
-
                 errorContainer.EnsureError(
                     DocumentErrorSeverity.Severe,
                     left.Parent,
                     TexlStrings.ErrIncompatibleTypesForEquality_Left_Right,
-                    typeLeft.GetKindString() + leftTypeDisambiguation,
-                    typeRight.GetKindString() + rightTypeDisambiguation);
+                    typeLeft.GetKindString(),
+                    typeRight.GetKindString());
                 return new BinderCheckTypeResult();
             }
 
@@ -793,15 +795,12 @@ namespace Microsoft.PowerFx.Core.Binding
             // Special case for comparing option set values, it should produce an error when the base option sets are different
             if (typeLeft.Kind == DKind.OptionSetValue && typeRight.Kind == DKind.OptionSetValue && !typeLeft.Accepts(typeRight))
             {
-                var leftTypeDisambiguation = typeLeft.IsOptionSet && typeLeft.OptionSetInfo != null ? $"({typeLeft.OptionSetInfo.EntityName})" : string.Empty;
-                var rightTypeDisambiguation = typeRight.IsOptionSet && typeRight.OptionSetInfo != null ? $"({typeRight.OptionSetInfo.EntityName})" : string.Empty;
-
                 errorContainer.EnsureError(
                     DocumentErrorSeverity.Severe,
                     left.Parent,
                     TexlStrings.ErrIncompatibleTypesForEquality_Left_Right,
-                    typeLeft.GetKindString() + leftTypeDisambiguation,
-                    typeRight.GetKindString() + rightTypeDisambiguation);
+                    typeLeft.GetKindString(),
+                    typeRight.GetKindString());
 
                 return new BinderCheckTypeResult();
             }
@@ -822,15 +821,12 @@ namespace Microsoft.PowerFx.Core.Binding
             // Special case for view values, it should produce an error when the base views are different
             if (typeLeft.Kind == DKind.ViewValue && !typeLeft.Accepts(typeRight))
             {
-                var leftTypeDisambiguation = typeLeft.IsView && typeLeft.ViewInfo != null ? $"({typeLeft.ViewInfo.Name})" : string.Empty;
-                var rightTypeDisambiguation = typeRight.IsView && typeRight.ViewInfo != null ? $"({typeRight.ViewInfo.Name})" : string.Empty;
-
                 errorContainer.EnsureError(
                     DocumentErrorSeverity.Severe,
                     left.Parent,
                     TexlStrings.ErrIncompatibleTypesForEquality_Left_Right,
-                    typeLeft.GetKindString() + leftTypeDisambiguation,
-                    typeRight.GetKindString() + rightTypeDisambiguation);
+                    typeLeft.GetKindString(),
+                    typeRight.GetKindString());
                 return new BinderCheckTypeResult();
             }
 

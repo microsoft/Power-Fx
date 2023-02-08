@@ -10,6 +10,7 @@ using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions.Delegation;
 using Microsoft.PowerFx.Core.Localization;
+using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 using Conditional = System.Diagnostics.ConditionalAttribute;
@@ -984,8 +985,23 @@ namespace Microsoft.PowerFx.Core.Types
 
             if (IsLazyType)
             {
+                Contracts.AssertValue(LazyTypeProvider);
+
                 var typeSuffix = string.IsNullOrEmpty(LazyTypeProvider.UserVisibleTypeName) ? string.Empty : $" ({LazyTypeProvider.UserVisibleTypeName})";
                 return (IsTable ? DKind.Table : DKind.Record) + typeSuffix;
+            }
+
+            if (IsOptionSet)
+            {
+                var typeSuffix = string.IsNullOrEmpty(OptionSetInfo?.EntityName) ? string.Empty : $" ({OptionSetInfo.EntityName})";
+                var kind = OptionSetInfo is EnumSymbol ? DKind.Enum : Kind;
+                return kind.ToString() + typeSuffix;
+            }
+
+            if (IsView)
+            {
+                var typeSuffix = string.IsNullOrEmpty(ViewInfo?.EntityName) ? string.Empty : $" ({ViewInfo.EntityName})";
+                return Kind.ToString() + typeSuffix;
             }
 
             return Kind.ToString();
