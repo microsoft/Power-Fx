@@ -112,12 +112,6 @@ namespace Microsoft.PowerFx.Functions
 
             var result = new ArrayUntypedObject(list);
 
-            // Map null to blank
-            if (result == null || result.Type == FormulaType.Blank)
-            {
-                return new BlankValue(IRContext.NotInSource(FormulaType.Blank));
-            }
-
             return new UntypedObjectValue(irContext, result);
         }
 
@@ -137,12 +131,6 @@ namespace Microsoft.PowerFx.Functions
 
             list.Reverse();
             var result = new ArrayUntypedObject(list);
-
-            // Map null to blank
-            if (result == null || result.Type == FormulaType.Blank)
-            {
-                return new BlankValue(IRContext.NotInSource(FormulaType.Blank));
-            }
 
             return new UntypedObjectValue(irContext, result);
         }
