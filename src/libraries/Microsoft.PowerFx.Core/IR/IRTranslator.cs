@@ -185,7 +185,7 @@ namespace Microsoft.PowerFx.Core.IR
                         binaryOpResult = new CallNode(context.GetIRContext(node), BuiltinFunctionsCore.Power, left, right);
                         break;
                     case BinaryOpKind.Concatenate:
-                        binaryOpResult = ConcatenateArgs(left, right);
+                        binaryOpResult = ConcatenateArgs(left, right, context.GetIRContext(node));
                         break;
                     case BinaryOpKind.Or:
                     case BinaryOpKind.And:
@@ -373,11 +373,11 @@ namespace Microsoft.PowerFx.Core.IR
             private static IntermediateNode ReplaceBlankWithZero(IntermediateNode arg)
             {
                 var zeroNumLitNode = new NumberLiteralNode(IRContext.NotInSource(FormulaType.Number), 0);
-                var convertedNode = new CallNode(IRContext.NotInSource(FormulaType.Number), BuiltinFunctionsCore.Coalesce, arg, zeroNumLitNode);
+                var convertedNode = new CallNode(arg.IRContext, BuiltinFunctionsCore.Coalesce, arg, zeroNumLitNode);
                 return convertedNode;
             }
 
-            private static IntermediateNode ConcatenateArgs(IntermediateNode arg1, IntermediateNode arg2)
+            private static IntermediateNode ConcatenateArgs(IntermediateNode arg1, IntermediateNode arg2, IRContext irContext)
             {
                 var concatenateArgs = new List<IntermediateNode>();
                 foreach (var arg in new[] { arg1, arg2 })
@@ -396,7 +396,7 @@ namespace Microsoft.PowerFx.Core.IR
                     }
                 }
 
-                var concatenatedNode = new CallNode(IRContext.NotInSource(FormulaType.String), BuiltinFunctionsCore.Concatenate, concatenateArgs);
+                var concatenatedNode = new CallNode(irContext, BuiltinFunctionsCore.Concatenate, concatenateArgs);
                 return concatenatedNode;
             }
 
