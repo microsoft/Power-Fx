@@ -266,16 +266,23 @@ namespace Microsoft.PowerFx.Functions
                     return new NumberValue(irContext, years);
             }
 
-            // Convert to UTC to be accurate (apply DST if needed)
+            var utcOffset = (timeZoneInfo.GetUtcOffset(start) - timeZoneInfo.GetUtcOffset(end)).Duration();
 
-            if (NeedToConvertToUtc(runner, start, timeUnit))
+            // If diff of utcOffset is less than hour different and time unit is hour, there is no need to convert.
+            // Help with cases were UTC offset which also has minute component
+            // Ie, in IST (GMT+5:30): DateDiff(DateTime(2022,12,31,23,59,59,999), DateTime(2023,1,1,0,0,0), TimeUnit.Hours) = 1
+            if (!(utcOffset.Hours < 1 && timeUnit is "hours"))
             {
-                start = TimeZoneInfo.ConvertTimeToUtc(start, timeZoneInfo);
-            }
+                // Convert to UTC to be accurate (apply DST if needed)
+                if (NeedToConvertToUtc(runner, start, timeUnit))
+                {
+                    start = TimeZoneInfo.ConvertTimeToUtc(start, timeZoneInfo);
+                }
 
-            if (NeedToConvertToUtc(runner, end, timeUnit))
-            {
-                end = TimeZoneInfo.ConvertTimeToUtc(end, timeZoneInfo);
+                if (NeedToConvertToUtc(runner, end, timeUnit))
+                {
+                    end = TimeZoneInfo.ConvertTimeToUtc(end, timeZoneInfo);
+                }
             }
 
             // The function DateDiff only returns a whole number of the units being subtracted, and the precision is given in the unit specified.
