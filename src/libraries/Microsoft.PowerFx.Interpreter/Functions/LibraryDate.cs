@@ -266,17 +266,15 @@ namespace Microsoft.PowerFx.Functions
                     return new NumberValue(irContext, years);
             }
 
-            // Convert to UTC to be accurate (apply DST if needed)
-
-            if (NeedToConvertToUtc(runner, start, timeUnit))
-            {
-                start = TimeZoneInfo.ConvertTimeToUtc(start, timeZoneInfo);
-            }
-
-            if (NeedToConvertToUtc(runner, end, timeUnit))
-            {
-                end = TimeZoneInfo.ConvertTimeToUtc(end, timeZoneInfo);
-            }
+            // This takes care of DST differences
+            // e.g. https://www.timeanddate.com/time/change/usa/seattle?year=2023
+            // start = DateTime(2023, 3, 12, 0, 0, 0) is in UTC-8
+            // end = DateTime(2023, 3, 12, 3, 0, 0) is in UTC-7
+            // startUTCOffset - endUTCOffset = -1
+            // so adding that utcOffset difference to the end(instead of converting both to UTC) will adjust the subtraction for DST
+            // while preserving hours, since cases having minutes offset can potentially change the hour.
+            var utcOffset = timeZoneInfo.GetUtcOffset(start) - timeZoneInfo.GetUtcOffset(end);
+            end += utcOffset;
 
             // The function DateDiff only returns a whole number of the units being subtracted, and the precision is given in the unit specified.
             switch (timeUnit)
