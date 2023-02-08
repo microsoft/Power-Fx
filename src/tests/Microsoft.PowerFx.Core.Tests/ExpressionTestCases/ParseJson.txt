@@ -404,3 +404,15 @@ false
 
 >> Text(ParseJSON("{""a"":null,""b"":""""}").c) = Blank()
 true
+
+>> Value(First(ParseJSON("[1, 2, 3, 4]")))
+1
+
+>> Value(Last(ParseJSON("[1, 2, 3, 4]")))
+4
+
+>> Value(Last(FirstN(ParseJSON("[1, 2, 3, 4]"), 2)))
+2
+
+>> Value(First(LastN(ParseJSON("[1, 2, 3, 4]"), 2)))
+3
