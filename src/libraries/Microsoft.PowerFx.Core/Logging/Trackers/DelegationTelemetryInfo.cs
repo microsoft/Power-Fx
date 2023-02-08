@@ -82,7 +82,7 @@ namespace Microsoft.PowerFx.Core.Logging.Trackers
                     var funcName = binding?.GetInfo(callNode)?.Function?.Name ?? string.Empty;
                     return new DelegationTelemetryInfo(funcName);
                 default:
-                    return new DelegationTelemetryInfo(node.ToString());
+                    return new DelegationTelemetryInfo(StructuralPrint.Print(node, binding));
             }
         }
 
@@ -98,7 +98,7 @@ namespace Microsoft.PowerFx.Core.Logging.Trackers
                     var funcName = binding?.GetInfo(callNode)?.Function?.Name ?? string.Empty;
                     return new DelegationTelemetryInfo(funcName);
                 default:
-                    return CreateEmptyDelegationTelemetryInfo();
+                    return new DelegationTelemetryInfo(StructuralPrint.Print(node, binding));
             }
         }
 
