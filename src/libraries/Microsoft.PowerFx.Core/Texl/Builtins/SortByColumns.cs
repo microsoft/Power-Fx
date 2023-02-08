@@ -27,8 +27,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool IsSelfContained => true;
 
-        public override bool HasColumnIdentifiers => true;
-
         public override bool SupportsParamCoercion => false;
 
         public SortByColumnsFunction()
@@ -38,7 +36,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             // SortByColumns(source, name, order, name, order, ...name, order, ...)
             SignatureConstraint = new SignatureConstraint(omitStartIndex: 5, repeatSpan: 2, endNonRepeatCount: 0, repeatTopLength: 9);
-            ScopeInfo = new FunctionScopeInfo(this);
         }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
@@ -78,64 +75,41 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             returnType = argTypes[0];
 
             var sourceType = argTypes[0];
-            var supportColumnNamesAsIdentifiers = context.Features.HasFlag(Features.SupportColumnNamesAsIdentifiers);
-
             for (var i = 1; i < args.Length; i += 2)
             {
-                string expectedColumnName = null;
                 var colNameArg = args[i];
                 var colNameArgType = argTypes[i];
+                StrLitNode nameNode;
 
-                if (supportColumnNamesAsIdentifiers)
+                if (colNameArgType.Kind != DKind.String)
                 {
-                    if (colNameArg is not FirstNameNode identifierNode)
-                    {
-                        fValid = false;
-
-                        // Argument '{0}' is invalid, expected an identifier.
-                        errors.EnsureError(DocumentErrorSeverity.Severe, colNameArg, TexlStrings.ErrExpectedIdentifierArg_Name, colNameArg.ToString());
-                        continue;
-                    }
-
-                    expectedColumnName = identifierNode.Ident.Name;
-                }
-                else
-                {
-                    StrLitNode strLitNode = colNameArg.AsStrLit();
-
-                    if (colNameArgType.Kind != DKind.String || strLitNode == null)
-                    {
-                        fValid = false;
-
-                        // Argument '{0}' is invalid, expected a text literal.
-                        errors.EnsureError(DocumentErrorSeverity.Severe, colNameArg, TexlStrings.ErrExpectedStringLiteralArg_Name, colNameArg.ToString());
-                        continue;
-                    }
-
-                    expectedColumnName = strLitNode.Value;
-                }
-
-                // Verify that the name is valid.
-                if (DName.IsValidDName(expectedColumnName))
-                {
-                    var columnName = new DName(expectedColumnName);
-
-                    // Verify that the name exists.
-                    if (!sourceType.TryGetType(columnName, out var columnType))
-                    {
-                        sourceType.ReportNonExistingName(FieldNameKind.Logical, errors, columnName, args[i]);
-                        fValid = false;
-                    }
-                    else if (!columnType.IsPrimitive)
-                    {
-                        fValid = false;
-                        errors.EnsureError(colNameArg, TexlStrings.ErrSortWrongType);
-                    }
-                }
-                else
-                {
-                    errors.EnsureError(DocumentErrorSeverity.Severe, colNameArg, TexlStrings.ErrArgNotAValidIdentifier_Name, expectedColumnName);
+                    errors.EnsureError(DocumentErrorSeverity.Severe, colNameArg, TexlStrings.ErrStringExpected);
                     fValid = false;
+                }
+                else if ((nameNode = colNameArg.AsStrLit()) != null)
+                {
+                    // Verify that the name is valid.
+                    if (DName.IsValidDName(nameNode.Value))
+                    {
+                        var columnName = new DName(nameNode.Value);
+
+                        // Verify that the name exists.
+                        if (!sourceType.TryGetType(columnName, out var columnType))
+                        {
+                            sourceType.ReportNonExistingName(FieldNameKind.Logical, errors, columnName, args[i]);
+                            fValid = false;
+                        }
+                        else if (!columnType.IsPrimitive)
+                        {
+                            fValid = false;
+                            errors.EnsureError(colNameArg, TexlStrings.ErrSortWrongType);
+                        }
+                    }
+                    else
+                    {
+                        errors.EnsureError(DocumentErrorSeverity.Severe, nameNode, TexlStrings.ErrArgNotAValidIdentifier_Name, nameNode.Value);
+                        fValid = false;
+                    }
                 }
 
                 var nextArgIdx = i + 1;
@@ -149,14 +123,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return fValid;
         }
 
-        public override bool IsIdentifierParam(int index)
-        {
-            Contracts.Assert(index >= 0);
-
-            // Left to right mask (infinite): ...010101010 
-            return index >= 1 && ((index & 1) == 1);
-        }
-
         // This method returns true if there are special suggestions for a particular parameter of the function.
         public override bool HasSuggestionsForParam(int argumentIndex)
         {
@@ -165,34 +131,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return argumentIndex >= 0;
         }
 
-        private DName GetColumnNameFromNode(TexlNode node)
-        {
-            Contracts.AssertValue(node);
-            Contracts.Assert(node.Kind == NodeKind.StrLit || node.Kind == NodeKind.FirstName);
-            
-            if (node is FirstNameNode firstNameNode)
-            {
-                return firstNameNode.Ident.Name;
-            }
-            else if (node is StrLitNode strLitNode)
-            {
-                return new DName(strLitNode.Value);
-            }
-
-            return default;
-        }
-
-        private bool IsColumnSortable(TexlNode node, TexlBinding binding, SortOpMetadata sortMetadata)
+        private bool IsColumnSortable(StrLitNode node, TexlBinding binding, SortOpMetadata sortMetadata)
         {
             Contracts.AssertValue(node);
             Contracts.AssertValue(binding);
             Contracts.AssertValue(sortMetadata);
 
-            var columnName = GetColumnNameFromNode(node);
-
-            Contracts.AssertValid(columnName);
-
-            var columnPath = DPath.Root.Append(columnName);
+            var columnPath = DPath.Root.Append(new DName(node.Value));
             if (!sortMetadata.IsDelegationSupportedByColumn(columnPath, DelegationCapability.Sort))
             {
                 SuggestDelegationHint(node, binding);
@@ -208,16 +153,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(binding);
             Contracts.AssertValue(metadata);
 
-            var supportColumnNamesAsIdentifiers = binding.Features.HasFlag(Features.SupportColumnNamesAsIdentifiers);
-            var isNotString = !supportColumnNamesAsIdentifiers && node.Kind != NodeKind.StrLit;
-            var isNotIdentifier = supportColumnNamesAsIdentifiers && node.Kind != NodeKind.FirstName;
-
-            if (binding.ErrorContainer.HasErrors(node) || isNotString || isNotIdentifier)
+            if (binding.ErrorContainer.HasErrors(node) || node.Kind != NodeKind.StrLit)
             {
                 return false;
             }
 
-            return IsColumnSortable(node, binding, metadata);
+            var columnName = node.AsStrLit().VerifyValue();
+            return IsColumnSortable(columnName, binding, metadata);
         }
 
         private bool IsValidSortOrderNode(TexlNode node, SortOpMetadata metadata, TexlBinding binding, DPath columnPath)
@@ -308,10 +250,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     return false;
                 }
 
-                var columnName = GetColumnNameFromNode(args[i]);
-
-                Contracts.AssertValid(columnName);
-
+                var columnName = args[i].AsStrLit().VerifyValue().Value;
                 var sortOrderNode = (i + 1) < cargs ? args[i + 1] : null;
                 var sortOrder = sortOrderNode == null ? defaultSortOrder : string.Empty;
                 if (sortOrderNode != null)
@@ -400,16 +339,18 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             for (var i = 1; i < args.Length; i += 2)
             {
-                var columnName = GetColumnNameFromNode(args[i]);
-
-                if (!columnName.IsValid)
+                var columnType = binding.GetType(args[i]);
+                var columnNode = args[i].AsStrLit();
+                if (columnType.Kind != DKind.String || columnNode == null)
                 {
                     continue;
                 }
 
-                Contracts.Assert(dsType.Contains(columnName));
+                var columnName = columnNode.Value;
 
-                retval |= dsType.AssociateDataSourcesToSelect(dataSourceToQueryOptionsMap, columnName, DType.String, true);
+                Contracts.Assert(dsType.Contains(new DName(columnName)));
+
+                retval |= dsType.AssociateDataSourcesToSelect(dataSourceToQueryOptionsMap, columnName, columnType, true);
             }
 
             return retval;
