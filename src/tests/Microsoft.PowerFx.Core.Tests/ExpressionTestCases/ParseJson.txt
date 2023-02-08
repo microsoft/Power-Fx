@@ -471,8 +471,8 @@ Blank()
 >> Last(ParseJSON("[]"))
 Blank()
 
->> FirstN(ParseJSON("[]"), 1)
-Blank()
+>> CountRows(FirstN(ParseJSON("[]"), 1))
+0
 
->> LastN(ParseJSON("[]"), 1)
-Blank()
+>> CountRows(LastN(ParseJSON("[]"), 1))
+0

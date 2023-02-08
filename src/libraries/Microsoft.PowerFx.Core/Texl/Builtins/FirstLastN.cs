@@ -73,18 +73,20 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public override bool IsSelfContained => true;
 
-        public override bool SupportsParamCoercion => false;
-
         // Note this function does not inherit from FunctionWithTableInput so there cannot be a common
         // base class with the above function
         public FirstLastNFunction_UO(bool isFirst)
-            : base(isFirst ? "FirstN" : "LastN", isFirst ? TexlStrings.AboutFirstN : TexlStrings.AboutLastN, FunctionCategories.Table, DType.UntypedObject, 0, 1, 2, DType.UntypedObject, DType.Number)
+            : base(isFirst ? "FirstN" : "LastN", isFirst ? TexlStrings.AboutFirstN : TexlStrings.AboutLastN, FunctionCategories.Table, DType.UntypedObject, 0, 2, 2, DType.UntypedObject, DType.Number)
         {
+        }
+
+        public override bool SupportCoercionForArg(int argIndex)
+        {
+            return argIndex == 1;
         }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new[] { TexlStrings.FirstLastNArg1 };
             yield return new[] { TexlStrings.FirstLastNArg1, TexlStrings.FirstLastNArg2 };
         }
 

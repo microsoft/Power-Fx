@@ -104,11 +104,6 @@ namespace Microsoft.PowerFx.Functions
             var element = arg0.Impl;
             var len = element.GetArrayLength();
 
-            if (len == 0)
-            {
-                return new BlankValue(irContext);
-            }
-
             var list = new List<IUntypedObject>();
             for (int i = 0; i < (int)arg1.Value && i < len; i++)
             {
@@ -133,11 +128,6 @@ namespace Microsoft.PowerFx.Functions
 
             var element = arg0.Impl;
             var len = element.GetArrayLength();
-
-            if (len == 0)
-            {
-                return new BlankValue(irContext);
-            }
 
             var list = new List<IUntypedObject>();
             for (int i = 1; i <= (int)arg1.Value && len - i >= 0; i++)
