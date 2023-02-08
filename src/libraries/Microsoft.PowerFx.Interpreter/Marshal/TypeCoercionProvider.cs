@@ -5,11 +5,9 @@ using System;
 using System.Globalization;
 using System.Threading;
 using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Types;
 using static Microsoft.PowerFx.Functions.Library;
-using static Microsoft.PowerFx.Syntax.PrettyPrintVisitor;
 
 namespace Microsoft.PowerFx.Interpreter.Marshal
 {

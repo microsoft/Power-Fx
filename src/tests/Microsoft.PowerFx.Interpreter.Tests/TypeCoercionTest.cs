@@ -2,19 +2,9 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Reflection;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Tests;
-using Microsoft.PowerFx.Core.Texl.Builtins;
-using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Interpreter.Marshal;
-using Microsoft.PowerFx.Interpreter.Tests;
 using Microsoft.PowerFx.Types;
-using Newtonsoft.Json.Linq;
 using Xunit;
 
 namespace Microsoft.PowerFx.Tests
