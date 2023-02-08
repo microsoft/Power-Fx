@@ -476,3 +476,9 @@ Blank()
 
 >> CountRows(LastN(ParseJSON("[]"), 1))
 0
+
+>> CountRows(FirstN(ParseJSON("[1, 2, 3, 4]"), "3"))
+3
+
+>> CountRows(LastN(ParseJSON("[1, 2, 3, 4]"), "3"))
+3
