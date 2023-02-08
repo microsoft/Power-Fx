@@ -139,6 +139,21 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
         [Fact]
+        public async void TodayTest()
+        {
+            var utcToday = DateTime.UtcNow;
+            var istToday = TimeZoneInfo.ConvertTime(utcToday, _istTimeZone).Date;
+            utcToday = utcToday.Date;
+            
+            var evaluator = _engine.Check("Today()", options: null, _symbolTable).GetEvaluator();
+            var result = await evaluator.EvalAsync(default, _localSymbol);
+            Assert.Equal(istToday, ((DateValue)result).GetConvertedValue(_istTimeZone));
+
+            var utcResult = await evaluator.EvalAsync(default, _utcSymbol);
+            Assert.Equal(utcToday, ((DateValue)utcResult).GetConvertedValue(TimeZoneInfo.Utc));
+        }
+
+        [Fact]
         public void GetConvertedDateTimeValueTest()
         {
             var result = DateTimeValue.GetConvertedDateTimeValue(_utcNow, _istTimeZone);
