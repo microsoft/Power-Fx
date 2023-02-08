@@ -325,36 +325,26 @@ namespace Microsoft.PowerFx.Functions
                 return new BlankValue(irContext);
             }
 
-            try
-            {
-                BooleanValue result = TextToBoolean(irContext, args[0]);
+            bool isBoolean = TryTextToBoolean(irContext, args[0], out BooleanValue result);
 
-                if (result != null)
-                {
-                    return result;
-                }
-            }
-            catch
-            {
-                // no ops
-            }
-
-            return CommonErrors.InvalidBooleanFormatError(irContext);
+            return isBoolean ? result : CommonErrors.InvalidBooleanFormatError(irContext);
         }
 
-        public static BooleanValue TextToBoolean(IRContext irContext, StringValue value)
+        public static bool TryTextToBoolean(IRContext irContext, StringValue value, out BooleanValue result)
         {
+            result = null;
             var lower = value.Value.ToLowerInvariant();
+
             if (lower == "true")
             {
-                return new BooleanValue(irContext, true);
+                result = new BooleanValue(irContext, true);
             }
             else if (lower == "false")
             {
-                return new BooleanValue(irContext, false);
+                result = new BooleanValue(irContext, false);
             }
 
-            throw new Exception("Invalid Boolean Format.");
+            return result != null;
         }
 
         public static bool TryGetBoolean(IRContext irContext, FormulaValue value, out BooleanValue result)
@@ -368,16 +358,7 @@ namespace Microsoft.PowerFx.Functions
                         return false;
                     }
 
-                    try
-                    {
-                        result = TextToBoolean(irContext, sv);
-                    }
-                    catch
-                    {
-                        return false;    
-                    }
-                    
-                    break;
+                    return TryTextToBoolean(irContext, sv, out result);
                 case NumberValue num:
                     result = NumberToBoolean(irContext, new NumberValue[] { num });
                     break;

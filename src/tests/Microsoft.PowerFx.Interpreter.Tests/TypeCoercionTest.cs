@@ -28,6 +28,8 @@ namespace Microsoft.PowerFx.Tests
         [InlineData("1", null, "1", "1", null)]
         [InlineData("true", "true", null, "true", null)]
         [InlineData("false", "false", null, "false", null)]
+        [InlineData("True", "true", null, "True", null)]
+        [InlineData("False", "false", null, "False", null)]
         [InlineData("This is a string", null, null, "This is a string", null)]
         public void TryCoerceFromStringTest(string value, string exprBool, string exprNumber, string exprStr, string exprDateTime)
         {
@@ -53,7 +55,7 @@ namespace Microsoft.PowerFx.Tests
 
         private void TryCoerceToTargetTypes(FormulaValue inputValue, string exprBool, string exprNumber, string exprStr, string exprDateTime)
         {
-            bool isSucceeded = TypeCoercionProvider.TryCoerceTo(inputValue, out BooleanValue resultBoolean);
+            bool isSucceeded = inputValue.TryCoerceTo(out BooleanValue resultBoolean);
             if (exprBool != null)
             {
                 Assert.True(isSucceeded);
@@ -61,10 +63,11 @@ namespace Microsoft.PowerFx.Tests
             }
             else
             {
-                Assert.False(isSucceeded);
+                Assert.False(isSucceeded); 
+                Assert.Null(resultBoolean);
             }
 
-            isSucceeded = TypeCoercionProvider.TryCoerceTo(inputValue, out NumberValue resultNumber);
+            isSucceeded = inputValue.TryCoerceTo(out NumberValue resultNumber);
             if (exprNumber != null)
             {
                 Assert.True(isSucceeded);
@@ -73,9 +76,10 @@ namespace Microsoft.PowerFx.Tests
             else
             {
                 Assert.False(isSucceeded);
+                Assert.Null(resultNumber);
             }
 
-            isSucceeded = TypeCoercionProvider.TryCoerceTo(inputValue, out StringValue resultString);
+            isSucceeded = inputValue.TryCoerceTo(out StringValue resultString);
             if (exprStr != null)
             {
                 Assert.True(isSucceeded);
@@ -84,9 +88,10 @@ namespace Microsoft.PowerFx.Tests
             else
             {
                 Assert.False(isSucceeded);
+                Assert.Null(resultString);
             }
 
-            isSucceeded = TypeCoercionProvider.TryCoerceTo(inputValue, out DateTimeValue resultDateTime);
+            isSucceeded = inputValue.TryCoerceTo(out DateTimeValue resultDateTime);
             if (exprDateTime != null)
             {
                 Assert.True(isSucceeded);
@@ -95,6 +100,7 @@ namespace Microsoft.PowerFx.Tests
             else
             {
                 Assert.False(isSucceeded);
+                Assert.Null(resultDateTime);
             }
         }
     }

@@ -32,7 +32,7 @@ namespace Microsoft.PowerFx.Interpreter.Marshal
         /// <param name="value">Input value.</param>
         /// <param name="result">Result value.</param>
         /// <returns>True/False based on whether function can convert from original type to Boolean type.</returns> 
-        public static bool TryCoerceTo(FormulaValue value, out BooleanValue result)
+        public static bool TryCoerceTo(this FormulaValue value, out BooleanValue result)
         {
             return TryGetBoolean(IRContext.NotInSource(FormulaType.Boolean), value, out result);
         }
@@ -43,19 +43,19 @@ namespace Microsoft.PowerFx.Interpreter.Marshal
         /// <param name="value">Input value.</param>
         /// <param name="result">Result value.</param>
         /// <returns>True/False based on whether function can convert from original type to String type.</returns> 
-        public static bool TryCoerceTo(FormulaValue value, out StringValue result)
+        public static bool TryCoerceTo(this FormulaValue value, out StringValue result)
         {
-            return TryCoerceTo(CreateFormattingInfo(), value, out result);
+            return TryCoerceTo(value, CreateFormattingInfo(), out result);
         }
 
         /// <summary>
         /// Try to convert value to String format.
         /// </summary>
-        /// <param name="formatInfo">Formatting Info.</param>
         /// <param name="value">Input value.</param>
+        /// <param name="formatInfo">Formatting Info.</param>
         /// <param name="result">Result value.</param>
         /// <returns>True/False based on whether function can convert from original type to String type.</returns> 
-        public static bool TryCoerceTo(FormattingInfo formatInfo, FormulaValue value, out StringValue result)
+        public static bool TryCoerceTo(this FormulaValue value, FormattingInfo formatInfo, out StringValue result)
         {
             result = Text(formatInfo, IRContext.NotInSource(FormulaType.String), value);
             return result != null;
@@ -67,19 +67,19 @@ namespace Microsoft.PowerFx.Interpreter.Marshal
         /// <param name="value">Input value.</param>
         /// <param name="result">Result value.</param>
         /// <returns>True/False based on whether function can convert from original type to Number type.</returns> 
-        public static bool TryCoerceTo(FormulaValue value, out NumberValue result)
+        public static bool TryCoerceTo(this FormulaValue value, out NumberValue result)
         {
-            return TryCoerceTo(CreateFormattingInfo(), value, out result);
+            return TryCoerceTo(value, CreateFormattingInfo(), out result);
         }
 
         /// <summary>
         /// Try to convert value to Number format.
         /// </summary>
-        /// <param name="formatInfo">Formatting Info.</param>
         /// <param name="value">Input value.</param>
+        /// <param name="formatInfo">Formatting Info.</param>
         /// <param name="result">Result value.</param>
         /// <returns>True/False based on whether function can convert from original type to Number type.</returns> 
-        public static bool TryCoerceTo(FormattingInfo formatInfo, FormulaValue value, out NumberValue result)
+        public static bool TryCoerceTo(this FormulaValue value, FormattingInfo formatInfo, out NumberValue result)
         {
             result = Value(formatInfo, IRContext.NotInSource(FormulaType.Number), value);
             return result != null;
@@ -91,19 +91,19 @@ namespace Microsoft.PowerFx.Interpreter.Marshal
         /// <param name="value">Input value.</param>
         /// <param name="result">Result value.</param>
         /// <returns>True/False based on whether function can convert from original type to DateTime type.</returns> 
-        public static bool TryCoerceTo(FormulaValue value, out DateTimeValue result)
+        public static bool TryCoerceTo(this FormulaValue value, out DateTimeValue result)
         {
-            return TryCoerceTo(CreateFormattingInfo(), value, out result);
+            return TryCoerceTo(value, CreateFormattingInfo(), out result);
         }
 
         /// <summary>
         /// Try to convert value to DateTime format.
         /// </summary>
-        /// <param name="formatInfo">Formatting Info.</param>
         /// <param name="value">Input value.</param>
+        /// <param name="formatInfo">Formatting Info.</param>
         /// <param name="result">Result value.</param>
         /// <returns>True/False based on whether function can convert from original type to DateTime type.</returns> 
-        public static bool TryCoerceTo(FormattingInfo formatInfo, FormulaValue value, out DateTimeValue result)
+        public static bool TryCoerceTo(this FormulaValue value, FormattingInfo formatInfo, out DateTimeValue result)
         {
             return TryGetDateTime(formatInfo, IRContext.NotInSource(FormulaType.DateTime), value, out result);
         }

@@ -259,34 +259,42 @@ namespace Microsoft.PowerFx.Functions
                         resultString = num.Value.ToString(formatString ?? "g", culture);
                     }
 
-                    break;
-                case DateValue:
-                case DateTimeValue:
-                case TimeValue:
-                    DateTimeValue dateTimeValue;
-
-                    if (value is TimeValue t)
-                    {
-                        dateTimeValue = Library.TimeToDateTime(formatInfo, IRContext.NotInSource(FormulaType.DateTime), t);
-                    }
-                    else if (value is DateValue d)
-                    {
-                        dateTimeValue = FormulaValue.New(d.GetConvertedValue(timeZoneInfo));
-                    }
-                    else
-                    {
-                        dateTimeValue = value as DateTimeValue;
-                    }
-
+                    break;                
+                case DateTimeValue dateTimeValue:
                     if (formatString != null && hasNumberFmt)
                     {
                         // It's a datetime, formatted as number. Let's convert it to a number value first
                         var newNumber = Library.DateTimeToNumber(formatInfo, IRContext.NotInSource(FormulaType.Number), dateTimeValue);
-                        resultString = newNumber.Value.ToString(formatString ?? "g", culture);
+                        resultString = newNumber.Value.ToString(formatString, culture);
                     }
                     else
                     {
                         return ExpandDateTimeExcelFormatSpecifiersToStringValue(irContext, formatString, "g", dateTimeValue.GetConvertedValue(timeZoneInfo), culture, formatInfo.CancellationToken);
+                    }
+
+                    break;
+                case DateValue dateValue:
+                    if (formatString != null && hasNumberFmt)
+                    {
+                        NumberValue newDateNumber = Library.DateToNumber(formatInfo, IRContext.NotInSource(FormulaType.Number), dateValue) as NumberValue;
+                        resultString = newDateNumber.Value.ToString(formatString, culture);
+                    }
+                    else
+                    {
+                        return ExpandDateTimeExcelFormatSpecifiersToStringValue(irContext, formatString, "d", dateValue.GetConvertedValue(timeZoneInfo), culture, formatInfo.CancellationToken);
+                    }
+
+                    break;
+                case TimeValue timeValue:
+                    if (formatString != null && hasNumberFmt)
+                    {
+                        var newNumber = Library.TimeToNumber(IRContext.NotInSource(FormulaType.Number), new TimeValue[] { timeValue });
+                        resultString = newNumber.Value.ToString(formatString, culture);
+                    }
+                    else
+                    {
+                        var dtValue = Library.TimeToDateTime(formatInfo, IRContext.NotInSource(FormulaType.DateTime), timeValue);
+                        return ExpandDateTimeExcelFormatSpecifiersToStringValue(irContext, formatString, "t", dtValue.GetConvertedValue(timeZoneInfo), culture, formatInfo.CancellationToken);
                     }
 
                     break;
