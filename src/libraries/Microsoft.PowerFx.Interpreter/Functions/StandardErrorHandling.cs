@@ -189,8 +189,17 @@ namespace Microsoft.PowerFx.Functions
             });
         }
 
-        // Wraps a scalar function into its tabular overload
-        private static AsyncFunctionPtr StandardErrorHandlingTabularOverload<TScalar>(string functionName, AsyncFunctionPtr targetFunction)
+        /// <summary>
+        /// Wraps a scalar function into its tabular overload.
+        /// </summary>
+        /// <param name="functionName">Function name.</param>
+        /// <param name="targetFunction">Target function to execute.</param>
+        /// <param name="replaceBlankValues">Only supply this if its scalar function has <see cref="NoOpAlreadyHandledByIR(IRContext, int)"/>, meaning scalar has handled this via IR.</param>
+        /// <returns></returns>
+        private static AsyncFunctionPtr StandardErrorHandlingTabularOverload<TScalar>(
+            string functionName, 
+            AsyncFunctionPtr targetFunction,
+            Func<IRContext, int, FormulaValue> replaceBlankValues)
             where TScalar : FormulaValue => StandardErrorHandlingAsync<TableValue>(
                 functionName: functionName,
                 expandArguments: NoArgExpansion,
@@ -198,7 +207,7 @@ namespace Microsoft.PowerFx.Functions
                 checkRuntimeTypes: ExactValueTypeOrBlank<TableValue>,
                 checkRuntimeValues: DeferRuntimeValueChecking,
                 returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
-                targetFunction: StandardSingleColumnTable<TScalar>(targetFunction));
+                targetFunction: StandardSingleColumnTable<TScalar>(targetFunction, replaceBlankValues));
 
         // A wrapper for a function with no error handling behavior whatsoever.
         private static AsyncFunctionPtr NoErrorHandling(
@@ -222,7 +231,16 @@ namespace Microsoft.PowerFx.Functions
         }
 
         #region Single Column Table Functions
-        public static Func<EvalVisitor, EvalVisitorContext, IRContext, TableValue[], ValueTask<FormulaValue>> StandardSingleColumnTable<T>(AsyncFunctionPtr targetFunction)
+
+        /// <summary>
+        /// Wrapper for single column table argument functions.
+        /// </summary>
+        /// <param name="targetFunction">Target function to execute.</param>
+        /// <param name="replaceBlankValues">Only supply this if its scalar function has <see cref="NoOpAlreadyHandledByIR(IRContext, int)"/>, meaning scalar has handled this via IR.</param>
+        /// <returns></returns>
+        public static Func<EvalVisitor, EvalVisitorContext, IRContext, TableValue[], ValueTask<FormulaValue>> StandardSingleColumnTable<T>(
+            AsyncFunctionPtr targetFunction,
+            Func<IRContext, int, FormulaValue> replaceBlankValues)
             where T : FormulaValue
         {
             return async (runner, context, irContext, args) =>
@@ -241,6 +259,13 @@ namespace Microsoft.PowerFx.Functions
                     if (row.IsValue)
                     {
                         var value = row.Value.GetField(inputColumnNameStr);
+
+                        if (value is BlankValue)
+                        {
+                            // since this is for single column table arg, index is passed as 0
+                            value = replaceBlankValues(value.IRContext, 0);
+                        }
+
                         NamedValue namedValue;
                         namedValue = value switch
                         {
@@ -270,7 +295,7 @@ namespace Microsoft.PowerFx.Functions
         public static Func<EvalVisitor, EvalVisitorContext, IRContext, TableValue[], ValueTask<FormulaValue>> StandardSingleColumnTable<T>(Func<IRContext, T[], FormulaValue> targetFunction)
             where T : FormulaValue
         {
-            return StandardSingleColumnTable<T>(async (runner, context, irContext, args) => targetFunction(irContext, args.OfType<T>().ToArray()));
+            return StandardSingleColumnTable<T>(async (runner, context, irContext, args) => targetFunction(irContext, args.OfType<T>().ToArray()), DoNotReplaceBlank);
         }
 
         private static (int minTableSize, int maxTableSize, FormulaValue errorOrBlankTable) AnalyzeTableArguments(FormulaValue[] args, IRContext irContext)
@@ -299,18 +324,22 @@ namespace Microsoft.PowerFx.Functions
             return (minTableSize, maxTableSize, null);
         }
 
-        /*
-         * A standard error handling wrapper function that handles functions that can accept one or more table values.
-         * The standard behavior for this type of function is to expand all scalars and tables into a set of tables
-         * with the same size, where that size is the length of the longest table, if any. The result is always a table
-         * where some operation has been performed on the transpose of the input tables.
-         * 
-         * For example given the table function F and the operation F' and inputs [a, b] and [c, d], the transpose is [a, c], [b, d]
-         * F([a, b], [c, d]) => [F'([a, c]), F'([b, d])]
-         * As a concrete example, Concatenate(["a", "b"], ["1", "2"]) => ["a1", "b2"]
-        */
+        /// <summary>
+        /// A standard error handling wrapper function that handles functions that can accept one or more table values.
+        /// The standard behavior for this type of function is to expand all scalars and tables into a set of tables
+        /// with the same size, where that size is the length of the longest table, if any.The result is always a table
+        /// where some operation has been performed on the transpose of the input tables.
+        ///
+        /// For example given the table function F and the operation F' and inputs [a, b] and [c, d], the transpose is [a, c], [b, d]
+        /// F([a, b], [c, d]) => [F'([a, c]), F'([b, d])]
+        /// As a concrete example, Concatenate(["a", "b"], ["1", "2"]) => ["a1", "b2"].
+        /// </summary>
+        /// <param name="targetFunction">Target function to execute.</param>
+        /// <param name="replaceBlankValues">Only supply this if its scalar function has <see cref="NoOpAlreadyHandledByIR(IRContext, int)"/>, meaning scalar has handled this via IR.</param>
+        /// <returns></returns>
         public static Func<EvalVisitor, EvalVisitorContext, IRContext, FormulaValue[], ValueTask<FormulaValue>> MultiSingleColumnTable(
-            AsyncFunctionPtr targetFunction)
+            AsyncFunctionPtr targetFunction,
+            Func<IRContext, int, FormulaValue> replaceBlankValues)
         {
             return async (runner, context, irContext, args) =>
             {
@@ -386,7 +415,19 @@ namespace Microsoft.PowerFx.Functions
                     }
                     else
                     {
-                        var rowResult = await targetFunction(runner, context, IRContext.NotInSource(itemType), functionArgs);
+                        var blankValuesReplaced = functionArgs.Select((arg, i) =>
+                        {
+                            if (arg is BlankValue)
+                            {
+                                return replaceBlankValues(arg.IRContext, i);
+                            }
+                            else
+                            {
+                                return arg;
+                            }
+                        });
+
+                        var rowResult = await targetFunction(runner, context, IRContext.NotInSource(itemType), blankValuesReplaced.ToArray());
                         var namedValue = new NamedValue(columnNameStr, rowResult);
                         var record = new InMemoryRecordValue(IRContext.NotInSource(resultType), new List<NamedValue>() { namedValue });
                         resultRows.Add(DValue<RecordValue>.Of(record));
@@ -705,6 +746,11 @@ namespace Microsoft.PowerFx.Functions
         }
 
         private static FormulaValue DoNotReplaceBlank(IRContext irContext, int index)
+        {
+            return new BlankValue(irContext);
+        }
+
+        private static FormulaValue NoOpAlreadyHandledByIR(IRContext irContext, int index)
         {
             return new BlankValue(irContext);
         }
