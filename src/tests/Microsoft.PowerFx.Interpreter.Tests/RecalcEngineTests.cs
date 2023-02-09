@@ -803,7 +803,7 @@ namespace Microsoft.PowerFx.Tests
         {
             var recalcEngine = new RecalcEngine(new PowerFxConfig(null)
             {
-                MaxCallDepth = 80
+                MaxCallDepth = 81
             });
             recalcEngine.DefineFunctions(
                 "A(x: Number): Number = If(Mod(x, 2) = 0, B(x/2), B(x));" +
