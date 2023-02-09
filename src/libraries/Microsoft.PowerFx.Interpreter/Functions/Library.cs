@@ -1584,106 +1584,50 @@ namespace Microsoft.PowerFx.Functions
         {
             {
                 BuiltinFunctionsCore.AbsT,
-                StandardErrorHandlingTabularOverload<NumberValue>(BuiltinFunctionsCore.AbsT.Name, StandardErrorHandling<NumberValue>(
-                    BuiltinFunctionsCore.Abs.Name,
-                    expandArguments: NoArgExpansion,
-                    replaceBlankValues: ReplaceBlankWithZero,
-                    checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
-                    checkRuntimeValues: DeferRuntimeValueChecking,
-                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-                    targetFunction: Abs))
+                StandardErrorHandlingTabularOverload<NumberValue>(BuiltinFunctionsCore.AbsT.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.Abs], ReplaceBlankWithZero)
             },
             {
                 BuiltinFunctionsCore.Boolean_T,
-                StandardErrorHandlingTabularOverload<StringValue>(BuiltinFunctionsCore.Boolean_T.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.Boolean])
+                StandardErrorHandlingTabularOverload<StringValue>(BuiltinFunctionsCore.Boolean_T.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.Boolean], DoNotReplaceBlank)
             },
             {
                 BuiltinFunctionsCore.BooleanN_T,
-                StandardErrorHandlingTabularOverload<NumberValue>(BuiltinFunctionsCore.BooleanN_T.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.BooleanN])
+                StandardErrorHandlingTabularOverload<NumberValue>(BuiltinFunctionsCore.BooleanN_T.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.BooleanN], DoNotReplaceBlank)
             },
 
             // This implementation is not actually used for this as this is handled at IR level. 
             // This is a placeholder, so that RecalcEngine._interpreterSupportedFunctions can add it for txt tests.
             {
                 BuiltinFunctionsCore.BooleanB_T,
-                StandardErrorHandlingTabularOverload<StringValue>(BuiltinFunctionsCore.BooleanB_T.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.BooleanB])
+                StandardErrorHandlingTabularOverload<StringValue>(BuiltinFunctionsCore.BooleanB_T.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.BooleanB], DoNotReplaceBlank)
             },
             {
                 BuiltinFunctionsCore.CharT,
-                StandardErrorHandlingTabularOverload<NumberValue>(BuiltinFunctionsCore.CharT.Name, StandardErrorHandling<NumberValue>(
-                    BuiltinFunctionsCore.Char.Name,
-                    expandArguments: NoArgExpansion,
-                    replaceBlankValues: ReplaceBlankWithZero,
-                    checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
-                    checkRuntimeValues: DeferRuntimeValueChecking,
-                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
-                    targetFunction: Char))
+                StandardErrorHandlingTabularOverload<NumberValue>(BuiltinFunctionsCore.CharT.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.Char], ReplaceBlankWithZero)
             },
             {
                 BuiltinFunctionsCore.ExpT,
-                StandardErrorHandlingTabularOverload<NumberValue>(BuiltinFunctionsCore.ExpT.Name, StandardErrorHandling<NumberValue>(
-                    BuiltinFunctionsCore.Exp.Name,
-                    expandArguments: NoArgExpansion,
-                    replaceBlankValues: ReplaceBlankWithZero,
-                    checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
-                    checkRuntimeValues: DeferRuntimeValueChecking,
-                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-                    targetFunction: Exp))
+                StandardErrorHandlingTabularOverload<NumberValue>(BuiltinFunctionsCore.ExpT.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.Exp], ReplaceBlankWithZero)
             },
             {
                 BuiltinFunctionsCore.Hex2DecT,
-                StandardErrorHandlingTabularOverload<StringValue>(BuiltinFunctionsCore.Hex2DecT.Name, StandardErrorHandling<StringValue>(
-                    BuiltinFunctionsCore.Hex2Dec.Name,
-                    expandArguments: NoArgExpansion,
-                    replaceBlankValues: ReplaceBlankWithZero,
-                    checkRuntimeTypes: ExactValueTypeOrBlank<StringValue>,
-                    checkRuntimeValues: DeferRuntimeValueChecking,
-                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-                    targetFunction: Hex2Dec))
+                StandardErrorHandlingTabularOverload<StringValue>(BuiltinFunctionsCore.Hex2DecT.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.Hex2Dec], ReplaceBlankWithZero)
             },
             {
                 BuiltinFunctionsCore.IntT,
-                StandardErrorHandlingTabularOverload<NumberValue>(BuiltinFunctionsCore.IntT.Name, StandardErrorHandling<NumberValue>(
-                    BuiltinFunctionsCore.Int.Name,
-                    expandArguments: NoArgExpansion,
-                    replaceBlankValues: ReplaceBlankWithZero,
-                    checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
-                    checkRuntimeValues: DeferRuntimeValueChecking,
-                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-                    targetFunction: Int))
+                StandardErrorHandlingTabularOverload<NumberValue>(BuiltinFunctionsCore.IntT.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.Int], ReplaceBlankWithZero)
             },
             {
                 BuiltinFunctionsCore.LenT,
-                StandardErrorHandlingTabularOverload<StringValue>(BuiltinFunctionsCore.LenT.Name, StandardErrorHandling<StringValue>(
-                    BuiltinFunctionsCore.Len.Name,
-                    expandArguments: NoArgExpansion,
-                    replaceBlankValues: ReplaceBlankWithZero,
-                    checkRuntimeTypes: ExactValueType<StringValue>,
-                    checkRuntimeValues: DeferRuntimeValueChecking,
-                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-                    targetFunction: Len))
+                StandardErrorHandlingTabularOverload<StringValue>(BuiltinFunctionsCore.LenT.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.Len], ReplaceBlankWithZero)
             },
             {
                 BuiltinFunctionsCore.LnT,
-                StandardErrorHandlingTabularOverload<NumberValue>(BuiltinFunctionsCore.LnT.Name, StandardErrorHandling<NumberValue>(
-                    BuiltinFunctionsCore.Ln.Name,
-                    expandArguments: NoArgExpansion,
-                    replaceBlankValues: ReplaceBlankWithZero,
-                    checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
-                    checkRuntimeValues: DeferRuntimeValueChecking,
-                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-                    targetFunction: Ln))
+                StandardErrorHandlingTabularOverload<NumberValue>(BuiltinFunctionsCore.LnT.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.Ln], ReplaceBlankWithZero)
             },
             {
                 BuiltinFunctionsCore.SqrtT,
-                StandardErrorHandlingTabularOverload<NumberValue>(BuiltinFunctionsCore.SqrtT.Name, StandardErrorHandling<NumberValue>(
-                    BuiltinFunctionsCore.Sqrt.Name,
-                    expandArguments: NoArgExpansion,
-                    replaceBlankValues: ReplaceBlankWithZero,
-                    checkRuntimeTypes: ExactValueType<NumberValue>,
-                    checkRuntimeValues: DeferRuntimeTypeChecking,
-                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-                    targetFunction: Sqrt))
+                StandardErrorHandlingTabularOverload<NumberValue>(BuiltinFunctionsCore.SqrtT.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.Sqrt], ReplaceBlankWithZero)
             },
         };
 
@@ -1691,37 +1635,23 @@ namespace Microsoft.PowerFx.Functions
         {
             {
                 BuiltinFunctionsCore.ColorFadeT,
-                NoErrorHandling(MultiSingleColumnTable(SimpleFunctionImplementations[BuiltinFunctionsCore.ColorFade]))
+                NoErrorHandling(MultiSingleColumnTable(SimpleFunctionImplementations[BuiltinFunctionsCore.ColorFade], DoNotReplaceBlank))
             },
             {
                 BuiltinFunctionsCore.ConcatenateT,
-                NoErrorHandling(MultiSingleColumnTable(SimpleFunctionImplementations[BuiltinFunctionsCore.Concatenate]))
+                NoErrorHandling(MultiSingleColumnTable(SimpleFunctionImplementations[BuiltinFunctionsCore.Concatenate], DoNotReplaceBlank))
             },
             {
                 BuiltinFunctionsCore.Dec2HexT,
-                NoErrorHandling(MultiSingleColumnTable(StandardErrorHandling<NumberValue>(
-                                BuiltinFunctionsCore.Dec2Hex.Name,
-                                expandArguments: InsertDefaultValues(outputArgsCount: 2, fillWith: new NumberValue(IRContext.NotInSource(FormulaType.Number), 0)),
-                                replaceBlankValues: ReplaceBlankWithZero,
-                                checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
-                                checkRuntimeValues: DeferRuntimeValueChecking,
-                                returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-                                targetFunction: Dec2Hex)))
+                NoErrorHandling(MultiSingleColumnTable(SimpleFunctionImplementations[BuiltinFunctionsCore.Dec2Hex], ReplaceBlankWithZero))
             },
             {
                 BuiltinFunctionsCore.FindT,
-                NoErrorHandling(MultiSingleColumnTable(SimpleFunctionImplementations[BuiltinFunctionsCore.Find]))
+                NoErrorHandling(MultiSingleColumnTable(SimpleFunctionImplementations[BuiltinFunctionsCore.Find], DoNotReplaceBlank))
             },
             {
                 BuiltinFunctionsCore.RoundT,
-                NoErrorHandling(MultiSingleColumnTable(StandardErrorHandling<NumberValue>(
-                    BuiltinFunctionsCore.Round.Name,
-                    expandArguments: NoArgExpansion,
-                    replaceBlankValues: ReplaceBlankWithZero,
-                    checkRuntimeTypes: ExactValueType<NumberValue>,
-                    checkRuntimeValues: DeferRuntimeValueChecking,
-                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-                    targetFunction: Round)))
+                NoErrorHandling(MultiSingleColumnTable(SimpleFunctionImplementations[BuiltinFunctionsCore.Round], ReplaceBlankWithZero))
             },
         };
 

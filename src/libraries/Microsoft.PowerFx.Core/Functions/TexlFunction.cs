@@ -1416,7 +1416,7 @@ namespace Microsoft.PowerFx.Core.Functions
         /// Function can override this method to provide pre-processing policy for argument.
         /// By default, function does not attach any pre-processing for arguments.
         /// </summary>
-        /// <param name="index">0 based Index of argument.</param>
+        /// <param name="index">0 based index of argument.</param>
         /// <returns></returns>
         public virtual ArgPreprocessor GetArgPreprocessor(int index)
         {
