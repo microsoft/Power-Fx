@@ -361,6 +361,9 @@ namespace Microsoft.PowerFx.Core.IR
                         case ArgPreprocessor.ReplaceWithZero:
                             convertedNode = ReplaceBlankWithZero(args[i]);
                             break;
+                        case ArgPreprocessor.Truncate:
+                            convertedNode = TruncatePreProcessor(args[i]);
+                            break;
                         default:
                             convertedNode = args[i];
                             break;
@@ -387,6 +390,16 @@ namespace Microsoft.PowerFx.Core.IR
                 var zeroNumLitNode = new NumberLiteralNode(convertedIRContext, 0);
                 var convertedNode = new CallNode(convertedIRContext, BuiltinFunctionsCore.Coalesce, arg, zeroNumLitNode);
                 return convertedNode;
+            }
+
+            /// <summary>
+            /// Wraps node arg => Truc(Coalesce(arg , 0)).
+            /// </summary>
+            private static IntermediateNode TruncatePreProcessor(IntermediateNode arg)
+            {
+                var blankToZeroNode = ReplaceBlankWithZero(arg);
+                var truncateNode = new CallNode(blankToZeroNode.IRContext, BuiltinFunctionsCore.Trunc, blankToZeroNode);
+                return truncateNode;
             }
 
             /// <summary>
