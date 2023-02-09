@@ -5,6 +5,7 @@ using System;
 using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Types;
@@ -36,7 +37,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, timeZoneInfo);
             }
-        
+
             var same = (arg0.Year == now.Year) && (arg0.Month == now.Month) && (arg0.Day == now.Day);
             return new BooleanValue(irContext, same);
         }
@@ -564,13 +565,9 @@ namespace Microsoft.PowerFx.Functions
         {
             result = null;
 
-            if (DateTime.TryParse(value.Value, formatInfo.CultureInfo, DateTimeStyles.None, out var dateTime))
+            if (DateTime.TryParse(value.Value, formatInfo.CultureInfo, DateTimeStyles.AdjustToUniversal, out var dateTime))
             {
-                if (dateTime.Kind == DateTimeKind.Local)
-                {
-                    dateTime = TimeZoneInfo.ConvertTime(dateTime, TimeZoneInfo.Local, formatInfo.TimeZoneInfo);
-                }
-
+                dateTime = DateTimeValue.GetConvertedDateTimeValue(dateTime, formatInfo.TimeZoneInfo);
                 result = new DateTimeValue(irContext, dateTime);
             }
 
@@ -603,19 +600,9 @@ namespace Microsoft.PowerFx.Functions
                 return new BlankValue(irContext);
             }
 
-<<<<<<< HEAD
-            if (DateTime.TryParse(str, culture, DateTimeStyles.AdjustToUniversal, out var result))
-            {
-                var tzi = runner.TimeZoneInfo;
-
-                result = DateTimeValue.GetConvertedDateTimeValue(result, tzi);
-
-                return new DateTimeValue(irContext, result);
-=======
             if (TryDateTimeParse(formatInfo, irContext, args[0], out var result))
             {
                 return result;
->>>>>>> 408ea0258b4f8d9fd1f9e39b04c7853fa6e5c557
             }
             else
             {

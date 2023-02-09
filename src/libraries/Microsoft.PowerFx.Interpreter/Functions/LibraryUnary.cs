@@ -325,12 +325,6 @@ namespace Microsoft.PowerFx.Functions
                 return new BlankValue(irContext);
             }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-            var lower = val.ToLowerInvariant();
-=======
-=======
->>>>>>> 408ea0258b4f8d9fd1f9e39b04c7853fa6e5c557
             bool isBoolean = TryTextToBoolean(irContext, args[0], out BooleanValue result);
 
             return isBoolean ? result : CommonErrors.InvalidBooleanFormatError(irContext);
@@ -341,10 +335,6 @@ namespace Microsoft.PowerFx.Functions
             result = null;
             var lower = value.Value.ToLowerInvariant();
 
-<<<<<<< HEAD
->>>>>>> ee034846 (update)
-=======
->>>>>>> 408ea0258b4f8d9fd1f9e39b04c7853fa6e5c557
             if (lower == "true")
             {
                 result = new BooleanValue(irContext, true);
@@ -354,12 +344,6 @@ namespace Microsoft.PowerFx.Functions
                 result = new BooleanValue(irContext, false);
             }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-            return CommonErrors.InvalidBooleanFormatError(irContext);
-=======
-=======
->>>>>>> 408ea0258b4f8d9fd1f9e39b04c7853fa6e5c557
             return result != null;
         }
 
@@ -382,11 +366,11 @@ namespace Microsoft.PowerFx.Functions
                     result = boolVal;
                     break;
             }
-            
+
             return result != null;
         }
 
-        public static DateTime GetNormalizedDateTime(FormulaValue value, TimeZoneInfo timeZoneInfo)
+        public static DateTime GetNormalizedDateTimeLibrary(FormulaValue value, TimeZoneInfo timeZoneInfo)
         {
             switch (value)
             {
@@ -397,10 +381,6 @@ namespace Microsoft.PowerFx.Functions
                 default:
                     throw CommonExceptions.RuntimeMisMatch;
             }
-<<<<<<< HEAD
->>>>>>> ee034846 (update)
-=======
->>>>>>> 408ea0258b4f8d9fd1f9e39b04c7853fa6e5c557
         }
 
         public static FormulaValue DateToNumber(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
@@ -410,7 +390,7 @@ namespace Microsoft.PowerFx.Functions
 
         public static NumberValue DateToNumber(FormattingInfo formatInfo, IRContext irContext, FormulaValue value)
         {
-            DateTime dateTime = GetNormalizedDateTime(value, formatInfo.TimeZoneInfo);
+            DateTime dateTime = GetNormalizedDateTimeLibrary(value, formatInfo.TimeZoneInfo);
             return new NumberValue(irContext, dateTime.Subtract(_epoch).TotalDays);
         }
 

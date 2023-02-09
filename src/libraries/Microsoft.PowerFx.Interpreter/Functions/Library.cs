@@ -51,7 +51,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 CultureInfo = runner.CultureInfo,
                 CancellationToken = runner.CancellationToken,
-                TimeZoneInfo = runner.GetService<TimeZoneInfo>() ?? TimeZoneInfo.Local
+                TimeZoneInfo = runner.TimeZoneInfo
             };
         }
 
