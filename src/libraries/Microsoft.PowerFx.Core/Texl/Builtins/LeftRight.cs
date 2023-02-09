@@ -21,7 +21,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         {
             if (index == 1)
             {
-                return ArgPreprocessor.Trurncate;
+                return ArgPreprocessor.Truncate;
             }
 
             return ArgPreprocessor.None;

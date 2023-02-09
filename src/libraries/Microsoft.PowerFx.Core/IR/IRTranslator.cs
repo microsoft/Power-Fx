@@ -361,7 +361,7 @@ namespace Microsoft.PowerFx.Core.IR
                         case ArgPreprocessor.ReplaceWithZero:
                             convertedNode = ReplaceBlankWithZero(args[i]);
                             break;
-                        case ArgPreprocessor.Trurncate:
+                        case ArgPreprocessor.Truncate:
                             convertedNode = TruncatePreProcessor(args[i]);
                             break;
                         default:

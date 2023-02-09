@@ -13,6 +13,6 @@ namespace Microsoft.PowerFx.Core.Functions
         ReplaceWithZero = 1,
         
         // This also includes ReplaceWithZero
-        Trurncate = 2,
+        Truncate = 2,
     }
 }
