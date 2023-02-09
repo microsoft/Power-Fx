@@ -9,12 +9,12 @@ using System.Threading;
 
 namespace Microsoft.PowerFx.Functions
 {
-    public class FormattingInfo
+    internal class FormattingInfo
     {
-        public CultureInfo CultureInfo { get; set; }
+        internal CultureInfo CultureInfo { get; set; }
 
-        public CancellationToken CancellationToken { get; set; }
+        internal CancellationToken CancellationToken { get; set; }
 
-        public TimeZoneInfo TimeZoneInfo { get; set; }
+        internal TimeZoneInfo TimeZoneInfo { get; set; }
     }
 }

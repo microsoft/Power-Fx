@@ -16,7 +16,7 @@ namespace Microsoft.PowerFx
     /// </summary>
     public static class TypeCoercionProvider
     {
-        public static FormattingInfo CreateFormattingInfo()
+        internal static FormattingInfo CreateFormattingInfo()
         {
             return new FormattingInfo()
             {
@@ -55,7 +55,7 @@ namespace Microsoft.PowerFx
         /// <param name="formatInfo">Formatting Info.</param>
         /// <param name="result">Result value.</param>
         /// <returns>True/False based on whether function can convert from original type to String type.</returns> 
-        public static bool TryCoerceTo(this FormulaValue value, FormattingInfo formatInfo, out StringValue result)
+        internal static bool TryCoerceTo(this FormulaValue value, FormattingInfo formatInfo, out StringValue result)
         {
             return TryText(formatInfo, IRContext.NotInSource(FormulaType.String), value, null, out result);
         }
@@ -78,7 +78,7 @@ namespace Microsoft.PowerFx
         /// <param name="formatInfo">Formatting Info.</param>
         /// <param name="result">Result value.</param>
         /// <returns>True/False based on whether function can convert from original type to Number type.</returns> 
-        public static bool TryCoerceTo(this FormulaValue value, FormattingInfo formatInfo, out NumberValue result)
+        internal static bool TryCoerceTo(this FormulaValue value, FormattingInfo formatInfo, out NumberValue result)
         {
             return TryValue(formatInfo, IRContext.NotInSource(FormulaType.Number), value, out result);
         }
@@ -101,7 +101,7 @@ namespace Microsoft.PowerFx
         /// <param name="formatInfo">Formatting Info.</param>
         /// <param name="result">Result value.</param>
         /// <returns>True/False based on whether function can convert from original type to DateTime type.</returns> 
-        public static bool TryCoerceTo(this FormulaValue value, FormattingInfo formatInfo, out DateTimeValue result)
+        internal static bool TryCoerceTo(this FormulaValue value, FormattingInfo formatInfo, out DateTimeValue result)
         {
             return TryGetDateTime(formatInfo, IRContext.NotInSource(FormulaType.DateTime), value, out result);
         }
