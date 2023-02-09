@@ -142,3 +142,6 @@ Table({Result:Error({Kind:ErrorKind.Div0})},{Result:Error({Kind:ErrorKind.Div0})
 
 >> Find(If(Sqrt(-1)<0,"First second third"), Table({ within: "First" }, { within: "Second" }))
 Table({Result:Error({Kind:ErrorKind.Numeric})},{Result:Error({Kind:ErrorKind.Numeric})})
+
+>> Find(["one","two","three","four","five"],"one two three four five",[1/0, 0, 3, 100, 10])
+Table({Result:Error({Kind:ErrorKind.Div0})},{Result:Error({Kind:ErrorKind.InvalidArgument})},{Result:9},{Result:Error({Kind:ErrorKind.InvalidArgument})},{Result:20})
