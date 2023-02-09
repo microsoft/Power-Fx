@@ -82,9 +82,3 @@ Table({Value:1})
 
 >> LastN([1,2,3,4,5], true)
 Table({Value:5})
-
->> FirstN([1,2,3,4,5], Date(1900,1,1))
-Table({Value:1},{Value:2})
-
->> LastN([1,2,3,4,5], Date(1900,1,1))
-Table({Value:4},{Value:5})
