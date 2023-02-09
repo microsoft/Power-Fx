@@ -45,6 +45,16 @@ namespace Microsoft.PowerFx.Functions
 
         public static readonly IReadOnlyDictionary<TexlFunction, AsyncFunctionPtr> FunctionImplementations;
 
+        public static FormattingInfo CreateFormattingInfo(EvalVisitor runner)
+        {
+            return new FormattingInfo()
+            {
+                CultureInfo = runner.CultureInfo,
+                CancellationToken = runner.CancellationToken,
+                TimeZoneInfo = runner.TimeZoneInfo
+            };
+        }
+
         static Library()
         {
             var allFunctions = new Dictionary<TexlFunction, AsyncFunctionPtr>();
@@ -890,8 +900,7 @@ namespace Microsoft.PowerFx.Functions
                     BuiltinFunctionsCore.Left.Name,
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: ReplaceBlankWith(
-                        new StringValue(IRContext.NotInSource(FormulaType.String), string.Empty),
-                        new NumberValue(IRContext.NotInSource(FormulaType.Number), 0)),
+                        new StringValue(IRContext.NotInSource(FormulaType.String), string.Empty)),
                     checkRuntimeTypes: ExactSequence(
                         ExactValueType<StringValue>,
                         ExactValueType<NumberValue>),
@@ -1162,8 +1171,7 @@ namespace Microsoft.PowerFx.Functions
                     BuiltinFunctionsCore.Right.Name,
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: ReplaceBlankWith(
-                        new StringValue(IRContext.NotInSource(FormulaType.String), string.Empty),
-                        new NumberValue(IRContext.NotInSource(FormulaType.Number), 0)),
+                        new StringValue(IRContext.NotInSource(FormulaType.String), string.Empty)),
                     checkRuntimeTypes: ExactSequence(
                         ExactValueType<StringValue>,
                         ExactValueType<NumberValue>),

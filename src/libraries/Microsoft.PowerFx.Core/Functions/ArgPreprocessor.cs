@@ -11,5 +11,8 @@ namespace Microsoft.PowerFx.Core.Functions
     {
         None = 0,
         ReplaceWithZero = 1,
+        
+        // This also includes ReplaceWithZero
+        Truncate = 2,
     }
 }
