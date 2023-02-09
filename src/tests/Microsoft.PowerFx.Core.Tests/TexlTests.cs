@@ -310,6 +310,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("CountIf([1,2,3], Value) // Coercion from number to boolean")]
         [InlineData("CountIf([\"false\",\"true\",\"false\"], Value) // Coercion from text to boolean")]
         [InlineData("CountIf([1,2,3], BoolOptionSet.Yes) // Coercion from 2-valued option set to boolean")]
+        [InlineData("CountIf([1,2,3], If(true, 0 > 1, \"true\"))")]
         public void TexlFunctionTypeSemanticsCountIf(string expression)
         {
             var symbol = new SymbolTable();
