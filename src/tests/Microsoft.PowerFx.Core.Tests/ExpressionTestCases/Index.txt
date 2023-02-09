@@ -51,3 +51,16 @@ Error({Kind:ErrorKind.Validation})
 
 >> Index([1, 2, 3, 4, 5], Error({Kind: 11}))
 Error({Kind:ErrorKind.Validation})
+
+// ********** Coercions ************
+>> Index([1,2,3,4,5], "3")
+{Value:3}
+
+>> Index([1,2,3,4,5], "4").Value
+4
+
+>> Index([1,2,3,4,5], true)
+{Value:1}
+
+>> Index([1,2,3,4,5], false)
+Error({Kind:ErrorKind.InvalidArgument})

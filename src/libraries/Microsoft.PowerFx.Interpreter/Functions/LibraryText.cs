@@ -681,6 +681,11 @@ namespace Microsoft.PowerFx.Functions
                 return CommonErrors.GenericInvalidArgument(irContext);
             }
 
+            if ((count.Value % 1) != 0)
+            {
+                throw new NotImplementedException("Should have been handled by IR");
+            }
+
             return new StringValue(irContext, leftOrRight(source.Value, (int)count.Value));
         }
 
