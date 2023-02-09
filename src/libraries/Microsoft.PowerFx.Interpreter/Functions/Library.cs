@@ -45,6 +45,16 @@ namespace Microsoft.PowerFx.Functions
 
         public static readonly IReadOnlyDictionary<TexlFunction, AsyncFunctionPtr> FunctionImplementations;
 
+        public static FormattingInfo CreateFormattingInfo(EvalVisitor runner)
+        {
+            return new FormattingInfo()
+            {
+                CultureInfo = runner.CultureInfo,
+                CancellationToken = runner.CancellationToken,
+                TimeZoneInfo = runner.TimeZoneInfo
+            };
+        }
+
         static Library()
         {
             var allFunctions = new Dictionary<TexlFunction, AsyncFunctionPtr>();
