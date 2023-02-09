@@ -16,6 +16,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Dec2Hex(number:n, [places:n])
     internal sealed class Dec2HexFunction : BuiltinFunction
     {
+        public override ArgPreprocessor GetArgPreprocessor(int index)
+        {
+            return base.GetGenericArgPreprocessor(index);
+        }
+
         public override bool IsSelfContained => true;
 
         public override bool IsStateless => true;

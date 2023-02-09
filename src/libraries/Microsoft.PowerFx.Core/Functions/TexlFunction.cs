@@ -1411,5 +1411,32 @@ namespace Microsoft.PowerFx.Core.Functions
 
             return new IRCallNode(context.GetIRContext(node), this, args);
         }
+
+        /// <summary>
+        /// Function can override this method to provide pre-processing policy for argument.
+        /// By default, function does not attach any pre-processing for arguments.
+        /// </summary>
+        /// <param name="index">0 based index of argument.</param>
+        /// <returns></returns>
+        public virtual ArgPreprocessor GetArgPreprocessor(int index)
+        {
+            return ArgPreprocessor.None;
+        }
+
+        /// <summary>
+        /// Generic arg preprocessor that uses <see cref="ParamTypes"/> to determine pre-processing policy.
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        internal ArgPreprocessor GetGenericArgPreprocessor(int index)
+        {
+            var paramType = ParamTypes[index] ?? DType.Unknown;
+            if (paramType == DType.Number)
+            {
+                return ArgPreprocessor.ReplaceWithZero;
+            }
+
+            return ArgPreprocessor.None;
+        }
     }
 }
