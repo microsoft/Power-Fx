@@ -22,7 +22,7 @@ namespace Microsoft.PowerFx.Types
 
         public override void ToExpression(StringBuilder sb, FormulaValueSerializerSettings settings)
         {
-            sb.Append(Value.ToString());
+            sb.Append((Value == 0) ? "0" : Value.ToString());
         }
     }
 }
