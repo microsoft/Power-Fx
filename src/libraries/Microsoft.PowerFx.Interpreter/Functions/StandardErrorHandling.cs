@@ -3,9 +3,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
@@ -196,7 +194,7 @@ namespace Microsoft.PowerFx.Functions
         /// </summary>
         /// <param name="functionName">Function name.</param>
         /// <param name="targetFunction">Target function to execute.</param>
-        /// <param name="replaceBlankValues">Only supply this if its scaler function has <see cref="NoOpAlreadyHandledByIR(IRContext, int)"/>, meaning scaler has handled this via IR.</param>
+        /// <param name="replaceBlankValues">Only supply this if its scalar function has <see cref="NoOpAlreadyHandledByIR(IRContext, int)"/>, meaning scalar has handled this via IR.</param>
         /// <returns></returns>
         private static AsyncFunctionPtr StandardErrorHandlingTabularOverload<TScalar>(
             string functionName, 
@@ -238,7 +236,7 @@ namespace Microsoft.PowerFx.Functions
         /// Wrapper for single column table argument functions.
         /// </summary>
         /// <param name="targetFunction">Target function to execute.</param>
-        /// <param name="replaceBlankValues">Only supply this if its scaler function has <see cref="NoOpAlreadyHandledByIR(IRContext, int)"/>, meaning scaler has handled this via IR.</param>
+        /// <param name="replaceBlankValues">Only supply this if its scalar function has <see cref="NoOpAlreadyHandledByIR(IRContext, int)"/>, meaning scalar has handled this via IR.</param>
         /// <returns></returns>
         public static Func<EvalVisitor, EvalVisitorContext, IRContext, TableValue[], ValueTask<FormulaValue>> StandardSingleColumnTable<T>(
             AsyncFunctionPtr targetFunction,
@@ -337,7 +335,7 @@ namespace Microsoft.PowerFx.Functions
         /// As a concrete example, Concatenate(["a", "b"], ["1", "2"]) => ["a1", "b2"].
         /// </summary>
         /// <param name="targetFunction">Target function to execute.</param>
-        /// <param name="replaceBlankValues">Only supply this if its scaler function has <see cref="NoOpAlreadyHandledByIR(IRContext, int)"/>, meaning scaler has handled this via IR.</param>
+        /// <param name="replaceBlankValues">Only supply this if its scalar function has <see cref="NoOpAlreadyHandledByIR(IRContext, int)"/>, meaning scalar has handled this via IR.</param>
         /// <returns></returns>
         public static Func<EvalVisitor, EvalVisitorContext, IRContext, FormulaValue[], ValueTask<FormulaValue>> MultiSingleColumnTable(
             AsyncFunctionPtr targetFunction,
