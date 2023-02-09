@@ -4,15 +4,18 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.IR.Symbols;
 using Microsoft.PowerFx.Core.Texl;
+using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
+using static Microsoft.PowerFx.Syntax.PrettyPrintVisitor;
 using BinaryOpNode = Microsoft.PowerFx.Core.IR.Nodes.BinaryOpNode;
 using CallNode = Microsoft.PowerFx.Core.IR.Nodes.CallNode;
 using ErrorNode = Microsoft.PowerFx.Core.IR.Nodes.ErrorNode;
@@ -182,7 +185,7 @@ namespace Microsoft.PowerFx.Core.IR
                         binaryOpResult = new CallNode(context.GetIRContext(node), BuiltinFunctionsCore.Power, left, right);
                         break;
                     case BinaryOpKind.Concatenate:
-                        binaryOpResult = new CallNode(context.GetIRContext(node), BuiltinFunctionsCore.Concatenate, left, right);
+                        binaryOpResult = ConcatenateArgs(left, right, context.GetIRContext(node));
                         break;
                     case BinaryOpKind.Or:
                     case BinaryOpKind.And:
@@ -332,11 +335,98 @@ namespace Microsoft.PowerFx.Core.IR
                     }
                 }
 
+                // This can add pre-processing to arguments, such as BlankToZero, Truncate etc...
+                // based on the function.
+                args = AttachArgPreprocessor(args, func);
+
                 // this can rewrite the entire call node to any intermediate node.
                 // e.g. For Boolean(true), Instead of IR as Call(Boolean, true) it can be rewritten directly to emit true.
                 var irNode = func.CreateIRCallNode(node, context, args, scope);
 
                 return MaybeInjectCoercion(node, irNode, context);
+            }
+
+            private List<IntermediateNode> AttachArgPreprocessor(List<IntermediateNode> args, TexlFunction func)
+            {
+                var len = args.Count;
+                List<IntermediateNode> convertedArgs = new List<IntermediateNode>(len);
+
+                for (var i = 0; i < len; i++)
+                {
+                    IntermediateNode convertedNode;
+                    var argPreprocessor = func.GetArgPreprocessor(i);
+
+                    switch (argPreprocessor)
+                    {
+                        case ArgPreprocessor.ReplaceWithZero:
+                            convertedNode = ReplaceBlankWithZero(args[i]);
+                            break;
+                        case ArgPreprocessor.Truncate:
+                            convertedNode = TruncatePreProcessor(args[i]);
+                            break;
+                        default:
+                            convertedNode = args[i];
+                            break;
+                    }
+
+                    convertedArgs.Add(convertedNode);
+                }
+
+                return convertedArgs;
+            }
+
+            /// <summary>
+            /// Wraps node arg => Coalesce(arg , 0) when arg is not Number Literal.
+            /// </summary>
+            private static IntermediateNode ReplaceBlankWithZero(IntermediateNode arg)
+            {
+                if (arg is NumberLiteralNode)
+                {
+                    return arg;
+                }
+
+                // need a new context since when arg is Blank IRContext.Returntypee is not a Number but a Blank.
+                var convertedIRContext = new IRContext(arg.IRContext.SourceContext, FormulaType.Number);
+                var zeroNumLitNode = new NumberLiteralNode(convertedIRContext, 0);
+                var convertedNode = new CallNode(convertedIRContext, BuiltinFunctionsCore.Coalesce, arg, zeroNumLitNode);
+                return convertedNode;
+            }
+
+            /// <summary>
+            /// Wraps node arg => Truc(Coalesce(arg , 0)).
+            /// </summary>
+            private static IntermediateNode TruncatePreProcessor(IntermediateNode arg)
+            {
+                var blankToZeroNode = ReplaceBlankWithZero(arg);
+                var truncateNode = new CallNode(blankToZeroNode.IRContext, BuiltinFunctionsCore.Trunc, blankToZeroNode);
+                return truncateNode;
+            }
+
+            /// <summary>
+            /// This is not a generic arg concatenate function, but a special case for the Concatenate function,
+            /// used for Binary Concatenate operator.
+            /// </summary>
+            private static IntermediateNode ConcatenateArgs(IntermediateNode arg1, IntermediateNode arg2, IRContext irContext)
+            {
+                var concatenateArgs = new List<IntermediateNode>();
+                foreach (var arg in new[] { arg1, arg2 })
+                {
+                    // if arg is call node to Concatenate unpack it, and pass it as arg to outer Concatenate
+                    if (arg is CallNode maybeConcatenate && maybeConcatenate.Function is ConcatenateFunction concatenateFunction)
+                    {
+                        foreach (var argC in maybeConcatenate.Args)
+                        {
+                            concatenateArgs.Add(argC);
+                        }
+                    }
+                    else
+                    {
+                        concatenateArgs.Add(arg);
+                    }
+                }
+
+                var concatenatedNode = new CallNode(irContext, BuiltinFunctionsCore.Concatenate, concatenateArgs);
+                return concatenatedNode;
             }
 
             public override IntermediateNode Visit(FirstNameNode node, IRTranslatorContext context)

@@ -45,6 +45,16 @@ namespace Microsoft.PowerFx.Functions
 
         public static readonly IReadOnlyDictionary<TexlFunction, AsyncFunctionPtr> FunctionImplementations;
 
+        public static FormattingInfo CreateFormattingInfo(EvalVisitor runner)
+        {
+            return new FormattingInfo()
+            {
+                CultureInfo = runner.CultureInfo,
+                CancellationToken = runner.CancellationToken,
+                TimeZoneInfo = runner.TimeZoneInfo
+            };
+        }
+
         static Library()
         {
             var allFunctions = new Dictionary<TexlFunction, AsyncFunctionPtr>();
@@ -76,7 +86,7 @@ namespace Microsoft.PowerFx.Functions
                 StandardErrorHandling<NumberValue>(
                     BuiltinFunctionsCore.Abs.Name,
                     expandArguments: NoArgExpansion,
-                    replaceBlankValues: ReplaceBlankWithZero,
+                    replaceBlankValues: NoOpAlreadyHandledByIR,
                     checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
@@ -87,7 +97,7 @@ namespace Microsoft.PowerFx.Functions
                 StandardErrorHandling<NumberValue>(
                     BuiltinFunctionsCore.Acos.Name,
                     expandArguments: NoArgExpansion,
-                    replaceBlankValues: ReplaceBlankWithZero,
+                    replaceBlankValues: NoOpAlreadyHandledByIR,
                     checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
@@ -98,7 +108,7 @@ namespace Microsoft.PowerFx.Functions
                 StandardErrorHandling<NumberValue>(
                     BuiltinFunctionsCore.Acot.Name,
                     expandArguments: NoArgExpansion,
-                    replaceBlankValues: ReplaceBlankWithZero,
+                    replaceBlankValues: NoOpAlreadyHandledByIR,
                     checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
@@ -124,7 +134,7 @@ namespace Microsoft.PowerFx.Functions
                 StandardErrorHandling<NumberValue>(
                     BuiltinFunctionsCore.Asin.Name,
                     expandArguments: NoArgExpansion,
-                    replaceBlankValues: ReplaceBlankWithZero,
+                    replaceBlankValues: NoOpAlreadyHandledByIR,
                     checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
@@ -135,7 +145,7 @@ namespace Microsoft.PowerFx.Functions
                 StandardErrorHandling<NumberValue>(
                     BuiltinFunctionsCore.Atan.Name,
                     expandArguments: NoArgExpansion,
-                    replaceBlankValues: ReplaceBlankWithZero,
+                    replaceBlankValues: NoOpAlreadyHandledByIR,
                     checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
@@ -146,7 +156,7 @@ namespace Microsoft.PowerFx.Functions
                 StandardErrorHandling<NumberValue>(
                     BuiltinFunctionsCore.Atan2.Name,
                     expandArguments: NoArgExpansion,
-                    replaceBlankValues: ReplaceBlankWithZero,
+                    replaceBlankValues: NoOpAlreadyHandledByIR,
                     checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
@@ -250,7 +260,7 @@ namespace Microsoft.PowerFx.Functions
                 StandardErrorHandling<NumberValue>(
                     BuiltinFunctionsCore.Char.Name,
                     expandArguments: NoArgExpansion,
-                    replaceBlankValues: ReplaceBlankWithZero,
+                    replaceBlankValues: NoOpAlreadyHandledByIR,
                     checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
@@ -309,7 +319,7 @@ namespace Microsoft.PowerFx.Functions
                 StandardErrorHandling<NumberValue>(
                     BuiltinFunctionsCore.Cos.Name,
                     expandArguments: NoArgExpansion,
-                    replaceBlankValues: ReplaceBlankWithZero,
+                    replaceBlankValues: NoOpAlreadyHandledByIR,
                     checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
@@ -320,7 +330,7 @@ namespace Microsoft.PowerFx.Functions
                 StandardErrorHandling<NumberValue>(
                     BuiltinFunctionsCore.Cot.Name,
                     expandArguments: NoArgExpansion,
-                    replaceBlankValues: ReplaceBlankWithZero,
+                    replaceBlankValues: NoOpAlreadyHandledByIR,
                     checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
@@ -388,7 +398,7 @@ namespace Microsoft.PowerFx.Functions
                 StandardErrorHandling<NumberValue>(
                     BuiltinFunctionsCore.Date.Name,
                     expandArguments: NoArgExpansion,
-                    replaceBlankValues: ReplaceBlankWithZero,
+                    replaceBlankValues: NoOpAlreadyHandledByIR,
                     checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
@@ -433,7 +443,7 @@ namespace Microsoft.PowerFx.Functions
                 StandardErrorHandling<NumberValue>(
                     BuiltinFunctionsCore.DateTime.Name,
                     expandArguments: InsertDefaultValues(outputArgsCount: 7, fillWith: new NumberValue(IRContext.NotInSource(FormulaType.Number), 0)),
-                    replaceBlankValues: ReplaceBlankWithZero,
+                    replaceBlankValues: NoOpAlreadyHandledByIR,
                     checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
@@ -499,7 +509,7 @@ namespace Microsoft.PowerFx.Functions
                 StandardErrorHandling<NumberValue>(
                     BuiltinFunctionsCore.Degrees.Name,
                     expandArguments: NoArgExpansion,
-                    replaceBlankValues: ReplaceBlankWithZero,
+                    replaceBlankValues: NoOpAlreadyHandledByIR,
                     checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
@@ -510,7 +520,7 @@ namespace Microsoft.PowerFx.Functions
                 StandardErrorHandling<NumberValue>(
                     BuiltinFunctionsCore.Dec2Hex.Name,
                     expandArguments: InsertDefaultValues(outputArgsCount: 2, fillWith: new NumberValue(IRContext.NotInSource(FormulaType.Number), 0)),
-                    replaceBlankValues: ReplaceBlankWithZero,
+                    replaceBlankValues: NoOpAlreadyHandledByIR,
                     checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
@@ -567,7 +577,7 @@ namespace Microsoft.PowerFx.Functions
                 StandardErrorHandling<NumberValue>(
                     BuiltinFunctionsCore.Exp.Name,
                     expandArguments: NoArgExpansion,
-                    replaceBlankValues: ReplaceBlankWithZero,
+                    replaceBlankValues: NoOpAlreadyHandledByIR,
                     checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
@@ -741,7 +751,7 @@ namespace Microsoft.PowerFx.Functions
                 StandardErrorHandling<NumberValue>(
                     BuiltinFunctionsCore.Int.Name,
                     expandArguments: NoArgExpansion,
-                    replaceBlankValues: ReplaceBlankWithZero,
+                    replaceBlankValues: NoOpAlreadyHandledByIR,
                     checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
@@ -890,8 +900,7 @@ namespace Microsoft.PowerFx.Functions
                     BuiltinFunctionsCore.Left.Name,
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: ReplaceBlankWith(
-                        new StringValue(IRContext.NotInSource(FormulaType.String), string.Empty),
-                        new NumberValue(IRContext.NotInSource(FormulaType.Number), 0)),
+                        new StringValue(IRContext.NotInSource(FormulaType.String), string.Empty)),
                     checkRuntimeTypes: ExactSequence(
                         ExactValueType<StringValue>,
                         ExactValueType<NumberValue>),
@@ -915,7 +924,7 @@ namespace Microsoft.PowerFx.Functions
                 StandardErrorHandling<NumberValue>(
                     BuiltinFunctionsCore.Ln.Name,
                     expandArguments: NoArgExpansion,
-                    replaceBlankValues: ReplaceBlankWithZero,
+                    replaceBlankValues: NoOpAlreadyHandledByIR,
                     checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
@@ -926,7 +935,7 @@ namespace Microsoft.PowerFx.Functions
                 StandardErrorHandling<NumberValue>(
                     BuiltinFunctionsCore.Log.Name,
                     expandArguments: InsertDefaultValues(outputArgsCount: 2, fillWith: new NumberValue(IRContext.NotInSource(FormulaType.Number), 10)),
-                    replaceBlankValues: ReplaceBlankWithZero,
+                    replaceBlankValues: NoOpAlreadyHandledByIR,
                     checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
@@ -1038,7 +1047,7 @@ namespace Microsoft.PowerFx.Functions
                 StandardErrorHandling<NumberValue>(
                     BuiltinFunctionsCore.Mod.Name,
                     expandArguments: NoArgExpansion,
-                    replaceBlankValues: ReplaceBlankWithZero,
+                    replaceBlankValues: NoOpAlreadyHandledByIR,
                     checkRuntimeTypes: ExactValueType<NumberValue>,
                     checkRuntimeValues: DeferRuntimeTypeChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
@@ -1094,7 +1103,7 @@ namespace Microsoft.PowerFx.Functions
                 StandardErrorHandling<NumberValue>(
                     BuiltinFunctionsCore.Power.Name,
                     expandArguments: NoArgExpansion,
-                    replaceBlankValues: ReplaceBlankWithZero,
+                    replaceBlankValues: NoOpAlreadyHandledByIR,
                     checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
@@ -1105,7 +1114,7 @@ namespace Microsoft.PowerFx.Functions
                 StandardErrorHandling<NumberValue>(
                     BuiltinFunctionsCore.Radians.Name,
                     expandArguments: NoArgExpansion,
-                    replaceBlankValues: ReplaceBlankWithZero,
+                    replaceBlankValues: NoOpAlreadyHandledByIR,
                     checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
@@ -1120,7 +1129,7 @@ namespace Microsoft.PowerFx.Functions
                 StandardErrorHandling<NumberValue>(
                     BuiltinFunctionsCore.RandBetween.Name,
                     expandArguments: NoArgExpansion,
-                    replaceBlankValues: ReplaceBlankWithZero,
+                    replaceBlankValues: NoOpAlreadyHandledByIR,
                     checkRuntimeTypes: ExactValueType<NumberValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
@@ -1150,7 +1159,7 @@ namespace Microsoft.PowerFx.Functions
                 StandardErrorHandling<NumberValue>(
                     BuiltinFunctionsCore.RGBA.Name,
                     expandArguments: NoArgExpansion,
-                    replaceBlankValues: ReplaceBlankWithZero,
+                    replaceBlankValues: NoOpAlreadyHandledByIR,
                     checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
@@ -1162,8 +1171,7 @@ namespace Microsoft.PowerFx.Functions
                     BuiltinFunctionsCore.Right.Name,
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: ReplaceBlankWith(
-                        new StringValue(IRContext.NotInSource(FormulaType.String), string.Empty),
-                        new NumberValue(IRContext.NotInSource(FormulaType.Number), 0)),
+                        new StringValue(IRContext.NotInSource(FormulaType.String), string.Empty)),
                     checkRuntimeTypes: ExactSequence(
                         ExactValueType<StringValue>,
                         ExactValueType<NumberValue>),
@@ -1176,7 +1184,7 @@ namespace Microsoft.PowerFx.Functions
                 StandardErrorHandling<NumberValue>(
                     BuiltinFunctionsCore.Round.Name,
                     expandArguments: NoArgExpansion,
-                    replaceBlankValues: ReplaceBlankWithZero,
+                    replaceBlankValues: NoOpAlreadyHandledByIR,
                     checkRuntimeTypes: ExactValueType<NumberValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
@@ -1187,7 +1195,7 @@ namespace Microsoft.PowerFx.Functions
                 StandardErrorHandling<NumberValue>(
                     BuiltinFunctionsCore.RoundUp.Name,
                     expandArguments: NoArgExpansion,
-                    replaceBlankValues: ReplaceBlankWithZero,
+                    replaceBlankValues: NoOpAlreadyHandledByIR,
                     checkRuntimeTypes: ExactValueType<NumberValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
@@ -1198,7 +1206,7 @@ namespace Microsoft.PowerFx.Functions
                 StandardErrorHandling<NumberValue>(
                     BuiltinFunctionsCore.RoundDown.Name,
                     expandArguments: NoArgExpansion,
-                    replaceBlankValues: ReplaceBlankWithZero,
+                    replaceBlankValues: NoOpAlreadyHandledByIR,
                     checkRuntimeTypes: ExactValueType<NumberValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
@@ -1220,7 +1228,7 @@ namespace Microsoft.PowerFx.Functions
                 StandardErrorHandling<NumberValue>(
                     BuiltinFunctionsCore.Sequence.Name,
                     expandArguments: InsertDefaultValues(outputArgsCount: 3, fillWith: new NumberValue(IRContext.NotInSource(FormulaType.Number), 1)),
-                    replaceBlankValues: ReplaceBlankWithZero,
+                    replaceBlankValues: NoOpAlreadyHandledByIR,
                     checkRuntimeTypes: ExactValueType<NumberValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
@@ -1242,7 +1250,7 @@ namespace Microsoft.PowerFx.Functions
                 StandardErrorHandling<NumberValue>(
                     BuiltinFunctionsCore.Sin.Name,
                     expandArguments: NoArgExpansion,
-                    replaceBlankValues: ReplaceBlankWithZero,
+                    replaceBlankValues: NoOpAlreadyHandledByIR,
                     checkRuntimeTypes: ExactValueType<NumberValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
@@ -1278,7 +1286,7 @@ namespace Microsoft.PowerFx.Functions
                 StandardErrorHandling<NumberValue>(
                     BuiltinFunctionsCore.Sqrt.Name,
                     expandArguments: NoArgExpansion,
-                    replaceBlankValues: ReplaceBlankWithZero,
+                    replaceBlankValues: NoOpAlreadyHandledByIR,
                     checkRuntimeTypes: ExactValueType<NumberValue>,
                     checkRuntimeValues: DeferRuntimeTypeChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
@@ -1386,7 +1394,7 @@ namespace Microsoft.PowerFx.Functions
                 StandardErrorHandling<NumberValue>(
                     BuiltinFunctionsCore.Tan.Name,
                     expandArguments: NoArgExpansion,
-                    replaceBlankValues: ReplaceBlankWithZero,
+                    replaceBlankValues: NoOpAlreadyHandledByIR,
                     checkRuntimeTypes: ExactValueType<NumberValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
@@ -1419,7 +1427,7 @@ namespace Microsoft.PowerFx.Functions
                 StandardErrorHandling<NumberValue>(
                     BuiltinFunctionsCore.Time.Name,
                     expandArguments: InsertDefaultValues(outputArgsCount: 4, fillWith: new NumberValue(IRContext.NotInSource(FormulaType.Number), 0)),
-                    replaceBlankValues: ReplaceBlankWithZero,
+                    replaceBlankValues: NoOpAlreadyHandledByIR,
                     checkRuntimeTypes: ExactValueType<NumberValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
@@ -1490,7 +1498,7 @@ namespace Microsoft.PowerFx.Functions
                 StandardErrorHandling<NumberValue>(
                     BuiltinFunctionsCore.Trunc.Name,
                     expandArguments: InsertDefaultValues(outputArgsCount: 2, fillWith: new NumberValue(IRContext.NotInSource(FormulaType.Number), 0)),
-                    replaceBlankValues: ReplaceBlankWithZero,
+                    replaceBlankValues: NoOpAlreadyHandledByIR,
                     checkRuntimeTypes: ExactValueType<NumberValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
@@ -1584,50 +1592,50 @@ namespace Microsoft.PowerFx.Functions
         {
             {
                 BuiltinFunctionsCore.AbsT,
-                StandardErrorHandlingTabularOverload<NumberValue>(BuiltinFunctionsCore.AbsT.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.Abs])
+                StandardErrorHandlingTabularOverload<NumberValue>(BuiltinFunctionsCore.AbsT.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.Abs], ReplaceBlankWithZero)
             },
             {
                 BuiltinFunctionsCore.Boolean_T,
-                StandardErrorHandlingTabularOverload<StringValue>(BuiltinFunctionsCore.Boolean_T.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.Boolean])
+                StandardErrorHandlingTabularOverload<StringValue>(BuiltinFunctionsCore.Boolean_T.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.Boolean], DoNotReplaceBlank)
             },
             {
                 BuiltinFunctionsCore.BooleanN_T,
-                StandardErrorHandlingTabularOverload<NumberValue>(BuiltinFunctionsCore.BooleanN_T.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.BooleanN])
+                StandardErrorHandlingTabularOverload<NumberValue>(BuiltinFunctionsCore.BooleanN_T.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.BooleanN], DoNotReplaceBlank)
             },
 
             // This implementation is not actually used for this as this is handled at IR level. 
             // This is a placeholder, so that RecalcEngine._interpreterSupportedFunctions can add it for txt tests.
             {
                 BuiltinFunctionsCore.BooleanB_T,
-                StandardErrorHandlingTabularOverload<StringValue>(BuiltinFunctionsCore.BooleanB_T.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.BooleanB])
+                StandardErrorHandlingTabularOverload<StringValue>(BuiltinFunctionsCore.BooleanB_T.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.BooleanB], DoNotReplaceBlank)
             },
             {
                 BuiltinFunctionsCore.CharT,
-                StandardErrorHandlingTabularOverload<NumberValue>(BuiltinFunctionsCore.CharT.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.Char])
+                StandardErrorHandlingTabularOverload<NumberValue>(BuiltinFunctionsCore.CharT.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.Char], ReplaceBlankWithZero)
             },
             {
                 BuiltinFunctionsCore.ExpT,
-                StandardErrorHandlingTabularOverload<NumberValue>(BuiltinFunctionsCore.ExpT.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.Exp])
+                StandardErrorHandlingTabularOverload<NumberValue>(BuiltinFunctionsCore.ExpT.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.Exp], ReplaceBlankWithZero)
             },
             {
                 BuiltinFunctionsCore.Hex2DecT,
-                StandardErrorHandlingTabularOverload<StringValue>(BuiltinFunctionsCore.Hex2DecT.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.Hex2Dec])
+                StandardErrorHandlingTabularOverload<StringValue>(BuiltinFunctionsCore.Hex2DecT.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.Hex2Dec], ReplaceBlankWithZero)
             },
             {
                 BuiltinFunctionsCore.IntT,
-                StandardErrorHandlingTabularOverload<NumberValue>(BuiltinFunctionsCore.IntT.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.Int])
+                StandardErrorHandlingTabularOverload<NumberValue>(BuiltinFunctionsCore.IntT.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.Int], ReplaceBlankWithZero)
             },
             {
                 BuiltinFunctionsCore.LenT,
-                StandardErrorHandlingTabularOverload<StringValue>(BuiltinFunctionsCore.LenT.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.Len])
+                StandardErrorHandlingTabularOverload<StringValue>(BuiltinFunctionsCore.LenT.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.Len], ReplaceBlankWithZero)
             },
             {
                 BuiltinFunctionsCore.LnT,
-                StandardErrorHandlingTabularOverload<NumberValue>(BuiltinFunctionsCore.LnT.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.Ln])
+                StandardErrorHandlingTabularOverload<NumberValue>(BuiltinFunctionsCore.LnT.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.Ln], ReplaceBlankWithZero)
             },
             {
                 BuiltinFunctionsCore.SqrtT,
-                StandardErrorHandlingTabularOverload<NumberValue>(BuiltinFunctionsCore.SqrtT.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.Sqrt])
+                StandardErrorHandlingTabularOverload<NumberValue>(BuiltinFunctionsCore.SqrtT.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.Sqrt], ReplaceBlankWithZero)
             },
         };
 
@@ -1635,23 +1643,23 @@ namespace Microsoft.PowerFx.Functions
         {
             {
                 BuiltinFunctionsCore.ColorFadeT,
-                NoErrorHandling(MultiSingleColumnTable(SimpleFunctionImplementations[BuiltinFunctionsCore.ColorFade]))
+                NoErrorHandling(MultiSingleColumnTable(SimpleFunctionImplementations[BuiltinFunctionsCore.ColorFade], DoNotReplaceBlank))
             },
             {
                 BuiltinFunctionsCore.ConcatenateT,
-                NoErrorHandling(MultiSingleColumnTable(SimpleFunctionImplementations[BuiltinFunctionsCore.Concatenate]))
+                NoErrorHandling(MultiSingleColumnTable(SimpleFunctionImplementations[BuiltinFunctionsCore.Concatenate], DoNotReplaceBlank))
             },
             {
                 BuiltinFunctionsCore.Dec2HexT,
-                NoErrorHandling(MultiSingleColumnTable(SimpleFunctionImplementations[BuiltinFunctionsCore.Dec2Hex]))
+                NoErrorHandling(MultiSingleColumnTable(SimpleFunctionImplementations[BuiltinFunctionsCore.Dec2Hex], ReplaceBlankWithZero))
             },
             {
                 BuiltinFunctionsCore.FindT,
-                NoErrorHandling(MultiSingleColumnTable(SimpleFunctionImplementations[BuiltinFunctionsCore.Find]))
+                NoErrorHandling(MultiSingleColumnTable(SimpleFunctionImplementations[BuiltinFunctionsCore.Find], DoNotReplaceBlank))
             },
             {
                 BuiltinFunctionsCore.RoundT,
-                NoErrorHandling(MultiSingleColumnTable(SimpleFunctionImplementations[BuiltinFunctionsCore.Round]))
+                NoErrorHandling(MultiSingleColumnTable(SimpleFunctionImplementations[BuiltinFunctionsCore.Round], ReplaceBlankWithZero))
             },
         };
 

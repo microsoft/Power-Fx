@@ -5,6 +5,7 @@ using System;
 using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Types;
@@ -36,7 +37,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, timeZoneInfo);
             }
-        
+
             var same = (arg0.Year == now.Year) && (arg0.Month == now.Month) && (arg0.Day == now.Day);
             return new BooleanValue(irContext, same);
         }
@@ -134,15 +135,20 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
-        private static DateTime MakeValidDateTime(EvalVisitor runner, DateTime datetime, TimeZoneInfo timeZoneInfo)
+        private static DateTime MakeValidDateTime(EvalVisitor runner, DateTime dateTime, TimeZoneInfo timeZoneInfo)
         {
-            if (datetime.IsValid(runner))
+            return MakeValidDateTime(runner.TimeZoneInfo, dateTime);
+        }
+
+        private static DateTime MakeValidDateTime(TimeZoneInfo timeZoneInfo, DateTime dateTime)
+        {
+            if (dateTime.IsValid(timeZoneInfo))
             {
-                return datetime;
+                return dateTime;
             }
 
             // If the date is invalid, we want to return the next valid date/time
-            return GetNextValidDate(datetime, timeZoneInfo);
+            return GetNextValidDate(dateTime, timeZoneInfo);
         }
 
         private static DateTime GetNextValidDate(DateTime invalidDate, TimeZoneInfo timeZoneInfo)
@@ -555,12 +561,28 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
+        public static bool TryDateTimeParse(FormattingInfo formatInfo, IRContext irContext, StringValue value, out DateTimeValue result)
+        {
+            result = null;
+
+            if (DateTime.TryParse(value.Value, formatInfo.CultureInfo, DateTimeStyles.AdjustToUniversal, out var dateTime))
+            {
+                dateTime = DateTimeValue.GetConvertedDateTimeValue(dateTime, formatInfo.TimeZoneInfo);
+                result = new DateTimeValue(irContext, dateTime);
+            }
+
+            return result != null;
+        }
+
         public static FormulaValue DateTimeParse(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, StringValue[] args)
         {
-            var str = args[0].Value;
+            return DateTimeParse(CreateFormattingInfo(runner), irContext, args);
+        }
 
+        public static FormulaValue DateTimeParse(FormattingInfo formatInfo, IRContext irContext, StringValue[] args)
+        {
             // culture will have Cultural info in-case one was passed in argument else it will have the default one.
-            CultureInfo culture = runner.CultureInfo;
+            CultureInfo culture = formatInfo.CultureInfo;
             if (args.Length > 1)
             {
                 var languageCode = args[1].Value;
@@ -569,20 +591,18 @@ namespace Microsoft.PowerFx.Functions
                 {
                     return CommonErrors.BadLanguageCode(irContext, languageCode);
                 }
+
+                formatInfo.CultureInfo = culture;
             }
 
-            if (str == string.Empty)
+            if (args[0].Value == string.Empty)
             {
                 return new BlankValue(irContext);
             }
 
-            if (DateTime.TryParse(str, culture, DateTimeStyles.AdjustToUniversal, out var result))
+            if (TryDateTimeParse(formatInfo, irContext, args[0], out var result))
             {
-                var tzi = runner.TimeZoneInfo;
-
-                result = DateTimeValue.GetConvertedDateTimeValue(result, tzi);
-
-                return new DateTimeValue(irContext, result);
+                return result;
             }
             else
             {
