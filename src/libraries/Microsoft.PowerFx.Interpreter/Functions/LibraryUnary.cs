@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Interpreter;
+using Microsoft.PowerFx.Interpreter.Exceptions;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Functions
@@ -309,22 +310,27 @@ namespace Microsoft.PowerFx.Functions
 
         public static NumberValue BooleanToNumber(IRContext irContext, BooleanValue[] args)
         {
-            var b = args[0].Value;
-            return new NumberValue(irContext, b ? 1.0 : 0.0);
+            return BooleanToNumber(irContext, args[0]);
+        }
+
+        public static NumberValue BooleanToNumber(IRContext irContext, BooleanValue value)
+        {
+            return new NumberValue(irContext, value.Value ? 1.0 : 0.0);
         }
 
         public static FormulaValue TextToBoolean(IRContext irContext, StringValue[] args)
         {
-            var val = args[0].Value;
-
-            if (string.IsNullOrEmpty(val))
+            if (string.IsNullOrEmpty(args[0].Value))
             {
                 return new BlankValue(irContext);
             }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
             var lower = val.ToLowerInvariant();
 =======
+=======
+>>>>>>> 408ea0258b4f8d9fd1f9e39b04c7853fa6e5c557
             bool isBoolean = TryTextToBoolean(irContext, args[0], out BooleanValue result);
 
             return isBoolean ? result : CommonErrors.InvalidBooleanFormatError(irContext);
@@ -335,7 +341,10 @@ namespace Microsoft.PowerFx.Functions
             result = null;
             var lower = value.Value.ToLowerInvariant();
 
+<<<<<<< HEAD
 >>>>>>> ee034846 (update)
+=======
+>>>>>>> 408ea0258b4f8d9fd1f9e39b04c7853fa6e5c557
             if (lower == "true")
             {
                 result = new BooleanValue(irContext, true);
@@ -346,8 +355,11 @@ namespace Microsoft.PowerFx.Functions
             }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
             return CommonErrors.InvalidBooleanFormatError(irContext);
 =======
+=======
+>>>>>>> 408ea0258b4f8d9fd1f9e39b04c7853fa6e5c557
             return result != null;
         }
 
@@ -385,24 +397,32 @@ namespace Microsoft.PowerFx.Functions
                 default:
                     throw CommonExceptions.RuntimeMisMatch;
             }
+<<<<<<< HEAD
 >>>>>>> ee034846 (update)
+=======
+>>>>>>> 408ea0258b4f8d9fd1f9e39b04c7853fa6e5c557
         }
 
         public static FormulaValue DateToNumber(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            var timeZoneInfo = runner.TimeZoneInfo;
-            DateTime arg0 = runner.GetNormalizedDateTime(args[0]);
+            return DateToNumber(CreateFormattingInfo(runner), irContext, args[0]);
+        }
 
-            var diff = arg0.Subtract(_epoch).TotalDays;
-            return new NumberValue(irContext, diff);
+        public static NumberValue DateToNumber(FormattingInfo formatInfo, IRContext irContext, FormulaValue value)
+        {
+            DateTime dateTime = GetNormalizedDateTime(value, formatInfo.TimeZoneInfo);
+            return new NumberValue(irContext, dateTime.Subtract(_epoch).TotalDays);
         }
 
         public static NumberValue DateTimeToNumber(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, DateTimeValue[] args)
         {
-            var timeZoneInfo = runner.TimeZoneInfo;
-            var d = args[0].GetConvertedValue(timeZoneInfo);
-            var diff = d.Subtract(_epoch).TotalDays;
-            return new NumberValue(irContext, diff);
+            return DateTimeToNumber(CreateFormattingInfo(runner), irContext, args[0]);
+        }
+
+        public static NumberValue DateTimeToNumber(FormattingInfo formatInfo, IRContext irContext, DateTimeValue value)
+        {
+            var d = value.GetConvertedValue(formatInfo.TimeZoneInfo);
+            return new NumberValue(irContext, d.Subtract(_epoch).TotalDays);
         }
 
         public static DateValue NumberToDate(IRContext irContext, NumberValue[] args)
@@ -414,10 +434,15 @@ namespace Microsoft.PowerFx.Functions
 
         public static DateTimeValue NumberToDateTime(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, NumberValue[] args)
         {
-            var n = args[0].Value;
+            return NumberToDateTime(CreateFormattingInfo(runner), irContext, args[0]);
+        }
+
+        public static DateTimeValue NumberToDateTime(FormattingInfo formatInfo, IRContext irContext, NumberValue value)
+        {
+            var n = value.Value;
             var date = _epoch.AddDays(n);
 
-            date = MakeValidDateTime(runner, date, runner.GetService<TimeZoneInfo>());            
+            date = MakeValidDateTime(formatInfo.TimeZoneInfo, date);
 
             return new DateTimeValue(irContext, date);
         }
@@ -434,6 +459,28 @@ namespace Microsoft.PowerFx.Functions
                 default:
                     return CommonErrors.RuntimeTypeMismatch(irContext);
             }
+        }
+
+        public static bool TryGetDateTime(FormattingInfo formatInfo, IRContext irContext, FormulaValue value, out DateTimeValue result)
+        {
+            result = null;
+
+            switch (value)
+            {
+                case StringValue st:
+                    return TryDateTimeParse(formatInfo, irContext, st, out result);
+                case NumberValue num:
+                    result = NumberToDateTime(formatInfo, irContext, num);
+                    break;
+                case DateValue dv:
+                    result = new DateTimeValue(irContext, dv.GetConvertedValue(formatInfo.TimeZoneInfo));
+                    break;
+                case DateTimeValue dtv:
+                    result = dtv;
+                    break;
+            }
+
+            return result != null;
         }
 
         public static FormulaValue DateTimeToDate(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
@@ -488,10 +535,15 @@ namespace Microsoft.PowerFx.Functions
 
         public static DateTimeValue TimeToDateTime(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, TimeValue[] args)
         {
-            var t = args[0].Value;
+            return TimeToDateTime(CreateFormattingInfo(runner), irContext, args[0]);
+        }
+
+        public static DateTimeValue TimeToDateTime(FormattingInfo formatInfo, IRContext irContext, TimeValue value)
+        {
+            var t = value.Value;
             var date = _epoch.Add(t);
 
-            date = MakeValidDateTime(runner, date, runner.GetService<TimeZoneInfo>());
+            date = MakeValidDateTime(formatInfo.TimeZoneInfo, date);
 
             return new DateTimeValue(irContext, date);
         }
