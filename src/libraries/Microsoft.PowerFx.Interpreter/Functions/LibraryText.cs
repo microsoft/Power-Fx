@@ -152,37 +152,42 @@ namespace Microsoft.PowerFx.Functions
                 formatInfo.CultureInfo = culture;
             }
 
-            NumberValue result = Value(formatInfo, irContext, args[0]);
+            bool isValue = TryValue(formatInfo, irContext, args[0], out NumberValue result);
 
-            return result == null ? CommonErrors.ArgumentOutOfRange(irContext) : result;
+            return isValue ? result : CommonErrors.ArgumentOutOfRange(irContext);
         }
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-value
         // Convert string to number
-        public static NumberValue Value(FormattingInfo formatInfo, IRContext irContext, FormulaValue value)
+        public static bool TryValue(FormattingInfo formatInfo, IRContext irContext, FormulaValue value, out NumberValue result)
         {
+            result = null;
             switch (value)
             {
                 case NumberValue n:
-                    return n;
+                    result = n;
+                    break;
                 case BooleanValue b:
-                    return BooleanToNumber(irContext, b);
+                    result = BooleanToNumber(irContext, b);
+                    break;
                 case DateValue dv:
-                    return DateToNumber(formatInfo, irContext, dv);
+                    result = DateToNumber(formatInfo, irContext, dv);
+                    break;
                 case DateTimeValue dtv:
-                    return DateTimeToNumber(formatInfo, irContext, dtv);
+                    result = DateTimeToNumber(formatInfo, irContext, dtv);
+                    break;
                 case StringValue sv:
                     var (val, err) = ConvertToNumber(sv.Value, formatInfo.CultureInfo);
 
                     if (err == ConvertionStatus.Ok)
                     {
-                        return new NumberValue(irContext, val);
+                        result = new NumberValue(irContext, val);
                     }
 
                     break;
             }
 
-            return null;
+            return result != null;
         }
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-text
@@ -225,38 +230,39 @@ namespace Microsoft.PowerFx.Functions
                 return CommonErrors.GenericInvalidArgument(irContext, string.Format(customErrorMessage, "Text"));
             }
 
-            var result = Text(formatInfo, irContext, args[0], formatString);
+            var isText = TryText(formatInfo, irContext, args[0], formatString, out StringValue result);
 
-            return result == null ? CommonErrors.GenericInvalidArgument(irContext, StringResources.Get(TexlStrings.ErrTextInvalidFormat, culture.Name)) : result;
+            return isText ? result : CommonErrors.GenericInvalidArgument(irContext, StringResources.Get(TexlStrings.ErrTextInvalidFormat, culture.Name));
         }
 
-        public static StringValue Text(FormattingInfo formatInfo, IRContext irContext, FormulaValue value, string formatString = null)
+        public static bool TryText(FormattingInfo formatInfo, IRContext irContext, FormulaValue value, string formatString, out StringValue result)
         {
             var timeZoneInfo = formatInfo.TimeZoneInfo;
             var culture = formatInfo.CultureInfo;
             var hasDateTimeFmt = false;
             var hasNumberFmt = false;
-            string resultString = null;
+            result = null;
 
             if (formatString != null && !TextFormatUtils.IsValidFormatArg(formatString, out hasDateTimeFmt, out hasNumberFmt))
             {
-                return null;
+                return false;
             }
 
             switch (value)
             {
                 case StringValue sv:
-                    return sv;
+                    result = sv;
+                    break;
                 case NumberValue num:
                     if (formatString != null && hasDateTimeFmt)
                     {
                         // It's a number, formatted as date/time. Let's convert it to a date/time value first
                         var newDateTime = Library.NumberToDateTime(formatInfo, IRContext.NotInSource(FormulaType.DateTime), num);
-                        return ExpandDateTimeExcelFormatSpecifiersToStringValue(irContext, formatString, "g", newDateTime.GetConvertedValue(timeZoneInfo), culture, formatInfo.CancellationToken);
+                        return TryExpandDateTimeExcelFormatSpecifiersToStringValue(irContext, formatString, "g", newDateTime.GetConvertedValue(timeZoneInfo), culture, formatInfo.CancellationToken, out result);
                     }
                     else
                     {
-                        resultString = num.Value.ToString(formatString ?? "g", culture);
+                        result = new StringValue(irContext, num.Value.ToString(formatString ?? "g", culture));
                     }
 
                     break;                
@@ -265,11 +271,11 @@ namespace Microsoft.PowerFx.Functions
                     {
                         // It's a datetime, formatted as number. Let's convert it to a number value first
                         var newNumber = Library.DateTimeToNumber(formatInfo, IRContext.NotInSource(FormulaType.Number), dateTimeValue);
-                        resultString = newNumber.Value.ToString(formatString, culture);
+                        result = new StringValue(irContext, newNumber.Value.ToString(formatString, culture));
                     }
                     else
                     {
-                        return ExpandDateTimeExcelFormatSpecifiersToStringValue(irContext, formatString, "g", dateTimeValue.GetConvertedValue(timeZoneInfo), culture, formatInfo.CancellationToken);
+                        return TryExpandDateTimeExcelFormatSpecifiersToStringValue(irContext, formatString, "g", dateTimeValue.GetConvertedValue(timeZoneInfo), culture, formatInfo.CancellationToken, out result);
                     }
 
                     break;
@@ -277,11 +283,11 @@ namespace Microsoft.PowerFx.Functions
                     if (formatString != null && hasNumberFmt)
                     {
                         NumberValue newDateNumber = Library.DateToNumber(formatInfo, IRContext.NotInSource(FormulaType.Number), dateValue) as NumberValue;
-                        resultString = newDateNumber.Value.ToString(formatString, culture);
+                        result = new StringValue(irContext, newDateNumber.Value.ToString(formatString, culture));
                     }
                     else
                     {
-                        return ExpandDateTimeExcelFormatSpecifiersToStringValue(irContext, formatString, "d", dateValue.GetConvertedValue(timeZoneInfo), culture, formatInfo.CancellationToken);
+                        return TryExpandDateTimeExcelFormatSpecifiersToStringValue(irContext, formatString, "d", dateValue.GetConvertedValue(timeZoneInfo), culture, formatInfo.CancellationToken, out result);
                     }
 
                     break;
@@ -289,35 +295,37 @@ namespace Microsoft.PowerFx.Functions
                     if (formatString != null && hasNumberFmt)
                     {
                         var newNumber = Library.TimeToNumber(IRContext.NotInSource(FormulaType.Number), new TimeValue[] { timeValue });
-                        resultString = newNumber.Value.ToString(formatString, culture);
+                        result = new StringValue(irContext, newNumber.Value.ToString(formatString, culture));
                     }
                     else
                     {
                         var dtValue = Library.TimeToDateTime(formatInfo, IRContext.NotInSource(FormulaType.DateTime), timeValue);
-                        return ExpandDateTimeExcelFormatSpecifiersToStringValue(irContext, formatString, "t", dtValue.GetConvertedValue(timeZoneInfo), culture, formatInfo.CancellationToken);
+                        return TryExpandDateTimeExcelFormatSpecifiersToStringValue(irContext, formatString, "t", dtValue.GetConvertedValue(timeZoneInfo), culture, formatInfo.CancellationToken, out result);
                     }
 
                     break;
                 case BooleanValue b:
-                    resultString = b.Value.ToString().ToLower();
+                    result = new StringValue(irContext, b.Value.ToString().ToLower());
                     break;
             }
 
-            return resultString == null ? null : new StringValue(irContext, resultString);
+            return result != null;
         }
 
         internal static FormulaValue ExpandDateTimeExcelFormatSpecifiers(IRContext irContext, string format, string defaultFormat, DateTime dateTime, CultureInfo culture, CancellationToken cancellationToken)
         {
-            StringValue result = ExpandDateTimeExcelFormatSpecifiersToStringValue(irContext, format, defaultFormat, dateTime, culture, cancellationToken);
+            bool isStringValue = TryExpandDateTimeExcelFormatSpecifiersToStringValue(irContext, format, defaultFormat, dateTime, culture, cancellationToken, out StringValue result);
 
-            return result == null ? CommonErrors.GenericInvalidArgument(irContext, StringResources.Get(TexlStrings.ErrTextInvalidFormat, culture.Name)) : result;
+            return isStringValue ? result : CommonErrors.GenericInvalidArgument(irContext, StringResources.Get(TexlStrings.ErrTextInvalidFormat, culture.Name));
         }
 
-        internal static StringValue ExpandDateTimeExcelFormatSpecifiersToStringValue(IRContext irContext, string format, string defaultFormat, DateTime dateTime, CultureInfo culture, CancellationToken cancellationToken)
+        internal static bool TryExpandDateTimeExcelFormatSpecifiersToStringValue(IRContext irContext, string format, string defaultFormat, DateTime dateTime, CultureInfo culture, CancellationToken cancellationToken, out StringValue result)
         {
+            result = null;
             if (format == null)
             {
-                return new StringValue(irContext, dateTime.ToString(defaultFormat, culture));
+                result = new StringValue(irContext, dateTime.ToString(defaultFormat, culture));
+                return true;
             }
 
             // DateTime format
@@ -333,18 +341,23 @@ namespace Microsoft.PowerFx.Functions
                 case "'longtime24'":
                 case "'longtime'":
                 case "'longdate'":
-                    return new StringValue(irContext, dateTime.ToString(ExpandDateTimeFormatSpecifiers(format, culture)));
+                    result = new StringValue(irContext, dateTime.ToString(ExpandDateTimeFormatSpecifiers(format, culture)));
+                    break;
                 default:
                     try
                     {
                         var stringResult = ResolveDateTimeFormatAmbiguities(format, dateTime, culture, cancellationToken);
-                        return new StringValue(irContext, stringResult);
+                        result = new StringValue(irContext, stringResult);
                     }
                     catch (FormatException)
                     {
-                        return null;
+                        return false;
                     }
+
+                    break;
             }
+
+            return result != null;
         }
 
         internal static string ExpandDateTimeFormatSpecifiers(string format, CultureInfo culture)

@@ -2,8 +2,8 @@
 // Licensed under the MIT license.
 
 using System;
+using Microsoft.PowerFx;
 using Microsoft.PowerFx.Core.Tests;
-using Microsoft.PowerFx.Interpreter.Marshal;
 using Microsoft.PowerFx.Types;
 using Xunit;
 

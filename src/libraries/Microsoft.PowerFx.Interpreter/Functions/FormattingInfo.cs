@@ -9,7 +9,7 @@ using System.Threading;
 
 namespace Microsoft.PowerFx.Functions
 {
-    internal class FormattingInfo
+    public class FormattingInfo
     {
         public CultureInfo CultureInfo { get; set; }
 

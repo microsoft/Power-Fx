@@ -9,14 +9,14 @@ using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Types;
 using static Microsoft.PowerFx.Functions.Library;
 
-namespace Microsoft.PowerFx.Interpreter.Marshal
+namespace Microsoft.PowerFx
 {
     /// <summary>
     /// Convert value to target format.
     /// </summary>
-    internal static class TypeCoercionProvider
+    public static class TypeCoercionProvider
     {
-        private static FormattingInfo CreateFormattingInfo()
+        public static FormattingInfo CreateFormattingInfo()
         {
             return new FormattingInfo()
             {
@@ -57,8 +57,7 @@ namespace Microsoft.PowerFx.Interpreter.Marshal
         /// <returns>True/False based on whether function can convert from original type to String type.</returns> 
         public static bool TryCoerceTo(this FormulaValue value, FormattingInfo formatInfo, out StringValue result)
         {
-            result = Text(formatInfo, IRContext.NotInSource(FormulaType.String), value);
-            return result != null;
+            return TryText(formatInfo, IRContext.NotInSource(FormulaType.String), value, null, out result);
         }
 
         /// <summary>
@@ -81,8 +80,7 @@ namespace Microsoft.PowerFx.Interpreter.Marshal
         /// <returns>True/False based on whether function can convert from original type to Number type.</returns> 
         public static bool TryCoerceTo(this FormulaValue value, FormattingInfo formatInfo, out NumberValue result)
         {
-            result = Value(formatInfo, IRContext.NotInSource(FormulaType.Number), value);
-            return result != null;
+            return TryValue(formatInfo, IRContext.NotInSource(FormulaType.Number), value, out result);
         }
 
         /// <summary>
