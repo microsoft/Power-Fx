@@ -69,3 +69,16 @@ Blank()
 
 >> FirstN(Filter([1,2,3],Value=4),2)
 Table()
+
+// ********** Coercions ************
+>> FirstN([1,2,3,4,5], "3")
+Table({Value:1},{Value:2},{Value:3})
+
+>> LastN([1,2,3,4,5], "3")
+Table({Value:3},{Value:4},{Value:5})
+
+>> FirstN([1,2,3,4,5], true)
+Table({Value:1})
+
+>> LastN([1,2,3,4,5], true)
+Table({Value:5})

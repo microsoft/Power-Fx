@@ -482,3 +482,9 @@ Blank()
 
 >> CountRows(LastN(ParseJSON("[1, 2, 3, 4]"), "3"))
 3
+
+>> Value(Index(ParseJSON("[1,2,3,4]"), "2")) // Coercion from string
+2
+
+>> Text(Index(ParseJSON("[""one"",""two"",""three""]"),true)) // Coercion from boolean
+"one"
