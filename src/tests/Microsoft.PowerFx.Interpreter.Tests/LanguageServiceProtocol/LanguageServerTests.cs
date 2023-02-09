@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text.Json;
 using System.Text.RegularExpressions;
@@ -51,8 +52,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 
             _sendToClientData = new List<string>();
             _scopeFactory = new TestPowerFxScopeFactory(
-                (string documentUri) => engine.CreateEditorScope(options, GetFromUri(documentUri)),
-                options);
+                (string documentUri) => engine.CreateEditorScope(options, GetFromUri(documentUri)));
             _testServer = new TestLanguageServer(_sendToClientData.Add, _scopeFactory);
         }
 
@@ -66,7 +66,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
                 json = "{}";
             }
 
-            var record = (RecordValue)FormulaValue.FromJson(json);
+            var record = (RecordValue)FormulaValueJSON.FromJson(json);
             return ReadOnlySymbolTable.NewFromRecord(record.Type);
         }
 
@@ -560,7 +560,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Equal(InvalidParams, errorResponse.Error.Code);
         }
 
-        class DummyQuickFixHandler : CodeFixHandler
+        private class DummyQuickFixHandler : CodeFixHandler
         {
             public override async Task<IEnumerable<CodeFixSuggestion>> SuggestFixesAsync(Engine engine, CheckResult checkResult, CancellationToken cancel)
             {
@@ -649,7 +649,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 
             // Fail handler was invokde, but didn't block us. 
             Assert.Equal(1, failHandler._counter); // Invoked
-            Assert.Equal(1, errorList.Count);
+            Assert.Single(errorList);
         }
 
         // Test a codefix using a customization, ICodeFixHandler
@@ -809,7 +809,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
                         Uri = documentUri
                     },
                     Command = CommandName.CodeActionApplied,
-                    Argument = ""
+                    Argument = string.Empty
                 }
             }));
 
@@ -1264,6 +1264,83 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Equal("123", response.Id);
             Assert.Equal(documentUri, response.Result.Uri);
             Assert.Equal("Price * Quantity", response.Result.Text);
+        }
+        
+        [Fact]
+        public void ErrorIsLocalized()
+        {
+            var engine = new Engine(new PowerFxConfig());
+
+            // ParseOptions locale
+            var locale = CultureInfo.CreateSpecificCulture("fr-FR");
+
+            engine.Config.AddFunction(new BehaviorFunction());
+
+            _sendToClientData = new List<string>();
+            _scopeFactory = new TestPowerFxScopeFactory(
+                (string documentUri) => engine.CreateEditorScope(new ParserOptions() { Culture = locale }, GetFromUri(documentUri)));
+            _testServer = new TestLanguageServer(_sendToClientData.Add, _scopeFactory);
+
+            _testServer.OnDataReceived(
+                JsonSerializer.Serialize(new
+                {
+                    jsonrpc = "2.0",
+                    method = "textDocument/didOpen",
+                    @params = new DidOpenTextDocumentParams()
+                    {
+                        TextDocument = new TextDocumentItem()
+                        {
+                            Uri = "powerfx://app",
+                            LanguageId = "powerfx",
+                            Version = 1,
+                            Text = "Bla."
+                        }
+                    }
+                }));
+
+            CheckBehaviorError(_sendToClientData[0], false, out var diags);
+
+            // Checking if contains text in the correct locale
+            Assert.Contains("Caractères inattendus.", diags.First().Message); // the value should be localized. Resx files have this localized.
+        }
+
+        // Test showing how LSP can fully customize check result. 
+        [Fact]
+        public void CustomCheckResult()
+        {
+            _scopeFactory = new TestPowerFxScopeFactory(this.TestCreateEditorScope);
+            _testServer = new TestLanguageServer(_sendToClientData.Add, _scopeFactory);
+
+            _testServer.OnDataReceived(
+             JsonSerializer.Serialize(new
+             {
+                 jsonrpc = "2.0",
+                 method = "textDocument/didOpen",
+                 @params = new DidOpenTextDocumentParams()
+                 {
+                     TextDocument = new TextDocumentItem()
+                     {
+                         Uri = "powerfx://app",
+                         LanguageId = "powerfx",
+                         Version = 1,
+                         Text = "12+34" // number, expecting string 
+                     }
+                 }
+             }));
+
+            CheckBehaviorError(_sendToClientData[0], false, out var diags);
+
+            Assert.Contains("The type of this expression does not match the expected type 'Text'. Found type 'Number'.", diags.First().Message);
+        }
+
+        private EditorContextScope TestCreateEditorScope(string documentUri)
+        {
+            var engine = new Engine();
+
+            return new EditorContextScope((expression) => new CheckResult(engine)
+                .SetText(expression)
+                .SetBindingInfo()
+                .SetExpectedReturnValue(FormulaType.String));
         }
     }
 }

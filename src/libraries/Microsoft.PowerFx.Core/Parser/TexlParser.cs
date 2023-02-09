@@ -86,7 +86,7 @@ namespace Microsoft.PowerFx.Core.Parser
                 }
 
                 ParseTrivia();
-                
+
                 if (TokEat(TokKind.Semicolon) == null)
                 {
                     break;
@@ -261,6 +261,11 @@ namespace Microsoft.PowerFx.Core.Parser
                     if (thisEq != null)
                     {
                         ParseTrivia();
+
+                        if (_curs.TidCur == TokKind.Semicolon)
+                        {
+                            CreateError(thisIdentifier, TexlStrings.ErrNamedFormula_MissingValue);
+                        }
 
                         // Extract expression
                         while (_curs.TidCur != TokKind.Semicolon)
@@ -708,7 +713,7 @@ namespace Microsoft.PowerFx.Core.Parser
                             {
                                 goto default;
                             }
-                            
+
                             if (_features.HasFlag(Features.DisableRowScopeDisambiguationSyntax))
                             {
                                 PostError(_curs.TokCur, errKey: TexlStrings.ErrDeprecated);

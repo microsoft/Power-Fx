@@ -21,7 +21,7 @@ namespace Microsoft.PowerFx.Core.Texl
         // Functions in this list are shared and may show up in other hosts by default.
         private static readonly List<TexlFunction> _library = new List<TexlFunction>(200);
         private static readonly List<TexlFunction> _featureGateFunctions = new List<TexlFunction>();
-        
+
         public static readonly TexlFunction AmPm = _library.Append(new AmPmFunction());
         public static readonly TexlFunction AmPmShort = _library.Append(new AmPmShortFunction());
         public static readonly TexlFunction Abs = _library.Append(new AbsFunction());
@@ -45,6 +45,8 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction Boolean_T = _library.Append(new BooleanFunction_T());
         public static readonly TexlFunction BooleanN = _library.Append(new BooleanNFunction());
         public static readonly TexlFunction BooleanN_T = _library.Append(new BooleanNFunction_T());
+        public static readonly TexlFunction BooleanB = _library.Append(new BooleanBFunction());
+        public static readonly TexlFunction BooleanB_T = _library.Append(new BooleanBFunction_T());
         public static readonly TexlFunction Boolean_UO = _library.Append(new BooleanFunction_UO());
         public static readonly TexlFunction Clock24 = _library.Append(new IsClock24Function());
         public static readonly TexlFunction Char = _library.Append(new CharFunction());
@@ -77,8 +79,11 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction DateValue = _library.Append(new DateValueFunction());
         public static readonly TexlFunction DateValue_UO = _library.Append(new DateValueFunction_UO());
         public static readonly TexlFunction Day = _library.Append(new DayFunction());
+        public static readonly TexlFunction Dec2Hex = _library.Append(new Dec2HexFunction());
+        public static readonly TexlFunction Dec2HexT = _library.Append(new Dec2HexTFunction());
         public static readonly TexlFunction Degrees = _library.Append(new DegreesFunction());
         public static readonly TexlFunction DegreesT = _library.Append(new DegreesTableFunction());
+        public static readonly TexlFunction DropColumns = _library.Append(new DropColumnsFunction());
         public static readonly TexlFunction EndsWith = _library.Append(new EndsWithFunction());
         public static readonly TexlFunction Error = _library.Append(new ErrorFunction());
         public static readonly TexlFunction Exp = _library.Append(new ExpFunction());
@@ -88,10 +93,14 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction FindT = _library.Append(new FindTFunction());
         public static readonly TexlFunction First = _library.Append(new FirstLastFunction(isFirst: true));
         public static readonly TexlFunction FirstN = _library.Append(new FirstLastNFunction(isFirst: true));
+        public static readonly TexlFunction First_UO = _library.Append(new FirstLastFunction_UO(isFirst: true));
+        public static readonly TexlFunction FirstN_UO = _library.Append(new FirstLastNFunction_UO(isFirst: true));
         public static readonly TexlFunction ForAll = _library.Append(new ForAllFunction());
         public static readonly TexlFunction ForAll_UO = _library.Append(new ForAllFunction_UO());
         public static readonly TexlFunction GUIDPure = _library.Append(new GUIDPureFunction());
         public static readonly TexlFunction GUID_UO = _library.Append(new GUIDPureFunction_UO());
+        public static readonly TexlFunction Hex2Dec = _library.Append(new Hex2DecFunction());
+        public static readonly TexlFunction Hex2DecT = _library.Append(new Hex2DecTFunction());
         public static readonly TexlFunction Hour = _library.Append(new HourFunction());
         public static readonly TexlFunction If = _library.Append(new IfFunction());
         public static readonly TexlFunction IfError = _library.Append(new IfErrorFunction());
@@ -110,6 +119,8 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction ISOWeekNum = _library.Append(new ISOWeekNumFunction());
         public static readonly TexlFunction Last = _library.Append(new FirstLastFunction(isFirst: false));
         public static readonly TexlFunction LastN = _library.Append(new FirstLastNFunction(isFirst: false));
+        public static readonly TexlFunction Last_UO = _library.Append(new FirstLastFunction_UO(isFirst: false));
+        public static readonly TexlFunction LastN_UO = _library.Append(new FirstLastNFunction_UO(isFirst: false));
         public static readonly TexlFunction Left = _library.Append(new LeftRightScalarFunction(isLeft: true));
         public static readonly TexlFunction LeftTS = _library.Append(new LeftRightTableScalarFunction(isLeft: true));
         public static readonly TexlFunction LeftTT = _library.Append(new LeftRightTableTableFunction(isLeft: true));
@@ -119,7 +130,7 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction Ln = _library.Append(new LnFunction());
         public static readonly TexlFunction LnT = _library.Append(new LnTableFunction());
         public static readonly TexlFunction Log = _library.Append(new LogFunction());
-        public static readonly TexlFunction LogT = _library.Append(new LogTFunction());        
+        public static readonly TexlFunction LogT = _library.Append(new LogTFunction());
         public static readonly TexlFunction LookUp = _library.Append(new LookUpFunction());
         public static readonly TexlFunction Lower = _library.Append(new LowerUpperFunction(isLower: true));
         public static readonly TexlFunction LowerT = _library.Append(new LowerUpperTFunction(isLower: true));
@@ -209,11 +220,6 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction WeekNum = _library.Append(new WeekNumFunction());
         public static readonly TexlFunction With = _library.Append(new WithFunction());
         public static readonly TexlFunction Year = _library.Append(new YearFunction());
-
-        public static readonly TexlFunction Dec2Hex = _featureGateFunctions.Append(new Dec2HexFunction());
-        public static readonly TexlFunction Dec2HexT = _featureGateFunctions.Append(new Dec2HexTFunction());
-        public static readonly TexlFunction Hex2Dec = _featureGateFunctions.Append(new Hex2DecFunction());
-        public static readonly TexlFunction Hex2DecT = _featureGateFunctions.Append(new Hex2DecTFunction());
 
         public static readonly TexlFunction IsUTCToday = _featureGateFunctions.Append(new IsUTCTodayFunction());
         public static readonly TexlFunction UTCNow = _featureGateFunctions.Append(new UTCNowFunction());

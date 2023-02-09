@@ -98,11 +98,11 @@ namespace Microsoft.PowerFx.Functions
             });
         }
 
-        public static ErrorValue GenericInvalidArgument(IRContext irContext)
+        public static ErrorValue GenericInvalidArgument(IRContext irContext, string message = "Invalid Argument")
         {
             return new ErrorValue(irContext, new ExpressionError()
             {
-                Message = "Invalid Argument",
+                Message = message,
                 Span = irContext.SourceContext,
                 Kind = ErrorKind.InvalidArgument
             });
@@ -185,6 +185,16 @@ namespace Microsoft.PowerFx.Functions
                 Message = message,
                 Span = irContext.SourceContext,
                 Kind = ErrorKind.Custom
+            });
+        }
+
+        internal static FormulaValue OnlyPrimitiveValuesAllowed(IRContext irContext)
+        {
+            return new ErrorValue(irContext, new ExpressionError()
+            {
+                Message = "Only primitive values are allowed for the operation",
+                Span = irContext.SourceContext,
+                Kind = ErrorKind.InvalidArgument
             });
         }
     }

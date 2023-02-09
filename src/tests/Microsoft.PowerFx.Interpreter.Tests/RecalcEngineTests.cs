@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Texl;
+using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Functions;
@@ -36,6 +37,7 @@ namespace Microsoft.PowerFx.Tests
                 $"{ns}.{nameof(CheckResultExtensions)}",
                 $"{ns}.{nameof(ReadOnlySymbolValues)}",
                 $"{ns}.{nameof(RecalcEngine)}",
+                $"{ns}.{nameof(Governor)}",
                 $"{ns}.{nameof(ReflectionFunction)}",
 #pragma warning disable CS0618 // Type or member is obsolete
                 $"{ns}.{nameof(RecalcEngineScope)}",
@@ -47,6 +49,9 @@ namespace Microsoft.PowerFx.Tests
                 $"{ns}.{nameof(IDynamicTypeMarshaller)}",
                 $"{ns}.{nameof(ObjectMarshallerProvider)}",
                 $"{ns}.{nameof(ObjectMarshaller)}",
+                $"{ns}.{nameof(BasicServiceProvider)}",
+                $"{ns}.{nameof(IRuntimeConfig)}",
+                $"{ns}.{nameof(RuntimeConfig)}",
                 $"{ns}.{nameof(PrimitiveMarshallerProvider)}",
                 $"{ns}.{nameof(PrimitiveTypeMarshaller)}",
                 $"{ns}.{nameof(SymbolValues)}",
@@ -58,6 +63,7 @@ namespace Microsoft.PowerFx.Tests
                 $"{nsType}.{nameof(QueryableTableValue)}",
                 $"{ns}.InterpreterConfigException",
                 $"{ns}.Interpreter.{nameof(NotDelegableException)}",
+                $"{ns}.Interpreter.{nameof(CustomFunctionErrorException)}",
                 $"{ns}.Interpreter.UDF.{nameof(DefineFunctionsResult)}",                               
 
                 // Services for functions. 
@@ -100,6 +106,24 @@ namespace Microsoft.PowerFx.Tests
             var result = engine.Eval("With({y:2}, x+y)", context);
 
             Assert.Equal(17.0, ((NumberValue)result).Value);
+        }
+
+        [Fact]
+        public void EvalWithoutParse()
+        {
+            var engine = new RecalcEngine();
+            engine.UpdateVariable("x", 2);
+
+            var check = new CheckResult(engine)
+                .SetText("x*3")
+                .SetBindingInfo();
+
+            // Call Evaluator directly.
+            // Ensure it also pulls engine's symbols. 
+            var run = check.GetEvaluator();
+
+            var result = run.Eval();
+            Assert.Equal(2.0 * 3, result.ToObject());
         }
 
         /// <summary>
@@ -464,7 +488,7 @@ namespace Microsoft.PowerFx.Tests
 
             // Spot check some known functions
             Assert.Contains("Cos", names);
-            Assert.Contains("ParseJSON", names);
+            Assert.Contains("Filter", names);
 
             Assert.Contains("Cos", names);
         }
@@ -507,7 +531,6 @@ namespace Microsoft.PowerFx.Tests
 
             Assert.True(result.IsSuccess);
             Assert.Equal(1, result.Errors.Count(x => x.Severity == ErrorSeverity.Warning));
-            Assert.NotNull(result.Expression);
         }
 
         [Fact]
@@ -585,7 +608,6 @@ namespace Microsoft.PowerFx.Tests
             var result = engine.Check("3+foo+2", RecordType.Empty()); // foo is undefined 
 
             Assert.False(result.IsSuccess);
-            Assert.Null(result.Expression);
             Assert.Single(result.Errors);
             Assert.StartsWith("Error 2-5: Name isn't valid. 'foo' isn't recognized", result.Errors.First().ToString());
         }
@@ -601,7 +623,6 @@ namespace Microsoft.PowerFx.Tests
 
             // Test that parsing worked
             Assert.True(result.IsSuccess);
-            Assert.NotNull(result.Expression);
             Assert.True(result.ReturnType is NumberType);
             Assert.Single(result.TopLevelIdentifiers);
             Assert.Equal("x", result.TopLevelIdentifiers.First());
@@ -627,7 +648,6 @@ namespace Microsoft.PowerFx.Tests
 
             // Test that parsing worked
             Assert.True(result.IsSuccess);
-            Assert.NotNull(result.Expression);
             Assert.True(result.ReturnType is NumberType);
 
             // Test evaluation of parsed expression
@@ -678,7 +698,7 @@ namespace Microsoft.PowerFx.Tests
             config.SymbolTable.AddFunction(func);
             config.SymbolTable.AddEntity(optionSet);
 
-            Assert.True(config.TryGetSymbol(new DName("foo"), out _, out _));
+            Assert.True(config.TryGetVariable(new DName("foo"), out _));
             Assert.Contains(func, recalcEngine.Functions); // function was added to the config.
 
             Assert.DoesNotContain(BuiltinFunctionsCore.Abs, recalcEngine.Functions);
@@ -763,24 +783,6 @@ namespace Microsoft.PowerFx.Tests
         }
 
         [Fact]
-        public async void MaxRecursionDepthTest()
-        {
-            var config = new PowerFxConfig(null)
-            {
-                MaxCallDepth = 5
-            };
-            var recalcEngine = new RecalcEngine(config);
-            Assert.IsType<ErrorValue>(recalcEngine.Eval("Abs(Abs(Abs(Abs(Abs(Abs(1))))))"));
-            Assert.IsType<NumberValue>(recalcEngine.Eval("Abs(Abs(Abs(Abs(Abs(1)))))"));
-            Assert.IsType<NumberValue>(recalcEngine.Eval(
-                @"Sum(
-                Sum(Sum(1),1),
-                Sum(Sum(1),1),
-                Sum(Sum(1),1)
-                )"));
-        }
-
-        [Fact]
         public void UDFRecursionLimitTest()
         {
             var recalcEngine = new RecalcEngine(new PowerFxConfig(null));
@@ -832,7 +834,7 @@ namespace Microsoft.PowerFx.Tests
             // CultureInfo not set in PowerFxConfig as we use Symbols
             var pfxConfig = new PowerFxConfig();
             var recalcEngine = new RecalcEngine(pfxConfig);
-            var symbols = new SymbolValues();
+            var symbols = new RuntimeConfig();
 
             // 10/30/22 is the date where DST applies in France (https://www.timeanddate.com/time/change/france/paris)
             // So adding 2 hours to 1:34am will result in 2:34am
@@ -870,7 +872,7 @@ namespace Microsoft.PowerFx.Tests
         public void FunctionServices()
         {
             var engine = new RecalcEngine();
-            var values = new SymbolValues();
+            var values = new RuntimeConfig();
             values.AddService<IRandomService>(new TestRandService());
 
             // Rand 
@@ -890,7 +892,7 @@ namespace Microsoft.PowerFx.Tests
             // Need to protect against bogus values from a poorly implemented service.
             // These are exceptions, not ErrorValues, since it's a host bug. 
             var engine = new RecalcEngine();
-            var values = new SymbolValues();
+            var values = new RuntimeConfig();
 
             // Host bug, service should be 0...1, this is out of range. 
             var buggyService = new TestRandService { _value = 9999 };
@@ -968,6 +970,25 @@ namespace Microsoft.PowerFx.Tests
                 new NamedValue("x", FormulaValue.New(10)));
             result2 = eval.Eval(recordX);
             Assert.Equal(10.0, result2.ToObject());
+        }
+
+        [Fact]
+        public void GetVariableRecalcEngine()
+        {
+            var config = new PowerFxConfig();
+
+            var engine = new RecalcEngine(config);
+            engine.UpdateVariable("A", FormulaValue.New(0));
+
+            Assert.True(engine.TryGetVariableType("A", out var type));
+            Assert.Equal(FormulaType.Number, type);
+
+            Assert.False(engine.TryGetVariableType("Invalid", out type));
+            Assert.Equal(default, type);
+
+            engine.DeleteFormula("A");
+            Assert.False(engine.TryGetVariableType("A", out type));
+            Assert.Equal(default, type);
         }
 
         private class TestRandService : IRandomService

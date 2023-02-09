@@ -33,6 +33,12 @@ namespace Microsoft.PowerFx.Tests
                 flags: Flags.EnableExpressionChaining);
 
             Assert.Equal(expected, result.GetAnonymizedFormula());
+            
+            // Test same cases via CheckResult
+            var check = new CheckResult(new Engine());
+            check.SetText(script, new ParserOptions { AllowsSideEffects = true });
+            var result2 = check.ApplyGetLogging();
+            Assert.Equal(expected, result2);
         }
 
         private class TestSanitizer : ISanitizedNameProvider

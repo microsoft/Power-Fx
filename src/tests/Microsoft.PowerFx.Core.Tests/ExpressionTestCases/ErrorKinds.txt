@@ -68,10 +68,10 @@ Error({Kind:ErrorKind.Numeric})
 >> ForAll(Boolean([3, 1/0, 0, Sqrt(-1)]), IfError(Text(Value), $"ErrorKind={FirstError.Kind}"))
 Table({Value:"true"},{Value:"ErrorKind=13"},{Value:"false"},{Value:"ErrorKind=24"})
 
->> Boolean(ParseJSON("1"))
+>> Boolean(ParseJSON("[1]"))
 Error({Kind:ErrorKind.InvalidArgument})
 
->> Boolean(ParseJSON("{""a"":""true""}").a)
+>> Boolean(ParseJSON("{""a"":[""true""]}").a)
 Error({Kind:ErrorKind.InvalidArgument})
 
 >> Concat([3, 2, 1, 0, -1, -2], Text(Sqrt(1/Value)))
@@ -589,7 +589,7 @@ Error({Kind:ErrorKind.BadLanguageCode})
 >> Text(Char(0), If(1/0<2,"format"), If(Sqrt(-1)<0,"language"))
 Error(Table({Kind:ErrorKind.InvalidArgument},{Kind:ErrorKind.Div0},{Kind:ErrorKind.Numeric}))
 
->> Text(ParseJSON("1"))
+>> Text(ParseJSON("[1]"))
 Error({Kind:ErrorKind.InvalidArgument})
 
 >> Text(If(1/0<2,ParseJSON("1")))
@@ -634,7 +634,7 @@ Error({Kind:ErrorKind.Numeric})
 >> Value("1234", "not a culture")
 Error({Kind:ErrorKind.BadLanguageCode})
 
->> Value(ParseJSON("false"))
+>> Value(ParseJSON("[false]"))
 Error({Kind:ErrorKind.InvalidArgument})
 
 >> Value(If(1/0<2,ParseJSON("1")))

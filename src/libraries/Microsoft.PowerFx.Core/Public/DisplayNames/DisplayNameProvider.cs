@@ -35,5 +35,28 @@ namespace Microsoft.PowerFx.Core
         /// KeyValuePair&lt;Dname, Dname&gt;&gt; represents  KeyValuePair&lt;LogicalName, DisplayName&gt;&gt;.
         /// </summary>
         public abstract IEnumerable<KeyValuePair<DName, DName>> LogicalToDisplayPairs { get; }
+
+        /// <summary>
+        /// Lookup when it is either logical or display name. 
+        /// </summary>
+        /// <param name="logicalOrDisplay"></param>
+        /// <param name="logicalName"></param>
+        /// <param name="displayName"></param>
+        /// <returns></returns>
+        public bool TryGetLogicalOrDisplayName(DName logicalOrDisplay, out DName logicalName, out DName displayName)
+        {
+            if (this.TryGetDisplayName(logicalOrDisplay, out displayName))
+            {
+                logicalName = logicalOrDisplay;
+                return true;
+            }
+            else if (this.TryGetLogicalName(logicalOrDisplay, out logicalName))
+            {
+                displayName = logicalOrDisplay;
+                return true;
+            }
+
+            return false;
+        }
     }
 }

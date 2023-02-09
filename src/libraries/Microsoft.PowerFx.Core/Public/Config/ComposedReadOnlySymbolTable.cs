@@ -24,14 +24,14 @@ namespace Microsoft.PowerFx
         private readonly IEnumerable<ReadOnlySymbolTable> _symbolTables;
 
         // In priority order. 
-        public ComposedReadOnlySymbolTable(SymbolTableEnumerator symbolTables)
+        public ComposedReadOnlySymbolTable(params ReadOnlySymbolTable[] symbolTables)
         {
-            _symbolTables = symbolTables;
+            _symbolTables = symbolTables.Where(x => x != null);
 
-            DebugName = "(" + string.Join(",", symbolTables.Select(t => t.DebugName)) + ")";
+            DebugName = "(" + string.Join(",", _symbolTables.Select(t => t.DebugName)) + ")";
         }
 
-        internal override IEnumerable<ReadOnlySymbolTable> SubTables => _symbolTables;
+        internal IEnumerable<ReadOnlySymbolTable> SubTables => _symbolTables;
         
         internal override VersionHash VersionHash
         {
@@ -146,28 +146,6 @@ namespace Microsoft.PowerFx
             return Functions.Where(function => function.Namespace.Equals(nameSpace));
         }
 
-        public virtual bool LookupEnumValueByInfoAndLocName(object enumInfo, DName locName, out object value)
-        {
-            value = null;
-            var castEnumInfo = enumInfo as EnumSymbol;
-            return castEnumInfo?.TryLookupValueByLocName(locName.Value, out _, out value) ?? false;
-        }
-
-        public virtual bool LookupEnumValueByTypeAndLocName(DType enumType, DName locName, out object value)
-        {
-            // Slower O(n) lookup involving a walk over the registered enums...
-            foreach (INameResolver table in _symbolTables)
-            {
-                if (table.LookupEnumValueByTypeAndLocName(enumType, locName, out value))
-                {
-                    return true;
-                }
-            }
-
-            value = null;
-            return false;
-        }
-
         public virtual bool LookupGlobalEntity(DName name, out NameLookupInfo lookupInfo)
         {
             foreach (INameResolver table in _symbolTables)
@@ -180,6 +158,24 @@ namespace Microsoft.PowerFx
 
             lookupInfo = default;
             return false;
+        }
+
+        internal override IExternalEntityScope InternalEntityScope
+        {
+            get
+            {
+                // returns the first EntityScope from composed tables
+                // intended for unit testing purposes
+                foreach (INameResolver table in _symbolTables)
+                {
+                    if (table.EntityScope != null)
+                    {
+                        return table.EntityScope;
+                    }
+                }
+
+                return default;
+            }
         }
     }
 }

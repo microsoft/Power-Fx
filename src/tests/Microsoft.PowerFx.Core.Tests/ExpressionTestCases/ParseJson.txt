@@ -8,14 +8,29 @@
 >> Value(ParseJSON("5"))
 5
 
+>> Value(ParseJSON("5")) = Value("5")
+true
+
 >> Value(ParseJSON("true"))
-Error({Kind:ErrorKind.InvalidArgument})
+1
 
 >> Value(ParseJSON("false"))
-Error({Kind:ErrorKind.InvalidArgument})
+0
 
 >> Value(ParseJSON("""5"""))
-Error({Kind:ErrorKind.InvalidArgument})
+5
+
+>> Value(ParseJSON("""123,456"""))
+123456
+
+>> Value(ParseJSON("""123,456"""), "fr-FR")
+123.456
+
+>> Value(ParseJSON("""123.456"""), "es-ES")
+123456
+
+>> Value(ParseJSON("123.456"), "es-ES")
+123.456
 
 >> Value(ParseJSON("""a"""))
 Error({Kind:ErrorKind.InvalidArgument})
@@ -48,23 +63,56 @@ Error({Kind:ErrorKind.InvalidArgument})
 >> Text(ParseJSON("""s"""))
 "s"
 
+>> Text(ParseJSON("""s""")) = Text("s")
+true
+
 >> Text(ParseJSON("null"))
 Blank()
 
 >> Text(ParseJSON("true"))
-Error({Kind:ErrorKind.InvalidArgument})
+"true"
 
 >> Text(ParseJSON("false"))
-Error({Kind:ErrorKind.InvalidArgument})
+"false"
 
 >> Text(ParseJSON("5"))
-Error({Kind:ErrorKind.InvalidArgument})
+"5"
 
 >> Boolean(ParseJSON("true"))
 true
 
 >> Boolean(ParseJSON("false"))
 false
+
+>> Boolean(ParseJSON("true")) = Boolean("true")
+true
+
+>> Boolean(ParseJSON("false")) = Boolean("false")
+true
+
+>> Boolean(ParseJSON("""true"""))
+true
+
+>> Boolean(ParseJSON("""false"""))
+false
+
+>> Boolean(ParseJSON("""tRuE"""))
+true
+
+>> Boolean(ParseJSON("""fAlSe"""))
+false
+
+>> Boolean(ParseJSON("""F"""))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Boolean(ParseJSON("1"))
+true
+
+>> Boolean(ParseJSON("0"))
+false
+
+>> Boolean(ParseJSON("5"))
+true
 
 >> Boolean(ParseJSON("null"))
 Blank()
@@ -139,10 +187,10 @@ Error({Kind:ErrorKind.Div0})
 Table({Value:"1"},{Value:"false"},{Value:"hello"})
 
 >> ForAll(ParseJSON("[1,true,3,false]"), Value(ThisRecord))
-Error(Table({Kind:ErrorKind.InvalidArgument},{Kind:ErrorKind.InvalidArgument}))
+Table({Value:1},{Value:1},{Value:3},{Value:0})
 
 >> ForAll(ParseJSON("[1,2,3]"), If(Value(ThisRecord) < 2, Value(ThisRecord), ThisRecord))
-Errors: Error 74-84: Invalid argument type (UntypedObject). Expecting a Number value instead.|Error 29-85: The function 'If' has some invalid arguments.
+Table({Value:1},{Value:2},{Value:3})
 
 >> ForAll(ParseJSON("[1,2,3]"), ThisItem)
 Errors: Error 29-37: Name isn't valid. 'ThisItem' isn't recognized.|Error 0-38: The function 'ForAll' has some invalid arguments.
@@ -197,6 +245,9 @@ Error({Kind:ErrorKind.InvalidArgument})
 >> DateDiff(DateValue(ParseJSON("""2011-01-15""")), DateValue(ParseJSON("""2011-01-30""")))
 15
 
+>> Value(Index(ParseJSON("[1,2,3]"), If(1<0,1)))
+Error({Kind:ErrorKind.InvalidArgument})
+
 >> DateValue(ParseJSON("""2011-1-15"""))
 Error({Kind:ErrorKind.InvalidArgument})
 
@@ -233,6 +284,9 @@ Error({Kind:ErrorKind.InvalidArgument})
 >> DateTimeValue(ParseJSON("""2011T08:00:00.000Z"""))
 Error({Kind:ErrorKind.InvalidArgument})
 
+>> DateTimeValue(ParseJSON("""2011-01-15T08:00:00.000Z""")) = DateTimeValue("2011-01-15T08:00:00.000Z")
+true
+
 >> DateTimeValue(ParseJSON("null"))
 Blank()
 
@@ -254,8 +308,14 @@ Error({Kind:ErrorKind.InvalidArgument})
 >> DateDiff(DateValue(ParseJSON("""2011-01-15T08:00:00.000""")), DateValue(ParseJSON("""2011-01-30T08:00:00.000""")))
 15
 
+>> DateValue(ParseJSON("""2011-01-15T08:00:00.000""")) = DateValue("2011-01-15T08:00:00.000")
+true
+
 >> Text(TimeValue(ParseJSON("""08:03:05.000""")), "HH:mm:ss")
 "08:03:05"
+
+>> TimeValue(ParseJSON("""08:03:05.000""")) = TimeValue("08:03:05.000")
+true
 
 >> TimeValue(ParseJSON("""08:93:05.000"""))
 Error({Kind:ErrorKind.InvalidArgument})
@@ -268,6 +328,9 @@ Error({Kind:ErrorKind.InvalidArgument})
 
 >> GUID(ParseJSON("""5cc45615-f759-4a53-b225-d3a2497f60ad"""))
 GUID("5cc45615-f759-4a53-b225-d3a2497f60ad")
+
+>> GUID(ParseJSON("""5cc45615-f759-4a53-b225-d3a2497f60ad""")) = GUID("5cc45615-f759-4a53-b225-d3a2497f60ad")
+true
 
 >> GUID(ParseJSON("null"))
 Blank()
@@ -284,3 +347,138 @@ Blank()
 
 >> Text(Index(ParseJSON("[ { ""a"" : 10 }, { ""b"" : ""str"" } ]"),2).a)
 Blank()
+
+>> ColorValue(ParseJSON("""#01020304"""))
+RGBA(1,2,3,0.016)
+
+>> ColorValue(ParseJSON("""#010203"""))
+RGBA(1,2,3,1)
+
+>> ColorValue(ParseJSON("""#010203""")) = ColorValue("#010203")
+true
+
+>> ColorValue(ParseJSON("""Red"""))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ColorValue(ParseJSON("""#RRGGBBAA"""))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ColorValue(ParseJSON("""#000000ZZ"""))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ColorValue(ParseJSON("null"))
+Blank()
+
+>> DateTimeValue(ParseJSON("""2011-01-30T08:00:00.000"""))
+DateTime(2011,1,30,8,0,0,0)
+
+>> DateTimeValue(ParseJSON("""2011-01-30T08:00:00.0005"""))
+DateTime(2011,1,30,8,0,0,0)
+
+>> DateTimeValue(ParseJSON("""2011-01-30T08:00:00.1234567"""))
+DateTime(2011,1,30,8,0,0,123)
+
+>> TimeValue(ParseJSON("""11:12:00.000"""))
+Time(11,12,0,0)
+
+>> TimeValue(ParseJSON("""11:12:00"""))
+Time(11,12,0,0)
+
+>> TimeValue(ParseJSON("""11:12:00.1234567"""))
+Time(11,12,0,123)
+
+>> IsBlank(ParseJSON("{""a"":null,""b"":""""}").a)
+true
+
+>> IsBlank(ParseJSON("{""a"":null,""b"":""""}").b)
+true
+
+>> IsBlank(ParseJSON("{""a"":null,""b"":""""}").c)
+true
+
+>> Text(ParseJSON("{""a"":null,""b"":""""}").a) = Blank()
+true
+
+>> Text(ParseJSON("{""a"":null,""b"":""""}").b) = Blank()
+false
+
+>> Text(ParseJSON("{""a"":null,""b"":""""}").c) = Blank()
+true
+
+>> Value(First(ParseJSON("[1, 2, 3, 4]")))
+1
+
+>> Value(First(ParseJSON("[1, 2, 3, 4]"))) = First([1, 2, 3, 4]).Value
+true
+
+>> Value(Last(ParseJSON("[1, 2, 3, 4]")))
+4
+
+>> Value(Last(ParseJSON("[1, 2, 3, 4]"))) = Last([1, 2, 3, 4]).Value
+true
+
+>> Value(Last(FirstN(ParseJSON("[1, 2, 3, 4]"), 2)))
+2
+
+>> Value(Last(FirstN(ParseJSON("[1, 2, 3, 4]"), 2))) = Last(FirstN([1, 2, 3, 4], 2)).Value
+true
+
+>> Value(First(LastN(ParseJSON("[1, 2, 3, 4]"), 2)))
+3
+
+>> Value(First(LastN(ParseJSON("[1, 2, 3, 4]"), 2))) = First(LastN([1, 2, 3, 4], 2)).Value
+true
+
+>> Value(First(FirstN(ParseJSON("[1, 2, 3, 4]"), 2)))
+1
+
+>> Value(First(FirstN(ParseJSON("[1, 2, 3, 4]"), 2))) = First(FirstN([1, 2, 3, 4], 2)).Value
+true
+
+>> Value(Last(LastN(ParseJSON("[1, 2, 3, 4]"), 2)))
+4
+
+>> Value(Last(LastN(ParseJSON("[1, 2, 3, 4]"), 2))) = Last(LastN([1, 2, 3, 4], 2)).Value
+true
+
+>> CountRows(FirstN(ParseJSON("[1, 2, 3, 4]"), 2))
+2
+
+>> CountRows(FirstN(ParseJSON("[1, 2, 3, 4]"), 2)) = CountRows(FirstN([1, 2, 3, 4], 2))
+true
+
+>> CountRows(LastN(ParseJSON("[1, 2, 3, 4]"), 2))
+2
+
+>> CountRows(LastN(ParseJSON("[1, 2, 3, 4]"), 2)) = CountRows(LastN([1, 2, 3, 4], 2))
+true
+
+>> CountRows(FirstN(ParseJSON("[1, 2, 3, 4]"), 5))
+4
+
+>> CountRows(FirstN(ParseJSON("[1, 2, 3, 4]"), 5)) = CountRows(FirstN([1, 2, 3, 4], 5))
+true
+
+>> CountRows(LastN(ParseJSON("[1, 2, 3, 4]"), 5))
+4
+
+>> CountRows(LastN(ParseJSON("[1, 2, 3, 4]"), 5)) = CountRows(LastN([1, 2, 3, 4], 5))
+true
+
+>> First(ParseJSON("[]"))
+Blank()
+
+>> Last(ParseJSON("[]"))
+Blank()
+
+>> CountRows(FirstN(ParseJSON("[]"), 1))
+0
+
+>> CountRows(LastN(ParseJSON("[]"), 1))
+0
+
+>> CountRows(FirstN(ParseJSON("[1, 2, 3, 4]"), "3"))
+3
+
+>> CountRows(LastN(ParseJSON("[1, 2, 3, 4]"), "3"))
+3

@@ -8,6 +8,7 @@ using System.Net.Http;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
+using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors
@@ -20,7 +21,7 @@ namespace Microsoft.PowerFx.Connectors
 
         public static string GetScheme(this OpenApiDocument openApiDocument) => GetUriElement(openApiDocument, (uri) => uri.Scheme);
 
-        public static string GetAuthority(this OpenApiDocument openApiDocument) => GetUriElement(openApiDocument, (uri) => uri.Authority);        
+        public static string GetAuthority(this OpenApiDocument openApiDocument) => GetUriElement(openApiDocument, (uri) => uri.Authority);
 
         private static string GetUriElement(this OpenApiDocument openApiDocument, Func<Uri, string> getElement)
         {
@@ -95,41 +96,68 @@ namespace Microsoft.PowerFx.Connectors
 
         public static bool IsTrigger(this OpenApiOperation op)
         {
+            // https://learn.microsoft.com/en-us/connectors/custom-connectors/openapi-extensions#x-ms-trigger
+            // Identifies whether the current operation is a trigger that produces a single event.
+            // The absence of this field means this is an action operation.
             var isTrigger = op.Extensions.ContainsKey("x-ms-trigger");
             return isTrigger;
         }
 
-        public static bool TryGetDefaultValue(this OpenApiSchema schema, out string defaultValue)
+        public static bool TryGetDefaultValue(this OpenApiSchema schema, FormulaType formulaType, out FormulaValue defaultValue)
         {
             var x = schema.Default;
 
             if (x == null)
             {
+                if (formulaType is RecordType rt && schema.Properties != null)
+                {
+                    List<NamedValue> values = new List<NamedValue>();
+
+                    foreach (NamedFormulaType nft in rt.GetFieldTypes())
+                    {
+                        string columnName = nft.Name.Value;
+
+                        if (schema.Properties.ContainsKey(columnName))
+                        {
+                            if (schema.Properties[columnName].TryGetDefaultValue(nft.Type, out FormulaValue innerDefaultValue))
+                            {
+                                values.Add(new NamedValue(columnName, innerDefaultValue));
+                            }                            
+                        }
+                    }
+
+                    if (values.Any())
+                    {
+                        defaultValue = new InMemoryRecordValue(IRContext.NotInSource(rt), values);
+                        return true;
+                    }
+                }
+
                 defaultValue = null;
                 return false;
             }
 
             if (x is OpenApiString str)
             {
-                defaultValue = str.Value;
+                defaultValue = FormulaValue.New(str.Value); // StringValue
                 return true;
             }
 
             if (x is OpenApiInteger intVal)
             {
-                defaultValue = intVal.Value.ToString();
+                defaultValue = FormulaValue.New(intVal.Value); // NumberValue
                 return true;
             }
 
             if (x is OpenApiDouble dbl)
             {
-                defaultValue = dbl.Value.ToString();
+                defaultValue = FormulaValue.New(dbl.Value); // NumberValue
                 return true;
             }
 
             if (x is OpenApiBoolean b)
             {
-                defaultValue = b.Value.ToString();
+                defaultValue = FormulaValue.New(b.Value); // BooleanValue
                 return true;
             }
 
@@ -143,29 +171,89 @@ namespace Microsoft.PowerFx.Connectors
 
         // Internal parameters are not showen to the user. 
         // They can have a default value or be special cased by the infrastructure (like "connectionId").
-        public static bool IsInternal(this OpenApiParameter param) => param.Extensions.TryGetValue("x-ms-visibility", out var openApiExt) && openApiExt is OpenApiString openApiStr && openApiStr.Value == "internal";                    
+        public static bool IsInternal(this IOpenApiExtensible schema) => schema.Extensions.TryGetValue("x-ms-visibility", out var openApiExt) && openApiExt is OpenApiString openApiStr && openApiStr.Value == "internal";
 
         // See https://swagger.io/docs/specification/data-models/data-types/
-        public static FormulaType ToFormulaType(this OpenApiSchema schema)
+        public static (FormulaType, RecordType) ToFormulaType(this OpenApiSchema schema, Stack<string> chain = null, int level = 0)
         {
+            if (chain == null)
+            {
+                chain = new Stack<string>();
+            }
+
+            if (level == 20)
+            {
+                throw new Exception("ToFormulaType() excessive recursion");
+            }
+
+            // schema.Format is optional and potentially any string
             switch (schema.Type)
             {
-                case "string": return FormulaType.String;
-                case "number": return FormulaType.Number;
-                case "boolean": return FormulaType.Boolean;
-                case "integer": return FormulaType.Number;
-                case "array":
-                    var elementType = schema.Items.ToFormulaType();
-                    if (elementType is RecordType r)
+                // OpenAPI spec: Format could be <null>, byte, binary, date, date-time, password
+                case "string":
+
+                    // We don't want to have OptionSets in connections, we'll only get string/number for now
+                    // No need to test schema.Enum
+
+                    switch (schema.Format)
                     {
-                        return r.ToTable();
+                        case null:
+                        case "uuid":
+                            return (FormulaType.String, null);
+
+                        case "date-time":
+                            // Consider this as a string for now
+                            // $$$ Should be DateTime type
+                            return (FormulaType.String, null);
+
+                        default:
+                            throw new NotImplementedException("Unsupported type of string");
+                    }
+
+                // OpenAPI spec: Format could be float, double
+                case "number": return (FormulaType.Number, null);
+
+                // Always a boolean (Format not used)                
+                case "boolean": return (FormulaType.Boolean, null);
+
+                // OpenAPI spec: Format could be <null>, int32, int64
+                case "integer": return (FormulaType.Number, null);
+
+                case "array":
+                    var innerA = GetUniqueIdentifier(schema.Items);
+
+                    if (innerA.StartsWith("R:") && chain.Contains(innerA))
+                    {
+                        // Here, we have a circular reference and default to a string
+                        return (FormulaType.String, null);
+                    }
+
+                    // Inheritance/Polymorphism - Can't know the exact type
+                    // https://github.com/OAI/OpenAPI-Specification/blob/main/versions/2.0.md
+                    if (schema.Items.Discriminator != null)
+                    {
+                        return (FormulaType.UntypedObject, null);
+                    }
+
+                    chain.Push(innerA);
+                    (FormulaType elementType, RecordType rt) = schema.Items.ToFormulaType(chain, level + 1);
+                    chain.Pop();
+
+                    if (rt != null)
+                    {
+                        throw new NotImplementedException("Unexpected value for array items");
+                    }
+
+                    if (elementType is RecordType r)
+                    {                        
+                        return (r.ToTable(), null);
                     }
                     else if (elementType is not AggregateType)
                     {
                         // Primitives get marshalled as a SingleColumn table.
                         // Make sure this is consistent with invoker. 
                         var r2 = RecordType.Empty().Add(TableValue.ValueName, elementType);
-                        return r2.ToTable();
+                        return (r2.ToTable(), null);
                     }
                     else
                     {
@@ -173,22 +261,77 @@ namespace Microsoft.PowerFx.Connectors
                     }
 
                 case "object":
-                case null: // xml
-                    var obj = RecordType.Empty();
-                    foreach (var kv in schema.Properties)
+                case null: // xml                   
+
+                    // Dictionary - https://swagger.io/docs/specification/data-models/dictionaries/
+                    // Key is always a string, Value is in AdditionalProperties
+                    if (schema.AdditionalProperties != null)
                     {
-                        var propName = kv.Key;
-                        var propType = kv.Value.ToFormulaType();
-
-                        obj = obj.Add(propName, propType);
+                        return (FormulaType.UntypedObject, null);
                     }
+                    else
+                    {
+                        RecordType obj = RecordType.Empty();
+                        RecordType hObj = null;
 
-                    return obj;
+                        foreach (var kv in schema.Properties)
+                        {
+                            bool hiddenRequired = false;
+
+                            if (kv.Value.IsInternal())
+                            {
+                                if (schema.Required.Contains(kv.Key) && kv.Value.Default != null)
+                                {
+                                    hiddenRequired = true;
+                                }
+                                else
+                                {
+                                    continue;
+                                }
+                            }
+
+                            var propName = kv.Key;
+                            var innerO = GetUniqueIdentifier(kv.Value);
+
+                            if (innerO.StartsWith("R:") && chain.Contains(innerO))
+                            {
+                                // Here, we have a circular reference and default to a string
+                                return (FormulaType.String, hObj);
+                            }
+
+                            chain.Push(innerO);
+                            (FormulaType propType, RecordType innerHiddenRecord) = kv.Value.ToFormulaType(chain, level + 1);
+                            chain.Pop();
+
+                            if (innerHiddenRecord != null)
+                            {
+                                hObj = (hObj ?? RecordType.Empty()).Add(propName, innerHiddenRecord);
+                            }
+
+                            if (hiddenRequired)
+                            {                                
+                                hObj = (hObj ?? RecordType.Empty()).Add(propName, propType);                           
+                            }
+                            else
+                            {
+                                obj = obj.Add(propName, propType);
+                            }
+                        }
+
+                        return (obj, hObj);
+                    }
 
                 default:
 
                     throw new NotImplementedException($"{schema.Type}");
             }
+        }
+
+        private static string GetUniqueIdentifier(this OpenApiSchema schema)
+        {
+            return schema.Reference != null
+                ? "R:" + schema.Reference.Id
+                : "T:" + schema.Type;
         }
 
         public static HttpMethod ToHttpMethod(this OperationType key)
@@ -240,7 +383,13 @@ namespace Microsoft.PowerFx.Connectors
                         return FormulaType.Blank;
                     }
 
-                    var responseType = openApiMediaType.Schema.ToFormulaType();
+                    (FormulaType responseType, RecordType hiddenRecordType) = openApiMediaType.Schema.ToFormulaType();
+
+                    if (hiddenRecordType != null)
+                    {
+                        throw new NotImplementedException("Unexpected value mediatype schema");
+                    }
+
                     return responseType;
                 }
             }

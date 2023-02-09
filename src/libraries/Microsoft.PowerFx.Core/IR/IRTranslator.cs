@@ -27,6 +27,12 @@ using UnaryOpNode = Microsoft.PowerFx.Core.IR.Nodes.UnaryOpNode;
 
 namespace Microsoft.PowerFx.Core.IR
 {
+    internal class IRResult
+    {
+        public IntermediateNode TopNode;
+        public ScopeSymbol RuleScopeSymbol;
+    }
+
     internal class IRTranslator
     {
         private const string DeferredNotSupportedExceptionMsg = "Deferred(Unknown) is not supported in expressions to be evaluated. This is always an error, deferred is only valid when calling Check";
@@ -39,11 +45,18 @@ namespace Microsoft.PowerFx.Core.IR
             Contracts.AssertValue(binding);
 
             var ruleScopeSymbol = new ScopeSymbol(0);
-            return (binding.Top.Accept(new IRTranslatorVisitor(), new IRTranslatorContext(binding, ruleScopeSymbol)), ruleScopeSymbol);
+            return (binding.Top.Accept(new IRTranslatorVisitor(binding.Features), new IRTranslatorContext(binding, ruleScopeSymbol)), ruleScopeSymbol);
         }
 
         private class IRTranslatorVisitor : TexlFunctionalVisitor<IntermediateNode, IRTranslatorContext>
         {
+            private readonly Features _features;
+
+            public IRTranslatorVisitor(Features features)
+            {
+                _features = features;
+            }
+
             public override IntermediateNode Visit(BlankNode node, IRTranslatorContext context)
             {
                 Contracts.AssertValue(node);
@@ -282,8 +295,6 @@ namespace Microsoft.PowerFx.Core.IR
                 var carg = node.Args.Count;
                 var func = (TexlFunction)info.Function;
 
-                var resultType = context.Binding.GetType(node);
-
                 if (func == null || carg < func.MinArity || carg > func.MaxArity)
                 {
                     throw new NotImplementedException();
@@ -299,9 +310,20 @@ namespace Microsoft.PowerFx.Core.IR
                 for (var i = 0; i < carg; ++i)
                 {
                     var arg = node.Args.Children[i];
-                    if (func.IsLazyEvalParam(i))
+
+                    var supportColumnNamesAsIdentifiers = _features.HasFlag(Features.SupportColumnNamesAsIdentifiers);
+                    if (supportColumnNamesAsIdentifiers && func.IsIdentifierParam(i))
                     {
-                        var child = arg.Accept(this, scope != null ? context.With(scope) : context);
+                        var identifierNode = arg.AsFirstName();
+                        Contracts.Assert(identifierNode != null);
+
+                        // Transform the identifier node as a string literal
+                        var nodeName = context.Binding.TryGetReplacedIdentName(identifierNode.Ident, out var newIdent) ? new DName(newIdent) : identifierNode.Ident.Name;
+                        args.Add(new TextLiteralNode(context.GetIRContext(arg, DType.String), nodeName.Value));
+                    }
+                    else if (func.IsLazyEvalParam(i))
+                    {
+                        var child = arg.Accept(this, scope != null && func.ScopeInfo.AppliesToArgument(i) ? context.With(scope) : context);
                         args.Add(new LazyEvalNode(context.GetIRContext(arg), child));
                     }
                     else
@@ -310,12 +332,11 @@ namespace Microsoft.PowerFx.Core.IR
                     }
                 }
 
-                if (scope != null)
-                {
-                    return MaybeInjectCoercion(node, new CallNode(context.GetIRContext(node), func, scope, args), context);
-                }
+                // this can rewrite the entire call node to any intermediate node.
+                // e.g. For Boolean(true), Instead of IR as Call(Boolean, true) it can be rewritten directly to emit true.
+                var irNode = func.CreateIRCallNode(node, context, args, scope);
 
-                return MaybeInjectCoercion(node, new CallNode(context.GetIRContext(node), func, args), context);
+                return MaybeInjectCoercion(node, irNode, context);
             }
 
             public override IntermediateNode Visit(FirstNameNode node, IRTranslatorContext context)
@@ -778,6 +799,22 @@ namespace Microsoft.PowerFx.Core.IR
                     case CoercionKind.AggregateToDataEntity:
                         unaryOpKind = UnaryOpKind.AggregateToDataEntity;
                         break;
+                    case CoercionKind.UntypedToText:
+                        return new CallNode(IRContext.NotInSource(FormulaType.Build(toType)), BuiltinFunctionsCore.Text_UO, child);
+                    case CoercionKind.UntypedToNumber:
+                        return new CallNode(IRContext.NotInSource(FormulaType.Build(toType)), BuiltinFunctionsCore.Value_UO, child);
+                    case CoercionKind.UntypedToBoolean:
+                        return new CallNode(IRContext.NotInSource(FormulaType.Build(toType)), BuiltinFunctionsCore.Boolean_UO, child);
+                    case CoercionKind.UntypedToDate:
+                        return new CallNode(IRContext.NotInSource(FormulaType.Build(toType)), BuiltinFunctionsCore.DateValue_UO, child);
+                    case CoercionKind.UntypedToTime:
+                        return new CallNode(IRContext.NotInSource(FormulaType.Build(toType)), BuiltinFunctionsCore.TimeValue_UO, child);
+                    case CoercionKind.UntypedToDateTime:
+                        return new CallNode(IRContext.NotInSource(FormulaType.Build(toType)), BuiltinFunctionsCore.DateTimeValue_UO, child);
+                    case CoercionKind.UntypedToColor:
+                        return new CallNode(IRContext.NotInSource(FormulaType.Build(toType)), BuiltinFunctionsCore.ColorValue_UO, child);
+                    case CoercionKind.UntypedToGUID:
+                        return new CallNode(IRContext.NotInSource(FormulaType.Build(toType)), BuiltinFunctionsCore.GUID_UO, child);
                     case CoercionKind.None:
                         // No coercion needed, return the child node
                         return child;
@@ -817,6 +854,11 @@ namespace Microsoft.PowerFx.Core.IR
             public IRContext GetIRContext(TexlNode node)
             {
                 return new IRContext(node.GetTextSpan(), FormulaType.Build(Binding.GetType(node)));
+            }
+
+            public IRContext GetIRContext(TexlNode node, DType type)
+            {
+                return new IRContext(node.GetTextSpan(), FormulaType.Build(type));
             }
         }
     }

@@ -7,6 +7,8 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Numerics;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Entities;
@@ -18,16 +20,20 @@ using Microsoft.PowerFx.Core.Functions.DLP;
 using Microsoft.PowerFx.Core.Functions.FunctionArgValidators;
 using Microsoft.PowerFx.Core.Functions.Publish;
 using Microsoft.PowerFx.Core.Functions.TransportSchemas;
+using Microsoft.PowerFx.Core.IR.Nodes;
+using Microsoft.PowerFx.Core.IR.Symbols;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Logging.Trackers;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
+using Microsoft.PowerFx.Types;
+using static Microsoft.PowerFx.Core.IR.IRTranslator;
+using CallNode = Microsoft.PowerFx.Syntax.CallNode;
+using IRCallNode = Microsoft.PowerFx.Core.IR.Nodes.CallNode;
 
 namespace Microsoft.PowerFx.Core.Functions
 {
-    using FunctionInfo = Microsoft.PowerFx.Core.Functions.TransportSchemas.FunctionInfo;
-
     [ThreadSafeImmutable]
     internal abstract class TexlFunction : IFunction
     {
@@ -68,7 +74,7 @@ namespace Microsoft.PowerFx.Core.Functions
 
         private SignatureConstraint _signatureConstraint;
 
-        private FunctionInfo _cachedFunctionInfo;
+        private TransportSchemas.FunctionInfo _cachedFunctionInfo;
 
         private string _cachedLocaleName;
 
@@ -77,6 +83,13 @@ namespace Microsoft.PowerFx.Core.Functions
 
         // Return true if the function expects lambda arguments, false otherwise.
         public virtual bool HasLambdas => !_maskLambdas.IsZero;
+
+        /// <summary>
+        /// Returns true if the function expect identifiers, false otherwise.
+        /// Needs to be overloaded for functions having identifier parameters.
+        /// Also overload IsIdentifierParam method. 
+        /// </summary>
+        public virtual bool HasColumnIdentifiers => false;
 
         // Return true if lambda args should affect ECS, false otherwise.
         public virtual bool HasEcsExcemptLambdas => false;
@@ -385,7 +398,6 @@ namespace Microsoft.PowerFx.Core.Functions
             return char.ToLowerInvariant(name[0]).ToString() + name.Substring(1) + suffix + (IsAsync && !suppressAsync ? "Async" : string.Empty);
         }
 
-        #region CheckInvocation Replacement Project
         public bool HandleCheckInvocation(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             var result = CheckTypes(binding.CheckTypesContext, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
@@ -398,12 +410,7 @@ namespace Microsoft.PowerFx.Core.Functions
         /// </summary>
         public virtual bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
-            return CheckTypes(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
-        }
-
-        public virtual bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
-        {
-            return CheckTypesCore(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            return CheckTypesCore(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
         }
 
         /// <summary>
@@ -417,7 +424,6 @@ namespace Microsoft.PowerFx.Core.Functions
         public virtual void CheckSemantics(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors)
         {
         }
-        #endregion
 
         public virtual bool CheckForDynamicReturnType(TexlBinding binding, TexlNode[] args)
         {
@@ -441,15 +447,22 @@ namespace Microsoft.PowerFx.Core.Functions
             return SupportsParamCoercion && (argIndex <= MinArity || argIndex <= MaxArity);
         }
 
-        private bool CheckTypesCore(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        private bool CheckTypesCore(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
             Contracts.AssertValue(argTypes);
-            Contracts.AssertAllValid(argTypes);
             Contracts.Assert(args.Length == argTypes.Length);
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
+
+            for (var i = 0; i < argTypes.Length; i++)
+            {
+                if (!IsIdentifierParam(i))
+                {
+                    Contracts.AssertValid(argTypes[i]);
+                }
+            }
 
             var fValid = true;
             var count = Math.Min(args.Length, ParamTypes.Length);
@@ -470,6 +483,12 @@ namespace Microsoft.PowerFx.Core.Functions
 
             for (var i = count; i < args.Length; i++)
             {
+                // Identifiers don't have a type
+                if (IsIdentifierParam(i))
+                {
+                    continue;
+                }
+
                 var type = argTypes[i];
                 if (type.IsError)
                 {
@@ -521,6 +540,18 @@ namespace Microsoft.PowerFx.Core.Functions
         }
 
         public virtual bool IsEcsExcemptedLambda(int index)
+        {
+            Contracts.Assert(index >= 0);
+
+            return false;
+        }
+
+        /// <summary>
+        /// Returns true if the parameter is an identifier.
+        /// </summary>
+        /// <param name="index">Parameter's index.</param>
+        /// <returns>Boolean representing if the parameter is an identifier.</returns>
+        public virtual bool IsIdentifierParam(int index)
         {
             Contracts.Assert(index >= 0);
 
@@ -1036,6 +1067,13 @@ namespace Microsoft.PowerFx.Core.Functions
             return CheckColumnType(type, arg, DType.DateTime, errors, TexlStrings.ErrInvalidSchemaNeedDateCol_Col, ref nodeToCoercedTypeMap);
         }
 
+        // Check that the type of a specified node is a boolean column type, and possibly emit errors
+        // accordingly. Returns true if the types align, false otherwise.
+        protected bool CheckBooleanColumnType(DType type, TexlNode arg, IErrorContainer errors, ref Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        {
+            return CheckColumnType(type, arg, DType.Boolean, errors, TexlStrings.ErrInvalidSchemaNeedColorCol_Col, ref nodeToCoercedTypeMap);
+        }
+
         // Enumerate some of the function signatures for a specified arity and known parameter descriptions.
         // The last parameter may be repeated as many times as necessary in order to satisfy the arity constraint.
         protected IEnumerable<TexlStrings.StringGetter[]> GetGenericSignatures(int arity, params TexlStrings.StringGetter[] args)
@@ -1177,7 +1215,7 @@ namespace Microsoft.PowerFx.Core.Functions
             return false;
         }
 
-        public virtual IOpDelegationStrategy GetOpDelegationStrategy(BinaryOp op, BinaryOpNode opNode)
+        public virtual IOpDelegationStrategy GetOpDelegationStrategy(BinaryOp op, PowerFx.Syntax.BinaryOpNode opNode)
         {
             Contracts.AssertValueOrNull(opNode);
 
@@ -1328,7 +1366,7 @@ namespace Microsoft.PowerFx.Core.Functions
 
         #endregion
 
-        internal FunctionInfo Info(string locale)
+        internal TransportSchemas.FunctionInfo Info(string locale)
         {
             // If the locale has changed, we want to reset the function info to one of the new locale
             if (CurrentLocaleInfo.CurrentUILanguageName == _cachedLocaleName && _cachedFunctionInfo != null)
@@ -1337,7 +1375,7 @@ namespace Microsoft.PowerFx.Core.Functions
             }
 
             _cachedLocaleName = CurrentLocaleInfo.CurrentUILanguageName;
-            return _cachedFunctionInfo = new FunctionInfo()
+            return _cachedFunctionInfo = new TransportSchemas.FunctionInfo()
             {
                 Label = Name,
                 Detail = Description,
@@ -1358,6 +1396,20 @@ namespace Microsoft.PowerFx.Core.Functions
                     }).ToArray()
                 }).ToArray()
             };
+        }
+
+        /// <summary>
+        /// Override this method to rewrite the CallNode that is generated.
+        /// e.g. Boolean(true) would want to emit the arg true directly instead of a function call.
+        /// </summary>
+        internal virtual IntermediateNode CreateIRCallNode(CallNode node, IRTranslatorContext context, List<IntermediateNode> args, ScopeSymbol scope)
+        {
+            if (scope != null)
+            {
+                return new IRCallNode(context.GetIRContext(node), this, scope, args);
+            }
+
+            return new IRCallNode(context.GetIRContext(node), this, args);
         }
     }
 }

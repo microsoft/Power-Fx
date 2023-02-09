@@ -16,17 +16,12 @@ namespace Microsoft.PowerFx
         // Map to composed tables 
         private readonly IReadOnlyDictionary<ReadOnlySymbolTable, ReadOnlySymbolValues> _map;
 
-        // Existing services providers. Chain to in order.
-        private readonly IServiceProvider[] _existing;
-
         private ComposedReadOnlySymbolValues(
             ReadOnlySymbolTable symbolTable,
-            IReadOnlyDictionary<ReadOnlySymbolTable, ReadOnlySymbolValues> map,
-            IServiceProvider[] existing)
+            IReadOnlyDictionary<ReadOnlySymbolTable, ReadOnlySymbolValues> map)
             : base(symbolTable)
         {
             _map = map;
-            _existing = existing;
             DebugName = symbolTable.DebugName;
         }
 
@@ -35,12 +30,13 @@ namespace Microsoft.PowerFx
         // Graft in existing nodes (avoids allocating a new one). 
         // Parameters allows specifying an override in the map.
         internal static ReadOnlySymbolValues New(
+            bool canCreateNew,
             ReadOnlySymbolTable symbolTable,
             params ReadOnlySymbolValues[] existing)
         {
             existing = existing.Where(x => x != null).ToArray();
 
-            var map = new Dictionary<ReadOnlySymbolTable, ReadOnlySymbolValues>();
+            var existingMap = new Dictionary<ReadOnlySymbolTable, ReadOnlySymbolValues>();
 
             // Graft in existing entries.
             // These take precedence and are all added first. 
@@ -51,25 +47,36 @@ namespace Microsoft.PowerFx
                     foreach (var kv in composed._map)
                     {
                         // quick Integrity checks - these should never fail. 
-                        if (!Object.ReferenceEquals(kv.Key, kv.Value.SymbolTable))
+                        if (!object.ReferenceEquals(kv.Key, kv.Value.SymbolTable))
                         {
                             throw new InvalidOperationException($"Table doesn't match");
                         }
+
                         if (kv.Value is ComposedReadOnlySymbolValues)
                         {
                             throw new InvalidOperationException($"ComposedSymbolValues should have been flattened ");
                         }
                         
-                        Add(map, kv.Value);
+                        Add(existingMap, kv.Value);
                     }
                 }
                 else
                 {
-                    Add(map, symValues);
+                    Add(existingMap, symValues);
                 }                
             }
-            
-            CreateValues(map, symbolTable);
+
+            // CreateValues will remove from existingMap, so anything left is extra.
+            var map = new Dictionary<ReadOnlySymbolTable, ReadOnlySymbolValues>();
+            CreateValues(canCreateNew, existingMap, map, symbolTable);
+
+            if (existingMap.Count > 0)
+            {
+                // There were existing SymbolValues that don't match. 
+                var kv = existingMap.First();
+                var msg = $"SymbolValues '{kv.Value.DebugName}' matches to symbol table '{kv.Key.DebugName}', which is not part of symbol table '{symbolTable?.DebugName}'.";
+                throw new InvalidOperationException(msg);
+            }
 
             // Optimization
             if (map.Count == 1)
@@ -78,7 +85,7 @@ namespace Microsoft.PowerFx
                 return symValues;
             }
 
-            return new ComposedReadOnlySymbolValues(symbolTable, map, existing);
+            return new ComposedReadOnlySymbolValues(symbolTable, map);
         }
 
         private static void Add(Dictionary<ReadOnlySymbolTable, ReadOnlySymbolValues> map, ReadOnlySymbolValues symValues)
@@ -100,6 +107,8 @@ namespace Microsoft.PowerFx
 
         // Walk the symbolTable tree and for each node, create the corresponding symbol values. 
         private static void CreateValues(
+            bool canCreateNew,
+            Dictionary<ReadOnlySymbolTable, ReadOnlySymbolValues> existingMap,
             Dictionary<ReadOnlySymbolTable, ReadOnlySymbolValues> map,
             ReadOnlySymbolTable symbolTable)
         {
@@ -110,6 +119,14 @@ namespace Microsoft.PowerFx
 
             if (map.ContainsKey(symbolTable))
             {
+                // Common if this was set by existing SymbolValues.
+                return;
+            }
+
+            if (existingMap.TryGetValue(symbolTable, out var existingValues))
+            {
+                existingMap.Remove(symbolTable);
+                map.Add(symbolTable, existingValues);
                 return;
             }
 
@@ -117,12 +134,9 @@ namespace Microsoft.PowerFx
             {
                 foreach (var inner in composed.SubTables)
                 {
-                    CreateValues(map, inner);
+                    CreateValues(canCreateNew, existingMap, map, inner);
                 }
 
-#pragma warning disable CS0618 // Type or member is obsolete
-                CreateValues(map, symbolTable.Parent);
-#pragma warning restore CS0618 // Type or member is obsolete
                 return;
             }
             else if (symbolTable is SymbolTableOverRecordType)
@@ -133,14 +147,31 @@ namespace Microsoft.PowerFx
             }
             else if (symbolTable is SymbolTable symbolTable2)
             {
+                if (!canCreateNew)
+                {
+                    // $$$ Move broader
+                    if (symbolTable2.NeedsValues) 
+                    {
+                        var msg = $"Missing SymbolValues for {symbolTable.DebugName()}";
+                        throw new InvalidOperationException(msg);
+                    }
+                }
+
                 var symValues = new SymbolValues(symbolTable2)
                 {
                     DebugName = symbolTable2.DebugName
                 };
 
-#pragma warning disable CS0618 // Type or member is obsolete
-                CreateValues(map, symbolTable.Parent);
-#pragma warning restore CS0618 // Type or member is obsolete
+                map[symbolTable] = symValues;
+                return;
+            }
+            else if (symbolTable is DeferredSymbolTable symbolTable3)
+            {
+                var symValues = new SymbolValues(symbolTable3)
+                {
+                    DebugName = symbolTable3.DebugName
+                };
+
                 map[symbolTable] = symValues;
                 return;
             }
@@ -148,20 +179,6 @@ namespace Microsoft.PowerFx
             {
                 throw new NotImplementedException($"Unhandled symbol table kind: {symbolTable.DebugName} of type {symbolTable.GetType().FullName} ");
             }
-        }
-
-        public override object GetService(Type serviceType)
-        {
-            foreach (var table in _existing)
-            {
-                var service = table.GetService(serviceType);
-                if (service != null)
-                {
-                    return service;
-                }
-            }
-
-            return null;
         }
 
         /// <summary>

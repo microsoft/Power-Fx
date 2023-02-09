@@ -57,7 +57,7 @@ namespace Microsoft.PowerFx.Tests
                 DType.Unknown, DType.Error, DType.Number, DType.Boolean, DType.String, DType.Hyperlink, DType.Image,
                 DType.PenImage, DType.Media, DType.Blob, DType.Color, DType.Currency, DType.EmptyRecord, DType.EmptyTable,
                 DType.EmptyEnum, DType.Date, DType.Time, DType.Guid, DType.Polymorphic, DType.Deferred, AttachmentTableType,
-                AttachmentRecordType, OptionSetType, MultiSelectOptionSetType, DType.ObjNull, DType.OptionSet, 
+                AttachmentRecordType, OptionSetType, MultiSelectOptionSetType, DType.ObjNull, DType.OptionSet,
                 DType.OptionSetValue, DType.View, DType.ViewValue, DType.UntypedObject
             };
 
@@ -98,7 +98,7 @@ namespace Microsoft.PowerFx.Tests
             DType.TryParse("*[X:*[Y:n], A:![B:*[C:n]]]", out var dType5);
             Assert.Equal(3, dType5.MaxDepth);
         }
-        
+
         [Fact]
         public void DTypeToStringRepresentation()
         {
@@ -128,7 +128,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal("V", DType.NamedValue.ToString());
             Assert.Equal("X", DType.Deferred.ToString());
         }
-        
+
         [Fact]
         public void DTypeCorrectDKind()
         {
@@ -184,7 +184,7 @@ namespace Microsoft.PowerFx.Tests
             foreach (var dType in _dTypes)
             {
                 // Deferred is subtype of all except unknown.
-                if(dType!= DType.Unknown)
+                if (dType != DType.Unknown)
                 {
                     Assert.True(dType.Accepts(DType.Deferred));
                 }
@@ -265,7 +265,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.True(DType.Time.Accepts(DType.Time));
             Assert.True(DType.Time.Accepts(DType.EmptyEnum));
         }
-        
+
         [Fact]
         public void TestDropAllOfKind()
         {
@@ -295,7 +295,7 @@ namespace Microsoft.PowerFx.Tests
             fError = false;
             newType = type7.DropAllMatching(ref fError, DPath.Root, type => type.IsAttachment);
             Assert.Equal(TestUtils.DT("*[A:n, B:n, C:s]"), newType);
-            
+
             // Safe to call when type isn't present
             fError = false;
             newType = type1.DropAllMatching(ref fError, DPath.Root, type => type.IsAttachment);
@@ -498,7 +498,7 @@ namespace Microsoft.PowerFx.Tests
 
             Assert.True(DType.EmptyTable.Accepts(AttachmentTableType));
             Assert.False(AttachmentTableType.Accepts(DType.EmptyTable));
-            
+
             Assert.True(DType.EmptyRecord.Accepts(AttachmentTableType.ToRecord()));
 
             Assert.True(DType.EmptyRecord.Accepts(AttachmentRecordType));
@@ -509,7 +509,7 @@ namespace Microsoft.PowerFx.Tests
 
             Assert.True(DType.EmptyTable.Accepts(AttachmentRecordType.ToTable()));
         }
-        
+
         [Fact]
         public void DefaultDTypeIsInvalid()
         {
@@ -538,7 +538,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.True(DType.Guid.ChildCount == 0);
             Assert.True(DType.Polymorphic.ChildCount == 0);
         }
-        
+
         [Fact]
         public void AggregateDTypes()
         {
@@ -568,7 +568,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.True(DType.TryParse("%n[A:1,B:2]", out DType type));
             Assert.False(type.IsAggregate);
         }
-        
+
         [Fact]
         public void AggregateDTypesWithCollidingFields()
         {
@@ -613,7 +613,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.False(DType.EmptyRecord.IsPrimitive);
             Assert.False(DType.EmptyTable.IsPrimitive);
         }
-        
+
         [Fact]
         public void AttachmentdataDTypes()
         {
@@ -645,7 +645,7 @@ namespace Microsoft.PowerFx.Tests
 
             Assert.Equal(DType.Boolean, result);
         }
-                
+
         [Fact]
         public void RecordAndTableDTypeTests()
         {
@@ -660,7 +660,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal(DType.EmptyRecord, DType.EmptyRecord.ToRecord());
             Assert.Equal(DType.EmptyRecord, DType.EmptyTable.ToRecord());
             Assert.Equal(DType.EmptyRecord, DType.ObjNull.ToRecord());
-            
+
             DType.Number.ToRecord(ref fError);
             Assert.True(fError);
             fError = false;
@@ -775,7 +775,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal("*[A:n, B:n, C:n]", type4.ToString());
             fError = false;
 
-            var type5 = DType.EmptyTable.Add(ref fError, DPath.Root,  new DName("D"), DType.String)
+            var type5 = DType.EmptyTable.Add(ref fError, DPath.Root, new DName("D"), DType.String)
                 .Add(ref fError, DPath.Root, new DName("E"), DType.String);
             Assert.False(fError);
             Assert.Equal("*[D:s, E:s]", type5.ToString());
@@ -814,7 +814,7 @@ namespace Microsoft.PowerFx.Tests
             DType type12 = type1.Add(
                 ref fError,
                 DPath.Root,
-                new DName("Y"), 
+                new DName("Y"),
                 DType.CreateTable(new TypedName(DType.Boolean, new DName("F")), new TypedName(DType.Error, new DName("E"))));
             Assert.False(fError);
 
@@ -898,7 +898,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.True(DType.String.Accepts(type2));
             Assert.Equal("%s['Segoe UI':\"segoe ui\", 'bah humbug':\"bah and then humbug\"]", type2.ToString());
         }
-        
+
         [Fact]
         public void TestDefaultSchemaDifference()
         {
@@ -919,7 +919,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.True(left.Accepts(right, out testSchemaDifference, out typeSchemaDifferenceType));
             Assert.Equal(testSchemaDifference.Value, DType.Invalid);
         }
-                
+
         [Fact]
         public void TestDTypeSupertype()
         {
@@ -1308,14 +1308,14 @@ namespace Microsoft.PowerFx.Tests
             foreach (var dType in _dTypes)
             {
                 // Deferred is subtype of all except unknown.
-                if(dType!= DType.Unknown)
+                if (dType != DType.Unknown)
                 {
                     superType = DType.Supertype(dType, DType.Deferred);
                     Assert.Equal(dType.Kind, superType.Kind);
                 }
             }
         }
-        
+
         [Fact]
         public void DTypeSpecParsing_SimpleTypes()
         {
@@ -1339,7 +1339,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.True(DType.TryParse(DType.EmptyTable.ToString(), out type) && type == DType.EmptyTable);
             Assert.True(DType.TryParse(DType.EmptyEnum.ToString(), out type) && type == DType.EmptyEnum);
         }
-        
+
         [Fact]
         public void DTypeSpecParsing_NestedAggregates()
         {
@@ -1462,7 +1462,7 @@ namespace Microsoft.PowerFx.Tests
             type2 = DType.CreateEnum(DType.ObjNull);
             Assert.True(DType.TryParse("%N[]", out type) && type == type2);
         }
-        
+
         [Fact]
         public void DTypeTestEnumsParseAndPrettyprint()
         {
@@ -1491,7 +1491,7 @@ namespace Microsoft.PowerFx.Tests
             // Test roundtripping
             Assert.True(DType.TryParse(type3.ToString(), out DType type4) && type3 == type4);
         }
-        
+
         [Fact]
         public void DTypeSpecParsing_FieldsWithBlanks()
         {
@@ -1514,7 +1514,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.True(DType.TryParse("*['foo bar':s, 'hello world':n, from:n, 'beyond':b]", out type) && type.IsTable);
             Assert.Equal("*[beyond:b, 'foo bar':s, from:n, 'hello world':n]", type.ToString());
         }
-        
+
         [Fact]
         public void DTypeSpecParsing_FieldsWithSpecialChars()
         {
@@ -1547,7 +1547,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.Contains(names, tn => tn.Name == new DName("single''quotes"));
             Assert.Contains(names, tn => tn.Name == new DName("!@#$%^&*()_+-=:;''\"{}\\|<>?/.,~`"));
         }
-        
+
         [Fact]
         public void DTypeSpecParsing_Negative()
         {
@@ -1587,7 +1587,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.False(DType.TryParse("*[''':n]", out type));
             Assert.False(DType.TryParse("*[\"\"\":n]", out type));
         }
-        
+
         [Fact]
         public void TestCoercesTo()
         {
@@ -2039,7 +2039,7 @@ namespace Microsoft.PowerFx.Tests
             // Coercion to Error type
             Assert.True(DType.Error.CoercesTo(DType.Error));
         }
-        
+
         [Fact]
         public void DTypeTestOptionSetCoercion()
         {
@@ -2049,7 +2049,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.False(OptionSetValueType.CoercesTo(DType.Boolean));
             Assert.True(OptionSetValueType.CoercesTo(DType.String));
         }
-        
+
         private void TestUnion(string t1, string t2, string tResult)
         {
             DType type1 = TestUtils.DT(t1);
@@ -2203,12 +2203,12 @@ namespace Microsoft.PowerFx.Tests
             TestUnion(DType.ObjNull, type1, type1.LazyTypeProvider.GetExpandedType(type1.IsTable));
 
             var typeEncodings = "ebnshdipmgo$cDTlLNZPQqVOX";
-            foreach(var type in typeEncodings)
+            foreach (var type in typeEncodings)
             {
                 TestUnion(type.ToString(), "X", type.ToString());
             }
         }
-        
+
         [Fact]
         public void DTypeAggregateWithFunkyFieldsToString()
         {
@@ -2360,7 +2360,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.False(DType.EmptyTable.IsMultiSelectOptionSet());
             Assert.False(DType.CreateTable(new TypedName(OptionSetType, new DName("Value")), new TypedName(DType.String, new DName("Name"))).IsMultiSelectOptionSet());
         }
-        
+
         [Theory]
         [InlineData("*[hello:n, hellos:b]", "hello", "hello")]
         [InlineData("*[hello:n, hellos:b]", "he", "hello")]

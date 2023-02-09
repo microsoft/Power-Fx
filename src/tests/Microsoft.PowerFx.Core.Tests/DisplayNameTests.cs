@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Glue;
@@ -11,6 +12,7 @@ using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Tests;
 using Microsoft.PowerFx.Types;
@@ -30,7 +32,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 {
                     "Num" => FormulaType.Number,
                     "B" => FormulaType.Boolean,
-                    "Nested" => TableType.Empty().Add(new NamedFormulaType("Inner", FormulaType.Number, "InnerDisplay")),
+                    "Nested" => TableType.Empty()
+                        .Add(new NamedFormulaType("Inner", FormulaType.Number, "InnerDisplay"))
+                        .Add(new NamedFormulaType("DisplayNum", FormulaType.Number, "InnerLogicalConflicts")),
                     _ => FormulaType.Blank
                 };
 
@@ -63,7 +67,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     {
                         "Num" => "DisplayNum",
                         "B" => "DisplayB",
-                        "Inner" => "InnerDisplay",
                         "Nested" => "NestedDisplay",
                         _ => null
                     };
@@ -77,7 +80,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     {
                         "DisplayNum" => "Num",
                         "DisplayB" => "B",
-                        "InnerDisplay" => "Inner",
                         "NestedDisplay" => "Nested",
                         _ => null
                     };
@@ -110,6 +112,62 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.Throws<NameCollisionException>(() => r1.Add(new NamedFormulaType("DisplayNum", FormulaType.Date, "NoCollision")));
             Assert.Throws<NameCollisionException>(() => r1.Add(new NamedFormulaType("NoCollision", FormulaType.Date, "DisplayNum")));
             Assert.Throws<NameCollisionException>(() => r1.Add(new NamedFormulaType("NoCollision", FormulaType.Date, "Num")));
+
+            // Collision on symbol table
+            var symbol = new SymbolTable();
+
+            // Adds display name for a variable.
+            symbol.AddVariable("logicalVariable", FormulaType.Number, displayName: "displayVariable");
+            symbol.AddVariable("logicalVariable2", FormulaType.Number, displayName: "displayVariable2");
+
+            // should throw if try to add same name constant
+            Assert.Throws<NameCollisionException>(() => symbol.AddConstant("logicalVariable", FormulaValue.New(1)));
+            Assert.Throws<NameCollisionException>(() => symbol.AddConstant("displayVariable", FormulaValue.New(1)));
+
+            // should be able to remove variable using display name
+            Assert.Throws<NameCollisionException>(() => symbol.AddConstant("logicalVariable2", FormulaValue.New(1)));
+            Assert.Throws<NameCollisionException>(() => symbol.AddConstant("displayVariable2", FormulaValue.New(1)));
+            symbol.RemoveVariable("displayVariable2");
+            symbol.AddConstant("logicalVariable2", FormulaValue.New(1));
+            symbol.AddConstant("displayVariable2", FormulaValue.New(1));
+
+            var config = new PowerFxConfig() { SymbolTable = symbol };
+
+            // should throw if try to add same name entity
+            // displayVariable is display name for variable logicalVariable
+            var optionSet = new OptionSet("displayVariable", DisplayNameUtility.MakeUnique(new Dictionary<string, string>()
+            {
+                    { "foo", "Option1" },
+                    { "baz", "foo" }
+            }));
+            Assert.Throws<NameCollisionException>(() => config.AddEntity(optionSet, new DName("newName")));
+
+            // logicalVariable is logical name for variable logicalVariable.
+            var optionSet2 = new OptionSet("logicalVariable", DisplayNameUtility.MakeUnique(new Dictionary<string, string>()
+            {
+                    { "foo", "Option1" },
+                    { "baz", "foo" }
+            }));
+            Assert.Throws<NameCollisionException>(() => config.AddEntity(optionSet2, new DName("newName")));
+
+            // option set with new name.
+            var optionSet3 = new OptionSet("newName", DisplayNameUtility.MakeUnique(new Dictionary<string, string>()
+            {
+                    { "foo", "Option1" },
+                    { "baz", "foo" }
+            }));
+
+            // displayVariable is display name for variable logicalVariable
+            Assert.Throws<NameCollisionException>(() => config.AddEntity(optionSet3, new DName("displayVariable")));
+
+            // logicalVariable is logical name for variable logicalVariable
+            Assert.Throws<NameCollisionException>(() => config.AddEntity(optionSet3, new DName("logicalVariable")));
+
+            // Remove variable and remove from display name as well.
+            symbol.RemoveVariable("logicalVariable");
+
+            // Now below should not throw an exception.
+            config.AddEntity(optionSet3, new DName("displayVariable"));
         }
 
         [Fact]
@@ -144,13 +202,18 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("If(DisplayB, DisplayNum, 1234)", "If(DisplayB, DisplayNum, 1234)", true)]
         [InlineData("If(DisplayB, Num, 1234)", "If(DisplayB, DisplayNum, 1234)", true)]
         [InlineData("Sum(Nested, Inner)", "Sum(NestedDisplay, InnerDisplay)", true)]
-        [InlineData("Sum(Nested /* The source */ , Inner /* Sum over the InnerDisplay column */)", "Sum(NestedDisplay /* The source */ , InnerDisplay /* Sum over the InnerDisplay column */)", true)]
+        [InlineData("Sum(Nested /* The source */ , Inner /* Sum over the InnerDisplay column */)", "Sum(NestedDisplay /* The source */ , InnerDisplay /* Sum over the InnerDisplay column */)", true)]        
+        [InlineData("First(Nested.Inner).Inner", "First(NestedDisplay.InnerDisplay).InnerDisplay", true)]
+        [InlineData("First(Nested).DisplayNum", "First(NestedDisplay).InnerLogicalConflicts", true)]
         [InlineData("If(DisplayB, DisplayNum, 1234)", "If(B, Num, 1234)", false)]
         [InlineData("If(B, Num, 1234)", "If(B, Num, 1234)", false)]
         [InlineData("If(DisplayB, Num, 1234)", "If(B, Num, 1234)", false)]
         [InlineData("Sum(NestedDisplay, InnerDisplay)", "Sum(Nested, Inner)", false)]
         [InlineData("Sum(NestedDisplay /* The source */ , InnerDisplay /* Sum over the InnerDisplay column */)", "Sum(Nested /* The source */ , Inner /* Sum over the InnerDisplay column */)", false)]
         [InlineData("Sum(NestedDisplay, ThisRecord.InnerDisplay)", "Sum(Nested, ThisRecord.Inner)", false)]
+        [InlineData("First(NestedDisplay.InnerDisplay).InnerDisplay", "First(Nested.Inner).Inner", false)]
+        [InlineData("First(NestedDisplay).InnerLogicalConflicts", "First(Nested).DisplayNum", false)]
+        [InlineData("First(NestedDisplay).DisplayNum", "First(Nested).DisplayNum", false)]
         public void ValidateDisplayNames(string inputExpression, string outputExpression, bool toDisplay)
         {
             var r1 = RecordType.Empty()
@@ -158,7 +221,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 .Add(new NamedFormulaType("B", FormulaType.Boolean, "DisplayB"))
                 .Add(new NamedFormulaType(
                     "Nested", 
-                    TableType.Empty().Add(new NamedFormulaType("Inner", FormulaType.Number, "InnerDisplay")), 
+                    TableType.Empty()
+                        .Add(new NamedFormulaType("Inner", FormulaType.Number, "InnerDisplay"))
+                        .Add(new NamedFormulaType("DisplayNum", FormulaType.Number, "InnerLogicalConflicts")), 
                     "NestedDisplay"));
 
             // Below Record r2 Tests the second method where we provide DisplayNameProvider via constructor to 
@@ -182,6 +247,52 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     var outInvariantExpression = _engine.GetInvariantExpression(inputExpression, record);
                     Assert.Equal(outputExpression, outInvariantExpression);
                 }
+            }
+        }
+
+        // Display name with symbol tables 
+        [Theory]
+        [InlineData("new_field + 2", "Field + 2")]
+        [InlineData("ThisRecord.new_field", "ThisRecord.Field")]
+        [InlineData("First(crf_table).new_field", "First(Table).Field")]
+        [InlineData("123.456", "123,456")] // culture toke
+        [InlineData("new_field + new_field2", "Field + Field2", "new_field + Field2")] // Mixed
+        public void DisplayNamesWithSymbols(string logical, string display, string mixedExpression = null)
+        {
+            // Simulate symbols like dataverse. 
+            var r1 = RecordType.Empty()
+              .Add(new NamedFormulaType("new_field", FormulaType.Number, "Field"))
+              .Add(new NamedFormulaType("new_field2", FormulaType.Number, "Field2"));
+
+            var rowScopeSymbols = ReadOnlySymbolTable.NewFromRecord(r1, allowThisRecord: true);
+            
+            var globalSymbols = new SymbolTable { DebugName = "Globals" };
+            var tableType = r1.ToTable();
+            globalSymbols.AddVariable("crf_table", tableType, displayName: "Table");
+
+            var allSymbols = ReadOnlySymbolTable.Compose(rowScopeSymbols, globalSymbols);
+
+            var config = new PowerFxConfig(new CultureInfo("fr-FR"));
+            var engine = new Engine(config);
+            var check = new CheckResult(engine)
+                .SetText(mixedExpression ?? display)
+                .SetBindingInfo(allSymbols);
+
+            check.ApplyBinding();
+            Assert.True(check.IsSuccess);
+
+            var invariant = check.ApplyGetInvariant();
+
+            Assert.Equal(logical, invariant);
+
+            // Get display
+            var displayActual = engine.GetDisplayExpression(logical, allSymbols);
+            Assert.Equal(display, displayActual);
+
+            if (mixedExpression != null)
+            {
+                displayActual = engine.GetDisplayExpression(mixedExpression, allSymbols);
+                Assert.Equal(display, displayActual);
             }
         }
 
@@ -373,6 +484,26 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.Equal(FormulaType.Number, type);
             Assert.Equal("Num", logical);
         }
+
+        [Theory]
+        [InlineData("ForAll(Outer, { Inner: 123 })", "ForAll(OuterDisplay, { Inner: 123 })")]
+        [InlineData("ForAll(Outer, ForAll(Inner, { OuterField: 123, InnerField: 456 })", "ForAll(OuterDisplay, ForAll(InnerDisplay, { OuterField: 123, InnerField: 456 })")]
+        [InlineData("ForAll(Inner, { InnerField: 123 })", "ForAll(InnerDisplay, { InnerField: 123 })")]
+        public void ConvertToDisplayNamesForAllNoScopes(string expression, string expected)
+        {
+            var r1 = RecordType.Empty()
+                .Add(new NamedFormulaType(
+                        "Inner",
+                        TableType.Empty().Add(new NamedFormulaType("InnerField", FormulaType.Number, "InnerFieldDisplay")),
+                        "InnerDisplay"))
+                .Add(new NamedFormulaType(
+                        "Outer",
+                        TableType.Empty().Add(new NamedFormulaType("OuterField", FormulaType.Number, "OuterFieldDisplay")),
+                        "OuterDisplay"));
+
+            var outDisplayExpression = _engine.GetDisplayExpression(expression, r1);
+            Assert.Equal(expected, outDisplayExpression);
+        }
     }
 
     public class CommaSeparatedDecimalLocaleConversionTests
@@ -454,6 +585,42 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var result = engine.Check(input, parameters);
             var actual = result.IsSuccess;
             Assert.Equal(succeeds, actual);
+        }
+
+        [Theory]
+        [InlineData("d", "displayName")]
+        [InlineData("D", "displayName")]
+        [InlineData("di", "displayName")]
+        [InlineData("DI", "displayName")]
+        [InlineData("dis", "displayName")]
+        [InlineData("DIs", "displayName")]
+        [InlineData("display", "displayName")]
+        [InlineData("displayname", "displayName")]
+        [InlineData("l", "logicalB")]
+        [InlineData("L", "logicalB")]
+        [InlineData("lo", "logicalB")]
+        [InlineData("LO", "logicalB")]
+        [InlineData("logical", "logicalB")]
+        [InlineData("logicalB", "logicalB")]
+        public void TestSuggestIdentifier(string txt, string expected)
+        {
+            var pfxConfig = new PowerFxConfig(Features.SupportColumnNamesAsIdentifiers);
+            var recalcEngine = new Engine(pfxConfig);
+            var rt = RecordType.Empty()
+                .Add(new NamedFormulaType("logicalA", FormulaType.Number, displayName: "displayName"))
+                .Add(new NamedFormulaType("logicalB", FormulaType.Number));
+
+            var intellisenseResult = recalcEngine.Suggest($"DropColumns(myTable, {txt}", rt, 21 + txt.Length);
+
+            Assert.NotNull(intellisenseResult);
+            Assert.NotNull(intellisenseResult.Suggestions);
+            Assert.True(intellisenseResult.Suggestions.Any());
+
+            var intellisenseSuggestion = intellisenseResult.Suggestions.FirstOrDefault(s => s.DisplayText.Text == expected) as IntellisenseSuggestion;
+
+            Assert.NotNull(intellisenseSuggestion);
+            Assert.Equal(expected, intellisenseSuggestion.Text);
+            Assert.Equal(DType.Number, intellisenseSuggestion.Type);
         }
     }
 }

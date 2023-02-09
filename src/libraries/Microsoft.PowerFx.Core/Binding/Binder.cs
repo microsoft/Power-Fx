@@ -121,7 +121,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
         public bool HasLocalScopeReferences { get; private set; }
 
-        public ErrorContainer ErrorContainer { get; } = new ErrorContainer();
+        public ErrorContainer ErrorContainer { get; private set; } = new ErrorContainer();
 
         /// <summary>
         /// The maximum number of selects in a table that will be included in data call.
@@ -2338,6 +2338,16 @@ namespace Microsoft.PowerFx.Core.Binding
             return IsAsync(node) && !HasSideEffects(node);
         }
 
+        /// <summary>
+        /// Override the error container.  Should only be used for scenarios where the current error container needs to be updated, for example, 
+        /// to run validation logic that should not produce visible errors for the consumer.
+        /// </summary>
+        /// <param name="container">The new error container.</param>
+        internal void OverrideErrorContainer(ErrorContainer container)
+        {
+            ErrorContainer = container;
+        }
+
         private class Visitor : TexlVisitor
         {
             private sealed class Scope
@@ -2748,6 +2758,10 @@ namespace Microsoft.PowerFx.Core.Binding
                     else if (lookupInfo.Data is IExternalEntity entity)
                     {
                         _txb.NodesToReplace.Add(new KeyValuePair<Token, string>(node.Token, entity.EntityName));
+                    }
+                    else if (lookupInfo.Data is NameSymbol nameSymbol)
+                    {
+                        _txb.NodesToReplace.Add(new KeyValuePair<Token, string>(node.Token, nameSymbol.Name));
                     }
                 }
 
@@ -3199,23 +3213,9 @@ namespace Microsoft.PowerFx.Core.Binding
                         SetDottedNameError(node, TexlStrings.ErrInvalidIdentifier);
                         return;
                     }
-
-                    // The RHS is a locale-specific name (straight from the parse tree), so we need
-                    // to look things up accordingly. If the LHS is a FirstName, fetch its embedded
-                    // EnumInfo and look in it for a value with the given locale-specific name.
-                    // This should be a fast O(1) lookup that covers 99% of all cases, such as
-                    // Couleur!Rouge, Align.Droit, etc.
-                    var firstNodeLhs = node.Left.AsFirstName();
-                    var firstInfoLhs = firstNodeLhs == null ? null : _txb.GetInfo(firstNodeLhs).VerifyValue();
-                    if (firstInfoLhs != null && _nameResolver.LookupEnumValueByInfoAndLocName(firstInfoLhs.Data, nameRhs, out value))
-                    {
-                        typeRhs = leftType.GetEnumSupertype();
-                    }
-
-                    // ..otherwise do a slower lookup by type for the remaining 1% of cases,
-                    // such as text1!Fill!Rouge, etc.
-                    // This is O(n) in the number of registered enums.
-                    else if (_nameResolver.LookupEnumValueByTypeAndLocName(leftType, nameRhs, out value))
+                    
+                    // Validate that the name exists in the enum type
+                    if (leftType.TryGetEnumValue(nameRhs, out value))
                     {
                         typeRhs = leftType.GetEnumSupertype();
                     }
@@ -3270,8 +3270,11 @@ namespace Microsoft.PowerFx.Core.Binding
                         return;
                     }
 
-                    // We block the property access usage for scoped component properties.
-                    if (template.IsComponent && property.IsScopeVariable)
+                    // We block the property access usage for scoped component properties or functional properties
+                    // TODO remove feature gate when ECS flag is completely rolled out
+                    if (template.IsComponent &&
+                        (property.IsScopeVariable ||
+                        ((_txb.Document?.Properties?.EnabledFeatures?.IsEnhancedComponentFunctionPropertyEnabled ?? false) && property.IsScopedProperty)))
                     {
                         SetDottedNameError(node, TexlStrings.ErrInvalidPropertyReference);
                         return;
@@ -3493,7 +3496,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     }
                     else
                     {
-                        _txb.SetType(node, DType.CreateDTypeWithConnectedDataSourceInfoMetadata(DType.CreateTable(new TypedName(typeRhs, nameRhs)), typeRhs.AssociatedDataSources, typeRhs.DisplayNameProvider));
+                        _txb.SetType(node, DType.CreateDTypeWithConnectedDataSourceInfoMetadata(DType.CreateTable(new TypedName(typeRhs, nameRhs)), leftType.AssociatedDataSources, leftType.DisplayNameProvider));
                     }
                 }
                 else
@@ -4041,6 +4044,15 @@ namespace Microsoft.PowerFx.Core.Binding
                 }
             }
 
+            private void UntypedObjectScopeError(CallNode node, TexlFunction maybeFunc, TexlNode firstArg)
+            {
+                _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, firstArg, TexlStrings.ErrUntypedObjectScope);
+                _txb.ErrorContainer.Error(node, TexlStrings.ErrInvalidArgs_Func, maybeFunc.Name);
+
+                _txb.SetInfo(node, new CallInfo(maybeFunc, node, null, default, false, _currentScope.Nest));
+                _txb.SetType(node, maybeFunc.ReturnType);
+            }
+
             public override bool PreVisit(CallNode node)
             {
                 AssertValid();
@@ -4080,10 +4092,10 @@ namespace Microsoft.PowerFx.Core.Binding
                     return false;
                 }
 
-                // If there are no overloads with lambdas, we can continue the visitation and
+                // If there are no overloads with lambdas or identifiers, we can continue the visitation and
                 // yield to the normal overload resolution.
-                var overloadsWithLambdas = overloads.Where(func => func.HasLambdas);
-                if (!overloadsWithLambdas.Any())
+                var overloadsWithLambdasOrIdentifiers = overloads.Where(func => func.HasLambdas || func.HasColumnIdentifiers);
+                if (!overloadsWithLambdasOrIdentifiers.Any())
                 {
                     // We may still need a scope to determine inline-record types
                     Scope maybeScope = null;
@@ -4121,7 +4133,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 var numOverloads = overloads.Count();
 
-                var overloadsWithUntypedObjectLambdas = overloadsWithLambdas.Where(func => func.ParamTypes.Any() && func.ParamTypes[0] == DType.UntypedObject);
+                var overloadsWithUntypedObjectLambdas = overloadsWithLambdasOrIdentifiers.Where(func => func.ParamTypes.Any() && func.ParamTypes[0] == DType.UntypedObject);
                 TexlFunction overloadWithUntypedObjectLambda = null;
                 if (overloadsWithUntypedObjectLambdas.Any())
                 {
@@ -4132,16 +4144,15 @@ namespace Microsoft.PowerFx.Core.Binding
                     // using the function without untyped object params. This only works if both functions have exactly
                     // the same arity (this is enforced below). We can't simply check the type of the first argument
                     // because the argument list might be empty. Arity checks below require that we already picked an override.
-                    overloadsWithLambdas = overloadsWithLambdas.Where(func => func.ParamTypes.Any() && func.ParamTypes[0] != DType.UntypedObject);
+                    overloadsWithLambdasOrIdentifiers = overloadsWithLambdasOrIdentifiers.Where(func => func.ParamTypes.Any() && func.ParamTypes[0] != DType.UntypedObject);
                     numOverloads -= 1;
                 }
 
                 // We support a single overload with lambdas. Otherwise we have a conceptual chicken-and-egg
                 // problem, whereby in order to bind the lambda args we need the precise overload (for
                 // its lambda mask), which in turn requires binding the args (for their types).
-                Contracts.Assert(overloadsWithLambdas.Count() == 1, "Incorrect multiple overloads with lambdas.");
-                var maybeFunc = overloadsWithLambdas.Single();
-                Contracts.Assert(maybeFunc.HasLambdas);
+                Contracts.Assert(overloadsWithLambdasOrIdentifiers.Count() == 1, "Incorrect multiple overloads with lambdas.");
+                var maybeFunc = overloadsWithLambdasOrIdentifiers.Single();
 
                 if (overloadWithUntypedObjectLambda != null)
                 {
@@ -4239,10 +4250,22 @@ namespace Microsoft.PowerFx.Core.Binding
                 nodeInput.Accept(this);
 
                 // At this point we know the type of the first argument, so we can check for untyped objects
-                if (overloadWithUntypedObjectLambda != null && _txb.GetType(nodeInput) == DType.UntypedObject)
+                if (_txb.GetType(nodeInput) == DType.UntypedObject)
                 {
-                    maybeFunc = overloadWithUntypedObjectLambda;
-                    scopeInfo = maybeFunc.ScopeInfo;
+                    if (overloadWithUntypedObjectLambda != null)
+                    {
+                        maybeFunc = overloadWithUntypedObjectLambda;
+                        scopeInfo = maybeFunc.ScopeInfo;
+                    }
+                    else
+                    {
+                        UntypedObjectScopeError(node, maybeFunc, nodeInput);
+
+                        PreVisitBottomUp(node, 1);
+                        FinalizeCall(node);
+
+                        return false;
+                    }
                 }
 
                 FirstNameNode dsNode;
@@ -4331,14 +4354,26 @@ namespace Microsoft.PowerFx.Core.Binding
                         _txb.AddVolatileVariables(args[i], volatileVariables);
                     }
 
+                    var isIdentifier = args[i] is FirstNameNode &&
+                        _features.HasFlag(Features.SupportColumnNamesAsIdentifiers) &&
+                        maybeFunc.IsIdentifierParam(i);
+
                     // Use the new scope only for lambda args.
                     _currentScope = (maybeFunc.IsLambdaParam(i) && scopeInfo.AppliesToArgument(i)) ? scopeNew : scopeNew.Parent;
-                    args[i].Accept(this);
 
-                    _txb.AddVolatileVariables(node, _txb.GetVolatileVariables(args[i]));
+                    if (!isIdentifier)
+                    {
+                        args[i].Accept(this);
+                        _txb.AddVolatileVariables(node, _txb.GetVolatileVariables(args[i]));
+                        argTypes[i] = _txb.GetType(args[i]);
 
-                    argTypes[i] = _txb.GetType(args[i]);
-                    Contracts.Assert(argTypes[i].IsValid);
+                        Contracts.Assert(argTypes[i].IsValid);
+                    }
+                    else
+                    {
+                        // This is an identifier, no associated type, let's make it invalid
+                        argTypes[i] = DType.Invalid;
+                    }
 
                     // Async lambdas are not (yet) supported for this function. Flag these with errors.
                     if (_txb.IsAsync(args[i]) && !scopeInfo.SupportsAsyncLambdas)
@@ -4362,6 +4397,20 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 // Temporary error container which can be discarded if deferred type arg is present.
                 var checkErrorContainer = new ErrorContainer();
+                if (maybeFunc.HasColumnIdentifiers && _features.HasFlag(Features.SupportColumnNamesAsIdentifiers))
+                {
+                    var i = 0;
+
+                    foreach (var arg in args)
+                    {
+                        if (arg is FirstNameNode firstNameNode && maybeFunc.IsIdentifierParam(i))
+                        {
+                            _ = GetLogicalNodeNameAndUpdateDisplayNames(argTypes[0], firstNameNode.Ident, out _);
+                        }
+
+                        i++;
+                    }
+                }
 
                 // Typecheck the invocation and infer the return type.
                 fArgsValid &= maybeFunc.HandleCheckInvocation(_txb, args, argTypes, checkErrorContainer, out var returnType, out var nodeToCoercedTypeMap);
@@ -4725,7 +4774,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 // already processed in PreVisit.
                 var funcNamespace = _txb.GetFunctionNamespace(node, this);
                 var overloads = LookupFunctions(funcNamespace, node.Head.Name.Value)
-                    .Where(fnc => !fnc.HasLambdas)
+                    .Where(fnc => !fnc.HasLambdas && !fnc.HasColumnIdentifiers)
                     .ToArray();
 
                 TexlFunction funcWithScope = null;
@@ -4777,6 +4826,23 @@ namespace Microsoft.PowerFx.Core.Binding
                     if (args[i].Kind == NodeKind.As)
                     {
                         _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrAsNotInContext);
+                    }
+                }
+
+                if (argCount > 0 && _txb.GetType(args[0]).Kind == DKind.UntypedObject)
+                {
+                    var functionsWithLambdas = LookupFunctions(funcNamespace, node.Head.Name.Value).Where(fnc => fnc.HasLambdas);
+
+                    if (functionsWithLambdas.Any() && !_txb.ErrorContainer.HasErrors(node))
+                    {
+                        // PreVisitBottomUp is called along the arity error code path. For functions such as Sum,
+                        // there is an overload with a lambda as well as an overload with scalars. Using untyped
+                        // object as a single parameter for such functions should be an error. If there is not
+                        // already an error for this node, add the ErrUntypedObjectScope
+                        var functionWithLambdas = functionsWithLambdas.Single();
+
+                        UntypedObjectScopeError(node, functionWithLambdas, args[0]);
+                        return;
                     }
                 }
 
@@ -4915,7 +4981,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 var carg = args.Length;
                 var argTypes = args.Select(_txb.GetType).ToArray();
 
-                if (TryGetBestOverload(_txb.CheckTypesContext, _txb.ErrorContainer, node, argTypes, overloads, out var function, out var nodeToCoercedTypeMap, out var returnType))
+                if (TryGetBestOverload(_txb.CheckTypesContext, _txb.ErrorContainer, node, node.Args.Children, argTypes, overloads, out var function, out var nodeToCoercedTypeMap, out var returnType))
                 {
                     function.CheckSemantics(_txb, args, argTypes, _txb.ErrorContainer);
 
@@ -4983,11 +5049,15 @@ namespace Microsoft.PowerFx.Core.Binding
                 for (scope = _currentScope; scope != null; scope = scope.Parent)
                 {
                     Contracts.AssertValue(scope);
+                    if (scope.SkipForInlineRecords)
+                    {
+                        continue;
+                    }
 
                     // If scope type is a data source, the node may be a display name instead of logical.
                     // Attempt to get the logical name to use for type checking
-                    if (!scope.SkipForInlineRecords && (DType.TryGetConvertedDisplayNameAndLogicalNameForColumn(scope.Type, name.Value, out var maybeLogicalName, out var tmp) ||
-                        DType.TryGetLogicalNameForColumn(scope.Type, name.Value, out maybeLogicalName)))
+                    if (DType.TryGetConvertedDisplayNameAndLogicalNameForColumn(scope.Type, name.Value, out var maybeLogicalName, out var tmp) ||
+                        DType.TryGetLogicalNameForColumn(scope.Type, name.Value, out maybeLogicalName))
                     {
                         name = new DName(maybeLogicalName);
                     }

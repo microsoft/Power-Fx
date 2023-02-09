@@ -530,6 +530,28 @@
   <data name="AboutBooleanNT_input" xml:space="preserve">
     <value>संसाधित किए जाने वाले संख्या मानों का स्तंभ.</value>
   </data>
+  <data name="AboutBooleanB" xml:space="preserve">
+    <value>'बूलियन' को बूलियन मान में बदलता है.</value>
+    
+  </data>
+  <data name="BooleanBArg1" xml:space="preserve">
+    <value>बूलियन</value>
+    
+  </data>
+  <data name="AboutBooleanB_boolean" xml:space="preserve">
+    <value>बूलियन मान में रूपांतरित करने के लिए बूलियन मान.</value>
+  </data>
+  <data name="AboutBooleanBT" xml:space="preserve">
+    <value>बूलियन मानों के कॉलम को बूलियन मानों के कॉलम में रूपांतरित करता है.</value>
+    
+  </data>
+  <data name="BooleanBTArg1" xml:space="preserve">
+    <value>इनपुट</value>
+    
+  </data>
+  <data name="AboutBooleanBT_input" xml:space="preserve">
+    <value>प्रक्रिया के लिए बूलियन मानों का एक कॉलम.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>पहला गैर रिक्त तर्क वापस करता है</value>
     
@@ -1367,6 +1389,23 @@
   <data name="AboutDegrees_input" xml:space="preserve">
     <value>संसाधित किए जाने वाले सांख्यिक मानों (रेडियंस में) का स्तंभ.</value>
   </data>
+  <data name="AboutDistinct" xml:space="preserve">
+    <value>तालिका के एक या उससे अधिक स्तंभों पर व्यंजकों का मूल्यांकन करता है और ऐसी एक-स्तंभ की तालिका लौटता है जिसमें मूल्यांकित व्यंजक के लिए पृथक (अद्वितीय) मान शामिल होते हैं.</value>
+  </data>
+  <data name="DistinctArg1" xml:space="preserve">
+    <value>स्रोत</value>
+    
+  </data>
+  <data name="DistinctArg2" xml:space="preserve">
+    <value>व्यंजक</value>
+    
+  </data>
+  <data name="AboutDistinct_source" xml:space="preserve">
+    <value>ऐसी तालिका जिससे पृथक मान निकाले जाएँगे.</value>
+  </data>
+  <data name="AboutDistinct_expression" xml:space="preserve">
+    <value>इनपुट तालिका की प्रत्येक पंक्ति पर मूल्यांकित व्यंजक जो पृथक कार्रवाई के लिए मान प्रदान करता है.</value>
+  </data>
   <data name="AboutAtan2" xml:space="preserve">
     <value>निर्दिष्ट x- और y- निर्देशांक का चाप स्पज्या (रेडियंस में) लौटाता है.</value>
   </data>
@@ -1798,6 +1837,14 @@
     <value>सांख्यिक मान बहुत बड़ा है.</value>
     
   </data>
+  <data name="ErrTextFormatTooLarge" xml:space="preserve">
+    <value>फ़ॉर्मेट स्ट्रिंग का आकार {0} वर्णों से अधिक नहीं हो सकता है.</value>
+    
+  </data>
+  <data name="ErrTextInvalidFormat" xml:space="preserve">
+    <value>अमान्य फ़ॉर्मैट.</value>
+    
+  </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
     <value>यह डेटा स्रोत अमान्य है. कृपया "सामग्री -&gt; डेटा स्रोत" या "देखें -&gt; विकल्प" क्लिक करके "डेटा स्रोत" फलक की त्रुटि सुधारें</value>
     
@@ -1852,6 +1899,10 @@
   </data>
   <data name="ErrSortWrongType" xml:space="preserve">
     <value>व्यंजक प्रकार पर सॉर्ट नहीं किया जा सकता.</value>
+    
+  </data>
+  <data name="ErrDistinctWrongType" xml:space="preserve">
+    <value>एक्सप्रेशन प्रकार पर अलग से लागू नहीं किया जा सकता.</value>
     
   </data>
   <data name="ErrFunctionDoesNotAcceptThisType_Function_Expected" xml:space="preserve">
@@ -3268,6 +3319,38 @@
     <value>कॉन्ट्रास्ट विषयवस्तु</value>
     
   </data>
+  <data name="AboutCollect" xml:space="preserve">
+    <value>डेटा स्रोत में रिकार्ड्स जोड़ता है.</value>
+    
+  </data>
+  <data name="CollectDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="CollectRecordArg" xml:space="preserve">
+    <value>रिकॉर्ड</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>एक संग्रह के सभी रिकॉर्ड हटा देता है. संग्रह के कॉलम बने रहेंगे.</value>
+    
+  </data>
+  <data name="AboutClearCollect" xml:space="preserve">
+    <value>एक संग्रह से सभी रिकॉर्ड हटा देता है. और फिर उसी संग्रह में रिकॉर्ड्स के अलग सेट जोड़ता है.</value>
+    
+  </data>
+  <data name="ClearCollectionArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="ClearCollectDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="ClearCollectRecordArg" xml:space="preserve">
+    <value>रिकॉर्ड</value>
+    
+  </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>अद्यतनों को निर्दिष्ट पंक्ति पर लागू करता है और निर्दिष्ट डेटास्रोत की पंक्ति को बदलता है. अद्यतित पंक्ति लौटाता है.</value>
     
@@ -4398,6 +4481,10 @@
     <value>आलेख: Power Apps के लिए सूत्र संदर्भ</value>
     
   </data>
+  <data name="ErrorResource_ErrRecordDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
+    <value>असंगत प्रकार. आप जिस आइटम को रिकॉर्ड में डालने का प्रयास कर रहे हैं, उसका प्रकार रिकॉर्ड के साथ संगत नहीं है.</value>
+    
+  </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
     <value>असंगत प्रकार. आप जिस आइटम को तालिका में रखने का प्रयास कर रहे हैं, उसका एक प्रकार है, जो कि तालिका के साथ संगत नहीं है.</value>
     
@@ -4642,6 +4729,10 @@
     <value>जैसा कि इस संदर्भ में अनुमति नहीं है</value>
     
   </data>
+  <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
+    <value>रिकॉर्ड स्कोप का समर्थन करने वाले कार्यों के पहले तर्क के रूप में अनटाइप्ड ऑब्जेक्ट्स का इस्तेमाल नहीं किया जा सकता है.</value>
+    
+  </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>नामांकित सूत्र अर्धविराम के साथ समाप्त होना चाहिए.</value>
     
@@ -4725,6 +4816,18 @@
   </data>
   <data name="ErrDeprecated" xml:space="preserve">
     <value>यह सुविधा अप्रचलित कर दी गई है और यह अब समर्थित नहीं है.</value>
+    
+  </data>
+  <data name="WarnDeferredType" xml:space="preserve">
+    <value>चेतावनी: आस्थगित प्रकार प्रदान किया गया.</value>
+    
+  </data>
+  <data name="ErrExpectedIdentifierArg_Name" xml:space="preserve">
+    <value>अपेक्षित आइडेंटिफ़ायर का नाम</value>
+    
+  </data>
+  <data name="ErrInvalidFunction" xml:space="preserve">
+    <value>यह फ़ंक्शन संदिग्ध है, इसमें इसी तरह के तर्क के लिए लैम्बडा एक्सप्रेशन्स और स्तंभ आइडेंटिफ़ायर शामिल हैं.</value>
     
   </data>
 </root>

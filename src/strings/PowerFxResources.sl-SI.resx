@@ -530,6 +530,28 @@
   <data name="AboutBooleanNT_input" xml:space="preserve">
     <value>Stolpec številskih vrednosti za obdelavo</value>
   </data>
+  <data name="AboutBooleanB" xml:space="preserve">
+    <value>Pretvori »logično vrednost« v logično vrednost.</value>
+    
+  </data>
+  <data name="BooleanBArg1" xml:space="preserve">
+    <value>logičen</value>
+    
+  </data>
+  <data name="AboutBooleanB_boolean" xml:space="preserve">
+    <value>Logična vrednost za pretvorbo v logično vrednost.</value>
+  </data>
+  <data name="AboutBooleanBT" xml:space="preserve">
+    <value>Pretvori stolpec logičnih vrednosti v stolpec logičnih vrednosti.</value>
+    
+  </data>
+  <data name="BooleanBTArg1" xml:space="preserve">
+    <value>vnos</value>
+    
+  </data>
+  <data name="AboutBooleanBT_input" xml:space="preserve">
+    <value>Stolpec logičnih vrednosti, ki jih želite obdelati.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Vrne prvi neprazen argument</value>
     
@@ -1367,6 +1389,23 @@
   <data name="AboutDegrees_input" xml:space="preserve">
     <value>Stolpec številskih vrednosti (v radianih) za obdelavo.</value>
   </data>
+  <data name="AboutDistinct" xml:space="preserve">
+    <value>Ovrednoti izraz za enega ali več stolpcev tabele in vrne tabelo z enim stolpcem, ki vsebuje različne (unikatne) vrednosti za ovrednoteni izraz.</value>
+  </data>
+  <data name="DistinctArg1" xml:space="preserve">
+    <value>vir</value>
+    
+  </data>
+  <data name="DistinctArg2" xml:space="preserve">
+    <value>izraz</value>
+    
+  </data>
+  <data name="AboutDistinct_source" xml:space="preserve">
+    <value>Tabela, iz katere bodo izvlečene različne vrednosti.</value>
+  </data>
+  <data name="AboutDistinct_expression" xml:space="preserve">
+    <value>Izraz, ovrednoten za vsako posamezno vrstico v vhodni tabeli, ki zagotavlja vrednosti za postopek »Distinct«.</value>
+  </data>
   <data name="AboutAtan2" xml:space="preserve">
     <value>Vrne arkus tangens (v radianih) navedenih koordinat x in y.</value>
   </data>
@@ -1798,6 +1837,14 @@
     <value>Številska vrednost je prevelika.</value>
     
   </data>
+  <data name="ErrTextFormatTooLarge" xml:space="preserve">
+    <value>Velikost oblikovanega niza ne more presegati {0} znakov.</value>
+    
+  </data>
+  <data name="ErrTextInvalidFormat" xml:space="preserve">
+    <value>Oblika zapisa ni veljavna.</value>
+    
+  </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
     <value>Vir podatkov ni veljaven. Odpravite napako v podoknu »Viri podatkov«, tako da kliknete »Vsebina -&gt; Viri podatkov« ali »Pogled -&gt; Možnosti«.</value>
     
@@ -1852,6 +1899,10 @@
   </data>
   <data name="ErrSortWrongType" xml:space="preserve">
     <value>Razvrščanje za ta tip izraza ni mogoče.</value>
+    
+  </data>
+  <data name="ErrDistinctWrongType" xml:space="preserve">
+    <value>Funkcije »distinct« ni mogoče uporabiti za vrsto izraza.</value>
     
   </data>
   <data name="ErrFunctionDoesNotAcceptThisType_Function_Expected" xml:space="preserve">
@@ -3268,6 +3319,38 @@
     <value>Kontrastna tema</value>
     
   </data>
+  <data name="AboutCollect" xml:space="preserve">
+    <value>Doda zapise viru podatkov.</value>
+    
+  </data>
+  <data name="CollectDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="CollectRecordArg" xml:space="preserve">
+    <value>zapis</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>Izbriše vse zapise zbirke. Stolpci zbirke bodo ostali.</value>
+    
+  </data>
+  <data name="AboutClearCollect" xml:space="preserve">
+    <value>Izbriše vse zapise iz zbirke. Nato v isto zbirko doda nov nabor zapisov.</value>
+    
+  </data>
+  <data name="ClearCollectionArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="ClearCollectDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="ClearCollectRecordArg" xml:space="preserve">
+    <value>zapis</value>
+    
+  </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>Uporabi posodobitve v določeni vrstici in spremeni vrstico v določenem viru podatkov. Vrne posodobljeno vrstico.</value>
     
@@ -4398,6 +4481,10 @@
     <value>Članek: Sklic na formulo za storitev Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrRecordDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
+    <value>Nezdružljiva vrsta. Element, ki ga poskušate vstaviti v zapis, vsebuje vrsto, ki ni združljiva z zapisom.</value>
+    
+  </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
     <value>Nezdružljiva vrsta. Element, ki ga poskušate vstaviti v tabelo, vsebuje vrsto, ki ni združljiva s tabelo.</value>
     
@@ -4642,6 +4729,10 @@
     <value>»Kot« ni dovoljeno v tem kontekstu</value>
     
   </data>
+  <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
+    <value>Predmetov brez vrste ni mogoče uporabiti kot prvi argument za funkcije, ki podpirajo obseg zapisa.</value>
+    
+  </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>Navedena formula se mora končati s podpičjem.</value>
     
@@ -4725,6 +4816,18 @@
   </data>
   <data name="ErrDeprecated" xml:space="preserve">
     <value>Ta funkcija je opuščena in ni več podprta.</value>
+    
+  </data>
+  <data name="WarnDeferredType" xml:space="preserve">
+    <value>Opozorilo: na voljo je odložena vrsta.</value>
+    
+  </data>
+  <data name="ErrExpectedIdentifierArg_Name" xml:space="preserve">
+    <value>Pričakovano ime identifikatorja</value>
+    
+  </data>
+  <data name="ErrInvalidFunction" xml:space="preserve">
+    <value>Ta funkcija je dvoumna. Za isti argument vsebuje izraze lambda in identifikatorje stolpcev.</value>
     
   </data>
 </root>

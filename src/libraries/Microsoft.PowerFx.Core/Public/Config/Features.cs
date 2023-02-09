@@ -6,7 +6,9 @@ using System;
 namespace Microsoft.PowerFx
 {
     [Flags]
+#pragma warning disable CA2217 // Do not mark enums with FlagsAttribute
     public enum Features : int
+#pragma warning restore CA2217 // Do not mark enums with FlagsAttribute
     {
         None = 0x0,
 
@@ -18,6 +20,7 @@ namespace Microsoft.PowerFx
 
         /// <summary>
         /// Enable functions to consistently return one dimension tables with a "Value" column rather than some other name like "Result"
+        /// Added on 11th July 2022
         /// </summary>
         ConsistentOneColumnTableResult = 0x2,
 
@@ -28,5 +31,16 @@ namespace Microsoft.PowerFx
         /// Filter(A, A[@Value] = 2)
         /// </summary>
         DisableRowScopeDisambiguationSyntax = 0x4,
+
+        /// <summary>
+        /// Enable Identifier support for describing column names
+        /// Added on 6th December 2022.
+        /// </summary>
+        SupportColumnNamesAsIdentifiers = 0x8,
+        
+        /// <summary>        
+        /// All features enabled
+        /// </summary>
+        All = ~0
     }
 }

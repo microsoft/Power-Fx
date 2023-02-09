@@ -25,5 +25,14 @@ namespace Microsoft.PowerFx
                 return false;
             }
         }
+
+        /// <summary>
+        /// Get a service from the <paramref name="serviceProvider"/>,
+        /// Returns null if not present.
+        /// </summary>
+        public static T GetService<T>(this IServiceProvider serviceProvider)
+        {
+            return (T)serviceProvider.GetService(typeof(T));
+        }
     }
 }

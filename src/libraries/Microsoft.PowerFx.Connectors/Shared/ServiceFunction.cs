@@ -60,13 +60,9 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
 
         public ServiceFunction(IService parentService, DPath theNamespace, string name, string localeSpecificName, string description,
             DType returnType, BigInteger maskLambdas, int arityMin, int arityMax, bool isBehaviorOnly, bool isAutoRefreshable, bool isDynamic, bool isCacheEnabled, int cacheTimetoutMs, bool isHidden,
-            Dictionary<TypedName, List<string>> parameterOptions,
-            ServiceFunctionParameterTemplate[] optionalParamInfo, ServiceFunctionParameterTemplate[] requiredParamInfo,
-            Dictionary<string, Tuple<string, DType>> parameterDefaultValues,
-            string actionName = "",
-            params DType[] paramTypes)
-            : base(theNamespace, name, localeSpecificName, (l) => description, FunctionCategories.REST, returnType, maskLambdas, arityMin, arityMax,
-            paramTypes)
+            Dictionary<TypedName, List<string>> parameterOptions, ServiceFunctionParameterTemplate[] optionalParamInfo, ServiceFunctionParameterTemplate[] requiredParamInfo,
+            Dictionary<string, Tuple<string, DType>> parameterDefaultValues, string actionName = "", params DType[] paramTypes)
+            : base(theNamespace, name, localeSpecificName, (l) => description, FunctionCategories.REST, returnType, maskLambdas, arityMin, arityMax, paramTypes)
         {
             Contracts.AssertValueOrNull(parentService);
             Contracts.AssertValueOrNull(localeSpecificName);
@@ -229,8 +225,7 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
         }
 #endif
 
-        public override bool CheckTypes(TexlNode[] args, DType[] argTypes,
-            IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertValue(argTypes);
@@ -238,7 +233,7 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            bool fArgsValid = base.CheckTypes(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            bool fArgsValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
 
 #if canvas
             // Check if we have a dynamic type for a dynamic schema
@@ -382,14 +377,15 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
 #if !canvas
         // Provide as hook for execution. 
         public IAsyncTexlFunction _invoker;
-        public async Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancel)
+
+        public async Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancellationToken)
         {
-            if (_invoker == null)
-            {
-                throw new InvalidOperationException($"Function {Name} can't be invoked.");
+            if (_invoker == null) 
+            { 
+                throw new InvalidOperationException($"Function {Name} can't be invoked."); 
             }
 
-            var result = await _invoker.InvokeAsync(args, cancel);
+            var result = await _invoker.InvokeAsync(args, cancellationToken);
             ExpressionError er = null;
 
             if (result is ErrorValue ev && (er = ev.Errors.FirstOrDefault(e => e.Kind == ErrorKind.Network)) != null)

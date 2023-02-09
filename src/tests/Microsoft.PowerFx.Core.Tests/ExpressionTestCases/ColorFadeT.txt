@@ -1,0 +1,32 @@
+﻿>> ColorFade([RGBA(255,0,0,1), RGBA(255,0,0,0)], 0)
+Table({Value:RGBA(255,0,0,1)},{Value:RGBA(255,0,0,0)})
+
+>> ColorFade([RGBA(255,0,0,1), RGBA(255,0,0,0)], 0%)
+Table({Value:RGBA(255,0,0,1)},{Value:RGBA(255,0,0,0)})
+
+>> ColorFade([RGBA(255,0,0,1), RGBA(255,0,0,0)], 1)
+Table({Value:RGBA(255,255,255,1)},{Value:RGBA(255,255,255,0)})
+
+>> ColorFade([RGBA(255,0,0,1), RGBA(256,0,0,0)], 1)
+Table({Value:RGBA(255,255,255,1)},{Value:Error({Kind:ErrorKind.InvalidArgument})})
+
+>> ColorFade([RGBA(255,0,0,1), RGBA(255,0,0,1)], 100%)
+Table({Value:RGBA(255,255,255,1)},{Value:RGBA(255,255,255,1)})
+
+>> ColorFade([RGBA(255,0,0,1), RGBA(255,0,0,1)], 1.1)
+Table({Value:Error({Kind:ErrorKind.InvalidArgument})},{Value:Error({Kind:ErrorKind.InvalidArgument})})
+
+>> ColorFade([RGBA(255,0,0,1), RGBA(255,0,0,1)], 101%)
+Table({Value:Error({Kind:ErrorKind.InvalidArgument})},{Value:Error({Kind:ErrorKind.InvalidArgument})})
+
+>> ColorFade([RGBA(255,0,0,1), RGBA(255,0,0,1)], -1.1)
+Table({Value:Error({Kind:ErrorKind.InvalidArgument})},{Value:Error({Kind:ErrorKind.InvalidArgument})})
+
+>> ColorFade([RGBA(255,0,0,1), RGBA(255,0,0,0)], 0.5)
+Table({Value:RGBA(255,127,127,1)},{Value:RGBA(255,127,127,0)})
+
+>> ColorFade([RGBA(255,0,0,1), Blank()], 0.5)
+Table({Value:RGBA(255,127,127,1)},{Value:RGBA(127,127,127,0)})
+
+>> ColorFade([RGBA(255,0,0,1), Blank()], If(1<0, 1))
+Table({Value:RGBA(255,0,0,1)},{Value:RGBA(0,0,0,0)})

@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Utils;
@@ -58,9 +59,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.Null(v1);
 
             var symbols = locals.SymbolTable;
-#pragma warning disable CS0618 // Type or member is obsolete
-            Assert.Null(symbols.Parent);
-#pragma warning restore CS0618 // Type or member is obsolete
 
             // Internal hook is null;
             var a = new DName("a");
@@ -142,69 +140,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
         [Fact]
-        public void Services()
-        {
-            var service1 = new MyService();
-            var r1 = new SymbolValues { DebugName = "Services " };
-
-            r1.AddService(service1);
-
-            // Lookup succeeds
-            var lookup = r1.GetService(typeof(MyService));
-            Assert.Same(lookup, service1);
-
-            var r2 = new SymbolValues();            
-            var r21 = ReadOnlySymbolValues.Compose(r2, r1);
-
-            // Finds in child
-            lookup = r21.GetService(typeof(MyService));
-            Assert.Same(lookup, service1);
-
-            // Shadowing 
-            var service2 = new MyService();
-            Assert.NotSame(service1, service2);
-
-            r2.AddService(service2);
-
-            lookup = r2.GetService(typeof(MyService));
-            Assert.Same(lookup, service2);
-
-            lookup = r21.GetService(typeof(MyService));
-            Assert.Same(lookup, service2);
-        }
-
-        private class BaseService
-        {
-        }
-
-        private class MyService : BaseService
-        {
-        }
-
-        [Fact]
-        public void Derived()
-        {
-            var derivedService = new MyService();
-            var r1 = new SymbolValues();
-
-            r1.AddService(derivedService);
-
-            // Lookup must be exact type; doesn't lookup by base class.
-            var lookup = r1.GetService(typeof(BaseService));
-            Assert.Null(lookup);
-
-            // Base and derived can coexist 
-            BaseService baseService = new MyService();
-            r1.AddService(baseService);
-
-            lookup = r1.GetService(typeof(BaseService));
-            Assert.Same(baseService, lookup);
-
-            lookup = r1.GetService(typeof(MyService));
-            Assert.Same(derivedService, lookup);
-        }
-
-        [Fact]
         public void TestRowScope()
         {
             var r1 = new SymbolValues();
@@ -275,7 +210,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             // chcek missing 
             found = symbolTable.TryLookupSlot("missing", out var slot3);
             Assert.False(found);
-            Assert.Null(slot3);            
+            Assert.Null(slot3);
         }
 
         [Fact]
@@ -309,7 +244,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var r2 = NewRowScope(record, r1);
 
             var table = r2.SymbolTable;
-            
+
             var engine = new RecalcEngine();
 
             var result = engine.EvalAsync("ThisRecord.a + a + b", CancellationToken.None, runtimeConfig: r2).Result;
@@ -343,20 +278,17 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             public override IEnumerable<string> FieldNames => throw new NotImplementedException();
 
             public override bool Equals(object other) => throw new NotImplementedException();
-            
+
             public override int GetHashCode() => throw new NotImplementedException();
         }
-
+                
         // Test Composing symbol tables. 
         [Fact]
-        public void Compose()
+        public void Compose1()
         {
-            var culture1 = new CultureInfo("en-us");
-
             var r1 = new SymbolValues { DebugName = "L1" };
             r1.Add("x", FormulaValue.New("x1"));
-            r1.AddService(culture1);
-
+            
             var r2 = new SymbolValues { DebugName = "L2" };
             r2.Add("y", FormulaValue.New("y2"));
             r2.Add("x", FormulaValue.New("x2"));
@@ -375,18 +307,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             found = r3.TryGetValue("missing", out result);
             Assert.False(found);
             Assert.Null(result);
-
-            var culture2 = r3.GetService<CultureInfo>();
-            Assert.Same(culture1, culture2);
-
+            
             // Flipping the order changes precedence
             r3 = ReadOnlySymbolValues.Compose(r2, r1);
             found = r3.TryGetValue("x", out result);
             Assert.True(found);
-            Assert.Equal("x2", result.ToObject());
-
-            culture2 = r3.GetService<CultureInfo>();
-            Assert.Same(culture1, culture2);           
+            Assert.Equal("x2", result.ToObject());            
         }
 
         [Fact]
@@ -441,7 +367,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         {
             var symbolTable = new SymbolTable
             {
-                 DebugName = "My Locals"
+                DebugName = "My Locals"
             };
             var slot1 = symbolTable.AddVariable("x", FormulaType.Number);
 
@@ -473,7 +399,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             Assert.Equal("v2=20;|v1=1;v2=<shadow>;|", Get(sym2));
 
-            sym2.UpdateValue("v2", FormulaValue.New(21));            
+            sym2.UpdateValue("v2", FormulaValue.New(21));
             Assert.Equal("v2=21;|v1=1;v2=<shadow>;|", Get(sym2));
             Assert.Equal("v1=1;v2=2;|", Get(sym1)); // v2 in parent not updated 
 
@@ -511,7 +437,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var sym2 = ReadOnlySymbolValues.Compose(sym1, sym2a);
 
-            sym2.UpdateValue("v2a", FormulaValue.New(2));            
+            sym2.UpdateValue("v2a", FormulaValue.New(2));
             Assert.Equal("|v2a=2;|", Get(sym2));
         }
 
@@ -531,7 +457,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.Equal("num=11;|", Get(sym));
 
             // No 'ThisRecord'
-            var ok = sym.TryGetValue("ThisRecord", out var x);            
+            var ok = sym.TryGetValue("ThisRecord", out var x);
             Assert.False(ok);
             Assert.Null(x);
 
@@ -592,7 +518,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var symTable1 = new SymbolTable { DebugName = "L1" };
             var slot = symTable1.AddVariable("x", FormulaType.Number);
 
-            var record = FormulaValue.NewRecordFromFields(                
+            var record = FormulaValue.NewRecordFromFields(
                 new NamedValue("x", FormulaValue.New(11)));
             var recordType = record.Type;
 
@@ -661,6 +587,55 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             }
         }
 
+        // Trying to eval with missing symbol values will fail
+        [Fact]
+        public async Task MissingSymbolValues()
+        {
+            // Get meaningful error if we eval with the "wrong" symbols 
+            var symTable1 = new SymbolTable { DebugName = "L1" };
+            symTable1.AddVariable("var1", FormulaType.Number);
+
+            var engine = new RecalcEngine();
+            var check = engine.Check("1+2", symbolTable: symTable1);
+
+            var symTable2 = new SymbolTable { DebugName = "L2" };
+            var symValues2 = symTable2.CreateValues();
+            var run = check.GetEvaluator();
+
+            // Pass in symbolValues that aren't associated with symTable1 used in check. 
+            Assert.NotSame(symTable1, symValues2.SymbolTable);
+
+            // Catch and proactively get error. 
+            await Assert.ThrowsAsync<InvalidOperationException>(async () => await run.EvalAsync(CancellationToken.None, symValues2));
+
+            // Works when we pass in right symbol values (tied to what we checked against)
+            var symValues1 = symTable1.CreateValues();
+            run.Eval(symValues1);
+        }
+                
+        // Fail when trying to eval with an extra SymbolValue that doesn't below.
+        [Fact]
+        public async Task MismatchedSymbolValues()
+        {
+            var symValue = new SymbolValues { DebugName = "Extra" };
+            var engine = new RecalcEngine();
+
+            // Succeeds since eval will get the symbol table from values 
+            await engine.EvalAsync("1+2", CancellationToken.None, runtimeConfig: symValue);
+
+            // Check() without binding to a symbol table
+            var check = engine.Check("1+2");
+            Assert.True(check.IsSuccess);
+
+            var run = check.GetEvaluator();
+
+            // Succeeds, no extra SymbolValues
+            await run.EvalAsync(CancellationToken.None, new RuntimeConfig());
+
+            // Fails, extra symbol Values 
+            await Assert.ThrowsAsync<InvalidOperationException>(async () => await run.EvalAsync(CancellationToken.None, new RuntimeConfig(symValue)));
+        }
+
         // Demonstrate how to use ThisItem in a loop.
         // All Loop iterations can access common global state,
         // but also have their own loop-specific identifer. 
@@ -679,7 +654,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var symTable = ReadOnlySymbolTable.Compose(symTableThisItem, symTableGlobals);
 
             var expr = "globalVar + ThisItem";
-            
+
             // Compile once outside the loop, then run many times. 
             var engine = new RecalcEngine();
             var check = engine.Check(expr, symbolTable: symTable);
@@ -704,8 +679,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
                 // In the loop, just eval.
                 var result = run.Eval(symValues);
-
-                var expected = (double)1000 + i; // matches 'expr'
+                var expected = 1000D + i; // matches 'expr'
                 Assert.Equal(expected, result.ToObject());
             });
 
@@ -725,7 +699,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 var symValuesAll = symTableAll.CreateValues(symValuesThisItem);
 
                 var opts = new ParserOptions { AllowsSideEffects = true };
-                var result = engine.EvalAsync("Set(counter, ThisItem);counter", CancellationToken.None, options: opts, runtimeConfig: symValuesAll).Result;
+
+                var runtimeConfig = new RuntimeConfig(symValuesAll);
+                var result = await engine.EvalAsync("Set(counter, ThisItem);counter", CancellationToken.None, options: opts, runtimeConfig: runtimeConfig);
 
                 Assert.Equal(5.0, result.ToObject());
 
@@ -733,6 +709,56 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 var check2 = engine.Check("Set(ThisItem, 5)", options: opts, symbolTable: symValuesAll.SymbolTable);
                 Assert.False(check2.IsSuccess);
             }
+        }
+
+        [Fact]
+        public void DeferredSymbolTest()
+        {
+            var map = new SingleSourceDisplayNameProvider(new Dictionary<DName, DName>
+            {
+                { new DName("logical1"), new DName("display1") },
+                { new DName("logical2"), new DName("display2") }
+            });
+
+            var symTable = ReadOnlySymbolTable.NewFromDeferred(map, (disp, logical) =>
+            {
+                return FormulaType.Number;
+            });
+
+            var values = symTable.CreateValues();
+
+            // Before 
+            {
+                var ok = symTable.TryLookupSlot("logical1", out var slot1);
+                Assert.True(ok);
+                values.Set(slot1, FormulaValue.New(7));
+
+                var value = values.Get(slot1);
+                Assert.Same(symTable, slot1.Owner);
+                Assert.Equal(7.0, value.ToObject());
+            }
+
+            // Compile
+            var engine = new RecalcEngine();
+            var check = new CheckResult(engine);
+
+            var expr = "display1 & display2";
+            check.SetText(expr);
+            check.SetBindingInfo(symTable);
+
+            check.ApplyBinding();
+            Assert.True(check.IsSuccess);
+
+            // After
+            {
+                var ok = symTable.TryLookupSlot("display2", out var slot1);
+                Assert.True(ok);
+                values.Set(slot1, FormulaValue.New(8));
+            }
+
+            var run = check.GetEvaluator();
+            var result = run.Eval(new RuntimeConfig(values));
+            Assert.Equal("78", result.ToObject());
         }
 
         // Get a convenient string representation of a SymbolValue
@@ -744,7 +770,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var seen = new HashSet<string>();
 
-            foreach (var symbolTable in symbolTableAll.SubTables)
+            IEnumerable<ReadOnlySymbolTable> tables =
+                (symbolTableAll is ComposedReadOnlySymbolTable composed) ?
+                    composed.SubTables :
+                    new ReadOnlySymbolTable[] { symbolTableAll };
+
+            foreach (var symbolTable in tables)
             {
                 foreach (var sym in symbolTable.SymbolNames.OrderBy(x => x.Name.Value))
                 {
@@ -763,7 +794,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                         sb.Append("<shadow>");
                     }
 
-                    sb.Append(';');             
+                    sb.Append(';');
                 }
 
                 sb.Append('|'); // break between symbol tables.
@@ -802,7 +833,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             throw new InvalidOperationException();
         }
-                
+
         public static bool TryGetValue(this ReadOnlySymbolValues symValues, string name, out FormulaValue value)
         {
             if (symValues.SymbolTable.TryLookupSlot(name, out var slot))

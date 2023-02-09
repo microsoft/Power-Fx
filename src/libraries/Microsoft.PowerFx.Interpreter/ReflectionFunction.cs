@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Numerics;
 using System.Reflection;
 using System.Threading;
@@ -17,6 +18,7 @@ using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Functions;
+using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 using static Microsoft.PowerFx.Core.Localization.TexlStrings;
@@ -95,7 +97,7 @@ namespace Microsoft.PowerFx
         }
 
         // 2nd argument should be same type as 1st argument. 
-        public override bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
@@ -179,43 +181,51 @@ namespace Microsoft.PowerFx
                 throw new NotSupportedException();
             }
 
-            _info = new FunctionDescr
-            {
-                Name = name,
-                RetType = returnType,
-                ParamTypes = paramTypes,
-                _method = m
-            };
+            var isAsync = m.ReturnType.BaseType == typeof(Task);
+
+            var configType = ConfigType ?? default;
+
+            _info = new FunctionDescr(name, m, returnType, paramTypes, configType, BigInteger.Zero, isAsync);
         }
 
         private class FunctionDescr
         {
-            public FormulaType RetType;
+            internal string Name { get; }
+
+            internal MethodInfo Method { get; }
+
+            internal FormulaType RetType { get; }
 
             // User-facing parameter types. 
-            public FormulaType[] ParamTypes;
-            public string Name;
+            internal FormulaType[] ParamTypes { get; }
 
             // If not null, then arg0 is from RuntimeConfig
-            public Type _configType;
+            internal Type ConfigType { get; }
 
-            public MethodInfo _method;
+            internal bool IsAsync { get; }
 
-            public bool _isAsync;
+            internal BigInteger LamdaParamMask { get; }
 
-            public BigInteger LamdaParamMask;
+            public FunctionDescr(string name, MethodInfo method, FormulaType retType, FormulaType[] paramTypes, Type configType, BigInteger lamdaParamMask, bool isAsync = false)
+            {
+                Name = name;
+                Method = method;
+                RetType = retType;
+                ParamTypes = paramTypes;
+                ConfigType = configType;
+                IsAsync = isAsync;
+                LamdaParamMask = lamdaParamMask;
+            }
         }
 
         private FunctionDescr Scan()
         {
             if (_info == null)
             {
-                var info = new FunctionDescr();
-
                 var t = GetType();
 
                 var suffix = "Function";
-                info.Name = t.Name.Substring(0, t.Name.Length - suffix.Length);
+                var name = t.Name.Substring(0, t.Name.Length - suffix.Length);
 
                 var m = t.GetMethod("Execute", BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance);
                 if (m == null)
@@ -223,16 +233,20 @@ namespace Microsoft.PowerFx
                     throw new InvalidOperationException($"Missing Execute method");
                 }
 
-                info.RetType = GetType(m.ReturnType);
+                var returnType = GetType(m.ReturnType);
 
                 var paramTypes = new List<FormulaType>();
 
-                info._isAsync = m.ReturnType.BaseType == typeof(Task);
+                var isAsync = m.ReturnType.BaseType == typeof(Task);
 
                 var parameters = m.GetParameters();
+
+                var configType = default(Type);
+
+                BigInteger lamdaParamMask = default;
                 for (var i = 0; i < parameters.Length; i++)
                 {
-                    if (i == parameters.Length - 1 && info._isAsync)
+                    if (i == parameters.Length - 1 && isAsync)
                     {
                         if (parameters[i].ParameterType != typeof(CancellationToken))
                         {
@@ -246,15 +260,15 @@ namespace Microsoft.PowerFx
                     else if (parameters[i].ParameterType == ConfigType)
                     {
                         // Not a Formulatype, pull from RuntimeConfig
-                        info._configType = parameters[i].ParameterType;
+                        configType = parameters[i].ParameterType;
                     }
-                    else if (parameters[i].ParameterType == typeof(CancellationToken) && info._isAsync)
+                    else if (parameters[i].ParameterType == typeof(CancellationToken) && isAsync)
                     {
                         throw new InvalidOperationException($"Cancellation token must be the last argument.");
                     }
                     else if (parameters[i].ParameterType == typeof(Func<Task<BooleanValue>>))
                     {
-                        info.LamdaParamMask = info.LamdaParamMask | BigInteger.One << i;
+                        lamdaParamMask = lamdaParamMask | BigInteger.One << i;
                         paramTypes.Add(FormulaType.Boolean);
                     }
                     else if (parameters[i].ParameterType.BaseType == typeof(MulticastDelegate))
@@ -269,10 +283,7 @@ namespace Microsoft.PowerFx
                     }
                 }
 
-                info.ParamTypes = paramTypes.ToArray();
-                info._method = m;
-
-                _info = info;
+                _info = new FunctionDescr(name, m, returnType, paramTypes.ToArray(), configType, lamdaParamMask, isAsync);
             }
 
             return _info;
@@ -338,7 +349,7 @@ namespace Microsoft.PowerFx
                 }
                 else
                 {
-                    throw new InvalidOperationException($"Call to {_info.Name} is missing config type {_info._configType.FullName}");
+                    throw new InvalidOperationException($"Call to {_info.Name} is missing config type {_info.ConfigType.FullName}");
                 }
             }
 
@@ -389,21 +400,54 @@ namespace Microsoft.PowerFx
                 return ErrorValue.Combine(IRContext.NotInSource(_info.RetType), errors);
             }
 
-            if (_info._isAsync)
+            if (_info.IsAsync)
             {
                 args2.Add(cancellationToken);
             }
 
-            var result = _info._method.Invoke(this, args2.ToArray());
-
-            if (_info._isAsync)
+            object result = default;
+            try
             {
-                var resultType = result.GetType().GenericTypeArguments[0];
-                var formulaValueResult = await Unwrap(result, resultType);
-                return formulaValueResult;
+                result = _info.Method.Invoke(this, args2.ToArray());
+            }
+            catch (TargetInvocationException e)
+            {
+                if (e.InnerException is CustomFunctionErrorException customFunctionErrorException)
+                {
+                    return CommonErrors.CustomError(IRContext.NotInSource(_info.RetType), customFunctionErrorException.Message);
+                }
+
+                throw e;
             }
 
-            return (FormulaValue)result;
+            if (_info.IsAsync)
+            {
+                var resultType = result.GetType().GenericTypeArguments[0];
+                try
+                {
+                    result = await Unwrap(result, resultType);
+                }
+                catch (CustomFunctionErrorException customFunctionErrorException)
+                {
+                    return CommonErrors.CustomError(IRContext.NotInSource(_info.RetType), customFunctionErrorException.Message);
+                }
+            }
+
+            var formulaResult = (FormulaValue)result;   
+            
+            if (formulaResult == null)
+            {
+                formulaResult = FormulaValue.NewBlank(_info.RetType);
+            }
+
+            if (formulaResult.Type != _info.RetType)
+            {
+                return CommonErrors.CustomError(
+                    formulaResult.IRContext,
+                    string.Format("Return type should have been {0}, found {1}", _info.RetType._type, formulaResult.Type._type));
+            }
+
+            return formulaResult;
         }
 
         private static async Task<FormulaValue> Unwrap(object obj, Type resultType)
@@ -434,11 +478,5 @@ namespace Microsoft.PowerFx
                 return result;
             }
         }
-    }
-
-    // A function capable of async invokes. 
-    internal interface IAsyncTexlFunction
-    {
-        Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancellationToken);
     }
 }

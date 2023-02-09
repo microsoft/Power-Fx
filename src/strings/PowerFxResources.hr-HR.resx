@@ -530,6 +530,28 @@
   <data name="AboutBooleanNT_input" xml:space="preserve">
     <value>Stupac brojčanih vrijednosti koji treba obraditi.</value>
   </data>
+  <data name="AboutBooleanB" xml:space="preserve">
+    <value>Pretvara stavku „Booleova” u Booleovu vrijednost.</value>
+    
+  </data>
+  <data name="BooleanBArg1" xml:space="preserve">
+    <value>Booleova</value>
+    
+  </data>
+  <data name="AboutBooleanB_boolean" xml:space="preserve">
+    <value>Booleova vrijednost koju je potrebno pretvoriti u Booleovu vrijednost.</value>
+  </data>
+  <data name="AboutBooleanBT" xml:space="preserve">
+    <value>Pretvara stupac Booleovih vrijednosti u stupac Booleovih vrijednosti.</value>
+    
+  </data>
+  <data name="BooleanBTArg1" xml:space="preserve">
+    <value>unos</value>
+    
+  </data>
+  <data name="AboutBooleanBT_input" xml:space="preserve">
+    <value>Stupac Booleovih vrijednosti za obradu.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Vraća prvi argument koji nije prazan</value>
     
@@ -1367,6 +1389,23 @@
   <data name="AboutDegrees_input" xml:space="preserve">
     <value>Stupac brojčanih vrijednosti (u radijanima) koje će biti obrađene.</value>
   </data>
+  <data name="AboutDistinct" xml:space="preserve">
+    <value>Vrednuje izraz na temelju jednog ili više stupaca tablice i vraća tablicu s jednim stupcem koja sadrži različite (jedinstvene) vrijednosti za vrednovani izraz.</value>
+  </data>
+  <data name="DistinctArg1" xml:space="preserve">
+    <value>izvor</value>
+    
+  </data>
+  <data name="DistinctArg2" xml:space="preserve">
+    <value>izraz</value>
+    
+  </data>
+  <data name="AboutDistinct_source" xml:space="preserve">
+    <value>Tablica iz koje će se izdvajati različite vrijednosti.</value>
+  </data>
+  <data name="AboutDistinct_expression" xml:space="preserve">
+    <value>Izraz koji se vrednuje na temelju svakog retka u ulaznoj tablici i koji daje vrijednosti za operaciju Različite vrijednosti.</value>
+  </data>
   <data name="AboutAtan2" xml:space="preserve">
     <value>Vraća arkus tangens (u radijanima) navedenih koordinata x i y.</value>
   </data>
@@ -1798,6 +1837,14 @@
     <value>Numerička je vrijednost preduga.</value>
     
   </data>
+  <data name="ErrTextFormatTooLarge" xml:space="preserve">
+    <value>Veličina niza formata ne može biti veća od ovoliko znakova: {0}.</value>
+    
+  </data>
+  <data name="ErrTextInvalidFormat" xml:space="preserve">
+    <value>Format nije valjan.</value>
+    
+  </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
     <value>Izvor podataka nije valjan. Ispravite pogrešku u oknu "Izvori podataka" tako da kliknete "Sadržaj -&gt; Izvori podataka" ili "Prikaz -&gt; Mogućnosti"</value>
     
@@ -1852,6 +1899,10 @@
   </data>
   <data name="ErrSortWrongType" xml:space="preserve">
     <value>Sortiranje po vrsti izraza nije moguće.</value>
+    
+  </data>
+  <data name="ErrDistinctWrongType" xml:space="preserve">
+    <value>Različitu vrijednost nije moguće primijeniti na vrstu izraza.</value>
     
   </data>
   <data name="ErrFunctionDoesNotAcceptThisType_Function_Expected" xml:space="preserve">
@@ -3268,6 +3319,38 @@
     <value>Tema Kontrast</value>
     
   </data>
+  <data name="AboutCollect" xml:space="preserve">
+    <value>Dodaje zapise u izvor podataka.</value>
+    
+  </data>
+  <data name="CollectDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="CollectRecordArg" xml:space="preserve">
+    <value>zapis</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>Briše sve zapise iz zbirke. Stupci zbirke će ostati.</value>
+    
+  </data>
+  <data name="AboutClearCollect" xml:space="preserve">
+    <value>Briše sve zapise iz zbirke. Zatim dodaje drugačiji skup zapisa istoj zbirci.</value>
+    
+  </data>
+  <data name="ClearCollectionArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="ClearCollectDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="ClearCollectRecordArg" xml:space="preserve">
+    <value>zapis</value>
+    
+  </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>Primjenjuje ažuriranja na navedeni redak i mijenja redak u navedenom izvoru podataka. Vraća ažurirani redak.</value>
     
@@ -4398,6 +4481,10 @@
     <value>Članak: referenca formule za Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrRecordDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
+    <value>Vrsta nije kompatibilna. Stavka koju pokušavate unijeti u zapis nije kompatibilna s tablicom.</value>
+    
+  </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
     <value>Vrsta nije kompatibilna. Vrsta stavke koju pokušavate unijeti u tablicu nije kompatibilna s tablicom.</value>
     
@@ -4642,6 +4729,10 @@
     <value>Kakvo jest nije dopušteno u ovom kontekstu</value>
     
   </data>
+  <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
+    <value>Netipizirani objekti ne mogu se upotrijebiti kao prvi argument funkcijama koje podržavaju dosege zapisa.</value>
+    
+  </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>Imenovana formula mora završiti točkom sa zarezom.</value>
     
@@ -4725,6 +4816,18 @@
   </data>
   <data name="ErrDeprecated" xml:space="preserve">
     <value>Ta je značajka zastarjela i više nije podržana.</value>
+    
+  </data>
+  <data name="WarnDeferredType" xml:space="preserve">
+    <value>Upozorenje: navedena je odgođena vrsta.</value>
+    
+  </data>
+  <data name="ErrExpectedIdentifierArg_Name" xml:space="preserve">
+    <value>Očekivani naziv identifikatora</value>
+    
+  </data>
+  <data name="ErrInvalidFunction" xml:space="preserve">
+    <value>Ta je funkcija dvosmislena, sadrži izraz lambda i identifikatore stupca za isti argument.</value>
     
   </data>
 </root>

@@ -141,7 +141,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
                 return false;
             }
 
-            IDelegationMetadata columnMetadata = info.Data as DelegationMetadata.DelegationMetadata;
+            IDelegationMetadata columnMetadata = info.Data as DelegationMetadata.DelegationMetadataBase;
 
             // For this to be delegable, rhs needs to be a column that belongs to innermost scoped delegable datasource.
             if (columnMetadata == null || info.UpCount != 0)
@@ -195,7 +195,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             // RHS always needs to be firstname node or dottedname lambda access to support delegation.
             var isRHSFirstName = _binaryOpNode.Right.Kind == NodeKind.FirstName;
             var isRHSRecordScope = binding.IsFullRecordRowScopeAccess(_binaryOpNode.Right);
-            
+
             // Check if this is a table delegation for CDS in operator
             var isCdsInTableDelegation = binding.Document.Properties.EnabledFeatures.IsEnhancedDelegationEnabled && metadata.IsDelegationSupportedByTable(DelegationCapability.CdsIn) &&
                 /* Left node can be first name, row scope lambda or a lookup column */

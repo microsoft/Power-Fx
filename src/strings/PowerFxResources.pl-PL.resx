@@ -530,6 +530,28 @@
   <data name="AboutBooleanNT_input" xml:space="preserve">
     <value>Kolumna wartości liczbowych do przetworzenia.</value>
   </data>
+  <data name="AboutBooleanB" xml:space="preserve">
+    <value>Konwertuje „wartość logiczną” na wartość typu wartość logiczna.</value>
+    
+  </data>
+  <data name="BooleanBArg1" xml:space="preserve">
+    <value>wartość logiczna</value>
+    
+  </data>
+  <data name="AboutBooleanB_boolean" xml:space="preserve">
+    <value>Wartość logiczna do przekonwertowania na wartość logiczną.</value>
+  </data>
+  <data name="AboutBooleanBT" xml:space="preserve">
+    <value>Konwertuje kolumnę wartości logicznych na kolumnę wartości logicznych.</value>
+    
+  </data>
+  <data name="BooleanBTArg1" xml:space="preserve">
+    <value>dane wejściowe</value>
+    
+  </data>
+  <data name="AboutBooleanBT_input" xml:space="preserve">
+    <value>Kolumna wartości logicznych do przetworzenia.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Zwraca pierwszy niepusty argument</value>
     
@@ -1367,6 +1389,23 @@
   <data name="AboutDegrees_input" xml:space="preserve">
     <value>Kolumna wartości liczbowych (w radianach) do przetworzenia.</value>
   </data>
+  <data name="AboutDistinct" xml:space="preserve">
+    <value>Oblicza wyrażenie względem co najmniej jednej kolumny tabeli i zwraca jednokolumnową tabelę, która zawiera odrębne (unikatowe) wartości obliczanego wyrażenia.</value>
+  </data>
+  <data name="DistinctArg1" xml:space="preserve">
+    <value>źródło</value>
+    
+  </data>
+  <data name="DistinctArg2" xml:space="preserve">
+    <value>wyrażenie</value>
+    
+  </data>
+  <data name="AboutDistinct_source" xml:space="preserve">
+    <value>Tabela, z której zostaną wyodrębnione wartości odrębne.</value>
+  </data>
+  <data name="AboutDistinct_expression" xml:space="preserve">
+    <value>Wyrażenie obliczane w odniesieniu do każdego wiersza w tabeli wejściowej, które dostarcza wartości do użycia w operacji Distinct.</value>
+  </data>
   <data name="AboutAtan2" xml:space="preserve">
     <value>Zwraca arcus tangens (w radianach) określonych współrzędnych x i y.</value>
   </data>
@@ -1798,6 +1837,14 @@
     <value>Wartość liczbowa jest zbyt duża.</value>
     
   </data>
+  <data name="ErrTextFormatTooLarge" xml:space="preserve">
+    <value>Wyrażona w znakach długość ciągu formatu nie może przekraczać {0}.</value>
+    
+  </data>
+  <data name="ErrTextInvalidFormat" xml:space="preserve">
+    <value>Nieprawidłowy format.</value>
+    
+  </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
     <value>To źródło danych jest nieprawidłowe. Napraw błąd w okienku „Źródła danych”, klikając opcje „Zawartość -&gt; Źródła danych” lub „Widok -&gt; Opcje”</value>
     
@@ -1852,6 +1899,10 @@
   </data>
   <data name="ErrSortWrongType" xml:space="preserve">
     <value>Nie można sortować przy użyciu wyrażenia tego typu.</value>
+    
+  </data>
+  <data name="ErrDistinctWrongType" xml:space="preserve">
+    <value>Nie można zastosować wyodrębniania wartości odrębnych przy użyciu wyrażenia tego typu.</value>
     
   </data>
   <data name="ErrFunctionDoesNotAcceptThisType_Function_Expected" xml:space="preserve">
@@ -3268,6 +3319,38 @@
     <value>Motyw kontrastowy</value>
     
   </data>
+  <data name="AboutCollect" xml:space="preserve">
+    <value>Dodaje rekordy do źródła danych.</value>
+    
+  </data>
+  <data name="CollectDataSourceArg" xml:space="preserve">
+    <value>źródło_danych</value>
+    
+  </data>
+  <data name="CollectRecordArg" xml:space="preserve">
+    <value>rekord</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>Usuwa wszystkie rekordy wchodzące w skład kolekcji. Kolumny kolekcji nie zostaną usunięte.</value>
+    
+  </data>
+  <data name="AboutClearCollect" xml:space="preserve">
+    <value>Usuwa wszystkie rekordy z kolekcji, a następnie dodaje inny zestaw rekordów do tej samej kolekcji.</value>
+    
+  </data>
+  <data name="ClearCollectionArg" xml:space="preserve">
+    <value>źródło_danych</value>
+    
+  </data>
+  <data name="ClearCollectDataSourceArg" xml:space="preserve">
+    <value>źródło_danych</value>
+    
+  </data>
+  <data name="ClearCollectRecordArg" xml:space="preserve">
+    <value>rekord</value>
+    
+  </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>Stosuje aktualizacje do określonego wiersza i zmienia wiersz w określonym źródle danych. Zwraca zaktualizowany wiersz.</value>
     
@@ -4398,6 +4481,10 @@
     <value>Artykuł: Informacje o formułach w usłudze Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrRecordDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
+    <value>Niezgodny typ. Typ elementu, który próbujesz umieścić w rekordzie, jest niezgodny z rekordem.</value>
+    
+  </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
     <value>Niezgodny typ. Element, który próbujesz umieścić w tabeli, ma typ, który nie jest zgodny z tabelą.</value>
     
@@ -4642,6 +4729,10 @@
     <value>Słowo kluczowe As jest niedozwolone w tym kontekście</value>
     
   </data>
+  <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
+    <value>Obiektów bez typu nie można używać jako pierwszego argumentu funkcji, które obsługują zakresy rekordów.</value>
+    
+  </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>Nazwana formuła musi kończyć się średnikiem.</value>
     
@@ -4725,6 +4816,18 @@
   </data>
   <data name="ErrDeprecated" xml:space="preserve">
     <value>Ta funkcja jest przestarzała i nie jest już obsługiwana.</value>
+    
+  </data>
+  <data name="WarnDeferredType" xml:space="preserve">
+    <value>Ostrzeżenie: dostarczono odroczony typ.</value>
+    
+  </data>
+  <data name="ErrExpectedIdentifierArg_Name" xml:space="preserve">
+    <value>Oczekiwano nazwy identyfikatora</value>
+    
+  </data>
+  <data name="ErrInvalidFunction" xml:space="preserve">
+    <value>Ta funkcja jest niejednoznaczna, ponieważ zawiera wyrażenia lambda oraz identyfikatory kolumn dla tego samego argumentu.</value>
     
   </data>
 </root>

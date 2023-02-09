@@ -73,3 +73,9 @@ Errors: Error 8-10: Invalid argument type (Text). Expecting a Table value instea
 
 >> Collect(If(false,Blank()),r2)
 Errors: Error 8-25: The function 'Collect' has some invalid arguments.
+
+>> Collect(t1,{Price:200}).Price
+200
+
+>> Collect([1,2,3],{Value:200}).Value
+200

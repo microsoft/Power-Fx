@@ -93,6 +93,9 @@ namespace Microsoft.PowerFx.Core.Binding
         /// <param name="node">
         /// CallNode for which the best overload will be determined.
         /// </param>
+        /// <param name="args">
+        /// List of argument nodes for <paramref name="node"/>.
+        /// </param>
         /// <param name="argTypes">
         /// List of argument types for <paramref name="node.Args"/>.
         /// </param>
@@ -112,12 +115,11 @@ namespace Microsoft.PowerFx.Core.Binding
         /// <returns>
         /// True if a valid overload was found, false if not.
         /// </returns>
-        internal static bool TryGetBestOverload(CheckTypesContext context, IErrorContainer errors, CallNode node, DType[] argTypes, TexlFunction[] overloads, out TexlFunction bestOverload, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap, out DType returnType)
+        internal static bool TryGetBestOverload(CheckTypesContext context, IErrorContainer errors, CallNode node, TexlNode[] args, DType[] argTypes, TexlFunction[] overloads, out TexlFunction bestOverload, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap, out DType returnType)
         {
             Contracts.AssertValue(node, nameof(node));
             Contracts.AssertValue(overloads, nameof(overloads));
 
-            var args = node.Args.Children;
             var carg = args.Length;
             returnType = DType.Unknown;
 
@@ -211,12 +213,12 @@ namespace Microsoft.PowerFx.Core.Binding
                     returnType = DType.Deferred;
                 }
             }
-            else if(checkErrorContainer!=null && errorContainer!=null)
+            else if (checkErrorContainer != null && errorContainer != null)
             {
                 errorContainer.MergeErrors(checkErrorContainer.GetErrors());
             }
 
-            return(typeCheckSucceeded, returnType);
+            return (typeCheckSucceeded, returnType);
         }
 
         /// <summary>
@@ -597,7 +599,7 @@ namespace Microsoft.PowerFx.Core.Binding
                         default:
                             // Date + number = Date
                             var resRight = CheckTypeCore(errorContainer, node.Right, rightType, DType.Number, /* coerced: */ DType.String, DType.Boolean);
-                            return new BinderCheckTypeResult() { Node = node, NodeType = DType.DateTime, Coercions = resRight.Coercions };
+                            return new BinderCheckTypeResult() { Node = node, NodeType = DType.Date, Coercions = resRight.Coercions };
                     }
 
                 case DKind.Time:
@@ -647,7 +649,7 @@ namespace Microsoft.PowerFx.Core.Binding
                         case DKind.Date:
                             // number + Date = Date
                             var leftResDate = CheckTypeCore(errorContainer, node.Left, leftType, DType.Number, /* coerced: */ DType.String, DType.Boolean);
-                            return new BinderCheckTypeResult() { Node = node, NodeType = DType.DateTime, Coercions = leftResDate.Coercions };
+                            return new BinderCheckTypeResult() { Node = node, NodeType = DType.Date, Coercions = leftResDate.Coercions };
                         case DKind.Time:
                             // number + Time = Time
                             var leftResTime = CheckTypeCore(errorContainer, node.Left, leftType, DType.Number, /* coerced: */ DType.String, DType.Boolean);
@@ -656,7 +658,7 @@ namespace Microsoft.PowerFx.Core.Binding
                             // Regular Addition
                             var leftResAdd = CheckTypeCore(errorContainer, node.Left, leftType, DType.Number, /* coerced: */ DType.String, DType.Boolean);
                             var rightResAdd = CheckTypeCore(errorContainer, node.Right, rightType, DType.Number, /* coerced: */ DType.String, DType.Boolean);
-                            
+
                             // Deferred + number or number + Deferred
                             if (leftKind == DKind.Deferred || rightKind == DKind.Deferred)
                             {

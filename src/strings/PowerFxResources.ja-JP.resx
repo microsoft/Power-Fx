@@ -530,6 +530,28 @@
   <data name="AboutBooleanNT_input" xml:space="preserve">
     <value>処理する数値の列。</value>
   </data>
+  <data name="AboutBooleanB" xml:space="preserve">
+    <value>'ブール値' をブール値に変換します。</value>
+    
+  </data>
+  <data name="BooleanBArg1" xml:space="preserve">
+    <value>ブール値</value>
+    
+  </data>
+  <data name="AboutBooleanB_boolean" xml:space="preserve">
+    <value>ブール値に変換するブール値です。</value>
+  </data>
+  <data name="AboutBooleanBT" xml:space="preserve">
+    <value>ブール値の列をブール値の列に変換します。</value>
+    
+  </data>
+  <data name="BooleanBTArg1" xml:space="preserve">
+    <value>入力</value>
+    
+  </data>
+  <data name="AboutBooleanBT_input" xml:space="preserve">
+    <value>処理するブール値の列です。</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>空でない最初の引数を返します</value>
     
@@ -1367,6 +1389,23 @@
   <data name="AboutDegrees_input" xml:space="preserve">
     <value>処理する数値列の値 (ラジアン単位)。</value>
   </data>
+  <data name="AboutDistinct" xml:space="preserve">
+    <value>テーブルの 1 つまたは複数の列に対して式を評価し、評価された式の固有 (一意) の値が含まれる 1 列のテーブルを返します。</value>
+  </data>
+  <data name="DistinctArg1" xml:space="preserve">
+    <value>ソース</value>
+    
+  </data>
+  <data name="DistinctArg2" xml:space="preserve">
+    <value>式</value>
+    
+  </data>
+  <data name="AboutDistinct_source" xml:space="preserve">
+    <value>固有の値を抽出する元となるテーブルです。</value>
+  </data>
+  <data name="AboutDistinct_expression" xml:space="preserve">
+    <value>入力テーブルの各行を評価し、DISTINCT 操作の対象となる値を提供する式です。</value>
+  </data>
   <data name="AboutAtan2" xml:space="preserve">
     <value>指定した X 座標と Y 座標のアークタンジェント (ラジアン単位) を返します。</value>
   </data>
@@ -1798,6 +1837,14 @@
     <value>数値が大きすぎます。</value>
     
   </data>
+  <data name="ErrTextFormatTooLarge" xml:space="preserve">
+    <value>書式設定の文字列のサイズは {0} 文字以内にしてください。</value>
+    
+  </data>
+  <data name="ErrTextInvalidFormat" xml:space="preserve">
+    <value>無効な形式です。</value>
+    
+  </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
     <value>このデータ ソースは無効です。[コンテンツ] -&gt; [データ ソース] または [表示] -&gt; [オプション] の順にクリックして、[データ ソース] ウィンドウでエラーを修正してください。</value>
     
@@ -1852,6 +1899,10 @@
   </data>
   <data name="ErrSortWrongType" xml:space="preserve">
     <value>式の型で並べ替えることはできません。</value>
+    
+  </data>
+  <data name="ErrDistinctWrongType" xml:space="preserve">
+    <value>式の型には distinct を適用できません。</value>
     
   </data>
   <data name="ErrFunctionDoesNotAcceptThisType_Function_Expected" xml:space="preserve">
@@ -3268,6 +3319,38 @@
     <value>コントラストのテーマ</value>
     
   </data>
+  <data name="AboutCollect" xml:space="preserve">
+    <value>データ ソースにレコードを追加します。</value>
+    
+  </data>
+  <data name="CollectDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="CollectRecordArg" xml:space="preserve">
+    <value>レコード</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>コレクションのすべてのレコードを削除します。コレクションの列は残ります。</value>
+    
+  </data>
+  <data name="AboutClearCollect" xml:space="preserve">
+    <value>コレクションからすべてのレコードを削除します。その後、別のレコード セットを同じコレクションに追加します。</value>
+    
+  </data>
+  <data name="ClearCollectionArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="ClearCollectDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="ClearCollectRecordArg" xml:space="preserve">
+    <value>レコード</value>
+    
+  </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>指定された行に更新を適用し、指定されたデータソースの行を変更します。更新された行を返します。</value>
     
@@ -4398,6 +4481,10 @@
     <value>記事: Power Apps の数式のリファレンス</value>
     
   </data>
+  <data name="ErrorResource_ErrRecordDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
+    <value>互換性のない型です。レコードに追加しようとしている項目には、レコードと互換性がない型が含まれています。</value>
+    
+  </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
     <value>互換性のない型です。テーブルに追加しようとしている項目には、テーブルと互換性がない型が含まれています。</value>
     
@@ -4642,6 +4729,10 @@
     <value>As はこのコンテキストで許可されていません</value>
     
   </data>
+  <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
+    <value>型指定されていないオブジェクトを、レコード スコープをサポートする関数への第一引数として使用することはできません。</value>
+    
+  </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>名前付き計算式はセミコロンで終わる必要があります。</value>
     
@@ -4725,6 +4816,18 @@
   </data>
   <data name="ErrDeprecated" xml:space="preserve">
     <value>この機能は廃止されたため、現在はサポートされていません。</value>
+    
+  </data>
+  <data name="WarnDeferredType" xml:space="preserve">
+    <value>警告: 未定の型が指定されています。</value>
+    
+  </data>
+  <data name="ErrExpectedIdentifierArg_Name" xml:space="preserve">
+    <value>予期される識別子名</value>
+    
+  </data>
+  <data name="ErrInvalidFunction" xml:space="preserve">
+    <value>この関数はあいまいです。Lambda 式と列識別子が同じ引数に含まれています。</value>
     
   </data>
 </root>

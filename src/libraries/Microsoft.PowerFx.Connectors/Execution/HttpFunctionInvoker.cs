@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.Web;
 using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Connectors.Execution;
+using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
@@ -65,7 +66,7 @@ namespace Microsoft.PowerFx.Connectors
             HttpContent body = null;
             Dictionary<string, (OpenApiSchema, FormulaValue)> bodyParts = new ();
 
-            var map = _argMapper.ConvertToSwagger(args);
+            Dictionary<string, FormulaValue> map = _argMapper.ConvertToNamedParameters(args);
 
             foreach (var param in _argMapper.OpenApiBodyParameters)
             {
@@ -148,7 +149,8 @@ namespace Microsoft.PowerFx.Connectors
 
                 serializer.EndSerialization();
 
-                return new StringContent(serializer.GetResult(), Encoding.Default, _argMapper.ContentType);
+                string body = serializer.GetResult();
+                return new StringContent(body, Encoding.Default, _argMapper.ContentType);
             }
             finally
             {
@@ -168,7 +170,7 @@ namespace Microsoft.PowerFx.Connectors
             {                
                 return string.IsNullOrWhiteSpace(text) 
                     ? FormulaValue.NewBlank(_returnType) 
-                    : FormulaValue.FromJson(text); // $$$ Do we need to check response media type to confirm that the content is indeed json?
+                    : FormulaValueJSON.FromJson(text); // $$$ Do we need to check response media type to confirm that the content is indeed json?
             }
 
             return FormulaValue.NewError(
@@ -184,7 +186,7 @@ namespace Microsoft.PowerFx.Connectors
         public async Task<FormulaValue> InvokeAsync(string cacheScope, FormulaValue[] args, CancellationToken cancellationToken)
         {
             FormulaValue result;
-            using var request = BuildRequest(args);
+            using HttpRequestMessage request = BuildRequest(args);
 
             var key = request.RequestUri.ToString();
 

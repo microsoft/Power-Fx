@@ -38,6 +38,16 @@ namespace Microsoft.PowerFx.Types
 
         public new TableType Type => (TableType)base.Type;
 
+        public TableValue(RecordType recordType)
+            : this(IRContext.NotInSource(recordType.ToTable()))
+        {
+        }
+
+        public TableValue(TableType type)
+            : this(IRContext.NotInSource(type))
+        {
+        }
+
         internal TableValue(IRContext irContext)
             : base(irContext)
         {
@@ -108,6 +118,11 @@ namespace Microsoft.PowerFx.Types
         }
 
         public virtual async Task<DValue<BooleanValue>> RemoveAsync(IEnumerable<FormulaValue> recordsToRemove, bool all, CancellationToken cancellationToken)
+        {
+            return DValue<BooleanValue>.Of(NotImplemented(IRContext));
+        }
+
+        public virtual async Task<DValue<BooleanValue>> ClearAsync(CancellationToken cancellationToken)
         {
             return DValue<BooleanValue>.Of(NotImplemented(IRContext));
         }

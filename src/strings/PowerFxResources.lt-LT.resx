@@ -530,6 +530,28 @@
   <data name="AboutBooleanNT_input" xml:space="preserve">
     <value>Apdorotinų skaitinių reikšmių stulpelis.</value>
   </data>
+  <data name="AboutBooleanB" xml:space="preserve">
+    <value>Konvertuoja Bulio logikos reikšmę į Bulio logikos reikšmę.</value>
+    
+  </data>
+  <data name="BooleanBArg1" xml:space="preserve">
+    <value>Bulio logikos</value>
+    
+  </data>
+  <data name="AboutBooleanB_boolean" xml:space="preserve">
+    <value>Bulio logikos reikšmė, kurią reikia konvertuoti į Bulio logikos reikšmę.</value>
+  </data>
+  <data name="AboutBooleanBT" xml:space="preserve">
+    <value>Konvertuoja Bulio logikos reikšmių stulpelį į Bulio logikos reikšmių stulpelį.</value>
+    
+  </data>
+  <data name="BooleanBTArg1" xml:space="preserve">
+    <value>įvestis</value>
+    
+  </data>
+  <data name="AboutBooleanBT_input" xml:space="preserve">
+    <value>Bulio logikos reikšmių stulpelis, skirtas apdoroti.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Pateikiamas pirmasis netuščias argumentas</value>
     
@@ -1367,6 +1389,23 @@
   <data name="AboutDegrees_input" xml:space="preserve">
     <value>Skaitinių reikšmių (radianais) stulpelis, skirtas apdoroti.</value>
   </data>
+  <data name="AboutDistinct" xml:space="preserve">
+    <value>Apskaičiuoja reiškinį pagal vieną ar kelis lentelės stulpelius ir pateikia vieno stulpelio lentelę, kurioje yra atskiros (unikalios) apskaičiuoto reiškinio reikšmės.</value>
+  </data>
+  <data name="DistinctArg1" xml:space="preserve">
+    <value>šaltinis</value>
+    
+  </data>
+  <data name="DistinctArg2" xml:space="preserve">
+    <value>reiškinys</value>
+    
+  </data>
+  <data name="AboutDistinct_source" xml:space="preserve">
+    <value>Lentelė, iš kurios bus išgautos atskiros reikšmės.</value>
+  </data>
+  <data name="AboutDistinct_expression" xml:space="preserve">
+    <value>Reiškinys apskaičiuojamas pagal kiekvieną eilutę įvesties lentelėje, kurioje pateikiamos šios atskiros operacijos reikšmės.</value>
+  </data>
   <data name="AboutAtan2" xml:space="preserve">
     <value>Pateikia nurodytų x ir y koordinačių arktangentą (radianais).</value>
   </data>
@@ -1798,6 +1837,14 @@
     <value>Skaitinė reikšmė per didelė.</value>
     
   </data>
+  <data name="ErrTextFormatTooLarge" xml:space="preserve">
+    <value>Formato eilutės dydis negali viršyti {0} simb.</value>
+    
+  </data>
+  <data name="ErrTextInvalidFormat" xml:space="preserve">
+    <value>Netinkamas formatas.</value>
+    
+  </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
     <value>Šis duomenų šaltinis yra neleistinas. Ištaisykite klaidą srityje Duomenų šaltiniai spustelėdami Turinys -&gt; Duomenų šaltiniai arba Rodyti -&gt; Parinktys.</value>
     
@@ -1852,6 +1899,10 @@
   </data>
   <data name="ErrSortWrongType" xml:space="preserve">
     <value>Negalima rikiuoti pagal reiškinio tipą.</value>
+    
+  </data>
+  <data name="ErrDistinctWrongType" xml:space="preserve">
+    <value>Negalima reiškinio tipui taikyti skirtingų reikšmių skaičiaus.</value>
     
   </data>
   <data name="ErrFunctionDoesNotAcceptThisType_Function_Expected" xml:space="preserve">
@@ -3268,6 +3319,38 @@
     <value>Didelio kontrasto tema</value>
     
   </data>
+  <data name="AboutCollect" xml:space="preserve">
+    <value>Į duomenų šaltinį įtraukiami įrašai.</value>
+    
+  </data>
+  <data name="CollectDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="CollectRecordArg" xml:space="preserve">
+    <value>įrašas</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>Panaikinami visi rinkinio įrašai. Rinkinio stulpeliai liks.</value>
+    
+  </data>
+  <data name="AboutClearCollect" xml:space="preserve">
+    <value>Panaikinami visi rinkinio įrašai. Tada į tą patį rinkinį įtraukiamas kitas įrašų rinkinys.</value>
+    
+  </data>
+  <data name="ClearCollectionArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="ClearCollectDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="ClearCollectRecordArg" xml:space="preserve">
+    <value>įrašas</value>
+    
+  </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>Taiko naujinimus nurodytai eilutei ir pakeičia eilutę į nurodytą duomenų šaltinį. Pateikia atnaujintą eilutę.</value>
     
@@ -4398,6 +4481,10 @@
     <value>Straipsnis: formulės nuoroda, skirta „Power Apps“</value>
     
   </data>
+  <data name="ErrorResource_ErrRecordDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
+    <value>Nesuderinamas tipas. Elementas, kurį bandote įdėti į įrašą, yra nesuderinamo su įrašu tipo.</value>
+    
+  </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
     <value>Nesuderinamas tipas. Elementas, kurį bandote įdėti į lentelę, yra nesuderinamo su lentele tipo.</value>
     
@@ -4642,6 +4729,10 @@
     <value>Raktinis žodis „kaip“ šiame kontekste neleidžiamas</value>
     
   </data>
+  <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
+    <value>Neapibrėžto tipo objektai negali būti naudojami kaip pirmas argumentas funkcijoms, palaikančioms įrašų aprėptis.</value>
+    
+  </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>Įvardytoji formulė turi baigtis kabliataškiu.</value>
     
@@ -4725,6 +4816,18 @@
   </data>
   <data name="ErrDeprecated" xml:space="preserve">
     <value>Ši funkcija nerekomenduojama ir nebepalaikoma.</value>
+    
+  </data>
+  <data name="WarnDeferredType" xml:space="preserve">
+    <value>Įspėjimas: pateiktas atidėtas tipas.</value>
+    
+  </data>
+  <data name="ErrExpectedIdentifierArg_Name" xml:space="preserve">
+    <value>Numatomas identifikatoriaus pavadinimas</value>
+    
+  </data>
+  <data name="ErrInvalidFunction" xml:space="preserve">
+    <value>Ši funkcija yra nevienareikšmiška, joje yra to paties argumento lambda išraiškos ir stulpelių identifikatoriai.</value>
     
   </data>
 </root>

@@ -34,9 +34,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override DelegationCapability FunctionDelegationCapability => DelegationCapability.Not | DelegationCapability.Filter;
 
-        // For binary op node args, we need to use filter delegation strategy. Hence we override this method here.
-        public override IOpDelegationStrategy GetOpDelegationStrategy(BinaryOp op, BinaryOpNode opNode)
-        {
+        // For binary op node args, we need to use filter delegation strategy. Hence we override this method here.        
+        public override IOpDelegationStrategy GetOpDelegationStrategy(BinaryOp op, PowerFx.Syntax.BinaryOpNode opNode)
+        {            
             Contracts.AssertValueOrNull(opNode);
 
             if (op == BinaryOp.In)

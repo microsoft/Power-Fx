@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Numerics;
+using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Functions.Delegation;
 using Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata;
@@ -62,7 +63,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return true;
         }
 
-        protected bool IsValidDelegatableFilterPredicateNode(TexlNode dsNode, TexlBinding binding, FilterOpMetadata filterMetadata)
+        protected bool IsValidDelegatableFilterPredicateNode(TexlNode dsNode, TexlBinding binding, FilterOpMetadata filterMetadata, bool generateHints = true)
         {
             Contracts.AssertValue(dsNode);
             Contracts.AssertValue(binding);
@@ -75,77 +76,96 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             NodeKind kind;
             kind = dsNode.Kind;
 
-            switch (kind)
+            ErrorContainer originalErrorContainer = null;
+            try
             {
-                case NodeKind.BinaryOp:
-                    {
-                        var opNode = dsNode.AsBinaryOp();
-                        var binaryOpNodeValidationStrategy = GetOpDelegationStrategy(opNode.Op, opNode);
-                        Contracts.AssertValue(opNode);
+                // if hints should not be generated, create a temporary override error container to hold the unwanted warnings/hints
+                if (!generateHints)
+                {
+                    originalErrorContainer = binding.ErrorContainer;
+                    binding.OverrideErrorContainer(new ErrorContainer());
+                }
 
-                        if (!binaryOpNodeValidationStrategy.IsSupportedOpNode(opNode, filterMetadata, binding))
+                switch (kind)
+                {
+                    case NodeKind.BinaryOp:
                         {
-                            return false;
+                            var opNode = dsNode.AsBinaryOp();
+                            var binaryOpNodeValidationStrategy = GetOpDelegationStrategy(opNode.Op, opNode);
+                            Contracts.AssertValue(opNode);
+
+                            if (!binaryOpNodeValidationStrategy.IsSupportedOpNode(opNode, filterMetadata, binding))
+                            {
+                                return false;
+                            }
+
+                            break;
                         }
 
-                        break;
-                    }
-
-                case NodeKind.FirstName:
-                    {
-                        if (!firstNameStrategy.IsValidFirstNameNode(dsNode.AsFirstName(), binding, null))
+                    case NodeKind.FirstName:
                         {
-                            return false;
+                            if (!firstNameStrategy.IsValidFirstNameNode(dsNode.AsFirstName(), binding, null))
+                            {
+                                return false;
+                            }
+
+                            break;
                         }
 
-                        break;
-                    }
-
-                case NodeKind.DottedName:
-                    {
-                        if (!dottedNameStrategy.IsValidDottedNameNode(dsNode.AsDottedName(), binding, filterMetadata, null))
+                    case NodeKind.DottedName:
                         {
-                            return false;
+                            if (!dottedNameStrategy.IsValidDottedNameNode(dsNode.AsDottedName(), binding, filterMetadata, null))
+                            {
+                                return false;
+                            }
+
+                            break;
                         }
 
-                        break;
-                    }
-
-                case NodeKind.UnaryOp:
-                    {
-                        var opNode = dsNode.AsUnaryOpLit();
-                        var unaryOpNodeValidationStrategy = GetOpDelegationStrategy(opNode.Op);
-                        Contracts.AssertValue(opNode);
-
-                        if (!unaryOpNodeValidationStrategy.IsSupportedOpNode(opNode, filterMetadata, binding))
+                    case NodeKind.UnaryOp:
                         {
-                            SuggestDelegationHint(dsNode, binding);
-                            return false;
+                            var opNode = dsNode.AsUnaryOpLit();
+                            var unaryOpNodeValidationStrategy = GetOpDelegationStrategy(opNode.Op);
+                            Contracts.AssertValue(opNode);
+
+                            if (!unaryOpNodeValidationStrategy.IsSupportedOpNode(opNode, filterMetadata, binding))
+                            {
+                                SuggestDelegationHint(dsNode, binding);
+                                return false;
+                            }
+
+                            break;
                         }
 
-                        break;
-                    }
-
-                case NodeKind.Call:
-                    {
-                        if (!cNodeStrategy.IsValidCallNode(dsNode.AsCall(), binding, filterMetadata))
+                    case NodeKind.Call:
                         {
-                            return false;
+                            if (!cNodeStrategy.IsValidCallNode(dsNode.AsCall(), binding, filterMetadata))
+                            {
+                                return false;
+                            }
+
+                            break;
                         }
 
-                        break;
-                    }
-
-                default:
-                    {
-                        if (kind != NodeKind.BoolLit)
+                    default:
                         {
-                            SuggestDelegationHint(dsNode, binding, string.Format("Not supported node {0}.", kind));
-                            return false;
-                        }
+                            if (kind != NodeKind.BoolLit)
+                            {
+                                SuggestDelegationHint(dsNode, binding, string.Format("Not supported node {0}.", kind));
+                                return false;
+                            }
 
-                        break;
+                            break;
+                        }
                     }
+            }
+            finally
+            {
+                // restore the original error container, if necessary, discarding any warnings added
+                if (originalErrorContainer != null)
+                {
+                    binding.OverrideErrorContainer(originalErrorContainer);
+                }
             }
 
             return true;

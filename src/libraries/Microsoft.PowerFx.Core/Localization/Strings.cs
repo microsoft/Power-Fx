@@ -99,6 +99,11 @@ namespace Microsoft.PowerFx.Core.Localization
         public static StringGetter AboutBooleanNT = (b) => StringResources.Get("AboutBooleanNT", b);
         public static StringGetter BooleanNTArg1 = (b) => StringResources.Get("BooleanNTArg1", b);
 
+        public static StringGetter AboutBooleanB = (b) => StringResources.Get("AboutBooleanB", b);
+        public static StringGetter BooleanBArg1 = (b) => StringResources.Get("BooleanBArg1", b);
+        public static StringGetter AboutBooleanBT = (b) => StringResources.Get("AboutBooleanBT", b);
+        public static StringGetter BooleanBTArg1 = (b) => StringResources.Get("BooleanBTArg1", b);
+
         public static StringGetter AboutConcatenate = (b) => StringResources.Get("AboutConcatenate", b);
         public static StringGetter ConcatenateArg1 = (b) => StringResources.Get("ConcatenateArg1", b);
         public static StringGetter AboutConcatenateT = (b) => StringResources.Get("AboutConcatenateT", b);
@@ -159,6 +164,10 @@ namespace Microsoft.PowerFx.Core.Localization
         public static StringGetter SortArg1 = (b) => StringResources.Get("SortArg1", b);
         public static StringGetter SortArg2 = (b) => StringResources.Get("SortArg2", b);
         public static StringGetter SortArg3 = (b) => StringResources.Get("SortArg3", b);
+
+        public static StringGetter AboutDistinct = (b) => StringResources.Get("AboutDistinct", b);
+        public static StringGetter DistinctArg1 = (b) => StringResources.Get("DistinctArg1", b);
+        public static StringGetter DistinctArg2 = (b) => StringResources.Get("DistinctArg2", b);
 
         public static StringGetter AboutSortByColumns = (b) => StringResources.Get("AboutSortByColumns", b);
         public static StringGetter SortByColumnsArg1 = (b) => StringResources.Get("SortByColumnsArg1", b);
@@ -455,6 +464,17 @@ namespace Microsoft.PowerFx.Core.Localization
         public static StringGetter PatchBaseRecordArg = (b) => StringResources.Get("PatchBaseRecordArg", b);
         public static StringGetter PatchChangeRecordsArg = (b) => StringResources.Get("PatchChangeRecordsArg", b);
 
+        public static StringGetter AboutCollect = (b) => StringResources.Get("AboutCollect", b);
+        public static StringGetter CollectDataSourceArg = (b) => StringResources.Get("CollectDataSourceArg", b);
+        public static StringGetter CollectRecordArg = (b) => StringResources.Get("CollectRecordArg", b);
+
+        public static StringGetter AboutClearCollect = (b) => StringResources.Get("AboutClearCollect", b);
+        public static StringGetter ClearCollectDataSourceArg = (b) => StringResources.Get("ClearCollectDataSourceArg", b);
+        public static StringGetter ClearCollectRecordArg = (b) => StringResources.Get("ClearCollectRecordArg", b);
+
+        public static StringGetter AboutClear = (b) => StringResources.Get("AboutClear", b);
+        public static StringGetter ClearCollectionArg = (b) => StringResources.Get("ClearCollectionArg", b);
+
         public static StringGetter AboutRemove = (b) => StringResources.Get("AboutRemove", b);
         public static StringGetter RemoveDataSourceArg = (b) => StringResources.Get("RemoveDataSourceArg", b);
         public static StringGetter RemoveRecordsArg = (b) => StringResources.Get("RemoveRecordsArg", b);
@@ -530,6 +550,9 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrOperatorExpected = new ErrorResourceKey("ErrOperatorExpected");
         public static ErrorResourceKey ErrNumberExpected = new ErrorResourceKey("ErrNumberExpected");
         public static ErrorResourceKey ErrNumberTooLarge = new ErrorResourceKey("ErrNumberTooLarge");
+        public static ErrorResourceKey ErrTextTooLarge = new ErrorResourceKey("ErrTextTooLarge");
+        public static ErrorResourceKey ErrTextFormatTooLarge = new ErrorResourceKey("ErrTextFormatTooLarge");
+        public static ErrorResourceKey ErrTextInvalidFormat = new ErrorResourceKey("ErrTextInvalidFormat");
         public static ErrorResourceKey ErrBooleanExpected = new ErrorResourceKey("ErrBooleanExpected");
         public static ErrorResourceKey ErrOnlyOneViewExpected = new ErrorResourceKey("ErrOnlyOneViewExpected");
         public static ErrorResourceKey ErrViewFromCurrentTableExpected = new ErrorResourceKey("ErrViewFromCurrentTableExpected");
@@ -554,8 +577,10 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrTypeError = new ErrorResourceKey("ErrTypeError");
         public static ErrorResourceKey ErrTypeError_Ex1_Ex2_Found = new ErrorResourceKey("ErrTypeError_Ex1_Ex2_Found");
         public static ErrorResourceKey ErrTypeError_Arg_Expected_Found = new ErrorResourceKey("ErrTypeError_Arg_Expected_Found");
+        public static ErrorResourceKey ErrTypeError_WrongType = new ErrorResourceKey("ErrTypeError_WrongType");
         public static ErrorResourceKey ErrTypeErrorRecordIncompatibleWithSource = new ErrorResourceKey("ErrTypeErrorRecordIncompatibleWithSource");
         public static ErrorResourceKey ErrExpectedStringLiteralArg_Name = new ErrorResourceKey("ErrExpectedStringLiteralArg_Name");
+        public static ErrorResourceKey ErrExpectedIdentifierArg_Name = new ErrorResourceKey("ErrExpectedIdentifierArg_Name");
         public static ErrorResourceKey ErrArgNotAValidIdentifier_Name = new ErrorResourceKey("ErrArgNotAValidIdentifier_Name");
         public static ErrorResourceKey ErrColExists_Name = new ErrorResourceKey("ErrColExists_Name");
         public static ErrorResourceKey ErrColConflict_Name = new ErrorResourceKey("ErrColConflict_Name");
@@ -563,6 +588,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrColumnDoesNotExist_Name_Similar = new ErrorResourceKey("ErrColumnDoesNotExist_Name_Similar");
         public static ErrorResourceKey ErrSortIncorrectOrder = new ErrorResourceKey("ErrSortIncorrectOrder");
         public static ErrorResourceKey ErrSortWrongType = new ErrorResourceKey("ErrSortWrongType");
+        public static ErrorResourceKey ErrDistinctWrongType = new ErrorResourceKey("ErrDistinctWrongType");
         public static ErrorResourceKey ErrFunctionDoesNotAcceptThisType_Function_Expected = new ErrorResourceKey("ErrFunctionDoesNotAcceptThisType_Function_Expected");
         public static ErrorResourceKey ErrIncorrectFormat_Func = new ErrorResourceKey("ErrIncorrectFormat_Func");
         public static ErrorResourceKey ErrAsyncLambda = new ErrorResourceKey("ErrAsyncLambda");
@@ -575,6 +601,8 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrInvalidStringInterpolation = new ErrorResourceKey("ErrInvalidStringInterpolation");
         public static ErrorResourceKey ErrEmptyIsland = new ErrorResourceKey("ErrEmptyIsland");
         public static ErrorResourceKey ErrDeprecated = new ErrorResourceKey("ErrDeprecated");
+        public static ErrorResourceKey ErrInvalidFunction = new ErrorResourceKey("ErrInvalidFunction");
+        public static ErrorResourceKey ErrUntypedObjectScope = new ErrorResourceKey("ErrUntypedObjectScope");
 
         public static ErrorResourceKey ErrErrorIrrelevantField = new ErrorResourceKey("ErrErrorIrrelevantField");
         public static ErrorResourceKey ErrAsNotInContext = new ErrorResourceKey("ErrAsNotInContext");
@@ -599,13 +627,13 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey OpNotSupportedByClientSuggestionMessage_OpNotSupportedByClient = new ErrorResourceKey("SuggestRemoteExecutionHint_OpNotSupportedByClient");
 
         public static ErrorResourceKey ErrNamedFormula_MissingSemicolon = new ErrorResourceKey("ErrNamedFormula_MissingSemicolon");
+        public static ErrorResourceKey ErrNamedFormula_MissingValue = new ErrorResourceKey("ErrNamedFormula_MissingValue");
         public static ErrorResourceKey ErrNamedFormula_AlreadyDefined = new ErrorResourceKey("ErrNamedFormula_AlreadyDefined");
         public static ErrorResourceKey ErrorResource_NameConflict = new ErrorResourceKey("ErrorResource_NameConflict");
 
         // ErrorResourceKey for creating an error from an arbitrary string message. The key resolves to "{0}", meaning
         // that a single string arg can be supplied representing the entire text of the error.
         public static ErrorResourceKey ErrGeneralError = new ErrorResourceKey("ErrGeneralError");
-
         public static ErrorResourceKey ErrRemoveAllArg = new ErrorResourceKey("ErrRemoveAllArg");
     }
 }

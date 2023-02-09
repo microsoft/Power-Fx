@@ -270,7 +270,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Fact]
         public void SingleColumnTable()
         {
-            TableValue value = (TableValue)FormulaValue.FromJson("[1,2,3]");
+            TableValue value = (TableValue)FormulaValueJSON.FromJson("[1,2,3]");
 
             TableType type = (TableType)value.Type;
 
@@ -340,6 +340,23 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     Assert.True(set.Contains(type), $"Type {type.FullName} should derive from {typeof(ValidFormulaValue).FullName}, not FormulaValue.");
                 }
             }
+        }
+
+        [Fact]
+        public void NewError()
+        {
+            IEnumerable<ExpressionError> errors = new List<ExpressionError>()
+            {
+                new ExpressionError { Kind = ErrorKind.Custom, Message = "test1" },
+                new ExpressionError { Kind = ErrorKind.Custom, Message = "test2" },
+                new ExpressionError { Kind = ErrorKind.Custom, Message = "test3" }
+            };
+
+            var combinedError = FormulaValue.NewError(errors, FormulaType.Number);
+
+            Assert.Equal(3, combinedError.Errors.Count);
+            Assert.All(combinedError.Errors, (e) => e.Kind = ErrorKind.Custom);
+            Assert.Equal("test1", combinedError.Errors.First().Message);
         }
     }
 

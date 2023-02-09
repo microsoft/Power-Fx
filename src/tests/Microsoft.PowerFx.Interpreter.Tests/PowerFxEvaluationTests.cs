@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.PowerFx;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
@@ -226,6 +227,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             return (new RecalcEngine(config), null);
         }
 
+        // Interpret each test case independently
+        // Supports #setup directives. 
         internal class InterpreterRunner : BaseRunner
         {
             // For async tests, run in special mode. 
@@ -257,6 +260,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 RecordValue parameters;
                 var iSetup = InternalSetup.Parse(setupHandlerName);
                 var config = new PowerFxConfig(features: iSetup.Features);
+                config.EnableParseJSONFunction();
 
                 if (string.Equals(iSetup.HandlerName, "AsyncTestSetup", StringComparison.OrdinalIgnoreCase))
                 {
@@ -290,16 +294,25 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     return new RunResult(check);
                 }
 
-                var rtConfig = SymbolValues.NewFromRecord(symbolTable, parameters);
+                var symbolValues = SymbolValues.NewFromRecord(symbolTable, parameters);
+                var runtimeConfig = new RuntimeConfig(symbolValues);
                                 
                 if (iSetup.TimeZoneInfo != null)
-                {
-                    var commonSymbols = new SymbolValues();
-                    commonSymbols.AddService(iSetup.TimeZoneInfo);
-                    rtConfig = ReadOnlySymbolValues.Compose(rtConfig, commonSymbols);
+                {                    
+                    runtimeConfig.AddService(iSetup.TimeZoneInfo);
                 }
 
-                var newValue = await check.GetEvaluator().EvalAsync(CancellationToken.None, rtConfig);
+                // Ensure tests can run with governor on. 
+                // Some tests that use large memory can disable via:
+                //    #SETUP: DisableMemChecks
+                if (!iSetup.DisableMemoryChecks)
+                {
+                    var kbytes = 1000;
+                    var mem = new SingleThreadedGovernor(10 * 1000 * kbytes);
+                    runtimeConfig.AddService<Governor>(mem);
+                }
+
+                var newValue = await check.GetEvaluator().EvalAsync(CancellationToken.None, runtimeConfig);
 
                 // UntypedObjectType type is currently not supported for serialization.
                 if (newValue.Type is UntypedObjectType)
@@ -308,9 +321,83 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 }
 
                 // Serialization test. Serialized expression must produce an identical result.
-                var newValueDeserialized = await engine.EvalAsync(newValue.ToExpression(), CancellationToken.None, runtimeConfig: rtConfig);
+                var newValueDeserialized = await engine.EvalAsync(newValue.ToExpression(), CancellationToken.None, runtimeConfig: runtimeConfig);
 
                 return new RunResult(newValueDeserialized);
+            }
+        }
+
+        // Runts through a .txt in sequence, allowing Set() functions that can create state. 
+        // Useful for testing mutation functions. 
+        internal class ReplRunner : BaseRunner
+        {
+            private readonly RecalcEngine _engine;
+            public ParserOptions _opts = new ParserOptions { AllowsSideEffects = true };
+
+            public ReplRunner(RecalcEngine engine)
+            {
+                _engine = engine;
+            }
+
+            protected override async Task<RunResult> RunAsyncInternal(string expr, string setupHandlerName = null)
+            {
+                if (TryMatchSet(expr, out var runResult))
+                {
+                    return runResult;
+                }
+
+                var check = _engine.Check(expr, _opts);
+                if (!check.IsSuccess)
+                {
+                    return new RunResult(check);
+                }
+
+                var result = check.GetEvaluator().Eval();
+                return new RunResult(result);
+            }
+
+            // Pattern match for Set(x,y) so that we can define the variable
+            public bool TryMatchSet(string expr, out RunResult runResult)
+            {
+                var parserOptions = new ParserOptions { AllowsSideEffects = true };
+
+                var parse = _engine.Parse(expr);
+                if (parse.IsSuccess)
+                {
+                    if (parse.Root.Kind == Microsoft.PowerFx.Syntax.NodeKind.Call)
+                    {
+                        if (parse.Root is Microsoft.PowerFx.Syntax.CallNode call)
+                        {
+                            if (call.Head.Name.Value == "Set")
+                            {
+                                // Infer type based on arg1. 
+                                var arg0 = call.Args.ChildNodes[0];
+                                if (arg0 is Microsoft.PowerFx.Syntax.FirstNameNode arg0node)
+                                {
+                                    var arg0name = arg0node.Ident.Name.Value;
+
+                                    var arg1 = call.Args.ChildNodes[1];
+                                    var arg1expr = arg1.GetCompleteSpan().GetFragment(expr);
+
+                                    var check = _engine.Check(arg1expr);
+                                    if (check.IsSuccess)
+                                    {
+                                        var arg1Type = check.ReturnType;
+
+                                        var varValue = check.GetEvaluator().Eval();
+                                        _engine.UpdateVariable(arg0name, varValue);
+
+                                        runResult = new RunResult(varValue);
+                                        return true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                runResult = null;
+                return false;
             }
         }
     }

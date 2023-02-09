@@ -530,6 +530,28 @@
   <data name="AboutBooleanNT_input" xml:space="preserve">
     <value>Töödeldav arvväärtuste veerg.</value>
   </data>
+  <data name="AboutBooleanB" xml:space="preserve">
+    <value>Teisendab „loogikaväärtuse“ loogiliseks väärtuseks.</value>
+    
+  </data>
+  <data name="BooleanBArg1" xml:space="preserve">
+    <value>loogikaväärtus</value>
+    
+  </data>
+  <data name="AboutBooleanB_boolean" xml:space="preserve">
+    <value>Loogiline väärtus loogiliseks väärtuseks teisendamise jaoks.</value>
+  </data>
+  <data name="AboutBooleanBT" xml:space="preserve">
+    <value>Teisendab loogiliste väärtuste veeru loogiliste väärtuste veeruks.</value>
+    
+  </data>
+  <data name="BooleanBTArg1" xml:space="preserve">
+    <value>sisend</value>
+    
+  </data>
+  <data name="AboutBooleanBT_input" xml:space="preserve">
+    <value>Töödeldav loogiliste väärtuste veerg.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Tagastab esimese mittetühja argumendi</value>
     
@@ -1367,6 +1389,23 @@
   <data name="AboutDegrees_input" xml:space="preserve">
     <value>Töödeldavate arvväärtuste (radiaanides) veerg.</value>
   </data>
+  <data name="AboutDistinct" xml:space="preserve">
+    <value>Arvutab tabeli ühe või mitme veeru põhjal avaldise väärtuse ja tagastab ühe veeruga tabeli, mis sisaldab arvutatud avaldise kordumatuid väärtusi.</value>
+  </data>
+  <data name="DistinctArg1" xml:space="preserve">
+    <value>allikas</value>
+    
+  </data>
+  <data name="DistinctArg2" xml:space="preserve">
+    <value>avaldis</value>
+    
+  </data>
+  <data name="AboutDistinct_source" xml:space="preserve">
+    <value>Tabel, millest ekstraktitakse ainuväärtused.</value>
+  </data>
+  <data name="AboutDistinct_expression" xml:space="preserve">
+    <value>Sisendtabeli iga rea põhjal arvutatud avaldis, mis esitab toimingule Distinct väärtused.</value>
+  </data>
   <data name="AboutAtan2" xml:space="preserve">
     <value>Tagastab määratud x- ja y-koordinaatide arkustangensi (radiaanides).</value>
   </data>
@@ -1798,6 +1837,14 @@
     <value>Arvväärtus on liiga suur.</value>
     
   </data>
+  <data name="ErrTextFormatTooLarge" xml:space="preserve">
+    <value>Vormingustring ei tohi olla pikem kui {0} märki.</value>
+    
+  </data>
+  <data name="ErrTextInvalidFormat" xml:space="preserve">
+    <value>Sobimatu vorming.</value>
+    
+  </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
     <value>See andmeallikas ei sobi. Parandage viga paanil Andmeallikad, valides Sisu -&gt; Andmeallikad või Vaade -&gt; Suvandid</value>
     
@@ -1852,6 +1899,10 @@
   </data>
   <data name="ErrSortWrongType" xml:space="preserve">
     <value>Avaldisetüüpi ei saa sortida.</value>
+    
+  </data>
+  <data name="ErrDistinctWrongType" xml:space="preserve">
+    <value>Avaldisetüübile ei saa ainuväärtust rakendada.</value>
     
   </data>
   <data name="ErrFunctionDoesNotAcceptThisType_Function_Expected" xml:space="preserve">
@@ -3268,6 +3319,38 @@
     <value>Kontrastne kujundus</value>
     
   </data>
+  <data name="AboutCollect" xml:space="preserve">
+    <value>Lisab kirjed andmeallikasse.</value>
+    
+  </data>
+  <data name="CollectDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="CollectRecordArg" xml:space="preserve">
+    <value>kirje</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>Kustutab kõik kogumi kirjed. Kogumi veerud jäävad alles.</value>
+    
+  </data>
+  <data name="AboutClearCollect" xml:space="preserve">
+    <value>Kustutab kõik kirjed kogumist. Seejärel lisab samasse kogumisse teise kirjete kogumi.</value>
+    
+  </data>
+  <data name="ClearCollectionArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="ClearCollectDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="ClearCollectRecordArg" xml:space="preserve">
+    <value>kirje</value>
+    
+  </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>Rakendab värskendused määratud reale ja muudab rea määratud andmeallikas. Tagastab värskendatud rea.</value>
     
@@ -4398,6 +4481,10 @@
     <value>Artikkel: Power Appsi valemiviide</value>
     
   </data>
+  <data name="ErrorResource_ErrRecordDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
+    <value>Ühildumatu tüüp. Proovite panna kirjesse üksust, mille tüüp ei ühildu kirjega.</value>
+    
+  </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
     <value>Ühildumatu tüüp. Proovite panna tabelisse üksust, mille tüüp ei ühildu tabeliga.</value>
     
@@ -4642,6 +4729,10 @@
     <value>Märksõna "Kui" pole selles kontekstis lubatud</value>
     
   </data>
+  <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
+    <value>Tippimata objekte ei saa kasutada esimese argumendina funktsioonidele, mis toetavad kirje ulatusi.</value>
+    
+  </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>Nimetatud valem peab lõppema semikooloniga.</value>
     
@@ -4725,6 +4816,18 @@
   </data>
   <data name="ErrDeprecated" xml:space="preserve">
     <value>See funktsioon on iganenud ja seda ei toetata enam.</value>
+    
+  </data>
+  <data name="WarnDeferredType" xml:space="preserve">
+    <value>Hoiatus: esitati edasi lükatud tüüp.</value>
+    
+  </data>
+  <data name="ErrExpectedIdentifierArg_Name" xml:space="preserve">
+    <value>Eeldatav identifikaatori nimi</value>
+    
+  </data>
+  <data name="ErrInvalidFunction" xml:space="preserve">
+    <value>See funktsioon on mitmetähenduslik, see sisaldab sama argumendi lambdaavaldisi ja veeruidentifikaatoreid.</value>
     
   </data>
 </root>

@@ -2,8 +2,11 @@
 // Licensed under the MIT license.
 
 using System.IO;
+using System.Threading.Tasks;
+using Microsoft.CodeAnalysis;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Interpreter.Tests.XUnitExtensions;
+using Microsoft.PowerFx.Types;
 using Xunit;
 using static Microsoft.PowerFx.Interpreter.Tests.ExpressionEvaluationTests;
 
@@ -60,6 +63,38 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var result = testRunner.RunTests();
         }
 #endif
+
+        // Run cases in MutationScripts
+        // Normal tests have each line as an independent test case. 
+        // Whereas these are fed into a repl and each file maintains state. 
+        [Theory]
+        [InlineData("Simple1.txt")]
+        [InlineData("Collect.txt")]
+        [InlineData("Clear.txt")]
+        [InlineData("ClearCollect.txt")]
+        [InlineData("ForAllMutate.txt")]
+        public void RunMutationTests(string file)
+        {
+            var path = Path.Combine(System.Environment.CurrentDirectory, "MutationScripts", file);
+
+            //path = @"D:\dev\pa2\Power-Fx\src\tests\Microsoft.PowerFx.Interpreter.Tests\MutationScripts\ForAllMutate.txt";
+
+            var config = new PowerFxConfig();
+            config.SymbolTable.EnableMutationFunctions();
+            var engine = new RecalcEngine(config);
+            var runner = new ReplRunner(engine);
+            
+            var testRunner = new TestRunner(runner);
+
+            testRunner.AddFile(path);
+
+            var result = testRunner.RunTests();
+
+            if (result.Fail > 0)
+            {
+                Assert.Equal(string.Empty, result.Output);
+            }
+        }
 
         // Since test discovery runs in a separate process, run a dedicated 
         // parse pass as a single unit test to verify all the .txt will parse. 

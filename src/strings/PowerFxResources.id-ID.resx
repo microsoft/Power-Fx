@@ -530,6 +530,28 @@
   <data name="AboutBooleanNT_input" xml:space="preserve">
     <value>Kolom nilai angka untuk diproses.</value>
   </data>
+  <data name="AboutBooleanB" xml:space="preserve">
+    <value>Mengonversi 'boolean' ke nilai boolean.</value>
+    
+  </data>
+  <data name="BooleanBArg1" xml:space="preserve">
+    <value>boolean</value>
+    
+  </data>
+  <data name="AboutBooleanB_boolean" xml:space="preserve">
+    <value>Nilai boolean untuk dikonversi ke nilai boolean.</value>
+  </data>
+  <data name="AboutBooleanBT" xml:space="preserve">
+    <value>Mengonversi kolom nilai boolean ke kolom nilai boolean.</value>
+    
+  </data>
+  <data name="BooleanBTArg1" xml:space="preserve">
+    <value>masukan</value>
+    
+  </data>
+  <data name="AboutBooleanBT_input" xml:space="preserve">
+    <value>Kolom nilai boolean untuk diproses.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Menampilkan argumen tidak kosong pertama</value>
     
@@ -1367,6 +1389,23 @@
   <data name="AboutDegrees_input" xml:space="preserve">
     <value>Kolom nilai numerik (dalam radian) untuk diproses.</value>
   </data>
+  <data name="AboutDistinct" xml:space="preserve">
+    <value>Mengevaluasi ekpresi atas satu kolom atau lebih dan menampilkan tabel satu kolom yang berisi nilai tersendiri (unik) untuk ekspresi yang dievaluasi.</value>
+  </data>
+  <data name="DistinctArg1" xml:space="preserve">
+    <value>sumber</value>
+    
+  </data>
+  <data name="DistinctArg2" xml:space="preserve">
+    <value>ekspresi</value>
+    
+  </data>
+  <data name="AboutDistinct_source" xml:space="preserve">
+    <value>Tabel yang nilai tersendirinya akan diekstrak.</value>
+  </data>
+  <data name="AboutDistinct_expression" xml:space="preserve">
+    <value>Ekspresi dievaluasi pada setiap baris di tabel input, dan yang memberikan nilai operasi Tersendiri.</value>
+  </data>
   <data name="AboutAtan2" xml:space="preserve">
     <value>Mengembalikan arc tangen (dalam radian) koordinat x dan y khusus.</value>
   </data>
@@ -1798,6 +1837,14 @@
     <value>Nilai numerik terlalu besar.</value>
     
   </data>
+  <data name="ErrTextFormatTooLarge" xml:space="preserve">
+    <value>Ukuran string format tidak boleh lebih dari {0} karakter.</value>
+    
+  </data>
+  <data name="ErrTextInvalidFormat" xml:space="preserve">
+    <value>Format tidak valid.</value>
+    
+  </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
     <value>Sumber Data ini tidak valid. Perbaiki kesalahan di panel "Sumber data" dengan mengeklik "Konten -&gt; Sumber data" atau "View -&gt; Opsi"</value>
     
@@ -1852,6 +1899,10 @@
   </data>
   <data name="ErrSortWrongType" xml:space="preserve">
     <value>Tidak dapat menyortir jenis ekspresi.</value>
+    
+  </data>
+  <data name="ErrDistinctWrongType" xml:space="preserve">
+    <value>Tidak dapat menerapkan perbedaan pada tipe ekspresi.</value>
     
   </data>
   <data name="ErrFunctionDoesNotAcceptThisType_Function_Expected" xml:space="preserve">
@@ -3268,6 +3319,38 @@
     <value>Tema kontras</value>
     
   </data>
+  <data name="AboutCollect" xml:space="preserve">
+    <value>Menambahkan rekaman ke sumber data.</value>
+    
+  </data>
+  <data name="CollectDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="CollectRecordArg" xml:space="preserve">
+    <value>rekaman</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>Menghapus semua rekaman dari suatu kumpulan. Kolom kumpulan akan tetap ada.</value>
+    
+  </data>
+  <data name="AboutClearCollect" xml:space="preserve">
+    <value>Menghapus semua rekaman dari suatu kumpulan, kemudian menambahkan rangkaian rekaman lain ke kumpulan yang sama.</value>
+    
+  </data>
+  <data name="ClearCollectionArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="ClearCollectDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="ClearCollectRecordArg" xml:space="preserve">
+    <value>rekaman</value>
+    
+  </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>Menerapkan pembaruan ke baris yang ditentukan dan mengubah baris di sumber data tertentu. Mengembalikan baris yang diperbarui.</value>
     
@@ -4398,6 +4481,10 @@
     <value>Artikel: Referensi rumus untuk Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrRecordDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
+    <value>Tipe tidak kompatibel. Item yang coba Anda masukkan ke dalam rekaman memiliki tipe yang tidak kompatibel dengan rekaman.</value>
+    
+  </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
     <value>Tipe tidak kompatibel. Item yang coba Anda masukkan ke dalam tabel memiliki tipe yang tidak kompatibel dengan tabel.</value>
     
@@ -4642,6 +4729,10 @@
     <value>Karena tidak diizinkan dalam konteks ini</value>
     
   </data>
+  <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
+    <value>Objek tidak bertipe tidak dapat digunakan sebagai argumen pertama untuk fungsi yang mendukung cakupan rekaman.</value>
+    
+  </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>Rumus bernama harus diakhiri dengan titik koma.</value>
     
@@ -4725,6 +4816,18 @@
   </data>
   <data name="ErrDeprecated" xml:space="preserve">
     <value>Fitur ini tidak digunakan lagi dan sudah tidak didukung.</value>
+    
+  </data>
+  <data name="WarnDeferredType" xml:space="preserve">
+    <value>Peringatan: Tipe yang ditangguhkan diberikan.</value>
+    
+  </data>
+  <data name="ErrExpectedIdentifierArg_Name" xml:space="preserve">
+    <value>Nama pengidentifikasi yang diharapkan</value>
+    
+  </data>
+  <data name="ErrInvalidFunction" xml:space="preserve">
+    <value>Fungsi ini ambigu karena berisi ekspresi lambda dan pengidentifikasi kolom untuk argumen yang sama.</value>
     
   </data>
 </root>

@@ -6,15 +6,18 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Entities;
+using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.IR.Symbols;
 using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter;
+using Microsoft.PowerFx.Interpreter.Exceptions;
 using Microsoft.PowerFx.Types;
 using static Microsoft.PowerFx.Functions.Library;
 
@@ -25,19 +28,36 @@ namespace Microsoft.PowerFx
     // Use Task for public methods, but ValueTask for internal methods that we expect to be mostly sync. 
     internal class EvalVisitor : IRNodeVisitor<ValueTask<FormulaValue>, EvalVisitorContext>
     {
-        private readonly CultureInfo _defaultCultureInfo;
-
-        public CultureInfo CultureInfo => GetService<CultureInfo>() ?? _defaultCultureInfo;
-
-        private readonly ReadOnlySymbolValues _runtimeConfig;
+        private readonly ReadOnlySymbolValues _symbolValues;
 
         private readonly CancellationToken _cancellationToken;
 
-        public EvalVisitor(CultureInfo cultureInfo, CancellationToken cancellationToken, ReadOnlySymbolValues runtimeConfig = null)
+        internal CancellationToken CancellationToken => _cancellationToken;
+
+        private readonly IServiceProvider _services;
+
+        public IServiceProvider FunctionServices => _services;
+
+        public CultureInfo CultureInfo { get; private set; }
+
+        public TimeZoneInfo TimeZoneInfo { get; private set; }
+
+        public DateTimeKind DateTimeKind => TimeZoneInfo.BaseUtcOffset == TimeSpan.Zero ? DateTimeKind.Utc : DateTimeKind.Unspecified;
+
+        public Governor Governor { get; private set; }
+        
+        public EvalVisitor(IRuntimeConfig config, CancellationToken cancellationToken)
         {
-            _defaultCultureInfo = cultureInfo;
+            _symbolValues = config.Values; // may be null 
             _cancellationToken = cancellationToken;
-            _runtimeConfig = runtimeConfig;
+
+            _services = config.ServiceProvider ?? new BasicServiceProvider();
+
+            TimeZoneInfo = GetService<TimeZoneInfo>() ?? TimeZoneInfo.Local;
+
+            Governor = GetService<Governor>() ?? new Governor();
+            
+            CultureInfo = GetService<CultureInfo>();
         }
 
         /// <summary>
@@ -47,12 +67,7 @@ namespace Microsoft.PowerFx
         /// <returns></returns>
         public T GetService<T>()
         {
-            if (_runtimeConfig != null)
-            {
-                return _runtimeConfig.GetService<T>();
-            }
-
-            return default;
+            return (T)_services.GetService(typeof(T));            
         }
 
         public bool TryGetService<T>(out T result)
@@ -61,13 +76,13 @@ namespace Microsoft.PowerFx
             return result != null;
         }
 
-        public IServiceProvider FunctionServices => _runtimeConfig;
-
         // Check this cooperatively - especially in any loop. 
         public void CheckCancel()
         {
             // Throws OperationCanceledException exception
             _cancellationToken.ThrowIfCancellationRequested();
+
+            Governor.Poll();
         }
 
         // Helper to eval an arg that might be a lambda.
@@ -149,9 +164,9 @@ namespace Microsoft.PowerFx
             {
                 if (obj.Value is ISymbolSlot sym)
                 {
-                    if (_runtimeConfig != null)
+                    if (_symbolValues != null)
                     {
-                        _runtimeConfig.Set(sym, newValue);
+                        _symbolValues.Set(sym, newValue);
                         return FormulaValue.New(true);
                     }
 
@@ -231,38 +246,55 @@ namespace Microsoft.PowerFx
 
             var childContext = context.SymbolContext.WithScope(node.Scope);
 
+            FormulaValue result;
             if (func is IAsyncTexlFunction asyncFunc)
             {
-                var result = await asyncFunc.InvokeAsync(args, _cancellationToken);
-                return result;
+                result = await asyncFunc.InvokeAsync(args, _cancellationToken);
             }
             else if (func is UserDefinedTexlFunction udtf)
             {
                 // $$$ Should add _runtimeConfig
-                var result = await udtf.InvokeAsync(args, _cancellationToken, context.StackDepthCounter.Increment());
-                return result;
+                result = await udtf.InvokeAsync(args, _cancellationToken, context.StackDepthCounter.Increment());
             }
             else if (func is CustomTexlFunction customTexlFunc)
             {
-                var result = await customTexlFunc.InvokeAsync(_runtimeConfig, args, _cancellationToken);
-                return result;
+                // If custom function throws an exception, don't catch it - let it propagate up to the host.
+                result = await customTexlFunc.InvokeAsync(FunctionServices, args, _cancellationToken);
             }
             else
             {
                 if (FunctionImplementations.TryGetValue(func, out var ptr))
                 {
-                    var result = await ptr(this, context.IncrementStackDepthCounter(childContext), node.IRContext, args);
+                    try
+                    {
+                        result = await ptr(this, context.IncrementStackDepthCounter(childContext), node.IRContext, args);
+                    }
+                    catch (CustomFunctionErrorException ex)
+                    {
+                        var irContext = node.IRContext;
+                        result = new ErrorValue(
+                            irContext, 
+                            new ExpressionError()
+                            {
+                                Message = ex.Message,
+                                Span = irContext.SourceContext,
+                                Kind = ex.ErrorKind
+                            });
+                    }
 
                     if (IfFunction.CanCheckIfReturn(func))
                     {
                         Contract.Assert(result.IRContext.ResultType == node.IRContext.ResultType || result is ErrorValue || result.IRContext.ResultType is BlankType);
                     }
-
-                    return result;
                 }
-
-                return CommonErrors.NotYetImplementedError(node.IRContext, $"Missing func: {func.Name}");
+                else
+                {
+                    result = CommonErrors.NotYetImplementedError(node.IRContext, $"Missing func: {func.Name}");
+                }
             }
+
+            CheckCancel();
+            return result;
         }
 
         public override async ValueTask<FormulaValue> Visit(BinaryOpNode node, EvalVisitorContext context)
@@ -499,6 +531,24 @@ namespace Microsoft.PowerFx
 
                 return new InMemoryTableValue(node.IRContext, resultRows);
             }
+            else if (node.Op == UnaryOpKind.RecordToRecord)
+            {
+                var fields = new List<NamedValue>();
+                var scopeContext = context.SymbolContext.WithScope(node.Scope);
+                var newScope = scopeContext.WithScopeValues((RecordValue)arg1);
+
+                foreach (var coercion in node.FieldCoercions)
+                {
+                    CheckCancel();
+
+                    var newValue = await coercion.Value.Accept(this, context.NewScope(newScope));
+                    var name = coercion.Key;
+
+                    fields.Add(new NamedValue(name.Value, newValue));
+                }
+
+                return FormulaValue.NewRecordFromFields(fields);
+            }
 
             return CommonErrors.UnreachableCodeError(node.IRContext);
         }
@@ -610,9 +660,9 @@ namespace Microsoft.PowerFx
 
         private FormulaValue GetVariableOrFail(ResolvedObjectNode node, ISymbolSlot slot)
         {
-            if (_runtimeConfig != null)                
+            if (_symbolValues != null)                
             {
-                var value = _runtimeConfig.Get(slot);
+                var value = _symbolValues.Get(slot);
                 if (value != null)
                 {
                     return value;
@@ -620,6 +670,61 @@ namespace Microsoft.PowerFx
             }
 
             return ResolvedObjectHelpers.ResolvedObjectError(node);
+        }
+
+        public DateTime GetNormalizedDateTime(FormulaValue arg)
+        {
+            switch (arg)
+            {
+                case DateTimeValue dtv:
+                    return dtv.GetConvertedValue(TimeZoneInfo);
+                case DateValue dv:
+                    return dv.GetConvertedValue(TimeZoneInfo);
+                default:
+                    throw CommonExceptions.RuntimeMisMatch;
+            }
+        }
+
+        public DateTime GetNormalizedDateTimeAllowTimeValue(FormulaValue arg)
+        {
+            switch (arg)
+            {
+                case DateTimeValue dtv:
+                    return dtv.GetConvertedValue(TimeZoneInfo);
+                case DateValue dv:
+                    return dv.GetConvertedValue(TimeZoneInfo);
+                case TimeValue tv:
+                    return _epoch.Add(tv.Value);
+                default:
+                    throw CommonExceptions.RuntimeMisMatch;
+            }
+        }
+
+        public TimeSpan GetNormalizedTimeSpan(FormulaValue arg)
+        {
+            switch (arg)
+            {
+                case DateTimeValue dtv:
+                    return dtv.GetConvertedValue(TimeZoneInfo).TimeOfDay;
+                case TimeValue dv:
+                    return dv.Value;
+                default:
+                    throw CommonExceptions.RuntimeMisMatch;
+            }
+        }
+
+        public TimeSpan GetNormalizedTimeSpanWithoutDay(FormulaValue arg)
+        {
+            switch (arg)
+            {
+                case DateTimeValue dtv:
+                    var dtvValue = dtv.GetConvertedValue(TimeZoneInfo);
+                    return new TimeSpan(0, dtvValue.Hour, dtvValue.Minute, dtvValue.Second, dtvValue.Millisecond);
+                case TimeValue tv:
+                    return tv.Value;
+                default:
+                    throw CommonExceptions.RuntimeMisMatch;
+            }
         }
     }
 }

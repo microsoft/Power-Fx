@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
+using Microsoft.PowerFx.Core.Binding;
+using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
@@ -134,9 +136,9 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
                 yield break;
             }
 
-            public override bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> coercedArgs)
+            public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> coercedArgs)
             {
-                var isValid = base.CheckTypes(args, argTypes, errors, out returnType, out coercedArgs);
+                var isValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out coercedArgs);
 
                 // explicitly blocking coercion
                 var wasCoerced = false;
@@ -289,6 +291,49 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
             public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
             {
                 return base.GetUniqueTexlRuntimeName() + _runtimeFunctionNameSuffix;
+            }
+        }
+
+        public sealed class MockSilentDelegableFilterFunction : FilterFunctionBase
+        {
+            private readonly string _runtimeFunctionNameSuffix;
+
+            public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
+            {
+                yield break;
+            }
+
+            public MockSilentDelegableFilterFunction(string name, string runtimeFunctionNameSuffix)
+                : base(name, (l) => "MockFunction", FunctionCategories.Table, DType.EmptyTable, -2, 2, int.MaxValue, DType.EmptyTable)
+            {
+                _runtimeFunctionNameSuffix = runtimeFunctionNameSuffix;
+                ScopeInfo = new FunctionScopeInfo(this, acceptsLiteralPredicates: false);
+            }
+
+            public override bool IsServerDelegatable(CallNode callNode, TexlBinding binding)
+            {
+                IExternalDataSource dataSource = null;
+
+                if ((binding.Document != null && !binding.Document.Properties.EnabledFeatures.IsEnhancedDelegationEnabled) || !TryGetValidDataSourceForDelegation(callNode, binding, FunctionDelegationCapability, out dataSource))
+                {
+                    if (dataSource != null && !dataSource.IsDelegatable)
+                    {
+                        return false;
+                    }
+                }
+
+                var args = callNode.Args.Children.VerifyValue();
+
+                if (dataSource != null && dataSource.DelegationMetadata != null)
+                {
+                    var metadata = dataSource.DelegationMetadata.FilterDelegationMetadata;
+                    if (!IsValidDelegatableFilterPredicateNode(args[1], binding, metadata, false))
+                    {
+                        return false;
+                    }
+                }
+
+                return false;
             }
         }
 

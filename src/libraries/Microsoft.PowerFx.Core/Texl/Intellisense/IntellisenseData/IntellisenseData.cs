@@ -156,11 +156,11 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
         /// <returns>
         /// True if the provided name collides with an existing name or identifier, false otherwise.
         /// </returns>
-        internal virtual bool DoesNameCollide(string name)
+        internal virtual bool DoesUnqualifiedEnumNameCollide(string name)
         {
-            return (from enumSymbol in _enumStore.EnumSymbols
-                    where (from localizedEnum in enumSymbol.LocalizedEnumValues where localizedEnum == name select localizedEnum).Any()
-                    select enumSymbol).Count() > 1;
+            return _enumStore.EnumSymbols
+                .Where(enumSymbol => enumSymbol.Members.Any(member => member == name))
+                .Any();
         }
 
         ///// <summary>
@@ -280,7 +280,7 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
             Contracts.AssertValue(function);
             Contracts.AssertValue(scopeType);
 
-            return ArgumentSuggestions.GetArgumentSuggestions(TryGetEnumSymbol,  SuggestUnqualifiedEnums, function, scopeType, argumentIndex, out requiresSuggestionEscaping);
+            return ArgumentSuggestions.GetArgumentSuggestions(TryGetEnumSymbol, SuggestUnqualifiedEnums, function, scopeType, argumentIndex, out requiresSuggestionEscaping);
         }
 
         /// <summary>
@@ -312,9 +312,15 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
         /// </summary>
         internal virtual void AddCustomSuggestionsForGlobals()
         {
-            foreach (var global in _powerFxConfig.GetSymbols())
+            foreach (var global in _powerFxConfig.GetSuggestableSymbolName())
             {
-                IntellisenseHelper.AddSuggestion(this, _powerFxConfig.GetSuggestableSymbolName(global), SuggestionKind.Global, SuggestionIconKind.Other, global.Type, requiresSuggestionEscaping: true);
+                DType type = default;
+                if (_powerFxConfig.GetSymbols(global, out var nameInfo))
+                {
+                    type = nameInfo.Type;
+                }
+
+                IntellisenseHelper.AddSuggestion(this, global, SuggestionKind.Global, SuggestionIconKind.Other, type, requiresSuggestionEscaping: true);
             }
         }
 
@@ -342,7 +348,7 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
         /// <returns>
         /// Sequence of suggestions for first name node context.
         /// </returns>
-        internal virtual IEnumerable<string> SuggestableFirstNames => _powerFxConfig.GetSymbols().Select(_powerFxConfig.GetSuggestableSymbolName);
+        internal virtual IEnumerable<string> SuggestableFirstNames => _powerFxConfig.GetSuggestableSymbolName();
 
         /// <summary>
         /// Invokes <see cref="AddSuggestionsForConstantKeywords"/> to supply suggestions for constant

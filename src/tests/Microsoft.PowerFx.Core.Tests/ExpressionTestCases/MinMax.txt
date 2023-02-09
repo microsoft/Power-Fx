@@ -1,4 +1,6 @@
-﻿// ****** Numeric arguments, scalar arguments ******
+﻿#SETUP: DisableMemChecks
+
+// ****** Numeric arguments, scalar arguments ******
 
 >> Max(1)
 1
@@ -275,10 +277,10 @@ Date(1986,10,19)
 Date(1985,3,5)
 
 >> Max(Sequence(10000), DateAdd(Date(2000,1,1), -Value, TimeUnit.Days))
-DateTime(1999,12,31,0,0,0,0)
+Date(1999,12,31)
 
 >> Min(Sequence(10000), DateAdd(Date(2000,1,1), -Value, TimeUnit.Days))
-DateTime(1972,8,15,0,0,0,0)
+Date(1972,8,15)
 
 >> Max(Sequence(10), Date(2000,1,10 + Value))
 Date(2000,1,20)

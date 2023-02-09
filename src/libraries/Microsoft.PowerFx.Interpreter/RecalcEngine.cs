@@ -9,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Interpreter.UDF;
@@ -58,36 +59,17 @@ namespace Microsoft.PowerFx
             return CreateResolverInternal();
         }
 
-        /// <inheritdoc/>
-        protected override IExpression CreateEvaluator(CheckResult result)
-        {
-            return CreateEvaluatorDirect(result, new StackDepthCounter(Config.MaxCallDepth));
-        }
-
-        internal static IExpression CreateEvaluatorDirect(CheckResult result, StackDepthCounter stackMarker)
-        {
-            if (result._binding == null)
-            {
-                throw new InvalidOperationException($"Requires successful binding");
-            }
-
-            result.ThrowOnErrors();
-
-            (var irnode, var ruleScopeSymbol) = IRTranslator.Translate(result._binding);
-            return new ParsedExpression(irnode, ruleScopeSymbol, stackMarker, result.CultureInfo)
-            {
-                _parameterSymbolTable = result.Parameters
-            };
-        }
-
         /// <summary>
         /// Create an evaluator over the existing binding.
         /// </summary>
         /// <param name = "result" >A successful binding from a previous call to.<see cref="Engine.Check(string, RecordType, ParserOptions)"/>. </param>        
         /// <returns></returns>
+        [Obsolete("Call CheckResult.GetEvaluator()")]
         public static IExpression CreateEvaluatorDirect(CheckResult result)
         {
-            return CreateEvaluatorDirect(result, new StackDepthCounter(PowerFxConfig.DefaultMaxCallDepth));
+            var eval = result.GetEvaluator();
+            var eval2 = (ParsedExpression)eval;
+            return eval2;
         }
 
         // Event handler fired when we update symbol values. 
@@ -96,7 +78,7 @@ namespace Microsoft.PowerFx
             if (Formulas.TryGetValue(slot.SlotIndex, out var info))
             {
                 if (!info.IsFormula)
-                {    
+                {
                     // IF we've updated a non-formula (variable), then trigger the recalc chain.
                     // Cascading formula recalc will be triggered by Recalc chain. 
                     Recalc(info.Name);
@@ -149,7 +131,7 @@ namespace Microsoft.PowerFx
         {
             return EvalAsync(expressionText, CancellationToken.None, parameters, options).Result;
         }
-      
+
         public async Task<FormulaValue> EvalAsync(string expressionText, CancellationToken cancellationToken, RecordValue parameters, ParserOptions options = null)
         {
             if (parameters == null)
@@ -158,23 +140,29 @@ namespace Microsoft.PowerFx
             }
 
             var symbolValues = ReadOnlySymbolValues.NewFromRecord(parameters);
+            var runtimeConfig = new RuntimeConfig(symbolValues);
 
-            return await EvalAsync(expressionText, cancellationToken, options, null, symbolValues);
+            return await EvalAsync(expressionText, cancellationToken, options, null, runtimeConfig);
         }
 
-        public async Task<FormulaValue> EvalAsync(string expressionText, CancellationToken cancellationToken, ParserOptions options = null, ReadOnlySymbolTable symbolTable = null, ReadOnlySymbolValues runtimeConfig = null)
+        public async Task<FormulaValue> EvalAsync(string expressionText, CancellationToken cancellationToken, ReadOnlySymbolValues runtimeConfig)
+        {
+            var runtimeConfig2 = new RuntimeConfig(runtimeConfig);
+            return await EvalAsync(expressionText, cancellationToken, runtimeConfig: runtimeConfig2);
+        }
+
+        public async Task<FormulaValue> EvalAsync(string expressionText, CancellationToken cancellationToken, ParserOptions options = null, ReadOnlySymbolTable symbolTable = null, RuntimeConfig runtimeConfig = null)
         {
             // We could have any combination of symbols and runtime values. 
             // - RuntimeConfig may be null if we don't need it. 
             // - Some Symbols are metadata-only (like option sets, UDFs, constants, etc)
             // and hence don't require a corresponnding runtime Symbol Value. 
-            var parameterSymbols = runtimeConfig?.SymbolTable;
+            var parameterSymbols = runtimeConfig?.Values?.SymbolTable;
             var symbolsAll = ReadOnlySymbolTable.Compose(parameterSymbols, symbolTable);
 
             var check = Check(expressionText, options, symbolsAll);
             check.ThrowOnErrors();
 
-            check.Parameters = parameterSymbols;
             var stackMarker = new StackDepthCounter(Config.MaxCallDepth);
             var eval = check.GetEvaluator(stackMarker);
 
@@ -285,7 +273,7 @@ namespace Microsoft.PowerFx
         {
             var check = Check(expr._expression, expr._schema);
             check.ThrowOnErrors();
-            var binding = check._binding;
+            var binding = check.Binding;
 
             // This will fail if it already exists 
             var slot = _symbolTable.AddVariable(name, check.ReturnType, mutable: false);
@@ -326,11 +314,14 @@ namespace Microsoft.PowerFx
             {
                 if (fi._usedBy.Count == 0)
                 {
-                    foreach (var dependsOnName in fi._dependsOn)
+                    if (fi._dependsOn != null)
                     {
-                        if (TryGetByName(dependsOnName, out var info))
+                        foreach (var dependsOnName in fi._dependsOn)
                         {
-                            info._usedBy.Remove(name);
+                            if (TryGetByName(dependsOnName, out var info))
+                            {
+                                info._usedBy.Remove(name);
+                            }
                         }
                     }
 
@@ -376,14 +367,27 @@ namespace Microsoft.PowerFx
             {
                 if (slot.Owner != _symbolTable)
                 {
-                    throw _symbolTable.NewBadSlotException(slot); 
+                    throw _symbolTable.NewBadSlotException(slot);
                 }
-                    
+
                 info = Formulas[slot.SlotIndex];
                 return true;
             }
 
             info = null;
+            return false;
+        }
+
+        public bool TryGetVariableType(string name, out FormulaType type)
+        {
+            type = default;
+
+            if (_symbolTable.TryGetVariable(new DName(name), out var nameLookupInfo, out _))
+            {
+                type = FormulaType.Build(nameLookupInfo.Type);
+                return true;
+            }
+
             return false;
         }
     } // end class RecalcEngine

@@ -530,6 +530,28 @@
   <data name="AboutBooleanNT_input" xml:space="preserve">
     <value>İşlenecek sayı değerlerini içeren bir sütun.</value>
   </data>
+  <data name="AboutBooleanB" xml:space="preserve">
+    <value>Bir "boole"yi boole değerine dönüştürür.</value>
+    
+  </data>
+  <data name="BooleanBArg1" xml:space="preserve">
+    <value>boole</value>
+    
+  </data>
+  <data name="AboutBooleanB_boolean" xml:space="preserve">
+    <value>Boole değerine dönüştürülecek boole değeri.</value>
+  </data>
+  <data name="AboutBooleanBT" xml:space="preserve">
+    <value>Boole değerleri sütununu boole değerleri sütununa dönüştürür.</value>
+    
+  </data>
+  <data name="BooleanBTArg1" xml:space="preserve">
+    <value>giriş</value>
+    
+  </data>
+  <data name="AboutBooleanBT_input" xml:space="preserve">
+    <value>İşlenecek boole değerleri sütunu.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Boş olmayan ilk bağımsız değişkeni döndürür</value>
     
@@ -1367,6 +1389,23 @@
   <data name="AboutDegrees_input" xml:space="preserve">
     <value>İşlenecek bir sayısal değerler (radyan cinsinde) sütunu.</value>
   </data>
+  <data name="AboutDistinct" xml:space="preserve">
+    <value>Bir ifadeyi tablonun bir veya daha fazla sütunu üzerinde değerlendirir ve değerlendirilen ifade için ayrı (benzersiz) değerleri içeren tek sütunlu bir tablo döndürür.</value>
+  </data>
+  <data name="DistinctArg1" xml:space="preserve">
+    <value>kaynak</value>
+    
+  </data>
+  <data name="DistinctArg2" xml:space="preserve">
+    <value>ifade</value>
+    
+  </data>
+  <data name="AboutDistinct_source" xml:space="preserve">
+    <value>Ayrı değerlerin ayıklanacağı bir tablo.</value>
+  </data>
+  <data name="AboutDistinct_expression" xml:space="preserve">
+    <value>Giriş tablosunun her satırında değerlendirilen ve Distinct işlemi için değerler sağlayan bir ifade.</value>
+  </data>
   <data name="AboutAtan2" xml:space="preserve">
     <value>Belirtilen x ve y koordinatlarının ark tanjantını (radyan cinsinde) döndürür.</value>
   </data>
@@ -1798,6 +1837,14 @@
     <value>Sayısal değer çok büyük.</value>
     
   </data>
+  <data name="ErrTextFormatTooLarge" xml:space="preserve">
+    <value>Biçim dizesi boyutu {0} karakterden fazla olamaz.</value>
+    
+  </data>
+  <data name="ErrTextInvalidFormat" xml:space="preserve">
+    <value>Geçersiz biçim.</value>
+    
+  </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
     <value>Bu Veri kaynağı geçersiz. Lütfen sırasıyla şunlara tıklayarak "Veri kaynakları" bölmesindeki hatayı düzeltin: "İçerik -&gt; Veri kaynakları" veya "Görünüm -&gt; Seçenekler"</value>
     
@@ -1852,6 +1899,10 @@
   </data>
   <data name="ErrSortWrongType" xml:space="preserve">
     <value>Bu ifade türünde sıralama yapılamaz.</value>
+    
+  </data>
+  <data name="ErrDistinctWrongType" xml:space="preserve">
+    <value>Bu ifade türüne ayrı işlem uygulanamaz.</value>
     
   </data>
   <data name="ErrFunctionDoesNotAcceptThisType_Function_Expected" xml:space="preserve">
@@ -3268,6 +3319,38 @@
     <value>Karşıtlık teması</value>
     
   </data>
+  <data name="AboutCollect" xml:space="preserve">
+    <value>Bir veri kaynağına kayıt ekler.</value>
+    
+  </data>
+  <data name="CollectDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="CollectRecordArg" xml:space="preserve">
+    <value>kayıt</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>Bir koleksiyondaki tüm kayıtları siler. Koleksiyonun sütunları kalır.</value>
+    
+  </data>
+  <data name="AboutClearCollect" xml:space="preserve">
+    <value>Bir koleksiyondaki tüm kayıtları siler. Daha sonra aynı koleksiyona farklı bir kayıt kümesi ekler.</value>
+    
+  </data>
+  <data name="ClearCollectionArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="ClearCollectDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="ClearCollectRecordArg" xml:space="preserve">
+    <value>kayıt</value>
+    
+  </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>Güncelleştirmeleri belirtilen satırlara uygular ve belirtilen veri kaynağındaki satırı değiştirir. Güncelleştirilen satırı döndürür.</value>
     
@@ -4398,6 +4481,10 @@
     <value>Makale: Power Apps için formül başvurusu</value>
     
   </data>
+  <data name="ErrorResource_ErrRecordDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
+    <value>Uyumsuz tür. Bir kayda koymaya çalıştığınız öğe, kayıtla uyumlu olmayan bir türe sahip.</value>
+    
+  </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
     <value>Uyumsuz tür. Bir tabloya koymaya çalıştığınız öğe, tabloyla uyumlu olmayan bir türe sahip.</value>
     
@@ -4642,6 +4729,10 @@
     <value>bu bağlamda As'e izin verilmiyor</value>
     
   </data>
+  <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
+    <value>Untyped objects cannot be used as the first argument to functions which support record scopes.</value>
+    
+  </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>Adlandırılmış formül, noktalı virgülle sona ermelidir.</value>
     
@@ -4725,6 +4816,18 @@
   </data>
   <data name="ErrDeprecated" xml:space="preserve">
     <value>Bu özellik kullanım dışı bırakıldı ve artık desteklenmiyor.</value>
+    
+  </data>
+  <data name="WarnDeferredType" xml:space="preserve">
+    <value>Uyarı: Ertelenmiş tür sağlandı.</value>
+    
+  </data>
+  <data name="ErrExpectedIdentifierArg_Name" xml:space="preserve">
+    <value>Beklenen tanımlayıcı adı</value>
+    
+  </data>
+  <data name="ErrInvalidFunction" xml:space="preserve">
+    <value>Bu işlev belirsiz, aynı bağımsız değişken için Lambda ifadesi ve sütun tanımlayıcıları içeriyor.</value>
     
   </data>
 </root>

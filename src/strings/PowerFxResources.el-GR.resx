@@ -530,6 +530,28 @@
   <data name="AboutBooleanNT_input" xml:space="preserve">
     <value>Στήλη αριθμητικών τιμών για επεξεργασία.</value>
   </data>
+  <data name="AboutBooleanB" xml:space="preserve">
+    <value>Μετατρέπει έναν ΄δυαδικό' σε δυαδική τιμή.</value>
+    
+  </data>
+  <data name="BooleanBArg1" xml:space="preserve">
+    <value>δυαδική τιμή</value>
+    
+  </data>
+  <data name="AboutBooleanB_boolean" xml:space="preserve">
+    <value>Η δυαδική τιμή για μετατροπή σε δυαδική τιμή.</value>
+  </data>
+  <data name="AboutBooleanBT" xml:space="preserve">
+    <value>Μετατρέπει μια στήλη δυαδικών τιμών σε στήλη δυαδικών τιμών.</value>
+    
+  </data>
+  <data name="BooleanBTArg1" xml:space="preserve">
+    <value>δεδομένα_εισόδου</value>
+    
+  </data>
+  <data name="AboutBooleanBT_input" xml:space="preserve">
+    <value>Μια στήλη δυαδικών τιμών για επεξεργασία.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Επιστρέφει το πρώτο μη κενό όρισμα</value>
     
@@ -1367,6 +1389,23 @@
   <data name="AboutDegrees_input" xml:space="preserve">
     <value>Μια στήλη αριθμητικών τιμών (σε ακτίνια) προς επεξεργασία.</value>
   </data>
+  <data name="AboutDistinct" xml:space="preserve">
+    <value>Αξιολογεί μια παράσταση σε μία ή περισσότερες στήλες του πίνακα και επιστρέφει έναν πίνακα μίας στήλης που περιέχει διακριτές (μοναδικές) τιμές για την αξιολογημένη παράσταση.</value>
+  </data>
+  <data name="DistinctArg1" xml:space="preserve">
+    <value>προέλευση</value>
+    
+  </data>
+  <data name="DistinctArg2" xml:space="preserve">
+    <value>παράσταση</value>
+    
+  </data>
+  <data name="AboutDistinct_source" xml:space="preserve">
+    <value>Πίνακας από τον οποίο θα εξαχθούν διακριτές τιμές.</value>
+  </data>
+  <data name="AboutDistinct_expression" xml:space="preserve">
+    <value>Μια παράσταση που αξιολογείται σε κάθε σειρά στον πίνακα εισαγωγής και παρέχει τιμές για τη λειτουργία διάκρισης.</value>
+  </data>
   <data name="AboutAtan2" xml:space="preserve">
     <value>Επιστρέφει το τόξο εφαπτομένης (σε ακτίνια) των καθορισμένων συντεταγμένων x και y.</value>
   </data>
@@ -1798,6 +1837,14 @@
     <value>Η αριθμητική τιμή είναι υπερβολικά μεγάλη.</value>
     
   </data>
+  <data name="ErrTextFormatTooLarge" xml:space="preserve">
+    <value>Το μέγεθος συμβολοσειράς μορφής δεν μπορεί να υπερβαίνει τους {0} χαρακτήρες.</value>
+    
+  </data>
+  <data name="ErrTextInvalidFormat" xml:space="preserve">
+    <value>Μη έγκυρη μορφή.</value>
+    
+  </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
     <value>Αυτή η προέλευση δεδομένων δεν είναι έγκυρη. Διορθώστε το σφάλμα στο παράθυρο "Προελεύσεις δεδομένων" κάνοντας κλικ στην επιλογή "Περιεχόμενο -&gt; Προελεύσεις δεδομένων" ή "Προβολή -&gt; Επιλογές"</value>
     
@@ -1852,6 +1899,10 @@
   </data>
   <data name="ErrSortWrongType" xml:space="preserve">
     <value>Δεν είναι δυνατή η ταξινόμηση στον τύπο της παράστασης.</value>
+    
+  </data>
+  <data name="ErrDistinctWrongType" xml:space="preserve">
+    <value>Δεν είναι δυνατή η εμφάνιση διακριτικών στον τύπο παράστασης.</value>
     
   </data>
   <data name="ErrFunctionDoesNotAcceptThisType_Function_Expected" xml:space="preserve">
@@ -3268,6 +3319,38 @@
     <value>Θέμα αντίθεσης</value>
     
   </data>
+  <data name="AboutCollect" xml:space="preserve">
+    <value>Προσθέτει καρτέλες σε μια προέλευση δεδομένων.</value>
+    
+  </data>
+  <data name="CollectDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="CollectRecordArg" xml:space="preserve">
+    <value>καρτέλα</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>Διαγράφει όλες τις καρτέλες μιας συλλογής. Οι στήλες της συλλογής θα παραμείνουν.</value>
+    
+  </data>
+  <data name="AboutClearCollect" xml:space="preserve">
+    <value>Διαγράφει όλες τις καρτέλες από μια συλλογή. Στη συνέχεια, προσθέτει ένα διαφορετικό σύνολο καρτελών στην ίδια συλλογή.</value>
+    
+  </data>
+  <data name="ClearCollectionArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="ClearCollectDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="ClearCollectRecordArg" xml:space="preserve">
+    <value>καρτέλα</value>
+    
+  </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>Εφαρμόζει τις ενημερώσεις στην καθορισμένη γραμμή και αλλάζει τη γραμμή στην καθορισμένη προέλευση δεδομένων. Επιστρέφει την ενημερωμένη γραμμή.</value>
     
@@ -4398,6 +4481,10 @@
     <value>Άρθρο: Αναφορά τύπου για το Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrRecordDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
+    <value>Μη συμβατός τύπος. Το στοιχείο που προσπαθείτε να τοποθετήσετε σε μια καρτέλα έχει τύπο που δεν είναι συμβατός με την καρτέλα.</value>
+    
+  </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
     <value>Μη συμβατός τύπος. Το στοιχείο που προσπαθείτε να τοποθετήσετε σε έναν πίνακα έχει έναν τύπο που δεν είναι συμβατός με τον πίνακα.</value>
     
@@ -4642,6 +4729,10 @@
     <value>Η λέξη-κλειδί As δεν επιτρέπεται σε αυτό το περιβάλλον</value>
     
   </data>
+  <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
+    <value>Τα μη πληκτρολογημένα αντικείμενα δεν μπορούν να χρησιμοποιηθούν ως το πρώτο όρισμα για λειτουργίες που υποστηρίζουν πεδία καρτελών.</value>
+    
+  </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>Ο καθορισμένος τύπος πρέπει να τελειώνει με ερωτηματικό.</value>
     
@@ -4725,6 +4816,18 @@
   </data>
   <data name="ErrDeprecated" xml:space="preserve">
     <value>Αυτή η δυνατότητα δεν χρησιμοποιείται και δεν υποστηρίζεται πλέον.</value>
+    
+  </data>
+  <data name="WarnDeferredType" xml:space="preserve">
+    <value>Προειδοποίηση: Παρέχεται τύπος χωρίς αναβολή.</value>
+    
+  </data>
+  <data name="ErrExpectedIdentifierArg_Name" xml:space="preserve">
+    <value>Αναμενόμενο όνομα αναγνωριστικού</value>
+    
+  </data>
+  <data name="ErrInvalidFunction" xml:space="preserve">
+    <value>Αυτή η συνάρτηση είναι διφορούμενη, περιέχει παραστάσεις λάμδα και αναγνωριστικά στηλών για το ίδιο όρισμα.</value>
     
   </data>
 </root>

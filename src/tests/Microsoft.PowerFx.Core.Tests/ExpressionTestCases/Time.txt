@@ -105,7 +105,7 @@ Error({Kind:ErrorKind.Div0})
 "09:24:00"
 
 >> Text(Time(23, 59, 59, 999), "HH:mm:ss.fff")
-"23:59:59.999"
+"23:59:59.fff"
 
 >> Date(2011, 2, 3) + Time(1, 2, 3)
 DateTime(2011,2,3,1,2,3,0)
@@ -157,6 +157,12 @@ Time(4,0,0,0)
 >> Time(12,50,45,950) + Time(6,15,35,750)
 Time(19,6,21,700)
 
+>> If(1<0,Time(2,0,0)) + Time(3,0,0)
+Time(3,0,0,0)
+
+>> Time(2,0,0) + If(1<0,Time(3,0,0))
+Time(2,0,0,0)
+
 >> Time(2,0,0) + 0.5
 Time(14,0,0,0)
 
@@ -175,6 +181,12 @@ Time(8,0,0,0)
 >> Time(18,30,0) - Time(6,30,0)
 0.5
 
+>> Time(18,0,0) - If(1<0,Time(6,30,0))
+0.75
+
+>> If(1<0,Time(18,0,0)) - Time(12,0,0)
+-0.5
+
 >> Date(2022, 9, 8) + Time(12, 34, 56)
 DateTime(2022,9,8,12,34,56,0)
 
@@ -188,10 +200,16 @@ DateTime(2022,9,8,13,35,57,1)
 DateTime(2022,9,8,13,35,57,1)
 
 >> Date(2022,1,1) + 2.5
-DateTime(2022,1,3,12,0,0,0)
+Date(2022,1,3)
+
+>> Date(2022,1,1) + 2.5 + 0.5
+Date(2022,1,4)
 
 >> 2.5 + Date(2022,1,1)
-DateTime(2022,1,3,12,0,0,0)
+Date(2022,1,3)
+
+>> 2.5 + Date(2022,1,1) + 1.75
+Date(2022,1,5)
 
 >> Time(12,0,0) - Date(2022,10,10)
 Errors: Error 13-14: This operation isn't valid on these types: Time, Date.
@@ -356,3 +374,12 @@ Errors: Error 7-11: Invalid argument type (Boolean). Expecting a DateTime value 
 
 >> Second(true)
 Errors: Error 7-11: Invalid argument type (Boolean). Expecting a DateTime value instead.
+
+>> TimeValue("11:12:00.000")
+Time(11,12,0,0)
+
+>> TimeValue("11:12:00")
+Time(11,12,0,0)
+
+>> TimeValue("11:12:00.1234567")
+Time(11,12,0,123)

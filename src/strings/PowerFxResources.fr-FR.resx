@@ -530,6 +530,28 @@
   <data name="AboutBooleanNT_input" xml:space="preserve">
     <value>Colonne de valeurs numériques à traiter.</value>
   </data>
+  <data name="AboutBooleanB" xml:space="preserve">
+    <value>Convertit un « booléen » en une valeur booléenne.</value>
+    
+  </data>
+  <data name="BooleanBArg1" xml:space="preserve">
+    <value>booléen</value>
+    
+  </data>
+  <data name="AboutBooleanB_boolean" xml:space="preserve">
+    <value>Valeur booléenne à convertir en valeur booléenne.</value>
+  </data>
+  <data name="AboutBooleanBT" xml:space="preserve">
+    <value>Convertit une colonne de valeurs booléennes en une colonne de valeurs booléennes.</value>
+    
+  </data>
+  <data name="BooleanBTArg1" xml:space="preserve">
+    <value>entrée</value>
+    
+  </data>
+  <data name="AboutBooleanBT_input" xml:space="preserve">
+    <value>Colonne de valeurs booléennes à traiter.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Retourne le premier argument non vide</value>
     
@@ -1367,6 +1389,23 @@
   <data name="AboutDegrees_input" xml:space="preserve">
     <value>Colonne de valeurs numériques (en radians) à traiter.</value>
   </data>
+  <data name="AboutDistinct" xml:space="preserve">
+    <value>Évalue une expression sur une ou plusieurs colonnes de la table et retourne une table à colonne unique qui contient des valeurs distinctes (uniques) pour l’expression évaluée.</value>
+  </data>
+  <data name="DistinctArg1" xml:space="preserve">
+    <value>source</value>
+    
+  </data>
+  <data name="DistinctArg2" xml:space="preserve">
+    <value>expression</value>
+    
+  </data>
+  <data name="AboutDistinct_source" xml:space="preserve">
+    <value>Table dont des valeurs distinctes seront extraites.</value>
+  </data>
+  <data name="AboutDistinct_expression" xml:space="preserve">
+    <value>Expression évaluée sur chaque ligne de la table d’entrée, et qui fournit des valeurs pour l’opération Distinct.</value>
+  </data>
   <data name="AboutAtan2" xml:space="preserve">
     <value>Retourne l’arctangente (en radians) des coordonnées x et y spécifiées.</value>
   </data>
@@ -1798,6 +1837,14 @@
     <value>La valeur numérique est trop importante.</value>
     
   </data>
+  <data name="ErrTextFormatTooLarge" xml:space="preserve">
+    <value>La taille de la chaîne de format ne peut pas dépasser {0} caractères.</value>
+    
+  </data>
+  <data name="ErrTextInvalidFormat" xml:space="preserve">
+    <value>Format non valide.</value>
+    
+  </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
     <value>Cette source de données n’est pas valide. Corrigez l’erreur dans le volet « Sources de données » en cliquant sur « Contenu -&gt; Sources de données » ou « Affichage -&gt; Options »</value>
     
@@ -1852,6 +1899,10 @@
   </data>
   <data name="ErrSortWrongType" xml:space="preserve">
     <value>Impossible de trier sur le type d’expression.</value>
+    
+  </data>
+  <data name="ErrDistinctWrongType" xml:space="preserve">
+    <value>Impossible d’appliquer une valeur distincte au type d’expression.</value>
     
   </data>
   <data name="ErrFunctionDoesNotAcceptThisType_Function_Expected" xml:space="preserve">
@@ -3268,20 +3319,52 @@
     <value>Thème contrasté</value>
     
   </data>
+  <data name="AboutCollect" xml:space="preserve">
+    <value>Ajoute des enregistrements à une source de données.</value>
+    
+  </data>
+  <data name="CollectDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="CollectRecordArg" xml:space="preserve">
+    <value>enregistrement</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>Supprime tous les enregistrements d’une collection sans les colonnes de la collection.</value>
+    
+  </data>
+  <data name="AboutClearCollect" xml:space="preserve">
+    <value>Supprime tous les enregistrements d’une collection. Ajoute ensuite un ensemble d’enregistrements différent à la même collection.</value>
+    
+  </data>
+  <data name="ClearCollectionArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="ClearCollectDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="ClearCollectRecordArg" xml:space="preserve">
+    <value>enregistrement</value>
+    
+  </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>Applique les mises à jour à la ligne spécifiée, et modifie celle-ci dans la source de données spécifiée. Retourne la ligne mise à jour.</value>
     
   </data>
   <data name="PatchDataSourceArg" xml:space="preserve">
-    <value>source_données</value>
+    <value>data_source</value>
     
   </data>
   <data name="PatchBaseRecordArg" xml:space="preserve">
-    <value>enregistrement_base</value>
+    <value>base_record</value>
     
   </data>
   <data name="PatchChangeRecordsArg" xml:space="preserve">
-    <value>modifier_enregistrement(s)</value>
+    <value>change_record(s)</value>
     
   </data>
   <data name="AboutRemove" xml:space="preserve">
@@ -3289,7 +3372,7 @@
     
   </data>
   <data name="RemoveDataSourceArg" xml:space="preserve">
-    <value>source_données</value>
+    <value>data_source</value>
     
   </data>
   <data name="RemoveRecordsArg" xml:space="preserve">
@@ -4398,6 +4481,10 @@
     <value>Article : Référence de formule pour Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrRecordDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
+    <value>Type incompatible. L’élément que vous tentez de placer dans un enregistrement a un type qui n’est pas compatible avec l’enregistrement.</value>
+    
+  </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
     <value>Type incompatible. L’élément que vous voulez placer dans une table a un type qui n’est pas compatible avec la table.</value>
     
@@ -4642,6 +4729,10 @@
     <value>« As » n’est pas autorisé dans ce contexte</value>
     
   </data>
+  <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
+    <value>Les objets sans type ne peuvent pas être utilisés en tant que premier argument des fonctions qui prennent en charge les étendues d’enregistrement.</value>
+    
+  </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>La formule nommée doit se terminer par un point-virgule.</value>
     
@@ -4725,6 +4816,18 @@
   </data>
   <data name="ErrDeprecated" xml:space="preserve">
     <value>Cette fonctionnalité est déconseillée et n’est plus prise en charge.</value>
+    
+  </data>
+  <data name="WarnDeferredType" xml:space="preserve">
+    <value>Avertissement : type différé fourni.</value>
+    
+  </data>
+  <data name="ErrExpectedIdentifierArg_Name" xml:space="preserve">
+    <value>Nom de l’identificateur attendu</value>
+    
+  </data>
+  <data name="ErrInvalidFunction" xml:space="preserve">
+    <value>Cette fonction est ambiguë, elle contient des expressions lambda et des identificateurs de colonne pour le même argument.</value>
     
   </data>
 </root>

@@ -530,6 +530,28 @@
   <data name="AboutBooleanNT_input" xml:space="preserve">
     <value>처리할 숫자 값 열입니다.</value>
   </data>
+  <data name="AboutBooleanB" xml:space="preserve">
+    <value>'부울'을 부울 값으로 변환합니다.</value>
+    
+  </data>
+  <data name="BooleanBArg1" xml:space="preserve">
+    <value>부울</value>
+    
+  </data>
+  <data name="AboutBooleanB_boolean" xml:space="preserve">
+    <value>부울 값으로 변환할 부울 값입니다.</value>
+  </data>
+  <data name="AboutBooleanBT" xml:space="preserve">
+    <value>부울 값 열을 부울 값 열로 변환합니다.</value>
+    
+  </data>
+  <data name="BooleanBTArg1" xml:space="preserve">
+    <value>입력</value>
+    
+  </data>
+  <data name="AboutBooleanBT_input" xml:space="preserve">
+    <value>처리할 부울 값의 열입니다.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>공백이 아닌 첫 번째 인수를 반환함</value>
     
@@ -1367,6 +1389,23 @@
   <data name="AboutDegrees_input" xml:space="preserve">
     <value>처리할 숫자 값(라디안 단위)의 열입니다.</value>
   </data>
+  <data name="AboutDistinct" xml:space="preserve">
+    <value>테이블의 하나 이상의 열에 대해 식을 평가하고 평가된 식에 대해 고유한 값을 포함하는 단일 열 테이블을 반환합니다.</value>
+  </data>
+  <data name="DistinctArg1" xml:space="preserve">
+    <value>원본</value>
+    
+  </data>
+  <data name="DistinctArg2" xml:space="preserve">
+    <value>식</value>
+    
+  </data>
+  <data name="AboutDistinct_source" xml:space="preserve">
+    <value>고유한 값이 추출되는 테이블입니다.</value>
+  </data>
+  <data name="AboutDistinct_expression" xml:space="preserve">
+    <value>입력 테이블의 각 행에 대해 평가된 식이며, Distinct 연산에 대한 값을 제공합니다.</value>
+  </data>
   <data name="AboutAtan2" xml:space="preserve">
     <value>지정된 X좌표 및 Y좌표의 아크탄젠트 값(라디안 단위)을 반환합니다.</value>
   </data>
@@ -1798,6 +1837,14 @@
     <value>숫자 값이 너무 큽니다.</value>
     
   </data>
+  <data name="ErrTextFormatTooLarge" xml:space="preserve">
+    <value>형식 문자열 크기는 {0}자를 초과할 수 없습니다.</value>
+    
+  </data>
+  <data name="ErrTextInvalidFormat" xml:space="preserve">
+    <value>잘못된 형식.</value>
+    
+  </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
     <value>이 데이터 원본은 잘못되었습니다. "내용 -&gt; 데이터 원본" 또는 "보기 -&gt; 옵션"을 클릭하여 "데이터 원본" 창에서 오류를 수정하세요.</value>
     
@@ -1852,6 +1899,10 @@
   </data>
   <data name="ErrSortWrongType" xml:space="preserve">
     <value>식 형식을 정렬할 수 없습니다.</value>
+    
+  </data>
+  <data name="ErrDistinctWrongType" xml:space="preserve">
+    <value>식 형식에 distinct 함수를 적용할 수 없습니다.</value>
     
   </data>
   <data name="ErrFunctionDoesNotAcceptThisType_Function_Expected" xml:space="preserve">
@@ -3268,6 +3319,38 @@
     <value>대비 테마</value>
     
   </data>
+  <data name="AboutCollect" xml:space="preserve">
+    <value>데이터 원본에 레코드를 추가합니다.</value>
+    
+  </data>
+  <data name="CollectDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="CollectRecordArg" xml:space="preserve">
+    <value>레코드</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>컬렉션의 모든 레코드를 삭제합니다. 컬렉션의 열은 그대로 남아 있습니다.</value>
+    
+  </data>
+  <data name="AboutClearCollect" xml:space="preserve">
+    <value>컬렉션에서 모든 레코드를 삭제합니다. 그런 다음 동일한 컬렉션에 다른 레코드 집합을 추가합니다.</value>
+    
+  </data>
+  <data name="ClearCollectionArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="ClearCollectDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="ClearCollectRecordArg" xml:space="preserve">
+    <value>레코드</value>
+    
+  </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>지정된 행에 업데이트를 적용하고 지정된 데이터 원본의 행을 변경합니다. 업데이트된 행을 반환합니다.</value>
     
@@ -4398,6 +4481,10 @@
     <value>문서: Power Apps에 대한 수식 참조</value>
     
   </data>
+  <data name="ErrorResource_ErrRecordDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
+    <value>호환되지 않는 형식입니다. 레코드에 넣으려는 항목에 레코드와 호환되지 않는 형식이 있습니다.</value>
+    
+  </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
     <value>호환되지 않는 형식입니다. 테이블에 배치하려는 항목이 테이블과 호환되지 않는 형식입니다.</value>
     
@@ -4642,6 +4729,10 @@
     <value>이 컨텍스트에서는 As가 허용되지 않음</value>
     
   </data>
+  <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
+    <value>Untyped objects cannot be used as the first argument to functions which support record scopes.</value>
+    
+  </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>이름이 지정된 수식은 세미콜론으로 끝나야 합니다.</value>
     
@@ -4725,6 +4816,18 @@
   </data>
   <data name="ErrDeprecated" xml:space="preserve">
     <value>이 기능은 사용되지 않으며 더 이상 지원되지 않습니다.</value>
+    
+  </data>
+  <data name="WarnDeferredType" xml:space="preserve">
+    <value>경고: 지연된 유형이 제공되지 않습니다.</value>
+    
+  </data>
+  <data name="ErrExpectedIdentifierArg_Name" xml:space="preserve">
+    <value>예상 식별자 이름</value>
+    
+  </data>
+  <data name="ErrInvalidFunction" xml:space="preserve">
+    <value>이 함수는 모호하며 동일한 인수에 대한 람다 식과 열 식별자를 포함합니다.</value>
     
   </data>
 </root>

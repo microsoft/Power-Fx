@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Xml.Linq;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Types;
@@ -20,7 +19,7 @@ namespace Microsoft.PowerFx.Types
         /// Override to add a more specific user-visible type name when this type shows up
         /// in error messages, suggestions, etc..
         /// </summary>
-        public virtual string UserVisibleTypeName => null; 
+        public virtual string UserVisibleTypeName => null;
 
         internal AggregateType(DType type)
             : base(type)
@@ -42,7 +41,7 @@ namespace Microsoft.PowerFx.Types
 
         public FormulaType GetFieldType(string fieldName)
         {
-            return TryGetFieldType(fieldName, out var type) ? 
+            return TryGetFieldType(fieldName, out var type) ?
                 type :
                 throw new InvalidOperationException($"No field {fieldName}");
         }
@@ -165,7 +164,7 @@ namespace Microsoft.PowerFx.Types
                 var ds = _type.AssociatedDataSources.FirstOrDefault();
 
                 if (ds != null)
-                { 
+                {
                     return ds.EntityName.Value;
                 }
 

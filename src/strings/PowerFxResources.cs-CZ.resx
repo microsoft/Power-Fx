@@ -530,6 +530,28 @@
   <data name="AboutBooleanNT_input" xml:space="preserve">
     <value>Sloupec číselných hodnot, které se mají zpracovat.</value>
   </data>
+  <data name="AboutBooleanB" xml:space="preserve">
+    <value>Převede logickou hodnotu na logickou hodnotu.</value>
+    
+  </data>
+  <data name="BooleanBArg1" xml:space="preserve">
+    <value>logický</value>
+    
+  </data>
+  <data name="AboutBooleanB_boolean" xml:space="preserve">
+    <value>Logická hodnota, kterou chcete převést na logickou hodnotu.</value>
+  </data>
+  <data name="AboutBooleanBT" xml:space="preserve">
+    <value>Převede sloupec logických hodnot na sloupec logických hodnot.</value>
+    
+  </data>
+  <data name="BooleanBTArg1" xml:space="preserve">
+    <value>vstup</value>
+    
+  </data>
+  <data name="AboutBooleanBT_input" xml:space="preserve">
+    <value>Sloupec logických hodnot ke zpracování.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Vrátí první neprázdný argument.</value>
     
@@ -1367,6 +1389,23 @@
   <data name="AboutDegrees_input" xml:space="preserve">
     <value>Sloupec číselných hodnot (v radiánech), které se mají zpracovat.</value>
   </data>
+  <data name="AboutDistinct" xml:space="preserve">
+    <value>Vyhodnotí výraz v jednom nebo více sloupcích tabulky a vrátí tabulku s jedním sloupcem, která obsahuje odlišné (jedinečné) hodnoty vyhodnoceného výrazu.</value>
+  </data>
+  <data name="DistinctArg1" xml:space="preserve">
+    <value>zdroj</value>
+    
+  </data>
+  <data name="DistinctArg2" xml:space="preserve">
+    <value>výraz</value>
+    
+  </data>
+  <data name="AboutDistinct_source" xml:space="preserve">
+    <value>Tabulka, ze které budou extrahovány odlišné hodnoty.</value>
+  </data>
+  <data name="AboutDistinct_expression" xml:space="preserve">
+    <value>Výraz vyhodnocený v jednotlivých řádcích vstupní tabulky, který poskytuje hodnoty pro operaci Distinct.</value>
+  </data>
   <data name="AboutAtan2" xml:space="preserve">
     <value>Vrátí arkus tangens (v radiánech) zadaných souřadnic x a y.</value>
   </data>
@@ -1798,6 +1837,14 @@
     <value>Číselná hodnota je moc velká.</value>
     
   </data>
+  <data name="ErrTextFormatTooLarge" xml:space="preserve">
+    <value>Velikost řetězce formátu nesmí být větší než {0} znaků.</value>
+    
+  </data>
+  <data name="ErrTextInvalidFormat" xml:space="preserve">
+    <value>Neplatný formát.</value>
+    
+  </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
     <value>Tento zdroj dat není platný. Opravte prosím chybu v podokně Zdroje dat (klikněte na Obsah -&gt; Zdroje dat nebo na Zobrazení -&gt; Možnosti).</value>
     
@@ -1852,6 +1899,10 @@
   </data>
   <data name="ErrSortWrongType" xml:space="preserve">
     <value>Typ výrazu neumožňuje řazení.</value>
+    
+  </data>
+  <data name="ErrDistinctWrongType" xml:space="preserve">
+    <value>Tento typ výrazu neumožňuje použít operaci distinct.</value>
     
   </data>
   <data name="ErrFunctionDoesNotAcceptThisType_Function_Expected" xml:space="preserve">
@@ -3268,6 +3319,38 @@
     <value>Kontrastní motiv</value>
     
   </data>
+  <data name="AboutCollect" xml:space="preserve">
+    <value>Přidá záznamy do zdroje dat.</value>
+    
+  </data>
+  <data name="CollectDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="CollectRecordArg" xml:space="preserve">
+    <value>záznam</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>Odstraní všechny záznamy kolekce. Sloupce kolekce zůstanou zachovány.</value>
+    
+  </data>
+  <data name="AboutClearCollect" xml:space="preserve">
+    <value>Odstraní všechny záznamy z kolekce. A poté do stejné kolekce přidá jinou sadu záznamů.</value>
+    
+  </data>
+  <data name="ClearCollectionArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="ClearCollectDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="ClearCollectRecordArg" xml:space="preserve">
+    <value>záznam</value>
+    
+  </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>Aplikuje aktualizace pro zadaný řádek a změní řádek v zadaném zdroji dat. Vrátí aktualizovaný řádek.</value>
     
@@ -4398,6 +4481,10 @@
     <value>Článek: Referenční informace ke vzorcům v Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrRecordDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
+    <value>Nekompatibilní typ. Položka, kterou se pokoušíte umístit do záznamu, má typ, který není kompatibilní se záznamem.</value>
+    
+  </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
     <value>Nekompatibilní typ. Položka, kterou se pokoušíte umístit do tabulky, má typ, který není kompatibilní s tabulkou.</value>
     
@@ -4642,6 +4729,10 @@
     <value>Jak se v tomto kontextu nepovoluje</value>
     
   </data>
+  <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
+    <value>Objekty bez typu nelze použít jako první argument pro funkce, které podporují obory záznamů.</value>
+    
+  </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>Pojmenovaný vzorec musí končit středníkem.</value>
     
@@ -4725,6 +4816,18 @@
   </data>
   <data name="ErrDeprecated" xml:space="preserve">
     <value>Tato funkce je zastaralá a již není podporována.</value>
+    
+  </data>
+  <data name="WarnDeferredType" xml:space="preserve">
+    <value>Upozornění: Odložený typ poskytnut.</value>
+    
+  </data>
+  <data name="ErrExpectedIdentifierArg_Name" xml:space="preserve">
+    <value>Očekávaný název identifikátoru</value>
+    
+  </data>
+  <data name="ErrInvalidFunction" xml:space="preserve">
+    <value>Tato funkce je nejednoznačná, obsahuje výrazy lambda a identifikátory sloupců pro stejný argument.</value>
     
   </data>
 </root>

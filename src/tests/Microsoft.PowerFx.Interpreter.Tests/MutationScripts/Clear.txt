@@ -1,0 +1,14 @@
+﻿>> Set(t1, Table({a:1},{a:2}))
+Table({a:1},{a:2})
+
+>> Clear(t1)
+true
+
+>> t1
+Table()
+
+>> With({x:[1,2,3]},Clear(x))
+true
+
+>> With({x:[1,2,3]},Clear(x);x)
+Table()

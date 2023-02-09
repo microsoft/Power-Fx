@@ -530,6 +530,28 @@
   <data name="AboutBooleanNT_input" xml:space="preserve">
     <value>คอลัมน์ของค่าตัวเลขที่จะดำเนินการ</value>
   </data>
+  <data name="AboutBooleanB" xml:space="preserve">
+    <value>แปลง 'บูลีน' เป็นค่าแบบบูลีน</value>
+    
+  </data>
+  <data name="BooleanBArg1" xml:space="preserve">
+    <value>แบบบูลีน</value>
+    
+  </data>
+  <data name="AboutBooleanB_boolean" xml:space="preserve">
+    <value>ค่าแบบบูลีนที่จะแปลงเป็นค่าแบบบูลีน</value>
+  </data>
+  <data name="AboutBooleanBT" xml:space="preserve">
+    <value>แปลงคอลัมน์ของค่าแบบบูลีนเป็นคอลัมน์ของค่าแบบบูลีน</value>
+    
+  </data>
+  <data name="BooleanBTArg1" xml:space="preserve">
+    <value>ข้อมูลป้อนเข้า</value>
+    
+  </data>
+  <data name="AboutBooleanBT_input" xml:space="preserve">
+    <value>คอลัมน์ของค่าแบบบูลีนที่จะประมวลผล</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>ส่งคืนอาร์กิวเมนต์แรกที่ไม่ได้เว้นว่าง</value>
     
@@ -1367,6 +1389,23 @@
   <data name="AboutDegrees_input" xml:space="preserve">
     <value>คอลัมน์ของค่าตัวเลข (ในเรเดียน) ที่จะประมวลผล</value>
   </data>
+  <data name="AboutDistinct" xml:space="preserve">
+    <value>ประเมินนิพจน์จากหนึ่งคอลัมน์ตารางหรือมากกว่า และคืนค่าเป็นตารางหนึ่งคอลัมน์ที่ประกอบไปด้วยค่าเฉพาะของนิพจน์ที่ประเมินแล้ว</value>
+  </data>
+  <data name="DistinctArg1" xml:space="preserve">
+    <value>แหล่งที่มา</value>
+    
+  </data>
+  <data name="DistinctArg2" xml:space="preserve">
+    <value>นิพจน์</value>
+    
+  </data>
+  <data name="AboutDistinct_source" xml:space="preserve">
+    <value>ตารางที่ค่าเฉพาะจะถูกแยกออกมา</value>
+  </data>
+  <data name="AboutDistinct_expression" xml:space="preserve">
+    <value>นิพจน์ที่ถูกประเมินจากแถวแต่ละแถวในตารางป้อนค่าและให้ค่าสำหรับการดำเนินการ Distinct</value>
+  </data>
   <data name="AboutAtan2" xml:space="preserve">
     <value>คืนค่าแทนเจนต์โค้ง (ในเรเดียน) ของพิกัด x- และ y- ที่ระบุ</value>
   </data>
@@ -1798,6 +1837,14 @@
     <value>ค่าตัวเลขสูงเกินไป</value>
     
   </data>
+  <data name="ErrTextFormatTooLarge" xml:space="preserve">
+    <value>ขนาดสตริงรูปแบบต้องไม่เกิน {0} อักขระ</value>
+    
+  </data>
+  <data name="ErrTextInvalidFormat" xml:space="preserve">
+    <value>รูปแบบไม่ถูกต้อง</value>
+    
+  </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
     <value>แหล่งข้อมูลนี้ไม่ถูกต้อง: โปรดแก้ไขข้อผิดพลาดในบานหน้าต่าง "แหล่งข้อมูล" โดยคลิก "เนื้อหา -&gt; แหล่งเครื่องมือ" หรือ "แสดง -&gt; ตัวเลือก"</value>
     
@@ -1852,6 +1899,10 @@
   </data>
   <data name="ErrSortWrongType" xml:space="preserve">
     <value>ไม่สามารถเรียงลำดับประเภทนิพจน์</value>
+    
+  </data>
+  <data name="ErrDistinctWrongType" xml:space="preserve">
+    <value>ไม่สามารถใช้ Distinct กับนิพจน์ชนิดนี้</value>
     
   </data>
   <data name="ErrFunctionDoesNotAcceptThisType_Function_Expected" xml:space="preserve">
@@ -3268,6 +3319,38 @@
     <value>ธีมความคมชัด</value>
     
   </data>
+  <data name="AboutCollect" xml:space="preserve">
+    <value>เพิ่มเรกคอร์ดลงในแหล่งข้อมูล</value>
+    
+  </data>
+  <data name="CollectDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="CollectRecordArg" xml:space="preserve">
+    <value>เรกคอร์ด</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>ลบเรกคอร์ดทั้งหมดของคอลเลกชัน คอลัมน์ของคอลเลกชันจะยังคงอยู่</value>
+    
+  </data>
+  <data name="AboutClearCollect" xml:space="preserve">
+    <value>ลบเรกคอร์ดทั้งหมดออกจากคอลเลกชัน จากนั้นเพิ่มชุดเรกคอร์ดอื่นลงในคอลเลกชันเดียวกัน</value>
+    
+  </data>
+  <data name="ClearCollectionArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="ClearCollectDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="ClearCollectRecordArg" xml:space="preserve">
+    <value>เรกคอร์ด</value>
+    
+  </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>ใช้การอัปเดตกับแถวที่กำหนด และเปลี่ยนแปลงแถวในแหล่งข้อมูลที่กำหนด ส่งกลับแถวที่อัปเดตแล้ว</value>
     
@@ -4398,6 +4481,10 @@
     <value>บทความ: การอ้างอิงสูตรสำหรับ Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrRecordDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
+    <value>ชนิดไม่สามารถเข้ากันได้ รายการที่คุณกำลังจะวางลงในเรกคอร์ดมีชนิดที่ไม่เข้ากันกับเรกคอร์ด</value>
+    
+  </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
     <value>ชนิดไม่สามารถเข้ากันได้ รายการที่คุณกำลังจะวางลงในตารางมีชนิดที่ไม่เข้ากันกับตาราง</value>
     
@@ -4642,6 +4729,10 @@
     <value>ไม่ได้รับอนุญาตในบริบทนี้</value>
     
   </data>
+  <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
+    <value>ออบเจ็กต์ที่ไม่ได้ระบุชนิดไม่สามารถใช้เป็นอาร์กิวเมนต์แรกสำหรับฟังก์ชันที่สนับสนุนขอบเขตเรกคอร์ดได้</value>
+    
+  </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>สูตรที่ระบุชื่อต้องลงท้ายด้วยเครื่องหมายอัฒภาค</value>
     
@@ -4725,6 +4816,18 @@
   </data>
   <data name="ErrDeprecated" xml:space="preserve">
     <value>คุณลักษณะนี้ไม่สนับสนุนและไม่ได้รับการรองรับอีกต่อไป</value>
+    
+  </data>
+  <data name="WarnDeferredType" xml:space="preserve">
+    <value>คำเตือน: ชนิดที่ระบุเป็นชนิดแบบเลื่อนเวลา</value>
+    
+  </data>
+  <data name="ErrExpectedIdentifierArg_Name" xml:space="preserve">
+    <value>ชื่อตัวระบุที่คาดไว้</value>
+    
+  </data>
+  <data name="ErrInvalidFunction" xml:space="preserve">
+    <value>ฟังก์ชันนี้คลุมเครือ โดยประกอบด้วยนิพจน์แลมบ์ดาและตัวระบุคอลัมน์สำหรับอาร์กิวเมนต์เดียวกัน</value>
     
   </data>
 </root>

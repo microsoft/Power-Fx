@@ -530,6 +530,28 @@
   <data name="AboutBooleanNT_input" xml:space="preserve">
     <value>A feldolgozandó számértékeket tartalmazó oszlop.</value>
   </data>
+  <data name="AboutBooleanB" xml:space="preserve">
+    <value>Átalakít egy "logikai adatot" logikai értékké.</value>
+    
+  </data>
+  <data name="BooleanBArg1" xml:space="preserve">
+    <value>logikai</value>
+    
+  </data>
+  <data name="AboutBooleanB_boolean" xml:space="preserve">
+    <value>A logikai értékké alakítandó logikai érték.</value>
+  </data>
+  <data name="AboutBooleanBT" xml:space="preserve">
+    <value>Logikai értékekből álló oszlopot logikai értékek oszlopává alakít át.</value>
+    
+  </data>
+  <data name="BooleanBTArg1" xml:space="preserve">
+    <value>bemenet</value>
+    
+  </data>
+  <data name="AboutBooleanBT_input" xml:space="preserve">
+    <value>A feldolgozandó logikai értékeket tartalmazó oszlop.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Az első nem üres argumentumot adja vissza</value>
     
@@ -1367,6 +1389,23 @@
   <data name="AboutDegrees_input" xml:space="preserve">
     <value>A feldolgozandó, számértékeket (radiánban) tartalmazó oszlop.</value>
   </data>
+  <data name="AboutDistinct" xml:space="preserve">
+    <value>Kiértékel egy kifejezést egy tábla egy vagy több oszlopán, és egy egyoszlopos táblázatot ad vissza, amely a kiértékelt kifejezés egyedi (egymástól különböző) értékeit tábla.</value>
+  </data>
+  <data name="DistinctArg1" xml:space="preserve">
+    <value>forrás</value>
+    
+  </data>
+  <data name="DistinctArg2" xml:space="preserve">
+    <value>kifejezés</value>
+    
+  </data>
+  <data name="AboutDistinct_source" xml:space="preserve">
+    <value>Az a tábla, amelyből a függvény kinyeri az egyedi értékeket.</value>
+  </data>
+  <data name="AboutDistinct_expression" xml:space="preserve">
+    <value>A bemeneti tábla minden során kiértékelt kifejezés, amely az értékeket szolgáltatja a Distinct műveletnek.</value>
+  </data>
   <data name="AboutAtan2" xml:space="preserve">
     <value>A megadott x és y koordináták arkusztangensértékét adja eredményül (radiánban).</value>
   </data>
@@ -1798,6 +1837,14 @@
     <value>A számérték túl nagy.</value>
     
   </data>
+  <data name="ErrTextFormatTooLarge" xml:space="preserve">
+    <value>A formátum sztringmérete nem lehet hosszabb {0} karakternél.</value>
+    
+  </data>
+  <data name="ErrTextInvalidFormat" xml:space="preserve">
+    <value>Érvénytelen formátum.</value>
+    
+  </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
     <value>Az adatforrás érvénytelen. Javítsa ki a hibát az „Adatforrások” panelen. Ehhez kattintson a „Tartalom -&gt; Adatforrások” vagy a „Nézet -&gt; Beállítások” parancsra</value>
     
@@ -1852,6 +1899,10 @@
   </data>
   <data name="ErrSortWrongType" xml:space="preserve">
     <value>A kifejezés típusa alapján nem lehet rendezni.</value>
+    
+  </data>
+  <data name="ErrDistinctWrongType" xml:space="preserve">
+    <value>A kifejezés típusa alapján nem lehet egyedit alkalmazni.</value>
     
   </data>
   <data name="ErrFunctionDoesNotAcceptThisType_Function_Expected" xml:space="preserve">
@@ -3268,6 +3319,38 @@
     <value>Kontrasztos téma</value>
     
   </data>
+  <data name="AboutCollect" xml:space="preserve">
+    <value>Rekordokat ad hozzá egy adatforráshoz.</value>
+    
+  </data>
+  <data name="CollectDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="CollectRecordArg" xml:space="preserve">
+    <value>rekord</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>Törli a gyűjtemény összes rekordját. A gyűjtemény oszlopai megmaradnak.</value>
+    
+  </data>
+  <data name="AboutClearCollect" xml:space="preserve">
+    <value>Törli az összes rekordot egy gyűjteményből. Ezután különböző rekordhalmazokat ad hozzá ugyanahhoz a gyűjteményhez.</value>
+    
+  </data>
+  <data name="ClearCollectionArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="ClearCollectDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    
+  </data>
+  <data name="ClearCollectRecordArg" xml:space="preserve">
+    <value>rekord</value>
+    
+  </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>Alkalmazza a frissítéseket megadott sorra, és módosítja a sort a megadott adatforrásban. A frissített sort adja vissza.</value>
     
@@ -4398,6 +4481,10 @@
     <value>Cikk: Power Apps-képletekkel kapcsolatos segédlet</value>
     
   </data>
+  <data name="ErrorResource_ErrRecordDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
+    <value>Inkompatibilis típus. A rekordhoz hozzáadni kívánt elem típusa nem kompatibilis a rekorddal.</value>
+    
+  </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
     <value>Inkompatibilis típus. A táblához hozzáadni kívánt elem típusa nem kompatibilis a táblával.</value>
     
@@ -4642,6 +4729,10 @@
     <value>Az As nem engedélyezett ebben a környezetben</value>
     
   </data>
+  <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
+    <value>Nem használhatók típus nélküli objektumok a rekord hatókörét támogató függvények első argumentumaként.</value>
+    
+  </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>A megnevezett képletnek pontosvesszővel kell végződnie.</value>
     
@@ -4725,6 +4816,18 @@
   </data>
   <data name="ErrDeprecated" xml:space="preserve">
     <value>Ez a funkció elavult, és már nem támogatott.</value>
+    
+  </data>
+  <data name="WarnDeferredType" xml:space="preserve">
+    <value>Figyelmeztetés: Késleltetett típus van megadva.</value>
+    
+  </data>
+  <data name="ErrExpectedIdentifierArg_Name" xml:space="preserve">
+    <value>Várt azonosítónév</value>
+    
+  </data>
+  <data name="ErrInvalidFunction" xml:space="preserve">
+    <value>Ez a függvény nem egyértelmű, azonos argumentumhoz tartalmaz lambda kifejezéseket és oszlopazonosítókat.</value>
     
   </data>
 </root>
