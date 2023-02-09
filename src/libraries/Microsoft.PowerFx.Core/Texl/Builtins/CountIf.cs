@@ -70,11 +70,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             // Ensure that all the args starting at index 1 are booleans or coerece to boolean if they are OptionSetValues.
             for (var i = 1; i < args.Length; i++)
             {
-                if (argTypes[i].Kind == DKind.OptionSetValue && argTypes[i].CoercesTo(DType.Boolean))
-                {
-                    CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i], DType.Boolean, allowDupes: true);
-                }
-                else if (!DType.Boolean.Accepts(argTypes[i]))
+                if (!DType.Boolean.Accepts(argTypes[i]))
                 {
                     if (argTypes[i].CoercesTo(DType.Boolean))
                     {
