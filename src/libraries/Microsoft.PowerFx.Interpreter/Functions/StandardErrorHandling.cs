@@ -572,6 +572,21 @@ namespace Microsoft.PowerFx.Functions
             };
         }
 
+        private static Func<IRContext, int, FormulaValue, FormulaValue> ExactSequenceVariadic(Func<IRContext, int, FormulaValue, FormulaValue>[] runtimeChecksRegularArgs, Func<IRContext, int, FormulaValue, FormulaValue>[] runtimeChecksVariadicArgs)
+        {
+            return (irContext, index, arg) =>
+            {
+                if (index < runtimeChecksRegularArgs.Length)
+                {
+                    return runtimeChecksRegularArgs[index](irContext, index, arg);
+                }
+                else
+                {
+                    return runtimeChecksVariadicArgs[(index - runtimeChecksRegularArgs.Length) % runtimeChecksVariadicArgs.Length](irContext, index, arg);
+                }
+            };
+        }
+
         private static FormulaValue AddColumnsTypeChecker(IRContext irContext, int index, FormulaValue arg)
         {
             if (index == 0)
