@@ -1413,7 +1413,8 @@ namespace Microsoft.PowerFx.Core.Functions
         }
 
         /// <summary>
-        /// Function can override this method to provide BlankHandling policy for argument.
+        /// Function can override this method to provide pre-processing policy for argument.
+        /// By default, function does not attach any pre-processing for arguments.
         /// </summary>
         /// <param name="index">0 based Index of argument.</param>
         /// <returns></returns>
@@ -1422,7 +1423,12 @@ namespace Microsoft.PowerFx.Core.Functions
             return ArgPreprocessor.None;
         }
 
-        internal ArgPreprocessor GetDefaultArgPreprocessor(int index)
+        /// <summary>
+        /// Generic arg preprocessor that uses <see cref="ParamTypes"/> to determine pre-processing policy.
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        internal ArgPreprocessor GetGenericArgPreprocessor(int index)
         {
             var paramType = ParamTypes[index] ?? DType.Unknown;
             if (paramType == DType.Number)

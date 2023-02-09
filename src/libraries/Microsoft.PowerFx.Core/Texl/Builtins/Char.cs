@@ -21,7 +21,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public override ArgPreprocessor GetArgPreprocessor(int index)
         {
-            return base.GetDefaultArgPreprocessor(index);
+            return base.GetGenericArgPreprocessor(index);
         }
 
         public override bool IsSelfContained => true;

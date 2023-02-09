@@ -335,7 +335,9 @@ namespace Microsoft.PowerFx.Core.IR
                     }
                 }
 
-                args = ReplaceBlankWithDefault(args, func);
+                // This can add pre-processing to arguments, such as BlankToZero, Truncate etc...
+                // based on the function.
+                args = AttachArgPreprocessor(args, func);
 
                 // this can rewrite the entire call node to any intermediate node.
                 // e.g. For Boolean(true), Instead of IR as Call(Boolean, true) it can be rewritten directly to emit true.
@@ -344,17 +346,17 @@ namespace Microsoft.PowerFx.Core.IR
                 return MaybeInjectCoercion(node, irNode, context);
             }
 
-            private List<IntermediateNode> ReplaceBlankWithDefault(List<IntermediateNode> args, TexlFunction func)
+            private List<IntermediateNode> AttachArgPreprocessor(List<IntermediateNode> args, TexlFunction func)
             {
                 var len = args.Count;
                 List<IntermediateNode> convertedArgs = new List<IntermediateNode>(len);
 
                 for (var i = 0; i < len; i++)
                 {
-                    IntermediateNode convertedNode = default;
-                    var blankHandlerPolicy = func.GetArgPreprocessor(i);
+                    IntermediateNode convertedNode;
+                    var argPreprocessor = func.GetArgPreprocessor(i);
 
-                    switch (blankHandlerPolicy)
+                    switch (argPreprocessor)
                     {
                         case ArgPreprocessor.ReplaceWithZero:
                             convertedNode = ReplaceBlankWithZero(args[i]);
@@ -370,13 +372,27 @@ namespace Microsoft.PowerFx.Core.IR
                 return convertedArgs;
             }
 
+            /// <summary>
+            /// Wraps node arg => Coalesce(arg , 0) when arg is not Number Literal.
+            /// </summary>
             private static IntermediateNode ReplaceBlankWithZero(IntermediateNode arg)
             {
-                var zeroNumLitNode = new NumberLiteralNode(IRContext.NotInSource(FormulaType.Number), 0);
-                var convertedNode = new CallNode(arg.IRContext, BuiltinFunctionsCore.Coalesce, arg, zeroNumLitNode);
+                if (arg is NumberLiteralNode)
+                {
+                    return arg;
+                }
+
+                // need a new context since when arg is Blank IRContext.Returntypee is not a Number but a Blank.
+                var convertedIRContext = new IRContext(arg.IRContext.SourceContext, FormulaType.Number);
+                var zeroNumLitNode = new NumberLiteralNode(convertedIRContext, 0);
+                var convertedNode = new CallNode(convertedIRContext, BuiltinFunctionsCore.Coalesce, arg, zeroNumLitNode);
                 return convertedNode;
             }
 
+            /// <summary>
+            /// This is not a generic arg concatenate function, but a special case for the Concatenate function,
+            /// used for Binary Concatenate operator.
+            /// </summary>
             private static IntermediateNode ConcatenateArgs(IntermediateNode arg1, IntermediateNode arg2, IRContext irContext)
             {
                 var concatenateArgs = new List<IntermediateNode>();
