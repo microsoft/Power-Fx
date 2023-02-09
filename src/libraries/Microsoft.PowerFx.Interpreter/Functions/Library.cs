@@ -890,8 +890,7 @@ namespace Microsoft.PowerFx.Functions
                     BuiltinFunctionsCore.Left.Name,
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: ReplaceBlankWith(
-                        new StringValue(IRContext.NotInSource(FormulaType.String), string.Empty),
-                        new NumberValue(IRContext.NotInSource(FormulaType.Number), 0)),
+                        new StringValue(IRContext.NotInSource(FormulaType.String), string.Empty)),
                     checkRuntimeTypes: ExactSequence(
                         ExactValueType<StringValue>,
                         ExactValueType<NumberValue>),
@@ -1162,8 +1161,7 @@ namespace Microsoft.PowerFx.Functions
                     BuiltinFunctionsCore.Right.Name,
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: ReplaceBlankWith(
-                        new StringValue(IRContext.NotInSource(FormulaType.String), string.Empty),
-                        new NumberValue(IRContext.NotInSource(FormulaType.Number), 0)),
+                        new StringValue(IRContext.NotInSource(FormulaType.String), string.Empty)),
                     checkRuntimeTypes: ExactSequence(
                         ExactValueType<StringValue>,
                         ExactValueType<NumberValue>),
