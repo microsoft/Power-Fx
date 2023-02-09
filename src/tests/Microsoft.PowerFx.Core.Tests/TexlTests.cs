@@ -311,6 +311,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("CountIf([\"false\",\"true\",\"false\"], Value) // Coercion from text to boolean")]
         [InlineData("CountIf([1,2,3], BoolOptionSet.Yes) // Coercion from 2-valued option set to boolean")]
         [InlineData("CountIf([1,2,3], If(true, 0 > 1, \"true\"))")]
+        [InlineData("CountIf([{a:\"true\",b:BoolOptionSet.Yes},{a:\"false\",b:BoolOptionSet.No}], a, b) // Coercion from fields in table")]
         public void TexlFunctionTypeSemanticsCountIf(string expression)
         {
             var symbol = new SymbolTable();
@@ -326,6 +327,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 expression,
                 DType.Number,
                 symbol,
+                features: Features.All,
                 optionSets: new[] { new BooleanOptionSet("BoolOptionSet", boolOptionSetDisplayNameProvider) });
         }
 
