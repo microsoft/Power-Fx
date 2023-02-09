@@ -9,6 +9,7 @@ using System.Reflection.Metadata;
 using Microsoft.PowerFx.Core.App.Controls;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
+using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Functions.Delegation;
 using Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata;
@@ -21,6 +22,7 @@ using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
+using Microsoft.PowerFx.Tests;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
@@ -292,17 +294,38 @@ namespace Microsoft.PowerFx.Core.Tests
                 symbol);
         }
 
+        private class BooleanOptionSet : OptionSet, IExternalOptionSet
+        {
+            public BooleanOptionSet(string name, DisplayNameProvider displayNameProvider)
+                : base(name, displayNameProvider)
+            {
+            }
+
+            bool IExternalOptionSet.IsBooleanValued => true;
+        }
+
         [Theory]
         [InlineData("CountIf(Table, A < 10)")]
         [InlineData("CountIf(Table, A < 10, A > 0, A <> 2)")]
         [InlineData("CountIf([1,2,3], Value) // Coercion from number to boolean")]
         [InlineData("CountIf([\"false\",\"true\",\"false\"], Value) // Coercion from text to boolean")]
+        [InlineData("CountIf([1,2,3], BoolOptionSet.Yes) // Coercion from 2-valued option set to boolean")]
         public void TexlFunctionTypeSemanticsCountIf(string expression)
         {
             var symbol = new SymbolTable();
             symbol.AddVariable("Table", new TableType(TestUtils.DT("*[A:n]")));
 
-            TestSimpleBindingSuccess(expression, DType.Number, symbol);
+            var boolOptionSetDisplayNameProvider = DisplayNameUtility.MakeUnique(new Dictionary<string, string>
+            {
+                { "Yes", "Yes" },
+                { "No", "No" },
+            });
+
+            TestSimpleBindingSuccess(
+                expression,
+                DType.Number,
+                symbol,
+                optionSets: new[] { new BooleanOptionSet("BoolOptionSet", boolOptionSetDisplayNameProvider) });
         }
 
         [Theory]
@@ -310,12 +333,24 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("CountIf(Table, A > 0, Today() + A)")]
         [InlineData("CountIf(Table, {Result:A})")]
         [InlineData("CountIf(First(Table), true)")]
+        [InlineData("CountIf([1,3,4], NonBoolOptionSet.First")]
         public void TexlFunctionTypeSemanticsCountIf_Negative(string expression)
         {
             var symbol = new SymbolTable();
             symbol.AddVariable("Table", new TableType(TestUtils.DT("*[A:n]")));
 
-            TestBindingErrors(expression, DType.Number, symbol);
+            var nonBoolOptionSetDisplayNameProvider = DisplayNameUtility.MakeUnique(new Dictionary<string, string>
+            {
+                { "First", "One" },
+                { "Second", "Two" },
+                { "Third", "Three" },
+            });
+
+            TestBindingErrors(
+                expression,
+                DType.Number,
+                symbol,
+                optionSets: new[] { new OptionSet("NonBoolOptionSet", nonBoolOptionSetDisplayNameProvider) });
         }
 
         [Fact]
@@ -3180,12 +3215,20 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.False(result.IsSuccess);
         }
 
-        private void TestBindingErrors(string script, DType expectedType, SymbolTable symbolTable = null)
+        private void TestBindingErrors(string script, DType expectedType, SymbolTable symbolTable = null, OptionSet[] optionSets = null)
         {
             var config = new PowerFxConfig
             {
                 SymbolTable = symbolTable
             };
+
+            if (optionSets != null)
+            {
+                foreach (var optionSet in optionSets)
+                {
+                    config.AddOptionSet(optionSet);
+                }
+            }
 
             var engine = new Engine(config);
             var result = engine.Check(script);
@@ -3194,7 +3237,7 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.False(result.IsSuccess);
         }
 
-        private static void TestSimpleBindingSuccess(string script, DType expectedType, SymbolTable symbolTable = null, Features features = Features.None)
+        private static void TestSimpleBindingSuccess(string script, DType expectedType, SymbolTable symbolTable = null, Features features = Features.None, OptionSet[] optionSets = null)
         {
             var config = new PowerFxConfig(features)
             {
@@ -3204,6 +3247,13 @@ namespace Microsoft.PowerFx.Core.Tests
             if (symbolTable != null)
             {
                 config.AddFunction(new ShowColumnsFunction());
+                if (optionSets != null)
+                {
+                    foreach (var optionSet in optionSets)
+                    {
+                        config.AddOptionSet(optionSet);
+                    }
+                }
             }
 
             var engine = new Engine(config);
