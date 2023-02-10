@@ -269,6 +269,17 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: OptionSetValueToString)
+            },
+            {
+                UnaryOpKind.BooleanOptionSetToBoolean,
+                StandardErrorHandling<OptionSetValue>(
+                    functionName: null, // internal function, no user-facing name
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<OptionSetValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: BooleanOptionSetToBoolean)
             }
         };
         #endregion
@@ -533,6 +544,12 @@ namespace Microsoft.PowerFx.Functions
             var optionSet = args[0];
             var displayName = optionSet.DisplayName;
             return new StringValue(irContext, displayName);
+        }
+
+        public static FormulaValue BooleanOptionSetToBoolean(IRContext irContext, OptionSetValue[] args)
+        {
+            var arg0 = args[0];
+            return arg0.Option == "1" ? FormulaValue.New(true) : FormulaValue.New(false);
         }
         #endregion
     }
