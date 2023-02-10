@@ -67,17 +67,20 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var fValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
             Contracts.Assert(returnType == DType.Number);
 
-            // Ensure that all the args starting at index 1 are booleans or coerece to boolean if they are OptionSetValues.
+            // Ensure that all the args starting at index 1 are booleans or coerecible to boolean
             for (var i = 1; i < args.Length; i++)
             {
-                if (argTypes[i].Kind == DKind.OptionSetValue && argTypes[i].CoercesTo(DType.Boolean))
+                if (!DType.Boolean.Accepts(argTypes[i]))
                 {
-                    CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i], DType.Boolean, allowDupes: true);
-                }
-                else if (!DType.Boolean.Accepts(argTypes[i]))
-                {
-                    errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrBooleanExpected);
-                    fValid = false;
+                    if (argTypes[i].CoercesTo(DType.Boolean))
+                    {
+                        CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i], DType.Boolean, allowDupes: true);
+                    }
+                    else
+                    {
+                        errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrBooleanExpected);
+                        fValid = false;
+                    }
                 }
             }
 

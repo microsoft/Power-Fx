@@ -862,7 +862,8 @@ namespace Microsoft.PowerFx.Functions
                 return GetDiv0Error(irContext);
             }
 
-            return new NumberValue(irContext, 1 / tan);
+            var cot = 1 / tan;
+            return new NumberValue(irContext, cot);
         }
 
         // Given the absence of Math.Acot function, we compute acot(x) as pi/2 - atan(x)
