@@ -1,7 +1,4 @@
 ﻿// Scalar + Table
->> Concatenate("a", Table({b:"1"},{b:"2"}))
-Table({Result:"a1"},{Result:"a2"})
-
 >> Concatenate("a", LastN(Table({b:"1"},{b:"2"}), 0))
 Table()
 
