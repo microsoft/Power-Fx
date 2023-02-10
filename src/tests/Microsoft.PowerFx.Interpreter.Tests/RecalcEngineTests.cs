@@ -64,7 +64,8 @@ namespace Microsoft.PowerFx.Tests
                 $"{ns}.InterpreterConfigException",
                 $"{ns}.Interpreter.{nameof(NotDelegableException)}",
                 $"{ns}.Interpreter.{nameof(CustomFunctionErrorException)}",
-                $"{ns}.Interpreter.UDF.{nameof(DefineFunctionsResult)}",                               
+                $"{ns}.Interpreter.UDF.{nameof(DefineFunctionsResult)}",
+                $"{ns}.{nameof(TypeCoercionProvider)}",                             
 
                 // Services for functions. 
                 $"{ns}.Functions.IRandomService"
@@ -803,7 +804,7 @@ namespace Microsoft.PowerFx.Tests
         {
             var recalcEngine = new RecalcEngine(new PowerFxConfig(null)
             {
-                MaxCallDepth = 80
+                MaxCallDepth = 81
             });
             recalcEngine.DefineFunctions(
                 "A(x: Number): Number = If(Mod(x, 2) = 0, B(x/2), B(x));" +

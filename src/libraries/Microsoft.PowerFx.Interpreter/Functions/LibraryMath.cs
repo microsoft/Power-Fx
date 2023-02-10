@@ -655,12 +655,6 @@ namespace Microsoft.PowerFx.Functions
         public static FormulaValue Abs(IRContext irContext, NumberValue[] args)
         {
             var arg0 = args[0];
-
-            if (arg0 == null)
-            {
-                return new NumberValue(irContext, 0d);
-            }
-
             var x = arg0.Value;
             var val = Math.Abs(x);
             return new NumberValue(irContext, val);
@@ -868,7 +862,8 @@ namespace Microsoft.PowerFx.Functions
                 return GetDiv0Error(irContext);
             }
 
-            return new NumberValue(irContext, 1 / tan);
+            var cot = 1 / tan;
+            return new NumberValue(irContext, cot);
         }
 
         // Given the absence of Math.Acot function, we compute acot(x) as pi/2 - atan(x)

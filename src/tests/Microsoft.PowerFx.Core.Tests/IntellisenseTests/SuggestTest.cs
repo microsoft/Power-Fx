@@ -9,6 +9,7 @@ using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types.Enums;
+using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
@@ -45,7 +46,15 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             var intellisense = Suggest(expression, config, context);
             return intellisense.Suggestions.Select(suggestion => suggestion.DisplayText.Text).ToArray();
         }
-        
+
+        private string[] SuggestStrings(string expression, PowerFxConfig config, ReadOnlySymbolTable symTable)
+        {
+            Assert.NotNull(expression);
+
+            var intellisense = Suggest(expression, config, symTable);
+            return intellisense.Suggestions.Select(suggestion => suggestion.DisplayText.Text).ToArray();
+        }
+
         internal static PowerFxConfig Default => PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder().WithDefaultEnums());
 
         internal static PowerFxConfig Default_DisableRowScopeDisambiguationSyntax => PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder().WithDefaultEnums(), Features.DisableRowScopeDisambiguationSyntax);
@@ -233,6 +242,21 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             Assert.Equal(expectedSuggestions, actualSuggestions);
         }
 
+        [Theory]
+        [InlineData("SortByColumns(|", 2, "The table to sort.", "SortByColumns(source, column, ...)")]
+        [InlineData("SortByColumns(tbl1,|", 2, "A unique column name.", "SortByColumns(source, column, ...)")]
+        [InlineData("SortByColumns(tbl1,col1,|", 1, "Ascending or Descending", "SortByColumns(source, column, order, ...)")]
+        [InlineData("SortByColumns(tbl1,col1,SortOrder.Ascending,|", 2, "A unique column name.", "SortByColumns(source, column, order, column, ...)")]
+        public void TestIntellisenseFunctionParameterDescription(string expression, int expectedOverloadCount, string expectedDescription, string expectedDisplayText)
+        {
+            var context = "![tbl1:*[col1:n,col2:n]]";
+            var result = Suggest(expression, Default, context);
+            Assert.Equal(expectedOverloadCount, result.FunctionOverloads.Count());
+            var currentOverload = result.FunctionOverloads.ToArray()[result.CurrentFunctionOverloadIndex];
+            Assert.Equal(expectedDisplayText, currentOverload.DisplayText.Text);
+            Assert.Equal(expectedDescription, currentOverload.FunctionParameterDescription);
+        }
+
         // Add an extra (empy) symbol table into the config and ensure we get the same results. 
         private void AdjustConfig(PowerFxConfig config)
         {
@@ -345,6 +369,27 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             // With adjusted config 
             AdjustConfig(config);
             actualSuggestions = SuggestStrings(expression, config, lazyInstance);
+            Assert.Equal(expectedSuggestions, actualSuggestions);
+        }
+
+        [Theory]
+        [InlineData("logica|")] // No suggestions for logical names
+        [InlineData("displa|", "display1", "display2")] // display names
+        public void TestSuggestDeferredSymbols(string expression, params string[] expectedSuggestions)
+        {
+            var map = new SingleSourceDisplayNameProvider(new Dictionary<DName, DName>
+            {
+                { new DName("logical1"), new DName("display1") },
+                { new DName("logical2"), new DName("display2") }
+            });
+
+            var symTable = new DeferredSymbolTable(map, (disp, logical) =>
+            {
+                return FormulaType.Number;
+            });
+
+            var config = new PowerFxConfig();
+            var actualSuggestions = SuggestStrings(expression, config, symTable);
             Assert.Equal(expectedSuggestions, actualSuggestions);
         }
 

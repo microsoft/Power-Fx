@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Types;
 using Xunit;
@@ -138,6 +139,21 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
         [Fact]
+        public async void TodayTest()
+        {
+            var utcToday = DateTime.UtcNow;
+            var istToday = TimeZoneInfo.ConvertTime(utcToday, _istTimeZone).Date;
+            utcToday = utcToday.Date;
+            
+            var evaluator = _engine.Check("Today()", options: null, _symbolTable).GetEvaluator();
+            var result = await evaluator.EvalAsync(default, _localSymbol);
+            Assert.Equal(istToday, ((DateValue)result).GetConvertedValue(_istTimeZone));
+
+            var utcResult = await evaluator.EvalAsync(default, _utcSymbol);
+            Assert.Equal(utcToday, ((DateValue)utcResult).GetConvertedValue(TimeZoneInfo.Utc));
+        }
+
+        [Fact]
         public void GetConvertedDateTimeValueTest()
         {
             var result = DateTimeValue.GetConvertedDateTimeValue(_utcNow, _istTimeZone);
@@ -159,6 +175,162 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             result = DateTimeValue.GetConvertedDateTimeValue(localtime, TimeZoneInfo.Utc);
             Assert.Equal(DateTime.SpecifyKind(_istNow, DateTimeKind.Utc), result);
+        }
+
+        [Fact]
+        public async Task DateTimeValueTests()
+        {
+            _engine.Config.AddFunction(new ToUntypedObjectFunction());
+
+            var expectedUTC = new DateTime(2022, 11, 21, 12, 13, 30, DateTimeKind.Utc);
+
+            var expectedLocal = TimeZoneInfo.ConvertTimeFromUtc(expectedUTC, _istTimeZone);
+
+            // UTC string
+            var evaluator = _engine.Check(@"DateTimeValue(""2022-11-21T12:13:30Z"")", options: null, _symbolTable).GetEvaluator();
+            var result = await evaluator.EvalAsync(default, _localSymbol);
+            Assert.Equal(expectedLocal, ((DateTimeValue)result).GetConvertedValue(_istTimeZone));
+
+            var utcResult = await evaluator.EvalAsync(default, _utcSymbol);
+            Assert.Equal(expectedUTC, ((DateTimeValue)utcResult).GetConvertedValue(TimeZoneInfo.Utc));
+
+            // Local string
+            evaluator = _engine.Check(@"DateTimeValue(""2022-11-21T17:43:30.0000000+05:30"")", options: null, _symbolTable).GetEvaluator();
+            result = await evaluator.EvalAsync(default, _localSymbol);
+            Assert.Equal(expectedLocal, ((DateTimeValue)result).GetConvertedValue(_istTimeZone));
+
+            utcResult = await evaluator.EvalAsync(default, _utcSymbol);
+            Assert.Equal(expectedUTC, ((DateTimeValue)utcResult).GetConvertedValue(TimeZoneInfo.Utc));
+
+            // UnSpecified string
+            evaluator = _engine.Check(@"DateTimeValue(""2022-11-21T17:43:30.0000000"")", options: null, _symbolTable).GetEvaluator();
+            result = await evaluator.EvalAsync(default, _localSymbol);
+            Assert.Equal(expectedLocal, ((DateTimeValue)result).GetConvertedValue(_istTimeZone));
+
+            utcResult = await evaluator.EvalAsync(default, _utcSymbol);
+            Assert.Equal(DateTime.SpecifyKind(expectedLocal, DateTimeKind.Utc), ((DateTimeValue)utcResult).GetConvertedValue(TimeZoneInfo.Utc));
+
+            // With UntypedObject
+            // UTC string
+            evaluator = _engine.Check(@"DateTimeValue(ToUntypedObject(""2022-11-21T12:13:30Z""))", options: null, _symbolTable).GetEvaluator();
+            result = await evaluator.EvalAsync(default, _localSymbol);
+            Assert.Equal(expectedLocal, ((DateTimeValue)result).GetConvertedValue(_istTimeZone));
+            
+            utcResult = await evaluator.EvalAsync(default, _utcSymbol);
+            Assert.Equal(expectedUTC, ((DateTimeValue)utcResult).GetConvertedValue(TimeZoneInfo.Utc));
+
+            // UnSpecified string
+            evaluator = _engine.Check(@"DateTimeValue(ToUntypedObject(""2022-11-21T17:43:30.0000000""))", options: null, _symbolTable).GetEvaluator();
+            result = await evaluator.EvalAsync(default, _localSymbol);
+            Assert.Equal(expectedLocal, ((DateTimeValue)result).GetConvertedValue(_istTimeZone));
+
+            utcResult = await evaluator.EvalAsync(default, _utcSymbol);
+            Assert.Equal(DateTime.SpecifyKind(expectedLocal, DateTimeKind.Utc), ((DateTimeValue)utcResult).GetConvertedValue(TimeZoneInfo.Utc));
+        }
+
+        [Fact]
+        public async Task DateValueTests()
+        {
+            _engine.Config.AddFunction(new ToUntypedObjectFunction());
+
+            var expectedUTC = new DateTime(2022, 11, 21, 22, 13, 30, DateTimeKind.Utc);
+
+            var expectedLocal = TimeZoneInfo.ConvertTimeFromUtc(expectedUTC, _istTimeZone).Date;
+
+            expectedUTC = expectedUTC.Date;
+
+            // UTC string
+            var evaluator = _engine.Check(@"DateValue(""2022-11-21T22:13:30Z"")", options: null, _symbolTable).GetEvaluator();
+            var result = await evaluator.EvalAsync(default, _localSymbol);
+            Assert.Equal(expectedLocal, ((DateValue)result).GetConvertedValue(_istTimeZone));
+
+            var utcResult = await evaluator.EvalAsync(default, _utcSymbol);
+            Assert.Equal(expectedUTC, ((DateValue)utcResult).GetConvertedValue(TimeZoneInfo.Utc));
+
+            // Local string
+            evaluator = _engine.Check(@"DateValue(""2022-11-22T03:43:30.0000000+05:30"")", options: null, _symbolTable).GetEvaluator();
+            result = await evaluator.EvalAsync(default, _localSymbol);
+            Assert.Equal(expectedLocal, ((DateValue)result).GetConvertedValue(_istTimeZone));
+
+            utcResult = await evaluator.EvalAsync(default, _utcSymbol);
+            Assert.Equal(expectedUTC, ((DateValue)utcResult).GetConvertedValue(TimeZoneInfo.Utc));
+
+            // UnSpecified string
+            evaluator = _engine.Check(@"DateValue(""2022-11-22T03:43:30.0000000"")", options: null, _symbolTable).GetEvaluator();
+            result = await evaluator.EvalAsync(default, _localSymbol);
+            Assert.Equal(expectedLocal, ((DateValue)result).GetConvertedValue(_istTimeZone));
+
+            utcResult = await evaluator.EvalAsync(default, _utcSymbol);
+            Assert.Equal(DateTime.SpecifyKind(expectedLocal, DateTimeKind.Utc), ((DateValue)utcResult).GetConvertedValue(TimeZoneInfo.Utc));
+
+            // With UntypedObject
+            // UTC string
+            evaluator = _engine.Check(@"DateValue(ToUntypedObject(""2022-11-21T22:13:30Z""))", options: null, _symbolTable).GetEvaluator();
+            result = await evaluator.EvalAsync(default, _localSymbol);
+            Assert.Equal(expectedLocal, ((DateValue)result).GetConvertedValue(_istTimeZone));
+
+            utcResult = await evaluator.EvalAsync(default, _utcSymbol);
+            Assert.Equal(expectedUTC, ((DateValue)utcResult).GetConvertedValue(TimeZoneInfo.Utc));
+
+            // UnSpecified string
+            evaluator = _engine.Check(@"DateValue(ToUntypedObject(""2022-11-22T03:43:30.0000000""))", options: null, _symbolTable).GetEvaluator();
+            result = await evaluator.EvalAsync(default, _localSymbol);
+            Assert.Equal(expectedLocal, ((DateValue)result).GetConvertedValue(_istTimeZone));
+
+            utcResult = await evaluator.EvalAsync(default, _utcSymbol);
+            Assert.Equal(DateTime.SpecifyKind(expectedLocal, DateTimeKind.Utc), ((DateValue)utcResult).GetConvertedValue(TimeZoneInfo.Utc));
+        }
+
+        private class ToUntypedObjectFunction : ReflectionFunction
+        {
+            public ToUntypedObjectFunction()
+                : base("ToUntypedObject", FormulaType.UntypedObject, FormulaType.String)
+            {
+            }
+
+            public FormulaValue Execute(StringValue val)
+            {
+                return FormulaValue.New(new SimpleObject(val));
+            }
+        }
+
+        private class SimpleObject : IUntypedObject
+        {
+            private readonly FormulaValue _value;
+
+            public SimpleObject(FormulaValue value)
+            {
+                _value = value;
+            }
+
+            public IUntypedObject this[int index] => throw new NotImplementedException();
+
+            public FormulaType Type => _value.Type;
+
+            public int GetArrayLength()
+            {
+                throw new NotImplementedException();
+            }
+
+            public bool GetBoolean()
+            {
+                return ((BooleanValue)_value).Value;
+            }
+
+            public double GetDouble()
+            {
+                return ((NumberValue)_value).Value;
+            }
+
+            public string GetString()
+            {
+                return ((StringValue)_value).Value;
+            }
+
+            public bool TryGetProperty(string value, out IUntypedObject result)
+            {
+                throw new NotImplementedException();
+            }
         }
     }
 }

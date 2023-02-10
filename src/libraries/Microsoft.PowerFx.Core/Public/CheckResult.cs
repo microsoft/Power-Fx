@@ -155,6 +155,14 @@ namespace Microsoft.PowerFx
             return this.SetBindingInfo(symbolTable);
         }
 
+        private FormulaType _expectedReturnType;
+
+        public CheckResult SetExpectedReturnValue(FormulaType type)
+        {
+            _expectedReturnType = type;
+            return this;
+        }
+
         // No additional binding is required
         public CheckResult SetBindingInfo()
         {
@@ -404,6 +412,26 @@ namespace Microsoft.PowerFx
                     if (binding.ResultType.Kind != DKind.Enum)
                     {
                         this.ReturnType = FormulaType.Build(binding.ResultType);
+                    }
+                }
+
+                if (this.ReturnType != null && this._expectedReturnType != null)
+                {
+                    var sameType = this._expectedReturnType == this.ReturnType;
+                    if (!sameType)
+                    {
+                        _errors.Add(new ExpressionError
+                        {
+                            Kind = ErrorKind.Validation,
+                            Severity = ErrorSeverity.Critical,
+                            Span = new Span(0, this._expression.Length),
+                            MessageKey = TexlStrings.ErrTypeError_WrongType.Key,
+                            _messageArgs = new object[]
+                            {
+                                this._expectedReturnType._type.GetKindString(),
+                                this.ReturnType._type.GetKindString()
+                            }
+                        });
                     }
                 }
             }

@@ -1869,6 +1869,10 @@
     <value>The type of this argument '{0}' does not match the expected type '{1}'. Found type '{2}'.</value>
     <comment>Error Message.</comment>
   </data>
+  <data name="ErrTypeError_WrongType" xml:space="preserve">
+    <value>The type of this expression does not match the expected type '{0}'. Found type '{1}'.</value>
+    <comment>Error Message.</comment>
+  </data>
   <data name="ErrTypeErrorRecordIncompatibleWithSource" xml:space="preserve">
     <value>The type of the record is incompatible with the source.</value>
     <comment>Error Message.</comment>

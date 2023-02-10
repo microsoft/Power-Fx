@@ -313,7 +313,7 @@ namespace Microsoft.PowerFx.Functions
 
             // Streaming 
             var sources = (TableValue)args[0];
-            var filter = (LambdaFormulaValue)args[1];
+            var filters = args.Skip(1).Cast<LambdaFormulaValue>().ToArray();
 
             var count = 0;
 
@@ -324,14 +324,28 @@ namespace Microsoft.PowerFx.Functions
                     var childContext = row.IsValue ?
                         context.SymbolContext.WithScopeValues(row.Value) :
                         context.SymbolContext.WithScopeValues(row.Error);
-                    var result = await filter.EvalInRowScopeAsync(context.NewScope(childContext));
-
-                    if (result is ErrorValue error)
+                    var include = true;
+                    for (var i = 0; i < filters.Length; i++)
                     {
-                        return error;
-                    }
+                        var result = await filters[i].EvalInRowScopeAsync(context.NewScope(childContext));
 
-                    var include = ((BooleanValue)result).Value;
+                        if (result is ErrorValue error)
+                        {
+                            return error;
+                        }
+                        else if (result is BlankValue)
+                        {
+                            include = false;
+                            break;
+                        }
+
+                        include = ((BooleanValue)result).Value;
+
+                        if (!include)
+                        {
+                            break;
+                        }
+                    }
 
                     if (include)
                     {
