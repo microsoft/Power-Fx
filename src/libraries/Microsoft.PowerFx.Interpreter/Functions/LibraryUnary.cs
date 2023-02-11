@@ -605,7 +605,7 @@ namespace Microsoft.PowerFx.Functions
                 return new ColorValue(IRContext.NotInSource(FormulaType.Color), ToColor(evalValue));
             }
 
-            // IR Gen should not attempt to coerce a non-boolean-backed option set to a number using this operation.
+            // IR Gen should not attempt to coerce a non-color-backed option set to a color using this operation.
             return CommonErrors.UnreachableCodeError(irContext);
         }
 

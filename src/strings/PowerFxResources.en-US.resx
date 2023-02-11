@@ -4526,7 +4526,7 @@
     <value>Ensure you have text for your identifier. This error occurs when the identifier is all blanks or spaces.</value>
     <comment>1 How to fix the error. </comment>
   </data>
-  <data name="ErrorResource_ErrUnOrderedTypeForComparison_Type_ShortMessage" xml:space="preserve">
+  <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
     <value>Unable to compare values of type {0}.</value>
     <comment>Error message when the user attempts to compare (using Less Than, Greater Than, Less Than or Equal, Greater Than or Equal) values of non-numeric types. {0} will be canonical type representations like "Number" or "Boolean".</comment>
   </data>

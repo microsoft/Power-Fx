@@ -457,14 +457,6 @@ namespace Microsoft.PowerFx.Core.Functions
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            for (var i = 0; i < argTypes.Length; i++)
-            {
-                if (!IsIdentifierParam(i))
-                {
-                    Contracts.AssertValid(argTypes[i]);
-                }
-            }
-
             var fValid = true;
             var count = Math.Min(args.Length, ParamTypes.Length);
 
@@ -473,6 +465,13 @@ namespace Microsoft.PowerFx.Core.Functions
             // Type check the args
             for (var i = 0; i < count; i++)
             {
+                // Identifiers don't have a type
+                if (IsIdentifierParam(i))
+                {
+                    continue;
+                }
+
+                Contracts.AssertValid(argTypes[i]);
                 var expectedParamType = ParamTypes[i];
 
                 // If the strong-enum type flag is disabled, treat an enum option set type as the enum supertype instead
