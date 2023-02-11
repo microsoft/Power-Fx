@@ -56,7 +56,7 @@ namespace Microsoft.PowerFx.Tests
 
             public IEnumerable<DName> OptionNames => new[] { new DName("No"), new DName("Yes") };
 
-            public bool IsBooleanValued => true;
+            public DKind BackingKind => DKind.Boolean;
 
             public bool IsConvertingDisplayNameMapping => true;
 
@@ -70,7 +70,7 @@ namespace Microsoft.PowerFx.Tests
             {
                 if (fieldName.Value == "No" || fieldName.Value == "Yes")
                 {
-                    optionSetValue = new OptionSetValue(fieldName.Value, this.OptionSetValueType);
+                    optionSetValue = new OptionSetValue(fieldName.Value, this.OptionSetValueType, fieldName.Value == "Yes");
                     return true;
                 }
 
