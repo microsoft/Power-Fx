@@ -4,8 +4,10 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
+using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Interpreter.Exceptions;
 using Microsoft.PowerFx.Types;
@@ -269,6 +271,17 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: OptionSetValueToString)
+            },
+            {
+                UnaryOpKind.BooleanOptionSetToBoolean,
+                StandardErrorHandling<OptionSetValue>(
+                    functionName: null, // internal function, no user-facing name
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<OptionSetValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: BooleanOptionSetToBoolean)
             }
         };
         #endregion
@@ -533,6 +546,25 @@ namespace Microsoft.PowerFx.Functions
             var optionSet = args[0];
             var displayName = optionSet.DisplayName;
             return new StringValue(irContext, displayName);
+        }
+
+        public static FormulaValue BooleanOptionSetToBoolean(IRContext irContext, OptionSetValue[] args)
+        {
+            var arg0 = args[0];
+
+            if (arg0.Option == "1")
+            {
+                return FormulaValue.New(true);
+            }
+            else if (arg0.Option == "0")
+            {
+                return FormulaValue.New(false);
+            }
+            else
+            {
+                var errorMessage = ErrorUtils.FormatMessage(StringResources.Get(TexlStrings.BooleanOptionSetOptionNotSupported), null, arg0.Option);
+                return CommonErrors.CustomError(IRContext.NotInSource(FormulaType.Boolean), errorMessage);
+            }
         }
         #endregion
     }
