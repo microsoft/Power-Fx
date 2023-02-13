@@ -5030,4 +5030,8 @@
     <value>This function is ambiguous, it contains lambda expressions and column identifiers for the same argument.</value>
     <comment>Error Message.</comment>
   </data>
+  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
+    <value>The BooleanOptionSet option {0} is not supported.</value>
+    <comment>Error Message. When BooleanOptionSet option has an invalid value.</comment>
+  </data>
 </root>

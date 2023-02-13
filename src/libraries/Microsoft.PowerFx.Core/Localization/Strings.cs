@@ -635,5 +635,7 @@ namespace Microsoft.PowerFx.Core.Localization
         // that a single string arg can be supplied representing the entire text of the error.
         public static ErrorResourceKey ErrGeneralError = new ErrorResourceKey("ErrGeneralError");
         public static ErrorResourceKey ErrRemoveAllArg = new ErrorResourceKey("ErrRemoveAllArg");
+
+        public static ErrorResourceKey BooleanOptionSetOptionNotSupported = new ErrorResourceKey("BooleanOptionSetOptionNotSupported");
     }
 }

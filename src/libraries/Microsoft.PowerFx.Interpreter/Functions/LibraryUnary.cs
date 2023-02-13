@@ -4,8 +4,10 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
+using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Interpreter.Exceptions;
 using Microsoft.PowerFx.Types;
@@ -549,7 +551,20 @@ namespace Microsoft.PowerFx.Functions
         public static FormulaValue BooleanOptionSetToBoolean(IRContext irContext, OptionSetValue[] args)
         {
             var arg0 = args[0];
-            return arg0.Option == "1" ? FormulaValue.New(true) : FormulaValue.New(false);
+
+            if (arg0.Option == "1")
+            {
+                return FormulaValue.New(true);
+            }
+            else if (arg0.Option == "0")
+            {
+                return FormulaValue.New(false);
+            }
+            else
+            {
+                var errorMessage = ErrorUtils.FormatMessage(StringResources.Get(TexlStrings.BooleanOptionSetOptionNotSupported), null, arg0.Option);
+                return CommonErrors.CustomError(IRContext.NotInSource(FormulaType.Boolean), errorMessage);
+            }
         }
         #endregion
     }
