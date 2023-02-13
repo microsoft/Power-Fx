@@ -261,7 +261,8 @@ namespace Microsoft.PowerFx
                 foreach (var kv in globals.GlobalSymbols)
                 {
                     var type = FormulaType.Build(kv.Value.Type);
-                    yield return new NamedFormulaType(kv.Key, type);
+                    var displayName = kv.Value.DisplayName != default ? kv.Value.DisplayName.Value : null;
+                    yield return new NamedFormulaType(kv.Key, type, displayName);
                 }
             }
         }
