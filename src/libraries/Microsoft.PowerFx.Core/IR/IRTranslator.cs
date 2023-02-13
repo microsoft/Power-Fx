@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR.Nodes;
@@ -15,7 +14,6 @@ using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
-using static Microsoft.PowerFx.Syntax.PrettyPrintVisitor;
 using BinaryOpNode = Microsoft.PowerFx.Core.IR.Nodes.BinaryOpNode;
 using CallNode = Microsoft.PowerFx.Core.IR.Nodes.CallNode;
 using ErrorNode = Microsoft.PowerFx.Core.IR.Nodes.ErrorNode;
@@ -364,6 +362,9 @@ namespace Microsoft.PowerFx.Core.IR
                         case ArgPreprocessor.ReplaceBlankWithZeroAndTruncate:
                             convertedNode = ReplaceBlankWithZeroAndTruncatePreProcessor(args[i]);
                             break;
+                        case ArgPreprocessor.ReplaceBlankWithEmptyString:
+                            convertedNode = BlankToEmptyString(args[i]);
+                            break;
                         default:
                             convertedNode = args[i];
                             break;
@@ -385,7 +386,7 @@ namespace Microsoft.PowerFx.Core.IR
                     return arg;
                 }
 
-                // need a new context since when arg is Blank IRContext.Returntypee is not a Number but a Blank.
+                // need a new context since when arg is Blank IRContext.Returntype is not a Number but a Blank.
                 var convertedIRContext = new IRContext(arg.IRContext.SourceContext, FormulaType.Number);
                 var zeroNumLitNode = new NumberLiteralNode(convertedIRContext, 0);
                 var convertedNode = new CallNode(convertedIRContext, BuiltinFunctionsCore.Coalesce, arg, zeroNumLitNode);
@@ -400,6 +401,16 @@ namespace Microsoft.PowerFx.Core.IR
                 var blankToZeroNode = ReplaceBlankWithZero(arg);
                 var truncateNode = new CallNode(blankToZeroNode.IRContext, BuiltinFunctionsCore.Trunc, blankToZeroNode);
                 return truncateNode;
+            }
+
+            /// <summary>
+            /// Wraps node arg => UnaryOp(BlankToEmptyString, arg).
+            /// </summary>
+            private static IntermediateNode BlankToEmptyString(IntermediateNode arg)
+            {
+                // need a new context since when arg is Blank IRContext.Returntype is not a String but a Blank.
+                var convertedIRContext = new IRContext(arg.IRContext.SourceContext, FormulaType.String);
+                return new UnaryOpNode(convertedIRContext, UnaryOpKind.BlankToEmptyString, arg);
             }
 
             /// <summary>
