@@ -62,28 +62,29 @@ namespace Microsoft.PowerFx.Functions
 
         public static FormulaValue RGBA(IRContext irContext, NumberValue[] args)
         {
+            // Truncate (strip decimals)
+            var red = (int)args[0].Value;
+            var green = (int)args[1].Value;
+            var blue = (int)args[2].Value;
+            var alpha = args[3].Value;
+
             // Ensure rgb numbers are in range (0-255)
-            if (args[0].Value < 0.0d || args[0].Value > 255.0d
-                || args[1].Value < 0.0d || args[1].Value > 255.0d
-                || args[2].Value < 0.0d || args[2].Value > 255.0d)
+            if (red < 0.0d || red > 255.0d
+                || green < 0.0d || green > 255.0d
+                || blue < 0.0d || blue > 255.0d)
             {
                 return CommonErrors.ArgumentOutOfRange(irContext);
             }
-
-            // Truncate (strip decimals)
-            var r = (int)args[0].Value;
-            var g = (int)args[1].Value;
-            var b = (int)args[2].Value;
 
             // Ensure alpha is between 0 and 1
-            if (args[3].Value < 0.0d || args[3].Value > 1.0d)
+            if (alpha < 0.0d || alpha > 1.0d)
             {
                 return CommonErrors.ArgumentOutOfRange(irContext);
             }
 
-            var a = System.Convert.ToInt32(args[3].Value * 255.0d);
+            var alpha255 = System.Convert.ToInt32(alpha * 255.0d);
 
-            return new ColorValue(irContext, Color.FromArgb(a, r, g, b));
+            return new ColorValue(irContext, Color.FromArgb(alpha255, red, green, blue));
         }
 
         public static FormulaValue ColorFade(IRContext irContext, FormulaValue[] args)
