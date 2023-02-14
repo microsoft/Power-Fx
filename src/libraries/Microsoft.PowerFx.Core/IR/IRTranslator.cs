@@ -410,6 +410,8 @@ namespace Microsoft.PowerFx.Core.IR
             {
                 // need a new context since when arg is Blank IRContext.Returntype is not a String but a Blank.
                 var convertedIRContext = new IRContext(arg.IRContext.SourceContext, FormulaType.String);
+
+                // We are not using coalesce, because coalesce doesn't considers empty string as blank.
                 return new UnaryOpNode(convertedIRContext, UnaryOpKind.BlankToEmptyString, arg);
             }
 
