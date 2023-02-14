@@ -1433,7 +1433,7 @@ namespace Microsoft.PowerFx.Core.Functions
             var paramType = ParamTypes[index] ?? DType.Unknown;
             if (paramType == DType.Number)
             {
-                return ArgPreprocessor.ReplaceWithZero;
+                return ArgPreprocessor.ReplaceBlankWithZero;
             }
 
             return ArgPreprocessor.None;

@@ -13,6 +13,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public override ArgPreprocessor GetArgPreprocessor(int index)
         {
+            if (index >= 0 && index <= 2)
+            {
+                return ArgPreprocessor.ReplaceBlankWithZeroAndTruncate;
+            }
+
             return base.GetGenericArgPreprocessor(index);
         }
 
