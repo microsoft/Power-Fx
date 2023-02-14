@@ -245,6 +245,9 @@ Error({Kind:ErrorKind.InvalidArgument})
 >> DateDiff(DateValue(ParseJSON("""2011-01-15""")), DateValue(ParseJSON("""2011-01-30""")))
 15
 
+>> Value(Index(ParseJSON("[1,2,3]"), If(1<0,1)))
+Error({Kind:ErrorKind.InvalidArgument})
+
 >> DateValue(ParseJSON("""2011-1-15"""))
 Error({Kind:ErrorKind.InvalidArgument})
 
@@ -383,3 +386,105 @@ Time(11,12,0,0)
 
 >> TimeValue(ParseJSON("""11:12:00.1234567"""))
 Time(11,12,0,123)
+
+>> IsBlank(ParseJSON("{""a"":null,""b"":""""}").a)
+true
+
+>> IsBlank(ParseJSON("{""a"":null,""b"":""""}").b)
+true
+
+>> IsBlank(ParseJSON("{""a"":null,""b"":""""}").c)
+true
+
+>> Text(ParseJSON("{""a"":null,""b"":""""}").a) = Blank()
+true
+
+>> Text(ParseJSON("{""a"":null,""b"":""""}").b) = Blank()
+false
+
+>> Text(ParseJSON("{""a"":null,""b"":""""}").c) = Blank()
+true
+
+>> Value(First(ParseJSON("[1, 2, 3, 4]")))
+1
+
+>> Value(First(ParseJSON("[1, 2, 3, 4]"))) = First([1, 2, 3, 4]).Value
+true
+
+>> Value(Last(ParseJSON("[1, 2, 3, 4]")))
+4
+
+>> Value(Last(ParseJSON("[1, 2, 3, 4]"))) = Last([1, 2, 3, 4]).Value
+true
+
+>> Value(Last(FirstN(ParseJSON("[1, 2, 3, 4]"), 2)))
+2
+
+>> Value(Last(FirstN(ParseJSON("[1, 2, 3, 4]"), 2))) = Last(FirstN([1, 2, 3, 4], 2)).Value
+true
+
+>> Value(First(LastN(ParseJSON("[1, 2, 3, 4]"), 2)))
+3
+
+>> Value(First(LastN(ParseJSON("[1, 2, 3, 4]"), 2))) = First(LastN([1, 2, 3, 4], 2)).Value
+true
+
+>> Value(First(FirstN(ParseJSON("[1, 2, 3, 4]"), 2)))
+1
+
+>> Value(First(FirstN(ParseJSON("[1, 2, 3, 4]"), 2))) = First(FirstN([1, 2, 3, 4], 2)).Value
+true
+
+>> Value(Last(LastN(ParseJSON("[1, 2, 3, 4]"), 2)))
+4
+
+>> Value(Last(LastN(ParseJSON("[1, 2, 3, 4]"), 2))) = Last(LastN([1, 2, 3, 4], 2)).Value
+true
+
+>> CountRows(FirstN(ParseJSON("[1, 2, 3, 4]"), 2))
+2
+
+>> CountRows(FirstN(ParseJSON("[1, 2, 3, 4]"), 2)) = CountRows(FirstN([1, 2, 3, 4], 2))
+true
+
+>> CountRows(LastN(ParseJSON("[1, 2, 3, 4]"), 2))
+2
+
+>> CountRows(LastN(ParseJSON("[1, 2, 3, 4]"), 2)) = CountRows(LastN([1, 2, 3, 4], 2))
+true
+
+>> CountRows(FirstN(ParseJSON("[1, 2, 3, 4]"), 5))
+4
+
+>> CountRows(FirstN(ParseJSON("[1, 2, 3, 4]"), 5)) = CountRows(FirstN([1, 2, 3, 4], 5))
+true
+
+>> CountRows(LastN(ParseJSON("[1, 2, 3, 4]"), 5))
+4
+
+>> CountRows(LastN(ParseJSON("[1, 2, 3, 4]"), 5)) = CountRows(LastN([1, 2, 3, 4], 5))
+true
+
+>> First(ParseJSON("[]"))
+Blank()
+
+>> Last(ParseJSON("[]"))
+Blank()
+
+>> CountRows(FirstN(ParseJSON("[]"), 1))
+0
+
+>> CountRows(LastN(ParseJSON("[]"), 1))
+0
+
+>> CountRows(FirstN(ParseJSON("[1, 2, 3, 4]"), "3"))
+3
+
+>> CountRows(LastN(ParseJSON("[1, 2, 3, 4]"), "3"))
+3
+
+>> Value(Index(ParseJSON("[1,2,3,4]"), "2")) // Coercion from string
+2
+
+>> Text(Index(ParseJSON("[""one"",""two"",""three""]"),true)) // Coercion from boolean
+"one"

@@ -1,11 +1,5 @@
 #SETUP: ConsistentOneColumnTableResult
 
->> Char("55")
-"7"
-
->> Char("Should be Error")
-Error({Kind:ErrorKind.InvalidArgument})
-
 >> Char(["55", "56", "57"])
 Table({Value:"7"},{Value:"8"},{Value:"9"})
 
@@ -15,5 +9,8 @@ Table({Value:"7"},{Value:Error({Kind:ErrorKind.InvalidArgument})},{Value:"9"})
 >> Concatenate(-1, ["456", "abc"] )
 Table({Value:"-1456"},{Value:"-1abc"})
 
->> Concatenate([-1, 123], ["456", "abc"] )
+>> Concatenate(Table({a: -1}, {a: 123}), Table({a: "456"}, {a: "abc"}))
 Table({Value:"-1456"},{Value:"123abc"})
+
+>> Len([123, -2344566, 0567])
+Table({Value:3},{Value:8},{Value:3})

@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
@@ -12,6 +13,10 @@ namespace Microsoft.PowerFx.Core.Tests
 {
     public class CheckResultTests
     {
+        // A non-default culture that  uses comma as a decimal separator
+        private static readonly CultureInfo _frCulture = new CultureInfo("fr-FR");
+        private static readonly ParserOptions _frCultureOpts = new ParserOptions { Culture = _frCulture };
+
         [Fact]
         public void Ctors()
         {
@@ -168,10 +173,7 @@ namespace Microsoft.PowerFx.Core.Tests
         public void ParserOptions()
         {
             var check = new CheckResult(new Engine());
-            var opts = new ParserOptions
-            {
-                Culture = new System.Globalization.CultureInfo("fr-FR")
-            };
+            var opts = _frCultureOpts;
             check.SetText("1,234", opts); // , is decimal separator for fr-FR.
 
             var parse = check.ApplyParse();
@@ -240,6 +242,23 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Fact]
+        public void BindingCheckReturnType()
+        {
+            var check = new CheckResult(new Engine())
+                .SetText("123")
+                .SetBindingInfo()
+                .SetExpectedReturnValue(FormulaType.String);
+
+            var errors = check.ApplyErrors();
+
+            Assert.False(check.IsSuccess);
+
+            Assert.Single(errors);
+            var error = errors.First();
+            Assert.Equal("Error 0-3: The type of this expression does not match the expected type 'Text'. Found type 'Number'.", error.ToString());
+        }
+
+        [Fact]
         public void BindingSetRecordType()
         {
             var check = new CheckResult(new Engine());
@@ -249,6 +268,53 @@ namespace Microsoft.PowerFx.Core.Tests
             check.ApplyBinding();
             Assert.Equal(FormulaType.Number, check.ReturnType);
             Assert.Equal(FormulaType.Number, check.GetNodeType(check.Parse.Root));
+        }
+
+        [Fact]
+        public void BindingSymbols()
+        {
+            // Test Symbol property. 
+            var config = new PowerFxConfig();
+            config.SymbolTable.AddVariable("Global1", FormulaType.Number);
+
+            var localSymbols = new SymbolTable { DebugName = "Locals" };
+            localSymbols.AddVariable("Local1", FormulaType.Number);
+
+            var check = new CheckResult(new Engine(config));
+
+            check.SetText("Global1 + Local1 +"); // has error.
+            check.SetBindingInfo(localSymbols);
+
+            Assert.Throws<InvalidOperationException>(() => check.Symbols);
+
+            check.ApplyBinding();
+            Assert.False(check.IsSuccess); // Still have symbols even on binding errors. 
+            
+            // Validate symbol table.
+            var allSymbols = check.Symbols;
+            Assert.NotNull(allSymbols);
+
+            var ok = allSymbols.TryLookupSlot("Global1", out var slotGlobal);
+            Assert.True(ok);
+            Assert.Same(config.SymbolTable, slotGlobal.Owner);
+
+            ok = allSymbols.TryLookupSlot("Local1", out var slotLocal);
+            Assert.True(ok);
+            Assert.Same(localSymbols, slotLocal.Owner);            
+        }
+
+        // Still have Symbols even if we thing it's empty 
+        [Fact]
+        public void BindingSymbolsEmpty()
+        {
+            var check = new CheckResult(new Engine());
+            check.SetText("1+2");
+            check.SetBindingInfo();
+
+            check.ApplyBinding();
+
+            var allSymbols = check.Symbols;
+            Assert.NotNull(allSymbols);
         }
 
         [Fact] 
@@ -279,6 +345,48 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.False(check.IsSuccess);
 
             Assert.Throws<InvalidOperationException>(() => check.ApplyIR());
+        }
+
+        // CheckResult properly wired up to invariant translator. 
+        // More tests at DisplayNameTests
+        [Fact]
+        public void TestApplyGetInvariant()
+        {
+            var check = new CheckResult(new Engine());
+
+            Assert.Throws<InvalidOperationException>(() => check.ApplyGetInvariant());
+
+            var r1 = RecordType.Empty()
+              .Add(new NamedFormulaType("new_field", FormulaType.Number, "Field"));
+
+            // display name: Field --> new_field
+            // lexer locale: 2,3 --> 2.3
+            check.SetText("Field + 2,3", _frCultureOpts);
+            Assert.Throws<InvalidOperationException>(() => check.ApplyGetInvariant());
+
+            check.SetBindingInfo(r1);
+            var invariant = check.ApplyGetInvariant();
+
+            Assert.Equal("new_field + 2.3", invariant);
+        }
+
+        // CheckResult properly wired up to Apply logging. 
+        [Theory]
+        [InlineData("123+abc", "#$number$# + #$firstname$#", true)] // display names
+        [InlineData("123+", "#$number$# + #$error$#", false)] // error 
+        [InlineData("123,456", "#$number$#", true)] // locales 
+        [InlineData("Power(2,3)", "Power(#$number$#)", true)] // functions aren't Pii
+        public void TestApplyGetLogging(string expr, string execptedLog, bool success)
+        {
+            var check = new CheckResult(new Engine());
+
+            Assert.Throws<InvalidOperationException>(() => check.ApplyGetLogging());
+
+            // Only requires text, not binding
+            check.SetText(expr, _frCultureOpts);
+            var log = check.ApplyGetLogging();
+            Assert.Equal(success, check.IsSuccess);
+            Assert.Equal(execptedLog, log);
         }
     }
 }

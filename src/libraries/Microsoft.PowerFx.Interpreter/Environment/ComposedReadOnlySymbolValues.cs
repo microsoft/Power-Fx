@@ -74,7 +74,7 @@ namespace Microsoft.PowerFx
             {
                 // There were existing SymbolValues that don't match. 
                 var kv = existingMap.First();
-                var msg = $"SymbolValues '{kv.Value.DebugName}' matches to symbol table '{kv.Key.DebugName}', which is not part of symbol table '{symbolTable.DebugName}'.";
+                var msg = $"SymbolValues '{kv.Value.DebugName}' matches to symbol table '{kv.Key.DebugName}', which is not part of symbol table '{symbolTable?.DebugName}'.";
                 throw new InvalidOperationException(msg);
             }
 
@@ -160,6 +160,16 @@ namespace Microsoft.PowerFx
                 var symValues = new SymbolValues(symbolTable2)
                 {
                     DebugName = symbolTable2.DebugName
+                };
+
+                map[symbolTable] = symValues;
+                return;
+            }
+            else if (symbolTable is DeferredSymbolTable symbolTable3)
+            {
+                var symValues = new SymbolValues(symbolTable3)
+                {
+                    DebugName = symbolTable3.DebugName
                 };
 
                 map[symbolTable] = symValues;

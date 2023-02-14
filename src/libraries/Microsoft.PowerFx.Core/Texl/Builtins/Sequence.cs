@@ -12,6 +12,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Sequence(records:n, start:n, step:n): *[Value:n]
     internal sealed class SequenceFunction : BuiltinFunction
     {
+        public override ArgPreprocessor GetArgPreprocessor(int index)
+        {
+            return base.GetGenericArgPreprocessor(index);
+        }
+
         public override bool IsSelfContained => true;
 
         public override bool SupportsParamCoercion => true;

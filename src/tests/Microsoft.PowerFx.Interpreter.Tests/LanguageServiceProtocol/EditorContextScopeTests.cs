@@ -137,6 +137,42 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
             Assert.Equal(0, engine.PostCheckCounter);            
         }
 
+        [Fact]
+        public void NullCtor()
+        {
+            Assert.Throws<ArgumentNullException>(() => new EditorContextScope(null));
+        }
+
+        [Fact]
+        public void Ctor()
+        {
+            var check = new CheckResult(new Engine());
+            var editor = new EditorContextScope(
+                (expr) => check.SetText(expr).SetBindingInfo());
+
+            var check2 = editor.Check("1+2");
+            Assert.Same(check, check2);
+
+            Assert.True(check2.IsSuccess);
+        }
+
+        // Fail if the getter doesn't fully create the CheckResult
+        [Fact]
+        public void MissingInit()
+        {
+            var check = new CheckResult(new Engine());
+
+            var editor = new EditorContextScope(
+                (expr) => check.SetText(expr));
+
+            Assert.Throws<InvalidOperationException>(() => editor.Check("1+2"));
+
+            editor = new EditorContextScope(
+                (expr) => check);
+
+            Assert.Throws<InvalidOperationException>(() => editor.Check("3+4"));
+        }
+
         private class MyEngine : Engine
         {
             public MyEngine()

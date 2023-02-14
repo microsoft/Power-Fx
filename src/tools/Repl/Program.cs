@@ -361,21 +361,39 @@ namespace PowerFxHostSamples
                     resultString = "<table>";
                 }
                 else
-                {
-                    var columnWidth = new int[table.Rows.First().Value.Fields.Count()];
+                {                    
+                    var columnCount = 0;
+                    foreach (var row in table.Rows)
+                    {
+                        if (row.Value != null)
+                        {
+                            columnCount = Math.Max(columnCount, row.Value.Fields.Count());
+                            break;
+                        }
+                    }
+
+                    if (columnCount == 0)
+                    {
+                        return minimal ? string.Empty : "Blank()";
+                    }
+
+                    var columnWidth = new int[columnCount];
 
                     foreach (var row in table.Rows)
                     {
-                        var column = 0;
-                        foreach (var field in row.Value.Fields)
+                        if (row.Value != null)
                         {
-                            columnWidth[column] = Math.Max(columnWidth[column], PrintResult(field.Value, true).Length);
-                            column++;
+                            var column = 0;
+                            foreach (var field in row.Value.Fields)
+                            {
+                                columnWidth[column] = Math.Max(columnWidth[column], PrintResult(field.Value, true).Length);
+                                column++;
+                            }
                         }
                     }
 
                     // special treatment for single column table named Value
-                    if (columnWidth.Length == 1 && table.Rows.First().Value.Fields.First().Name == "Value")
+                    if (columnWidth.Length == 1 && table.Rows.First().Value != null && table.Rows.First().Value.Fields.First().Name == "Value")
                     {
                         var separator = string.Empty;
                         resultString = "[";
@@ -393,11 +411,21 @@ namespace PowerFxHostSamples
                     {
                         resultString = "\n ";
                         var column = 0;
-                        foreach (var field in table.Rows.First().Value.Fields)
+
+                        foreach (var row in table.Rows)
                         {
-                            columnWidth[column] = Math.Max(columnWidth[column], field.Name.Length);
-                            resultString += " " + field.Name.PadLeft(columnWidth[column]) + "  ";
-                            column++;
+                            if (row.Value != null)
+                            {
+                                column = 0;
+                                foreach (var field in row.Value.Fields)
+                                {
+                                    columnWidth[column] = Math.Max(columnWidth[column], field.Name.Length);
+                                    resultString += " " + field.Name.PadLeft(columnWidth[column]) + "  ";
+                                    column++;
+                                }
+
+                                break;
+                            }
                         }
 
                         resultString += "\n ";
@@ -411,10 +439,17 @@ namespace PowerFxHostSamples
                         {
                             column = 0;
                             resultString += "\n ";
-                            foreach (var field in row.Value.Fields)
+                            if (row.Value != null)
                             {
-                                resultString += " " + PrintResult(field.Value, true).PadLeft(columnWidth[column]) + "  ";
-                                column++;
+                                foreach (var field in row.Value.Fields)
+                                {
+                                    resultString += " " + PrintResult(field.Value, true).PadLeft(columnWidth[column]) + "  ";
+                                    column++;
+                                }
+                            }
+                            else
+                            {
+                                resultString += row.IsError ? row.Error?.Errors?[0].Message : "Blank()";
                             }
                         }
                     }

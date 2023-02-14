@@ -72,11 +72,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("Collect.txt")]
         [InlineData("Clear.txt")]
         [InlineData("ClearCollect.txt")]
+        [InlineData("ForAllMutate.txt")]
         public void RunMutationTests(string file)
         {
-            // var path = @"D:\dev\pa2\Power-Fx\src\tests\Microsoft.PowerFx.Interpreter.Tests\MutationScripts\Simple1.txt";
-
             var path = Path.Combine(System.Environment.CurrentDirectory, "MutationScripts", file);
+
+            //path = @"D:\dev\pa2\Power-Fx\src\tests\Microsoft.PowerFx.Interpreter.Tests\MutationScripts\ForAllMutate.txt";
 
             var config = new PowerFxConfig();
             config.SymbolTable.EnableMutationFunctions();

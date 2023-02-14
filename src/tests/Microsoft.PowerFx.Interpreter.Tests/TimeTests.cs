@@ -58,10 +58,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.NotNull(result);
             if (result is DateTimeValue dateResult)
             {
-                Assert.Equal(dateResult.Value.Date, testTime.ToUniversalTime().Date);
-                Assert.Equal(dateResult.Value.TimeOfDay.Hours, testTime.ToUniversalTime().TimeOfDay.Hours);
-                Assert.Equal(dateResult.Value.TimeOfDay.Minutes, testTime.ToUniversalTime().TimeOfDay.Minutes);
-                Assert.Equal(dateResult.Value.TimeOfDay.Seconds, testTime.ToUniversalTime().TimeOfDay.Seconds);
+                var dateResultValue = dateResult.GetConvertedValue(null);
+                Assert.Equal(dateResultValue.Date, testTime.ToUniversalTime().Date);
+                Assert.Equal(dateResultValue.TimeOfDay.Hours, testTime.ToUniversalTime().TimeOfDay.Hours);
+                Assert.Equal(dateResultValue.TimeOfDay.Minutes, testTime.ToUniversalTime().TimeOfDay.Minutes);
+                Assert.Equal(dateResultValue.TimeOfDay.Seconds, testTime.ToUniversalTime().TimeOfDay.Seconds);
             }
             else
             {
@@ -77,10 +78,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.NotNull(result);
             if (result is DateTimeValue dateResult)
             {
-                Assert.Equal(dateResult.Value.Date, testTime.ToLocalTime().Date);
-                Assert.Equal(dateResult.Value.TimeOfDay.Hours, testTime.ToLocalTime().TimeOfDay.Hours);
-                Assert.Equal(dateResult.Value.TimeOfDay.Minutes, testTime.ToLocalTime().TimeOfDay.Minutes);
-                Assert.Equal(dateResult.Value.TimeOfDay.Seconds, testTime.ToLocalTime().TimeOfDay.Seconds);
+                var dateResultValue = dateResult.GetConvertedValue(null);
+                Assert.Equal(dateResultValue.Date, testTime.ToLocalTime().Date);
+                Assert.Equal(dateResultValue.TimeOfDay.Hours, testTime.ToLocalTime().TimeOfDay.Hours);
+                Assert.Equal(dateResultValue.TimeOfDay.Minutes, testTime.ToLocalTime().TimeOfDay.Minutes);
+                Assert.Equal(dateResultValue.TimeOfDay.Seconds, testTime.ToLocalTime().TimeOfDay.Seconds);
             }
             else
             {

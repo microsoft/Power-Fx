@@ -309,12 +309,3 @@ Table({Value:5},{Value:10},{Value:15},{Value:20},{Value:25})
 
 >> Sequence(5, 5, ParseJSON("5"))
 Table({Value:5},{Value:10},{Value:15},{Value:20},{Value:25})
-
->> Split("Hello World", "Hello World")
-Table({Result:""},{Result:""})
-
->> Split(ParseJSON("""Hello World"""), "Hello World")
-Table({Result:""},{Result:""})
-
->> Split("Hello World", ParseJSON("""Hello World"""))
-Table({Result:""},{Result:""})
