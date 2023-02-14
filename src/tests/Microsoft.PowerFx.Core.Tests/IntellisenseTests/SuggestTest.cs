@@ -5,11 +5,13 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Linq.Expressions;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
@@ -409,6 +411,26 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
                                     
             check.ApplyErrors();
             Assert.Empty(check.Errors);
+        }
+
+        [Theory]
+        [InlineData("ThisRec|", "ThisRecord")]
+        [InlineData("ThisRecord.|", "F1", "F2")]
+        public void SuggestThisRecord(string expression, params string[] expected)
+        {
+            var recordType = RecordType.Empty()
+                .Add("F1", FormulaType.Number)
+                .Add("F2", FormulaType.String);
+
+            var rowScopeSymbols = ReadOnlySymbolTable.NewFromRecord(recordType, allowThisRecord: true, allowMutable: true, debugName: $"RowScope");
+            var config = new PowerFxConfig();
+            var actualSuggestions = SuggestStrings(expression, config, rowScopeSymbols);
+            Assert.Equal(expected, actualSuggestions);
+
+            // No suggestion when allowThisRecord is false.
+            rowScopeSymbols = ReadOnlySymbolTable.NewFromRecord(recordType, allowThisRecord: false, allowMutable: true, debugName: $"RowScope");
+            actualSuggestions = SuggestStrings(expression, config, rowScopeSymbols);
+            Assert.Empty(actualSuggestions);
         }
 
         private class LazyRecursiveRecordType : RecordType
