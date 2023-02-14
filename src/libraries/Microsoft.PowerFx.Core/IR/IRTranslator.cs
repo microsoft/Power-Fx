@@ -358,11 +358,11 @@ namespace Microsoft.PowerFx.Core.IR
 
                     switch (argPreprocessor)
                     {
-                        case ArgPreprocessor.ReplaceWithZero:
+                        case ArgPreprocessor.ReplaceBlankWithZero:
                             convertedNode = ReplaceBlankWithZero(args[i]);
                             break;
-                        case ArgPreprocessor.Truncate:
-                            convertedNode = TruncatePreProcessor(args[i]);
+                        case ArgPreprocessor.ReplaceBlankWithZeroAndTruncate:
+                            convertedNode = ReplaceBlankWithZeroAndTruncatePreProcessor(args[i]);
                             break;
                         default:
                             convertedNode = args[i];
@@ -395,7 +395,7 @@ namespace Microsoft.PowerFx.Core.IR
             /// <summary>
             /// Wraps node arg => Truc(Coalesce(arg , 0)).
             /// </summary>
-            private static IntermediateNode TruncatePreProcessor(IntermediateNode arg)
+            private static IntermediateNode ReplaceBlankWithZeroAndTruncatePreProcessor(IntermediateNode arg)
             {
                 var blankToZeroNode = ReplaceBlankWithZero(arg);
                 var truncateNode = new CallNode(blankToZeroNode.IRContext, BuiltinFunctionsCore.Trunc, blankToZeroNode);

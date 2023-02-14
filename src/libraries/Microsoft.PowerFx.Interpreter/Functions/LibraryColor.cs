@@ -62,16 +62,15 @@ namespace Microsoft.PowerFx.Functions
 
         public static FormulaValue RGBA(IRContext irContext, NumberValue[] args)
         {
-            // Truncate (strip decimals)
             var red = (int)args[0].Value;
             var green = (int)args[1].Value;
             var blue = (int)args[2].Value;
             var alpha = args[3].Value;
 
             // Ensure rgb numbers are in range (0-255)
-            if (red < 0.0d || red > 255.0d
-                || green < 0.0d || green > 255.0d
-                || blue < 0.0d || blue > 255.0d)
+            if (red < 0 || red > 255
+                || green < 0 || green > 255
+                || blue < 0 || blue > 255)
             {
                 return CommonErrors.ArgumentOutOfRange(irContext);
             }
