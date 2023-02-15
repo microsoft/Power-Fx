@@ -162,10 +162,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         // Also other function, that can wrap If statement inside can face the same issue.
         internal static bool CanCheckIfReturn(TexlFunction func)
         {
-            return func is not IfFunction || 
-                func is not WithFunction ||
-                func is not ForAllFunction ||
-                func is not FirstLastFunction ||
+            return func is not IfFunction && 
+                func is not WithFunction &&
+                func is not ForAllFunction &&
+                func is not FirstLastFunction &&
                 func is not FirstLastNFunction;
         }
 
