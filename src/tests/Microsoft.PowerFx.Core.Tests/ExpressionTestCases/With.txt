@@ -14,4 +14,4 @@ Blank()
 Error(Table({Kind:ErrorKind.Div0},{Kind:ErrorKind.Div0}))
 
 >> With({y:1}, If(false, {x:1}, {z:2}))
-{z:2}
+{}

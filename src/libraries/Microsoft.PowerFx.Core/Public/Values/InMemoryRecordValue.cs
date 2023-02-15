@@ -13,8 +13,8 @@ namespace Microsoft.PowerFx.Types
     // Represent record backed by known list of values. 
     internal class InMemoryRecordValue : RecordValue
     {
-        private readonly IReadOnlyDictionary<string, FormulaValue> _fields;
-        private readonly IDictionary<string, FormulaValue> _mutableFields;
+        protected readonly IReadOnlyDictionary<string, FormulaValue> _fields;
+        protected readonly IDictionary<string, FormulaValue> _mutableFields;
 
         public InMemoryRecordValue(IRContext irContext, IEnumerable<NamedValue> fields)
           : this(irContext, ToDict(fields))
@@ -60,12 +60,9 @@ namespace Microsoft.PowerFx.Types
                 return await base.UpdateFieldsAsync(changeRecord, cancellationToken);
             }
 
-            var fields = new List<NamedValue>();
+            await UpdateExistingFields(changeRecord, cancellationToken);
 
-            await foreach (var field in changeRecord.GetFieldsAsync(cancellationToken))
-            {
-                _mutableFields[field.Name] = field.Value;
-            }
+            var fields = new List<NamedValue>();
 
             foreach (var kvp in _fields)
             {
@@ -73,6 +70,14 @@ namespace Microsoft.PowerFx.Types
             }
 
             return DValue<RecordValue>.Of(NewRecordFromFields(fields));
+        }
+
+        protected async Task UpdateExistingFields(RecordValue changeRecord, CancellationToken cancellationToken)
+        {
+            await foreach (var field in changeRecord.GetFieldsAsync(cancellationToken))
+            {
+                _mutableFields[field.Name] = field.Value;
+            }
         }
     }
 }
