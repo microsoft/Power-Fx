@@ -11,7 +11,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class AbsFunction : MathOneArgFunction
     {
         public AbsFunction()
-            : base("Abs", TexlStrings.AboutAbs, FunctionCategories.MathAndStat)
+            : base("Abs", TexlStrings.AboutAbs, FunctionCategories.MathAndStat, DecimalOverload.Number)
         {
         }
     }
@@ -21,7 +21,27 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class AbsTableFunction : MathOneArgTableFunction
     {
         public AbsTableFunction()
-            : base("Abs", TexlStrings.AboutAbsT, FunctionCategories.Table)
+            : base("Abs", TexlStrings.AboutAbsT, FunctionCategories.Table, DecimalOverload.Number)
+        {
+        }
+    }
+
+    // Abs(number:w)
+    // Equivalent DAX function: Abs
+    internal sealed class AbsWFunction : MathOneArgFunction
+    {
+        public AbsWFunction()
+            : base("Abs", TexlStrings.AboutAbs, FunctionCategories.MathAndStat, DecimalOverload.Decimal)
+        {
+        }
+    }
+
+    // Abs(E:*[n])
+    // Table overload that computes the absolute values of each item in the input table.
+    internal sealed class AbsWTableFunction : MathOneArgTableFunction
+    {
+        public AbsWTableFunction()
+            : base("Abs", TexlStrings.AboutAbsT, FunctionCategories.Table, DecimalOverload.Decimal)
         {
         }
     }

@@ -91,6 +91,21 @@ namespace Microsoft.PowerFx
             UpdateVariable(name, new NumberValue(IRContext.NotInSource(FormulaType.Number), value));
         }
 
+        public void UpdateVariable(string name, decimal value)
+        {
+            UpdateVariable(name, new DecimalValue(IRContext.NotInSource(FormulaType.Decimal), value));
+        }
+
+        public void UpdateVariable(string name, int value)
+        {
+            UpdateVariable(name, new NumberValue(IRContext.NotInSource(FormulaType.Number), value));
+        }
+
+        public void UpdateVariable(string name, long value)
+        {
+            UpdateVariable(name, new DecimalValue(IRContext.NotInSource(FormulaType.Decimal), value));
+        }
+
         /// <summary>
         /// Create or update a named variable to a value. 
         /// </summary>

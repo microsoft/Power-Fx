@@ -691,7 +691,9 @@ namespace Microsoft.PowerFx.Core.IR
                 switch (coercionKind)
                 {
                     case CoercionKind.TextToNumber:
-                        return new CallNode(IRContext.NotInSource(FormulaType.Build(toType)), BuiltinFunctionsCore.Value, child);
+                        return new CallNode(IRContext.NotInSource(FormulaType.Build(toType)), BuiltinFunctionsCore.Float, child);
+                    case CoercionKind.TextToDecimal:
+                        return new CallNode(IRContext.NotInSource(FormulaType.Build(toType)), BuiltinFunctionsCore.Decimal, child);
 
                     case CoercionKind.DecimalToNumber:
                         return new CallNode(IRContext.NotInSource(FormulaType.Build(toType)), BuiltinFunctionsCore.Float, child);

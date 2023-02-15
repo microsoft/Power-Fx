@@ -6740,4 +6740,40 @@
   <data name="AboutFloat_text" xml:space="preserve">
     <value>The text value to convert to a numeric value.</value>
   </data>
+  <data name="AboutBooleanW" xml:space="preserve">
+    <value>Converts a 'decimal' to a boolean value.</value>
+    <comment>Description of 'Boolean' function.</comment>
+  </data>
+  <data name="AboutBooleanWT" xml:space="preserve">
+    <value>Converts a column of decimal values to a column of boolean values.</value>
+    <comment>Description of 'Boolean' function.</comment>
+  </data>
+  <data name="AboutBooleanWT_input" xml:space="preserve">
+    <value>A column of decimal values to process.</value>
+  </data>
+  <data name="AboutBooleanW_decimal" xml:space="preserve">
+    <value>The decimal value to convert to a boolean value.</value>
+  </data>
+  <data name="AboutFirstNW" xml:space="preserve">
+    <value>Returns the first 'count' rows of 'source'.</value>
+    <comment>Description of 'FirstN' function, 'source' should be translated as 'FirstLastNWAarg1'; 'count' should be translated as 'FirstLastNWArg2'</comment>
+  </data>
+  <data name="AboutFirstNW_count" xml:space="preserve">
+    <value>The number of rows to return.</value>
+  </data>
+  <data name="AboutFirstNW_source" xml:space="preserve">
+    <value>A table from which rows will be returned.</value>
+  </data>
+  <data name="BooleanWArg1" xml:space="preserve">
+    <value>decimal</value>
+    <comment>function_parameter - First argument to the Boolean function - the number that will be converted to a boolean.</comment>
+  </data>
+  <data name="BooleanWTArg1" xml:space="preserve">
+    <value>input</value>
+    <comment>function_parameter - First argument to the Boolean function - a column of number values.</comment>
+  </data>
+  <data name="ErrInvalidSchemaNeedDecCol_Col" xml:space="preserve">
+    <value>Invalid schema, expected a column of decimal values for '{0}'.</value>
+    <comment>Error Message.</comment>
+  </data>
 </root>

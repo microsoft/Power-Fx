@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Errors;
@@ -40,8 +41,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             returnType = argTypes[1];
             nodeToCoercedTypeMap = null;
 
-            // Coerce everything except date/times to numeric.
-            if (argTypes[1] != DType.Date && argTypes[1] != DType.DateTime && argTypes[1] != DType.Time && CheckType(args[1], argTypes[1], DType.Number, DefaultErrorContainer, out var matchedWithCoercion))
+            // All decimals returns a decimal, not a number and no coercions required
+            if (argTypes[1] == DType.Decimal)
+            {
+                returnType = DType.Decimal;
+            } // Coerce everything except date/times to numeric.
+            else if (argTypes[1] != DType.Date && argTypes[1] != DType.DateTime && argTypes[1] != DType.Time && CheckType(args[1], argTypes[1], DType.Number, DefaultErrorContainer, out var matchedWithCoercion))
             {
                 returnType = DType.Number;
                 if (matchedWithCoercion)

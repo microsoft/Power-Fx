@@ -40,7 +40,7 @@ namespace Microsoft.PowerFx.Interpreter
         [InlineData("Date(2022, 11, 10) + X", "D")]
         [InlineData("Time(0, 0, 0) + X", "T")]
 
-        [InlineData("X * 1", "n")]
+        [InlineData("X * 1", "w")]
         [InlineData("And(X, 1=1)", "b")]
         [InlineData("X&\"test\"", "s")]
         [InlineData("X = 1", "b")]
@@ -55,28 +55,28 @@ namespace Microsoft.PowerFx.Interpreter
         [InlineData("IsBlank(X)", "b")]
         [InlineData("IsError(X)", "b")]
         [InlineData("Text(X)", "s")]
-        [InlineData("Value(X)", "n")]
+        [InlineData("Value(X)", "w")] 
         [InlineData("Boolean(X)", "b")]
-        [InlineData("Index([1,2,3].Value, X)", "![Value:n]")]
+        [InlineData("Index([1,2,3].Value, X)", "![Value:w]")]
         [InlineData("Sum(X, 1) < 5", "b")]
         [InlineData("Sum(X, 1, R) < 5", "b")] // All error are discarded for function calls, hence we don't get error for RecordType here.
         [InlineData("Sum(X, T) < 5", "b")] // Since we discard all errors for function calls, Function calls are biased to non tabular overload.
 
-        [InlineData("Sum(X, X)", "n")]
+        [InlineData("Sum(X, X)", "w")]
         [InlineData("X.Field1.Field1", "X")]
         [InlineData("If(true, X)", "X")]
-        [InlineData("If(true, X, 1)", "n")]
+        [InlineData("If(true, X, 1)", "w")]
         [InlineData("If(true, X, X)", "X")]
         [InlineData("ForAll([1,2,3], X)", "X")]
         [InlineData("ForAll(ParseJSON(\"[1]\"), X)", "X")]
         [InlineData("Abs(Table(X))", "n")]
-        [InlineData("Power(2, Table(X))", "n")]
-        [InlineData("Switch(X, 0, 0, 1, 1)", "n")]
-        [InlineData("Switch(0, 0, X, 1, 1)", "n")]
+        [InlineData("Power(2, Table(X))", "w")]
+        [InlineData("Switch(X, 0, 0, 1, 1)", "w")]
+        [InlineData("Switch(0, 0, X, 1, 1)", "w")]
         [InlineData("Switch(0, 0, X, 1, X)", "X")]
         [InlineData("Switch(0, 0, X, 1, \"test\")", "s")]
-        [InlineData("Set(N, X); N", "n")]
-        [InlineData("Set(N, X); Set(N, 5); N", "n")]
+        [InlineData("Set(N, X); N", "n")] // TODO Decimal: Why is this n?
+        [InlineData("Set(N, X); Set(N, 5); N", "w")]
         [InlineData("Set(XM, X); XM", "X")]
 
         // Ensures expression binds without any errors - but issues a warning for the deferred(unknown) type.

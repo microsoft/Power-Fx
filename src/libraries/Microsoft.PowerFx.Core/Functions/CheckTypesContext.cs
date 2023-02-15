@@ -22,7 +22,9 @@ namespace Microsoft.PowerFx.Core.Functions
 
         public bool AllowsSideEffects { get; }
 
-        public CheckTypesContext(Features features, INameResolver nameResolver, string entityName, string propertyName, bool isEnhancedDelegationEnabled, bool allowsSideEffects)
+        public bool NumberIsFloat { get; }
+
+        public CheckTypesContext(Features features, INameResolver nameResolver, string entityName, string propertyName, bool isEnhancedDelegationEnabled, bool allowsSideEffects, bool numberIsFloat)
         {
             Features = features;
             NameResolver = nameResolver;
@@ -30,6 +32,7 @@ namespace Microsoft.PowerFx.Core.Functions
             PropertyName = propertyName;
             IsEnhancedDelegationEnabled = isEnhancedDelegationEnabled;
             AllowsSideEffects = allowsSideEffects;
+            NumberIsFloat = numberIsFloat;
         }
     }
 }

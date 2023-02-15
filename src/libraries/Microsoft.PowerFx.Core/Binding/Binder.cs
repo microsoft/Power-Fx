@@ -336,7 +336,8 @@ namespace Microsoft.PowerFx.Core.Binding
                 entityName: EntityName,
                 propertyName: Property?.InvariantName ?? string.Empty,
                 isEnhancedDelegationEnabled: Document?.Properties?.EnabledFeatures?.IsEnhancedDelegationEnabled ?? false,
-                allowsSideEffects: bindingConfig.AllowsSideEffects);
+                allowsSideEffects: bindingConfig.AllowsSideEffects,
+                numberIsFloat: bindingConfig.NumberIsFloat);
         }
 
         // Binds a Texl parse tree.

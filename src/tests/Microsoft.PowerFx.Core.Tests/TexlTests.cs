@@ -39,12 +39,12 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("Time(2000,1,1) + 5", "T")]
         [InlineData("5 + DateTimeValue(\"1 Jan 2015\")", "d")]
         [InlineData("5 + Time(2000,1,1)", "T")]
-        [InlineData("DateTimeValue(\"1 Jan 2015\") - DateTimeValue(\"1 Jan 2015\")", "n")]
-        [InlineData("DateTimeValue(\"1 Jan 2015\") - Date(2000,1,1)", "n")]
+        [InlineData("DateTimeValue(\"1 Jan 2015\") - DateTimeValue(\"1 Jan 2015\")", "w")]
+        [InlineData("DateTimeValue(\"1 Jan 2015\") - Date(2000,1,1)", "w")]
         [InlineData("DateTimeValue(\"1 Jan 2015\") - 5", "d")]
-        [InlineData("Date(2000,1,1) - DateTimeValue(\"1 Jan 2015\")", "n")]
-        [InlineData("Date(2000,1,1) - Date(1999,1,1)", "n")]
-        [InlineData("Time(2,1,1) - Time(2,1,1)", "n")]
+        [InlineData("Date(2000,1,1) - DateTimeValue(\"1 Jan 2015\")", "w")]
+        [InlineData("Date(2000,1,1) - Date(1999,1,1)", "w")]
+        [InlineData("Time(2,1,1) - Time(2,1,1)", "w")]
         [InlineData("5 - DateTimeValue(\"1 Jan 2015\")", "d")]
         [InlineData("5 - Time(2000,1,1)", "T")]
         [InlineData("-Date(2001,1,1)", "D")]
@@ -155,13 +155,24 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
+        [InlineData("Average(Float(\"3\"))")]
+        [InlineData("Average(\"3\", Float(4))")]
+        [InlineData("Average(true, Float(4))")]
+        [InlineData("Average(true, Float(\"5\"), 6)")]
+        public void TexlFunctionTypeSemanticsAverageWithCoercion(string script)
+        {
+            TestSimpleBindingSuccess(script, DType.Number);
+        }
+
+        [Theory]
         [InlineData("Average(\"3\")")]
         [InlineData("Average(\"3\", 4)")]
         [InlineData("Average(true, 4)")]
         [InlineData("Average(true, \"5\", 6)")]
-        public void TexlFunctionTypeSemanticsAverageWithCoercion(string script)
+        [InlineData("Average(true, \"5\", Blank())")]
+        public void TexlFunctionTypeSemanticsAverageWithCoercionDecimal(string script)
         {
-            TestSimpleBindingSuccess(script, DType.Number);
+            TestSimpleBindingSuccess(script, DType.Decimal);
         }
 
         [Fact]
@@ -402,7 +413,11 @@ namespace Microsoft.PowerFx.Core.Tests
                 TestUtils.DT("*[A:n]"),
                 symbol);
             TestSimpleBindingSuccess(
-                "FirstN(Table, 1234)",
+                "FirstN(Table, Float(1234))",
+                TestUtils.DT("*[A:n]"),
+                symbol);
+            TestSimpleBindingSuccess(
+                "FirstN(Table, Decimal(1234))",
                 TestUtils.DT("*[A:n]"),
                 symbol);
         }
@@ -417,7 +432,17 @@ namespace Microsoft.PowerFx.Core.Tests
 
             TestSimpleBindingSuccess(
                 "If(A < 10, 1, 2)",
+                DType.Decimal,
+                symbol);
+
+            TestSimpleBindingSuccess(
+                "If(A < 10, Float(1), 2)",
                 DType.Number,
+                symbol);
+
+            TestSimpleBindingSuccess(
+                "If(A < 10, 1, Float(2))",
+                DType.Decimal,
                 symbol);
 
             TestSimpleBindingSuccess(
@@ -427,17 +452,17 @@ namespace Microsoft.PowerFx.Core.Tests
 
             TestSimpleBindingSuccess(
                 "If(A < 10, 1, A < 20, 2, A < 30, 3)",
-                DType.Number,
+                DType.Decimal,
                 symbol);
 
             TestSimpleBindingSuccess(
                 "If(A < 10, 1, A < 20, 2, A < 30, 3, 4)",
-                DType.Number,
+                DType.Decimal,
                 symbol);
 
             TestSimpleBindingSuccess(
                 "If(A < 10, [[1,2,3],[3,2,1]], [[1,3,2],[3,2,3],[1,1,3]])",
-                TestUtils.DT("*[Value:*[Value:n]]"),
+                TestUtils.DT("*[Value:*[Value:w]]"),
                 symbol);
         }
 
@@ -449,6 +474,11 @@ namespace Microsoft.PowerFx.Core.Tests
             
             TestSimpleBindingSuccess(
                 "If(A < 10, 1, \"2\")",
+                DType.Decimal,
+                symbol);
+
+            TestSimpleBindingSuccess(
+                "If(A < 10, Float(1), \"2\")",
                 DType.Number,
                 symbol);
 
@@ -466,12 +496,12 @@ namespace Microsoft.PowerFx.Core.Tests
 
             TestBindingErrors(
                 "If(A < 10, 1, [1,2,3])",
-                DType.Number,
+                DType.Decimal,
                 symbol);
 
             TestBindingErrors(
                 "If(A < 10, 1, {Value: 2})",
-                DType.Number,
+                DType.Decimal,
                 symbol);
         }
 
@@ -742,13 +772,12 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("Max(1, 2, 3, 4)")]
+        [InlineData("Max(Float(1), Float(2), Float(3), Float(4))")]
         [InlineData("Max(1, A, 2, A)")]
         [InlineData("Max(Table, A)")]
-        [InlineData("Min(1, 2, 3, 4)")]
+        [InlineData("Min(Float(1), Float(2), Float(3), Float(4))")]
         [InlineData("Min(1, A, 2, A)")]
         [InlineData("Min(Table, A)")]
-
         public void TexlFunctionTypeSemanticsMinMax(string script)
         {
             var symbol = new SymbolTable();
@@ -758,6 +787,25 @@ namespace Microsoft.PowerFx.Core.Tests
             TestSimpleBindingSuccess(
                 script,
                 DType.Number,
+                symbol);
+        }
+
+        [Theory]
+        [InlineData("Max(Decimal(1), Decimal(2), Decimal(3), Decimal(4))")]
+        [InlineData("Max(1, A, 2, A)")]
+        [InlineData("Max(Table, A)")]
+        [InlineData("Min(Decimal(1), Decimal(2), Decimal(3), Decimal(4))")]
+        [InlineData("Min(1, A, 2, A)")]
+        [InlineData("Min(Table, A)")]
+        public void TexlFunctionTypeSemanticsMinMaxDecimal(string script)
+        {
+            var symbol = new SymbolTable();
+            symbol.AddVariable("A", FormulaType.Decimal);
+            symbol.AddVariable("Table", new TableType(TestUtils.DT("*[A:w, B:s, C:b, D:*[X:w]]")));
+
+            TestSimpleBindingSuccess(
+                script,
+                DType.Decimal,
                 symbol);
         }
 
@@ -1157,6 +1205,9 @@ namespace Microsoft.PowerFx.Core.Tests
 
         [Theory]
         [InlineData("Sqrt(1234.567)", "n")]
+        [InlineData("Sqrt(TW)", "*[A:n]")]
+        [InlineData("Sqrt(ShowColumns(TW2,\"Value\"))", "*[Value:n]")]
+        [InlineData("Sqrt(Float(1234.567))", "n")]
         [InlineData("Sqrt(T)", "*[A:n]")]
         [InlineData("Sqrt(ShowColumns(T2,\"Value\"))", "*[Value:n]")]
         public void TexlFunctionTypeSemanticsSqrt(string script, string expectedType)
@@ -1164,6 +1215,8 @@ namespace Microsoft.PowerFx.Core.Tests
             var symbol = new SymbolTable();
             symbol.AddVariable("T", new TableType(TestUtils.DT("*[A:n]")));
             symbol.AddVariable("T2", new TableType(TestUtils.DT("*[Name:s, Price:n, Value:n]")));
+            symbol.AddVariable("TW", new TableType(TestUtils.DT("*[A:w]")));
+            symbol.AddVariable("TW2", new TableType(TestUtils.DT("*[Name:s, Price:n, Value:w]")));
 
             TestSimpleBindingSuccess(
                 script,
@@ -1213,7 +1266,7 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("Sum(1, 2, 3, 4)")]
+        [InlineData("Sum(Float(1), Float(2), Float(3), Float(4))")]
         [InlineData("Sum(1, A, 2, A)")]
         [InlineData("Sum(Table, A)")]
         [InlineData("Sum(Table2, D.X)")]
@@ -1231,14 +1284,43 @@ namespace Microsoft.PowerFx.Core.Tests
                 symbol);
         }
 
+        // TODO Decimal: [InlineData("Sum(Table, A + CountA(D.X))")]
+        [Theory]
+        [InlineData("Sum(1, 2, 3, 4)")]
+        [InlineData("Sum(1, A, 2, A)")]
+        [InlineData("Sum(Table, A)")]
+        [InlineData("Sum(Table2, D.X)")]
+        public void TexlFunctionTypeSemanticsSumDecimal(string script)
+        {
+            var symbol = new SymbolTable();
+            symbol.AddVariable("A", FormulaType.Decimal);
+            symbol.AddVariable("Table", new TableType(TestUtils.DT("*[A:w, B:s, C:b, D:*[X:w]]")));
+            symbol.AddVariable("Table2", new TableType(TestUtils.DT("*[A:w, B:s, C:b, D:![X:w]]")));
+
+            TestSimpleBindingSuccess(
+                script,
+                DType.Decimal,
+                symbol);
+        }
+
+        [Theory]
+        [InlineData("Sum(Float(\"3\"))")]
+        [InlineData("Sum(\"3\", Float(4))")]
+        [InlineData("Sum(true, Float(4))")]
+        [InlineData("Sum(Float(true), \"5\", 6)")]
+        public void TexlFunctionTypeSemanticsSumWithCoercion(string script)
+        {
+            TestSimpleBindingSuccess(script, DType.Number);
+        }
+
         [Theory]
         [InlineData("Sum(\"3\")")]
         [InlineData("Sum(\"3\", 4)")]
         [InlineData("Sum(true, 4)")]
         [InlineData("Sum(true, \"5\", 6)")]
-        public void TexlFunctionTypeSemanticsSumWithCoercion(string script)
+        public void TexlFunctionTypeSemanticsSumDecimalWithCoercion(string script)
         {
-            TestSimpleBindingSuccess(script, DType.Number);
+            TestSimpleBindingSuccess(script, DType.Decimal);
         }
 
         [Fact]
@@ -1256,7 +1338,7 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("StdevP(1, 2, 3, 4)")]
+        [InlineData("StdevP(Float(1), 2, 3, 4)")]
         [InlineData("StdevP(1, A, 2, A)")]
         [InlineData("StdevP(Table, A)")]
         [InlineData("StdevP(Table2, D.X)")]
@@ -1274,11 +1356,42 @@ namespace Microsoft.PowerFx.Core.Tests
                 symbol);
         }
 
+        // TODO Decimal: type of CountA/Count/...
+
+        [Theory]
+        [InlineData("StdevP(Decimal(1), 2, 3, 4)")]
+        [InlineData("StdevP(1, A, 2, A)")]
+        [InlineData("StdevP(Table, A)")]
+        [InlineData("StdevP(Table2, D.X)")]
+        [InlineData("StdevP(Table, A + Decimal(CountA(ShowColumns(D,\"X\"))))")]
+        public void TexlFunctionTypeSemanticsStdevPDecimal(string script)
+        {
+            var symbol = new SymbolTable();
+            symbol.AddVariable("A", FormulaType.Decimal);
+            symbol.AddVariable("Table", new TableType(TestUtils.DT("*[A:w, B:s, C:b, D:*[X:w]]")));
+            symbol.AddVariable("Table2", new TableType(TestUtils.DT("*[A:w, B:s, C:b, D:![X:w]]")));
+
+            TestSimpleBindingSuccess(
+                script,
+                DType.Decimal,
+                symbol);
+        }
+
         [Theory]
         [InlineData("StdevP(\"3\")")]
         [InlineData("StdevP(\"3\", 4)")]
         [InlineData("StdevP(true, 4)")]
         [InlineData("StdevP(true, \"5\", 6)")]
+        public void TexlFunctionTypeSemanticsStdevPDecimalWithCoercion(string script)
+        {
+            TestSimpleBindingSuccess(script, DType.Number);
+        }
+
+        [Theory]
+        [InlineData("StdevP(Float(\"3\"))")]
+        [InlineData("StdevP(\"3\", Float(4))")]
+        [InlineData("StdevP(true, Float(4))")]
+        [InlineData("StdevP(true, \"5\", Float(6))")]
         public void TexlFunctionTypeSemanticsStdevPWithCoercion(string script)
         {
             TestSimpleBindingSuccess(script, DType.Number);
@@ -1303,17 +1416,17 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("VarP(1, A, 2, A)")]
         [InlineData("VarP(Table, A)")]
         [InlineData("VarP(Table2, D.X)")]
-        [InlineData("VarP(Table, A + CountA(ShowColumns(D,\"X\")))")]
+        [InlineData("VarP(Table, A + Decimal(CountA(ShowColumns(D,\"X\"))))")]
         public void TexlFunctionTypeSemanticsVarP(string script)
         {
             var symbol = new SymbolTable();
-            symbol.AddVariable("A", FormulaType.Number);
-            symbol.AddVariable("Table", new TableType(TestUtils.DT("*[A:n, B:s, C:b, D:*[X:n]]")));
-            symbol.AddVariable("Table2", new TableType(TestUtils.DT("*[A:n, B:s, C:b, D:![X:n]]")));
+            symbol.AddVariable("A", FormulaType.Decimal);
+            symbol.AddVariable("Table", new TableType(TestUtils.DT("*[A:w, B:s, C:b, D:*[X:w]]")));
+            symbol.AddVariable("Table2", new TableType(TestUtils.DT("*[A:w, B:s, C:b, D:![X:w]]")));
 
             TestSimpleBindingSuccess(
                 script,
-                DType.Number,
+                DType.Decimal,
                 symbol);
         }
 
@@ -1518,11 +1631,11 @@ namespace Microsoft.PowerFx.Core.Tests
         {
             TestSimpleBindingSuccess(
                 "Value(\"123.456\")",
-                DType.Number);
+                DType.Decimal);
 
             TestSimpleBindingSuccess(
                 "Value(123.456)",
-                DType.Number);
+                DType.Decimal);
         }
 
         [Theory]
@@ -1588,40 +1701,40 @@ namespace Microsoft.PowerFx.Core.Tests
         [Fact]
         public void TexlBindingLambdaAs()
         {
-            TestSimpleBindingSuccess("Filter([1,2,3] As Input, Input.Value > 2)", TestUtils.DT("*[Value:n]"));
-            TestSimpleBindingSuccess("Filter([1,2,3], ThisRecord.Value > 2)", TestUtils.DT("*[Value:n]"));
-            TestSimpleBindingSuccess("Filter([1,2,3] As ThisRecord, ThisRecord.Value > 2)", TestUtils.DT("*[Value:n]"));
-            TestSimpleBindingSuccess("Filter([[1,2,3],[2,3,4],[4,5,6]] As Outer, CountRows(Filter(Outer.Value As Inner, Inner.Value > 4)) > 1)", TestUtils.DT("*[Value:*[Value:n]]"));
-            TestSimpleBindingSuccess("Filter(Filter([1,2,3] As Left, Left.Value > 1) As Right, Right.Value > 2)", TestUtils.DT("*[Value:n]"));
-            TestSimpleBindingSuccess("ForAll(Filter([1,2,3] As Input, Input.Value > 2) As Outer, {Inner: Outer.Value})", TestUtils.DT("*[Inner:n]"));
-            TestSimpleBindingSuccess("ForAll(Filter([1,2,3] As Input, Input.Value > 2), {Inner: ThisRecord.Value})", TestUtils.DT("*[Inner:n]"));
+            TestSimpleBindingSuccess("Filter([1,2,3] As Input, Input.Value > 2)", TestUtils.DT("*[Value:w]"));
+            TestSimpleBindingSuccess("Filter([1,2,3], ThisRecord.Value > 2)", TestUtils.DT("*[Value:w]"));
+            TestSimpleBindingSuccess("Filter([1,2,3] As ThisRecord, ThisRecord.Value > 2)", TestUtils.DT("*[Value:w]"));
+            TestSimpleBindingSuccess("Filter([[1,2,3],[2,3,4],[4,5,6]] As Outer, CountRows(Filter(Outer.Value As Inner, Inner.Value > 4)) > 1)", TestUtils.DT("*[Value:*[Value:w]]"));
+            TestSimpleBindingSuccess("Filter(Filter([1,2,3] As Left, Left.Value > 1) As Right, Right.Value > 2)", TestUtils.DT("*[Value:w]"));
+            TestSimpleBindingSuccess("ForAll(Filter([1,2,3] As Input, Input.Value > 2) As Outer, {Inner: Outer.Value})", TestUtils.DT("*[Inner:w]"));
+            TestSimpleBindingSuccess("ForAll(Filter([1,2,3] As Input, Input.Value > 2), {Inner: ThisRecord.Value})", TestUtils.DT("*[Inner:w]"));
 
             // Required ident after rename
-            TestBindingErrors("Filter([1,2,3] As Input, Value > 2)", TestUtils.DT("*[Value:n]"));
+            TestBindingErrors("Filter([1,2,3] As Input, Value > 2)", TestUtils.DT("*[Value:w]"));
 
             // Required ident after rename
-            TestBindingErrors("Filter([1,2,3] As Input, ThisRecord.Value > 2)", TestUtils.DT("*[Value:n]"));
+            TestBindingErrors("Filter([1,2,3] As Input, ThisRecord.Value > 2)", TestUtils.DT("*[Value:w]"));
 
             // As must be immediate child of call node
-            TestBindingErrors("Filter([1,2,3] As First As Second, Value > 2)", TestUtils.DT("*[Value:n]"));
+            TestBindingErrors("Filter([1,2,3] As First As Second, Value > 2)", TestUtils.DT("*[Value:w]"));
 
             // If As is used, field access must be qualified
             TestBindingErrors("ForAll(Filter([1,2,3] As Input, Input.Value > 2) As Outer, {Inner: Value})", TestUtils.DT("*[Inner:e]"));
 
             // If As is used, field access must be qualified
-            TestBindingErrors("Filter([1,2,3] As ThisRecord, Value > 2)", TestUtils.DT("*[Value:n]"));
+            TestBindingErrors("Filter([1,2,3] As ThisRecord, Value > 2)", TestUtils.DT("*[Value:w]"));
 
             // If As is used, field access must be qualified
-            TestBindingErrors("Filter([1,2,3] As Renamed, IsBlank(Text(Renamed.Value)) = Value)", TestUtils.DT("*[Value:n]"));
+            TestBindingErrors("Filter([1,2,3] As Renamed, IsBlank(Text(Renamed.Value)) = Value)", TestUtils.DT("*[Value:w]"));
         }
 
         [Theory]
         [InlineData("[]", "*[]")]
-        [InlineData("[1, 2, 3]", "*[Value:n]")]
+        [InlineData("[1, 2, 3]", "*[Value:w]")]
         [InlineData("[true, true, false, true]", "*[Value:b]")]
         [InlineData("[\"a\", \"b\", \"c\"]", "*[Value:s]")]
         [InlineData("[\"a\", 2, 3, true, false, 123, \"hello\"]", "*[Value:s]")]
-        [InlineData("[1, 2, \"3\", \"1234.243\", 6564.254, Abs(-123.22)]", "*[Value:n]")]
+        [InlineData("[1, 2, \"3\", \"1234.243\", 6564.254, Abs(-123.22)]", "*[Value:w]")]
         public void TexlBindingTables(string script, string expectedType)
         {
             TestSimpleBindingSuccess(
@@ -1634,7 +1747,7 @@ namespace Microsoft.PowerFx.Core.Tests
         {
             TestSimpleBindingSuccess(
                 "[{a:1}, {b:2}, {c:\"hello\"}, {a:3, c:\"goodbye\"}, {a:0, b:2}, {b:123, c:\"foo\"}]",
-                TestUtils.DT("*[Value:![a:n, b:n, c:s]]"));
+                TestUtils.DT("*[Value:![a:w, b:w, c:s]]"));
 
             TestSimpleBindingSuccess(
                 "[" +
@@ -1643,7 +1756,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "{ id: 2, nestedData: [{ nestedId: \"f\" }, { nestedId: \"g\" }, { nestedId: \"h\" }] }," +
                 "{ id: 3, nestedData: [] }," +
                 "{ id: 4, nestedData: [{ nestedId: \"i\" }] }]",
-                TestUtils.DT("*[Value:![id:n, nestedData:*[Value:![nestedId:s]]]]"));
+                TestUtils.DT("*[Value:![id:w, nestedData:*[Value:![nestedId:s]]]]"));
         }
 
         [Fact]
@@ -1797,7 +1910,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [Theory]
         [InlineData("Table()", "*[]")]
         [InlineData("Table({})", "*[]")]
-        [InlineData("Table({X:1})", "*[X:n]")]
+        [InlineData("Table({X:1})", "*[X:w]")]
         [InlineData("Table({X:\"hello\"})", "*[X:s]")]
         [InlineData("Table({X:true})", "*[X:b]")]
         [InlineData("Table({X:true}, {})", "*[X:b]")]
@@ -1805,13 +1918,13 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("Table({X:false}, {}, {X:true})", "*[X:b]")]
         [InlineData("Table({X:false}, {}, {X:true}, {})", "*[X:b]")]
         [InlineData("Table({X:false}, {}, {}, {}, {}, {X:true}, {})", "*[X:b]")]
-        [InlineData("Table({X:false, Y:123}, {X:true})", "*[X:b, Y:n]")]
-        [InlineData("Table({X:false, Y:123}, {X:true}, {})", "*[X:b, Y:n]")]
-        [InlineData("Table({X:false, Y:123}, {Y:99.9}, {X:true}, {})", "*[X:b, Y:n]")]
-        [InlineData("Table({X:false, Y:123}, {Y:7, X:true}, {Y:99.9}, {X:true}, {})", "*[X:b, Y:n]")]
-        [InlineData("Table({Y:123}, {Y:7}, {Y:99.9}, {X:true})", "*[X:b, Y:n]")]
-        [InlineData("Table({Y:123}, {Z:true}, {X:\"hello\"}, {W:{A:1, B:true, C:\"hello\"}})", "*[X:s, Y:n, Z:b, W:![A:n, B:b, C:s]]")]
-        [InlineData("Table({Nested:Table({Nested:Table({X:1})})})", "*[Nested:*[Nested:*[X:n]]]")]
+        [InlineData("Table({X:false, Y:123}, {X:true})", "*[X:b, Y:w]")]
+        [InlineData("Table({X:false, Y:123}, {X:true}, {})", "*[X:b, Y:w]")]
+        [InlineData("Table({X:false, Y:123}, {Y:99.9}, {X:true}, {})", "*[X:b, Y:w]")]
+        [InlineData("Table({X:false, Y:123}, {Y:7, X:true}, {Y:99.9}, {X:true}, {})", "*[X:b, Y:w]")]
+        [InlineData("Table({Y:123}, {Y:7}, {Y:99.9}, {X:true})", "*[X:b, Y:w]")]
+        [InlineData("Table({Y:123}, {Z:true}, {X:\"hello\"}, {W:{A:1, B:true, C:\"hello\"}})", "*[X:s, Y:w, Z:b, W:![A:w, B:b, C:s]]")]
+        [InlineData("Table({Nested:Table({Nested:Table({X:1})})})", "*[Nested:*[Nested:*[X:w]]]")]
         public void TexlFunctionTypeSemanticsTable(string script, string expectedType)
         {
             Assert.True(DType.TryParse(expectedType, out DType type));
@@ -1827,8 +1940,8 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("Table(true, false)", "*[]")]
         [InlineData("Table(true, 2, \"hello\")", "*[]")]
         [InlineData("Table(\"hello\", \"world\")", "*[]")]
-        [InlineData("Table({X:1}, [1, 2, 3])", "*[X:n]")]
-        [InlineData("Table([true, false, true], {X:1}, {Y:2})", "*[X:n, Y:n]")]
+        [InlineData("Table({X:1}, [1, 2, 3])", "*[X:w]")]
+        [InlineData("Table([true, false, true], {X:1}, {Y:2})", "*[X:w, Y:w]")]
         public void TexlFunctionTypeSemanticsTable_Negative(string script, string expectedType)
         {
             Assert.True(DType.TryParse(expectedType, out DType type));
@@ -1986,7 +2099,7 @@ namespace Microsoft.PowerFx.Core.Tests
             "0+1+2+3+4+5+6+7+8+9+0+1+2+3+4+5+6+7+8+9+0+1+2+3+4+5+6+7+8+9+0+1+2+3+4+5+6+7+8+9+0+1+2+3+4+5+6+7+8+9+" +
             "0+1+2+3+4+5+6+7+8+9+0+1+2+3+4+5+6+7+8+9+0+1+2+3+4+5+6+7+8+9+0+1+2+3+4+5+6+7+8+9+0+1+2+3+4+5+6+7+8+9+" +
             "0+1+2+3+4+5+6+7+8+9+0+1+2+3+4+5+6+7+8+9+0+1+2+3+4+5+6+7+8+9+0+1+2+3+4+5+6+7+8+9+0+1+2+3+4+5+6+7+8+9+" +
-            "0+1+2+3+4+5+6+7+8+9+0+1+2+3+4+5+6+7+8+9+0+1+2+3+4+5+6+7+8+9+0+1+2+3+4+5+6+7+8+9+0+1+2+3+4+5+6+7+8+9", "n")]
+            "0+1+2+3+4+5+6+7+8+9+0+1+2+3+4+5+6+7+8+9+0+1+2+3+4+5+6+7+8+9+0+1+2+3+4+5+6+7+8+9+0+1+2+3+4+5+6+7+8+9", "w")]
         public void TexlExcessivelyLongButFlatRulesParseCorrectly(string script, string expectedType)
         {
             TestSimpleBindingSuccess(script, TestUtils.DT(expectedType));
@@ -2061,7 +2174,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
         [Theory]
         [InlineData("MockFunctionThatSupportsCoercedParamsWithOverride(\"123\", true)", true)]
-        [InlineData("MockFunctionThatSupportsCoercedParamsWithOverride(123, true)", false)]
+        [InlineData("MockFunctionThatSupportsCoercedParamsWithOverride(Float(123), true)", false)]
         [InlineData("MockFunctionThatSupportsCoercedParamsWithOverride([1,2,3], true)", false)]
         [InlineData("MockFunctionThatSupportsCoercedParamsWithOverride([\"1\",\"2\",\"3\"], \"2\")", false)]
         [InlineData("MockFunctionThatSupportsCoercedParamsWithOverride([\"1\",\"2\",\"3\"], true)", false)]
@@ -2162,14 +2275,14 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("With({A: 1, B: \"test\"}, B & \" \" & A)", "![A:n, B:s]", "s")]
+        [InlineData("With({A: 1, B: \"test\"}, B & \" \" & A)", "![A:w, B:s]", "s")]
         [InlineData("With({table: [{name: \"first\"},{name: \"first\"}]}, ForAll(table, Value))", "![table:*[value:s]]", "*[name:s]")]
         [InlineData("With({date: Today()}, date)", "![date:D]", "D")]
-        [InlineData("With({a: true, b: 5}, If(a, b+2, b-2))", "![a:b, b:n]", "n")]
+        [InlineData("With({a: true, b: 5}, If(a, b+2, b-2))", "![a:b, b:w]", "w")]
         [InlineData("With({color: RGBA(255, 255, 255, 1)}, ThisRecord)", "", "![color:c]")]
         [InlineData("With({color: RGBA(255, 255, 255, 1)}, ThisRecord.color)", "![color:c]", "c")]
         [InlineData("With({color: RGBA(255, 255, 255, 1)} As Outer, Outer.color)", "![color:c]", "c")]
-        [InlineData("With({r: 255, g: 255, b: 255, a: 1}, {color: RGBA(r, g, b, a)})", "![r:n, g:n, b:n, a:n]", "![color: c]")]
+        [InlineData("With({r: 255, g: 255, b: 255, a: 1}, {color: RGBA(r, g, b, a)})", "![r:w, g:w, b:w, a:w]", "![color: c]")]
         public void TexlFunctionTypeSemanticsWith(string script, string typedGlobal, string expectedTypeString)
         {
             if (string.IsNullOrEmpty(typedGlobal))
@@ -2185,7 +2298,7 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("With({table: DoesntExist}, 1)", "![table:e]", "n")]
+        [InlineData("With({table: DoesntExist}, 1)", "![table:e]", "w")]
         [InlineData("With(1)", "", "?")]
         public void TexlFunctionTypeSemanticsWith_Negative(string script, string typedGlobal, string expectedTypeString)
         {
@@ -2207,7 +2320,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("ForAll(T, Rec)", "*[Rec:![Item:o]]", "*[Item:o]")]
         [InlineData("ForAll(T, {Num:A+5, Image:img})", "*[A:n, img:i, unused:s]", "*[Num:n, Image:i]")]
         [InlineData("ForAll(T, FirstN(table, 3))", "*[table:*[A:n]]", "*[Value:*[A:n]]")]
-        [InlineData("ForAll(Table({Str:\"hello\", Num:5}), Num + 5)", "", "*[Value:n]")]
+        [InlineData("ForAll(Table({Str:\"hello\", Num:5}), Num + 5)", "", "*[Value:w]")]
         public void TexlFunctionTypeSemanticsForAll(string script, string typedGlobal, string expectedTypeString)
         {
             if (string.IsNullOrEmpty(typedGlobal))
@@ -2240,7 +2353,9 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("Average(T, \"Item\")", "n")]
+        [InlineData("Sum(T, 1)", "w")]
+        [InlineData("Sum(T, \"1\")", "w")]
+        [InlineData("Average(T, \"Item\")", "w")]
         [InlineData("Filter(T, true)", "*[Item:n]")]
         public void TestWarningOnLiteralPredicate(string script, string expectedType)
         {
@@ -2255,6 +2370,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
         [Theory]
         [InlineData("Sum(T, 1)", "w")]
+        [InlineData("Sum(T, \"1\")", "w")]
         [InlineData("Average(T, \"Item\")", "w")]
         [InlineData("Filter(T, true)", "*[Item:w]")]
         public void TestWarningOnDecimalLiteralPredicate(string script, string expectedType)
@@ -2371,14 +2487,17 @@ namespace Microsoft.PowerFx.Core.Tests
 
         [Theory]
         [InlineData("Coalesce(\"Hello\", \"He\")", "s")]
-        [InlineData("Coalesce(1, Today())", "n")]
-        [InlineData("Coalesce(Blank(), 1, Today())", "n")]
+        [InlineData("Coalesce(1, Today())", "w")]
+        [InlineData("Coalesce(Float(1), Today())", "n")]
+        [InlineData("Coalesce(Blank(), 1, Today())", "w")]
+        [InlineData("Coalesce(Blank(), Float(1), Today())", "n")]
         [InlineData("Coalesce(name, url)", "s")]
         [InlineData("Coalesce(url, name)", "s")]
         [InlineData("Coalesce(url)", "h")]
         [InlineData("Coalesce(col)", "*[testname:s]")]
         [InlineData("Coalesce(Blank())", "N")]
         [InlineData("Coalesce(Blank(), Blank())", "N")]
+        [InlineData("Coalesce(Float(1), Decimal(1))", "n")]
         public void TexlFunctionTypeSemanticsCoalesce(string script, string typeSpec)
         {
             var symbol = new SymbolTable();
@@ -2394,7 +2513,9 @@ namespace Microsoft.PowerFx.Core.Tests
 
         [Theory]
         [InlineData("Coalesce(\"Hello\", Color.Brown)", "s")]
-        [InlineData("Coalesce(1, Color.Brown)", "n")]
+        [InlineData("Coalesce(1, Color.Brown)", "w")]
+        [InlineData("Coalesce(Decimal(1), Color.Brown)", "w")]
+        [InlineData("Coalesce(Float(1), Color.Brown)", "n")]
         public void TexlFunctionTypeSemanticsCoalesce_Negative(string script, string typeSpec)
         {
             TestBindingErrors(script, TestUtils.DT(typeSpec));
@@ -2437,14 +2558,14 @@ namespace Microsoft.PowerFx.Core.Tests
 
         [Theory]
         [InlineData("\"Hello World\" //Line Comment", "s")]
-        [InlineData("6 //Line Comment \n * 4", "n")]
+        [InlineData("6 //Line Comment \n * 4", "w")]
         [InlineData("\"Hello World\" /*Block Comment*/", "s")]
         [InlineData("/*Block Comment*/ \"Hello World\"", "s")]
-        [InlineData("1 + 2 //Line Comment", "n")]
-        [InlineData("1 + 2/*Block Comment*/", "n")]
-        [InlineData("1 + /*Block Comment*/ 2", "n")]
-        [InlineData("1 /*Block Comment*/ + 2", "n")]
-        [InlineData("/*Block Comment*/ 1 + 2", "n")]
+        [InlineData("1 + 2 //Line Comment", "w")]
+        [InlineData("1 + 2/*Block Comment*/", "w")]
+        [InlineData("1 + /*Block Comment*/ 2", "w")]
+        [InlineData("1 /*Block Comment*/ + 2", "w")]
+        [InlineData("/*Block Comment*/ 1 + 2", "w")]
         public void TexlTestCommentingSemantics(string script, string typeSpec)
         {
             var symbol = new SymbolTable();
@@ -2458,14 +2579,19 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("Abs(1)", "n")]
+        [InlineData("Abs(1)", "w")]
+        [InlineData("Abs(Float(1))", "n")]
         [InlineData("Abs(A)", "n")]
         [InlineData("Abs(Table)", "*[input:n]")]
+        [InlineData("Abs(AW)", "w")]
+        [InlineData("Abs(TableW)", "*[input:w]")]
         public void TexlFunctionTypeSemanticsAbs(string script, string expectedType)
         {
             var symbol = new SymbolTable();
             symbol.AddVariable("Table", new TableType(TestUtils.DT("*[input:n]")));
             symbol.AddVariable("A", FormulaType.Number);
+            symbol.AddVariable("TableW", new TableType(TestUtils.DT("*[input:w]")));
+            symbol.AddVariable("AW", FormulaType.Decimal);
 
             TestSimpleBindingSuccess(
                 script,
@@ -2609,6 +2735,8 @@ namespace Microsoft.PowerFx.Core.Tests
 
         [Theory]
         [InlineData("Boolean(1)", "b")]
+        [InlineData("Boolean(Decimal(1))", "b")]
+        [InlineData("Boolean(Float(1))", "b")]
         [InlineData("Boolean(A)", "b")]
         [InlineData("Boolean(Table)", "*[Value:b]")]
         [InlineData("Boolean(TableS)", "*[Value:b]")]

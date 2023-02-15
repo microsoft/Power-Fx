@@ -1,7 +1,9 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
+using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Errors;
@@ -23,8 +25,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool IsSelfContained => true;
 
+        public bool SupportsDecimal;
+
         public StatisticalTableFunction(string name, TexlStrings.StringGetter description, FunctionCategories fc)
-            : base(name, description, fc, DType.Number, 0x02, 2, 2, DType.EmptyTable, DType.Number)
+            : base(name, description, fc, DType.Unknown, 0x02, 2, 2, DType.EmptyTable, DType.Number)
         {
             ScopeInfo = new FunctionScopeInfo(this, usesAllFieldsInScope: false, acceptsLiteralPredicates: false);
         }
@@ -108,6 +112,43 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             callNode.Accept(viewFinderVisitor);
 
             return viewFinderVisitor.ContainsView;
+        }
+
+        public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        {
+            Contracts.AssertValue(args);
+            Contracts.AssertAllValues(args);
+            Contracts.AssertValue(argTypes);
+            Contracts.Assert(args.Length == argTypes.Length);
+            Contracts.AssertValue(errors);
+            Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
+
+            returnType = !SupportsDecimal || (argTypes[1] != DType.Decimal && argTypes[1] != DType.Boolean && argTypes[1] != DType.ObjNull && (argTypes[1] != DType.String || context.NumberIsFloat)) ? DType.Number : DType.Decimal;
+            nodeToCoercedTypeMap = new Dictionary<TexlNode, DType>();
+            var fValid = true;
+
+            // TODO Decimal: More checks to make?
+            if (CheckType(args[1], argTypes[1], returnType, DefaultErrorContainer, out var matchedWithCoercion1))
+            {
+                if (matchedWithCoercion1)
+                {
+                    CollectionUtils.Add(ref nodeToCoercedTypeMap, args[1], returnType, allowDupes: true);
+                }
+            }
+            else
+            {
+                errors.EnsureError(DocumentErrorSeverity.Severe, args[1], TexlStrings.ErrNumberExpected);
+                fValid = false;
+            }
+
+            if (!fValid)
+            {
+                nodeToCoercedTypeMap = null;
+            }
+
+            ScopeInfo?.CheckLiteralPredicates(args, errors);
+
+            return fValid;
         }
     }
 }

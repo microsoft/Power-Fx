@@ -26,6 +26,8 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction AmPmShort = _library.Append(new AmPmShortFunction());
         public static readonly TexlFunction Abs = _library.Append(new AbsFunction());
         public static readonly TexlFunction AbsT = _library.Append(new AbsTableFunction());
+        public static readonly TexlFunction AbsW = _library.Append(new AbsWFunction());
+        public static readonly TexlFunction AbsWT = _library.Append(new AbsWTableFunction());
         public static readonly TexlFunction Acos = _library.Append(new AcosFunction());
         public static readonly TexlFunction AcosT = _library.Append(new AcosTableFunction());
         public static readonly TexlFunction Acot = _library.Append(new AcotFunction());
@@ -47,6 +49,8 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction BooleanN_T = _library.Append(new BooleanNFunction_T());
         public static readonly TexlFunction BooleanB = _library.Append(new BooleanBFunction());
         public static readonly TexlFunction BooleanB_T = _library.Append(new BooleanBFunction_T());
+        public static readonly TexlFunction BooleanW = _library.Append(new BooleanWFunction());
+        public static readonly TexlFunction BooleanW_T = _library.Append(new BooleanWFunction_T());
         public static readonly TexlFunction Boolean_UO = _library.Append(new BooleanFunction_UO());
         public static readonly TexlFunction Clock24 = _library.Append(new IsClock24Function());
         public static readonly TexlFunction Char = _library.Append(new CharFunction());
@@ -82,6 +86,7 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction Dec2Hex = _library.Append(new Dec2HexFunction());
         public static readonly TexlFunction Dec2HexT = _library.Append(new Dec2HexTFunction());
         public static readonly TexlFunction Decimal = _library.Append(new DecimalFunction());
+        public static readonly TexlFunction Decimal_UO = _library.Append(new DecimalFunction_UO());
         public static readonly TexlFunction Degrees = _library.Append(new DegreesFunction());
         public static readonly TexlFunction DegreesT = _library.Append(new DegreesTableFunction());
         public static readonly TexlFunction DropColumns = _library.Append(new DropColumnsFunction());
@@ -95,6 +100,7 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction First = _library.Append(new FirstLastFunction(isFirst: true));
         public static readonly TexlFunction FirstN = _library.Append(new FirstLastNFunction(isFirst: true));
         public static readonly TexlFunction Float = _library.Append(new FloatFunction());
+        public static readonly TexlFunction Float_UO = _library.Append(new FloatFunction_UO());
         public static readonly TexlFunction ForAll = _library.Append(new ForAllFunction());
         public static readonly TexlFunction ForAll_UO = _library.Append(new ForAllFunction_UO());
         public static readonly TexlFunction GUIDPure = _library.Append(new GUIDPureFunction());

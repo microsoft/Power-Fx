@@ -141,6 +141,22 @@ namespace Microsoft.PowerFx.Tests
             AssertUpdate("B-->0;");
         }
 
+        [Fact]
+        public void BasicRecalcDecimal()
+        {
+            var engine = new RecalcEngine();
+            engine.UpdateVariable("A", 15m);
+            engine.SetFormula("B", "A*2", OnUpdate);
+            AssertUpdate("B-->30;");
+
+            engine.UpdateVariable("A", 20m);
+            AssertUpdate("B-->40;");
+
+            // Ensure we can update to null. 
+            engine.UpdateVariable("A", FormulaValue.NewBlank(FormulaType.Decimal));
+            AssertUpdate("B-->0;");
+        }
+
         // depend on grand child directly 
         [Fact]
         public void Recalc2()
@@ -305,7 +321,25 @@ namespace Microsoft.PowerFx.Tests
                 new NamedFormulaType("x", FormulaType.Number),
                 new NamedFormulaType("y", FormulaType.Number))).Errors;
             Assert.False(enumerable.Any());
-            Assert.Equal(17.0, recalcEngine.Eval("foo(3,4) + 5").ToObject());
+            Assert.Equal(17.0, recalcEngine.Eval("foo(Float(3),Float(4)) + Float(5)").ToObject());
+        }
+
+        [Fact]
+        public void DefFuncDecimal()
+        {
+            var config = new PowerFxConfig(null);
+            var recalcEngine = new RecalcEngine(config);
+
+            IEnumerable<ExpressionError> enumerable = recalcEngine.DefineFunctions(
+            new UDFDefinition(
+                "foo",
+                "x * y",
+                FormulaType.Decimal,
+                false,
+                new NamedFormulaType("x", FormulaType.Decimal),
+                new NamedFormulaType("y", FormulaType.Decimal))).Errors;
+            Assert.False(enumerable.Any());
+            Assert.Equal(17m, recalcEngine.Eval("foo(3,4) + 5").ToObject());
         }
 
         [Fact]
@@ -321,8 +355,26 @@ namespace Microsoft.PowerFx.Tests
                     FormulaType.Number,
                     false,
                     new NamedFormulaType("x", FormulaType.Number))).Errors;
-            var result = recalcEngine.Eval("foo(0)");
+            var result = recalcEngine.Eval("foo(Float(0))");
             Assert.Equal(2.0, result.ToObject());
+            Assert.False(enumerable.Any());
+        }
+
+        [Fact]
+        public void DefRecursiveFuncDecimal()
+        {
+            var config = new PowerFxConfig(null);
+            var recalcEngine = new RecalcEngine(config);
+            var body = @"If(x=0,foo(1),If(x=1,foo(2),If(x=2,2)))";
+            IEnumerable<ExpressionError> enumerable = recalcEngine.DefineFunctions(
+                new UDFDefinition(
+                    "foo",
+                    body,
+                    FormulaType.Decimal,
+                    false,
+                    new NamedFormulaType("x", FormulaType.Decimal))).Errors;
+            var result = recalcEngine.Eval("foo(0)");
+            Assert.Equal(2m, result.ToObject());
             Assert.False(enumerable.Any());
         }
 
@@ -356,6 +408,24 @@ namespace Microsoft.PowerFx.Tests
 
             Assert.False(recalcEngine.DefineFunctions(
                 new UDFDefinition(funcName, body, returnType, false, variable)).Errors.Any());
+            Assert.Equal(1.0, recalcEngine.Eval("hailstone(Float(192))").ToObject());
+        }
+
+        [Fact]
+        public void DefHailstoneSequenceDecimal()
+        {
+            var config = new PowerFxConfig(null)
+            {
+                MaxCallDepth = 100
+            };
+            var recalcEngine = new RecalcEngine(config);
+            var body = @"If(Not(x = 1), If(Mod(x, 2)=0, hailstone(x/2), hailstone(3*x+1)), x)";
+            var funcName = "hailstone";
+            var returnType = FormulaType.Decimal;
+            var variable = new NamedFormulaType("x", FormulaType.Decimal);
+
+            Assert.False(recalcEngine.DefineFunctions(
+                new UDFDefinition(funcName, body, returnType, false, variable)).Errors.Any());
             Assert.Equal(1.0, recalcEngine.Eval("hailstone(192)").ToObject());
         }
 
@@ -382,6 +452,36 @@ namespace Microsoft.PowerFx.Tests
                 FormulaType.Boolean,
                 false,
                 new NamedFormulaType("number", FormulaType.Number));
+
+            Assert.False(recalcEngine.DefineFunctions(udfOdd, udfEven).Errors.Any());
+
+            Assert.Equal(true, recalcEngine.Eval("odd(Float(17))").ToObject());
+            Assert.Equal(false, recalcEngine.Eval("even(Float(17))").ToObject());
+        }
+
+        [Fact]
+        public void DefMutualRecursionFuncDecimal()
+        {
+            var config = new PowerFxConfig(null)
+            {
+                MaxCallDepth = 100
+            };
+            var recalcEngine = new RecalcEngine(config);
+            var bodyEven = @"If(number = 0, true, odd(Abs(number)-1))";
+            var bodyOdd = @"If(number = 0, false, even(Abs(number)-1))";
+
+            var udfOdd = new UDFDefinition(
+                "odd",
+                bodyOdd,
+                FormulaType.Boolean,
+                false,
+                new NamedFormulaType("number", FormulaType.Decimal));
+            var udfEven = new UDFDefinition(
+                "even",
+                bodyEven,
+                FormulaType.Boolean,
+                false,
+                new NamedFormulaType("number", FormulaType.Decimal));
 
             Assert.False(recalcEngine.DefineFunctions(udfOdd, udfEven).Errors.Any());
 

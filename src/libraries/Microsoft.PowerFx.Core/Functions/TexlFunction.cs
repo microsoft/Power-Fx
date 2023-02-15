@@ -1053,6 +1053,11 @@ namespace Microsoft.PowerFx.Core.Functions
             return CheckColumnType(type, arg, DType.Number, errors, TexlStrings.ErrInvalidSchemaNeedNumCol_Col, ref nodeToCoercedTypeMap);
         }
 
+        public bool CheckDecimalColumnType(DType type, TexlNode arg, IErrorContainer errors, ref Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        {
+            return CheckColumnType(type, arg, DType.Decimal, errors, TexlStrings.ErrInvalidSchemaNeedDecCol_Col, ref nodeToCoercedTypeMap);
+        }
+
         // Check that the type of a specified node is a color column type, and possibly emit errors
         // accordingly. Returns true if the types align, false otherwise.
         protected bool CheckColorColumnType(DType type, TexlNode arg, IErrorContainer errors, ref Dictionary<TexlNode, DType> nodeToCoercedTypeMap)

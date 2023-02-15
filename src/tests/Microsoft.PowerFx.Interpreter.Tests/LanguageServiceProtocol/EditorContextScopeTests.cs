@@ -22,12 +22,22 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
     {
         // Check() calls through to engine. 
         [Fact]
-        public void Test()
+        public void TestDecimal()
         {
             var engine = new Engine(new PowerFxConfig());
 
             var scope = engine.CreateEditorScope();
             var result = scope.Check("1+2");
+            Assert.Equal(result.ReturnType, FormulaType.Decimal);
+        }
+
+        [Fact]
+        public void Test()
+        {
+            var engine = new Engine(new PowerFxConfig());
+
+            var scope = engine.CreateEditorScope();
+            var result = scope.Check("Float(1)+Float(2)");
             Assert.Equal(result.ReturnType, FormulaType.Number);
         }
 

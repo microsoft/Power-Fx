@@ -25,7 +25,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool IsSelfContained => true;
 
         public MinMaxFunction(bool isMin)
-            : base(isMin ? "Min" : "Max", isMin ? TexlStrings.AboutMin : TexlStrings.AboutMax, FunctionCategories.MathAndStat, DType.Number, 0, 1, int.MaxValue, DType.Number)
+            : base(isMin ? "Min" : "Max", isMin ? TexlStrings.AboutMin : TexlStrings.AboutMax, FunctionCategories.MathAndStat, DType.Unknown, 0, 1, int.MaxValue)
         {
         }
 
@@ -59,6 +59,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             } // If there are elements of mixed types OR if the elements are NOT a Date/Time/DateTime, attempt to coerce to numeric.
             else if (!Array.TrueForAll(argTypes, element => element.Kind == argTypes[0].Kind) || !Array.Exists(argTypes, element => element.Kind == DKind.Date || element.Kind == DKind.DateTime || element.Kind == DKind.Time))
             {
+                // TODO Decimal: coerce to decimal for hosts that don't have float, perhaps try for all hosts?
                 returnType = DType.Number;
 
                 // Ensure that all the arguments are numeric/coercible to numeric.

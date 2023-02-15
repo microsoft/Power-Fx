@@ -117,6 +117,37 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         }
     }
 
+    // Boolean(arg:w)
+    // Corresponding Excel and DAX function: Boolean
+    internal sealed class BooleanWFunction : BuiltinFunction
+    {
+        public override bool IsSelfContained => true;
+
+        public override bool SupportsParamCoercion => false;
+
+        public BooleanWFunction()
+            : base(BooleanFunction.BooleanInvariantFunctionName, TexlStrings.AboutBooleanW, FunctionCategories.Text, DType.Boolean, 0, 1, 1, DType.Decimal)
+        {
+        }
+
+        public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
+        {
+            yield return new[] { TexlStrings.BooleanWArg1 };
+        }
+
+        public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
+        {
+            return GetUniqueTexlRuntimeName(suffix: "W");
+        }
+
+        public override bool TryGetParamDescription(string paramName, out string paramDescription)
+        {
+            Contracts.AssertNonEmpty(paramName);
+
+            return StringResources.TryGet("AboutBooleanW_" + paramName, out paramDescription);
+        }
+    }
+
     // Boolean(E:*[n])
     // Corresponding Excel and DAX function: Boolean
     internal sealed class BooleanNFunction_T : BuiltinFunction
@@ -160,6 +191,52 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertNonEmpty(paramName);
 
             return StringResources.TryGet("AboutBooleanNT_" + paramName, out paramDescription);
+        }
+    }
+
+    // Boolean(E:*[n])
+    // Corresponding Excel and DAX function: Boolean
+    internal sealed class BooleanWFunction_T : BuiltinFunction
+    {
+        public override bool IsSelfContained => true;
+
+        public override bool SupportsParamCoercion => false;
+
+        public BooleanWFunction_T()
+            : base(BooleanFunction.BooleanInvariantFunctionName, TexlStrings.AboutBooleanWT, FunctionCategories.Table, DType.EmptyTable, 0, 1, 1, DType.EmptyTable)
+        {
+        }
+
+        public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
+        {
+            yield return new[] { TexlStrings.BooleanWTArg1 };
+        }
+
+        public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
+        {
+            return GetUniqueTexlRuntimeName(suffix: "W_T");
+        }
+
+        public override bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        {
+            var fValid = base.CheckTypes(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            Contracts.Assert(returnType.IsTable);
+
+            var arg = args[0];
+            var argType = argTypes[0];
+            fValid &= CheckNumericColumnType(argType, arg, errors, ref nodeToCoercedTypeMap);
+
+            var rowType = DType.EmptyRecord.Add(new TypedName(DType.Boolean, ColumnName_Value));
+            returnType = rowType.ToTable();
+
+            return fValid;
+        }
+
+        public override bool TryGetParamDescription(string paramName, out string paramDescription)
+        {
+            Contracts.AssertNonEmpty(paramName);
+
+            return StringResources.TryGet("AboutBooleanWT_" + paramName, out paramDescription);
         }
     }
 

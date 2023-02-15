@@ -82,6 +82,17 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: Abs)
             },
             {
+                BuiltinFunctionsCore.AbsW,
+                StandardErrorHandling<DecimalValue>(
+                    BuiltinFunctionsCore.AbsW.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: ReplaceBlankWithZero,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<DecimalValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: AbsDecimal)
+            },
+            {
                 BuiltinFunctionsCore.Acos,
                 StandardErrorHandling<NumberValue>(
                     BuiltinFunctionsCore.Acos.Name,
@@ -157,7 +168,7 @@ namespace Microsoft.PowerFx.Functions
                     BuiltinFunctionsCore.Average.Name,
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
-                    checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
+                    checkRuntimeTypes: DeferRuntimeTypeChecking,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: Average)
@@ -200,6 +211,17 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: NumberToBoolean)
+            },
+            {
+                BuiltinFunctionsCore.BooleanW,
+                StandardErrorHandling<DecimalValue>(
+                    BuiltinFunctionsCore.BooleanW.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<DecimalValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: DecimalToBoolean)
             },
 
             // This implementation is not actually used for this as this is handled at IR level. 
@@ -1268,7 +1290,7 @@ namespace Microsoft.PowerFx.Functions
                     BuiltinFunctionsCore.StdevP.Name,
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
-                    checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
+                    checkRuntimeTypes: DeferRuntimeTypeChecking,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: Stdev)
@@ -1311,7 +1333,7 @@ namespace Microsoft.PowerFx.Functions
                     BuiltinFunctionsCore.Sum.Name,
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
-                    checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
+                    checkRuntimeTypes: DeferRuntimeTypeChecking,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: Sum)
@@ -1553,6 +1575,10 @@ namespace Microsoft.PowerFx.Functions
                 StandardErrorHandlingTabularOverload<NumberValue>(BuiltinFunctionsCore.AbsT.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.Abs])
             },
             {
+                BuiltinFunctionsCore.AbsWT,
+                StandardErrorHandlingTabularOverload<DecimalValue>(BuiltinFunctionsCore.AbsWT.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.AbsW])
+            },
+            {
                 BuiltinFunctionsCore.Boolean_T,
                 StandardErrorHandlingTabularOverload<StringValue>(BuiltinFunctionsCore.Boolean_T.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.Boolean])
             },
@@ -1594,7 +1620,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.SqrtT,
                 StandardErrorHandlingTabularOverload<NumberValue>(BuiltinFunctionsCore.SqrtT.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.Sqrt])
-            },
+            }
         };
 
         private static IReadOnlyDictionary<TexlFunction, AsyncFunctionPtr> SimpleFunctionMultiArgsTabularOverloadImplementations { get; } = new Dictionary<TexlFunction, AsyncFunctionPtr>

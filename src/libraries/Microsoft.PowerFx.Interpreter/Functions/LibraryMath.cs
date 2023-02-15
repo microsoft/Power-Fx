@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
 
@@ -36,6 +38,7 @@ namespace Microsoft.PowerFx.Functions
                     return;
                 }
 
+                // TODO Decimal: check types, should be number
                 var n1 = (NumberValue)value;
 
                 _accumulator += n1.Value;
@@ -65,6 +68,47 @@ namespace Microsoft.PowerFx.Functions
                 }
 
                 return new NumberValue(irContext, _accumulator);
+            }
+        }
+
+        private class SumDecimalAgg : IAggregator
+        {
+            protected int _count;
+            protected decimal _accumulator;
+
+            public void Apply(FormulaValue value)
+            {
+                if (value is BlankValue)
+                {
+                    return;
+                }
+
+                var n1 = (DecimalValue)value;
+
+                // TODO Decimal: check types, should be number
+                // TODO Decimal: Overflow
+                _accumulator += n1.Value;
+                _count++;
+            }
+
+            public virtual FormulaValue NoElementValue(IRContext context)
+            {
+                return GetDefault(context);
+            }
+
+            public FormulaValue GetDefault(IRContext context)
+            {
+                return new BlankValue(context);
+            }
+
+            public virtual FormulaValue GetResult(IRContext irContext)
+            {
+                if (_count == 0)
+                {
+                    return GetDefault(irContext);
+                }
+
+                return new DecimalValue(irContext, _accumulator);
             }
         }
 
@@ -449,6 +493,26 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
+        private class AverageDecimalAgg : SumDecimalAgg
+        {
+            public override FormulaValue NoElementValue(IRContext context)
+            {
+                return CommonErrors.DivByZeroError(context);
+            }
+
+            public override FormulaValue GetResult(IRContext irContext)
+            {
+                if (_count == 0)
+                {
+                    return CommonErrors.DivByZeroError(irContext);
+                }
+
+                // TODO Decimal: check for overflow
+
+                return new DecimalValue(irContext, _accumulator / _count);
+            }
+        }
+
         private static FormulaValue RunAggregator(IAggregator agg, IRContext irContext, FormulaValue[] values)
         {
             foreach (var value in values.Where(v => v is not BlankValue))
@@ -493,10 +557,23 @@ namespace Microsoft.PowerFx.Functions
             return agg.GetResult(irContext);
         }
 
-        private static FormulaValue Sqrt(IRContext irContext, NumberValue[] args)
+        private static FormulaValue Sqrt(IRContext irContext, FormulaValue[] args)
         {
-            var n1 = args[0];
-            var result = Math.Sqrt(n1.Value);
+            double f = ((NumberValue)args[0]).Value;
+
+            if (f < 0.0)
+            {
+                return new ErrorValue(irContext, new ExpressionError
+                {
+                    Kind = ErrorKind.Numeric,
+                    Span = irContext.SourceContext,
+
+                    // TODO Decimal: Should this (and div0 error) be a localized resource?
+                    Message = "Argument to Sqrt must be greater than or equal to zero"
+                });
+            }
+
+            double result = Math.Sqrt(f);
 
             return new NumberValue(irContext, result);
         }
@@ -504,13 +581,13 @@ namespace Microsoft.PowerFx.Functions
         // Sum(1,2,3)     
         internal static FormulaValue Sum(IRContext irContext, FormulaValue[] args)
         {
-            return RunAggregator(new SumAgg(), irContext, args);
+            return RunAggregator(irContext.ResultType == FormulaType.Decimal ? new SumDecimalAgg() : new SumAgg(), irContext, args);
         }
 
         // Sum([1,2,3], Value * Value)     
         public static async ValueTask<FormulaValue> SumTable(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            return await RunAggregatorAsync("Sum", new SumAgg(), runner, context, irContext, args);
+            return await RunAggregatorAsync("Sum", irContext.ResultType == FormulaType.Decimal ? new SumDecimalAgg() : new SumAgg(), runner, context, irContext, args);
         }
 
         // VarP(1,2,3)
@@ -626,7 +703,7 @@ namespace Microsoft.PowerFx.Functions
         // Average(1,2,3)
         public static FormulaValue Average(IRContext irContext, FormulaValue[] args)
         {
-            return RunAggregator(new AverageAgg(), irContext, args);
+            return RunAggregator(irContext.ResultType == FormulaType.Decimal ? new AverageDecimalAgg() : new AverageAgg(), irContext, args);
         }
 
         // Average([1,2,3], Value * Value)     
@@ -639,7 +716,7 @@ namespace Microsoft.PowerFx.Functions
                 return CommonErrors.DivByZeroError(irContext);
             }
 
-            return await RunAggregatorAsync("Average", new AverageAgg(), runner, context, irContext, args);
+            return await RunAggregatorAsync("Average", irContext.ResultType == FormulaType.Decimal ? new AverageDecimalAgg() : new AverageAgg(), runner, context, irContext, args);
         }
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-mod
@@ -711,6 +788,20 @@ namespace Microsoft.PowerFx.Functions
             var x = arg0.Value;
             var val = Math.Abs(x);
             return new NumberValue(irContext, val);
+        }
+
+        public static FormulaValue AbsDecimal(IRContext irContext, DecimalValue[] args)
+        {
+            var arg0 = args[0];
+
+            if (arg0 == null)
+            {
+                return new DecimalValue(irContext, 0m);
+            }
+
+            decimal x = arg0.Value;
+            decimal val = x < 0m ? -x : x;
+            return new DecimalValue(irContext, val);
         }
 
         public static FormulaValue Round(IRContext irContext, NumberValue[] args)

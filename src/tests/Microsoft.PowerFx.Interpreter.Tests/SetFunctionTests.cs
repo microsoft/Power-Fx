@@ -43,11 +43,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             config.EnableSetFunction();
             var engine = new RecalcEngine(config);
 
-            engine.UpdateVariable("x", FormulaValue.NewBlank(FormulaType.Number));
+            engine.UpdateVariable("x", FormulaValue.NewBlank(FormulaType.Decimal));
 
             // Circular reference ok
             var r3 = engine.Eval("Set(x, 1);Set(x,x+1);x", null, _opts);
-            Assert.Equal(2.0, r3.ToObject());
+            Assert.Equal(2.0m, r3.ToObject());
         }
 
         [Fact]

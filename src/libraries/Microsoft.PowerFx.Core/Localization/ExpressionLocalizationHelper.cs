@@ -77,6 +77,7 @@ namespace Microsoft.PowerFx.Core
                         replacement = targetLexer.LocalizedPunctuatorChainingSeparator;
                         break;
                     case TokKind.NumLit:
+                    case TokKind.DecLit:
                         var numLit = token.Span.GetFragment(script);
                         var decimalSeparatorIndex = numLit.IndexOf(sourceDecimalSeparator);
                         if (decimalSeparatorIndex >= 0)

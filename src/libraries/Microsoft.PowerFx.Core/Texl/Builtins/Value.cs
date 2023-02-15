@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
@@ -9,6 +10,7 @@ using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Syntax;
 
 // Decimal TODO: if decimal or float switch off, those functions unavailable
@@ -67,7 +69,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
             }
 
-            returnType = FunctionReturnType ?? (context.Features.HasFlag(Features.NumberIsFloat) ? DType.Number : DType.Decimal);
+            returnType = FunctionReturnType ?? (context.NumberIsFloat ? DType.Number : DType.Decimal);
             return isValid;
         }
 
@@ -122,14 +124,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     }
 
     // Value(arg:O)
-    internal sealed class ValueFunction_UO : BuiltinFunction
+    internal class ValueBaseFunction_UO : BuiltinFunction
     {
         public override bool IsSelfContained => true;
 
         public override bool SupportsParamCoercion => false;
 
-        public ValueFunction_UO()
-            : base(ValueFunction.ValueInvariantFunctionName, TexlStrings.AboutValue, FunctionCategories.Text, DType.Number, 0, 1, 2, DType.UntypedObject, DType.String)
+        public ValueBaseFunction_UO(string functionName, TexlStrings.StringGetter functionAbout, DType resultType)
+            : base(functionName, functionAbout, FunctionCategories.Text, resultType, 0, 1, 2, DType.UntypedObject, DType.String)
         {
         }
 
@@ -141,6 +143,39 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
         {
             return GetUniqueTexlRuntimeName(suffix: "_UO");
+        }
+    }
+
+    // Value(arg:O)
+    internal sealed class ValueFunction_UO : ValueBaseFunction_UO
+    {
+        public ValueFunction_UO()
+            : base(ValueFunction.ValueInvariantFunctionName, TexlStrings.AboutValue, DType.Unknown)
+        {
+        }
+
+        public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        {
+            returnType = context.NumberIsFloat ? DType.Number : DType.Decimal;
+            nodeToCoercedTypeMap = null;
+            return true;
+        }
+    }
+
+        // Value(arg:O)
+    internal sealed class FloatFunction_UO : ValueBaseFunction_UO
+    {
+        public FloatFunction_UO()
+            : base(FloatFunction.FloatInvariantFunctionName, TexlStrings.AboutFloat, DType.Number)
+        {
+        }
+    }
+
+    internal sealed class DecimalFunction_UO : ValueBaseFunction_UO
+    {
+        public DecimalFunction_UO()
+            : base(DecimalFunction.DecimalInvariantFunctionName, TexlStrings.AboutDecimal, DType.Decimal)
+        {
         }
     }
 }

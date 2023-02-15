@@ -346,7 +346,7 @@ namespace Microsoft.PowerFx.Functions
             return new BooleanValue(irContext, n != 0.0);
         }
 
-        public static BooleanValue NumberToDecimal(IRContext irContext, DecimalValue[] args)
+        public static BooleanValue DecimalToBoolean(IRContext irContext, DecimalValue[] args)
         {
             var n = args[0].Value;
             return new BooleanValue(irContext, n != 0m);

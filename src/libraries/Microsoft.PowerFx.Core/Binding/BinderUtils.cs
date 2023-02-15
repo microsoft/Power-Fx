@@ -701,19 +701,6 @@ namespace Microsoft.PowerFx.Core.Binding
             coercions.AddRange(resLeft.Coercions);
             coercions.AddRange(resRight.Coercions);
 
-            // Float is higher precedence than Decimal.
-            // Coerce decimal to number before further coercions required for date/time to number.
-            if (DType.Decimal.Accepts(typeLeft) && !DType.Decimal.Accepts(typeRight))
-            {
-                coercions.Add(new BinderCoercionResult() { Node = left, CoercedType = DType.Number });
-                typeLeft = DType.Number;
-            }
-            else if (!DType.Decimal.Accepts(typeLeft) && DType.Decimal.Accepts(typeRight))
-            {
-                coercions.Add(new BinderCoercionResult() { Node = right, CoercedType = DType.Number });
-                typeRight = DType.Number;
-            }
-
             if (!typeLeft.Accepts(typeRight) && !typeRight.Accepts(typeLeft))
             {
                 // Handle DateTime <=> Number comparison by coercing one side to Number
@@ -725,11 +712,32 @@ namespace Microsoft.PowerFx.Core.Binding
                 {
                     coercions.Add(new BinderCoercionResult() { Node = left, CoercedType = DType.Number });
                 }
-                else if (DType.DateTime.Accepts(typeLeft) && DType.DateTime.Accepts(typeRight))
+
+                if (DType.DateTime.Accepts(typeLeft) && DType.DateTime.Accepts(typeRight))
                 {
                     // Handle Date <=> Time comparison by coercing both to DateTime
                     coercions.Add(new BinderCoercionResult() { Node = left, CoercedType = DType.DateTime });
                     coercions.Add(new BinderCoercionResult() { Node = right, CoercedType = DType.DateTime });
+                }
+
+                // Handle DateTime <=> Decimal comparison by coercing one side to Number
+                if (DType.Decimal.Accepts(typeLeft) && DType.DateTime.Accepts(typeRight))
+                {
+                    coercions.Add(new BinderCoercionResult() { Node = right, CoercedType = DType.Decimal });
+                }
+                else if (DType.Number.Accepts(typeRight) && DType.DateTime.Accepts(typeLeft))
+                {
+                    coercions.Add(new BinderCoercionResult() { Node = left, CoercedType = DType.Decimal });
+                }
+
+                // Handle Decimal <=> Number comparison by coercing one side to Number
+                if (DType.Number.Accepts(typeLeft) && DType.Decimal.Accepts(typeRight))
+                {
+                    coercions.Add(new BinderCoercionResult() { Node = right, CoercedType = DType.Number });
+                }
+                else if (DType.Number.Accepts(typeRight) && DType.Decimal.Accepts(typeLeft))
+                {
+                    coercions.Add(new BinderCoercionResult() { Node = left, CoercedType = DType.Number });
                 }
             }
 
@@ -812,6 +820,30 @@ namespace Microsoft.PowerFx.Core.Binding
                     return new BinderCheckTypeResult() { Coercions = coercions };
                 }
                 else if (DType.Number.Accepts(typeRight) && DType.DateTime.Accepts(typeLeft))
+                {
+                    coercions.Add(new BinderCoercionResult() { Node = left, CoercedType = DType.Number });
+                    return new BinderCheckTypeResult() { Coercions = coercions };
+                }
+
+                // Handle Decimal <=> Number comparison
+                if (DType.Number.Accepts(typeLeft) && DType.Decimal.Accepts(typeRight))
+                {
+                    coercions.Add(new BinderCoercionResult() { Node = right, CoercedType = DType.Number });
+                    return new BinderCheckTypeResult() { Coercions = coercions };
+                }
+                else if (DType.Number.Accepts(typeRight) && DType.Decimal.Accepts(typeLeft))
+                {
+                    coercions.Add(new BinderCoercionResult() { Node = left, CoercedType = DType.Number });
+                    return new BinderCheckTypeResult() { Coercions = coercions };
+                }
+
+                // Handle DateTime <=> Decimal comparison
+                if (DType.Decimal.Accepts(typeLeft) && DType.DateTime.Accepts(typeRight))
+                {
+                    coercions.Add(new BinderCoercionResult() { Node = right, CoercedType = DType.Number });
+                    return new BinderCheckTypeResult() { Coercions = coercions };
+                }
+                else if (DType.Decimal.Accepts(typeRight) && DType.DateTime.Accepts(typeLeft))
                 {
                     coercions.Add(new BinderCoercionResult() { Node = left, CoercedType = DType.Number });
                     return new BinderCheckTypeResult() { Coercions = coercions };

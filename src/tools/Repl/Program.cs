@@ -10,15 +10,18 @@ using System.Text;
 using System.Text.RegularExpressions;
 using Microsoft.PowerFx;
 using Microsoft.PowerFx.Core;
+using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Types;
 
-namespace PowerFxHostSamples
+namespace Microsoft.PowerFx
 {
     public static class ConsoleRepl
     {
         private static RecalcEngine _engine;
         private static bool _formatTable = true;
+        private static bool _numberIsFloat = false;
         private const string OptionFormatTable = "FormatTable";
+        private const string OptionNumberIsFloat = "NumberIsFloat";
         private static Features _features = Features.All;
 
         private static void ResetEngine()
@@ -26,7 +29,8 @@ namespace PowerFxHostSamples
             var config = new PowerFxConfig(_features);
             Dictionary<string, string> options = new Dictionary<string, string>
             {
-                { OptionFormatTable, OptionFormatTable }
+                { OptionFormatTable, OptionFormatTable },
+                { OptionNumberIsFloat, OptionNumberIsFloat }
             };
             foreach (Features feature in (Features[])Enum.GetValues(typeof(Features)))
             {
@@ -34,6 +38,11 @@ namespace PowerFxHostSamples
             }
 
             config.SymbolTable.EnableMutationFunctions();
+#if false
+            config.EnableSetFunction();
+
+            config.EnableParseJSONFunction();
+#endif
 
             config.AddFunction(new HelpFunction());
             config.AddFunction(new ResetFunction());
@@ -161,7 +170,7 @@ namespace PowerFxHostSamples
                     // eval and print everything else
                     else
                     {
-                        var opts = new ParserOptions(_engine.Config.Features) { AllowsSideEffects = true };
+                        var opts = new ParserOptions(_engine.Config.Features) { AllowsSideEffects = true, NumberIsFloat = _numberIsFloat };
                         var result = _engine.Eval(expr, options: opts);
 
                         if (result is ErrorValue errorValue)
@@ -474,6 +483,12 @@ namespace PowerFxHostSamples
                 if (option.Value.ToLower() == OptionFormatTable.ToLower())
                 {
                     _formatTable = value.Value;
+                    return value;
+                }
+
+                if (option.Value.ToLower() == OptionNumberIsFloat.ToLower())
+                {
+                    _numberIsFloat = value.Value;
                     return value;
                 }
 

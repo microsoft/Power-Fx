@@ -23,12 +23,12 @@ namespace Microsoft.PowerFx.Types
             { typeof(double), FormulaType.Number },
             { typeof(int), FormulaType.Number },
             { typeof(decimal), FormulaType.Decimal },
-            { typeof(long), FormulaType.Decimal },        // Decimal TODO: int mapping, long is definitely Decimal at 64 bit
+            { typeof(long), FormulaType.Decimal },
             { typeof(float), FormulaType.Number },
             { typeof(double?), FormulaType.Number },
             { typeof(int?), FormulaType.Number },
             { typeof(decimal?), FormulaType.Decimal },   
-            { typeof(long?), FormulaType.Decimal },       // Decimal TODO: more int mapping
+            { typeof(long?), FormulaType.Decimal },
             { typeof(float?), FormulaType.Number },
                         
             // Non-numeric types:

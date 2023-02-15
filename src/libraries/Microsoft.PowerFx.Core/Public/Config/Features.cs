@@ -37,13 +37,6 @@ namespace Microsoft.PowerFx
         /// Added on 6th December 2022.
         /// </summary>
         SupportColumnNamesAsIdentifiers = 0x8,
-
-        /// <summary>
-        /// Floating point is default for numeric literals and Value function
-        /// By default, Number is Decimal
-        /// Added on 26th January 2023
-        /// </summary>
-        NumberIsFloat = 0x10,
         
         /// <summary>        
         /// All features enabled

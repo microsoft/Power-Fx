@@ -401,7 +401,7 @@ namespace Microsoft.PowerFx.Tests
             engine.UpdateVariable("x", x); // x has field1. 
 
             // Wrap in a record. 
-            var result1 = engine.Eval("If(false, {field1:11, field2:22}, x).field1");
+            var result1 = engine.Eval("If(false, {field1:Float(11), field2:Float(22)}, x).field1");
             Assert.Equal(999.0, result1.ToObject());
         }
 

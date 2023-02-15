@@ -25,6 +25,7 @@ namespace Microsoft.PowerFx.Tests
     public class SandboxTests
     {
         // Protect against stack overflows. 
+        // TODO Decimal: Abs, Mod, etc should be decimal specific
         [Fact]
         public async void MaxRecursionDepthTest()
         {
@@ -34,8 +35,8 @@ namespace Microsoft.PowerFx.Tests
             };
             var recalcEngine = new RecalcEngine(config);
             Assert.IsType<ErrorValue>(recalcEngine.Eval("Abs(Abs(Abs(Abs(Abs(Abs(1))))))"));
-            Assert.IsType<NumberValue>(recalcEngine.Eval("Abs(Abs(Abs(Abs(Abs(1)))))"));
-            Assert.IsType<NumberValue>(recalcEngine.Eval(
+            Assert.IsType<DecimalValue>(recalcEngine.Eval("Abs(Abs(Abs(Abs(Abs(1)))))"));
+            Assert.IsType<DecimalValue>(recalcEngine.Eval(
                 @"Sum(
                 Sum(Sum(1),1),
                 Sum(Sum(1),1),

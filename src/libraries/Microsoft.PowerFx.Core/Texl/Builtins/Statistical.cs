@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Errors;
@@ -8,6 +9,7 @@ using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Syntax;
 
 namespace Microsoft.PowerFx.Core.Texl.Builtins
@@ -20,8 +22,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool IsSelfContained => true;
 
+        public bool SupportsDecimal;
+
         public StatisticalFunction(string name, TexlStrings.StringGetter description, FunctionCategories fc)
-            : base(name, description, fc, DType.Number, 0, 1, int.MaxValue, DType.Number)
+            : base(name, description, fc, DType.Unknown, 0, 1, int.MaxValue)
         {
         }
 
@@ -42,7 +46,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return base.GetSignatures(arity);
         }
 
-        public override bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
@@ -51,17 +55,18 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            var fValid = base.CheckTypes(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
-            Contracts.Assert(returnType == DType.Number);
+            returnType = SupportsDecimal && Array.Find(argTypes, item => item != DType.Decimal && item != DType.Boolean && item != DType.ObjNull && (item != DType.String || context.NumberIsFloat)) == null ? DType.Decimal : DType.Number;
+            nodeToCoercedTypeMap = new Dictionary<TexlNode, DType>();
+            var fValid = true;
 
             // Ensure that all the arguments are numeric/coercible to numeric.
             for (var i = 0; i < argTypes.Length; i++)
             {
-                if (CheckType(args[i], argTypes[i], DType.Number, DefaultErrorContainer, out var matchedWithCoercion))
+                if (CheckType(args[i], argTypes[i], returnType, DefaultErrorContainer, out var matchedWithCoercion))
                 {
                     if (matchedWithCoercion)
                     {
-                        CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i], DType.Number, allowDupes: true);
+                        CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i], returnType, allowDupes: true);
                     }
                 }
                 else

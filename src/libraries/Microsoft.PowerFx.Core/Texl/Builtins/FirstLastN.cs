@@ -19,7 +19,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public override bool IsSelfContained => true;
 
-        public override bool SupportsParamCoercion => false;
+        public override bool SupportsParamCoercion => true;
 
         public FirstLastNFunction(bool isFirst)
             : base(
@@ -66,4 +66,5 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         }
     }
 }
+
 #pragma warning restore SA1649 // File name should match first type name

@@ -187,41 +187,52 @@ namespace Microsoft.PowerFx.Core.Tests
             var symbolTableOriginal = new Engine(new PowerFxConfig()).SupportedFunctions;
             var symbolTableCopy1 = symbolTableOriginal.GetMutableCopyOfFunctions();
             var symbolTableCopy2 = symbolTableOriginal.GetMutableCopyOfFunctions();
+            var symbolTableCopy3 = symbolTableOriginal.GetMutableCopyOfFunctions();
 
             var originalCount = symbolTableOriginal.Functions.Count();
             var copyCount1 = symbolTableCopy1.Functions.Count();
             var copyCount2 = symbolTableCopy2.Functions.Count();
+            var copyCount3 = symbolTableCopy2.Functions.Count();
 
             Assert.Equal(copyCount1, originalCount);
             Assert.Equal(copyCount2, originalCount);
+            Assert.Equal(copyCount3, originalCount);
 
             symbolTableCopy1.RemoveFunction("Abs");
             symbolTableCopy2.RemoveFunction("Day");
+            symbolTableCopy3.RemoveFunction("Cos");
 
             Assert.Equal(originalCount, symbolTableOriginal.Functions.Count());
-            Assert.Equal(copyCount1 - 2, symbolTableCopy1.Functions.Count());
+            Assert.Equal(copyCount1 - 4, symbolTableCopy1.Functions.Count());
             Assert.Equal(copyCount2 - 1, symbolTableCopy2.Functions.Count());
+            Assert.Equal(copyCount3 - 2, symbolTableCopy3.Functions.Count());
 
             Assert.NotEqual(copyCount1, symbolTableCopy1.Functions.Count());
             Assert.NotEqual(copyCount2, symbolTableCopy2.Functions.Count());
+            Assert.NotEqual(copyCount3, symbolTableCopy3.Functions.Count());
 
             Assert.Contains(symbolTableOriginal.Functions, f => f.Name == "Abs");
             Assert.Contains(symbolTableOriginal.Functions, f => f.Name == "Day");
             Assert.Contains(symbolTableOriginal.Functions, f => f.Name == "Text");
-            Assert.Contains(symbolTableOriginal.Functions, f => f.Name == "Value");
+            Assert.Contains(symbolTableOriginal.Functions, f => f.Name == "Cos");
             Assert.Contains(symbolTableCopy1.Functions, f => f.Name == "Day");
             Assert.Contains(symbolTableCopy1.Functions, f => f.Name == "Text");
-            Assert.Contains(symbolTableCopy1.Functions, f => f.Name == "Value");
+            Assert.Contains(symbolTableCopy1.Functions, f => f.Name == "Cos");
             Assert.Contains(symbolTableCopy2.Functions, f => f.Name == "Abs");
             Assert.Contains(symbolTableCopy2.Functions, f => f.Name == "Text");
-            Assert.Contains(symbolTableCopy2.Functions, f => f.Name == "Value");
+            Assert.Contains(symbolTableCopy2.Functions, f => f.Name == "Cos");
+            Assert.Contains(symbolTableCopy3.Functions, f => f.Name == "Abs");
+            Assert.Contains(symbolTableCopy3.Functions, f => f.Name == "Text");
+            Assert.Contains(symbolTableCopy3.Functions, f => f.Name == "Abs");
 
             Assert.DoesNotContain(symbolTableCopy1.Functions, f => f.Name == "Abs");
             Assert.DoesNotContain(symbolTableCopy2.Functions, f => f.Name == "Day");
+            Assert.DoesNotContain(symbolTableCopy3.Functions, f => f.Name == "Cos");
 
             // Check if nothing else has been copied
             Assert.Empty(symbolTableCopy1.SymbolNames);
             Assert.Empty(symbolTableCopy2.SymbolNames);
+            Assert.Empty(symbolTableCopy3.SymbolNames);
         }
     }
 }

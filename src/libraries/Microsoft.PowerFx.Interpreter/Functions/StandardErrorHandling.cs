@@ -643,7 +643,7 @@ namespace Microsoft.PowerFx.Functions
 
         private static FormulaValue DateNumberTimeOrDateTime(IRContext irContext, int index, FormulaValue arg)
         {
-            if (arg is DateValue || arg is DateTimeValue || arg is TimeValue || arg is NumberValue || arg is BlankValue || arg is ErrorValue)
+            if (arg is DateValue || arg is DateTimeValue || arg is TimeValue || arg is NumberValue || arg is DecimalValue || arg is BlankValue || arg is ErrorValue)
             {
                 return arg;
             }
@@ -719,6 +719,14 @@ namespace Microsoft.PowerFx.Functions
                     return CommonErrors.ArgumentOutOfRange(irContext);
                 }
             }
+            else if (arg is DecimalValue decimalArg)
+            {
+                var dec = decimalArg.Value;
+                if (dec < 0)
+                {
+                    return CommonErrors.ArgumentOutOfRange(irContext);
+                }
+            }
 
             return arg;
         }
@@ -733,6 +741,14 @@ namespace Microsoft.PowerFx.Functions
                     return CommonErrors.ArgumentOutOfRange(irContext);
                 }
             }
+            else if (arg is DecimalValue decimalArg)
+            {
+                var dec = decimalArg.Value;
+                if (dec <= 0)
+                {
+                    return CommonErrors.ArgumentOutOfRange(irContext);
+                }
+            }
 
             return arg;
         }
@@ -743,6 +759,14 @@ namespace Microsoft.PowerFx.Functions
             {
                 var number = numberArg.Value;
                 if (number <= 0)
+                {
+                    return CommonErrors.ArgumentOutOfRange(irContext);
+                }
+            }
+            else if (arg is DecimalValue decimalArg)
+            {
+                var dec = decimalArg.Value;
+                if (dec <= 0)
                 {
                     return CommonErrors.ArgumentOutOfRange(irContext);
                 }

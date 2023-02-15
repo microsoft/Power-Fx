@@ -40,7 +40,6 @@ namespace Microsoft.PowerFx
 
         public ParserOptions(Features features) 
         {
-            NumberIsFloat = features.HasFlag(Features.NumberIsFloat);
         }
 
         internal ParserOptions()
@@ -64,7 +63,7 @@ namespace Microsoft.PowerFx
             }
 
             var flags = (AllowsSideEffects ? TexlParser.Flags.EnableExpressionChaining : 0) |
-                        (NumberIsFloat || features.HasFlag(Features.NumberIsFloat) ? TexlParser.Flags.NumberIsFloat : 0);
+                        (NumberIsFloat ? TexlParser.Flags.NumberIsFloat : 0);
 
             var result = TexlParser.ParseScript(script, features, Culture, flags);
             result.Options = this;
