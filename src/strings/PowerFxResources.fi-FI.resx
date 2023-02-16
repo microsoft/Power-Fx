@@ -1837,6 +1837,10 @@
     <value>Numeerinen arvo on liian suuri.</value>
     
   </data>
+  <data name="ErrTextTooLarge" xml:space="preserve">
+    <value>Lausekkeessa ei saa olla yli {0} merkkiä. Lauseke on {1} merkkiä pitkä.</value>
+    
+  </data>
   <data name="ErrTextFormatTooLarge" xml:space="preserve">
     <value>Muodon merkkijonon koko voi olla enintään {0} merkkiä.</value>
     
@@ -1863,6 +1867,10 @@
   </data>
   <data name="ErrTypeError_Arg_Expected_Found" xml:space="preserve">
     <value>Tämän argumentin {0} tyyppi ei vastaa odotettua tyyppiä {1}. Löytyi tyyppi {2}.</value>
+    
+  </data>
+  <data name="ErrTypeError_WrongType" xml:space="preserve">
+    <value>Tämän lausekkeen tyyppi ei vastaa odotettua tyyppiä {0}. Löytyi tyyppi {1}.</value>
     
   </data>
   <data name="ErrTypeErrorRecordIncompatibleWithSource" xml:space="preserve">
@@ -2643,10 +2651,6 @@
   <data name="AboutIsNumeric_value" xml:space="preserve">
     <value>Testattava arvo.</value>
   </data>
-  <data name="Post" xml:space="preserve">
-    <value>Julkaise</value>
-    
-  </data>
   <data name="AboutDateTimeValue" xml:space="preserve">
     <value>Muuntaa tekstimuotoisen päivämäärän ja ajan luvuksi, joka edustaa päivämäärää Power Appsin päivämäärä- ja aikakoodissa.</value>
     
@@ -3064,7 +3068,7 @@
     
   </data>
   <data name="Icon_Train_DisplayName" xml:space="preserve">
-    <value>Harjoittaa</value>
+    <value>Kouluta</value>
     
   </data>
   <data name="Icon_Tray_DisplayName" xml:space="preserve">
@@ -4111,10 +4115,6 @@
     <value>Kaavasarakkeet eivät tue tietueiden tai taulukoiden coercing-tietueita.</value>
     
   </data>
-  <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
-    <value>Kaavat voivat olla enintään 1 000 merkkiä pitkiä.</value>
-    
-  </data>
   <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
     <value>Yksisarakkeista taulukoita ei tueta kaavasarakkeissa.</value>
     
@@ -4225,10 +4225,10 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
-    <value>Tämä virhe tulee näkyviin, kun kaava viittaa osan käyttäytymisen ominaisuuksiin, joiden syntaksi on virheellinen. (Esimerkiksi Component.OnCustomChange kohteen Component.OnCustomChange() sijaan)</value>
+    <value>Tämä virhe tulee näkyviin, kun kaava viittaa osan käyttäytymisen ominaisuuksiin, joiden syntaksi on virheellinen. (Esimerkiksi Component.CustomFunction kohteen Component.CustomFunction() sijaan)</value>
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
-    <value>Viittaa osan käyttäytymisen ominaisuuteen oikean syntaksin avulla. Esimerkki: Component.OnCustomChange()</value>
+    <value>Viittaa osan käyttäytymisen ominaisuuteen oikean syntaksin avulla. Esimerkki: Component.CustomFunction()</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_Link_1" xml:space="preserve">
@@ -4737,6 +4737,10 @@
     <value>Nimetyn kaavan täytyy päättyä puolipisteeseen.</value>
     
   </data>
+  <data name="ErrNamedFormula_MissingValue" xml:space="preserve">
+    <value>Nimetyn kaavan on oltava lauseke.</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula '{0}' on jo olemassa.</value>
   </data>
@@ -4828,6 +4832,10 @@
   </data>
   <data name="ErrInvalidFunction" xml:space="preserve">
     <value>Tämä funktio on epäselvä, se sisältää Lambda-lausekkeita ja saraketunnisteita samalle argumentille.</value>
+    
+  </data>
+  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
+    <value>BooleanOptionSet-toimintoa {0} ei tueta.</value>
     
   </data>
 </root>

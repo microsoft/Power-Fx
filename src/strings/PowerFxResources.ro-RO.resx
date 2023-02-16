@@ -1837,6 +1837,10 @@
     <value>Valoarea numerică este prea mare.</value>
     
   </data>
+  <data name="ErrTextTooLarge" xml:space="preserve">
+    <value>Expresia nu poate fi mai mare de {0} caractere. Expresia are {1} caractere.</value>
+    
+  </data>
   <data name="ErrTextFormatTooLarge" xml:space="preserve">
     <value>Dimensiunea formatului de șir nu poate fi mai mare de {0} caractere.</value>
     
@@ -1863,6 +1867,10 @@
   </data>
   <data name="ErrTypeError_Arg_Expected_Found" xml:space="preserve">
     <value>Tipul acestui argument „{0}” nu corespunde tipului așteptat „{1}”. S-a găsit tipul „{2}”.</value>
+    
+  </data>
+  <data name="ErrTypeError_WrongType" xml:space="preserve">
+    <value>Tipul acestei expresii nu corespunde tipului așteptat „{0}”. S-a găsit tipul „{1}”.</value>
     
   </data>
   <data name="ErrTypeErrorRecordIncompatibleWithSource" xml:space="preserve">
@@ -2643,10 +2651,6 @@
   <data name="AboutIsNumeric_value" xml:space="preserve">
     <value>Valoarea de testat.</value>
   </data>
-  <data name="Post" xml:space="preserve">
-    <value>Postare</value>
-    
-  </data>
   <data name="AboutDateTimeValue" xml:space="preserve">
     <value>Convertește o valoare dată-oră în formă de text la un număr care reprezintă data în codul dată-oră Power Apps.</value>
     
@@ -3064,7 +3068,7 @@
     
   </data>
   <data name="Icon_Train_DisplayName" xml:space="preserve">
-    <value>Tren</value>
+    <value>Instruire</value>
     
   </data>
   <data name="Icon_Tray_DisplayName" xml:space="preserve">
@@ -4111,10 +4115,6 @@
     <value>Constrângerea înregistrărilor sau a tabelelor nu este acceptată în coloanele de formule.</value>
     
   </data>
-  <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
-    <value>Formulele nu pot avea mai mult de 1000 de caractere.</value>
-    
-  </data>
   <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
     <value>Tabelele cu o singură coloană nu sunt acceptate în coloanele de formule.</value>
     
@@ -4225,10 +4225,10 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
-    <value>Această eroare apare când o formulă se referă la proprietățile de comportament ale componentelor cu sintaxă nevalidă. (De exemplu, Component.OnCustomChange în loc de Component.OnCustomChange())</value>
+    <value>Această eroare apare când o formulă se referă la proprietățile funcție ale componentelor cu sintaxă nevalidă. (De exemplu, Component.CustomFunction în loc de Component.CustomFunction())</value>
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
-    <value>Utilizați sintaxa corectă pentru a face referire la proprietatea de comportament a componentelor. De exemplu, Component.OnCustomChange()</value>
+    <value>Utilizați sintaxa corectă pentru a face referire la proprietatea funcție a componentelor. De exemplu, Component.CustomFunction()</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_Link_1" xml:space="preserve">
@@ -4730,11 +4730,15 @@
     
   </data>
   <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
-    <value>Obiectele atipice nu pot fi utilizate ca prim argument pentru funcțiile care acceptă domenii de înregistrare. </value>
+    <value>Obiectele fără tip nu pot fi utilizate ca prim argument pentru funcțiile care acceptă domenii de înregistrare. </value>
     
   </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>Formula numită trebuie să se termine cu punct și virgulă.</value>
+    
+  </data>
+  <data name="ErrNamedFormula_MissingValue" xml:space="preserve">
+    <value>Formula denumită trebuie să fie o expresie.</value>
     
   </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
@@ -4828,6 +4832,10 @@
   </data>
   <data name="ErrInvalidFunction" xml:space="preserve">
     <value>Această funcție este ambiguă. Conține expresii lambda și identificatori de coloană pentru același argument.</value>
+    
+  </data>
+  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
+    <value>Opțiunea BooleanOptionSet {0} nu este acceptată.</value>
     
   </data>
 </root>

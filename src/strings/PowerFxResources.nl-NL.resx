@@ -535,7 +535,7 @@
     
   </data>
   <data name="BooleanBArg1" xml:space="preserve">
-    <value>booleaans</value>
+    <value>booleaanse waarde</value>
     
   </data>
   <data name="AboutBooleanB_boolean" xml:space="preserve">
@@ -1837,6 +1837,10 @@
     <value>De numerieke waarde is te groot.</value>
     
   </data>
+  <data name="ErrTextTooLarge" xml:space="preserve">
+    <value>Expressie mag niet meer dan {0} tekens bevatten. De expressie bevat {1} tekens.</value>
+    
+  </data>
   <data name="ErrTextFormatTooLarge" xml:space="preserve">
     <value>Tekenreeksgrootte van indeling mag niet langer zijn dan {0} tekens.</value>
     
@@ -1863,6 +1867,10 @@
   </data>
   <data name="ErrTypeError_Arg_Expected_Found" xml:space="preserve">
     <value>Het type van dit argument {0} komt niet overeen met het verwachte type {1}. Type {2} gevonden.</value>
+    
+  </data>
+  <data name="ErrTypeError_WrongType" xml:space="preserve">
+    <value>Het type van deze expressie komt niet overeen met het verwachte type {0}. Type {1} gevonden.</value>
     
   </data>
   <data name="ErrTypeErrorRecordIncompatibleWithSource" xml:space="preserve">
@@ -2643,10 +2651,6 @@
   <data name="AboutIsNumeric_value" xml:space="preserve">
     <value>De waarde die moet worden getest.</value>
   </data>
-  <data name="Post" xml:space="preserve">
-    <value>Plaatsen</value>
-    
-  </data>
   <data name="AboutDateTimeValue" xml:space="preserve">
     <value>Hiermee worden een datum en tijd in het tekstformulier geconverteerd naar een getal dat de datum weergeeft in de Power Apps datum/tijdcode.</value>
     
@@ -3064,7 +3068,7 @@
     
   </data>
   <data name="Icon_Train_DisplayName" xml:space="preserve">
-    <value>Trein</value>
+    <value>Trainen</value>
     
   </data>
   <data name="Icon_Tray_DisplayName" xml:space="preserve">
@@ -4111,10 +4115,6 @@
     <value>Afwijken van records of tabellen wordt niet ondersteund in formulekolommen.</value>
     
   </data>
-  <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
-    <value>Formules kunnen niet langer zijn dan 1000 tekens.</value>
-    
-  </data>
   <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
     <value>Tabellen met één kolom worden niet ondersteund in formulekolommen.</value>
     
@@ -4225,10 +4225,10 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
-    <value>Deze fout wordt weergegeven wanneer een formule verwijst naar eigenschappen van componentgedrag met ongeldige syntaxis. (Bijvoorbeeld Component.OnCustomChange in plaats van Component.OnCustomChange())</value>
+    <value>Deze fout wordt weergegeven wanneer een formule verwijst naar eigenschappen van componentfunctie met ongeldige syntaxis. (Bijvoorbeeld Component.CustomFunction in plaats van Component.CustomFunction())</value>
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
-    <value>Gebruik de juiste syntaxis om te verwijzen naar de eigenschap van componentgedrag. Bijvoorbeeld Component.OnCustomChange()</value>
+    <value>Gebruik de juiste syntaxis om te verwijzen naar de eigenschap van componentfunctie. Bijvoorbeeld Component.CustomFunction()</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_Link_1" xml:space="preserve">
@@ -4730,11 +4730,15 @@
     
   </data>
   <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
-    <value>Objecten zonder type kunnen niet worden gebruikt als het eerste argument voor functies die recordbereiken ondersteunen.</value>
+    <value>Niet-getypeerde objecten kunnen niet worden gebruikt als het eerste argument voor functies die recordbereiken ondersteunen.</value>
     
   </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>De genoemde formule moet eindigen met een puntkomma.</value>
+    
+  </data>
+  <data name="ErrNamedFormula_MissingValue" xml:space="preserve">
+    <value>De genoemde formule moet een expressie zijn.</value>
     
   </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
@@ -4828,6 +4832,10 @@
   </data>
   <data name="ErrInvalidFunction" xml:space="preserve">
     <value>Deze functie is dubbelzinnig. De functie bevat een aantal lambda-expressies en kolom-id's voor hetzelfde argument.</value>
+    
+  </data>
+  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
+    <value>De BooleanOptionSet-optie {0} wordt niet ondersteund.</value>
     
   </data>
 </root>
