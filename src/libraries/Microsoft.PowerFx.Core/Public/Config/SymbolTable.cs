@@ -24,12 +24,7 @@ namespace Microsoft.PowerFx
     public class SymbolTable : ReadOnlySymbolTable, IGlobalSymbolNameResolver
     {
         private readonly SlotMap<NameLookupInfo?> _slots = new SlotMap<NameLookupInfo?>();
-
-        // $$$ NEeded by config... make private?
-        //internal readonly Dictionary<string, NameLookupInfo> _variables = new Dictionary<string, NameLookupInfo>();
-
-        //private DisplayNameProvider _environmentSymbolDisplayNameProvider = new SingleSourceDisplayNameProvider();
-
+        
         IEnumerable<KeyValuePair<string, NameLookupInfo>> IGlobalSymbolNameResolver.GlobalSymbols => _variables;
 
         /// <summary>
@@ -58,22 +53,22 @@ namespace Microsoft.PowerFx
             throw NewBadSlotException(slot);
         }
 
-        //internal bool TryGetVariable(DName name, out NameLookupInfo symbol, out DName displayName)
-        //{
-        //    var lookupName = name;
+        internal override bool TryGetVariable(DName name, out NameLookupInfo symbol, out DName displayName)
+        {
+            var lookupName = name;
 
-        //    if (_environmentSymbolDisplayNameProvider.TryGetDisplayName(name, out displayName))
-        //    {
-        //        // do nothing as provided name can be used for lookup with logical name
-        //    }
-        //    else if (_environmentSymbolDisplayNameProvider.TryGetLogicalName(name, out var logicalName))
-        //    {
-        //        lookupName = logicalName;
-        //        displayName = name;
-        //    }
+            if (_environmentSymbolDisplayNameProvider.TryGetDisplayName(name, out displayName))
+            {
+                // do nothing as provided name can be used for lookup with logical name
+            }
+            else if (_environmentSymbolDisplayNameProvider.TryGetLogicalName(name, out var logicalName))
+            {
+                lookupName = logicalName;
+                displayName = name;
+            }
 
-        //    return _variables.TryGetValue(lookupName, out symbol);
-        //}
+            return _variables.TryGetValue(lookupName, out symbol);
+        }
 
         /// <summary>
         /// Provide variable for binding only.

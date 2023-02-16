@@ -2,15 +2,11 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
-using Microsoft.PowerFx.Core.Entities;
-using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
 
@@ -34,9 +30,7 @@ namespace Microsoft.PowerFx
 
         // Full universe of possible symbols
         // All other symbols are missing. 
-        public DeferredSymbolTable(
-            DisplayNameProvider map, 
-            Func<string, string, FormulaType> fetchTypeInfo)
+        public DeferredSymbolTable(DisplayNameProvider map, Func<string, string, FormulaType> fetchTypeInfo)
         {
             _displayNameLookup = map ?? throw new ArgumentNullException(nameof(map));
             _fetchTypeInfo = fetchTypeInfo ?? throw new ArgumentNullException(nameof(fetchTypeInfo));
@@ -49,9 +43,7 @@ namespace Microsoft.PowerFx
 
         // Must be thread safe!!!        
         // We can have multiple threads reading; which means they may be populating the cache. 
-        private readonly object _lock = new object();
-
-        //private readonly Dictionary<string, NameLookupInfo> _variables = new Dictionary<string, NameLookupInfo>();
+        private readonly object _lock = new object();        
 
         private readonly SlotMap<NameLookupInfo?> _slots = new SlotMap<NameLookupInfo?>();
 
