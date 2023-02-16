@@ -14,7 +14,7 @@ namespace Microsoft.PowerFx.Types
     internal class InMemoryRecordValue : RecordValue
     {
         protected readonly IReadOnlyDictionary<string, FormulaValue> _fields;
-        protected readonly IDictionary<string, FormulaValue> _mutableFields;
+        private readonly IDictionary<string, FormulaValue> _mutableFields;
 
         public InMemoryRecordValue(IRContext irContext, IEnumerable<NamedValue> fields)
           : this(irContext, ToDict(fields))
@@ -53,6 +53,11 @@ namespace Microsoft.PowerFx.Types
 
         public override async Task<DValue<RecordValue>> UpdateFieldsAsync(RecordValue changeRecord, CancellationToken cancellationToken)
         {
+            return await UpdateAllowedFieldsAsync(changeRecord, _fields, cancellationToken);
+        }
+
+        protected async Task<DValue<RecordValue>> UpdateAllowedFieldsAsync(RecordValue changeRecord, IEnumerable<KeyValuePair<string, FormulaValue>> allowedFields, CancellationToken cancellationToken)
+        {
             cancellationToken.ThrowIfCancellationRequested();
 
             if (_mutableFields == null)
@@ -60,24 +65,19 @@ namespace Microsoft.PowerFx.Types
                 return await base.UpdateFieldsAsync(changeRecord, cancellationToken);
             }
 
-            await UpdateExistingFields(changeRecord, cancellationToken);
+            await foreach (var field in changeRecord.GetFieldsAsync(cancellationToken))
+            {
+                _mutableFields[field.Name] = field.Value;
+            }
 
             var fields = new List<NamedValue>();
 
-            foreach (var kvp in _fields)
+            foreach (var kvp in allowedFields)
             {
                 fields.Add(new NamedValue(kvp.Key, kvp.Value));
             }
 
             return DValue<RecordValue>.Of(NewRecordFromFields(fields));
-        }
-
-        protected async Task UpdateExistingFields(RecordValue changeRecord, CancellationToken cancellationToken)
-        {
-            await foreach (var field in changeRecord.GetFieldsAsync(cancellationToken))
-            {
-                _mutableFields[field.Name] = field.Value;
-            }
         }
     }
 }

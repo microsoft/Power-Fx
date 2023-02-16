@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
@@ -43,28 +44,9 @@ namespace Microsoft.PowerFx.Types
 
         public override async Task<DValue<RecordValue>> UpdateFieldsAsync(RecordValue changeRecord, CancellationToken cancellationToken)
         {
-            cancellationToken.ThrowIfCancellationRequested();
+            var allowedFields = _fields.Where(kvp => Type.TryGetFieldType(kvp.Key, out _));
 
-            if (_mutableFields == null)
-            {
-                return await base.UpdateFieldsAsync(changeRecord, cancellationToken);
-            }
-
-            await UpdateExistingFields(changeRecord, cancellationToken);
-
-            var fields = new List<NamedValue>();
-
-            foreach (var kvp in _fields)
-            {
-                // Only add fields which were specified via the expectedType (IE RecordType),
-                // because inner record value may have more fields than the expected type.
-                if (Type.TryGetFieldType(kvp.Key, out _))
-                {
-                    fields.Add(new NamedValue(kvp.Key, kvp.Value));
-                }
-            }
-
-            return DValue<RecordValue>.Of(NewRecordFromFields(fields));
+            return await UpdateAllowedFieldsAsync(changeRecord, allowedFields, cancellationToken);
         }
     }
 }

@@ -102,7 +102,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
 
                 var typeSuper = DType.Supertype(type, typeArg);
-
                 if (!typeSuper.IsError)
                 {
                     type = typeSuper;
