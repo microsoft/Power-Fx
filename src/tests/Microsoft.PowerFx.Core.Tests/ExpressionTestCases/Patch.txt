@@ -114,6 +114,9 @@ Errors: Error 0-15: The function 'Patch' has some invalid arguments.|Error 10-11
 {Planet:"Jupter",Properties:{Color:"red-brown",Moon:{Color:"yellow",Name:"Phobos"},Size:"huge",Weight:99999}}
 
 // Display names
+>> Patch(r1, {DisplayNameField2:"earth"}, {Field2:"mars"})
+{Field1:1,Field2:"mars",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}
+
 >> Patch(t1, {DisplayNameField2:"earth"}, {Field2:"mars"});
    t1
 Table({Field1:1,Field2:"mars",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})

@@ -141,6 +141,58 @@ namespace Microsoft.PowerFx.Functions
             return base.GetSignatures(arity);
         }
 
+        public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        {
+            Contracts.AssertValue(args);
+            Contracts.AssertAllValues(args);
+            Contracts.AssertValue(argTypes);
+            Contracts.Assert(args.Length == argTypes.Length);
+            Contracts.AssertValue(errors);
+
+            bool isValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+
+            // Use DType.Error until we can correctly infer the return type.
+            returnType = DType.Error;
+
+            if (!isValid)
+            {
+                return false;
+            }
+
+            DType recordType = argTypes[0];
+            DType retType = recordType;
+            for (int i = 1; i < args.Length; i++)
+            {
+                DType curType = argTypes[i];
+                if (!curType.IsRecord)
+                {
+                    errors.EnsureError(args[i], TexlStrings.ErrNeedRecord);
+                    isValid = false;
+                    continue;
+                }
+
+                // Ensure that if the key in argument1 exists in the current record, their types match.
+                bool isSafeToUnion = true;
+                foreach (var typedName in curType.GetNames(DPath.Root))
+                {
+                    DName name = typedName.Name;
+                    if (recordType.TryGetType(name, out DType nameType) && !nameType.Accepts(typedName.Type))
+                    {
+                        errors.EnsureError(args[i], TexlStrings.ErrTypeError_Arg_Expected_Found, name, nameType.GetKindString(), typedName.Type.GetKindString());
+                        isValid = isSafeToUnion = false;
+                    }
+                }
+
+                if (isSafeToUnion)
+                {
+                    retType = DType.Union(retType, curType);
+                }
+            }
+
+            returnType = retType;
+            return isValid;
+        }
+
         public async Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancellationToken)
         {
             var validArgs = CheckArgs(args, out FormulaValue faultyArg);

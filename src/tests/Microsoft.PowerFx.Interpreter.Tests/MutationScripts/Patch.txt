@@ -1,0 +1,26 @@
+﻿>> Set(x, {t: Table({a:"lorem", b:1, c:true})})
+{t:Table({a:"lorem",b:1,c:true})}
+
+>> Set(r, {f1:"lorem", f2:1, f3:true})
+{f1:"lorem",f2:1,f3:true}
+
+>> x.t
+Table({a:"lorem",b:1,c:true})
+
+>> Patch(First(x.t), {d:Date(2023,2,16)})
+{a:"lorem",b:1,c:true,d:Date(2023,2,16)}
+
+>> Patch(First(x.t), {d:Date(2023,2,16),a:"ipsum"},{b:2},{c:false,d:Date(2000,2,16)},{e:123})
+{a:"ipsum",b:2,c:false,d:Date(2000,2,16),e:123}
+
+>> With({y:Patch(First(x.t), {d:Date(2023,2,16),a:"ipsum"},{b:2},{c:false,d:Date(2000,2,16)},{e:123})}, Patch(First(x.t), {a:First(x.t).a & " " & y.a, b: First(x.t).b + y.b}))
+{a:"lorem ipsum",b:3,c:true}
+
+>> Patch({f4:Date(2023,2,16)}, r)
+{f1:"lorem",f2:1,f3:true,f4:Date(2023,2,16)}
+
+>> Patch(First(x.t), r)
+{a:"lorem",b:1,c:true,f1:"lorem",f2:1,f3:true}
+
+>> Patch({f4:Date(2023,2,16)}, First(x.t), r)
+{a:"lorem",b:1,c:true,f1:"lorem",f2:1,f3:true,f4:Date(2023,2,16)}

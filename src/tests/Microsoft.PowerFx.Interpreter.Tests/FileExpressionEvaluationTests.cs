@@ -72,6 +72,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("Collect.txt")]
         [InlineData("Clear.txt")]
         [InlineData("ClearCollect.txt")]
+        [InlineData("Patch.txt")]
         [InlineData("ForAllMutate.txt")]
         public void RunMutationTests(string file)
         {
