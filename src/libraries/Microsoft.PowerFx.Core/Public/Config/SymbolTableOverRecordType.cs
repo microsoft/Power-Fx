@@ -62,6 +62,11 @@ namespace Microsoft.PowerFx
                 {
                     yield return new KeyValuePair<string, NameLookupInfo>(kv.Name, Create(kv.Name, kv.Type));
                 }
+
+                if (_allowThisRecord)
+                {
+                    yield return new KeyValuePair<string, NameLookupInfo>(TexlBinding.ThisRecordDefaultName, _thisRecord);
+                }
             }
         }
 

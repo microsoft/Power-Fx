@@ -88,6 +88,8 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction FindT = _library.Append(new FindTFunction());
         public static readonly TexlFunction First = _library.Append(new FirstLastFunction(isFirst: true));
         public static readonly TexlFunction FirstN = _library.Append(new FirstLastNFunction(isFirst: true));
+        public static readonly TexlFunction First_UO = _library.Append(new FirstLastFunction_UO(isFirst: true));
+        public static readonly TexlFunction FirstN_UO = _library.Append(new FirstLastNFunction_UO(isFirst: true));
         public static readonly TexlFunction ForAll = _library.Append(new ForAllFunction());
         public static readonly TexlFunction ForAll_UO = _library.Append(new ForAllFunction_UO());
         public static readonly TexlFunction GUIDPure = _library.Append(new GUIDPureFunction());
@@ -112,6 +114,8 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction ISOWeekNum = _library.Append(new ISOWeekNumFunction());
         public static readonly TexlFunction Last = _library.Append(new FirstLastFunction(isFirst: false));
         public static readonly TexlFunction LastN = _library.Append(new FirstLastNFunction(isFirst: false));
+        public static readonly TexlFunction Last_UO = _library.Append(new FirstLastFunction_UO(isFirst: false));
+        public static readonly TexlFunction LastN_UO = _library.Append(new FirstLastNFunction_UO(isFirst: false));
         public static readonly TexlFunction Left = _library.Append(new LeftRightScalarFunction(isLeft: true));
         public static readonly TexlFunction LeftTS = _library.Append(new LeftRightTableScalarFunction(isLeft: true));
         public static readonly TexlFunction LeftTT = _library.Append(new LeftRightTableTableFunction(isLeft: true));

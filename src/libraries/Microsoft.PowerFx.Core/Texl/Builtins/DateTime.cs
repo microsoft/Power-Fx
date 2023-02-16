@@ -21,6 +21,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Equivalent DAX/Excel function: Date
     internal sealed class DateFunction : BuiltinFunction
     {
+        public override ArgPreprocessor GetArgPreprocessor(int index)
+        {
+            return base.GetGenericArgPreprocessor(index);
+        }
+
         public override bool IsSelfContained => true;
 
         public override bool HasPreciseErrors => true;
@@ -69,6 +74,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Equivalent DAX/Excel function: Time
     internal sealed class TimeFunction : BuiltinFunction
     {
+        public override ArgPreprocessor GetArgPreprocessor(int index)
+        {
+            return base.GetGenericArgPreprocessor(index);
+        }
+
         public override bool IsSelfContained => true;
 
         public override bool HasPreciseErrors => true;
@@ -90,6 +100,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // DateTime(year, month, day, hour, minute, second[, millisecond])
     internal sealed class DateTimeFunction : BuiltinFunction
     {
+        public override ArgPreprocessor GetArgPreprocessor(int index)
+        {
+            return base.GetGenericArgPreprocessor(index);
+        }
+
         public override bool IsSelfContained => true;
 
         public override bool HasPreciseErrors => true;
@@ -401,7 +416,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return argumentIndex == 2;
         }
 
-        public override bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
@@ -410,17 +425,22 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            var fValid = base.CheckTypes(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
             Contracts.Assert(returnType == DType.DateTime);
 
             var type0 = argTypes[0];
 
             if (fValid)
             {
-                // Arg0 should be either a DateTime or Date.
-                if (type0.Kind == DKind.Date || type0.Kind == DKind.DateTime)
+                if (type0.Kind == DKind.Date || type0.Kind == DKind.DateTime || type0.Kind == DKind.Time)
                 {
+                    // Arg0 should be a Time, DateTime or Date.
                     returnType = type0;
+                }
+                else if (nodeToCoercedTypeMap != null && nodeToCoercedTypeMap.TryGetValue(args[0], out var coercedType))
+                {
+                    // Or a type that can be coerced to it
+                    returnType = coercedType;
                 }
                 else
                 {
@@ -488,6 +508,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 {
                     var inputColumn = type0.GetNames(DPath.Root).Single();
                     var resultColumnType = inputColumn.Type;
+                    if (nodeToCoercedTypeMap != null && nodeToCoercedTypeMap.TryGetValue(args[0], out var coercedType))
+                    {
+                        resultColumnType = coercedType.GetColumnTypeFromSingleColumnTable();
+                    }
+
                     var resultColumnName = context.Features.HasFlag(Features.ConsistentOneColumnTableResult)
                         ? ColumnName_Value
                         : inputColumn.Name;
@@ -496,13 +521,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
             else
             {
-                if (type0.Kind == DKind.DateTime || type0.Kind == DKind.Date)
+                if (type0.Kind == DKind.DateTime || type0.Kind == DKind.Date || type0.Kind == DKind.Time)
                 {
                     returnType = DType.CreateTable(new TypedName(type0, GetOneColumnTableResultName(context.Features)));
                 }
                 else if (type0.CoercesTo(DType.DateTime))
                 {
                     CollectionUtils.Add(ref nodeToCoercedTypeMap, args[0], DType.DateTime);
+                    returnType = DType.CreateTable(new TypedName(DType.DateTime, GetOneColumnTableResultName(context.Features)));
                 }
                 else
                 {

@@ -8,12 +8,12 @@ using System.Text.RegularExpressions;
 
 namespace Microsoft.PowerFx.Connectors
 {
-    internal class OpenApiHelperFunctions
+    public class OpenApiHelperFunctions
     {
         private static readonly Regex NotAnXsdNCNameCharRegex = new Regex(@"[^a-zA-Z0-9_-]+", RegexOptions.Compiled);
         private static readonly Regex XsdNCNameStartCharRegex = new Regex(@"^[a-zA-Z_]", RegexOptions.Compiled);
 
-        internal static string NormalizeOperationId(string operationId)
+        public static string NormalizeOperationId(string operationId)
         {
             return MakeValidXsdNCName(Regex.Replace(operationId, @"[^A-Za-z0-9]", string.Empty));
         }

@@ -17,6 +17,16 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     //  Right(arg:s, count:n)
     internal sealed class LeftRightScalarFunction : BuiltinFunction
     {
+        public override ArgPreprocessor GetArgPreprocessor(int index)
+        {
+            if (index == 1)
+            {
+                return ArgPreprocessor.ReplaceBlankWithZeroAndTruncate;
+            }
+
+            return ArgPreprocessor.None;
+        }
+
         public override bool IsSelfContained => true;
 
         public override bool SupportsParamCoercion => true;

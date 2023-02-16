@@ -92,10 +92,6 @@ Error({Kind:ErrorKind.InvalidArgument})
 >> Char(256)
 Error({Kind:ErrorKind.InvalidArgument})
 
-// Needs updating for consistent schema flag
->> ForAll(Char([65, -1, 97, 1000]), IfError(Result, Text(FirstError.Kind)))
-Table({Value:"A"},{Value:"25"},{Value:"a"},{Value:"25"})
-
 >> Concatenate("Hello", If(1/0,"div0"), "world", If(Sqrt(-1)<0,"sqrt"))
 Error(Table({Kind:ErrorKind.Div0},{Kind:ErrorKind.Numeric}))
 
@@ -238,9 +234,6 @@ Error({Kind:ErrorKind.Div0})
 >> Find(If(1/0<2,["1","2"]),"1234")
 Error({Kind:ErrorKind.Div0})
 
->> Find(["one","two","three","four","five"],"one two three four five",[1/0, 0, 3, 100, 10])
-Table({Result:Error({Kind:ErrorKind.Div0})},{Result:Error({Kind:ErrorKind.InvalidArgument})},{Result:9},{Result:Error({Kind:ErrorKind.InvalidArgument})},{Result:20})
-
 >> First(If(1/0<2,[1]))
 Error({Kind:ErrorKind.Div0})
 
@@ -354,10 +347,6 @@ Error({Kind:ErrorKind.InvalidArgument})
 
 >> Len(If(1/0<2,"Hello"))
 Error({Kind:ErrorKind.Div0})
-
-// Needs updating for consistent schema flag
->> ForAll(Len(["abc", 1/0, Sqrt(-1)+"", "hello"]), IfError(Result, -FirstError.Kind))
-Table({Value:3},{Value:-13},{Value:-24},{Value:5})
 
 >> Ln(0)
 Error({Kind:ErrorKind.Numeric})

@@ -30,7 +30,7 @@ namespace Microsoft.PowerFx.Tests
         {
             var config = new PowerFxConfig(null)
             {
-                MaxCallDepth = 5
+                MaxCallDepth = 10
             };
             var recalcEngine = new RecalcEngine(config);
             Assert.IsType<ErrorValue>(recalcEngine.Eval("Abs(Abs(Abs(Abs(Abs(Abs(1))))))"));

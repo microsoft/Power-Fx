@@ -1869,6 +1869,10 @@
     <value>The type of this argument '{0}' does not match the expected type '{1}'. Found type '{2}'.</value>
     <comment>Error Message.</comment>
   </data>
+  <data name="ErrTypeError_WrongType" xml:space="preserve">
+    <value>The type of this expression does not match the expected type '{0}'. Found type '{1}'.</value>
+    <comment>Error Message.</comment>
+  </data>
   <data name="ErrTypeErrorRecordIncompatibleWithSource" xml:space="preserve">
     <value>The type of the record is incompatible with the source.</value>
     <comment>Error Message.</comment>
@@ -5025,5 +5029,9 @@
   <data name="ErrInvalidFunction" xml:space="preserve">
     <value>This function is ambiguous, it contains lambda expressions and column identifiers for the same argument.</value>
     <comment>Error Message.</comment>
+  </data>
+  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
+    <value>The BooleanOptionSet option {0} is not supported.</value>
+    <comment>Error Message. When BooleanOptionSet option has an invalid value.</comment>
   </data>
 </root>

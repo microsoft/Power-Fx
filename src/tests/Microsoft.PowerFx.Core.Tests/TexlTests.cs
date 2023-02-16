@@ -9,6 +9,7 @@ using System.Reflection.Metadata;
 using Microsoft.PowerFx.Core.App.Controls;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
+using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Functions.Delegation;
 using Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata;
@@ -21,6 +22,7 @@ using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
+using Microsoft.PowerFx.Tests;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
@@ -84,14 +86,17 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("DateAdd([Date(2000,1,1)],1)", "*[Value:D]")]
-        [InlineData("DateAdd([Date(2000,1,1)],[3])", "*[Value:D]")]
-        [InlineData("DateAdd(Table({a:Date(2000,1,1)}),[3])", "*[a:D]")]
-        [InlineData("DateAdd(Date(2000,1,1),[1])", "*[Result:D]")]
+        [InlineData("DateAdd(Date(2000,1,1), 1)", "D")]
+        [InlineData("DateAdd(Date(2000,1,1), 1, TimeUnit.Months)", "D")]
+        [InlineData("DateAdd(Date(2000,1,1), \"2\")", "D")] // Coercion on delta argument from string
+        [InlineData("DateAdd(Date(2000,1,1), true)", "D")] // Coercion on delta argument from boolean
         [InlineData("DateAdd(DateTimeValue(\"1 Jan 2015\"), 2)", "d")]
         [InlineData("DateAdd(DateTimeValue(\"1 Jan 2015\"), 2, TimeUnit.Years)", "d")]
         [InlineData("DateAdd(DateTimeValue(\"1 Jan 2015\"), \"hello\")", "d")]
         [InlineData("DateAdd(DateTimeValue(\"1 Jan 2015\"), \"hello\", 3)", "d")]
+        [InlineData("DateAdd(\"2000-01-01\", 1)", "d")] // Coercion on date argument from string
+        [InlineData("DateAdd(45678, 1)", "d")] // Coercion on date argument from number
+        [InlineData("DateAdd(Time(12,34,56), 1)", "T")] // Coercion on date argument from time
         public void TexlDateAdd(string script, string expectedType)
         {
             Assert.True(DType.TryParse(expectedType, out var type));
@@ -103,10 +108,17 @@ namespace Microsoft.PowerFx.Core.Tests
         [Theory]
         [InlineData("DateAdd([Date(2000,1,1)],1)", "*[Value:D]")]
         [InlineData("DateAdd([Date(2000,1,1)],[3])", "*[Value:D]")]
+        [InlineData("DateAdd(Table({a:Date(2000,1,1)}),[3])", "*[a:D]")]
         [InlineData("DateAdd(Date(2000,1,1),[1])", "*[Result:D]")]
+        [InlineData("DateAdd(\"2021-02-03\",[1])", "*[Result:d]")] // Coercion from string
+        [InlineData("DateAdd(44955,[1])", "*[Result:d]")] // Coercion from number
+        [InlineData("DateAdd(Time(12,0,0),[1])", "*[Result:T]")] // Coercion from time
         [InlineData("DateAdd([DateTimeValue(\"1 Jan 2015\")],1)", "*[Value:d]")]
         [InlineData("DateAdd([DateTimeValue(\"1 Jan 2015\")],[3])", "*[Value:d]")]
         [InlineData("DateAdd(DateTimeValue(\"1 Jan 2015\"),[1])", "*[Result:d]")]
+        [InlineData("DateAdd([\"2011-02-03\"],1)", "*[Value:d]")] // Coercion from string
+        [InlineData("DateAdd([44900],1)", "*[Value:d]")] // Coercion from number
+        [InlineData("DateAdd([Time(12,0,0)],1)", "*[Value:T]")] // Coercion from time
         [InlineData("DateDiff([Date(2000,1,1)],[Date(2001,1,1)],\"years\")", "*[Result:n]")]
         [InlineData("DateDiff(Date(2000,1,1),[Date(2001,1,1)],\"years\")", "*[Result:n]")]
         [InlineData("DateDiff([Date(2000,1,1)],Date(2001,1,1),\"years\")", "*[Result:n]")]
@@ -142,8 +154,8 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("DateAdd(Table({v:Date(2022,1,1),s:9},{v:Date(2022,2,2),s:25}), 2, TimeUnit.Days)")]
-        [InlineData("DateAdd(DropColumns([Date(2022,1,1),Date(2022,2,2)],\"Value\"), 2, TimeUnit.Days)")]
+        [InlineData("DateAdd(Table({v:Date(2022,1,1),s:9},{v:Date(2022,2,2),s:25}), 2, TimeUnit.Days)")] // Not a single-column table
+        [InlineData("DateAdd(DropColumns([Date(2022,1,1),Date(2022,2,2)],\"Value\"), 2, TimeUnit.Days)")] // Not a single-column table
         [InlineData("DateDiff(Table({v:Date(2022,1,1),s:9},{v:Date(2022,2,2),s:25}), Date(2022,12,12), TimeUnit.Days)")]
         [InlineData("DateDiff(DropColumns([Date(2022,1,1),Date(2022,2,2)],\"Value\"), Date(2022,2,2), TimeUnit.Days)")]
         public void TexlDateTableFunctions_Negative(string expression)
@@ -282,21 +294,66 @@ namespace Microsoft.PowerFx.Core.Tests
                 symbol);
         }
 
-        [Fact]
-        public void TexlFunctionTypeSemanticsCountIf()
+        private class BooleanOptionSet : OptionSet, IExternalOptionSet
+        {
+            public BooleanOptionSet(string name, DisplayNameProvider displayNameProvider)
+                : base(name, displayNameProvider)
+            {
+            }
+
+            bool IExternalOptionSet.IsBooleanValued => true;
+        }
+
+        [Theory]
+        [InlineData("CountIf(Table, A < 10)")]
+        [InlineData("CountIf(Table, A < 10, A > 0, A <> 2)")]
+        [InlineData("CountIf([1,2,3], Value) // Coercion from number to boolean")]
+        [InlineData("CountIf([\"false\",\"true\",\"false\"], Value) // Coercion from text to boolean")]
+        [InlineData("CountIf([1,2,3], BoolOptionSet.Yes) // Coercion from 2-valued option set to boolean")]
+        [InlineData("CountIf([1,2,3], If(true, 0 > 1, \"true\"))")]
+        [InlineData("CountIf([{a:\"true\",b:BoolOptionSet.Yes},{a:\"false\",b:BoolOptionSet.No}], a, b) // Coercion from fields in table")]
+        public void TexlFunctionTypeSemanticsCountIf(string expression)
         {
             var symbol = new SymbolTable();
             symbol.AddVariable("Table", new TableType(TestUtils.DT("*[A:n]")));
 
-            TestSimpleBindingSuccess(
-                "CountIf(Table, A < 10)",
-                DType.Number,
-                symbol);
+            var boolOptionSetDisplayNameProvider = DisplayNameUtility.MakeUnique(new Dictionary<string, string>
+            {
+                { "Yes", "Yes" },
+                { "No", "No" },
+            });
 
             TestSimpleBindingSuccess(
-                "CountIf(Table, A < 10, A > 0, A <> 2)",
+                expression,
                 DType.Number,
-                symbol);
+                symbol,
+                features: Features.All,
+                optionSets: new[] { new BooleanOptionSet("BoolOptionSet", boolOptionSetDisplayNameProvider) });
+        }
+
+        [Theory]
+        [InlineData("CountIf(Table, Today() + A)")]
+        [InlineData("CountIf(Table, A > 0, Today() + A)")]
+        [InlineData("CountIf(Table, {Result:A})")]
+        [InlineData("CountIf(First(Table), true)")]
+        [InlineData("CountIf([1,3,4], NonBoolOptionSet.First")]
+        public void TexlFunctionTypeSemanticsCountIf_Negative(string expression)
+        {
+            var symbol = new SymbolTable();
+            symbol.AddVariable("Table", new TableType(TestUtils.DT("*[A:n]")));
+
+            var nonBoolOptionSetDisplayNameProvider = DisplayNameUtility.MakeUnique(new Dictionary<string, string>
+            {
+                { "First", "One" },
+                { "Second", "Two" },
+                { "Third", "Three" },
+            });
+
+            TestBindingErrors(
+                expression,
+                DType.Number,
+                symbol,
+                optionSets: new[] { new OptionSet("NonBoolOptionSet", nonBoolOptionSetDisplayNameProvider) });
         }
 
         [Fact]
@@ -3161,12 +3218,20 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.False(result.IsSuccess);
         }
 
-        private void TestBindingErrors(string script, DType expectedType, SymbolTable symbolTable = null)
+        private void TestBindingErrors(string script, DType expectedType, SymbolTable symbolTable = null, OptionSet[] optionSets = null)
         {
             var config = new PowerFxConfig
             {
                 SymbolTable = symbolTable
             };
+
+            if (optionSets != null)
+            {
+                foreach (var optionSet in optionSets)
+                {
+                    config.AddOptionSet(optionSet);
+                }
+            }
 
             var engine = new Engine(config);
             var result = engine.Check(script);
@@ -3175,7 +3240,7 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.False(result.IsSuccess);
         }
 
-        private static void TestSimpleBindingSuccess(string script, DType expectedType, SymbolTable symbolTable = null, Features features = Features.None)
+        private static void TestSimpleBindingSuccess(string script, DType expectedType, SymbolTable symbolTable = null, Features features = Features.None, OptionSet[] optionSets = null)
         {
             var config = new PowerFxConfig(features)
             {
@@ -3185,6 +3250,13 @@ namespace Microsoft.PowerFx.Core.Tests
             if (symbolTable != null)
             {
                 config.AddFunction(new ShowColumnsFunction());
+                if (optionSets != null)
+                {
+                    foreach (var optionSet in optionSets)
+                    {
+                        config.AddOptionSet(optionSet);
+                    }
+                }
             }
 
             var engine = new Engine(config);

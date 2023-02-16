@@ -23,8 +23,33 @@ Error({Kind:ErrorKind.Numeric})
 >> CountIf(Filter([-2, -1, 0, 1, 2], Sqrt(1/Value) > 0), IsError(ThisRecord))
 3
 
->> CountIf([1, 2, 3, 4], 123)
-Errors: Error 22-25: Expected boolean. We expect a boolean (true/false) at this point in the formula.
+// CountIf with blank values
+>> CountIf([1, 2, 3, 4, 5], If(Mod(Value, 2) = 0, Value > 2))
+1
 
->> CountIf([1, 2, 3, 4], "abc")
-Errors: Error 22-27: Expected boolean. We expect a boolean (true/false) at this point in the formula.
+// Multiple predicates
+>> CountIf(Sequence(12), Mod(Value,2)=0, Mod(Value,3)=0)
+2
+
+// Multiple predicates 2
+>> CountIf(Sequence(240), Mod(Value,2)=0, Mod(Value,3)=0, Mod(Value,4)=0, Mod(Value,5)=0)
+4
+
+// Multiple predicates 3
+>> CountIf(Table({a:1,b:"true"},{a:0,b:"true"},{a:1,b:"false"},{a:0,b:"false"}), a > 0, b = "true")
+1
+
+// Coercion from number to boolean
+>> CountIf([-1, 0, 1, 0, -1, 0, 1], Value)
+4
+
+// Coercion from string to boolean
+>> CountIf(["true", "false", "TRUE", "FALSE", "True", "False"], Value)
+3
+
+// Multiple coercions
+>> CountIf(Table({a:1,b:"true"},{a:0,b:"true"},{a:1,b:"false"},{a:0,b:"false"}), a, b)
+1
+
+>> CountIf([1, 2, 3, 4], Today())
+Errors: Error 22-29: Invalid argument type (Date). Expecting a Boolean value instead.|Error 0-30: The function 'CountIf' has some invalid arguments.

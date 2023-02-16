@@ -14,3 +14,6 @@ Table({Result:" "},{Result:Error({Kind:ErrorKind.InvalidArgument})},{Result:"A"}
 
 >> Char(If(Sqrt(-1)<1,[33]))
 Error({Kind:ErrorKind.Numeric})
+
+>> ForAll(Char([65, -1, 97, 1000]), IfError(Result, Text(FirstError.Kind)))
+Table({Value:"A"},{Value:"25"},{Value:"a"},{Value:"25"})

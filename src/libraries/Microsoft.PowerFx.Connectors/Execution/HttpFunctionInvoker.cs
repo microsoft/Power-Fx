@@ -178,7 +178,7 @@ namespace Microsoft.PowerFx.Connectors
                     {
                         Kind = ErrorKind.Network,
                         Severity = ErrorSeverity.Critical,
-                        Message = $"The server returned an HTTP error with code {statusCode}."
+                        Message = $"The server returned an HTTP error with code {statusCode}. Response: {text}"
                     },
                     returnType);
         }

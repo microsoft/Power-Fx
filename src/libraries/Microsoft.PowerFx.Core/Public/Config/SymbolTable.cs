@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Binding;
@@ -20,9 +21,16 @@ namespace Microsoft.PowerFx
     /// This is a publicly facing class around a <see cref="INameResolver"/>.
     /// </summary>
     [DebuggerDisplay("{DebugName}")]
-    public class SymbolTable : ReadOnlySymbolTable
+    public class SymbolTable : ReadOnlySymbolTable, IGlobalSymbolNameResolver
     {
         private readonly SlotMap<NameLookupInfo?> _slots = new SlotMap<NameLookupInfo?>();
+
+        // $$$ NEeded by config... make private?
+        //internal readonly Dictionary<string, NameLookupInfo> _variables = new Dictionary<string, NameLookupInfo>();
+
+        //private DisplayNameProvider _environmentSymbolDisplayNameProvider = new SingleSourceDisplayNameProvider();
+
+        IEnumerable<KeyValuePair<string, NameLookupInfo>> IGlobalSymbolNameResolver.GlobalSymbols => _variables;
 
         /// <summary>
         /// Does this SymbolTable require a corresponding SymbolValue?
@@ -50,34 +58,22 @@ namespace Microsoft.PowerFx
             throw NewBadSlotException(slot);
         }
 
-        // Ensure that newType can be assigned to the given slot. 
-        internal void ValidateAccepts(ISymbolSlot slot, FormulaType newType)
-        {
-            if (_slots.TryGet(slot.SlotIndex, out var nameInfo))
-            {
-                var srcType = nameInfo.Value.Type;
+        //internal bool TryGetVariable(DName name, out NameLookupInfo symbol, out DName displayName)
+        //{
+        //    var lookupName = name;
 
-                if (newType is RecordType)
-                {
-                    // Lazy RecordTypes don't validate. 
-                    // https://github.com/microsoft/Power-Fx/issues/833
-                    return;
-                }
+        //    if (_environmentSymbolDisplayNameProvider.TryGetDisplayName(name, out displayName))
+        //    {
+        //        // do nothing as provided name can be used for lookup with logical name
+        //    }
+        //    else if (_environmentSymbolDisplayNameProvider.TryGetLogicalName(name, out var logicalName))
+        //    {
+        //        lookupName = logicalName;
+        //        displayName = name;
+        //    }
 
-                var ok = srcType.Accepts(newType._type);
-
-                if (ok)
-                {
-                    return;
-                }
-
-                var name = (nameInfo.Value.Data as NameSymbol)?.Name;
-
-                throw new InvalidOperationException($"Can't change '{name}' from {srcType} to {newType._type}.");
-            }
-
-            throw NewBadSlotException(slot);
-        }
+        //    return _variables.TryGetValue(lookupName, out symbol);
+        //}
 
         /// <summary>
         /// Provide variable for binding only.
