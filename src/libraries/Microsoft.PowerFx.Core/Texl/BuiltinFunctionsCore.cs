@@ -223,9 +223,11 @@ namespace Microsoft.PowerFx.Core.Texl
         // Slow API, only use for backward compatibility
 #pragma warning disable CS0618 // Type or member is obsolete        
         public static IEnumerable<TexlFunction> BuiltinFunctionsLibrary => _library.Functions;
+        
+        private static readonly TexlFunctionSet _testOnlyLibrary = new TexlFunctionSet(_library.Functions).Add(_featureGateFunctions);
 
         // Slow API, only use for backward compatibility
-        internal static IEnumerable<TexlFunction> TestOnly_AllBuiltinFunctions => _library.Add(_featureGateFunctions).Functions;
+        internal static IEnumerable<TexlFunction> TestOnly_AllBuiltinFunctions => _testOnlyLibrary.Functions;
 #pragma warning restore CS0618 // Type or member is obsolete
     }
 }

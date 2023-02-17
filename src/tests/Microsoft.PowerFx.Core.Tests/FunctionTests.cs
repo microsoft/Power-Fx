@@ -7,12 +7,9 @@ using System.Linq;
 using System.Numerics;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
-using Microsoft.PowerFx.Core.Public;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
-using Microsoft.PowerFx.Syntax;
-using Microsoft.PowerFx.Types;
 using Xunit;
 
 namespace Microsoft.PowerFx.Core.Tests
@@ -23,8 +20,7 @@ namespace Microsoft.PowerFx.Core.Tests
         public void TestAllBuiltinFunctionsHaveParameterDescriptions()
         {
             var texlFunctionsLibrary = BuiltinFunctionsCore.TestOnly_AllBuiltinFunctions;
-            var functions = texlFunctionsLibrary
-                .Where(x => !x.FunctionCategoriesMask.HasFlag(FunctionCategories.REST));
+            var functions = texlFunctionsLibrary.Where(x => !x.FunctionCategoriesMask.HasFlag(FunctionCategories.REST));
 
             foreach (var function in functions)
             {
@@ -35,9 +31,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
                 foreach (var paramName in function.GetParamNames())
                 {
-                    Assert.True(
-                        function.TryGetParamDescription(paramName, out var descr),
-                        "Missing parameter description. Please add the following to Resources.pares: " + "About" + function.LocaleInvariantName + "_" + paramName);
+                    Assert.True(function.TryGetParamDescription(paramName, out var descr), "Missing parameter description. Please add the following to Resources.pares: " + "About" + function.LocaleInvariantName + "_" + paramName);
                 }
             }
         }

@@ -4,8 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Linq;
-using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Functions
@@ -131,15 +129,31 @@ namespace Microsoft.PowerFx.Core.Functions
                 throw new ArgumentNullException(nameof(function));
             }
 
-            var fList = WithNameInternal(function.Name);
+            List<TexlFunction> fList = WithNameInternal(function.Name);
+            List<TexlFunction> fInvariantList = WithInvariantNameInternal(function.LocaleInvariantName);
+            List<TexlFunction> fNsList = WithNamespaceInternal(function.Namespace);
 
-            if (fList.Any())
+            bool fListAny = fList.Any();
+            bool fInvariantListAny = fInvariantList.Any();
+            bool fNsListAny = fNsList.Any();
+
+            if (fListAny && fList.Contains(function))
             {
-                if (fList.Contains(function))
-                {
-                    throw new ArgumentException($"Function {function.Name} is already part of core or extra functions");
-                }
+                throw new ArgumentException($"Function {function.Name} is already part of core or extra functions");
+            }
 
+            if (fInvariantListAny && fInvariantList.Contains(function))
+            {
+                throw new ArgumentException($"Function {function.Name} is already part of core or extra functions (invariant)");
+            }
+
+            if (fNsListAny && fNsList.Contains(function))
+            {
+                throw new ArgumentException($"Function {function.Name} is already part of core or extra functions (namespace)");
+            }
+
+            if (fListAny)
+            {                
                 fList.Add(function);
             }
             else
@@ -147,15 +161,8 @@ namespace Microsoft.PowerFx.Core.Functions
                 _functions.Add(function.Name, new List<TexlFunction>() { function });
             }
 
-            var fInvariantList = WithInvariantNameInternal(function.LocaleInvariantName);
-
-            if (fInvariantList.Any())
-            {
-                if (fInvariantList.Contains(function))
-                {
-                    throw new ArgumentException($"Function {function.Name} is already part of core or extra functions (invariant)");
-                }
-
+            if (fInvariantListAny)
+            {               
                 fInvariantList.Add(function);
             }
             else
@@ -163,16 +170,9 @@ namespace Microsoft.PowerFx.Core.Functions
                 _functionsInvariant.Add(function.LocaleInvariantName, new List<TexlFunction>() { function });
             }
 
-            var fnsList = WithNamespaceInternal(function.Namespace);
-
-            if (fnsList.Any())
-            {
-                if (fnsList.Contains(function))
-                {
-                    throw new ArgumentException($"Function {function.Name} is already part of core or extra functions (namespace)");
-                }
-
-                fnsList.Add(function);
+            if (fNsListAny)
+            {                
+                fNsList.Add(function);
             }
             else
             {
