@@ -1080,6 +1080,17 @@ namespace Microsoft.PowerFx.Functions
                 NoErrorHandling(Now)
             },
             {
+                BuiltinFunctionsCore.OptionsSetInfo,
+                StandardErrorHandling<OptionSetValue>(
+                    BuiltinFunctionsCore.OptionsSetInfo.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<OptionSetValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: OptionSetValueToLogicalName)
+            },
+            {
                 BuiltinFunctionsCore.Or,
                 Or
             },

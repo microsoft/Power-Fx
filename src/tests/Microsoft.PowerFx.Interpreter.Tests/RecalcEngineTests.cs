@@ -11,7 +11,6 @@ using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Texl;
-using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Functions;
@@ -730,6 +729,50 @@ namespace Microsoft.PowerFx.Tests
 
             var checkResult = recalcEngine.Check("OptionSet.Option1 <> OptionSet.Option2");
             Assert.True(checkResult.IsSuccess);
+        }
+
+        [Theory]
+        [InlineData("OptionSetInfo(OptionSet.option_1)", "option_1")]
+        [InlineData("OptionSetInfo(OptionSet.Option1)", "option_1")]
+        [InlineData("OptionSetInfo(Option1)", "option_1")]
+        [InlineData("OptionSetInfo(If(1<0, Option1))", null)]
+        public async void OptionSetInfoTests(string expression, string expected)
+        {
+            var optionSet = new OptionSet("OptionSet", DisplayNameUtility.MakeUnique(new Dictionary<string, string>()
+            {
+                    { "option_1", "Option1" },
+                    { "option_2", "Option2" }
+            }));
+
+            optionSet.TryGetValue(new DName("option_1"), out var option1);
+
+            var symbol = new SymbolTable();
+            var option1Solt = symbol.AddVariable("Option1", FormulaType.OptionSetValue);
+            var symValues = new SymbolValues(symbol);
+            symValues.Set(option1Solt, option1);
+
+            var config = new PowerFxConfig() { SymbolTable = symbol };
+            config.AddOptionSet(optionSet);
+            var recalcEngine = new RecalcEngine(config);
+            
+            var result = await recalcEngine.EvalAsync(expression, CancellationToken.None, symValues);
+            Assert.Equal(expected, result.ToObject());
+        }
+
+        [Fact]
+        public async Task OptionSetInfoNegativeTest()
+        {
+            var optionSet = new OptionSet("OptionSet", DisplayNameUtility.MakeUnique(new Dictionary<string, string>()
+            {
+                    { "option_1", "Option1" },
+                    { "option_2", "Option2" }
+            }));
+
+            var config = new PowerFxConfig();
+            config.AddOptionSet(optionSet);
+            var recalcEngine = new RecalcEngine(config);
+
+            await Assert.ThrowsAsync<InvalidOperationException>(() => recalcEngine.EvalAsync("OptionSetInfo(OptionSet)", CancellationToken.None));
         }
 
         [Fact]
