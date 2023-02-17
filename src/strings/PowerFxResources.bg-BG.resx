@@ -1837,6 +1837,10 @@
     <value>Числовата стойност е твърде голяма.</value>
     
   </data>
+  <data name="ErrTextTooLarge" xml:space="preserve">
+    <value>Изразът не може да бъде по-дълъг от {0} знака, а в момента е {1} знака.</value>
+    
+  </data>
   <data name="ErrTextFormatTooLarge" xml:space="preserve">
     <value>Низът за форматиране не може да надхвърля {0} знака.</value>
     
@@ -1863,6 +1867,10 @@
   </data>
   <data name="ErrTypeError_Arg_Expected_Found" xml:space="preserve">
     <value>Типът на аргумента „{0}“ не съвпада с очаквания тип „{1}“. Открит е тип „{2}“.</value>
+    
+  </data>
+  <data name="ErrTypeError_WrongType" xml:space="preserve">
+    <value>Типът на израза не съвпада с очаквания тип „{0}“. Открит е тип „{1}“.</value>
     
   </data>
   <data name="ErrTypeErrorRecordIncompatibleWithSource" xml:space="preserve">
@@ -2642,10 +2650,6 @@
   </data>
   <data name="AboutIsNumeric_value" xml:space="preserve">
     <value>Стойността за тестване.</value>
-  </data>
-  <data name="Post" xml:space="preserve">
-    <value>Публикуване</value>
-    
   </data>
   <data name="AboutDateTimeValue" xml:space="preserve">
     <value>Преобразува дадена дата и час под формата на текст като число, представляващо датата в кода за дата и час в Power Apps.</value>
@@ -4111,10 +4115,6 @@
     <value>Налагането на записи или таблици не се поддържа в колони с формули.</value>
     
   </data>
-  <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
-    <value>Формулите не може да бъдат по-дълги от 1000 знака.</value>
-    
-  </data>
   <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
     <value>Таблиците с една колона не се поддържат в колоните за формули.</value>
     
@@ -4225,10 +4225,10 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
-    <value>Тази грешка се появява, когато дадена формула препраща към свойства на поведение на компонент с невалиден синтаксис (например Component.OnCustomChange вместо Component.OnCustomChange())</value>
+    <value>Тази грешка възниква, когато във формула се използва неправилен синтаксис за свойство на компонент, което е функция. (Например Component.CustomFunction вместо Component.CustomFunction())</value>
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
-    <value>Използвайте правилен синтаксис за препратка към свойство на поведение на компонент, като например Component.OnCustomChange()</value>
+    <value>Използвайте правилния синтаксис за работа със свойство на компонент, което е функция, като например Component.CustomFunction()</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_Link_1" xml:space="preserve">
@@ -4730,11 +4730,15 @@
     
   </data>
   <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
-    <value>Обекти без тип не могат да се използват като първи аргумент на функции, които поддържат обхвати на записи.</value>
+    <value>Нетипизирани обекти не могат да се използват като първи аргумент на функции, които поддържат обхвати на записи.</value>
     
   </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>Наименуваната формула трябва да завършва с точка и запетая.</value>
+    
+  </data>
+  <data name="ErrNamedFormula_MissingValue" xml:space="preserve">
+    <value>Наименуваната формула трябва да бъде израз.</value>
     
   </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
@@ -4828,6 +4832,10 @@
   </data>
   <data name="ErrInvalidFunction" xml:space="preserve">
     <value>Тази функция е двусмислена: съдържа ламбда-изрази и идентификатори на колони за един и същ аргумент.</value>
+    
+  </data>
+  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
+    <value>Опцията BooleanOptionSet {0} не се поддържа.</value>
     
   </data>
 </root>

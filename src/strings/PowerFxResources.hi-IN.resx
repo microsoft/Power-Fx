@@ -1837,6 +1837,10 @@
     <value>सांख्यिक मान बहुत बड़ा है.</value>
     
   </data>
+  <data name="ErrTextTooLarge" xml:space="preserve">
+    <value>अभिव्यक्ति {0} वर्णों से अधिक नहीं हो सकती. अभिव्यक्ति {1} वर्ण हैं.</value>
+    
+  </data>
   <data name="ErrTextFormatTooLarge" xml:space="preserve">
     <value>फ़ॉर्मेट स्ट्रिंग का आकार {0} वर्णों से अधिक नहीं हो सकता है.</value>
     
@@ -1863,6 +1867,10 @@
   </data>
   <data name="ErrTypeError_Arg_Expected_Found" xml:space="preserve">
     <value>इस तर्क '{0}' के प्रकार का मिलान अपेक्षित प्रकार '{1}' से नहीं होता. प्रकार '{2}' मिला.</value>
+    
+  </data>
+  <data name="ErrTypeError_WrongType" xml:space="preserve">
+    <value>इस अभिव्यक्ति का प्रकार अपेक्षित प्रकार '{0}' से मेल नहीं खाता. प्रकार '{1}' मिला.</value>
     
   </data>
   <data name="ErrTypeErrorRecordIncompatibleWithSource" xml:space="preserve">
@@ -2643,10 +2651,6 @@
   <data name="AboutIsNumeric_value" xml:space="preserve">
     <value>परीक्षण किया जाने वाला मान.</value>
   </data>
-  <data name="Post" xml:space="preserve">
-    <value>पोस्ट करें</value>
-    
-  </data>
   <data name="AboutDateTimeValue" xml:space="preserve">
     <value>पाठ के रूप में दिनांक और समय को एक संख्या के रूप में रूपांतरित करता है, जो Power Apps दिनांक-समय कोड में दिनांक को दर्शाता है.</value>
     
@@ -3064,7 +3068,7 @@
     
   </data>
   <data name="Icon_Train_DisplayName" xml:space="preserve">
-    <value>ट्रेन</value>
+    <value>प्रशिक्षण</value>
     
   </data>
   <data name="Icon_Tray_DisplayName" xml:space="preserve">
@@ -3124,7 +3128,7 @@
     
   </data>
   <data name="Icon_Leave_DisplayName" xml:space="preserve">
-    <value>छोड़ना</value>
+    <value>छोड़ें</value>
     
   </data>
   <data name="Icon_Paste_DisplayName" xml:space="preserve">
@@ -4111,10 +4115,6 @@
     <value>सूत्र स्तंभों में बलपूर्वक रिकॉर्ड या तालिकाएं समर्थित नहीं हैं.</value>
     
   </data>
-  <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
-    <value>फॉर्मूला 1000 अक्षरों से ज्यादा लंबे नहीं हो सकते.</value>
-    
-  </data>
   <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
     <value>सूत्र स्तंभों में एकल-स्तंभ तालिकाएँ समर्थित नहीं हैं.</value>
     
@@ -4225,10 +4225,10 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
-    <value>यह त्रुटि तब दिखाई देती है, जब कोई सूत्र अमान्य सिंटैक्स वाले घटक व्यवहार गुणों को दर्शाता है. (उदाहरण के लिए, Component.OnCustomChange के बजाय Component.OnCustomChange())</value>
+    <value>यह त्रुटी तब दिखाई देती है जब एक फ़ॉर्मूला किसी अमान्य सिंटैक्स के साथ कंपोनेंट फ़ंक्शन के गुणों को संदर्भित करता है. (उदाहरण के लिए, Component.CustomFunction के बजाय Component.CustomFunction())</value>
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
-    <value>घटक व्यवहार गुण को दर्शाने के लिए उपयुक्त सिंटैक्स का उपयोग करें. उदाहरण के लिए, Component.OnCustomChange()</value>
+    <value>कंपोनेंट फ़ंक्शन गुण को संदर्भित करने के लिए सही सिंटैक्स का इस्तेमाल करें. उदाहरण के लिए, Component.CustomFunction()</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_Link_1" xml:space="preserve">
@@ -4737,6 +4737,10 @@
     <value>नामांकित सूत्र अर्धविराम के साथ समाप्त होना चाहिए.</value>
     
   </data>
+  <data name="ErrNamedFormula_MissingValue" xml:space="preserve">
+    <value>नामित सूत्र एक व्यंजक होना चाहिए.</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula '{0}' पहले से मौजूद है.</value>
   </data>
@@ -4828,6 +4832,10 @@
   </data>
   <data name="ErrInvalidFunction" xml:space="preserve">
     <value>यह फ़ंक्शन संदिग्ध है, इसमें इसी तरह के तर्क के लिए लैम्बडा एक्सप्रेशन्स और स्तंभ आइडेंटिफ़ायर शामिल हैं.</value>
+    
+  </data>
+  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
+    <value>BooleanOptionSet विकल्प {0} समर्थित नहीं है.</value>
     
   </data>
 </root>

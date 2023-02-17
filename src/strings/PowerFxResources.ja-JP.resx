@@ -1837,6 +1837,10 @@
     <value>数値が大きすぎます。</value>
     
   </data>
+  <data name="ErrTextTooLarge" xml:space="preserve">
+    <value>式を {0} 文字より長くすることはできません。この式の文字数は {1} です。</value>
+    
+  </data>
   <data name="ErrTextFormatTooLarge" xml:space="preserve">
     <value>書式設定の文字列のサイズは {0} 文字以内にしてください。</value>
     
@@ -1863,6 +1867,10 @@
   </data>
   <data name="ErrTypeError_Arg_Expected_Found" xml:space="preserve">
     <value>この引数 '{0}' の型は必要な型 '{1}' と一致しません。見つかった型 '{2}'。</value>
+    
+  </data>
+  <data name="ErrTypeError_WrongType" xml:space="preserve">
+    <value>この式の型が予期される型 '{0}' と一致しません。見つかった型 '{1}'。</value>
     
   </data>
   <data name="ErrTypeErrorRecordIncompatibleWithSource" xml:space="preserve">
@@ -2643,10 +2651,6 @@
   <data name="AboutIsNumeric_value" xml:space="preserve">
     <value>テスト対象の値。</value>
   </data>
-  <data name="Post" xml:space="preserve">
-    <value>投稿</value>
-    
-  </data>
   <data name="AboutDateTimeValue" xml:space="preserve">
     <value>テキスト形式の日時を Power Apps の日時コード形式の日付を表す数値に変換します。</value>
     
@@ -3064,7 +3068,7 @@
     
   </data>
   <data name="Icon_Train_DisplayName" xml:space="preserve">
-    <value>列車</value>
+    <value>トレーニングする</value>
     
   </data>
   <data name="Icon_Tray_DisplayName" xml:space="preserve">
@@ -4111,10 +4115,6 @@
     <value>数式列はレコードやテーブルの強制変換に対応していません。</value>
     
   </data>
-  <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
-    <value>計算式を 1,000 文字より長くすることはできません。</value>
-    
-  </data>
   <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
     <value>数式列は単一列テーブルに対応していません。</value>
     
@@ -4225,10 +4225,10 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
-    <value>このエラーは、構文が無効なコンポーネントの動作プロパティを数式が参照している場合に表示されます (例: Component.OnCustomChange() ではなく Component.OnCustomChange)。</value>
+    <value>このエラーは、式が無効な構文でコンポーネントの関数プロパティを参照している場合 (Component.CustomFunction() ではなく Component.CustomFunction など) に表示されます。</value>
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
-    <value>正しい構文を使用してコンポーネントの動作プロパティを参照してください。例: Component.OnCustomChange()</value>
+    <value>正しい構文を使用してコンポーネントの関数プロパティを参照してください。例: Component.CustomFunction()</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_Link_1" xml:space="preserve">
@@ -4737,6 +4737,10 @@
     <value>名前付き計算式はセミコロンで終わる必要があります。</value>
     
   </data>
+  <data name="ErrNamedFormula_MissingValue" xml:space="preserve">
+    <value>名前付き計算式は式である必要があります。</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula '{0}'は既に存在します。</value>
   </data>
@@ -4828,6 +4832,10 @@
   </data>
   <data name="ErrInvalidFunction" xml:space="preserve">
     <value>この関数はあいまいです。Lambda 式と列識別子が同じ引数に含まれています。</value>
+    
+  </data>
+  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
+    <value>BooleanOptionSet オプション {0} はサポートされていません。</value>
     
   </data>
 </root>
