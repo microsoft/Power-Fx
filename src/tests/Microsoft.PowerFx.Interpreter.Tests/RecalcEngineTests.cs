@@ -767,8 +767,15 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal(expected, result.ToObject());
         }
 
-        [Fact]
-        public async Task OptionSetInfoNegativeTest()
+        [Theory]
+        [InlineData("Text(OptionSet)")]
+
+        [InlineData("OptionSetInfo(OptionSet)")]
+        [InlineData("OptionSetInfo(\"test\")")]
+        [InlineData("OptionSetInfo(1)")]
+        [InlineData("OptionSetInfo(true)")]
+        [InlineData("OptionSetInfo(Color.Red)")]
+        public async Task OptionSetInfoNegativeTest(string expression)
         {
             var optionSet = new OptionSet("OptionSet", DisplayNameUtility.MakeUnique(new Dictionary<string, string>()
             {
@@ -780,8 +787,7 @@ namespace Microsoft.PowerFx.Tests
             config.AddOptionSet(optionSet);
             var recalcEngine = new RecalcEngine(config);
 
-            await Assert.ThrowsAsync<InvalidOperationException>(() => recalcEngine.EvalAsync("OptionSetInfo(OptionSet)", CancellationToken.None));
-            await Assert.ThrowsAsync<InvalidOperationException>(() => recalcEngine.EvalAsync("Text(OptionSet)", CancellationToken.None));
+            await Assert.ThrowsAsync<InvalidOperationException>(() => recalcEngine.EvalAsync(expression, CancellationToken.None));
         }
 
         [Fact]
