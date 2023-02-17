@@ -162,10 +162,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         internal static bool CanCheckIfReturn(TexlFunction func)
         {
             return func is not IfFunction && 
-                func is not WithFunction &&
-                func is not ForAllFunction &&
-                func is not FirstLastFunction &&
-                func is not FirstLastNFunction;
+                func is not WithFunction;
         }
 
         private bool IsArgTypeInconsequential(TexlNode arg)
