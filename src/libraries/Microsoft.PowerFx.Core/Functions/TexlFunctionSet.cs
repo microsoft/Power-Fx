@@ -33,7 +33,7 @@ namespace Microsoft.PowerFx.Core.Functions
 
         internal IEnumerable<TexlFunction> WithName(string name) => WithNameInternal(name);
 
-        private List<TexlFunction> WithNameInternal(string name) => _functions.TryGetValue(name, out List<TexlFunction> result) ? result : new List<TexlFunction>();                
+        private List<TexlFunction> WithNameInternal(string name) => _functions.TryGetValue(name, out List<TexlFunction> result) ? result : new List<TexlFunction>();
 
         internal IEnumerable<TexlFunction> WithName(string name, DPath ns) => _functions.TryGetValue(name, out List<TexlFunction> result) ? result.Where(f => f.Namespace == ns) : new List<TexlFunction>();
 
@@ -153,7 +153,7 @@ namespace Microsoft.PowerFx.Core.Functions
             }
 
             if (fListAny)
-            {                
+            {
                 fList.Add(function);
             }
             else
@@ -162,7 +162,7 @@ namespace Microsoft.PowerFx.Core.Functions
             }
 
             if (fInvariantListAny)
-            {               
+            {
                 fInvariantList.Add(function);
             }
             else
@@ -171,7 +171,7 @@ namespace Microsoft.PowerFx.Core.Functions
             }
 
             if (fNsListAny)
-            {                
+            {
                 fNsList.Add(function);
             }
             else
@@ -204,8 +204,8 @@ namespace Microsoft.PowerFx.Core.Functions
             {
                 foreach (var key in functionSet.FunctionNames)
                 {
-                    var fList = WithNameInternal(key);
                     var newFuncs = functionSet.WithNameInternal(key);
+                    var fList = WithNameInternal(key);
 
                     if (fList.Any())
                     {
@@ -221,8 +221,8 @@ namespace Microsoft.PowerFx.Core.Functions
 
                 foreach (var key in functionSet.InvariantFunctionNames)
                 {
-                    var fInvariantList = WithInvariantNameInternal(key);
                     var newFuncs = functionSet.WithInvariantNameInternal(key);
+                    var fInvariantList = WithInvariantNameInternal(key);
 
                     if (fInvariantList.Any())
                     {
@@ -236,8 +236,8 @@ namespace Microsoft.PowerFx.Core.Functions
 
                 foreach (var key in functionSet.Namespaces)
                 {
-                    var fnsList = WithNamespaceInternal(key);
                     var newFuncs = functionSet.WithNamespaceInternal(key);
+                    var fnsList = WithNamespaceInternal(key);
 
                     if (fnsList.Any())
                     {
@@ -282,8 +282,8 @@ namespace Microsoft.PowerFx.Core.Functions
 
         internal void RemoveAll(string name)
         {
-            if (_functions.TryGetValue(name, out List<TexlFunction> removed))            
-            {                
+            if (_functions.TryGetValue(name, out List<TexlFunction> removed))
+            {
                 _count -= removed.Count();
                 _functions.Remove(name);
             }

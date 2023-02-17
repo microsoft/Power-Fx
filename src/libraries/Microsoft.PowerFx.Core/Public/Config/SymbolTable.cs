@@ -24,7 +24,9 @@ namespace Microsoft.PowerFx
     public class SymbolTable : ReadOnlySymbolTable, IGlobalSymbolNameResolver
     {
         private readonly SlotMap<NameLookupInfo?> _slots = new SlotMap<NameLookupInfo?>();
-        
+
+        private DisplayNameProvider _environmentSymbolDisplayNameProvider = new SingleSourceDisplayNameProvider();
+
         IEnumerable<KeyValuePair<string, NameLookupInfo>> IGlobalSymbolNameResolver.GlobalSymbols => _variables;
 
         /// <summary>

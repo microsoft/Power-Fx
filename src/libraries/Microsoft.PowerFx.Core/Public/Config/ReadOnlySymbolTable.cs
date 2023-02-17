@@ -221,8 +221,6 @@ namespace Microsoft.PowerFx
 
         internal readonly Dictionary<string, NameLookupInfo> _variables = new Dictionary<string, NameLookupInfo>();
 
-        internal DisplayNameProvider _environmentSymbolDisplayNameProvider = new SingleSourceDisplayNameProvider();
-
         private protected readonly TexlFunctionSet _functions = new TexlFunctionSet();
 
         // Which enums are available. 

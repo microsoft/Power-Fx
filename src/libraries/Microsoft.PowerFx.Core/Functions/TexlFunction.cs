@@ -1435,10 +1435,5 @@ namespace Microsoft.PowerFx.Core.Functions
 
             return ArgPreprocessor.None;
         }
-
-        public TexlFunction ToTexlFunctions()
-        {
-            return this;
-        }
     }
 }
