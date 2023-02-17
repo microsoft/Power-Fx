@@ -786,8 +786,8 @@ namespace Microsoft.PowerFx.Tests
             var config = new PowerFxConfig();
             config.AddOptionSet(optionSet);
             var recalcEngine = new RecalcEngine(config);
-
-            await Assert.ThrowsAsync<InvalidOperationException>(() => recalcEngine.EvalAsync(expression, CancellationToken.None));
+            var checkResult = recalcEngine.Check(expression, RecordType.Empty());
+            Assert.False(checkResult.IsSuccess);
         }
 
         [Fact]
