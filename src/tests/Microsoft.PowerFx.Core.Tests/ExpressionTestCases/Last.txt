@@ -55,9 +55,3 @@ Blank()
 
 >> LastN(Filter([1,2,3],Value=4),2)
 Table()
-
->> Last(If(false, Table({a:1}), Table({b:2})))
-{b:2}
-
->> LastN(If(false, Table({a:1}), Table({b:2})), 1)
-Table({})

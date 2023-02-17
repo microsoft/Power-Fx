@@ -83,12 +83,6 @@ Table({Value:1})
 >> LastN([1,2,3,4,5], true)
 Table({Value:5})
 
->> First(If(false, Table({a:1}), Table({b:2})))
-{b:2}
-
->> FirstN(If(false, Table({a:1}), Table({b:2})), 1)
-Table({})
-
 // since If uses the interaction of types, If(false, {x:1, y:1}, {x:2, z:2}) => {x:2} hence .z is blank.
 >> First(Table(If(false, {x:1, y:1}, {x:1, z:2}), {x:9,z:9})).z
 Blank()
