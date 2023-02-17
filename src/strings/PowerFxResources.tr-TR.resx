@@ -1837,6 +1837,10 @@
     <value>Sayısal değer çok büyük.</value>
     
   </data>
+  <data name="ErrTextTooLarge" xml:space="preserve">
+    <value>İfade {0} karakterden uzun olamaz. İfade {1} karakter.</value>
+    
+  </data>
   <data name="ErrTextFormatTooLarge" xml:space="preserve">
     <value>Biçim dizesi boyutu {0} karakterden fazla olamaz.</value>
     
@@ -1863,6 +1867,10 @@
   </data>
   <data name="ErrTypeError_Arg_Expected_Found" xml:space="preserve">
     <value>'{0}' bağımsız değişkeninin türü, beklenen '{1}' türüyle eşleşmiyor. Bulunan tür: '{2}'.</value>
+    
+  </data>
+  <data name="ErrTypeError_WrongType" xml:space="preserve">
+    <value>Bu ifadenin türü, beklenen '{0}' türüyle eşleşmiyor. Bulunan tür: '{1}'.</value>
     
   </data>
   <data name="ErrTypeErrorRecordIncompatibleWithSource" xml:space="preserve">
@@ -2643,10 +2651,6 @@
   <data name="AboutIsNumeric_value" xml:space="preserve">
     <value>Test edilecek değer.</value>
   </data>
-  <data name="Post" xml:space="preserve">
-    <value>Yayımla</value>
-    
-  </data>
   <data name="AboutDateTimeValue" xml:space="preserve">
     <value>Metin biçimindeki tarih ve saat değerini, Power Apps tarih-saat kodunda tarihi temsil eden bir sayıya dönüştürür.</value>
     
@@ -3064,7 +3068,7 @@
     
   </data>
   <data name="Icon_Train_DisplayName" xml:space="preserve">
-    <value>Tren</value>
+    <value>Eğit</value>
     
   </data>
   <data name="Icon_Tray_DisplayName" xml:space="preserve">
@@ -3124,7 +3128,7 @@
     
   </data>
   <data name="Icon_Leave_DisplayName" xml:space="preserve">
-    <value>Ayrılma</value>
+    <value>Çık</value>
     
   </data>
   <data name="Icon_Paste_DisplayName" xml:space="preserve">
@@ -4111,10 +4115,6 @@
     <value>Formül sütunlarında kayıt veya tabloların zorlanması desteklenmez.</value>
     
   </data>
-  <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
-    <value>Formüller 1000 karakterden uzun olamaz.</value>
-    
-  </data>
   <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
     <value>Formül sütunlarında tek sütunlu tablolar desteklenmez.</value>
     
@@ -4225,10 +4225,10 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
-    <value>Bu hata, bir formül geçersiz söz dizimine sahip bileşen davranışı özelliklerine başvurduğunda görüntülenir. (ör. Component.OnCustomChange()) yerine Component.OnCustomChange())</value>
+    <value>Bu hata, bir formül geçersiz söz dizimine sahip bileşen işlevi özelliklerine başvurduğunda görüntülenir. (ör. Component.CustomFunction()) yerine Component.CustomFunction</value>
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
-    <value>Bileşen davranışı özelliğine başvurmak için doğru söz dizimini kullanın. Örneğin, Component.OnCustomChange()</value>
+    <value>Bileşen işlevi özelliğine başvurmak için doğru söz dizimini kullanın. Örneğin, Component.CustomFunction()</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_Link_1" xml:space="preserve">
@@ -4730,11 +4730,15 @@
     
   </data>
   <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
-    <value>Untyped objects cannot be used as the first argument to functions which support record scopes.</value>
+    <value>Türü belirtilmemiş nesneler, kayıt kapsamlarını destekleyen işlevlerin ilk bağımsız değişkeni olarak kullanılamaz.</value>
     
   </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>Adlandırılmış formül, noktalı virgülle sona ermelidir.</value>
+    
+  </data>
+  <data name="ErrNamedFormula_MissingValue" xml:space="preserve">
+    <value>Adlandırılmış formül bir ifade olmalı.</value>
     
   </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
@@ -4828,6 +4832,10 @@
   </data>
   <data name="ErrInvalidFunction" xml:space="preserve">
     <value>Bu işlev belirsiz, aynı bağımsız değişken için Lambda ifadesi ve sütun tanımlayıcıları içeriyor.</value>
+    
+  </data>
+  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
+    <value>BooleanOptionSet seçeneği {0} desteklenmiyor.</value>
     
   </data>
 </root>

@@ -1837,6 +1837,10 @@
     <value>Der Zahlenwert ist zu groß.</value>
     
   </data>
+  <data name="ErrTextTooLarge" xml:space="preserve">
+    <value>Der Ausdruck darf nicht länger als {0} Zeichen sein. Der Ausdruck besteht aus {1} Zeichen.</value>
+    
+  </data>
   <data name="ErrTextFormatTooLarge" xml:space="preserve">
     <value>Die Formatzeichenfolgengröße darf nicht größer als {0} sein.</value>
     
@@ -1863,6 +1867,10 @@
   </data>
   <data name="ErrTypeError_Arg_Expected_Found" xml:space="preserve">
     <value>Der Typ dieses Arguments „{0}“ stimmt nicht mit dem erwarteten Typ „{1}“ überein. Gefunden wurde Typ „{2}“.</value>
+    
+  </data>
+  <data name="ErrTypeError_WrongType" xml:space="preserve">
+    <value>Der Typ dieses Ausdrucks „{0}“ stimmt nicht mit dem erwarteten Typ „{1}“ überein. Gefunden wurde Typ „{2}“.</value>
     
   </data>
   <data name="ErrTypeErrorRecordIncompatibleWithSource" xml:space="preserve">
@@ -2643,10 +2651,6 @@
   <data name="AboutIsNumeric_value" xml:space="preserve">
     <value>Der zu prüfende Wert.</value>
   </data>
-  <data name="Post" xml:space="preserve">
-    <value>Posten</value>
-    
-  </data>
   <data name="AboutDateTimeValue" xml:space="preserve">
     <value>Konvertiert ein Datum und eine Uhrzeit in Textform in eine Zahl, die im Power Apps-Code für Datum und Uhrzeit das Datum darstellt.</value>
     
@@ -3064,7 +3068,7 @@
     
   </data>
   <data name="Icon_Train_DisplayName" xml:space="preserve">
-    <value>Zug</value>
+    <value>Trainieren</value>
     
   </data>
   <data name="Icon_Tray_DisplayName" xml:space="preserve">
@@ -4111,10 +4115,6 @@
     <value>Das Erstellen von Datensätzen oder Tabellen wird in Formelspalten nicht unterstützt.</value>
     
   </data>
-  <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
-    <value>Formeln dürfen nicht länger als 1000 Zeichen sein.</value>
-    
-  </data>
   <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
     <value>Tabellen mit einer einzelnen Spalte werden in Formelspalten nicht unterstützt.</value>
     
@@ -4225,10 +4225,10 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
-    <value>Dieser Fehler tritt auf, wenn eine Formel mit ungültiger Syntax auf Komponentenverhaltenseigenschaften verweist. (Beispiel: "Component.OnCustomChange" statt "Component.OnCustomChange()")</value>
+    <value>Dieser Fehler tritt auf, wenn eine Formel mit ungültiger Syntax auf Komponentenfunktionseigenschaften verweist. (Beispiel: „Component.CustomFunction“ statt „Component.CustomFunction()“)</value>
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
-    <value>Verwenden Sie die richtige Syntax, um auf die Komponentenverhaltenseigenschaft zu verweisen. Beispiel: Component.OnCustomChange()</value>
+    <value>Verwenden Sie die richtige Syntax, um auf die Komponentenfunktionseigenschaft zu verweisen. Beispiel: Component.CustomFunction()</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_Link_1" xml:space="preserve">
@@ -4730,11 +4730,15 @@
     
   </data>
   <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
-    <value>Untyped objects cannot be used as the first argument to functions which support record scopes.</value>
+    <value>Nicht typisierte Objekte können nicht als erstes Argument für Funktionen verwendet werden, die Datensatzumfänge unterstützen.</value>
     
   </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>Die benannte Formel muss mit einem Semikolon enden.</value>
+    
+  </data>
+  <data name="ErrNamedFormula_MissingValue" xml:space="preserve">
+    <value>Die benannte Formel muss ein Ausdruck sein.</value>
     
   </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
@@ -4828,6 +4832,10 @@
   </data>
   <data name="ErrInvalidFunction" xml:space="preserve">
     <value>Diese Funktion ist mehrdeutig; sie enthält Lambdaausdrücke und Spaltenbezeichner für dasselbe Argument.</value>
+    
+  </data>
+  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
+    <value>Die BooleanOptionSet-Option {0} wird nicht unterstützt.</value>
     
   </data>
 </root>
