@@ -732,10 +732,18 @@ namespace Microsoft.PowerFx.Tests
         }
 
         [Theory]
+
+        // Text() returns the display name of the input option set value
+        [InlineData("Text(OptionSet.option_1)", "Option1")]
+        [InlineData("Text(OptionSet.Option1)", "Option1")]
+        [InlineData("Text(Option1)", "Option1")]
+        [InlineData("Text(If(1<0, Option1))", "")]
+
+        // OptionSetInfo() returns the logical name of the input option set value
         [InlineData("OptionSetInfo(OptionSet.option_1)", "option_1")]
         [InlineData("OptionSetInfo(OptionSet.Option1)", "option_1")]
         [InlineData("OptionSetInfo(Option1)", "option_1")]
-        [InlineData("OptionSetInfo(If(1<0, Option1))", null)]
+        [InlineData("OptionSetInfo(If(1<0, Option1))", "")]
         public async void OptionSetInfoTests(string expression, string expected)
         {
             var optionSet = new OptionSet("OptionSet", DisplayNameUtility.MakeUnique(new Dictionary<string, string>()
@@ -773,6 +781,7 @@ namespace Microsoft.PowerFx.Tests
             var recalcEngine = new RecalcEngine(config);
 
             await Assert.ThrowsAsync<InvalidOperationException>(() => recalcEngine.EvalAsync("OptionSetInfo(OptionSet)", CancellationToken.None));
+            await Assert.ThrowsAsync<InvalidOperationException>(() => recalcEngine.EvalAsync("Text(OptionSet)", CancellationToken.None));
         }
 
         [Fact]
