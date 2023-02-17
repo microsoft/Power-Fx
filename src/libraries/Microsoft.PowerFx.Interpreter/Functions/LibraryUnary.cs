@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.IR;
@@ -425,19 +426,26 @@ namespace Microsoft.PowerFx.Functions
             return new DateValue(irContext, date);
         }
 
-        public static DateTimeValue NumberToDateTime(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, NumberValue[] args)
+        public static FormulaValue NumberToDateTime(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, NumberValue[] args)
         {
             return NumberToDateTime(CreateFormattingInfo(runner), irContext, args[0]);
         }
 
-        public static DateTimeValue NumberToDateTime(FormattingInfo formatInfo, IRContext irContext, NumberValue value)
+        public static FormulaValue NumberToDateTime(FormattingInfo formatInfo, IRContext irContext, NumberValue value)
         {
             var n = value.Value;
-            var date = _epoch.AddDays(n);
 
-            date = MakeValidDateTime(formatInfo.TimeZoneInfo, date);
+            var maxDays = (DateTime.MaxValue - _epoch).TotalDays;
 
-            return new DateTimeValue(irContext, date);
+            if (maxDays >= value.Value)
+            {
+                var date = _epoch.AddDays(n);
+                return new DateTimeValue(irContext, date);
+            }
+            else
+            {
+                return CommonErrors.GenericInvalidArgument(irContext);
+            }            
         }
 
         public static FormulaValue DateToDateTime(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
@@ -463,7 +471,7 @@ namespace Microsoft.PowerFx.Functions
                 case StringValue st:
                     return TryDateTimeParse(formatInfo, irContext, st, out result);
                 case NumberValue num:
-                    result = NumberToDateTime(formatInfo, irContext, num);
+                    result = NumberToDateTime(formatInfo, irContext, num) as DateTimeValue;
                     break;
                 case DateValue dv:
                     result = new DateTimeValue(irContext, dv.GetConvertedValue(formatInfo.TimeZoneInfo));

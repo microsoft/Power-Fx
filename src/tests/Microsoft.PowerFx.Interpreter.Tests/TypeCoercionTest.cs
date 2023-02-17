@@ -17,6 +17,7 @@ namespace Microsoft.PowerFx.Tests
         [InlineData(1, "true", "1", "1", "12/31/1899 12:00 AM")]
         [InlineData(0, "false", "0", "0", "12/30/1899 12:00 AM")]
         [InlineData(44962, "true", "44962", "44962", "2/5/2023 12:00 AM")]
+        [InlineData(4496200, "true", "4496200", "4496200", null)]
         public void TryCoerceFromNumberTest(double value, string exprBool, string exprNumber, string exprStr, string exprDateTime)
         {
             TryCoerceToTargetTypes(FormulaValue.New(value), exprBool, exprNumber, exprStr, exprDateTime);
@@ -79,16 +80,17 @@ namespace Microsoft.PowerFx.Tests
                 Assert.Null(resultNumber);
             }
 
-            isSucceeded = inputValue.TryCoerceTo(out StringValue resultString);
+            isSucceeded = inputValue.TryCoerceTo(out StringValue resultValue);
             if (exprStr != null)
             {
                 Assert.True(isSucceeded);
-                Assert.Equal(exprStr, resultString.Value);
+
+                Assert.Equal(exprStr, ((StringValue)resultValue).Value);
             }
             else
             {
                 Assert.False(isSucceeded);
-                Assert.Null(resultString);
+                Assert.IsType<ErrorValue>(resultValue);
             }
 
             isSucceeded = inputValue.TryCoerceTo(out DateTimeValue resultDateTime);
