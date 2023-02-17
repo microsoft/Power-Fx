@@ -925,5 +925,12 @@ namespace Microsoft.PowerFx.Functions
                 return CommonErrors.GenericInvalidArgument(irContext);
             }
         }
+
+        public static FormulaValue OptionSetValueToLogicalName(IRContext irContext, OptionSetValue[] args)
+        {
+            var optionSet = args[0];
+            var logicalName = optionSet.Option;
+            return new StringValue(irContext, logicalName);
+        }
     }
 }

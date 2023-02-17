@@ -11,7 +11,6 @@ using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Texl;
-using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Functions;
@@ -730,6 +729,65 @@ namespace Microsoft.PowerFx.Tests
 
             var checkResult = recalcEngine.Check("OptionSet.Option1 <> OptionSet.Option2");
             Assert.True(checkResult.IsSuccess);
+        }
+
+        [Theory]
+
+        // Text() returns the display name of the input option set value
+        [InlineData("Text(OptionSet.option_1)", "Option1")]
+        [InlineData("Text(OptionSet.Option1)", "Option1")]
+        [InlineData("Text(Option1)", "Option1")]
+        [InlineData("Text(If(1<0, Option1))", "")]
+
+        // OptionSetInfo() returns the logical name of the input option set value
+        [InlineData("OptionSetInfo(OptionSet.option_1)", "option_1")]
+        [InlineData("OptionSetInfo(OptionSet.Option1)", "option_1")]
+        [InlineData("OptionSetInfo(Option1)", "option_1")]
+        [InlineData("OptionSetInfo(If(1<0, Option1))", "")]
+        public async void OptionSetInfoTests(string expression, string expected)
+        {
+            var optionSet = new OptionSet("OptionSet", DisplayNameUtility.MakeUnique(new Dictionary<string, string>()
+            {
+                    { "option_1", "Option1" },
+                    { "option_2", "Option2" }
+            }));
+
+            optionSet.TryGetValue(new DName("option_1"), out var option1);
+
+            var symbol = new SymbolTable();
+            var option1Solt = symbol.AddVariable("Option1", FormulaType.OptionSetValue);
+            var symValues = new SymbolValues(symbol);
+            symValues.Set(option1Solt, option1);
+
+            var config = new PowerFxConfig() { SymbolTable = symbol };
+            config.AddOptionSet(optionSet);
+            var recalcEngine = new RecalcEngine(config);
+            
+            var result = await recalcEngine.EvalAsync(expression, CancellationToken.None, symValues);
+            Assert.Equal(expected, result.ToObject());
+        }
+
+        [Theory]
+        [InlineData("Text(OptionSet)")]
+
+        [InlineData("OptionSetInfo(OptionSet)")]
+        [InlineData("OptionSetInfo(\"test\")")]
+        [InlineData("OptionSetInfo(1)")]
+        [InlineData("OptionSetInfo(true)")]
+        [InlineData("OptionSetInfo(Color.Red)")]
+        public async Task OptionSetInfoNegativeTest(string expression)
+        {
+            var optionSet = new OptionSet("OptionSet", DisplayNameUtility.MakeUnique(new Dictionary<string, string>()
+            {
+                    { "option_1", "Option1" },
+                    { "option_2", "Option2" }
+            }));
+
+            var config = new PowerFxConfig();
+            config.AddOptionSet(optionSet);
+            var recalcEngine = new RecalcEngine(config);
+            var checkResult = recalcEngine.Check(expression, RecordType.Empty());
+            Assert.False(checkResult.IsSuccess);
         }
 
         [Fact]
