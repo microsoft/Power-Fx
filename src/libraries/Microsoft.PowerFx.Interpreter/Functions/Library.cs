@@ -1822,7 +1822,8 @@ namespace Microsoft.PowerFx.Functions
                     {
                         var trueBranch = args[i + 1];
 
-                        return (await runner.EvalArgAsync<ValidFormulaValue>(trueBranch, context, trueBranch.IRContext)).ToFormulaValue();
+                        var trueBranchResult = (await runner.EvalArgAsync<ValidFormulaValue>(trueBranch, context, trueBranch.IRContext)).ToFormulaValue();
+                        return MaybeWrapRecordValue(trueBranchResult, irContext);
                     }
                 }
 
@@ -1838,7 +1839,9 @@ namespace Microsoft.PowerFx.Functions
                 if (i + 2 == args.Length - 1)
                 {
                     var falseBranch = args[i + 2];
-                    return (await runner.EvalArgAsync<ValidFormulaValue>(falseBranch, context, falseBranch.IRContext)).ToFormulaValue();
+                    var falseBranchResult = (await runner.EvalArgAsync<ValidFormulaValue>(falseBranch, context, falseBranch.IRContext)).ToFormulaValue();
+                    
+                    return MaybeWrapRecordValue(falseBranchResult, irContext);
                 }
 
                 // Else, if there are more values, this is another conditional.
@@ -1847,6 +1850,21 @@ namespace Microsoft.PowerFx.Functions
 
             // If there's no value here, then use blank. 
             return new BlankValue(irContext);
+        }
+
+        /// <summary>
+        /// If the <paramref name="result"/> is a record value, and the IRContext result type is a record type,
+        /// then this helper may wrap it in CompileTimeTypeWrapperRecordValue, else return the result it self.
+        /// e.g. If(false, {x:1, y:1}, {x:1, z:2}) has compile time type ![x:n] while runtime type ![x:n, z:n].
+        /// </summary>
+        private static FormulaValue MaybeWrapRecordValue(FormulaValue result, IRContext irContext)
+        {
+            if (result is RecordValue recordValue && irContext.ResultType is RecordType compileTimeType)
+            {
+                return CompileTimeTypeWrapperRecordValue.AdjustType(compileTimeType, recordValue);
+            }
+
+            return result;
         }
 
         public static async ValueTask<FormulaValue> IfError(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
