@@ -16,6 +16,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Abstract base for all scalar flavors of round (Round, RoundUp, RoundDown)
     internal abstract class ScalarRoundingFunction : BuiltinFunction
     {
+        public override ArgPreprocessor GetArgPreprocessor(int index)
+        {
+            return base.GetGenericArgPreprocessor(index);
+        }
+
         public override bool IsSelfContained => true;
 
         public override bool SupportsParamCoercion => true;

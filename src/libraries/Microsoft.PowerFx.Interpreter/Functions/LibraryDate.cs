@@ -5,6 +5,7 @@ using System;
 using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Types;
@@ -17,11 +18,10 @@ namespace Microsoft.PowerFx.Functions
 {
     internal static partial class Library
     {
-        public static FormulaValue Today(IRContext irContext, FormulaValue[] args)
+        public static async ValueTask<FormulaValue> Today(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            // $$$ timezone?
-            var date = DateTime.Today;
-
+            var timeZoneInfo = runner.TimeZoneInfo;
+            var date = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, timeZoneInfo).Date;
             return new DateValue(irContext, date);
         }
 
@@ -37,7 +37,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, timeZoneInfo);
             }
-        
+
             var same = (arg0.Year == now.Year) && (arg0.Month == now.Month) && (arg0.Day == now.Day);
             return new BooleanValue(irContext, same);
         }
@@ -135,15 +135,20 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
-        private static DateTime MakeValidDateTime(EvalVisitor runner, DateTime datetime, TimeZoneInfo timeZoneInfo)
+        private static DateTime MakeValidDateTime(EvalVisitor runner, DateTime dateTime, TimeZoneInfo timeZoneInfo)
         {
-            if (datetime.IsValid(runner))
+            return MakeValidDateTime(runner.TimeZoneInfo, dateTime);
+        }
+
+        private static DateTime MakeValidDateTime(TimeZoneInfo timeZoneInfo, DateTime dateTime)
+        {
+            if (dateTime.IsValid(timeZoneInfo))
             {
-                return datetime;
+                return dateTime;
             }
 
             // If the date is invalid, we want to return the next valid date/time
-            return GetNextValidDate(datetime, timeZoneInfo);
+            return GetNextValidDate(dateTime, timeZoneInfo);
         }
 
         private static DateTime GetNextValidDate(DateTime invalidDate, TimeZoneInfo timeZoneInfo)
@@ -266,17 +271,15 @@ namespace Microsoft.PowerFx.Functions
                     return new NumberValue(irContext, years);
             }
 
-            // Convert to UTC to be accurate (apply DST if needed)
-
-            if (NeedToConvertToUtc(runner, start, timeUnit))
-            {
-                start = TimeZoneInfo.ConvertTimeToUtc(start, timeZoneInfo);
-            }
-
-            if (NeedToConvertToUtc(runner, end, timeUnit))
-            {
-                end = TimeZoneInfo.ConvertTimeToUtc(end, timeZoneInfo);
-            }
+            // This takes care of DST differences
+            // e.g. https://www.timeanddate.com/time/change/usa/seattle?year=2023
+            // start = DateTime(2023, 3, 12, 0, 0, 0) is in UTC-8
+            // end = DateTime(2023, 3, 12, 3, 0, 0) is in UTC-7
+            // startUTCOffset - endUTCOffset = -1
+            // so adding that utcOffset difference to the end(instead of converting both to UTC) will adjust the subtraction for DST
+            // while preserving hours, since cases having minutes offset can potentially change the hour.
+            var utcOffset = timeZoneInfo.GetUtcOffset(start) - timeZoneInfo.GetUtcOffset(end);
+            end += utcOffset;
 
             // The function DateDiff only returns a whole number of the units being subtracted, and the precision is given in the unit specified.
             switch (timeUnit)
@@ -530,14 +533,11 @@ namespace Microsoft.PowerFx.Functions
                 return new BlankValue(irContext);
             }
 
-            if (DateTime.TryParse(str, runner.CultureInfo, DateTimeStyles.None, out var result))
+            if (DateTime.TryParse(str, runner.CultureInfo, DateTimeStyles.AdjustToUniversal, out var result))
             {
                 var tzi = runner.TimeZoneInfo;
 
-                if (result.Kind == DateTimeKind.Local)
-                {
-                    result = TimeZoneInfo.ConvertTime(result, TimeZoneInfo.Local, tzi);
-                }
+                result = DateTimeValue.GetConvertedDateTimeValue(result, tzi);
 
                 return new DateValue(irContext, result.Date);
             }
@@ -561,12 +561,28 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
+        public static bool TryDateTimeParse(FormattingInfo formatInfo, IRContext irContext, StringValue value, out DateTimeValue result)
+        {
+            result = null;
+
+            if (DateTime.TryParse(value.Value, formatInfo.CultureInfo, DateTimeStyles.AdjustToUniversal, out var dateTime))
+            {
+                dateTime = DateTimeValue.GetConvertedDateTimeValue(dateTime, formatInfo.TimeZoneInfo);
+                result = new DateTimeValue(irContext, dateTime);
+            }
+
+            return result != null;
+        }
+
         public static FormulaValue DateTimeParse(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, StringValue[] args)
         {
-            var str = args[0].Value;
+            return DateTimeParse(CreateFormattingInfo(runner), irContext, args);
+        }
 
+        public static FormulaValue DateTimeParse(FormattingInfo formatInfo, IRContext irContext, StringValue[] args)
+        {
             // culture will have Cultural info in-case one was passed in argument else it will have the default one.
-            CultureInfo culture = runner.CultureInfo;
+            CultureInfo culture = formatInfo.CultureInfo;
             if (args.Length > 1)
             {
                 var languageCode = args[1].Value;
@@ -575,23 +591,18 @@ namespace Microsoft.PowerFx.Functions
                 {
                     return CommonErrors.BadLanguageCode(irContext, languageCode);
                 }
+
+                formatInfo.CultureInfo = culture;
             }
 
-            if (str == string.Empty)
+            if (args[0].Value == string.Empty)
             {
                 return new BlankValue(irContext);
             }
 
-            if (DateTime.TryParse(str, culture, DateTimeStyles.None, out var result))
+            if (TryDateTimeParse(formatInfo, irContext, args[0], out var result))
             {
-                var tzi = runner.TimeZoneInfo;
-
-                if (result.Kind == DateTimeKind.Local)
-                {
-                    result = TimeZoneInfo.ConvertTime(result, TimeZoneInfo.Local, tzi);
-                }
-
-                return new DateTimeValue(irContext, result);
+                return result;
             }
             else
             {

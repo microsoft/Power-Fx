@@ -472,12 +472,6 @@ namespace Microsoft.PowerFx.Core.Functions
             // Type check the args
             for (var i = 0; i < count; i++)
             {
-                // Identifiers don't have a type
-                if (IsIdentifierParam(i))
-                {
-                    continue;
-                }
-
                 var typeChecks = CheckType(args[i], argTypes[i], ParamTypes[i], errors, SupportCoercionForArg(i), out DType coercionType);
                 if (typeChecks && coercionType != null)
                 {
@@ -1416,6 +1410,33 @@ namespace Microsoft.PowerFx.Core.Functions
             }
 
             return new IRCallNode(context.GetIRContext(node), this, args);
+        }
+
+        /// <summary>
+        /// Function can override this method to provide pre-processing policy for argument.
+        /// By default, function does not attach any pre-processing for arguments.
+        /// </summary>
+        /// <param name="index">0 based index of argument.</param>
+        /// <returns></returns>
+        public virtual ArgPreprocessor GetArgPreprocessor(int index)
+        {
+            return ArgPreprocessor.None;
+        }
+
+        /// <summary>
+        /// Generic arg preprocessor that uses <see cref="ParamTypes"/> to determine pre-processing policy.
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        internal ArgPreprocessor GetGenericArgPreprocessor(int index)
+        {
+            var paramType = ParamTypes[index] ?? DType.Unknown;
+            if (paramType == DType.Number)
+            {
+                return ArgPreprocessor.ReplaceBlankWithZero;
+            }
+
+            return ArgPreprocessor.None;
         }
     }
 }

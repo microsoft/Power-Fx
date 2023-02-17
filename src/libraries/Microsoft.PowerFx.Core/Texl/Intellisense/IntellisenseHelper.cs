@@ -421,17 +421,6 @@ namespace Microsoft.PowerFx.Intellisense
             }
         }
 
-        internal static IEnumerable<KeyValuePair<string, DType>> GetColumnNameIdentifierSuggestions(DType scopeType)
-        {
-            Contracts.AssertValid(scopeType);
-
-            foreach (var name in scopeType.GetRootFieldNames()
-                .Select(field => (Type: scopeType.GetType(field), Name: field)))
-            {
-                yield return new KeyValuePair<string, DType>(CharacterUtils.ExcelEscapeString(name.Name.Value), name.Type);
-            }
-        }
-
         internal static IEnumerable<KeyValuePair<string, DType>> GetSuggestionsFromType(DType typeToSuggestFrom, DType suggestionType)
         {
             Contracts.AssertValid(typeToSuggestFrom);

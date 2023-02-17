@@ -674,15 +674,7 @@ namespace Microsoft.PowerFx
 
         public DateTime GetNormalizedDateTime(FormulaValue arg)
         {
-            switch (arg)
-            {
-                case DateTimeValue dtv:
-                    return dtv.GetConvertedValue(TimeZoneInfo);
-                case DateValue dv:
-                    return dv.GetConvertedValue(TimeZoneInfo);
-                default:
-                    throw CommonExceptions.RuntimeMisMatch;
-            }
+            return GetNormalizedDateTimeLibrary(arg, TimeZoneInfo);
         }
 
         public DateTime GetNormalizedDateTimeAllowTimeValue(FormulaValue arg)

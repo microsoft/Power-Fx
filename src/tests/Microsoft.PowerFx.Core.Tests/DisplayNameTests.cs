@@ -622,5 +622,20 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.Equal(expected, intellisenseSuggestion.Text);
             Assert.Equal(DType.Number, intellisenseSuggestion.Type);
         }
+
+        [Fact]
+        public void SymbolTableGlobalVariableDisplayName()
+        {
+            var symbol = new SymbolTable();
+            symbol.AddVariable("numLogical", FormulaType.Number, true, "numDisplay");
+            Assert.Equal("numDisplay", symbol.SymbolNames.First().DisplayName);
+        }
+
+        [Fact]
+        public void AggregateFieldTypeDisplayName()
+        {
+            var recordType = RecordType.Empty().Add("numLogical", FormulaType.Number, "numDisplay");
+            Assert.Equal("numDisplay", recordType.GetFieldTypes().First().DisplayName);
+        }
     }
 }

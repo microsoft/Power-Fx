@@ -100,6 +100,32 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return false;
         }
     }
+
+    // First(source:*)
+    // Last(source:*)
+    internal sealed class FirstLastFunction_UO : BuiltinFunction
+    {
+        public override bool IsSelfContained => true;
+
+        public override bool SupportsParamCoercion => false;
+
+        // Note this function does not inherit from FunctionWithTableInput so there cannot be a common
+        // base class with the above function
+        public FirstLastFunction_UO(bool isFirst)
+            : base(isFirst ? "First" : "Last", isFirst ? TexlStrings.AboutFirst : TexlStrings.AboutLast, FunctionCategories.Table, DType.UntypedObject, 0, 1, 1, DType.UntypedObject)
+        {
+        }
+
+        public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
+        {
+            yield return new[] { TexlStrings.FirstLastArg1 };
+        }
+
+        public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
+        {
+            return GetUniqueTexlRuntimeName(suffix: "_UO");
+        }
+    }
 }
 
 #pragma warning restore SA1402 // File may only contain a single type

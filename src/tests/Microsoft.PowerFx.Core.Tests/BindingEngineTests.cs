@@ -179,55 +179,6 @@ namespace Microsoft.PowerFx.Tests
             AssertContainsError(result, expected);
         }
 
-        [Theory]
-
-        [InlineData("SortByColumns(table, \"First\")", false)]
-        [InlineData("SortByColumns(table, First)", true)]
-        [InlineData("SortByColumns(table, 'Has Dog')", true)]
-        [InlineData("SortByColumns(table, 'Has Do')", false)]
-        [InlineData("SortByColumns(table, 'Has Dog', SortOrder.Ascending)", true)]
-        [InlineData("SortByColumns(table, First, SortOrder.Ascending)", true)]
-        [InlineData("SortByColumns(table, First, SortOrder.Ascending, Last, SortOrder.Descending, 'Has Dog')", true)]
-        [InlineData("SortByColumns(tableWithBlanks, Flavor, SortOrder.Ascending, Quantity, SortOrder.Descending, OnOrder)", true)]
-        [InlineData("SortByColumns(tableWithBlanks, Flavor, SortOrder.Ascending, Quant, SortOrder.Descending, OnOrder)", false)]
-        [InlineData("SortByColumns([1],\"Value\")", false)]
-        [InlineData("SortByColumns([1],Value)", true)]
-        [InlineData("SortByColumns([\"a\", \"b\", \"D\", \"x\", \"J\", \"C\"], Value)", true)]
-        [InlineData("SortByColumns([true,false,true,false,true], Value)", true)]
-        [InlineData("SortByColumns([Date(2020, 01, 05), Date(2020, 01, 01), Date(1995, 01, 01)], Value)", true)]
-        [InlineData("SortByColumns([Blank(),Blank()], Value, SortOrder.Descending)", true)]
-        public void CheckSortByColumnsWithColumnNamesAsIdentifiers(string expression, bool shouldSucceed)
-        {
-            var engine = new Engine(new PowerFxConfig(CultureInfo.GetCultureInfo("en-US"), features: Features.SupportColumnNamesAsIdentifiers));
-            var table = @"Table(
-                          { First: ""Bob"", Last: ""Smith"", Age: 2, Gender: ""Male"", Vaccinated: true, 'Has Dog': true },
-                          { First: ""Alice"", Last: ""Smith"", Age: 5, Gender: ""Female"", Vaccinated: true, 'Has Dog': true },
-                          { First: Blank(), Last: ""Clark"", Age: Blank(), Gender: ""Male"", Vaccinated: Blank(), 'Has Dog': Blank() },
-                          { First: Blank(), Last: ""Allen"", Age: Blank(), Gender: ""Male"", Vaccinated: Blank(), 'Has Dog': Blank() },
-                          { First: Blank(), Last: ""Brown"", Age: Blank(), Gender: ""Female"", Vaccinated: Blank(), 'Has Dog': Blank() },
-                          { First: ""John"", Last: ""Batali"", Age: 17, Gender: ""Male"", Vaccinated: false, 'Has Dog': false },
-                          { First: ""Emily"", Last: ""Jones"", Age: 29, Gender: ""Female"", Vaccinated: true, 'Has Dog': Blank() }
-                        )";
-            var tableWithBlanks = @"Table(
-                                      {Flavor: ""Chocolate"", Quantity:100, OnOrder:150},
-                                      Blank(),
-                                      {Flavor: ""Vanilla"", Quantity:200, OnOrder:20},
-                                      Blank()
-                                    )";
-            if (expression.Contains("tableWithBlanks"))
-            {
-                expression = expression.Replace("tableWithBlanks", tableWithBlanks);
-            }
-            else if (expression.Contains("table"))
-            {
-                expression = expression.Replace("table", table);
-            }
-            
-            var result = engine.Check(expression);
-
-            Assert.Equal(result.IsSuccess, shouldSucceed);
-        }
-
         [Fact]
         public void CheckBadFunctionError()
         {

@@ -9,6 +9,7 @@ using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Tests.Helpers;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Types;
 using Xunit;
 
 namespace Microsoft.PowerFx.Tests
@@ -41,7 +42,57 @@ namespace Microsoft.PowerFx.Tests
             }
         }
 
-        private static DType OptionSetValueType => DType.CreateOptionSetValueType(OptionSetType.OptionSetInfo);
+        internal static DType OptionSetValueType => DType.CreateOptionSetValueType(OptionSetType.OptionSetInfo);
+
+        private static DType _booleanOptionSetType;
+
+        internal class BoolOptionSetInfo : IExternalOptionSet
+        {
+            public DisplayNameProvider DisplayNameProvider => DisplayNameUtility.MakeUnique(new Dictionary<string, string>
+            {
+                { "Yes", "Yes" },
+                { "No", "No" },
+            });
+
+            public IEnumerable<DName> OptionNames => new[] { new DName("No"), new DName("Yes") };
+
+            public bool IsBooleanValued => true;
+
+            public bool IsConvertingDisplayNameMapping => true;
+
+            public DName EntityName => new DName("BoolOptionSet");
+
+            public DType Type => DType.CreateOptionSetType(this);
+
+            public OptionSetValueType OptionSetValueType => new OptionSetValueType(this);
+
+            public bool TryGetValue(DName fieldName, out OptionSetValue optionSetValue)
+            {
+                if (fieldName.Value == "No" || fieldName.Value == "Yes")
+                {
+                    optionSetValue = new OptionSetValue(fieldName.Value, this.OptionSetValueType);
+                    return true;
+                }
+
+                optionSetValue = null;
+                return false;
+            }
+        }
+
+        private static DType BooleanValuedOptionSetType
+        {
+            get
+            {
+                if (_booleanOptionSetType == null)
+                {
+                    _booleanOptionSetType = DType.CreateOptionSetType(new BoolOptionSetInfo());
+                }
+
+                return _booleanOptionSetType;
+            }
+        }
+
+        internal static DType BooleanValuedOptionSetValueType => DType.CreateOptionSetValueType(BooleanValuedOptionSetType.OptionSetInfo);
 
         private static DType MultiSelectOptionSetType
         {
@@ -2048,6 +2099,8 @@ namespace Microsoft.PowerFx.Tests
 
             Assert.False(OptionSetValueType.CoercesTo(DType.Boolean));
             Assert.True(OptionSetValueType.CoercesTo(DType.String));
+
+            Assert.True(BooleanValuedOptionSetValueType.CoercesTo(DType.Boolean));
         }
 
         private void TestUnion(string t1, string t2, string tResult)

@@ -535,7 +535,7 @@
     
   </data>
   <data name="BooleanBArg1" xml:space="preserve">
-    <value>Booleova</value>
+    <value>booleov</value>
     
   </data>
   <data name="AboutBooleanB_boolean" xml:space="preserve">
@@ -1837,6 +1837,10 @@
     <value>Numerička je vrijednost preduga.</value>
     
   </data>
+  <data name="ErrTextTooLarge" xml:space="preserve">
+    <value>Izraz ne može imati više od ovoliko znakova: {0}. Izraz ima ovoliko znakova: {1}.</value>
+    
+  </data>
   <data name="ErrTextFormatTooLarge" xml:space="preserve">
     <value>Veličina niza formata ne može biti veća od ovoliko znakova: {0}.</value>
     
@@ -1863,6 +1867,10 @@
   </data>
   <data name="ErrTypeError_Arg_Expected_Found" xml:space="preserve">
     <value>Vrsta argumenta "{0}" ne odgovara očekivanoj vrsti "{1}". Pronađena je vrsta "{2}".</value>
+    
+  </data>
+  <data name="ErrTypeError_WrongType" xml:space="preserve">
+    <value>Vrsta izraza ne odgovara očekivanoj vrsti „{0}”. Pronađena je vrsta „{1}”.</value>
     
   </data>
   <data name="ErrTypeErrorRecordIncompatibleWithSource" xml:space="preserve">
@@ -2643,10 +2651,6 @@
   <data name="AboutIsNumeric_value" xml:space="preserve">
     <value>Vrijednost koja se testira.</value>
   </data>
-  <data name="Post" xml:space="preserve">
-    <value>Objava</value>
-    
-  </data>
   <data name="AboutDateTimeValue" xml:space="preserve">
     <value>Pretvara datum i vrijeme u obliku teksta u broj koji predstavlja datum u kodu vremena i datuma za Power Apps.</value>
     
@@ -3064,7 +3068,7 @@
     
   </data>
   <data name="Icon_Train_DisplayName" xml:space="preserve">
-    <value>Vlak</value>
+    <value>Uvježbavanje</value>
     
   </data>
   <data name="Icon_Tray_DisplayName" xml:space="preserve">
@@ -4111,10 +4115,6 @@
     <value>Prisila zapisa ili tablica nije podržana u stupcima formule.</value>
     
   </data>
-  <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
-    <value>Formule ne smiju biti dulje od 1000 znakova.</value>
-    
-  </data>
   <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
     <value>Tablice s jednim stupcem nisu podržane u stupcima formule.</value>
     
@@ -4225,10 +4225,10 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
-    <value>Ta se pogreška pojavljuje kada se formula poziva na svojstva ponašanja komponente sa sintaksom koja nije valjana. (Na primjer, Component.OnCustomChange umjesto Component.OnCustomChange())</value>
+    <value>Ta se pogreška pojavljuje kada se formula poziva na svojstva funkcije komponente sa sintaksom koja nije valjana. (Na primjer, Component.CustomFunction instead of Component.CustomFunction())</value>
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
-    <value>Koristite pravilnu sintaksu za pozivanje na svojstvo ponašanja komponente. Na primjer, Component.OnCustomChange()</value>
+    <value>Upotrijebite pravilnu sintaksu za pozivanje na svojstvo funkcije komponente. Na primjer, Component.CustomFunction()</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_Link_1" xml:space="preserve">
@@ -4737,6 +4737,10 @@
     <value>Imenovana formula mora završiti točkom sa zarezom.</value>
     
   </data>
+  <data name="ErrNamedFormula_MissingValue" xml:space="preserve">
+    <value>Imenovana formula mora biti izraz.</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula „{0}” već postoji.</value>
   </data>
@@ -4828,6 +4832,10 @@
   </data>
   <data name="ErrInvalidFunction" xml:space="preserve">
     <value>Ta je funkcija dvosmislena, sadrži izraz lambda i identifikatore stupca za isti argument.</value>
+    
+  </data>
+  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
+    <value>Mogućnost BooleanOptionSet {0} nije podržana.</value>
     
   </data>
 </root>

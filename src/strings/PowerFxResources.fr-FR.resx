@@ -1837,6 +1837,10 @@
     <value>La valeur numérique est trop importante.</value>
     
   </data>
+  <data name="ErrTextTooLarge" xml:space="preserve">
+    <value>L’expression ne peut pas contenir plus de {0} caractères. L’expression contient {1} caractères.</value>
+    
+  </data>
   <data name="ErrTextFormatTooLarge" xml:space="preserve">
     <value>La taille de la chaîne de format ne peut pas dépasser {0} caractères.</value>
     
@@ -1863,6 +1867,10 @@
   </data>
   <data name="ErrTypeError_Arg_Expected_Found" xml:space="preserve">
     <value>Le type de cet argument « {0} » ne correspond pas au type attendu « {1} ». Type trouvé « {2} ».</value>
+    
+  </data>
+  <data name="ErrTypeError_WrongType" xml:space="preserve">
+    <value>Le type de cette expression ne correspond pas au type attendu « {0} ». Type trouvé « {1} ».</value>
     
   </data>
   <data name="ErrTypeErrorRecordIncompatibleWithSource" xml:space="preserve">
@@ -2643,10 +2651,6 @@
   <data name="AboutIsNumeric_value" xml:space="preserve">
     <value>Valeur à tester.</value>
   </data>
-  <data name="Post" xml:space="preserve">
-    <value>Publier</value>
-    
-  </data>
   <data name="AboutDateTimeValue" xml:space="preserve">
     <value>Convertit une date et une heure au format texte en nombre représentant la date dans le code date-heure de Power Apps.</value>
     
@@ -3064,7 +3068,7 @@
     
   </data>
   <data name="Icon_Train_DisplayName" xml:space="preserve">
-    <value>Train</value>
+    <value>Effectuer l’apprentissage</value>
     
   </data>
   <data name="Icon_Tray_DisplayName" xml:space="preserve">
@@ -4111,10 +4115,6 @@
     <value>Contraindre des enregistrements ou des tables n’est pas pris en charge dans les colonnes de formules.</value>
     
   </data>
-  <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
-    <value>Les formules ne peuvent pas comporter plus de 1 000 caractères.</value>
-    
-  </data>
   <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
     <value>Les tables à une seule colonne ne sont pas prise en charge dans les colonnes de formules.</value>
     
@@ -4225,10 +4225,10 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
-    <value>Cette erreur s'affiche quand une formule référence des propriétés de comportement de composant avec une syntaxe non valide. (Par exemple, Component.OnCustomChange au lieu de Component.OnCustomChange())</value>
+    <value>Cette erreur s’affiche quand une formule fait référence à des propriétés de fonction de composant avec une syntaxe non valide. (Par exemple, Component.CustomFunction au lieu de Component.CustomFunction())</value>
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
-    <value>Utilisez une syntaxe correcte pour référencer la propriété de comportement de composant. Par exemple, Component.OnCustomChange()</value>
+    <value>Utilisez une syntaxe correcte pour faire référence à la propriété de fonction de composant. Par exemple, Component.CustomFunction()</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_Link_1" xml:space="preserve">
@@ -4737,6 +4737,10 @@
     <value>La formule nommée doit se terminer par un point-virgule.</value>
     
   </data>
+  <data name="ErrNamedFormula_MissingValue" xml:space="preserve">
+    <value>La formule nommée doit être une expression.</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula '{0}' existe déjà.</value>
   </data>
@@ -4828,6 +4832,10 @@
   </data>
   <data name="ErrInvalidFunction" xml:space="preserve">
     <value>Cette fonction est ambiguë, elle contient des expressions lambda et des identificateurs de colonne pour le même argument.</value>
+    
+  </data>
+  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
+    <value>L’option BooleanOptionSet {0} n’est pas prise en charge.</value>
     
   </data>
 </root>

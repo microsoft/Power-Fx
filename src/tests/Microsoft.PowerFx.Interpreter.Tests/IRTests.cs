@@ -2,7 +2,11 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
+using Microsoft.PowerFx.Core;
+using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
@@ -57,6 +61,64 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var result = engine.Eval(expr, options: new ParserOptions() { AllowsSideEffects = true });
 
             Assert.IsNotType<ErrorValue>(result);
+        }
+
+        private class BooleanOptionSet : OptionSet, IExternalOptionSet
+        {
+            public BooleanOptionSet(string name, DisplayNameProvider displayNameProvider)
+                : base(name, displayNameProvider)
+            {
+            }
+
+            bool IExternalOptionSet.IsBooleanValued => true;
+        }
+
+        [Theory]
+        [InlineData("If(BoolOptionSet.Negative, \"YES\",\"NO\")", "NO")]
+        [InlineData("BoolOptionSet.Positive & \" TEXT\"", "Positive TEXT")]
+        public void BooleanOptionSetTest(string expression, string expected)
+        {
+            var engine = new RecalcEngine(new PowerFxConfig());
+            var symbol = new SymbolTable();
+
+            var boolOptionSetDisplayNameProvider = DisplayNameUtility.MakeUnique(new Dictionary<string, string>
+            {
+                { "1", "Positive" },
+                { "0", "Negative" },
+            });
+
+            engine.Config.AddOptionSet(new BooleanOptionSet("BoolOptionSet", boolOptionSetDisplayNameProvider));
+
+            var check = engine.Check(expression);
+            Assert.True(check.IsSuccess);
+
+            var result = check.GetEvaluator().Eval() as StringValue;
+
+            Assert.Equal(expected, result.Value);
+        }
+
+        [Theory]
+        [InlineData("If(BoolOptionSet.Negative, \"YES\",\"NO\")")]
+        public void BooleanOptionSetErrorTest(string expression)
+        {
+            var engine = new RecalcEngine(new PowerFxConfig());
+            var symbol = new SymbolTable();
+
+            var boolOptionSetDisplayNameProvider = DisplayNameUtility.MakeUnique(new Dictionary<string, string>
+            {
+                { "error", "Positive" },
+                { "invalid", "Negative" },
+            });
+
+            engine.Config.AddOptionSet(new BooleanOptionSet("BoolOptionSet", boolOptionSetDisplayNameProvider));
+
+            var check = engine.Check(expression);
+            Assert.True(check.IsSuccess);
+
+            var result = check.GetEvaluator().Eval();
+
+            Assert.IsType<ErrorValue>(result);
+            Assert.Contains("The BooleanOptionSet option", ((ErrorValue)result).Errors.First().Message);
         }
     }
 }

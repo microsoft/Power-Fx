@@ -29,3 +29,13 @@ Table()
 
 >> Split(Text(1/0), "")
 Error({Kind:ErrorKind.Div0})
+
+// Table comparison ParseJSON
+>> Split("Hello World", "Hello World")
+Table({Value:""},{Value:""})
+
+>> Split(ParseJSON("""Hello World"""), "Hello World")
+Table({Value:""},{Value:""})
+
+>> Split("Hello World", ParseJSON("""Hello World"""))
+Table({Value:""},{Value:""})

@@ -1837,6 +1837,10 @@
     <value>Nilai angka terlalu besar.</value>
     
   </data>
+  <data name="ErrTextTooLarge" xml:space="preserve">
+    <value>Ungkapan tidak boleh lebih daripada {0} aksara. Ungkapan ialah {1} aksara.</value>
+    
+  </data>
   <data name="ErrTextFormatTooLarge" xml:space="preserve">
     <value>Saiz rentetan format tidak boleh melebihi {0} aksara.</value>
     
@@ -1863,6 +1867,10 @@
   </data>
   <data name="ErrTypeError_Arg_Expected_Found" xml:space="preserve">
     <value>Jenis argumen '{0}' ini tidak padan dengan jenis '{1}' yang dijangka. Jenis '{2}' ditemui.</value>
+    
+  </data>
+  <data name="ErrTypeError_WrongType" xml:space="preserve">
+    <value>Jenis ungkapan ini tidak sepadan dengan jenis '{0}' yang dijangka. Jenis '{1}' ditemukan.</value>
     
   </data>
   <data name="ErrTypeErrorRecordIncompatibleWithSource" xml:space="preserve">
@@ -2643,10 +2651,6 @@
   <data name="AboutIsNumeric_value" xml:space="preserve">
     <value>Nilai untuk diuji.</value>
   </data>
-  <data name="Post" xml:space="preserve">
-    <value>Siar</value>
-    
-  </data>
   <data name="AboutDateTimeValue" xml:space="preserve">
     <value>Menukar tarikh dan masa dalam bentuk teks kepada nombor yang mewakili tarikh dalam kod tarikh masa Power Apps.</value>
     
@@ -3064,7 +3068,7 @@
     
   </data>
   <data name="Icon_Train_DisplayName" xml:space="preserve">
-    <value>Kereta api</value>
+    <value>Latih</value>
     
   </data>
   <data name="Icon_Tray_DisplayName" xml:space="preserve">
@@ -3124,7 +3128,7 @@
     
   </data>
   <data name="Icon_Leave_DisplayName" xml:space="preserve">
-    <value>Tinggalkan</value>
+    <value>Keluar</value>
     
   </data>
   <data name="Icon_Paste_DisplayName" xml:space="preserve">
@@ -4111,10 +4115,6 @@
     <value>Rekod atau jadual paksaan tidak disokong dalam lajur formula.</value>
     
   </data>
-  <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
-    <value>Formula tidak boleh lebih panjang daripada 1000 aksara.</value>
-    
-  </data>
   <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
     <value>Jadual lajur tunggal tidak disokong dalam lajur formula.</value>
     
@@ -4225,10 +4225,10 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
-    <value>Ralat ini muncul apabila formula merujuk pada sifat tingkah laku komponen dengan sintaks yang tidak sah. (Contohnya, Component.OnCustomChange bukannya Component.OnCustomChange())</value>
+    <value>Ralat ini muncul apabila formula merujuk kepada sifat fungsi komponen dengan sintaks yang tidak sah. (Sebagai contoh, Component.CustomFunction dan bukannya Component.CustomFunction())</value>
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
-    <value>Gunakan sintaks yang betul untuk merujuk pada sifat tingkah laku komponen. Sebagai contoh, Component.OnCustomChange()</value>
+    <value>Gunakan sintaks yang betul untuk merujuk kepada sifat fungsi komponen. Sebagai contoh, Component.CustomFunction()</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_Link_1" xml:space="preserve">
@@ -4730,11 +4730,15 @@
     
   </data>
   <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
-    <value>Objek yang tidak berjenis tidak boleh digunakan sebagai argumen pertama untuk fungsi yang menyokong skop rekod.</value>
+    <value>Objek tanpa jenis tidak boleh digunakan sebagai argumen pertama untuk fungsi yang menyokong skop rekod.</value>
     
   </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>Formula yang dinamakan mesti tamat dengan koma bernoktah.</value>
+    
+  </data>
+  <data name="ErrNamedFormula_MissingValue" xml:space="preserve">
+    <value>Formula yang dinamakan mestilah ungkapan.</value>
     
   </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
@@ -4828,6 +4832,10 @@
   </data>
   <data name="ErrInvalidFunction" xml:space="preserve">
     <value>Fungsi ini samar-samar, ia mengandungi ungkapan LAMBDA dan pengecam lajur untuk argumen yang sama.</value>
+    
+  </data>
+  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
+    <value>Pilihan BooleanOptionSet {0} tidak disokong.</value>
     
   </data>
 </root>
