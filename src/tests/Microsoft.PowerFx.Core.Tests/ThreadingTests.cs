@@ -24,6 +24,9 @@ namespace Microsoft.PowerFx.Core.Tests
 
             var bugNames = new HashSet<string>
             {
+                // Threading.InterlockedIncrement.
+                "VersionHash._hashStarter",
+
                 // readonly arrays / dictionary - is there an IReadOnly type to changes these too instead? 
                 "LazyList`1.Empty",
                 "DType._kindToSuperkindMapping",
