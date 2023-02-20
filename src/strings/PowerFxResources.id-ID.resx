@@ -1837,6 +1837,10 @@
     <value>Nilai numerik terlalu besar.</value>
     
   </data>
+  <data name="ErrTextTooLarge" xml:space="preserve">
+    <value>Ekspresi tidak boleh lebih dari {0} karakter. Panjang ekspresi {1} karakter.</value>
+    
+  </data>
   <data name="ErrTextFormatTooLarge" xml:space="preserve">
     <value>Ukuran string format tidak boleh lebih dari {0} karakter.</value>
     
@@ -1863,6 +1867,10 @@
   </data>
   <data name="ErrTypeError_Arg_Expected_Found" xml:space="preserve">
     <value>Jenis argumen '{0}' tidak cocok dengan jenis yang diharapkan '{1}'. Jenis '{2}' ditemukan.</value>
+    
+  </data>
+  <data name="ErrTypeError_WrongType" xml:space="preserve">
+    <value>Tipe ekspresi ini tidak cocok dengan tipe yang diharapkan '{0}'. Tipe yang ditemukan adalah '{1}'.</value>
     
   </data>
   <data name="ErrTypeErrorRecordIncompatibleWithSource" xml:space="preserve">
@@ -2643,10 +2651,6 @@
   <data name="AboutIsNumeric_value" xml:space="preserve">
     <value>Nilai untuk diuji.</value>
   </data>
-  <data name="Post" xml:space="preserve">
-    <value>Posting</value>
-    
-  </data>
   <data name="AboutDateTimeValue" xml:space="preserve">
     <value>Mengonversi tanggal dan waktu dalam bentuk teks ke angka yang mewakili tanggal di kode tanggal-waktu Power Apps.</value>
     
@@ -3064,7 +3068,7 @@
     
   </data>
   <data name="Icon_Train_DisplayName" xml:space="preserve">
-    <value>Kereta</value>
+    <value>Latih</value>
     
   </data>
   <data name="Icon_Tray_DisplayName" xml:space="preserve">
@@ -4111,10 +4115,6 @@
     <value>Rekaman atau tabel yang memaksa tidak didukung di kolom rumus.</value>
     
   </data>
-  <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
-    <value>Rumus tidak boleh lebih dari 1.000 karakter.</value>
-    
-  </data>
   <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
     <value>Tabel satu kolom tidak didukung di kolom rumus.</value>
     
@@ -4225,10 +4225,10 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
-    <value>Kesalahan ini muncul saat rumus merujuk pada properti perilaku komponen dengan sintaks yang tidak valid. (Misalnya, Component.OnCustomChange, dan bukan Component.OnCustomChange())</value>
+    <value>Kesalahan ini muncul saat rumus merujuk pada properti fungsi komponen dengan sintaksis yang tidak valid. (Misalnya, Component.CustomFunction alih-alih Component.CustomFunction())</value>
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
-    <value>Gunakan sintaks yang benar untuk merujuk pada properti perilaku komponen. Misalnya, Component.OnCustomChange()</value>
+    <value>Gunakan sintaksis yang benar untuk merujuk pada properti fungsi komponen. Misalnya, Component.CustomFunction()</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_Link_1" xml:space="preserve">
@@ -4737,6 +4737,10 @@
     <value>Rumus bernama harus diakhiri dengan titik koma.</value>
     
   </data>
+  <data name="ErrNamedFormula_MissingValue" xml:space="preserve">
+    <value>Rumus bernama harus merupakan ekspresi.</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula '{0}' sudah ada.</value>
   </data>
@@ -4828,6 +4832,10 @@
   </data>
   <data name="ErrInvalidFunction" xml:space="preserve">
     <value>Fungsi ini ambigu karena berisi ekspresi lambda dan pengidentifikasi kolom untuk argumen yang sama.</value>
+    
+  </data>
+  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
+    <value>Opsi BooleanOptionSet {0} tidak didukung.</value>
     
   </data>
 </root>

@@ -89,3 +89,9 @@ Table({Value:5})
 >> FirstN(If(false, Table({a:1}), Table({b:2})), 1)
 Table({})
 
+// since If uses the interaction of types, If(false, {x:1, y:1}, {x:2, z:2}) => {x:2} hence .z is blank.
+>> First(Table(If(false, {x:1, y:1}, {x:1, z:2}), {x:9,z:9})).z
+Blank()
+
+>> First(Table(If(false, {x:1, y:1}, {x:1, z:"str"}), {x:9,z:9})).z
+Blank()

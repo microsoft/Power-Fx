@@ -1837,6 +1837,10 @@
     <value>ค่าตัวเลขสูงเกินไป</value>
     
   </data>
+  <data name="ErrTextTooLarge" xml:space="preserve">
+    <value>นิพจน์ต้องไม่เกิน {0} อักขระ นิพจน์นี้มีความยาว {1} อักขระ</value>
+    
+  </data>
   <data name="ErrTextFormatTooLarge" xml:space="preserve">
     <value>ขนาดสตริงรูปแบบต้องไม่เกิน {0} อักขระ</value>
     
@@ -1863,6 +1867,10 @@
   </data>
   <data name="ErrTypeError_Arg_Expected_Found" xml:space="preserve">
     <value>ประเภทของอาร์กิวเมนต์ '{0}' ไม่ตรงกับประเภทที่ต้องการ '{1}' พบประเภท '{2}'</value>
+    
+  </data>
+  <data name="ErrTypeError_WrongType" xml:space="preserve">
+    <value>ชนิดของนิพจน์ไม่ตรงกับชนิดที่ต้องการ '{0}' ชนิดที่พบคือ '{1}'</value>
     
   </data>
   <data name="ErrTypeErrorRecordIncompatibleWithSource" xml:space="preserve">
@@ -2643,10 +2651,6 @@
   <data name="AboutIsNumeric_value" xml:space="preserve">
     <value>ค่าที่จะทดสอบ</value>
   </data>
-  <data name="Post" xml:space="preserve">
-    <value>โพสต์</value>
-    
-  </data>
   <data name="AboutDateTimeValue" xml:space="preserve">
     <value>แปลงวันที่และเวลาในรูปแบบข้อความให้เป็นตัวเลขที่แสดงวันที่เป็นรหัสวันที่-เวลาของ Power Apps</value>
     
@@ -3064,7 +3068,7 @@
     
   </data>
   <data name="Icon_Train_DisplayName" xml:space="preserve">
-    <value>รถไฟ</value>
+    <value>ฝึก</value>
     
   </data>
   <data name="Icon_Tray_DisplayName" xml:space="preserve">
@@ -4111,10 +4115,6 @@
     <value>การแปลงข้อมูลเรกคอร์ดหรือตารางไม่ได้รับการสนับสนุนในคอลัมน์สูตร</value>
     
   </data>
-  <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
-    <value>สูตรต้องมีความยาวไม่เกิน 1000 อักขระ</value>
-    
-  </data>
   <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
     <value>ตารางคอลัมน์เดียวไม่ได้รับการสนับสนุนในคอลัมน์สูตร</value>
     
@@ -4225,10 +4225,10 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
-    <value>ข้อผิดพลาดนี้ปรากฏขึ้นเมื่อสูตรอ้างถึงคุณสมบัติลักษณะการทำงานของคอมโพเนนต์ที่มีไวยากรณ์ไม่ถูกต้อง (ตัวอย่างเช่น Component.OnCustomChange แทนที่จะเป็น Component.OnCustomChange())</value>
+    <value>ข้อผิดพลาดนี้ปรากฏขึ้นเมื่อสูตรอ้างถึงคุณสมบัติฟังก์ชันของคอมโพเนนต์ที่มีไวยากรณ์ไม่ถูกต้อง (ตัวอย่างเช่น Component.CustomFunction แทนที่จะเป็น Component.CustomFunction())</value>
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
-    <value>ใช้ไวยากรณ์ที่ถูกต้องเพื่ออ้างถึงคุณสมบัติลักษณะการทำงานของคอมโพเนนต์ ตัวอย่างเช่น Component.OnCustomChange()</value>
+    <value>ใช้ไวยากรณ์ที่ถูกต้องเพื่ออ้างถึงคุณสมบัติฟังก์ชันของคอมโพเนนต์ ตัวอย่างเช่น Component.CustomFunction()</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_Link_1" xml:space="preserve">
@@ -4737,6 +4737,10 @@
     <value>สูตรที่ระบุชื่อต้องลงท้ายด้วยเครื่องหมายอัฒภาค</value>
     
   </data>
+  <data name="ErrNamedFormula_MissingValue" xml:space="preserve">
+    <value>สูตรที่มีชื่อต้องเป็นนิพจน์</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>มี NamedFormula '{0}' อยู่แล้ว</value>
   </data>
@@ -4828,6 +4832,10 @@
   </data>
   <data name="ErrInvalidFunction" xml:space="preserve">
     <value>ฟังก์ชันนี้คลุมเครือ โดยประกอบด้วยนิพจน์แลมบ์ดาและตัวระบุคอลัมน์สำหรับอาร์กิวเมนต์เดียวกัน</value>
+    
+  </data>
+  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
+    <value>ไม่รองรับตัวเลือก {0} BooleanOptionSet</value>
     
   </data>
 </root>

@@ -1393,7 +1393,7 @@
     <value>Өрнекті кестенің бір немесе бірнеше бағаны бойынша есептейді және есептелетін өрнек үшін бөлек (бірегей) мәндері бар бір бағанды кестені қайтарады.</value>
   </data>
   <data name="DistinctArg1" xml:space="preserve">
-    <value>ресурс</value>
+    <value>бастапқы</value>
     
   </data>
   <data name="DistinctArg2" xml:space="preserve">
@@ -1837,6 +1837,10 @@
     <value>Сандық мән тым үлкен.</value>
     
   </data>
+  <data name="ErrTextTooLarge" xml:space="preserve">
+    <value>Өрнек {0} таңбадан артық болмауы кере. Өрнек {1} таңбадан тұрады.</value>
+    
+  </data>
   <data name="ErrTextFormatTooLarge" xml:space="preserve">
     <value>Пішім жолының өлшемі {0} таңбадан артық болмауы керек.</value>
     
@@ -1863,6 +1867,10 @@
   </data>
   <data name="ErrTypeError_Arg_Expected_Found" xml:space="preserve">
     <value>Бұл аргументтің "{0}" түрі күтілген "{1}" түріне сәйкес емес. "{2}" түрі табылды.</value>
+    
+  </data>
+  <data name="ErrTypeError_WrongType" xml:space="preserve">
+    <value>Бұл өрнек түрі күтілген "{0}" түріне сәйкес емес. "{1}" түрі табылды.</value>
     
   </data>
   <data name="ErrTypeErrorRecordIncompatibleWithSource" xml:space="preserve">
@@ -2643,10 +2651,6 @@
   <data name="AboutIsNumeric_value" xml:space="preserve">
     <value>Тексерілетін мән.</value>
   </data>
-  <data name="Post" xml:space="preserve">
-    <value>Пошта</value>
-    
-  </data>
   <data name="AboutDateTimeValue" xml:space="preserve">
     <value>Мәтін түріндегі күн мен уақытты Power Apps күн-уақыт кодындағы күнді көрсететін санға түрлендіреді.</value>
     
@@ -3064,7 +3068,7 @@
     
   </data>
   <data name="Icon_Train_DisplayName" xml:space="preserve">
-    <value>Пойыз</value>
+    <value>Үйрету</value>
     
   </data>
   <data name="Icon_Tray_DisplayName" xml:space="preserve">
@@ -3320,7 +3324,7 @@
     
   </data>
   <data name="AboutCollect" xml:space="preserve">
-    <value>Жазбаларды дереккөзге қосады.</value>
+    <value>Жазбаларды деректер көзіне қосады.</value>
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
@@ -4111,10 +4115,6 @@
     <value>Мәжбүрлі жазбаларға немесе кестелерге формула бағандарында қолдау көрсетілмейді.</value>
     
   </data>
-  <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
-    <value>Формулалар 1000 таңбадан аспауы керек.</value>
-    
-  </data>
   <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
     <value>Бір бағанды кестелерге формула бағандарында қолдау көрсетілмейді.</value>
     
@@ -4225,10 +4225,10 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
-    <value>Бұл қате формула жарамсыз синтаксисі бар компоненттің жұмыс режимі сипаттарына сілтеме жасағанда пайда болады. (Мысалы, Component.OnCustomChange() орнына Component.OnCustomChange)</value>
+    <value>Формула синтаксисі жарамсыз компоненттің функциялық сипаттарына қатысты болғанда, осы қате пайда болады. (Мысалы, Component.CustomFunction() орнына Component.CustomFunction)</value>
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
-    <value>Компоненттің жұмыс режимі сипатына сілтеме жасау үшін дұрыс синтаксисті пайдаланыңыз. Мысалы, Component.OnCustomChange()</value>
+    <value>Компоненттің функциялық сипатына қатысты ету үшін дұрыс синтаксисті пайдаланыңыз. Мысалы, Component.CustomFunction()</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_Link_1" xml:space="preserve">
@@ -4730,11 +4730,15 @@
     
   </data>
   <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
-    <value>Терілмеген нысандар жазба ауқымдарын қолдайтын функцияларға бірінші аргумент ретінде пайдаланылмайды.</value>
+    <value>Жіктелмеген нысандар жазба ауқымдарына қолдау көрсететін функцияларға бірінші аргумент ретінде пайдаланылмайды.</value>
     
   </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>Аталған формула үтір нүктемен аяқталуға тиіс.</value>
+    
+  </data>
+  <data name="ErrNamedFormula_MissingValue" xml:space="preserve">
+    <value>Аталған формула өрнек болуы керек.</value>
     
   </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
@@ -4828,6 +4832,10 @@
   </data>
   <data name="ErrInvalidFunction" xml:space="preserve">
     <value>Бұл функция айқын емес, оның құрамында бірдей аргумент үшін Lambda өрнектері мен баған идентификаторлары бар.</value>
+    
+  </data>
+  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
+    <value>BooleanOptionSet {0} опциясына қолдау көрсетілмейді.</value>
     
   </data>
 </root>

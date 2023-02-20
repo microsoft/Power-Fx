@@ -1837,6 +1837,10 @@
     <value>Numerická hodnota je príliš veľká.</value>
     
   </data>
+  <data name="ErrTextTooLarge" xml:space="preserve">
+    <value>Výraz nemôže mať viac ako {0} znakov. Výraz má {1} znakov.</value>
+    
+  </data>
   <data name="ErrTextFormatTooLarge" xml:space="preserve">
     <value>Maximálny povolený počet znakov veľkosti reťazca formátu je {0}.</value>
     
@@ -1863,6 +1867,10 @@
   </data>
   <data name="ErrTypeError_Arg_Expected_Found" xml:space="preserve">
     <value>Typ tohto argumentu {0} sa nezhoduje s očakávaným typom {1}. Nájdený typ: {2}.</value>
+    
+  </data>
+  <data name="ErrTypeError_WrongType" xml:space="preserve">
+    <value>Typ tohto výrazu sa nezhoduje s očakávaným typom {0}. Nájdený typ: {1}.</value>
     
   </data>
   <data name="ErrTypeErrorRecordIncompatibleWithSource" xml:space="preserve">
@@ -2643,10 +2651,6 @@
   <data name="AboutIsNumeric_value" xml:space="preserve">
     <value>Hodnota na testovanie.</value>
   </data>
-  <data name="Post" xml:space="preserve">
-    <value>Príspevok</value>
-    
-  </data>
   <data name="AboutDateTimeValue" xml:space="preserve">
     <value>Skonvertuje dátum a čas vo formáte textu na číslo reprezentujúce dátum v kóde dátumu a času služby Power Apps.</value>
     
@@ -3064,7 +3068,7 @@
     
   </data>
   <data name="Icon_Train_DisplayName" xml:space="preserve">
-    <value>Vlak</value>
+    <value>Trénovať</value>
     
   </data>
   <data name="Icon_Tray_DisplayName" xml:space="preserve">
@@ -4111,10 +4115,6 @@
     <value>Vynútenie záznamov alebo tabuliek nie je v stĺpcoch vzorcov podporované.</value>
     
   </data>
-  <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
-    <value>Vzorce nemôžu byť dlhšie ako 1 000 znakov.</value>
-    
-  </data>
   <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
     <value>Tabuľky s jedným stĺpcom nie sú v stĺpcoch vzorcov podporované.</value>
     
@@ -4225,10 +4225,10 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
-    <value>Táto chyba sa zobrazí, keď vzorec odkazuje na vlastnosti správania súčastí s neplatnou syntaxou. (Napríklad na vlastnosť Component.OnCustomChange namiesto vlastnosti Component.OnCustomChange())</value>
+    <value>Táto chyba sa zobrazí, keď vzorec odkazuje na vlastnosti funkcií súčasti s neplatnou syntaxou. (Napríklad na vlastnosť Component.CustomFunction namiesto vlastnosti Component.CustomFunction())</value>
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
-    <value>Na odkazovanie na vlastnosť správania súčastí použite správnu syntax. Napríklad Component.OnCustomChange()</value>
+    <value>Na odkazovanie na vlastnosť funkcií súčasti použite správnu syntax. Napríklad Component.CustomFunction()</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_Link_1" xml:space="preserve">
@@ -4737,6 +4737,10 @@
     <value>Pomenovaný vzorec sa musí končiť bodkočiarkou.</value>
     
   </data>
+  <data name="ErrNamedFormula_MissingValue" xml:space="preserve">
+    <value>Pomenovaný vzorec musí byť výraz.</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula {0} už existuje.</value>
   </data>
@@ -4828,6 +4832,10 @@
   </data>
   <data name="ErrInvalidFunction" xml:space="preserve">
     <value>Táto funkcia je nejednoznačná, obsahuje výrazy lambda a identifikátory stĺpcov pre rovnaký argument.</value>
+    
+  </data>
+  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
+    <value>Možnosť BooleanOptionSet {0} nie je podporovaná.</value>
     
   </data>
 </root>

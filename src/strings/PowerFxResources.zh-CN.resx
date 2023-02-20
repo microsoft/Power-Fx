@@ -1837,6 +1837,10 @@
     <value>数值太大。</value>
     
   </data>
+  <data name="ErrTextTooLarge" xml:space="preserve">
+    <value>表达式不能超过 {0} 个字符。该表达式包含 {1} 个字符。</value>
+    
+  </data>
   <data name="ErrTextFormatTooLarge" xml:space="preserve">
     <value>格式字符串大小不能超过 {0} 个字符。</value>
     
@@ -1863,6 +1867,10 @@
   </data>
   <data name="ErrTypeError_Arg_Expected_Found" xml:space="preserve">
     <value>此参数“{0}”的类型与所需类型“{1}”不匹配。找到类型“{2}”。</value>
+    
+  </data>
+  <data name="ErrTypeError_WrongType" xml:space="preserve">
+    <value>此表达式的类型与所需类型 '{0}' 不匹配。找到类型 '{1}'。</value>
     
   </data>
   <data name="ErrTypeErrorRecordIncompatibleWithSource" xml:space="preserve">
@@ -2643,10 +2651,6 @@
   <data name="AboutIsNumeric_value" xml:space="preserve">
     <value>要测试的值。</value>
   </data>
-  <data name="Post" xml:space="preserve">
-    <value>发布</value>
-    
-  </data>
   <data name="AboutDateTimeValue" xml:space="preserve">
     <value>将文本形式的日期和时间转换为采用 Power Apps 日期时间代码表示日期的数字。</value>
     
@@ -3124,7 +3128,7 @@
     
   </data>
   <data name="Icon_Leave_DisplayName" xml:space="preserve">
-    <value>退出</value>
+    <value>离开</value>
     
   </data>
   <data name="Icon_Paste_DisplayName" xml:space="preserve">
@@ -3488,7 +3492,7 @@
     
   </data>
   <data name="FormPattern_CardList_DisplayName" xml:space="preserve">
-    <value>卡列表</value>
+    <value>卡片列表</value>
     
   </data>
   <data name="BarcodeType_Auto_DisplayName" xml:space="preserve">
@@ -4111,10 +4115,6 @@
     <value>公式列中不支持强制记录或表格。</value>
     
   </data>
-  <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
-    <value>公式长度不能超过 1000 个字符。</value>
-    
-  </data>
   <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
     <value>公式列中不支持单列表。</value>
     
@@ -4225,10 +4225,10 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
-    <value>当公式引用具有无效语法的组件行为属性时，会出现此错误。(例如，Component.OnCustomChange 而不是 Component.OnCustomChange())</value>
+    <value>当公式引用具有无效语法的组件函数属性时，会出现此错误。(例如，引用 Component.CustomFunction 而不是 Component.CustomFunction())</value>
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
-    <value>请使用正确的语法来引用组件行为属性。例如，Component.OnCustomChange()</value>
+    <value>请使用正确的语法来引用组件函数属性。例如，Component.CustomFunction()</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_Link_1" xml:space="preserve">
@@ -4737,6 +4737,10 @@
     <value>命名公式必须以分号结束。</value>
     
   </data>
+  <data name="ErrNamedFormula_MissingValue" xml:space="preserve">
+    <value>指定的公式必须为表达式。</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula '{0}' 已存在。</value>
   </data>
@@ -4828,6 +4832,10 @@
   </data>
   <data name="ErrInvalidFunction" xml:space="preserve">
     <value>此函数不明确，其中包含同一参数的 Lambda 表达式和列标识符。</value>
+    
+  </data>
+  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
+    <value>不支持 BooleanOptionSet 选项 {0}。</value>
     
   </data>
 </root>

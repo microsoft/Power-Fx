@@ -1837,6 +1837,10 @@
     <value>Numerisk verdi er for stor.</value>
     
   </data>
+  <data name="ErrTextTooLarge" xml:space="preserve">
+    <value>Uttrykk kan ikke bestå av mer enn {0} tegn. Uttrykket inneholder {1} tegn.</value>
+    
+  </data>
   <data name="ErrTextFormatTooLarge" xml:space="preserve">
     <value>Formatstrengstørrelsen kan ikke være lengre enn {0} tegn.</value>
     
@@ -1863,6 +1867,10 @@
   </data>
   <data name="ErrTypeError_Arg_Expected_Found" xml:space="preserve">
     <value>Typen for dette argumentet ({0}) samsvarer ikke med den forventede typen ({1}). Fant typen {2}.</value>
+    
+  </data>
+  <data name="ErrTypeError_WrongType" xml:space="preserve">
+    <value>Typen for dette uttrykket samsvarer ikke med den forventede typen {0}. Fant typen {1}.</value>
     
   </data>
   <data name="ErrTypeErrorRecordIncompatibleWithSource" xml:space="preserve">
@@ -2643,10 +2651,6 @@
   <data name="AboutIsNumeric_value" xml:space="preserve">
     <value>Verdien som skal testes.</value>
   </data>
-  <data name="Post" xml:space="preserve">
-    <value>Legg ut</value>
-    
-  </data>
   <data name="AboutDateTimeValue" xml:space="preserve">
     <value>Konverterer en dato og et klokkeslett tekstformat til et tall som representerer datoen i dato/klokkeslett-koden for Power Apps.</value>
     
@@ -3064,7 +3068,7 @@
     
   </data>
   <data name="Icon_Train_DisplayName" xml:space="preserve">
-    <value>Tog</value>
+    <value>Lær opp</value>
     
   </data>
   <data name="Icon_Tray_DisplayName" xml:space="preserve">
@@ -3124,7 +3128,7 @@
     
   </data>
   <data name="Icon_Leave_DisplayName" xml:space="preserve">
-    <value>Ferie</value>
+    <value>Forlat</value>
     
   </data>
   <data name="Icon_Paste_DisplayName" xml:space="preserve">
@@ -4111,10 +4115,6 @@
     <value>Tvungne oppføringer eller tabeller støttes ikke i formelkolonner.</value>
     
   </data>
-  <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
-    <value>Formler kan ikke være lengre enn 1000 tegn.</value>
-    
-  </data>
   <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
     <value>Tabeller med én kolonne støttes ikke i formelkolonner.</value>
     
@@ -4225,10 +4225,10 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
-    <value>Denne feilen vises når en formel refererer til egenskaper for komponentvirkemåte med ugyldig syntaks. (Som for eksempel Component.OnCustomChange i stedet for Component.OnCustomChange())</value>
+    <value>Denne feilen vises når en formel henviser til egenskaper for komponentfunksjon med ugyldig syntaks. (Eksempel: Component.CustomFunction i stedet for Component.CustomFunction())</value>
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
-    <value>Bruk riktig syntaks til å referere til egenskapen for komponentvirkemåte. Som: Component.OnCustomChange()</value>
+    <value>Bruk riktig syntaks til å henvise til egenskapen for komponentfunksjon. Eksempel: Component.CustomFunction()</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_Link_1" xml:space="preserve">
@@ -4730,11 +4730,15 @@
     
   </data>
   <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
-    <value>Objekter uten type kan ikke brukes som det første argumentet for funksjoner som støtter oppføringsomfang.</value>
+    <value>Typeløse objekter kan ikke brukes som det første argumentet for funksjoner som støtter oppføringsomfang.</value>
     
   </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>Navngitt formel må slutte med et semikolon.</value>
+    
+  </data>
+  <data name="ErrNamedFormula_MissingValue" xml:space="preserve">
+    <value>Den navngitte formelen må være et uttrykk.</value>
     
   </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
@@ -4828,6 +4832,10 @@
   </data>
   <data name="ErrInvalidFunction" xml:space="preserve">
     <value>Denne funksjonen er tvetydig, den inneholder lambda-uttrykk og kolonneidentifikatorer for samme argument.</value>
+    
+  </data>
+  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
+    <value>Alternativet BooleanOptionSet {0} støttes ikke.</value>
     
   </data>
 </root>

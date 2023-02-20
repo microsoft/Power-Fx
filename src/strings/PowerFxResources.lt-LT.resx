@@ -1837,6 +1837,10 @@
     <value>Skaitinė reikšmė per didelė.</value>
     
   </data>
+  <data name="ErrTextTooLarge" xml:space="preserve">
+    <value>Reiškinio negali sudaryti daugiau nei {0} simb. Reiškinį sudaro {1} simb.</value>
+    
+  </data>
   <data name="ErrTextFormatTooLarge" xml:space="preserve">
     <value>Formato eilutės dydis negali viršyti {0} simb.</value>
     
@@ -1863,6 +1867,10 @@
   </data>
   <data name="ErrTypeError_Arg_Expected_Found" xml:space="preserve">
     <value>Šio argumento tipas „{0}“ neatitinka numatomo tipo „{1}“. Rastas tipas „{2}“.</value>
+    
+  </data>
+  <data name="ErrTypeError_WrongType" xml:space="preserve">
+    <value>Šio reiškinio tipas neatitinka numatomo tipo „{0}“. Rastas tipas „{1}“.</value>
     
   </data>
   <data name="ErrTypeErrorRecordIncompatibleWithSource" xml:space="preserve">
@@ -2643,10 +2651,6 @@
   <data name="AboutIsNumeric_value" xml:space="preserve">
     <value>Reikšmė, kurią reikia patikrinti.</value>
   </data>
-  <data name="Post" xml:space="preserve">
-    <value>Paštas</value>
-    
-  </data>
   <data name="AboutDateTimeValue" xml:space="preserve">
     <value>Teksto formos datą ir laiką konvertuoja į skaičių, kuris pavaizduoja datą „Power Apps“ datos ir laiko kode.</value>
     
@@ -3064,7 +3068,7 @@
     
   </data>
   <data name="Icon_Train_DisplayName" xml:space="preserve">
-    <value>Traukinys</value>
+    <value>Mokyti</value>
     
   </data>
   <data name="Icon_Tray_DisplayName" xml:space="preserve">
@@ -4111,10 +4115,6 @@
     <value>Įrašų arba lentelių vertimas formulės stulpeliuose nepalaikomas.</value>
     
   </data>
-  <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
-    <value>Formulės negali būti ilgesnės nei 1000 simbolių.</value>
-    
-  </data>
   <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
     <value>Vieno stulpelio lentelės formulės stulpeliuose nepalaikomos.</value>
     
@@ -4225,10 +4225,10 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
-    <value>Ši klaida rodoma, kai formulė nurodo komponento veikimo ypatybes su netinkama sintakse. (Pvz., „Component.OnCustomChange“ vietoj „Component.OnCustomChange()“)</value>
+    <value>Ši klaida rodoma, kai formulė nurodo komponento funkcijų ypatybes su netinkama sintakse. (Pvz., „Component.CustomFunction“ vietoj „Component.CustomFunction()“)</value>
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
-    <value>Norėdami nurodyti komponento veikimo ypatybę, naudokite tinkamą sintaksę. Pvz., Component.OnCustomChange()</value>
+    <value>Norėdami nurodyti komponento funkcijos ypatybę, naudokite tinkamą sintaksę. Pvz., Component.CustomFunction()</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_Link_1" xml:space="preserve">
@@ -4737,6 +4737,10 @@
     <value>Įvardytoji formulė turi baigtis kabliataškiu.</value>
     
   </data>
+  <data name="ErrNamedFormula_MissingValue" xml:space="preserve">
+    <value>Įvardytoji formulė turi būti reiškinys.</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula „{0}“ jau yra.</value>
   </data>
@@ -4828,6 +4832,10 @@
   </data>
   <data name="ErrInvalidFunction" xml:space="preserve">
     <value>Ši funkcija yra nevienareikšmiška, joje yra to paties argumento lambda išraiškos ir stulpelių identifikatoriai.</value>
+    
+  </data>
+  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
+    <value>BooleanOptionSet parinktis {0} nepalaikoma.</value>
     
   </data>
 </root>
