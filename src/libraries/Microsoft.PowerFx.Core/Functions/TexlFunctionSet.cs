@@ -51,7 +51,7 @@ namespace Microsoft.PowerFx.Core.Functions
 
         internal TexlFunctionSet()
         {
-            _functions = new Dictionary<string, List<TexlFunction>>();
+            _functions = new Dictionary<string, List<TexlFunction>>(StringComparer.Ordinal);
             _functionsInvariant = new Dictionary<string, List<TexlFunction>>(StringComparer.OrdinalIgnoreCase);
             _namespaces = new Dictionary<DPath, List<TexlFunction>>();
             _enums = new List<string>();
@@ -192,6 +192,7 @@ namespace Microsoft.PowerFx.Core.Functions
                 throw new ArgumentNullException(nameof(functionSet));
             }
 
+            // Notice that this code path is a critical performance gain versus the various loops in the 'else' part
             if (_count == 0)
             {
                 _functions = functionSet._functions.ToDictionary(kvp => kvp.Key, kvp => new List<TexlFunction>(kvp.Value));
