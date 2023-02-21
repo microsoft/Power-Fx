@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Numerics;
 using Microsoft.PowerFx;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Interpreter;
@@ -55,6 +56,17 @@ namespace Microsoft.PowerFx.Tests
             TryCoerceToTargetTypes(FormulaValue.New(DateTime.Parse(value)), exprBool, exprNumber, exprStr, exprDateTime);
         }
 
+        // From number to datetime, expects an exception
+        [Theory]
+        [InlineData(4496200)]
+        [InlineData(4E8)]
+        public void TryCoerceFromNumberExpectsExceptionTest(double value)
+        {
+            var inputValue = FormulaValue.New(value);
+
+            Assert.Throws<CustomFunctionErrorException>(() => inputValue.TryCoerceTo(out DateTimeValue resultDateTime));
+        }
+
         private void TryCoerceToTargetTypes(FormulaValue inputValue, string exprBool, string exprNumber, string exprStr, string exprDateTime)
         {
             bool isSucceeded = inputValue.TryCoerceTo(out BooleanValue resultBoolean);
@@ -93,24 +105,16 @@ namespace Microsoft.PowerFx.Tests
                 Assert.IsType<ErrorValue>(resultValue);
             }
 
-            try
+            isSucceeded = inputValue.TryCoerceTo(out DateTimeValue resultDateTime);
+            if (exprDateTime != null)
             {
-                isSucceeded = inputValue.TryCoerceTo(out DateTimeValue resultDateTime);
-                if (exprDateTime != null)
-                {
-                    Assert.True(isSucceeded);
-                    Assert.Equal(DateTime.Parse(exprDateTime), resultDateTime.GetConvertedValue(TimeZoneInfo.Local));
-                }
-                else
-                {
-                    Assert.False(isSucceeded);
-                    Assert.Null(resultDateTime);
-                }
+                Assert.True(isSucceeded);
+                Assert.Equal(DateTime.Parse(exprDateTime), resultDateTime.GetConvertedValue(TimeZoneInfo.Local));
             }
-            catch (CustomFunctionErrorException ex)
+            else
             {
-                Assert.Equal(ErrorKind.InvalidArgument, ex.ErrorKind);
-                Assert.Equal("Value to add was out of range.", ex.Message);
+                Assert.False(isSucceeded);
+                Assert.Null(resultDateTime);
             }
         }
     }
