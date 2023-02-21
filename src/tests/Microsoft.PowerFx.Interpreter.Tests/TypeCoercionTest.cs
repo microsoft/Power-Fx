@@ -2,8 +2,10 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Numerics;
 using Microsoft.PowerFx;
 using Microsoft.PowerFx.Core.Tests;
+using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
@@ -53,6 +55,17 @@ namespace Microsoft.PowerFx.Tests
             TryCoerceToTargetTypes(FormulaValue.New(DateTime.Parse(value)), exprBool, exprNumber, exprStr, exprDateTime);
         }
 
+        // From number to datetime, expects an exception
+        [Theory]
+        [InlineData(4496200)]
+        [InlineData(4E8)]
+        public void TryCoerceFromNumberExpectsExceptionTest(double value)
+        {
+            var inputValue = FormulaValue.New(value);
+
+            Assert.Throws<CustomFunctionErrorException>(() => inputValue.TryCoerceTo(out DateTimeValue resultDateTime));
+        }
+
         private void TryCoerceToTargetTypes(FormulaValue inputValue, string exprBool, string exprNumber, string exprStr, string exprDateTime)
         {
             bool isSucceeded = inputValue.TryCoerceTo(out BooleanValue resultBoolean);
@@ -79,16 +92,16 @@ namespace Microsoft.PowerFx.Tests
                 Assert.Null(resultNumber);
             }
 
-            isSucceeded = inputValue.TryCoerceTo(out StringValue resultString);
+            isSucceeded = inputValue.TryCoerceTo(out StringValue resultValue);
             if (exprStr != null)
             {
                 Assert.True(isSucceeded);
-                Assert.Equal(exprStr, resultString.Value);
+                Assert.Equal(exprStr, resultValue.Value);
             }
             else
             {
                 Assert.False(isSucceeded);
-                Assert.Null(resultString);
+                Assert.IsType<ErrorValue>(resultValue);
             }
 
             isSucceeded = inputValue.TryCoerceTo(out DateTimeValue resultDateTime);

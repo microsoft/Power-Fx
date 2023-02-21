@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
@@ -432,12 +431,21 @@ namespace Microsoft.PowerFx.Functions
 
         public static DateTimeValue NumberToDateTime(FormattingInfo formatInfo, IRContext irContext, NumberValue value)
         {
-            var n = value.Value;
-            var date = _epoch.AddDays(n);
+            try
+            {
+                var n = value.Value;
+                var date = _epoch.AddDays(n);
 
-            date = MakeValidDateTime(formatInfo.TimeZoneInfo, date);
+                date = MakeValidDateTime(formatInfo.TimeZoneInfo, date);
 
-            return new DateTimeValue(irContext, date);
+                return new DateTimeValue(irContext, date);
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                (var shortMessage, _) = ErrorUtils.GetLocalizedErrorContent(TexlStrings.ErrTextInvalidArgDateTime, formatInfo.CultureInfo, out _);
+
+                throw new CustomFunctionErrorException(shortMessage, ErrorKind.InvalidArgument);
+            }          
         }
 
         public static FormulaValue DateToDateTime(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)

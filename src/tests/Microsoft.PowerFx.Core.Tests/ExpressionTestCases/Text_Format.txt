@@ -636,6 +636,10 @@ Error({Kind:ErrorKind.InvalidArgument})
 >> Text(30470.01953125, "YYYY-MM-DD HH:MM:SS.00000000") 
 Error({Kind:ErrorKind.InvalidArgument})
 
+// Number 4492800 exceeds the max days that DateTime.AddDays can take.
+>> Text(4492800,DateTimeFormat.LongDate)
+Error({Kind:ErrorKind.InvalidArgument})
+
 // C# interpreter can handle up to 7 decimals after the second
 >> Text(DateTimeValue("2023-01-03 00:01:02.3456789"), "yyyy-mm-dd hh:mm:ss.0000000")
 "2023-01-03 00:01:02.3456789"
