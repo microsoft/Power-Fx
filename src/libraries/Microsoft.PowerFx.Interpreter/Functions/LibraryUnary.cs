@@ -442,7 +442,7 @@ namespace Microsoft.PowerFx.Functions
             }
             catch (ArgumentOutOfRangeException)
             {
-                (var shortMessage, _) = ErrorUtils.GetLocalizedErrorContent(TexlStrings.ErrTextOutOfRange, formatInfo.CultureInfo, out _);
+                (var shortMessage, _) = ErrorUtils.GetLocalizedErrorContent(TexlStrings.ErrTextInvalidArgDateTime, formatInfo.CultureInfo, out _);
 
                 throw new CustomFunctionErrorException(shortMessage, ErrorKind.InvalidArgument);
             }          
@@ -471,7 +471,7 @@ namespace Microsoft.PowerFx.Functions
                 case StringValue st:
                     return TryDateTimeParse(formatInfo, irContext, st, out result);
                 case NumberValue num:
-                    result = NumberToDateTime(formatInfo, irContext, num) as DateTimeValue;
+                    result = NumberToDateTime(formatInfo, irContext, num);
                     break;
                 case DateValue dv:
                     result = new DateTimeValue(irContext, dv.GetConvertedValue(formatInfo.TimeZoneInfo));
