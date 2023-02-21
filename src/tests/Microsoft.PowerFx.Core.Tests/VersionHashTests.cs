@@ -65,5 +65,31 @@ namespace Microsoft.PowerFx.Core.Tests
 
             Assert.NotEqual(v1.Combine(vx), v1.Combine(vy));
         }
+
+        // Hash doesn't *need* to be unique, but it is highly desirably to help catch checks. 
+        [Fact]
+        public void Unique()
+        {
+            var set = new HashSet<VersionHash>();
+            for (int i = 0; i < 10 * 1000; i++)
+            {
+                // Create 2 in rapid succession to look for timer issues. 
+                var v1 = VersionHash.New();
+                var v2 = VersionHash.New();
+
+                Assert.NotEqual(v1, v2);
+
+                // Ensure these are unique with all previous ones. 
+                Assert.True(set.Add(v1));
+                Assert.True(set.Add(v2));
+
+                // Incremented values should also be unique. 
+                for (int j = 0; j < 10; j++)
+                {
+                    v1.Inc();
+                    Assert.True(set.Add(v1));
+                }
+            }
+        }
     }
 }
