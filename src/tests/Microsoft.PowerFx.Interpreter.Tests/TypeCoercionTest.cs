@@ -4,6 +4,7 @@
 using System;
 using Microsoft.PowerFx;
 using Microsoft.PowerFx.Core.Tests;
+using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
@@ -84,8 +85,7 @@ namespace Microsoft.PowerFx.Tests
             if (exprStr != null)
             {
                 Assert.True(isSucceeded);
-
-                Assert.Equal(exprStr, ((StringValue)resultValue).Value);
+                Assert.Equal(exprStr, resultValue.Value);
             }
             else
             {
@@ -93,16 +93,24 @@ namespace Microsoft.PowerFx.Tests
                 Assert.IsType<ErrorValue>(resultValue);
             }
 
-            isSucceeded = inputValue.TryCoerceTo(out DateTimeValue resultDateTime);
-            if (exprDateTime != null)
+            try
             {
-                Assert.True(isSucceeded);
-                Assert.Equal(DateTime.Parse(exprDateTime), resultDateTime.GetConvertedValue(TimeZoneInfo.Local));
+                isSucceeded = inputValue.TryCoerceTo(out DateTimeValue resultDateTime);
+                if (exprDateTime != null)
+                {
+                    Assert.True(isSucceeded);
+                    Assert.Equal(DateTime.Parse(exprDateTime), resultDateTime.GetConvertedValue(TimeZoneInfo.Local));
+                }
+                else
+                {
+                    Assert.False(isSucceeded);
+                    Assert.Null(resultDateTime);
+                }
             }
-            else
+            catch (CustomFunctionErrorException ex)
             {
-                Assert.False(isSucceeded);
-                Assert.Null(resultDateTime);
+                Assert.Equal(ErrorKind.InvalidArgument, ex.ErrorKind);
+                Assert.Equal("Value to add was out of range.", ex.Message);
             }
         }
     }

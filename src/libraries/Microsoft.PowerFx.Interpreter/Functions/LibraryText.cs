@@ -232,20 +232,18 @@ namespace Microsoft.PowerFx.Functions
                 return CommonErrors.GenericInvalidArgument(irContext, string.Format(customErrorMessage, "Text"));
             }
 
-            var isText = TryText(formatInfo, irContext, args[0], formatString, out StringValue result, out ErrorResourceKey errorResourceKey);
+            var isText = TryText(formatInfo, irContext, args[0], formatString, out StringValue result);
 
-            return isText ? result : CommonErrors.GenericInvalidArgument(irContext, StringResources.Get(errorResourceKey, culture.Name));
+            return isText ? result : CommonErrors.GenericInvalidArgument(irContext, StringResources.Get(TexlStrings.ErrTextInvalidFormat, culture.Name));
         }
 
-        public static bool TryText(FormattingInfo formatInfo, IRContext irContext, FormulaValue value, string formatString, out StringValue result, out ErrorResourceKey errorResourceKey)
+        public static bool TryText(FormattingInfo formatInfo, IRContext irContext, FormulaValue value, string formatString, out StringValue result)
         {
             var timeZoneInfo = formatInfo.TimeZoneInfo;
             var culture = formatInfo.CultureInfo;
             var hasDateTimeFmt = false;
             var hasNumberFmt = false;
             result = null;
-
-            errorResourceKey = TexlStrings.ErrTextInvalidFormat;
 
             if (formatString != null && !TextFormatUtils.IsValidFormatArg(formatString, out hasDateTimeFmt, out hasNumberFmt))
             {
@@ -261,15 +259,7 @@ namespace Microsoft.PowerFx.Functions
                     if (formatString != null && hasDateTimeFmt)
                     {
                         // It's a number, formatted as date/time. Let's convert it to a date/time value first
-                        var formulaValue = Library.NumberToDateTime(formatInfo, IRContext.NotInSource(FormulaType.DateTime), num);
-
-                        if (formulaValue is ErrorValue)
-                        {
-                            errorResourceKey = TexlStrings.ErrTextOutOfRange;
-                            return false;
-                        }
-
-                        var newDateTime = (DateTimeValue)formulaValue;
+                        var newDateTime = Library.NumberToDateTime(formatInfo, IRContext.NotInSource(FormulaType.DateTime), num);
 
                         return TryExpandDateTimeExcelFormatSpecifiersToStringValue(irContext, formatString, "g", newDateTime.GetConvertedValue(timeZoneInfo), culture, formatInfo.CancellationToken, out result);
                     }

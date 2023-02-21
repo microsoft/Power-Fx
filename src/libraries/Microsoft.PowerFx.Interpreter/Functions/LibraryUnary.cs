@@ -3,8 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
@@ -426,26 +424,28 @@ namespace Microsoft.PowerFx.Functions
             return new DateValue(irContext, date);
         }
 
-        public static FormulaValue NumberToDateTime(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, NumberValue[] args)
+        public static DateTimeValue NumberToDateTime(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, NumberValue[] args)
         {
             return NumberToDateTime(CreateFormattingInfo(runner), irContext, args[0]);
         }
 
-        public static FormulaValue NumberToDateTime(FormattingInfo formatInfo, IRContext irContext, NumberValue value)
+        public static DateTimeValue NumberToDateTime(FormattingInfo formatInfo, IRContext irContext, NumberValue value)
         {
-            var n = value.Value;
-
-            var maxDays = (DateTime.MaxValue - _epoch).TotalDays;
-
-            if (maxDays >= value.Value)
+            try
             {
+                var n = value.Value;
                 var date = _epoch.AddDays(n);
+
+                date = MakeValidDateTime(formatInfo.TimeZoneInfo, date);
+
                 return new DateTimeValue(irContext, date);
             }
-            else
+            catch (ArgumentOutOfRangeException)
             {
-                return CommonErrors.GenericInvalidArgument(irContext);
-            }            
+                (var shortMessage, _) = ErrorUtils.GetLocalizedErrorContent(TexlStrings.ErrTextOutOfRange, formatInfo.CultureInfo, out _);
+
+                throw new CustomFunctionErrorException(shortMessage, ErrorKind.InvalidArgument);
+            }          
         }
 
         public static FormulaValue DateToDateTime(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
