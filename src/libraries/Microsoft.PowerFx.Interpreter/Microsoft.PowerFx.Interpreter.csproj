@@ -28,15 +28,6 @@
     <ProjectReference Include="..\Microsoft.PowerFx.Core\Microsoft.PowerFx.Core.csproj" />
   </ItemGroup>
 
-  <!--
-  <ItemGroup>
-    <ProjectReference Include="C:\Users\nguhoa\Source\repos\Microsoft.PowerFx.PFxCodeAnalyzer\Microsoft.PowerFx.PFxCodeAnalyzer.csproj">
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <OutputItemType>Analyzer</OutputItemType>
-    </ProjectReference>
-  </ItemGroup>
-  -->
-  
   <ItemGroup>
     <ProjectReference Include="..\Microsoft.PowerFx.PFxCodeAnalyzer\Microsoft.PowerFx.PFxCodeAnalyzer.csproj">
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
