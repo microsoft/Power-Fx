@@ -16,12 +16,12 @@ namespace Microsoft.PowerFx.PFxCodeAnalyzer
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public class PowerFxCodeAnalyzer : DiagnosticAnalyzer
     {
-        public const string DiagnosticId = "PFxCodeAnalyzer";
+        public const string DiagnosticId = "PowerFxCodeAnalyzer";
 
         private static readonly LocalizableString Title = new LocalizableResourceString(nameof(Resources.AnalyzerTitle), Resources.ResourceManager, typeof(Resources));
         private static readonly LocalizableString MessageFormat = new LocalizableResourceString(nameof(Resources.AnalyzerMessageFormat), Resources.ResourceManager, typeof(Resources));
         private static readonly LocalizableString Description = new LocalizableResourceString(nameof(Resources.AnalyzerDescription), Resources.ResourceManager, typeof(Resources));
-        private const string Category = "Usage";
+        private const string Category = "Security";
 
         private static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, Category, DiagnosticSeverity.Error, isEnabledByDefault: true, description: Description);
 

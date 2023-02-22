@@ -10,8 +10,8 @@
   <!-- Nuget Properties -->
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <PackageId>Microsoft.PowerFx.Interpreter</PackageId>
-    <Title>Microsoft Power Fx Compiler - Interpreter Target</Title>
+    <PackageId>Microsoft.PowerFx.Interpreter.CodeAnalyzer</PackageId>
+    <Title>Microsoft Power Fx Compiler - Interpreter Target - CodeAnalyzer</Title>
     <Description>The Interpreter the Power Fx compiler</Description>
   </PropertyGroup>
 
@@ -26,5 +26,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Microsoft.PowerFx.Core\Microsoft.PowerFx.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Microsoft.PowerFx.PFxCodeAnalyzer\Microsoft.PowerFx.PFxCodeAnalyzer.csproj">
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <OutputItemType>Analyzer</OutputItemType>
+    </ProjectReference>
   </ItemGroup>
 </Project>

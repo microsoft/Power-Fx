@@ -7,4 +7,4 @@
 
 Rule ID | Category | Severity | Notes
 --------|----------|----------|--------------------
-PFxCodeAnalyzer  | Security |  Error | PowerFxCodeAnalyzerCancellationTokenCheck
+PowerFxCodeAnalyzer  | Security |  Error | PowerFxCodeAnalyzerCancellationTokenCheck
