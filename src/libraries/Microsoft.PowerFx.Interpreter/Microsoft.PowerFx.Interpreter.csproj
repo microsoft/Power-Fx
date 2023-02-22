@@ -35,8 +35,8 @@
       <OutputItemType>Analyzer</OutputItemType>
     </ProjectReference>
   </ItemGroup>
-
   -->
+  
   <ItemGroup>
     <ProjectReference Include="..\Microsoft.PowerFx.PFxCodeAnalyzer\Microsoft.PowerFx.PFxCodeAnalyzer.csproj">
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
