@@ -11,6 +11,7 @@
           <CodeCoverage>
             <ModulePaths>
               <Include>
+                <ModulePath>.*\Microsoft.PowerFx.PFxCodeAnalyzer.dll</ModulePath>
                 <ModulePath>.*\Microsoft.PowerFx.Connectors.dll</ModulePath>
                 <ModulePath>.*\Microsoft.PowerFx.Core.dll</ModulePath>
                 <ModulePath>.*\Microsoft.PowerFx.Interpreter.dll</ModulePath>

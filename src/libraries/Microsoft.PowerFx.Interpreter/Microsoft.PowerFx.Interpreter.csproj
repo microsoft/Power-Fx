@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
+﻿<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
   <PropertyGroup>
     <Version Condition=" '$(ReleasePackageVersion)' == '' ">$(LocalPackageVersion)</Version>
     <Version Condition=" '$(ReleasePackageVersion)' != '' ">$(ReleasePackageVersion)</Version>
@@ -26,5 +26,21 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Microsoft.PowerFx.Core\Microsoft.PowerFx.Core.csproj" />
+  </ItemGroup>
+
+  <!--
+  <ItemGroup>
+    <ProjectReference Include="C:\Users\nguhoa\Source\repos\Microsoft.PowerFx.PFxCodeAnalyzer\Microsoft.PowerFx.PFxCodeAnalyzer.csproj">
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <OutputItemType>Analyzer</OutputItemType>
+    </ProjectReference>
+  </ItemGroup>
+
+  -->
+  <ItemGroup>
+    <ProjectReference Include="..\Microsoft.PowerFx.PFxCodeAnalyzer\Microsoft.PowerFx.PFxCodeAnalyzer.csproj">
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <OutputItemType>Analyzer</OutputItemType>
+    </ProjectReference>
   </ItemGroup>
 </Project>

@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
+  <PropertyGroup>
+    <Version Condition=" '$(ReleasePackageVersion)' == '' ">$(LocalPackageVersion)</Version>
+    <Version Condition=" '$(ReleasePackageVersion)' != '' ">$(ReleasePackageVersion)</Version>
+    <PackageVersion Condition=" '$(ReleasePackageVersion)' == '' ">$(LocalPackageVersion)</PackageVersion>
+    <PackageVersion Condition=" '$(ReleasePackageVersion)' != '' ">$(ReleasePackageVersion)</PackageVersion>
+    <Configurations>Debug;Release</Configurations>
+  </PropertyGroup>
+
+  <!-- Nuget Properties -->
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <PackageId>Microsoft.PowerFx.CodeAnalyzer</PackageId>
+    <Title>Microsoft Power Fx Compiler - Code Analyzer</Title>
+    <Description>The code analyzer for the Power Fx compiler</Description>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <AdditionalFiles Include="..\..\stylecop.json" Link="stylecop.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.3" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Resources.Designer.cs" DesignTime="True" AutoGen="True" DependentUpon="Resources.resx" />
+    <EmbeddedResource Update="Resources.resx" Generator="ResXFileCodeGenerator" LastGenOutput="Resources.Designer.cs" />
+  </ItemGroup>
+
+</Project>

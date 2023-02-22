@@ -57,6 +57,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.PowerFx.Json", "l
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.PowerFx.Json.Tests", "tests\Microsoft.PowerFx.Json.Tests\Microsoft.PowerFx.Json.Tests.csproj", "{8986E836-2F55-4D71-B23E-50F4A8427A5B}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.PowerFx.PFxCodeAnalyzer", "libraries\Microsoft.PowerFx.PFxCodeAnalyzer\Microsoft.PowerFx.PFxCodeAnalyzer.csproj", "{E4166594-AD25-4D17-9497-E577E5443A6C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -111,6 +113,10 @@ Global
 		{8986E836-2F55-4D71-B23E-50F4A8427A5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8986E836-2F55-4D71-B23E-50F4A8427A5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8986E836-2F55-4D71-B23E-50F4A8427A5B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E4166594-AD25-4D17-9497-E577E5443A6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E4166594-AD25-4D17-9497-E577E5443A6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E4166594-AD25-4D17-9497-E577E5443A6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E4166594-AD25-4D17-9497-E577E5443A6C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -128,6 +134,7 @@ Global
 		{142854D7-409C-4C87-A5B8-39B51477F5B2} = {5EEC2873-35B5-4364-A2A0-97AAD7BF960D}
 		{D4CC6660-8C30-41E5-A28A-C018DDDF8D96} = {4269F3C3-6B42-419B-B64A-3E6DC0F1574A}
 		{8986E836-2F55-4D71-B23E-50F4A8427A5B} = {AD743B78-D61F-4FBF-B620-FA83CE599A50}
+		{E4166594-AD25-4D17-9497-E577E5443A6C} = {4269F3C3-6B42-419B-B64A-3E6DC0F1574A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {30372F91-B206-4351-A621-F0E2773C337B}
