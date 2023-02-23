@@ -386,7 +386,7 @@ namespace Microsoft.PowerFx.Core.IR
                     return arg;
                 }
 
-                // need a new context since when arg is Blank IRContext.Returntype is not a Number but a Blank.
+                // need a new context since when arg is Blank IRContext.ResultType is not a Number but a Blank.
                 var convertedIRContext = new IRContext(arg.IRContext.SourceContext, FormulaType.Number);
                 var zeroNumLitNode = new NumberLiteralNode(convertedIRContext, 0);
                 var convertedNode = new CallNode(convertedIRContext, BuiltinFunctionsCore.Coalesce, arg, zeroNumLitNode);
@@ -408,7 +408,7 @@ namespace Microsoft.PowerFx.Core.IR
             /// </summary>
             private static IntermediateNode BlankToEmptyString(IntermediateNode arg)
             {
-                // need a new context since when arg is Blank IRContext.Returntype is not a String but a Blank.
+                // need a new context since when arg is Blank IRContext.ResultType is not a String but a Blank.
                 var convertedIRContext = new IRContext(arg.IRContext.SourceContext, FormulaType.String);
 
                 // We are not using coalesce, because coalesce doesn't considers empty string as blank.
