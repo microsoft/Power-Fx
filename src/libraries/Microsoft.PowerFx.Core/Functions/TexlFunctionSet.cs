@@ -120,7 +120,7 @@ namespace Microsoft.PowerFx.Core.Functions
             }
         }
 
-        internal TexlFunction Append(TexlFunction function) => Add(function);
+        internal TexlFunction Add(TexlFunction function) => Add(function);
 
         internal TexlFunction Add(TexlFunction function)
         {
