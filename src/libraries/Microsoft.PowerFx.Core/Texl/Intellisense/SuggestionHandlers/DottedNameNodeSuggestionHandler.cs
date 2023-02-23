@@ -160,7 +160,7 @@ namespace Microsoft.PowerFx.Intellisense
 
                 return data.TryGetEnumSymbol(firstNameInfo.Name, binding, out enumSymbol);
             }
-
+            
             private static bool TryGetNamespaceFunctions(TexlNode node, TexlBinding binding, out IEnumerable<TexlFunction> functions)
             {
                 Contracts.AssertValue(node);
