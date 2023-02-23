@@ -36,7 +36,7 @@ namespace Microsoft.PowerFx.Types
         public sealed override IEnumerable<DValue<RecordValue>> Rows =>
             _lazyTaskRows.Value.GetAwaiter().GetResult();
 
-        protected void Refresh()
+        public void Refresh()
         {
             _lazyTaskRows = NewLazyTaskRowsInstance;
         }
