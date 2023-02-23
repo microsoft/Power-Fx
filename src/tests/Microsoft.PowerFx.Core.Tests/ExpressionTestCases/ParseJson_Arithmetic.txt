@@ -1,0 +1,215 @@
+﻿// Test simple arithmetic
+>> 1+ParseJSON("2")
+3
+
+>> ParseJSON("1")+2
+3
+
+>> ParseJSON("1")+ParseJSON("2")
+3
+
+>> 1 + (1/ParseJSON("0"))
+Error({Kind:ErrorKind.Div0})
+
+>> 5-ParseJSON("3")
+2
+
+>> ParseJSON("5")-3
+2
+
+>> ParseJSON("5")-ParseJSON("3")
+2
+
+// Unary minus
+>> -ParseJSON("3")
+-3
+
+>> -(1/ParseJSON("0"))
+Error({Kind:ErrorKind.Div0})
+
+>> 5 - -ParseJSON("3")
+8
+
+>> -(5+ParseJSON("3"))
+-8
+
+>> -(ParseJSON("5")+3)
+-8
+
+>> 2*ParseJSON("3")
+6
+
+>> ParseJSON("2")*3
+6
+
+>> ParseJSON("2")*ParseJSON("3")
+6
+
+>> ParseJSON("15")/3
+5
+
+>> 15/ParseJSON("3")
+5
+
+>> ParseJSON("15")/ParseJSON("3")
+5
+
+>> ParseJSON("1")/2
+0.5
+
+>> 1/ParseJSON("2")
+0.5
+
+>> ParseJSON("20")%
+0.2
+
+>> ParseJSON("200")%
+2
+
+>> (1/ParseJSON("0"))%
+Error({Kind:ErrorKind.Div0})
+
+>> ParseJSON("1") * 50%
+0.5
+
+>> 1 * ParseJSON("50")%
+0.5
+
+// Precedence
+>> ParseJSON("1")+2*3
+7
+
+>> 1+ParseJSON("2")*3
+7
+
+>> 1+2*ParseJSON("3")
+7
+
+>> ParseJSON("1")+ParseJSON("2")*ParseJSON("3")
+7
+
+// Comparison operations 
+>> ParseJSON("1")=1
+true
+
+>> 1=ParseJSON("1")
+true
+
+>> ParseJSON("1")=ParseJSON("1")
+true
+
+>> ParseJSON("1")<>1
+false
+
+>> 1<>ParseJSON("1")
+false
+
+
+>> ParseJSON("1")<>ParseJSON("1")
+false
+
+>> ParseJSON("6")>5
+true
+
+>> 6>ParseJSON("5")
+true
+
+>> ParseJSON("6")>ParseJSON("5")
+true
+
+>> ParseJSON("5")>6
+false
+
+>> 5>ParseJSON("6")
+false
+
+>> ParseJSON("5")>ParseJSON("6")
+false
+
+>> 5.0>5
+false 
+
+>> 5>=5
+true
+
+>> 5>=6
+false
+
+>> 5 < 7
+true
+
+>> -5 < 3
+true
+
+>> 5 < 5
+false
+
+>> 5 <= 7
+true
+
+>> 5 < 1/0
+Error({Kind:ErrorKind.Div0})
+
+>> 5 <= 1/0
+Error({Kind:ErrorKind.Div0})
+
+>> 5 > 1/0
+Error({Kind:ErrorKind.Div0})
+
+>> 5 >= 1/0
+Error({Kind:ErrorKind.Div0})
+
+>> 5 = 1/0
+Error({Kind:ErrorKind.Div0})
+
+>> 5 <> 1/0
+Error({Kind:ErrorKind.Div0})
+
+// Blank coercions
+>> 1 < If(1<0,1)
+false
+
+>> 1 > If(1<0,1)
+true
+
+>> 1 <= If(1<0,1)
+false
+
+>> 1 >= If(1<0,1)
+true
+
+>> If(1<0,1) < 0
+false
+
+>> If(1<0,1) > 0
+false
+
+>> If(1<0,1) <= 0
+true
+
+>> If(1<0,1) >= 0
+true
+
+>> 1 < Blank()
+false
+
+>> 1 > Blank()
+true
+
+>> 1 <= Blank()
+false
+
+>> 1 >= Blank()
+true
+
+>> Blank() < 0
+false
+
+>> Blank() > 0
+false
+
+>> Blank() <= 0
+true
+
+>> Blank() >= 0
+true
