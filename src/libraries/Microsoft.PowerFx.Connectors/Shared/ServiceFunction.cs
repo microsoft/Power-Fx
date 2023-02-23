@@ -157,8 +157,6 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
 
         public int CacheTimeoutMs { get { return _cacheTimeoutMs; } }
 
-        public override bool SupportsParamCoercion { get { return true; } }
-
         // Service functions currently require all columns to be filled.
         public override bool RequireAllParamColumns { get { return true; } }
 

@@ -23,8 +23,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Corresponding DAX function: CountAX, CountX
     internal sealed class CountIfFunction : FilterFunctionBase
     {
-        public override bool SupportsParamCoercion => true;
-
         public override bool HasPreciseErrors => true;
 
         public override DelegationCapability FunctionDelegationCapability => DelegationCapability.Filter | DelegationCapability.Count;

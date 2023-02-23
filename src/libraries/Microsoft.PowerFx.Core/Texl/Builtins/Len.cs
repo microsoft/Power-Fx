@@ -19,8 +19,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public override bool HasPreciseErrors => true;
 
-        public override bool SupportsParamCoercion => true;
-
         public LenFunction()
             : base("Len", TexlStrings.AboutLen, FunctionCategories.Text, DType.Number)
         {
@@ -43,8 +41,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class LenTFunction : BuiltinFunction
     {
         public override bool IsSelfContained => true;
-
-        public override bool SupportsParamCoercion => true;
 
         public LenTFunction()
             : base("Len", TexlStrings.AboutLenT, FunctionCategories.Table, DType.EmptyTable, 0, 1, 1, DType.EmptyTable)
