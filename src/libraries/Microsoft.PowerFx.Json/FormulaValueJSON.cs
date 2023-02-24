@@ -42,7 +42,6 @@ namespace Microsoft.PowerFx.Types
         /// <param name="formulaType">Expected formula type. We will check the Json element and formula type match if this parameter is provided.</param>
         public static FormulaValue FromJson(JsonElement element, FormulaType formulaType = null)
         {
-
             switch (element.ValueKind)
             {
                 case JsonValueKind.Null:
