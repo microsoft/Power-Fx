@@ -2,8 +2,14 @@
 >> 1+ParseJSON("2")
 3
 
+>> Blank()+ParseJSON("2")
+2
+
 >> ParseJSON("1")+2
 3
+
+>> ParseJSON("1")+Blank()
+1
 
 >> ParseJSON("1")+ParseJSON("2")
 3
@@ -14,8 +20,14 @@ Error({Kind:ErrorKind.Div0})
 >> 5-ParseJSON("3")
 2
 
+>> Blank()-ParseJSON("3")
+-3
+
 >> ParseJSON("5")-3
 2
+
+>> ParseJSON("5")-Blank()
+5
 
 >> ParseJSON("5")-ParseJSON("3")
 2
@@ -39,8 +51,14 @@ Error({Kind:ErrorKind.Div0})
 >> 2*ParseJSON("3")
 6
 
+>> Blank()*ParseJSON("3")
+0
+
 >> ParseJSON("2")*3
 6
+
+>> ParseJSON("2")*Blank()
+0
 
 >> ParseJSON("2")*ParseJSON("3")
 6
@@ -48,8 +66,14 @@ Error({Kind:ErrorKind.Div0})
 >> ParseJSON("15")/3
 5
 
+>> ParseJSON("15")/Blank()
+Error({Kind:ErrorKind.Div0})
+
 >> 15/ParseJSON("3")
 5
+
+>> Blank()/ParseJSON("3")
+0
 
 >> ParseJSON("15")/ParseJSON("3")
 5
@@ -100,6 +124,18 @@ false
 
 >> 1<>ParseJSON("1")
 false
+
+>> ParseJSON("1")=Blank()
+false
+
+>> Blank()=ParseJSON("1")
+false
+
+>> ParseJSON("1")<>Blank()
+true
+
+>> Blank()<>ParseJSON("1")
+true
 
 >> ParseJSON("6")>5
 true
