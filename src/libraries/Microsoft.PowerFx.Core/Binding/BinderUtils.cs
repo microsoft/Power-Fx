@@ -723,6 +723,16 @@ namespace Microsoft.PowerFx.Core.Binding
                 }
             }
 
+            if (typeLeft.IsUntypedObject && typeRight.Kind == DKind.ObjNull)
+            {
+                coercions.Add(new BinderCoercionResult() { Node = left, CoercedType = DType.Number });
+            }
+
+            if (typeRight.IsUntypedObject && typeLeft.Kind == DKind.ObjNull)
+            {
+                coercions.Add(new BinderCoercionResult() { Node = right, CoercedType = DType.Number });
+            }
+
             return new BinderCheckTypeResult() { Coercions = coercions };
         }
 

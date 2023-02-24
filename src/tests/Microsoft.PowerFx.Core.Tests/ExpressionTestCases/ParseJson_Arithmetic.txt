@@ -131,81 +131,93 @@ false
 >> 5>=ParseJSON("6")
 false
 
->> 5 < 7
+>> ParseJSON("5") < 7
 true
 
->> -5 < 3
+>> 5 < ParseJSON("7")
 true
 
->> 5 < 5
+>> -5 < ParseJSON("3")
+true
+
+>> -ParseJSON("5") < 3
+true
+
+>> ParseJSON("5") < 5
 false
 
->> 5 <= 7
+>> 5 < ParseJSON("5")
+false
+
+>> 5 <= ParseJSON("7")
 true
 
->> 5 < 1/0
+>> ParseJSON("5") <= 7
+true
+
+>> 5 < 1/ParseJSON("0")
 Error({Kind:ErrorKind.Div0})
 
->> 5 <= 1/0
+>> 5 <= 1/ParseJSON("0")
 Error({Kind:ErrorKind.Div0})
 
->> 5 > 1/0
+>> 5 > 1/ParseJSON("0")
 Error({Kind:ErrorKind.Div0})
 
->> 5 >= 1/0
+>> 5 >= 1/ParseJSON("0")
 Error({Kind:ErrorKind.Div0})
 
->> 5 = 1/0
+>> 5 = 1/ParseJSON("0")
 Error({Kind:ErrorKind.Div0})
 
->> 5 <> 1/0
+>> 5 <> 1/ParseJSON("0")
 Error({Kind:ErrorKind.Div0})
 
 // Blank coercions
->> 1 < If(1<0,1)
+>> 1 < If(ParseJSON("1")<0,1)
 false
 
->> 1 > If(1<0,1)
+>> 1 > If(ParseJSON("1")<0,1)
 true
 
->> 1 <= If(1<0,1)
+>> 1 <= If(ParseJSON("1")<0,1)
 false
 
->> 1 >= If(1<0,1)
+>> 1 >= If(ParseJSON("1")<0,1)
 true
 
->> If(1<0,1) < 0
+>> If(ParseJSON("1")<0,1) < 0
 false
 
->> If(1<0,1) > 0
+>> If(ParseJSON("1")<0,1) > 0
 false
 
->> If(1<0,1) <= 0
+>> If(ParseJSON("1")<0,1) <= 0
 true
 
->> If(1<0,1) >= 0
+>> If(ParseJSON("1")<0,1) >= 0
 true
 
->> 1 < Blank()
+>> ParseJSON("1") < Blank()
 false
 
->> 1 > Blank()
+>> ParseJSON("1") > Blank()
 true
 
->> 1 <= Blank()
+>> ParseJSON("1") <= Blank()
 false
 
->> 1 >= Blank()
+>> ParseJSON("1") >= Blank()
 true
 
->> Blank() < 0
+>> Blank() < ParseJSON("0")
 false
 
->> Blank() > 0
+>> Blank() > ParseJSON("0")
 false
 
->> Blank() <= 0
+>> Blank() <= ParseJSON("0")
 true
 
->> Blank() >= 0
+>> Blank() >= ParseJSON("0")
 true
