@@ -95,17 +95,10 @@ true
 >> 1=ParseJSON("1")
 true
 
->> ParseJSON("1")=ParseJSON("1")
-true
-
 >> ParseJSON("1")<>1
 false
 
 >> 1<>ParseJSON("1")
-false
-
-
->> ParseJSON("1")<>ParseJSON("1")
 false
 
 >> ParseJSON("6")>5
@@ -114,25 +107,28 @@ true
 >> 6>ParseJSON("5")
 true
 
->> ParseJSON("6")>ParseJSON("5")
-true
-
 >> ParseJSON("5")>6
 false
 
 >> 5>ParseJSON("6")
 false
 
->> ParseJSON("5")>ParseJSON("6")
+>> ParseJSON("5.0")>5
 false
 
->> 5.0>5
-false 
+>> 5.0>ParseJSON("5")
+false
 
->> 5>=5
+>> ParseJSON("5")>=5
 true
 
->> 5>=6
+>> 5>=ParseJSON("5")
+true
+
+>> ParseJSON("5")>=6
+false
+
+>> 5>=ParseJSON("6")
 false
 
 >> 5 < 7

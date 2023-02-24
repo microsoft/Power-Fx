@@ -671,7 +671,7 @@ namespace Microsoft.PowerFx.Core.Binding
             }
         }
 
-        private static BinderCheckTypeResult CheckComparisonArgTypesCore(IErrorContainer errorContainer, TexlNode left, TexlNode right, DType typeLeft, DType typeRight)
+        private static BinderCheckTypeResult CheckComparisonArgTypesCore(IErrorContainer errorContainer, TexlNode binaryOpNode, TexlNode left, TexlNode right, DType typeLeft, DType typeRight)
         {
             // Excel's type coercion for inequality operators is inconsistent / borderline wrong, so we can't
             // use it as a reference. For example, in Excel '2 < TRUE' produces TRUE, but so does '2 < FALSE'.
@@ -682,6 +682,17 @@ namespace Microsoft.PowerFx.Core.Binding
             var coercions = new List<BinderCoercionResult>();
             coercions.AddRange(resLeft.Coercions);
             coercions.AddRange(resRight.Coercions);
+
+            if (typeLeft.IsUntypedObject && typeRight.IsUntypedObject)
+            {
+                errorContainer.EnsureError(
+                    DocumentErrorSeverity.Severe,
+                    binaryOpNode,
+                    TexlStrings.ErrBadOperatorTypes,
+                    typeLeft.GetKindString(),
+                    typeRight.GetKindString());
+                return new BinderCheckTypeResult() { Node = binaryOpNode, NodeType = DType.Error };
+            }
 
             if (!typeLeft.Accepts(typeRight) && !typeRight.Accepts(typeLeft))
             {
@@ -700,12 +711,22 @@ namespace Microsoft.PowerFx.Core.Binding
                     coercions.Add(new BinderCoercionResult() { Node = left, CoercedType = DType.DateTime });
                     coercions.Add(new BinderCoercionResult() { Node = right, CoercedType = DType.DateTime });
                 }
+
+                if (typeLeft.IsUntypedObject && CoercionMatrix.GetCoercionKind(typeLeft, typeRight) != CoercionKind.None)
+                {
+                    coercions.Add(new BinderCoercionResult() { Node = left, CoercedType = typeRight });
+                }
+
+                if (typeRight.IsUntypedObject && CoercionMatrix.GetCoercionKind(typeRight, typeLeft) != CoercionKind.None)
+                {
+                    coercions.Add(new BinderCoercionResult() { Node = right, CoercedType = typeLeft });
+                }
             }
 
             return new BinderCheckTypeResult() { Coercions = coercions };
         }
 
-        private static BinderCheckTypeResult CheckEqualArgTypesCore(IErrorContainer errorContainer, TexlNode left, TexlNode right, DType typeLeft, DType typeRight)
+        private static BinderCheckTypeResult CheckEqualArgTypesCore(IErrorContainer errorContainer, TexlNode binaryOpNode, TexlNode left, TexlNode right, DType typeLeft, DType typeRight)
         {
             Contracts.AssertValue(left);
             Contracts.AssertValue(right);
@@ -770,6 +791,20 @@ namespace Microsoft.PowerFx.Core.Binding
                 return new BinderCheckTypeResult();
             }
 
+            if (typeLeft.IsUntypedObject && typeRight.IsUntypedObject)
+            {
+                if (typeLeft.IsUntypedObject && typeRight.IsUntypedObject)
+                {
+                    errorContainer.EnsureError(
+                        DocumentErrorSeverity.Severe,
+                        binaryOpNode,
+                        TexlStrings.ErrIncompatibleTypesForEquality_Left_Right,
+                        typeLeft.GetKindString(),
+                        typeRight.GetKindString());
+                    return new BinderCheckTypeResult() { Node = binaryOpNode, NodeType = DType.Error };
+                }
+            }
+
             var coercions = new List<BinderCoercionResult>();
 
             if (!typeLeft.Accepts(typeRight) && !typeRight.Accepts(typeLeft))
@@ -787,21 +822,15 @@ namespace Microsoft.PowerFx.Core.Binding
                 }
 
                 // Handle UntypedObject comparisons
-                if (typeLeft.IsUntypedObject && !typeRight.IsUntypedObject)
+                if (typeLeft.IsUntypedObject && CoercionMatrix.GetCoercionKind(typeLeft, typeRight) != CoercionKind.None)
                 {
-                    if (CoercionMatrix.GetCoercionKind(typeLeft, typeRight) != CoercionKind.None)
-                    {
-                        coercions.Add(new BinderCoercionResult() { Node = left, CoercedType = typeRight });
-                        return new BinderCheckTypeResult() { Coercions = coercions };
-                    }
+                    coercions.Add(new BinderCoercionResult() { Node = left, CoercedType = typeRight });
+                    return new BinderCheckTypeResult() { Coercions = coercions };
                 }
-                else if (!typeLeft.IsUntypedObject && typeRight.IsUntypedObject)
+                else if (typeRight.IsUntypedObject && CoercionMatrix.GetCoercionKind(typeRight, typeLeft) != CoercionKind.None)
                 {
-                    if (CoercionMatrix.GetCoercionKind(typeRight, typeLeft) != CoercionKind.None)
-                    {
-                        coercions.Add(new BinderCoercionResult() { Node = right, CoercedType = typeLeft });
-                        return new BinderCheckTypeResult() { Coercions = coercions };
-                    }
+                    coercions.Add(new BinderCoercionResult() { Node = right, CoercedType = typeLeft });
+                    return new BinderCheckTypeResult() { Coercions = coercions };
                 }
 
                 errorContainer.EnsureError(
@@ -887,7 +916,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 case BinaryOp.Equal:
                 case BinaryOp.NotEqual:
-                    var resEq = CheckEqualArgTypesCore(errorContainer, leftNode, rightNode, leftType, rightType);
+                    var resEq = CheckEqualArgTypesCore(errorContainer, node, leftNode, rightNode, leftType, rightType);
                     return new BinderCheckTypeResult() { Node = node, NodeType = DType.Boolean, Coercions = resEq.Coercions };
 
                 case BinaryOp.Less:
@@ -897,7 +926,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     // Excel's type coercion for inequality operators is inconsistent / borderline wrong, so we can't
                     // use it as a reference. For example, in Excel '2 < TRUE' produces TRUE, but so does '2 < FALSE'.
                     // Sticking to a restricted set of numeric-like types for now until evidence arises to support the need for coercion.
-                    var resOrder = CheckComparisonArgTypesCore(errorContainer, leftNode, rightNode, leftType, rightType);
+                    var resOrder = CheckComparisonArgTypesCore(errorContainer, node, leftNode, rightNode, leftType, rightType);
                     return new BinderCheckTypeResult() { Node = node, NodeType = DType.Boolean, Coercions = resOrder.Coercions };
 
                 case BinaryOp.In:

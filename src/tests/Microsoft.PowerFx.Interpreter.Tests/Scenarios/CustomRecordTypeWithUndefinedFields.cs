@@ -79,7 +79,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("IsBlank(obj.missing)", true, false)] // fields not defined in RecordType is treated as Blank.
         [InlineData("IsBlank(obj.missing.missing)", true, false)]
         [InlineData("IsBlank(obj.prop_not_defined_in_type)", true, false)] // fields not defined in RecordType is always Blank, regardless of whether it is defined in actual data.
-        [InlineData("IsError(obj.missing + 1)", null, true)] // type checking fails when operating on undefined field.
+        [InlineData("IsError(obj.missing + 1)", false, false)] // type checking fails when operating on undefined field.
         public async Task TestCustomRecordType(string expr, object expected, bool hasException)
         {
             var engine = new RecalcEngine();
