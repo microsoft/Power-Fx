@@ -1432,6 +1432,10 @@ namespace Microsoft.PowerFx.Core.Functions
             {
                 return ArgPreprocessor.ReplaceBlankWithZero;
             }
+            else if (paramType == DType.String)
+            {
+                return ArgPreprocessor.ReplaceBlankWithEmptyString;
+            }
 
             return ArgPreprocessor.None;
         }
