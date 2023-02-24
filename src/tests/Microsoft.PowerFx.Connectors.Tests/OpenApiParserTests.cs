@@ -170,9 +170,10 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             FormulaValue result = await function.InvokeAync(client, new FormulaValue[] { analysisInputParam, parametersParam }, CancellationToken.None);
 
-            string input = testConnector._log.ToString();
-            string output = System.Text.Json.JsonSerializer.Serialize(result.ToObject());
+            Assert.NotNull(result);
+            Assert.True(result is RecordValue);
 
+            string input = testConnector._log.ToString();            
             var version = PowerPlatformConnectorClient.Version;
             var expectedInput =
 @$"POST https://lucgen-apim.azure-api.net/invoke

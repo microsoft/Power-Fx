@@ -170,7 +170,7 @@ namespace Microsoft.PowerFx.Connectors
             {                
                 return string.IsNullOrWhiteSpace(text) 
                     ? FormulaValue.NewBlank(_returnType) 
-                    : FormulaValueJSON.FromJson(text); // $$$ Do we need to check response media type to confirm that the content is indeed json?
+                    : FormulaValueJSON.FromJson(text, _returnType); // $$$ Do we need to check response media type to confirm that the content is indeed json?
             }
 
             return FormulaValue.NewError(
