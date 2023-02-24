@@ -63,7 +63,7 @@ namespace Microsoft.PowerFx.Types
                     return RecordFromJsonObject(element, formulaType as RecordType);
 
                 case JsonValueKind.Array:
-                    if (formulaType == null || formulaType is TableType || formulaType._type.Kind == DKind.ObjNull)
+                    if (formulaType == null || formulaType is TableType)
                     {
                         return TableFromJsonArray(element, formulaType as TableType);
                     }
@@ -95,7 +95,10 @@ namespace Microsoft.PowerFx.Types
                 var value = pair.Value;
                 FormulaType fieldType = null;
 
-                recordType?.TryGetFieldType(name, out fieldType);                
+                if (!recordType?.TryGetFieldType(name, out fieldType) != true)
+                {
+                    fieldType = null;
+                }
 
                 var paValue = FromJson(value, fieldType);
                 fields.Add(new NamedValue(name, paValue));
