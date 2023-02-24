@@ -281,7 +281,18 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: BooleanOptionSetToBoolean)
-            }
+            },
+            {
+                UnaryOpKind.BlankToEmptyString,
+                StandardErrorHandling<FormulaValue>(
+                    functionName: null, // internal function, no user-facing name
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<FormulaValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: BlankToEmptyString)
+            },
         };
         #endregion
 
@@ -573,6 +584,16 @@ namespace Microsoft.PowerFx.Functions
                 var errorMessage = ErrorUtils.FormatMessage(StringResources.Get(TexlStrings.BooleanOptionSetOptionNotSupported), null, arg0.Option);
                 return CommonErrors.CustomError(IRContext.NotInSource(FormulaType.Boolean), errorMessage);
             }
+        }
+
+        public static FormulaValue BlankToEmptyString(IRContext irContext, FormulaValue[] args)
+        {
+            if (args[0] is BlankValue)
+            {
+                return new StringValue(irContext, string.Empty);
+            }
+
+            return args[0];
         }
         #endregion
     }
