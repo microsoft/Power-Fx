@@ -95,6 +95,7 @@ namespace Microsoft.PowerFx.Types
                 var value = pair.Value;
                 FormulaType fieldType = null;
 
+                // if TryGetFieldType fails, fieldType is set to Blank
                 if (!recordType?.TryGetFieldType(name, out fieldType) != true)
                 {
                     fieldType = null;
