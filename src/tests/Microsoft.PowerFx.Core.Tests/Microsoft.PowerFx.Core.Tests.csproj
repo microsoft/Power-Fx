@@ -49,10 +49,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="ExpressionTestCases\ParseJSON_Arithmetic.txt" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\libraries\Microsoft.PowerFx.Core\Microsoft.PowerFx.Core.csproj" />
   </ItemGroup>
   <ItemGroup>
