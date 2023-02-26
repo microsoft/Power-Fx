@@ -30,8 +30,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool HasPreciseErrors => true;
 
-        public override bool SupportsParamCoercion => true;
-
         public DateFunction()
             : base("Date", TexlStrings.AboutDate, FunctionCategories.DateTime, DType.Date, 0, 3, 3, DType.Number, DType.Number, DType.Number)
         {
@@ -49,8 +47,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool HasPreciseErrors => true;
 
         public override bool IsSelfContained => true;
-
-        public override bool SupportsParamCoercion => true;
 
         public ExtractDateTimeFunctionBase(string name, TexlStrings.StringGetter description, FunctionCategories fc, DType returnType, BigInteger maskLambdas, int arityMin, int arityMax, params DType[] paramTypes)
             : base(name, description, fc, returnType, maskLambdas, arityMin, arityMax, paramTypes)
@@ -83,8 +79,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool HasPreciseErrors => true;
 
-        public override bool SupportsParamCoercion => true;
-
         public TimeFunction()
             : base("Time", TexlStrings.AboutTime, FunctionCategories.DateTime, DType.Time, 0, 3, 4, DType.Number, DType.Number, DType.Number, DType.Number)
         {
@@ -108,8 +102,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool IsSelfContained => true;
 
         public override bool HasPreciseErrors => true;
-
-        public override bool SupportsParamCoercion => true;
 
         public DateTimeFunction()
             : base("DateTime", TexlStrings.AboutDateTime, FunctionCategories.DateTime, DType.DateTime, 0, 6, 7, DType.Number, DType.Number, DType.Number, DType.Number, DType.Number, DType.Number, DType.Number)
@@ -233,8 +225,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool HasPreciseErrors => true;
 
-        public override bool SupportsParamCoercion => true;
-
         public WeekdayFunction()
             : base("Weekday", TexlStrings.AboutWeekday, FunctionCategories.DateTime, DType.Number, 0, 1, 2, DType.DateTime, DType.Number)
         {
@@ -260,8 +250,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool HasPreciseErrors => true;
 
-        public override bool SupportsParamCoercion => true;
-
         public WeekNumFunction()
             : base("WeekNum", TexlStrings.AboutWeekNum, FunctionCategories.DateTime, DType.Number, 0, 1, 2, DType.DateTime, DType.Number)
         {
@@ -284,8 +272,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class ISOWeekNumFunction : BuiltinFunction
     {
         public override bool IsSelfContained => true;
-
-        public override bool SupportsParamCoercion => true;
 
         public ISOWeekNumFunction()
             : base("ISOWeekNum", TexlStrings.AboutISOWeekNum, FunctionCategories.DateTime, DType.Number, 0, 1, 1, DType.DateTime)
@@ -327,8 +313,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool HasPreciseErrors => true;
 
-        public override bool SupportsParamCoercion => true;
-
         public DateValueFunction()
             : base(DateValueInvariantFunctionName, TexlStrings.AboutDateValue, DType.Date)
         {
@@ -347,8 +331,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public const string TimeValueFunctionInvariantName = "TimeValue";
 
         public override bool HasPreciseErrors => true;
-
-        public override bool SupportsParamCoercion => true;
 
         public TimeValueFunction()
             : base(TimeValueFunctionInvariantName, TexlStrings.AboutTimeValue, DType.Time)
@@ -369,8 +351,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool HasPreciseErrors => true;
 
-        public override bool SupportsParamCoercion => true;
-
         public DateTimeValueFunction()
             : base(DateTimeValueInvariantFunctionName, TexlStrings.AboutDateTimeValue, DType.DateTime)
         {
@@ -387,8 +367,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class DateAddFunction : BuiltinFunction
     {
         public override bool IsSelfContained => true;
-
-        public override bool SupportsParamCoercion => true;
 
         internal static readonly List<string> SubDayStringList = new List<string>() { "Hours", "Minutes", "Seconds", "Milliseconds" };
 
@@ -458,8 +436,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class DateAddTFunction : BuiltinFunction
     {
         public override bool IsSelfContained => true;
-
-        public override bool SupportsParamCoercion => true;
 
         public DateAddTFunction()
             : base("DateAdd", TexlStrings.AboutDateAddT, FunctionCategories.Table, DType.EmptyTable, 0, 2, 3)
@@ -582,8 +558,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool HasPreciseErrors => true;
 
-        public override bool SupportsParamCoercion => true;
-
         public DateDiffFunction()
             : base("DateDiff", TexlStrings.AboutDateDiff, FunctionCategories.DateTime, DType.Number, 0, 2, 3, DType.DateTime, DType.DateTime, DType.String)
         {
@@ -613,8 +587,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class DateDiffTFunction : BuiltinFunction
     {
         public override bool IsSelfContained => true;
-
-        public override bool SupportsParamCoercion => true;
 
         public DateDiffTFunction()
             : base("DateDiff", TexlStrings.AboutDateDiffT, FunctionCategories.Table, DType.EmptyTable, 0, 2, 3)
@@ -716,8 +688,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public override bool HasPreciseErrors => true;
 
-        public override bool SupportsParamCoercion => false;
-
         public override bool IsSelfContained => true;
 
         public DateValueFunction_UO()
@@ -741,8 +711,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public override bool HasPreciseErrors => true;
 
-        public override bool SupportsParamCoercion => false;
-
         public override bool IsSelfContained => true;
 
         public TimeValueFunction_UO()
@@ -765,8 +733,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class DateTimeValueFunction_UO : BuiltinFunction
     {
         public override bool HasPreciseErrors => true;
-
-        public override bool SupportsParamCoercion => false;
 
         public override bool IsSelfContained => true;
 

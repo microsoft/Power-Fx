@@ -16,8 +16,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
     internal abstract class IsBlankFunctionBase : BuiltinFunction
     {
-        public override bool SupportsParamCoercion => true;
-
         public override bool IsSelfContained => true;
 
         public override DelegationCapability FunctionDelegationCapability => DelegationCapability.Null | DelegationCapability.Filter;
@@ -129,8 +127,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Equivalent Excel and DAX function: IsBlank
     internal sealed class IsBlankOptionSetValueFunction : BuiltinFunction
     {
-        public override bool SupportsParamCoercion => true;
-
         public override bool IsSelfContained => true;
 
         public IsBlankOptionSetValueFunction()

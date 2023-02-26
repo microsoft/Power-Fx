@@ -25,8 +25,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool IsStateless => true;
 
-        public override bool SupportsParamCoercion => true;
-
         public override bool HasPreciseErrors => true;
 
         public Dec2HexFunction()
@@ -46,8 +44,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool IsSelfContained => true;
 
         public override bool IsStateless => true;
-
-        public override bool SupportsParamCoercion => true;
 
         public override bool HasPreciseErrors => true;
 
