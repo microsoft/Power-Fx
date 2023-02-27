@@ -44,7 +44,7 @@ namespace Microsoft.PowerFx.Types
         {            
             if (formulaType is UntypedObjectType uot)
             {
-                return new UntypedObjectValue(IRContext.NotInSource(FormulaType.UntypedObject), new JsonUntypedObject(element));
+                return new UntypedObjectValue(IRContext.NotInSource(FormulaType.UntypedObject), new JsonUntypedObject(element.Clone()));
             }
 
             bool skipTypeValidation = formulaType == null || formulaType is BlankType;
