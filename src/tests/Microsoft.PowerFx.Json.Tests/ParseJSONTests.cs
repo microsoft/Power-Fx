@@ -2,14 +2,8 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Collections.Generic;
-using System.Diagnostics.SymbolStore;
 using System.Linq;
-using System.Text;
-using System.Xml.Serialization;
-using Microsoft.PowerFx;
 using Microsoft.PowerFx.Core.Tests;
-using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
