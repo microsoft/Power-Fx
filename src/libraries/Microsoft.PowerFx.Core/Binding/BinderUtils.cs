@@ -671,7 +671,7 @@ namespace Microsoft.PowerFx.Core.Binding
             }
         }
 
-        private static BinderCheckTypeResult CheckComparisonArgTypesCore(IErrorContainer errorContainer, TexlNode binaryOpNode, TexlNode left, TexlNode right, DType typeLeft, DType typeRight)
+        private static BinderCheckTypeResult CheckComparisonArgTypesCore(IErrorContainer errorContainer, TexlNode left, TexlNode right, DType typeLeft, DType typeRight)
         {
             // Excel's type coercion for inequality operators is inconsistent / borderline wrong, so we can't
             // use it as a reference. For example, in Excel '2 < TRUE' produces TRUE, but so does '2 < FALSE'.
@@ -687,11 +687,11 @@ namespace Microsoft.PowerFx.Core.Binding
             {
                 errorContainer.EnsureError(
                     DocumentErrorSeverity.Severe,
-                    binaryOpNode,
+                    left.Parent,
                     TexlStrings.ErrBadOperatorTypes,
                     typeLeft.GetKindString(),
                     typeRight.GetKindString());
-                return new BinderCheckTypeResult() { Node = binaryOpNode, NodeType = DType.Error };
+                return new BinderCheckTypeResult() { Node = left.Parent, NodeType = DType.Error };
             }
 
             if (!typeLeft.Accepts(typeRight) && !typeRight.Accepts(typeLeft))
@@ -736,7 +736,7 @@ namespace Microsoft.PowerFx.Core.Binding
             return new BinderCheckTypeResult() { Coercions = coercions };
         }
 
-        private static BinderCheckTypeResult CheckEqualArgTypesCore(IErrorContainer errorContainer, TexlNode binaryOpNode, TexlNode left, TexlNode right, DType typeLeft, DType typeRight)
+        private static BinderCheckTypeResult CheckEqualArgTypesCore(IErrorContainer errorContainer, TexlNode left, TexlNode right, DType typeLeft, DType typeRight)
         {
             Contracts.AssertValue(left);
             Contracts.AssertValue(right);
@@ -803,16 +803,13 @@ namespace Microsoft.PowerFx.Core.Binding
 
             if (typeLeft.IsUntypedObject && typeRight.IsUntypedObject)
             {
-                if (typeLeft.IsUntypedObject && typeRight.IsUntypedObject)
-                {
                     errorContainer.EnsureError(
                         DocumentErrorSeverity.Severe,
-                        binaryOpNode,
+                        left.Parent,
                         TexlStrings.ErrIncompatibleTypesForEquality_Left_Right,
                         typeLeft.GetKindString(),
                         typeRight.GetKindString());
-                    return new BinderCheckTypeResult() { Node = binaryOpNode, NodeType = DType.Error };
-                }
+                    return new BinderCheckTypeResult() { Node = left.Parent, NodeType = DType.Error };
             }
 
             var coercions = new List<BinderCoercionResult>();
@@ -926,7 +923,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 case BinaryOp.Equal:
                 case BinaryOp.NotEqual:
-                    var resEq = CheckEqualArgTypesCore(errorContainer, node, leftNode, rightNode, leftType, rightType);
+                    var resEq = CheckEqualArgTypesCore(errorContainer, leftNode, rightNode, leftType, rightType);
                     return new BinderCheckTypeResult() { Node = node, NodeType = DType.Boolean, Coercions = resEq.Coercions };
 
                 case BinaryOp.Less:
@@ -936,7 +933,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     // Excel's type coercion for inequality operators is inconsistent / borderline wrong, so we can't
                     // use it as a reference. For example, in Excel '2 < TRUE' produces TRUE, but so does '2 < FALSE'.
                     // Sticking to a restricted set of numeric-like types for now until evidence arises to support the need for coercion.
-                    var resOrder = CheckComparisonArgTypesCore(errorContainer, node, leftNode, rightNode, leftType, rightType);
+                    var resOrder = CheckComparisonArgTypesCore(errorContainer, leftNode, rightNode, leftType, rightType);
                     return new BinderCheckTypeResult() { Node = node, NodeType = DType.Boolean, Coercions = resOrder.Coercions };
 
                 case BinaryOp.In:
