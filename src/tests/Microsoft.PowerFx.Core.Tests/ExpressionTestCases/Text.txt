@@ -240,7 +240,13 @@ Error({Kind:ErrorKind.Div0})
 "5:02:03 CH"
 
 >> Text(DateValue("02/27/2023"), DateTimeFormat.LongDate, "vi-VN")
-"27 Tha'ng Hai 2023"
+"27 Tháng Hai 2023"
 
 >> Text(DateTimeValue("02/27/2023"), DateTimeFormat.LongDateTime, "vi-VN")
-"27 Tha'ng Hai 2023 12:00:00 SA"
+"27 Tháng Hai 2023 12:00:00 SA"
+
+>> Text(Boolean("True"), "", "vi-Vn")
+"true"
+
+>> Text(1.2, "", "vi-Vn")
+"1,2"

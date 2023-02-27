@@ -308,7 +308,7 @@ namespace Microsoft.PowerFx.Functions
 
                     break;
                 case BooleanValue b:
-                    result = new StringValue(irContext, b.Value.ToString().ToLower());
+                    result = new StringValue(irContext, b.Value.ToString(culture).ToLower());
                     break;
             }
 
@@ -344,7 +344,8 @@ namespace Microsoft.PowerFx.Functions
                 case "'longtime24'":
                 case "'longtime'":
                 case "'longdate'":
-                    result = new StringValue(irContext, dateTime.ToString(ExpandDateTimeFormatSpecifiers(format, culture), culture));
+                    var formatStr = ExpandDateTimeFormatSpecifiers(format, culture);
+                    result = new StringValue(irContext, dateTime.ToString(formatStr, culture));
                     break;
                 default:
                     try
