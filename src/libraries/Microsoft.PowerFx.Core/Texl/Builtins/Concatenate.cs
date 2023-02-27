@@ -22,8 +22,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public override bool IsSelfContained => true;
 
-        public override bool SupportsParamCoercion => true;
-
         public ConcatenateFunction()
             : base("Concatenate", TexlStrings.AboutConcatenate, FunctionCategories.Text, DType.String, 0, 1, int.MaxValue)
         {
@@ -48,7 +46,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return base.GetSignatures(arity);
         }
 
-        public override bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertValue(argTypes);
@@ -90,8 +88,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class ConcatenateTableFunction : BuiltinFunction
     {
         public override bool IsSelfContained => true;
-
-        public override bool SupportsParamCoercion => true;
 
         public ConcatenateTableFunction()
             : base("Concatenate", TexlStrings.AboutConcatenateT, FunctionCategories.Table | FunctionCategories.Text, DType.EmptyTable, 0, 1, int.MaxValue)

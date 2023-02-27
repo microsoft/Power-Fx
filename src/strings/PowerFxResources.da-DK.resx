@@ -1837,6 +1837,10 @@
     <value>Numerisk værdi er for stor.</value>
     
   </data>
+  <data name="ErrTextTooLarge" xml:space="preserve">
+    <value>Udtryk må ikke være mere end {0} tegn. Udtrykket er {1} tegn.</value>
+    
+  </data>
   <data name="ErrTextFormatTooLarge" xml:space="preserve">
     <value>Formatstrengstørrelsen må ikke være mere end {0} tegn.</value>
     
@@ -1863,6 +1867,10 @@
   </data>
   <data name="ErrTypeError_Arg_Expected_Found" xml:space="preserve">
     <value>Denne argumenttype "{0}" matcher ikke den forventede type "{1}". Fandt type "{2}".</value>
+    
+  </data>
+  <data name="ErrTypeError_WrongType" xml:space="preserve">
+    <value>Denne type udtryk matcher ikke den forventede type '{0}'. Fandt type '{1}'.</value>
     
   </data>
   <data name="ErrTypeErrorRecordIncompatibleWithSource" xml:space="preserve">
@@ -2643,10 +2651,6 @@
   <data name="AboutIsNumeric_value" xml:space="preserve">
     <value>Værdien, der skal testes.</value>
   </data>
-  <data name="Post" xml:space="preserve">
-    <value>Slå op</value>
-    
-  </data>
   <data name="AboutDateTimeValue" xml:space="preserve">
     <value>Konverterer dato og klokkeslæt i form af tekst til et tal, der repræsenterer datoen i Power Apps-koden for dato/klokkeslæt.</value>
     
@@ -3064,7 +3068,7 @@
     
   </data>
   <data name="Icon_Train_DisplayName" xml:space="preserve">
-    <value>Tog</value>
+    <value>Oplær</value>
     
   </data>
   <data name="Icon_Tray_DisplayName" xml:space="preserve">
@@ -4111,10 +4115,6 @@
     <value>Det er ikke understøttet at tvinge poster eller tabeller i formelkolonner.</value>
     
   </data>
-  <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
-    <value>Formler må ikke være længere end 1000 tegn.</value>
-    
-  </data>
   <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
     <value>Tabeller med en enkelt kolonne understøttes ikke i formelkolonner.</value>
     
@@ -4225,10 +4225,10 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
-    <value>Denne fejl vises, når en formel refererer til egenskaber for komponentfunktionsmåde med ugyldig syntaks. (Eksempelvis Component.OnCustomChange i stedet for Component.OnCustomChange())</value>
+    <value>Denne fejl vises, når en formel refererer til egenskaber for komponentfunktionsmåde med ugyldig syntaks. (Eksempelvis Component.CustomFunction i stedet for Component.CustomFunction())</value>
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
-    <value>Brug korrekt syntaks til at referere til egenskaben for komponentfunktionsmåde. Eksempelvis Component.OnCustomChange()</value>
+    <value>Brug korrekt syntaks til at referere til egenskaben for komponentfunktionsmåde. Eksempelvis Component.CustomFunction()</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_Link_1" xml:space="preserve">
@@ -4730,11 +4730,15 @@
     
   </data>
   <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
-    <value>Ikke-indtastede objekter kan ikke bruges som det første argument for funktioner, der understøtter postomfang.</value>
+    <value>Objekter uden type kan ikke bruges som det første argument for funktioner, der understøtter postomfang.</value>
     
   </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>Den navngivne formel skal slutte med et semikolon.</value>
+    
+  </data>
+  <data name="ErrNamedFormula_MissingValue" xml:space="preserve">
+    <value>Den navngivne formel skal være et udtryk.</value>
     
   </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
@@ -4828,6 +4832,10 @@
   </data>
   <data name="ErrInvalidFunction" xml:space="preserve">
     <value>Denne funktion er entydig. Den indeholder lambda-udtryk og kolonne-id'er for det samme argument.</value>
+    
+  </data>
+  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
+    <value>Indstillingen BooleanOptionSet {0} understøttes ikke.</value>
     
   </data>
 </root>

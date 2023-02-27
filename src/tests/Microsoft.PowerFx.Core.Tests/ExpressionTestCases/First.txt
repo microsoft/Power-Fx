@@ -69,3 +69,26 @@ Blank()
 
 >> FirstN(Filter([1,2,3],Value=4),2)
 Table()
+
+// ********** Coercions ************
+>> FirstN([1,2,3,4,5], "3")
+Table({Value:1},{Value:2},{Value:3})
+
+>> LastN([1,2,3,4,5], "3")
+Table({Value:3},{Value:4},{Value:5})
+
+>> FirstN([1,2,3,4,5], true)
+Table({Value:1})
+
+>> LastN([1,2,3,4,5], true)
+Table({Value:5})
+
+// since If uses the interaction of types, If(false, {x:1, y:1}, {x:2, z:2}) => {x:2} hence .z is blank.
+>> First(Table(If(false, {x:1, y:1}, {x:1, z:2}), {x:9,z:9})).z
+Blank()
+
+>> First(Table(If(false, {x:1, y:1}, {x:1, z:"str"}), {x:9,z:9})).z
+Blank()
+
+>> First({a:1,b:2})
+Errors: Error 0-16: The function 'First' has some invalid arguments.|Error 6-15: Invalid argument type (Record). Expecting a Table value instead.

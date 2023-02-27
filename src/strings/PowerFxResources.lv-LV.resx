@@ -1837,6 +1837,10 @@
     <value>Skaitliskā vērtība ir pārāk liela..</value>
     
   </data>
+  <data name="ErrTextTooLarge" xml:space="preserve">
+    <value>Izteiksme nevar būt garāka par {0} rakstzīmēm. Izteiksmei ir {1} rakstzīme(-es).</value>
+    
+  </data>
   <data name="ErrTextFormatTooLarge" xml:space="preserve">
     <value>Formāta virkne nevar būt lielāka par {0} rakstzīmēm.</value>
     
@@ -1863,6 +1867,10 @@
   </data>
   <data name="ErrTypeError_Arg_Expected_Found" xml:space="preserve">
     <value>Šī argumenta tips {0} neatbilst paredzētajam tipam {1}. Atrastais tips {2}.</value>
+    
+  </data>
+  <data name="ErrTypeError_WrongType" xml:space="preserve">
+    <value>Šīs izteiksmes tips neatbilst paredzētajam tipam {0}. Atrastais tips: {1}.</value>
     
   </data>
   <data name="ErrTypeErrorRecordIncompatibleWithSource" xml:space="preserve">
@@ -2643,10 +2651,6 @@
   <data name="AboutIsNumeric_value" xml:space="preserve">
     <value>Testējamā vērtība.</value>
   </data>
-  <data name="Post" xml:space="preserve">
-    <value>Pasts</value>
-    
-  </data>
   <data name="AboutDateTimeValue" xml:space="preserve">
     <value>Pārvērš datumu un laiku teksta formā par skaitli, kas atspoguļo datumu Power Apps datuma-laika kodā.</value>
     
@@ -3064,7 +3068,7 @@
     
   </data>
   <data name="Icon_Train_DisplayName" xml:space="preserve">
-    <value>Vilciens</value>
+    <value>Apmācīt</value>
     
   </data>
   <data name="Icon_Tray_DisplayName" xml:space="preserve">
@@ -4111,10 +4115,6 @@
     <value>Formulas kolonnās netiek atbalstīti piespiedu ieraksti vai tabulas.</value>
     
   </data>
-  <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
-    <value>Formulas nevar būt garākas par 1000 rakstzīmēm.</value>
-    
-  </data>
   <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
     <value>Formulas kolonnās netiek atbalstītas vienas kolonnas tabulas.</value>
     
@@ -4225,10 +4225,10 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
-    <value>Šī kļūda rodas, ja formulā ir atsauce uz komponenta uzvedības rekvizītiem ar nederīgu sintaksi. (Piemēram, Component.OnCustomChange, nevis Component.OnCustomChange())</value>
+    <value>Šī kļūda rodas, ja formulā ir atsauce uz komponenta funkcijas rekvizītiem ar nederīgu sintaksi. (Piemēram, Component.CustomFunction, nevis Component.CustomFunction())</value>
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
-    <value>Izmantojiet pareizu sintaksi, lai norādītu komponenta uzvedības rekvizītu. Piemēram, Component.OnCustomChange()</value>
+    <value>Izmantojiet pareizu sintaksi, lai norādītu komponenta funkcijas rekvizītu. Piemēram, Component.CustomFunction()</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_Link_1" xml:space="preserve">
@@ -4730,11 +4730,15 @@
     
   </data>
   <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
-    <value>Objektus bez tipa nevar lietot kā pirmo argumentu funkcijām, kas atbalsta ierakstu tvērumus.</value>
+    <value>Netipizētus objektus nevar lietot kā pirmo argumentu funkcijām, kas atbalsta ierakstu tvērumus.</value>
     
   </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>Nosauktajai formulai jābeidzas ar semikolu.</value>
+    
+  </data>
+  <data name="ErrNamedFormula_MissingValue" xml:space="preserve">
+    <value>Nosauktajai formulai ir jābūt izteiksmei.</value>
     
   </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
@@ -4828,6 +4832,10 @@
   </data>
   <data name="ErrInvalidFunction" xml:space="preserve">
     <value>Šī funkcija ir neviennozīmīga. Tajā ir ietvertas LAMBDA izteiksmes un kolonnu identifikatori vienam un tam pašam argumentam.</value>
+    
+  </data>
+  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
+    <value>Opcija BooleanOptionSet {0} netiek atbalstīta.</value>
     
   </data>
 </root>

@@ -32,7 +32,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 {
                     "Num" => FormulaType.Number,
                     "B" => FormulaType.Boolean,
-                    "Nested" => TableType.Empty().Add(new NamedFormulaType("Inner", FormulaType.Number, "InnerDisplay")),
+                    "Nested" => TableType.Empty()
+                        .Add(new NamedFormulaType("Inner", FormulaType.Number, "InnerDisplay"))
+                        .Add(new NamedFormulaType("DisplayNum", FormulaType.Number, "InnerLogicalConflicts")),
                     _ => FormulaType.Blank
                 };
 
@@ -65,7 +67,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     {
                         "Num" => "DisplayNum",
                         "B" => "DisplayB",
-                        "Inner" => "InnerDisplay",
                         "Nested" => "NestedDisplay",
                         _ => null
                     };
@@ -79,7 +80,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     {
                         "DisplayNum" => "Num",
                         "DisplayB" => "B",
-                        "InnerDisplay" => "Inner",
                         "NestedDisplay" => "Nested",
                         _ => null
                     };
@@ -202,13 +202,18 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("If(DisplayB, DisplayNum, 1234)", "If(DisplayB, DisplayNum, 1234)", true)]
         [InlineData("If(DisplayB, Num, 1234)", "If(DisplayB, DisplayNum, 1234)", true)]
         [InlineData("Sum(Nested, Inner)", "Sum(NestedDisplay, InnerDisplay)", true)]
-        [InlineData("Sum(Nested /* The source */ , Inner /* Sum over the InnerDisplay column */)", "Sum(NestedDisplay /* The source */ , InnerDisplay /* Sum over the InnerDisplay column */)", true)]
+        [InlineData("Sum(Nested /* The source */ , Inner /* Sum over the InnerDisplay column */)", "Sum(NestedDisplay /* The source */ , InnerDisplay /* Sum over the InnerDisplay column */)", true)]        
+        [InlineData("First(Nested.Inner).Inner", "First(NestedDisplay.InnerDisplay).InnerDisplay", true)]
+        [InlineData("First(Nested).DisplayNum", "First(NestedDisplay).InnerLogicalConflicts", true)]
         [InlineData("If(DisplayB, DisplayNum, 1234)", "If(B, Num, 1234)", false)]
         [InlineData("If(B, Num, 1234)", "If(B, Num, 1234)", false)]
         [InlineData("If(DisplayB, Num, 1234)", "If(B, Num, 1234)", false)]
         [InlineData("Sum(NestedDisplay, InnerDisplay)", "Sum(Nested, Inner)", false)]
         [InlineData("Sum(NestedDisplay /* The source */ , InnerDisplay /* Sum over the InnerDisplay column */)", "Sum(Nested /* The source */ , Inner /* Sum over the InnerDisplay column */)", false)]
         [InlineData("Sum(NestedDisplay, ThisRecord.InnerDisplay)", "Sum(Nested, ThisRecord.Inner)", false)]
+        [InlineData("First(NestedDisplay.InnerDisplay).InnerDisplay", "First(Nested.Inner).Inner", false)]
+        [InlineData("First(NestedDisplay).InnerLogicalConflicts", "First(Nested).DisplayNum", false)]
+        [InlineData("First(NestedDisplay).DisplayNum", "First(Nested).DisplayNum", false)]
         public void ValidateDisplayNames(string inputExpression, string outputExpression, bool toDisplay)
         {
             var r1 = RecordType.Empty()
@@ -216,7 +221,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 .Add(new NamedFormulaType("B", FormulaType.Boolean, "DisplayB"))
                 .Add(new NamedFormulaType(
                     "Nested", 
-                    TableType.Empty().Add(new NamedFormulaType("Inner", FormulaType.Number, "InnerDisplay")), 
+                    TableType.Empty()
+                        .Add(new NamedFormulaType("Inner", FormulaType.Number, "InnerDisplay"))
+                        .Add(new NamedFormulaType("DisplayNum", FormulaType.Number, "InnerLogicalConflicts")), 
                     "NestedDisplay"));
 
             // Below Record r2 Tests the second method where we provide DisplayNameProvider via constructor to 
@@ -240,6 +247,52 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     var outInvariantExpression = _engine.GetInvariantExpression(inputExpression, record);
                     Assert.Equal(outputExpression, outInvariantExpression);
                 }
+            }
+        }
+
+        // Display name with symbol tables 
+        [Theory]
+        [InlineData("new_field + 2", "Field + 2")]
+        [InlineData("ThisRecord.new_field", "ThisRecord.Field")]
+        [InlineData("First(crf_table).new_field", "First(Table).Field")]
+        [InlineData("123.456", "123,456")] // culture toke
+        [InlineData("new_field + new_field2", "Field + Field2", "new_field + Field2")] // Mixed
+        public void DisplayNamesWithSymbols(string logical, string display, string mixedExpression = null)
+        {
+            // Simulate symbols like dataverse. 
+            var r1 = RecordType.Empty()
+              .Add(new NamedFormulaType("new_field", FormulaType.Number, "Field"))
+              .Add(new NamedFormulaType("new_field2", FormulaType.Number, "Field2"));
+
+            var rowScopeSymbols = ReadOnlySymbolTable.NewFromRecord(r1, allowThisRecord: true);
+            
+            var globalSymbols = new SymbolTable { DebugName = "Globals" };
+            var tableType = r1.ToTable();
+            globalSymbols.AddVariable("crf_table", tableType, displayName: "Table");
+
+            var allSymbols = ReadOnlySymbolTable.Compose(rowScopeSymbols, globalSymbols);
+
+            var config = new PowerFxConfig(new CultureInfo("fr-FR"));
+            var engine = new Engine(config);
+            var check = new CheckResult(engine)
+                .SetText(mixedExpression ?? display)
+                .SetBindingInfo(allSymbols);
+
+            check.ApplyBinding();
+            Assert.True(check.IsSuccess);
+
+            var invariant = check.ApplyGetInvariant();
+
+            Assert.Equal(logical, invariant);
+
+            // Get display
+            var displayActual = engine.GetDisplayExpression(logical, allSymbols);
+            Assert.Equal(display, displayActual);
+
+            if (mixedExpression != null)
+            {
+                displayActual = engine.GetDisplayExpression(mixedExpression, allSymbols);
+                Assert.Equal(display, displayActual);
             }
         }
 
@@ -568,6 +621,21 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.NotNull(intellisenseSuggestion);
             Assert.Equal(expected, intellisenseSuggestion.Text);
             Assert.Equal(DType.Number, intellisenseSuggestion.Type);
+        }
+
+        [Fact]
+        public void SymbolTableGlobalVariableDisplayName()
+        {
+            var symbol = new SymbolTable();
+            symbol.AddVariable("numLogical", FormulaType.Number, true, "numDisplay");
+            Assert.Equal("numDisplay", symbol.SymbolNames.First().DisplayName);
+        }
+
+        [Fact]
+        public void AggregateFieldTypeDisplayName()
+        {
+            var recordType = RecordType.Empty().Add("numLogical", FormulaType.Number, "numDisplay");
+            Assert.Equal("numDisplay", recordType.GetFieldTypes().First().DisplayName);
         }
     }
 }

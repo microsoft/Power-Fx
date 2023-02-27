@@ -1837,6 +1837,10 @@
     <value>Arvväärtus on liiga suur.</value>
     
   </data>
+  <data name="ErrTextTooLarge" xml:space="preserve">
+    <value>Avaldis ei tohi olla pikem kui {0} märki. Avaldises on {1} märki.</value>
+    
+  </data>
   <data name="ErrTextFormatTooLarge" xml:space="preserve">
     <value>Vormingustring ei tohi olla pikem kui {0} märki.</value>
     
@@ -1863,6 +1867,10 @@
   </data>
   <data name="ErrTypeError_Arg_Expected_Found" xml:space="preserve">
     <value>Selle argumendi {0} tüüp ei vasta eeldatud tüübile {1}. Leiti tüüp {2}.</value>
+    
+  </data>
+  <data name="ErrTypeError_WrongType" xml:space="preserve">
+    <value>Selle avaldise tüüp ei vasta eeldatud tüübile {0}. Leiti tüüp {1}.</value>
     
   </data>
   <data name="ErrTypeErrorRecordIncompatibleWithSource" xml:space="preserve">
@@ -2643,10 +2651,6 @@
   <data name="AboutIsNumeric_value" xml:space="preserve">
     <value>Testitav väärtus.</value>
   </data>
-  <data name="Post" xml:space="preserve">
-    <value>Postita</value>
-    
-  </data>
   <data name="AboutDateTimeValue" xml:space="preserve">
     <value>Teisendab kuupäeva ja kellaaja tekstivormingust arvuvormingusse, millega tähistatakse Power Appsi kuupäeva- ja kellaajakoodis kuupäeva.</value>
     
@@ -3064,7 +3068,7 @@
     
   </data>
   <data name="Icon_Train_DisplayName" xml:space="preserve">
-    <value>Rong</value>
+    <value>Koolita</value>
     
   </data>
   <data name="Icon_Tray_DisplayName" xml:space="preserve">
@@ -4111,10 +4115,6 @@
     <value>Kirjete või tabelite koondamist ei toetata valemiveergudes.</value>
     
   </data>
-  <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
-    <value>Valemid ei tohi olla pikemad kui 1000 märki.</value>
-    
-  </data>
   <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
     <value>Üheveerulisi tabeleid ei toetata valemiveergudes.</value>
     
@@ -4225,10 +4225,10 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
-    <value>See tõrge ilmub siis, kui valem viitab komponendi käitumisatribuutidele, millel on sobimatu süntaks. (Näiteks Component.OnCustomChange, mitte Component.OnCustomChange())</value>
+    <value>See tõrge ilmub siis, kui valem viitab komponendi funktsiooniatribuutidele, millel on sobimatu süntaks. (Näiteks Component.CustomFunction, mitte Component.CustomFunction())</value>
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
-    <value>Kasutage komponendi käitumisatribuudile viitamiseks õiget süntaksit. Näiteks Component.OnCustomChange()</value>
+    <value>Kasutage komponendi funktsiooniatribuudile viitamiseks õiget süntaksit. Näiteks Component.CustomFunction()</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_Link_1" xml:space="preserve">
@@ -4730,11 +4730,15 @@
     
   </data>
   <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
-    <value>Tippimata objekte ei saa kasutada esimese argumendina funktsioonidele, mis toetavad kirje ulatusi.</value>
+    <value>Tüübita objekte ei saa kasutada esimese argumendina funktsioonidele, mis toetavad kirje ulatusi.</value>
     
   </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>Nimetatud valem peab lõppema semikooloniga.</value>
+    
+  </data>
+  <data name="ErrNamedFormula_MissingValue" xml:space="preserve">
+    <value>Nimega valem peab olema avaldis.</value>
     
   </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
@@ -4828,6 +4832,10 @@
   </data>
   <data name="ErrInvalidFunction" xml:space="preserve">
     <value>See funktsioon on mitmetähenduslik, see sisaldab sama argumendi lambdaavaldisi ja veeruidentifikaatoreid.</value>
+    
+  </data>
+  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
+    <value>Suvandit BooleanOptionSet {0} ei toetata.</value>
     
   </data>
 </root>

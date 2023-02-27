@@ -4,12 +4,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.PowerFx.Core.App;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
@@ -20,7 +18,7 @@ namespace Microsoft.PowerFx
     /// Composition of multiple <see cref="ReadOnlySymbolTable"/> into a single table.
     /// </summary>
     internal class ComposedReadOnlySymbolTable : ReadOnlySymbolTable, INameResolver, IGlobalSymbolNameResolver, IEnumStore
-    {        
+    {
         private readonly IEnumerable<ReadOnlySymbolTable> _symbolTables;
 
         // In priority order. 
@@ -32,7 +30,7 @@ namespace Microsoft.PowerFx
         }
 
         internal IEnumerable<ReadOnlySymbolTable> SubTables => _symbolTables;
-        
+
         internal override VersionHash VersionHash
         {
             get
@@ -60,18 +58,27 @@ namespace Microsoft.PowerFx
             return slot.Owner.GetTypeFromSlot(slot);
         }
 
+        private TexlFunctionSet _nameResolverFunctions = null;
+        private VersionHash _cachedVersionHash = VersionHash.New();
+
         // Expose the list to aide in intellisense suggestions. 
-        IEnumerable<TexlFunction> INameResolver.Functions
+        TexlFunctionSet INameResolver.Functions
         {
             get
             {
-                foreach (INameResolver table in _symbolTables)
+                var current = this.VersionHash;
+                if (current != _cachedVersionHash)
                 {
-                    foreach (var function in table.Functions)
-                    {
-                        yield return function;
-                    }
+                    _nameResolverFunctions = null;       
                 }
+
+                if (_nameResolverFunctions == null)
+                {
+                    _nameResolverFunctions = new TexlFunctionSet(_symbolTables.Select(t => t.Functions).ToList());
+                    _cachedVersionHash = current;
+                }
+
+                return _nameResolverFunctions;                
             }
         }
 
@@ -134,38 +141,15 @@ namespace Microsoft.PowerFx
             Contracts.Check(theNamespace.IsValid, "The namespace is invalid.");
             Contracts.CheckNonEmpty(name, "name");
 
-            // See TexlFunctionsLibrary.Lookup
-            var functionLibrary = Functions.Where(func => func.Namespace == theNamespace && name == (localeInvariant ? func.LocaleInvariantName : func.Name)); // Base filter
-            return functionLibrary;
+            return localeInvariant
+                        ? Functions.WithInvariantName(name, theNamespace)
+                        : Functions.WithName(name, theNamespace);
         }
 
         public IEnumerable<TexlFunction> LookupFunctionsInNamespace(DPath nameSpace)
         {
             Contracts.Check(nameSpace.IsValid, "The namespace is invalid.");
-
-            return Functions.Where(function => function.Namespace.Equals(nameSpace));
-        }
-
-        public virtual bool LookupEnumValueByInfoAndLocName(object enumInfo, DName locName, out object value)
-        {
-            value = null;
-            var castEnumInfo = enumInfo as EnumSymbol;
-            return castEnumInfo?.TryLookupValueByLocName(locName.Value, out _, out value) ?? false;
-        }
-
-        public virtual bool LookupEnumValueByTypeAndLocName(DType enumType, DName locName, out object value)
-        {
-            // Slower O(n) lookup involving a walk over the registered enums...
-            foreach (INameResolver table in _symbolTables)
-            {
-                if (table.LookupEnumValueByTypeAndLocName(enumType, locName, out value))
-                {
-                    return true;
-                }
-            }
-
-            value = null;
-            return false;
+            return Functions.WithNamespace(nameSpace);
         }
 
         public virtual bool LookupGlobalEntity(DName name, out NameLookupInfo lookupInfo)

@@ -21,8 +21,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Corresponding DAX functions: Format, Fixed
     internal sealed class TextFunction : BuiltinFunction
     {
-        public override bool SupportsParamCoercion => true;
-
         public override bool IsSelfContained => true;
 
         public TextFunction()
@@ -181,8 +179,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Text(arg:O)
     internal sealed class TextFunction_UO : BuiltinFunction
     {
-        public override bool SupportsParamCoercion => false;
-
         public override bool IsSelfContained => true;
 
         public TextFunction_UO()

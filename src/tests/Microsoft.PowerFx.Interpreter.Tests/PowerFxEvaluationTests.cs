@@ -302,6 +302,16 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     runtimeConfig.AddService(iSetup.TimeZoneInfo);
                 }
 
+                // Ensure tests can run with governor on. 
+                // Some tests that use large memory can disable via:
+                //    #SETUP: DisableMemChecks
+                if (!iSetup.DisableMemoryChecks)
+                {
+                    var kbytes = 1000;
+                    var mem = new SingleThreadedGovernor(10 * 1000 * kbytes);
+                    runtimeConfig.AddService<Governor>(mem);
+                }
+
                 var newValue = await check.GetEvaluator().EvalAsync(CancellationToken.None, runtimeConfig);
 
                 // UntypedObjectType type is currently not supported for serialization.

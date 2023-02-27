@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Utils;
@@ -708,6 +709,56 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 var check2 = engine.Check("Set(ThisItem, 5)", options: opts, symbolTable: symValuesAll.SymbolTable);
                 Assert.False(check2.IsSuccess);
             }
+        }
+
+        [Fact]
+        public void DeferredSymbolTest()
+        {
+            var map = new SingleSourceDisplayNameProvider(new Dictionary<DName, DName>
+            {
+                { new DName("logical1"), new DName("display1") },
+                { new DName("logical2"), new DName("display2") }
+            });
+
+            var symTable = ReadOnlySymbolTable.NewFromDeferred(map, (disp, logical) =>
+            {
+                return FormulaType.Number;
+            });
+
+            var values = symTable.CreateValues();
+
+            // Before 
+            {
+                var ok = symTable.TryLookupSlot("logical1", out var slot1);
+                Assert.True(ok);
+                values.Set(slot1, FormulaValue.New(7));
+
+                var value = values.Get(slot1);
+                Assert.Same(symTable, slot1.Owner);
+                Assert.Equal(7.0, value.ToObject());
+            }
+
+            // Compile
+            var engine = new RecalcEngine();
+            var check = new CheckResult(engine);
+
+            var expr = "display1 & display2";
+            check.SetText(expr);
+            check.SetBindingInfo(symTable);
+
+            check.ApplyBinding();
+            Assert.True(check.IsSuccess);
+
+            // After
+            {
+                var ok = symTable.TryLookupSlot("display2", out var slot1);
+                Assert.True(ok);
+                values.Set(slot1, FormulaValue.New(8));
+            }
+
+            var run = check.GetEvaluator();
+            var result = run.Eval(new RuntimeConfig(values));
+            Assert.Equal("78", result.ToObject());
         }
 
         // Get a convenient string representation of a SymbolValue

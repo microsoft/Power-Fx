@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
+using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
@@ -18,8 +19,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class FirstLastNFunction : FunctionWithTableInput
     {
         public override bool IsSelfContained => true;
-
-        public override bool SupportsParamCoercion => false;
 
         public FirstLastNFunction(bool isFirst)
             : base(
@@ -41,7 +40,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             yield return new[] { TexlStrings.FirstLastNArg1, TexlStrings.FirstLastNArg2 };
         }
 
-        public override bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertValue(argTypes);
@@ -49,7 +48,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            var fArgsValid = base.CheckTypes(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fArgsValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
 
             var arg0Type = argTypes[0];
             if (arg0Type.IsTable)
@@ -63,6 +62,35 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             return fArgsValid;
+        }
+    }
+
+    // FirstN(source:*, [count:n])
+    // LastN(source:*, [count:n])
+    internal sealed class FirstLastNFunction_UO : BuiltinFunction
+    {
+        public override bool IsSelfContained => true;
+
+        // Note this function does not inherit from FunctionWithTableInput so there cannot be a common
+        // base class with the above function
+        public FirstLastNFunction_UO(bool isFirst)
+            : base(isFirst ? "FirstN" : "LastN", isFirst ? TexlStrings.AboutFirstN : TexlStrings.AboutLastN, FunctionCategories.Table, DType.UntypedObject, 0, 2, 2, DType.UntypedObject, DType.Number)
+        {
+        }
+
+        public override bool SupportCoercionForArg(int argIndex)
+        {
+            return argIndex == 1;
+        }
+
+        public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
+        {
+            yield return new[] { TexlStrings.FirstLastNArg1, TexlStrings.FirstLastNArg2 };
+        }
+
+        public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
+        {
+            return GetUniqueTexlRuntimeName(suffix: "_UO");
         }
     }
 }

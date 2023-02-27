@@ -24,6 +24,8 @@ namespace Microsoft.PowerFx.Functions
     {
         public override bool RequiresDataSourceScope => true;
 
+        public override bool CanSuggestInputColumns => true;
+
         public override bool ArgMatchesDatasourceType(int argNum)
         {
             return argNum >= 1;
@@ -39,7 +41,7 @@ namespace Microsoft.PowerFx.Functions
         {
         }
 
-        public override bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
@@ -47,7 +49,7 @@ namespace Microsoft.PowerFx.Functions
             Contracts.Assert(args.Length == argTypes.Length);
             Contracts.AssertValue(errors);
 
-            var isValid = base.CheckTypes(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var isValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
 
             return isValid;
         }
@@ -113,47 +115,6 @@ namespace Microsoft.PowerFx.Functions
         }
     }
 
-    // Patch( Record1, Record2 [, …] )
-    internal class PatchRecordFunction : PatchAndValidateRecordFunctionBase, IAsyncTexlFunction
-    {
-        public override bool IsSelfContained => false;
-
-        public PatchRecordFunction()
-            : base("Patch", AboutPatch, FunctionCategories.Table | FunctionCategories.Behavior, DType.EmptyRecord, 0, 2, int.MaxValue, DType.EmptyRecord, DType.EmptyRecord)
-        {
-        }
-
-        public override IEnumerable<StringGetter[]> GetSignatures()
-        {
-            yield return new[] { PatchBaseRecordArg, PatchChangeRecordsArg };
-            yield return new[] { PatchBaseRecordArg, PatchChangeRecordsArg, PatchChangeRecordsArg };
-        }
-
-        public override IEnumerable<StringGetter[]> GetSignatures(int arity)
-        {
-            if (arity > 2)
-            {
-                return GetGenericSignatures(arity, PatchBaseRecordArg, PatchChangeRecordsArg);
-            }
-
-            return base.GetSignatures(arity);
-        }
-
-        public async Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancellationToken)
-        {
-            var validArgs = CheckArgs(args, out FormulaValue faultyArg);
-
-            if (!validArgs)
-            {
-                return faultyArg;
-            }
-
-            return FieldDictToRecordValue(await CreateRecordFromArgsDictAsync(args, 0, cancellationToken));
-        }
-
-        public override RequiredDataSourcePermissions FunctionPermission => RequiredDataSourcePermissions.Create | RequiredDataSourcePermissions.Update;
-    }
-
     // Patch( DataSource, BaseRecord, ChangeRecord1 [, ChangeRecord2, … ])
     internal class PatchFunction : PatchAndValidateRecordFunctionBase, IAsyncTexlFunction
     {
@@ -181,7 +142,7 @@ namespace Microsoft.PowerFx.Functions
             return base.GetSignatures(arity);
         }
 
-        public override bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
@@ -189,7 +150,7 @@ namespace Microsoft.PowerFx.Functions
             Contracts.Assert(args.Length == argTypes.Length);
             Contracts.AssertValue(errors);
 
-            var isValid = base.CheckTypes(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var isValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
 
             DType dataSourceType = argTypes[0];
 

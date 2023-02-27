@@ -3213,23 +3213,9 @@ namespace Microsoft.PowerFx.Core.Binding
                         SetDottedNameError(node, TexlStrings.ErrInvalidIdentifier);
                         return;
                     }
-
-                    // The RHS is a locale-specific name (straight from the parse tree), so we need
-                    // to look things up accordingly. If the LHS is a FirstName, fetch its embedded
-                    // EnumInfo and look in it for a value with the given locale-specific name.
-                    // This should be a fast O(1) lookup that covers 99% of all cases, such as
-                    // Couleur!Rouge, Align.Droit, etc.
-                    var firstNodeLhs = node.Left.AsFirstName();
-                    var firstInfoLhs = firstNodeLhs == null ? null : _txb.GetInfo(firstNodeLhs).VerifyValue();
-                    if (firstInfoLhs != null && _nameResolver.LookupEnumValueByInfoAndLocName(firstInfoLhs.Data, nameRhs, out value))
-                    {
-                        typeRhs = leftType.GetEnumSupertype();
-                    }
-
-                    // ..otherwise do a slower lookup by type for the remaining 1% of cases,
-                    // such as text1!Fill!Rouge, etc.
-                    // This is O(n) in the number of registered enums.
-                    else if (_nameResolver.LookupEnumValueByTypeAndLocName(leftType, nameRhs, out value))
+                    
+                    // Validate that the name exists in the enum type
+                    if (leftType.TryGetEnumValue(nameRhs, out value))
                     {
                         typeRhs = leftType.GetEnumSupertype();
                     }
@@ -3284,8 +3270,11 @@ namespace Microsoft.PowerFx.Core.Binding
                         return;
                     }
 
-                    // We block the property access usage for scoped component properties.
-                    if (template.IsComponent && property.IsScopeVariable)
+                    // We block the property access usage for scoped component properties or functional properties
+                    // TODO remove feature gate when ECS flag is completely rolled out
+                    if (template.IsComponent &&
+                        (property.IsScopeVariable ||
+                        ((_txb.Document?.Properties?.EnabledFeatures?.IsEnhancedComponentFunctionPropertyEnabled ?? false) && property.IsScopedProperty)))
                     {
                         SetDottedNameError(node, TexlStrings.ErrInvalidPropertyReference);
                         return;
@@ -3507,7 +3496,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     }
                     else
                     {
-                        _txb.SetType(node, DType.CreateDTypeWithConnectedDataSourceInfoMetadata(DType.CreateTable(new TypedName(typeRhs, nameRhs)), typeRhs.AssociatedDataSources, typeRhs.DisplayNameProvider));
+                        _txb.SetType(node, DType.CreateDTypeWithConnectedDataSourceInfoMetadata(DType.CreateTable(new TypedName(typeRhs, nameRhs)), leftType.AssociatedDataSources, leftType.DisplayNameProvider));
                     }
                 }
                 else
@@ -4992,7 +4981,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 var carg = args.Length;
                 var argTypes = args.Select(_txb.GetType).ToArray();
 
-                if (TryGetBestOverload(_txb.CheckTypesContext, _txb.ErrorContainer, node, argTypes, overloads, out var function, out var nodeToCoercedTypeMap, out var returnType))
+                if (TryGetBestOverload(_txb.CheckTypesContext, _txb.ErrorContainer, node, node.Args.Children, argTypes, overloads, out var function, out var nodeToCoercedTypeMap, out var returnType))
                 {
                     function.CheckSemantics(_txb, args, argTypes, _txb.ErrorContainer);
 

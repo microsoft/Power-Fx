@@ -16,7 +16,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Abstract base class for all 1-arg math functions that return numeric values.
     internal abstract class MathOneArgFunction : BuiltinFunction
     {
-        public override bool SupportsParamCoercion => true;
+        public override ArgPreprocessor GetArgPreprocessor(int index)
+        {
+            return base.GetGenericArgPreprocessor(index);
+        }
 
         public override bool IsSelfContained => true;
 
@@ -33,8 +36,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
     internal abstract class MathOneArgTableFunction : BuiltinFunction
     {
-        public override bool SupportsParamCoercion => true;
-
         public override bool IsSelfContained => true;
 
         public MathOneArgTableFunction(string name, TexlStrings.StringGetter description, FunctionCategories fc)

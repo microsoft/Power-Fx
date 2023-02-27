@@ -1837,6 +1837,10 @@
     <value>數值太大。</value>
     
   </data>
+  <data name="ErrTextTooLarge" xml:space="preserve">
+    <value>運算式不能超過 {0} 個字元。此運算式包含 {1} 個字元。</value>
+    
+  </data>
   <data name="ErrTextFormatTooLarge" xml:space="preserve">
     <value>格式字串大小不能超過 {0} 個字元。</value>
     
@@ -1863,6 +1867,10 @@
   </data>
   <data name="ErrTypeError_Arg_Expected_Found" xml:space="preserve">
     <value>此引數的類型 '{0}' 不符合應有的類型 '{1}'。找到的類型為 '{2}'。</value>
+    
+  </data>
+  <data name="ErrTypeError_WrongType" xml:space="preserve">
+    <value>此運算式的類型不符合應有的類型 '{0}'。找到的類型為 '{1}'。</value>
     
   </data>
   <data name="ErrTypeErrorRecordIncompatibleWithSource" xml:space="preserve">
@@ -2643,10 +2651,6 @@
   <data name="AboutIsNumeric_value" xml:space="preserve">
     <value>要測試的值。</value>
   </data>
-  <data name="Post" xml:space="preserve">
-    <value>張貼</value>
-    
-  </data>
   <data name="AboutDateTimeValue" xml:space="preserve">
     <value>將文字格式的日期與時間，轉換為在 Power Apps 日期時間代碼中代表日期的數字。</value>
     
@@ -3064,7 +3068,7 @@
     
   </data>
   <data name="Icon_Train_DisplayName" xml:space="preserve">
-    <value>火車</value>
+    <value>訓練</value>
     
   </data>
   <data name="Icon_Tray_DisplayName" xml:space="preserve">
@@ -4111,10 +4115,6 @@
     <value>公式資料行中不支援強制記錄或資料表。</value>
     
   </data>
-  <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
-    <value>公式不能超過 1000 個字元。</value>
-    
-  </data>
   <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
     <value>公式資料行不支援單欄資料表。</value>
     
@@ -4225,10 +4225,10 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
-    <value>當公式參考了含有無效語法的元件行為屬性時，就會發生此錯誤。(例如把 Component.OnCustomChange() 寫成 Component.OnCustomChange)</value>
+    <value>當公式參考了含有無效語法的元件函式屬性時，就會發生此錯誤。(例如把 Component.CustomFunction() 寫成 Component.CustomFunction)</value>
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
-    <value>使用正確的語法來參考元件行為屬性。例如 Component.OnCustomChange()</value>
+    <value>使用正確的語法來參考元件函式屬性。例如 Component.CustomFunction()</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_Link_1" xml:space="preserve">
@@ -4737,6 +4737,10 @@
     <value>命名公式必須以分號結尾。</value>
     
   </data>
+  <data name="ErrNamedFormula_MissingValue" xml:space="preserve">
+    <value>命名公式必須是運算式。</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula '{0}' 已存在。</value>
   </data>
@@ -4828,6 +4832,10 @@
   </data>
   <data name="ErrInvalidFunction" xml:space="preserve">
     <value>此函式不明確，其包含同一個引數的 Lambda 運算式和資料行識別碼。</value>
+    
+  </data>
+  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
+    <value>不支援 BooleanOptionSet 選項 {0}。</value>
     
   </data>
 </root>

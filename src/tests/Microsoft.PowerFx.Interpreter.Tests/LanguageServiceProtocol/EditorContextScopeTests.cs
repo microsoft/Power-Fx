@@ -125,6 +125,70 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
             Assert.Equal("Action1", handler._onExecuted[0]);
         }
 
+        // Calling Suggest() on intellisense doesn't need to compute errors
+        [Fact]
+        public void SuggestDoesntNeedErrors()
+        {
+            var engine = new MyEngine();
+
+            IPowerFxScope ctx = engine.CreateEditorScope();
+            var result = ctx.Suggest("1+2", 1);
+
+            Assert.Equal(0, engine.PostCheckCounter);            
+        }
+
+        [Fact]
+        public void NullCtor()
+        {
+            Assert.Throws<ArgumentNullException>(() => new EditorContextScope(null));
+        }
+
+        [Fact]
+        public void Ctor()
+        {
+            var check = new CheckResult(new Engine());
+            var editor = new EditorContextScope(
+                (expr) => check.SetText(expr).SetBindingInfo());
+
+            var check2 = editor.Check("1+2");
+            Assert.Same(check, check2);
+
+            Assert.True(check2.IsSuccess);
+        }
+
+        // Fail if the getter doesn't fully create the CheckResult
+        [Fact]
+        public void MissingInit()
+        {
+            var check = new CheckResult(new Engine());
+
+            var editor = new EditorContextScope(
+                (expr) => check.SetText(expr));
+
+            Assert.Throws<InvalidOperationException>(() => editor.Check("1+2"));
+
+            editor = new EditorContextScope(
+                (expr) => check);
+
+            Assert.Throws<InvalidOperationException>(() => editor.Check("3+4"));
+        }
+
+        private class MyEngine : Engine
+        {
+            public MyEngine()
+                : base(new PowerFxConfig())
+            {
+            }
+
+            public int PostCheckCounter = 0;
+                    
+            protected override IEnumerable<ExpressionError> PostCheck(CheckResult check)
+            {
+                PostCheckCounter++;
+                return base.PostCheck(check);
+            }
+        }
+
         [Fact]
         public void HandlerName()
         {

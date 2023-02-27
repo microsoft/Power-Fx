@@ -493,6 +493,9 @@ namespace Microsoft.PowerFx.Core.Localization
         public static StringGetter AboutHex2DecT = (b) => StringResources.Get("AboutHex2DecT", b);
         public static StringGetter Hex2DecTArg1 = (b) => StringResources.Get("Hex2DecTArg1", b);
 
+        public static StringGetter AboutOptionSetInfo = (b) => StringResources.Get("AboutOptionSetInfo", b);
+        public static StringGetter AboutOptionSetInfoArg1 = (b) => StringResources.Get("AboutOptionSetInfoArg1", b);
+        
         // Previously, errors were listed here in the form of a StringGetter, which would be evaluated to fetch
         // an error message to pass to the BaseError class constructor. We are switching to passing the message key itself
         // to the BaseError class, and the BaseError itself is responsible for fetching the resource. (This allows the
@@ -550,8 +553,10 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrOperatorExpected = new ErrorResourceKey("ErrOperatorExpected");
         public static ErrorResourceKey ErrNumberExpected = new ErrorResourceKey("ErrNumberExpected");
         public static ErrorResourceKey ErrNumberTooLarge = new ErrorResourceKey("ErrNumberTooLarge");
+        public static ErrorResourceKey ErrTextTooLarge = new ErrorResourceKey("ErrTextTooLarge");
         public static ErrorResourceKey ErrTextFormatTooLarge = new ErrorResourceKey("ErrTextFormatTooLarge");
         public static ErrorResourceKey ErrTextInvalidFormat = new ErrorResourceKey("ErrTextInvalidFormat");
+        public static ErrorResourceKey ErrTextInvalidArgDateTime = new ErrorResourceKey("ErrTextInvalidArgDateTime");
         public static ErrorResourceKey ErrBooleanExpected = new ErrorResourceKey("ErrBooleanExpected");
         public static ErrorResourceKey ErrOnlyOneViewExpected = new ErrorResourceKey("ErrOnlyOneViewExpected");
         public static ErrorResourceKey ErrViewFromCurrentTableExpected = new ErrorResourceKey("ErrViewFromCurrentTableExpected");
@@ -576,6 +581,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrTypeError = new ErrorResourceKey("ErrTypeError");
         public static ErrorResourceKey ErrTypeError_Ex1_Ex2_Found = new ErrorResourceKey("ErrTypeError_Ex1_Ex2_Found");
         public static ErrorResourceKey ErrTypeError_Arg_Expected_Found = new ErrorResourceKey("ErrTypeError_Arg_Expected_Found");
+        public static ErrorResourceKey ErrTypeError_WrongType = new ErrorResourceKey("ErrTypeError_WrongType");
         public static ErrorResourceKey ErrTypeErrorRecordIncompatibleWithSource = new ErrorResourceKey("ErrTypeErrorRecordIncompatibleWithSource");
         public static ErrorResourceKey ErrExpectedStringLiteralArg_Name = new ErrorResourceKey("ErrExpectedStringLiteralArg_Name");
         public static ErrorResourceKey ErrExpectedIdentifierArg_Name = new ErrorResourceKey("ErrExpectedIdentifierArg_Name");
@@ -625,6 +631,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey OpNotSupportedByClientSuggestionMessage_OpNotSupportedByClient = new ErrorResourceKey("SuggestRemoteExecutionHint_OpNotSupportedByClient");
 
         public static ErrorResourceKey ErrNamedFormula_MissingSemicolon = new ErrorResourceKey("ErrNamedFormula_MissingSemicolon");
+        public static ErrorResourceKey ErrNamedFormula_MissingValue = new ErrorResourceKey("ErrNamedFormula_MissingValue");
         public static ErrorResourceKey ErrNamedFormula_AlreadyDefined = new ErrorResourceKey("ErrNamedFormula_AlreadyDefined");
         public static ErrorResourceKey ErrorResource_NameConflict = new ErrorResourceKey("ErrorResource_NameConflict");
 
@@ -632,5 +639,7 @@ namespace Microsoft.PowerFx.Core.Localization
         // that a single string arg can be supplied representing the entire text of the error.
         public static ErrorResourceKey ErrGeneralError = new ErrorResourceKey("ErrGeneralError");
         public static ErrorResourceKey ErrRemoveAllArg = new ErrorResourceKey("ErrRemoveAllArg");
+
+        public static ErrorResourceKey BooleanOptionSetOptionNotSupported = new ErrorResourceKey("BooleanOptionSetOptionNotSupported");
     }
 }

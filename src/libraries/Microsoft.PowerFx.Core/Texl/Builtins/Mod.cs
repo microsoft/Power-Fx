@@ -16,7 +16,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Mod(number:n, divisor:n)
     internal sealed class ModFunction : BuiltinFunction
     {
-        public override bool SupportsParamCoercion => true;
+        public override ArgPreprocessor GetArgPreprocessor(int index)
+        {
+            return base.GetGenericArgPreprocessor(index);
+        }
 
         public override bool IsSelfContained => true;
 
@@ -34,8 +37,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Mod(number:n|*[n], divisor:n|*[n])
     internal sealed class ModTFunction : BuiltinFunction
     {
-        public override bool SupportsParamCoercion => true;
-
         public override bool IsSelfContained => true;
 
         public ModTFunction()

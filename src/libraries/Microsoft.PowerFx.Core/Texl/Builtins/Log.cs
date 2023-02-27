@@ -16,7 +16,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Equivalent Excel function: Log
     internal sealed class LogFunction : BuiltinFunction
     {
-        public override bool SupportsParamCoercion => true;
+        public override ArgPreprocessor GetArgPreprocessor(int index)
+        {
+            return base.GetGenericArgPreprocessor(index);
+        }
 
         public override bool IsSelfContained => true;
 
@@ -38,8 +41,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Equivalent Excel function: Log
     internal sealed class LogTFunction : BuiltinFunction
     {
-        public override bool SupportsParamCoercion => true;
-
         public override bool IsSelfContained => true;
 
         public LogTFunction()

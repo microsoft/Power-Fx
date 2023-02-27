@@ -30,6 +30,8 @@ namespace Microsoft.PowerFx.Performance.Tests
                            Microsoft.PowerFx.Performance.Tests.<test class>-report.html
                            Microsoft.PowerFx.Performance.Tests.<test class>-report.csv
             
+                     To identify the list of tests available
+                       "tests\Microsoft.PowerFx.Performance.Tests\bin\Release\netcoreapp3.1\Microsoft.PowerFx.Performance.Tests.exe" --list flat
              */
 
             _ = BenchmarkSwitcher.FromAssembly(typeof(Program).Assembly).Run(args);

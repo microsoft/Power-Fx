@@ -7,8 +7,6 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Numerics;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Entities;
@@ -27,7 +25,6 @@ using Microsoft.PowerFx.Core.Logging.Trackers;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
-using Microsoft.PowerFx.Types;
 using static Microsoft.PowerFx.Core.IR.IRTranslator;
 using CallNode = Microsoft.PowerFx.Syntax.CallNode;
 using IRCallNode = Microsoft.PowerFx.Core.IR.Nodes.CallNode;
@@ -362,7 +359,7 @@ namespace Microsoft.PowerFx.Core.Functions
         // This can be used to generate a list of enums required for a function library.
         public virtual IEnumerable<string> GetRequiredEnumNames()
         {
-            return new List<string>();
+            return Enumerable.Empty<string>();
         }
 
         // Return all signatures with at most 'arity' parameters.
@@ -398,7 +395,6 @@ namespace Microsoft.PowerFx.Core.Functions
             return char.ToLowerInvariant(name[0]).ToString() + name.Substring(1) + suffix + (IsAsync && !suppressAsync ? "Async" : string.Empty);
         }
 
-        #region CheckInvocation Replacement Project
         public bool HandleCheckInvocation(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             var result = CheckTypes(binding.CheckTypesContext, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
@@ -411,12 +407,7 @@ namespace Microsoft.PowerFx.Core.Functions
         /// </summary>
         public virtual bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
-            return CheckTypes(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
-        }
-
-        public virtual bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
-        {
-            return CheckTypesCore(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            return CheckTypesCore(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
         }
 
         /// <summary>
@@ -430,7 +421,6 @@ namespace Microsoft.PowerFx.Core.Functions
         public virtual void CheckSemantics(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors)
         {
         }
-        #endregion
 
         public virtual bool CheckForDynamicReturnType(TexlBinding binding, TexlNode[] args)
         {
@@ -454,7 +444,7 @@ namespace Microsoft.PowerFx.Core.Functions
             return SupportsParamCoercion && (argIndex <= MinArity || argIndex <= MaxArity);
         }
 
-        private bool CheckTypesCore(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        private bool CheckTypesCore(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
@@ -1417,6 +1407,37 @@ namespace Microsoft.PowerFx.Core.Functions
             }
 
             return new IRCallNode(context.GetIRContext(node), this, args);
+        }
+
+        /// <summary>
+        /// Function can override this method to provide pre-processing policy for argument.
+        /// By default, function does not attach any pre-processing for arguments.
+        /// </summary>
+        /// <param name="index">0 based index of argument.</param>
+        /// <returns></returns>
+        public virtual ArgPreprocessor GetArgPreprocessor(int index)
+        {
+            return ArgPreprocessor.None;
+        }
+
+        /// <summary>
+        /// Generic arg preprocessor that uses <see cref="ParamTypes"/> to determine pre-processing policy.
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        internal ArgPreprocessor GetGenericArgPreprocessor(int index)
+        {
+            var paramType = ParamTypes[index] ?? DType.Unknown;
+            if (paramType == DType.Number)
+            {
+                return ArgPreprocessor.ReplaceBlankWithZero;
+            }
+            else if (paramType == DType.String)
+            {
+                return ArgPreprocessor.ReplaceBlankWithEmptyString;
+            }
+
+            return ArgPreprocessor.None;
         }
     }
 }

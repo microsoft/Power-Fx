@@ -1,6 +1,10 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
 
 namespace Microsoft.PowerFx.Types
@@ -23,6 +27,26 @@ namespace Microsoft.PowerFx.Types
         private CompileTimeTypeWrapperRecordValue(RecordType type, RecordValue inner)
             : base(IRContext.NotInSource(type), inner.Fields)
         {
+        }
+
+        protected override bool TryGetField(FormulaType fieldType, string fieldName, out FormulaValue result)
+        {
+            if (Type.TryGetFieldType(fieldName, out _))
+            {
+                // Only return field which were specified via the expectedType (IE RecordType),
+                // because inner record value may have more fields than the expected type.
+                return _fields.TryGetValue(fieldName, out result);
+            }
+
+            result = default;
+            return false;
+        }
+
+        public override async Task<DValue<RecordValue>> UpdateFieldsAsync(RecordValue changeRecord, CancellationToken cancellationToken)
+        {
+            var allowedFields = _fields.Where(kvp => Type.TryGetFieldType(kvp.Key, out _));
+
+            return await UpdateAllowedFieldsAsync(changeRecord, allowedFields, cancellationToken);
         }
     }
 }

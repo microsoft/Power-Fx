@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -59,36 +58,17 @@ namespace Microsoft.PowerFx
             return CreateResolverInternal();
         }
 
-        /// <inheritdoc/>
-        protected override IExpression CreateEvaluator(CheckResult result)
-        {
-            return CreateEvaluatorDirect(result, new StackDepthCounter(Config.MaxCallDepth));
-        }
-
-        internal static IExpression CreateEvaluatorDirect(CheckResult result, StackDepthCounter stackMarker)
-        {
-            if (result._binding == null)
-            {
-                throw new InvalidOperationException($"Requires successful binding");
-            }
-
-            result.ThrowOnErrors();
-
-            (var irnode, var ruleScopeSymbol) = IRTranslator.Translate(result._binding);
-            return new ParsedExpression(irnode, ruleScopeSymbol, stackMarker, result.CultureInfo)
-            {
-                _parameterSymbolTable = result.Parameters
-            };
-        }
-
         /// <summary>
         /// Create an evaluator over the existing binding.
         /// </summary>
         /// <param name = "result" >A successful binding from a previous call to.<see cref="Engine.Check(string, RecordType, ParserOptions)"/>. </param>        
         /// <returns></returns>
+        [Obsolete("Call CheckResult.GetEvaluator()")]
         public static IExpression CreateEvaluatorDirect(CheckResult result)
         {
-            return CreateEvaluatorDirect(result, new StackDepthCounter(PowerFxConfig.DefaultMaxCallDepth));
+            var eval = result.GetEvaluator();
+            var eval2 = (ParsedExpression)eval;
+            return eval2;
         }
 
         // Event handler fired when we update symbol values. 
@@ -182,7 +162,6 @@ namespace Microsoft.PowerFx
             var check = Check(expressionText, options, symbolsAll);
             check.ThrowOnErrors();
 
-            check.Parameters = parameterSymbols;
             var stackMarker = new StackDepthCounter(Config.MaxCallDepth);
             var eval = check.GetEvaluator(stackMarker);
 
@@ -220,9 +199,8 @@ namespace Microsoft.PowerFx
             var check = new CheckWrapper(this, definition.Body, record, definition.IsImperative);
 
             var func = new UserDefinedTexlFunction(definition.Name, definition.ReturnType, definition.Parameters, check);
-
-            var exists = _symbolTable.Functions.Any(x => x.Name == definition.Name);
-            if (exists)
+            
+            if (_symbolTable.Functions.AnyWithName(definition.Name))
             {
                 throw new InvalidOperationException($"Function {definition.Name} is already defined");
             }
@@ -293,7 +271,7 @@ namespace Microsoft.PowerFx
         {
             var check = Check(expr._expression, expr._schema);
             check.ThrowOnErrors();
-            var binding = check._binding;
+            var binding = check.Binding;
 
             // This will fail if it already exists 
             var slot = _symbolTable.AddVariable(name, check.ReturnType, mutable: false);

@@ -149,7 +149,7 @@ namespace Microsoft.PowerFx.Tests
 
                 Assert.Equal(ErrorKind.Network, err.Kind);
                 Assert.Equal(ErrorSeverity.Critical, err.Severity);
-                Assert.Equal($"TestConnector12.GenerateError failed: The server returned an HTTP error with code {statusCode}.", err.Message);
+                Assert.Equal($"TestConnector12.GenerateError failed: The server returned an HTTP error with code {statusCode}. Response: {statusCode}", err.Message);
             }
 
             testConnector.SetResponse($"{statusCode}", (HttpStatusCode)statusCode);
@@ -166,7 +166,7 @@ namespace Microsoft.PowerFx.Tests
             }
             else
             {
-                Assert.Equal($"TestConnector12.GenerateError failed: The server returned an HTTP error with code {statusCode}.", sv2.Value);
+                Assert.Equal($"TestConnector12.GenerateError failed: The server returned an HTTP error with code {statusCode}. Response: {statusCode}", sv2.Value);
             }
 
             testConnector.SetResponse($"{statusCode}", (HttpStatusCode)statusCode);

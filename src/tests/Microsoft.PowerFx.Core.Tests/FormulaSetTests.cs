@@ -35,7 +35,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 var checkResult = engine.Check(formulaWithParameters._expression, formulaWithParameters._schema);
 
                 var v = new TestDependencyFinderVisitor();
-                checkResult._binding.Top.Accept(v);
+                checkResult.Binding.Top.Accept(v);
                 return v._vars;
             }
         }

@@ -13,3 +13,6 @@ Table({Value:"W"},{Value:"o"},{Value:"r"},{Value:"l"},{Value:"d"})
 
 >> Char(Table({a:32},{a:257},{a:65},{a:Blank()},{a:97}))
 Table({Value:" "},{Value:Error({Kind:ErrorKind.InvalidArgument})},{Value:"A"},{Value:Error({Kind:ErrorKind.InvalidArgument})},{Value:"a"})
+
+>> ForAll(Char([65, -1, 97, 1000]), IfError(Value, Text(FirstError.Kind)))
+Table({Value:"A"},{Value:"25"},{Value:"a"},{Value:"25"})

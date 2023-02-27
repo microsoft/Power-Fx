@@ -2,6 +2,8 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections.Generic;
+using Microsoft.PowerFx.Core.Functions;
 
 namespace Microsoft.PowerFx.Functions
 {
@@ -9,8 +11,11 @@ namespace Microsoft.PowerFx.Functions
     {
         internal static bool IsValid(this DateTime dateTime, EvalVisitor runner)
         {
-            var tzi = runner.GetService<TimeZoneInfo>() ?? TimeZoneInfo.Local;
+            return IsValid(dateTime, runner.TimeZoneInfo);
+        }
 
+        internal static bool IsValid(this DateTime dateTime, TimeZoneInfo tzi)
+        {
             // If DateTime is UTC, the time is always valid
             if (dateTime.Kind == DateTimeKind.Utc)
             {

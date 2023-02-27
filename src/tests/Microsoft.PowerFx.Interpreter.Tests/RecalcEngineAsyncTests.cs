@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Functions;
@@ -168,28 +169,6 @@ namespace Microsoft.PowerFx.Tests
             await Assert.ThrowsAsync<TaskCanceledException>(async () => { await task; });
         }
 
-        // Verify cancellation 
-        [Fact]
-        public async Task InfiniteLoop()
-        {
-            // Create an expression that will take hang (take very long)
-            var n = 10 * 1000;
-            var expr = $"ForAll(Sequence({n}), ForAll(Sequence({n}), ForAll(Sequence({n}), 5)))";
-
-            var engine = new RecalcEngine();
-
-            // Can be invoked. 
-            using var cts = new CancellationTokenSource();
-
-            cts.CancelAfter(5);
-
-            // Eval may never return.             
-            await Assert.ThrowsAsync<OperationCanceledException>(async () =>
-            {
-                await engine.EvalAsync(expr, cts.Token);
-            });
-        }
-
         // Test interleaved concurrent runs. 
         // RecalcEngine is single threaded, but the same engine should be able to do multiple evals.
         [Fact]
@@ -263,8 +242,6 @@ namespace Microsoft.PowerFx.Tests
     internal class CustomAsyncTexlFunction : TexlFunction, IAsyncTexlFunction
     {
         public Func<FormulaValue[], CancellationToken, Task<FormulaValue>> _impl;
-
-        public override bool SupportsParamCoercion => true;
 
         public CustomAsyncTexlFunction(string name, FormulaType returnType, params FormulaType[] paramTypes)
             : this(name, returnType._type, Array.ConvertAll(paramTypes, x => x._type))

@@ -67,9 +67,6 @@ Error({Kind:ErrorKind.Div0})
 >> Len("foo" & 67890 & false & Blank() & Text(12, "#.000") & Date(1976, 12,23))
 29
 
->> Len(["abc", "def"])
-Table({Result:3},{Result:3})
-
 >> Len([])
 Errors: Error 0-7: The function 'Len' has some invalid arguments.|Error 4-6: Invalid schema, expected a one-column table.
 

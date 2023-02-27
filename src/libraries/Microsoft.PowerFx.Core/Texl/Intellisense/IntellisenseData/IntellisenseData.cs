@@ -156,11 +156,11 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
         /// <returns>
         /// True if the provided name collides with an existing name or identifier, false otherwise.
         /// </returns>
-        internal virtual bool DoesNameCollide(string name)
+        internal virtual bool DoesUnqualifiedEnumNameCollide(string name)
         {
-            return (from enumSymbol in _enumStore.EnumSymbols
-                    where (from localizedEnum in enumSymbol.LocalizedEnumValues where localizedEnum == name select localizedEnum).Any()
-                    select enumSymbol).Count() > 1;
+            return _enumStore.EnumSymbols
+                .Where(enumSymbol => enumSymbol.Members.Any(member => member == name))
+                .Any();
         }
 
         ///// <summary>
