@@ -23,8 +23,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool IsSelfContained => true;
 
-        public override bool SupportsParamCoercion => true;
-
         public StringOneArgFunction(string name, TexlStrings.StringGetter description, FunctionCategories functionCategories)
             : base(name, description, functionCategories, DType.String, 0, 1, 1, DType.String)
         {
@@ -93,8 +91,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal abstract class StringOneArgTableFunction : BuiltinFunction
     {
         public override bool IsSelfContained => true;
-
-        public override bool SupportsParamCoercion => true;
 
         public StringOneArgTableFunction(string name, TexlStrings.StringGetter description, FunctionCategories functionCategories)
             : base(name, description, functionCategories, DType.EmptyTable, 0, 1, 1, DType.EmptyTable)
