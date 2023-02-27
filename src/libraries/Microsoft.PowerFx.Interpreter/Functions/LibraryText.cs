@@ -344,7 +344,7 @@ namespace Microsoft.PowerFx.Functions
                 case "'longtime24'":
                 case "'longtime'":
                 case "'longdate'":
-                    result = new StringValue(irContext, dateTime.ToString(ExpandDateTimeFormatSpecifiers(format, culture)));
+                    result = new StringValue(irContext, dateTime.ToString(ExpandDateTimeFormatSpecifiers(format, culture), culture));
                     break;
                 default:
                     try

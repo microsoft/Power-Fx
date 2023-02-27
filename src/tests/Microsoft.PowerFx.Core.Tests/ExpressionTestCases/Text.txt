@@ -235,3 +235,12 @@ Error({Kind:ErrorKind.Div0})
 
 >> Text(TimeValue("15:06"))
 "3:06 PM"
+
+>> Text(Time(17,2,3), DateTimeFormat.LongTime, "vi-VN")
+"5:02:03 CH"
+
+>> Text(DateValue("02/27/2023"), DateTimeFormat.LongDate, "vi-VN")
+"27 Tha'ng Hai 2023"
+
+>> Text(DateTimeValue("02/27/2023"), DateTimeFormat.LongDateTime, "vi-VN")
+"27 Tha'ng Hai 2023 12:00:00 SA"
