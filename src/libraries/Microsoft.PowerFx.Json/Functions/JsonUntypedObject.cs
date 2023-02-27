@@ -21,7 +21,7 @@ namespace Microsoft.PowerFx.Functions
 
         public JsonUntypedObject(JsonElement element)
         {
-            _element = element.ValueKind == JsonValueKind.Undefined ? element : element.Clone();
+            _element = element;
         }
 
         public FormulaType Type

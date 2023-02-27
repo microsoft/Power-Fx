@@ -162,7 +162,7 @@ namespace Microsoft.PowerFx.Types
 
             for (var i = 0; i < array.GetArrayLength(); ++i)
             {
-                var element = array[i];
+                JsonElement element = array[i];
                 var val = GuaranteeRecord(FromJson(element, ft));
 
                 records.Add(val);
