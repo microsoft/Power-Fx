@@ -155,6 +155,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             ConnectorFunction function = OpenApiParser.GetFunctions(apiDoc).OrderBy(cf => cf.Name).ToList()[19];
             Assert.Equal("ConversationAnalysisAnalyzeConversationConversation", function.Name);
+            Assert.Equal("![kind:s, result:![detectedLanguage:s, prediction:![entities:*[category:s, confidenceScore:n, extraInformation:O, length:n, offset:n, resolutions:O, text:s], intents:*[category:s, confidenceScore:n], projectKind:s, topIntent:s], query:s]]", function.ReturnType.ToStringWithDisplayNames());
 
             RecalcEngine engine = new RecalcEngine(pfxConfig);
 
@@ -168,11 +169,29 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 SessionId = "a41bd03b-6c3c-4509-a844-e8c51b61f878",                
             };
 
-            FormulaValue result = await function.InvokeAync(client, new FormulaValue[] { analysisInputParam, parametersParam }, CancellationToken.None);
+            FormulaValue httpResult = await function.InvokeAync(client, new FormulaValue[] { analysisInputParam, parametersParam }, CancellationToken.None);
 
-            Assert.NotNull(result);
-            Assert.True(result is RecordValue);
+            Assert.NotNull(httpResult);
+            Assert.True(httpResult is RecordValue);
+            
+            RecordValue httpResultValue = (RecordValue)httpResult;
+            RecordValue resultValue = (RecordValue)httpResultValue.GetField("result");
+            RecordValue predictionValue = (RecordValue)resultValue.GetField("prediction");
+            TableValue entitiesValue = (TableValue)predictionValue.GetField("entities");
+            RecordValue entityValue = (RecordValue)entitiesValue.Rows.First().Value;
+            FormulaValue resolutionsValue = entityValue.GetField("resolutions");
 
+            Assert.True(resolutionsValue is UntypedObjectValue);
+
+            UntypedObjectValue resolutionUO = (UntypedObjectValue)resolutionsValue;
+            IUntypedObject impl = resolutionUO.Impl;
+            Assert.NotNull(impl);
+            Assert.Equal(1, impl.GetArrayLength());
+
+            bool b = impl[0].TryGetProperty("resolutionKind", out IUntypedObject resolutionKind);
+            Assert.True(b);
+            Assert.Equal("NumberResolution", resolutionKind.GetString());
+          
             string input = testConnector._log.ToString();            
             var version = PowerPlatformConnectorClient.Version;
             var expectedInput =
