@@ -4,13 +4,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
-using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
