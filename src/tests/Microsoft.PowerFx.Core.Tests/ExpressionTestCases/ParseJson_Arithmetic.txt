@@ -257,3 +257,39 @@ true
 
 >> Blank() >= ParseJSON("0")
 true
+
+>> Day(Date(2011,1,15) + ParseJSON("1"))
+16
+
+>> Day(ParseJSON("1") + Date(2011,1,15))
+16
+
+>> Day(DateTime(2011,1,15,4,5,6) + ParseJSON("1"))
+16
+
+>> Day(ParseJSON("1") + DateTime(2011,1,15,4,5,6))
+16
+
+>> Hour(Time(12, 34, 56) + ParseJSON("1"))
+12
+
+>> Hour(ParseJSON("1") + Time(12, 34, 56))
+12
+
+>> Day(Date(2011,1,15) - ParseJSON("1"))
+14
+
+>> Day(ParseJSON("1") - Date(2011,1,15))
+Error({Kind:ErrorKind.NotSupported})
+
+>> Day(DateTime(2011,1,15,4,5,6) - ParseJSON("1"))
+14
+
+>> Day(ParseJSON("1") - DateTime(2011,1,15,4,5,6))
+Error({Kind:ErrorKind.NotSupported})
+
+>> Hour(Time(12, 34, 56) - ParseJSON("1"))
+-11
+
+>> Hour(ParseJSON("1") - Time(12, 34, 56))
+Error({Kind:ErrorKind.NotSupported})
