@@ -4,7 +4,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
-using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
@@ -57,7 +56,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         }
 
         // Gets the overloads for the IfError function for the specified arity.
-        // If is special because it doesn't have a small number of overloads
+        // IfError is special because it doesn't have a small number of overloads
         // since its max arity is int.MaxSize.
         private IEnumerable<TexlStrings.StringGetter[]> GetOverloadsIfError(int arity)
         {
@@ -82,8 +81,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             argCount++;
 
-            var overloads = new List<TexlStrings.StringGetter[]> { signature };
-            return new ReadOnlyCollection<TexlStrings.StringGetter[]>(overloads);
+            return new[] { signature };
         }
 
         public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)

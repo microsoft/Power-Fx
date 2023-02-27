@@ -246,6 +246,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("IfError(1,2|", 1, "Value that is returned if the previous argument is an error.", "IfError(value, fallback, ...)")]
         [InlineData("IfError(1,2,3|", 1, "Value that is returned if it is not an error.", "IfError(value, fallback, value, ...)")]
         [InlineData("IfError(1,2,3,4|", 1, "Value that is returned if the previous argument is an error.", "IfError(value, fallback, value, fallback, ...)")]
+        [InlineData("IfError(1,2,3|,4", 1, "Value that is returned if it is not an error.", "IfError(value, fallback, value, fallback, ...)")]
         [InlineData("IfError(1,2,3,4,5|", 1, "Value that is returned if it is not an error.", "IfError(value, fallback, value, fallback, value, ...)")]
         [InlineData("IfError(1,2,3,4,5,6,7,8,9,0,1,2,3,4,5|", 1, "Value that is returned if it is not an error.", "IfError(value, fallback, value, fallback, ..., value, fallback, value, ...)")]
         public void TestIntellisenseFunctionParameterDescription(string expression, int expectedOverloadCount, string expectedDescription, string expectedDisplayText)
