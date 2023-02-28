@@ -34,17 +34,17 @@ namespace Microsoft.PowerFx.Json.Tests
             Assert.Equal(17, nv.Value);
             Assert.Equal("n", nv.Type.ToStringWithDisplayNames());
 
-            FormulaValue fv2 = FormulaValueJSON.FromJson(expr, new NumberType());
+            FormulaValue fv2 = FormulaValueJSON.FromJson(expr, FormulaType.Number);
             Assert.NotNull(fv2);
             Assert.True(fv2 is NumberValue);
             Assert.Equal(17, ((NumberValue)nv).Value);
 
             Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, TableType.Empty()));
             Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, RecordType.Empty()));
-            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, new StringType()));
-            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, new BooleanType()));
-            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, new GuidType()));
-            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, new ColorType()));
+            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, FormulaType.String));
+            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, FormulaType.Boolean));
+            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, FormulaType.Guid));
+            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, FormulaType.Color));
 
             FormulaValue fv3 = FormulaValueJSON.FromJson(expr, new UntypedObjectType());
             Assert.NotNull(fv3);
@@ -71,17 +71,17 @@ namespace Microsoft.PowerFx.Json.Tests
             Assert.Equal("abc", sv.Value);
             Assert.Equal("s", sv.Type.ToStringWithDisplayNames());
 
-            FormulaValue fv2 = FormulaValueJSON.FromJson(expr, new StringType());
+            FormulaValue fv2 = FormulaValueJSON.FromJson(expr, FormulaType.String);
             Assert.NotNull(fv2);
             Assert.True(fv2 is StringValue);
             Assert.Equal("abc", ((StringValue)sv).Value);
 
             Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, TableType.Empty()));
             Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, RecordType.Empty()));
-            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, new NumberType()));
-            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, new BooleanType()));
-            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, new GuidType()));
-            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, new ColorType()));
+            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, FormulaType.Number));
+            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, FormulaType.Boolean));
+            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, FormulaType.Guid));
+            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, FormulaType.Color));
 
             FormulaValue fv3 = FormulaValueJSON.FromJson(expr, new UntypedObjectType());
             Assert.NotNull(fv3);
@@ -111,7 +111,7 @@ namespace Microsoft.PowerFx.Json.Tests
             Assert.NotNull(fv2);
             Assert.True(fv2 is BlankValue);
 
-            foreach (FormulaType ft in new FormulaType[] { TableType.Empty(), RecordType.Empty(), new StringType(), new NumberType(), new BooleanType(), new GuidType(), new ColorType() })
+            foreach (FormulaType ft in new FormulaType[] { TableType.Empty(), RecordType.Empty(), FormulaType.String, FormulaType.Number, FormulaType.Boolean, FormulaType.Guid, FormulaType.Color })
             {
                 FormulaValue fv5 = FormulaValueJSON.FromJson(expr, ft);
                 Assert.NotNull(fv5);
@@ -140,17 +140,17 @@ namespace Microsoft.PowerFx.Json.Tests
             Assert.Equal(expectedBoolean, bv.Value);
             Assert.Equal("b", bv.Type.ToStringWithDisplayNames());
 
-            FormulaValue fv2 = FormulaValueJSON.FromJson(expr, new BooleanType());
+            FormulaValue fv2 = FormulaValueJSON.FromJson(expr, FormulaType.Boolean);
             Assert.NotNull(fv2);
             Assert.True(fv2 is BooleanValue);
             Assert.Equal(expectedBoolean, ((BooleanValue)bv).Value);
 
             Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, TableType.Empty()));
             Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, RecordType.Empty()));            
-            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, new NumberType()));
-            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, new StringType()));
-            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, new GuidType()));
-            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, new ColorType()));
+            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, FormulaType.Number));
+            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, FormulaType.String));
+            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, FormulaType.Guid));
+            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, FormulaType.Color));
 
             FormulaValue fv3 = FormulaValueJSON.FromJson(expr, new UntypedObjectType());
             Assert.NotNull(fv3);
@@ -182,11 +182,11 @@ namespace Microsoft.PowerFx.Json.Tests
             Assert.True(fv2 is RecordValue);
 
             Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, TableType.Empty()));
-            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, new NumberType()));
-            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, new StringType()));
-            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, new BooleanType()));
-            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, new GuidType()));
-            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, new ColorType()));
+            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, FormulaType.Number));
+            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, FormulaType.String));
+            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, FormulaType.Boolean));
+            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, FormulaType.Guid));
+            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, FormulaType.Color));
 
             FormulaValue fv3 = FormulaValueJSON.FromJson(expr, new UntypedObjectType());
             Assert.NotNull(fv3);
@@ -231,11 +231,11 @@ namespace Microsoft.PowerFx.Json.Tests
             Assert.True(fv2 is RecordValue);
 
             Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, TableType.Empty()));
-            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, new NumberType()));
-            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, new StringType()));
-            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, new BooleanType()));
-            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, new GuidType()));
-            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, new ColorType()));
+            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, FormulaType.Number));
+            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, FormulaType.String));
+            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, FormulaType.Boolean));
+            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, FormulaType.Guid));
+            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, FormulaType.Color));
 
             FormulaValue fv3 = FormulaValueJSON.FromJson(expr, new UntypedObjectType());
             Assert.NotNull(fv3);
@@ -286,11 +286,11 @@ namespace Microsoft.PowerFx.Json.Tests
             Assert.True(fv2 is TableValue);
 
             Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, RecordType.Empty()));
-            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, new NumberType()));
-            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, new StringType()));
-            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, new BooleanType()));
-            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, new GuidType()));
-            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, new ColorType()));
+            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, FormulaType.Number));
+            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, FormulaType.String));
+            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, FormulaType.Boolean));
+            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, FormulaType.Guid));
+            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, FormulaType.Color));
 
             FormulaValue fv3 = FormulaValueJSON.FromJson(expr, new UntypedObjectType());
             Assert.NotNull(fv3);

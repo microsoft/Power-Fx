@@ -44,7 +44,7 @@ namespace Microsoft.PowerFx.Types
         {            
             if (formulaType is UntypedObjectType uot)
             {
-                return new UntypedObjectValue(IRContext.NotInSource(FormulaType.UntypedObject), new JsonUntypedObject(element.Clone()));
+                return UntypedObjectValue.New(new JsonUntypedObject(element.Clone()));
             }
 
             bool skipTypeValidation = formulaType == null || formulaType is BlankType;
@@ -52,12 +52,12 @@ namespace Microsoft.PowerFx.Types
             switch (element.ValueKind)
             {
                 case JsonValueKind.Null:
-                    return new BlankValue(IRContext.NotInSource(FormulaType.Blank));
+                    return FormulaValue.NewBlank(formulaType);
 
                 case JsonValueKind.Number:
                     if (skipTypeValidation || formulaType is NumberType)
                     {
-                        return new NumberValue(IRContext.NotInSource(FormulaType.Number), element.GetDouble());
+                        return NumberValue.New(element.GetDouble());
                     }
                     else
                     {
@@ -67,7 +67,7 @@ namespace Microsoft.PowerFx.Types
                 case JsonValueKind.String:
                     if (skipTypeValidation || formulaType is StringType)
                     {
-                        return new StringValue(IRContext.NotInSource(FormulaType.String), element.GetString());
+                        return StringValue.New(element.GetString());
                     }
                     else
                     {
@@ -77,7 +77,7 @@ namespace Microsoft.PowerFx.Types
                 case JsonValueKind.False:
                     if (skipTypeValidation || formulaType is BooleanType)
                     {
-                        return new BooleanValue(IRContext.NotInSource(FormulaType.Boolean), false);
+                        return BooleanValue.New(false);
                     }
                     else
                     {
@@ -87,7 +87,7 @@ namespace Microsoft.PowerFx.Types
                 case JsonValueKind.True:
                     if (skipTypeValidation || formulaType is BooleanType)
                     {
-                        return new BooleanValue(IRContext.NotInSource(FormulaType.Boolean), true);
+                        return BooleanValue.New(true);
                     }
                     else
                     {
@@ -155,8 +155,7 @@ namespace Microsoft.PowerFx.Types
         {
             Contract.Assert(array.ValueKind == JsonValueKind.Array);
 
-            var records = new List<RecordValue>();
-            var fields = tableType?.ToRecord().FieldNames;
+            var records = new List<RecordValue>();            
             bool isArray = tableType?._type.IsColumn == true;
             FormulaType ft = isArray ? tableType.ToRecord().GetFieldType("Value") : tableType?.ToRecord();
 
