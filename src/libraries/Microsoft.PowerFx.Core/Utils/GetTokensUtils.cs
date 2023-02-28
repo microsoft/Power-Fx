@@ -49,10 +49,12 @@ namespace Microsoft.PowerFx.Core.Utils
 
             if (flags.HasFlag(GetTokensFlags.AllFunctions))
             {
-                foreach (var item in binding.NameResolver.Functions)
+#pragma warning disable CS0618 // Type or member is obsolete
+                foreach (var item in binding.NameResolver.Functions.Functions)
                 {
                     tokens[item.QualifiedName] = TokenResultType.Function;
                 }
+#pragma warning restore CS0618 // Type or member is obsolete
             }
 
             return tokens;

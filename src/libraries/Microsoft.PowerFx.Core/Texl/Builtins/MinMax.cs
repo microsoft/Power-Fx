@@ -18,8 +18,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Corresponding Excel functions: Min, Max
     internal sealed class MinMaxFunction : BuiltinFunction
     {
-        public override bool SupportsParamCoercion => true;
-
         public override bool HasPreciseErrors => true;
 
         public override bool IsSelfContained => true;

@@ -15,6 +15,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Split(text:s, separator:s)
     internal class SplitFunction : StringTwoArgFunction
     {
+        public override ArgPreprocessor GetArgPreprocessor(int index)
+        {
+            return base.GetGenericArgPreprocessor(index);
+        }
+
         public SplitFunction()
             : base("Split", TexlStrings.AboutSplit, DType.EmptyTable)
         {

@@ -19,8 +19,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // a table as the first argument, and a value function as the second argument.
     internal abstract class StatisticalTableFunction : FunctionWithTableInput
     {
-        public override bool SupportsParamCoercion => true;
-
         public override bool IsSelfContained => true;
 
         public StatisticalTableFunction(string name, TexlStrings.StringGetter description, FunctionCategories fc)

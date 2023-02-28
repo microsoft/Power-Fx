@@ -7,8 +7,6 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Numerics;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Entities;
@@ -27,7 +25,6 @@ using Microsoft.PowerFx.Core.Logging.Trackers;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
-using Microsoft.PowerFx.Types;
 using static Microsoft.PowerFx.Core.IR.IRTranslator;
 using CallNode = Microsoft.PowerFx.Syntax.CallNode;
 using IRCallNode = Microsoft.PowerFx.Core.IR.Nodes.CallNode;
@@ -362,7 +359,7 @@ namespace Microsoft.PowerFx.Core.Functions
         // This can be used to generate a list of enums required for a function library.
         public virtual IEnumerable<string> GetRequiredEnumNames()
         {
-            return new List<string>();
+            return Enumerable.Empty<string>();
         }
 
         // Return all signatures with at most 'arity' parameters.
@@ -1434,6 +1431,10 @@ namespace Microsoft.PowerFx.Core.Functions
             if (paramType == DType.Number)
             {
                 return ArgPreprocessor.ReplaceBlankWithZero;
+            }
+            else if (paramType == DType.String)
+            {
+                return ArgPreprocessor.ReplaceBlankWithEmptyString;
             }
 
             return ArgPreprocessor.None;

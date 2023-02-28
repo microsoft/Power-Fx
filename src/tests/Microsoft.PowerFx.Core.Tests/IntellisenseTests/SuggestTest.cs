@@ -3,22 +3,19 @@
 
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-using System.Linq.Expressions;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
-using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
 namespace Microsoft.PowerFx.Tests.IntellisenseTests
 {
     public class SuggestTests : IntellisenseTestBase
-    {      
+    {
         /// <summary>
         /// This method does the same as <see cref="Suggest"/>, but filters the suggestions by their text so
         /// that they can be more easily compared.
@@ -62,10 +59,10 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         internal static PowerFxConfig Default_DisableRowScopeDisambiguationSyntax => PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder().WithDefaultEnums(), Features.DisableRowScopeDisambiguationSyntax);
 
         // No enums, no functions. Adding functions will add back in associated enums, so to be truly empty, ensure no functions. 
-        private PowerFxConfig EmptyEverything => PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder(), new TexlFunction[0]);
+        private PowerFxConfig EmptyEverything => PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder(), new TexlFunctionSet());
 
         // No extra enums, but standard functions (which will include some enums).
-        private PowerFxConfig MinimalEnums => PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder().WithRequiredEnums(BuiltinFunctionsCore.BuiltinFunctionsLibrary));        
+        private PowerFxConfig MinimalEnums => PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder().WithRequiredEnums(BuiltinFunctionsCore._library));
 
         /// <summary>
         /// Compares expected suggestions with suggestions made by PFx Intellisense for a given
@@ -196,9 +193,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             var config = Default;
             var actualSuggestions = SuggestStrings(expression, config);
             Assert.Equal(expectedSuggestions, actualSuggestions);
-
-            // With adjusted config 
-            AdjustConfig(config);
+            
             actualSuggestions = SuggestStrings(expression, config);
             Assert.Equal(expectedSuggestions, actualSuggestions);
         }
@@ -219,9 +214,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             var config = EmptyEverything;
             var actualSuggestions = SuggestStrings(expression, config);
             Assert.Equal(expectedSuggestions, actualSuggestions);
-
-            // With adjusted config 
-            AdjustConfig(config);
+                     
             actualSuggestions = SuggestStrings(expression, config);
             Assert.Equal(expectedSuggestions, actualSuggestions);
         }
@@ -237,9 +230,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             var config = MinimalEnums;
             var actualSuggestions = SuggestStrings(expression, config);
             Assert.Equal(expectedSuggestions, actualSuggestions);
-
-            // With adjusted config 
-            AdjustConfig(config);
+            
             actualSuggestions = SuggestStrings(expression, config);
             Assert.Equal(expectedSuggestions, actualSuggestions);
         }
@@ -249,6 +240,13 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("SortByColumns(tbl1,|", 2, "A unique column name.", "SortByColumns(source, column, ...)")]
         [InlineData("SortByColumns(tbl1,col1,|", 1, "Ascending or Descending", "SortByColumns(source, column, order, ...)")]
         [InlineData("SortByColumns(tbl1,col1,SortOrder.Ascending,|", 2, "A unique column name.", "SortByColumns(source, column, order, column, ...)")]
+        [InlineData("IfError(1|", 1, "Value that is returned if it is not an error.", "IfError(value, fallback, ...)")]
+        [InlineData("IfError(1,2|", 1, "Value that is returned if the previous argument is an error.", "IfError(value, fallback, ...)")]
+        [InlineData("IfError(1,2,3|", 1, "Value that is returned if it is not an error.", "IfError(value, fallback, value, ...)")]
+        [InlineData("IfError(1,2,3,4|", 1, "Value that is returned if the previous argument is an error.", "IfError(value, fallback, value, fallback, ...)")]
+        [InlineData("IfError(1,2,3|,4", 1, "Value that is returned if it is not an error.", "IfError(value, fallback, value, fallback, ...)")]
+        [InlineData("IfError(1,2,3,4,5|", 1, "Value that is returned if it is not an error.", "IfError(value, fallback, value, fallback, value, ...)")]
+        [InlineData("IfError(1,2,3,4,5,6,7,8,9,0,1,2,3,4,5|", 1, "Value that is returned if it is not an error.", "IfError(value, fallback, value, fallback, ..., value, fallback, value, ...)")]
         public void TestIntellisenseFunctionParameterDescription(string expression, int expectedOverloadCount, string expectedDescription, string expectedDisplayText)
         {
             var context = "![tbl1:*[col1:n,col2:n]]";
@@ -299,8 +297,6 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             var actualSuggestions = SuggestStrings(expression, Default, context);
             Assert.True(actualSuggestions.Length > 0);
 
-            // With adjusted config 
-            AdjustConfig(config);
             actualSuggestions = SuggestStrings(expression, config);
             Assert.True(actualSuggestions.Length > 0);
         }
@@ -324,8 +320,6 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             var actualSuggestions = SuggestStrings(expression, config, context);
             Assert.Equal(expectedSuggestions, actualSuggestions);
 
-            // With adjusted config 
-            AdjustConfig(config);
             actualSuggestions = SuggestStrings(expression, config, context);
             Assert.Equal(expectedSuggestions, actualSuggestions);
         }
@@ -341,8 +335,6 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             var actualSuggestions = SuggestStrings(expression, config, context);
             Assert.Equal(expectedSuggestions, actualSuggestions);
 
-            // With adjusted config 
-            AdjustConfig(config);
             actualSuggestions = SuggestStrings(expression, config, context);
             Assert.Equal(expectedSuggestions, actualSuggestions);
         }
@@ -361,15 +353,13 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             var config = PowerFxConfig.BuildWithEnumStore(
                 null,
                 new EnumStoreBuilder(),
-                new TexlFunction[] { BuiltinFunctionsCore.EndsWith, BuiltinFunctionsCore.Filter, BuiltinFunctionsCore.Table });
+                new TexlFunctionSet(new[] { BuiltinFunctionsCore.EndsWith, BuiltinFunctionsCore.Filter, BuiltinFunctionsCore.Table }));
             var actualSuggestions = SuggestStrings(expression, config, lazyInstance);
             Assert.Equal(expectedSuggestions, actualSuggestions);
-            
+
             // Intellisense requires iterating the field names for some operations
             Assert.Equal(requiresExpansion, lazyInstance.EnumerableIterated);
 
-            // With adjusted config 
-            AdjustConfig(config);
             actualSuggestions = SuggestStrings(expression, config, lazyInstance);
             Assert.Equal(expectedSuggestions, actualSuggestions);
         }
@@ -484,7 +474,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             public override int GetHashCode()
             {
                 return 1;
-            }   
+            }
         }
     }
 }

@@ -29,8 +29,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             ScopeInfo = new FunctionScopeInfo(this, acceptsLiteralPredicates: false);
         }
 
-        public override bool SupportsParamCoercion => true;
-
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
             // Enumerate just the base overloads (the first 3 possibilities).
