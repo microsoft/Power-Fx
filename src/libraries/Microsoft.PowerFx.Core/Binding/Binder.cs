@@ -5164,7 +5164,7 @@ namespace Microsoft.PowerFx.Core.Binding
                         {
                             _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, node.Children[i], TexlStrings.ErrMultipleValuesForField_Name, displayName);
                         }
-                        else if (_txb.GetType(node.Children[i]).IsDeferred)
+                        else if (_txb.GetType(node.Children[i]).IsDeferred || _txb.GetType(node.Children[i]).IsVoid)
                         {
                             _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, node.Children[i], TexlStrings.ErrRecordDoesNotAcceptThisType);
                         }
@@ -5192,16 +5192,16 @@ namespace Microsoft.PowerFx.Core.Binding
                 {
                     var childType = _txb.GetType(child);
                     isSelfContainedConstant &= _txb.IsSelfContainedConstant(child);
-
-                    if (!childType.IsDeferred && !exprType.IsValid)
+                    var isNotDeferredOrVoid = !childType.IsDeferred && !childType.IsVoid;
+                    if (isNotDeferredOrVoid && !exprType.IsValid)
                     {
                         exprType = childType;
                     }
-                    else if (!childType.IsDeferred && exprType.CanUnionWith(childType))
+                    else if (isNotDeferredOrVoid && exprType.CanUnionWith(childType))
                     {
                         exprType = DType.Union(exprType, childType);
                     }
-                    else if (!childType.IsDeferred && childType.CoercesTo(exprType))
+                    else if (isNotDeferredOrVoid && childType.CoercesTo(exprType))
                     {
                         _txb.SetCoercedType(child, exprType);
                     }

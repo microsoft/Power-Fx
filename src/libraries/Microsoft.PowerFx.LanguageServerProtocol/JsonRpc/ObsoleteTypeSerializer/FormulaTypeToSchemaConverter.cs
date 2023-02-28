@@ -100,6 +100,11 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                 Result = new FormulaTypeSchema() { Type = FormulaTypeSchema.ParamType.Error };
             }
 
+            public void Visit(VoidType type)
+            {
+                Result = new FormulaTypeSchema() { Type = FormulaTypeSchema.ParamType.Void };
+            }
+
             #endregion
             #region Complex Types
 

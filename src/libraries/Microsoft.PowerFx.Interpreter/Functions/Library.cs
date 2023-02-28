@@ -1872,7 +1872,7 @@ namespace Microsoft.PowerFx.Functions
                         var trueBranch = args[i + 1];
 
                         var trueBranchResult = (await runner.EvalArgAsync<ValidFormulaValue>(trueBranch, context, trueBranch.IRContext)).ToFormulaValue();
-                        return MaybeWrapRecordValue(trueBranchResult, irContext);
+                        return MaybeAdjustToCompileTimeType(trueBranchResult, irContext);
                     }
                 }
 
@@ -1890,7 +1890,7 @@ namespace Microsoft.PowerFx.Functions
                     var falseBranch = args[i + 2];
                     var falseBranchResult = (await runner.EvalArgAsync<ValidFormulaValue>(falseBranch, context, falseBranch.IRContext)).ToFormulaValue();
                     
-                    return MaybeWrapRecordValue(falseBranchResult, irContext);
+                    return MaybeAdjustToCompileTimeType(falseBranchResult, irContext);
                 }
 
                 // Else, if there are more values, this is another conditional.
@@ -1911,6 +1911,28 @@ namespace Microsoft.PowerFx.Functions
             if (result is RecordValue recordValue && irContext.ResultType is RecordType compileTimeType)
             {
                 return CompileTimeTypeWrapperRecordValue.AdjustType(compileTimeType, recordValue);
+            }
+            else if (result is TableValue tableValue && irContext.ResultType is TableType compileTimeTableType)
+            {
+                return CompileTimeTypeWrapperTableValue.AdjustType(compileTimeTableType, tableValue);
+            }
+
+            return result;
+        }
+
+        private static FormulaValue MaybeAdjustToCompileTimeType(FormulaValue result, IRContext irContext)
+        {
+            if (irContext.ResultType is VoidType && result is not ErrorValue)
+            {
+                return new VoidValue(IRContext.NotInSource(FormulaType.Void));
+            }
+            else if (result is RecordValue recordValue && irContext.ResultType is RecordType compileTimeType)
+            {
+                return CompileTimeTypeWrapperRecordValue.AdjustType(compileTimeType, recordValue);
+            }
+            else if (result is TableValue tableValue && irContext.ResultType is TableType compileTimeTableType)
+            {
+                return CompileTimeTypeWrapperTableValue.AdjustType(compileTimeTableType, tableValue);
             }
 
             return result;

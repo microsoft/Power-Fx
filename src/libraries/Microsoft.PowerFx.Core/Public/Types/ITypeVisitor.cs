@@ -47,5 +47,7 @@ namespace Microsoft.PowerFx.Types
         void Visit(DeferredType type);
 
         void Visit(BindingErrorType type);
+
+        void Visit(VoidType type);
     }
 }
