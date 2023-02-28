@@ -7,6 +7,7 @@ using System.Linq;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Diagnostics.Windows;
 using BenchmarkDotNet.Diagnostics.Windows.Configs;
+using BenchmarkDotNet.Engines;
 using BenchmarkDotNet.Jobs;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
@@ -23,7 +24,7 @@ namespace Microsoft.PowerFx.Performance.Tests
     [MedianColumn]
     [Q3Column]
     [MaxColumn]
-    [SimpleJob(runtimeMoniker: RuntimeMoniker.NetCoreApp31)]
+    [SimpleJob(RunStrategy.Throughput, RuntimeMoniker.NetCoreApp31, launchCount: 1, warmupCount: 10, targetCount: 10, invocationCount: 50)]
     public class BasicPerformance
     {
         private PowerFxConfig _powerFxConfig;

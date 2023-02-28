@@ -10,6 +10,7 @@ using System.Text;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Diagnostics.Windows;
 using BenchmarkDotNet.Diagnostics.Windows.Configs;
+using BenchmarkDotNet.Engines;
 using BenchmarkDotNet.Jobs;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Utils;
@@ -26,7 +27,7 @@ namespace Microsoft.PowerFx.Performance.Tests
     [MedianColumn]
     [Q3Column]
     [MaxColumn]
-    [SimpleJob(runtimeMoniker: RuntimeMoniker.NetCoreApp31)]
+    [SimpleJob(RunStrategy.Throughput, RuntimeMoniker.NetCoreApp31, launchCount: 1, warmupCount: 10, targetCount: 10, invocationCount: 50)]
     public class PvaPerformance
     {
         private const int ExpressionNumber = 100;
@@ -64,14 +65,19 @@ namespace Microsoft.PowerFx.Performance.Tests
         public RecalcEngine PvaRecalcEngineConstructorWith10KOptionSets()
         {
             PowerFxConfig powerFxConfig = new PowerFxConfig(new CultureInfo("en-US"), Features.All);
+            RecalcEngine engine = null;
 
             for (int i = 0; i < 10000; i++)
             {
                 TestOptionSetDisplayNameProvider nameProvider = new TestOptionSetDisplayNameProvider(Enumerable.Range(0, 10).Select(j => new TestOption($"Logical{j}", $"Display{j}")).ToImmutableArray());
                 powerFxConfig.AddOptionSet(new OptionSet($"OptionSet{i:0000}", nameProvider));
+            }            
+
+            for (int i = 0; i < 1000; i++)
+            {
+                engine = new RecalcEngine(powerFxConfig);
             }
 
-            RecalcEngine engine = new RecalcEngine(powerFxConfig);           
             return engine;
         }
 
@@ -79,11 +85,16 @@ namespace Microsoft.PowerFx.Performance.Tests
         public ParseResult PvaRecalcEngineParse()
         {
             string expression = _expressions[_rnd.Next(0, ExpressionNumber)];
-            ParseResult parseResult = _engine.Parse(expression, _parserOptions);
+            ParseResult parseResult = null;
 
-            if (!parseResult.IsSuccess)
+            for (int i = 0; i < 1000; i++)
             {
-                throw new Exception($"{expression}\r\n{string.Join("\r\n", parseResult.Errors.Select(ee => $"{ee.Message}"))}");
+                parseResult = _engine.Parse(expression, _parserOptions);
+
+                if (!parseResult.IsSuccess)
+                {
+                    throw new Exception($"{expression}\r\n{string.Join("\r\n", parseResult.Errors.Select(ee => $"{ee.Message}"))}");
+                }
             }
 
             return parseResult;
@@ -93,11 +104,16 @@ namespace Microsoft.PowerFx.Performance.Tests
         public CheckResult PvaRecalcEngineCheck()
         {
             string expression = _expressions[_rnd.Next(0, ExpressionNumber)];
-            CheckResult checkResult = _engine.Check(expression, _parserOptions);
+            CheckResult checkResult = null;
 
-            if (!checkResult.IsSuccess)
+            for (int i = 0; i < 1000; i++)
             {
-                throw new Exception($"{expression}\r\n{string.Join("\r\n", checkResult.Errors.Select(ee => $"{ee.Message}"))}");
+                checkResult = _engine.Check(expression, _parserOptions);
+
+                if (!checkResult.IsSuccess)
+                {
+                    throw new Exception($"{expression}\r\n{string.Join("\r\n", checkResult.Errors.Select(ee => $"{ee.Message}"))}");
+                }
             }
 
             return checkResult;
