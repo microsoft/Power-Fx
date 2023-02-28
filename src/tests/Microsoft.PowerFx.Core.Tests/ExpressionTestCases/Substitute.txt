@@ -193,3 +193,18 @@ Error({Kind:ErrorKind.InvalidArgument})
 //Excel returns "JaneSmith67890TRUE12.00028117FALSE"
 >> Substitute("Jane" & "Smith" & 67890 & true & Blank() & Text(12, "#.000") & Date(1976, 12,23) & true,true,false,2)
 "JaneSmith67890true12.00012/23/1976false"
+
+>> Substitute( "Quarter 1, 2011", "1", "2", 2 )
+"Quarter 1, 2021"
+
+>> Substitute( "Quarter 1, 2011", "3", "2", 2 )
+"Quarter 1, 2011"
+
+>> Substitute( "aaaaaaaaa", "a", "dfg", 5 )
+"aaaadfgaaaa"
+
+>> Substitute("abcabcabc", "abd", "dfg")
+"abcabcabc"
+
+>> Len(With({one: "aaaaaaaaaaaaaaaaaa"}, Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(one, "a", one, 3), "a", one, 3), "a", one, 3), "a", one, 3), "a", one, 3), "a", one, 3), "a", one, 3), "a", one, 3), "a", one, 3), "a", one, 3)))
+188
