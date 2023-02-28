@@ -4,13 +4,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
-using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
@@ -242,6 +240,13 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("SortByColumns(tbl1,|", 2, "A unique column name.", "SortByColumns(source, column, ...)")]
         [InlineData("SortByColumns(tbl1,col1,|", 1, "Ascending or Descending", "SortByColumns(source, column, order, ...)")]
         [InlineData("SortByColumns(tbl1,col1,SortOrder.Ascending,|", 2, "A unique column name.", "SortByColumns(source, column, order, column, ...)")]
+        [InlineData("IfError(1|", 1, "Value that is returned if it is not an error.", "IfError(value, fallback, ...)")]
+        [InlineData("IfError(1,2|", 1, "Value that is returned if the previous argument is an error.", "IfError(value, fallback, ...)")]
+        [InlineData("IfError(1,2,3|", 1, "Value that is returned if it is not an error.", "IfError(value, fallback, value, ...)")]
+        [InlineData("IfError(1,2,3,4|", 1, "Value that is returned if the previous argument is an error.", "IfError(value, fallback, value, fallback, ...)")]
+        [InlineData("IfError(1,2,3|,4", 1, "Value that is returned if it is not an error.", "IfError(value, fallback, value, fallback, ...)")]
+        [InlineData("IfError(1,2,3,4,5|", 1, "Value that is returned if it is not an error.", "IfError(value, fallback, value, fallback, value, ...)")]
+        [InlineData("IfError(1,2,3,4,5,6,7,8,9,0,1,2,3,4,5|", 1, "Value that is returned if it is not an error.", "IfError(value, fallback, value, fallback, ..., value, fallback, value, ...)")]
         public void TestIntellisenseFunctionParameterDescription(string expression, int expectedOverloadCount, string expectedDescription, string expectedDisplayText)
         {
             var context = "![tbl1:*[col1:n,col2:n]]";

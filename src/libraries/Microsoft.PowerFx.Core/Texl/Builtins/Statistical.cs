@@ -16,8 +16,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // scalar arguments.
     internal abstract class StatisticalFunction : BuiltinFunction
     {
-        public override bool SupportsParamCoercion => true;
-
         public override bool IsSelfContained => true;
 
         public StatisticalFunction(string name, TexlStrings.StringGetter description, FunctionCategories fc)

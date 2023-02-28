@@ -24,8 +24,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool IsSelfContained => true;
 
-        public override bool SupportsParamCoercion => false;
-
         public override DelegationCapability FunctionDelegationCapability => DelegationCapability.Count;
 
         public CountRowsFunction()
@@ -112,8 +110,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class CountRowsFunction_UO : BuiltinFunction
     {
         public override bool IsSelfContained => true;
-
-        public override bool SupportsParamCoercion => false;
 
         public CountRowsFunction_UO()
             : base(CountRowsFunction.CountRowsInvariantFunctionName, TexlStrings.AboutCountRows, FunctionCategories.Table | FunctionCategories.MathAndStat, DType.Number, 0, 1, 1, DType.UntypedObject)
