@@ -1,7 +1,10 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.ComponentModel.Design;
 using System.Linq;
 using System.Net.Http;
 using System.Threading;
@@ -10,8 +13,10 @@ using Microsoft.AppMagic.Authoring.Texl.Builtins;
 using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Tests;
+using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Tests;
 using Microsoft.PowerFx.Types;
+using Newtonsoft.Json;
 using Xunit;
 
 namespace Microsoft.PowerFx.Connectors.Tests
@@ -165,15 +170,15 @@ namespace Microsoft.PowerFx.Connectors.Tests
             FormulaValue parametersParam = engine.Eval(parameters);
 
             using PowerPlatformConnectorClient client = new PowerPlatformConnectorClient("https://lucgen-apim.azure-api.net", "aaa373836ffd4915bf6eefd63d164adc" /* environment Id */, "16e7c181-2f8d-4cae-b1f0-179c5c4e4d8b" /* connectionId */, () => "No Auth", httpClient)
-            { 
-                SessionId = "a41bd03b-6c3c-4509-a844-e8c51b61f878",                
+            {
+                SessionId = "a41bd03b-6c3c-4509-a844-e8c51b61f878",
             };
 
             FormulaValue httpResult = await function.InvokeAync(client, new FormulaValue[] { analysisInputParam, parametersParam }, CancellationToken.None);
 
             Assert.NotNull(httpResult);
             Assert.True(httpResult is RecordValue);
-            
+
             RecordValue httpResultValue = (RecordValue)httpResult;
             RecordValue resultValue = (RecordValue)httpResultValue.GetField("result");
             RecordValue predictionValue = (RecordValue)resultValue.GetField("prediction");
@@ -191,8 +196,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
             bool b = impl[0].TryGetProperty("resolutionKind", out IUntypedObject resolutionKind);
             Assert.True(b);
             Assert.Equal("NumberResolution", resolutionKind.GetString());
-          
-            string input = testConnector._log.ToString();            
+
+            string input = testConnector._log.ToString();
             var version = PowerPlatformConnectorClient.Version;
             var expectedInput =
 @$"POST https://lucgen-apim.azure-api.net/invoke
@@ -210,6 +215,210 @@ namespace Microsoft.PowerFx.Connectors.Tests
 ";
 
             Assert.Equal(expectedInput, input);
+        }
+
+        [Fact]
+        public async Task ACSL_InvokeFunction_v21()
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\Azure Cognitive Service for Language v2.1.json");
+            OpenApiDocument apiDoc = testConnector._apiDocument;
+
+            PowerFxConfig pfxConfig = new PowerFxConfig(Features.All);
+            using var httpClient = new HttpClient(testConnector);
+            testConnector.SetResponseFromFile(@"Responses\Azure Cognitive Service for Language v2.1_Response.json");
+
+            ConnectorFunction function = OpenApiParser.GetFunctions(apiDoc).OrderBy(cf => cf.Name).ToList()[13];
+            Assert.Equal("ConversationAnalysisAnalyzeConversationConversation", function.Name);
+            Assert.Equal("![kind:s, result:![detectedLanguage:s, prediction:![entities:*[category:s, confidenceScore:n, extraInformation:O, length:n, multipleResolutions:b, offset:n, resolutions:O, text:s, topResolution:O], intents:*[category:s, confidenceScore:n], projectKind:s, topIntent:s], query:s]]", function.ReturnType.ToStringWithDisplayNames());
+
+            RecalcEngine engine = new RecalcEngine(pfxConfig);
+
+            string analysisInput = @"{ conversationItem: { modality: ""text"", language: ""en-us"", text: ""Book me a flight for Munich"" } }";
+            string parameters = @"{ deploymentName: ""deploy1"", projectName: ""project1"", verbose: true, stringIndexType: ""TextElement_V8"" }";
+            FormulaValue analysisInputParam = engine.Eval(analysisInput);
+            FormulaValue parametersParam = engine.Eval(parameters);
+
+            using PowerPlatformConnectorClient client = new PowerPlatformConnectorClient("https://lucgen-apim.azure-api.net", "aaa373836ffd4915bf6eefd63d164adc" /* environment Id */, "16e7c181-2f8d-4cae-b1f0-179c5c4e4d8b" /* connectionId */, () => "No Auth", httpClient)
+            {
+                SessionId = "a41bd03b-6c3c-4509-a844-e8c51b61f878",
+            };
+
+            FormulaValue httpResult = await function.InvokeAync(client, new FormulaValue[] { analysisInputParam, parametersParam }, CancellationToken.None);
+
+            Assert.NotNull(httpResult);
+            Assert.True(httpResult is RecordValue);
+
+            RecordValue httpResultValue = (RecordValue)httpResult;
+            RecordValue resultValue = (RecordValue)httpResultValue.GetField("result");
+            RecordValue predictionValue = (RecordValue)resultValue.GetField("prediction");
+            TableValue entitiesValue = (TableValue)predictionValue.GetField("entities");
+            IEnumerable<DValue<RecordValue>> rows = entitiesValue.Rows;
+
+            // Get second entity
+            RecordValue entityValue2 = rows.Skip(1).First().Value;
+            FormulaValue resolutionsValue = entityValue2.GetField("resolutions");
+
+            Assert.True(resolutionsValue is UntypedObjectValue);          
+            UOValueVisitor visitor1 = new UOValueVisitor();
+            resolutionsValue.Visit(visitor1);
+
+            Assert.Equal("[\"{\\\"resolutionKind\\\":\\\"DateTimeResolution\\\",\\\"value\\\":\\\"2023-02-25\\\"}\"]", visitor1.Result);
+
+            FormulaValue topResolutionValue1 = entityValue2.GetField("topResolution");
+            Assert.True(topResolutionValue1 is UntypedObjectValue);
+
+            UOValueVisitor visitor2 = new UOValueVisitor();
+            topResolutionValue1.Visit(visitor2);
+
+            Assert.Equal("{\"resolutionKind\":\"DateTimeResolution\",\"value\":\"2023-02-25\"}", visitor2.Result);
+        }
+
+        internal class UOValueVisitor : IValueVisitor
+        {            
+            public string Result { get; private set; }
+
+            public void Visit(BlankValue value)
+            {
+                Result = string.Empty;
+            }
+
+            public void Visit(NumberValue value)
+            {
+                Result = value.Value.ToString();
+            }
+
+            public void Visit(BooleanValue value)
+            {
+                Result = value.Value.ToString();
+            }
+
+            public void Visit(StringValue value)
+            {
+                Result = value.Value;
+            }
+
+            public void Visit(TimeValue value)
+            {
+                Result = value.Value.ToString();
+            }
+
+            public void Visit(DateValue value)
+            {
+                Result = value.GetConvertedValue(null).ToString();
+            }
+
+            public void Visit(DateTimeValue value)
+            {
+                Result = value.GetConvertedValue(null).ToString();
+            }
+
+            public void Visit(ErrorValue value)
+            {
+                Result = string.Empty;
+            }
+
+            public void Visit(RecordValue value)
+            {
+                var fieldBuilder = new Dictionary<string, string>();
+
+                foreach (var item in value.Fields)
+                {
+                    item.Value.Visit(this);
+                    fieldBuilder.Add(item.Name, Result!);
+                }
+
+                Result = JsonConvert.SerializeObject(fieldBuilder);
+            }
+
+            public void Visit(TableValue value)
+            {
+                var rows = new List<string>();
+
+                foreach (var row in value.Rows)
+                {
+                    row.ToFormulaValue().Visit(this);
+                    rows.Add(Result);
+                }
+
+                Result = JsonConvert.SerializeObject(rows);
+            }
+
+            public void Visit(UntypedObjectValue value)
+            {
+                Visit(value.Impl);
+            }
+
+            public void Visit(OptionSetValue value)
+            {
+                Result = value.DisplayName;
+            }
+
+            public void Visit(ColorValue value)
+            {
+                Result = string.Empty;
+            }
+
+            public void Visit(GuidValue value)
+            {
+                Result = value.Value.ToString();
+            }
+
+            private void Visit(IUntypedObject untypedObject)
+            {
+                var type = untypedObject.Type;
+
+                if (type is StringType)
+                {
+                    Result = untypedObject.GetString();
+                }
+                else if (type is NumberType)
+                {
+                    Result = untypedObject.GetDouble().ToString();
+                }
+                else if (type is BooleanType)
+                {
+                    Result = untypedObject.GetBoolean().ToString();
+                }
+                else if (type is ExternalType externalType)
+                {
+                    if (externalType.Kind == ExternalTypeKind.Array)
+                    {
+                        var rows = new List<string>();                        
+
+                        for (var i = 0; i < untypedObject.GetArrayLength(); i++)
+                        {
+                            var row = untypedObject[i];
+                            Visit(row);
+                            rows.Add(Result);
+                        }
+
+                        Result = JsonConvert.SerializeObject(rows);
+                    }
+                    else if (externalType.Kind == ExternalTypeKind.Object)
+                    {
+                        var fieldBuilder = new Dictionary<string, string>();
+
+                        foreach (var key in new[] { "extraInformationKind", "numberKind", "resolutionKind", "value" })
+                        {
+                            if (untypedObject.TryGetProperty(key, out var result))
+                            {
+                                Visit(result);
+                                fieldBuilder.Add(key, Result!);
+                            }
+                        }
+
+                        Result = JsonConvert.SerializeObject(fieldBuilder);
+                    }
+                    else
+                    {
+                        Result = string.Empty;
+                    }
+                }
+                else
+                {
+                    Result = string.Empty;
+                }
+            }
         }
 
         [Fact]
