@@ -3,10 +3,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
+using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Interpreter;
+using Microsoft.PowerFx.Interpreter.Exceptions;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Functions
@@ -268,7 +270,29 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: OptionSetValueToString)
-            }
+            },
+            {
+                UnaryOpKind.BooleanOptionSetToBoolean,
+                StandardErrorHandling<OptionSetValue>(
+                    functionName: null, // internal function, no user-facing name
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<OptionSetValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: BooleanOptionSetToBoolean)
+            },
+            {
+                UnaryOpKind.BlankToEmptyString,
+                StandardErrorHandling<FormulaValue>(
+                    functionName: null, // internal function, no user-facing name
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<FormulaValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: BlankToEmptyString)
+            },
         };
         #endregion
 
@@ -309,56 +333,99 @@ namespace Microsoft.PowerFx.Functions
 
         public static NumberValue BooleanToNumber(IRContext irContext, BooleanValue[] args)
         {
-            var b = args[0].Value;
-            return new NumberValue(irContext, b ? 1.0 : 0.0);
+            return BooleanToNumber(irContext, args[0]);
+        }
+
+        public static NumberValue BooleanToNumber(IRContext irContext, BooleanValue value)
+        {
+            return new NumberValue(irContext, value.Value ? 1.0 : 0.0);
         }
 
         public static FormulaValue TextToBoolean(IRContext irContext, StringValue[] args)
         {
-            var val = args[0].Value;
-
-            if (string.IsNullOrEmpty(val))
+            if (string.IsNullOrEmpty(args[0].Value))
             {
                 return new BlankValue(irContext);
             }
 
-            var lower = val.ToLowerInvariant();
+            bool isBoolean = TryTextToBoolean(irContext, args[0], out BooleanValue result);
+
+            return isBoolean ? result : CommonErrors.InvalidBooleanFormatError(irContext);
+        }
+
+        public static bool TryTextToBoolean(IRContext irContext, StringValue value, out BooleanValue result)
+        {
+            result = null;
+            var lower = value.Value.ToLowerInvariant();
+
             if (lower == "true")
             {
-                return new BooleanValue(irContext, true);
+                result = new BooleanValue(irContext, true);
             }
             else if (lower == "false")
             {
-                return new BooleanValue(irContext, false);
+                result = new BooleanValue(irContext, false);
             }
 
-            return CommonErrors.InvalidBooleanFormatError(irContext);
+            return result != null;
         }
 
-        public static FormulaValue DateToNumber(IRContext irContext, FormulaValue[] args)
+        public static bool TryGetBoolean(IRContext irContext, FormulaValue value, out BooleanValue result)
         {
-            DateTime arg0;
-            switch (args[0])
+            result = null;
+            switch (value)
+            {
+                case StringValue sv:
+                    if (string.IsNullOrEmpty(sv.Value))
+                    {
+                        return false;
+                    }
+
+                    return TryTextToBoolean(irContext, sv, out result);
+                case NumberValue num:
+                    result = NumberToBoolean(irContext, new NumberValue[] { num });
+                    break;
+                case BooleanValue boolVal:
+                    result = boolVal;
+                    break;
+            }
+
+            return result != null;
+        }
+
+        public static DateTime GetNormalizedDateTimeLibrary(FormulaValue value, TimeZoneInfo timeZoneInfo)
+        {
+            switch (value)
             {
                 case DateTimeValue dtv:
-                    arg0 = dtv.Value;
-                    break;
+                    return dtv.GetConvertedValue(timeZoneInfo);
                 case DateValue dv:
-                    arg0 = dv.Value;
-                    break;
+                    return dv.GetConvertedValue(timeZoneInfo);
                 default:
-                    return CommonErrors.RuntimeTypeMismatch(irContext);
+                    throw CommonExceptions.RuntimeMisMatch;
             }
-
-            var diff = arg0.Subtract(_epoch).TotalDays;
-            return new NumberValue(irContext, diff);
         }
 
-        public static NumberValue DateTimeToNumber(IRContext irContext, DateTimeValue[] args)
+        public static FormulaValue DateToNumber(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            var d = args[0].Value;
-            var diff = d.Subtract(_epoch).TotalDays;
-            return new NumberValue(irContext, diff);
+            return DateToNumber(CreateFormattingInfo(runner), irContext, args[0]);
+        }
+
+        public static NumberValue DateToNumber(FormattingInfo formatInfo, IRContext irContext, FormulaValue value)
+        {
+            DateTime dateTime = GetNormalizedDateTimeLibrary(value, formatInfo.TimeZoneInfo);
+            return new NumberValue(irContext, dateTime.Subtract(_epoch).TotalDays);
+        }
+
+        public static NumberValue DateTimeToNumber(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, DateTimeValue[] args)
+        {
+            return DateTimeToNumber(CreateFormattingInfo(runner), irContext, args[0]);
+        }
+
+        public static NumberValue DateTimeToNumber(FormattingInfo formatInfo, IRContext irContext, DateTimeValue value)
+        {
+            var d = value.GetConvertedValue(formatInfo.TimeZoneInfo);
+            return new NumberValue(irContext, d.Subtract(_epoch).TotalDays);
         }
 
         public static DateValue NumberToDate(IRContext irContext, NumberValue[] args)
@@ -370,33 +437,71 @@ namespace Microsoft.PowerFx.Functions
 
         public static DateTimeValue NumberToDateTime(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, NumberValue[] args)
         {
-            var n = args[0].Value;
-            var date = _epoch.AddDays(n);
-
-            date = MakeValidDateTime(runner, date, runner.GetService<TimeZoneInfo>() ?? LocalTimeZone);            
-
-            return new DateTimeValue(irContext, date);
+            return NumberToDateTime(CreateFormattingInfo(runner), irContext, args[0]);
         }
 
-        public static FormulaValue DateToDateTime(IRContext irContext, FormulaValue[] args)
+        public static DateTimeValue NumberToDateTime(FormattingInfo formatInfo, IRContext irContext, NumberValue value)
         {
+            try
+            {
+                var n = value.Value;
+                var date = _epoch.AddDays(n);
+
+                date = MakeValidDateTime(formatInfo.TimeZoneInfo, date);
+
+                return new DateTimeValue(irContext, date);
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                (var shortMessage, _) = ErrorUtils.GetLocalizedErrorContent(TexlStrings.ErrTextInvalidArgDateTime, formatInfo.CultureInfo, out _);
+
+                throw new CustomFunctionErrorException(shortMessage, ErrorKind.InvalidArgument);
+            }          
+        }
+
+        public static FormulaValue DateToDateTime(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        {
+            var timeZoneInfo = runner.TimeZoneInfo;
             switch (args[0])
             {
                 case DateTimeValue dtv:
                     return dtv;
                 case DateValue dv:
-                    return new DateTimeValue(irContext, dv.Value);
+                    return new DateTimeValue(irContext, dv.GetConvertedValue(timeZoneInfo));
                 default:
                     return CommonErrors.RuntimeTypeMismatch(irContext);
             }
         }
 
-        public static FormulaValue DateTimeToDate(IRContext irContext, FormulaValue[] args)
+        public static bool TryGetDateTime(FormattingInfo formatInfo, IRContext irContext, FormulaValue value, out DateTimeValue result)
         {
+            result = null;
+
+            switch (value)
+            {
+                case StringValue st:
+                    return TryDateTimeParse(formatInfo, irContext, st, out result);
+                case NumberValue num:
+                    result = NumberToDateTime(formatInfo, irContext, num);
+                    break;
+                case DateValue dv:
+                    result = new DateTimeValue(irContext, dv.GetConvertedValue(formatInfo.TimeZoneInfo));
+                    break;
+                case DateTimeValue dtv:
+                    result = dtv;
+                    break;
+            }
+
+            return result != null;
+        }
+
+        public static FormulaValue DateTimeToDate(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        {
+            var timeZoneInfo = runner.TimeZoneInfo;
             switch (args[0])
             {
                 case DateTimeValue dtv:
-                    var startOfDate = dtv.Value.Date;
+                    var startOfDate = dtv.GetConvertedValue(timeZoneInfo).Date;
                     return new DateValue(irContext, startOfDate);
                 case DateValue dv:
                     return dv;
@@ -418,20 +523,10 @@ namespace Microsoft.PowerFx.Functions
             return new TimeValue(irContext, days);
         }
 
-        public static FormulaValue DateTimeToTime(IRContext irContext, FormulaValue[] args)
+        public static FormulaValue DateTimeToTime(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            DateTime arg0;
-            switch (args[0])
-            {
-                case DateTimeValue dtv:
-                    arg0 = dtv.Value;
-                    break;
-                case DateValue dv:
-                    arg0 = dv.Value;
-                    break;
-                default:
-                    return CommonErrors.RuntimeTypeMismatch(irContext);
-            }
+            TimeZoneInfo timeZoneInfo = runner.TimeZoneInfo;
+            DateTime arg0 = runner.GetNormalizedDateTime(args[0]);
 
             var time = arg0.TimeOfDay;
             return new TimeValue(irContext, time);
@@ -452,10 +547,15 @@ namespace Microsoft.PowerFx.Functions
 
         public static DateTimeValue TimeToDateTime(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, TimeValue[] args)
         {
-            var t = args[0].Value;
+            return TimeToDateTime(CreateFormattingInfo(runner), irContext, args[0]);
+        }
+
+        public static DateTimeValue TimeToDateTime(FormattingInfo formatInfo, IRContext irContext, TimeValue value)
+        {
+            var t = value.Value;
             var date = _epoch.Add(t);
 
-            date = MakeValidDateTime(runner, date, runner.GetService<TimeZoneInfo>() ?? LocalTimeZone);
+            date = MakeValidDateTime(formatInfo.TimeZoneInfo, date);
 
             return new DateTimeValue(irContext, date);
         }
@@ -465,6 +565,35 @@ namespace Microsoft.PowerFx.Functions
             var optionSet = args[0];
             var displayName = optionSet.DisplayName;
             return new StringValue(irContext, displayName);
+        }
+
+        public static FormulaValue BooleanOptionSetToBoolean(IRContext irContext, OptionSetValue[] args)
+        {
+            var arg0 = args[0];
+
+            if (arg0.Option == "1")
+            {
+                return FormulaValue.New(true);
+            }
+            else if (arg0.Option == "0")
+            {
+                return FormulaValue.New(false);
+            }
+            else
+            {
+                var errorMessage = ErrorUtils.FormatMessage(StringResources.Get(TexlStrings.BooleanOptionSetOptionNotSupported), null, arg0.Option);
+                return CommonErrors.CustomError(IRContext.NotInSource(FormulaType.Boolean), errorMessage);
+            }
+        }
+
+        public static FormulaValue BlankToEmptyString(IRContext irContext, FormulaValue[] args)
+        {
+            if (args[0] is BlankValue)
+            {
+                return new StringValue(irContext, string.Empty);
+            }
+
+            return args[0];
         }
         #endregion
     }

@@ -22,6 +22,11 @@ Error({Kind:ErrorKind.InvalidArgument})
 >> RGBA(255, 1.5, 255, 1.0)
 RGBA(255,1,255,1)
 
+// Decimal values are truncated
+>> RGBA(255.5, 1.5, 255.9, 1.0)
+RGBA(255,1,255,1)
+
+// First three arguments need to be between 0 and 255; last argument must be between 0 and 1
 >> RGBA(255, 256, 255, 1.0)
 Error({Kind:ErrorKind.InvalidArgument})
 

@@ -17,10 +17,10 @@ namespace Microsoft.PowerFx.Functions
     internal static partial class Library
     {
         // ColorTable is ARGB
-        private static readonly Regex RegexColorTable = new (@"^#(?<a>[0-9a-fA-F]{2})(?<r>[0-9a-fA-F]{2})(?<g>[0-9a-fA-F]{2})(?<b>[0-9a-fA-F]{2})?$", RegexOptions.Compiled);
+        private static readonly Regex RegexColorTable = new Regex(@"^#(?<a>[0-9a-fA-F]{2})(?<r>[0-9a-fA-F]{2})(?<g>[0-9a-fA-F]{2})(?<b>[0-9a-fA-F]{2})?$", LibraryFlags.RegExFlags);
 
         // CSS format is RGBA
-        private static readonly Regex RegexCSS = new (@"^#(?<r>[0-9a-fA-F]{2})(?<g>[0-9a-fA-F]{2})(?<b>[0-9a-fA-F]{2})(?<a>[0-9a-fA-F]{2})?$", RegexOptions.Compiled);
+        private static readonly Regex RegexCSS = new Regex(@"^#(?<r>[0-9a-fA-F]{2})(?<g>[0-9a-fA-F]{2})(?<b>[0-9a-fA-F]{2})(?<a>[0-9a-fA-F]{2})?$", LibraryFlags.RegExFlags);
 
         public static FormulaValue ColorValue(IRContext irContext, StringValue[] args)
         {
@@ -62,42 +62,32 @@ namespace Microsoft.PowerFx.Functions
 
         public static FormulaValue RGBA(IRContext irContext, NumberValue[] args)
         {
+            var red = (int)args[0].Value;
+            var green = (int)args[1].Value;
+            var blue = (int)args[2].Value;
+            var alpha = args[3].Value;
+
             // Ensure rgb numbers are in range (0-255)
-            if (args[0].Value < 0.0d || args[0].Value > 255.0d
-                || args[1].Value < 0.0d || args[1].Value > 255.0d
-                || args[2].Value < 0.0d || args[2].Value > 255.0d)
+            if (red < 0 || red > 255
+                || green < 0 || green > 255
+                || blue < 0 || blue > 255)
             {
                 return CommonErrors.ArgumentOutOfRange(irContext);
             }
-
-            // Truncate (strip decimals)
-            var r = (int)args[0].Value;
-            var g = (int)args[1].Value;
-            var b = (int)args[2].Value;
 
             // Ensure alpha is between 0 and 1
-            if (args[3].Value < 0.0d || args[3].Value > 1.0d)
+            if (alpha < 0.0d || alpha > 1.0d)
             {
                 return CommonErrors.ArgumentOutOfRange(irContext);
             }
 
-            var a = System.Convert.ToInt32(args[3].Value * 255.0d);
+            var alpha255 = System.Convert.ToInt32(alpha * 255.0d);
 
-            return new ColorValue(irContext, Color.FromArgb(a, r, g, b));
+            return new ColorValue(irContext, Color.FromArgb(alpha255, red, green, blue));
         }
 
         public static FormulaValue ColorFade(IRContext irContext, FormulaValue[] args)
         {
-            if (args[0] is BlankValue)
-            {
-                args[0] = FormulaValue.New(Color.FromArgb(0, 0, 0, 0));
-            }
-
-            if (args[1] is BlankValue)
-            {
-                args[1] = FormulaValue.New(0);
-            }
-
             var color = (ColorValue)args[0];
             var fadeDelta = ((NumberValue)args[1]).Value;
 

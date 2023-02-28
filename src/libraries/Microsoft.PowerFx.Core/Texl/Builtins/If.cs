@@ -28,8 +28,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool IsSelfContained => true;
 
-        public override bool SupportsParamCoercion => true;
-
         public IfFunction()
             : base("If", TexlStrings.AboutIf, FunctionCategories.Logical, DType.Unknown, 0, 2, int.MaxValue)
         {
@@ -102,7 +100,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
 
                 var typeSuper = DType.Supertype(type, typeArg);
-
                 if (!typeSuper.IsError)
                 {
                     type = typeSuper;
@@ -159,9 +156,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         // When IsArgTypeInconsequential returns true, the runtime result of If may not match the binder's expectation.
         // So use this helper to skip asserts comparing runtime and bind time types.
+        // Also other function, that can wrap If statement inside can face the same issue.
         internal static bool CanCheckIfReturn(TexlFunction func)
         {
-            return func is not IfFunction;
+            return func is not IfFunction && 
+                func is not WithFunction;
         }
 
         private bool IsArgTypeInconsequential(TexlNode arg)

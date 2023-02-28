@@ -1,0 +1,11 @@
+﻿>> Len(["abc", "def"])
+Table({Result:3},{Result:3})
+
+>> Len([123, -2344566, 0567])
+Table({Result:3},{Result:8},{Result:3})
+
+>> Len(Len(Table({b: "doubledigitlength"}, {b:"length"}, {b: ""})))
+Table({Result:2},{Result:1},{Result:1})
+
+>> ForAll(Len(["abc", Error("lorem ipsum"), Sqrt(-1)+"", "hello"]), IfError(Result, -FirstError.Kind))
+Table({Value:3},{Value:-1000},{Value:-24},{Value:5})

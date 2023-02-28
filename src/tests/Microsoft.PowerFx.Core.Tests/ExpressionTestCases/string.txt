@@ -131,6 +131,42 @@ false
 >> "A" exactin "bar"
 false
 
+>> "f" in ""
+false
+
+>> "f" exactin ""
+false
+
+>> "" in ""
+true
+
+>> "" exactin ""
+true
+
+>> "" in "f"
+true
+
+>> "" in "true"
+true
+
+>> "f" in If(1<0,"blank")
+false
+
+>> "f" exactin If(1<0,"blank")
+false
+
+>> If(1<0,"blank") in If(1<0,"blank")
+true
+
+>> If(1<0,"blank") exactin If(1<0,"blank")
+true
+
+>> If(1<0,"blank") in "f"
+true
+
+>> If(1<0,"blank") in "true"
+true
+
 >> StartsWith("foo", "f")
 true
 

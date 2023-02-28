@@ -71,7 +71,7 @@ namespace Microsoft.PowerFx.Performance.Tests
             {
                 TestOptionSetDisplayNameProvider nameProvider = new TestOptionSetDisplayNameProvider(Enumerable.Range(0, 10).Select(j => new TestOption($"Logical{j}", $"Display{j}")).ToImmutableArray());
                 powerFxConfig.AddOptionSet(new OptionSet($"OptionSet{i:0000}", nameProvider));
-            }            
+            }
 
             for (int i = 0; i < 1000; i++)
             {
@@ -91,10 +91,10 @@ namespace Microsoft.PowerFx.Performance.Tests
             {
                 parseResult = _engine.Parse(expression, _parserOptions);
 
-                if (!parseResult.IsSuccess)
-                {
-                    throw new Exception($"{expression}\r\n{string.Join("\r\n", parseResult.Errors.Select(ee => $"{ee.Message}"))}");
-                }
+            if (!parseResult.IsSuccess)
+            {
+                throw new Exception($"{expression}\r\n{string.Join("\r\n", parseResult.Errors.Select(ee => $"{ee.Message}"))}");
+            }
             }
 
             return parseResult;
@@ -110,10 +110,10 @@ namespace Microsoft.PowerFx.Performance.Tests
             {
                 checkResult = _engine.Check(expression, _parserOptions);
 
-                if (!checkResult.IsSuccess)
-                {
-                    throw new Exception($"{expression}\r\n{string.Join("\r\n", checkResult.Errors.Select(ee => $"{ee.Message}"))}");
-                }
+            if (!checkResult.IsSuccess)
+            {
+                throw new Exception($"{expression}\r\n{string.Join("\r\n", checkResult.Errors.Select(ee => $"{ee.Message}"))}");
+            }
             }
 
             return checkResult;

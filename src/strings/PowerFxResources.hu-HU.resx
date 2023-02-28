@@ -546,7 +546,7 @@
     
   </data>
   <data name="BooleanBTArg1" xml:space="preserve">
-    <value>bemenet</value>
+    <value>bevitel</value>
     
   </data>
   <data name="AboutBooleanBT_input" xml:space="preserve">
@@ -1837,6 +1837,10 @@
     <value>A számérték túl nagy.</value>
     
   </data>
+  <data name="ErrTextTooLarge" xml:space="preserve">
+    <value>A kifejezés nem lehet hosszabb {0} karakternél. A kifejezés {1} karakter.</value>
+    
+  </data>
   <data name="ErrTextFormatTooLarge" xml:space="preserve">
     <value>A formátum sztringmérete nem lehet hosszabb {0} karakternél.</value>
     
@@ -1863,6 +1867,10 @@
   </data>
   <data name="ErrTypeError_Arg_Expected_Found" xml:space="preserve">
     <value>A(z) {0} argumentum típusa nem felel meg az elvárt {1} típusnak. A talált típus {2}.</value>
+    
+  </data>
+  <data name="ErrTypeError_WrongType" xml:space="preserve">
+    <value>A kifejezés típusa nem felel meg az elvárt {0} típusnak. A talált típus {1}.</value>
     
   </data>
   <data name="ErrTypeErrorRecordIncompatibleWithSource" xml:space="preserve">
@@ -2643,10 +2651,6 @@
   <data name="AboutIsNumeric_value" xml:space="preserve">
     <value>A vizsgálandó érték.</value>
   </data>
-  <data name="Post" xml:space="preserve">
-    <value>Közzététel</value>
-    
-  </data>
   <data name="AboutDateTimeValue" xml:space="preserve">
     <value>Átalakítja a szöveges formátumú dátumot és időpontot azzá a számmá, amely a dátumot jelöli a Power Apps dátum- és időpontkódjában.</value>
     
@@ -3064,7 +3068,7 @@
     
   </data>
   <data name="Icon_Train_DisplayName" xml:space="preserve">
-    <value>Vonat</value>
+    <value>Betanítás</value>
     
   </data>
   <data name="Icon_Tray_DisplayName" xml:space="preserve">
@@ -4111,10 +4115,6 @@
     <value>A rekordok vagy táblák kényszerítése nem támogatott a képletoszlopokban.</value>
     
   </data>
-  <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
-    <value>A képletek nem lehetnek hosszabbak 1000 karakternél.</value>
-    
-  </data>
   <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
     <value>Az egyoszlopos táblák nem támogatottak a képletoszlopokban.</value>
     
@@ -4225,10 +4225,10 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
-    <value>Ez a hibaüzenet akkor jelenik meg, ha egy képlet érvénytelen szintaxissal hivatkozik az összetevő viselkedési tulajdonságaira (például a Component.OnCustomChange() függvényhívás helyett a következőt használja: Component.OnCustomChange)</value>
+    <value>Ez a hibaüzenet akkor jelenik meg, ha egy képlet érvénytelen szintaxissal hivatkozik az összetevő függvénytulajdonságaira (például a Component.CustomFunction() függvényhívás helyett a következőt használja: Component.CustomFunction())</value>
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
-    <value>A helyes szintaxis használatával hivatkozzon az összetevő viselkedési tulajdonságára. Példa: Component.OnCustomChange()</value>
+    <value>A helyes szintaxis használatával hivatkozzon az összetevő függvénytulajdonságára. Példa: Component.CustomFunction()</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_Link_1" xml:space="preserve">
@@ -4730,11 +4730,15 @@
     
   </data>
   <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
-    <value>Nem használhatók típus nélküli objektumok a rekord hatókörét támogató függvények első argumentumaként.</value>
+    <value>Nem használhatók be nem írt objektumok a rekord hatókörét támogató függvények első argumentumaként.</value>
     
   </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>A megnevezett képletnek pontosvesszővel kell végződnie.</value>
+    
+  </data>
+  <data name="ErrNamedFormula_MissingValue" xml:space="preserve">
+    <value>A megnevezett képletnek kifejezésnek kell lennie.</value>
     
   </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
@@ -4828,6 +4832,10 @@
   </data>
   <data name="ErrInvalidFunction" xml:space="preserve">
     <value>Ez a függvény nem egyértelmű, azonos argumentumhoz tartalmaz lambda kifejezéseket és oszlopazonosítókat.</value>
+    
+  </data>
+  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
+    <value>A(z) {0} BooleanOptionSet lehetőség nem támogatott.</value>
     
   </data>
 </root>

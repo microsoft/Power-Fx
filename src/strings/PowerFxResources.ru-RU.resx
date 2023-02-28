@@ -1837,6 +1837,10 @@
     <value>Числовое значение слишком велико.</value>
     
   </data>
+  <data name="ErrTextTooLarge" xml:space="preserve">
+    <value>Выражение не может содержать более {0} символов. Количество символов в выражении: {1}.</value>
+    
+  </data>
   <data name="ErrTextFormatTooLarge" xml:space="preserve">
     <value>Размер строки формата не может быть более {0} символов.</value>
     
@@ -1863,6 +1867,10 @@
   </data>
   <data name="ErrTypeError_Arg_Expected_Found" xml:space="preserve">
     <value>Тип этого аргумента "{0}" не соответствует ожидаемому типу "{1}". Обнаруженный тип: "{2}".</value>
+    
+  </data>
+  <data name="ErrTypeError_WrongType" xml:space="preserve">
+    <value>Тип этого выражения "{0}" не соответствует ожидаемому типу "{0}". Обнаруженный тип: "{1}".</value>
     
   </data>
   <data name="ErrTypeErrorRecordIncompatibleWithSource" xml:space="preserve">
@@ -2643,10 +2651,6 @@
   <data name="AboutIsNumeric_value" xml:space="preserve">
     <value>Значение для проверки.</value>
   </data>
-  <data name="Post" xml:space="preserve">
-    <value>Опубликовать</value>
-    
-  </data>
   <data name="AboutDateTimeValue" xml:space="preserve">
     <value>Преобразует дату и время в виде текста в число, представляющее дату в формате кода даты и времени Power Apps.</value>
     
@@ -3064,7 +3068,7 @@
     
   </data>
   <data name="Icon_Train_DisplayName" xml:space="preserve">
-    <value>Поезд</value>
+    <value>Обучить</value>
     
   </data>
   <data name="Icon_Tray_DisplayName" xml:space="preserve">
@@ -4111,10 +4115,6 @@
     <value>Приведение типов записей или таблиц не поддерживается в столбцах формул.</value>
     
   </data>
-  <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
-    <value>Длина формулы не может превышать 1000 символов.</value>
-    
-  </data>
   <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
     <value>Таблицы из одного столбца не поддерживаются в столбцах формул.</value>
     
@@ -4225,10 +4225,10 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
-    <value>Эта ошибка возникает, когда формула ссылается на свойства поведения компонента с недопустимым синтаксисом (например, Component.OnCustomChange вместо Component.OnCustomChange()).</value>
+    <value>Эта ошибка возникает, когда формула ссылается на свойства функции компонента с недопустимым синтаксисом (например, Component.CustomFunction вместо Component.CustomFunction())</value>
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
-    <value>Используйте правильный синтаксис для ссылки на свойство поведения компонента. Например, Component.OnCustomChange().</value>
+    <value>Используйте правильный синтаксис для ссылки на свойство функции компонента. Например, Component.CustomFunction()</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_Link_1" xml:space="preserve">
@@ -4737,6 +4737,10 @@
     <value>Именованная формула должна заканчиваться точкой с запятой.</value>
     
   </data>
+  <data name="ErrNamedFormula_MissingValue" xml:space="preserve">
+    <value>Именованная формула должна быть выражением.</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>Именованная формула "{0}" уже существует.</value>
   </data>
@@ -4819,7 +4823,7 @@
     
   </data>
   <data name="WarnDeferredType" xml:space="preserve">
-    <value>Предупреждение. Указан тип Deferred</value>
+    <value>Предупреждение. Указан тип Deferred.</value>
     
   </data>
   <data name="ErrExpectedIdentifierArg_Name" xml:space="preserve">
@@ -4828,6 +4832,10 @@
   </data>
   <data name="ErrInvalidFunction" xml:space="preserve">
     <value>Эта функция является неоднозначной, она содержит лямбда-выражения и идентификаторы столбцов для одного аргумента.</value>
+    
+  </data>
+  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
+    <value>Параметр BooleanOptionSet {0} не поддерживается.</value>
     
   </data>
 </root>

@@ -11,9 +11,17 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // RGBA(red, green, blue, alpha)
     internal sealed class RGBAFunction : BuiltinFunction
     {
-        public override bool IsTrackedInTelemetry => false;
+        public override ArgPreprocessor GetArgPreprocessor(int index)
+        {
+            if (index >= 0 && index <= 2)
+            {
+                return ArgPreprocessor.ReplaceBlankWithZeroAndTruncate;
+            }
 
-        public override bool SupportsParamCoercion => true;
+            return base.GetGenericArgPreprocessor(index);
+        }
+
+        public override bool IsTrackedInTelemetry => false;
 
         public override bool SupportsInlining => true;
 

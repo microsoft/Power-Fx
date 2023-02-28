@@ -1,0 +1,23 @@
+﻿// https://www.timeanddate.com/time/change/australia/lord-howe-island
+// This is a special TZ where UTC offset has minutes and DST diff is not one hour, but 30 minutes.
+#SETUP: TimeZoneInfo("Lord Howe Standard Time")
+
+// 2023, Sun, 2 Apr, 02:00	LHDT → LHST	-0:30 hours (DST end)
+>> DateDiff(DateTime(2023,4,2,0,0,0), DateTime(2023,4,2,2,30,0), TimeUnit.Hours)
+3
+
+>> DateDiff(DateTime(2023,4,1,0,0,0), DateTime(2023,4,1,2,30,0), TimeUnit.Hours)
+2
+
+// 2023, Sun, 2 Apr, 02:00	LHDT → LHST	-0:30 hours (DST end)
+>> DateDiff(DateTime(2023,4,2,0,0,0), DateTime(2023,4,2,2,30,0), TimeUnit.Minutes)
+180
+
+>> DateDiff(DateTime(2023,4,1,0,0,0), DateTime(2023,4,1,2,30,0), TimeUnit.Minutes)
+150
+
+>> DateDiff(DateTime(2006,12,31,23,59,59,999), DateTime(2007,1,1,0,0,0), TimeUnit.Hours)
+1
+
+>> DateDiff(DateTime(2006,6,30,23,59,59,999), DateTime(2006,7,1,0,0,0), TimeUnit.Hours)
+1

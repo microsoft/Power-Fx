@@ -17,9 +17,17 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     //  Right(arg:s, count:n)
     internal sealed class LeftRightScalarFunction : BuiltinFunction
     {
-        public override bool IsSelfContained => true;
+        public override ArgPreprocessor GetArgPreprocessor(int index)
+        {
+            if (index == 1)
+            {
+                return ArgPreprocessor.ReplaceBlankWithZeroAndTruncate;
+            }
 
-        public override bool SupportsParamCoercion => true;
+            return ArgPreprocessor.None;
+        }
+
+        public override bool IsSelfContained => true;
 
         public LeftRightScalarFunction(bool isLeft)
             : base(isLeft ? "Left" : "Right", isLeft ? TexlStrings.AboutLeft : TexlStrings.AboutRight, FunctionCategories.Text, DType.String, 0, 2, 2, DType.String, DType.Number)
@@ -38,8 +46,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class LeftRightTableScalarFunction : BuiltinFunction
     {
         public override bool IsSelfContained => true;
-
-        public override bool SupportsParamCoercion => true;
 
         public LeftRightTableScalarFunction(bool isLeft)
             : base(isLeft ? "Left" : "Right", isLeft ? TexlStrings.AboutLeftT : TexlStrings.AboutRightT, FunctionCategories.Table, DType.EmptyTable, 0, 2, 2, DType.EmptyTable, DType.Number)
@@ -88,8 +94,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class LeftRightTableTableFunction : BuiltinFunction
     {
         public override bool IsSelfContained => true;
-
-        public override bool SupportsParamCoercion => true;
 
         public LeftRightTableTableFunction(bool isLeft)
             : base(isLeft ? "Left" : "Right", isLeft ? TexlStrings.AboutLeftT : TexlStrings.AboutRightT, FunctionCategories.Table, DType.EmptyTable, 0, 2, 2, DType.EmptyTable, DType.EmptyTable)
@@ -141,8 +145,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class LeftRightScalarTableFunction : BuiltinFunction
     {
         public override bool IsSelfContained => true;
-
-        public override bool SupportsParamCoercion => true;
 
         public LeftRightScalarTableFunction(bool isLeft)
             : base(isLeft ? "Left" : "Right", isLeft ? TexlStrings.AboutLeftT : TexlStrings.AboutRightT, FunctionCategories.Table, DType.EmptyTable, 0, 2, 2, DType.String, DType.EmptyTable)

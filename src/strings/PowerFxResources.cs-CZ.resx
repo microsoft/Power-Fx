@@ -1837,6 +1837,10 @@
     <value>Číselná hodnota je moc velká.</value>
     
   </data>
+  <data name="ErrTextTooLarge" xml:space="preserve">
+    <value>Výraz nesmí být delší než {0} znaků. Výraz má {1} znaků.</value>
+    
+  </data>
   <data name="ErrTextFormatTooLarge" xml:space="preserve">
     <value>Velikost řetězce formátu nesmí být větší než {0} znaků.</value>
     
@@ -1863,6 +1867,10 @@
   </data>
   <data name="ErrTypeError_Arg_Expected_Found" xml:space="preserve">
     <value>Typ tohoto argumentu ({0}) neodpovídá očekávanému typu {1}. Našel se typ {2}.</value>
+    
+  </data>
+  <data name="ErrTypeError_WrongType" xml:space="preserve">
+    <value>Typ tohoto výrazu neodpovídá očekávanému typu '{0}'. Nalezený typ '{1}'.</value>
     
   </data>
   <data name="ErrTypeErrorRecordIncompatibleWithSource" xml:space="preserve">
@@ -2643,10 +2651,6 @@
   <data name="AboutIsNumeric_value" xml:space="preserve">
     <value>Hodnota, která se má testovat</value>
   </data>
-  <data name="Post" xml:space="preserve">
-    <value>Publikovat</value>
-    
-  </data>
   <data name="AboutDateTimeValue" xml:space="preserve">
     <value>Převede datum a čas ve formě textu na číslo, které představuje datum v kódu data a času Power Apps.</value>
     
@@ -3064,7 +3068,7 @@
     
   </data>
   <data name="Icon_Train_DisplayName" xml:space="preserve">
-    <value>Vlak</value>
+    <value>Trénovat</value>
     
   </data>
   <data name="Icon_Tray_DisplayName" xml:space="preserve">
@@ -4111,10 +4115,6 @@
     <value>Vynucení záznamů nebo tabulek není ve sloupcích vzorců podporováno.</value>
     
   </data>
-  <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
-    <value>Vzorce nesmí být delší než 1000 znaků.</value>
-    
-  </data>
   <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
     <value>Tabulky s jedním sloupcem nejsou ve sloupcích vzorců podporovány.</value>
     
@@ -4225,10 +4225,10 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
-    <value>Tato chyba se zobrazí, když se vzorec odkazuje na vlastnosti chování komponenty pomocí neplatné syntaxe. (Příklad: Component.OnCustomChange místo Component.OnCustomChange())</value>
+    <value>Tato chyba se zobrazí, když se vzorec odkazuje na vlastnosti komponenty pomocí neplatné syntaxe. (Příklad: Component.CustomFunction instead of Component.CustomFunction())</value>
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
-    <value>Při odkazování na vlastnost chování komponenty použijte správnou syntaxi. Příklad: Component.OnCustomChange()</value>
+    <value>Při odkazování na vlastnost komponenty použijte správnou syntaxi. Příklad: Component.CustomFunction()</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_Link_1" xml:space="preserve">
@@ -4730,11 +4730,15 @@
     
   </data>
   <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
-    <value>Objekty bez typu nelze použít jako první argument pro funkce, které podporují obory záznamů.</value>
+    <value>Netypové objekty nelze použít jako první argument pro funkce, které podporují obory záznamů.</value>
     
   </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>Pojmenovaný vzorec musí končit středníkem.</value>
+    
+  </data>
+  <data name="ErrNamedFormula_MissingValue" xml:space="preserve">
+    <value>Pojmenovaný vzorec musí být výraz.</value>
     
   </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
@@ -4828,6 +4832,10 @@
   </data>
   <data name="ErrInvalidFunction" xml:space="preserve">
     <value>Tato funkce je nejednoznačná, obsahuje výrazy lambda a identifikátory sloupců pro stejný argument.</value>
+    
+  </data>
+  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
+    <value>Možnost BooleanOptionSet {0} není podporována.</value>
     
   </data>
 </root>

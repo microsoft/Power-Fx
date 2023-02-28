@@ -1837,6 +1837,10 @@
     <value>숫자 값이 너무 큽니다.</value>
     
   </data>
+  <data name="ErrTextTooLarge" xml:space="preserve">
+    <value>식은 {0}자를 초과할 수 없습니다. 현재 식은 {1}자입니다.</value>
+    
+  </data>
   <data name="ErrTextFormatTooLarge" xml:space="preserve">
     <value>형식 문자열 크기는 {0}자를 초과할 수 없습니다.</value>
     
@@ -1863,6 +1867,10 @@
   </data>
   <data name="ErrTypeError_Arg_Expected_Found" xml:space="preserve">
     <value>인수 '{0}'의 형식이 필요한 형식인 '{1}'과(와) 일치하지 않습니다. 검색된 형식: '{2}'</value>
+    
+  </data>
+  <data name="ErrTypeError_WrongType" xml:space="preserve">
+    <value>이 식의 형식이 필요한 형식인 '{0}'과(와) 일치하지 않습니다. '{1}' 형식을 찾았습니다.</value>
     
   </data>
   <data name="ErrTypeErrorRecordIncompatibleWithSource" xml:space="preserve">
@@ -2643,10 +2651,6 @@
   <data name="AboutIsNumeric_value" xml:space="preserve">
     <value>테스트할 값입니다.</value>
   </data>
-  <data name="Post" xml:space="preserve">
-    <value>게시</value>
-    
-  </data>
   <data name="AboutDateTimeValue" xml:space="preserve">
     <value>텍스트 형식의 날짜 및 시간을 Power Apps 날짜-시간 코드로 날짜를 나타내는 숫자로 변환합니다.</value>
     
@@ -3064,7 +3068,7 @@
     
   </data>
   <data name="Icon_Train_DisplayName" xml:space="preserve">
-    <value>기차</value>
+    <value>학습</value>
     
   </data>
   <data name="Icon_Tray_DisplayName" xml:space="preserve">
@@ -3124,7 +3128,7 @@
     
   </data>
   <data name="Icon_Leave_DisplayName" xml:space="preserve">
-    <value>나뭇잎</value>
+    <value>나가기</value>
     
   </data>
   <data name="Icon_Paste_DisplayName" xml:space="preserve">
@@ -4111,10 +4115,6 @@
     <value>수식 열에서는 레코드 또는 테이블 강제 변환이 지원되지 않습니다.</value>
     
   </data>
-  <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
-    <value>수식은 1,000자를 초과할 수 없습니다.</value>
-    
-  </data>
   <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
     <value>단일 열 테이블은 수식 열에서 지원되지 않습니다.</value>
     
@@ -4225,10 +4225,10 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
-    <value>이 오류는 수식에서 잘못된 구문이 있는 구성 요소 동작 속성을 참조하는 경우에 표시됩니다(예: Component.OnCustomChange() 대신 Component.OnCustomChange).</value>
+    <value>이 오류는 수식에서 잘못된 구문이 있는 구성 요소 함수 속성을 참조하는 경우에 표시됩니다. (예: Component.CustomFunction() 대신 Component.CustomFunction)</value>
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
-    <value>올바른 구문을 사용하여 구성 요소 동작 속성을 참조하세요(예: Component.OnCustomChange()).</value>
+    <value>올바른 구문을 사용하여 구성 요소 함수 속성을 참조하세요. 예: Component.CustomFunction()</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_Link_1" xml:space="preserve">
@@ -4730,11 +4730,15 @@
     
   </data>
   <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
-    <value>Untyped objects cannot be used as the first argument to functions which support record scopes.</value>
+    <value>형식화되지 않은 개체는 레코드 범위를 지원하는 함수에 대한 첫 번째 인수로 사용할 수 없습니다.</value>
     
   </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>이름이 지정된 수식은 세미콜론으로 끝나야 합니다.</value>
+    
+  </data>
+  <data name="ErrNamedFormula_MissingValue" xml:space="preserve">
+    <value>이름이 지정된 수식은 식이어야 합니다.</value>
     
   </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
@@ -4828,6 +4832,10 @@
   </data>
   <data name="ErrInvalidFunction" xml:space="preserve">
     <value>이 함수는 모호하며 동일한 인수에 대한 람다 식과 열 식별자를 포함합니다.</value>
+    
+  </data>
+  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
+    <value>BooleanOptionSet 옵션 {0}은(는) 지원되지 않습니다.</value>
     
   </data>
 </root>

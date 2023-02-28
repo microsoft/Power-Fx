@@ -157,8 +157,6 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
 
         public int CacheTimeoutMs { get { return _cacheTimeoutMs; } }
 
-        public override bool SupportsParamCoercion { get { return true; } }
-
         // Service functions currently require all columns to be filled.
         public override bool RequireAllParamColumns { get { return true; } }
 
@@ -225,7 +223,7 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
         }
 #endif
 
-        public override bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertValue(argTypes);
@@ -233,7 +231,7 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            bool fArgsValid = base.CheckTypes(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            bool fArgsValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
 
 #if canvas
             // Check if we have a dynamic type for a dynamic schema

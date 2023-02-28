@@ -19,7 +19,7 @@ namespace Microsoft.PowerFx
         // Index by Slot.SlotIndex. This could be optimized to be a dense array. 
         private readonly Dictionary<int, Tuple<ISymbolSlot, FormulaValue>> _symbolValues = new Dictionary<int, Tuple<ISymbolSlot, FormulaValue>>();
 
-        private readonly SymbolTable _symTable;
+        private readonly ReadOnlySymbolTable _symTable;
 
         /// <summary>
         /// Register an event to invoke when <see cref="Set(ISymbolSlot, FormulaValue)"/> is called.
@@ -42,6 +42,15 @@ namespace Microsoft.PowerFx
             DebugName = table.DebugName;
         }
 
+        // Limit which kinds of SymbolTables this handles.
+        internal SymbolValues(DeferredSymbolTable table)
+            : base(table)
+        {
+            _symTable = table ?? throw new ArgumentNullException(nameof(table));
+
+            DebugName = table.DebugName;
+        }
+
         /// <summary>
         /// Convenience method to add a new unique symbol.
         /// </summary>
@@ -50,10 +59,15 @@ namespace Microsoft.PowerFx
         /// <returns></returns>
         public SymbolValues Add(string name, FormulaValue value)
         {
-            var slot = _symTable.AddVariable(name, value.Type, mutable: true);
-            Set(slot, value);
+            if (_symTable is SymbolTable symTableEditable)
+            {
+                var slot = symTableEditable.AddVariable(name, value.Type, mutable: true);
+                Set(slot, value);
 
-            return this;
+                return this;
+            }
+
+            throw new InvalidOperationException($"SymbolTable instance is not mutable: {_symTable.DebugName()}");
         }
 
         public override void Set(ISymbolSlot slot, FormulaValue value)
