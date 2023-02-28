@@ -523,7 +523,7 @@ namespace Microsoft.PowerFx.Functions
                 return new BooleanValue(irContext, false);
             }
 
-            Contracts.Assert(arg1 is UntypedObjectValue ^ arg2 is UntypedObjectValue, "UO = UO is undefined");
+            Contracts.Assert(arg1 is UntypedObjectValue ^ arg2 is UntypedObjectValue, "UO <> UO is undefined");
 
             if (arg1 is UntypedObjectValue uo1)
             {
