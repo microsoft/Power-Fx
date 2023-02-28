@@ -761,8 +761,6 @@ namespace Microsoft.PowerFx.Tests
         {
             public override bool IsSelfContained => true;
 
-            public override bool SupportsParamCoercion => true;
-
             public TestFunctionMultiply()
                 : base("Func", DType.Number, DType.Number, DType.String)
             {
@@ -785,8 +783,6 @@ namespace Microsoft.PowerFx.Tests
         private class TestFunctionSubstract : CustomTexlFunction
         {
             public override bool IsSelfContained => true;
-
-            public override bool SupportsParamCoercion => true;
 
             public TestFunctionSubstract()
                 : base("Func", DType.Number, DType.String, DType.Number)

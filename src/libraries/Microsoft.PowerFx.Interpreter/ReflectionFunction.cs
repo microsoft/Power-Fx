@@ -34,8 +34,6 @@ namespace Microsoft.PowerFx
 
         internal BigInteger LamdaParamMask;
 
-        public override bool SupportsParamCoercion => true;
-
         public CustomTexlFunction(string name, FormulaType returnType, params FormulaType[] paramTypes)
             : this(name, returnType._type, Array.ConvertAll(paramTypes, x => x._type))
         {

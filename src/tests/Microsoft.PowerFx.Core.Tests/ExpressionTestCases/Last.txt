@@ -55,3 +55,6 @@ Blank()
 
 >> LastN(Filter([1,2,3],Value=4),2)
 Table()
+
+>> Last({a:1,b:2})
+Errors: Error 0-15: The function 'Last' has some invalid arguments.|Error 5-14: Invalid argument type (Record). Expecting a Table value instead.

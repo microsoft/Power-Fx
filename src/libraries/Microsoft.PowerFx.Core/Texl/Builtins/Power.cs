@@ -21,8 +21,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return base.GetGenericArgPreprocessor(index);
         }
 
-        public override bool SupportsParamCoercion => true;
-
         public override bool IsSelfContained => true;
 
         public PowerFunction()
@@ -40,8 +38,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Equivalent DAX function: Power
     internal sealed class PowerTFunction : BuiltinFunction
     {
-        public override bool SupportsParamCoercion => true;
-
         public override bool IsSelfContained => true;
 
         public PowerTFunction()

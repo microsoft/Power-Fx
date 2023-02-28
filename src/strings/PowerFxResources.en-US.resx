@@ -795,7 +795,7 @@
     <comment>function_parameter - Argument to the IfError function - a value to fallback on if the previous args are errors.</comment>
   </data>
   <data name="AboutIfError_fallback" xml:space="preserve">
-    <value>Value that is returned if it is the first non error argument.</value>
+    <value>Value that is returned if the previous argument is an error.</value>
     <comment>Description of the repeated parameter: a value to fallback on if the previous args are errors</comment>
   </data>
   <data name="AboutSubstitute" xml:space="preserve">

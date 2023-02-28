@@ -21,8 +21,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool IsSelfContained => true;
 
-        public override bool SupportsParamCoercion => true;
-
         public ColorFadeFunction()
             : base("ColorFade", TexlStrings.AboutColorFade, FunctionCategories.Color, DType.Color, 0, 2, 2, DType.Color, DType.Number)
         {

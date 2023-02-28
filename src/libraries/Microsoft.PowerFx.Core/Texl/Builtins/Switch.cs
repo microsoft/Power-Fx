@@ -27,10 +27,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public override bool IsSelfContained => true;
 
-        // Note, switch has a very custom checkinvocation implementation
-        // We do not support coercion for the 1st param, or the match params, only the result params. 
-        public override bool SupportsParamCoercion => true;
-
         public SwitchFunction()
             : base("Switch", TexlStrings.AboutSwitch, FunctionCategories.Logical, DType.Unknown, 0, 3, int.MaxValue)
         {
