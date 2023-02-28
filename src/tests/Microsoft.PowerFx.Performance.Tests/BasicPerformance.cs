@@ -46,36 +46,56 @@ namespace Microsoft.PowerFx.Performance.Tests
         [Benchmark]
         public IReadOnlyList<Token> Tokenize()
         {
-            var expr = string.Join(" + ", Enumerable.Repeat("Sum(1)", N));
+            string expr = string.Join(" + ", Enumerable.Repeat("Sum(1)", N));
+            IReadOnlyList<Token> tokens = null;
 
-            var tokens = _engine.Tokenize(expr);
+            for (int i = 0; i < 80; i++)
+            {
+                tokens = _engine.Tokenize(expr);
+            }
+
             return tokens;
         }
 
         [Benchmark]
         public ParseResult Parse()
         {
-            var expr = string.Join(" + ", Enumerable.Repeat("Sum(1)", N));
+            string expr = string.Join(" + ", Enumerable.Repeat("Sum(1)", N));
+            ParseResult parse = null;
 
-            var parse = _engine.Parse(expr, _parserOptions);
+            for (int i = 0; i < 80; i++)
+            {
+                parse = _engine.Parse(expr, _parserOptions);
+            }
+
             return parse;
         }
 
         [Benchmark]
         public CheckResult Check()
         {
-            var expr = string.Join(" + ", Enumerable.Repeat("Sum(1)", N));
+            string expr = string.Join(" + ", Enumerable.Repeat("Sum(1)", N));
+            CheckResult check = null;
 
-            var check = _engine.Check(expr);
+            for (int i = 0; i < 80; i++)
+            {
+                check = _engine.Check(expr);
+            }
+
             return check;
         }
 
         [Benchmark]
         public FormulaValue Eval()
         {
-            var expr = string.Join(" + ", Enumerable.Repeat("Sum(1)", N));
+            string expr = string.Join(" + ", Enumerable.Repeat("Sum(1)", N));
+            FormulaValue result = null;
 
-            var result = _recalcEngine.Eval(expr);
+            for (int i = 0; i < 80; i++)
+            {
+                result = _recalcEngine.Eval(expr);
+            }
+
             return result;
         }
     }
