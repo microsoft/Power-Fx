@@ -3,6 +3,7 @@
 
 using System;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Microsoft.PowerFx.Core.Utils
 {
@@ -143,14 +144,9 @@ namespace Microsoft.PowerFx.Core.Utils
             return false;
         }
 
-        // $$$ Needs optimization $$$
+        private static readonly Regex Rex_AllSpaces = new Regex(@"[ \u0009\u000b\u000a\u000d\u0085\u2028\u2029\u000c]*", RegexOptions.Compiled);
+        private static readonly Regex Rex_AnyDisallowedWhiteSpace = new Regex(@"[\u0009\u000b\u000a\u000d\u0085\u2028\u2029\u000c]", RegexOptions.Compiled);
 
-        /// <summary>
-        /// Takes a name and makes it into a valid <see cref="DName" />.
-        /// If the name contains all spaces, an underscore is prepended to the name.
-        /// </summary>
-        /// <param name="strName"></param>
-        /// <param name="fModified">Whether it had to be changed to be a valid <see cref="DName" />.</param>
         public static DName MakeValid(string strName, out bool fModified)
         {
             Contracts.AssertValueOrNull(strName);
@@ -161,19 +157,10 @@ namespace Microsoft.PowerFx.Core.Utils
                 return new DName(StrUnderscore);
             }
 
-            var fAllSpaces = true;
-            var fHasDisallowedWhiteSpaceCharacters = false;
+            bool fAllSpaces = Rex_AllSpaces.Match(strName).Length == strName.Length;
+            bool fHasDisallowedWhiteSpaceCharacters = Rex_AnyDisallowedWhiteSpace.IsMatch(strName);
 
             fModified = false;
-
-            // $$$ Needs optimization
-            for (var i = 0; i < strName.Length; i++)
-            {
-                var fIsSpace = strName[i] == ChSpace;
-                var fIsDisallowedWhiteSpace = CharacterUtils.IsTabulation(strName[i]) || CharacterUtils.IsLineTerm(strName[i]);
-                fAllSpaces = fAllSpaces && (fIsDisallowedWhiteSpace || fIsSpace);
-                fHasDisallowedWhiteSpaceCharacters |= fIsDisallowedWhiteSpace;
-            }
 
             if (fHasDisallowedWhiteSpaceCharacters)
             {
@@ -182,13 +169,14 @@ namespace Microsoft.PowerFx.Core.Utils
 
                 for (var i = 0; i < strName.Length; i++)
                 {
-                    if (CharacterUtils.IsTabulation(strName[i]) || CharacterUtils.IsLineTerm(strName[i]))
+                    char c = strName[i];
+                    if (CharacterUtils.IsTabulation(c) || CharacterUtils.IsLineTerm(c))
                     {
                         builder.Append(ChSpace);
                     }
                     else
                     {
-                        builder.Append(strName[i]);
+                        builder.Append(c);
                     }
                 }
 
@@ -201,8 +189,7 @@ namespace Microsoft.PowerFx.Core.Utils
             }
 
             fModified = true;
-
             return new DName(StrUnderscore + strName);
-        }
+        }    
     }
 }

@@ -10,7 +10,7 @@ namespace Microsoft.PowerFx.Performance.Tests
 {
     public class UnitTests
     {
-        private PvaPerformance pvaPerf;
+        private readonly PvaPerformance pvaPerf;
 
         public UnitTests()
         {

@@ -91,10 +91,10 @@ namespace Microsoft.PowerFx.Performance.Tests
             {
                 parseResult = _engine.Parse(expression, _parserOptions);
 
-            if (!parseResult.IsSuccess)
-            {
-                throw new Exception($"{expression}\r\n{string.Join("\r\n", parseResult.Errors.Select(ee => $"{ee.Message}"))}");
-            }
+                if (!parseResult.IsSuccess)
+                {
+                    throw new Exception($"{expression}\r\n{string.Join("\r\n", parseResult.Errors.Select(ee => $"{ee.Message}"))}");
+                }
             }
 
             return parseResult;
@@ -110,10 +110,10 @@ namespace Microsoft.PowerFx.Performance.Tests
             {
                 checkResult = _engine.Check(expression, _parserOptions);
 
-            if (!checkResult.IsSuccess)
-            {
-                throw new Exception($"{expression}\r\n{string.Join("\r\n", checkResult.Errors.Select(ee => $"{ee.Message}"))}");
-            }
+                if (!checkResult.IsSuccess)
+                {
+                    throw new Exception($"{expression}\r\n{string.Join("\r\n", checkResult.Errors.Select(ee => $"{ee.Message}"))}");
+                }
             }
 
             return checkResult;

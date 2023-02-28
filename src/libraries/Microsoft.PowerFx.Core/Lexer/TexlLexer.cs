@@ -493,7 +493,9 @@ namespace Microsoft.PowerFx.Syntax
                 return (CharacterUtils.GetUniCatFlags(ch) & CharacterUtils.UniCatFlags.IdentPartChar) != 0;
             }
 
-            return ((uint)(ch - 'a') < 26) || ((uint)(ch - 'A') < 26) || ((uint)(ch - '0') <= 9) || (ch == '_');
+            // Character range where this method will return true: [0-9], [A-Z], _, [a-z]
+            // This code is equivalent to return ((uint)(ch - 'a') < 26) || ((uint)(ch - 'A') < 26) || ((uint)(ch - '0') <= 9) || (ch == '_');            
+            return ch < '{' && ("\0\0\0\u03ff\ufffe\u87ff\ufffe\u07ff"[ch >> 4] & (1 << (ch & 0xF))) != 0;
         }
 
         // Returns true if the specified character constitutes a valid start for a numeric literal.
@@ -883,33 +885,33 @@ namespace Microsoft.PowerFx.Syntax
             }
 
             // Whether we've hit the end of input yet. If this returns true, ChCur will be zero.
-            private bool Eof => CurrentPos >= _charCount;
+            private bool Eof => _currentPosition >= _charCount;
 
             // The current position.
-            private int CurrentPos { get; set; }
+            private int _currentPosition;
 
             // The current character. Zero if we've hit the end of input.
-            private char CurrentChar => CurrentPos < _charCount ? _text[CurrentPos] : '\0';
+            private char CurrentChar => _currentPosition < _charCount ? _text[_currentPosition] : '\0';
 
             // Advance to the next character and returns it.
             private char NextChar()
             {
-                Contracts.Assert(CurrentPos < _charCount);
+                Contracts.Assert(_currentPosition < _charCount);
 
-                if (++CurrentPos < _charCount)
+                if (++_currentPosition < _charCount)
                 {
-                    return _text[CurrentPos];
+                    return _text[_currentPosition];
                 }
 
-                CurrentPos = _charCount;
+                _currentPosition = _charCount;
                 return '\0';
             }
 
             // Return the ich character without advancing the current position.
             private char PeekChar(int ich)
             {
-                Contracts.AssertIndexInclusive(ich, _text.Length - CurrentPos);
-                ich += CurrentPos;
+                Contracts.AssertIndexInclusive(ich, _text.Length - _currentPosition);
+                ich += _currentPosition;
                 return (ich < _charCount) ? _text[ich] : '\0';
             }
 
@@ -917,7 +919,7 @@ namespace Microsoft.PowerFx.Syntax
             // reset the lexer to the state it was when called
             private Token Lookahead(int n)
             {
-                var lookaheadStart = CurrentPos;
+                var lookaheadStart = _currentPosition;
                 var lookaheadTokenStart = _currentTokenPos;
                 Token foundTok = null;
                 for (var i = 0; i <= n; i++)
@@ -932,25 +934,25 @@ namespace Microsoft.PowerFx.Syntax
                 }
 
                 _currentTokenPos = lookaheadTokenStart;
-                CurrentPos = lookaheadStart;
+                _currentPosition = lookaheadStart;
                 return foundTok;
             }
 
             // Marks the beginning of the current token.
             private void StartToken()
             {
-                _currentTokenPos = CurrentPos;
+                _currentTokenPos = _currentPosition;
             }
 
             // Resets current read position to the beginning of the current token.
             private void ResetToken()
             {
-                CurrentPos = _currentTokenPos;
+                _currentPosition = _currentTokenPos;
             }
 
             private Span GetTextSpan()
             {
-                return new Span(_currentTokenPos, CurrentPos);
+                return new Span(_currentTokenPos, _currentPosition);
             }
 
             // Form and return the next token. Returns null to signal end of input.
@@ -1205,8 +1207,7 @@ namespace Microsoft.PowerFx.Syntax
                 if (IsKeyword(str, out var tid) && !fDelimiterStart)
                 {
                     // Lookahead to distinguish Keyword "and/or/not" from Function "and/or/not"
-                    if ((tid == TokKind.KeyAnd || tid == TokKind.KeyOr || tid == TokKind.KeyNot) &&
-                       Lookahead(0)?.Kind == TokKind.ParenOpen)
+                    if ((tid == TokKind.KeyAnd || tid == TokKind.KeyOr || tid == TokKind.KeyNot) && Lookahead(0)?.Kind == TokKind.ParenOpen)
                     {
                         return new IdentToken(str, spanTok, fDelimiterStart, fDelimiterEnd);
                     }
@@ -1219,56 +1220,60 @@ namespace Microsoft.PowerFx.Syntax
 
             // Core functionality for lexing an identifier.
             private string LexIdentCore(out bool fDelimiterStart, out bool fDelimiterEnd)
-            {
-                Contracts.Assert(IsIdentStart(CurrentChar));
+            {                
+                char currentChar = _text[_currentPosition];
+
+                Contracts.Assert(IsIdentStart(currentChar));
 
                 _sb.Length = 0;
-                fDelimiterStart = IsIdentDelimiter(CurrentChar);
+                fDelimiterStart = IsIdentDelimiter(currentChar);
                 fDelimiterEnd = false;
 
                 if (!fDelimiterStart)
                 {
                     // Simple identifier.
-                    while (IsSimpleIdentCh(CurrentChar))
+                    while (IsSimpleIdentCh(currentChar))
                     {
-                        _sb.Append(CurrentChar);
-                        NextChar();
+                        _sb.Append(currentChar);
+                        
+                        if (++_currentPosition < _charCount)
+                        {
+                            currentChar = _text[_currentPosition];
+                        }
+                        else
+                        {
+                            break;
+                        }
                     }
 
                     return _sb.ToString();
                 }
 
-                // Delimited identifier.
-                NextChar();
-                var ichStrMin = CurrentPos;
+                var ichStrMin = _currentPosition + 1;
 
                 // Accept any characters up to the next unescaped identifier delimiter.
                 // String will be corrected in the IdentToken if needed.
-                for (; ;)
+                while (++_currentPosition < _charCount)
                 {
-                    if (Eof)
-                    {
-                        break;
-                    }
+                    currentChar = _text[_currentPosition];
 
-                    if (IsIdentDelimiter(CurrentChar))
+                    if (IsIdentDelimiter(currentChar))
                     {
                         if (IsIdentDelimiter(PeekChar(1)))
                         {
                             // Escaped delimiter.
-                            _sb.Append(CurrentChar);
-                            NextChar();
-                            NextChar();
+                            _sb.Append(currentChar);
+                            _currentPosition++;
                         }
                         else
                         {
                             // End of the identifier.
-                            NextChar();
+                            _currentPosition++;
                             fDelimiterEnd = true;
                             break;
                         }
                     }
-                    else if (IsNewLineCharacter(CurrentChar))
+                    else if (IsNewLineCharacter(currentChar))
                     {
                         // Terminate an identifier on a new line character
                         // Don't include the new line in the identifier
@@ -1277,8 +1282,7 @@ namespace Microsoft.PowerFx.Syntax
                     }
                     else
                     {
-                        _sb.Append(CurrentChar);
-                        NextChar();
+                        _sb.Append(currentChar);
                     }
                 }
 
@@ -1472,9 +1476,9 @@ namespace Microsoft.PowerFx.Syntax
                 var commentEnd = _sb.ToString().StartsWith("/*") ? "*/" : "\n";
 
                 // Comment initiation takes up two chars, so must - 1 to get start
-                var startingPosition = CurrentPos - 1;
+                var startingPosition = _currentPosition - 1;
 
-                while (CurrentPos < _text.Length)
+                while (_currentPosition < _text.Length)
                 {
                     _sb.Append(NextChar());
                     var str = _sb.ToString();
@@ -1488,7 +1492,7 @@ namespace Microsoft.PowerFx.Syntax
                 }
 
                 // Trailing comment space
-                while (CurrentPos < _text.Length)
+                while (_currentPosition < _text.Length)
                 {
                     var nxtChar = NextChar();
 
@@ -1502,7 +1506,7 @@ namespace Microsoft.PowerFx.Syntax
                     if (IsNewLineCharacter(nxtChar))
                     {
                         _sb.Append(nxtChar);
-                        ++CurrentPos;
+                        ++_currentPosition;
                         break;
                     }
                 }
@@ -1540,7 +1544,7 @@ namespace Microsoft.PowerFx.Syntax
             {
                 if (CurrentChar > 255)
                 {
-                    var position = CurrentPos;
+                    var position = _currentPosition;
                     var unexpectedChar = Convert.ToUInt16(CurrentChar).ToString("X4");
                     NextChar();
                     return new ErrorToken(GetTextSpan(), TexlStrings.UnexpectedCharacterToken, string.Concat("U+", unexpectedChar), position);
