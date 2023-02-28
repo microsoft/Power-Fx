@@ -109,9 +109,9 @@ namespace Microsoft.PowerFx.Json.Tests
 
             FormulaValue fv2 = FormulaValueJSON.FromJson(expr, new BlankType());
             Assert.NotNull(fv2);
-            Assert.True(fv2 is BlankValue);            
+            Assert.True(fv2 is BlankValue);
 
-            foreach (FormulaType ft in new FormulaType[] { TableType.Empty() , RecordType.Empty(), new StringType(), new NumberType(), new BooleanType(), new GuidType(), new ColorType() })
+            foreach (FormulaType ft in new FormulaType[] { TableType.Empty(), RecordType.Empty(), new StringType(), new NumberType(), new BooleanType(), new GuidType(), new ColorType() })
             {
                 FormulaValue fv5 = FormulaValueJSON.FromJson(expr, ft);
                 Assert.NotNull(fv5);
