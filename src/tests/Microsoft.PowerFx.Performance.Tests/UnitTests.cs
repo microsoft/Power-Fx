@@ -10,30 +10,30 @@ namespace Microsoft.PowerFx.Performance.Tests
 {
     public class UnitTests
     {
-        private readonly PvaPerformance pvaPerf;
+        private readonly PvaPerformance _pvaPerf;
 
         public UnitTests()
         {
-            pvaPerf = new PvaPerformance();
-            pvaPerf.GlobalSetup();
+            _pvaPerf = new PvaPerformance();
+            _pvaPerf.GlobalSetup();
         }
 
         [Fact]
         public void Benchmark_PvaRecalcEngineConstructorWith10KOptionSets()
         {
-            pvaPerf.PvaRecalcEngineConstructorWith10KOptionSets();
+            _pvaPerf.PvaRecalcEngineConstructorWith10KOptionSets();
         }
 
         [Fact]
         public void Benchmark_PvaRecalcEngineCheck()
         {
-            pvaPerf.PvaRecalcEngineCheck();
+            _pvaPerf.PvaRecalcEngineCheck();
         }
 
         [Fact]
         public void Benchmark_PvaRecalcEngineParse()
         {
-            pvaPerf.PvaRecalcEngineParse();
+            _pvaPerf.PvaRecalcEngineParse();
         }
     }
 }
