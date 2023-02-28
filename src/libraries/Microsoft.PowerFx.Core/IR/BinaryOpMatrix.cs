@@ -68,7 +68,13 @@ namespace Microsoft.PowerFx.Core.IR
                 }
                 else
                 {
-                    return BinaryOpKind.Invalid;
+                    switch (node.Op)
+                    {
+                        case BinaryOp.NotEqual:
+                            return BinaryOpKind.NeqNullUntyped;
+                        case BinaryOp.Equal:
+                            return BinaryOpKind.EqNullUntyped;
+                    }
                 }
             }
 
@@ -80,7 +86,13 @@ namespace Microsoft.PowerFx.Core.IR
                 }
                 else
                 {
-                    return BinaryOpKind.Invalid;
+                    switch (node.Op)
+                    {
+                        case BinaryOp.NotEqual:
+                            return BinaryOpKind.NeqNullUntyped;
+                        case BinaryOp.Equal:
+                            return BinaryOpKind.EqNullUntyped;
+                    }
                 }
             }
 

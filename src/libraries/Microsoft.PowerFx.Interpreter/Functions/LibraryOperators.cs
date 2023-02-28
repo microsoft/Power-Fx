@@ -4,6 +4,7 @@
 using System;
 using System.Linq;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Functions
@@ -83,6 +84,15 @@ namespace Microsoft.PowerFx.Functions
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
             targetFunction: AreEqual);
 
+        public static readonly AsyncFunctionPtr OperatorBinaryEqNullUntyped = StandardErrorHandling<FormulaValue>(
+            "=",
+            expandArguments: NoArgExpansion,
+            replaceBlankValues: DoNotReplaceBlank,
+            checkRuntimeTypes: DeferRuntimeTypeChecking,
+            checkRuntimeValues: DeferRuntimeValueChecking,
+            returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+            targetFunction: AreEqualNullUntyped);
+
         public static readonly AsyncFunctionPtr OperatorBinaryNeq = StandardErrorHandling<FormulaValue>(
             "<>",
             expandArguments: NoArgExpansion,
@@ -91,6 +101,15 @@ namespace Microsoft.PowerFx.Functions
             checkRuntimeValues: DeferRuntimeValueChecking,
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
             targetFunction: NotEqual);
+
+        public static readonly AsyncFunctionPtr OperatorBinaryNeqNullUntyped = StandardErrorHandling<FormulaValue>(
+            "<>",
+            expandArguments: NoArgExpansion,
+            replaceBlankValues: DoNotReplaceBlank,
+            checkRuntimeTypes: DeferRuntimeTypeChecking,
+            checkRuntimeValues: DeferRuntimeValueChecking,
+            returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+            targetFunction: NotEqualNullUntyped);
 
         public static readonly AsyncFunctionPtr OperatorTextIn = StandardErrorHandling(
             "in",
@@ -466,11 +485,53 @@ namespace Microsoft.PowerFx.Functions
             return new BooleanValue(irContext, RuntimeHelpers.AreEqual(arg1, arg2));
         }
 
+        private static BooleanValue AreEqualNullUntyped(IRContext irContext, FormulaValue[] args)
+        {
+            var arg1 = args[0];
+            var arg2 = args[1];
+
+            if (arg1 is BlankValue && arg2 is BlankValue)
+            {
+                return new BooleanValue(irContext, true);
+            }
+
+            Contracts.Assert(arg1 is UntypedObjectValue ^ arg2 is UntypedObjectValue, "UO = UO is undefined");
+
+            if (arg1 is UntypedObjectValue uo1)
+            {
+                return new BooleanValue(irContext, uo1.Impl.Type == FormulaType.Blank);
+            }
+
+            var uo2 = (UntypedObjectValue)arg2;
+            return new BooleanValue(irContext, uo2.Impl.Type == FormulaType.Blank);
+        }
+
         private static BooleanValue NotEqual(IRContext irContext, FormulaValue[] args)
         {
             var arg1 = args[0];
             var arg2 = args[1];
             return new BooleanValue(irContext, !RuntimeHelpers.AreEqual(arg1, arg2));
+        }
+
+        private static BooleanValue NotEqualNullUntyped(IRContext irContext, FormulaValue[] args)
+        {
+            var arg1 = args[0];
+            var arg2 = args[1];
+
+            if (arg1 is BlankValue && arg2 is BlankValue)
+            {
+                return new BooleanValue(irContext, false);
+            }
+
+            Contracts.Assert(arg1 is UntypedObjectValue ^ arg2 is UntypedObjectValue, "UO = UO is undefined");
+
+            if (arg1 is UntypedObjectValue uo1)
+            {
+                return new BooleanValue(irContext, uo1.Impl.Type != FormulaType.Blank);
+            }
+
+            var uo2 = (UntypedObjectValue)arg2;
+            return new BooleanValue(irContext, uo2.Impl.Type != FormulaType.Blank);
         }
 
         // See in_SS in JScript membershipReplacementFunctions

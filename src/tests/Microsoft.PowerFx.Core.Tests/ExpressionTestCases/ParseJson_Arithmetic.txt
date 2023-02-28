@@ -293,3 +293,38 @@ Error({Kind:ErrorKind.NotSupported})
 
 >> Hour(ParseJSON("1") - Time(12, 34, 56))
 Error({Kind:ErrorKind.NotSupported})
+
+// blank should be coerced to 0 in `<`, `<=`, `>=`, `<=`, but not in equality or inequality
+>> ParseJSON("0") = Blank()
+false
+
+>> ParseJSON("0") <> Blank()
+true
+
+>> Blank() = ParseJSON("0")
+false
+
+>> Blank() <> ParseJSON("0")
+true
+
+>> ParseJSON("null") = Blank()
+true
+
+>> ParseJSON("null") <> Blank()
+false
+
+>> Blank() = ParseJSON("null")
+true
+
+>> Blank() <> ParseJSON("null")
+false
+
+// ^ operator
+>> ParseJSON("3") ^ 4
+81
+
+>> 3 ^ ParseJSON("4")
+81
+
+>> ParseJSON("3") ^ ParseJSON("4")
+81
