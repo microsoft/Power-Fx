@@ -176,7 +176,7 @@ namespace Microsoft.PowerFx.Interpreter
             {
                 // The item type must be compatible with the collection schema.
                 var fError = false;
-                returnType = DType.Union(ref fError, collectionType.ToRecord(), collectedType, useLegacyDateTimeAccepts: true);
+                returnType = DType.Union(ref fError, collectionType.ToRecord(), collectedType);
                 if (fError)
                 {
                     fValid = false;
