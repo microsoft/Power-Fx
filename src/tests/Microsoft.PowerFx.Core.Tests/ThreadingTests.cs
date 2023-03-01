@@ -32,6 +32,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "DType._kindToSuperkindMapping",
                 "DTypeSpecParser._types",
                 "BuiltinFunctionsCore._library",
+                "BuiltinFunctionsCore._testOnlyLibrary",
                 "BuiltinFunctionsCore._featureGateFunctions",
                 "ArgumentSuggestions._languageCodeSuggestions",
                 "IntellisenseProvider.SuggestionHandlers",

@@ -9,6 +9,7 @@ using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Glue;
+using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Intellisense;
@@ -48,7 +49,7 @@ namespace Microsoft.PowerFx
         // All functions that powerfx core knows about. 
         // Derived engines may only support a subset of these builtins, 
         // and they may add their own custom ones. 
-        private static readonly ReadOnlySymbolTable _allBuiltinCoreFunctions = ReadOnlySymbolTable.NewDefault(Core.Texl.BuiltinFunctionsCore.BuiltinFunctionsLibrary);
+        private static readonly ReadOnlySymbolTable _allBuiltinCoreFunctions = ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library);
 
         /// <summary>
         /// Builtin functions supported by this engine. 
@@ -57,20 +58,28 @@ namespace Microsoft.PowerFx
 
         // By default, we pull the core functions. 
         // These can be overridden. 
-        internal IEnumerable<TexlFunction> Functions => CreateResolverInternal().Functions;
+        internal TexlFunctionSet Functions => CreateResolverInternal().Functions;
 
         /// <summary>
         /// Get all functions from the config and symbol tables. 
-        /// </summary>
-        public IEnumerable<FunctionInfo> FunctionInfos => Functions.Select(f => new FunctionInfo(f));
+        /// </summary>        
+#pragma warning disable CS0618 // Type or member is obsolete
+        public IEnumerable<FunctionInfo> FunctionInfos => Functions.Functions.Select(f => new FunctionInfo(f));
+#pragma warning restore CS0618 // Type or member is obsolete
 
         /// <summary>
         /// List all functions (both builtin and custom) registered with this evaluator. 
         /// </summary>
+#pragma warning disable CA1024 // Use properties where appropriate        
         public IEnumerable<string> GetAllFunctionNames()
+#pragma warning restore CA1024 // Use properties where appropriate
         {
-            return FunctionInfos.Select(func => func.Name).Distinct();
+            return Functions.FunctionNames;
         }
+
+        internal IEnumerable<TexlFunction> GetFunctionsByName(string name) => Functions.WithName(name);
+
+        internal int FunctionCount => Functions.Count();
 
         // Additional symbols for the engine.
         // A derived engine can replace this completely to inject engine-specific virtuals. 

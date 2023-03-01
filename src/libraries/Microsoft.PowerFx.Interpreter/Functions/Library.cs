@@ -6,14 +6,12 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
-using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Functions
@@ -43,7 +41,7 @@ namespace Microsoft.PowerFx.Functions
 
         public static IEnumerable<TexlFunction> FunctionList => FunctionImplementations.Keys;
 
-        public static readonly IReadOnlyDictionary<TexlFunction, AsyncFunctionPtr> FunctionImplementations;
+        public static readonly IReadOnlyDictionary<TexlFunction, AsyncFunctionPtr> FunctionImplementations;        
 
         public static FormattingInfo CreateFormattingInfo(EvalVisitor runner)
         {
@@ -721,7 +719,7 @@ namespace Microsoft.PowerFx.Functions
                 StandardErrorHandling<StringValue>(
                     BuiltinFunctionsCore.Hex2Dec.Name,
                     expandArguments: NoArgExpansion,
-                    replaceBlankValues: ReplaceBlankWithEmptyString,
+                    replaceBlankValues: NoOpAlreadyHandledByIR,
                     checkRuntimeTypes: ExactValueTypeOrBlank<StringValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
@@ -913,7 +911,7 @@ namespace Microsoft.PowerFx.Functions
                 StandardErrorHandling<StringValue>(
                     BuiltinFunctionsCore.Len.Name,
                     expandArguments: NoArgExpansion,
-                    replaceBlankValues: ReplaceBlankWithEmptyString,
+                    replaceBlankValues: NoOpAlreadyHandledByIR,
                     checkRuntimeTypes: ExactValueType<StringValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
@@ -960,7 +958,7 @@ namespace Microsoft.PowerFx.Functions
                 StandardErrorHandling<StringValue>(
                     BuiltinFunctionsCore.Lower.Name,
                     expandArguments: NoArgExpansion,
-                    replaceBlankValues: ReplaceBlankWithEmptyString,
+                    replaceBlankValues: NoOpAlreadyHandledByIR,
                     checkRuntimeTypes: ExactValueType<StringValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
@@ -1099,7 +1097,7 @@ namespace Microsoft.PowerFx.Functions
                 StandardErrorHandling<StringValue>(
                     BuiltinFunctionsCore.Proper.Name,
                     expandArguments: NoArgExpansion,
-                    replaceBlankValues: ReplaceBlankWithEmptyString,
+                    replaceBlankValues: NoOpAlreadyHandledByIR,
                     checkRuntimeTypes: ExactValueType<StringValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
@@ -1286,7 +1284,7 @@ namespace Microsoft.PowerFx.Functions
                 StandardErrorHandling<StringValue>(
                     BuiltinFunctionsCore.Split.Name,
                     expandArguments: NoArgExpansion,
-                    replaceBlankValues: ReplaceBlankWithEmptyString,
+                    replaceBlankValues: NoOpAlreadyHandledByIR,
                     checkRuntimeTypes: ExactValueType<StringValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
@@ -1487,7 +1485,7 @@ namespace Microsoft.PowerFx.Functions
                 StandardErrorHandling<StringValue>(
                     BuiltinFunctionsCore.Trim.Name,
                     expandArguments: NoArgExpansion,
-                    replaceBlankValues: ReplaceBlankWithEmptyString,
+                    replaceBlankValues: NoOpAlreadyHandledByIR,
                     checkRuntimeTypes: ExactValueType<StringValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
@@ -1498,7 +1496,7 @@ namespace Microsoft.PowerFx.Functions
                 StandardErrorHandling<StringValue>(
                     BuiltinFunctionsCore.TrimEnds.Name,
                     expandArguments: NoArgExpansion,
-                    replaceBlankValues: ReplaceBlankWithEmptyString,
+                    replaceBlankValues: NoOpAlreadyHandledByIR,
                     checkRuntimeTypes: ExactValueType<StringValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
@@ -1520,7 +1518,7 @@ namespace Microsoft.PowerFx.Functions
                 StandardErrorHandling<StringValue>(
                     BuiltinFunctionsCore.Upper.Name,
                     expandArguments: NoArgExpansion,
-                    replaceBlankValues: ReplaceBlankWithEmptyString,
+                    replaceBlankValues: NoOpAlreadyHandledByIR,
                     checkRuntimeTypes: ExactValueType<StringValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
@@ -1658,7 +1656,7 @@ namespace Microsoft.PowerFx.Functions
             },
             {
                 BuiltinFunctionsCore.Hex2DecT,
-                StandardErrorHandlingTabularOverload<StringValue>(BuiltinFunctionsCore.Hex2DecT.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.Hex2Dec], ReplaceBlankWithZero)
+                StandardErrorHandlingTabularOverload<StringValue>(BuiltinFunctionsCore.Hex2DecT.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.Hex2Dec], ReplaceBlankWithEmptyString)
             },
             {
                 BuiltinFunctionsCore.IntT,
@@ -1666,7 +1664,7 @@ namespace Microsoft.PowerFx.Functions
             },
             {
                 BuiltinFunctionsCore.LenT,
-                StandardErrorHandlingTabularOverload<StringValue>(BuiltinFunctionsCore.LenT.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.Len], ReplaceBlankWithZero)
+                StandardErrorHandlingTabularOverload<StringValue>(BuiltinFunctionsCore.LenT.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.Len], ReplaceBlankWithEmptyString)
             },
             {
                 BuiltinFunctionsCore.LnT,

@@ -2,6 +2,8 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections.Generic;
+using Microsoft.PowerFx.Core.Functions;
 
 namespace Microsoft.PowerFx.Functions
 {
