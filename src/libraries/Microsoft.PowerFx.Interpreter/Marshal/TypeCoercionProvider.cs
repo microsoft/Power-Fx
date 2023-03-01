@@ -16,15 +16,19 @@ namespace Microsoft.PowerFx
     /// </summary>
     public static class TypeCoercionProvider
     {
-        internal static FormattingInfo CreateFormattingInfo()
+        internal static FormattingInfo CreateFormattingInfo() => new FormattingInfo()
         {
-            return new FormattingInfo()
-            {
-                CultureInfo = CultureInfo.CurrentCulture,
-                CancellationToken = CancellationToken.None,
-                TimeZoneInfo = TimeZoneInfo.Local
-            };
-        }
+            CultureInfo = CultureInfo.CurrentCulture,
+            CancellationToken = CancellationToken.None,
+            TimeZoneInfo = TimeZoneInfo.Local
+        };
+
+        internal static FormattingInfo CreateFormattingInfoFromRuntimeConfig(RuntimeConfig runtimeConfig) => new FormattingInfo()
+        {
+            CultureInfo = runtimeConfig.GetService<CultureInfo>(),
+            CancellationToken = runtimeConfig.GetService<CancellationToken>(),
+            TimeZoneInfo = runtimeConfig.GetService<TimeZoneInfo>()
+        };
 
         /// <summary>
         /// Try to convert value to Boolean format.
@@ -46,6 +50,18 @@ namespace Microsoft.PowerFx
         public static bool TryCoerceTo(this FormulaValue value, out StringValue result)
         {
             return TryCoerceTo(value, CreateFormattingInfo(), out result);
+        }
+
+        /// <summary>
+        /// Try to convert value to String format.
+        /// </summary>
+        /// <param name="value">Input value.</param>
+        /// <param name="runtimeConfig">Runtime Config. Need to SetCulture, SetCancellationToken and SetTimeZone for RuntimeConfig.</param>
+        /// <param name="result">Result value.</param>
+        /// <returns>True/False based on whether function can convert from original type to String type.</returns> 
+        public static bool TryCoerceTo(this FormulaValue value, RuntimeConfig runtimeConfig, out StringValue result)
+        {
+            return TryText(CreateFormattingInfoFromRuntimeConfig(runtimeConfig), IRContext.NotInSource(FormulaType.String), value, null, out result);
         }
 
         /// <summary>

@@ -2,7 +2,9 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Globalization;
 using System.Numerics;
+using System.Threading;
 using Microsoft.PowerFx;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Interpreter;
@@ -102,6 +104,23 @@ namespace Microsoft.PowerFx.Tests
             {
                 Assert.False(isSucceeded);
                 Assert.IsType<ErrorValue>(resultValue);
+            }
+
+            var runtimeConfig = new RuntimeConfig();
+            runtimeConfig.SetCulture(CultureInfo.CurrentCulture);
+            runtimeConfig.SetCancellationToken(CancellationToken.None);
+            runtimeConfig.SetTimeZone(TimeZoneInfo.Utc);
+
+            isSucceeded = inputValue.TryCoerceTo(runtimeConfig, out StringValue resultString);
+            if (exprStr != null)
+            {
+                Assert.True(isSucceeded);
+                Assert.Equal(exprStr, resultString.Value);
+            }
+            else
+            {
+                Assert.False(isSucceeded);
+                Assert.IsType<ErrorValue>(resultString);
             }
 
             isSucceeded = inputValue.TryCoerceTo(out DateTimeValue resultDateTime);

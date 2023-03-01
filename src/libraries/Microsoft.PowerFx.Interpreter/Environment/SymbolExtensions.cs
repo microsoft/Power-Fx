@@ -4,6 +4,7 @@
 using System;
 using System.Globalization;
 using System.Linq;
+using System.Threading;
 
 namespace Microsoft.PowerFx
 {
@@ -29,6 +30,16 @@ namespace Microsoft.PowerFx
         public static void SetCulture(this RuntimeConfig symbols, CultureInfo culture)
         {
             symbols.AddService(culture ?? throw new ArgumentNullException(nameof(culture)));
+        }
+
+        /// <summary>
+        /// Set CancellationToken.
+        /// </summary>
+        /// <param name="symbols">SymbolValues where to set the CancellationToken.</param>
+        /// <param name="cancellationToken">CancellationToken to set.</param>
+        public static void SetCancellationToken(this RuntimeConfig symbols, CancellationToken cancellationToken)
+        {
+            symbols.AddService(cancellationToken);
         }
 
         /// <summary>
