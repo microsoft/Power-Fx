@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -833,6 +834,9 @@ namespace Microsoft.PowerFx.Functions
             }
             else
             {
+                // 0 is an error. This was already enforced by the IR
+                Contract.Assert(instanceNum > 0);
+
                 for (int idx = 0; idx < source.Value.Length; idx += match.Value.Length)
                 {
                     eval.CheckCancel();

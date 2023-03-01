@@ -206,5 +206,14 @@ Error({Kind:ErrorKind.InvalidArgument})
 >> Substitute("abcabcabc", "abd", "dfg")
 "abcabcabc"
 
+>> Substitute("ababb", "ab", "aba")
+"abaabab"
+
+>> Substitute("abcabcabc", "ab", "dfg")
+"dfgcdfgcdfgc"
+
+>> Substitute("aaaaa", "aa", "dfg")
+"dfgdfga"
+
 >> Len(With({one: "aaaaaaaaaaaaaaaaaa"}, Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(one, "a", one, 3), "a", one, 3), "a", one, 3), "a", one, 3), "a", one, 3), "a", one, 3), "a", one, 3), "a", one, 3), "a", one, 3), "a", one, 3)))
 188
