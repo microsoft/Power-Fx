@@ -150,6 +150,10 @@ namespace Microsoft.PowerFx.Core.Functions
         // with side effects, such as Collect.
         public virtual bool IsBehaviorOnly => !IsSelfContained;
 
+        // Return true if the function can only be used as part of test cases. Functions that
+        // emulate user interaction fall into this category, such as SetProperty.
+        public virtual bool IsTestOnly => false;
+
         // Return true if the function manipulates collections.
         public virtual bool ManipulatesCollections => false;
 
