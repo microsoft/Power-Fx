@@ -163,9 +163,6 @@ namespace Microsoft.PowerFx.Core.Functions
         // Return true if the function expects a screen's context variables to be suggested within a record argument.
         public virtual bool CanSuggestContextVariables => false;
 
-        // Returns true if it's valid to suggest ThisItem for this function as an argument.
-        public virtual bool CanSuggestThisItem => false;
-
         // Return true if this function affects collection schemas.
         public virtual bool AffectsCollectionSchemas => false;
 
