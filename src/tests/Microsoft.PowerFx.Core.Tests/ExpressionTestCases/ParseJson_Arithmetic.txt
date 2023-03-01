@@ -288,8 +288,8 @@ Error({Kind:ErrorKind.NotSupported})
 >> Day(ParseJSON("1") - DateTime(2011,1,15,4,5,6))
 Error({Kind:ErrorKind.NotSupported})
 
->> Hour(Time(12, 34, 56) - ParseJSON("1"))
--11
+>> Hour(Time(12, 34, 56) - ParseJSON("0.25"))
+6
 
 >> Hour(ParseJSON("1") - Time(12, 34, 56))
 Error({Kind:ErrorKind.NotSupported})
