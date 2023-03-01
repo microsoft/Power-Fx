@@ -8,7 +8,7 @@
 // b) it's verified nobody is actually using the return value.
 
 >> If(1<0, "abc1", {x:3})
-"Void"
+If(true, {test:1}, "Mismatched args")
 
 >> If(1>0, 100, {x:3}) + 1
 Errors: Error 0-19: Invalid argument type. Expecting one of the following: Number, Text, Boolean.
@@ -26,7 +26,7 @@ Errors: Error 6-29: Invalid argument type. Expecting one of the following: Numbe
 Errors: Error 10-33: Invalid argument type. Expecting one of the following: Number, Text, Boolean.
 
 >> If(1<0, "abc2", {x:3}; {x:2})
-"Void"
+If(true, {test:1}, "Mismatched args")
 
 >> If(false, "abc3", {x:3}; If(true, Value(10); {x:3})); Value(101)
 101

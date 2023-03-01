@@ -1922,8 +1922,13 @@ namespace Microsoft.PowerFx.Functions
 
         private static FormulaValue MaybeAdjustToCompileTimeType(FormulaValue result, IRContext irContext)
         {
-            if (irContext.ResultType is VoidType && result is not ErrorValue)
+            if (irContext.ResultType is VoidType)
             {
+                if (result is ErrorValue ev)
+                {
+                    return new ErrorValue(IRContext.NotInSource(FormulaType.Void), (List<ExpressionError>)ev.Errors);
+                }
+
                 return new VoidValue(IRContext.NotInSource(FormulaType.Void));
             }
             else if (result is RecordValue recordValue && irContext.ResultType is RecordType compileTimeType)
