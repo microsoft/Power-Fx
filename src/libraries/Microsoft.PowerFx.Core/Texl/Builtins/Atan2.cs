@@ -15,6 +15,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Equivalent Excel function: Atan2
     internal sealed class Atan2Function : BuiltinFunction
     {
+        public override ArgPreprocessor GetArgPreprocessor(int index)
+        {
+            return base.GetGenericArgPreprocessor(index);
+        }
+
         public override bool IsSelfContained => true;
 
         public Atan2Function()
@@ -35,8 +40,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         {
             yield return new[] { TexlStrings.AboutAtan2Arg1, TexlStrings.AboutAtan2Arg2 };
         }
-
-        public override bool SupportsParamCoercion => true;
     }
 }
 

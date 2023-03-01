@@ -67,7 +67,7 @@ namespace Microsoft.PowerFx
         /// <returns></returns>
         public T GetService<T>()
         {
-            return (T)_services.GetService(typeof(T));            
+            return (T)_services.GetService(typeof(T));
         }
 
         public bool TryGetService<T>(out T result)
@@ -171,7 +171,7 @@ namespace Microsoft.PowerFx
                     }
 
                     // This may happen if the runtime symbols are missing a value and we failed to update. 
-                }    
+                }
             }
 
             // Fail?
@@ -262,7 +262,7 @@ namespace Microsoft.PowerFx
                 result = await customTexlFunc.InvokeAsync(FunctionServices, args, _cancellationToken);
             }
             else
-            {
+            {               
                 if (FunctionImplementations.TryGetValue(func, out var ptr))
                 {
                     try
@@ -660,7 +660,7 @@ namespace Microsoft.PowerFx
 
         private FormulaValue GetVariableOrFail(ResolvedObjectNode node, ISymbolSlot slot)
         {
-            if (_symbolValues != null)                
+            if (_symbolValues != null)
             {
                 var value = _symbolValues.Get(slot);
                 if (value != null)
@@ -674,15 +674,7 @@ namespace Microsoft.PowerFx
 
         public DateTime GetNormalizedDateTime(FormulaValue arg)
         {
-            switch (arg)
-            {
-                case DateTimeValue dtv:
-                    return dtv.GetConvertedValue(TimeZoneInfo);
-                case DateValue dv:
-                    return dv.GetConvertedValue(TimeZoneInfo);
-                default:
-                    throw CommonExceptions.RuntimeMisMatch;
-            }
+            return GetNormalizedDateTimeLibrary(arg, TimeZoneInfo);
         }
 
         public DateTime GetNormalizedDateTimeAllowTimeValue(FormulaValue arg)

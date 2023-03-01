@@ -421,17 +421,6 @@ namespace Microsoft.PowerFx.Intellisense
             }
         }
 
-        internal static IEnumerable<KeyValuePair<string, DType>> GetColumnNameIdentifierSuggestions(DType scopeType)
-        {
-            Contracts.AssertValid(scopeType);
-
-            foreach (var name in scopeType.GetRootFieldNames()
-                .Select(field => (Type: scopeType.GetType(field), Name: field)))
-            {
-                yield return new KeyValuePair<string, DType>(CharacterUtils.ExcelEscapeString(name.Name.Value), name.Type);
-            }
-        }
-
         internal static IEnumerable<KeyValuePair<string, DType>> GetSuggestionsFromType(DType typeToSuggestFrom, DType suggestionType)
         {
             Contracts.AssertValid(typeToSuggestFrom);
@@ -633,7 +622,9 @@ namespace Microsoft.PowerFx.Intellisense
             // TASK: 76039: Intellisense: Update intellisense to filter suggestions based on the expected type of the text being typed in UI
             Contracts.AssertValue(intellisenseData);
 
-            foreach (var function in intellisenseData.Binding.NameResolver.Functions)
+            // $$$ Needs optimization
+#pragma warning disable CS0618 // Type or member is obsolete
+            foreach (var function in intellisenseData.Binding.NameResolver.Functions.Functions)
             {
                 var qualifiedName = function.QualifiedName;
                 var highlightStart = qualifiedName.IndexOf(intellisenseData.MatchingStr, StringComparison.OrdinalIgnoreCase);
@@ -650,6 +641,7 @@ namespace Microsoft.PowerFx.Intellisense
                     }
                 }
             }
+#pragma warning restore CS0618 // Type or member is obsolete
         }
 
         /// <summary>
@@ -713,9 +705,8 @@ namespace Microsoft.PowerFx.Intellisense
 
             intellisenseData.AddCustomSuggestionsForGlobals();
 
-            // Suggest function namespaces
-            var namespaces = intellisenseData.Binding.NameResolver.Functions.Select(func => func.Namespace).Distinct();
-            foreach (var funcNamespace in namespaces)
+            // Suggest function namespaces                                        
+            foreach (var funcNamespace in intellisenseData.Binding.NameResolver.Functions.Namespaces)
             {
                 if (funcNamespace == DPath.Root)
                 {

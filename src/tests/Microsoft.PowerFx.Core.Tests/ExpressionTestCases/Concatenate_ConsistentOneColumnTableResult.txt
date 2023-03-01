@@ -1,6 +1,9 @@
 #SETUP: ConsistentOneColumnTableResult
 
->> Concatenate("777", ["abc"], ["1", "2"])
+>> Concatenate("Jane", Table({a: "Doe"}, {a: "Smith"}, {a: "Williams"}))
+Table({Value:"JaneDoe"},{Value:"JaneSmith"},{Value:"JaneWilliams"})
+
+>> Concatenate("777", ["abc"], Table({a: "1"}, {a: "2"}))
 Table({Value:"777abc1"},{Value:Error({Kind:ErrorKind.NotApplicable})})
 
 >> Concatenate("777", Filter(["empty table"], Value <> Value), ["1", "2"])

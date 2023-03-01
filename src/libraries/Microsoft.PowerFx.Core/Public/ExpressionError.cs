@@ -66,7 +66,7 @@ namespace Microsoft.PowerFx
 
         // localize message lazily 
         private string _message; 
-        private object[] _messageArgs;
+        internal object[] _messageArgs;
         private CultureInfo _messageLocale;
 
         internal CultureInfo MessageLocale => _messageLocale;

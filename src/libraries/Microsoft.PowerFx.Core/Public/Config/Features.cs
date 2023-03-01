@@ -41,12 +41,13 @@ namespace Microsoft.PowerFx
         /// <summary>
         /// Enforces strong-typing for builtin enums, rather than treating
         /// them as aliases for values of string/number/boolean types
-        /// Added January 2023.
+        /// Added March 2023.
         /// </summary>
         StronglyTypedBuiltinEnums = 0x10,
 
         /// <summary>        
         /// All features enabled
+        /// [USE WITH CAUTION] In using this value, you expose your code to future features.
         /// </summary>
         All = ~0
     }

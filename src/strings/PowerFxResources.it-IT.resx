@@ -1837,6 +1837,10 @@
     <value>Il valore numerico è troppo alto.</value>
     
   </data>
+  <data name="ErrTextTooLarge" xml:space="preserve">
+    <value>L'espressione non può superare {0} caratteri. L'espressione è {1} caratteri.</value>
+    
+  </data>
   <data name="ErrTextFormatTooLarge" xml:space="preserve">
     <value>Le dimensioni della stringa di formato non possono superare {0} caratteri.</value>
     
@@ -1863,6 +1867,10 @@
   </data>
   <data name="ErrTypeError_Arg_Expected_Found" xml:space="preserve">
     <value>Il tipo dell'argomento '{0}' non corrisponde al tipo previsto '{1}'. È stato trovato il tipo '{2}'.</value>
+    
+  </data>
+  <data name="ErrTypeError_WrongType" xml:space="preserve">
+    <value>Il tipo di questa espressione non corrisponde al tipo previsto "{0}". È stato trovato il tipo "{1}".</value>
     
   </data>
   <data name="ErrTypeErrorRecordIncompatibleWithSource" xml:space="preserve">
@@ -2643,10 +2651,6 @@
   <data name="AboutIsNumeric_value" xml:space="preserve">
     <value>Valore da testare.</value>
   </data>
-  <data name="Post" xml:space="preserve">
-    <value>Pubblica</value>
-    
-  </data>
   <data name="AboutDateTimeValue" xml:space="preserve">
     <value>Converte una data e un'ora in formato testo in un numero che rappresenta la data nel codice data-ora di Power Apps.</value>
     
@@ -3064,7 +3068,7 @@
     
   </data>
   <data name="Icon_Train_DisplayName" xml:space="preserve">
-    <value>Treno</value>
+    <value>Esegui training</value>
     
   </data>
   <data name="Icon_Tray_DisplayName" xml:space="preserve">
@@ -4111,10 +4115,6 @@
     <value>La forzatura di record o tabelle non è supportata nelle colonne della formula.</value>
     
   </data>
-  <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
-    <value>Le formule non possono essere più lunghe di 1000 caratteri.</value>
-    
-  </data>
   <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
     <value>Le tabelle a colonna singola non sono supportate nelle colonne della formula.</value>
     
@@ -4225,10 +4225,10 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
-    <value>Questo errore viene visualizzato quando una formula fa riferimento a proprietà di comportamento dei componenti con una sintassi non valida. Ad esempio: Component.OnCustomChange anziché Component.OnCustomChange()</value>
+    <value>Questo errore viene visualizzato quando una formula fa riferimento alle proprietà della funzione del componente con una sintassi non valida. (Ad esempio: Component.CustomFunction invece di Component.CustomFunction())</value>
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
-    <value>Usare la sintassi corretta per fare riferimento alla proprietà di comportamento del componente. Ad esempio: Component.OnCustomChange()</value>
+    <value>Utilizza la sintassi corretta per fare riferimento alla proprietà della funzione del componente. Ad esempio: Component.CustomFunction()</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_Link_1" xml:space="preserve">
@@ -4730,11 +4730,15 @@
     
   </data>
   <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
-    <value>Impossibile utilizzare oggetti senza tipo come primo argomento per le funzioni che supportano gli ambiti dei record.</value>
+    <value>Impossibile utilizzare oggetti non tipizzati come primo argomento per le funzioni che supportano gli ambiti dei record.</value>
     
   </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>La formula con nome deve terminare con un punto e virgola.</value>
+    
+  </data>
+  <data name="ErrNamedFormula_MissingValue" xml:space="preserve">
+    <value>La formula denominata deve essere un'espressione.</value>
     
   </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
@@ -4828,6 +4832,10 @@
   </data>
   <data name="ErrInvalidFunction" xml:space="preserve">
     <value>Questa funzione è ambigua, contiene espressioni lambda e identificatori di colonna per lo stesso argomento.</value>
+    
+  </data>
+  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
+    <value>L'opzione BooleanOptionSet {0} non è supportata.</value>
     
   </data>
 </root>

@@ -19,8 +19,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // LookUp(source:*, predicate, [projectionFunc])
     internal sealed class LookUpFunction : FilterFunctionBase
     {
-        public override bool SupportsParamCoercion => true;
-
         public override bool HasPreciseErrors => true;
 
         public LookUpFunction()

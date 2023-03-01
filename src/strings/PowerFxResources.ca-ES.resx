@@ -1837,6 +1837,10 @@
     <value>El valor numèric és massa gran.</value>
     
   </data>
+  <data name="ErrTextTooLarge" xml:space="preserve">
+    <value>L'expressió no pot tenir més de {0} caràcters. L'expressió té {1} caràcters.</value>
+    
+  </data>
   <data name="ErrTextFormatTooLarge" xml:space="preserve">
     <value>La mida de la cadena de format no pot tenir més de {0} caràcters.</value>
     
@@ -1863,6 +1867,10 @@
   </data>
   <data name="ErrTypeError_Arg_Expected_Found" xml:space="preserve">
     <value>El tipus de l'argument '{0}' no coincideix amb el tipus esperat '{1}'. S'ha trobat el tipus '{2}'.</value>
+    
+  </data>
+  <data name="ErrTypeError_WrongType" xml:space="preserve">
+    <value>El tipus d'aquesta expressió no coincideix amb el tipus esperat "{0}". S'ha trobat el tipus "{1}".</value>
     
   </data>
   <data name="ErrTypeErrorRecordIncompatibleWithSource" xml:space="preserve">
@@ -2642,10 +2650,6 @@
   </data>
   <data name="AboutIsNumeric_value" xml:space="preserve">
     <value>Valor que es provarà.</value>
-  </data>
-  <data name="Post" xml:space="preserve">
-    <value>Publica</value>
-    
   </data>
   <data name="AboutDateTimeValue" xml:space="preserve">
     <value>Converteix una data i una hora en format de text en un nombre que representa la data en el codi de data i hora del Power Apps.</value>
@@ -4111,10 +4115,6 @@
     <value>Les columnes de fórmules no admeten la coerció de registres o taules.</value>
     
   </data>
-  <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
-    <value>Les fórmules no poden tenir més de 1000 caràcters.</value>
-    
-  </data>
   <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
     <value>Les taules d'una sola columna no s'admeten a les columnes de fórmules.</value>
     
@@ -4225,10 +4225,10 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
-    <value>Aquest error apareix quan una fórmula fa referència a propietats del comportament del component amb una sintaxi no vàlida. (Per exemple, Component.OnCustomChange en lloc de Component.OnCustomChange().)</value>
+    <value>Aquest error apareix quan una fórmula fa referència a propietats de funció del component amb una sintaxi no vàlida. (Per exemple, Component.CustomFunction en lloc de Component.CustomFunction()).</value>
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
-    <value>Utilitzeu la sintaxi correcta per referir-vos a la propietat del comportament del component. Per exemple, Component.OnCustomChange()</value>
+    <value>Utilitzeu la sintaxi correcta per referir-vos a la propietat de funció del component. Per exemple, Component.CustomFunction().</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_Link_1" xml:space="preserve">
@@ -4737,6 +4737,10 @@
     <value>La fórmula amb nom ha d'acabar amb un punt i coma.</value>
     
   </data>
+  <data name="ErrNamedFormula_MissingValue" xml:space="preserve">
+    <value>La fórmula amb nom ha de ser una expressió.</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>La fórmula NamedFormula "{0}" ja existeix.</value>
   </data>
@@ -4828,6 +4832,10 @@
   </data>
   <data name="ErrInvalidFunction" xml:space="preserve">
     <value>Aquesta funció és ambigua; conté expressions lambda i identificadors de columna per al mateix argument.</value>
+    
+  </data>
+  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
+    <value>No s'admet l'opció BooleanOptionSet {0}.</value>
     
   </data>
 </root>

@@ -2,24 +2,6 @@
 
 // Check MutationFunctionsTestSetup handler (PowerFxEvaluationTests.cs) for documentation.
 
->> Patch(r1, {Field5:5})
-{Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true,Field5:5}
-
->> Patch(r1, r_empty)
-{Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}
-
->> Patch(r1, {Field2:"mars"})
-{Field1:1,Field2:"mars",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}
-
->> Patch(r1, {Field2:"mars"}, Blank())
-{Field1:1,Field2:"mars",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}
-
->> Patch(r1, {Field3:DateTime(2022,12,12,0,0,0,0)}, {Field4:false})
-{Field1:1,Field2:"earth",Field3:DateTime(2022,12,12,0,0,0,0),Field4:false}
-
->> Patch(r1, r2)
-{Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false}
-
 >> Patch(t1, r1, r_empty);
    t1
 Table({Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})
@@ -51,7 +33,7 @@ Table({Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false})
 
 >> Patch(t1, r1, {Field5:"Field5"});
    t1
-Errors: Error 0-32: The function 'Patch' has some invalid arguments.|Error 14-31: The specified column 'Field5' does not exist.
+Errors: Error 14-31: The specified column 'Field5' does not exist.|Error 0-32: The function 'Patch' has some invalid arguments.
 
 // This test would fail in PA.
 >> Patch(Table(r1, r2), r1, {Field2:"Venus"})
@@ -94,7 +76,7 @@ Table({Field1:10,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})
 "phobos"
 
 >> Patch(t1, 0, 0)
-Errors: Error 0-15: The function 'Patch' has some invalid arguments.|Error 10-11: Invalid argument type (Number). Expecting a Record value instead.|Error 13-14: Invalid argument type (Number). Expecting a Record value instead.|Error 10-11: Cannot use a non-record value in this context.|Error 13-14: Cannot use a non-record value in this context.
+Errors: Error 10-11: Invalid argument type (Number). Expecting a Record value instead.|Error 13-14: Invalid argument type (Number). Expecting a Record value instead.|Error 10-11: Cannot use a non-record value in this context.|Error 13-14: Cannot use a non-record value in this context.|Error 0-15: The function 'Patch' has some invalid arguments.
 
 // field22 is missing and this is Ok
 >> Patch(
@@ -144,7 +126,7 @@ Table({Field1:0,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})
 
 >> Patch(t1, First(t1), {DisplayNameField5:"Pandora"});
    First(t1)
-Errors: Error 0-51: The function 'Patch' has some invalid arguments.|Error 21-50: The specified column 'DisplayNameField5' does not exist. The column with the most similar name is 'DisplayNameField1'.
+Errors: Error 21-50: The specified column 'DisplayNameField5' does not exist. The column with the most similar name is 'DisplayNameField1'.|Error 0-51: The function 'Patch' has some invalid arguments.
 
 >> Patch(t1, {Field1:1}, {DisplayNameField2:"mars"});
    First(t1).Field2
@@ -164,7 +146,7 @@ Blank()
 
 // Record to Record coercion not allowed
 >> Patch(t1, First(Filter(t1, Field2="earth")), {Field3: "2022-11-14 7:22:06 pm"})
-Errors: Error 0-79: The function 'Patch' has some invalid arguments.|Error 45-78: The type of this argument 'Field3' does not match the expected type 'DateTime'. Found type 'Text'.
+Errors: Error 45-78: The type of this argument 'Field3' does not match the expected type 'DateTime'. Found type 'Text'.|Error 0-79: The function 'Patch' has some invalid arguments.
 
 >> Patch(t1,LookUp(t1,DisplayNameField2="earth"),{Field1:100,Field4:false});t1
 Table({Field1:100,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:false})
@@ -191,5 +173,14 @@ Errors: Error 6-9: Name isn't valid. 'Foo' isn't recognized.|Error 0-51: The fun
 >> Patch(Foo, Bar, {DisplayNameField2:"jupter"})
 Errors: Error 6-9: Name isn't valid. 'Foo' isn't recognized.|Error 11-14: Name isn't valid. 'Bar' isn't recognized.|Error 0-45: The function 'Patch' has some invalid arguments.
 
->> Patch(r1, Foo)
-Errors: Error 10-13: Name isn't valid. 'Foo' isn't recognized.|Error 0-14: The function 'Patch' has some invalid arguments.
+>> Patch([1,2], {Value:1}, If(false, {x:1, Value:2}, {Value:11, z:2}))
+{Value:11}
+
+>> Patch([1,2], If(false, {x:1, Value:2}, {Value:1, z:2}),  {Value:11})
+{Value:11}
+
+>> Patch([1,2], If(false, {x:1, Value:2}, {Value:1, z:2}),  If(false, {x:1, Value:2}, {Value:11, z:2}))
+{Value:11}
+
+>> Patch(Table({Value:1}, If(false, {x:1, Value:2}, {Value:2, z:2}), {Value:3}), {Value:2}, {Value:11})
+{Value:11}

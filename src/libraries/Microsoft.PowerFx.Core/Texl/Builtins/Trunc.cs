@@ -17,9 +17,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Truncate by rounding toward zero.
     internal sealed class TruncFunction : BuiltinFunction
     {
-        public override bool IsSelfContained => true;
+        public override ArgPreprocessor GetArgPreprocessor(int index)
+        {
+            return base.GetGenericArgPreprocessor(index);
+        }
 
-        public override bool SupportsParamCoercion => true;
+        public override bool IsSelfContained => true;
 
         public TruncFunction()
             : base("Trunc", TexlStrings.AboutTrunc, FunctionCategories.MathAndStat, DType.Number, 0, 1, 2, DType.Number, DType.Number)
@@ -36,8 +39,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class TruncTableFunction : BuiltinFunction
     {
         public override bool IsSelfContained => true;
-
-        public override bool SupportsParamCoercion => true;
 
         public TruncTableFunction()
             : base("Trunc", TexlStrings.AboutTruncT, FunctionCategories.Table, DType.EmptyTable, 0, 1, 2)

@@ -115,7 +115,15 @@ namespace Microsoft.PowerFx.Types
 
         public IEnumerable<NamedFormulaType> GetFieldTypes()
         {
-            return FieldNames.Select(field => new NamedFormulaType(field, GetFieldType(field)));
+            return FieldNames.Select(field =>
+            {
+                var fieldType = GetFieldType(field);
+                
+                var displayName = DType.TryGetDisplayNameForColumn(_type, field, out var dName)
+                    ? dName
+                    : null;
+                return new NamedFormulaType(field, GetFieldType(field), displayName);
+            });
         }
 
         private protected DType AddFieldToType(NamedFormulaType field)

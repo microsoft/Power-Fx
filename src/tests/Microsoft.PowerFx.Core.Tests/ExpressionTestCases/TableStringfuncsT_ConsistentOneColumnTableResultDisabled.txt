@@ -1,0 +1,43 @@
+﻿// Scalar + Table
+>> Concatenate("a", Table({b:"1"},{b:"2"}))
+Table({Result:"a1"},{Result:"a2"})
+
+>> Concatenate("a", ["hello", Mid("great", -1), "world"])
+Table({Result:"ahello"},{Result:Error({Kind:ErrorKind.InvalidArgument})},{Result:"aworld"})
+
+>> Concatenate("a", Table({a:"one"},If(1<0,{a:"two"}),{a:"three"}))
+Table({Result:"aone"},{Result:"a"},{Result:"athree"})
+
+>> Concatenate("a", Table({a:"one"},If(1/0<2,{a:"two"}),{a:"three"}))
+Table({Result:"aone"},Error({Kind:ErrorKind.Div0}),{Result:"athree"})
+
+// Table + Scalar (Reverse Arguments)
+
+>> Concatenate(Table({b:"1"},{b:"2"}), "a")
+Table({Result:"1a"},{Result:"2a"})
+
+>> Concatenate(["hello", Mid("great", -1), "world"], "a")
+Table({Result:"helloa"},{Result:Error({Kind:ErrorKind.InvalidArgument})},{Result:"worlda"})
+
+>> Concatenate(Table({a:"one"},If(1<0,{a:"two"}),{a:"three"}), "a")
+Table({Result:"onea"},{Result:"a"},{Result:"threea"})
+
+>> Concatenate(Table({a:"one"},If(1/0<2,{a:"two"}),{a:"three"}), "a")
+Table({Result:"onea"},Error({Kind:ErrorKind.Div0}),{Result:"threea"})
+
+// Table + Table
+
+>> Concatenate(["one", "two"], [1, 2, 3, 4])
+Table({Result:"one1"},{Result:"two2"},{Result:Error({Kind:ErrorKind.NotApplicable})},{Result:Error({Kind:ErrorKind.NotApplicable})})
+
+>> Concatenate(["one", "two"], LastN(Table({b:"1"},{b:"2"}), 0))
+Table({Result:Error({Kind:ErrorKind.NotApplicable})},{Result:Error({Kind:ErrorKind.NotApplicable})})
+
+>> Concatenate(["one", "two"], Table({a:"one"},If(1<0,{a:"two"}),{a:"three"}))
+Table({Result:"oneone"},{Result:"two"},{Result:Error({Kind:ErrorKind.NotApplicable})})
+
+>> Concatenate(["one", "two"], ["hello", Mid("great", -1), "world"])
+Table({Result:"onehello"},{Result:Error({Kind:ErrorKind.InvalidArgument})},{Result:Error({Kind:ErrorKind.NotApplicable})})
+
+>> Concatenate(["a","b","c","d"], "-", ["1", "2"], "-", ["x", "y", "z"], "!")
+Table({Result:"a-1-x!"},{Result:"b-2-y!"},{Result:Error({Kind:ErrorKind.NotApplicable})},{Result:Error({Kind:ErrorKind.NotApplicable})})

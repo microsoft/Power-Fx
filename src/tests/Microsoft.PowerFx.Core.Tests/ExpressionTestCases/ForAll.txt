@@ -76,3 +76,4 @@ Table({x:1,y:2},Blank())
 
 >> Last(ForAll([true,false], If(ThisRecord.Value, {x:1,y:2}, Blank()))).x
 Blank()
+

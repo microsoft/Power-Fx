@@ -1837,6 +1837,10 @@
     <value>Det numeriska värdet är för stort.</value>
     
   </data>
+  <data name="ErrTextTooLarge" xml:space="preserve">
+    <value>Uttrycket får inte vara längre än {0} tecken. Uttrycket är {1} tecken.</value>
+    
+  </data>
   <data name="ErrTextFormatTooLarge" xml:space="preserve">
     <value>Storlek på formatsträng får inte vara fler än {0} tecken.</value>
     
@@ -1863,6 +1867,10 @@
   </data>
   <data name="ErrTypeError_Arg_Expected_Found" xml:space="preserve">
     <value>Argumenttypen {0} matchar inte den förväntade typen {1}. Hittade typen {2}.</value>
+    
+  </data>
+  <data name="ErrTypeError_WrongType" xml:space="preserve">
+    <value>Denna uttryckstyp matchar inte den förväntade typen "{0}". Hittade typen "{1}".</value>
     
   </data>
   <data name="ErrTypeErrorRecordIncompatibleWithSource" xml:space="preserve">
@@ -2643,10 +2651,6 @@
   <data name="AboutIsNumeric_value" xml:space="preserve">
     <value>Värdet att testa.</value>
   </data>
-  <data name="Post" xml:space="preserve">
-    <value>Inlägg</value>
-    
-  </data>
   <data name="AboutDateTimeValue" xml:space="preserve">
     <value>Konverterar ett datum och tid i textformat till ett tal som representerar datumet i Power Apps datum/tid-kod.</value>
     
@@ -3064,7 +3068,7 @@
     
   </data>
   <data name="Icon_Train_DisplayName" xml:space="preserve">
-    <value>Tåg</value>
+    <value>Träna</value>
     
   </data>
   <data name="Icon_Tray_DisplayName" xml:space="preserve">
@@ -3332,7 +3336,7 @@
     
   </data>
   <data name="AboutClear" xml:space="preserve">
-    <value>raderar alla poster i en samling. Kolumnerna i samlingen förblir kvar.</value>
+    <value>Tar bort alla poster i en samling. Kolumnerna i samlingen förblir kvar.</value>
     
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
@@ -4111,10 +4115,6 @@
     <value>Det går inte att använda flera samtidiga poster eller tabeller i formelkolumner.</value>
     
   </data>
-  <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
-    <value>Formler får inte vara längre än 1 000 tecken.</value>
-    
-  </data>
   <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
     <value>Tabeller med en kolumn stöds inte i formelkolumner.</value>
     
@@ -4225,10 +4225,10 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
-    <value>Det här felet uppstår när en formel refererar till egenskaper för komponentbeteende med en ogiltig syntax. (Till exempel Component.OnCustomChange i stället för Component.OnCustomChange())</value>
+    <value>Det här felet uppstår när en formel refererar till egenskaper för komponentfunktioner med en ogiltig syntax. (Till exempel Component.CustomFunction i stället för Component.CustomFunction())</value>
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
-    <value>Använd korrekt syntax för att referera till egenskapen för komponentbeteendet. Till exempel Component.OnCustomChange()</value>
+    <value>Använd korrekt syntax för att referera till egenskapen för komponentfunktionen. Till exempel Component.CustomFunction()</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_Link_1" xml:space="preserve">
@@ -4730,11 +4730,15 @@
     
   </data>
   <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
-    <value>Objekt utan typ kan inte användas som första argument för funktioner som stöder postomfattningar.</value>
+    <value>Typlöst objekt kan inte användas som första argument för funktioner som stöder postomfattningar.</value>
     
   </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>Den namngivna formeln måste sluta med ett semikolon.</value>
+    
+  </data>
+  <data name="ErrNamedFormula_MissingValue" xml:space="preserve">
+    <value>Den namngivna formeln måste vara ett uttryck.</value>
     
   </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
@@ -4828,6 +4832,10 @@
   </data>
   <data name="ErrInvalidFunction" xml:space="preserve">
     <value>Denna funktion är tvetydig. Den innehåller lambda-uttryck och kolumnidentifierare för samma argument.</value>
+    
+  </data>
+  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
+    <value>BooleanOptionSet-alternativet {0} stöds inte.</value>
     
   </data>
 </root>

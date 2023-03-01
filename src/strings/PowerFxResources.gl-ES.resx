@@ -1837,6 +1837,10 @@
     <value>O valor numérico é demasiado longo.</value>
     
   </data>
+  <data name="ErrTextTooLarge" xml:space="preserve">
+    <value>A expresión non pode ter máis de {0} caracteres e ten {1} caracteres.</value>
+    
+  </data>
   <data name="ErrTextFormatTooLarge" xml:space="preserve">
     <value>O tamaño da cadea de formato non pode ter máis de {0} caracteres.</value>
     
@@ -1863,6 +1867,10 @@
   </data>
   <data name="ErrTypeError_Arg_Expected_Found" xml:space="preserve">
     <value>O tipo deste argumento '{0}' non coincide co tipo esperado '{1}'. Atopouse o tipo '{2}'.</value>
+    
+  </data>
+  <data name="ErrTypeError_WrongType" xml:space="preserve">
+    <value>O tipo desta expresión non coincide co tipo esperado "{0}". Atopouse o tipo "{1}".</value>
     
   </data>
   <data name="ErrTypeErrorRecordIncompatibleWithSource" xml:space="preserve">
@@ -2643,10 +2651,6 @@
   <data name="AboutIsNumeric_value" xml:space="preserve">
     <value>Valor que se vai probar.</value>
   </data>
-  <data name="Post" xml:space="preserve">
-    <value>Postal</value>
-    
-  </data>
   <data name="AboutDateTimeValue" xml:space="preserve">
     <value>Converte unha data e hora en forma de texto nun número que representa a data do código de data e hora de Power Apps.</value>
     
@@ -3064,7 +3068,7 @@
     
   </data>
   <data name="Icon_Train_DisplayName" xml:space="preserve">
-    <value>Tren</value>
+    <value>Adestrar</value>
     
   </data>
   <data name="Icon_Tray_DisplayName" xml:space="preserve">
@@ -4111,10 +4115,6 @@
     <value>A coerción de rexistros ou táboas non se admite nas columnas de fórmula.</value>
     
   </data>
-  <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
-    <value>As fórmulas non poden ter máis de 1000 caracteres.</value>
-    
-  </data>
   <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
     <value>Non se admiten as táboas dunha única columna nas columnas de fórmula.</value>
     
@@ -4225,10 +4225,10 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
-    <value>Este erro aparece cando unha fórmula fai referencia a propiedades de comportamento de compoñentes con sintaxe non válida. (Por exemplo, Component.OnCustomChange en lugar de Component.OnCustomChange())</value>
+    <value>Este erro aparece cando unha fórmula fai referencia a propiedades de funcionamento de compoñentes con sintaxe non válida. Component.CustomFunction en lugar de Component.CustomFunction())</value>
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
-    <value>Use a sintaxe correcta para facer referencia á propiedade de comportamento do compoñente. Por exemplo, Component.OnCustomChange()</value>
+    <value>Use a sintaxe correcta para facer referencia á propiedade de funcionamento do compoñente. Por exemplo, Component.CustomFunction()</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_Link_1" xml:space="preserve">
@@ -4737,6 +4737,10 @@
     <value>As fórmulas con nome deben rematar en punto e coma.</value>
     
   </data>
+  <data name="ErrNamedFormula_MissingValue" xml:space="preserve">
+    <value>A fórmula con nome debe ser unha expresión.</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>A fórmula denominada "{0}" xa existe.</value>
   </data>
@@ -4828,6 +4832,10 @@
   </data>
   <data name="ErrInvalidFunction" xml:space="preserve">
     <value>Esta función é ambigua, contén expresións lambda e identificadores de columna para o mesmo argumento.</value>
+    
+  </data>
+  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
+    <value>A opción de BooleanOptionSet {0} non é compatible.</value>
     
   </data>
 </root>

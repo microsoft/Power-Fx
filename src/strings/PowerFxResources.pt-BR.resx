@@ -1837,6 +1837,10 @@
     <value>O valor numérico é grande demais.</value>
     
   </data>
+  <data name="ErrTextTooLarge" xml:space="preserve">
+    <value>A expressão não pode ter mais de {0} caracteres. A expressão tem {1} caracteres.</value>
+    
+  </data>
   <data name="ErrTextFormatTooLarge" xml:space="preserve">
     <value>O tamanho da cadeia de caracteres não pode exceder {0} caracteres.</value>
     
@@ -1863,6 +1867,10 @@
   </data>
   <data name="ErrTypeError_Arg_Expected_Found" xml:space="preserve">
     <value>O tipo deste argumento '{0}' não corresponde ao tipo esperado '{1}'. Encontrado o tipo '{2}'.</value>
+    
+  </data>
+  <data name="ErrTypeError_WrongType" xml:space="preserve">
+    <value>O tipo desta expressão não corresponde ao tipo "{0}" esperado. Foi encontrado o tipo "{1}".</value>
     
   </data>
   <data name="ErrTypeErrorRecordIncompatibleWithSource" xml:space="preserve">
@@ -2643,10 +2651,6 @@
   <data name="AboutIsNumeric_value" xml:space="preserve">
     <value>Valor a ser testado.</value>
   </data>
-  <data name="Post" xml:space="preserve">
-    <value>Postar</value>
-    
-  </data>
   <data name="AboutDateTimeValue" xml:space="preserve">
     <value>Converte uma data e hora em formato de texto em um número que representa a data no código data-hora do Power Apps.</value>
     
@@ -3064,7 +3068,7 @@
     
   </data>
   <data name="Icon_Train_DisplayName" xml:space="preserve">
-    <value>Trem</value>
+    <value>Treinar</value>
     
   </data>
   <data name="Icon_Tray_DisplayName" xml:space="preserve">
@@ -3332,7 +3336,7 @@
     
   </data>
   <data name="AboutClear" xml:space="preserve">
-    <value>exclui todos os registros de uma coleção. As colunas da coleção permanecerão.</value>
+    <value>Exclui todos os registros de uma coleção. As colunas da coleção permanecerão.</value>
     
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
@@ -4111,10 +4115,6 @@
     <value>Não há suporte para coerção de registros ou tabelas em colunas com fórmula.</value>
     
   </data>
-  <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
-    <value>As fórmulas não podem ter mais de 1.000 caracteres.</value>
-    
-  </data>
   <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
     <value>Tabelas com uma única coluna não têm suporte em colunas com fórmula.</value>
     
@@ -4225,10 +4225,10 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
-    <value>Esse erro aparece quando uma fórmula referencia propriedades de comportamento de componente com sintaxe inválida. (Por exemplo, Component.OnCustomChange em vez de Component.OnCustomChange())</value>
+    <value>Esse erro aparece quando uma fórmula refere-se a propriedades de comportamento de componente com sintaxe inválida (por exemplo, Component.CustomFunction em vez de Component.CustomFunction())</value>
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
-    <value>Use a sintaxe correta para referenciar a propriedade de comportamento de componente. Por exemplo, Component.OnCustomChange()</value>
+    <value>Use a sintaxe correta para fazer referência à propriedade de função de componente. Por exemplo, Component.CustomFunction()</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_Link_1" xml:space="preserve">
@@ -4737,6 +4737,10 @@
     <value>A fórmula nomeada deve terminar com um ponto e vírgula.</value>
     
   </data>
+  <data name="ErrNamedFormula_MissingValue" xml:space="preserve">
+    <value>A fórmula nomeada deve ser uma expressão.</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>A NamedFormula '{0}' já existe.</value>
   </data>
@@ -4828,6 +4832,10 @@
   </data>
   <data name="ErrInvalidFunction" xml:space="preserve">
     <value>Esta função é ambígua, contém expressões lambda e identificadores de colunas para o mesmo argumento.</value>
+    
+  </data>
+  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
+    <value>The BooleanOptionSet option {0} is not supported.</value>
     
   </data>
 </root>

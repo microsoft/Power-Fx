@@ -1837,6 +1837,10 @@
     <value>Zenbakizko balioa handiegia da.</value>
     
   </data>
+  <data name="ErrTextTooLarge" xml:space="preserve">
+    <value>Adierazpenak ezin ditu eduki {0} karaktere baino gehiago ({1} karaktere ditu).</value>
+    
+  </data>
   <data name="ErrTextFormatTooLarge" xml:space="preserve">
     <value>Formatu-katearen tamainak ezin du eduki {0} karaktere baino gehiago.</value>
     
@@ -1863,6 +1867,10 @@
   </data>
   <data name="ErrTypeError_Arg_Expected_Found" xml:space="preserve">
     <value>'{0}' argumentuaren mota ez dator bat espero zen '{1}' motarekin. Mota hau aurkitu da: '{2}'.</value>
+    
+  </data>
+  <data name="ErrTypeError_WrongType" xml:space="preserve">
+    <value>Adierazpenaren mota ez dator bat espero zen '{0}' motarekin. Mota hau aurkitu da: '{1}'.</value>
     
   </data>
   <data name="ErrTypeErrorRecordIncompatibleWithSource" xml:space="preserve">
@@ -2643,10 +2651,6 @@
   <data name="AboutIsNumeric_value" xml:space="preserve">
     <value>Probatuko den balioa.</value>
   </data>
-  <data name="Post" xml:space="preserve">
-    <value>P. Kd.</value>
-    
-  </data>
   <data name="AboutDateTimeValue" xml:space="preserve">
     <value>Testu-formatua duten data eta ordua bihurtzen ditu Power Apps-eko data eta orduaren kodeko data adierazten duen zenbaki.</value>
     
@@ -3064,7 +3068,7 @@
     
   </data>
   <data name="Icon_Train_DisplayName" xml:space="preserve">
-    <value>Trena</value>
+    <value>Trebatu</value>
     
   </data>
   <data name="Icon_Tray_DisplayName" xml:space="preserve">
@@ -4111,10 +4115,6 @@
     <value>Ezin dira txertatu erregistroak edo taulak formula-zutabeetan.</value>
     
   </data>
-  <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
-    <value>Formulek ezin dituzte eduki 1.000 karaktere baino gehiago.</value>
-    
-  </data>
   <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
     <value>Zutabe bakarreko taulak ez dira onartzen formula-zutabeetan.</value>
     
@@ -4225,10 +4225,10 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
-    <value>Formulak erabil ezin daitekeen sintaxia duten osagaiaren portaeraren propietateei erreferentzia egiten dienean agertzen da errorea (adibidez, Component.OnCustomChange sintaxia erabiltzen denean Component.OnCustomChange() sintaxiaren ordez).</value>
+    <value>Formulak erabil ezin daitekeen sintaxia duten osagaiaren funtzioaren propietateei erreferentzia egiten dienean agertzen da errorea (adibidez, Component.CustomFunction sintaxia erabiltzen denean Component.CustomFunction() sintaxiaren ordez).</value>
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
-    <value>Erabili sintaxi zuzena osagaiaren portaeraren propietateei erreferentzia egiteko. Adibidez, Component.OnCustomChange().</value>
+    <value>Erabili sintaxi zuzena osagaiaren funtzioaren propietateei erreferentzia egiteko. Adibidez, Component.CustomFunction()</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_Link_1" xml:space="preserve">
@@ -4737,6 +4737,10 @@
     <value>Izendatutako formulak puntu eta komaz amaitu behar du.</value>
     
   </data>
+  <data name="ErrNamedFormula_MissingValue" xml:space="preserve">
+    <value>Izendatutako formulak adierazpen bat izan behar du.</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>Badago "{0}" deitzen den formula bat.</value>
   </data>
@@ -4828,6 +4832,10 @@
   </data>
   <data name="ErrInvalidFunction" xml:space="preserve">
     <value>Funtzioa anbiguoa da: argumentu bereko lambda adierazpenak eta zutabe-identifikatzaileak ditu.</value>
+    
+  </data>
+  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
+    <value>BooleanOptionSet aukera ({0}) ez da onartzen.</value>
     
   </data>
 </root>

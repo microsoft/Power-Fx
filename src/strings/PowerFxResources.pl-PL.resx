@@ -1837,6 +1837,10 @@
     <value>Wartość liczbowa jest zbyt duża.</value>
     
   </data>
+  <data name="ErrTextTooLarge" xml:space="preserve">
+    <value>Długość wyrażenia nie może przekraczać {0} znaków. To wyrażenie zawiera następującą liczbę znaków: {1}.</value>
+    
+  </data>
   <data name="ErrTextFormatTooLarge" xml:space="preserve">
     <value>Wyrażona w znakach długość ciągu formatu nie może przekraczać {0}.</value>
     
@@ -1863,6 +1867,10 @@
   </data>
   <data name="ErrTypeError_Arg_Expected_Found" xml:space="preserve">
     <value>Typ tego argumentu „{0}” nie pasuje do oczekiwanego typu „{1}”. Znaleziono typ „{2}”.</value>
+    
+  </data>
+  <data name="ErrTypeError_WrongType" xml:space="preserve">
+    <value>Typ tego wyrażenia nie pasuje do oczekiwanego typu „{0}”. Znaleziony typ: „{1}”.</value>
     
   </data>
   <data name="ErrTypeErrorRecordIncompatibleWithSource" xml:space="preserve">
@@ -2643,10 +2651,6 @@
   <data name="AboutIsNumeric_value" xml:space="preserve">
     <value>Wartość do przetestowania.</value>
   </data>
-  <data name="Post" xml:space="preserve">
-    <value>Opublikuj</value>
-    
-  </data>
   <data name="AboutDateTimeValue" xml:space="preserve">
     <value>Konwertuje datę i godzinę w postaci tekstu na liczbę reprezentującą datę w kodzie daty/godziny usługi Power Apps.</value>
     
@@ -3064,7 +3068,7 @@
     
   </data>
   <data name="Icon_Train_DisplayName" xml:space="preserve">
-    <value>Pociąg</value>
+    <value>Przeszkól</value>
     
   </data>
   <data name="Icon_Tray_DisplayName" xml:space="preserve">
@@ -4111,10 +4115,6 @@
     <value>Wymuszanie rekordów lub tabel nie jest obsługiwane w kolumnach formuł.</value>
     
   </data>
-  <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
-    <value>Długość formuł nie może przekraczać 1000 znaków.</value>
-    
-  </data>
   <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
     <value>Tabele jednokolumnowe nie są obsługiwane w kolumnach formuł.</value>
     
@@ -4225,10 +4225,10 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
-    <value>Ten błąd występuje, gdy formuła odwołuje się do właściwości zachowania składnika przy użyciu nieprawidłowej składni. Na przykład Component.OnCustomChange zamiast Component.OnCustomChange()</value>
+    <value>Ten błąd występuje, gdy formuła odwołuje się do właściwości funkcji składnika przy użyciu nieprawidłowej składni. Na przykład Component.CustomFunction zamiast Component.CustomFunction().</value>
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
-    <value>Użyj poprawnej składni, aby odwołać się do właściwości zachowania składnika. Na przykład Component.OnCustomChange()</value>
+    <value>Użyj poprawnej składni, aby odwołać się do właściwości funkcji składnika. Na przykład Component.CustomFunction().</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_Link_1" xml:space="preserve">
@@ -4737,6 +4737,10 @@
     <value>Nazwana formuła musi kończyć się średnikiem.</value>
     
   </data>
+  <data name="ErrNamedFormula_MissingValue" xml:space="preserve">
+    <value>Nazwana formuła musi być wyrażeniem.</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>Nazwana formuła „{0}” już istnieje.</value>
   </data>
@@ -4828,6 +4832,10 @@
   </data>
   <data name="ErrInvalidFunction" xml:space="preserve">
     <value>Ta funkcja jest niejednoznaczna, ponieważ zawiera wyrażenia lambda oraz identyfikatory kolumn dla tego samego argumentu.</value>
+    
+  </data>
+  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
+    <value>Opcja BooleanOptionSet o wartości „{0}” nie jest obsługiwana.</value>
     
   </data>
 </root>
