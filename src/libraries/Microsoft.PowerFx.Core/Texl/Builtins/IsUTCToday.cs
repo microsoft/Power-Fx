@@ -21,8 +21,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool IsSelfContained => true;
 
-        public override bool SupportsParamCoercion => true;
-
         public IsUTCTodayFunction()
             : base("IsUTCToday", TexlStrings.AboutIsUTCToday, FunctionCategories.Information, DType.Boolean, 0, 1, 1, DType.DateTime)
         {

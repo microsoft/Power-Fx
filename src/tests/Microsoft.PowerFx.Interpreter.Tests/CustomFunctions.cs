@@ -247,6 +247,39 @@ namespace Microsoft.PowerFx.Tests
             }
         }
 
+        [Fact]
+        public void CustomTableArgFunction()
+        {
+            var config = new PowerFxConfig(null);
+            config.AddFunction(new TableArgCustomFunction());
+
+            var engine = new RecalcEngine(config);
+
+            // Shows up in enumeration
+            var func = engine.GetAllFunctionNames().First(name => name == "TableArgTest");
+            Assert.NotNull(func);
+
+            // Can be invoked. 
+            var result = engine.Eval("TableArgTest( [1, 2, 3, 4, 5] )");
+            Assert.IsType<NumberValue>(result);
+
+            var resultNumber = (NumberValue)result;
+            Assert.Equal(5, resultNumber.Value);
+        }
+
+        private class TableArgCustomFunction : ReflectionFunction
+        {
+            public TableArgCustomFunction()
+                : base("TableArgTest", FormulaType.Number, TableType.Empty().Add("Value", FormulaType.Number))
+            {
+            }
+
+            public NumberValue Execute(TableValue table)
+            {
+                return FormulaValue.New(table.Count());
+            }
+        }
+
         // Must have "Function" suffix. 
         private class TestInvalidRecordCustomFunction : ReflectionFunction
         {

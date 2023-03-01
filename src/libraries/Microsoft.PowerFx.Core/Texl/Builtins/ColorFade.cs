@@ -15,11 +15,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // ColorFade(color:c, fadeDelta:n)
     internal sealed class ColorFadeFunction : BuiltinFunction
     {
-        public override bool IsTrackedInTelemetry => false;
-
         public override bool IsSelfContained => true;
-
-        public override bool SupportsParamCoercion => true;
 
         public ColorFadeFunction()
             : base("ColorFade", TexlStrings.AboutColorFade, FunctionCategories.Color, DType.Color, 0, 2, 2, DType.Color, DType.Number)

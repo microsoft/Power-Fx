@@ -94,9 +94,6 @@ namespace Microsoft.PowerFx.Core.Functions
         // Return true if the function is asynchronous, false otherwise.
         public virtual bool IsAsync => false;
 
-        // Return true if the function is tracked in telemetry.
-        public virtual bool IsTrackedInTelemetry => true;
-
         // Return true if the function is declared as variadic.
         public bool IsVariadicFunction => MaxArity == int.MaxValue;
 
@@ -152,10 +149,6 @@ namespace Microsoft.PowerFx.Core.Functions
         // response to user feedback. Only certain functions fall into this category, e.g. functions
         // with side effects, such as Collect.
         public virtual bool IsBehaviorOnly => !IsSelfContained;
-
-        // Return true if the function can only be used as part of test cases. Functions that
-        // emulate user interaction fall into this category, such as SetProperty.
-        public virtual bool IsTestOnly => false;
 
         // Return true if the function manipulates collections.
         public virtual bool ManipulatesCollections => false;

@@ -21,8 +21,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return base.GetGenericArgPreprocessor(index);
         }
 
-        public override bool SupportsParamCoercion => true;
-
         public override bool IsSelfContained => true;
 
         public MathOneArgFunction(string name, TexlStrings.StringGetter description, FunctionCategories fc)
@@ -38,8 +36,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
     internal abstract class MathOneArgTableFunction : BuiltinFunction
     {
-        public override bool SupportsParamCoercion => true;
-
         public override bool IsSelfContained => true;
 
         public MathOneArgTableFunction(string name, TexlStrings.StringGetter description, FunctionCategories fc)
