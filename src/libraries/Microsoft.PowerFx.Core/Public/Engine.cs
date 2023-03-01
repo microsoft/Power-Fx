@@ -102,6 +102,9 @@ namespace Microsoft.PowerFx
             return CreateResolverInternal(out _, localSymbols);
         }
 
+        private TexlFunctionSet _cachedFunctionSet = null;
+        private readonly object _cachedFunctionSetLock = new ();
+
         private protected INameResolver CreateResolverInternal(out ReadOnlySymbolTable symbols, ReadOnlySymbolTable localSymbols = null)
         {
             // For backwards compat with Prose.
@@ -116,7 +119,19 @@ namespace Microsoft.PowerFx
                 return existing;
             }
 
-            symbols = ReadOnlySymbolTable.Compose(localSymbols, EngineSymbols, SupportedFunctions, Config.SymbolTable);
+            VersionHash combinedFunctionHash = VersionHash.Combine(new[] { EngineSymbols, SupportedFunctions, Config.SymbolTable }.Where(t => t != null).Select(t => t.Functions.VersionHash));
+
+            lock (_cachedFunctionSetLock)
+            {
+                if (_cachedFunctionSet != null && _cachedFunctionSet.VersionHash != combinedFunctionHash)
+                {
+                    _cachedFunctionSet = null;
+                }
+
+                symbols = ReadOnlySymbolTable.Compose(_cachedFunctionSet, localSymbols, EngineSymbols, SupportedFunctions, Config.SymbolTable);
+                _cachedFunctionSet = symbols.Functions;
+            }
+
             return symbols;
         }
 
@@ -233,10 +248,7 @@ namespace Microsoft.PowerFx
             return check;
         }
 
-        public CheckResult Check(
-            string expressionText,
-            ParserOptions options = null,
-            ReadOnlySymbolTable symbolTable = null)
+        public CheckResult Check(string expressionText, ParserOptions options = null, ReadOnlySymbolTable symbolTable = null)
         {
             var check = new CheckResult(this)
                 .SetText(expressionText, options)

@@ -19,7 +19,8 @@ namespace Microsoft.PowerFx.Core.Tests
             var asm = typeof(Parser.TexlParser).Assembly;
 
             // The goal for public namespaces is to make the SDK easy for the consumer. 
-            // Namespace principles for public classes:            // 
+            // Namespace principles for public classes:            
+            // 
             // - prefer fewer namespaces. See C# for example: https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis
             // - For easy discovery, but Engine in "Microsoft.PowerFx".
             // - For sub areas with many related classes, cluster into a single subnamespace.
@@ -45,11 +46,12 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.ParserOptions",
 
                 // Config & Symbols
+                "Microsoft.PowerFx.FormulaValueSerializerSettings",
+                "Microsoft.PowerFx.ISymbolSlot",
                 "Microsoft.PowerFx.PowerFxConfig",
                 "Microsoft.PowerFx.ReadOnlySymbolTable",
                 "Microsoft.PowerFx.SymbolTable",
-                "Microsoft.PowerFx.FormulaValueSerializerSettings",
-                "Microsoft.PowerFx.ISymbolSlot",
+                "Microsoft.PowerFx.VersionedSet",
 
                 // Lexer                
                 "Microsoft.PowerFx.Syntax.BinaryOp",
@@ -90,9 +92,9 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Syntax.VariadicOpNode",
                               
                 // Visitors
-                "Microsoft.PowerFx.Syntax.TexlVisitor",
-                "Microsoft.PowerFx.Syntax.TexlFunctionalVisitor`2",
                 "Microsoft.PowerFx.Syntax.IdentityTexlVisitor",
+                "Microsoft.PowerFx.Syntax.TexlFunctionalVisitor`2",
+                "Microsoft.PowerFx.Syntax.TexlVisitor",
 
                 // Power Fx Type system and Values. 
                 "Microsoft.PowerFx.Types.AggregateType",
@@ -109,6 +111,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Types.DateTimeValue",
                 "Microsoft.PowerFx.Types.DateType",
                 "Microsoft.PowerFx.Types.DateValue",
+                "Microsoft.PowerFx.Types.DeferredType",
                 "Microsoft.PowerFx.Types.DValue`1",
                 "Microsoft.PowerFx.Types.ErrorValue",
                 "Microsoft.PowerFx.Types.ExternalType",
@@ -138,7 +141,6 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Types.TimeType",
                 "Microsoft.PowerFx.Types.TimeValue",
                 "Microsoft.PowerFx.Types.UnknownType",
-                "Microsoft.PowerFx.Types.DeferredType",
                 "Microsoft.PowerFx.Types.UnsupportedType",
                 "Microsoft.PowerFx.Types.UntypedObjectType",
                 "Microsoft.PowerFx.Types.UntypedObjectValue",
@@ -146,6 +148,8 @@ namespace Microsoft.PowerFx.Core.Tests
 
                 // Intellisense classes. Used primarily by the Language Service Provider.
                 // Most evaluators should never need these. 
+                "Microsoft.PowerFx.Intellisense.CodeFixHandler",
+                "Microsoft.PowerFx.Intellisense.CodeFixSuggestion",
                 "Microsoft.PowerFx.Intellisense.IIntellisenseResult",
                 "Microsoft.PowerFx.Intellisense.IIntellisenseSuggestion",
                 "Microsoft.PowerFx.Intellisense.IntellisenseOperations",
@@ -157,8 +161,6 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Intellisense.SuggestionKind",
                 "Microsoft.PowerFx.Intellisense.TokenResultType",
                 "Microsoft.PowerFx.Intellisense.UIString",
-                "Microsoft.PowerFx.Intellisense.CodeFixHandler",
-                "Microsoft.PowerFx.Intellisense.CodeFixSuggestion",
 
                 // TBD ...
                 "Microsoft.PowerFx.Core.DisplayNameProvider",
@@ -167,7 +169,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Core.RenameDriver",
                 "Microsoft.PowerFx.Core.Utils.DName",
                 "Microsoft.PowerFx.Core.Utils.DPath",
-                "Microsoft.PowerFx.Core.Utils.ICheckable"
+                "Microsoft.PowerFx.Core.Utils.ICheckable",
             };
 
             var sb = new StringBuilder();

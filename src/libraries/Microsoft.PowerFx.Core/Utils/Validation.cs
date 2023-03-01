@@ -26,6 +26,7 @@ namespace Microsoft.PowerFx.Core.Utils
     {
         #region Check contracts for public APIs
 
+        [Conditional("DEBUG")]
         public static void Check(bool f, string sid)
         {
             if (!f)
@@ -34,6 +35,7 @@ namespace Microsoft.PowerFx.Core.Utils
             }
         }
 
+        [Conditional("DEBUG")]
         public static void CheckNonEmpty(string s, string paramName)
         {
             if (string.IsNullOrEmpty(s))
@@ -47,6 +49,7 @@ namespace Microsoft.PowerFx.Core.Utils
             }
         }
 
+        [Conditional("DEBUG")]
         public static void CheckNonEmpty(string s, string paramName, string sid)
         {
             if (string.IsNullOrEmpty(s))
@@ -60,6 +63,7 @@ namespace Microsoft.PowerFx.Core.Utils
             }
         }
 
+        [Conditional("DEBUG")]
         public static void CheckNonEmpty(Guid g, string paramName)
         {
             if (g == Guid.Empty)
@@ -68,12 +72,14 @@ namespace Microsoft.PowerFx.Core.Utils
             }
         }
 
+        [Conditional("DEBUG")]
         public static void CheckNonEmpty(Guid? g, string paramName)
         {
             CheckValue(g, paramName);
             CheckNonEmpty(g.Value, paramName);
         }
 
+        [Conditional("DEBUG")]
         public static void CheckNonEmpty<T>(IList<T> args, string paramName)
         {
             if (Size(args) == 0)
@@ -82,6 +88,7 @@ namespace Microsoft.PowerFx.Core.Utils
             }
         }
 
+        [Conditional("DEBUG")]
         public static void CheckNonEmptyOrNull(string s, string paramName)
         {
             if (s != null && s.Length == 0)
@@ -90,6 +97,7 @@ namespace Microsoft.PowerFx.Core.Utils
             }
         }
 
+        [Conditional("DEBUG")]
         public static void CheckNonEmptyOrNull(Guid? g, string paramName)
         {
             if (g.HasValue && g.Value == Guid.Empty)
@@ -98,6 +106,7 @@ namespace Microsoft.PowerFx.Core.Utils
             }
         }
 
+        [Conditional("DEBUG")]
         public static void CheckRange(bool f, string paramName)
         {
             if (!f)
@@ -106,6 +115,7 @@ namespace Microsoft.PowerFx.Core.Utils
             }
         }
 
+        [Conditional("DEBUG")]
         public static void CheckRange(bool f, string paramName, string sid)
         {
             if (!f)
@@ -114,6 +124,7 @@ namespace Microsoft.PowerFx.Core.Utils
             }
         }
 
+        [Conditional("DEBUG")]
         public static void CheckIndexRange(int index, int count, int available, string paramName)
         {
             if (!IsValid(index, count, available))
@@ -122,6 +133,7 @@ namespace Microsoft.PowerFx.Core.Utils
             }
         }
 
+        [Conditional("DEBUG")]
         public static void CheckIndexRange(int index, int count, int available, string paramName, string sid)
         {
             if (!IsValid(index, count, available))
@@ -130,6 +142,7 @@ namespace Microsoft.PowerFx.Core.Utils
             }
         }
 
+        [Conditional("DEBUG")]
         public static void CheckIndexRange(long index, long count, long available, string paramName)
         {
             if (!IsValid(index, count, available))
@@ -138,6 +151,7 @@ namespace Microsoft.PowerFx.Core.Utils
             }
         }
 
+        [Conditional("DEBUG")]
         public static void CheckIndexRange(long index, long count, long available, string paramName, string sid)
         {
             if (!IsValid(index, count, available))
@@ -146,6 +160,7 @@ namespace Microsoft.PowerFx.Core.Utils
             }
         }
 
+        [Conditional("DEBUG")]
         public static void CheckIndex(int index, int available, string paramName)
         {
             if (!IsValidIndex(index, available))
@@ -154,6 +169,7 @@ namespace Microsoft.PowerFx.Core.Utils
             }
         }
 
+        [Conditional("DEBUG")]
         public static void CheckIndex(int index, int available, string paramName, string sid)
         {
             if (!IsValidIndex(index, available))
@@ -162,6 +178,7 @@ namespace Microsoft.PowerFx.Core.Utils
             }
         }
 
+        [Conditional("DEBUG")]
         public static void CheckIndex(long index, long available, string paramName)
         {
             if (!IsValidIndex(index, available))
@@ -170,6 +187,7 @@ namespace Microsoft.PowerFx.Core.Utils
             }
         }
 
+        [Conditional("DEBUG")]
         public static void CheckIndex(long index, long available, string paramName, string sid)
         {
             if (!IsValidIndex(index, available))
@@ -178,6 +196,7 @@ namespace Microsoft.PowerFx.Core.Utils
             }
         }
 
+        [Conditional("DEBUG")]
         public static void CheckIndexInclusive(int index, int available, string paramName)
         {
             if (!IsValidIndexInclusive(index, available))
@@ -186,6 +205,7 @@ namespace Microsoft.PowerFx.Core.Utils
             }
         }
 
+        [Conditional("DEBUG")]
         public static void CheckIndexInclusive(int index, int available, string paramName, string sid)
         {
             if (!IsValidIndexInclusive(index, available))
@@ -194,6 +214,7 @@ namespace Microsoft.PowerFx.Core.Utils
             }
         }
 
+        [Conditional("DEBUG")]
         public static void CheckIndexInclusive(long index, long available, string paramName)
         {
             if (!IsValidIndexInclusive(index, available))
@@ -202,6 +223,7 @@ namespace Microsoft.PowerFx.Core.Utils
             }
         }
 
+        [Conditional("DEBUG")]
         public static void CheckIndexInclusive(long index, long available, string paramName, string sid)
         {
             if (!IsValidIndexInclusive(index, available))
@@ -210,6 +232,7 @@ namespace Microsoft.PowerFx.Core.Utils
             }
         }
 
+        [Conditional("DEBUG")]
         public static void CheckParam(bool f, string paramName)
         {
             if (!f)
@@ -218,6 +241,7 @@ namespace Microsoft.PowerFx.Core.Utils
             }
         }
 
+        [Conditional("DEBUG")]
         public static void CheckParam(bool f, string paramName, string sid)
         {
             if (!f)
@@ -226,6 +250,7 @@ namespace Microsoft.PowerFx.Core.Utils
             }
         }
 
+        [Conditional("DEBUG")]
         public static void CheckValue<T>(T val, string paramName)
             where T : class
         {
@@ -235,6 +260,7 @@ namespace Microsoft.PowerFx.Core.Utils
             }
         }
 
+        [Conditional("DEBUG")]
         public static void CheckValue<T>(T val, string paramName, string sid)
             where T : class
         {
@@ -244,6 +270,7 @@ namespace Microsoft.PowerFx.Core.Utils
             }
         }
 
+        [Conditional("DEBUG")]
         public static void CheckValue<T>(T? val, string paramName)
             where T : struct
         {
@@ -253,6 +280,7 @@ namespace Microsoft.PowerFx.Core.Utils
             }
         }
 
+        [Conditional("DEBUG")]
         public static void CheckNull<T>(T val, string paramName)
             where T : class
         {
@@ -262,6 +290,7 @@ namespace Microsoft.PowerFx.Core.Utils
             }
         }
 
+        [Conditional("DEBUG")]
         public static void CheckNull<T>(T val, string paramName, string sid)
             where T : class
         {
@@ -271,6 +300,7 @@ namespace Microsoft.PowerFx.Core.Utils
             }
         }
 
+        [Conditional("DEBUG")]
         public static void CheckNull<T>(T? val, string paramName)
             where T : struct
         {
@@ -280,6 +310,7 @@ namespace Microsoft.PowerFx.Core.Utils
             }
         }
 
+        [Conditional("DEBUG")]
         public static void CheckNull<T>(T? val, string paramName, string sid)
             where T : struct
         {
@@ -288,7 +319,7 @@ namespace Microsoft.PowerFx.Core.Utils
                 throw ExceptNull(paramName, sid);
             }
         }
-
+        
         public static void CheckXmlDocumentString(string text, string paramName, out XDocument parsedXDocument)
         {
             CheckNonEmpty(text, paramName);
@@ -314,11 +345,13 @@ namespace Microsoft.PowerFx.Core.Utils
             }
         }
 
+        [Conditional("DEBUG")]
         public static void CheckXmlDocumentString(string text, string paramName)
         {
             CheckXmlDocumentString(text, paramName, out var parsedXDocument);
         }
 
+        [Conditional("DEBUG")]
         public static void CheckXmlDocumentStringOrNull(string text, string paramName)
         {
             if (text != null)
@@ -327,6 +360,7 @@ namespace Microsoft.PowerFx.Core.Utils
             }
         }
 
+        [Conditional("DEBUG")]
         public static void CheckAllNonEmpty(IList<string> args, string paramName)
         {
             for (var i = 0; i < Size(args); i++)
@@ -338,6 +372,7 @@ namespace Microsoft.PowerFx.Core.Utils
             }
         }
 
+        [Conditional("DEBUG")]
         public static void CheckAllValues<T>(IList<T> args, string paramName)
             where T : class
         {
@@ -350,6 +385,7 @@ namespace Microsoft.PowerFx.Core.Utils
             }
         }
 
+        [Conditional("DEBUG")]
         public static void CheckAllValues<T>(IEnumerable<T> args, string paramName)
             where T : class
         {
@@ -365,6 +401,7 @@ namespace Microsoft.PowerFx.Core.Utils
             }
         }
 
+        [Conditional("DEBUG")]
         public static void CheckAllValues<TKey, TValue>(IDictionary<TKey, TValue> args, string paramName)
             where TValue : class
         {
@@ -380,6 +417,7 @@ namespace Microsoft.PowerFx.Core.Utils
             }
         }
 
+        [Conditional("DEBUG")]
         public static void CheckAll<T>(IList<T> args, string paramName)
             where T : struct, ICheckable
         {
@@ -392,6 +430,7 @@ namespace Microsoft.PowerFx.Core.Utils
             }
         }
 
+        [Conditional("DEBUG")]
         public static void CheckValid<T>(T val, string paramName)
             where T : struct, ICheckable
         {
@@ -401,6 +440,7 @@ namespace Microsoft.PowerFx.Core.Utils
             }
         }
 
+        [Conditional("DEBUG")]
         public static void CheckValid<T>(T val, string paramName, string sid)
             where T : struct, ICheckable
         {
@@ -410,25 +450,25 @@ namespace Microsoft.PowerFx.Core.Utils
             }
         }
 
-        [Conditional("INVARIANT_CHECKS")]
+        [Conditional("INVARIANT_CHECKS")]        
         public static void CheckValueOrNull<T>(T val)
             where T : class
         {
         }
 
-        [Conditional("INVARIANT_CHECKS")]
+        [Conditional("INVARIANT_CHECKS")]        
         public static void CheckValueOrNull<T>(T val, string paramName)
             where T : class
         {
         }
 
-        [Conditional("INVARIANT_CHECKS")]
+        [Conditional("INVARIANT_CHECKS")]        
         public static void CheckValueOrNull<T>(T val, string name, string sid)
             where T : class
         {
         }
 
-        [Conditional("INVARIANT_CHECKS")]
+        [Conditional("INVARIANT_CHECKS")]        
         public static void CheckValueOrNull<T>(T? val, string paramName)
             where T : struct
         {
@@ -1393,7 +1433,7 @@ namespace Microsoft.PowerFx.Core.Utils
         {
             DbgFailCore("Assertion Failed");
         }
-
+        
         private static void DbgFail(string msg)
         {
             DbgFailCore(msg);
@@ -1456,10 +1496,10 @@ namespace Microsoft.PowerFx.Core.Utils
 
         #region Verify contracts
 
-        // Verify contracts are used to assert a value in debug, and act as a pass through in retail.
-
+        // Verify contracts are used to assert a value in debug, and act as a pass through in retail.        
         public static bool Verify(this bool f, string message = "")
         {
+#if DEBUG
             if (string.IsNullOrWhiteSpace(message))
             {
                 Assert(f);
@@ -1468,17 +1508,17 @@ namespace Microsoft.PowerFx.Core.Utils
             {
                 Assert(f, message);
             }
-
+#endif
             return f;
         }
-
+        
         public static T VerifyValue<T>(this T val)
             where T : class
         {
             AssertValue(val);
             return val;
         }
-
+        
         public static string VerifyNonEmpty(this string val)
         {
             AssertNonEmpty(val);
@@ -1499,7 +1539,7 @@ namespace Microsoft.PowerFx.Core.Utils
         {
             return list == null ? 0 : list.Count();
         }
-
+        
         // Internal for unit tests
         internal static bool IsValid(int index, int count, int available)
         {
@@ -1518,7 +1558,7 @@ namespace Microsoft.PowerFx.Core.Utils
                 return ((uint)index <= (uint)available) && ((uint)count <= (uint)(available - index));
             }
         }
-
+        
         internal static bool IsValid(long index, long count, long available)
         {
             // This code explicitly allows the case of index == available, but only when

@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 
@@ -36,14 +37,21 @@ namespace Microsoft.PowerFx
         /// <summary>
         /// Note that object has changed. 
         /// </summary>
-        public void Inc()
+        public void UpdateValue()
         {
             _value++;
         }
 
-        public VersionHash Combine(VersionHash other)
+        public static VersionHash Combine(IEnumerable<VersionHash> versionHashes)
         {
-            return new VersionHash(HashCombine(_value, other._value));
+            int versionHash = 0;
+
+            foreach (VersionHash vh in versionHashes)
+            {
+                versionHash = HashCombine(versionHash, vh._value);
+            }
+
+            return new VersionHash(versionHash);
         }
 
         internal static int HashCombine(int a, int b)

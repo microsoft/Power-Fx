@@ -4,10 +4,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
-using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.UtilityDataStructures;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
@@ -22,7 +20,7 @@ namespace Microsoft.PowerFx.Core
 
         internal void RegisterType(string typeName, AggregateType type)
         {
-            Inc();            
+            NotifyChange();            
 
             _definedTypes.Add(typeName, type);
         }

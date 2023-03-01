@@ -83,7 +83,7 @@ namespace Microsoft.PowerFx
         /// <param name="displayName"></param>
         public ISymbolSlot AddVariable(string name, FormulaType type, bool mutable = false, string displayName = null)
         {
-            Inc();
+            NotifyChange();
             DName displayDName = default;
             DName varDName = ValidateName(name);
 
@@ -135,7 +135,7 @@ namespace Microsoft.PowerFx
         {
             var type = data.Type;
 
-            Inc();
+            NotifyChange();
             ValidateName(name);
 
             var info = new NameLookupInfo(
@@ -163,7 +163,7 @@ namespace Microsoft.PowerFx
         /// <param name="name">display or logical name for the variable or entity to be removed. Logical name of constant to be removed.</param>
         public void RemoveVariable(string name)
         {
-            Inc();
+            NotifyChange();
 
             // Also remove from display name provider
             if (_environmentSymbolDisplayNameProvider is SingleSourceDisplayNameProvider ssDP)
@@ -202,21 +202,21 @@ namespace Microsoft.PowerFx
         /// <param name="name"></param>
         public void RemoveFunction(string name)
         {
-            Inc();
+            NotifyChange();
 
             _functions.RemoveAll(name);
         }
 
         internal void RemoveFunction(TexlFunction function)
         {
-            Inc();
+            NotifyChange();
 
             _functions.RemoveAll(function);
         }
 
         internal void AddFunctions(TexlFunctionSet functions)
         {
-            Inc();
+            NotifyChange();
 
             if (functions._count == 0)
             {
@@ -231,7 +231,7 @@ namespace Microsoft.PowerFx
 
         internal void AddFunction(TexlFunction function)
         {
-            Inc();
+            NotifyChange();
             _functions.Add(function);
 
             // Add any associated enums 
@@ -243,14 +243,14 @@ namespace Microsoft.PowerFx
             get => _enumStoreBuilder;
             set
             {
-                Inc();
+                NotifyChange();
                 _enumStoreBuilder = value;
             }
         }
 
         internal void AddEntity(IExternalEntity entity, DName displayName = default)
         {
-            Inc();
+            NotifyChange();
             NameLookupInfo nameInfo;
 
             if (entity is IExternalOptionSet optionSet)

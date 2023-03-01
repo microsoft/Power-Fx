@@ -22,7 +22,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             var v1Snapshot = v1;
             Assert.Equal(v1, v1Snapshot);
-            v1.Inc();
+            v1.UpdateValue();
             Assert.NotEqual(v1, v1Snapshot);
         }
 
@@ -54,8 +54,8 @@ namespace Microsoft.PowerFx.Core.Tests
         public void Combine()
         {
             var v1 = VersionHash.New();
+            var v2 = VersionHash.Combine(new[] { v1, v1 });
 
-            var v2 = v1.Combine(v1);
             Assert.NotEqual(v1, v2);
 
             // An object's version hash may be computed from its dependents. 
@@ -63,7 +63,7 @@ namespace Microsoft.PowerFx.Core.Tests
             var vx = VersionHash.New();
             var vy = VersionHash.New();
 
-            Assert.NotEqual(v1.Combine(vx), v1.Combine(vy));
+            Assert.NotEqual(VersionHash.Combine(new[] { v1, vx }), VersionHash.Combine(new[] { v1, vy }));
         }
 
         // Hash doesn't *need* to be unique, but it is highly desirably to help catch checks. 
@@ -86,7 +86,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 // Incremented values should also be unique. 
                 for (int j = 0; j < 10; j++)
                 {
-                    v1.Inc();
+                    v1.UpdateValue();
                     Assert.True(set.Add(v1));
                 }
             }

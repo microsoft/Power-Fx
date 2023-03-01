@@ -477,25 +477,27 @@ namespace Microsoft.PowerFx.Syntax
         // If an identifier contains any other characters, it has to be surrounded by single quotation marks.
         public static bool IsIdentStart(char ch)
         {
-            if (ch >= 128)
+            if (ch < 128)
             {
-                return (CharacterUtils.GetUniCatFlags(ch) & CharacterUtils.UniCatFlags.IdentStartChar) != 0;
+                // Character range where this method will return true: [A-Z], [a-z], _, '
+                // return ((uint)(ch - 'a') < 26) || ((uint)(ch - 'A') < 26) || (ch == '_') || (ch == IdentifierDelimiter);
+                return ch < '{' && ("\0\0\u0080\0\ufffe\u87ff\ufffe\u07ff"[ch >> 4] & (1 << (ch & 0xF))) != 0;
             }
-
-            return ((uint)(ch - 'a') < 26) || ((uint)(ch - 'A') < 26) || (ch == '_') || (ch == IdentifierDelimiter);
+            
+            return (CharacterUtils.GetUniCatFlags(ch) & CharacterUtils.UniCatFlags.IdentStartChar) != 0;                        
         }
 
         // Returns true if the specified character is a valid simple identifier character.
         public static bool IsSimpleIdentCh(char ch)
         {
-            if (ch >= 128)
+            if (ch < 128)
             {
-                return (CharacterUtils.GetUniCatFlags(ch) & CharacterUtils.UniCatFlags.IdentPartChar) != 0;
+                // Character range where this method will return true: [0-9], [A-Z], _, [a-z]
+                // This code is equivalent to return ((uint)(ch - 'a') < 26) || ((uint)(ch - 'A') < 26) || ((uint)(ch - '0') <= 9) || (ch == '_');            
+                return ch < '{' && ("\0\0\0\u03ff\ufffe\u87ff\ufffe\u07ff"[ch >> 4] & (1 << (ch & 0xF))) != 0;
             }
-
-            // Character range where this method will return true: [0-9], [A-Z], _, [a-z]
-            // This code is equivalent to return ((uint)(ch - 'a') < 26) || ((uint)(ch - 'A') < 26) || ((uint)(ch - '0') <= 9) || (ch == '_');            
-            return ch < '{' && ("\0\0\0\u03ff\ufffe\u87ff\ufffe\u07ff"[ch >> 4] & (1 << (ch & 0xF))) != 0;
+            
+            return (CharacterUtils.GetUniCatFlags(ch) & CharacterUtils.UniCatFlags.IdentPartChar) != 0;                       
         }
 
         // Returns true if the specified character constitutes a valid start for a numeric literal.
@@ -958,19 +960,16 @@ namespace Microsoft.PowerFx.Syntax
             // Form and return the next token. Returns null to signal end of input.
             public Token GetNextToken()
             {
-                for (; ;)
-                {
-                    if (Eof)
-                    {
-                        return null;
-                    }
-
+                while (_currentPosition < _charCount)
+                {                   
                     var tok = Dispatch(true, true);
                     if (tok != null)
                     {
                         return tok;
                     }
                 }
+
+                return null;
             }
 
             // Call once GetNextToken returns null if you need an Eof token.

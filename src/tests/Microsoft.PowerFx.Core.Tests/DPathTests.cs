@@ -30,7 +30,11 @@ namespace Microsoft.PowerFx.Core.Tests
         [Fact]
         public void TestInvalidAppendThrows()
         {
+            // This test is skipped when not in DEBUG configurationn
+            // as we rely on Contract.Asserts to throw
+#if DEBUG
             Assert.Throws<ArgumentException>(() => DPath.Root.Append(default(DName)));
+#endif 
         }
 
         [Theory]

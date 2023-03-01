@@ -157,12 +157,9 @@ namespace Microsoft.PowerFx.Core.Utils
                 return new DName(StrUnderscore);
             }
 
-            bool fAllSpaces = Rex_AllSpaces.Match(strName).Length == strName.Length;
-            bool fHasDisallowedWhiteSpaceCharacters = Rex_AnyDisallowedWhiteSpace.IsMatch(strName);
-
             fModified = false;
 
-            if (fHasDisallowedWhiteSpaceCharacters)
+            if (Rex_AnyDisallowedWhiteSpace.IsMatch(strName))
             {
                 fModified = true;
                 var builder = new StringBuilder(strName.Length);
@@ -183,7 +180,7 @@ namespace Microsoft.PowerFx.Core.Utils
                 strName = builder.ToString();
             }
 
-            if (!fAllSpaces)
+            if (Rex_AllSpaces.Match(strName).Length != strName.Length)
             {
                 return new DName(strName);
             }

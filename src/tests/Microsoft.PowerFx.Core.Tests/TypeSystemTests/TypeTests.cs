@@ -44,11 +44,9 @@ namespace Microsoft.PowerFx.Tests
         [InlineData("SomethingElse", false, null)]
         public void TryGetFieldTypeLookupTest(string inputDisplayOrLogical, bool succeeds, string expectedLogical)
         {
-            var r1 = RecordType.Empty()
-                        .Add(new NamedFormulaType("F1", FormulaType.Number, "Display1"));
+            var r1 = RecordType.Empty().Add(new NamedFormulaType("F1", FormulaType.Number, "Display1"));
 
-            Assert.Equal(r1.TryGetFieldType(inputDisplayOrLogical, out var actualLogical, out var formulaType), succeeds);
-            
+            Assert.Equal(r1.TryGetFieldType(inputDisplayOrLogical, out var actualLogical, out var formulaType), succeeds);            
             Assert.Equal(expectedLogical, actualLogical);
      
             // Since, it returns Blank node on returning false too.
@@ -63,7 +61,6 @@ namespace Microsoft.PowerFx.Tests
             var r1 = RecordType.Empty().Add(new NamedFormulaType("F1", FormulaType.Number));
 
             Assert.Equal(r1.TryGetFieldType(inputDisplayOrLogical, out var actualLogical, out var formulaType), succeeds);
-
             Assert.Equal(expectedLogical, actualLogical);
 
             // Since, it returns Blank node on returning false too.
@@ -73,14 +70,14 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void TryGetFieldTypeLookupNullTest()
         {
-            var r1 = RecordType.Empty()
-                        .Add(new NamedFormulaType("F1", FormulaType.Number, "Display1"));
+            var r1 = RecordType.Empty().Add(new NamedFormulaType("F1", FormulaType.Number, "Display1"));
 
-            Assert.Throws<ArgumentNullException>(
-                () => r1.TryGetFieldType(null, out var actualLogical, out var formulaType));
-
-            Assert.Throws<ArgumentException>(
-                () => r1.TryGetFieldType(string.Empty, out var actualLogical, out var formulaType));
+            // These tests are skipped when not in DEBUG configurationn
+            // as we rely on Contract.Asserts to throw
+#if DEBUG
+            Assert.Throws<ArgumentNullException>(() => r1.TryGetFieldType(null, out var actualLogical, out var formulaType));
+            Assert.Throws<ArgumentException>(() => r1.TryGetFieldType(string.Empty, out var actualLogical, out var formulaType));
+#endif
         }
 
         [Fact]

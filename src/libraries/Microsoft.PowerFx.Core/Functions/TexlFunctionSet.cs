@@ -8,7 +8,7 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Functions
 {
-    internal class TexlFunctionSet
+    internal class TexlFunctionSet : VersionedSet
     {
         // Dictionary key: function.Name
         private Dictionary<string, List<TexlFunction>> _functions;
@@ -102,6 +102,8 @@ namespace Microsoft.PowerFx.Core.Functions
                     Add(functionSet);
                 }
             }
+
+            _version = VersionHash.Combine(functionSets.Select(fs => fs.VersionHash));
         }
 
         // Slow API, only use for backward compatibility
@@ -126,6 +128,8 @@ namespace Microsoft.PowerFx.Core.Functions
             {
                 throw new ArgumentNullException(nameof(function));
             }
+
+            NotifyChange();
 
             List<TexlFunction> fList = WithNameInternal(function.Name);
             List<TexlFunction> fInvariantList = WithInvariantNameInternal(function.LocaleInvariantName);
@@ -190,6 +194,8 @@ namespace Microsoft.PowerFx.Core.Functions
                 throw new ArgumentNullException(nameof(functionSet));
             }
 
+            NotifyChange();
+
             // Notice that this code path is a critical performance gain versus the various loops in the 'else' part
             if (_count == 0)
             {
@@ -197,7 +203,7 @@ namespace Microsoft.PowerFx.Core.Functions
                 _functionsInvariant = functionSet._functionsInvariant.ToDictionary(kvp => kvp.Key, kvp => new List<TexlFunction>(kvp.Value));
                 _namespaces = functionSet._namespaces.ToDictionary(kvp => kvp.Key, kvp => new List<TexlFunction>(kvp.Value));
                 _enums = new List<string>(functionSet._enums);
-                _count = functionSet._count;
+                _count = functionSet._count;                
             }
             else
             {
@@ -261,6 +267,8 @@ namespace Microsoft.PowerFx.Core.Functions
                 throw new ArgumentNullException(nameof(functions));
             }
 
+            NotifyChange();
+
             foreach (var t in functions)
             {
                 Add(t);
@@ -281,6 +289,8 @@ namespace Microsoft.PowerFx.Core.Functions
 
         internal void RemoveAll(string name)
         {
+            NotifyChange();
+
             if (_functions.TryGetValue(name, out List<TexlFunction> removed))
             {
                 _count -= removed.Count();
@@ -316,6 +326,8 @@ namespace Microsoft.PowerFx.Core.Functions
 
         internal void RemoveAll(TexlFunction function)
         {
+            NotifyChange();
+
             if (_functions.TryGetValue(function.Name, out List<TexlFunction> funcs))
             {
                 _count--;

@@ -25,25 +25,18 @@ namespace Microsoft.PowerFx
         public ComposedReadOnlySymbolTable(params ReadOnlySymbolTable[] symbolTables)
         {
             _symbolTables = symbolTables.Where(x => x != null);
-
-            DebugName = "(" + string.Join(",", _symbolTables.Select(t => t.DebugName)) + ")";
+            DebugName = "(" + string.Join(",", _symbolTables.Select(t => t.DebugName)) + ")";            
         }
+
+        public ComposedReadOnlySymbolTable(TexlFunctionSet cachedFunctionSet, params ReadOnlySymbolTable[] symbolTables)
+            : this(symbolTables)
+        {
+            _cachedFunctions = cachedFunctionSet;
+        }     
 
         internal IEnumerable<ReadOnlySymbolTable> SubTables => _symbolTables;
 
-        internal override VersionHash VersionHash
-        {
-            get
-            {
-                var hash = new VersionHash();
-                foreach (var table in _symbolTables)
-                {
-                    hash = hash.Combine(table.VersionHash);
-                }
-
-                return hash;
-            }
-        }
+        internal override VersionHash VersionHash => VersionHash.Combine(_symbolTables.Select(t => t.VersionHash));        
 
         public override FormulaType GetTypeFromSlot(ISymbolSlot slot)
         {
@@ -58,27 +51,21 @@ namespace Microsoft.PowerFx
             return slot.Owner.GetTypeFromSlot(slot);
         }
 
-        private TexlFunctionSet _nameResolverFunctions = null;
-        private VersionHash _cachedVersionHash = VersionHash.New();
+        private TexlFunctionSet _cachedFunctions = null;
+        private VersionHash _cachedVersionHash = VersionHash.New(); // Random number
 
         // Expose the list to aide in intellisense suggestions. 
         TexlFunctionSet INameResolver.Functions
         {
             get
-            {
-                var current = this.VersionHash;
-                if (current != _cachedVersionHash)
+            {                
+                if (_cachedFunctions == null || _cachedVersionHash != VersionHash.Combine(_symbolTables.Select(st => st.Functions.VersionHash)))
                 {
-                    _nameResolverFunctions = null;       
+                    _cachedFunctions = new TexlFunctionSet(_symbolTables.Select(t => t.Functions).ToList());
+                    _cachedVersionHash = _cachedFunctions.VersionHash;
                 }
 
-                if (_nameResolverFunctions == null)
-                {
-                    _nameResolverFunctions = new TexlFunctionSet(_symbolTables.Select(t => t.Functions).ToList());
-                    _cachedVersionHash = current;
-                }
-
-                return _nameResolverFunctions;                
+                return _cachedFunctions;                
             }
         }
 

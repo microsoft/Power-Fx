@@ -11,8 +11,6 @@ using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.Texl.Builtins;
-using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
@@ -26,25 +24,8 @@ namespace Microsoft.PowerFx
     /// </summary>
     [DebuggerDisplay("{_debugName}_{GetHashCode()}")]
     [ThreadSafeImmutable]
-    public abstract class ReadOnlySymbolTable : INameResolver, IGlobalSymbolNameResolver, IEnumStore
-    {
-        // Changed on each update. 
-        // Host can use to ensure that a symbol table wasn't mutated on us.                 
-        private protected VersionHash _version = VersionHash.New();
-
-        /// <summary>
-        /// This can be compared to determine if the symbol table was mutated during an operation. 
-        /// </summary>
-        internal virtual VersionHash VersionHash => _version;
-
-        /// <summary>
-        /// Notify the symbol table has changed. 
-        /// </summary>
-        public void Inc()
-        {
-            _version.Inc();
-        }
-
+    public abstract class ReadOnlySymbolTable : VersionedSet, INameResolver, IGlobalSymbolNameResolver, IEnumStore
+    {        
         private protected string _debugName = "SymbolTable";
 
         // Helper in debugging. Useful when we have multiple symbol tables chained. 
@@ -147,10 +128,7 @@ namespace Microsoft.PowerFx
         /// but their type info is lazily hydrated. 
         /// </summary>
         /// <returns></returns>
-        public static ReadOnlySymbolTable NewFromDeferred(
-            DisplayNameProvider map,
-            Func<string, string, FormulaType> fetchTypeInfo,
-            string debugName = null)
+        public static ReadOnlySymbolTable NewFromDeferred(DisplayNameProvider map, Func<string, string, FormulaType> fetchTypeInfo, string debugName = null)
         {
             return new DeferredSymbolTable(map, fetchTypeInfo)
             {
@@ -158,11 +136,7 @@ namespace Microsoft.PowerFx
             };
         }
 
-        public static ReadOnlySymbolTable NewFromRecord(
-            RecordType type,
-            string debugName = null,
-            bool allowThisRecord = false,
-            bool allowMutable = false)
+        public static ReadOnlySymbolTable NewFromRecord(RecordType type, string debugName = null, bool allowThisRecord = false, bool allowMutable = false)
         {
             return new SymbolTableOverRecordType(type ?? RecordType.Empty(), null, mutable: allowMutable, allowThisRecord: allowThisRecord)
             {
@@ -173,6 +147,11 @@ namespace Microsoft.PowerFx
         public static ReadOnlySymbolTable Compose(params ReadOnlySymbolTable[] tables)
         {
             return new ComposedReadOnlySymbolTable(tables);
+        }
+
+        internal static ReadOnlySymbolTable Compose(TexlFunctionSet cachedFunctionSet, params ReadOnlySymbolTable[] tables)
+        {
+            return new ComposedReadOnlySymbolTable(cachedFunctionSet, tables);
         }
 
         // Helper to create a ReadOnly symbol table around a set of core functions.
@@ -191,7 +170,7 @@ namespace Microsoft.PowerFx
         }
 
         internal static ReadOnlySymbolTable NewDefault(IEnumerable<TexlFunction> functions)
-        {            
+        {
             TexlFunctionSet tfs = new TexlFunctionSet();
 
             foreach (TexlFunction function in functions)
@@ -321,15 +300,15 @@ namespace Microsoft.PowerFx
             Contracts.Check(theNamespace.IsValid, "The namespace is invalid.");
             Contracts.CheckNonEmpty(name, "name");
 
-            return localeInvariant 
-                        ? Functions.WithInvariantName(name, theNamespace) 
-                        : Functions.WithName(name, theNamespace);            
+            return localeInvariant
+                        ? Functions.WithInvariantName(name, theNamespace)
+                        : Functions.WithName(name, theNamespace);
         }
-        
+
         IEnumerable<TexlFunction> INameResolver.LookupFunctionsInNamespace(DPath nameSpace)
         {
             Contracts.Check(nameSpace.IsValid, "The namespace is invalid.");
-            
+
             return _functions.WithNamespace(nameSpace);
         }
 

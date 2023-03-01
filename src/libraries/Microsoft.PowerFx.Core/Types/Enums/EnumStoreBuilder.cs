@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
@@ -360,9 +359,7 @@ namespace Microsoft.PowerFx.Core.Types.Enums
             return list.ToImmutable();
         }
 
-        private IEnumerable<EnumSymbol> EnumSymbols =>
-            CollectionUtils.EnsureInstanceCreated(
-                    ref _enumSymbols, () => RegenerateEnumSymbols());
+        private IEnumerable<EnumSymbol> EnumSymbols => CollectionUtils.EnsureInstanceCreated(ref _enumSymbols, () => RegenerateEnumSymbols());
 
         private ImmutableList<EnumSymbol> RegenerateEnumSymbols()
         {

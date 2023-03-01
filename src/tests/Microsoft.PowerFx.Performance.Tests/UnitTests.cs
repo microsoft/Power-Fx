@@ -8,11 +8,11 @@ using Xunit;
 
 namespace Microsoft.PowerFx.Performance.Tests
 {
-    public class UnitTests
+    public class UnitTests_Pva
     {
         private readonly PvaPerformance _pvaPerf;
 
-        public UnitTests()
+        public UnitTests_Pva()
         {
             _pvaPerf = new PvaPerformance();
             _pvaPerf.GlobalSetup();
@@ -34,6 +34,41 @@ namespace Microsoft.PowerFx.Performance.Tests
         public void Benchmark_PvaRecalcEngineParse()
         {
             _pvaPerf.PvaRecalcEngineParse();
+        }
+    }
+
+    public class UnitTests_Basic
+    {
+        private readonly BasicPerformance _basicPerformance;
+
+        public UnitTests_Basic()
+        {
+            _basicPerformance = new BasicPerformance() { N = 5 };
+            _basicPerformance.GlobalSetup();
+        }
+
+        [Fact]
+        public void Benchmark_Tokenize()
+        {
+            _basicPerformance.Tokenize();
+        }
+
+        [Fact]
+        public void Benchmark_Check()
+        {
+            _basicPerformance.Check();
+        }
+
+        [Fact]
+        public void Benchmark_Parse()
+        {
+            _basicPerformance.Parse();
+        }
+
+        [Fact]
+        public void Benchmark_Eval()
+        {
+            _basicPerformance.Eval();
         }
     }
 }
