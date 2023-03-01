@@ -601,20 +601,20 @@ namespace Microsoft.PowerFx.Functions
                 return new NumberValue(IRContext.NotInSource(FormulaType.Number), evalValue);
             }
 
-            // Type checker should not attempt to coerce a non-number-backed option set to a number.
-            return CommonErrors.UnreachableCodeError(irContext);
+            var errorMessage = ErrorUtils.FormatMessage(StringResources.Get(TexlStrings.OptionSetOptionNotSupported), null, optionSet.DisplayName, FormulaType.Color._type.GetKindString());
+            return CommonErrors.CustomError(IRContext.NotInSource(FormulaType.Number), errorMessage);
         }
 
         public static FormulaValue OptionSetValueToBoolean(IRContext irContext, OptionSetValue[] args)
         {
             var optionSet = args[0];
-            if (optionSet.ExecutionValue is string evalValue)
+            if (optionSet.ExecutionValue is bool evalValue)
             {                
-                return new StringValue(IRContext.NotInSource(FormulaType.Boolean), evalValue);
+                return new BooleanValue(IRContext.NotInSource(FormulaType.Boolean), evalValue);
             }
 
-            // Type checker should not attempt to coerce a non-boolean-backed option set to a boolean.
-            return CommonErrors.UnreachableCodeError(irContext);
+            var errorMessage = ErrorUtils.FormatMessage(StringResources.Get(TexlStrings.OptionSetOptionNotSupported), null, optionSet.DisplayName, FormulaType.Color._type.GetKindString());
+            return CommonErrors.CustomError(IRContext.NotInSource(FormulaType.Boolean), errorMessage);
         }
 
         public static FormulaValue OptionSetValueToColor(IRContext irContext, OptionSetValue[] args)
@@ -626,8 +626,8 @@ namespace Microsoft.PowerFx.Functions
                 return new ColorValue(IRContext.NotInSource(FormulaType.Color), ToColor(evalValue));
             }
 
-            // IR Gen should not attempt to coerce a non-color-backed option set to a color using this operation.
-            return CommonErrors.UnreachableCodeError(irContext);
+            var errorMessage = ErrorUtils.FormatMessage(StringResources.Get(TexlStrings.OptionSetOptionNotSupported), null, optionSet.DisplayName, FormulaType.Color._type.GetKindString());
+            return CommonErrors.CustomError(IRContext.NotInSource(FormulaType.Color), errorMessage);
         }
 
         private static System.Drawing.Color ToColor(double doubValue)
@@ -638,25 +638,6 @@ namespace Microsoft.PowerFx.Functions
                         (byte)((value >> 16) & 0xFF),
                         (byte)((value >> 8) & 0xFF),
                         (byte)(value & 0xFF));
-        }
-
-        public static FormulaValue BooleanOptionSetToBoolean(IRContext irContext, OptionSetValue[] args)
-        {
-            var arg0 = args[0];
-
-            if (arg0.Option == "1")
-            {
-                return FormulaValue.New(true);
-            }
-            else if (arg0.Option == "0")
-            {
-                return FormulaValue.New(false);
-            }
-            else
-            {
-                var errorMessage = ErrorUtils.FormatMessage(StringResources.Get(TexlStrings.BooleanOptionSetOptionNotSupported), null, arg0.Option);
-                return CommonErrors.CustomError(IRContext.NotInSource(FormulaType.Boolean), errorMessage);
-            }
         }
 
         public static FormulaValue BlankToEmptyString(IRContext irContext, FormulaValue[] args)

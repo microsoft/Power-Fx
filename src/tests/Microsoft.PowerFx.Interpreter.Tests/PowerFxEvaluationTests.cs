@@ -33,7 +33,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 
         private static (RecalcEngine engine, RecordValue parameters) AllEnumsSetup(PowerFxConfig config)
         {
-            return (new RecalcEngine(PowerFxConfig.BuildWithEnumStore(config.CultureInfo, new EnumStoreBuilder().WithDefaultEnums(), Enumerable.Empty<TexlFunction>(), config.Features)), null);
+            return (new RecalcEngine(PowerFxConfig.BuildWithEnumStore(config.CultureInfo, new EnumStoreBuilder().WithDefaultEnums(), new TexlFunctionSet(), config.Features)), null);
         }
 
         private static (RecalcEngine engine, RecordValue parameters) OptionSetTestSetup(PowerFxConfig config)
