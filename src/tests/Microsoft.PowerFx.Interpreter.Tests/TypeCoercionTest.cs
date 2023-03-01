@@ -108,9 +108,7 @@ namespace Microsoft.PowerFx.Tests
 
             var runtimeConfig = new RuntimeConfig();
             runtimeConfig.SetCulture(CultureInfo.CurrentCulture);
-            runtimeConfig.SetCancellationToken(CancellationToken.None);
             runtimeConfig.SetTimeZone(TimeZoneInfo.Utc);
-
             isSucceeded = inputValue.TryCoerceTo(runtimeConfig, out StringValue resultString);
             if (exprStr != null)
             {
@@ -121,6 +119,20 @@ namespace Microsoft.PowerFx.Tests
             {
                 Assert.False(isSucceeded);
                 Assert.IsType<ErrorValue>(resultString);
+            }
+
+            var cts = new CancellationTokenSource();
+            cts.CancelAfter(3000);
+            isSucceeded = inputValue.TryCoerceTo(runtimeConfig, cts.Token, out StringValue cResultString);
+            if (exprStr != null)
+            {
+                Assert.True(isSucceeded);
+                Assert.Equal(exprStr, cResultString.Value);
+            }
+            else
+            {
+                Assert.False(isSucceeded);
+                Assert.IsType<ErrorValue>(cResultString);
             }
 
             isSucceeded = inputValue.TryCoerceTo(out DateTimeValue resultDateTime);

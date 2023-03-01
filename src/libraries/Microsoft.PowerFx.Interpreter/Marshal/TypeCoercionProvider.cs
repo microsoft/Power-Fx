@@ -23,10 +23,10 @@ namespace Microsoft.PowerFx
             TimeZoneInfo = TimeZoneInfo.Local
         };
 
-        internal static FormattingInfo CreateFormattingInfoFromRuntimeConfig(RuntimeConfig runtimeConfig) => new FormattingInfo()
+        internal static FormattingInfo CreateFormattingInfoFromRuntimeConfig(RuntimeConfig runtimeConfig, CancellationToken cancellationToken) => new FormattingInfo()
         {
             CultureInfo = runtimeConfig.GetService<CultureInfo>(),
-            CancellationToken = runtimeConfig.GetService<CancellationToken>(),
+            CancellationToken = cancellationToken,
             TimeZoneInfo = runtimeConfig.GetService<TimeZoneInfo>()
         };
 
@@ -56,12 +56,25 @@ namespace Microsoft.PowerFx
         /// Try to convert value to String format.
         /// </summary>
         /// <param name="value">Input value.</param>
-        /// <param name="runtimeConfig">Runtime Config. Need to SetCulture, SetCancellationToken and SetTimeZone for RuntimeConfig.</param>
+        /// <param name="runtimeConfig">Runtime Config.</param>
         /// <param name="result">Result value.</param>
         /// <returns>True/False based on whether function can convert from original type to String type.</returns> 
         public static bool TryCoerceTo(this FormulaValue value, RuntimeConfig runtimeConfig, out StringValue result)
         {
-            return TryText(CreateFormattingInfoFromRuntimeConfig(runtimeConfig), IRContext.NotInSource(FormulaType.String), value, null, out result);
+            return TryCoerceTo(value, runtimeConfig, CancellationToken.None, out result);
+        }
+
+        /// <summary>
+        /// Try to convert value to String format.
+        /// </summary>
+        /// <param name="value">Input value.</param>
+        /// <param name="runtimeConfig">Runtime Config.</param>
+        /// <param name="cancellationToken">Cancellation Token.</param>
+        /// <param name="result">Result value.</param>
+        /// <returns>True/False based on whether function can convert from original type to String type.</returns> 
+        public static bool TryCoerceTo(this FormulaValue value, RuntimeConfig runtimeConfig, CancellationToken cancellationToken, out StringValue result)
+        {
+            return TryText(CreateFormattingInfoFromRuntimeConfig(runtimeConfig, cancellationToken), IRContext.NotInSource(FormulaType.String), value, null, out result);
         }
 
         /// <summary>

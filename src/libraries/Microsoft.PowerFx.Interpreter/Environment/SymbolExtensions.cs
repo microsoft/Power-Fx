@@ -33,16 +33,6 @@ namespace Microsoft.PowerFx
         }
 
         /// <summary>
-        /// Set CancellationToken.
-        /// </summary>
-        /// <param name="symbols">SymbolValues where to set the CancellationToken.</param>
-        /// <param name="cancellationToken">CancellationToken to set.</param>
-        public static void SetCancellationToken(this RuntimeConfig symbols, CancellationToken cancellationToken)
-        {
-            symbols.AddService(cancellationToken);
-        }
-
-        /// <summary>
         /// Create a set of values against this symbol table.
         /// </summary>
         /// <returns></returns>
