@@ -49,6 +49,7 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
         EqViewValue,
         EqNamedValue,
         EqNull,
+        EqNullUntyped,
 
         NeqNumbers,
         NeqBoolean,
@@ -67,6 +68,7 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
         NeqViewValue,
         NeqNamedValue,
         NeqNull,
+        NeqNullUntyped,
 
         LtNumbers,
         LeqNumbers,
