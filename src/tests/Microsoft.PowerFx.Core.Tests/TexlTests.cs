@@ -525,13 +525,33 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("If(0 < 1, [1], 2)", "-", true)]
 
         // negative cases, when if produces void type
+        // If(1 < 0, [1], 2) => V which is void value
 
         // void type is not allowed in aggregate type.
-        [InlineData("{test: If(A < 10, 1, {Value: 2})}", "![]", false)]
-        [InlineData("[If(A < 10, 1, {Value: 2})]", "*[]", false)]
+        // {test: V}
+        [InlineData("{test: If(1 < 0, [1], 2)}", "![]", false)]
+
+        // [V]
+        [InlineData("[If(1 < 0, [1], 2)]", "*[]", false)]
 
         // void type can't be consumed.
-        [InlineData("If(0 < 1, [1], 2) + 1", "n", false)]
+        // V + 1 
+        [InlineData("If(1 < 0, [1], 2) + 1", "n", false)]
+
+        // Abs(V)
+        [InlineData("Abs(If(1 < 0, [1], 2))", "n", false)]
+
+        // Len(V)
+        [InlineData("Len(If(1 < 0, [1], 2))", "n", false)]
+
+        // If(V, 0, 1)
+        [InlineData("If(If(1 < 0, [1], 2), 0, 1)", "n", false)]
+
+        // Hour(V)
+        [InlineData("Hour(If(1 < 0, [1], 2))", "n", false)]
+
+        // ForAll([1,2,3], V)
+        [InlineData("ForAll([1,2,3], If(1 < 0, [1], 2))", "e", false)]
         public void TexlFunctionTypeSemanticsIfWithArgumentCoercion(string expression, string expectedType, bool checkSuccess)
         {
             var symbol = new SymbolTable();

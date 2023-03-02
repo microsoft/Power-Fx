@@ -8,25 +8,25 @@
 // b) it's verified nobody is actually using the return value.
 
 >> If(1<0, "abc1", {x:3})
-If(true, {test:1}, "Mismatched args")
+If(true, {test:1}, "Mismatched args (result of the expression can't be used).")
 
 >> If(1>0, 100, {x:3}) + 1
-Errors: Error 0-19: Invalid argument type. Expecting one of the following: Number, Text, Boolean.
+Errors: Error 0-19: Invalid argument type. Expecting one of the following: Number, Text, Boolean, UntypedObject.
 
 >> If(1>0, 100; 30, {x:3}) + 1
-Errors: Error 0-23: Invalid argument type. Expecting one of the following: Number, Text, Boolean.
+Errors: Error 0-23: Invalid argument type. Expecting one of the following: Number, Text, Boolean, UntypedObject.
 
 >> If(1>0, 100; 30, {x:3}; 60) + 1
 31
 
 >> Value(If(1>0, 100; 30, {x:3}) + 1)
-Errors: Error 6-29: Invalid argument type. Expecting one of the following: Number, Text, Boolean.
+Errors: Error 6-29: Invalid argument type. Expecting one of the following: Number, Text, Boolean, UntypedObject.
 
 >> Value(1 + If(1>0, 100; 30, {x:3}))
-Errors: Error 10-33: Invalid argument type. Expecting one of the following: Number, Text, Boolean.
+Errors: Error 10-33: Invalid argument type. Expecting one of the following: Number, Text, Boolean, UntypedObject.
 
 >> If(1<0, "abc2", {x:3}; {x:2})
-If(true, {test:1}, "Mismatched args")
+If(true, {test:1}, "Mismatched args (result of the expression can't be used).")
 
 >> If(false, "abc3", {x:3}; If(true, Value(10); {x:3})); Value(101)
 101
@@ -50,4 +50,35 @@ Error({Kind:ErrorKind.Div0})
 Errors: Error 15-32: Invalid argument type (Void). Expecting a Boolean value instead.|Error 0-41: The function 'If' has some invalid arguments.
 
 >> If(1<0, {x:3}, 1/0)
+Error({Kind:ErrorKind.Div0})
+
+>> If(Sqrt(-1)<0, { a: 1 }, 2)
+Error({Kind:ErrorKind.Numeric})
+
+>> If(1<0, { a: 1 }, Sqrt(-1))
+Error({Kind:ErrorKind.Numeric})
+
+>> IfError( If(1<0, { a: 1 }, Sqrt(-1)), $"Error {FirstError.Kind}", "No errors")
+"Error 24"
+
+>> IsError( If(false, { a: 1 }, 2 ) )
+false
+
+>> IsError( If(1<0, {x:3}, 1/0) )
+true
+
+// result of If can't be used (even inside another If).
+>> IsBlankOrError( If(1<0, If(false, {x:3}, 1/0)) )
+Errors: Error 16-46: The function 'If' has some invalid arguments.|Error 0-48: The function 'IsBlankOrError' has some invalid arguments.|Error 16-46: Invalid argument type.
+
+>> IsBlankOrError( If(false, { a: 1 }, 2 ) )
+false
+
+>> IsNumeric( If(false, { a: 1 }, 2 ) )
+false
+
+>> If( true, With({a:1},Switch(a, 1, { prop:"complex" }, "scalar")) )
+{prop:"complex"}
+
+>> If( true, With({a:1},Switch(a, 1, 1/0, { prop:"complex" })) )
 Error({Kind:ErrorKind.Div0})

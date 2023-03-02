@@ -63,4 +63,4 @@ Error({Kind:ErrorKind.Div0})
 
 // Demos expression that generates Void value.
 >> If(true, {a:1}, "test")
-If(true, {test:1}, "Mismatched args")
+If(true, {test:1}, "Mismatched args (result of the expression can't be used).")
