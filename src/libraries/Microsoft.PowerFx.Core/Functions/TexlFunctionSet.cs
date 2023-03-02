@@ -120,7 +120,7 @@ namespace Microsoft.PowerFx.Core.Functions
                     }
                 }
             }
-        }        
+        }
 
         internal TexlFunction Add(TexlFunction function)
         {
@@ -203,7 +203,7 @@ namespace Microsoft.PowerFx.Core.Functions
                 _functionsInvariant = functionSet._functionsInvariant.ToDictionary(kvp => kvp.Key, kvp => new List<TexlFunction>(kvp.Value));
                 _namespaces = functionSet._namespaces.ToDictionary(kvp => kvp.Key, kvp => new List<TexlFunction>(kvp.Value));
                 _enums = new List<string>(functionSet._enums);
-                _count = functionSet._count;                
+                _count = functionSet._count;
             }
             else
             {

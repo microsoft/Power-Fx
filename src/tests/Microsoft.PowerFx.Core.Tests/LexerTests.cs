@@ -469,5 +469,50 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.True(object.ReferenceEquals(TexlLexer.CommaDecimalSeparatorLexer, TexlLexer.CommaDecimalSeparatorLexer));
             Assert.False(object.ReferenceEquals(TexlLexer.InvariantLexer, TexlLexer.CommaDecimalSeparatorLexer));
         }
+
+        [Fact]
+        public void Lexer_IsSimpleIdentCh_ValidateOptimization()
+        {
+            for (char ch = '\0'; ch < 10; ch++)
+            {
+                bool expectedResult = ((uint)(ch - 'a') < 26) || ((uint)(ch - 'A') < 26) || ((uint)(ch - '0') <= 9) || (ch == '_');
+                bool result = TexlLexer.IsSimpleIdentCh(ch);
+
+                Assert.Equal(expectedResult, result);
+
+                /* The code used to generate the test in IsSimpleIdentCh is the following
+                 * It allows combining all tests in an equivalent bit array
+                 
+                    List<(char start, char end)> spans = new () 
+                    { 
+                        ('0', '9'),
+                        ('A', 'Z'),
+                        ('a', 'z'),
+                        ('_', '_')
+                    };
+
+                    int max = 128;
+                    BitArray ba  = new BitArray(Enumerable.Range(0, 128).Select(i => spans.Any(s => s.start <= (char)i && (char)i <= s.end)).ToArray());
+                    byte[] b = new byte[max >> 3];
+                    ba.CopyTo(b, 0);
+                    StringBuilder sb = new StringBuilder();
+
+                    for (int i = 0; i < b.Length / 2; i++)
+                    {
+                        UInt32 ui = (uint)b[2 * i + 1] * 256 + (uint)b[2 * i];
+                        string ch = ui.ToString("X4");
+                        if (ch == "0000") sb.Append("\\0");
+                        else if (ui >= 32 && ui < 128) { sb.Append((char)ui); }
+                        else { sb.Append("\\u"); sb.Append(ch.ToLowerInvariant()); }
+                    }
+
+                    string magicString = sb.ToString();
+                    char nextCh = (Char)(Convert.ToUInt16(spans.Max(s => s.end)) + 1);
+
+                    $@"ch < '{nextCh}' && (""{magicString}""[ch >> 4] & (1 << (ch & 0xF))) != 0;".Dump();
+
+                */
+            }
+        }
     }
 }

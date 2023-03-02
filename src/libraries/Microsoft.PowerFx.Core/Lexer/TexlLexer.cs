@@ -479,12 +479,10 @@ namespace Microsoft.PowerFx.Syntax
         {
             if (ch < 128)
             {
-                // Character range where this method will return true: [A-Z], [a-z], _, '
-                // return ((uint)(ch - 'a') < 26) || ((uint)(ch - 'A') < 26) || (ch == '_') || (ch == IdentifierDelimiter);
-                return ch < '{' && ("\0\0\u0080\0\ufffe\u87ff\ufffe\u07ff"[ch >> 4] & (1 << (ch & 0xF))) != 0;
+                return ((uint)(ch - 'a') < 26) || ((uint)(ch - 'A') < 26) || (ch == '_') || (ch == IdentifierDelimiter);
             }
-            
-            return (CharacterUtils.GetUniCatFlags(ch) & CharacterUtils.UniCatFlags.IdentStartChar) != 0;                        
+
+            return (CharacterUtils.GetUniCatFlags(ch) & CharacterUtils.UniCatFlags.IdentStartChar) != 0;
         }
 
         // Returns true if the specified character is a valid simple identifier character.
@@ -493,11 +491,12 @@ namespace Microsoft.PowerFx.Syntax
             if (ch < 128)
             {
                 // Character range where this method will return true: [0-9], [A-Z], _, [a-z]
-                // This code is equivalent to return ((uint)(ch - 'a') < 26) || ((uint)(ch - 'A') < 26) || ((uint)(ch - '0') <= 9) || (ch == '_');            
+                // This code is equivalent to return ((uint)(ch - 'a') < 26) || ((uint)(ch - 'A') < 26) || ((uint)(ch - '0') <= 9) || (ch == '_');
+                // Below code is ~8% faster on .Net Core 3.1
                 return ch < '{' && ("\0\0\0\u03ff\ufffe\u87ff\ufffe\u07ff"[ch >> 4] & (1 << (ch & 0xF))) != 0;
             }
-            
-            return (CharacterUtils.GetUniCatFlags(ch) & CharacterUtils.UniCatFlags.IdentPartChar) != 0;                       
+
+            return (CharacterUtils.GetUniCatFlags(ch) & CharacterUtils.UniCatFlags.IdentPartChar) != 0;
         }
 
         // Returns true if the specified character constitutes a valid start for a numeric literal.
@@ -961,7 +960,7 @@ namespace Microsoft.PowerFx.Syntax
             public Token GetNextToken()
             {
                 while (_currentPosition < _charCount)
-                {                   
+                {
                     var tok = Dispatch(true, true);
                     if (tok != null)
                     {
@@ -1051,6 +1050,7 @@ namespace Microsoft.PowerFx.Syntax
 
                 _sb.Length = 0;
                 _sb.Append(CurrentChar);
+
                 for (; ;)
                 {
                     var str = _sb.ToString();
@@ -1219,7 +1219,7 @@ namespace Microsoft.PowerFx.Syntax
 
             // Core functionality for lexing an identifier.
             private string LexIdentCore(out bool fDelimiterStart, out bool fDelimiterEnd)
-            {                
+            {
                 char currentChar = _text[_currentPosition];
 
                 Contracts.Assert(IsIdentStart(currentChar));
@@ -1234,7 +1234,7 @@ namespace Microsoft.PowerFx.Syntax
                     while (IsSimpleIdentCh(currentChar))
                     {
                         _sb.Append(currentChar);
-                        
+
                         if (++_currentPosition < _charCount)
                         {
                             currentChar = _text[_currentPosition];

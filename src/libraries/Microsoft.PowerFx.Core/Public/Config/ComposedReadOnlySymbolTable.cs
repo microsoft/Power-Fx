@@ -25,18 +25,18 @@ namespace Microsoft.PowerFx
         public ComposedReadOnlySymbolTable(params ReadOnlySymbolTable[] symbolTables)
         {
             _symbolTables = symbolTables.Where(x => x != null);
-            DebugName = "(" + string.Join(",", _symbolTables.Select(t => t.DebugName)) + ")";            
+            DebugName = "(" + string.Join(",", _symbolTables.Select(t => t.DebugName)) + ")";
         }
 
         public ComposedReadOnlySymbolTable(TexlFunctionSet cachedFunctionSet, params ReadOnlySymbolTable[] symbolTables)
             : this(symbolTables)
         {
             _cachedFunctions = cachedFunctionSet;
-        }     
+        }
 
         internal IEnumerable<ReadOnlySymbolTable> SubTables => _symbolTables;
 
-        internal override VersionHash VersionHash => VersionHash.Combine(_symbolTables.Select(t => t.VersionHash));        
+        internal override VersionHash VersionHash => VersionHash.Combine(_symbolTables.Select(t => t.VersionHash));
 
         public override FormulaType GetTypeFromSlot(ISymbolSlot slot)
         {
@@ -58,14 +58,14 @@ namespace Microsoft.PowerFx
         TexlFunctionSet INameResolver.Functions
         {
             get
-            {                
+            {
                 if (_cachedFunctions == null || _cachedVersionHash != VersionHash.Combine(_symbolTables.Select(st => st.Functions.VersionHash)))
                 {
                     _cachedFunctions = new TexlFunctionSet(_symbolTables.Select(t => t.Functions).ToList());
                     _cachedVersionHash = _cachedFunctions.VersionHash;
                 }
 
-                return _cachedFunctions;                
+                return _cachedFunctions;
             }
         }
 

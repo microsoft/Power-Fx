@@ -187,6 +187,6 @@ namespace Microsoft.PowerFx.Core.Utils
 
             fModified = true;
             return new DName(StrUnderscore + strName);
-        }    
+        }
     }
 }

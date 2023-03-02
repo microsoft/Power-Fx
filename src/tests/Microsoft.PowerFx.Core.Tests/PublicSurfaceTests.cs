@@ -165,7 +165,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 // TBD ...
                 "Microsoft.PowerFx.Core.DisplayNameProvider",
                 "Microsoft.PowerFx.Core.DisplayNameUtility",
-                "Microsoft.PowerFx.Core.Localization.ErrorResourceKey",                
+                "Microsoft.PowerFx.Core.Localization.ErrorResourceKey",
                 "Microsoft.PowerFx.Core.RenameDriver",
                 "Microsoft.PowerFx.Core.Utils.DName",
                 "Microsoft.PowerFx.Core.Utils.DPath",
@@ -227,7 +227,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             var len = values1.Length;
             Assert.Equal(len, values2.Length);
-            
+
             for (var i = 0; i < len; i++)
             {
                 var x = values1.GetValue(i);

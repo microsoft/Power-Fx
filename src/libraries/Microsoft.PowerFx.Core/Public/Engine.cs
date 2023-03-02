@@ -123,13 +123,19 @@ namespace Microsoft.PowerFx
 
             lock (_cachedFunctionSetLock)
             {
-                if (_cachedFunctionSet != null && _cachedFunctionSet.VersionHash != combinedFunctionHash)
-                {
+                bool updateCache = _cachedFunctionSet == null || _cachedFunctionSet.VersionHash != combinedFunctionHash;
+
+                if (updateCache)
+                {                    
                     _cachedFunctionSet = null;
                 }
 
                 symbols = ReadOnlySymbolTable.Compose(_cachedFunctionSet, localSymbols, EngineSymbols, SupportedFunctions, Config.SymbolTable);
-                _cachedFunctionSet = symbols.Functions;
+                
+                if (updateCache)
+                {
+                    _cachedFunctionSet = symbols.Functions;
+                }
             }
 
             return symbols;
