@@ -33,7 +33,7 @@ namespace Microsoft.PowerFx.Performance.Tests
         [Fact]
         public void Benchmark_PvaRecalcEngineParse()
         {
-            _pvaPerf.PvaRecalcEngineParse();
+            _pvaPerf.PvaRecalcEngineParse(); 
         }
     }
 
