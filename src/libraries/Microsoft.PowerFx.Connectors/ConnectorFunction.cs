@@ -3,12 +3,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
 using System.Numerics;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.AppMagic.Authoring;
 using Microsoft.AppMagic.Authoring.Texl.Builtins;
 using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Core.Functions;
@@ -18,6 +18,7 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors
 {
+    [DebuggerDisplay("{Name}")]
     public class ConnectorFunction
     {
         public string Name { get; }
