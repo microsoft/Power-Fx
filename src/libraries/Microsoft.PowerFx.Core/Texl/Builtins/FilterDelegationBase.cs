@@ -105,8 +105,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     case NodeKind.FirstName:
                         {
                             // Only boolean option sets and boolean fields are allowed to delegate
-                            var nodeDType = binding.GetType(dsNode);
-                            if (!((nodeDType.IsOptionSet && nodeDType.OptionSetInfo != null && nodeDType.OptionSetInfo.IsBooleanValued) || (nodeDType == DType.Boolean && dsNode.Kind != NodeKind.BoolLit))) 
+                            if (!binding.IsValidBooleanDelegableNode(dsNode))
                             {
                                 SuggestDelegationHint(dsNode, binding);
                                 return false;
@@ -124,8 +123,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         {
                             // Only boolean option set, boolean fields and views are allowed to delegate
                             var nodeDType = binding.GetType(dsNode);
-                            if (!((nodeDType.IsOptionSet && nodeDType.OptionSetInfo != null && nodeDType.OptionSetInfo.IsBooleanValued) 
-                                || (nodeDType == DType.Boolean && dsNode.Kind != NodeKind.BoolLit)
+                            if (!(binding.IsValidBooleanDelegableNode(dsNode)
                                 || (nodeDType == DType.ViewValue)))
                             {
                                 SuggestDelegationHint(dsNode, binding);

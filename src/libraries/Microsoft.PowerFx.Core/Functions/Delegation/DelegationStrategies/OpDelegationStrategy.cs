@@ -44,8 +44,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
                 // Filter(SharepointDS, BooleanCol And <some other predicate>), makes it non delegable since no column has And/Or capability
                 if ((column.Kind == NodeKind.FirstName || column.Kind == NodeKind.DottedName) && (Op == BinaryOp.And || Op == BinaryOp.Or))
                 {
-                    var nodeDType = binder.GetType(column);
-                    if ((nodeDType.IsOptionSet && nodeDType.OptionSetInfo != null && nodeDType.OptionSetInfo.IsBooleanValued) || (nodeDType == DType.Boolean && column.Kind != NodeKind.BoolLit))
+                    if (binder.IsValidBooleanDelegableNode(column))
                     {
                         return IsOpSupportedByTable(metadata, column, binder);
                     }
