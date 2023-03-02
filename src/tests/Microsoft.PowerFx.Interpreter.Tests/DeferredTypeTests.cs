@@ -70,13 +70,13 @@ namespace Microsoft.PowerFx.Interpreter
         [InlineData("ForAll([1,2,3], X)", "X")]
         [InlineData("ForAll(ParseJSON(\"[1]\"), X)", "X")]
         [InlineData("Abs(Table(X))", "n")]
-        [InlineData("Power(2, Table(X))", "w")]
+        [InlineData("Power(2, Table(X))", "n")]
         [InlineData("Switch(X, 0, 0, 1, 1)", "w")]
         [InlineData("Switch(0, 0, X, 1, 1)", "w")]
         [InlineData("Switch(0, 0, X, 1, X)", "X")]
         [InlineData("Switch(0, 0, X, 1, \"test\")", "s")]
-        [InlineData("Set(N, X); N", "n")] // TODO Decimal: Why is this n?
-        [InlineData("Set(N, X); Set(N, 5); N", "w")]
+        [InlineData("Set(N, X); N", "n")]
+        [InlineData("Set(N, X); Set(N, 5); N", "n")]
         [InlineData("Set(XM, X); XM", "X")]
 
         // Ensures expression binds without any errors - but issues a warning for the deferred(unknown) type.

@@ -11,7 +11,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
     // Exp(number:n)
     // Equivalent Excel function: Exp
-    internal sealed class ExpFunction : MathOneArgFunction
+    internal sealed class ExpFunction : MathFunction
     {
         public override bool HasPreciseErrors => true;
 

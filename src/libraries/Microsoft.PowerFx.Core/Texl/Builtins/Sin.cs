@@ -8,7 +8,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
     // Sin(number:n)
     // Equivalent Excel function: Sin
-    internal sealed class SinFunction : MathOneArgFunction
+    internal sealed class SinFunction : MathFunction
     {
         public SinFunction()
             : base("Sin", TexlStrings.AboutSin, FunctionCategories.MathAndStat)

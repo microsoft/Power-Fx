@@ -42,8 +42,6 @@ namespace Microsoft.PowerFx
 
         public int MaxCallDepth { get; set; }
 
-        public bool NumberIsFloat { get; set; }
-
         private PowerFxConfig(CultureInfo cultureInfo, EnumStoreBuilder enumStoreBuilder, Features features = Features.None)
         {
             CultureInfo = cultureInfo ?? CultureInfo.CurrentCulture;

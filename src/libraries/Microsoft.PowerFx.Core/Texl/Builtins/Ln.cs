@@ -8,7 +8,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
     // Ln(number:n)
     // Equivalent Excel function: Ln
-    internal sealed class LnFunction : MathOneArgFunction
+    internal sealed class LnFunction : MathFunction
     {
         public override bool HasPreciseErrors => true;
 

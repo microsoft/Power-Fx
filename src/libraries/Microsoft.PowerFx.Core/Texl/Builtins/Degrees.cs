@@ -11,7 +11,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
     // Degrees(number:n)
     // Equivalent Excel function: Degrees
-    internal sealed class DegreesFunction : MathOneArgFunction
+    internal sealed class DegreesFunction : MathFunction
     {
         public DegreesFunction()
             : base("Degrees", TexlStrings.AboutDegrees, FunctionCategories.MathAndStat)

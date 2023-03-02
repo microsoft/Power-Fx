@@ -117,10 +117,15 @@ namespace Microsoft.PowerFx.Core.IR
                     return GetToEnumCoercion(fromType, toType);
 
                 case DKind.Boolean:
-                    Contracts.Assert(DType.Number.Accepts(fromType) || DType.String.Accepts(fromType) || (DType.OptionSetValue.Accepts(fromType) && (fromType.OptionSetInfo?.IsBooleanValued ?? false)), "Unsupported type coercion");
+                    Contracts.Assert(DType.Number.Accepts(fromType) || DType.Decimal.Accepts(fromType) || DType.String.Accepts(fromType) || (DType.OptionSetValue.Accepts(fromType) && (fromType.OptionSetInfo?.IsBooleanValued ?? false)), "Unsupported type coercion");
                     if (DType.Number.Accepts(fromType))
                     {
                         return CoercionKind.NumberToBoolean;
+                    }
+
+                    if (DType.Decimal.Accepts(fromType))
+                    {
+                        return CoercionKind.DecimalToBoolean;
                     }
 
                     if (DType.String.Accepts(fromType))
@@ -160,10 +165,14 @@ namespace Microsoft.PowerFx.Core.IR
 
                 case DKind.DateTime:
                 case DKind.DateTimeNoTimeZone:
-                    Contracts.Assert(DType.String.Accepts(fromType) || DType.Number.Accepts(fromType) || DType.Time.Accepts(fromType) || DType.Date.Accepts(fromType), "Unsupported type coercion");
+                    Contracts.Assert(DType.String.Accepts(fromType) || DType.Decimal.Accepts(fromType) || DType.Number.Accepts(fromType) || DType.Time.Accepts(fromType) || DType.Date.Accepts(fromType), "Unsupported type coercion");
                     if (DType.Number.Accepts(fromType))
                     {
                         return CoercionKind.NumberToDateTime;
+                    }
+                    else if (DType.Decimal.Accepts(fromType))
+                    {
+                        return CoercionKind.DecimalToDateTime;
                     }
                     else if (DType.Date.Accepts(fromType))
                     {
@@ -177,10 +186,14 @@ namespace Microsoft.PowerFx.Core.IR
                     return CoercionKind.TextToDateTime;
 
                 case DKind.Time:
-                    Contracts.Assert(DType.String.Accepts(fromType) || DType.Number.Accepts(fromType) || DType.DateTime.Accepts(fromType) || DType.Date.Accepts(fromType), "Unsupported type coercion");
+                    Contracts.Assert(DType.String.Accepts(fromType) || DType.Number.Accepts(fromType) || DType.Decimal.Accepts(fromType) || DType.DateTime.Accepts(fromType) || DType.Date.Accepts(fromType), "Unsupported type coercion");
                     if (DType.Number.Accepts(fromType))
                     {
                         return CoercionKind.NumberToTime;
+                    }
+                    else if (DType.Decimal.Accepts(fromType))
+                    {
+                        return CoercionKind.DecimalToTime;
                     }
                     else if (DType.Date.Accepts(fromType))
                     {
@@ -194,10 +207,14 @@ namespace Microsoft.PowerFx.Core.IR
                     return CoercionKind.TextToTime;
 
                 case DKind.Date:
-                    Contracts.Assert(DType.String.Accepts(fromType) || DType.Number.Accepts(fromType) || DType.DateTime.Accepts(fromType) || DType.Time.Accepts(fromType), "Unsupported type coercion");
+                    Contracts.Assert(DType.String.Accepts(fromType) || DType.Number.Accepts(fromType) || DType.Decimal.Accepts(fromType) || DType.DateTime.Accepts(fromType) || DType.Time.Accepts(fromType), "Unsupported type coercion");
                     if (DType.Number.Accepts(fromType))
                     {
                         return CoercionKind.NumberToDate;
+                    }
+                    else if (DType.Decimal.Accepts(fromType))
+                    {
+                        return CoercionKind.DecimalToDate;
                     }
                     else if (DType.Time.Accepts(fromType))
                     {

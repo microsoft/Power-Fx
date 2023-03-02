@@ -6,12 +6,12 @@ using Microsoft.PowerFx.Core.Types;
 
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
-    // Int(number:n)
+    // Int(number:n)    
     // Truncate by rounding toward negative infinity.
-    internal sealed class IntFunction : MathOneArgFunction
+    internal sealed class IntFunction : MathFunction
     {
         public IntFunction()
-            : base("Int", TexlStrings.AboutInt, FunctionCategories.MathAndStat)
+            : base("Int", TexlStrings.AboutInt, FunctionCategories.MathAndStat, nativeDecimal: true)
         {
         }
     }
@@ -21,7 +21,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class IntTableFunction : MathOneArgTableFunction
     {
         public IntTableFunction()
-            : base("Int", TexlStrings.AboutIntT, FunctionCategories.Table)
+            : base("Int", TexlStrings.AboutIntT, FunctionCategories.Table, nativeDecimal: true)
         {
         }
     }

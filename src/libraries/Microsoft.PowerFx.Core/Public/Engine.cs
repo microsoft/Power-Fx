@@ -9,6 +9,7 @@ using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Glue;
+using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Intellisense;
@@ -216,6 +217,8 @@ namespace Microsoft.PowerFx
 
         public CheckResult Check(ParseResult parse, RecordType parameterType = null)
         {
+            // TODO Decimal: add in engine config here too?
+
             var check = new CheckResult(this)
                .SetText(parse)
                .SetBindingInfo(parameterType);

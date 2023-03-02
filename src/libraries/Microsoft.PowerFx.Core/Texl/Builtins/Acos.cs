@@ -11,7 +11,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
     // Acos(number:n)
     // Equivalent Excel function: acos
-    internal sealed class AcosFunction : MathOneArgFunction
+    internal sealed class AcosFunction : MathFunction
     {
         public AcosFunction()
             : base("Acos", TexlStrings.AboutAcos, FunctionCategories.MathAndStat)

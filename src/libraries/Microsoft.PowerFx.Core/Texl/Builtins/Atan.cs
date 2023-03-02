@@ -11,7 +11,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
     // Atan(number:n)
     // Equivalent Excel function: Atan
-    internal sealed class AtanFunction : MathOneArgFunction
+    internal sealed class AtanFunction : MathFunction
     {
         public AtanFunction()
             : base("Atan", TexlStrings.AboutAtan, FunctionCategories.MathAndStat)

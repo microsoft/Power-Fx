@@ -11,7 +11,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
     // Asin(number:n)
     // Equivalent Excel function: Asin
-    internal sealed class AsinFunction : MathOneArgFunction
+    internal sealed class AsinFunction : MathFunction
     {
         public AsinFunction()
             : base("Asin", TexlStrings.AboutAsin, FunctionCategories.MathAndStat)

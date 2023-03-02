@@ -8,7 +8,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
     // Tan(number:n)
     // Equivalent Excel function: Tan
-    internal sealed class TanFunction : MathOneArgFunction
+    internal sealed class TanFunction : MathFunction
     {
         public TanFunction()
             : base("Tan", TexlStrings.AboutTan, FunctionCategories.MathAndStat)

@@ -11,7 +11,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
     // Cot(number:n)
     // Equivalent Excel function: Cot
-    internal sealed class CotFunction : MathOneArgFunction
+    internal sealed class CotFunction : MathFunction
     {
         public CotFunction()
             : base("Cot", TexlStrings.AboutCot, FunctionCategories.MathAndStat)

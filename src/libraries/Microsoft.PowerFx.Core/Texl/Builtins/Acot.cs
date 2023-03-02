@@ -11,7 +11,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
     // Acot(number:n)
     // Equivalent Excel function: Acot
-    internal sealed class AcotFunction : MathOneArgFunction
+    internal sealed class AcotFunction : MathFunction
     {
         public AcotFunction()
             : base("Acot", TexlStrings.AboutAcot, FunctionCategories.MathAndStat)

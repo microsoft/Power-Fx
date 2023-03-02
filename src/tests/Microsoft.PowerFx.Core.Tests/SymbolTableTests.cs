@@ -203,7 +203,7 @@ namespace Microsoft.PowerFx.Core.Tests
             symbolTableCopy3.RemoveFunction("Cos");
 
             Assert.Equal(originalCount, symbolTableOriginal.Functions.Count());
-            Assert.Equal(copyCount1 - 4, symbolTableCopy1.Functions.Count());
+            Assert.Equal(copyCount1 - 2, symbolTableCopy1.Functions.Count());
             Assert.Equal(copyCount2 - 1, symbolTableCopy2.Functions.Count());
             Assert.Equal(copyCount3 - 2, symbolTableCopy3.Functions.Count());
 

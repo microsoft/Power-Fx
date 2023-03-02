@@ -11,7 +11,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
     // Cos(number:n)
     // Equivalent Excel function: Cos
-    internal sealed class CosFunction : MathOneArgFunction
+    internal sealed class CosFunction : MathFunction
     {
         public CosFunction()
             : base("Cos", TexlStrings.AboutCos, FunctionCategories.MathAndStat)

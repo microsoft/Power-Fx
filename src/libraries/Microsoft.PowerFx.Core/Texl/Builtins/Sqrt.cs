@@ -8,7 +8,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
     // Sqrt(number:n)
     // Equivalent DAX function: Sqrt
-    internal sealed class SqrtFunction : MathOneArgFunction
+    internal sealed class SqrtFunction : MathFunction
     {
         public SqrtFunction()
             : base("Sqrt", TexlStrings.AboutSqrt, FunctionCategories.MathAndStat)

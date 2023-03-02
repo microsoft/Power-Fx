@@ -424,6 +424,11 @@ namespace Microsoft.PowerFx
             return _irresult;
         }
 
+        public string GetIR()
+        {
+            return this.ApplyIR().TopNode.ToString();
+        }
+
         /// <summary>
         /// Gets the type of a syntax node. Must call <see cref="ApplyBinding"/> first. 
         /// </summary>

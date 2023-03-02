@@ -28,17 +28,6 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: NumericNegate)
             },
             {
-                UnaryOpKind.Percent,
-                StandardErrorHandling<NumberValue>(
-                    "%",
-                    expandArguments: NoArgExpansion,
-                    replaceBlankValues: ReplaceBlankWithZero,
-                    checkRuntimeTypes: ExactValueType<NumberValue>,
-                    checkRuntimeValues: DeferRuntimeTypeChecking,
-                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-                    targetFunction: NumericPercent)
-            },
-            {
                 UnaryOpKind.NegateDecimal,
                 StandardErrorHandling<DecimalValue>(
                     "-",
@@ -48,6 +37,17 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeValues: DeferRuntimeTypeChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: DecimalNegate)
+            },
+            {
+                UnaryOpKind.Percent,
+                StandardErrorHandling<NumberValue>(
+                    "%",
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: ReplaceBlankWithZero,
+                    checkRuntimeTypes: ExactValueType<NumberValue>,
+                    checkRuntimeValues: DeferRuntimeTypeChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: NumericPercent)
             },
             {
                 UnaryOpKind.PercentDecimal,
@@ -94,6 +94,17 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: NumberToBoolean)
             },
             {
+                UnaryOpKind.DecimalToBoolean,
+                StandardErrorHandling<DecimalValue>(
+                    functionName: null, // internal function, no user-facing name
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<DecimalValue>,
+                    checkRuntimeValues: DeferRuntimeTypeChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: DecimalToBoolean)
+            },
+            {
                 UnaryOpKind.BooleanToText,
                 StandardErrorHandling<BooleanValue>(
                     functionName: null, // internal function, no user-facing name
@@ -116,6 +127,18 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: BooleanToNumber)
             },
             {
+                // Decimal TODO: shouldn't these all be property typed to the coercion target?  Why does input need to match output?
+                UnaryOpKind.BooleanToDecimal,
+                StandardErrorHandling<BooleanValue>(
+                    functionName: null, // internal function, no user-facing name
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<BooleanValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: BooleanToDecimal)
+            },
+            {
                 UnaryOpKind.TextToBoolean,
                 StandardErrorHandling<StringValue>(
                     functionName: null, // internal function, no user-facing name
@@ -128,7 +151,7 @@ namespace Microsoft.PowerFx.Functions
             },
             {
                 UnaryOpKind.DateToNumber,
-                StandardErrorHandling<FormulaValue>(
+                StandardErrorHandling<NumberValue>(
                     functionName: null, // internal function, no user-facing name
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
@@ -136,6 +159,17 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: DateToNumber)
+            },
+            {
+                UnaryOpKind.DateToDecimal,
+                StandardErrorHandling<DecimalValue>(
+                    functionName: null, // internal function, no user-facing name
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: DateOrDateTime,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: DateToDecimal)
             },
             {
                 UnaryOpKind.NumberToDate,
@@ -147,6 +181,17 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeValues: DeferRuntimeTypeChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: NumberToDate)
+            },
+            {
+                UnaryOpKind.DecimalToDate,
+                StandardErrorHandling<DecimalValue>(
+                    functionName: null, // internal function, no user-facing name
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<DecimalValue>,
+                    checkRuntimeValues: DeferRuntimeTypeChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: DecimalToDate)
             },
             {
                 UnaryOpKind.DateTimeToNumber,
@@ -352,12 +397,6 @@ namespace Microsoft.PowerFx.Functions
             return new BooleanValue(irContext, n != 0m);
         }
 
-        public static DecimalValue BooleanToDecimal(IRContext irContext, BooleanValue[] args)
-        {
-            var b = args[0].Value;
-            return new DecimalValue(irContext, b ? 1m : 0m);
-        }
-
         public static FormulaValue DateToDecimal(IRContext irContext, FormulaValue[] args)
         {
             // no loss of precision as underlying system .TotalDays returns a double
@@ -386,6 +425,12 @@ namespace Microsoft.PowerFx.Functions
         {
             var b = args[0].Value;
             return new NumberValue(irContext, b ? 1.0 : 0.0);
+        }
+
+        public static DecimalValue BooleanToDecimal(IRContext irContext, BooleanValue[] args)
+        {
+            var b = args[0].Value;
+            return new DecimalValue(irContext, b ? 1m : 0m);
         }
 
         public static FormulaValue TextToBoolean(IRContext irContext, StringValue[] args)
@@ -440,6 +485,13 @@ namespace Microsoft.PowerFx.Functions
         {
             var n = args[0].Value;
             var date = _epoch.AddDays(n);
+            return new DateValue(irContext, date);
+        }
+
+        public static DateValue DecimalToDate(IRContext irContext, DecimalValue[] args)
+        {
+            var n = args[0].Value;
+            var date = _epoch.AddDays((double)n);
             return new DateValue(irContext, date);
         }
 

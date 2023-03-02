@@ -721,17 +721,32 @@ namespace Microsoft.PowerFx.Core.IR
                     case CoercionKind.BooleanToNumber:
                         unaryOpKind = UnaryOpKind.BooleanToNumber;
                         break;
+                    case CoercionKind.BooleanToDecimal:
+                        unaryOpKind = UnaryOpKind.BooleanToDecimal;
+                        break;
                     case CoercionKind.BooleanOptionSetToNumber:
                         unaryOpKind = UnaryOpKind.BooleanOptionSetToNumber;
+                        break;
+                    case CoercionKind.BooleanOptionSetToDecimal:
+                        unaryOpKind = UnaryOpKind.BooleanOptionSetToDecimal;
                         break;
                     case CoercionKind.DateToNumber:
                         unaryOpKind = UnaryOpKind.DateToNumber;
                         break;
+                    case CoercionKind.DateToDecimal:
+                        unaryOpKind = UnaryOpKind.DateToDecimal;
+                        break;
                     case CoercionKind.TimeToNumber:
                         unaryOpKind = UnaryOpKind.TimeToNumber;
                         break;
+                    case CoercionKind.TimeToDecimal:
+                        unaryOpKind = UnaryOpKind.TimeToDecimal;
+                        break;
                     case CoercionKind.DateTimeToNumber:
                         unaryOpKind = UnaryOpKind.DateTimeToNumber;
+                        break;
+                    case CoercionKind.DateTimeToDecimal:
+                        unaryOpKind = UnaryOpKind.DateTimeToDecimal;
                         break;
                     case CoercionKind.BlobToHyperlink:
                         unaryOpKind = UnaryOpKind.BlobToHyperlink;
@@ -781,6 +796,9 @@ namespace Microsoft.PowerFx.Core.IR
                     case CoercionKind.NumberToBoolean:
                         unaryOpKind = UnaryOpKind.NumberToBoolean;
                         break;
+                    case CoercionKind.DecimalToBoolean:
+                        unaryOpKind = UnaryOpKind.DecimalToBoolean;
+                        break;
                     case CoercionKind.TextToBoolean:
                         unaryOpKind = UnaryOpKind.TextToBoolean;
                         break;
@@ -793,11 +811,20 @@ namespace Microsoft.PowerFx.Core.IR
                     case CoercionKind.NumberToDateTime:
                         unaryOpKind = UnaryOpKind.NumberToDateTime;
                         break;
+                    case CoercionKind.DecimalToDateTime:
+                        unaryOpKind = UnaryOpKind.DecimalToDateTime;
+                        break;
                     case CoercionKind.NumberToDate:
                         unaryOpKind = UnaryOpKind.NumberToDate;
                         break;
+                    case CoercionKind.DecimalToDate:
+                        unaryOpKind = UnaryOpKind.DecimalToDate;
+                        break;
                     case CoercionKind.NumberToTime:
                         unaryOpKind = UnaryOpKind.NumberToTime;
+                        break;
+                    case CoercionKind.DecimalToTime:
+                        unaryOpKind = UnaryOpKind.DecimalToTime;
                         break;
                     case CoercionKind.DateTimeToDate:
                         unaryOpKind = UnaryOpKind.DateTimeToDate;
@@ -824,6 +851,8 @@ namespace Microsoft.PowerFx.Core.IR
                         return new CallNode(IRContext.NotInSource(FormulaType.Build(toType)), BuiltinFunctionsCore.Text_UO, child);
                     case CoercionKind.UntypedToNumber:
                         return new CallNode(IRContext.NotInSource(FormulaType.Build(toType)), BuiltinFunctionsCore.Value_UO, child);
+                    case CoercionKind.UntypedToDecimal:
+                        return new CallNode(IRContext.NotInSource(FormulaType.Build(toType)), BuiltinFunctionsCore.Decimal_UO, child);
                     case CoercionKind.UntypedToBoolean:
                         return new CallNode(IRContext.NotInSource(FormulaType.Build(toType)), BuiltinFunctionsCore.Boolean_UO, child);
                     case CoercionKind.UntypedToDate:

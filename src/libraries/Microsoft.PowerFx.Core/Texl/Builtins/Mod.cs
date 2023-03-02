@@ -14,14 +14,14 @@ using Microsoft.PowerFx.Syntax;
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
     // Mod(number:n, divisor:n)
-    internal sealed class ModFunction : BuiltinFunction
+    internal sealed class ModFunction : MathFunction
     {
         public override bool SupportsParamCoercion => true;
 
         public override bool IsSelfContained => true;
 
         public ModFunction()
-            : base("Mod", TexlStrings.AboutMod, FunctionCategories.MathAndStat, DType.Number, 0, 2, 2, DType.Number, DType.Number)
+            : base("Mod", TexlStrings.AboutMod, FunctionCategories.MathAndStat, 2)
         {
         }
 
@@ -32,6 +32,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     }
 
     // Mod(number:n|*[n], divisor:n|*[n])
+    // Decimal TODO: Should derive from MathTableFunction, needs interpreter implementation
     internal sealed class ModTFunction : BuiltinFunction
     {
         public override bool SupportsParamCoercion => true;

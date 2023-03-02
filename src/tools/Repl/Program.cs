@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using Microsoft.CodeAnalysis.Options;
 using Microsoft.PowerFx;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Texl.Builtins;
@@ -38,9 +39,9 @@ namespace Microsoft.PowerFx
             }
 
             config.SymbolTable.EnableMutationFunctions();
-#if false
-            config.EnableSetFunction();
 
+            config.EnableSetFunction();
+#if false
             config.EnableParseJSONFunction();
 #endif
 
@@ -148,6 +149,15 @@ namespace Microsoft.PowerFx
                     if (TryMatchSet(expr, out var varName, out var varValue))
                     {
                         Console.WriteLine(varName + ": " + PrintResult(varValue));
+                    }
+
+                    // IR pretty printer: IR( <expr> )
+                    if ((match = Regex.Match(expr, @"^\s*IR\((?<expr>.*)\)\s*$", RegexOptions.Singleline)).Success)
+                    {
+                        var opts = new ParserOptions(_engine.Config.Features) { AllowsSideEffects = true, NumberIsFloat = _numberIsFloat };
+                        var cr = _engine.Check(match.Groups["expr"].Value, options: opts);
+                        var ir = cr.GetIR();
+                        Console.WriteLine(ir);
                     }
 
                     // formula definition: <ident> = <formula>

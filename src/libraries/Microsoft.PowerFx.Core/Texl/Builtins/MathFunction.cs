@@ -1,11 +1,14 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
@@ -14,25 +17,18 @@ using Microsoft.PowerFx.Syntax;
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
     // Abstract base class for all 1-arg math functions that return numeric values.
-    internal abstract class MathOneArgFunction : BuiltinFunction
+    internal abstract class MathFunction : BuiltinFunction
     {
         public override bool SupportsParamCoercion => true;
 
         public override bool IsSelfContained => true;
 
-        public enum DecimalOverload
-        {
-            None = 0,
-            Number,
-            Decimal
-        }
+        private readonly bool _nativeDecimal;
 
-        private readonly DecimalOverload _decimalOverload = DecimalOverload.None;
-
-        public MathOneArgFunction(string name, TexlStrings.StringGetter description, FunctionCategories fc, DecimalOverload decimalOverload = DecimalOverload.None)
-            : base(name, description, fc, decimalOverload == DecimalOverload.Decimal ? DType.Decimal : DType.Number, 0, 1, 1, decimalOverload == DecimalOverload.Decimal ? DType.Decimal : DType.Number)
+        public MathFunction(string name, TexlStrings.StringGetter description, FunctionCategories fc, int arityMax = 1, bool nativeDecimal = false)
+            : base(name, description, fc, DType.Unknown, 0, 1, arityMax, nativeDecimal ? DType.Unknown : DType.Number)
         {
-            _decimalOverload = decimalOverload;
+            _nativeDecimal = nativeDecimal;
         }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
@@ -46,19 +42,34 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertAllValues(args);
             Contracts.AssertValue(argTypes);
             Contracts.Assert(args.Length == argTypes.Length);
-            Contracts.Assert(args.Length == 1);
+            Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
             Contracts.AssertValue(errors);
 
-            var fValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fValid = true;
 
-            var arg = args[0];
-            var argType = argTypes[0];
+            nodeToCoercedTypeMap = null;
 
-            if ((nodeToCoercedTypeMap?.Any() ?? false) && 
-                ((_decimalOverload == DecimalOverload.Decimal && context.NumberIsFloat) ||
-                 (_decimalOverload == DecimalOverload.Number && !context.NumberIsFloat)))
+            returnType = Array.FindIndex(argTypes, item => NumDecReturnType(context, _nativeDecimal, item) == DType.Number) == -1 ? DType.Decimal : DType.Number;
+
+            for (int i = 0; i < argTypes.Length; i++)
             {
-                fValid = false;
+                if (CheckType(args[i], argTypes[i], returnType, DefaultErrorContainer, out var matchedWithCoercion))
+                {
+                    if (matchedWithCoercion)
+                    {
+                        if (nodeToCoercedTypeMap == null)
+                        {
+                            nodeToCoercedTypeMap = new Dictionary<TexlNode, DType>();
+                        }
+
+                        CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i], returnType, allowDupes: true);
+                    }
+                }
+                else
+                {
+                    fValid = false;
+                    break;
+                }
             }
 
             if (!fValid)
@@ -74,21 +85,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public override bool SupportsParamCoercion => true;
 
-        private readonly DecimalOverload _decimalOverload = DecimalOverload.None;
-
-        public enum DecimalOverload
-        {
-            None = 0,
-            Number,
-            Decimal
-        }
-
         public override bool IsSelfContained => true;
 
-        public MathOneArgTableFunction(string name, TexlStrings.StringGetter description, FunctionCategories fc, DecimalOverload decimalOverload = DecimalOverload.None)
+        private readonly bool _nativeDecimal;
+
+        public MathOneArgTableFunction(string name, TexlStrings.StringGetter description, FunctionCategories fc, bool nativeDecimal = false)
             : base(name, description, fc, DType.EmptyTable, 0, 1, 1, DType.EmptyTable)
         {
-            _decimalOverload = decimalOverload;
+            _nativeDecimal = nativeDecimal;
         }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
@@ -110,31 +114,30 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.Assert(args.Length == 1);
             Contracts.AssertValue(errors);
 
-            var fValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
-            Contracts.Assert(returnType.IsTable);
-
             var arg = args[0];
             var argType = argTypes[0];
+            var fValid = true;
 
-            fValid &= _decimalOverload == DecimalOverload.Decimal ? CheckDecimalColumnType(argType, arg, errors, ref nodeToCoercedTypeMap) : CheckNumericColumnType(argType, arg, errors, ref nodeToCoercedTypeMap);
+            //           var fValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            //           Contracts.Assert(returnType.IsTable);
+
+            nodeToCoercedTypeMap = new Dictionary<TexlNode, DType>();
+
+            var scalarType = NumDecReturnType(context, _nativeDecimal, argType);
+
+            fValid &= CheckNumDecColumnType(scalarType, argType, arg, errors, ref nodeToCoercedTypeMap);
 
             if (nodeToCoercedTypeMap?.Any() ?? false)
             {
                 // Now set the coerced type to a table with numeric column type with the same name as in the argument.
                 returnType = nodeToCoercedTypeMap[arg];
-
-                if ((_decimalOverload == DecimalOverload.Decimal && context.NumberIsFloat) ||
-                    (_decimalOverload == DecimalOverload.Number && !context.NumberIsFloat))
-                {
-                    fValid = false;
-                }
             }
             else
             {
                 returnType = argType;
             }
 
-            returnType = context.Features.HasFlag(Features.ConsistentOneColumnTableResult) ? DType.CreateTable(new TypedName(_decimalOverload == DecimalOverload.Decimal ? DType.Decimal : DType.Number, GetOneColumnTableResultName(context.Features))) : returnType;
+            returnType = context.Features.HasFlag(Features.ConsistentOneColumnTableResult) ? DType.CreateTable(new TypedName(scalarType, GetOneColumnTableResultName(context.Features))) : returnType;
 
             if (!fValid)
             {

@@ -11,9 +11,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class SumFunction : StatisticalFunction
     {
         public SumFunction()
-            : base("Sum", TexlStrings.AboutSum, FunctionCategories.MathAndStat)
+            : base("Sum", TexlStrings.AboutSum, FunctionCategories.MathAndStat, nativeDecimal: true)
         {
-            SupportsDecimal = true;
         }
     }
 
