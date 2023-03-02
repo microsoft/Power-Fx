@@ -16,6 +16,11 @@
               "value": 1
             }
           ],
+          "topResolution": {
+            "resolutionKind": "NumberResolution",
+            "numberKind": "Integer",
+            "value": 1
+          },
           "extraInformation": [
             {
               "extraInformationKind": "EntitySubtype",
@@ -37,6 +42,12 @@
               "value": "2023-02-25"
             }
           ],
+          "topResolution": {
+            "resolutionKind": "DateTimeResolution",
+            "dateTimeSubKind": "Date",
+            "timex": "2023-02-25",
+            "value": "2023-02-25"
+          },
           "extraInformation": [
             {
               "extraInformationKind": "EntitySubtype",

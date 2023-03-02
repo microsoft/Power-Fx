@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,7 +12,6 @@ using System.Web;
 using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Connectors.Execution;
 using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
 
@@ -161,7 +159,7 @@ namespace Microsoft.PowerFx.Connectors
             }
         }
 
-        public async Task<FormulaValue> DecodeResponseAsync(HttpResponseMessage response, FormulaType returnType)
+        public async Task<FormulaValue> DecodeResponseAsync(HttpResponseMessage response)
         {
             var text = await response.Content.ReadAsStringAsync();
             var statusCode = (int)response.StatusCode;
@@ -170,7 +168,7 @@ namespace Microsoft.PowerFx.Connectors
             {                
                 return string.IsNullOrWhiteSpace(text) 
                     ? FormulaValue.NewBlank(_returnType) 
-                    : FormulaValueJSON.FromJson(text); // $$$ Do we need to check response media type to confirm that the content is indeed json?
+                    : FormulaValueJSON.FromJson(text, _returnType); // $$$ Do we need to check response media type to confirm that the content is indeed json?
             }
 
             return FormulaValue.NewError(
@@ -180,7 +178,7 @@ namespace Microsoft.PowerFx.Connectors
                         Severity = ErrorSeverity.Critical,
                         Message = $"The server returned an HTTP error with code {statusCode}. Response: {text}"
                     },
-                    returnType);
+                    _returnType);
         }
 
         public async Task<FormulaValue> InvokeAsync(string cacheScope, FormulaValue[] args, CancellationToken cancellationToken)
@@ -199,7 +197,7 @@ namespace Microsoft.PowerFx.Connectors
             var result2 = await _cache.TryGetAsync(cacheScope, key, async () =>
             {
                 var response = await _httpClient.SendAsync(request, cancellationToken);
-                result = await DecodeResponseAsync(response, _returnType);
+                result = await DecodeResponseAsync(response);
                 return result;
             });
 

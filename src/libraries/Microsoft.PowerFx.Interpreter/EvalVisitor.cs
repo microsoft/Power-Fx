@@ -332,6 +332,8 @@ namespace Microsoft.PowerFx
                 case BinaryOpKind.EqTime:
                 case BinaryOpKind.EqNull:
                     return OperatorBinaryEq(this, context, node.IRContext, args);
+                case BinaryOpKind.EqNullUntyped:
+                    return OperatorBinaryEqNullUntyped(this, context, node.IRContext, args);
 
                 case BinaryOpKind.NeqBlob:
                 case BinaryOpKind.NeqBoolean:
@@ -349,6 +351,8 @@ namespace Microsoft.PowerFx
                 case BinaryOpKind.NeqTime:
                 case BinaryOpKind.NeqNull:
                     return OperatorBinaryNeq(this, context, node.IRContext, args);
+                case BinaryOpKind.NeqNullUntyped:
+                    return OperatorBinaryNeqNullUntyped(this, context, node.IRContext, args);
 
                 case BinaryOpKind.GtNumbers:
                     return OperatorBinaryGt(this, context, node.IRContext, args);

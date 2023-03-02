@@ -29,8 +29,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         {
         }
 
-        public override bool IsTrackedInTelemetry => false;
-
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
             yield return new[] { TexlStrings.ColorFadeTArg1, TexlStrings.ColorFadeTArg2 };

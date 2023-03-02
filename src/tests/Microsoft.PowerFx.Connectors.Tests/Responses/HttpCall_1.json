@@ -1,0 +1,42 @@
+﻿[
+  {
+    "$id": "1",
+    "date": "2023-02-28T13:52:36.963533+01:00",
+    "temperatureC": 32,
+    "temperatureF": 89,
+    "summary": "abc",
+    "index": 4
+  },
+  {
+    "$id": "2",
+    "date": "2023-03-01T13:52:36.963888+01:00",
+    "temperatureC": 1,
+    "temperatureF": 33,
+    "summary": "abc",
+    "index": 4
+  },
+  {
+    "$id": "3",
+    "date": "2023-03-02T13:52:36.9638903+01:00",
+    "temperatureC": -18,
+    "temperatureF": 0,
+    "summary": "abc",
+    "index": 4
+  },
+  {
+    "$id": "4",
+    "date": "2023-03-03T13:52:36.9638905+01:00",
+    "temperatureC": 25,
+    "temperatureF": 76,
+    "summary": "abc",
+    "index": 4
+  },
+  {
+    "$id": "5",
+    "date": "2023-03-04T13:52:36.9638907+01:00",
+    "temperatureC": 23,
+    "temperatureF": 73,
+    "summary": "abc",
+    "index": 4
+  }
+]
