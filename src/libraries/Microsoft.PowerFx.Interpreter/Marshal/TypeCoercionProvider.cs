@@ -23,7 +23,7 @@ namespace Microsoft.PowerFx
             TimeZoneInfo = TimeZoneInfo.Local
         };
 
-        internal static FormattingInfo CreateFormattingInfoFromRuntimeConfig(RuntimeConfig runtimeConfig, CancellationToken cancellationToken) => new FormattingInfo()
+        internal static FormattingInfo CreateFormattingInfo(RuntimeConfig runtimeConfig, CancellationToken cancellationToken) => new FormattingInfo()
         {
             CultureInfo = runtimeConfig.GetService<CultureInfo>(),
             CancellationToken = cancellationToken,
@@ -74,7 +74,7 @@ namespace Microsoft.PowerFx
         /// <returns>True/False based on whether function can convert from original type to String type.</returns> 
         public static bool TryCoerceTo(this FormulaValue value, RuntimeConfig runtimeConfig, CancellationToken cancellationToken, out StringValue result)
         {
-            return TryText(CreateFormattingInfoFromRuntimeConfig(runtimeConfig, cancellationToken), IRContext.NotInSource(FormulaType.String), value, null, out result);
+            return TryCoerceTo(value, CreateFormattingInfo(runtimeConfig, cancellationToken), out result);
         }
 
         /// <summary>
