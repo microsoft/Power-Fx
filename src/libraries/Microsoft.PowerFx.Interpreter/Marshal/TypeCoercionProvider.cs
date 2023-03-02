@@ -42,6 +42,16 @@ namespace Microsoft.PowerFx
         }
 
         /// <summary>
+        /// Can convert value to String format or not.
+        /// </summary>
+        /// <param name="value">Input value.</param>
+        /// <returns>True/False based on whether function can convert from original type to String type.</returns> 
+        public static bool CanCoerceToStringValue(this FormulaValue value)
+        {
+            return AllowedListConvertToString.Contains(value.Type);
+        }
+
+        /// <summary>
         /// Try to convert value to String format.
         /// </summary>
         /// <param name="value">Input value.</param>

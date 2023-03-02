@@ -6,6 +6,7 @@ using System.Globalization;
 using System.Numerics;
 using System.Threading;
 using Microsoft.PowerFx;
+using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
@@ -66,6 +67,17 @@ namespace Microsoft.PowerFx.Tests
             var inputValue = FormulaValue.New(value);
 
             Assert.Throws<CustomFunctionErrorException>(() => inputValue.TryCoerceTo(out DateTimeValue resultDateTime));
+        }
+
+        // Test if it can coerce to String
+        [Fact]
+        public void CanCoerceToStringTest()
+        {
+            GuidValue guidInput = new GuidValue(IRContext.NotInSource(FormulaType.Guid), Guid.NewGuid());
+            Assert.False(guidInput.CanCoerceToStringValue());
+
+            NumberValue numberInput = new NumberValue(IRContext.NotInSource(FormulaType.Number), 12);
+            Assert.True(numberInput.CanCoerceToStringValue());
         }
 
         private void TryCoerceToTargetTypes(FormulaValue inputValue, string exprBool, string exprNumber, string exprStr, string exprDateTime)
