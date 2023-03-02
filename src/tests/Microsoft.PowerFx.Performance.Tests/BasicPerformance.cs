@@ -15,7 +15,7 @@ using Microsoft.PowerFx.Types;
 namespace Microsoft.PowerFx.Performance.Tests
 {
     [MemoryDiagnoser]
-    [NativeMemoryProfiler]    
+    [NativeMemoryProfiler]
     [EtwProfiler] // https://benchmarkdotnet.org/articles/features/etwprofiler.html
     [CsvExporter] // https://benchmarkdotnet.org/articles/configs/exporters.html
     [MinColumn]
@@ -50,7 +50,7 @@ namespace Microsoft.PowerFx.Performance.Tests
             string expr = string.Join(" + ", Enumerable.Repeat("Sum(1)", N));
             IReadOnlyList<Token> tokens = null;
 
-            for (int i = 0; i < 80; i++)
+            for (int i = 0; i < 100; i++)
             {
                 tokens = _engine.Tokenize(expr);
             }
@@ -64,7 +64,7 @@ namespace Microsoft.PowerFx.Performance.Tests
             string expr = string.Join(" + ", Enumerable.Repeat("Sum(1)", N));
             ParseResult parse = null;
 
-            for (int i = 0; i < 80; i++)
+            for (int i = 0; i < 100; i++)
             {
                 parse = _engine.Parse(expr, _parserOptions);
             }
@@ -78,7 +78,7 @@ namespace Microsoft.PowerFx.Performance.Tests
             string expr = string.Join(" + ", Enumerable.Repeat("Sum(1)", N));
             CheckResult check = null;
 
-            for (int i = 0; i < 80; i++)
+            for (int i = 0; i < 100; i++)
             {
                 check = _engine.Check(expr);
             }
@@ -92,7 +92,7 @@ namespace Microsoft.PowerFx.Performance.Tests
             string expr = string.Join(" + ", Enumerable.Repeat("Sum(1)", N));
             FormulaValue result = null;
 
-            for (int i = 0; i < 80; i++)
+            for (int i = 0; i < 100; i++)
             {
                 result = _recalcEngine.Eval(expr);
             }
