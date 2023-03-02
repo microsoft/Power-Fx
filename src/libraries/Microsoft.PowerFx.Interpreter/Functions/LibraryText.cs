@@ -31,7 +31,7 @@ namespace Microsoft.PowerFx.Functions
 
     internal static partial class Library
     {
-        internal static readonly List<FormulaType> AllowedListConvertToString = new List<FormulaType> { FormulaType.String, FormulaType.Number, FormulaType.DateTime, FormulaType.Date, FormulaType.Time, FormulaType.Boolean };
+        internal static readonly List<FormulaType> AllowedListConvertToString = new List<FormulaType> { FormulaType.String, FormulaType.Number, FormulaType.DateTime, FormulaType.Date, FormulaType.Time, FormulaType.Boolean, FormulaType.Guid };
 
         private static readonly RegexOptions RegExFlags = LibraryFlags.RegExFlags;
 
@@ -314,6 +314,9 @@ namespace Microsoft.PowerFx.Functions
                     break;
                 case BooleanValue b:
                     result = new StringValue(irContext, b.Value.ToString(culture).ToLower());
+                    break;
+                case GuidValue g:
+                    result = new StringValue(irContext, g.Value.ToString(formatString ?? "d", culture));
                     break;
             }
 
