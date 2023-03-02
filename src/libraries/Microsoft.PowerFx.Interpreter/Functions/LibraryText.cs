@@ -31,7 +31,7 @@ namespace Microsoft.PowerFx.Functions
 
     internal static partial class Library
     {
-        internal static readonly List<FormulaType> AllowedListConvertToString = new List<FormulaType> { FormulaType.String, FormulaType.Number, FormulaType.DateTime, FormulaType.Date, FormulaType.Time, FormulaType.Boolean, FormulaType.Guid };
+        internal static readonly IReadOnlyList<FormulaType> AllowedListConvertToString = new List<FormulaType> { FormulaType.String, FormulaType.Number, FormulaType.DateTime, FormulaType.Date, FormulaType.Time, FormulaType.Boolean, FormulaType.Guid };
 
         private static readonly RegexOptions RegExFlags = LibraryFlags.RegExFlags;
 
