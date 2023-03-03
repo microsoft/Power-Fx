@@ -79,3 +79,6 @@ Errors: Error 11-22: The specified column 'Price' does not exist.|Error 0-23: Th
 
 >> Collect([1,2,3],{Value:200}).Value
 200
+
+>> With({ C2: Filter(Table({F1 : 0}), false),C3: Filter(Table({F1 : 0}), false)},ForAll(Sequence(5),Collect(C2, { F1: ThisRecord.Value }));ForAll(Sequence(CountRows(C2)),Collect(C3, Index(C2, ThisRecord.Value)));Patch(C2, First(C2), { F1 : 99});Patch(C3, Last(C2), { F1 : 88});Concat(C2, F1) & "," & Concat(C3, F1));
+"992345,123488"
