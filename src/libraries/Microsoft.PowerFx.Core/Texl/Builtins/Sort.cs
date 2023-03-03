@@ -227,7 +227,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(metadata);
             Contracts.AssertValid(columnPath);
 
-            order = order.ToLower();
+            order = order.ToLowerInvariant();
 
             // If column is marked as ascending only then return false if order requested is descending.
             return order != LanguageConstants.DescendingSortOrderString || !metadata.IsColumnAscendingOnly(columnPath);

@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Diagnostics.Contracts;
+using System.Globalization;
 using System.Text;
 using Microsoft.PowerFx.Core.IR;
 
@@ -22,7 +23,7 @@ namespace Microsoft.PowerFx.Types
 
         public override void ToExpression(StringBuilder sb, FormulaValueSerializerSettings settings)
         {
-            sb.Append((Value == 0) ? "0" : Value.ToString());
+            sb.Append((Value == 0) ? "0" : Value.ToString(CultureInfo.CurrentCulture));
         }
     }
 }

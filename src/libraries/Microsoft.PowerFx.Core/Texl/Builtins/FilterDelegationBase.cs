@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Globalization;
 using System.Numerics;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
@@ -167,7 +168,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         {
                             if (kind != NodeKind.BoolLit)
                             {
-                                SuggestDelegationHint(dsNode, binding, string.Format("Not supported node {0}.", kind));
+                                SuggestDelegationHint(dsNode, binding, string.Format(CultureInfo.InvariantCulture, "Not supported node {0}.", kind));
                                 return false;
                             }
 

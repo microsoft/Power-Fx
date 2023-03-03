@@ -286,7 +286,7 @@ namespace Microsoft.PowerFx
             }
         }
 
-        internal bool HasDeferredArgsWarning => _errors.Any(x => x.IsWarning && x.MessageKey.Equals(TexlStrings.WarnDeferredType.Key));
+        internal bool HasDeferredArgsWarning => _errors.Any(x => x.IsWarning && x.MessageKey.Equals(TexlStrings.WarnDeferredType.Key, StringComparison.Ordinal));
 
         private ReadOnlySymbolTable _allSymbols;
 

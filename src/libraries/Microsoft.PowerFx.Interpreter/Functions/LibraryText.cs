@@ -226,13 +226,13 @@ namespace Microsoft.PowerFx.Functions
             if (formatString != null && formatString.Length > formatSize)
             {
                 var customErrorMessage = StringResources.Get(TexlStrings.ErrTextFormatTooLarge, culture.Name);
-                return CommonErrors.GenericInvalidArgument(irContext, string.Format(customErrorMessage, formatSize));
+                return CommonErrors.GenericInvalidArgument(irContext, string.Format(CultureInfo.InvariantCulture, customErrorMessage, formatSize));
             }
 
             if (formatString != null && !TextFormatUtils.IsValidFormatArg(formatString, out bool hasDateTimeFmt, out bool hasNumberFmt))
             {
                 var customErrorMessage = StringResources.Get(TexlStrings.ErrIncorrectFormat_Func, culture.Name);
-                return CommonErrors.GenericInvalidArgument(irContext, string.Format(customErrorMessage, "Text"));
+                return CommonErrors.GenericInvalidArgument(irContext, string.Format(CultureInfo.InvariantCulture, customErrorMessage, "Text"));
             }
 
             var isText = TryText(formatInfo, irContext, args[0], formatString, out StringValue result);
@@ -313,7 +313,7 @@ namespace Microsoft.PowerFx.Functions
 
                     break;
                 case BooleanValue b:
-                    result = new StringValue(irContext, b.Value.ToString(culture).ToLower());
+                    result = new StringValue(irContext, b.Value.ToString(culture).ToLowerInvariant());
                     break;
                 case GuidValue g:
                     result = new StringValue(irContext, g.Value.ToString(formatString ?? "d", culture));
@@ -340,7 +340,7 @@ namespace Microsoft.PowerFx.Functions
             }
 
             // DateTime format
-            switch (format.ToLower())
+            switch (format.ToLowerInvariant())
             {
                 case "'shortdatetime24'":
                 case "'shortdatetime'":
@@ -376,7 +376,7 @@ namespace Microsoft.PowerFx.Functions
         {
             var info = DateTimeFormatInfo.GetInstance(culture);
 
-            switch (format.ToLower())
+            switch (format.ToLowerInvariant())
             {
                 case "'shortdatetime24'":
                     // TODO: This might be wrong for some cultures
@@ -504,7 +504,7 @@ namespace Microsoft.PowerFx.Functions
 
             // AM/PM component
             format = format.Replace("\u0001", dateTime.ToString("tt", culture))
-                           .Replace("\u0002", dateTime.ToString("%t", culture).ToLower());
+                           .Replace("\u0002", dateTime.ToString("%t", culture).ToLowerInvariant());
 
             return format;
         }
@@ -711,7 +711,8 @@ namespace Microsoft.PowerFx.Functions
                 return CommonErrors.ArgumentOutOfRange(irContext);
             }
 
-            var index = withinText.Value.IndexOf(findText.Value, startIndexValue - 1);
+            var index = withinText.Value.IndexOf(findText.Value, startIndexValue - 1, StringComparison.Ordinal);
+
             return index >= 0 ? new NumberValue(irContext, index + 1)
                               : new BlankValue(irContext);
         }
@@ -848,7 +849,7 @@ namespace Microsoft.PowerFx.Functions
                 {
                     eval.CheckCancel();
 
-                    idx = source.Value.IndexOf(match.Value, idx);
+                    idx = source.Value.IndexOf(match.Value, idx, StringComparison.Ordinal);
                     if (idx == -1)
                     {
                         break;
