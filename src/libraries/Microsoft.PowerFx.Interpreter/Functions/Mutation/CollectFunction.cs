@@ -2,10 +2,8 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
-using System.Numerics;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Errors;
@@ -18,7 +16,6 @@ using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 using static Microsoft.PowerFx.Core.Localization.TexlStrings;
-using static Microsoft.PowerFx.Syntax.PrettyPrintVisitor;
 
 namespace Microsoft.PowerFx.Interpreter
 {
@@ -119,6 +116,9 @@ namespace Microsoft.PowerFx.Interpreter
                 {
                     argType = argType.ToRecord();
                 }
+
+                bool checkAggregateNames = argType.CheckAggregateNames(argTypes[0], args[i], errors, SupportsParamCoercion);
+                fValid = fValid && checkAggregateNames;
 
                 if (!itemType.IsValid)
                 {

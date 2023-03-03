@@ -7,10 +7,8 @@ using System.Numerics;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
-using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.Functions.DLP;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
@@ -170,6 +168,7 @@ namespace Microsoft.PowerFx.Functions
             for (var i = 1; i < args.Length; i++)
             {
                 DType curType = argTypes[i];
+                bool isSafeToUnion = true;
 
                 if (!curType.IsRecord)
                 {
@@ -178,35 +177,10 @@ namespace Microsoft.PowerFx.Functions
                     continue;
                 }
 
-                var isSafeToUnion = true;
+                bool checkAggregateNames = curType.CheckAggregateNames(dataSourceType, args[i], errors, SupportsParamCoercion);
 
-                foreach (var typedName in curType.GetNames(DPath.Root))
-                {
-                    DName name = typedName.Name;
-                    DType type = typedName.Type;
-
-                    if (!dataSourceType.TryGetType(name, out DType dsNameType))
-                    {
-                        dataSourceType.ReportNonExistingName(FieldNameKind.Display, errors, typedName.Name, args[i]);
-                        isValid = isSafeToUnion = false;
-                        continue;
-                    }
-
-                    if (!type.Accepts(dsNameType, out var schemaDifference, out var schemaDifferenceType) &&
-                        (!SupportsParamCoercion || !type.CoercesTo(dsNameType, out var coercionIsSafe, aggregateCoercion: false) || !coercionIsSafe))
-                    {
-                        if (dsNameType.Kind == type.Kind)
-                        {
-                            errors.Errors(args[i], type, schemaDifference, schemaDifferenceType);
-                        }
-                        else
-                        {
-                            errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrTypeError_Arg_Expected_Found, name, dsNameType.GetKindString(), type.GetKindString());
-                        }
-
-                        isValid = isSafeToUnion = false;
-                    }
-                }
+                isValid = isValid && checkAggregateNames;
+                isSafeToUnion = checkAggregateNames;
 
                 if (isValid && SupportsParamCoercion && !dataSourceType.Accepts(curType))
                 {
