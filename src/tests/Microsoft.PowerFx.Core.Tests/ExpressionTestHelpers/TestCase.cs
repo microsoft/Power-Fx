@@ -26,6 +26,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
         // For diagnostics, save the orginal location
         public string OverrideFrom;
+        public string Locale;
 
         public bool IsOverride => OverrideFrom != null;
 
@@ -47,12 +48,12 @@ namespace Microsoft.PowerFx.Core.Tests
             // But filenames are case insensitive, so canon them to lowercase.
             var fileKey = file ?? Path.GetFileName(SourceFile);
 
-            return fileKey.ToLower() + ":" + Input;
+            return fileKey.ToLower() + ":" + (string.IsNullOrEmpty(Locale) ? string.Empty : $" [{Locale}] ") + Input;
         }
 
         public override string ToString()
         {
-            return $"{Path.GetFileName(SourceFile)}:{SourceLine}: {Input}";
+            return $"{Path.GetFileName(SourceFile)}:{SourceLine}: [{(string.IsNullOrEmpty(Locale) ? "-" : Locale)}] {Input}";
         }
     }
 }

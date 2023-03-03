@@ -35,6 +35,7 @@ namespace Microsoft.PowerFx.Core.Tests
             SourceFile = test.SourceFile;
             SourceLine = test.SourceLine;
             SetupHandlerName = test.SetupHandlerName;
+            Locale = test.Locale;
         }
 
         public static ExpressionTestCase Fail(string message)
@@ -47,7 +48,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
         public override string ToString()
         {
-            var str = $"{Path.GetFileName(SourceFile)} : {SourceLine.ToString("000")} - {Input} = {Expected}";
+            var str = $"{Path.GetFileName(SourceFile)} : {SourceLine.ToString("000")} [{Locale}] - {Input} = {Expected}";
 
             if (!string.IsNullOrEmpty(SetupHandlerName))
             {
@@ -67,6 +68,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 SourceLine = info.GetValue<int>("sourceLine");
                 SetupHandlerName = info.GetValue<string>("setupHandlerName");
                 FailMessage = info.GetValue<string>("failMessage");
+                Locale = info.GetValue<string>("locale");
             }
             catch (Exception e)
             {
@@ -82,6 +84,7 @@ namespace Microsoft.PowerFx.Core.Tests
             info.AddValue("sourceLine", SourceLine, typeof(int));
             info.AddValue("setupHandlerName", SetupHandlerName, typeof(string));
             info.AddValue("failMessage", FailMessage, typeof(string));
+            info.AddValue("locale", Locale, typeof(string));
         }
     }
 }

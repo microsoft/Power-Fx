@@ -21,12 +21,14 @@ namespace Microsoft.PowerFx.Core.Tests
         private readonly string _filePathCommon;
         private readonly string _filePathSpecific;
         private readonly string _engineName;
+        private readonly string _locales;
         
-        public TxtFileDataAttribute(string filePathCommon, string filePathSpecific, string engineName)
+        public TxtFileDataAttribute(string filePathCommon, string filePathSpecific, string engineName, string locales = null)
         {
             _filePathCommon = filePathCommon;
             _filePathSpecific = filePathSpecific;
             _engineName = engineName;
+            _locales = locales;
         }
 
         public override IEnumerable<object[]> GetData(MethodInfo testMethod)
@@ -43,7 +45,12 @@ namespace Microsoft.PowerFx.Core.Tests
 
             try
             {
-                var parser = new TestRunner();
+                var parser = new TestRunner() 
+                { 
+                    Locales = string.IsNullOrEmpty(_locales) 
+                        ? new[] { "en-US" } 
+                        : _locales.Split(",", StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).Distinct().ToArray() 
+                }; 
 
                 foreach (var dir in new string[] { _filePathCommon, _filePathSpecific })
                 {

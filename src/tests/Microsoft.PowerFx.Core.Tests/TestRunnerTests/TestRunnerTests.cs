@@ -25,13 +25,13 @@ namespace Microsoft.PowerFx.Core.Tests
             // Ordered by how we see them in the file. 
             Assert.Equal("input1", tests[0].Input);
             Assert.Equal("expected_result1", tests[0].Expected);
-            Assert.Equal("file1.txt:input1", tests[0].GetUniqueId(null));
+            Assert.Equal("file1.txt: [en-US] input1", tests[0].GetUniqueId(null));
             Assert.Equal("File1.txt", Path.GetFileName(tests[0].SourceFile), ignoreCase: true);
             Assert.Equal(3, tests[0].SourceLine);
 
             Assert.Equal("input2", tests[1].Input);
             Assert.Equal("expected_result2", tests[1].Expected);
-            Assert.Equal("file1.txt:input2", tests[1].GetUniqueId(null));
+            Assert.Equal("file1.txt: [en-US] input2", tests[1].GetUniqueId(null));
         }
 
         [Fact]
@@ -171,7 +171,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             Assert.Equal("input3", tests[0].Input);
             Assert.Equal("result3", tests[0].Expected);
-            Assert.Equal("filedisable.txt:input3", tests[0].GetUniqueId(null));
+            Assert.Equal("filedisable.txt: [en-US] input3", tests[0].GetUniqueId(null));
         }
 
         private static readonly ErrorValue _errorValue = new ErrorValue(IR.IRContext.NotInSource(FormulaType.Number));
@@ -182,7 +182,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             public Func<string, string, RunResult> _hook2;
 
-            protected override Task<RunResult> RunAsyncInternal(string expr, string setupHandlerName = null)
+            protected override Task<RunResult> RunAsyncInternal(string expr, string setupHandlerName = null, string locale = "en-US")
             {
                 if (_hook != null)
                 {
@@ -400,7 +400,7 @@ namespace Microsoft.PowerFx.Core.Tests
         // Override IsError
         private class MockErrorRunner : MockRunner
         {
-            protected override Task<RunResult> RunAsyncInternal(string expr, string setupHandlerName = null)
+            protected override Task<RunResult> RunAsyncInternal(string expr, string setupHandlerName = null, string locale = "en-US")
             {
                 return Task.FromResult(new RunResult(_hook(expr, setupHandlerName)));
             }

@@ -2,27 +2,24 @@
 // Licensed under the MIT license.
 
 using System.IO;
-using System.Threading.Tasks;
-using Microsoft.CodeAnalysis;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Interpreter.Tests.XUnitExtensions;
-using Microsoft.PowerFx.Types;
 using Xunit;
 using static Microsoft.PowerFx.Interpreter.Tests.ExpressionEvaluationTests;
 
 namespace Microsoft.PowerFx.Interpreter.Tests
-{    
+{
     public class FileExpressionEvaluationTests : PowerFxTest
-    {        
+    {
         [InterpreterTheory]
-        [TxtFileData("ExpressionTestCases", "InterpreterExpressionTestCases", nameof(InterpreterRunner))]        
+        [TxtFileData("ExpressionTestCases", "InterpreterExpressionTestCases", nameof(InterpreterRunner), "en-US, fr-FR")]        
         public void InterpreterTestCase(ExpressionTestCase testCase)
         {
             // This is running against embedded resources, so if you're updating the .txt files,
             // make sure they build is actually copying them over. 
             Assert.True(testCase.FailMessage == null, testCase.FailMessage);
 
-            var runner = new InterpreterRunner();            
+            var runner = new InterpreterRunner();
             var (result, msg) = runner.RunTestCase(testCase);
 
             var prefix = $"Test {Path.GetFileName(testCase.SourceFile)}:{testCase.SourceLine}: ";
@@ -83,7 +80,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             config.SymbolTable.EnableMutationFunctions();
             var engine = new RecalcEngine(config);
             var runner = new ReplRunner(engine);
-            
+
             var testRunner = new TestRunner(runner);
 
             testRunner.AddFile(path);

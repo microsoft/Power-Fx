@@ -57,7 +57,7 @@ namespace Microsoft.PowerFx
         /// <param name="source">Engine used to handle Apply operations.</param>
         public CheckResult(Engine source)
         {
-            this._engine = source ?? throw new ArgumentNullException(nameof(source));
+            this._engine = source ?? throw new ArgumentNullException(nameof(source));            
         }
 
         internal Engine Engine => _engine;

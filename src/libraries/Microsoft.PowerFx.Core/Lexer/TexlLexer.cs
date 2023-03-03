@@ -203,7 +203,7 @@ namespace Microsoft.PowerFx.Syntax
             // Number decimal separator can be a dot (.), comma (,), arabic comma (Unicode 0x66B) 
             // .Net core 3.1 doesn't support arabic comma and defines '/' as decimal separator for Persian/Farsi (fa, fa-IR) which is probably a bug
             return culture.NumberFormat.NumberDecimalSeparator == PunctuatorDecimalSeparatorInvariant ? InvariantLexer : CommaDecimalSeparatorLexer;
-        }
+        }        
 
         public static IReadOnlyList<string> GetKeywords()
         {

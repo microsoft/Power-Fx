@@ -87,7 +87,7 @@ namespace Microsoft.PowerFx.Core.Tests
         /// <param name="expr">PowerFx expression.</param>
         /// <param name="setupHandlerName">Optional name of a setup handler to run. Throws SetupHandlerNotImplemented if not found.</param>
         /// <returns>Result of evaluating Expr.</returns>
-        protected abstract Task<RunResult> RunAsyncInternal(string expr, string setupHandlerName = null);
+        protected abstract Task<RunResult> RunAsyncInternal(string expr, string setupHandlerName = null, string locale = "en-US");
 
         /// <summary>
         /// Returns (Pass,Fail,Skip) and a status message.
@@ -174,7 +174,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             try
             {
-                runResult = await RunAsyncInternal(testCase.Input, testCase.SetupHandlerName);
+                runResult = await RunAsyncInternal(testCase.Input, testCase.SetupHandlerName, testCase.Locale);
                 result = runResult.Value;
 
                 // Unsupported is just for ignoring large groups of inherited tests. 
