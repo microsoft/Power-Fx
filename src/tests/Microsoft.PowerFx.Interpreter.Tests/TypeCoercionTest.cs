@@ -148,7 +148,7 @@ namespace Microsoft.PowerFx.Tests
                 Assert.IsType<ErrorValue>(resultString);
             }
 
-            var cts = new CancellationTokenSource();
+            using var cts = new CancellationTokenSource();
             cts.CancelAfter(3000);
             isSucceeded = inputValue.TryCoerceTo(runtimeConfig, cts.Token, out StringValue cResultString);
             if (exprStr != null)
