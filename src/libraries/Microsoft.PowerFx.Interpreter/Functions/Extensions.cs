@@ -38,6 +38,15 @@ namespace Microsoft.PowerFx.Functions
             return true;
         }
 
+        /// <summary>
+        /// Checks if all names within an aggregate DType exists.
+        /// </summary>
+        /// <param name="argType">Record DType.</param>
+        /// <param name="dataSourceType">Table DType.</param>
+        /// <param name="arg">Arg node.</param>
+        /// <param name="errors">Error object reference.</param>
+        /// <param name="supportsParamCoercion">Does the caller function support coercion.</param>
+        /// <returns></returns>
         internal static bool CheckAggregateNames(this DType argType, DType dataSourceType, TexlNode arg, IErrorContainer errors, bool supportsParamCoercion = false)
         {
             bool isValid = true;

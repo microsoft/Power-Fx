@@ -117,6 +117,7 @@ namespace Microsoft.PowerFx.Interpreter
                     argType = argType.ToRecord();
                 }
 
+                // Checks if all record names exist against table type and if its possible to coerce.
                 bool checkAggregateNames = argType.CheckAggregateNames(argTypes[0], args[i], errors, SupportsParamCoercion);
                 fValid = fValid && checkAggregateNames;
 

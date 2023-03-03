@@ -177,6 +177,7 @@ namespace Microsoft.PowerFx.Functions
                     continue;
                 }
 
+                // Checks if all record names exist against table type and if its possible to coerce.
                 bool checkAggregateNames = curType.CheckAggregateNames(dataSourceType, args[i], errors, SupportsParamCoercion);
 
                 isValid = isValid && checkAggregateNames;
