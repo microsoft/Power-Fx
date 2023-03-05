@@ -29,8 +29,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Equivalent Excel and DAX function: IsBlank
     internal sealed class IsBlankOrErrorOptionSetValueFunction : BuiltinFunction
     {
-        public override bool SupportsParamCoercion => true;
-
         public override bool IsSelfContained => true;
 
         public IsBlankOrErrorOptionSetValueFunction()

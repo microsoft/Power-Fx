@@ -54,3 +54,9 @@ Blank()
 
 >> If(1/0 = 7, 2, 3)
 Error({Kind:ErrorKind.Div0})
+
+>> If(false, {x:1, y:1}, {x:2, z:2})
+{x:2}
+
+>> If(true, {x:1, y:1}, {x:2, z:2})
+{x:1}

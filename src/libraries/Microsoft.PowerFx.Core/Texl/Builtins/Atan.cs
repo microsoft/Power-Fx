@@ -21,7 +21,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
     // Atan(E:*[n])
     // Table overload that computes the arc tangent of each item in the input table.
-    internal sealed class AtanTableFunction : MathOneArgTableFunction
+    internal sealed class AtanTableFunction : MathTableFunction
     {
         public AtanTableFunction()
             : base("Atan", TexlStrings.AboutAtanT, FunctionCategories.Table)

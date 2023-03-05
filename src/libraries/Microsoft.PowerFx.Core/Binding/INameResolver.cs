@@ -34,7 +34,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
         DPath CurrentEntityPath { get; }
 
-        IEnumerable<TexlFunction> Functions { get; }
+        TexlFunctionSet Functions { get; }
 
         // This advertises whether the INameResolver instance will suggest unqualified enums ("Hours")
         // or only qualified enums ("TimeUnit.Hours").
@@ -57,12 +57,6 @@ namespace Microsoft.PowerFx.Core.Binding
         /// List of functions in <paramref name="nameSpace"/>.
         /// </returns>
         IEnumerable<TexlFunction> LookupFunctionsInNamespace(DPath nameSpace);
-
-        // Return true if the specified boxed enum info contains a value for the given locale-specific name.
-        bool LookupEnumValueByInfoAndLocName(object enumInfo, DName locName, out object value);
-
-        // Return true if the specified enum type contains a value for the given locale-specific name.
-        bool LookupEnumValueByTypeAndLocName(DType enumType, DName locName, out object value);
 
         // Looks up the parent control for the current context.
         bool LookupParent(out NameLookupInfo lookupInfo);

@@ -21,7 +21,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
     // Degrees(E:*[n])
     // Table overload that computes the degrees values of each item in the input table.
-    internal sealed class DegreesTableFunction : MathOneArgTableFunction
+    internal sealed class DegreesTableFunction : MathTableFunction
     {
         public DegreesTableFunction()
             : base("Degrees", TexlStrings.AboutDegreesT, FunctionCategories.Table)

@@ -4,8 +4,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Microsoft.PowerFx.Core.Binding;
+using Microsoft.PowerFx.Core.Texl.Builtins;
+using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
@@ -121,12 +122,12 @@ namespace Microsoft.PowerFx.Core.Tests
             s1.RemoveVariable("x");
             s1.RemoveVariable("x"); // Ok to remove if missing.
             s1.AddVariable("x", FormulaType.String);
-            
+
             var result = _engine.Check("x", symbolTable: s1);
             Assert.Equal(FormulaType.String, result.ReturnType);
 
             // But can shadow. 
-            var s2 = new SymbolTable();            
+            var s2 = new SymbolTable();
             var s21 = ReadOnlySymbolTable.Compose(s2, s1);
 
             s2.AddVariable("x", FormulaType.Boolean); // hides s1.
@@ -148,21 +149,25 @@ namespace Microsoft.PowerFx.Core.Tests
 
             var s12 = ReadOnlySymbolTable.Compose(s1, s2);
 
-            Assert.Empty(s12.Functions);
-            
+#pragma warning disable CS0618 // Type or member is obsolete
+            Assert.Empty(s12.Functions.Functions);
+
             s2.AddFunction(func2);
-            var funcs = s12.Functions.ToArray();
+            var funcs = s12.Functions.Functions.ToArray();
+#pragma warning restore CS0618 // Type or member is obsolete
             Assert.Single(funcs);
             Assert.Same(func2, funcs[0]);
 
             // Superceded 
             s1.AddFunction(func1);
-            funcs = s12.Functions.ToArray(); // Query again
+#pragma warning disable CS0618 // Type or member is obsolete
+            funcs = s12.Functions.Functions.ToArray(); // Query again
+#pragma warning restore CS0618 // Type or member is obsolete
             Assert.Equal(2, funcs.Length); // both even though they have same name
 
             // Enumerable is ordered. Takes s1 since that's higher precedence. 
             Assert.Same(func1, funcs[0]);
-            
+
             // Returns all combined. 
             INameResolver nr = s12;
             var list = nr.LookupFunctions(func1.Namespace, func1.Name).ToArray();
@@ -211,28 +216,93 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.NotEqual(copyCount2, symbolTableCopy2.Functions.Count());
             Assert.NotEqual(copyCount3, symbolTableCopy3.Functions.Count());
 
-            Assert.Contains(symbolTableOriginal.Functions, f => f.Name == "Abs");
-            Assert.Contains(symbolTableOriginal.Functions, f => f.Name == "Day");
-            Assert.Contains(symbolTableOriginal.Functions, f => f.Name == "Text");
-            Assert.Contains(symbolTableOriginal.Functions, f => f.Name == "Cos");
-            Assert.Contains(symbolTableCopy1.Functions, f => f.Name == "Day");
-            Assert.Contains(symbolTableCopy1.Functions, f => f.Name == "Text");
-            Assert.Contains(symbolTableCopy1.Functions, f => f.Name == "Cos");
-            Assert.Contains(symbolTableCopy2.Functions, f => f.Name == "Abs");
-            Assert.Contains(symbolTableCopy2.Functions, f => f.Name == "Text");
-            Assert.Contains(symbolTableCopy2.Functions, f => f.Name == "Cos");
-            Assert.Contains(symbolTableCopy3.Functions, f => f.Name == "Abs");
-            Assert.Contains(symbolTableCopy3.Functions, f => f.Name == "Text");
-            Assert.Contains(symbolTableCopy3.Functions, f => f.Name == "Abs");
+            Assert.True(symbolTableOriginal.Functions.AnyWithName("Abs"));
+            Assert.True(symbolTableOriginal.Functions.AnyWithName("Day"));
+            Assert.True(symbolTableOriginal.Functions.AnyWithName("Text"));
+            Assert.True(symbolTableOriginal.Functions.AnyWithName("Cos"));
 
-            Assert.DoesNotContain(symbolTableCopy1.Functions, f => f.Name == "Abs");
-            Assert.DoesNotContain(symbolTableCopy2.Functions, f => f.Name == "Day");
-            Assert.DoesNotContain(symbolTableCopy3.Functions, f => f.Name == "Cos");
+            Assert.True(symbolTableCopy1.Functions.AnyWithName("Day"));
+            Assert.True(symbolTableCopy1.Functions.AnyWithName("Text"));
+            Assert.True(symbolTableCopy1.Functions.AnyWithName("Cos"));
+
+            Assert.True(symbolTableCopy2.Functions.AnyWithName("Abs"));
+            Assert.True(symbolTableCopy2.Functions.AnyWithName("Text"));
+            Assert.True(symbolTableCopy2.Functions.AnyWithName("Cos"));
+
+            Assert.True(symbolTableCopy3.Functions.AnyWithName("Abs"));
+            Assert.True(symbolTableCopy3.Functions.AnyWithName("Day"));
+            Assert.True(symbolTableCopy3.Functions.AnyWithName("Text"));
+
+            Assert.False(symbolTableCopy1.Functions.AnyWithName("Abs"));
+            Assert.False(symbolTableCopy2.Functions.AnyWithName("Day"));
+            Assert.False(symbolTableCopy3.Functions.AnyWithName("Cos"));
 
             // Check if nothing else has been copied
             Assert.Empty(symbolTableCopy1.SymbolNames);
             Assert.Empty(symbolTableCopy2.SymbolNames);
             Assert.Empty(symbolTableCopy3.SymbolNames);
+        }
+
+        [Theory]
+        [InlineData("logical1+ 5", true)] // logical name
+        [InlineData("display1 + 5", true)] // display name
+        [InlineData("missing + 5", false)] // display name
+        [InlineData("logical1 + logical1", true)] // logical name
+        public void Deferred(string expr, bool expectSuccess)
+        {
+            var map = new SingleSourceDisplayNameProvider(new Dictionary<DName, DName>
+            {
+                { new DName("logical1"), new DName("display1") }
+            });
+
+            int callbackCount = 0;
+            var symTable = new DeferredSymbolTable(map, (disp, logical) =>
+            {
+                callbackCount++;
+                return FormulaType.Number;
+            });
+
+            var check = new CheckResult(new Engine());
+            check.SetText(expr);
+            check.SetBindingInfo(symTable);
+
+            check.ApplyBinding();
+            if (expectSuccess)
+            {
+                Assert.True(check.IsSuccess);
+                Assert.Equal(1, callbackCount);
+            }
+            else
+            {
+                Assert.False(check.IsSuccess);
+                Assert.Equal(0, callbackCount);
+            }
+        }
+
+        [Fact]
+        public void ComposedReadOnlySymbolTableFunctionCacheTest()
+        {
+            var symbolTable = new SymbolTable();
+            symbolTable.AddFunction(new BlankFunction());
+
+            var composed = new ComposedReadOnlySymbolTable(symbolTable);
+            var func1 = composed.Functions;
+
+            Assert.NotNull(func1);
+            Assert.Equal(1, func1.Count());
+
+            var func2 = composed.Functions;
+
+            Assert.NotNull(func2);
+            Assert.Equal(1, func2.Count());
+
+            Assert.Same(func1, func2);
+
+            symbolTable.AddFunction(new SqrtFunction());
+
+            var func3 = composed.Functions;
+            Assert.NotNull(func3);
+            Assert.Equal(2, func3.Count());
         }
     }
 }

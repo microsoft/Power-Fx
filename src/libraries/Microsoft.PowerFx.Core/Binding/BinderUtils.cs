@@ -9,6 +9,7 @@ using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Logging.Trackers;
 using Microsoft.PowerFx.Core.Texl;
@@ -93,6 +94,9 @@ namespace Microsoft.PowerFx.Core.Binding
         /// <param name="node">
         /// CallNode for which the best overload will be determined.
         /// </param>
+        /// <param name="args">
+        /// List of argument nodes for <paramref name="node"/>.
+        /// </param>
         /// <param name="argTypes">
         /// List of argument types for <paramref name="node.Args"/>.
         /// </param>
@@ -112,12 +116,11 @@ namespace Microsoft.PowerFx.Core.Binding
         /// <returns>
         /// True if a valid overload was found, false if not.
         /// </returns>
-        internal static bool TryGetBestOverload(CheckTypesContext context, IErrorContainer errors, CallNode node, DType[] argTypes, TexlFunction[] overloads, out TexlFunction bestOverload, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap, out DType returnType)
+        internal static bool TryGetBestOverload(CheckTypesContext context, IErrorContainer errors, CallNode node, TexlNode[] args, DType[] argTypes, TexlFunction[] overloads, out TexlFunction bestOverload, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap, out DType returnType)
         {
             Contracts.AssertValue(node, nameof(node));
             Contracts.AssertValue(overloads, nameof(overloads));
 
-            var args = node.Args.Children;
             var carg = args.Length;
             returnType = DType.Unknown;
 
@@ -509,7 +512,7 @@ namespace Microsoft.PowerFx.Core.Binding
             return new BinderCheckTypeResult() { Coercions = coercions };
         }
 
-        private static BinderCheckTypeResult PostVisitBinaryOpNodeAdditionCore(IErrorContainer errorContainer, BinaryOpNode node, DType leftType, DType rightType)
+        private static BinderCheckTypeResult PostVisitBinaryOpNodeAdditionCore(IErrorContainer errorContainer, BinaryOpNode node, DType leftType, DType rightType, bool numberIsFloat)
         {
             Contracts.AssertValue(node);
             Contracts.Assert(node.Op == BinaryOp.Add);
@@ -556,7 +559,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                         default:
                             // DateTime + number = DateTime
-                            var resRight = CheckTypeCore(errorContainer, node.Right, rightType, DType.Number, /* coerced: */ DType.String, DType.Boolean, DType.Decimal);
+                            var resRight = CheckTypeCore(errorContainer, node.Right, rightType, DType.Number, /* coerced: */ DType.String, DType.Boolean, DType.UntypedObject, DType.Decimal);
                             return new BinderCheckTypeResult() { Node = node, NodeType = DType.DateTime, Coercions = resRight.Coercions };
                     }
 
@@ -596,7 +599,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                         default:
                             // Date + number = Date
-                            var resRight = CheckTypeCore(errorContainer, node.Right, rightType, DType.Number, /* coerced: */ DType.String, DType.Boolean, DType.Decimal);
+                            var resRight = CheckTypeCore(errorContainer, node.Right, rightType, DType.Number, /* coerced: */ DType.String, DType.Boolean, DType.UntypedObject, DType.Decimal);
                             return new BinderCheckTypeResult() { Node = node, NodeType = DType.Date, Coercions = resRight.Coercions };
                     }
 
@@ -633,7 +636,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                         default:
                             // Time + number = Time
-                            var resRight = CheckTypeCore(errorContainer, node.Right, rightType, DType.Number, /* coerced: */ DType.String, DType.Boolean, DType.Decimal);
+                            var resRight = CheckTypeCore(errorContainer, node.Right, rightType, DType.Number, /* coerced: */ DType.String, DType.Boolean, DType.UntypedObject, DType.Decimal);
                             return new BinderCheckTypeResult() { Node = node, NodeType = DType.Time, Coercions = resRight.Coercions };
                     }
 
@@ -642,32 +645,18 @@ namespace Microsoft.PowerFx.Core.Binding
                     {
                         case DKind.DateTime:
                             // number/decimal + DateTime = DateTime
-                            var leftResDateTime = CheckTypeCore(errorContainer, node.Left, leftType, DType.Number, /* coerced: */ DType.Decimal, DType.String, DType.Boolean);
+                            var leftResDateTime = CheckTypeCore(errorContainer, node.Left, leftType, DType.Number, /* coerced: */ DType.Decimal, DType.String, DType.Boolean, DType.UntypedObject);
                             return new BinderCheckTypeResult() { Node = node, NodeType = DType.DateTime, Coercions = leftResDateTime.Coercions };
                         case DKind.Date:
                             // number/decimal + Date = Date
-                            var leftResDate = CheckTypeCore(errorContainer, node.Left, leftType, DType.Number, /* coerced: */ DType.Decimal, DType.String, DType.Boolean);
+                            var leftResDate = CheckTypeCore(errorContainer, node.Left, leftType, DType.Number, /* coerced: */ DType.Decimal, DType.String, DType.Boolean, DType.UntypedObject);
                             return new BinderCheckTypeResult() { Node = node, NodeType = DType.Date, Coercions = leftResDate.Coercions };
                         case DKind.Time:
                             // number/decimal + Time = Time
-                            var leftResTime = CheckTypeCore(errorContainer, node.Left, leftType, DType.Number, /* coerced: */ DType.Decimal, DType.String, DType.Boolean);
+                            var leftResTime = CheckTypeCore(errorContainer, node.Left, leftType, DType.Number, /* coerced: */ DType.Decimal, DType.String, DType.Boolean, DType.UntypedObject);
                             return new BinderCheckTypeResult() { Node = node, NodeType = DType.Time, Coercions = leftResTime.Coercions };
                         default:
                             // Regular Addition
-                            // Decimal TODO: Deferred behavior
-                            if (leftType == DType.Decimal && rightType == DType.Decimal)
-                            {
-                                return new BinderCheckTypeResult()
-                                {
-                                    Node = node,
-                                    NodeType = DType.Decimal,
-                                    Coercions = null
-                                };
-                            }
-
-                            var leftResAdd = CheckTypeCore(errorContainer, node.Left, leftType, DType.Number, /* coerced: */ DType.Decimal, DType.String, DType.Boolean);
-                            var rightResAdd = CheckTypeCore(errorContainer, node.Right, rightType, DType.Number, /* coerced: */ DType.Decimal, DType.String, DType.Boolean);
-
                             // Deferred + number or number + Deferred
                             if (leftKind == DKind.Deferred || rightKind == DKind.Deferred)
                             {
@@ -675,16 +664,35 @@ namespace Microsoft.PowerFx.Core.Binding
                                 {
                                     Node = node,
                                     NodeType = DType.Deferred,
-                                    Coercions = leftResAdd.Coercions.Concat(rightResAdd.Coercions).ToList()
+                                    Coercions = null
                                 };
                             }
 
-                            return new BinderCheckTypeResult()
+                            // Only operations where both operands are Decimal-compatible result in Decimal
+                            if (DType.DecimalBinaryOp(leftType, rightType, numberIsFloat))
                             {
-                                Node = node,
-                                NodeType = leftType == DType.Decimal && rightType == DType.Decimal ? DType.Decimal : DType.Number,
-                                Coercions = leftResAdd.Coercions.Concat(rightResAdd.Coercions).ToList()
-                            };
+                                var leftResAdd = CheckTypeCore(errorContainer, node.Left, leftType, DType.Decimal, /* coerced: */ DType.String, DType.Boolean, DType.UntypedObject);
+                                var rightResAdd = CheckTypeCore(errorContainer, node.Right, rightType, DType.Decimal, /* coerced: */ DType.String, DType.Boolean, DType.UntypedObject);
+
+                                return new BinderCheckTypeResult()
+                                {
+                                    Node = node,
+                                    NodeType = DType.Decimal,
+                                    Coercions = leftResAdd.Coercions.Concat(rightResAdd.Coercions).ToList()
+                                };
+                            }
+                            else
+                            {
+                                var leftResAdd = CheckTypeCore(errorContainer, node.Left, leftType, DType.Number, /* coerced: */ DType.Decimal, DType.String, DType.Boolean, DType.UntypedObject);
+                                var rightResAdd = CheckTypeCore(errorContainer, node.Right, rightType, DType.Number, /* coerced: */ DType.Decimal, DType.String, DType.Boolean, DType.UntypedObject);
+
+                                return new BinderCheckTypeResult()
+                                {
+                                    Node = node,
+                                    NodeType = DType.Number,
+                                    Coercions = leftResAdd.Coercions.Concat(rightResAdd.Coercions).ToList()
+                                };
+                            }
                     }
             } 
         }
@@ -694,12 +702,23 @@ namespace Microsoft.PowerFx.Core.Binding
             // Excel's type coercion for inequality operators is inconsistent / borderline wrong, so we can't
             // use it as a reference. For example, in Excel '2 < TRUE' produces TRUE, but so does '2 < FALSE'.
             // Sticking to a restricted set of numeric-like types for now until evidence arises to support the need for coercion.
-            var resLeft = CheckComparisonTypeOneOfCore(errorContainer, left, typeLeft, DType.Number, DType.Decimal, DType.Date, DType.Time, DType.DateTime);
-            var resRight = CheckComparisonTypeOneOfCore(errorContainer, right, typeRight, DType.Number, DType.Decimal, DType.Date, DType.Time, DType.DateTime);
+            var resLeft = CheckComparisonTypeOneOfCore(errorContainer, left, typeLeft, DType.Number, DType.Decimal, DType.Date, DType.Time, DType.DateTime, DType.UntypedObject);
+            var resRight = CheckComparisonTypeOneOfCore(errorContainer, right, typeRight, DType.Number, DType.Decimal, DType.Date, DType.Time, DType.DateTime, DType.UntypedObject);
 
             var coercions = new List<BinderCoercionResult>();
             coercions.AddRange(resLeft.Coercions);
             coercions.AddRange(resRight.Coercions);
+
+            if (typeLeft.IsUntypedObject && typeRight.IsUntypedObject)
+            {
+                errorContainer.EnsureError(
+                    DocumentErrorSeverity.Severe,
+                    left.Parent,
+                    TexlStrings.ErrBadOperatorTypes,
+                    typeLeft.GetKindString(),
+                    typeRight.GetKindString());
+                return new BinderCheckTypeResult() { Node = left.Parent, NodeType = DType.Error };
+            }
 
             if (!typeLeft.Accepts(typeRight) && !typeRight.Accepts(typeLeft))
             {
@@ -713,23 +732,6 @@ namespace Microsoft.PowerFx.Core.Binding
                     coercions.Add(new BinderCoercionResult() { Node = left, CoercedType = DType.Number });
                 }
 
-                if (DType.DateTime.Accepts(typeLeft) && DType.DateTime.Accepts(typeRight))
-                {
-                    // Handle Date <=> Time comparison by coercing both to DateTime
-                    coercions.Add(new BinderCoercionResult() { Node = left, CoercedType = DType.DateTime });
-                    coercions.Add(new BinderCoercionResult() { Node = right, CoercedType = DType.DateTime });
-                }
-
-                // Handle DateTime <=> Decimal comparison by coercing one side to Number
-                if (DType.Decimal.Accepts(typeLeft) && DType.DateTime.Accepts(typeRight))
-                {
-                    coercions.Add(new BinderCoercionResult() { Node = right, CoercedType = DType.Decimal });
-                }
-                else if (DType.Number.Accepts(typeRight) && DType.DateTime.Accepts(typeLeft))
-                {
-                    coercions.Add(new BinderCoercionResult() { Node = left, CoercedType = DType.Decimal });
-                }
-
                 // Handle Decimal <=> Number comparison by coercing one side to Number
                 if (DType.Number.Accepts(typeLeft) && DType.Decimal.Accepts(typeRight))
                 {
@@ -739,6 +741,33 @@ namespace Microsoft.PowerFx.Core.Binding
                 {
                     coercions.Add(new BinderCoercionResult() { Node = left, CoercedType = DType.Number });
                 }
+
+                if (DType.DateTime.Accepts(typeLeft) && DType.DateTime.Accepts(typeRight))
+                {
+                    // Handle Date <=> Time comparison by coercing both to DateTime
+                    coercions.Add(new BinderCoercionResult() { Node = left, CoercedType = DType.DateTime });
+                    coercions.Add(new BinderCoercionResult() { Node = right, CoercedType = DType.DateTime });
+                }
+
+                if (typeLeft.IsUntypedObject && CoercionMatrix.GetCoercionKind(typeLeft, typeRight) != CoercionKind.None)
+                {
+                    coercions.Add(new BinderCoercionResult() { Node = left, CoercedType = typeRight });
+                }
+
+                if (typeRight.IsUntypedObject && CoercionMatrix.GetCoercionKind(typeRight, typeLeft) != CoercionKind.None)
+                {
+                    coercions.Add(new BinderCoercionResult() { Node = right, CoercedType = typeLeft });
+                }
+            }
+
+            if (typeLeft.IsUntypedObject && typeRight.Kind == DKind.ObjNull)
+            {
+                coercions.Add(new BinderCoercionResult() { Node = left, CoercedType = DType.Number });
+            }
+
+            if (typeRight.IsUntypedObject && typeLeft.Kind == DKind.ObjNull)
+            {
+                coercions.Add(new BinderCoercionResult() { Node = right, CoercedType = DType.Number });
             }
 
             return new BinderCheckTypeResult() { Coercions = coercions };
@@ -751,9 +780,9 @@ namespace Microsoft.PowerFx.Core.Binding
             Contracts.AssertValue(left.Parent);
             Contracts.Assert(ReferenceEquals(left.Parent, right.Parent));
 
-            // EqualOp is only allowed on primitive types, polymorphic lookups, and control types.
+            // EqualOp is only allowed on primitive types, polymorphic lookups, untyped objects, and control types.
             if (!(typeLeft.IsPrimitive && typeRight.IsPrimitive) && !(typeLeft.IsPolymorphic && typeRight.IsPolymorphic) && !(typeLeft.IsControl && typeRight.IsControl)
-                && !(typeLeft.IsPolymorphic && typeRight.IsRecord) && !(typeLeft.IsRecord && typeRight.IsPolymorphic) && !(typeLeft.IsDeferred || typeRight.IsDeferred))
+                && !(typeLeft.IsPolymorphic && typeRight.IsRecord) && !(typeLeft.IsRecord && typeRight.IsPolymorphic) && !(typeLeft.IsDeferred || typeRight.IsDeferred) && !(typeLeft.IsUntypedObject || typeRight.IsUntypedObject))
             {
                 var leftTypeDisambiguation = typeLeft.IsOptionSet && typeLeft.OptionSetInfo != null ? $"({typeLeft.OptionSetInfo.EntityName})" : string.Empty;
                 var rightTypeDisambiguation = typeRight.IsOptionSet && typeRight.OptionSetInfo != null ? $"({typeRight.OptionSetInfo.EntityName})" : string.Empty;
@@ -809,6 +838,17 @@ namespace Microsoft.PowerFx.Core.Binding
                 return new BinderCheckTypeResult();
             }
 
+            if (typeLeft.IsUntypedObject && typeRight.IsUntypedObject)
+            {
+                    errorContainer.EnsureError(
+                        DocumentErrorSeverity.Severe,
+                        left.Parent,
+                        TexlStrings.ErrIncompatibleTypesForEquality_Left_Right,
+                        typeLeft.GetKindString(),
+                        typeRight.GetKindString());
+                    return new BinderCheckTypeResult() { Node = left.Parent, NodeType = DType.Error };
+            }
+
             var coercions = new List<BinderCoercionResult>();
 
             if (!typeLeft.Accepts(typeRight) && !typeRight.Accepts(typeLeft))
@@ -822,6 +862,18 @@ namespace Microsoft.PowerFx.Core.Binding
                 else if (DType.Number.Accepts(typeRight) && DType.DateTime.Accepts(typeLeft))
                 {
                     coercions.Add(new BinderCoercionResult() { Node = left, CoercedType = DType.Number });
+                    return new BinderCheckTypeResult() { Coercions = coercions };
+                }
+
+                // Handle UntypedObject comparisons
+                if (typeLeft.IsUntypedObject && CoercionMatrix.GetCoercionKind(typeLeft, typeRight) != CoercionKind.None)
+                {
+                    coercions.Add(new BinderCoercionResult() { Node = left, CoercedType = typeRight });
+                    return new BinderCheckTypeResult() { Coercions = coercions };
+                }
+                else if (typeRight.IsUntypedObject && CoercionMatrix.GetCoercionKind(typeRight, typeLeft) != CoercionKind.None)
+                {
+                    coercions.Add(new BinderCoercionResult() { Node = right, CoercedType = typeLeft });
                     return new BinderCheckTypeResult() { Coercions = coercions };
                 }
 
@@ -867,7 +919,7 @@ namespace Microsoft.PowerFx.Core.Binding
             switch (node.Op)
             {
                 case UnaryOp.Not:
-                    var resNot = CheckTypeCore(errorContainer, node.Child, childType, DType.Boolean, /* coerced: */ DType.Number, DType.Decimal, DType.String, DType.OptionSetValue);
+                    var resNot = CheckTypeCore(errorContainer, node.Child, childType, DType.Boolean, /* coerced: */ DType.Number, DType.Decimal, DType.String, DType.OptionSetValue, DType.Decimal);
                     return new BinderCheckTypeResult() { Node = node, NodeType = DType.Boolean, Coercions = resNot.Coercions };
                 case UnaryOp.Minus:
                     switch (childType.Kind)
@@ -883,12 +935,12 @@ namespace Microsoft.PowerFx.Core.Binding
                         case DKind.Decimal:
                             return new BinderCheckTypeResult() { Node = node, NodeType = DType.Decimal };
                         default:
-                            var resDefault = CheckTypeCore(errorContainer, node.Child, childType, DType.Number, /* coerced: */ DType.String, DType.Boolean);
+                            var resDefault = CheckTypeCore(errorContainer, node.Child, childType, DType.Number, /* coerced: */ DType.String, DType.Boolean, DType.UntypedObject);
                             return new BinderCheckTypeResult() { Node = node, NodeType = DType.Number, Coercions = resDefault.Coercions };
                     }
 
                 case UnaryOp.Percent:
-                    var resPercent = CheckTypeCore(errorContainer, node.Child, childType, DType.Number, /* coerced: */ DType.Decimal, DType.String, DType.Boolean, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime);
+                    var resPercent = CheckTypeCore(errorContainer, node.Child, childType, DType.Number, /* coerced: */ DType.Decimal, DType.String, DType.Boolean, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime, DType.UntypedObject);
                     return new BinderCheckTypeResult() { Node = node, NodeType = childType.Kind == DKind.Decimal ? DType.Decimal : DType.Number, Coercions = resPercent.Coercions };
                 default:
                     Contracts.Assert(false);
@@ -899,7 +951,7 @@ namespace Microsoft.PowerFx.Core.Binding
         // REVIEW ragru: Introduce a TexlOperator abstract base plus various subclasses
         // for handling operators and their overloads. That will offload the burden of dealing with
         // operator special cases to the various operator classes.
-        public static BinderCheckTypeResult CheckBinaryOpCore(IErrorContainer errorContainer, BinaryOpNode node, DType leftType, DType rightType, bool isEnhancedDelegationEnabled)
+        public static BinderCheckTypeResult CheckBinaryOpCore(IErrorContainer errorContainer, BinaryOpNode node, DType leftType, DType rightType, bool isEnhancedDelegationEnabled, bool numberIsFloat)
         {
             Contracts.AssertValue(node);
 
@@ -909,42 +961,45 @@ namespace Microsoft.PowerFx.Core.Binding
             switch (node.Op)
             {
                 case BinaryOp.Add:
-                    return PostVisitBinaryOpNodeAdditionCore(errorContainer, node, leftType, rightType);
+                    return PostVisitBinaryOpNodeAdditionCore(errorContainer, node, leftType, rightType, numberIsFloat);
                 case BinaryOp.Power:
                 case BinaryOp.Mul:
                 case BinaryOp.Div:
                     // Floating point has precedence
-                    // Decimal TODO, decimal switch
-                    // Decimal TODO, mixing Decimal with enum or other non-float
-                    if (node.Op != BinaryOp.Power && leftType == DType.Decimal && rightType == DType.Decimal)
+                    // Decimal TODO, untyped object support
+                    if (node.Op != BinaryOp.Power && DType.DecimalBinaryOp(leftType, rightType, numberIsFloat))
                     {
+                        var resLeftDiv = CheckTypeCore(errorContainer, leftNode, leftType, DType.Decimal, /* coerced: */ DType.String, DType.Boolean, DType.UntypedObject);
+                        var resRightDiv = CheckTypeCore(errorContainer, rightNode, rightType, DType.Decimal, /* coerced: */ DType.String, DType.Boolean, DType.UntypedObject);
+
                         return new BinderCheckTypeResult()
                         {
                             Node = node,
                             NodeType = DType.Decimal,
-                            Coercions = null
+                            Coercions = resLeftDiv.Coercions.Concat(resRightDiv.Coercions).ToList()
+                        };
+                    }
+                    else
+                    {
+                        var resLeftDiv = CheckTypeCore(errorContainer, leftNode, leftType, DType.Number, /* coerced: */ DType.Decimal, DType.String, DType.Boolean, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime, DType.UntypedObject);
+                        var resRightDiv = CheckTypeCore(errorContainer, rightNode, rightType, DType.Number, /* coerced: */ DType.Decimal, DType.String, DType.Boolean, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime, DType.UntypedObject);
+                        return new BinderCheckTypeResult()
+                        {
+                            Node = node,
+                            NodeType = DType.Number,
+                            Coercions = resLeftDiv.Coercions.Concat(resRightDiv.Coercions).ToList()
                         };
                     }
 
-                    var resLeftDiv = CheckTypeCore(errorContainer, leftNode, leftType, DType.Number, /* coerced: */ DType.Decimal, DType.String, DType.Boolean, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime);
-                    var resRightDiv = CheckTypeCore(errorContainer, rightNode, rightType, DType.Number, /* coerced: */ DType.Decimal, DType.String, DType.Boolean, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime);
-                    return new BinderCheckTypeResult()
-                    {
-                        Node = node,
-
-                        NodeType = node.Op == BinaryOp.Power || leftType == DType.Number || rightType == DType.Number ? DType.Number : DType.Decimal,
-                        Coercions = resLeftDiv.Coercions.Concat(resRightDiv.Coercions).ToList()
-                    };
-
                 case BinaryOp.Or:
                 case BinaryOp.And:
-                    var resLeftAnd = CheckTypeCore(errorContainer, leftNode, leftType, DType.Boolean, /* coerced: */ DType.Number, DType.Decimal, DType.String, DType.OptionSetValue);
-                    var resRightAnd = CheckTypeCore(errorContainer, rightNode, rightType, DType.Boolean, /* coerced: */ DType.Number, DType.Decimal, DType.String, DType.OptionSetValue);
+                    var resLeftAnd = CheckTypeCore(errorContainer, leftNode, leftType, DType.Boolean, /* coerced: */ DType.Number, DType.Decimal, DType.String, DType.OptionSetValue, DType.UntypedObject);
+                    var resRightAnd = CheckTypeCore(errorContainer, rightNode, rightType, DType.Boolean, /* coerced: */ DType.Number, DType.Decimal, DType.String, DType.OptionSetValue, DType.UntypedObject);
                     return new BinderCheckTypeResult() { Node = node, NodeType = DType.Boolean, Coercions = resLeftAnd.Coercions.Concat(resRightAnd.Coercions).ToList() };
 
                 case BinaryOp.Concat:
-                    var resLeftConcat = CheckTypeCore(errorContainer, leftNode, leftType, DType.String, /* coerced: */ DType.Number, DType.Decimal, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime, DType.Boolean, DType.OptionSetValue, DType.ViewValue);
-                    var resRightConcat = CheckTypeCore(errorContainer, rightNode, rightType, DType.String, /* coerced: */ DType.Number, DType.Decimal, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime, DType.Boolean, DType.OptionSetValue, DType.ViewValue);
+                    var resLeftConcat = CheckTypeCore(errorContainer, leftNode, leftType, DType.String, /* coerced: */ DType.Number, DType.Decimal, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime, DType.Boolean, DType.OptionSetValue, DType.ViewValue, DType.UntypedObject);
+                    var resRightConcat = CheckTypeCore(errorContainer, rightNode, rightType, DType.String, /* coerced: */ DType.Number, DType.Decimal, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime, DType.Boolean, DType.OptionSetValue, DType.ViewValue, DType.UntypedObject);
                     return new BinderCheckTypeResult() { Node = node, NodeType = DType.String, Coercions = resLeftConcat.Coercions.Concat(resRightConcat.Coercions).ToList() };
 
                 case BinaryOp.Error:
@@ -1044,7 +1099,9 @@ namespace Microsoft.PowerFx.Core.Binding
                     var dottedNameNode = node.AsDottedName();
                     if (dottedNameNode.Left.Kind == NodeKind.FirstName)
                     {
+#pragma warning disable IDE0018 // Inline variable declaration
                         DType enumType = null;
+#pragma warning restore IDE0018 // Inline variable declaration
                         if (context.NameResolver.EntityScope?.TryGetNamedEnum(dottedNameNode.Left.AsFirstName().Ident.Name, out enumType) == true)
                         {
                             if (enumType.TryGetEnumValue(dottedNameNode.Right.Name, out var enumValue))

@@ -32,6 +32,7 @@ namespace Microsoft.PowerFx.Core.Types
         public static readonly DType Date = new DType(DKind.Date);
         public static readonly DType Time = new DType(DKind.Time);
         public static readonly DType Hyperlink = new DType(DKind.Hyperlink);
+        public static readonly DType Currency = new DType(DKind.Currency);
         public static readonly DType Image = new DType(DKind.Image);
         public static readonly DType PenImage = new DType(DKind.PenImage);
         public static readonly DType Media = new DType(DKind.Media);
@@ -65,12 +66,13 @@ namespace Microsoft.PowerFx.Core.Types
             yield return Date;
             yield return Time;
             yield return Hyperlink;
-            yield return Decimal;
+            yield return Currency;
             yield return Image;
             yield return PenImage;
             yield return Media;
             yield return Color;
             yield return Blob;
+            yield return Decimal;
         }
 
         private static readonly Lazy<Dictionary<DKind, DKind>> _kindToSuperkindMapping =
@@ -90,7 +92,7 @@ namespace Microsoft.PowerFx.Core.Types
                 { DKind.DateTime, DKind.Error },
                 { DKind.Hyperlink, DKind.String },
                 { DKind.Guid, DKind.Error },
-                { DKind.Decimal, DKind.Error },
+                { DKind.Currency, DKind.Number },
                 { DKind.Color, DKind.Error },
                 { DKind.Control, DKind.Error },
                 { DKind.DataEntity, DKind.Error },
@@ -107,6 +109,7 @@ namespace Microsoft.PowerFx.Core.Types
                 { DKind.ViewValue, DKind.Error },
                 { DKind.NamedValue, DKind.Error },
                 { DKind.UntypedObject, DKind.Error },
+                { DKind.Decimal, DKind.Error },
             }, isThreadSafe: true);
 
         public static Dictionary<DKind, DKind> KindToSuperkindMapping => _kindToSuperkindMapping.Value;
@@ -1930,6 +1933,7 @@ namespace Microsoft.PowerFx.Core.Types
                 case DKind.Number:
                     accepts =
                         type.Kind == Kind ||
+                        type.Kind == DKind.Currency ||
                         type.Kind == DKind.Unknown ||
                         type.Kind == DKind.Deferred ||
                         (useLegacyDateTimeAccepts &&
@@ -1981,6 +1985,9 @@ namespace Microsoft.PowerFx.Core.Types
                     break;
                 case DKind.Blob:
                     accepts = (!exact && (type.Kind == DKind.String || type.Kind == DKind.Hyperlink)) || DefaultReturnValue(type);
+                    break;
+                case DKind.Currency:
+                    accepts = (!exact && type.Kind == DKind.Number) || DefaultReturnValue(type);
                     break;
                 case DKind.DateTime:
                     accepts = (type.Kind == DKind.Date || type.Kind == DKind.Time || type.Kind == DKind.DateTimeNoTimeZone || (useLegacyDateTimeAccepts && !exact && type.Kind == DKind.Number)) || DefaultReturnValue(type);
@@ -3188,6 +3195,13 @@ namespace Microsoft.PowerFx.Core.Types
                                  Decimal.Accepts(this) ||
                                  DateTime.Accepts(this);
                     break;
+                case DKind.Currency:
+                    // Ill-formatted strings coerce to null; unsafe.
+                    isSafe = Kind != DKind.String;
+                    doesCoerce = Kind == DKind.String ||
+                                 Kind == DKind.Number ||
+                                 Boolean.Accepts(this);
+                    break;
                 case DKind.Decimal:
                     // Decimal TODO: Review overflow from number, isSafe?
                     // Ill-formatted strings coerce to null; unsafe.
@@ -3362,6 +3376,8 @@ namespace Microsoft.PowerFx.Core.Types
                     return "i";
                 case DKind.PenImage:
                     return "p";
+                case DKind.Currency:
+                    return "$";
                 case DKind.Color:
                     return "c";
                 case DKind.Record:
@@ -3536,6 +3552,22 @@ namespace Microsoft.PowerFx.Core.Types
             // suggestions.
             return similar != null &&
                    comparer.Distance(similar) < (name.Value.Length / 3) + 3;
+        }
+
+        public static bool DecimalBinaryOp(DType leftType, DType rightType, bool numberIsFloat)
+        {
+            // Decimal TODO: Do two untypedobject ops coerce?
+            if (leftType == DType.UntypedObject && rightType == DType.UntypedObject)
+            {
+                return !numberIsFloat;
+            }
+            else
+            {
+                return (leftType == DType.Decimal || leftType == DType.UntypedObject || 
+                        (!numberIsFloat && (leftType == DType.String || leftType == DType.Boolean))) &&
+                       (rightType == DType.Decimal || rightType == DType.UntypedObject || 
+                        (!numberIsFloat && (rightType == DType.String || rightType == DType.Boolean)));
+            }
         }
     }
 }

@@ -25,11 +25,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => true;
 
-        protected virtual DType FunctionReturnType { get; }
+        private readonly DType _returnType;
 
         public ValueBaseFunction(string functionName, TexlStrings.StringGetter functionAbout, DType functionReturn) 
             : base(functionName, functionAbout, FunctionCategories.Text, functionReturn, 0, 1, 2, DType.String, DType.String)
         {
+            _returnType = functionReturn;
         }
 
         public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
@@ -69,7 +70,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
             }
 
-            returnType = FunctionReturnType ?? (context.NumberIsFloat ? DType.Number : DType.Decimal);
+            returnType = _returnType != DType.Unknown ? _returnType : (context.NumberIsFloat ? DType.Number : DType.Decimal);
             return isValid;
         }
 
@@ -87,38 +88,26 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
     internal sealed class ValueFunction : ValueBaseFunction
     {
-        public const string ValueInvariantFunctionName = "Value";
-
-        protected override DType FunctionReturnType => null; 
-
         public ValueFunction()
-            : base(ValueInvariantFunctionName, TexlStrings.AboutValue, DType.Unknown)
+            : base("Value", TexlStrings.AboutValue, DType.Unknown)
         {
         }
     }
 
     internal sealed class DecimalFunction : ValueBaseFunction
     {
-        public const string DecimalInvariantFunctionName = "Decimal";
-
-        protected override DType FunctionReturnType => DType.Decimal;
-
         // Decimal TODO: Need new TexlStrings
         public DecimalFunction()
-            : base(DecimalInvariantFunctionName, TexlStrings.AboutDecimal, DType.Decimal)
+            : base("Decimal", TexlStrings.AboutDecimal, DType.Decimal)
         {
         }
     }
 
     internal sealed class FloatFunction : ValueBaseFunction
     {
-        public const string FloatInvariantFunctionName = "Float";
-
-        protected override DType FunctionReturnType => DType.Number;
-
         // Decimal TODO: Need new TexlStrings
         public FloatFunction()
-            : base(FloatInvariantFunctionName, TexlStrings.AboutFloat, DType.Number)
+            : base("Float", TexlStrings.AboutFloat, DType.Number)
         {
         }
     }
@@ -127,8 +116,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal class ValueBaseFunction_UO : BuiltinFunction
     {
         public override bool IsSelfContained => true;
-
-        public override bool SupportsParamCoercion => false;
 
         public ValueBaseFunction_UO(string functionName, TexlStrings.StringGetter functionAbout, DType resultType)
             : base(functionName, functionAbout, FunctionCategories.Text, resultType, 0, 1, 2, DType.UntypedObject, DType.String)
@@ -150,7 +137,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class ValueFunction_UO : ValueBaseFunction_UO
     {
         public ValueFunction_UO()
-            : base(ValueFunction.ValueInvariantFunctionName, TexlStrings.AboutValue, DType.Unknown)
+            : base("Value", TexlStrings.AboutValue, DType.Unknown)
         {
         }
 
@@ -166,7 +153,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class FloatFunction_UO : ValueBaseFunction_UO
     {
         public FloatFunction_UO()
-            : base(FloatFunction.FloatInvariantFunctionName, TexlStrings.AboutFloat, DType.Number)
+            : base("Float", TexlStrings.AboutFloat, DType.Number)
         {
         }
     }
@@ -174,7 +161,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class DecimalFunction_UO : ValueBaseFunction_UO
     {
         public DecimalFunction_UO()
-            : base(DecimalFunction.DecimalInvariantFunctionName, TexlStrings.AboutDecimal, DType.Decimal)
+            : base("Decimal", TexlStrings.AboutDecimal, DType.Decimal)
         {
         }
     }

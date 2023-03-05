@@ -4,6 +4,7 @@
 namespace Microsoft.PowerFx.Core.Texl.Intellisense
 {
     // Keep in sync with src/AppMagic/js/AppMagic.WebAuthoring/Constants/Texl.ts
+    // Decimal TODO: Sync with client
     internal enum TokenType
     {
         // default(TokenType) will resolve to Unknown.
@@ -49,8 +50,11 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
         // A Constant Boolean value (True, False)
         BoolLit,
 
-        // A Constant numeric value (eg. 5, 4.2)
+        // A Constant numeric value (eg. 5, 4.2, 1e300)
         NumLit,
+
+        // A Constant decimal value (eg. 5, 4.2, 1e28)
+        DecLit,        
 
         // A Constant String Value (eg. "Hello")
         StrLit,

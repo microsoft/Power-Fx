@@ -1837,6 +1837,10 @@
     <value>Η αριθμητική τιμή είναι υπερβολικά μεγάλη.</value>
     
   </data>
+  <data name="ErrTextTooLarge" xml:space="preserve">
+    <value>Η παράσταση δεν μπορεί να περιέχει περισσότερους από {0} χαρακτήρες. Η παράσταση είναι {1} χαρακτήρων.</value>
+    
+  </data>
   <data name="ErrTextFormatTooLarge" xml:space="preserve">
     <value>Το μέγεθος συμβολοσειράς μορφής δεν μπορεί να υπερβαίνει τους {0} χαρακτήρες.</value>
     
@@ -1863,6 +1867,10 @@
   </data>
   <data name="ErrTypeError_Arg_Expected_Found" xml:space="preserve">
     <value>Ο τύπος αυτού του ορίσματος '{0}' δεν συμφωνεί με τον αναμενόμενο τύπο '{1}'. Βρέθηκε ο τύπος '{2}'.</value>
+    
+  </data>
+  <data name="ErrTypeError_WrongType" xml:space="preserve">
+    <value>Ο τύπος αυτής της παράστασης δεν συμφωνεί με τον αναμενόμενο τύπο '{0}'. Βρέθηκε ο τύπος '{1}'.</value>
     
   </data>
   <data name="ErrTypeErrorRecordIncompatibleWithSource" xml:space="preserve">
@@ -2643,10 +2651,6 @@
   <data name="AboutIsNumeric_value" xml:space="preserve">
     <value>Η τιμή προς δοκιμή.</value>
   </data>
-  <data name="Post" xml:space="preserve">
-    <value>Δημοσίευση</value>
-    
-  </data>
   <data name="AboutDateTimeValue" xml:space="preserve">
     <value>Μετατρέπει μια ημερομηνία και ώρα στη μορφή κειμένου σε έναν αριθμό που αντιπροσωπεύει την ημερομηνία σε κώδικα ημερομηνίας-ώρας του Power Apps.</value>
     
@@ -3064,7 +3068,7 @@
     
   </data>
   <data name="Icon_Train_DisplayName" xml:space="preserve">
-    <value>Τρένο</value>
+    <value>Εκπαίδευση</value>
     
   </data>
   <data name="Icon_Tray_DisplayName" xml:space="preserve">
@@ -4111,10 +4115,6 @@
     <value>Ο εξαναγκασμός εγγραφών ή πινάκων δεν υποστηρίζεται σε στήλες τύπων.</value>
     
   </data>
-  <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
-    <value>Οι τύποι δεν μπορούν να είναι μεγαλύτεροι από 1000 χαρακτήρες.</value>
-    
-  </data>
   <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
     <value>Οι πίνακες μίας στήλης δεν υποστηρίζονται σε στήλες τύπων.</value>
     
@@ -4225,10 +4225,10 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
-    <value>Αυτό το σφάλμα εμφανίζεται όταν ένας τύπος αναφέρεται σε ιδιότητες συμπεριφοράς στοιχείων με μη έγκυρη σύνταξη. (Για παράδειγμα, Component.OnCustomChange αντί για Component.OnCustomChange())</value>
+    <value>Αυτό το σφάλμα εμφανίζεται όταν ένας τύπος αναφέρεται σε ιδιότητες της συνάρτησης των στοιχείων με μη έγκυρη σύνταξη. (Για παράδειγμα, Component.CustomFunction αντί για Component.CustomFunction())</value>
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
-    <value>Χρησιμοποιήστε τη σωστή σύνταξη για να αναφερθείτε στην ιδιότητα συμπεριφοράς στοιχείων. Για παράδειγμα, Component.OnCustomChange()</value>
+    <value>Χρησιμοποιήστε τη σωστή σύνταξη για να αναφερθείτε στην ιδιότητα της συνάρτησης των στοιχείων. Για παράδειγμα, Component.CustomFunction()</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_Link_1" xml:space="preserve">
@@ -4730,11 +4730,15 @@
     
   </data>
   <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
-    <value>Τα μη πληκτρολογημένα αντικείμενα δεν μπορούν να χρησιμοποιηθούν ως το πρώτο όρισμα για λειτουργίες που υποστηρίζουν πεδία καρτελών.</value>
+    <value>Τα μη τυπολογημένα αντικείμενα δεν μπορούν να χρησιμοποιηθούν ως το πρώτο όρισμα για λειτουργίες που υποστηρίζουν πεδία καρτελών.</value>
     
   </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>Ο καθορισμένος τύπος πρέπει να τελειώνει με ερωτηματικό.</value>
+    
+  </data>
+  <data name="ErrNamedFormula_MissingValue" xml:space="preserve">
+    <value>Ο τύπος με όνομα πρέπει να είναι παράσταση.</value>
     
   </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
@@ -4828,6 +4832,10 @@
   </data>
   <data name="ErrInvalidFunction" xml:space="preserve">
     <value>Αυτή η συνάρτηση είναι διφορούμενη, περιέχει παραστάσεις λάμδα και αναγνωριστικά στηλών για το ίδιο όρισμα.</value>
+    
+  </data>
+  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
+    <value>Η επιλογή BooleanOptionSet {0} δεν υποστηρίζεται.</value>
     
   </data>
 </root>

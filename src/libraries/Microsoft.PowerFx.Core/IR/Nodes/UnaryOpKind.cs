@@ -71,5 +71,13 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
 
         BooleanToOptionSet,
         AggregateToDataEntity,
+
+        // Argument pre-processesor in IR Phase.
+
+        /// <summary>
+        /// Used for pre-processing function arguments from blank to empty string.
+        /// All Interpreter(backed) must implement this.
+        /// </summary>
+        BlankToEmptyString,
     }
 }

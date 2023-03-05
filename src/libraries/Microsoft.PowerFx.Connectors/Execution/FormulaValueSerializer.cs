@@ -33,6 +33,8 @@ namespace Microsoft.PowerFx.Connectors.Execution
 
         protected abstract void WriteNumberValue(double numberValue);
 
+        protected abstract void WriteDecimalValue(decimal decimalValue);
+
         protected abstract void WriteStringValue(string stringValue);
 
         protected abstract void WriteBooleanValue(bool booleanValue);
@@ -121,6 +123,10 @@ namespace Microsoft.PowerFx.Connectors.Execution
                     {
                         WriteNumberValue(numberValue.Value);
                     }
+                    else if (fv is DecimalValue decimalValue)
+                    {
+                        WriteDecimalValue(decimalValue.Value);
+                    }
                     else
                     {
                         throw new ArgumentException($"Expected NumberValue (number) and got {fv?.GetType()?.Name ?? "<null>"} value, for property {propertyName}");
@@ -149,6 +155,10 @@ namespace Microsoft.PowerFx.Connectors.Execution
                     if (fv is NumberValue integerValue)
                     {
                         WriteNumberValue(integerValue.Value);
+                    }
+                    else if (fv is DecimalValue decimalValue)
+                    {
+                        WriteDecimalValue(decimalValue.Value);
                     }
                     else
                     {
@@ -196,6 +206,10 @@ namespace Microsoft.PowerFx.Connectors.Execution
             else if (value is NumberValue numberValue)
             {
                 WriteNumberValue(numberValue.Value);
+            }
+            else if (value is DecimalValue decimalValue)
+            {
+                WriteDecimalValue(decimalValue.Value);
             }
             else if (value is StringValue stringValue)
             {

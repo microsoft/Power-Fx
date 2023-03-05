@@ -41,7 +41,7 @@ namespace Microsoft.PowerFx.Core.Types
         Time = 9,
         DateTime = 10,
         Hyperlink = 11,
-        Decimal = 12,
+        Currency = 12,
         Image = 13,
         Color = 14,
         Enum = 15,
@@ -55,18 +55,19 @@ namespace Microsoft.PowerFx.Core.Types
         OptionSetValue = 22,
         ViewValue = 23,
         NamedValue = 24,
+        Decimal = 25,
         _LimPrimitive = Control,
 
         // Control type.
-        Control = 25,
+        Control = 26,
 
         // Expand Entity type.
-        DataEntity = 26,
+        DataEntity = 27,
 
-        ObjNull = 27, // A type representing a null value.
+        ObjNull = 28, // A type representing a null value.
 
         // Metadata type,
-        Metadata = 28, // Type represents column metadata.
+        Metadata = 29, // Type represents column metadata.
 
         // OptionSet type,
         OptionSet = 30,

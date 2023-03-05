@@ -7,8 +7,6 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Numerics;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Entities;
@@ -28,7 +26,6 @@ using Microsoft.PowerFx.Core.Logging.Trackers;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
-using Microsoft.PowerFx.Types;
 using static Microsoft.PowerFx.Core.IR.IRTranslator;
 using CallNode = Microsoft.PowerFx.Syntax.CallNode;
 using IRCallNode = Microsoft.PowerFx.Core.IR.Nodes.CallNode;
@@ -98,9 +95,6 @@ namespace Microsoft.PowerFx.Core.Functions
         // Return true if the function is asynchronous, false otherwise.
         public virtual bool IsAsync => false;
 
-        // Return true if the function is tracked in telemetry.
-        public virtual bool IsTrackedInTelemetry => true;
-
         // Return true if the function is declared as variadic.
         public bool IsVariadicFunction => MaxArity == int.MaxValue;
 
@@ -116,20 +110,9 @@ namespace Microsoft.PowerFx.Core.Functions
         // Return true if the function is stateless (same result for same input), or false otherwise.
         public virtual bool IsStateless => true;
 
-        // Return true if the function supports inlining during codegen.
-        public virtual bool SupportsInlining => false;
-
         // Returns false if we want to block the function within FunctionWithScope calls
         // that have a nondeterministic operation order (due to multiple async calls).
         public virtual bool AllowedWithinNondeterministicOperationOrder => true;
-
-        // Returns true if the function creates an implicit dependency on the control's parent screen.
-        public virtual bool CreatesImplicitScreenDependency => false;
-
-        // Returns true if the function can be used in test cases; all "global" functions should
-        // work, functionst that create screen dependencies don't by default (but can be overriden
-        // if the function is ready for that)
-        public virtual bool CanBeUsedInTests => !CreatesImplicitScreenDependency;
 
         /// <summary>
         /// Whether the function always produces a visible error if CheckTypes returns invalid.
@@ -180,9 +163,6 @@ namespace Microsoft.PowerFx.Core.Functions
 
         // Return true if the function expects a screen's context variables to be suggested within a record argument.
         public virtual bool CanSuggestContextVariables => false;
-
-        // Returns true if it's valid to suggest ThisItem for this function as an argument.
-        public virtual bool CanSuggestThisItem => false;
 
         // Return true if this function affects collection schemas.
         public virtual bool AffectsCollectionSchemas => false;
@@ -363,7 +343,7 @@ namespace Microsoft.PowerFx.Core.Functions
         // This can be used to generate a list of enums required for a function library.
         public virtual IEnumerable<string> GetRequiredEnumNames()
         {
-            return new List<string>();
+            return Enumerable.Empty<string>();
         }
 
         // Return all signatures with at most 'arity' parameters.
@@ -399,7 +379,6 @@ namespace Microsoft.PowerFx.Core.Functions
             return char.ToLowerInvariant(name[0]).ToString() + name.Substring(1) + suffix + (IsAsync && !suppressAsync ? "Async" : string.Empty);
         }
 
-        #region CheckInvocation Replacement Project
         public bool HandleCheckInvocation(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             var result = CheckTypes(binding.CheckTypesContext, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
@@ -412,12 +391,7 @@ namespace Microsoft.PowerFx.Core.Functions
         /// </summary>
         public virtual bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
-            return CheckTypes(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
-        }
-
-        public virtual bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
-        {
-            return CheckTypesCore(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            return CheckTypesCore(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
         }
 
         /// <summary>
@@ -431,7 +405,6 @@ namespace Microsoft.PowerFx.Core.Functions
         public virtual void CheckSemantics(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors)
         {
         }
-        #endregion
 
         public virtual bool CheckForDynamicReturnType(TexlBinding binding, TexlNode[] args)
         {
@@ -455,7 +428,7 @@ namespace Microsoft.PowerFx.Core.Functions
             return SupportsParamCoercion && (argIndex <= MinArity || argIndex <= MaxArity);
         }
 
-        private bool CheckTypesCore(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        private bool CheckTypesCore(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
@@ -1102,9 +1075,14 @@ namespace Microsoft.PowerFx.Core.Functions
             }
 
             // TODO Decimal: Is this the right thing to do for deferred and unknown?
+            if (argType == DType.Deferred || argType == DType.Unknown)
+            {
+                return argType;
+            }
+
             return nativeDecimal && 
                    (argType == DType.Decimal ||
-                    ((argType == DType.Boolean || argType == DType.ObjNull || argType == DType.String || argType == DType.Deferred || argType == DType.Unknown) && !context.NumberIsFloat))
+                    ((argType == DType.Boolean || argType == DType.ObjNull || argType == DType.String) && !context.NumberIsFloat))
                    ? DType.Decimal : DType.Number;
         }
 
@@ -1444,6 +1422,37 @@ namespace Microsoft.PowerFx.Core.Functions
             }
 
             return new IRCallNode(context.GetIRContext(node), this, args);
+        }
+
+        /// <summary>
+        /// Function can override this method to provide pre-processing policy for argument.
+        /// By default, function does not attach any pre-processing for arguments.
+        /// </summary>
+        /// <param name="index">0 based index of argument.</param>
+        /// <returns></returns>
+        public virtual ArgPreprocessor GetArgPreprocessor(int index)
+        {
+            return ArgPreprocessor.None;
+        }
+
+        /// <summary>
+        /// Generic arg preprocessor that uses <see cref="ParamTypes"/> to determine pre-processing policy.
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        internal ArgPreprocessor GetGenericArgPreprocessor(int index)
+        {
+            var paramType = ParamTypes[index] ?? DType.Unknown;
+            if (paramType == DType.Number || paramType == DType.Decimal)
+            {
+                return ArgPreprocessor.ReplaceBlankWithZero;
+            }
+            else if (paramType == DType.String)
+            {
+                return ArgPreprocessor.ReplaceBlankWithEmptyString;
+            }
+
+            return ArgPreprocessor.None;
         }
     }
 }

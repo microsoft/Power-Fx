@@ -23,7 +23,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
     // Exp(E:*[n])
     // Table overload that computes the E raised to the respective values of each item in the input table.
-    internal sealed class ExpTableFunction : MathOneArgTableFunction
+    internal sealed class ExpTableFunction : MathTableFunction
     {
         public override bool HasPreciseErrors => true;
 

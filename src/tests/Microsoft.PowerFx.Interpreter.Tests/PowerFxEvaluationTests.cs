@@ -321,7 +321,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 }
 
                 // Serialization test. Serialized expression must produce an identical result.
-                var newValueDeserialized = await engine.EvalAsync(newValue.ToExpression(), CancellationToken.None, runtimeConfig: runtimeConfig);
+                ParserOptions options = new ParserOptions() { NumberIsFloat = newValue.Type == FormulaType.Number };
+                var newValueDeserialized = await engine.EvalAsync(newValue.ToExpression(), CancellationToken.None, options, runtimeConfig: runtimeConfig);
 
                 return new RunResult(newValueDeserialized);
             }

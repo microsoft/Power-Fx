@@ -3,7 +3,6 @@
 
 using System.Collections.Generic;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
-using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
@@ -24,8 +23,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool IsAsync => true;
 
-        public override bool SupportsParamCoercion => true;
-
         public IfErrorFunction()
             : base("IfError", TexlStrings.AboutIfError, FunctionCategories.Logical, DType.Unknown, 0, 2, int.MaxValue)
         {
@@ -37,23 +34,53 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     new TypedName(ErrorType.ReifiedErrorTable(), new DName("AllErrors")),
                     new TypedName(DType.ObjNull, new DName("ErrorResult"))),
                 appliesToArgument: i => i > 0 && (i % 2 == 1));
+
+            // IfError(value1, fallback1, value2, fallback2, ..., valueN, [fallbackN], ...)
+            SignatureConstraint = new SignatureConstraint(omitStartIndex: 4, repeatSpan: 2, endNonRepeatCount: 0, repeatTopLength: 8);
         }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
             yield return new[] { TexlStrings.IfErrorArg1, TexlStrings.IfErrorArg2 };
-            yield return new[] { TexlStrings.IfErrorArg1, TexlStrings.IfErrorArg2, TexlStrings.IfErrorArg2 };
-            yield return new[] { TexlStrings.IfErrorArg1, TexlStrings.IfErrorArg2, TexlStrings.IfErrorArg2, TexlStrings.IfErrorArg2 };
         }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures(int arity)
         {
             if (arity > 2)
             {
-                return GetGenericSignatures(arity, TexlStrings.IfErrorArg2);
+                return GetOverloadsIfError(arity);
             }
 
             return base.GetSignatures(arity);
+        }
+
+        // Gets the overloads for the IfError function for the specified arity.
+        // IfError is special because it doesn't have a small number of overloads
+        // since its max arity is int.MaxSize.
+        private IEnumerable<TexlStrings.StringGetter[]> GetOverloadsIfError(int arity)
+        {
+            Contracts.Assert(arity >= 3);
+
+            // Limit the argCount avoiding potential OOM
+            var argCount = arity > SignatureConstraint.RepeatTopLength ? SignatureConstraint.RepeatTopLength + (arity & 1) : arity;
+            var signature = new TexlStrings.StringGetter[argCount];
+            var fOdd = (argCount & 1) != 0;
+            var cargCur = fOdd ? argCount - 1 : argCount;
+
+            for (var iarg = 0; iarg < cargCur; iarg += 2)
+            {
+                signature[iarg] = TexlStrings.IfErrorArg1;
+                signature[iarg + 1] = TexlStrings.IfErrorArg2;
+            }
+
+            if (fOdd)
+            {
+                signature[cargCur] = TexlStrings.IfErrorArg1;
+            }
+
+            argCount++;
+
+            return new[] { signature };
         }
 
         public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)

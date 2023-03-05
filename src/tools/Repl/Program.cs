@@ -19,19 +19,34 @@ namespace Microsoft.PowerFx
     public static class ConsoleRepl
     {
         private static RecalcEngine _engine;
-        private static bool _formatTable = true;
-        private static bool _numberIsFloat = false;
+
         private const string OptionFormatTable = "FormatTable";
+        private static bool _formatTable = true;
+
         private const string OptionNumberIsFloat = "NumberIsFloat";
+        private static bool _numberIsFloat = false;
+
+        private const string OptionLargeCallDepth = "LargeCallDepth";
+        private static bool _largeCallDepth = false;
+
         private static Features _features = Features.All;
 
         private static void ResetEngine()
         {
-            var config = new PowerFxConfig(_features);
+            var config = new PowerFxConfig(_features)
+            {
+            };
+
+            if (_largeCallDepth)
+            {
+                config.MaxCallDepth = 200;
+            }
+
             Dictionary<string, string> options = new Dictionary<string, string>
             {
                 { OptionFormatTable, OptionFormatTable },
-                { OptionNumberIsFloat, OptionNumberIsFloat }
+                { OptionNumberIsFloat, OptionNumberIsFloat },
+                { OptionLargeCallDepth, OptionLargeCallDepth }
             };
             foreach (Features feature in (Features[])Enum.GetValues(typeof(Features)))
             {
@@ -41,9 +56,7 @@ namespace Microsoft.PowerFx
             config.SymbolTable.EnableMutationFunctions();
 
             config.EnableSetFunction();
-#if false
             config.EnableParseJSONFunction();
-#endif
 
             config.AddFunction(new HelpFunction());
             config.AddFunction(new ResetFunction());
@@ -93,7 +106,7 @@ namespace Microsoft.PowerFx
         // Pattern match for Set(x,y) so that we can define the variable
         public static bool TryMatchSet(string expr, out string arg0name, out FormulaValue varValue)
         {
-            var parserOptions = new ParserOptions(Features.None) { AllowsSideEffects = true };
+            var parserOptions = new ParserOptions() { AllowsSideEffects = true };
 
             var parse = _engine.Parse(expr);
             if (parse.IsSuccess)
@@ -154,7 +167,7 @@ namespace Microsoft.PowerFx
                     // IR pretty printer: IR( <expr> )
                     if ((match = Regex.Match(expr, @"^\s*IR\((?<expr>.*)\)\s*$", RegexOptions.Singleline)).Success)
                     {
-                        var opts = new ParserOptions(_engine.Config.Features) { AllowsSideEffects = true, NumberIsFloat = _numberIsFloat };
+                        var opts = new ParserOptions() { AllowsSideEffects = true, NumberIsFloat = _numberIsFloat };
                         var cr = _engine.Check(match.Groups["expr"].Value, options: opts);
                         var ir = cr.GetIR();
                         Console.WriteLine(ir);
@@ -180,7 +193,7 @@ namespace Microsoft.PowerFx
                     // eval and print everything else
                     else
                     {
-                        var opts = new ParserOptions(_engine.Config.Features) { AllowsSideEffects = true, NumberIsFloat = _numberIsFloat };
+                        var opts = new ParserOptions() { AllowsSideEffects = true, NumberIsFloat = _numberIsFloat };
                         var result = _engine.Eval(expr, options: opts);
 
                         if (result is ErrorValue errorValue)
@@ -381,21 +394,39 @@ namespace Microsoft.PowerFx
                     resultString = "<table>";
                 }
                 else
-                {
-                    var columnWidth = new int[table.Rows.First().Value.Fields.Count()];
+                {                    
+                    var columnCount = 0;
+                    foreach (var row in table.Rows)
+                    {
+                        if (row.Value != null)
+                        {
+                            columnCount = Math.Max(columnCount, row.Value.Fields.Count());
+                            break;
+                        }
+                    }
+
+                    if (columnCount == 0)
+                    {
+                        return minimal ? string.Empty : "Blank()";
+                    }
+
+                    var columnWidth = new int[columnCount];
 
                     foreach (var row in table.Rows)
                     {
-                        var column = 0;
-                        foreach (var field in row.Value.Fields)
+                        if (row.Value != null)
                         {
-                            columnWidth[column] = Math.Max(columnWidth[column], PrintResult(field.Value, true).Length);
-                            column++;
+                            var column = 0;
+                            foreach (var field in row.Value.Fields)
+                            {
+                                columnWidth[column] = Math.Max(columnWidth[column], PrintResult(field.Value, true).Length);
+                                column++;
+                            }
                         }
                     }
 
                     // special treatment for single column table named Value
-                    if (columnWidth.Length == 1 && table.Rows.First().Value.Fields.First().Name == "Value")
+                    if (columnWidth.Length == 1 && table.Rows.First().Value != null && table.Rows.First().Value.Fields.First().Name == "Value")
                     {
                         var separator = string.Empty;
                         resultString = "[";
@@ -413,11 +444,21 @@ namespace Microsoft.PowerFx
                     {
                         resultString = "\n ";
                         var column = 0;
-                        foreach (var field in table.Rows.First().Value.Fields)
+
+                        foreach (var row in table.Rows)
                         {
-                            columnWidth[column] = Math.Max(columnWidth[column], field.Name.Length);
-                            resultString += " " + field.Name.PadLeft(columnWidth[column]) + "  ";
-                            column++;
+                            if (row.Value != null)
+                            {
+                                column = 0;
+                                foreach (var field in row.Value.Fields)
+                                {
+                                    columnWidth[column] = Math.Max(columnWidth[column], field.Name.Length);
+                                    resultString += " " + field.Name.PadLeft(columnWidth[column]) + "  ";
+                                    column++;
+                                }
+
+                                break;
+                            }
                         }
 
                         resultString += "\n ";
@@ -431,10 +472,17 @@ namespace Microsoft.PowerFx
                         {
                             column = 0;
                             resultString += "\n ";
-                            foreach (var field in row.Value.Fields)
+                            if (row.Value != null)
                             {
-                                resultString += " " + PrintResult(field.Value, true).PadLeft(columnWidth[column]) + "  ";
-                                column++;
+                                foreach (var field in row.Value.Fields)
+                                {
+                                    resultString += " " + PrintResult(field.Value, true).PadLeft(columnWidth[column]) + "  ";
+                                    column++;
+                                }
+                            }
+                            else
+                            {
+                                resultString += row.IsError ? row.Error?.Errors?[0].Message : "Blank()";
                             }
                         }
                     }
@@ -499,6 +547,13 @@ namespace Microsoft.PowerFx
                 if (option.Value.ToLower() == OptionNumberIsFloat.ToLower())
                 {
                     _numberIsFloat = value.Value;
+                    return value;
+                }
+
+                if (option.Value.ToLower() == OptionLargeCallDepth.ToLower())
+                {
+                    _largeCallDepth = value.Value;
+                    ResetEngine();
                     return value;
                 }
 

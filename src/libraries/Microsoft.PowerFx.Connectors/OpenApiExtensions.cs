@@ -266,7 +266,7 @@ namespace Microsoft.PowerFx.Connectors
 
                     // Dictionary - https://swagger.io/docs/specification/data-models/dictionaries/
                     // Key is always a string, Value is in AdditionalProperties
-                    if (schema.AdditionalProperties != null)
+                    if ((schema.AdditionalProperties != null && schema.AdditionalProperties.Properties.Any()) || schema.Discriminator != null)
                     {
                         return (FormulaType.UntypedObject, null);
                     }

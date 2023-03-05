@@ -21,7 +21,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
     // Cos(E:*[n])
     // Table overload that computes the cosine of each item in the input table.
-    internal sealed class CosTableFunction : MathOneArgTableFunction
+    internal sealed class CosTableFunction : MathTableFunction
     {
         public CosTableFunction()
             : base("Cos", TexlStrings.AboutCosT, FunctionCategories.Table)

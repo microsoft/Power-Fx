@@ -12,9 +12,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Sequence(records:n, start:n, step:n): *[Value:n]
     internal sealed class SequenceFunction : BuiltinFunction
     {
-        public override bool IsSelfContained => true;
+        public override ArgPreprocessor GetArgPreprocessor(int index)
+        {
+            return base.GetGenericArgPreprocessor(index);
+        }
 
-        public override bool SupportsParamCoercion => true;
+        public override bool IsSelfContained => true;
 
         public SequenceFunction()
             : base("Sequence", TexlStrings.AboutSequence, FunctionCategories.MathAndStat, DType.CreateTable(new TypedName(DType.Number, new DName("Value"))), 0, 1, 3, DType.Number, DType.Number, DType.Number)

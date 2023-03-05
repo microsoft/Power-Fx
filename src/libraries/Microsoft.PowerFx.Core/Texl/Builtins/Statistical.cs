@@ -17,35 +17,15 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal abstract class StatisticalFunction : MathFunction
     {
         public StatisticalFunction(string name, TexlStrings.StringGetter description, FunctionCategories fc, bool nativeDecimal = false)
-            : base(name, description, fc, int.MaxValue, nativeDecimal: nativeDecimal)
+            : base(name, description, fc, int.MaxValue, nativeDecimal: nativeDecimal, replaceBlankWithZero: false)
         {
-        }
-
-        public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
-        {
-            yield return new[] { TexlStrings.StatisticalArg };
-            yield return new[] { TexlStrings.StatisticalArg, TexlStrings.StatisticalArg };
-            yield return new[] { TexlStrings.StatisticalArg, TexlStrings.StatisticalArg, TexlStrings.StatisticalArg };
-        }
-
-        public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures(int arity)
-        {
-            if (arity > 2)
-            {
-                return GetGenericSignatures(arity, TexlStrings.StatisticalArg, TexlStrings.StatisticalArg);
-            }
-
-            return base.GetSignatures(arity);
         }
     }
-
 #if false
     // Abstract base class for all statistical functions with similar signatures that take
     // scalar arguments.
     internal abstract class StatisticalFunction : BuiltinFunction
     {
-        public override bool SupportsParamCoercion => true;
-
         public override bool IsSelfContained => true;
 
         public bool SupportsDecimal;
@@ -99,6 +79,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 {
                     errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrNumberExpected);
                     fValid = false;
+                    break;
                 }
             }
 

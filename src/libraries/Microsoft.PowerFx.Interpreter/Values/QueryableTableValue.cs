@@ -10,12 +10,14 @@ namespace Microsoft.PowerFx.Types
 {
     public abstract class QueryableTableValue : TableValue
     {
-        private readonly Lazy<Task<List<DValue<RecordValue>>>> _lazyTaskRows;
+        private Lazy<Task<List<DValue<RecordValue>>>> _lazyTaskRows;
+
+        private Lazy<Task<List<DValue<RecordValue>>>> NewLazyTaskRowsInstance => new Lazy<Task<List<DValue<RecordValue>>>>(() => GetRowsAsync());
 
         internal QueryableTableValue(IRContext irContext)
             : base(irContext)
         {
-            _lazyTaskRows = new Lazy<Task<List<DValue<RecordValue>>>>(() => GetRowsAsync());
+            _lazyTaskRows = NewLazyTaskRowsInstance;
         }
 
         internal abstract TableValue Filter(LambdaFormulaValue lambda, EvalVisitor runner, EvalVisitorContext context);
@@ -33,5 +35,10 @@ namespace Microsoft.PowerFx.Types
         // Not the best, but doesn't require major breaking changes to TableValue
         public sealed override IEnumerable<DValue<RecordValue>> Rows =>
             _lazyTaskRows.Value.GetAwaiter().GetResult();
+
+        protected void Refresh()
+        {
+            _lazyTaskRows = NewLazyTaskRowsInstance;
+        }
     }
 }

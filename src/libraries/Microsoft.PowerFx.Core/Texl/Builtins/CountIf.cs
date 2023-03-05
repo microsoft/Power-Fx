@@ -23,8 +23,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Corresponding DAX function: CountAX, CountX
     internal sealed class CountIfFunction : FilterFunctionBase
     {
-        public override bool SupportsParamCoercion => true;
-
         public override bool HasPreciseErrors => true;
 
         public override DelegationCapability FunctionDelegationCapability => DelegationCapability.Filter | DelegationCapability.Count;
@@ -57,27 +55,30 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return base.GetSignatures(arity);
         }
 
-        public override bool CheckTypes(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertValue(argTypes);
             Contracts.Assert(args.Length == argTypes.Length);
             Contracts.AssertValue(errors);
 
-            var fValid = base.CheckTypes(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
             Contracts.Assert(returnType == DType.Number);
 
-            // Ensure that all the args starting at index 1 are booleans or coerece to boolean if they are OptionSetValues.
+            // Ensure that all the args starting at index 1 are booleans or coerecible to boolean
             for (var i = 1; i < args.Length; i++)
             {
-                if (argTypes[i].Kind == DKind.OptionSetValue && argTypes[i].CoercesTo(DType.Boolean))
+                if (!DType.Boolean.Accepts(argTypes[i]))
                 {
-                    CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i], DType.Boolean, allowDupes: true);
-                }
-                else if (!DType.Boolean.Accepts(argTypes[i]))
-                {
-                    errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrBooleanExpected);
-                    fValid = false;
+                    if (argTypes[i].CoercesTo(DType.Boolean))
+                    {
+                        CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i], DType.Boolean, allowDupes: true);
+                    }
+                    else
+                    {
+                        errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrBooleanExpected);
+                        fValid = false;
+                    }
                 }
             }
 

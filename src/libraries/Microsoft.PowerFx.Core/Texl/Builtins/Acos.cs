@@ -21,7 +21,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
     // Acos(E:*[n])
     // Table overload that computes the arc cosine of each item in the input table.
-    internal sealed class AcosTableFunction : MathOneArgTableFunction
+    internal sealed class AcosTableFunction : MathTableFunction
     {
         public AcosTableFunction()
             : base("Acos", TexlStrings.AboutAcosT, FunctionCategories.Table)

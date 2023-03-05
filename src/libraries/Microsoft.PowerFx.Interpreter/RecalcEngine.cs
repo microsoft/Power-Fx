@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -215,9 +214,8 @@ namespace Microsoft.PowerFx
             var check = new CheckWrapper(this, definition.Body, record, definition.IsImperative);
 
             var func = new UserDefinedTexlFunction(definition.Name, definition.ReturnType, definition.Parameters, check);
-
-            var exists = _symbolTable.Functions.Any(x => x.Name == definition.Name);
-            if (exists)
+            
+            if (_symbolTable.Functions.AnyWithName(definition.Name))
             {
                 throw new InvalidOperationException($"Function {definition.Name} is already defined");
             }

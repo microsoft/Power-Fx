@@ -149,7 +149,7 @@ namespace Microsoft.PowerFx.Tests
 
                 Assert.Equal(ErrorKind.Network, err.Kind);
                 Assert.Equal(ErrorSeverity.Critical, err.Severity);
-                Assert.Equal($"TestConnector12.GenerateError failed: The server returned an HTTP error with code {statusCode}.", err.Message);
+                Assert.Equal($"TestConnector12.GenerateError failed: The server returned an HTTP error with code {statusCode}. Response: {statusCode}", err.Message);
             }
 
             testConnector.SetResponse($"{statusCode}", (HttpStatusCode)statusCode);
@@ -166,7 +166,7 @@ namespace Microsoft.PowerFx.Tests
             }
             else
             {
-                Assert.Equal($"TestConnector12.GenerateError failed: The server returned an HTTP error with code {statusCode}.", sv2.Value);
+                Assert.Equal($"TestConnector12.GenerateError failed: The server returned an HTTP error with code {statusCode}. Response: {statusCode}", sv2.Value);
             }
 
             testConnector.SetResponse($"{statusCode}", (HttpStatusCode)statusCode);
@@ -233,7 +233,7 @@ namespace Microsoft.PowerFx.Tests
             var result = await engine.EvalAsync(
                 @"AzureBlobStorage.CreateFile(""container"", ""bora1.txt"", ""abc"").Size",
                 CancellationToken.None,
-                options: new ParserOptions(engine.Config.Features) { AllowsSideEffects = true });
+                options: new ParserOptions() { AllowsSideEffects = true });
 
             dynamic res = result.ToObject();
             var size = (double)res;
@@ -280,7 +280,7 @@ namespace Microsoft.PowerFx.Tests
 
             var engine = new Engine(config);
             
-            var check = engine.Check(expr, RecordType.Empty(), withAllowSideEffects ? new ParserOptions(config.Features) { AllowsSideEffects = true } : null);
+            var check = engine.Check(expr, RecordType.Empty(), withAllowSideEffects ? new ParserOptions() { AllowsSideEffects = true } : null);
             
             if (expectedBehaviorError)
             {

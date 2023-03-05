@@ -70,7 +70,6 @@ namespace Microsoft.PowerFx
         internal static IExpressionEvaluator GetEvaluator(this CheckResult result, StackDepthCounter stackMarker)
         {
             ReadOnlySymbolValues globals = null;
-            var allSymbols = result.AllSymbols;
                 
             if (result.Engine is RecalcEngine recalcEngine)
             {
@@ -81,10 +80,10 @@ namespace Microsoft.PowerFx
             var irResult = result.ApplyIR();
             result.ThrowOnErrors();
 
-            var expr = new ParsedExpression(irResult.TopNode, irResult.RuleScopeSymbol, stackMarker, result.CultureInfo)
+            var expr = new ParsedExpression(irResult.TopNode, irResult.RuleScopeSymbol, stackMarker, result.ParserCultureInfo)
             {
                 _globals = globals,
-                _allSymbols = allSymbols,
+                _allSymbols = result.Symbols,
                 _parameterSymbolTable = result.Parameters
             };
 

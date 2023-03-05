@@ -314,7 +314,7 @@ namespace Microsoft.PowerFx.Functions
 
             // Streaming 
             var sources = (TableValue)args[0];
-            var filter = (LambdaFormulaValue)args[1];
+            var filters = args.Skip(1).Cast<LambdaFormulaValue>().ToArray();
 
             var count = 0;
 
@@ -325,14 +325,28 @@ namespace Microsoft.PowerFx.Functions
                     var childContext = row.IsValue ?
                         context.SymbolContext.WithScopeValues(row.Value) :
                         context.SymbolContext.WithScopeValues(row.Error);
-                    var result = await filter.EvalInRowScopeAsync(context.NewScope(childContext));
-
-                    if (result is ErrorValue error)
+                    var include = true;
+                    for (var i = 0; i < filters.Length; i++)
                     {
-                        return error;
-                    }
+                        var result = await filters[i].EvalInRowScopeAsync(context.NewScope(childContext));
 
-                    var include = ((BooleanValue)result).Value;
+                        if (result is ErrorValue error)
+                        {
+                            return error;
+                        }
+                        else if (result is BlankValue)
+                        {
+                            include = false;
+                            break;
+                        }
+
+                        include = ((BooleanValue)result).Value;
+
+                        if (!include)
+                        {
+                            break;
+                        }
+                    }
 
                     if (include)
                     {
@@ -416,8 +430,14 @@ namespace Microsoft.PowerFx.Functions
             var arg1 = (LambdaFormulaValue)args[1];
 
             var values = arg0.Rows.Select(row => ApplyLambda(runner, context, row, arg1));
-            var pairResults = await Task.WhenAll(values);
-            var pairs = pairResults.ToList();
+            
+            var pairs = new List<(DValue<RecordValue> row, FormulaValue distinctValue)>();
+
+            foreach (var pair in values)
+            {
+                runner.CheckCancel();
+                pairs.Add(await pair);
+            }
 
             return DistinctValueType(pairs, irContext);
         }
@@ -441,7 +461,12 @@ namespace Microsoft.PowerFx.Functions
                 }
             }
 
-            var pairs = (await Task.WhenAll(arg0.Rows.Select(row => ApplyLambda(runner, context, row, arg1)))).ToList();
+            var pairs = new List<(DValue<RecordValue> row, FormulaValue distinctValue)>();
+
+            foreach (var pair in arg0.Rows.Select(row => ApplyLambda(runner, context, row, arg1)))
+            {
+                pairs.Add(await pair);
+            }
 
             bool allNumbers = true, allDecimals = true, allStrings = true, allBooleans = true, allDatetimes = true, allDates = true, allOptionSets = true;
 
@@ -636,7 +661,7 @@ namespace Microsoft.PowerFx.Functions
             LambdaFormulaValue filter,
             int topN = int.MaxValue)
         {
-            var tasks = new List<Task<DValue<RecordValue>>>();
+            var results = new List<DValue<RecordValue>>();
 
             // Filter needs to allow running in parallel. 
             foreach (var row in sources)
@@ -644,12 +669,10 @@ namespace Microsoft.PowerFx.Functions
                 runner.CheckCancel();
 
                 var task = LazyFilterRowAsync(runner, context, row, filter);
-                tasks.Add(task);
+                
+                results.Add(await task);
             }
-
-            // WhenAll will allow running tasks in parallel. 
-            var results = await Task.WhenAll(tasks);
-
+                        
             // Remove all nulls. 
             var final = results.Where(x => x != null);
 

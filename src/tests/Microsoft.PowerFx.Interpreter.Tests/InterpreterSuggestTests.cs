@@ -13,12 +13,11 @@ using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Tests.IntellisenseTests;
 using Microsoft.PowerFx.Types;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Microsoft.PowerFx.Interpreter.Tests
 {
     public class InterpreterSuggestTests : IntellisenseTestBase
-    {        
+    {
         private string[] SuggestStrings(string expression, PowerFxConfig config, RecordType parameterType)
         {
             Assert.NotNull(expression);
@@ -48,7 +47,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("TopOptionSetField <> |", "OptionSet", "OtherOptionSet")]
         [InlineData("TopOptionSetField <> Opt|", "OptionSet", "TopOptionSetField", "OtherOptionSet")]
         public void TestSuggestOptionSets(string expression, params string[] expectedSuggestions)
-        {            
+        {
             var config = PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder());
 
             var optionSet = new OptionSet("OptionSet", DisplayNameUtility.MakeUnique(new Dictionary<string, string>()
@@ -80,7 +79,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var actualSuggestions = SuggestStrings(expression, engine, parameterType);
             Assert.Equal(expectedSuggestions, actualSuggestions);
-            
+
             // Now try with Globals instead of RowScope
             foreach (var field in parameterType.GetFieldTypes())
             {
@@ -96,7 +95,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("Dis|", "DisplayOpt", "DisplayRowScope")] // Match to row scope       
         public void TestSuggestOptionSetsDisplayName(string expression, params string[] expectedSuggestions)
         {
-            var config = PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder(), new TexlFunction[0]);
+            var config = PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder(), new TexlFunctionSet());
 
             var optionSet = new OptionSet("OptionSet", DisplayNameUtility.MakeUnique(new Dictionary<string, string>()
             {
@@ -169,6 +168,23 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.True(b);
             Assert.Equal(BindKind.PowerFxResolvedObject, nameInfo.Kind);
             Assert.IsType<NameSymbol>(nameInfo.Data);
+        }
+
+        [Theory]
+        [InlineData("Collect|", "Collect", "ClearCollect")]
+        [InlineData("Patc|", "Patch")]
+        [InlineData("Collect(Table({a:1, b:2}), {|", "a:", "b:")]
+        [InlineData("Collect(Table({a:1, 'test space': \"test\"), {|", "a:", "'test space':")]
+        [InlineData("Patch(Table({a:1, b:2}), {|", "a:", "b:")]
+        [InlineData("Patch({a:1, b:2}, {|", "a:", "b:")]
+        [InlineData("ClearCollect(Table({a:1, b:2}), {|", "a:", "b:")]
+        [InlineData("Remove(Table({a:1, b:2}), {|", "a:", "b:")]
+        public void TestSuggestMutationFunctions(string expression, params string[] expectedSuggestions)
+        {
+            var config = SuggestTests.Default;
+            config.SymbolTable.EnableMutationFunctions();
+            var actualSuggestions = SuggestStrings(expression, config, null);
+            Assert.Equal(expectedSuggestions, actualSuggestions);
         }
     }
 }

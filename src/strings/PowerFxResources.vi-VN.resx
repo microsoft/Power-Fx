@@ -1837,6 +1837,10 @@
     <value>Giá trị số quá lớn.</value>
     
   </data>
+  <data name="ErrTextTooLarge" xml:space="preserve">
+    <value>Biểu thức không được nhiều hơn {0} ký tự. Biểu thức có {1} ký tự.</value>
+    
+  </data>
   <data name="ErrTextFormatTooLarge" xml:space="preserve">
     <value>Kích thước chuỗi định dạng không được lớn hơn {0} ký tự.</value>
     
@@ -1863,6 +1867,10 @@
   </data>
   <data name="ErrTypeError_Arg_Expected_Found" xml:space="preserve">
     <value>Loại đối số này '{0}' không khớp với loại '{1}' theo dự kiến. Đã tìm thấy loại '{2}'.</value>
+    
+  </data>
+  <data name="ErrTypeError_WrongType" xml:space="preserve">
+    <value>Loại biểu thức này không khớp với loại dự kiến "{0}". Đã tìm thấy loại "{1}".</value>
     
   </data>
   <data name="ErrTypeErrorRecordIncompatibleWithSource" xml:space="preserve">
@@ -2643,10 +2651,6 @@
   <data name="AboutIsNumeric_value" xml:space="preserve">
     <value>Giá trị cần thử nghiệm.</value>
   </data>
-  <data name="Post" xml:space="preserve">
-    <value>Đăng</value>
-    
-  </data>
   <data name="AboutDateTimeValue" xml:space="preserve">
     <value>Chuyển đổi ngày giờ ở dạng văn bản thành một số biểu diễn ngày theo mã ngày/giờ của Power Apps.</value>
     
@@ -3064,7 +3068,7 @@
     
   </data>
   <data name="Icon_Train_DisplayName" xml:space="preserve">
-    <value>Tàu hỏa</value>
+    <value>Đào tạo</value>
     
   </data>
   <data name="Icon_Tray_DisplayName" xml:space="preserve">
@@ -4111,10 +4115,6 @@
     <value>Không hỗ trợ ép buộc bản ghi hoặc bảng trong các cột công thức.</value>
     
   </data>
-  <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
-    <value>Công thức không được dài hơn 1.000 ký tự.</value>
-    
-  </data>
   <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
     <value>Không hỗ trợ bảng một cột trong các cột công thức.</value>
     
@@ -4225,10 +4225,10 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
-    <value>Lỗi này xuất hiện khi một công thức đề cập đến các thuộc tính hành vi cấu phần với cú pháp không hợp lệ. (Ví dụ: Component.OnCustomChange thay vì Component.OnCustomChange())</value>
+    <value>Lỗi này xuất hiện khi một công thức đề cập đến các thuộc tính hàm thành phần bằng cú pháp không hợp lệ. (Ví dụ: Component.CustomFunction thay vì Component.CustomFunction())</value>
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
-    <value>Sử dụng đúng cú pháp để tham chiếu đến thuộc tính hành vi cấu phần. Ví dụ: Component.OnCustomChange()</value>
+    <value>Sử dụng đúng cú pháp để đề cập đến thuộc tính hàm thành phần. Ví dụ: Component.CustomFunction()</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_Link_1" xml:space="preserve">
@@ -4730,11 +4730,15 @@
     
   </data>
   <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
-    <value>Không thể dùng các đối tượng chưa nhập làm đối số đầu tiên cho các hàm hỗ trợ phạm vi bản ghi.</value>
+    <value>Không thể dùng các đối tượng chưa được phân loại làm đối số đầu tiên cho các hàm hỗ trợ phạm vi bản ghi.</value>
     
   </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>Công thức được đặt tên phải kết thúc bằng dấu chấm phẩy.</value>
+    
+  </data>
+  <data name="ErrNamedFormula_MissingValue" xml:space="preserve">
+    <value>Công thức được đặt tên phải là một biểu thức.</value>
     
   </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
@@ -4828,6 +4832,10 @@
   </data>
   <data name="ErrInvalidFunction" xml:space="preserve">
     <value>Hàm này không rõ ràng, chứa các biểu thức lambda và mã định danh cột cho cùng một đối số.</value>
+    
+  </data>
+  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
+    <value>Không hỗ trợ tùy chọn BooleanOptionSet {0}.</value>
     
   </data>
 </root>

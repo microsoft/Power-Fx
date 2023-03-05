@@ -33,10 +33,10 @@ namespace Microsoft.PowerFx
         /// This is critical for calling back to populate the rest of the results. 
         /// </summary>
         private readonly Engine _engine;
-       
+
         // The raw expression test. 
         private string _expression;
-        
+
         private ParserOptions _parserOptions;
 
         // Information for binding. 
@@ -84,7 +84,7 @@ namespace Microsoft.PowerFx
 
             if (parse == null)
             {
-                throw new ArgumentNullException(nameof(parse));    
+                throw new ArgumentNullException(nameof(parse));
             }
 
             if (_expression != null)
@@ -115,6 +115,7 @@ namespace Microsoft.PowerFx
 
             _expression = expression;
             _parserOptions = parserOptions ?? Engine.GetDefaultParserOptionsCopy();
+            this.ParserCultureInfo = _parserOptions.Culture;
 
             return this;
         }
@@ -154,10 +155,18 @@ namespace Microsoft.PowerFx
             return this.SetBindingInfo(symbolTable);
         }
 
+        private FormulaType _expectedReturnType;
+
+        public CheckResult SetExpectedReturnValue(FormulaType type)
+        {
+            _expectedReturnType = type;
+            return this;
+        }
+
         // No additional binding is required
         public CheckResult SetBindingInfo()
         {
-            return SetBindingInfo((RecordType)null);            
+            return SetBindingInfo((RecordType)null);
         }
         #endregion
 
@@ -239,16 +248,31 @@ namespace Microsoft.PowerFx
         /// </summary>
         public IEnumerable<ExpressionError> Errors
         {
-            get => _errors;
+            get => GetErrorsInLocale(null);
 
             [Obsolete("use constructor to set errors")]
             set => _errors.AddRange(value);
         }
 
         /// <summary>
+        /// Get errors localized with the given culture. 
+        /// </summary>
+        /// <param name="culture"></param>
+        /// <returns></returns>
+        public IEnumerable<ExpressionError> GetErrorsInLocale(CultureInfo culture)
+        {
+            culture ??= this.ParserCultureInfo;
+
+            foreach (var error in this._errors)
+            {
+                yield return error.GetInLocale(culture);
+            }
+        }
+
+        /// <summary>
         /// True if no errors for stages run so far. 
         /// </summary>
-        public bool IsSuccess => !_errors.Any(x => !x.IsWarning);              
+        public bool IsSuccess => !_errors.Any(x => !x.IsWarning);
 
         /// <summary>
         /// Helper to throw if <see cref="IsSuccess"/> is false.
@@ -264,23 +288,49 @@ namespace Microsoft.PowerFx
 
         internal bool HasDeferredArgsWarning => _errors.Any(x => x.IsWarning && x.MessageKey.Equals(TexlStrings.WarnDeferredType.Key));
 
+        private ReadOnlySymbolTable _allSymbols;
+
         /// <summary>
         /// Full set of Symbols passed to this binding. 
         /// Can include symbols from Config, Engine, and Parameters, 
         /// May be null. 
+        /// Set after binding. 
         /// </summary>
-        internal ReadOnlySymbolTable AllSymbols { get; private set; }
+        public ReadOnlySymbolTable Symbols
+        {
+            get
+            {
+                if (_binding == null)
+                {
+                    throw new InvalidOperationException($"Must call {nameof(ApplyBinding)} before accessing combined Sybmols.");
+                }
+
+                return this._allSymbols;
+            }
+        }
 
         /// <summary>
         /// Parameters are the subset of symbols that must be passed in Eval() for each evaluation. 
         /// This lets us associated the type in Check()  with the values in Eval().
         /// </summary>
-        internal ReadOnlySymbolTable Parameters => _symbols;
+        internal ReadOnlySymbolTable Parameters 
+        {
+            get
+            {
+                if (!this._setBindingCalled)
+                {
+                    throw new InvalidOperationException($"Must call {nameof(SetBindingInfo)} first.");
+                }
+
+                return _symbols;
+            }
+        }
 
         /// <summary>
-        /// Culture info passed to this binding. May be null. 
+        /// Culture info used for parsing. 
+        /// By default, this is also used for error messages. 
         /// </summary>
-        internal CultureInfo CultureInfo => this.Engine.Config.CultureInfo;
+        internal CultureInfo ParserCultureInfo { get; private set; }
 
         internal void ThrowIfSymbolsChanged()
         {
@@ -346,22 +396,42 @@ namespace Microsoft.PowerFx
                 (var binding, var combinedSymbols) = Engine.ComputeBinding(this);
 
                 this.ThrowIfSymbolsChanged();
-                
+
                 // Don't modify any fields until after we've verified the symbols haven't change.
 
                 this._binding = binding;
-                this.AllSymbols = combinedSymbols;
+                this._allSymbols = combinedSymbols;
 
                 // Add the errors
-                IEnumerable<ExpressionError> bindingErrors = ExpressionError.New(binding.ErrorContainer.GetErrors(), CultureInfo);
+                IEnumerable<ExpressionError> bindingErrors = ExpressionError.New(binding.ErrorContainer.GetErrors(), ParserCultureInfo);
                 _errors.AddRange(bindingErrors);
 
-                if (this.IsSuccess && !this.HasDeferredArgsWarning)
+                if (this.IsSuccess)
                 {
                     // TODO: Fix FormulaType.Build to not throw exceptions for Enum types then remove this check
                     if (binding.ResultType.Kind != DKind.Enum)
                     {
                         this.ReturnType = FormulaType.Build(binding.ResultType);
+                    }
+                }
+
+                if (this.ReturnType != null && this._expectedReturnType != null)
+                {
+                    var sameType = this._expectedReturnType == this.ReturnType;
+                    if (!sameType)
+                    {
+                        _errors.Add(new ExpressionError
+                        {
+                            Kind = ErrorKind.Validation,
+                            Severity = ErrorSeverity.Critical,
+                            Span = new Span(0, this._expression.Length),
+                            MessageKey = TexlStrings.ErrTypeError_WrongType.Key,
+                            _messageArgs = new object[]
+                            {
+                                this._expectedReturnType._type.GetKindString(),
+                                this.ReturnType._type.GetKindString()
+                            }
+                        });
                     }
                 }
             }
@@ -401,7 +471,7 @@ namespace Microsoft.PowerFx
 
                 _errors.AddRange(extraErrors);
             }
-            
+
             return this.Errors;
         }
 
@@ -418,7 +488,7 @@ namespace Microsoft.PowerFx
                 {
                     TopNode = irnode,
                     RuleScopeSymbol = ruleScopeSymbol
-                };                
+                };
             }
 
             return _irresult;
@@ -434,7 +504,7 @@ namespace Microsoft.PowerFx
         /// </summary>
         /// <param name="node"></param>
         /// <returns></returns>
-        public FormulaType GetNodeType(TexlNode node) 
+        public FormulaType GetNodeType(TexlNode node)
         {
             if (node == null)
             {
@@ -442,10 +512,49 @@ namespace Microsoft.PowerFx
             }
 
             var type = this.Binding.GetType(node);
-            return FormulaType.Build(type);            
+            return FormulaType.Build(type);
         }
 
         internal IReadOnlyDictionary<string, TokenResultType> GetTokens(GetTokensFlags flags) => GetTokensUtils.GetTokens(this.Binding, flags);
+
+        private string _expressionInvariant;
+
+        // form of expression with personal info removed,
+        // suitable for logging the structure of a formula.
+        private string _expressionAnonymous;
+
+        /// <summary>
+        /// Get the invariant form of the expression.  
+        /// </summary>
+        /// <returns></returns>
+        public string ApplyGetInvariant()
+        {
+            if (_expressionInvariant == null)
+            {
+                this.GetParseFormula(); // will verify 
+                var symbols = this.Parameters; // will throw
+
+                _expressionInvariant = _engine.GetInvariantExpressionWorker(this._expression, symbols, parseCulture: _parserOptions.Culture);
+            }
+
+            return _expressionInvariant;
+        }
+
+        /// <summary>
+        /// Get anonymous form of expression with all PII removed. Suitable for logging to 
+        /// capture the structure of the expression.
+        /// </summary>
+        public string ApplyGetLogging()
+        {
+            if (_expressionAnonymous == null)
+            {
+                var parse = ApplyParse();
+                
+                _expressionAnonymous = parse.GetAnonymizedFormula();
+            }
+
+            return _expressionAnonymous;
+        }
     }
 
     // Internal interface to ensure that Result objects have a common contract

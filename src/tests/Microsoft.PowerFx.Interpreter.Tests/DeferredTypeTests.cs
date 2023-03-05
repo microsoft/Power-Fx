@@ -62,21 +62,35 @@ namespace Microsoft.PowerFx.Interpreter
         [InlineData("Sum(X, 1, R) < 5", "b")] // All error are discarded for function calls, hence we don't get error for RecordType here.
         [InlineData("Sum(X, T) < 5", "b")] // Since we discard all errors for function calls, Function calls are biased to non tabular overload.
 
-        [InlineData("Sum(X, X)", "w")]
+        [InlineData("Sum(X, X)", "X")]
         [InlineData("X.Field1.Field1", "X")]
         [InlineData("If(true, X)", "X")]
         [InlineData("If(true, X, 1)", "w")]
         [InlineData("If(true, X, X)", "X")]
         [InlineData("ForAll([1,2,3], X)", "X")]
         [InlineData("ForAll(ParseJSON(\"[1]\"), X)", "X")]
-        [InlineData("Abs(Table(X))", "n")]
+        [InlineData("Abs(Table(X))", "X")]
+        [InlineData("Abs(X)", "X")]
+        [InlineData("Sum(Table(X),Float(1))", "n")]
+        [InlineData("Sum(X,Float(1))", "n")]
+        [InlineData("Sum(Table(X),Decimal(1))", "X")]
+        [InlineData("Sum(X,Decimal(1))", "X")]
+        [InlineData("Mod(Table(X),Decimal(1))", "X")]
+        [InlineData("Mod(X,Decimal(1))", "X")]
+        [InlineData("Mod(Table(X),Float(1))", "n")]
+        [InlineData("Mod(X,Float(1))", "n")]
+        [InlineData("Mod(Decimal(1),Table(X))", "X")]
+        [InlineData("Mod(Decimal(1),X)", "X")]
+        [InlineData("Mod(Float(1),Table(X))", "n")]
+        [InlineData("Mod(Float(1),X)", "n")]
         [InlineData("Power(2, Table(X))", "n")]
         [InlineData("Switch(X, 0, 0, 1, 1)", "w")]
         [InlineData("Switch(0, 0, X, 1, 1)", "w")]
         [InlineData("Switch(0, 0, X, 1, X)", "X")]
         [InlineData("Switch(0, 0, X, 1, \"test\")", "s")]
         [InlineData("Set(N, X); N", "n")]
-        [InlineData("Set(N, X); Set(N, 5); N", "n")]
+        [InlineData("Set(N, X); Set(N, Float(5)); N", "n")]
+        [InlineData("Set(N, X); Set(N, Decimal(5)); N", "n")]
         [InlineData("Set(XM, X); XM", "X")]
 
         // Ensures expression binds without any errors - but issues a warning for the deferred(unknown) type.
@@ -148,9 +162,7 @@ namespace Microsoft.PowerFx.Interpreter
             
             Assert.True(result.IsSuccess);
 
-            var returnType = FormulaType.Build(result.Binding.ResultType);
-
-            Assert.Equal(expected, result.Binding.ResultType);
+            Assert.Equal(expected, result.ReturnType._type);
 
             Assert.True(result.Errors.Count() > 0);
 

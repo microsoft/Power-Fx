@@ -52,10 +52,92 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
+        public static FormulaValue First_UO(IRContext irContext, UntypedObjectValue[] args)
+        {
+            var arg0 = (UntypedObjectValue)args[0];
+            var element = arg0.Impl;
+            var len = element.GetArrayLength();
+
+            if (len == 0)
+            {
+                return new BlankValue(irContext);
+            }
+
+            var result = element[0];
+
+            return new UntypedObjectValue(irContext, result);
+        }
+
+        public static FormulaValue Last_UO(IRContext irContext, UntypedObjectValue[] args)
+        {
+            var arg0 = (UntypedObjectValue)args[0];
+            var element = arg0.Impl;
+            var len = element.GetArrayLength();
+
+            if (len == 0)
+            {
+                return new BlankValue(irContext);
+            }
+
+            var result = element[len - 1];
+
+            // Map null to blank
+            if (result == null || result.Type == FormulaType.Blank)
+            {
+                return new BlankValue(IRContext.NotInSource(FormulaType.Blank));
+            }
+
+            return new UntypedObjectValue(irContext, result);
+        }
+
+        public static FormulaValue FirstN_UO(IRContext irContext, FormulaValue[] args)
+        {
+            var arg0 = (UntypedObjectValue)args[0];
+            var arg1 = (NumberValue)args[1];
+
+            var element = arg0.Impl;
+            var len = element.GetArrayLength();
+
+            var list = new List<IUntypedObject>();
+            for (int i = 0; i < (int)arg1.Value && i < len; i++)
+            {
+                list.Add(element[i]);
+            }
+
+            var result = new ArrayUntypedObject(list);
+
+            return new UntypedObjectValue(irContext, result);
+        }
+
+        public static FormulaValue LastN_UO(IRContext irContext, FormulaValue[] args)
+        {
+            var arg0 = (UntypedObjectValue)args[0];
+            var arg1 = (NumberValue)args[1];
+
+            var element = arg0.Impl;
+            var len = element.GetArrayLength();
+
+            var list = new List<IUntypedObject>();
+            var takeCount = (int)arg1.Value;
+            for (int i = 0; i < takeCount; i++)
+            {
+                var takeIndex = len - takeCount + i;
+                if (takeIndex >= 0)
+                {
+                    list.Add(element[takeIndex]);
+                }
+            }
+
+            var result = new ArrayUntypedObject(list);
+
+            return new UntypedObjectValue(irContext, result);
+        }
+
         public static FormulaValue Value_UO(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             var uo = args[0] as UntypedObjectValue;
             var impl = uo.Impl;
+            bool numberIsFloat = irContext.ResultType == FormulaType.Number;
 
             if (impl.Type == FormulaType.String)
             {
@@ -67,6 +149,84 @@ namespace Microsoft.PowerFx.Functions
 
                 return Value(runner, context, irContext, new FormulaValue[] { str });
             }
+            else if (impl.Type == FormulaType.Number && numberIsFloat)
+            {
+                var number = impl.GetDouble();
+                if (IsInvalidDouble(number))
+                {
+                    return CommonErrors.ArgumentOutOfRange(irContext);
+                }
+
+                return new NumberValue(irContext, number);
+            }
+            else if (impl.Type == FormulaType.Number && !numberIsFloat)
+            {
+                // Decimal TODO: Badly formed decimal, error return?
+                var dec = impl.GetDecimal();
+                return new DecimalValue(irContext, dec);
+            }
+            else if (impl.Type == FormulaType.Boolean && numberIsFloat)
+            {
+                var b = new BooleanValue(IRContext.NotInSource(FormulaType.Boolean), impl.GetBoolean());
+
+                return BooleanToNumber(irContext, new BooleanValue[] { b });
+            }
+            else if (impl.Type == FormulaType.Boolean && !numberIsFloat)
+            {
+                var b = new BooleanValue(IRContext.NotInSource(FormulaType.Boolean), impl.GetBoolean());
+
+                return BooleanToDecimal(irContext, new BooleanValue[] { b });
+            }
+
+            return GetTypeMismatchError(irContext, BuiltinFunctionsCore.Value_UO.Name, DType.Number.GetKindString(), impl);
+        }
+
+        public static FormulaValue Decimal_UO(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        {
+            var uo = args[0] as UntypedObjectValue;
+            var impl = uo.Impl;
+
+            if (impl.Type == FormulaType.String)
+            {
+                var str = new StringValue(IRContext.NotInSource(FormulaType.String), impl.GetString());
+                if (args.Length > 1)
+                {
+                    return Decimal(runner, context, irContext, new FormulaValue[] { str, args[1] });
+                }
+
+                return Decimal(runner, context, irContext, new FormulaValue[] { str });
+            }
+            else if (impl.Type == FormulaType.Number)
+            {
+                // Decimal TODO: Badly formed decimal, error return?
+                var dec = impl.GetDecimal();
+                return new DecimalValue(irContext, dec);
+            }
+            else if (impl.Type == FormulaType.Boolean)
+            {
+                var b = new BooleanValue(IRContext.NotInSource(FormulaType.Boolean), impl.GetBoolean());
+
+                return BooleanToDecimal(irContext, new BooleanValue[] { b });
+            }
+
+            return GetTypeMismatchError(irContext, BuiltinFunctionsCore.Decimal_UO.Name, DType.Number.GetKindString(), impl);
+        }
+
+        public static FormulaValue Float_UO(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        {
+            var uo = args[0] as UntypedObjectValue;
+            var impl = uo.Impl;
+
+            if (impl.Type == FormulaType.String)
+            {
+                var str = new StringValue(IRContext.NotInSource(FormulaType.String), impl.GetString());
+                if (args.Length > 1)
+                {
+                    return Float(runner, context, irContext, new FormulaValue[] { str, args[1] });
+                }
+
+                return Float(runner, context, irContext, new FormulaValue[] { str });
+            }
             else if (impl.Type == FormulaType.Number)
             {
                 var number = impl.GetDouble();
@@ -77,15 +237,10 @@ namespace Microsoft.PowerFx.Functions
 
                 return new NumberValue(irContext, number);
             }
-            else if (impl.Type == FormulaType.Decimal)
-            {
-                // Decimal TODO: Badly formed decimal, error return?
-                var dec = impl.GetDecimal();
-                return new DecimalValue(irContext, dec);
-            }
             else if (impl.Type == FormulaType.Boolean)
             {
                 var b = new BooleanValue(IRContext.NotInSource(FormulaType.Boolean), impl.GetBoolean());
+
                 return BooleanToNumber(irContext, new BooleanValue[] { b });
             }
 
@@ -203,9 +358,12 @@ namespace Microsoft.PowerFx.Functions
             {
                 var s = impl.GetString();
 
-                if (IsValidDateTimeUO(s) && DateTime.TryParse(s, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime datetime))
+                if (IsValidDateTimeUO(s) && DateTime.TryParse(s, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out DateTime datetime))
                 {
-                    datetime = MakeValidDateTime(runner, datetime, runner.GetService<TimeZoneInfo>() ?? TimeZoneInfo.Local);
+                    var timeZoneInfo = runner.TimeZoneInfo;
+                    datetime = MakeValidDateTime(runner, datetime, timeZoneInfo);
+
+                    datetime = DateTimeValue.GetConvertedDateTimeValue(datetime, timeZoneInfo);
 
                     return new DateValue(irContext, datetime.Date);
                 }
@@ -244,9 +402,11 @@ namespace Microsoft.PowerFx.Functions
             {
                 var s = impl.GetString();
 
-                if (IsValidDateTimeUO(s) && DateTime.TryParse(s, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime datetime))
+                if (IsValidDateTimeUO(s) && DateTime.TryParse(s, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out DateTime datetime))
                 {
-                    datetime = MakeValidDateTime(runner, datetime, runner.GetService<TimeZoneInfo>() ?? TimeZoneInfo.Local);
+                    datetime = MakeValidDateTime(runner, datetime, runner.TimeZoneInfo);
+                    
+                    datetime = DateTimeValue.GetConvertedDateTimeValue(datetime, runner.TimeZoneInfo);
 
                     return new DateTimeValue(irContext, datetime);
                 }
@@ -301,7 +461,12 @@ namespace Microsoft.PowerFx.Functions
 
             var rowsAsync = LazyForAll(runner, context, items, arg1);
 
-            var rows = await Task.WhenAll(rowsAsync);
+            var rows = new List<FormulaValue>();
+
+            foreach (var row in rowsAsync)
+            {
+                rows.Add(await row);
+            }
 
             var errorRows = rows.OfType<ErrorValue>();
             if (errorRows.Any())
@@ -309,7 +474,7 @@ namespace Microsoft.PowerFx.Functions
                 return ErrorValue.Combine(irContext, errorRows);
             }
 
-            return new InMemoryTableValue(irContext, StandardTableNodeRecords(irContext, rows, forceSingleColumn: false));
+            return new InMemoryTableValue(irContext, StandardTableNodeRecords(irContext, rows.ToArray(), forceSingleColumn: false));
         }
 
         public static FormulaValue ColorValue_UO(IRContext irContext, UntypedObjectValue[] args)

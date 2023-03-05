@@ -38,14 +38,6 @@ namespace Microsoft.PowerFx
         /// </summary>
         public int MaxExpressionLength { get; set; }
 
-        public ParserOptions(Features features) 
-        {
-        }
-
-        internal ParserOptions()
-        {
-        }
-
         internal ParseResult Parse(string script)
         {
             // Decimal TODO: Who uses this entry point without features?

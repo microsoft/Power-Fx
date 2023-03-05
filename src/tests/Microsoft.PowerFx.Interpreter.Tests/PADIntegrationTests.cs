@@ -67,11 +67,11 @@ namespace Microsoft.PowerFx.Tests
             var result1 = engine.Eval("Value(Index(robintable, 1).Column1)"); // 101
             var result2 = engine.Eval("Text(Index(robintable, 2).Column2)"); // "str202"
 
-            Assert.Equal(101.0, result1.ToObject());
+            Assert.Equal(101m, result1.ToObject());
             Assert.Equal("str202", result2.ToObject());
 
             var result3 = engine.Eval("Sum(robintable, Value(ThisRecord.Column1))");
-            Assert.Equal(101.0 + 201 + 301, result3.ToObject());
+            Assert.Equal(101m + 201 + 301, result3.ToObject());
         }
 
         // Create table with strong typing
@@ -132,7 +132,7 @@ First(
 
             Assert.Equal(3, table.Rows.Count);
 
-            var result5 = engine.Eval("Remove(robintable, {Names:\"name2\"});robintable", options: opt);            
+            var result5 = engine.Eval("Remove(robintable, {Names:\"name2\"});robintable", options: opt);
             Assert.Equal("Table({Names:\"name1\",Scores:10},{Names:\"name3\",Scores:30})", ((DataTableValue)result5).Dump());
 
             // Is table object affected?
@@ -186,7 +186,7 @@ First(
             var result1 = engine.Eval("Value(Index(robinList, 1).Value)");
             var result2 = engine.Eval("Text(Index(robinList, 2).Value)");
 
-            Assert.Equal(1.0, result1.ToObject());
+            Assert.Equal(1m, result1.ToObject());
             Assert.Equal("string", result2.ToObject());
         }
     }

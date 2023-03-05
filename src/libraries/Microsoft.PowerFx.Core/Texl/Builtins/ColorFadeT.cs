@@ -24,14 +24,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool IsSelfContained => true;
 
-        public override bool SupportsParamCoercion => true;
-
         public ColorFadeTFunction()
             : base("ColorFade", TexlStrings.AboutColorFadeT, FunctionCategories.Table, DType.EmptyTable, 0, 2, 2)
         {
         }
-
-        public override bool IsTrackedInTelemetry => false;
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {

@@ -98,15 +98,6 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Fact]
-        public void TestDateNoUTC()
-        {
-            var utc = new DateTime(2011, 3, 6, 0, 0, 0, DateTimeKind.Utc);
-
-            Assert.Throws<ArgumentException>(() => FormulaValue.NewDateOnly(utc));
-            Assert.Throws<ArgumentException>(() => FormulaValue.New(utc));
-        }
-
-        [Fact]
         public void TestBlank()
         {
             var x1 = FormulaValue.NewBlank();

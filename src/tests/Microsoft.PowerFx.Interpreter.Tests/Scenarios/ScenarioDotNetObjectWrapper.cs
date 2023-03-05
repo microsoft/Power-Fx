@@ -36,7 +36,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
         [Theory]
-        [InlineData("Value(obj.Next.Value)", 20.0)]
+        [InlineData("Float(obj.Next.Value)", 20.0)]
+        [InlineData("Float(Value(obj.Next.Value))", 20.0)]
         [InlineData("Text(obj.Value)", "10")]
         [InlineData("obj.missing", null)] // missing fields are blank
         [InlineData("IsBlank(obj.Next.Next)", true)]

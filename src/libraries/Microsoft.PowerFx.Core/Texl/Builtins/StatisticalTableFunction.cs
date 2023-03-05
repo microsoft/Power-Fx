@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
 using System.Collections.Generic;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
@@ -21,8 +20,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // a table as the first argument, and a value function as the second argument.
     internal abstract class StatisticalTableFunction : FunctionWithTableInput
     {
-        public override bool SupportsParamCoercion => true;
-
         public override bool IsSelfContained => true;
 
         public bool SupportsDecimal;

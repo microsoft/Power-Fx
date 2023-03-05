@@ -48,6 +48,7 @@ namespace Microsoft.PowerFx.Core.IR
             switch (toType.Kind)
             {
                 case DKind.Number:
+                case DKind.Currency:
                     return GetToNumberCoercion(fromType);
 
                 case DKind.Decimal:
@@ -441,6 +442,8 @@ namespace Microsoft.PowerFx.Core.IR
                     return CoercionKind.UntypedToBoolean;
                 case DKind.Number:
                     return CoercionKind.UntypedToNumber;
+                case DKind.Decimal:
+                    return CoercionKind.UntypedToDecimal;
                 case DKind.Date:
                     return CoercionKind.UntypedToDate;
                 case DKind.Time:

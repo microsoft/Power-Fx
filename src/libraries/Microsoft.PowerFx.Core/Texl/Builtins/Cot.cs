@@ -21,7 +21,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
     // Cot(E:*[n])
     // Table overload that computes the cotangent of each item in the input table.
-    internal sealed class CotTableFunction : MathOneArgTableFunction
+    internal sealed class CotTableFunction : MathTableFunction
     {
         public CotTableFunction()
             : base("Cot", TexlStrings.AboutCotT, FunctionCategories.Table)

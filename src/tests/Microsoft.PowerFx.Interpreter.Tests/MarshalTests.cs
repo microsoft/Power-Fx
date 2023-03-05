@@ -360,7 +360,7 @@ namespace Microsoft.PowerFx.Tests
         // There's no type unification here.
         [Theory]
         [InlineData("{ f1 : x }.f1")]
-        [InlineData("If(false, { field1 : 12 }, x)")]
+        [InlineData("If(false, { field1 : Float(12) }, x)")]
         [InlineData("Last(Table(y,x))")]
         public void PassThroughRecordValue(string expr)
         {

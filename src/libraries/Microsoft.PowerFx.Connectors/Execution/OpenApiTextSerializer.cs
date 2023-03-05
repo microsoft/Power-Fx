@@ -56,6 +56,11 @@ namespace Microsoft.PowerFx.Connectors.Execution
             _writer.Append(numberValue.ToString());
         }
 
+        protected override void WriteDecimalValue(decimal decimalValue)
+        {
+            _writer.Append(decimalValue.ToString());
+        }
+
         protected override void WritePropertyName(string name)
         {            
         }

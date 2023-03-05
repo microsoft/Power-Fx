@@ -25,9 +25,9 @@ namespace Microsoft.PowerFx.Core.IR
                 BinaryOp.Concat => BinaryOpKind.Concatenate,
                 BinaryOp.And => BinaryOpKind.And,
                 BinaryOp.Or => BinaryOpKind.Or,
-                BinaryOp.Add => GetAddOp(node, leftType, rightType),
-                BinaryOp.Mul => GetMulOp(node, leftType, rightType),
-                BinaryOp.Div => GetDivOp(node, leftType, rightType),
+                BinaryOp.Add => GetAddOp(node, leftType, rightType, binding.BindingConfig.NumberIsFloat),
+                BinaryOp.Mul => GetMulOp(node, leftType, rightType, binding.BindingConfig.NumberIsFloat),
+                BinaryOp.Div => GetDivOp(node, leftType, rightType, binding.BindingConfig.NumberIsFloat),
                 BinaryOp.Equal or
                 BinaryOp.NotEqual or
                 BinaryOp.Less or
@@ -57,6 +57,42 @@ namespace Microsoft.PowerFx.Core.IR
                 else
                 {
                     return BinaryOpKind.Invalid;
+                }
+            }
+
+            if (leftType.IsUntypedObject && rightType.Kind == DKind.ObjNull)
+            {
+                if (binding.TryGetCoercedType(node.Left, out var leftCoerced))
+                {
+                    kindToUse = leftCoerced.Kind;
+                }
+                else
+                {
+                    switch (node.Op)
+                    {
+                        case BinaryOp.NotEqual:
+                            return BinaryOpKind.NeqNullUntyped;
+                        case BinaryOp.Equal:
+                            return BinaryOpKind.EqNullUntyped;
+                    }
+                }
+            }
+
+            if (rightType.IsUntypedObject && leftType.Kind == DKind.ObjNull)
+            {
+                if (binding.TryGetCoercedType(node.Right, out var rightCoerced))
+                {
+                    kindToUse = rightCoerced.Kind;
+                }
+                else
+                {
+                    switch (node.Op)
+                    {
+                        case BinaryOp.NotEqual:
+                            return BinaryOpKind.NeqNullUntyped;
+                        case BinaryOp.Equal:
+                            return BinaryOpKind.EqNullUntyped;
+                    }
                 }
             }
 
@@ -190,6 +226,17 @@ namespace Microsoft.PowerFx.Core.IR
                             throw new NotSupportedException();
                     }
 
+                case DKind.Currency:
+                    switch (node.Op)
+                    {
+                        case BinaryOp.NotEqual:
+                            return BinaryOpKind.NeqCurrency;
+                        case BinaryOp.Equal:
+                            return BinaryOpKind.EqCurrency;
+                        default:
+                            throw new NotSupportedException();
+                    }
+
                 case DKind.Image:
                     switch (node.Op)
                     {
@@ -294,9 +341,9 @@ namespace Microsoft.PowerFx.Core.IR
             }
         }
 
-        private static BinaryOpKind GetMulOp(PowerFx.Syntax.BinaryOpNode node, DType leftType, DType rightType)
+        private static BinaryOpKind GetMulOp(PowerFx.Syntax.BinaryOpNode node, DType leftType, DType rightType, bool numberIsFloat)
         {
-            if (leftType.Kind == DKind.Decimal && rightType.Kind == DKind.Decimal)
+            if (DType.DecimalBinaryOp(leftType, rightType, numberIsFloat))
             {
                 return BinaryOpKind.MulDecimals;
             }
@@ -306,9 +353,9 @@ namespace Microsoft.PowerFx.Core.IR
             }
         }
 
-        private static BinaryOpKind GetDivOp(PowerFx.Syntax.BinaryOpNode node, DType leftType, DType rightType)
+        private static BinaryOpKind GetDivOp(PowerFx.Syntax.BinaryOpNode node, DType leftType, DType rightType, bool numberIsFloat)
         {
-            if (leftType.Kind == DKind.Decimal && rightType.Kind == DKind.Decimal)
+            if (DType.DecimalBinaryOp(leftType, rightType, numberIsFloat))
             {
                 return BinaryOpKind.DivDecimals;
             }
@@ -318,7 +365,7 @@ namespace Microsoft.PowerFx.Core.IR
             }
         }
 
-        private static BinaryOpKind GetAddOp(PowerFx.Syntax.BinaryOpNode node, DType leftType, DType rightType)
+        private static BinaryOpKind GetAddOp(PowerFx.Syntax.BinaryOpNode node, DType leftType, DType rightType, bool numberIsFloat)
         {
             switch (leftType.Kind)
             {
@@ -389,9 +436,10 @@ namespace Microsoft.PowerFx.Core.IR
                         return BinaryOpKind.AddDateTimeAndDay;
                     }
 
-                case DKind.Number:
+                default:
                     switch (rightType.Kind)
                     {
+                        // Operations with Date/DateTime/Time and Decimal promote the Decimal to float
                         case DKind.Date:
                             if (node.Right.AsUnaryOpLit()?.Op == UnaryOp.Minus)
                             {
@@ -429,29 +477,18 @@ namespace Microsoft.PowerFx.Core.IR
                             }
 
                         default:
-                            // Number + Number
-                            return BinaryOpKind.AddNumbers;
+                            // Only operations where both operands are Decimal-compatible result in Decimal
+                            if (DType.DecimalBinaryOp(leftType, rightType, numberIsFloat))
+                            {
+                                // Decimal + Decimal
+                                return BinaryOpKind.AddDecimals;
+                            }
+                            else
+                            {
+                                // Number + Number
+                                return BinaryOpKind.AddNumbers;
+                            }
                     }
-
-                case DKind.Decimal:
-                    switch (rightType.Kind)
-                    {
-                        // all other types result in a coercion to Number first
-
-                        case DKind.Number:
-                            // Decimal + Number
-                            return BinaryOpKind.AddNumbers;
-
-                        case DKind.Decimal:
-                            // Decimal + Decimal
-                            return BinaryOpKind.AddDecimals;
-
-                        default:
-                            throw new NotSupportedException();
-                    }
-
-                default:
-                    throw new NotSupportedException();
             }
         }
 

@@ -4,11 +4,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection.Metadata;
+using System.Runtime.InteropServices.ComTypes;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
+using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
@@ -16,19 +16,39 @@ using Microsoft.PowerFx.Syntax;
 
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
-    // Abstract base class for all 1-arg math functions that return numeric values.
+    // Abstract base class for all math functions that return numeric values.
     internal abstract class MathFunction : BuiltinFunction
     {
-        public override bool SupportsParamCoercion => true;
+        public override ArgPreprocessor GetArgPreprocessor(int index)
+        {
+                return _replaceBlankWithZero ? base.GetGenericArgPreprocessor(index) : ArgPreprocessor.None;
+        }
 
         public override bool IsSelfContained => true;
 
         private readonly bool _nativeDecimal;
 
-        public MathFunction(string name, TexlStrings.StringGetter description, FunctionCategories fc, int arityMax = 1, bool nativeDecimal = false)
-            : base(name, description, fc, DType.Unknown, 0, 1, arityMax, nativeDecimal ? DType.Unknown : DType.Number)
+        private readonly bool _replaceBlankWithZero;
+
+        public MathFunction(string name, TexlStrings.StringGetter description, FunctionCategories fc, bool nativeDecimal = false, bool replaceBlankWithZero = true)
+            : base(name, description, fc, DType.Unknown, 0, 1, 1, nativeDecimal ? DType.Unknown : DType.Number)
         {
             _nativeDecimal = nativeDecimal;
+            _replaceBlankWithZero = replaceBlankWithZero;
+        }
+
+        public MathFunction(string name, TexlStrings.StringGetter description, FunctionCategories fc, bool twoArg, bool nativeDecimal = false, bool replaceBlankWithZero = true)
+            : base(name, description, fc, DType.Unknown, 0, 1, 2, nativeDecimal ? DType.Unknown : DType.Number, nativeDecimal ? DType.Unknown : DType.Number)
+        {
+            _nativeDecimal = nativeDecimal;
+            _replaceBlankWithZero = replaceBlankWithZero;
+        }
+
+        public MathFunction(string name, TexlStrings.StringGetter description, FunctionCategories fc, int maxArity, bool nativeDecimal = false, bool replaceBlankWithZero = true)
+            : base(name, description, fc, DType.Unknown, 0, 1, maxArity, nativeDecimal ? DType.Unknown : DType.Number)
+        {
+            _nativeDecimal = nativeDecimal;
+            _replaceBlankWithZero = replaceBlankWithZero;
         }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
@@ -49,7 +69,35 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             nodeToCoercedTypeMap = null;
 
-            returnType = Array.FindIndex(argTypes, item => NumDecReturnType(context, _nativeDecimal, item) == DType.Number) == -1 ? DType.Decimal : DType.Number;
+            bool isDeferred = false;
+
+            if (_nativeDecimal)
+            {
+                returnType = DType.Decimal;
+
+                for (int i = 0; i < argTypes.Length; i++)
+                {
+                    var argReturn = NumDecReturnType(context, _nativeDecimal, argTypes[i]);
+                    if (argReturn == DType.Number)
+                    {
+                        returnType = DType.Number;
+                    }
+                    else if (argReturn == DType.Deferred)
+                    {
+                        isDeferred = true;
+                    }
+                }
+
+                if (isDeferred && returnType == DType.Decimal)
+                {
+                    returnType = DType.Deferred;
+                    return true;
+                }
+            }
+            else
+            {
+                returnType = DType.Number;
+            }
 
             for (int i = 0; i < argTypes.Length; i++)
             {
@@ -81,15 +129,19 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         }
     }
 
-    internal abstract class MathOneArgTableFunction : BuiltinFunction
+    internal abstract class MathTableFunction : BuiltinFunction
     {
-        public override bool SupportsParamCoercion => true;
-
         public override bool IsSelfContained => true;
 
         private readonly bool _nativeDecimal;
 
-        public MathOneArgTableFunction(string name, TexlStrings.StringGetter description, FunctionCategories fc, bool nativeDecimal = false)
+        public MathTableFunction(string name, TexlStrings.StringGetter description, FunctionCategories fc, bool twoArg, bool nativeDecimal = false)
+            : base(name, description, fc, DType.EmptyTable, 0, 2, 2)
+        {
+            _nativeDecimal = nativeDecimal;
+        }
+
+        public MathTableFunction(string name, TexlStrings.StringGetter description, FunctionCategories fc, bool nativeDecimal = false)
             : base(name, description, fc, DType.EmptyTable, 0, 1, 1, DType.EmptyTable)
         {
             _nativeDecimal = nativeDecimal;
@@ -111,36 +163,95 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertAllValues(args);
             Contracts.AssertValue(argTypes);
             Contracts.Assert(args.Length == argTypes.Length);
-            Contracts.Assert(args.Length == 1);
+            Contracts.Assert(args.Length == MaxArity);
             Contracts.AssertValue(errors);
 
-            var arg = args[0];
-            var argType = argTypes[0];
             var fValid = true;
 
-            //           var fValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
-            //           Contracts.Assert(returnType.IsTable);
+            int tables = 0;
 
-            nodeToCoercedTypeMap = new Dictionary<TexlNode, DType>();
+            bool isDeferred = false;
 
-            var scalarType = NumDecReturnType(context, _nativeDecimal, argType);
+            DType scalarType;
 
-            fValid &= CheckNumDecColumnType(scalarType, argType, arg, errors, ref nodeToCoercedTypeMap);
+            nodeToCoercedTypeMap = null;
 
-            if (nodeToCoercedTypeMap?.Any() ?? false)
+            if (_nativeDecimal)
             {
-                // Now set the coerced type to a table with numeric column type with the same name as in the argument.
-                returnType = nodeToCoercedTypeMap[arg];
+                scalarType = DType.Decimal;
+
+                for (int i = 0; i < argTypes.Length; i++)
+                {
+                    var argReturn = NumDecReturnType(context, _nativeDecimal, argTypes[i]);
+                    if (argReturn == DType.Number)
+                    {
+                        scalarType = DType.Number;
+                    }
+                    else if (argReturn == DType.Deferred)
+                    {
+                        isDeferred = true;
+                    }
+                }
+
+                if (isDeferred && scalarType == DType.Decimal)
+                {
+                    returnType = DType.Deferred;
+                    return true;
+                }
             }
             else
             {
-                returnType = argType;
+                scalarType = DType.Number;
             }
 
-            returnType = context.Features.HasFlag(Features.ConsistentOneColumnTableResult) ? DType.CreateTable(new TypedName(scalarType, GetOneColumnTableResultName(context.Features))) : returnType;
+            for (int i = 0; i < argTypes.Length; i++)
+            {   
+                if (argTypes[i].IsTable)
+                {
+                    // Ensure we have a one-column table of numbers.
+                    fValid &= CheckNumDecColumnType(scalarType, argTypes[i], args[i], errors, ref nodeToCoercedTypeMap);
+                    tables++;
+                }
+                else if (CheckType(args[i], argTypes[i], scalarType, DefaultErrorContainer, out var matchedWithCoercion))
+                {
+                    if (matchedWithCoercion)
+                    {
+                        CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i], scalarType);
+                    }
+                }
+                else
+                {
+                    fValid = false;
+                    errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrNumberExpected);
+                }
+            }
 
-            if (!fValid)
+            // At least one arg has to be a table.
+            if (tables == 0)
             {
+                fValid = false;
+            }
+
+            if (fValid)
+            {
+                returnType = DType.CreateTable(new TypedName(scalarType, GetOneColumnTableResultName(context.Features)));
+
+                if (!context.Features.HasFlag(Features.ConsistentOneColumnTableResult) && args.Length == 1)
+                {
+                    if (nodeToCoercedTypeMap?.Any() ?? false)
+                    {
+                        // Now set the coerced type to a table with numeric column type with the same name as in the argument.
+                        returnType = nodeToCoercedTypeMap[args[0]];
+                    }
+                    else
+                    {
+                        returnType = argTypes[0];
+                    }
+                }
+            }
+            else
+            {
+                returnType = null;
                 nodeToCoercedTypeMap = null;
             }
 

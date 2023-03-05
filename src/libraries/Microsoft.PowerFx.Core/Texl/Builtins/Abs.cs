@@ -18,7 +18,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
     // Abs(E:*[n|w])
     // Table overload that computes the absolute values of each item in the input table.
-    internal sealed class AbsTableFunction : MathOneArgTableFunction
+    internal sealed class AbsTableFunction : MathTableFunction
     {
         public AbsTableFunction()
             : base("Abs", TexlStrings.AboutAbsT, FunctionCategories.Table, nativeDecimal: true)

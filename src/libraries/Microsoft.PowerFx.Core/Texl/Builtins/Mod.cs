@@ -16,12 +16,15 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Mod(number:n, divisor:n)
     internal sealed class ModFunction : MathFunction
     {
-        public override bool SupportsParamCoercion => true;
+        public override ArgPreprocessor GetArgPreprocessor(int index)
+        {
+            return base.GetGenericArgPreprocessor(index);
+        }
 
         public override bool IsSelfContained => true;
 
         public ModFunction()
-            : base("Mod", TexlStrings.AboutMod, FunctionCategories.MathAndStat, 2)
+            : base("Mod", TexlStrings.AboutMod, FunctionCategories.MathAndStat, twoArg: true, nativeDecimal: true)
         {
         }
 
@@ -33,14 +36,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
     // Mod(number:n|*[n], divisor:n|*[n])
     // Decimal TODO: Should derive from MathTableFunction, needs interpreter implementation
-    internal sealed class ModTFunction : BuiltinFunction
+    internal sealed class ModTFunction : MathTableFunction
     {
-        public override bool SupportsParamCoercion => true;
-
         public override bool IsSelfContained => true;
 
         public ModTFunction()
-            : base("Mod", TexlStrings.AboutModT, FunctionCategories.Table, DType.EmptyTable, 0, 2, 2)
+            : base("Mod", TexlStrings.AboutModT, FunctionCategories.Table, twoArg: true, nativeDecimal: true)
         {
         }
 
@@ -54,6 +55,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return GetUniqueTexlRuntimeName(suffix: "_T");
         }
 
+#if false
         public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
@@ -124,5 +126,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             return fValid;
         }
+#endif
     }
 }

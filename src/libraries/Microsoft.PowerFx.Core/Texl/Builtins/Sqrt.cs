@@ -18,7 +18,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
     // Sqrt(E:*[n])
     // Table overload that computes the square root values of each item in the input table.
-    internal sealed class SqrtTableFunction : MathOneArgTableFunction
+    internal sealed class SqrtTableFunction : MathTableFunction
     {
         public SqrtTableFunction()
             : base("Sqrt", TexlStrings.AboutSqrtT, FunctionCategories.Table)

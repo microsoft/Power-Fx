@@ -48,6 +48,12 @@ namespace Microsoft.PowerFx.Connectors.Execution
             _writer.WriteNumberValue(numberValue);
         }
 
+        protected override void WriteDecimalValue(decimal decimalValue)
+        {
+            // TODO Decimal: OK?
+            _writer.WriteStringValue(decimalValue.ToString());
+        }
+
         protected override void WriteBooleanValue(bool booleanValue)
         {
             _writer.WriteBooleanValue(booleanValue);
@@ -130,8 +136,8 @@ namespace Microsoft.PowerFx.Connectors.Execution
             {
                 if (disposing)
                 {
+                    _writer?.Dispose();
                     _stream?.Dispose();
-                    _writer?.Dispose();                    
                 }
 
                 _wasDisposed = true;

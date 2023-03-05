@@ -18,7 +18,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
     // Tan(E:*[n])
     // Table overload that computes the tangent of each item in the input table.
-    internal sealed class TanTableFunction : MathOneArgTableFunction
+    internal sealed class TanTableFunction : MathTableFunction
     {
         public TanTableFunction()
             : base("Tan", TexlStrings.AboutTanT, FunctionCategories.Table)

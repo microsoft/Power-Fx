@@ -31,6 +31,8 @@ namespace Microsoft.PowerFx.Connector.Tests
               "Microsoft.PowerFx.Connectors.NonCachingClient",
               "Microsoft.PowerFx.Connectors.CachingHttpClient",
               "Microsoft.PowerFx.Connectors.OpenApiExtensions",
+              "Microsoft.PowerFx.Connectors.OpenApiHelperFunctions",
+              "Microsoft.PowerFx.Connectors.OpenApiParser",
               "Microsoft.PowerFx.Connectors.ODataQueryableTableValue",
               "Microsoft.PowerFx.Connectors.ODataParameters",
               "Microsoft.PowerFx.Connectors.ConnectorParameter",

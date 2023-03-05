@@ -18,7 +18,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
     // Int(E:*[n])
     // Table overload that applies Int to each item in the input table.
-    internal sealed class IntTableFunction : MathOneArgTableFunction
+    internal sealed class IntTableFunction : MathTableFunction
     {
         public IntTableFunction()
             : base("Int", TexlStrings.AboutIntT, FunctionCategories.Table, nativeDecimal: true)

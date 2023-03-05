@@ -4,6 +4,7 @@
 using System;
 using System.Linq;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Functions
@@ -146,6 +147,15 @@ namespace Microsoft.PowerFx.Functions
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
             targetFunction: AreEqual);
 
+        public static readonly AsyncFunctionPtr OperatorBinaryEqNullUntyped = StandardErrorHandling<FormulaValue>(
+            "=",
+            expandArguments: NoArgExpansion,
+            replaceBlankValues: DoNotReplaceBlank,
+            checkRuntimeTypes: DeferRuntimeTypeChecking,
+            checkRuntimeValues: DeferRuntimeValueChecking,
+            returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+            targetFunction: AreEqualNullUntyped);
+
         public static readonly AsyncFunctionPtr OperatorBinaryNeq = StandardErrorHandling<FormulaValue>(
             "<>",
             expandArguments: NoArgExpansion,
@@ -155,10 +165,19 @@ namespace Microsoft.PowerFx.Functions
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
             targetFunction: NotEqual);
 
+        public static readonly AsyncFunctionPtr OperatorBinaryNeqNullUntyped = StandardErrorHandling<FormulaValue>(
+            "<>",
+            expandArguments: NoArgExpansion,
+            replaceBlankValues: DoNotReplaceBlank,
+            checkRuntimeTypes: DeferRuntimeTypeChecking,
+            checkRuntimeValues: DeferRuntimeValueChecking,
+            returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+            targetFunction: NotEqualNullUntyped);
+
         public static readonly AsyncFunctionPtr OperatorTextIn = StandardErrorHandling(
             "in",
             expandArguments: NoArgExpansion,
-            replaceBlankValues: DoNotReplaceBlank,
+            replaceBlankValues: ReplaceBlankWithEmptyString,
             checkRuntimeTypes: DeferRuntimeTypeChecking,
             checkRuntimeValues: DeferRuntimeValueChecking,
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
@@ -167,7 +186,7 @@ namespace Microsoft.PowerFx.Functions
         public static readonly AsyncFunctionPtr OperatorTextInExact = StandardErrorHandling(
             "exactin",
             expandArguments: NoArgExpansion,
-            replaceBlankValues: DoNotReplaceBlank,
+            replaceBlankValues: ReplaceBlankWithEmptyString,
             checkRuntimeTypes: DeferRuntimeTypeChecking,
             checkRuntimeValues: DeferRuntimeValueChecking,
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
@@ -194,7 +213,9 @@ namespace Microsoft.PowerFx.Functions
         public static readonly AsyncFunctionPtr OperatorAddDateAndTime = StandardErrorHandling<FormulaValue>(
             "+",
             expandArguments: NoArgExpansion,
-            replaceBlankValues: DoNotReplaceBlank,
+            replaceBlankValues: ReplaceBlankWith(
+                new DateValue(IRContext.NotInSource(FormulaType.Date), _epoch),
+                new TimeValue(IRContext.NotInSource(FormulaType.Time), TimeSpan.Zero)),
             checkRuntimeTypes: ExactSequence(
                 DateOrDateTime,
                 ExactValueType<TimeValue>),
@@ -231,7 +252,9 @@ namespace Microsoft.PowerFx.Functions
         public static readonly AsyncFunctionPtr OperatorAddDateAndDay = StandardErrorHandling<FormulaValue>(
             "+",
             expandArguments: NoArgExpansion,
-            replaceBlankValues: DoNotReplaceBlank,
+            replaceBlankValues: ReplaceBlankWith(
+                new DateValue(IRContext.NotInSource(FormulaType.Date), _epoch),
+                new NumberValue(IRContext.NotInSource(FormulaType.Number), 0)),
             checkRuntimeTypes: ExactSequence(
                 DateOrDateTime,
                 ExactValueType<NumberValue>),
@@ -242,7 +265,9 @@ namespace Microsoft.PowerFx.Functions
         public static readonly AsyncFunctionPtr OperatorAddDateTimeAndDay = StandardErrorHandling<FormulaValue>(
             "+",
             expandArguments: NoArgExpansion,
-            replaceBlankValues: DoNotReplaceBlank,
+            replaceBlankValues: ReplaceBlankWith(
+                new DateValue(IRContext.NotInSource(FormulaType.Date), _epoch),
+                new NumberValue(IRContext.NotInSource(FormulaType.Number), 0)),
             checkRuntimeTypes: ExactSequence(
                 DateOrDateTime,
                 ExactValueType<NumberValue>),
@@ -253,7 +278,9 @@ namespace Microsoft.PowerFx.Functions
         public static readonly AsyncFunctionPtr OperatorDateDifference = StandardErrorHandling<FormulaValue>(
             "-",
             expandArguments: NoArgExpansion,
-            replaceBlankValues: DoNotReplaceBlank,
+            replaceBlankValues: ReplaceBlankWith(
+                new DateValue(IRContext.NotInSource(FormulaType.Date), _epoch),
+                new DateValue(IRContext.NotInSource(FormulaType.Date), _epoch)),
             checkRuntimeTypes: ExactSequence(
                 DateOrDateTime,
                 DateOrDateTime),
@@ -264,7 +291,9 @@ namespace Microsoft.PowerFx.Functions
         public static readonly AsyncFunctionPtr OperatorTimeDifference = StandardErrorHandling<FormulaValue>(
             "-",
             expandArguments: NoArgExpansion,
-            replaceBlankValues: DoNotReplaceBlank,
+            replaceBlankValues: ReplaceBlankWith(
+                new TimeValue(IRContext.NotInSource(FormulaType.Time), TimeSpan.Zero),
+                new TimeValue(IRContext.NotInSource(FormulaType.Time), TimeSpan.Zero)),
             checkRuntimeTypes: ExactSequence(
                 ExactValueType<TimeValue>,
                 ExactValueType<TimeValue>),
@@ -275,7 +304,9 @@ namespace Microsoft.PowerFx.Functions
         public static readonly AsyncFunctionPtr OperatorSubtractDateAndTime = StandardErrorHandling<FormulaValue>(
             "-",
             expandArguments: NoArgExpansion,
-            replaceBlankValues: DoNotReplaceBlank,
+            replaceBlankValues: ReplaceBlankWith(
+                new DateValue(IRContext.NotInSource(FormulaType.Date), _epoch),
+                new TimeValue(IRContext.NotInSource(FormulaType.Time), TimeSpan.Zero)),
             checkRuntimeTypes: ExactSequence(
                 DateOrDateTime,
                 ExactValueType<TimeValue>),
@@ -565,11 +596,53 @@ namespace Microsoft.PowerFx.Functions
             return new BooleanValue(irContext, RuntimeHelpers.AreEqual(arg1, arg2));
         }
 
+        private static BooleanValue AreEqualNullUntyped(IRContext irContext, FormulaValue[] args)
+        {
+            var arg1 = args[0];
+            var arg2 = args[1];
+
+            if (arg1 is BlankValue && arg2 is BlankValue)
+            {
+                return new BooleanValue(irContext, true);
+            }
+
+            Contracts.Assert(arg1 is UntypedObjectValue ^ arg2 is UntypedObjectValue, "UO = UO is undefined");
+
+            if (arg1 is UntypedObjectValue uo1)
+            {
+                return new BooleanValue(irContext, uo1.Impl.Type == FormulaType.Blank);
+            }
+
+            var uo2 = (UntypedObjectValue)arg2;
+            return new BooleanValue(irContext, uo2.Impl.Type == FormulaType.Blank);
+        }
+
         private static BooleanValue NotEqual(IRContext irContext, FormulaValue[] args)
         {
             var arg1 = args[0];
             var arg2 = args[1];
             return new BooleanValue(irContext, !RuntimeHelpers.AreEqual(arg1, arg2));
+        }
+
+        private static BooleanValue NotEqualNullUntyped(IRContext irContext, FormulaValue[] args)
+        {
+            var arg1 = args[0];
+            var arg2 = args[1];
+
+            if (arg1 is BlankValue && arg2 is BlankValue)
+            {
+                return new BooleanValue(irContext, false);
+            }
+
+            Contracts.Assert(arg1 is UntypedObjectValue ^ arg2 is UntypedObjectValue, "UO <> UO is undefined");
+
+            if (arg1 is UntypedObjectValue uo1)
+            {
+                return new BooleanValue(irContext, uo1.Impl.Type != FormulaType.Blank);
+            }
+
+            var uo2 = (UntypedObjectValue)arg2;
+            return new BooleanValue(irContext, uo2.Impl.Type != FormulaType.Blank);
         }
 
         // See in_SS in JScript membershipReplacementFunctions
@@ -644,20 +717,10 @@ namespace Microsoft.PowerFx.Functions
             return DateAdd(runner, context, irContext, args);
         }
 
-        private static FormulaValue AddTimeAndNumber(IRContext irContext, FormulaValue[] args)
+        private static FormulaValue AddTimeAndNumber(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            TimeSpan arg0;
-            switch (args[0])
-            {
-                case DateTimeValue dtv:
-                    arg0 = new TimeSpan(0, dtv.Value.Hour, dtv.Value.Minute, dtv.Value.Second, dtv.Value.Millisecond);
-                    break;
-                case TimeValue tv:
-                    arg0 = tv.Value;
-                    break;
-                default:
-                    return CommonErrors.RuntimeTypeMismatch(irContext);
-            }
+            var timeZoneInfo = runner.TimeZoneInfo;
+            TimeSpan arg0 = runner.GetNormalizedTimeSpanWithoutDay(args[0]);
 
             var arg1 = (NumberValue)args[1];
 
@@ -672,32 +735,13 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
-        private static FormulaValue AddTimeAndTime(IRContext irContext, FormulaValue[] args)
+        private static FormulaValue AddTimeAndTime(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
+            var timeZoneInfo = runner.TimeZoneInfo;
             TimeSpan arg0, arg1;
-            switch (args[0])
-            {
-                case DateTimeValue dtv:
-                    arg0 = new TimeSpan(0, dtv.Value.Hour, dtv.Value.Minute, dtv.Value.Second, dtv.Value.Millisecond);
-                    break;
-                case TimeValue tv:
-                    arg0 = tv.Value;
-                    break;
-                default:
-                    return CommonErrors.RuntimeTypeMismatch(irContext);
-            }
+            arg0 = runner.GetNormalizedTimeSpanWithoutDay(args[0]);
 
-            switch (args[1])
-            {
-                case DateTimeValue dtv:
-                    arg1 = new TimeSpan(0, dtv.Value.Hour, dtv.Value.Minute, dtv.Value.Second, dtv.Value.Millisecond);
-                    break;
-                case TimeValue tv:
-                    arg1 = tv.Value;
-                    break;
-                default:
-                    return CommonErrors.RuntimeTypeMismatch(irContext);
-            }
+            arg1 = runner.GetNormalizedTimeSpanWithoutDay(args[1]);
 
             try
             {
@@ -720,33 +764,12 @@ namespace Microsoft.PowerFx.Functions
             return DateAdd(runner, context, irContext, new FormulaValue[3] { args[0], args[1], StringValue.New("Days") });
         }
 
-        private static FormulaValue DateDifference(IRContext irContext, FormulaValue[] args)
+        private static FormulaValue DateDifference(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            DateTime arg0;
-            switch (args[0])
-            {
-                case DateTimeValue dtv:
-                    arg0 = dtv.Value;
-                    break;
-                case DateValue dv:
-                    arg0 = dv.Value;
-                    break;
-                default:
-                    return CommonErrors.RuntimeTypeMismatch(irContext);
-            }
+            var timeZoneInfo = runner.TimeZoneInfo;
+            DateTime arg0 = runner.GetNormalizedDateTime(args[0]);
 
-            DateTime arg1;
-            switch (args[1])
-            {
-                case DateTimeValue dtv:
-                    arg1 = dtv.Value;
-                    break;
-                case DateValue dv:
-                    arg1 = dv.Value;
-                    break;
-                default:
-                    return CommonErrors.RuntimeTypeMismatch(irContext);
-            }
+            DateTime arg1 = runner.GetNormalizedDateTime(args[1]);
 
             var result = arg0.Subtract(arg1);
             return new NumberValue(irContext, result.Days);
@@ -786,257 +809,89 @@ namespace Microsoft.PowerFx.Functions
             });
         }
 
-        private static FormulaValue LtDateTime(IRContext irContext, FormulaValue[] args)
+        private static FormulaValue LtDateTime(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            DateTime arg0;
-            switch (args[0])
-            {
-                case DateTimeValue dtv:
-                    arg0 = dtv.Value;
-                    break;
-                case DateValue dv:
-                    arg0 = dv.Value;
-                    break;
-                default:
-                    return CommonErrors.RuntimeTypeMismatch(irContext);
-            }
-
-            DateTime arg1;
-            switch (args[1])
-            {
-                case DateTimeValue dtv:
-                    arg1 = dtv.Value;
-                    break;
-                case DateValue dv:
-                    arg1 = dv.Value;
-                    break;
-                default:
-                    return CommonErrors.RuntimeTypeMismatch(irContext);
-            }
+            var timeZoneInfo = runner.TimeZoneInfo;
+            DateTime arg0 = runner.GetNormalizedDateTime(args[0]);
+            
+            DateTime arg1 = runner.GetNormalizedDateTime(args[1]);
 
             var result = arg0 < arg1;
             return new BooleanValue(irContext, result);
         }
 
-        private static FormulaValue LeqDateTime(IRContext irContext, FormulaValue[] args)
+        private static FormulaValue LeqDateTime(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            DateTime arg0;
-            switch (args[0])
-            {
-                case DateTimeValue dtv:
-                    arg0 = dtv.Value;
-                    break;
-                case DateValue dv:
-                    arg0 = dv.Value;
-                    break;
-                default:
-                    return CommonErrors.RuntimeTypeMismatch(irContext);
-            }
+            var timeZoneInfo = runner.TimeZoneInfo;
+            DateTime arg0 = runner.GetNormalizedDateTime(args[0]);
 
-            DateTime arg1;
-            switch (args[1])
-            {
-                case DateTimeValue dtv:
-                    arg1 = dtv.Value;
-                    break;
-                case DateValue dv:
-                    arg1 = dv.Value;
-                    break;
-                default:
-                    return CommonErrors.RuntimeTypeMismatch(irContext);
-            }
+            DateTime arg1 = runner.GetNormalizedDateTime(args[1]);
 
             var result = arg0 <= arg1;
             return new BooleanValue(irContext, result);
         }
 
-        private static FormulaValue GtDateTime(IRContext irContext, FormulaValue[] args)
+        private static FormulaValue GtDateTime(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            DateTime arg0;
-            switch (args[0])
-            {
-                case DateTimeValue dtv:
-                    arg0 = dtv.Value;
-                    break;
-                case DateValue dv:
-                    arg0 = dv.Value;
-                    break;
-                default:
-                    return CommonErrors.RuntimeTypeMismatch(irContext);
-            }
+            var timeZoneInfo = runner.TimeZoneInfo;
+            DateTime arg0 = runner.GetNormalizedDateTime(args[0]);
 
-            DateTime arg1;
-            switch (args[1])
-            {
-                case DateTimeValue dtv:
-                    arg1 = dtv.Value;
-                    break;
-                case DateValue dv:
-                    arg1 = dv.Value;
-                    break;
-                default:
-                    return CommonErrors.RuntimeTypeMismatch(irContext);
-            }
+            DateTime arg1 = runner.GetNormalizedDateTime(args[1]);
 
             var result = arg0 > arg1;
             return new BooleanValue(irContext, result);
         }
 
-        private static FormulaValue GeqDateTime(IRContext irContext, FormulaValue[] args)
+        private static FormulaValue GeqDateTime(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            DateTime arg0;
-            switch (args[0])
-            {
-                case DateTimeValue dtv:
-                    arg0 = dtv.Value;
-                    break;
-                case DateValue dv:
-                    arg0 = dv.Value;
-                    break;
-                default:
-                    return CommonErrors.RuntimeTypeMismatch(irContext);
-            }
+            var timeZoneInfo = runner.TimeZoneInfo;
+            DateTime arg0 = runner.GetNormalizedDateTime(args[0]);
 
-            DateTime arg1;
-            switch (args[1])
-            {
-                case DateTimeValue dtv:
-                    arg1 = dtv.Value;
-                    break;
-                case DateValue dv:
-                    arg1 = dv.Value;
-                    break;
-                default:
-                    return CommonErrors.RuntimeTypeMismatch(irContext);
-            }
+            DateTime arg1 = runner.GetNormalizedDateTime(args[1]);
 
             var result = arg0 >= arg1;
             return new BooleanValue(irContext, result);
         }
 
-        private static FormulaValue LtDate(IRContext irContext, FormulaValue[] args)
+        private static FormulaValue LtDate(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            DateTime arg0;
-            switch (args[0])
-            {
-                case DateTimeValue dtv:
-                    arg0 = dtv.Value;
-                    break;
-                case DateValue dv:
-                    arg0 = dv.Value;
-                    break;
-                default:
-                    return CommonErrors.RuntimeTypeMismatch(irContext);
-            }
+            var timeZoneInfo = runner.TimeZoneInfo;
+            DateTime arg0 = runner.GetNormalizedDateTime(args[0]);
 
-            DateTime arg1;
-            switch (args[1])
-            {
-                case DateTimeValue dtv:
-                    arg1 = dtv.Value;
-                    break;
-                case DateValue dv:
-                    arg1 = dv.Value;
-                    break;
-                default:
-                    return CommonErrors.RuntimeTypeMismatch(irContext);
-            }
+            DateTime arg1 = runner.GetNormalizedDateTime(args[1]);
 
             var result = arg0 < arg1;
             return new BooleanValue(irContext, result);
         }
 
-        private static FormulaValue LeqDate(IRContext irContext, FormulaValue[] args)
+        private static FormulaValue LeqDate(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            DateTime arg0;
-            switch (args[0])
-            {
-                case DateTimeValue dtv:
-                    arg0 = dtv.Value;
-                    break;
-                case DateValue dv:
-                    arg0 = dv.Value;
-                    break;
-                default:
-                    return CommonErrors.RuntimeTypeMismatch(irContext);
-            }
+            var timeZoneInfo = runner.TimeZoneInfo;
+            DateTime arg0 = runner.GetNormalizedDateTime(args[0]);
 
-            DateTime arg1;
-            switch (args[1])
-            {
-                case DateTimeValue dtv:
-                    arg1 = dtv.Value;
-                    break;
-                case DateValue dv:
-                    arg1 = dv.Value;
-                    break;
-                default:
-                    return CommonErrors.RuntimeTypeMismatch(irContext);
-            }
+            DateTime arg1 = runner.GetNormalizedDateTime(args[1]);
 
             var result = arg0 <= arg1;
             return new BooleanValue(irContext, result);
         }
 
-        private static FormulaValue GtDate(IRContext irContext, FormulaValue[] args)
+        private static FormulaValue GtDate(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            DateTime arg0;
-            switch (args[0])
-            {
-                case DateTimeValue dtv:
-                    arg0 = dtv.Value;
-                    break;
-                case DateValue dv:
-                    arg0 = dv.Value;
-                    break;
-                default:
-                    return CommonErrors.RuntimeTypeMismatch(irContext);
-            }
+            var timeZoneInfo = runner.TimeZoneInfo;
+            DateTime arg0 = runner.GetNormalizedDateTime(args[0]);
 
-            DateTime arg1;
-            switch (args[1])
-            {
-                case DateTimeValue dtv:
-                    arg1 = dtv.Value;
-                    break;
-                case DateValue dv:
-                    arg1 = dv.Value;
-                    break;
-                default:
-                    return CommonErrors.RuntimeTypeMismatch(irContext);
-            }
+            DateTime arg1 = runner.GetNormalizedDateTime(args[1]);
 
             var result = arg0 > arg1;
             return new BooleanValue(irContext, result);
         }
 
-        private static FormulaValue GeqDate(IRContext irContext, FormulaValue[] args)
+        private static FormulaValue GeqDate(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            DateTime arg0;
-            switch (args[0])
-            {
-                case DateTimeValue dtv:
-                    arg0 = dtv.Value;
-                    break;
-                case DateValue dv:
-                    arg0 = dv.Value;
-                    break;
-                default:
-                    return CommonErrors.RuntimeTypeMismatch(irContext);
-            }
+            var timeZoneInfo = runner.TimeZoneInfo;
+            DateTime arg0 = runner.GetNormalizedDateTime(args[0]);
 
-            DateTime arg1;
-            switch (args[1])
-            {
-                case DateTimeValue dtv:
-                    arg1 = dtv.Value;
-                    break;
-                case DateValue dv:
-                    arg1 = dv.Value;
-                    break;
-                default:
-                    return CommonErrors.RuntimeTypeMismatch(irContext);
-            }
+            DateTime arg1 = runner.GetNormalizedDateTime(args[1]);
 
             var result = arg0 >= arg1;
             return new BooleanValue(irContext, result);

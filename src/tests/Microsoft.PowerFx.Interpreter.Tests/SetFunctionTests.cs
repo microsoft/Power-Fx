@@ -46,7 +46,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             engine.UpdateVariable("x", FormulaValue.New(12));
 
             var r1 = engine.Eval("x", null, _opts); // 12.0
-            Assert.Equal(12m, r1.ToObject());
+            Assert.Equal(12.0, r1.ToObject());
 
             var r2 = engine.Eval("Set(x, Float(15))", null, _opts);
 
@@ -99,16 +99,37 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var engine = new RecalcEngine(config);
 
             var cache = new TypeMarshallerCache();
-            var obj = cache.Marshal(new { X = 10, Y = 20 });
+            var obj = cache.Marshal(new { X = 10m, Y = 20m });
 
             engine.UpdateVariable("obj", obj);
             
             // Can update record
             var r1 = engine.Eval("Set(obj, {X: 11, Y: 21}); obj.X", null, _opts);
-            Assert.Equal(11.0, r1.ToObject());
+            Assert.Equal(11m, r1.ToObject());
 
             // But SetField fails 
             var r2 = engine.Check("Set(obj.X, 31); obj.X", null, _opts);
+            Assert.False(r2.IsSuccess);
+        }
+
+        [Fact]
+        public void SetRecordFloat()
+        {
+            var config = new PowerFxConfig();
+            config.EnableSetFunction();
+            var engine = new RecalcEngine(config);
+
+            var cache = new TypeMarshallerCache();
+            var obj = cache.Marshal(new { X = 10, Y = 20 });
+
+            engine.UpdateVariable("obj", obj);
+
+            // Can update record
+            var r1 = engine.Eval("Set(obj, {X: Float(11), Y: Float(21)}); obj.X", null, _opts);
+            Assert.Equal(11.0, r1.ToObject());
+
+            // But SetField fails 
+            var r2 = engine.Check("Set(obj.X, Float(31)); obj.X", null, _opts);
             Assert.False(r2.IsSuccess);
         }
 

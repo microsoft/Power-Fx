@@ -12,12 +12,10 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
         public delegate IPowerFxScope GetOrCreateInstanceDelegate(string documentUri);
 
         private readonly GetOrCreateInstanceDelegate _getOrCreateInstance;
-        private readonly ParserOptions _parserOptions;
 
-        public TestPowerFxScopeFactory(GetOrCreateInstanceDelegate getOrCreateInstance, ParserOptions options = null)
+        public TestPowerFxScopeFactory(GetOrCreateInstanceDelegate getOrCreateInstance)
         {
             _getOrCreateInstance = getOrCreateInstance;
-            _parserOptions = options;
         }
 
         public IPowerFxScope GetOrCreateInstance(string documentUri)

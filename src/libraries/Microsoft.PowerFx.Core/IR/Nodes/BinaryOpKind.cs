@@ -43,6 +43,7 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
         EqTime,
         EqDateTime,
         EqHyperlink,
+        EqCurrency,
         EqImage,
         EqColor,
         EqMedia,
@@ -53,6 +54,7 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
         EqNamedValue,
         EqNull,
         EqDecimals,
+        EqNullUntyped,
 
         NeqNumbers,
         NeqBoolean,
@@ -61,6 +63,7 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
         NeqTime,
         NeqDateTime,
         NeqHyperlink,
+        NeqCurrency,
         NeqImage,
         NeqColor,
         NeqMedia,
@@ -71,6 +74,7 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
         NeqNamedValue,
         NeqNull,
         NeqDecimals,
+        NeqNullUntyped,
 
         LtNumbers,
         LeqNumbers,

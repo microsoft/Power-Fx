@@ -22,7 +22,7 @@ namespace Microsoft.PowerFx.Types
 
         public override void ToExpression(StringBuilder sb, FormulaValueSerializerSettings settings)
         {
-            sb.Append(Value.ToString());
+            sb.Append((Value == 0) ? "0" : Value.ToString());
         }
     }
 
@@ -31,6 +31,12 @@ namespace Microsoft.PowerFx.Types
         internal DecimalValue(IRContext irContext, decimal value)
             : base(irContext, value)
         {
+            bool x = irContext.ResultType == FormulaType.Decimal;
+            if (!x)
+            {
+                x = true;
+            }
+
             Contract.Assert(IRContext.ResultType == FormulaType.Decimal);
         }
 

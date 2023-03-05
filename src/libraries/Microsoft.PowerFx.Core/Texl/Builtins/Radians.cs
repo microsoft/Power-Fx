@@ -18,7 +18,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
     // Radians(E:*[n])
     // Table overload that computes the radians values of each item in the input table.
-    internal sealed class RadiansTableFunction : MathOneArgTableFunction
+    internal sealed class RadiansTableFunction : MathTableFunction
     {
         public RadiansTableFunction()
             : base("Radians", TexlStrings.AboutRadiansT, FunctionCategories.Table)
