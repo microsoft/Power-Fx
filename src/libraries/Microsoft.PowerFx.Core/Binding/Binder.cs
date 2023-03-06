@@ -419,7 +419,7 @@ namespace Microsoft.PowerFx.Core.Binding
             Contracts.AssertValue(node);
 
             var nodeDType = GetType(node);
-            return (nodeDType.IsOptionSet && nodeDType.OptionSetInfo != null && nodeDType.OptionSetInfo.IsBooleanValued) ||
+            return (nodeDType.IsOptionSet && nodeDType.OptionSetInfo != null && nodeDType.OptionSetInfo.IsBooleanValued()) ||
                 (nodeDType == DType.Boolean && node.Kind != NodeKind.BoolLit);
         }
 

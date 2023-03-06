@@ -41,6 +41,19 @@ namespace Microsoft.PowerFx.Core.IR
 
         private static BinaryOpKind GetBooleanBinaryOp(PowerFx.Syntax.BinaryOpNode node, TexlBinding binding, DType leftType, DType rightType)
         {
+            // Check untyped object special case first
+            if ((leftType.IsUntypedObject && rightType.Kind == DKind.ObjNull) ||
+                (rightType.IsUntypedObject && leftType.Kind == DKind.ObjNull))
+            {
+                switch (node.Op)
+                {
+                    case BinaryOp.NotEqual:
+                        return BinaryOpKind.NeqNullUntyped;
+                    case BinaryOp.Equal:
+                        return BinaryOpKind.EqNullUntyped;
+                }
+            }
+
             var kindToUse = leftType.Accepts(rightType) ? leftType.Kind : rightType.Kind;
 
             // If there is coercion involved, pick the coerced type.
@@ -55,44 +68,8 @@ namespace Microsoft.PowerFx.Core.IR
             else if (!leftType.Accepts(rightType) && !rightType.Accepts(leftType))
             {
                 return BinaryOpKind.Invalid;
-            }
-
-            if (leftType.IsUntypedObject && rightType.Kind == DKind.ObjNull)
-            {
-                if (binding.TryGetCoercedType(node.Left, out var leftCoerced))
-                {
-                    kindToUse = leftCoerced.Kind;
-                }
-                else
-                {
-                    switch (node.Op)
-                    {
-                        case BinaryOp.NotEqual:
-                            return BinaryOpKind.NeqNullUntyped;
-                        case BinaryOp.Equal:
-                            return BinaryOpKind.EqNullUntyped;
-                    }
-                }
-            }
-
-            if (rightType.IsUntypedObject && leftType.Kind == DKind.ObjNull)
-            {
-                if (binding.TryGetCoercedType(node.Right, out var rightCoerced))
-                {
-                    kindToUse = rightCoerced.Kind;
-                }
-                else
-                {
-                    switch (node.Op)
-                    {
-                        case BinaryOp.NotEqual:
-                            return BinaryOpKind.NeqNullUntyped;
-                        case BinaryOp.Equal:
-                            return BinaryOpKind.EqNullUntyped;
-                    }
-                }
-            }
-
+            } 
+            
             switch (kindToUse)
             {
                 case DKind.Number:
