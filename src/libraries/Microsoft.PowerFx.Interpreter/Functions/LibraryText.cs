@@ -31,6 +31,8 @@ namespace Microsoft.PowerFx.Functions
 
     internal static partial class Library
     {
+        internal static readonly IReadOnlyList<FormulaType> AllowedListConvertToString = new FormulaType[] { FormulaType.String, FormulaType.Number, FormulaType.DateTime, FormulaType.Date, FormulaType.Time, FormulaType.Boolean, FormulaType.Guid };
+
         private static readonly RegexOptions RegExFlags = LibraryFlags.RegExFlags;
 
         private static readonly Regex _ampmReplaceRegex = new Regex("[aA][mM]\\/[pP][mM]", RegExFlags);
@@ -47,7 +49,7 @@ namespace Microsoft.PowerFx.Functions
         private static readonly Regex _minutesDetokenizeRegex = new Regex("[\u000A][\u000A]+", RegExFlags);
         private static readonly Regex _secondsDetokenizeRegex = new Regex("[\u0008][\u0008]+", RegExFlags);
         private static readonly Regex _milisecondsDetokenizeRegex = new Regex("[\u000e]+", RegExFlags);
-
+        
         // Char is used for PA string escaping 
         public static FormulaValue Char(IRContext irContext, NumberValue[] args)
         {
@@ -251,6 +253,8 @@ namespace Microsoft.PowerFx.Functions
                 return false;
             }
 
+            Contract.Assert(AllowedListConvertToString.Contains(value.Type));
+
             switch (value)
             {
                 case StringValue sv:
@@ -310,6 +314,9 @@ namespace Microsoft.PowerFx.Functions
                     break;
                 case BooleanValue b:
                     result = new StringValue(irContext, b.Value.ToString(culture).ToLower());
+                    break;
+                case GuidValue g:
+                    result = new StringValue(irContext, g.Value.ToString(formatString ?? "d", culture));
                     break;
             }
 
