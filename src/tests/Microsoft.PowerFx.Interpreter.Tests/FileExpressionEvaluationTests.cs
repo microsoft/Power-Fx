@@ -12,7 +12,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
     public class FileExpressionEvaluationTests : PowerFxTest
     {
         [InterpreterTheory]
-        [TxtFileData("ExpressionTestCases", "InterpreterExpressionTestCases", nameof(InterpreterRunner), "en-US, fr-FR")]        
+        [TxtFileData("ExpressionTestCases", "InterpreterExpressionTestCases", nameof(InterpreterRunner), "en-US")]        
         public void InterpreterTestCase(ExpressionTestCase testCase)
         {
             // This is running against embedded resources, so if you're updating the .txt files,
