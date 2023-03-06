@@ -8,6 +8,8 @@ using Xunit;
 
 namespace Microsoft.PowerFx.Performance.Tests
 {
+    // These classes are only present to run VS profiler 
+
     public class UnitTests_Pva
     {
         private readonly PvaPerformance _pvaPerf;
@@ -33,7 +35,7 @@ namespace Microsoft.PowerFx.Performance.Tests
         [Fact]
         public void Benchmark_PvaRecalcEngineParse()
         {
-            _pvaPerf.PvaRecalcEngineParse(); 
+            _pvaPerf.PvaRecalcEngineParse();
         }
     }
 

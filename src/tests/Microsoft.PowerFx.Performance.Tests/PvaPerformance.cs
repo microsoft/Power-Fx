@@ -144,8 +144,8 @@ namespace Microsoft.PowerFx.Performance.Tests
             return e;
         }
     }
-    
-    public sealed class TestOption 
+
+    public sealed class TestOption
     {
         public TestOption(string value, string displayName)
         {
@@ -173,13 +173,13 @@ namespace Microsoft.PowerFx.Performance.Tests
             {
                 foreach (var option in _options)
                 {
-                    yield return new KeyValuePair<DName, DName>(new DName(option.Value), new DName(option.DisplayName ?? option.Value));                    
+                    yield return new KeyValuePair<DName, DName>(new DName(option.Value), new DName(option.DisplayName ?? option.Value));
                 }
             }
         }
 
         public override bool TryGetDisplayName(DName logicalName, out DName displayName)
-        {            
+        {
             foreach (var option in _options)
             {
                 if (logicalName.Value.Equals(option.Value))
@@ -194,7 +194,7 @@ namespace Microsoft.PowerFx.Performance.Tests
         }
 
         public override bool TryGetLogicalName(DName displayName, out DName logicalName)
-        {           
+        {
             foreach (var option in _options)
             {
                 if ((option.DisplayName != null && displayName.Value.Equals(option.DisplayName)) || option.Value.Equals(displayName.Value))
