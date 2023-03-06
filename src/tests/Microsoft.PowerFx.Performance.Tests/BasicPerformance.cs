@@ -7,6 +7,7 @@ using System.Linq;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Diagnostics.Windows;
 using BenchmarkDotNet.Diagnostics.Windows.Configs;
+using BenchmarkDotNet.Engines;
 using BenchmarkDotNet.Jobs;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
@@ -14,7 +15,7 @@ using Microsoft.PowerFx.Types;
 namespace Microsoft.PowerFx.Performance.Tests
 {
     [MemoryDiagnoser]
-    [NativeMemoryProfiler]    
+    [NativeMemoryProfiler]
     [EtwProfiler] // https://benchmarkdotnet.org/articles/features/etwprofiler.html
     [CsvExporter] // https://benchmarkdotnet.org/articles/configs/exporters.html
     [MinColumn]
@@ -23,7 +24,7 @@ namespace Microsoft.PowerFx.Performance.Tests
     [MedianColumn]
     [Q3Column]
     [MaxColumn]
-    [SimpleJob(runtimeMoniker: RuntimeMoniker.NetCoreApp31)]
+    [SimpleJob(RunStrategy.Throughput, RuntimeMoniker.NetCoreApp31, launchCount: 1, warmupCount: 2)]
     public class BasicPerformance
     {
         private PowerFxConfig _powerFxConfig;
@@ -46,36 +47,56 @@ namespace Microsoft.PowerFx.Performance.Tests
         [Benchmark]
         public IReadOnlyList<Token> Tokenize()
         {
-            var expr = string.Join(" + ", Enumerable.Repeat("Sum(1)", N));
+            string expr = string.Join(" + ", Enumerable.Repeat("Sum(1)", N));
+            IReadOnlyList<Token> tokens = null;
 
-            var tokens = _engine.Tokenize(expr);
+            for (int i = 0; i < 100; i++)
+            {
+                tokens = _engine.Tokenize(expr);
+            }
+
             return tokens;
         }
 
         [Benchmark]
         public ParseResult Parse()
         {
-            var expr = string.Join(" + ", Enumerable.Repeat("Sum(1)", N));
+            string expr = string.Join(" + ", Enumerable.Repeat("Sum(1)", N));
+            ParseResult parse = null;
 
-            var parse = _engine.Parse(expr, _parserOptions);
+            for (int i = 0; i < 100; i++)
+            {
+                parse = _engine.Parse(expr, _parserOptions);
+            }
+
             return parse;
         }
 
         [Benchmark]
         public CheckResult Check()
         {
-            var expr = string.Join(" + ", Enumerable.Repeat("Sum(1)", N));
+            string expr = string.Join(" + ", Enumerable.Repeat("Sum(1)", N));
+            CheckResult check = null;
 
-            var check = _engine.Check(expr);
+            for (int i = 0; i < 100; i++)
+            {
+                check = _engine.Check(expr);
+            }
+
             return check;
         }
 
         [Benchmark]
         public FormulaValue Eval()
         {
-            var expr = string.Join(" + ", Enumerable.Repeat("Sum(1)", N));
+            string expr = string.Join(" + ", Enumerable.Repeat("Sum(1)", N));
+            FormulaValue result = null;
 
-            var result = _recalcEngine.Eval(expr);
+            for (int i = 0; i < 100; i++)
+            {
+                result = _recalcEngine.Eval(expr);
+            }
+
             return result;
         }
     }
