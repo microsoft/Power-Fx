@@ -150,7 +150,7 @@ namespace Microsoft.PowerFx.Core.Tests
             var baseError = GetBaseError(TexlStrings.ErrInvalidName, "name");
             var baseErrors = new IDocumentError[] { baseError };
 
-            var errors = ExpressionError.New(baseErrors, CultureInfo.CurrentCulture);
+            var errors = ExpressionError.New(baseErrors, new CultureInfo("en-US"));
 
             Assert.Single(errors);
             var error = errors.First();
