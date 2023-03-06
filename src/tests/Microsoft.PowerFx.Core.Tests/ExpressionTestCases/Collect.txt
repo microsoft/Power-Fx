@@ -42,13 +42,13 @@ Errors: Error 12-15: Invalid argument type (Text). Expecting a Record value inst
 Errors: Error 12-13: Invalid argument type (Number). Expecting a Record value instead.|Error 12-13: Invalid argument type. Cannot use Number values in this context.|Error 0-14: The function 'Collect' has some invalid arguments.
 
 >> Collect(Table({name: "VC"}), {surname: "textInput1"})
-{surname:"textInput1"}
+Errors: Error 29-52: The specified column 'surname' does not exist. The column with the most similar name is 'name'.|Error 0-53: The function 'Collect' has some invalid arguments.
 
 >> Collect(FirstN(Table({name: "hello"}), 0), {name: "textInput1"})
 {name:"textInput1"}
 
 >> Collect(Foo,r2)
-Errors: Error 8-11: Name isn't valid. 'Foo' isn't recognized.|Error 0-15: The function 'Collect' has some invalid arguments.
+Errors: Error 8-11: Name isn't valid. 'Foo' isn't recognized.|Error 12-14: The specified column 'Field1' does not exist.|Error 0-15: The function 'Collect' has some invalid arguments.
 
 >> Collect(Foo,Bar)
 Errors: Error 8-11: Name isn't valid. 'Foo' isn't recognized.|Error 12-15: Name isn't valid. 'Bar' isn't recognized.|Error 0-16: The function 'Collect' has some invalid arguments.
@@ -57,13 +57,13 @@ Errors: Error 8-11: Name isn't valid. 'Foo' isn't recognized.|Error 12-15: Name 
 Errors: Error 12-15: Name isn't valid. 'Foo' isn't recognized.
 
 >> Collect(Error({Kind:ErrorKind.Custom}), r2)
-Error({Kind:ErrorKind.Custom})
+Errors: Error 40-42: The specified column 'Field1' does not exist.|Error 0-43: The function 'Collect' has some invalid arguments.
 
 >> Collect(Error({Kind:ErrorKind.Custom}), Error({Kind:ErrorKind.Div0}))
 Error({Kind:ErrorKind.Custom})
 
 >> Collect(Blank(), r2)
-Blank()
+Errors: Error 17-19: The specified column 'Field1' does not exist.|Error 0-20: The function 'Collect' has some invalid arguments.
 
 >> Collect(Blank(), Blank())
 Blank()
@@ -75,7 +75,10 @@ Errors: Error 8-10: Invalid argument type (Text). Expecting a Table value instea
 Errors: Error 8-25: The function 'Collect' has some invalid arguments.
 
 >> Collect(t1,{Price:200}).Price
-200
+Errors: Error 11-22: The specified column 'Price' does not exist.|Error 0-23: The function 'Collect' has some invalid arguments.|Error 23-29: Name isn't valid. 'Price' isn't recognized.
 
 >> Collect([1,2,3],{Value:200}).Value
 200
+
+>> With({ C2: Filter(Table({F1 : 0}), false),C3: Filter(Table({F1 : 0}), false)},ForAll(Sequence(5),Collect(C2, { F1: ThisRecord.Value }));ForAll(Sequence(CountRows(C2)),Collect(C3, Index(C2, ThisRecord.Value)));Patch(C2, First(C2), { F1 : 99});Patch(C3, Last(C2), { F1 : 88});Concat(C2, F1) & "," & Concat(C3, F1));
+"992345,123488"

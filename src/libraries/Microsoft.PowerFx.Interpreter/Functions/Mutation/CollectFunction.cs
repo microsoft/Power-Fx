@@ -2,10 +2,8 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
-using System.Numerics;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Errors;
@@ -18,7 +16,6 @@ using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 using static Microsoft.PowerFx.Core.Localization.TexlStrings;
-using static Microsoft.PowerFx.Syntax.PrettyPrintVisitor;
 
 namespace Microsoft.PowerFx.Interpreter
 {
@@ -119,6 +116,10 @@ namespace Microsoft.PowerFx.Interpreter
                 {
                     argType = argType.ToRecord();
                 }
+
+                // Checks if all record names exist against table type and if its possible to coerce.
+                bool checkAggregateNames = argType.CheckAggregateNames(argTypes[0], args[i], errors, SupportsParamCoercion);
+                fValid = fValid && checkAggregateNames;
 
                 if (!itemType.IsValid)
                 {
@@ -244,9 +245,10 @@ namespace Microsoft.PowerFx.Interpreter
 
             var tableValue = arg0 as TableValue;
             var recordValue = arg1 as RecordValue;
+            var recordValueCopy = FormulaValue.NewRecordFromFields(recordValue.Fields);
 
             cancellationToken.ThrowIfCancellationRequested();
-            var result = await tableValue.AppendAsync(recordValue, cancellationToken);
+            var result = await tableValue.AppendAsync(recordValueCopy, cancellationToken);
 
             return result.ToFormulaValue();
         }

@@ -411,6 +411,18 @@ namespace Microsoft.PowerFx.Core.Binding
         }
 
         /// <summary>
+        /// Checks if node is a valid delegable boolean or boolean option set node.
+        /// </summary>
+        public bool IsValidBooleanDelegableNode(TexlNode node)
+        {
+            Contracts.AssertValue(node);
+
+            var nodeDType = GetType(node);
+            return (nodeDType.IsOptionSet && nodeDType.OptionSetInfo != null && nodeDType.OptionSetInfo.IsBooleanValued) ||
+                (nodeDType == DType.Boolean && node.Kind != NodeKind.BoolLit);
+        }
+
+        /// <summary>
         /// Checks that the node is associated with this binding. This is critical so that node IDs are valid.
         /// </summary>
         /// <param name="node"></param>

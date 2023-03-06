@@ -2,8 +2,12 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Collections.Generic;
-using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.App.ErrorContainers;
+using Microsoft.PowerFx.Core.Errors;
+using Microsoft.PowerFx.Core.Localization;
+using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Syntax;
 
 namespace Microsoft.PowerFx.Functions
 {
@@ -32,6 +36,50 @@ namespace Microsoft.PowerFx.Functions
 
             // ambiguous times (like 5 Nov 2023 01:10:00 is ambiguous in PST timezone) will be considered valid
             return true;
+        }
+
+        /// <summary>
+        /// Checks if all names within an aggregate DType exists.
+        /// </summary>
+        /// <param name="argType">Record DType.</param>
+        /// <param name="dataSourceType">Table DType.</param>
+        /// <param name="arg">Arg node.</param>
+        /// <param name="errors">Error object reference.</param>
+        /// <param name="supportsParamCoercion">Does the caller function support coercion.</param>
+        /// <returns></returns>
+        internal static bool CheckAggregateNames(this DType argType, DType dataSourceType, TexlNode arg, IErrorContainer errors, bool supportsParamCoercion = false)
+        {
+            bool isValid = true;
+
+            foreach (var typedName in argType.GetNames(DPath.Root))
+            {
+                DName name = typedName.Name;
+                DType type = typedName.Type;
+
+                if (!dataSourceType.TryGetType(name, out DType dsNameType))
+                {
+                    dataSourceType.ReportNonExistingName(FieldNameKind.Display, errors, typedName.Name, arg);
+                    isValid = false;
+                    continue;
+                }
+
+                if (!type.Accepts(dsNameType, out var schemaDifference, out var schemaDifferenceType) &&
+                    (!supportsParamCoercion || !type.CoercesTo(dsNameType, out var coercionIsSafe, aggregateCoercion: false) || !coercionIsSafe))
+                {
+                    if (dsNameType.Kind == type.Kind)
+                    {
+                        errors.Errors(arg, type, schemaDifference, schemaDifferenceType);
+                    }
+                    else
+                    {
+                        errors.EnsureError(DocumentErrorSeverity.Severe, arg, TexlStrings.ErrTypeError_Arg_Expected_Found, name, dsNameType.GetKindString(), type.GetKindString());
+                    }
+
+                    isValid = false;
+                }
+            }
+
+            return isValid;
         }
     }
 }
