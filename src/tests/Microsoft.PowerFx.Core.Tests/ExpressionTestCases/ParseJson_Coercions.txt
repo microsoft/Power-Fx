@@ -39,7 +39,7 @@ Errors: Error 4-24: Untyped objects cannot be used as the first argument to func
 6
 
 >> Filter(ParseJSON("[1,2,3]"), true)
-Errors: Error 7-27: Untyped objects cannot be used as the first argument to functions which support record scopes.|Error 0-34: The function 'Filter' has some invalid arguments.
+Errors: Error 7-27: Invalid argument type.|Error 0-34: The function 'Filter' has some invalid arguments.
 
 // Comparison tests
 >> Abs(5) = Abs(ParseJSON("5"))
