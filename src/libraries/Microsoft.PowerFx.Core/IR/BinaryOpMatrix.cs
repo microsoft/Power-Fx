@@ -57,6 +57,42 @@ namespace Microsoft.PowerFx.Core.IR
                 return BinaryOpKind.Invalid;
             }
 
+            if (leftType.IsUntypedObject && rightType.Kind == DKind.ObjNull)
+            {
+                if (binding.TryGetCoercedType(node.Left, out var leftCoerced))
+                {
+                    kindToUse = leftCoerced.Kind;
+                }
+                else
+                {
+                    switch (node.Op)
+                    {
+                        case BinaryOp.NotEqual:
+                            return BinaryOpKind.NeqNullUntyped;
+                        case BinaryOp.Equal:
+                            return BinaryOpKind.EqNullUntyped;
+                    }
+                }
+            }
+
+            if (rightType.IsUntypedObject && leftType.Kind == DKind.ObjNull)
+            {
+                if (binding.TryGetCoercedType(node.Right, out var rightCoerced))
+                {
+                    kindToUse = rightCoerced.Kind;
+                }
+                else
+                {
+                    switch (node.Op)
+                    {
+                        case BinaryOp.NotEqual:
+                            return BinaryOpKind.NeqNullUntyped;
+                        case BinaryOp.Equal:
+                            return BinaryOpKind.EqNullUntyped;
+                    }
+                }
+            }
+
             switch (kindToUse)
             {
                 case DKind.Number:

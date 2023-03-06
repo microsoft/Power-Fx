@@ -95,9 +95,6 @@ namespace Microsoft.PowerFx.Core.Functions
         // Return true if the function is asynchronous, false otherwise.
         public virtual bool IsAsync => false;
 
-        // Return true if the function is tracked in telemetry.
-        public virtual bool IsTrackedInTelemetry => true;
-
         // Return true if the function is declared as variadic.
         public bool IsVariadicFunction => MaxArity == int.MaxValue;
 
@@ -113,20 +110,9 @@ namespace Microsoft.PowerFx.Core.Functions
         // Return true if the function is stateless (same result for same input), or false otherwise.
         public virtual bool IsStateless => true;
 
-        // Return true if the function supports inlining during codegen.
-        public virtual bool SupportsInlining => false;
-
         // Returns false if we want to block the function within FunctionWithScope calls
         // that have a nondeterministic operation order (due to multiple async calls).
         public virtual bool AllowedWithinNondeterministicOperationOrder => true;
-
-        // Returns true if the function creates an implicit dependency on the control's parent screen.
-        public virtual bool CreatesImplicitScreenDependency => false;
-
-        // Returns true if the function can be used in test cases; all "global" functions should
-        // work, functionst that create screen dependencies don't by default (but can be overriden
-        // if the function is ready for that)
-        public virtual bool CanBeUsedInTests => !CreatesImplicitScreenDependency;
 
         /// <summary>
         /// Whether the function always produces a visible error if CheckTypes returns invalid.
@@ -177,9 +163,6 @@ namespace Microsoft.PowerFx.Core.Functions
 
         // Return true if the function expects a screen's context variables to be suggested within a record argument.
         public virtual bool CanSuggestContextVariables => false;
-
-        // Returns true if it's valid to suggest ThisItem for this function as an argument.
-        public virtual bool CanSuggestThisItem => false;
 
         // Return true if this function affects collection schemas.
         public virtual bool AffectsCollectionSchemas => false;

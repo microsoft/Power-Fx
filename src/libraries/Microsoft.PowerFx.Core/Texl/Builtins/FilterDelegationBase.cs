@@ -104,6 +104,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                     case NodeKind.FirstName:
                         {
+                            // Only boolean option sets and boolean fields are allowed to delegate
+                            if (!binding.IsValidBooleanDelegableNode(dsNode))
+                            {
+                                SuggestDelegationHint(dsNode, binding);
+                                return false;
+                            }
+
                             if (!firstNameStrategy.IsValidFirstNameNode(dsNode.AsFirstName(), binding, null))
                             {
                                 return false;
@@ -114,6 +121,15 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                     case NodeKind.DottedName:
                         {
+                            // Only boolean option set, boolean fields and views are allowed to delegate
+                            var nodeDType = binding.GetType(dsNode);
+                            if (!(binding.IsValidBooleanDelegableNode(dsNode)
+                                || (nodeDType == DType.ViewValue)))
+                            {
+                                SuggestDelegationHint(dsNode, binding);
+                                return false;
+                            }
+
                             if (!dottedNameStrategy.IsValidDottedNameNode(dsNode.AsDottedName(), binding, filterMetadata, null))
                             {
                                 return false;

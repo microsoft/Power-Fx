@@ -250,3 +250,24 @@ Error({Kind:ErrorKind.Div0})
 
 >> Text(1.2, "", "vi-Vn")
 "1,2"
+
+>> Text(GUID("0f8fad5bd9cb469fa16570867728950e"))
+"0f8fad5b-d9cb-469f-a165-70867728950e"
+
+>> Text(GUID("0f8fad5bd9cb469fa16570867728950e"), "b")
+"{0f8fad5b-d9cb-469f-a165-70867728950e}"
+
+>> Text(GUID("0f8fad5bd9cb469fa16570867728950e"), "d", "vi-Vn")
+"0f8fad5b-d9cb-469f-a165-70867728950e"
+
+>> Text(GUID("0f8fad5bd9cb469fa16570867728950e"), "p", "vi-Vn")
+"(0f8fad5b-d9cb-469f-a165-70867728950e)"
+
+>> Text(GUID("0f8fad5bd9cb469fa16570867728950e"), "n", "vi-Vn")
+"0f8fad5bd9cb469fa16570867728950e"
+
+>> Text(GUID("0f8fad5bd9cb469fa16570867728950e"), "b", "vi-Vn")
+"{0f8fad5b-d9cb-469f-a165-70867728950e}"
+
+>> Text(GUID("0f8fad5bd9cb469fa16570867728950e"), "", "vi-Vn")
+"0f8fad5b-d9cb-469f-a165-70867728950e"

@@ -30,3 +30,9 @@ Table({Value:1},{Value:2},{Value:3},{Value:99},{Value:88},{Value:77},{Value:77},
 
 >> Collect([1,2,3],{Value:200})
 {Value:200}
+
+>> Collect([1,2,3],{Value:Date(2023,3,1)})
+Errors: Error 16-38: The type of this argument 'Value' does not match the expected type 'Number'. Found type 'Date'.|Error 0-39: The function 'Collect' has some invalid arguments.
+
+>> Collect(Table({x:1,y:2}), {x: 3}).y 
+Blank()
