@@ -5048,4 +5048,8 @@
   <data name="AboutOptionSetInfo_option" xml:space="preserve">
     <value>An option set value whose logical name will be returned.</value>
   </data>
+  <data name="AboutLanguage" xml:space="preserve">
+    <value>Get the default locale set at runtime.</value>
+    <comment>Description of 'Language' function.</comment>
+  </data>
 </root>

@@ -216,6 +216,7 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction WeekNum = _library.Add(new WeekNumFunction());
         public static readonly TexlFunction With = _library.Add(new WithFunction());
         public static readonly TexlFunction Year = _library.Add(new YearFunction());
+        public static readonly TexlFunction Language = _library.Add(new LanguageFunction());
 
         public static readonly TexlFunction IsUTCToday = _featureGateFunctions.Add(new IsUTCTodayFunction());
         public static readonly TexlFunction UTCNow = _featureGateFunctions.Add(new UTCNowFunction());
