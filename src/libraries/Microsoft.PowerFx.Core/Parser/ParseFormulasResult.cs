@@ -44,7 +44,7 @@ namespace Microsoft.PowerFx.Core.Parser
 
             if (errors?.Any() ?? false)
             {
-                ExpErrors = ExpressionError.New(errors, CultureInfo.CurrentCulture);
+                ExpErrors = ExpressionError.New(errors, CultureInfo.InvariantCulture);
                 HasError = true;
             }
 

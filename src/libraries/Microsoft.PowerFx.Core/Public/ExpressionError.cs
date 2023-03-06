@@ -147,7 +147,7 @@ namespace Microsoft.PowerFx
             }
             else
             {
-                return errors.Select(x => ExpressionError.New(x, CultureInfo.CurrentCulture)).ToArray();
+                return errors.Select(x => ExpressionError.New(x, CultureInfo.InvariantCulture)).ToArray();
             }
         }
 
