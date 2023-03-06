@@ -20,7 +20,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public override ArgPreprocessor GetArgPreprocessor(int index)
         {
-            return base.GetGenericArgPreprocessor(index);
+            return index == 0 ? ArgPreprocessor.ReplaceBlankWithFuncResultTypedZero : ArgPreprocessor.ReplaceBlankWithFloatZero;
         }
 
         public override bool IsSelfContained => true;

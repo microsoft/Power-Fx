@@ -379,7 +379,7 @@ namespace Microsoft.PowerFx.Core.IR
             var acceptsDec = DType.Decimal.Accepts(fromType);
             Contracts.Assert(acceptsN || acceptsB || acceptsDT || acceptsD || acceptsT || acceptsS || acceptsG || acceptsOS || acceptsV || acceptsDec, "Unsupported type coercion");
 
-            if (DType.Number.Accepts(fromType))
+            if (DType.Number.Accepts(fromType) || DType.DateTime.Accepts(fromType))
             {
                 if (fromType.Kind == DKind.Date)
                 {

@@ -493,7 +493,14 @@ namespace Microsoft.PowerFx.Functions
         #region Common Blank Replacement Pipeline Stages
         private static FormulaValue ReplaceBlankWithZero(IRContext irContext, int index)
         {
-            return new NumberValue(IRContext.NotInSource(FormulaType.Number), 0.0);
+            if (irContext.ResultType == FormulaType.Number)
+            {
+                return new NumberValue(IRContext.NotInSource(FormulaType.Number), 0.0);
+            }
+            else
+            {
+                return new DecimalValue(IRContext.NotInSource(FormulaType.Decimal), 0m);
+            }
         }
 
         private static FormulaValue ReplaceBlankWithEmptyString(IRContext irContext, int index)
@@ -516,7 +523,14 @@ namespace Microsoft.PowerFx.Functions
             {
                 if (indicesToReplace.Contains(index))
                 {
-                    return new NumberValue(IRContext.NotInSource(FormulaType.Number), 0.0);
+                    if (irContext.ResultType == FormulaType.Number)
+                    {
+                        return new NumberValue(IRContext.NotInSource(FormulaType.Number), 0.0);
+                    }
+                    else
+                    {
+                        return new DecimalValue(IRContext.NotInSource(FormulaType.Decimal), 0m);
+                    }
                 }
 
                 return new BlankValue(irContext);

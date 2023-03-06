@@ -75,7 +75,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var r2 = FormulaValue.NewRecordFromFields(new NamedValue("OptionSetField1", o2Val), new NamedValue("StrField1", FormulaValue.New("test2")));
             var r3 = FormulaValue.NewRecordFromFields(new NamedValue("OptionSetField1", o1Val), new NamedValue("StrField1", FormulaValue.New("test3")));
             var r4 = FormulaValue.NewRecordFromFields(new NamedValue("OptionSetField1", o2Val), new NamedValue("StrField1", FormulaValue.New("test4")));
-            
+
             // Testing with missing/blank option set field is throwing an exception. Once that is resolved uncomment and fix the test case in Sort.txt
             var r5 = FormulaValue.NewRecordFromFields(new NamedValue("StrField1", FormulaValue.New("test5")));
 
@@ -109,14 +109,14 @@ namespace Microsoft.PowerFx.Interpreter.Tests
              */
 
             var rType = RecordType.Empty()
-                .Add(new NamedFormulaType("Field1", FormulaType.Number, "DisplayNameField1"))
+                .Add(new NamedFormulaType("Field1", FormulaType.Decimal, "DisplayNameField1"))
                 .Add(new NamedFormulaType("Field2", FormulaType.String, "DisplayNameField2"))
                 .Add(new NamedFormulaType("Field3", FormulaType.DateTime, "DisplayNameField3"))
                 .Add(new NamedFormulaType("Field4", FormulaType.Boolean, "DisplayNameField4"));
 
             var r1Fields = new List<NamedValue>()
             {
-                new NamedValue("Field1", FormulaValue.New(1)),
+                new NamedValue("Field1", FormulaValue.New(1m)),
                 new NamedValue("Field2", FormulaValue.New("earth")),
                 new NamedValue("Field3", FormulaValue.New(DateTime.Parse("1/1/2022").Date)),
                 new NamedValue("Field4", FormulaValue.New(true))
@@ -124,7 +124,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var r2Fields = new List<NamedValue>()
             {
-                new NamedValue("Field1", FormulaValue.New(2)),
+                new NamedValue("Field1", FormulaValue.New(2m)),
                 new NamedValue("Field2", FormulaValue.New("moon")),
                 new NamedValue("Field3", FormulaValue.New(DateTime.Parse("2/1/2022").Date)),
                 new NamedValue("Field4", FormulaValue.New(false))
@@ -152,14 +152,14 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var recordWithRecordFields1 = new List<NamedValue>()
             {
-                new NamedValue("Field1", FormulaValue.New(1)),
+                new NamedValue("Field1", FormulaValue.New(1m)),
                 new NamedValue("Field2", FormulaValue.NewRecordFromFields(new List<NamedValue>()
                 {
-                    new NamedValue("Field2_1", FormulaValue.New(121)),
+                    new NamedValue("Field2_1", FormulaValue.New(121m)),
                     new NamedValue("Field2_2", FormulaValue.New("2_2")),
                     new NamedValue("Field2_3", FormulaValue.NewRecordFromFields(new List<NamedValue>()
                     {
-                        new NamedValue("Field2_3_1", FormulaValue.New(1231)),
+                        new NamedValue("Field2_3_1", FormulaValue.New(1231m)),
                         new NamedValue("Field2_3_2", FormulaValue.New("common")),
                     }))
                 })),
@@ -168,14 +168,14 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var recordWithRecordFields2 = new List<NamedValue>()
             {
-                new NamedValue("Field1", FormulaValue.New(2)),
+                new NamedValue("Field1", FormulaValue.New(2m)),
                 new NamedValue("Field2", FormulaValue.NewRecordFromFields(new List<NamedValue>()
                 {
-                    new NamedValue("Field2_1", FormulaValue.New(221)),
+                    new NamedValue("Field2_1", FormulaValue.New(221m)),
                     new NamedValue("Field2_2", FormulaValue.New("2_2")),
                     new NamedValue("Field2_3", FormulaValue.NewRecordFromFields(new List<NamedValue>()
                     {
-                        new NamedValue("Field2_3_1", FormulaValue.New(2231)),
+                        new NamedValue("Field2_3_1", FormulaValue.New(2231m)),
                         new NamedValue("Field2_3_2", FormulaValue.New("common")),
                     }))
                 })),
@@ -184,14 +184,14 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var recordWithRecordFields3 = new List<NamedValue>()
             {
-                new NamedValue("Field1", FormulaValue.New(3)),
+                new NamedValue("Field1", FormulaValue.New(3m)),
                 new NamedValue("Field2", FormulaValue.NewRecordFromFields(new List<NamedValue>()
                 {
-                    new NamedValue("Field2_1", FormulaValue.New(321)),
+                    new NamedValue("Field2_1", FormulaValue.New(321m)),
                     new NamedValue("Field2_2", FormulaValue.New("2_2")),
                     new NamedValue("Field2_3", FormulaValue.NewRecordFromFields(new List<NamedValue>()
                     {
-                        new NamedValue("Field2_3_1", FormulaValue.New(3231)),
+                        new NamedValue("Field2_3_1", FormulaValue.New(3231m)),
                         new NamedValue("Field2_3_2", FormulaValue.New("common")),
                     }))
                 })),
@@ -296,9 +296,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
                 var symbolValues = SymbolValues.NewFromRecord(symbolTable, parameters);
                 var runtimeConfig = new RuntimeConfig(symbolValues);
-                                
+
                 if (iSetup.TimeZoneInfo != null)
-                {                    
+                {
                     runtimeConfig.AddService(iSetup.TimeZoneInfo);
                 }
 

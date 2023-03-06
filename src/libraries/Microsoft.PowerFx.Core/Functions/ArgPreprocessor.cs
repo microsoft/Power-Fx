@@ -10,8 +10,10 @@ namespace Microsoft.PowerFx.Core.Functions
     internal enum ArgPreprocessor
     {
         None = 0,
-        ReplaceBlankWithZero = 1,
-        ReplaceBlankWithZeroAndTruncate = 2,
+        ReplaceBlankWithFloatZero = 1,
+        ReplaceBlankWithFloatZeroAndTruncate = 2,
         ReplaceBlankWithEmptyString = 3,
+        ReplaceBlankWithFuncResultTypedZero = 4,
+        ReplaceBlankWithDecimalZero = 5,
     }
 }

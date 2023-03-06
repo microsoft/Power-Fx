@@ -165,7 +165,15 @@ namespace Microsoft.PowerFx
                     }
 
                     // IR pretty printer: IR( <expr> )
-                    if ((match = Regex.Match(expr, @"^\s*IR\((?<expr>.*)\)\s*$", RegexOptions.Singleline)).Success)
+                    else if ((match = Regex.Match(expr, @"^\s*Parse\((?<expr>.*)\)\s*$", RegexOptions.Singleline)).Success)
+                    {
+                        var opts = new ParserOptions() { AllowsSideEffects = true, NumberIsFloat = _numberIsFloat };
+                        var pr = _engine.Parse(match.Groups["expr"].Value, opts);
+                        Console.WriteLine(pr.ToString());
+                    }
+
+                    // IR pretty printer: IR( <expr> )
+                    else if ((match = Regex.Match(expr, @"^\s*IR\((?<expr>.*)\)\s*$", RegexOptions.Singleline)).Success)
                     {
                         var opts = new ParserOptions() { AllowsSideEffects = true, NumberIsFloat = _numberIsFloat };
                         var cr = _engine.Check(match.Groups["expr"].Value, options: opts);

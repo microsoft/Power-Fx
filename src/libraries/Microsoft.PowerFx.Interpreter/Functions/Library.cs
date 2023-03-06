@@ -85,7 +85,7 @@ namespace Microsoft.PowerFx.Functions
                     BuiltinFunctionsCore.Abs.Name,
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: NoOpAlreadyHandledByIR,
-                    checkRuntimeTypes: DeferRuntimeTypeChecking,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<FormulaValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: Abs)

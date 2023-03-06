@@ -1443,9 +1443,13 @@ namespace Microsoft.PowerFx.Core.Functions
         internal ArgPreprocessor GetGenericArgPreprocessor(int index)
         {
             var paramType = ParamTypes[index] ?? DType.Unknown;
-            if (paramType == DType.Number || paramType == DType.Decimal)
+            if (paramType == DType.Number)
             {
-                return ArgPreprocessor.ReplaceBlankWithZero;
+                return ArgPreprocessor.ReplaceBlankWithFloatZero;
+            }
+            else if (paramType == DType.Decimal)
+            {
+                return ArgPreprocessor.ReplaceBlankWithDecimalZero;
             }
             else if (paramType == DType.String)
             {

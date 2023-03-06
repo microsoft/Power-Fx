@@ -3673,7 +3673,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 var childType = _txb.GetType(node.Child);
 
-                var res = CheckUnaryOpCore(_txb.ErrorContainer, node, childType);
+                var res = CheckUnaryOpCore(_txb.ErrorContainer, node, childType, _txb.BindingConfig.NumberIsFloat);
 
                 foreach (var coercion in res.Coercions)
                 {

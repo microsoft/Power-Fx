@@ -21,7 +21,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public override ArgPreprocessor GetArgPreprocessor(int index)
         {
-                return _replaceBlankWithZero ? base.GetGenericArgPreprocessor(index) : ArgPreprocessor.None;
+                return _replaceBlankWithZero ? 
+                    (_nativeDecimal ? ArgPreprocessor.ReplaceBlankWithFuncResultTypedZero : ArgPreprocessor.ReplaceBlankWithFloatZero)
+                    : ArgPreprocessor.None;
         }
 
         public override bool IsSelfContained => true;
@@ -166,7 +168,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.Assert(args.Length == MaxArity);
             Contracts.AssertValue(errors);
 
-            var fValid = true;
+            var fValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            Contracts.Assert(returnType.IsTable);
 
             int tables = 0;
 
@@ -204,6 +207,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 scalarType = DType.Number;
             }
 
+            returnType = DType.CreateTable(new TypedName(scalarType, GetOneColumnTableResultName(context.Features)));
+
             for (int i = 0; i < argTypes.Length; i++)
             {   
                 if (argTypes[i].IsTable)
@@ -234,8 +239,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             if (fValid)
             {
-                returnType = DType.CreateTable(new TypedName(scalarType, GetOneColumnTableResultName(context.Features)));
-
                 if (!context.Features.HasFlag(Features.ConsistentOneColumnTableResult) && args.Length == 1)
                 {
                     if (nodeToCoercedTypeMap?.Any() ?? false)
@@ -251,7 +254,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
             else
             {
-                returnType = null;
                 nodeToCoercedTypeMap = null;
             }
 

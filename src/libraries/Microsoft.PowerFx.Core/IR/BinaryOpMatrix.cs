@@ -476,6 +476,8 @@ namespace Microsoft.PowerFx.Core.IR
                                 return BinaryOpKind.AddDayAndDateTime;
                             }
 
+                            // Decimal TODO: DateTimeNoTimeZone?
+
                         default:
                             // Only operations where both operands are Decimal-compatible result in Decimal
                             if (DType.DecimalBinaryOp(leftType, rightType, numberIsFloat))

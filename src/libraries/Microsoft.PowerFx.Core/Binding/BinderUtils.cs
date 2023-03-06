@@ -912,7 +912,7 @@ namespace Microsoft.PowerFx.Core.Binding
             return new BinderCheckTypeResult();
         }
 
-        internal static BinderCheckTypeResult CheckUnaryOpCore(IErrorContainer errorContainer, UnaryOpNode node, DType childType)
+        internal static BinderCheckTypeResult CheckUnaryOpCore(IErrorContainer errorContainer, UnaryOpNode node, DType childType, bool numberIsFloat)
         {
             Contracts.AssertValue(node);
 
@@ -932,16 +932,37 @@ namespace Microsoft.PowerFx.Core.Binding
                         case DKind.DateTime:
                             // Important to keep the type of minus-datetime as datetime, to allow d-d/D-d to be detected
                             return new BinderCheckTypeResult() { Node = node, NodeType = DType.DateTime };
+                        case DKind.DateTimeNoTimeZone:
+                            return new BinderCheckTypeResult() { Node = node, NodeType = DType.DateTimeNoTimeZone };
                         case DKind.Decimal:
                             return new BinderCheckTypeResult() { Node = node, NodeType = DType.Decimal };
+                        case DKind.Number:
+                            return new BinderCheckTypeResult() { Node = node, NodeType = DType.Number };
                         default:
-                            var resDefault = CheckTypeCore(errorContainer, node.Child, childType, DType.Number, /* coerced: */ DType.String, DType.Boolean, DType.UntypedObject);
-                            return new BinderCheckTypeResult() { Node = node, NodeType = DType.Number, Coercions = resDefault.Coercions };
+                            var resultType = numberIsFloat ? DType.Number : DType.Decimal;
+                            var resDefault = CheckTypeCore(errorContainer, node.Child, childType, resultType, /* coerced: */ DType.String, DType.Boolean, DType.UntypedObject);
+                            return new BinderCheckTypeResult() { Node = node, NodeType = resultType, Coercions = resDefault.Coercions };
                     }
 
                 case UnaryOp.Percent:
-                    var resPercent = CheckTypeCore(errorContainer, node.Child, childType, DType.Number, /* coerced: */ DType.Decimal, DType.String, DType.Boolean, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime, DType.UntypedObject);
-                    return new BinderCheckTypeResult() { Node = node, NodeType = childType.Kind == DKind.Decimal ? DType.Decimal : DType.Number, Coercions = resPercent.Coercions };
+                    switch (childType.Kind)
+                    {
+                        case DKind.Decimal:
+                            return new BinderCheckTypeResult() { Node = node, NodeType = DType.Decimal };
+                        case DKind.Number:
+                            return new BinderCheckTypeResult() { Node = node, NodeType = DType.Number };
+                        case DKind.Date:
+                        case DKind.Time:
+                        case DKind.DateTime:
+                        case DKind.DateTimeNoTimeZone:
+                            var resPercent = CheckTypeCore(errorContainer, node.Child, childType, DType.Number, /* coerced: */ DType.Date, DType.DateTime, DType.DateTimeNoTimeZone, DType.Time);
+                            return new BinderCheckTypeResult() { Node = node, NodeType = DType.Number, Coercions = resPercent.Coercions };
+                        default:
+                            var resultType = numberIsFloat ? DType.Number : DType.Decimal;
+                            var resPercent2 = CheckTypeCore(errorContainer, node.Child, childType, resultType, /* coerced: */ DType.String, DType.Boolean, DType.UntypedObject);
+                            return new BinderCheckTypeResult() { Node = node, NodeType = resultType, Coercions = resPercent2.Coercions };
+                    }
+
                 default:
                     Contracts.Assert(false);
                     return new BinderCheckTypeResult() { Node = node, NodeType = DType.Error };
