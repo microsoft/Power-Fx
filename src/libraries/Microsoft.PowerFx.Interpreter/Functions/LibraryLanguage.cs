@@ -19,7 +19,7 @@ namespace Microsoft.PowerFx.Functions
 
         public static StringValue Language(EvalVisitor runner, IRContext irContext)
         {
-            return new StringValue(irContext, runner.CultureInfo.ToString());
+            return new StringValue(irContext, runner.CultureInfo.Name);
         }
     }
 }

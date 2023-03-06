@@ -29,5 +29,13 @@ namespace Microsoft.PowerFx.Tests
             var language = Language(runner, IRContext.NotInSource(FormulaType.String));
             Assert.Equal(vnCulture.ToLower(), language.Value.ToLower());
         }
+
+        // Test default language
+        [Fact]
+        public void GetDefaultLanguageTest()
+        {
+            var engine = new RecalcEngine();
+            engine.Eval("Language()");
+        }
     }
 }
