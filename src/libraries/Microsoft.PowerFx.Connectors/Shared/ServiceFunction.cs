@@ -365,13 +365,6 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
             return _parameterDefaultValues.TryGetValue(paramName, out defaultValue);
         }
 
-        // We changed all async functions to append "Async" to the end of async function names,
-        // but to maintain the previous behavior of service functions, we suppress this in this case.
-        public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
-        {
-            return GetUniqueTexlRuntimeName(suffix: "", suppressAsync: true);
-        }
-
 #if !canvas
         // Provide as hook for execution. 
         public IAsyncTexlFunction _invoker;
