@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -72,9 +73,11 @@ namespace Microsoft.PowerFx.Types
 
             if (info != null && info.DisplayNameProvider.LogicalToDisplayPairs.Any())
             {
+                var firstOrderedValue = info.DisplayNameProvider.LogicalToDisplayPairs.OrderBy(x => x.Key.Value, StringComparer.Ordinal).First();
+
                 sb.Append(this.OptionSetName.Value);
                 sb.Append(".");
-                sb.Append(info.DisplayNameProvider.LogicalToDisplayPairs.OrderBy(kvp => kvp.Value.Value).First().Value);
+                sb.Append(firstOrderedValue.Value);
             }
             else
             {
