@@ -525,9 +525,8 @@ namespace Microsoft.PowerFx.Core.IR
 
                     if (DType.Color.Accepts(resultType))
                     {
-                        Contracts.Assert(value is uint);
-                        result = new ColorLiteralNode(context.GetIRContext(node), (uint)value);
-                    }
+                        result = new ColorLiteralNode(context.GetIRContext(node), System.Drawing.Color.FromName(node.Right.Name.ToString()));
+                    } 
                     else if (DType.Number.Accepts(resultType))
                     {
                         result = new NumberLiteralNode(context.GetIRContext(node), (double)value);
