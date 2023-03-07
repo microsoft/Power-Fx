@@ -769,5 +769,17 @@ namespace Microsoft.PowerFx.Core.Tests
 
             Assert.True(result.HasError);
         }
+
+        [Theory]
+        [InlineData("a = 10; b = in'valid ; c = 20;", "c")]
+        [InlineData("a = 10; b = in'valid", "a")]
+        public void TestFormulaParseRestart(string script, string key)
+        {
+            var formulasResult = TexlParser.ParseFormulasScript(script);
+            Assert.True(formulasResult.HasError);
+
+            // Parser restarted, and found 'c' correctly
+            Assert.Contains(formulasResult.NamedFormulas, kvp => kvp.Key.Name.Value == key);
+        }
     }
 }

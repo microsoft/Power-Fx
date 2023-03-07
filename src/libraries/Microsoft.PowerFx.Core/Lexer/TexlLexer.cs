@@ -517,6 +517,9 @@ namespace Microsoft.PowerFx.Syntax
         // Returns true if the specified character is a new line character.
         public static bool IsNewLineCharacter(char ch) => ch == '\n';
 
+        // Returns true if the specified character is a semicolon character.
+        public static bool IsSemicolonCharacter(char ch) => ch == ';';
+
         // Takes a valid name and changes it to an identifier, escaping if needed.
         public static string EscapeName(DName name)
         {
@@ -1273,6 +1276,13 @@ namespace Microsoft.PowerFx.Syntax
                         // Terminate an identifier on a new line character
                         // Don't include the new line in the identifier
                         fDelimiterEnd = false;
+                        break;
+                    }
+                    else if (IsSemicolonCharacter(CurrentChar))
+                    {
+                        // Terminate an identifier on a semicolon character
+                        // Don't include the new line in the identifier
+                        fDelimiterEnd = true;
                         break;
                     }
                     else

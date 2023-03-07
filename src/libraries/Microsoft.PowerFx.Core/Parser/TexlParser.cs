@@ -281,6 +281,15 @@ namespace Microsoft.PowerFx.Core.Parser
                             var result = ParseExpr(Precedence.None);
 
                             namedFormulas.Add(new KeyValuePair<IdentToken, TexlNode>(thisIdentifier.As<IdentToken>(), result));
+
+                            // If the result was an error, keep moving cursor until end of named formula expression
+                            if (result.Kind == NodeKind.Error)
+                            {
+                                while (_curs.TidCur != TokKind.Semicolon && _curs.TidCur != TokKind.Eof)
+                                {
+                                    _curs.TokMove();
+                                }
+                            }
                         }
 
                         _curs.TokMove();
@@ -643,6 +652,11 @@ namespace Microsoft.PowerFx.Core.Parser
                         case TokKind.True:
                         case TokKind.False:
                             PostError(_curs.TokCur, TexlStrings.ErrOperatorExpected);
+                            if (_flagsMode.Peek().HasFlag(Flags.NamedFormulas))
+                            {
+                                goto case TokKind.Semicolon;
+                            }
+
                             tok = _curs.TokMove();
                             rightTrivia = ParseTrivia();
                             right = ParseExpr(Precedence.Error);
