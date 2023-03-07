@@ -6,17 +6,12 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.PowerFx;
 using Microsoft.PowerFx.Core;
-using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Tests;
-using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Tests;
 using Microsoft.PowerFx.Types;
-using static Microsoft.PowerFx.Core.Localization.TexlStrings;
 
 namespace Microsoft.PowerFx.Interpreter.Tests
 {
@@ -76,7 +71,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var r2 = FormulaValue.NewRecordFromFields(new NamedValue("OptionSetField1", o2Val), new NamedValue("StrField1", FormulaValue.New("test2")));
             var r3 = FormulaValue.NewRecordFromFields(new NamedValue("OptionSetField1", o1Val), new NamedValue("StrField1", FormulaValue.New("test3")));
             var r4 = FormulaValue.NewRecordFromFields(new NamedValue("OptionSetField1", o2Val), new NamedValue("StrField1", FormulaValue.New("test4")));
-            
+
             // Testing with missing/blank option set field is throwing an exception. Once that is resolved uncomment and fix the test case in Sort.txt
             var r5 = FormulaValue.NewRecordFromFields(new NamedValue("StrField1", FormulaValue.New("test5")));
 
@@ -280,7 +275,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     (engine, parameters) = handler(config);
                 }
                 else
-                {                    
+                {
                     engine = new RecalcEngine(config);
                     parameters = null;
                 }
@@ -302,9 +297,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
                 var symbolValues = SymbolValues.NewFromRecord(symbolTable, parameters);
                 var runtimeConfig = new RuntimeConfig(symbolValues);
-                                
+
                 if (iSetup.TimeZoneInfo != null)
-                {                    
+                {
                     runtimeConfig.AddService(iSetup.TimeZoneInfo);
                 }
 
@@ -328,11 +323,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     return new RunResult(newValue);
                 }
 
-                // Need to reset culture to English US as .ToExpression() call below will return an invariant expression
-                config = new PowerFxConfig(new CultureInfo("en-US"), iSetup.Features);
-                config.EnableParseJSONFunction();
-                engine = new RecalcEngine(config);
-
                 // Serialization test. Serialized expression must produce an identical result.
                 var newValueDeserialized = await engine.EvalAsync(newValue.ToExpression(), CancellationToken.None, runtimeConfig: runtimeConfig);
 
@@ -344,7 +334,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         // Useful for testing mutation functions. 
         internal class ReplRunner : BaseRunner
         {
-            private readonly RecalcEngine _engine;            
+            private readonly RecalcEngine _engine;
 
             public ReplRunner(RecalcEngine engine)
             {

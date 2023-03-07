@@ -6,9 +6,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text;
-using Microsoft.PowerFx.Syntax;
-using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core.Tests
 {
@@ -173,7 +170,7 @@ namespace Microsoft.PowerFx.Core.Tests
                         Input = line,
                         SourceLine = i + 1, // 1-based
                         SourceFile = thisFile,
-                        SetupHandlerName = fileSetup                      
+                        SetupHandlerName = fileSetup
                     };
                     continue;
                 }
@@ -204,7 +201,7 @@ namespace Microsoft.PowerFx.Core.Tests
                         if (e == null)
                         {
                             e = new Engine(new PowerFxConfig(new CultureInfo(locale)));
-                            _engines.Add(e);                            
+                            _engines.Add(e);
                         }
 
                         TestCase testWithLocale = new TestCase()
@@ -213,7 +210,7 @@ namespace Microsoft.PowerFx.Core.Tests
                             SourceFile = test.SourceFile,
                             SourceLine = test.SourceLine,
                             SetupHandlerName = test.SetupHandlerName,
-                            Expected = test.Expected, //(locale == "en-US") ? test.Expected : e.GetDisplayExpression(test.Expected, null as ReadOnlySymbolTable),
+                            Expected = test.Expected, // Never adapted to locale
                             Locale = locale
                         };
 
