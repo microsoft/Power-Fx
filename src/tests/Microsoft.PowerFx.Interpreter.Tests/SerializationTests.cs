@@ -48,30 +48,30 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         {
             var engine = new RecalcEngine(new PowerFxConfig());
             var symbol = new SymbolTable();
-
-            var boolOptionSetDisplayNameProvider = DisplayNameUtility.MakeUnique(new Dictionary<string, string>
+            
+            var optionSetDisplayNameProvider = DisplayNameUtility.MakeUnique(new Dictionary<string, string>
             {
-                { "0", "Negative" },
-                { "1", "Positive" },
+                { "1", "One" },
+                { "2", "Two" },
+                { "0", "Zero" },
+                { "4", "Four" },
             });
 
-            engine.Config.AddOptionSet(new BooleanOptionSet("BoolOptionSet", boolOptionSetDisplayNameProvider));
+            var optionSet = new OptionSet("MyOptionSet", optionSetDisplayNameProvider);
 
-            var optionSetValueType = new OptionSetValueType(new BooleanOptionSet("BoolOptionSet", boolOptionSetDisplayNameProvider));
-            var optionSetValuePositive = new OptionSetValue("Positive", optionSetValueType);
+            engine.Config.AddOptionSet(optionSet);
 
+            var optionSetValueType = new OptionSetValueType(optionSet);
             var optionSetDefaultExpressionValue = optionSetValueType.DefaultExpressionValue();
 
-            Assert.Equal("BoolOptionSet.Negative", optionSetDefaultExpressionValue);
+            Assert.Equal("MyOptionSet.Zero", optionSetDefaultExpressionValue);
 
-            var expr = $"If({optionSetDefaultExpressionValue}, 0, {optionSetValuePositive.ToExpression()}, 1, 2)";
-
-            var check = engine.Check(expr);
+            var check = engine.Check(optionSetDefaultExpressionValue);
             Assert.True(check.IsSuccess);
 
-            var result = check.GetEvaluator().Eval() as NumberValue;
+            var result = check.GetEvaluator().Eval();
 
-            Assert.Equal(1, result.Value);
+            Assert.IsType<OptionSetValue>(result);
         }
 
         [Fact]
