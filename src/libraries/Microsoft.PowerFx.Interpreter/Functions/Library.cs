@@ -1803,7 +1803,7 @@ namespace Microsoft.PowerFx.Functions
 
             if (args[0] is TableValue tv)
             {
-                return new BooleanValue(irContext, tv.Count() == 0);
+                return new BooleanValue(irContext, !tv.Rows.Any());
             }
             else
             {
