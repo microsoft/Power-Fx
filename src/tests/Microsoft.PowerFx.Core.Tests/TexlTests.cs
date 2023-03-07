@@ -294,14 +294,37 @@ namespace Microsoft.PowerFx.Core.Tests
                 symbol);
         }
 
-        private class BooleanOptionSet : OptionSet, IExternalOptionSet
+        internal class BooleanOptionSet : IExternalOptionSet
         {
-            public BooleanOptionSet(string name, DisplayNameProvider displayNameProvider)
-                : base(name, displayNameProvider)
+            public DisplayNameProvider DisplayNameProvider => DisplayNameUtility.MakeUnique(new Dictionary<string, string>
             {
-            }
+                { "Yes", "Yes" },
+                { "No", "No" },
+            });
 
-            bool IExternalOptionSet.IsBooleanValued => true;
+            public IEnumerable<DName> OptionNames => new[] { new DName("No"), new DName("Yes") };
+
+            public DKind BackingKind => DKind.Boolean;
+
+            public bool IsConvertingDisplayNameMapping => false;
+
+            public DName EntityName => new DName("BoolOptionSet");
+
+            public DType Type => DType.CreateOptionSetType(this);
+
+            public OptionSetValueType OptionSetValueType => new OptionSetValueType(this);
+
+            public bool TryGetValue(DName fieldName, out OptionSetValue optionSetValue)
+            {
+                if (fieldName.Value == "No" || fieldName.Value == "Yes")
+                {
+                    optionSetValue = new OptionSetValue(fieldName.Value, this.OptionSetValueType, fieldName.Value == "Yes");
+                    return true;
+                }
+
+                optionSetValue = null;
+                return false;
+            }
         }
 
         [Theory]
@@ -317,18 +340,12 @@ namespace Microsoft.PowerFx.Core.Tests
             var symbol = new SymbolTable();
             symbol.AddVariable("Table", new TableType(TestUtils.DT("*[A:n]")));
 
-            var boolOptionSetDisplayNameProvider = DisplayNameUtility.MakeUnique(new Dictionary<string, string>
-            {
-                { "Yes", "Yes" },
-                { "No", "No" },
-            });
-
             TestSimpleBindingSuccess(
                 expression,
                 DType.Number,
                 symbol,
                 features: Features.All,
-                optionSets: new[] { new BooleanOptionSet("BoolOptionSet", boolOptionSetDisplayNameProvider) });
+                optionSets: new[] { new BooleanOptionSet() });
         }
 
         [Theory]
@@ -3240,7 +3257,7 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.False(result.IsSuccess);
         }
 
-        private static void TestSimpleBindingSuccess(string script, DType expectedType, SymbolTable symbolTable = null, Features features = Features.None, OptionSet[] optionSets = null)
+        private static void TestSimpleBindingSuccess(string script, DType expectedType, SymbolTable symbolTable = null, Features features = Features.None, IExternalOptionSet[] optionSets = null)
         {
             var config = new PowerFxConfig(features)
             {
@@ -3254,7 +3271,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 {
                     foreach (var optionSet in optionSets)
                     {
-                        config.AddOptionSet(optionSet);
+                        config.AddEntity(optionSet);
                     }
                 }
             }
