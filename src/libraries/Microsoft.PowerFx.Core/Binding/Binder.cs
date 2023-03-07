@@ -411,6 +411,18 @@ namespace Microsoft.PowerFx.Core.Binding
         }
 
         /// <summary>
+        /// Checks if node is a valid delegable boolean or boolean option set node.
+        /// </summary>
+        public bool IsValidBooleanDelegableNode(TexlNode node)
+        {
+            Contracts.AssertValue(node);
+
+            var nodeDType = GetType(node);
+            return (nodeDType.IsOptionSet && nodeDType.OptionSetInfo != null && nodeDType.OptionSetInfo.IsBooleanValued) ||
+                (nodeDType == DType.Boolean && node.Kind != NodeKind.BoolLit);
+        }
+
+        /// <summary>
         /// Checks that the node is associated with this binding. This is critical so that node IDs are valid.
         /// </summary>
         /// <param name="node"></param>
@@ -4257,8 +4269,10 @@ namespace Microsoft.PowerFx.Core.Binding
                         maybeFunc = overloadWithUntypedObjectLambda;
                         scopeInfo = maybeFunc.ScopeInfo;
                     }
-                    else
+                    else if (numOverloads != 1)
                     {
+                        // We have multiple overloads, therefore we cannot pick one because it's impossible
+                        // to determine if the first argument is an untyped array or a scalar
                         UntypedObjectScopeError(node, maybeFunc, nodeInput);
 
                         PreVisitBottomUp(node, 1);

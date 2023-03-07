@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -30,6 +31,8 @@ namespace Microsoft.PowerFx.Functions
 
     internal static partial class Library
     {
+        internal static readonly IReadOnlyList<FormulaType> AllowedListConvertToString = new FormulaType[] { FormulaType.String, FormulaType.Number, FormulaType.DateTime, FormulaType.Date, FormulaType.Time, FormulaType.Boolean, FormulaType.Guid };
+
         private static readonly RegexOptions RegExFlags = LibraryFlags.RegExFlags;
 
         private static readonly Regex _ampmReplaceRegex = new Regex("[aA][mM]\\/[pP][mM]", RegExFlags);
@@ -46,7 +49,7 @@ namespace Microsoft.PowerFx.Functions
         private static readonly Regex _minutesDetokenizeRegex = new Regex("[\u000A][\u000A]+", RegExFlags);
         private static readonly Regex _secondsDetokenizeRegex = new Regex("[\u0008][\u0008]+", RegExFlags);
         private static readonly Regex _milisecondsDetokenizeRegex = new Regex("[\u000e]+", RegExFlags);
-
+        
         // Char is used for PA string escaping 
         public static FormulaValue Char(IRContext irContext, NumberValue[] args)
         {
@@ -250,6 +253,8 @@ namespace Microsoft.PowerFx.Functions
                 return false;
             }
 
+            Contract.Assert(AllowedListConvertToString.Contains(value.Type));
+
             switch (value)
             {
                 case StringValue sv:
@@ -309,6 +314,9 @@ namespace Microsoft.PowerFx.Functions
                     break;
                 case BooleanValue b:
                     result = new StringValue(irContext, b.Value.ToString(culture).ToLower());
+                    break;
+                case GuidValue g:
+                    result = new StringValue(irContext, g.Value.ToString("d", CultureInfo.InvariantCulture));
                     break;
             }
 
@@ -805,7 +813,6 @@ namespace Microsoft.PowerFx.Functions
             }
 
             // Compute max possible memory this operation may need.
-            // Compute max possible memory this operation may need.
             var sourceLen = source.Value.Length;
             var matchLen = match.Value.Length;
             var replacementLen = replacement.Value.Length;
@@ -827,56 +834,37 @@ namespace Microsoft.PowerFx.Functions
                 return source;
             }
 
-            var sourceValue = source.Value;
-            var idx = sourceValue.IndexOf(match.Value);
+            StringBuilder strBuilder = new StringBuilder(source.Value);
             if (instanceNum < 0)
             {
-                while (idx >= 0)
-                {
-                    eval.CheckCancel();
-
-                    var temp = sourceValue.Substring(0, idx) + replacement.Value;
-                    sourceValue = sourceValue.Substring(idx + match.Value.Length);
-                    var idx2 = sourceValue.IndexOf(match.Value);
-                    if (idx2 < 0)
-                    {
-                        idx = idx2;
-                    }
-                    else
-                    {
-                        idx = temp.Length + idx2;
-                    }
-
-                    sourceValue = temp + sourceValue;
-                }
+                strBuilder.Replace(match.Value, replacement.Value);
             }
             else
             {
-                var num = 0;
-                while (idx >= 0 && ++num < instanceNum)
+                // 0 is an error. This was already enforced by the IR
+                Contract.Assert(instanceNum > 0);
+
+                for (int idx = 0; idx < source.Value.Length; idx += match.Value.Length)
                 {
                     eval.CheckCancel();
 
-                    var idx2 = sourceValue.Substring(idx + match.Value.Length).IndexOf(match.Value);
-                    if (idx2 < 0)
+                    idx = source.Value.IndexOf(match.Value, idx);
+                    if (idx == -1)
                     {
-                        idx = idx2;
+                        break;
                     }
-                    else
+                    
+                    if (--instanceNum == 0)
                     {
-                        idx += match.Value.Length + idx2;
+                        strBuilder.Replace(match.Value, replacement.Value, idx, match.Value.Length);
+                        break;
                     }
-                }
-
-                if (idx >= 0 && num == instanceNum)
-                {
-                    sourceValue = sourceValue.Substring(0, idx) + replacement.Value + sourceValue.Substring(idx + match.Value.Length);
                 }
             }
 
-            return new StringValue(irContext, sourceValue);
+            return new StringValue(irContext, strBuilder.ToString());
         }
-
+        
         public static FormulaValue StartsWith(IRContext irContext, StringValue[] args)
         {
             var text = args[0];
