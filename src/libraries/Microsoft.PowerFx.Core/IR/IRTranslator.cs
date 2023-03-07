@@ -534,7 +534,8 @@ namespace Microsoft.PowerFx.Core.IR
 
                     if (DType.Color.Accepts(resultType))
                     {
-                        result = new ColorLiteralNode(context.GetIRContext(node), System.Drawing.Color.FromName(node.Right.Name.ToString()));
+                        var uintValue = Convert.ToUInt32(value);
+                        result = new ColorLiteralNode(context.GetIRContext(node), System.Drawing.Color.FromArgb((byte)((uintValue >> 24) & 0xFF), (byte)((uintValue >> 16) & 0xFF), (byte)((uintValue >> 8) & 0xFF), (byte)(uintValue & 0xFF)));
                     } 
                     else if (DType.Number.Accepts(resultType))
                     {
