@@ -58,7 +58,7 @@ namespace Microsoft.PowerFx.Tests
 
             public DKind BackingKind => DKind.Boolean;
 
-            public bool IsConvertingDisplayNameMapping => true;
+            public bool IsConvertingDisplayNameMapping => false;
 
             public DName EntityName => new DName("BoolOptionSet");
 

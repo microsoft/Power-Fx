@@ -74,7 +74,7 @@ namespace Microsoft.PowerFx.Types
             {
                 sb.Append(this.OptionSetName.Value);
                 sb.Append(".");
-                sb.Append(info.DisplayNameProvider.LogicalToDisplayPairs.First().Value);
+                sb.Append(info.DisplayNameProvider.LogicalToDisplayPairs.OrderBy(kvp => kvp.Value.Value).First().Value);
             }
             else
             {
