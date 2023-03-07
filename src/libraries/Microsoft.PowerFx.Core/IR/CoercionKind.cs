@@ -9,7 +9,7 @@ namespace Microsoft.PowerFx.Core.IR
 
         TextToNumber,
         BooleanToNumber,
-        BooleanOptionSetToNumber,
+        OptionSetToNumber,
         DateToNumber,
         TimeToNumber,
         DateTimeToNumber,
@@ -37,7 +37,7 @@ namespace Microsoft.PowerFx.Core.IR
 
         NumberToBoolean,
         TextToBoolean,
-        BooleanOptionSetToBoolean,
+        OptionSetToBoolean,
 
         RecordToRecord, // See field mappings
         TableToTable,
@@ -58,7 +58,9 @@ namespace Microsoft.PowerFx.Core.IR
         DateToDateTime,
 
         BooleanToOptionSet,
-        AggregateToDataEntity,
+        AggregateToDataEntity,  
+        
+        OptionSetToColor,
 
         UntypedToText,
         UntypedToBoolean,

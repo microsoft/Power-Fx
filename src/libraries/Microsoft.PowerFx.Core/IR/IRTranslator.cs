@@ -499,6 +499,15 @@ namespace Microsoft.PowerFx.Core.IR
                             break;
                         }
 
+                    case BindKind.Enum:
+                        {
+                            // If StronglyTypedEnums is disabled, this should have been handled by the DottedName visitor.
+                            Contracts.Assert(context.Binding.Features.HasFlag(Features.StronglyTypedBuiltinEnums));
+
+                            result = new ResolvedObjectNode(context.GetIRContext(node), info.Data);
+                            break;
+                        }
+
                     default:
                         Contracts.Assert(false, "Unsupported Bindkind");
                         throw new NotImplementedException();
@@ -805,8 +814,11 @@ namespace Microsoft.PowerFx.Core.IR
                     case CoercionKind.BooleanToNumber:
                         unaryOpKind = UnaryOpKind.BooleanToNumber;
                         break;
-                    case CoercionKind.BooleanOptionSetToNumber:
-                        unaryOpKind = UnaryOpKind.BooleanOptionSetToNumber;
+                    case CoercionKind.OptionSetToNumber:
+                        unaryOpKind = UnaryOpKind.OptionSetToNumber;
+                        break;
+                    case CoercionKind.OptionSetToColor:
+                        unaryOpKind = UnaryOpKind.OptionSetToColor;
                         break;
                     case CoercionKind.DateToNumber:
                         unaryOpKind = UnaryOpKind.DateToNumber;
@@ -865,8 +877,8 @@ namespace Microsoft.PowerFx.Core.IR
                     case CoercionKind.TextToBoolean:
                         unaryOpKind = UnaryOpKind.TextToBoolean;
                         break;
-                    case CoercionKind.BooleanOptionSetToBoolean:
-                        unaryOpKind = UnaryOpKind.BooleanOptionSetToBoolean;
+                    case CoercionKind.OptionSetToBoolean:
+                        unaryOpKind = UnaryOpKind.OptionSetToBoolean;
                         break;
                     case CoercionKind.RecordToTable:
                         unaryOpKind = UnaryOpKind.RecordToTable;
