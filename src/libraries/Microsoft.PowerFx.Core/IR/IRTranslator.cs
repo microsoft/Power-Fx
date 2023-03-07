@@ -534,8 +534,7 @@ namespace Microsoft.PowerFx.Core.IR
 
                     if (DType.Color.Accepts(resultType))
                     {
-                        var uintValue = Convert.ToUInt32(value);
-                        result = new ColorLiteralNode(context.GetIRContext(node), System.Drawing.Color.FromArgb((byte)((uintValue >> 24) & 0xFF), (byte)((uintValue >> 16) & 0xFF), (byte)((uintValue >> 8) & 0xFF), (byte)(uintValue & 0xFF)));
+                        result = new ColorLiteralNode(context.GetIRContext(node), ConvertToColor(value));
                     } 
                     else if (DType.Number.Accepts(resultType))
                     {
@@ -938,6 +937,16 @@ namespace Microsoft.PowerFx.Core.IR
                 }
 
                 return new UnaryOpNode(IRContext.NotInSource(FormulaType.Build(toType)), unaryOpKind, child);
+            }
+
+            private System.Drawing.Color ConvertToColor(object inputValue)
+            {
+                var value = Convert.ToUInt32(inputValue);
+                return System.Drawing.Color.FromArgb(
+                            (byte)((value >> 24) & 0xFF),
+                            (byte)((value >> 16) & 0xFF),
+                            (byte)((value >> 8) & 0xFF),
+                            (byte)(value & 0xFF));
             }
         }
 
