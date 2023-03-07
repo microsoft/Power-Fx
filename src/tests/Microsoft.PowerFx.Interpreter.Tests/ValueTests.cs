@@ -20,6 +20,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
     public class ValueTests
     {
         private static readonly TypeMarshallerCache _cache = new TypeMarshallerCache();
+        private static int _count = 0;
 
         [Theory]
         [InlineData(true, "true")]
@@ -357,6 +358,23 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.Equal(3, combinedError.Errors.Count);
             Assert.All(combinedError.Errors, (e) => e.Kind = ErrorKind.Custom);
             Assert.Equal("test1", combinedError.Errors.First().Message);
+        }
+
+        [Fact]
+        public void NewRecordFromFieldsTest()
+        {
+            RecordValue record = FormulaValue.NewRecordFromFields(CreateFields());
+
+            Assert.Equal(1, _count);
+        }
+
+        private IEnumerable<NamedValue> CreateFields()
+        {
+            _count++;
+
+            yield return new NamedValue("Num", FormulaValue.New(12));            
+            yield return new NamedValue("Str", FormulaValue.New("test string"));
+            yield return new NamedValue("Bool", FormulaValue.New(true));
         }
     }
 
