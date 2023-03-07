@@ -360,6 +360,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.Equal("test1", combinedError.Errors.First().Message);
         }
 
+        // Ensure the enumeration is only traversed one.
         [Fact]
         public void NewRecordFromFieldsTest()
         {
