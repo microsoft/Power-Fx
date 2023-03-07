@@ -72,9 +72,11 @@ namespace Microsoft.PowerFx.Types
 
             if (info != null && info.DisplayNameProvider.LogicalToDisplayPairs.Any())
             {
+                var firstOrderedValue = info.DisplayNameProvider.LogicalToDisplayPairs.OrderBy(x => x.Key.Value).First();
+
                 sb.Append(this.OptionSetName.Value);
                 sb.Append(".");
-                sb.Append(info.DisplayNameProvider.LogicalToDisplayPairs.First().Value);
+                sb.Append(firstOrderedValue.Value);
             }
             else
             {
