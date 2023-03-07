@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 
@@ -52,8 +53,16 @@ namespace Microsoft.PowerFx.Core.IR
                     return GetToNumberCoercion(fromType);
 
                 case DKind.Color:
+                    if (DType.OptionSetValue.Accepts(fromType) && fromType.OptionSetInfo?.BackingKind == DKind.Color)
+                    {
+                        return CoercionKind.OptionSetToColor;
+                    }
+
+                    Contracts.Assert(false, "Unsupported type coercion");
+                    break;
+
                 case DKind.PenImage:
-                    // It is not safe to coerce these.
+                    // It is not safe to coerce this type.
                     Contracts.Assert(false, "Unsupported type coercion");
                     break;
 
@@ -115,7 +124,7 @@ namespace Microsoft.PowerFx.Core.IR
                     return GetToEnumCoercion(fromType, toType);
 
                 case DKind.Boolean:
-                    Contracts.Assert(DType.Number.Accepts(fromType) || DType.String.Accepts(fromType) || (DType.OptionSetValue.Accepts(fromType) && (fromType.OptionSetInfo?.IsBooleanValued ?? false)), "Unsupported type coercion");
+                    Contracts.Assert(DType.Number.Accepts(fromType) || DType.String.Accepts(fromType) || (DType.OptionSetValue.Accepts(fromType) && fromType.OptionSetInfo?.BackingKind == DKind.Boolean), "Unsupported type coercion");
                     if (DType.Number.Accepts(fromType))
                     {
                         return CoercionKind.NumberToBoolean;
@@ -126,9 +135,9 @@ namespace Microsoft.PowerFx.Core.IR
                         return CoercionKind.TextToBoolean;
                     }
 
-                    if (DType.OptionSetValue.Accepts(fromType) && (fromType.OptionSetInfo?.IsBooleanValued ?? false))
+                    if (DType.OptionSetValue.Accepts(fromType) && fromType.OptionSetInfo?.BackingKind == DKind.Boolean)
                     {
-                        return CoercionKind.BooleanOptionSetToBoolean;
+                        return CoercionKind.OptionSetToBoolean;
                     }
 
                     return CoercionKind.None; // Implicit coercion?
@@ -209,9 +218,9 @@ namespace Microsoft.PowerFx.Core.IR
                     return CoercionKind.TextToDate;
 
                 case DKind.OptionSetValue:
-                    Contracts.Assert(DType.OptionSetValue.Accepts(fromType) || (DType.Boolean.Accepts(fromType) && (toType.OptionSetInfo?.IsBooleanValued ?? false)), "Unsupported type coercion");
+                    Contracts.Assert(DType.OptionSetValue.Accepts(fromType) || (DType.Boolean.Accepts(fromType) && toType.OptionSetInfo?.BackingKind == DKind.Boolean), "Unsupported type coercion");
 
-                    if (DType.Boolean.Accepts(fromType) && (toType.OptionSetInfo?.IsBooleanValued ?? false))
+                    if (DType.Boolean.Accepts(fromType) && toType.OptionSetInfo?.BackingKind == DKind.Boolean)
                     {
                         return CoercionKind.BooleanToOptionSet;
                     }
@@ -236,7 +245,7 @@ namespace Microsoft.PowerFx.Core.IR
             Contracts.Assert(
                 DType.String.Accepts(fromType) || DType.Boolean.Accepts(fromType) || DType.Number.Accepts(fromType) ||
                 DType.DateTime.Accepts(fromType) || DType.Time.Accepts(fromType) || DType.Date.Accepts(fromType) || DType.DateTimeNoTimeZone.Accepts(fromType) ||
-                fromType.IsControl || (DType.OptionSetValue.Accepts(fromType) && (fromType.OptionSetInfo?.IsBooleanValued ?? false)), "Unsupported type coercion");
+                fromType.IsControl || (DType.OptionSetValue.Accepts(fromType) && ((fromType.OptionSetInfo?.BackingKind == DKind.Boolean) || fromType.OptionSetInfo?.BackingKind == DKind.Number)), "Unsupported type coercion");
 
             if (DType.String.Accepts(fromType))
             {
@@ -263,9 +272,9 @@ namespace Microsoft.PowerFx.Core.IR
                 return CoercionKind.DateToNumber;
             }
 
-            if (DType.OptionSetValue.Accepts(fromType) && (fromType.OptionSetInfo?.IsBooleanValued ?? false))
+            if (DType.OptionSetValue.Accepts(fromType) && (fromType.OptionSetInfo?.BackingKind == DKind.Number))
             {
-                return CoercionKind.BooleanOptionSetToNumber;
+                return CoercionKind.OptionSetToNumber;
             }
 
             return CoercionKind.None;

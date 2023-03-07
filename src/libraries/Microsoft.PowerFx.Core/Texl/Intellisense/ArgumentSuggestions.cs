@@ -108,7 +108,7 @@ namespace Microsoft.PowerFx.Intellisense
                 requiresSuggestionEscaping = false;
                 foreach (var name in enumInfo.EnumType.GetNames(DPath.Root))
                 {
-                    retVal.Add(new KeyValuePair<string, DType>(TexlLexer.EscapeName(enumInfo.Name) + TexlLexer.PunctuatorDot + TexlLexer.EscapeName(name.Name.Value), name.Type));
+                    retVal.Add(new KeyValuePair<string, DType>(TexlLexer.EscapeName(enumInfo.EntityName.Value) + TexlLexer.PunctuatorDot + TexlLexer.EscapeName(name.Name.Value), name.Type));
                 }
 
                 return retVal;
@@ -180,7 +180,7 @@ namespace Microsoft.PowerFx.Intellisense
                     }
                     else
                     {
-                        retVal.Add(new KeyValuePair<string, DType>(TexlLexer.EscapeName(enumInfo.Name) + TexlLexer.PunctuatorDot + TexlLexer.EscapeName(name.Name.Value), name.Type));
+                        retVal.Add(new KeyValuePair<string, DType>(TexlLexer.EscapeName(enumInfo.EntityName.Value) + TexlLexer.PunctuatorDot + TexlLexer.EscapeName(name.Name.Value), name.Type));
                     }
                 }
             }

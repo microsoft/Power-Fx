@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx;
@@ -12,6 +13,7 @@ using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Tests;
 using Microsoft.PowerFx.Types;
@@ -26,7 +28,13 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             { "OptionSetTestSetup", OptionSetTestSetup },
             { "MutationFunctionsTestSetup", MutationFunctionsTestSetup },
             { "OptionSetSortTestSetup", OptionSetSortTestSetup },
+            { "AllEnumsSetup", AllEnumsSetup },
         };
+                
+        private static (RecalcEngine engine, RecordValue parameters) AllEnumsSetup(PowerFxConfig config)
+        {
+            return (new RecalcEngine(PowerFxConfig.BuildWithEnumStore(config.CultureInfo, new EnumStoreBuilder().WithDefaultEnums(), new TexlFunctionSet(), config.Features)), null);
+        }
 
         private static (RecalcEngine engine, RecordValue parameters) OptionSetTestSetup(PowerFxConfig config)
         {
