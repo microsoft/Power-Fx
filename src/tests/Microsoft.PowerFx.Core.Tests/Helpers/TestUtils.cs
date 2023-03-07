@@ -216,11 +216,6 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
 
                 return true;
             }
-
-            public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
-            {
-                return base.GetUniqueTexlRuntimeName(isPrefetching) + _runtimeFunctionNameSuffix;
-            }
         }
 
         public class MockFunction : BuiltinFunction
@@ -255,11 +250,6 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
             {
                 yield break;
             }
-
-            public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
-            {
-                return base.GetUniqueTexlRuntimeName() + _runtimeFunctionNameSuffix;
-            }
         }
 
         public sealed class MockFunctionWithScope : FunctionWithTableInput
@@ -287,26 +277,18 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
             {
                 yield break;
             }
-
-            public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
-            {
-                return base.GetUniqueTexlRuntimeName() + _runtimeFunctionNameSuffix;
-            }
         }
 
         public sealed class MockSilentDelegableFilterFunction : FilterFunctionBase
         {
-            private readonly string _runtimeFunctionNameSuffix;
-
             public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
             {
                 yield break;
             }
 
-            public MockSilentDelegableFilterFunction(string name, string runtimeFunctionNameSuffix)
+            public MockSilentDelegableFilterFunction(string name)
                 : base(name, (l) => "MockFunction", FunctionCategories.Table, DType.EmptyTable, -2, 2, int.MaxValue, DType.EmptyTable)
             {
-                _runtimeFunctionNameSuffix = runtimeFunctionNameSuffix;
                 ScopeInfo = new FunctionScopeInfo(this, acceptsLiteralPredicates: false);
             }
 

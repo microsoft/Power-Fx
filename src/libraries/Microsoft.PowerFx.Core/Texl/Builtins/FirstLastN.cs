@@ -87,11 +87,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         {
             yield return new[] { TexlStrings.FirstLastNArg1, TexlStrings.FirstLastNArg2 };
         }
-
-        public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
-        {
-            return GetUniqueTexlRuntimeName(suffix: "_UO");
-        }
     }
 }
 #pragma warning restore SA1649 // File name should match first type name

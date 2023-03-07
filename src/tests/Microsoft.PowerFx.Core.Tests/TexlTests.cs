@@ -3144,7 +3144,7 @@ namespace Microsoft.PowerFx.Core.Tests
                             new DelegationCapability(DelegationCapability.Equal | DelegationCapability.StartsWith),
                             null))));
 
-            var silentFilterFunction = new TestUtils.MockSilentDelegableFilterFunction("TestSilentFilter", script);
+            var silentFilterFunction = new TestUtils.MockSilentDelegableFilterFunction("TestSilentFilter");
 
             try
             {

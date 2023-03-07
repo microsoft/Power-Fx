@@ -57,13 +57,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             yield return new[] { TexlStrings.LeftRightTArg1, TexlStrings.LeftRightArg2 };
         }
 
-        public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
-        {
-            // Disambiguate these from the scalar overloads, so we don't have to
-            // do type checking in the JS (runtime) implementation of Left/Right.
-            return GetUniqueTexlRuntimeName(suffix: "_TS");
-        }
-
         public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
@@ -103,13 +96,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
             yield return new[] { TexlStrings.LeftRightTArg1, TexlStrings.LeftRightArg2 };
-        }
-
-        public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
-        {
-            // Disambiguate these from the scalar overloads, so we don't have to
-            // do type checking in the JS (runtime) implementation of Left/Right.
-            return GetUniqueTexlRuntimeName(suffix: "_TT");
         }
 
         public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
@@ -154,13 +140,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
             yield return new[] { TexlStrings.LeftRightArg1, TexlStrings.LeftRightArg2 };
-        }
-
-        public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
-        {
-            // Disambiguate these from the scalar overloads, so we don't have to
-            // do type checking in the JS (runtime) implementation of Left/Right.
-            return GetUniqueTexlRuntimeName(suffix: "_ST");
         }
 
         public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)

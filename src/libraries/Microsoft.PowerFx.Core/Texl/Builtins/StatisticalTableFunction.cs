@@ -37,11 +37,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             yield return new[] { TexlStrings.StatisticalTArg1, TexlStrings.StatisticalTArg2 };
         }
 
-        public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
-        {
-            return GetUniqueTexlRuntimeName(suffix: "_T");
-        }
-
         public override bool IsServerDelegatable(CallNode callNode, TexlBinding binding)
         {
             Contracts.AssertValue(callNode);
