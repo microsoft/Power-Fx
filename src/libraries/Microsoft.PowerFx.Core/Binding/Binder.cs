@@ -4269,8 +4269,10 @@ namespace Microsoft.PowerFx.Core.Binding
                         maybeFunc = overloadWithUntypedObjectLambda;
                         scopeInfo = maybeFunc.ScopeInfo;
                     }
-                    else
+                    else if (numOverloads != 1)
                     {
+                        // We have multiple overloads, therefore we cannot pick one because it's impossible
+                        // to determine if the first argument is an untyped array or a scalar
                         UntypedObjectScopeError(node, maybeFunc, nodeInput);
 
                         PreVisitBottomUp(node, 1);
