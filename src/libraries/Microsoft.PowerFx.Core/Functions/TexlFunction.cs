@@ -360,25 +360,6 @@ namespace Microsoft.PowerFx.Core.Functions
             }
         }
 
-        // Return a unique name for this function (useful in the presence of overloads).
-        // This is used for name mangling and Texl -> runtime function mapping.
-        // TASK: 68797: We need a TexlFunction name -> JS/runtime function name map.
-        public virtual string GetUniqueTexlRuntimeName(bool isPrefetching = false)
-        {
-            return GetUniqueTexlRuntimeName(string.Empty);
-        }
-
-        protected string GetUniqueTexlRuntimeName(string suffix, bool suppressAsync = false)
-        {
-            var name = Namespace.IsRoot ? LocaleInvariantName : Namespace.Name + "__" + LocaleInvariantName;
-            if (name.Length <= 1)
-            {
-                return name.ToLowerInvariant();
-            }
-
-            return char.ToLowerInvariant(name[0]).ToString() + name.Substring(1) + suffix + (IsAsync && !suppressAsync ? "Async" : string.Empty);
-        }
-
         public bool HandleCheckInvocation(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             var result = CheckTypes(binding.CheckTypesContext, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);

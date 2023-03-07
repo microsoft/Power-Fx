@@ -58,6 +58,9 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
         public override bool IsHidden => _isHidden;
         public override bool IsSelfContained => !_isBehaviorOnly;
 
+        internal string ServiceFunctionName => Name;
+        internal string ServiceFunctionNamespace => Namespace.Name;
+
         public ServiceFunction(IService parentService, DPath theNamespace, string name, string localeSpecificName, string description,
             DType returnType, BigInteger maskLambdas, int arityMin, int arityMax, bool isBehaviorOnly, bool isAutoRefreshable, bool isDynamic, bool isCacheEnabled, int cacheTimetoutMs, bool isHidden,
             Dictionary<TypedName, List<string>> parameterOptions, ServiceFunctionParameterTemplate[] optionalParamInfo, ServiceFunctionParameterTemplate[] requiredParamInfo,
