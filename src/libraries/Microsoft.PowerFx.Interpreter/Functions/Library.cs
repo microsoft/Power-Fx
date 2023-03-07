@@ -1798,7 +1798,7 @@ namespace Microsoft.PowerFx.Functions
         {
             if (args[0] is BlankValue)
             {
-                return new BooleanValue(irContext, false);
+                return new BooleanValue(irContext, true);
             }
 
             if (args[0] is TableValue tv)

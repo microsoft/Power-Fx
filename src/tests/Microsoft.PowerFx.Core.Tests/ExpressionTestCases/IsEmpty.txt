@@ -43,7 +43,10 @@ false
 true
 
 >> IsEmpty(Blank())
-false
+true
+
+>> IsEmpty(If(1<0,[1,2,3]))
+true
 
 >> IsEmpty([Blank()])
 false
