@@ -795,7 +795,7 @@
     
   </data>
   <data name="AboutIfError_fallback" xml:space="preserve">
-    <value>Wartość, która jest zwracana, jeśli jest to pierwszy argument bez błędu.</value>
+    <value>Wartość, która jest zwracana, jeśli poprzedni argument zawierał błąd.</value>
     
   </data>
   <data name="AboutSubstitute" xml:space="preserve">
@@ -1847,6 +1847,10 @@
   </data>
   <data name="ErrTextInvalidFormat" xml:space="preserve">
     <value>Nieprawidłowy format.</value>
+    
+  </data>
+  <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
+    <value>Argument nie reprezentuje prawidłowej wartości daty lub godziny.</value>
     
   </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
@@ -4418,6 +4422,10 @@
     <value>Upewnij się, że podano tekst dla identyfikatora. Ten błąd występuje, gdy identyfikator zawiera same wartości puste lub spacje.</value>
     
   </data>
+  <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
+    <value>Unable to compare values of type {0}.</value>
+    
+  </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
     <value>Niezgodne typy do porównania. Nie można porównywać następujących typów: {0}, {1}.</value>
     
@@ -4834,8 +4842,18 @@
     <value>Ta funkcja jest niejednoznaczna, ponieważ zawiera wyrażenia lambda oraz identyfikatory kolumn dla tego samego argumentu.</value>
     
   </data>
-  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
-    <value>Opcja BooleanOptionSet o wartości „{0}” nie jest obsługiwana.</value>
+  <data name="OptionSetOptionNotSupported" xml:space="preserve">
+    <value>The value of option {0} is not of expected type {1}.</value>
     
+  </data>
+  <data name="AboutOptionSetInfo" xml:space="preserve">
+    <value>Zwraca nazwę logiczną danej wartości zestawu opcji.</value>
+    
+  </data>
+  <data name="AboutOptionSetInfoArg1" xml:space="preserve">
+    <value>opcja</value>
+  </data>
+  <data name="AboutOptionSetInfo_option" xml:space="preserve">
+    <value>Wartość zestawu opcji, której nazwa logiczna zostanie zwrócona.</value>
   </data>
 </root>
