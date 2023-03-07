@@ -57,9 +57,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 { "4", "Four" },
             });
 
-            engine.Config.AddOptionSet(new MyOptionSet("MyOptionSet", optionSetDisplayNameProvider));
+            var optionSet = new OptionSet("MyOptionSet", optionSetDisplayNameProvider);
 
-            var optionSetValueType = new OptionSetValueType(new MyOptionSet("MyOptionSet", optionSetDisplayNameProvider));
+            engine.Config.AddOptionSet(optionSet);
+
+            var optionSetValueType = new OptionSetValueType(optionSet);
             var optionSetDefaultExpressionValue = optionSetValueType.DefaultExpressionValue();
 
             Assert.Equal("MyOptionSet.Zero", optionSetDefaultExpressionValue);
@@ -103,14 +105,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             }
 
             bool IExternalOptionSet.IsBooleanValued => true;
-        }
-
-        private class MyOptionSet : OptionSet, IExternalOptionSet
-        {
-            public MyOptionSet(string name, DisplayNameProvider displayNameProvider)
-                : base(name, displayNameProvider)
-            {
-            }
         }
     }
 }
