@@ -30,3 +30,6 @@ Table({Value:RGBA(255,127,127,1)},{Value:RGBA(127,127,127,0)})
 
 >> ColorFade([RGBA(255,0,0,1), Blank()], If(1<0, 1))
 Table({Value:RGBA(255,0,0,1)},{Value:RGBA(0,0,0,0)})
+
+>> ColorFade([Color.Red, Color.Black, Color.ForestGreen], 100%)
+[RGBA(255,255,255,1), RGBA(255,255,255,1), RGBA(255,255,255,1)]
