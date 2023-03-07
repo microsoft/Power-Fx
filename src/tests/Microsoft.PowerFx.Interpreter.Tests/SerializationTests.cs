@@ -48,7 +48,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         {
             var engine = new RecalcEngine(new PowerFxConfig());
             var symbol = new SymbolTable();
-
+            
             var optionSetDisplayNameProvider = DisplayNameUtility.MakeUnique(new Dictionary<string, string>
             {
                 { "1", "One" },
