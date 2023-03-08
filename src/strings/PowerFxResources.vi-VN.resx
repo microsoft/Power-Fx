@@ -795,7 +795,7 @@
     
   </data>
   <data name="AboutIfError_fallback" xml:space="preserve">
-    <value>Giá trị được trả về nếu đó là đối số không lỗi đầu tiên.</value>
+    <value>Giá trị được trả về nếu đối số trước không phải là lỗi.</value>
     
   </data>
   <data name="AboutSubstitute" xml:space="preserve">
@@ -1849,6 +1849,10 @@
     <value>Định dạng không hợp lệ.</value>
     
   </data>
+  <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
+    <value>Đối số này không biểu thị một giá trị ngày hoặc giờ hợp lệ.</value>
+    
+  </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
     <value>Nguồn Dữ liệu này không hợp lệ. Vui lòng khắc phục lỗi trong ngăn "Nguồn dữ liệu" bằng cách bấm vào "Nội dung -&gt; Nguồn dữ liệu" hoặc "Xem -&gt; Tùy chọn"</value>
     
@@ -2294,7 +2298,7 @@
     <value>Hành vi</value>
   </data>
   <data name="DateTime" xml:space="preserve">
-    <value>Ngày &amp; Giờ</value>
+    <value>Ngày và giờ</value>
   </data>
   <data name="MathAndStat" xml:space="preserve">
     <value>Toán học &amp; Thống kê</value>
@@ -4418,6 +4422,10 @@
     <value>Hãy đảm bảo mã định danh của bạn chứa văn bản. Lỗi này xảy ra khi mã định danh chứa toàn khoảng trống hoặc dấu cách.</value>
     
   </data>
+  <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
+    <value>Unable to compare values of type {0}.</value>
+    
+  </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
     <value>Các loại không tương thích để so sánh. Những loại này không thể so sánh được: {0}, {1}.</value>
     
@@ -4834,8 +4842,18 @@
     <value>Hàm này không rõ ràng, chứa các biểu thức lambda và mã định danh cột cho cùng một đối số.</value>
     
   </data>
-  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
-    <value>Không hỗ trợ tùy chọn BooleanOptionSet {0}.</value>
+  <data name="OptionSetOptionNotSupported" xml:space="preserve">
+    <value>The value of option {0} is not of expected type {1}.</value>
     
+  </data>
+  <data name="AboutOptionSetInfo" xml:space="preserve">
+    <value>Trả về tên lô-gic của giá trị bộ tùy chọn cụ thể.</value>
+    
+  </data>
+  <data name="AboutOptionSetInfoArg1" xml:space="preserve">
+    <value>tùy chọn</value>
+  </data>
+  <data name="AboutOptionSetInfo_option" xml:space="preserve">
+    <value>Hệ thống sẽ trả về một giá trị bộ tùy chọn có tên lô-gic.</value>
   </data>
 </root>

@@ -21,7 +21,7 @@ namespace Microsoft.PowerFx.Core.Tests
         private readonly string _filePathCommon;
         private readonly string _filePathSpecific;
         private readonly string _engineName;
-        
+
         public TxtFileDataAttribute(string filePathCommon, string filePathSpecific, string engineName)
         {
             _filePathCommon = filePathCommon;
@@ -80,7 +80,7 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         internal static string GetDefaultTestDir(string filePath)
-        { 
+        {
             var executable = new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath;
             var curDir = Path.GetFullPath(Path.GetDirectoryName(executable));
             var testDir = Path.Combine(curDir, filePath);

@@ -795,7 +795,7 @@
     
   </data>
   <data name="AboutIfError_fallback" xml:space="preserve">
-    <value>Valoarea care este returnată dacă este primul argument non-eroare.</value>
+    <value>Valoarea care este returnată dacă argumentul anterior este o eroare.</value>
     
   </data>
   <data name="AboutSubstitute" xml:space="preserve">
@@ -1847,6 +1847,10 @@
   </data>
   <data name="ErrTextInvalidFormat" xml:space="preserve">
     <value>Format nevalid.</value>
+    
+  </data>
+  <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
+    <value>Argumentul nu reprezintă o valoare de dată sau oră validă.</value>
     
   </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
@@ -4418,6 +4422,10 @@
     <value>Asigurați-vă că aveți text pentru identificator. Această eroare apare atunci când identificatorul are numai blancuri sau spații.</value>
     
   </data>
+  <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
+    <value>Unable to compare values of type {0}.</value>
+    
+  </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
     <value>Tipuri incompatibile într-o comparație. Aceste tipuri nu pot fi comparate: {0}, {1}.</value>
     
@@ -4730,7 +4738,7 @@
     
   </data>
   <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
-    <value>Obiectele fără tip nu pot fi utilizate ca prim argument pentru funcțiile care acceptă domenii de înregistrare. </value>
+    <value>Obiectele fără tip nu pot fi utilizate ca prim argument pentru funcțiile care acceptă domenii de aplicare pentru înregistrări.</value>
     
   </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
@@ -4834,8 +4842,18 @@
     <value>Această funcție este ambiguă. Conține expresii lambda și identificatori de coloană pentru același argument.</value>
     
   </data>
-  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
-    <value>Opțiunea BooleanOptionSet {0} nu este acceptată.</value>
+  <data name="OptionSetOptionNotSupported" xml:space="preserve">
+    <value>The value of option {0} is not of expected type {1}.</value>
     
+  </data>
+  <data name="AboutOptionSetInfo" xml:space="preserve">
+    <value>Returnează numele logic al valorii setului dat de opțiuni.</value>
+    
+  </data>
+  <data name="AboutOptionSetInfoArg1" xml:space="preserve">
+    <value>opțiune</value>
+  </data>
+  <data name="AboutOptionSetInfo_option" xml:space="preserve">
+    <value>O valoare a setului de opțiuni al cărei nume logic va fi returnat.</value>
   </data>
 </root>

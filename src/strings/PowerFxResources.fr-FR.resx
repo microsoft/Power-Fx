@@ -169,7 +169,7 @@
     
   </data>
   <data name="AboutSwitch_switch_value" xml:space="preserve">
-    <value>Valeur à comparer à chaque valeur_correspondance.</value>
+    <value>Valeur à comparer avec chaque valeur_correspondance.</value>
     
   </data>
   <data name="AboutSwitch_match_value" xml:space="preserve">
@@ -775,7 +775,7 @@
     
   </data>
   <data name="ErrErrorIrrelevantField" xml:space="preserve">
-    <value>La fonction Error utilise uniquement les champs « Kind », « Message », « Notify », « Control » et « Property ».</value>
+    <value>La fonction Error utilise uniquement les champs "Genre", "Message", "Notifier", "Contrôle", and "Propriété".</value>
     
   </data>
   <data name="AboutIfError" xml:space="preserve">
@@ -795,7 +795,7 @@
     
   </data>
   <data name="AboutIfError_fallback" xml:space="preserve">
-    <value>Valeur qui est retournée s’il s’agit du premier argument qui n’est pas une erreur.</value>
+    <value>Valeur qui est retournée si l’argument précédent est une erreur.</value>
     
   </data>
   <data name="AboutSubstitute" xml:space="preserve">
@@ -949,7 +949,7 @@
     
   </data>
   <data name="AboutUTCNow" xml:space="preserve">
-    <value>Renvoie la date et l’heure actuelles en heure UTC.</value>
+    <value>Retourne la date et l’heure actuelles en heure UTC.</value>
     
   </data>
   <data name="AboutTimeZoneOffset" xml:space="preserve">
@@ -969,7 +969,7 @@
     
   </data>
   <data name="AboutUTCToday" xml:space="preserve">
-    <value>Renvoie la date actuelle en heure UTC.</value>
+    <value>Retourne la date actuelle en heure UTC.</value>
     
   </data>
   <data name="AboutWeekNum" xml:space="preserve">
@@ -1034,7 +1034,7 @@
     
   </data>
   <data name="TruncArg1" xml:space="preserve">
-    <value>number</value>
+    <value>nombre</value>
     
   </data>
   <data name="TruncArg2" xml:space="preserve">
@@ -1324,11 +1324,11 @@
     <value>Colonne de valeurs numériques à traiter.</value>
   </data>
   <data name="AboutLog" xml:space="preserve">
-    <value>Renvoie le logarithme d'un nombre pour la base donnée. La base par défaut est 10.</value>
+    <value>Retourne le logarithme d’un nombre pour la base donnée. La base par défaut est 10.</value>
     
   </data>
   <data name="AboutLogT" xml:space="preserve">
-    <value>Renvoie les valeurs de logarithme d'un nombre ou d'une colonne de nombres pour la base ou la colonne de bases donnée. La base par défaut est 10.</value>
+    <value>Retourne les valeurs de logarithme d’un nombre ou d’une colonne de nombres pour la base ou la colonne de bases donnée. La base par défaut est 10.</value>
     
   </data>
   <data name="AboutLog_number" xml:space="preserve">
@@ -1620,7 +1620,7 @@
     
   </data>
   <data name="AboutIsType" xml:space="preserve">
-    <value>Renvoie la valeur true si la valeur fournie est du type donné.</value>
+    <value>Retourne la valeur true si la valeur fournie est du type donné.</value>
     
   </data>
   <data name="IsTypeArg1" xml:space="preserve">
@@ -1746,7 +1746,7 @@
     
   </data>
   <data name="ErrBadRecordFieldType_FieldName_ExpectedType" xml:space="preserve">
-    <value>Type non valide pour le champ « {0} ». Le champ attendu est de type « {1} ».</value>
+    <value>Type non valide pour le champ '{0}'. Le champ attendu est de type '{1}'.</value>
     
   </data>
   <data name="ErrBadType_ExpectedType" xml:space="preserve">
@@ -1766,11 +1766,11 @@
     
   </data>
   <data name="ErrInvalidArgs_Func" xml:space="preserve">
-    <value>La fonction « {0} » contient des arguments non valides.</value>
+    <value>La fonction '{0}' contient des arguments non valides.</value>
     
   </data>
   <data name="ErrNeedTable_Func" xml:space="preserve">
-    <value>Le premier argument de « {0} » doit être une table.</value>
+    <value>Le premier argument de '{0}' doit être une table.</value>
     
   </data>
   <data name="ErrInvalidPropertyAccess" xml:space="preserve">
@@ -1778,23 +1778,23 @@
     
   </data>
   <data name="ErrNeedTableCol_Func" xml:space="preserve">
-    <value>Le premier argument de « {0} » doit être une table à colonne unique.</value>
+    <value>Le premier argument de '{0}' doit être une table à colonne unique.</value>
     
   </data>
   <data name="ErrInvalidSchemaNeedStringCol_Col" xml:space="preserve">
-    <value>Schéma non valide. Colonne de valeurs de texte attendue pour « {0} ».</value>
+    <value>Schéma non valide. Colonne de valeurs de texte attendue pour '{0}'.</value>
     
   </data>
   <data name="ErrInvalidSchemaNeedDateCol_Col" xml:space="preserve">
-    <value>Schéma non valide. Colonne de valeurs de date attendue pour « {0} ».</value>
+    <value>Schéma non valide. Colonne de valeurs de date attendue pour '{0}'.</value>
     
   </data>
   <data name="ErrInvalidSchemaNeedNumCol_Col" xml:space="preserve">
-    <value>Schéma non valide. Colonne de valeurs numériques attendue pour « {0} ».</value>
+    <value>Schéma non valide. Colonne de valeurs numériques attendue pour '{0}'.</value>
     
   </data>
   <data name="ErrInvalidSchemaNeedColorCol_Col" xml:space="preserve">
-    <value>Schéma non valide. Colonne de valeurs de couleur attendue pour « {0} ».</value>
+    <value>Schéma non valide. Colonne de valeurs de couleur attendue pour '{0}'.</value>
     
   </data>
   <data name="ErrInvalidSchemaNeedCol" xml:space="preserve">
@@ -1810,7 +1810,7 @@
     
   </data>
   <data name="ErrNeedRecord_Func" xml:space="preserve">
-    <value>Le premier argument de « {0} » doit être un enregistrement.</value>
+    <value>Le premier argument de '{0}' doit être un enregistrement.</value>
     
   </data>
   <data name="ErrNeedEntity_EntityName" xml:space="preserve">
@@ -1849,6 +1849,10 @@
     <value>Format non valide.</value>
     
   </data>
+  <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
+    <value>L’argument ne représente pas une valeur de date ou d’heure valide.</value>
+    
+  </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
     <value>Cette source de données n’est pas valide. Corrigez l’erreur dans le volet « Sources de données » en cliquant sur « Contenu -&gt; Sources de données » ou « Affichage -&gt; Options »</value>
     
@@ -1862,11 +1866,11 @@
     
   </data>
   <data name="ErrTypeError_Ex1_Ex2_Found" xml:space="preserve">
-    <value>Le type de cet argument « {2} » ne correspond à aucun des types attendus « {0} » ou « {1} ».</value>
+    <value>Le type de cet argument '{2}' ne correspond à aucun des types attendus '{0}' ou '{1}'.</value>
     
   </data>
   <data name="ErrTypeError_Arg_Expected_Found" xml:space="preserve">
-    <value>Le type de cet argument « {0} » ne correspond pas au type attendu « {1} ». Type trouvé « {2} ».</value>
+    <value>Le type de cet argument '{0}'  ne correspond pas au type attendu '{1}'. Type trouvé '{2}'.</value>
     
   </data>
   <data name="ErrTypeError_WrongType" xml:space="preserve">
@@ -1878,27 +1882,27 @@
     
   </data>
   <data name="ErrExpectedStringLiteralArg_Name" xml:space="preserve">
-    <value>L’argument « {0} » n’est pas valide. Un littéral de texte est attendu.</value>
+    <value>L’argument '{0}' n’est pas valide. Un littéral de texte est attendu.</value>
     
   </data>
   <data name="ErrArgNotAValidIdentifier_Name" xml:space="preserve">
-    <value>L’argument « {0} » n’est pas un identificateur valide.</value>
+    <value>L’argument '{0}' n’est pas un identificateur valide.</value>
     
   </data>
   <data name="ErrColExists_Name" xml:space="preserve">
-    <value>Une colonne nommée « {0} » existe déjà.</value>
+    <value>Une colonne nommée '{0}' existe déjà.</value>
     
   </data>
   <data name="ErrColConflict_Name" xml:space="preserve">
-    <value>Conflit de nom de colonne pour « {0} ».</value>
+    <value>Conflit de nom de colonne pour '{0}'.</value>
     
   </data>
   <data name="ErrColDNE_Name" xml:space="preserve">
-    <value>La colonne spécifiée « {0} » n’existe pas.</value>
+    <value>La colonne spécifiée '{0}' n’existe pas.</value>
     
   </data>
   <data name="ErrColumnDoesNotExist_Name_Similar" xml:space="preserve">
-    <value>La colonne spécifiée « {0} » n’existe pas. La colonne avec le nom le plus proche est « {1} ».</value>
+    <value>La colonne spécifiée '{0}' n’existe pas. La colonne avec le nom le plus proche est '{1}'.</value>
     
   </data>
   <data name="ErrSortIncorrectOrder" xml:space="preserve">
@@ -1918,7 +1922,7 @@
     
   </data>
   <data name="ErrIncorrectFormat_Func" xml:space="preserve">
-    <value>Spécificateur de format incorrect pour « {0} ».</value>
+    <value>Spécificateur de format incorrect pour '{0}'.</value>
     
   </data>
   <data name="ErrAsyncLambda" xml:space="preserve">
@@ -1926,7 +1930,7 @@
     
   </data>
   <data name="ErrValueMustBeFullyQualified" xml:space="preserve">
-    <value>Il s’agit d’un espace de noms. Vous pouvez accéder à ses membres en utilisant l’opérateur « . ».</value>
+    <value>Il s’agit d’un espace de noms. Vous pouvez accéder à ses membres en utilisant l’opérateur '.'</value>
     
   </data>
   <data name="ErrScopeModificationLambda" xml:space="preserve">
@@ -2204,11 +2208,11 @@
     
   </data>
   <data name="ErrMultipleValuesForField_Name" xml:space="preserve">
-    <value>Un champ nommé « {0} » a été spécifié plusieurs fois dans cet enregistrement.</value>
+    <value>Un champ nommé '{0}' a été spécifié plusieurs fois dans cet enregistrement.</value>
     
   </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
-    <value>Une colonne nommée « {0} » a été spécifiée plusieurs fois.</value>
+    <value>Une colonne nommée '{0}' a été spécifiée plusieurs fois.</value>
     
   </data>
   <data name="WarnLiteralPredicate" xml:space="preserve">
@@ -2378,7 +2382,7 @@
     <value>Nombre d’unités à ajouter. Ce nombre peut être négatif.</value>
   </data>
   <data name="AboutDateAdd_unit" xml:space="preserve">
-    <value>Unité à utiliser, parmi Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
+    <value>Unité à utiliser, parmi Années, Trimestres, Mois, Jours, Heures, Minutes, Secondes, Millisecondes.</value>
     
   </data>
   <data name="DateDiffArg1" xml:space="preserve">
@@ -2400,7 +2404,7 @@
     <value>Date de fin pour l’opération Différence.</value>
   </data>
   <data name="AboutDateDiff_unit" xml:space="preserve">
-    <value>Unité dans laquelle exprimer le résultat, parmi Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
+    <value>Unité dans laquelle exprimer le résultat, parmi Années, Trimestres, Mois, Jours, Heures, Minutes, Secondes, Millisecondes.</value>
     
   </data>
   <data name="AboutDateAddT" xml:space="preserve">
@@ -2412,7 +2416,7 @@
     
   </data>
   <data name="DateAddTArg1" xml:space="preserve">
-    <value>colonne_date</value>
+    <value>date_colonne</value>
     
   </data>
   <data name="DateAddTArg2" xml:space="preserve">
@@ -3148,7 +3152,7 @@
     
   </data>
   <data name="SuggestRemoteExecutionHint_OpNotSupportedByClient" xml:space="preserve">
-    <value>Une partie de cette formule ne peut pas être évaluée à distance. L'opération « {0} » n'est actuellement pas prise en charge dans ce contexte.</value>
+    <value>Une partie de cette formule ne peut pas être évaluée à distance. L’opération '{0}' n'est actuellement pas prise en charge dans ce contexte.</value>
     
   </data>
   <data name="SuggestRemoteExecutionHint_StringMatchSecondParam" xml:space="preserve">
@@ -3200,7 +3204,7 @@
     
   </data>
   <data name="LayoutDirection_Vertical_DisplayName" xml:space="preserve">
-    <value>Vertical</value>
+    <value>Verticale</value>
     
   </data>
   <data name="LayoutAlignItems_Start_DisplayName" xml:space="preserve">
@@ -3268,7 +3272,7 @@
     
   </data>
   <data name="LayoutOverflow_Scroll_DisplayName" xml:space="preserve">
-    <value>Faire défiler</value>
+    <value>Défilement</value>
     
   </data>
   <data name="Overflow_Hidden_DisplayName" xml:space="preserve">
@@ -3520,7 +3524,7 @@
     
   </data>
   <data name="BarcodeType_RssExpanded_DisplayName" xml:space="preserve">
-    <value>RSS Expanded</value>
+    <value>RSS Étendu</value>
     
   </data>
   <data name="BarcodeType_Upc_DisplayName" xml:space="preserve">
@@ -4124,7 +4128,7 @@
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
-    <value>Opérande attendu. La formule ou l’expression attend un opérande valide. Par exemple, vous pouvez ajouter l’opérande « 2 » à l’expression « 1«+_ » pour que le résultat soit « 3 ». Vous pouvez également ajouter l’opérande « vous » à l’expression « "Bonjour " &amp; _ » afin que le résultat soit « Bonjour vous ».</value>
+    <value>Opérande attendu. La formule ou l’expression attend un opérande valide. Par exemple, vous pouvez ajouter l’opérande '2' à l’expression ' 1 +_' pour que le résultat soit '3'. Vous pouvez également ajouter l’opérande "vous" à l’expression '"Bonjour "&amp; _ ' afin que le résultat soit 'Bonjour vous'.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_HowToFix_1" xml:space="preserve">
@@ -4273,7 +4277,7 @@
     
   </data>
   <data name="ErrorResource_ErrOperatorExpected_ShortMessage" xml:space="preserve">
-    <value>Un opérateur était attendu. Nous attendons un opérateur tel que +, * ou &amp; à ce stade de la formule.</value>
+    <value>Un opérateur était attendu. Nous attendons un opérateur tel que +, *, ou &amp;  à ce stade de la formule.</value>
     
   </data>
   <data name="ErrorResource_ErrOperatorExpected_LongMessage" xml:space="preserve">
@@ -4416,6 +4420,10 @@
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
     <value>Vérifiez que vous disposez de texte pour votre identificateur. Cette erreur se produit lorsque l’identificateur est entièrement vide ou inclut uniquement des espaces.</value>
+    
+  </data>
+  <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
+    <value>Unable to compare values of type {0}.</value>
     
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
@@ -4834,8 +4842,18 @@
     <value>Cette fonction est ambiguë, elle contient des expressions lambda et des identificateurs de colonne pour le même argument.</value>
     
   </data>
-  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
-    <value>L’option BooleanOptionSet {0} n’est pas prise en charge.</value>
+  <data name="OptionSetOptionNotSupported" xml:space="preserve">
+    <value>The value of option {0} is not of expected type {1}.</value>
     
+  </data>
+  <data name="AboutOptionSetInfo" xml:space="preserve">
+    <value>Retourne le nom logique de la valeur du groupe d’options donnée.</value>
+    
+  </data>
+  <data name="AboutOptionSetInfoArg1" xml:space="preserve">
+    <value>option</value>
+  </data>
+  <data name="AboutOptionSetInfo_option" xml:space="preserve">
+    <value>Valeur de groupe d’options dont le nom logique sera renvoyé.</value>
   </data>
 </root>

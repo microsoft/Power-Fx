@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
@@ -941,12 +942,12 @@ namespace Microsoft.PowerFx.Functions
             */
             if (number < 0)
             {
-                result = roundNumber.ToString("X");
+                result = roundNumber.ToString("X", CultureInfo.InvariantCulture);
                 result = result.Substring(result.Length - 10, 10);
             }
             else
             {
-                result = roundNumber.ToString("X" + places);
+                result = roundNumber.ToString("X" + places, CultureInfo.InvariantCulture);
             }
 
             // places need to be greater or equal to length of hexadecimal when number is positive
@@ -978,7 +979,7 @@ namespace Microsoft.PowerFx.Functions
             }
 
             // negative numbers starts after 8000000000
-            if (number.Length == 10 && number.CompareTo("8000000000") > 0)
+            if (number.Length == 10 && string.Compare(number, "8000000000", StringComparison.Ordinal) > 0)
             {
                 var maxNumber = (long)(1L << 40);
                 long.TryParse(number, System.Globalization.NumberStyles.HexNumber, null, out var negative_result);
