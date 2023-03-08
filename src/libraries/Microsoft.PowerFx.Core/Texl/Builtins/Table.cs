@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using System.Xml.Linq;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Errors;
@@ -65,19 +66,26 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrNeedRecord);
                     isValid = false;
                 }
-                else if (!rowType.CanUnionWith(argType))
+
+                if (!argType.IsDeferred && !rowType.IsValid)
                 {
-                    errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrIncompatibleRecord);
-                    isValid = false;
+                    rowType = argType;
+                }
+                else if (!argType.IsDeferred && rowType.CanUnionWith(argType))
+                {
+                    rowType = DType.Union(rowType, argType);
+                }
+                else if (!argType.IsDeferred && argType.CoercesTo(rowType))
+                {
+                    CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i], rowType, allowDupes: true);
                 }
                 else
                 {
-                    var isUnionError = false;
-                    rowType = DType.Union(ref isUnionError, rowType, argType);
-                    Contracts.Assert(!isUnionError);
-                    Contracts.Assert(rowType.IsRecord);
+                    errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrTableDoesNotAcceptThisType);
                 }
             }
+
+            isValid &= rowType.IsValid;
 
             Contracts.Assert(rowType.IsRecord);
             returnType = rowType.ToTable();

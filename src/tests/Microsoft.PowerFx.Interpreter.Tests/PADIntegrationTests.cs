@@ -79,7 +79,7 @@ namespace Microsoft.PowerFx.Tests
         {
             var table = new DataTable();
 
-            table.Columns.Add("Scores", typeof(int));
+            table.Columns.Add("Scores", typeof(decimal));
             table.Columns.Add("Names", typeof(string));
 
             table.Rows.Add(10, "name1");
@@ -108,11 +108,11 @@ namespace Microsoft.PowerFx.Tests
             var result1 = engine.Eval("Index(robintable, 2).Scores"); // 20
             var result2 = engine.Eval("Index(robintable, 3).Names"); // "name3"
 
-            Assert.Equal(20.0, result1.ToObject());
+            Assert.Equal(20m, result1.ToObject());
             Assert.Equal("name3", result2.ToObject());
 
             var result3 = engine.Eval("Sum(robintable, ThisRecord.Scores)");
-            Assert.Equal(60.0, result3.ToObject());
+            Assert.Equal(60m, result3.ToObject());
 
             // Access field not on the table 
             var result4 = engine.Eval(@"

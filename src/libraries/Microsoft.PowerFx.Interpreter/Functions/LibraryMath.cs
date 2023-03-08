@@ -77,6 +77,7 @@ namespace Microsoft.PowerFx.Functions
         {
             protected int _count;
             protected decimal _accumulator;
+            protected bool _overflow;
 
             public void Apply(FormulaValue value)
             {
@@ -87,9 +88,15 @@ namespace Microsoft.PowerFx.Functions
 
                 var n1 = (DecimalValue)value;
 
-                // TODO Decimal: check types, should be number
-                // TODO Decimal: Overflow
-                _accumulator += n1.Value;
+                try
+                {
+                    _accumulator += n1.Value;
+                }
+                catch (OverflowException)
+                {
+                    _overflow = true;
+                }
+
                 _count++;
             }
 
@@ -108,6 +115,11 @@ namespace Microsoft.PowerFx.Functions
                 if (_count == 0)
                 {
                     return GetDefault(irContext);
+                }
+
+                if (_overflow)
+                {
+                    return CommonErrors.OverflowError(irContext);
                 }
 
                 return new DecimalValue(irContext, _accumulator);
@@ -803,6 +815,22 @@ namespace Microsoft.PowerFx.Functions
         }
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-sequence
+        public static FormulaValue SequenceDecimal(IRContext irContext, DecimalValue[] args)
+        {
+            var records = args[0].Value;
+            var start = args[1].Value;
+            var step = args[2].Value;
+
+            if (records < 0)
+            {
+                return CommonErrors.ArgumentOutOfRange(irContext);
+            }
+
+            var rows = LazySequenceDecimal(records, start, step).Select(n => new DecimalValue(IRContext.NotInSource(FormulaType.Decimal), n));
+
+            return new InMemoryTableValue(irContext, StandardTableNodeRecords(irContext, rows.ToArray(), forceSingleColumn: true));
+        }
+
         public static FormulaValue Sequence(IRContext irContext, NumberValue[] args)
         {
             var records = args[0].Value;
@@ -820,6 +848,16 @@ namespace Microsoft.PowerFx.Functions
         }
 
         private static IEnumerable<double> LazySequence(double records, double start, double step)
+        {
+            var x = start;
+            for (var i = 1; i <= records; i++)
+            {
+                yield return x;
+                x += step;
+            }
+        }
+
+        private static IEnumerable<decimal> LazySequenceDecimal(decimal records, decimal start, decimal step)
         {
             var x = start;
             for (var i = 1; i <= records; i++)

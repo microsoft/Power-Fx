@@ -184,9 +184,9 @@ namespace Microsoft.PowerFx
             return result;
         }
 
-        public DefineFunctionsResult DefineFunctions(string script)
+        public DefineFunctionsResult DefineFunctions(string script, bool numberIsFloat = false)
         {
-            var parsedUDFS = new Core.Syntax.ParsedUDFs(script);
+            var parsedUDFS = new Core.Syntax.ParsedUDFs(script, numberIsFloat: numberIsFloat);
             var result = parsedUDFS.GetParsed();
 
             var udfDefinitions = result.UDFs.Select(udf => new UDFDefinition(
@@ -194,6 +194,7 @@ namespace Microsoft.PowerFx
                 udf.Body.ToString(),
                 FormulaType.GetFromStringOrNull(udf.ReturnType.ToString()),
                 udf.IsImperative,
+                udf.NumberIsFloat,
                 udf.Args.Select(arg => new NamedFormulaType(arg.VarIdent.ToString(), FormulaType.GetFromStringOrNull(arg.VarType.ToString()))).ToArray())).ToArray();
             return DefineFunctions(udfDefinitions);
         }
@@ -211,7 +212,7 @@ namespace Microsoft.PowerFx
                 record = record.Add(p);
             }
 
-            var check = new CheckWrapper(this, definition.Body, record, definition.IsImperative);
+            var check = new CheckWrapper(this, definition.Body, record, definition.IsImperative, definition.NumberIsFloat);
 
             var func = new UserDefinedTexlFunction(definition.Name, definition.ReturnType, definition.Parameters, check);
             

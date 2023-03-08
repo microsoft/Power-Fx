@@ -176,6 +176,7 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction RoundUpT = _library.Add(new RoundUpTableFunction());
         public static readonly TexlFunction Second = _library.Add(new SecondFunction());
         public static readonly TexlFunction Sequence = _library.Add(new SequenceFunction());
+        public static readonly TexlFunction SequenceW = _library.Add(new SequenceWFunction());
         public static readonly TexlFunction Shuffle = _library.Add(new ShuffleFunction());
         public static readonly TexlFunction Sin = _library.Add(new SinFunction());
         public static readonly TexlFunction Sort = _library.Add(new SortFunction());

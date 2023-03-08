@@ -372,14 +372,15 @@ namespace Microsoft.PowerFx.Functions
                     if (formatString != null && hasDateTimeFmt)
                     {
                         // It's a number, formatted as date/time. Let's convert it to a date/time value first
-                        // Decimal TODO: Overflow
                         var decNum = new NumberValue(IRContext.NotInSource(FormulaType.Number), (double)dec.Value);
                         var newDateTime = Library.NumberToDateTime(formatInfo, IRContext.NotInSource(FormulaType.DateTime), decNum);
                         return TryExpandDateTimeExcelFormatSpecifiersToStringValue(irContext, formatString, "g", newDateTime.GetConvertedValue(timeZoneInfo), culture, formatInfo.CancellationToken, out result);
                     }
                     else
                     {
-                        result = new StringValue(irContext, dec.Value.ToString(formatString ?? "g", culture));
+                        // Decimal TODO: best approach for normailization, and should we be showing scientific notation for this and numbers?
+                        var normalized = dec.Value / 1.000000000000000000000000000000m;
+                        result = new StringValue(irContext, normalized.ToString(formatString ?? "g", culture));
                     }
 
                     break;

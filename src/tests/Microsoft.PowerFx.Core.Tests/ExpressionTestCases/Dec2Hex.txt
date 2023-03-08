@@ -171,7 +171,10 @@ Error({Kind:ErrorKind.InvalidArgument})
 >> Dec2Hex([10,255,-16])
 Table({Value:"A"},{Value:"FF"},{Value:"FFFFFFFFF0"})
 
->> Dec2Hex([1,1e-45,1e45,2])
+>> Dec2Hex([1,1e-28,1e28,2])
+Table({Value:"1"},{Value:"0"},{Value:Error({Kind:ErrorKind.Numeric})},{Value:"2"})
+
+>> Dec2Hex([1,Float("1e-45"),Float("1e45"),2])
 Table({Value:"1"},{Value:"0"},{Value:Error({Kind:ErrorKind.Numeric})},{Value:"2"})
 
 >> Dec2Hex([10,11,"12"], [2,5,10])

@@ -91,26 +91,32 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             var count = args.Length;
 
+            nodeToCoercedTypeMap = null;
+
             // Check the switch expression type matches all case expression types in list.
             var fArgsValid = true;
             for (var i = 1; i < count - 1; i += 2)
             {
-                if (!argTypes[0].Accepts(argTypes[i]) && !argTypes[i].Accepts(argTypes[0]))
+                if (CheckType(args[i], argTypes[i], argTypes[0], errors, out var matchedWithCoercion))
                 {
-                    // Type mismatch; using CheckType to fill the errors collection
-                    var validExpectedType = CheckType(args[i], argTypes[i], argTypes[0], errors, coerceIfSupported: false, out bool _);
-                    if (validExpectedType)
+                    if (matchedWithCoercion)
                     {
-                        // Check on the opposite direction
-                        validExpectedType = CheckType(args[0], argTypes[0], argTypes[i], errors, coerceIfSupported: false, out bool _);
-                    }
+                        if (nodeToCoercedTypeMap == null)
+                        {
+                            nodeToCoercedTypeMap = new Dictionary<TexlNode, DType>();
+                        }
 
-                    fArgsValid &= validExpectedType;
+                        CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i], argTypes[0], allowDupes: true);
+                    }
+                }
+                else
+                {
+                    fArgsValid = false;
+                    break;
                 }
             }
 
             var type = ReturnType;
-            nodeToCoercedTypeMap = null;
 
             // Are we on a behavior property?
             var isBehavior = context.AllowsSideEffects;

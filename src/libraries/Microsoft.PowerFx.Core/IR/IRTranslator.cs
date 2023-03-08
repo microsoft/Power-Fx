@@ -992,7 +992,7 @@ namespace Microsoft.PowerFx.Core.IR
                     case CoercionKind.UntypedToText:
                         return new CallNode(IRContext.NotInSource(FormulaType.Build(toType)), BuiltinFunctionsCore.Text_UO, child);
                     case CoercionKind.UntypedToNumber:
-                        return new CallNode(IRContext.NotInSource(FormulaType.Build(toType)), BuiltinFunctionsCore.Value_UO, child);
+                        return new CallNode(IRContext.NotInSource(FormulaType.Build(toType)), BuiltinFunctionsCore.Float_UO, child);
                     case CoercionKind.UntypedToDecimal:
                         return new CallNode(IRContext.NotInSource(FormulaType.Build(toType)), BuiltinFunctionsCore.Decimal_UO, child);
                     case CoercionKind.UntypedToBoolean:

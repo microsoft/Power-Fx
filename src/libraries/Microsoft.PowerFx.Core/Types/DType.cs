@@ -3096,6 +3096,7 @@ namespace Microsoft.PowerFx.Core.Types
                 isSafe = false;
                 if (typeDest.Kind == DKind.String ||
                     typeDest.Kind == DKind.Number ||
+                    typeDest.Kind == DKind.Decimal ||
                     typeDest.Kind == DKind.Boolean ||
                     typeDest.Kind == DKind.Date ||
                     typeDest.Kind == DKind.Time ||
@@ -3557,15 +3558,16 @@ namespace Microsoft.PowerFx.Core.Types
         public static bool DecimalBinaryOp(DType leftType, DType rightType, bool numberIsFloat)
         {
             // Decimal TODO: Do two untypedobject ops coerce?
-            if (leftType == DType.UntypedObject && rightType == DType.UntypedObject)
+            if ((leftType == DType.UntypedObject || rightType == DType.ObjNull) && 
+                (rightType == DType.UntypedObject || rightType == DType.ObjNull))
             {
                 return !numberIsFloat;
             }
             else
             {
-                return (leftType == DType.Decimal || leftType == DType.UntypedObject || 
+                return (leftType == DType.Decimal || leftType == DType.UntypedObject || leftType == DType.ObjNull ||
                         (!numberIsFloat && (leftType == DType.String || leftType == DType.Boolean))) &&
-                       (rightType == DType.Decimal || rightType == DType.UntypedObject || 
+                       (rightType == DType.Decimal || rightType == DType.UntypedObject || rightType == DType.ObjNull ||
                         (!numberIsFloat && (rightType == DType.String || rightType == DType.Boolean)));
             }
         }

@@ -56,7 +56,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 fValid = false;
                 errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrNeedTableCol_Func, Name);
             }
-            else if (!DType.Number.Accepts(columns.Single().Type))
+            else if (!DType.Number.Accepts(columns.Single().Type) && !DType.Decimal.Accepts(columns.Single().Type))
             {
                 fValid = false;
                 errors.EnsureError(DocumentErrorSeverity.Warning, args[0], TexlStrings.ErrInvalidSchemaNeedNumCol_Col, columns.Single().Name);

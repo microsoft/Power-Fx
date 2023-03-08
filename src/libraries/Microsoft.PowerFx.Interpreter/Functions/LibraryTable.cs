@@ -250,7 +250,7 @@ namespace Microsoft.PowerFx.Functions
                         return error;
                     }
 
-                    if (field is NumberValue)
+                    if (field is NumberValue || field is DecimalValue)
                     {
                         count++;
                     }

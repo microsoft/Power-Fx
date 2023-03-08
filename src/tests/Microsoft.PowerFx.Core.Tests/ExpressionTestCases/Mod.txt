@@ -12,7 +12,7 @@ Error({Kind:ErrorKind.Div0})
 >> Mod(0,1)
 0
 
->> Mod(1E+300,1E-20)
+>> Mod(Float("1E+300"),Float("1E-20"))
 Error({Kind:ErrorKind.Numeric})
 
 // Invalid operation: Division by zero

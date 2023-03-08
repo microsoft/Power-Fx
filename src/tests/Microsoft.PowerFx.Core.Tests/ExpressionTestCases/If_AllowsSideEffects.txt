@@ -11,19 +11,19 @@
 {x:3}
 
 >> If(1>0, 100, {x:3}) + 1
-Errors: Error 13-18: Invalid argument type (Record). Expecting a Number value instead.|Error 0-19: The function 'If' has some invalid arguments.
+Errors: Error 13-18: Invalid argument type (Record). Expecting a Decimal value instead.|Error 0-19: The function 'If' has some invalid arguments.
 
 >> If(1>0, 100; 30, {x:3}) + 1
-Errors: Error 17-22: Invalid argument type (Record). Expecting a Number value instead.
+Errors: Error 17-22: Invalid argument type (Record). Expecting a Decimal value instead.
 
 >> If(1>0, 100; 30, {x:3}; 60) + 1
 31
 
 >> Value(If(1>0, 100; 30, {x:3}) + 1)
-Errors: Error 23-28: Invalid argument type (Record). Expecting a Number value instead.|Error 6-29: The function 'If' has some invalid arguments.
+Errors: Error 23-28: Invalid argument type (Record). Expecting a Decimal value instead.|Error 6-29: The function 'If' has some invalid arguments.
 
 >> Value(1 + If(1>0, 100; 30, {x:3}))
-Errors: Error 27-32: Invalid argument type (Record). Expecting a Number value instead.|Error 10-33: The function 'If' has some invalid arguments.
+Errors: Error 27-32: Invalid argument type (Record). Expecting a Decimal value instead.|Error 10-33: The function 'If' has some invalid arguments.
 
 >> If(1<0, "abc2", {x:3}; {x:2})
 {x:2}

@@ -143,9 +143,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
+            var fValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
             returnType = context.NumberIsFloat ? DType.Number : DType.Decimal;
-            nodeToCoercedTypeMap = null;
-            return true;
+            return fValid;
         }
     }
 

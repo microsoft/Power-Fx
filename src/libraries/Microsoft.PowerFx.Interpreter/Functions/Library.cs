@@ -663,7 +663,7 @@ namespace Microsoft.PowerFx.Functions
                 StandardErrorHandling<FormulaValue>(
                     BuiltinFunctionsCore.FirstN.Name,
                     expandArguments: InsertDefaultValues(outputArgsCount: 2, fillWith: new NumberValue(IRContext.NotInSource(FormulaType.Number), 1)),
-                    replaceBlankValues: ReplaceBlankWithZeroForSpecificIndices(1),
+                    replaceBlankValues: ReplaceBlankWithFloatZeroForSpecificIndices(1),
                     checkRuntimeTypes: ExactSequence(
                         ExactValueTypeOrBlank<TableValue>,
                         ExactValueTypeOrBlank<NumberValue>),
@@ -687,7 +687,7 @@ namespace Microsoft.PowerFx.Functions
                 StandardErrorHandling<FormulaValue>(
                     BuiltinFunctionsCore.FirstN.Name,
                     expandArguments: NoArgExpansion,
-                    replaceBlankValues: ReplaceBlankWithZeroForSpecificIndices(1),
+                    replaceBlankValues: ReplaceBlankWithFloatZeroForSpecificIndices(1),
                     checkRuntimeTypes: ExactSequence(
                         ExactValueTypeOrBlank<UntypedObjectValue>,
                         ExactValueTypeOrBlank<NumberValue>),
@@ -815,7 +815,7 @@ namespace Microsoft.PowerFx.Functions
                 StandardErrorHandling<FormulaValue>(
                     BuiltinFunctionsCore.Index.Name,
                     expandArguments: NoArgExpansion,
-                    replaceBlankValues: ReplaceBlankWithZeroForSpecificIndices(1),
+                    replaceBlankValues: ReplaceBlankWithFloatZeroForSpecificIndices(1),
                     checkRuntimeTypes: ExactSequence(
                         ExactValueTypeOrBlank<TableValue>,
                         ExactValueTypeOrBlank<NumberValue>),
@@ -830,7 +830,7 @@ namespace Microsoft.PowerFx.Functions
                 StandardErrorHandling<FormulaValue>(
                     BuiltinFunctionsCore.Index_UO.Name,
                     expandArguments: NoArgExpansion,
-                    replaceBlankValues: ReplaceBlankWithZeroForSpecificIndices(1),
+                    replaceBlankValues: ReplaceBlankWithFloatZeroForSpecificIndices(1),
                     checkRuntimeTypes: ExactSequence(
                         ExactValueTypeOrBlank<UntypedObjectValue>,
                         ExactValueTypeOrBlank<NumberValue>),
@@ -913,7 +913,7 @@ namespace Microsoft.PowerFx.Functions
                 StandardErrorHandling<FormulaValue>(
                     BuiltinFunctionsCore.LastN.Name,
                     expandArguments: InsertDefaultValues(outputArgsCount: 2, fillWith: new NumberValue(IRContext.NotInSource(FormulaType.Number), 1)),
-                    replaceBlankValues: ReplaceBlankWithZeroForSpecificIndices(1),
+                    replaceBlankValues: ReplaceBlankWithFloatZeroForSpecificIndices(1),
                     checkRuntimeTypes: ExactSequence(
                         ExactValueTypeOrBlank<TableValue>,
                         ExactValueTypeOrBlank<NumberValue>),
@@ -937,7 +937,7 @@ namespace Microsoft.PowerFx.Functions
                 StandardErrorHandling<FormulaValue>(
                     BuiltinFunctionsCore.LastN.Name,
                     expandArguments: NoArgExpansion,
-                    replaceBlankValues: ReplaceBlankWithZeroForSpecificIndices(1),
+                    replaceBlankValues: ReplaceBlankWithFloatZeroForSpecificIndices(1),
                     checkRuntimeTypes: ExactSequence(
                         ExactValueTypeOrBlank<UntypedObjectValue>,
                         ExactValueTypeOrBlank<NumberValue>),
@@ -1301,6 +1301,17 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: Sequence)
             },
             {
+                BuiltinFunctionsCore.SequenceW,
+                StandardErrorHandling<DecimalValue>(
+                    BuiltinFunctionsCore.SequenceW.Name,
+                    expandArguments: InsertDefaultValues(outputArgsCount: 3, fillWith: new DecimalValue(IRContext.NotInSource(FormulaType.Decimal), 1)),
+                    replaceBlankValues: NoOpAlreadyHandledByIR,
+                    checkRuntimeTypes: ExactValueType<DecimalValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: SequenceDecimal)
+            },
+            {
                 BuiltinFunctionsCore.Shuffle,
                 StandardErrorHandling<TableValue>(
                     BuiltinFunctionsCore.Shuffle.Name,
@@ -1658,23 +1669,23 @@ namespace Microsoft.PowerFx.Functions
         {
             {
                 BuiltinFunctionsCore.AbsT,
-                StandardErrorHandlingTabularOverload<FormulaValue>(BuiltinFunctionsCore.AbsT.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.Abs], ReplaceBlankWithZero)
+                StandardErrorHandlingTabularOverload<FormulaValue>(BuiltinFunctionsCore.AbsT.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.Abs], DoNotReplaceBlank)
             },
             {
                 BuiltinFunctionsCore.AcosT,
-                StandardErrorHandlingTabularOverload<NumberValue>(BuiltinFunctionsCore.AcosT.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.Acos], ReplaceBlankWithZero)
+                StandardErrorHandlingTabularOverload<NumberValue>(BuiltinFunctionsCore.AcosT.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.Acos], ReplaceBlankWithFloatZero)
             },
             {
                 BuiltinFunctionsCore.AcotT,
-                StandardErrorHandlingTabularOverload<NumberValue>(BuiltinFunctionsCore.AcotT.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.Acot], ReplaceBlankWithZero)
+                StandardErrorHandlingTabularOverload<NumberValue>(BuiltinFunctionsCore.AcotT.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.Acot], ReplaceBlankWithFloatZero)
             },
             {
                 BuiltinFunctionsCore.AsinT,
-                StandardErrorHandlingTabularOverload<NumberValue>(BuiltinFunctionsCore.AsinT.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.Asin], ReplaceBlankWithZero)
+                StandardErrorHandlingTabularOverload<NumberValue>(BuiltinFunctionsCore.AsinT.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.Asin], ReplaceBlankWithFloatZero)
             },
             {
                 BuiltinFunctionsCore.AtanT,
-                StandardErrorHandlingTabularOverload<NumberValue>(BuiltinFunctionsCore.AtanT.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.Atan], ReplaceBlankWithZero)
+                StandardErrorHandlingTabularOverload<NumberValue>(BuiltinFunctionsCore.AtanT.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.Atan], ReplaceBlankWithFloatZero)
             },
             {
                 BuiltinFunctionsCore.Boolean_T,
@@ -1683,6 +1694,10 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.BooleanN_T,
                 StandardErrorHandlingTabularOverload<NumberValue>(BuiltinFunctionsCore.BooleanN_T.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.BooleanN], DoNotReplaceBlank)
+            },
+            {
+                BuiltinFunctionsCore.BooleanW_T,
+                StandardErrorHandlingTabularOverload<DecimalValue>(BuiltinFunctionsCore.BooleanW_T.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.BooleanW], DoNotReplaceBlank)
             },
 
             // This implementation is not actually used for this as this is handled at IR level. 
@@ -1693,23 +1708,23 @@ namespace Microsoft.PowerFx.Functions
             },
             {
                 BuiltinFunctionsCore.CharT,
-                StandardErrorHandlingTabularOverload<NumberValue>(BuiltinFunctionsCore.CharT.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.Char], ReplaceBlankWithZero)
+                StandardErrorHandlingTabularOverload<NumberValue>(BuiltinFunctionsCore.CharT.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.Char], ReplaceBlankWithFloatZero)
             },
             {
                 BuiltinFunctionsCore.CosT,
-                StandardErrorHandlingTabularOverload<NumberValue>(BuiltinFunctionsCore.CosT.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.Cos], ReplaceBlankWithZero)
+                StandardErrorHandlingTabularOverload<NumberValue>(BuiltinFunctionsCore.CosT.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.Cos], ReplaceBlankWithFloatZero)
             },
             {
                 BuiltinFunctionsCore.CotT,
-                StandardErrorHandlingTabularOverload<NumberValue>(BuiltinFunctionsCore.CotT.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.Cot], ReplaceBlankWithZero)
+                StandardErrorHandlingTabularOverload<NumberValue>(BuiltinFunctionsCore.CotT.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.Cot], ReplaceBlankWithFloatZero)
             },
             {
                 BuiltinFunctionsCore.DegreesT,
-                StandardErrorHandlingTabularOverload<NumberValue>(BuiltinFunctionsCore.DegreesT.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.Degrees], ReplaceBlankWithZero)
+                StandardErrorHandlingTabularOverload<NumberValue>(BuiltinFunctionsCore.DegreesT.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.Degrees], ReplaceBlankWithFloatZero)
             },
             {
                 BuiltinFunctionsCore.ExpT,
-                StandardErrorHandlingTabularOverload<NumberValue>(BuiltinFunctionsCore.ExpT.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.Exp], ReplaceBlankWithZero)
+                StandardErrorHandlingTabularOverload<NumberValue>(BuiltinFunctionsCore.ExpT.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.Exp], ReplaceBlankWithFloatZero)
             },
             {
                 BuiltinFunctionsCore.Hex2DecT,
@@ -1717,7 +1732,7 @@ namespace Microsoft.PowerFx.Functions
             },
             {
                 BuiltinFunctionsCore.IntT,
-                StandardErrorHandlingTabularOverload<FormulaValue>(BuiltinFunctionsCore.IntT.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.Int], ReplaceBlankWithZero)
+                StandardErrorHandlingTabularOverload<FormulaValue>(BuiltinFunctionsCore.IntT.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.Int], DoNotReplaceBlank)
             },
             {
                 BuiltinFunctionsCore.LenT,
@@ -1725,23 +1740,23 @@ namespace Microsoft.PowerFx.Functions
             },
             {
                 BuiltinFunctionsCore.LnT,
-                StandardErrorHandlingTabularOverload<NumberValue>(BuiltinFunctionsCore.LnT.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.Ln], ReplaceBlankWithZero)
+                StandardErrorHandlingTabularOverload<NumberValue>(BuiltinFunctionsCore.LnT.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.Ln], ReplaceBlankWithFloatZero)
             },
             {
                 BuiltinFunctionsCore.RadiansT,
-                StandardErrorHandlingTabularOverload<NumberValue>(BuiltinFunctionsCore.RadiansT.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.Radians], ReplaceBlankWithZero)
+                StandardErrorHandlingTabularOverload<NumberValue>(BuiltinFunctionsCore.RadiansT.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.Radians], ReplaceBlankWithFloatZero)
             },
             {
                 BuiltinFunctionsCore.SinT,
-                StandardErrorHandlingTabularOverload<NumberValue>(BuiltinFunctionsCore.SinT.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.Sin], ReplaceBlankWithZero)
+                StandardErrorHandlingTabularOverload<NumberValue>(BuiltinFunctionsCore.SinT.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.Sin], ReplaceBlankWithFloatZero)
             },
             {
                 BuiltinFunctionsCore.SqrtT,
-                StandardErrorHandlingTabularOverload<NumberValue>(BuiltinFunctionsCore.SqrtT.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.Sqrt], ReplaceBlankWithZero)
+                StandardErrorHandlingTabularOverload<NumberValue>(BuiltinFunctionsCore.SqrtT.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.Sqrt], ReplaceBlankWithFloatZero)
             },
             {
                 BuiltinFunctionsCore.TanT,
-                StandardErrorHandlingTabularOverload<NumberValue>(BuiltinFunctionsCore.TanT.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.Tan], ReplaceBlankWithZero)
+                StandardErrorHandlingTabularOverload<NumberValue>(BuiltinFunctionsCore.TanT.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.Tan], ReplaceBlankWithFloatZero)
             },
         };
 
@@ -1757,7 +1772,7 @@ namespace Microsoft.PowerFx.Functions
             },
             {
                 BuiltinFunctionsCore.Dec2HexT,
-                NoErrorHandling(MultiSingleColumnTable(SimpleFunctionImplementations[BuiltinFunctionsCore.Dec2Hex], ReplaceBlankWithZero))
+                NoErrorHandling(MultiSingleColumnTable(SimpleFunctionImplementations[BuiltinFunctionsCore.Dec2Hex], ReplaceBlankWithFloatZero))
             },
             {
                 BuiltinFunctionsCore.FindT,
@@ -1767,7 +1782,7 @@ namespace Microsoft.PowerFx.Functions
             // Decimal TODO: Where is RoundUp, RoundDown?
             {
                 BuiltinFunctionsCore.RoundT,
-                NoErrorHandling(MultiSingleColumnTable(SimpleFunctionImplementations[BuiltinFunctionsCore.Round], ReplaceBlankWithZero))
+                NoErrorHandling(MultiSingleColumnTable(SimpleFunctionImplementations[BuiltinFunctionsCore.Round], DoNotReplaceBlank))
             },
         };
 

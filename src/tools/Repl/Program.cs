@@ -164,7 +164,7 @@ namespace Microsoft.PowerFx
                         Console.WriteLine(varName + ": " + PrintResult(varValue));
                     }
 
-                    // IR pretty printer: IR( <expr> )
+                    // Parse tree pretty printer: Parse( <expr> )
                     else if ((match = Regex.Match(expr, @"^\s*Parse\((?<expr>.*)\)\s*$", RegexOptions.Singleline)).Success)
                     {
                         var opts = new ParserOptions() { AllowsSideEffects = true, NumberIsFloat = _numberIsFloat };
@@ -191,7 +191,7 @@ namespace Microsoft.PowerFx
                     //                      <ident>( <ident> : <type>, ... ) : <type> { <formula>; <formula>; ... }
                     else if (Regex.IsMatch(expr, @"^\s*\w+\((\s*\w+\s*\:\s*\w+\s*,?)*\)\s*\:\s*\w+\s*(\=|\{).*$", RegexOptions.Singleline))
                     {
-                        var res = _engine.DefineFunctions(expr);
+                        var res = _engine.DefineFunctions(expr, _numberIsFloat);
                         if (res.Errors.Count() > 0)
                         {
                             throw new Exception("Error: " + res.Errors.First());

@@ -64,13 +64,13 @@ namespace Microsoft.PowerFx.Core.Parser
             _features = features;
         }
 
-        public static ParseUDFsResult ParseUDFsScript(string script, CultureInfo loc = null)
+        public static ParseUDFsResult ParseUDFsScript(string script, CultureInfo loc = null, bool numberIsFloat = false)
         {
             Contracts.AssertValue(script);
             Contracts.AssertValueOrNull(loc);
 
-            var formulaTokens = TokenizeScript(script, loc, Flags.NamedFormulas);
-            var parser = new TexlParser(formulaTokens, Flags.NamedFormulas);
+            var formulaTokens = TokenizeScript(script, loc, Flags.NamedFormulas | (numberIsFloat ? Flags.NumberIsFloat : 0));
+            var parser = new TexlParser(formulaTokens, Flags.NamedFormulas | (numberIsFloat ? Flags.NumberIsFloat : 0));
 
             return parser.ParseUDFs(script);
         }
@@ -195,7 +195,7 @@ namespace Microsoft.PowerFx.Core.Parser
                     return false;
                 }
 
-                udfs.Add(new UDF(ident.As<IdentToken>(), returnType.As<IdentToken>(), new HashSet<UDFArg>(args), exp_result, _hasSemicolon));
+                udfs.Add(new UDF(ident.As<IdentToken>(), returnType.As<IdentToken>(), new HashSet<UDFArg>(args), exp_result, _hasSemicolon, (_flagsMode.Peek() & Flags.NumberIsFloat) != 0));
 
                 return true;
             }
@@ -205,7 +205,7 @@ namespace Microsoft.PowerFx.Core.Parser
                 ParseTrivia();
                 var result = ParseExpr(Precedence.None);
                 ParseTrivia();
-                udfs.Add(new UDF(ident.As<IdentToken>(), returnType.As<IdentToken>(), new HashSet<UDFArg>(args), result, false));
+                udfs.Add(new UDF(ident.As<IdentToken>(), returnType.As<IdentToken>(), new HashSet<UDFArg>(args), result, false, (_flagsMode.Peek() & Flags.NumberIsFloat) != 0));
                 return true;
             }
             else

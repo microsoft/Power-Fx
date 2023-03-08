@@ -47,7 +47,8 @@ namespace Microsoft.PowerFx.Types
 
         public override void ToExpression(StringBuilder sb, FormulaValueSerializerSettings settings)
         {
-            sb.Append(Value.ToString());
+            decimal normalized = Value / 1.00000000000000000000000000000m;
+            sb.Append(normalized.ToString());
         }
     }
 }

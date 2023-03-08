@@ -11,8 +11,11 @@ Error({Kind:ErrorKind.Numeric})
 6.06378521
 
 // Excel shows typo in the formula and suggest to change the formula to Ln(E1+308)
->> Ln(1E+308)
+>> Ln(Float("1E+308"))
 709.19620864
+
+>> Ln(1e28)
+64.4723826
 
 // Negative Integer Parameters
 
@@ -26,7 +29,10 @@ Error({Kind:ErrorKind.Numeric})
 Error({Kind:ErrorKind.Numeric})
 
 // Excel shows typo in the formula and suggest to change the formula to Ln(E1+308)
->> Ln(-1E+308)
+>> Ln(Float("-1E+308"))
+Error({Kind:ErrorKind.Numeric})
+
+>> Ln(-1E+28)
 Error({Kind:ErrorKind.Numeric})
 
 

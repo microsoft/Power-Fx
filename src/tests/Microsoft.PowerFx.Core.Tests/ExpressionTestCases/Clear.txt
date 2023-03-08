@@ -24,7 +24,7 @@ Error({Kind:ErrorKind.Custom})
 Errors: Error 0-7: Invalid number of arguments: received 0, expected 1.
 
 >> Clear(1)
-Errors: Error 6-7: Invalid argument type (Number). Expecting a Table value instead.|Error 0-8: The function 'Clear' has some invalid arguments.
+Errors: Error 6-7: Invalid argument type (Decimal). Expecting a Table value instead.|Error 0-8: The function 'Clear' has some invalid arguments.
 
 >> Clear(t1, t1)
 Errors: Error 0-13: Invalid number of arguments: received 2, expected 1.
@@ -33,7 +33,7 @@ Errors: Error 0-13: Invalid number of arguments: received 2, expected 1.
 Errors: Error 6-9: Name isn't valid. 'Foo' isn't recognized.|Error 0-10: The function 'Clear' has some invalid arguments.
 
 >> IsError(Clear(1))
-Errors: Error 14-15: Invalid argument type (Number). Expecting a Table value instead.|Error 8-16: The function 'Clear' has some invalid arguments.
+Errors: Error 14-15: Invalid argument type (Decimal). Expecting a Table value instead.|Error 8-16: The function 'Clear' has some invalid arguments.
 
 >> Clear(1/0)
-Errors: Error 7-8: Invalid argument type (Number). Expecting a Table value instead.|Error 0-10: The function 'Clear' has some invalid arguments.
+Errors: Error 7-8: Invalid argument type (Decimal). Expecting a Table value instead.|Error 0-10: The function 'Clear' has some invalid arguments.

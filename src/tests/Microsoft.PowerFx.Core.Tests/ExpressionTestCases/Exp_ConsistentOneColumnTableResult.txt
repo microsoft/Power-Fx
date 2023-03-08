@@ -18,4 +18,4 @@ Table({Value:1},{Value:148.4131591},{Value:10})
 Table({Value:0.00673795},{Value:10.44026536},{Value:2.71828183})
 
 >> Round(Exp(Table({a: "10"}, {a: "-10.123"})), 8)
-Table({Value:22026.46579481},{Value:4.015E-05})
+Table({Value:22026.46579481},{Value:0.00004015})

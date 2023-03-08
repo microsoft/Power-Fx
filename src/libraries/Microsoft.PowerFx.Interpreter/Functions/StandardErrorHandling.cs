@@ -124,7 +124,8 @@ namespace Microsoft.PowerFx.Functions
                         break;
                 }
 
-                var result = await targetFunction(runner, context, irContext, runtimeValuesChecked.Select(arg => arg as T).ToArray());
+                var r = runtimeValuesChecked.Select(arg => arg as T).ToArray();
+                var result = await targetFunction(runner, context, irContext, r);
                 var finiteError = FiniteResultCheck(functionName, irContext, result);
                 return finiteError ?? result;
             };
@@ -491,16 +492,14 @@ namespace Microsoft.PowerFx.Functions
         #endregion
 
         #region Common Blank Replacement Pipeline Stages
-        private static FormulaValue ReplaceBlankWithZero(IRContext irContext, int index)
+        private static FormulaValue ReplaceBlankWithFloatZero(IRContext irContext, int index)
         {
-            if (irContext.ResultType == FormulaType.Number)
-            {
-                return new NumberValue(IRContext.NotInSource(FormulaType.Number), 0.0);
-            }
-            else
-            {
-                return new DecimalValue(IRContext.NotInSource(FormulaType.Decimal), 0m);
-            }
+            return new NumberValue(IRContext.NotInSource(FormulaType.Number), 0.0);
+        }
+
+        private static FormulaValue ReplaceBlankWithDecimalZero(IRContext irContext, int index)
+        {
+            return new DecimalValue(IRContext.NotInSource(FormulaType.Decimal), 0m);
         }
 
         private static FormulaValue ReplaceBlankWithEmptyString(IRContext irContext, int index)
@@ -516,21 +515,28 @@ namespace Microsoft.PowerFx.Functions
             };
         }
 
-        private static Func<IRContext, int, FormulaValue> ReplaceBlankWithZeroForSpecificIndices(params int[] indices)
+        private static Func<IRContext, int, FormulaValue> ReplaceBlankWithFloatZeroForSpecificIndices(params int[] indices)
         {
             var indicesToReplace = new HashSet<int>(indices);
             return (irContext, index) =>
             {
                 if (indicesToReplace.Contains(index))
                 {
-                    if (irContext.ResultType == FormulaType.Number)
-                    {
-                        return new NumberValue(IRContext.NotInSource(FormulaType.Number), 0.0);
-                    }
-                    else
-                    {
-                        return new DecimalValue(IRContext.NotInSource(FormulaType.Decimal), 0m);
-                    }
+                    return new NumberValue(IRContext.NotInSource(FormulaType.Number), 0.0);
+                }
+
+                return new BlankValue(irContext);
+            };
+        }
+
+        private static Func<IRContext, int, FormulaValue> ReplaceBlankWithDecimalZeroForSpecificIndices(params int[] indices)
+        {
+            var indicesToReplace = new HashSet<int>(indices);
+            return (irContext, index) =>
+            {
+                if (indicesToReplace.Contains(index))
+                {
+                    return new DecimalValue(IRContext.NotInSource(FormulaType.Decimal), 0m);
                 }
 
                 return new BlankValue(irContext);

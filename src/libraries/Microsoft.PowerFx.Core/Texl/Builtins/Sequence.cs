@@ -31,4 +31,26 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             yield return new[] { TexlStrings.SequenceArg1, TexlStrings.SequenceArg2, TexlStrings.SequenceArg3 };
         }
     }
+
+    internal sealed class SequenceWFunction : BuiltinFunction
+    {
+        public override ArgPreprocessor GetArgPreprocessor(int index)
+        {
+            return base.GetGenericArgPreprocessor(index);
+        }
+
+        public override bool IsSelfContained => true;
+
+        public SequenceWFunction()
+            : base("Sequence", TexlStrings.AboutSequence, FunctionCategories.MathAndStat, DType.CreateTable(new TypedName(DType.Decimal, new DName("Value"))), 0, 1, 3, DType.Decimal, DType.Decimal, DType.Decimal)
+        {
+        }
+
+        public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
+        {
+            yield return new[] { TexlStrings.SequenceArg1 };
+            yield return new[] { TexlStrings.SequenceArg1, TexlStrings.SequenceArg2 };
+            yield return new[] { TexlStrings.SequenceArg1, TexlStrings.SequenceArg2, TexlStrings.SequenceArg3 };
+        }
+    }
 }
