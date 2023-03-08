@@ -1596,7 +1596,7 @@ namespace Microsoft.PowerFx.Functions
             },
             {
                 BuiltinFunctionsCore.Language,
-                NoErrorHandling(Pi)
+                NoErrorHandling(Language)
             }
         };
 

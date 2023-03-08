@@ -3,6 +3,7 @@
 
 using System;
 using System.Globalization;
+using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Types;
@@ -12,7 +13,7 @@ namespace Microsoft.PowerFx.Functions
 {
     internal static partial class Library
     {
-        public static FormulaValue Language(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        public static async ValueTask<FormulaValue> Language(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             return Language(runner, irContext);
         }
