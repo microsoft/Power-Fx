@@ -57,7 +57,7 @@ namespace Microsoft.PowerFx
         /// <param name="source">Engine used to handle Apply operations.</param>
         public CheckResult(Engine source)
         {
-            this._engine = source ?? throw new ArgumentNullException(nameof(source));
+            this._engine = source ?? throw new ArgumentNullException(nameof(source));            
         }
 
         internal Engine Engine => _engine;
@@ -286,7 +286,7 @@ namespace Microsoft.PowerFx
             }
         }
 
-        internal bool HasDeferredArgsWarning => _errors.Any(x => x.IsWarning && x.MessageKey.Equals(TexlStrings.WarnDeferredType.Key));
+        internal bool HasDeferredArgsWarning => _errors.Any(x => x.IsWarning && x.MessageKey.Equals(TexlStrings.WarnDeferredType.Key, StringComparison.Ordinal));
 
         private ReadOnlySymbolTable _allSymbols;
 

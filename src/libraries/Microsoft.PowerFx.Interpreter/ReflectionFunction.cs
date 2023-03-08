@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Numerics;
@@ -168,11 +169,7 @@ namespace Microsoft.PowerFx
         protected ReflectionFunction(string name, FormulaType returnType, params FormulaType[] paramTypes)
         {
             var t = GetType();
-            var m = t.GetMethod("Execute", BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance);
-            if (m == null)
-            {
-                throw new InvalidOperationException($"Missing Execute method");
-            }
+            var m = t.GetMethod("Execute", BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance) ?? throw new InvalidOperationException($"Missing Execute method");
 
             if (returnType._type.IsDeferred || paramTypes.Any(type => type._type.IsDeferred))
             {
@@ -221,27 +218,16 @@ namespace Microsoft.PowerFx
             if (_info == null)
             {
                 var t = GetType();
-
                 var suffix = "Function";
                 var name = t.Name.Substring(0, t.Name.Length - suffix.Length);
-
-                var m = t.GetMethod("Execute", BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance);
-                if (m == null)
-                {
-                    throw new InvalidOperationException($"Missing Execute method");
-                }
-
+                var m = t.GetMethod("Execute", BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance) ?? throw new InvalidOperationException($"Missing Execute method");
                 var returnType = GetType(m.ReturnType);
-
                 var paramTypes = new List<FormulaType>();
-
                 var isAsync = m.ReturnType.BaseType == typeof(Task);
-
                 var parameters = m.GetParameters();
-
                 var configType = default(Type);
-
                 BigInteger lamdaParamMask = default;
+
                 for (var i = 0; i < parameters.Length; i++)
                 {
                     if (i == parameters.Length - 1 && isAsync)
@@ -433,16 +419,11 @@ namespace Microsoft.PowerFx
 
             var formulaResult = (FormulaValue)result;   
             
-            if (formulaResult == null)
-            {
-                formulaResult = FormulaValue.NewBlank(_info.RetType);
-            }
+            formulaResult ??= FormulaValue.NewBlank(_info.RetType);
 
             if (formulaResult.Type != _info.RetType)
             {
-                return CommonErrors.CustomError(
-                    formulaResult.IRContext,
-                    string.Format("Return type should have been {0}, found {1}", _info.RetType._type, formulaResult.Type._type));
+                return CommonErrors.CustomError(formulaResult.IRContext, string.Format(CultureInfo.InvariantCulture, "Return type should have been {0}, found {1}", _info.RetType._type, formulaResult.Type._type));
             }
 
             return formulaResult;

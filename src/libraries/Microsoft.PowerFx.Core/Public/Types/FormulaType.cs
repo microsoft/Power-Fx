@@ -2,11 +2,10 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Text;
 using Microsoft.PowerFx.Core.Entities;
-using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 
@@ -116,7 +115,7 @@ namespace Microsoft.PowerFx.Types
         {
             foreach (FormulaType formulaType in GetValidUDFPrimitiveTypes())
             {
-                if (formulaType.ToString().Equals(formula))
+                if (string.Equals(formulaType.ToString(), formula, StringComparison.Ordinal))
                 {
                     return formulaType;
                 }

@@ -53,7 +53,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
 
         protected override void WriteNumberValue(double numberValue)
         {
-            _writer.Append(numberValue.ToString());
+            _writer.Append(numberValue.ToString(CultureInfo.InvariantCulture));
         }
 
         protected override void WritePropertyName(string name)

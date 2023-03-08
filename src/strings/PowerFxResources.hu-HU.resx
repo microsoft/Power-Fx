@@ -795,7 +795,7 @@
     
   </data>
   <data name="AboutIfError_fallback" xml:space="preserve">
-    <value>A visszaadott érték, ha az az első nem-hiba argumentum.</value>
+    <value>A visszaadott érték, ha az előző argumentum hiba volt.</value>
     
   </data>
   <data name="AboutSubstitute" xml:space="preserve">
@@ -1847,6 +1847,10 @@
   </data>
   <data name="ErrTextInvalidFormat" xml:space="preserve">
     <value>Érvénytelen formátum.</value>
+    
+  </data>
+  <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
+    <value>A(z) {0} argumentum nem érvényes dátum- vagy időpontértéket jelent.</value>
     
   </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
@@ -4344,7 +4348,7 @@
     
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_Link_1" xml:space="preserve">
-    <value>Cikk: A Power Apps-beli vászonalkalmazások viselkedési képleteinek ismertetése</value>
+    <value>Cikk: A Power Apps-beli vászonalapú alkalmazások viselkedési képleteinek ismertetése</value>
     
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
@@ -4416,6 +4420,10 @@
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
     <value>Győződjön meg arról, hogy az azonosító szöveget tartalmaz. Ez a hiba akkor fordul elő, ha az azonosító csak üres vagy szóközkarakterekből áll.</value>
+    
+  </data>
+  <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
+    <value>Unable to compare values of type {0}.</value>
     
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
@@ -4834,8 +4842,18 @@
     <value>Ez a függvény nem egyértelmű, azonos argumentumhoz tartalmaz lambda kifejezéseket és oszlopazonosítókat.</value>
     
   </data>
-  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
-    <value>A(z) {0} BooleanOptionSet lehetőség nem támogatott.</value>
+  <data name="OptionSetOptionNotSupported" xml:space="preserve">
+    <value>The value of option {0} is not of expected type {1}.</value>
     
+  </data>
+  <data name="AboutOptionSetInfo" xml:space="preserve">
+    <value>Az adott beállításkészlet értékének logikai nevét adja vissza.</value>
+    
+  </data>
+  <data name="AboutOptionSetInfoArg1" xml:space="preserve">
+    <value>beállítás</value>
+  </data>
+  <data name="AboutOptionSetInfo_option" xml:space="preserve">
+    <value>Olyan értékkészlet-érték, amelynek a logikai neve vissza lesz állítva.</value>
   </data>
 </root>

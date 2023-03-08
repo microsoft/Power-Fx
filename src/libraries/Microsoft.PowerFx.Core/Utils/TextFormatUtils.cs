@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Text.RegularExpressions;
 
 namespace Microsoft.PowerFx.Core.Utils
@@ -15,7 +16,7 @@ namespace Microsoft.PowerFx.Core.Utils
             // format specifiers. If it does, that's an error according to Excel and our spec.
 
             // But firstly skip any locale-prefix
-            if (formatArg.StartsWith("[$-"))
+            if (formatArg.StartsWith("[$-", StringComparison.Ordinal))
             {
                 var end = formatArg.IndexOf(']', 3);
                 if (end > 0)
