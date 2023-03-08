@@ -3,15 +3,19 @@
 
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.PowerFx;
 using Microsoft.PowerFx.Core;
+using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Tests;
+using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Tests;
 using Microsoft.PowerFx.Types;
+using static Microsoft.PowerFx.Core.Localization.TexlStrings;
 
 namespace Microsoft.PowerFx.Interpreter.Tests
 {
@@ -250,14 +254,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 return result;
             }
 
-            protected override async Task<RunResult> RunAsyncInternal(string expr, string setupHandlerName, string locale)
+            protected override async Task<RunResult> RunAsyncInternal(string expr, string setupHandlerName)
             {
                 RecalcEngine engine;
                 RecordValue parameters;
-                CultureInfo culture = new CultureInfo(locale);
                 var iSetup = InternalSetup.Parse(setupHandlerName);
-
-                var config = new PowerFxConfig(culture, iSetup.Features);
+                var config = new PowerFxConfig(features: iSetup.Features);
                 config.EnableParseJSONFunction();
 
                 if (string.Equals(iSetup.HandlerName, "AsyncTestSetup", StringComparison.OrdinalIgnoreCase))
@@ -286,10 +288,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 }
 
                 var symbolTable = ReadOnlySymbolTable.NewFromRecord(parameters.Type);
-                var parserOptions = iSetup.Flags.ToParserOptions();
-                parserOptions.Culture = new CultureInfo(locale);
-
-                var check = engine.Check(expr, options: parserOptions, symbolTable: symbolTable);
+                var check = engine.Check(expr, options: iSetup.Flags.ToParserOptions(), symbolTable: symbolTable);
                 if (!check.IsSuccess)
                 {
                     return new RunResult(check);
@@ -302,8 +301,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 {
                     runtimeConfig.AddService(iSetup.TimeZoneInfo);
                 }
-
-                runtimeConfig.SetCulture(parserOptions.Culture);
 
                 // Ensure tests can run with governor on. 
                 // Some tests that use large memory can disable via:
@@ -335,21 +332,21 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         internal class ReplRunner : BaseRunner
         {
             private readonly RecalcEngine _engine;
+            public ParserOptions _opts = new ParserOptions { AllowsSideEffects = true };
 
             public ReplRunner(RecalcEngine engine)
             {
                 _engine = engine;
             }
 
-            protected override async Task<RunResult> RunAsyncInternal(string expr, string setupHandlerName = null, string locale = "en-US")
+            protected override async Task<RunResult> RunAsyncInternal(string expr, string setupHandlerName = null)
             {
                 if (TryMatchSet(expr, out var runResult))
                 {
                     return runResult;
                 }
 
-                ParserOptions opts = new ParserOptions { AllowsSideEffects = true, Culture = new CultureInfo(locale) };
-                var check = _engine.Check(expr, opts);
+                var check = _engine.Check(expr, _opts);
                 if (!check.IsSuccess)
                 {
                     return new RunResult(check);

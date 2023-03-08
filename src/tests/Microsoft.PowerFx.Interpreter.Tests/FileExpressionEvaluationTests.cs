@@ -2,8 +2,11 @@
 // Licensed under the MIT license.
 
 using System.IO;
+using System.Threading.Tasks;
+using Microsoft.CodeAnalysis;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Interpreter.Tests.XUnitExtensions;
+using Microsoft.PowerFx.Types;
 using Xunit;
 using static Microsoft.PowerFx.Interpreter.Tests.ExpressionEvaluationTests;
 
@@ -12,7 +15,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
     public class FileExpressionEvaluationTests : PowerFxTest
     {
         [InterpreterTheory]
-        [TxtFileData("ExpressionTestCases", "InterpreterExpressionTestCases", nameof(InterpreterRunner), "en-US")]        
+        [TxtFileData("ExpressionTestCases", "InterpreterExpressionTestCases", nameof(InterpreterRunner))]
         public void InterpreterTestCase(ExpressionTestCase testCase)
         {
             // This is running against embedded resources, so if you're updating the .txt files,

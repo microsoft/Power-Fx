@@ -3,9 +3,11 @@
 
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
+using Microsoft.PowerFx.Syntax;
+using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core.Tests
 {
@@ -24,12 +26,8 @@ namespace Microsoft.PowerFx.Core.Tests
         // Also populate this by calling various Add*() functions to parse. 
         public List<TestCase> Tests { get; set; } = new List<TestCase>();
 
-        private readonly List<Engine> _engines = new List<Engine>();
-
         // Files that have been disabled. 
         public HashSet<string> DisabledFiles = new HashSet<string>();
-
-        public string[] Locales { get; set; } = new[] { "en-US" };
 
         public TestRunner(params BaseRunner[] runners)
         {
@@ -95,7 +93,8 @@ namespace Microsoft.PowerFx.Core.Tests
             // >> indicates input expression
             // next line is expected result.
 
-            Exception ParseError(int lineNumber, string message) => new InvalidOperationException($"{Path.GetFileName(thisFile)} {lineNumber}: {message}");
+            Exception ParseError(int lineNumber, string message) => new InvalidOperationException(
+                $"{Path.GetFileName(thisFile)} {lineNumber}: {message}");
 
             TestCase test = null;
 
@@ -161,7 +160,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 {
                     if (test != null)
                     {
-                        throw ParseError(i, $"parse error - multiple test inputs in a row. Previous input is: {test.Input}");
+                        throw ParseError(i, $"parse error- multiple test inputs in a row. Previous input is: {test.Input}");
                     }
 
                     line = line.Substring(2).Trim();
@@ -194,47 +193,25 @@ namespace Microsoft.PowerFx.Core.Tests
 
                     test.Expected = line.Trim();
 
-                    foreach (string locale in Locales)
+                    var key = test.GetUniqueId(fileOveride);
+                    if (_keyToTests.TryGetValue(key, out var existingTest))
                     {
-                        Engine e = _engines.FirstOrDefault(e => e.Config.CultureInfo.Name == locale);
-
-                        if (e == null)
+                        // Must be in different sources
+                        if (existingTest.SourceFile == test.SourceFile && existingTest.SetupHandlerName == test.SetupHandlerName)
                         {
-                            e = new Engine(new PowerFxConfig(new CultureInfo(locale)));
-                            _engines.Add(e);
+                            throw ParseError(i, $"Duplicate test cases in {Path.GetFileName(test.SourceFile)} on line {test.SourceLine} and {existingTest.SourceLine}");
                         }
 
-                        TestCase testWithLocale = new TestCase()
-                        {
-                            Input = (locale == "en-US") ? test.Input : e.GetDisplayExpression(test.Input, null as ReadOnlySymbolTable),
-                            SourceFile = test.SourceFile,
-                            SourceLine = test.SourceLine,
-                            SetupHandlerName = test.SetupHandlerName,
-                            Expected = test.Expected, // Never adapted to locale
-                            Locale = locale
-                        };
+                        // Updating an existing test. 
+                        // Inputs are the same, but update the results.
+                        existingTest.MarkOverride(test);
+                    }
+                    else
+                    {
+                        // New test
+                        Tests.Add(test);
 
-                        var key = testWithLocale.GetUniqueId(fileOveride);
-
-                        if (_keyToTests.TryGetValue(key, out var existingTest))
-                        {
-                            // Must be in different sources & locales
-                            if (existingTest.SourceFile == testWithLocale.SourceFile && existingTest.SetupHandlerName == testWithLocale.SetupHandlerName && existingTest.Locale == testWithLocale.Locale)
-                            {
-                                throw ParseError(i, $"Duplicate test cases in {Path.GetFileName(testWithLocale.SourceFile)} on line {testWithLocale.SourceLine} [{testWithLocale.Locale}] and {existingTest.SourceLine} [{existingTest.Locale}]");
-                            }
-
-                            // Updating an existing test. 
-                            // Inputs are the same, but update the results.
-                            existingTest.MarkOverride(testWithLocale);
-                        }
-                        else
-                        {
-                            // New test
-                            Tests.Add(testWithLocale);
-
-                            _keyToTests[key] = testWithLocale;
-                        }
+                        _keyToTests[key] = test;
                     }
 
                     test = null;
