@@ -396,7 +396,7 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: OptionSetValueToString)
             },
             {
-                UnaryOpKind.BooleanOptionSetToBoolean,
+                UnaryOpKind.OptionSetToNumber,
                 StandardErrorHandling<OptionSetValue>(
                     functionName: null, // internal function, no user-facing name
                     expandArguments: NoArgExpansion,
@@ -404,7 +404,40 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeTypes: ExactValueTypeOrBlank<OptionSetValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
-                    targetFunction: BooleanOptionSetToBoolean)
+                    targetFunction: OptionSetValueToNumber)
+            },
+            {
+                UnaryOpKind.OptionSetToDecimal,
+                StandardErrorHandling<OptionSetValue>(
+                    functionName: null, // internal function, no user-facing name
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<OptionSetValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: OptionSetValueToDecimal)
+            },
+            {
+                UnaryOpKind.OptionSetToBoolean,
+                StandardErrorHandling<OptionSetValue>(
+                    functionName: null, // internal function, no user-facing name
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<OptionSetValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: OptionSetValueToBoolean)
+            },
+            {
+                UnaryOpKind.OptionSetToColor,
+                StandardErrorHandling<OptionSetValue>(
+                    functionName: null, // internal function, no user-facing name
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<OptionSetValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: OptionSetValueToColor)
             },
             {
                 UnaryOpKind.BlankToEmptyString,
@@ -785,30 +818,74 @@ namespace Microsoft.PowerFx.Functions
             return new DateTimeValue(irContext, date);
         }
 
-        public static FormulaValue OptionSetValueToString(IRContext irContext, OptionSetValue[] args)
+        public static StringValue OptionSetValueToString(IRContext irContext, OptionSetValue[] args)
         {
             var optionSet = args[0];
-            var displayName = optionSet.DisplayName;
-            return new StringValue(irContext, displayName);
+            if (optionSet.ExecutionValue is string evalValue)
+            {                
+                return new StringValue(IRContext.NotInSource(FormulaType.String), evalValue);
+            }
+
+            return new StringValue(irContext, optionSet.DisplayName);
+        }
+        
+        public static FormulaValue OptionSetValueToNumber(IRContext irContext, OptionSetValue[] args)
+        {
+            var optionSet = args[0];
+            if (optionSet.ExecutionValue is double evalValue)
+            {                
+                return new NumberValue(IRContext.NotInSource(FormulaType.Number), evalValue);
+            }
+
+            var errorMessage = ErrorUtils.FormatMessage(StringResources.Get(TexlStrings.OptionSetOptionNotSupported), null, optionSet.DisplayName, FormulaType.Color._type.GetKindString());
+            return CommonErrors.CustomError(IRContext.NotInSource(FormulaType.Number), errorMessage);
         }
 
-        public static FormulaValue BooleanOptionSetToBoolean(IRContext irContext, OptionSetValue[] args)
+        public static FormulaValue OptionSetValueToDecimal(IRContext irContext, OptionSetValue[] args)
         {
-            var arg0 = args[0];
+            var optionSet = args[0];
+            if (optionSet.ExecutionValue is double evalValue)
+            {
+                return new DecimalValue(IRContext.NotInSource(FormulaType.Decimal), (decimal)evalValue);
+            }
 
-            if (arg0.Option == "1")
-            {
-                return FormulaValue.New(true);
+            var errorMessage = ErrorUtils.FormatMessage(StringResources.Get(TexlStrings.OptionSetOptionNotSupported), null, optionSet.DisplayName, FormulaType.Color._type.GetKindString());
+            return CommonErrors.CustomError(IRContext.NotInSource(FormulaType.Number), errorMessage);
+        }
+
+        public static FormulaValue OptionSetValueToBoolean(IRContext irContext, OptionSetValue[] args)
+        {
+            var optionSet = args[0];
+            if (optionSet.ExecutionValue is bool evalValue)
+            {                
+                return new BooleanValue(IRContext.NotInSource(FormulaType.Boolean), evalValue);
             }
-            else if (arg0.Option == "0")
+
+            var errorMessage = ErrorUtils.FormatMessage(StringResources.Get(TexlStrings.OptionSetOptionNotSupported), null, optionSet.DisplayName, FormulaType.Color._type.GetKindString());
+            return CommonErrors.CustomError(IRContext.NotInSource(FormulaType.Boolean), errorMessage);
+        }
+
+        public static FormulaValue OptionSetValueToColor(IRContext irContext, OptionSetValue[] args)
+        {
+            var optionSet = args[0];
+            if (optionSet.ExecutionValue is double evalValue)
             {
-                return FormulaValue.New(false);
+                // Color enums are backed by a double
+                return new ColorValue(IRContext.NotInSource(FormulaType.Color), ToColor(evalValue));
             }
-            else
-            {
-                var errorMessage = ErrorUtils.FormatMessage(StringResources.Get(TexlStrings.BooleanOptionSetOptionNotSupported), null, arg0.Option);
-                return CommonErrors.CustomError(IRContext.NotInSource(FormulaType.Boolean), errorMessage);
-            }
+
+            var errorMessage = ErrorUtils.FormatMessage(StringResources.Get(TexlStrings.OptionSetOptionNotSupported), null, optionSet.DisplayName, FormulaType.Color._type.GetKindString());
+            return CommonErrors.CustomError(IRContext.NotInSource(FormulaType.Color), errorMessage);
+        }
+
+        private static System.Drawing.Color ToColor(double doubValue)
+        {
+            var value = Convert.ToUInt32(doubValue);
+            return System.Drawing.Color.FromArgb(
+                        (byte)((value >> 24) & 0xFF),
+                        (byte)((value >> 16) & 0xFF),
+                        (byte)((value >> 8) & 0xFF),
+                        (byte)(value & 0xFF));
         }
 
         public static FormulaValue BlankToEmptyString(IRContext irContext, FormulaValue[] args)

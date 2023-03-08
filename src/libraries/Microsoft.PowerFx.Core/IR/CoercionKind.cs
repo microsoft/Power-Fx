@@ -12,14 +12,14 @@ namespace Microsoft.PowerFx.Core.IR
 
         TextToNumber,
         BooleanToNumber,
-        BooleanOptionSetToNumber,
+        OptionSetToNumber,
         DateToNumber,
         TimeToNumber,
         DateTimeToNumber,
 
         TextToDecimal,
         BooleanToDecimal,
-        BooleanOptionSetToDecimal,
+        OptionSetToDecimal,
         DateToDecimal,
         TimeToDecimal,
         DateTimeToDecimal,
@@ -49,7 +49,7 @@ namespace Microsoft.PowerFx.Core.IR
         NumberToBoolean,
         DecimalToBoolean,
         TextToBoolean,
-        BooleanOptionSetToBoolean,
+        OptionSetToBoolean,
 
         RecordToRecord, // See field mappings
         TableToTable,
@@ -73,7 +73,9 @@ namespace Microsoft.PowerFx.Core.IR
         DateToDateTime,
 
         BooleanToOptionSet,
-        AggregateToDataEntity,
+        AggregateToDataEntity,  
+        
+        OptionSetToColor,
 
         UntypedToText,
         UntypedToBoolean,

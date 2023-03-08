@@ -544,7 +544,10 @@ namespace Microsoft.PowerFx.Functions
                     return CommonErrors.DivByZeroError(irContext);
                 }
 
-                // TODO Decimal: check for overflow
+                if (_overflow)
+                {
+                    return CommonErrors.OverflowError(irContext);
+                }
 
                 return new DecimalValue(irContext, _accumulator / _count);
             }

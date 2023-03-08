@@ -187,7 +187,7 @@
     
   </data>
   <data name="AboutOr" xml:space="preserve">
-    <value>Kontrollerar om något av argumenten är sanna och returnerar sant eller falstkt. Returnerar bara falskt om alla argumenten är falska.</value>
+    <value>Kontrollerar om något av argumenten är sanna och returnerar sant eller falskt. Returnerar bara falskt om alla argumenten är falska.</value>
     
   </data>
   <data name="AboutNot" xml:space="preserve">
@@ -195,7 +195,7 @@
     
   </data>
   <data name="LogicalFuncParam" xml:space="preserve">
-    <value>logiskt</value>
+    <value>logisk</value>
     
   </data>
   <data name="AboutAnd_logical" xml:space="preserve">
@@ -255,11 +255,11 @@
     
   </data>
   <data name="AboutMaxT" xml:space="preserve">
-    <value>Returnerar det högsta värdet som uttrycket utvärderar mot i tabellkontexten.</value>
+    <value>Returnerar det högsta värdet som uttrycket utvärderas till i tabellkontexten.</value>
     
   </data>
   <data name="AboutMinT" xml:space="preserve">
-    <value>Returnerar det minsta värdet som uttrycket utvärderar mot i tabellkontexten.</value>
+    <value>Returnerar det minsta värdet som uttrycket utvärderas till i tabellkontexten.</value>
     
   </data>
   <data name="AboutAverageT" xml:space="preserve">
@@ -347,7 +347,7 @@
     
   </data>
   <data name="AboutAddColumns_source" xml:space="preserve">
-    <value>En tabell att lägga till kolumner till.</value>
+    <value>En tabell att lägga till kolumner i.</value>
     
   </data>
   <data name="AboutAddColumns_column" xml:space="preserve">
@@ -359,7 +359,7 @@
     
   </data>
   <data name="AboutDropColumns" xml:space="preserve">
-    <value>Returnerar en tabell med ett eller flera angivna kolumner borttagna från källtabellen.</value>
+    <value>Returnerar en tabell med en eller flera angivna kolumner borttagna från källtabellen.</value>
     
   </data>
   <data name="DropColumnsArg1" xml:space="preserve">
@@ -586,7 +586,7 @@
     <value>Ett textvärde eller en kolumn med textvärden som ska sammanfogas med övriga argument.</value>
   </data>
   <data name="AboutConcat" xml:space="preserve">
-    <value>Kopplar alla textvärden som skapats genom att utvärdera det givna uttrycket för den givna tabellen i ett textvärde.</value>
+    <value>Sammanfogar alla textvärden som skapats genom att utvärdera det givna uttrycket för den givna tabellen i ett textvärde.</value>
     
   </data>
   <data name="ConcatArg1" xml:space="preserve">
@@ -619,7 +619,7 @@
     <value>Ett textvärde vars teckenlängd returneras.</value>
   </data>
   <data name="AboutLenT" xml:space="preserve">
-    <value>Returnerar antalet tecken i ett textvärde, utvärderat per rad inom den angivna tabellen eller samlingen.</value>
+    <value>Returnerar antalet tecken i ett textvärde, utvärderat per rad inom den angivna tabellen eller mängden.</value>
     
   </data>
   <data name="AboutLen_text_column" xml:space="preserve">
@@ -638,7 +638,7 @@
     
   </data>
   <data name="AboutUpperT" xml:space="preserve">
-    <value>Konverterar alla bokstäver i ett textvärde, utvärderat efter rad inom den angivna tabellen eller samlingen, till versaler.</value>
+    <value>Konverterar alla bokstäver i ett textvärde, utvärderat efter rad inom den angivna tabellen eller mängden, till versaler.</value>
     
   </data>
   <data name="AboutUpper_text" xml:space="preserve">
@@ -652,7 +652,7 @@
     
   </data>
   <data name="AboutLowerT" xml:space="preserve">
-    <value>Konverterar alla bokstäver i ett textvärde, utvärderade per rad inom den angivna tabellen eller samlingen, till gemener.</value>
+    <value>Konverterar alla bokstäver i ett textvärde, utvärderade per rad inom den angivna tabellen eller mängden, till gemener.</value>
     
   </data>
   <data name="AboutLower_text" xml:space="preserve">
@@ -736,7 +736,7 @@
     
   </data>
   <data name="AboutReplaceT" xml:space="preserve">
-    <value>Ersätter en del av ett textvärde med ett annat textvärde, utvärderat per rad inom den angivna tabellen eller samlingen.</value>
+    <value>Ersätter en del av ett textvärde med ett annat textvärde, utvärderat per rad inom den angivna tabellen eller mängden.</value>
     
   </data>
   <data name="ReplaceFuncArg1" xml:space="preserve">
@@ -779,7 +779,7 @@
     
   </data>
   <data name="AboutIfError" xml:space="preserve">
-    <value>Utvärderar och returnerar det första icke-fel argumentet.</value>
+    <value>Utvärderar och returnerar det första icke-felaktiga argumentet.</value>
     
   </data>
   <data name="IfErrorArg1" xml:space="preserve">
@@ -795,7 +795,7 @@
     
   </data>
   <data name="AboutIfError_fallback" xml:space="preserve">
-    <value>Värde som returneras om det är det första icke-fel argumentet.</value>
+    <value>Värde som returneras om det föregående argumentet är ett fel.</value>
     
   </data>
   <data name="AboutSubstitute" xml:space="preserve">
@@ -803,7 +803,7 @@
     
   </data>
   <data name="AboutSubstituteT" xml:space="preserve">
-    <value>Ersätter befintlig text med ny text i ett textvärde som utvärderas per rad inom den angivna tabellen eller samlingen.</value>
+    <value>Ersätter befintlig text med ny text i ett textvärde som utvärderas per rad inom den angivna tabellen eller mängden.</value>
     
   </data>
   <data name="SubstituteFuncArg1" xml:space="preserve">
@@ -842,7 +842,7 @@
     <value>En kolumn med textvärden att bearbeta.</value>
   </data>
   <data name="AboutSort" xml:space="preserve">
-    <value>Sorterar källan baserat på resultaten från uttrycket som utvärderats för varje rad. Valfritt så kan en sorteringsordning anges.</value>
+    <value>Sorterar källan baserat på resultaten från uttrycket som utvärderats för varje rad. Valfritt så att en sorteringsordning kan anges.</value>
     
   </data>
   <data name="SortArg1" xml:space="preserve">
@@ -854,7 +854,7 @@
     
   </data>
   <data name="SortArg3" xml:space="preserve">
-    <value>sortera</value>
+    <value>ordna</value>
     
   </data>
   <data name="AboutSort_source" xml:space="preserve">
@@ -867,7 +867,7 @@
     <value>Stigande eller fallande</value>
   </data>
   <data name="AboutSortByColumns" xml:space="preserve">
-    <value>Sorterar källan baserat på kolumnen. Valfritt så kan en sorteringsordning anges.</value>
+    <value>Sorterar källan baserat på kolumnen. Valfritt så att en sorteringsordning kan anges.</value>
     
   </data>
   <data name="SortByColumnsArg1" xml:space="preserve">
@@ -879,7 +879,7 @@
     
   </data>
   <data name="SortByColumnsArg3" xml:space="preserve">
-    <value>sortera</value>
+    <value>ordna</value>
     
   </data>
   <data name="AboutSortByColumns_source" xml:space="preserve">
@@ -911,11 +911,11 @@
     <value>En kolumn med värden att användas i sorteringssyfte. Sortering görs inte stigande/fallande, utan baserat på indexet med matchande värden i kolumnen.</value>
   </data>
   <data name="AboutRand" xml:space="preserve">
-    <value>Returnerar ett slumpmässigt nummer större än eller lika med 0 och mindre än 1, jämt distribuerat.</value>
+    <value>Returnerar ett slumpmässigt tal som är större än eller lika med 0 och mindre än 1, jämnt fördelat.</value>
     
   </data>
   <data name="AboutRandBetween" xml:space="preserve">
-    <value>Returnerar ett slumptal mellan lägsta och högsta, jämnt distribuerat.</value>
+    <value>Returnerar ett slumpmässigt tal mellan lägsta och högsta, jämnt fördelat.</value>
     
   </data>
   <data name="AboutRandBetween_bottom" xml:space="preserve">
@@ -945,7 +945,7 @@
     
   </data>
   <data name="AboutNow" xml:space="preserve">
-    <value>Returnerar nuvarande datum och tid.</value>
+    <value>Returnerar aktuellt datum och aktuell tid.</value>
     
   </data>
   <data name="AboutUTCNow" xml:space="preserve">
@@ -953,7 +953,7 @@
     
   </data>
   <data name="AboutTimeZoneOffset" xml:space="preserve">
-    <value>Returnerar tidsskillnaden mellan UTC-tid och lokal tid i minuter. Om din tidzon t.ex. är UTC+2 så returneras -120.</value>
+    <value>Returnerar tidsskillnaden mellan UTC-tid och lokal tid i minuter. Om din tidszon t.ex. är UTC+2 så returneras -120.</value>
     
   </data>
   <data name="TimeZoneOffsetArg1" xml:space="preserve">
@@ -965,7 +965,7 @@
     
   </data>
   <data name="AboutToday" xml:space="preserve">
-    <value>Returnerar nuvarande datum.</value>
+    <value>Returnerar aktuellt datum.</value>
     
   </data>
   <data name="AboutUTCToday" xml:space="preserve">
@@ -1050,15 +1050,15 @@
     
   </data>
   <data name="AboutRound" xml:space="preserve">
-    <value>Rundar tal till det angivna antalet siffror.</value>
+    <value>Rundar av tal till det angivna antalet siffror.</value>
     
   </data>
   <data name="AboutRoundUp" xml:space="preserve">
-    <value>Rundar upp tal bort från noll.</value>
+    <value>Rundar av tal uppåt bort från noll.</value>
     
   </data>
   <data name="AboutRoundDown" xml:space="preserve">
-    <value>Rundar ner tal mot noll.</value>
+    <value>Rundar av tal nedåt mot noll.</value>
     
   </data>
   <data name="RoundArg1" xml:space="preserve">
@@ -1097,15 +1097,15 @@
     <value>Antal decimaler att använda vid rundning.</value>
   </data>
   <data name="AboutRoundT" xml:space="preserve">
-    <value>Rundar alla tal i källan till det angivna antalet decimaler.</value>
+    <value>Rundar av alla tal i källan till det angivna antalet decimaler.</value>
     
   </data>
   <data name="AboutRoundUpT" xml:space="preserve">
-    <value>Rundar upp alla tal i källan bort från noll.</value>
+    <value>Rundar av alla tal i källan uppåt bort från noll.</value>
     
   </data>
   <data name="AboutRoundDownT" xml:space="preserve">
-    <value>Rundar ner alla tal i källan mot noll.</value>
+    <value>Rundar av alla tal i källan nedåt mot noll.</value>
     
   </data>
   <data name="RoundTArg1" xml:space="preserve">
@@ -1515,7 +1515,7 @@
     
   </data>
   <data name="AboutIsEmpty" xml:space="preserve">
-    <value>Kontrollerar om en samling är tom och returnerar sant eller falskt.</value>
+    <value>Kontrollerar om en mängd är tom och returnerar sant eller falskt.</value>
     
   </data>
   <data name="IsEmptyArg1" xml:space="preserve">
@@ -1562,7 +1562,7 @@
     <value>Ett uttryck att utvärdera för raden som matchar det angivna villkoret och som kommer att ge resultatet.</value>
   </data>
   <data name="AboutStdevP" xml:space="preserve">
-    <value>Beräknar standardavvikelse baserat på hela populationen given som argument (ignorerar logiska värden och text).</value>
+    <value>Beräknar standardavvikelse baserat på hela populationen angiven som argument (ignorerar logiska värden och text).</value>
     
   </data>
   <data name="AboutStdevP_number" xml:space="preserve">
@@ -1575,7 +1575,7 @@
     <value>Ett uttryck som utvärderas för rader i indata och anger värden för standardavvikelseberäkning.</value>
   </data>
   <data name="AboutStdevPT" xml:space="preserve">
-    <value>Beräknar standardavvikelse baserat på hela populationen given som en kolumn (ignorerar logiska värden och text inom kolumnen).</value>
+    <value>Beräknar standardavvikelse baserat på hela populationen angiven som en kolumn (ignorerar logiska värden och text inom kolumnen).</value>
     
   </data>
   <data name="AboutVarP" xml:space="preserve">
@@ -1654,7 +1654,7 @@
     
   </data>
   <data name="WithArg1" xml:space="preserve">
-    <value>omfång</value>
+    <value>omfattning</value>
     
   </data>
   <data name="WithArg2" xml:space="preserve">
@@ -1678,7 +1678,7 @@
     
   </data>
   <data name="AboutSequence_records" xml:space="preserve">
-    <value>Antalet poster i den enskilda kolumnen med namnet "Värde". Max 50 000.</value>
+    <value>Antalet poster i den enskilda kolumntabellen med namnet "Värde". Max 50 000.</value>
     
   </data>
   <data name="SequenceArg2" xml:space="preserve">
@@ -1686,7 +1686,7 @@
     
   </data>
   <data name="AboutSequence_start" xml:space="preserve">
-    <value>Valfritt. Det första numret i sekvensen. Standardvärdet är 1.</value>
+    <value>Valfritt. Det första talet i sekvensen. Standardvärdet är 1.</value>
     
   </data>
   <data name="SequenceArg3" xml:space="preserve">
@@ -1702,11 +1702,11 @@
     
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
-    <value>'{0}' är en okänd funktion eller funktion som inte stöds.</value>
+    <value>{0} är en okänd funktion eller funktion som inte stöds.</value>
     
   </data>
   <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
-    <value>'{0}' är en okänd funktion eller funktion som inte stöds i namnrymden '{1}'.</value>
+    <value>{0} är en okänd funktion eller funktion som inte stöds i namnområdet {1}.</value>
     
   </data>
   <data name="ErrUnSupportedComponentBehaviorInvocation" xml:space="preserve">
@@ -1754,7 +1754,7 @@
     
   </data>
   <data name="ErrBadType_ExpectedType_ProvidedType" xml:space="preserve">
-    <value>Ogiltig argumenttyp ({1}). Ett {0}-värde förväntades istället.</value>
+    <value>Ogiltig argumenttyp ({1}). Ett {0}-värde förväntades i stället.</value>
     
   </data>
   <data name="ErrBadSchema_ExpectedType" xml:space="preserve">
@@ -1849,6 +1849,10 @@
     <value>Ogiltigt format.</value>
     
   </data>
+  <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
+    <value>Argumentet representerar inte ett giltigt datum- eller tidsvärde.</value>
+    
+  </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
     <value>Den här datakällan är ogiltig. Åtgärda felet i panelen "Datakällor" genom att klicka på "Innehåll -&gt; Datakällor" eller "Visa -&gt; Alternativ"</value>
     
@@ -1858,7 +1862,7 @@
     
   </data>
   <data name="ErrIncompatibleTypes" xml:space="preserve">
-    <value>De givna typerna är inkompatibla.</value>
+    <value>De angivna typerna är inkompatibla.</value>
     
   </data>
   <data name="ErrTypeError_Ex1_Ex2_Found" xml:space="preserve">
@@ -1922,7 +1926,7 @@
     
   </data>
   <data name="ErrAsyncLambda" xml:space="preserve">
-    <value>Asynkrona anrop får inte användas i villkors- och värdesfunktioner.</value>
+    <value>Asynkrona anrop får inte användas i villkors- och värdefunktioner.</value>
     
   </data>
   <data name="ErrValueMustBeFullyQualified" xml:space="preserve">
@@ -2084,7 +2088,7 @@
     <value>Datumvärdet som dagkomponenten extraheras från.</value>
   </data>
   <data name="AboutHour" xml:space="preserve">
-    <value>Timme returnerar timmen som ett tal mellan 0 (12:00:00 AM) och 23 (11:00:00 PM).</value>
+    <value>Timme returnerar timmen som ett tal mellan 0 (0.00) och 23 (23.00).</value>
     
   </data>
   <data name="HourArg1" xml:space="preserve">
@@ -2095,7 +2099,7 @@
     <value>Datum- eller tidsvärdet som komponenten kommer extraheras från.</value>
   </data>
   <data name="AboutMinute" xml:space="preserve">
-    <value>Returnerar minuten, ett nummer mellan 0 och 59.</value>
+    <value>Returnerar minuten, ett tal mellan 0 och 59.</value>
     
   </data>
   <data name="MinuteArg1" xml:space="preserve">
@@ -2267,7 +2271,7 @@
     <value>Textvärdet (eller kolumnen med textvärden) att leta i.</value>
   </data>
   <data name="AboutColorValue" xml:space="preserve">
-    <value>Återställer färgen som motsvarar den givna färgsträngen.</value>
+    <value>Returnerar färgen som motsvarar den givna färgsträngen.</value>
     
   </data>
   <data name="ColorValueArg1" xml:space="preserve">
@@ -2278,7 +2282,7 @@
     <value>En färg som anges med namn, exempelvis "blå", eller med standard 6-siffrig hexnotering #rrggbb.</value>
   </data>
   <data name="ErrInvalidJsonPointer" xml:space="preserve">
-    <value>Ogiltig JSON-visare.</value>
+    <value>Ogiltig JSON-pekare.</value>
     
   </data>
   <data name="Text" xml:space="preserve">
@@ -2699,7 +2703,7 @@
     <value>Namnet på en kolumn att behålla.</value>
   </data>
   <data name="AboutIsToday" xml:space="preserve">
-    <value>Kontrollerar om det givna datumet är idag och returenerar sant eller falskt.</value>
+    <value>Kontrollerar om det angivna datumet är i dag och returenerar sant eller falskt.</value>
     
   </data>
   <data name="AboutIsToday_date" xml:space="preserve">
@@ -2769,7 +2773,7 @@
     
   </data>
   <data name="pdfViewer_PasswordState_DisplayName" xml:space="preserve">
-    <value>Lösenordsstatus</value>
+    <value>Lösenordets tillstånd</value>
     
   </data>
   <data name="DataDescriptionInvalidFormat_Reason" xml:space="preserve">
@@ -2815,7 +2819,7 @@
     
   </data>
   <data name="AboutStartsWith" xml:space="preserve">
-    <value>Returnerar true om den angivna texten börjar med den angivna startsträngen.</value>
+    <value>Returnerar sant om den angivna texten börjar med den angivna startsträngen.</value>
     
   </data>
   <data name="AboutStartsWith_text" xml:space="preserve">
@@ -2833,7 +2837,7 @@
     
   </data>
   <data name="AboutEndsWith" xml:space="preserve">
-    <value>Returnerar true om den angivna texten slutar med den angivna slutsträngen.</value>
+    <value>Returnerar sant om den angivna texten slutar med den angivna slutsträngen.</value>
     
   </data>
   <data name="AboutEndsWith_text" xml:space="preserve">
@@ -2854,7 +2858,7 @@
     <value>Returnerar ett null (tomt) värde</value>
   </data>
   <data name="AboutPowerT" xml:space="preserve">
-    <value>Höjer ett tal x (eller kolumn med tal) till potensen av ett annat tal y (eller kolumn med tal). Samma som x^y.</value>
+    <value>Upphöjer ett tal x (eller kolumn med tal) till potensen av ett annat tal y (eller kolumn med tal). Samma som x^y.</value>
     
   </data>
   <data name="AboutPower_base_or_column" xml:space="preserve">
@@ -3084,7 +3088,7 @@
     
   </data>
   <data name="Icon_VerticalLine_DisplayName" xml:space="preserve">
-    <value>Vertikal rad</value>
+    <value>Vertikal linje</value>
     
   </data>
   <data name="Icon_Video_DisplayName" xml:space="preserve">
@@ -3160,7 +3164,7 @@
     
   </data>
   <data name="BorderStyle_None_DisplayName" xml:space="preserve">
-    <value>Inget</value>
+    <value>Ingen</value>
     
   </data>
   <data name="BorderStyle_Dashed_DisplayName" xml:space="preserve">
@@ -3196,11 +3200,11 @@
     
   </data>
   <data name="LayoutDirection_Horizontal_DisplayName" xml:space="preserve">
-    <value>Vågrät</value>
+    <value>Horisontell</value>
     
   </data>
   <data name="LayoutDirection_Vertical_DisplayName" xml:space="preserve">
-    <value>Lodrät</value>
+    <value>Vertikal</value>
     
   </data>
   <data name="LayoutAlignItems_Start_DisplayName" xml:space="preserve">
@@ -3208,7 +3212,7 @@
     
   </data>
   <data name="LayoutAlignItems_Center_DisplayName" xml:space="preserve">
-    <value>Mitten</value>
+    <value>Centrera</value>
     
   </data>
   <data name="LayoutAlignItems_End_DisplayName" xml:space="preserve">
@@ -3216,7 +3220,7 @@
     
   </data>
   <data name="LayoutAlignItems_Stretch_DisplayName" xml:space="preserve">
-    <value>Utsträckt</value>
+    <value>Sträck ut</value>
     
   </data>
   <data name="AlignInContainer_Start_DisplayName" xml:space="preserve">
@@ -3224,7 +3228,7 @@
     
   </data>
   <data name="AlignInContainer_Center_DisplayName" xml:space="preserve">
-    <value>Mitten</value>
+    <value>Centrera</value>
     
   </data>
   <data name="AlignInContainer_End_DisplayName" xml:space="preserve">
@@ -3232,7 +3236,7 @@
     
   </data>
   <data name="AlignInContainer_Stretch_DisplayName" xml:space="preserve">
-    <value>Utsträckt</value>
+    <value>Sträck ut</value>
     
   </data>
   <data name="AlignInContainer_SetByContainer_DisplayName" xml:space="preserve">
@@ -3244,7 +3248,7 @@
     
   </data>
   <data name="LayoutJustifyContent_Center_DisplayName" xml:space="preserve">
-    <value>Mitten</value>
+    <value>Centrera</value>
     
   </data>
   <data name="LayoutJustifyContent_End_DisplayName" xml:space="preserve">
@@ -3296,11 +3300,11 @@
     
   </data>
   <data name="TextFormat_Number_DisplayName" xml:space="preserve">
-    <value>Antal</value>
+    <value>Tal</value>
     
   </data>
   <data name="VirtualKeyboardMode_Auto_DisplayName" xml:space="preserve">
-    <value>Automatisk tangentbord</value>
+    <value>Automatiskt tangentbord</value>
     
   </data>
   <data name="VirtualKeyboardMode_Numeric_DisplayName" xml:space="preserve">
@@ -3424,7 +3428,7 @@
     
   </data>
   <data name="VerticalAlign_Top_DisplayName" xml:space="preserve">
-    <value>Högsta</value>
+    <value>Överkant</value>
     
   </data>
   <data name="VerticalAlign_Middle_DisplayName" xml:space="preserve">
@@ -3432,15 +3436,15 @@
     
   </data>
   <data name="VerticalAlign_Bottom_DisplayName" xml:space="preserve">
-    <value>Lägsta</value>
+    <value>Underkant</value>
     
   </data>
   <data name="Layout_Horizontal_DisplayName" xml:space="preserve">
-    <value>Vågrätt</value>
+    <value>Horisontell</value>
     
   </data>
   <data name="Layout_Vertical_DisplayName" xml:space="preserve">
-    <value>Lodrät</value>
+    <value>Vertikal</value>
     
   </data>
   <data name="TextPosition_Left_DisplayName" xml:space="preserve">
@@ -3460,7 +3464,7 @@
     
   </data>
   <data name="Transition_None_DisplayName" xml:space="preserve">
-    <value>Inget</value>
+    <value>Ingen</value>
     
   </data>
   <data name="FontWeight_Normal_DisplayName" xml:space="preserve">
@@ -3540,7 +3544,7 @@
     
   </data>
   <data name="GridStyle_None_DisplayName" xml:space="preserve">
-    <value>Inget</value>
+    <value>Ingen</value>
     
   </data>
   <data name="FormMode_Edit_DisplayName" xml:space="preserve">
@@ -3576,7 +3580,7 @@
     
   </data>
   <data name="LoadingSpinner_None_DisplayName" xml:space="preserve">
-    <value>Inget</value>
+    <value>Ingen</value>
     
   </data>
   <data name="NotificationType_Error_DisplayName" xml:space="preserve">
@@ -3608,7 +3612,7 @@
     
   </data>
   <data name="Icon_Check_DisplayName" xml:space="preserve">
-    <value>Kryss</value>
+    <value>Bock</value>
     
   </data>
   <data name="Icon_Search_DisplayName" xml:space="preserve">
@@ -3656,7 +3660,7 @@
     
   </data>
   <data name="Icon_ClearDrawing_DisplayName" xml:space="preserve">
-    <value>Rensa ritning</value>
+    <value>Rensa teckning</value>
     
   </data>
   <data name="Icon_ExpandView_DisplayName" xml:space="preserve">
@@ -3700,7 +3704,7 @@
     
   </data>
   <data name="Icon_Hamburger_DisplayName" xml:space="preserve">
-    <value>Hamburger</value>
+    <value>Hamburgare</value>
     
   </data>
   <data name="Icon_Settings_DisplayName" xml:space="preserve">
@@ -3804,7 +3808,7 @@
     
   </data>
   <data name="Icon_AddToCalendar_DisplayName" xml:space="preserve">
-    <value>Lägga till i kalender</value>
+    <value>Lägg till i kalender</value>
     
   </data>
   <data name="Icon_CalendarBlank_DisplayName" xml:space="preserve">
@@ -3880,7 +3884,7 @@
     
   </data>
   <data name="Icon_ToolsWrench_DisplayName" xml:space="preserve">
-    <value>Verktyg skiftnyckel</value>
+    <value>Verktyget skiftnyckel</value>
     
   </data>
   <data name="Icon_Mail_DisplayName" xml:space="preserve">
@@ -3904,7 +3908,7 @@
     
   </data>
   <data name="Icon_Note_DisplayName" xml:space="preserve">
-    <value>Obs!</value>
+    <value>Anteckning</value>
     
   </data>
   <data name="Icon_PhotosPictures_DisplayName" xml:space="preserve">
@@ -3988,7 +3992,7 @@
     
   </data>
   <data name="Icon_Weather_DisplayName" xml:space="preserve">
-    <value>Vädret</value>
+    <value>Väder</value>
     
   </data>
   <data name="Icon_TrendingHashtag_DisplayName" xml:space="preserve">
@@ -4016,7 +4020,7 @@
     
   </data>
   <data name="AboutIsError" xml:space="preserve">
-    <value>Returneras om ett fel inträffar under utvärderingen av det angivna argumentet.</value>
+    <value>Returnerar om ett fel inträffar under utvärderingen av det angivna argumentet.</value>
     
   </data>
   <data name="IsErrorArg" xml:space="preserve">
@@ -4032,7 +4036,7 @@
     
   </data>
   <data name="ErrBadArityRange" xml:space="preserve">
-    <value>Ogiltigt antal argument: mottagna {0}, förväntade {1}-{2}.</value>
+    <value>Ogiltigt antal argument: mottagna {0}, förväntade {1}–{2}.</value>
     
   </data>
   <data name="ErrGeneralError" xml:space="preserve">
@@ -4064,7 +4068,7 @@
     
   </data>
   <data name="FormulaColumns_TimeZoneConversion" xml:space="preserve">
-    <value>{0} kan inte utföras på denna indata utan en tidszonskonvertering, som inte stöds i formelkolumner.</value>
+    <value>{0} kan inte utföras på dessa indata utan en tidszonskonvertering, som inte stöds i formelkolumner.</value>
     
   </data>
   <data name="FormulaColumns_IncompatibleDateTimes" xml:space="preserve">
@@ -4124,7 +4128,7 @@
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
-    <value>En operand förväntades. Formeln eller uttrycket förväntar sig en giltig operand. Du kan t.ex. lägga till operanden 2 till uttrycket "1+_” så att resultatet blir 3. Du kan lägga till operanden ”det” till uttrycket '”Hej” &amp; _' så att resultatet blir "Hej där".</value>
+    <value>En operand förväntades. Formeln eller uttrycket förväntar sig en giltig operand. Du kan t.ex. lägga till operanden '2' till uttrycket ' 1 +_' så att resultatet blir '3'. Du kan lägga till operanden 'där' till uttrycket '"Hej "&amp; _ ' så att resultatet blir 'Hej där'.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_HowToFix_1" xml:space="preserve">
@@ -4191,7 +4195,7 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
-    <value>Namnet är inte giltigt. '{0}' kan inte identifieras.</value>
+    <value>Namnet är inte giltigt. "{0}" kan inte identifieras.</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
@@ -4247,7 +4251,7 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_Link_1" xml:space="preserve">
-    <value>Artikel: Lägg till och konfigurera en kanvasappskontroll i Power Apps</value>
+    <value>Artikel: Lägg till och konfigurera en kontroll för en arbetsyteapp i Power Apps</value>
     
   </data>
   <data name="ErrorResource_ErrTooManyUps_ShortMessage" xml:space="preserve">
@@ -4295,7 +4299,7 @@
     <value>Det här felet uppstår om du använder en funktion som kräver ett tal men du anger, låt oss säga, en bild istället.</value>
   </data>
   <data name="ErrorResource_ErrNumberExpected_HowToFix_1" xml:space="preserve">
-    <value>Redigera din formel så att den utvärderas till ett tal vid den här tidpunkten i formeln.</value>
+    <value>Redigera din formel så att den utvärderas till ett tal vid den här punkten i formeln.</value>
     
   </data>
   <data name="ErrorResource_ErrNumberExpected_Link_1" xml:space="preserve">
@@ -4303,7 +4307,7 @@
     
   </data>
   <data name="ErrorResource_ErrBooleanExpected_ShortMessage" xml:space="preserve">
-    <value>Ett booleskt värde förväntades. Vi förväntar oss nu ett booleskt värde (true/false) i formeln.</value>
+    <value>Ett booleskt värde förväntades. Vi förväntar oss nu ett booleskt värde (sant/falskt) i formeln.</value>
     
   </data>
   <data name="ErrorResource_ErrBooleanExpected_LongMessage" xml:space="preserve">
@@ -4359,7 +4363,7 @@
     
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_ShortMessage" xml:space="preserve">
-    <value>Det går inte att konvertera den här datatypen. PowerApps kan inte konvertera den här {0} till en {1}.</value>
+    <value>Det går inte att konvertera den här datatypen. Power Apps kan inte konvertera den här {0} till en {1}.</value>
     
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_LongMessage" xml:space="preserve">
@@ -4377,7 +4381,7 @@
     <value>Det här felet uppstår om du använder en funktion som kräver ett textargument (eller strängargument) och du anger, låt oss säga, ett datum istället.</value>
   </data>
   <data name="ErrorResource_ErrStringExpected_HowToFix_1" xml:space="preserve">
-    <value>Redigera din formel så att den utvärderas till text vid den här tidpunkten i formeln.</value>
+    <value>Redigera din formel så att den utvärderas till text vid den här punkten i formeln.</value>
     
   </data>
   <data name="ErrorResource_ErrStringExpected_Link_1" xml:space="preserve">
@@ -4392,7 +4396,7 @@
     <value>Det här felet uppstår om du använder en funktion som kräver antingen text eller ett tal men du anger, låt oss säga, ett booleskt värde (sant/falskt).</value>
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_HowToFix_1" xml:space="preserve">
-    <value>Redigera din formel så att den utvärderas till en text eller ett tal i den här tidpunkten i formeln.</value>
+    <value>Redigera din formel så att den utvärderas till en text eller ett tal vid den här punkten i formeln.</value>
     
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_Link_1" xml:space="preserve">
@@ -4416,6 +4420,10 @@
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
     <value>Se till att du har text för din identifierare. Felet uppstår när identifieraren är tom eller bara innehåller blanksteg.</value>
+    
+  </data>
+  <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
+    <value>Unable to compare values of type {0}.</value>
     
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
@@ -4474,7 +4482,7 @@
     
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_HowToFix_1" xml:space="preserve">
-    <value>Lägg till en kolumn till din formel.</value>
+    <value>Lägg till en kolumn i din formel.</value>
     
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_Link_1" xml:space="preserve">
@@ -4502,7 +4510,7 @@
     
   </data>
   <data name="ErrorResource_ErrTypeError_ShortMessage" xml:space="preserve">
-    <value>Inkompatibel typ. Det går inte att utvärdera formeln pga ett typfel.</value>
+    <value>Inkompatibel typ. Det går inte att utvärdera formeln på grund av ett typfel.</value>
     
   </data>
   <data name="ErrorResource_ErrTypeError_LongMessage" xml:space="preserve">
@@ -4543,7 +4551,7 @@
     <value>Datakällan kanske inte kan bearbeta formeln och kan då returnera en ofullständig datauppsättning. Ditt program kanske inte kan returnera korrekta resultat eller uppvisa korrekt beteende om datauppsättningen är ofullständig.</value>
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_1" xml:space="preserve">
-    <value>Om din datauppsättning överskrider gränsen på 500 poster men innehåller mindre än 2 000 poster, kan du prova att återställa gränsen.</value>
+    <value>Om din datauppsättning överskrider gränsen på 500 poster men innehåller färre än 2 000 poster, kan du prova att återställa gränsen.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_2" xml:space="preserve">
@@ -4563,14 +4571,14 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_ShortMessage" xml:space="preserve">
-    <value>Delegering varning. Den markerade delen av den här formeln kanske inte fungerar korrekt med kolumnen {0} i stora datauppsättningar.</value>
+    <value>Delegeringsvarning. Den markerade delen av den här formeln kanske inte fungerar korrekt med kolumnen {0} i stora datauppsättningar.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_LongMessage" xml:space="preserve">
     <value>Datakällan kanske inte kan bearbeta formeln och kan då returnera en ofullständig datauppsättning. Ditt program kanske inte kan returnera korrekta resultat eller uppvisa korrekt beteende om datauppsättningen är ofullständig.</value>
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_1" xml:space="preserve">
-    <value>Om din datauppsättning överskrider gränsen på 500 poster men innehåller mindre än 2 000 poster, kan du prova att återställa gränsen.</value>
+    <value>Om din datauppsättning överskrider gränsen på 500 poster men innehåller färre än 2 000 poster, kan du prova att återställa gränsen.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_2" xml:space="preserve">
@@ -4597,11 +4605,11 @@
     <value>Höger sida av in-operatorn bör varra ett kolumnnamn från korrekt datakälla. Datakällan kanske inte kan bearbeta formeln och kan returnera en ofullständig datauppsättning. Ditt program kanske inte kan returnera korrekta resultat eller uppföra sig korrekt om datauppsättningen är ofullständig.</value>
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_1" xml:space="preserve">
-    <value>Ändra objektet till höger om in-operatorn till att vara en kolumn från rätt datakälla.</value>
+    <value>Ändra objektet till höger om "in"-operatorn till att vara en kolumn från rätt datakälla.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_2" xml:space="preserve">
-    <value>Om din datauppsättning överskrider gränsen på 500 poster men innehåller mindre än 2 000 poster, kan du prova att återställa gränsen.</value>
+    <value>Om din datauppsättning överskrider gränsen på 500 poster men innehåller färre än 2 000 poster, kan du prova att återställa gränsen.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_3" xml:space="preserve">
@@ -4629,7 +4637,7 @@
       </value>
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_1" xml:space="preserve">
-    <value>Ändra objektet till höger om in-operatorn till att vara en kolumn från rätt datakälla.</value>
+    <value>Ändra objektet till höger om "in"-operatorn till att vara en kolumn från rätt datakälla.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_2" xml:space="preserve">
@@ -4662,7 +4670,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_1" xml:space="preserve">
-    <value>Om din datauppsättning överskrider gränsen på 500 poster men innehåller mindre än 2 000 poster, kan du prova att återställa gränsen.</value>
+    <value>Om din datauppsättning överskrider gränsen på 500 poster men innehåller färre än 2 000 poster, kan du prova att återställa gränsen.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_2" xml:space="preserve">
@@ -4722,7 +4730,7 @@
     
   </data>
   <data name="ErrorResource_ErrEmptyIsland_HowToFix_1" xml:space="preserve">
-    <value>Kontrollera för tomma uttryck inuti den interpolerade strängen.</value>
+    <value>Kontrollera om det finns tomma uttryck i den interpolerade strängen.</value>
     
   </data>
   <data name="ErrorResource_ErrAsNotInContext_ShortMessage" xml:space="preserve">
@@ -4834,8 +4842,18 @@
     <value>Denna funktion är tvetydig. Den innehåller lambda-uttryck och kolumnidentifierare för samma argument.</value>
     
   </data>
-  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
-    <value>BooleanOptionSet-alternativet {0} stöds inte.</value>
+  <data name="OptionSetOptionNotSupported" xml:space="preserve">
+    <value>The value of option {0} is not of expected type {1}.</value>
     
+  </data>
+  <data name="AboutOptionSetInfo" xml:space="preserve">
+    <value>Returnerar det logiska namnet på det angivna alternativuppsättningsvärdet.</value>
+    
+  </data>
+  <data name="AboutOptionSetInfoArg1" xml:space="preserve">
+    <value>alternativ</value>
+  </data>
+  <data name="AboutOptionSetInfo_option" xml:space="preserve">
+    <value>Ett alternativuppsättningsvärde vars logiska namn kommer att returneras.</value>
   </data>
 </root>

@@ -13,13 +13,13 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
 
         // Coercion operations
         BooleanToNumber,
-        BooleanOptionSetToNumber,         // TODO Decimal: this, and others, don't appear in the interpreter's LibaryUnary.cs?
+        OptionSetToNumber,  // TODO Decimal: this, and others, don't appear in the interpreter's LibaryUnary.cs?
         DateToNumber,
         TimeToNumber,
         DateTimeToNumber,
 
         BooleanToDecimal,
-        BooleanOptionSetToDecimal,
+        OptionSetToDecimal,
         DateToDecimal,
         TimeToDecimal,
         DateTimeToDecimal,
@@ -45,8 +45,9 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
 
         NumberToBoolean,
         TextToBoolean,
-        BooleanOptionSetToBoolean,
         DecimalToBoolean,
+        OptionSetToBoolean,
+        OptionSetToColor,
 
         RecordToRecord, // See field mappings
         TableToTable,

@@ -476,14 +476,14 @@ namespace Microsoft.PowerFx.Tests
                 bodyOdd,
                 FormulaType.Boolean,
                 false,
-                numberIsFloat: false,
+                numberIsFloat: true,
                 new NamedFormulaType("number", FormulaType.Number));
             var udfEven = new UDFDefinition(
                 "even",
                 bodyEven,
                 FormulaType.Boolean,
                 false,
-                numberIsFloat: false,
+                numberIsFloat: true,
                 new NamedFormulaType("number", FormulaType.Number));
 
             Assert.False(recalcEngine.DefineFunctions(udfOdd, udfEven).Errors.Any());
@@ -508,14 +508,14 @@ namespace Microsoft.PowerFx.Tests
                 bodyOdd,
                 FormulaType.Boolean,
                 false,
-                numberIsFloat: true,
+                numberIsFloat: false,
                 new NamedFormulaType("number", FormulaType.Decimal));
             var udfEven = new UDFDefinition(
                 "even",
                 bodyEven,
                 FormulaType.Boolean,
                 false,
-                numberIsFloat: true,
+                numberIsFloat: false,
                 new NamedFormulaType("number", FormulaType.Decimal));
 
             Assert.False(recalcEngine.DefineFunctions(udfOdd, udfEven).Errors.Any());
@@ -551,7 +551,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.False(recalcEngine.DefineFunctions(new UDFDefinition("foo", "x+1", FormulaType.Number, false, true, new NamedFormulaType("x", FormulaType.Number))).Errors.Any());
             Assert.False(recalcEngine.Check("foo(False)").IsSuccess);
             Assert.False(recalcEngine.Check("foo(Table( { Value: \"Strawberry\" }, { Value: \"Vanilla\" } ))").IsSuccess);
-            Assert.True(recalcEngine.Check("foo(1)").IsSuccess);
+            Assert.True(recalcEngine.Check("foo(Float(1))").IsSuccess);
             await Assert.ThrowsAsync<InvalidOperationException>(async () => await recalcEngine.EvalAsync("foo(False)", CancellationToken.None));
         }
 
@@ -1051,7 +1051,7 @@ namespace Microsoft.PowerFx.Tests
         {
             var recalcEngine = new RecalcEngine(new PowerFxConfig(null));
             recalcEngine.DefineFunctions("Foo(x: Number): Number = Foo(x);");
-            Assert.IsType<ErrorValue>(recalcEngine.Eval("Foo(1)"));
+            Assert.IsType<ErrorValue>(recalcEngine.Eval("Foo(Float(1))"));
         }
 
         [Fact]
@@ -1077,13 +1077,17 @@ namespace Microsoft.PowerFx.Tests
             {
                 MaxCallDepth = 81
             });
+            var opts = new ParserOptions()
+            {
+                NumberIsFloat = true
+            };
             recalcEngine.DefineFunctions(
                 "A(x: Number): Number = If(Mod(x, 2) = 0, B(x/2), B(x));" +
                 "B(x: Number): Number = If(Mod(x, 3) = 0, C(x/3), C(x));" +
                 "C(x: Number): Number = If(Mod(x, 5) = 0, D(x/5), D(x));" +
                 "D(x: Number): Number { If(Mod(x, 7) = 0, F(x/7), F(x)) };" +
-                "F(x: Number): Number { If(x = 1, 1, A(x+1)) };");
-            Assert.Equal(1.0, recalcEngine.Eval("A(12654)").ToObject());
+                "F(x: Number): Number { If(x = 1, 1, A(x+1)) };", numberIsFloat: true);
+            Assert.Equal(1.0, recalcEngine.Eval("A(12654)", options: opts).ToObject());
         }
 
         [Fact]

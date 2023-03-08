@@ -305,7 +305,7 @@ namespace Microsoft.PowerFx
                 return true;
             }
 
-            var enumValue = GetEnumSymbolSnapshot.FirstOrDefault(symbol => symbol.Name == name);
+            var enumValue = GetEnumSymbolSnapshot.FirstOrDefault(symbol => symbol.EntityName.Value == name);
             if (enumValue != null)
             {
                 nameInfo = new NameLookupInfo(BindKind.Enum, enumValue.EnumType, DPath.Root, 0, enumValue);

@@ -38,13 +38,13 @@ Errors: Error 17-20: Invalid argument type (Text). Expecting a Record value inst
 Errors: Error 17-18: Invalid argument type (Decimal). Expecting a Record value instead.|Error 17-18: Invalid argument type. Cannot use Decimal values in this context.|Error 0-19: The function 'ClearCollect' has some invalid arguments.
 
 >> ClearCollect(Table({name: "VC"}), {surname: "textInput1"})
-{surname:"textInput1"}
+Errors: Error 34-57: The specified column 'surname' does not exist. The column with the most similar name is 'name'.|Error 0-58: The function 'ClearCollect' has some invalid arguments.
 
 >> ClearCollect(FirstN(Table({name: "hello"}), 0), {name: "textInput1"})
 {name:"textInput1"}
 
 >> ClearCollect(Foo,r1)
-Errors: Error 13-16: Name isn't valid. 'Foo' isn't recognized.|Error 0-20: The function 'ClearCollect' has some invalid arguments.
+Errors: Error 13-16: Name isn't valid. 'Foo' isn't recognized.|Error 17-19: The specified column 'a' does not exist.|Error 0-20: The function 'ClearCollect' has some invalid arguments.
 
 >> ClearCollect(Foo,Bar)
 Errors: Error 13-16: Name isn't valid. 'Foo' isn't recognized.|Error 17-20: Name isn't valid. 'Bar' isn't recognized.|Error 0-21: The function 'ClearCollect' has some invalid arguments.
@@ -53,13 +53,13 @@ Errors: Error 13-16: Name isn't valid. 'Foo' isn't recognized.|Error 17-20: Name
 Errors: Error 17-20: Name isn't valid. 'Foo' isn't recognized.|Error 14-15: Invalid argument type (Decimal). Expecting a Table value instead.|Error 0-21: The function 'ClearCollect' has some invalid arguments.
 
 >> ClearCollect(Error({Kind:ErrorKind.Custom}), r1)
-Error({Kind:ErrorKind.Custom})
+Errors: Error 45-47: The specified column 'a' does not exist.|Error 0-48: The function 'ClearCollect' has some invalid arguments.
 
 >> ClearCollect(Error({Kind:ErrorKind.Custom}), Error({Kind:ErrorKind.Div0}))
 Error({Kind:ErrorKind.Custom})
 
 >> ClearCollect(Blank(), r1)
-Blank()
+Errors: Error 22-24: The specified column 'a' does not exist.|Error 0-25: The function 'ClearCollect' has some invalid arguments.
 
 >> ClearCollect(Blank(), Blank())
 Blank()

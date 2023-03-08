@@ -41,6 +41,15 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             var result = metadata.IsBinaryOpInDelegationSupportedByColumn(Op, columnPath);
             if (!result)
             {
+                // Filter(SharepointDS, BooleanCol And <some other predicate>), makes it non delegable since no column has And/Or capability
+                if ((column.Kind == NodeKind.FirstName || column.Kind == NodeKind.DottedName) && (Op == BinaryOp.And || Op == BinaryOp.Or))
+                {
+                    if (binder.IsValidBooleanDelegableNode(column))
+                    {
+                        return IsOpSupportedByTable(metadata, column, binder);
+                    }
+                }
+                
                 TrackingProvider.Instance.AddSuggestionMessage(FormatTelemetryMessage("Operator not supported by column."), column, binder);
                 SuggestDelegationHint(column, binder, TexlStrings.OpNotSupportedByColumnSuggestionMessage_OpNotSupportedByColumn, CharacterUtils.MakeSafeForFormatString(columnPath.ToString()));
             }

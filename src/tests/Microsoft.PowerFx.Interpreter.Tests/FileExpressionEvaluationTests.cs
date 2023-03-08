@@ -92,7 +92,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             if (result.Fail > 0)
             {
-                Assert.Equal(string.Empty, result.Output);
+                Assert.True(false, result.Output);
             }
         }
 

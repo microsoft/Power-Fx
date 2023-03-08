@@ -2,8 +2,11 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Globalization;
 using System.Numerics;
+using System.Threading;
 using Microsoft.PowerFx;
+using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
@@ -66,6 +69,32 @@ namespace Microsoft.PowerFx.Tests
             Assert.Throws<CustomFunctionErrorException>(() => inputValue.TryCoerceTo(out DateTimeValue resultDateTime));
         }
 
+        // From Guid to String
+        [Theory]
+        [InlineData("0f8fad5bd9cb469fa16570867728950e", "0f8fad5b-d9cb-469f-a165-70867728950e")]
+        [InlineData("0f8fad5b-d9cb-469f-a165-70867728950e", "0f8fad5b-d9cb-469f-a165-70867728950e")]
+        public void TryCoerceFromGuidToStringTest(string value, string expectedValue)
+        {
+            GuidValue guidInput = new GuidValue(IRContext.NotInSource(FormulaType.Guid), new Guid(value));
+            bool isSucceeded = guidInput.TryCoerceTo(out StringValue resultValue);
+            Assert.True(isSucceeded);
+            Assert.Equal(expectedValue, resultValue.Value);
+        }
+
+        // Test if it can coerce to String
+        [Fact]
+        public void CanCoerceToStringTest()
+        {
+            ColorValue colorInput = new ColorValue(IRContext.NotInSource(FormulaType.Color), System.Drawing.Color.Red);
+            Assert.False(colorInput.CanCoerceToStringValue());
+
+            GuidValue guidInput = new GuidValue(IRContext.NotInSource(FormulaType.Guid), Guid.NewGuid());
+            Assert.True(guidInput.CanCoerceToStringValue());
+
+            NumberValue numberInput = new NumberValue(IRContext.NotInSource(FormulaType.Number), 12);
+            Assert.True(numberInput.CanCoerceToStringValue());
+        }
+
         private void TryCoerceToTargetTypes(FormulaValue inputValue, string exprBool, string exprNumber, string exprDecimal, string exprStr, string exprDateTime)
         {
             bool isSucceeded = inputValue.TryCoerceTo(out BooleanValue resultBoolean);
@@ -114,6 +143,35 @@ namespace Microsoft.PowerFx.Tests
             {
                 Assert.False(isSucceeded);
                 Assert.IsType<ErrorValue>(resultValue);
+            }
+
+            var runtimeConfig = new RuntimeConfig();
+            runtimeConfig.SetCulture(CultureInfo.CurrentCulture);
+            runtimeConfig.SetTimeZone(TimeZoneInfo.Utc);
+            isSucceeded = inputValue.TryCoerceTo(runtimeConfig, out StringValue resultString);
+            if (exprStr != null)
+            {
+                Assert.True(isSucceeded);
+                Assert.Equal(exprStr, resultString.Value);
+            }
+            else
+            {
+                Assert.False(isSucceeded);
+                Assert.IsType<ErrorValue>(resultString);
+            }
+
+            using var cts = new CancellationTokenSource();
+            cts.CancelAfter(3000);
+            isSucceeded = inputValue.TryCoerceTo(runtimeConfig, cts.Token, out StringValue cResultString);
+            if (exprStr != null)
+            {
+                Assert.True(isSucceeded);
+                Assert.Equal(exprStr, cResultString.Value);
+            }
+            else
+            {
+                Assert.False(isSucceeded);
+                Assert.IsType<ErrorValue>(cResultString);
             }
 
             isSucceeded = inputValue.TryCoerceTo(out DateTimeValue resultDateTime);
