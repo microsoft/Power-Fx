@@ -316,7 +316,7 @@ namespace Microsoft.PowerFx.Functions
                     result = new StringValue(irContext, b.Value.ToString(culture).ToLowerInvariant());
                     break;
                 case GuidValue g:
-                    result = new StringValue(irContext, g.Value.ToString(formatString ?? "d", culture));
+                    result = new StringValue(irContext, g.Value.ToString("d", CultureInfo.InvariantCulture));
                     break;
             }
 

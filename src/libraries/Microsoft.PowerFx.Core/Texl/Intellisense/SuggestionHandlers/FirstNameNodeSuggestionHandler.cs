@@ -93,7 +93,7 @@ namespace Microsoft.PowerFx.Intellisense
                 Contracts.AssertValue(intellisenseData);
 
                 var suggestions = intellisenseData.AdditionalGlobalSuggestions
-                    .Union(intellisenseData.EnumSymbols.Select(symbol => new KeyValuePair<string, SuggestionIconKind>(symbol.Name, SuggestionIconKind.Other)));
+                    .Union(intellisenseData.EnumSymbols.Select(symbol => new KeyValuePair<string, SuggestionIconKind>(symbol.EntityName.Value, SuggestionIconKind.Other)));
 
                 IntellisenseHelper.AddSuggestionsForMatches(intellisenseData, suggestions, SuggestionKind.Global, requiresSuggestionEscaping: true);
             }

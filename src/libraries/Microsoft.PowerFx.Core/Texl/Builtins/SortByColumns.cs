@@ -16,6 +16,7 @@ using Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata;
 using Microsoft.PowerFx.Core.Functions.FunctionArgValidators;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 
@@ -31,7 +32,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool SupportsParamCoercion => false;
 
         public SortByColumnsFunction()
-            : base("SortByColumns", TexlStrings.AboutSortByColumns, FunctionCategories.Table, DType.EmptyTable, 0, 2, int.MaxValue, DType.EmptyTable, DType.String)
+            : base("SortByColumns", TexlStrings.AboutSortByColumns, FunctionCategories.Table, DType.EmptyTable, 0, 2, int.MaxValue, DType.EmptyTable, DType.String, BuiltInEnums.SortOrderEnum.OptionSetType)
         {
             _sortOrderValidator = ArgValidators.SortOrderValidator;
 
@@ -72,6 +73,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             var fValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
             Contracts.Assert(returnType.IsTable);
+
+            var orderExpectedType = context.Features.HasFlag(Features.StronglyTypedBuiltinEnums) ?
+                BuiltInEnums.SortOrderEnum.FormulaType._type :
+                DType.String;
 
             returnType = argTypes[0];
 
@@ -114,10 +119,19 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
 
                 var nextArgIdx = i + 1;
-                if (nextArgIdx < args.Length && argTypes[nextArgIdx] != DType.String)
+                if (nextArgIdx < args.Length)
                 {
-                    fValid = false;
-                    errors.EnsureError(args[i + 1], TexlStrings.ErrSortIncorrectOrder);
+                    if (!orderExpectedType.Accepts(argTypes[nextArgIdx]))
+                    {
+                        fValid = false;
+                        errors.TypeMismatchError(args[i + 1], argTypes[nextArgIdx], argTypes[2]);
+                    }
+                    else if (orderExpectedType.OptionSetInfo is EnumSymbol enumSymbol1)
+                    {
+                        // For implementations, coerce enum option set values to the backing type
+                        var coercionType = enumSymbol1.EnumType.GetEnumSupertype();
+                        CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i + 1], coercionType);
+                    }
                 }
             }
 

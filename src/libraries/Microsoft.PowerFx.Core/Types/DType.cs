@@ -10,6 +10,7 @@ using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions.Delegation;
 using Microsoft.PowerFx.Core.Localization;
+using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 using Conditional = System.Diagnostics.ConditionalAttribute;
@@ -862,6 +863,7 @@ namespace Microsoft.PowerFx.Core.Types
         public static DType CreateOptionSetType(IExternalOptionSet info)
         {
             Contracts.AssertValue(info);
+            Contracts.Assert(info.BackingKind is DKind.String or DKind.Number or DKind.Boolean or DKind.Color);
 
             var typedNames = new List<TypedName>();
 
@@ -983,8 +985,23 @@ namespace Microsoft.PowerFx.Core.Types
 
             if (IsLazyType)
             {
+                Contracts.AssertValue(LazyTypeProvider);
+
                 var typeSuffix = string.IsNullOrEmpty(LazyTypeProvider.UserVisibleTypeName) ? string.Empty : $" ({LazyTypeProvider.UserVisibleTypeName})";
                 return (IsTable ? DKind.Table : DKind.Record) + typeSuffix;
+            }
+
+            if (IsOptionSet)
+            {
+                var typeSuffix = string.IsNullOrEmpty(OptionSetInfo?.EntityName) ? string.Empty : $" ({OptionSetInfo.EntityName})";
+                var kind = OptionSetInfo is EnumSymbol ? DKind.Enum : Kind;
+                return kind.ToString() + typeSuffix;
+            }
+
+            if (IsView)
+            {
+                var typeSuffix = string.IsNullOrEmpty(ViewInfo?.EntityName) ? string.Empty : $" ({ViewInfo.EntityName})";
+                return Kind.ToString() + typeSuffix;
             }
 
             return Kind.ToString();
@@ -1998,7 +2015,7 @@ namespace Microsoft.PowerFx.Core.Types
                 case DKind.OptionSet:
                 case DKind.OptionSetValue:
                     accepts = (type.Kind == Kind &&
-                                (OptionSetInfo == null || type.OptionSetInfo == null || type.OptionSetInfo == OptionSetInfo)) ||
+                                (OptionSetInfo == null || type.OptionSetInfo == null || type.OptionSetInfo.Equals(OptionSetInfo))) ||
                                type.Kind == DKind.Unknown || type.Kind == DKind.Deferred;
                     break;
                 case DKind.View:
@@ -3153,7 +3170,7 @@ namespace Microsoft.PowerFx.Core.Types
                     isSafe = Kind != DKind.String;
                     doesCoerce = Kind == DKind.String ||
                                  Number.Accepts(this) ||
-                                 (Kind == DKind.OptionSetValue && OptionSetInfo != null && OptionSetInfo.IsBooleanValued);
+                                 (Kind == DKind.OptionSetValue && OptionSetInfo != null && OptionSetInfo.IsBooleanValued());
                     break;
                 case DKind.DateTime:
                 case DKind.Date:
@@ -3173,7 +3190,8 @@ namespace Microsoft.PowerFx.Core.Types
                     doesCoerce = Kind == DKind.String ||
                                  Number.Accepts(this) ||
                                  Boolean.Accepts(this) ||
-                                 DateTime.Accepts(this);
+                                 DateTime.Accepts(this) ||
+                                 (Kind == DKind.OptionSetValue && OptionSetInfo != null && OptionSetInfo.BackingKind == DKind.Number);
                     break;
                 case DKind.Currency:
                     // Ill-formatted strings coerce to null; unsafe.
@@ -3197,10 +3215,13 @@ namespace Microsoft.PowerFx.Core.Types
                 case DKind.Blob:
                     doesCoerce = Kind != DKind.Guid && String.Accepts(this);
                     break;
+                case DKind.Color:
+                    doesCoerce = Kind == DKind.OptionSetValue && OptionSetInfo != null && OptionSetInfo.BackingKind == DKind.Color;
+                    break;
                 case DKind.Enum:
                     return CoercesTo(typeDest.GetEnumSupertype(), out isSafe, out coercionType, out schemaDifference, out schemaDifferenceType);
                 case DKind.OptionSetValue:
-                    doesCoerce = (typeDest.OptionSetInfo?.IsBooleanValued ?? false) && Kind == DKind.Boolean && !isTopLevelCoercion;
+                    doesCoerce = (typeDest.OptionSetInfo?.IsBooleanValued() ?? false) && Kind == DKind.Boolean && !isTopLevelCoercion;
                     break;
             }
 
