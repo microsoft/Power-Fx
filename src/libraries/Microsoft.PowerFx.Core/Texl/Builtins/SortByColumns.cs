@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Linq;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
@@ -185,7 +186,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             if (binding.IsAsync(node))
             {
-                var message = string.Format("Function:{0}, SortOrderNode is async", Name);
+                var message = string.Format(CultureInfo.InvariantCulture, "Function:{0}, SortOrderNode is async", Name);
                 AddSuggestionMessageToTelemetry(message, node, binding);
                 return false;
             }
@@ -291,7 +292,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(metadata);
             Contracts.AssertValid(columnPath);
 
-            order = order.ToLower();
+            order = order.ToLowerInvariant();
 
             // If column is marked as ascending only then return false if order requested is descending.
             return order != LanguageConstants.DescendingSortOrderString || !metadata.IsColumnAscendingOnly(columnPath);

@@ -795,7 +795,7 @@
     
   </data>
   <data name="AboutIfError_fallback" xml:space="preserve">
-    <value>ค่าที่ส่งกลับถ้าเป็นอาร์กิวเมนต์แรกที่ไม่ใช่ข้อผิดพลาด</value>
+    <value>ค่าที่ส่งกลับหากอาร์กิวเมนต์ก่อนหน้าเป็นข้อผิดพลาด</value>
     
   </data>
   <data name="AboutSubstitute" xml:space="preserve">
@@ -1847,6 +1847,10 @@
   </data>
   <data name="ErrTextInvalidFormat" xml:space="preserve">
     <value>รูปแบบไม่ถูกต้อง</value>
+    
+  </data>
+  <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
+    <value>อาร์กิวเมนต์ไม่ได้แสดงค่าวันที่หรือเวลาที่ถูกต้อง</value>
     
   </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
@@ -4418,6 +4422,10 @@
     <value>ตรวจสอบให้แน่ใจว่าคุณมีข้อความสำหรับตัวระบุของคุณ ข้อผิดพลาดนี้เกิดขึ้นเมื่อตัวตัวระบุนั้นเว้นว่างไว้หรือเป็นพื้นที่ว่างทั้งหมด</value>
     
   </data>
+  <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
+    <value>Unable to compare values of type {0}.</value>
+    
+  </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
     <value>ชนิดที่เข้ากันไม่ได้สำหรับการเปรียบเทียบ ชนิดเหล่านี้ไม่สามารถเปรียบเทียบกันได้: {0}, {1}</value>
     
@@ -4834,8 +4842,18 @@
     <value>ฟังก์ชันนี้คลุมเครือ โดยประกอบด้วยนิพจน์แลมบ์ดาและตัวระบุคอลัมน์สำหรับอาร์กิวเมนต์เดียวกัน</value>
     
   </data>
-  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
-    <value>ไม่รองรับตัวเลือก {0} BooleanOptionSet</value>
+  <data name="OptionSetOptionNotSupported" xml:space="preserve">
+    <value>The value of option {0} is not of expected type {1}.</value>
     
+  </data>
+  <data name="AboutOptionSetInfo" xml:space="preserve">
+    <value>คืนค่าชื่อที่แสดงของค่าชุดตัวเลือกที่กำหนด</value>
+    
+  </data>
+  <data name="AboutOptionSetInfoArg1" xml:space="preserve">
+    <value>ตัวเลือก</value>
+  </data>
+  <data name="AboutOptionSetInfo_option" xml:space="preserve">
+    <value>ค่าชุดตัวเลือกที่จะคืนค่าเป็นชื่อที่แสดง</value>
   </data>
 </root>

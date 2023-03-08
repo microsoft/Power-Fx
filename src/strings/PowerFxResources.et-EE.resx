@@ -795,7 +795,7 @@
     
   </data>
   <data name="AboutIfError_fallback" xml:space="preserve">
-    <value>Väärtus, mis tagastatakse, kui see on esimene mittevigane argument.</value>
+    <value>Väärtus, mis tagastatakse, kui eelmine argument on vealine.</value>
     
   </data>
   <data name="AboutSubstitute" xml:space="preserve">
@@ -1847,6 +1847,10 @@
   </data>
   <data name="ErrTextInvalidFormat" xml:space="preserve">
     <value>Sobimatu vorming.</value>
+    
+  </data>
+  <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
+    <value>Argument ei esinda kehtivat kuupäeva- ega kellaajaväärtust</value>
     
   </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
@@ -4418,6 +4422,10 @@
     <value>Veenduge, et teil oleks oma identifikaatorile tekst. See tõrge ilmneb, kui identifikaator koosneb ainult tühiväärtustest või tühikutest.</value>
     
   </data>
+  <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
+    <value>Unable to compare values of type {0}.</value>
+    
+  </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
     <value>Võrdluse jaoks sobimatud tüübid. Neid tüüpe ei saa võrrelda: {0}, {1}.</value>
     
@@ -4834,8 +4842,18 @@
     <value>See funktsioon on mitmetähenduslik, see sisaldab sama argumendi lambdaavaldisi ja veeruidentifikaatoreid.</value>
     
   </data>
-  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
-    <value>Suvandit BooleanOptionSet {0} ei toetata.</value>
+  <data name="OptionSetOptionNotSupported" xml:space="preserve">
+    <value>The value of option {0} is not of expected type {1}.</value>
     
+  </data>
+  <data name="AboutOptionSetInfo" xml:space="preserve">
+    <value>Tagastab antud suvandikomplekti väärtuse loogilise nime.</value>
+    
+  </data>
+  <data name="AboutOptionSetInfoArg1" xml:space="preserve">
+    <value>suvand</value>
+  </data>
+  <data name="AboutOptionSetInfo_option" xml:space="preserve">
+    <value>Suvandikomplekti väärtus, mille loogiline nimi tagastatakse.</value>
   </data>
 </root>

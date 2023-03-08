@@ -183,7 +183,7 @@
     <value>Formel til at evaluere og returnere, hvis der ikke findes nogen forekomster.</value>
   </data>
   <data name="AboutAnd" xml:space="preserve">
-    <value>Kontrollerer, om alle argumenter er sande og returnerer sande, hvis alle argumenter er sande.</value>
+    <value>Kontrollerer, om alle argumenter er sande og returnerer sand, hvis alle argumenter er sande.</value>
     
   </data>
   <data name="AboutOr" xml:space="preserve">
@@ -575,7 +575,7 @@
     <value>En tekstværdi, der skal sammenkædes med resten af argumenterne.</value>
   </data>
   <data name="AboutConcatenateT" xml:space="preserve">
-    <value>Joinforbinder flere tekstværdier eller tabeller til én kolonne med tekstværdier.</value>
+    <value>Forbinder flere tekstværdier eller tabeller til én kolonne med tekstværdier.</value>
     
   </data>
   <data name="ConcatenateTArg1" xml:space="preserve">
@@ -795,7 +795,7 @@
     
   </data>
   <data name="AboutIfError_fallback" xml:space="preserve">
-    <value>Værdi, der returneres, hvis det er det første argument uden fejl.</value>
+    <value>Værdi, der returneres, hvis det forrige argument er en fejl.</value>
     
   </data>
   <data name="AboutSubstitute" xml:space="preserve">
@@ -1849,6 +1849,10 @@
     <value>Ugyldigt format.</value>
     
   </data>
+  <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
+    <value>Argumentet repræsenterer ikke en gyldig dato- eller klokkeslætsværdi.</value>
+    
+  </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
     <value>Datakilden er ugyldig. Udbedr fejlen i datakildepanelet ved at klikke på "Indhold-&gt; Datakilder" eller "Se-&gt; Indstillinger"</value>
     
@@ -2043,7 +2047,7 @@
     
   </data>
   <data name="AboutDateTime_second" xml:space="preserve">
-    <value>Den anden.</value>
+    <value>Sekundet.</value>
     
   </data>
   <data name="AboutDateTime_millisecond" xml:space="preserve">
@@ -2833,7 +2837,7 @@
     
   </data>
   <data name="AboutEndsWith" xml:space="preserve">
-    <value>Returnerer true, hvis den angivne tekst slutter med den angivne sidste streng.</value>
+    <value>Returnerer sand, hvis den angivne tekst slutter med den angivne sidste streng.</value>
     
   </data>
   <data name="AboutEndsWith_text" xml:space="preserve">
@@ -4418,6 +4422,10 @@
     <value>Sørg for, at du har tekst til din identifikator. Denne fejl opstår, når identifikatoren udelukkende består af tomme celler eller mellemrum.</value>
     
   </data>
+  <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
+    <value>Unable to compare values of type {0}.</value>
+    
+  </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
     <value>Inkompatible typer til sammenligning. Disse typer kan ikke sammenlignes: {0}, {1}.</value>
     
@@ -4834,8 +4842,18 @@
     <value>Denne funktion er entydig. Den indeholder lambda-udtryk og kolonne-id'er for det samme argument.</value>
     
   </data>
-  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
-    <value>Indstillingen BooleanOptionSet {0} understøttes ikke.</value>
+  <data name="OptionSetOptionNotSupported" xml:space="preserve">
+    <value>The value of option {0} is not of expected type {1}.</value>
     
+  </data>
+  <data name="AboutOptionSetInfo" xml:space="preserve">
+    <value>Returnerer det logiske navn for den givne værdi for grupperet indstilling.</value>
+    
+  </data>
+  <data name="AboutOptionSetInfoArg1" xml:space="preserve">
+    <value>valgmulighed</value>
+  </data>
+  <data name="AboutOptionSetInfo_option" xml:space="preserve">
+    <value>En værdi for grupperet indstilling, hvis logiske navn returneres.</value>
   </data>
 </root>

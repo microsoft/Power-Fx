@@ -795,7 +795,7 @@
     
   </data>
   <data name="AboutIfError_fallback" xml:space="preserve">
-    <value>Pateikta reikšmė, jei ji yra pirmasis neklaidingas argumentas.</value>
+    <value>Grąžinama reikšmė, jei ankstesnis argumentas yra klaida.</value>
     
   </data>
   <data name="AboutSubstitute" xml:space="preserve">
@@ -1847,6 +1847,10 @@
   </data>
   <data name="ErrTextInvalidFormat" xml:space="preserve">
     <value>Netinkamas formatas.</value>
+    
+  </data>
+  <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
+    <value>Argumentas neatspindi tinkamos datos arba laiko reikšmės.</value>
     
   </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
@@ -3024,7 +3028,7 @@
     
   </data>
   <data name="Icon_Ribbon_DisplayName" xml:space="preserve">
-    <value>Kaspinas</value>
+    <value>Juostelė</value>
     
   </data>
   <data name="Icon_Scan_DisplayName" xml:space="preserve">
@@ -3200,7 +3204,7 @@
     
   </data>
   <data name="LayoutDirection_Vertical_DisplayName" xml:space="preserve">
-    <value>Vertikalus</value>
+    <value>Vertikalusis</value>
     
   </data>
   <data name="LayoutAlignItems_Start_DisplayName" xml:space="preserve">
@@ -3268,7 +3272,7 @@
     
   </data>
   <data name="LayoutOverflow_Scroll_DisplayName" xml:space="preserve">
-    <value>Slinkite</value>
+    <value>Slinkti</value>
     
   </data>
   <data name="Overflow_Hidden_DisplayName" xml:space="preserve">
@@ -3536,7 +3540,7 @@
     
   </data>
   <data name="GridStyle_All_DisplayName" xml:space="preserve">
-    <value>Visi</value>
+    <value>Viskas</value>
     
   </data>
   <data name="GridStyle_None_DisplayName" xml:space="preserve">
@@ -3684,7 +3688,7 @@
     
   </data>
   <data name="Icon_Post_DisplayName" xml:space="preserve">
-    <value>Paštas</value>
+    <value>Skelbti</value>
     
   </data>
   <data name="Icon_AddDocument_DisplayName" xml:space="preserve">
@@ -4418,6 +4422,10 @@
     <value>Įsitikinkite, kad turite savo identifikatoriaus tekstą. Ši klaida įvyksta, kai identifikatoriuje yra visi tušti langeliai arba tarpai.</value>
     
   </data>
+  <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
+    <value>Unable to compare values of type {0}.</value>
+    
+  </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
     <value>Nesuderinami palyginimo tipai. Negalima palyginti šių tipų: {0}, {1}.</value>
     
@@ -4834,8 +4842,18 @@
     <value>Ši funkcija yra nevienareikšmiška, joje yra to paties argumento lambda išraiškos ir stulpelių identifikatoriai.</value>
     
   </data>
-  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
-    <value>BooleanOptionSet parinktis {0} nepalaikoma.</value>
+  <data name="OptionSetOptionNotSupported" xml:space="preserve">
+    <value>The value of option {0} is not of expected type {1}.</value>
     
+  </data>
+  <data name="AboutOptionSetInfo" xml:space="preserve">
+    <value>Grąžina pateiktos parinkčių rinkinio reikšmės loginį pavadinimą.</value>
+    
+  </data>
+  <data name="AboutOptionSetInfoArg1" xml:space="preserve">
+    <value>parinktis</value>
+  </data>
+  <data name="AboutOptionSetInfo_option" xml:space="preserve">
+    <value>Parinkčių rinkinio reikšmė, kurios loginis pavadinimas bus grąžintas.</value>
   </data>
 </root>
