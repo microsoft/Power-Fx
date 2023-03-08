@@ -7,8 +7,10 @@ using System.Linq;
 using Microsoft.PowerFx.Core.App.Controls;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
+using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Logging.Trackers;
 using Microsoft.PowerFx.Core.Texl;
@@ -321,7 +323,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 }
 
                 // Ensure that booleans only match bool valued option sets
-                if (typeWant.Kind == DKind.Boolean && altType.Kind == DKind.OptionSetValue && !(nodeType.OptionSetInfo?.IsBooleanValued ?? false))
+                if (typeWant.Kind == DKind.Boolean && altType.Kind == DKind.OptionSetValue && !(nodeType.OptionSetInfo?.IsBooleanValued() ?? false))
                 {
                     continue;
                 }
@@ -558,7 +560,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                         default:
                             // DateTime + number = DateTime
-                            var resRight = CheckTypeCore(errorContainer, node.Right, rightType, DType.Number, /* coerced: */ DType.String, DType.Boolean);
+                            var resRight = CheckTypeCore(errorContainer, node.Right, rightType, DType.Number, /* coerced: */ DType.String, DType.Boolean, DType.UntypedObject);
                             return new BinderCheckTypeResult() { Node = node, NodeType = DType.DateTime, Coercions = resRight.Coercions };
                     }
 
@@ -598,7 +600,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                         default:
                             // Date + number = Date
-                            var resRight = CheckTypeCore(errorContainer, node.Right, rightType, DType.Number, /* coerced: */ DType.String, DType.Boolean);
+                            var resRight = CheckTypeCore(errorContainer, node.Right, rightType, DType.Number, /* coerced: */ DType.String, DType.Boolean, DType.UntypedObject);
                             return new BinderCheckTypeResult() { Node = node, NodeType = DType.Date, Coercions = resRight.Coercions };
                     }
 
@@ -635,7 +637,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                         default:
                             // Time + number = Time
-                            var resRight = CheckTypeCore(errorContainer, node.Right, rightType, DType.Number, /* coerced: */ DType.String, DType.Boolean);
+                            var resRight = CheckTypeCore(errorContainer, node.Right, rightType, DType.Number, /* coerced: */ DType.String, DType.Boolean, DType.UntypedObject);
                             return new BinderCheckTypeResult() { Node = node, NodeType = DType.Time, Coercions = resRight.Coercions };
                     }
 
@@ -644,20 +646,20 @@ namespace Microsoft.PowerFx.Core.Binding
                     {
                         case DKind.DateTime:
                             // number + DateTime = DateTime
-                            var leftResDateTime = CheckTypeCore(errorContainer, node.Left, leftType, DType.Number, /* coerced: */ DType.String, DType.Boolean);
+                            var leftResDateTime = CheckTypeCore(errorContainer, node.Left, leftType, DType.Number, /* coerced: */ DType.String, DType.Boolean, DType.UntypedObject);
                             return new BinderCheckTypeResult() { Node = node, NodeType = DType.DateTime, Coercions = leftResDateTime.Coercions };
                         case DKind.Date:
                             // number + Date = Date
-                            var leftResDate = CheckTypeCore(errorContainer, node.Left, leftType, DType.Number, /* coerced: */ DType.String, DType.Boolean);
+                            var leftResDate = CheckTypeCore(errorContainer, node.Left, leftType, DType.Number, /* coerced: */ DType.String, DType.Boolean, DType.UntypedObject);
                             return new BinderCheckTypeResult() { Node = node, NodeType = DType.Date, Coercions = leftResDate.Coercions };
                         case DKind.Time:
                             // number + Time = Time
-                            var leftResTime = CheckTypeCore(errorContainer, node.Left, leftType, DType.Number, /* coerced: */ DType.String, DType.Boolean);
+                            var leftResTime = CheckTypeCore(errorContainer, node.Left, leftType, DType.Number, /* coerced: */ DType.String, DType.Boolean, DType.UntypedObject);
                             return new BinderCheckTypeResult() { Node = node, NodeType = DType.Time, Coercions = leftResTime.Coercions };
                         default:
                             // Regular Addition
-                            var leftResAdd = CheckTypeCore(errorContainer, node.Left, leftType, DType.Number, /* coerced: */ DType.String, DType.Boolean);
-                            var rightResAdd = CheckTypeCore(errorContainer, node.Right, rightType, DType.Number, /* coerced: */ DType.String, DType.Boolean);
+                            var leftResAdd = CheckTypeCore(errorContainer, node.Left, leftType, DType.Number, /* coerced: */ DType.String, DType.Boolean, DType.UntypedObject);
+                            var rightResAdd = CheckTypeCore(errorContainer, node.Right, rightType, DType.Number, /* coerced: */ DType.String, DType.Boolean, DType.UntypedObject);
 
                             // Deferred + number or number + Deferred
                             if (leftKind == DKind.Deferred || rightKind == DKind.Deferred)
@@ -672,15 +674,88 @@ namespace Microsoft.PowerFx.Core.Binding
 
         private static BinderCheckTypeResult CheckComparisonArgTypesCore(IErrorContainer errorContainer, TexlNode left, TexlNode right, DType typeLeft, DType typeRight)
         {
+            var coercions = new List<BinderCoercionResult>();
+
+            // Special case for number-backed BuiltIn Option Sets:
+            if (typeLeft.Kind == DKind.OptionSetValue || typeRight.Kind == DKind.OptionSetValue)
+            {
+                // Option set must be numeric to compare. 
+                if ((typeLeft.OptionSetInfo?.BackingKind ?? DKind.Number) != DKind.Number)
+                {
+                    errorContainer.EnsureError(
+                        DocumentErrorSeverity.Severe,
+                        left.Parent,
+                        TexlStrings.ErrUnOrderedTypeForComparison_Type,
+                        typeLeft.GetKindString());
+
+                    return new BinderCheckTypeResult();
+                }
+                else if ((typeRight.OptionSetInfo?.BackingKind ?? DKind.Number) != DKind.Number)
+                {
+                    errorContainer.EnsureError(
+                        DocumentErrorSeverity.Severe,
+                        left.Parent,
+                        TexlStrings.ErrUnOrderedTypeForComparison_Type,
+                        typeRight.GetKindString());
+
+                    return new BinderCheckTypeResult();
+                }
+
+                // Mismatched option sets can't be compared
+                if (typeLeft.Kind == DKind.OptionSetValue && typeRight.Kind == DKind.OptionSetValue && !typeLeft.Accepts(typeRight))
+                {
+                    errorContainer.EnsureError(
+                        DocumentErrorSeverity.Severe,
+                        left.Parent,
+                        TexlStrings.ErrIncompatibleTypesForEquality_Left_Right,
+                        typeLeft.GetKindString(),
+                        typeRight.GetKindString());
+
+                    return new BinderCheckTypeResult();
+                }
+                else if (typeLeft.Kind == DKind.OptionSetValue && typeRight.Kind == DKind.OptionSetValue)
+                {
+                    coercions.Add(new BinderCoercionResult() { Node = left, CoercedType = DType.Number });
+                    coercions.Add(new BinderCoercionResult() { Node = right, CoercedType = DType.Number });
+                }
+                else if (typeLeft.Kind == DKind.OptionSetValue)
+                {
+                    // The other value (right in this case) needs to be a number or coerced to a number in order to compare
+                    var rightResult = CheckComparisonTypeOneOfCore(errorContainer, right, typeRight, DType.Number, DType.Date, DType.Time, DType.DateTime);
+                    coercions.AddRange(rightResult.Coercions);
+
+                    // Comparing option sets to their backing kind is permitted, and coerces the option set to the backing kind. In this case, always number, checked above.
+                    coercions.Add(new BinderCoercionResult() { Node = left, CoercedType = DType.Number });
+                }
+                else if (typeRight.Kind == DKind.OptionSetValue)
+                {
+                    var leftResult = CheckComparisonTypeOneOfCore(errorContainer, left, typeLeft, DType.Number, DType.Date, DType.Time, DType.DateTime);
+                    coercions.AddRange(leftResult.Coercions);
+                    coercions.Add(new BinderCoercionResult() { Node = right, CoercedType = DType.Number });
+                }
+
+                return new BinderCheckTypeResult() { Coercions = coercions };
+            }
+
             // Excel's type coercion for inequality operators is inconsistent / borderline wrong, so we can't
             // use it as a reference. For example, in Excel '2 < TRUE' produces TRUE, but so does '2 < FALSE'.
             // Sticking to a restricted set of numeric-like types for now until evidence arises to support the need for coercion.
-            var resLeft = CheckComparisonTypeOneOfCore(errorContainer, left, typeLeft, DType.Number, DType.Date, DType.Time, DType.DateTime);
-            var resRight = CheckComparisonTypeOneOfCore(errorContainer, right, typeRight, DType.Number, DType.Date, DType.Time, DType.DateTime);
+            var resLeft = CheckComparisonTypeOneOfCore(errorContainer, left, typeLeft, DType.Number, DType.Date, DType.Time, DType.DateTime, DType.UntypedObject);
+            var resRight = CheckComparisonTypeOneOfCore(errorContainer, right, typeRight, DType.Number, DType.Date, DType.Time, DType.DateTime, DType.UntypedObject);
 
-            var coercions = new List<BinderCoercionResult>();
             coercions.AddRange(resLeft.Coercions);
             coercions.AddRange(resRight.Coercions);
+
+            if (typeLeft.IsUntypedObject && typeRight.IsUntypedObject)
+            {
+                errorContainer.EnsureError(
+                    DocumentErrorSeverity.Severe,
+                    left.Parent,
+                    TexlStrings.ErrBadOperatorTypes,
+                    typeLeft.GetKindString(),
+                    typeRight.GetKindString());
+                return new BinderCheckTypeResult() { Node = left.Parent, NodeType = DType.Error };
+            }
 
             if (!typeLeft.Accepts(typeRight) && !typeRight.Accepts(typeLeft))
             {
@@ -699,6 +774,26 @@ namespace Microsoft.PowerFx.Core.Binding
                     coercions.Add(new BinderCoercionResult() { Node = left, CoercedType = DType.DateTime });
                     coercions.Add(new BinderCoercionResult() { Node = right, CoercedType = DType.DateTime });
                 }
+
+                if (typeLeft.IsUntypedObject && CoercionMatrix.GetCoercionKind(typeLeft, typeRight) != CoercionKind.None)
+                {
+                    coercions.Add(new BinderCoercionResult() { Node = left, CoercedType = typeRight });
+                }
+
+                if (typeRight.IsUntypedObject && CoercionMatrix.GetCoercionKind(typeRight, typeLeft) != CoercionKind.None)
+                {
+                    coercions.Add(new BinderCoercionResult() { Node = right, CoercedType = typeLeft });
+                }
+            }
+
+            if (typeLeft.IsUntypedObject && typeRight.Kind == DKind.ObjNull)
+            {
+                coercions.Add(new BinderCoercionResult() { Node = left, CoercedType = DType.Number });
+            }
+
+            if (typeRight.IsUntypedObject && typeLeft.Kind == DKind.ObjNull)
+            {
+                coercions.Add(new BinderCoercionResult() { Node = right, CoercedType = DType.Number });
             }
 
             return new BinderCheckTypeResult() { Coercions = coercions };
@@ -711,19 +806,16 @@ namespace Microsoft.PowerFx.Core.Binding
             Contracts.AssertValue(left.Parent);
             Contracts.Assert(ReferenceEquals(left.Parent, right.Parent));
 
-            // EqualOp is only allowed on primitive types, polymorphic lookups, and control types.
+            // EqualOp is only allowed on primitive types, polymorphic lookups, untyped objects, and control types.
             if (!(typeLeft.IsPrimitive && typeRight.IsPrimitive) && !(typeLeft.IsPolymorphic && typeRight.IsPolymorphic) && !(typeLeft.IsControl && typeRight.IsControl)
-                && !(typeLeft.IsPolymorphic && typeRight.IsRecord) && !(typeLeft.IsRecord && typeRight.IsPolymorphic) && !(typeLeft.IsDeferred || typeRight.IsDeferred))
+                && !(typeLeft.IsPolymorphic && typeRight.IsRecord) && !(typeLeft.IsRecord && typeRight.IsPolymorphic) && !(typeLeft.IsDeferred || typeRight.IsDeferred) && !(typeLeft.IsUntypedObject || typeRight.IsUntypedObject))
             {
-                var leftTypeDisambiguation = typeLeft.IsOptionSet && typeLeft.OptionSetInfo != null ? $"({typeLeft.OptionSetInfo.EntityName})" : string.Empty;
-                var rightTypeDisambiguation = typeRight.IsOptionSet && typeRight.OptionSetInfo != null ? $"({typeRight.OptionSetInfo.EntityName})" : string.Empty;
-
                 errorContainer.EnsureError(
                     DocumentErrorSeverity.Severe,
                     left.Parent,
                     TexlStrings.ErrIncompatibleTypesForEquality_Left_Right,
-                    typeLeft.GetKindString() + leftTypeDisambiguation,
-                    typeRight.GetKindString() + rightTypeDisambiguation);
+                    typeLeft.GetKindString(),
+                    typeRight.GetKindString());
                 return new BinderCheckTypeResult();
             }
 
@@ -738,35 +830,53 @@ namespace Microsoft.PowerFx.Core.Binding
                 return new BinderCheckTypeResult();
             }
 
-            // Special case for option set values, it should produce an error when the base option sets are different
-            if (typeLeft.Kind == DKind.OptionSetValue && !typeLeft.Accepts(typeRight))
+            // Special case for comparing option set values, it should produce an error when the base option sets are different
+            if (typeLeft.Kind == DKind.OptionSetValue && typeRight.Kind == DKind.OptionSetValue && !typeLeft.Accepts(typeRight))
             {
-                var leftTypeDisambiguation = typeLeft.IsOptionSet && typeLeft.OptionSetInfo != null ? $"({typeLeft.OptionSetInfo.EntityName})" : string.Empty;
-                var rightTypeDisambiguation = typeRight.IsOptionSet && typeRight.OptionSetInfo != null ? $"({typeRight.OptionSetInfo.EntityName})" : string.Empty;
-
                 errorContainer.EnsureError(
                     DocumentErrorSeverity.Severe,
                     left.Parent,
                     TexlStrings.ErrIncompatibleTypesForEquality_Left_Right,
-                    typeLeft.GetKindString() + leftTypeDisambiguation,
-                    typeRight.GetKindString() + rightTypeDisambiguation);
+                    typeLeft.GetKindString(),
+                    typeRight.GetKindString());
 
                 return new BinderCheckTypeResult();
+            }
+            else if (typeLeft.Kind == DKind.OptionSetValue && typeLeft.OptionSetInfo?.BackingKind == typeRight.Kind)
+            {
+                // Comparing option sets to their backing kind is permitted, and coerces the option set to the backing kind
+                Contracts.Assert(typeRight.Kind == DKind.String || typeRight.Kind == DKind.Number || typeRight.Kind == DKind.Boolean || typeRight.Kind == DKind.Color);
+                
+                return new BinderCheckTypeResult() { Coercions = new[] { new BinderCoercionResult() { Node = left, CoercedType = typeRight } } };
+            }
+            else if (typeRight.Kind == DKind.OptionSetValue && typeRight.OptionSetInfo?.BackingKind == typeLeft.Kind)
+            {
+                Contracts.Assert(typeLeft.Kind == DKind.String || typeLeft.Kind == DKind.Number || typeLeft.Kind == DKind.Boolean || typeLeft.Kind == DKind.Color);
+
+                return new BinderCheckTypeResult() { Coercions = new[] { new BinderCoercionResult() { Node = right, CoercedType = typeLeft } } };
             }
 
             // Special case for view values, it should produce an error when the base views are different
             if (typeLeft.Kind == DKind.ViewValue && !typeLeft.Accepts(typeRight))
             {
-                var leftTypeDisambiguation = typeLeft.IsView && typeLeft.ViewInfo != null ? $"({typeLeft.ViewInfo.Name})" : string.Empty;
-                var rightTypeDisambiguation = typeRight.IsView && typeRight.ViewInfo != null ? $"({typeRight.ViewInfo.Name})" : string.Empty;
-
                 errorContainer.EnsureError(
                     DocumentErrorSeverity.Severe,
                     left.Parent,
                     TexlStrings.ErrIncompatibleTypesForEquality_Left_Right,
-                    typeLeft.GetKindString() + leftTypeDisambiguation,
-                    typeRight.GetKindString() + rightTypeDisambiguation);
+                    typeLeft.GetKindString(),
+                    typeRight.GetKindString());
                 return new BinderCheckTypeResult();
+            }
+
+            if (typeLeft.IsUntypedObject && typeRight.IsUntypedObject)
+            {
+                    errorContainer.EnsureError(
+                        DocumentErrorSeverity.Severe,
+                        left.Parent,
+                        TexlStrings.ErrIncompatibleTypesForEquality_Left_Right,
+                        typeLeft.GetKindString(),
+                        typeRight.GetKindString());
+                    return new BinderCheckTypeResult() { Node = left.Parent, NodeType = DType.Error };
             }
 
             var coercions = new List<BinderCoercionResult>();
@@ -782,6 +892,18 @@ namespace Microsoft.PowerFx.Core.Binding
                 else if (DType.Number.Accepts(typeRight) && DType.DateTime.Accepts(typeLeft))
                 {
                     coercions.Add(new BinderCoercionResult() { Node = left, CoercedType = DType.Number });
+                    return new BinderCheckTypeResult() { Coercions = coercions };
+                }
+
+                // Handle UntypedObject comparisons
+                if (typeLeft.IsUntypedObject && CoercionMatrix.GetCoercionKind(typeLeft, typeRight) != CoercionKind.None)
+                {
+                    coercions.Add(new BinderCoercionResult() { Node = left, CoercedType = typeRight });
+                    return new BinderCheckTypeResult() { Coercions = coercions };
+                }
+                else if (typeRight.IsUntypedObject && CoercionMatrix.GetCoercionKind(typeRight, typeLeft) != CoercionKind.None)
+                {
+                    coercions.Add(new BinderCoercionResult() { Node = right, CoercedType = typeLeft });
                     return new BinderCheckTypeResult() { Coercions = coercions };
                 }
 
@@ -803,7 +925,7 @@ namespace Microsoft.PowerFx.Core.Binding
             switch (node.Op)
             {
                 case UnaryOp.Not:
-                    var resNot = CheckTypeCore(errorContainer, node.Child, childType, DType.Boolean, /* coerced: */ DType.Number, DType.String, DType.OptionSetValue);
+                    var resNot = CheckTypeCore(errorContainer, node.Child, childType, DType.Boolean, /* coerced: */ DType.Number, DType.String, DType.OptionSetValue, DType.UntypedObject);
                     return new BinderCheckTypeResult() { Node = node, NodeType = DType.Boolean, Coercions = resNot.Coercions };
                 case UnaryOp.Minus:
                     switch (childType.Kind)
@@ -817,12 +939,12 @@ namespace Microsoft.PowerFx.Core.Binding
                             // Important to keep the type of minus-datetime as datetime, to allow d-d/D-d to be detected
                             return new BinderCheckTypeResult() { Node = node, NodeType = DType.DateTime };
                         default:
-                            var resDefault = CheckTypeCore(errorContainer, node.Child, childType, DType.Number, /* coerced: */ DType.String, DType.Boolean);
+                            var resDefault = CheckTypeCore(errorContainer, node.Child, childType, DType.Number, /* coerced: */ DType.String, DType.Boolean, DType.UntypedObject);
                             return new BinderCheckTypeResult() { Node = node, NodeType = DType.Number, Coercions = resDefault.Coercions };
                     }
 
                 case UnaryOp.Percent:
-                    var resPercent = CheckTypeCore(errorContainer, node.Child, childType, DType.Number, /* coerced: */ DType.String, DType.Boolean, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime);
+                    var resPercent = CheckTypeCore(errorContainer, node.Child, childType, DType.Number, /* coerced: */ DType.String, DType.Boolean, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime, DType.UntypedObject);
                     return new BinderCheckTypeResult() { Node = node, NodeType = DType.Number, Coercions = resPercent.Coercions };
                 default:
                     Contracts.Assert(false);
@@ -847,19 +969,19 @@ namespace Microsoft.PowerFx.Core.Binding
                 case BinaryOp.Power:
                 case BinaryOp.Mul:
                 case BinaryOp.Div:
-                    var resLeftDiv = CheckTypeCore(errorContainer, leftNode, leftType, DType.Number, /* coerced: */ DType.String, DType.Boolean, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime);
-                    var resRightDiv = CheckTypeCore(errorContainer, rightNode, rightType, DType.Number, /* coerced: */ DType.String, DType.Boolean, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime);
+                    var resLeftDiv = CheckTypeCore(errorContainer, leftNode, leftType, DType.Number, /* coerced: */ DType.String, DType.Boolean, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime, DType.UntypedObject);
+                    var resRightDiv = CheckTypeCore(errorContainer, rightNode, rightType, DType.Number, /* coerced: */ DType.String, DType.Boolean, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime, DType.UntypedObject);
                     return new BinderCheckTypeResult() { Node = node, NodeType = DType.Number, Coercions = resLeftDiv.Coercions.Concat(resRightDiv.Coercions).ToList() };
 
                 case BinaryOp.Or:
                 case BinaryOp.And:
-                    var resLeftAnd = CheckTypeCore(errorContainer, leftNode, leftType, DType.Boolean, /* coerced: */ DType.Number, DType.String, DType.OptionSetValue);
-                    var resRightAnd = CheckTypeCore(errorContainer, rightNode, rightType, DType.Boolean, /* coerced: */ DType.Number, DType.String, DType.OptionSetValue);
+                    var resLeftAnd = CheckTypeCore(errorContainer, leftNode, leftType, DType.Boolean, /* coerced: */ DType.Number, DType.String, DType.OptionSetValue, DType.UntypedObject);
+                    var resRightAnd = CheckTypeCore(errorContainer, rightNode, rightType, DType.Boolean, /* coerced: */ DType.Number, DType.String, DType.OptionSetValue, DType.UntypedObject);
                     return new BinderCheckTypeResult() { Node = node, NodeType = DType.Boolean, Coercions = resLeftAnd.Coercions.Concat(resRightAnd.Coercions).ToList() };
 
                 case BinaryOp.Concat:
-                    var resLeftConcat = CheckTypeCore(errorContainer, leftNode, leftType, DType.String, /* coerced: */ DType.Number, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime, DType.Boolean, DType.OptionSetValue, DType.ViewValue);
-                    var resRightConcat = CheckTypeCore(errorContainer, rightNode, rightType, DType.String, /* coerced: */ DType.Number, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime, DType.Boolean, DType.OptionSetValue, DType.ViewValue);
+                    var resLeftConcat = CheckTypeCore(errorContainer, leftNode, leftType, DType.String, /* coerced: */ DType.Number, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime, DType.Boolean, DType.OptionSetValue, DType.ViewValue, DType.UntypedObject);
+                    var resRightConcat = CheckTypeCore(errorContainer, rightNode, rightType, DType.String, /* coerced: */ DType.Number, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime, DType.Boolean, DType.OptionSetValue, DType.ViewValue, DType.UntypedObject);
                     return new BinderCheckTypeResult() { Node = node, NodeType = DType.String, Coercions = resLeftConcat.Coercions.Concat(resRightConcat.Coercions).ToList() };
 
                 case BinaryOp.Error:
@@ -959,8 +1081,8 @@ namespace Microsoft.PowerFx.Core.Binding
                     var dottedNameNode = node.AsDottedName();
                     if (dottedNameNode.Left.Kind == NodeKind.FirstName)
                     {
-                        DType enumType = null;
-                        if (context.NameResolver.EntityScope?.TryGetNamedEnum(dottedNameNode.Left.AsFirstName().Ident.Name, out enumType) == true)
+                        DType enumType = DType.Invalid;
+                        if (context.NameResolver.EntityScope?.TryGetNamedEnum(dottedNameNode.Left.AsFirstName().Ident.Name, out enumType) ?? false)
                         {
                             if (enumType.TryGetEnumValue(dottedNameNode.Right.Name, out var enumValue))
                             {

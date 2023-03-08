@@ -1,8 +1,12 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using Microsoft.PowerFx.Core.Entities;
+using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 
@@ -61,6 +65,32 @@ namespace Microsoft.PowerFx.Types
 
             osValue = null;
             return false;
+        }
+
+        internal override void DefaultExpressionValue(StringBuilder sb)
+        {
+            var info = _type.OptionSetInfo;
+
+            if (info != null && info.DisplayNameProvider.LogicalToDisplayPairs.Any())
+            {
+                var firstOrderedValue = info.DisplayNameProvider.LogicalToDisplayPairs.OrderBy(x => x.Key.Value, StringComparer.Ordinal).First();
+
+                sb.Append(this.OptionSetName.Value);
+                sb.Append(".");
+                sb.Append(firstOrderedValue.Value);
+            }
+            else
+            {
+                var context = IRContext.NotInSource(this);
+                var errorValue = new ErrorValue(context, new ExpressionError()
+                {
+                    Message = $"Couldn't define a default value for {this.OptionSetName.Value} option type.",
+                    Span = context.SourceContext,
+                    Kind = ErrorKind.Custom
+                });
+
+                sb.Append(errorValue.ToExpression());
+            }
         }
     }
 }

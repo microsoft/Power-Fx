@@ -41,25 +41,35 @@ namespace Microsoft.PowerFx.Core.IR
 
         private static BinaryOpKind GetBooleanBinaryOp(PowerFx.Syntax.BinaryOpNode node, TexlBinding binding, DType leftType, DType rightType)
         {
-            var kindToUse = leftType.Accepts(rightType) ? leftType.Kind : rightType.Kind;
-
-            if (!leftType.Accepts(rightType) && !rightType.Accepts(leftType))
+            // Check untyped object special case first
+            if ((leftType.IsUntypedObject && rightType.Kind == DKind.ObjNull) ||
+                (rightType.IsUntypedObject && leftType.Kind == DKind.ObjNull))
             {
-                // There is coercion involved, pick the coerced type.
-                if (binding.TryGetCoercedType(node.Left, out var leftCoerced))
+                switch (node.Op)
                 {
-                    kindToUse = leftCoerced.Kind;
-                }
-                else if (binding.TryGetCoercedType(node.Right, out var rightCoerced))
-                {
-                    kindToUse = rightCoerced.Kind;
-                }
-                else
-                {
-                    return BinaryOpKind.Invalid;
+                    case BinaryOp.NotEqual:
+                        return BinaryOpKind.NeqNullUntyped;
+                    case BinaryOp.Equal:
+                        return BinaryOpKind.EqNullUntyped;
                 }
             }
 
+            var kindToUse = leftType.Accepts(rightType) ? leftType.Kind : rightType.Kind;
+
+            // If there is coercion involved, pick the coerced type.
+            if (binding.TryGetCoercedType(node.Left, out var leftCoerced))
+            {
+                kindToUse = leftCoerced.Kind;
+            }
+            else if (binding.TryGetCoercedType(node.Right, out var rightCoerced))
+            {
+                kindToUse = rightCoerced.Kind;
+            }
+            else if (!leftType.Accepts(rightType) && !rightType.Accepts(leftType))
+            {
+                return BinaryOpKind.Invalid;
+            } 
+            
             switch (kindToUse)
             {
                 case DKind.Number:

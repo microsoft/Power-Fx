@@ -1,0 +1,330 @@
+﻿// Test simple arithmetic
+>> 1+ParseJSON("2")
+3
+
+>> Blank()+ParseJSON("2")
+2
+
+>> ParseJSON("1")+2
+3
+
+>> ParseJSON("1")+Blank()
+1
+
+>> ParseJSON("1")+ParseJSON("2")
+3
+
+>> 1 + (1/ParseJSON("0"))
+Error({Kind:ErrorKind.Div0})
+
+>> 5-ParseJSON("3")
+2
+
+>> Blank()-ParseJSON("3")
+-3
+
+>> ParseJSON("5")-3
+2
+
+>> ParseJSON("5")-Blank()
+5
+
+>> ParseJSON("5")-ParseJSON("3")
+2
+
+// Unary minus
+>> -ParseJSON("3")
+-3
+
+>> -(1/ParseJSON("0"))
+Error({Kind:ErrorKind.Div0})
+
+>> 5 - -ParseJSON("3")
+8
+
+>> -(5+ParseJSON("3"))
+-8
+
+>> -(ParseJSON("5")+3)
+-8
+
+>> 2*ParseJSON("3")
+6
+
+>> Blank()*ParseJSON("3")
+0
+
+>> ParseJSON("2")*3
+6
+
+>> ParseJSON("2")*Blank()
+0
+
+>> ParseJSON("2")*ParseJSON("3")
+6
+
+>> ParseJSON("15")/3
+5
+
+>> ParseJSON("15")/Blank()
+Error({Kind:ErrorKind.Div0})
+
+>> 15/ParseJSON("3")
+5
+
+>> Blank()/ParseJSON("3")
+0
+
+>> ParseJSON("15")/ParseJSON("3")
+5
+
+>> ParseJSON("1")/2
+0.5
+
+>> 1/ParseJSON("2")
+0.5
+
+>> ParseJSON("20")%
+0.2
+
+>> ParseJSON("200")%
+2
+
+>> (1/ParseJSON("0"))%
+Error({Kind:ErrorKind.Div0})
+
+>> ParseJSON("1") * 50%
+0.5
+
+>> 1 * ParseJSON("50")%
+0.5
+
+// Precedence
+>> ParseJSON("1")+2*3
+7
+
+>> 1+ParseJSON("2")*3
+7
+
+>> 1+2*ParseJSON("3")
+7
+
+>> ParseJSON("1")+ParseJSON("2")*ParseJSON("3")
+7
+
+// Comparison operations 
+>> ParseJSON("1")=1
+true
+
+>> 1=ParseJSON("1")
+true
+
+>> ParseJSON("1")<>1
+false
+
+>> 1<>ParseJSON("1")
+false
+
+>> ParseJSON("1")=Blank()
+false
+
+>> Blank()=ParseJSON("1")
+false
+
+>> ParseJSON("1")<>Blank()
+true
+
+>> Blank()<>ParseJSON("1")
+true
+
+>> ParseJSON("6")>5
+true
+
+>> 6>ParseJSON("5")
+true
+
+>> ParseJSON("5")>6
+false
+
+>> 5>ParseJSON("6")
+false
+
+>> ParseJSON("5.0")>5
+false
+
+>> 5.0>ParseJSON("5")
+false
+
+>> ParseJSON("5")>=5
+true
+
+>> 5>=ParseJSON("5")
+true
+
+>> ParseJSON("5")>=6
+false
+
+>> 5>=ParseJSON("6")
+false
+
+>> ParseJSON("5") < 7
+true
+
+>> 5 < ParseJSON("7")
+true
+
+>> -5 < ParseJSON("3")
+true
+
+>> -ParseJSON("5") < 3
+true
+
+>> ParseJSON("5") < 5
+false
+
+>> 5 < ParseJSON("5")
+false
+
+>> 5 <= ParseJSON("7")
+true
+
+>> ParseJSON("5") <= 7
+true
+
+>> 5 < 1/ParseJSON("0")
+Error({Kind:ErrorKind.Div0})
+
+>> 5 <= 1/ParseJSON("0")
+Error({Kind:ErrorKind.Div0})
+
+>> 5 > 1/ParseJSON("0")
+Error({Kind:ErrorKind.Div0})
+
+>> 5 >= 1/ParseJSON("0")
+Error({Kind:ErrorKind.Div0})
+
+>> 5 = 1/ParseJSON("0")
+Error({Kind:ErrorKind.Div0})
+
+>> 5 <> 1/ParseJSON("0")
+Error({Kind:ErrorKind.Div0})
+
+// Blank coercions
+>> 1 < If(ParseJSON("1")<0,1)
+false
+
+>> 1 > If(ParseJSON("1")<0,1)
+true
+
+>> 1 <= If(ParseJSON("1")<0,1)
+false
+
+>> 1 >= If(ParseJSON("1")<0,1)
+true
+
+>> If(ParseJSON("1")<0,1) < 0
+false
+
+>> If(ParseJSON("1")<0,1) > 0
+false
+
+>> If(ParseJSON("1")<0,1) <= 0
+true
+
+>> If(ParseJSON("1")<0,1) >= 0
+true
+
+>> ParseJSON("1") < Blank()
+false
+
+>> ParseJSON("1") > Blank()
+true
+
+>> ParseJSON("1") <= Blank()
+false
+
+>> ParseJSON("1") >= Blank()
+true
+
+>> Blank() < ParseJSON("0")
+false
+
+>> Blank() > ParseJSON("0")
+false
+
+>> Blank() <= ParseJSON("0")
+true
+
+>> Blank() >= ParseJSON("0")
+true
+
+>> Day(Date(2011,1,15) + ParseJSON("1"))
+16
+
+>> Day(ParseJSON("1") + Date(2011,1,15))
+16
+
+>> Day(DateTime(2011,1,15,4,5,6) + ParseJSON("1"))
+16
+
+>> Day(ParseJSON("1") + DateTime(2011,1,15,4,5,6))
+16
+
+>> Hour(Time(12, 34, 56) + ParseJSON("1"))
+12
+
+>> Hour(ParseJSON("1") + Time(12, 34, 56))
+12
+
+>> Day(Date(2011,1,15) - ParseJSON("1"))
+14
+
+>> Day(ParseJSON("1") - Date(2011,1,15))
+Error({Kind:ErrorKind.NotSupported})
+
+>> Day(DateTime(2011,1,15,4,5,6) - ParseJSON("1"))
+14
+
+>> Day(ParseJSON("1") - DateTime(2011,1,15,4,5,6))
+Error({Kind:ErrorKind.NotSupported})
+
+>> Hour(Time(12, 34, 56) - ParseJSON("0.25"))
+6
+
+>> Hour(ParseJSON("1") - Time(12, 34, 56))
+Error({Kind:ErrorKind.NotSupported})
+
+// blank should be coerced to 0 in `<`, `<=`, `>=`, `<=`, but not in equality or inequality
+>> ParseJSON("0") = Blank()
+false
+
+>> ParseJSON("0") <> Blank()
+true
+
+>> Blank() = ParseJSON("0")
+false
+
+>> Blank() <> ParseJSON("0")
+true
+
+>> ParseJSON("null") = Blank()
+true
+
+>> ParseJSON("null") <> Blank()
+false
+
+>> Blank() = ParseJSON("null")
+true
+
+>> Blank() <> ParseJSON("null")
+false
+
+// ^ operator
+>> ParseJSON("3") ^ 4
+81
+
+>> 3 ^ ParseJSON("4")
+81
+
+>> ParseJSON("3") ^ ParseJSON("4")
+81
