@@ -795,7 +795,7 @@
     
   </data>
   <data name="AboutIfError_fallback" xml:space="preserve">
-    <value>오류가 아닌 첫 번째 인수인 경우 반환되는 값입니다.</value>
+    <value>이전 인수가 오류인 경우 반환되는 값입니다.</value>
     
   </data>
   <data name="AboutSubstitute" xml:space="preserve">
@@ -1117,7 +1117,7 @@
     
   </data>
   <data name="AboutRGBA" xml:space="preserve">
-    <value>색의 빨간색, 녹색, 파란색 및 알파 구성 요소에 대한 숫자 값을 가져오고 특정 색을 생성합니다. R, G, B 는 0 ~007E; 255 사이의 숫자이고 알파는 0 ~007E; 1사이의 소수입니다.</value>
+    <value>색의 빨간색, 녹색, 파란색 및 알파 구성 요소에 대한 숫자 값을 가져오고 특정 색을 생성합니다. R, G, B 는 0 ~ 255 사이의 숫자이고 알파는 0 ~ 1사이의 소수입니다.</value>
     
   </data>
   <data name="RGBAArg1" xml:space="preserve">
@@ -1184,11 +1184,11 @@
     <value>색(또는 색 값의 열)이 페이드되는 비율(또는 비율 값의 열)입니다. 음수 비율은 어두운 음영을 만들고 양수 비율은 밝은 음영을 만듭니다.</value>
   </data>
   <data name="AboutAbs" xml:space="preserve">
-    <value>숫자의 절댓값(부호 없이 숫자만)을 반환합니다.</value>
+    <value>숫자의 절대값(부호 없이 숫자만)을 반환합니다.</value>
     
   </data>
   <data name="AboutAbsT" xml:space="preserve">
-    <value>숫자 열의 절댓값(부호 없이 숫자만)을 반환합니다.</value>
+    <value>숫자 열의 절대값(부호 없이 숫자만)을 반환합니다.</value>
     
   </data>
   <data name="AboutAbs_number" xml:space="preserve">
@@ -1604,7 +1604,7 @@
     
   </data>
   <data name="AboutSplit_text" xml:space="preserve">
-    <value>Text 하위 문자열로 분할될 텍스트입니다.</value>
+    <value>하위 문자열로 분할될 텍스트입니다.</value>
     
   </data>
   <data name="AboutSplit_separator" xml:space="preserve">
@@ -1616,7 +1616,7 @@
     
   </data>
   <data name="SplitArg2" xml:space="preserve">
-    <value>구분기호</value>
+    <value>구분 기호</value>
     
   </data>
   <data name="AboutIsType" xml:space="preserve">
@@ -1678,7 +1678,7 @@
     
   </data>
   <data name="AboutSequence_records" xml:space="preserve">
-    <value>이름이 "Value"인 단일 열 테이블의 레코드 수입니다. 최대 50,000입니다.</value>
+    <value>이름이 "값"인 단일 열 테이블의 레코드 수입니다. 최대 50,000입니다.</value>
     
   </data>
   <data name="SequenceArg2" xml:space="preserve">
@@ -1686,7 +1686,7 @@
     
   </data>
   <data name="AboutSequence_start" xml:space="preserve">
-    <value>선택사항입니다. 시퀀스의 첫 번째 번호입니다. 기본값은 1입니다.</value>
+    <value>선택 사항입니다. 시퀀스의 첫 번째 번호입니다. 기본값은 1입니다.</value>
     
   </data>
   <data name="SequenceArg3" xml:space="preserve">
@@ -1694,11 +1694,11 @@
     
   </data>
   <data name="AboutSequence_step" xml:space="preserve">
-    <value>선택사항. 테이블에서 각 후속 값을 증가시키는 양입니다. 기본값은 1입니다.</value>
+    <value>선택 사항입니다. 테이블에서 각 후속 값을 증가시키는 양입니다. 기본값은 1입니다.</value>
     
   </data>
   <data name="ErrInvalidDot" xml:space="preserve">
-    <value>'.'을 잘못 사용했습니다.</value>
+    <value>'.'을 잘못 사용했습니다</value>
     
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
@@ -1738,7 +1738,7 @@
     
   </data>
   <data name="ErrBadOperatorTypes" xml:space="preserve">
-    <value>이 작업은 {0}, {1} 유향에 유효하지 않습니다.</value>
+    <value>이 작업은 {0}, {1} 형식에 유효하지 않습니다.</value>
     
   </data>
   <data name="ErrGuidStrictComparison" xml:space="preserve">
@@ -1754,7 +1754,7 @@
     
   </data>
   <data name="ErrBadType_ExpectedType_ProvidedType" xml:space="preserve">
-    <value>잘못된 인수 형식입니다({1}). 대신 {0} 값이 필요합니다.</value>
+    <value>잘못된 인수 형식({1})입니다. 대신 {0} 값이 필요합니다.</value>
     
   </data>
   <data name="ErrBadSchema_ExpectedType" xml:space="preserve">
@@ -1849,8 +1849,12 @@
     <value>잘못된 형식.</value>
     
   </data>
+  <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
+    <value>인수는 유효한 날짜 또는 시간 값을 나타내지 않습니다.</value>
+    
+  </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
-    <value>이 데이터 원본은 잘못되었습니다. "내용 -&gt; 데이터 원본" 또는 "보기 -&gt; 옵션"을 클릭하여 "데이터 원본" 창에서 오류를 수정하세요.</value>
+    <value>이 데이터 원본은 잘못되었습니다. "내용 -&gt; 데이터 원본" 또는 "보기 -&gt; 옵션"을 클릭하여 "데이터 원본" 창에서 오류를 수정하세요</value>
     
   </data>
   <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
@@ -1866,7 +1870,7 @@
     
   </data>
   <data name="ErrTypeError_Arg_Expected_Found" xml:space="preserve">
-    <value>인수 '{0}'의 형식이 필요한 형식인 '{1}'과(와) 일치하지 않습니다. 검색된 형식: '{2}'</value>
+    <value>인수 '{0}'의 형식이 필요한 형식인 '{1}'과(와) 일치하지 않습니다. 검색된 형식: '{2}'.</value>
     
   </data>
   <data name="ErrTypeError_WrongType" xml:space="preserve">
@@ -2084,7 +2088,7 @@
     <value>일 구성 요소가 추출되는 날짜 값입니다.</value>
   </data>
   <data name="AboutHour" xml:space="preserve">
-    <value>시간은 0(12:00:00AM) ~ 23(11:00:00PM) 사이의 숫자로 시간을 반환합니다.</value>
+    <value>시간은 0(12:00:00 AM) ~ 23(11:00:00 PM) 사이의 숫자로 시간을 반환합니다.</value>
     
   </data>
   <data name="HourArg1" xml:space="preserve">
@@ -2117,7 +2121,7 @@
     <value>초 구성 요소가 추출되는 날짜 또는 시간 값입니다.</value>
   </data>
   <data name="AboutWeekday" xml:space="preserve">
-    <value>날짜시간 값의 요일을 반환합니다. 기본적으로 이 결과 범위는 1(일요일) ~007E; 7(토요일)입니다. StartOfWeek 열거 값이나 Microsoft Excel Weekday 함수 코드를 사용하여 다른 범위를 지정할 수 있습니다.</value>
+    <value>날짜시간 값의 요일을 반환합니다. 기본적으로 이 결과 범위는 1(일요일) ~ 7(토요일)입니다. StartOfWeek 열거 값이나 Microsoft Excel Weekday 함수 코드를 사용하여 다른 범위를 지정할 수 있습니다.</value>
     
   </data>
   <data name="WeekdayArg1" xml:space="preserve">
@@ -2573,7 +2577,7 @@
     
   </data>
   <data name="DatePicker_DateTimeZone_DisplayName" xml:space="preserve">
-    <value>표준 시간대</value>
+    <value>날짜/시간 표준 시간대</value>
     
   </data>
   <data name="DatePicker_Format_DisplayName" xml:space="preserve">
@@ -2621,7 +2625,7 @@
     
   </data>
   <data name="text_Clear_DisplayName" xml:space="preserve">
-    <value>지우기 단추</value>
+    <value>지우기 버튼</value>
     
   </data>
   <data name="Align_Left_DisplayName" xml:space="preserve">
@@ -2847,7 +2851,7 @@
     
   </data>
   <data name="EndsWithArg2" xml:space="preserve">
-    <value>end</value>
+    <value>종료</value>
     
   </data>
   <data name="AboutBlank" xml:space="preserve">
@@ -3328,7 +3332,7 @@
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>데이터_원본</value>
     
   </data>
   <data name="CollectRecordArg" xml:space="preserve">
@@ -3344,11 +3348,11 @@
     
   </data>
   <data name="ClearCollectionArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>데이터_원본</value>
     
   </data>
   <data name="ClearCollectDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>데이터_원본</value>
     
   </data>
   <data name="ClearCollectRecordArg" xml:space="preserve">
@@ -3860,7 +3864,7 @@
     
   </data>
   <data name="Icon_Laptop_DisplayName" xml:space="preserve">
-    <value>랩톱</value>
+    <value>노트북</value>
     
   </data>
   <data name="Icon_ComputerDesktop_DisplayName" xml:space="preserve">
@@ -4418,6 +4422,10 @@
     <value>식별자의 텍스트가 있는지 확인합니다. 식별자가 모두 비어 있거나 공백이면 이 오류가 발생합니다.</value>
     
   </data>
+  <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
+    <value>Unable to compare values of type {0}.</value>
+    
+  </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
     <value>비교할 수 없는 유형입니다. {0} 및 {1} 유형은 비교할 수 없습니다.</value>
     
@@ -4454,7 +4462,7 @@
     
   </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_ShortMessage" xml:space="preserve">
-    <value>호환되지 않는 형식입니다. 업데이트하려는 데이터 소스의 '{0}' 열은 '{1}' 형식이어야 하는데 '{2}' 형식을 사용 중입니다.</value>
+    <value>호환되지 않는 형식입니다. 업데이트하려는 데이터 원본의 '{0}' 열은 '{1}' 형식이어야 하는데 '{2}' 형식을 사용 중입니다.</value>
     
   </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_HowToFix_1" xml:space="preserve">
@@ -4834,8 +4842,18 @@
     <value>이 함수는 모호하며 동일한 인수에 대한 람다 식과 열 식별자를 포함합니다.</value>
     
   </data>
-  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
-    <value>BooleanOptionSet 옵션 {0}은(는) 지원되지 않습니다.</value>
+  <data name="OptionSetOptionNotSupported" xml:space="preserve">
+    <value>The value of option {0} is not of expected type {1}.</value>
     
+  </data>
+  <data name="AboutOptionSetInfo" xml:space="preserve">
+    <value>주어진 옵션 집합 값의 논리적 이름을 반환합니다.</value>
+    
+  </data>
+  <data name="AboutOptionSetInfoArg1" xml:space="preserve">
+    <value>옵션</value>
+  </data>
+  <data name="AboutOptionSetInfo_option" xml:space="preserve">
+    <value>논리적 이름이 반환될 옵션 집합 값입니다.</value>
   </data>
 </root>

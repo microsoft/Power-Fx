@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Threading;
 using Microsoft.PowerFx.Core;
@@ -70,7 +71,42 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             {
             }
 
-            bool IExternalOptionSet.IsBooleanValued => true;
+            public new bool TryGetValue(DName fieldName, out OptionSetValue optionSetValue)
+            {
+                if (!Options.Any(option => option.Key == fieldName))
+                {
+                    optionSetValue = null;
+                    return false;
+                }
+
+                optionSetValue = new OptionSetValue(fieldName, FormulaType, fieldName == "1");
+                return true;
+            }
+
+            DKind IExternalOptionSet.BackingKind => DKind.Boolean;
+        }
+
+        private class InvalidBooleanOptionSet : OptionSet, IExternalOptionSet
+        {
+            public InvalidBooleanOptionSet(string name, DisplayNameProvider displayNameProvider)
+                : base(name, displayNameProvider)
+            {
+            }
+
+            public new bool TryGetValue(DName fieldName, out OptionSetValue optionSetValue)
+            {
+                if (!Options.Any(option => option.Key == fieldName))
+                {
+                    optionSetValue = null;
+                    return false;
+                }
+
+                // Invalid, not passing a bool value for `value`
+                optionSetValue = new OptionSetValue(fieldName, FormulaType);
+                return true;
+            }
+
+            DKind IExternalOptionSet.BackingKind => DKind.Boolean;
         }
 
         [Theory]
@@ -110,7 +146,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 { "invalid", "Negative" },
             });
 
-            engine.Config.AddOptionSet(new BooleanOptionSet("BoolOptionSet", boolOptionSetDisplayNameProvider));
+            engine.Config.AddOptionSet(new InvalidBooleanOptionSet("BoolOptionSet", boolOptionSetDisplayNameProvider));
 
             var check = engine.Check(expression);
             Assert.True(check.IsSuccess);
@@ -118,7 +154,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var result = check.GetEvaluator().Eval();
 
             Assert.IsType<ErrorValue>(result);
-            Assert.Contains("The BooleanOptionSet option", ((ErrorValue)result).Errors.First().Message);
+            Assert.Contains("The value of option", ((ErrorValue)result).Errors.First().Message);
         }
     }
 }

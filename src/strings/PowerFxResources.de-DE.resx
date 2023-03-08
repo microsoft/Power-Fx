@@ -795,7 +795,7 @@
     
   </data>
   <data name="AboutIfError_fallback" xml:space="preserve">
-    <value>Der Wert, der zurückgegeben wird, wenn es sich um das erste Argument ohne Fehler handelt.</value>
+    <value>Wert, der zurückgegeben wird, wenn das vorherige Argument ein Fehler ist.</value>
     
   </data>
   <data name="AboutSubstitute" xml:space="preserve">
@@ -1847,6 +1847,10 @@
   </data>
   <data name="ErrTextInvalidFormat" xml:space="preserve">
     <value>Ungültiges Format.</value>
+    
+  </data>
+  <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
+    <value>Das Argument stellt keinen gültigen Datums- oder Uhrzeitwert dar.</value>
     
   </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
@@ -3184,7 +3188,7 @@
     
   </data>
   <data name="DisplayMode_View_DisplayName" xml:space="preserve">
-    <value>Ansicht</value>
+    <value>Anzeigen</value>
     
   </data>
   <data name="LayoutMode_Manual_DisplayName" xml:space="preserve">
@@ -3412,7 +3416,7 @@
     
   </data>
   <data name="ImagePosition_Stretch_DisplayName" xml:space="preserve">
-    <value>Stretching durchführen</value>
+    <value>Gestreckt</value>
     
   </data>
   <data name="ImagePosition_Tile_DisplayName" xml:space="preserve">
@@ -3548,7 +3552,7 @@
     
   </data>
   <data name="FormMode_View_DisplayName" xml:space="preserve">
-    <value>Ansicht</value>
+    <value>Anzeigen</value>
     
   </data>
   <data name="FormMode_New_DisplayName" xml:space="preserve">
@@ -3560,7 +3564,7 @@
     
   </data>
   <data name="SelectedState_View_DisplayName" xml:space="preserve">
-    <value>Ansicht</value>
+    <value>Anzeigen</value>
     
   </data>
   <data name="SelectedState_New_DisplayName" xml:space="preserve">
@@ -4418,6 +4422,10 @@
     <value>Stellen Sie sicher, dass für Ihren Bezeichner Text vorliegt. Dieser Fehler tritt auf, wenn der Bezeichner nur Leerzeichen enthält.</value>
     
   </data>
+  <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
+    <value>Unable to compare values of type {0}.</value>
+    
+  </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
     <value>Einige Typen sind für den Vergleich inkompatibel. Diese Typen können nicht verglichen werden: {0}, {1}.</value>
     
@@ -4834,8 +4842,18 @@
     <value>Diese Funktion ist mehrdeutig; sie enthält Lambdaausdrücke und Spaltenbezeichner für dasselbe Argument.</value>
     
   </data>
-  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
-    <value>Die BooleanOptionSet-Option {0} wird nicht unterstützt.</value>
+  <data name="OptionSetOptionNotSupported" xml:space="preserve">
+    <value>The value of option {0} is not of expected type {1}.</value>
     
+  </data>
+  <data name="AboutOptionSetInfo" xml:space="preserve">
+    <value>Gibt den logischen Namen des angegebenen Optionssatzwerts zurück.</value>
+    
+  </data>
+  <data name="AboutOptionSetInfoArg1" xml:space="preserve">
+    <value>Option</value>
+  </data>
+  <data name="AboutOptionSetInfo_option" xml:space="preserve">
+    <value>Ein Optionssatzwert, dessen logischer Name zurückgegeben wird.</value>
   </data>
 </root>

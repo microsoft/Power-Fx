@@ -199,8 +199,11 @@ namespace Microsoft.PowerFx.Syntax
         public static TexlLexer GetLocalizedInstance(CultureInfo culture)
         {
             culture ??= CultureInfo.InvariantCulture;
+
+            // Number decimal separator can be a dot (.), comma (,), arabic comma (Unicode 0x66B) 
+            // .Net core 3.1 doesn't support arabic comma and defines '/' as decimal separator for Persian/Farsi (fa, fa-IR) which is probably a bug
             return culture.NumberFormat.NumberDecimalSeparator == PunctuatorDecimalSeparatorInvariant ? InvariantLexer : CommaDecimalSeparatorLexer;
-        }
+        }        
 
         public static IReadOnlyList<string> GetKeywords()
         {
@@ -1471,8 +1474,8 @@ namespace Microsoft.PowerFx.Syntax
                     _sb.Append(NextChar());
                 }
 
-                Contracts.Assert(_sb.ToString().Equals("/*") || _sb.ToString().Equals("//"));
-                var commentEnd = _sb.ToString().StartsWith("/*") ? "*/" : "\n";
+                Contracts.Assert(_sb.ToString().Equals("/*", StringComparison.Ordinal) || _sb.ToString().Equals("//", StringComparison.Ordinal));
+                var commentEnd = _sb.ToString().StartsWith("/*", StringComparison.Ordinal) ? "*/" : "\n";
 
                 // Comment initiation takes up two chars, so must - 1 to get start
                 var startingPosition = _currentPosition - 1;
@@ -1484,7 +1487,7 @@ namespace Microsoft.PowerFx.Syntax
 
                     // "str.Length >= commentLength + commentEnd.Length"  ensures block comment of "/*/"
                     // does not satisfy starts with "/*" and ends with "*/" conditions
-                    if (str.EndsWith(commentEnd) && str.Length >= commentLength + commentEnd.Length)
+                    if (str.EndsWith(commentEnd, StringComparison.Ordinal) && str.Length >= commentLength + commentEnd.Length)
                     {
                         break;
                     }
@@ -1530,7 +1533,7 @@ namespace Microsoft.PowerFx.Syntax
                 }
 
                 var commentToken = new CommentToken(_sb.ToString(), GetTextSpan());
-                if (_sb.ToString().Trim().StartsWith("/*") && !_sb.ToString().Trim().EndsWith("*/"))
+                if (_sb.ToString().Trim().StartsWith("/*", StringComparison.Ordinal) && !_sb.ToString().Trim().EndsWith("*/", StringComparison.Ordinal))
                 {
                     commentToken.IsOpenBlock = true;
                 }
@@ -1544,7 +1547,7 @@ namespace Microsoft.PowerFx.Syntax
                 if (CurrentChar > 255)
                 {
                     var position = _currentPosition;
-                    var unexpectedChar = Convert.ToUInt16(CurrentChar).ToString("X4");
+                    var unexpectedChar = Convert.ToUInt16(CurrentChar).ToString("X4", CultureInfo.InvariantCulture);
                     NextChar();
                     return new ErrorToken(GetTextSpan(), TexlStrings.UnexpectedCharacterToken, string.Concat("U+", unexpectedChar), position);
                 }

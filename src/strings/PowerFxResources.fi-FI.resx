@@ -173,7 +173,7 @@
     
   </data>
   <data name="AboutSwitch_match_value" xml:space="preserve">
-    <value>Arvo, joka täsmätään switch-arvo-kohteeseen.</value>
+    <value>Arvo, joka täsmätään kytkimen_arvo-arvoon.</value>
     
   </data>
   <data name="AboutSwitch_match_result" xml:space="preserve">
@@ -795,7 +795,7 @@
     
   </data>
   <data name="AboutIfError_fallback" xml:space="preserve">
-    <value>Palautettava arvo, jos se on ensimmäinen muu kuin virheargumentti.</value>
+    <value>Arvo, joka palautetaan, jos edellinen argumentti on virhe.</value>
     
   </data>
   <data name="AboutSubstitute" xml:space="preserve">
@@ -1650,7 +1650,7 @@
     <value>Entiteettitaulukko, joka edustaa tyyppiä, jona toivomme arvoa käytettävän.</value>
   </data>
   <data name="AboutWith" xml:space="preserve">
-    <value>Suorittaa toisessa parametrina annetun kaavan käyttäen ensimmäisen parametrin antamaa vaikutusaluetta.</value>
+    <value>Suorittaa toisena parametrina annetun kaavan käyttäen ensimmäisen parametrin antamaa vaikutusaluetta.</value>
     
   </data>
   <data name="WithArg1" xml:space="preserve">
@@ -1806,7 +1806,7 @@
     
   </data>
   <data name="ErrIncompatibleRecord" xml:space="preserve">
-    <value>Tätä tietuetta ei voi käyttää. Se voi sisältää kenttiä, joiden tyypit ovat yhteenopimattoma.</value>
+    <value>Tätä tietuetta ei voi käyttää. Se voi sisältää kenttiä, joiden tyypit ovat yhteensopimattomia.</value>
     
   </data>
   <data name="ErrNeedRecord_Func" xml:space="preserve">
@@ -1847,6 +1847,10 @@
   </data>
   <data name="ErrTextInvalidFormat" xml:space="preserve">
     <value>Virheellinen muoto.</value>
+    
+  </data>
+  <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
+    <value>Argumentti ei vastaa kelvollista päivämäärä- tai aika-arvoa.</value>
     
   </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
@@ -2019,7 +2023,7 @@
     <value>Millisekuntikomponentti.</value>
   </data>
   <data name="AboutDateTime" xml:space="preserve">
-    <value>Luo arvon, joka edustaa ajanhenkeä ilmaistuna päivämääränä ja aikana.</value>
+    <value>Luo arvon, joka edustaa hetkeä ilmaistuna päivämääränä ja aikana.</value>
     
   </data>
   <data name="AboutDateTime_year" xml:space="preserve">
@@ -2208,7 +2212,7 @@
     
   </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
-    <value>Sarake {0} määritettiin useammin kuin kerran.</value>
+    <value>Sarake nimeltä {0} määritettiin useammin kuin kerran.</value>
     
   </data>
   <data name="WarnLiteralPredicate" xml:space="preserve">
@@ -2445,7 +2449,7 @@
     <value>Eroavaisuustoiminnon päättymispäivämäärien sarake.</value>
   </data>
   <data name="AboutChar" xml:space="preserve">
-    <value>Palauttaa alustasi merkistön koodin numeron määrittämän merkin.</value>
+    <value>Palauttaa ympäristön merkistön koodinumeron määrittämän merkin.</value>
     
   </data>
   <data name="CharArg1" xml:space="preserve">
@@ -2456,7 +2460,7 @@
     <value>Alustasi merkistön koodin numero.</value>
   </data>
   <data name="AboutCharT" xml:space="preserve">
-    <value>Palauttaa taulukon merkkejä, jotka alustasi merkistön koodin numerot määrittävät.</value>
+    <value>Palauttaa taulukon merkkejä, jotka alustasi merkistön koodinumerot määrittävät.</value>
     
   </data>
   <data name="CharTArg1" xml:space="preserve">
@@ -2710,7 +2714,7 @@
     
   </data>
   <data name="AboutIsUTCToday" xml:space="preserve">
-    <value>Tarkistaa, onko annettu päivämäärä tämä päivä UTC-muodossa, ja palauttaa arvon tosi vai epätosi.</value>
+    <value>Tarkistaa, onko annettu päivämäärä tämä päivä UTC-muodossa, ja palauttaa arvon tosi tai epätosi.</value>
     
   </data>
   <data name="AboutIsUTCToday_date" xml:space="preserve">
@@ -2757,7 +2761,7 @@
     
   </data>
   <data name="pdfViewer_Document_DisplayName" xml:space="preserve">
-    <value>Tiedosto</value>
+    <value>Asiakirja</value>
     
   </data>
   <data name="pdfViewer_Zoom_DisplayName" xml:space="preserve">
@@ -3144,7 +3148,7 @@
     
   </data>
   <data name="Icon_EmojiHappy_DisplayName" xml:space="preserve">
-    <value>Emoji - Tyytyväinen</value>
+    <value>Hymiö - Tyytyväinen</value>
     
   </data>
   <data name="SuggestRemoteExecutionHint_OpNotSupportedByClient" xml:space="preserve">
@@ -3420,7 +3424,7 @@
     
   </data>
   <data name="ImagePosition_Center_DisplayName" xml:space="preserve">
-    <value>Keskellä</value>
+    <value>Keskitä</value>
     
   </data>
   <data name="VerticalAlign_Top_DisplayName" xml:space="preserve">
@@ -3712,7 +3716,7 @@
     
   </data>
   <data name="Icon_Waffle_DisplayName" xml:space="preserve">
-    <value>Waffle</value>
+    <value>Vohveli</value>
     
   </data>
   <data name="Icon_ChevronLeft_DisplayName" xml:space="preserve">
@@ -3760,7 +3764,7 @@
     
   </data>
   <data name="Icon_Document_DisplayName" xml:space="preserve">
-    <value>Tiedosto</value>
+    <value>Asiakirja</value>
     
   </data>
   <data name="Icon_DockCheckProperties_DisplayName" xml:space="preserve">
@@ -3772,7 +3776,7 @@
     
   </data>
   <data name="Icon_Journal_DisplayName" xml:space="preserve">
-    <value>Kirjausraportti</value>
+    <value>Kirjauskansio</value>
     
   </data>
   <data name="Icon_ForkKnife_DisplayName" xml:space="preserve">
@@ -3916,7 +3920,7 @@
     
   </data>
   <data name="Icon_Tablet_DisplayName" xml:space="preserve">
-    <value>Tablet</value>
+    <value>Taulutietokone</value>
     
   </data>
   <data name="Icon_Tag_DisplayName" xml:space="preserve">
@@ -3960,19 +3964,19 @@
     
   </data>
   <data name="Icon_EmojiFrown_DisplayName" xml:space="preserve">
-    <value>Emoji – harmistus</value>
+    <value>Hymiö – harmistus</value>
     
   </data>
   <data name="Icon_EmojiSmile_DisplayName" xml:space="preserve">
-    <value>Emoji – hymy</value>
+    <value>Hymiö – hymy</value>
     
   </data>
   <data name="Icon_EmojiSad_DisplayName" xml:space="preserve">
-    <value>Emoji – surullinen</value>
+    <value>Hymiö – surullinen</value>
     
   </data>
   <data name="Icon_EmojiNeutral_DisplayName" xml:space="preserve">
-    <value>Emoji – neutraali</value>
+    <value>Hymiö – neutraali</value>
     
   </data>
   <data name="Icon_Warning_DisplayName" xml:space="preserve">
@@ -4340,7 +4344,7 @@
     <value>Toimintafunktiot muuttavat sovelluksen tilaa muuttamalla arvoja muualla sovelluksessa. Navigate, Patch, UpdateContext ja Collect ovat yleisiä toimintafunktioita. OnSelect, OnVisible ja muut On...-ominaisuudet ovat yleisiä toimintaan perustuvia ominaisuuksia.</value>
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_HowToFix_1" xml:space="preserve">
-    <value>Siirrä käyttäytymisfunktion käyttäytymiseen perustuvaan ominaisuuteen.</value>
+    <value>Siirrä käyttäytymisfunktio käyttäytymiseen perustuvaan ominaisuuteen.</value>
     
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_Link_1" xml:space="preserve">
@@ -4416,6 +4420,10 @@
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
     <value>Varmista, että sinulla on teksti tunnisteellesi. Tämä virhe tapahtuu, kun tunniste on kokonaan tyhjä tai koostuu vain välilyönneistä.</value>
+    
+  </data>
+  <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
+    <value>Unable to compare values of type {0}.</value>
     
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
@@ -4834,8 +4842,18 @@
     <value>Tämä funktio on epäselvä, se sisältää Lambda-lausekkeita ja saraketunnisteita samalle argumentille.</value>
     
   </data>
-  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
-    <value>BooleanOptionSet-toimintoa {0} ei tueta.</value>
+  <data name="OptionSetOptionNotSupported" xml:space="preserve">
+    <value>The value of option {0} is not of expected type {1}.</value>
     
+  </data>
+  <data name="AboutOptionSetInfo" xml:space="preserve">
+    <value>Palauttaa annetun asetusjoukon arvon loogisen nimen.</value>
+    
+  </data>
+  <data name="AboutOptionSetInfoArg1" xml:space="preserve">
+    <value>asetus</value>
+  </data>
+  <data name="AboutOptionSetInfo_option" xml:space="preserve">
+    <value>Asetusjoukon arvo, jonka looginen nimi palautetaan.</value>
   </data>
 </root>

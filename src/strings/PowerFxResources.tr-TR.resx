@@ -795,7 +795,7 @@
     
   </data>
   <data name="AboutIfError_fallback" xml:space="preserve">
-    <value>Hata olmayan ilk bağımsız değişkense döndürülecek değer.</value>
+    <value>Önceki bağımsız değişken hataysa döndürülecek değer.</value>
     
   </data>
   <data name="AboutSubstitute" xml:space="preserve">
@@ -1847,6 +1847,10 @@
   </data>
   <data name="ErrTextInvalidFormat" xml:space="preserve">
     <value>Geçersiz biçim.</value>
+    
+  </data>
+  <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
+    <value>Bağımsız değişken, geçerli bir tarih veya saat değerini temsil etmiyor.</value>
     
   </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
@@ -4418,6 +4422,10 @@
     <value>Tanımlayıcınız için metne sahip olduğunuzdan emin olun. Bu hata, tanımlayıcı yalnızca boşluklardan oluştuğunda oluşur.</value>
     
   </data>
+  <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
+    <value>Unable to compare values of type {0}.</value>
+    
+  </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
     <value>Karşılaştırma için uyumsuz türler. Bu türler karşılaştıramaz: {0}, {1}.</value>
     
@@ -4834,8 +4842,18 @@
     <value>Bu işlev belirsiz, aynı bağımsız değişken için Lambda ifadesi ve sütun tanımlayıcıları içeriyor.</value>
     
   </data>
-  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
-    <value>BooleanOptionSet seçeneği {0} desteklenmiyor.</value>
+  <data name="OptionSetOptionNotSupported" xml:space="preserve">
+    <value>The value of option {0} is not of expected type {1}.</value>
     
+  </data>
+  <data name="AboutOptionSetInfo" xml:space="preserve">
+    <value>Belirtilen seçenek kümesi değerinin mantıksal adını döndürür.</value>
+    
+  </data>
+  <data name="AboutOptionSetInfoArg1" xml:space="preserve">
+    <value>seçenek</value>
+  </data>
+  <data name="AboutOptionSetInfo_option" xml:space="preserve">
+    <value>Mantıksal adı döndürülecek bir seçenek kümesi değeri.</value>
   </data>
 </root>

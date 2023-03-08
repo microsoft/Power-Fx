@@ -488,3 +488,6 @@ Blank()
 
 >> Text(Index(ParseJSON("[""one"",""two"",""three""]"),true)) // Coercion from boolean
 "one"
+
+>> Boolean(IfError(ParseJSON("{""field1"":true}").field1, ParseJSON("false")))
+true

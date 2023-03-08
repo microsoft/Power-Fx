@@ -795,7 +795,7 @@
     
   </data>
   <data name="AboutIfError_fallback" xml:space="preserve">
-    <value>Vrednost koja se vraća ako je u pitanju prvi argument bez greške.</value>
+    <value>Vrednost koja se vraća ako je prethodni argument greška.</value>
     
   </data>
   <data name="AboutSubstitute" xml:space="preserve">
@@ -1849,6 +1849,10 @@
     <value>Nevažeći format.</value>
     
   </data>
+  <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
+    <value>Argument ne predstavlja važeću vrednost datuma ili vremena.</value>
+    
+  </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
     <value>Ovaj izvor podataka je nevažeći. Popravite grešku u oknu „Izvori podataka“ tako što ćete izabrati stavke „Sadržaj –&gt; Izvori podataka“ ili „Prikaz –&gt; Opcije“</value>
     
@@ -2829,7 +2833,7 @@
     
   </data>
   <data name="StartsWithArg2" xml:space="preserve">
-    <value>pokreni</value>
+    <value>početak</value>
     
   </data>
   <data name="AboutEndsWith" xml:space="preserve">
@@ -3092,7 +3096,7 @@
     
   </data>
   <data name="Icon_View_DisplayName" xml:space="preserve">
-    <value>Prikaz</value>
+    <value>Prikaži</value>
     
   </data>
   <data name="Icon_ZoomIn_DisplayName" xml:space="preserve">
@@ -3268,7 +3272,7 @@
     
   </data>
   <data name="LayoutOverflow_Scroll_DisplayName" xml:space="preserve">
-    <value>Listaj</value>
+    <value>Pomeranje</value>
     
   </data>
   <data name="Overflow_Hidden_DisplayName" xml:space="preserve">
@@ -3412,7 +3416,7 @@
     
   </data>
   <data name="ImagePosition_Stretch_DisplayName" xml:space="preserve">
-    <value>Razvuci</value>
+    <value>Rastezanje</value>
     
   </data>
   <data name="ImagePosition_Tile_DisplayName" xml:space="preserve">
@@ -3420,7 +3424,7 @@
     
   </data>
   <data name="ImagePosition_Center_DisplayName" xml:space="preserve">
-    <value>Centar</value>
+    <value>Centrirano</value>
     
   </data>
   <data name="VerticalAlign_Top_DisplayName" xml:space="preserve">
@@ -3560,7 +3564,7 @@
     
   </data>
   <data name="SelectedState_View_DisplayName" xml:space="preserve">
-    <value>Prikaz</value>
+    <value>Prikaži</value>
     
   </data>
   <data name="SelectedState_New_DisplayName" xml:space="preserve">
@@ -4124,7 +4128,7 @@
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
-    <value>Očekuje se operand. Formula ili izraz očekuju važeći operand. Na primer, možete da dodate operand „2“ u izraz „ 1 + _“ tako da rezultat bude „3“. Ili, možete da dodate operand „kako si“ u izraz „Zdravo, “&amp; _ “ tako da rezultat bude „Zdravo, kako si“.</value>
+    <value>Očekuje se operand. Formula ili izraz očekuju važeći operand. Na primer, možete da dodate operand „2“ u izraz „ 1 + _“ tako da rezultat bude „3“. Ili, možete da dodate operand „kako si“ u izraz „„Zdravo, “&amp; _ “ tako da rezultat bude „Zdravo, kako si“.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_HowToFix_1" xml:space="preserve">
@@ -4416,6 +4420,10 @@
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
     <value>Uverite se da identifikator ima tekst. Ova greška se javlja kada se identifikator sastoji samo od praznih mesta ili razmaka.</value>
+    
+  </data>
+  <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
+    <value>Unable to compare values of type {0}.</value>
     
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
@@ -4834,8 +4842,18 @@
     <value>Ova funkcija je dvosmislena, sadrži lambda izraze i identifikatore kolona za isti argument.</value>
     
   </data>
-  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
-    <value>Opcija BooleanOptionSet {0} nije podržana.</value>
+  <data name="OptionSetOptionNotSupported" xml:space="preserve">
+    <value>The value of option {0} is not of expected type {1}.</value>
     
+  </data>
+  <data name="AboutOptionSetInfo" xml:space="preserve">
+    <value>Prikazuje logičko ime date vrednosti skupa opcija.</value>
+    
+  </data>
+  <data name="AboutOptionSetInfoArg1" xml:space="preserve">
+    <value>opcija</value>
+  </data>
+  <data name="AboutOptionSetInfo_option" xml:space="preserve">
+    <value>Vrednost skupa opcija čije će logičko ime biti prikazano.</value>
   </data>
 </root>

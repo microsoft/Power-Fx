@@ -795,7 +795,7 @@
     
   </data>
   <data name="AboutIfError_fallback" xml:space="preserve">
-    <value>Значення, що повертається, якщо це перший аргумент без помилки.</value>
+    <value>Значення, що повертається, якщо попередній аргумент є помилкою.</value>
     
   </data>
   <data name="AboutSubstitute" xml:space="preserve">
@@ -1847,6 +1847,10 @@
   </data>
   <data name="ErrTextInvalidFormat" xml:space="preserve">
     <value>Неприпустимий формат.</value>
+    
+  </data>
+  <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
+    <value>Аргумент є неприпустимим значенням дати або часу.</value>
     
   </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
@@ -4418,6 +4422,10 @@
     <value>Переконайтеся, що ідентифікатор містить текст. Ця помилка стається, якщо ідентифікатор пустий або містить тільки пробіли.</value>
     
   </data>
+  <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
+    <value>Unable to compare values of type {0}.</value>
+    
+  </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
     <value>Несумісні типи для порівняння. Ці типи не можна порівняти: {0}, {1}.</value>
     
@@ -4834,8 +4842,18 @@
     <value>Ця функція неоднозначна, вона містить лямбда-вирази та ідентифікатори стовпців для одного аргументу.</value>
     
   </data>
-  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
-    <value>Параметр BooleanOptionSet {0} не підтримується.</value>
+  <data name="OptionSetOptionNotSupported" xml:space="preserve">
+    <value>The value of option {0} is not of expected type {1}.</value>
     
+  </data>
+  <data name="AboutOptionSetInfo" xml:space="preserve">
+    <value>Повертає логічне ім’я даного значення набору параметрів.</value>
+    
+  </data>
+  <data name="AboutOptionSetInfoArg1" xml:space="preserve">
+    <value>параметр</value>
+  </data>
+  <data name="AboutOptionSetInfo_option" xml:space="preserve">
+    <value>Значення набору параметрів, логічне ім’я якого буде повернено.</value>
   </data>
 </root>
