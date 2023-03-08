@@ -1923,7 +1923,6 @@ namespace Microsoft.PowerFx.Core.Types
                         type.Kind == DKind.Blob ||
                         type.Kind == DKind.Unknown ||
                         type.Kind == DKind.Deferred ||
-                        type.Kind == DKind.Guid ||
                         (type.Kind == DKind.Enum && Accepts(type.GetEnumSupertype()));
                     break;
 

@@ -92,6 +92,7 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction FirstN_UO = _library.Add(new FirstLastNFunction_UO(isFirst: true));
         public static readonly TexlFunction ForAll = _library.Add(new ForAllFunction());
         public static readonly TexlFunction ForAll_UO = _library.Add(new ForAllFunction_UO());
+        public static readonly TexlFunction GUIDNoArg = _library.Add(new GUIDNoArgFunction());
         public static readonly TexlFunction GUIDPure = _library.Add(new GUIDPureFunction());
         public static readonly TexlFunction GUID_UO = _library.Add(new GUIDPureFunction_UO());
         public static readonly TexlFunction Hex2Dec = _library.Add(new Hex2DecFunction());

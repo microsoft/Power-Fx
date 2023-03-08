@@ -31,3 +31,23 @@ Error({Kind:ErrorKind.InvalidArgument})
 
 >> GUID("thisisastringthatismuchlongerthanaguidshouldbeitisquitealongstringandwillfinderrorswithlongstringsinthisfunction")
 Error({Kind:ErrorKind.InvalidArgument})
+
+// Coercion to text
+>> If(1<0,"",GUID("C203B79B-B985-42F0-B523-C10EB64387C6"))
+"c203b79b-b985-42f0-b523-c10eb64387c6"
+
+// Coercion to text, dash positions
+>> With({g:GUID(),dashPositions:[9,14,19,24]},Concat(dashPositions,Mid(g,Value,1)))
+"----"
+
+// Parameterless constructor, creates different values
+>> GUID() = GUID()
+false
+
+// Parameterless constructor, creates valid GUID
+>> With(
+    {g:GUID(), digits:"0123456789abcdef", dashPositions:[9,14,19,24]},
+    Sum(
+        Filter(Sequence(Len(g)), !(Value in dashPositions)),
+        If(Find(Mid(g,Value,1),digits) > 0, 1, 100)))
+32

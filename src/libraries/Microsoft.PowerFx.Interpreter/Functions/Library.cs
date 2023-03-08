@@ -693,6 +693,10 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: ForAll_UO)
             },
             {
+                BuiltinFunctionsCore.GUIDNoArg,
+                NoErrorHandling(GuidNoArg)
+            },
+            {
                 BuiltinFunctionsCore.GUIDPure,
                 StandardErrorHandling<StringValue>(
                     BuiltinFunctionsCore.GUIDPure.Name,
@@ -701,7 +705,7 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeTypes: ExactValueTypeOrBlank<StringValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
-                    targetFunction: Guid)
+                    targetFunction: GuidPure)
             },
             {
                 BuiltinFunctionsCore.GUID_UO,

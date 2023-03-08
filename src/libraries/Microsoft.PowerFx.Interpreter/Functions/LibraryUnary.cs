@@ -74,6 +74,17 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: BooleanToText)
             },
             {
+                UnaryOpKind.GuidToText,
+                StandardErrorHandling<GuidValue>(
+                    functionName: null, // internal function, no user-facing name
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<GuidValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: GuidToText)
+            },
+            {
                 UnaryOpKind.BooleanToNumber,
                 StandardErrorHandling<BooleanValue>(
                     functionName: null, // internal function, no user-facing name
@@ -312,6 +323,12 @@ namespace Microsoft.PowerFx.Functions
         public static FormulaValue NumberToText(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, NumberValue[] args)
         {
             return Text(runner, context, irContext, args);
+        }
+
+        public static FormulaValue GuidToText(IRContext irContext, GuidValue[] args)
+        {
+            var g = args[0].Value;
+            return new StringValue(irContext, g.ToString("d"));
         }
 
         public static BooleanValue NumberToBoolean(IRContext irContext, NumberValue[] args)

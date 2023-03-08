@@ -902,7 +902,13 @@ namespace Microsoft.PowerFx.Functions
             return new StringValue(irContext, result);
         }
 
-        public static FormulaValue Guid(IRContext irContext, StringValue[] args)
+        public static FormulaValue GuidNoArg(IRContext irContext, FormulaValue[] args)
+        {
+            var guid = System.Guid.NewGuid();
+            return new GuidValue(irContext, guid);
+        }
+
+        public static FormulaValue GuidPure(IRContext irContext, StringValue[] args)
         {
             var text = args[0].Value;
             try

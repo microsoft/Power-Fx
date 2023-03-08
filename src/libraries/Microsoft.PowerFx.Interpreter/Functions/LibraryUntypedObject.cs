@@ -344,7 +344,7 @@ namespace Microsoft.PowerFx.Functions
             if (impl.Type == FormulaType.String)
             {
                 var str = new StringValue(IRContext.NotInSource(FormulaType.String), impl.GetString());
-                return Guid(irContext, new StringValue[] { str });
+                return GuidPure(irContext, new StringValue[] { str });
             }
 
             return GetTypeMismatchError(irContext, BuiltinFunctionsCore.GUID_UO.Name, DType.String.GetKindString(), impl);

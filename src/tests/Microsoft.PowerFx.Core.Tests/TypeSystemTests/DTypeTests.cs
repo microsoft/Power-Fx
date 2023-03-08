@@ -276,7 +276,7 @@ namespace Microsoft.PowerFx.Tests
 
             Assert.True(DType.String.Accepts(DType.String));
             Assert.True(DType.String.Accepts(DType.Hyperlink));
-            Assert.True(DType.String.Accepts(DType.Guid));
+            Assert.False(DType.String.Accepts(DType.Guid));
             Assert.True(DType.String.Accepts(DType.Image));
             Assert.True(DType.String.Accepts(DType.PenImage));
             Assert.True(DType.String.Accepts(DType.Media));
@@ -1229,7 +1229,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal(DKind.Error, superType.Kind);
 
             superType = DType.Supertype(DType.Guid, DType.String);
-            Assert.Equal(DKind.String, superType.Kind);
+            Assert.Equal(DKind.Error, superType.Kind);
 
             superType = DType.Supertype(DType.Guid, DType.Number);
             Assert.Equal(DKind.Error, superType.Kind);
@@ -2160,8 +2160,8 @@ namespace Microsoft.PowerFx.Tests
             TestUnion("s", "m", "s");
             TestUnion("s", "o", "s");
             TestUnion("o", "s", "s");
-            TestUnion("s", "g", "s");
-            TestUnion("g", "s", "s");
+            TestUnion("s", "g", "e");
+            TestUnion("g", "s", "e");
 
             TestUnion("h", "m", "h");
             TestUnion("h", "s", "s");
