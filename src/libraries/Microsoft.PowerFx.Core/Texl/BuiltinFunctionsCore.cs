@@ -112,6 +112,7 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction IsToday = _library.Add(new IsTodayFunction());
         public static readonly TexlFunction IsNumeric = _library.Add(new IsNumericFunction());
         public static readonly TexlFunction ISOWeekNum = _library.Add(new ISOWeekNumFunction());
+        public static readonly TexlFunction Language = _library.Add(new LanguageFunction());
         public static readonly TexlFunction Last = _library.Add(new FirstLastFunction(isFirst: false));
         public static readonly TexlFunction LastN = _library.Add(new FirstLastNFunction(isFirst: false));
         public static readonly TexlFunction Last_UO = _library.Add(new FirstLastFunction_UO(isFirst: false));
@@ -216,7 +217,6 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction WeekNum = _library.Add(new WeekNumFunction());
         public static readonly TexlFunction With = _library.Add(new WithFunction());
         public static readonly TexlFunction Year = _library.Add(new YearFunction());
-        public static readonly TexlFunction Language = _library.Add(new LanguageFunction());
 
         public static readonly TexlFunction IsUTCToday = _featureGateFunctions.Add(new IsUTCTodayFunction());
         public static readonly TexlFunction UTCNow = _featureGateFunctions.Add(new UTCNowFunction());
