@@ -138,6 +138,8 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Types.TimeType",
                 "Microsoft.PowerFx.Types.TimeValue",
                 "Microsoft.PowerFx.Types.UnknownType",
+                "Microsoft.PowerFx.Types.UntypedObjectBase",
+                "Microsoft.PowerFx.Types.UntypedObjectCapabilities",
                 "Microsoft.PowerFx.Types.DeferredType",
                 "Microsoft.PowerFx.Types.UnsupportedType",
                 "Microsoft.PowerFx.Types.UntypedObjectType",

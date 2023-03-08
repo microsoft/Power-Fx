@@ -322,6 +322,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 return ((NumberValue)_value).Value;
             }
 
+            public string[] GetPropertyNames()
+            {
+                throw new NotImplementedException();
+            }
+
             public string GetString()
             {
                 return ((StringValue)_value).Value;

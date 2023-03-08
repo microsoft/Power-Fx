@@ -18,6 +18,8 @@ namespace Microsoft.PowerFx.Functions
 
         public FormulaType Type => ExternalType.ArrayType;
 
+        public UntypedObjectCapabilities Capabilities => UntypedObjectCapabilities.SupportsArray;
+
         public IUntypedObject this[int index] => _list[index];
 
         public int GetArrayLength()
@@ -41,6 +43,11 @@ namespace Microsoft.PowerFx.Functions
         }
 
         public bool TryGetProperty(string value, out IUntypedObject result)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string[] GetPropertyNames()
         {
             throw new NotImplementedException();
         }

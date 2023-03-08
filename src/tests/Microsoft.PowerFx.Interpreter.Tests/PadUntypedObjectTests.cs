@@ -191,6 +191,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 throw new NotImplementedException();
             }
 
+            public string[] GetPropertyNames()
+            {
+                throw new NotImplementedException();
+            }
+
             public string GetString()
             {
                 throw new NotImplementedException();

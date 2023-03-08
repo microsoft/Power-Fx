@@ -151,5 +151,10 @@ namespace Microsoft.PowerFx.Tests
 
             return true;
         }
+
+        public string[] GetPropertyNames()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

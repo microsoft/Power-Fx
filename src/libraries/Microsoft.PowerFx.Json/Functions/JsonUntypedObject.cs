@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -15,16 +16,32 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Functions
 {
-    internal class JsonUntypedObject : IUntypedObject
+    internal class JsonUntypedObject : UntypedObjectBase
     {
         private readonly JsonElement _element;
 
         public JsonUntypedObject(JsonElement element)
+            : base(GetCapabilities(element))
         {
-            _element = element;
+            _element = element;           
         }
 
-        public FormulaType Type
+        private static UntypedObjectCapabilities GetCapabilities(JsonElement element)
+        {
+            return element.ValueKind switch
+            {
+                JsonValueKind.String => UntypedObjectCapabilities.SupportsString,
+                JsonValueKind.Number => UntypedObjectCapabilities.SupportsDouble,
+                JsonValueKind.True => UntypedObjectCapabilities.SupportsBoolean,
+                JsonValueKind.False => UntypedObjectCapabilities.SupportsBoolean,
+                JsonValueKind.Array => UntypedObjectCapabilities.SupportsArray,
+                JsonValueKind.Object => UntypedObjectCapabilities.SupportsProperties,
+                JsonValueKind.Null => UntypedObjectCapabilities.SupportsString,                
+                _ => throw new NotImplementedException() // JsonValueKind.Undefined
+            };
+        }
+
+        public override FormulaType Type
         {
             get
             {
@@ -41,39 +58,49 @@ namespace Microsoft.PowerFx.Functions
                     case JsonValueKind.True:
                     case JsonValueKind.False:
                         return FormulaType.Boolean;
+                    case JsonValueKind.Null:
+                        return FormulaType.Blank;
                 }
 
                 return FormulaType.Blank;
             }
         }
 
-        public IUntypedObject this[int index] => new JsonUntypedObject(_element[index]);
+        public override bool IsBlank()
+        {
+            return Type == FormulaType.Blank;
+        }
 
-        public int GetArrayLength()
+        public override UntypedObjectBase IndexOf(int index) => new JsonUntypedObject(_element[index]);
+
+        public override int ArrayLength()
         {
             return _element.GetArrayLength();
         }
 
-        public double GetDouble()
+        public override double AsDouble()
         {
             return _element.GetDouble();
         }
 
-        public string GetString()
+        public override string AsString()
         {
             return _element.GetString();
         }
 
-        public bool GetBoolean()
+        public override bool AsBoolean()
         {
             return _element.GetBoolean();
         }
 
-        public bool TryGetProperty(string value, out IUntypedObject result)
+        public override UntypedObjectBase GetProperty(string propertyName)
+        {                        
+            return new JsonUntypedObject(_element.GetProperty(propertyName));            
+        }
+
+        public override string[] PropertyNames()
         {
-            var res = _element.TryGetProperty(value, out var je);
-            result = new JsonUntypedObject(je);
-            return res;
+            return _element.EnumerateObject().Select(je => je.Name).ToArray();
         }
     }
 }

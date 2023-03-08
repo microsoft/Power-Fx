@@ -435,6 +435,18 @@ namespace Microsoft.PowerFx
 
             if (arg1 is UntypedObjectValue cov && arg2 is StringValue sv)
             {
+                if (cov.Impl is UntypedObjectBase uob)
+                {
+                    UntypedObjectBase uob2 = uob.GetProperty(sv.Value);
+
+                    if (uob2.IsBlank())
+                    {
+                        return new BlankValue(node.IRContext);
+                    }
+
+                    return new UntypedObjectValue(node.IRContext, uob2);
+                }
+
                 if (cov.Impl.Type is ExternalType et && et.Kind == ExternalTypeKind.Object)
                 {
                     if (cov.Impl.TryGetProperty(sv.Value, out var res))

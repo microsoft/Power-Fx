@@ -33,6 +33,18 @@ namespace Microsoft.PowerFx.Functions
             var index1 = (int)arg1.Value;
             var index0 = index1 - 1; // 1-based index
 
+            if (arg0.Impl is UntypedObjectBase uob)
+            {
+                if (uob.IsBlank())
+                {
+                    return new BlankValue(IRContext.NotInSource(FormulaType.Blank));
+                }
+
+                // $$$ Need to manage out of range here
+
+                return new UntypedObjectValue(irContext, uob[index0]);
+            }
+
             // Error pipeline already caught cases of too low. 
             if (index0 < len)
             {
@@ -138,6 +150,11 @@ namespace Microsoft.PowerFx.Functions
             var uo = args[0] as UntypedObjectValue;
             var impl = uo.Impl;
 
+            if (impl is UntypedObjectBase uob)
+            {
+
+            }
+
             if (impl.Type == FormulaType.String)
             {
                 var str = new StringValue(IRContext.NotInSource(FormulaType.String), impl.GetString());
@@ -213,10 +230,17 @@ namespace Microsoft.PowerFx.Functions
         }
 
         private static FormulaValue UntypedObjectArrayChecker(IRContext irContext, int index, FormulaValue arg)
-        {
+        {            
             if (arg is UntypedObjectValue cov)
             {
-                if (cov.Impl.Type == FormulaType.Blank)
+                if (cov.Impl is UntypedObjectBase uob)
+                {
+                    if (uob.HasCapability(UntypedObjectCapabilities.SupportsArray))
+                    {
+                        return arg;
+                    }
+                }
+                else if (cov.Impl.Type == FormulaType.Blank)
                 {
                     return new BlankValue(irContext);
                 }
