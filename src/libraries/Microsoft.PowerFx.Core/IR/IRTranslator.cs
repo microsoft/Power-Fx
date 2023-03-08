@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Functions;
@@ -941,7 +942,7 @@ namespace Microsoft.PowerFx.Core.IR
 
             private static System.Drawing.Color ConvertToColor(object inputValue)
             {
-                var value = Convert.ToUInt32(inputValue);
+                var value = Convert.ToUInt32(inputValue, CultureInfo.InvariantCulture);
                 return System.Drawing.Color.FromArgb(
                             (byte)((value >> 24) & 0xFF),
                             (byte)((value >> 16) & 0xFF),
