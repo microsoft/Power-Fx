@@ -186,7 +186,7 @@ namespace Microsoft.PowerFx.Intellisense
         // For debugging.
         public override string ToString()
         {
-            return string.Format("{0}: {1}", Text, Kind);
+            return string.Format(CultureInfo.InvariantCulture, "{0}: {1}", Text, Kind);
         }
 
         // For debugging.
@@ -195,16 +195,16 @@ namespace Microsoft.PowerFx.Intellisense
             Contracts.AssertValue(sb);
             if (Kind == SuggestionKind.Function)
             {
-                sb.AppendLine(string.Format("Function {0}, arg index {1}", Text, ArgIndex));
+                sb.AppendLine(string.Format(CultureInfo.InvariantCulture, "Function {0}, arg index {1}", Text, ArgIndex));
                 sb.AppendLine("Overloads:");
                 foreach (var overload in _overloads)
                 {
-                    sb.AppendLine(string.Format(overload.DisplayText.ToString()));
+                    sb.AppendLine(string.Format(CultureInfo.InvariantCulture, overload.DisplayText.ToString()));
                 }
             }
             else
             {
-                sb.AppendFormat("{0}: {1}", Text, Kind);
+                sb.AppendFormat(CultureInfo.InvariantCulture, "{0}: {1}", Text, Kind);
             }
 
             sb.AppendLine();
@@ -231,7 +231,7 @@ namespace Microsoft.PowerFx.Intellisense
                 return 1;
             }
 
-            return SortPriority == other.SortPriority ? Text.CompareTo(other.Text) : (int)(other.SortPriority - SortPriority);
+            return SortPriority == other.SortPriority ? string.Compare(Text, other.Text, StringComparison.Ordinal) : (int)(other.SortPriority - SortPriority);
         }
 
         public bool Equals(IntellisenseSuggestion other)

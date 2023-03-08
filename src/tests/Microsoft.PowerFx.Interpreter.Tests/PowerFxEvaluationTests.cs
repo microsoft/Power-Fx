@@ -83,7 +83,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var r2 = FormulaValue.NewRecordFromFields(new NamedValue("OptionSetField1", o2Val), new NamedValue("StrField1", FormulaValue.New("test2")));
             var r3 = FormulaValue.NewRecordFromFields(new NamedValue("OptionSetField1", o1Val), new NamedValue("StrField1", FormulaValue.New("test3")));
             var r4 = FormulaValue.NewRecordFromFields(new NamedValue("OptionSetField1", o2Val), new NamedValue("StrField1", FormulaValue.New("test4")));
-            
+
             // Testing with missing/blank option set field is throwing an exception. Once that is resolved uncomment and fix the test case in Sort.txt
             var r5 = FormulaValue.NewRecordFromFields(new NamedValue("StrField1", FormulaValue.New("test5")));
 
@@ -304,9 +304,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
                 var symbolValues = SymbolValues.NewFromRecord(symbolTable, parameters);
                 var runtimeConfig = new RuntimeConfig(symbolValues);
-                                
+
                 if (iSetup.TimeZoneInfo != null)
-                {                    
+                {
                     runtimeConfig.AddService(iSetup.TimeZoneInfo);
                 }
 
