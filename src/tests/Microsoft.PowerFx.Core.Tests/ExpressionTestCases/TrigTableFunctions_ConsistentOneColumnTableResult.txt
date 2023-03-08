@@ -74,3 +74,22 @@ Table({Value:0},{Value:180},{Value:90},{Value:-90},{Value:270},{Value:360},{Valu
 
 >> Round(Radians(Table({a:0}, {a:1}, {a:-1}, {a:180}, {a:90}, {a:-180}, {a:-90}, {a:-360}, {a:Blank()})), 4)
 Table({Value:0},{Value:0.0175},{Value:-0.0175},{Value:3.1416},{Value:1.5708},{Value:-3.1416},{Value:-1.5708},{Value:-6.2832},{Value:0})
+
+// ####### Coercions
+>> Sin(["0"])
+Table({Value:0})
+
+>> If(1<0,Sin(["0"]))
+Blank()
+
+>> Sin(If(Sqrt(-1)<0,["0"]))
+Error({Kind:ErrorKind.Numeric})
+
+>> Cos(["0"])
+Table({Value:1})
+
+>> If(1<0,Cos(["0"]))
+Blank()
+
+>> Cos(If(Sqrt(-1)<0,["0"]))
+Error({Kind:ErrorKind.Numeric})
