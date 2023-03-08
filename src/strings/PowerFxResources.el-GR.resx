@@ -153,7 +153,7 @@
     
   </data>
   <data name="SwitchExpression" xml:space="preserve">
-    <value>τιμή_εναλλαγής</value>
+    <value>αλλαγή_τιμής</value>
     
   </data>
   <data name="SwitchDefaultReturn" xml:space="preserve">
@@ -161,7 +161,7 @@
     
   </data>
   <data name="SwitchCaseExpr" xml:space="preserve">
-    <value>τιμή_συμφωνίας</value>
+    <value>column_name</value>
     
   </data>
   <data name="SwitchCaseArg" xml:space="preserve">
@@ -169,11 +169,11 @@
     
   </data>
   <data name="AboutSwitch_switch_value" xml:space="preserve">
-    <value>Τιμή προς σύγκριση με κάθε τιμή_συμφωνίας.</value>
+    <value>Τιμή προς σύγκριση με κάθε match_value.</value>
     
   </data>
   <data name="AboutSwitch_match_value" xml:space="preserve">
-    <value>Τιμή προς σύγκριση με την τιμή_εναλλαγής.</value>
+    <value>Τιμή προς αντιστοίχιση με την αλλαγή_τιμής.</value>
     
   </data>
   <data name="AboutSwitch_match_result" xml:space="preserve">
@@ -795,7 +795,7 @@
     
   </data>
   <data name="AboutIfError_fallback" xml:space="preserve">
-    <value>Η τιμή που επιστρέφεται αν πρόκειται για το πρώτο όρισμα που δεν είναι σφάλμα.</value>
+    <value>Η τιμή που επιστρέφεται αν το προηγούμενο όρισμα είναι σφάλμα.</value>
     
   </data>
   <data name="AboutSubstitute" xml:space="preserve">
@@ -1847,6 +1847,10 @@
   </data>
   <data name="ErrTextInvalidFormat" xml:space="preserve">
     <value>Μη έγκυρη μορφή.</value>
+    
+  </data>
+  <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
+    <value>Το όρισμα δεν αντιπροσωπεύει έγκυρη τιμή ημερομηνίας ή ώρας.</value>
     
   </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
@@ -3192,7 +3196,7 @@
     
   </data>
   <data name="LayoutMode_Auto_DisplayName" xml:space="preserve">
-    <value>Αυτόματος</value>
+    <value>Αυτόματο</value>
     
   </data>
   <data name="LayoutDirection_Horizontal_DisplayName" xml:space="preserve">
@@ -3200,7 +3204,7 @@
     
   </data>
   <data name="LayoutDirection_Vertical_DisplayName" xml:space="preserve">
-    <value>Κατακόρυφος</value>
+    <value>Κατακόρυφα</value>
     
   </data>
   <data name="LayoutAlignItems_Start_DisplayName" xml:space="preserve">
@@ -3396,7 +3400,7 @@
     
   </data>
   <data name="DateTimeZone_Local_DisplayName" xml:space="preserve">
-    <value>Local</value>
+    <value>Τοπικός</value>
     
   </data>
   <data name="DateTimeZone_UTC_DisplayName" xml:space="preserve">
@@ -3436,7 +3440,7 @@
     
   </data>
   <data name="Layout_Horizontal_DisplayName" xml:space="preserve">
-    <value>Οριζόντια</value>
+    <value>Οριζόντιος</value>
     
   </data>
   <data name="Layout_Vertical_DisplayName" xml:space="preserve">
@@ -3508,7 +3512,7 @@
     
   </data>
   <data name="BarcodeType_DataMatrix_DisplayName" xml:space="preserve">
-    <value>Data Matrix</value>
+    <value>Πίνακας δεδομένων</value>
     
   </data>
   <data name="BarcodeType_Ean_DisplayName" xml:space="preserve">
@@ -3576,7 +3580,7 @@
     
   </data>
   <data name="LoadingSpinner_None_DisplayName" xml:space="preserve">
-    <value>Κανένας</value>
+    <value>Κανένα</value>
     
   </data>
   <data name="NotificationType_Error_DisplayName" xml:space="preserve">
@@ -4418,6 +4422,10 @@
     <value>Βεβαιωθείτε ότι έχετε κείμενο για το αναγνωριστικό. Αυτό το σφάλμα παρουσιάζεται όταν το αναγνωριστικό αποτελείται μόνο από κενά ή διαστήματα.</value>
     
   </data>
+  <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
+    <value>Unable to compare values of type {0}.</value>
+    
+  </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
     <value>Ασύμβατοι τύποι για σύγκριση. Δεν είναι δυνατή η σύγκριση αυτών των τύπων: {0}, {1}.</value>
     
@@ -4834,8 +4842,18 @@
     <value>Αυτή η συνάρτηση είναι διφορούμενη, περιέχει παραστάσεις λάμδα και αναγνωριστικά στηλών για το ίδιο όρισμα.</value>
     
   </data>
-  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
-    <value>Η επιλογή BooleanOptionSet {0} δεν υποστηρίζεται.</value>
+  <data name="OptionSetOptionNotSupported" xml:space="preserve">
+    <value>The value of option {0} is not of expected type {1}.</value>
     
+  </data>
+  <data name="AboutOptionSetInfo" xml:space="preserve">
+    <value>Επιστρέφει λογικό όνομα της δεδομένης τιμής συνόλου επιλογών.</value>
+    
+  </data>
+  <data name="AboutOptionSetInfoArg1" xml:space="preserve">
+    <value>επιλογή</value>
+  </data>
+  <data name="AboutOptionSetInfo_option" xml:space="preserve">
+    <value>Μια τιμή συνόλου επιλογών του οποίου το λογικό όνομα θα επιστραφεί.</value>
   </data>
 </root>

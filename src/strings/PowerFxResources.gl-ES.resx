@@ -795,7 +795,7 @@
     
   </data>
   <data name="AboutIfError_fallback" xml:space="preserve">
-    <value>Valor que se devolve se é o primeiro argumento sen erros.</value>
+    <value>Valor que se devolve se o argumento anterior é un erro.</value>
     
   </data>
   <data name="AboutSubstitute" xml:space="preserve">
@@ -1847,6 +1847,10 @@
   </data>
   <data name="ErrTextInvalidFormat" xml:space="preserve">
     <value>Formato non válido.</value>
+    
+  </data>
+  <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
+    <value>O argumento non representa un valor de data ou hora válido.</value>
     
   </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
@@ -4225,7 +4229,7 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
-    <value>Este erro aparece cando unha fórmula fai referencia a propiedades de funcionamento de compoñentes con sintaxe non válida. Component.CustomFunction en lugar de Component.CustomFunction())</value>
+    <value>Este erro aparece cando unha fórmula fai referencia ás propiedades dunha función de compoñente con sintaxe non válida. (Por exemplo, Component.CustomFunction en lugar de Component.CustomFunction())</value>
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
     <value>Use a sintaxe correcta para facer referencia á propiedade de funcionamento do compoñente. Por exemplo, Component.CustomFunction()</value>
@@ -4416,6 +4420,10 @@
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
     <value>Asegúrese de que ten texto para o identificador. Este erro prodúcese cando o identificador consiste só en espazos ou espazos en branco.</value>
+    
+  </data>
+  <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
+    <value>Unable to compare values of type {0}.</value>
     
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
@@ -4834,8 +4842,18 @@
     <value>Esta función é ambigua, contén expresións lambda e identificadores de columna para o mesmo argumento.</value>
     
   </data>
-  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
-    <value>A opción de BooleanOptionSet {0} non é compatible.</value>
+  <data name="OptionSetOptionNotSupported" xml:space="preserve">
+    <value>The value of option {0} is not of expected type {1}.</value>
     
+  </data>
+  <data name="AboutOptionSetInfo" xml:space="preserve">
+    <value>Devolve o nome lóxico do valor do conxunto de opcións indicado.</value>
+    
+  </data>
+  <data name="AboutOptionSetInfoArg1" xml:space="preserve">
+    <value>opción</value>
+  </data>
+  <data name="AboutOptionSetInfo_option" xml:space="preserve">
+    <value>Valor dun conxunto de opcións cuxo nome lóxico se vai devolver.</value>
   </data>
 </root>

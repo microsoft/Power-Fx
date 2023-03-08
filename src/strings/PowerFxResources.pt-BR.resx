@@ -795,7 +795,7 @@
     
   </data>
   <data name="AboutIfError_fallback" xml:space="preserve">
-    <value>Valor que será retornado se for o primeiro argumento sem erro.</value>
+    <value>Valor que será retornado se o argumento anterior não for um erro.</value>
     
   </data>
   <data name="AboutSubstitute" xml:space="preserve">
@@ -1847,6 +1847,10 @@
   </data>
   <data name="ErrTextInvalidFormat" xml:space="preserve">
     <value>Formato inválido.</value>
+    
+  </data>
+  <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
+    <value>O argumento não representa um valor de data ou hora válido.</value>
     
   </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
@@ -4418,6 +4422,10 @@
     <value>Verifique se você tem o texto para o seu identificador. Este erro ocorre quando o identificador é todo de espaços em branco ou espaços.</value>
     
   </data>
+  <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
+    <value>Unable to compare values of type {0}.</value>
+    
+  </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
     <value>Tipos incompatíveis para comparação. Estes tipos não podem ser comparados: {0}, {1}.</value>
     
@@ -4834,8 +4842,18 @@
     <value>Esta função é ambígua, contém expressões lambda e identificadores de colunas para o mesmo argumento.</value>
     
   </data>
-  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
-    <value>The BooleanOptionSet option {0} is not supported.</value>
+  <data name="OptionSetOptionNotSupported" xml:space="preserve">
+    <value>The value of option {0} is not of expected type {1}.</value>
     
+  </data>
+  <data name="AboutOptionSetInfo" xml:space="preserve">
+    <value>Retorna o nome lógico do valor do conjunto de opções fornecido.</value>
+    
+  </data>
+  <data name="AboutOptionSetInfoArg1" xml:space="preserve">
+    <value>opção</value>
+  </data>
+  <data name="AboutOptionSetInfo_option" xml:space="preserve">
+    <value>Um valor do conjunto de opções cujo nome lógico será retornado.</value>
   </data>
 </root>

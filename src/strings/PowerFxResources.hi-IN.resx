@@ -359,7 +359,7 @@
     
   </data>
   <data name="AboutDropColumns" xml:space="preserve">
-    <value>'स्रोत' तालिका से निकाले गए एक या अधिक निर्दिष्ट 'स्तंभों' वाली तालिका लौटाता है.</value>
+    <value>'source' तालिका से निकाले गए एक या अधिक निर्दिष्ट 'columns' वाली तालिका लौटाता है.</value>
     
   </data>
   <data name="DropColumnsArg1" xml:space="preserve">
@@ -395,11 +395,11 @@
     <value>प्रत्येक पंक्ति का मूल्यांकन करने के लिए तार्किक परीक्षण. फ़िल्टर के परिणाम में केवल यह परीक्षण पूरा करने वाली पंक्तियाँ शामिल की जाएँगी.</value>
   </data>
   <data name="AboutFirst" xml:space="preserve">
-    <value>'स्रोत' की पहली पंक्ति लौटाता है.</value>
+    <value>'source' की पहली पंक्ति लौटाता है.</value>
     
   </data>
   <data name="AboutLast" xml:space="preserve">
-    <value>'स्रोत' की अंतिम पंक्ति लौटाता है.</value>
+    <value>'source' की अंतिम पंक्ति लौटाता है.</value>
     
   </data>
   <data name="FirstLastArg1" xml:space="preserve">
@@ -413,11 +413,11 @@
     <value>एक तालिका जिसकी अंतिम पंक्ति लौटाई जाएगी.</value>
   </data>
   <data name="AboutFirstN" xml:space="preserve">
-    <value>'स्रोत' की पहली 'गणना' पंक्तियाँ लौटाता है.</value>
+    <value>'source' की पहली 'count' पंक्तियाँ लौटाता है.</value>
     
   </data>
   <data name="AboutLastN" xml:space="preserve">
-    <value>'स्रोत' की अंतिम 'गणना' पंक्तियाँ लौटाता है.</value>
+    <value>'source' की अंतिम 'count' पंक्तियाँ लौटाता है.</value>
     
   </data>
   <data name="FirstLastNArg1" xml:space="preserve">
@@ -795,7 +795,7 @@
     
   </data>
   <data name="AboutIfError_fallback" xml:space="preserve">
-    <value>मान जो वापस किया जाता है अगर यह पहली गैर त्रुटि तर्क है.</value>
+    <value>मान जो पिछला तर्क त्रुटि होने पर लौटाया जाता है.</value>
     
   </data>
   <data name="AboutSubstitute" xml:space="preserve">
@@ -842,7 +842,7 @@
     <value>संसाधित किए जाने वाले पाठ मानों का स्तंभ.</value>
   </data>
   <data name="AboutSort" xml:space="preserve">
-    <value>प्रत्येक पंक्ति के लिए मूल्यांकित 'expression' के परिणामों के आधार पर, वैकल्पिक रूप से एक सॉर्ट 'क्रम' निर्दिष्‍ट करते हुए 'source' को सॉर्ट करता है.</value>
+    <value>प्रत्येक पंक्ति के लिए मूल्यांकित 'expression' के परिणामों के आधार पर, वैकल्पिक रूप से एक सॉर्ट 'order' निर्दिष्‍ट करते हुए 'source' को सॉर्ट करता है.</value>
     
   </data>
   <data name="SortArg1" xml:space="preserve">
@@ -1003,11 +1003,11 @@
     <value>तिथि मान जिसके लिए ISO सप्ताह संख्या की गणना की जाएगी.</value>
   </data>
   <data name="AboutInt" xml:space="preserve">
-    <value>नकारात्मक अनंत की ओर गोल करके 'संख्या' को छोटा करता है.</value>
+    <value>नकारात्मक अनंत की ओर पूर्णांकन करके 'number' को कम करता है.</value>
     
   </data>
   <data name="AboutIntT" xml:space="preserve">
-    <value>नकारात्मक अनंत की ओर गोल करके संख्याओं के कॉलम में मानों को छोटा करता है.</value>
+    <value>नकारात्मक अनंत की ओर पूर्णांकन करके संख्याओं के कॉलम में मानों को कम करता है.</value>
     
   </data>
   <data name="AboutInt_number" xml:space="preserve">
@@ -1017,7 +1017,7 @@
     <value>संसाधित करने के लिए सांख्यिक मानों का स्तंभ.</value>
   </data>
   <data name="AboutTrunc" xml:space="preserve">
-    <value>शून्य की ओर पूर्णांकन करके 'संख्या' को छोटा करता है.</value>
+    <value>शून्य की ओर पूर्णांकन करके 'number' को छोटा करता है.</value>
     
   </data>
   <data name="AboutTrunc_number" xml:space="preserve">
@@ -1030,7 +1030,7 @@
     <value>पूर्णांकन के लिए इस्तेमाल किए जाने वाले भिन्नात्मक अंकों की संख्या.</value>
   </data>
   <data name="AboutTruncT" xml:space="preserve">
-    <value>सभी संख्याओं को 'स्रोत' में शून्य की ओर पूर्णांकन करके छोटा करता है.</value>
+    <value>सभी संख्याओं को 'source' में शून्य की ओर पूर्णांकन करके छोटा करता है.</value>
     
   </data>
   <data name="TruncArg1" xml:space="preserve">
@@ -1097,7 +1097,7 @@
     <value>पूर्णांक बनाने के लिए उपयोग किए जाने वाले भिन्नात्मक अंकों की संख्या.</value>
   </data>
   <data name="AboutRoundT" xml:space="preserve">
-    <value>source' की सभी संख्याओं को अंकों की निर्दिष्ट संख्या में पूर्णांक बनाता है.</value>
+    <value>'source' की सभी संख्याओं को अंकों की निर्दिष्ट संख्या में पूर्णांक बनाता है.</value>
     
   </data>
   <data name="AboutRoundUpT" xml:space="preserve">
@@ -1105,7 +1105,7 @@
     
   </data>
   <data name="AboutRoundDownT" xml:space="preserve">
-    <value>source' की सभी संख्याओं को नीचे, शून्य की ओर पूर्णांक बनाता है.</value>
+    <value>'source' की सभी संख्याओं को नीचे, शून्य की ओर पूर्णांक बनाता है.</value>
     
   </data>
   <data name="RoundTArg1" xml:space="preserve">
@@ -1184,7 +1184,7 @@
     <value>ऐसा प्रतिशत (या प्रतिशत मानों का स्तंभ) जिससे रंग (या रंग मानों का स्तंभ) फ़ेड हो जाएगा. एक नकारात्मक प्रतिशत से गहरी छाया उत्पन्न होती है. एक सकारात्मक प्रतिशत से हल्की छाया उत्पन्न होती है.</value>
   </data>
   <data name="AboutAbs" xml:space="preserve">
-    <value>किसी संख्या का पूर्ण मान लौटाता है, चिह्न रहित एक संख्या.</value>
+    <value>किसी संख्या का निरपेक्ष मान लौटाता है, चिह्न रहित एक संख्या.</value>
     
   </data>
   <data name="AboutAbsT" xml:space="preserve">
@@ -1600,7 +1600,7 @@
     
   </data>
   <data name="AboutSplit" xml:space="preserve">
-    <value>डिलिमिटर का उपयोग करके एक पंक्ति को उपपंक्तियों में विभाजित करें.</value>
+    <value>डिलिमिटर का उपयोग करके एक स्ट्रिंग को उपपंक्तियों में विभाजित करें.</value>
     
   </data>
   <data name="AboutSplit_text" xml:space="preserve">
@@ -1620,7 +1620,7 @@
     
   </data>
   <data name="AboutIsType" xml:space="preserve">
-    <value>यदि प्रदान किया गया मान दिए गए प्रकार का है, तो true लौटाता है.</value>
+    <value>"यदि प्रदान किया गया मान दिए गए प्रकार का है, तो सही लौटाता है."</value>
     
   </data>
   <data name="IsTypeArg1" xml:space="preserve">
@@ -1706,7 +1706,7 @@
     
   </data>
   <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
-    <value>{0}' नामस्थान '{1}' में एक अज्ञात या असमर्थित फ़ंक्शन है.</value>
+    <value>'{0}' नेमस्पेस '{1}' में एक अज्ञात या असमर्थित फ़ंक्शन है.</value>
     
   </data>
   <data name="ErrUnSupportedComponentBehaviorInvocation" xml:space="preserve">
@@ -1849,6 +1849,10 @@
     <value>अमान्य फ़ॉर्मैट.</value>
     
   </data>
+  <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
+    <value>तर्क मान्य दिनांक या समय मान का प्रतिनिधित्व नहीं करता है.</value>
+    
+  </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
     <value>यह डेटा स्रोत अमान्य है. कृपया "सामग्री -&gt; डेटा स्रोत" या "देखें -&gt; विकल्प" क्लिक करके "डेटा स्रोत" फलक की त्रुटि सुधारें</value>
     
@@ -1922,7 +1926,7 @@
     
   </data>
   <data name="ErrAsyncLambda" xml:space="preserve">
-    <value>एसिन्क्रॉनस इनवोकेशंस का उपयोग शर्तों और मान फ़ंक्शंस में नहीं किया जा सकता है.</value>
+    <value>एसिन्क्रॉनस इनवोकेशंस का उपयोग शर्तों और मान फ़ंक्‍शन में नहीं किया जा सकता है.</value>
     
   </data>
   <data name="ErrValueMustBeFullyQualified" xml:space="preserve">
@@ -1930,11 +1934,11 @@
     
   </data>
   <data name="ErrScopeModificationLambda" xml:space="preserve">
-    <value>यह कार्य {0} में प्रयुक्त एक ही डेटा स्त्रोत में काम नहीं कर सकता है.</value>
+    <value>यह फ़ंक्‍शन {0} में प्रयुक्त एक ही डेटा स्रोत में काम नहीं कर सकता है.</value>
     
   </data>
   <data name="ErrFunctionDisallowedWithinNondeterministicOperationOrder" xml:space="preserve">
-    <value>इस कार्य को {0} के भीतर लागू नहीं किया जा सकता है.</value>
+    <value>इस फ़ंक्‍शन को {0} के भीतर लागू नहीं किया जा सकता है.</value>
     
   </data>
   <data name="ErrAsTypeAndIsTypeExpectConnectedDataSource" xml:space="preserve">
@@ -1942,7 +1946,7 @@
     
   </data>
   <data name="InfoMessage" xml:space="preserve">
-    <value>संदेश</value>
+    <value>संदेश: </value>
     
   </data>
   <data name="InfoNode_Node" xml:space="preserve">
@@ -2062,7 +2066,7 @@
     <value>दिनांक का ऐसा मान जिससे वर्ष घटक का निष्कर्षण किया जाएगा.</value>
   </data>
   <data name="AboutMonth" xml:space="preserve">
-    <value>माह लौटाता है, जो कि 1 (जनवरी) से 12 (दिसंबर) तक की संख्या है.</value>
+    <value>माह लौटाता है, जो 1 (जनवरी) से 12 (दिसंबर) तक की संख्या है.</value>
     
   </data>
   <data name="MonthArg1" xml:space="preserve">
@@ -2200,7 +2204,7 @@
     <value>प्रदत्त लेख का भाषा कोड.</value>
   </data>
   <data name="ErrAutoRefreshNotAllowed" xml:space="preserve">
-    <value>सेवा फ़ंक्शंस को स्वचालित रूप से ताज़ा करना का उपयोग कार्रवाई नियमों में नहीं किया जा सकता है.</value>
+    <value>सेवा फ़ंक्‍शन को स्वचालित रूप से ताज़ा करना का उपयोग कार्रवाई नियमों में नहीं किया जा सकता है.</value>
     
   </data>
   <data name="ErrMultipleValuesForField_Name" xml:space="preserve">
@@ -2445,7 +2449,7 @@
     <value>अंतर की कार्रवाई के लिए समाप्ति दिनांकों का स्तंभ..</value>
   </data>
   <data name="AboutChar" xml:space="preserve">
-    <value>आपके प्लेटफ़ॉर्म पर कैरेक्टर सेट से कोड संख्या द्वारा निर्दिष्ट कैरेक्टर लौटाता है.</value>
+    <value>आपके प्लेटफ़ॉर्म पर वर्ण सेट से कोड संख्या द्वारा निर्दिष्ट वर्ण लौटाता है.</value>
     
   </data>
   <data name="CharArg1" xml:space="preserve">
@@ -2456,7 +2460,7 @@
     <value>आपके प्लेटफ़ॉर्म पर कैरेक्टर सेट से एक कोड संख्या.</value>
   </data>
   <data name="AboutCharT" xml:space="preserve">
-    <value>आपके प्लेटफ़ॉर्म पर कैरेक्टर सेट से कोड संख्याओं द्वारा निर्दिष्ट कैरेक्टर की तालिका लौटाता है.</value>
+    <value>आपके प्लेटफ़ॉर्म पर वर्ण सेट से कोड संख्याओं द्वारा निर्दिष्ट वर्ण की तालिका लौटाता है.</value>
     
   </data>
   <data name="CharTArg1" xml:space="preserve">
@@ -2613,7 +2617,7 @@
     
   </data>
   <data name="text_VirtualKeyboardMode_DisplayName" xml:space="preserve">
-    <value>वर्चुअल कुंजीपटल मोड</value>
+    <value>वर्चुअल कीबोर्ड मोड</value>
     
   </data>
   <data name="text_TeamsTheme_DisplayName" xml:space="preserve">
@@ -2633,7 +2637,7 @@
     
   </data>
   <data name="Align_Center_DisplayName" xml:space="preserve">
-    <value>केंद्र में संरेखित करें</value>
+    <value>सेंटर में संरेखित करें</value>
     
   </data>
   <data name="Align_Justify_DisplayName" xml:space="preserve">
@@ -2681,7 +2685,7 @@
     <value>ऐसा रेकॉर्ड जो परिणामी तालिका में पंक्ति बन जाएगा.</value>
   </data>
   <data name="AboutShowColumns" xml:space="preserve">
-    <value>source' तालिका से निर्दिष्ट स्तंभों को छोड़कर सभी स्तंभ के साथ निकाली गई तालिका लौटाता है.</value>
+    <value>'source' तालिका से निर्दिष्ट स्तंभों को छोड़कर सभी स्तंभ के साथ निकाली गई तालिका लौटाता है.</value>
     
   </data>
   <data name="ShowColumnsArg1" xml:space="preserve">
@@ -2815,7 +2819,7 @@
     
   </data>
   <data name="AboutStartsWith" xml:space="preserve">
-    <value>प्रान किया गया पाठ यदि प्रदान की गई स्ट्रिंग से प्रारंभ होता है, तो सही वापस लौटाता है.</value>
+    <value>प्रदान किया गया पाठ यदि प्रदान की गई स्ट्रिंग से प्रारंभ होता है, तो सत्य वापस लौटाता है.</value>
     
   </data>
   <data name="AboutStartsWith_text" xml:space="preserve">
@@ -2829,7 +2833,7 @@
     
   </data>
   <data name="StartsWithArg2" xml:space="preserve">
-    <value>प्रारंभ_करें</value>
+    <value>प्रारंभ करें</value>
     
   </data>
   <data name="AboutEndsWith" xml:space="preserve">
@@ -2847,7 +2851,7 @@
     
   </data>
   <data name="EndsWithArg2" xml:space="preserve">
-    <value>समाप्त</value>
+    <value>समाप्ति</value>
     
   </data>
   <data name="AboutBlank" xml:space="preserve">
@@ -3084,7 +3088,7 @@
     
   </data>
   <data name="Icon_VerticalLine_DisplayName" xml:space="preserve">
-    <value>वर्टिकल लाइन</value>
+    <value>ऊर्ध्वाधर लाइन</value>
     
   </data>
   <data name="Icon_Video_DisplayName" xml:space="preserve">
@@ -3152,11 +3156,11 @@
     
   </data>
   <data name="SuggestRemoteExecutionHint_StringMatchSecondParam" xml:space="preserve">
-    <value>इस सूत्र के भाग का मूल्यांकन दूरस्थ रूप से नहीं किया जा सकता. अगर फ़ील्ड नाम दूसरे तर्क में दिखाई देता है, '{0}' फ़ंक्शन प्रत्यायोजित नहीं किया जा सकता है.</value>
+    <value>इस सूत्र के भाग का मूल्यांकन दूरस्थ रूप से नहीं किया जा सकता. अगर फ़ील्ड नाम दूसरे तर्क में दिखाई देता है, तो '{0}' फ़ंक्शन प्रत्यायोजित नहीं किया जा सकता है.</value>
     
   </data>
   <data name="entityForm_EntityForm_DisplayName" xml:space="preserve">
-    <value>इकाई फॉर्म</value>
+    <value>इकाई फ़ॉर्म</value>
     
   </data>
   <data name="BorderStyle_None_DisplayName" xml:space="preserve">
@@ -3200,7 +3204,7 @@
     
   </data>
   <data name="LayoutDirection_Vertical_DisplayName" xml:space="preserve">
-    <value>लंबवत</value>
+    <value>ऊर्ध्वाधर</value>
     
   </data>
   <data name="LayoutAlignItems_Start_DisplayName" xml:space="preserve">
@@ -3216,7 +3220,7 @@
     
   </data>
   <data name="LayoutAlignItems_Stretch_DisplayName" xml:space="preserve">
-    <value>प्रसारित</value>
+    <value>स्ट्रेच</value>
     
   </data>
   <data name="AlignInContainer_Start_DisplayName" xml:space="preserve">
@@ -3232,7 +3236,7 @@
     
   </data>
   <data name="AlignInContainer_Stretch_DisplayName" xml:space="preserve">
-    <value>प्रसारित</value>
+    <value>स्ट्रेच</value>
     
   </data>
   <data name="AlignInContainer_SetByContainer_DisplayName" xml:space="preserve">
@@ -3252,15 +3256,15 @@
     
   </data>
   <data name="LayoutJustifyContent_SpaceEvenly_DisplayName" xml:space="preserve">
-    <value>अंतरिक्ष समान रूप से</value>
+    <value>समान रूप से बंटी जगह</value>
     
   </data>
   <data name="LayoutJustifyContent_SpaceAround_DisplayName" xml:space="preserve">
-    <value>स्थान के आसपास</value>
+    <value>आसपास की जगह</value>
     
   </data>
   <data name="LayoutJustifyContent_SpaceBetween_DisplayName" xml:space="preserve">
-    <value>बीच का स्थान</value>
+    <value>बीच की जगह</value>
     
   </data>
   <data name="LayoutOverflow_Hide_DisplayName" xml:space="preserve">
@@ -3268,7 +3272,7 @@
     
   </data>
   <data name="LayoutOverflow_Scroll_DisplayName" xml:space="preserve">
-    <value>स्क्रॉल</value>
+    <value>स्क्रॉल करें</value>
     
   </data>
   <data name="Overflow_Hidden_DisplayName" xml:space="preserve">
@@ -3300,27 +3304,27 @@
     
   </data>
   <data name="VirtualKeyboardMode_Auto_DisplayName" xml:space="preserve">
-    <value>स्वत: कुंजीपटल</value>
+    <value>स्वत: कीबोर्ड</value>
     
   </data>
   <data name="VirtualKeyboardMode_Numeric_DisplayName" xml:space="preserve">
-    <value>संख्यात्मक कुंजीपटल</value>
+    <value>संख्यात्मक कीबोर्ड</value>
     
   </data>
   <data name="VirtualKeyboardMode_Text_DisplayName" xml:space="preserve">
-    <value>पाठ कुंजीपटल</value>
+    <value>पाठ कीबोर्ड</value>
     
   </data>
   <data name="TeamsTheme_Default_DisplayName" xml:space="preserve">
-    <value>डिफ़ॉल्ट विषयवस्तु</value>
+    <value>डिफ़ॉल्ट थीम</value>
     
   </data>
   <data name="TeamsTheme_Dark_DisplayName" xml:space="preserve">
-    <value>गहरे थीम</value>
+    <value>डार्क थीम</value>
     
   </data>
   <data name="TeamsTheme_Contrast_DisplayName" xml:space="preserve">
-    <value>कॉन्ट्रास्ट विषयवस्तु</value>
+    <value>कॉन्ट्रास्ट थीम</value>
     
   </data>
   <data name="AboutCollect" xml:space="preserve">
@@ -3412,7 +3416,7 @@
     
   </data>
   <data name="ImagePosition_Stretch_DisplayName" xml:space="preserve">
-    <value>खिंचाव</value>
+    <value>स्ट्रेच</value>
     
   </data>
   <data name="ImagePosition_Tile_DisplayName" xml:space="preserve">
@@ -3420,7 +3424,7 @@
     
   </data>
   <data name="ImagePosition_Center_DisplayName" xml:space="preserve">
-    <value>मध्य</value>
+    <value>सेंटर</value>
     
   </data>
   <data name="VerticalAlign_Top_DisplayName" xml:space="preserve">
@@ -3808,7 +3812,7 @@
     
   </data>
   <data name="Icon_CalendarBlank_DisplayName" xml:space="preserve">
-    <value>कैलंडर रिक्त</value>
+    <value>कैलेंडर रिक्त</value>
     
   </data>
   <data name="Icon_OfficeBuilding_DisplayName" xml:space="preserve">
@@ -4064,7 +4068,7 @@
     
   </data>
   <data name="FormulaColumns_TimeZoneConversion" xml:space="preserve">
-    <value>इस इनपुट पर टाइम जोन कनवर्जन के बिना {0} को कार्यान्वित नहीं किया जा सकता है, जो फॉर्मूला कॉलम में समर्थित नहीं है.</value>
+    <value>इस इनपुट पर समय क्षेत्र कनवर्जन के बिना {0} को कार्यान्वित नहीं किया जा सकता है, जो फॉर्मूला कॉलम में समर्थित नहीं है.</value>
     
   </data>
   <data name="FormulaColumns_IncompatibleDateTimes" xml:space="preserve">
@@ -4236,7 +4240,7 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_ShortMessage" xml:space="preserve">
-    <value>'पैरेंट' का संदर्भ मान्य नहीं है. आप इस प्रसंग में किसी पैरेंट नियंत्रण का संदर्भ नहीं दे सकते.</value>
+    <value>'Parent' का संदर्भ मान्य नहीं है. आप इस प्रसंग में किसी पैरेंट नियंत्रण का संदर्भ नहीं दे सकते.</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_LongMessage" xml:space="preserve">
@@ -4416,6 +4420,10 @@
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
     <value>सुनिश्चित करें कि आपके पास अपने पहचानकर्ता के लिए पाठ है. यह त्रुटि तब होती है, जब पहचानकर्ता पूरी तरह रिक्त हो या उसमें रिक्त स्थान हो.</value>
+    
+  </data>
+  <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
+    <value>Unable to compare values of type {0}.</value>
     
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
@@ -4834,8 +4842,18 @@
     <value>यह फ़ंक्शन संदिग्ध है, इसमें इसी तरह के तर्क के लिए लैम्बडा एक्सप्रेशन्स और स्तंभ आइडेंटिफ़ायर शामिल हैं.</value>
     
   </data>
-  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
-    <value>BooleanOptionSet विकल्प {0} समर्थित नहीं है.</value>
+  <data name="OptionSetOptionNotSupported" xml:space="preserve">
+    <value>The value of option {0} is not of expected type {1}.</value>
     
+  </data>
+  <data name="AboutOptionSetInfo" xml:space="preserve">
+    <value>दिए गए विकल्प सेट मान का तार्किक नाम लौटाता है.</value>
+    
+  </data>
+  <data name="AboutOptionSetInfoArg1" xml:space="preserve">
+    <value>"विकल्प"</value>
+  </data>
+  <data name="AboutOptionSetInfo_option" xml:space="preserve">
+    <value>एक विकल्प सेट मान जिसका तार्किक नाम दिया जाएगा.</value>
   </data>
 </root>
