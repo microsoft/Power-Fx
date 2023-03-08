@@ -939,7 +939,7 @@ namespace Microsoft.PowerFx.Core.IR
                 return new UnaryOpNode(IRContext.NotInSource(FormulaType.Build(toType)), unaryOpKind, child);
             }
 
-            private System.Drawing.Color ConvertToColor(object inputValue)
+            private static System.Drawing.Color ConvertToColor(object inputValue)
             {
                 var value = Convert.ToUInt32(inputValue);
                 return System.Drawing.Color.FromArgb(
