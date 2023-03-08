@@ -795,7 +795,7 @@
     
   </data>
   <data name="AboutIfError_fallback" xml:space="preserve">
-    <value>Vrednost, ki je vrnjena, če je prvi argument brez napake.</value>
+    <value>Vrednost, ki je vrnjena, če je prejšnji argument napaka.</value>
     
   </data>
   <data name="AboutSubstitute" xml:space="preserve">
@@ -1847,6 +1847,10 @@
   </data>
   <data name="ErrTextInvalidFormat" xml:space="preserve">
     <value>Oblika zapisa ni veljavna.</value>
+    
+  </data>
+  <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
+    <value>Argument ne predstavlja veljavne vrednosti za datum ali uro.</value>
     
   </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
@@ -4418,6 +4422,10 @@
     <value>Prepričajte se, da imate besedilo za svoj identifikator. Do te napake pride, če je identifikator prazen ali vsebuje samo presledke.</value>
     
   </data>
+  <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
+    <value>Unable to compare values of type {0}.</value>
+    
+  </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
     <value>Nezdružljivi vrsti za primerjavo. Teh vrst ni mogoče primerjati: {0}, {1}.</value>
     
@@ -4834,8 +4842,18 @@
     <value>Ta funkcija je dvoumna. Za isti argument vsebuje izraze lambda in identifikatorje stolpcev.</value>
     
   </data>
-  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
-    <value>The BooleanOptionSet option {0} is not supported.</value>
+  <data name="OptionSetOptionNotSupported" xml:space="preserve">
+    <value>The value of option {0} is not of expected type {1}.</value>
     
+  </data>
+  <data name="AboutOptionSetInfo" xml:space="preserve">
+    <value>Vrne logično ime navedene vrednosti nabora možnosti.</value>
+    
+  </data>
+  <data name="AboutOptionSetInfoArg1" xml:space="preserve">
+    <value>možnost</value>
+  </data>
+  <data name="AboutOptionSetInfo_option" xml:space="preserve">
+    <value>Vrednost nabora možnosti, za katero bo vrnjeno logično ime.</value>
   </data>
 </root>

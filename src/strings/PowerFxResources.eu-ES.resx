@@ -795,7 +795,7 @@
     
   </data>
   <data name="AboutIfError_fallback" xml:space="preserve">
-    <value>Itzultzen den balioa, errore bat ez den lehen argumentua bada.</value>
+    <value>Itzuliko den balioa, aurreko argumentua errore bat ez bada.</value>
     
   </data>
   <data name="AboutSubstitute" xml:space="preserve">
@@ -1507,7 +1507,7 @@
     
   </data>
   <data name="IsBlankOrErrorArg1" xml:space="preserve">
-    <value>espresioa</value>
+    <value>adierazpena</value>
     
   </data>
   <data name="AboutIsBlankOrError_expression" xml:space="preserve">
@@ -1847,6 +1847,10 @@
   </data>
   <data name="ErrTextInvalidFormat" xml:space="preserve">
     <value>Formatuak ez du balio.</value>
+    
+  </data>
+  <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
+    <value>Argumentuak ez du adierazten erabil daitekeen data- edo ordu-balioa.</value>
     
   </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
@@ -3184,7 +3188,7 @@
     
   </data>
   <data name="DisplayMode_View_DisplayName" xml:space="preserve">
-    <value>Ikusi</value>
+    <value>Ikuspegia</value>
     
   </data>
   <data name="LayoutMode_Manual_DisplayName" xml:space="preserve">
@@ -3420,7 +3424,7 @@
     
   </data>
   <data name="ImagePosition_Center_DisplayName" xml:space="preserve">
-    <value>Erdigunean</value>
+    <value>Erdia</value>
     
   </data>
   <data name="VerticalAlign_Top_DisplayName" xml:space="preserve">
@@ -3548,7 +3552,7 @@
     
   </data>
   <data name="FormMode_View_DisplayName" xml:space="preserve">
-    <value>Ikusi</value>
+    <value>Ikuspegia</value>
     
   </data>
   <data name="FormMode_New_DisplayName" xml:space="preserve">
@@ -4418,6 +4422,10 @@
     <value>Ziurtatu identifikatzaileak testua duela. Identifikatzailea hutsik badago edo zuriuneak soilik baditu gertatu ohi da errore hau.</value>
     
   </data>
+  <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
+    <value>Unable to compare values of type {0}.</value>
+    
+  </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
     <value>Konparazioaren motak ez dira bateragarriak. Ezin dira konparatu honako mota hauek: {0}, {1}.</value>
     
@@ -4834,8 +4842,18 @@
     <value>Funtzioa anbiguoa da: argumentu bereko lambda adierazpenak eta zutabe-identifikatzaileak ditu.</value>
     
   </data>
-  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
-    <value>BooleanOptionSet aukera ({0}) ez da onartzen.</value>
+  <data name="OptionSetOptionNotSupported" xml:space="preserve">
+    <value>The value of option {0} is not of expected type {1}.</value>
     
+  </data>
+  <data name="AboutOptionSetInfo" xml:space="preserve">
+    <value>Emandako aukera multzoaren balioaren izen logikoa itzultzen du.</value>
+    
+  </data>
+  <data name="AboutOptionSetInfoArg1" xml:space="preserve">
+    <value>aukera</value>
+  </data>
+  <data name="AboutOptionSetInfo_option" xml:space="preserve">
+    <value>Aukera multzo baten balioa, zeinaren izen logikoa itzuliko den.</value>
   </data>
 </root>

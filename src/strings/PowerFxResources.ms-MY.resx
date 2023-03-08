@@ -141,11 +141,11 @@
     <value>Syarat yang menghasilkan nilai boolean.</value>
   </data>
   <data name="AboutIf_true_value" xml:space="preserve">
-    <value>Ungkapan yang memberikan hasil Jika If apabila syarat adalah benar.</value>
+    <value>Ungkapan yang memberikan hasil If jika syarat adalah benar.</value>
     
   </data>
   <data name="AboutIf_else_value" xml:space="preserve">
-    <value>Ungkapan yang memberikan hasil Jika If apabila semua syarat yang ditentukan adalah palsu.</value>
+    <value>Ungkapan yang memberikan hasil If jika semua syarat yang ditentukan adalah palsu.</value>
     
   </data>
   <data name="AboutSwitch" xml:space="preserve">
@@ -183,15 +183,15 @@
     <value>Formula untuk dinilai dan dikembalikan jika tiada padanan ditemui.</value>
   </data>
   <data name="AboutAnd" xml:space="preserve">
-    <value>Menyemak sama ada semua argumen adalah benar dan mengembalikan benar jika semua argumen adalah benar.</value>
+    <value>Menyemak sama ada semua argumen adalah benar atau tidak dan mengembalikan benar jika semua argumen adalah benar.</value>
     
   </data>
   <data name="AboutOr" xml:space="preserve">
-    <value>Menyemak sama ada mana-mana argumen adalah benar dan mengembalikan benar atau palsu. Mengembalikan palsu hanya jika semua argumen adalah palsu.</value>
+    <value>Menyemak sama ada mana-mana argumen adalah benar atau tidak, dan mengembalikan benar atau salah. Mengembalikan salah hanya jika semua argumen adalah salah.</value>
     
   </data>
   <data name="AboutNot" xml:space="preserve">
-    <value>Mengubahkan palsu ke benar dan benar ke palsu.</value>
+    <value>Mengubah salah kepada benar dan benar kepada salah.</value>
     
   </data>
   <data name="LogicalFuncParam" xml:space="preserve">
@@ -212,7 +212,7 @@
     
   </data>
   <data name="AboutCountA" xml:space="preserve">
-    <value>Mengira bilangan baris dalam lajur yang tidak kosong.</value>
+    <value>Mengira bilangan baris dalam lajur bukan kosong.</value>
     
   </data>
   <data name="AboutCountRows" xml:space="preserve">
@@ -311,7 +311,7 @@
     
   </data>
   <data name="AboutAverage" xml:space="preserve">
-    <value>Mengembalikan purata (min aritmetik) argumen.</value>
+    <value>Mengembalikan purata (min aritmetik) argumennya.</value>
     
   </data>
   <data name="StatisticalArg" xml:space="preserve">
@@ -331,7 +331,7 @@
     <value>Nilai angka untuk pengendalian sederhana ini.</value>
   </data>
   <data name="AboutAddColumns" xml:space="preserve">
-    <value>Mengembalikan jadual dengan lajur baharu yang dikira dengan menilai semua 'ungkapan' berbanding 'sumber'.</value>
+    <value>Mengembalikan jadual dengan lajur baharu yang dikira dengan menilai semua 'ungkapan' berbanding dengan 'sumber'.</value>
     
   </data>
   <data name="AddColumnsArg1" xml:space="preserve">
@@ -347,7 +347,7 @@
     
   </data>
   <data name="AboutAddColumns_source" xml:space="preserve">
-    <value>Jadual untuk ditambahkan jalur.</value>
+    <value>Jadual untuk ditambahkan lajur.</value>
     
   </data>
   <data name="AboutAddColumns_column" xml:space="preserve">
@@ -355,7 +355,7 @@
     
   </data>
   <data name="AboutAddColumns_expression" xml:space="preserve">
-    <value>Ungkapan yang memberikan nilai untuk lajur baru.</value>
+    <value>Ungkapan yang memberikan nilai untuk lajur baharu.</value>
     
   </data>
   <data name="AboutDropColumns" xml:space="preserve">
@@ -377,7 +377,7 @@
     <value>Nama lajur untuk dialih keluar.</value>
   </data>
   <data name="AboutFilter" xml:space="preserve">
-    <value>Mengembalikan baris dalam jadual yang semua syarat yang ditentukan adalah benar.</value>
+    <value>Mengembalikan baris daripada jadual yang semua syarat yang ditentukan adalah benar.</value>
     
   </data>
   <data name="FilterArg1" xml:space="preserve">
@@ -575,7 +575,7 @@
     <value>Nilai teks, untuk ditambahkan dengan argumen yang selebihnya.</value>
   </data>
   <data name="AboutConcatenateT" xml:space="preserve">
-    <value>Gabungkan beberapa nilai teks atau jadual ke dalam satu lajur nilai teks.</value>
+    <value>Mencantumkan beberapa nilai teks atau jadual ke dalam satu lajur nilai teks.</value>
     
   </data>
   <data name="ConcatenateTArg1" xml:space="preserve">
@@ -586,7 +586,7 @@
     <value>Nilai teks atau lajur nilai teks, untuk ditambahkan dengan argumen lain yang selebihnya.</value>
   </data>
   <data name="AboutConcat" xml:space="preserve">
-    <value>Mencantumkan semua nilai teks yang dihasilkan dengan menilai ungkapan yang diberi ke atas jadual yang diberi menjadi satu nilai teks.</value>
+    <value>Mencantumkan semua nilai teks yang dihasilkan dengan menilai ungkapan yang diberikan ke atas jadual yang diberikan ke dalam satu nilai teks.</value>
     
   </data>
   <data name="ConcatArg1" xml:space="preserve">
@@ -696,7 +696,7 @@
     <value>Lajur nilai teks untuk memangkas ruang putih pendahulu dan mengekor.</value>
   </data>
   <data name="AboutMid" xml:space="preserve">
-    <value>Mengembalikan aksara daripada bahagian tengah nilai teks, diberikan kedudukan dan panjang permulaan.</value>
+    <value>Mengembalikan aksara daripada bahagian tengah nilai teks yang diberikan kedudukan dan panjang permulaan.</value>
     
   </data>
   <data name="AboutMidT" xml:space="preserve">
@@ -795,7 +795,7 @@
     
   </data>
   <data name="AboutIfError_fallback" xml:space="preserve">
-    <value>Nilai yang dikembalikan jika ia argumen bukan ralat pertama.</value>
+    <value>Nilai yang dikembalikan jika argumen sebelumnya ialah ralat.</value>
     
   </data>
   <data name="AboutSubstitute" xml:space="preserve">
@@ -911,11 +911,11 @@
     <value>Nilai lajur untuk digunakan bagi tujuan pengisihan. Pengisihan bukan dilakukan secara menaik/secara menurun, tetapi berdasarkan indeks nilai pemadanan dalam lajur </value>
   </data>
   <data name="AboutRand" xml:space="preserve">
-    <value>Mengembalikan nombor rawak lebih besar daripada atau sama dengan 0 dan kurang daripada 1 yang diagihkan sama rata.</value>
+    <value>Mengembalikan nombor rawak yang lebih besar daripada atau sama dengan 0 dan kurang daripada 1, yang diagihkan dengan sekata.</value>
     
   </data>
   <data name="AboutRandBetween" xml:space="preserve">
-    <value>Mengembalikan nombor rawak antara bawah dengan atas, diagihkan dengan sekata.</value>
+    <value>Mengembalikan nombor rawak antara bawah dengan atas, yang diagihkan dengan sekata.</value>
     
   </data>
   <data name="AboutRandBetween_bottom" xml:space="preserve">
@@ -941,7 +941,7 @@
     
   </data>
   <data name="AboutGUID_GUID_string" xml:space="preserve">
-    <value>Rentetan untuk menukar kepada GUID</value>
+    <value>Rentetan untuk ditukar kepada GUID</value>
     
   </data>
   <data name="AboutNow" xml:space="preserve">
@@ -981,7 +981,7 @@
     
   </data>
   <data name="WeekNumArg2" xml:space="preserve">
-    <value>start_of_week</value>
+    <value>permulaan_minggu</value>
     
   </data>
   <data name="AboutWeekNum_date" xml:space="preserve">
@@ -992,7 +992,7 @@
     
   </data>
   <data name="AboutISOWeekNum" xml:space="preserve">
-    <value>Mengembalikan nombor minggu menurut peraturan ISO untuk tarikh yang diberikan.</value>
+    <value>Mengembalikan bilangan minggu menurut peraturan ISO untuk tarikh yang diberikan.</value>
     
   </data>
   <data name="ISOWeekNumArg1" xml:space="preserve">
@@ -1003,11 +1003,11 @@
     <value>Nilai tarikh yang nombor minggu ISO akan dikira.</value>
   </data>
   <data name="AboutInt" xml:space="preserve">
-    <value>Membendung 'nombor' dengan membundar ke arah infiniti negatif.</value>
+    <value>Memotong 'nombor' dengan membundarkan nombor kepada infiniti negatif.</value>
     
   </data>
   <data name="AboutIntT" xml:space="preserve">
-    <value>Membendung nilai dalam lajur nombor dengan membundar ke arah infiniti negatif.</value>
+    <value>Memotong nilai dalam lajur nombor dengan membundarkan nombor kepada infiniti negatif.</value>
     
   </data>
   <data name="AboutInt_number" xml:space="preserve">
@@ -1038,7 +1038,7 @@
     
   </data>
   <data name="TruncArg2" xml:space="preserve">
-    <value>no_angka</value>
+    <value>nombor_digit</value>
     
   </data>
   <data name="TruncTArg1" xml:space="preserve">
@@ -1046,7 +1046,7 @@
     
   </data>
   <data name="TruncTArg2" xml:space="preserve">
-    <value>no_angka</value>
+    <value>nombor_digit</value>
     
   </data>
   <data name="AboutRound" xml:space="preserve">
@@ -1184,11 +1184,11 @@
     <value>Peratusan (atau lajur nilai peratusan) yang warna (atau lajur nilai warna) akan dipudarkan. Peratusan negatif menghasilkan warna yang lebih gelap. Peratusan positif menghasilkan warna yang lebih cerah.</value>
   </data>
   <data name="AboutAbs" xml:space="preserve">
-    <value>Mengembalikan nilai mutlak nombor iaitu nombor tanpa tanda.</value>
+    <value>Mengembalikan nilai mutlak nombor, iaitu nombor tanpa tandanya.</value>
     
   </data>
   <data name="AboutAbsT" xml:space="preserve">
-    <value>Mengembalikan nilai mutlak (nombor tanpa tanda) suatu lajur nombor.</value>
+    <value>Mengembalikan nilai mutlak (nombor tanpa tandanya) lajur nombor.</value>
     
   </data>
   <data name="AboutAbs_number" xml:space="preserve">
@@ -1218,11 +1218,11 @@
     <value>Lajur nilai angka untuk diproses.</value>
   </data>
   <data name="AboutAsin" xml:space="preserve">
-    <value>Mengembalikan nilai lengkuk sinus (dalam radian) nombor.</value>
+    <value>Mengembalikan nilai sinus lengkuk (dalam radian) nombor.</value>
     
   </data>
   <data name="AboutAsinT" xml:space="preserve">
-    <value>Mengembalikan nilai lengkuk sinus (dalam radian) lajur nombor.</value>
+    <value>Mengembalikan nilai sinus lengkuk (dalam radian) lajur nombor.</value>
     
   </data>
   <data name="AboutCos" xml:space="preserve">
@@ -1240,14 +1240,14 @@
     <value>Lajur nilai nombor (dalam radian) untuk diproses.</value>
   </data>
   <data name="AboutAcos" xml:space="preserve">
-    <value>Mengembalikan nilai lengkuk kosinus (dalam radian) nombor.</value>
+    <value>Mengembalikan nilai kosinus lengkuk (dalam radian) nombor.</value>
     
   </data>
   <data name="AboutAcos_number" xml:space="preserve">
     <value>Nilai angka untuk diproses.</value>
   </data>
   <data name="AboutAcosT" xml:space="preserve">
-    <value>Mengembalikan nilai lengkuk kosinus (dalam radian) lajur nombor.</value>
+    <value>Mengembalikan nilai kosinus lengkuk (dalam radian) lajur nombor.</value>
     
   </data>
   <data name="AboutAcos_input" xml:space="preserve">
@@ -1260,11 +1260,11 @@
     <value>Lajur nilai angka untuk diproses.</value>
   </data>
   <data name="AboutAcot" xml:space="preserve">
-    <value>Mengembalikan nilai lengkuk kotangen (dalam radian) nombor.</value>
+    <value>Mengembalikan nilai kotangen lengkuk (dalam radian) nombor.</value>
     
   </data>
   <data name="AboutAcotT" xml:space="preserve">
-    <value>Mengembalikan nilai lengkuk kotangen (dalam radian) lajur nombor.</value>
+    <value>Mengembalikan nilai kotangen lengkuk (dalam radian) lajur nombor.</value>
     
   </data>
   <data name="AboutTan" xml:space="preserve">
@@ -1282,11 +1282,11 @@
     <value>Lajur nilai nombor (dalam radian) untuk diproses.</value>
   </data>
   <data name="AboutAtan" xml:space="preserve">
-    <value>Mengembalikan nilai lengkuk tangen (dalam radian) nombor.</value>
+    <value>Mengembalikan nilai tangen lengkuk (dalam radian) nombor.</value>
     
   </data>
   <data name="AboutAtanT" xml:space="preserve">
-    <value>Mengembalikan nilai lengkuk tangen (dalam radian) lajur nombor.</value>
+    <value>Mengembalikan nilai tangen lengkuk (dalam radian) lajur nombor.</value>
     
   </data>
   <data name="AboutAtan_number" xml:space="preserve">
@@ -1324,11 +1324,11 @@
     <value>Lajur nilai angka untuk diproses.</value>
   </data>
   <data name="AboutLog" xml:space="preserve">
-    <value>Mengembalikan logaritma nombor untuk asas yang ditentukan. Asas lalai ialah 10.</value>
+    <value>Mengembalikan logaritma nombor untuk asas yang diberikan. Asas lalai ialah 10.</value>
     
   </data>
   <data name="AboutLogT" xml:space="preserve">
-    <value>Mengembalikan nilai logaritma nombor atau lajur nombor untuk asas yang atau lajur asas yang ditentukan. Asas lalai ialah 10.</value>
+    <value>Mengembalikan nilai logaritma nombor atau lajur nombor untuk asas atau lajur asas yang diberikan. Asas lalai ialah 10.</value>
     
   </data>
   <data name="AboutLog_number" xml:space="preserve">
@@ -1345,7 +1345,7 @@
     <value>Asas logaritma.</value>
   </data>
   <data name="AboutExp" xml:space="preserve">
-    <value>Mengembalikan E dikuasakan satu nombor. Untuk mengira kuasa asas lain, gunakan operator pengeksponenan (^).</value>
+    <value>Mengembalikan E yang dinaikkan kepada kuasa satu nombor. Untuk mengira kuasa asas lain, gunakan operator pengeksponenan (^).</value>
     
   </data>
   <data name="AboutExpT" xml:space="preserve">
@@ -1515,7 +1515,7 @@
     
   </data>
   <data name="AboutIsEmpty" xml:space="preserve">
-    <value>Menyemak jika koleksi kosong dan mengembalikan benar atau palsu.</value>
+    <value>Menyemak sama ada koleksi adalah kosong atau tidak dan mengembalikan benar atau salah.</value>
     
   </data>
   <data name="IsEmptyArg1" xml:space="preserve">
@@ -1620,7 +1620,7 @@
     
   </data>
   <data name="AboutIsType" xml:space="preserve">
-    <value>Mengembalikan benar jika nilai yang diberikan adalah daripada jenis yang ditentukan.</value>
+    <value>Mengembalikan benar jika nilai yang diberikan adalah daripada jenis yang diberikan.</value>
     
   </data>
   <data name="IsTypeArg1" xml:space="preserve">
@@ -1632,7 +1632,7 @@
     
   </data>
   <data name="AboutAsType" xml:space="preserve">
-    <value>Menggunakan nilai yang diberikan sebagai jenis yang ditentukan.</value>
+    <value>Menggunakan nilai yang diberikan sebagai jenis yang diberikan.</value>
     
   </data>
   <data name="AsTypeArg1" xml:space="preserve">
@@ -1849,6 +1849,10 @@
     <value>Format tidak sah.</value>
     
   </data>
+  <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
+    <value>Argumen tidak mewakili nilai tarikh atau masa yang sah.</value>
+    
+  </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
     <value>Sumber Data sini tidak sah. Sila betulkan ralat dalam anak tetingkap "Sumber Data" dengan mengklik "Kandungan -&gt; Sumber data" atau "Lihat -&gt; Opsyen"</value>
     
@@ -1962,7 +1966,7 @@
     
   </data>
   <data name="AboutDate" xml:space="preserve">
-    <value>Mengembalikan nombor yang mewakili tarikh dalam kod tarikh masa Power Apps.</value>
+    <value>Mengembalikan nombor yang mewakili tarikh dalam kod tarikh-masa Power Apps.</value>
     
   </data>
   <data name="DateArg1" xml:space="preserve">
@@ -1978,13 +1982,13 @@
     
   </data>
   <data name="AboutDate_year" xml:space="preserve">
-    <value>Tahun tersebut.</value>
+    <value>Tahun.</value>
   </data>
   <data name="AboutDate_month" xml:space="preserve">
-    <value>Bulan tersebut.</value>
+    <value>Bulan.</value>
   </data>
   <data name="AboutDate_day" xml:space="preserve">
-    <value>Hari tersebut.</value>
+    <value>Hari.</value>
   </data>
   <data name="AboutTime" xml:space="preserve">
     <value>Menukarkan jam, minit dan saat ke dalam nombor perpuluhan.</value>
@@ -2062,7 +2066,7 @@
     <value>Nilai tarikh daripada mana komponen tahun akan diekstrak.</value>
   </data>
   <data name="AboutMonth" xml:space="preserve">
-    <value>Mengembalikan bulan, satu nombor dari 1 (Januari) hingga 12 (Disember).</value>
+    <value>Mengembalikan bulan, satu nombor daripada 1 (Januari) hingga 12 (Disember).</value>
     
   </data>
   <data name="MonthArg1" xml:space="preserve">
@@ -2073,7 +2077,7 @@
     <value>Nilai tarikh daripadanya komponen bulan akan diekstrak.</value>
   </data>
   <data name="AboutDay" xml:space="preserve">
-    <value>Hari mengembalikan hari bagi bulan, nombor dari 1 hingga 31.</value>
+    <value>Hari mengembalikan hari bagi bulan, nombor daripada 1 hingga 31.</value>
     
   </data>
   <data name="DayArg1" xml:space="preserve">
@@ -2084,7 +2088,7 @@
     <value>Nilai tarikh yang komponen harinya akan diekstrak.</value>
   </data>
   <data name="AboutHour" xml:space="preserve">
-    <value>Jam mengembalikan jam sebagai nombor di antara 0 (12:00:00 PG) dan 23 (11:00:00 MLM).</value>
+    <value>Jam mengembalikan jam sebagai nombor antara 0 (12:00:00 PG) dengan 23 (11:00:00 MLM).</value>
     
   </data>
   <data name="HourArg1" xml:space="preserve">
@@ -2095,7 +2099,7 @@
     <value>Nilai tarikh atau masa yang komponennya akan diekstrak.</value>
   </data>
   <data name="AboutMinute" xml:space="preserve">
-    <value>Mengembalikan minit, satu nombor dari 0 hingga 59.</value>
+    <value>Mengembalikan minit, satu nombor daripada 0 hingga 59.</value>
     
   </data>
   <data name="MinuteArg1" xml:space="preserve">
@@ -2125,7 +2129,7 @@
     
   </data>
   <data name="WeekdayArg2" xml:space="preserve">
-    <value>minggu_mula</value>
+    <value>permulaan_minggu</value>
     
   </data>
   <data name="AboutWeekday_date" xml:space="preserve">
@@ -2152,19 +2156,19 @@
     
   </data>
   <data name="AboutClock__AmPm" xml:space="preserve">
-    <value>Mengembalikan jadual lajur tunggal yang mengandungi peruntukan huruf besar untuk sebelum dan selepas tengahari.</value>
+    <value>Mengembalikan jadual lajur tunggal yang mengandungi peruntukan huruf besar untuk sebelum dan selepas tengah hari.</value>
     
   </data>
   <data name="AboutClock__AmPmShort" xml:space="preserve">
-    <value>Mengembalikan jadual lajur tunggal yang mengandungi peruntukan huruf besar singkatan untuk sebelum dan selepas tengahari.</value>
+    <value>Mengembalikan jadual lajur tunggal yang mengandungi peruntukan huruf besar singkatan untuk sebelum dan selepas tengah hari.</value>
     
   </data>
   <data name="AboutClock__IsClock24" xml:space="preserve">
-    <value>Mengembalikan nilai boolean menunjukkan sama ada jam menggunakan masa 24 jam.</value>
+    <value>Mengembalikan nilai Boolean yang menunjukkan sama ada jam menggunakan masa 24 jam atau tidak.</value>
     
   </data>
   <data name="AboutDateValue" xml:space="preserve">
-    <value>Menukar tarikh dalam bentuk teks kepada nombor yang mewakili tarikh dalam kod tarikh masa Power Apps.</value>
+    <value>Menukar tarikh dalam bentuk teks kepada nombor yang mewakili tarikh dalam kod tarikh-masa Power Apps.</value>
     
   </data>
   <data name="DateValueArg1" xml:space="preserve">
@@ -2241,7 +2245,7 @@
     <value>Posisi permulaan pilihan.</value>
   </data>
   <data name="AboutFind" xml:space="preserve">
-    <value>Mengembalikan kedudukan permulaan suatu nilai teks dalam nilai teks yang lain. Find adalah sensitif huruf.</value>
+    <value>Mengembalikan kedudukan permulaan satu nilai teks dalam nilai teks yang lain. Carian adalah sensitif huruf.</value>
     
   </data>
   <data name="AboutFindT" xml:space="preserve">
@@ -2297,7 +2301,7 @@
     <value>Tarikh dan Masa</value>
   </data>
   <data name="MathAndStat" xml:space="preserve">
-    <value>Matematik &amp; Statistik</value>
+    <value>Matematik dan Statistik</value>
   </data>
   <data name="Information" xml:space="preserve">
     <value>Maklumat</value>
@@ -2356,7 +2360,7 @@
     
   </data>
   <data name="AboutDateDiff" xml:space="preserve">
-    <value>Kira perbezaan di antara dua tarikh.</value>
+    <value>Kira perbezaan antara dua tarikh.</value>
     
   </data>
   <data name="DateAddArg1" xml:space="preserve">
@@ -2408,7 +2412,7 @@
     
   </data>
   <data name="AboutDateDiffT" xml:space="preserve">
-    <value>Kira perbezaan di antara dua lajur tarikh.</value>
+    <value>Kira perbezaan antara dua lajur tarikh.</value>
     
   </data>
   <data name="DateAddTArg1" xml:space="preserve">
@@ -2641,7 +2645,7 @@
     
   </data>
   <data name="AboutIsNumeric" xml:space="preserve">
-    <value>Menyemak sama ada nilai ialah nombor dan mengembalikan benar atau palsu.</value>
+    <value>Menyemak sama ada nilai ialah nombor atau tidak, dan mengembalikan benar atau salah.</value>
     
   </data>
   <data name="IsNumericArg1" xml:space="preserve">
@@ -2652,7 +2656,7 @@
     <value>Nilai untuk diuji.</value>
   </data>
   <data name="AboutDateTimeValue" xml:space="preserve">
-    <value>Menukar tarikh dan masa dalam bentuk teks kepada nombor yang mewakili tarikh dalam kod tarikh masa Power Apps.</value>
+    <value>Menukar tarikh dan masa dalam bentuk teks kepada nombor yang mewakili tarikh dalam kod tarikh-masa Power Apps.</value>
     
   </data>
   <data name="DateTimeValueArg1" xml:space="preserve">
@@ -2699,7 +2703,7 @@
     <value>Nama lajur untuk disimpan.</value>
   </data>
   <data name="AboutIsToday" xml:space="preserve">
-    <value>Menyemak sama ada tarikh yang diberi ialah hari ini dan mengembalikan benar atau palsu.</value>
+    <value>Menyemak sama ada tarikh yang diberikan ialah hari ini atau tidak, dan mengembalikan benar atau salah.</value>
     
   </data>
   <data name="AboutIsToday_date" xml:space="preserve">
@@ -2779,7 +2783,7 @@
     <value>Ralat tidak diketahui telah berlaku semasa cuba menghurai perihalan data.</value>
   </data>
   <data name="AboutForAll" xml:space="preserve">
-    <value>Menggunakan formula yang diberikan pada setiap baris dalam sumber data, kemudian mengembalikan jadual baru dengan hasil setiap baris.</value>
+    <value>Menggunakan formula yang diberikan pada setiap baris dalam sumber data, kemudian mengembalikan jadual baharu dengan hasil setiap baris.</value>
     
   </data>
   <data name="AboutForAll_source" xml:space="preserve">
@@ -2797,7 +2801,7 @@
     
   </data>
   <data name="AboutPower" xml:space="preserve">
-    <value>Mendarabkan nombor x kepada kuasa nombor lain y. Sama seperti x^y.</value>
+    <value>Meningkatkan nombor x kepada kuasa nombor y yang lain. Sama seperti x^y.</value>
     
   </data>
   <data name="AboutPower_base" xml:space="preserve">
@@ -2833,7 +2837,7 @@
     
   </data>
   <data name="AboutEndsWith" xml:space="preserve">
-    <value>Mengembalikan true jika teks yang ditentukan tamat dengan rentetan tamat yang ditentukan.</value>
+    <value>Mengembalikan benar jika teks yang diberikan berakhir dengan rentetan tamat yang diberikan.</value>
     
   </data>
   <data name="AboutEndsWith_text" xml:space="preserve">
@@ -2854,7 +2858,7 @@
     <value>Mengembalikan nilai nol (kosong)</value>
   </data>
   <data name="AboutPowerT" xml:space="preserve">
-    <value>Menguasakan nombor x (atau lajur nombor) kepada kuasa nombor y lain (or lajur nombor). Sama seperti x^y.</value>
+    <value>Menaikkan nombor x (atau lajur nombor) kepada kuasa nombor y yang lain (atau lajur nombor). Sama seperti x^y.</value>
     
   </data>
   <data name="AboutPower_base_or_column" xml:space="preserve">
@@ -3196,7 +3200,7 @@
     
   </data>
   <data name="LayoutDirection_Horizontal_DisplayName" xml:space="preserve">
-    <value>Melintang</value>
+    <value>Mendatar</value>
     
   </data>
   <data name="LayoutDirection_Vertical_DisplayName" xml:space="preserve">
@@ -3216,7 +3220,7 @@
     
   </data>
   <data name="LayoutAlignItems_Stretch_DisplayName" xml:space="preserve">
-    <value>Regang</value>
+    <value>Regangan</value>
     
   </data>
   <data name="AlignInContainer_Start_DisplayName" xml:space="preserve">
@@ -3232,7 +3236,7 @@
     
   </data>
   <data name="AlignInContainer_Stretch_DisplayName" xml:space="preserve">
-    <value>Regang</value>
+    <value>Regangan</value>
     
   </data>
   <data name="AlignInContainer_SetByContainer_DisplayName" xml:space="preserve">
@@ -3264,7 +3268,7 @@
     
   </data>
   <data name="LayoutOverflow_Hide_DisplayName" xml:space="preserve">
-    <value>Sembunyi</value>
+    <value>Sembunyikan</value>
     
   </data>
   <data name="LayoutOverflow_Scroll_DisplayName" xml:space="preserve">
@@ -3420,7 +3424,7 @@
     
   </data>
   <data name="ImagePosition_Center_DisplayName" xml:space="preserve">
-    <value>Pusat</value>
+    <value>Tengah</value>
     
   </data>
   <data name="VerticalAlign_Top_DisplayName" xml:space="preserve">
@@ -3552,7 +3556,7 @@
     
   </data>
   <data name="FormMode_New_DisplayName" xml:space="preserve">
-    <value>Baru</value>
+    <value>Baharu</value>
     
   </data>
   <data name="SelectedState_Edit_DisplayName" xml:space="preserve">
@@ -4016,7 +4020,7 @@
     
   </data>
   <data name="AboutIsError" xml:space="preserve">
-    <value>Mengembalikan sama ada ralat berlaku semasa menilai argumen yang diberikan.</value>
+    <value>Mengembalikan sama ada ralat berlaku atau tidak semasa menilai argumen yang diberikan.</value>
     
   </data>
   <data name="IsErrorArg" xml:space="preserve">
@@ -4124,7 +4128,7 @@
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
-    <value>Dijangka operan. Formula atau ungkapan menjangkakan operan yang sah. Contohnya, anda boleh menambah operan '2' ungkapan '1 + _' agar keputusan adalah '3'. Atau, anda boleh menambah operan "there" pada ungkapan ' "Hi" &amp; _ ' agar keputusan adalah 'Hi tiada'.</value>
+    <value>Operan dijangkakan. Formula atau ungkapan menjangkakan operan yang sah. Contohnya, anda boleh menambah operan '2' kepada ungkapan ' 1 +_' agar hasil ialah '3'. Atau, anda boleh menambah operan "awak" kepada ungkapan '"Hai "&amp; _ ' agar hasil ialah 'Hi awak'.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_HowToFix_1" xml:space="preserve">
@@ -4416,6 +4420,10 @@
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
     <value>Pastikan anda mempunyai teks untuk pengecam anda. Ralat ini berlaku apabila pengecam semuanya ruang kosong atau ruang.</value>
+    
+  </data>
+  <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
+    <value>Unable to compare values of type {0}.</value>
     
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
@@ -4834,8 +4842,18 @@
     <value>Fungsi ini samar-samar, ia mengandungi ungkapan LAMBDA dan pengecam lajur untuk argumen yang sama.</value>
     
   </data>
-  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
-    <value>Pilihan BooleanOptionSet {0} tidak disokong.</value>
+  <data name="OptionSetOptionNotSupported" xml:space="preserve">
+    <value>The value of option {0} is not of expected type {1}.</value>
     
+  </data>
+  <data name="AboutOptionSetInfo" xml:space="preserve">
+    <value>Mengembalikan nama logik nilai set pilihan yang diberikan.</value>
+    
+  </data>
+  <data name="AboutOptionSetInfoArg1" xml:space="preserve">
+    <value>pilihan</value>
+  </data>
+  <data name="AboutOptionSetInfo_option" xml:space="preserve">
+    <value>Nilai set pilihan yang nama logiknya akan dikembalikan.</value>
   </data>
 </root>
