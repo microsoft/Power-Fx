@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
@@ -34,7 +35,7 @@ namespace Microsoft.PowerFx.Functions
             Match match;
             if (ColorTable.InvariantNameToHexMap.ContainsKey(val))
             {
-                var hexStringColor = string.Format("#{0:X8}", ColorTable.InvariantNameToHexMap[val]);
+                var hexStringColor = string.Format(CultureInfo.InvariantCulture, "#{0:X8}", ColorTable.InvariantNameToHexMap[val]);
                 match = RegexColorTable.Match(hexStringColor);
             }
             else
@@ -57,7 +58,7 @@ namespace Microsoft.PowerFx.Functions
 
         private static byte ParseColor(Match match, string color)
         {
-            return byte.Parse(match.Groups[color].Value, System.Globalization.NumberStyles.HexNumber);
+            return byte.Parse(match.Groups[color].Value, System.Globalization.NumberStyles.HexNumber, CultureInfo.InvariantCulture);
         }
 
         public static FormulaValue RGBA(IRContext irContext, NumberValue[] args)

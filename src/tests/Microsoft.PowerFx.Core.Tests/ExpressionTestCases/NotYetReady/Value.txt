@@ -29,6 +29,17 @@
 >> Value(123.456)
 123.456
 
+// In en-us, comma is thousand separator. In fr-FR, it's decimal separate.
+>> Value("123,456")
+123456
+
+>> Value("123,456", "en-US")
+123456
+
+>> Value("123,456", "fr-FR")
+123.456
+
+
 //Excel allows only single parameter
 >> Value( "123,456", "es-ES" )
 123.456

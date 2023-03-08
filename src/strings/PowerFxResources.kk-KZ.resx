@@ -795,7 +795,7 @@
     
   </data>
   <data name="AboutIfError_fallback" xml:space="preserve">
-    <value>Бірінші қате емес аргумент болғанда қайтарылатын мән.</value>
+    <value>Алдыңғы аргумент қате болмағанда қайтарылатын мән.</value>
     
   </data>
   <data name="AboutSubstitute" xml:space="preserve">
@@ -1847,6 +1847,10 @@
   </data>
   <data name="ErrTextInvalidFormat" xml:space="preserve">
     <value>Пішім дұрыс емес.</value>
+    
+  </data>
+  <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
+    <value>Аргумент жарамды күнді немесе уақыт мәнін білдірмейді.</value>
     
   </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
@@ -4124,7 +4128,7 @@
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
-    <value>Операнд күтілді. Формула немесе өрнек жарамды операнд күтеді. Мысалы, "2" операндысын " 1 +_" өрнегіне қосуға болады, сонда нәтижесі "3" болады. Немесе ""Сәлем, "&amp; _ " өрнегіне "бәріңізге" операндысын қосуға болады, сонда нәижесі "Сәлем, бәріңізге" болады.</value>
+    <value>Операнд күтілді. Формула немесе өрнек жарамды операнд күтеді. Мысалы, "2" операндын "1 +_" өрнегіне қосуға болады, сонда нәтижесі "3" болады. Немесе "Сәлем "&amp; _ " өрнегіне "бәріңізге" операндын қосуға болады, сонда нәтижесі "Сәлем бәріңізге" болады.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_HowToFix_1" xml:space="preserve">
@@ -4416,6 +4420,10 @@
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
     <value>Идентификатор үшін мәтіннің болуына көз жеткізіңіз. Идентификатор бос немесе бос орындар болса, осы қате пайда болады.</value>
+    
+  </data>
+  <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
+    <value>Unable to compare values of type {0}.</value>
     
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
@@ -4834,8 +4842,18 @@
     <value>Бұл функция айқын емес, оның құрамында бірдей аргумент үшін Lambda өрнектері мен баған идентификаторлары бар.</value>
     
   </data>
-  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
-    <value>BooleanOptionSet {0} опциясына қолдау көрсетілмейді.</value>
+  <data name="OptionSetOptionNotSupported" xml:space="preserve">
+    <value>The value of option {0} is not of expected type {1}.</value>
     
+  </data>
+  <data name="AboutOptionSetInfo" xml:space="preserve">
+    <value>Берілген параметрлер жиыны мәнінің логикалық атауын береді.</value>
+    
+  </data>
+  <data name="AboutOptionSetInfoArg1" xml:space="preserve">
+    <value>опция</value>
+  </data>
+  <data name="AboutOptionSetInfo_option" xml:space="preserve">
+    <value>Логикалық атауы қайтарылатын параметрлер жиынының мәні.</value>
   </data>
 </root>

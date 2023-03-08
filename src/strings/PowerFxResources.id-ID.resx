@@ -795,7 +795,7 @@
     
   </data>
   <data name="AboutIfError_fallback" xml:space="preserve">
-    <value>Jika nilai adalah argumen bebas kesalahan pertama, nilai akan dikembalikan.</value>
+    <value>Nilai yang dihasilkan jika argumen sebelumnya adalah kesalahan.</value>
     
   </data>
   <data name="AboutSubstitute" xml:space="preserve">
@@ -1847,6 +1847,10 @@
   </data>
   <data name="ErrTextInvalidFormat" xml:space="preserve">
     <value>Format tidak valid.</value>
+    
+  </data>
+  <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
+    <value>Argumen tidak menunjukkan nilai tanggal atau waktu yang valid.</value>
     
   </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
@@ -4418,6 +4422,10 @@
     <value>Pastikan Anda memiliki teks untuk pengidentifikasi Anda. Kesalahan ini terjadi jika semua pengidentifikasi kosong atau berisi spasi.</value>
     
   </data>
+  <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
+    <value>Unable to compare values of type {0}.</value>
+    
+  </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
     <value>Jenis perbandingan tidak kompatibel. Jenis ini tidak dapat dibandingkan: {0}, {1}.</value>
     
@@ -4834,8 +4842,18 @@
     <value>Fungsi ini ambigu karena berisi ekspresi lambda dan pengidentifikasi kolom untuk argumen yang sama.</value>
     
   </data>
-  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
-    <value>Opsi BooleanOptionSet {0} tidak didukung.</value>
+  <data name="OptionSetOptionNotSupported" xml:space="preserve">
+    <value>The value of option {0} is not of expected type {1}.</value>
     
+  </data>
+  <data name="AboutOptionSetInfo" xml:space="preserve">
+    <value>Menghasilkan nama logis dari nilai rangkaian pilihan yang diberikan.</value>
+    
+  </data>
+  <data name="AboutOptionSetInfoArg1" xml:space="preserve">
+    <value>opsi</value>
+  </data>
+  <data name="AboutOptionSetInfo_option" xml:space="preserve">
+    <value>Nilai rangkaian pilihan yang nama logisnya akan dihasilkan.</value>
   </data>
 </root>

@@ -82,9 +82,10 @@ namespace PowerFxHostSamples
         // Pattern match for Set(x,y) so that we can define the variable
         public static bool TryMatchSet(string expr, out string arg0name, out FormulaValue varValue)
         {
-            var parserOptions = new ParserOptions { AllowsSideEffects = true };
-
-            var parse = _engine.Parse(expr);
+            var parserOptions = _engine.GetDefaultParserOptionsCopy();
+            parserOptions.AllowsSideEffects = true;
+            
+            var parse = Engine.Parse(expr, parserOptions, parserOptions.Culture);
             if (parse.IsSuccess)
             {
                 if (parse.Root.Kind == Microsoft.PowerFx.Syntax.NodeKind.Call)
@@ -505,7 +506,7 @@ namespace PowerFxHostSamples
 
             public FormulaValue Execute(StringValue option, BooleanValue value)
             {
-                if (option.Value.ToLower() == OptionFormatTable.ToLower())
+                if (string.Equals(option.Value, OptionFormatTable, StringComparison.OrdinalIgnoreCase))
                 {
                     _formatTable = value.Value;
                     return value;
