@@ -501,6 +501,11 @@ namespace Microsoft.PowerFx
         {
             var arg1 = await node.Child.Accept(this, context);
 
+            if (arg1 is BlankValue || arg1 is ErrorValue)
+            {
+                return arg1;
+            }
+
             if (node.Op == UnaryOpKind.TableToTable)
             {
                 var table = (TableValue)arg1;
