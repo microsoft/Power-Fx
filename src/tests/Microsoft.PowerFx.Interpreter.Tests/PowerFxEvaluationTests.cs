@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx;
@@ -12,6 +13,7 @@ using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Tests;
 using Microsoft.PowerFx.Types;
@@ -26,7 +28,13 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             { "OptionSetTestSetup", OptionSetTestSetup },
             { "MutationFunctionsTestSetup", MutationFunctionsTestSetup },
             { "OptionSetSortTestSetup", OptionSetSortTestSetup },
+            { "AllEnumsSetup", AllEnumsSetup },
         };
+                
+        private static (RecalcEngine engine, RecordValue parameters) AllEnumsSetup(PowerFxConfig config)
+        {
+            return (new RecalcEngine(PowerFxConfig.BuildWithEnumStore(config.CultureInfo, new EnumStoreBuilder().WithDefaultEnums(), new TexlFunctionSet(), config.Features)), null);
+        }
 
         private static (RecalcEngine engine, RecordValue parameters) OptionSetTestSetup(PowerFxConfig config)
         {
@@ -75,7 +83,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var r2 = FormulaValue.NewRecordFromFields(new NamedValue("OptionSetField1", o2Val), new NamedValue("StrField1", FormulaValue.New("test2")));
             var r3 = FormulaValue.NewRecordFromFields(new NamedValue("OptionSetField1", o1Val), new NamedValue("StrField1", FormulaValue.New("test3")));
             var r4 = FormulaValue.NewRecordFromFields(new NamedValue("OptionSetField1", o2Val), new NamedValue("StrField1", FormulaValue.New("test4")));
-            
+
             // Testing with missing/blank option set field is throwing an exception. Once that is resolved uncomment and fix the test case in Sort.txt
             var r5 = FormulaValue.NewRecordFromFields(new NamedValue("StrField1", FormulaValue.New("test5")));
 
@@ -296,9 +304,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
                 var symbolValues = SymbolValues.NewFromRecord(symbolTable, parameters);
                 var runtimeConfig = new RuntimeConfig(symbolValues);
-                                
+
                 if (iSetup.TimeZoneInfo != null)
-                {                    
+                {
                     runtimeConfig.AddService(iSetup.TimeZoneInfo);
                 }
 

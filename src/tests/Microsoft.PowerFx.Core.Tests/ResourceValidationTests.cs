@@ -46,7 +46,11 @@ namespace Microsoft.PowerFx.Tests
             // Strings are not the same as enUS
             // Not validating content directly, since it might change
             Assert.NotEqual(enUsBasicContent, frBasicContent);
-            Assert.NotEqual(enUsERContent.GetSingleValue(ErrorResource.ShortMessageTag), frERContent.GetSingleValue(ErrorResource.ShortMessageTag));
+
+            string usContent = enUsERContent.GetSingleValue(ErrorResource.ShortMessageTag);
+            string frContent = frERContent.GetSingleValue(ErrorResource.ShortMessageTag);
+
+            Assert.NotEqual(usContent, frContent);
         }        
 
         [Fact]

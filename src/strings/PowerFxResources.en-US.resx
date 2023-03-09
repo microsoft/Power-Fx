@@ -4530,6 +4530,10 @@
     <value>Ensure you have text for your identifier. This error occurs when the identifier is all blanks or spaces.</value>
     <comment>1 How to fix the error. </comment>
   </data>
+  <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
+    <value>Unable to compare values of type {0}.</value>
+    <comment>Error message when the user attempts to compare (using Less Than, Greater Than, Less Than or Equal, Greater Than or Equal) values of non-numeric types. {0} will be canonical type representations like "Number" or "Boolean".</comment>
+  </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
     <value>Incompatible types for comparison. These types can't be compared: {0}, {1}.</value>
     <comment>Error message when the user attempts to check equality between two values that don't make sense together. {0} and {1} will be canonical type representations like "Number" or "Boolean".</comment>
@@ -5034,8 +5038,8 @@
     <value>This function is ambiguous, it contains lambda expressions and column identifiers for the same argument.</value>
     <comment>Error Message.</comment>
   </data>
-  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
-    <value>The BooleanOptionSet option {0} is not supported.</value>
+  <data name="OptionSetOptionNotSupported" xml:space="preserve">
+    <value>The value of option {0} is not of expected type {1}.</value>
     <comment>Error Message. When BooleanOptionSet option has an invalid value.</comment>
   </data>
   <data name="AboutOptionSetInfo" xml:space="preserve">
@@ -5047,5 +5051,9 @@
   </data>
   <data name="AboutOptionSetInfo_option" xml:space="preserve">
     <value>An option set value whose logical name will be returned.</value>
+  </data>
+  <data name="AboutLanguage" xml:space="preserve">
+    <value>Get the default locale set at runtime.</value>
+    <comment>Description of 'Language' function.</comment>
   </data>
 </root>

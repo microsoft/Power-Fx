@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Globalization;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Errors;
@@ -46,7 +47,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             Contracts.AssertValue(node);
             Contracts.AssertValue(binding);
 
-            var message = string.Format("Function:{0}, Message:{1}", Function.Name, telemetryMessage);
+            var message = string.Format(CultureInfo.InvariantCulture, "Function:{0}, Message:{1}", Function.Name, telemetryMessage);
             TrackingProvider.Instance.AddSuggestionMessage(message, node, binding);
         }
 
@@ -142,10 +143,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
 
             if (!IsValidRowScopedDottedNameNode(node, binding, metadata, out var isRowScopedDelegationExempted))
             {
-                var telemetryMessage = string.Format(
-                    "Kind:{0}, isRowScoped:{1}",
-                    node.Kind,
-                    isRowScoped);
+                var telemetryMessage = string.Format(CultureInfo.InvariantCulture, "Kind:{0}, isRowScoped:{1}", node.Kind, isRowScoped);
 
                 SuggestDelegationHintAndAddTelemetryMessage(node, binding, telemetryMessage);
                 return false;
@@ -174,7 +172,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
                 if (!BinderUtils.TryConvertNodeToDPath(binding, node, out var columnPath) || !metadata.IsDelegationSupportedByColumn(columnPath, Function.FunctionDelegationCapability))
                 {
                     var safeColumnName = CharacterUtils.MakeSafeForFormatString(columnPath.ToDottedSyntax());
-                    var message = string.Format(StringResources.Get(TexlStrings.OpNotSupportedByColumnSuggestionMessage_OpNotSupportedByColumn), safeColumnName);
+                    var message = string.Format(CultureInfo.InvariantCulture, StringResources.Get(TexlStrings.OpNotSupportedByColumnSuggestionMessage_OpNotSupportedByColumn), safeColumnName);
                     SuggestDelegationHintAndAddTelemetryMessage(node, binding, message, TexlStrings.OpNotSupportedByColumnSuggestionMessage_OpNotSupportedByColumn, safeColumnName);
                     TrackingProvider.Instance.SetDelegationTrackerStatus(DelegationStatus.NoDelSupportByColumn, node, binding, Function, DelegationTelemetryInfo.CreateNoDelSupportByColumnTelemetryInfo(columnPath.ToDottedSyntax()));
                     return false;
@@ -190,11 +188,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
 
             if (!dataSourceInfo.DataEntityMetadataProvider.TryGetEntityMetadata(info.Identity, out var entityMetadata))
             {
-                var telemetryMessage = string.Format(
-                    "Kind:{0}, isRowScoped:{1}, no metadata found for entity {2}",
-                    node.Kind,
-                    isRowScoped,
-                    CharacterUtils.MakeSafeForFormatString(info.Identity));
+                var telemetryMessage = string.Format(CultureInfo.InvariantCulture, "Kind:{0}, isRowScoped:{1}, no metadata found for entity {2}", node.Kind, isRowScoped, CharacterUtils.MakeSafeForFormatString(info.Identity));
 
                 SuggestDelegationHintAndAddTelemetryMessage(node, binding, telemetryMessage);
                 return false;
@@ -212,7 +206,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             if (!entityCapabilityMetadata.IsDelegationSupportedByColumn(entityColumnPath, Function.FunctionDelegationCapability))
             {
                 var safeColumnName = CharacterUtils.MakeSafeForFormatString(columnName.Value);
-                var message = string.Format(StringResources.Get(TexlStrings.OpNotSupportedByColumnSuggestionMessage_OpNotSupportedByColumn), safeColumnName);
+                var message = string.Format(CultureInfo.InvariantCulture, StringResources.Get(TexlStrings.OpNotSupportedByColumnSuggestionMessage_OpNotSupportedByColumn), safeColumnName);
                 SuggestDelegationHintAndAddTelemetryMessage(node, binding, message, TexlStrings.OpNotSupportedByColumnSuggestionMessage_OpNotSupportedByColumn, safeColumnName);
                 TrackingProvider.Instance.SetDelegationTrackerStatus(DelegationStatus.NoDelSupportByColumn, node, binding, Function, DelegationTelemetryInfo.CreateNoDelSupportByColumnTelemetryInfo(columnName));
                 return false;
@@ -304,7 +298,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             if (!metadata.FilterDelegationMetadata.IsDelegationSupportedByColumn(columnPath, capability))
             {
                 var safeColumnName = CharacterUtils.MakeSafeForFormatString(columnName.Value);
-                var message = string.Format(StringResources.Get(TexlStrings.OpNotSupportedByColumnSuggestionMessage_OpNotSupportedByColumn), safeColumnName);
+                var message = string.Format(CultureInfo.InvariantCulture, StringResources.Get(TexlStrings.OpNotSupportedByColumnSuggestionMessage_OpNotSupportedByColumn), safeColumnName);
                 SuggestDelegationHintAndAddTelemetryMessage(node, binding, message, TexlStrings.OpNotSupportedByColumnSuggestionMessage_OpNotSupportedByColumn, safeColumnName);
                 TrackingProvider.Instance.SetDelegationTrackerStatus(DelegationStatus.NoDelSupportByColumn, node, binding, Function, DelegationTelemetryInfo.CreateNoDelSupportByColumnTelemetryInfo(firstNameInfo));
                 return false;
@@ -344,7 +338,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
                 return true;
             }
 
-            var telemetryMessage = string.Format("Kind:{0}, isRowScoped:{1}", node.Kind, isRowScoped);
+            var telemetryMessage = string.Format(CultureInfo.InvariantCulture, "Kind:{0}, isRowScoped:{1}", node.Kind, isRowScoped);
             SuggestDelegationHintAndAddTelemetryMessage(node, binding, telemetryMessage);
             TrackingProvider.Instance.SetDelegationTrackerStatus(DelegationStatus.UndelegatableFunction, node, binding, Function, DelegationTelemetryInfo.CreateUndelegatableFunctionTelemetryInfo((TexlFunction)callInfo?.Function));
             return false;
@@ -400,7 +394,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             if (!IsValidDelegatableAsyncNode(node, binding)
                 && (isAsync || (!binding.Features.HasFlag(Features.AllowImpureNodeDelegation) && !isPure)))
             {
-                var telemetryMessage = string.Format("Kind:{0}, isAsync:{1}, isPure:{2}", node.Kind, isAsync, isPure);
+                var telemetryMessage = string.Format(CultureInfo.InvariantCulture, "Kind:{0}, isAsync:{1}, isPure:{2}", node.Kind, isAsync, isPure);
                 SuggestDelegationHintAndAddTelemetryMessage(node, binding, telemetryMessage);
 
                 if (isAsync && !binding.Features.HasFlag(Features.AllowAsyncDelegation))

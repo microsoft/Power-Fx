@@ -36,7 +36,14 @@ namespace Microsoft.PowerFx
         /// Enable Identifier support for describing column names
         /// Added on 6th December 2022.
         /// </summary>
-        SupportColumnNamesAsIdentifiers = 0x8,
+        SupportColumnNamesAsIdentifiers = 0x8,        
+
+        /// <summary>
+        /// Enforces strong-typing for builtin enums, rather than treating
+        /// them as aliases for values of string/number/boolean types
+        /// Added March 2023.
+        /// </summary>
+        StronglyTypedBuiltinEnums = 0x10,
 
         /// <summary>
         /// Allow delegation for async calls (delegate using awaited call result).

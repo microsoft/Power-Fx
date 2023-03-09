@@ -161,7 +161,7 @@
     
   </data>
   <data name="SwitchCaseExpr" xml:space="preserve">
-    <value>match_verdi</value>
+    <value>samsvar_verdi</value>
     
   </data>
   <data name="SwitchCaseArg" xml:space="preserve">
@@ -169,11 +169,11 @@
     
   </data>
   <data name="AboutSwitch_switch_value" xml:space="preserve">
-    <value>Verdi som skal sammenlignes med hver match_verdi.</value>
+    <value>Verdi som skal sammenlignes med hver samsvar_verdi.</value>
     
   </data>
   <data name="AboutSwitch_match_value" xml:space="preserve">
-    <value>Verdi som skal matches med bytt_verdi.</value>
+    <value>Verdi som skal samsvares med bytt_verdi.</value>
     
   </data>
   <data name="AboutSwitch_match_result" xml:space="preserve">
@@ -795,7 +795,7 @@
     
   </data>
   <data name="AboutIfError_fallback" xml:space="preserve">
-    <value>Verdien som returneres hvis det er det første argumentet uten feil.</value>
+    <value>Verdien som returneres hvis det forrige segmentet er en feil.</value>
     
   </data>
   <data name="AboutSubstitute" xml:space="preserve">
@@ -1849,6 +1849,10 @@
     <value>Ugyldig format.</value>
     
   </data>
+  <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
+    <value>Argumentet representerer ikke en gyldig dato- eller klokkeslettverdi</value>
+    
+  </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
     <value>Denne datakilden er ugyldig. Rett opp feilen i ruten Datakilder ved å klikke Innhold -&gt; Datakilder eller Vis -&gt; Alternativer</value>
     
@@ -2670,7 +2674,7 @@
     <value>Språkkoden for den angitte teksten.</value>
   </data>
   <data name="AboutTable" xml:space="preserve">
-    <value>Oppretter en tabell fra de angitte postene med like mange kolonner som det er unike postfelt. For eksempel: tabell ({key1: val1, key2: val2, ...},...)</value>
+    <value>Oppretter en tabell fra de angitte postene med like mange kolonner som det er unike postfelter. Eksempel: Table({key1: val1, key2: val2, ...}, ...)</value>
     
   </data>
   <data name="TableArg1" xml:space="preserve">
@@ -3268,7 +3272,7 @@
     
   </data>
   <data name="LayoutOverflow_Scroll_DisplayName" xml:space="preserve">
-    <value>Bla</value>
+    <value>Rull</value>
     
   </data>
   <data name="Overflow_Hidden_DisplayName" xml:space="preserve">
@@ -3496,7 +3500,7 @@
     
   </data>
   <data name="BarcodeType_Auto_DisplayName" xml:space="preserve">
-    <value>Auto</value>
+    <value>Automatisk</value>
     
   </data>
   <data name="BarcodeType_Aztec_DisplayName" xml:space="preserve">
@@ -4124,7 +4128,7 @@
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
-    <value>Forventet en operand. Formelen eller uttrykket forventer en gyldig operand. Du kan for eksempel legge til operanden "2" i uttrykket '1 + _, slik at resultatet blir (3). Eller du kan legge til operanden "there" i uttrykket "" hei "&amp; _' slik at resultatet blir "Hei du".</value>
+    <value>Forventet en operand. Formelen eller uttrykket forventer en gyldig operand. Du kan for eksempel legge til operanden «2» i uttrykket «1 +_» slik at resultatet blir «3». Eller du kan legge til operanden «du» i uttrykket «Hei &amp; _» slik at resultatet blir «Hei du».</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_HowToFix_1" xml:space="preserve">
@@ -4416,6 +4420,10 @@
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
     <value>Kontroller at du har tekst for identifikatoren. Denne feilen oppstår når identifikatoren er bare tomrom eller mellomrom.</value>
+    
+  </data>
+  <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
+    <value>Unable to compare values of type {0}.</value>
     
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
@@ -4834,8 +4842,18 @@
     <value>Denne funksjonen er tvetydig, den inneholder lambda-uttrykk og kolonneidentifikatorer for samme argument.</value>
     
   </data>
-  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
-    <value>Alternativet BooleanOptionSet {0} støttes ikke.</value>
+  <data name="OptionSetOptionNotSupported" xml:space="preserve">
+    <value>The value of option {0} is not of expected type {1}.</value>
     
+  </data>
+  <data name="AboutOptionSetInfo" xml:space="preserve">
+    <value>Returnerer det logiske navnet for den angitte alternativsettverdien.</value>
+    
+  </data>
+  <data name="AboutOptionSetInfoArg1" xml:space="preserve">
+    <value>alternativ</value>
+  </data>
+  <data name="AboutOptionSetInfo_option" xml:space="preserve">
+    <value>En alternativsettverdi med det logiske navnet som returneres.</value>
   </data>
 </root>

@@ -192,10 +192,10 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             //   https://github.com/nunit/nunit3-vs-adapter/issues/691
             var config = Default;
             var actualSuggestions = SuggestStrings(expression, config);
-            Assert.Equal(expectedSuggestions, actualSuggestions);
-            
+            Assert.Equal(expectedSuggestions.OrderBy(x => x), actualSuggestions.OrderBy(x => x));
+
             actualSuggestions = SuggestStrings(expression, config);
-            Assert.Equal(expectedSuggestions, actualSuggestions);
+            Assert.Equal(expectedSuggestions.OrderBy(x => x), actualSuggestions.OrderBy(x => x));
         }
 
         /// <summary>
@@ -214,7 +214,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             var config = EmptyEverything;
             var actualSuggestions = SuggestStrings(expression, config);
             Assert.Equal(expectedSuggestions, actualSuggestions);
-                     
+
             actualSuggestions = SuggestStrings(expression, config);
             Assert.Equal(expectedSuggestions, actualSuggestions);
         }
@@ -230,7 +230,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             var config = MinimalEnums;
             var actualSuggestions = SuggestStrings(expression, config);
             Assert.Equal(expectedSuggestions, actualSuggestions);
-            
+
             actualSuggestions = SuggestStrings(expression, config);
             Assert.Equal(expectedSuggestions, actualSuggestions);
         }
@@ -318,10 +318,10 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
 
             var config = Default;
             var actualSuggestions = SuggestStrings(expression, config, context);
-            Assert.Equal(expectedSuggestions, actualSuggestions);
+            Assert.Equal(expectedSuggestions.OrderBy(x => x), actualSuggestions.OrderBy(x => x));
 
             actualSuggestions = SuggestStrings(expression, config, context);
-            Assert.Equal(expectedSuggestions, actualSuggestions);
+            Assert.Equal(expectedSuggestions.OrderBy(x => x), actualSuggestions.OrderBy(x => x));
         }
 
         [Theory]
@@ -398,7 +398,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             check.SetBindingInfo();
             var suggest = engine.Suggest(check, 1);
             Assert.NotNull(suggest);
-                                    
+
             check.ApplyErrors();
             Assert.Empty(check.Errors);
         }

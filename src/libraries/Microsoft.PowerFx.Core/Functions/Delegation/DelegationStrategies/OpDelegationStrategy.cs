@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Globalization;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Logging.Trackers;
@@ -29,7 +30,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
         {
             Contracts.AssertNonEmpty(message);
 
-            return string.Format("Op:{0}, {1}", Op, message);
+            return string.Format(CultureInfo.InvariantCulture, "Op:{0}, {1}", Op, message);
         }
 
         public virtual bool IsOpSupportedByColumn(OperationCapabilityMetadata metadata, TexlNode column, DPath columnPath, TexlBinding binder)
@@ -41,6 +42,15 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             var result = metadata.IsBinaryOpInDelegationSupportedByColumn(Op, columnPath);
             if (!result)
             {
+                // Filter(SharepointDS, BooleanCol And <some other predicate>), makes it non delegable since no column has And/Or capability
+                if ((column.Kind == NodeKind.FirstName || column.Kind == NodeKind.DottedName) && (Op == BinaryOp.And || Op == BinaryOp.Or))
+                {
+                    if (binder.IsValidBooleanDelegableNode(column))
+                    {
+                        return IsOpSupportedByTable(metadata, column, binder);
+                    }
+                }
+                
                 TrackingProvider.Instance.AddSuggestionMessage(FormatTelemetryMessage("Operator not supported by column."), column, binder);
                 SuggestDelegationHint(column, binder, TexlStrings.OpNotSupportedByColumnSuggestionMessage_OpNotSupportedByColumn, CharacterUtils.MakeSafeForFormatString(columnPath.ToString()));
             }
@@ -177,7 +187,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
 
                         if (kind != NodeKind.BoolLit && kind != NodeKind.StrLit && kind != NodeKind.NumLit)
                         {
-                            var telemetryMessage = string.Format("NodeKind {0} unsupported.", kind);
+                            var telemetryMessage = string.Format(CultureInfo.InvariantCulture, "NodeKind {0} unsupported.", kind);
                             SuggestDelegationHintAndAddTelemetryMessage(node, binding, telemetryMessage);
                             return false;
                         }
@@ -276,7 +286,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
                 !(binaryOpNode.Right is FirstNameNode || binaryOpNode.Right is DottedNameNode) &&
                 !opDelStrategy.IsOpSupportedByTable(metadata, node, binding))
             {
-                var telemetryMessage = string.Format("{0} operator not supported at table level", binaryOpNode.Op.ToString());
+                var telemetryMessage = string.Format(CultureInfo.InvariantCulture, "{0} operator not supported at table level", binaryOpNode.Op.ToString());
                 SuggestDelegationHintAndAddTelemetryMessage(node, binding, telemetryMessage);
                 TrackingProvider.Instance.SetDelegationTrackerStatus(DelegationStatus.BinaryOpNoSupported, node, binding, _function, DelegationTelemetryInfo.CreateBinaryOpNoSupportedInfoTelemetryInfo(binaryOpNode.Op));
                 return false;

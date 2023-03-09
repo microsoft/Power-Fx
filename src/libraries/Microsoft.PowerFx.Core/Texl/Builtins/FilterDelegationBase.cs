@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Globalization;
 using System.Numerics;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
@@ -104,6 +105,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                     case NodeKind.FirstName:
                         {
+                            // Only boolean option sets and boolean fields are allowed to delegate
+                            if (!binding.IsValidBooleanDelegableNode(dsNode))
+                            {
+                                SuggestDelegationHint(dsNode, binding);
+                                return false;
+                            }
+
                             if (!firstNameStrategy.IsValidFirstNameNode(dsNode.AsFirstName(), binding, null))
                             {
                                 return false;
@@ -114,6 +122,15 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                     case NodeKind.DottedName:
                         {
+                            // Only boolean option set, boolean fields and views are allowed to delegate
+                            var nodeDType = binding.GetType(dsNode);
+                            if (!(binding.IsValidBooleanDelegableNode(dsNode)
+                                || (nodeDType == DType.ViewValue)))
+                            {
+                                SuggestDelegationHint(dsNode, binding);
+                                return false;
+                            }
+
                             if (!dottedNameStrategy.IsValidDottedNameNode(dsNode.AsDottedName(), binding, filterMetadata, null))
                             {
                                 return false;
@@ -151,7 +168,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         {
                             if (kind != NodeKind.BoolLit)
                             {
-                                SuggestDelegationHint(dsNode, binding, string.Format("Not supported node {0}.", kind));
+                                SuggestDelegationHint(dsNode, binding, string.Format(CultureInfo.InvariantCulture, "Not supported node {0}.", kind));
                                 return false;
                             }
 

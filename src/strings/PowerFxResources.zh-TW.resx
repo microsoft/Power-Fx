@@ -795,7 +795,7 @@
     
   </data>
   <data name="AboutIfError_fallback" xml:space="preserve">
-    <value>若為第一個非錯誤引數，即為傳回的值。</value>
+    <value>上一個引數錯誤時傳回的值。</value>
     
   </data>
   <data name="AboutSubstitute" xml:space="preserve">
@@ -1849,6 +1849,10 @@
     <value>無效的格式。</value>
     
   </data>
+  <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
+    <value>引數不代表有效的日期或時間值。</value>
+    
+  </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
     <value>此資料來源無效。請在 [資料來源] 窗格中按一下 [內容] -&gt; [資料來源] 或 [檢視] -&gt; [選項]，以修正錯誤。</value>
     
@@ -2888,7 +2892,7 @@
     
   </data>
   <data name="Icon_Bookmark_DisplayName" xml:space="preserve">
-    <value>書簽</value>
+    <value>書籤</value>
     
   </data>
   <data name="Icon_Bug_DisplayName" xml:space="preserve">
@@ -3208,7 +3212,7 @@
     
   </data>
   <data name="LayoutAlignItems_Center_DisplayName" xml:space="preserve">
-    <value>中心</value>
+    <value>置中</value>
     
   </data>
   <data name="LayoutAlignItems_End_DisplayName" xml:space="preserve">
@@ -3224,7 +3228,7 @@
     
   </data>
   <data name="AlignInContainer_Center_DisplayName" xml:space="preserve">
-    <value>中心</value>
+    <value>置中</value>
     
   </data>
   <data name="AlignInContainer_End_DisplayName" xml:space="preserve">
@@ -3244,7 +3248,7 @@
     
   </data>
   <data name="LayoutJustifyContent_Center_DisplayName" xml:space="preserve">
-    <value>中心</value>
+    <value>置中</value>
     
   </data>
   <data name="LayoutJustifyContent_End_DisplayName" xml:space="preserve">
@@ -3420,7 +3424,7 @@
     
   </data>
   <data name="ImagePosition_Center_DisplayName" xml:space="preserve">
-    <value>中央</value>
+    <value>置中</value>
     
   </data>
   <data name="VerticalAlign_Top_DisplayName" xml:space="preserve">
@@ -3432,7 +3436,7 @@
     
   </data>
   <data name="VerticalAlign_Bottom_DisplayName" xml:space="preserve">
-    <value>下</value>
+    <value>底部</value>
     
   </data>
   <data name="Layout_Horizontal_DisplayName" xml:space="preserve">
@@ -3788,7 +3792,7 @@
     
   </data>
   <data name="Icon_Bus_DisplayName" xml:space="preserve">
-    <value>匯流排</value>
+    <value>公共汽車</value>
     
   </data>
   <data name="Icon_Cars_DisplayName" xml:space="preserve">
@@ -3840,7 +3844,7 @@
     
   </data>
   <data name="Icon_Bell_DisplayName" xml:space="preserve">
-    <value>鈴</value>
+    <value>鐘</value>
     
   </data>
   <data name="Icon_ShoppingCart_DisplayName" xml:space="preserve">
@@ -4418,6 +4422,10 @@
     <value>請確認您為識別碼提供了文字。若識別碼完全為空白或空格，就會發生此錯誤。</value>
     
   </data>
+  <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
+    <value>Unable to compare values of type {0}.</value>
+    
+  </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
     <value>比較不相容的類型。這些類型無法比較: {0}、{1}。</value>
     
@@ -4834,8 +4842,18 @@
     <value>此函式不明確，其包含同一個引數的 Lambda 運算式和資料行識別碼。</value>
     
   </data>
-  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
-    <value>不支援 BooleanOptionSet 選項 {0}。</value>
+  <data name="OptionSetOptionNotSupported" xml:space="preserve">
+    <value>The value of option {0} is not of expected type {1}.</value>
     
+  </data>
+  <data name="AboutOptionSetInfo" xml:space="preserve">
+    <value>傳回給定選項組值的邏輯名稱。</value>
+    
+  </data>
+  <data name="AboutOptionSetInfoArg1" xml:space="preserve">
+    <value>選項</value>
+  </data>
+  <data name="AboutOptionSetInfo_option" xml:space="preserve">
+    <value>邏輯名稱將被傳回的選項組值。</value>
   </data>
 </root>

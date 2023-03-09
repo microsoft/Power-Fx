@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ListItemSingleQuotedFormat" xml:space="preserve">
-    <value>“{0}”</value>
+    <value>'{0}'</value>
     
   </data>
   <data name="AboutIf" xml:space="preserve">
@@ -130,11 +130,11 @@
     
   </data>
   <data name="IfArgTrueValue" xml:space="preserve">
-    <value>true值</value>
+    <value>true_值</value>
     
   </data>
   <data name="IfArgElseValue" xml:space="preserve">
-    <value>else值</value>
+    <value>else_值</value>
     
   </data>
   <data name="AboutIf_logical_test" xml:space="preserve">
@@ -153,27 +153,27 @@
     
   </data>
   <data name="SwitchExpression" xml:space="preserve">
-    <value>switch值</value>
+    <value>开关值</value>
     
   </data>
   <data name="SwitchDefaultReturn" xml:space="preserve">
-    <value>default结果</value>
+    <value>默认结果</value>
     
   </data>
   <data name="SwitchCaseExpr" xml:space="preserve">
-    <value>match值</value>
+    <value>匹配值</value>
     
   </data>
   <data name="SwitchCaseArg" xml:space="preserve">
-    <value>match结果</value>
+    <value>匹配结果</value>
     
   </data>
   <data name="AboutSwitch_switch_value" xml:space="preserve">
-    <value>用于与每个match值进行比较的值。</value>
+    <value>用于与每个匹配值进行比较的值。</value>
     
   </data>
   <data name="AboutSwitch_match_value" xml:space="preserve">
-    <value>用于匹配switch值的值。</value>
+    <value>用于匹配开关值的值。</value>
     
   </data>
   <data name="AboutSwitch_match_result" xml:space="preserve">
@@ -331,7 +331,7 @@
     <value>用于此平均值运算的数值。</value>
   </data>
   <data name="AboutAddColumns" xml:space="preserve">
-    <value>返回一个表，其中包含通过对 "source" 计算所有 "expression" 而计算出的新列。</value>
+    <value>返回一个表，其中包含通过对“源”计算所有“表达式”而计算出的新列。</value>
     
   </data>
   <data name="AddColumnsArg1" xml:space="preserve">
@@ -662,7 +662,7 @@
     <value>文本值组成的列，要转换为小写文本值组成的列。</value>
   </data>
   <data name="AboutProper" xml:space="preserve">
-    <value>将文本值转换为正确的大小写; 每个单词中的第一个字母为大写，所有其他字母为小写。</value>
+    <value>将文本值转换为正确的大小写；每个单词中的第一个字母为大写，所有其他字母为小写。</value>
     
   </data>
   <data name="AboutProperT" xml:space="preserve">
@@ -728,7 +728,7 @@
     
   </data>
   <data name="StringFuncArg3" xml:space="preserve">
-    <value>数字字符</value>
+    <value>字符数</value>
     
   </data>
   <data name="AboutReplace" xml:space="preserve">
@@ -795,7 +795,7 @@
     
   </data>
   <data name="AboutIfError_fallback" xml:space="preserve">
-    <value>当它是第一个非错误参数时返回的值。</value>
+    <value>前一个参数出错时返回的值。</value>
     
   </data>
   <data name="AboutSubstitute" xml:space="preserve">
@@ -1038,7 +1038,7 @@
     
   </data>
   <data name="TruncArg2" xml:space="preserve">
-    <value>数字位数</value>
+    <value>位数</value>
     
   </data>
   <data name="TruncTArg1" xml:space="preserve">
@@ -1046,7 +1046,7 @@
     
   </data>
   <data name="TruncTArg2" xml:space="preserve">
-    <value>数字位数</value>
+    <value>位数</value>
     
   </data>
   <data name="AboutRound" xml:space="preserve">
@@ -1066,7 +1066,7 @@
     
   </data>
   <data name="RoundArg2" xml:space="preserve">
-    <value>编号数字</value>
+    <value>位数</value>
     
   </data>
   <data name="AboutRound_number" xml:space="preserve">
@@ -1113,7 +1113,7 @@
     
   </data>
   <data name="RoundTArg2" xml:space="preserve">
-    <value>编号数字</value>
+    <value>位数</value>
     
   </data>
   <data name="AboutRGBA" xml:space="preserve">
@@ -1488,7 +1488,7 @@
     
   </data>
   <data name="LeftRightArg2" xml:space="preserve">
-    <value>数字字符</value>
+    <value>字符数</value>
     
   </data>
   <data name="AboutIsBlank" xml:space="preserve">
@@ -1766,11 +1766,11 @@
     
   </data>
   <data name="ErrInvalidArgs_Func" xml:space="preserve">
-    <value>函数“{0}”具有一些无效参数。</value>
+    <value>函数 '{0}' 具有一些无效参数。</value>
     
   </data>
   <data name="ErrNeedTable_Func" xml:space="preserve">
-    <value>“{0}”的第一个参数应是表。</value>
+    <value>'{0}' 的第一个参数应是表。</value>
     
   </data>
   <data name="ErrInvalidPropertyAccess" xml:space="preserve">
@@ -1778,23 +1778,23 @@
     
   </data>
   <data name="ErrNeedTableCol_Func" xml:space="preserve">
-    <value>“{0}”的第一个参数应是由一列组成的表。</value>
+    <value>'{0}' 的第一个参数应是由一列组成的表。</value>
     
   </data>
   <data name="ErrInvalidSchemaNeedStringCol_Col" xml:space="preserve">
-    <value>架构无效，需要“{0}”的文本值组成的列。</value>
+    <value>架构无效，需要 '{0}' 的文本值组成的列。</value>
     
   </data>
   <data name="ErrInvalidSchemaNeedDateCol_Col" xml:space="preserve">
-    <value>架构无效，需要“{0}”的日期值组成的列。</value>
+    <value>架构无效，需要 '{0}' 的日期值组成的列。</value>
     
   </data>
   <data name="ErrInvalidSchemaNeedNumCol_Col" xml:space="preserve">
-    <value>架构无效，需要“{0}”的数值组成的列。</value>
+    <value>架构无效，需要 '{0}' 的数值组成的列。</value>
     
   </data>
   <data name="ErrInvalidSchemaNeedColorCol_Col" xml:space="preserve">
-    <value>架构无效，需要“{0}”的颜色值组成的列。</value>
+    <value>架构无效，需要 '{0}' 的颜色值组成的列。</value>
     
   </data>
   <data name="ErrInvalidSchemaNeedCol" xml:space="preserve">
@@ -1810,7 +1810,7 @@
     
   </data>
   <data name="ErrNeedRecord_Func" xml:space="preserve">
-    <value>“{0}”的第一个参数应是记录。</value>
+    <value>'{0}' 的第一个参数应是记录。</value>
     
   </data>
   <data name="ErrNeedEntity_EntityName" xml:space="preserve">
@@ -1849,6 +1849,10 @@
     <value>格式无效。</value>
     
   </data>
+  <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
+    <value>变量未表示有效的日期或时间值。</value>
+    
+  </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
     <value>此数据源无效。请通过单击“内容 -&gt; 数据源”或“查看 -&gt; 选项”来修复“数据源”窗格中的错误</value>
     
@@ -1862,11 +1866,11 @@
     
   </data>
   <data name="ErrTypeError_Ex1_Ex2_Found" xml:space="preserve">
-    <value>此参数“{2}”的类型与所需类型“{0}”或“{1}”之一不匹配。</value>
+    <value>此参数 '{2}' 的类型与所需类型 '{0}' 或 '{1}' 之一不匹配。</value>
     
   </data>
   <data name="ErrTypeError_Arg_Expected_Found" xml:space="preserve">
-    <value>此参数“{0}”的类型与所需类型“{1}”不匹配。找到类型“{2}”。</value>
+    <value>此参数 '{0}' 的类型与所需类型 '{1}' 不匹配。找到类型 '{2}'。</value>
     
   </data>
   <data name="ErrTypeError_WrongType" xml:space="preserve">
@@ -1878,23 +1882,23 @@
     
   </data>
   <data name="ErrExpectedStringLiteralArg_Name" xml:space="preserve">
-    <value>参数“{0}”无效，应为文本。</value>
+    <value>参数 '{0}' 无效，应为文本。</value>
     
   </data>
   <data name="ErrArgNotAValidIdentifier_Name" xml:space="preserve">
-    <value>参数“{0}”不是有效的标识符。</value>
+    <value>参数 '{0}' 不是有效的标识符。</value>
     
   </data>
   <data name="ErrColExists_Name" xml:space="preserve">
-    <value>名为“{0}”的列已存在。</value>
+    <value>名为 '{0}' 的列已存在。</value>
     
   </data>
   <data name="ErrColConflict_Name" xml:space="preserve">
-    <value>“{0}”的列名冲突。</value>
+    <value>'{0}' 的列名冲突。</value>
     
   </data>
   <data name="ErrColDNE_Name" xml:space="preserve">
-    <value>指定列“{0}”不存在。</value>
+    <value>指定列 '{0}' 不存在。</value>
     
   </data>
   <data name="ErrColumnDoesNotExist_Name_Similar" xml:space="preserve">
@@ -1918,7 +1922,7 @@
     
   </data>
   <data name="ErrIncorrectFormat_Func" xml:space="preserve">
-    <value>为“{0}”指定的格式不正确。</value>
+    <value>为 '{0}' 指定的格式不正确。</value>
     
   </data>
   <data name="ErrAsyncLambda" xml:space="preserve">
@@ -2204,11 +2208,11 @@
     
   </data>
   <data name="ErrMultipleValuesForField_Name" xml:space="preserve">
-    <value>此记录中多次指定了名为“{0}”的字段。</value>
+    <value>此记录中多次指定了名为 '{0}' 的字段。</value>
     
   </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
-    <value>多次指定了名为“{0}”的列。</value>
+    <value>多次指定了名为 '{0}' 的列。</value>
     
   </data>
   <data name="WarnLiteralPredicate" xml:space="preserve">
@@ -2314,35 +2318,35 @@
     
   </data>
   <data name="InvalidXml_ElementMissingAttribute_ElemName_AttrName" xml:space="preserve">
-    <value>元素“{0}”缺少属性“{1}”。</value>
+    <value>元素 '{0}' 缺少属性 '{1}'。</value>
     
   </data>
   <data name="InvalidXml_AttributeCannotBeEmpty_AttrName" xml:space="preserve">
-    <value>属性“{0}”不能为空字符串。</value>
+    <value>属性 '{0}' 不能为空字符串。</value>
     
   </data>
   <data name="InvalidXml_AttributeValueInvalidGuid_AttrName_Value" xml:space="preserve">
-    <value>属性“{0}”具有无效的 GUID 值“{1}”。</value>
+    <value>属性 '{0}' 具有无效的 GUID 值 '{1}'。</value>
     
   </data>
   <data name="InvalidJson_MissingRequiredNamedValue_PropName" xml:space="preserve">
-    <value>缺少属性“{0}”。</value>
+    <value>缺少属性 '{0}'。</value>
     
   </data>
   <data name="InvalidJson_NamedValueTypeNotCorrect_PropName_ExpectedType_ActualType" xml:space="preserve">
-    <value>属性“{0}”具有无效类型值: {2}。需要类型值: {1}。</value>
+    <value>属性 '{0}' 具有无效类型值: {2}。需要类型值: {1}。</value>
     
   </data>
   <data name="InvalidJson_NamedValueCannotBeEmpty_PropName" xml:space="preserve">
-    <value>属性“{0}”不能为空。</value>
+    <value>属性 '{0}' 不能为空。</value>
     
   </data>
   <data name="InvalidJson_NamedEnumStringInvalid_PropName_ActualValue" xml:space="preserve">
-    <value>枚举“{0}”应具有一个整数值，但其值 {1} 不在枚举范围内。</value>
+    <value>枚举 '{0}' 应具有一个有效值，但其值 {1} 不在枚举范围内。</value>
     
   </data>
   <data name="InvalidJson_NamedIntegerOverflow_PropName_ActualValue" xml:space="preserve">
-    <value>属性“{0}”应具有一个整数值，但其值 {1} 不在范围内。</value>
+    <value>属性 '{0}' 应具有一个整数值，但其值 {1} 不在范围内。</value>
     
   </data>
   <data name="InvalidJson_IndexedValueTypeNotCorrect_Index_ExpectedType_ActualType" xml:space="preserve">
@@ -2565,7 +2569,7 @@
     
   </data>
   <data name="label_Live_DisplayName" xml:space="preserve">
-    <value>活动</value>
+    <value>实时</value>
     
   </data>
   <data name="label_Overflow_DisplayName" xml:space="preserve">
@@ -2829,7 +2833,7 @@
     
   </data>
   <data name="StartsWithArg2" xml:space="preserve">
-    <value>start</value>
+    <value>开始</value>
     
   </data>
   <data name="AboutEndsWith" xml:space="preserve">
@@ -2964,7 +2968,7 @@
     
   </data>
   <data name="Icon_Key_DisplayName" xml:space="preserve">
-    <value>钥匙</value>
+    <value>键</value>
     
   </data>
   <data name="Icon_Lightbulb_DisplayName" xml:space="preserve">
@@ -3148,11 +3152,11 @@
     
   </data>
   <data name="SuggestRemoteExecutionHint_OpNotSupportedByClient" xml:space="preserve">
-    <value>无法正确计算此公式的一部分。此上下文中当前不支持“{0}”运算。</value>
+    <value>无法远程计算此公式的一部分。此上下文中当前不支持 '{0}' 运算。</value>
     
   </data>
   <data name="SuggestRemoteExecutionHint_StringMatchSecondParam" xml:space="preserve">
-    <value>此公式的一部分不能远程计算。如果第二个参数中出现字段名称，则不能委托“{0}”函数。</value>
+    <value>此公式的一部分不能远程计算。如果第二个参数中出现字段名称，则不能委托 '{0}' 函数。</value>
     
   </data>
   <data name="entityForm_EntityForm_DisplayName" xml:space="preserve">
@@ -3408,7 +3412,7 @@
     
   </data>
   <data name="ImagePosition_Fit_DisplayName" xml:space="preserve">
-    <value>匹配度</value>
+    <value>适应</value>
     
   </data>
   <data name="ImagePosition_Stretch_DisplayName" xml:space="preserve">
@@ -3424,7 +3428,7 @@
     
   </data>
   <data name="VerticalAlign_Top_DisplayName" xml:space="preserve">
-    <value>上</value>
+    <value>顶部</value>
     
   </data>
   <data name="VerticalAlign_Middle_DisplayName" xml:space="preserve">
@@ -3432,7 +3436,7 @@
     
   </data>
   <data name="VerticalAlign_Bottom_DisplayName" xml:space="preserve">
-    <value>下</value>
+    <value>底部</value>
     
   </data>
   <data name="Layout_Horizontal_DisplayName" xml:space="preserve">
@@ -3608,7 +3612,7 @@
     
   </data>
   <data name="Icon_Check_DisplayName" xml:space="preserve">
-    <value>检查</value>
+    <value>选中</value>
     
   </data>
   <data name="Icon_Search_DisplayName" xml:space="preserve">
@@ -3616,7 +3620,7 @@
     
   </data>
   <data name="Icon_Filter_DisplayName" xml:space="preserve">
-    <value>筛选</value>
+    <value>筛选器</value>
     
   </data>
   <data name="Icon_Sort_DisplayName" xml:space="preserve">
@@ -3796,7 +3800,7 @@
     
   </data>
   <data name="Icon_Money_DisplayName" xml:space="preserve">
-    <value>钱</value>
+    <value>金钱</value>
     
   </data>
   <data name="Icon_Currency_DisplayName" xml:space="preserve">
@@ -3956,7 +3960,7 @@
     
   </data>
   <data name="Icon_Person_DisplayName" xml:space="preserve">
-    <value>个人</value>
+    <value>人员</value>
     
   </data>
   <data name="Icon_EmojiFrown_DisplayName" xml:space="preserve">
@@ -4004,7 +4008,7 @@
     
   </data>
   <data name="Icon_LevelsLayersItems_DisplayName" xml:space="preserve">
-    <value>层叠</value>
+    <value>层</value>
     
   </data>
   <data name="Icon_Trending_DisplayName" xml:space="preserve">
@@ -4168,7 +4172,7 @@
     <value>每个块注释都必须以 "/*" 开头且以 "*/" 结尾。如果块注释结尾错误，则注释后的所有代码都将成为注释的一部分。如果注释仅包含一行，可以 " //" 开头，而不用标识注释结尾。</value>
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_HowToFix_1" xml:space="preserve">
-    <value>在块注释的结尾添加“*/”，或将其更改为一组行注释。</value>
+    <value>在块注释的结尾添加 "*/"，或将其更改为一组行注释。</value>
     
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_Link_1" xml:space="preserve">
@@ -4176,7 +4180,7 @@
     
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_ShortMessage" xml:space="preserve">
-    <value>意外字符。应为“{1}”，但公式包含的是“{0}”。</value>
+    <value>意外字符。应为 '{1}'，但公式包含的是 '{0}'。</value>
     
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_LongMessage" xml:space="preserve">
@@ -4243,7 +4247,7 @@
     <value>无法对没有父控件的控件使用父运算符。此运算符引用承载给定控件的控件，并使其所有属性可用。</value>
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_HowToFix_1" xml:space="preserve">
-    <value>删除“Parent”运算符。</value>
+    <value>删除 "Parent" 运算符。</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_Link_1" xml:space="preserve">
@@ -4418,6 +4422,10 @@
     <value>请确保标识符具有文本。当标识符全部空白或全为空格时，会发生此错误。</value>
     
   </data>
+  <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
+    <value>Unable to compare values of type {0}.</value>
+    
+  </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
     <value>比较的类型不兼容。无法比较这些类型: {0}、{1}。</value>
     
@@ -4442,7 +4450,7 @@
     
   </data>
   <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_ShortMessage" xml:space="preserve">
-    <value>无参数。此函数没有名为“{0}”的可选参数。</value>
+    <value>无参数。此函数没有名为 '{0}' 的可选参数。</value>
     
   </data>
   <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_HowToFix_1" xml:space="preserve">
@@ -4454,7 +4462,7 @@
     
   </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_ShortMessage" xml:space="preserve">
-    <value>类型不兼容。正在更新的数据源中的“{0}”列应为“{1}”类型，但你使用的是“{2}”类型。</value>
+    <value>类型不兼容。正在更新的数据源中的 '{0}' 列应为 '{1}' 类型，但您使用的是 '{2}' 类型。</value>
     
   </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_HowToFix_1" xml:space="preserve">
@@ -4470,7 +4478,7 @@
     
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_ShortMessage" xml:space="preserve">
-    <value>缺少列。公式缺少类型为“{1}”的列“{0}”。</value>
+    <value>缺少列。公式缺少类型为 '{1}' 的列 '{0}'。</value>
     
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_HowToFix_1" xml:space="preserve">
@@ -4536,7 +4544,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_ShortMessage" xml:space="preserve">
-    <value>委派警告。此公式的“{0}”部分可能在大型数据集上无法正常工作。</value>
+    <value>委派警告。此公式的 "{0}" 部分可能在大型数据集上无法正常工作。</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_LongMessage" xml:space="preserve">
@@ -4563,7 +4571,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_ShortMessage" xml:space="preserve">
-    <value>委派警告。此公式中突出显示的部分可能在大型数据集的列“{0}”上无法正常工作。</value>
+    <value>委派警告。此公式中突出显示的部分可能在大型数据集的列 "{0}" 上无法正常工作。</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_LongMessage" xml:space="preserve">
@@ -4706,7 +4714,7 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidControlReference_Link_1" xml:space="preserve">
-    <value>引用:画布应用的 ConfirmExit</value>
+    <value>引用: 画布应用的 ConfirmExit</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidStringInterpolation_ShortMessage" xml:space="preserve">
@@ -4834,8 +4842,18 @@
     <value>此函数不明确，其中包含同一参数的 Lambda 表达式和列标识符。</value>
     
   </data>
-  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
-    <value>不支持 BooleanOptionSet 选项 {0}。</value>
+  <data name="OptionSetOptionNotSupported" xml:space="preserve">
+    <value>The value of option {0} is not of expected type {1}.</value>
     
+  </data>
+  <data name="AboutOptionSetInfo" xml:space="preserve">
+    <value>返回给定选项集值的逻辑名称。</value>
+    
+  </data>
+  <data name="AboutOptionSetInfoArg1" xml:space="preserve">
+    <value>选项</value>
+  </data>
+  <data name="AboutOptionSetInfo_option" xml:space="preserve">
+    <value>将返回其逻辑名称的选项集值。</value>
   </data>
 </root>

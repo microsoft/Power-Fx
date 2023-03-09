@@ -495,7 +495,9 @@ namespace Microsoft.PowerFx.Core.Localization
 
         public static StringGetter AboutOptionSetInfo = (b) => StringResources.Get("AboutOptionSetInfo", b);
         public static StringGetter AboutOptionSetInfoArg1 = (b) => StringResources.Get("AboutOptionSetInfoArg1", b);
-        
+
+        public static StringGetter AboutLanguage = (b) => StringResources.Get("AboutLanguage", b);
+
         // Previously, errors were listed here in the form of a StringGetter, which would be evaluated to fetch
         // an error message to pass to the BaseError class constructor. We are switching to passing the message key itself
         // to the BaseError class, and the BaseError itself is responsible for fetching the resource. (This allows the
@@ -573,6 +575,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrEmptyInvalidIdentifier = new ErrorResourceKey("ErrEmptyInvalidIdentifier");
         public static ErrorResourceKey ErrIncompatibleTypes = new ErrorResourceKey("ErrIncompatibleTypes");
         public static ErrorResourceKey ErrIncompatibleTypesForEquality_Left_Right = new ErrorResourceKey("ErrIncompatibleTypesForEquality_Left_Right");
+        public static ErrorResourceKey ErrUnOrderedTypeForComparison_Type = new ErrorResourceKey("ErrUnOrderedTypeForComparison_Type");
         public static ErrorResourceKey ErrServiceFunctionUnknownOptionalParam_Name = new ErrorResourceKey("ErrServiceFunctionUnknownOptionalParam_Name");
         public static ErrorResourceKey ErrColumnTypeMismatch_ColName_ExpectedType_ActualType = new ErrorResourceKey("ErrColumnTypeMismatch_ColName_ExpectedType_ActualType");
         public static ErrorResourceKey ErrColumnMissing_ColName_ExpectedType = new ErrorResourceKey("ErrColumnMissing_ColName_ExpectedType");
@@ -640,6 +643,6 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrGeneralError = new ErrorResourceKey("ErrGeneralError");
         public static ErrorResourceKey ErrRemoveAllArg = new ErrorResourceKey("ErrRemoveAllArg");
 
-        public static ErrorResourceKey BooleanOptionSetOptionNotSupported = new ErrorResourceKey("BooleanOptionSetOptionNotSupported");
+        public static ErrorResourceKey OptionSetOptionNotSupported = new ErrorResourceKey("OptionSetOptionNotSupported");
     }
 }

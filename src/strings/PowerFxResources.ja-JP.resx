@@ -126,15 +126,15 @@
     
   </data>
   <data name="IfArgCond" xml:space="preserve">
-    <value>論理式</value>
+    <value>論理テスト</value>
     
   </data>
   <data name="IfArgTrueValue" xml:space="preserve">
-    <value>trueの場合の_値</value>
+    <value>true の場合の値</value>
     
   </data>
   <data name="IfArgElseValue" xml:space="preserve">
-    <value>その他の場合の_値</value>
+    <value>その他の場合の値</value>
     
   </data>
   <data name="AboutIf_logical_test" xml:space="preserve">
@@ -153,27 +153,27 @@
     
   </data>
   <data name="SwitchExpression" xml:space="preserve">
-    <value>switch_値</value>
+    <value>スイッチ値</value>
     
   </data>
   <data name="SwitchDefaultReturn" xml:space="preserve">
-    <value>既定の_結果</value>
+    <value>既定の結果</value>
     
   </data>
   <data name="SwitchCaseExpr" xml:space="preserve">
-    <value>一致した_値</value>
+    <value>一致した値</value>
     
   </data>
   <data name="SwitchCaseArg" xml:space="preserve">
-    <value>一致した_結果</value>
+    <value>一致した結果</value>
     
   </data>
   <data name="AboutSwitch_switch_value" xml:space="preserve">
-    <value>各 "一致した_値" と比較する値。</value>
+    <value>各 "一致した値" と比較する値。</value>
     
   </data>
   <data name="AboutSwitch_match_value" xml:space="preserve">
-    <value>switch_値と一致する値。</value>
+    <value>スイッチ値と一致する値です。</value>
     
   </data>
   <data name="AboutSwitch_match_result" xml:space="preserve">
@@ -385,7 +385,7 @@
     
   </data>
   <data name="FilterArg2" xml:space="preserve">
-    <value>論理式</value>
+    <value>論理テスト</value>
     
   </data>
   <data name="AboutFilter_source" xml:space="preserve">
@@ -425,7 +425,7 @@
     
   </data>
   <data name="FirstLastNArg2" xml:space="preserve">
-    <value>カウント</value>
+    <value>件数</value>
     
   </data>
   <data name="AboutFirstN_source" xml:space="preserve">
@@ -630,7 +630,7 @@
     
   </data>
   <data name="LenTArg1" xml:space="preserve">
-    <value>テキスト_列</value>
+    <value>テキスト列</value>
     
   </data>
   <data name="AboutUpper" xml:space="preserve">
@@ -720,7 +720,7 @@
     
   </data>
   <data name="StringTFuncArg1" xml:space="preserve">
-    <value>テキスト_列</value>
+    <value>テキスト列</value>
     
   </data>
   <data name="StringFuncArg2" xml:space="preserve">
@@ -795,7 +795,7 @@
     
   </data>
   <data name="AboutIfError_fallback" xml:space="preserve">
-    <value>エラーではない最初の引数である場合に返される値です。</value>
+    <value>前の引数がエラーである場合に返される値です。</value>
     
   </data>
   <data name="AboutSubstitute" xml:space="preserve">
@@ -811,7 +811,7 @@
     
   </data>
   <data name="SubstituteTFuncArg1" xml:space="preserve">
-    <value>テキスト_列</value>
+    <value>テキスト列</value>
     
   </data>
   <data name="SubstituteFuncArg2" xml:space="preserve">
@@ -823,7 +823,7 @@
     
   </data>
   <data name="SubstituteFuncArg4" xml:space="preserve">
-    <value>置換</value>
+    <value>インスタンス番号</value>
     
   </data>
   <data name="AboutSubstitute_text" xml:space="preserve">
@@ -911,7 +911,7 @@
     <value>並べ替えに使用する値の列。並べ替えは昇順または降順ではなく、この列の一致する値のインデックスに基づいて行われます</value>
   </data>
   <data name="AboutRand" xml:space="preserve">
-    <value>0 以上 1 未満の新しい乱数を返します。</value>
+    <value>均等に分散させた 0 以上 1 未満の新しい乱数を返します。</value>
     
   </data>
   <data name="AboutRandBetween" xml:space="preserve">
@@ -929,7 +929,7 @@
     
   </data>
   <data name="RandBetweenArg2" xml:space="preserve">
-    <value>上位</value>
+    <value>最高</value>
     
   </data>
   <data name="AboutGUID" xml:space="preserve">
@@ -937,7 +937,7 @@
     
   </data>
   <data name="GUIDArg" xml:space="preserve">
-    <value>GUID_文字列</value>
+    <value>GUID 文字列</value>
     
   </data>
   <data name="AboutGUID_GUID_string" xml:space="preserve">
@@ -1133,7 +1133,7 @@
     
   </data>
   <data name="RGBAArg4" xml:space="preserve">
-    <value>アルファ_値</value>
+    <value>アルファ値</value>
     
   </data>
   <data name="AboutRGBA_red_value" xml:space="preserve">
@@ -1174,7 +1174,7 @@
     
   </data>
   <data name="ColorFadeTArg2" xml:space="preserve">
-    <value>フェード_または_列</value>
+    <value>フェードまたは列</value>
     
   </data>
   <data name="AboutColorFade_color_or_column" xml:space="preserve">
@@ -1484,7 +1484,7 @@
     
   </data>
   <data name="LeftRightTArg1" xml:space="preserve">
-    <value>テキスト_列</value>
+    <value>テキスト列</value>
     
   </data>
   <data name="LeftRightArg2" xml:space="preserve">
@@ -1849,8 +1849,12 @@
     <value>無効な形式です。</value>
     
   </data>
+  <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
+    <value>引数が有効な日付または時刻の値を表していません。</value>
+    
+  </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
-    <value>このデータ ソースは無効です。[コンテンツ] -&gt; [データ ソース] または [表示] -&gt; [オプション] の順にクリックして、[データ ソース] ウィンドウでエラーを修正してください。</value>
+    <value>このデータ ソースは無効です。[コンテンツ] -&gt; [データ ソース] または [表示] -&gt; [オプション] の順にクリックして、[データ ソース] ウィンドウでエラーを修正してください</value>
     
   </data>
   <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
@@ -1942,7 +1946,7 @@
     
   </data>
   <data name="InfoMessage" xml:space="preserve">
-    <value>メッセージ</value>
+    <value>メッセージ: </value>
     
   </data>
   <data name="InfoNode_Node" xml:space="preserve">
@@ -2200,7 +2204,7 @@
     <value>表示されたテキストの言語コード。</value>
   </data>
   <data name="ErrAutoRefreshNotAllowed" xml:space="preserve">
-    <value>動作規則では、サービス機能の自動更新は使用できません。</value>
+    <value>動作ルールでは、サービス機能の自動更新は使用できません。</value>
     
   </data>
   <data name="ErrMultipleValuesForField_Name" xml:space="preserve">
@@ -2322,7 +2326,7 @@
     
   </data>
   <data name="InvalidXml_AttributeValueInvalidGuid_AttrName_Value" xml:space="preserve">
-    <value>属性 '{0}' に無効な GUID 値 '{1}' が含まれています。</value>
+    <value>属性 '{0}' の GUID 値 '{1}' が無効です。</value>
     
   </data>
   <data name="InvalidJson_MissingRequiredNamedValue_PropName" xml:space="preserve">
@@ -2364,7 +2368,7 @@
     
   </data>
   <data name="DateAddArg2" xml:space="preserve">
-    <value>単位_の_数</value>
+    <value>単位の数</value>
     
   </data>
   <data name="DateAddArg3" xml:space="preserve">
@@ -2416,7 +2420,7 @@
     
   </data>
   <data name="DateAddTArg2" xml:space="preserve">
-    <value>単位_の_数</value>
+    <value>単位の数</value>
     
   </data>
   <data name="DateAddTArg3" xml:space="preserve">
@@ -2589,7 +2593,7 @@
     
   </data>
   <data name="Hide_Calendar_DisplayName" xml:space="preserve">
-    <value>予定表の非表示</value>
+    <value>カレンダーの非表示</value>
     
   </data>
   <data name="Calendar_StartOfWeek_DisplayName" xml:space="preserve">
@@ -2829,7 +2833,7 @@
     
   </data>
   <data name="StartsWithArg2" xml:space="preserve">
-    <value>先頭のテキスト</value>
+    <value>先頭</value>
     
   </data>
   <data name="AboutEndsWith" xml:space="preserve">
@@ -2847,7 +2851,7 @@
     
   </data>
   <data name="EndsWithArg2" xml:space="preserve">
-    <value>end</value>
+    <value>終了</value>
     
   </data>
   <data name="AboutBlank" xml:space="preserve">
@@ -3128,7 +3132,7 @@
     
   </data>
   <data name="Icon_Leave_DisplayName" xml:space="preserve">
-    <value>移動</value>
+    <value>終了</value>
     
   </data>
   <data name="Icon_Paste_DisplayName" xml:space="preserve">
@@ -3204,7 +3208,7 @@
     
   </data>
   <data name="LayoutAlignItems_Start_DisplayName" xml:space="preserve">
-    <value>スタート画面</value>
+    <value>先頭</value>
     
   </data>
   <data name="LayoutAlignItems_Center_DisplayName" xml:space="preserve">
@@ -3220,7 +3224,7 @@
     
   </data>
   <data name="AlignInContainer_Start_DisplayName" xml:space="preserve">
-    <value>スタート画面</value>
+    <value>先頭</value>
     
   </data>
   <data name="AlignInContainer_Center_DisplayName" xml:space="preserve">
@@ -3240,7 +3244,7 @@
     
   </data>
   <data name="LayoutJustifyContent_Start_DisplayName" xml:space="preserve">
-    <value>スタート画面</value>
+    <value>先頭</value>
     
   </data>
   <data name="LayoutJustifyContent_Center_DisplayName" xml:space="preserve">
@@ -3420,7 +3424,7 @@
     
   </data>
   <data name="ImagePosition_Center_DisplayName" xml:space="preserve">
-    <value>中央</value>
+    <value>中央揃え</value>
     
   </data>
   <data name="VerticalAlign_Top_DisplayName" xml:space="preserve">
@@ -3444,11 +3448,11 @@
     
   </data>
   <data name="TextPosition_Left_DisplayName" xml:space="preserve">
-    <value>左へ移動</value>
+    <value>左</value>
     
   </data>
   <data name="TextPosition_Right_DisplayName" xml:space="preserve">
-    <value>右へ移動</value>
+    <value>右</value>
     
   </data>
   <data name="Transition_Push_DisplayName" xml:space="preserve">
@@ -3520,7 +3524,7 @@
     
   </data>
   <data name="BarcodeType_RssExpanded_DisplayName" xml:space="preserve">
-    <value>RSS Expanded</value>
+    <value>RSS 展開済み</value>
     
   </data>
   <data name="BarcodeType_Upc_DisplayName" xml:space="preserve">
@@ -3808,7 +3812,7 @@
     
   </data>
   <data name="Icon_CalendarBlank_DisplayName" xml:space="preserve">
-    <value>空白の予定表</value>
+    <value>空白のカレンダー</value>
     
   </data>
   <data name="Icon_OfficeBuilding_DisplayName" xml:space="preserve">
@@ -4143,7 +4147,7 @@
     
   </data>
   <data name="ErrorResource_ErrBadToken_Link_1" xml:space="preserve">
-    <value>記事: Power Apps の数式のリファレンス</value>
+    <value>記事: Power Apps 向けの数式のリファレンス</value>
     
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_ShortMessage" xml:space="preserve">
@@ -4157,7 +4161,7 @@
     <value>予期しない文字を削除するか、置き換えてください。</value>
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_Link_1" xml:space="preserve">
-    <value>記事: Power Apps の数式のリファレンス</value>
+    <value>記事: Power Apps 向けの数式のリファレンス</value>
     
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_ShortMessage" xml:space="preserve">
@@ -4172,7 +4176,7 @@
     
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_Link_1" xml:space="preserve">
-    <value>記事: Power Apps の数式のリファレンス</value>
+    <value>記事: Power Apps 向けの数式のリファレンス</value>
     
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_ShortMessage" xml:space="preserve">
@@ -4187,7 +4191,7 @@
     
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_Link_1" xml:space="preserve">
-    <value>記事: Power Apps の数式のリファレンス</value>
+    <value>記事: Power Apps 向けの数式のリファレンス</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
@@ -4202,7 +4206,7 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidName_Link_1" xml:space="preserve">
-    <value>記事: Power Apps の数式のリファレンス</value>
+    <value>記事: Power Apps 向けの数式のリファレンス</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
@@ -4217,7 +4221,7 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
-    <value>記事: Power Apps の数式のリファレンス</value>
+    <value>記事: Power Apps 向けの数式のリファレンス</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_ShortMessage" xml:space="preserve">
@@ -4299,7 +4303,7 @@
     
   </data>
   <data name="ErrorResource_ErrNumberExpected_Link_1" xml:space="preserve">
-    <value>記事: Power Apps の数式のリファレンス</value>
+    <value>記事: Power Apps 向けの数式のリファレンス</value>
     
   </data>
   <data name="ErrorResource_ErrBooleanExpected_ShortMessage" xml:space="preserve">
@@ -4314,7 +4318,7 @@
     
   </data>
   <data name="ErrorResource_ErrBooleanExpected_Link_1" xml:space="preserve">
-    <value>記事: Power Apps の数式のリファレンス</value>
+    <value>記事: Power Apps 向けの数式のリファレンス</value>
     
   </data>
   <data name="ErrorResource_ErrColonExpected_ShortMessage" xml:space="preserve">
@@ -4381,7 +4385,7 @@
     
   </data>
   <data name="ErrorResource_ErrStringExpected_Link_1" xml:space="preserve">
-    <value>記事: Power Apps の数式のリファレンス</value>
+    <value>記事: Power Apps 向けの数式のリファレンス</value>
     
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_ShortMessage" xml:space="preserve">
@@ -4396,7 +4400,7 @@
     
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_Link_1" xml:space="preserve">
-    <value>記事: Power Apps の数式のリファレンス</value>
+    <value>記事: Power Apps 向けの数式のリファレンス</value>
     
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_ShortMessage" xml:space="preserve">
@@ -4416,6 +4420,10 @@
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
     <value>識別子のテキストがあることを確認してください。このエラーは、識別子がすべて空白またはスペースである場合に発生します。</value>
+    
+  </data>
+  <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
+    <value>Unable to compare values of type {0}.</value>
     
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
@@ -4450,7 +4458,7 @@
     
   </data>
   <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_Link_1" xml:space="preserve">
-    <value>記事: Power Apps の数式のリファレンス</value>
+    <value>記事: Power Apps 向けの数式のリファレンス</value>
     
   </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_ShortMessage" xml:space="preserve">
@@ -4478,7 +4486,7 @@
     
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_Link_1" xml:space="preserve">
-    <value>記事: Power Apps の数式のリファレンス</value>
+    <value>記事: Power Apps 向けの数式のリファレンス</value>
     
   </data>
   <data name="ErrorResource_ErrRecordDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
@@ -4532,7 +4540,7 @@
     
   </data>
   <data name="ErrorResource_ErrDateExpected_Link_1" xml:space="preserve">
-    <value>記事: Power Apps の数式のリファレンス</value>
+    <value>記事: Power Apps 向けの数式のリファレンス</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_ShortMessage" xml:space="preserve">
@@ -4547,15 +4555,15 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_2" xml:space="preserve">
-    <value>数式を簡単にしてみてください。</value>
+    <value>数式を簡単にしてください。</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_3" xml:space="preserve">
-    <value>データを別のデータ ソースに移動してみてください。</value>
+    <value>別のデータ ソースにデータを移動してください。</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_Link_1" xml:space="preserve">
-    <value>記事: キャンバス アプリでの委任を理解する</value>
+    <value>記事: キャンバス アプリでの委任について</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_Link_2" xml:space="preserve">
@@ -4574,15 +4582,15 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_2" xml:space="preserve">
-    <value>数式を簡単にしてみてください。</value>
+    <value>数式を簡単にしてください。</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_3" xml:space="preserve">
-    <value>データを別のデータ ソースに移動してみてください。</value>
+    <value>別のデータ ソースにデータを移動してください。</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_1" xml:space="preserve">
-    <value>記事: キャンバス アプリでの委任を理解する</value>
+    <value>記事: キャンバス アプリでの委任について</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_2" xml:space="preserve">
@@ -4605,15 +4613,15 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_3" xml:space="preserve">
-    <value>数式を簡単にしてみてください。</value>
+    <value>数式を簡単にしてください。</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_4" xml:space="preserve">
-    <value>データを別のデータ ソースに移動してみてください。</value>
+    <value>別のデータ ソースにデータを移動してください。</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_1" xml:space="preserve">
-    <value>記事: キャンバス アプリでの委任を理解する</value>
+    <value>記事: キャンバス アプリでの委任について</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_2" xml:space="preserve">
@@ -4638,15 +4646,15 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_3" xml:space="preserve">
-    <value>数式を簡単にしてみてください。</value>
+    <value>数式を簡単にしてください。</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_4" xml:space="preserve">
-    <value>データを別のデータ ソースに移動してみてください。</value>
+    <value>別のデータ ソースにデータを移動してください。</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_1" xml:space="preserve">
-    <value>記事: キャンバス アプリでの委任を理解する</value>
+    <value>記事: キャンバス アプリでの委任について</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_2" xml:space="preserve">
@@ -4666,15 +4674,15 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_2" xml:space="preserve">
-    <value>数式を簡単にしてみてください。</value>
+    <value>数式を簡単にしてください。</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_3" xml:space="preserve">
-    <value>データを別のデータ ソースに移動してみてください。</value>
+    <value>別のデータ ソースにデータを移動してください。</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_1" xml:space="preserve">
-    <value>記事: キャンバス アプリでの委任を理解する</value>
+    <value>記事: キャンバス アプリでの委任について</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_2" xml:space="preserve">
@@ -4682,7 +4690,7 @@
     
   </data>
   <data name="ErrorResource_ErrOnlyOneViewExpected_ShortMessage" xml:space="preserve">
-    <value>1 つのビューのみが必要です。この時点での数式で 1 つのビューのみが含まれるようにする必要があります。</value>
+    <value>1 つのビューのみが必要です。この時点で数式には 1 つのビューのみを含める必要があります。</value>
     
   </data>
   <data name="ErrorResource_ErrOnlyOneViewExpected_HowToFix_1" xml:space="preserve">
@@ -4834,8 +4842,18 @@
     <value>この関数はあいまいです。Lambda 式と列識別子が同じ引数に含まれています。</value>
     
   </data>
-  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
-    <value>BooleanOptionSet オプション {0} はサポートされていません。</value>
+  <data name="OptionSetOptionNotSupported" xml:space="preserve">
+    <value>The value of option {0} is not of expected type {1}.</value>
     
+  </data>
+  <data name="AboutOptionSetInfo" xml:space="preserve">
+    <value>指定されたオプション セット値の論理名を返します。</value>
+    
+  </data>
+  <data name="AboutOptionSetInfoArg1" xml:space="preserve">
+    <value>オプション</value>
+  </data>
+  <data name="AboutOptionSetInfo_option" xml:space="preserve">
+    <value>論理名が返されるオプション セット値です。</value>
   </data>
 </root>

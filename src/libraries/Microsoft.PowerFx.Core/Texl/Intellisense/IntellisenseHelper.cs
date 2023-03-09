@@ -142,7 +142,7 @@ namespace Microsoft.PowerFx.Intellisense
                     var dispText = curList[index].DisplayText;
 
                     // If we are already using the global syntax, we should not add it again.
-                    if (dispText.Text.StartsWith(TexlLexer.PunctuatorBracketOpen + TexlLexer.PunctuatorAt))
+                    if (dispText.Text.StartsWith(TexlLexer.PunctuatorBracketOpen + TexlLexer.PunctuatorAt, StringComparison.Ordinal))
                     {
                         continue;
                     }
@@ -755,7 +755,7 @@ namespace Microsoft.PowerFx.Intellisense
             foreach (var enumInfo in intellisenseData.EnumSymbols)
             {
                 var enumType = enumInfo.EnumType;
-                var enumName = enumInfo.Name;
+                var enumName = enumInfo.EntityName.Value;
 
                 // TASK: 76039: Intellisense: Update intellisense to filter suggestions based on the expected type of the text being typed in UI
                 AddSuggestion(intellisenseData, enumName, SuggestionKind.Enum, SuggestionIconKind.Other, enumType, requiresSuggestionEscaping: true);
@@ -766,7 +766,7 @@ namespace Microsoft.PowerFx.Intellisense
             if (suggestions.Count + substringSuggestions.Count == countSuggBefore + countSubSuggBefore + 1 && intellisenseData.SuggestUnqualifiedEnums)
             {
                 var enumSuggestion = suggestions.Count > countSuggBefore ? suggestions[countSuggBefore].Text : substringSuggestions[countSubSuggBefore].Text;
-                var dotIndex = enumSuggestion.LastIndexOf(TexlLexer.PunctuatorDot);
+                var dotIndex = enumSuggestion.LastIndexOf(TexlLexer.PunctuatorDot, StringComparison.Ordinal);
 
                 // Assert '.' is not present or not at the beginning or the end of the EnumSuggestion
                 Contracts.Assert(dotIndex == -1 || (dotIndex > 0 && dotIndex < enumSuggestion.Length - 1));

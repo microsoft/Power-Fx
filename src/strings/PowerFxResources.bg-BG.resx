@@ -795,7 +795,7 @@
     
   </data>
   <data name="AboutIfError_fallback" xml:space="preserve">
-    <value>Стойност, която се връща, ако е първият аргумент, който не е грешка.</value>
+    <value>Стойност, която се връща, ако предишният аргумент е грешка.</value>
     
   </data>
   <data name="AboutSubstitute" xml:space="preserve">
@@ -1847,6 +1847,10 @@
   </data>
   <data name="ErrTextInvalidFormat" xml:space="preserve">
     <value>Невалиден формат.</value>
+    
+  </data>
+  <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
+    <value>Аргументът не представлява валидна стойност за дата или час.</value>
     
   </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
@@ -4418,6 +4422,10 @@
     <value>Уверете се, че имате текст за вашия идентификатор. Тази грешка възниква, когато идентификаторът се състои изцяло от празни места или интервали.</value>
     
   </data>
+  <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
+    <value>Unable to compare values of type {0}.</value>
+    
+  </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
     <value>Несъвместими типове за сравнение. Тези типове не могат да се сравняват: {0}, {1}.</value>
     
@@ -4834,8 +4842,18 @@
     <value>Тази функция е двусмислена: съдържа ламбда-изрази и идентификатори на колони за един и същ аргумент.</value>
     
   </data>
-  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
-    <value>Опцията BooleanOptionSet {0} не се поддържа.</value>
+  <data name="OptionSetOptionNotSupported" xml:space="preserve">
+    <value>The value of option {0} is not of expected type {1}.</value>
     
+  </data>
+  <data name="AboutOptionSetInfo" xml:space="preserve">
+    <value>Връща логическото име на дадената стойност на набор от опции.</value>
+    
+  </data>
+  <data name="AboutOptionSetInfoArg1" xml:space="preserve">
+    <value>опция</value>
+  </data>
+  <data name="AboutOptionSetInfo_option" xml:space="preserve">
+    <value>Стойност на набор от опции, чието логическо име ще бъде върнато.</value>
   </data>
 </root>
