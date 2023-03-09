@@ -760,7 +760,7 @@ namespace Microsoft.PowerFx.Intellisense
                 // TASK: 76039: Intellisense: Update intellisense to filter suggestions based on the expected type of the text being typed in UI
                 AddSuggestion(intellisenseData, enumName, SuggestionKind.Enum, SuggestionIconKind.Other, enumType, requiresSuggestionEscaping: true);
 
-                AddSuggestionsForEnum(intellisenseData, enumInfo, prefix: enumName + TexlLexer.PunctuatorDot);
+                AddSuggestionsForEnum(intellisenseData, enumInfo, prefix: TexlLexer.EscapeName(enumName) + TexlLexer.PunctuatorDot);
             }
 
             if (suggestions.Count + substringSuggestions.Count == countSuggBefore + countSubSuggBefore + 1 && intellisenseData.SuggestUnqualifiedEnums)
