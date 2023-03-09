@@ -9,9 +9,9 @@ namespace Microsoft.PowerFx.Types
     /// <summary>
     /// Special Type which can't be coerced or accepted by any types.
     /// </summary>
-    public sealed class VoidType : FormulaType
+    public sealed class Void : FormulaType
     {
-        internal VoidType()
+        internal Void()
             : base(DType.Void)
         {
         }

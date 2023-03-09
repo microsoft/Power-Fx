@@ -48,6 +48,6 @@ namespace Microsoft.PowerFx.Types
 
         void Visit(BindingErrorType type);
 
-        void Visit(VoidType type);
+        void Visit(Void type);
     }
 }

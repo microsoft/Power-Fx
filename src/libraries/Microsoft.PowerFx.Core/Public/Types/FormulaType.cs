@@ -55,7 +55,7 @@ namespace Microsoft.PowerFx.Types
 
         public static FormulaType BindingError { get; } = new BindingErrorType();
 
-        public static FormulaType Void { get; } = new VoidType();
+        public static FormulaType Void { get; } = new Void();
 
         /// <summary>
         /// Internal use only to represent an arbitrary (un-backed) option set value.

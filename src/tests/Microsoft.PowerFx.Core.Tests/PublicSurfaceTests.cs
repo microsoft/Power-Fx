@@ -143,7 +143,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Types.UntypedObjectType",
                 "Microsoft.PowerFx.Types.UntypedObjectValue",
                 "Microsoft.PowerFx.Types.ValidFormulaValue",
-                "Microsoft.PowerFx.Types.VoidType",
+                "Microsoft.PowerFx.Types.Void",
                 "Microsoft.PowerFx.Types.VoidValue",
 
                 // Intellisense classes. Used primarily by the Language Service Provider.

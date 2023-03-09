@@ -67,15 +67,15 @@ false
 >> IsError( If(1<0, {x:3}, 1/0) )
 true
 
-// result of If can't be used (even inside another If).
+// result of If can't be used.
 >> IsBlankOrError( If(1<0, If(false, {x:3}, 1/0)) )
-Errors: Error 16-46: The function 'If' has some invalid arguments.|Error 0-48: The function 'IsBlankOrError' has some invalid arguments.|Error 16-46: Invalid argument type.
+Errors: Error 0-48: The function 'IsBlankOrError' has some invalid arguments.
 
 >> IsBlankOrError( If(false, { a: 1 }, 2 ) )
-false
+Errors: Error 0-41: The function 'IsBlankOrError' has some invalid arguments.|Error 16-39: Invalid argument type.
 
 >> IsNumeric( If(false, { a: 1 }, 2 ) )
-false
+Errors: Error 11-34: Invalid argument type.|Error 0-36: The function 'IsNumeric' has some invalid arguments.
 
 >> If( true, With({a:1},Switch(a, 1, { prop:"complex" }, "scalar")) )
 {prop:"complex"}

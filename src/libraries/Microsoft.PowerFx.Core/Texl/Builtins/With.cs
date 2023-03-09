@@ -44,8 +44,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.Assert(args.Length == argTypes.Length);
             Contracts.AssertValue(errors);
 
-            // Base call yields unknown return type, so we set it accordingly below
-            var fArgsValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fArgsValid = base.CheckType(args[0], argTypes[0], ParamTypes[0], errors, SupportCoercionForArg(0), out DType coercionType);
+            nodeToCoercedTypeMap = null;
 
             // Return type determined by second argument (function)
             // Since CheckTypes is called on partial functions, return type should be error when a second argument is undefined

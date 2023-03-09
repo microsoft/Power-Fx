@@ -100,7 +100,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                 Result = new FormulaTypeSchema() { Type = FormulaTypeSchema.ParamType.Error };
             }
 
-            public void Visit(VoidType type)
+            public void Visit(Types.Void type)
             {
                 Result = new FormulaTypeSchema() { Type = FormulaTypeSchema.ParamType.Void };
             }

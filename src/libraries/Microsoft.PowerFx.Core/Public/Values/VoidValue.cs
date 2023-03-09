@@ -16,7 +16,6 @@ namespace Microsoft.PowerFx.Types
         /// Initializes a new instance of the <see cref="VoidValue"/> class.
         /// The void value should be used when the result of an expression is not used or is null.
         /// </summary>
-        /// <param name="irContext"></param>
         internal VoidValue(IRContext irContext) 
             : base(irContext)
         {

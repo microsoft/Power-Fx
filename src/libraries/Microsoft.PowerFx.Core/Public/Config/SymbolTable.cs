@@ -87,7 +87,7 @@ namespace Microsoft.PowerFx
             DName displayDName = default;
             DName varDName = ValidateName(name);
 
-            if (type is VoidType)
+            if (type is Types.Void)
             {
                 throw new NotSupportedException();
             }

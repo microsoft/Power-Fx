@@ -94,6 +94,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             {
                 var nodeArg = args[i];
                 var typeArg = argTypes[i];
+                if (typeArg.IsVoid)
+                {
+                    type = DType.Void;
+                    break;
+                }
+
                 if (typeArg.IsError)
                 {
                     errors.EnsureError(args[i], TexlStrings.ErrTypeError);
@@ -109,7 +115,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     type = typeSuper;
                     fArgsValid = false;
                 }
-                else if (!type.IsError && !type.IsVoid)
+                else if (!type.IsError)
                 {
                     if (typeArg.CoercesTo(type))
                     {
