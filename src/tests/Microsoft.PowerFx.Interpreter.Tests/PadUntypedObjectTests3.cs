@@ -94,7 +94,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     }
 
                 // for Table and Row
-                : ExternalType.MixedType;
+                : ExternalType.ArrayAndObject;
 
             public int GetArrayLength()
             {

@@ -221,7 +221,7 @@ namespace Microsoft.PowerFx.Functions
                     return new BlankValue(irContext);
                 }
 
-                if (!(cov.Impl.Type is ExternalType et && (et.Kind == ExternalTypeKind.Array || et.Kind == ExternalTypeKind.Mixed)))
+                if (!(cov.Impl.Type is ExternalType et && (et.Kind == ExternalTypeKind.Array || et.Kind == ExternalTypeKind.ArrayAndObject)))
                 {
                     return new ErrorValue(irContext, new ExpressionError()
                     {
