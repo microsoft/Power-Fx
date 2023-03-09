@@ -394,20 +394,21 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
                 }
             }
 
-            // Async predicates and impure nodes are not supported.
-            // Let CallNodes for User() be marked as being Valid to allow
-            // expressions with User() calls to be delegated
-            if (!IsUserCallNodeDelegable(node, binding) && (isAsync || !isPure))
+            // Async predicates and impure nodes are not supported unless Features say otherwise.
+            // Let CallNodes for delegatable async functions be marked as being Valid to allow
+            // expressions with delegatable async function calls to be delegated
+            if (!IsValidDelegatableAsyncNode(node, binding)
+                && (isAsync || (!binding.Features.HasFlag(Features.AllowImpureNodeDelegation) && !isPure)))
             {
                 var telemetryMessage = string.Format("Kind:{0}, isAsync:{1}, isPure:{2}", node.Kind, isAsync, isPure);
                 SuggestDelegationHintAndAddTelemetryMessage(node, binding, telemetryMessage);
 
-                if (isAsync)
+                if (isAsync && !binding.Features.HasFlag(Features.AllowAsyncDelegation))
                 {
                     TrackingProvider.Instance.SetDelegationTrackerStatus(DelegationStatus.AsyncPredicate, node, binding, Function);
                 }
 
-                if (!isPure)
+                if (!isPure && !binding.Features.HasFlag(Features.AllowImpureNodeDelegation))
                 {
                     TrackingProvider.Instance.SetDelegationTrackerStatus(DelegationStatus.ImpureNode, node, binding, Function, DelegationTelemetryInfo.CreateImpureNodeTelemetryInfo(node, binding));
                 }
@@ -418,12 +419,24 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             return true;
         }
 
-        private bool IsUserCallNodeDelegable(TexlNode node, TexlBinding binding)
+        protected bool IsValidDelegatableAsyncNode(TexlNode node, TexlBinding binding)
         {
-            if ((node is DottedNameNode)
-                && (node.AsDottedName().Left is CallNode)
-                && (binding.GetInfo(node.AsDottedName().Left.AsCall()).Function is ICustomDelegationFunction customDelFunc)
-                && customDelFunc.IsUserCallNodeDelegable())
+            // Dotted Name node with left hand delegatable async call
+            if ((node is DottedNameNode) && (node.AsDottedName().Left is CallNode))
+            {
+                // Some functions (presently the PowerApps User function) are marked as delegatable async
+                // indicating that delegation should be allowed for these calls.
+                if (binding.GetInfo(node.AsDottedName().Left.AsCall()).Function.IsDelegatableAsync)
+                {
+                    return true;
+                }
+            }
+
+            // If the feature is enabled, enable delegation
+            // async call, first name and dotted name nodes.
+            if (binding.Features.HasFlag(Features.AllowAsyncDelegation)
+                && (binding.Features.HasFlag(Features.AllowImpureNodeDelegation) || binding.IsPure(node))
+                && ((node is CallNode) || (node is FirstNameNode) || (node is DottedNameNode)))
             {
                 return true;
             }

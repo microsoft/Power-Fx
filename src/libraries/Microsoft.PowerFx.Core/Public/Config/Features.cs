@@ -38,6 +38,18 @@ namespace Microsoft.PowerFx
         /// </summary>
         SupportColumnNamesAsIdentifiers = 0x8,
 
+        /// <summary>
+        /// Allow delegation for async calls (delegate using awaited call result).
+        /// Added on 1st March 2023.
+        /// </summary>
+        AllowAsyncDelegation = 0x10,
+
+        /// <summary>
+        /// Allow delegation for impure nodes.
+        /// Added on 9th March 2023.
+        /// </summary>
+        AllowImpureNodeDelegation = 0x20,
+
         /// <summary>        
         /// All features enabled
         /// [USE WITH CAUTION] In using this value, you expose your code to future features.

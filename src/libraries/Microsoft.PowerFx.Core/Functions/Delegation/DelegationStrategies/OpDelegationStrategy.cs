@@ -82,7 +82,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
                 // Check whether this is -
                 //  1) in operator delegation and
                 //  2) it is verifying if RHS node is supported and
-                //  3) it is not an async node and
+                //  3) it is not an async node unless allowed by the AllowAsyncDelegation feature and
                 //  4) it is a single column table and
                 //  5) metadata belongs to cds datasource that supports delegation of CdsIn
                 // If this check fails, verify if it is simply a valid node..
@@ -90,10 +90,13 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
                 // Filter(Accounts, 'Account Name' in ["Foo", Bar"]) - Direct table use
                 // Set(Names, ["Foo", Bar"]); Filter(Accounts, 'Account Name' in Names) - Using variable of type table
                 // ClearCollect(Names, Accounts); Filter(Accounts, 'Account Name' in Names.'Account Name') - using column from collection.
-                // This won't be delegated - Filter(Accounts, 'Account Name' in Accounts.'Account Name') as Accounts.'Account Name' is async.
+                // This won't be delegated if the AllowAsyncDelegation- Filter(Accounts, 'Account Name' in Accounts.'Account Name') as Accounts.'Account Name' is async.
                 if (isRHSNode && binding.Document.Properties.EnabledFeatures.IsEnhancedDelegationEnabled
-                    && (opDelStrategy as BinaryOpDelegationStrategy)?.Op == BinaryOp.In && !binding.IsAsync(node) && binding.GetType(node).IsTable && binding.GetType(node).IsColumn &&
-                    opDelStrategy.IsOpSupportedByTable(metadata, node, binding))
+                    && (opDelStrategy as BinaryOpDelegationStrategy)?.Op == BinaryOp.In
+                    && binding.GetType(node).IsTable 
+                    && binding.GetType(node).IsColumn
+                    && (IsValidDelegatableAsyncNode(node, binding) || !binding.IsAsync(node))
+                    && opDelStrategy.IsOpSupportedByTable(metadata, node, binding))
                 {
                     return true;
                 }

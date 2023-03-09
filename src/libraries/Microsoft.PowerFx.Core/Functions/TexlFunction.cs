@@ -94,6 +94,12 @@ namespace Microsoft.PowerFx.Core.Functions
         // Return true if the function is asynchronous, false otherwise.
         public virtual bool IsAsync => false;
 
+        // Return true if the function is a delegatable asynchronous, false otherwise.
+        // This means that the function should be a valid node for delegation regardless
+        // of the AllowAsyncDelegation feature, and only means that it'll be a valid node when used
+        // as the left hand side of a dotted name node (i.e. the User function in Power Apps)
+        public virtual bool IsDelegatableAsync => false;
+
         // Return true if the function is declared as variadic.
         public bool IsVariadicFunction => MaxArity == int.MaxValue;
 
