@@ -15,10 +15,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public override bool IsSelfContained => true;
 
-        public override bool HasPreciseErrors => true;
-
-        public override bool SupportsParamCoercion => true;
-
         public LanguageFunction()
             : base("Language", TexlStrings.AboutLanguage, FunctionCategories.Information, DType.String, 0, 0, 0)
         {
