@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Functions;
@@ -499,6 +500,15 @@ namespace Microsoft.PowerFx.Core.IR
                             break;
                         }
 
+                    case BindKind.Enum:
+                        {
+                            // If StronglyTypedEnums is disabled, this should have been handled by the DottedName visitor.
+                            Contracts.Assert(context.Binding.Features.HasFlag(Features.StronglyTypedBuiltinEnums));
+
+                            result = new ResolvedObjectNode(context.GetIRContext(node), info.Data);
+                            break;
+                        }
+
                     default:
                         Contracts.Assert(false, "Unsupported Bindkind");
                         throw new NotImplementedException();
@@ -525,9 +535,8 @@ namespace Microsoft.PowerFx.Core.IR
 
                     if (DType.Color.Accepts(resultType))
                     {
-                        Contracts.Assert(value is uint);
-                        result = new ColorLiteralNode(context.GetIRContext(node), (uint)value);
-                    }
+                        result = new ColorLiteralNode(context.GetIRContext(node), ConvertToColor(value));
+                    } 
                     else if (DType.Number.Accepts(resultType))
                     {
                         result = new NumberLiteralNode(context.GetIRContext(node), (double)value);
@@ -806,8 +815,11 @@ namespace Microsoft.PowerFx.Core.IR
                     case CoercionKind.BooleanToNumber:
                         unaryOpKind = UnaryOpKind.BooleanToNumber;
                         break;
-                    case CoercionKind.BooleanOptionSetToNumber:
-                        unaryOpKind = UnaryOpKind.BooleanOptionSetToNumber;
+                    case CoercionKind.OptionSetToNumber:
+                        unaryOpKind = UnaryOpKind.OptionSetToNumber;
+                        break;
+                    case CoercionKind.OptionSetToColor:
+                        unaryOpKind = UnaryOpKind.OptionSetToColor;
                         break;
                     case CoercionKind.DateToNumber:
                         unaryOpKind = UnaryOpKind.DateToNumber;
@@ -866,8 +878,8 @@ namespace Microsoft.PowerFx.Core.IR
                     case CoercionKind.TextToBoolean:
                         unaryOpKind = UnaryOpKind.TextToBoolean;
                         break;
-                    case CoercionKind.BooleanOptionSetToBoolean:
-                        unaryOpKind = UnaryOpKind.BooleanOptionSetToBoolean;
+                    case CoercionKind.OptionSetToBoolean:
+                        unaryOpKind = UnaryOpKind.OptionSetToBoolean;
                         break;
                     case CoercionKind.RecordToTable:
                         unaryOpKind = UnaryOpKind.RecordToTable;
@@ -926,6 +938,16 @@ namespace Microsoft.PowerFx.Core.IR
                 }
 
                 return new UnaryOpNode(IRContext.NotInSource(FormulaType.Build(toType)), unaryOpKind, child);
+            }
+
+            private static System.Drawing.Color ConvertToColor(object inputValue)
+            {
+                var value = Convert.ToUInt32(inputValue, CultureInfo.InvariantCulture);
+                return System.Drawing.Color.FromArgb(
+                            (byte)((value >> 24) & 0xFF),
+                            (byte)((value >> 16) & 0xFF),
+                            (byte)((value >> 8) & 0xFF),
+                            (byte)(value & 0xFF));
             }
         }
 

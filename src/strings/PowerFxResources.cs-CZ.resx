@@ -130,22 +130,22 @@
     
   </data>
   <data name="IfArgTrueValue" xml:space="preserve">
-    <value>hodnota_true</value>
+    <value>pravd_hodnota</value>
     
   </data>
   <data name="IfArgElseValue" xml:space="preserve">
-    <value>hodnota_else</value>
+    <value>jiná_hodnota</value>
     
   </data>
   <data name="AboutIf_logical_test" xml:space="preserve">
     <value>Podmínka, jejímž výsledkem je logická hodnota</value>
   </data>
   <data name="AboutIf_true_value" xml:space="preserve">
-    <value>Výraz, který poskytuje výsledek funkce If, pokud je podmínka pravdivá</value>
+    <value>Výraz, který poskytuje výsledek funkce If, pokud je podmínka pravdivá.</value>
     
   </data>
   <data name="AboutIf_else_value" xml:space="preserve">
-    <value>Výraz, který poskytuje výsledek funkce If, pokud jsou všechny zadané podmínky nepravdivé</value>
+    <value>Výraz, který poskytuje výsledek funkce If, pokud jsou všechny zadané podmínky nepravdivé.</value>
     
   </data>
   <data name="AboutSwitch" xml:space="preserve">
@@ -169,11 +169,11 @@
     
   </data>
   <data name="AboutSwitch_switch_value" xml:space="preserve">
-    <value>Hodnota, která se porovná s hodnotou_pro_srovnání.</value>
+    <value>Hodnota, která se bude porovnávat s hodnotou match_value.</value>
     
   </data>
   <data name="AboutSwitch_match_value" xml:space="preserve">
-    <value>Hodnota, která se bude porovnávat s hodnotou_přepínače.</value>
+    <value>Hodnota, která se bude porovnávat s hodnotou_switch.</value>
     
   </data>
   <data name="AboutSwitch_match_result" xml:space="preserve">
@@ -331,7 +331,7 @@
     <value>Číselná hodnota této operace průměru</value>
   </data>
   <data name="AboutAddColumns" xml:space="preserve">
-    <value>Vrátí tabulku s novými sloupci vypočítanými vyhodnocením všech výrazů (expression) ve zdroji (source).</value>
+    <value>Vrátí tabulku s novými sloupci vypočítanými vyhodnocením všech výrazů „expression“ ve zdroji „source“.</value>
     
   </data>
   <data name="AddColumnsArg1" xml:space="preserve">
@@ -347,19 +347,19 @@
     
   </data>
   <data name="AboutAddColumns_source" xml:space="preserve">
-    <value>Tabulka, do které se mají sloupce přidat</value>
+    <value>Tabulka, do které se mají sloupce přidat.</value>
     
   </data>
   <data name="AboutAddColumns_column" xml:space="preserve">
-    <value>Jedinečný název sloupce</value>
+    <value>Jedinečný název sloupce.</value>
     
   </data>
   <data name="AboutAddColumns_expression" xml:space="preserve">
-    <value>Výraz, který poskytuje hodnoty pro nový sloupec</value>
+    <value>Výraz, který poskytuje hodnoty pro nový sloupec.</value>
     
   </data>
   <data name="AboutDropColumns" xml:space="preserve">
-    <value>Vrátí tabulku s jedním nebo více zadanými sloupci odebranými ze zdrojové tabulky.</value>
+    <value>Vrátí tabulku s jedním nebo více zadanými „sloupci“ odebranými z tabulky „zdroje“.</value>
     
   </data>
   <data name="DropColumnsArg1" xml:space="preserve">
@@ -395,11 +395,11 @@
     <value>Logický test, který se má vyhodnotit v jednotlivých řádcích. Do výsledku filtru budu zahrnuty pouze řádky, které tomuto testu vyhoví.</value>
   </data>
   <data name="AboutFirst" xml:space="preserve">
-    <value>Vrátí první řádek zdroje.</value>
+    <value>Vrátí první řádek „zdroje“.</value>
     
   </data>
   <data name="AboutLast" xml:space="preserve">
-    <value>Vrátí poslední řádek zdroje.</value>
+    <value>Vrátí poslední řádek „zdroje“.</value>
     
   </data>
   <data name="FirstLastArg1" xml:space="preserve">
@@ -413,11 +413,11 @@
     <value>Tabulka, jejíž poslední řádek bude vrácen</value>
   </data>
   <data name="AboutFirstN" xml:space="preserve">
-    <value>Vrátí určitý počet prvních řádků zdroje.</value>
+    <value>Vrátí určitý „počet“ prvních řádků „zdroje“.</value>
     
   </data>
   <data name="AboutLastN" xml:space="preserve">
-    <value>Vrátí určitý počet posledních řádků zdroje.</value>
+    <value>Vrátí určitý počet posledních řádků „zdroje“.</value>
     
   </data>
   <data name="FirstLastNArg1" xml:space="preserve">
@@ -460,15 +460,15 @@
     <value>Hodnota, která se má formátovat jako text</value>
   </data>
   <data name="AboutText_format_text" xml:space="preserve">
-    <value>Textová hodnota určující způsob, jak by měla být hodnota formátována</value>
+    <value>Textová hodnota určující způsob, jak by měla být „hodnota“ formátována.</value>
     
   </data>
   <data name="AboutText_language" xml:space="preserve">
-    <value>Kód jazyka, který se má použít při převodu na text</value>
+    <value>Kód jazyka, který se má použít při převodu na text.</value>
     
   </data>
   <data name="AboutValue" xml:space="preserve">
-    <value>Převede text, který představuje číslo, na číselnou hodnotu.</value>
+    <value>Převede „text“, který představuje číslo, na číselnou hodnotu.</value>
     
   </data>
   <data name="ValueArg1" xml:space="preserve">
@@ -483,11 +483,11 @@
     <value>Textová hodnota, která má být převedena na číselnou</value>
   </data>
   <data name="AboutValue_language" xml:space="preserve">
-    <value>Kód jazyka, který se má použít při převodu hodnoty</value>
+    <value>Kód jazyka, který se má použít při převodu hodnoty.</value>
     
   </data>
   <data name="AboutBoolean" xml:space="preserve">
-    <value>Převede "text", který představuje logickou hodnotu, na logickou hodnotu.</value>
+    <value>Převede „text“, který představuje logickou hodnotu, na logickou hodnotu.</value>
     
   </data>
   <data name="BooleanArg1" xml:space="preserve">
@@ -553,7 +553,7 @@
     <value>Sloupec logických hodnot ke zpracování.</value>
   </data>
   <data name="AboutCoalesce" xml:space="preserve">
-    <value>Vrátí první neprázdný argument.</value>
+    <value>Vrátí první neprázdný argument</value>
     
   </data>
   <data name="CoalesceArg1" xml:space="preserve">
@@ -608,11 +608,11 @@
     <value>Výraz vytvářející text, který se má vyhodnotit v jednotlivých řádcích zadané tabulky</value>
   </data>
   <data name="AboutConcat_separator" xml:space="preserve">
-    <value>Textová hodnota, která se má vložit mezi zřetězené řádky tabulky</value>
+    <value>Textová hodnota, která se má vložit mezi zřetězené řádky tabulky.</value>
     
   </data>
   <data name="AboutLen" xml:space="preserve">
-    <value>Vrátí počet znaků v textové hodnotě</value>
+    <value>Vrátí počet znaků v textové hodnotě.</value>
     
   </data>
   <data name="AboutLen_text" xml:space="preserve">
@@ -763,7 +763,7 @@
     <value>Sloupec textových hodnot, které mají být zpracovány</value>
   </data>
   <data name="AboutError" xml:space="preserve">
-    <value>S vlastními hodnotami vytvoří chybu.</value>
+    <value>Vytvoří chybu s vlastními hodnotami.</value>
     
   </data>
   <data name="AboutError_error_information" xml:space="preserve">
@@ -775,7 +775,7 @@
     
   </data>
   <data name="ErrErrorIrrelevantField" xml:space="preserve">
-    <value>Funkce Error používá jenom pole Kind, Message, Notify, Control a Property.</value>
+    <value>Funkce Error používá jenom pole „Kind“, „Message“, „Notify“, „Control“ a „Property“.</value>
     
   </data>
   <data name="AboutIfError" xml:space="preserve">
@@ -791,11 +791,11 @@
     
   </data>
   <data name="IfErrorArg2" xml:space="preserve">
-    <value>zakl_hodn</value>
+    <value>zákl_hodnota</value>
     
   </data>
   <data name="AboutIfError_fallback" xml:space="preserve">
-    <value>Hodnota, která se vrátí, pokud je prvním argumentem, který není chybný.</value>
+    <value>Hodnota, která se vrátí, pokud je předchozí argument chybný.</value>
     
   </data>
   <data name="AboutSubstitute" xml:space="preserve">
@@ -842,7 +842,7 @@
     <value>Sloupec textových hodnot, které mají být zpracovány</value>
   </data>
   <data name="AboutSort" xml:space="preserve">
-    <value>Seřadí zdroj na základě výsledků výrazu, který se vyhodnocuje pro každý řádek. Volitelně může být zadáno pořadí řazení.</value>
+    <value>Seřadí „zdroj“ na základě výsledků „výrazu„“, který se vyhodnocuje pro každý řádek. Volitelně může být zadáno „pořadí“ řazení.</value>
     
   </data>
   <data name="SortArg1" xml:space="preserve">
@@ -867,7 +867,7 @@
     <value>Vzestupné nebo sestupné pořadí</value>
   </data>
   <data name="AboutSortByColumns" xml:space="preserve">
-    <value>Seřadí zdroj podle určitého sloupce. Volitelně může být zadáno pořadí řazení.</value>
+    <value>Seřadí „zdroj“ podle určitého sloupce. Volitelně může být zadáno „pořadí“ řazení.</value>
     
   </data>
   <data name="SortByColumnsArg1" xml:space="preserve">
@@ -886,13 +886,13 @@
     <value>Tabulka, která má být seřazena</value>
   </data>
   <data name="AboutSortByColumns_column" xml:space="preserve">
-    <value>Jedinečný název sloupce</value>
+    <value>Jedinečný název sloupce.</value>
   </data>
   <data name="AboutSortByColumns_order" xml:space="preserve">
     <value>Vzestupné nebo sestupné pořadí</value>
   </data>
   <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
-    <value>Seřadí zdroj na základě indexu porovnávaných hodnot v zadaném sloupci.</value>
+    <value>Seřadí „zdroj“ na základě indexu porovnávaných hodnot v zadaném sloupci.</value>
     
   </data>
   <data name="SortByColumnsWithOrderValuesArg1" xml:space="preserve">
@@ -911,7 +911,7 @@
     <value>Sloupec hodnot, které mají být použity k řazení. Seřazení neproběhne vzestupně nebo sestupně, ale podle indexu porovnávaných hodnot ve sloupci. </value>
   </data>
   <data name="AboutRand" xml:space="preserve">
-    <value>Vrátí náhodné číslo větší nebo rovné 0 a menší než 1 určené na základě spojité distribuční funkce.</value>
+    <value>Vrátí náhodné číslo větší nebo rovné 0 a menší než 1, rovnoměrně rozložené.</value>
     
   </data>
   <data name="AboutRandBetween" xml:space="preserve">
@@ -961,7 +961,7 @@
     
   </data>
   <data name="AboutTimeZoneOffset_date" xml:space="preserve">
-    <value>Datum, ve kterém se vypočítá TimeZoneOffset</value>
+    <value>Datum, ve kterém se vypočítá „TimeZoneOffset“.</value>
     
   </data>
   <data name="AboutToday" xml:space="preserve">
@@ -1003,7 +1003,7 @@
     <value>Hodnota data, pro kterou bude vypočteno číslo týdne ISO.</value>
   </data>
   <data name="AboutInt" xml:space="preserve">
-    <value>Zkrátí „číslo“ zaokrouhlením směrem k záporné nekonečnosti.</value>
+    <value>Zkrátí „číslo“ zaokrouhlením směrem k zápornému nekonečnu.</value>
     
   </data>
   <data name="AboutIntT" xml:space="preserve">
@@ -1030,7 +1030,7 @@
     <value>Počet desetinných míst, která se mají použít při zkracování.</value>
   </data>
   <data name="AboutTruncT" xml:space="preserve">
-    <value>Zkrátí všechna čísla ve zdroji zaokrouhlením k nule.</value>
+    <value>Zkrátí všechna čísla ve „zdroji“ zaokrouhlením k nule.</value>
     
   </data>
   <data name="TruncArg1" xml:space="preserve">
@@ -1050,15 +1050,15 @@
     
   </data>
   <data name="AboutRound" xml:space="preserve">
-    <value>Zaokrouhlí číslo na zadaný počet číslic.</value>
+    <value>Zaokrouhlí „číslo“ na zadaný počet číslic.</value>
     
   </data>
   <data name="AboutRoundUp" xml:space="preserve">
-    <value>Zaokrouhlí číslo nahoru směrem od nuly.</value>
+    <value>Zaokrouhlí „číslo“ nahoru směrem od nuly.</value>
     
   </data>
   <data name="AboutRoundDown" xml:space="preserve">
-    <value>Zaokrouhlí číslo dolů směrem k nule.</value>
+    <value>Zaokrouhlí „číslo“ dolů směrem k nule.</value>
     
   </data>
   <data name="RoundArg1" xml:space="preserve">
@@ -1097,15 +1097,15 @@
     <value>Počet desetinných míst, která se mají použít při zaokrouhlení</value>
   </data>
   <data name="AboutRoundT" xml:space="preserve">
-    <value>Zaokrouhlí všechna čísla ve zdroji na zadaný počet číslic.</value>
+    <value>Zaokrouhlí všechna čísla ve „zdroji“ na zadaný počet číslic.</value>
     
   </data>
   <data name="AboutRoundUpT" xml:space="preserve">
-    <value>Zaokrouhlí všechna čísla ve zdroji nahoru směrem od nuly.</value>
+    <value>Zaokrouhlí všechna čísla ve „zdroji“ nahoru směrem od nuly.</value>
     
   </data>
   <data name="AboutRoundDownT" xml:space="preserve">
-    <value>Zaokrouhlí všechna čísla ve zdroji dolů směrem k nule.</value>
+    <value>Zaokrouhlí všechna čísla ve „zdroji“ dolů směrem k nule.</value>
     
   </data>
   <data name="RoundTArg1" xml:space="preserve">
@@ -1149,7 +1149,7 @@
     <value>Hodnota alfa v rozmezí 0 až 1 (nebo procenta, například 49 %)</value>
   </data>
   <data name="AboutColorFade" xml:space="preserve">
-    <value>Vytvoří nový odstín zadané barvy na základě zadané procentuální hodnoty vyblednutí.</value>
+    <value>Vytvoří nový odstín zadané „barvy“ na základě zadané procentuální hodnoty „vyblednutí“.</value>
     
   </data>
   <data name="ColorFadeArg1" xml:space="preserve">
@@ -1157,7 +1157,7 @@
     
   </data>
   <data name="ColorFadeArg2" xml:space="preserve">
-    <value>zesvětlení_nebo_ztmavení</value>
+    <value>zesvětlit</value>
     
   </data>
   <data name="AboutColorFade_color" xml:space="preserve">
@@ -1174,7 +1174,7 @@
     
   </data>
   <data name="ColorFadeTArg2" xml:space="preserve">
-    <value>zesvětlení_ztmavení_nebo_sloupec</value>
+    <value>zesvětlení_nebo_sloupec</value>
     
   </data>
   <data name="AboutColorFade_color_or_column" xml:space="preserve">
@@ -1488,7 +1488,7 @@
     
   </data>
   <data name="LeftRightArg2" xml:space="preserve">
-    <value>počet_znaků</value>
+    <value>počet znaků</value>
     
   </data>
   <data name="AboutIsBlank" xml:space="preserve">
@@ -1526,7 +1526,7 @@
     <value>Tabulka, která se má testovat.</value>
   </data>
   <data name="AboutShuffle" xml:space="preserve">
-    <value>Vrátí kopii vstupní zdrojové tabulky náhodně přeházenou metodou shuffle.</value>
+    <value>Vrátí kopii vstupní „zdrojové“ tabulky náhodně přeházenou metodou shuffle.</value>
     
   </data>
   <data name="ShuffleArg1" xml:space="preserve">
@@ -1604,7 +1604,7 @@
     
   </data>
   <data name="AboutSplit_text" xml:space="preserve">
-    <value>Text, který se má rozdělit do podřetězců</value>
+    <value>Text, který se má rozdělit do podřetězců.</value>
     
   </data>
   <data name="AboutSplit_separator" xml:space="preserve">
@@ -1620,7 +1620,7 @@
     
   </data>
   <data name="AboutIsType" xml:space="preserve">
-    <value>Vrátí true, pokud je zadaná hodnota daného typu.</value>
+    <value>Vrátí hodnotu true, pokud je zadaná hodnota daného typu.</value>
     
   </data>
   <data name="IsTypeArg1" xml:space="preserve">
@@ -1650,7 +1650,7 @@
     <value>Tabulka entit, která představuje typ. Hodnota se použije jako tento typ.</value>
   </data>
   <data name="AboutWith" xml:space="preserve">
-    <value>Spustí vzorec, který se poskytl jako druhý parametr pomocí oboru zadaného v prvním parametru.</value>
+    <value>Spustí vzorec, který byl poskytnut jako druhý parametr pomocí rozsahu zadaného v prvním parametru.</value>
     
   </data>
   <data name="WithArg1" xml:space="preserve">
@@ -1662,11 +1662,11 @@
     
   </data>
   <data name="AboutWith_scope" xml:space="preserve">
-    <value>Obor, se kterým se má zavolat vzorec definovaný v druhém parametru</value>
+    <value>Rozsah, se kterým se má zavolat vzorec definovaný v druhém parametru.</value>
     
   </data>
   <data name="AboutWith_formula" xml:space="preserve">
-    <value>Vzorec, který se má zavolat pomocí oboru poskytnutého v prvním parametru</value>
+    <value>Vzorec, který se má zavolat pomocí rozsahu poskytnutého v prvním parametru.</value>
     
   </data>
   <data name="AboutSequence" xml:space="preserve">
@@ -1686,7 +1686,7 @@
     
   </data>
   <data name="AboutSequence_start" xml:space="preserve">
-    <value>Volitelné. První číslo v pořadí. Výchozí hodnota je 1.</value>
+    <value>Volitelné. První číslo v sekvenci. Výchozí hodnota je 1.</value>
     
   </data>
   <data name="SequenceArg3" xml:space="preserve">
@@ -1698,11 +1698,11 @@
     
   </data>
   <data name="ErrInvalidDot" xml:space="preserve">
-    <value>Neplatné použití tečky</value>
+    <value>Neplatné použití „.“</value>
     
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
-    <value>'{0}' je neznámá nebo nepodporovaná funkce.</value>
+    <value>„{0}“ je neznámá nebo nepodporovaná funkce v oboru názvů „{1}“.</value>
     
   </data>
   <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
@@ -1718,7 +1718,7 @@
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
-    <value>Neplatný počet argumentů: přijato {0}, počet očekávaných: {1}</value>
+    <value>Neplatný počet argumentů: přijato {0}, počet očekávaných: {1}.</value>
     
   </data>
   <data name="ErrBadArityEven" xml:space="preserve">
@@ -1730,11 +1730,11 @@
     
   </data>
   <data name="ErrBadType" xml:space="preserve">
-    <value>Neplatný typ argumentu</value>
+    <value>Neplatný typ argumentu.</value>
     
   </data>
   <data name="ErrBadType_Type" xml:space="preserve">
-    <value>Neplatný typ argumentu. Hodnoty typu {0} nejde v tomto kontextu použít.</value>
+    <value>Neplatný typ argumentu. Hodnoty {0} nejde v tomto kontextu použít.</value>
     
   </data>
   <data name="ErrBadOperatorTypes" xml:space="preserve">
@@ -1746,15 +1746,15 @@
     
   </data>
   <data name="ErrBadRecordFieldType_FieldName_ExpectedType" xml:space="preserve">
-    <value>Neplatný typ pro pole {0}. Očekávaný typ pole: {1}.</value>
+    <value>Neplatný typ pro pole „{0}“. Očekávaný typ pole: „{1}“.</value>
     
   </data>
   <data name="ErrBadType_ExpectedType" xml:space="preserve">
-    <value>Neplatný typ argumentu. Očekává se hodnota typu {0}.</value>
+    <value>Neplatný typ argumentu. Očekává se hodnota {0}.</value>
     
   </data>
   <data name="ErrBadType_ExpectedType_ProvidedType" xml:space="preserve">
-    <value>Neplatný typ argumentu ({1}). Očekává se hodnota typu {0}.</value>
+    <value>Neplatný typ argumentu ({1}). Očekává se hodnota {0}.</value>
     
   </data>
   <data name="ErrBadSchema_ExpectedType" xml:space="preserve">
@@ -1762,15 +1762,15 @@
     
   </data>
   <data name="ErrBadType_ExpectedTypesCSV" xml:space="preserve">
-    <value>Neplatný typ argumentu. Očekává se jeden z těchto typů: {0}.</value>
+    <value>Neplatný typ argumentu. Očekává se jedna z těchto: {0}.</value>
     
   </data>
   <data name="ErrInvalidArgs_Func" xml:space="preserve">
-    <value>Některé argumenty funkce {0} nejsou platné.</value>
+    <value>Některé argumenty funkce „{0}“ nejsou platné.</value>
     
   </data>
   <data name="ErrNeedTable_Func" xml:space="preserve">
-    <value>Prvním argumentem funkce {0} by měla být tabulka.</value>
+    <value>Prvním argumentem „{0}“ by měla být tabulka.</value>
     
   </data>
   <data name="ErrInvalidPropertyAccess" xml:space="preserve">
@@ -1778,23 +1778,23 @@
     
   </data>
   <data name="ErrNeedTableCol_Func" xml:space="preserve">
-    <value>Prvním argumentem funkce {0} by měla být tabulka s jedním sloupcem.</value>
+    <value>Prvním argumentem „{0}“ by měla být tabulka s jedním sloupcem.</value>
     
   </data>
   <data name="ErrInvalidSchemaNeedStringCol_Col" xml:space="preserve">
-    <value>Neplatné schéma, očekával se sloupec textových hodnot pro: {0}.</value>
+    <value>Neplatné schéma, očekával se sloupec textových hodnot pro „{0}“.</value>
     
   </data>
   <data name="ErrInvalidSchemaNeedDateCol_Col" xml:space="preserve">
-    <value>Neplatné schéma, očekával se sloupec hodnot data pro: {0}.</value>
+    <value>Neplatné schéma, očekával se sloupec hodnot dat pro „{0}“.</value>
     
   </data>
   <data name="ErrInvalidSchemaNeedNumCol_Col" xml:space="preserve">
-    <value>Neplatné schéma, očekával se sloupec číselných hodnot pro: {0}.</value>
+    <value>Neplatné schéma, očekával se sloupec číselných hodnot pro „{0}“.</value>
     
   </data>
   <data name="ErrInvalidSchemaNeedColorCol_Col" xml:space="preserve">
-    <value>Neplatné schéma, očekával se sloupec hodnot barvy pro: {0}.</value>
+    <value>Neplatné schéma, očekával se sloupec hodnot barvy pro „{0}“.</value>
     
   </data>
   <data name="ErrInvalidSchemaNeedCol" xml:space="preserve">
@@ -1810,7 +1810,7 @@
     
   </data>
   <data name="ErrNeedRecord_Func" xml:space="preserve">
-    <value>Prvním argumentem funkce {0} by měl být záznam.</value>
+    <value>Prvním argumentem „{0}“ by měl být záznam.</value>
     
   </data>
   <data name="ErrNeedEntity_EntityName" xml:space="preserve">
@@ -1849,8 +1849,12 @@
     <value>Neplatný formát.</value>
     
   </data>
+  <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
+    <value>Argument nepředstavuje platnou hodnotu data nebo času.</value>
+    
+  </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
-    <value>Tento zdroj dat není platný. Opravte prosím chybu v podokně Zdroje dat (klikněte na Obsah -&gt; Zdroje dat nebo na Zobrazení -&gt; Možnosti).</value>
+    <value>Tento zdroj dat není platný. Opravte chybu v podokně „Zdroje dat“ kliknutím na „Obsah -&gt; Zdroje dat“ nebo na „Zobrazení -&gt; Možnosti“</value>
     
   </data>
   <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
@@ -1862,11 +1866,11 @@
     
   </data>
   <data name="ErrTypeError_Ex1_Ex2_Found" xml:space="preserve">
-    <value>Typ tohoto argumentu ({2}) neodpovídá žádnému z očekávaných typů ({0} nebo {1}).</value>
+    <value>Typ tohoto argumentu „{2}“ neodpovídá žádnému z očekávaných typů „{0}“ nebo „{1}“.</value>
     
   </data>
   <data name="ErrTypeError_Arg_Expected_Found" xml:space="preserve">
-    <value>Typ tohoto argumentu ({0}) neodpovídá očekávanému typu {1}. Našel se typ {2}.</value>
+    <value>Typ tohoto argumentu „{0}“ neodpovídá očekávanému typu „{1}“. Našel se typ „{2}“.</value>
     
   </data>
   <data name="ErrTypeError_WrongType" xml:space="preserve">
@@ -1878,27 +1882,27 @@
     
   </data>
   <data name="ErrExpectedStringLiteralArg_Name" xml:space="preserve">
-    <value>Argument {0} není platný, očekával se textový literál.</value>
+    <value>Argument „{0}“ není platný, očekával se textový literál.</value>
     
   </data>
   <data name="ErrArgNotAValidIdentifier_Name" xml:space="preserve">
-    <value>Argument {0} není platný identifikátor.</value>
+    <value>Argument „{0}“ není platný identifikátor.</value>
     
   </data>
   <data name="ErrColExists_Name" xml:space="preserve">
-    <value>Sloupec s názvem {0} již existuje.</value>
+    <value>Sloupec s názvem „{0}“ již existuje.</value>
     
   </data>
   <data name="ErrColConflict_Name" xml:space="preserve">
-    <value>Konflikt názvů sloupců: {0}</value>
+    <value>Konflikt názvů sloupců pro „{0}“.</value>
     
   </data>
   <data name="ErrColDNE_Name" xml:space="preserve">
-    <value>Zadaný sloupec {0} neexistuje.</value>
+    <value>Zadaný sloupec „{0}“ neexistuje.</value>
     
   </data>
   <data name="ErrColumnDoesNotExist_Name_Similar" xml:space="preserve">
-    <value>Zadaný sloupec {0} neexistuje. Sloupec s nejpodobnějším názvem je {1}.</value>
+    <value>Zadaný sloupec „{0}“ neexistuje. Sloupec s nejpodobnějším názvem je „{1}“.</value>
     
   </data>
   <data name="ErrSortIncorrectOrder" xml:space="preserve">
@@ -1918,7 +1922,7 @@
     
   </data>
   <data name="ErrIncorrectFormat_Func" xml:space="preserve">
-    <value>Nesprávný specifikátor formátu pro funkci {0}</value>
+    <value>Nesprávný specifikátor formátu pro: „{0}“.</value>
     
   </data>
   <data name="ErrAsyncLambda" xml:space="preserve">
@@ -1934,7 +1938,7 @@
     
   </data>
   <data name="ErrFunctionDisallowedWithinNondeterministicOperationOrder" xml:space="preserve">
-    <value>Tuto funkci nejde volat v rámci {0}.</value>
+    <value>Tuto funkci nejde vyvolat v rámci {0}.</value>
     
   </data>
   <data name="ErrAsTypeAndIsTypeExpectConnectedDataSource" xml:space="preserve">
@@ -1962,7 +1966,7 @@
     
   </data>
   <data name="AboutDate" xml:space="preserve">
-    <value>Vrátí číslo, které představuje datum zadané v kódu data a času Power Apps</value>
+    <value>Vrátí číslo, které představuje datum zadané v kódu data a času Power Apps.</value>
     
   </data>
   <data name="DateArg1" xml:space="preserve">
@@ -2204,7 +2208,7 @@
     
   </data>
   <data name="ErrMultipleValuesForField_Name" xml:space="preserve">
-    <value>Pole s názvem {0} se v tomto záznamu zadalo více než jednou.</value>
+    <value>Pole s názvem „{0}“ se v tomto záznamu zadalo více než jednou.</value>
     
   </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
@@ -2249,7 +2253,7 @@
     
   </data>
   <data name="FindTArg1" xml:space="preserve">
-    <value>hledaný_text_nebo_sloupec</value>
+    <value>najít_text_nebo_sloupec</value>
     
   </data>
   <data name="FindTArg2" xml:space="preserve">
@@ -2278,7 +2282,7 @@
     <value>Barva určená názvem (například Blue) nebo standardním 6ciferným hexadecimálním zápisem #rrggbb</value>
   </data>
   <data name="ErrInvalidJsonPointer" xml:space="preserve">
-    <value>Neplatný ukazatel JSON</value>
+    <value>Neplatný ukazatel JSON.</value>
     
   </data>
   <data name="Text" xml:space="preserve">
@@ -2378,7 +2382,7 @@
     <value>Počet jednotek, které se mají přičíst. Toto číslo může být záporné.</value>
   </data>
   <data name="AboutDateAdd_unit" xml:space="preserve">
-    <value>Jednotka, která se má použít. Může to být jedna z těchto hodnot: Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds</value>
+    <value>Jednotka, která se má použít. Může to být jedna z těchto hodnot: Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
     
   </data>
   <data name="DateDiffArg1" xml:space="preserve">
@@ -2400,7 +2404,7 @@
     <value>Koncové datum rozdílové operace</value>
   </data>
   <data name="AboutDateDiff_unit" xml:space="preserve">
-    <value>Jednotka, ve které se má výsledek vyjádřit. Může to být jedna z těchto hodnot: Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds</value>
+    <value>Jednotka, ve které se má výsledek vyjádřit. Může to být jedna z těchto hodnot: Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
     
   </data>
   <data name="AboutDateAddT" xml:space="preserve">
@@ -2670,7 +2674,7 @@
     <value>Kód jazyka zadaného textu</value>
   </data>
   <data name="AboutTable" xml:space="preserve">
-    <value>Vytvoří tabulku ze zadaných záznamů. Počet sloupců v tabulce bude odpovídat počtu jedinečných polí záznamů. Příklad: Table({key1: val1, key2: val2, ...}; ...)</value>
+    <value>Vytvoří tabulku ze zadaných záznamů. Počet sloupců v tabulce bude odpovídat počtu jedinečných polí záznamů. Příklad: Table({key1: val1, key2: val2, ...}, ...)</value>
     
   </data>
   <data name="TableArg1" xml:space="preserve">
@@ -2681,7 +2685,7 @@
     <value>Záznam, který se stane řádkem ve výsledné tabulce</value>
   </data>
   <data name="AboutShowColumns" xml:space="preserve">
-    <value>Vrátí tabulku, ve které budou jenom zadané sloupce ze zdrojové tabulky. Všechny ostatní sloupce budou odebrány.</value>
+    <value>Vrátí tabulku, ve které budou všechny odstraněné sloupce ze „zdrojové“ tabulky kromě určených sloupců.</value>
     
   </data>
   <data name="ShowColumnsArg1" xml:space="preserve">
@@ -2815,7 +2819,7 @@
     
   </data>
   <data name="AboutStartsWith" xml:space="preserve">
-    <value>Vrátí true, pokud zadaný text začíná zadaným počátečním řetězcem.</value>
+    <value>Vrátí hodnotu true, pokud zadaný text začíná zadaným počátečním řetězcem.</value>
     
   </data>
   <data name="AboutStartsWith_text" xml:space="preserve">
@@ -2833,7 +2837,7 @@
     
   </data>
   <data name="AboutEndsWith" xml:space="preserve">
-    <value>Vrátí true, pokud zadaný text končí zadaným koncovým řetězcem.</value>
+    <value>Vrátí hodnotu true, pokud zadaný text končí zadaným koncovým řetězcem.</value>
     
   </data>
   <data name="AboutEndsWith_text" xml:space="preserve">
@@ -3160,7 +3164,7 @@
     
   </data>
   <data name="BorderStyle_None_DisplayName" xml:space="preserve">
-    <value>Žádné</value>
+    <value>Žádný</value>
     
   </data>
   <data name="BorderStyle_Dashed_DisplayName" xml:space="preserve">
@@ -3384,7 +3388,7 @@
     
   </data>
   <data name="ErrRemoveAllArg" xml:space="preserve">
-    <value>Pokud je zadán, musí být posledním argumentem „RemoveFlags.All“. Jedná se o překlep?</value>
+    <value>Pokud je zadán, musí být posledním argumentem 'RemoveFlags.All'. Jedná se o překlep?</value>
     
   </data>
   <data name="PenMode_Draw_DisplayName" xml:space="preserve">
@@ -3520,7 +3524,7 @@
     
   </data>
   <data name="BarcodeType_RssExpanded_DisplayName" xml:space="preserve">
-    <value>RSS Expanded</value>
+    <value>Rozbalené RSS</value>
     
   </data>
   <data name="BarcodeType_Upc_DisplayName" xml:space="preserve">
@@ -4024,7 +4028,7 @@
     
   </data>
   <data name="AboutIsError_value" xml:space="preserve">
-    <value>Hodnota, ve které se mají zkontrolovat chyby</value>
+    <value>Hodnota, ve které se mají zkontrolovat chyby.</value>
     
   </data>
   <data name="ErrBadArityMinimum" xml:space="preserve">
@@ -4032,7 +4036,7 @@
     
   </data>
   <data name="ErrBadArityRange" xml:space="preserve">
-    <value>Neplatný počet argumentů: přijato {0}, počet očekávaných: {1}–{2}</value>
+    <value>Neplatný počet argumentů: přijato {0}, počet očekávaných: {1}–{2}.</value>
     
   </data>
   <data name="ErrGeneralError" xml:space="preserve">
@@ -4168,7 +4172,7 @@
     <value>Každý blokový komentář musí začínat znaky /* a končit znaky */. Pokud blokový komentář správně neukončíte, všechen kód za komentářem se stane součástí tohoto komentáře. Pokud má komentář jen jeden řádek, můžete ho začít znaky // a není nutné identifikovat jeho konec.</value>
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_HowToFix_1" xml:space="preserve">
-    <value>Přidejte na konec blokového komentáře znaky */, nebo ho změňte na sadu řádkových komentářů.</value>
+    <value>Přidejte na konec blokového komentáře znaky „*/“, nebo ho změňte na sadu řádkových komentářů.</value>
     
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_Link_1" xml:space="preserve">
@@ -4236,14 +4240,14 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_ShortMessage" xml:space="preserve">
-    <value>Odkaz Parent není platný. V tomto kontextu se na nadřazený ovládací prvek nemůžete odkazovat.</value>
+    <value>Odkaz „Parent“ není platný. V tomto kontextu se na nadřazený ovládací prvek nemůžete odkazovat.</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_LongMessage" xml:space="preserve">
     <value>Operátor Parent se nedá použít spolu s ovládacím prvkem, který nemá nadřazený ovládací prvek. Tento operátor odkazuje na prvek, který hostuje daný ovládací prvek a zpřístupňuje všechny jeho vlastnosti.</value>
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_HowToFix_1" xml:space="preserve">
-    <value>Odeberte operátor Parent.</value>
+    <value>Odeberte operátor „Parent“.</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_Link_1" xml:space="preserve">
@@ -4359,7 +4363,7 @@
     
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_ShortMessage" xml:space="preserve">
-    <value>Tento datový typ se nedá převést. Power Apps nemůže tento typ {0} převést na typ {1}.</value>
+    <value>Tento datový typ se nedá převést. Power Apps nemůže tento {0} převést na {1}.</value>
     
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_LongMessage" xml:space="preserve">
@@ -4418,6 +4422,10 @@
     <value>Ujistěte se, že pro svůj identifikátor máte nějaký text. K této chybě dojde v případě, že identifikátor obsahuje jen mezery nebo prázdné znaky.</value>
     
   </data>
+  <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
+    <value>Unable to compare values of type {0}.</value>
+    
+  </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
     <value>Nekompatibilní typy pro porovnání. Tyto typy nelze srovnávat: {0}, {1}.</value>
     
@@ -4454,7 +4462,7 @@
     
   </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_ShortMessage" xml:space="preserve">
-    <value>Nekompatibilní typ. Sloupec {0} v aktualizovaném zdroji dat očekává typ {1}, ale používáte typ {2}.</value>
+    <value>Nekompatibilní typ. Sloupec „{0}“ v aktualizovaném zdroji dat očekává typ „{1}“, ale používáte typ „{2}“.</value>
     
   </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_HowToFix_1" xml:space="preserve">
@@ -4470,7 +4478,7 @@
     
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_ShortMessage" xml:space="preserve">
-    <value>Chybí sloupec. Ve vzorci chybí sloupec {0} s typem {1}.</value>
+    <value>Chybí sloupec. Ve vzorci chybí sloupec „{0}“ s typem „{1}“.</value>
     
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_HowToFix_1" xml:space="preserve">
@@ -4698,7 +4706,7 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidControlReference_ShortMessage" xml:space="preserve">
-    <value>Tento odkaz na ovládací prvek se v této vlastnosti nedá použít.</value>
+    <value>Tento odkaz na ovládací prvek se v této vlastnosti nedá použít</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidControlReference_HowToFix_1" xml:space="preserve">
@@ -4730,7 +4738,7 @@
     
   </data>
   <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
-    <value>Netypové objekty nelze použít jako první argument pro funkce, které podporují obory záznamů.</value>
+    <value>Netypové objekty nelze použít jako první argument pro funkce, které podporují rozsahy záznamů.</value>
     
   </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
@@ -4834,8 +4842,18 @@
     <value>Tato funkce je nejednoznačná, obsahuje výrazy lambda a identifikátory sloupců pro stejný argument.</value>
     
   </data>
-  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
-    <value>Možnost BooleanOptionSet {0} není podporována.</value>
+  <data name="OptionSetOptionNotSupported" xml:space="preserve">
+    <value>The value of option {0} is not of expected type {1}.</value>
     
+  </data>
+  <data name="AboutOptionSetInfo" xml:space="preserve">
+    <value>Vrátí logický název dané hodnoty sady možností.</value>
+    
+  </data>
+  <data name="AboutOptionSetInfoArg1" xml:space="preserve">
+    <value>možnost</value>
+  </data>
+  <data name="AboutOptionSetInfo_option" xml:space="preserve">
+    <value>Hodnota sady možností, jejíž logický název bude vrácen.</value>
   </data>
 </root>

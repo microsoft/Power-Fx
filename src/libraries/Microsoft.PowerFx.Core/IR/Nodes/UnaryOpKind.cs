@@ -11,7 +11,7 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
 
         // Coercion operations
         BooleanToNumber,
-        BooleanOptionSetToNumber,
+        OptionSetToNumber,
         DateToNumber,
         TimeToNumber,
         DateTimeToNumber,
@@ -36,7 +36,9 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
 
         NumberToBoolean,
         TextToBoolean,
-        BooleanOptionSetToBoolean,
+        OptionSetToBoolean,
+
+        OptionSetToColor,
 
         RecordToRecord, // See field mappings
         TableToTable,

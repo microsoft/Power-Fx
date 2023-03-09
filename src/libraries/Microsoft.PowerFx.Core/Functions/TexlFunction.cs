@@ -23,6 +23,7 @@ using Microsoft.PowerFx.Core.IR.Symbols;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Logging.Trackers;
 using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 using static Microsoft.PowerFx.Core.IR.IRTranslator;
@@ -235,7 +236,7 @@ namespace Microsoft.PowerFx.Core.Functions
                 // The invariant name is used to form a URL. It cannot contain spaces and other
                 // funky characters. We have tests that enforce this constraint. If we ever need
                 // such characters (#, &, %, ?), they need to be encoded here, e.g. %20, etc.
-                StringResources.Get("FunctionReference_Link") + char.ToLower(LocaleInvariantName.First());
+                StringResources.Get("FunctionReference_Link") + char.ToLowerInvariant(LocaleInvariantName.First());
 
         /// <summary>
         /// Might need to reset if Function is variadic function.
@@ -436,14 +437,6 @@ namespace Microsoft.PowerFx.Core.Functions
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            for (var i = 0; i < argTypes.Length; i++)
-            {
-                if (!IsIdentifierParam(i))
-                {
-                    Contracts.AssertValid(argTypes[i]);
-                }
-            }
-
             var fValid = true;
             var count = Math.Min(args.Length, ParamTypes.Length);
 
@@ -452,10 +445,34 @@ namespace Microsoft.PowerFx.Core.Functions
             // Type check the args
             for (var i = 0; i < count; i++)
             {
-                var typeChecks = CheckType(args[i], argTypes[i], ParamTypes[i], errors, SupportCoercionForArg(i), out DType coercionType);
-                if (typeChecks && coercionType != null)
+                // Identifiers don't have a type
+                if (IsIdentifierParam(i))
                 {
-                    CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i], coercionType);
+                    continue;
+                }
+
+                Contracts.AssertValid(argTypes[i]);
+                var expectedParamType = ParamTypes[i];
+
+                // If the strong-enum type flag is disabled, treat an enum option set type as the enum supertype instead
+                if (!context.Features.HasFlag(Features.StronglyTypedBuiltinEnums) && expectedParamType.OptionSetInfo is EnumSymbol enumSymbol)
+                {
+                    expectedParamType = enumSymbol.EnumType.GetEnumSupertype();
+                }
+
+                var typeChecks = CheckType(args[i], argTypes[i], expectedParamType, errors, SupportCoercionForArg(i), out DType coercionType);
+                if (typeChecks)
+                {
+                    // For implementations, coerce enum option set values to the backing type
+                    if (expectedParamType.OptionSetInfo is EnumSymbol enumSymbol1)
+                    {
+                        coercionType = enumSymbol1.EnumType.GetEnumSupertype();
+                    }
+
+                    if (coercionType != null)
+                    {
+                        CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i], coercionType);
+                    }
                 }
 
                 fValid &= typeChecks;
@@ -970,7 +987,7 @@ namespace Microsoft.PowerFx.Core.Functions
                 }
             }
 
-            if (nodeType.Kind == expectedType.Kind)
+            if (nodeType.Kind == expectedType.Kind && !expectedType.IsOptionSet)
             {
                 // If coercion type is non null and coercion difference is, then the node should have been coercible.
                 // This likely indicates a bug in CoercesTo, called above
@@ -978,7 +995,7 @@ namespace Microsoft.PowerFx.Core.Functions
             }
             else
             {
-                errors.EnsureError(DocumentErrorSeverity.Severe, node, TexlStrings.ErrBadType_ExpectedType_ProvidedType, expectedType.GetKindString(), nodeType.GetKindString());
+                errors.TypeMismatchError(node, expectedType, nodeType);
             }
 
             return false;
@@ -1098,7 +1115,7 @@ namespace Microsoft.PowerFx.Core.Functions
             Contracts.AssertValue(node);
             Contracts.AssertValue(binding);
 
-            var message = string.Format("Function:{0}, Message:{1}", Name, telemetryMessage);
+            var message = string.Format(CultureInfo.InvariantCulture, "Function:{0}, Message:{1}", Name, telemetryMessage);
             TrackingProvider.Instance.AddSuggestionMessage(message, node, binding);
         }
 

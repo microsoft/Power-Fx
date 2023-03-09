@@ -21,6 +21,11 @@ namespace Microsoft.PowerFx.Types
         {
         }
 
+        public InMemoryRecordValue(IRContext irContext, params NamedValue[] fields)
+          : this(irContext, ToDict(fields))
+        {
+        }
+
         public InMemoryRecordValue(IRContext irContext, IReadOnlyDictionary<string, FormulaValue> fields)
             : base(irContext)
         {

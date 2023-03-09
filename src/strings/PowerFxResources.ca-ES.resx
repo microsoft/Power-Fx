@@ -795,7 +795,7 @@
     
   </data>
   <data name="AboutIfError_fallback" xml:space="preserve">
-    <value>Valor que es retorna si és el primer argument sense errors.</value>
+    <value>Valor que es retorna si l'argument anterior no és un error.</value>
     
   </data>
   <data name="AboutSubstitute" xml:space="preserve">
@@ -1849,6 +1849,10 @@
     <value>El format no és vàlid.</value>
     
   </data>
+  <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
+    <value>L'argument no representa un valor de data o hora vàlid.</value>
+    
+  </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
     <value>La font de dades no és vàlida. Podeu solucionar l'error a la subfinestra "Fonts de dades" si feu clic a "Contingut -&gt; Fonts de dades" o "Visualitza -&gt; Opcions"</value>
     
@@ -2200,7 +2204,7 @@
     <value>Codi de llengua del text proporcionat.</value>
   </data>
   <data name="ErrAutoRefreshNotAllowed" xml:space="preserve">
-    <value>Les funcions de servei d'actualització automàtica no es poden utilitzar a les normes d'acció.</value>
+    <value>Les funcions de servei d'actualització automàtica no es poden utilitzar a les regles d'acció.</value>
     
   </data>
   <data name="ErrMultipleValuesForField_Name" xml:space="preserve">
@@ -2888,7 +2892,7 @@
     
   </data>
   <data name="Icon_Bookmark_DisplayName" xml:space="preserve">
-    <value>Adreça d'interès</value>
+    <value>Marcador</value>
     
   </data>
   <data name="Icon_Bug_DisplayName" xml:space="preserve">
@@ -3104,7 +3108,7 @@
     
   </data>
   <data name="Icon_BookmarkFilled_DisplayName" xml:space="preserve">
-    <value>Adreça d'interès (emplenada)</value>
+    <value>Marcador (emplenat)</value>
     
   </data>
   <data name="Icon_CancelBadge_DisplayName" xml:space="preserve">
@@ -4418,6 +4422,10 @@
     <value>Assegureu-vos que teniu text per a l'identificador. Aquest error es produeix quan l'identificador està buit o només conté espais.</value>
     
   </data>
+  <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
+    <value>Unable to compare values of type {0}.</value>
+    
+  </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
     <value>Els tipus són incompatibles per a la comparació. Aquests tipus no es poden comparar: {0}, {1}.</value>
     
@@ -4834,8 +4842,18 @@
     <value>Aquesta funció és ambigua; conté expressions lambda i identificadors de columna per al mateix argument.</value>
     
   </data>
-  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
-    <value>No s'admet l'opció BooleanOptionSet {0}.</value>
+  <data name="OptionSetOptionNotSupported" xml:space="preserve">
+    <value>The value of option {0} is not of expected type {1}.</value>
     
+  </data>
+  <data name="AboutOptionSetInfo" xml:space="preserve">
+    <value>Retorna el nom lògic del valor del conjunt d'opcions proporcionat.</value>
+    
+  </data>
+  <data name="AboutOptionSetInfoArg1" xml:space="preserve">
+    <value>opció</value>
+  </data>
+  <data name="AboutOptionSetInfo_option" xml:space="preserve">
+    <value>Valor del conjunt d'opcions el nom lògic del qual es retornarà.</value>
   </data>
 </root>

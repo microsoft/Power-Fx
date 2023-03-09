@@ -30,7 +30,7 @@ true
 4
 
 >> OtherOptionSet.OptionA <> TopOptionSetField
-Errors: Error 23-25: Incompatible types for comparison. These types can't be compared: OptionSetValue(OtherOptionSet), OptionSetValue(OptionSet).
+Errors: Error 23-25: Incompatible types for comparison. These types can't be compared: OptionSetValue (OtherOptionSet), OptionSetValue (OptionSet).
 
 >> IsBlank(Nested.InnerOtherOptionSet)
 false

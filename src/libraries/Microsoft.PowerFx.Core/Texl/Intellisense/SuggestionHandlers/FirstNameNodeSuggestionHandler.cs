@@ -93,7 +93,7 @@ namespace Microsoft.PowerFx.Intellisense
                 Contracts.AssertValue(intellisenseData);
 
                 var suggestions = intellisenseData.AdditionalGlobalSuggestions
-                    .Union(intellisenseData.EnumSymbols.Select(symbol => new KeyValuePair<string, SuggestionIconKind>(symbol.Name, SuggestionIconKind.Other)));
+                    .Union(intellisenseData.EnumSymbols.Select(symbol => new KeyValuePair<string, SuggestionIconKind>(symbol.EntityName.Value, SuggestionIconKind.Other)));
 
                 IntellisenseHelper.AddSuggestionsForMatches(intellisenseData, suggestions, SuggestionKind.Global, requiresSuggestionEscaping: true);
             }
@@ -114,7 +114,7 @@ namespace Microsoft.PowerFx.Intellisense
                 var bracketOpenCount = 0;
                 for (var i = begin; i < cursorPos; i++)
                 {
-                    if (TexlLexer.PunctuatorBracketOpen.Equals(script[i].ToString()))
+                    if (TexlLexer.PunctuatorBracketOpen.Equals(script[i].ToString(), System.StringComparison.Ordinal))
                     {
                         bracketOpenCount++;
                     }

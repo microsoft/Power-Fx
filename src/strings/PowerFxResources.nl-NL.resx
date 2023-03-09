@@ -795,7 +795,7 @@
     
   </data>
   <data name="AboutIfError_fallback" xml:space="preserve">
-    <value>De waarde die wordt geretourneerd als dit het eerste argument is zonder een fout.</value>
+    <value>De waarde die wordt als het vorige argument een fout is.</value>
     
   </data>
   <data name="AboutSubstitute" xml:space="preserve">
@@ -1847,6 +1847,10 @@
   </data>
   <data name="ErrTextInvalidFormat" xml:space="preserve">
     <value>Ongeldige indeling.</value>
+    
+  </data>
+  <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
+    <value>Het argument vertegenwoordigt geen geldige datum- of tijdwaarde.</value>
     
   </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
@@ -3268,7 +3272,7 @@
     
   </data>
   <data name="LayoutOverflow_Scroll_DisplayName" xml:space="preserve">
-    <value>Scrollen</value>
+    <value>Schuiven</value>
     
   </data>
   <data name="Overflow_Hidden_DisplayName" xml:space="preserve">
@@ -3548,7 +3552,7 @@
     
   </data>
   <data name="FormMode_View_DisplayName" xml:space="preserve">
-    <value>Weergave</value>
+    <value>Weergeven</value>
     
   </data>
   <data name="FormMode_New_DisplayName" xml:space="preserve">
@@ -4418,6 +4422,10 @@
     <value>Zorg dat er tekst voor de id is. Deze fout treedt op wanneer de id uitsluitend uit spaties of lege ruimte bestaat.</value>
     
   </data>
+  <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
+    <value>Unable to compare values of type {0}.</value>
+    
+  </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
     <value>Incompatibele typen voor vergelijking. Deze typen kunnen niet worden vergeleken: {0}, {1}.</value>
     
@@ -4730,7 +4738,7 @@
     
   </data>
   <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
-    <value>Niet-getypeerde objecten kunnen niet worden gebruikt als het eerste argument voor functies die recordbereiken ondersteunen.</value>
+    <value>Niet-getypeerde objecten kunnen niet worden gebruikt als het eerste argument voor functies die recordbereik ondersteunen.</value>
     
   </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
@@ -4834,8 +4842,18 @@
     <value>Deze functie is dubbelzinnig. De functie bevat een aantal lambda-expressies en kolom-id's voor hetzelfde argument.</value>
     
   </data>
-  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
-    <value>De BooleanOptionSet-optie {0} wordt niet ondersteund.</value>
+  <data name="OptionSetOptionNotSupported" xml:space="preserve">
+    <value>The value of option {0} is not of expected type {1}.</value>
     
+  </data>
+  <data name="AboutOptionSetInfo" xml:space="preserve">
+    <value>Retourneert de logische naam van de opgegeven waarde in een optieset.</value>
+    
+  </data>
+  <data name="AboutOptionSetInfoArg1" xml:space="preserve">
+    <value>optie</value>
+  </data>
+  <data name="AboutOptionSetInfo_option" xml:space="preserve">
+    <value>Een waarde van een optieset waarvan de logische naam wordt geretourneerd.</value>
   </data>
 </root>
