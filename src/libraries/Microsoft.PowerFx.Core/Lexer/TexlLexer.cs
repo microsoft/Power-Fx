@@ -517,9 +517,6 @@ namespace Microsoft.PowerFx.Syntax
         // Returns true if the specified character is a new line character.
         public static bool IsNewLineCharacter(char ch) => ch == '\n';
 
-        // Returns true if the specified character is a semicolon character.
-        public static bool IsSemicolonCharacter(char ch) => ch == ';';
-
         // Takes a valid name and changes it to an identifier, escaping if needed.
         public static string EscapeName(DName name)
         {
@@ -1244,6 +1241,7 @@ namespace Microsoft.PowerFx.Syntax
                 // Delimited identifier.
                 NextChar();
                 var ichStrMin = CurrentPos;
+                var semicolonIndex = -1;
 
                 // Accept any characters up to the next unescaped identifier delimiter.
                 // String will be corrected in the IdentToken if needed.
@@ -1251,6 +1249,18 @@ namespace Microsoft.PowerFx.Syntax
                 {
                     if (Eof)
                     {
+                        // Ident was never closed, tokenize ident up to semicolon
+                        if (semicolonIndex != -1)
+                        {
+                            CurrentPos = ichStrMin;
+                            _sb.Length = 0;
+                            while (CurrentPos < semicolonIndex)
+                            {
+                                _sb.Append(CurrentChar);
+                                NextChar();
+                            }
+                        }
+
                         break;
                     }
 
@@ -1278,12 +1288,12 @@ namespace Microsoft.PowerFx.Syntax
                         fDelimiterEnd = false;
                         break;
                     }
-                    else if (IsSemicolonCharacter(CurrentChar))
+                    else if (_lex.TryGetPunctuator(CurrentChar.ToString(), out var tid) && tid == TokKind.Semicolon)
                     {
-                        // Terminate an identifier on a semicolon character
-                        // Don't include the new line in the identifier
-                        fDelimiterEnd = true;
-                        break;
+                        // Don't know if semicolon is end of identifier so we will store for fallback
+                        semicolonIndex = semicolonIndex == -1 ? CurrentPos : semicolonIndex;
+                        _sb.Append(CurrentChar);
+                        NextChar();
                     }
                     else
                     {

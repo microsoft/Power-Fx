@@ -772,7 +772,15 @@ namespace Microsoft.PowerFx.Core.Tests
 
         [Theory]
         [InlineData("a = 10; b = in'valid ; c = 20;", "c")]
+        [InlineData("a = 10; b = in(valid ; c = 20;", "c")]
+        [InlineData("a = 10; b = in)valid ; c = 20;", "c")]
+        [InlineData("a = 10; b = in{valid ; c = 20;", "c")]
+        [InlineData("a = 10; b = in}valid ; c = 20;", "c")]
         [InlineData("a = 10; b = in'valid", "a")]
+        [InlineData("a = 10; b = 3213d 123123asdf", "a")]
+        [InlineData("a = 10; b = 3213d 123123asdf; c = 23;", "c")]
+        [InlineData("a = 10; b = 3213d 123123asdf;; c = 23;", "c")]
+        [InlineData("a = 10; b = 321;3;d ;;;123123asdf;; c = 23;", "c")]
         public void TestFormulaParseRestart(string script, string key)
         {
             var formulasResult = TexlParser.ParseFormulasScript(script);

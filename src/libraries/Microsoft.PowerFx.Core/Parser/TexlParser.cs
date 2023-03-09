@@ -296,12 +296,14 @@ namespace Microsoft.PowerFx.Core.Parser
                     }
                     else
                     {
-                        break;
+                        _curs.TokMove();
+                        continue;
                     }
                 }
                 else
                 {
-                    break;
+                    _curs.TokMove();
+                    continue;
                 }
 
                 ParseTrivia();
@@ -652,15 +654,19 @@ namespace Microsoft.PowerFx.Core.Parser
                         case TokKind.True:
                         case TokKind.False:
                             PostError(_curs.TokCur, TexlStrings.ErrOperatorExpected);
-                            if (_flagsMode.Peek().HasFlag(Flags.NamedFormulas))
-                            {
-                                goto case TokKind.Semicolon;
-                            }
 
                             tok = _curs.TokMove();
+
+                            // Stop recursing if we reach a semicolon
+                            if (_curs.TidCur == TokKind.Semicolon)
+                            {
+                                return node;
+                            }
+
                             rightTrivia = ParseTrivia();
                             right = ParseExpr(Precedence.Error);
                             node = MakeBinary(BinaryOp.Error, node, leftTrivia, tok, rightTrivia, right);
+
                             break;
 
                         case TokKind.ParenOpen:
