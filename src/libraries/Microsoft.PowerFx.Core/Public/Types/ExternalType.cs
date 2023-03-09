@@ -12,8 +12,9 @@ namespace Microsoft.PowerFx.Types
     /// </summary>
     public enum ExternalTypeKind
     {
-        Array, // PowerFx only supports single-column tables
-        Object // PowerFx does not support schema-less objects
+        Array,  // PowerFx only supports single-column tables
+        Object, // PowerFx does not support schema-less objects
+        Mixed // Supports Array indexing and Property access
     }
 
     /// <summary>
@@ -24,6 +25,7 @@ namespace Microsoft.PowerFx.Types
     {
         public static readonly FormulaType ObjectType = new ExternalType(ExternalTypeKind.Object);
         public static readonly FormulaType ArrayType = new ExternalType(ExternalTypeKind.Array);
+        public static readonly FormulaType MixedType = new ExternalType(ExternalTypeKind.Mixed);
 
         public ExternalTypeKind Kind { get; }
 
