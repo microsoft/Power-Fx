@@ -43,8 +43,11 @@
 >> Dec2Hex(45780)
 "B2D4"
 
+>> Dec2Hex(45780, Blank())
+Error({Kind:ErrorKind.Numeric})
+
 >> Dec2Hex(45780, 0)
-"B2D4"
+Error({Kind:ErrorKind.Numeric})
 
 >> Dec2Hex(45780, 3)
 Error({Kind:ErrorKind.Numeric})
@@ -177,11 +180,20 @@ Table({Value:"1"},{Value:"0"},{Value:Error({Kind:ErrorKind.Numeric})},{Value:"2"
 >> Dec2Hex([10,11,"12"], [2,5,10])
 Table({Value:"0A"},{Value:"0000B"},{Value:"000000000C"})
 
+>> Dec2Hex(["10","11","12"])
+Table({Value:"A"},{Value:"B"},{Value:"C"})
+
+>> Dec2Hex(["10","11","12"], [2,5,10])
+Table({Value:"0A"},{Value:"0000B"},{Value:"000000000C"})
+
 >> Dec2Hex([10,255,-16], 5)
 Table({Value:"0000A"},{Value:"000FF"},{Value:"FFFFFFFFF0"})
 
 >> Dec2Hex(10, [2,5,10])
 Table({Value:"0A"},{Value:"0000A"},{Value:"000000000A"})
+
+>> Dec2Hex(255, [Blank(),-1,0,1,2,3,4])
+Table({Value:Error({Kind:ErrorKind.Numeric})},{Value:Error({Kind:ErrorKind.Numeric})},{Value:Error({Kind:ErrorKind.Numeric})},{Value:Error({Kind:ErrorKind.Numeric})},{Value:"FF"},{Value:"0FF"},{Value:"00FF"})
 
 // ******** DIFFERENT INPUT TYPES AS PARAMETERS ********
 
