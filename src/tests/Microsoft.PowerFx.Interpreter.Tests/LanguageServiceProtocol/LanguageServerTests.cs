@@ -1330,7 +1330,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 
             CheckBehaviorError(_sendToClientData[0], false, out var diags);
 
-            Assert.Contains("The type of this expression does not match the expected type 'Text'. Found type 'Number'.", diags.First().Message);
+            Assert.Contains("The type of this expression does not match the expected type. Found type 'Number'.", diags.First().Message);
         }
 
         private EditorContextScope TestCreateEditorScope(string documentUri)

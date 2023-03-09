@@ -255,11 +255,11 @@ namespace Microsoft.PowerFx.Core.Tests
 
             Assert.Single(errors);
             var error = errors.First();
-            Assert.Equal("Error 0-3: The type of this expression does not match the expected type 'Text'. Found type 'Number'.", error.ToString());
+            Assert.Equal("Error 0-3: The type of this expression does not match the expected type. Found type 'Number'.", error.ToString());
         }
 
         [Fact]
-        public void BindingCheckCoerceReturnTypes()
+        public void BindingCheckExpectedReturnType()
         {
             var check = new CheckResult(new Engine())
                 .SetText("RGBA(255,0,0,1)")
