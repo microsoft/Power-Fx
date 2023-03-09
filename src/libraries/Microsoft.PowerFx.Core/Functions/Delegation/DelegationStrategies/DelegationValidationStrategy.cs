@@ -426,7 +426,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
                 }
             }
 
-            // If the feature is enabled, enable delegation
+            // If the feature is enabled, enable delegation for
             // async call, first name and dotted name nodes.
             if (binding.Features.HasFlag(Features.AllowAsyncDelegation)
                 && (binding.Features.HasFlag(Features.AllowImpureNodeDelegation) || binding.IsPure(node))
