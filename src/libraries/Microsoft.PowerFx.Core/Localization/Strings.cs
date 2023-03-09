@@ -583,6 +583,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrTypeError_Ex1_Ex2_Found = new ErrorResourceKey("ErrTypeError_Ex1_Ex2_Found");
         public static ErrorResourceKey ErrTypeError_Arg_Expected_Found = new ErrorResourceKey("ErrTypeError_Arg_Expected_Found");
         public static ErrorResourceKey ErrTypeError_WrongType = new ErrorResourceKey("ErrTypeError_WrongType");
+        public static ErrorResourceKey ErrTypeError_WrongExpectedType = new ErrorResourceKey("ErrTypeError_WrongExpectedType");
         public static ErrorResourceKey ErrTypeErrorRecordIncompatibleWithSource = new ErrorResourceKey("ErrTypeErrorRecordIncompatibleWithSource");
         public static ErrorResourceKey ErrExpectedStringLiteralArg_Name = new ErrorResourceKey("ErrExpectedStringLiteralArg_Name");
         public static ErrorResourceKey ErrExpectedIdentifierArg_Name = new ErrorResourceKey("ErrExpectedIdentifierArg_Name");

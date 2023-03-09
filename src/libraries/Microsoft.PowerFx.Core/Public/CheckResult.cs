@@ -156,11 +156,18 @@ namespace Microsoft.PowerFx
         }
 
         private FormulaType _expectedReturnType;
+        private Func<FormulaType, bool> _expectedCoerceToType;
+
+        public CheckResult SetExpectedReturnValue(Func<FormulaType, bool> canCoerceToType)
+        {
+            _expectedCoerceToType = canCoerceToType;
+            return this;
+        }
 
         public CheckResult SetExpectedReturnValue(FormulaType type)
         {
             _expectedReturnType = type;
-            return this;
+            return SetExpectedReturnValue(t => t == type);
         }
 
         // No additional binding is required
@@ -415,23 +422,39 @@ namespace Microsoft.PowerFx
                     }
                 }
 
-                if (this.ReturnType != null && this._expectedReturnType != null)
+                if (this.ReturnType != null && this._expectedCoerceToType != null)
                 {
-                    var sameType = this._expectedReturnType == this.ReturnType;
-                    if (!sameType)
+                    if (!this._expectedCoerceToType(this.ReturnType))
                     {
-                        _errors.Add(new ExpressionError
+                        if (this._expectedReturnType != null)
                         {
-                            Kind = ErrorKind.Validation,
-                            Severity = ErrorSeverity.Critical,
-                            Span = new Span(0, this._expression.Length),
-                            MessageKey = TexlStrings.ErrTypeError_WrongType.Key,
-                            _messageArgs = new object[]
+                            _errors.Add(new ExpressionError
                             {
-                                this._expectedReturnType._type.GetKindString(),
-                                this.ReturnType._type.GetKindString()
-                            }
-                        });
+                                Kind = ErrorKind.Validation,
+                                Severity = ErrorSeverity.Critical,
+                                Span = new Span(0, this._expression.Length),
+                                MessageKey = TexlStrings.ErrTypeError_WrongType.Key,
+                                _messageArgs = new object[]
+                                {
+                                    this._expectedReturnType._type.GetKindString(),
+                                    this.ReturnType._type.GetKindString()
+                                }
+                            });
+                        }
+                        else
+                        {
+                            _errors.Add(new ExpressionError
+                            {
+                                Kind = ErrorKind.Validation,
+                                Severity = ErrorSeverity.Critical,
+                                Span = new Span(0, this._expression.Length),
+                                MessageKey = TexlStrings.ErrTypeError_WrongExpectedType.Key,
+                                _messageArgs = new object[]
+                                {
+                                    this.ReturnType._type.GetKindString()
+                                }
+                            });
+                        }
                     }
                 }
             }

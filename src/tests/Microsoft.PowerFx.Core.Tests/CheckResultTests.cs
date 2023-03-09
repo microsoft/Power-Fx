@@ -127,7 +127,7 @@ namespace Microsoft.PowerFx.Core.Tests
             var formula = check.GetParseFormula();
             Assert.NotNull(formula);
         }
-        
+
         [Fact]
         public void ParseResultTest()
         {
@@ -256,6 +256,23 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Single(errors);
             var error = errors.First();
             Assert.Equal("Error 0-3: The type of this expression does not match the expected type 'Text'. Found type 'Number'.", error.ToString());
+        }
+
+        [Fact]
+        public void BindingCheckCoerceReturnTypes()
+        {
+            var check = new CheckResult(new Engine())
+                .SetText("RGBA(255,0,0,1)")
+                .SetBindingInfo()
+                .SetExpectedReturnValue(type => type == FormulaType.String || type == FormulaType.Number || type == FormulaType.Boolean || type == FormulaType.DateTime);
+
+            var errors = check.ApplyErrors();
+
+            Assert.False(check.IsSuccess);
+
+            Assert.Single(errors);
+            var error = errors.First();
+            Assert.Equal("Error 0-15: The type of this expression does not match the expected type. Found type 'Color'.", error.ToString());
         }
 
         [Fact]

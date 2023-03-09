@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -5051,5 +5051,9 @@
   </data>
   <data name="AboutOptionSetInfo_option" xml:space="preserve">
     <value>An option set value whose logical name will be returned.</value>
+  </data>
+  <data name="ErrTypeError_WrongExpectedType" xml:space="preserve">
+    <value>The type of this expression does not match the expected type. Found type '{0}'.</value>
+    <comment>Error Message.</comment>
   </data>
 </root>
