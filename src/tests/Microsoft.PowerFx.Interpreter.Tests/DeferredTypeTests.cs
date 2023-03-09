@@ -92,6 +92,7 @@ namespace Microsoft.PowerFx.Interpreter
         [InlineData("Set(N, X); Set(N, Float(5)); N", "n")]
         [InlineData("Set(W, X); Set(W, 5); W", "w")]
         [InlineData("Set(XM, X); XM", "X")]
+        [InlineData("First(Sum(X, 1))", "X")]
 
         // Ensures expression binds without any errors - but issues a warning for the deferred(unknown) type.
         public void DeferredTypeTest(string script, string expectedReturnType)
@@ -114,7 +115,6 @@ namespace Microsoft.PowerFx.Interpreter
         [InlineData("X.field + N.field", "ErrInvalidDot")]
         [InlineData("Index([1,2,3], X).missing", "ErrInvalidName")]
         [InlineData("X < \"2021-12-09T20:28:52Z\"", "ErrBadType_ExpectedTypesCSV")]
-        [InlineData("First(Sum(X, 1))", "ErrBadType_ExpectedType_ProvidedType")]
 
         // Can't create aggregates around Deferred type.
         [InlineData("[X]", "ErrTableDoesNotAcceptThisType")]

@@ -27,7 +27,7 @@
 1E+308
 
 >> Round(1e15,10)
-1E+15
+1000000000000000
 
 >> RoundUp(1e15,15)
 Error({Kind:ErrorKind.Numeric})

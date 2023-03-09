@@ -102,7 +102,7 @@ namespace Microsoft.PowerFx.Functions
                     case ReturnBehavior.ReturnBlankIfAnyArgIsBlank:
                         if (anyValueBlank)
                         {
-                            return new BlankValue(IRContext.NotInSource(FormulaType.Blank));
+                            return new BlankValue(IRContext.NotInSource(irContext.ResultType));
                         }
 
                         break;
@@ -500,6 +500,18 @@ namespace Microsoft.PowerFx.Functions
         private static FormulaValue ReplaceBlankWithDecimalZero(IRContext irContext, int index)
         {
             return new DecimalValue(IRContext.NotInSource(FormulaType.Decimal), 0m);
+        }
+
+        private static FormulaValue ReplaceBlankWithContextZero(IRContext irContext, int index)
+        {
+            if (irContext.ResultType._type == DType.Decimal)
+            {
+                return new DecimalValue(IRContext.NotInSource(FormulaType.Decimal), 0m);
+            }
+            else
+            {
+                return new NumberValue(IRContext.NotInSource(FormulaType.Number), 0.0);
+            }
         }
 
         private static FormulaValue ReplaceBlankWithEmptyString(IRContext irContext, int index)

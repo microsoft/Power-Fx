@@ -1782,7 +1782,7 @@ namespace Microsoft.PowerFx.Functions
             // Decimal TODO: Where is RoundUp, RoundDown?
             {
                 BuiltinFunctionsCore.RoundT,
-                NoErrorHandling(MultiSingleColumnTable(SimpleFunctionImplementations[BuiltinFunctionsCore.Round], DoNotReplaceBlank))
+                NoErrorHandling(MultiSingleColumnTable(SimpleFunctionImplementations[BuiltinFunctionsCore.Round], ReplaceBlankWithContextZero))
             },
         };
 

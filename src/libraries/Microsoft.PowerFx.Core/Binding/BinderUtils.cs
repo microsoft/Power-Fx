@@ -270,15 +270,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     continue;
                 }
 
-                if (!DType.Number.Accepts(type))
-                {
-                    coercions.Add(new BinderCoercionResult() { Node = node, CoercedType = DType.Number });
-                    return new BinderCheckTypeResult() { Coercions = coercions };
-                }
-                else
-                {
-                    return new BinderCheckTypeResult();
-                }
+                return new BinderCheckTypeResult();
             }
 
             // If the node is a control, we may be able to coerce its primary output property
@@ -666,41 +658,32 @@ namespace Microsoft.PowerFx.Core.Binding
                             return new BinderCheckTypeResult() { Node = node, NodeType = DType.Time, Coercions = leftResTime.Coercions };
                         default:
                             // Regular Addition
-                            // Deferred + number or number + Deferred
-                            if (leftKind == DKind.Deferred || rightKind == DKind.Deferred)
-                            {
-                                return new BinderCheckTypeResult()
-                                {
-                                    Node = node,
-                                    NodeType = DType.Deferred,
-                                    Coercions = null
-                                };
-                            }
-
                             // Only operations where both operands are Decimal-compatible result in Decimal
                             if (DType.DecimalBinaryOp(leftType, rightType, numberIsFloat))
                             {
                                 var leftResAdd = CheckTypeCore(errorContainer, node.Left, leftType, DType.Decimal, /* coerced: */ DType.String, DType.Boolean, DType.UntypedObject);
                                 var rightResAdd = CheckTypeCore(errorContainer, node.Right, rightType, DType.Decimal, /* coerced: */ DType.String, DType.Boolean, DType.UntypedObject);
 
-                                return new BinderCheckTypeResult()
+                                // Deferred + number or number + Deferred
+                                if (leftKind == DKind.Deferred || rightKind == DKind.Deferred)
                                 {
-                                    Node = node,
-                                    NodeType = DType.Decimal,
-                                    Coercions = leftResAdd.Coercions.Concat(rightResAdd.Coercions).ToList()
-                                };
+                                    return new BinderCheckTypeResult() { Node = node, NodeType = DType.Deferred, Coercions = leftResAdd.Coercions.Concat(rightResAdd.Coercions).ToList() };
+                                }
+
+                                return new BinderCheckTypeResult() { Node = node, NodeType = DType.Decimal, Coercions = leftResAdd.Coercions.Concat(rightResAdd.Coercions).ToList() };
                             }
                             else
                             {
                                 var leftResAdd = CheckTypeCore(errorContainer, node.Left, leftType, DType.Number, /* coerced: */ DType.Decimal, DType.String, DType.Boolean, DType.UntypedObject);
                                 var rightResAdd = CheckTypeCore(errorContainer, node.Right, rightType, DType.Number, /* coerced: */ DType.Decimal, DType.String, DType.Boolean, DType.UntypedObject);
 
-                                return new BinderCheckTypeResult()
+                                // Deferred + number or number + Deferred
+                                if (leftKind == DKind.Deferred || rightKind == DKind.Deferred)
                                 {
-                                    Node = node,
-                                    NodeType = DType.Number,
-                                    Coercions = leftResAdd.Coercions.Concat(rightResAdd.Coercions).ToList()
-                                };
+                                    return new BinderCheckTypeResult() { Node = node, NodeType = DType.Deferred, Coercions = leftResAdd.Coercions.Concat(rightResAdd.Coercions).ToList() };
+                                }
+
+                                return new BinderCheckTypeResult() { Node = node, NodeType = DType.Number, Coercions = leftResAdd.Coercions.Concat(rightResAdd.Coercions).ToList() };
                             }
                     }
             } 
@@ -758,6 +741,12 @@ namespace Microsoft.PowerFx.Core.Binding
                     var rightResult = CheckComparisonTypeOneOfCore(errorContainer, right, typeRight, DType.Number, DType.Decimal, DType.Date, DType.Time, DType.DateTime);
                     coercions.AddRange(rightResult.Coercions);
 
+                    // CheckComparisonTypeOneOfCore above will validate that Decimal is OK, but will not coerce to a number
+                    if (!DType.Number.Accepts(typeRight))
+                    {
+                        coercions.Add(new BinderCoercionResult() { Node = right, CoercedType = DType.Number });
+                    }
+
                     // Comparing option sets to their backing kind is permitted, and coerces the option set to the backing kind. In this case, always number, checked above.
                     coercions.Add(new BinderCoercionResult() { Node = left, CoercedType = DType.Number });
                 }
@@ -765,6 +754,12 @@ namespace Microsoft.PowerFx.Core.Binding
                 {
                     var leftResult = CheckComparisonTypeOneOfCore(errorContainer, left, typeLeft, DType.Number, DType.Decimal, DType.Date, DType.Time, DType.DateTime);
                     coercions.AddRange(leftResult.Coercions);
+
+                    if (!DType.Number.Accepts(typeLeft))
+                    {
+                        coercions.Add(new BinderCoercionResult() { Node = left, CoercedType = DType.Number });
+                    }
+
                     coercions.Add(new BinderCoercionResult() { Node = right, CoercedType = DType.Number });
                 }
 

@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Functions;
@@ -584,9 +585,8 @@ namespace Microsoft.PowerFx.Core.IR
 
                     if (DType.Color.Accepts(resultType))
                     {
-                        Contracts.Assert(value is double);
-                        result = new ColorLiteralNode(context.GetIRContext(node), Convert.ToUInt32((double)value));
-                    }
+                        result = new ColorLiteralNode(context.GetIRContext(node), ConvertToColor(value));
+                    } 
                     else if (DType.Number.Accepts(resultType))
                     {
                         result = new NumberLiteralNode(context.GetIRContext(node), (double)value);
@@ -1027,6 +1027,16 @@ namespace Microsoft.PowerFx.Core.IR
                 }
 
                 return new UnaryOpNode(IRContext.NotInSource(FormulaType.Build(toType)), unaryOpKind, child);
+            }
+
+            private static System.Drawing.Color ConvertToColor(object inputValue)
+            {
+                var value = Convert.ToUInt32(inputValue, CultureInfo.InvariantCulture);
+                return System.Drawing.Color.FromArgb(
+                            (byte)((value >> 24) & 0xFF),
+                            (byte)((value >> 16) & 0xFF),
+                            (byte)((value >> 8) & 0xFF),
+                            (byte)(value & 0xFF));
             }
         }
 

@@ -843,13 +843,13 @@ namespace Microsoft.PowerFx.Syntax
                         .With(GetScriptForToken(tokenSource.Token))
                         .With(GetNewLine(context.IndentDepth + 1));
                 }
-                else if (commentToken != null && (previousToken?.Kind == TokKind.CurlyOpen || previousToken?.Kind == TokKind.Comma) && !commentToken.Value.StartsWith("//") && !commentToken.Value.StartsWith("\n"))
+                else if (commentToken != null && (previousToken?.Kind == TokKind.CurlyOpen || previousToken?.Kind == TokKind.Comma) && !commentToken.Value.StartsWith("//", StringComparison.Ordinal) && !commentToken.Value.StartsWith("\n", StringComparison.Ordinal))
                 {
                     result = result
                         .With(GetScriptForToken(tokenSource.Token))
                         .With(GetNewLine(context.IndentDepth + 1));
                 }
-                else if (commentToken != null && (previousToken?.Kind == TokKind.CurlyOpen || previousToken?.Kind == TokKind.Comma) && !commentToken.Value.StartsWith("//") && commentToken.Value.StartsWith("\n"))
+                else if (commentToken != null && (previousToken?.Kind == TokKind.CurlyOpen || previousToken?.Kind == TokKind.Comma) && !commentToken.Value.StartsWith("//", StringComparison.Ordinal) && commentToken.Value.StartsWith("\n", StringComparison.Ordinal))
                 {
                     result = result
                         .With(GetScriptForToken(tokenSource.Token).TrimStart())

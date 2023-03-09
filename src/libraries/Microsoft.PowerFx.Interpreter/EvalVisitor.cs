@@ -123,6 +123,11 @@ namespace Microsoft.PowerFx
             return new BooleanValue(node.IRContext, node.LiteralValue);
         }
 
+        public override async ValueTask<FormulaValue> Visit(ColorLiteralNode node, EvalVisitorContext context)
+        {
+            return new ColorValue(node.IRContext, node.LiteralValue);
+        }
+
         public override async ValueTask<FormulaValue> Visit(RecordNode node, EvalVisitorContext context)
         {
             var fields = new List<NamedValue>();
@@ -645,11 +650,6 @@ namespace Microsoft.PowerFx
                 Span = node.IRContext.SourceContext,
                 Kind = ErrorKind.AnalysisError
             });
-        }
-
-        public override async ValueTask<FormulaValue> Visit(ColorLiteralNode node, EvalVisitorContext context)
-        {
-            return CommonErrors.NotYetImplementedError(node.IRContext, "Color literal");
         }
 
         public override async ValueTask<FormulaValue> Visit(ChainingNode node, EvalVisitorContext context)

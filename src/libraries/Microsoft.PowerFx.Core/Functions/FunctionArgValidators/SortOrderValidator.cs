@@ -47,7 +47,7 @@ namespace Microsoft.PowerFx.Core.Functions.FunctionArgValidators
             Contracts.AssertValue(order);
 
             validatedSortOrder = string.Empty;
-            order = order.ToLower();
+            order = order.ToLowerInvariant();
             if (order != LanguageConstants.AscendingSortOrderString && order != LanguageConstants.DescendingSortOrderString)
             {
                 return false;

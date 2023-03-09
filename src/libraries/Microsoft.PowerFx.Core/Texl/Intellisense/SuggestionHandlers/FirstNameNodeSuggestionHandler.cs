@@ -114,7 +114,7 @@ namespace Microsoft.PowerFx.Intellisense
                 var bracketOpenCount = 0;
                 for (var i = begin; i < cursorPos; i++)
                 {
-                    if (TexlLexer.PunctuatorBracketOpen.Equals(script[i].ToString()))
+                    if (TexlLexer.PunctuatorBracketOpen.Equals(script[i].ToString(), System.StringComparison.Ordinal))
                     {
                         bracketOpenCount++;
                     }

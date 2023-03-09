@@ -53,12 +53,12 @@ namespace Microsoft.PowerFx.Connectors.Execution
 
         protected override void WriteNumberValue(double numberValue)
         {
-            _writer.Append(numberValue.ToString());
+            _writer.Append(numberValue.ToString(CultureInfo.InvariantCulture));
         }
 
         protected override void WriteDecimalValue(decimal decimalValue)
         {
-            _writer.Append(decimalValue.ToString());
+            _writer.Append(decimalValue.ToString(CultureInfo.InvariantCulture));
         }
 
         protected override void WritePropertyName(string name)

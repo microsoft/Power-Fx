@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Globalization;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Logging.Trackers;
@@ -29,7 +30,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
         {
             Contracts.AssertNonEmpty(message);
 
-            return string.Format("Op:{0}, {1}", Op, message);
+            return string.Format(CultureInfo.InvariantCulture, "Op:{0}, {1}", Op, message);
         }
 
         public virtual bool IsOpSupportedByColumn(OperationCapabilityMetadata metadata, TexlNode column, DPath columnPath, TexlBinding binder)
@@ -172,7 +173,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
 
             if ((unaryOpNode.Child.Kind != NodeKind.FirstName) && !opDelStrategy.IsOpSupportedByTable(metadata, node, binding))
             {
-                var telemetryMessage = string.Format("{0} operator not supported at table level", unaryOpNode.Op.ToString());
+                var telemetryMessage = string.Format(CultureInfo.InvariantCulture, "{0} operator not supported at table level", unaryOpNode.Op.ToString());
                 SuggestDelegationHintAndAddTelemetryMessage(node, binding, telemetryMessage);
                 TrackingProvider.Instance.SetDelegationTrackerStatus(DelegationStatus.UnaryOpNotSupportedByTable, node, binding, _function, DelegationTelemetryInfo.CreateUnaryOpNoSupportedInfoTelemetryInfo(unaryOpNode.Op));
                 return false;

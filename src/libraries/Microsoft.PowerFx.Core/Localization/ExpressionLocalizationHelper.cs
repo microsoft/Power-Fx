@@ -84,7 +84,7 @@ namespace Microsoft.PowerFx.Core
                     case TokKind.NumLit:
                     case TokKind.DecLit:
                         var numLit = token.Span.GetFragment(script);
-                        var decimalSeparatorIndex = numLit.IndexOf(sourceDecimalSeparator);
+                        var decimalSeparatorIndex = numLit.IndexOf(sourceDecimalSeparator, StringComparison.Ordinal);
                         if (decimalSeparatorIndex >= 0)
                         {
                             var newMin = span.Min + decimalSeparatorIndex;

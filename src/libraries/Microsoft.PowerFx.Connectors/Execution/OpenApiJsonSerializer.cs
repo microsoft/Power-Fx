@@ -50,8 +50,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
 
         protected override void WriteDecimalValue(decimal decimalValue)
         {
-            // TODO Decimal: OK?
-            _writer.WriteStringValue(decimalValue.ToString());
+            _writer.WriteNumberValue(decimalValue);
         }
 
         protected override void WriteBooleanValue(bool booleanValue)

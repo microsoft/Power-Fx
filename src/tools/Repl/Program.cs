@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -106,9 +107,10 @@ namespace Microsoft.PowerFx
         // Pattern match for Set(x,y) so that we can define the variable
         public static bool TryMatchSet(string expr, out string arg0name, out FormulaValue varValue)
         {
-            var parserOptions = new ParserOptions() { AllowsSideEffects = true };
-
-            var parse = _engine.Parse(expr);
+            var parserOptions = _engine.GetDefaultParserOptionsCopy();
+            parserOptions.AllowsSideEffects = true;
+            
+            var parse = Engine.Parse(expr, parserOptions, parserOptions.Culture);
             if (parse.IsSuccess)
             {
                 if (parse.Root.Kind == Microsoft.PowerFx.Syntax.NodeKind.Call)
@@ -162,14 +164,6 @@ namespace Microsoft.PowerFx
                     if (TryMatchSet(expr, out var varName, out var varValue))
                     {
                         Console.WriteLine(varName + ": " + PrintResult(varValue));
-                    }
-
-                    // Parse tree pretty printer: Parse( <expr> )
-                    else if ((match = Regex.Match(expr, @"^\s*Parse\((?<expr>.*)\)\s*$", RegexOptions.Singleline)).Success)
-                    {
-                        var opts = new ParserOptions() { AllowsSideEffects = true, NumberIsFloat = _numberIsFloat };
-                        var pr = _engine.Parse(match.Groups["expr"].Value, opts);
-                        Console.WriteLine(pr.ToString());
                     }
 
                     // IR pretty printer: IR( <expr> )
@@ -546,19 +540,19 @@ namespace Microsoft.PowerFx
 
             public FormulaValue Execute(StringValue option, BooleanValue value)
             {
-                if (option.Value.ToLower() == OptionFormatTable.ToLower())
+                if (string.Equals(option.Value, OptionFormatTable, StringComparison.OrdinalIgnoreCase))
                 {
                     _formatTable = value.Value;
                     return value;
                 }
 
-                if (option.Value.ToLower() == OptionNumberIsFloat.ToLower())
+                if (option.Value.ToLower(CultureInfo.InvariantCulture) == OptionNumberIsFloat.ToLower(CultureInfo.InvariantCulture))
                 {
                     _numberIsFloat = value.Value;
                     return value;
                 }
 
-                if (option.Value.ToLower() == OptionLargeCallDepth.ToLower())
+                if (option.Value.ToLower(CultureInfo.InvariantCulture) == OptionLargeCallDepth.ToLower(CultureInfo.InvariantCulture))
                 {
                     _largeCallDepth = value.Value;
                     ResetEngine();
@@ -567,7 +561,7 @@ namespace Microsoft.PowerFx
 
                 foreach (Features feature in (Features[])Enum.GetValues(typeof(Features)))
                 {
-                    if (option.Value.ToLower() == feature.ToString().ToLower())
+                    if (option.Value.ToLower(CultureInfo.InvariantCulture) == feature.ToString().ToLower(CultureInfo.InvariantCulture))
                     {
                         _features = _features & ~feature | (value.Value ? feature : Features.None);
                         ResetEngine();

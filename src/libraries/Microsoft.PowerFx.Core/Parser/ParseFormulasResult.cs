@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Utils;
@@ -43,7 +44,7 @@ namespace Microsoft.PowerFx.Core.Parser
 
             if (errors?.Any() ?? false)
             {
-                ExpErrors = ExpressionError.New(errors);
+                ExpErrors = ExpressionError.New(errors, CultureInfo.InvariantCulture);
                 HasError = true;
             }
 
