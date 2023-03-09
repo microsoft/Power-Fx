@@ -478,15 +478,37 @@ namespace Microsoft.PowerFx.Functions
             return new DecimalValue(irContext, result);
         }
 
-        public static DecimalValue NumberToDecimal(IRContext irContext, NumberValue[] args)
+        public static FormulaValue NumberToDecimal(IRContext irContext, NumberValue[] args)
         {
             return NumberToDecimal(irContext, args[0]);
         }
 
-        public static DecimalValue NumberToDecimal(IRContext irContext, NumberValue value)
+        public static FormulaValue NumberToDecimal(IRContext irContext, NumberValue value)
         {
-            // Decimal TODO: Overflow
-            return new DecimalValue(irContext, (decimal)value.Value);
+            try
+            {
+                return new DecimalValue(irContext, (decimal)value.Value);
+            }
+            catch (OverflowException)
+            {
+                return CommonErrors.OverflowError(irContext);
+            }
+        }
+
+        private static (decimal, ConvertionStatus) ConvertNumberToDecimal(double value)
+        {
+            decimal result;
+
+            try
+            {
+                result = (decimal)value;
+            }
+            catch (OverflowException)
+            {
+                return (0m, ConvertionStatus.InvalidNumber);
+            }
+
+            return (result, ConvertionStatus.Ok);
         }
 
         public static NumberValue DecimalToNumber(IRContext irContext, DecimalValue[] args)

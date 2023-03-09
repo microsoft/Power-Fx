@@ -106,11 +106,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         private static (RecalcEngine engine, RecordValue parameters) MutationFunctionsTestSetup(PowerFxConfig config)
         {
             /*
-             * Record r1 => {![Field1:n, Field2:s, Field3:d, Field4:b]}
-             * Record r2 => {![Field1:n, Field2:s, Field3:d, Field4:b]}
-             * Record rwr1 => {![Field1:n, Field2:![Field2_1:n, Field2_2:s, Field2_3:![Field2_3_1:n, Field2_3_2:s]], Field3:b]}
-             * Record rwr2 => {![Field1:n, Field2:![Field2_1:n, Field2_2:s, Field2_3:![Field2_3_1:n, Field2_3_2:s]], Field3:b]}
-             * Record rwr3 => {![Field1:n, Field2:![Field2_1:n, Field2_2:s, Field2_3:![Field2_3_1:n, Field2_3_2:s]], Field3:b]}
+             * Record r1 => {![Field1:w, Field2:s, Field3:d, Field4:b]}
+             * Record r2 => {![Field1:w, Field2:s, Field3:d, Field4:b]}
+             * Record rwr1 => {![Field1:w, Field2:![Field2_1:w, Field2_2:s, Field2_3:![Field2_3_1:w, Field2_3_2:s]], Field3:b]}
+             * Record rwr2 => {![Field1:w, Field2:![Field2_1:w, Field2_2:s, Field2_3:![Field2_3_1:w, Field2_3_2:s]], Field3:b]}
+             * Record rwr3 => {![Field1:w, Field2:![Field2_1:w, Field2_2:s, Field2_3:![Field2_3_1:w, Field2_3_2:s]], Field3:b]}
              * Record r_empty => {}
              * Table t1(r1) => Type (Field1, Field2, Field3, Field4)
              * Table t2(rwr1, rwr2, rwr3)
@@ -146,12 +146,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
 #pragma warning disable SA1117 // Parameters should be on same line or separate lines
             var recordWithRecordType = RecordType.Empty()
-                .Add(new NamedFormulaType("Field1", FormulaType.Number, "DisplayNameField1"))
+                .Add(new NamedFormulaType("Field1", FormulaType.Decimal, "DisplayNameField1"))
                 .Add(new NamedFormulaType("Field2", RecordType.Empty()
-                    .Add(new NamedFormulaType("Field2_1", FormulaType.Number, "DisplayNameField2_1"))
+                    .Add(new NamedFormulaType("Field2_1", FormulaType.Decimal, "DisplayNameField2_1"))
                     .Add(new NamedFormulaType("Field2_2", FormulaType.String, "DisplayNameField2_2"))
                     .Add(new NamedFormulaType("Field2_3", RecordType.Empty()
-                        .Add(new NamedFormulaType("Field2_3_1", FormulaType.Number, "DisplayNameField2_3_1"))
+                        .Add(new NamedFormulaType("Field2_3_1", FormulaType.Decimal, "DisplayNameField2_3_1"))
                         .Add(new NamedFormulaType("Field2_3_2", FormulaType.String, "DisplayNameField2_3_2")),
                     "DisplayNameField2_3")),
                 "DisplayNameField2"))

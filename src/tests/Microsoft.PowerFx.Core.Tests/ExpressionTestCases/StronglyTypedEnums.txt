@@ -61,4 +61,4 @@ Date(2011,1,16)
 "A"
 
 >> If(true, 1, TimeUnit.Seconds)
-Errors: Error 20-28: Invalid argument type (Enum (TimeUnit)). Expecting a Number value instead.|Error 0-29: The function 'If' has some invalid arguments.
+Errors: Error 20-28: Invalid argument type (Enum (TimeUnit)). Expecting a Decimal value instead.|Error 0-29: The function 'If' has some invalid arguments.

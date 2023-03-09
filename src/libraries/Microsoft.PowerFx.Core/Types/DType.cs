@@ -3578,6 +3578,12 @@ namespace Microsoft.PowerFx.Core.Types
 
         public static bool DecimalBinaryOp(DType leftType, DType rightType, bool numberIsFloat)
         {
+            if (leftType == DType.Unknown || rightType == DType.Unknown ||
+                leftType == DType.Deferred || rightType == DType.Deferred)
+            {
+                return false;
+            }
+
             // Decimal TODO: Do two untypedobject ops coerce?
             if ((leftType == DType.UntypedObject || rightType == DType.ObjNull) && 
                 (rightType == DType.UntypedObject || rightType == DType.ObjNull))

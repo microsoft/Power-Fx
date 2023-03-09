@@ -270,7 +270,15 @@ namespace Microsoft.PowerFx.Core.Binding
                     continue;
                 }
 
-                return new BinderCheckTypeResult();
+                if (!DType.Number.Accepts(type))
+                {
+                    coercions.Add(new BinderCoercionResult() { Node = node, CoercedType = DType.Number });
+                    return new BinderCheckTypeResult() { Coercions = coercions };
+                }
+                else
+                {
+                    return new BinderCheckTypeResult();
+                }
             }
 
             // If the node is a control, we may be able to coerce its primary output property
@@ -747,7 +755,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 else if (typeLeft.Kind == DKind.OptionSetValue)
                 {
                     // The other value (right in this case) needs to be a number or coerced to a number in order to compare
-                    var rightResult = CheckComparisonTypeOneOfCore(errorContainer, right, typeRight, DType.Number, DType.Date, DType.Time, DType.DateTime);
+                    var rightResult = CheckComparisonTypeOneOfCore(errorContainer, right, typeRight, DType.Number, DType.Decimal, DType.Date, DType.Time, DType.DateTime);
                     coercions.AddRange(rightResult.Coercions);
 
                     // Comparing option sets to their backing kind is permitted, and coerces the option set to the backing kind. In this case, always number, checked above.
@@ -755,7 +763,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 }
                 else if (typeRight.Kind == DKind.OptionSetValue)
                 {
-                    var leftResult = CheckComparisonTypeOneOfCore(errorContainer, left, typeLeft, DType.Number, DType.Date, DType.Time, DType.DateTime);
+                    var leftResult = CheckComparisonTypeOneOfCore(errorContainer, left, typeLeft, DType.Number, DType.Decimal, DType.Date, DType.Time, DType.DateTime);
                     coercions.AddRange(leftResult.Coercions);
                     coercions.Add(new BinderCoercionResult() { Node = right, CoercedType = DType.Number });
                 }

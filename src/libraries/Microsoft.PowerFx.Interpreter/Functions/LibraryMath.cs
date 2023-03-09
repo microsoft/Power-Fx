@@ -904,32 +904,31 @@ namespace Microsoft.PowerFx.Functions
 
         public static FormulaValue Round(IRContext irContext, FormulaValue[] args)
         {
-            if (args[1] is NumberValue digits)
+            if (args.Length == 2 && args[1] is NumberValue digits)
             {
                 if (args[0] is NumberValue num)
                 {
-                    var x = Round(num.Value, digits.Value);
-                    return new NumberValue(irContext, x);
+                    return RoundFloat(irContext, num, digits.Value);
                 }
                 else if (args[0] is DecimalValue dec)
                 {
-                    var d = RoundDecimal(dec.Value, digits.Value);
-                    return new DecimalValue(irContext, d);
+                    return RoundDecimal(irContext, dec, digits.Value);
                 }
             }
 
             return CommonErrors.UnreachableCodeError(irContext);
         }
 
-        internal static double Round(double number, double digits, RoundType rt = RoundType.Default)
+        internal static FormulaValue RoundFloat(IRContext irContext, NumberValue num, double digits, RoundType rt = RoundType.Default)
         {
+            var number = num.Value;
             var s = number < 0 ? -1d : 1d;
             var n = number * s;
             var dg = digits < 0 ? (int)Math.Ceiling(digits) : (int)Math.Floor(digits);
 
             if (dg < -15 || dg > 15 || number < -1e20d || number > 1e20d)
             {
-                return number;
+                return num;
             }
 
             // Dividing by m, since multiplication was introducing floating point error
@@ -939,18 +938,19 @@ namespace Microsoft.PowerFx.Functions
             switch (rt)
             {
                 case RoundType.Default:
-                    return s * Math.Floor((n + (1 / (2 * m)) + eps) * m) / m;
+                    return new NumberValue(irContext, s * Math.Floor((n + (1 / (2 * m)) + eps) * m) / m);
                 case RoundType.Down:
-                    return s * Math.Floor(n * m) / m;
+                    return new NumberValue(irContext, s * Math.Floor(n * m) / m);
                 case RoundType.Up:
-                    return s * Math.Ceiling(n * m) / m;
+                    return new NumberValue(irContext, s * Math.Ceiling(n * m) / m);
             }
 
-            return 0;
+            return CommonErrors.UnreachableCodeError(irContext);
         }
 
-        internal static decimal RoundDecimal(decimal number, double digits, RoundType rt = RoundType.Default)
+        internal static FormulaValue RoundDecimal(IRContext irContext, DecimalValue dec, double digits, RoundType rt = RoundType.Default)
         {
+            // TODO Decimal: explore a better algorithm that doesn't overflow as often, but in general overflow is unavoidable
             // TODO Decimal: avoids immutable field check, but don't want to recreate array for each call
             IReadOnlyList<decimal> decPow10 = new decimal[]
             {
@@ -962,29 +962,39 @@ namespace Microsoft.PowerFx.Functions
                 1e+21m, 1e+22m, 1e+23m, 1e+24m, 1e+25m, 1e+26m, 1e+27m, 1e+28m
             };
 
+            var number = dec.Value;
             var s = number < 0 ? -1m : 1m;
             var n = number * s;
             var dg = digits < 0 ? (int)Math.Ceiling(digits) : (int)Math.Floor(digits);
 
             // Decimal TODO: shouldn't this return zero, here and above for double?
+#if false
             if (dg < -29 || dg > 29)
             {
                 return number;
             }
+#endif
 
             var m = decPow10[dg + 29];
 
-            switch (rt)
+            try
             {
-                case RoundType.Default:
-                    return s * decimal.Floor((n + (1 / (2 * m))) * m) / m;
-                case RoundType.Down:
-                    return s * decimal.Floor(n * m) / m;
-                case RoundType.Up:
-                    return s * decimal.Ceiling(n * m) / m;
+                switch (rt)
+                {
+                    case RoundType.Default:
+                        return new DecimalValue(irContext, s * decimal.Floor((n + (1 / (2 * m))) * m) / m);
+                    case RoundType.Down:
+                        return new DecimalValue(irContext, s * decimal.Floor(n * m) / m);
+                    case RoundType.Up:
+                        return new DecimalValue(irContext, s * decimal.Ceiling(n * m) / m);
+                }
+            }
+            catch (OverflowException)
+            {
+                return CommonErrors.OverflowError(irContext);
             }
 
-            return 0;
+            return CommonErrors.UnreachableCodeError(irContext);
         }
 
         public enum RoundType
@@ -996,17 +1006,15 @@ namespace Microsoft.PowerFx.Functions
 
         public static FormulaValue RoundUp(IRContext irContext, FormulaValue[] args)
         {
-            if (args[1] is NumberValue digits)
+            if (args.Length == 2 && args[1] is NumberValue digits)
             {
                 if (args[0] is NumberValue num)
                 {
-                    var x = Round(num.Value, digits.Value, RoundType.Up);
-                    return new NumberValue(irContext, x);
+                    return RoundFloat(irContext, num, digits.Value, RoundType.Up);
                 }
                 else if (args[0] is DecimalValue dec)
                 {
-                    var d = RoundDecimal(dec.Value, digits.Value, RoundType.Up);
-                    return new DecimalValue(irContext, d);
+                    return RoundDecimal(irContext, dec, digits.Value, RoundType.Up);
                 }
             }
 
@@ -1015,35 +1023,19 @@ namespace Microsoft.PowerFx.Functions
 
         public static FormulaValue RoundDown(IRContext irContext, FormulaValue[] args)
         {
-            double digits;
-
-            if (args.Length == 1)
+            if (args.Length == 2 && args[1] is NumberValue digits)
             {
-                digits = 0;
-            }
-            else if (args[1] is NumberValue dig)
-            {
-                digits = dig.Value;
-            }
-            else
-            {
-                return CommonErrors.UnreachableCodeError(irContext);
+                if (args[0] is NumberValue num)
+                {
+                    return RoundFloat(irContext, num, digits.Value, RoundType.Down);
+                }
+                else if (args[0] is DecimalValue dec)
+                {
+                    return RoundDecimal(irContext, dec, digits.Value, RoundType.Down);
+                }
             }
 
-            if (args[0] is NumberValue num)
-            {
-                var x = Round(num.Value, digits, RoundType.Down);
-                return new NumberValue(irContext, x);
-            }
-            else if (args[0] is DecimalValue dec)
-            {
-                var d = RoundDecimal(dec.Value, digits, RoundType.Down);
-                return new DecimalValue(irContext, d);
-            }
-            else
-            {
-                return CommonErrors.UnreachableCodeError(irContext);
-            }
+            return CommonErrors.UnreachableCodeError(irContext);
         }
 
         public static FormulaValue Int(IRContext irContext, FormulaValue[] args)

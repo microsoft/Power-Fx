@@ -40,7 +40,7 @@ namespace Microsoft.PowerFx.Interpreter
         [InlineData("Date(2022, 11, 10) + X", "D")]
         [InlineData("Time(0, 0, 0) + X", "T")]
 
-        [InlineData("X * 1", "w")]
+        [InlineData("X * 1", "n")]
         [InlineData("And(X, 1=1)", "b")]
         [InlineData("X&\"test\"", "s")]
         [InlineData("X = 1", "b")]
@@ -90,7 +90,7 @@ namespace Microsoft.PowerFx.Interpreter
         [InlineData("Switch(0, 0, X, 1, \"test\")", "s")]
         [InlineData("Set(N, X); N", "n")]
         [InlineData("Set(N, X); Set(N, Float(5)); N", "n")]
-        [InlineData("Set(N, X); Set(N, Decimal(5)); N", "n")]
+        [InlineData("Set(W, X); Set(W, 5); W", "w")]
         [InlineData("Set(XM, X); XM", "X")]
 
         // Ensures expression binds without any errors - but issues a warning for the deferred(unknown) type.
@@ -103,6 +103,7 @@ namespace Microsoft.PowerFx.Interpreter
             symbolTable.AddVariable("T", RecordType.Empty().ToTable());
             symbolTable.AddVariable("N", FormulaType.Number, mutable: true);
             symbolTable.AddVariable("XM", FormulaType.Deferred, mutable: true);
+            symbolTable.AddVariable("W", FormulaType.Decimal, mutable: true);
 
             TestDeferredTypeBindingWarning(script, Features.None, TestUtils.DT(expectedReturnType), symbolTable);
         }

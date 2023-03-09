@@ -264,7 +264,12 @@ namespace Microsoft.PowerFx.Functions
             switch (value)
             {
                 case NumberValue n:
-                    result = NumberToDecimal(irContext, n);
+                    var (num, numErr) = ConvertNumberToDecimal(n.Value);
+                    if (numErr == ConvertionStatus.Ok)
+                    {
+                        result = new DecimalValue(irContext, num);
+                    }
+
                     break;
                 case DecimalValue w:
                     result = w;
@@ -279,11 +284,11 @@ namespace Microsoft.PowerFx.Functions
                     result = DateTimeToDecimal(formatInfo, irContext, dtv);
                     break;
                 case StringValue sv:
-                    var (val, err) = ConvertToDecimal(sv.Value, formatInfo.CultureInfo);
+                    var (str, strErr) = ConvertToDecimal(sv.Value, formatInfo.CultureInfo);
 
-                    if (err == ConvertionStatus.Ok)
+                    if (strErr == ConvertionStatus.Ok)
                     {
-                        result = new DecimalValue(irContext, val);
+                        result = new DecimalValue(irContext, str);
                     }
 
                     break;
