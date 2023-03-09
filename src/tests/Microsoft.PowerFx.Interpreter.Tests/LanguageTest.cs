@@ -35,7 +35,9 @@ namespace Microsoft.PowerFx.Tests
         public void GetDefaultLanguageTest()
         {
             var engine = new RecalcEngine();
-            engine.Eval("Language()");
+            var result = engine.Eval("Language()");
+
+            Assert.Equal("en-US", result.ToObject());
         }
     }
 }
