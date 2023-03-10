@@ -37,3 +37,16 @@ Table({Value:Error({Kind:ErrorKind.Div0})},{Value:Error({Kind:ErrorKind.Div0})},
 
 >> Round(Table({b: 1.23}, {b: Sqrt(-1)}, {b: 7.89}), 1)
 Table({Value:1.2},{Value:Error({Kind:ErrorKind.Numeric})},{Value:7.9})
+
+// Coercions and blank values
+>> Round(["12.34", "56.78"], "1")
+Table({Value:12.3},{Value:56.8})
+
+>> Round(["12.34", "56.78"], true)
+Table({Value:12.3},{Value:56.8})
+
+>> Round(If(1<0,["12.34", "56.78"]), 1)
+Blank()
+
+>> Round(["12.34", "56.78"], If(1<0,"1"))
+Table({Value:12},{Value:57})
