@@ -73,7 +73,7 @@ namespace Microsoft.PowerFx.Core.Parser
             return parser.ParseUDFs(script);
         }
 
-        public static ParseNamedFormulasAndUDFResult ParseNamedFormulasAndUDFsScript(string script, CultureInfo loc = null)
+        public static ParseUserDefinitionResult ParseUserDefinitionScript(string script, CultureInfo loc = null)
         {
             Contracts.AssertValue(script);
             Contracts.AssertValueOrNull(loc);
@@ -227,7 +227,7 @@ namespace Microsoft.PowerFx.Core.Parser
             }
         }
 
-        private ParseNamedFormulasAndUDFResult ParseUDFsAndNamedFormulas(string script)
+        private ParseUserDefinitionResult ParseUDFsAndNamedFormulas(string script)
         {
             var udfs = new List<UDF>();
             var namedFormulas = new List<NamedFormula>();
@@ -351,7 +351,7 @@ namespace Microsoft.PowerFx.Core.Parser
                 }
             }
 
-            return new ParseNamedFormulasAndUDFResult(namedFormulas, udfs, _errors);
+            return new ParseUserDefinitionResult(namedFormulas, udfs, _errors);
         }
 
         // Parse the script

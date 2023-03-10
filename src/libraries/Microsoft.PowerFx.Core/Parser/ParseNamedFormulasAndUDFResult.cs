@@ -7,7 +7,7 @@ using Microsoft.PowerFx.Core.Errors;
 
 namespace Microsoft.PowerFx.Core.Parser
 {
-    internal class ParseNamedFormulasAndUDFResult
+    internal class ParseUserDefinitionResult
     {
         internal IEnumerable<UDF> UDFs { get; }
 
@@ -17,7 +17,7 @@ namespace Microsoft.PowerFx.Core.Parser
 
         internal bool HasErrors { get; }
 
-        public ParseNamedFormulasAndUDFResult(IEnumerable<NamedFormula> namedFormulas, IEnumerable<UDF> uDFs, IEnumerable<TexlError> errors)
+        public ParseUserDefinitionResult(IEnumerable<NamedFormula> namedFormulas, IEnumerable<UDF> uDFs, IEnumerable<TexlError> errors)
         {
             NamedFormulas = namedFormulas;
             UDFs = uDFs;

@@ -37,9 +37,9 @@ namespace Microsoft.PowerFx.Syntax
             Loc = loc;
         }
 
-        public ParseNamedFormulasAndUDFResult Parse()
+        public ParseUserDefinitionResult Parse()
         {
-            return TexlParser.ParseNamedFormulasAndUDFsScript(Script, Loc);
+            return TexlParser.ParseUserDefinitionScript(Script, Loc);
         }
     }
 }
