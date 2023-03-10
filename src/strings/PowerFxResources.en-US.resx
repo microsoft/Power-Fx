@@ -5052,10 +5052,6 @@
   <data name="AboutOptionSetInfo_option" xml:space="preserve">
     <value>An option set value whose logical name will be returned.</value>
   </data>
-  <data name="ErrTypeError_WrongExpectedType" xml:space="preserve">
-    <value>The type of this expression does not match the expected type. Found type '{0}'.</value>
-    <comment>Error Message.</comment>
-  </data>
   <data name="AboutLanguage" xml:space="preserve">
     <value>Get the default locale set at runtime.</value>
     <comment>Description of 'Language' function.</comment>

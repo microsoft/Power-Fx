@@ -255,7 +255,24 @@ namespace Microsoft.PowerFx.Core.Tests
 
             Assert.Single(errors);
             var error = errors.First();
-            Assert.Equal("Error 0-3: The type of this expression does not match the expected type. Found type 'Number'.", error.ToString());
+            Assert.Equal("Error 0-3: The type of this expression does not match the expected type 'Text'. Found type 'Number'.", error.ToString());
+        }
+
+        [Fact]
+        public void BindingCheckNotExpectedReturnType()
+        {
+            var check = new CheckResult(new Engine())
+                .SetText("RGBA(255,0,0,1)")
+                .SetBindingInfo()
+                .SetExpectedReturnValue(FormulaType.String, false);
+
+            var errors = check.ApplyErrors();
+
+            Assert.False(check.IsSuccess);
+
+            Assert.Single(errors);
+            var error = errors.First();
+            Assert.Equal("Error 0-15: The type of this expression does not match the expected type 'Text'. Found type 'Color'.", error.ToString());
         }
 
         [Fact]
@@ -264,15 +281,11 @@ namespace Microsoft.PowerFx.Core.Tests
             var check = new CheckResult(new Engine())
                 .SetText("RGBA(255,0,0,1)")
                 .SetBindingInfo()
-                .SetExpectedReturnValue(type => type == FormulaType.String || type == FormulaType.Number || type == FormulaType.Boolean || type == FormulaType.DateTime);
+                .SetExpectedReturnValue(FormulaType.String, true);
 
             var errors = check.ApplyErrors();
 
-            Assert.False(check.IsSuccess);
-
-            Assert.Single(errors);
-            var error = errors.First();
-            Assert.Equal("Error 0-15: The type of this expression does not match the expected type. Found type 'Color'.", error.ToString());
+            Assert.True(check.IsSuccess);
         }
 
         [Fact]

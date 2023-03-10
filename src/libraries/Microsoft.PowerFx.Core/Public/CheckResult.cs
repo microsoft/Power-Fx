@@ -155,17 +155,14 @@ namespace Microsoft.PowerFx
             return this.SetBindingInfo(symbolTable);
         }
 
-        private Func<FormulaType, bool> _expectedReturnTypeValidator;
+        private FormulaType _expectedReturnType;
+        private bool _allowCoerceToType = false;
 
-        public CheckResult SetExpectedReturnValue(Func<FormulaType, bool> expectedReturnType)
+        public CheckResult SetExpectedReturnValue(FormulaType type, bool allowCoerceTo = false)
         {
-            _expectedReturnTypeValidator = expectedReturnType;
+            _expectedReturnType = type;
+            _allowCoerceToType = allowCoerceTo;
             return this;
-        }
-
-        public CheckResult SetExpectedReturnValue(FormulaType type)
-        {
-            return SetExpectedReturnValue(t => t == type);
         }
 
         // No additional binding is required
@@ -420,18 +417,20 @@ namespace Microsoft.PowerFx
                     }
                 }
 
-                if (this.ReturnType != null && this._expectedReturnTypeValidator != null)
+                if (this.ReturnType != null && this._expectedReturnType != null)
                 {
-                    if (!this._expectedReturnTypeValidator(this.ReturnType))
+                    var sameType = this._expectedReturnType == this.ReturnType;
+                    if (!sameType && !_allowCoerceToType)
                     {
                         _errors.Add(new ExpressionError
                         {
                             Kind = ErrorKind.Validation,
                             Severity = ErrorSeverity.Critical,
                             Span = new Span(0, this._expression.Length),
-                            MessageKey = TexlStrings.ErrTypeError_WrongExpectedType.Key,
+                            MessageKey = TexlStrings.ErrTypeError_WrongType.Key,
                             _messageArgs = new object[]
                             {
+                                this._expectedReturnType._type.GetKindString(),
                                 this.ReturnType._type.GetKindString()
                             }
                         });
