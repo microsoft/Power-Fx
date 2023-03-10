@@ -1593,6 +1593,10 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: Year)
+            },
+            {
+                BuiltinFunctionsCore.Language,
+                NoErrorHandling(Language)
             }
         };
 

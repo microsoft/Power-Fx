@@ -41,7 +41,7 @@ namespace Microsoft.PowerFx.Functions
                 // Map null to blank
                 if (result == null || result.Type == FormulaType.Blank)
                 {
-                    return new BlankValue(IRContext.NotInSource(FormulaType.Blank));
+                    return new BlankValue(IRContext.NotInSource(irContext.ResultType));
                 }
 
                 return new UntypedObjectValue(irContext, result);
@@ -84,7 +84,7 @@ namespace Microsoft.PowerFx.Functions
             // Map null to blank
             if (result == null || result.Type == FormulaType.Blank)
             {
-                return new BlankValue(IRContext.NotInSource(FormulaType.Blank));
+                return new BlankValue(IRContext.NotInSource(irContext.ResultType));
             }
 
             return new UntypedObjectValue(irContext, result);
@@ -221,7 +221,7 @@ namespace Microsoft.PowerFx.Functions
                     return new BlankValue(irContext);
                 }
 
-                if (!(cov.Impl.Type is ExternalType et && et.Kind == ExternalTypeKind.Array))
+                if (!(cov.Impl.Type is ExternalType et && (et.Kind == ExternalTypeKind.Array || et.Kind == ExternalTypeKind.ArrayAndObject)))
                 {
                     return new ErrorValue(irContext, new ExpressionError()
                     {
