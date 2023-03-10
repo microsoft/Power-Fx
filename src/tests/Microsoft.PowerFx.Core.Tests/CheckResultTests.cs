@@ -289,6 +289,23 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Fact]
+        public void BindingCheckNotExpectedReturnTypeOnRecord()
+        {
+            var check = new CheckResult(new Engine())
+                .SetText("{a:12, b:15}")
+                .SetBindingInfo()
+                .SetExpectedReturnValue(FormulaType.String, false);
+
+            var errors = check.ApplyErrors();
+
+            Assert.False(check.IsSuccess);
+
+            Assert.Single(errors);
+            var error = errors.First();
+            Assert.Equal("Error 0-12: The type of this expression does not match the expected type 'Text'. Found type 'Record'.", error.ToString());
+        }
+
+        [Fact]
         public void BindingSetRecordType()
         {
             var check = new CheckResult(new Engine());
