@@ -417,10 +417,10 @@ namespace Microsoft.PowerFx
                     }
                 }
 
-                if (this.ReturnType != null && this._expectedReturnType != null)
+                if (!_allowCoerceToType && this.ReturnType != null && this._expectedReturnType != null)
                 {
                     var sameType = this._expectedReturnType == this.ReturnType;
-                    if (!sameType && !_allowCoerceToType)
+                    if (!sameType)
                     {
                         _errors.Add(new ExpressionError
                         {
