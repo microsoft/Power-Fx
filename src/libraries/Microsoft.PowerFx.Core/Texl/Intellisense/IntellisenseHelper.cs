@@ -762,41 +762,6 @@ namespace Microsoft.PowerFx.Intellisense
 
                 AddSuggestionsForEnum(intellisenseData, enumInfo, prefix: TexlLexer.EscapeName(enumName) + TexlLexer.PunctuatorDot);
             }
-
-            if (suggestions.Count + substringSuggestions.Count == countSuggBefore + countSubSuggBefore + 1 && intellisenseData.SuggestUnqualifiedEnums)
-            {
-                var enumSuggestion = suggestions.Count > countSuggBefore ? suggestions[countSuggBefore].Text : substringSuggestions[countSubSuggBefore].Text;
-                var dotIndex = enumSuggestion.LastIndexOf(TexlLexer.PunctuatorDot, StringComparison.Ordinal);
-
-                // Assert '.' is not present or not at the beginning or the end of the EnumSuggestion
-                Contracts.Assert(dotIndex == -1 || (dotIndex > 0 && dotIndex < enumSuggestion.Length - 1));
-                var unqualifiedEnum = enumSuggestion.Substring(dotIndex + 1);
-
-                // If the Enum we are about suggest unqualified (i.e. just 'Blue' instead of Color!Blue)
-                // has a name collision with some Item already in the suggestionlist we should not continue
-                // and suggest it.
-                if (suggestions.Any(x => x.Text == unqualifiedEnum) || substringSuggestions.Any(x => x.Text == unqualifiedEnum))
-                {
-                    return;
-                }
-
-                DType enumType;
-                if (suggestions.Count > countSuggBefore)
-                {
-                    enumType = suggestions[countSuggBefore].Type;
-                    suggestions.RemoveAt(suggestions.Count - 1);
-                }
-                else
-                {
-                    Contracts.Assert(substringSuggestions.Count > countSubSuggBefore);
-                    enumType = substringSuggestions[countSubSuggBefore].Type;
-                    substringSuggestions.RemoveAt(substringSuggestions.Count - 1);
-                }
-
-                // Add the unqualified Enum.
-                // Note: The suggestion has already been escaped when it was previously added
-                AddSuggestion(intellisenseData, unqualifiedEnum, SuggestionKind.Enum, SuggestionIconKind.Other, enumType, requiresSuggestionEscaping: false);
-            }
         }
 
         internal static bool AddSuggestionsForValuePossibilities(IntellisenseData.IntellisenseData intellisenseData, TexlNode node)
