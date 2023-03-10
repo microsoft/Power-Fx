@@ -755,12 +755,12 @@ namespace Microsoft.PowerFx.Intellisense
             foreach (var enumInfo in intellisenseData.EnumSymbols)
             {
                 var enumType = enumInfo.EnumType;
-                var enumName = enumInfo.EntityName.Value;
+                var enumName = TexlLexer.EscapeName(enumInfo.EntityName.Value);
 
                 // TASK: 76039: Intellisense: Update intellisense to filter suggestions based on the expected type of the text being typed in UI
-                AddSuggestion(intellisenseData, enumName, SuggestionKind.Enum, SuggestionIconKind.Other, enumType, requiresSuggestionEscaping: true);
+                AddSuggestion(intellisenseData, enumName, SuggestionKind.Enum, SuggestionIconKind.Other, enumType);
 
-                AddSuggestionsForEnum(intellisenseData, enumInfo, prefix: TexlLexer.EscapeName(enumName) + TexlLexer.PunctuatorDot);
+                AddSuggestionsForEnum(intellisenseData, enumInfo, prefix: enumName + TexlLexer.PunctuatorDot);
             }
         }
 
