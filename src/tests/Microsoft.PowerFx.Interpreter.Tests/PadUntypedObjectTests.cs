@@ -74,25 +74,33 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Cell = cell;
         }
 
-        public IUntypedObject this[int index] =>
-            (DataTable != null)
+        public IUntypedObject this[int index] => Index(index);
+
+        private IUntypedObject Index(int index)
+        {
+            return (DataTable != null)
                     ? new PadUntypedObject(DataTable.Rows[index])
                     : (DataRow != null)
                     ? new PadUntypedObject(DataRow[index])
                     : throw new NotImplementedException();
+        }
 
-        public FormulaType Type =>
-            (Cell != null)
-            ? Cell switch
-            {
-                int => FormulaType.Number,
-                double => FormulaType.Number,
-                string => FormulaType.String,
-                _ => throw new NotImplementedException()
-            }
+        public FormulaType Type => GetFormulaType();
 
-            // for Table and Row
-            : ExternalType.ArrayAndObject;
+        private FormulaType GetFormulaType()
+        {
+            return (Cell != null)
+                ? Cell switch
+                {
+                    int => FormulaType.Number,
+                    double => FormulaType.Number,
+                    string => FormulaType.String,
+                    _ => throw new NotImplementedException()
+                }
+
+                // for Table and Row
+                : ExternalType.ArrayAndObject;
+        }
 
         public int GetArrayLength()
         {
