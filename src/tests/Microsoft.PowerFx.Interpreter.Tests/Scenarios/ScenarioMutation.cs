@@ -13,7 +13,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 {
     // Demonstrate mutation example using IUntypedObject
     public class ScenarioMutation : PowerFxTest
-    {       
+    {
         [Fact]
         public void MutabilityTest()
         {
@@ -26,7 +26,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             {
                 ["prop"] = FormulaValue.New(123)
             };
-                        
+
             var obj = MutableObject.New(d);
             engine.UpdateVariable("obj", obj);
 
@@ -45,15 +45,15 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
         [Theory]
         [InlineData("Assert2(obj.prop, 123); Set2(obj, \"prop\", 456); Assert2(obj.prop, 456)")]
-        [InlineData("Assert2(obj.prop, 123); Set3(obj, \"prop\", \"prop2\"); Assert2(obj.prop, 456)")]       
+        [InlineData("Assert2(obj.prop, 123); Set3(obj, \"prop\", \"prop2\"); Assert2(obj.prop, 456)")]
         public void MutabilityTest_Chain(string expr)
         {
-            var config = new PowerFxConfig();            
+            var config = new PowerFxConfig();
             config.AddFunction(new Assert2Function());
             config.AddFunction(new Set2Function());
             config.AddFunction(new Set3Function());
-            var engine = new RecalcEngine(config);            
-                      
+            var engine = new RecalcEngine(config);
+
             var d = new Dictionary<string, FormulaValue>
             {
                 ["prop"] = FormulaValue.New(123),
@@ -72,7 +72,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             Assert.IsType<NumberValue>(x);
             Assert.Equal(456, ((NumberValue)x).Value);
-            Assert.Equal(456, ((NumberValue)d["prop"]).Value);                      
+            Assert.Equal(456, ((NumberValue)d["prop"]).Value);
         }
 
         [Fact]
@@ -95,8 +95,13 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             public NumberValue Execute(UntypedObjectValue obj, NumberValue val)
             {
-                var impl = obj.Impl;
-                var actual = impl.GetDouble();
+                IUntypedObject uo = obj.Implementation;
+                SupportsFxValue fxValue = uo as SupportsFxValue;
+
+                Assert.NotNull(fxValue);
+                Assert.Equal(FormulaType.Number, fxValue.Type);
+
+                var actual = ((NumberValue)fxValue.Value).Value;
                 var expected = val.Value;
 
                 if (actual != expected)
@@ -117,7 +122,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             public void Execute(UntypedObjectValue obj, StringValue propName, FormulaValue val)
             {
-                var impl = (MutableObject)obj.Impl;
+                var impl = (MutableObject)obj.Implementation;
                 impl.Set(propName.Value, val);
             }
         }
@@ -131,53 +136,26 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             public void Execute(UntypedObjectValue obj, StringValue propName, StringValue propName2)
             {
-                var impl = (MutableObject)obj.Impl;
-                impl.TryGetProperty(propName2.Value, out var propValue);
-                var val = propValue.GetDouble();                
-                impl.Set(propName.Value, new NumberValue(IRContext.NotInSource(FormulaType.Number), val));
+                MutableObject uo = (MutableObject)obj.Implementation;
+                ISupportsProperties record = uo as ISupportsProperties;
+                
+                record.TryGetProperty(propName2.Value, out IUntypedObject propValue);
+                SupportsFxValue fxValue = propValue as SupportsFxValue;
+
+                var val = ((NumberValue)fxValue.Value).Value;
+                uo.Set(propName.Value, new NumberValue(IRContext.NotInSource(FormulaType.Number), val));
             }
         }
 
-        private class SimpleObject : IUntypedObject
+        private class SimpleObject : SupportsFxValue
         {
-            private readonly FormulaValue _value;
-
             public SimpleObject(FormulaValue value)
+                : base(value)
             {
-                _value = value;
-            }
-
-            public IUntypedObject this[int index] => throw new NotImplementedException();
-
-            public FormulaType Type => _value.Type;
-
-            public int GetArrayLength()
-            {
-                throw new NotImplementedException();
-            }
-
-            public bool GetBoolean()
-            {
-                return ((BooleanValue)_value).Value;
-            }
-
-            public double GetDouble()
-            {
-                return ((NumberValue)_value).Value;
-            }
-
-            public string GetString()
-            {
-                return ((StringValue)_value).Value;
-            }
-
-            public bool TryGetProperty(string value, out IUntypedObject result)
-            {
-                throw new NotImplementedException();
             }
         }
 
-        private class MutableObject : IUntypedObject
+        private class MutableObject : ISupportsProperties
         {
             private Dictionary<string, FormulaValue> _values = new Dictionary<string, FormulaValue>();
 
@@ -187,37 +165,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             }
 
             public static UntypedObjectValue New(Dictionary<string, FormulaValue> d)
-            {
-                var x = new MutableObject()
-                {
-                    _values = d
-                };
-
-                return FormulaValue.New(x);
-            }
-
-            public IUntypedObject this[int index] => throw new NotImplementedException();
-
-            public FormulaType Type => ExternalType.ObjectType;
-
-            public int GetArrayLength()
-            {
-                throw new NotImplementedException();
-            }
-
-            public bool GetBoolean()
-            {
-                throw new NotImplementedException();
-            }
-
-            public double GetDouble()
-            {
-                throw new NotImplementedException();
-            }
-
-            public string GetString()
-            {
-                throw new NotImplementedException();
+            {                
+                return FormulaValue.New(new MutableObject() { _values = d });
             }
 
             public bool TryGetProperty(string value, out IUntypedObject result)
@@ -230,6 +179,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
                 result = null;
                 return false;
+            }
+
+            public bool IsBlank()
+            {
+                return _values == null;
             }
         }
     }

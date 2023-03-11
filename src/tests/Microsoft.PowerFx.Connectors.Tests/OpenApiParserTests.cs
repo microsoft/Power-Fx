@@ -185,13 +185,19 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.True(resolutionsValue is UntypedObjectValue);
 
             UntypedObjectValue resolutionUO = (UntypedObjectValue)resolutionsValue;
-            IUntypedObject impl = resolutionUO.Impl;
+            IUntypedObject impl = resolutionUO.Implementation;
             Assert.NotNull(impl);
-            Assert.Equal(1, impl.GetArrayLength());
-
-            bool b = impl[0].TryGetProperty("resolutionKind", out IUntypedObject resolutionKind);
+            ISupportsArray array = impl as ISupportsArray;
+            Assert.NotNull(array);
+            Assert.Equal(1, array.Length);
+            IUntypedObject element = array[0];
+            ISupportsProperties record = element as ISupportsProperties;
+            Assert.NotNull(record);
+            bool b = record.TryGetProperty("resolutionKind", out IUntypedObject resolutionKind);
             Assert.True(b);
-            Assert.Equal("NumberResolution", resolutionKind.GetString());
+            SupportsFxValue fxValue = resolutionKind as SupportsFxValue;
+            Assert.NotNull(fxValue);
+            Assert.Equal("NumberResolution", ((StringValue)fxValue.Value).Value);
 
             string input = testConnector._log.ToString();
             var version = PowerPlatformConnectorClient.Version;
@@ -254,7 +260,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             RecordValue entityValue2 = rows.Skip(1).First().Value;
             FormulaValue resolutionsValue = entityValue2.GetField("resolutions");
 
-            Assert.True(resolutionsValue is UntypedObjectValue);          
+            Assert.True(resolutionsValue is UntypedObjectValue);
             UOValueVisitor visitor1 = new UOValueVisitor();
             resolutionsValue.Visit(visitor1);
 
@@ -270,7 +276,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         }
 
         internal class UOValueVisitor : IValueVisitor
-        {            
+        {
             public string Result { get; private set; }
 
             public void Visit(BlankValue value)
@@ -341,7 +347,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             public void Visit(UntypedObjectValue value)
             {
-                Visit(value.Impl);
+                Visit(value.Implementation);
             }
 
             public void Visit(OptionSetValue value)
@@ -359,66 +365,61 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 Result = value.Value.ToString();
             }
 
-            private void Visit(IUntypedObject untypedObject)
+            private void Visit(IUntypedObject uo)
             {
-                var type = untypedObject.Type;
+                if (uo is SupportsFxValue fxValue)
+                {
+                    var type = fxValue.Type;
 
-                if (type is StringType)
-                {
-                    Result = untypedObject.GetString();
-                }
-                else if (type is NumberType)
-                {
-                    Result = untypedObject.GetDouble().ToString();
-                }
-                else if (type is BooleanType)
-                {
-                    Result = untypedObject.GetBoolean().ToString();
-                }
-                else if (type is ExternalType externalType)
-                {
-                    if (externalType.Kind == ExternalTypeKind.Array)
+                    if (type is StringType)
                     {
-                        var rows = new List<string>();                        
-
-                        for (var i = 0; i < untypedObject.GetArrayLength(); i++)
-                        {
-                            var row = untypedObject[i];
-                            Visit(row);
-                            rows.Add(Result);
-                        }
-
-                        Result = JsonConvert.SerializeObject(rows);
+                        Result = ((StringValue)fxValue.Value).Value;
                     }
-                    else if (externalType.Kind == ExternalTypeKind.Object)
+                    else if (type is NumberType)
                     {
-                        var fieldBuilder = new Dictionary<string, string>();
-
-                        foreach (var key in new[] { "extraInformationKind", "numberKind", "resolutionKind", "value" })
-                        {
-                            if (untypedObject.TryGetProperty(key, out var result))
-                            {
-                                Visit(result);
-                                fieldBuilder.Add(key, Result!);
-                            }
-                        }
-
-                        Result = JsonConvert.SerializeObject(fieldBuilder);
+                        Result = ((NumberValue)fxValue.Value).Value.ToString();
+                    }
+                    else if (type is BooleanType)
+                    {
+                        Result = ((BooleanValue)fxValue.Value).Value.ToString();
                     }
                     else
                     {
                         Result = string.Empty;
                     }
                 }
-                else
+                else if (uo is ISupportsArray array)
                 {
-                    Result = string.Empty;
+                    var rows = new List<string>();
+
+                    for (var i = 0; i < array.Length; i++)
+                    {
+                        var row = array[i];
+                        Visit(row);
+                        rows.Add(Result);
+                    }
+
+                    Result = JsonConvert.SerializeObject(rows);
+                }
+                else if (uo is ISupportsProperties record)
+                {
+                    var fieldBuilder = new Dictionary<string, string>();
+
+                    foreach (var key in new[] { "extraInformationKind", "numberKind", "resolutionKind", "value" })
+                    {
+                        if (record.TryGetProperty(key, out var result))
+                        {
+                            Visit(result);
+                            fieldBuilder.Add(key, Result!);
+                        }
+                    }
+
+                    Result = JsonConvert.SerializeObject(fieldBuilder);
                 }
             }
         }
 
         [Fact]
-
         public void LQA_Load()
         {
             OpenApiDocument doc = Helpers.ReadSwagger(@"Swagger\Language - Question Answering.json");

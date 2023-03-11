@@ -49,9 +49,9 @@ namespace Microsoft.PowerFx.Json.Tests
             FormulaValue fv3 = FormulaValueJSON.FromJson(expr, new UntypedObjectType());
             Assert.NotNull(fv3);
             Assert.True(fv3 is UntypedObjectValue);
-            Assert.NotNull(((UntypedObjectValue)fv3).Impl);
+            Assert.NotNull(((UntypedObjectValue)fv3).Implementation);
 
-            Assert.Equal(17d, ((UntypedObjectValue)fv3).Impl.GetDouble());
+            Assert.Equal(17d, ((UntypedObjectValue)fv3).Implementation.GetDouble());
 
             FormulaValue fv4 = FormulaValueJSON.FromJson(expr, new BlankType());
             Assert.NotNull(fv4);
@@ -86,9 +86,9 @@ namespace Microsoft.PowerFx.Json.Tests
             FormulaValue fv3 = FormulaValueJSON.FromJson(expr, new UntypedObjectType());
             Assert.NotNull(fv3);
             Assert.True(fv3 is UntypedObjectValue);
-            Assert.NotNull(((UntypedObjectValue)fv3).Impl);
+            Assert.NotNull(((UntypedObjectValue)fv3).Implementation);
 
-            Assert.Equal("abc", ((UntypedObjectValue)fv3).Impl.GetString());
+            Assert.Equal("abc", ((UntypedObjectValue)fv3).Implementation.GetString());
 
             FormulaValue fv4 = FormulaValueJSON.FromJson(expr, new BlankType());
             Assert.NotNull(fv4);
@@ -121,8 +121,8 @@ namespace Microsoft.PowerFx.Json.Tests
             FormulaValue fv3 = FormulaValueJSON.FromJson(expr, new UntypedObjectType());
             Assert.NotNull(fv3);
             Assert.True(fv3 is UntypedObjectValue);
-            Assert.NotNull(((UntypedObjectValue)fv3).Impl);
-            Assert.Null(((UntypedObjectValue)fv3).Impl.GetString());
+            Assert.NotNull(((UntypedObjectValue)fv3).Implementation);
+            Assert.Null(((UntypedObjectValue)fv3).Implementation.GetString());
         }
 
         [Theory]
@@ -155,9 +155,9 @@ namespace Microsoft.PowerFx.Json.Tests
             FormulaValue fv3 = FormulaValueJSON.FromJson(expr, new UntypedObjectType());
             Assert.NotNull(fv3);
             Assert.True(fv3 is UntypedObjectValue);
-            Assert.NotNull(((UntypedObjectValue)fv3).Impl);
+            Assert.NotNull(((UntypedObjectValue)fv3).Implementation);
 
-            Assert.Equal(expectedBoolean, ((UntypedObjectValue)fv3).Impl.GetBoolean());
+            Assert.Equal(expectedBoolean, ((UntypedObjectValue)fv3).Implementation.GetBoolean());
 
             FormulaValue fv4 = FormulaValueJSON.FromJson(expr, new BlankType());
             Assert.NotNull(fv4);
@@ -191,7 +191,7 @@ namespace Microsoft.PowerFx.Json.Tests
             FormulaValue fv3 = FormulaValueJSON.FromJson(expr, new UntypedObjectType());
             Assert.NotNull(fv3);
             Assert.True(fv3 is UntypedObjectValue);
-            Assert.NotNull(((UntypedObjectValue)fv3).Impl);
+            Assert.NotNull(((UntypedObjectValue)fv3).Implementation);
 
             FormulaValue fv4 = FormulaValueJSON.FromJson(expr, new BlankType());
             Assert.NotNull(fv4);
@@ -241,21 +241,21 @@ namespace Microsoft.PowerFx.Json.Tests
             Assert.NotNull(fv3);
             Assert.True(fv3 is UntypedObjectValue);
             UntypedObjectValue uo = (UntypedObjectValue)fv3;
-            Assert.NotNull(uo.Impl);
+            Assert.NotNull(uo.Implementation);
 
-            Assert.True(uo.Impl.TryGetProperty("a", out IUntypedObject a));
+            Assert.True(uo.Implementation.TryGetProperty("a", out IUntypedObject a));
             Assert.True(a.GetBoolean());
-            Assert.True(uo.Impl.TryGetProperty("b", out IUntypedObject b));
+            Assert.True(uo.Implementation.TryGetProperty("b", out IUntypedObject b));
             Assert.Equal("str", b.GetString());
-            Assert.True(uo.Impl.TryGetProperty("c", out IUntypedObject c));
+            Assert.True(uo.Implementation.TryGetProperty("c", out IUntypedObject c));
             Assert.Equal(17.5d, c.GetDouble());
-            Assert.True(uo.Impl.TryGetProperty("d", out IUntypedObject d));
+            Assert.True(uo.Implementation.TryGetProperty("d", out IUntypedObject d));
             Assert.Null(d.GetString());
-            Assert.True(uo.Impl.TryGetProperty("e", out IUntypedObject e));
+            Assert.True(uo.Implementation.TryGetProperty("e", out IUntypedObject e));
             Assert.Equal(2, e.GetArrayLength());
-            Assert.Equal(1d, e[0].GetDouble());
-            Assert.Equal(2d, e[1].GetDouble());
-            Assert.True(uo.Impl.TryGetProperty("f", out IUntypedObject f));
+            Assert.Equal(1d, e.Index(0).GetDouble());
+            Assert.Equal(2d, e.Index(1).GetDouble());
+            Assert.True(uo.Implementation.TryGetProperty("f", out IUntypedObject f));
             Assert.True(f.TryGetProperty("g", out IUntypedObject g));
             Assert.Equal(7, g.GetDouble());
 
@@ -295,11 +295,82 @@ namespace Microsoft.PowerFx.Json.Tests
             FormulaValue fv3 = FormulaValueJSON.FromJson(expr, new UntypedObjectType());
             Assert.NotNull(fv3);
             Assert.True(fv3 is UntypedObjectValue);
-            Assert.NotNull(((UntypedObjectValue)fv3).Impl);
+            Assert.NotNull(((UntypedObjectValue)fv3).Implementation);
 
             FormulaValue fv4 = FormulaValueJSON.FromJson(expr, new BlankType());
             Assert.NotNull(fv4);
             Assert.True(fv4 is TableValue);
+        }
+    }
+
+    public static class UoExtensions
+    {
+        public static double GetDouble(this IUntypedObject uo)
+        {            
+            if (uo is SupportsFxValue fxValue && fxValue.Type == FormulaType.Number)
+            {
+                return ((NumberValue)fxValue.Value).Value;
+            }
+
+            throw new Exception("Fail");
+        }
+
+        public static string GetString(this IUntypedObject uo)
+        {
+            if (uo is SupportsFxValue fxValue)
+            {
+                if (fxValue.Type == FormulaType.Blank)
+                {
+                    return null;
+                }
+
+                if (fxValue.Type == FormulaType.String)
+                {
+                    return ((StringValue)fxValue.Value).Value;
+                }
+            }
+
+            throw new Exception("Fail");
+        }
+
+        public static bool GetBoolean(this IUntypedObject uo)
+        {
+            if (uo is SupportsFxValue fxValue && fxValue.Type == FormulaType.Boolean)
+            {
+                return ((BooleanValue)fxValue.Value).Value;
+            }
+
+            throw new Exception("Fail");
+        }
+
+        public static bool TryGetProperty(this IUntypedObject uo, string propertyName, out IUntypedObject result)
+        {
+            if (uo is ISupportsProperties record)
+            {
+                return record.TryGetProperty(propertyName, out result);
+            }
+
+            throw new Exception("Fail");
+        }
+
+        public static int GetArrayLength(this IUntypedObject uo)
+        {
+            if (uo is ISupportsArray array)
+            {
+                return array.Length;
+            }
+
+            throw new Exception("Fail");
+        }
+
+        public static IUntypedObject Index(this IUntypedObject uo, int index)
+        {
+            if (uo is ISupportsArray array)
+            {
+                return array[index];
+            }
+
+            throw new Exception("Fail");
         }
     }
 }

@@ -1779,9 +1779,9 @@ namespace Microsoft.PowerFx.Functions
                 return str.Value.Length == 0;
             }
 
-            if (arg is UntypedObjectValue uo && uo.Impl.Type == FormulaType.String)
+            if (arg is UntypedObjectValue uo)
             {
-                return uo.Impl.GetString().Length == 0;
+                return uo.Implementation.IsBlank();
             }
 
             return false;

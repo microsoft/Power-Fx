@@ -499,11 +499,11 @@ namespace Microsoft.PowerFx.Functions
 
             if (arg1 is UntypedObjectValue uo1)
             {
-                return new BooleanValue(irContext, uo1.Impl.Type == FormulaType.Blank);
+                return new BooleanValue(irContext, uo1.Implementation is SupportsFxValue fxValue1 && fxValue1.IsBlank());
             }
 
-            var uo2 = (UntypedObjectValue)arg2;
-            return new BooleanValue(irContext, uo2.Impl.Type == FormulaType.Blank);
+            var uo2 = (UntypedObjectValue)arg2;            
+            return new BooleanValue(irContext, uo2.Implementation is SupportsFxValue fxValue2 && fxValue2.IsBlank());
         }
 
         private static BooleanValue NotEqual(IRContext irContext, FormulaValue[] args)
@@ -527,11 +527,11 @@ namespace Microsoft.PowerFx.Functions
 
             if (arg1 is UntypedObjectValue uo1)
             {
-                return new BooleanValue(irContext, uo1.Impl.Type != FormulaType.Blank);
+                return new BooleanValue(irContext, !(uo1.Implementation is SupportsFxValue fxValue1 && fxValue1.IsBlank()));
             }
 
             var uo2 = (UntypedObjectValue)arg2;
-            return new BooleanValue(irContext, uo2.Impl.Type != FormulaType.Blank);
+            return new BooleanValue(irContext, !(uo2.Implementation is SupportsFxValue fxValue2 && fxValue2.IsBlank()));
         }
 
         // See in_SS in JScript membershipReplacementFunctions
@@ -670,7 +670,7 @@ namespace Microsoft.PowerFx.Functions
 
         private static FormulaValue SubtractDateAndTime(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            return DateAdd(runner, context, irContext, new FormulaValue[2] { args[0], TimeValue.New(new TimeSpan(-((TimeValue)args[1]).Value.Ticks)) });            
+            return DateAdd(runner, context, irContext, new FormulaValue[2] { args[0], TimeValue.New(new TimeSpan(-((TimeValue)args[1]).Value.Ticks)) });
         }
 
         private static FormulaValue SubtractNumberAndDate(IRContext irContext, FormulaValue[] args)
@@ -697,7 +697,7 @@ namespace Microsoft.PowerFx.Functions
         {
             var timeZoneInfo = runner.TimeZoneInfo;
             DateTime arg0 = runner.GetNormalizedDateTime(args[0]);
-            
+
             DateTime arg1 = runner.GetNormalizedDateTime(args[1]);
 
             var result = arg0 < arg1;

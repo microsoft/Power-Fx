@@ -7,7 +7,7 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Functions
 {
-    internal class ArrayUntypedObject : IUntypedObject
+    internal class ArrayUntypedObject : ISupportsArray
     {
         private readonly List<IUntypedObject> _list;
 
@@ -16,33 +16,13 @@ namespace Microsoft.PowerFx.Functions
             _list = list;
         }
 
-        public FormulaType Type => ExternalType.ArrayType;
-
         public IUntypedObject this[int index] => _list[index];
 
-        public int GetArrayLength()
-        {
-            return _list.Count;
-        }
+        public int Length => _list.Count;
 
-        public double GetDouble()
+        public bool IsBlank()
         {
-            throw new NotImplementedException();
-        }
-
-        public string GetString()
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool GetBoolean()
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool TryGetProperty(string value, out IUntypedObject result)
-        {
-            throw new NotImplementedException();
+            return _list == null;
         }
     }
 }

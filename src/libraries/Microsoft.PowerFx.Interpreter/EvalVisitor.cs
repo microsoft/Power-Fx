@@ -440,11 +440,11 @@ namespace Microsoft.PowerFx
 
             if (arg1 is UntypedObjectValue cov && arg2 is StringValue sv)
             {
-                if (cov.Impl.Type is ExternalType et && (et.Kind == ExternalTypeKind.Object || et.Kind == ExternalTypeKind.ArrayAndObject))
+                if (cov.Implementation is ISupportsProperties record)
                 {
-                    if (cov.Impl.TryGetProperty(sv.Value, out var res))
+                    if (record.TryGetProperty(sv.Value, out var res))
                     {
-                        if (res.Type == FormulaType.Blank)
+                        if (res.IsBlank())
                         {
                             return new BlankValue(node.IRContext);
                         }
@@ -456,7 +456,7 @@ namespace Microsoft.PowerFx
                         return new BlankValue(node.IRContext);
                     }
                 }
-                else if (cov.Impl.Type == FormulaType.Blank)
+                else if (cov.Implementation.IsBlank())
                 {
                     return new BlankValue(node.IRContext);
                 }

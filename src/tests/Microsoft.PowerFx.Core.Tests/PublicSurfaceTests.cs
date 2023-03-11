@@ -111,8 +111,6 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Types.DateValue",
                 "Microsoft.PowerFx.Types.DValue`1",
                 "Microsoft.PowerFx.Types.ErrorValue",
-                "Microsoft.PowerFx.Types.ExternalType",
-                "Microsoft.PowerFx.Types.ExternalTypeKind",
                 "Microsoft.PowerFx.Types.FormulaType",
                 "Microsoft.PowerFx.Types.FormulaValue",
                 "Microsoft.PowerFx.Types.GuidType",
@@ -139,6 +137,10 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Types.TimeValue",
                 "Microsoft.PowerFx.Types.UnknownType",
                 "Microsoft.PowerFx.Types.DeferredType",
+                "Microsoft.PowerFx.Types.ISupportsArray",
+                "Microsoft.PowerFx.Types.ISupportsProperties",
+                "Microsoft.PowerFx.Types.ISupportsPropertyEnumeration",
+                "Microsoft.PowerFx.Types.SupportsFxValue",
                 "Microsoft.PowerFx.Types.UnsupportedType",
                 "Microsoft.PowerFx.Types.UntypedObjectType",
                 "Microsoft.PowerFx.Types.UntypedObjectValue",
@@ -163,7 +165,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 // TBD ...
                 "Microsoft.PowerFx.Core.DisplayNameProvider",
                 "Microsoft.PowerFx.Core.DisplayNameUtility",
-                "Microsoft.PowerFx.Core.Localization.ErrorResourceKey",                
+                "Microsoft.PowerFx.Core.Localization.ErrorResourceKey",
                 "Microsoft.PowerFx.Core.RenameDriver",
                 "Microsoft.PowerFx.Core.Utils.DName",
                 "Microsoft.PowerFx.Core.Utils.DPath",
@@ -225,7 +227,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             var len = values1.Length;
             Assert.Equal(len, values2.Length);
-            
+
             for (var i = 0; i < len; i++)
             {
                 var x = values1.GetValue(i);

@@ -1,79 +1,82 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
+using System;
 using System.Text.Json;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Core.Localization;
+using System.Xml.Linq;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Functions
 {
-    internal class JsonUntypedObject : IUntypedObject
+    internal class JsonUntypedObject
+    {
+        public static IUntypedObject New(JsonElement element)
+        {
+            return element.ValueKind switch
+            {
+                JsonValueKind.Object => new JsonObject(element),
+                JsonValueKind.Array => new JsonArray(element),
+                _ => new JsonValue(element)
+            };
+        }
+    }
+
+    internal class JsonObject : ISupportsProperties
     {
         private readonly JsonElement _element;
 
-        public JsonUntypedObject(JsonElement element)
+        internal JsonObject(JsonElement je)
         {
-            _element = element;
+            _element = je;
         }
 
-        public FormulaType Type
+        public bool IsBlank()
         {
-            get
-            {
-                switch (_element.ValueKind)
-                {
-                    case JsonValueKind.Object:
-                        return ExternalType.ObjectType;
-                    case JsonValueKind.Array:
-                        return ExternalType.ArrayType;
-                    case JsonValueKind.String:
-                        return FormulaType.String;
-                    case JsonValueKind.Number:
-                        return FormulaType.Number;
-                    case JsonValueKind.True:
-                    case JsonValueKind.False:
-                        return FormulaType.Boolean;
-                }
-
-                return FormulaType.Blank;
-            }
-        }
-
-        public IUntypedObject this[int index] => new JsonUntypedObject(_element[index]);
-
-        public int GetArrayLength()
-        {
-            return _element.GetArrayLength();
-        }
-
-        public double GetDouble()
-        {
-            return _element.GetDouble();
-        }
-
-        public string GetString()
-        {
-            return _element.GetString();
-        }
-
-        public bool GetBoolean()
-        {
-            return _element.GetBoolean();
+            return false;
         }
 
         public bool TryGetProperty(string value, out IUntypedObject result)
         {
-            var res = _element.TryGetProperty(value, out var je);
-            result = new JsonUntypedObject(je);
+            var res = _element.TryGetProperty(value, out JsonElement je);
+            result = JsonUntypedObject.New(je);
             return res;
+        }
+    }
+
+    internal class JsonArray : ISupportsArray
+    {
+        private readonly JsonElement _element;
+
+        internal JsonArray(JsonElement je)
+        {
+            _element = je;
+        }
+
+        public IUntypedObject this[int index] => JsonUntypedObject.New(_element[index]);
+
+        public int Length => _element.GetArrayLength();
+
+        public bool IsBlank()
+        {
+            return false;
+        }
+    }
+
+    internal class JsonValue : SupportsFxValue
+    {
+        internal JsonValue(JsonElement je)
+            : base(je.ValueKind switch
+            {
+                JsonValueKind.Null => FormulaValue.NewBlank(),
+                JsonValueKind.True => FormulaValue.New(true),
+                JsonValueKind.False => FormulaValue.New(false),
+                JsonValueKind.String => FormulaValue.New(je.GetString()),
+                JsonValueKind.Undefined => FormulaValue.NewBlank(),
+                JsonValueKind.Number => FormulaValue.New(je.GetDouble()),                
+                _ => null
+            })
+        { 
         }
     }
 }

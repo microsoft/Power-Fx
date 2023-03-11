@@ -27,67 +27,86 @@ namespace Microsoft.PowerFx.Functions
             var arg0 = (UntypedObjectValue)args[0];
             var arg1 = (NumberValue)args[1];
 
-            var element = arg0.Impl;
-
-            var len = element.GetArrayLength();
-            var index1 = (int)arg1.Value;
-            var index0 = index1 - 1; // 1-based index
-
-            // Error pipeline already caught cases of too low. 
-            if (index0 < len)
+            if (arg0.Implementation is ISupportsArray array)
             {
-                var result = element[index0];
+                var len = array.Length;
+                var index1 = (int)arg1.Value;
+                var index0 = index1 - 1; // 1-based index
 
-                // Map null to blank
-                if (result == null || result.Type == FormulaType.Blank)
+                // Error pipeline already caught cases of too low. 
+                if (index0 < len)
                 {
-                    return new BlankValue(IRContext.NotInSource(irContext.ResultType));
-                }
+                    IUntypedObject result = array[index0];
 
-                return new UntypedObjectValue(irContext, result);
+                    // Map null to blank
+                    if (result == null || result.IsBlank())
+                    {
+                        return new BlankValue(IRContext.NotInSource(FormulaType.Blank));
+                    }
+
+                    return new UntypedObjectValue(irContext, result);
+                }
+                else
+                {
+                    return CommonErrors.ArgumentOutOfRange(irContext);
+                }
             }
             else
             {
-                return CommonErrors.ArgumentOutOfRange(irContext);
+                return CommonErrors.RuntimeTypeMismatch(irContext);
             }
         }
 
         public static FormulaValue First_UO(IRContext irContext, UntypedObjectValue[] args)
         {
             var arg0 = (UntypedObjectValue)args[0];
-            var element = arg0.Impl;
-            var len = element.GetArrayLength();
 
-            if (len == 0)
+            if (arg0.Implementation is ISupportsArray array)
             {
-                return new BlankValue(irContext);
+                var len = array.Length;
+
+                if (len == 0)
+                {
+                    return new BlankValue(irContext);
+                }
+
+                var result = array[0];
+
+                return new UntypedObjectValue(irContext, result);
             }
-
-            var result = element[0];
-
-            return new UntypedObjectValue(irContext, result);
+            else
+            {
+                return CommonErrors.RuntimeTypeMismatch(irContext);
+            }
         }
 
         public static FormulaValue Last_UO(IRContext irContext, UntypedObjectValue[] args)
         {
             var arg0 = (UntypedObjectValue)args[0];
-            var element = arg0.Impl;
-            var len = element.GetArrayLength();
 
-            if (len == 0)
+            if (arg0.Implementation is ISupportsArray array)
             {
-                return new BlankValue(irContext);
+                var len = array.Length;
+
+                if (len == 0)
+                {
+                    return new BlankValue(irContext);
+                }
+
+                IUntypedObject result = array[len - 1];
+
+                // Map null to blank
+                if (result == null || result.IsBlank())
+                {
+                    return new BlankValue(IRContext.NotInSource(FormulaType.Blank));
+                }
+
+                return new UntypedObjectValue(irContext, result);
             }
-
-            var result = element[len - 1];
-
-            // Map null to blank
-            if (result == null || result.Type == FormulaType.Blank)
+            else
             {
-                return new BlankValue(IRContext.NotInSource(irContext.ResultType));
+                return CommonErrors.RuntimeTypeMismatch(irContext);
             }
-
-            return new UntypedObjectValue(irContext, result);
         }
 
         public static FormulaValue FirstN_UO(IRContext irContext, FormulaValue[] args)
@@ -95,18 +114,24 @@ namespace Microsoft.PowerFx.Functions
             var arg0 = (UntypedObjectValue)args[0];
             var arg1 = (NumberValue)args[1];
 
-            var element = arg0.Impl;
-            var len = element.GetArrayLength();
-
-            var list = new List<IUntypedObject>();
-            for (int i = 0; i < (int)arg1.Value && i < len; i++)
+            if (arg0.Implementation is ISupportsArray array)
             {
-                list.Add(element[i]);
+                var len = array.Length;
+
+                var list = new List<IUntypedObject>();
+                for (int i = 0; i < (int)arg1.Value && i < len; i++)
+                {
+                    list.Add(array[i]);
+                }
+
+                IUntypedObject result = new ArrayUntypedObject(list);
+
+                return new UntypedObjectValue(irContext, result);
             }
-
-            var result = new ArrayUntypedObject(list);
-
-            return new UntypedObjectValue(irContext, result);
+            else
+            {
+                return CommonErrors.RuntimeTypeMismatch(irContext);
+            }
         }
 
         public static FormulaValue LastN_UO(IRContext irContext, FormulaValue[] args)
@@ -114,80 +139,90 @@ namespace Microsoft.PowerFx.Functions
             var arg0 = (UntypedObjectValue)args[0];
             var arg1 = (NumberValue)args[1];
 
-            var element = arg0.Impl;
-            var len = element.GetArrayLength();
-
-            var list = new List<IUntypedObject>();
-            var takeCount = (int)arg1.Value;
-            for (int i = 0; i < takeCount; i++)
+            if (arg0.Implementation is ISupportsArray array)
             {
-                var takeIndex = len - takeCount + i;
-                if (takeIndex >= 0)
+                var len = array.Length;
+
+                var list = new List<IUntypedObject>();
+                var takeCount = (int)arg1.Value;
+                for (int i = 0; i < takeCount; i++)
                 {
-                    list.Add(element[takeIndex]);
+                    var takeIndex = len - takeCount + i;
+                    if (takeIndex >= 0)
+                    {
+                        list.Add(array[takeIndex]);
+                    }
                 }
+
+                var result = new ArrayUntypedObject(list);
+
+                return new UntypedObjectValue(irContext, result);
             }
-
-            var result = new ArrayUntypedObject(list);
-
-            return new UntypedObjectValue(irContext, result);
+            else
+            {
+                return CommonErrors.RuntimeTypeMismatch(irContext);
+            }
         }
 
         public static FormulaValue Value_UO(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             var uo = args[0] as UntypedObjectValue;
-            var impl = uo.Impl;
 
-            if (impl.Type == FormulaType.String)
+            if (uo.Implementation is SupportsFxValue fxValue)
             {
-                var str = new StringValue(IRContext.NotInSource(FormulaType.String), impl.GetString());
-                if (args.Length > 1)
+                if (fxValue.Type == FormulaType.String)
                 {
-                    return Value(runner, context, irContext, new FormulaValue[] { str, args[1] });
-                }
+                    FormulaValue str = fxValue.Value;
+                    if (args.Length > 1)
+                    {
+                        return Value(runner, context, irContext, new FormulaValue[] { str, args[1] });
+                    }
 
-                return Value(runner, context, irContext, new FormulaValue[] { str });
-            }
-            else if (impl.Type == FormulaType.Number)
-            {
-                var number = impl.GetDouble();
-                if (IsInvalidDouble(number))
+                    return Value(runner, context, irContext, new FormulaValue[] { str });
+                }
+                else if (fxValue.Type == FormulaType.Number)
                 {
-                    return CommonErrors.ArgumentOutOfRange(irContext);
+                    NumberValue numberValue = (NumberValue)fxValue.Value;
+                    if (IsInvalidDouble(numberValue.Value))
+                    {
+                        return CommonErrors.ArgumentOutOfRange(irContext);
+                    }
+
+                    return numberValue;
                 }
-
-                return new NumberValue(irContext, number);
-            }
-            else if (impl.Type == FormulaType.Boolean)
-            {
-                var b = new BooleanValue(IRContext.NotInSource(FormulaType.Boolean), impl.GetBoolean());
-                return BooleanToNumber(irContext, new BooleanValue[] { b });
+                else if (fxValue.Type == FormulaType.Boolean)
+                {
+                    BooleanValue b = (BooleanValue)fxValue.Value;
+                    return BooleanToNumber(irContext, new BooleanValue[] { b });
+                }
             }
 
-            return GetTypeMismatchError(irContext, BuiltinFunctionsCore.Value_UO.Name, DType.Number.GetKindString(), impl);
+            return GetTypeMismatchError(irContext, BuiltinFunctionsCore.Value_UO.Name, DType.Number.GetKindString(), uo.Implementation);
         }
 
         public static FormulaValue Text_UO(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, UntypedObjectValue[] args)
         {
-            var impl = args[0].Impl;
+            IUntypedObject uo = args[0].Implementation;
 
-            if (impl.Type == FormulaType.String)
+            if (uo is SupportsFxValue fxValue)
             {
-                var str = impl.GetString();
-                return new StringValue(irContext, str);
-            }
-            else if (impl.Type == FormulaType.Number)
-            {
-                var n = new NumberValue(IRContext.NotInSource(FormulaType.Number), impl.GetDouble());
-                return Text(runner, context, irContext, new FormulaValue[] { n });
-            }
-            else if (impl.Type == FormulaType.Boolean)
-            {
-                var b = impl.GetBoolean();
-                return new StringValue(irContext, PowerFxBooleanToString(b));
+                if (fxValue.Type == FormulaType.String)
+                {
+                    return fxValue.Value;
+                }
+                else if (fxValue.Type == FormulaType.Number)
+                {
+                    var n = fxValue.Value;
+                    return Text(runner, context, irContext, new FormulaValue[] { n });
+                }
+                else if (fxValue.Type == FormulaType.Boolean)
+                {
+                    BooleanValue b = (BooleanValue)fxValue.Value;
+                    return new StringValue(irContext, PowerFxBooleanToString(b.Value));
+                }
             }
 
-            return GetTypeMismatchError(irContext, BuiltinFunctionsCore.Text_UO.Name, DType.String.GetKindString(), impl);
+            return GetTypeMismatchError(irContext, BuiltinFunctionsCore.Text_UO.Name, DType.String.GetKindString(), uo);
         }
 
         public static FormulaValue Table_UO(IRContext irContext, UntypedObjectValue[] args)
@@ -198,30 +233,35 @@ namespace Microsoft.PowerFx.Functions
 
             var resultRows = new List<DValue<RecordValue>>();
 
-            var len = args[0].Impl.GetArrayLength();
-
-            for (var i = 0; i < len; i++)
+            if (args[0].Implementation is ISupportsArray array)
             {
-                var element = args[0].Impl[i];
+                var len = array.Length;
 
-                var namedValue = new NamedValue(BuiltinFunction.ColumnName_ValueStr, new UntypedObjectValue(IRContext.NotInSource(itemType), element));
-                var record = new InMemoryRecordValue(IRContext.NotInSource(resultType), new List<NamedValue>() { namedValue });
-                resultRows.Add(DValue<RecordValue>.Of(record));
+                for (var i = 0; i < len; i++)
+                {
+                    IUntypedObject element = array[i];
+
+                    var namedValue = new NamedValue(BuiltinFunction.ColumnName_ValueStr, new UntypedObjectValue(IRContext.NotInSource(itemType), element));
+                    var record = new InMemoryRecordValue(IRContext.NotInSource(resultType), new List<NamedValue>() { namedValue });
+                    resultRows.Add(DValue<RecordValue>.Of(record));
+                }
+
+                return new InMemoryTableValue(irContext, resultRows);
             }
 
-            return new InMemoryTableValue(irContext, resultRows);
+            return CommonErrors.RuntimeTypeMismatch(irContext);
         }
 
         private static FormulaValue UntypedObjectArrayChecker(IRContext irContext, int index, FormulaValue arg)
         {
-            if (arg is UntypedObjectValue cov)
+            if (arg is UntypedObjectValue uov)
             {
-                if (cov.Impl.Type == FormulaType.Blank)
+                if (uov.Implementation.IsBlank())
                 {
                     return new BlankValue(irContext);
                 }
 
-                if (!(cov.Impl.Type is ExternalType et && (et.Kind == ExternalTypeKind.Array || et.Kind == ExternalTypeKind.ArrayAndObject)))
+                if (!(uov.Implementation is ISupportsArray))
                 {
                     return new ErrorValue(irContext, new ExpressionError()
                     {
@@ -237,73 +277,77 @@ namespace Microsoft.PowerFx.Functions
 
         public static FormulaValue Boolean_UO(IRContext irContext, UntypedObjectValue[] args)
         {
-            var impl = args[0].Impl;
+            IUntypedObject uo = args[0].Implementation;
 
-            if (impl.Type == FormulaType.String)
+            if (uo is SupportsFxValue fxValue)
             {
-                var str = new StringValue(IRContext.NotInSource(FormulaType.String), impl.GetString());
-                return TextToBoolean(irContext, new StringValue[] { str });
-            }
-            else if (impl.Type == FormulaType.Number)
-            {
-                var n = new NumberValue(IRContext.NotInSource(FormulaType.Number), impl.GetDouble());
-                return NumberToBoolean(irContext, new NumberValue[] { n });
-            }
-            else if (impl.Type == FormulaType.Boolean)
-            {
-                var b = impl.GetBoolean();
-                return new BooleanValue(irContext, b);
+                if (fxValue.Type == FormulaType.String)
+                {
+                    StringValue str = (StringValue)fxValue.Value;
+                    return TextToBoolean(irContext, new StringValue[] { str });
+                }
+                else if (fxValue.Type == FormulaType.Number)
+                {
+                    NumberValue n = (NumberValue)fxValue.Value;
+                    return NumberToBoolean(irContext, new NumberValue[] { n });
+                }
+                else if (fxValue.Type == FormulaType.Boolean)
+                {
+                    return fxValue.Value;
+                }
             }
 
-            return GetTypeMismatchError(irContext, BuiltinFunctionsCore.Boolean_UO.Name, DType.Boolean.GetKindString(), impl);
+            return GetTypeMismatchError(irContext, BuiltinFunctionsCore.Boolean_UO.Name, DType.Boolean.GetKindString(), uo);
         }
 
         public static FormulaValue CountRows_UO(IRContext irContext, UntypedObjectValue[] args)
         {
-            var impl = args[0].Impl;
+            IUntypedObject uo = args[0].Implementation;
 
-            if (impl.Type is ExternalType externalType && externalType.Kind == ExternalTypeKind.Array)
+            if (uo is ISupportsArray array)
             {
-                return new NumberValue(irContext, impl.GetArrayLength());
+                return new NumberValue(irContext, array.Length);
             }
 
-            return GetTypeMismatchError(irContext, BuiltinFunctionsCore.CountRows_UO.Name, DType.EmptyTable.GetKindString(), impl);
+            return GetTypeMismatchError(irContext, BuiltinFunctionsCore.CountRows_UO.Name, DType.EmptyTable.GetKindString(), uo);
         }
 
         public static FormulaValue DateValue_UO(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, UntypedObjectValue[] args)
         {
-            var impl = args[0].Impl;
+            IUntypedObject uo = args[0].Implementation;
 
-            if (impl.Type == FormulaType.String)
+            if (uo is SupportsFxValue fxValue)
             {
-                var s = impl.GetString();
-
-                if (IsValidDateTimeUO(s) && DateTime.TryParse(s, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out DateTime datetime))
+                if (fxValue.Type == FormulaType.String)
                 {
-                    var timeZoneInfo = runner.TimeZoneInfo;
-                    datetime = MakeValidDateTime(runner, datetime, timeZoneInfo);
+                    StringValue s = (StringValue)fxValue.Value;
 
-                    datetime = DateTimeValue.GetConvertedDateTimeValue(datetime, timeZoneInfo);
+                    if (IsValidDateTimeUO(s.Value) && DateTime.TryParse(s.Value, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out DateTime datetime))
+                    {
+                        var timeZoneInfo = runner.TimeZoneInfo;
+                        datetime = MakeValidDateTime(runner, datetime, timeZoneInfo);
+                        datetime = DateTimeValue.GetConvertedDateTimeValue(datetime, timeZoneInfo);
 
-                    return new DateValue(irContext, datetime.Date);
+                        return new DateValue(irContext, datetime.Date);
+                    }
+
+                    return CommonErrors.InvalidDateTimeParsingError(irContext);
                 }
-
-                return CommonErrors.InvalidDateTimeParsingError(irContext);
             }
 
-            return GetTypeMismatchError(irContext, BuiltinFunctionsCore.DateValue_UO.Name, DType.String.GetKindString(), impl);
+            return GetTypeMismatchError(irContext, BuiltinFunctionsCore.DateValue_UO.Name, DType.String.GetKindString(), uo);
         }
 
         public static FormulaValue TimeValue_UO(IRContext irContext, UntypedObjectValue[] args)
         {
-            var impl = args[0].Impl;
+            var uo = args[0].Implementation;
 
-            if (impl.Type == FormulaType.String)
+            if (uo is SupportsFxValue fxValue && fxValue.Type == FormulaType.String)
             {
-                var s = impl.GetString();
+                StringValue s = (StringValue)fxValue.Value;
 
-                if (TimeSpan.TryParseExact(s, @"hh\:mm\:ss\.FFFFFFF", CultureInfo.InvariantCulture, TimeSpanStyles.None, out var res) ||
-                    TimeSpan.TryParseExact(s, @"hh\:mm\:ss", CultureInfo.InvariantCulture, TimeSpanStyles.None, out res))
+                if (TimeSpan.TryParseExact(s.Value, @"hh\:mm\:ss\.FFFFFFF", CultureInfo.InvariantCulture, TimeSpanStyles.None, out var res) ||
+                    TimeSpan.TryParseExact(s.Value, @"hh\:mm\:ss", CultureInfo.InvariantCulture, TimeSpanStyles.None, out res))
                 {
                     return new TimeValue(irContext, res);
                 }
@@ -311,21 +355,20 @@ namespace Microsoft.PowerFx.Functions
                 return CommonErrors.InvalidDateTimeParsingError(irContext);
             }
 
-            return GetTypeMismatchError(irContext, BuiltinFunctionsCore.TimeValue_UO.Name, DType.String.GetKindString(), impl);
+            return GetTypeMismatchError(irContext, BuiltinFunctionsCore.TimeValue_UO.Name, DType.String.GetKindString(), uo);
         }
 
         public static FormulaValue DateTimeValue_UO(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, UntypedObjectValue[] args)
         {
-            var impl = args[0].Impl;
+            var uo = args[0].Implementation;
 
-            if (impl.Type == FormulaType.String)
+            if (uo is SupportsFxValue fxValue && fxValue.Type == FormulaType.String)
             {
-                var s = impl.GetString();
+                StringValue s = (StringValue)fxValue.Value;
 
-                if (IsValidDateTimeUO(s) && DateTime.TryParse(s, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out DateTime datetime))
+                if (IsValidDateTimeUO(s.Value) && DateTime.TryParse(s.Value, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out DateTime datetime))
                 {
                     datetime = MakeValidDateTime(runner, datetime, runner.TimeZoneInfo);
-                    
                     datetime = DateTimeValue.GetConvertedDateTimeValue(datetime, runner.TimeZoneInfo);
 
                     return new DateTimeValue(irContext, datetime);
@@ -334,20 +377,20 @@ namespace Microsoft.PowerFx.Functions
                 return CommonErrors.InvalidDateTimeParsingError(irContext);
             }
 
-            return GetTypeMismatchError(irContext, BuiltinFunctionsCore.DateTimeValue_UO.Name, DType.String.GetKindString(), impl);
+            return GetTypeMismatchError(irContext, BuiltinFunctionsCore.DateTimeValue_UO.Name, DType.String.GetKindString(), uo);
         }
 
         public static FormulaValue Guid_UO(IRContext irContext, UntypedObjectValue[] args)
         {
-            var impl = args[0].Impl;
+            var uo = args[0].Implementation;
 
-            if (impl.Type == FormulaType.String)
+            if (uo is SupportsFxValue fxValue && fxValue.Type == FormulaType.String)
             {
-                var str = new StringValue(IRContext.NotInSource(FormulaType.String), impl.GetString());
+                StringValue str = (StringValue)fxValue.Value;
                 return Guid(irContext, new StringValue[] { str });
             }
 
-            return GetTypeMismatchError(irContext, BuiltinFunctionsCore.GUID_UO.Name, DType.String.GetKindString(), impl);
+            return GetTypeMismatchError(irContext, BuiltinFunctionsCore.GUID_UO.Name, DType.String.GetKindString(), uo);
         }
 
         private static ErrorValue GetTypeMismatchError(IRContext irContext, string functionName, string expectedType, IUntypedObject actualValue)
@@ -356,7 +399,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 Kind = ErrorKind.InvalidArgument,
                 Span = irContext.SourceContext,
-                Message = $"The untyped object argument to the '{functionName}' function has an incorrect type. Expected: {expectedType}, Actual: {actualValue.Type}."
+                Message = $"The untyped object argument to the '{functionName}' function has an incorrect type. Expected: {expectedType}, Actual: {actualValue.GetType().FullName}."
             });
         }
 
@@ -367,47 +410,52 @@ namespace Microsoft.PowerFx.Functions
 
             var items = new List<DValue<UntypedObjectValue>>();
 
-            var len = arg0.Impl.GetArrayLength();
-
-            for (var i = 0; i < len; i++)
+            if (arg0.Implementation is ISupportsArray array)
             {
-                runner.CheckCancel();
+                var len = array.Length;
 
-                var element = arg0.Impl[i];
-                var item = new UntypedObjectValue(IRContext.NotInSource(FormulaType.UntypedObject), element);
+                for (var i = 0; i < len; i++)
+                {
+                    runner.CheckCancel();
 
-                items.Add(DValue<UntypedObjectValue>.Of(item));
+                    var element = array[i];
+                    var item = new UntypedObjectValue(IRContext.NotInSource(FormulaType.UntypedObject), element);
+
+                    items.Add(DValue<UntypedObjectValue>.Of(item));
+                }
+
+                var rowsAsync = LazyForAll(runner, context, items, arg1);
+
+                var rows = new List<FormulaValue>();
+
+                foreach (var row in rowsAsync)
+                {
+                    rows.Add(await row);
+                }
+
+                var errorRows = rows.OfType<ErrorValue>();
+                if (errorRows.Any())
+                {
+                    return ErrorValue.Combine(irContext, errorRows);
+                }
+
+                return new InMemoryTableValue(irContext, StandardTableNodeRecords(irContext, rows.ToArray(), forceSingleColumn: false));
             }
 
-            var rowsAsync = LazyForAll(runner, context, items, arg1);
-
-            var rows = new List<FormulaValue>();
-
-            foreach (var row in rowsAsync)
-            {
-                rows.Add(await row);
-            }
-
-            var errorRows = rows.OfType<ErrorValue>();
-            if (errorRows.Any())
-            {
-                return ErrorValue.Combine(irContext, errorRows);
-            }
-
-            return new InMemoryTableValue(irContext, StandardTableNodeRecords(irContext, rows.ToArray(), forceSingleColumn: false));
+            return CommonErrors.RuntimeTypeMismatch(irContext);
         }
 
         public static FormulaValue ColorValue_UO(IRContext irContext, UntypedObjectValue[] args)
         {
-            var impl = args[0].Impl;
+            var uo = args[0].Implementation;
 
-            if (impl.Type == FormulaType.String)
+            if (uo is SupportsFxValue fxValue && fxValue.Type == FormulaType.String)
             {
-                var str = impl.GetString();
+                StringValue str = (StringValue)fxValue.Value;
 
-                if (Regex.IsMatch(str, @"^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$"))
+                if (Regex.IsMatch(str.Value, @"^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$"))
                 {
-                    return ColorValue(irContext, new StringValue[] { FormulaValue.New(str) });
+                    return ColorValue(irContext, new StringValue[] { str });
                 }
                 else
                 {
@@ -415,7 +463,7 @@ namespace Microsoft.PowerFx.Functions
                 }
             }
 
-            return GetTypeMismatchError(irContext, BuiltinFunctionsCore.ColorValue_UO.Name, DType.String.GetKindString(), impl);
+            return GetTypeMismatchError(irContext, BuiltinFunctionsCore.ColorValue_UO.Name, DType.String.GetKindString(), uo);
         }
     }
 }

@@ -53,7 +53,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     return new BlankValue(IRContext.NotInSource(FormulaType.Blank));
                 }
 
-                return new UntypedObjectValue(irContext, new JsonUntypedObject(result));
+                return new UntypedObjectValue(irContext, JsonUntypedObject.New(result));
             }
             catch (JsonException ex)
             {

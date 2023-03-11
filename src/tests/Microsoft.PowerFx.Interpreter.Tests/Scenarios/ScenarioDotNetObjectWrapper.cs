@@ -91,26 +91,16 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var objFx2 = PrimitiveWrapperAsUnknownObject.New(obj2);
 
             // We can pass UntypedObject as a parameter.             
-            var parameters = FormulaValue.NewRecordFromFields(
-                new NamedValue("obj2", objFx2));
+            var parameters = FormulaValue.NewRecordFromFields(new NamedValue("obj2", objFx2));
 
             var result = engine.Eval("obj2.Next", parameters);
 
             Assert.IsType<UntypedObjectValue>(result);
             var uov = (UntypedObjectValue)result;
-            var obj1result = ((PrimitiveWrapperAsUnknownObject)uov.Impl)._source;
+            var obj1result = ((PrimitiveWrapperAsUnknownObject)uov.Implementation)._source;
             
             // And also ensure we get it back out with reference identity. 
             Assert.True(ReferenceEquals(obj1result, obj1));
-        }
-
-        [Fact]
-        public void ObjectTypes()
-        {
-            // FormulaType.UntypedObject is any value wrapping a IUntypedObject
-            // IUntypedObject can represent any Fx type as well as foriegn types. 
-            // ExternalType.ObjectType is the set of IUntypedObject that represent a foriegn object 
-            Assert.NotEqual(FormulaType.UntypedObject, ExternalType.ObjectType);
         }
     }
 }

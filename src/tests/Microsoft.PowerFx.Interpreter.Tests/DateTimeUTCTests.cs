@@ -23,7 +23,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         private readonly DateTime _utcNow = DateTime.UtcNow;
         private readonly DateTime _istNow;
 
-        public DateTimeUTCTests() 
+        public DateTimeUTCTests()
         {
             _engine = new RecalcEngine(
                new PowerFxConfig(System.Globalization.CultureInfo.InvariantCulture));
@@ -61,7 +61,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var localDateTimeExpected = new DateTime(2023, 1, 1, 0, 0, 0, DateTimeKind.Unspecified);
             var utcDateTimeExpected = new DateTime(2023, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-            
+
             // DateTime function tests
             var evaluator = _engine.Check("DateTime(2023,1,1,0,0,0)", null, _symbolTable).GetEvaluator();
             var result = await evaluator.EvalAsync(default, _localSymbol);
@@ -69,7 +69,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var utcResult = await evaluator.EvalAsync(default, _utcSymbol);
             Assert.Equal(utcDateTimeExpected.ToString("o"), ((DateTimeValue)utcResult).GetConvertedValue(null).ToString("o"));
-            
+
             Assert.NotEqual(((DateTimeValue)result).GetConvertedValue(_istTimeZone).ToString("o"), ((DateTimeValue)utcResult).GetConvertedValue(null).ToString("o"));
 
             // Date function tests.
@@ -91,12 +91,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             // this is today's IST today's date 23:30:00, so when converted to IST this will remain same. 
             var myDateTimeIST = new DateTime(_istNow.Year, _istNow.Month, _istNow.Day, 23, 30, 0, DateTimeKind.Unspecified);
-            
+
             var myDateTimeUTCToday = new DateTime(_utcNow.Year, _utcNow.Month, _utcNow.Day, 23, 30, 0, DateTimeKind.Utc);
 
             var myDateTimeUTCSlot = _symbolTable.AddVariable("myDateTimeUTC", FormulaType.DateTime);
             _symbolValues.Set(myDateTimeUTCSlot, FormulaValue.New(myDateTimeUTC));
-            
+
             var myDateTimeISTSlot = _symbolTable.AddVariable("myDateTimeIST", FormulaType.DateTime);
             _symbolValues.Set(myDateTimeISTSlot, FormulaValue.New(myDateTimeIST));
 
@@ -144,7 +144,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var utcToday = DateTime.UtcNow;
             var istToday = TimeZoneInfo.ConvertTime(utcToday, _istTimeZone).Date;
             utcToday = utcToday.Date;
-            
+
             var evaluator = _engine.Check("Today()", options: null, _symbolTable).GetEvaluator();
             var result = await evaluator.EvalAsync(default, _localSymbol);
             Assert.Equal(istToday, ((DateValue)result).GetConvertedValue(_istTimeZone));
@@ -169,7 +169,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.Equal(DateTime.SpecifyKind(_istNow, DateTimeKind.Utc), result);
 
             var localtime = DateTime.SpecifyKind(_istNow, DateTimeKind.Local);
-            
+
             result = DateTimeValue.GetConvertedDateTimeValue(localtime, _istTimeZone);
             Assert.Equal(_istNow, result);
 
@@ -215,7 +215,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             evaluator = _engine.Check(@"DateTimeValue(ToUntypedObject(""2022-11-21T12:13:30Z""))", options: null, _symbolTable).GetEvaluator();
             result = await evaluator.EvalAsync(default, _localSymbol);
             Assert.Equal(expectedLocal, ((DateTimeValue)result).GetConvertedValue(_istTimeZone));
-            
+
             utcResult = await evaluator.EvalAsync(default, _utcSymbol);
             Assert.Equal(expectedUTC, ((DateTimeValue)utcResult).GetConvertedValue(TimeZoneInfo.Utc));
 
@@ -294,42 +294,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             }
         }
 
-        private class SimpleObject : IUntypedObject
+        private class SimpleObject : SupportsFxValue
         {
-            private readonly FormulaValue _value;
-
             public SimpleObject(FormulaValue value)
-            {
-                _value = value;
-            }
-
-            public IUntypedObject this[int index] => throw new NotImplementedException();
-
-            public FormulaType Type => _value.Type;
-
-            public int GetArrayLength()
-            {
-                throw new NotImplementedException();
-            }
-
-            public bool GetBoolean()
-            {
-                return ((BooleanValue)_value).Value;
-            }
-
-            public double GetDouble()
-            {
-                return ((NumberValue)_value).Value;
-            }
-
-            public string GetString()
-            {
-                return ((StringValue)_value).Value;
-            }
-
-            public bool TryGetProperty(string value, out IUntypedObject result)
-            {
-                throw new NotImplementedException();
+                : base(value)
+            {                
             }
         }
     }
