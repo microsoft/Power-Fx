@@ -417,8 +417,21 @@ namespace Microsoft.PowerFx
                     }
                 }
 
-                if (!_allowCoerceToType && this.ReturnType != null && this._expectedReturnType != null)
+                if (this.ReturnType != null && this._expectedReturnType != null)
                 {
+                    if (_allowCoerceToType)
+                    {
+                        if (this._expectedReturnType != FormulaType.String)
+                        {
+                            throw new NotImplementedException();
+                        }
+
+                        if (StringValue.AllowedListConvertToString.Contains(this.ReturnType))
+                        {
+                            return _binding;
+                        }
+                    }
+
                     var sameType = this._expectedReturnType == this.ReturnType;
                     if (!sameType)
                     {

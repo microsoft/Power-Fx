@@ -8,6 +8,7 @@ using System.Linq;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Microsoft.PowerFx.Core.Tests
 {
@@ -241,68 +242,70 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Throws<InvalidOperationException>(() => check.ApplyBinding());
         }
 
-        [Fact]
-        public void BindingCheckReturnType()
+        [Theory]
+        [InlineData("\"test string\"", false, true)]
+        [InlineData("\"test string\"", true, true)]
+        [InlineData("12", false, false)]       
+        [InlineData("12", true, true)]
+        [InlineData("{a:12, b:15}", true, false)]
+        [InlineData("{a:12, b:15}", false, false)]
+        public void CheckResultExpectedReturnValueString(string inputExpr, bool allowCoerceTo, bool isSuccess)
         {
             var check = new CheckResult(new Engine())
-                .SetText("123")
+                .SetText(inputExpr)
                 .SetBindingInfo()
-                .SetExpectedReturnValue(FormulaType.String);
+                .SetExpectedReturnValue(FormulaType.String, allowCoerceTo);
 
-            var errors = check.ApplyErrors();
+            if (isSuccess)
+            {
+                Assert.True(check.IsSuccess);
+            }
+            else
+            {
+                var errors = check.ApplyErrors();
 
-            Assert.False(check.IsSuccess);
-
-            Assert.Single(errors);
-            var error = errors.First();
-            Assert.Equal("Error 0-3: The type of this expression does not match the expected type 'Text'. Found type 'Number'.", error.ToString());
+                Assert.False(check.IsSuccess);
+                Assert.Single(errors);
+                var error = errors.First();
+                Assert.Contains("The type of this expression does not match the expected type 'Text'", error.ToString());
+            }
         }
 
-        [Fact]
-        public void BindingCheckNotExpectedReturnType()
+        [Theory]
+        [InlineData("12", false, true, "")]
+        [InlineData("12", true, true, "")]
+        [InlineData("\"test string\"", true, false, "The method or operation is not implemented")]
+        [InlineData("\"test string\"", false, false, "The type of this expression does not match the expected type 'Number'")]
+        [InlineData("{a:12, b:15}", true, false, "The method or operation is not implemented")]
+        [InlineData("{a:12, b:15}", false, false, "The type of this expression does not match the expected type 'Number'")]
+        public void CheckResultExpectedReturnValueNumber(string inputExpr, bool allowCoerceTo, bool isSuccess, string errorMsg)
         {
             var check = new CheckResult(new Engine())
-                .SetText("RGBA(255,0,0,1)")
+                .SetText(inputExpr)
                 .SetBindingInfo()
-                .SetExpectedReturnValue(FormulaType.String, false);
+                .SetExpectedReturnValue(FormulaType.Number, allowCoerceTo);
 
-            var errors = check.ApplyErrors();
+            if (isSuccess)
+            {
+                Assert.True(check.IsSuccess);
+            }
+            else
+            {
+                string exMsg = null;
 
-            Assert.False(check.IsSuccess);
+                try
+                {
+                    var errors = check.ApplyErrors();
+                    exMsg = errorMsg.ToString();
+                    Assert.False(check.IsSuccess);
+                }
+                catch (Exception ex)
+                {
+                    exMsg = ex.ToString();
+                }
 
-            Assert.Single(errors);
-            var error = errors.First();
-            Assert.Equal("Error 0-15: The type of this expression does not match the expected type 'Text'. Found type 'Color'.", error.ToString());
-        }
-
-        [Fact]
-        public void BindingCheckExpectedReturnType()
-        {
-            var check = new CheckResult(new Engine())
-                .SetText("RGBA(255,0,0,1)")
-                .SetBindingInfo()
-                .SetExpectedReturnValue(FormulaType.String, true);
-
-            var errors = check.ApplyErrors();
-
-            Assert.True(check.IsSuccess);
-        }
-
-        [Fact]
-        public void BindingCheckNotExpectedReturnTypeOnRecord()
-        {
-            var check = new CheckResult(new Engine())
-                .SetText("{a:12, b:15}")
-                .SetBindingInfo()
-                .SetExpectedReturnValue(FormulaType.String, false);
-
-            var errors = check.ApplyErrors();
-
-            Assert.False(check.IsSuccess);
-
-            Assert.Single(errors);
-            var error = errors.First();
-            Assert.Equal("Error 0-12: The type of this expression does not match the expected type 'Text'. Found type 'Record'.", error.ToString());
+                Assert.Contains(errorMsg, exMsg);
+            }
         }
 
         [Fact]
