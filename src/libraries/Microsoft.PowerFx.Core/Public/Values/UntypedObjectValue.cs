@@ -28,11 +28,14 @@ namespace Microsoft.PowerFx.Types
     //
     // The terminal elements are SupportsFxValue to retrieve a FormulaValue
 
+    // No Type property here as this is an *untyped* object
+    // This is the core interface for Untyped Objects (UO)
     public interface IUntypedObject
     {
         bool IsBlank();
     }
 
+    // Enables Index function
     public interface ISupportsArray : IUntypedObject
     {
         IUntypedObject this[int index] { get; }
@@ -40,16 +43,19 @@ namespace Microsoft.PowerFx.Types
         int Length { get; }
     }
 
+    // Enables access via properties
     public interface ISupportsProperties : IUntypedObject
     {
         bool TryGetProperty(string value, out IUntypedObject result);
     }
 
+    // Enables property enumeration (Intellisense)
     public interface ISupportsPropertyEnumeration : IUntypedObject
     {
         string[] PropertyNames { get; }
     }
 
+    // Hosts a FormulaValue in an UO
     public abstract class SupportsFxValue : IUntypedObject
     {
         public SupportsFxValue(object obj)
@@ -113,6 +119,7 @@ namespace Microsoft.PowerFx.Types
 
         public override object ToObject()
         {
+            // When an UO hosts a FormulaValue, we can return its value
             if (Implementation is SupportsFxValue fxValue)
             {
                 return fxValue.Value.ToObject();
