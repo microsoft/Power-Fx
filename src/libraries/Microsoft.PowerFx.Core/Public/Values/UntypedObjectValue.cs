@@ -63,17 +63,17 @@ namespace Microsoft.PowerFx.Types
                 ? FormulaValue.NewBlank()
                 : obj switch
                 {
-                    null => FormulaValue.NewBlank(),
-                    bool b => FormulaValue.New(b),
-                    DateTime dt => FormulaValue.New(dt),
+                    bool b => FormulaValue.New(b),                    
                     decimal dec => FormulaValue.New(dec),
                     double dbl => FormulaValue.New(dbl),
-                    float flt => FormulaValue.New(flt),
-                    Guid g => FormulaValue.New(g),
+                    float flt => FormulaValue.New(flt),                    
                     int i => FormulaValue.New(i),
                     long lng => FormulaValue.New(lng),
+                    null => FormulaValue.NewBlank(),
                     string s => FormulaValue.New(s),
                     Color c => FormulaValue.New(c),
+                    DateTime dt => FormulaValue.New(dt),
+                    Guid g => FormulaValue.New(g),
                     TimeSpan sp => FormulaValue.New(sp),
                     _ => null // includes IUntypedObject
                 })
