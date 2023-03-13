@@ -419,6 +419,7 @@ namespace Microsoft.PowerFx
 
                 if (this.ReturnType != null && this._expectedReturnType != null)
                 {
+                    bool notCoerceToType = false;
                     if (_allowCoerceToType)
                     {
                         if (this._expectedReturnType != FormulaType.String)
@@ -426,14 +427,14 @@ namespace Microsoft.PowerFx
                             throw new NotImplementedException();
                         }
 
-                        if (StringValue.AllowedListConvertToString.Contains(this.ReturnType))
+                        if (!StringValue.AllowedListConvertToString.Contains(this.ReturnType))
                         {
-                            return _binding;
+                            notCoerceToType = true;
                         }
                     }
 
                     var sameType = this._expectedReturnType == this.ReturnType;
-                    if (!sameType)
+                    if (notCoerceToType || !sameType)
                     {
                         _errors.Add(new ExpressionError
                         {
