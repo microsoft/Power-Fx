@@ -80,10 +80,7 @@ namespace Microsoft.PowerFx.Syntax
             Contracts.AssertValue(visitor);
             if (visitor.PreVisit(this))
             {
-                if (SourceRestriction != null)
-                {
-                    SourceRestriction.Accept(visitor);
-                }
+                SourceRestriction?.Accept(visitor);
 
                 AcceptChildren(visitor);
                 visitor.PostVisit(this);

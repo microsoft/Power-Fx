@@ -3,12 +3,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
 using System.Threading;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
@@ -62,6 +62,18 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var result = engine.Eval(expr, options: new ParserOptions() { AllowsSideEffects = true });
 
             Assert.IsNotType<ErrorValue>(result);
+        }
+
+        [Theory]
+        [InlineData("[{a:0},{a:\"3\",b:2}]", "Table({a:0,b:If(false,0)},{a:3,b:2})")]
+        public void RecordToRecordAggregateCoercionDontDropFieldsTest(string expr, string expected)
+        {
+            var iSetup = InternalSetup.Parse($"TableSyntaxDoesntWrapRecords");
+            var engine = new RecalcEngine(new PowerFxConfig(Features.TableSyntaxDoesntWrapRecords));
+
+            var result = engine.Eval(expr) as TableValue;
+
+            Assert.Equal(expected, result.ToExpression());
         }
 
         private class BooleanOptionSet : OptionSet, IExternalOptionSet

@@ -743,11 +743,18 @@ namespace Microsoft.PowerFx.Core.IR
             {
                 var fieldCoercions = new Dictionary<DName, IntermediateNode>();
                 var scope = GetNewScope();
+                var recordType = RecordType.Empty();
+
+                foreach (var toField in toType.GetNames(DPath.Root))
+                {
+                    recordType = recordType.Add(toField.Name, FormulaType.Build(toField.Type));
+                }
+
                 foreach (var fromField in fromType.GetNames(DPath.Root))
                 {
                     if (!toType.TryGetType(fromField.Name, out var toFieldType) || toFieldType.Accepts(fromField.Type))
                     {
-                        continue;
+                        fieldCoercions.Add(fromField.Name, new ScopeAccessNode(IRContext.NotInSource(FormulaType.Build(fromField.Type)), new ScopeAccessSymbol(scope, scope.AddOrGetIndexForField(fromField.Name))));
                     }
                     else
                     {
@@ -760,14 +767,14 @@ namespace Microsoft.PowerFx.Core.IR
                         var innerCoersion = InjectCoercion(new ScopeAccessNode(IRContext.NotInSource(FormulaType.Build(fromField.Type)), new ScopeAccessSymbol(scope, scope.AddOrGetIndexForField(fromField.Name))), context, fromField.Type, toFieldType);
                         fieldCoercions.Add(fromField.Name, innerCoersion);
                     }
+
+                    if (!recordType.TryGetFieldType(fromField.Name, out _))
+                    {
+                        recordType = recordType.Add(fromField.Name, FormulaType.Build(fromField.Type));
+                    }
                 }
 
-                if (!fieldCoercions.Any())
-                {
-                    return child;
-                }
-
-                return new AggregateCoercionNode(IRContext.NotInSource(FormulaType.Build(toType)), unaryOpKind, scope, child, fieldCoercions);
+                return new AggregateCoercionNode(IRContext.NotInSource(recordType), unaryOpKind, scope, child, fieldCoercions);
             }
 
             private IntermediateNode MaybeInjectCoercion(TexlNode nodeIn, IntermediateNode child, IRTranslatorContext context)

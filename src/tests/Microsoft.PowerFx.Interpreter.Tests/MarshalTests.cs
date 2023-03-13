@@ -405,6 +405,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal(999.0, result1.ToObject());
         }
 
+        // !!!### This test case is failing!
         [Fact]
         public void TypeProjectionWithCustomRecords()
         {

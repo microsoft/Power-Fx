@@ -1752,6 +1752,8 @@ namespace Microsoft.PowerFx.Functions
 
         public static FormulaValue Table(IRContext irContext, FormulaValue[] args)
         {
+            var recordType = RecordType.Empty();
+
             // Table literal
             var records = Array.ConvertAll(
                 args,
@@ -1762,8 +1764,23 @@ namespace Microsoft.PowerFx.Functions
                     _ => DValue<RecordValue>.Of((ErrorValue)arg),
                 });
 
-            // Returning List to ensure that the returned table is mutable
-            return new InMemoryTableValue(irContext, records);
+            foreach (var record in records)
+            {
+                if (record.IsValue)
+                {
+                    var fields = ((RecordValue)record.ToFormulaValue()).Fields;
+
+                    foreach (var field in fields)
+                    {
+                        if (!recordType.TryGetFieldType(field.Name, out _))
+                        {
+                            recordType = recordType.Add(field.Name, field.Value.Type);
+                        }
+                    }
+                }                    
+            }
+
+            return new InMemoryTableValue(IRContext.NotInSource(recordType.ToTable()), records);
         }
 
         public static ValueTask<FormulaValue> Blank(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
