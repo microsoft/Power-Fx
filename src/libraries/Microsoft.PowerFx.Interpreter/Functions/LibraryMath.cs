@@ -1022,16 +1022,29 @@ namespace Microsoft.PowerFx.Functions
 
         public static FormulaValue RoundDown(IRContext irContext, FormulaValue[] args)
         {
-            if (args.Length == 2 && args[1] is NumberValue digits)
+            double digits;
+
+            // Trunc uses RoundDown as the implementation, and Trunc's second argument is optional
+            if (args.Length == 2 && args[1] is NumberValue digitsArg)
             {
-                if (args[0] is NumberValue num)
-                {
-                    return RoundFloat(irContext, num, digits.Value, RoundType.Down);
-                }
-                else if (args[0] is DecimalValue dec)
-                {
-                    return RoundDecimal(irContext, dec, digits.Value, RoundType.Down);
-                }
+                digits = digitsArg.Value;
+            }
+            else if (args.Length == 1)
+            {
+                digits = 0;
+            }
+            else
+            {
+                return CommonErrors.UnreachableCodeError(irContext);
+            }
+
+            if (args[0] is NumberValue num)
+            {
+                return RoundFloat(irContext, num, digits, RoundType.Down);
+            }
+            else if (args[0] is DecimalValue dec)
+            {
+                return RoundDecimal(irContext, dec, digits, RoundType.Down);
             }
 
             return CommonErrors.UnreachableCodeError(irContext);

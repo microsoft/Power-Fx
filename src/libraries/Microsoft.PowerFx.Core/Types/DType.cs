@@ -1962,19 +1962,6 @@ namespace Microsoft.PowerFx.Core.Types
                     break;
 
                 case DKind.Decimal:
-                    // Decimal TODO: Review, especially compare with Number and date/time and enum handling
-                    accepts =
-                        type.Kind == Kind ||
-                        type.Kind == DKind.Unknown ||
-                        type.Kind == DKind.Deferred ||
-                        (useLegacyDateTimeAccepts &&
-                            (type.Kind == DKind.DateTime ||
-                            type.Kind == DKind.Date ||
-                            type.Kind == DKind.Time ||
-                            type.Kind == DKind.DateTimeNoTimeZone)) ||
-                        (type.Kind == DKind.Enum && Accepts(type.GetEnumSupertype()));
-                    break;
-
                 case DKind.Color:
                 case DKind.Boolean:
                 case DKind.PenImage:

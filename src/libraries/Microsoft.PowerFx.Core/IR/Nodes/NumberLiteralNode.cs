@@ -20,7 +20,7 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
 
         public override string ToString()
         {
-            return $"Number({LiteralValue})";
+            return $"{LiteralValue}:n";
         }
     }
 
@@ -41,7 +41,7 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
 
         public override string ToString()
         {
-            return $"Decimal({LiteralValue})";
+            return $"{LiteralValue}:w";
         }
     }
 }

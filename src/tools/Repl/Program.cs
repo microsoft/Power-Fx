@@ -171,12 +171,13 @@ namespace Microsoft.PowerFx
                     {
                         var opts = new ParserOptions() { AllowsSideEffects = true, NumberIsFloat = _numberIsFloat };
                         var cr = _engine.Check(match.Groups["expr"].Value, options: opts);
-                        var ir = cr.GetIR();
+                        var ir = cr.PrintIR();
                         Console.WriteLine(ir);
                     }
 
                     // formula definition: <ident> = <formula>
-                    else if ((match = Regex.Match(expr, @"^\s*(?<ident>\w+)\s*=(?<formula>.*)$", RegexOptions.Singleline)).Success)
+                    else if ((match = Regex.Match(expr, @"^\s*(?<ident>[a-zA-Z]\w+)\s*=(?<formula>.*)$", RegexOptions.Singleline)).Success &&
+                              match.Groups["ident"].Value != "true" && match.Groups["ident"].Value != "false" && match.Groups["ident"].Value != "blank")
                     {
                         _engine.SetFormula(match.Groups["ident"].Value, match.Groups["formula"].Value, OnUpdate);
                     }
@@ -634,9 +635,10 @@ namespace Microsoft.PowerFx
                 var column = 0;
                 var funcList = string.Empty;
 #pragma warning disable CS0618 // Type or member is obsolete
-                var funcNames = _engine.Config.FunctionInfos.Select(x => x.Name).Distinct();
+                List<string> funcNames = _engine.Config.FunctionInfos.Select(x => x.Name).Distinct().ToList();
 #pragma warning restore CS0618 // Type or member is obsolete
 
+                funcNames.Sort();
                 foreach (var func in funcNames)
                 {
                     funcList += $"  {func,-14}";

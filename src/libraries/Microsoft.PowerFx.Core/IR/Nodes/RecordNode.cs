@@ -27,7 +27,7 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
 
         public override string ToString()
         {
-            return $"Record({string.Join(",", Fields.Select(kvp => $"{{{kvp.Key},{kvp.Value}}}"))}";
+            return $"{string.Join(",", Fields.Select(kvp => $"{{{kvp.Key}: {kvp.Value}}}"))}";
         }
     }
 }

@@ -494,9 +494,12 @@ namespace Microsoft.PowerFx
             return _irresult;
         }
 
-        public string GetIR()
+        public string PrintIR()
         {
-            return this.ApplyIR().TopNode.ToString();
+            //            return this.ApplyIR().TopNode.ToString();
+            var x = this.ApplyIR().TopNode;
+            var y = x.ToString();
+            return y;
         }
 
         /// <summary>

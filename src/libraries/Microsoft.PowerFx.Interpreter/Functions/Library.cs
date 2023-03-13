@@ -552,7 +552,9 @@ namespace Microsoft.PowerFx.Functions
                     BuiltinFunctionsCore.Decimal.Name,
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
-                    checkRuntimeTypes: ExactValueTypeOrBlank<UntypedObjectValue>,
+                    checkRuntimeTypes: ExactSequence(
+                        ExactValueTypeOrBlank<UntypedObjectValue>,
+                        ExactValueTypeOrBlank<StringValue>),
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: Decimal_UO)
@@ -714,7 +716,9 @@ namespace Microsoft.PowerFx.Functions
                     BuiltinFunctionsCore.Float.Name,
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
-                    checkRuntimeTypes: ExactValueTypeOrBlank<UntypedObjectValue>,
+                    checkRuntimeTypes: ExactSequence(
+                        ExactValueTypeOrBlank<UntypedObjectValue>,
+                        ExactValueTypeOrBlank<StringValue>),
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: Float_UO)
@@ -1778,11 +1782,21 @@ namespace Microsoft.PowerFx.Functions
                 BuiltinFunctionsCore.FindT,
                 NoErrorHandling(MultiSingleColumnTable(SimpleFunctionImplementations[BuiltinFunctionsCore.Find], DoNotReplaceBlank))
             },
-
-            // Decimal TODO: Where is RoundUp, RoundDown?
             {
                 BuiltinFunctionsCore.RoundT,
                 NoErrorHandling(MultiSingleColumnTable(SimpleFunctionImplementations[BuiltinFunctionsCore.Round], ReplaceBlankWithContextZero))
+            },
+            {
+                BuiltinFunctionsCore.RoundDownT,
+                NoErrorHandling(MultiSingleColumnTable(SimpleFunctionImplementations[BuiltinFunctionsCore.RoundDown], ReplaceBlankWithContextZero))
+            },
+            {
+                BuiltinFunctionsCore.RoundUpT,
+                NoErrorHandling(MultiSingleColumnTable(SimpleFunctionImplementations[BuiltinFunctionsCore.RoundUp], ReplaceBlankWithContextZero))
+            },
+            {
+                BuiltinFunctionsCore.TruncT,
+                NoErrorHandling(MultiSingleColumnTable(SimpleFunctionImplementations[BuiltinFunctionsCore.RoundDown], ReplaceBlankWithContextZero))
             },
         };
 

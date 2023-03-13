@@ -65,10 +65,12 @@ namespace Microsoft.PowerFx.Core.IR
             {
                 kindToUse = rightCoerced.Kind;
             }
+#if false
             else if (!leftType.Accepts(rightType) && !rightType.Accepts(leftType))
             {
                 return BinaryOpKind.Invalid;
             } 
+#endif
             
             switch (kindToUse)
             {

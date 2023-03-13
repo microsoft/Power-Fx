@@ -788,7 +788,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
             if (!typeLeft.Accepts(typeRight) && !typeRight.Accepts(typeLeft))
             {
-                // Handle DateTime <=> Number comparison by coercing one side to Number
+                // Handle DateTime <=> Number comparison by coercing DateTime side to Number
                 if (DType.Number.Accepts(typeLeft) && DType.DateTime.Accepts(typeRight))
                 {
                     coercions.Add(new BinderCoercionResult() { Node = right, CoercedType = DType.Number });
@@ -798,7 +798,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     coercions.Add(new BinderCoercionResult() { Node = left, CoercedType = DType.Number });
                 }
 
-                // Handle Decimal <=> Number comparison by coercing one side to Number
+                // Handle Decimal <=> Number comparison by coercing Decimal side to Number
                 if (DType.Number.Accepts(typeLeft) && DType.Decimal.Accepts(typeRight))
                 {
                     coercions.Add(new BinderCoercionResult() { Node = right, CoercedType = DType.Number });
@@ -806,6 +806,14 @@ namespace Microsoft.PowerFx.Core.Binding
                 else if (DType.Number.Accepts(typeRight) && DType.Decimal.Accepts(typeLeft))
                 {
                     coercions.Add(new BinderCoercionResult() { Node = left, CoercedType = DType.Number });
+                }
+
+                // Handle Decimal <=> DateTime comparison by coercing both sides to Number
+                if ((DType.DateTime.Accepts(typeLeft) && DType.Decimal.Accepts(typeRight)) ||
+                    (DType.DateTime.Accepts(typeRight) && DType.Decimal.Accepts(typeLeft)))
+                {
+                    coercions.Add(new BinderCoercionResult() { Node = left, CoercedType = DType.Number });
+                    coercions.Add(new BinderCoercionResult() { Node = right, CoercedType = DType.Number });
                 }
 
                 if (DType.DateTime.Accepts(typeLeft) && DType.DateTime.Accepts(typeRight))
