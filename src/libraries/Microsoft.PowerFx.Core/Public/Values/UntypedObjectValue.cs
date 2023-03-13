@@ -96,11 +96,6 @@ namespace Microsoft.PowerFx.Types
                 return true;
             }
 
-            if (Value is StringValue str)
-            {
-                return str.Value.Length == 0;
-            }
-
             return false;
         }
     }

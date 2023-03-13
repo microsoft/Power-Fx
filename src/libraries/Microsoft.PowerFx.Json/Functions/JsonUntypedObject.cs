@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Linq;
 using System.Text.Json;
 using System.Xml.Linq;
 using Microsoft.PowerFx.Core.Types;
@@ -33,7 +34,7 @@ namespace Microsoft.PowerFx.Functions
 
         public bool IsBlank()
         {
-            return false;
+            return !_element.EnumerateObject().Any();
         }
 
         public bool TryGetProperty(string value, out IUntypedObject result)
