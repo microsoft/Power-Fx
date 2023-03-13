@@ -66,6 +66,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
         [Theory]
         [InlineData("[{a:0},{a:\"3\",b:2}]", "Table({a:0,b:If(false,0)},{a:3,b:2})")]
+        [InlineData("[{a:1}, {a:true, b:2}]", "Table({a:1,b:If(false,0)},{a:1,b:2})")]
         public void RecordToRecordAggregateCoercionDontDropFieldsTest(string expr, string expected)
         {
             var iSetup = InternalSetup.Parse($"TableSyntaxDoesntWrapRecords");
