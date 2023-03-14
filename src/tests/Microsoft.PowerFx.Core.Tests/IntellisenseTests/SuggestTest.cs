@@ -3,10 +3,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Texl;
+using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
@@ -233,6 +235,26 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
 
             actualSuggestions = SuggestStrings(expression, config);
             Assert.Equal(expectedSuggestions, actualSuggestions);
+        }
+
+        [Fact]
+        public void TestSuggestEscapedEnumName()
+        {
+            var enumStoreBuilder = new EnumStoreBuilder();
+            enumStoreBuilder.TestOnly_WithCustomEnum(new EnumSymbol(
+                new DName("Name That.Requires!escaping"),
+                DType.Number,
+                new Dictionary<string, object>()
+                {
+                    { "Field1", 1 },
+                    { "Field2", 2 },
+                }));
+            var config = PowerFxConfig.BuildWithEnumStore(CultureInfo.InvariantCulture, enumStoreBuilder);
+
+            var result = SuggestStrings("Fiel|", config);
+            Assert.Equal(2, result.Length);
+            Assert.Contains("'Name That.Requires!escaping'.Field1", result);
+            Assert.Contains("'Name That.Requires!escaping'.Field2", result);
         }
 
         [Theory]
