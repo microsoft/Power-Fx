@@ -137,7 +137,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             if (!argTypes[0].IsTable && (args.Length == 1 || !argTypes[1].IsTable))
             {
                 errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrTypeError);
-                errors.EnsureError(DocumentErrorSeverity.Severe, args[1], TexlStrings.ErrTypeError);
+                if (args.Length > 1)
+                {
+                    errors.EnsureError(DocumentErrorSeverity.Severe, args[1], TexlStrings.ErrTypeError);
+                }
 
                 // Both args are invalid. No need to continue.
                 fValid = false;

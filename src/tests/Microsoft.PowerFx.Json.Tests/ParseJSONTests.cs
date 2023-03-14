@@ -325,7 +325,7 @@ namespace Microsoft.PowerFx.Json.Tests
         }
 
         [Theory]
-        [InlineData("[1, 2, 3]", "*[Value:n]", 1d, 2d, 3d)]
+        [InlineData("[1, 2, 3]", "*[Value:d]", 1d, 2d, 3d)]
         [InlineData("[\"a\", \"b\", \"c\"]", "*[Value:s]", "a", "b", "c")]
         [InlineData("[true, false]", "*[Value:b]", true, false)]
         public void FromJsonHomogeneousPrimitiveArray(string json, string expectedType, params object[] expected)
@@ -339,7 +339,7 @@ namespace Microsoft.PowerFx.Json.Tests
             int i = 0;
             foreach (var row in res.Rows)
             {
-                Assert.Equal(expected[i++], row.Value.GetField("Value").ToObject());
+                Assert.Equal(expected[i++] is double ? (decimal)expected[i++] : expected[i++], row.Value.GetField("Value").ToObject());
             }
         }
 
@@ -352,7 +352,7 @@ namespace Microsoft.PowerFx.Json.Tests
 
             var res = (TableValue)FormulaValueJSON.FromJson(json);
 
-            Assert.Equal("*[f1:s, f2:n]", res.Type.ToStringWithDisplayNames());
+            Assert.Equal("*[f1:s, f2:w]", res.Type.ToStringWithDisplayNames());
             Assert.Equal(2, res.Count());
 
             var rows = res.Rows.GetEnumerator();
@@ -362,7 +362,7 @@ namespace Microsoft.PowerFx.Json.Tests
 
             rows.MoveNext();
             Assert.Null(rows.Current.Value.GetField("f1").ToObject());
-            Assert.Equal(1d, rows.Current.Value.GetField("f2").ToObject());
+            Assert.Equal(1m, rows.Current.Value.GetField("f2").ToObject());
         }
 
         [Theory]

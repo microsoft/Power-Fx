@@ -1802,18 +1802,6 @@ namespace Microsoft.PowerFx.Functions
                 BuiltinFunctionsCore.TruncT,
                 NoErrorHandling(MultiSingleColumnTable(SimpleFunctionImplementations[BuiltinFunctionsCore.RoundDown], ReplaceBlankWithContextZero))
             },
-            {
-                BuiltinFunctionsCore.RoundUpT,
-                NoErrorHandling(MultiSingleColumnTable(SimpleFunctionImplementations[BuiltinFunctionsCore.RoundUp], ReplaceBlankWithZero))
-            },
-            {
-                BuiltinFunctionsCore.RoundDownT,
-                NoErrorHandling(MultiSingleColumnTable(SimpleFunctionImplementations[BuiltinFunctionsCore.RoundDown], ReplaceBlankWithZero))
-            },
-            {
-                BuiltinFunctionsCore.TruncT,
-                NoErrorHandling(MultiSingleColumnTable(SimpleFunctionImplementations[BuiltinFunctionsCore.RoundDown], ReplaceBlankWithZero))
-            },
         };
 
         public static IEnumerable<DValue<RecordValue>> StandardTableNodeRecords(IRContext irContext, FormulaValue[] args, bool forceSingleColumn)
