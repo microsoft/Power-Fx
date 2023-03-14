@@ -105,13 +105,13 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
                     && (opDelStrategy as BinaryOpDelegationStrategy)?.Op == BinaryOp.In
                     && binding.GetType(node).IsTable 
                     && binding.GetType(node).IsColumn
-                    && (IsValidDelegatableAsyncNode(node, binding) || !binding.IsAsync(node))
+                    && (IsValidAsyncOrImpureNode(node, binding) || !binding.IsAsync(node))
                     && opDelStrategy.IsOpSupportedByTable(metadata, node, binding))
                 {
                     return true;
                 }
 
-                if (!binding.IsRowScope(node) && IsValidNode(node, binding))
+                if (!binding.IsRowScope(node) && IsValidAsyncOrImpureNode(node, binding))
                 {
                     return true;
                 }
