@@ -35,6 +35,13 @@ Error({Kind:ErrorKind.Div0})
 >> RoundDown( [1.2, 2.3, 3.4], 1/0 )
 Table({Value:Error({Kind:ErrorKind.Div0})},{Value:Error({Kind:ErrorKind.Div0})},{Value:Error({Kind:ErrorKind.Div0})})
 
+// Mixed length tables
+>> RoundDown( [1.2, 2.3, 3.4], [1/0] )
+Table({Value:Error({Kind:ErrorKind.Div0})},{Value:Error({Kind:ErrorKind.NotApplicable})},{Value:Error({Kind:ErrorKind.NotApplicable})})
+
+>> RoundDown( [1.23], [1, 2, 3] )
+Table({Value:1.2},{Value:Error({Kind:ErrorKind.NotApplicable})},{Value:Error({Kind:ErrorKind.NotApplicable})})
+
 >> RoundDown(Table({b: 1.23}, {b: Sqrt(-1)}, {b: 7.89}), 1)
 Table({Value:1.2},{Value:Error({Kind:ErrorKind.Numeric})},{Value:7.8})
 

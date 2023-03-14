@@ -22,6 +22,13 @@ Table({Result:1200},{Result:1230},{Result:1234},{Result:1234.5},{Result:1234.56}
 >> RoundDown([123.456, 345.678], [1, 2])
 Table({Value:123.4},{Value:345.67})
 
+// Mixed length tables
+>> RoundDown( [1.2, 2.3, 3.4], [1/0] )
+Table({Value:Error({Kind:ErrorKind.Div0})},{Value:Error({Kind:ErrorKind.NotApplicable})},{Value:Error({Kind:ErrorKind.NotApplicable})})
+
+>> RoundDown( [1.23], [1, 2, 3] )
+Table({Value:1.2},{Value:Error({Kind:ErrorKind.NotApplicable})},{Value:Error({Kind:ErrorKind.NotApplicable})})
+
 // Blank values
 >> RoundDown( If(1<0,[1]), 1 )
 Blank()
