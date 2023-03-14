@@ -1,0 +1,8 @@
+﻿>> Dec2Hex([{A:2},{A:3}])
+Errors: Error 8-21: Invalid argument type (Table). Expecting a Number value instead.
+
+>> Dec2Hex([{A: 12}])
+Errors: Error 8-17: Invalid argument type (Table). Expecting a Number value instead.
+
+>> Dec2Hex([{A: 12}], 3)
+Errors: Error 8-17: Invalid argument type (Table). Expecting a Number value instead.

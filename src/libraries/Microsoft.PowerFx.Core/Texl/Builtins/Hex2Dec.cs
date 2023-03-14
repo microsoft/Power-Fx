@@ -2,10 +2,14 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using Microsoft.PowerFx.Core.App.ErrorContainers;
+using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Functions.Delegation;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Syntax;
 
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
@@ -54,6 +58,34 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
         {
             return GetUniqueTexlRuntimeName(suffix: "_T");
+        }
+
+        public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        {
+            Contracts.AssertValue(args);
+            Contracts.AssertAllValues(args);
+            Contracts.AssertValue(argTypes);
+            Contracts.Assert(args.Length == argTypes.Length);
+            Contracts.Assert(args.Length == 1);
+            Contracts.AssertValue(errors);
+            Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
+
+            var fValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            Contracts.Assert(returnType.IsTable);
+            Contracts.Assert(!fValid || returnType.IsColumn);
+            var type = argTypes[0];
+            var arg = args[0];
+            if (type.IsTable)
+            {
+                fValid &= CheckStringColumnType(type, arg, errors, ref nodeToCoercedTypeMap);
+            }
+            else
+            {
+                errors.EnsureError(DocumentErrorSeverity.Severe, arg, TexlStrings.ErrTypeError);
+                return false;
+            }
+
+            return fValid;
         }
     }
 }

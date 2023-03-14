@@ -1,0 +1,8 @@
+﻿>> Hex2Dec([{a:"A"}])
+Errors: Error 0-18: The function 'Hex2Dec' has some invalid arguments.|Error 8-17: Invalid schema, expected a column of text values for 'Value'.
+
+>> Hex2Dec([{a:"A"},{a:"12"},{a:"FFFF"}])
+Errors: Error 0-38: The function 'Hex2Dec' has some invalid arguments.|Error 8-37: Invalid schema, expected a column of text values for 'Value'.
+
+>> Hex2Dec([{a:"A",b:"B"}])
+Errors: Error 0-24: The function 'Hex2Dec' has some invalid arguments.|Error 8-23: Invalid schema, expected a column of text values for 'Value'.
