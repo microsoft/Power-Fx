@@ -42,8 +42,8 @@ namespace Microsoft.PowerFx
 
         private CultureInfo _defaultErrorCulture;
 
-        // We must call all Set*() operations before calling Apply*(). 
-        // This is because Applys can be called in lazy ways, and so we need a gaurantee
+        // We must call all Set() operations before calling Apply(). 
+        // This is because Apply() methods can be called in lazy ways, and so we need a gaurantee
         // that the Set() conditions are fixed. 
         private bool _beginApply;
 
