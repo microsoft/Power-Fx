@@ -864,7 +864,8 @@
     <value>An expression that gets evaluated over rows in 'source' and provides values for sorting.</value>
   </data>
   <data name="AboutSort_order" xml:space="preserve">
-    <value>Ascending or Descending</value>
+    <value>SortOrder.Ascending or SortOrder.Descending</value>
+    <comment>{Locked=SortOrder.Ascending}{Locked=SortOrder.Descending} Possible values for the third argument of the Sort function</comment>
   </data>
   <data name="AboutSortByColumns" xml:space="preserve">
     <value>Sorts 'source' based on the column, optionally specifying a sort 'order'.</value>
@@ -889,7 +890,8 @@
     <value>A unique column name.</value>
   </data>
   <data name="AboutSortByColumns_order" xml:space="preserve">
-    <value>Ascending or Descending</value>
+    <value>SortOrder.Ascending or SortOrder.Descending</value>
+    <comment>{Locked=SortOrder.Ascending}{Locked=SortOrder.Descending} Possible values for the third argument of the Sort function</comment>
   </data>
   <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
     <value>Sorts 'source' based on the index of matching values in the specified column.</value>
