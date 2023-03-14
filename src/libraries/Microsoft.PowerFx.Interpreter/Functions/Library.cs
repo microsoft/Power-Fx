@@ -1752,8 +1752,6 @@ namespace Microsoft.PowerFx.Functions
 
         public static FormulaValue Table(IRContext irContext, FormulaValue[] args)
         {
-            var recordType = RecordType.Empty();
-
             // Table literal
             var records = Array.ConvertAll(
                 args,
@@ -1764,23 +1762,31 @@ namespace Microsoft.PowerFx.Functions
                     _ => DValue<RecordValue>.Of((ErrorValue)arg),
                 });
 
+            var exprType = DType.Invalid;
+
             foreach (var record in records)
             {
-                if (record.IsValue)
+                if (record.Value is RecordValue recordValue)
                 {
-                    var fields = ((RecordValue)record.ToFormulaValue()).Fields;
-
-                    foreach (var field in fields)
+                    if (!exprType.IsValid)
                     {
-                        if (!recordType.TryGetFieldType(field.Name, out _))
-                        {
-                            recordType = recordType.Add(field.Name, field.Value.Type);
-                        }
+                        exprType = recordValue.Type._type;
                     }
-                }                    
+                    else if (exprType.CanUnionWith(recordValue.Type._type))
+                    {
+                        exprType = DType.Union(exprType, recordValue.Type._type);
+                    }
+                }
             }
 
-            return new InMemoryTableValue(IRContext.NotInSource(recordType.ToTable()), records);
+            if (exprType.IsValid)
+            {
+                return new InMemoryTableValue(IRContext.NotInSource(FormulaType.Build(DType.CreateTable(exprType.GetNames(DPath.Root)))), records);
+            }
+            else
+            {
+                return new InMemoryTableValue(irContext, records);
+            }
         }
 
         public static ValueTask<FormulaValue> Blank(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)

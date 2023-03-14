@@ -5187,7 +5187,6 @@ namespace Microsoft.PowerFx.Core.Binding
                 Contracts.AssertValue(node);
                 var exprType = DType.Invalid;
                 var isSelfContainedConstant = true;
-                var recordType = RecordType.Empty();
 
                 foreach (var child in node.Children)
                 {
@@ -5210,19 +5209,11 @@ namespace Microsoft.PowerFx.Core.Binding
                     {
                         _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, child, TexlStrings.ErrTableDoesNotAcceptThisType);
                     }
-
-                    foreach (var field in childType.GetNames(DPath.Root))
-                    {
-                        if (!recordType.TryGetFieldType(field.Name, out _))
-                        {
-                            recordType = recordType.Add(field.Name, FormulaType.Build(field.Type));
-                        }
-                    }
                 }
 
                 DType tableType = exprType.IsValid
                     ? (_features.HasTableSyntaxDoesntWrapRecords() && exprType.IsRecord
-                        ? recordType.ToTable()._type
+                        ? DType.CreateTable(exprType.GetNames(DPath.Root))
                         : DType.CreateTable(new TypedName(exprType, TableValue.ValueDName)))
                     : DType.EmptyTable;
 
