@@ -4423,7 +4423,7 @@
     
   </data>
   <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
-    <value>Unable to compare values of type {0}.</value>
+    <value>Nem lehet {0} típusú értékeket összehasonlítani.</value>
     
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
@@ -4843,7 +4843,7 @@
     
   </data>
   <data name="OptionSetOptionNotSupported" xml:space="preserve">
-    <value>The value of option {0} is not of expected type {1}.</value>
+    <value>A beírt {0} értéke nem a(z) {1} várt típusú.</value>
     
   </data>
   <data name="AboutOptionSetInfo" xml:space="preserve">
@@ -4855,5 +4855,9 @@
   </data>
   <data name="AboutOptionSetInfo_option" xml:space="preserve">
     <value>Olyan értékkészlet-érték, amelynek a logikai neve vissza lesz állítva.</value>
+  </data>
+  <data name="AboutLanguage" xml:space="preserve">
+    <value>Kérje le a futásidőben beállított alapértelmezett területi beállítást.</value>
+    
   </data>
 </root>
