@@ -64,7 +64,8 @@ namespace Microsoft.PowerFx
             config.AddFunction(new ExitFunction());
             config.AddFunction(new OptionFunction());
             config.AddFunction(new ResetImportFunction());
-            config.AddFunction(new ImportFunction());
+            config.AddFunction(new ImportFunction1Arg());
+            config.AddFunction(new ImportFunction2Arg());
 
             var optionsSet = new OptionSet("Options", DisplayNameUtility.MakeUnique(options));
 
@@ -149,12 +150,12 @@ namespace Microsoft.PowerFx
             return false;
         }
 
-        public static void REPL(TextReader input, bool echo)
+        public static void REPL(TextReader input, bool echo = false, TextWriter output = null)
         {
             string expr;
 
             // main loop
-            while ((expr = ReadFormula(input, echo)) != null)
+            while ((expr = ReadFormula(input, output, echo)) != null)
             {
                 Match match;
 
@@ -164,6 +165,7 @@ namespace Microsoft.PowerFx
                     if (TryMatchSet(expr, out var varName, out var varValue))
                     {
                         Console.WriteLine(varName + ": " + PrintResult(varValue));
+                        output?.WriteLine(varName + ": " + PrintResult(varValue));
                     }
 
                     // IR pretty printer: IR( <expr> )
@@ -173,6 +175,7 @@ namespace Microsoft.PowerFx
                         var cr = _engine.Check(match.Groups["expr"].Value, options: opts);
                         var ir = cr.PrintIR();
                         Console.WriteLine(ir);
+                        output?.WriteLine(ir);
                     }
 
                     // formula definition: <ident> = <formula>
@@ -199,9 +202,25 @@ namespace Microsoft.PowerFx
                         var opts = new ParserOptions() { AllowsSideEffects = true, NumberIsFloat = _numberIsFloat };
                         var result = _engine.Eval(expr, options: opts);
 
+                        if (output != null)
+                        {
+                            var sb = new StringBuilder();
+                            var settings = new FormulaValueSerializerSettings()
+                            {
+                                UseCompactRepresentation = true,
+                            };
+
+                            // Serializer will produce a human-friedly representation of the value
+                            result.ToExpression(sb, settings);
+
+                            output.Write(sb.ToString() + "\n\n");
+                        }
+
                         if (result is ErrorValue errorValue)
                         {
-                            throw new Exception("Error: " + errorValue.Errors[0].Message);
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine(errorValue.Errors[0].Message);
+                            Console.ResetColor();
                         }
                         else
                         {
@@ -214,6 +233,7 @@ namespace Microsoft.PowerFx
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine(e.Message);
                     Console.ResetColor();
+                    output?.WriteLine(Regex.Replace(e.InnerException.Message, "\r\n", "|") + "\n");
                 }
             }
         }
@@ -238,7 +258,7 @@ namespace Microsoft.PowerFx
             }
         }
 
-        public static string ReadFormula(TextReader input, bool echo)
+        public static string ReadFormula(TextReader input, TextWriter output = null, bool echo = false)
         {
             string exprPartial;
             int usefulCount;
@@ -340,9 +360,20 @@ namespace Microsoft.PowerFx
                 }
                 while (!Regex.IsMatch(exprOne, "^\\s*$") && (parenCount != 0 || Regex.IsMatch(exprOne, "(=|=\\>)\\s*$")));
 
-                if (echo && !Regex.IsMatch(exprPartial, "^\\s*$"))
+                if (echo)
                 {
-                    Console.Write("\n>> " + exprPartial);
+                    // skip >> for comments and setup
+                    if (Regex.IsMatch(exprPartial, "^\\s*//") || Regex.IsMatch(exprPartial, "^#SETUP"))
+                    {
+                        Console.Write(exprPartial);
+                        output?.Write(exprPartial + "\n");
+                        usefulCount = 0;
+                    }
+                    else if (!Regex.IsMatch(exprPartial, "^\\s*$"))
+                    {
+                        Console.Write("\n>> " + exprPartial);
+                        output?.Write(">> " + exprPartial);
+                    }
                 }
             }
             while (usefulCount == 0);
@@ -579,46 +610,52 @@ namespace Microsoft.PowerFx
             }
         }
 
-        private class ImportFunction : ReflectionFunction
+        private class ImportFunction1Arg : ReflectionFunction
         {
-            public ImportFunction()
-                : base("Import", FormulaType.Boolean, new[] { FormulaType.String })
+            public BooleanValue Execute(StringValue fileNameSV)
             {
+                var if2 = new ImportFunction2Arg();
+                return if2.Execute(fileNameSV, null);
             }
+        }
 
-            public FormulaValue Execute(StringValue fileNameSV)
+        private class ImportFunction2Arg : ReflectionFunction
+        {
+            public BooleanValue Execute(StringValue fileNameSV, StringValue outputSV)
             {
                 var fileName = fileNameSV.Value;
                 if (File.Exists(fileName))
                 {
                     TextReader fileReader = new StreamReader(fileName);
-                    ConsoleRepl.REPL(fileReader, true);
+                    TextWriter outputWriter = null;
+
+                    if (outputSV != null)
+                    {
+                        outputWriter = new StreamWriter(outputSV.Value);
+                    }
+
+                    ConsoleRepl.REPL(fileReader, true, outputWriter);
                     fileReader.Close();
+                    outputWriter?.Close();
                 }
                 else
                 {
-                    return FormulaValue.NewError(new ExpressionError()
-                    {
-                        Kind = ErrorKind.InvalidArgument,
-                        Severity = ErrorSeverity.Critical,
-                        Message = $"File not found: {fileName}."
-                    });
+#pragma warning disable CA1303 // Do not pass literals as localized parameters
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("File not found: " + fileNameSV);
+                    Console.ResetColor();
+                    return BooleanValue.New(false);
                 }
 
-                return FormulaValue.New(true);
+                return BooleanValue.New(true);
             }
         }
 
         private class ResetImportFunction : ReflectionFunction
         {
-            public ResetImportFunction()
-                : base("ResetImport", FormulaType.Boolean, new[] { FormulaType.String })
+            public BooleanValue Execute(StringValue fileNameSV)
             {
-            }
-
-            public FormulaValue Execute(StringValue fileNameSV)
-            {
-                var import = new ImportFunction();
+                var import = new ImportFunction1Arg();
                 if (File.Exists(fileNameSV.Value))
                 {
                     ResetEngine();
