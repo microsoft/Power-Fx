@@ -1762,31 +1762,7 @@ namespace Microsoft.PowerFx.Functions
                     _ => DValue<RecordValue>.Of((ErrorValue)arg),
                 });
 
-            var exprType = DType.Invalid;
-
-            foreach (var record in records)
-            {
-                if (record.Value is RecordValue recordValue)
-                {
-                    if (!exprType.IsValid)
-                    {
-                        exprType = recordValue.Type._type;
-                    }
-                    else if (exprType.CanUnionWith(recordValue.Type._type))
-                    {
-                        exprType = DType.Union(exprType, recordValue.Type._type);
-                    }
-                }
-            }
-
-            if (exprType.IsValid)
-            {
-                return new InMemoryTableValue(IRContext.NotInSource(FormulaType.Build(DType.CreateTable(exprType.GetNames(DPath.Root)))), records);
-            }
-            else
-            {
-                return new InMemoryTableValue(irContext, records);
-            }
+            return new InMemoryTableValue(irContext, records);
         }
 
         public static ValueTask<FormulaValue> Blank(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)

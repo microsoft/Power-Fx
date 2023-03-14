@@ -287,7 +287,7 @@ namespace Microsoft.PowerFx
                             });
                     }
 
-                    if (RuntimeHelpers.CanAssertReturn(func))
+                    if (IfFunction.CanCheckIfReturn(func))
                     {
                         Contract.Assert(result.IRContext.ResultType == node.IRContext.ResultType || result is ErrorValue || result.IRContext.ResultType is BlankType);
                     }

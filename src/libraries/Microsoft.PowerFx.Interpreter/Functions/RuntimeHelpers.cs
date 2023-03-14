@@ -33,12 +33,5 @@ namespace Microsoft.PowerFx.Functions
             var str = string.Concat(arg1.Value, arg2.Value);
             return new StringValue(irContext, str);
         }
-
-        public static bool CanAssertReturn(TexlFunction func)
-        {
-            return func is not IfFunction &&
-                func is not WithFunction &&
-                func is not TableFunction;
-        }
     }
 }
