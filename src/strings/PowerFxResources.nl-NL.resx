@@ -4423,7 +4423,7 @@
     
   </data>
   <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
-    <value>Unable to compare values of type {0}.</value>
+    <value>Kan waarden van het type {0} niet vergelijken.</value>
     
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
@@ -4843,7 +4843,7 @@
     
   </data>
   <data name="OptionSetOptionNotSupported" xml:space="preserve">
-    <value>The value of option {0} is not of expected type {1}.</value>
+    <value>De waarde van optie {0} is niet het verwachte type {1}.</value>
     
   </data>
   <data name="AboutOptionSetInfo" xml:space="preserve">
@@ -4855,5 +4855,9 @@
   </data>
   <data name="AboutOptionSetInfo_option" xml:space="preserve">
     <value>Een waarde van een optieset waarvan de logische naam wordt geretourneerd.</value>
+  </data>
+  <data name="AboutLanguage" xml:space="preserve">
+    <value>Haal de standaardlandinstellingen tijdens de runtime op.</value>
+    
   </data>
 </root>
