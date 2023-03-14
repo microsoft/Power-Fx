@@ -43,6 +43,9 @@
 >> Dec2Hex(45780)
 "B2D4"
 
+>> Dec2Hex(Blank(), 2)
+"00"
+
 >> Dec2Hex(45780, Blank())
 Error({Kind:ErrorKind.Numeric})
 
