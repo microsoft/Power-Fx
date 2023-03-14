@@ -17,12 +17,19 @@ Table({Value:-9.88},{Value:-8.77},{Value:-7.65},{Value:-6.54},{Value:-5.43})
 Table()
 
 // Scalar and table
->> Round(1234.5678, [-2, 1, 0, 1, 2])
-Table({Value:1200},{Value:1234.6},{Value:1235},{Value:1234.6},{Value:1234.57})
+>> Round(1234.5678, [-2, -1, 0, 1, 2])
+Table({Value:1200},{Value:1230},{Value:1235},{Value:1234.6},{Value:1234.57})
 
 // Table and table
 >> Round(Table({a: 123.456}, {a: 345.678}), Table({b: 1}, {b: 2}))
 Table({Value:123.5},{Value:345.68})
+
+// Mixed length tables
+>> Round( [1.2, 2.3, 3.4], [1/0] )
+Table({Value:Error({Kind:ErrorKind.Div0})},{Value:Error({Kind:ErrorKind.NotApplicable})},{Value:Error({Kind:ErrorKind.NotApplicable})})
+
+>> Round( [1.23], [1, 2, 3] )
+Table({Value:1.2},{Value:Error({Kind:ErrorKind.NotApplicable})},{Value:Error({Kind:ErrorKind.NotApplicable})})
 
 // Blank values
 >> Round( If(1<0,[1]), 1 )
@@ -37,3 +44,16 @@ Table({Value:Error({Kind:ErrorKind.Div0})},{Value:Error({Kind:ErrorKind.Div0})},
 
 >> Round(Table({b: 1.23}, {b: Sqrt(-1)}, {b: 7.89}), 1)
 Table({Value:1.2},{Value:Error({Kind:ErrorKind.Numeric})},{Value:7.9})
+
+// Coercions and blank values
+>> Round(["12.34", "56.78"], "1")
+Table({Value:12.3},{Value:56.8})
+
+>> Round(["12.34", "56.78"], true)
+Table({Value:12.3},{Value:56.8})
+
+>> Round(If(1<0,["12.34", "56.78"]), 1)
+Blank()
+
+>> Round(["12.34", "56.78"], If(1<0,"1"))
+Table({Value:12},{Value:57})

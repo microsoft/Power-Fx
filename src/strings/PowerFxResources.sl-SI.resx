@@ -4856,4 +4856,8 @@
   <data name="AboutOptionSetInfo_option" xml:space="preserve">
     <value>Vrednost nabora možnosti, za katero bo vrnjeno logično ime.</value>
   </data>
+  <data name="AboutLanguage" xml:space="preserve">
+    <value>Get the default locale set at runtime.</value>
+    
+  </data>
 </root>

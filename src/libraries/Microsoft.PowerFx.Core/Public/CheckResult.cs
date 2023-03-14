@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.IR;
@@ -38,6 +39,13 @@ namespace Microsoft.PowerFx
         private string _expression;
 
         private ParserOptions _parserOptions;
+
+        private CultureInfo _defaultErrorCulture;
+
+        // We must call all Set() operations before calling Apply(). 
+        // This is because Apply() methods can be called in lazy ways, and so we need a gaurantee
+        // that the Set() conditions are fixed. 
+        private bool _beginApply;
 
         // Information for binding. 
         private bool _setBindingCalled;
@@ -74,13 +82,23 @@ namespace Microsoft.PowerFx
         }
 
         #region Set info from User. 
-
-        public CheckResult SetText(ParseResult parse)
+        private void VerifyEngine([CallerMemberName] string memberName = "")
         {
             if (_engine == null)
             {
-                throw new InvalidOperationException($"Can't call {nameof(SetText)} without an engine.");
+                throw new InvalidOperationException($"Can't call {memberName} without an engine.");
             }
+
+            // Can't call Set*() methods after the init phase.
+            if (_beginApply)
+            {
+                throw new InvalidOperationException($"Can't call {memberName} after calling an Apply*() method.");
+            }
+        }
+
+        public CheckResult SetText(ParseResult parse)
+        {
+            VerifyEngine();
 
             if (parse == null)
             {
@@ -101,10 +119,7 @@ namespace Microsoft.PowerFx
 
         public CheckResult SetText(string expression, ParserOptions parserOptions = null)
         {
-            if (_engine == null)
-            {
-                throw new InvalidOperationException($"Can't call {nameof(SetText)} without an engine.");
-            }
+            VerifyEngine();
 
             expression = expression ?? throw new ArgumentNullException(nameof(expression));
 
@@ -120,13 +135,19 @@ namespace Microsoft.PowerFx
             return this;
         }
 
+        // Set the default culture for localizing error messages. 
+        public CheckResult SetDefaultErrorCulture(CultureInfo culture)
+        {
+            VerifyEngine();
+
+            this._defaultErrorCulture = culture;
+            return this;
+        }
+
         // Symbols could be null if no additional symbols are provided. 
         public CheckResult SetBindingInfo(ReadOnlySymbolTable symbols)
         {
-            if (_engine == null)
-            {
-                throw new InvalidOperationException($"Can't call {nameof(SetText)} without an engine.");
-            }
+            VerifyEngine();
 
             if (_setBindingCalled)
             {
@@ -159,6 +180,8 @@ namespace Microsoft.PowerFx
 
         public CheckResult SetExpectedReturnValue(FormulaType type)
         {
+            VerifyEngine();
+
             _expectedReturnType = type;
             return this;
         }
@@ -261,7 +284,7 @@ namespace Microsoft.PowerFx
         /// <returns></returns>
         public IEnumerable<ExpressionError> GetErrorsInLocale(CultureInfo culture)
         {
-            culture ??= this.ParserCultureInfo;
+            culture ??= _defaultErrorCulture ?? this.ParserCultureInfo;
 
             foreach (var error in this._errors)
             {
@@ -351,6 +374,7 @@ namespace Microsoft.PowerFx
                 throw new InvalidOperationException($"Must call {nameof(SetText)} before calling ApplyParse().");
             }
 
+            _beginApply = true;
             if (this.Parse == null)
             {
                 var result = Engine.Parse(_expression, Engine.Config.Features, _parserOptions);

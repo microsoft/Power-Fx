@@ -504,7 +504,9 @@ namespace Microsoft.PowerFx.Core.Localization
 
         public static StringGetter AboutOptionSetInfo = (b) => StringResources.Get("AboutOptionSetInfo", b);
         public static StringGetter AboutOptionSetInfoArg1 = (b) => StringResources.Get("AboutOptionSetInfoArg1", b);
-        
+
+        public static StringGetter AboutLanguage = (b) => StringResources.Get("AboutLanguage", b);
+
         // Previously, errors were listed here in the form of a StringGetter, which would be evaluated to fetch
         // an error message to pass to the BaseError class constructor. We are switching to passing the message key itself
         // to the BaseError class, and the BaseError itself is responsible for fetching the resource. (This allows the

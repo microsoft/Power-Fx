@@ -463,7 +463,7 @@ namespace Microsoft.PowerFx
 
             if (arg1 is UntypedObjectValue cov && arg2 is StringValue sv)
             {
-                if (cov.Impl.Type is ExternalType et && et.Kind == ExternalTypeKind.Object)
+                if (cov.Impl.Type is ExternalType et && (et.Kind == ExternalTypeKind.Object || et.Kind == ExternalTypeKind.ArrayAndObject))
                 {
                     if (cov.Impl.TryGetProperty(sv.Value, out var res))
                     {

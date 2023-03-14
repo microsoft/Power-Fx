@@ -1,0 +1,54 @@
+// Trunc(Number_or_table, [digits_or_table]), toward zero
+// Results should match RoundDown.txt
+
+// Table and scalar
+
+>> Trunc([1.2, 3.4, 5.6, 7.8], 0)
+Table({Value:1},{Value:3},{Value:5},{Value:7})
+
+>> Trunc([1.2, 3.4, 5.6, 7.8])
+Table({Value:1},{Value:3},{Value:5},{Value:7})
+
+>> Trunc([1.23, 4.56, 7.89, 10.12], 1)
+Table({Value:1.2},{Value:4.5},{Value:7.8},{Value:10.1})
+
+>> Trunc([1.23, 4.56, 7.89, 10.12], 0)
+Table({Value:1},{Value:4},{Value:7},{Value:10})
+
+>> Trunc([1.23, 4.56, 7.89, 10.12])
+Table({Value:1},{Value:4},{Value:7},{Value:10})
+
+>> Trunc([-9.8765, -8.7654, -7.6543, -6.5432, -5.4321], 2)
+Table({Value:-9.87},{Value:-8.76},{Value:-7.65},{Value:-6.54},{Value:-5.43})
+
+>> Trunc(Filter([1,2,3], Value > 10), 0) // Empty table
+Table()
+
+>> Trunc(Filter([1,2,3], Value > 10)) // Empty table
+Table()
+
+// Scalar and table
+>> Trunc(1234.5678, [-2, -1, 0, 1, 2])
+Table({Result:1200},{Result:1230},{Result:1234},{Result:1234.5},{Result:1234.56})
+
+// Table and table
+>> Trunc([123.456, 345.678], [1, 2])
+Table({Value:123.4},{Value:345.67})
+
+// Blank values
+>> Trunc( If(1<0,[1]), 1 )
+Blank()
+
+// Blank values
+>> Trunc( If(1<0,[1]) )
+Blank()
+
+// Errors
+>> Trunc( If(1/0<2, [1]), 1 )
+Error({Kind:ErrorKind.Div0})
+
+>> Trunc( [1.2, 2.3, 3.4], 1/0 )
+Table({Value:Error({Kind:ErrorKind.Div0})},{Value:Error({Kind:ErrorKind.Div0})},{Value:Error({Kind:ErrorKind.Div0})})
+
+>> Trunc( [1.23, Sqrt(-1), 7.89], 1)
+Table({Value:1.2},{Value:Error({Kind:ErrorKind.Numeric})},{Value:7.8})

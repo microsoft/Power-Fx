@@ -7,9 +7,13 @@ using System.Diagnostics.Contracts;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using System.Threading;
+using System.Xml.Schema;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Functions;
+using static Microsoft.PowerFx.Syntax.PrettyPrintVisitor;
 
 namespace Microsoft.PowerFx.Types
 {
@@ -155,7 +159,7 @@ namespace Microsoft.PowerFx.Types
         // Parse json. 
         // [1,2,3]  is a single column table, actually equivalent to: 
         // [{Value : 1, Value: 2, Value :3 }]
-        internal static TableValue TableFromJsonArray(JsonElement array, TableType tableType)
+        internal static FormulaValue TableFromJsonArray(JsonElement array, TableType tableType)
         {
             Contract.Assert(array.ValueKind == JsonValueKind.Array);
 
@@ -179,7 +183,18 @@ namespace Microsoft.PowerFx.Types
             }
             else
             {
-                type = ((RecordType)GuaranteeRecord(records[0]).IRContext.ResultType).ToTable();
+                DType typeUnion = DType.EmptyRecord;
+                foreach (var record in records)
+                {
+                    typeUnion = DType.Union(GuaranteeRecord(record).IRContext.ResultType._type, typeUnion);
+                }
+
+                if (typeUnion.HasErrors)
+                {
+                    return new UntypedObjectValue(IRContext.NotInSource(FormulaType.UntypedObject), new JsonUntypedObject(array.Clone()));
+                }
+
+                type = (TableType)FormulaType.Build(typeUnion.ToRecord().ToTable());
             }
 
             return new InMemoryTableValue(IRContext.NotInSource(type), records.Select(r => DValue<RecordValue>.Of(r)));

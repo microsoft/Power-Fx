@@ -1304,6 +1304,52 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Contains("Caractères inattendus.", diags.First().Message); // the value should be localized. Resx files have this localized.
         }
 
+        // Parse in Culture1, Errors in culture2
+        [Fact]
+        public void ParseAndErrorLocaleAreDifferent()
+        {
+            var engine = new Engine(new PowerFxConfig());
+                        
+            var parseLocale = CultureInfo.CreateSpecificCulture("fr-FR");
+            var errorLocale = CultureInfo.CreateSpecificCulture("es-ES");
+
+            engine.Config.AddFunction(new BehaviorFunction());
+
+            _sendToClientData = new List<string>();
+            _scopeFactory = new TestPowerFxScopeFactory(
+                (string documentUri) => new EditorContextScope(
+                    (expr) => new CheckResult(engine)
+                        .SetText(expr, new ParserOptions { Culture = parseLocale })
+                        .SetBindingInfo()
+                        .SetDefaultErrorCulture(errorLocale)));
+
+            _testServer = new TestLanguageServer(_sendToClientData.Add, _scopeFactory);
+
+            _testServer.OnDataReceived(
+                JsonSerializer.Serialize(new
+                {
+                    jsonrpc = "2.0",
+                    method = "textDocument/didOpen",
+                    @params = new DidOpenTextDocumentParams()
+                    {
+                        TextDocument = new TextDocumentItem()
+                        {
+                            Uri = "powerfx://app",
+                            LanguageId = "powerfx",
+                            Version = 1,
+                            Text = "123,456 + foo"
+                        }
+                    }
+                }));
+
+            CheckBehaviorError(_sendToClientData[0], false, out var diags);
+
+            // Checking if contains text in the correct locale
+            // the value should be localized. Resx files have this localized.
+            // If it's a different error message, then we may have a bug in the parser locale. 
+            Assert.Contains("El nombre no es válido. No se reconoce \"foo\".", diags.First().Message); 
+        }
+
         // Test showing how LSP can fully customize check result. 
         [Fact]
         public void CustomCheckResult()

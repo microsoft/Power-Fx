@@ -5106,4 +5106,8 @@
     <value>Invalid schema, expected a column of decimal values for '{0}'.</value>
     <comment>Error Message.</comment>
   </data>
+  <data name="AboutLanguage" xml:space="preserve">
+    <value>Get the default locale set at runtime.</value>
+    <comment>Description of 'Language' function.</comment>
+  </data>
 </root>

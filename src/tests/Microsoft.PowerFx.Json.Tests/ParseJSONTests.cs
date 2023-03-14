@@ -2,7 +2,10 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Reflection.Metadata;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
@@ -319,6 +322,82 @@ namespace Microsoft.PowerFx.Json.Tests
             FormulaValue fv4 = FormulaValueJSON.FromJson(expr, new BlankType());
             Assert.NotNull(fv4);
             Assert.True(fv4 is TableValue);
+        }
+
+        [Theory]
+        [InlineData("[1, 2, 3]", "*[Value:n]", 1d, 2d, 3d)]
+        [InlineData("[\"a\", \"b\", \"c\"]", "*[Value:s]", "a", "b", "c")]
+        [InlineData("[true, false]", "*[Value:b]", true, false)]
+        public void FromJsonHomogeneousPrimitiveArray(string json, string expectedType, params object[] expected)
+        {
+            var res = (TableValue)FormulaValueJSON.FromJson(json);
+
+            Assert.Equal(expectedType, res.Type.ToStringWithDisplayNames());
+
+            Assert.Equal(expected.Length, res.Rows.Count());
+
+            int i = 0;
+            foreach (var row in res.Rows)
+            {
+                Assert.Equal(expected[i++], row.Value.GetField("Value").ToObject());
+            }
+        }
+
+        [Fact]
+
+        // Heterogeneous arrays are unionized, the record that didn't have the particular field will return blank.  
+        public void FromJsonHeterogeneousRecordArray()
+        {
+            var json = "[{\"f1\" : \"str\"}, {\"f2\" : 1}]";
+
+            var res = (TableValue)FormulaValueJSON.FromJson(json);
+
+            Assert.Equal("*[f1:s, f2:n]", res.Type.ToStringWithDisplayNames());
+            Assert.Equal(2, res.Count());
+
+            var rows = res.Rows.GetEnumerator();
+            rows.MoveNext();
+            Assert.Equal("str", rows.Current.Value.GetField("f1").ToObject());
+            Assert.Null(rows.Current.Value.GetField("f2").ToObject());
+
+            rows.MoveNext();
+            Assert.Null(rows.Current.Value.GetField("f1").ToObject());
+            Assert.Equal(1d, rows.Current.Value.GetField("f2").ToObject());
+        }
+
+        [Theory]
+        [InlineData("[1, \"2\", \"3\"]", "O", 1d, "2", "3")]
+        [InlineData("[\"a\", 1, true]", "O", "a", 1, true)]
+        [InlineData("[true, 0]", "O", true, 0)]
+        [InlineData("[true, \"false\"]", "O", true, "false")]
+
+        // Heterogeneous arrays are converted to Untyped object, rather than homogeneous TableValue. 
+        public void FromJsonHeterogeneousPrimitiveArray(string json, string expectedType, params object[] expected)
+        {
+            var res = (UntypedObjectValue)FormulaValueJSON.FromJson(json);
+            Assert.Equal(expectedType, res.Type.ToStringWithDisplayNames());
+            Assert.NotNull(expected);
+
+            var expectedLength = expected.Length;
+            Assert.Equal(expectedLength, res.Impl.GetArrayLength());
+
+            var array = res.Impl;
+
+            for (var i = 0; i < expectedLength; i++)
+            {
+                switch (expected[i])
+                {
+                    case double:
+                        Assert.Equal(expected[i], array[i].GetDouble()); 
+                        break;
+                    case string:
+                        Assert.Equal(expected[i], array[i].GetString());
+                        break;
+                    case bool:
+                        Assert.Equal(expected[i], array[i].GetBoolean());
+                        break;
+                }
+            }
         }
     }
 }
