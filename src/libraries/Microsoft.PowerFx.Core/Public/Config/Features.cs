@@ -47,13 +47,13 @@ namespace Microsoft.PowerFx
 
         /// <summary>
         /// Allow delegation for async calls (delegate using awaited call result).
-        /// Added on 1st March 2023.
+        /// Added on March 2023.
         /// </summary>
         AllowAsyncDelegation = 0x10,
 
         /// <summary>
         /// Allow delegation for impure nodes.
-        /// Added on 9th March 2023.
+        /// Added on March 2023.
         /// </summary>
         AllowImpureNodeDelegation = 0x20,
 

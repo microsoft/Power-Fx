@@ -10,6 +10,7 @@ using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Functions.Delegation;
+using Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
@@ -111,6 +112,26 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             // For the second argument, we need only metadata. No actual data from datasource is required.
             return paramIndex != 1;
+        }
+
+        public override ICallNodeDelegatableNodeValidationStrategy GetCallNodeDelegationStrategy()
+        {
+            return base.GetCallNodeDelegationStrategy();
+        }
+    }
+
+    internal class AsTypeCallNodeDelegationStrategy : DelegationValidationStrategy
+    {
+        public AsTypeCallNodeDelegationStrategy(TexlFunction function)
+            : base(function)
+        {
+        }
+
+        public override bool IsValidCallNode(CallNode node, TexlBinding binding, OperationCapabilityMetadata metadata)
+        {
+            // AsType CallNodeDelegationStrategy should match default IsValidCallNode from
+            // DelegationValidationStrategy but skips only the !IsBlockScopedConstant check.
+            return IsValidCallNodeInternal(node, binding, metadata, true);
         }
     }
 }
