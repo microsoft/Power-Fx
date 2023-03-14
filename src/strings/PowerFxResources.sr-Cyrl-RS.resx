@@ -4423,7 +4423,7 @@
     
   </data>
   <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
-    <value>Unable to compare values of type {0}.</value>
+    <value>Није могуће упоредити вредности типа {0}.</value>
     
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
@@ -4843,7 +4843,7 @@
     
   </data>
   <data name="OptionSetOptionNotSupported" xml:space="preserve">
-    <value>The value of option {0} is not of expected type {1}.</value>
+    <value>Вредност опције {0} није очекиваног типа {1}.</value>
     
   </data>
   <data name="AboutOptionSetInfo" xml:space="preserve">
@@ -4855,5 +4855,9 @@
   </data>
   <data name="AboutOptionSetInfo_option" xml:space="preserve">
     <value>Вредност скупа опција чије ће логичко име бити враћено.</value>
+  </data>
+  <data name="AboutLanguage" xml:space="preserve">
+    <value>Преузмите подразумевани локални стандард у време извршавања.</value>
+    
   </data>
 </root>

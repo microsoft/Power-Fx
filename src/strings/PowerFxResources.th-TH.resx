@@ -4423,7 +4423,7 @@
     
   </data>
   <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
-    <value>Unable to compare values of type {0}.</value>
+    <value>ไม่สามารถเปรียบเทียบค่าชนิด {0} ได้</value>
     
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
@@ -4843,7 +4843,7 @@
     
   </data>
   <data name="OptionSetOptionNotSupported" xml:space="preserve">
-    <value>The value of option {0} is not of expected type {1}.</value>
+    <value>ค่าของตัวเลือก {0} ไม่ใช่ประเภท {1} ที่คาดไว้</value>
     
   </data>
   <data name="AboutOptionSetInfo" xml:space="preserve">
@@ -4855,5 +4855,9 @@
   </data>
   <data name="AboutOptionSetInfo_option" xml:space="preserve">
     <value>ค่าชุดตัวเลือกที่จะคืนค่าเป็นชื่อที่แสดง</value>
+  </data>
+  <data name="AboutLanguage" xml:space="preserve">
+    <value>ตั้งค่าตำแหน่งที่ตั้งเริ่มต้นขณะรันไทม์</value>
+    
   </data>
 </root>
