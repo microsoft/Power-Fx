@@ -462,12 +462,11 @@ namespace Microsoft.PowerFx
                     var sameType = this._expectedReturnType == this.ReturnType;
                     if (!sameType)
                     {
-                        var span = string.IsNullOrEmpty(this._expression) ? RootNode.GetTextSpan() : new Span(0, this._expression.Length);
                         _errors.Add(new ExpressionError
                         {
                             Kind = ErrorKind.Validation,
                             Severity = ErrorSeverity.Critical,
-                            Span = span,
+                            Span = new Span(0, this._expression.Length),
                             MessageKey = TexlStrings.ErrTypeError_WrongType.Key,
                             _messageArgs = new object[]
                             {
@@ -602,16 +601,5 @@ namespace Microsoft.PowerFx
         public IEnumerable<ExpressionError> Errors { get; }
 
         public bool IsSuccess { get; }
-    }
-
-    /// <summary>
-    /// Used specifically for UDF, so that we can set the texlnode for UDF body that was already parsed.
-    /// </summary>
-    internal class UDFCheckResult : CheckResult
-    {
-        public UDFCheckResult(Engine engine, TexlNode texlNode, ParserOptions parserOptions = null)
-            : base(engine, texlNode, parserOptions)
-        {
-        }
     }
 }

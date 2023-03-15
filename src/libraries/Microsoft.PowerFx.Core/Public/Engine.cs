@@ -204,22 +204,6 @@ namespace Microsoft.PowerFx
         }
 
         /// <summary>
-        /// Parse and Bind an expression. 
-        /// </summary>
-        /// <param name="texlNode">Node for UDF body, if it was already parsed earlier. </param>
-        /// <param name="parameterType">types of additional args to pass.</param>
-        /// <param name="options">parser options to use.</param>
-        /// <returns></returns>
-        public CheckResult CheckUDF(TexlNode texlNode, RecordType parameterType, ParserOptions options = null)
-        {
-            var check = new UDFCheckResult(this, texlNode, options)
-                .SetBindingInfo(parameterType);
-
-            CheckWorker(check);
-            return check;
-        }
-
-        /// <summary>
         /// Type check a formula without executing it. 
         /// </summary>
         /// <param name="parse">the parsed expression. Obtain from <see cref="Parse(string, ParserOptions)"/>.</param>
@@ -307,12 +291,7 @@ namespace Microsoft.PowerFx
         // Called by CheckResult.ApplyBinding to compute the binding. 
         internal (TexlBinding, ReadOnlySymbolTable) ComputeBinding(CheckResult result)
         {
-            ParseResult parseResult = null;
-
-            if (result.RootNode == null)
-            {
-                parseResult = result.ApplyParse();
-            }
+            var parse = result.ApplyParse();
 
             ReadOnlySymbolTable symbolTable = result.Parameters;
 
@@ -333,7 +312,7 @@ namespace Microsoft.PowerFx
 
             var binding = TexlBinding.Run(
                 glue,
-                result.RootNode ?? parseResult.Root,
+                parse.Root,
                 resolver,
                 bindingConfig,
                 ruleScope: ruleScope?._type,

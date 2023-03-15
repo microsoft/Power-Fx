@@ -176,15 +176,11 @@ namespace Microsoft.PowerFx
 
             var udfDefinitions = result.UDFs.Select(udf => new UDFDefinition(
                 udf.Ident.ToString(),
-                udf.Body,
-                FormulaType.GetFromStringOrNull(udf.ReturnType.ToString()) ?? FormulaType.Unknown,
+                new ParseResult(udf.Body, result.Errors.ToList(), result.HasError, null, null, null, script),
+                udf.ReturnType.GetFormulaType(),
                 udf.IsImperative,
-                udf.Args.Select(arg =>
-                {
-                    var formulaType = FormulaType.GetFromStringOrNull(arg.VarType.ToString()) ?? FormulaType.Unknown;
+                udf.Args.Select(arg => new NamedFormulaType(arg.VarIdent.ToString(), arg.VarType.GetFormulaType())).ToArray())).ToArray();
 
-                    return new NamedFormulaType(arg.VarIdent.ToString(), formulaType);
-                }).ToArray())).ToArray();
             return DefineFunctions(udfDefinitions);
         }
 
@@ -201,7 +197,7 @@ namespace Microsoft.PowerFx
                 record = record.Add(p);
             }
 
-            var check = new CheckWrapper(this, definition.Body, record, definition.IsImperative);
+            var check = new CheckWrapper(this, definition.ParseResult, record, definition.IsImperative);
 
             var func = new UserDefinedTexlFunction(definition.Name, definition.ReturnType, definition.Parameters, check);
 

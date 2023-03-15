@@ -12,7 +12,7 @@ namespace Microsoft.PowerFx.Interpreter
     {
         internal readonly string Name;
 
-        internal readonly TexlNode Body;
+        internal readonly ParseResult ParseResult;
 
         internal readonly FormulaType ReturnType;
 
@@ -20,17 +20,17 @@ namespace Microsoft.PowerFx.Interpreter
 
         internal readonly bool IsImperative;
 
-        public UDFDefinition(string name, TexlNode body, FormulaType returnType, bool isImperative, IEnumerable<NamedFormulaType> parameters)
+        public UDFDefinition(string name, ParseResult parseResultForUDFBody, FormulaType returnType, bool isImperative, IEnumerable<NamedFormulaType> parameters)
         {
             Name = name;
-            Body = body;
+            ParseResult = parseResultForUDFBody;
             ReturnType = returnType;
             IsImperative = isImperative;
             Parameters = parameters;
         }
 
-        public UDFDefinition(string name, TexlNode body, FormulaType returnType, bool isImperative, params NamedFormulaType[] parameters)
-            : this(name, body, returnType, isImperative, parameters.AsEnumerable())
+        public UDFDefinition(string name, ParseResult parseResultForUDFBody, FormulaType returnType, bool isImperative, params NamedFormulaType[] parameters)
+            : this(name, parseResultForUDFBody, returnType, isImperative, parameters.AsEnumerable())
         {
         }
     }

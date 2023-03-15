@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Diagnostics;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
@@ -16,9 +17,7 @@ namespace Microsoft.PowerFx.Types
 
         public NamedFormulaType(string name, FormulaType type, string displayName = null)
         {
-            Contracts.AssertValue(type);
-
-            _typedName = new TypedName(type._type, new DName(name));
+            _typedName = new TypedName(type?._type ?? throw new ArgumentNullException(nameof(type)), new DName(name));
             DisplayName = displayName == null ? default : new DName(displayName);
         }
 
