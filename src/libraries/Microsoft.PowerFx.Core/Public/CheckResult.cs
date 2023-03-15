@@ -605,7 +605,7 @@ namespace Microsoft.PowerFx
     }
 
     /// <summary>
-    /// Used specifically for UDF, so that we can set the texlnode.
+    /// Used specifically for UDF, so that we can set the texlnode for UDF body that was already parsed.
     /// </summary>
     internal class UDFCheckResult : CheckResult
     {
