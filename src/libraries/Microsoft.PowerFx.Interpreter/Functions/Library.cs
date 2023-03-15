@@ -23,7 +23,6 @@ namespace Microsoft.PowerFx.Functions
         /// Texl Instance of <see cref="DistinctFunction"/>.
         /// </summary>
         public static readonly TexlFunction DistinctInterpreterFunction = new DistinctFunction();
-        public static readonly TexlFunction EncodeUrlFunction = new EncodeUrlFunction();
 
         internal static readonly DateTime _epoch = new DateTime(1899, 12, 30, 0, 0, 0, 0);
 
@@ -550,9 +549,9 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: DropColumns)
             },            
             {
-                EncodeUrlFunction,
+                BuiltinFunctionsCore.EncodeUrl,
                 StandardErrorHandling<StringValue>(
-                    EncodeUrlFunction.Name,
+                    BuiltinFunctionsCore.EncodeUrl.Name,
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: NoOpAlreadyHandledByIR,
                     checkRuntimeTypes: ExactValueType<StringValue>,
