@@ -1,16 +1,59 @@
-// ******** STRING PARAMETERS ********
-
+// String URL Parameter
 >> EncodeUrl("https://make.powerapps.com/")
 "https%3A%2F%2Fmake.powerapps.com%2F"
 
+// String Parameter with a character to be encoded
 >> EncodeUrl("powerfx&test")
 "powerfx%26test"
 
+// Empty String Parameter
 >> EncodeUrl("")
 ""
 
+// String Parameter with a Space
 >> EncodeUrl(" ")
 "%20"
 
+// String Paremeter with multiple characters to be encoded
 >> EncodeUrl("hello!@#world")
 "hello%21%40%23world"
+
+// String Paremeter Concatenation
+>> EncodeUrl("www" & "msft.com/")
+"wwwmsft.com%2F"
+
+// String Paremeter Concatenation With Number
+>> EncodeUrl("www.msft.com/?orderid=" & 1)
+"www.msft.com%2F%3Forderid%3D1"
+
+// String Paremeter Concatenation With Boolean
+>> EncodeUrl("www.msft.com/?orderid=" & false)
+"www.msft.com%2F%3Forderid%3Dfalse"
+
+// PowerFX Parameter with Upper function
+>> EncodeUrl(Upper("www.msft.com/"))
+"WWW.MSFT.COM%2F"
+
+// PowerFX Parameter with Blank function
+>> EncodeUrl(Blank())
+""
+
+// With function with EncodeUrl function as a parameter
+>> With({url:"www.msft.com/"}, EncodeUrl(url))
+"www.msft.com%2F"
+
+// Empty Parameter
+>> EncodeUrl()
+Errors: Error 0-11: Invalid number of arguments: received 0, expected 1.
+
+// Number Parameter
+>> EncodeUrl(1)
+"1"
+
+// Table Parameter
+>> EncodeUrl([1])
+Errors: Error 10-13: Invalid argument type (Table). Expecting a Text value instead.
+
+// Date Parameter
+>> EncodeUrl(Date(2023, 03, 01))
+"3%2F1%2F2023"
