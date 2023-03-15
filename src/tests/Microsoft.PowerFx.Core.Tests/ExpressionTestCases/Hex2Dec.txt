@@ -81,3 +81,14 @@ Error({Kind:ErrorKind.Numeric})
 >> Hex2Dec(["3","E","I","B"])
 Table({Value:3},{Value:14},{Value:Error({Kind:ErrorKind.Numeric})},{Value:11})
 
+>> Hex2Dec(Table({a:"A"}))
+Table({Value:10})
+
+>> Hex2Dec(Table({a:"A"},{a:"12"},{a:"FFFF"}))
+Table({Value:10},{Value:18},{Value:65535})
+
+>> Hex2Dec(Table({a:"A",b:"B"}))
+Errors: Error 0-29: The function 'Hex2Dec' has some invalid arguments.|Error 8-28: Invalid schema, expected a one-column table.
+
+>> Hex2Dec(Table({A:"dead", B: "beef"},{A:"beef",B:"dead"}))
+Errors: Error 0-57: The function 'Hex2Dec' has some invalid arguments.|Error 8-56: Invalid schema, expected a one-column table.
