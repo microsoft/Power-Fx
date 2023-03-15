@@ -432,7 +432,7 @@ namespace Microsoft.PowerFx.Connectors
 
             // x-ms-dynamic-list :: To be implemented later
             // x-ms-dynamic-schema :: To be implemented later
-            // x-x-ms-dynamic-properties :: To be implemented later
+            // x-ms-dynamic-properties :: To be implemented later
 
             return null;
         }
