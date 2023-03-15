@@ -335,7 +335,7 @@ namespace Microsoft.PowerFx.Intellisense
             {
                 if (info.Function.IsLambdaParam(argPosition) && !info.Function.HasSuggestionsForParam(argPosition) && type.IsValid)
                 {
-                    if (info.Function.IsLambdaParam(argPosition) && type.ContainsDataEntityType(DPath.Root))
+                    if (type.ContainsDataEntityType(DPath.Root))
                     {
                         var error = false;
                         type = type.DropAllOfTableRelationships(ref error, DPath.Root);
