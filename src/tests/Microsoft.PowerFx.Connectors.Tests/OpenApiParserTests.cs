@@ -425,6 +425,15 @@ namespace Microsoft.PowerFx.Connectors.Tests
             List<ServiceFunction> functionList = OpenApiParser.Parse("LQA", doc);
             Assert.Contains(functionList, sf => sf.GetUniqueTexlRuntimeName() == "lQA__GetAnswersFromText");
         }
+
+        [Fact]
+
+        public void SQL_Load()
+        {
+            OpenApiDocument doc = Helpers.ReadSwagger(@"Swagger\SQL Server.json");
+            List<ServiceFunction> functionList = OpenApiParser.Parse("SQL", doc);
+            Assert.Contains(functionList, sf => sf.GetUniqueTexlRuntimeName() == "sQL__GetProcedureV2");
+        }
     }
 
     public static class Extensions
