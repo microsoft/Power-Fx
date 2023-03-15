@@ -4423,7 +4423,7 @@
     
   </data>
   <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
-    <value>Unable to compare values of type {0}.</value>
+    <value>प्रकार {0} के मानों की तुलना करने में असमर्थ.</value>
     
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
@@ -4843,7 +4843,7 @@
     
   </data>
   <data name="OptionSetOptionNotSupported" xml:space="preserve">
-    <value>The value of option {0} is not of expected type {1}.</value>
+    <value>विकल्प {0} का मान अपेक्षित प्रकार {1} का नहीं है.</value>
     
   </data>
   <data name="AboutOptionSetInfo" xml:space="preserve">
@@ -4855,5 +4855,9 @@
   </data>
   <data name="AboutOptionSetInfo_option" xml:space="preserve">
     <value>एक विकल्प सेट मान जिसका तार्किक नाम दिया जाएगा.</value>
+  </data>
+  <data name="AboutLanguage" xml:space="preserve">
+    <value>रनटाइम पर डिफ़ॉल्ट लोकेल सेट पाएं.</value>
+    
   </data>
 </root>
