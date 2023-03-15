@@ -43,11 +43,14 @@ namespace Microsoft.PowerFx
             _symbolValues = new SymbolValues(_symbolTable);
             _symbolValues.OnUpdate += OnSymbolValuesOnUpdate;
 
-            EngineSymbols = _symbolTable;
+            base.EngineSymbols = _symbolTable;
 
             // Add Builtin functions that aren't yet in the shared library. 
             SupportedFunctions = _interpreterSupportedFunctions;
         }
+
+        // Expose publicly. 
+        public new ReadOnlySymbolTable EngineSymbols => base.EngineSymbols; 
 
         // Set of default functions supported by the interpreter. 
         private static readonly ReadOnlySymbolTable _interpreterSupportedFunctions = ReadOnlySymbolTable.NewDefault(Library.FunctionList);

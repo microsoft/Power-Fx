@@ -136,16 +136,21 @@ namespace Microsoft.PowerFx
         {
             var hasDisplayName = DType.TryGetDisplayNameForColumn(_type._type, logicalName, out var displayName);
 
-            if (!_map.TryGetValue(logicalName, out var data))
-            {                                                
-                var slotIdx = _map.Count;
-
-                data = new NameSymbol(logicalName, _mutable)
+            NameSymbol data;
+            lock (_map)
+            {
+                if (!_map.TryGetValue(logicalName, out data))
                 {
-                    Owner = this,
-                    SlotIndex = slotIdx
-                };
-                _map.Add(logicalName, data);
+                    // Slot is based on map count, so whole operation needs to be under single lock. 
+                    var slotIdx = _map.Count;
+
+                    data = new NameSymbol(logicalName, _mutable)
+                    {
+                        Owner = this,
+                        SlotIndex = slotIdx
+                    };
+                    _map.Add(logicalName, data);
+                }
             }
 
             return new NameLookupInfo(
