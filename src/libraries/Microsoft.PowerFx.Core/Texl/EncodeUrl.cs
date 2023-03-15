@@ -17,5 +17,10 @@ namespace Microsoft.PowerFx.Core.Texl
             : base("EncodeUrl", TexlStrings.AboutEncodeUrl, FunctionCategories.Text)
         { 
         }
+
+    public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
+        {
+            yield return new[] { TexlStrings.EncodeUrlArg1 };
+        }
     }
 }
