@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using Microsoft.CodeAnalysis;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.IR;
@@ -279,9 +280,11 @@ namespace Microsoft.PowerFx
             set => _errors.AddRange(value);
         }
 
-        public CheckResult SetTexlNode(TexlNode texlNode)
+        public CheckResult SetTexlNode(TexlNode texlNode, ParserOptions parserOptions = null)
         {
-            RootNode = texlNode;
+            this.RootNode = texlNode;
+            this._parserOptions = parserOptions ?? Engine.GetDefaultParserOptionsCopy();
+            this.ParserCultureInfo = _parserOptions.Culture;
 
             return this;
         }
@@ -455,11 +458,12 @@ namespace Microsoft.PowerFx
                     var sameType = this._expectedReturnType == this.ReturnType;
                     if (!sameType)
                     {
+                        var span = string.IsNullOrEmpty(this._expression) ? RootNode.GetTextSpan() : new Span(0, this._expression.Length);
                         _errors.Add(new ExpressionError
                         {
                             Kind = ErrorKind.Validation,
                             Severity = ErrorSeverity.Critical,
-                            Span = new Span(0, this._expression.Length),
+                            Span = span,
                             MessageKey = TexlStrings.ErrTypeError_WrongType.Key,
                             _messageArgs = new object[]
                             {

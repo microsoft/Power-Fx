@@ -176,7 +176,6 @@ namespace Microsoft.PowerFx
 
             var udfDefinitions = result.UDFs.Select(udf => new UDFDefinition(
                 udf.Ident.ToString(),
-                udf.Body.ToString(),
                 udf.Body,
                 FormulaType.GetFromStringOrNull(udf.ReturnType.ToString()) ?? FormulaType.Unknown,
                 udf.IsImperative,
@@ -202,7 +201,7 @@ namespace Microsoft.PowerFx
                 record = record.Add(p);
             }
 
-            var check = new CheckWrapper(this, definition.BodyScript, definition.Body, record, definition.IsImperative);
+            var check = new CheckWrapper(this, definition.Body, record, definition.IsImperative);
 
             var func = new UserDefinedTexlFunction(definition.Name, definition.ReturnType, definition.Parameters, check);
 

@@ -14,16 +14,14 @@ namespace Microsoft.PowerFx.Interpreter.UDF
      /// </summary>
     internal class CheckWrapper
     {
-        private readonly string _bodyScript;
         private readonly TexlNode _texlNode;
         private readonly RecordType _parameterType;
         private readonly RecalcEngine _engine;
         public readonly ParserOptions ParserOptions;
 
-        public CheckWrapper(RecalcEngine engine, string bodyScript, TexlNode texlNode, RecordType parameterType = null, bool isImperative = false)
+        public CheckWrapper(RecalcEngine engine, TexlNode texlNode, RecordType parameterType = null, bool isImperative = false)
         {
             _engine = engine;
-            _bodyScript = bodyScript;
             _texlNode = texlNode;
             _parameterType = parameterType;
             ParserOptions = new ParserOptions()
@@ -33,6 +31,6 @@ namespace Microsoft.PowerFx.Interpreter.UDF
             };
         }
 
-        public CheckResult Get() => _engine.Check(_bodyScript, _texlNode, _parameterType, ParserOptions);
+        public CheckResult Get() => _engine.Check(_texlNode, _parameterType, ParserOptions);
     }
 }

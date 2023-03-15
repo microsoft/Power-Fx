@@ -206,16 +206,14 @@ namespace Microsoft.PowerFx
         /// <summary>
         /// Parse and Bind an expression. 
         /// </summary>
-        /// <param name="expressionText">the expression in plain text. </param>
         /// <param name="texlNode">Node for the provided expression, if it was already parsed earlier. </param>
         /// <param name="parameterType">types of additional args to pass.</param>
         /// <param name="options">parser options to use.</param>
         /// <returns></returns>
-        public CheckResult Check(string expressionText, TexlNode texlNode, RecordType parameterType, ParserOptions options = null)
+        public CheckResult Check(TexlNode texlNode, RecordType parameterType, ParserOptions options = null)
         {
             var check = new CheckResult(this)
-                .SetText(expressionText, options)
-                .SetTexlNode(texlNode)
+                .SetTexlNode(texlNode, options)
                 .SetBindingInfo(parameterType);
 
             CheckWorker(check);
