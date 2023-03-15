@@ -5192,16 +5192,18 @@ namespace Microsoft.PowerFx.Core.Binding
                 {
                     var childType = _txb.GetType(child);
                     isSelfContainedConstant &= _txb.IsSelfContainedConstant(child);
-                    var isNotDeferredOrVoid = !childType.IsDeferred && !childType.IsVoid;
-                    if (isNotDeferredOrVoid && !exprType.IsValid)
+
+                    // Deferred and void types are not allowed in tables.
+                    var isChildTypeAllowedInTable = !childType.IsDeferred && !childType.IsVoid;
+                    if (isChildTypeAllowedInTable && !exprType.IsValid)
                     {
                         exprType = childType;
                     }
-                    else if (isNotDeferredOrVoid && exprType.CanUnionWith(childType))
+                    else if (isChildTypeAllowedInTable && exprType.CanUnionWith(childType))
                     {
                         exprType = DType.Union(exprType, childType);
                     }
-                    else if (isNotDeferredOrVoid && childType.CoercesTo(exprType))
+                    else if (isChildTypeAllowedInTable && childType.CoercesTo(exprType))
                     {
                         _txb.SetCoercedType(child, exprType);
                     }

@@ -44,7 +44,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.Assert(args.Length == argTypes.Length);
             Contracts.AssertValue(errors);
 
-            var fArgsValid = base.CheckType(args[0], argTypes[0], ParamTypes[0], errors, SupportCoercionForArg(0), out DType coercionType);
+            var fArgsValid = base.CheckType(args[0], argTypes[0], ParamTypes[0], errors, SupportCoercionForArg(0), out DType _);
             nodeToCoercedTypeMap = null;
 
             // Return type determined by second argument (function)

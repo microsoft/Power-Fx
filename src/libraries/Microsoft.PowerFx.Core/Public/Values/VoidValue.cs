@@ -29,7 +29,7 @@ namespace Microsoft.PowerFx.Types
 
         public override object ToObject()
         {
-            return null;
+            throw new InvalidOperationException();
         }
 
         public override string ToString()
