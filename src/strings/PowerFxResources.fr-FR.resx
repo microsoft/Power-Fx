@@ -4423,7 +4423,7 @@
     
   </data>
   <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
-    <value>Unable to compare values of type {0}.</value>
+    <value>Impossible de comparer les valeurs de type {0}.</value>
     
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
@@ -4843,7 +4843,7 @@
     
   </data>
   <data name="OptionSetOptionNotSupported" xml:space="preserve">
-    <value>The value of option {0} is not of expected type {1}.</value>
+    <value>La valeur de l’option {0} n’est pas du type attendu {1}.</value>
     
   </data>
   <data name="AboutOptionSetInfo" xml:space="preserve">
@@ -4855,5 +4855,9 @@
   </data>
   <data name="AboutOptionSetInfo_option" xml:space="preserve">
     <value>Valeur de groupe d’options dont le nom logique sera renvoyé.</value>
+  </data>
+  <data name="AboutLanguage" xml:space="preserve">
+    <value>Obtenez les paramètres régionaux par défaut au moment de l’exécution.</value>
+    
   </data>
 </root>
