@@ -7,6 +7,8 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Numerics;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Entities;
@@ -207,6 +209,13 @@ namespace Microsoft.PowerFx.Core.Functions
         /// Indicates whether the function sets a value.
         /// </summary>
         public virtual bool ModifiesValues => false;
+
+        // This method is used for managing "x-ms-dynamic-values" OpenApi extensions in connectors
+        // https://learn.microsoft.com/en-us/connectors/custom-connectors/openapi-extensions#use-dynamic-values
+        public virtual async Task<List<string>> GetConnectorSuggestionsAsync(CallNode callNode, int argPosition, CancellationToken cts)
+        {
+            return null;
+        }
 
         /// <summary>
         /// The function's name as surfaced in / accessible from the language.

@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Models;
+using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors.Execution
@@ -70,6 +71,29 @@ namespace Microsoft.PowerFx.Connectors.Execution
                 }
 
                 WriteProperty(property.Key, property.Value, namedValue.Value);
+            }
+
+            if (!schema.Properties.Any() && fields.Any())
+            {
+                foreach (NamedValue nv in fields)
+                {
+                    WriteProperty(
+                        nv.Name,
+                        new OpenApiSchema()
+                        {
+                            Type = nv.Value.Type._type.Kind switch
+                            {
+                                DKind.Number => "number",
+                                DKind.String => "string",
+                                DKind.Boolean => "boolean",
+                                DKind.Record => "object",
+                                DKind.Table => "array",
+                                DKind.ObjNull => "null",
+                                _ => "unknown_dkind"
+                            }
+                        }, 
+                        nv.Value);
+                }
             }
 
             EndObject(objectName);
