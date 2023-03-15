@@ -174,11 +174,7 @@ namespace Microsoft.PowerFx
             var parsedUDFS = new Core.Syntax.ParsedUDFs(script);
             var result = parsedUDFS.GetParsed();
 
-            var udfDefinitions = result.UDFs.Select(udf => 
-            {
-                var returnType = FormulaType.GetFromStringOrNull(udf.ReturnType.ToString());
-
-                return new UDFDefinition(
+            var udfDefinitions = result.UDFs.Select(udf => new UDFDefinition(
                 udf.Ident.ToString(),
                 udf.Body.ToString(),
                 udf.Body,
@@ -189,8 +185,7 @@ namespace Microsoft.PowerFx
                     var formulaType = FormulaType.GetFromStringOrNull(arg.VarType.ToString()) ?? FormulaType.Unknown;
 
                     return new NamedFormulaType(arg.VarIdent.ToString(), formulaType);
-                }).ToArray());
-            }).ToArray();
+                }).ToArray())).ToArray();
             return DefineFunctions(udfDefinitions);
         }
 

@@ -207,7 +207,7 @@ namespace Microsoft.PowerFx
         /// Parse and Bind an expression. 
         /// </summary>
         /// <param name="expressionText">the expression in plain text. </param>
-        /// <param name="texlNode"></param>
+        /// <param name="texlNode">Node for the provided expression, if it was already parsed earlier. </param>
         /// <param name="parameterType">types of additional args to pass.</param>
         /// <param name="options">parser options to use.</param>
         /// <returns></returns>
