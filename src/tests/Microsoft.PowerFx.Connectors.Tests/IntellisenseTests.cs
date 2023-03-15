@@ -67,10 +67,22 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.True((responseIndex == 0) ^ testConnector.SendAsyncCalled);                       
 
             string networkTrace = testConnector._log.ToString();
+            string queryPart = queryIndex switch
+            {
+                0 => null,
+                1 => "servers",
+                2 => "databases?server=pfxdev-sql.database.windows.net",
+                3 => "databases?server=default",
+                4 => "v2/datasets/pfxdev-sql.database.windows.net,connectortest/procedures",
+                5 => "v2/datasets/default,connectortest/procedures",
+                6 => "v2/datasets/default,default/procedures",
+                _ => throw new NotImplementedException("Unknown index")
+            };
+
             string expectedNetwork = queryIndex switch
             {
                 0 => string.Empty,
-                1 =>
+                _ =>
 $@"POST https://tip1-shared-002.azure-apim.net/invoke
  authority: tip1-shared-002.azure-apim.net
  Authorization: Bearer eyJ0eXA...
@@ -79,70 +91,9 @@ $@"POST https://tip1-shared-002.azure-apim.net/invoke
  x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/a2df3fb8-e4a4-e5e6-905c-e3dff9f93b46
  x-ms-client-session-id: 8e67ebdc-d402-455a-b33a-304820832383
  x-ms-request-method: GET
- x-ms-request-url: /apim/sql/5f57ec83acef477b8ccc769e52fa22cc/servers
+ x-ms-request-url: /apim/sql/5f57ec83acef477b8ccc769e52fa22cc/{queryPart}
  x-ms-user-agent: PowerFx/{PowerPlatformConnectorClient.Version}
-",
-                2 =>
-$@"POST https://tip1-shared-002.azure-apim.net/invoke
- authority: tip1-shared-002.azure-apim.net
- Authorization: Bearer eyJ0eXA...
- path: /invoke
- scheme: https
- x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/a2df3fb8-e4a4-e5e6-905c-e3dff9f93b46
- x-ms-client-session-id: 8e67ebdc-d402-455a-b33a-304820832383
- x-ms-request-method: GET
- x-ms-request-url: /apim/sql/5f57ec83acef477b8ccc769e52fa22cc/databases?server=pfxdev-sql.database.windows.net
- x-ms-user-agent: PowerFx/{PowerPlatformConnectorClient.Version}
-",
-                3 =>
-$@"POST https://tip1-shared-002.azure-apim.net/invoke
- authority: tip1-shared-002.azure-apim.net
- Authorization: Bearer eyJ0eXA...
- path: /invoke
- scheme: https
- x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/a2df3fb8-e4a4-e5e6-905c-e3dff9f93b46
- x-ms-client-session-id: 8e67ebdc-d402-455a-b33a-304820832383
- x-ms-request-method: GET
- x-ms-request-url: /apim/sql/5f57ec83acef477b8ccc769e52fa22cc/databases?server=default
- x-ms-user-agent: PowerFx/{PowerPlatformConnectorClient.Version}
-",
-                4 =>
-$@"POST https://tip1-shared-002.azure-apim.net/invoke
- authority: tip1-shared-002.azure-apim.net
- Authorization: Bearer eyJ0eXA...
- path: /invoke
- scheme: https
- x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/a2df3fb8-e4a4-e5e6-905c-e3dff9f93b46
- x-ms-client-session-id: 8e67ebdc-d402-455a-b33a-304820832383
- x-ms-request-method: GET
- x-ms-request-url: /apim/sql/5f57ec83acef477b8ccc769e52fa22cc/v2/datasets/pfxdev-sql.database.windows.net,connectortest/procedures
- x-ms-user-agent: PowerFx/{PowerPlatformConnectorClient.Version}
-",
-                5 =>
-$@"POST https://tip1-shared-002.azure-apim.net/invoke
- authority: tip1-shared-002.azure-apim.net
- Authorization: Bearer eyJ0eXA...
- path: /invoke
- scheme: https
- x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/a2df3fb8-e4a4-e5e6-905c-e3dff9f93b46
- x-ms-client-session-id: 8e67ebdc-d402-455a-b33a-304820832383
- x-ms-request-method: GET
- x-ms-request-url: /apim/sql/5f57ec83acef477b8ccc769e52fa22cc/v2/datasets/default,connectortest/procedures
- x-ms-user-agent: PowerFx/{PowerPlatformConnectorClient.Version}
-",
-                6 =>
-$@"POST https://tip1-shared-002.azure-apim.net/invoke
- authority: tip1-shared-002.azure-apim.net
- Authorization: Bearer eyJ0eXA...
- path: /invoke
- scheme: https
- x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/a2df3fb8-e4a4-e5e6-905c-e3dff9f93b46
- x-ms-client-session-id: 8e67ebdc-d402-455a-b33a-304820832383
- x-ms-request-method: GET
- x-ms-request-url: /apim/sql/5f57ec83acef477b8ccc769e52fa22cc/v2/datasets/default,default/procedures
- x-ms-user-agent: PowerFx/{PowerPlatformConnectorClient.Version}
-",
-                _ => throw new NotImplementedException("Unknown index")
+"                
             };
 
             Assert.Equal(expectedNetwork, networkTrace);
