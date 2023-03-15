@@ -418,7 +418,6 @@ namespace Microsoft.PowerFx.Connectors.Tests
         }
 
         [Fact]
-
         public void LQA_Load()
         {
             OpenApiDocument doc = Helpers.ReadSwagger(@"Swagger\Language - Question Answering.json");
@@ -427,7 +426,6 @@ namespace Microsoft.PowerFx.Connectors.Tests
         }
 
         [Fact]
-
         public void SQL_Load()
         {
             OpenApiDocument doc = Helpers.ReadSwagger(@"Swagger\SQL Server.json");

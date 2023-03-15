@@ -441,6 +441,7 @@ namespace Microsoft.PowerFx.Connectors
         {
             public string OperationId;
 
+            // <parm name to be called, param name of current function>
             public Dictionary<string, string> ParameterMap;
 
             public string ValueTitle = null;
