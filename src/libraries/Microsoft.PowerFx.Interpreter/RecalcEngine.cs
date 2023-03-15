@@ -174,12 +174,23 @@ namespace Microsoft.PowerFx
             var parsedUDFS = new Core.Syntax.ParsedUDFs(script);
             var result = parsedUDFS.GetParsed();
 
-            var udfDefinitions = result.UDFs.Select(udf => new UDFDefinition(
+            var udfDefinitions = result.UDFs.Select(udf => 
+            {
+                var returnType = FormulaType.GetFromStringOrNull(udf.ReturnType.ToString());
+
+                return new UDFDefinition(
                 udf.Ident.ToString(),
                 udf.Body.ToString(),
-                FormulaType.GetFromStringOrNull(udf.ReturnType.ToString()),
+                udf.Body,
+                FormulaType.GetFromStringOrNull(udf.ReturnType.ToString()) ?? FormulaType.Unknown,
                 udf.IsImperative,
-                udf.Args.Select(arg => new NamedFormulaType(arg.VarIdent.ToString(), FormulaType.GetFromStringOrNull(arg.VarType.ToString()))).ToArray())).ToArray();
+                udf.Args.Select(arg =>
+                {
+                    var formulaType = FormulaType.GetFromStringOrNull(arg.VarType.ToString()) ?? FormulaType.Unknown;
+
+                    return new NamedFormulaType(arg.VarIdent.ToString(), formulaType);
+                }).ToArray());
+            }).ToArray();
             return DefineFunctions(udfDefinitions);
         }
 
@@ -196,10 +207,10 @@ namespace Microsoft.PowerFx
                 record = record.Add(p);
             }
 
-            var check = new CheckWrapper(this, definition.Body, record, definition.IsImperative);
+            var check = new CheckWrapper(this, definition.BodyScript, definition.Body, record, definition.IsImperative);
 
             var func = new UserDefinedTexlFunction(definition.Name, definition.ReturnType, definition.Parameters, check);
-            
+
             if (_symbolTable.Functions.AnyWithName(definition.Name))
             {
                 throw new InvalidOperationException($"Function {definition.Name} is already defined");

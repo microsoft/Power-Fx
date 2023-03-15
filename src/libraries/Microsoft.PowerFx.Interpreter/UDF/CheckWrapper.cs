@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Interpreter.UDF
@@ -13,15 +14,17 @@ namespace Microsoft.PowerFx.Interpreter.UDF
      /// </summary>
     internal class CheckWrapper
     {
-        private readonly string _expressionText;
+        private readonly string _bodyScript;
+        private readonly TexlNode _texlNode;
         private readonly RecordType _parameterType;
         private readonly RecalcEngine _engine;
         public readonly ParserOptions ParserOptions;
 
-        public CheckWrapper(RecalcEngine engine, string expressionText, RecordType parameterType = null, bool isImperative = false)
+        public CheckWrapper(RecalcEngine engine, string bodyScript, TexlNode texlNode, RecordType parameterType = null, bool isImperative = false)
         {
             _engine = engine;
-            _expressionText = expressionText;
+            _bodyScript = bodyScript;
+            _texlNode = texlNode;
             _parameterType = parameterType;
             ParserOptions = new ParserOptions()
             {
@@ -30,6 +33,6 @@ namespace Microsoft.PowerFx.Interpreter.UDF
             };
         }
 
-        public CheckResult Get() => _engine.Check(_expressionText, _parameterType, ParserOptions);
+        public CheckResult Get() => _engine.Check(_bodyScript, _texlNode, _parameterType, ParserOptions);
     }
 }

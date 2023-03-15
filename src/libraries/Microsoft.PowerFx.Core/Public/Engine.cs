@@ -204,6 +204,25 @@ namespace Microsoft.PowerFx
         }
 
         /// <summary>
+        /// Parse and Bind an expression. 
+        /// </summary>
+        /// <param name="expressionText">the expression in plain text. </param>
+        /// <param name="texlNode"></param>
+        /// <param name="parameterType">types of additional args to pass.</param>
+        /// <param name="options">parser options to use.</param>
+        /// <returns></returns>
+        public CheckResult Check(string expressionText, TexlNode texlNode, RecordType parameterType, ParserOptions options = null)
+        {
+            var check = new CheckResult(this)
+                .SetText(expressionText, options)
+                .SetTexlNode(texlNode)
+                .SetBindingInfo(parameterType);
+
+            CheckWorker(check);
+            return check;
+        }
+
+        /// <summary>
         /// Type check a formula without executing it. 
         /// </summary>
         /// <param name="parse">the parsed expression. Obtain from <see cref="Parse(string, ParserOptions)"/>.</param>
@@ -291,7 +310,12 @@ namespace Microsoft.PowerFx
         // Called by CheckResult.ApplyBinding to compute the binding. 
         internal (TexlBinding, ReadOnlySymbolTable) ComputeBinding(CheckResult result)
         {
-            var parse = result.ApplyParse();
+            ParseResult parseResult = null;
+
+            if (result.RootNode == null)
+            {
+                parseResult = result.ApplyParse();
+            }
 
             ReadOnlySymbolTable symbolTable = result.Parameters;
 
@@ -308,11 +332,11 @@ namespace Microsoft.PowerFx
             // Anything else should be accomplished with SymbolTables.
             bool useThisRecordForRuleScope = ruleScope != null;
 
-            var bindingConfig = new BindingConfig(result.Parse.Options.AllowsSideEffects, useThisRecordForRuleScope);
+            var bindingConfig = new BindingConfig(result?.Parse?.Options?.AllowsSideEffects ?? false, useThisRecordForRuleScope);
 
             var binding = TexlBinding.Run(
                 glue,
-                parse.Root,
+                result.RootNode ?? parseResult.Root,
                 resolver,
                 bindingConfig,
                 ruleScope: ruleScope?._type,

@@ -277,6 +277,13 @@ namespace Microsoft.PowerFx
             set => _errors.AddRange(value);
         }
 
+        public CheckResult SetTexlNode(TexlNode texlNode)
+        {
+            RootNode = texlNode;
+
+            return this;
+        }
+
         /// <summary>
         /// Get errors localized with the given culture. 
         /// </summary>
@@ -331,6 +338,8 @@ namespace Microsoft.PowerFx
                 return this._allSymbols;
             }
         }
+
+        public TexlNode RootNode { get; private set; }
 
         /// <summary>
         /// Parameters are the subset of symbols that must be passed in Eval() for each evaluation. 
@@ -489,7 +498,7 @@ namespace Microsoft.PowerFx
                 // Errors require Binding, Parse 
                 var binding = ApplyBindingInternal();
 
-                // Plus engine's may have additional constaints. 
+                // Plus engine's may have additional constraints. 
                 // PostCheck may refer to binding. 
                 var extraErrors = Engine.InvokePostCheck(this);
 
