@@ -19,7 +19,7 @@ using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx
-{
+{ 
     /// <summary>
     /// Holds work such as parsing, binding, error checking done on a single expression. 
     /// Different options require different work. 
@@ -67,6 +67,19 @@ namespace Microsoft.PowerFx
         public CheckResult(Engine source)
         {
             this._engine = source ?? throw new ArgumentNullException(nameof(source));            
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CheckResult"/> class.
+        /// </summary>
+        /// <param name="source">Engine used to handle Apply operations.</param>
+        /// <param name="texlNode">TexlNode for the expression that is already parsed. </param>
+        /// <param name="parserOptions">Options for parsing an expression. </param>
+        protected CheckResult(Engine source, TexlNode texlNode, ParserOptions parserOptions = null)
+        {
+            this._engine = source ?? throw new ArgumentNullException(nameof(source));
+            this.RootNode = texlNode ?? throw new ArgumentNullException(nameof(texlNode));
+            this._parserOptions = parserOptions ?? Engine.GetDefaultParserOptionsCopy();
         }
 
         internal Engine Engine => _engine;
@@ -253,6 +266,8 @@ namespace Microsoft.PowerFx
 
         #endregion 
 
+        public TexlNode RootNode { get; private set; }
+
         internal TexlBinding Binding
         {
             get
@@ -278,15 +293,6 @@ namespace Microsoft.PowerFx
 
             [Obsolete("use constructor to set errors")]
             set => _errors.AddRange(value);
-        }
-
-        public CheckResult SetTexlNode(TexlNode texlNode, ParserOptions parserOptions = null)
-        {
-            this.RootNode = texlNode;
-            this._parserOptions = parserOptions ?? Engine.GetDefaultParserOptionsCopy();
-            this.ParserCultureInfo = _parserOptions.Culture;
-
-            return this;
         }
 
         /// <summary>
@@ -343,8 +349,6 @@ namespace Microsoft.PowerFx
                 return this._allSymbols;
             }
         }
-
-        public TexlNode RootNode { get; private set; }
 
         /// <summary>
         /// Parameters are the subset of symbols that must be passed in Eval() for each evaluation. 
@@ -598,5 +602,16 @@ namespace Microsoft.PowerFx
         public IEnumerable<ExpressionError> Errors { get; }
 
         public bool IsSuccess { get; }
+    }
+
+    /// <summary>
+    /// Used specifically for UDF, so that we can set the texlnode.
+    /// </summary>
+    internal class UDFCheckResult : CheckResult
+    {
+        public UDFCheckResult(Engine engine, TexlNode texlNode, ParserOptions parserOptions = null)
+            : base(engine, texlNode, parserOptions)
+        {
+        }
     }
 }

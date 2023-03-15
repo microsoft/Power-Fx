@@ -31,6 +31,6 @@ namespace Microsoft.PowerFx.Interpreter.UDF
             };
         }
 
-        public CheckResult Get() => _engine.Check(_texlNode, _parameterType, ParserOptions);
+        public CheckResult Get() => _engine.CheckUDF(_texlNode, _parameterType, ParserOptions);
     }
 }

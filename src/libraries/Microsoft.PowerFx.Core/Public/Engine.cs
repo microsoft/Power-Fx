@@ -206,14 +206,13 @@ namespace Microsoft.PowerFx
         /// <summary>
         /// Parse and Bind an expression. 
         /// </summary>
-        /// <param name="texlNode">Node for the provided expression, if it was already parsed earlier. </param>
+        /// <param name="texlNode">Node for UDF body, if it was already parsed earlier. </param>
         /// <param name="parameterType">types of additional args to pass.</param>
         /// <param name="options">parser options to use.</param>
         /// <returns></returns>
-        public CheckResult Check(TexlNode texlNode, RecordType parameterType, ParserOptions options = null)
+        public CheckResult CheckUDF(TexlNode texlNode, RecordType parameterType, ParserOptions options = null)
         {
-            var check = new CheckResult(this)
-                .SetTexlNode(texlNode, options)
+            var check = new UDFCheckResult(this, texlNode, options)
                 .SetBindingInfo(parameterType);
 
             CheckWorker(check);
