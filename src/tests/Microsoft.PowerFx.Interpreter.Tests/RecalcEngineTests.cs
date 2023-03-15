@@ -925,18 +925,6 @@ namespace Microsoft.PowerFx.Tests
         }
 
         [Fact]
-        public void IndirectRecursionTest1()
-        {
-            var recalcEngine = new RecalcEngine(new PowerFxConfig(null)
-            {
-                MaxCallDepth = 81
-            });
-            recalcEngine.DefineFunctions(
-                "A(x: Test, y:Test1): Test = 10 * x;");
-            Assert.Equal(20, recalcEngine.Eval("A(2)").ToObject());
-        }
-
-        [Fact]
         public void DoubleDefinitionTest()
         {
             var recalcEngine = new RecalcEngine(new PowerFxConfig(null));

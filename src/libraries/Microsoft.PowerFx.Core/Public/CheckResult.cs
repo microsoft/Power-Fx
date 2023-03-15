@@ -237,6 +237,8 @@ namespace Microsoft.PowerFx
             }
         }
 
+        public ParserOptions ParserOptions => _parserOptions;
+
         #endregion 
 
         #region Results from Errors

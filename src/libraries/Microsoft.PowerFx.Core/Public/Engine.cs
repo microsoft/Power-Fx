@@ -332,7 +332,7 @@ namespace Microsoft.PowerFx
             // Anything else should be accomplished with SymbolTables.
             bool useThisRecordForRuleScope = ruleScope != null;
 
-            var bindingConfig = new BindingConfig(result?.Parse?.Options?.AllowsSideEffects ?? false, useThisRecordForRuleScope);
+            var bindingConfig = new BindingConfig(result.ParserOptions.AllowsSideEffects, useThisRecordForRuleScope);
 
             var binding = TexlBinding.Run(
                 glue,
