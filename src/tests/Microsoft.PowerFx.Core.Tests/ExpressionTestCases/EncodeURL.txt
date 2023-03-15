@@ -1,0 +1,16 @@
+// ******** STRING PARAMETERS ********
+
+>> EncodeUrl("https://make.powerapps.com/")
+"https%3A%2F%2Fmake.powerapps.com%2F"
+
+>> EncodeUrl("powerfx&test")
+"powerfx%26test"
+
+>> EncodeUrl("")
+""
+
+>> EncodeUrl(" ")
+"%20"
+
+>> EncodeUrl("hello!@#world")
+"hello%21%40%23world"
