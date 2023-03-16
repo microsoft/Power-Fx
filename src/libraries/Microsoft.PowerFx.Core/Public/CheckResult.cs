@@ -69,19 +69,6 @@ namespace Microsoft.PowerFx
             this._engine = source ?? throw new ArgumentNullException(nameof(source));            
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CheckResult"/> class.
-        /// </summary>
-        /// <param name="source">Engine used to handle Apply operations.</param>
-        /// <param name="texlNode">TexlNode for the expression that is already parsed. </param>
-        /// <param name="parserOptions">Options for parsing an expression. </param>
-        protected CheckResult(Engine source, TexlNode texlNode, ParserOptions parserOptions = null)
-        {
-            this._engine = source ?? throw new ArgumentNullException(nameof(source));
-            this.RootNode = texlNode ?? throw new ArgumentNullException(nameof(texlNode));
-            this._parserOptions = parserOptions ?? Engine.GetDefaultParserOptionsCopy();
-        }
-
         internal Engine Engine => _engine;
 
         /// <summary>
@@ -251,8 +238,6 @@ namespace Microsoft.PowerFx
             }
         }
 
-        public ParserOptions ParserOptions => _parserOptions;
-
         #endregion 
 
         #region Results from Errors
@@ -265,8 +250,6 @@ namespace Microsoft.PowerFx
         private IRResult _irresult;
 
         #endregion 
-
-        public TexlNode RootNode { get; private set; }
 
         internal TexlBinding Binding
         {
