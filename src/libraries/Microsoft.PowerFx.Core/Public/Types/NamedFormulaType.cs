@@ -17,7 +17,12 @@ namespace Microsoft.PowerFx.Types
 
         public NamedFormulaType(string name, FormulaType type, string displayName = null)
         {
-            _typedName = new TypedName(type?._type ?? throw new ArgumentNullException(nameof(type)), new DName(name));
+            if (type == null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            _typedName = new TypedName(type._type, new DName(name));
             DisplayName = displayName == null ? default : new DName(displayName);
         }
 
