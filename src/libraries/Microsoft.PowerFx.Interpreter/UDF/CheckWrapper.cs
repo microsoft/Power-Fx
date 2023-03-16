@@ -17,17 +17,21 @@ namespace Microsoft.PowerFx.Interpreter.UDF
         private readonly ParseResult _parseResult;
         private readonly RecordType _parameterType;
         private readonly RecalcEngine _engine;
+        public readonly ParserOptions ParserOptions;
 
         public CheckWrapper(RecalcEngine engine, ParseResult parseResult, RecordType parameterType = null, bool isImperative = false)
         {
             _engine = engine;
             _parseResult = parseResult;
             _parameterType = parameterType;
-            _parseResult.Options = new ParserOptions()
+
+            ParserOptions = new ParserOptions()
             {
                 Culture = _engine.Config.CultureInfo,
                 AllowsSideEffects = isImperative,
             };
+
+            _parseResult.Options = ParserOptions;
         }
 
         public CheckResult Get() => _engine.Check(_parseResult, _parameterType);
