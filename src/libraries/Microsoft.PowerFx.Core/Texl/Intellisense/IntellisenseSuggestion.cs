@@ -231,7 +231,9 @@ namespace Microsoft.PowerFx.Intellisense
                 return 1;
             }
 
-            return SortPriority == other.SortPriority ? string.Compare(Text, other.Text, StringComparison.Ordinal) : (int)(other.SortPriority - SortPriority);
+#pragma warning disable CA1310 // Specify StringComparison for correctness
+            return SortPriority == other.SortPriority ? Text.CompareTo(other.Text) : (int)(other.SortPriority - SortPriority);
+#pragma warning restore CA1310 // Specify StringComparison for correctness
         }
 
         public bool Equals(IntellisenseSuggestion other)
