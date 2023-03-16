@@ -1,4 +1,4 @@
-// String URL Parameter
+﻿// String URL Parameter
 >> EncodeUrl("https://make.powerapps.com/")
 "https%3A%2F%2Fmake.powerapps.com%2F"
 
@@ -74,10 +74,6 @@ Error({Kind:ErrorKind.Div0})
 >> EncodeUrl("http://b*()!\'ool")
 "http%3A%2F%2Fb%2A%28%29%21%5C%27ool"
 
-// Unicode Parameter
->> EncodeUrl(U+2764)
-Errors: Error 10-11: Name isn't valid. 'U' isn't recognized.
-
-// String Unicode Parameter
->> EncodeUrl("U+2764")
-"U%2B2764"
+// Emoji Support
+>> EncodeUrl("https://www.bing.com/❤")
+"https%3A%2F%2Fwww.bing.com%2F%E2%9D%A4"
