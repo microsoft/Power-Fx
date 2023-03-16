@@ -277,5 +277,35 @@ namespace Microsoft.PowerFx
 
             _variables.Add(entity.EntityName, nameInfo);
         }
+
+        /// <summary>
+        /// Adds a host object schema, that can be referenced in the formula.
+        /// Actual object is added in Runtime config service provider.
+        /// </summary>
+        /// <param name="name">Name of the object.</param>
+        /// <param name="type">Type of the object.</param>
+        /// <param name="getValue">Call back that will retrieve object from the service provider.
+        /// It can throw CustomFunctionErrorException, that fx will convert to an error.</param>
+        public void AddHostObject(string name, FormulaType type, Func<IServiceProvider, FormulaValue> getValue)
+        {
+            var hostDName = ValidateName(name);
+
+            // Attempt to update display name provider before symbol table,
+            // since it can throw on collision and we want to leave the config in a good state.
+            if (_environmentSymbolDisplayNameProvider is SingleSourceDisplayNameProvider ssDnp)
+            {
+                _environmentSymbolDisplayNameProvider = ssDnp.AddField(hostDName, default);
+            }
+
+            var info = new NameLookupInfo(
+                BindKind.PowerFxResolvedObject,
+                type._type,
+                DPath.Root,
+                0,
+                data: getValue,
+                displayName: default);
+
+            _variables.Add(hostDName, info);
+        }
     }
 }
