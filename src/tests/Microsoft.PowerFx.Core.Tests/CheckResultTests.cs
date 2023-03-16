@@ -155,9 +155,25 @@ namespace Microsoft.PowerFx.Core.Tests
 
             Assert.False(check.IsSuccess);
 
-            // Can still try to bind even with parse errors. 
+            // Can't set Binding if we called ApplyParse 
+            Assert.Throws<InvalidOperationException>(() => check.SetBindingInfo());
+        }
+
+        [Fact]
+        public void BasicParseErrors2()
+        {
+            var check = new CheckResult(new Engine());
+            check.SetText("1+"); // parse error
+
+           // Can still try to bind even with parse errors. 
             // But some information like Returntype isn't computed.
             check.SetBindingInfo();
+            var parse = check.ApplyParse();
+            Assert.NotNull(parse);
+            Assert.False(parse.IsSuccess);
+
+            Assert.False(check.IsSuccess);
+
             check.ApplyBinding();
             Assert.NotNull(check.Binding);
             Assert.Null(check.ReturnType);
@@ -355,6 +371,14 @@ namespace Microsoft.PowerFx.Core.Tests
             var check = new CheckResult(new Engine());
 
             Assert.Throws<InvalidOperationException>(() => check.ApplyGetInvariant());
+        }
+
+        // CheckResult properly wired up to invariant translator. 
+        // More tests at DisplayNameTests
+        [Fact]
+        public void TestApplyGetInvariant2()
+        {
+            var check = new CheckResult(new Engine());
 
             var r1 = RecordType.Empty()
               .Add(new NamedFormulaType("new_field", FormulaType.Number, "Field"));
@@ -363,6 +387,21 @@ namespace Microsoft.PowerFx.Core.Tests
             // lexer locale: 2,3 --> 2.3
             check.SetText("Field + 2,3", _frCultureOpts);
             Assert.Throws<InvalidOperationException>(() => check.ApplyGetInvariant());
+        }
+
+        // CheckResult properly wired up to invariant translator. 
+        // More tests at DisplayNameTests
+        [Fact]
+        public void TestApplyGetInvariant3()
+        {
+            var check = new CheckResult(new Engine());
+
+            var r1 = RecordType.Empty()
+              .Add(new NamedFormulaType("new_field", FormulaType.Number, "Field"));
+
+            // display name: Field --> new_field
+            // lexer locale: 2,3 --> 2.3
+            check.SetText("Field + 2,3", _frCultureOpts);
 
             check.SetBindingInfo(r1);
             var invariant = check.ApplyGetInvariant();

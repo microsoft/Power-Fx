@@ -1,4 +1,4 @@
-// TRUNC(NUMBER, NUMBER_OF_DIGITS)
+// TRUNC(NUMBER, NUMBER_OF_DIGITS), toward zero
 
 // ******** INTEGER PARAMETERS ********
 

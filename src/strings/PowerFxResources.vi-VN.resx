@@ -4423,7 +4423,7 @@
     
   </data>
   <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
-    <value>Unable to compare values of type {0}.</value>
+    <value>Không thể so sánh các giá trị thuộc loại {0}.</value>
     
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
@@ -4843,7 +4843,7 @@
     
   </data>
   <data name="OptionSetOptionNotSupported" xml:space="preserve">
-    <value>The value of option {0} is not of expected type {1}.</value>
+    <value>Giá trị của tùy chọn {0} không thuộc loại dự kiến {1}.</value>
     
   </data>
   <data name="AboutOptionSetInfo" xml:space="preserve">
@@ -4855,5 +4855,9 @@
   </data>
   <data name="AboutOptionSetInfo_option" xml:space="preserve">
     <value>Hệ thống sẽ trả về một giá trị bộ tùy chọn có tên lô-gic.</value>
+  </data>
+  <data name="AboutLanguage" xml:space="preserve">
+    <value>Đặt ngôn ngữ mặc định trong thời gian chạy.</value>
+    
   </data>
 </root>
