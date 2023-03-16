@@ -4423,7 +4423,7 @@
     
   </data>
   <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
-    <value>Unable to compare values of type {0}.</value>
+    <value>{0} 유형의 값을 비교할 수 없습니다.</value>
     
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
@@ -4843,7 +4843,7 @@
     
   </data>
   <data name="OptionSetOptionNotSupported" xml:space="preserve">
-    <value>The value of option {0} is not of expected type {1}.</value>
+    <value>{0} 옵션의 값이 예상 유형 {1}이(가) 아닙니다.</value>
     
   </data>
   <data name="AboutOptionSetInfo" xml:space="preserve">
@@ -4855,5 +4855,9 @@
   </data>
   <data name="AboutOptionSetInfo_option" xml:space="preserve">
     <value>논리적 이름이 반환될 옵션 집합 값입니다.</value>
+  </data>
+  <data name="AboutLanguage" xml:space="preserve">
+    <value>런타임에 설정된 기본 로캘을 가져옵니다.</value>
+    
   </data>
 </root>

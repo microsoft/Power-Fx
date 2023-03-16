@@ -601,7 +601,7 @@ namespace Microsoft.PowerFx.Functions
                 return new NumberValue(IRContext.NotInSource(FormulaType.Number), evalValue);
             }
 
-            var errorMessage = ErrorUtils.FormatMessage(StringResources.Get(TexlStrings.OptionSetOptionNotSupported), null, optionSet.DisplayName, FormulaType.Color._type.GetKindString());
+            var errorMessage = ErrorUtils.FormatMessage(StringResources.Get(TexlStrings.OptionSetOptionNotSupported), null, optionSet.DisplayName, FormulaType.Number._type.GetKindString());
             return CommonErrors.CustomError(IRContext.NotInSource(FormulaType.Number), errorMessage);
         }
 
@@ -613,7 +613,7 @@ namespace Microsoft.PowerFx.Functions
                 return new BooleanValue(IRContext.NotInSource(FormulaType.Boolean), evalValue);
             }
 
-            var errorMessage = ErrorUtils.FormatMessage(StringResources.Get(TexlStrings.OptionSetOptionNotSupported), null, optionSet.DisplayName, FormulaType.Color._type.GetKindString());
+            var errorMessage = ErrorUtils.FormatMessage(StringResources.Get(TexlStrings.OptionSetOptionNotSupported), null, optionSet.DisplayName, FormulaType.Boolean._type.GetKindString());
             return CommonErrors.CustomError(IRContext.NotInSource(FormulaType.Boolean), errorMessage);
         }
 
