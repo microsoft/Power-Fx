@@ -97,10 +97,10 @@ true
 >> IsError(Error({Kind: "2" }))
 true
 
->> IfError( If( false, 1, Error({Kind:2}) ), FirstError.Kind )
+>> IfError( If( false, 1, Error({Kind: 2}) ), FirstError.Kind )
 2
 
->> IfError( If( false, 1, Error({Kind:"2"}) ), FirstError.Kind )
+>> IfError( If( false, 1, Error({Kind: "2"}) ), FirstError.Kind )
 2
 
 >> IfError( If( false, 1, Error({Kind:true}) ), FirstError.Kind )
