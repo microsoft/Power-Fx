@@ -178,12 +178,14 @@ namespace Microsoft.PowerFx
         }
 
         private FormulaType _expectedReturnType;
+        private bool _allowCoerceToType = false;
 
-        public CheckResult SetExpectedReturnValue(FormulaType type)
+        public CheckResult SetExpectedReturnValue(FormulaType type, bool allowCoerceTo = false)
         {
             VerifyEngine();
 
             _expectedReturnType = type;
+            _allowCoerceToType = allowCoerceTo;
             return this;
         }
 
@@ -442,8 +444,22 @@ namespace Microsoft.PowerFx
 
                 if (this.ReturnType != null && this._expectedReturnType != null)
                 {
+                    bool notCoerceToType = false;
+                    if (_allowCoerceToType)
+                    {
+                        if (this._expectedReturnType != FormulaType.String)
+                        {
+                            throw new NotImplementedException();
+                        }
+
+                        if (!StringValue.AllowedListConvertToString.Contains(this.ReturnType))
+                        {
+                            notCoerceToType = true;
+                        }
+                    }
+
                     var sameType = this._expectedReturnType == this.ReturnType;
-                    if (!sameType)
+                    if (notCoerceToType || !sameType)
                     {
                         _errors.Add(new ExpressionError
                         {

@@ -31,8 +31,6 @@ namespace Microsoft.PowerFx.Functions
 
     internal static partial class Library
     {
-        internal static readonly IReadOnlyList<FormulaType> AllowedListConvertToString = new FormulaType[] { FormulaType.String, FormulaType.Number, FormulaType.DateTime, FormulaType.Date, FormulaType.Time, FormulaType.Boolean, FormulaType.Guid };
-
         private static readonly RegexOptions RegExFlags = LibraryFlags.RegExFlags;
 
         private static readonly Regex _ampmReplaceRegex = new Regex("[aA][mM]\\/[pP][mM]", RegExFlags);
@@ -253,7 +251,7 @@ namespace Microsoft.PowerFx.Functions
                 return false;
             }
 
-            Contract.Assert(AllowedListConvertToString.Contains(value.Type));
+            Contract.Assert(StringValue.AllowedListConvertToString.Contains(value.Type));
 
             switch (value)
             {
