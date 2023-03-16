@@ -99,7 +99,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 argumentKindType = argumentKindType.GetEnumSupertype();
             }
 
-            if (argumentKindType.Kind != requiredKindField.Type.Kind)
+            if (!(requiredKindField.Type.Kind == DKind.Number) && (argumentKindType.Kind != requiredKindField.Type.Kind))
             {
                 errors.EnsureError(
                     argument,
@@ -143,7 +143,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     acceptedFields.Where(field =>
 
                         // Kind has already been handled before
-                        field.Name != "Kind" && names.Any(name => name.Name == field.Name)));
+                        ((requiredKindField.Type.Kind == DKind.Number) ? true : field.Name != "Kind") && names.Any(name => name.Name == field.Name)));
 
                 typeValid = CheckType(argument, argumentType, expectedOptionalFieldsRecord, errors, true, out matchedWithCoercion);
             }

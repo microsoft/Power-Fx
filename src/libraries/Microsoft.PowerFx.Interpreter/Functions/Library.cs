@@ -1989,6 +1989,11 @@ namespace Microsoft.PowerFx.Functions
             {
                 var messageField = errorRecord.GetField(ErrorType.MessageFieldName) as StringValue;
 
+                if (errorRecord.GetField(ErrorType.KindFieldName) is ErrorValue error)
+                {
+                    return error;
+                }
+
                 if (errorRecord.GetField(ErrorType.KindFieldName) is not NumberValue kindField)
                 {
                     return CommonErrors.RuntimeTypeMismatch(irContext);
