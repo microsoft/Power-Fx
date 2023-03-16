@@ -286,10 +286,8 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("Choice,car", "car,Choice", "en-US")] // Case insensitive comparison
         public void TestIntellisenseSuggestionsSortOrder(string names, string expectedOrder, string culture)
         {
-            CultureInfo currentCulture = Thread.CurrentThread.CurrentCulture;
-            try
+            RunOnIsolatedThread(CultureInfo.GetCultureInfo(culture), () =>
             {
-                Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo(culture);
                 var context = $"![{string.Join(",", names.Split(',').Select(s => $"variable{s}:n"))}]";
                 var expectedSuggestions = expectedOrder.Split(',').Select(s => "variable" + s).ToArray();
                 var result = Suggest("variabl|", Default, context);
@@ -299,10 +297,34 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
                 {
                     Assert.Equal(expectedSuggestions[i], suggestions[i].DisplayText.Text);
                 }
-            }
-            finally
+            });
+        }
+
+        // Run on an isolated thread.
+        // Useful for testing per-thread properties
+        private static void RunOnIsolatedThread(CultureInfo culture, Action worker)
+        {
+            Exception exception = null;
+
+            var t = new Thread(() =>
             {
-                Thread.CurrentThread.CurrentCulture = currentCulture;
+                try
+                {
+                    Thread.CurrentThread.CurrentCulture = culture;
+                    worker();
+                }
+                catch (Exception ex)
+                {
+                    exception = ex;
+                }
+            });
+
+            t.Start();
+            t.Join();
+
+            if (exception != null)
+            {
+                throw exception;
             }
         }
 
