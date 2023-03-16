@@ -4,6 +4,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Microsoft.PowerFx.Core.Utils;
 
@@ -201,9 +202,9 @@ namespace Microsoft.PowerFx.Intellisense
             return ((IList<IntellisenseSuggestion>)_backingList).GetEnumerator();
         }
 
-        public void Sort()
+        public void Sort(CultureInfo culture)
         {
-            _backingList.Sort();
+            _backingList.Sort(new IntellisenseSuggestionComparer(cultuer));
         }
 
         public int FindIndex(Predicate<IntellisenseSuggestion> pred)

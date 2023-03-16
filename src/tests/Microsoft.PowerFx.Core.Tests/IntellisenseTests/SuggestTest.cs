@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Threading;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Texl;
@@ -277,6 +278,32 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             var currentOverload = result.FunctionOverloads.ToArray()[result.CurrentFunctionOverloadIndex];
             Assert.Equal(expectedDisplayText, currentOverload.DisplayText.Text);
             Assert.Equal(expectedDescription, currentOverload.FunctionParameterDescription);
+        }
+
+        [Theory]
+        [InlineData("çava,comment,chat", "çava,chat,comment", "fr-FR")]
+        [InlineData("azul,árvore,áurea", "árvore,áurea,azul", "pt-BR")]
+        [InlineData("Choice,car", "car,Choice", "en-US")] // Case insensitive comparison
+        public void TestIntellisenseSuggestionsSortOrder(string names, string expectedOrder, string culture)
+        {
+            CultureInfo currentCulture = Thread.CurrentThread.CurrentCulture;
+            try
+            {
+                Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo(culture);
+                var context = $"![{string.Join(",", names.Split(',').Select(s => $"variable{s}:n"))}]";
+                var expectedSuggestions = expectedOrder.Split(',').Select(s => "variable" + s).ToArray();
+                var result = Suggest("variabl|", Default, context);
+                var suggestions = result.Suggestions.ToList();
+                Assert.Equal(expectedSuggestions.Length, suggestions.Count);
+                for (var i = 0; i < expectedSuggestions.Length; i++)
+                {
+                    Assert.Equal(expectedSuggestions[i], suggestions[i].DisplayText.Text);
+                }
+            }
+            finally
+            {
+                Thread.CurrentThread.CurrentCulture = currentCulture;
+            }
         }
 
         // Add an extra (empy) symbol table into the config and ensure we get the same results. 
