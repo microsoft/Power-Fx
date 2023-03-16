@@ -57,3 +57,19 @@ Errors: Error 10-13: Invalid argument type (Table). Expecting a Text value inste
 // Date Parameter
 >> EncodeUrl(Date(2023, 03, 01))
 "3%2F1%2F2023"
+
+// ErrorKind Parameter
+>> EncodeUrl(Error({Kind:ErrorKind.Div0}))
+Error({Kind:ErrorKind.Div0})
+
+// String Parameter
+>> EncodeUrl("a&b?c d%e")
+"a%26b%3Fc%20d%25e"
+
+// String URL Parameter
+>> EncodeUrl("bing.com/search?q=mypuppy&color=blue")
+"bing.com%2Fsearch%3Fq%3Dmypuppy%26color%3Dblue"
+
+// String URL Parameter
+>> EncodeUrl("http://b*()!\'ool")
+"http%3A%2F%2Fb%2A%28%29%21%5C%27ool"

@@ -5066,7 +5066,7 @@
     <value>url</value>
     <comment>Function_parameter - First parameter for the EncodeUrl function - the URL(string) to encode. Translate this string. Maintain as a single word (do not add spaces)</comment>
   </data>
-  <data name="Abouturl_text" xml:space="preserve">
+  <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>A url to be encoded.</value>
   </data>
 </root>
