@@ -1245,7 +1245,7 @@ namespace Microsoft.PowerFx.Core.Functions
             return new DelegationValidationStrategy(this);
         }
 
-        public IDottedNameNodeDelegatableNodeValidationStrategy GetDottedNameNodeDelegationStrategy()
+        public virtual IDottedNameNodeDelegatableNodeValidationStrategy GetDottedNameNodeDelegationStrategy()
         {
             return new DelegationValidationStrategy(this);
         }
