@@ -260,7 +260,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [Theory]
         [InlineData("SortByColumns(|", 2, "The table to sort.", "SortByColumns(source, column, ...)")]
         [InlineData("SortByColumns(tbl1,|", 2, "A unique column name.", "SortByColumns(source, column, ...)")]
-        [InlineData("SortByColumns(tbl1,col1,|", 1, "Ascending or Descending", "SortByColumns(source, column, order, ...)")]
+        [InlineData("SortByColumns(tbl1,col1,|", 1, "SortOrder.Ascending or SortOrder.Descending", "SortByColumns(source, column, order, ...)")]
         [InlineData("SortByColumns(tbl1,col1,SortOrder.Ascending,|", 2, "A unique column name.", "SortByColumns(source, column, order, column, ...)")]
         [InlineData("IfError(1|", 1, "Value that is returned if it is not an error.", "IfError(value, fallback, ...)")]
         [InlineData("IfError(1,2|", 1, "Value that is returned if the previous argument is an error.", "IfError(value, fallback, ...)")]
