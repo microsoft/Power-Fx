@@ -202,9 +202,9 @@ namespace Microsoft.PowerFx.Intellisense
             return ((IList<IntellisenseSuggestion>)_backingList).GetEnumerator();
         }
 
-        public void Sort(CultureInfo culture)
+        public void Sort(CultureInfo culture = null)
         {
-            _backingList.Sort(new IntellisenseSuggestionComparer(cultuer));
+            _backingList.Sort(new IntellisenseSuggestionComparer(culture));
         }
 
         public int FindIndex(Predicate<IntellisenseSuggestion> pred)

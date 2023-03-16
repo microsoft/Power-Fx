@@ -58,7 +58,7 @@ namespace Microsoft.PowerFx.Intellisense
 #pragma warning restore CA1310 // Specify StringComparison for correctness
             }
             
-            return _culture.CompareInfo.GetStringComparer(CompareOptions.OrdinalIgnoreCase).Compare(x.Text, y.Text);            
+            return _culture.CompareInfo.GetStringComparer(CompareOptions.IgnoreCase).Compare(x.Text, y.Text);            
         }
 
         private bool IsExactMatch(string input, string match)

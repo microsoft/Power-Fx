@@ -286,37 +286,19 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("Choice,car", "car,Choice", "en-US")] // Case insensitive comparison
         public void TestIntellisenseSuggestionsSortOrder(string names, string expectedOrder, string culture)
         {
-            CultureInfo currentCulture = Thread.CurrentThread.CurrentCulture;
-            try
-            {
-                Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo(culture);
-                var context = $"![{string.Join(",", names.Split(',').Select(s => $"variable{s}:n"))}]";
-                var expectedSuggestions = expectedOrder.Split(',').Select(s => "variable" + s).ToArray();
-                var result = Suggest("variabl|", Default, context);
-                var suggestions = result.Suggestions.ToList();
-                Assert.Equal(expectedSuggestions.Length, suggestions.Count);
-                for (var i = 0; i < expectedSuggestions.Length; i++)
-                {
-                    Assert.Equal(expectedSuggestions[i], suggestions[i].DisplayText.Text);
-                }
-            }
-            finally
-            {
-                Thread.CurrentThread.CurrentCulture = currentCulture;
-            }
-        }
+            var context = $"![{string.Join(",", names.Split(',').Select(s => $"variable{s}:n"))}]";
+            var expectedSuggestions = expectedOrder.Split(',').Select(s => "variable" + s).ToArray();
+            var config = PowerFxConfig.BuildWithEnumStore(new CultureInfo(culture), new EnumStoreBuilder().WithDefaultEnums());
 
-        // Add an extra (empy) symbol table into the config and ensure we get the same results. 
-        private void AdjustConfig(PowerFxConfig config)
-        {
-            /*
-            config.SymbolTable = new SymbolTable 
+            var result = Suggest("variabl|", config, context);
+            var suggestions = result.Suggestions.ToList();
+
+            Assert.Equal(expectedSuggestions.Length, suggestions.Count);
+
+            for (var i = 0; i < expectedSuggestions.Length; i++)
             {
-#pragma warning disable CS0618 // Type or member is obsolete
-                Parent = config.SymbolTable,
-#pragma warning restore CS0618 // Type or member is obsolete
-                DebugName = "Extra Table"
-            };*/
+                Assert.Equal(expectedSuggestions[i], suggestions[i].DisplayText.Text);
+            }
         }
 
         /// <summary>
@@ -367,10 +349,10 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
 
             var config = Default;
             var actualSuggestions = SuggestStrings(expression, config, context);
-            Assert.Equal(expectedSuggestions.OrderBy(x => x), actualSuggestions.OrderBy(x => x));
+            Assert.Equal(expectedSuggestions, actualSuggestions);
 
             actualSuggestions = SuggestStrings(expression, config, context);
-            Assert.Equal(expectedSuggestions.OrderBy(x => x), actualSuggestions.OrderBy(x => x));
+            Assert.Equal(expectedSuggestions, actualSuggestions);
         }
 
         [Theory]
