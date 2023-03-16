@@ -323,6 +323,30 @@ namespace Microsoft.PowerFx.Tests
         }
 
         [Fact]
+        public void DefFuncWithErrorsAndVerifySpans()
+        {
+            var config = new PowerFxConfig(null);
+            var recalcEngine = new RecalcEngine(config);
+
+            IEnumerable<ExpressionError> enumerable = recalcEngine.DefineFunctions("func1(x:Number/*comment*/): Number = x * 10;\nfunc2(x:Number): Number = y1 * 10;").Errors;
+            Assert.True(enumerable.Any());
+            var span = enumerable.First().Span;
+            Assert.Equal(71, span.Min);
+            Assert.Equal(73, span.Lim);
+
+            enumerable = recalcEngine.DefineFunctions("func3():Blank = a + func1(10);").Errors;
+            Assert.True(enumerable.Any());
+
+            span = enumerable.First().Span;
+            Assert.Equal(16, span.Min);
+            Assert.Equal(17, span.Lim);
+
+            span = enumerable.ElementAt(1).Span;
+            Assert.Equal(20, span.Min);
+            Assert.Equal(29, span.Lim);
+        }
+
+        [Fact]
         public void DefRecursiveFunc()
         {
             var config = new PowerFxConfig(null);
