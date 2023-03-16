@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Entities;
@@ -65,17 +66,31 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
         [Theory]
-        
-        [InlineData("[{a:0},{a:\"3\",b:2}]", "Table({a:0,b:If(false,0)},{a:3,b:2})")]
-        [InlineData("[{a:1}, {a:true, b:2}]", "Table({a:1,b:If(false,0)},{a:1,b:2})")]
+        [InlineData("[{a:0},{a:\"3\",b:2}]", "Table({a:0,b:Blank()},{a:3,b:2})")]
+        [InlineData("[{a:1}, {a:true, b:2}]", "Table({a:1,b:Blank()},{a:1,b:2})")]
         public void RecordToRecordAggregateCoercionDontDropFieldsTest(string expr, string expected)
         {
-            var iSetup = InternalSetup.Parse($"TableSyntaxDoesntWrapRecords");
             var engine = new RecalcEngine(new PowerFxConfig(Features.TableSyntaxDoesntWrapRecords));
+            StringBuilder sb = new StringBuilder();
 
-            var result = engine.Eval(expr) as TableValue;
+            var result = engine.Eval(expr);
 
-            Assert.Equal(expected, result.ToExpression());
+            result.ToExpression(sb, new FormulaValueSerializerSettings() { UseCompactRepresentation = true });
+
+            Assert.Equal(expected, sb.ToString());
+        }
+
+        [Theory]
+        [InlineData("[{a:true},{a:Date(2023,3,16),b:2}]")]
+        public void RecordToRecordAggregateCoercionCantCoerceTest(string expr)
+        {
+            var engine = new RecalcEngine(new PowerFxConfig(Features.TableSyntaxDoesntWrapRecords));
+            StringBuilder sb = new StringBuilder();
+
+            var check = engine.Check(expr);
+
+            Assert.False(check.IsSuccess);
+            Assert.Contains("The item you are trying to put into a table has a type that is not compatible with the table", check.Errors.First().Message);
         }
 
         private class BooleanOptionSet : OptionSet, IExternalOptionSet
