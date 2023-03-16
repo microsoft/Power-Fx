@@ -173,7 +173,7 @@ namespace Microsoft.PowerFx
         {
             var parsedUDFS = new Core.Syntax.ParsedUDFs(script);
             var result = parsedUDFS.GetParsed();
-            var errors = result.Errors.ToList();
+            var errors = result.Errors?.ToList();
 
             var udfDefinitions = result.UDFs.Select(udf => new UDFDefinition(
                 udf.Ident.ToString(),
