@@ -98,10 +98,10 @@ true
 true
 
 >> IfError( If( false, 1, Error({Kind:2}) ), FirstError.Kind )
-2 
+2
 
 >> IfError( If( false, 1, Error({Kind:"2"}) ), FirstError.Kind )
-2 
+2
 
 >> IfError( If( false, 1, Error({Kind:true}) ), FirstError.Kind )
 1
