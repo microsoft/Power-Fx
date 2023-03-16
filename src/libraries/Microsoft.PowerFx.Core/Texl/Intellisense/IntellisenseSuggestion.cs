@@ -15,7 +15,7 @@ namespace Microsoft.PowerFx.Intellisense
     // Represents an intellisense suggestion.
     // Implements IComparable as Suggestion will be used in a List that will be sorted.
     // List.Sort() calls CompareTo.
-    internal sealed class IntellisenseSuggestion : IComparable<IntellisenseSuggestion>, IEquatable<IntellisenseSuggestion>, IIntellisenseSuggestion
+    internal sealed class IntellisenseSuggestion : IEquatable<IntellisenseSuggestion>, IIntellisenseSuggestion
     {
         private readonly List<IIntellisenseSuggestion> _overloads;
         private int _argIndex;
@@ -210,30 +210,6 @@ namespace Microsoft.PowerFx.Intellisense
             sb.AppendLine();
         }
 
-        public int CompareTo(IntellisenseSuggestion other)
-        {
-            Contracts.AssertValueOrNull(other);
-
-            if (other == null)
-            {
-                return -1;
-            }
-
-            var thisIsExactMatch = IsExactMatch(Text, ExactMatch);
-            var otherIsExactMatch = IsExactMatch(other.Text, other.ExactMatch);
-
-            if (thisIsExactMatch && !otherIsExactMatch)
-            {
-                return -1;
-            }
-            else if (!thisIsExactMatch && otherIsExactMatch)
-            {
-                return 1;
-            }
-
-            return SortPriority == other.SortPriority ? string.Compare(Text, other.Text, StringComparison.Ordinal) : (int)(other.SortPriority - SortPriority);
-        }
-
         public bool Equals(IntellisenseSuggestion other)
         {
             Contracts.AssertValueOrNull(other);
@@ -327,13 +303,6 @@ namespace Microsoft.PowerFx.Intellisense
         internal void SetTypematch()
         {
             IsTypeMatch = true;
-        }
-
-        private bool IsExactMatch(string input, string match)
-        {
-            Contracts.AssertValue(input);
-            Contracts.AssertValue(match);
-            return input.Equals(match, StringComparison.OrdinalIgnoreCase);
         }
     }
 }
