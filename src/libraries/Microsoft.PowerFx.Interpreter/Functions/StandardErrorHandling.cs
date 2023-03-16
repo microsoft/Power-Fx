@@ -102,7 +102,7 @@ namespace Microsoft.PowerFx.Functions
                     case ReturnBehavior.ReturnBlankIfAnyArgIsBlank:
                         if (anyValueBlank)
                         {
-                            return new BlankValue(IRContext.NotInSource(FormulaType.Blank));
+                            return new BlankValue(IRContext.NotInSource(irContext.ResultType));
                         }
 
                         break;

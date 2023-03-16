@@ -60,3 +60,15 @@ Blank()
 
 >> ColorValue("")
 Blank()
+
+>> Color.Red
+RGBA(255,0,0,1)
+
+>> Color.Black
+RGBA(0,0,0,1)
+
+>> Color.ForestGreen
+RGBA(34,139,34,1)
+
+>> Color.AliceBlue
+RGBA(240,248,255,1)

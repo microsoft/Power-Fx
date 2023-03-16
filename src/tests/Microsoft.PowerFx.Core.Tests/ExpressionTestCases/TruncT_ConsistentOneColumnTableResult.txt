@@ -1,0 +1,67 @@
+﻿#SETUP: ConsistentOneColumnTableResult
+
+// Trunc(Number_or_table, [digits_or_table]), toward zero
+
+// Table and scalar
+
+>> Trunc([1.2, 3.4, 5.6, 7.8], 0)
+Table({Value:1},{Value:3},{Value:5},{Value:7})
+
+>> Trunc([1.2, 3.4, 5.6, 7.8])
+Table({Value:1},{Value:3},{Value:5},{Value:7})
+
+>> Trunc(Table({a: 1.23}, {a: 4.56}, {a: 7.89}, {a: 10.12}), 1)
+Table({Value:1.2},{Value:4.5},{Value:7.8},{Value:10.1})
+
+>> Trunc(Table({a: 1.23}, {a: 4.56}, {a: 7.89}, {a: 10.12}), 0)
+Table({Value:1},{Value:4},{Value:7},{Value:10})
+
+>> Trunc(Table({a: 1.23}, {a: 4.56}, {a: 7.89}, {a: 10.12}))
+Table({Value:1},{Value:4},{Value:7},{Value:10})
+
+>> Trunc(Table({b: -9.8765}, {b: -8.7654}, {b: -7.6543}, {b: -6.5432}, {b: -5.4321}), 2)
+Table({Value:-9.87},{Value:-8.76},{Value:-7.65},{Value:-6.54},{Value:-5.43})
+
+>> Trunc(Filter([1,2,3], Value > 10), 0) // Empty table
+Table()
+
+// Scalar and table
+>> Trunc(1234.5678, [-2, -1, 0, 1, 2])
+Table({Value:1200},{Value:1230},{Value:1234},{Value:1234.5},{Value:1234.56})
+
+// Table and table
+>> Trunc(Table({a: 123.456}, {a: 345.678}), Table({b: 1}, {b: 2}))
+Table({Value:123.4},{Value:345.67})
+
+// Blank values
+>> Trunc( If(1<0,[1]), 1 )
+Blank()
+
+>> Trunc( If(1<0,[1]) )
+Blank()
+
+// Errors
+>> Trunc( If(1/0<2, [1]), 1 )
+Error({Kind:ErrorKind.Div0})
+
+>> Trunc( [1.2, 2.3, 3.4], 1/0 )
+Table({Value:Error({Kind:ErrorKind.Div0})},{Value:Error({Kind:ErrorKind.Div0})},{Value:Error({Kind:ErrorKind.Div0})})
+
+>> Trunc(Table({b: 1.23}, {b: Sqrt(-1)}, {b: 7.89}), 1)
+Table({Value:1.2},{Value:Error({Kind:ErrorKind.Numeric})},{Value:7.8})
+
+// Coercions and blank values
+>> Trunc(["12.34", "56.78"], "1")
+Table({Value:12.3},{Value:56.7})
+
+>> Trunc(["12.34", "56.78"], true)
+Table({Value:12.3},{Value:56.7})
+
+>> Trunc(If(1<0,["12.34", "56.78"]), 1)
+Blank()
+
+>> Trunc(If(1<0,["12.34", "56.78"]))
+Blank()
+
+>> Trunc(["12.34", "56.78"], If(1<0,"1"))
+Table({Value:12},{Value:56})

@@ -718,7 +718,9 @@ namespace Microsoft.PowerFx.Functions
         public static FormulaValue RoundDown(IRContext irContext, NumberValue[] args)
         {
             var numberArg = args[0].Value;
-            var digitsArg = args[1].Value;
+
+            // RoundDown is also used for Trunc which has an optional digits argument
+            var digitsArg = args.Length == 1 ? 0 : args[1].Value;
 
             var x = Round(numberArg, digitsArg, RoundType.Down);
             return new NumberValue(irContext, x);

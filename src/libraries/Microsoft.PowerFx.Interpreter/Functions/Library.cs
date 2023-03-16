@@ -1593,6 +1593,10 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: Year)
+            },
+            {
+                BuiltinFunctionsCore.Language,
+                NoErrorHandling(Language)
             }
         };
 
@@ -1709,6 +1713,18 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.RoundT,
                 NoErrorHandling(MultiSingleColumnTable(SimpleFunctionImplementations[BuiltinFunctionsCore.Round], ReplaceBlankWithZero))
+            },
+            {
+                BuiltinFunctionsCore.RoundUpT,
+                NoErrorHandling(MultiSingleColumnTable(SimpleFunctionImplementations[BuiltinFunctionsCore.RoundUp], ReplaceBlankWithZero))
+            },
+            {
+                BuiltinFunctionsCore.RoundDownT,
+                NoErrorHandling(MultiSingleColumnTable(SimpleFunctionImplementations[BuiltinFunctionsCore.RoundDown], ReplaceBlankWithZero))
+            },
+            {
+                BuiltinFunctionsCore.TruncT,
+                NoErrorHandling(MultiSingleColumnTable(SimpleFunctionImplementations[BuiltinFunctionsCore.RoundDown], ReplaceBlankWithZero))
             },
         };
 

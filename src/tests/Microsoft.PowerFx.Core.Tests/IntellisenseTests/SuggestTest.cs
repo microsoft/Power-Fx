@@ -3,10 +3,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Texl;
+using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
@@ -235,10 +237,30 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             Assert.Equal(expectedSuggestions, actualSuggestions);
         }
 
+        [Fact]
+        public void TestSuggestEscapedEnumName()
+        {
+            var enumStoreBuilder = new EnumStoreBuilder();
+            enumStoreBuilder.TestOnly_WithCustomEnum(new EnumSymbol(
+                new DName("Name That.Requires!escaping"),
+                DType.Number,
+                new Dictionary<string, object>()
+                {
+                    { "Field1", 1 },
+                    { "Field2", 2 },
+                }));
+            var config = PowerFxConfig.BuildWithEnumStore(CultureInfo.InvariantCulture, enumStoreBuilder);
+
+            var result = SuggestStrings("Fiel|", config);
+            Assert.Equal(2, result.Length);
+            Assert.Contains("'Name That.Requires!escaping'.Field1", result);
+            Assert.Contains("'Name That.Requires!escaping'.Field2", result);
+        }
+
         [Theory]
         [InlineData("SortByColumns(|", 2, "The table to sort.", "SortByColumns(source, column, ...)")]
         [InlineData("SortByColumns(tbl1,|", 2, "A unique column name.", "SortByColumns(source, column, ...)")]
-        [InlineData("SortByColumns(tbl1,col1,|", 1, "Ascending or Descending", "SortByColumns(source, column, order, ...)")]
+        [InlineData("SortByColumns(tbl1,col1,|", 1, "SortOrder.Ascending or SortOrder.Descending", "SortByColumns(source, column, order, ...)")]
         [InlineData("SortByColumns(tbl1,col1,SortOrder.Ascending,|", 2, "A unique column name.", "SortByColumns(source, column, order, column, ...)")]
         [InlineData("IfError(1|", 1, "Value that is returned if it is not an error.", "IfError(value, fallback, ...)")]
         [InlineData("IfError(1,2|", 1, "Value that is returned if the previous argument is an error.", "IfError(value, fallback, ...)")]

@@ -371,5 +371,12 @@ namespace Microsoft.PowerFx.Core.Types.Enums
 
             return list.ToImmutable();
         }
+
+        // Do not use, only for testing
+        internal EnumStoreBuilder TestOnly_WithCustomEnum(EnumSymbol custom)
+        {
+            _enumSymbols = ImmutableList.CreateRange(new List<EnumSymbol>() { custom });
+            return this;
+        }
     }
 }

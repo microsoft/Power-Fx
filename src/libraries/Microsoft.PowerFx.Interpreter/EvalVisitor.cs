@@ -118,6 +118,11 @@ namespace Microsoft.PowerFx
             return new BooleanValue(node.IRContext, node.LiteralValue);
         }
 
+        public override async ValueTask<FormulaValue> Visit(ColorLiteralNode node, EvalVisitorContext context)
+        {
+            return new ColorValue(node.IRContext, node.LiteralValue);
+        }
+
         public override async ValueTask<FormulaValue> Visit(RecordNode node, EvalVisitorContext context)
         {
             var fields = new List<NamedValue>();
@@ -435,7 +440,7 @@ namespace Microsoft.PowerFx
 
             if (arg1 is UntypedObjectValue cov && arg2 is StringValue sv)
             {
-                if (cov.Impl.Type is ExternalType et && et.Kind == ExternalTypeKind.Object)
+                if (cov.Impl.Type is ExternalType et && (et.Kind == ExternalTypeKind.Object || et.Kind == ExternalTypeKind.ArrayAndObject))
                 {
                     if (cov.Impl.TryGetProperty(sv.Value, out var res))
                     {
@@ -495,6 +500,11 @@ namespace Microsoft.PowerFx
         public override async ValueTask<FormulaValue> Visit(AggregateCoercionNode node, EvalVisitorContext context)
         {
             var arg1 = await node.Child.Accept(this, context);
+
+            if (arg1 is BlankValue || arg1 is ErrorValue)
+            {
+                return arg1;
+            }
 
             if (node.Op == UnaryOpKind.TableToTable)
             {
@@ -617,11 +627,6 @@ namespace Microsoft.PowerFx
                 Span = node.IRContext.SourceContext,
                 Kind = ErrorKind.AnalysisError
             });
-        }
-
-        public override async ValueTask<FormulaValue> Visit(ColorLiteralNode node, EvalVisitorContext context)
-        {
-            return CommonErrors.NotYetImplementedError(node.IRContext, "Color literal");
         }
 
         public override async ValueTask<FormulaValue> Visit(ChainingNode node, EvalVisitorContext context)
