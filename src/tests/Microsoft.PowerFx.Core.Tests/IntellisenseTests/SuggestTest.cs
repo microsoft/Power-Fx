@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Threading;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Texl;
@@ -279,17 +280,25 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             Assert.Equal(expectedDescription, currentOverload.FunctionParameterDescription);
         }
 
-        // Add an extra (empy) symbol table into the config and ensure we get the same results. 
-        private void AdjustConfig(PowerFxConfig config)
+        [Theory]
+        [InlineData("çava,comment,chat", "çava,chat,comment", "fr-FR")]
+        [InlineData("azul,árvore,áurea", "árvore,áurea,azul", "pt-BR")]
+        [InlineData("Choice,car", "car,Choice", "en-US")] // Case insensitive comparison
+        public void TestIntellisenseSuggestionsSortOrder(string names, string expectedOrder, string culture)
         {
-            /*
-            config.SymbolTable = new SymbolTable 
+            var context = $"![{string.Join(",", names.Split(',').Select(s => $"variable{s}:n"))}]";
+            var expectedSuggestions = expectedOrder.Split(',').Select(s => "variable" + s).ToArray();
+            var config = PowerFxConfig.BuildWithEnumStore(new CultureInfo(culture), new EnumStoreBuilder().WithDefaultEnums());
+
+            var result = Suggest("variabl|", config, context);
+            var suggestions = result.Suggestions.ToList();
+
+            Assert.Equal(expectedSuggestions.Length, suggestions.Count);
+
+            for (var i = 0; i < expectedSuggestions.Length; i++)
             {
-#pragma warning disable CS0618 // Type or member is obsolete
-                Parent = config.SymbolTable,
-#pragma warning restore CS0618 // Type or member is obsolete
-                DebugName = "Extra Table"
-            };*/
+                Assert.Equal(expectedSuggestions[i], suggestions[i].DisplayText.Text);
+            }
         }
 
         /// <summary>
@@ -340,10 +349,10 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
 
             var config = Default;
             var actualSuggestions = SuggestStrings(expression, config, context);
-            Assert.Equal(expectedSuggestions.OrderBy(x => x), actualSuggestions.OrderBy(x => x));
+            Assert.Equal(expectedSuggestions, actualSuggestions);
 
             actualSuggestions = SuggestStrings(expression, config, context);
-            Assert.Equal(expectedSuggestions.OrderBy(x => x), actualSuggestions.OrderBy(x => x));
+            Assert.Equal(expectedSuggestions, actualSuggestions);
         }
 
         [Theory]
