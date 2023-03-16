@@ -5057,8 +5057,8 @@
     <comment>Description of 'Language' function.</comment>
   </data>
   <data name="AboutEncodeUrl" xml:space="preserve">
-    <value />
-    <comment>Encodes a URL string, replacing certain non-alphanumeric characters with % and a hexadecimal number.</comment>
+    <value>Encodes a URL string, replacing certain non-alphanumeric characters with % and a hexadecimal number.</value>
+    <comment>Description of 'EncodeUrl' function.</comment>
   </data>
   <data name="EncodeUrlArg1" xml:space="preserve">
     <value>url</value>

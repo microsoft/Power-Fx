@@ -73,3 +73,11 @@ Error({Kind:ErrorKind.Div0})
 // String URL Parameter
 >> EncodeUrl("http://b*()!\'ool")
 "http%3A%2F%2Fb%2A%28%29%21%5C%27ool"
+
+// Unicode Parameter
+>> EncodeUrl(U+2764)
+Errors: Error 10-11: Name isn't valid. 'U' isn't recognized.
+
+// String Unicode Parameter
+>> EncodeUrl("U+2764")
+"U%2B2764"
