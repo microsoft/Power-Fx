@@ -91,7 +91,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             //  1) in operator delegation and
             //  2) it is not within row scope
             //  3) it is verifying if RHS node is supported and
-            //  4) it is not an async node unless allowed by the AllowAsyncDelegation feature and
+            //  4) it is not an async node or a valid async node.
             //  5) it is a single column table and
             //  6) metadata belongs to cds datasource that supports delegation of CdsIn
             // If this check fails, verify if it is simply a valid node..
@@ -105,7 +105,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
                 && !binding.IsRowScope(node)
                 && binding.GetType(node).IsTable 
                 && binding.GetType(node).IsColumn
-                && (IsValidAsyncOrImpureNode(node, binding) || !binding.IsAsync(node))
+                && (binding.Features.HasFlag(Features.AllowAsyncDelegation) || !binding.IsAsync(node))
                 && opDelStrategy.IsOpSupportedByTable(metadata, node, binding))
             {
                 return true;

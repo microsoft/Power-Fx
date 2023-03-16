@@ -127,14 +127,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         {
         }
 
-        public override bool IsValidCallNode(CallNode node, TexlBinding binding, OperationCapabilityMetadata metadata)
-        {
-            // AsType CallNodeDelegationStrategy should match default IsValidCallNode from
-            // DelegationValidationStrategy but skips the !IsBlockScopedConstant check as
-            // well as impure and async checks via the IsValidAsyncOrImpureNode override
-            return IsValidCallNodeInternal(node, binding, metadata, true);
-        }
-
         protected override bool IsValidAsyncOrImpureNode(TexlNode node, TexlBinding binding)
         {
             // AsType should always be marked as valid regardless of it being async and impure.

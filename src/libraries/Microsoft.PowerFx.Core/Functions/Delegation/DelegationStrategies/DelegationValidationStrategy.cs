@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Globalization;
+using System.Security.Authentication.ExtendedProtection;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Errors;
@@ -364,24 +365,23 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
                 return function.GetCallNodeDelegationStrategy().IsValidCallNode(node, binding, metadata);
             }
 
-            return IsValidCallNodeInternal(node, binding, metadata, false);
+            return IsValidCallNodeInternal(node, binding, metadata);
         }
 
-        protected bool IsValidCallNodeInternal(CallNode node, TexlBinding binding, OperationCapabilityMetadata metadata, bool allowNonBlockScopedConstant)
+        protected bool IsValidCallNodeInternal(CallNode node, TexlBinding binding, OperationCapabilityMetadata metadata)
         {
             Contracts.AssertValue(node);
             Contracts.AssertValue(binding);
             Contracts.AssertValue(metadata);
 
-            if (!IsValidAsyncOrImpureNode(node, binding))
+            // We skip aysnc or impure check for BlockScopedConstants
+            // to allow for nesting of valid async nodes.
+            if (!binding.IsBlockScopedConstant(node))
             {
-                SuggestDelegationHint(node, binding);
-                return false;
-            }
-
-            if (!allowNonBlockScopedConstant && !binding.IsBlockScopedConstant(node))
-            {
-                return false;
+                if (!IsValidAsyncOrImpureNode(node, binding))
+                {
+                    return false;
+                }
             }
 
             // If the node is not row scoped and it's valid then it can be delegated.
