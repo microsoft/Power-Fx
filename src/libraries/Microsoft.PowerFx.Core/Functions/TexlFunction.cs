@@ -404,6 +404,23 @@ namespace Microsoft.PowerFx.Core.Functions
         }
 
         /// <summary>
+        /// Perform sub-expression type checking and produce a return type for the function declaration, this is only applicable for UDFs.
+        /// </summary>
+        public virtual bool CheckTypesOnDeclaration(CheckTypesContext context, TexlNode[] args, DType[] argTypes, DType returnType, IErrorContainer errors, out DType actualReturnType)
+        {
+            actualReturnType = DType.Unknown;
+
+            return false;
+        }
+
+        /// <summary>
+        /// Perform expression-level semantics checks which require a binding, this is only applicable for UDFs.
+        /// </summary>
+        public virtual void CheckSemanticsOnDeclaration(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors)
+        { 
+        }
+
+        /// <summary>
         /// Perform expression-level semantics checks which require a binding. May produce coercions.
         /// </summary>
         public virtual void CheckSemantics(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors, ref Dictionary<TexlNode, DType> nodeToCoercedTypeMap)

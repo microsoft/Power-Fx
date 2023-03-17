@@ -7,7 +7,7 @@ using Microsoft.PowerFx.Core.Errors;
 
 namespace Microsoft.PowerFx.Core.Parser
 {
-    internal class ParseUserDefinitionResult
+    internal sealed class ParseUserDefinitionResult
     {
         internal IEnumerable<UDF> UDFs { get; }
 

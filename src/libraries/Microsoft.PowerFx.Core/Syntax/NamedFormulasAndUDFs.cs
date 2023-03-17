@@ -15,7 +15,7 @@ namespace Microsoft.PowerFx.Syntax
     /// <summary>
     /// This encapsulates a named formula and user defined functions: its original script, the parsed result, and any parse errors.
     /// </summary>
-    internal class NamedFormulasAndUDFs
+    internal sealed class NamedFormulasAndUDFs
     {
         /// <summary>
         /// A script containing one or more UDFs.
