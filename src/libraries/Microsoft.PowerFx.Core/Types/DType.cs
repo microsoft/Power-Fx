@@ -865,6 +865,7 @@ namespace Microsoft.PowerFx.Core.Types
             Contracts.AssertValue(info);
             Contracts.Assert(info.BackingKind is DKind.String or DKind.Number or DKind.Boolean or DKind.Color);
 
+            // This is a hotpath. Some scenarios have 10k option sets
             return new DType(DKind.OptionSet, TypeTree.Create(info.OptionNames.Select(on => new KeyValuePair<string, DType>(on, new DType(DKind.OptionSetValue, info)))), info);
         }
 
