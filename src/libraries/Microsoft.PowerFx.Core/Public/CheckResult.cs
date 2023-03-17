@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using Microsoft.CodeAnalysis;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.IR;
@@ -18,7 +19,7 @@ using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx
-{
+{ 
     /// <summary>
     /// Holds work such as parsing, binding, error checking done on a single expression. 
     /// Different options require different work. 
@@ -505,7 +506,7 @@ namespace Microsoft.PowerFx
                 // Errors require Binding, Parse 
                 var binding = ApplyBindingInternal();
 
-                // Plus engine's may have additional constaints. 
+                // Plus engine's may have additional constraints. 
                 // PostCheck may refer to binding. 
                 var extraErrors = Engine.InvokePostCheck(this);
 
