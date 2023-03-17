@@ -865,15 +865,7 @@ namespace Microsoft.PowerFx.Core.Types
             Contracts.AssertValue(info);
             Contracts.Assert(info.BackingKind is DKind.String or DKind.Number or DKind.Boolean or DKind.Color);
 
-            var pairs = new List<KeyValuePair<string, DType>>();
-
-            foreach (var name in info.OptionNames)
-            {
-                var type = new DType(DKind.OptionSetValue, info);
-                pairs.Add(new KeyValuePair<string, DType>(name, type));
-            }
-
-            return new DType(DKind.OptionSet, TypeTree.Create(pairs), info);
+            return new DType(DKind.OptionSet, TypeTree.Create(info.OptionNames.Select(on => new KeyValuePair<string, DType>(on, new DType(DKind.OptionSetValue, info)))), info);
         }
 
         public static DType CreateViewType(IExternalViewInfo info)
