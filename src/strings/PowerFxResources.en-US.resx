@@ -5078,4 +5078,15 @@
     <value>Get the default locale set at runtime.</value>
     <comment>Description of 'Language' function.</comment>
   </data>
+  <data name="AboutEncodeUrl" xml:space="preserve">
+    <value>Encodes a URL string, replacing certain non-alphanumeric characters with % and a hexadecimal number.</value>
+    <comment>Description of 'EncodeUrl' function.</comment>
+  </data>
+  <data name="EncodeUrlArg1" xml:space="preserve">
+    <value>url</value>
+    <comment>Function_parameter - First parameter for the EncodeUrl function - the URL(string) to encode. Translate this string. Maintain as a single word (do not add spaces)</comment>
+  </data>
+  <data name="AboutEncodeUrl_url" xml:space="preserve">
+    <value>A url to be encoded.</value>
+  </data>
 </root>
