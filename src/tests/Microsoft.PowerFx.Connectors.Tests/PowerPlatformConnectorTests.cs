@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -496,7 +497,8 @@ namespace Microsoft.PowerFx.Tests
                     "a2df3fb8-e4a4-e5e6-905c-e3dff9f93b46",     // environment
                     "5f57ec83acef477b8ccc769e52fa22cc",         // connectionId
                     () => "ey...",
-                    httpClient)
+                    httpClient,
+                    new Dictionary<string, IEnumerable<string>>() { { "x-ms-user-agent", new List<string>() { "SpecialAgent/0.0.7" } } })
             {
                 SessionId = "8e67ebdc-d402-455a-b33a-304820832383"
             };
@@ -515,7 +517,7 @@ namespace Microsoft.PowerFx.Tests
 
             string actual = testConnector._log.ToString();
             string version = PowerPlatformConnectorClient.Version;
-            string expected2 = @$"POST https://tip1-shared-002.azure-apim.net/invoke
+            string expected2 = @"POST https://tip1-shared-002.azure-apim.net/invoke
  authority: tip1-shared-002.azure-apim.net
  Authorization: Bearer ey...
  path: /invoke
@@ -524,7 +526,7 @@ namespace Microsoft.PowerFx.Tests
  x-ms-client-session-id: 8e67ebdc-d402-455a-b33a-304820832383
  x-ms-request-method: GET
  x-ms-request-url: /apim/sql/5f57ec83acef477b8ccc769e52fa22cc/v2/datasets/pfxdev-sql.database.windows.net,connectortest/procedures
- x-ms-user-agent: PowerFx/{version}
+ x-ms-user-agent: SpecialAgent/0.0.7
 ";
 
             Assert.Equal(expected2, actual);
