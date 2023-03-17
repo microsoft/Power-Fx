@@ -54,7 +54,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var acceptedFields = reifiedError.GetNames(DPath.Root);
             var requiredKindField = acceptedFields.Where(tn => tn.Name == "Kind").First();
             Contracts.Assert(requiredKindField.Type.IsEnum || requiredKindField.Type.Kind == DKind.Number);
-            var optionalFields = acceptedFields.Where(tn => tn.Name != "Kind");
 
             returnType = DType.ObjNull;
             nodeToCoercedTypeMap = null;
@@ -93,7 +92,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 return false;
             }
 
-            var argumentKindType = names.First(tn => tn.Name == requiredKindField.Name).Type;
+            var argumentKindType = names.FirstOrDefault(tn => tn.Name == requiredKindField.Name).Type;
             if (argumentKindType.IsEnum)
             {
                 argumentKindType = argumentKindType.GetEnumSupertype();
