@@ -35,9 +35,9 @@ namespace Microsoft.PowerFx
         /// <summary>
         /// Set UserInfo.
         /// </summary>
-        /// <param name="symbols">SymbolValues where to set the CultureInfo.</param>
+        /// <param name="symbols">SymbolValues where to set the UserInfo.</param>
         /// <param name="userInfo">UserInfo to set.</param>
-        /// <exception cref="ArgumentNullException">When culture is null.</exception>
+        /// <exception cref="ArgumentNullException">When userInfo is null.</exception>
         public static void SetUserInfo(this RuntimeConfig symbols, UserInfo userInfo)
         {
             symbols.AddService(userInfo ?? throw new ArgumentNullException(nameof(userInfo)));
