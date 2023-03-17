@@ -15,7 +15,7 @@ namespace Microsoft.PowerFx.Syntax
     /// <summary>
     /// This encapsulates a named formula and user defined functions: its original script, the parsed result, and any parse errors.
     /// </summary>
-    internal sealed class NamedFormulasAndUDFs
+    internal sealed class UserDefinitions
     {
         /// <summary>
         /// A script containing one or more UDFs.
@@ -28,7 +28,7 @@ namespace Microsoft.PowerFx.Syntax
         /// </summary>
         public readonly CultureInfo Loc;
 
-        public NamedFormulasAndUDFs(string script, CultureInfo loc = null)
+        public UserDefinitions(string script, CultureInfo loc = null)
         {
             Contracts.AssertValue(script);
             Contracts.AssertValueOrNull(loc);
