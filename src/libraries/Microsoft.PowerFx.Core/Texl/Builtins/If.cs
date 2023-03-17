@@ -85,34 +85,25 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             var type = ReturnType;
 
-            // Are we on a behavior property?
-            var isBehavior = context.AllowsSideEffects;
-
             // Compute the result type by joining the types of all non-predicate args.
             Contracts.Assert(type == DType.Unknown);
             for (var i = 1; i < count;)
             {
                 var nodeArg = args[i];
                 var typeArg = argTypes[i];
-                if (typeArg.IsVoid)
-                {
-                    type = DType.Void;
-                    break;
-                }
-
-                if (typeArg.IsError)
-                {
-                    errors.EnsureError(args[i], TexlStrings.ErrTypeError);
-                }
 
                 var typeSuper = DType.Supertype(type, typeArg);
                 if (!typeSuper.IsError)
                 {
                     type = typeSuper;
                 }
-                else if (type.Kind == DKind.Unknown)
+                else if (typeArg.IsVoid)
                 {
-                    type = typeSuper;
+                    type = DType.Void;
+                }
+                else if (typeArg.IsError)
+                {
+                    errors.EnsureError(args[i], TexlStrings.ErrTypeError);
                     fArgsValid = false;
                 }
                 else if (!type.IsError)
@@ -125,7 +116,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     {
                         // If the types are incompatible, the result type is void.
                         type = DType.Void;
-                        break;
                     }
                 }
                 else if (typeArg.Kind != DKind.Unknown)
