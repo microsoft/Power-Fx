@@ -547,6 +547,17 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: DropColumns)
+            },            
+            {
+                BuiltinFunctionsCore.EncodeUrl,
+                StandardErrorHandling<StringValue>(
+                    BuiltinFunctionsCore.EncodeUrl.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: NoOpAlreadyHandledByIR,
+                    checkRuntimeTypes: ExactValueType<StringValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: EncodeUrl)
             },
             {
                 BuiltinFunctionsCore.EndsWith,
