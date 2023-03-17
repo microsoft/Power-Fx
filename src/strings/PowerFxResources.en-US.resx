@@ -2985,26 +2985,6 @@
     <value>Globe</value>
     <comment>Icon control name representing an globe object. Display text representing the value of Icon enum that will be shown in the icon control. This value represents the Globe value.</comment>
   </data>
-  <data name="Icon_GlobeNotConnected_DisplayName" xml:space="preserve">
-    <value>Globe - Not connected</value>
-    <comment>Display text representing the value of Icon enum that will be shown in the icon control. This value represents the Globe - Not connected value.</comment>
-  </data>
-  <data name="Icon_GlobeRefresh_DisplayName" xml:space="preserve">
-    <value>Globe - Refresh</value>
-    <comment>Display text representing the value of Icon enum that will be shown in the icon control. This value represents the Globe - Refresh value.</comment>
-  </data>
-  <data name="Icon_GlobeChangesPending_DisplayName" xml:space="preserve">
-    <value>Globe - Changes pending</value>
-    <comment>Display text representing the value of Icon enum that will be shown in the icon control. This value represents the Globe - Changes pending value.</comment>
-  </data>
-  <data name="Icon_GlobeWarning_DisplayName" xml:space="preserve">
-    <value>Globe - Warning</value>
-    <comment>Display text representing the value of Icon enum that will be shown in the icon control. This value represents the Globe - Warning value.</comment>
-  </data>
-  <data name="Icon_GlobeError_DisplayName" xml:space="preserve">
-    <value>Globe - Error</value>
-    <comment>Display text representing the value of Icon enum that will be shown in the icon control. This value represents the Globe - Error value.</comment>
-  </data>
   <data name="Icon_HalfFilledCircle_DisplayName" xml:space="preserve">
     <value>Half filled circle</value>
     <comment>Icon control name representing an half filled circle object. Display text representing the value of Icon enum that will be shown in the icon control. This value represents the HalfFilledCircle value.</comment>
@@ -5077,5 +5057,16 @@
   <data name="AboutLanguage" xml:space="preserve">
     <value>Get the default locale set at runtime.</value>
     <comment>Description of 'Language' function.</comment>
+  </data>
+  <data name="AboutEncodeUrl" xml:space="preserve">
+    <value>Encodes a URL string, replacing certain non-alphanumeric characters with % and a hexadecimal number.</value>
+    <comment>Description of 'EncodeUrl' function.</comment>
+  </data>
+  <data name="EncodeUrlArg1" xml:space="preserve">
+    <value>url</value>
+    <comment>Function_parameter - First parameter for the EncodeUrl function - the URL(string) to encode. Translate this string. Maintain as a single word (do not add spaces)</comment>
+  </data>
+  <data name="AboutEncodeUrl_url" xml:space="preserve">
+    <value>A url to be encoded.</value>
   </data>
 </root>
