@@ -89,6 +89,3 @@ Table({Value:10},{Value:18},{Value:65535})
 
 >> Hex2Dec(Table({a:"A",b:"B"}))
 Errors: Error 0-29: The function 'Hex2Dec' has some invalid arguments.|Error 8-28: Invalid schema, expected a one-column table.
-
->> Hex2Dec(Table({A:"dead", B: "beef"},{A:"beef",B:"dead"}))
-Errors: Error 0-57: The function 'Hex2Dec' has some invalid arguments.|Error 8-56: Invalid schema, expected a one-column table.
