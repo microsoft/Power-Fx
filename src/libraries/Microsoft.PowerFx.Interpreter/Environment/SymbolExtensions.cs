@@ -4,6 +4,7 @@
 using System;
 using System.Globalization;
 using System.Linq;
+using Microsoft.PowerFx.Functions;
 
 namespace Microsoft.PowerFx
 {
@@ -29,6 +30,17 @@ namespace Microsoft.PowerFx
         public static void SetCulture(this RuntimeConfig symbols, CultureInfo culture)
         {
             symbols.AddService(culture ?? throw new ArgumentNullException(nameof(culture)));
+        }
+
+        /// <summary>
+        /// Set UserInfo.
+        /// </summary>
+        /// <param name="symbols">SymbolValues where to set the CultureInfo.</param>
+        /// <param name="userInfo">UserInfo to set.</param>
+        /// <exception cref="ArgumentNullException">When culture is null.</exception>
+        public static void SetUserInfo(this RuntimeConfig symbols, UserInfo userInfo)
+        {
+            symbols.AddService(userInfo ?? throw new ArgumentNullException(nameof(userInfo)));
         }
 
         /// <summary>
