@@ -2,6 +2,12 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.PowerFx.Types;
 using Xunit;
 
 namespace Microsoft.PowerFx.Interpreter.Tests
@@ -132,6 +138,113 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             lookup = r1.GetService(typeof(MyService));
             Assert.Same(derivedService, lookup);
+        }
+
+        [Theory]
+        [InlineData("User.Name", true, "test")]
+        [InlineData("User.Age", true, 21d)]
+        [InlineData("User.SomeField", false, null)]
+        public async Task AddHostObjectBasicTests(string expression, bool isCheckSuccess, object expected)
+        {
+            var symbol = new SymbolTable();
+            
+            var userType = RecordType.Empty()
+                .Add("Name", FormulaType.String)
+                .Add("Age", FormulaType.Number);
+
+            symbol.AddHostObject("User", userType, GetUserObject);
+
+            var config = new PowerFxConfig() { SymbolTable = symbol };
+            var engine = new RecalcEngine(config);
+            var check = engine.Check(expression);
+            Assert.Equal(isCheckSuccess, check.IsSuccess);
+
+            if (expected != null)
+            {
+                var runtimeConfig = new RuntimeConfig();
+                runtimeConfig.AddService<User>(new User() { Name = "test", Age = 21 });
+
+                var res = await check.GetEvaluator().EvalAsync(CancellationToken.None, runtimeConfig);
+            
+                Assert.Equal(expected, res.ToObject());
+            }
+        }
+
+        [Fact]
+        public async Task AddHostObjectTypeMismatchTest()
+        {
+            var symbol = new SymbolTable();
+
+            var userType = RecordType.Empty()
+                .Add("Name", FormulaType.String);
+
+            symbol.AddHostObject("User", userType, GetUserObject);
+
+            var config = new PowerFxConfig() { SymbolTable = symbol };
+            var engine = new RecalcEngine(config);
+            var check = engine.Check("User.Name");
+            Assert.True(check.IsSuccess);
+
+            var runtimeConfig = new RuntimeConfig();
+            runtimeConfig.AddService<User>(new User() { Name = "test", Age = 21 });
+
+            var res = await check.GetEvaluator().EvalAsync(CancellationToken.None, runtimeConfig);
+            Assert.IsType<ErrorValue>(res);
+            Assert.NotNull(((ErrorValue)res).Errors.Where((error) => error.Kind.Equals(ErrorKind.InvalidArgument)));
+        }
+
+        [Fact]
+        public async Task AddHostObjectCustomErrorTest()
+        {
+            var symbol = new SymbolTable();
+
+            var userType = RecordType.Empty()
+                .Add("Name", FormulaType.String)
+                .Add("Age", FormulaType.Number);
+
+            symbol.AddHostObject("User", userType, GetUserObject);
+
+            var config = new PowerFxConfig() { SymbolTable = symbol };
+            var engine = new RecalcEngine(config);
+            var check = engine.Check("User.Name");
+            Assert.True(check.IsSuccess);
+
+            var runtimeConfig = new RuntimeConfig();
+
+            var res = await check.GetEvaluator().EvalAsync(CancellationToken.None, runtimeConfig);
+            Assert.IsType<ErrorValue>(res);
+            Assert.NotNull(((ErrorValue)res).Errors.Where((error) => error.Kind.Equals(ErrorKind.Custom)));
+        }
+
+        [Fact]
+        public void AddHostObjectCollisonTest()
+        {
+            var symbol = new SymbolTable();
+            symbol.AddVariable("User", FormulaType.String);
+            Assert.Throws<NameCollisionException>(() => symbol.AddHostObject("User", FormulaType.String, (serviceProvider) => FormulaValue.New("test")));
+        }
+
+        public FormulaValue GetUserObject(IServiceProvider serviceProvider)
+        {
+            var cache = new TypeMarshallerCache();
+            var user = (User)serviceProvider.GetService(typeof(User));
+            
+            // if user object was not added via service provider.
+            if (user == null)
+            {
+                // this exception is catch by Fx, and converted to an error.
+                throw new CustomFunctionErrorException("User was not added to service");
+            }
+
+            var userFV = cache.Marshal(user);
+            return userFV;
+        }
+
+        private class User
+        {
+            public string Name { get; set; }
+            
+            public int Age { get; set; }
         }
     }
 }
