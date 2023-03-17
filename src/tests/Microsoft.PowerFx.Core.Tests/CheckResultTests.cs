@@ -8,6 +8,7 @@ using System.Linq;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Microsoft.PowerFx.Core.Tests
 {
@@ -127,7 +128,7 @@ namespace Microsoft.PowerFx.Core.Tests
             var formula = check.GetParseFormula();
             Assert.NotNull(formula);
         }
-        
+
         [Fact]
         public void ParseResultTest()
         {
@@ -155,9 +156,25 @@ namespace Microsoft.PowerFx.Core.Tests
 
             Assert.False(check.IsSuccess);
 
-            // Can still try to bind even with parse errors. 
+            // Can't set Binding if we called ApplyParse 
+            Assert.Throws<InvalidOperationException>(() => check.SetBindingInfo());
+        }
+
+        [Fact]
+        public void BasicParseErrors2()
+        {
+            var check = new CheckResult(new Engine());
+            check.SetText("1+"); // parse error
+
+           // Can still try to bind even with parse errors. 
             // But some information like Returntype isn't computed.
             check.SetBindingInfo();
+            var parse = check.ApplyParse();
+            Assert.NotNull(parse);
+            Assert.False(parse.IsSuccess);
+
+            Assert.False(check.IsSuccess);
+
             check.ApplyBinding();
             Assert.NotNull(check.Binding);
             Assert.Null(check.ReturnType);
@@ -241,21 +258,70 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Throws<InvalidOperationException>(() => check.ApplyBinding());
         }
 
-        [Fact]
-        public void BindingCheckReturnType()
+        [Theory]
+        [InlineData("\"test string\"", false, true)]
+        [InlineData("\"test string\"", true, true)]
+        [InlineData("12", false, false)]       
+        [InlineData("12", true, true)]
+        [InlineData("{a:12, b:15}", true, false)]
+        [InlineData("{a:12, b:15}", false, false)]
+        public void CheckResultExpectedReturnValueString(string inputExpr, bool allowCoerceTo, bool isSuccess)
         {
             var check = new CheckResult(new Engine())
-                .SetText("123")
+                .SetText(inputExpr)
                 .SetBindingInfo()
-                .SetExpectedReturnValue(FormulaType.String);
+                .SetExpectedReturnValue(FormulaType.String, allowCoerceTo);
 
-            var errors = check.ApplyErrors();
+            if (isSuccess)
+            {
+                Assert.True(check.IsSuccess);
+            }
+            else
+            {
+                var errors = check.ApplyErrors();
 
-            Assert.False(check.IsSuccess);
+                Assert.False(check.IsSuccess);
+                Assert.Single(errors);
+                var error = errors.First();
+                Assert.Contains("The type of this expression does not match the expected type 'Text'", error.ToString());
+            }
+        }
 
-            Assert.Single(errors);
-            var error = errors.First();
-            Assert.Equal("Error 0-3: The type of this expression does not match the expected type 'Text'. Found type 'Number'.", error.ToString());
+        [Theory]
+        [InlineData("12", false, true, "")]
+        [InlineData("12", true, true, "")]
+        [InlineData("\"test string\"", true, false, "The method or operation is not implemented")]
+        [InlineData("\"test string\"", false, false, "The type of this expression does not match the expected type 'Number'")]
+        [InlineData("{a:12, b:15}", true, false, "The method or operation is not implemented")]
+        [InlineData("{a:12, b:15}", false, false, "The type of this expression does not match the expected type 'Number'")]
+        public void CheckResultExpectedReturnValueNumber(string inputExpr, bool allowCoerceTo, bool isSuccess, string errorMsg)
+        {
+            var check = new CheckResult(new Engine())
+                .SetText(inputExpr)
+                .SetBindingInfo()
+                .SetExpectedReturnValue(FormulaType.Number, allowCoerceTo);
+
+            if (isSuccess)
+            {
+                Assert.True(check.IsSuccess);
+            }
+            else
+            {
+                string exMsg = null;
+
+                try
+                {
+                    var errors = check.ApplyErrors();
+                    exMsg = errorMsg.ToString();
+                    Assert.False(check.IsSuccess);
+                }
+                catch (Exception ex)
+                {
+                    exMsg = ex.ToString();
+                }
+
+                Assert.Contains(errorMsg, exMsg);
+            }
         }
 
         [Fact]
@@ -355,6 +421,14 @@ namespace Microsoft.PowerFx.Core.Tests
             var check = new CheckResult(new Engine());
 
             Assert.Throws<InvalidOperationException>(() => check.ApplyGetInvariant());
+        }
+
+        // CheckResult properly wired up to invariant translator. 
+        // More tests at DisplayNameTests
+        [Fact]
+        public void TestApplyGetInvariant2()
+        {
+            var check = new CheckResult(new Engine());
 
             var r1 = RecordType.Empty()
               .Add(new NamedFormulaType("new_field", FormulaType.Number, "Field"));
@@ -363,6 +437,21 @@ namespace Microsoft.PowerFx.Core.Tests
             // lexer locale: 2,3 --> 2.3
             check.SetText("Field + 2,3", _frCultureOpts);
             Assert.Throws<InvalidOperationException>(() => check.ApplyGetInvariant());
+        }
+
+        // CheckResult properly wired up to invariant translator. 
+        // More tests at DisplayNameTests
+        [Fact]
+        public void TestApplyGetInvariant3()
+        {
+            var check = new CheckResult(new Engine());
+
+            var r1 = RecordType.Empty()
+              .Add(new NamedFormulaType("new_field", FormulaType.Number, "Field"));
+
+            // display name: Field --> new_field
+            // lexer locale: 2,3 --> 2.3
+            check.SetText("Field + 2,3", _frCultureOpts);
 
             check.SetBindingInfo(r1);
             var invariant = check.ApplyGetInvariant();

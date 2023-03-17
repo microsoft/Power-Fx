@@ -3,10 +3,13 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Threading;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Texl;
+using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
@@ -142,7 +145,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("true &|", "&", "&&")]
 
         // UnaryOpNodeSuggestionHandler
-        [InlineData("Not| false", "Not", "NotificationType", "NotificationType.Error", "NotificationType.Information", "NotificationType.Success", "NotificationType.Warning", "ErrorKind.FileNotFound", "ErrorKind.NotApplicable", "ErrorKind.NotFound", "ErrorKind.NotSupported", "Icon.Note", "Icon.Notebook")]
+        [InlineData("Not| false", "Not", "NotificationType", "NotificationType.Error", "NotificationType.Information", "NotificationType.Success", "NotificationType.Warning", "ErrorKind.FileNotFound", "ErrorKind.NotApplicable", "ErrorKind.NotFound", "ErrorKind.NotSupported", "Icon.GlobeNotConnected", "Icon.Note", "Icon.Notebook")]
         [InlineData("| Not false")]
         [InlineData("Not |")]
 
@@ -235,10 +238,30 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             Assert.Equal(expectedSuggestions, actualSuggestions);
         }
 
+        [Fact]
+        public void TestSuggestEscapedEnumName()
+        {
+            var enumStoreBuilder = new EnumStoreBuilder();
+            enumStoreBuilder.TestOnly_WithCustomEnum(new EnumSymbol(
+                new DName("Name That.Requires!escaping"),
+                DType.Number,
+                new Dictionary<string, object>()
+                {
+                    { "Field1", 1 },
+                    { "Field2", 2 },
+                }));
+            var config = PowerFxConfig.BuildWithEnumStore(CultureInfo.InvariantCulture, enumStoreBuilder);
+
+            var result = SuggestStrings("Fiel|", config);
+            Assert.Equal(2, result.Length);
+            Assert.Contains("'Name That.Requires!escaping'.Field1", result);
+            Assert.Contains("'Name That.Requires!escaping'.Field2", result);
+        }
+
         [Theory]
         [InlineData("SortByColumns(|", 2, "The table to sort.", "SortByColumns(source, column, ...)")]
         [InlineData("SortByColumns(tbl1,|", 2, "A unique column name.", "SortByColumns(source, column, ...)")]
-        [InlineData("SortByColumns(tbl1,col1,|", 1, "Ascending or Descending", "SortByColumns(source, column, order, ...)")]
+        [InlineData("SortByColumns(tbl1,col1,|", 1, "SortOrder.Ascending or SortOrder.Descending", "SortByColumns(source, column, order, ...)")]
         [InlineData("SortByColumns(tbl1,col1,SortOrder.Ascending,|", 2, "A unique column name.", "SortByColumns(source, column, order, column, ...)")]
         [InlineData("IfError(1|", 1, "Value that is returned if it is not an error.", "IfError(value, fallback, ...)")]
         [InlineData("IfError(1,2|", 1, "Value that is returned if the previous argument is an error.", "IfError(value, fallback, ...)")]
@@ -257,17 +280,25 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             Assert.Equal(expectedDescription, currentOverload.FunctionParameterDescription);
         }
 
-        // Add an extra (empy) symbol table into the config and ensure we get the same results. 
-        private void AdjustConfig(PowerFxConfig config)
+        [Theory]
+        [InlineData("çava,comment,chat", "çava,chat,comment", "fr-FR")]
+        [InlineData("azul,árvore,áurea", "árvore,áurea,azul", "pt-BR")]
+        [InlineData("Choice,car", "car,Choice", "en-US")] // Case insensitive comparison
+        public void TestIntellisenseSuggestionsSortOrder(string names, string expectedOrder, string culture)
         {
-            /*
-            config.SymbolTable = new SymbolTable 
+            var context = $"![{string.Join(",", names.Split(',').Select(s => $"variable{s}:n"))}]";
+            var expectedSuggestions = expectedOrder.Split(',').Select(s => "variable" + s).ToArray();
+            var config = PowerFxConfig.BuildWithEnumStore(new CultureInfo(culture), new EnumStoreBuilder().WithDefaultEnums());
+
+            var result = Suggest("variabl|", config, context);
+            var suggestions = result.Suggestions.ToList();
+
+            Assert.Equal(expectedSuggestions.Length, suggestions.Count);
+
+            for (var i = 0; i < expectedSuggestions.Length; i++)
             {
-#pragma warning disable CS0618 // Type or member is obsolete
-                Parent = config.SymbolTable,
-#pragma warning restore CS0618 // Type or member is obsolete
-                DebugName = "Extra Table"
-            };*/
+                Assert.Equal(expectedSuggestions[i], suggestions[i].DisplayText.Text);
+            }
         }
 
         /// <summary>
@@ -318,10 +349,10 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
 
             var config = Default;
             var actualSuggestions = SuggestStrings(expression, config, context);
-            Assert.Equal(expectedSuggestions.OrderBy(x => x), actualSuggestions.OrderBy(x => x));
+            Assert.Equal(expectedSuggestions, actualSuggestions);
 
             actualSuggestions = SuggestStrings(expression, config, context);
-            Assert.Equal(expectedSuggestions.OrderBy(x => x), actualSuggestions.OrderBy(x => x));
+            Assert.Equal(expectedSuggestions, actualSuggestions);
         }
 
         [Theory]

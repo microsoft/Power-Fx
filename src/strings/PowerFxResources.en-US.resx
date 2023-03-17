@@ -864,7 +864,8 @@
     <value>An expression that gets evaluated over rows in 'source' and provides values for sorting.</value>
   </data>
   <data name="AboutSort_order" xml:space="preserve">
-    <value>Ascending or Descending</value>
+    <value>SortOrder.Ascending or SortOrder.Descending</value>
+    <comment>{Locked=SortOrder.Ascending}{Locked=SortOrder.Descending} Possible values for the third argument of the Sort function</comment>
   </data>
   <data name="AboutSortByColumns" xml:space="preserve">
     <value>Sorts 'source' based on the column, optionally specifying a sort 'order'.</value>
@@ -889,7 +890,8 @@
     <value>A unique column name.</value>
   </data>
   <data name="AboutSortByColumns_order" xml:space="preserve">
-    <value>Ascending or Descending</value>
+    <value>SortOrder.Ascending or SortOrder.Descending</value>
+    <comment>{Locked=SortOrder.Ascending}{Locked=SortOrder.Descending} Possible values for the third argument of the Sort function</comment>
   </data>
   <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
     <value>Sorts 'source' based on the index of matching values in the specified column.</value>
@@ -2382,8 +2384,8 @@
     <value>A number of units to add. The number can be negative.</value>
   </data>
   <data name="AboutDateAdd_unit" xml:space="preserve">
-    <value>The unit to use, which can be one of Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
-    <comment>{Locked=Years}{Locked=Quarters}{Locked=Months}{Locked=Days}{Locked=Hours}{Locked=Minutes}{Locked=Seconds}{Locked=Milliseconds}</comment>
+    <value>The unit to use, which can be one of TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
+    <comment>{Locked=TimeUnit.Years}{Locked=TimeUnit.Quarters}{Locked=TimeUnit.Months}{Locked=TimeUnit.Days}{Locked=TimeUnit.Hours}{Locked=TimeUnit.Minutes}{Locked=TimeUnit.Seconds}{Locked=TimeUnit.Milliseconds}</comment>
   </data>
   <data name="DateDiffArg1" xml:space="preserve">
     <value>start_date</value>
@@ -2404,8 +2406,8 @@
     <value>An end date for the different operation.</value>
   </data>
   <data name="AboutDateDiff_unit" xml:space="preserve">
-    <value>The unit to express the result in, which can be one of Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
-    <comment>{Locked=Years}{Locked=Quarters}{Locked=Months}{Locked=Days}{Locked=Hours}{Locked=Minutes}{Locked=Seconds}{Locked=Milliseconds}</comment>
+    <value>The unit to express the result in, which can be one of TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
+    <comment>{Locked=TimeUnit.Years}{Locked=TimeUnit.Quarters}{Locked=TimeUnit.Months}{Locked=TimeUnit.Days}{Locked=TimeUnit.Hours}{Locked=TimeUnit.Minutes}{Locked=TimeUnit.Seconds}{Locked=TimeUnit.Milliseconds}</comment>
   </data>
   <data name="AboutDateAddT" xml:space="preserve">
     <value>Add the specified number of units to a column of dates.</value>
@@ -2982,6 +2984,26 @@
   <data name="Icon_Globe_DisplayName" xml:space="preserve">
     <value>Globe</value>
     <comment>Icon control name representing an globe object. Display text representing the value of Icon enum that will be shown in the icon control. This value represents the Globe value.</comment>
+  </data>
+  <data name="Icon_GlobeNotConnected_DisplayName" xml:space="preserve">
+    <value>Globe - Not connected</value>
+    <comment>Display text representing the value of Icon enum that will be shown in the icon control. This value represents the Globe - Not connected value.</comment>
+  </data>
+  <data name="Icon_GlobeRefresh_DisplayName" xml:space="preserve">
+    <value>Globe - Refresh</value>
+    <comment>Display text representing the value of Icon enum that will be shown in the icon control. This value represents the Globe - Refresh value.</comment>
+  </data>
+  <data name="Icon_GlobeChangesPending_DisplayName" xml:space="preserve">
+    <value>Globe - Changes pending</value>
+    <comment>Display text representing the value of Icon enum that will be shown in the icon control. This value represents the Globe - Changes pending value.</comment>
+  </data>
+  <data name="Icon_GlobeWarning_DisplayName" xml:space="preserve">
+    <value>Globe - Warning</value>
+    <comment>Display text representing the value of Icon enum that will be shown in the icon control. This value represents the Globe - Warning value.</comment>
+  </data>
+  <data name="Icon_GlobeError_DisplayName" xml:space="preserve">
+    <value>Globe - Error</value>
+    <comment>Display text representing the value of Icon enum that will be shown in the icon control. This value represents the Globe - Error value.</comment>
   </data>
   <data name="Icon_HalfFilledCircle_DisplayName" xml:space="preserve">
     <value>Half filled circle</value>

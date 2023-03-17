@@ -1,0 +1,9 @@
+{
+  "ResultSets": {
+    "Table1": [
+      { "Column1": 2500 }
+    ]
+  },
+  "ReturnCode": 0,
+  "OutputParameters": {}
+}

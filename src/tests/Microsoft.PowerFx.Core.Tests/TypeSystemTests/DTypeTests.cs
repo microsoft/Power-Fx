@@ -79,6 +79,17 @@ namespace Microsoft.PowerFx.Tests
             }
         }
 
+        [Fact]
+        public void BoolOptionSetTryGetValueSucceeds()
+        {
+            var boolOs = new BoolOptionSetInfo();
+            Assert.True(boolOs.OptionSetValueType.TryGetValue("Yes", out var optionSetValue));
+            Assert.Equal(true, optionSetValue.ExecutionValue);
+
+            Assert.True(boolOs.TryGetValue(new DName("Yes"), out var directValue));
+            Assert.Equal(true, directValue.ExecutionValue);
+        }
+
         private static DType BooleanValuedOptionSetType
         {
             get
