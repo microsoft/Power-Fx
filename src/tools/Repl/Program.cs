@@ -219,7 +219,7 @@ namespace Microsoft.PowerFx
                         if (result is ErrorValue errorValue)
                         {
                             Console.ForegroundColor = ConsoleColor.Red;
-                            Console.WriteLine(errorValue.Errors[0].Message);
+                            Console.WriteLine($"Error: {errorValue.Errors[0].Kind} - {errorValue.Errors[0].Message}");
                             Console.ResetColor();
                         }
                         else
