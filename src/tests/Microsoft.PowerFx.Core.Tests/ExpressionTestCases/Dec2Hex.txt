@@ -114,6 +114,9 @@ Error({Kind:ErrorKind.Div0})
 >> Dec2Hex(If(1<0,[1]))
 Blank()
 
+>> Dec2Hex(If(1<0,[1]), If(1<0,[2]))
+Blank()
+
 >> Dec2Hex(Filter([1,2,3], Value > 10))
 Table()
 
