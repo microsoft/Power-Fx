@@ -120,7 +120,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         }
     }
 
-    internal class AsTypeCallNodeDelegationStrategy : DelegationValidationStrategy
+    internal sealed class AsTypeCallNodeDelegationStrategy : DelegationValidationStrategy
     {
         public AsTypeCallNodeDelegationStrategy(TexlFunction function)
             : base(function)

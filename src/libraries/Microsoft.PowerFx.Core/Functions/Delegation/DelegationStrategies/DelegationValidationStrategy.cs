@@ -358,9 +358,9 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             // so, if available, we need to ensure we use their specific delegation strategy.
             var function = binding.GetInfo(node)?.Function;
 
-            // We need to have this check in case an override does not properly overwrite this method to prevent
-            // getting lost in recursion.
-            if (function != null && function.QualifiedName != Function.QualifiedName)
+            // We need to have this check in case an override does not properly
+            // overwrite this method to prevent getting lost in recursion.
+            if (function != null && function != Function)
             {
                 return function.GetCallNodeDelegationStrategy().IsValidCallNode(node, binding, metadata);
             }
