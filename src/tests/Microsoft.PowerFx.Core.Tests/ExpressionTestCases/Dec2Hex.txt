@@ -214,4 +214,9 @@ Table({Value:"00C"})
 
 >> Dec2Hex(Table({A: 12, B:13}))
 Errors: Error 8-28: Invalid argument type (Table). Expecting a Number value instead.
->>>>>>> a483cec3 (Consolidate tests)
+
+>> Dec2Hex(Table({a:[1]},{a:[2]}))
+Errors: Error 8-30: Invalid argument type (Table). Expecting a Number value instead.
+
+>> Dec2Hex(Table({a:{b:1}},{a:{b:2}}))
+Errors: Error 8-34: Invalid argument type (Table). Expecting a Number value instead.
