@@ -3,13 +3,16 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Numerics;
+using Microsoft.AppMagic.Authoring;
 using Microsoft.AppMagic.Authoring.Texl.Builtins;
 using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Types;
 using static Microsoft.PowerFx.Connectors.OpenApiHelperFunctions;
 
 namespace Microsoft.PowerFx.Connectors
@@ -70,8 +73,8 @@ namespace Microsoft.PowerFx.Connectors
                 throw new ArgumentException(nameof(functionNamespace));
             }
 
-            var newFunctions = new List<ServiceFunction>();
-            var basePath = openApiDocument.GetBasePath();
+            List<ServiceFunction> newFunctions = new List<ServiceFunction>();
+            string basePath = openApiDocument.GetBasePath();
             DPath theNamespace = DPath.Root.Append(new DName(functionNamespace));
 
             if (openApiDocument.Paths == null)
@@ -82,13 +85,13 @@ namespace Microsoft.PowerFx.Connectors
 
             foreach (var kv in openApiDocument.Paths)
             {
-                var path = kv.Key;
-                var ops = kv.Value;
+                string path = kv.Key;
+                OpenApiPathItem ops = kv.Value;
 
                 foreach (var kv2 in ops.Operations)
                 {
-                    var verb = kv2.Key.ToHttpMethod(); // "GET", "POST"
-                    var op = kv2.Value;
+                    HttpMethod verb = kv2.Key.ToHttpMethod(); // "GET", "POST"
+                    OpenApiOperation op = kv2.Value;
 
                     if (op.IsTrigger())
                     {
@@ -96,13 +99,13 @@ namespace Microsoft.PowerFx.Connectors
                     }
 
                     // We need to remove invalid chars to be consistent with Power Apps
-                    var operationName = NormalizeOperationId(op.OperationId) ?? path.Replace("/", string.Empty);
-                    var returnType = op.GetReturnType();
-                    var opPath = basePath != null ? basePath + path : path;                    
+                    string operationName = NormalizeOperationId(op.OperationId) ?? path.Replace("/", string.Empty);
 
-                    var argMapper = new ArgumentMapper(op.Parameters, op);
-
+                    FormulaType returnType = op.GetReturnType();
+                    string opPath = basePath != null && basePath != "/" ? basePath + path : path;
+                    ArgumentMapper argMapper = new ArgumentMapper(op.Parameters, op);
                     IAsyncTexlFunction invoker = null;
+
                     if (httpClient != null)
                     {
                         var httpInvoker = new HttpFunctionInvoker(httpClient, verb, opPath, returnType, argMapper, cache);
@@ -110,20 +113,18 @@ namespace Microsoft.PowerFx.Connectors
                     }
 
                     // Parameter (name,type) --> list of options. 
-                    var parameterOptions = new Dictionary<TypedName, List<string>>();
-                    var parameterDefaultValues = new Dictionary<string, Tuple<string, DType>>(StringComparer.Ordinal);
+                    Dictionary<TypedName, List<string>> parameterOptions = new ();
+                    Dictionary<string, Tuple<string, DType>> parameterDefaultValues = new (StringComparer.Ordinal);
 
-                    var isBehavior = !IsSafeHttpMethod(verb);
-                    var isDynamic = false;
-                    var isAutoRefreshable = false;
+                    bool isBehavior = !IsSafeHttpMethod(verb);
+                    bool isDynamic = false;
+                    bool isAutoRefreshable = false;
+                    bool isCacheEnabled = false;
+                    int cacheTimeoutMs = 10000;
+                    bool isHidden = false;
+                    string description = op.Description ?? $"Invoke {operationName}";
 
-                    var isCacheEnabled = false;
-                    var cacheTimeoutMs = 10000;
-                    var isHidden = false;
-
-                    var description = op.Description ?? $"Invoke {operationName}";
-
-                    var sfunc = new ServiceFunction(
+                    ServiceFunction sfunc = new ServiceFunction(
                         null,
                         theNamespace,
                         operationName,
@@ -142,14 +143,26 @@ namespace Microsoft.PowerFx.Connectors
                         parameterOptions,
                         argMapper.OptionalParamInfo,
                         argMapper.RequiredParamInfo,
-                        parameterDefaultValues,
-                        "action", //  funcTemplate.ActionName,??
+                        parameterDefaultValues,                        
+                        "action", //  funcTemplate.ActionName,??                        
                         argMapper._parameterTypes)
                     {
                         _invoker = invoker
                     };
 
                     newFunctions.Add(sfunc);
+                }
+            }
+
+            // post processing for ConnectorDynamicValue, identify service functions
+            foreach (ServiceFunction sf in newFunctions)
+            {
+                foreach (ServiceFunctionParameterTemplate sfpt in sf._requiredParameters)
+                {
+                    if (sfpt.ConnectorDynamicValue != null)
+                    {
+                        sfpt.ConnectorDynamicValue.ServiceFunction = newFunctions.FirstOrDefault(f => f.Name == sfpt.ConnectorDynamicValue.OperationId);
+                    }
                 }
             }
 
