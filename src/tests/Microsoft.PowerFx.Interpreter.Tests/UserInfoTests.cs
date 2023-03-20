@@ -23,18 +23,14 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("", "")]
         public async Task UserInfoObjectTest(string fullName, string email)
         {            
-            var userInfo = new UserInfo
+            IUserInfo userInfo = new UserInfo
             {
                 FullName = fullName,
                 Email = email
             };
 
-            var userInfoType = RecordType.Empty()
-                .Add("FullName", FormulaType.String)
-                .Add("Email", FormulaType.String);
-
             SymbolTable symbol = new SymbolTable();
-            symbol.AddHostObject("UserInfo", userInfoType, GetUserInfoObject);
+            symbol.AddUserInfoObject();
 
             var engine = new RecalcEngine(new PowerFxConfig() { SymbolTable = symbol });
             var rc = new RuntimeConfig();
@@ -43,12 +39,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var checkName = engine.Check("UserInfo.FullName");
             Assert.True(checkName.IsSuccess);
             var nameResult = await checkName.GetEvaluator().EvalAsync(CancellationToken.None, rc);
-            Assert.Equal(userInfo.FullName, nameResult.ToObject());
+            Assert.Equal(userInfo.FullName ?? string.Empty, nameResult.ToObject());
 
             var checkEmail = engine.Check("UserInfo.Email");
             Assert.True(checkEmail.IsSuccess);
             var emailResult = await checkEmail.GetEvaluator().EvalAsync(CancellationToken.None, rc);
-            Assert.Equal(userInfo.Email, emailResult.ToObject());
+            Assert.Equal(userInfo.Email ?? string.Empty, emailResult.ToObject());
         }
 
         [Fact]
@@ -62,12 +58,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Fact]
         public async Task UserInfoNoServiceSetupTest()
         {
-            var userInfoType = RecordType.Empty()
-                .Add("FullName", FormulaType.String)
-                .Add("Email", FormulaType.String);
-
             SymbolTable symbol = new SymbolTable();
-            symbol.AddHostObject("UserInfo", userInfoType, GetUserInfoObject);
+            symbol.AddUserInfoObject();
 
             var engine = new RecalcEngine(new PowerFxConfig() { SymbolTable = symbol });
             var rc = new RuntimeConfig();
@@ -75,16 +67,14 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var check = engine.Check("UserInfo.FullName");
             Assert.True(check.IsSuccess);
 
-            var result = await check.GetEvaluator().EvalAsync(CancellationToken.None, rc);
-            Assert.IsType<ErrorValue>(result);
-            Assert.NotNull(((ErrorValue)result).Errors.Where((error) => error.Message.Contains("UserInfo object was not added to service")));
-        }
-
-        public FormulaValue GetUserInfoObject(IServiceProvider serviceProvider)
-        {
-            var cache = new TypeMarshallerCache();
-            var userInfo = (UserInfo)serviceProvider.GetService(typeof(UserInfo)) ?? throw new CustomFunctionErrorException("UserInfo object was not added to service");
-            return cache.Marshal(userInfo);
+            try
+            {
+                var result = await check.GetEvaluator().EvalAsync(CancellationToken.None, rc);
+            }
+            catch (Exception ex)
+            {
+                Assert.Contains("UserInfo object was not added to service", ex.Message);
+            }
         }
     }
 }

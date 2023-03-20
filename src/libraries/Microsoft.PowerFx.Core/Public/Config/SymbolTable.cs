@@ -9,6 +9,7 @@ using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
@@ -306,6 +307,30 @@ namespace Microsoft.PowerFx
                 displayName: default);
 
             _variables.Add(hostDName, info);
+        }
+
+        /// <summary>
+        /// Adds a UserInfo object schema.
+        /// Actual object is added in Runtime config service provider.
+        /// </summary>
+        public void AddUserInfoObject()
+        {
+            var userInfoType = RecordType.Empty()
+                .Add("FullName", FormulaType.String)
+                .Add("Email", FormulaType.String);
+
+            AddHostObject("UserInfo", userInfoType, GetUserInfoObject);
+        }
+
+        private FormulaValue GetUserInfoObject(IServiceProvider serviceProvider)
+        {
+            var userInfo = (IUserInfo)serviceProvider.GetService(typeof(IUserInfo)) ?? throw new Exception("UserInfo object was not added to service");
+
+            RecordValue userRecord = FormulaValue.NewRecordFromFields(
+                new NamedValue("FullName", FormulaValue.New(userInfo.FullName ?? string.Empty)),
+                new NamedValue("Email", FormulaValue.New(userInfo.Email ?? string.Empty)));
+
+            return userRecord;
         }
     }
 }
