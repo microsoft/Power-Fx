@@ -9,6 +9,7 @@ using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
@@ -19,43 +20,50 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Abstract base class for all math functions that return numeric values.
     internal abstract class MathFunction : BuiltinFunction
     {
-        public override ArgPreprocessor GetArgPreprocessor(int index)
-        {
-                return _replaceBlankWithZero ? 
-                    (_nativeDecimal ? ArgPreprocessor.ReplaceBlankWithFuncResultTypedZero : ArgPreprocessor.ReplaceBlankWithFloatZero)
-                    : ArgPreprocessor.None;
-        }
-
         public override bool IsSelfContained => true;
 
+        // This function supports native operations on Decimal values and will return a Decimal value if Decimal args are provided.
+        // Values are not coerced to Float before calling this function.
         private readonly bool _nativeDecimal;
+
+        private readonly bool _nativeDateTime;
 
         private readonly bool _replaceBlankWithZero;
 
-        public MathFunction(string name, TexlStrings.StringGetter description, FunctionCategories fc, bool nativeDecimal = false, bool replaceBlankWithZero = true)
-            : base(name, description, fc, DType.Unknown, 0, 1, 1, nativeDecimal ? DType.Unknown : DType.Number)
+        public override ArgPreprocessor GetArgPreprocessor(int index)
         {
-            _nativeDecimal = nativeDecimal;
-            _replaceBlankWithZero = replaceBlankWithZero;
-        }
-
-        public MathFunction(string name, TexlStrings.StringGetter description, FunctionCategories fc, bool twoArg, bool nativeDecimal = false, bool replaceBlankWithZero = true)
-            : base(name, description, fc, DType.Unknown, 0, 1, 2, nativeDecimal ? DType.Unknown : DType.Number, nativeDecimal ? DType.Unknown : DType.Number)
-        {
-            _nativeDecimal = nativeDecimal;
-            _replaceBlankWithZero = replaceBlankWithZero;
-        }
-
-        public MathFunction(string name, TexlStrings.StringGetter description, FunctionCategories fc, int maxArity, bool nativeDecimal = false, bool replaceBlankWithZero = true)
-            : base(name, description, fc, DType.Unknown, 0, 1, maxArity, nativeDecimal ? DType.Unknown : DType.Number)
-        {
-            _nativeDecimal = nativeDecimal;
-            _replaceBlankWithZero = replaceBlankWithZero;
+            return _replaceBlankWithZero ?
+                (_nativeDecimal ? ArgPreprocessor.ReplaceBlankWithFuncResultTypedZero : ArgPreprocessor.ReplaceBlankWithFloatZero) :
+                ArgPreprocessor.None;
         }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
+            // Decimal TODO: Math arg strings
             yield return new[] { TexlStrings.MathFuncArg1 };
+            if (MaxArity > 1)
+            {
+                yield return new[] { TexlStrings.MathFuncArg1, TexlStrings.MathFuncArg1 };
+            }
+        }
+
+        public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures(int arity)
+        {
+            if (arity > 1)
+            {
+                // Decimal TODO: Math arg strings
+                return GetGenericSignatures(arity, TexlStrings.MathFuncArg1);
+            }
+
+            return base.GetSignatures(arity);
+        }
+
+        public MathFunction(string name, TexlStrings.StringGetter description, FunctionCategories fc, int minArity, int maxArity, bool nativeDecimal = false, bool replaceBlankWithZero = true, bool nativeDateTime = false)
+            : base(name, description, fc, DType.Unknown, 0, minArity, maxArity, nativeDecimal ? DType.Unknown : DType.Number)
+        {
+            _nativeDecimal = nativeDecimal;
+            _replaceBlankWithZero = replaceBlankWithZero;
+            _nativeDateTime = nativeDateTime;
         }
 
         public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
@@ -71,34 +79,24 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             nodeToCoercedTypeMap = null;
 
-            bool isDeferred = false;
+            // Return type of the funciton is taken from the first argument.
+            returnType = _nativeDecimal ? NumDecReturnType(context, argTypes[0]) : DType.Number;
 
-            if (_nativeDecimal)
+            if (_nativeDateTime)
             {
-                returnType = DType.Decimal;
-
-                for (int i = 0; i < argTypes.Length; i++)
+                // If there is mixing of Date and DateTime, coerce Date to DateTime
+                if (Array.TrueForAll(argTypes, element => element.Kind == DKind.Date || element.Kind == DKind.DateTime) &&
+                    !Array.TrueForAll(argTypes, element => element.Kind == DKind.Date))
                 {
-                    var argReturn = NumDecReturnType(context, _nativeDecimal, argTypes[i]);
-                    if (argReturn == DType.Number)
-                    {
-                        returnType = DType.Number;
-                    }
-                    else if (argReturn == DType.Deferred)
-                    {
-                        isDeferred = true;
-                    }
+                    returnType = DType.DateTime;
                 }
-
-                if (isDeferred && returnType == DType.Decimal)
+                
+                // ELSE If all elements are the same type AND if the elements are it is Date/Time/DateTime, use the Date/Time/DateTime type.
+                else if (Array.TrueForAll(argTypes, element => element.Kind == argTypes[0].Kind) &&
+                    !Array.Exists(argTypes, element => element.Kind != DKind.Date && element.Kind != DKind.DateTime && element.Kind != DKind.Time))
                 {
-                    returnType = DType.Deferred;
-                    return true;
+                    returnType = argTypes[0];
                 }
-            }
-            else
-            {
-                returnType = DType.Number;
             }
 
             for (int i = 0; i < argTypes.Length; i++)
@@ -117,8 +115,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
                 else
                 {
+                    errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrNumberExpected);
                     fValid = false;
-                    break;
                 }
             }
 
@@ -131,27 +129,47 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         }
     }
 
+    internal abstract class MathOneArgFunction : MathFunction
+    {
+        public MathOneArgFunction(string name, TexlStrings.StringGetter description, FunctionCategories fc, bool nativeDecimal = false)
+            : base(name, description, fc, 1, 1, nativeDecimal)
+        {
+        }
+    }
+
     internal abstract class MathTableFunction : BuiltinFunction
     {
         public override bool IsSelfContained => true;
 
+        // This function supports native operations on Decimal values and will return a Decimal value if Decimal args are provided.
+        // Values are not coerced to Float before calling this function.
         private readonly bool _nativeDecimal;
 
-        public MathTableFunction(string name, TexlStrings.StringGetter description, FunctionCategories fc, bool twoArg, bool nativeDecimal = false)
-            : base(name, description, fc, DType.EmptyTable, 0, 2, 2)
-        {
-            _nativeDecimal = nativeDecimal;
-        }
-
-        public MathTableFunction(string name, TexlStrings.StringGetter description, FunctionCategories fc, bool nativeDecimal = false)
-            : base(name, description, fc, DType.EmptyTable, 0, 1, 1, DType.EmptyTable)
+        public MathTableFunction(string name, TexlStrings.StringGetter description, FunctionCategories fc, int minArity, int maxArity, bool nativeDecimal)
+            : base(name, description, fc, DType.EmptyTable, 0, minArity, maxArity, DType.EmptyTable)
         {
             _nativeDecimal = nativeDecimal;
         }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new[] { TexlStrings.MathTFuncArg1 };
+            // Decimal TODO: Math arg strings
+            yield return new[] { TexlStrings.MathFuncArg1 };
+            if (MaxArity > 1)
+            {
+                yield return new[] { TexlStrings.MathFuncArg1, TexlStrings.MathFuncArg1 };
+            }
+        }
+
+        public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures(int arity)
+        {
+            if (arity > 1)
+            {
+                // Decimal TODO: Math arg strings
+                return GetGenericSignatures(arity, TexlStrings.MathTFuncArg1, TexlStrings.MathTFuncArg1);
+            }
+
+            return base.GetSignatures(arity);
         }
 
         public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
@@ -168,44 +186,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.Assert(args.Length == MaxArity);
             Contracts.AssertValue(errors);
 
-            var fValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
-            Contracts.Assert(returnType.IsTable);
+            // each argument is run through base.CheckTypes below if scalar
+            var fValid = true;
+            nodeToCoercedTypeMap = null;
 
             int tables = 0;
 
-            bool isDeferred = false;
-
-            DType scalarType;
-
-            nodeToCoercedTypeMap = null;
-
-            if (_nativeDecimal)
-            {
-                scalarType = DType.Decimal;
-
-                for (int i = 0; i < argTypes.Length; i++)
-                {
-                    var argReturn = NumDecReturnType(context, _nativeDecimal, argTypes[i]);
-                    if (argReturn == DType.Number)
-                    {
-                        scalarType = DType.Number;
-                    }
-                    else if (argReturn == DType.Deferred)
-                    {
-                        isDeferred = true;
-                    }
-                }
-
-                if (isDeferred && scalarType == DType.Decimal)
-                {
-                    returnType = DType.Deferred;
-                    return true;
-                }
-            }
-            else
-            {
-                scalarType = DType.Number;
-            }
+            DType scalarType = _nativeDecimal ? NumDecReturnType(context, argTypes[0]) : DType.Number;
 
             returnType = DType.CreateTable(new TypedName(scalarType, GetOneColumnTableResultName(context.Features)));
 
@@ -214,7 +201,15 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 if (argTypes[i].IsTable)
                 {
                     // Ensure we have a one-column table of numbers.
-                    fValid &= CheckNumDecColumnType(scalarType, argTypes[i], args[i], errors, ref nodeToCoercedTypeMap);
+                    if (scalarType == DType.Number)
+                    {
+                        fValid &= CheckNumericColumnType(argTypes[i], args[i], errors, ref nodeToCoercedTypeMap);
+                    }
+                    else
+                    {
+                        fValid &= CheckDecimalColumnType(argTypes[i], args[i], errors, ref nodeToCoercedTypeMap);
+                    }
+
                     tables++;
                 }
                 else if (CheckType(args[i], argTypes[i], scalarType, DefaultErrorContainer, out var matchedWithCoercion))
@@ -258,6 +253,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             return fValid;
+        }
+    }
+
+    internal abstract class MathOneArgTableFunction : MathTableFunction
+    {
+        public MathOneArgTableFunction(string name, TexlStrings.StringGetter description, FunctionCategories fc, bool nativeDecimal = false)
+            : base(name, description, fc, 1, 1, nativeDecimal)
+        {
         }
     }
 }

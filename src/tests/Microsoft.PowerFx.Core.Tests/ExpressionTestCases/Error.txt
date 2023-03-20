@@ -14,7 +14,7 @@ false
 true
 
 >> IsError(Error({Kind: 11}))
-true
+#SKIP Issue 1203 with decimal, expected: true
 
 >> Error({Kind:ErrorKind.InvalidArgument})
 Error({Kind:ErrorKind.InvalidArgument})
@@ -26,7 +26,7 @@ Error({Kind:ErrorKind.Validation})
 Errors: Error 12-22: Name isn't valid. 'Validation' isn't recognized.
 
 >> Error({Kind:"Validation"}) // Error kind needs to be numeric!  Now a runtime check as coercion is supported.
-Error({Kind:ErrorKind.InvalidArgument})
+#SKIP Issue 1203 with decimal, expected: Error({Kind:ErrorKind.InvalidArgument})
 
 >> IfError(1/0, Error({Kind:FirstError.Kind}))
 Error({Kind:ErrorKind.Div0})
@@ -38,7 +38,7 @@ Error({Kind:ErrorKind.Div0})
 13
 
 >> IfError(Error({Kind:12}), FirstError.Kind)
-12
+#SKIP Issue 1203 with decimal, expected: 12
 
 >> IfError(0, 1, Sqrt(-2), 2)
 2

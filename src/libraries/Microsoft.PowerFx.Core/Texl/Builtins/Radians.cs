@@ -8,7 +8,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
     // Radians(number:n)
     // Equivalent Excel function: Radians
-    internal sealed class RadiansFunction : MathFunction
+    internal sealed class RadiansFunction : MathOneArgFunction
     {
         public RadiansFunction()
             : base("Radians", TexlStrings.AboutRadians, FunctionCategories.MathAndStat)
@@ -18,7 +18,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
     // Radians(E:*[n])
     // Table overload that computes the radians values of each item in the input table.
-    internal sealed class RadiansTableFunction : MathTableFunction
+    internal sealed class RadiansTableFunction : MathOneArgTableFunction
     {
         public RadiansTableFunction()
             : base("Radians", TexlStrings.AboutRadiansT, FunctionCategories.Table)

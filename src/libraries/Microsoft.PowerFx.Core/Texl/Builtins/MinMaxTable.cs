@@ -16,56 +16,23 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Min(source:*, projection:n)
     // Max(source:*, projection:n)
     // Corresponding DAX functions: Min, MinA, MinX, Max, MaxA, MaxX
-    internal sealed class MinMaxTableFunction : StatisticalTableFunction
+    internal sealed class MinTableFunction : StatisticalTableFunction
     {
-        private readonly DelegationCapability _delegationCapability;
+        public override DelegationCapability FunctionDelegationCapability => DelegationCapability.Min;
 
-        public override DelegationCapability FunctionDelegationCapability => _delegationCapability;
-
-        public MinMaxTableFunction(bool isMin)
-            : base(isMin ? "Min" : "Max", isMin ? TexlStrings.AboutMinT : TexlStrings.AboutMaxT, FunctionCategories.Table)
+        public MinTableFunction()
+            : base("Min", TexlStrings.AboutMinT, FunctionCategories.Table, nativeDecimal: true, nativeDateTime: true)
         {
-            _delegationCapability = isMin ? DelegationCapability.Min : DelegationCapability.Max;
         }
+    }
 
-        public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+    internal sealed class MaxTableFunction : StatisticalTableFunction
+    {
+        public override DelegationCapability FunctionDelegationCapability => DelegationCapability.Max;
+
+        public MaxTableFunction()
+            : base("Max", TexlStrings.AboutMaxT, FunctionCategories.Table, nativeDecimal: true, nativeDateTime: true)
         {
-            Contracts.AssertValue(args);
-            Contracts.AssertValue(argTypes);
-            Contracts.Assert(args.Length == argTypes.Length);
-            Contracts.AssertValue(errors);
-            Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
-
-            // The return type will be the result type of the expression in the 2nd argument
-            var fArgsValid = true;
-            returnType = argTypes[1];
-            nodeToCoercedTypeMap = null;
-
-            // All decimals returns a decimal, not a number and no coercions required
-            if (argTypes[1] == DType.Decimal)
-            {
-                returnType = DType.Decimal;
-            } // Coerce everything except date/times to numeric.
-            else if (argTypes[1] != DType.Date && argTypes[1] != DType.DateTime && argTypes[1] != DType.Time && CheckType(args[1], argTypes[1], DType.Number, DefaultErrorContainer, out var matchedWithCoercion))
-            {
-                returnType = DType.Number;
-                if (matchedWithCoercion)
-                {
-                    CollectionUtils.Add(ref nodeToCoercedTypeMap, args[1], DType.Number, allowDupes: true);
-                }
-            }
-            else if (argTypes[1] != DType.Date && argTypes[1] != DType.DateTime && argTypes[1] != DType.Time)
-            {
-                errors.EnsureError(DocumentErrorSeverity.Severe, args[1], TexlStrings.ErrNumberExpected);
-                fArgsValid = false;
-            }
-
-            if (!fArgsValid)
-            {
-                nodeToCoercedTypeMap = null;
-            }
-
-            return fArgsValid;
         }
     }
 }

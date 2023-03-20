@@ -11,7 +11,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
     // Asin(number:n)
     // Equivalent Excel function: Asin
-    internal sealed class AsinFunction : MathFunction
+    internal sealed class AsinFunction : MathOneArgFunction
     {
         public AsinFunction()
             : base("Asin", TexlStrings.AboutAsin, FunctionCategories.MathAndStat)
@@ -21,7 +21,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
     // Asin(E:*[n])
     // Table overload that computes the arc sine values of each item in the input table.
-    internal sealed class AsinTableFunction : MathTableFunction
+    internal sealed class AsinTableFunction : MathOneArgTableFunction
     {
         public AsinTableFunction()
             : base("Asin", TexlStrings.AboutAsinT, FunctionCategories.Table)

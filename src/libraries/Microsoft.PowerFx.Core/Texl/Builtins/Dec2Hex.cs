@@ -80,12 +80,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             {
                 var type = argTypes[0];
                 var arg = args[0];
-                if (type.IsTable)
-                {
-                    // Ensure we have a one-column table of numerics
-                    fValid &= CheckNumericColumnType(type, arg, errors, ref nodeToCoercedTypeMap);
-                }
-                else 
+                if (!type.IsTable)
                 { 
                     errors.EnsureError(DocumentErrorSeverity.Severe, arg, TexlStrings.ErrTypeError);
                     return false;

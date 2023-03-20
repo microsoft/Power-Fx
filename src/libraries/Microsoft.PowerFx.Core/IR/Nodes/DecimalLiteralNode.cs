@@ -3,11 +3,11 @@
 
 namespace Microsoft.PowerFx.Core.IR.Nodes
 {
-    internal sealed class TextLiteralNode : IntermediateNode
+    internal sealed class DecimalLiteralNode : IntermediateNode
     {
-        public readonly string LiteralValue;
+        public readonly decimal LiteralValue;
 
-        public TextLiteralNode(IRContext irContext, string value)
+        public DecimalLiteralNode(IRContext irContext, decimal value)
             : base(irContext)
         {
             LiteralValue = value;
@@ -20,7 +20,7 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
 
         public override string ToString()
         {
-            return $"Text({LiteralValue})";
+            return $"Decimal({LiteralValue})";
         }
     }
 }

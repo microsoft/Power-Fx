@@ -20,7 +20,7 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
 
         public override string ToString()
         {
-            return $"{LiteralValue}:b";
+            return $"Bool({LiteralValue})";
         }
     }
 }

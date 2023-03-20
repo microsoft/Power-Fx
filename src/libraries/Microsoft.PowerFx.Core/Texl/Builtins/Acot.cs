@@ -11,7 +11,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
     // Acot(number:n)
     // Equivalent Excel function: Acot
-    internal sealed class AcotFunction : MathFunction
+    internal sealed class AcotFunction : MathOneArgFunction
     {
         public AcotFunction()
             : base("Acot", TexlStrings.AboutAcot, FunctionCategories.MathAndStat)
@@ -21,7 +21,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
     // Acot(E:*[n])
     // Table overload that computes the arc cotangent of each item in the input table.
-    internal sealed class AcotTableFunction : MathTableFunction
+    internal sealed class AcotTableFunction : MathOneArgTableFunction
     {
         public AcotTableFunction()
             : base("Acot", TexlStrings.AboutAcotT, FunctionCategories.Table)

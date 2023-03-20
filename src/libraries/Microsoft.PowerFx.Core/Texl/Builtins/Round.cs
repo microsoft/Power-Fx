@@ -13,11 +13,15 @@ using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 
+// Decimal TOOD: Review
+
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
     // Abstract base for all scalar flavors of round (Round, RoundUp, RoundDown)
     internal abstract class ScalarRoundingFunction : BuiltinFunction
     {
+        // all ScalarRoundingFunctions have native Decimal support
+
         public override ArgPreprocessor GetArgPreprocessor(int index)
         {
             return index == 0 ? ArgPreprocessor.ReplaceBlankWithFuncResultTypedZero : ArgPreprocessor.ReplaceBlankWithFloatZero;
@@ -50,7 +54,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var arg0 = args[0];
             var arg0Type = argTypes[0];
 
-            returnType = NumDecReturnType(context, nativeDecimal: true, arg0Type);
+            returnType = NumDecReturnType(context, arg0Type);
 
             if (CheckType(arg0, arg0Type, returnType, DefaultErrorContainer, out var matchedWithCoercion0))
             {
@@ -100,6 +104,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Abstract base for all overloads of round that take table arguments
     internal abstract class TableRoundingFunction : BuiltinFunction
     {
+        // all TableRoundingFunctions have native Decimal support
+
         public override bool IsSelfContained => true;
 
         public TableRoundingFunction(string name, TexlStrings.StringGetter description, int arityMin)
@@ -128,7 +134,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             var type0 = argTypes[0];
 
-            var scalarType = NumDecReturnType(context, nativeDecimal: true, type0);
+            var scalarType = NumDecReturnType(context, type0);
 
             var fValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
             Contracts.Assert(returnType.IsTable);
@@ -149,7 +155,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             if (type0.IsTable)
             {
                 // Ensure we have a one-column table of numerics
-                fValid &= CheckNumDecColumnType(scalarType, type0, args[0], errors, ref nodeToCoercedTypeMap);
+                if (scalarType == DType.Number)
+                {
+                    fValid &= CheckNumericColumnType(argTypes[0], args[0], errors, ref nodeToCoercedTypeMap);
+                }
+                else
+                {
+                    fValid &= CheckDecimalColumnType(argTypes[0], args[0], errors, ref nodeToCoercedTypeMap);
+                }
 
                 // Decimal TODO: else case should be based on scalarType - ends up with same type as something coerced
                 returnType = context.Features.HasFlag(Features.ConsistentOneColumnTableResult)

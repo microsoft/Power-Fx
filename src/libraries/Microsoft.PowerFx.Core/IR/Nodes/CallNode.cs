@@ -79,15 +79,19 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
             string result;
             if (Scope != null)
             {
-                result = $"{Function.Name}:{IRContext.ResultType._type}, {Scope}";
+                result = $"Call({Function.Name}, {Scope}";
             }
             else
             {
-                result = $"{Function.Name}:{IRContext.ResultType._type}";
+                result = $"Call({Function.Name}";
             }
 
-            result += $"( {string.Join(", ", Args.Select(arg => $"{arg}"))} )";
+            foreach (var arg in Args)
+            {
+                result += $", {arg}";
+            }
 
+            result += ")";
             return result;
         }
     }

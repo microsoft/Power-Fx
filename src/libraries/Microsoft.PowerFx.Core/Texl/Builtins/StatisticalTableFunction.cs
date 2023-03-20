@@ -22,12 +22,16 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public override bool IsSelfContained => true;
 
-        public bool SupportsDecimal;
+        public bool _nativeDecimal;
 
-        public StatisticalTableFunction(string name, TexlStrings.StringGetter description, FunctionCategories fc)
-            : base(name, description, fc, DType.Unknown, 0x02, 2, 2, DType.EmptyTable, DType.Number)
+        public bool _nativeDateTime;
+
+        public StatisticalTableFunction(string name, TexlStrings.StringGetter description, FunctionCategories fc, bool nativeDecimal = false, bool nativeDateTime = true)
+            : base(name, description, fc, DType.Unknown, 0x02, 2, 2, DType.EmptyTable, DType.Unknown)
         {
             ScopeInfo = new FunctionScopeInfo(this, usesAllFieldsInScope: false, acceptsLiteralPredicates: false);
+            _nativeDecimal = nativeDecimal;
+            _nativeDateTime = nativeDateTime;
         }
 
         public override bool SupportsPaging(CallNode callNode, TexlBinding binding)
@@ -120,11 +124,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            returnType = !SupportsDecimal || (argTypes[1] != DType.Decimal && argTypes[1] != DType.Boolean && argTypes[1] != DType.ObjNull && (argTypes[1] != DType.String || context.NumberIsFloat)) ? DType.Number : DType.Decimal;
+            returnType = 
+                _nativeDateTime && (argTypes[1] == DType.Date || argTypes[1] == DType.DateTime || argTypes[1] == DType.Time) ? argTypes[1] :
+                    (_nativeDecimal ? NumDecReturnType(context, argTypes[1]) : DType.Number);
             nodeToCoercedTypeMap = new Dictionary<TexlNode, DType>();
             var fValid = true;
 
-            // TODO Decimal: More checks to make?
             if (CheckType(args[1], argTypes[1], returnType, DefaultErrorContainer, out var matchedWithCoercion1))
             {
                 if (matchedWithCoercion1)

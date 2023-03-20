@@ -8,7 +8,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
     // Ln(number:n)
     // Equivalent Excel function: Ln
-    internal sealed class LnFunction : MathFunction
+    internal sealed class LnFunction : MathOneArgFunction
     {
         public override bool HasPreciseErrors => true;
 
@@ -20,7 +20,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
     // Ln(E:*[n])
     // Table overload that computes the natural logarithm values of each item in the input table.
-    internal sealed class LnTableFunction : MathTableFunction
+    internal sealed class LnTableFunction : MathOneArgTableFunction
     {
         public override bool HasPreciseErrors => true;
 

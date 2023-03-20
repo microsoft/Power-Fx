@@ -10,7 +10,7 @@ using Microsoft.PowerFx.Core.Types;
 
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
-    // Average(arg1:n/w, arg2:n/w, ..., argN:n/w)
+    // Average(arg1:n|w, arg2:n|w, ..., argN:n|w)
     // Corresponding Excel function: Average
     internal sealed class AverageFunction : StatisticalFunction
     {
@@ -20,16 +20,15 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         }
     }
 
-    // Average(source:*, projection:n/w)
+    // Average(source:*, projection:n|w)
     // Corresponding DAX function: Average
     internal sealed class AverageTableFunction : StatisticalTableFunction
     {
         public override DelegationCapability FunctionDelegationCapability => DelegationCapability.Average;
 
         public AverageTableFunction()
-            : base("Average", TexlStrings.AboutAverageT, FunctionCategories.Table)
+            : base("Average", TexlStrings.AboutAverageT, FunctionCategories.Table, nativeDecimal: true)
         {
-            SupportsDecimal = true;
         }
     }
 }

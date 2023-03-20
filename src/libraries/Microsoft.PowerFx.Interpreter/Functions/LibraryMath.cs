@@ -41,7 +41,6 @@ namespace Microsoft.PowerFx.Functions
                     return;
                 }
 
-                // TODO Decimal: check types, should be number
                 var n1 = (NumberValue)value;
 
                 _accumulator += n1.Value;

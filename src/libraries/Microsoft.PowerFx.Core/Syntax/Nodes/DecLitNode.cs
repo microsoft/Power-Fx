@@ -8,46 +8,46 @@ using Microsoft.PowerFx.Syntax.SourceInformation;
 namespace Microsoft.PowerFx.Syntax
 {
     /// <summary>
-    /// Numeric literal parse node. Example:
+    /// Decimal literal parse node. Example:
     /// 
-    /// <code>3.14</code>
+    /// <code>12.34</code>
     /// </summary>
-    public sealed class NumLitNode : TexlNode
+    public sealed class DecLitNode : TexlNode
     {
         // If Value is non-null, then the token represents its value.
-        // Otherwise, the value is in NumValue.
-        internal readonly double NumValue;
+        // Otherwise, the value is in DecValue.
+        internal readonly decimal DecValue;
 
         /// <summary>
         /// The numeric value of the node.
         /// </summary>
-        public double ActualNumValue => Value?.Value ?? NumValue;
+        public decimal ActualDecValue => Value?.Value ?? DecValue;
 
-        internal NumLitNode(ref int idNext, NumLitToken tok)
+        internal DecLitNode(ref int idNext, DecLitToken tok)
             : base(ref idNext, tok, new SourceList(tok))
         {
-            NumValue = double.NaN;
+            DecValue = 0;    // Decimal TODO: Null handling, NaN in float case
         }
 
-        internal NumLitNode(ref int idNext, Token tok, SourceList sourceList, double value)
+        internal DecLitNode(ref int idNext, Token tok, SourceList sourceList, decimal value)
             : base(ref idNext, tok, sourceList)
         {
-            Contracts.Assert(tok.Kind != TokKind.NumLit);
-            NumValue = value;
+            Contracts.Assert(tok.Kind != TokKind.DecLit);
+            DecValue = value;
         }
 
         internal override TexlNode Clone(ref int idNext, Span ts)
         {
             if (Value == null)
             {
-                return new NumLitNode(ref idNext, Token.Clone(ts), SourceList.Clone(ts, null), NumValue);
+                return new DecLitNode(ref idNext, Token.Clone(ts), SourceList.Clone(ts, null), DecValue);
             }
 
-            return new NumLitNode(ref idNext, Value.Clone(ts).As<NumLitToken>());
+            return new DecLitNode(ref idNext, Value.Clone(ts).As<DecLitToken>());
         }
 
-        // This may be null, in which case, NumValue should be used.
-        internal NumLitToken Value => Token as NumLitToken;
+        // This may be null, in which case, DecValue should be used.
+        internal DecLitToken Value => Token as DecLitToken;
 
         /// <inheritdoc />
         public override void Accept(TexlVisitor visitor)
@@ -63,9 +63,9 @@ namespace Microsoft.PowerFx.Syntax
         }
 
         /// <inheritdoc />
-        public override NodeKind Kind => NodeKind.NumLit;
+        public override NodeKind Kind => NodeKind.DecLit;
 
-        internal override NumLitNode AsNumLit()
+        internal override DecLitNode AsDecLit()
         {
             return this;
         }

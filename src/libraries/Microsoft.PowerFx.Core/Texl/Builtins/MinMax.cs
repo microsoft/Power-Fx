@@ -16,95 +16,23 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Min(arg1:n, arg2:n, ..., argN:n)
     // Max(arg1:n, arg2:n, ..., argN:n)
     // Corresponding Excel functions: Min, Max
-    internal sealed class MinMaxFunction : BuiltinFunction
+    internal sealed class MinFunction : MathFunction
     {
         public override bool HasPreciseErrors => true;
 
-        public override bool IsSelfContained => true;
-
-        public MinMaxFunction(bool isMin)
-            : base(isMin ? "Min" : "Max", isMin ? TexlStrings.AboutMin : TexlStrings.AboutMax, FunctionCategories.MathAndStat, DType.Unknown, 0, 1, int.MaxValue)
+        public MinFunction()
+            : base("Min", TexlStrings.AboutMin, FunctionCategories.MathAndStat, 1, int.MaxValue, replaceBlankWithZero: false, nativeDecimal: true, nativeDateTime: true)
         {
         }
+    }
 
-        public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+    internal sealed class MaxFunction : MathFunction
+    {
+        public override bool HasPreciseErrors => true;
+
+        public MaxFunction()
+            : base("Max", TexlStrings.AboutMax, FunctionCategories.MathAndStat, 1, int.MaxValue, replaceBlankWithZero: false, nativeDecimal: true, nativeDateTime: true)
         {
-            Contracts.AssertValue(args);
-            Contracts.AssertValue(argTypes);
-            Contracts.Assert(args.Length == argTypes.Length);
-            Contracts.AssertValue(errors);
-            Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
-
-            nodeToCoercedTypeMap = null;
-            var fArgsValid = true;
-            returnType = argTypes[0];
-
-            // All decimals returns a decimal, not a number and no coercions required
-            if (Array.TrueForAll(argTypes, element => element.Kind == DKind.Decimal))
-            {
-                returnType = DType.Decimal;
-            } // If there is mixing of Date and DateTime, coerce Date to DateTime
-            else if (Array.TrueForAll(argTypes, element => element.Kind == DKind.Date || element.Kind == DKind.DateTime) && !Array.TrueForAll(argTypes, element => element.Kind == DKind.Date))
-            {
-                for (var i = 0; i < argTypes.Length; i++)
-                {
-                    if (argTypes[i].Kind == DKind.Date && argTypes[i].CoercesTo(DType.DateTime))
-                    {
-                        CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i], DType.DateTime, allowDupes: true);
-                        returnType = DType.DateTime;
-                    }
-                }
-            } // If there are elements of mixed types OR if the elements are NOT a Date/Time/DateTime, attempt to coerce to numeric.
-            else if (!Array.TrueForAll(argTypes, element => element.Kind == argTypes[0].Kind) || !Array.Exists(argTypes, element => element.Kind == DKind.Date || element.Kind == DKind.DateTime || element.Kind == DKind.Time))
-            {
-                // TODO Decimal: coerce to decimal for hosts that don't have float, perhaps try for all hosts?
-                returnType = DType.Number;
-
-                // Ensure that all the arguments are numeric/coercible to numeric.
-                for (var i = 0; i < argTypes.Length; i++)
-                {
-                    if (CheckType(args[i], argTypes[i], DType.Number, DefaultErrorContainer, out var matchedWithCoercion))
-                    {
-                        if (matchedWithCoercion)
-                        {
-                            CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i], DType.Number, allowDupes: true);
-                        }
-                    }
-                    else
-                    {
-                        errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrNumberExpected);
-                        fArgsValid = false;
-                    }
-                }
-            } // No coercion necessary
-            else 
-            { 
-                fArgsValid = true; 
-            }
-
-            if (!fArgsValid)
-            {
-                nodeToCoercedTypeMap = null;
-            }
-
-            return fArgsValid;
-        }
-
-        public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
-        {
-            yield return new[] { TexlStrings.StatisticalArg };
-            yield return new[] { TexlStrings.StatisticalArg, TexlStrings.StatisticalArg };
-            yield return new[] { TexlStrings.StatisticalArg, TexlStrings.StatisticalArg, TexlStrings.StatisticalArg };
-        }
-
-        public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures(int arity)
-        {
-            if (arity > 2)
-            {
-                return GetGenericSignatures(arity, TexlStrings.StatisticalArg, TexlStrings.StatisticalArg);
-            }
-
-            return base.GetSignatures(arity);
         }
     }
 }

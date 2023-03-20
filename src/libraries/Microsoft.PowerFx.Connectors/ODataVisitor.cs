@@ -3,7 +3,6 @@
 
 using System.Collections.Generic;
 using System.Globalization;
-using Microsoft.CodeAnalysis.Operations;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.IR.Symbols;
@@ -195,11 +194,11 @@ namespace Microsoft.PowerFx.Connectors
                 BinaryOpKind.SubtractNumberAndTime => "-",
                 BinaryOpKind.DivNumbers => "/",
 
+                // Decimal TODO: Mul Numbers wasn't here?
+                BinaryOpKind.MulNumbers => "*",
+
                 BinaryOpKind.AddDecimals => "+",
                 BinaryOpKind.DivDecimals => "/",
-
-                // Decimal TODO: Numbers wasn't here?
-                BinaryOpKind.MulNumbers => "*",
                 BinaryOpKind.MulDecimals => "*",
 
                 BinaryOpKind.EqNumbers => "eq",
@@ -227,7 +226,7 @@ namespace Microsoft.PowerFx.Connectors
                 BinaryOpKind.NeqTime => "ne",
                 BinaryOpKind.NeqDateTime => "ne",
                 BinaryOpKind.NeqHyperlink => "ne",
-                BinaryOpKind.NeqCurrency => "eq",
+                BinaryOpKind.NeqCurrency => "ne",
                 BinaryOpKind.NeqImage => "ne",
                 BinaryOpKind.NeqColor => "ne",
                 BinaryOpKind.NeqMedia => "ne",

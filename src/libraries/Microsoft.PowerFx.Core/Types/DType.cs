@@ -3209,9 +3209,8 @@ namespace Microsoft.PowerFx.Core.Types
                                  Boolean.Accepts(this);
                     break;
                 case DKind.Decimal:
-                    // Decimal TODO: Review overflow from number, isSafe?
                     // Ill-formatted strings coerce to null; unsafe.
-                    isSafe = Kind != DKind.String;
+                    isSafe = Kind != DKind.String && Kind != DKind.Number;
                     doesCoerce = Kind == DKind.String ||
                                  Number.Accepts(this) ||
                                  Boolean.Accepts(this) ||
@@ -3563,6 +3562,8 @@ namespace Microsoft.PowerFx.Core.Types
                    comparer.Distance(similar) < (name.Value.Length / 3) + 3;
         }
 
+        // Determins if the result of a numeric binary operation should be a Decimal or a Number.
+        // If !numberIsFloat then Strings and Booleans are allowed to coerce to Decimal for this test, as if they were passed through Value
         public static bool DecimalBinaryOp(DType leftType, DType rightType, bool numberIsFloat)
         {
             if (leftType == DType.Unknown || rightType == DType.Unknown ||
@@ -3570,10 +3571,8 @@ namespace Microsoft.PowerFx.Core.Types
             {
                 return false;
             }
-
-            // Decimal TODO: Do two untypedobject ops coerce?
-            if ((leftType == DType.UntypedObject || rightType == DType.ObjNull) && 
-                (rightType == DType.UntypedObject || rightType == DType.ObjNull))
+            else if ((leftType == DType.UntypedObject || rightType == DType.ObjNull) && 
+                     (rightType == DType.UntypedObject || rightType == DType.ObjNull))
             {
                 return !numberIsFloat;
             }

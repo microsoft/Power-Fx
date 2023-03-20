@@ -6,10 +6,10 @@ using Microsoft.PowerFx.Core.Types;
 
 namespace Microsoft.PowerFx.Types
 {
-    public class NumberType : FormulaType
+    public class DecimalType : FormulaType
     {
-        internal NumberType()
-            : base(new DType(DKind.Number))
+        internal DecimalType()
+            : base(new DType(DKind.Decimal))
         {
         }
 
@@ -20,7 +20,7 @@ namespace Microsoft.PowerFx.Types
 
         public override string ToString()
         {
-            return "Number";
+            return "Decimal";
         }
 
         internal override void DefaultExpressionValue(StringBuilder sb)
@@ -30,7 +30,7 @@ namespace Microsoft.PowerFx.Types
 
         internal override void DefaultUniqueExpressionValue(StringBuilder sb)
         {
-            sb.Append("Float(0)");
+            sb.Append("Decimal(0)");
         }
     }
 }

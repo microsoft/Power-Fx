@@ -1791,12 +1791,12 @@ namespace Microsoft.PowerFx.Functions
                 NoErrorHandling(MultiSingleColumnTable(SimpleFunctionImplementations[BuiltinFunctionsCore.Round], ReplaceBlankWithContextZero))
             },
             {
-                BuiltinFunctionsCore.RoundDownT,
-                NoErrorHandling(MultiSingleColumnTable(SimpleFunctionImplementations[BuiltinFunctionsCore.RoundDown], ReplaceBlankWithContextZero))
-            },
-            {
                 BuiltinFunctionsCore.RoundUpT,
                 NoErrorHandling(MultiSingleColumnTable(SimpleFunctionImplementations[BuiltinFunctionsCore.RoundUp], ReplaceBlankWithContextZero))
+            },
+            {
+                BuiltinFunctionsCore.RoundDownT,
+                NoErrorHandling(MultiSingleColumnTable(SimpleFunctionImplementations[BuiltinFunctionsCore.RoundDown], ReplaceBlankWithContextZero))
             },
             {
                 BuiltinFunctionsCore.TruncT,

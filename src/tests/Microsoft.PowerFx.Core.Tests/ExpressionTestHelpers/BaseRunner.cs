@@ -165,7 +165,8 @@ namespace Microsoft.PowerFx.Core.Tests
             FormulaValue result = null;
 
             var expected = testCase.Expected;
-            var expectedSkip = string.Equals(expected, "#skip", StringComparison.OrdinalIgnoreCase);
+
+            var expectedSkip = Regex.Match(expected, "^\\s*\\#skip", RegexOptions.IgnoreCase).Success;
             if (expectedSkip)
             {
                 // Skipped test should fail when run. 

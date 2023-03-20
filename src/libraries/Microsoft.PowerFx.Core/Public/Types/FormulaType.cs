@@ -238,6 +238,11 @@ namespace Microsoft.PowerFx.Types
             throw new NotSupportedException($"{GetType().FullName} doesn't implement DefaultExpressionValue.");
         }
 
+        internal virtual void DefaultUniqueExpressionValue(StringBuilder sb)
+        {
+            DefaultExpressionValue(sb);
+        }
+
         internal string DefaultExpressionValue()
         {
             var sb = new StringBuilder();
@@ -245,11 +250,6 @@ namespace Microsoft.PowerFx.Types
             DefaultExpressionValue(sb);
 
             return sb.ToString();
-        }
-
-        internal virtual void DefaultUniqueExpressionValue(StringBuilder sb)
-        {
-            DefaultExpressionValue(sb);
         }
 
         internal string DefaultUniqueExpressionValue()

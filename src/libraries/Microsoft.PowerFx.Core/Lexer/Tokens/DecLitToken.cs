@@ -7,45 +7,41 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Syntax
 {
-    /// <summary>
-    /// Token for a numeric literal.
-    /// </summary>
-    public class NumLitToken : Token
+    public class DecLitToken : Token
     {
-        internal NumLitToken(double value, Span span)
-            : base(TokKind.NumLit, span)
+        internal DecLitToken(decimal value, Span span)
+            : base(TokKind.DecLit, span)
         {
-            // Decimal TODO: Why isn't this <= double.MaxValue?
-            Contracts.Assert(value >= double.MinValue && value < double.MaxValue);
+            Contracts.Assert(value >= decimal.MinValue && value <= decimal.MaxValue);
 
             Value = value;
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="NumLitToken"/> class.
+        /// Initializes a new instance of the <see cref="DecLitToken"/> class.
         /// Copy Ctor for NumLitToken used by Clone.
         /// </summary>
         /// <param name="tok">The token to be copied.</param>
         /// <param name="newSpan">The new span.</param>
-        private NumLitToken(NumLitToken tok, Span newSpan)
+        private DecLitToken(DecLitToken tok, Span newSpan)
             : this(tok.Value, newSpan)
         {
         }
 
         internal override Token Clone(Span ts)
         {
-            return new NumLitToken(this, ts);
+            return new DecLitToken(this, ts);
         }
 
         /// <summary>
         /// Numeric value of the token.
         /// </summary>
-        public double Value { get; }
+        public decimal Value { get; }
 
         /// <inheritdoc />
         public override string ToString()
         {
-            return Value.ToString("R", CultureInfo.CurrentCulture);
+            return Value.ToString("G29", CultureInfo.CurrentCulture);
         }
 
         /// <inheritdoc />
@@ -53,12 +49,12 @@ namespace Microsoft.PowerFx.Syntax
         {
             Contracts.AssertValue(that);
 
-            if (!(that is NumLitToken))
+            if (!(that is DecLitToken))
             {
                 return false;
             }
 
-            var thatNumLitToken = that.As<NumLitToken>();
+            var thatNumLitToken = that.As<DecLitToken>();
             return Value == thatNumLitToken.Value && base.Equals(that);
         }
     }

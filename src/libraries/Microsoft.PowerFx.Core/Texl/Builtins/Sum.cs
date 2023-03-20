@@ -23,9 +23,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override DelegationCapability FunctionDelegationCapability => DelegationCapability.Sum;
 
         public SumTableFunction()
-            : base("Sum", TexlStrings.AboutSumT, FunctionCategories.Table)
+            : base("Sum", TexlStrings.AboutSumT, FunctionCategories.Table, nativeDecimal: true)
         {
-            SupportsDecimal = true;
         }
     }
 }

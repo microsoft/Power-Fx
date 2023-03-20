@@ -167,22 +167,25 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("Average(Float(\"3\"))")]
-        [InlineData("Average(\"3\", Float(4))")]
-        [InlineData("Average(true, Float(4))")]
-        [InlineData("Average(true, Float(\"5\"), 6)")]
-        public void TexlFunctionTypeSemanticsAverageWithCoercion(string script)
-        {
-            TestSimpleBindingSuccess(script, DType.Number);
-        }
-
-        [Theory]
+        [InlineData("Average(3)")]
         [InlineData("Average(\"3\")")]
         [InlineData("Average(\"3\", 4)")]
         [InlineData("Average(true, 4)")]
         [InlineData("Average(true, \"5\", 6)")]
         [InlineData("Average(true, \"5\", Blank())")]
-        public void TexlFunctionTypeSemanticsAverageWithCoercionDecimal(string script)
+        public void TexlFunctionTypeSemanticsAverageWithCoercion_Float(string script)
+        {
+            TestSimpleBindingSuccess(script, DType.Number, numberIsFloat: true);
+        }
+
+        [Theory]
+        [InlineData("Average(3)")]
+        [InlineData("Average(\"3\")")]
+        [InlineData("Average(\"3\", 4)")]
+        [InlineData("Average(true, 4)")]
+        [InlineData("Average(true, \"5\", 6)")]
+        [InlineData("Average(true, \"5\", Blank())")]
+        public void TexlFunctionTypeSemanticsAverageWithCoercion(string script)
         {
             TestSimpleBindingSuccess(script, DType.Decimal);
         }
@@ -194,7 +197,17 @@ namespace Microsoft.PowerFx.Core.Tests
             symbol.AddVariable("A", FormulaType.Boolean);
             symbol.AddVariable("B", FormulaType.String);
             symbol.AddVariable("C", FormulaType.Number);
-            TestSimpleBindingSuccess("Average(1, 2, A, B, C)", DType.Number, symbol);
+            TestSimpleBindingSuccess("Average(1, 2, A, B, C)", DType.Decimal, symbol);
+        }
+
+        [Fact]
+        public void TexlFunctionTypeSemanticsAverageTypedGlobalWithCoercion_Float()
+        {
+            var symbol = new SymbolTable();
+            symbol.AddVariable("A", FormulaType.Boolean);
+            symbol.AddVariable("B", FormulaType.String);
+            symbol.AddVariable("C", FormulaType.Number);
+            TestSimpleBindingSuccess("Average(Float(1), 2, A, B, C)", DType.Number, symbol);
         }
 
         [Fact]
@@ -846,13 +859,13 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("Max(Float(1), Float(2), Float(3), Float(4))")]
+        [InlineData("Max(1, 2, 3, 4)")]
         [InlineData("Max(1, A, 2, A)")]
         [InlineData("Max(Table, A)")]
-        [InlineData("Min(Float(1), Float(2), Float(3), Float(4))")]
+        [InlineData("Min(1, 2, 3, 4)")]
         [InlineData("Min(1, A, 2, A)")]
         [InlineData("Min(Table, A)")]
-        public void TexlFunctionTypeSemanticsMinMax(string script)
+        public void TexlFunctionTypeSemanticsMinMax_Float(string script)
         {
             var symbol = new SymbolTable();
             symbol.AddVariable("A", FormulaType.Number);
@@ -861,17 +874,18 @@ namespace Microsoft.PowerFx.Core.Tests
             TestSimpleBindingSuccess(
                 script,
                 DType.Number,
-                symbol);
+                symbol,
+                numberIsFloat: true);
         }
 
         [Theory]
-        [InlineData("Max(Decimal(1), Decimal(2), Decimal(3), Decimal(4))")]
+        [InlineData("Max(1, 2, 3, 4)")]
         [InlineData("Max(1, A, 2, A)")]
         [InlineData("Max(Table, A)")]
-        [InlineData("Min(Decimal(1), Decimal(2), Decimal(3), Decimal(4))")]
+        [InlineData("Min(1, 2, 3, 4)")]
         [InlineData("Min(1, A, 2, A)")]
         [InlineData("Min(Table, A)")]
-        public void TexlFunctionTypeSemanticsMinMaxDecimal(string script)
+        public void TexlFunctionTypeSemanticsMinMax(string script)
         {
             var symbol = new SymbolTable();
             symbol.AddVariable("A", FormulaType.Decimal);
@@ -894,7 +908,21 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("Min(true, \"5\", 6)")]
         public void TexlFunctionTypeSemanticsMinMaxWithCoercion(string script)
         {
-            TestSimpleBindingSuccess(script, DType.Number);
+            TestSimpleBindingSuccess(script, DType.Decimal);
+        }
+
+        [Theory]
+        [InlineData("Max(\"3\")")]
+        [InlineData("Max(\"3\", 4)")]
+        [InlineData("Max(true, 4)")]
+        [InlineData("Max(true, \"5\", 6)")]
+        [InlineData("Min(\"3\")")]
+        [InlineData("Min(\"3\", 4)")]
+        [InlineData("Min(true, 4)")]
+        [InlineData("Min(true, \"5\", 6)")]
+        public void TexlFunctionTypeSemanticsMinMaxWithCoercion_Float(string script)
+        {
+            TestSimpleBindingSuccess(script, DType.Number, numberIsFloat: true);
         }
 
         [Theory]
@@ -909,8 +937,25 @@ namespace Microsoft.PowerFx.Core.Tests
 
             TestSimpleBindingSuccess(
                 script,
-                DType.Number,
+                DType.Decimal,
                 symbol);
+        }
+
+        [Theory]
+        [InlineData("Min(1, 2, A, B, C)")]
+        [InlineData("Max(1, 2, A, B, C)")]
+        public void TexlFunctionTypeSemanticsMinMaxTypedGlobalWithCoercion_Float(string script)
+        {
+            var symbol = new SymbolTable();
+            symbol.AddVariable("A", FormulaType.Number);
+            symbol.AddVariable("B", FormulaType.String);
+            symbol.AddVariable("C", FormulaType.Number);
+
+            TestSimpleBindingSuccess(
+                script,
+                DType.Number,
+                symbol,
+                numberIsFloat: true);
         }
 
         [Fact]
@@ -1575,7 +1620,7 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("Sum(Float(1), Float(2), Float(3), Float(4))")]
+        [InlineData("Sum(1, 2, 3, 4)")]
         [InlineData("Sum(1, A, 2, A)")]
         [InlineData("Sum(Table, A)")]
         [InlineData("Sum(Table2, D.X)")]
@@ -1590,7 +1635,8 @@ namespace Microsoft.PowerFx.Core.Tests
             TestSimpleBindingSuccess(
                 script,
                 DType.Number,
-                symbol);
+                symbol,
+                numberIsFloat: true);
         }
 
         // TODO Decimal: [InlineData("Sum(Table, A + CountA(D.X))")]
@@ -1599,7 +1645,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("Sum(1, A, 2, A)")]
         [InlineData("Sum(Table, A)")]
         [InlineData("Sum(Table2, D.X)")]
-        public void TexlFunctionTypeSemanticsSumDecimal(string script)
+        public void TexlFunctionTypeSemanticsSum_Decimal(string script)
         {
             var symbol = new SymbolTable();
             symbol.AddVariable("A", FormulaType.Decimal);
@@ -1613,13 +1659,14 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("Sum(Float(\"3\"))")]
-        [InlineData("Sum(\"3\", Float(4))")]
-        [InlineData("Sum(true, Float(4))")]
+        [InlineData("Sum(3)")]
+        [InlineData("Sum(\"3\")")]
+        [InlineData("Sum(\"3\", 4)")]
+        [InlineData("Sum(true, 4)")]
         [InlineData("Sum(Float(true), \"5\", 6)")]
         public void TexlFunctionTypeSemanticsSumWithCoercion(string script)
         {
-            TestSimpleBindingSuccess(script, DType.Number);
+            TestSimpleBindingSuccess(script, DType.Number, numberIsFloat: true);
         }
 
         [Theory]
@@ -1627,7 +1674,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("Sum(\"3\", 4)")]
         [InlineData("Sum(true, 4)")]
         [InlineData("Sum(true, \"5\", 6)")]
-        public void TexlFunctionTypeSemanticsSumDecimalWithCoercion(string script)
+        public void TexlFunctionTypeSemanticsSumWithCoercion_Decimal(string script)
         {
             TestSimpleBindingSuccess(script, DType.Decimal);
         }
@@ -1642,8 +1689,14 @@ namespace Microsoft.PowerFx.Core.Tests
 
             TestSimpleBindingSuccess(
                 "Sum(1, 2, A, B, C)",
-                DType.Number,
+                DType.Decimal,
                 symbol);
+
+            TestSimpleBindingSuccess(
+                "Sum(1, 2, A, B, C)",
+                DType.Number,
+                symbol,
+                numberIsFloat: true);
         }
 
         [Theory]
@@ -2289,7 +2342,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("Mod(-2, -2)", "w")]
         [InlineData("Mod(T, 2)", "*[Result:n]")]
         [InlineData("Mod(T, T2)", "*[Result:n]")]
-        [InlineData("Mod(3, T2)", "*[Result:n]")]
+        [InlineData("Mod(3, T2)", "*[Result:w]")]
         [InlineData("Mod(W, 2)", "*[Result:w]")]
         [InlineData("Mod(W, W2)", "*[Result:w]")]
         [InlineData("Mod(3, W2)", "*[Result:w]")]
@@ -2315,7 +2368,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("Mod(T, 2)", "*[Result:n]")]
         [InlineData("Mod(T, T2)", "*[Result:n]")]
         [InlineData("Mod(3, T2)", "*[Result:n]")]
-        public void TexlFunctionTypeSemanticsModOverloads_NumberIsFloat(string script, string expectedType)
+        public void TexlFunctionTypeSemanticsModOverloads_Float(string script, string expectedType)
         {
             var symbol = new SymbolTable();
             symbol.AddVariable("T", new TableType(TestUtils.DT("*[Number:n]")));
@@ -2332,12 +2385,18 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("Mod(-2, -2)", "w")]
         [InlineData("Mod(T, 2)", "*[Value:n]")]
         [InlineData("Mod(T, T2)", "*[Value:n]")]
-        [InlineData("Mod(3, T2)", "*[Value:n]")]
+        [InlineData("Mod(3, T2)", "*[Value:w]")]
+        [InlineData("Mod(W, 2)", "*[Value:w]")]
+        [InlineData("Mod(W, W2)", "*[Value:w]")]
+        [InlineData("Mod(3, W2)", "*[Value:w]")]
+        [InlineData("Mod(W, T2)", "*[Value:w]")]
         public void TexlFunctionTypeSemanticsModOverloads_ConsistentOneColumnTableResult(string script, string expectedType)
         {
             var symbol = new SymbolTable();
             symbol.AddVariable("T", new TableType(TestUtils.DT("*[Number:n]")));
             symbol.AddVariable("T2", new TableType(TestUtils.DT("*[Dividend:n]")));
+            symbol.AddVariable("W", new TableType(TestUtils.DT("*[Number:w]")));
+            symbol.AddVariable("W2", new TableType(TestUtils.DT("*[Dividend:w]")));
 
             TestSimpleBindingSuccess(
                 script,

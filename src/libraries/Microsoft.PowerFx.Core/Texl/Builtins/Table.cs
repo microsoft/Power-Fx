@@ -66,26 +66,19 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrNeedRecord);
                     isValid = false;
                 }
-
-                if (!argType.IsDeferred && !rowType.IsValid)
+                else if (!rowType.CanUnionWith(argType))
                 {
-                    rowType = argType;
-                }
-                else if (!argType.IsDeferred && rowType.CanUnionWith(argType))
-                {
-                    rowType = DType.Union(rowType, argType);
-                }
-                else if (!argType.IsDeferred && argType.CoercesTo(rowType))
-                {
-                    CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i], rowType, allowDupes: true);
+                    errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrIncompatibleRecord);
+                    isValid = false;
                 }
                 else
                 {
-                    errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrTableDoesNotAcceptThisType);
+                    var isUnionError = false;
+                    rowType = DType.Union(ref isUnionError, rowType, argType);
+                    Contracts.Assert(!isUnionError);
+                    Contracts.Assert(rowType.IsRecord);
                 }
             }
-
-            isValid &= rowType.IsValid;
 
             Contracts.Assert(rowType.IsRecord);
             returnType = rowType.ToTable();

@@ -124,8 +124,7 @@ namespace Microsoft.PowerFx.Functions
                         break;
                 }
 
-                var r = runtimeValuesChecked.Select(arg => arg as T).ToArray();
-                var result = await targetFunction(runner, context, irContext, r);
+                var result = await targetFunction(runner, context, irContext, runtimeValuesChecked.Select(arg => arg as T).ToArray());
                 var finiteError = FiniteResultCheck(functionName, irContext, result);
                 return finiteError ?? result;
             };

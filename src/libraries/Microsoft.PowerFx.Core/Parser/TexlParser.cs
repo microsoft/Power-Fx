@@ -27,7 +27,7 @@ namespace Microsoft.PowerFx.Core.Parser
             NamedFormulas = 1 << 1,
 
             // When specified, literal numbers are treated as floats.  By default, literal numbers are decimals.
-            NumberIsFloat = 1 << 2
+            NumberIsFloat = 1 << 2,
         }
 
         private bool _hasSemicolon = false;
@@ -304,9 +304,8 @@ namespace Microsoft.PowerFx.Core.Parser
             return new ParseFormulasResult(namedFormulas, _errors);
         }
 
-        private static IReadOnlyList<Token> TokenizeScript(string script, CultureInfo loc, Flags flags = Flags.None)
+        private static IReadOnlyList<Token> TokenizeScript(string script, CultureInfo loc, Flags flags)
         {
-            // Decimal TODO: Who uses this without flags?
             Contracts.AssertValue(script);
             Contracts.AssertValueOrNull(loc);
 

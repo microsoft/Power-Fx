@@ -8,7 +8,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
     // Sin(number:n)
     // Equivalent Excel function: Sin
-    internal sealed class SinFunction : MathFunction
+    internal sealed class SinFunction : MathOneArgFunction
     {
         public SinFunction()
             : base("Sin", TexlStrings.AboutSin, FunctionCategories.MathAndStat)
@@ -18,7 +18,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
     // Sin(E:*[n])
     // Table overload that computes the sine values of each item in the input table.
-    internal sealed class SinTableFunction : MathTableFunction
+    internal sealed class SinTableFunction : MathOneArgTableFunction
     {
         public SinTableFunction()
             : base("Sin", TexlStrings.AboutSinT, FunctionCategories.Table)

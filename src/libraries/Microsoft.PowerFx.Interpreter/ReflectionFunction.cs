@@ -219,6 +219,8 @@ namespace Microsoft.PowerFx
             {
                 var t = GetType();
                 var suffix = "Function";
+
+                //                 var name = t.Name.Substring(0, t.Name.Length - suffix.Length);  and replace Program.cs, Decimal TODO before PR
                 var name = t.Name.Substring(0, t.Name.IndexOf(suffix, StringComparison.InvariantCulture));
                 var m = t.GetMethod("Execute", BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance) ?? throw new InvalidOperationException($"Missing Execute method");
                 var returnType = GetType(m.ReturnType);

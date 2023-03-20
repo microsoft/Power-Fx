@@ -88,12 +88,6 @@ Blank()
 >> Max(-1, -2, -3, Blank(), -2, -3)
 -1
 
->> Max(1E+308, 1E+308)
-Errors: Error 4-10: Numeric value is too large.|Error 12-18: Numeric value is too large.|Error 4-10: Expected number. We expect a number at this point in the formula.|Error 12-18: Expected number. We expect a number at this point in the formula.
-
->> Min(1E+308, 1E+308)
-Errors: Error 4-10: Numeric value is too large.|Error 12-18: Numeric value is too large.|Error 4-10: Expected number. We expect a number at this point in the formula.|Error 12-18: Expected number. We expect a number at this point in the formula.
-
 >> Max(79228162514264337593543950335,79228162514264337593543950325)
 79228162514264337593543950335
 

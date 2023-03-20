@@ -66,6 +66,7 @@ namespace Microsoft.PowerFx.Core.IR
                 kindToUse = rightCoerced.Kind;
             }
 #if false
+            // Decimal TODO
             else if (!leftType.Accepts(rightType) && !rightType.Accepts(leftType))
             {
                 return BinaryOpKind.Invalid;

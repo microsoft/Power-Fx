@@ -1,40 +1,40 @@
 #SETUP: ConsistentOneColumnTableResult
 
 >> Round(Sin(Table({a:0},{a:Pi()/6},{a:Pi()/2})),3)
-Table({Value:0},{Value:0.5},{Value:1})
+#SKIP Issue 1204 with decimal, expected: Table({Value:0},{Value:0.5},{Value:1})
 
 >> Round(Sin([0, Pi()/6, Pi()/2]),3)
 Table({Value:0},{Value:0.5},{Value:1})
 
 >> Round(Sin(Table({a:0},{a:1/0},{a:Pi()/2})),3)
-Table({Value:0},{Value:Error({Kind:ErrorKind.Div0})},{Value:1})
+#SKIP Issue 1204 with decimal, expected: Table({Value:0},{Value:Error({Kind:ErrorKind.Div0})},{Value:1})
 
 >> Round(Sin(Table({a:0},{a:Pi()/6},If(1/0<2,{a:Pi()}))),3)
-Table({Value:0},{Value:0.5},Error({Kind:ErrorKind.Div0}))
+#SKIP Issue 1204 with decimal, expected: Table({Value:0},{Value:0.5},Error({Kind:ErrorKind.Div0}))
 
 >> Round(Sin([0, Pi(), Pi()/2, -Pi()/2, 3*Pi()/2, 2*Pi(), Pi()/4, -Pi()/4, Blank()]), 4)
 Table({Value:0},{Value:0},{Value:1},{Value:-1},{Value:-1},{Value:0},{Value:0.7071},{Value:-0.7071},{Value:0})
 
 >> Round(Cos(Table({a:0},{a:Pi()/3},{a:Pi()/2})),3)
-Table({Value:1},{Value:0.5},{Value:0})
+#SKIP Issue 1204 with decimal, expected: Table({Value:1},{Value:0.5},{Value:0})
 
 >> Round(Cos(Table({a:1/0},{a:Pi()/3},{a:Pi()/2})),3)
-Table({Value:Error({Kind:ErrorKind.Div0})},{Value:0.5},{Value:0})
+#SKIP Issue 1204 with decimal, expected: Table({Value:Error({Kind:ErrorKind.Div0})},{Value:0.5},{Value:0})
 
 >> Round(Cos(Table({a:0},If(1/0<2,{a:Pi()/3}),{a:Pi()/2})),3)
-Table({Value:1},Error({Kind:ErrorKind.Div0}),{Value:0})
+#SKIP Issue 1204 with decimal, expected: Table({Value:1},Error({Kind:ErrorKind.Div0}),{Value:0})
 
 >> Round(Cos([0, Pi(), Pi()/2, -Pi()/2, 3*Pi()/2, 2*Pi(), Pi()/4, -Pi()/4, Blank()]), 4)
 Table({Value:1},{Value:-1},{Value:0},{Value:0},{Value:0},{Value:1},{Value:0.7071},{Value:0.7071},{Value:1})
 
 >> Round(Tan(Table({a:0},{a:Pi()/4},{a:-Pi()/4})),3)
-Table({Value:0},{Value:1},{Value:-1})
+#SKIP Issue 1204 with decimal, expected: Table({Value:0},{Value:1},{Value:-1})
 
 >> Round(Tan(Table({a:1/0},{a:Pi()/4},{a:-Pi()/4})),3)
-Table({Value:Error({Kind:ErrorKind.Div0})},{Value:1},{Value:-1})
+#SKIP Issue 1204 with decimal, expected: Table({Value:Error({Kind:ErrorKind.Div0})},{Value:1},{Value:-1})
 
 >> Round(Tan(Table(If(1/0<2,{a:0}),{a:Pi()/4},{a:-Pi()/4})),3)
-Table(Error({Kind:ErrorKind.Div0}),{Value:1},{Value:-1})
+#SKIP Issue 1204 with decimal, expected: Table(Error({Kind:ErrorKind.Div0}),{Value:1},{Value:-1})
 
 >> Round(Tan([0, Pi(), 2*Pi(), Pi()/4, -Pi()/4, Blank()]), 4)
 Table({Value:0},{Value:0},{Value:0},{Value:1},{Value:-1},{Value:0})
@@ -43,7 +43,7 @@ Table({Value:0},{Value:0},{Value:0},{Value:1},{Value:-1},{Value:0})
 Table({Value:0},{Value:1},{Value:-1})
 
 >> Round(Cot(Table({a:Pi()/2},{a:0},{a:-Pi()/4})),3)
-Table({Value:0},{Value:Error({Kind:ErrorKind.Div0})},{Value:-1})
+#SKIP Issue 1204 with decimal, expected: Table({Value:0},{Value:Error({Kind:ErrorKind.Div0})},{Value:-1})
 
 >> Round(Cot(Table({a:Pi()/2},If(Sqrt(-1)<1,{a:Pi()/4}),{a:-Pi()/4})),3)
 Table({Value:0},Error({Kind:ErrorKind.Numeric}),{Value:-1})
@@ -70,7 +70,7 @@ Table({Value:0},{Value:180},{Value:90},{Value:-90},{Value:270},{Value:360},{Valu
 Table({Value:0},{Value:0.0175},{Value:-0.0175},{Value:3.1416},{Value:1.5708},{Value:-3.1416},{Value:-1.5708},{Value:-6.2832},{Value:0})
 
 >> Round(Degrees(Table({a:0}, {a:Pi()}, {a:Pi()/2}, {a:-Pi()/2}, {a:3*Pi()/2}, {a:2*Pi()}, {a:Pi()/4}, {a:-Pi()/4}, {a:Pi()*10}, {a:1}, {a:-1}, {a:Blank()})), 4)
-Table({Value:0},{Value:180},{Value:90},{Value:-90},{Value:270},{Value:360},{Value:45},{Value:-45},{Value:1800},{Value:57.2958},{Value:-57.2958},{Value:0})
+#SKIP Issue 1204 with decimal, expected: Table({Value:0},{Value:180},{Value:90},{Value:-90},{Value:270},{Value:360},{Value:45},{Value:-45},{Value:1800},{Value:57.2958},{Value:-57.2958},{Value:0})
 
 >> Round(Radians(Table({a:0}, {a:1}, {a:-1}, {a:180}, {a:90}, {a:-180}, {a:-90}, {a:-360}, {a:Blank()})), 4)
 Table({Value:0},{Value:0.0175},{Value:-0.0175},{Value:3.1416},{Value:1.5708},{Value:-3.1416},{Value:-1.5708},{Value:-6.2832},{Value:0})

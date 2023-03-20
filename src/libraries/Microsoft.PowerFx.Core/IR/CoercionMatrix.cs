@@ -385,8 +385,8 @@ namespace Microsoft.PowerFx.Core.IR
             var acceptsG = DType.Guid.Accepts(fromType);
             var acceptsOS = DType.OptionSetValue.Accepts(fromType);
             var acceptsV = DType.ViewValue.Accepts(fromType);
-            var acceptsDec = DType.Decimal.Accepts(fromType);
-            Contracts.Assert(acceptsN || acceptsB || acceptsDT || acceptsD || acceptsT || acceptsS || acceptsG || acceptsOS || acceptsV || acceptsDec, "Unsupported type coercion");
+            var acceptsW = DType.Decimal.Accepts(fromType);
+            Contracts.Assert(acceptsN || acceptsB || acceptsDT || acceptsD || acceptsT || acceptsS || acceptsG || acceptsOS || acceptsV || acceptsW, "Unsupported type coercion");
 
             if (DType.Number.Accepts(fromType) || DType.DateTime.Accepts(fromType))
             {

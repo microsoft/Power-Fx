@@ -1049,11 +1049,6 @@ namespace Microsoft.PowerFx.Core.Functions
             return CheckColumnType(type, arg, DType.Decimal, errors, TexlStrings.ErrInvalidSchemaNeedDecCol_Col, ref nodeToCoercedTypeMap);
         }
 
-        public bool CheckNumDecColumnType(DType numberType, DType type, TexlNode arg, IErrorContainer errors, ref Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
-        {
-            return CheckColumnType(type, arg, numberType, errors, numberType == DType.Decimal ? TexlStrings.ErrInvalidSchemaNeedDecCol_Col : TexlStrings.ErrInvalidSchemaNeedNumCol_Col, ref nodeToCoercedTypeMap);
-        }
-
         // Check that the type of a specified node is a color column type, and possibly emit errors
         // accordingly. Returns true if the types align, false otherwise.
         protected bool CheckColorColumnType(DType type, TexlNode arg, IErrorContainer errors, ref Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
@@ -1082,7 +1077,7 @@ namespace Microsoft.PowerFx.Core.Functions
             return CheckColumnType(type, arg, DType.Boolean, errors, TexlStrings.ErrInvalidSchemaNeedColorCol_Col, ref nodeToCoercedTypeMap);
         }
 
-        protected DType NumDecReturnType(CheckTypesContext context, bool nativeDecimal, DType argType)
+        protected DType NumDecReturnType(CheckTypesContext context, DType argType)
         {
             IEnumerable<TypedName> columns;
 
@@ -1097,8 +1092,7 @@ namespace Microsoft.PowerFx.Core.Functions
                 return argType;
             }
 
-            return nativeDecimal && 
-                   (argType == DType.Decimal ||
+            return (argType == DType.Decimal ||
                     ((argType == DType.Boolean || argType == DType.ObjNull || argType == DType.String) && !context.NumberIsFloat))
                    ? DType.Decimal : DType.Number;
         }

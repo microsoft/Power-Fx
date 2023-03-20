@@ -14,6 +14,8 @@ using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 
+// Decimal TODO: Review and revert
+
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
     /// <summary>

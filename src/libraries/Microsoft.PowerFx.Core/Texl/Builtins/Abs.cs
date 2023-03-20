@@ -8,8 +8,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
     // Abs(number:n|w)
     // Equivalent DAX function: Abs
-    internal sealed class AbsFunction : MathFunction
-    {
+    internal sealed class AbsFunction : MathOneArgFunction
+    { 
         public AbsFunction()
             : base("Abs", TexlStrings.AboutAbs, FunctionCategories.MathAndStat, nativeDecimal: true)
         {
@@ -18,7 +18,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
     // Abs(E:*[n|w])
     // Table overload that computes the absolute values of each item in the input table.
-    internal sealed class AbsTableFunction : MathTableFunction
+    internal sealed class AbsTableFunction : MathOneArgTableFunction
     {
         public AbsTableFunction()
             : base("Abs", TexlStrings.AboutAbsT, FunctionCategories.Table, nativeDecimal: true)

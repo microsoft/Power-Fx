@@ -26,30 +26,4 @@ namespace Microsoft.PowerFx.Types
             sb.Append((Value == 0) ? "0" : Value.ToString(CultureInfo.InvariantCulture));
         }
     }
-
-    public class DecimalValue : PrimitiveValue<decimal>
-    {
-        internal DecimalValue(IRContext irContext, decimal value)
-            : base(irContext, value)
-        {
-            bool x = irContext.ResultType == FormulaType.Decimal;
-            if (!x)
-            {
-                x = true;
-            }
-
-            Contract.Assert(IRContext.ResultType == FormulaType.Decimal);
-        }
-
-        public override void Visit(IValueVisitor visitor)
-        {
-            visitor.Visit(this);
-        }
-
-        public override void ToExpression(StringBuilder sb, FormulaValueSerializerSettings settings)
-        {
-            decimal normalized = Value / 1.00000000000000000000000000000m;
-            sb.Append(normalized.ToString(CultureInfo.InvariantCulture));
-        }
-    }
 }

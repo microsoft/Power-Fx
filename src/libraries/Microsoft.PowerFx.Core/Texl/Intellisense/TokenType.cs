@@ -50,10 +50,10 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
         // A Constant Boolean value (True, False)
         BoolLit,
 
-        // A Constant numeric value (eg. 5, 4.2, 1e300)
+        // A Constant float value (eg. ~5.1, 4.2, 1e300)
         NumLit,
 
-        // A Constant decimal value (eg. 5, 4.2, 1e28)
+        // A Constant decimal value (eg. 5.00000000000000000000000000000000001, 4.2, 1e28)
         DecLit,        
 
         // A Constant String Value (eg. "Hello")

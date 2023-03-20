@@ -168,16 +168,6 @@ namespace Microsoft.PowerFx
                         output?.WriteLine(varName + ": " + PrintResult(varValue));
                     }
 
-                    // IR pretty printer: IR( <expr> )
-                    else if ((match = Regex.Match(expr, @"^\s*IR\((?<expr>.*)\)\s*$", RegexOptions.Singleline)).Success)
-                    {
-                        var opts = new ParserOptions() { AllowsSideEffects = true, NumberIsFloat = _numberIsFloat };
-                        var cr = _engine.Check(match.Groups["expr"].Value, options: opts);
-                        var ir = cr.PrintIR();
-                        Console.WriteLine(ir);
-                        output?.WriteLine(ir);
-                    }
-
                     // formula definition: <ident> = <formula>
                     else if ((match = Regex.Match(expr, @"^\s*(?<ident>[a-zA-Z]\w+)\s*=(?<formula>.*)$", RegexOptions.Singleline)).Success &&
                               match.Groups["ident"].Value != "true" && match.Groups["ident"].Value != "false" && match.Groups["ident"].Value != "blank")

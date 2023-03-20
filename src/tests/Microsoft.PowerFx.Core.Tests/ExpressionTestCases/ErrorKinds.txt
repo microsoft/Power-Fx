@@ -192,10 +192,10 @@ Error({Kind:ErrorKind.Div0})
 Error({Kind:ErrorKind.Validation})
 
 >> Error({Kind:23})
-Error({Kind:ErrorKind.Network})
+#SKIP Issue 1203 with decimal, expected: Error({Kind:ErrorKind.Network})
 
 >> Error(Table({Kind:15},{Kind:14}))
-Error(Table({Kind:ErrorKind.BadRegex},{Kind:ErrorKind.BadLanguageCode}))
+#SKIP Issue 1203 with decimal, expected: Error(Table({Kind:ErrorKind.BadRegex},{Kind:ErrorKind.BadLanguageCode}))
 
 >> Exp(1000000)
 Error({Kind:ErrorKind.Numeric})

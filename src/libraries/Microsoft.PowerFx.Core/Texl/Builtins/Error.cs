@@ -93,7 +93,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 return false;
             }
 
-#if false
             var argumentKindType = names.First(tn => tn.Name == requiredKindField.Name).Type;
             if (argumentKindType.IsEnum)
             {
@@ -113,7 +112,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     "ErrorKind");
                 return false;
             }
-#endif
 
             var valid = true;
 
@@ -145,8 +143,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     acceptedFields.Where(field =>
 
                         // Kind has already been handled before
-                        // field.Name != "Kind" && 
-                        names.Any(name => name.Name == field.Name)));
+                        field.Name != "Kind" && names.Any(name => name.Name == field.Name)));
 
                 typeValid = CheckType(argument, argumentType, expectedOptionalFieldsRecord, errors, true, out matchedWithCoercion);
             }
@@ -157,8 +154,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     acceptedFields.Where(field =>
 
                         // Kind has already been handled before
-                        // field.Name != "Kind" &&
-                        names.Any(name => name.Name == field.Name)));
+                        field.Name != "Kind" && names.Any(name => name.Name == field.Name)));
                 typeValid = CheckType(argument, argumentType, expectedOptionalFieldsTable, errors, true, out matchedWithCoercion);
             }
 
