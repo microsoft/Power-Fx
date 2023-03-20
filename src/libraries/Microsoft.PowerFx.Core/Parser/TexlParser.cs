@@ -888,6 +888,9 @@ namespace Microsoft.PowerFx.Core.Parser
                 case TokKind.Eof:
                     return CreateError(_curs.TokCur, TexlStrings.ErrOperandExpected);
 
+                case TokKind.Semicolon:
+                    return CreateError(_curs.TokCur, TexlStrings.ErrOperandExpected);
+
                 case TokKind.Error:
                     var errorToken = _curs.TokMove().As<ErrorToken>();
                     var args = errorToken.ResourceKeyFormatStringArgs;

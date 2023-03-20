@@ -771,6 +771,12 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
+        [InlineData("a = 10ads; b = 123; c = 20;", "c")]
+        [InlineData("a = (; b = 123; c = 20;", "c")]
+        [InlineData("a = (; b = 123; c = );", "b")]
+        [InlineData("a = 10; b = 123; c = 10);", "b")]
+        [InlineData("3r(09 = 10; b = 123; c = 10;", "b")]
+        [InlineData("a = 10; b = (123 ; c = 20;", "c")]
         [InlineData("a = 10; b = in'valid ; c = 20;", "c")]
         [InlineData("a = 10; b = in(valid ; c = 20;", "c")]
         [InlineData("a = 10; b = in)valid ; c = 20;", "c")]
