@@ -86,7 +86,7 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
                 result = $"Call({Function.Name}";
             }
 
-            foreach (var arg in Args)
+            result += Args.Count > 1 : $"({string.Join(",", Args.Select(arg => $" {arg}"))} )";
             {
                 result += $", {arg}";
             }
