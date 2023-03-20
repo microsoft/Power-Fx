@@ -608,7 +608,7 @@ namespace Microsoft.PowerFx.Functions
                 foreach (DValue<RecordValue> row in table.Rows)
                 {
                     FormulaValue val = row.Value.GetField("Value");
-                    double arg1 = val is NumberValue nv ? nv.Value : val is BlankValue ? 0d : throw new InvalidOperationException($"Value in the array doesn't have the expected type {val.Type._type.ToString()}");
+                    double arg1 = val is NumberValue nv ? nv.Value : 0d;
                     modResults.Add(ModInternal(arg0, arg1, IRContext.NotInSource(FormulaType.Number)));
                 }
 
