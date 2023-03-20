@@ -428,15 +428,15 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             }
             else
             {
-                // If the feature is enabled, enable delegation for
-                // async call, first name and dotted name nodes.
-                if (binding.Features.HasFlag(Features.AllowAsyncDelegation))
-                {
-                    return (node is CallNode) || (node is FirstNameNode) || (node is DottedNameNode);
-                }
-                else if (!isAsync)
+                if (!isAsync)
                 {
                     return true;
+                }
+                else if (binding.Features.HasFlag(Features.AllowAsyncDelegation))
+                {
+                    // If the feature is enabled, enable delegation for
+                    // async call, first name and dotted name nodes.
+                    return (node is CallNode) || (node is FirstNameNode) || (node is DottedNameNode);
                 }
             }
 
