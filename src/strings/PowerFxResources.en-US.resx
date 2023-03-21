@@ -4951,6 +4951,22 @@
     <value>User defined function must have a body.</value>
     <comment>This error message shows up when user defined function does not have a body</comment>
   </data>
+  <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
+    <value>Function {0} is already defined.</value>
+    <comment>This error message shows up when user tries to define a function that already exists</comment>
+  </data>
+  <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
+    <value>Parameter {0} is a duplicate.</value>
+    <comment>This error message shows up when user defined function has a duplicate parameter</comment>
+  </data>
+  <data name="ErrUDF_UnknownType" xml:space="preserve">
+    <value>Unknown type {0}.</value>
+    <comment>This error message shows up when an invalid type is used</comment>
+  </data>
+  <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
+    <value>The stated function return type does not match the return type of the function body.</value>
+    <comment>This error message shows up when expected return type does not match with actual return type</comment>
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula '{0}' already exists.</value>
   </data>

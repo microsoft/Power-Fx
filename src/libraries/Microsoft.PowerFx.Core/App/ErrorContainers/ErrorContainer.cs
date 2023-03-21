@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.PowerFx.Core.Errors;
@@ -54,6 +55,26 @@ namespace Microsoft.PowerFx.Core.App.ErrorContainers
             return false;
         }
 
+        public bool HasErrors(Token token, DocumentErrorSeverity severity = DocumentErrorSeverity.Suggestion)
+        {
+            Contracts.AssertValue(token);
+
+            if (CollectionUtils.Size(_errors) == 0)
+            {
+                return false;
+            }
+
+            foreach (var err in _errors)
+            {
+                if (err.Tok == token && err.Severity >= severity)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         public bool HasErrorsInTree(TexlNode rootNode, DocumentErrorSeverity severity = DocumentErrorSeverity.Suggestion)
         {
             Contracts.AssertValue(rootNode);
@@ -99,6 +120,29 @@ namespace Microsoft.PowerFx.Core.App.ErrorContainers
         public TexlError EnsureError(TexlNode node, ErrorResourceKey errKey, params object[] args)
         {
             return EnsureError(DefaultSeverity, node, errKey, args);
+        }
+
+        public TexlError EnsureError(DocumentErrorSeverity severity, Token token, ErrorResourceKey errKey, params object[] args)
+        {
+            Contracts.AssertValue(token);
+            Contracts.AssertValue(args);
+
+            if (!HasErrors(token, severity))
+            {
+                return Error(severity, token, errKey, args);
+            }
+
+            return null;
+        }
+
+        public TexlError Error(DocumentErrorSeverity severity, Token token, ErrorResourceKey errKey, object[] args)
+        {
+            Contracts.AssertValue(token);
+            Contracts.AssertValue(args);
+
+            var err = new TexlError(token, severity, errKey, args);
+            CollectionUtils.Add(ref _errors, err);
+            return err;
         }
 
         public TexlError EnsureError(DocumentErrorSeverity severity, TexlNode node, ErrorResourceKey errKey, params object[] args)
