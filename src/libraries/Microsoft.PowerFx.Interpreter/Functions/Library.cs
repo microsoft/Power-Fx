@@ -547,7 +547,7 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: DropColumns)
-            },            
+            },
             {
                 BuiltinFunctionsCore.EncodeUrl,
                 StandardErrorHandling<StringValue>(
@@ -1058,6 +1058,19 @@ namespace Microsoft.PowerFx.Functions
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: NoOpAlreadyHandledByIR,
                     checkRuntimeTypes: ExactValueType<NumberValue>,
+                    checkRuntimeValues: DeferRuntimeTypeChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: Mod)
+            },
+            {
+                BuiltinFunctionsCore.ModT,
+                StandardErrorHandling<FormulaValue>(
+                    BuiltinFunctionsCore.Mod.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: NoOpAlreadyHandledByIR,
+                    checkRuntimeTypes: ExactSequence(
+                        ExactValueType<NumberValue>,
+                        ExactValueTypeOrBlank<TableValue>),                        
                     checkRuntimeValues: DeferRuntimeTypeChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: Mod)
@@ -1999,6 +2012,11 @@ namespace Microsoft.PowerFx.Functions
             foreach (var errorRecord in errorRecords)
             {
                 var messageField = errorRecord.GetField(ErrorType.MessageFieldName) as StringValue;
+
+                if (errorRecord.GetField(ErrorType.KindFieldName) is ErrorValue error)
+                {
+                    return error;
+                }
 
                 if (errorRecord.GetField(ErrorType.KindFieldName) is not NumberValue kindField)
                 {

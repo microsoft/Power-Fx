@@ -5,11 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Types;
-using static Microsoft.PowerFx.Syntax.PrettyPrintVisitor;
 
 namespace Microsoft.PowerFx.Functions
 {
@@ -61,41 +58,20 @@ namespace Microsoft.PowerFx.Functions
                     return nonFiniteArgError;
                 }
 
-                var argumentsExpanded = expandArguments(irContext, args);
+                IEnumerable<FormulaValue> argumentsExpanded = expandArguments(irContext, args);
+                IEnumerable<FormulaValue> blankValuesReplaced = argumentsExpanded.Select((arg, i) => (arg is BlankValue) ? replaceBlankValues(arg.IRContext, i) : arg);
+                IEnumerable<FormulaValue> runtimeTypesChecked = blankValuesReplaced.Select((arg, i) => checkRuntimeTypes(irContext, i, arg));
 
-                var blankValuesReplaced = argumentsExpanded.Select((arg, i) =>
-                {
-                    if (arg is BlankValue)
-                    {
-                        return replaceBlankValues(arg.IRContext, i);
-                    }
-                    else
-                    {
-                        return arg;
-                    }
-                });
+                // Calling ToList() here is a perf improvement as we use this list multiple times
+                List<FormulaValue> runtimeValuesChecked = runtimeTypesChecked.Select((arg, i) => (arg is T t) ? checkRuntimeValues(arg.IRContext, i, t) : arg).ToList();
 
-                var runtimeTypesChecked = blankValuesReplaced.Select((arg, i) => checkRuntimeTypes(irContext, i, arg));
-
-                var runtimeValuesChecked = runtimeTypesChecked.Select((arg, i) =>
-                {
-                    if (arg is T t)
-                    {
-                        return checkRuntimeValues(arg.IRContext, i, t);
-                    }
-                    else
-                    {
-                        return arg;
-                    }
-                });
-
-                var errors = runtimeValuesChecked.OfType<ErrorValue>();
+                IEnumerable<ErrorValue> errors = runtimeValuesChecked.OfType<ErrorValue>();
                 if (errors.Any())
                 {
                     return ErrorValue.Combine(irContext, errors);
                 }
 
-                var anyValueBlank = runtimeValuesChecked.Any(arg => arg is BlankValue || (arg is UntypedObjectValue uov && uov.Impl.Type == FormulaType.Blank));
+                bool anyValueBlank = runtimeValuesChecked.Any(arg => arg is BlankValue || (arg is UntypedObjectValue uov && uov.Impl.Type == FormulaType.Blank));
 
                 switch (returnBehavior)
                 {
@@ -124,8 +100,9 @@ namespace Microsoft.PowerFx.Functions
                         break;
                 }
 
-                var result = await targetFunction(runner, context, irContext, runtimeValuesChecked.Select(arg => arg as T).ToArray());
-                var finiteError = FiniteResultCheck(functionName, irContext, result);
+                FormulaValue result = await targetFunction(runner, context, irContext, runtimeValuesChecked.Select(arg => arg as T).ToArray());
+                ErrorValue finiteError = FiniteResultCheck(functionName, irContext, result);
+
                 return finiteError ?? result;
             };
         }

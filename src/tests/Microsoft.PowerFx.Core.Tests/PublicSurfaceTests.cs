@@ -167,7 +167,10 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Core.RenameDriver",
                 "Microsoft.PowerFx.Core.Utils.DName",
                 "Microsoft.PowerFx.Core.Utils.DPath",
-                "Microsoft.PowerFx.Core.Utils.ICheckable"
+                "Microsoft.PowerFx.Core.Utils.ICheckable",
+                "Microsoft.PowerFx.IUserInfo",
+                "Microsoft.PowerFx.UserInfo",
+                "Microsoft.PowerFx.SymbolExtensions"
             };
 
             var sb = new StringBuilder();
