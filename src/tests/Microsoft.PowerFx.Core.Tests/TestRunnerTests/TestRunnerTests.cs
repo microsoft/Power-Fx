@@ -182,7 +182,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             public Func<string, string, RunResult> _hook2;
 
-            protected override Task<RunResult> RunAsyncInternal(string expr, string setupHandlerName = null)
+            protected override Task<RunResult> RunAsyncInternal(string expr, string setupHandlerName = null, bool numberIsFloat = false)
             {
                 if (_hook != null)
                 {
@@ -400,7 +400,7 @@ namespace Microsoft.PowerFx.Core.Tests
         // Override IsError
         private class MockErrorRunner : MockRunner
         {
-            protected override Task<RunResult> RunAsyncInternal(string expr, string setupHandlerName = null)
+            protected override Task<RunResult> RunAsyncInternal(string expr, string setupHandlerName = null, bool numberIsFloat = false)
             {
                 return Task.FromResult(new RunResult(_hook(expr, setupHandlerName)));
             }

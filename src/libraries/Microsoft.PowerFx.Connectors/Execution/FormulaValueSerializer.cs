@@ -86,6 +86,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
                             Type = nv.Value.Type._type.Kind switch
                             {
                                 DKind.Number => "number",
+                                DKind.Decimal => "number",
                                 DKind.String => "string",
                                 DKind.Boolean => "boolean",
                                 DKind.Record => "object",

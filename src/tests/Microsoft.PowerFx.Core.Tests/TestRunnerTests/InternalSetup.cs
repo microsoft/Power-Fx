@@ -18,13 +18,15 @@ namespace Microsoft.PowerFx.Core.Tests
 
         internal TimeZoneInfo TimeZoneInfo { get; set; }
 
+        internal bool SkipTests { get; set; }
+
         /// <summary>
         /// By default, we run expressions with a memory governor to enforce a limited amount of memory. 
         /// When true, disable memory checks and allow expression to use as much memory as it needs. 
         /// </summary>
         internal bool DisableMemoryChecks { get; set; }
 
-        internal static InternalSetup Parse(string setupHandlerName)
+        internal static InternalSetup Parse(string setupHandlerName, bool numberIsFloat = false)
         {
             var iSetup = new InternalSetup();
 
@@ -37,6 +39,13 @@ namespace Microsoft.PowerFx.Core.Tests
 
             foreach (var part in parts.ToArray())
             {
+                // Skip tests if not in the right runner mode
+                if ((string.Equals(part, "!NumberIsFloat", StringComparison.OrdinalIgnoreCase) && numberIsFloat) ||
+                    (string.Equals(part, "NumberIsFloat", StringComparison.OrdinalIgnoreCase) && !numberIsFloat))
+                {
+                    iSetup.SkipTests = true;
+                }
+
                 if (string.Equals(part, "DisableMemChecks", StringComparison.OrdinalIgnoreCase))
                 {
                     iSetup.DisableMemoryChecks = true;
@@ -71,7 +80,12 @@ namespace Microsoft.PowerFx.Core.Tests
                 }
             }
 
-            if (parts.Count > 1)
+            if (numberIsFloat)
+            {
+                iSetup.Flags |= TexlParser.Flags.NumberIsFloat;
+            }
+
+            if (parts.Count > 5)
             {
                 throw new ArgumentException("Too many setup handler names!");
             }

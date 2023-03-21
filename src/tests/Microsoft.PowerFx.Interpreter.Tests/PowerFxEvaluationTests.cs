@@ -262,13 +262,21 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 return result;
             }
 
-            protected override async Task<RunResult> RunAsyncInternal(string expr, string setupHandlerName)
+            protected override async Task<RunResult> RunAsyncInternal(string expr, string setupHandlerName, bool numberIsFloat)
             {
                 RecalcEngine engine;
                 RecordValue parameters;
-                var iSetup = InternalSetup.Parse(setupHandlerName);
+                var iSetup = InternalSetup.Parse(setupHandlerName, numberIsFloat);
                 var config = new PowerFxConfig(features: iSetup.Features);
                 config.EnableParseJSONFunction();
+
+                if (iSetup.SkipTests)
+                {
+                    return new RunResult()
+                    {
+                        UnsupportedReason = "Skipped due to NumberIsFloat mismatch"
+                    };
+                }
 
                 if (string.Equals(iSetup.HandlerName, "AsyncTestSetup", StringComparison.OrdinalIgnoreCase))
                 {
@@ -348,7 +356,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 _engine = engine;
             }
 
-            protected override async Task<RunResult> RunAsyncInternal(string expr, string setupHandlerName = null)
+            protected override async Task<RunResult> RunAsyncInternal(string expr, string setupHandlerName = null, bool numberIsFloat = false)
             {
                 if (TryMatchSet(expr, out var runResult))
                 {

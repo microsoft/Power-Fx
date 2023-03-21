@@ -112,7 +112,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [Fact]
         public void InternalSetup_Parse_TwoHandlers()
         {
-            Assert.Throws<ArgumentException>(() => InternalSetup.Parse("Handler1, Handler2"));            
+            Assert.Throws<ArgumentException>(() => InternalSetup.Parse("Handler1, Handler2, Handler3, Handler4, Handler5, Handler6"));            
         }
     }
 }

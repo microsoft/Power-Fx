@@ -1,4 +1,4 @@
-#SETUP: TableSyntaxDoesntWrapRecords,SupportColumnNamesAsIdentifiers
+#SETUP: TableSyntaxDoesntWrapRecords,SupportColumnNamesAsIdentifiers,!NumberIsFloat
 
 // non-decimal aware other functions
 

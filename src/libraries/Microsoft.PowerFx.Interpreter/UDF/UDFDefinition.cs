@@ -33,7 +33,7 @@ namespace Microsoft.PowerFx.Interpreter
         }
 
         public UDFDefinition(string name, ParseResult parseResultForUDFBody, FormulaType returnType, bool isImperative, bool numberIsFloat, params NamedFormulaType[] parameters)
-            : this(name, parseResultForUDFBody, returnType, isImperative, parameters.AsEnumerable())
+            : this(name, parseResultForUDFBody, returnType, isImperative, numberIsFloat, parameters.AsEnumerable())
         {
         }
     }

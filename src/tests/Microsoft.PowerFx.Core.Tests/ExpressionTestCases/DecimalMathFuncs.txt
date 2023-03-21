@@ -1,3 +1,4 @@
+#SETUP:!NumberIsFloat
 // decimal aware aggregate functions
 
 >> Sum( 1.0000000000000000000000001, 2.0000000000000000000000002)
