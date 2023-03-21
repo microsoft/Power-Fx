@@ -4,7 +4,6 @@
 using System;
 using System.Globalization;
 using System.Linq;
-using Microsoft.PowerFx.Functions;
 
 namespace Microsoft.PowerFx
 {
