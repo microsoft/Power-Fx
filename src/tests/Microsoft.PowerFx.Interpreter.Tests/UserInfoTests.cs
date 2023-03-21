@@ -36,12 +36,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var rc = new RuntimeConfig();
             rc.SetUserInfo(userInfo);
 
-            var checkName = engine.Check("UserInfo.FullName");
+            var checkName = engine.Check("User.FullName");
             Assert.True(checkName.IsSuccess);
             var nameResult = await checkName.GetEvaluator().EvalAsync(CancellationToken.None, rc);
             Assert.Equal(userInfo.FullName ?? string.Empty, nameResult.ToObject());
 
-            var checkEmail = engine.Check("UserInfo.Email");
+            var checkEmail = engine.Check("User.Email");
             Assert.True(checkEmail.IsSuccess);
             var emailResult = await checkEmail.GetEvaluator().EvalAsync(CancellationToken.None, rc);
             Assert.Equal(userInfo.Email ?? string.Empty, emailResult.ToObject());
@@ -51,7 +51,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         public async Task UserInfoNoSymbolTableSetupTest()
         {
             var engine = new RecalcEngine();
-            var check = engine.Check("UserInfo");
+            var check = engine.Check("User");
             Assert.False(check.IsSuccess);
         }
 
@@ -64,7 +64,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var engine = new RecalcEngine(new PowerFxConfig() { SymbolTable = symbol });
             var rc = new RuntimeConfig();
 
-            var check = engine.Check("UserInfo.FullName");
+            var check = engine.Check("User.FullName");
             Assert.True(check.IsSuccess);
 
             await Assert.ThrowsAsync<InvalidOperationException>(async () => await check.GetEvaluator().EvalAsync(CancellationToken.None, rc));
