@@ -67,14 +67,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var check = engine.Check("UserInfo.FullName");
             Assert.True(check.IsSuccess);
 
-            try
-            {
-                var result = await check.GetEvaluator().EvalAsync(CancellationToken.None, rc);
-            }
-            catch (Exception ex)
-            {
-                Assert.Contains("UserInfo object was not added to service", ex.Message);
-            }
+            await Assert.ThrowsAsync<InvalidOperationException>(async () => await check.GetEvaluator().EvalAsync(CancellationToken.None, rc));
         }
     }
 }
