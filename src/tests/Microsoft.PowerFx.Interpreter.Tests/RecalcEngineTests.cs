@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation.
+// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
 using System;
@@ -481,7 +481,7 @@ namespace Microsoft.PowerFx.Tests
 
             // Spot check some known functions
             Assert.NotEmpty(engine2.Functions.WithName("Cos"));
-            Assert.NotEmpty(engine2.Functions.WithName("ParseJSON"));
+            Assert.NotEmpty(engine2.Functions.WithName("ParseJSON"));            
         }
 
         [Fact]
@@ -721,7 +721,7 @@ namespace Microsoft.PowerFx.Tests
             var result = engine.Eval("Func(7, 11)");
 
             Assert.IsType<NumberValue>(result);
-
+            
             // Multiply function is first and a valid overload so that's the one we use as coercion is valid for this one
             Assert.Equal(77.0, (result as NumberValue).Value);
         }
@@ -737,7 +737,7 @@ namespace Microsoft.PowerFx.Tests
             var result = engine.Eval("Func(7, 11)");
 
             Assert.IsType<NumberValue>(result);
-
+            
             // Substract function is first and a valid overload so that's the one we use as coercion is valid for this one
             Assert.Equal(-4.0, (result as NumberValue).Value);
         }
@@ -837,7 +837,7 @@ namespace Microsoft.PowerFx.Tests
             var config = new PowerFxConfig() { SymbolTable = symbol };
             config.AddOptionSet(optionSet);
             var recalcEngine = new RecalcEngine(config);
-
+            
             var result = await recalcEngine.EvalAsync(expression, CancellationToken.None, symValues);
             Assert.Equal(expected, result.ToObject());
         }
