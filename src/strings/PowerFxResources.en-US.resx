@@ -864,7 +864,8 @@
     <value>An expression that gets evaluated over rows in 'source' and provides values for sorting.</value>
   </data>
   <data name="AboutSort_order" xml:space="preserve">
-    <value>Ascending or Descending</value>
+    <value>SortOrder.Ascending or SortOrder.Descending</value>
+    <comment>{Locked=SortOrder.Ascending}{Locked=SortOrder.Descending} Possible values for the third argument of the Sort function</comment>
   </data>
   <data name="AboutSortByColumns" xml:space="preserve">
     <value>Sorts 'source' based on the column, optionally specifying a sort 'order'.</value>
@@ -889,7 +890,8 @@
     <value>A unique column name.</value>
   </data>
   <data name="AboutSortByColumns_order" xml:space="preserve">
-    <value>Ascending or Descending</value>
+    <value>SortOrder.Ascending or SortOrder.Descending</value>
+    <comment>{Locked=SortOrder.Ascending}{Locked=SortOrder.Descending} Possible values for the third argument of the Sort function</comment>
   </data>
   <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
     <value>Sorts 'source' based on the index of matching values in the specified column.</value>
@@ -2382,8 +2384,8 @@
     <value>A number of units to add. The number can be negative.</value>
   </data>
   <data name="AboutDateAdd_unit" xml:space="preserve">
-    <value>The unit to use, which can be one of Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
-    <comment>{Locked=Years}{Locked=Quarters}{Locked=Months}{Locked=Days}{Locked=Hours}{Locked=Minutes}{Locked=Seconds}{Locked=Milliseconds}</comment>
+    <value>The unit to use, which can be one of TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
+    <comment>{Locked=TimeUnit.Years}{Locked=TimeUnit.Quarters}{Locked=TimeUnit.Months}{Locked=TimeUnit.Days}{Locked=TimeUnit.Hours}{Locked=TimeUnit.Minutes}{Locked=TimeUnit.Seconds}{Locked=TimeUnit.Milliseconds}</comment>
   </data>
   <data name="DateDiffArg1" xml:space="preserve">
     <value>start_date</value>
@@ -2404,8 +2406,8 @@
     <value>An end date for the different operation.</value>
   </data>
   <data name="AboutDateDiff_unit" xml:space="preserve">
-    <value>The unit to express the result in, which can be one of Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
-    <comment>{Locked=Years}{Locked=Quarters}{Locked=Months}{Locked=Days}{Locked=Hours}{Locked=Minutes}{Locked=Seconds}{Locked=Milliseconds}</comment>
+    <value>The unit to express the result in, which can be one of TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
+    <comment>{Locked=TimeUnit.Years}{Locked=TimeUnit.Quarters}{Locked=TimeUnit.Months}{Locked=TimeUnit.Days}{Locked=TimeUnit.Hours}{Locked=TimeUnit.Minutes}{Locked=TimeUnit.Seconds}{Locked=TimeUnit.Milliseconds}</comment>
   </data>
   <data name="AboutDateAddT" xml:space="preserve">
     <value>Add the specified number of units to a column of dates.</value>
@@ -5109,5 +5111,16 @@
   <data name="AboutLanguage" xml:space="preserve">
     <value>Get the default locale set at runtime.</value>
     <comment>Description of 'Language' function.</comment>
+  </data>
+  <data name="AboutEncodeUrl" xml:space="preserve">
+    <value>Encodes a URL string, replacing certain non-alphanumeric characters with % and a hexadecimal number.</value>
+    <comment>Description of 'EncodeUrl' function.</comment>
+  </data>
+  <data name="EncodeUrlArg1" xml:space="preserve">
+    <value>url</value>
+    <comment>Function_parameter - First parameter for the EncodeUrl function - the URL(string) to encode. Translate this string. Maintain as a single word (do not add spaces)</comment>
+  </data>
+  <data name="AboutEncodeUrl_url" xml:space="preserve">
+    <value>A url to be encoded.</value>
   </data>
 </root>

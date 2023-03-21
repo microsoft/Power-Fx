@@ -874,7 +874,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
         // Run on an isolated thread.
         // Useful for testing per-thread properties
-        private static void RunOnIsolatedThread(CultureInfo culture, Action worker)
+        internal static void RunOnIsolatedThread(CultureInfo culture, Action worker)
         {
             Exception exception = null;
 

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using Microsoft.CodeAnalysis;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.IR;
@@ -18,7 +19,7 @@ using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx
-{
+{ 
     /// <summary>
     /// Holds work such as parsing, binding, error checking done on a single expression. 
     /// Different options require different work. 
@@ -177,12 +178,14 @@ namespace Microsoft.PowerFx
         }
 
         private FormulaType _expectedReturnType;
+        private bool _allowCoerceToType = false;
 
-        public CheckResult SetExpectedReturnValue(FormulaType type)
+        public CheckResult SetExpectedReturnValue(FormulaType type, bool allowCoerceTo = false)
         {
             VerifyEngine();
 
             _expectedReturnType = type;
+            _allowCoerceToType = allowCoerceTo;
             return this;
         }
 
@@ -441,8 +444,22 @@ namespace Microsoft.PowerFx
 
                 if (this.ReturnType != null && this._expectedReturnType != null)
                 {
+                    bool notCoerceToType = false;
+                    if (_allowCoerceToType)
+                    {
+                        if (this._expectedReturnType != FormulaType.String)
+                        {
+                            throw new NotImplementedException();
+                        }
+
+                        if (!StringValue.AllowedListConvertToString.Contains(this.ReturnType))
+                        {
+                            notCoerceToType = true;
+                        }
+                    }
+
                     var sameType = this._expectedReturnType == this.ReturnType;
-                    if (!sameType)
+                    if (notCoerceToType || !sameType)
                     {
                         _errors.Add(new ExpressionError
                         {
@@ -489,7 +506,7 @@ namespace Microsoft.PowerFx
                 // Errors require Binding, Parse 
                 var binding = ApplyBindingInternal();
 
-                // Plus engine's may have additional constaints. 
+                // Plus engine's may have additional constraints. 
                 // PostCheck may refer to binding. 
                 var extraErrors = Engine.InvokePostCheck(this);
 

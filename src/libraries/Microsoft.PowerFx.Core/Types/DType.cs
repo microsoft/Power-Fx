@@ -868,15 +868,8 @@ namespace Microsoft.PowerFx.Core.Types
             Contracts.AssertValue(info);
             Contracts.Assert(info.BackingKind is DKind.String or DKind.Number or DKind.Boolean or DKind.Color);
 
-            var typedNames = new List<TypedName>();
-
-            foreach (var name in info.OptionNames)
-            {
-                var type = new DType(DKind.OptionSetValue, info);
-                typedNames.Add(new TypedName(type, name));
-            }
-
-            return new DType(DKind.OptionSet, TypeTree.Create(typedNames.Select(TypedNameToKVP)), info);
+            // This is a hotpath. Some scenarios have 10k option sets
+            return new DType(DKind.OptionSet, TypeTree.Create(info.OptionNames.Select(on => new KeyValuePair<string, DType>(on, new DType(DKind.OptionSetValue, info)))), info);
         }
 
         public static DType CreateViewType(IExternalViewInfo info)

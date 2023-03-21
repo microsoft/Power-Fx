@@ -32,8 +32,6 @@ namespace Microsoft.PowerFx.Functions
 
     internal static partial class Library
     {
-        internal static readonly IReadOnlyList<FormulaType> AllowedListConvertToString = new FormulaType[] { FormulaType.String, FormulaType.Number, FormulaType.Decimal, FormulaType.DateTime, FormulaType.Date, FormulaType.Time, FormulaType.Boolean, FormulaType.Guid };
-
         private static readonly RegexOptions RegExFlags = LibraryFlags.RegExFlags;
 
         private static readonly Regex _ampmReplaceRegex = new Regex("[aA][mM]\\/[pP][mM]", RegExFlags);
@@ -355,7 +353,7 @@ namespace Microsoft.PowerFx.Functions
                 return false;
             }
 
-            Contract.Assert(AllowedListConvertToString.Contains(value.Type));
+            Contract.Assert(StringValue.AllowedListConvertToString.Contains(value.Type));
 
             switch (value)
             {
@@ -715,6 +713,11 @@ namespace Microsoft.PowerFx.Functions
         public static FormulaValue Upper(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, StringValue[] args)
         {
             return new StringValue(irContext, runner.CultureInfo.TextInfo.ToUpper(args[0].Value));
+        }
+
+        public static FormulaValue EncodeUrl(IRContext irContext, StringValue[] args)
+        {
+            return new StringValue(irContext, Uri.EscapeDataString(args[0].Value));
         }
 
         public static FormulaValue Proper(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, StringValue[] args)

@@ -423,7 +423,7 @@ namespace Microsoft.PowerFx
             
             formulaResult ??= FormulaValue.NewBlank(_info.RetType);
 
-            if (formulaResult.Type != _info.RetType)
+            if (!formulaResult.Type._type.Accepts(_info.RetType._type))
             {
                 return CommonErrors.CustomError(formulaResult.IRContext, string.Format(CultureInfo.InvariantCulture, "Return type should have been {0}, found {1}", _info.RetType._type, formulaResult.Type._type));
             }

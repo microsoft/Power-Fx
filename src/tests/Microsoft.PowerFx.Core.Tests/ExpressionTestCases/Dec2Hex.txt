@@ -198,3 +198,6 @@ Table({Value:"0A"},{Value:"0000A"},{Value:"000000000A"})
 
 >> Dec2Hex(Table({a:10},{a:11},{a:12}), Table({b:2},{b:5},{b:10}))
 Table({Value:"0A"},{Value:"0000B"},{Value:"000000000C"})
+
+>> Dec2Hex(["10","255","-16"])
+Table({Value:"A"},{Value:"FF"},{Value:"FFFFFFFFF0"})

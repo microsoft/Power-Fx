@@ -44,14 +44,16 @@ namespace Microsoft.PowerFx.Core.Parser
 
             if (errors?.Any() ?? false)
             {
-                ExpErrors = ExpressionError.New(errors, CultureInfo.InvariantCulture);
+                Errors = errors;
                 HasError = true;
             }
 
             UDFs = uDFs;
         }
 
-        public IEnumerable<ExpressionError> ExpErrors;
+        internal IEnumerable<TexlError> Errors;
+
+        public IEnumerable<ExpressionError> ExpErrors => ExpressionError.New(Errors, CultureInfo.InvariantCulture);
     }
 
     internal class UDF

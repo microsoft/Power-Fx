@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Interpreter
@@ -11,7 +12,7 @@ namespace Microsoft.PowerFx.Interpreter
     {
         internal readonly string Name;
 
-        internal readonly string Body;
+        internal readonly ParseResult ParseResult;
 
         internal readonly FormulaType ReturnType;
 
@@ -21,18 +22,18 @@ namespace Microsoft.PowerFx.Interpreter
 
         internal readonly bool NumberIsFloat;
 
-        public UDFDefinition(string name, string body, FormulaType returnType, bool isImperative, bool numberIsFloat, IEnumerable<NamedFormulaType> parameters)
+        public UDFDefinition(string name, ParseResult parseResultForUDFBody, FormulaType returnType, bool isImperative, bool numberIsFloat, IEnumerable<NamedFormulaType> parameters)
         {
             Name = name;
-            Body = body;
+            ParseResult = parseResultForUDFBody;
             ReturnType = returnType;
             IsImperative = isImperative;
             NumberIsFloat = numberIsFloat;
             Parameters = parameters;
         }
 
-        public UDFDefinition(string name, string body, FormulaType returnType, bool isImperative, bool numberIsFloat, params NamedFormulaType[] parameters)
-            : this(name, body, returnType, isImperative, numberIsFloat, parameters.AsEnumerable())
+        public UDFDefinition(string name, ParseResult parseResultForUDFBody, FormulaType returnType, bool isImperative, bool numberIsFloat, params NamedFormulaType[] parameters)
+            : this(name, parseResultForUDFBody, returnType, isImperative, parameters.AsEnumerable())
         {
         }
     }
