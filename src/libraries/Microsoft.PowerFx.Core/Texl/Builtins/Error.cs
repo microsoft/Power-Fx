@@ -76,7 +76,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             // We cache the whole name list regardless of path.
             var names = argumentType.GetNames(DPath.Root).ToArray();
 
-            // First handle required fields (currently only 'Kind')
+            // First handle required fields (currently only 'Kind').
             if (!names.Any(field => field.Name == requiredKindField.Name))
             {
                 // Kind is required, point it out to the maker, and specify the enumeration type.
@@ -99,6 +99,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             var valid = true;
+
             var record = argument.AsRecord();
             foreach (var name in names)
             {
