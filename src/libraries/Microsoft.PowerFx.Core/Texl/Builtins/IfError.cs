@@ -96,75 +96,60 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var count = args.Length;
             nodeToCoercedTypeMap = null;
 
-            // Check the predicates.
             var fArgsValid = true;
-            var type = ReturnType;
 
-            var isBehavior = context.AllowsSideEffects;
+            // if count is 2, then first argument can be returned.
+            var type = count == 2 ? argTypes[0] : ReturnType;
 
-            Contracts.Assert(type == DType.Unknown);
-            for (var i = 0; i < count;)
+            for (var i = 1; i < count;)
             {
                 var nodeArg = args[i];
                 var typeArg = argTypes[i];
 
-                if (typeArg.IsError)
+                var typeSuper = DType.Supertype(type, typeArg);
+                if (!typeSuper.IsError)
+                {
+                    type = typeSuper;
+                }
+                else if (typeArg.IsVoid)
+                {
+                    type = DType.Void;
+                }
+                else if (typeArg.IsError)
                 {
                     errors.EnsureError(args[i], TexlStrings.ErrTypeError);
+                    fArgsValid = false;
                 }
+                else if (!type.IsError)
+                {
+                    // Types don't resolve normally, coercion needed
+                    if (typeArg.CoercesTo(type))
+                    {
+                        CollectionUtils.Add(ref nodeToCoercedTypeMap, nodeArg, type);
+                    }
+                    else
+                    {
+                        // If the types are incompatible, the result type is void.
+                        type = DType.Void;
+                        break;
+                    }
+                }
+                else if (typeArg.Kind != DKind.Unknown)
+                {
+                    type = typeArg;
+                    fArgsValid = false;
+                }
+
+                i += 2;
 
                 // In an IfError expression, not all expressions can be returned to the caller:
-                // - If there is an even number of arguments, only the fallbacks or the last
+                // 1. If there is an even number of arguments, only the fallbacks or the last
                 //   value (the next-to-last argument) can be returned:
                 //   IfError(v1, f1, v2, f2, v3, f3) --> possible values to be returned are f1, f2, f3 or v3
-                // - If there is an odd number of arguments, only the fallbacks or the last
+                // 2. If there is an odd number of arguments, only the fallbacks or the last
                 //   value (the last argument) can be returned:
                 //   IfError(v1, f1, v2, f2, v3) --> possible values to be returned are f1, f2 or v3
-                var typeCanBeReturned = (i % 2) == 1 || i == ((count % 2) == 0 ? (count - 2) : (count - 1));
-
-                if (typeCanBeReturned)
-                {
-                    // Let's check if it matches the other types that can be returned
-                    var typeSuper = DType.Supertype(type, typeArg);
-
-                    if (!typeSuper.IsError)
-                    {
-                        type = typeSuper;
-                    }
-                    else if (type.Kind == DKind.Unknown)
-                    {
-                        // One of the args is also of unknown type, so we can't resolve the type of IfError
-                        type = typeSuper;
-                        fArgsValid = false;
-                    }
-                    else if (!type.IsError)
-                    {
-                        // Types don't resolve normally, coercion needed
-                        if (typeArg.CoercesTo(type))
-                        {
-                            CollectionUtils.Add(ref nodeToCoercedTypeMap, nodeArg, type);
-                        }
-                        else if (!isBehavior || !IsArgTypeInconsequential(nodeArg))
-                        {
-                            errors.EnsureError(
-                                DocumentErrorSeverity.Severe,
-                                nodeArg,
-                                TexlStrings.ErrBadType_ExpectedType_ProvidedType,
-                                type.GetKindString(),
-                                typeArg.GetKindString());
-                            fArgsValid = false;
-                        }
-                    }
-                    else if (typeArg.Kind != DKind.Unknown)
-                    {
-                        type = typeArg;
-                        fArgsValid = false;
-                    }
-                }
-
-                // If there are an odd number of args, the last arg also participates.
-                i += 2;
-                if (i == count)
+                if (i == count || i == count - 1)
                 {
                     i--;
                 }
