@@ -864,7 +864,8 @@
     <value>Izteiksme, kas tiek novērtēta attiecībā pret rindām vienumā "source" un nodrošina vērtības kārtošanai.</value>
   </data>
   <data name="AboutSort_order" xml:space="preserve">
-    <value>Augošā vai dilstošā secībā</value>
+    <value>SortOrder.Ascending vai SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumns" xml:space="preserve">
     <value>Kārto vienumu "source", ņemot vērā kolonnu, neobligāti norādot kārtošanas vienumu "order".</value>
@@ -889,7 +890,8 @@
     <value>Unikāls kolonnas nosaukums.</value>
   </data>
   <data name="AboutSortByColumns_order" xml:space="preserve">
-    <value>Augošā vai dilstošā secībā</value>
+    <value>SortOrder.Ascending vai SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
     <value>Kārto vienumu "source", ņemot vērā atbilstošo vērtību rādītāju norādītajā kolonnā.</value>
@@ -2382,7 +2384,7 @@
     <value>Pievienojamo vienību skaits. Skaitlis var būt negatīvs.</value>
   </data>
   <data name="AboutDateAdd_unit" xml:space="preserve">
-    <value>Izmantojamā vienība, kas var būt Years, Quarters, Months, Days, Hours, Minutes, Seconds vai Milliseconds.</value>
+    <value>Izmantojamā mērvienība, kas var būt viena no TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds un TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="DateDiffArg1" xml:space="preserve">
@@ -2404,7 +2406,7 @@
     <value>Starpības operācijas beigu datums.</value>
   </data>
   <data name="AboutDateDiff_unit" xml:space="preserve">
-    <value>Vienībā, kādā izteikt rezultātu, kas var būt Years, Quarters, Months, Days, Hours, Minutes, Seconds vai Milliseconds.</value>
+    <value>Mērvienība, kādā izteikt rezultātu un kas var būt viena no šīm: TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds un TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="AboutDateAddT" xml:space="preserve">
@@ -4859,5 +4861,16 @@
   <data name="AboutLanguage" xml:space="preserve">
     <value>Iegūstiet noklusējuma lokalizācijas kopu izpildlaikā.</value>
     
+  </data>
+  <data name="AboutEncodeUrl" xml:space="preserve">
+    <value>Kodē URL virkni, aizstājot noteiktas rakstzīmes, kas nav burtciparu rakstzīmes, ar % un heksadecimālu skaitli.</value>
+    
+  </data>
+  <data name="EncodeUrlArg1" xml:space="preserve">
+    <value>URL</value>
+    
+  </data>
+  <data name="AboutEncodeUrl_url" xml:space="preserve">
+    <value>Vietrādis URL, kas jākodē.</value>
   </data>
 </root>

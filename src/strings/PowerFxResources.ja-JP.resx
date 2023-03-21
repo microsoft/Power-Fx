@@ -864,7 +864,8 @@
     <value>'ソース' 内の行を評価し、並べ替え用の値を提供する式。</value>
   </data>
   <data name="AboutSort_order" xml:space="preserve">
-    <value>昇順または降順</value>
+    <value>SortOrder.Ascending または SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumns" xml:space="preserve">
     <value>列に基づいて 'ソース' を並べ替えます。並べ替え '順序' を指定することもできます。</value>
@@ -889,7 +890,8 @@
     <value>列の一意の名前。</value>
   </data>
   <data name="AboutSortByColumns_order" xml:space="preserve">
-    <value>昇順または降順</value>
+    <value>SortOrder.Ascending または SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
     <value>指定された列の一致する値のインデックスに基づいて 'ソース' を並べ替えます。</value>
@@ -2382,7 +2384,7 @@
     <value>追加する単位数。数は負にできます。</value>
   </data>
   <data name="AboutDateAdd_unit" xml:space="preserve">
-    <value>使用する単位。Years、Quarters、Months、Days、Hours、Minutes、Seconds、Milliseconds のいずれかを指定できます。</value>
+    <value>使用する単位。次のいずれか: TimeUnit.Years、TimeUnit.Quarters、TimeUnit.Months、TimeUnit.Days、TimeUnit.Hours、TimeUnit.Minutes、TimeUnit.Seconds、TimeUnit.Milliseconds。</value>
     
   </data>
   <data name="DateDiffArg1" xml:space="preserve">
@@ -2404,7 +2406,7 @@
     <value>比較操作の終了日付。</value>
   </data>
   <data name="AboutDateDiff_unit" xml:space="preserve">
-    <value>結果を表す単位。Years、Quarters、Months、Days、Hours、Minutes、Seconds、Milliseconds のいずれかを指定できます。</value>
+    <value>結果を表す単位。次のいずれか: TimeUnit.Years、TimeUnit.Quarters、TimeUnit.Months、TimeUnit.Days、TimeUnit.Hours、TimeUnit.Minutes、TimeUnit.Seconds、TimeUnit.Milliseconds。</value>
     
   </data>
   <data name="AboutDateAddT" xml:space="preserve">
@@ -4859,5 +4861,16 @@
   <data name="AboutLanguage" xml:space="preserve">
     <value>実行時に設定される既定のロケールを取得します。</value>
     
+  </data>
+  <data name="AboutEncodeUrl" xml:space="preserve">
+    <value>URL 文字列をエンコードし、特定の英数字以外の文字を % と 16 進数値に置き換えます。</value>
+    
+  </data>
+  <data name="EncodeUrlArg1" xml:space="preserve">
+    <value>URL</value>
+    
+  </data>
+  <data name="AboutEncodeUrl_url" xml:space="preserve">
+    <value>エンコードされる URL です。</value>
   </data>
 </root>
