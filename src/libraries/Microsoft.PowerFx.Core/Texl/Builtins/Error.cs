@@ -77,7 +77,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var names = argumentType.GetNames(DPath.Root).ToArray();
 
             // First handle required fields (currently only 'Kind')
-            if (!names.Any(field => field.Name == requiredKindField.Name))
+            var argumentKind = names.FirstOrDefault(tn => tn.Name == requiredKindField.Name);
+            if (argumentKind == null)
             {
                 // Kind is required, point it out to the maker, and specify the enumeration type.
                 errors.EnsureError(
@@ -92,28 +93,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 return false;
             }
 
-            var argumentKindType = names.FirstOrDefault(tn => tn.Name == requiredKindField.Name).Type;
-            if (argumentKindType.IsEnum)
+            var argumentKindType = argumentKind.Type;
+            if (argumentKind.Type.IsEnum)
             {
                 argumentKindType = argumentKindType.GetEnumSupertype();
             }
 
-            if (!(requiredKindField.Type.Kind == DKind.Number) && (argumentKindType.Kind != requiredKindField.Type.Kind))
-            {
-                errors.EnsureError(
-                    argument,
-                    TexlStrings.ErrBadSchema_ExpectedType,
-                    reifiedError.GetKindString());
-                errors.Error(
-                    argument,
-                    TexlStrings.ErrBadRecordFieldType_FieldName_ExpectedType,
-                    requiredKindField.Name.Value,
-                    "ErrorKind");
-                return false;
-            }
-
             var valid = true;
-
             var record = argument.AsRecord();
             foreach (var name in names)
             {
