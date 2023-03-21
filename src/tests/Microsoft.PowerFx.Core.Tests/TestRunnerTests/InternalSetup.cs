@@ -81,7 +81,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 iSetup.Flags |= TexlParser.Flags.NumberIsFloat;
             }
 
-            if (parts.Count > 5)
+            if (parts.Count > 1)
             {
                 throw new ArgumentException("Too many setup handler names!");
             }

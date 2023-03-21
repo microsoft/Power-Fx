@@ -328,8 +328,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     return new RunResult(newValue);
                 }
 
+                // Decimal TODO: This seems impossible without type information?  Float("1e300") will produce result that can't be serialized if treated as a decimal.
                 // Serialization test. Serialized expression must produce an identical result.
-                ParserOptions options = new ParserOptions() { NumberIsFloat = newValue.Type == FormulaType.Number };
+                ParserOptions options = new ParserOptions() { NumberIsFloat = numberIsFloat };
                 var newValueDeserialized = await engine.EvalAsync(newValue.ToExpression(), CancellationToken.None, options, runtimeConfig: runtimeConfig);
 
                 return new RunResult(newValueDeserialized);

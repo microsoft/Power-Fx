@@ -194,6 +194,7 @@ namespace Microsoft.PowerFx
 
                         if (output != null)
                         {
+                            // same algorithm used by BaseRunner.cs
                             var sb = new StringBuilder();
                             var settings = new FormulaValueSerializerSettings()
                             {
@@ -525,10 +526,6 @@ namespace Microsoft.PowerFx
                         resultString += "]";
                     }
                 }
-            }
-            else if (value is NumberValue n)
-            {
-                resultString = n.Value.ToString("0." + new string('#', 339), CultureInfo.InvariantCulture);
             }
             else
             {
