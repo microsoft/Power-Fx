@@ -163,6 +163,11 @@ namespace Microsoft.PowerFx.Connectors
                     {
                         sfpt.ConnectorDynamicValue.ServiceFunction = newFunctions.FirstOrDefault(f => f.Name == sfpt.ConnectorDynamicValue.OperationId);
                     }
+
+                    if (sfpt.ConnectorDynamicSchema != null)
+                    {
+                        sfpt.ConnectorDynamicSchema.ServiceFunction = newFunctions.FirstOrDefault(f => f.Name == sfpt.ConnectorDynamicSchema.OperationId);
+                    }
                 }
             }
 

@@ -210,7 +210,7 @@ namespace Microsoft.PowerFx.Core.Functions
         /// </summary>
         public virtual bool ModifiesValues => false;
 
-        // This method is used for managing "x-ms-dynamic-values" OpenApi extensions in connectors
+        // This method is used for managing "x-ms-dynamic-values" and "x-ms-dynamic-schema" OpenApi extensions in connectors
         // https://learn.microsoft.com/en-us/connectors/custom-connectors/openapi-extensions#use-dynamic-values
         public virtual async Task<List<string>> GetConnectorSuggestionsAsync(CallNode callNode, int argPosition, CancellationToken cts)
         {
