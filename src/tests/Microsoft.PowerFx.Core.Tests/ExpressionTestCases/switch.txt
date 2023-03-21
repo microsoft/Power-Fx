@@ -309,3 +309,24 @@ Error({Kind:ErrorKind.InvalidArgument})
 //DateTime-DateTime
 >> Switch("Case1","Case2",DateTimeValue("4/1/2001 10:00:00"),"Case1",DateTimeValue("4/1/2001 10:00:00"))
 DateTime(2001,4,1,10,0,0,0)
+
+// Result of switch can't be consumed.
+>> Switch(1, 1, 2, {x:4}) + 1
+Errors: Error 0-22: Invalid argument type. Expecting one of the following: Number, Text, Boolean, UntypedObject.
+
+// Expression generating void value can be used inside of the switch. If(1<0, 1, {x:1}) => void value
+>> Switch(1, 1, 2, If(1<0, 1, {x:4}))
+If(true, {test:1}, "Mismatched args (result of the expression can't be used).")
+
+>> Switch(1, 1, 1/0, 10, {x:4})
+Error({Kind:ErrorKind.Div0})
+
+>> Switch(1, 1, 2, {x:4}, 3)
+Errors: Error 16-21: Invalid argument type (Record). Expecting a Number value instead.|Error 0-25: The function 'Switch' has some invalid arguments.
+
+>> Switch(1, 2, 2, 3, b)
+Errors: Error 19-20: Name isn't valid. 'b' isn't recognized.|Error 0-21: The function 'Switch' has some invalid arguments.
+
+>> Switch(10, 1, 1/0, 10, {x:4})
+If(true, {test:1}, "Mismatched args (result of the expression can't be used).")
+
