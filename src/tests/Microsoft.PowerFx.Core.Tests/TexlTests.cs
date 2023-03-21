@@ -1639,7 +1639,6 @@ namespace Microsoft.PowerFx.Core.Tests
                 numberIsFloat: true);
         }
 
-        // TODO Decimal: [InlineData("Sum(Table, A + CountA(D.X))")]
         [Theory]
         [InlineData("Sum(1, 2, 3, 4)")]
         [InlineData("Sum(1, A, 2, A)")]
@@ -1717,8 +1716,6 @@ namespace Microsoft.PowerFx.Core.Tests
                 DType.Number,
                 symbol);
         }
-
-        // TODO Decimal: type of CountA/Count/...
 
         [Theory]
         [InlineData("StdevP(Decimal(1), 2, 3, 4)")]

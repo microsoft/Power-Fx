@@ -26,7 +26,7 @@ namespace Microsoft.PowerFx.Syntax
         internal DecLitNode(ref int idNext, DecLitToken tok)
             : base(ref idNext, tok, new SourceList(tok))
         {
-            DecValue = 0;    // Decimal TODO: Null handling, NaN in float case
+            DecValue = 0;
         }
 
         internal DecLitNode(ref int idNext, Token tok, SourceList sourceList, decimal value)

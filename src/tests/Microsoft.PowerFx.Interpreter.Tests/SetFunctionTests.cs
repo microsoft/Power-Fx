@@ -36,6 +36,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.Equal(15m, r1.ToObject());          
         }
 
+        // Decimal TODO: Set( x, 1 ); Set( x, Float(2) )
+
         [Fact]
         public void SetVarNumber()
         {
@@ -59,8 +61,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             r1 = engine.GetValue("x");
             Assert.Equal(15.0, r1.ToObject());
         }
-
-        // TODO Decimal: mixing number and decimal in Set and records
 
         [Fact]
         public void Circular()

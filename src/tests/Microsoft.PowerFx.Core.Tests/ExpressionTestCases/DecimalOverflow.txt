@@ -1,3 +1,5 @@
+#SETUP:!NumberIsFloat
+
 // 79228162514264337593543950335 is the max decimal number, and -79228162514264337593543950335 is the min decimal number
 
 // note negative does not hae a larger range unlike two's complement integers
@@ -148,4 +150,40 @@ Error({Kind:ErrorKind.Numeric})
 
 >> RoundDown( 79228162514264337593543950335, -100 )
 79228162514264337593543950335
+
+>> 79228162514264337593543950336*79228162514264337593543950336
+Errors: Error 0-29: Numeric value is too large.|Error 30-59: Numeric value is too large.|Error 0-29: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.|Error 30-59: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+
+>> IfError( 79228162514264337593543950336*79228162514264337593543950336, 79228162514264337593543950336 )
+Errors: Error 9-38: Numeric value is too large.|Error 39-68: Numeric value is too large.|Error 70-99: Numeric value is too large.|Error 9-38: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.|Error 39-68: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.|Error 70-99: Incompatible type. We can't evaluate your formula because of a type error.
+
+>> IfError( 79228162514264337593543950336*79228162514264337593543950336, FirstError.Kind )
+Errors: Error 9-38: Numeric value is too large.|Error 39-68: Numeric value is too large.|Error 9-38: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.|Error 39-68: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+
+>> IsError( 79228162514264337593543950336*79228162514264337593543950336 )
+Errors: Error 9-38: Numeric value is too large.|Error 39-68: Numeric value is too large.|Error 9-38: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.|Error 39-68: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+
+>> 79228162514264337593543950336/0
+Errors: Error 0-29: Numeric value is too large.|Error 0-29: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+
+>> IfError( 79228162514264337593543950336/0, 79228162514264337593543950336 )
+Errors: Error 9-38: Numeric value is too large.|Error 42-71: Numeric value is too large.|Error 9-38: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.|Error 42-71: Incompatible type. We can't evaluate your formula because of a type error.
+
+>> IfError( 79228162514264337593543950336/0, FirstError.Kind )
+Errors: Error 9-38: Numeric value is too large.|Error 9-38: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+
+>> IsError( 79228162514264337593543950336/0 )
+Errors: Error 9-38: Numeric value is too large.|Error 9-38: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+
+>> 1/79228162514264337593543950336/79228162514264337593543950336
+Errors: Error 2-31: Numeric value is too large.|Error 32-61: Numeric value is too large.|Error 2-31: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.|Error 32-61: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+
+>> IfError( 1/79228162514264337593543950336/79228162514264337593543950336, 79228162514264337593543950336 )
+Errors: Error 11-40: Numeric value is too large.|Error 41-70: Numeric value is too large.|Error 72-101: Numeric value is too large.|Error 11-40: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.|Error 41-70: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.|Error 72-101: Incompatible type. We can't evaluate your formula because of a type error.
+
+>> IfError( 1/79228162514264337593543950336/79228162514264337593543950336, FirstError.Kind )
+Errors: Error 11-40: Numeric value is too large.|Error 41-70: Numeric value is too large.|Error 11-40: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.|Error 41-70: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+
+>> IsError( 1/79228162514264337593543950336/79228162514264337593543950336 )
+Errors: Error 11-40: Numeric value is too large.|Error 41-70: Numeric value is too large.|Error 11-40: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.|Error 41-70: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
 

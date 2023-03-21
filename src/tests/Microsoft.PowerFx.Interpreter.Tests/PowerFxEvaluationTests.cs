@@ -270,14 +270,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 var config = new PowerFxConfig(features: iSetup.Features);
                 config.EnableParseJSONFunction();
 
-                if (iSetup.SkipTests)
-                {
-                    return new RunResult()
-                    {
-                        UnsupportedReason = "Skipped due to NumberIsFloat mismatch"
-                    };
-                }
-
                 if (string.Equals(iSetup.HandlerName, "AsyncTestSetup", StringComparison.OrdinalIgnoreCase))
                 {
                     return new RunResult(await RunVerifyAsync(expr, config, iSetup));

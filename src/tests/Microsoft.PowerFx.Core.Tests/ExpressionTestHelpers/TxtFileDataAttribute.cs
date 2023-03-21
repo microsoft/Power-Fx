@@ -21,12 +21,14 @@ namespace Microsoft.PowerFx.Core.Tests
         private readonly string _filePathCommon;
         private readonly string _filePathSpecific;
         private readonly string _engineName;
+        private readonly bool _numberIsFloat;
 
-        public TxtFileDataAttribute(string filePathCommon, string filePathSpecific, string engineName)
+        public TxtFileDataAttribute(string filePathCommon, string filePathSpecific, string engineName, bool numberIsFloat)
         {
             _filePathCommon = filePathCommon;
             _filePathSpecific = filePathSpecific;
             _engineName = engineName;
+            _numberIsFloat = numberIsFloat;
         }
 
         public override IEnumerable<object[]> GetData(MethodInfo testMethod)
@@ -53,7 +55,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
                         foreach (var file in allFiles)
                         {
-                            parser.AddFile(file);
+                            parser.AddFile(_numberIsFloat, file);
                         }
                     }
                 }

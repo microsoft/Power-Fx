@@ -608,7 +608,7 @@ namespace Microsoft.PowerFx.Functions
                     Kind = ErrorKind.Numeric,
                     Span = irContext.SourceContext,
 
-                    // TODO Decimal: Should this (and div0 error) be a localized resource?
+                    // Decimal TODO: Should this (and div0 error) be a localized resource?
                     Message = "Argument to Sqrt must be greater than or equal to zero"
                 });
             }
@@ -950,8 +950,8 @@ namespace Microsoft.PowerFx.Functions
 
         internal static FormulaValue RoundDecimal(IRContext irContext, DecimalValue dec, double digits, RoundType rt = RoundType.Default)
         {
-            // TODO Decimal: explore a better algorithm that doesn't overflow as often, but in general overflow is unavoidable
-            // TODO Decimal: avoids immutable field check, but don't want to recreate array for each call
+            // Decimal TODO: explore a better algorithm that doesn't overflow as often, but in general overflow is unavoidable
+            // Decimal TODO: avoids immutable field check, but don't want to recreate array for each call
             IReadOnlyList<decimal> decPow10 = new decimal[]
             {
                 1e-29m, 1e-28m, 1e-27m, 1e-26m, 1e-25m, 1e-24m, 1e-23m, 1e-22m, 1e-21m, 1e-20m,

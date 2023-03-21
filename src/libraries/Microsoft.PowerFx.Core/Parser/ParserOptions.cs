@@ -40,7 +40,6 @@ namespace Microsoft.PowerFx
 
         internal ParseResult Parse(string script)
         {
-            // Decimal TODO: Who uses this entry point without features?
             return Parse(script, Features.None);
         }
 

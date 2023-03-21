@@ -25,7 +25,6 @@ namespace Microsoft.PowerFx.Tests
     public class SandboxTests
     {
         // Protect against stack overflows. 
-        // TODO Decimal: Abs, Mod, etc should be decimal specific
         [Fact]
         public async void MaxRecursionDepthTest()
         {

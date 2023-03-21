@@ -283,7 +283,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var engine = new RecalcEngine();
 
-            // TODO Decimal: Decimal("1.0000") results in 1.0000, not 1.0, different from float, problem?
             Assert.Equal(1.0m, engine.EvalAsync("1.0", CancellationToken.None, options: us_ParserOptions, runtimeConfig: us_Symbols).Result.ToObject());
             Assert.ThrowsAsync<InvalidOperationException>(() => engine.EvalAsync("1.0", CancellationToken.None, options: fr_ParserOptions, runtimeConfig: fr_Symbols));
             Assert.ThrowsAsync<InvalidOperationException>(() => engine.EvalAsync("2,0", CancellationToken.None, options: us_ParserOptions, runtimeConfig: us_Symbols));

@@ -38,11 +38,11 @@ namespace Microsoft.PowerFx.Functions
                         return FormulaType.String;
                     case JsonValueKind.Number:
                         return FormulaType.Number;
-
-                    // Decimal TODO
                     case JsonValueKind.True:
                     case JsonValueKind.False:
                         return FormulaType.Boolean;
+
+                    // Decimal TODO
                 }
 
                 return FormulaType.Blank;

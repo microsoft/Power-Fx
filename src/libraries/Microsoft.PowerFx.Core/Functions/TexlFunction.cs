@@ -1095,7 +1095,7 @@ namespace Microsoft.PowerFx.Core.Functions
                 argType = columns.Single().Type;
             }
 
-            // TODO Decimal: Is this the right thing to do for deferred and unknown?
+            // Decimal TODO: Is this the right thing to do for deferred and unknown?
             if (argType == DType.Deferred || argType == DType.Unknown)
             {
                 return argType;

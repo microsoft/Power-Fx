@@ -526,6 +526,10 @@ namespace Microsoft.PowerFx
                     }
                 }
             }
+            else if (value is NumberValue n)
+            {
+                resultString = n.Value.ToString("0." + new string('#', 339), CultureInfo.InvariantCulture);
+            }
             else
             {
                 resultString = value.ToExpression();

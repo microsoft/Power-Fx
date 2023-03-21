@@ -18,8 +18,6 @@ namespace Microsoft.PowerFx.Core.Tests
 
         internal TimeZoneInfo TimeZoneInfo { get; set; }
 
-        internal bool SkipTests { get; set; }
-
         /// <summary>
         /// By default, we run expressions with a memory governor to enforce a limited amount of memory. 
         /// When true, disable memory checks and allow expression to use as much memory as it needs. 
@@ -39,14 +37,12 @@ namespace Microsoft.PowerFx.Core.Tests
 
             foreach (var part in parts.ToArray())
             {
-                // Skip tests if not in the right runner mode
-                if ((string.Equals(part, "!NumberIsFloat", StringComparison.OrdinalIgnoreCase) && numberIsFloat) ||
-                    (string.Equals(part, "NumberIsFloat", StringComparison.OrdinalIgnoreCase) && !numberIsFloat))
+                // negative flags are caught when adding the tests
+                if (part.StartsWith("!"))
                 {
-                    iSetup.SkipTests = true;
+                    parts.Remove(part);
                 }
-
-                if (string.Equals(part, "DisableMemChecks", StringComparison.OrdinalIgnoreCase))
+                else if (string.Equals(part, "DisableMemChecks", StringComparison.OrdinalIgnoreCase))
                 {
                     iSetup.DisableMemoryChecks = true;
                     parts.Remove(part);

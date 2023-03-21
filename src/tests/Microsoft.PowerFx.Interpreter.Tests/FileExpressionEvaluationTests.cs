@@ -15,11 +15,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
     public class FileExpressionEvaluationTests : PowerFxTest
     {
         [InterpreterTheory]
-        [TxtFileData("ExpressionTestCases", "InterpreterExpressionTestCases", nameof(InterpreterRunner))]
+        [TxtFileData("ExpressionTestCases", "InterpreterExpressionTestCases", nameof(InterpreterRunner), false)]
         public void InterpreterTestCase(ExpressionTestCase testCase)
         {
             // This is running against embedded resources, so if you're updating the .txt files,
-            // make sure they build is actually copying them over. abcdwe
+            // make sure they build is actually copying them over. abcdwerefdeee
             Assert.True(testCase.FailMessage == null, testCase.FailMessage);
 
             var runner = new InterpreterRunner();
@@ -42,7 +42,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
         [InterpreterTheory]
-        [TxtFileData("ExpressionTestCases", "InterpreterExpressionTestCases", nameof(InterpreterRunner))]
+        [TxtFileData("ExpressionTestCases", "InterpreterExpressionTestCases", nameof(InterpreterRunner), true)]
         public void InterpreterTestCase_NumberIsFloat(ExpressionTestCase testCase)
         {
             // This is running against embedded resources, so if you're updating the .txt files,
@@ -113,7 +113,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var testRunner = new TestRunner(runner);
 
-            testRunner.AddFile(path);
+            testRunner.AddFile(numberIsFloat: false, path);
 
             var result = testRunner.RunTests();
 
@@ -157,7 +157,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var runner = new TestRunner();
 
             // Verify this runs without throwing an exception.
-            runner.AddDir(path);
+            runner.AddDir(numberIsFloat: false, path);
 
             // Ensure that we actually found tests and not pointed to an empty directory
             Assert.True(runner.Tests.Count > 10);

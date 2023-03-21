@@ -118,10 +118,9 @@ namespace Microsoft.PowerFx.Tests
 
         public decimal GetDecimal()
         {
-            // Decimal TODO
+            // Decimal TODO: check with Bryan
             // Fx will only call this helper for decimals. 
             // Assert.True(Type == FormulaType.Decimal);
-            // check with Bryan
 
             if (_source is int valInt)
             {

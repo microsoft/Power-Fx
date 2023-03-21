@@ -169,14 +169,14 @@ Error({Kind:ErrorKind.InvalidArgument})
 // ******** TABULAR VALUE AS PARAMETERS ********
 
 >> Dec2Hex([10,255,-16])
-#SKIP Issue 1217 with decimal, expected: Table({Value:"A"},{Value:"FF"},{Value:"FFFFFFFFF0"})
+Table({Value:"A"},{Value:"FF"},{Value:"FFFFFFFFF0"})
 
 // first argument coerces entire single column Value table to Decimal
 >> Dec2Hex([16,1e-28,1e28,2])
-#SKIP Issue 1217 with decimal, expected: Table({Value:"10"},{Value:"0"},{Value:Error({Kind:ErrorKind.Numeric})},{Value:"2"})
+Table({Value:"10"},{Value:"0"},{Value:Error({Kind:ErrorKind.Numeric})},{Value:"2"})
 
 >> Dec2Hex([16,Float("1e-45"),Float("1e45"),2])
-#SKIP Issue 1217 with decimal, expected: Table({Value:"10"},{Value:"0"},{Value:Error({Kind:ErrorKind.InvalidArgument})},{Value:"2"})
+Table({Value:"10"},{Value:"0"},{Value:Error({Kind:ErrorKind.InvalidArgument})},{Value:"2"})
 
 // single column Value table goes to Float
 >> Dec2Hex([Float("1e-45"),Float("1e45"),16,2])
@@ -194,7 +194,7 @@ Table({Value:"0A"},{Value:"0000A"},{Value:"000000000A"})
 // ******** DIFFERENT INPUT TYPES AS PARAMETERS ********
 
 >> Dec2Hex(Table({a:10},{a:255},{a:-16}))
-#SKIP Issue 1217 with decimal, expected: Table({Value:"A"},{Value:"FF"},{Value:"FFFFFFFFF0"})
+Table({Value:"A"},{Value:"FF"},{Value:"FFFFFFFFF0"})
 
 >> Dec2Hex(Table({a:10},{a:11},{a:12}), Table({b:2},{b:5},{b:10}))
 Table({Value:"0A"},{Value:"0000B"},{Value:"000000000C"})

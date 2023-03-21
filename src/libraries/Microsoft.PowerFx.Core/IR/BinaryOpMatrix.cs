@@ -65,7 +65,7 @@ namespace Microsoft.PowerFx.Core.IR
             {
                 kindToUse = rightCoerced.Kind;
             }
-#if false
+#if true
             // Decimal TODO
             else if (!leftType.Accepts(rightType) && !rightType.Accepts(leftType))
             {
