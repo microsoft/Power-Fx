@@ -28,13 +28,12 @@ namespace Microsoft.PowerFx
 
         public INameResolver NameResolver { get; }
 
-        public UserDefinitions(IUserDefinitionSemanticsHandler userDefinitionSemanticsHandler, INameResolver nameResolver)
+        public UserDefinitions(INameResolver nameResolver, IUserDefinitionSemanticsHandler userDefinitionSemanticsHandler = null)
         {
-            Contracts.AssertValue(userDefinitionSemanticsHandler);
-            Contracts.AssertValue(nameResolver);
+            Contracts.AssertValueOrNull(userDefinitionSemanticsHandler);
 
+            NameResolver = nameResolver ?? throw new ArgumentNullException(nameof(nameResolver));
             UserDefinitionSemanticsHandler = userDefinitionSemanticsHandler;
-            NameResolver = nameResolver;
         }
 
         /// <summary>
@@ -97,7 +96,7 @@ namespace Microsoft.PowerFx
                 var binding = TexlBinding.Run(glue, udf.Body, NameResolver, bindingConfig);
 
                 UserDefinedFunction.CheckTypesOnDeclaration(binding.CheckTypesContext, udf.Args, udf.ReturnType, binding.ResultType, binding.ErrorContainer);
-                UserDefinitionSemanticsHandler.CheckSemanticsOnDeclaration(binding, udf.Args, binding.ErrorContainer);
+                UserDefinitionSemanticsHandler?.CheckSemanticsOnDeclaration(binding, udf.Args, binding.ErrorContainer);
 
                 if (binding.ErrorContainer.HasErrors())
                 {

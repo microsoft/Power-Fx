@@ -47,8 +47,6 @@ namespace Microsoft.PowerFx.Core.App.ErrorContainers
         /// </summary>
         TexlError Error(DocumentErrorSeverity severity, TexlNode node, ErrorResourceKey errKey, params object[] args);
 
-        TexlError Error(DocumentErrorSeverity severity, Token token, ErrorResourceKey errKey, params object[] args);
-
         /// <summary>
         /// Used to apply errors due to differing type schemas. Use schemaDifferenceType = DType.Invalid to indicate
         /// that the schema difference is due to a missing member.

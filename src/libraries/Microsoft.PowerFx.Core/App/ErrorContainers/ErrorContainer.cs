@@ -129,20 +129,12 @@ namespace Microsoft.PowerFx.Core.App.ErrorContainers
 
             if (!HasErrors(token, severity))
             {
-                return Error(severity, token, errKey, args);
+                var err = new TexlError(token, severity, errKey, args);
+                CollectionUtils.Add(ref _errors, err);
+                return err;
             }
 
             return null;
-        }
-
-        public TexlError Error(DocumentErrorSeverity severity, Token token, ErrorResourceKey errKey, object[] args)
-        {
-            Contracts.AssertValue(token);
-            Contracts.AssertValue(args);
-
-            var err = new TexlError(token, severity, errKey, args);
-            CollectionUtils.Add(ref _errors, err);
-            return err;
         }
 
         public TexlError EnsureError(DocumentErrorSeverity severity, TexlNode node, ErrorResourceKey errKey, params object[] args)
