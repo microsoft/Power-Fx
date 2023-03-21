@@ -171,7 +171,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Core.Utils.ICheckable",
                 "Microsoft.PowerFx.IUserInfo",
                 "Microsoft.PowerFx.UserInfo",
-                "Microsoft.PowerFx.SymbolExtensions"
+                "Microsoft.PowerFx.SymbolTableExtensions"
             };
 
             var sb = new StringBuilder();
