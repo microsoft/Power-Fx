@@ -26,7 +26,7 @@ Error({Kind:ErrorKind.Validation})
 Errors: Error 12-22: Name isn't valid. 'Validation' isn't recognized.
 
 >> Error({Kind:"Validation"}) // Error kind needs to be numeric!
-Errors: Error 6-25: Invalid argument type. Expecting a Record value, but of a different schema.|Error 6-25: Invalid type for field 'Kind'. Expected field type of 'ErrorKind'.
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> IfError(1/0, Error({Kind:FirstError.Kind}))
 Error({Kind:ErrorKind.Div0})
@@ -87,3 +87,27 @@ Error({Kind:ErrorKind.Custom})
 
 >> Date(2000, Sqrt(-1), Error("lorem ipsum"))
 Error(Table({Kind:ErrorKind.Numeric},{Kind:ErrorKind.Custom}))
+
+>> Error( {Kind:"test" } )
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> IsError(Error({Kind: 2 }))
+true
+
+>> IsError(Error({Kind: "2" }))
+true
+
+>> IfError( If( false, 1, Error({Kind: 2}) ), FirstError.Kind )
+2
+
+>> IfError( If( false, 1, Error({Kind: "2"}) ), FirstError.Kind )
+2
+
+>> IfError( If( false, 1, Error({Kind:true}) ), FirstError.Kind )
+1
+
+>> IfError( Value( Error({Kind:"1"&"2"}) ), FirstError.Kind )
+12
+
+>> IfError( If(false, 1, Error({Kind:Date(2023,3,15)})), FirstError.Kind )
+45000
