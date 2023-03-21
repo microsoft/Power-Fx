@@ -78,7 +78,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             // First handle required fields (currently only 'Kind')
             var argumentKind = names.FirstOrDefault(tn => tn.Name == requiredKindField.Name);
-            if (argumentKind == null)
+            if (argumentKind.Type == null)
             {
                 // Kind is required, point it out to the maker, and specify the enumeration type.
                 errors.EnsureError(
