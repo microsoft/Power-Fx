@@ -864,7 +864,8 @@
     <value>Uma expressão que obtém valores em linhas na "origem" e fornece valores para ordenação.</value>
   </data>
   <data name="AboutSort_order" xml:space="preserve">
-    <value>Ascendente ou Descendente</value>
+    <value>SortOrder.Ascending ou SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumns" xml:space="preserve">
     <value>Ordena a "origem" com base na coluna, especificando a ordem "ordem" opcionalmente.</value>
@@ -889,7 +890,8 @@
     <value>Um nome de coluna único.</value>
   </data>
   <data name="AboutSortByColumns_order" xml:space="preserve">
-    <value>Ascendente ou Descendente</value>
+    <value>SortOrder.Ascending ou SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
     <value>Ordena a "origem" com base no índice de valores correspondentes na coluna especificada.</value>
@@ -2382,7 +2384,7 @@
     <value>Um número de unidades a adicionar. O número pode ser negativo.</value>
   </data>
   <data name="AboutDateAdd_unit" xml:space="preserve">
-    <value>A unidade a utilizar, que pode ser Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
+    <value>A unidade a utilizar, que pode ser uma das seguintes: TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds ou TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="DateDiffArg1" xml:space="preserve">
@@ -2404,7 +2406,7 @@
     <value>Uma data de fim para a operação diferente.</value>
   </data>
   <data name="AboutDateDiff_unit" xml:space="preserve">
-    <value>A unidade para exprimir o resultado, que pode ser Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
+    <value>A unidade em que o resultado é indicado, que pode ser uma das seguintes: TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds ou TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="AboutDateAddT" xml:space="preserve">
@@ -4859,5 +4861,16 @@
   <data name="AboutLanguage" xml:space="preserve">
     <value>Obter a região predefinida em runtime.</value>
     
+  </data>
+  <data name="AboutEncodeUrl" xml:space="preserve">
+    <value>Codifica uma cadeia de URL, substituindo determinados carateres não alfanuméricos por % e um número hexadecimal.</value>
+    
+  </data>
+  <data name="EncodeUrlArg1" xml:space="preserve">
+    <value>URL</value>
+    
+  </data>
+  <data name="AboutEncodeUrl_url" xml:space="preserve">
+    <value>Um URL a codificar.</value>
   </data>
 </root>
