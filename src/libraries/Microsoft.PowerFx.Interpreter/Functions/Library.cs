@@ -1063,19 +1063,6 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: Mod)
             },
             {
-                BuiltinFunctionsCore.ModT,
-                StandardErrorHandling<FormulaValue>(
-                    BuiltinFunctionsCore.Mod.Name,
-                    expandArguments: NoArgExpansion,
-                    replaceBlankValues: NoOpAlreadyHandledByIR,
-                    checkRuntimeTypes: ExactSequence(
-                        ExactValueType<NumberValue>,
-                        ExactValueTypeOrBlank<TableValue>),                        
-                    checkRuntimeValues: DeferRuntimeTypeChecking,
-                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-                    targetFunction: Mod)
-            },
-            {
                 BuiltinFunctionsCore.Month,
                 StandardErrorHandling<FormulaValue>(
                     BuiltinFunctionsCore.Month.Name,
@@ -1733,6 +1720,10 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.FindT,
                 NoErrorHandling(MultiSingleColumnTable(SimpleFunctionImplementations[BuiltinFunctionsCore.Find], DoNotReplaceBlank))
+            },
+            {
+                BuiltinFunctionsCore.ModT,
+                NoErrorHandling(MultiSingleColumnTable(SimpleFunctionImplementations[BuiltinFunctionsCore.Mod], ReplaceBlankWithZero))
             },
             {
                 BuiltinFunctionsCore.RoundT,
