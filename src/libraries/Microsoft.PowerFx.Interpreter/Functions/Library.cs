@@ -1123,18 +1123,6 @@ namespace Microsoft.PowerFx.Functions
             },
 #if false
             {
-                BuiltinFunctionsCore.ModT,
-                StandardErrorHandling<FormulaValue>(
-                    BuiltinFunctionsCore.Mod.Name,
-                    expandArguments: NoArgExpansion,
-                    replaceBlankValues: NoOpAlreadyHandledByIR,
-                    checkRuntimeTypes: DeferRuntimeTypeChecking,
-                    checkRuntimeValues: DeferRuntimeTypeChecking,
-                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-                    targetFunction: Mod)
-            },
-#endif
-            {
                 BuiltinFunctionsCore.Month,
                 StandardErrorHandling<FormulaValue>(
                     BuiltinFunctionsCore.Month.Name,
