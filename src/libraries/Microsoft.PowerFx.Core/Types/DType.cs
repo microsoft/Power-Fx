@@ -2344,6 +2344,12 @@ namespace Microsoft.PowerFx.Core.Types
             return Union(ref fError, type1, type2, useLegacyDateTimeAccepts);
         }
 
+        public static DType UnionWithCoercion(DType type1, DType type2, bool useLegacyDateTimeAccepts = false)
+        {
+            var fError = false;
+            return UnionWithCoercion(ref fError, type1, type2, useLegacyDateTimeAccepts);
+        }        
+
         public bool CanUnionWith(DType type, bool useLegacyDateTimeAccepts = false)
         {
             AssertValid();
@@ -2579,6 +2585,69 @@ namespace Microsoft.PowerFx.Core.Types
             return false;
         }
 
+        // !!!###
+        // Copy and paste from Union but validates if types can get coerced.
+        public static DType UnionWithCoercion(ref bool fError, DType type1, DType type2, bool useLegacyDateTimeAccepts = false)
+        {
+            type1.AssertValid();
+            type2.AssertValid();
+
+            // For Lazy Types, union operations must expand the current depth
+            if (type1.IsLazyType)
+            {
+                if (type1 == type2)
+                {
+                    return type1;
+                }
+
+                type1 = type1.LazyTypeProvider.GetExpandedType(type1.IsTable);
+            }
+
+            if (type2.IsLazyType)
+            {
+                type2 = type2.LazyTypeProvider.GetExpandedType(type2.IsTable);
+            }
+
+            if (type1.IsAggregate && type2.IsAggregate)
+            {
+                if (type1 == ObjNull)
+                {
+                    return CreateDTypeWithConnectedDataSourceInfoMetadata(type2, type1.AssociatedDataSources, type1.DisplayNameProvider);
+                }
+
+                if (type2 == ObjNull)
+                {
+                    return CreateDTypeWithConnectedDataSourceInfoMetadata(type1, type2.AssociatedDataSources, type2.DisplayNameProvider);
+                }
+
+                if (type1.Kind != type2.Kind)
+                {
+                    fError = true;
+                    return Error;
+                }
+
+                return CreateDTypeWithConnectedDataSourceInfoMetadata(UnionWithCoercionCore(ref fError, type1, type2, useLegacyDateTimeAccepts), type2.AssociatedDataSources, type2.DisplayNameProvider);
+            }
+
+            // !!!###
+            // CoerceTo intead of Accept
+            if (type1.CoercesTo(type2))
+            {
+                fError |= type1.IsError;
+                return CreateDTypeWithConnectedDataSourceInfoMetadata(type1, type2.AssociatedDataSources, type2.DisplayNameProvider);
+            }
+
+            if (type2.CoercesTo(type1))
+            {
+                fError |= type2.IsError;
+                return CreateDTypeWithConnectedDataSourceInfoMetadata(type2, type1.AssociatedDataSources, type1.DisplayNameProvider);
+            }
+
+            var result = Supertype(type1, type2, useLegacyDateTimeAccepts);
+            fError = result == Error;
+            return result;
+        }
+
         public static DType Union(ref bool fError, DType type1, DType type2, bool useLegacyDateTimeAccepts = false)
         {
             type1.AssertValid();
@@ -2700,6 +2769,78 @@ namespace Microsoft.PowerFx.Core.Types
                 else
                 {
                     fieldType = Union(ref fError, field1Type, field2Type, useLegacyDateTimeAccepts);
+                }
+
+                result = result.SetType(ref fError, DPath.Root.Append(field2Name), fieldType);
+            }
+
+            return result;
+        }
+
+        // !!!###
+        // Copy and paste code from UnionCore
+        private static DType UnionWithCoercionCore(ref bool fError, DType type1, DType type2, bool useLegacyDateTimeAccepts = false)
+        {
+            type1.AssertValid();
+            Contracts.Assert(type1.IsAggregate);
+            type2.AssertValid();
+            Contracts.Assert(type2.IsAggregate);
+
+            var result = type1;
+
+            foreach (var pair in type2.GetNames(DPath.Root))
+            {
+                var field2Name = pair.Name;
+
+                if (!type1.TryGetType(field2Name, out var field1Type))
+                {
+                    result = result.Add(pair);
+                    continue;
+                }
+
+                var field2Type = pair.Type;
+                if (field1Type == field2Type)
+                {
+                    continue;
+                }
+
+                DType fieldType;
+                if (field1Type == ObjNull || field2Type == ObjNull)
+                {
+                    fieldType = field1Type == ObjNull ? field2Type : field1Type;
+                }
+                else if (field1Type.IsAggregate && field2Type.IsAggregate)
+                {
+                    fieldType = UnionWithCoercion(ref fError, field1Type, field2Type, useLegacyDateTimeAccepts);
+                }
+                else if (field1Type.IsAggregate || field2Type.IsAggregate)
+                {
+                    var isMatchingExpandType = false;
+                    var expandType = Unknown;
+                    if (field1Type.HasExpandInfo && field2Type.IsAggregate)
+                    {
+                        isMatchingExpandType = IsMatchingExpandType(field1Type, field2Type);
+                        expandType = field1Type;
+                    }
+                    else if (field2Type.HasExpandInfo && field1Type.IsAggregate)
+                    {
+                        isMatchingExpandType = IsMatchingExpandType(field2Type, field1Type);
+                        expandType = field2Type;
+                    }
+
+                    if (!isMatchingExpandType)
+                    {
+                        fieldType = Error;
+                        fError = true;
+                    }
+                    else
+                    {
+                        fieldType = expandType;
+                    }
+                }
+                else
+                {
+                    fieldType = UnionWithCoercion(ref fError, field1Type, field2Type, useLegacyDateTimeAccepts);
                 }
 
                 result = result.SetType(ref fError, DPath.Root.Append(field2Name), fieldType);

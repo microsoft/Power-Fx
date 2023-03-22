@@ -5205,6 +5205,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     }
                     else if (isChildTypeAllowedInTable && childType.CoercesTo(exprType))
                     {
+                        exprType = DType.UnionWithCoercion(exprType, childType);
                         _txb.SetCoercedType(child, exprType);
                     }
                     else

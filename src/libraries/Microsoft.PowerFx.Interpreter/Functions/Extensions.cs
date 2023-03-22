@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections.Generic;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Localization;
@@ -74,6 +75,33 @@ namespace Microsoft.PowerFx.Functions
                     {
                         errors.EnsureError(DocumentErrorSeverity.Severe, arg, TexlStrings.ErrTypeError_Arg_Expected_Found, name, dsNameType.GetKindString(), type.GetKindString());
                     }
+
+                    isValid = false;
+                }
+            }
+
+            return isValid;
+        }
+
+        internal static bool CheckAggregateNamesWithCoercion(this DType argType, DType dataSourceType, TexlNode arg, IErrorContainer errors, bool supportsParamCoercion = false)
+        {
+            bool isValid = true;
+
+            foreach (var typedName in argType.GetNames(DPath.Root))
+            {
+                DName name = typedName.Name;
+                DType type = typedName.Type;
+
+                if (!dataSourceType.TryGetType(name, out DType dsNameType))
+                {
+                    dataSourceType.ReportNonExistingName(FieldNameKind.Display, errors, typedName.Name, arg);
+                    isValid = false;
+                    continue;
+                }
+
+                if (!supportsParamCoercion || !type.CoercesTo(dsNameType, out var coercionIsSafe))
+                {
+                    errors.EnsureError(DocumentErrorSeverity.Severe, arg, TexlStrings.ErrTypeError_Arg_Expected_Found, name, dsNameType.GetKindString(), type.GetKindString());
 
                     isValid = false;
                 }

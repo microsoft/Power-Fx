@@ -40,7 +40,7 @@ namespace Microsoft.PowerFx.Interpreter
 
         protected virtual bool IsScalar => false;
 
-        public override bool SupportsParamCoercion => false;
+        public override bool SupportsParamCoercion => true;
 
         public override bool CanSuggestInputColumns => true;
 
@@ -118,7 +118,7 @@ namespace Microsoft.PowerFx.Interpreter
                 }
 
                 // Checks if all record names exist against table type and if its possible to coerce.
-                bool checkAggregateNames = argType.CheckAggregateNames(argTypes[0], args[i], errors, SupportsParamCoercion);
+                bool checkAggregateNames = argType.CheckAggregateNamesWithCoercion(argTypes[0], args[i], errors, SupportsParamCoercion);
                 fValid = fValid && checkAggregateNames;
 
                 if (!itemType.IsValid)
@@ -128,7 +128,7 @@ namespace Microsoft.PowerFx.Interpreter
                 else
                 {
                     var fUnionError = false;
-                    itemType = DType.Union(ref fUnionError, itemType, argType, useLegacyDateTimeAccepts: true);
+                    itemType = DType.UnionWithCoercion(ref fUnionError, itemType, argType);
                     if (fUnionError)
                     {
                         errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrIncompatibleTypes);
@@ -177,7 +177,7 @@ namespace Microsoft.PowerFx.Interpreter
             {
                 // The item type must be compatible with the collection schema.
                 var fError = false;
-                returnType = DType.Union(ref fError, collectionType.ToRecord(), collectedType);
+                returnType = DType.UnionWithCoercion(ref fError, collectionType.ToRecord(), collectedType);
                 if (fError)
                 {
                     fValid = false;

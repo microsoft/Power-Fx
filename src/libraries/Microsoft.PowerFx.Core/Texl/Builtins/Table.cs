@@ -65,17 +65,31 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrNeedRecord);
                     isValid = false;
                 }
-                else if (!rowType.CanUnionWith(argType))
-                {
-                    errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrIncompatibleRecord);
-                    isValid = false;
-                }
                 else
                 {
                     var isUnionError = false;
-                    rowType = DType.Union(ref isUnionError, rowType, argType);
+
+                    var isargTypeAllowedInTable = !argType.IsDeferred && !argType.IsVoid;
+                    if (isargTypeAllowedInTable && rowType.Equals(DType.EmptyRecord))
+                    {
+                        rowType = argType;
+                    }
+                    else if (isargTypeAllowedInTable && rowType.CanUnionWith(argType))
+                    {
+                        rowType = DType.Union(ref isUnionError, rowType, argType);
+                    }
+                    else if (isargTypeAllowedInTable && argType.CoercesTo(rowType))
+                    {
+                        rowType = DType.UnionWithCoercion(ref isUnionError, rowType, argType);
+                        CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i], rowType);
+                    }
+                    else
+                    {
+                        errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrTableDoesNotAcceptThisType);
+                        isValid = false;
+                    }
+
                     Contracts.Assert(!isUnionError);
-                    Contracts.Assert(rowType.IsRecord);
                 }
             }
 

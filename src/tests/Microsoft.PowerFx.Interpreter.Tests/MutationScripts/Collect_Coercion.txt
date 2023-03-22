@@ -1,0 +1,5 @@
+﻿>> Set(t1, Table({number:1},{number:"2",string:"2"}))
+Table({number:1,string:Blank()},{number:2,string:"2"})
+
+>> Collect(t1, {number:"3"});t1
+Table({number:1,string:Blank()},{number:2,string:"2"},{number:3,string:Blank()})
