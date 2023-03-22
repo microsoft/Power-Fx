@@ -1121,7 +1121,6 @@ namespace Microsoft.PowerFx.Functions
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: Mod)
             },
-#if false
             {
                 BuiltinFunctionsCore.Month,
                 StandardErrorHandling<FormulaValue>(
