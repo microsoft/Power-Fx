@@ -600,6 +600,65 @@ namespace Microsoft.PowerFx.Core.Tests
                 TestSimpleBindingSuccess(
                                     expression,
                                     TestUtils.DT(expectedType),
+                                    symbol, 
+                                    numberIsFloat: true);
+            }
+            else
+            {
+                TestBindingErrors(
+                    expression,
+                    TestUtils.DT(expectedType),
+                    symbol,
+                    numberIsFloat: true);
+            }
+        }
+
+        [Theory]
+        [InlineData("If(A < 10, 1, \"2\")", "n", true)]
+        [InlineData("If(A < 1, \"one\", A < 2, 2, A < 3, true, false)", "s", true)]
+        [InlineData("If(A < 1, true, A < 2, 2, A < 3, false, \"true\")", "b", true)]
+        [InlineData("If(A < 10, 1, [1,2,3])", "-", true)]
+        [InlineData("If(A < 10, 1, {Value: 2})", "-", true)]
+        [InlineData("If(0 < 1, [1], 2)", "-", true)]
+
+        // negative cases, when if produces void type
+        // If(1 < 0, [1], 2) => V which is void value
+
+        // void type is not allowed in aggregate type.
+        // {test: V}
+        [InlineData("{test: If(1 < 0, [1], 2)}", "![]", false)]
+
+        // [V]
+        [InlineData("[If(1 < 0, [1], 2)]", "*[]", false)]
+
+        // void type can't be consumed.
+        // V + 1 
+        [InlineData("If(1 < 0, [1], 2) + 1", "w", false)]
+
+        // Abs(V)
+        [InlineData("Abs(If(1 < 0, [1], 2))", "w", false)]
+
+        // Len(V)
+        [InlineData("Len(If(1 < 0, [1], 2))", "w", false)]
+
+        // If(V, 0, 1)
+        [InlineData("If(If(1 < 0, [1], 2), 0, 1)", "w", false)]
+
+        // Hour(V)
+        [InlineData("Hour(If(1 < 0, [1], 2))", "w", false)]
+
+        // ForAll([1,2,3], V)
+        [InlineData("ForAll([1,2,3], If(1 < 0, [1], 2))", "e", false)]
+        public void TexlFunctionTypeSemanticsIfWithArgumentCoercion_Decimal(string expression, string expectedType, bool checkSuccess)
+        {
+            var symbol = new SymbolTable();
+            symbol.AddVariable("A", FormulaType.Decimal);
+
+            if (checkSuccess)
+            {
+                TestSimpleBindingSuccess(
+                                    expression,
+                                    TestUtils.DT(expectedType),
                                     symbol);
             }
             else
@@ -3769,22 +3828,26 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.True(result.IsSuccess);
         }
 
-        private void TestBindingErrors(string script, DType expectedType, int expectedErrorCount, SymbolTable symbolTable = null)
+        private void TestBindingErrors(string script, DType expectedType, int expectedErrorCount, SymbolTable symbolTable = null, bool numberIsFloat = false)
         {
             var config = new PowerFxConfig
             {
                 SymbolTable = symbolTable
             };
-
             var engine = new Engine(config);
-            var result = engine.Check(script);
+
+            var options = new ParserOptions()
+            {
+                NumberIsFloat = numberIsFloat
+            };
+            var result = engine.Check(script, options);
 
             Assert.Equal(expectedType, result.Binding.ResultType);
             Assert.Equal(expectedErrorCount, result.Binding.ErrorContainer.GetErrors().Count());
             Assert.False(result.IsSuccess);
         }
 
-        private void TestBindingErrors(string script, DType expectedType, SymbolTable symbolTable = null, OptionSet[] optionSets = null)
+        private void TestBindingErrors(string script, DType expectedType, SymbolTable symbolTable = null, OptionSet[] optionSets = null, bool numberIsFloat = false)
         {
             var config = new PowerFxConfig
             {
@@ -3800,7 +3863,12 @@ namespace Microsoft.PowerFx.Core.Tests
             }
 
             var engine = new Engine(config);
-            var result = engine.Check(script);
+
+            var options = new ParserOptions()
+            {
+                NumberIsFloat = numberIsFloat
+            };
+            var result = engine.Check(script, options);
 
             Assert.Equal(expectedType, result.Binding.ResultType);
             Assert.False(result.IsSuccess);

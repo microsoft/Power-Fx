@@ -122,7 +122,7 @@ namespace Microsoft.PowerFx.Tests
                 DType.PenImage, DType.Media, DType.Blob, DType.Color, DType.Currency, DType.EmptyRecord, DType.EmptyTable,
                 DType.EmptyEnum, DType.Date, DType.Time, DType.Guid, DType.Polymorphic, DType.Deferred, AttachmentTableType,
                 AttachmentRecordType, OptionSetType, MultiSelectOptionSetType, DType.ObjNull, DType.OptionSet,
-                DType.OptionSetValue, DType.View, DType.ViewValue, DType.UntypedObject, DTypeTests.Void, DType.Decimal,
+                DType.OptionSetValue, DType.View, DType.ViewValue, DType.UntypedObject, DType.Void, DType.Decimal,
             };
 
         [Fact]
