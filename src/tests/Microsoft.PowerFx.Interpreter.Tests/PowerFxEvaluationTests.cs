@@ -333,7 +333,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 ParserOptions options = new ParserOptions() { NumberIsFloat = numberIsFloat };
                 var newValueDeserialized = await engine.EvalAsync(newValue.ToExpression(), CancellationToken.None, options, runtimeConfig: runtimeConfig);
 
-                return new RunResult(newValueDeserialized);
+                return new RunResult(newValueDeserialized, newValue);
             }
         }
 

@@ -65,13 +65,10 @@ namespace Microsoft.PowerFx.Core.IR
             {
                 kindToUse = rightCoerced.Kind;
             }
-#if true
-            // Decimal TODO
             else if (!leftType.Accepts(rightType) && !rightType.Accepts(leftType))
             {
                 return BinaryOpKind.Invalid;
             } 
-#endif
             
             switch (kindToUse)
             {
@@ -452,8 +449,6 @@ namespace Microsoft.PowerFx.Core.IR
                                 // Number + Date
                                 return BinaryOpKind.AddDayAndDateTime;
                             }
-
-                            // Decimal TODO: DateTimeNoTimeZone?
 
                         default:
                             // Only operations where both operands are Decimal-compatible result in Decimal

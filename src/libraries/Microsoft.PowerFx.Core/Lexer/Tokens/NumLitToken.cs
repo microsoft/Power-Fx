@@ -15,8 +15,7 @@ namespace Microsoft.PowerFx.Syntax
         internal NumLitToken(double value, Span span)
             : base(TokKind.NumLit, span)
         {
-            // Decimal TODO: Why isn't this <= double.MaxValue?
-            Contracts.Assert(value >= double.MinValue && value < double.MaxValue);
+            Contracts.Assert(value >= double.MinValue && value <= double.MaxValue);
 
             Value = value;
         }

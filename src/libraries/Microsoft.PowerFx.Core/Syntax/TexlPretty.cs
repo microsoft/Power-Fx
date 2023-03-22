@@ -67,7 +67,7 @@ namespace Microsoft.PowerFx.Syntax
             Contracts.AssertValue(node);
 
             var nlt = node.Value;
-            return LazyList<string>.Of(nlt != null ? nlt.ToString() : node.NumValue.ToString("R", CultureInfo.CurrentCulture));
+            return LazyList<string>.Of(nlt != null ? nlt.ToString() : node.NumValue.ToString("G17", CultureInfo.CurrentCulture));
         }
 
         public override LazyList<string> Visit(DecLitNode node, Precedence parentPrecedence)

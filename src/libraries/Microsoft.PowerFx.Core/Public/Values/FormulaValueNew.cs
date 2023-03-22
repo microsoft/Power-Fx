@@ -36,8 +36,6 @@ namespace Microsoft.PowerFx.Types
             return new DecimalValue(IRContext.NotInSource(FormulaType.Decimal), number);
         }
 
-        // Decimal TODO: should there be a nullable overload for decimal as there is for number?  Why does Number have one, and other types do not?
-
         public static DecimalValue New(long number)
         {
             // it is safe to convert 64-bit Long to Decimal

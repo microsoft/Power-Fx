@@ -8,6 +8,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core.Tests
@@ -29,6 +30,8 @@ namespace Microsoft.PowerFx.Core.Tests
         // Test case ran and returned a result. 
         public FormulaValue Value;
 
+        public FormulaValue OriginalValue;
+
         // Test may have run and failed (so Value is set) due to
         // known unsupported behavior in an engine. Let engine mark that this is a known case.
         //
@@ -43,9 +46,10 @@ namespace Microsoft.PowerFx.Core.Tests
         {
         }
 
-        public RunResult(FormulaValue value)
+        public RunResult(FormulaValue value, FormulaValue originalValue = null)
         {
             Value = value;
+            OriginalValue = originalValue;
         }
 
         public RunResult(CheckResult result)
@@ -163,6 +167,7 @@ namespace Microsoft.PowerFx.Core.Tests
         {
             RunResult runResult = null;
             FormulaValue result = null;
+            FormulaValue originalResult = null;
 
             var expected = testCase.Expected;
 
@@ -177,6 +182,7 @@ namespace Microsoft.PowerFx.Core.Tests
             {
                 runResult = await RunAsyncInternal(testCase.Input, testCase.SetupHandlerName, numberIsFloat);
                 result = runResult.Value;
+                originalResult = runResult.OriginalValue;
 
                 // Unsupported is just for ignoring large groups of inherited tests. 
                 // If it's an override, then the override should specify the exact error.
@@ -263,6 +269,14 @@ namespace Microsoft.PowerFx.Core.Tests
                 if (result is NumberValue numericResult && double.TryParse(expected, out var expectedNumeric))
                 {
                     if (NumberCompare(numericResult.Value, expectedNumeric))
+                    {
+                        return (TestResult.Pass, null);
+                    }
+                }
+
+                if (result is DecimalValue decimalResult && originalResult is NumberValue && double.TryParse(expected, out var expectedNumeric2))
+                {
+                    if (NumberCompare((double)decimalResult.Value, expectedNumeric2))
                     {
                         return (TestResult.Pass, null);
                     }

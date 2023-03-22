@@ -13,7 +13,7 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
 
         // Coercion operations
         BooleanToNumber,
-        OptionSetToNumber,  // Decimal TODO: this, and others, don't appear in the interpreter's LibaryUnary.cs?
+        OptionSetToNumber,
         DateToNumber,
         TimeToNumber,
         DateTimeToNumber,

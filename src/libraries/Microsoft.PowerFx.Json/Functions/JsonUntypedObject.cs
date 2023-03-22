@@ -42,7 +42,7 @@ namespace Microsoft.PowerFx.Functions
                     case JsonValueKind.False:
                         return FormulaType.Boolean;
 
-                    // Decimal TODO
+                    // Decimal TODO, talk to Luc
                 }
 
                 return FormulaType.Blank;

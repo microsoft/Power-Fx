@@ -130,7 +130,6 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: BooleanToNumber)
             },
             {
-                // Decimal TODO: shouldn't these all be property typed to the coercion target?  Why does input need to match output?
                 UnaryOpKind.BooleanToDecimal,
                 StandardErrorHandling<BooleanValue>(
                     functionName: null, // internal function, no user-facing name

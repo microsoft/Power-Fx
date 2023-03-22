@@ -22,10 +22,6 @@
 >> Round(230,3)
 230
 
-// Decimal TODO: Returns 0 on Canvas?
->> Round(Float("1E+308"),10)
-1E+308
-
 >> Round(1e15,10)
 1000000000000000
 

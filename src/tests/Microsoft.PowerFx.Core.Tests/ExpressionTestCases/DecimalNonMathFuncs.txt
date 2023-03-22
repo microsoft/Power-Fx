@@ -74,7 +74,7 @@ Table({Value:1.00000000000000000000001},{Value:2.00000000000000000000001},{Value
 Errors: Error 0-90: The function 'Table' has some invalid arguments.|Error 48-88: Cannot use this record. It may contain colliding fields of incompatible types.
 
 >> [{a:0.00000000000000000000001,b:Float(2)},{a:Float(1),b:0.00000000000000000000001}]
-Table({a:0.00000000000000000000001,b:2},{a:1,b:1.0000000000000001E-23})
+Table({a:0.00000000000000000000001,b:2},{a:1,b:0.00000000000000000000001})
 
 // functions that take their type from the first instance of the value
 

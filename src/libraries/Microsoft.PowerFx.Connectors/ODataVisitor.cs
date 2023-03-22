@@ -194,7 +194,6 @@ namespace Microsoft.PowerFx.Connectors
                 BinaryOpKind.SubtractNumberAndTime => "-",
                 BinaryOpKind.DivNumbers => "/",
 
-                // Decimal TODO: Mul Numbers wasn't here?
                 BinaryOpKind.MulNumbers => "*",
 
                 BinaryOpKind.AddDecimals => "+",

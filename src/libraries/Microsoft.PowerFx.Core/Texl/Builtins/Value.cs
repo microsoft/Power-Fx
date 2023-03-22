@@ -13,8 +13,6 @@ using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Syntax;
 
-// Decimal TODO: if decimal or float switch off, those functions unavailable
-
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
     // Value(arg:s|n [,language:s])
