@@ -17,10 +17,11 @@ using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
+using static Microsoft.PowerFx.Core.Localization.TexlStrings;
 
-namespace Microsoft.PowerFx
+namespace Microsoft.PowerFx.Core.Functions
 {
-    internal class UserDefinedFunction : CustomTexlFunction
+    internal class UserDefinedFunction : TexlFunction
     {
         private readonly bool _isImperative;
 
@@ -29,7 +30,7 @@ namespace Microsoft.PowerFx
         public override bool IsSelfContained => !_isImperative;
 
         public UserDefinedFunction(string name, FormulaType returnType, TexlNode udfBody, bool isImperative, params FormulaType[] paramTypes)
-            : base(name, returnType._type, Array.ConvertAll(paramTypes, x => x._type))
+            : base(DPath.Root, name, name, SG("Custom func " + name), FunctionCategories.MathAndStat, returnType._type, 0, paramTypes.Length, paramTypes.Length, Array.ConvertAll(paramTypes, x => x._type))
         {
             UdfBody = udfBody;
             _isImperative = isImperative;
@@ -87,6 +88,16 @@ namespace Microsoft.PowerFx
                     errorContainer.EnsureError(DocumentErrorSeverity.Severe, argTypeToken, TexlStrings.ErrUDF_UnknownType, argTypeToken.Name);
                 }
             }
+        }
+
+        public static StringGetter SG(string text)
+        {
+            return (string locale) => text;
+        }
+
+        public override IEnumerable<StringGetter[]> GetSignatures()
+        {
+            yield return new[] { SG("Arg 1") };
         }
     }
 }

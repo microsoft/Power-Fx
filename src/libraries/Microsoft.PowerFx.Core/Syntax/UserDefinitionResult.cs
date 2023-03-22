@@ -3,6 +3,8 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.PowerFx.Core.Errors;
+using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Parser;
 
 namespace Microsoft.PowerFx
@@ -11,13 +13,13 @@ namespace Microsoft.PowerFx
     {
         internal IEnumerable<UserDefinedFunction> UDFs { get; set; }
 
-        internal IEnumerable<ExpressionError> Errors { get; set; }
+        internal IEnumerable<TexlError> Errors { get; set; }
 
         internal IEnumerable<NamedFormula> NamedFormulas { get; }
 
         internal bool HasErrors { get; }
 
-        public UserDefinitionResult(IEnumerable<UserDefinedFunction> uDFs, IEnumerable<ExpressionError> errors, IEnumerable<NamedFormula> namedFormulas)
+        public UserDefinitionResult(IEnumerable<UserDefinedFunction> uDFs, IEnumerable<TexlError> errors, IEnumerable<NamedFormula> namedFormulas)
         {
             UDFs = uDFs;
             Errors = errors;
