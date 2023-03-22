@@ -864,7 +864,8 @@
     <value>O expresie care se evaluează pentru rândurile din „sursă” și furnizează valori pentru sortare.</value>
   </data>
   <data name="AboutSort_order" xml:space="preserve">
-    <value>Ascendent sau descendent</value>
+    <value>SortOrder.Ascending sau SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumns" xml:space="preserve">
     <value>Sortează „sursa” pe baza coloanei, specificând în mod opțional o „ordine” de sortare.</value>
@@ -889,7 +890,8 @@
     <value>Un nume de coloană unic.</value>
   </data>
   <data name="AboutSortByColumns_order" xml:space="preserve">
-    <value>Ascendent sau descendent</value>
+    <value>SortOrder.Ascending sau SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
     <value>Sortează „sursa” pe baza indexului valorilor potrivite din coloana specificată.</value>
@@ -2382,7 +2384,7 @@
     <value>Un număr de unități de adăugat. Numărul poate fi negativ.</value>
   </data>
   <data name="AboutDateAdd_unit" xml:space="preserve">
-    <value>Unitatea care se folosește, care poate fi una dintre Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
+    <value>Unitatea de utilizat, care poate fi una din TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="DateDiffArg1" xml:space="preserve">
@@ -2404,7 +2406,7 @@
     <value>O dată de sfârșit pentru operația de diferențiere.</value>
   </data>
   <data name="AboutDateDiff_unit" xml:space="preserve">
-    <value>Unitatea în care se exprimă rezultatul, care poate fi una dintre Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
+    <value>Unitatea de exprimare a rezultatului, care poate fi una din TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="AboutDateAddT" xml:space="preserve">
@@ -4859,5 +4861,16 @@
   <data name="AboutLanguage" xml:space="preserve">
     <value>Obțineți setările regionale implicite la runtime.</value>
     
+  </data>
+  <data name="AboutEncodeUrl" xml:space="preserve">
+    <value>Codifică un șir URL înlocuind anumite caractere non-alfanumerice cu % și cu un număr hexazecimal.</value>
+    
+  </data>
+  <data name="EncodeUrlArg1" xml:space="preserve">
+    <value>url</value>
+    
+  </data>
+  <data name="AboutEncodeUrl_url" xml:space="preserve">
+    <value>Un URL de codificat.</value>
   </data>
 </root>
