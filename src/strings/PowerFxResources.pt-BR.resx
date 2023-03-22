@@ -864,7 +864,8 @@
     <value>Expressão que é avaliada sobre linhas da 'source' (origem) e fornece valores para classificação.</value>
   </data>
   <data name="AboutSort_order" xml:space="preserve">
-    <value>Crescente ou decrescente</value>
+    <value>SortOrder.Ascending ou SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumns" xml:space="preserve">
     <value>Classifica 'source' (origem) com base na coluna, com a opção de especificar uma 'order' (ordem) de classificação.</value>
@@ -889,7 +890,8 @@
     <value>Nome de coluna exclusivo.</value>
   </data>
   <data name="AboutSortByColumns_order" xml:space="preserve">
-    <value>Crescente ou decrescente</value>
+    <value>SortOrder.Ascending ou SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
     <value>Classifica 'source' (origem) com base no índice de valores correspondentes da coluna especificada.</value>
@@ -2382,7 +2384,7 @@
     <value>Número de unidades a ser adicionadas. O número pode ser negativo.</value>
   </data>
   <data name="AboutDateAdd_unit" xml:space="preserve">
-    <value>A unidade a ser usada, que pode ser Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
+    <value>A unidade a ser usada, que pode ser uma destas opções: TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="DateDiffArg1" xml:space="preserve">
@@ -2404,7 +2406,7 @@
     <value>Data de término para a operação de diferença.</value>
   </data>
   <data name="AboutDateDiff_unit" xml:space="preserve">
-    <value>A unidade a ser usada para expressar o resultado, que pode ser Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
+    <value>A unidade para expressar o resultado, que pode ser uma destas opções: TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="AboutDateAddT" xml:space="preserve">
@@ -4859,5 +4861,16 @@
   <data name="AboutLanguage" xml:space="preserve">
     <value>Obtenha o conjunto de localidades padrão no tempo de execução.</value>
     
+  </data>
+  <data name="AboutEncodeUrl" xml:space="preserve">
+    <value>Encodes a URL string, replacing certain non-alphanumeric characters with % and a hexadecimal number.</value>
+    
+  </data>
+  <data name="EncodeUrlArg1" xml:space="preserve">
+    <value>url</value>
+    
+  </data>
+  <data name="AboutEncodeUrl_url" xml:space="preserve">
+    <value>A url to be encoded.</value>
   </data>
 </root>

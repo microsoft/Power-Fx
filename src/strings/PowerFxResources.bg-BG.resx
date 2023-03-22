@@ -864,7 +864,8 @@
     <value>Израз, който се изчислява върху редове в „източник“ и предоставя стойности за сортиране.</value>
   </data>
   <data name="AboutSort_order" xml:space="preserve">
-    <value>Възходящ или низходящ</value>
+    <value>SortOrder.Ascending или SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumns" xml:space="preserve">
     <value>Сортира „източник“, базирано на колоната, опционално указвайки „ред“ на сортирането.</value>
@@ -889,7 +890,8 @@
     <value>Уникално име на колона.</value>
   </data>
   <data name="AboutSortByColumns_order" xml:space="preserve">
-    <value>Възходящ или низходящ</value>
+    <value>SortOrder.Ascending или SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
     <value>Сортира „източник“, базирано на индекса от съвпадащи стойности в указаната колона.</value>
@@ -2382,7 +2384,7 @@
     <value>Брой единици за добавяне. Числото може да е отрицателно.</value>
   </data>
   <data name="AboutDateAdd_unit" xml:space="preserve">
-    <value>Единицата за използване, която може да е едно от следните: Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
+    <value>Единицата, която да се използва. Може да бъде една от следните: TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="DateDiffArg1" xml:space="preserve">
@@ -2404,7 +2406,7 @@
     <value>Крайна дата за другата операция.</value>
   </data>
   <data name="AboutDateDiff_unit" xml:space="preserve">
-    <value>Единицата, в която да се изрази резултатът, която може да е едно от следните: Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
+    <value>Единицата, в която да се изрази резултатът. Може да бъде една от следните: TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="AboutDateAddT" xml:space="preserve">
@@ -4859,5 +4861,16 @@
   <data name="AboutLanguage" xml:space="preserve">
     <value>Получаване на езиковата променлива по подразбиране, зададена по време на изпълнение.</value>
     
+  </data>
+  <data name="AboutEncodeUrl" xml:space="preserve">
+    <value>Кодира низ за URL адрес, замествайки определени знаци, които не са букви и цифри, с % и шестнадесетично число.</value>
+    
+  </data>
+  <data name="EncodeUrlArg1" xml:space="preserve">
+    <value>URL адрес</value>
+    
+  </data>
+  <data name="AboutEncodeUrl_url" xml:space="preserve">
+    <value>URL адрес, който да бъде кодиран.</value>
   </data>
 </root>
