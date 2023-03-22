@@ -762,30 +762,6 @@ namespace Microsoft.PowerFx.Functions
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-mod
         public static FormulaValue Mod(IRContext irContext, FormulaValue[] args)
         {
-            double arg0 = ((NumberValue)args[0]).Value;
-
-            if (args[1] is TableValue table)
-            {
-                List<FormulaValue> modResults = new List<FormulaValue>();
-
-                foreach (DValue<RecordValue> row in table.Rows)
-                {
-                    FormulaValue val = row.Value.GetField("Value");
-                    double arg1 = val is NumberValue nv ? nv.Value : 0d;
-                    modResults.Add(ModInternal(arg0, arg1, IRContext.NotInSource(FormulaType.Number)));
-                }
-
-                return new InMemoryTableValue(irContext, StandardTableNodeRecords(irContext, modResults.ToArray(), forceSingleColumn: true));
-            }
-            else
-            {
-                double arg1 = ((NumberValue)args[1]).Value;
-
-                return ModInternal(arg0, arg1, irContext);
-            }
-        }
-        public static FormulaValue Mod(IRContext irContext, FormulaValue[] args)
-        {
             if (irContext.ResultType == FormulaType.Decimal)
             {
                 decimal arg0 = ((DecimalValue)args[0]).Value;
@@ -812,16 +788,14 @@ namespace Microsoft.PowerFx.Functions
                 return new DecimalValue(irContext, result);
             }
             else
-            { 
+            {
                 double arg0 = ((NumberValue)args[0]).Value;
                 double arg1 = ((NumberValue)args[1]).Value;
 
-        private static FormulaValue ModInternal(double arg0, double arg1, IRContext irContext)
-        {
-            if (arg1 == 0)
-            {
-                return CommonErrors.DivByZeroError(irContext);
-            }
+                if (arg1 == 0)
+                {
+                    return CommonErrors.DivByZeroError(irContext);
+                }
 
                 // r = a – N × floor(a/b)
                 double q = Math.Floor(arg0 / arg1);
@@ -842,7 +816,7 @@ namespace Microsoft.PowerFx.Functions
                 return new NumberValue(irContext, result);
             }
         }
-
+        
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-sequence
         public static FormulaValue SequenceDecimal(IRContext irContext, DecimalValue[] args)
         {
@@ -930,16 +904,24 @@ namespace Microsoft.PowerFx.Functions
 
         public static FormulaValue Round(IRContext irContext, FormulaValue[] args)
         {
-            if (args.Length == 2 && args[1] is NumberValue digits)
+            double digits;
+
+            if (args.Length == 2 && args[1] is NumberValue numberDigs)
             {
-                if (args[0] is NumberValue num)
-                {
-                    return RoundFloat(irContext, num, digits.Value);
-                }
-                else if (args[0] is DecimalValue dec)
-                {
-                    return RoundDecimal(irContext, dec, digits.Value);
-                }
+                digits = numberDigs.Value;
+            }
+            else
+            {
+                return CommonErrors.UnreachableCodeError(irContext);
+            }
+
+            if (args[0] is NumberValue num)
+            {
+                return RoundFloat(irContext, num, digits);
+            }
+            else if (args[0] is DecimalValue dec)
+            {
+                return RoundDecimal(irContext, dec, digits);
             }
 
             return CommonErrors.UnreachableCodeError(irContext);
@@ -1030,16 +1012,24 @@ namespace Microsoft.PowerFx.Functions
 
         public static FormulaValue RoundUp(IRContext irContext, FormulaValue[] args)
         {
-            if (args.Length == 2 && args[1] is NumberValue digits)
+            double digits;
+
+            if (args.Length == 2 && args[1] is NumberValue numberDigs)
             {
-                if (args[0] is NumberValue num)
-                {
-                    return RoundFloat(irContext, num, digits.Value, RoundType.Up);
-                }
-                else if (args[0] is DecimalValue dec)
-                {
-                    return RoundDecimal(irContext, dec, digits.Value, RoundType.Up);
-                }
+                digits = numberDigs.Value;
+            }
+            else
+            {
+                return CommonErrors.UnreachableCodeError(irContext);
+            }
+
+            if (args[0] is NumberValue num)
+            {
+                return RoundFloat(irContext, num, digits, RoundType.Up);
+            }
+            else if (args[0] is DecimalValue dec)
+            {
+                return RoundDecimal(irContext, dec, digits, RoundType.Up);
             }
 
             return CommonErrors.UnreachableCodeError(irContext);
@@ -1050,9 +1040,9 @@ namespace Microsoft.PowerFx.Functions
             double digits;
 
             // Trunc uses RoundDown as the implementation, and Trunc's second argument is optional
-            if (args.Length == 2 && args[1] is NumberValue digitsArg)
+            if (args.Length == 2 && args[1] is NumberValue numberDigs)
             {
-                digits = digitsArg.Value;
+                digits = numberDigs.Value;
             }
             else if (args.Length == 1)
             {

@@ -633,7 +633,7 @@ namespace Microsoft.PowerFx
                 {
 #pragma warning disable CA1303 // Do not pass literals as localized parameters
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("File not found: " + fileNameSV);
+                    Console.WriteLine("File not found: " + fileName);
                     Console.ResetColor();
                     return BooleanValue.New(false);
                 }

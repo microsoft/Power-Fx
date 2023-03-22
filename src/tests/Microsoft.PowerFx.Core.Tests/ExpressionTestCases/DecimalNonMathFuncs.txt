@@ -21,7 +21,7 @@
 4
 
 >> Error({Kind:8})   // constraint violated
-Errors: Error 6-14: Invalid argument type. Expecting a Record value, but of a different schema.|Error 6-14: Invalid type for field 'Kind'. Expected field type of 'ErrorKind'.
+Error({Kind:ErrorKind.ConstraintViolated})
 
 // generic functions that work with any data type
 

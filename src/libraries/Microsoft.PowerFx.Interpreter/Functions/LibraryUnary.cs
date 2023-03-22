@@ -24,7 +24,7 @@ namespace Microsoft.PowerFx.Functions
                 StandardErrorHandling<NumberValue>(
                     "-",
                     expandArguments: NoArgExpansion,
-                    replaceBlankValues: ReplaceBlankWithFloatZero,
+                    replaceBlankValues: ReplaceBlankWithZeroAllFloat,
                     checkRuntimeTypes: DateNumberTimeOrDateTime,
                     checkRuntimeValues: DeferRuntimeTypeChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
@@ -35,7 +35,7 @@ namespace Microsoft.PowerFx.Functions
                 StandardErrorHandling<DecimalValue>(
                     "-",
                     expandArguments: NoArgExpansion,
-                    replaceBlankValues: ReplaceBlankWithDecimalZero,
+                    replaceBlankValues: ReplaceBlankWithZeroAllDecimal,
                     checkRuntimeTypes: ExactValueType<DecimalValue>,
                     checkRuntimeValues: DeferRuntimeTypeChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
@@ -46,7 +46,7 @@ namespace Microsoft.PowerFx.Functions
                 StandardErrorHandling<NumberValue>(
                     "%",
                     expandArguments: NoArgExpansion,
-                    replaceBlankValues: ReplaceBlankWithFloatZero,
+                    replaceBlankValues: ReplaceBlankWithZeroAllFloat,
                     checkRuntimeTypes: ExactValueType<NumberValue>,
                     checkRuntimeValues: DeferRuntimeTypeChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
@@ -57,7 +57,7 @@ namespace Microsoft.PowerFx.Functions
                 StandardErrorHandling<DecimalValue>(
                     "%",
                     expandArguments: NoArgExpansion,
-                    replaceBlankValues: ReplaceBlankWithDecimalZero,
+                    replaceBlankValues: ReplaceBlankWithZeroAllDecimal,
                     checkRuntimeTypes: ExactValueType<DecimalValue>,
                     checkRuntimeValues: DeferRuntimeTypeChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,

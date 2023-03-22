@@ -42,6 +42,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             yield return new[] { TexlStrings.ModTFuncArg1, TexlStrings.ModTFuncArg2 };
         }
 
+#if false
         public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
         {
             return GetUniqueTexlRuntimeName(suffix: "_T");
@@ -118,5 +119,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             return fValid;
         }
+#endif
     }
 }
