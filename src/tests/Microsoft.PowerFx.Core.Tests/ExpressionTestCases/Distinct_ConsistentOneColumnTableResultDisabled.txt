@@ -1,4 +1,4 @@
-#SETUP: disable:ConsistentOneColumnTableResult
+#SETUP: disable:ConsistentOneColumnTableResult,disable:TableSyntaxDoesntWrapRecords
 
 // Blank table
 >> Distinct(If(1<0,[1,2]), true)

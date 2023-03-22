@@ -100,13 +100,13 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Fact]
-        public void InternalSetup_Parse_TableSyntaxDoesntWrapRecordsFlags()
+        public void InternalSetup_Parse_DisableTableSyntaxDoesntWrapRecordsFlags()
         {
-            var iSetup = InternalSetup.Parse($"TableSyntaxDoesntWrapRecords");
+            var iSetup = InternalSetup.Parse($"disable:TableSyntaxDoesntWrapRecords");
 
             Assert.NotNull(iSetup);
             Assert.Null(iSetup.HandlerName);
-            Assert.Equal(Features.TableSyntaxDoesntWrapRecords, iSetup.Features);
+            Assert.Equal(Features.ConsistentOneColumnTableResult, iSetup.Features);
         }
 
         [Fact]

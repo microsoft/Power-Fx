@@ -19,4 +19,4 @@ Blank()
 Table({a:1},{a:0},{a:123456.789},{a:123456.789})
 
 >> Abs(Table({a:1/0},{a:Power(-3,2)}))
-Table({Value:Error({Kind:ErrorKind.Div0})},{Value:9})
+Table({a:Error({Kind:ErrorKind.Div0})},{a:9})

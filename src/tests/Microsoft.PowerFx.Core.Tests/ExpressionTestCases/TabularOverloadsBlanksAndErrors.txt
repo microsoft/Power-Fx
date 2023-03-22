@@ -189,8 +189,6 @@ Error({Kind:ErrorKind.Numeric})
 >> Concatenate(Filter([1,2], Value<>Value), If(1/0<0, "test"))
 Table()
 
-#SETUP: ConsistentOneColumnTableResult
-
 >> Concatenate(["hello", "hi"], If(1/0<2," world"))
 Table({Value:Error({Kind:ErrorKind.Div0})},{Value:Error({Kind:ErrorKind.Div0})})
 
@@ -247,21 +245,6 @@ Table({Value:1},{Value:1},{Value:1})
 
 >> Round(If(1<0,2), [1, 2, 3])
 Table({Value:0},{Value:0},{Value:0})
-
->> Concatenate(Filter(["hello", "hi"], Len(Value)>10), " world")
-Table()
-
->> Concatenate("hello ", Filter(["world", "day"],Len(Value)>10))
-Table()
-
->> Find(Filter(["hello", "hi"], Len(Value)>10), " world")
-Table()
-
->> Find("a", Filter(["world", "day"],Len(Value)>10))
-Table()
-
->> Round(1234.5678, Filter([1, 2, 3], Value > 10))
-Table()
 
 >> Concatenate(Filter([1], Value > 10), "test")
 Table()

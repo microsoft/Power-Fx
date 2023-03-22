@@ -69,11 +69,11 @@
 4
 
 //One blank record
->> CountA([Blank()])
+>> CountA([{Value:Blank()}])
 0
 
 //All blank records
->> CountA([Blank(),Blank(),Blank(),Blank(),Blank()])
+>> CountA([{Value:Blank()},If(1<0,{Value:1}),{Value:Blank()},If(1<0,{Value:1})])
 0
 
 >> CountA(Table({a:Blank()},{a:Blank()},{a:Blank()}))
