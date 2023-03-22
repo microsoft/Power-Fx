@@ -186,5 +186,26 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var actualSuggestions = SuggestStrings(expression, config, null);
             Assert.Equal(expectedSuggestions.OrderBy(x => x), actualSuggestions.OrderBy(x => x));
         }
+
+        [Theory]
+        [InlineData("Collect(table, { Choice: |", "Column1", "Column2")]
+        [InlineData("Collect(table, { Choice: 'f|", "Column1", "Column2")]
+        public void SuggestOptionSetInMutation(string expression, params string[] expectedSuggestions)
+        {
+            var symobl = new SymbolTable();
+            symobl.EnableMutationFunctions();
+            var optionSet = new OptionSet("foo", DisplayNameUtility.MakeUnique(new Dictionary<string, string>() { { "1", "1" } }));
+            symobl.AddEntity(optionSet, new DName("foo Display"));
+
+            var rType = RecordType.Empty()
+                .Add("Choice", optionSet.FormulaType);
+            symobl.AddVariable("table", rType.ToTable());
+
+            var config = SuggestTests.Default;
+            config.SymbolTable = symobl;
+
+            var actualSuggestions = SuggestStrings(expression, config, null);
+            Assert.Equal(expectedSuggestions.OrderBy(x => x), actualSuggestions.OrderBy(x => x));
+        }
     }
 }

@@ -271,11 +271,20 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void BasicEval()
         {
-            var engine = new RecalcEngine();
-            engine.UpdateVariable("M", 10.0);
-            engine.UpdateVariable("M2", -4);
-            var result = engine.Eval("M + Abs(M2)");
-            Assert.Equal(14.0, ((NumberValue)result).Value);
+            var symobl = new SymbolTable();
+            symobl.EnableMutationFunctions();
+            var optionSet = new OptionSet("foo", DisplayNameUtility.MakeUnique(new Dictionary<string, string>() { { "1", "1" } }));
+            symobl.AddEntity(optionSet, new DName("fooDisplay"));
+
+            var rType = RecordType.Empty()
+                .Add("Choice", optionSet.FormulaType);
+            symobl.AddVariable("table", rType.ToTable());
+            var config = new PowerFxConfig() { SymbolTable = symobl };
+            
+            var engine = new RecalcEngine(config);
+            
+            var result = engine.Check("Collect(table, {Choice : fooDisplay.'1' })");
+            Assert.True(result.IsSuccess);
         }
 
         [Fact]

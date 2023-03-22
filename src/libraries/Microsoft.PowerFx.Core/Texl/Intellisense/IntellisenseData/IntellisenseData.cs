@@ -320,7 +320,8 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
                     type = nameInfo.Type;
                 }
 
-                IntellisenseHelper.AddSuggestion(this, global, SuggestionKind.Global, SuggestionIconKind.Other, type, requiresSuggestionEscaping: true);
+                var name = nameInfo.DisplayName != default ? nameInfo.DisplayName.Value : global;
+                IntellisenseHelper.AddSuggestion(this, name, SuggestionKind.Global, SuggestionIconKind.Other, type, requiresSuggestionEscaping: true);
             }
         }
 
