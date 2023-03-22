@@ -4,44 +4,70 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using Microsoft.CodeAnalysis.Options;
 using Microsoft.PowerFx;
 using Microsoft.PowerFx.Core;
+using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Types;
 
-namespace PowerFxHostSamples
+namespace Microsoft.PowerFx
 {
     public static class ConsoleRepl
     {
         private static RecalcEngine _engine;
-        private static bool _formatTable = true;
+
         private const string OptionFormatTable = "FormatTable";
+        private static bool _formatTable = true;
+
+        private const string OptionNumberIsFloat = "NumberIsFloat";
+        private static bool _numberIsFloat = false;
+
+        private const string OptionLargeCallDepth = "LargeCallDepth";
+        private static bool _largeCallDepth = false;
+
+        private static Features _features = Features.All;
 
         private static void ResetEngine()
         {
-            Features toenable = 0;
-            foreach (Features feature in (Features[])Enum.GetValues(typeof(Features)))
+            var config = new PowerFxConfig(_features)
             {
-                toenable |= feature;
+            };
+
+            if (_largeCallDepth)
+            {
+                config.MaxCallDepth = 200;
             }
 
-            var config = new PowerFxConfig(toenable);
+            Dictionary<string, string> options = new Dictionary<string, string>
+            {
+                { OptionFormatTable, OptionFormatTable },
+                { OptionNumberIsFloat, OptionNumberIsFloat },
+                { OptionLargeCallDepth, OptionLargeCallDepth }
+            };
+            foreach (Features feature in (Features[])Enum.GetValues(typeof(Features)))
+            {
+                options.Add(feature.ToString(), feature.ToString());
+            }
+
             config.SymbolTable.EnableMutationFunctions();
+
+            config.EnableSetFunction();
+            config.EnableParseJSONFunction();
 
             config.AddFunction(new HelpFunction());
             config.AddFunction(new ResetFunction());
             config.AddFunction(new ExitFunction());
             config.AddFunction(new OptionFunction());
             config.AddFunction(new ResetImportFunction());
-            config.AddFunction(new ImportFunction());
+            config.AddFunction(new ImportFunction1Arg());
+            config.AddFunction(new ImportFunction2Arg());
 
-            var optionsSet = new OptionSet("Options", DisplayNameUtility.MakeUnique(new Dictionary<string, string>()
-                                            {
-                                                    { OptionFormatTable, OptionFormatTable },
-                                            }));
+            var optionsSet = new OptionSet("Options", DisplayNameUtility.MakeUnique(options));
 
             config.AddOptionSet(optionsSet);
 
@@ -124,12 +150,12 @@ namespace PowerFxHostSamples
             return false;
         }
 
-        public static void REPL(TextReader input, bool echo)
+        public static void REPL(TextReader input, bool echo = false, TextWriter output = null)
         {
             string expr;
 
             // main loop
-            while ((expr = ReadFormula(input, echo)) != null)
+            while ((expr = ReadFormula(input, output, echo)) != null)
             {
                 Match match;
 
@@ -139,10 +165,12 @@ namespace PowerFxHostSamples
                     if (TryMatchSet(expr, out var varName, out var varValue))
                     {
                         Console.WriteLine(varName + ": " + PrintResult(varValue));
+                        output?.WriteLine(varName + ": " + PrintResult(varValue));
                     }
 
                     // formula definition: <ident> = <formula>
-                    else if ((match = Regex.Match(expr, @"^\s*(?<ident>\w+)\s*=(?<formula>.*)$", RegexOptions.Singleline)).Success)
+                    else if ((match = Regex.Match(expr, @"^\s*(?<ident>[a-zA-Z]\w+)\s*=(?<formula>.*)$", RegexOptions.Singleline)).Success &&
+                              match.Groups["ident"].Value != "true" && match.Groups["ident"].Value != "false" && match.Groups["ident"].Value != "blank")
                     {
                         _engine.SetFormula(match.Groups["ident"].Value, match.Groups["formula"].Value, OnUpdate);
                     }
@@ -151,7 +179,7 @@ namespace PowerFxHostSamples
                     //                      <ident>( <ident> : <type>, ... ) : <type> { <formula>; <formula>; ... }
                     else if (Regex.IsMatch(expr, @"^\s*\w+\((\s*\w+\s*\:\s*\w+\s*,?)*\)\s*\:\s*\w+\s*(\=|\{).*$", RegexOptions.Singleline))
                     {
-                        var res = _engine.DefineFunctions(expr);
+                        var res = _engine.DefineFunctions(expr, _numberIsFloat);
                         if (res.Errors.Count() > 0)
                         {
                             throw new Exception("Error: " + res.Errors.First());
@@ -161,12 +189,29 @@ namespace PowerFxHostSamples
                     // eval and print everything else
                     else
                     {
-                        var opts = new ParserOptions { AllowsSideEffects = true };
+                        var opts = new ParserOptions() { AllowsSideEffects = true, NumberIsFloat = _numberIsFloat };
                         var result = _engine.Eval(expr, options: opts);
+
+                        if (output != null)
+                        {
+                            // same algorithm used by BaseRunner.cs
+                            var sb = new StringBuilder();
+                            var settings = new FormulaValueSerializerSettings()
+                            {
+                                UseCompactRepresentation = true,
+                            };
+
+                            // Serializer will produce a human-friedly representation of the value
+                            result.ToExpression(sb, settings);
+
+                            output.Write(sb.ToString() + "\n\n");
+                        }
 
                         if (result is ErrorValue errorValue)
                         {
-                            throw new Exception("Error: " + errorValue.Errors[0].Message);
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine($"Error: {errorValue.Errors[0].Kind} - {errorValue.Errors[0].Message}");
+                            Console.ResetColor();
                         }
                         else
                         {
@@ -179,6 +224,7 @@ namespace PowerFxHostSamples
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine(e.Message);
                     Console.ResetColor();
+                    output?.WriteLine(Regex.Replace(e.InnerException.Message, "\r\n", "|") + "\n");
                 }
             }
         }
@@ -203,7 +249,7 @@ namespace PowerFxHostSamples
             }
         }
 
-        public static string ReadFormula(TextReader input, bool echo)
+        public static string ReadFormula(TextReader input, TextWriter output = null, bool echo = false)
         {
             string exprPartial;
             int usefulCount;
@@ -305,9 +351,20 @@ namespace PowerFxHostSamples
                 }
                 while (!Regex.IsMatch(exprOne, "^\\s*$") && (parenCount != 0 || Regex.IsMatch(exprOne, "(=|=\\>)\\s*$")));
 
-                if (echo && !Regex.IsMatch(exprPartial, "^\\s*$"))
+                if (echo)
                 {
-                    Console.Write("\n>> " + exprPartial);
+                    // skip >> for comments and setup
+                    if (Regex.IsMatch(exprPartial, "^\\s*//") || Regex.IsMatch(exprPartial, "^#SETUP"))
+                    {
+                        Console.Write(exprPartial);
+                        output?.Write(exprPartial + "\n");
+                        usefulCount = 0;
+                    }
+                    else if (!Regex.IsMatch(exprPartial, "^\\s*$"))
+                    {
+                        Console.Write("\n>> " + exprPartial);
+                        output?.Write(">> " + exprPartial);
+                    }
                 }
             }
             while (usefulCount == 0);
@@ -511,58 +568,85 @@ namespace PowerFxHostSamples
                     _formatTable = value.Value;
                     return value;
                 }
-                else
+
+                if (option.Value.ToLower(CultureInfo.InvariantCulture) == OptionNumberIsFloat.ToLower(CultureInfo.InvariantCulture))
                 {
-                    return FormulaValue.NewError(new ExpressionError()
+                    _numberIsFloat = value.Value;
+                    return value;
+                }
+
+                if (option.Value.ToLower(CultureInfo.InvariantCulture) == OptionLargeCallDepth.ToLower(CultureInfo.InvariantCulture))
+                {
+                    _largeCallDepth = value.Value;
+                    ResetEngine();
+                    return value;
+                }
+
+                foreach (Features feature in (Features[])Enum.GetValues(typeof(Features)))
+                {
+                    if (option.Value.ToLower(CultureInfo.InvariantCulture) == feature.ToString().ToLower(CultureInfo.InvariantCulture))
                     {
+                        _features = _features & ~feature | (value.Value ? feature : Features.None);
+                        ResetEngine();
+                        return value;
+                    }
+                }
+
+                return FormulaValue.NewError(new ExpressionError()
+                {
                         Kind = ErrorKind.InvalidArgument,
                         Severity = ErrorSeverity.Critical,
                         Message = $"Invalid option name: {option.Value}."
-                    });
-                }
+                });
             }
         }
 
-        private class ImportFunction : ReflectionFunction
+        private class ImportFunction1Arg : ReflectionFunction
         {
-            public ImportFunction()
-                : base("Import", FormulaType.Boolean, new[] { FormulaType.String })
+            public BooleanValue Execute(StringValue fileNameSV)
             {
+                var if2 = new ImportFunction2Arg();
+                return if2.Execute(fileNameSV, null);
             }
+        }
 
-            public FormulaValue Execute(StringValue fileNameSV)
+        private class ImportFunction2Arg : ReflectionFunction
+        {
+            public BooleanValue Execute(StringValue fileNameSV, StringValue outputSV)
             {
                 var fileName = fileNameSV.Value;
                 if (File.Exists(fileName))
                 {
                     TextReader fileReader = new StreamReader(fileName);
-                    ConsoleRepl.REPL(fileReader, true);
+                    TextWriter outputWriter = null;
+
+                    if (outputSV != null)
+                    {
+                        outputWriter = new StreamWriter(outputSV.Value);
+                    }
+
+                    ConsoleRepl.REPL(fileReader, true, outputWriter);
                     fileReader.Close();
+                    outputWriter?.Close();
                 }
                 else
                 {
-                    return FormulaValue.NewError(new ExpressionError()
-                    {
-                        Kind = ErrorKind.InvalidArgument,
-                        Severity = ErrorSeverity.Critical,
-                        Message = $"File not found: {fileName}."
-                    });
+#pragma warning disable CA1303 // Do not pass literals as localized parameters
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("File not found: " + fileName);
+                    Console.ResetColor();
+                    return BooleanValue.New(false);
                 }
 
-                return FormulaValue.New(true);
+                return BooleanValue.New(true);
             }
         }
 
         private class ResetImportFunction : ReflectionFunction
         {
-            public ResetImportFunction()
-                : base("ResetImport", FormulaType.Boolean, new[] { FormulaType.String })
+            public BooleanValue Execute(StringValue fileNameSV)
             {
-            }
-
-            public FormulaValue Execute(StringValue fileNameSV)
-            {
-                var import = new ImportFunction();
+                var import = new ImportFunction1Arg();
                 if (File.Exists(fileNameSV.Value))
                 {
                     ResetEngine();
@@ -579,9 +663,10 @@ namespace PowerFxHostSamples
                 var column = 0;
                 var funcList = string.Empty;
 #pragma warning disable CS0618 // Type or member is obsolete
-                var funcNames = _engine.Config.FunctionInfos.Select(x => x.Name).Distinct();
+                List<string> funcNames = _engine.Config.FunctionInfos.Select(x => x.Name).Distinct().ToList();
 #pragma warning restore CS0618 // Type or member is obsolete
 
+                funcNames.Sort();
                 foreach (var func in funcNames)
                 {
                     funcList += $"  {func,-14}";

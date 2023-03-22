@@ -19,6 +19,7 @@ namespace Microsoft.PowerFx.Core.Entities
         {
             { DKind.Number, AllowedValuesOnly },
             { DKind.Currency, AllowedValuesOnly },
+            { DKind.Decimal, AllowedValuesOnly },
             { DKind.String, new[] { DataFormat.AllowedValues, DataFormat.Email, DataFormat.Multiline, DataFormat.Phone } },
             { DKind.Record, new[] { DataFormat.Lookup } },
             { DKind.Table, new[] { DataFormat.Lookup } },

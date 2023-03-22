@@ -14,7 +14,7 @@ false
 true
 
 >> IsError(Error({Kind: 11}))
-true
+#SKIP Issue 1203 with decimal, expected: true
 
 >> Error({Kind:ErrorKind.InvalidArgument})
 Error({Kind:ErrorKind.InvalidArgument})

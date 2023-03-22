@@ -11,7 +11,7 @@
 15
 
 // Excel gives compile error and mention typo in the formula. Suggest to correct 1E+308 to E1+308
->> Sum(1E+308, 1E+308)
+>> Sum(Float("1E+308"), Float("1E+308"))
 Error({Kind:ErrorKind.Numeric})
 
 // Negative Integer Parameters

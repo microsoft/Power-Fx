@@ -41,6 +41,8 @@ namespace Microsoft.PowerFx.Functions
                     case JsonValueKind.True:
                     case JsonValueKind.False:
                         return FormulaType.Boolean;
+
+                    // Decimal TODO, talk to Luc
                 }
 
                 return FormulaType.Blank;
@@ -67,6 +69,11 @@ namespace Microsoft.PowerFx.Functions
         public bool GetBoolean()
         {
             return _element.GetBoolean();
+        }
+
+        public decimal GetDecimal()
+        {
+            return _element.GetDecimal();
         }
 
         public bool TryGetProperty(string value, out IUntypedObject result)

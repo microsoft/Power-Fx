@@ -187,6 +187,7 @@ namespace Microsoft.PowerFx.Core.Types.Enums
                     "%n[NoError:0, Warning:1, Moderate:2, Severe:3]"
                 },
                 {
+                    // Decimal TODO: If adding Overflow
                     EnumConstants.ErrorKindEnumString,
                     "%n[None:0, Sync:1, MissingRequired:2, CreatePermission:3, EditPermissions:4, DeletePermissions:5, Conflict:6, NotFound:7, " +
                     "ConstraintViolated:8, GeneratedValue:9, ReadOnlyValue:10, Validation: 11, Unknown: 12, Div0: 13, BadLanguageCode: 14, " +

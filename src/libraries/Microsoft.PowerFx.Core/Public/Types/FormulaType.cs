@@ -31,6 +31,8 @@ namespace Microsoft.PowerFx.Types
 
         public static FormulaType Number { get; } = new NumberType();
 
+        public static FormulaType Decimal { get; } = new DecimalType();
+
         public static FormulaType String { get; } = new StringType();
 
         public static FormulaType Time { get; } = new TimeType();
@@ -109,7 +111,7 @@ namespace Microsoft.PowerFx.Types
 
         internal static FormulaType[] GetValidUDFPrimitiveTypes()
         {
-            FormulaType[] validTypes = { Blank, Boolean, Number, String, Time, Date, DateTime, DateTimeNoTimeZone, Hyperlink, Color, Guid };
+            FormulaType[] validTypes = { Blank, Boolean, Number, Decimal, String, Time, Date, DateTime, DateTimeNoTimeZone, Hyperlink, Color, Guid };
             return validTypes;
         }
 
@@ -143,6 +145,7 @@ namespace Microsoft.PowerFx.Types
                 case DKind.Table:
                     return new TableType(type);
                 case DKind.Number: return Number;
+                case DKind.Decimal: return Decimal;
                 case DKind.String: return String;
                 case DKind.Boolean: return Boolean;
                 case DKind.Currency: return Number; // TODO: validate

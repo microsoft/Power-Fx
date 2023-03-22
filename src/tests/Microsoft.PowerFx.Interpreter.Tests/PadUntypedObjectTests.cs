@@ -35,7 +35,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             engine.UpdateVariable("padTable", uov);
 
-            FormulaValue fv1 = engine.Eval(@"Value(Index(Index(padTable, 1), 1))");
+            FormulaValue fv1 = engine.Eval(@"Float(Index(Index(padTable, 1), 1))");
             Assert.Equal(1d, fv1.ToObject());
 
             FormulaValue fv2 = engine.Eval(@"Text(Index(padTable, 2).Column1)");
@@ -125,6 +125,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 float => (double)(float)Cell,
                 _ => throw new NotImplementedException()
             };
+        }
+
+        public decimal GetDecimal()
+        {
+            throw new NotImplementedException();
         }
 
         public string[] GetPropertyNames()

@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
@@ -76,20 +77,20 @@ namespace Microsoft.PowerFx.Functions
             }
 
             var arg0 = (TableValue)args[0];
-            var arg1 = (NumberValue)args[1];
+            var arg1 = (int)((NumberValue)args[1]).Value;
 
             if (arg0 is QueryableTableValue queryableTable)
             {
                 try
                 {
-                    return queryableTable.FirstN((int)arg1.Value);
+                    return queryableTable.FirstN(arg1);
                 }
                 catch (NotDelegableException)
                 {
                 }
             }
 
-            var rows = arg0.Rows.Take((int)arg1.Value);
+            var rows = arg0.Rows.Take(arg1);
             return new InMemoryTableValue(irContext, rows);
         }
 
@@ -106,12 +107,12 @@ namespace Microsoft.PowerFx.Functions
             }
 
             var arg0 = (TableValue)args[0];
-            var arg1 = (NumberValue)args[1];
+            var arg1 = (int)((NumberValue)args[1]).Value;
 
             // $$$ How to do on a streaming service?            
             var allRows = arg0.Rows.ToArray();
             var len = allRows.Length;
-            var take = (int)arg1.Value; // $$$ rounding?
+            var take = arg1; // $$$ rounding?
 
             var rows = allRows.Skip(len - take).Take(take);
 
@@ -249,7 +250,7 @@ namespace Microsoft.PowerFx.Functions
                         return error;
                     }
 
-                    if (field is NumberValue)
+                    if (field is NumberValue || field is DecimalValue)
                     {
                         count++;
                     }
@@ -467,11 +468,12 @@ namespace Microsoft.PowerFx.Functions
                 pairs.Add(await pair);
             }
 
-            bool allNumbers = true, allStrings = true, allBooleans = true, allDatetimes = true, allDates = true, allOptionSets = true;
+            bool allNumbers = true, allDecimals = true, allStrings = true, allBooleans = true, allDatetimes = true, allDates = true, allOptionSets = true;
 
             foreach (var (row, sortValue) in pairs)
             {
                 allNumbers &= IsValueTypeErrorOrBlank<NumberValue>(sortValue);
+                allDecimals &= IsValueTypeErrorOrBlank<DecimalValue>(sortValue);
                 allStrings &= IsValueTypeErrorOrBlank<StringValue>(sortValue);
                 allBooleans &= IsValueTypeErrorOrBlank<BooleanValue>(sortValue);
                 allDatetimes &= IsValueTypeErrorOrBlank<DateTimeValue>(sortValue);
@@ -484,7 +486,7 @@ namespace Microsoft.PowerFx.Functions
                 }
             }
 
-            if (!(allNumbers || allStrings || allBooleans || allDatetimes || allDates || allOptionSets))
+            if (!(allNumbers || allDecimals || allStrings || allBooleans || allDatetimes || allDates || allOptionSets))
             {
                 return CommonErrors.RuntimeTypeMismatch(irContext);
             }
@@ -498,6 +500,10 @@ namespace Microsoft.PowerFx.Functions
             if (allNumbers)
             {
                 return SortValueType<NumberValue, double>(pairs, irContext, compareToResultModifier);
+            }
+            else if (allDecimals)
+            {
+                return SortValueType<DecimalValue, decimal>(pairs, irContext, compareToResultModifier);
             }
             else if (allStrings)
             {

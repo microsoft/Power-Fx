@@ -182,7 +182,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
                     {
                         var kind = node.Kind;
 
-                        if (kind != NodeKind.BoolLit && kind != NodeKind.StrLit && kind != NodeKind.NumLit)
+                        if (kind != NodeKind.BoolLit && kind != NodeKind.StrLit && kind != NodeKind.NumLit && kind != NodeKind.DecLit)
                         {
                             var telemetryMessage = string.Format(CultureInfo.InvariantCulture, "NodeKind {0} unsupported.", kind);
                             SuggestDelegationHintAndAddTelemetryMessage(node, binding, telemetryMessage);

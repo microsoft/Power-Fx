@@ -16,6 +16,8 @@ namespace Microsoft.PowerFx.Types
 
         void Visit(NumberType type);
 
+        void Visit(DecimalType type);
+
         void Visit(StringType type);
 
         void Visit(RecordType type);

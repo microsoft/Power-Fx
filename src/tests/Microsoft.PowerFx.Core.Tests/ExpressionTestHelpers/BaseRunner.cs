@@ -8,6 +8,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core.Tests
@@ -29,6 +30,8 @@ namespace Microsoft.PowerFx.Core.Tests
         // Test case ran and returned a result. 
         public FormulaValue Value;
 
+        public FormulaValue OriginalValue;
+
         // Test may have run and failed (so Value is set) due to
         // known unsupported behavior in an engine. Let engine mark that this is a known case.
         //
@@ -43,9 +46,10 @@ namespace Microsoft.PowerFx.Core.Tests
         {
         }
 
-        public RunResult(FormulaValue value)
+        public RunResult(FormulaValue value, FormulaValue originalValue = null)
         {
             Value = value;
+            OriginalValue = originalValue;
         }
 
         public RunResult(CheckResult result)
@@ -87,19 +91,19 @@ namespace Microsoft.PowerFx.Core.Tests
         /// <param name="expr">PowerFx expression.</param>
         /// <param name="setupHandlerName">Optional name of a setup handler to run. Throws SetupHandlerNotImplemented if not found.</param>
         /// <returns>Result of evaluating Expr.</returns>
-        protected abstract Task<RunResult> RunAsyncInternal(string expr, string setupHandlerName = null);
+        protected abstract Task<RunResult> RunAsyncInternal(string expr, string setupHandlerName = null, bool numberIsFloat = false);
 
         /// <summary>
         /// Returns (Pass,Fail,Skip) and a status message.
         /// </summary>
         /// <param name="test">test case to run.</param>
         /// <returns>status from running.</returns>
-        public (TestResult result, string message) RunTestCase(TestCase testCase)
+        public (TestResult result, string message) RunTestCase(TestCase testCase, bool numberIsFloat = false)
         {
             var t = Task.Factory.StartNew(
                 () =>
                 {
-                    var t = RunAsync2(testCase);
+                    var t = RunAsync2(testCase, numberIsFloat);
                     t.ConfigureAwait(false);
 
                     return t.Result;
@@ -139,7 +143,7 @@ namespace Microsoft.PowerFx.Core.Tests
         // also check that:
         //   >> IsError(x)
         //   true
-        private async Task<(TestResult, string)> RunErrorCaseAsync(TestCase testCase)
+        private async Task<(TestResult, string)> RunErrorCaseAsync(TestCase testCase, bool numberIsFloat)
         {
             var case2 = new TestCase
             {
@@ -150,7 +154,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 Expected = "true"
             };
 
-            var (result, msg) = await RunAsync2(case2);
+            var (result, msg) = await RunAsync2(case2, numberIsFloat);
             if (result == TestResult.Fail)
             {
                 msg += " (IsError() followup call)";
@@ -159,13 +163,15 @@ namespace Microsoft.PowerFx.Core.Tests
             return (result, msg);
         }
 
-        private async Task<(TestResult, string)> RunAsync2(TestCase testCase)
+        private async Task<(TestResult, string)> RunAsync2(TestCase testCase, bool numberIsFloat)
         {
             RunResult runResult = null;
             FormulaValue result = null;
+            FormulaValue originalResult = null;
 
             var expected = testCase.Expected;
-            var expectedSkip = string.Equals(expected, "#skip", StringComparison.OrdinalIgnoreCase);
+
+            var expectedSkip = Regex.Match(expected, "^\\s*\\#skip", RegexOptions.IgnoreCase).Success;
             if (expectedSkip)
             {
                 // Skipped test should fail when run. 
@@ -174,8 +180,9 @@ namespace Microsoft.PowerFx.Core.Tests
 
             try
             {
-                runResult = await RunAsyncInternal(testCase.Input, testCase.SetupHandlerName);
+                runResult = await RunAsyncInternal(testCase.Input, testCase.SetupHandlerName, numberIsFloat);
                 result = runResult.Value;
+                originalResult = runResult.OriginalValue;
 
                 // Unsupported is just for ignoring large groups of inherited tests. 
                 // If it's an override, then the override should specify the exact error.
@@ -195,6 +202,11 @@ namespace Microsoft.PowerFx.Core.Tests
                     {
                         var msg = $"Errors: " + string.Join("\r\n", runResult.Errors.Select(err => err.ToString()).ToArray());
                         var actualStr = msg.Replace("\r\n", "|").Replace("\n", "|");
+
+                        if (numberIsFloat)
+                        {
+                            expected = Regex.Replace(expected, "(\\s|')Decimal(\\s|')", "$1Number$2");
+                        }
 
                         if (actualStr.Contains(expected))
                         {
@@ -220,7 +232,7 @@ namespace Microsoft.PowerFx.Core.Tests
             if (result is not ErrorValue && expected.StartsWith("Error") && IsError(result) && testCase.Input != null)
             {
                 // If they override IsError, then do additional checks. 
-                return await RunErrorCaseAsync(testCase);
+                return await RunErrorCaseAsync(testCase, numberIsFloat);
             }
 
             // If the actual result is not an error, we'll fail with a mismatch below
@@ -257,6 +269,14 @@ namespace Microsoft.PowerFx.Core.Tests
                 if (result is NumberValue numericResult && double.TryParse(expected, out var expectedNumeric))
                 {
                     if (NumberCompare(numericResult.Value, expectedNumeric))
+                    {
+                        return (TestResult.Pass, null);
+                    }
+                }
+
+                if (result is DecimalValue decimalResult && originalResult is NumberValue && double.TryParse(expected, out var expectedNumeric2))
+                {
+                    if (NumberCompare((double)decimalResult.Value, expectedNumeric2))
                     {
                         return (TestResult.Pass, null);
                     }

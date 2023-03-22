@@ -120,7 +120,30 @@ namespace Microsoft.PowerFx
         /// <returns>True/False based on whether function can convert from original type to Number type.</returns> 
         internal static bool TryCoerceTo(this FormulaValue value, FormattingInfo formatInfo, out NumberValue result)
         {
-            return TryValue(formatInfo, IRContext.NotInSource(FormulaType.Number), value, out result);
+            return TryFloat(formatInfo, IRContext.NotInSource(FormulaType.Number), value, out result);
+        }
+
+        /// <summary>
+        /// Try to convert value to Number format.
+        /// </summary>
+        /// <param name="value">Input value.</param>
+        /// <param name="result">Result value.</param>
+        /// <returns>True/False based on whether function can convert from original type to Number type.</returns> 
+        public static bool TryCoerceTo(this FormulaValue value, out DecimalValue result)
+        {
+            return TryCoerceTo(value, CreateFormattingInfo(), out result);
+        }
+
+        /// <summary>
+        /// Try to convert value to Number format.
+        /// </summary>
+        /// <param name="value">Input value.</param>
+        /// <param name="formatInfo">Formatting Info.</param>
+        /// <param name="result">Result value.</param>
+        /// <returns>True/False based on whether function can convert from original type to Number type.</returns> 
+        internal static bool TryCoerceTo(this FormulaValue value, FormattingInfo formatInfo, out DecimalValue result)
+        {
+            return TryDecimal(formatInfo, IRContext.NotInSource(FormulaType.Decimal), value, out result);
         }
 
         /// <summary>

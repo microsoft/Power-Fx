@@ -21,6 +21,11 @@ namespace Microsoft.PowerFx
         public bool AllowsSideEffects { get; set; }
 
         /// <summary>
+        /// If true, numbers are treated as float.  By default, numbers are treated as decimal.
+        /// </summary>
+        public bool NumberIsFloat { get; set; }
+
+        /// <summary>
         /// The culture that an expression will parse with. 
         /// This primarily determines numeric decimal separator character
         /// as well as chaining operator. 
@@ -48,7 +53,8 @@ namespace Microsoft.PowerFx
                 return result2;
             }
 
-            var flags = AllowsSideEffects ? TexlParser.Flags.EnableExpressionChaining : TexlParser.Flags.None;
+            var flags = (AllowsSideEffects ? TexlParser.Flags.EnableExpressionChaining : 0) |
+                        (NumberIsFloat ? TexlParser.Flags.NumberIsFloat : 0);
 
             var result = TexlParser.ParseScript(script, features, Culture, flags);
             result.Options = this;

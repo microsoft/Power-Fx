@@ -277,7 +277,7 @@ namespace Microsoft.PowerFx.Tests
 
             var engine = new Engine(config);
             var check = engine.Check(expr, RecordType.Empty(), withAllowSideEffects ? new ParserOptions() { AllowsSideEffects = true } : null);
-
+            
             if (expectedBehaviorError)
             {
                 Assert.Contains(check.Errors, d => d.Message == Extensions.GetErrBehaviorPropertyExpectedMessage());

@@ -34,6 +34,11 @@ namespace Microsoft.PowerFx.Syntax
         }
 
         /// <inheritdoc />
+        public override void Visit(DecLitNode node)
+        {
+        }
+
+        /// <inheritdoc />
         public override void Visit(FirstNameNode node)
         {
         }

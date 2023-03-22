@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 
@@ -43,25 +44,25 @@ namespace Microsoft.PowerFx.Core.Tests
 
         public string TestRoot { get; set; } = GetDefaultTestDir();
 
-        public void AddDir(string directory = "")
+        public void AddDir(bool numberIsFloat = false, string directory = "")
         {
             directory = Path.GetFullPath(directory, TestRoot);
             var allFiles = Directory.EnumerateFiles(directory);
 
-            AddFile(allFiles);
+            AddFile(numberIsFloat, allFiles);
         }
 
-        public void AddFile(params string[] files)
+        public void AddFile(bool numberIsFloat, params string[] files)
         {
             var x = (IEnumerable<string>)files;
-            AddFile(x);
+            AddFile(numberIsFloat, x);
         }
 
-        public void AddFile(IEnumerable<string> files)
+        public void AddFile(bool numberIsFloat, IEnumerable<string> files)
         {
             foreach (var file in files)
             {
-                AddFile(file);
+                AddFile(numberIsFloat, file);
             }
         }
 
@@ -83,7 +84,7 @@ namespace Microsoft.PowerFx.Core.Tests
             return false;
         }
 
-        public void AddFile(string thisFile)
+        public void AddFile(bool numberIsFloat, string thisFile)
         {
             thisFile = Path.GetFullPath(thisFile, TestRoot);
 
@@ -125,8 +126,15 @@ namespace Microsoft.PowerFx.Core.Tests
                         // Can apply to multiple files. 
                         var countRemoved = Tests.RemoveAll(test => string.Equals(Path.GetFileName(test.SourceFile), fileDisable, StringComparison.OrdinalIgnoreCase));
                     }
-                    else if (TryParseDirective(line, "#SETUP:", ref fileSetup) ||
-                             TryParseDirective(line, "#OVERRIDE:", ref fileOveride))
+                    else if (TryParseDirective(line, "#SETUP:", ref fileSetup))
+                    {
+                        if ((Regex.IsMatch(line, "[:,]!NumberIsFloat") && numberIsFloat) ||
+                            (Regex.IsMatch(line, "[:,]NumberIsFloat") && !numberIsFloat))
+                        {
+                            return;
+                        }
+                    }
+                    else if (TryParseDirective(line, "#OVERRIDE:", ref fileOveride))
                     {
                         // flag is set, no additional work needed.
                     }

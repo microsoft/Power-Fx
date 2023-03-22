@@ -36,6 +36,12 @@ namespace Microsoft.PowerFx.Syntax
         NumLit,
 
         /// <summary>
+        /// Decimal literal.
+        /// <code>12.34</code>
+        /// </summary>
+        DecLit,
+
+        /// <summary>
         /// String literal.
         /// <code>"Hello world"</code>
         /// </summary>

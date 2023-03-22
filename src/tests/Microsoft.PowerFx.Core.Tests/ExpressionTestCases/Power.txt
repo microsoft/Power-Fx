@@ -234,6 +234,4 @@ Error(Table({Kind:ErrorKind.InvalidArgument},{Kind:ErrorKind.InvalidArgument}))
 >> Power(Mod(1976,11),3)
 343
 
->> Power(Exp(42.5),2)
-8223012714622878000000000000000000000
 

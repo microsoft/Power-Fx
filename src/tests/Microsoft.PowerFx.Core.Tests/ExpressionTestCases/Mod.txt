@@ -12,7 +12,7 @@ Error({Kind:ErrorKind.Div0})
 >> Mod(0,1)
 0
 
->> Mod(1E+300,1E-20)
+>> Mod(Float("1E+300"),Float("1E-20"))
 Error({Kind:ErrorKind.Numeric})
 
 // Invalid operation: Division by zero
@@ -238,3 +238,69 @@ Table({Result:0},{Result:1})
 
 >> Mod(3, [-1, 0, 1, 2, 3, Blank()])
 Table({Result:0},{Result:Error({Kind:ErrorKind.Div0})},{Result:0},{Result:1},{Result:0},{Result:Error({Kind:ErrorKind.Div0})})
+
+>> Mod([If(1<0,1),3], [-1, 0, 1, 2, 3, Blank()])
+Table({Result:0},{Result:Error({Kind:ErrorKind.Div0})},{Result:Error({Kind:ErrorKind.NotApplicable})},{Result:Error({Kind:ErrorKind.NotApplicable})},{Result:Error({Kind:ErrorKind.NotApplicable})},{Result:Error({Kind:ErrorKind.NotApplicable})})
+
+>> Mod(If(1<0,1), [-1, 0, 1, 2, 3, Blank()])
+Table({Result:0},{Result:Error({Kind:ErrorKind.Div0})},{Result:0},{Result:0},{Result:0},{Result:Error({Kind:ErrorKind.Div0})})
+
+>> Mod([45,50,81],[11,12,13])
+Table({Result:1},{Result:2},{Result:3})
+
+>> Mod([45,50,81],[11,12])
+Table({Result:1},{Result:2},{Result:Error({Kind:ErrorKind.NotApplicable})})
+
+>> Mod([45,50],[11,12,13])
+Table({Result:1},{Result:2},{Result:Error({Kind:ErrorKind.NotApplicable})})
+
+>> Mod([45,50,81],["11",12,13])
+Table({Result:1},{Result:2},{Result:3})
+
+>> Mod([45,"50",81],["11",12,13])
+Table({Result:1},{Result:2},{Result:3})
+
+>> Mod([45,50,81],[11,0,13])
+Table({Result:1},{Result:Error({Kind:ErrorKind.Div0})},{Result:3})
+
+>> Mod([45,50,81],[11,Blank(),13])
+Table({Result:1},{Result:Error({Kind:ErrorKind.Div0})},{Result:3})
+
+>> Mod([45,0,81],[11,12,13])
+Table({Result:1},{Result:0},{Result:3})
+
+>> Mod([45,0,81],[11,"12",13])
+Table({Result:1},{Result:0},{Result:3})
+
+>> Mod([45,Blank(),81],[11,12,13])
+Table({Result:1},{Result:0},{Result:3})
+
+>> Mod([45,Blank(),"81"],["11",12,"13"])
+Table({Result:1},{Result:0},{Result:3})
+
+>> Mod([61,566,71943],12)
+Table({Result:1},{Result:2},{Result:3})
+
+>> Mod(["61",566,"71943"],12)
+Table({Result:1},{Result:2},{Result:3})
+
+>> Mod(["61",Blank(),"71943"],12)
+Table({Result:1},{Result:0},{Result:3})
+
+>> Mod([61,Blank(),71943],12)
+Table({Result:1},{Result:0},{Result:3})
+
+>> Mod([61,0,71943],12)
+Table({Result:1},{Result:0},{Result:3})
+
+>> Mod(true,[2,3,4])
+Table({Result:1},{Result:1},{Result:1})
+
+>> Mod(false,[2,3,4])
+Table({Result:0},{Result:0},{Result:0})
+
+>> Mod([2,3,4],true)
+Table({Result:0},{Result:0},{Result:0})
+
+>> Mod([2,3,4],false)
+Table({Result:Error({Kind:ErrorKind.Div0})},{Result:Error({Kind:ErrorKind.Div0})},{Result:Error({Kind:ErrorKind.Div0})})

@@ -731,7 +731,7 @@ namespace Microsoft.PowerFx.Tests
             engine.UpdateVariable("x", x);
 
             // Test multiple overloads
-            engine.Eval("SetProperty(x.NumProp, 123)", options: _opts);
+            engine.Eval("SetProperty(x.NumProp, Float(123))", options: _opts);
             Assert.Equal(123.0, obj.NumProp);
 
             engine.Eval("SetProperty(x.BoolProp, true)", options: _opts);
@@ -741,10 +741,10 @@ namespace Microsoft.PowerFx.Tests
             var check = engine.Check("SetProperty(x.BoolProp, true)"); // Binding Fail, behavior prop 
             Assert.False(check.IsSuccess);
 
-            check = engine.Check("SetProperty(x.BoolProp, 123)"); // arg mismatch
+            check = engine.Check("SetProperty(x.BoolProp, Float(123))"); // arg mismatch
             Assert.False(check.IsSuccess);
 
-            check = engine.Check("SetProperty(x.numMissing, 123)", options: _opts); // Binding Fail
+            check = engine.Check("SetProperty(x.numMissing, Float(123))", options: _opts); // Binding Fail
             Assert.False(check.IsSuccess);
         }
 

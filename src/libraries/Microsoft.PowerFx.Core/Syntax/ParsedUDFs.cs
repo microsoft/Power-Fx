@@ -26,18 +26,21 @@ namespace Microsoft.PowerFx.Core.Syntax
         /// </summary>
         public readonly CultureInfo Loc;
 
-        public ParsedUDFs(string script, CultureInfo loc = null)
+        public readonly bool NumberIsFloat;
+
+        public ParsedUDFs(string script, CultureInfo loc = null, bool numberIsFloat = false)
         {
             Contracts.AssertValue(script);
             Contracts.AssertValueOrNull(loc);
 
             Script = script;
             Loc = loc;
+            NumberIsFloat = numberIsFloat;
         }
 
         public ParseUDFsResult GetParsed()
         {
-            return TexlParser.ParseUDFsScript(Script, Loc);
+            return TexlParser.ParseUDFsScript(Script, Loc, NumberIsFloat);
         }
     }
 }

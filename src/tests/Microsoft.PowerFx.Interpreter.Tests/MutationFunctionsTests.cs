@@ -81,13 +81,13 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var engine = new Engine(new PowerFxConfig());
 
             var rType = RecordType.Empty()
-                        .Add(new NamedFormulaType("F1", FormulaType.Number, "Display1"))
+                        .Add(new NamedFormulaType("F1", FormulaType.Decimal, "Display1"))
                         .Add(new NamedFormulaType("F0", FormulaType.String, "Display0"))
                         .Add(new NamedFormulaType("F2", FormulaType.Boolean, "Display2"));
 
             var r = FormulaValue.NewRecordFromFields(rType, new List<NamedValue>()
             {
-                new NamedValue("F1", FormulaValue.New(1)),
+                new NamedValue("F1", FormulaValue.New(1m)),
                 new NamedValue("F0", FormulaValue.New("string1")),
                 new NamedValue("F2", FormulaValue.New(true))
             });

@@ -9,6 +9,8 @@ namespace Microsoft.PowerFx.Types
 
         void Visit(NumberValue value);
 
+        void Visit(DecimalValue value);
+
         void Visit(BooleanValue value);
 
         void Visit(StringValue value);

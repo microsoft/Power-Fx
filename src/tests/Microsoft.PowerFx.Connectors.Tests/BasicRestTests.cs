@@ -83,7 +83,10 @@ namespace Microsoft.PowerFx.Tests
         // Allow side-effects for executing behavior functions (any POST)
         private static readonly ParserOptions _optionsPost = new ()
         {
-            AllowsSideEffects = true
+            AllowsSideEffects = true,
+            
+            // Decimal TODO: why is this needed?  What about decimal doesn't work here?
+            NumberIsFloat = true
         };
 
         // Invoking a connector with a null client throws a InvalidOperationException exception.

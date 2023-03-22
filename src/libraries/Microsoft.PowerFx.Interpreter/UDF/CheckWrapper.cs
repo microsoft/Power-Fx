@@ -19,7 +19,7 @@ namespace Microsoft.PowerFx.Interpreter.UDF
         private readonly RecalcEngine _engine;
         public readonly ParserOptions ParserOptions;
 
-        public CheckWrapper(RecalcEngine engine, ParseResult parseResult, RecordType parameterType = null, bool isImperative = false)
+        public CheckWrapper(RecalcEngine engine, ParseResult parseResult, RecordType parameterType = null, bool isImperative = false, bool numberIsFloat = false)
         {
             _engine = engine;
             _parseResult = parseResult;
@@ -29,6 +29,7 @@ namespace Microsoft.PowerFx.Interpreter.UDF
             {
                 Culture = _engine.Config.CultureInfo,
                 AllowsSideEffects = isImperative,
+                NumberIsFloat = numberIsFloat,
             };
 
             _parseResult.Options = ParserOptions;

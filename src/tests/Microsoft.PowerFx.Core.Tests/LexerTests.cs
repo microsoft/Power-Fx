@@ -7,6 +7,7 @@ using System.Linq;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Syntax;
+using Newtonsoft.Json.Linq;
 using Xunit;
 
 namespace Microsoft.PowerFx.Core.Tests
@@ -15,7 +16,12 @@ namespace Microsoft.PowerFx.Core.Tests
     {
         private void AssertTokens(string value, params TokKind[] tokKinds)
         {
-            var tokens = TexlLexer.InvariantLexer.LexSource(value);
+            AssertTokens(TexlLexer.Flags.None, value, tokKinds);
+        }
+
+        private void AssertTokens(TexlLexer.Flags flags, string value, params TokKind[] tokKinds)
+        {
+            var tokens = TexlLexer.InvariantLexer.LexSource(value, flags);
             Assert.NotNull(tokens);
             Assert.Equal(tokKinds.Length, tokens.Count);
             Assert.True(tokens.Zip(tokKinds, (t, k) => t.Kind == k).All(b => b));
@@ -184,30 +190,51 @@ namespace Microsoft.PowerFx.Core.Tests
         [Fact]
         public void TestLexNumbersWithLanguageSettings()
         {
-            var tokens = TexlLexer.GetLocalizedInstance(GetFrenchSettings()).LexSource("123456,78");
-            Assert.NotNull(tokens);
-            Assert.Equal(2, tokens.Count);
-            Assert.Equal(TokKind.NumLit, tokens[0].Kind);
-            Assert.Equal(123456.78, tokens[0].As<NumLitToken>().Value);
+            var tokensN = TexlLexer.GetLocalizedInstance(GetFrenchSettings()).LexSource("123456,78", TexlLexer.Flags.NumberIsFloat);
+            Assert.NotNull(tokensN);
+            Assert.Equal(2, tokensN.Count);
+            Assert.True(tokensN[0].Kind == TokKind.NumLit);
+            Assert.Equal(123456.78, tokensN[0].As<NumLitToken>().Value);
+
+            var tokensW = TexlLexer.GetLocalizedInstance(GetFrenchSettings()).LexSource("123456,78");
+            Assert.NotNull(tokensW);
+            Assert.Equal(2, tokensW.Count);
+            Assert.True(tokensW[0].Kind == TokKind.DecLit);
+            Assert.Equal(123456.78m, tokensW[0].As<DecLitToken>().Value);
         }
 
         [Fact]
         public void TestLexListsWithLanguageSettings()
         {
-            var tokens = TexlLexer.GetLocalizedInstance(GetFrenchSettings()).LexSource("[1,2;2,3;4]");
-            Assert.NotNull(tokens);
-            Assert.Equal(8, tokens.Count);
-            Assert.Equal(TokKind.BracketOpen, tokens[0].Kind);
-            Assert.Equal(TokKind.NumLit, tokens[1].Kind);
-            Assert.Equal(1.2, tokens[1].As<NumLitToken>().Value);
-            Assert.Equal(TokKind.Comma, tokens[2].Kind);
-            Assert.Equal(TokKind.NumLit, tokens[3].Kind);
-            Assert.Equal(2.3, tokens[3].As<NumLitToken>().Value);
-            Assert.Equal(TokKind.Comma, tokens[4].Kind);
-            Assert.Equal(TokKind.NumLit, tokens[5].Kind);
-            Assert.Equal(4, tokens[5].As<NumLitToken>().Value);
-            Assert.Equal(TokKind.BracketClose, tokens[6].Kind);
-            Assert.Equal(TokKind.Eof, tokens[7].Kind);
+            var tokensN = TexlLexer.GetLocalizedInstance(GetFrenchSettings()).LexSource("[1,2;2,3;4]", TexlLexer.Flags.NumberIsFloat);
+            Assert.NotNull(tokensN);
+            Assert.Equal(8, tokensN.Count);
+            Assert.Equal(TokKind.BracketOpen, tokensN[0].Kind);
+            Assert.Equal(TokKind.NumLit, tokensN[1].Kind);
+            Assert.Equal(1.2, tokensN[1].As<NumLitToken>().Value);
+            Assert.Equal(TokKind.Comma, tokensN[2].Kind);
+            Assert.Equal(TokKind.NumLit, tokensN[3].Kind);
+            Assert.Equal(2.3, tokensN[3].As<NumLitToken>().Value);
+            Assert.Equal(TokKind.Comma, tokensN[4].Kind);
+            Assert.Equal(TokKind.NumLit, tokensN[5].Kind);
+            Assert.Equal(4, tokensN[5].As<NumLitToken>().Value);
+            Assert.Equal(TokKind.BracketClose, tokensN[6].Kind);
+            Assert.Equal(TokKind.Eof, tokensN[7].Kind);
+
+            var tokensW = TexlLexer.GetLocalizedInstance(GetFrenchSettings()).LexSource("[1,2;2,3;4]");
+            Assert.NotNull(tokensW);
+            Assert.Equal(8, tokensW.Count);
+            Assert.Equal(TokKind.BracketOpen, tokensW[0].Kind);
+            Assert.Equal(TokKind.DecLit, tokensW[1].Kind);
+            Assert.Equal(1.2m, tokensW[1].As<DecLitToken>().Value);
+            Assert.Equal(TokKind.Comma, tokensW[2].Kind);
+            Assert.Equal(TokKind.DecLit, tokensW[3].Kind);
+            Assert.Equal(2.3m, tokensW[3].As<DecLitToken>().Value);
+            Assert.Equal(TokKind.Comma, tokensW[4].Kind);
+            Assert.Equal(TokKind.DecLit, tokensW[5].Kind);
+            Assert.Equal(4, tokensW[5].As<DecLitToken>().Value);
+            Assert.Equal(TokKind.BracketClose, tokensW[6].Kind);
+            Assert.Equal(TokKind.Eof, tokensW[7].Kind);
         }
 
         [Fact]
@@ -371,11 +398,17 @@ namespace Microsoft.PowerFx.Core.Tests
             var lexer = TexlLexer.GetLocalizedInstance(null);
             Assert.Equal(lexer.LocalizedPunctuatorDecimalSeparator, TexlLexer.PunctuatorDecimalSeparatorInvariant);
 
-            var tokens = lexer.LexSource("123456.78");
+            var tokens = lexer.LexSource("123456.78", TexlLexer.Flags.NumberIsFloat);
             Assert.NotNull(tokens);
             Assert.Equal(2, tokens.Count);
             Assert.Equal(TokKind.NumLit, tokens[0].Kind);
             Assert.Equal(123456.78, tokens[0].As<NumLitToken>().Value);
+
+            tokens = lexer.LexSource("123456.78");
+            Assert.NotNull(tokens);
+            Assert.Equal(2, tokens.Count);
+            Assert.Equal(TokKind.DecLit, tokens[0].Kind);
+            Assert.Equal(123456.78m, tokens[0].As<DecLitToken>().Value);
 
             CultureInfo.CurrentCulture = oldCulture;
         }
@@ -423,6 +456,7 @@ namespace Microsoft.PowerFx.Core.Tests
         public void TestStringInterpolationWithTable()
         {
             AssertTokens(
+                TexlLexer.Flags.NumberIsFloat,
                 "$\"Hello {Table({a: 5})} World!\"",
                 TokKind.StrInterpStart,
                 TokKind.StrLit,
@@ -434,6 +468,25 @@ namespace Microsoft.PowerFx.Core.Tests
                 TokKind.Colon,
                 TokKind.Whitespace,
                 TokKind.NumLit,
+                TokKind.CurlyClose,
+                TokKind.ParenClose,
+                TokKind.IslandEnd,
+                TokKind.StrLit,
+                TokKind.StrInterpEnd,
+                TokKind.Eof);
+
+            AssertTokens(
+                "$\"Hello {Table({a: 5})} World!\"",
+                TokKind.StrInterpStart,
+                TokKind.StrLit,
+                TokKind.IslandStart,
+                TokKind.Ident,
+                TokKind.ParenOpen,
+                TokKind.CurlyOpen,
+                TokKind.Ident,
+                TokKind.Colon,
+                TokKind.Whitespace,
+                TokKind.DecLit,
                 TokKind.CurlyClose,
                 TokKind.ParenClose,
                 TokKind.IslandEnd,

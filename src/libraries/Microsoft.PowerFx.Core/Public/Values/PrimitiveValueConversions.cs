@@ -22,13 +22,13 @@ namespace Microsoft.PowerFx.Types
             // Fx needs more number types:
             { typeof(double), FormulaType.Number },
             { typeof(int), FormulaType.Number },
-            { typeof(decimal), FormulaType.Number },
-            { typeof(long), FormulaType.Number },
+            { typeof(decimal), FormulaType.Decimal },
+            { typeof(long), FormulaType.Decimal },
             { typeof(float), FormulaType.Number },
             { typeof(double?), FormulaType.Number },
             { typeof(int?), FormulaType.Number },
-            { typeof(decimal?), FormulaType.Number },
-            { typeof(long?), FormulaType.Number },
+            { typeof(decimal?), FormulaType.Decimal },   
+            { typeof(long?), FormulaType.Decimal },
             { typeof(float?), FormulaType.Number },
                         
             // Non-numeric types:
@@ -117,17 +117,20 @@ namespace Microsoft.PowerFx.Types
                 {
                     result = FormulaValue.New(d);
                 }
-                else if (value is decimal dec)
+                else if (value is float f)
+                {
+                    result = FormulaValue.New(f);
+                }
+            }
+            else if (type == FormulaType.Decimal)
+            {
+                if (value is decimal dec)
                 {
                     result = FormulaValue.New(dec);
                 }
                 else if (value is long l)
                 {
                     result = FormulaValue.New(l);
-                }
-                else if (value is float f)
-                {
-                    result = FormulaValue.New(f);
                 }
             }
             else if (type == FormulaType.String)

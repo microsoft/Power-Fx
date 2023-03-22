@@ -214,14 +214,40 @@ namespace Microsoft.PowerFx.Connectors
                             throw new NotImplementedException("Unsupported type of string");
                     }
 
-                // OpenAPI spec: Format could be float, double
-                case "number": return (FormulaType.Number, null);
+                // OpenAPI spec: Format could be float, double, or not specified.
+                // we assume not specified implies decimal
+                // https://swagger.io/docs/specification/data-models/data-types/
+                case "number": 
+                    switch (schema.Format)
+                    {
+                        case "float":
+                        case "double":
+                            return (FormulaType.Number, null);
+
+                        case null:
+                            return (FormulaType.Decimal, null);
+
+                        default:
+                            throw new NotImplementedException("Unsupported type of number");
+                    }
 
                 // Always a boolean (Format not used)                
                 case "boolean": return (FormulaType.Boolean, null);
 
                 // OpenAPI spec: Format could be <null>, int32, int64
-                case "integer": return (FormulaType.Number, null);
+                case "integer":
+                    switch (schema.Format)
+                    {
+                        case null:
+                        case "int32":
+                            return (FormulaType.Number, null);
+
+                        case "int64":
+                            return (FormulaType.Decimal, null);
+
+                        default:
+                            throw new NotImplementedException("Unsupported type of integer");
+                    }
 
                 case "array":
                     var innerA = GetUniqueIdentifier(schema.Items);

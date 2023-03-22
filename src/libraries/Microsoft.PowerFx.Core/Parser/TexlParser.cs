@@ -24,7 +24,10 @@ namespace Microsoft.PowerFx.Core.Parser
             EnableExpressionChaining = 1 << 0,
 
             // When specified, this is a named formula to be parsed. Mutually exclusive to EnableExpressionChaining.
-            NamedFormulas = 1 << 1
+            NamedFormulas = 1 << 1,
+
+            // When specified, literal numbers are treated as floats.  By default, literal numbers are decimals.
+            NumberIsFloat = 1 << 2,
         }
 
         private bool _hasSemicolon = false;
@@ -61,13 +64,13 @@ namespace Microsoft.PowerFx.Core.Parser
             _features = features;
         }
 
-        public static ParseUDFsResult ParseUDFsScript(string script, CultureInfo loc = null)
+        public static ParseUDFsResult ParseUDFsScript(string script, CultureInfo loc = null, bool numberIsFloat = false)
         {
             Contracts.AssertValue(script);
             Contracts.AssertValueOrNull(loc);
 
-            var formulaTokens = TokenizeScript(script, loc, Flags.NamedFormulas);
-            var parser = new TexlParser(formulaTokens, Flags.NamedFormulas);
+            var formulaTokens = TokenizeScript(script, loc, Flags.NamedFormulas | (numberIsFloat ? Flags.NumberIsFloat : 0));
+            var parser = new TexlParser(formulaTokens, Flags.NamedFormulas | (numberIsFloat ? Flags.NumberIsFloat : 0));
 
             return parser.ParseUDFs(script);
         }
@@ -192,7 +195,7 @@ namespace Microsoft.PowerFx.Core.Parser
                     return false;
                 }
 
-                udfs.Add(new UDF(ident.As<IdentToken>(), returnType.As<IdentToken>(), new HashSet<UDFArg>(args), exp_result, _hasSemicolon));
+                udfs.Add(new UDF(ident.As<IdentToken>(), returnType.As<IdentToken>(), new HashSet<UDFArg>(args), exp_result, _hasSemicolon, (_flagsMode.Peek() & Flags.NumberIsFloat) != 0));
 
                 return true;
             }
@@ -202,7 +205,7 @@ namespace Microsoft.PowerFx.Core.Parser
                 ParseTrivia();
                 var result = ParseExpr(Precedence.None);
                 ParseTrivia();
-                udfs.Add(new UDF(ident.As<IdentToken>(), returnType.As<IdentToken>(), new HashSet<UDFArg>(args), result, false));
+                udfs.Add(new UDF(ident.As<IdentToken>(), returnType.As<IdentToken>(), new HashSet<UDFArg>(args), result, false, (_flagsMode.Peek() & Flags.NumberIsFloat) != 0));
                 return true;
             }
             else
@@ -301,12 +304,12 @@ namespace Microsoft.PowerFx.Core.Parser
             return new ParseFormulasResult(namedFormulas, _errors);
         }
 
-        private static IReadOnlyList<Token> TokenizeScript(string script, CultureInfo loc, Flags flags = Flags.None)
+        private static IReadOnlyList<Token> TokenizeScript(string script, CultureInfo loc, Flags flags)
         {
             Contracts.AssertValue(script);
             Contracts.AssertValueOrNull(loc);
 
-            var lexerFlags = TexlLexer.Flags.None;
+            var lexerFlags = flags.HasFlag(Flags.NumberIsFloat) ? TexlLexer.Flags.NumberIsFloat : TexlLexer.Flags.None;
             loc ??= CultureInfo.CurrentCulture;
 
             return TexlLexer.GetLocalizedInstance(loc).LexSource(script, lexerFlags);
@@ -639,6 +642,7 @@ namespace Microsoft.PowerFx.Core.Parser
 
                         case TokKind.Ident:
                         case TokKind.NumLit:
+                        case TokKind.DecLit:
                         case TokKind.StrLit:
                         case TokKind.True:
                         case TokKind.False:
@@ -829,6 +833,8 @@ namespace Microsoft.PowerFx.Core.Parser
                 // Literals
                 case TokKind.NumLit:
                     return new NumLitNode(ref _idNext, _curs.TokMove().As<NumLitToken>());
+                case TokKind.DecLit:
+                    return new DecLitNode(ref _idNext, _curs.TokMove().As<DecLitToken>());
                 case TokKind.True:
                 case TokKind.False:
                     return new BoolLitNode(ref _idNext, _curs.TokMove());

@@ -26,6 +26,7 @@ namespace Microsoft.PowerFx.Core.Types
         public static readonly DType Unknown = new DType(DKind.Unknown);
         public static readonly DType Boolean = new DType(DKind.Boolean);
         public static readonly DType Number = new DType(DKind.Number);
+        public static readonly DType Decimal = new DType(DKind.Decimal);
         public static readonly DType String = new DType(DKind.String);
         public static readonly DType DateTimeNoTimeZone = new DType(DKind.DateTimeNoTimeZone);
         public static readonly DType DateTime = new DType(DKind.DateTime);
@@ -73,6 +74,7 @@ namespace Microsoft.PowerFx.Core.Types
             yield return Media;
             yield return Color;
             yield return Blob;
+            yield return Decimal;
         }
 
         private static readonly Lazy<Dictionary<DKind, DKind>> _kindToSuperkindMapping =
@@ -109,6 +111,7 @@ namespace Microsoft.PowerFx.Core.Types
                 { DKind.ViewValue, DKind.Error },
                 { DKind.NamedValue, DKind.Error },
                 { DKind.UntypedObject, DKind.Error },
+                { DKind.Decimal, DKind.Error },
             }, isThreadSafe: true);
 
         public static Dictionary<DKind, DKind> KindToSuperkindMapping => _kindToSuperkindMapping.Value;
@@ -1960,6 +1963,7 @@ namespace Microsoft.PowerFx.Core.Types
                         (type.Kind == DKind.Enum && Accepts(type.GetEnumSupertype()));
                     break;
 
+                case DKind.Decimal:
                 case DKind.Color:
                 case DKind.Boolean:
                 case DKind.PenImage:
@@ -3105,6 +3109,7 @@ namespace Microsoft.PowerFx.Core.Types
                 isSafe = false;
                 if (typeDest.Kind == DKind.String ||
                     typeDest.Kind == DKind.Number ||
+                    typeDest.Kind == DKind.Decimal ||
                     typeDest.Kind == DKind.Boolean ||
                     typeDest.Kind == DKind.Date ||
                     typeDest.Kind == DKind.Time ||
@@ -3179,6 +3184,7 @@ namespace Microsoft.PowerFx.Core.Types
                     isSafe = Kind != DKind.String;
                     doesCoerce = Kind == DKind.String ||
                                  Number.Accepts(this) ||
+                                 Decimal.Accepts(this) ||
                                  (Kind == DKind.OptionSetValue && OptionSetInfo != null && OptionSetInfo.IsBooleanValued());
                     break;
                 case DKind.DateTime:
@@ -3191,6 +3197,7 @@ namespace Microsoft.PowerFx.Core.Types
                     isSafe = Kind != DKind.String;
                     doesCoerce = Kind == DKind.String ||
                                  Number.Accepts(this) ||
+                                 Decimal.Accepts(this) ||
                                  DateTime.Accepts(this);
                     break;
                 case DKind.Number:
@@ -3198,6 +3205,7 @@ namespace Microsoft.PowerFx.Core.Types
                     isSafe = Kind != DKind.String;
                     doesCoerce = Kind == DKind.String ||
                                  Number.Accepts(this) ||
+                                 Decimal.Accepts(this) ||
                                  Boolean.Accepts(this) ||
                                  DateTime.Accepts(this) ||
                                  (Kind == DKind.OptionSetValue && OptionSetInfo != null && OptionSetInfo.BackingKind == DKind.Number);
@@ -3208,6 +3216,15 @@ namespace Microsoft.PowerFx.Core.Types
                     doesCoerce = Kind == DKind.String ||
                                  Kind == DKind.Number ||
                                  Boolean.Accepts(this);
+                    break;
+                case DKind.Decimal:
+                    // Ill-formatted strings coerce to null; unsafe.
+                    isSafe = Kind != DKind.String && Kind != DKind.Number;
+                    doesCoerce = Kind == DKind.String ||
+                                 Number.Accepts(this) ||
+                                 Boolean.Accepts(this) ||
+                                 Decimal.Accepts(this) ||
+                                 DateTime.Accepts(this);
                     break;
                 case DKind.String:
                     doesCoerce = Kind != DKind.Color && Kind != DKind.Control && Kind != DKind.DataEntity && Kind != DKind.OptionSet && Kind != DKind.View && Kind != DKind.Polymorphic && Kind != DKind.File && Kind != DKind.LargeImage;
@@ -3426,6 +3443,8 @@ namespace Microsoft.PowerFx.Core.Types
                     return "O";
                 case DKind.Void:
                     return "-";
+                case DKind.Decimal:
+                    return "w";
             }
         }
 
@@ -3552,6 +3571,29 @@ namespace Microsoft.PowerFx.Core.Types
             // suggestions.
             return similar != null &&
                    comparer.Distance(similar) < (name.Value.Length / 3) + 3;
+        }
+
+        // Determins if the result of a numeric binary operation should be a Decimal or a Number.
+        // If !numberIsFloat then Strings and Booleans are allowed to coerce to Decimal for this test, as if they were passed through Value
+        public static bool DecimalBinaryOp(DType leftType, DType rightType, bool numberIsFloat)
+        {
+            if (leftType == DType.Unknown || rightType == DType.Unknown ||
+                leftType == DType.Deferred || rightType == DType.Deferred)
+            {
+                return false;
+            }
+            else if ((leftType == DType.UntypedObject || rightType == DType.ObjNull) && 
+                     (rightType == DType.UntypedObject || rightType == DType.ObjNull))
+            {
+                return !numberIsFloat;
+            }
+            else
+            {
+                return (leftType == DType.Decimal || leftType == DType.UntypedObject || leftType == DType.ObjNull ||
+                        (!numberIsFloat && (leftType == DType.String || leftType == DType.Boolean))) &&
+                       (rightType == DType.Decimal || rightType == DType.UntypedObject || rightType == DType.ObjNull ||
+                        (!numberIsFloat && (rightType == DType.String || rightType == DType.Boolean)));
+            }
         }
     }
 }

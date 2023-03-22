@@ -19,12 +19,38 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             config.EnableSetFunction();
             var engine = new RecalcEngine(config);
 
-            engine.UpdateVariable("x", FormulaValue.New(12));
+            engine.UpdateVariable("x", FormulaValue.New(12m));
 
             var r1 = engine.Eval("x", null, _opts); // 12
-            Assert.Equal(12.0, r1.ToObject());
+            Assert.Equal(12m, r1.ToObject());
 
             var r2 = engine.Eval("Set(x, 15)", null, _opts);
+
+            // Set() returns constant 'true;
+            Assert.Equal(true, r2.ToObject());
+
+            r1 = engine.Eval("x"); // 15
+            Assert.Equal(15m, r1.ToObject());
+
+            r1 = engine.GetValue("x");
+            Assert.Equal(15m, r1.ToObject());          
+        }
+
+        // Decimal TODO: Set( x, 1 ); Set( x, Sqrt(2) )
+
+        [Fact]
+        public void SetVarNumber()
+        {
+            var config = new PowerFxConfig();
+            config.EnableSetFunction();
+            var engine = new RecalcEngine(config);
+
+            engine.UpdateVariable("x", FormulaValue.New(12));
+
+            var r1 = engine.Eval("x", null, _opts); // 12.0
+            Assert.Equal(12.0, r1.ToObject());
+
+            var r2 = engine.Eval("Set(x, Float(15))", null, _opts);
 
             // Set() returns constant 'true;
             Assert.Equal(true, r2.ToObject());
@@ -33,7 +59,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.Equal(15.0, r1.ToObject());
 
             r1 = engine.GetValue("x");
-            Assert.Equal(15.0, r1.ToObject());          
+            Assert.Equal(15.0, r1.ToObject());
         }
 
         [Fact]
@@ -43,11 +69,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             config.EnableSetFunction();
             var engine = new RecalcEngine(config);
 
-            engine.UpdateVariable("x", FormulaValue.NewBlank(FormulaType.Number));
+            engine.UpdateVariable("x", FormulaValue.NewBlank(FormulaType.Decimal));
 
             // Circular reference ok
             var r3 = engine.Eval("Set(x, 1);Set(x,x+1);x", null, _opts);
-            Assert.Equal(2.0, r3.ToObject());
+            Assert.Equal(2.0m, r3.ToObject());
         }
 
         [Fact]
@@ -73,16 +99,37 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var engine = new RecalcEngine(config);
 
             var cache = new TypeMarshallerCache();
-            var obj = cache.Marshal(new { X = 10, Y = 20 });
+            var obj = cache.Marshal(new { X = 10m, Y = 20m });
 
             engine.UpdateVariable("obj", obj);
             
             // Can update record
             var r1 = engine.Eval("Set(obj, {X: 11, Y: 21}); obj.X", null, _opts);
-            Assert.Equal(11.0, r1.ToObject());
+            Assert.Equal(11m, r1.ToObject());
 
             // But SetField fails 
             var r2 = engine.Check("Set(obj.X, 31); obj.X", null, _opts);
+            Assert.False(r2.IsSuccess);
+        }
+
+        [Fact]
+        public void SetRecordFloat()
+        {
+            var config = new PowerFxConfig();
+            config.EnableSetFunction();
+            var engine = new RecalcEngine(config);
+
+            var cache = new TypeMarshallerCache();
+            var obj = cache.Marshal(new { X = 10, Y = 20 });
+
+            engine.UpdateVariable("obj", obj);
+
+            // Can update record
+            var r1 = engine.Eval("Set(obj, {X: Float(11), Y: Float(21)}); obj.X", null, _opts);
+            Assert.Equal(11.0, r1.ToObject());
+
+            // But SetField fails 
+            var r2 = engine.Check("Set(obj.X, Float(31)); obj.X", null, _opts);
             Assert.False(r2.IsSuccess);
         }
 
@@ -157,7 +204,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         public void MutableByDefault()
         {            
             var sym = new SymbolValues();
-            sym.Add("x", FormulaValue.New(12)); // mutable by default
+            sym.Add("x", FormulaValue.New(12m)); // mutable by default
 
             var config = new PowerFxConfig();
             config.EnableSetFunction();
@@ -284,7 +331,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 new NamedValue("num", FormulaValue.New(11)),
                 new NamedValue("str", FormulaValue.New("abc")));
 
-            var expr = "Set(displayNum, 12); displayNum";
+            var expr = "Set(displayNum, Float(12)); displayNum";
                         
             var sym = NewMutableFromRecord(record);
             
@@ -301,7 +348,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             // Can get invariant form.
             var invariant = engine.GetInvariantExpression(expr, recordType);
-            Assert.Equal("Set(num, 12); num", invariant);
+            Assert.Equal("Set(num, Float(12)); num", invariant);
         }
 
         // Expression from 2 row scopes!

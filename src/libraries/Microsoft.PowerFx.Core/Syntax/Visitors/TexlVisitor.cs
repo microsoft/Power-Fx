@@ -39,6 +39,12 @@ namespace Microsoft.PowerFx.Syntax
         public abstract void Visit(NumLitNode node);
 
         /// <summary>
+        /// Visit <see cref="DecLitNode" /> leaf node.
+        /// </summary>
+        /// <param name="node">The visited node.</param>
+        public abstract void Visit(DecLitNode node);
+
+        /// <summary>
         /// Visit <see cref="FirstNameNode" /> leaf node.
         /// </summary>
         /// <param name="node">The visited node.</param>

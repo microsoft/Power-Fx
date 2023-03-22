@@ -133,10 +133,10 @@ Error({Kind:ErrorKind.Div0})
 >> Atan(0)
 0
 
->> Atan(1e100)
+>> Atan(1e28)
 1.570796327
 
->> Atan(-1e100)
+>> Atan(-1e28)
 -1.570796327
 
 >> Atan(1)
@@ -151,10 +151,10 @@ Error({Kind:ErrorKind.Div0})
 >> Acot(0)
 1.570796327
 
->> Acot(1e100)
+>> Acot(1e28)
 0
 
->> Acot(-1e100)
+>> Acot(-1e28)
 3.141592654
 
 >> Acot(1)

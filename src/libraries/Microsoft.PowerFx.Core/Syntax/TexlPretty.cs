@@ -67,7 +67,15 @@ namespace Microsoft.PowerFx.Syntax
             Contracts.AssertValue(node);
 
             var nlt = node.Value;
-            return LazyList<string>.Of(nlt != null ? nlt.ToString() : node.NumValue.ToString("R", CultureInfo.CurrentCulture));
+            return LazyList<string>.Of(nlt != null ? nlt.ToString() : node.NumValue.ToString("G17", CultureInfo.CurrentCulture));
+        }
+
+        public override LazyList<string> Visit(DecLitNode node, Precedence parentPrecedence)
+        {
+            Contracts.AssertValue(node);
+
+            var nlt = node.Value;
+            return LazyList<string>.Of(nlt != null ? nlt.ToString() : node.DecValue.ToString("G29", CultureInfo.CurrentCulture));
         }
 
         public override LazyList<string> Visit(FirstNameNode node, Precedence parentPrecedence)
@@ -546,6 +554,13 @@ namespace Microsoft.PowerFx.Syntax
         }
 
         public override LazyList<string> Visit(NumLitNode node, Context context)
+        {
+            Contracts.AssertValue(node);
+
+            return Single(node);
+        }
+
+        public override LazyList<string> Visit(DecLitNode node, Context context)
         {
             Contracts.AssertValue(node);
 

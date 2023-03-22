@@ -4,6 +4,7 @@
 using System;
 using System.Linq;
 using System.Net.Http;
+using System.Text.RegularExpressions;
 using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Tests;
@@ -97,7 +98,8 @@ $@"POST https://tip1-shared-002.azure-apim.net/invoke
 "
             };
 
-            Assert.Equal(expectedNetwork, networkTrace);
+            // on some systems, newlines will be represented with "\r\n", easiest just to strip for the test
+            Assert.Equal(expectedNetwork, Regex.Replace(networkTrace, @"\r\n?|\n", "\n"));
         }
 
         [Theory]        

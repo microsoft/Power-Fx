@@ -11,19 +11,19 @@
 If(true, {test:1}, "Mismatched args (result of the expression can't be used).")
 
 >> If(1>0, 100, {x:3}) + 1
-Errors: Error 0-19: Invalid argument type. Expecting one of the following: Number, Text, Boolean, UntypedObject.
+Errors: Error 0-19: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
 
 >> If(1>0, 100; 30, {x:3}) + 1
-Errors: Error 0-23: Invalid argument type. Expecting one of the following: Number, Text, Boolean, UntypedObject.
+Errors: Error 0-23: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
 
 >> If(1>0, 100; 30, {x:3}; 60) + 1
 31
 
 >> Value(If(1>0, 100; 30, {x:3}) + 1)
-Errors: Error 6-29: Invalid argument type. Expecting one of the following: Number, Text, Boolean, UntypedObject.
+Errors: Error 6-29: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
 
 >> Value(1 + If(1>0, 100; 30, {x:3}))
-Errors: Error 10-33: Invalid argument type. Expecting one of the following: Number, Text, Boolean, UntypedObject.
+Errors: Error 10-33: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
 
 >> If(1<0, "abc2", {x:3}; {x:2})
 If(true, {test:1}, "Mismatched args (result of the expression can't be used).")

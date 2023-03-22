@@ -1,4 +1,4 @@
-﻿#SETUP: EnableExpressionChaining,MutationFunctionsTestSetup
+﻿#SETUP: EnableExpressionChaining,MutationFunctionsTestSetup,!NumberIsFloat
 
 // Check MutationFunctionsTestSetup handler (PowerFxEvaluationTests.cs) for documentation.
 
@@ -76,7 +76,7 @@ Table({Field1:10,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})
 "phobos"
 
 >> Patch(t1, 0, 0)
-Errors: Error 10-11: Invalid argument type (Number). Expecting a Record value instead.|Error 13-14: Invalid argument type (Number). Expecting a Record value instead.|Error 10-11: Cannot use a non-record value in this context.|Error 13-14: Cannot use a non-record value in this context.|Error 0-15: The function 'Patch' has some invalid arguments.
+Errors: Error 10-11: Invalid argument type (Decimal). Expecting a Record value instead.|Error 13-14: Invalid argument type (Decimal). Expecting a Record value instead.|Error 10-11: Cannot use a non-record value in this context.|Error 13-14: Cannot use a non-record value in this context.|Error 0-15: The function 'Patch' has some invalid arguments.
 
 // field22 is missing and this is Ok
 >> Patch(

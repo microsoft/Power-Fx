@@ -34,6 +34,8 @@ namespace Microsoft.PowerFx.Types
 
         double GetDouble();
 
+        decimal GetDecimal();
+
         bool GetBoolean();
     }
 

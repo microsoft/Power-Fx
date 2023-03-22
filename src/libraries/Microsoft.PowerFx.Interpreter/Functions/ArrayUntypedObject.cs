@@ -30,6 +30,11 @@ namespace Microsoft.PowerFx.Functions
             throw new NotImplementedException();
         }
 
+        public decimal GetDecimal()
+        {
+            throw new NotImplementedException();
+        }
+
         public string GetString()
         {
             throw new NotImplementedException();

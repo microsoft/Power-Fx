@@ -19,6 +19,11 @@ namespace Microsoft.PowerFx.Core.Parser
                 parserOptions.AllowsSideEffects = true; 
             }
 
+            if ((flags & TexlParser.Flags.NumberIsFloat) != 0)
+            {
+                parserOptions.NumberIsFloat = true;
+            }
+
             return parserOptions; 
         }
     }

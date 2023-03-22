@@ -167,6 +167,11 @@ namespace Microsoft.PowerFx.Syntax
             return null;
         }
 
+        internal virtual DecLitNode AsDecLit()
+        {
+            return null;
+        }
+
         internal virtual StrLitNode AsStrLit()
         {
             return null;

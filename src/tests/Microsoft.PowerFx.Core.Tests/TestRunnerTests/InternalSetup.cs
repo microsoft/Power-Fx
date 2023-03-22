@@ -24,7 +24,7 @@ namespace Microsoft.PowerFx.Core.Tests
         /// </summary>
         internal bool DisableMemoryChecks { get; set; }
 
-        internal static InternalSetup Parse(string setupHandlerName)
+        internal static InternalSetup Parse(string setupHandlerName, bool numberIsFloat = false)
         {
             var iSetup = new InternalSetup();
 
@@ -37,7 +37,12 @@ namespace Microsoft.PowerFx.Core.Tests
 
             foreach (var part in parts.ToArray())
             {
-                if (string.Equals(part, "DisableMemChecks", StringComparison.OrdinalIgnoreCase))
+                // negative flags are caught when adding the tests
+                if (part.StartsWith("!"))
+                {
+                    parts.Remove(part);
+                }
+                else if (string.Equals(part, "DisableMemChecks", StringComparison.OrdinalIgnoreCase))
                 {
                     iSetup.DisableMemoryChecks = true;
                     parts.Remove(part);
@@ -69,6 +74,11 @@ namespace Microsoft.PowerFx.Core.Tests
                         throw new ArgumentException("Invalid TimeZoneInfo setup!");
                     }
                 }
+            }
+
+            if (numberIsFloat)
+            {
+                iSetup.Flags |= TexlParser.Flags.NumberIsFloat;
             }
 
             if (parts.Count > 1)

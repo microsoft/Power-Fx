@@ -6,3 +6,8 @@ Table({Value:0},{Value:1})
 >> Mod(3, [-1, 0, 1, 2, 3, Blank()])
 Table({Value:0},{Value:Error({Kind:ErrorKind.Div0})},{Value:0},{Value:1},{Value:0},{Value:Error({Kind:ErrorKind.Div0})})
 
+>> Mod([45,"50",81],["11",12,13])
+Table({Value:1},{Value:2},{Value:3})
+
+>> Mod([61,566,71943],12)
+Table({Value:1},{Value:2},{Value:3})

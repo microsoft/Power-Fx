@@ -137,6 +137,7 @@ namespace Microsoft.PowerFx.Functions
         {
             var uo = args[0] as UntypedObjectValue;
             var impl = uo.Impl;
+            bool numberIsFloat = irContext.ResultType == FormulaType.Number;
 
             if (impl.Type == FormulaType.String)
             {
@@ -147,6 +148,84 @@ namespace Microsoft.PowerFx.Functions
                 }
 
                 return Value(runner, context, irContext, new FormulaValue[] { str });
+            }
+            else if (impl.Type == FormulaType.Number && numberIsFloat)
+            {
+                var number = impl.GetDouble();
+                if (IsInvalidDouble(number))
+                {
+                    return CommonErrors.ArgumentOutOfRange(irContext);
+                }
+
+                return new NumberValue(irContext, number);
+            }
+            else if (impl.Type == FormulaType.Number && !numberIsFloat)
+            {
+                // Decimal TODO: Badly formed decimal, error return?
+                var dec = impl.GetDecimal();
+                return new DecimalValue(irContext, dec);
+            }
+            else if (impl.Type == FormulaType.Boolean && numberIsFloat)
+            {
+                var b = new BooleanValue(IRContext.NotInSource(FormulaType.Boolean), impl.GetBoolean());
+
+                return BooleanToNumber(irContext, new BooleanValue[] { b });
+            }
+            else if (impl.Type == FormulaType.Boolean && !numberIsFloat)
+            {
+                var b = new BooleanValue(IRContext.NotInSource(FormulaType.Boolean), impl.GetBoolean());
+
+                return BooleanToDecimal(irContext, new BooleanValue[] { b });
+            }
+
+            return GetTypeMismatchError(irContext, BuiltinFunctionsCore.Value_UO.Name, DType.Number.GetKindString(), impl);
+        }
+
+        public static FormulaValue Decimal_UO(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        {
+            var uo = args[0] as UntypedObjectValue;
+            var impl = uo.Impl;
+
+            if (impl.Type == FormulaType.String)
+            {
+                var str = new StringValue(IRContext.NotInSource(FormulaType.String), impl.GetString());
+                if (args.Length > 1)
+                {
+                    return Decimal(runner, context, irContext, new FormulaValue[] { str, args[1] });
+                }
+
+                return Decimal(runner, context, irContext, new FormulaValue[] { str });
+            }
+            else if (impl.Type == FormulaType.Number)
+            {
+                // Decimal TODO: Badly formed decimal, error return?
+                var dec = impl.GetDecimal();
+                return new DecimalValue(irContext, dec);
+            }
+            else if (impl.Type == FormulaType.Boolean)
+            {
+                var b = new BooleanValue(IRContext.NotInSource(FormulaType.Boolean), impl.GetBoolean());
+
+                return BooleanToDecimal(irContext, new BooleanValue[] { b });
+            }
+
+            return GetTypeMismatchError(irContext, BuiltinFunctionsCore.Decimal_UO.Name, DType.Number.GetKindString(), impl);
+        }
+
+        public static FormulaValue Float_UO(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        {
+            var uo = args[0] as UntypedObjectValue;
+            var impl = uo.Impl;
+
+            if (impl.Type == FormulaType.String)
+            {
+                var str = new StringValue(IRContext.NotInSource(FormulaType.String), impl.GetString());
+                if (args.Length > 1)
+                {
+                    return Float(runner, context, irContext, new FormulaValue[] { str, args[1] });
+                }
+
+                return Float(runner, context, irContext, new FormulaValue[] { str });
             }
             else if (impl.Type == FormulaType.Number)
             {
@@ -161,6 +240,7 @@ namespace Microsoft.PowerFx.Functions
             else if (impl.Type == FormulaType.Boolean)
             {
                 var b = new BooleanValue(IRContext.NotInSource(FormulaType.Boolean), impl.GetBoolean());
+
                 return BooleanToNumber(irContext, new BooleanValue[] { b });
             }
 

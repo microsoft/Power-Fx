@@ -307,6 +307,11 @@ namespace Microsoft.PowerFx.Syntax
             SetCurrentNodeAsResult(node);
         }
 
+        public override void Visit(DecLitNode node)
+        {
+            SetCurrentNodeAsResult(node);
+        }
+
         public override void Visit(FirstNameNode node)
         {
             SetCurrentNodeAsResult(node);

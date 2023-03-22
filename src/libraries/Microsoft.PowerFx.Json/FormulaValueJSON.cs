@@ -59,13 +59,17 @@ namespace Microsoft.PowerFx.Types
                     return FormulaValue.NewBlank(formulaType);
 
                 case JsonValueKind.Number:
-                    if (skipTypeValidation || formulaType is NumberType)
+                    if (formulaType is NumberType)
                     {
                         return NumberValue.New(element.GetDouble());
                     }
+                    else if (skipTypeValidation || formulaType is DecimalType)
+                    {
+                        return DecimalValue.New(element.GetDecimal());
+                    }
                     else
                     {
-                        throw new NotImplementedException($"Expecting a NumberType but got {formulaType._type.Kind}");
+                        throw new NotImplementedException($"Expecting a NumberType or DecimalType but got {formulaType._type.Kind}");
                     }
 
                 case JsonValueKind.String:

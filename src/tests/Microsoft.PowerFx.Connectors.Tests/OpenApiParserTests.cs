@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AppMagic.Authoring.Texl.Builtins;
@@ -209,8 +210,9 @@ namespace Microsoft.PowerFx.Connectors.Tests
  [content-header] Content-Type: application/json; charset=utf-8
  [body] {{""kind"":""Conversation"",""analysisInput"":{{""conversationItem"":{{""id"":""0"",""participantId"":""0"",""language"":""en-us"",""modality"":""text"",""text"":""Book me a flight for Munich""}}}},""parameters"":{{""projectName"":""project1"",""deploymentName"":""deploy1"",""verbose"":true,""stringIndexType"":""TextElement_V8""}}}}
 ";
-
-            Assert.Equal(expectedInput, input);
+            
+            // on some systems, newlines will be represented with "\r\n", easiest just to strip for the test
+            Assert.Equal(expectedInput, Regex.Replace(input, @"\r\n?|\n", "\n"));
         }
 
         [Fact]
@@ -279,6 +281,11 @@ namespace Microsoft.PowerFx.Connectors.Tests
             }
 
             public void Visit(NumberValue value)
+            {
+                Result = value.Value.ToString();
+            }
+
+            public void Visit(DecimalValue value)
             {
                 Result = value.Value.ToString();
             }

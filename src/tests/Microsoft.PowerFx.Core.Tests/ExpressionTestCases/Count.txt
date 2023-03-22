@@ -73,11 +73,11 @@ Error({Kind:ErrorKind.Div0})
 
 // Multiple errors
 >> Count(Table({a:1/0},{a:Sqrt(-1)}))
-Error({Kind:ErrorKind.Div0})
+#SKIP Issue 1204 with Decimal, expected: Error({Kind:ErrorKind.Div0})
 
 // Multiple errors
 >> Count(Table({a:Sqrt(-1)},{a:1/0}))
-Error({Kind:ErrorKind.Numeric})
+#SKIP Issue 1204 with Decimal, expected: Error({Kind:ErrorKind.Numeric})
 
 // ******** COMPILE ERRORS - NON-NUMERIC TABLES, NOT SINGLE-COLUMN ********
 

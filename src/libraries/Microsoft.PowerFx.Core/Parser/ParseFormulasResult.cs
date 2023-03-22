@@ -68,13 +68,16 @@ namespace Microsoft.PowerFx.Core.Parser
 
         internal bool IsImperative { get; }
 
-        public UDF(IdentToken ident, IdentToken returnType, HashSet<UDFArg> args, TexlNode body, bool isImperative)
+        internal bool NumberIsFloat { get; }
+
+        public UDF(IdentToken ident, IdentToken returnType, HashSet<UDFArg> args, TexlNode body, bool isImperative, bool numberIsFloat)
         {
             Ident = ident;
             ReturnType = returnType;
             Args = args;
             Body = body;
             IsImperative = isImperative;
+            NumberIsFloat = numberIsFloat;
         }
     }
 

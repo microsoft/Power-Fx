@@ -48,6 +48,11 @@ namespace Microsoft.PowerFx.Connectors.Execution
             _writer.WriteNumberValue(numberValue);
         }
 
+        protected override void WriteDecimalValue(decimal decimalValue)
+        {
+            _writer.WriteNumberValue(decimalValue);
+        }
+
         protected override void WriteBooleanValue(bool booleanValue)
         {
             _writer.WriteBooleanValue(booleanValue);
