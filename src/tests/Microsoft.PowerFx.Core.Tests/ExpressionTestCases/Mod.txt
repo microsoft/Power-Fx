@@ -237,4 +237,4 @@ Error(Table({Kind:ErrorKind.InvalidArgument},{Kind:ErrorKind.InvalidArgument}))
 Table({Result:0},{Result:1})
 
 >> Mod(3, [-1, 0, 1, 2, 3, Blank()])
-Table({Result:0},{Result:Error({Kind:ErrorKind.Div0})},{Result:0},{Result:1},{Result:0},{Result:Error({Kind:ErrorKind.Div0})})
+Table({Result:0},{Result:Error({Kind:ErrorKind.Div0})},{Result:0},{Result:1},{Result:0},{Result:Error({Kind:ErrorKind.InvalidArgument})})
