@@ -129,5 +129,10 @@ namespace Microsoft.PowerFx.Types
         {
             return new ColorValue(IRContext.NotInSource(FormulaType.Color), value);
         }
+
+        public static VoidValue NewVoid()
+        {
+            return new VoidValue(IRContext.NotInSource(FormulaType.Void));
+        }
     }
 }

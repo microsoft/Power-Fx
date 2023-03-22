@@ -304,5 +304,12 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.NotNull(func3);
             Assert.Equal(2, func3.Count());
         }
+
+        [Fact]
+        public void VoidIsNotAllowed()
+        {
+            var symbol = new SymbolTable();
+            Assert.Throws<NotSupportedException>(() => symbol.AddVariable("x", FormulaType.Void, mutable: true));
+        }
     }
 }

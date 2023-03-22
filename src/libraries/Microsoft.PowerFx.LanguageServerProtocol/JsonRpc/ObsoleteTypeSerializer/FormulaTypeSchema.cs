@@ -33,7 +33,8 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             EntityTable,
             Unknown,
             Error,
-            Deferred
+            Deferred,
+            Void
         }
 
         /// <summary>

@@ -56,7 +56,9 @@ namespace Microsoft.PowerFx.Types
         public static FormulaType Deferred { get; } = new DeferredType();
 
         public static FormulaType BindingError { get; } = new BindingErrorType();
-        
+
+        public static FormulaType Void { get; } = new Void();
+
         /// <summary>
         /// Internal use only to represent an arbitrary (un-backed) option set value.
         /// Should be removed if possible.
@@ -192,6 +194,10 @@ namespace Microsoft.PowerFx.Types
                     }
 
                     return new TableType(type);
+                case DKind.Deferred:
+                    return Deferred;
+                case DKind.Void: 
+                    return Void;
                 default:
                     return new UnsupportedType(type);
             }

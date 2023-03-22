@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Reflection.Metadata;
+using Microsoft.CodeAnalysis;
 using Microsoft.PowerFx.Core.App.Controls;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
@@ -27,7 +28,7 @@ using Microsoft.PowerFx.Types;
 using Xunit;
 
 namespace Microsoft.PowerFx.Core.Tests
-{    
+{
     public class TexlTests : PowerFxTest
     {
         private readonly CultureInfo _defaultLocale = new ("en-US");
@@ -80,8 +81,8 @@ namespace Microsoft.PowerFx.Core.Tests
             // TestBindingErrors(script, DType.Error);
             var engine = new Engine(new PowerFxConfig());
             var result = engine.Check(script);
-            
-            Assert.Equal(DType.Error, result.Binding.ResultType);            
+
+            Assert.Equal(DType.Error, result.Binding.ResultType);
             Assert.False(result.IsSuccess);
         }
 
@@ -553,43 +554,61 @@ namespace Microsoft.PowerFx.Core.Tests
                 symbol);
         }
 
-        [Fact]
-        public void TexlFunctionTypeSemanticsIfWithArgumentCoercion()
+        [Theory]
+        [InlineData("If(A < 10, 1, \"2\")", "n", true)]
+        [InlineData("If(A < 1, \"one\", A < 2, 2, A < 3, true, false)", "s", true)]
+        [InlineData("If(A < 1, true, A < 2, 2, A < 3, false, \"true\")", "b", true)]
+        [InlineData("If(A < 10, 1, [1,2,3])", "-", true)]
+        [InlineData("If(A < 10, 1, {Value: 2})", "-", true)]
+        [InlineData("If(0 < 1, [1], 2)", "-", true)]
+
+        // negative cases, when if produces void type
+        // If(1 < 0, [1], 2) => V which is void value
+
+        // void type is not allowed in aggregate type.
+        // {test: V}
+        [InlineData("{test: If(1 < 0, [1], 2)}", "![]", false)]
+
+        // [V]
+        [InlineData("[If(1 < 0, [1], 2)]", "*[]", false)]
+
+        // void type can't be consumed.
+        // V + 1 
+        [InlineData("If(1 < 0, [1], 2) + 1", "n", false)]
+
+        // Abs(V)
+        [InlineData("Abs(If(1 < 0, [1], 2))", "n", false)]
+
+        // Len(V)
+        [InlineData("Len(If(1 < 0, [1], 2))", "n", false)]
+
+        // If(V, 0, 1)
+        [InlineData("If(If(1 < 0, [1], 2), 0, 1)", "n", false)]
+
+        // Hour(V)
+        [InlineData("Hour(If(1 < 0, [1], 2))", "n", false)]
+
+        // ForAll([1,2,3], V)
+        [InlineData("ForAll([1,2,3], If(1 < 0, [1], 2))", "e", false)]
+        public void TexlFunctionTypeSemanticsIfWithArgumentCoercion(string expression, string expectedType, bool checkSuccess)
         {
             var symbol = new SymbolTable();
             symbol.AddVariable("A", FormulaType.Number);
-            
-            TestSimpleBindingSuccess(
-                "If(A < 10, 1, \"2\")",
-                DType.Decimal,
-                symbol);
 
-            TestSimpleBindingSuccess(
-                "If(A < 10, Float(1), \"2\")",
-                DType.Number,
-                symbol);
-
-            TestSimpleBindingSuccess(
-                "If(A < 1, \"one\", A < 2, 2, A < 3, true, false)",
-                DType.String,
-                symbol);
-
-            TestSimpleBindingSuccess(
-                "If(A < 1, true, A < 2, 2, A < 3, false, \"true\")",
-                DType.Boolean,
-                symbol);
-
-            // Negative cases -- when args cannot be coerced.
-
-            TestBindingErrors(
-                "If(A < 10, 1, [1,2,3])",
-                DType.Decimal,
-                symbol);
-
-            TestBindingErrors(
-                "If(A < 10, 1, {Value: 2})",
-                DType.Decimal,
-                symbol);
+            if (checkSuccess)
+            {
+                TestSimpleBindingSuccess(
+                                    expression,
+                                    TestUtils.DT(expectedType),
+                                    symbol);
+            }
+            else
+            {
+                TestBindingErrors(
+                    expression,
+                    TestUtils.DT(expectedType),
+                    symbol);
+            }
         }
 
         [Fact]
