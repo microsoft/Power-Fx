@@ -45,6 +45,12 @@ namespace Microsoft.PowerFx
         /// </summary>
         StronglyTypedBuiltinEnums = 0x10,
 
+        /// <summary>
+        /// Updates the IsEmpty function to only allow table arguments, since it
+        /// does not work properly with other types of arguments.
+        /// </summary>
+        RestrictedIsEmptyArguments = 0x20,
+
         /// <summary>        
         /// All features enabled
         /// [USE WITH CAUTION] In using this value, you expose your code to future features.

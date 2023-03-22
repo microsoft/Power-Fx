@@ -2487,6 +2487,33 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
+        [InlineData("IsEmpty(\"Hello\")", true)]
+        [InlineData("IsEmpty(7)", true)]
+        [InlineData("IsEmpty([1,2,3,4])", false)]
+        [InlineData("IsEmpty({a:3, b:4})", true)]
+        [InlineData("IsEmpty(Blank())", false)]
+        public void TexlFunctionTypeSemanticsIsEmpty(string script, bool expectedError)
+        {
+            TestSimpleBindingSuccess(script, DType.Boolean); // Without restriction, all succeed
+
+            if (expectedError)
+            {
+                TestBindingErrors(
+                    script,
+                    DType.Boolean,
+                    symbolTable: null,
+                    features: Features.RestrictedIsEmptyArguments);
+            }
+            else
+            {
+                TestSimpleBindingSuccess(
+                    script,
+                    DType.Boolean,
+                    features: Features.RestrictedIsEmptyArguments);
+            }
+        }
+
+        [Theory]
         [InlineData("Sequence(20)", "*[Value:n]")]
         [InlineData("Sequence(20, 30)", "*[Value:n]")]
         [InlineData("Sequence(20, 30, 10)", "*[Value:n]")]

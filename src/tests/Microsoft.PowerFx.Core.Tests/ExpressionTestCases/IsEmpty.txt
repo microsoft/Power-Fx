@@ -1,3 +1,5 @@
+#SETUP: RestrictedIsEmptyArguments
+
 // NUMERIC RECORDS
 
 >> IsEmpty([1234])
@@ -43,7 +45,10 @@ false
 true
 
 >> IsEmpty(Blank())
-false
+true
+
+>> IsEmpty(If(1<0,[1,2,3]))
+true
 
 >> IsEmpty([Blank()])
 false
@@ -61,7 +66,7 @@ false
 false
 
 >> IsEmpty(LastN([1,2,3,4], Blank()))
-false
+true
 
 
 // ERROR RECORDS
@@ -103,8 +108,21 @@ true
 >> IsEmpty(
    Filter(
    Table(
-   {a:1,b:true,c:Date(2022,12,1),d:Time(12,34,56),e:DateTimeValue("2012-12-12 12:12:12")},
-   {a:5,b:false,c:Date(2022,12,1),d:TimeValue("5:00 AM"),e:DateTimeValue("2012-12-12 12:12:12")},
-   {a:6,b:true,c:Date(2022,12,1),d:Time(12,34,56),e:DateTimeValue("Jun 19 2022 4:00 PM")}
+   {a:1,b:true,c:Date(2022,12,1),d:Time(12,34,56),e:DateTime(2012,12,12,12,12,12)},
+   {a:5,b:false,c:Date(2022,12,1),d:Time(5,0,0),e:DateTime(2012,12,12,12,12,12)},
+   {a:6,b:true,c:Date(2022,12,1),d:Time(12,34,56),e:DateTime(2022,6,19,16,0,0)}
    ),a > 10))
 true
+
+// INVALID ARGUMENTS
+>> IsEmpty("")
+Errors: Error 8-10: Invalid argument type (Text). Expecting a Table value instead.
+
+>> IsEmpty({})
+Errors: Error 8-10: Invalid argument type (Record). Expecting a Table value instead.
+
+>> IsEmpty(0)
+Errors: Error 8-9: Invalid argument type (Number). Expecting a Table value instead.
+
+>> IsEmpty(false)
+Errors: Error 8-13: Invalid argument type (Boolean). Expecting a Table value instead.
