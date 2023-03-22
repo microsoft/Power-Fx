@@ -551,7 +551,9 @@ namespace Microsoft.PowerFx
             return FormulaType.Build(type);
         }
 
-        internal IReadOnlyDictionary<string, TokenResultType> GetTokens(GetTokensFlags flags) => GetTokensUtils.GetTokens(this.Binding, flags);
+        // Called by language server to get custom tokens.
+        // If binding is available, returns context sensitive tokens.  $$$
+        internal IReadOnlyDictionary<string, TokenResultType> GetTokens(GetTokensFlags flags) => GetTokensUtils.GetTokens(this._binding, flags);
 
         private string _expressionInvariant;
 

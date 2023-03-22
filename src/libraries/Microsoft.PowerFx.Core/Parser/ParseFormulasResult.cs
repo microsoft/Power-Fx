@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -10,15 +11,18 @@ using Microsoft.PowerFx.Syntax;
 
 namespace Microsoft.PowerFx.Core.Parser
 {
-    internal class ParseFormulasResult
+    public class ParseFormulasResult
     {
-        internal IEnumerable<KeyValuePair<IdentToken, TexlNode>> NamedFormulas { get; }
+        public IEnumerable<KeyValuePair<IdentToken, TexlNode>> NamedFormulas { get; }
 
         internal IEnumerable<TexlError> Errors { get; }
 
-        internal bool HasError { get; }
+        // Expose errors publicly
+        public IEnumerable<ExpressionError> ExpressionErrors => ExpressionError.New(this.Errors, null);
 
-        public ParseFormulasResult(IEnumerable<KeyValuePair<IdentToken, TexlNode>> namedFormulas, List<TexlError> errors)
+        public bool HasError { get; }
+
+        internal ParseFormulasResult(IEnumerable<KeyValuePair<IdentToken, TexlNode>> namedFormulas, List<TexlError> errors)
         {
             Contracts.AssertValue(namedFormulas);
 
@@ -29,6 +33,12 @@ namespace Microsoft.PowerFx.Core.Parser
             }
 
             NamedFormulas = namedFormulas;
+        }
+
+        [Obsolete("Use unified UDF parser")]
+        public static ParseFormulasResult ParseFormulasScript(string script, CultureInfo loc = null)
+        {
+            return TexlParser.ParseFormulasScript(script, loc);
         }
     }
 
