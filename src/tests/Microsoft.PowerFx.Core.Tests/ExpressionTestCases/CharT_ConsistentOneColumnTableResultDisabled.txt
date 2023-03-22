@@ -1,4 +1,6 @@
-﻿>> Char([36,37])
+﻿#SETUP: disable:ConsistentOneColumnTableResult
+
+>> Char([36,37])
 Table({Result:"$"},{Result:"%"})
 
 >> Char(Table({a:72},{a:101},{a:108},{a:108},{a:111}))

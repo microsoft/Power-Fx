@@ -1,4 +1,6 @@
-﻿// *********** 2+-argument functions, errors ***********
+﻿#SETUP: disable:ConsistentOneColumnTableResult
+
+// *********** 2+-argument functions, errors ***********
 
 >> Concatenate(["hello", "hi"], If(1/0<2," world"))
 Table({Result:Error({Kind:ErrorKind.Div0})},{Result:Error({Kind:ErrorKind.Div0})})

@@ -1,4 +1,6 @@
-﻿// https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-split
+﻿#SETUP: disable:ConsistentOneColumnTableResult
+
+// https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-split
 
 // single column table with "Result" as col name
 >> Split("this is a test", " ")

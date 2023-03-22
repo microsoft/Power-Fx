@@ -1,4 +1,4 @@
-#SETUP: ConsistentOneColumnTableResult
+#SETUP: disable:ConsistentOneColumnTableResult
 
 >> Abs([-1, 0, 123456.789, -123456.789])
 Table({Value:1},{Value:0},{Value:123456.789},{Value:123456.789})
@@ -16,7 +16,7 @@ Errors: Error 0-7: The function 'Abs' has some invalid arguments.|Error 4-6: Inv
 Blank()
 
 >> Abs(Table({a:-1},{a:0},{a:123456.789},{a:-123456.789}))
-Table({Value:1},{Value:0},{Value:123456.789},{Value:123456.789})
+Table({a:1},{a:0},{a:123456.789},{a:123456.789})
 
 >> Abs(Table({a:1/0},{a:Power(-3,2)}))
 Table({Value:Error({Kind:ErrorKind.Div0})},{Value:9})

@@ -1,6 +1,4 @@
-﻿#SETUP: ConsistentOneColumnTableResult
-
-// Blank table
+﻿// Blank table
 >> Distinct(If(1<0,[1,2]), true)
 Blank()
 

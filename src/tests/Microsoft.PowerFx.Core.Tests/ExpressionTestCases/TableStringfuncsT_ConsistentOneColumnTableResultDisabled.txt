@@ -1,4 +1,6 @@
-﻿// Scalar + Table
+﻿#SETUP: disable:ConsistentOneColumnTableResult
+
+// Scalar + Table
 >> Concatenate("a", Table({b:"1"},{b:"2"}))
 Table({Result:"a1"},{Result:"a2"})
 

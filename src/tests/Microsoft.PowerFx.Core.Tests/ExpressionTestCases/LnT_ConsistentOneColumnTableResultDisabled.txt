@@ -1,3 +1,5 @@
+#SETUP: disable:ConsistentOneColumnTableResult
+
 >> Ln([1, true])
 Table({Value:0},{Value:0})
 

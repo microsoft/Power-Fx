@@ -1,3 +1,5 @@
+#SETUP: disable:ConsistentOneColumnTableResult
+
 // RoundUp(Number_or_table, digits_or_table), away from zero
 
 // Table and scalar

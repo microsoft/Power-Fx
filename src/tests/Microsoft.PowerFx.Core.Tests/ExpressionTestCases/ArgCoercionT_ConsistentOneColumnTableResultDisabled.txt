@@ -1,4 +1,6 @@
-﻿>> Char(["55", "56", "57"])
+﻿#SETUP: disable:ConsistentOneColumnTableResult
+
+>> Char(["55", "56", "57"])
 Table({Result:"7"},{Result:"8"},{Result:"9"})
 
 >> Char(["55", "Error Coercion", "57"])
