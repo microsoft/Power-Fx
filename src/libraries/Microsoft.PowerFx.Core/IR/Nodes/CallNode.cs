@@ -86,7 +86,7 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
                 result = $"{Function.Name}:{IRContext.ResultType._type}";
             }
 
-            result += $"({string.Join(", ", Args.Select(arg => $" {arg}"))})";
+            result += $"({string.Join(", ", Args.Select(arg => $"{arg}"))})";
 
             return result;
         }

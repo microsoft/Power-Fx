@@ -394,7 +394,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             var ir = check.ApplyIR();
             Assert.NotNull(ir);
-            Assert.Equal("AddNumbers:w(1:w, 2:w)", ir.TopNode.ToString());
+            Assert.Equal("AddNumbers:n(1:n, 2:n)", ir.TopNode.ToString());
         }
 
         // IR can only be produced for successful bindings
