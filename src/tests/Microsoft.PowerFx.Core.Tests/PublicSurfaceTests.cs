@@ -42,6 +42,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.NameCollisionException",
                 "Microsoft.PowerFx.OptionSet",
                 "Microsoft.PowerFx.ParseResult",
+                "Microsoft.PowerFx.Core.Parser.ParseFormulasResult",
                 "Microsoft.PowerFx.ParserOptions",
 
                 // Config & Symbols
